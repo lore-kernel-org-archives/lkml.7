@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF9FC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61378C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFC0C2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3744B2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:32:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="qJIC8vez"
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="b88+1mXk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727665AbfL3OcT (ORCPT
+        id S1727690AbfL3OcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 09:32:19 -0500
-Received: from mail.dlink.ru ([178.170.168.18]:40682 "EHLO fd.dlink.ru"
+        Mon, 30 Dec 2019 09:32:22 -0500
+Received: from mail.dlink.ru ([178.170.168.18]:40748 "EHLO fd.dlink.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727397AbfL3OcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 09:32:17 -0500
+        id S1727626AbfL3OcS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 09:32:18 -0500
 Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id D3AEB1B21931; Mon, 30 Dec 2019 17:32:13 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru D3AEB1B21931
+        id D42DD1B2194E; Mon, 30 Dec 2019 17:32:15 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru D42DD1B2194E
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1577716333; bh=K9IglDMfo6fAz8oDQ8Cy06HvYvmttudvu1VgNCQnFXk=;
+        t=1577716335; bh=omc8QrcNvP8pME1zDqBdaSM8dT/TdIR/78ZE/IJu6BE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=qJIC8vezW0CT/vTGRMA6+/uDOBnYmq5DvI2uzElLicNNnROsynCLwKx6/5v0TwV2K
-         Evrqb7oMuu61H5mj88wT1Dq6dGlhCouT1Po/aapUQkzrZy3nK6zMZ3u/By/+xLyjth
-         IeKgMTm5eYOelpTgn83ZgI1+QLjvJH7RgTn84Ug4=
+        b=b88+1mXk3AaqAKo5cHXojM8Z9FBeCQYwTsQ12ohRqbDqgjeny47cYSKO8Yr+cYZJV
+         NjbHt8cg+BFN05lMnlGwswFArEKZd6MFsnMm10h8/V2iRbBoqq6kVElCR/hZWwTaP3
+         NvQK8y1+7ajTw3719vsL7KFvMswIHA1393Qr+sUk=
 Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id 615FD1B21809;
-        Mon, 30 Dec 2019 17:31:27 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 615FD1B21809
+        by fd.dlink.ru (Postfix) with ESMTP id 041281B21829;
+        Mon, 30 Dec 2019 17:31:31 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 041281B21829
 Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id 5C76B1B229CB;
-        Mon, 30 Dec 2019 17:31:25 +0300 (MSK)
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id 3A52F1B229CB;
+        Mon, 30 Dec 2019 17:31:29 +0300 (MSK)
 Received: from localhost.localdomain (unknown [196.196.203.126])
         by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Mon, 30 Dec 2019 17:31:25 +0300 (MSK)
+        Mon, 30 Dec 2019 17:31:29 +0300 (MSK)
 From:   Alexander Lobakin <alobakin@dlink.ru>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Edward Cree <ecree@solarflare.com>, Andrew Lunn <andrew@lunn.ch>,
@@ -66,9 +66,9 @@ Cc:     Edward Cree <ecree@solarflare.com>, Andrew Lunn <andrew@lunn.ch>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org
-Subject: [PATCH RFC net-next 12/19] net: dsa: tag_lan9303: split out common tag accessors
-Date:   Mon, 30 Dec 2019 17:30:20 +0300
-Message-Id: <20191230143028.27313-13-alobakin@dlink.ru>
+Subject: [PATCH RFC net-next 14/19] net: dsa: tag_mtk: split out common tag accessors
+Date:   Mon, 30 Dec 2019 17:30:22 +0300
+Message-Id: <20191230143028.27313-15-alobakin@dlink.ru>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191230143028.27313-1-alobakin@dlink.ru>
 References: <20191230143028.27313-1-alobakin@dlink.ru>
@@ -79,108 +79,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-...as they will be needed in the upcoming GRO callbacks.
+Misc: fix identation of MTK_HDR_LEN and make use of it in
+mtk_tag_flow_dissect() instead of open-coded value.
 
 Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
 ---
- net/dsa/tag_lan9303.c | 46 +++++++++++++++++++++++++++++--------------
- 1 file changed, 31 insertions(+), 15 deletions(-)
+ net/dsa/tag_mtk.c | 40 +++++++++++++++++++++++-----------------
+ 1 file changed, 23 insertions(+), 17 deletions(-)
 
-diff --git a/net/dsa/tag_lan9303.c b/net/dsa/tag_lan9303.c
-index d328a44381a9..ba03502986a4 100644
---- a/net/dsa/tag_lan9303.c
-+++ b/net/dsa/tag_lan9303.c
-@@ -38,6 +38,32 @@
- # define LAN9303_TAG_RX_TRAPPED_TO_CPU (LAN9303_TAG_RX_IGMP | \
- 					LAN9303_TAG_RX_STP)
+diff --git a/net/dsa/tag_mtk.c b/net/dsa/tag_mtk.c
+index c3ad7b7b142a..b926ffdf5fb5 100644
+--- a/net/dsa/tag_mtk.c
++++ b/net/dsa/tag_mtk.c
+@@ -10,12 +10,27 @@
  
-+static inline bool lan9303_sanity_check(const u8 *data)
+ #include "dsa_priv.h"
+ 
+-#define MTK_HDR_LEN		4
++#define MTK_HDR_LEN			4
+ #define MTK_HDR_XMIT_UNTAGGED		0
+ #define MTK_HDR_XMIT_TAGGED_TPID_8100	1
+ #define MTK_HDR_RECV_SOURCE_PORT_MASK	GENMASK(2, 0)
+ #define MTK_HDR_XMIT_DP_BIT_MASK	GENMASK(5, 0)
+ 
++static inline int mtk_tag_source_port(const u8 *data)
 +{
-+	/* '->data' points into the middle of our special VLAN tag information:
-+	 *
-+	 * ~ MAC src   | 0x81 | 0x00 | 0xyy | 0xzz | ether type
-+	 *                           ^
-+	 *                        ->data
++	/* The MTK header is added by the switch between src addr
++	 * and ethertype at this point, skb->data points to 2 bytes
++	 * after src addr so header should be 2 bytes right before.
++	 * The source port field is in the second byte of the tag.
 +	 */
-+	return *(__be16 *)(data - 2) == htons(ETH_P_8021Q);
++	return *(data - 1) & MTK_HDR_RECV_SOURCE_PORT_MASK;
 +}
 +
-+static inline bool lan9303_trapped_to_cpu(const u8 *data)
-+{
-+	return *(data + 1) & LAN9303_TAG_RX_TRAPPED_TO_CPU;
-+}
-+
-+static inline int lan9303_source_port(const u8 *data)
-+{
-+	return *(data + 1) & GENMASK(1, 0);
-+}
-+
-+static inline __be16 lan9303_encap_proto(const u8 *data)
++static inline __be16 mtk_tag_encap_proto(const u8 *data)
 +{
 +	return *(__be16 *)(data + 2);
 +}
 +
- /* Decide whether to transmit using ALR lookup, or transmit directly to
-  * port using tag. ALR learning is performed only when using ALR lookup.
-  * If the two external ports are bridged and the frame is unicast,
-@@ -85,8 +111,6 @@ static struct sk_buff *lan9303_xmit(struct sk_buff *skb, struct net_device *dev)
- static struct sk_buff *lan9303_rcv(struct sk_buff *skb, struct net_device *dev,
+ static struct sk_buff *mtk_tag_xmit(struct sk_buff *skb,
+ 				    struct net_device *dev)
+ {
+@@ -60,17 +75,15 @@ static struct sk_buff *mtk_tag_rcv(struct sk_buff *skb, struct net_device *dev,
  				   struct packet_type *pt)
  {
--	u16 *lan9303_tag;
--	u16 lan9303_tag1;
- 	unsigned int source_port;
+ 	int port;
+-	__be16 *phdr, hdr;
  
- 	if (unlikely(!pskb_may_pull(skb, LAN9303_TAG_LEN))) {
-@@ -95,21 +119,12 @@ static struct sk_buff *lan9303_rcv(struct sk_buff *skb, struct net_device *dev,
+ 	if (unlikely(!pskb_may_pull(skb, MTK_HDR_LEN)))
  		return NULL;
- 	}
  
--	/* '->data' points into the middle of our special VLAN tag information:
--	 *
--	 * ~ MAC src   | 0x81 | 0x00 | 0xyy | 0xzz | ether type
--	 *                           ^
--	 *                        ->data
+-	/* The MTK header is added by the switch between src addr
+-	 * and ethertype at this point, skb->data points to 2 bytes
+-	 * after src addr so header should be 2 bytes right before.
 -	 */
--	lan9303_tag = (u16 *)(skb->data - 2);
--
--	if (lan9303_tag[0] != htons(ETH_P_8021Q)) {
-+	if (!lan9303_sanity_check(skb->data)) {
- 		dev_warn_ratelimited(&dev->dev, "Dropping packet due to invalid VLAN marker\n");
- 		return NULL;
- 	}
- 
--	lan9303_tag1 = ntohs(lan9303_tag[1]);
--	source_port = lan9303_tag1 & 0x3;
-+	source_port = lan9303_source_port(skb->data);
- 
- 	skb->dev = dsa_master_find_slave(dev, 0, source_port);
- 	if (!skb->dev) {
-@@ -117,13 +132,14 @@ static struct sk_buff *lan9303_rcv(struct sk_buff *skb, struct net_device *dev,
- 		return NULL;
- 	}
- 
-+	skb->offload_fwd_mark = !lan9303_trapped_to_cpu(skb->data);
+-	phdr = (__be16 *)(skb->data - 2);
+-	hdr = ntohs(*phdr);
++	port = mtk_tag_source_port(skb->data);
 +
- 	/* remove the special VLAN tag between the MAC addresses
- 	 * and the current ethertype field.
- 	 */
- 	skb_pull_rcsum(skb, 2 + 2);
- 	memmove(skb->data - ETH_HLEN, skb->data - (ETH_HLEN + LAN9303_TAG_LEN),
- 		2 * ETH_ALEN);
--	skb->offload_fwd_mark = !(lan9303_tag1 & LAN9303_TAG_RX_TRAPPED_TO_CPU);
++	skb->dev = dsa_master_find_slave(dev, 0, port);
++	if (!skb->dev)
++		return NULL;
  
+ 	/* Remove MTK tag and recalculate checksum. */
+ 	skb_pull_rcsum(skb, MTK_HDR_LEN);
+@@ -79,21 +92,14 @@ static struct sk_buff *mtk_tag_rcv(struct sk_buff *skb, struct net_device *dev,
+ 		skb->data - ETH_HLEN - MTK_HDR_LEN,
+ 		2 * ETH_ALEN);
+ 
+-	/* Get source port information */
+-	port = (hdr & MTK_HDR_RECV_SOURCE_PORT_MASK);
+-
+-	skb->dev = dsa_master_find_slave(dev, 0, port);
+-	if (!skb->dev)
+-		return NULL;
+-
  	return skb;
  }
-@@ -132,7 +148,7 @@ static void lan9303_flow_dissect(const struct sk_buff *skb, __be16 *proto,
+ 
+ static void mtk_tag_flow_dissect(const struct sk_buff *skb, __be16 *proto,
  				 int *offset)
  {
- 	*offset = LAN9303_TAG_LEN;
--	*proto = *(__be16 *)(skb->data + 2);
-+	*proto = lan9303_encap_proto(skb->data);
+-	*offset = 4;
+-	*proto = ((__be16 *)skb->data)[1];
++	*offset = MTK_HDR_LEN;
++	*proto = mtk_tag_encap_proto(skb->data);
  }
  
- static const struct dsa_device_ops lan9303_netdev_ops = {
+ static const struct dsa_device_ops mtk_netdev_ops = {
 -- 
 2.24.1
 
