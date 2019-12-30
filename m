@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A80C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 11:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A70C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 11:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FC2D2080A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 11:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59684206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 11:14:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UIDDn1z8"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OeQl7ZMy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfL3LOG (ORCPT
+        id S1727534AbfL3LOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 06:14:06 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1277 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727471AbfL3LOE (ORCPT
+        Mon, 30 Dec 2019 06:14:12 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15551 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727521AbfL3LOJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 06:14:04 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e09dbed0001>; Mon, 30 Dec 2019 03:13:49 -0800
+        Mon, 30 Dec 2019 06:14:09 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e09dbd70000>; Mon, 30 Dec 2019 03:13:27 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 30 Dec 2019 03:14:03 -0800
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 30 Dec 2019 03:14:07 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 30 Dec 2019 03:14:03 -0800
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL101.nvidia.com
+        by hqpgpgate102.nvidia.com on Mon, 30 Dec 2019 03:14:07 -0800
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL101.nvidia.com
  (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 30 Dec
- 2019 11:14:03 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 30 Dec 2019 11:14:03 +0000
+ 2019 11:14:06 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 30 Dec 2019 11:14:06 +0000
 Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.64.167]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e09dbf70004>; Mon, 30 Dec 2019 03:14:02 -0800
+        id <B5e09dbfb0001>; Mon, 30 Dec 2019 03:14:06 -0800
 From:   Nagarjuna Kristam <nkristam@nvidia.com>
 To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
@@ -45,9 +45,9 @@ To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
 CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V3 07/18] phy: tegra: xusb: Add set_mode support for utmi phy on Tegra186
-Date:   Mon, 30 Dec 2019 16:39:44 +0530
-Message-ID: <1577704195-2535-8-git-send-email-nkristam@nvidia.com>
+Subject: [Patch V3 08/18] usb: xhci-tegra: Add OTG support
+Date:   Mon, 30 Dec 2019 16:39:45 +0530
+Message-ID: <1577704195-2535-9-git-send-email-nkristam@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1577704195-2535-1-git-send-email-nkristam@nvidia.com>
 References: <1577704195-2535-1-git-send-email-nkristam@nvidia.com>
@@ -55,166 +55,322 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1577704429; bh=KV+RvZVcS5R2rrUVtJwt3OsWge2zRuD3fZVV5DbWXpE=;
+        t=1577704407; bh=CWLWVkN0Jof9BSC/KWNkmy+1QH7B3d1pS9skdsKBiX4=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=UIDDn1z85Nq6LCqY6n96wPxQvvxsFAa23oiscbLIh0pnkd4GQKxIYS90gdZSTzMFe
-         yWxucpNXU3D3Ai1E6PE5hzxwGuUwxZmykPxJxRwyXnNVUqHubfhN8lybIQ5sve7sVB
-         MA9qblNXnc9CKh8raC14Y5zSfRdBz6aOdovYiGPzEQ6ulIFLAhrZQNWTNTCuC0/l6Y
-         Cm4F7XPr80aaUs8JSFBOrBBPWH1ye50Z47+SzqEAoq6S7wOO4ib1uLkd3qip4R/PJL
-         ds0cRsROvtrZwOF0r/545G9Bt0wKgvvI5wEW9WFV6jvu4d4EMiBNn7yXYrWFE2zy/2
-         EukDA6/nP43Ig==
+        b=OeQl7ZMyKxMrybSdfNKfzhqPrXhIUymEBhpWO0wwws68Er5UyEW5Mtl5NmdPhzwAK
+         h7bb9K2uPsGjicmpzIfRvmAu4E6MEnJ5LEUU1lnPIq9r+TSuY2iVIywHr1cJ4V4ry0
+         Lim5BPQGFB1fFdAD3b5gGrhaj5PQGxUpQXrYbxZCMC2Vk9Ov430nyZASHsSD9kvdNC
+         5X3nUexwqXU0XQUusM3ev8rIwSOmj1mJzDZwRw2OSEr0pXKP3fED6Rkt+KnPUvtDWI
+         ajfH4Sit0gqNlzDlWlqntfnGT2Ty7kX799e/LA1jfbxQcG08RzlYlZSZkvAfc1uEt5
+         B14uirLEcNj3g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for set_mode on utmi phy. This allow XUSB host/device mode
-drivers to configure the hardware to corresponding modes.
+Get usb-phy's for availbale USB 2 phys. Register id notifiers for available
+usb-phy's to receive role change notifications. Perform PP for the received
+role change usb ports.
 
 Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
 ---
-V2-V3:
+V3:
  - No changes in this version
 ---
- drivers/phy/tegra/xusb-tegra186.c | 109 ++++++++++++++++++++++++++++++--------
- 1 file changed, 87 insertions(+), 22 deletions(-)
+V2:
+ - Removed extra line before tegra_xusb_probe API.
+---
+ drivers/usb/host/xhci-tegra.c | 225 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 224 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/phy/tegra/xusb-tegra186.c b/drivers/phy/tegra/xusb-tegra186.c
-index 84c2739..9a45160 100644
---- a/drivers/phy/tegra/xusb-tegra186.c
-+++ b/drivers/phy/tegra/xusb-tegra186.c
-@@ -301,6 +301,92 @@ static void tegra_phy_xusb_utmi_pad_power_down(struct phy *phy)
- 	tegra186_utmi_bias_pad_power_off(padctl);
- }
+diff --git a/drivers/usb/host/xhci-tegra.c b/drivers/usb/host/xhci-tegra.c
+index 0b58ef3..22f1d36 100644
+--- a/drivers/usb/host/xhci-tegra.c
++++ b/drivers/usb/host/xhci-tegra.c
+@@ -24,6 +24,9 @@
+ #include <linux/regulator/consumer.h>
+ #include <linux/reset.h>
+ #include <linux/slab.h>
++#include <linux/usb/otg.h>
++#include <linux/usb/phy.h>
++#include <linux/usb/role.h>
+ #include <soc/tegra/pmc.h>
  
-+static int tegra186_xusb_padctl_vbus_override(struct tegra_xusb_padctl *padctl,
-+					       bool status)
-+{
-+	u32 value;
-+
-+	dev_dbg(padctl->dev, "%s vbus override\n", status ? "set" : "clear");
-+
-+	value = padctl_readl(padctl, USB2_VBUS_ID);
-+
-+	if (status) {
-+		value |= VBUS_OVERRIDE;
-+		value &= ~ID_OVERRIDE(~0);
-+		value |= ID_OVERRIDE_FLOATING;
-+	} else {
-+		value &= ~VBUS_OVERRIDE;
-+	}
-+
-+	padctl_writel(padctl, value, USB2_VBUS_ID);
-+
-+	return 0;
-+}
-+
-+static int tegra186_xusb_padctl_id_override(struct tegra_xusb_padctl *padctl,
-+					    bool status)
-+{
-+	u32 value;
-+
-+	dev_dbg(padctl->dev, "%s id override\n", status ? "set" : "clear");
-+
-+	value = padctl_readl(padctl, USB2_VBUS_ID);
-+
-+	if (status) {
-+		if (value & VBUS_OVERRIDE) {
-+			value &= ~VBUS_OVERRIDE;
-+			padctl_writel(padctl, value, USB2_VBUS_ID);
-+			usleep_range(1000, 2000);
-+
-+			value = padctl_readl(padctl, USB2_VBUS_ID);
-+		}
-+
-+		value &= ~ID_OVERRIDE(~0);
-+		value |= ID_OVERRIDE_GROUNDED;
-+	} else {
-+		value &= ~ID_OVERRIDE(~0);
-+		value |= ID_OVERRIDE_FLOATING;
-+	}
-+
-+	padctl_writel(padctl, value, USB2_VBUS_ID);
-+
-+	return 0;
-+}
-+
-+static int tegra186_utmi_phy_set_mode(struct phy *phy, enum phy_mode mode,
-+				      int submode)
-+{
-+	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
-+	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
-+	struct tegra_xusb_usb2_port *port = tegra_xusb_find_usb2_port(padctl,
-+								lane->index);
-+	int err = 0;
-+
-+	mutex_lock(&padctl->lock);
-+
-+	dev_dbg(&port->base.dev, "%s: mode %d", __func__, mode);
-+
-+	if (mode == PHY_MODE_USB_OTG) {
-+		if (submode == USB_ROLE_HOST) {
-+			tegra186_xusb_padctl_id_override(padctl, true);
-+
-+			err = regulator_enable(port->supply);
-+		} else if (submode == USB_ROLE_DEVICE) {
-+			tegra186_xusb_padctl_vbus_override(padctl, true);
-+		} else if (submode == USB_ROLE_NONE) {
-+			if (regulator_is_enabled(port->supply))
-+				regulator_disable(port->supply);
-+
-+			tegra186_xusb_padctl_id_override(padctl, false);
-+			tegra186_xusb_padctl_vbus_override(padctl, false);
-+		}
-+	}
-+
-+	mutex_unlock(&padctl->lock);
-+
-+	return err;
-+}
-+
- static int tegra186_utmi_phy_power_on(struct phy *phy)
- {
- 	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
-@@ -439,6 +525,7 @@ static const struct phy_ops utmi_phy_ops = {
- 	.exit = tegra186_utmi_phy_exit,
- 	.power_on = tegra186_utmi_phy_power_on,
- 	.power_off = tegra186_utmi_phy_power_off,
-+	.set_mode = tegra186_utmi_phy_set_mode,
- 	.owner = THIS_MODULE,
+ #include "xhci.h"
+@@ -203,6 +206,7 @@ struct tegra_xusb_soc {
+ 
+ 	bool scale_ss_clock;
+ 	bool has_ipfs;
++	bool otg_reset_sspi;
  };
  
-@@ -857,28 +944,6 @@ static void tegra186_xusb_padctl_remove(struct tegra_xusb_padctl *padctl)
- {
+ struct tegra_xusb_context {
+@@ -250,6 +254,14 @@ struct tegra_xusb {
+ 	struct phy **phys;
+ 	unsigned int num_phys;
+ 
++	struct usb_phy **usbphy;
++	unsigned int num_usb_phys;
++	int otg_usb2_port;
++	int otg_usb3_port;
++	bool host_mode;
++	struct notifier_block id_nb;
++	struct work_struct id_work;
++
+ 	/* Firmware loading related */
+ 	struct {
+ 		size_t size;
+@@ -1081,6 +1093,205 @@ static int tegra_xusb_enable_firmware_messages(struct tegra_xusb *tegra)
+ 	return err;
  }
  
--static int tegra186_xusb_padctl_vbus_override(struct tegra_xusb_padctl *padctl,
--					       bool status)
--{
--	u32 value;
--
--	dev_dbg(padctl->dev, "%s vbus override\n", status ? "set" : "clear");
--
--	value = padctl_readl(padctl, USB2_VBUS_ID);
--
--	if (status) {
--		value |= VBUS_OVERRIDE;
--		value &= ~ID_OVERRIDE(~0);
--		value |= ID_OVERRIDE_FLOATING;
--	} else {
--		value &= ~VBUS_OVERRIDE;
--	}
--
--	padctl_writel(padctl, value, USB2_VBUS_ID);
--
--	return 0;
--}
--
- static const struct tegra_xusb_padctl_ops tegra186_xusb_padctl_ops = {
- 	.probe = tegra186_xusb_padctl_probe,
- 	.remove = tegra186_xusb_padctl_remove,
++static void tegra_xhci_set_port_power(struct tegra_xusb *tegra, bool main,
++						 bool set)
++{
++	struct xhci_hcd *xhci = hcd_to_xhci(tegra->hcd);
++	struct usb_hcd *hcd = main ?  xhci->main_hcd : xhci->shared_hcd;
++	int wait = (!main && !set) ? 1000 : 10;
++	u16 typeReq = set ? SetPortFeature : ClearPortFeature;
++	u16 wIndex = main ? tegra->otg_usb2_port + 1 : tegra->otg_usb3_port + 1;
++	u32 status;
++	u32 stat_power = main ? USB_PORT_STAT_POWER : USB_SS_PORT_STAT_POWER;
++	u32 status_val = set ? stat_power : 0;
++
++	dev_dbg(tegra->dev, "%s:%s %s PP\n", __func__, set ? "set" : "clear",
++							main ? "HS" : "SS");
++
++	tegra_xhci_hc_driver.hub_control(hcd, typeReq, USB_PORT_FEAT_POWER,
++					 wIndex, NULL, 0);
++
++	do {
++		tegra_xhci_hc_driver.hub_control(hcd, GetPortStatus, 0, wIndex,
++					(char *) &status, sizeof(status));
++		if (status_val == (status & stat_power))
++			break;
++
++		if (!main && !set)
++			usleep_range(600, 700);
++		else
++			usleep_range(10, 20);
++	} while (--wait > 0);
++
++	if (status_val != (status & stat_power))
++		dev_info(tegra->dev, "failed to %s %s PP %d\n",
++						set ? "set" : "clear",
++						main ? "HS" : "SS", status);
++}
++
++static struct phy *tegra_xusb_get_phy(struct tegra_xusb *tegra, char *name,
++								int port)
++{
++	int i, phy_count = 0;
++
++	for (i = 0; i < tegra->soc->num_types; i++) {
++		if (!strncmp(tegra->soc->phy_types[i].name, "usb2",
++							    strlen(name)))
++			return tegra->phys[phy_count+port];
++
++		phy_count += tegra->soc->phy_types[i].num;
++	}
++
++	return NULL;
++}
++
++static void tegra_xhci_id_work(struct work_struct *work)
++{
++	struct tegra_xusb *tegra = container_of(work, struct tegra_xusb,
++						id_work);
++	struct xhci_hcd *xhci = hcd_to_xhci(tegra->hcd);
++	struct tegra_xusb_mbox_msg msg;
++	struct phy *phy = tegra_xusb_get_phy(tegra, "usb2",
++						    tegra->otg_usb2_port);
++	u32 status;
++	int ret;
++
++	dev_dbg(tegra->dev, "host mode %s\n", tegra->host_mode ? "on" : "off");
++
++	mutex_lock(&tegra->lock);
++
++	if (tegra->host_mode)
++		phy_set_mode_ext(phy, PHY_MODE_USB_OTG, USB_ROLE_HOST);
++	else
++		phy_set_mode_ext(phy, PHY_MODE_USB_OTG, USB_ROLE_NONE);
++
++	mutex_unlock(&tegra->lock);
++
++	if (tegra->host_mode) {
++		/* switch to host mode */
++		if (tegra->otg_usb3_port >= 0) {
++			if (tegra->soc->otg_reset_sspi) {
++				/* set PP=0 */
++				tegra_xhci_hc_driver.hub_control(
++					xhci->shared_hcd, GetPortStatus,
++					0, tegra->otg_usb3_port+1,
++					(char *) &status, sizeof(status));
++				if (status & USB_SS_PORT_STAT_POWER)
++					tegra_xhci_set_port_power(tegra, false,
++								  false);
++
++				/* reset OTG port SSPI */
++				msg.cmd = MBOX_CMD_RESET_SSPI;
++				msg.data = tegra->otg_usb3_port+1;
++
++				ret = tegra_xusb_mbox_send(tegra, &msg);
++				if (ret < 0) {
++					dev_info(tegra->dev,
++						"failed to RESET_SSPI %d\n",
++						ret);
++				}
++			}
++
++			tegra_xhci_set_port_power(tegra, false, true);
++		}
++
++		tegra_xhci_set_port_power(tegra, true, true);
++
++	} else {
++		if (tegra->otg_usb3_port >= 0)
++			tegra_xhci_set_port_power(tegra, false, false);
++
++		tegra_xhci_set_port_power(tegra, true, false);
++	}
++}
++
++static int tegra_xusb_get_usb2_port(struct tegra_xusb *tegra,
++					      struct usb_phy *usbphy)
++{
++	int i;
++
++	for (i = 0; i < tegra->num_usb_phys; i++) {
++		if (tegra->usbphy[i] && usbphy == tegra->usbphy[i])
++			return i;
++	}
++
++	return -1;
++}
++
++static int tegra_xhci_id_notify(struct notifier_block *nb,
++					 unsigned long action, void *data)
++{
++	struct tegra_xusb *tegra = container_of(nb, struct tegra_xusb,
++						    id_nb);
++	struct usb_phy *usbphy = (struct usb_phy *)data;
++
++	dev_dbg(tegra->dev, "%s: action is %ld", __func__, action);
++
++	if ((tegra->host_mode && action == USB_ROLE_HOST) ||
++		(!tegra->host_mode && action != USB_ROLE_HOST)) {
++		dev_dbg(tegra->dev, "Same role(%d) received. Ignore",
++							tegra->host_mode);
++		return NOTIFY_OK;
++	}
++
++	tegra->otg_usb2_port = tegra_xusb_get_usb2_port(tegra, usbphy);
++	tegra->otg_usb3_port = tegra_xusb_padctl_get_usb3_companion(
++							tegra->padctl,
++							tegra->otg_usb2_port);
++
++	tegra->host_mode = (action == USB_ROLE_HOST) ? true : false;
++
++	schedule_work(&tegra->id_work);
++
++	return NOTIFY_OK;
++}
++
++static int tegra_xusb_init_usb_phy(struct tegra_xusb *tegra)
++{
++	int i;
++
++	tegra->usbphy = devm_kcalloc(tegra->dev, tegra->num_usb_phys,
++				   sizeof(*tegra->usbphy), GFP_KERNEL);
++	if (!tegra->usbphy)
++		return -ENOMEM;
++
++	INIT_WORK(&tegra->id_work, tegra_xhci_id_work);
++	tegra->id_nb.notifier_call = tegra_xhci_id_notify;
++
++	for (i = 0; i < tegra->num_usb_phys; i++) {
++		struct phy *phy = tegra_xusb_get_phy(tegra, "usb2", i);
++
++		if (!phy)
++			continue;
++
++		tegra->usbphy[i] = devm_usb_get_phy_by_node(tegra->dev,
++							phy->dev.of_node,
++							&tegra->id_nb);
++		if (!IS_ERR(tegra->usbphy[i])) {
++			dev_dbg(tegra->dev, "usbphy-%d registered", i);
++			otg_set_host(tegra->usbphy[i]->otg, &tegra->hcd->self);
++		} else {
++			/*
++			 * usb-phy is optional, continue if its not available.
++			 */
++			tegra->usbphy[i] = NULL;
++		}
++	}
++
++	return 0;
++}
++
++static void tegra_xusb_deinit_usb_phy(struct tegra_xusb *tegra)
++{
++	int i;
++
++	cancel_work_sync(&tegra->id_work);
++
++	for (i = 0; i < tegra->num_usb_phys; i++)
++		if (tegra->usbphy[i])
++			otg_set_host(tegra->usbphy[i]->otg, NULL);
++}
++
+ static int tegra_xusb_probe(struct platform_device *pdev)
+ {
+ 	struct tegra_xusb *tegra;
+@@ -1254,8 +1465,11 @@ static int tegra_xusb_probe(struct platform_device *pdev)
+ 		goto put_powerdomains;
+ 	}
+ 
+-	for (i = 0; i < tegra->soc->num_types; i++)
++	for (i = 0; i < tegra->soc->num_types; i++) {
++		if (!strncmp(tegra->soc->phy_types[i].name, "usb2", 4))
++			tegra->num_usb_phys = tegra->soc->phy_types[i].num;
+ 		tegra->num_phys += tegra->soc->phy_types[i].num;
++	}
+ 
+ 	tegra->phys = devm_kcalloc(&pdev->dev, tegra->num_phys,
+ 				   sizeof(*tegra->phys), GFP_KERNEL);
+@@ -1384,6 +1598,12 @@ static int tegra_xusb_probe(struct platform_device *pdev)
+ 		goto remove_usb3;
+ 	}
+ 
++	err = tegra_xusb_init_usb_phy(tegra);
++	if (err < 0) {
++		dev_err(&pdev->dev, "failed to Init usb-phy: %d\n", err);
++		goto remove_usb3;
++	}
++
+ 	return 0;
+ 
+ remove_usb3:
+@@ -1420,6 +1640,8 @@ static int tegra_xusb_remove(struct platform_device *pdev)
+ 	struct tegra_xusb *tegra = platform_get_drvdata(pdev);
+ 	struct xhci_hcd *xhci = hcd_to_xhci(tegra->hcd);
+ 
++	tegra_xusb_deinit_usb_phy(tegra);
++
+ 	usb_remove_hcd(xhci->shared_hcd);
+ 	usb_put_hcd(xhci->shared_hcd);
+ 	xhci->shared_hcd = NULL;
+@@ -1733,6 +1955,7 @@ static const struct tegra_xusb_soc tegra210_soc = {
+ 	},
+ 	.scale_ss_clock = false,
+ 	.has_ipfs = true,
++	.otg_reset_sspi = true,
+ 	.mbox = {
+ 		.cmd = 0xe4,
+ 		.data_in = 0xe8,
 -- 
 2.7.4
 
