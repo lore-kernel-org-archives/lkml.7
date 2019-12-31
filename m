@@ -2,170 +2,96 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1D8C2D0DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 15:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 771BAC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 15:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA0F4206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 15:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41E3C206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 15:55:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="O2w2n9iG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s773QcfH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfLaPvR (ORCPT
+        id S1727082AbfLaPzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 10:51:17 -0500
-Received: from mail-bn7nam10on2137.outbound.protection.outlook.com ([40.107.92.137]:20673
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726709AbfLaPvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 10:51:16 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lDhTImBE2lWLiH+cd8IV4JCQFCZQQJzVLIhjXpT9a/JkS7INKjYIN5qxWqyjJae/jhGPHp+yBywYTIyFaxoPEgxU0lMC7wzJBFoYQsEpFCVX9jV2WWKs62edCoF+ToDBk+uCRhK2t0yz/0IA0kJGnH/nKzs68qtMyCPlEhsXwxl27tKsLO8Sf6uAht4BQ5O51bpre/vWMhiKWqODzKH66iWhmr/m5czg9QckXNe8YxLfnn6wZ6s+NeDZC21R04Z2MslyHSO61mvmewNcQiBEWml48hS1P/Cj/PgKhOn5g4wrzGNJXjhYJa+BqdEfQELqAJc/g1JhnuUmRUwTUAxLdg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4Tnji/5dEtitg6PXF3qqaxMJLFry99yVx1A6+EgyjeE=;
- b=I0WOHI7vlDTsYn+nxeNDgngUQsUOBhlk/JtcQ8K0E9hu6smTTmfs2zITyAU25DOVenJxglSDIgdidRz8BGzIXASF7MDvqIgYkLjPMWoens88eboWDFlqXIGfY7C80HK3i6oRrc2lOgGVYN/ONaa97Ns174btlF29tPHMnZDyZcRX8VbOAtO0Sd519J/Q73eGFNPFNZvF3dD5Y9rYffO9ZUBQshvIWkOREqOUZBwdA2OzGLVAqTqETGdLFZ7EWiBDizYfGvuxS2ehPAz1Z9LHJnn2S6GpmQ6nzGPi5sLRQyQNTxAMMoc6mKPp8D2d6RaaxXpfup8Z/6398OgOzZXpUQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4Tnji/5dEtitg6PXF3qqaxMJLFry99yVx1A6+EgyjeE=;
- b=O2w2n9iGhm35JtW8dUYjCFm9bD1ERObPh6u9WjrU6QmpEbAiOMuNW/3ni1S7rZ3G6e6LgTxGVPvE3PQheiURPxgvb5NR2kCYZOtEdb5API6Xe9wuzOcteLpxozOcDgrHHigt5lTd/XpwydehL9gUC3QB+1sn5JNe+NbnaozOEJ0=
-Received: from MN2PR21MB1375.namprd21.prod.outlook.com (20.179.23.160) by
- MN2PR21MB1181.namprd21.prod.outlook.com (20.179.20.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.1; Tue, 31 Dec 2019 15:50:32 +0000
-Received: from MN2PR21MB1375.namprd21.prod.outlook.com
- ([fe80::6de3:c062:9e55:ffc4]) by MN2PR21MB1375.namprd21.prod.outlook.com
- ([fe80::6de3:c062:9e55:ffc4%5]) with mapi id 15.20.2623.002; Tue, 31 Dec 2019
- 15:50:32 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH V2,net-next, 2/3] Drivers: hv: vmbus: Add dev_num to sysfs
-Thread-Topic: [PATCH V2,net-next, 2/3] Drivers: hv: vmbus: Add dev_num to
- sysfs
-Thread-Index: AQHVv025lnTAhtETw0K5slPlS9br8qfTdmuAgADumHA=
-Date:   Tue, 31 Dec 2019 15:50:32 +0000
-Message-ID: <MN2PR21MB1375DB84228137F30E9C1891CA260@MN2PR21MB1375.namprd21.prod.outlook.com>
-References: <1577736814-21112-1-git-send-email-haiyangz@microsoft.com>
- <1577736814-21112-3-git-send-email-haiyangz@microsoft.com>
- <CY4PR21MB06299FE9E4C2023C6D886C84D7260@CY4PR21MB0629.namprd21.prod.outlook.com>
-In-Reply-To: <CY4PR21MB06299FE9E4C2023C6D886C84D7260@CY4PR21MB0629.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-31T01:34:57.1055604Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b5945d63-4c80-451a-8e09-e5ef2be28581;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haiyangz@microsoft.com; 
-x-originating-ip: [96.61.92.94]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f97d7ee8-eb4c-474f-e430-08d78e092b09
-x-ms-traffictypediagnostic: MN2PR21MB1181:|MN2PR21MB1181:|MN2PR21MB1181:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MN2PR21MB11814FDC5BCE017EF26352B5CA260@MN2PR21MB1181.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0268246AE7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(39860400002)(376002)(346002)(396003)(199004)(189003)(13464003)(9686003)(55016002)(10290500003)(86362001)(52536014)(2906002)(4326008)(186003)(26005)(54906003)(81166006)(81156014)(33656002)(66446008)(71200400001)(53546011)(66946007)(8990500004)(478600001)(6506007)(8676002)(316002)(76116006)(66556008)(110136005)(5660300002)(8936002)(64756008)(66476007)(7696005);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR21MB1181;H:MN2PR21MB1375.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: DDdQ8lC+FySkAGjTJ5U0X3Lhd+6pDtFfef+Od/iqa1JzMaTkgiSsM4NjD1svRHyNm1Sub0yMz1cAXTJM0ANxeZFOMMfxCVhw859XAtQs0lcPU1HXeVnpdtEll2d/CFSc45vMXvVtD4q91ltLn9O1ZsOCr9JVJriDV2WTskUnV4L1mT1hRmFV/Qa6XdL1HqA1AdssaYGF47VEHMa0bBqkG0SWA40e2kcKe24/cIae9yabcFNj+W7bUacCup4oBmtjlIVfDeRn3l1JD2MeE98axkbCxWmwhpXdsoGtWhnbT46B2hHUjtkP5c5TldEMpH8+qDfLN88nOldMwSpIBqz3CDX1LvGNxnUSi7OkW8oobaw9UnoF96Qsdy0fPeO2nLB67L9hWFVutotRSgA6ZriAsGlsjtqBT1efilHRCDrwvR4Z/nOOrWH8UMYNaqiEVeBGZJAtl0u8aSnoJ3TmriROaF7n4kUsqsJ7h5A0abGnvJKWxj9I/dUARGEMw2fBnkVR
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 31 Dec 2019 10:55:37 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:36074 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbfLaPzg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 10:55:36 -0500
+Received: by mail-il1-f194.google.com with SMTP id b15so30470267iln.3
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Dec 2019 07:55:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=3DNheO3oS1Fazjy7+wOUP9je7WySuIpsBaJSqQ+NApo=;
+        b=s773QcfHyOlV140Bzd6aNCFnrw0uIV6s50/TY+aEsI1m3O5e2knjR5JnriC3eu7T0p
+         sK719RKGjCC3Lt4uVPYQaCuZgJH+D5Fv6YgVO/lLDKfMvz7JU2xaDtVWYEaY9lbCRcK+
+         DyBwhDjfbuYEWcluCl6RBxFL460nMvb7uX1z9aUSEYh1Ey7Q6rp7n3VLDMZzH870Aljq
+         26e10iVWEM3+fou3mk+7BifbbHMASb/Fj4Gd+OcdvE9wLwS0IicPp8O7HPiOsdns+GCA
+         eU2yeIukqN1FuC6h8tg6aRFVG4delSOQmUH2TK6PGP5fE8IHxOLXGgUenbiNv4t9gieA
+         /PIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=3DNheO3oS1Fazjy7+wOUP9je7WySuIpsBaJSqQ+NApo=;
+        b=qDoC6sc0jxgDyoo/BEdfdJfyMlBPks+zls+p+nBhlmdjbCIH8IMCJMuLJFWQBNt0qr
+         ZRTtNXs0dfJhrUXO9O8OkP+wQyooxXupCwu2BIEXtrGmGrKbY/Ztn1nZGm1qF3cB/pxs
+         8Wqss44NgdKGwWxIswf78KnzOCEJ98kw0TJ0HwK67DNK6bpMluDyuR+LVN3Y6xspndMI
+         VTrkSepXsOMNd+Wj5gjKISJG8Uy/MW6ADbRoi84+uNiAfhONgcOiM6iywMEb3QOYj8NZ
+         UHkg84evHkJ0S8g44v93i3XLtY1BZnUxRHpV34KFg8NW/f64SKROWmEdMd/dOdEHcspx
+         7hWw==
+X-Gm-Message-State: APjAAAVYAMDm5MNRZjX6Ydyob1RHCzqqJQtfZfR4D2sTm5h6IhKLphxC
+        t5CqN4+BBRj5jrvK1e4hDw5K5V1um5VliHV9thlTnLDw
+X-Google-Smtp-Source: APXvYqwfj+BpzOwe/8fjcueBMWO7c4PNAPw15oIuvZXpyaDKDUoJFxhXneOYOTtT+PKCz3r4VFlJhonJdzcZPwMj7Nw=
+X-Received: by 2002:a05:6e02:5c8:: with SMTP id l8mr64411761ils.287.1577807736045;
+ Tue, 31 Dec 2019 07:55:36 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f97d7ee8-eb4c-474f-e430-08d78e092b09
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Dec 2019 15:50:32.1944
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: D6AM9JsSqWjl+SiggivMbvIW6b+wb/K13SPanSnaCiEFm89oa0Ed0n3416Ho5/LDfoOm8lQG5Z9IwsVWZUGb8g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1181
+Received: by 2002:ac0:9191:0:0:0:0:0 with HTTP; Tue, 31 Dec 2019 07:55:35
+ -0800 (PST)
+In-Reply-To: <20191231150226.GA523748@light.dominikbrodowski.net>
+References: <20191231150226.GA523748@light.dominikbrodowski.net>
+From:   youling 257 <youling257@gmail.com>
+Date:   Tue, 31 Dec 2019 23:55:35 +0800
+Message-ID: <CAOzgRdaaxN+BFnx8p2OabC8E9JgcU2VKM=MeGmn9ecmdhJrfLA@mail.gmail.com>
+Subject: Re: [PATCH] early init: open /dev/console with O_LARGEFILE
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+test this patch, still can see /system/bin/sh warning.
+this patch no help for me.
 
-
-> -----Original Message-----
-> From: Michael Kelley <mikelley@microsoft.com>
-> Sent: Monday, December 30, 2019 8:35 PM
-> To: Haiyang Zhang <haiyangz@microsoft.com>; sashal@kernel.org; linux-
-> hyperv@vger.kernel.org; netdev@vger.kernel.org
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>; KY Srinivasan
-> <kys@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> olaf@aepfle.de; vkuznets <vkuznets@redhat.com>; davem@davemloft.net;
-> linux-kernel@vger.kernel.org
-> Subject: RE: [PATCH V2,net-next, 2/3] Drivers: hv: vmbus: Add dev_num to =
-sysfs
->=20
-> From: Haiyang Zhang <haiyangz@microsoft.com> Sent: Monday, December 30,
-> 2019 12:14 PM
-> >
-> > It's a number based on the vmbus device offer sequence.
->=20
-> Let's use "VMBus" as the capitalization.
-I will.
-
->=20
-> > Useful for device naming when using Async probing.
-> >
-> > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > ---
-> >  Documentation/ABI/stable/sysfs-bus-vmbus |  8 ++++++++
-> >  drivers/hv/vmbus_drv.c                   | 13 +++++++++++++
-> >  2 files changed, 21 insertions(+)
-> >
-> > diff --git a/Documentation/ABI/stable/sysfs-bus-vmbus
-> > b/Documentation/ABI/stable/sysfs-bus-vmbus
-> > index 8e8d167..a42225d 100644
-> > --- a/Documentation/ABI/stable/sysfs-bus-vmbus
-> > +++ b/Documentation/ABI/stable/sysfs-bus-vmbus
-> > @@ -49,6 +49,14 @@ Contact:	Stephen Hemminger
-> <sthemmin@microsoft.com>
-> >  Description:	This NUMA node to which the VMBUS device is
-> >  		attached, or -1 if the node is unknown.
-> >
-> > +What:           /sys/bus/vmbus/devices/<UUID>/dev_num
-> > +Date:		Dec 2019
-> > +KernelVersion:	5.5
-> > +Contact:	Haiyang Zhang <haiyangz@microsoft.com>
-> > +Description:	A number based on the vmbus device offer sequence.
->=20
-> The capitalization of "VMBus" is already inconsistent in this file in tha=
-t
-> we have "VMBus" and "VMBUS" in the text.  Let's not introduce another
-> capitalization -- use "VMBus".
-
-I will use "VMBus".=20
-Thanks,
-- Haiyang
+2019-12-31 23:02 GMT+08:00, Dominik Brodowski <linux@dominikbrodowski.net>:
+> If force_o_largefile() is true, /dev/console used to be opened
+> with O_LARGEFILE. Retain that behaviour.
+>
+> Fixes: 8243186f0cc7 ("fs: remove ksys_dup()")
+> Signed-off-by: Dominik Brodowski <linux@dominikbrodowski.net>
+>
+> diff --git a/init/main.c b/init/main.c
+> index 1ecfd43ed464..d12777775cb0 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -1162,7 +1162,8 @@ void console_on_rootfs(void)
+>  	unsigned int i;
+>
+>  	/* Open /dev/console in kernelspace, this should never fail */
+> -	file = filp_open("/dev/console", O_RDWR, 0);
+> +	file = filp_open("/dev/console",
+> +			  O_RDWR | (force_o_largefile() ? O_LARGEFILE : 0), 0);
+>  	if (IS_ERR(file))
+>  		goto err_out;
+>
+>
