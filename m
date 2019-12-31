@@ -2,198 +2,188 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68226C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 09:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DADC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 09:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8E1206E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 09:00:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GpIX6Zxz"
+	by mail.kernel.org (Postfix) with ESMTP id 41C63206E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 09:01:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577782913;
+	bh=OPEbXj6ut2/+RxuWeIYRHGdcDr0MPRcBxc7kDmVmoi4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=g/rO4XbeAg6OdsLyHZldPpr0AM8sq63qnETO6JsiZbgG73kFOV0u7rZWXrdMfU5N4
+	 QIVYUQ00jHSvr32cYRxNSf3d3eXG1HN8Ecd3d1MCkpEXlDSjEPLX912fqFp4BvZWgT
+	 quczBYOTZjf/1n5Tq8O0wjPDXhYQegQ6kisjNkBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbfLaJAF (ORCPT
+        id S1726388AbfLaJBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 04:00:05 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:44775 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726627AbfLaJAE (ORCPT
+        Tue, 31 Dec 2019 04:01:52 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:42047 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfLaJBv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 04:00:04 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577782803; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=mBwAPIc5W10c/SxyhAEscSWTZOm3fmLRnox3jUftHDU=; b=GpIX6ZxzK69Ayw1baesS7zG+hd3ENaG0Mh7RHrqrJac3AEvOvAk23VlvT2caAN5mGTbsmrFh
- 7O1sQo2CwHlSW+4ctlbJum4o+miu30WRk6gsJx8VgAL9BjDJpfBiCE+YwcrI3ulb0GWc2o12
- iqHumZp4LLqxBP6LnusKnvybggw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e0b0e0c.7f34277eff48-smtp-out-n02;
- Tue, 31 Dec 2019 08:59:56 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 30CE6C433CB; Tue, 31 Dec 2019 08:59:56 +0000 (UTC)
-Received: from okukatla1-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: okukatla)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 40819C433A2;
-        Tue, 31 Dec 2019 08:59:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 40819C433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=okukatla@codeaurora.org
-From:   Odelu Kukatla <okukatla@codeaurora.org>
-To:     georgi.djakov@linaro.org, daidavid1@codeaurora.org,
-        bjorn.andersson@linaro.org, evgreen@google.com,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     sboyd@kernel.org, ilina@codeaurora.org, seansw@qti.qualcomm.com,
-        elder@linaro.org, linux-pm@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org,
-        Odelu Kukatla <okukatla@codeaurora.org>
-Subject: [V2, 3/3] arm64: dts: sc7180: Add interconnect provider DT nodes
-Date:   Tue, 31 Dec 2019 14:28:57 +0530
-Message-Id: <1577782737-32068-4-git-send-email-okukatla@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1577782737-32068-1-git-send-email-okukatla@codeaurora.org>
-References: <1577782737-32068-1-git-send-email-okukatla@codeaurora.org>
+        Tue, 31 Dec 2019 04:01:51 -0500
+Received: by mail-ed1-f66.google.com with SMTP id e10so34804008edv.9;
+        Tue, 31 Dec 2019 01:01:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fsG2Rvysfchuljlzy9Ww24f+1cIyMb/bwqWGWqBPxTA=;
+        b=oHQNSMoWDOYTX+J0Xxij2zh0YtyVZDpruBzaMwsBW5YdFfdk9koSrkio437+7kaKVp
+         KlIJw4idH2jJiWzI0EuBsB8mMLIzrCtnHR9DhbHmFs0KNTCV8IM4Mo6egok6HGUNTioh
+         8Gf7ORcCpUrPjjpI4R+6P/4ehONTJp/1Kg9m33Utkf95DMy2BY/CXWYK9Xing5aqBVs6
+         cdqODestYGcov20PjIFBW2yRN0mNd1SVav51z9FBiSpWSj63FCebjxrFXM04Zrj7E3k7
+         sC3kYybBjuV2JzG91rCEBlLilc2zcCSHbnpmYLZCn5FUjodYgAiPYV3qPrji2c0jwTCH
+         I46w==
+X-Gm-Message-State: APjAAAUXaLUc+Mk2/NcKx6eJYC57E86uQyyPp1kuUTIzhEMZvnO6MNiY
+        cg4uZ1FO6FCj12EXWFF4TQE=
+X-Google-Smtp-Source: APXvYqz82hNmJu4of9b2ODZh3tiQxLGmLoxEe04E5J/Dd76pnUZV2tjhsjz623nry1WIbNOSJIhtLQ==
+X-Received: by 2002:aa7:d956:: with SMTP id l22mr63653779eds.66.1577782909712;
+        Tue, 31 Dec 2019 01:01:49 -0800 (PST)
+Received: from pi3 ([194.230.155.138])
+        by smtp.googlemail.com with ESMTPSA id f10sm5758675eds.31.2019.12.31.01.01.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Dec 2019 01:01:49 -0800 (PST)
+Date:   Tue, 31 Dec 2019 10:01:46 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Jean Delvare <jdelvare@suse.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Max Staudt <max@enpas.org>,
+        Juergen Fitschen <jfi@ssv-embedded.de>,
+        Elie Morisse <syniurge@gmail.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 5/5] i2c: Enable compile testing for some of drivers
+Message-ID: <20191231090146.GA6872@pi3>
+References: <20191230172751.17985-1-krzk@kernel.org>
+ <20191230172751.17985-5-krzk@kernel.org>
+ <CAMuHMdUXJo3=x32xbfSUXs3O3JHaFpfxt0mHupEb+vzi=5+S4g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUXJo3=x32xbfSUXs3O3JHaFpfxt0mHupEb+vzi=5+S4g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the DT nodes for the network-on-chip interconnect buses found
-on sc7180-based platforms.
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 96 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 96 insertions(+)
+On Mon, Dec 30, 2019 at 08:11:03PM +0100, Geert Uytterhoeven wrote:
+> Hi Krzysztof,
+> 
+> On Mon, Dec 30, 2019 at 6:28 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > Some of the I2C bus drivers can be compile tested to increase build
+> > coverage.  This requires also:
+> > 1. Adding dependencies on COMMON_CLK for BCM2835 and Meson I2C
+> >    controllers,
+> > 2. Adding 'if' conditional to 'default y' so they will not get enabled
+> >    by default on all other architectures,
+> > 3. Limiting few compile test options to supported architectures (which
+> >    provide the readsX()/writesX() primitives).
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> Thanks for your patch!
+> 
+> > --- a/drivers/i2c/busses/Kconfig
+> > +++ b/drivers/i2c/busses/Kconfig
+> > @@ -367,7 +367,7 @@ comment "I2C system bus drivers (mostly embedded / system-on-chip)"
+> >
+> >  config I2C_ALTERA
+> >         tristate "Altera Soft IP I2C"
+> > -       depends on (ARCH_SOCFPGA || NIOS2) && OF
+> > +       depends on (ARCH_SOCFPGA || NIOS2 || COMPILE_TEST) && OF
+> 
+> Might be easier to read and maintain by splitting in "hard" and "useful"
+> dependencies:
+> 
+>     depends on OF
+>     depends on ARCH_SOCFPGA || NIOS2 || COMPILE_TEST
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 3676bfd..077b1e5 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/clock/qcom,gcc-sc7180.h>
- #include <dt-bindings/clock/qcom,rpmh.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/interconnect/qcom,sc7180.h>
- #include <dt-bindings/phy/phy-qcom-qusb2.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
- 
-@@ -1286,6 +1287,10 @@
- 				clock-names = "xo";
- 				#clock-cells = <1>;
- 			};
-+
-+			apps_bcm_voter: bcm_voter {
-+				compatible = "qcom,sc7180-bcm-voter";
-+			};
- 		};
- 
- 		cpufreq_hw: cpufreq@18323000 {
-@@ -1298,6 +1303,97 @@
- 
- 			#freq-domain-cells = <1>;
- 		};
-+
-+		config_noc: interconnect@1500000 {
-+			compatible = "qcom,sc7180-config-noc";
-+			reg = <0 0x01500000 0 0x28000>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		system_noc: interconnect@1620000 {
-+			compatible = "qcom,sc7180-system-noc";
-+			reg = <0 0x01620000 0 0x17080>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		mc_virt: interconnect@1630000 {
-+			compatible = "qcom,sc7180-mc-virt";
-+			reg = <0 0x01630000 0 0x4000>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		qup_virt: interconnect@1650000 {
-+			compatible = "qcom,sc7180-qup-virt";
-+			reg = <0 0x01650000 0 0x4000>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		aggre1_noc: interconnect@16e0000 {
-+			compatible = "qcom,sc7180-aggre1-noc";
-+			reg = <0 0x016e0000 0 0x15080>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		aggre2_noc: interconnect@1700000 {
-+			compatible = "qcom,sc7180-aggre2-noc";
-+			reg = <0 0x01700000 0 0x1f880>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		compute_noc: interconnect@170e000 {
-+			compatible = "qcom,sc7180-compute-noc";
-+			reg = <0 0x0170e000 0 0x11880>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		mmss_noc: interconnect@1740000 {
-+			compatible = "qcom,sc7180-mmss-noc";
-+			reg = <0 0x01740000 0 0x1c100>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		ipa_virt: interconnect@1e00000 {
-+			compatible = "qcom,sc7180-ipa-virt";
-+			reg = <0 0x01e00000 0 0x4000>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		dc_noc: interconnect@9160000 {
-+			compatible = "qcom,sc7180-dc-noc";
-+			reg = <0 0x09160000 0 0x03200>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		gem_noc: interconnect@9680000 {
-+			compatible = "qcom,sc7180-gem-noc";
-+			reg = <0 0x09680000 0 0x3e200>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		npu_noc: interconnect@9990000 {
-+			compatible = "qcom,sc7180-npu-noc";
-+			reg = <0 0x09990000 0 0x1600>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		camnoc_virt: interconnect@ac00000 {
-+			compatible = "qcom,sc7180-camnoc-virt";
-+			reg = <0 0x0ac00000 0 0x4000>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
- 	};
- 
- 	thermal-zones {
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Sure
+
+> 
+> > @@ -611,8 +612,8 @@ config I2C_EMEV2
+> >
+> >  config I2C_EXYNOS5
+> >         tristate "Exynos5 high-speed I2C driver"
+> > -       depends on ARCH_EXYNOS && OF
+> > -       default y
+> > +       depends on (ARCH_EXYNOS && OF) || COMPILE_TEST
+> 
+> This means it is only useful on DT-based Exynos platforms, but compiles
+> everywhere?
+
+Yes. The driver will proble only from DT.
+
+> 
+> Do you still have support for non-DT Exynos platforms?
+> ARCH_EXYNOS depends on ARCH_MULTI_V7?
+
+No, only DT. I think dependency here is a left over from board times and
+optional OF. Actually many drivers depend on OF and some OF-like ARCH so
+it could be removed.
+
+Since driver uses OF, it's rather the choice whether to explicitly
+mention OF.
+
+> (and its help text mentions Exynos 4/5 only, no 3?)
+
+That's correct although it supports also Exynos7 (ARMv8) which is not
+mentioned. I'll correct it.
+
+> 
+> > @@ -1055,15 +1057,15 @@ config I2C_SYNQUACER
+> >
+> >  config I2C_TEGRA
+> >         tristate "NVIDIA Tegra internal I2C controller"
+> > -       depends on ARCH_TEGRA
+> > +       depends on ARCH_TEGRA || (COMPILE_TEST && (ARC || ARM || ARM64 || M68K || RISCV || SUPERH || SPARC))
+> 
+> Perhaps
+> 
+>     depends on ARCH_TEGRA || COMPILE_TEST
+>     depends on ARC || ARM || ARM64 || M68K || RISCV || SUPERH || SPARC
+> # needs <foo>
+> 
+> to remember which <foo> feature is needed?
+
+I can comment on <foo> but such split of archs would be confusing. One
+would think that driver can work on these platforms, while it is purely
+for compile testing.  Keeping it together is self-documenting: these
+weird platform selection was added only for compile testing.
+
+Best regards,
+Krzysztof
+
+> 
+> > @@ -1403,8 +1405,8 @@ config I2C_OPAL
+> >
+> >  config I2C_ZX2967
+> >         tristate "ZTE ZX2967 I2C support"
+> > -       depends on ARCH_ZX
+> > -       default y
+> > +       depends on ARCH_ZX || (COMPILE_TEST && (ARC || ARM || ARM64 || M68K || RISCV || SUPERH || SPARC))
+> 
+> Same here/
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
