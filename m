@@ -2,285 +2,125 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93925C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 21:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C93FAC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 21:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B417206E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 21:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91DC0206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 21:33:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="OG/CBXUq"
+	dkim=pass (2048-bit key) header.d=mvista-com.20150623.gappssmtp.com header.i=@mvista-com.20150623.gappssmtp.com header.b="KSTVd+Gf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfLaVLj (ORCPT
+        id S1727109AbfLaVdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 16:11:39 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:47008 "EHLO
+        Tue, 31 Dec 2019 16:33:03 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43221 "EHLO
         mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbfLaVLj (ORCPT
+        with ESMTP id S1727056AbfLaVdD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 16:11:39 -0500
-Received: by mail-ot1-f66.google.com with SMTP id k8so34414941otl.13
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Dec 2019 13:11:38 -0800 (PST)
+        Tue, 31 Dec 2019 16:33:03 -0500
+Received: by mail-ot1-f66.google.com with SMTP id p8so15216737oth.10
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Dec 2019 13:32:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DULmnZUv/wwq/JWTQ2cMiTK1ZQVc05pKFRewQMycx+E=;
-        b=OG/CBXUqMiCu0gjjf16lUHv1JUbH7PqMt+VGFOehA1m2rEWnPsu+kHaE9mrwWefMLE
-         dKyZ5ml+SuxXZgwqHEo9/2kU1zXkMf14UIZDKe1ZThqn0wxZpIqfP3pS3k+qbSaqsSBJ
-         valN/SisyXFXwZYND9W7duC2Ke0WyUvIWJmPUbl6IcoaUo0INmb3iCcKEHZavynVGGN+
-         ZQfW6tD6sWK77yEBTANnD6YzweT/GHdw+u06x63tuogQQuUE5a1o2zZJn+E3fZeteS6v
-         K8NqDNdZCjrIxzaUoMq9O2+jsz6QX1lg/wg36Ty9MG3kaD5+FobIUn0H4ufztsBejYBr
-         Y0tQ==
+        d=mvista-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+/nS1bdAxCnLkhXguRUBX1Cxhqk1gjfbFD8rLHJu+no=;
+        b=KSTVd+GfRi/YLpRPtxRRr6LimCHDIj31fr7kYo0b4b//giRCT9jxYhDjG+EpaZ/6RG
+         ap6x1CpzZ2uAw5WUuAPb/JQw/GrBRIdZCijDPXgiPm3KAKUTxgQ2gqadIvSHnpff62V9
+         YGzXRuwvpFgIlDLFHBEdX6qpco0KqrD4fmXNk6SVFluB58AuYTA4NBDtWQ2N8erb1ej0
+         /sk1ewrQjiglHofxjL2m5AZ0i+mDgPyq9kyRQ+kgjFVtcNbopsV+xoK3NMXqfQOcUIZz
+         wUVy48+zKViRQBV5cN1fb7DY/aBoR08KB9TjsGMmE+Pzk5ebWgogWYBp6+nIMqzkd1zx
+         f03w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DULmnZUv/wwq/JWTQ2cMiTK1ZQVc05pKFRewQMycx+E=;
-        b=mq7DP/YVfDM0cnPYQFcdj3MATD6FA59ugK83j5bbIZEORpsrtWGT5LeZ5G/zBkqIUV
-         Ti1Dg3QZSHBYS0Cf0uHAVkYB3Ezo7Vgu1/r5W2Iv+Z3oOR0AaIeyI+GYKtTLHzo9iaTr
-         1O/M8T5QUKde7G5im1xecMBl6kkmpD730ylxjZTLkVLiKfVGpQPRXl3mY43rKCMoByDj
-         KCaVRUZAdVn5XYe/xodQSQ2E6Iv8LLvt3t/9xIuKLQOC6FN6nmCpeW5CeOM+llZ42HRm
-         ebTZpZQ0eXELyR0qiYrii87uqry05SFwTR3WItr29QieQads5LA34wORN7s8mYnMzluv
-         FMcw==
-X-Gm-Message-State: APjAAAXkO/S56EgOwSKbG95xi1AB29vshxh3vRpplGWMDfn3nAbAN2Q3
-        NTvgaUwj+F4RREzqG7lZxkAamkG+5qcg6Lf9JZPPuA==
-X-Google-Smtp-Source: APXvYqypFj1zF1kbnx/R5KfJArwLqUoFJSTxPfD+vcOvnU0v+aVIQWU2emX3uDqZOmc8+3nGXJFKRcjMBIYIHSQA7Zw=
-X-Received: by 2002:a9d:68cc:: with SMTP id i12mr45346891oto.207.1577826697852;
- Tue, 31 Dec 2019 13:11:37 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+/nS1bdAxCnLkhXguRUBX1Cxhqk1gjfbFD8rLHJu+no=;
+        b=RpHaXvJIYGOk7S2J+TyjmyhcBLAwxWdyK+EsNADfdVjPoTA9L1cjgsKktdgKblEVlN
+         ZiYwI+XZibQfmmgjANCWT2b+WQGEkLaDGjAQGb5tUYWRojsvAhkf9EoR5/0ppcZGmiiM
+         rcGj3Z1gb8mtAe8Hc7Aq/zFcrsI4i/XonbXEu+wQVp8pA2nJUXWte0lpeujFHCJHLQan
+         zM2cu/1zTlwEVZkPxee4uISBxcidMN2gG35fVjMcJhjzfAOBqzg1kEV60a0XsasV9Wh7
+         q3Iz4LHZzfoqNgW6eN8Z3SdouvKc30nudCqrwL/Xfou3IvnPmJOSbZcBkm13W7UeOeT9
+         SbQA==
+X-Gm-Message-State: APjAAAXZ3gRv8inuNWzuYqV89gNGjrOM95iwVNjom5Frq1raHOZxQEK1
+        HqoSmtdSLu+te2ZnavAXxuQ5Mg==
+X-Google-Smtp-Source: APXvYqxtZiNK72dgg3cXUoHDp2WuYGKWETZ2MLtVvL1tUGpM54gbYZ+6lBcjsS4utpNZTl51pQWvaw==
+X-Received: by 2002:a9d:7c8f:: with SMTP id q15mr70074856otn.140.1577827977935;
+        Tue, 31 Dec 2019 13:32:57 -0800 (PST)
+Received: from minyard.net ([2001:470:b8f6:1b:d193:7acb:1243:c644])
+        by smtp.gmail.com with ESMTPSA id m68sm15241741oig.50.2019.12.31.13.32.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 31 Dec 2019 13:32:57 -0800 (PST)
+Date:   Tue, 31 Dec 2019 15:32:55 -0600
+From:   Corey Minyard <cminyard@mvista.com>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        tony camuso <tcamuso@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 089/219] ipmi: Dont allow device module unload when
+ in use
+Message-ID: <20191231213255.GC6497@minyard.net>
+Reply-To: cminyard@mvista.com
+References: <20191229162508.458551679@linuxfoundation.org>
+ <20191229162520.260768030@linuxfoundation.org>
+ <20191230103218.GA10304@amd>
 MIME-Version: 1.0
-References: <157773590338.4153451.5898675419563883883.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20191231014630.GA24942@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20191231014630.GA24942@dhcp-128-65.nay.redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 31 Dec 2019 13:11:27 -0800
-Message-ID: <CAPcyv4heY1CKAWo1AKKifYUtXdKjoUt45dZbCNhB2o59hkXY6g@mail.gmail.com>
-Subject: Re: [PATCH] efi: Fix handling of multiple contiguous efi_fake_mem= entries
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Taku Izumi <izumi.taku@jp.fujitsu.com>,
-        Michael Weiser <michael@weiser.dinsnail.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>, kexec@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191230103218.GA10304@amd>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 5:46 PM Dave Young <dyoung@redhat.com> wrote:
->
-> Hi Dan,
-> On 12/30/19 at 11:58am, Dan Williams wrote:
-> > A recent test of efi_fake_mem=4G@9G:0x40000,4G@13G:0x40000 crashed with
-> > a signature of:
-> >
-> >     BUG: unable to handle page fault for address: ffffffffff281000
-> >     [..]
-> >     RIP: 0010:efi_memmap_insert+0x11d/0x191
-> >     [..]
-> >     Call Trace:
-> >      ? bgrt_init+0xbe/0xbe
-> >      ? efi_arch_mem_reserve+0x1cb/0x228
-> >      ? acpi_parse_bgrt+0xa/0xd
-> >      ? acpi_table_parse+0x86/0xb8
-> >      ? acpi_boot_init+0x494/0x4e3
-> >      ? acpi_parse_x2apic+0x87/0x87
-> >      ? setup_acpi_sci+0xa2/0xa2
-> >      ? setup_arch+0x8db/0x9e1
-> >      ? start_kernel+0x6a/0x547
-> >      ? secondary_startup_64+0xb6/0xc0
-> >
-> > efi_memmap_insert() is attempting to insert entries past the end of the
-> > new map. This condition is setup by efi_fake_mem() leaking empty entries
-> > to the end of memory map, and then efi_arch_mem_reserve() trips over the
-> > bad entry when attempting an additional efi_memmap_insert(). The empty
-> > entry causes efi_memmap_insert() to attempt more memmap splits / copies
-> > than efi_memmap_split_count() accounted for when sizing the new map.
-> >
-> > Update efi_fake_memmap() to cleanup lagging empty entries.
-> >
-> > This change is related to commit af1648984828 "x86/efi: Update e820 with
-> > reserved EFI boot services data to fix kexec breakage" since that
-> > introduces more occurrences where efi_memmap_insert() is invoked after
-> > an efi_fake_mem= configuration has been parsed. Previously the side
-> > effects of vestigial empty entries were benign, but with commit
-> > af1648984828 that follow-on efi_memmap_insert() invocation triggers the
-> > above crash signature.
-> >
-> > Fixes: 0f96a99dab36 ("efi: Add 'efi_fake_mem' boot option")
-> > Fixes: af1648984828 ("x86/efi: Update e820 with reserved EFI boot services...")
-> > Cc: Taku Izumi <izumi.taku@jp.fujitsu.com>
-> > Cc: Michael Weiser <michael@weiser.dinsnail.net>
-> > Cc: Dave Young <dyoung@redhat.com>
-> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Ingo Molnar <mingo@kernel.org>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > ---
-> >  drivers/firmware/efi/fake_mem.c |   22 +++++++++++++++++++++-
-> >  1 file changed, 21 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/firmware/efi/fake_mem.c b/drivers/firmware/efi/fake_mem.c
-> > index bb9fc70d0cfa..6df51ba93ae8 100644
-> > --- a/drivers/firmware/efi/fake_mem.c
-> > +++ b/drivers/firmware/efi/fake_mem.c
-> > @@ -67,13 +67,33 @@ void __init efi_fake_memmap(void)
-> >               return;
-> >       }
-> >
-> > +     memset(new_memmap, 0, efi.memmap.desc_size * new_nr_map);
-> >       for (i = 0; i < nr_fake_mem; i++)
-> >               efi_memmap_insert(&efi.memmap, new_memmap, &efi_fake_mems[i]);
-> >
-> > +     /*
-> > +      * efi_memmap_split_count() may over count the number of
-> > +      * required splits in the case when contiguous fake entries are
-> > +      * specified. Check that all new_nr_map entries were consumed.
-> > +      */
-> > +     for (i = new_nr_map; i > 0; i--) {
-> > +             efi_memory_desc_t *md;
-> > +             u64 start, end;
-> > +
-> > +             md = new_memmap + efi.memmap.desc_size * (new_nr_map - i - 1);
-> > +             end = md->phys_addr + (md->num_pages << EFI_PAGE_SHIFT) - 1;
-> > +             start = md->phys_addr;
-> > +
-> > +             if (start == 0 && end + 1 == 0)
-> > +                     continue;
-> > +             break;
-> > +     }
-> > +
-> >       /* swap into new EFI memmap */
-> >       early_memunmap(new_memmap, efi.memmap.desc_size * new_nr_map);
-> >
-> > -     efi_memmap_install(new_memmap_phy, new_nr_map);
-> > +     /* install only the valid entries */
-> > +     efi_memmap_install(new_memmap_phy, i);
-> >
-> >       /* print new EFI memmap */
-> >       efi_print_memmap();
-> >
->
-> Although kernel bootup works with this patch, it still does not fix the
-> issue I noticed, you can see:
-> [root@localhost ~]# cat /proc/cmdline
-> BOOT_IMAGE=/bzImage root=/dev/vda3 ro audit=0 selinux=0 crashkernel=160M efi=debug console=ttyS0 console=tty0 3 efi_fake_mem=200M@5G:0x40000,300M@5600M:0x40000 earlyprintk=serial
-> [root@localhost ~]# dmesg|grep fake_mem
-> [    0.000000] Command line: BOOT_IMAGE=/bzImage root=/dev/vda3 ro audit=0 selinux=0 crashkernel=160M efi=debug console=ttyS0 console=tty0 3 efi_fake_mem=200M@5G:0x40000,300M@5600M:0x40000 earlyprintk=serial
-> [    0.000000] efi_fake_mem: add attr=0x0000000000040000 to [mem 0x0000000140000000-0x000000014c7fffff]
-> [    0.000000] efi_fake_mem: add attr=0x0000000000040000 to [mem 0x000000015e000000-0x0000000170bfffff]
-> [root@localhost ~]# dmesg|grep SP
-> [    0.085762] efi: mem48: [Conventional Memory|   |  |SP|  |  |  |  |  |   |WB|WT|WC|UC] range=[0x000000015e000000-0x0000000170bfffff] (300MB)
->
->
-> With this patch applied, there is still only one md set "SP" attr.  That
-> means only the last insert worked.
->
-> void __init efi_memmap_insert(struct efi_memory_map *old_memmap, void *buf,
->                               struct efi_mem_range *mem)
->
-> The above function will use the old_memmap as the base for each
-> inserting.  the old_memmap == &efi.memmap, so when you do below:
->         for (i = 0; i < nr_fake_mem; i++)
->                 efi_memmap_insert(&efi.memmap, new_memmap, &efi_fake_mems[i]);
->
-> Only the last inserting will take effect.  Below debug patch worked for
-> me, but I thought you have found same bug so I did not add it in the
-> reply, here it is, only for debugging purpose, not graceful:
+On Mon, Dec 30, 2019 at 11:32:18AM +0100, Pavel Machek wrote:
+> On Sun 2019-12-29 18:18:11, Greg Kroah-Hartman wrote:
+> > From: Corey Minyard <cminyard@mvista.com>
+> > 
+> > [ Upstream commit cbb79863fc3175ed5ac506465948b02a893a8235 ]
+> > 
+> > If something has the IPMI driver open, don't allow the device
+> > module to be unloaded.  Before it would unload and the user would
+> > get errors on use.
+> > 
+> > This change is made on user request, and it makes it consistent
+> > with the I2C driver, which has the same behavior.
+> > 
+> > It does change things a little bit with respect to kernel users.
+> > If the ACPI or IPMI watchdog (or any other kernel user) has
+> > created a user, then the device module cannot be unloaded.  Before
+> > it could be unloaded,
+> > 
+> > This does not affect hot-plug.  If the device goes away (it's on
+> > something removable that is removed or is hot-removed via sysfs)
+> > then it still behaves as it did before.
+> 
+> I don't think this is good idea for stable. First, it includes
+> unrelated function rename,
 
-Good find! I missed this because my test case was checking /proc/iomem
-after booting and efi_fake_memmap_early() updates the e820 table.
+Umm, no, that's not unrelated, it was renamed so a defined could be
+done with the original name so the module could be passed in
+automatically.
 
->
-> diff --git a/drivers/firmware/efi/fake_mem.c b/drivers/firmware/efi/fake_mem.c
-> index bb9fc70d0cfa..097eaf7deb6a 100644
-> --- a/drivers/firmware/efi/fake_mem.c
-> +++ b/drivers/firmware/efi/fake_mem.c
-> @@ -36,44 +36,48 @@ static int __init cmp_fake_mem(const void *x1, const void *x2)
->
->  void __init efi_fake_memmap(void)
->  {
-> -       int new_nr_map = efi.memmap.nr_map;
-> -       efi_memory_desc_t *md;
-> -       phys_addr_t new_memmap_phy;
-> -       void *new_memmap;
->         int i;
->
-> +       pr_info("nr fake mem %d\n", nr_fake_mem);
->         if (!efi_enabled(EFI_MEMMAP) || !nr_fake_mem)
->                 return;
->
->         /* count up the number of EFI memory descriptor */
->         for (i = 0; i < nr_fake_mem; i++) {
-> -               for_each_efi_memory_desc(md) {
-> -                       struct range *r = &efi_fake_mems[i].range;
-> -
-> -                       new_nr_map += efi_memmap_split_count(md, r);
-> +               int new_nr_map = efi.memmap.nr_map;
-> +               efi_memory_desc_t md0;
-> +               efi_memory_desc_t *md = &md0;
-> +               phys_addr_t new_memmap_phy;
-> +               void *new_memmap;
-> +
-> +               if (efi_mem_desc_lookup(efi_fake_mems[i].range.start, md)) {
-> +                       pr_err("Failed to lookup EFI memory descriptor for %pa\n", &efi_fake_mems[i].range.start);
-> +                       return;
-> +               }
-> +
-> +               new_nr_map += efi_memmap_split_count(md, &efi_fake_mems[i].range);
-> +
-> +               pr_info("new nr %d\n", new_nr_map);
-> +               /* allocate memory for new EFI memmap */
-> +               new_memmap_phy = efi_memmap_alloc(new_nr_map);
-> +               if (!new_memmap_phy){
-> +                       pr_info("alloc new map failed\n");
-> +                       return;}
-> +
-> +               /* create new EFI memmap */
-> +               new_memmap = early_memremap(new_memmap_phy,
-> +                                   efi.memmap.desc_size * new_nr_map);
-> +               if (!new_memmap) {
-> +                       pr_info("map new map failed\n");
-> +                       memblock_free(new_memmap_phy, efi.memmap.desc_size * new_nr_map);
-> +                       return;
->                 }
-> -       }
-> -
-> -       /* allocate memory for new EFI memmap */
-> -       new_memmap_phy = efi_memmap_alloc(new_nr_map);
-> -       if (!new_memmap_phy)
-> -               return;
-> -
-> -       /* create new EFI memmap */
-> -       new_memmap = early_memremap(new_memmap_phy,
-> -                                   efi.memmap.desc_size * new_nr_map);
-> -       if (!new_memmap) {
-> -               memblock_free(new_memmap_phy, efi.memmap.desc_size * new_nr_map);
-> -               return;
-> -       }
-> -
-> -       for (i = 0; i < nr_fake_mem; i++)
->                 efi_memmap_insert(&efi.memmap, new_memmap, &efi_fake_mems[i]);
-> -
-> -       /* swap into new EFI memmap */
-> -       early_memunmap(new_memmap, efi.memmap.desc_size * new_nr_map);
-> -
-> -       efi_memmap_install(new_memmap_phy, new_nr_map);
-> +               /* swap into new EFI memmap */
-> +               early_memunmap(new_memmap, efi.memmap.desc_size * new_nr_map);
-> +               efi_memmap_install(new_memmap_phy, new_nr_map);
-> +               pr_info("inserted new map\n");
-> +       }
+> and second, it does not really fix any bug;
+> it just changes behaviour.
 
-Perhaps a prettier way to do this is to push the handling of each
-efi_fake_mem entry into a subroutine. However, I notice when a memmap
-allocated by efi_memmap_alloc() is replaced by another dynamically
-allocated memmap the previous one isn't released. I have a series that
-fixes that up as well.
+This is true.  I assume Tony asked for the backport.  I'm ambivolent
+on whether this gets backported.  I'll defer to Tony for justification.
+
+-corey
+
+> 
+> Best regards,
+> 									Pavel
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+
+
