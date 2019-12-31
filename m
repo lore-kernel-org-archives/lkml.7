@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-2.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 935FBC2D0DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 15:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DB2C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 15:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66CCA206E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 15:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BF1E206E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 15:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfLaPdA (ORCPT
+        id S1727166AbfLaPdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 10:33:00 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:55248 "EHLO gloria.sntech.de"
+        Tue, 31 Dec 2019 10:33:52 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:55324 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726060AbfLaPdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 10:33:00 -0500
+        id S1726060AbfLaPdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 10:33:51 -0500
 Received: from [185.109.153.2] (helo=phil.localnet)
         by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <heiko@sntech.de>)
-        id 1imJVm-0004gp-6H; Tue, 31 Dec 2019 16:32:46 +0100
+        id 1imJWj-0004i6-Eg; Tue, 31 Dec 2019 16:33:45 +0100
 From:   Heiko Stuebner <heiko@sntech.de>
 To:     Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
@@ -37,10 +37,10 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Subject: Re: [PATCH v2 10/11] arm64: dts: rockchip: Add PX30 DSI DPHY
-Date:   Tue, 31 Dec 2019 12:56:14 +0100
-Message-ID: <1796464.bE5sXyoQCg@phil>
-In-Reply-To: <20191224143900.23567-11-miquel.raynal@bootlin.com>
-References: <20191224143900.23567-1-miquel.raynal@bootlin.com> <20191224143900.23567-11-miquel.raynal@bootlin.com>
+Date:   Tue, 31 Dec 2019 13:14:02 +0100
+Message-ID: <10740878.zWD4iEhqxt@phil>
+In-Reply-To: <1796464.bE5sXyoQCg@phil>
+References: <20191224143900.23567-1-miquel.raynal@bootlin.com> <20191224143900.23567-11-miquel.raynal@bootlin.com> <1796464.bE5sXyoQCg@phil>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -49,14 +49,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, 24. Dezember 2019, 15:38:59 CET schrieb Miquel Raynal:
-> Add the PHY which outputs MIPI DSI and LVDS.
+Am Dienstag, 31. Dezember 2019, 12:56:14 CET schrieb Heiko Stuebner:
+> Am Dienstag, 24. Dezember 2019, 15:38:59 CET schrieb Miquel Raynal:
+> > Add the PHY which outputs MIPI DSI and LVDS.
+> > 
+> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 > 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> applied for 5.6 (picked early due to it being shared between lvds and dsi)
 
-applied for 5.6 (picked early due to it being shared between lvds and dsi)
+and I've just added the VO powerdomain to the dsi-dphy node.
 
-Thanks
+While the TRM is not really forthcoming in telling me if the dphy needs
+the power-domain as well, the vendor kernel does, so we should probably
+just follow their example ;-) .
+
+
 Heiko
 
 
