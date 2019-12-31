@@ -2,131 +2,122 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FCCC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 13:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13789C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 13:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0674205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 13:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9BC4207E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 13:05:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="k8le8wC+"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="JNRNyjPn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfLaNAn (ORCPT
+        id S1727070AbfLaNFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 08:00:43 -0500
-Received: from mout.web.de ([212.227.17.11]:48617 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726229AbfLaNAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 08:00:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1577797228;
-        bh=E2HgD9nBbFjio41NEe6vaMsromNwNlpF21WUg2UIpOk=;
-        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
-        b=k8le8wC+e9+ioEkmdyavFxO2vEvgUlD5UPoSp4Z6p9vqe6h7waTHTjfTZsupcbnKZ
-         s/myuKB6KhCVJN8/HRLEyzeJsnLBfHxj9TNbJkIvd5DWz4X2dnl1nMuphgYObcVgQx
-         /+EUZrtMv0sZKAgacXGtxcUqEbf9oG0JyBMF6wUY=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.105.164]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Md4l4-1j3Fks0dqE-00IAuS; Tue, 31
- Dec 2019 14:00:28 +0100
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        linkinjeon@gmail.com
-References: <20191220062419.23516-1-namjae.jeon@samsung.com>
-Subject: Re: [PATCH v8 00/13] add the latest exfat driver
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <6adef0a3-8bb7-1ac4-0891-4d56edfa9df8@web.de>
-Date:   Tue, 31 Dec 2019 14:00:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Tue, 31 Dec 2019 08:05:43 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:36943 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfLaNFm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 08:05:42 -0500
+Received: by mail-pj1-f66.google.com with SMTP id m13so1211822pjb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Dec 2019 05:05:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G8ue1C52c6GMFo3Ro49/gUAlsKHzYRxfbPWqTGCIbyw=;
+        b=JNRNyjPnuWa3Uwbq0Q5tiy7txraP03SundwCX4/YlAxMeSUJ4lClB9jb44eLtO6iRF
+         HrhyZr5cz1P8LDTX+KBc7DI8GMWWZ3FX2v3iPLpHt1LvH4grZql1KQkDA45kcp8pSkdK
+         TBDBQ2HMrNmRsko3h5ah/l328CIQUspldKC0E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G8ue1C52c6GMFo3Ro49/gUAlsKHzYRxfbPWqTGCIbyw=;
+        b=m400+uTpMpiMEcMNrPQf54XoUERPUbm5+b95PvMF8xvzMf3w6vi5fruYlau+ZHRZua
+         g0v+/xjcTR9e4ygbnpurs7lzOZJ57yhbR7l0XucytdBjbpmHzgESFxr/gHO/OrzRDfKQ
+         qa0Q8X5G2gTiSCwCC8Llv1DFnmUC2SnTqofHssZJA7JITnrlnfy4orbYWjyjMAIS7axV
+         uzuCaU801EdeeAbVqUjCSW2/ghjDgJTylfcBh4d5u1YZK0TH1QYlAuCgXCHxR7h46Yx9
+         37MbwTEQevmhmAnHOF8CLeQyoBQ6v3yYSJ1JOKe/sxrBYYpDn2xQ0kjrqDh3RSUD/Gti
+         ip+Q==
+X-Gm-Message-State: APjAAAXnZH8Dvs2u5b3Y82Wu2ChOfPWjcS/CyoZFCojSlu9kko3rvsm+
+        V+2466C8tdu6FZZ4z9X8d+tI5A==
+X-Google-Smtp-Source: APXvYqxXkYxsyd0ZyZlBKsAKlLynOFIBkeSMyKHk4J7/GJzGsj4UxrrFoX57Z2SFZ8ziy3NWHt7NsA==
+X-Received: by 2002:a17:902:bf0c:: with SMTP id bi12mr47277055plb.208.1577797541340;
+        Tue, 31 Dec 2019 05:05:41 -0800 (PST)
+Received: from localhost.localdomain ([49.206.202.115])
+        by smtp.gmail.com with ESMTPSA id i3sm55204089pfg.94.2019.12.31.05.05.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Dec 2019 05:05:40 -0800 (PST)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v3 0/9] drm/sun4i: Allwinner R40 MIPI-DSI support
+Date:   Tue, 31 Dec 2019 18:35:19 +0530
+Message-Id: <20191231130528.20669-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 MIME-Version: 1.0
-In-Reply-To: <20191220062419.23516-1-namjae.jeon@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:A2FRB0BAbHQIJIr7lMqGP2UIMxkyd7uK+JPSSyjzadAqqqjLcnz
- Td1/tsF2l3eb/GivrDYKzOploXl6pBk5jKnF1R7kBhZ5H3RQqs56TRS4+mfudSmrXLFk34W
- 1NRg0aZ9ACqmPCR/6Wih9S2qGHY8df9QUrUl1LYneq+jX7oGONpZdhvK54VZ+VimD8Dqk/0
- PITT1xgYhEQkNPVzgfvMQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LdhRFhqyDkQ=:v7udlbs+Tb0d+YBYrtK5C8
- Ar6KmLw085wR8bDSta7HKCWQpU4xCOrpWV8YohB8zxELQadXTOCWkOSbcxXQmo4I3Ulp9tzGY
- w2USdlXYBwWAvv+TPMs9QCVps4nTSTLFY4sEIUi7ZGSfNyjKEGNvE1wwmNZfGKVHlzo1s2tls
- OrlB1wtQJG0N3Vt0bx4FApkL2aMvnYfqUXwPdwbkXThzjTV0WkwMW0t4buuNhnfKXxVEmxMPP
- MSb8qn0xRg9cGgybeAcLLircHrB3tfQWYcV04uvNrE0iaLZ+Y6hOKokdQP+LZze2vaoMCqO+2
- NCSKbVy3Ro7XO3vwoS0Riv5ogt4RFbMC1EWFjYPnp34aAmn39ahb7c4nN/8dOyNPWmj2ZvkEg
- 34MlFZC0hEm6cne4/oCrfIvEe0uxp3327OKCGtoR6wzTCqdI3/GA+XLQR8pLVMsnEdhbFhmA0
- RS5aumIFsiIHJBW9rTHIKqTBkIEg/8bAYtKpjeBxkIZ7pBSf4K7IDNPOnc7OXMMRvD1vIdtB5
- k2HOZ8CO2LO8+JXU7r/a+RwGUhOioldKDsPbGll8m81Fqsu5azisXx3m2+xYqXUN1KFvK6eEy
- vIo3v693nCvjl/fkHMa+cM+wf7w+hZ0muk4IW/XdBbnfKF7WM2FQdnUd3DEfI/9vFuNePVNvl
- Sgek1/ey92C66Bj3QkdRaZDvCWYSgoB182NpWxyRPxzbpnYflBLfAUsaHL1TZJshNf/aMeu6z
- ik37Ruc+e+Y8ny96xoGg7m0rNxIJN7XyHEKeIZUBwP0PNdt2kmz2ym7mBB04HhYVhup2UBMWh
- f5ognVKgIfgzMZI1jwOivG3B1BHz+TE32XFa8wRrde52iDVVn90wlI+dmj68fLpna64SBR0OD
- w9OGjDOlr61SpUfstHPuWb1Oy02SnEY719e9JKHbqm1kXAbJlPHHpB/Tt1Grj0FM1Goe+X+zk
- /wulsh9FR9vskglRlUYpy29be1LY6cM5dfmig5Olv1/RD6HK6lIwvUiWKJGBB7Z2ZTTTnaQ4i
- IXwrKK8fSUrVOh49PL3wLxKhSCZ79pTJVKGRP9f3lov65hF9Yq0raIhsMcsz7kvqzAT/brHO/
- MXBoMdXv1ciCd8CbmGUAC0vqR3Jtedgvz95FEe0Viav2Zx6BPLrNJ/A46bz7B4odgidjOAOSs
- vA+iavcXj6nlxfDW4MS2+lVCtOTylTAgciqcGYdfV2MTPMMpsj64yZbJL711H2JfC82uBIBS7
- 73vCT24G5dMCL5mwzt0BaXzNLYQBEJ8dFvpvMn6vmtBw0Id/F+raM8MK9Cc4=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> We plan to treat this version as the future upstream for the code base
-> once merged, and all new features and bug fixes will go upstream first.
+This is v3 version for supporting MIPI-DSI on Allwinner R40 from
+initial version[1].
 
-Another constructive feedback would have been nice for this question:
-Would you like to offer and integrate any test cases?
+The controller look similar like, Allwinner A64 but with associated
+R40 TCON TOP for DSI pipeline.
 
-Regards,
-Markus
+Changes for v3:
+- collect Rob, Chen-Yu r-b, a-b tags
+- move tcon top reset control methods into probe
+- rebase on drm-misc
+Changes for v2:
+- drop tcon top lcd clock patch
+- add TODO text while adding tcon lcd support
+- add patch for registering tcon top clock gates in probe
+- change tcon-ch0 in tcon_lcd0 to CLK_TCON_LCD0
+- change mod clock in dphy to tcon_top with index 3 
+
+[1] https://patchwork.freedesktop.org/series/62062/
+
+Any inputs?
+Jagan.
+
+Jagan Teki (9):
+  dt-bindings: display: Add TCON LCD compatible for R40
+  drm/sun4i: tcon: Add TCON LCD support for R40
+  ARM: dts: sun8i: r40: Use tcon top clock index macros
+  drm/sun4i: tcon_top: Use clock name index macros
+  drm/sun4i: tcon_top: Register reset, clock gates in probe
+  dt-bindings: sun6i-dsi: Add R40 DPHY compatible (w/ A31 fallback)
+  dt-bindings: sun6i-dsi: Document R40 MIPI-DSI controller (w/ A64
+    fallback)
+  ARM: dts: sun8i: r40: Add MIPI DSI pipeline
+  [DO NOT MERGE] ARM: dts: sun8i-r40: bananapi-m2-ultra: Enable Bananapi S070WV20-CT16
+
+ .../display/allwinner,sun6i-a31-mipi-dsi.yaml |  8 +-
+ .../bindings/display/sunxi/sun4i-drm.txt      |  1 +
+ .../phy/allwinner,sun6i-a31-mipi-dphy.yaml    |  1 +
+ .../boot/dts/sun8i-r40-bananapi-m2-ultra.dts  | 37 +++++++++
+ arch/arm/boot/dts/sun8i-r40.dtsi              | 77 ++++++++++++++++++-
+ drivers/gpu/drm/sun4i/sun4i_tcon.c            |  8 ++
+ drivers/gpu/drm/sun4i/sun8i_tcon_top.c        | 50 ++++++------
+ 7 files changed, 154 insertions(+), 28 deletions(-)
+
+-- 
+2.18.0.321.gffc6fa0e3
+
