@@ -2,118 +2,125 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D89C2D0C2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2519C3F68F
 	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 16:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 718EC206DB
+	by mail.kernel.org (Postfix) with ESMTP id 92984206E4
 	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 16:41:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbfLaQkC (ORCPT
+        id S1727116AbfLaQlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 11:40:02 -0500
-Received: from foss.arm.com ([217.140.110.172]:35776 "EHLO foss.arm.com"
+        Tue, 31 Dec 2019 11:41:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:35818 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726060AbfLaQkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 11:40:01 -0500
+        id S1726060AbfLaQlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 11:41:04 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0C84328;
-        Tue, 31 Dec 2019 08:40:00 -0800 (PST)
-Received: from [192.168.1.123] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 263263F68F;
-        Tue, 31 Dec 2019 08:39:59 -0800 (PST)
-Subject: Re: [RFC v2 1/1] drm/lima: Add optional devfreq support
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     yuq825@gmail.com, dri-devel@lists.freedesktop.org, robh@kernel.org,
-        tomeu.vizoso@collabora.com, airlied@linux.ie,
-        linux-kernel@vger.kernel.org, steven.price@arm.com,
-        linux-rockchip@lists.infradead.org, wens@csie.org,
-        alyssa.rosenzweig@collabora.com, daniel@ffwll.ch,
-        linux-amlogic@lists.infradead.org
-References: <20191227173707.20413-1-martin.blumenstingl@googlemail.com>
- <20191227173707.20413-2-martin.blumenstingl@googlemail.com>
- <dd38ff5c-6a14-bb6a-4df5-d706f99234e9@arm.com>
- <CAFBinCDs3a8TJcQKgHUkDvssMR6Y2Kys38p50P0q=2KOiDTNHg@mail.gmail.com>
- <fe45f4f8-8c67-ded2-90bf-8d5fd6874876@arm.com>
- <CAFBinCByzLLdVTL0v=eC-TbZQnwnDY7cBLf4jyWq7N4PA1rr+A@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <ff2bdd26-3c34-63db-beb5-8f7c9fc7e790@arm.com>
-Date:   Tue, 31 Dec 2019 16:39:58 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AAF2328;
+        Tue, 31 Dec 2019 08:41:03 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C23C3F68F;
+        Tue, 31 Dec 2019 08:41:02 -0800 (PST)
+Date:   Tue, 31 Dec 2019 16:40:51 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     z00214469 <prime.zeng@hisilicon.com>
+Cc:     linuxarm@huawei.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>
+Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations conflicts with
+ lower layer
+Message-ID: <20191231164051.GA4864@bogus>
+References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCByzLLdVTL0v=eC-TbZQnwnDY7cBLf4jyWq7N4PA1rr+A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-31 2:17 pm, Martin Blumenstingl wrote:
-> Hi Robin,
+On Mon, Dec 23, 2019 at 04:16:19PM +0800, z00214469 wrote:
+> As we know, from sched domain's perspective, the DIE layer should be
+> larger than or at least equal to the MC layer, and in some cases, MC
+> is defined by the arch specified hardware, MPIDR for example, but NUMA
+> can be defined by users,
+
+Who are the users you are referring above ?
+
+> with the following system configrations:
+
+Do you mean ACPI tables or DT or some firmware tables ?
+
+> *************************************
+> NUMA:      	 0-2,  3-7
+
+Is the above simply wrong with respect to hardware and it actually match
+core_siblings ?
+
+> core_siblings:   0-3,  4-7
+> *************************************
+> Per the current code, for core 3, its MC cpu map fallbacks to 3~7(its
+> core_sibings is 0~3 while its numa node map is 3~7).
+>
+> For the sched MC, when we are build sched groups:
+> step1. core3 's sched groups chain is built like this: 3->4->5->6->7->3
+> step2. core4's sched groups chain is built like this: 4->5->6->7->4
+> so after step2, core3's sched groups for MC level is overlapped, more
+> importantly, it will fall to dead loop if while(sg != sg->groups)
+>
+> Obviously, the NUMA node with cpu 3-7 conflict with the MC level cpu
+> map, but unfortunately, there is no way even detect such cases.
+>
+
+Again, is cpu 3-7 actually in a NUMA node or is it 4-7 ?
+
+> In this patch, prompt a warning message to help with the above cases.
+>
+> Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
+> ---
+>  drivers/base/arch_topology.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 > 
-> On Mon, Dec 30, 2019 at 1:47 AM Robin Murphy <robin.murphy@arm.com> wrote:
->>
->> On 2019-12-29 11:19 pm, Martin Blumenstingl wrote:
->>> Hi Robin,
->>>
->>> On Sun, Dec 29, 2019 at 11:58 PM Robin Murphy <robin.murphy@arm.com> wrote:
->>>>
->>>> Hi Martin,
->>>>
->>>> On 2019-12-27 5:37 pm, Martin Blumenstingl wrote:
->>>>> Most platforms with a Mali-400 or Mali-450 GPU also have support for
->>>>> changing the GPU clock frequency. Add devfreq support so the GPU clock
->>>>> rate is updated based on the actual GPU usage when the
->>>>> "operating-points-v2" property is present in the board.dts.
->>>>>
->>>>> The actual devfreq code is taken from panfrost_devfreq.c and modified so
->>>>> it matches what the lima hardware needs:
->>>>> - a call to dev_pm_opp_set_clkname() during initialization because there
->>>>>      are two clocks on Mali-4x0 IPs. "core" is the one that actually clocks
->>>>>      the GPU so we need to control it using devfreq.
->>>>> - locking when reading or writing the devfreq statistics because (unlike
->>>>>      than panfrost) we have multiple PP and GP IRQs which may finish jobs
->>>>>      concurrently.
->>>>
->>>> I gave this a quick try on my RK3328, and the clock scaling indeed kicks
->>>> in nicely on the glmark2 scenes that struggle, however something appears
->>>> to be missing in terms of regulator association, as the appropriate OPP
->>>> voltages aren't reflected in the GPU supply (fortunately the initial
->>>> voltage seems close enough to that of the highest OPP not to cause major
->>>> problems, on my box at least). With panfrost on RK3399 I do see the
->>>> supply voltage scaling accordingly, but I don't know my way around
->>>> devfreq well enough to know what matters in the difference :/
->>> first of all: thank you for trying this out! :-)
->>>
->>> does your kernel include commit 221bc77914cbcc ("drm/panfrost: Use
->>> generic code for devfreq") for your panfrost test?
->>> if I understand the devfreq API correct then I suspect with that
->>> commit panfrost also won't change the voltage anymore.
->>
->> Oh, you're quite right - I was already considering that change as
->> ancient history, but indeed it's only in 5.5-rc, while that board is
->> still on 5.4.y release kernels. No wonder I couldn't make sense of how
->> the (current) code could possibly be working :)
->>
->> I'll try the latest -rc kernel tomorrow to confirm (now that PCIe is
->> hopefully fixed), but I'm already fairly confident you've called it
->> correctly.
-> I just tested it with the lima driver (by undervolting the GPU by
-> 0.05V) and it seems that dev_pm_opp_set_regulators is really needed.
-> I'll fix this in the next version of this patch and also submit a fix
-> for panfrost (I won't be able to test that though, so help is
-> appreciated in terms of testing :))
+> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+> index 1eb81f11..5fe44b3 100644
+> --- a/drivers/base/arch_topology.c
+> +++ b/drivers/base/arch_topology.c
+> @@ -439,10 +439,18 @@ const struct cpumask *cpu_coregroup_mask(int cpu)
+>  	if (cpumask_subset(&cpu_topology[cpu].core_sibling, core_mask)) {
+>  		/* not numa in package, lets use the package siblings */
+>  		core_mask = &cpu_topology[cpu].core_sibling;
+> -	}
+> +	} else
+> +		pr_warn_once("Warning: suspicous broken topology: cpu:[%d]'s core_sibling:[%*pbl] not a subset of numa node:[%*pbl]\n",
+> +			cpu, cpumask_pr_args(&cpu_topology[cpu].core_sibling),
+> +			cpumask_pr_args(core_mask));
+> +
 
-Yeah, I started hacking something up for panfrost yesterday, but at the 
-point of realising the core OPP code wants refactoring to actually 
-handle optional regulators without spewing errors, decided that was 
-crossing the line into "work" and thus could wait until next week :D
+Won't this print warning on all systems that don't have numa within a
+package ? What are you trying to achieve here ?
 
-Cheers,
-Robin.
+>  	if (cpu_topology[cpu].llc_id != -1) {
+>  		if (cpumask_subset(&cpu_topology[cpu].llc_sibling, core_mask))
+>  			core_mask = &cpu_topology[cpu].llc_sibling;
+> +		else
+> +			pr_warn_once("Warning: suspicous broken topology: cpu:[%d]'s llc_sibling:[%*pbl] not a subset of numa node:[%*pbl]\n",
+> +				cpu, cpumask_pr_args(&cpu_topology[cpu].llc_sibling),
+> +				cpumask_pr_args(core_mask));
+>  	}
+>
+
+This will trigger warning on all systems that lack cacheinfo topology.
+I don't understand the intent of this patch at all. Can you explain
+all the steps you follow and the issue you face ?
+
+--
+Regards,
+Sudeep
