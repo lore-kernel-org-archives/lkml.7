@@ -3,124 +3,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93FAC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 21:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C337C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 22:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91DC0206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 21:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3A27206EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 22:06:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mvista-com.20150623.gappssmtp.com header.i=@mvista-com.20150623.gappssmtp.com header.b="KSTVd+Gf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXl4VwVP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfLaVdD (ORCPT
+        id S1727109AbfLaWGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 16:33:03 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43221 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727056AbfLaVdD (ORCPT
+        Tue, 31 Dec 2019 17:06:54 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:38867 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727056AbfLaWGx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 16:33:03 -0500
-Received: by mail-ot1-f66.google.com with SMTP id p8so15216737oth.10
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Dec 2019 13:32:58 -0800 (PST)
+        Tue, 31 Dec 2019 17:06:53 -0500
+Received: by mail-pj1-f65.google.com with SMTP id l35so1632147pje.3;
+        Tue, 31 Dec 2019 14:06:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mvista-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+/nS1bdAxCnLkhXguRUBX1Cxhqk1gjfbFD8rLHJu+no=;
-        b=KSTVd+GfRi/YLpRPtxRRr6LimCHDIj31fr7kYo0b4b//giRCT9jxYhDjG+EpaZ/6RG
-         ap6x1CpzZ2uAw5WUuAPb/JQw/GrBRIdZCijDPXgiPm3KAKUTxgQ2gqadIvSHnpff62V9
-         YGzXRuwvpFgIlDLFHBEdX6qpco0KqrD4fmXNk6SVFluB58AuYTA4NBDtWQ2N8erb1ej0
-         /sk1ewrQjiglHofxjL2m5AZ0i+mDgPyq9kyRQ+kgjFVtcNbopsV+xoK3NMXqfQOcUIZz
-         wUVy48+zKViRQBV5cN1fb7DY/aBoR08KB9TjsGMmE+Pzk5ebWgogWYBp6+nIMqzkd1zx
-         f03w==
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UyKWBjTYtMhvO9CkUZXNZDev/n9QRhV/4KmWAGx3d9M=;
+        b=BXl4VwVPTLF4wJmXzKQRGjKLNC916gV7fQJmv+Bcfrxb3AYMAMwq5uiSf0LyAt4rHf
+         MgaSse7K2QcJNXjp5m7kxZLoqdkwjVhXCwjJEJZpMqKsMw+PYbI97+4rMU5Bm1nTX+4s
+         r0iX7RqJUGVOQcbGQLW8bdafTQnzqCPINxM6ST3FMLLPlcB7iehwU4E7eP0v0WTuwgZy
+         kDBIcpjyae1f4cke7KvavQiOw7OzhueQNifXvwE9OA6rdP+bO8wk3PeWnuNwZ3qdIa1n
+         QuYKUWomZLLaR25nCLZ6pMpedHYhOkkGvbW+1sWxKxmtJN+8tTQV/m/qhZX8TC6sz1UB
+         3O7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+/nS1bdAxCnLkhXguRUBX1Cxhqk1gjfbFD8rLHJu+no=;
-        b=RpHaXvJIYGOk7S2J+TyjmyhcBLAwxWdyK+EsNADfdVjPoTA9L1cjgsKktdgKblEVlN
-         ZiYwI+XZibQfmmgjANCWT2b+WQGEkLaDGjAQGb5tUYWRojsvAhkf9EoR5/0ppcZGmiiM
-         rcGj3Z1gb8mtAe8Hc7Aq/zFcrsI4i/XonbXEu+wQVp8pA2nJUXWte0lpeujFHCJHLQan
-         zM2cu/1zTlwEVZkPxee4uISBxcidMN2gG35fVjMcJhjzfAOBqzg1kEV60a0XsasV9Wh7
-         q3Iz4LHZzfoqNgW6eN8Z3SdouvKc30nudCqrwL/Xfou3IvnPmJOSbZcBkm13W7UeOeT9
-         SbQA==
-X-Gm-Message-State: APjAAAXZ3gRv8inuNWzuYqV89gNGjrOM95iwVNjom5Frq1raHOZxQEK1
-        HqoSmtdSLu+te2ZnavAXxuQ5Mg==
-X-Google-Smtp-Source: APXvYqxtZiNK72dgg3cXUoHDp2WuYGKWETZ2MLtVvL1tUGpM54gbYZ+6lBcjsS4utpNZTl51pQWvaw==
-X-Received: by 2002:a9d:7c8f:: with SMTP id q15mr70074856otn.140.1577827977935;
-        Tue, 31 Dec 2019 13:32:57 -0800 (PST)
-Received: from minyard.net ([2001:470:b8f6:1b:d193:7acb:1243:c644])
-        by smtp.gmail.com with ESMTPSA id m68sm15241741oig.50.2019.12.31.13.32.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 31 Dec 2019 13:32:57 -0800 (PST)
-Date:   Tue, 31 Dec 2019 15:32:55 -0600
-From:   Corey Minyard <cminyard@mvista.com>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        tony camuso <tcamuso@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 089/219] ipmi: Dont allow device module unload when
- in use
-Message-ID: <20191231213255.GC6497@minyard.net>
-Reply-To: cminyard@mvista.com
-References: <20191229162508.458551679@linuxfoundation.org>
- <20191229162520.260768030@linuxfoundation.org>
- <20191230103218.GA10304@amd>
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UyKWBjTYtMhvO9CkUZXNZDev/n9QRhV/4KmWAGx3d9M=;
+        b=WwmQ9K/0c+X6DdTmF6myj/YpV8UJJr+71ZzMQdc8wcfgIZtPU1z8ZXjqmrpnlEqoDy
+         PvGk+8ude5TSfbG7VvjGURMLNhjJA9akjl6PHT1/A2iMyIyJr9ak/xPymbRNBFYDjp3r
+         jRW+79vxxhz5eMFSCUElEq//aeWcUxtUKYwsmDqcsD97nZY0ZPklPcL4VZsUn1Klbyoe
+         5Qv2Z/PX5QZ6FuZnKt+NDa5m32XEkcAjlLz6agghPjCK36+sn8x2fYYp6DIRKGJu0nsF
+         ElVrqSSc6VrI8W0ThfDCucN0trRmYUHWnjr3sBkmqTBPQGYgUlw9CJ3f8K/ayckltTTC
+         qwug==
+X-Gm-Message-State: APjAAAVT6PH1d+8t5b+tUM3EYbKOblftSDzoTM0J8YMy7vnw1S/npXc4
+        7LnR6IQ0+kbJv8az1O72X1A=
+X-Google-Smtp-Source: APXvYqybjvAuvXhX2zdUwKAnSrs4yjN/Tdp8vKgaeiN/DvOw2nnIGGWQAFL9xkVY7rgADrIhlamMGw==
+X-Received: by 2002:a17:90b:4004:: with SMTP id ie4mr8971773pjb.49.1577830013234;
+        Tue, 31 Dec 2019 14:06:53 -0800 (PST)
+Received: from [100.71.96.87] ([143.166.81.254])
+        by smtp.gmail.com with ESMTPSA id 3sm54207358pfi.13.2019.12.31.14.06.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 31 Dec 2019 14:06:52 -0800 (PST)
+Subject: Re: [PATCH v4 1/3] PCI: pciehp: Add support for disabling in-band
+ presence
+From:   Stuart Hayes <stuart.w.hayes@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Austin Bolen <austin_bolen@dell.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>
+References: <20191025190047.38130-2-stuart.w.hayes@gmail.com>
+ <20191127013613.GA233706@google.com>
+ <CAL5oW00Lh4v2YpX2GcDoRS2fFJjvHRsdhNjtvyYGpWOpgL=TCg@mail.gmail.com>
+Message-ID: <f14d8325-8635-329f-cdc7-fd27a52b2704@gmail.com>
+Date:   Tue, 31 Dec 2019 16:06:45 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191230103218.GA10304@amd>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAL5oW00Lh4v2YpX2GcDoRS2fFJjvHRsdhNjtvyYGpWOpgL=TCg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 11:32:18AM +0100, Pavel Machek wrote:
-> On Sun 2019-12-29 18:18:11, Greg Kroah-Hartman wrote:
-> > From: Corey Minyard <cminyard@mvista.com>
-> > 
-> > [ Upstream commit cbb79863fc3175ed5ac506465948b02a893a8235 ]
-> > 
-> > If something has the IPMI driver open, don't allow the device
-> > module to be unloaded.  Before it would unload and the user would
-> > get errors on use.
-> > 
-> > This change is made on user request, and it makes it consistent
-> > with the I2C driver, which has the same behavior.
-> > 
-> > It does change things a little bit with respect to kernel users.
-> > If the ACPI or IPMI watchdog (or any other kernel user) has
-> > created a user, then the device module cannot be unloaded.  Before
-> > it could be unloaded,
-> > 
-> > This does not affect hot-plug.  If the device goes away (it's on
-> > something removable that is removed or is hot-removed via sysfs)
-> > then it still behaves as it did before.
+
+
+On 11/26/19 8:19 PM, Stuart Hayes wrote:
+> On Tue, Nov 26, 2019 at 7:36 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>
+>> On Fri, Oct 25, 2019 at 03:00:45PM -0400, Stuart Hayes wrote:
+>>> From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+>>>
+>>> The presence detect state (PDS) is normally a logical or of in-band and
+>>> out-of-band presence. As of PCIe 4.0, there is the option to disable
+>>> in-band presence so that the PDS bit always reflects the state of the
+>>> out-of-band presence.
+>>>
+>>> The recommendation of the PCIe spec is to disable in-band presence
+>>> whenever supported.
+>>
+>> I think I'm fine with this patch, but I would like to include the
+>> specific reference for this recommendation.  If you have it handy, I
+>> can just insert it.
+>>
 > 
-> I don't think this is good idea for stable. First, it includes
-> unrelated function rename,
-
-Umm, no, that's not unrelated, it was renamed so a defined could be
-done with the original name so the module could be passed in
-automatically.
-
-> and second, it does not really fix any bug;
-> it just changes behaviour.
-
-This is true.  I assume Tony asked for the backport.  I'm ambivolent
-on whether this gets backported.  I'll defer to Tony for justification.
-
--corey
-
+> The PCI Express Base Specification Revision 5.0, Version 1.0, in the
+> implementation note under Appendix I ("Async Hot-Plug Reference
+> Model"), it says "If OOB PD is being used and the associated DSP
+> supports In-Band PD Disable, it is recommended that the In-Band PD
+> Disable bit be Set, ..."
 > 
-> Best regards,
-> 									Pavel
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+> 
 
+Is that what you were looking for?  Please let me know if there's anything
+else I can do to help.
 
