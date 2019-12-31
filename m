@@ -2,109 +2,150 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAECC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 00:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 559D3C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 01:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97A5F2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 00:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B74D2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 01:03:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SChRRsQA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EXAD1iGm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbfLaA7r (ORCPT
+        id S1727834AbfLaBDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 19:59:47 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:57794 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727766AbfLaA7r (ORCPT
+        Mon, 30 Dec 2019 20:03:06 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42189 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727806AbfLaBDF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 19:59:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=aWSBqhxb0lE9SfM+h9fKMV7nyuX+MBH/ozYu/Tw/9UQ=; b=SChRRsQAz2wMeqlwHeMNImY2G
-        FlRsfTK+1oNFu6/CMoC7myWAtiYCm5Gpg3iEv4kytwFoeb8V2+SqCWAiAp8bFKA4HcCmeVl1qoTzH
-        3gLiAigOsgBWWghXDEcyxHmE9jno6TPkJyOmS5ZMcWSntg4MNPIi6TOeebKaPNwCH1m/9aIqNneCS
-        AVyMKkS2RYoWn1i/9gEOYWSSfUJ8IzhwSNyrqLsmCivn98y06sL3x7xXeiPm1cTy/T2IUTARV6V4c
-        4k5c7H+Sw0u8p6fM/Ok5MnWSEtVwSseSKkqWJJky22PAOh0aLPeWIjT+UjBUeKQ8ORQjtdo/XoPTK
-        NMJBp7sCQ==;
-Received: from [2601:1c0:6280:3f0::34d9]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1im5sw-0002mF-J6; Tue, 31 Dec 2019 00:59:46 +0000
-Subject: Re: Why is CONFIG_VT forced on?
-To:     Rob Landley <rob@landley.net>, linux-kernel@vger.kernel.org
-References: <9b79fb95-f20c-f299-f568-0ffb60305f04@landley.net>
- <b3cf8faf-ef04-2f55-3ccb-772e18a57d7b@infradead.org>
- <ac0e5b3b-6e70-6ab0-0c7f-43175b73058f@landley.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e55624fa-7112-1733-8ddd-032b134da737@infradead.org>
-Date:   Mon, 30 Dec 2019 16:59:45 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 30 Dec 2019 20:03:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577754185;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:in-reply-to:in-reply-to:  references:references;
+        bh=YEL59S0rEfaETJJxD2o4v2zyBJg6VbyRRupbe/gb39o=;
+        b=EXAD1iGm4OOqGvDIErtjjh4PfHnPprTDRwkgXVtgbK4RexpXWvVc+o2zrxPsvXNfddghOw
+        6TLP3uqp+w88TOPPBLDjTA5Ejb9cSPoJ7VZSpJeatU5KzPWnSFWL+JAUIQvCbU6MNeYFat
+        mJQS05HAOdIUksdxkR1gZXQ0bZ3WT5o=
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
+ [209.85.210.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-173-76QiPq1lOPGYu0ZV32n5hQ-1; Mon, 30 Dec 2019 20:03:02 -0500
+X-MC-Unique: 76QiPq1lOPGYu0ZV32n5hQ-1
+Received: by mail-pf1-f200.google.com with SMTP id i196so25489515pfe.6
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 17:03:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=YEL59S0rEfaETJJxD2o4v2zyBJg6VbyRRupbe/gb39o=;
+        b=MyRXRrHDemFv99geQnE6PQT5tZUJuZ3HSKYMk/Gvp+FpkkmPZjMSXN4d7EB6vPEPx0
+         WOoFtuA0/bYTM4Mojzun7U3HzJ+8VGvGq+OZHXsyddND6/z9lPjc9XUbJsBXMaJHVQ9l
+         PwvUQPmvAou7gJaj+YcapgV5LIs05DjGmt1i2mnISFelpnWENKzbL397B8nkZnfBFm7X
+         oPDctPo5dTFYMhPqyzxdCAIkUpkuk/y4iUbdCf2FwizShkUVPraPOMoOYe9eFBfpNZbe
+         iHIoX7TfzVcnFj4mMS3Jj/WJPHAXPRl/w2QxbcYVNNEZMmF1eFIkO2WcctsftLuReo5E
+         hxPQ==
+X-Gm-Message-State: APjAAAWfcZ2LEJxY2vieXPdEosXp9bmFcoTpnfmn2H61AnmPtiQc05M4
+        vPT1yYYmzGxwchLPRJcJjNMyg4uriqQ3i+qnSapUsRT09I7E/9+dp6pX0rrGTmCp56PLYO03gbu
+        +AFVab2EdcHFCVClong8e766C
+X-Received: by 2002:a17:90a:d804:: with SMTP id a4mr2786111pjv.11.1577754181412;
+        Mon, 30 Dec 2019 17:03:01 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxwK4Yqf5oL3Te81ljRHdMSyXxTSGUUsEblOWjDi2X4q996dVxQThs2vKjVE4pqL+Ar/f4RFQ==
+X-Received: by 2002:a17:90a:d804:: with SMTP id a4mr2786074pjv.11.1577754181186;
+        Mon, 30 Dec 2019 17:03:01 -0800 (PST)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id u7sm51013785pfh.128.2019.12.30.17.02.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Dec 2019 17:03:00 -0800 (PST)
+Date:   Mon, 30 Dec 2019 18:02:56 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Christian Bundy <christianbundy@fraction.io>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable-commits@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Patch "tpm_tis: reserve chip for duration of tpm_tis_core_init"
+ has been added to the 5.4-stable tree
+Message-ID: <20191231010256.kymv4shwmx5jcmey@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Christian Bundy <christianbundy@fraction.io>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Peter Huewe <peterhuewe@gmx.de>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable-commits@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1577122577157232@kroah.com>
+ <CAPcyv4jfpOX85GWgNTyugWksU=e-j=RhU_fcrcHBo4GMZ8_bhw@mail.gmail.com>
+ <c6ce34b130210d2d1330fc4079d6d82bd74dcef1.camel@linux.intel.com>
+ <50217a688ffa56cf5f150ffd358daba2a88cad48.camel@linux.intel.com>
+ <20191228151526.GA6971@linux.intel.com>
+ <CAPcyv4i_frm8jZeknniPexp8AAmGsaq0_DHegmL4XZHQi1ThxA@mail.gmail.com>
+ <CAPcyv4iyQeXBWvp8V_UPBsOk29cfmTVZGYrrDgyYYqzsQvTjNA@mail.gmail.com>
+ <2c4a80e0d30bf1dfe89c6e3469d1dbfb008275fa.camel@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <ac0e5b3b-6e70-6ab0-0c7f-43175b73058f@landley.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <2c4a80e0d30bf1dfe89c6e3469d1dbfb008275fa.camel@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/30/19 4:53 PM, Rob Landley wrote:
-> 
-> 
-> On 12/30/19 6:36 PM, Randy Dunlap wrote:
->> On 12/30/19 4:30 PM, Rob Landley wrote:
->>> On x86-64 menuconfig, CONFIG_VT is forced on (in drivers->char devices->virtual
->>> terminal), but the help doesn't mention a "selects", and I didn't spot anything
->>> obvious in "find . -name 'Kconfig*' | xargs grep -rw VT".
->>>
->>> Congratulations, you've reinvented "come from". I'm mostly familiar with the
->>> kconfig plumbing from _before_ you made it turing complete: how do I navigate this?
->>>
->>> I'm guessing "stick printfs into the menuconfig binary" is the recommended next
->>> step for investigating this? Or is there a trick I'm missing?
+On Tue Dec 31 19, Jarkko Sakkinen wrote:
+>On Sun, 2019-12-29 at 23:41 -0800, Dan Williams wrote:
+>> This looked like the wrong revert to me, and testing confirms that
+>> this does not fix the problem.
 >>
->> I've never had to resort to that trick.
+>> As I mentioned in the original report [1] the commit that bisect flagged was:
 >>
->>> Rob
->>>
+>>     5b359c7c4372 tpm_tis_core: Turn on the TPM before probing IRQ's
 >>
->> config VT
->> 	bool "Virtual terminal" if EXPERT
->> 	depends on !UML
->> 	select INPUT
->> 	default y
->> 	^^^^^^^^^^^^^^^^^^^
+>> That commit moved tpm_chip_start() before irq probing. Commit
+>> 21df4a8b6018 "tpm_tis: reserve chip for duration of tpm_tis_core_init"
+>> does not appear to change anything in that regard.
 >>
->> That's all it takes ^^^^^^^^^^^^^^^^.
-> 
-> Try to switch it off. It won't let you, it's forced on by something else. The
-> help doesn't say what. (That select means it's forcing CONFIG_INPUT on?)
-> 
->> Does that explain it?  Maybe I don't understand the problem.
-> 
-> It's possible I don't either. I can disable it when when I start from
-> allnoconfig and then switch CONFIG_TTY on (at which point it defaults to y, but
-> can be disabled).
+>> Perhaps this hardware has always had broken interrupts and needs to be
+>> quirked off? I'm trying an experiment with tpm_tis_core.interrupts=0
+>> workaround.
+>>
+>>
+>> [1]: https://lore.kernel.org/linux-integrity/CAA9_cmeLnHK4y+usQaWo72nUG3RNsripuZnS-koY4XTRC+mwJA@mail.gmail.com/
+>
+>I think for short term, yes, it is better to revert the commits
+>that make things more broken.
+>
+>for-linus-v5.5-rc5 branch contains three commits that exactly do
+>this i.e. the reverts that Stefan sent and revert to Jerry's earlier
+>commit.
+>
+>After that is out of the table it is easier to analyze how the code
+>should be actually refactored. Like, I have no idea when I get
+>local HW that can reproduce this and Jerry still seems to have the
+>same issue. It'd be nice make the exactly right changes instead of
+>reverts but situation is what it is.
+>
 
+The only other thought I had was moving the tpm_chip_start/stop
+into tpm_tis_probe_irq_single around the tpm_tis_gen_interrupt call.
+I don't know why doing the clkrun bit after setting the interrupt
+register values would matter, but I'm not sure what else there is
+that would be different than when that stuff was happening in
+down in tpm_try_transmit. Without hardware to poke at it is hard
+to get anywhere.
 
-#
-# Character devices
-#
-CONFIG_TTY=y
-# CONFIG_VT is not set
-
-But first you must set/enable EXPERT.  See the bool prompt.
-
-
--- 
-~Randy
+>Please check the branch and ACK/NAK if I can add tested-by's (and
+>other tags).
+>
+>/Jarkko
+>
 
