@@ -2,92 +2,65 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B93C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 13:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D01C7C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 14:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9850A205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 13:54:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bSyniGig"
+	by mail.kernel.org (Postfix) with ESMTP id AA9BE205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 14:05:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbfLaNyA (ORCPT
+        id S1727070AbfLaOFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 08:54:00 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37879 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbfLaNyA (ORCPT
+        Tue, 31 Dec 2019 09:05:01 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:50430 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbfLaOFB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 08:54:00 -0500
-Received: by mail-ot1-f67.google.com with SMTP id k14so50401419otn.4;
-        Tue, 31 Dec 2019 05:53:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=kGyXkBQJvM0c0hAT504olnbwajE9HeVwh9tzY4Wj4LY=;
-        b=bSyniGigC0qO9gd/Y2toL098hO1c80PihKqgNSew+a++IsTm3mxU4Oc6nLsNnOK1EK
-         vSOr+YvoFHp5GFWLnLGP+ElgWvsTdZ27dFj1PaW63Mg777TFpcu/PxkWAKLHN3wlSFfR
-         OaKFoFfKRwyzOFBxUBe0kdFne5nFFZayWJvnQymE7MhlXVSGbK/21U2K6mzrdyh0dSCs
-         oIN3lRYqzb1i94jM54Py6/PXxCh0QmUzkYnWksdBxUADnmh9QtpI08VBPyhW7S5+uFP/
-         y9ODZY4Mlu57lyl0+IrZ7icTiAXHZPqoVrANjqipAqgL4mx6MSsauQHoJWA7eaykQkUr
-         HXoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=kGyXkBQJvM0c0hAT504olnbwajE9HeVwh9tzY4Wj4LY=;
-        b=OGaYDWVpP8G++hEa1riC+4ctO/C+iqpXFpzWxRkvX7wUDs2NOeQqvEOHky+Yo9z7te
-         8qJYO4GJ4odyvnk9zrpy50Lip0TR2X1Zb0E5jYRTxqiA0dFlseZAOkSi/GuvtwyoFAOc
-         TWZK7iWmYug26+ibK0TVQ7UF10T+XPGzNFkJufMLcFALaCYdZ2pbgDb1Qd6ENrnS8mbR
-         vgjhdgteKmqx9E29+UmFgplVg6MFG9/W3AJkEgVUNkEiGwJWdilHcybIqLBGq5u+uJwz
-         f+p2Kd7ItUMo0yODybLojV8bhywidOnVQ3FJCMAkvbRiRDvUpx11IQOYwdAzmtBTWfql
-         2tCg==
-X-Gm-Message-State: APjAAAUIWoYmtv6C/g0XPFJJMGkAUXlVV5zX40J54uru/2jbk6wgsJ4j
-        oweVzL4iZFDDtnxiDyVxiRFPTk5dnZeIvUx/hoA=
-X-Google-Smtp-Source: APXvYqyE4/pCtSX3yLBRbI6W4bgx6Xb/kgk1G7fxT89nT9ORh9LV9Su5OMtLQETzAxRDg6SQtdpJzcztHjoFsTBdB48=
-X-Received: by 2002:a9d:6196:: with SMTP id g22mr83252945otk.204.1577800439673;
- Tue, 31 Dec 2019 05:53:59 -0800 (PST)
+        Tue, 31 Dec 2019 09:05:01 -0500
+Received: from [172.58.107.126] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1imI8n-0007rW-Nb; Tue, 31 Dec 2019 14:04:58 +0000
+Date:   Tue, 31 Dec 2019 15:04:52 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Sargun Dhillon <sargun@sargun.me>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Tycho Andersen <tycho@tycho.ws>
+Subject: Re: [PATCH] selftests/seccomp: Test kernel catches garbage on
+ SECCOMP_IOCTL_NOTIF_RECV
+Message-ID: <20191231140451.rcz7lsv7f2npuzuj@wittgenstein>
+References: <20191230203811.4996-1-sargun@sargun.me>
+ <201912301402.DAA6ED9A0@keescook>
 MIME-Version: 1.0
-Received: by 2002:a8a:87:0:0:0:0:0 with HTTP; Tue, 31 Dec 2019 05:53:59 -0800 (PST)
-In-Reply-To: <20191229141550.w66jnp2ayvd4bkk3@pali>
-References: <20191220062419.23516-1-namjae.jeon@samsung.com>
- <CGME20191220062733epcas1p1afd7af6ca2bfbde3d9a883f55f4f3b60@epcas1p1.samsung.com>
- <20191220062419.23516-4-namjae.jeon@samsung.com> <20191229141550.w66jnp2ayvd4bkk3@pali>
-From:   Namjae Jeon <linkinjeon@gmail.com>
-Date:   Tue, 31 Dec 2019 22:53:59 +0900
-Message-ID: <CAKYAXd-VmWMDqATCh9+jpGRx_Arw9_nc19CgJ8bNmRwSZDvD5w@mail.gmail.com>
-Subject: Re: [PATCH v8 03/13] exfat: add inode operations
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <201912301402.DAA6ED9A0@keescook>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> +	/* strip all trailing spaces */
->> +	/* DO NOTHING : Is needed? */
->
-> Hello, this comment looks like a TODO item which should be fixed.
-Will fix.
->
->> +
->> +	/* strip all trailing periods */
->> +	namelen = __exfat_striptail_len(strlen(path), path);
->> +	if (!namelen)
->> +		return -ENOENT;
->> +
->> +	/* the limitation of linux? */
->
-> And this one too.
-This too!
+On Mon, Dec 30, 2019 at 02:02:45PM -0800, Kees Cook wrote:
+> On Mon, Dec 30, 2019 at 12:38:11PM -0800, Sargun Dhillon wrote:
+> > This adds to the user_notification_basic to set a field of seccomp_notif
+> > to an invalid value to ensure that the kernel returns EINVAL if any of the
+> > seccomp_notif fields are set to invalid values.
+> > 
+> > Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+> > Suggested-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > Cc: Kees Cook <keescook@chromium.org>
+> 
+> Thanks! Applied. :)
 
-Thanks.
+Thanks everyone and guten Rutsch
+( https://en.wiktionary.org/wiki/guten_Rutsch )
+:)
+
+Christian
