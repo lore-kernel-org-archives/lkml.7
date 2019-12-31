@@ -2,90 +2,81 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C670DC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 22:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0647DC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 22:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D46D205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 22:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEA3F206E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 22:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577831613;
+	bh=QaZbUxjuLY1oPNTNyLwTGDZ9ozsSFFrFCBC1boCwOD0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lG/3r8iRKLKSarC0WijYBIJ3ZS4YipksxRBOFprvgnhOqiDy2AVlBUFReyVv2MDK/
+	 RuGF+cENFLNUSg9V2FnO5K0AvEQxi1hv/xxSxZxCmxDkHJwVVLwm10rCxXOYn1e8AM
+	 GTEbjp/yyKn+nw7GSuShx2K/UnRgIPQPANItFwIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfLaW1i (ORCPT
+        id S1727111AbfLaWdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 17:27:38 -0500
-Received: from mga18.intel.com ([134.134.136.126]:19577 "EHLO mga18.intel.com"
+        Tue, 31 Dec 2019 17:33:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727054AbfLaW1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 17:27:37 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Dec 2019 14:27:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,380,1571727600"; 
-   d="scan'208";a="231416403"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 31 Dec 2019 14:27:35 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1imPzC-0009fK-Ms; Wed, 01 Jan 2020 06:27:34 +0800
-Date:   Wed, 1 Jan 2020 06:26:45 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kbuild-all@lists.01.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        jmattson@google.com, sean.j.christopherson@intel.com,
-        yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
-        edwin.zhai@intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: Re: [PATCH v10 07/10] mmu: spp: Enable Lazy mode SPP protection
-Message-ID: <202001010504.RyikzFRu%lkp@intel.com>
-References: <20191231065043.2209-8-weijiang.yang@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191231065043.2209-8-weijiang.yang@intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        id S1727031AbfLaWdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 17:33:32 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE0E5205ED;
+        Tue, 31 Dec 2019 22:33:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577831612;
+        bh=QaZbUxjuLY1oPNTNyLwTGDZ9ozsSFFrFCBC1boCwOD0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=b8cExrddR70yQfCVlcvn8ljGEw0XzycDsmGTgca2kgOKJDaKrWquZGTFbI+XFUM0k
+         w/fZgXaPi1gTZHLlh6/5QBCZhmiqqd6yUzuNsxKyceGAysr49rt2A1keUOayLqwdSE
+         8/eB5jjSnDJFLqDVV3V8jqc8ffQwFNZwb3/5mbuY=
+Date:   Tue, 31 Dec 2019 14:33:31 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Gang He <GHe@suse.com>
+Cc:     "mark@fasheh.com" <mark@fasheh.com>,
+        "jlbec@evilplan.org" <jlbec@evilplan.org>,
+        "joseph.qi@linux.alibaba.com" <joseph.qi@linux.alibaba.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>
+Subject: Re: [PATCH] ocfs2: make local header paths relative to C files
+Message-Id: <20191231143331.9b77ee5709f2662c54d76a51@linux-foundation.org>
+In-Reply-To: <20191227022950.14804-1-ghe@suse.com>
+References: <20191227022950.14804-1-ghe@suse.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yang,
+On Fri, 27 Dec 2019 02:30:15 +0000 Gang He <GHe@suse.com> wrote:
 
-Thank you for the patch! Perhaps something to improve:
+> From: Masahiro Yamada <masahiroy@kernel.org>
+> 
+> Gang He reports the failure of building fs/ocfs2/ as an external module
+> of the kernel installed on the system:
+> 
+>  $ cd fs/ocfs2
+>  $ make -C /lib/modules/`uname -r`/build M=`pwd` modules
+> 
+> If you want to make it work reliably, I'd recommend to remove ccflags-y
+> from the Makefiles, and to make header paths relative to the C files.
+> I think this is the correct usage of the #include "..." directive.
+> 
+> Reported-by: Gang He <ghe@suse.com>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> Reviewed-by: Gang He <ghe@suse.com>
 
-[auto build test WARNING on kvm/linux-next]
-[also build test WARNING on vhost/linux-next tip/auto-latest linux/master linus/master v5.5-rc4 next-20191219]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Yang-Weijiang/Enable-Sub-Page-Write-Protection-Support/20191231-145254
-base:   https://git.kernel.org/pub/scm/virt/kvm/kvm.git linux-next
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-129-g341daf20-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
-   arch/x86/kvm/mmu/spp.c:202:5: sparse: sparse: symbol 'kvm_spp_level_pages' was not declared. Should it be static?
-   arch/x86/kvm/mmu/spp.c:419:6: sparse: sparse: symbol 'kvm_spp_flush_rmap' was not declared. Should it be static?
->> arch/x86/kvm/mmu/spp.c:574:6: sparse: sparse: symbol 'is_spp_protected' was not declared. Should it be static?
-   arch/x86/kvm/mmu/mmu.c:4827:57: sparse: sparse: cast truncates bits from constant value (ffffff33 becomes 33)
-   arch/x86/kvm/mmu/mmu.c:4829:56: sparse: sparse: cast truncates bits from constant value (ffffff0f becomes f)
-   arch/x86/kvm/mmu/mmu.c:4831:57: sparse: sparse: cast truncates bits from constant value (ffffff55 becomes 55)
-
-Please review and possibly fold the followup patch.
-
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+Your signed-off-by should appear here, since you were on the patch
+delivery path.  I have made that change, OK?
