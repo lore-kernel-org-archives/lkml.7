@@ -2,266 +2,92 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3344C2D0DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 19:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E277C2D0DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 19:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86786206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 19:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C89E206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 19:57:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H4BgyIGa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FxjQFh36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfLaTvq (ORCPT
+        id S1727114AbfLaT5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 14:51:46 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33198 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727557AbfLaTvo (ORCPT
+        Tue, 31 Dec 2019 14:57:41 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38479 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727075AbfLaT5k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 14:51:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577821903;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:in-reply-to:
-         references:references:references;
-        bh=QjRuXgfgPFrQtKbkS2TEeW3Hxk8pRX+LdfMXGhlsc7k=;
-        b=H4BgyIGasU7IigFXlz5TD32Bo9yCTovD4Sq9xBPkdhyZctKzDNoRZcD880CycNTo3eD2Xk
-        9fDpgeaH+SwdT7COVYCFV3zNgsib6yLyc004lpcQsW+7fKKK3G+LdAqz0kLnHxLxayoGme
-        2h967Ikobm+r2lHqcS5xquGMhXq2tZ0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-240-hsGloqUmPtKIbjX6hykI9A-1; Tue, 31 Dec 2019 14:51:42 -0500
-X-MC-Unique: hsGloqUmPtKIbjX6hykI9A-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2F2E918031D5;
-        Tue, 31 Dec 2019 19:51:40 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-15.phx2.redhat.com [10.3.112.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D66167673;
-        Tue, 31 Dec 2019 19:51:35 +0000 (UTC)
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org
-Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, dwalsh@redhat.com, mpatel@redhat.com,
-        Richard Guy Briggs <rgb@redhat.com>
-Subject: [PATCH ghak90 V8 16/16] audit: add capcontid to set contid outside init_user_ns
-Date:   Tue, 31 Dec 2019 14:48:29 -0500
-Message-Id: <5941671b6b6b5de28ab2cc80e72f288cf83291d5.1577736799.git.rgb@redhat.com>
-In-Reply-To: <cover.1577736799.git.rgb@redhat.com>
-References: <cover.1577736799.git.rgb@redhat.com>
-In-Reply-To: <cover.1577736799.git.rgb@redhat.com>
-References: <cover.1577736799.git.rgb@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Tue, 31 Dec 2019 14:57:40 -0500
+Received: by mail-wm1-f67.google.com with SMTP id u2so2525176wmc.3;
+        Tue, 31 Dec 2019 11:57:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=CsU1YPkDyWBaNW9/0vlGQy7znmLLiuhBVSrYueAradc=;
+        b=FxjQFh36axpDJGsW4aYnia11mXI7/TpaVw3Gb5v7dqoalYBw0RGP9TVCpJHwmWCBZC
+         cy2Pflp8YA+u9Y8Ph8O7dh/ot2UqQpxPpmAcgWa+0NyYR8YSY6u1lOhPpPjaVq+lt3Td
+         lf/NrsQVR0XI1b/0PeD+5Vm9GEdrRNl7MDC2IRhO/802djs+MAMezDULypjQ4zvpHTcv
+         /DflrTnkyucc8ZXlVcy6FwGq1XqwZBqiJbSwNOlh8hKq/EJo7ufpJpnN5CBTuS4MfXTZ
+         33IDsVRhvmyJUduMZrfOuY19ESCtC1XBYXYW0o1YGKsbE+BXJ6I48CFNYVZQxer+JLoH
+         ycCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CsU1YPkDyWBaNW9/0vlGQy7znmLLiuhBVSrYueAradc=;
+        b=M0pXbKhQ2En+Cp5Tw6jxpl5W+1J9PrrMJml7D1eJk9ePTMbZcaP6/fu/G3rORX05uJ
+         euV6eJjd04QNq1YsCj73SetlSKaBGkoqMTOTcLHKXhWLwDQqiWptQZlDr2SERg4+84SP
+         Zmumd2euvLnJHeCwkc+kodd9Eg7956WbbeRpNou2H6Jjx2qLwaZV7red/ZM4iY4lbYxb
+         taxBWG9MdHM1hWg6IhuR6+PebyW5lpGpriE0tLabiafNBMSuSwMs4G4PXsrL7du0Z3s2
+         OU1oSd3ybwDOvTSxSu2vtl7Gfs2YzoktHJmrgGljUJfPlLnyxcqedFhiEK7VjC4DYTSW
+         /vXg==
+X-Gm-Message-State: APjAAAU1aDEp47VVLr3ODnXosh/aqGHnlTGYiCT/+eNgi8QCC4/ECwg8
+        L/Qioh2cX19akhoSk0i8v8g=
+X-Google-Smtp-Source: APXvYqx2NEAB3NMhC7wZ8inzFPyzFcxEskKjvfDe1exbGCNjUr8AL271HjxGRZnhu3BBR4eZw9UI1Q==
+X-Received: by 2002:a1c:a982:: with SMTP id s124mr5532358wme.132.1577822258515;
+        Tue, 31 Dec 2019 11:57:38 -0800 (PST)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id b16sm51590572wrj.23.2019.12.31.11.57.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 31 Dec 2019 11:57:38 -0800 (PST)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, vgupta@synopsys.com,
+        devicetree@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARC: [plat-hsdk]: remove num-slots from mmc node
+Date:   Tue, 31 Dec 2019 20:57:31 +0100
+Message-Id: <20191231195731.6037-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide a mechanism similar to CAP_AUDIT_CONTROL to explicitly give a
-process in a non-init user namespace the capability to set audit
-container identifiers.
+The option "num-slots" was deprecated long time ago, so remove it.
 
-Provide /proc/$PID/audit_capcontid interface to capcontid.
-Valid values are: 1==enabled, 0==disabled
-
-Report this action in message type AUDIT_SET_CAPCONTID 1022 with fields
-opid= capcontid= old-capcontid=
-
-Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- fs/proc/base.c             | 55 ++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/audit.h      | 14 ++++++++++++
- include/uapi/linux/audit.h |  1 +
- kernel/audit.c             | 35 +++++++++++++++++++++++++++++
- 4 files changed, 105 insertions(+)
+ arch/arc/boot/dts/hsdk.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 26091800180c..283ef8e006e7 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -1360,6 +1360,59 @@ static ssize_t proc_contid_write(struct file *file, const char __user *buf,
- 	.write		= proc_contid_write,
- 	.llseek		= generic_file_llseek,
- };
-+
-+static ssize_t proc_capcontid_read(struct file *file, char __user *buf,
-+				  size_t count, loff_t *ppos)
-+{
-+	struct inode *inode = file_inode(file);
-+	struct task_struct *task = get_proc_task(inode);
-+	ssize_t length;
-+	char tmpbuf[TMPBUFLEN];
-+
-+	if (!task)
-+		return -ESRCH;
-+	/* if we don't have caps, reject */
-+	if (!capable(CAP_AUDIT_CONTROL) && !audit_get_capcontid(current))
-+		return -EPERM;
-+	length = scnprintf(tmpbuf, TMPBUFLEN, "%u", audit_get_capcontid(task));
-+	put_task_struct(task);
-+	return simple_read_from_buffer(buf, count, ppos, tmpbuf, length);
-+}
-+
-+static ssize_t proc_capcontid_write(struct file *file, const char __user *buf,
-+				   size_t count, loff_t *ppos)
-+{
-+	struct inode *inode = file_inode(file);
-+	u32 capcontid;
-+	int rv;
-+	struct task_struct *task = get_proc_task(inode);
-+
-+	if (!task)
-+		return -ESRCH;
-+	if (*ppos != 0) {
-+		/* No partial writes. */
-+		put_task_struct(task);
-+		return -EINVAL;
-+	}
-+
-+	rv = kstrtou32_from_user(buf, count, 10, &capcontid);
-+	if (rv < 0) {
-+		put_task_struct(task);
-+		return rv;
-+	}
-+
-+	rv = audit_set_capcontid(task, capcontid);
-+	put_task_struct(task);
-+	if (rv < 0)
-+		return rv;
-+	return count;
-+}
-+
-+static const struct file_operations proc_capcontid_operations = {
-+	.read		= proc_capcontid_read,
-+	.write		= proc_capcontid_write,
-+	.llseek		= generic_file_llseek,
-+};
- #endif
- 
- #ifdef CONFIG_FAULT_INJECTION
-@@ -3121,6 +3174,7 @@ static int proc_stack_depth(struct seq_file *m, struct pid_namespace *ns,
- 	REG("loginuid",   S_IWUSR|S_IRUGO, proc_loginuid_operations),
- 	REG("sessionid",  S_IRUGO, proc_sessionid_operations),
- 	REG("audit_containerid", S_IWUSR|S_IRUSR, proc_contid_operations),
-+	REG("audit_capcontainerid", S_IWUSR|S_IRUSR|S_IRUSR, proc_capcontid_operations),
- #endif
- #ifdef CONFIG_FAULT_INJECTION
- 	REG("make-it-fail", S_IRUGO|S_IWUSR, proc_fault_inject_operations),
-@@ -3522,6 +3576,7 @@ static int proc_tid_comm_permission(struct inode *inode, int mask)
- 	REG("loginuid",  S_IWUSR|S_IRUGO, proc_loginuid_operations),
- 	REG("sessionid",  S_IRUGO, proc_sessionid_operations),
- 	REG("audit_containerid", S_IWUSR|S_IRUSR, proc_contid_operations),
-+	REG("audit_capcontainerid", S_IWUSR|S_IRUSR|S_IRUSR, proc_capcontid_operations),
- #endif
- #ifdef CONFIG_FAULT_INJECTION
- 	REG("make-it-fail", S_IRUGO|S_IWUSR, proc_fault_inject_operations),
-diff --git a/include/linux/audit.h b/include/linux/audit.h
-index 28b9c7cd86a6..62c453306c2a 100644
---- a/include/linux/audit.h
-+++ b/include/linux/audit.h
-@@ -116,6 +116,7 @@ struct audit_task_info {
- 	kuid_t			loginuid;
- 	unsigned int		sessionid;
- 	struct audit_contobj	*cont;
-+	u32			capcontid;
- #ifdef CONFIG_AUDITSYSCALL
- 	struct audit_context	*ctx;
- #endif
-@@ -224,6 +225,14 @@ static inline unsigned int audit_get_sessionid(struct task_struct *tsk)
- 	return tsk->audit->sessionid;
- }
- 
-+static inline u32 audit_get_capcontid(struct task_struct *tsk)
-+{
-+	if (!tsk->audit)
-+		return 0;
-+	return tsk->audit->capcontid;
-+}
-+
-+extern int audit_set_capcontid(struct task_struct *tsk, u32 enable);
- extern int audit_set_contid(struct task_struct *tsk, u64 contid);
- 
- static inline u64 audit_get_contid(struct task_struct *tsk)
-@@ -305,6 +314,11 @@ static inline unsigned int audit_get_sessionid(struct task_struct *tsk)
- 	return AUDIT_SID_UNSET;
- }
- 
-+static inline u32 audit_get_capcontid(struct task_struct *tsk)
-+{
-+	return 0;
-+}
-+
- static inline u64 audit_get_contid(struct task_struct *tsk)
- {
- 	return AUDIT_CID_UNSET;
-diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
-index 2844d78cd7af..01251e6dcec0 100644
---- a/include/uapi/linux/audit.h
-+++ b/include/uapi/linux/audit.h
-@@ -73,6 +73,7 @@
- #define AUDIT_GET_FEATURE	1019	/* Get which features are enabled */
- #define AUDIT_CONTAINER_OP	1020	/* Define the container id and info */
- #define AUDIT_SIGNAL_INFO2	1021	/* Get info auditd signal sender */
-+#define AUDIT_SET_CAPCONTID	1022	/* Set cap_contid of a task */
- 
- #define AUDIT_FIRST_USER_MSG	1100	/* Userspace messages mostly uninteresting to kernel */
- #define AUDIT_USER_AVC		1107	/* We filter this differently */
-diff --git a/kernel/audit.c b/kernel/audit.c
-index 1287f0b63757..1c22dd084ae8 100644
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -2698,6 +2698,41 @@ static bool audit_contid_isowner(struct task_struct *tsk)
- 	return false;
- }
- 
-+int audit_set_capcontid(struct task_struct *task, u32 enable)
-+{
-+	u32 oldcapcontid;
-+	int rc = 0;
-+	struct audit_buffer *ab;
-+
-+	if (!task->audit)
-+		return -ENOPROTOOPT;
-+	oldcapcontid = audit_get_capcontid(task);
-+	/* if task is not descendant, block */
-+	if (task == current)
-+		rc = -EBADSLT;
-+	else if (!task_is_descendant(current, task))
-+		rc = -EXDEV;
-+	else if (current_user_ns() == &init_user_ns) {
-+		if (!capable(CAP_AUDIT_CONTROL) && !audit_get_capcontid(current))
-+			rc = -EPERM;
-+	}
-+	if (!rc)
-+		task->audit->capcontid = enable;
-+
-+	if (!audit_enabled)
-+		return rc;
-+
-+	ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_SET_CAPCONTID);
-+	if (!ab)
-+		return rc;
-+
-+	audit_log_format(ab,
-+			 "opid=%d capcontid=%u old-capcontid=%u",
-+			 task_tgid_nr(task), enable, oldcapcontid);
-+	audit_log_end(ab);
-+	return rc;
-+}
-+
- /*
-  * audit_set_contid - set current task's audit contid
-  * @task: target task
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index 9acbeba83..1d12808a1 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -251,7 +251,6 @@
+ 		mmc@a000 {
+ 			compatible = "altr,socfpga-dw-mshc";
+ 			reg = <0xa000 0x400>;
+-			num-slots = <1>;
+ 			fifo-depth = <16>;
+ 			card-detect-delay = <200>;
+ 			clocks = <&mmcclk_biu>, <&mmcclk_ciu>;
 -- 
-1.8.3.1
+2.11.0
 
