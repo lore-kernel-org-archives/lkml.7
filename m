@@ -2,222 +2,130 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A3ABC2D0D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 03:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EABAC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 03:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E79A2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 03:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81D1206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 03:23:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+5X4jgH"
+	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="K0RxkoMR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbfLaDHJ (ORCPT
+        id S1726816AbfLaDX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 22:07:09 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33449 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfLaDHJ (ORCPT
+        Mon, 30 Dec 2019 22:23:58 -0500
+Received: from mail-ot1-f47.google.com ([209.85.210.47]:44797 "EHLO
+        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbfLaDX6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 22:07:09 -0500
-Received: by mail-wm1-f67.google.com with SMTP id d139so1025845wmd.0;
-        Mon, 30 Dec 2019 19:07:06 -0800 (PST)
+        Mon, 30 Dec 2019 22:23:58 -0500
+Received: by mail-ot1-f47.google.com with SMTP id h9so46114075otj.11
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 19:23:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BZ0VS0hhU2Vvdywzz5wNCAdkQKdrdnQbQ4w6BurVpwQ=;
-        b=h+5X4jgHpLK5FZvMfDyI9vkbxSu9GLdeWW5Mo6g2xR7CDYmdux7e9+KX092C19gm2L
-         7HbQuwshg9KK2AZm//GhUxUYf/KixNNgz0a5Jf6Yxit6fCxR/BD+tm+AVjMj6n0mvREY
-         x94AnCE9RO8CU9yDOD12qTYg1UbvqjuhtKB0PqjtR0Gc3OXfALB1XNwWCgvKRcfoQ9Xc
-         yTbBQCGmoUxhCWK5/BVciN/13tKMozSoBdaaeZmpK6p+WG00hW5xsfHd2NyYS9NeZTDU
-         8UMJkiLV8/eKvOsxRXVkRdOkx+vFhZpHwcOZwQWUDgIPTPP5qoA8BVbhOjOIW0yk/wcs
-         FZxA==
+        d=landley-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=L/kyvGEr4uFHwqPQpgEhZ4Erg6RCGEqxRCpdwHQ8Tzw=;
+        b=K0RxkoMR1SxSz92rdlVNSCOmbgPOXNLYNoYvxEug/RW+dBv9STcmr0PV4CCqxiMFgZ
+         0NcPklQNGyWSu5GwZQs9lkkUb2oL9Zn8c7AQZPWZccA4gQJ9E+CqN8H9zVX5KeLSdNnv
+         kAerLuoZxrKEwXucwITB95zhL///GD18dqdlOcEWoNgb0WrdyY+8QabzO1d/7B64QCrp
+         APrDSeDIJUFtK8fW6sS4MzqwMGyW4MIF76Ae8FQhEJIFpMKutDBkKV46hWbVUaFBm8gP
+         0coTCJ4bpvLG82/mefMkdM4LmYO5pdhDVv9n0o/rmaBwRKHf5ri1mxlQt22/KVAu0Q/8
+         wZfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BZ0VS0hhU2Vvdywzz5wNCAdkQKdrdnQbQ4w6BurVpwQ=;
-        b=ouDwTaZZAVp+m21VBTt9Dy5kag/kR4Cw/o3MJREy3+TaF7EpSObMTGIk0hYtGtrVkq
-         OrAk1bXsWBZG+fjxG4DCfWuH6L1tw4FMb6JTJm081RPuWXejH7BmNzxF5gkJllFjCDBK
-         yNW7I2sSK+lVGNDGo+VtE+Zu/y/4pCRqiGHr5X+UOcBg8PSyAiPfW+9y/dHvZJAMC5oG
-         RRHDtrD9LYto5W8joOL913M0uOkFy/feBMZMfChUMIurnsOgU+9HJk3C8AOt4R1K9Vi3
-         ofj6I1LTA2cZzZr3N96hUN4hStS2CWGJcJ2Jp0d6csWSd38RNu/rH1gcIO7ZboF5X0Up
-         TlYg==
-X-Gm-Message-State: APjAAAU1XtkX5YQANw65keG2U4kREp9QfTZC0qWEmHRDAFsFR6I04hTo
-        YCoa2qDXhJSTwbEMN9jn5DXf7AsCFnzCE0SmcCc=
-X-Google-Smtp-Source: APXvYqyAU8QpgcwQV5VZ250qmL5iw27RREeLpKMeKHWBHOiqllsZ75v5UqFZF7O1AS7iokOPdu0imlT+PeKSQz2RYV0=
-X-Received: by 2002:a7b:cb0d:: with SMTP id u13mr1989297wmj.68.1577761625988;
- Mon, 30 Dec 2019 19:07:05 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=L/kyvGEr4uFHwqPQpgEhZ4Erg6RCGEqxRCpdwHQ8Tzw=;
+        b=TG0wKASPmDn2NtVNhLEg9CtIhNWBuTc9cOQdnrHyAJUWKS53jAzDAB4+Fs6o5zKu+/
+         T96LD493YFPpBnbLi+0IVfzWmSKJs72iewBR5G6XvXoI3FCOtZRM4Iyzbm7lR3Q5AVj/
+         HhHnSdblrJE7Jp6twyDDdD2/zKAkM9s/RJ2/jDmaIMgov8998PkMs95JiXIVDQ3Z2IrI
+         ++wYPfXvCu+sU87bMyw0TUOCfHhaMYMEevVXrLZu8nEyfCnSLOU3fItJ0b3thp+GrAKt
+         KPOZG/9i5+fuNeqpmKxTAsyAxxNwdmUCMinRWPTB5pPoYK2rugkok+QrdkEp/y7GQ6Ri
+         /N/w==
+X-Gm-Message-State: APjAAAVn4nYI3xWU58Kg7sEaXMTRKVZJwpssJpXnrDQ2AordTngVRm9+
+        XzhBEoAtYP80FM0ggLXpweapajfq7KQ=
+X-Google-Smtp-Source: APXvYqwRr7cHPIt0G74QZbOzuRXJuFFCK3qI4s/R9tBt1+o4/rH2gev1hmm6cosqUtj9alfBohXCUw==
+X-Received: by 2002:a05:6830:110a:: with SMTP id w10mr80837829otq.300.1577762637213;
+        Mon, 30 Dec 2019 19:23:57 -0800 (PST)
+Received: from ?IPv6:2605:6000:e947:6500:6680:99ff:fe6f:cb54? ([2605:6000:e947:6500:6680:99ff:fe6f:cb54])
+        by smtp.googlemail.com with ESMTPSA id m89sm15269464otc.41.2019.12.30.19.23.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 30 Dec 2019 19:23:56 -0800 (PST)
+Subject: Re: Why is CONFIG_VT forced on?
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+References: <9b79fb95-f20c-f299-f568-0ffb60305f04@landley.net>
+ <b3cf8faf-ef04-2f55-3ccb-772e18a57d7b@infradead.org>
+ <ac0e5b3b-6e70-6ab0-0c7f-43175b73058f@landley.net>
+ <e55624fa-7112-1733-8ddd-032b134da737@infradead.org>
+ <018540ef-0327-78dc-ea5c-a43318f1f640@landley.net>
+ <774dfe49-61a0-0144-42b7-c2cbac150687@landley.net>
+ <20191231024054.GC4203@ZenIV.linux.org.uk>
+ <20191231025255.GD4203@ZenIV.linux.org.uk>
+From:   Rob Landley <rob@landley.net>
+Message-ID: <ffa8ec1d-71d7-a153-eed9-8e2daee40949@landley.net>
+Date:   Mon, 30 Dec 2019 21:27:50 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191216121932.22967-1-zhang.lyra@gmail.com> <20191216121932.22967-4-zhang.lyra@gmail.com>
- <20191226185623.GA4463@bogus>
-In-Reply-To: <20191226185623.GA4463@bogus>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Tue, 31 Dec 2019 11:06:29 +0800
-Message-ID: <CAAfSe-vL4S-w4JVzevPYxb=LNqGQEn6quM54AjPHZUe6Gw3WTg@mail.gmail.com>
-Subject: Re: [PATCH V2 3/6] dt-bindings: clk: sprd: add bindings for sc9863a
- clock controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191231025255.GD4203@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Dec 2019 at 02:56, Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Dec 16, 2019 at 08:19:29PM +0800, Chunyan Zhang wrote:
-> > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> >
-> > add a new bindings to describe sc9863a clock compatible string.
-> >
-> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > ---
-> >  .../bindings/clock/sprd,sc9863a-clk.yaml      | 77 +++++++++++++++++++
-> >  1 file changed, 77 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
-> > new file mode 100644
-> > index 000000000000..881f0a0287e5
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
-> > @@ -0,0 +1,77 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +# Copyright 2019 Unisoc Inc.
-> > +%YAML 1.2
-> > +---
-> > +$id: "http://devicetree.org/schemas/clock/sprd,sc9863a-clk.yaml#"
-> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> > +
-> > +title: SC9863A Clock Control Unit Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Orson Zhai <orsonzhai@gmail.com>
-> > +  - Baolin Wang <baolin.wang7@gmail.com>
-> > +  - Chunyan Zhang <zhang.lyra@gmail.com>
-> > +
-> > +properties:
-> > +  "#clock-cells":
-> > +    const: 1
-> > +
-> > +  compatible :
-> > +    enum:
-> > +      - sprd,sc9863a-ap-clk
-> > +      - sprd,sc9863a-pmu-gate
-> > +      - sprd,sc9863a-pll
-> > +      - sprd,sc9863a-mpll
-> > +      - sprd,sc9863a-rpll
-> > +      - sprd,sc9863a-dpll
-> > +      - sprd,sc9863a-aon-clk
-> > +      - sprd,sc9863a-apahb-gate
-> > +      - sprd,sc9863a-aonapb-gate
-> > +      - sprd,sc9863a-mm-gate
-> > +      - sprd,sc9863a-mm-clk
-> > +      - sprd,sc9863a-vspahb-gate
-> > +      - sprd,sc9863a-apapb-gate
->
-> These will probably need to be split to separate schemas for the reasons
-> below...
->
-> > +
-> > +  clocks:
-> > +    description: |
-> > +      The input parent clock(s) phandle for this clock, only list fixed
-> > +      clocks which are decleared in devicetree.
->
-> typo.
->
-> You need to define how many clocks.
+On 12/30/19 8:52 PM, Al Viro wrote:
+>> Rob, if you are in a mood for a long wank, it's your business.  But try to avoid
+>> spraying the results over public lists.
 
-Ok, will add a define of maxItems.
+I don't post regularly here anymore, but it's good to see the code of conduct
+and Linus's sabbatical have had a positive effect on the place in my absence.
 
+> To elaborate: you are complaining about VT being treated the same way as e.g.
+> ELF_CORE or UID16.  Which might or might not be reasonable, but kconfig folks
+> have nothing to do with that.
 >
-> > +
-> > +  clock-names:
-> > +    description: |
-> > +      Clock name strings used for driver to reference.
+> Your complaint is basically that the same thing is forcing all of those on
+> in default configs.
+
+No, my complaint was that kconfig basically has the concept of symbols that turn
+_off_ something that is otherwise on by default ("Disable X" instead of "Enable
+X"), but it was implemented it in an awkward way then allowed to scale to silly
+levels, and now the fact it exists is being used as evidence that it was a good
+idea.
+
+I had to work out a way to work around this design breakage, which I did and had
+moved on before this email, but I thought pointing out the awkwardness might
+help a design discussion. My mistake.
+
+The thread _started_ because menuconfig help has a blind spot (which seemed like
+a bug to me, it _used_ to say why), and then I found the syntax you changed a
+year or two back non-obvious when I tried to RTFM but that part got answered.
+
+> Instead of having a separate ROB_WANTS_THOSE that would
+> prop the rest, but not VT (and frankly, quite a bit of that rest is
+> questionable for minimal setups).  With ROB_WANTS_THOSE (or equivalent
+> information) enshrined in the kernel tree for your convenience.
 >
-> You need to list out the names.
->
-> > +
-> > +  reg:
-> > +    description: |
-> > +      Contain the registers base address and length. It must be configured
-> > +      only if no 'sprd,syscon' under the node.
-> > +
-> > +  sprd,syscon:
-> > +    $ref: '/schemas/types.yaml#/definitions/phandle'
-> > +    description: |
-> > +      The phandle to the syscon which is in the same address area with
-> > +      the clock, and so we can get regmap for the clocks from the
-> > +      syscon device.
->
-> It is preferred to make the clock node a child of the syscon and then
-> you don't need this property.
+> Pardon me, but... why is that anyone else's problem?
 
-According to the hardware topology, any clocks are not belonged to
-syscon, like described here, this phandle is only used to get virtual
-map address for clocks which have the same phsical address base with
-one syscon.
+You drove everybody away who would express similar concerns years ago. None of
+my co-workers have wanted to get linux-kernel on them in ages. (I thought that
+sort of thing was why you were having a code of conduct and such, but apparently
+not.)
 
-In the past, clocks were defined like below:
-    apahb_gate: apahb-gate {
-      compatible = "sprd,sc9863a-apahb-gate";
-      reg = <0 0x20e00000 0 0x1000>;
-      #clock-cells = <1>;
-    };
+*shrug* I'll try to be more proactive about stripping linux-kernel from the cc:
+list once I've got a human's attention in a thread. (Or just try to dig up
+somebody to email directly via git history and the maintainers file.)
 
-And there was also a syscon which had the same base address like below:
-ap_ahb_regs: syscon@20e00000 {
-compatible = "sprd,sc9863a-glbregs", "syscon";
-reg = <0 0x20e00000 0 0x4000>;
-};
+I leave you to your sexual metaphors,
 
-To avoid one phsical address was remapped more than one time, I think
-using the mapped address by syscon directly would be better.
-Any other suggestions are very appreciated.
-
-Thanks,
-Chunyan
-
->
-> > +
-> > +required:
-> > +  - compatible
-> > +  - '#clock-cells'
-> > +
-> > +examples:
-> > +  - |
-> > +    ap_clk: clock-controller@21500000 {
-> > +      compatible = "sprd,sc9863a-ap-clk";
-> > +      reg = <0 0x21500000 0 0x1000>;
-> > +      clocks = <&ext_32k>, <&ext_26m>;
-> > +      clock-names = "ext-32k", "ext-26m";
-> > +      #clock-cells = <1>;
-> > +    };
-> > +
-> > +  - |
-> > +    apahb_gate: apahb-gate {
-> > +      compatible = "sprd,sc9863a-apahb-gate";
-> > +      sprd,syscon = <&ap_ahb_regs>;
-> > +      #clock-cells = <1>;
-> > +    };
-> > +
-> > +...
-> > --
-> > 2.20.1
-> >
+Rob
