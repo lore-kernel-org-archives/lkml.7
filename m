@@ -2,158 +2,108 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0A2C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF88C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 100B1206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7796D206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:39:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EaskGOhh"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="QtFPBRge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725875AbfLaIfP (ORCPT
+        id S1726417AbfLaIjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 03:35:15 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:46330 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725793AbfLaIfN (ORCPT
+        Tue, 31 Dec 2019 03:39:47 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38807 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfLaIjq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 03:35:13 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577781312; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=/MyzgTAoW84poPoGQNDvx4+/Q3RCJgT0vSrB6UE39Ec=;
- b=EaskGOhhGl9zE+i3m4via1P21uHkBLczEZnKZgfHlsUfwz5z1AZB9vQTAd7nZORmhI4GiTqh
- HiAI1NWY9NXPSxWT62gJ4Fj5eAceWUi9oor0oNz78NBT1F/SUTjvAcoD+EuQaaqJ5tLhr6DK
- CiRp6o6MAa3DYhBGfbsx3DT0tyk=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e0b083d.7fe0130850a0-smtp-out-n03;
- Tue, 31 Dec 2019 08:35:09 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id ADB6CC447A4; Tue, 31 Dec 2019 08:35:07 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A3C10C433CB;
-        Tue, 31 Dec 2019 08:35:06 +0000 (UTC)
+        Tue, 31 Dec 2019 03:39:46 -0500
+Received: by mail-pl1-f194.google.com with SMTP id f20so15693165plj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Dec 2019 00:39:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BQtaeDD9iVM5+b30tZbRI2EHQA2GRCPLt5coFH0Hu7k=;
+        b=QtFPBRgexpYA+27porJnxIo3FiID+P4q/uunZRO1911fhApxltA68KLt3FnSAPmSFg
+         o3vDx3KQLkxMzc+YGjItwPwaa1bI3SccD7XL81cYet5UBwSk23N4Y7viJ7QZRzLkoQFf
+         yDUUNPAO8r7K0glITDJkhKjbu+AYwXc+Digc/rjcCxzb87PeUOHNh2+Pa45hi2ep9t1i
+         qmWznwyLzgGxDQJtw3q8xZTKSjka609jGyiKjnAJdw1sq78SjUUg31drO4vvVuEsRoXj
+         WeLdMpnsodrBZJCTrolRCvvWA353118SUOGicN9U93xl4aZAQ/PCeW6ZDQBwCQOmaIfG
+         eYIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BQtaeDD9iVM5+b30tZbRI2EHQA2GRCPLt5coFH0Hu7k=;
+        b=bDYKkzoe6mMzon9Z8enh7mwAyTX/AEoNV/UvSG7bXDJx3jAEnp124+MBL8uiRI/Nge
+         WbUTarOkg9mEyCK0Yf+jMiUfR1GKbNsTqcn6ES9fv2PvF3/GvZYiT07fAee7U/xszSWD
+         IybAHDAstVtb/7JOguhWhvO9iji/Uo7J++ZL7OxL1yuh21XJxKIcvXAjEewk4wnWw3eZ
+         j4sbemNJ+2+pk+U64V/8g+IhDFEntKQvTpwmKGOJc+y2ix87xISEbppkTPiOLrBIQFmw
+         fIdxQX2g5zMYdNyNw0SZNcMgaIxwIZhLxB5GZh8doqj31hkVQUpU8T0e0yKiEn19AEeb
+         Anzw==
+X-Gm-Message-State: APjAAAVVJNtyzGdcLAbGOtf3Rxyq/+yCACJ1ZoqEwI2dRB1PU7jACpWw
+        8pMJCL6IkuucMR4htuFBH3y4cQ==
+X-Google-Smtp-Source: APXvYqyogbKOzEE1A3fEkjBs2LajnnAHqltAyAdH5gr4gm+XpBJEB1ntQvC/9yctl9aSkv2SZI5teA==
+X-Received: by 2002:a17:90b:258:: with SMTP id fz24mr4782140pjb.6.1577781586060;
+        Tue, 31 Dec 2019 00:39:46 -0800 (PST)
+Received: from starnight.8.8.8.8 (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.gmail.com with ESMTPSA id z30sm56896800pfq.154.2019.12.31.00.39.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Dec 2019 00:39:45 -0800 (PST)
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+To:     Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
+        Tova Mussai <tova.mussai@intel.com>,
+        Ayala Beker <ayala.beker@intel.com>
+Cc:     Intel Linux Wireless <linuxwifi@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@endlessm.com,
+        Jian-Hong Pan <jian-hong@endlessm.com>
+Subject: [PATCH] iwlwifi: mvm: Revert "iwlwifi: mvm: fix scan config command size"
+Date:   Tue, 31 Dec 2019 16:36:06 +0800
+Message-Id: <20191231083604.5639-1-jian-hong@endlessm.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 31 Dec 2019 16:35:06 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi-owner@vger.kernel.org, linux-scsi@vger.kernel.org,
-        martin.petersen@oracle.com, subhashj@codeaurora.org,
-        jejb@linux.ibm.com, chun-hung.wu@mediatek.com,
-        kuohong.wang@mediatek.com, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, avri.altman@wdc.com,
-        linux-mediatek@lists.infradead.org, peter.wang@mediatek.com,
-        alim.akhtar@samsung.com, andy.teng@mediatek.com,
-        matthias.bgg@gmail.com, beanhuo@micron.com,
-        pedrom.sousa@synopsys.com, bvanassche@acm.org,
-        linux-arm-kernel@lists.infradead.org, asutoshd@codeaurora.org
-Subject: Re: [PATCH v1 1/2] scsi: ufs: set device as default active power mode
- during initialization only
-In-Reply-To: <1577778290.13164.45.camel@mtkswgap22>
-References: <1577693546-7598-1-git-send-email-stanley.chu@mediatek.com>
- <1577693546-7598-2-git-send-email-stanley.chu@mediatek.com>
- <fd129b859c013852bd80f60a36425757@codeaurora.org>
- <1577754469.13164.5.camel@mtkswgap22>
- <836772092daffd8283a97d633e59fc34@codeaurora.org>
- <1577766179.13164.24.camel@mtkswgap22>
- <1577778290.13164.45.camel@mtkswgap22>
-Message-ID: <44393ed9ff3ba9878bae838307e7eec0@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-31 15:44, Stanley Chu wrote:
-> Hi Can,
-> 
-> On Tue, 2019-12-31 at 12:22 +0800, Stanley Chu wrote:
->> Hi Can,
->> 
->> 
->> > Hi Stanley,
->> >
->> > I see skipping ufshcd_set_ufs_dev_active() in ufshcd_probe_hba()
->> > if it is called from ufshcd_resume() path is the purpose here.
->> >
->> > If so, then ufshcd_set_dev_pwr_mode() would be called, meaning
->> > SSU command will be sent. Why is this SSU command needed to be
->> > sent after a full host reset and restore? Is ufshcd_probe_hba()
->> > not enough to make UFS device fully functional?
->> 
->> After resume (for both runtime resume and system resume), device power
->> mode shall be back to "Active" to service incoming requests.
->> 
->> I see two cases need device power mode transition during resume flow
->> 1. Device Power Mode = Sleep
->> 2. Device Power Mode = PowerDown
->> 
->> For 1, ufshcd_probe_hba() is not invoked during resume flow,
->> hba->curr_dev_pwr_mode = SLEEP, thus ufshcd_resume() can invoke
->> ufshcd_set_dev_pwr_mode() to change device power mode.
->> 
->> For 2, ufshcd_probe_hba() is invoked during resume flow, before this
->> fix, hba->curr_dev_pwr_mode will be set to ACTIVE (note that only this
->> flag is set as ACTIVE, but device may be still in PowerDown state if
->> device power is not fully shutdown or device HW reset is not executed
->> before resume), in the end, ufshcd_resume() will not invoke
->> ufshcd_set_dev_pwr_mode() to send SSU command to make device change 
->> back
->> to Active power mode.
->> 
->> But if device is fully reset before resume (not by current mainstream
->> driver), device can be already in "Active" power mode after power on
->> again during resume flow. In this case, it is OK to set
->> hba->curr_dev_pwr_mode as ACTIVE in ufshcd_probe_hba() and SSU command
->> is not necessary.
->> 
->> Thanks,
->> Stanley
-> 
-> I think currently the assumption in ufshcd_probe_hba() that "device
-> shall be already in Active power mode" makes sense because many device
-> commands will be sent to device in ufshcd_probe_hba() but device is not
-> promised to handle those commands in PowerDown power mode according to
-> UFS spec.
-> 
-> So, maybe always ensuring device being Active power mode before leaving
-> ufshcd_probe_hba() is more reasonable. If so, I will drop this patch
-> first.
-> 
-> Thanks so much for your reviews.
-> 
-> Happy new year!
-> 
-> Thanks,
-> Stanley
+The Intel(R) Dual Band Wireless AC 9461 WiFi keeps restarting until
+commit 06eb547c4ae4 ("wlwifi: mvm: fix scan config command size") is
+reverted.
 
-Hi Stanley,
+Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=206025
+Fixes: commit 06eb547c4ae4 ("wlwifi: mvm: fix scan config command size")
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+---
+ drivers/net/wireless/intel/iwlwifi/mvm/scan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I missed this mail before I hit send. In current code, as per my 
-understanding,
-UFS device's power state should be Active after ufshcd_link_startup() 
-returns.
-If I am wrong, please feel free to correct me.
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/scan.c b/drivers/net/wireless/intel/iwlwifi/mvm/scan.c
+index a046ac9fa852..a5af8f4128b1 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/scan.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/scan.c
+@@ -1213,7 +1213,7 @@ static int iwl_mvm_legacy_config_scan(struct iwl_mvm *mvm)
+ 		cmd_size = sizeof(struct iwl_scan_config_v2);
+ 	else
+ 		cmd_size = sizeof(struct iwl_scan_config_v1);
+-	cmd_size += num_channels;
++	cmd_size += mvm->fw->ucode_capa.n_scan_channels;
+ 
+ 	cfg = kzalloc(cmd_size, GFP_KERNEL);
+ 	if (!cfg)
+-- 
+2.24.1
 
-Due to you are almost trying to revert commit 7caf489b99a42a, I am just 
-wondering
-if you encounter failure/error caused by it.
-
-Happy new year to you too!
-
-Thanks,
-
-Can Guo
