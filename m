@@ -2,106 +2,84 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0508C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 12:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F83C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 12:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9264A20409
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 12:13:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="L1M0d2Mf"
+	by mail.kernel.org (Postfix) with ESMTP id DB7C1206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 12:22:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfLaMNm (ORCPT
+        id S1727064AbfLaMWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 07:13:42 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:43534 "EHLO mail.skyhub.de"
+        Tue, 31 Dec 2019 07:22:52 -0500
+Received: from foss.arm.com ([217.140.110.172]:34100 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726334AbfLaMNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 07:13:42 -0500
-Received: from zn.tnic (p4FED3FEE.dip0.t-ipconnect.de [79.237.63.238])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C266E1EC0216;
-        Tue, 31 Dec 2019 13:13:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1577794421;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=oR2xbj0U/pPGMoJ8gZOuKTnC6YknArbdAxhM7IvzOgI=;
-        b=L1M0d2MfDvXwB06BInNWbNrRyxXJ4p8eDWXOOC1n/RXs6mpQ2saXsgVesChtYtCn60jG7+
-        SBCfc9UtbWk0c6apV5LWzFHPhERhSr3VoPf1lCSNVyNciCmnC8tHSycqfsu4pL/EZgPGlQ
-        28R/sA9gg+yXZLyaBXZGDBcyGdJlvSI=
-Date:   Tue, 31 Dec 2019 13:11:21 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jann Horn <jannh@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH v7 3/4] x86/dumpstack: Introduce die_addr() for die()
- with #GP fault address
-Message-ID: <20191231121121.GA13549@zn.tnic>
-References: <20191218231150.12139-1-jannh@google.com>
- <20191218231150.12139-3-jannh@google.com>
+        id S1726334AbfLaMWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 07:22:52 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81DB0328;
+        Tue, 31 Dec 2019 04:22:51 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7ED693F703;
+        Tue, 31 Dec 2019 04:22:50 -0800 (PST)
+Date:   Tue, 31 Dec 2019 12:22:45 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] firmware: arm_scmi: Make scmi core independent of
+ transport type
+Message-ID: <20191231122245.GA35523@bogus>
+References: <5c545c2866ba075ddb44907940a1dae1d823b8a1.1575019719.git.viresh.kumar@linaro.org>
+ <AM0PR04MB44817F7C0FB0E6D417823B4A88260@AM0PR04MB4481.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191218231150.12139-3-jannh@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <AM0PR04MB44817F7C0FB0E6D417823B4A88260@AM0PR04MB4481.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 12:11:49AM +0100, Jann Horn wrote:
-> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> index c8b4ae6aed5b..4c691bb9e0d9 100644
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -621,7 +621,10 @@ do_general_protection(struct pt_regs *regs, long error_code)
->  				 "maybe for address",
->  				 gp_addr);
+On Tue, Dec 31, 2019 at 02:50:40AM +0000, Peng Fan wrote:
+>
+> > Subject: [PATCH] firmware: arm_scmi: Make scmi core independent of
+> > transport type
+> >
+> > The SCMI specification is fairly independent of the transport protocol, which
+> > can be a simple mailbox (already implemented) or anything else.
+> > The current Linux implementation however is very much dependent of the
+> > mailbox transport layer.
+> >
+> > This patch makes the SCMI core code (driver.c) independent of the mailbox
+> > transport layer and moves all mailbox related code to a new
+> > file: mailbox.c.
+> >
+> > We can now implement more transport protocols to transport SCMI
+> > messages.
+> >
+> > The transport protocols just need to provide struct scmi_transport_ops, with
+> > its version of the callbacks to enable exchange of SCMI messages.
+>
+> Will there be v2? will this be used to replace smc mailbox?
+>
 
- 
-> -		die(desc, regs, error_code);
+There's a requirement for virtio based transport too. I need to do
+a thorough review once I am able to gather the details. Feel free to
+add SMC based transport based on this patch if you can, you need not
+wait for me. I am fine with the approach as such.
 
-I've added here:
+Also I was waiting to get some feedback from Arnd or Jassi.
 
-                /*
-                 * KASAN is interested only in the non-canonical case, clear it
-                 * otherwise.
-                 */
-
-> +		if (hint != GP_NON_CANONICAL)
-> +			gp_addr = 0;
-
-
-otherwise you have:
-
-	if (hint != GP_NO_HINT)
-		...
-
-	if (hint != GP_NON_CANONICAL)
-		...
-
-which is kinda confusing at a first glance and one has to follow the
-code into die_addr() to figure out the usage of the address argument.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--
+Regards,
+Sudeep
