@@ -2,177 +2,132 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3397C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 02:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177CFC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 02:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D31382077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 02:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D776E2071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 02:03:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qRWm/zNl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfLaCBX (ORCPT
+        id S1726635AbfLaCD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 21:01:23 -0500
-Received: from mga03.intel.com ([134.134.136.65]:26061 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725379AbfLaCBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 21:01:22 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Dec 2019 18:01:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,377,1571727600"; 
-   d="scan'208";a="244016589"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 30 Dec 2019 18:01:18 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1im6qU-000HId-8e; Tue, 31 Dec 2019 10:01:18 +0800
-Date:   Tue, 31 Dec 2019 10:00:48 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     kbuild-all@lists.01.org, Kyungmin Park <kyungmin.park@samsung.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 3/3] mtd: onenand: Enable compile testing of OMAP and
- Samsung drivers
-Message-ID: <201912310904.9iM6MaFr%lkp@intel.com>
-References: <20191229183612.22133-3-krzk@kernel.org>
+        Mon, 30 Dec 2019 21:03:28 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:41666 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbfLaCD2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 21:03:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NcR1DITLyZDwVfijh4Itb/klrZ9aX2S8Z/+EATPgWnc=; b=qRWm/zNlS/s/vrfX7y9C9CuuT
+        K/ydTptVeAfZxDkqRACaA5fQ5RJ/xz4rmbgG/tiP52U96Br2DeN1iYAjgNkkFSYoufWKTkda/Nw9D
+        pPrDAMaqDGKbg2REiHXs7OSLpLrX1+wQWrtfcLHhkGWBEwFr3g1Hj7nHnmVCTszLDvBjDZTOw2V3e
+        764RkvBU7ZX5+H/tN0jqdb0MMuDal/sxoWaK0ElWYxDG8UXaKHb4PJYJbHwIDqgAf5WwU1QL1VcON
+        CBvpWn6rZqSYbjOpzOhLTqe/WdxsAHFZu5BDsjXdgpJe7olGlPm1JCG4qPGpzm4wJDqH7/6l0Cl9P
+        Y9ZWjmE+w==;
+Received: from [2601:1c0:6280:3f0::34d9]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1im6sa-000714-DF; Tue, 31 Dec 2019 02:03:28 +0000
+Subject: Re: Why is CONFIG_VT forced on?
+To:     Rob Landley <rob@landley.net>, linux-kernel@vger.kernel.org
+References: <9b79fb95-f20c-f299-f568-0ffb60305f04@landley.net>
+ <b3cf8faf-ef04-2f55-3ccb-772e18a57d7b@infradead.org>
+ <ac0e5b3b-6e70-6ab0-0c7f-43175b73058f@landley.net>
+ <e55624fa-7112-1733-8ddd-032b134da737@infradead.org>
+ <018540ef-0327-78dc-ea5c-a43318f1f640@landley.net>
+ <774dfe49-61a0-0144-42b7-c2cbac150687@landley.net>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <8059d1c4-759d-9911-73c7-211f8576e7f2@infradead.org>
+Date:   Mon, 30 Dec 2019 18:03:26 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191229183612.22133-3-krzk@kernel.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <774dfe49-61a0-0144-42b7-c2cbac150687@landley.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+On 12/30/19 6:04 PM, Rob Landley wrote:
+> 
+> 
+> On 12/30/19 7:45 PM, Rob Landley wrote:
+>> On 12/30/19 6:59 PM, Randy Dunlap wrote:
+>>> #
+>>> # Character devices
+>>> #
+>>> CONFIG_TTY=y
+>>> # CONFIG_VT is not set
+>>>
+>>> But first you must set/enable EXPERT.  See the bool prompt.
+>>
+>> Wait, the if doesn't _disable_ the symbol? It disables _editability_ of the
+>> symbol, but the symbol can still be on (and displayed) when the if is false?
+>> (Why would...)
+>>
+>> Ok. Thanks for pointing that out. Any idea why the menuconfig help text has no
+>> mention of this?
+> 
+> So if I disable CONFIG_EXPERT, using miniconfig I then need to manually switch on:
+> 
+> ./init/Kconfig:	bool "Namespaces support" if EXPERT
+> ./init/Kconfig:	bool "Multiple users, groups and capabilities support" if EXPERT
+> ./init/Kconfig:	bool "Sysfs syscall support" if EXPERT
+> ./init/Kconfig:	bool "open by fhandle syscalls" if EXPERT
+> ./init/Kconfig:	bool "Posix Clocks & timers" if EXPERT
+> ./init/Kconfig:	bool "Enable support for printk" if EXPERT
+> ./init/Kconfig:	bool "BUG() support" if EXPERT
+> ./init/Kconfig:	bool "Enable ELF core dumps" if EXPERT
+> ./init/Kconfig:	bool "Enable full-sized data structures for core" if EXPERT
+> ./init/Kconfig:	bool "Enable futex support" if EXPERT
+> ./init/Kconfig:	bool "Enable eventpoll support" if EXPERT
+> ./init/Kconfig:	bool "Enable signalfd() system call" if EXPERT
+> ./init/Kconfig:	bool "Enable timerfd() system call" if EXPERT
+> ./init/Kconfig:	bool "Enable eventfd() system call" if EXPERT
+> ./init/Kconfig:	bool "Use full shmem filesystem" if EXPERT
+> ./init/Kconfig:	bool "Enable AIO support" if EXPERT
+> ./init/Kconfig:	bool "Enable IO uring support" if EXPERT
+> ./init/Kconfig:	bool "Enable madvise/fadvise syscalls" if EXPERT
+> ./init/Kconfig:	bool "Enable membarrier() system call" if EXPERT
+> ./init/Kconfig:	bool "Load all symbols for debugging/ksymoops" if EXPERT
+> ./init/Kconfig:	bool "Enable rseq() system call" if EXPERT
+> ./init/Kconfig:	bool "Enabled debugging of rseq() system call" if EXPERT
+> ./init/Kconfig:	bool "PC/104 support" if EXPERT
+> ./init/Kconfig:	bool "Enable VM event counters for /proc/vmstat" if EXPERT
+> 
+> plus of course
+> 
+> ./arch/x86/Kconfig.cpu:	bool "Supported processor vendors" if EXPERT
+> ./arch/x86/Kconfig:	bool "DMA memory allocation support" if EXPERT
+> ./arch/x86/Kconfig:	bool "Enable DMI scanning" if EXPERT
+> ./arch/x86/Kconfig:	bool "Enable support for 16-bit segments" if EXPERT
+> ./arch/x86/Kconfig:       bool "Enable vsyscall emulation" if EXPERT
+> ./arch/x86/Kconfig:	bool "Enable the LDT (local descriptor table)" if EXPERT
+> ./arch/x86/Kconfig:	bool "Read CNB20LE Host Bridge Windows" if EXPERT
+> ./arch/x86/Kconfig:	bool "ISA bus support on modern systems" if EXPERT
+> ./arch/x86/Kconfig:	bool "ISA-style DMA support" if (X86_64 && EXPERT)
+> 
+> So nobody noticed you have a structural "this config option actually switches
+> this thing _off_" implemented via magic symbol then?
 
-I love your patch! Perhaps something to improve:
+I guess nobody had a problem with it for the last 10 or 15 or 20 years.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v5.5-rc4 next-20191220]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> I think the right fix here involves running sed after kconfig does its thing...
 
-url:    https://github.com/0day-ci/linux/commits/Krzysztof-Kozlowski/mtd-onenand-samsung-Fix-pointer-cast-Wpointer-to-int-cast-warnings-on-64-bit/20191230-030838
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git bf8d1cd4386535004c4afe7f03d37f9864c9940e
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-129-g341daf20-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+I doubt that would work, but if it does, go for it.
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+-- 
+~Randy
 
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/mtd/nand/onenand/samsung_mtd.c:678:17: sparse: sparse: incorrect type in argument 2 (different address spaces)
->> drivers/mtd/nand/onenand/samsung_mtd.c:678:17: sparse:    expected void const *from
->> drivers/mtd/nand/onenand/samsung_mtd.c:678:17: sparse:    got void [noderef] <asn:2> *[assigned] p
->> drivers/mtd/nand/onenand/samsung_mtd.c:679:19: sparse: sparse: incorrect type in assignment (different address spaces)
->> drivers/mtd/nand/onenand/samsung_mtd.c:679:19: sparse:    expected void [noderef] <asn:2> *[assigned] p
->> drivers/mtd/nand/onenand/samsung_mtd.c:679:19: sparse:    got unsigned char *
-   drivers/mtd/nand/onenand/samsung_mtd.c:682:9: sparse: sparse: incorrect type in argument 2 (different address spaces)
-   drivers/mtd/nand/onenand/samsung_mtd.c:682:9: sparse:    expected void const *from
-   drivers/mtd/nand/onenand/samsung_mtd.c:682:9: sparse:    got void [noderef] <asn:2> *[assigned] p
-
-vim +678 drivers/mtd/nand/onenand/samsung_mtd.c
-
-e23abf4b774322 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-09-28  614  
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  615  static int s5pc110_read_bufferram(struct mtd_info *mtd, int area,
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  616  		unsigned char *buffer, int offset, size_t count)
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  617  {
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  618  	struct onenand_chip *this = mtd->priv;
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  619  	void __iomem *p;
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  620  	void *buf = (void *) buffer;
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  621  	dma_addr_t dma_src, dma_dst;
-08b3af3092bb2c drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-11-02  622  	int err, ofs, page_dma = 0;
-dcf08227e964a5 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-09-28  623  	struct device *dev = &onenand->pdev->dev;
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  624  
-9aba97ad004ed0 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-08-27  625  	p = this->base + area;
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  626  	if (ONENAND_CURRENT_BUFFERRAM(this)) {
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  627  		if (area == ONENAND_DATARAM)
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  628  			p += this->writesize;
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  629  		else
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  630  			p += mtd->oobsize;
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  631  	}
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  632  
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  633  	if (offset & 3 || (size_t) buf & 3 ||
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  634  		!onenand->dma_addr || count != mtd->writesize)
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  635  		goto normal;
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  636  
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  637  	/* Handle vmalloc address */
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  638  	if (buf >= high_memory) {
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  639  		struct page *page;
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  640  
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  641  		if (((size_t) buf & PAGE_MASK) !=
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  642  		    ((size_t) (buf + count - 1) & PAGE_MASK))
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  643  			goto normal;
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  644  		page = vmalloc_to_page(buf);
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  645  		if (!page)
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  646  			goto normal;
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  647  
-08b3af3092bb2c drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-11-02  648  		/* Page offset */
-08b3af3092bb2c drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-11-02  649  		ofs = ((size_t) buf & ~PAGE_MASK);
-dcf08227e964a5 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-09-28  650  		page_dma = 1;
-08b3af3092bb2c drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-11-02  651  
-dcf08227e964a5 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-09-28  652  		/* DMA routine */
-dcf08227e964a5 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-09-28  653  		dma_src = onenand->phys_base + (p - this->base);
-08b3af3092bb2c drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-11-02  654  		dma_dst = dma_map_page(dev, page, ofs, count, DMA_FROM_DEVICE);
-dcf08227e964a5 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-09-28  655  	} else {
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  656  		/* DMA routine */
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  657  		dma_src = onenand->phys_base + (p - this->base);
-dcf08227e964a5 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-09-28  658  		dma_dst = dma_map_single(dev, buf, count, DMA_FROM_DEVICE);
-dcf08227e964a5 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-09-28  659  	}
-dcf08227e964a5 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-09-28  660  	if (dma_mapping_error(dev, dma_dst)) {
-102f66a740cfbe drivers/mtd/nand/onenand/samsung_mtd.c Krzysztof Kozlowski 2019-12-29  661  		dev_err(dev, "Couldn't map a %zu byte buffer for DMA\n", count);
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  662  		goto normal;
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  663  	}
-81d46c59550997 drivers/mtd/onenand/samsung.c          Arnd Bergmann       2014-05-08  664  	err = s5pc110_dma_ops(dma_dst, dma_src,
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  665  			count, S5PC110_DMA_DIR_READ);
-dcf08227e964a5 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-09-28  666  
-dcf08227e964a5 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-09-28  667  	if (page_dma)
-dcf08227e964a5 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-09-28  668  		dma_unmap_page(dev, dma_dst, count, DMA_FROM_DEVICE);
-dcf08227e964a5 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-09-28  669  	else
-dcf08227e964a5 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-09-28  670  		dma_unmap_single(dev, dma_dst, count, DMA_FROM_DEVICE);
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  671  
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  672  	if (!err)
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  673  		return 0;
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  674  
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  675  normal:
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  676  	if (count != mtd->writesize) {
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  677  		/* Copy the bufferram to memory to prevent unaligned access */
-9aba97ad004ed0 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-08-27 @678  		memcpy(this->page_buf, p, mtd->writesize);
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28 @679  		p = this->page_buf + offset;
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  680  	}
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  681  
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  682  	memcpy(buffer, p, count);
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  683  
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  684  	return 0;
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  685  }
-46f3e88bd9da01 drivers/mtd/onenand/samsung.c          Kyungmin Park       2010-04-28  686  
-
-:::::: The code at line 678 was first introduced by commit
-:::::: 9aba97ad004ed0cde9747a9daf5b1484edb746cd mtd: OneNAND: Fix 2KiB pagesize handling at Samsung SoCs
-
-:::::: TO: Kyungmin Park <kyungmin.park@samsung.com>
-:::::: CC: David Woodhouse <David.Woodhouse@intel.com>
-
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
