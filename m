@@ -2,88 +2,112 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AFDC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 07:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4553AC2D0DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 07:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2755206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 07:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B01B20718
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 07:58:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577778406;
-	bh=LlUfwcv1pTf8jpIiUZGTPpmx804xmSqBFSN1v6Uy1RM=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=mIvaWP91Fi1Whq4k84vrUDCZBApVnhwMr7giXsN1lyaX4Sa1ffW9cPVKTU7wCIx+y
-	 1iU8Z1iSiU43GDEBqupcbzEtA2XRx6CIS7BTOx+oPe3KP/IuHyryrfGt7qJGQbTC1r
-	 hRBNQ+4+r4gDe3MZUkMoQnH7hUjO6tepTahKeaOI=
+	s=default; t=1577779118;
+	bh=fl8RoGLJ0Bkf3yCH1QLnzjV3P/tl6iQW6a0+tUPE/Mk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iASniwah96YH60J7QP5pZEpWUXW/Vk1tpmoS3YiNDc3nUfKMjf4WT9XLewbvRE4e/
+	 Qq4EHWUfme04Z4EE72yciVvR55XbTt96P7j+C4cKLm2cT49K99FafTJCyW0DCuxdgC
+	 7WenEVzaYV3Ail2VO33RKDoy1LKViKjIe/SFzQr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbfLaHqo (ORCPT
+        id S1726119AbfLaH6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 02:46:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55988 "EHLO mail.kernel.org"
+        Tue, 31 Dec 2019 02:58:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725497AbfLaHqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 02:46:44 -0500
-Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1725497AbfLaH6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 02:58:37 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF34A206DB;
-        Tue, 31 Dec 2019 07:46:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84A91206D9;
+        Tue, 31 Dec 2019 07:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577778403;
-        bh=LlUfwcv1pTf8jpIiUZGTPpmx804xmSqBFSN1v6Uy1RM=;
-        h=From:To:Subject:Date:From;
-        b=tyce9aCCEC65oYSkprzOrXM0DmNq4MQcyD7qfKD9wI0293+jQm7lvy4jp5XtqSwAK
-         em862RQwI1oB4HKoqalHsUDPef4GgR9xnDlRTYWRtNnUHA9FRgCRxRAS2hzbQBCREE
-         qmgH+qEDKUP/yRMraXlk1+csQZKvqgOHxIy/x3Fw=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: host: Do not compile test deprecated USB_OCTEON_EHCI
-Date:   Tue, 31 Dec 2019 08:46:32 +0100
-Message-Id: <1577778392-570-1-git-send-email-krzk@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        s=default; t=1577779116;
+        bh=fl8RoGLJ0Bkf3yCH1QLnzjV3P/tl6iQW6a0+tUPE/Mk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NrjhCO77dz/ZYeJPLhPRQi/8p/IolRtyGUUXMnbC3Ue1/q1iQ3X311qRgzcRO0qAK
+         p0AntSL+ok3jBooT/+g2eQn1mpETDdJjC3pitQRlWXJ+7Y1YE3SV6D3KC1Sj8Df6Ax
+         MSF9REoZjsKqmxuE+nzuAMwCGNVlzmle234SV1eg=
+Date:   Tue, 31 Dec 2019 09:00:02 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     saravanan sekar <sravanhome@gmail.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, heiko@sntech.de,
+        sam@ravnborg.org, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, gregkh@linuxfoundation.org,
+        Jonathan.Cameron@huawei.com, davem@davemloft.net,
+        mchehab+samsung@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] dt-bindings: regulator: add document bindings for
+ mpq7920
+Message-ID: <20191231080002.efq3yeomzktepegk@hendrix.lan>
+References: <20191222204507.32413-1-sravanhome@gmail.com>
+ <20191222204507.32413-3-sravanhome@gmail.com>
+ <20191223105028.amtzf62yjdpdsfrt@hendrix.home>
+ <ec7d8937-724e-946c-0569-da685223d21d@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ec7d8937-724e-946c-0569-da685223d21d@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The USB_OCTEON_EHCI is deprecated and only selects proper driver so
-there is no need to compile test it.  Since it selects
-USB_EHCI_BIG_ENDIAN_MMIO it causes compilation failures on certain big
-endian architectures (e.g. m68k):
+On Thu, Dec 26, 2019 at 11:23:36PM +0100, saravanan sekar wrote:
+> > > +  mps,inc-off-time:
+> > > +     description: |
+> > > +        mutually exclusive to mps,fixed-off-time an array of 8, linearly increase
+> > > +        output delay during power off sequence based on factor of time slot/interval
+> > > +        for each regulator.
+> > > +     allOf:
+> > > +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+> > > +       - minimum: 0
+> > > +       - maximum: 15
+> > > +       - default: [ 0, 6, 0, 6, 7, 7, 7, 9 ]
+> > You should check the size of the array too, but if it's a property of
+> > the regulators, why not have it in the regulators node?
+>
+> the node regulators & sub-node of regulators are parsed (initdata) by
+> regulator framework during regulator registration,
+> so it would be redundant parsing all the node if mentioned under each
+> regulator node and this is optional. If you still not
+> convinced I will change.
 
-    In file included from drivers/usb/host/ehci-mxc.c:19:0:
-    drivers/usb/host/ehci.h: In function ‘ehci_readl’:
-    drivers/usb/host/ehci.h:743:3: error:
-        implicit declaration of function ‘readl_be’ [-Werror=implicit-function-declaration]
+It's not really redundant, since the regulator framework will ignore
+whatever custom property you would put there, and your driver would
+ignore any generic property in those nodes.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/usb/host/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > > +  regulators:
+> > > +    type: object
+> > > +    description:
+> > > +      list of regulators provided by this controller, must be named
+> > > +      after their hardware counterparts BUCK[1-4], one LDORTC, and LDO[2-5]
+> > > +      The valid names for regulators are
+> > > +      buck1, buck2, buck3, buck4, ldortc, ldo2, ldo3, ldo4, ldo5
+> > For the third times now, the names should be validated using
+> > propertyNames.
+>
+> Not sure did I understand your question correctly.
+> all the node name under regulators node are parsed by regulator
+> framework & validated against
+> name in regulator descriptors.
 
-diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-index da14a3d16b57..803023fcb3fe 100644
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -309,7 +309,7 @@ config USB_EHCI_HCD_PLATFORM
- 
- config USB_OCTEON_EHCI
- 	bool "Octeon on-chip EHCI support (DEPRECATED)"
--	depends on CAVIUM_OCTEON_SOC || COMPILE_TEST
-+	depends on CAVIUM_OCTEON_SOC
- 	select USB_EHCI_BIG_ENDIAN_MMIO if CPU_BIG_ENDIAN
- 	select USB_EHCI_HCD_PLATFORM
- 	help
--- 
-2.7.4
+Yes, and the point of the bindings in YAML is to make sure all the
+constraints we might have can be catched at compilation / validation
+time.
 
+The names of the nodes are a constraint, and propertyNames allows you
+to express it.
+
+Maxime
