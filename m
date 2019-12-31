@@ -2,37 +2,37 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F287C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 22:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C670DC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 22:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 680E0206E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 22:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D46D205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 22:27:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfLaW1i (ORCPT
+        id S1727130AbfLaW1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 31 Dec 2019 17:27:38 -0500
-Received: from mga02.intel.com ([134.134.136.20]:53005 "EHLO mga02.intel.com"
+Received: from mga18.intel.com ([134.134.136.126]:19577 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727071AbfLaW1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727054AbfLaW1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 31 Dec 2019 17:27:37 -0500
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Dec 2019 14:27:37 -0800
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Dec 2019 14:27:36 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,380,1571727600"; 
-   d="scan'208";a="221519036"
+   d="scan'208";a="231416403"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 31 Dec 2019 14:27:35 -0800
+  by orsmga002.jf.intel.com with ESMTP; 31 Dec 2019 14:27:35 -0800
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1imPzC-0009ev-KJ; Wed, 01 Jan 2020 06:27:34 +0800
-Date:   Wed, 1 Jan 2020 06:26:46 +0800
+        id 1imPzC-0009fK-Ms; Wed, 01 Jan 2020 06:27:34 +0800
+Date:   Wed, 1 Jan 2020 06:26:45 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Yang Weijiang <weijiang.yang@intel.com>
 Cc:     kbuild-all@lists.01.org, kvm@vger.kernel.org,
@@ -40,37 +40,52 @@ Cc:     kbuild-all@lists.01.org, kvm@vger.kernel.org,
         jmattson@google.com, sean.j.christopherson@intel.com,
         yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
         edwin.zhai@intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [RFC PATCH] mmu: spp: is_spp_protected() can be static
-Message-ID: <20191231222646.q2fcvpszi772zdox@f53c9c00458a>
+Subject: Re: [PATCH v10 07/10] mmu: spp: Enable Lazy mode SPP protection
+Message-ID: <202001010504.RyikzFRu%lkp@intel.com>
 References: <20191231065043.2209-8-weijiang.yang@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20191231065043.2209-8-weijiang.yang@intel.com>
-X-Patchwork-Hint: ignore
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Yang,
 
-Fixes: aacd4e33a5dd ("mmu: spp: Enable Lazy mode SPP protection")
-Signed-off-by: kbuild test robot <lkp@intel.com>
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on kvm/linux-next]
+[also build test WARNING on vhost/linux-next tip/auto-latest linux/master linus/master v5.5-rc4 next-20191219]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Yang-Weijiang/Enable-Sub-Page-Write-Protection-Support/20191231-145254
+base:   https://git.kernel.org/pub/scm/virt/kvm/kvm.git linux-next
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-129-g341daf20-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+   arch/x86/kvm/mmu/spp.c:202:5: sparse: sparse: symbol 'kvm_spp_level_pages' was not declared. Should it be static?
+   arch/x86/kvm/mmu/spp.c:419:6: sparse: sparse: symbol 'kvm_spp_flush_rmap' was not declared. Should it be static?
+>> arch/x86/kvm/mmu/spp.c:574:6: sparse: sparse: symbol 'is_spp_protected' was not declared. Should it be static?
+   arch/x86/kvm/mmu/mmu.c:4827:57: sparse: sparse: cast truncates bits from constant value (ffffff33 becomes 33)
+   arch/x86/kvm/mmu/mmu.c:4829:56: sparse: sparse: cast truncates bits from constant value (ffffff0f becomes f)
+   arch/x86/kvm/mmu/mmu.c:4831:57: sparse: sparse: cast truncates bits from constant value (ffffff55 becomes 55)
+
+Please review and possibly fold the followup patch.
+
 ---
- spp.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/mmu/spp.c b/arch/x86/kvm/mmu/spp.c
-index a5b881f438b1f..6b0317edf0b08 100644
---- a/arch/x86/kvm/mmu/spp.c
-+++ b/arch/x86/kvm/mmu/spp.c
-@@ -571,7 +571,7 @@ inline u64 construct_spptp(unsigned long root_hpa)
- }
- EXPORT_SYMBOL_GPL(construct_spptp);
- 
--bool is_spp_protected(struct kvm_memory_slot *slot, gfn_t gfn, int level)
-+static bool is_spp_protected(struct kvm_memory_slot *slot, gfn_t gfn, int level)
- {
- 	int page_num = KVM_PAGES_PER_HPAGE(level);
- 	u32 *access;
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
