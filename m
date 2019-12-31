@@ -2,267 +2,198 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4719CC2D0DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 10:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2806BC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 10:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA8DE206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 10:23:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="giYViXca"
+	by mail.kernel.org (Postfix) with ESMTP id D1494206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 10:28:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577788088;
+	bh=1j6kwnfKsjQk2dxzgv/UDQPunRfEltNwMCeDh26BjC8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lRRGkfc/bDpgdz/jRchoTVdjrIrJ70F2r5u6U/dxImQt/TsBdgTeZYxEv7VQm7z2V
+	 hlOGw95zSfbFj7kMB5Y08JUP0reIpjC/YRVvmFETNP5q6UkopfahVf8xKYIOkAv1PX
+	 Z/ZV/caV+ZXNpo8PAayXXP3o5C/rc9IZ1zGKQ2UA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfLaKXG (ORCPT
+        id S1726720AbfLaK2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 05:23:06 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:36877 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbfLaKXF (ORCPT
+        Tue, 31 Dec 2019 05:28:07 -0500
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:40722 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfLaK2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 05:23:05 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191231102303euoutp02661c76e8090c93ef24d8a0f4f37962bf~lbaESi6Lo2623026230euoutp02j
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Dec 2019 10:23:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191231102303euoutp02661c76e8090c93ef24d8a0f4f37962bf~lbaESi6Lo2623026230euoutp02j
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1577787783;
-        bh=wa+0vRXyiLRDiIsWEtqTDc/k5dC7lQT5/Cwx2rCbUiI=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=giYViXcaoPVPVCpxw8v19M6NmMC1ZApIcJjBrOpt+sJoG6r4AXMHuoqh9omvOsP04
-         5pDCTtANXlGKFDtiYw7XcCZKqPylDpoGjpyDzarkbu1DZLssGynrd92hoZqrVojbid
-         xH5ucsEBDn63WIP7Q6eIt4CY0JXeUg7AhcjPTPpM=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191231102302eucas1p13c0c38b38ed8a783376d5b6761e4ad13~lbaDxV7n81797217972eucas1p1v;
-        Tue, 31 Dec 2019 10:23:02 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 7C.0D.61286.6812B0E5; Tue, 31
-        Dec 2019 10:23:02 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191231102302eucas1p2c93ec388a3a90051d519d7e169ff5776~lbaDep-KS0686506865eucas1p2i;
-        Tue, 31 Dec 2019 10:23:02 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191231102302eusmtrp13f90c349956757c9b790a964abc004d4~lbaDd4kgE3047930479eusmtrp1F;
-        Tue, 31 Dec 2019 10:23:02 +0000 (GMT)
-X-AuditID: cbfec7f2-ef1ff7000001ef66-ae-5e0b218668f0
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id D9.B4.07950.6812B0E5; Tue, 31
-        Dec 2019 10:23:02 +0000 (GMT)
-Received: from AMDC3555 (unknown [106.120.51.67]) by eusmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20191231102301eusmtip14455cbb4a8108dcc7e987927d6e23d1b~lbaCsyqQU2440824408eusmtip1u;
-        Tue, 31 Dec 2019 10:23:01 +0000 (GMT)
-Message-ID: <29ed54c7700e35fb95fff4f4f5580eba24ffbb35.camel@samsung.com>
-Subject: Re: [RFC PATCH v3 4/7] arm: dts: exynos: Add interconnect bindings
- for Exynos4412
-From:   Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@samsung.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
-        inki.dae@samsung.com, sw0312.kim@samsung.com,
-        georgi.djakov@linaro.org, leonard.crestez@nxp.com,
-        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
-Date:   Tue, 31 Dec 2019 11:23:00 +0100
-In-Reply-To: <20191231100234.GA7024@pi3>
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRj227nsbG12nIovJoaL7hcrRU/YnYhT/elHEZRZKw8qbUt21NI/
-        zS6iLkVKcK1Cky5rUuqqYXYxZWkZTs02C5WhXUTLpGZphtWOx6h/z/c87/M87wsfhanaiHAq
-        TZ/BGfQarZqU447mH67leVGzklZ2lc1has3VBNM9Nkgw5U4Xwbz6NkoyZY/sJHPOW4Iz7e01
-        Usba94Vg7G89BNNVf4lkfEVOxJjbH0uYW84+KdOTayUZ8/khcuNs1m4rINlez0OS9ZpaJOyd
-        qyfY2s91Erb4rg2xPnvkTule+dpkTpuWxRmi1x+Up054LuDpX1Yfn3zuwozIvbAQySigY6Hp
-        yjgqRHJKRVsRuM9U4uJjDEHpswqp+PAhMJc/RX8to9UDElG4gaDV2YILgor+gGDkSbyAlTQL
-        vtMFUgEH04lgmfBOY5LeAG093yUCDqEXQ/fUOCEEYXQpBh2mjukhnJ4PD1+PTYfK6EUw5SiS
-        iM3LYKS12M9T/oIgmKoLFmiMngun7l3EhBygR6TQ2FojFee3wKipYcYbDMMtd2f4CHhx/iwu
-        Yh7e3/cSotmIwH7diYlCAvS6JkmhDPNvWl0fLdKb4N64SSLQQAfC65EgcYdAOOcow0RaCfl5
-        KhGqof5CoGgEOFnlmclmofNqAVGCoiz/brH8d4vlX2sFwmwojMvkdSkcv0rPHVvBa3R8pj5l
-        xeGjOjvyf7IXv1q+1qFvLw81IZpCaoUyP0CepCI0WXy2rgkBhalDlLGJsiSVMlmTncMZjh4w
-        ZGo5vgnNoXB1mDKmcmi/ik7RZHBHOC6dM/xVJZQs3IjKt7kduxTZebsXhMUE9/uaT51+EHCt
-        8KYiZ2ln6M22rWTEybTLcZYq2mr2zt+8/tPvoIyDF432n+pQIqJUd7iApw6t666NXyPr6c9K
-        2D6vKG6AlHl2JOSU7vm4Lmhf6q43tbbBlMiinMTNivyhs7c7u14qht3vOhoMuS7t82FjdqMa
-        51M1q5ZgBl7zB3LkodVgAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKIsWRmVeSWpSXmKPExsVy+t/xu7ptitxxBn8vMFtsnLGe1eL6l+es
-        FvOPnGO1uPL1PZvF9L2b2Cwm3Z/AYnH+/AZ2ixV3P7JabHp8jdXi8q45bBafe48wWsw4v4/J
-        Yu2Ru+wWtxtXsFnMmPySzYHfY9OqTjaPO9f2sHnc7z7O5LF5Sb3Hxnc7mDz6tqxi9Pi8SS6A
-        PUrPpii/tCRVISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjfLkEv48e1
-        mSwFH40qfp08x9zAeFW9i5GTQ0LAROL9+kdMXYxcHEICSxkl1n09yAaRkJD4uP4GK4QtLPHn
-        WhcbRNETRon/n7cygyR4BTwkPrd0soPYwgIxErN+3Aez2QTsJc7e/sYEYosIaEpc//sdbBCz
-        wFRmid2zAkBsFgFViT03vrCA2JwCGhJ/t/VCXTGdWeJEyxl2iAZNidbtv9khrtCReHuqD6iB
-        A2ixoMTfHcIQJfISzVtnM09gFJyFpGMWQtUsJFULGJlXMYqklhbnpucWG+kVJ+YWl+al6yXn
-        525iBEbptmM/t+xg7HoXfIhRgINRiYe3g4ErTog1say4MvcQowQHs5IIr0kMZ5wQb0piZVVq
-        UX58UWlOavEhRlOgfyYyS4km5wMTSF5JvKGpobmFpaG5sbmxmYWSOG+HwMEYIYH0xJLU7NTU
-        gtQimD4mDk6pBsZrH9kuT3djStThnvwylFtwwoW/UoLq7xRVL/L2qddWqvxq3t/x4/Els6Ia
-        1bm2u16sdY9V1NFe/9l04qF03wWXRFqvqv/aPXftuZVJ+67d+Vktoh2R+iWM86tb2dY9HTIf
-        EnjmcsktKRZ+xT/bxsLsueKk2tLEs+4Pfb6JCny+YWsYH7gsr1iJpTgj0VCLuag4EQDXG5sf
-        6AIAAA==
-X-CMS-MailID: 20191231102302eucas1p2c93ec388a3a90051d519d7e169ff5776
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191220120144eucas1p119ececf161a6d45a6a194e432bbbd1f9
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191220120144eucas1p119ececf161a6d45a6a194e432bbbd1f9
-References: <20191220115653.6487-1-a.swigon@samsung.com>
-        <CGME20191220120144eucas1p119ececf161a6d45a6a194e432bbbd1f9@eucas1p1.samsung.com>
-        <20191220115653.6487-5-a.swigon@samsung.com> <20191230154405.GC4918@pi3>
-        <2922135223b01126277ef92a53e6b294bc17bb5c.camel@samsung.com>
-        <20191231092254.GA6939@pi3>
-        <99427c18b1fcca3bc21e69609500abdbbef59167.camel@samsung.com>
-        <20191231100234.GA7024@pi3>
+        Tue, 31 Dec 2019 05:28:07 -0500
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id xBVARwPb011363;
+        Tue, 31 Dec 2019 19:27:58 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com xBVARwPb011363
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1577788079;
+        bh=SKqd2HWiYAuhUrskiZxzhJITENWtpPCtLPbJtA0qXLI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0k2D0yKUBflnAlvgsKjVwi17UJdPPrfQ9WzdIgNx8/1LXbovH/qKPkqAmnkwKpvz5
+         PyTfrB50i2jtzGgr6RQbOjXUGVxHfGbb9LQPUsQZBniP2OmbJUqAzlpi6m6gqRLQat
+         BqJ/KSGuaOi6AGeBL+UY6HO/j4tCh1A/PatYd+9JhbUfiCbTGzAhrNW7YmxQkZ/Ah2
+         W/4bdCXIqxa8b6Y3o/2dLGGoCn+1fo8RxuYIji8+sIZj+7Z0wZKI/5t8Xnov42GSod
+         HUEu3v5R41JUTzwnCAPbBia+Ogw1U9P37iArzA51r0X/iCOCA32SrQa4I6G5c4hVwB
+         7lBcFRTZMRqKA==
+X-Nifty-SrcIP: [209.85.222.51]
+Received: by mail-ua1-f51.google.com with SMTP id c14so10788425uaq.11;
+        Tue, 31 Dec 2019 02:27:58 -0800 (PST)
+X-Gm-Message-State: APjAAAXhsKb3whrY7Xtfn7MeK3UWNSZDXw4kUromuySP0PcczI62ef09
+        bDaZc4zBqA0cr43AJoIykUrwwFCB4hIHzUhbpdo=
+X-Google-Smtp-Source: APXvYqxWlSbUhmnqMIZZI8Wb7iQQ/woJKuNQ7RZojyHFmBAhJG3P4fTib+W/AUwVD8HgwE4AQUgy5W9CLUbSFB9J61Y=
+X-Received: by 2002:ab0:2ea6:: with SMTP id y6mr21100400uay.25.1577788077465;
+ Tue, 31 Dec 2019 02:27:57 -0800 (PST)
+MIME-Version: 1.0
+References: <20191230132006.7401-1-masahiroy@kernel.org> <CAMrEMU_5XmUmKmF99gg-RBkBAvpAbnM6G=Y0cBajcE2HMUQssg@mail.gmail.com>
+In-Reply-To: <CAMrEMU_5XmUmKmF99gg-RBkBAvpAbnM6G=Y0cBajcE2HMUQssg@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 31 Dec 2019 19:27:21 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASh89xrM3Q2VwSgufU05prVDUz8Lo0eQC+QfmH=eFXJmg@mail.gmail.com>
+Message-ID: <CAK7LNASh89xrM3Q2VwSgufU05prVDUz8Lo0eQC+QfmH=eFXJmg@mail.gmail.com>
+Subject: Re: [PATCH] initramfs: fix 'bad variable name' error in gen_initramfs_list.sh
+To:     Justin Capella <justincapella@gmail.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "Jory A . Pratt" <anarchy@gentoo.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-12-31 at 11:02 +0100, Krzysztof Kozlowski wrote:
-> On Tue, Dec 31, 2019 at 10:41:47AM +0100, Artur Świgoń wrote:
-> > On Tue, 2019-12-31 at 10:22 +0100, Krzysztof Kozlowski wrote:
-> > > On Tue, Dec 31, 2019 at 08:18:01AM +0100, Artur Świgoń wrote:
-> > > > Hi,
-> > > > 
-> > > > On Mon, 2019-12-30 at 16:44 +0100, Krzysztof Kozlowski wrote:
-> > > > > On Fri, Dec 20, 2019 at 12:56:50PM +0100, Artur Świgoń wrote:
-> > > > > > This patch adds the following properties to the Exynos4412 DT:
-> > > > > >   - exynos,interconnect-parent-node: to declare connections between
-> > > > > >     nodes in order to guarantee PM QoS requirements between nodes;
-> > > > > >   - #interconnect-cells: required by the interconnect framework.
-> > > > > > 
-> > > > > > Note that #interconnect-cells is always zero and node IDs are not
-> > > > > > hardcoded anywhere.
-> > > > > > 
-> > > > > > Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
-> > > > > > ---
-> > > > > >  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 5 +++++
-> > > > > >  1 file changed, 5 insertions(+)
-> > > > > 
-> > > > > The order of patches is confusing. Patches 4 and 6 are split - do the
-> > > > > depend on 5? I doubt but...
-> > > > 
-> > > > Let me elaborate:
-> > > > 
-> > > > The order of the patches in this series is such that every subsequent
-> > > > patch adds some functionality (and, of course, applying patches one-by-one
-> > > > yields a working kernel at every step). Specifically for patches 04--07:
-> > > > 
-> > > >  -- patch 04 adds interconnect _provider_ properties for Exynos4412;
-> > > >  -- patch 05 implements interconnect provider logic (depends on patch 04);
-> > > >  -- patch 06 adds interconnect _consumer_ properties for Exynos4412 mixer;
-> > > >  -- patch 07 implements interconnect consumer logic (depends on patches
-> > > >     05 & 06);
-> > > > 
-> > > > My reasoning is that this order allows to e.g., merge the interconnect
-> > > > provider for exynos-bus and leave the consumers for later (not limited to
-> > > > the mixer). I hope this makes sense.
-> > > 
-> > > It is wrong. The driver should not depend on DTS changes because:
-> > > 1. DTS always go through separate branch and tree, so last patch
-> > >    will have to wait up to 3 cycles (!!!),
-> > > 2. You break backward compatibility.
-> > 
-> > It is up to the definition of "depends". The driver is _not_ broken without
-> > the DTS patches, but the interconnect functionality will not be available.
-> > 
-> > The only requirement is that if we want to have a working interconnect
-> > consumer, there needs to be a working interconnet provider (and I used
-> > the word "depends" to specify what needs what in order to work as intended).
-> > 
-> 
-> The order of patches should reflect first of all real dependency.
-> Whether it compiles, works at all and does not break anything.  Logical
-> dependency of "when the feature will start working" is
-> irrelevant to DTS because DTS goes in separate way and driver is
-> independent of it.
+On Tue, Dec 31, 2019 at 12:13 AM Justin Capella <justincapella@gmail.com> wrote:
+>
+> I was looking at this, and in theory there are other problems that
+> could arise from non-escaped characters, or things with leading
+> hyphens... In general it isn't great to assume ls output will play
+> nicely with the internal field separator / IFS. I think a better
+> solution would be to use something like ${foo@Q} and instead of trying
+> to scrape ls -l, maybe using stat, since it can be asked to print out
+> the device number.
 
-The order of patches does indeed reflect real dependency. I can also reorder
-them (preserving the dependencies) so that DTS patches go first in the series
-if this is the more preferred way.
+I am not sure if 'stat' is necessarily preferred over 'ls -l'.
 
-> > I still think the order of these patches is the most logical one for someone
-> > reading this RFC as a whole.
-> 
-> I am sorry but it brings only confusion. DTS is orthogonal of the
-> driver code. You could even post the patchset without DTS (although then
-> it would raise questions where is the user of it, but still, you
-> could).
-> 
-> Further, DTS describes also hardware so you could send certain DTS
-> patches without driver implementation to describe the hardware.
-> 
-> Driver code and DTS are kind of different worlds so mixing them up for
-> logical review does not really make any sense.
-> 
-> Not mentioning it is different than most of other patches on mailing
-> lists.
-> 
-> BTW, it is the same as bindings which should (almost) always go first as
-> separate patches.
+Commit a670b0b4aed129dc11b465c1c330bfe9202023e5
+says 'stat' is not standardized.
 
-Thanks for elaborating on this, I appreciate it.
-Regarding your original concern, patches 04 & 06 are separate for several
-reasons, one of which is that they are related to two different drivers
-(exynos-bus vs. exynos-mixer).
+There is some room for argument
+how far we should care about the portability, though.
 
-> > 
-> > > In certain cases dependency on DTS changes is ok:
-> > > 1. Cleaning up deprecated properties,
-> > > 2. Ignoring the backward compatibility for e.g. new platforms.
-> > > 
-> > > None of these are applicable here.
-> > > 
-> > > You need to rework it, put DTS changes at the end. This clearly shows
-> > > that there is no wrong dependency.
-> > > 
-> > > > 
-> > > > > Adjust the title to match the contents - you are not adding bindings but
-> > > > > properties to bus nodes. Also the prefix is ARM: (look at recent
-> > > > > commits).
-> > > > 
-> > > > OK.
-> > > > 
-> > > > > > 
-> > > > > > diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> > > > > > index 4ce3d77a6704..d9d70eacfcaf 100644
-> > > > > > --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> > > > > > +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> > > > > > @@ -90,6 +90,7 @@
-> > > > > >  &bus_dmc {
-> > > > > >  	exynos,ppmu-device = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
-> > > > > >  	vdd-supply = <&buck1_reg>;
-> > > > > > +	#interconnect-cells = <0>;
-> > > > > 
-> > > > > This does not look like property of Odroid but Exynos4412 or Exynos4.
-> > > > 
-> > > > Strangely enough, this file is where the 'exynos,parent-bus' (aka. 'devfreq')
-> > > > properties are located (and everything in this RFC concerns devfreq).
-> > > 
-> > > I cannot find exynos,parent-bus in exynos4412-odroid-common.dtsi. Can
-> > > you elaborate?
-> > 
-> > Currently a name change is being made: 'devfreq' -> 'exynos,parent-bus'
-> > https://patchwork.kernel.org/patch/11304549/
-> > (a dependency of this RFC; also available in devfreq-testing branch)
-> 
-> I see. That property also does not look like board (Odroid) specific so
-> it should be moved to Exynos4412 DTSI.
 
-Makes sense to me. Just from looking at the patch I referenced above, there is
-a significant level of code duplication between
-* arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi
-* arch/arm/boot/dts/exynos4412-midas.dtsi
-* arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-with relation to the devfreq*/exynos,* properties.
+>
+> But I don't think this patch fixes the problem mentioned at all-- I
+> think the problem is initfs is not a variable name on line 61:
+
+cmd_initramfs is defined at line 46.
+
+Look into scripts/Kbuild.include
+if you want to know how if_changed works.
+
+
+> $(call if_changed,initfs)
+>
+> https://github.com/torvalds/linux/blob/351c8a09b00b5c51c8f58b016fffe51f87e2d820/usr/Makefile#L61
+>
+> The Makefile and script look like more patches would be needed to fix
+> mentioned issue, and I'm kind of wondering what the intent behind
+> lines 31-32 is...
+>
+> ramfs-input := $(if $(filter-out "",$(CONFIG_INITRAMFS_SOURCE)), \
+> $(shell echo $(CONFIG_INITRAMFS_SOURCE)),-d)
+>
+> why filter nothing, why shell echo?
+
+It does filter "", which is different from nothing.
+
+You need to notice GNU Make handles double-quote (")
+as a normal character.
+There is no special meaning as it has in shell.
+
+'echo' is used just for ripping off the double-quotes.
+
+
+>
+> Quoting and/or proper escaping would be needed in many other places,
+> and I suspect cpio input is always regenerated...
+
+I do not think so.
+
+If the cpio input is regenerated,
+the following log is shown.
+
+GEN     usr/initramfs_data.cpio
+
+
+I do not see it every time.
+
+
+> The use of sed to
+> manually escape things and suggesting using \ instead of using the
+> argument terminator "--"... If weird paths with spaces and stuff are a
+> requirement for the script needs some overhauling
+
+If you find a problem in particular, a patch is welcome.
+
+But, what you stated above comes from your misunderstanding.
+
+
+
+
+> On Mon, Dec 30, 2019 at 5:21 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > Prior to commit 858805b336be ("kbuild: add $(BASH) to run scripts with
+> > bash-extension"), this shell script was almost always run by bash since
+> > bash is usually installed on the system by default.
+> >
+> > Now, this script is run by sh, which might be a symlink to dash. On such
+> > distros, the following code emits an error:
+> >
+> >   local dev=`LC_ALL=C ls -l "${location}"`
+> >
+> > You can reproduce the build error, for example by setting
+> > CONFIG_INITRAMFS_SOURCE="/dev".
+> >
+> >     GEN     usr/initramfs_data.cpio.gz
+> >   ./usr/gen_initramfs_list.sh: 131: local: 1: bad variable name
+> >   make[1]: *** [usr/Makefile:61: usr/initramfs_data.cpio.gz] Error 2
+> >
+> > This is because `LC_ALL=C ls -l "${location}"` contains spaces.
+> > Surrounding it with double-quotes fixes the error.
+> >
+> > Fixes: 858805b336be ("kbuild: add $(BASH) to run scripts with bash-extension")
+> > Reported-by: Jory A. Pratt <anarchy@gentoo.org>
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > ---
+> >
+> >  usr/gen_initramfs_list.sh | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/usr/gen_initramfs_list.sh b/usr/gen_initramfs_list.sh
+> > index 0aad760fcd8c..2bbac73e6477 100755
+> > --- a/usr/gen_initramfs_list.sh
+> > +++ b/usr/gen_initramfs_list.sh
+> > @@ -128,7 +128,7 @@ parse() {
+> >                         str="${ftype} ${name} ${location} ${str}"
+> >                         ;;
+> >                 "nod")
+> > -                       local dev=`LC_ALL=C ls -l "${location}"`
+> > +                       local dev="`LC_ALL=C ls -l "${location}"`"
+> >                         local maj=`field 5 ${dev}`
+> >                         local min=`field 6 ${dev}`
+> >                         maj=${maj%,}
+> > --
+> > 2.17.1
+> >
+
+
 
 -- 
-Artur Świgoń
-Samsung R&D Institute Poland
-Samsung Electronics
-
-
+Best Regards
+Masahiro Yamada
