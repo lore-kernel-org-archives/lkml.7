@@ -2,96 +2,65 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98874C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 14:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FFDC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 15:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E3E2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 14:53:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="qZop3MAq"
+	by mail.kernel.org (Postfix) with ESMTP id C07B6206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 15:06:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfLaOxX (ORCPT
+        id S1727075AbfLaPCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 09:53:23 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45661 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbfLaOxW (ORCPT
+        Tue, 31 Dec 2019 10:02:33 -0500
+Received: from isilmar-4.linta.de ([136.243.71.142]:60318 "EHLO
+        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbfLaPCc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 09:53:22 -0500
-Received: by mail-ed1-f68.google.com with SMTP id v28so35360518edw.12;
-        Tue, 31 Dec 2019 06:53:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o/MjM9n8lcw4go9hM9V6jfDtkHJJ9OY553EV40YViXc=;
-        b=qZop3MAqC3vJeWXvQ48WeOe+IeamgtW3qBOEjDwmEpVxBcnmJMTPgqOyQjUAtfN4ws
-         vEIG7JargoFBvhQ9uuWn4t6Fh7zgo5kHmkDFP+pdZB1+gbIfvRiEY+1YcStU57vtJCOR
-         cCM9RJ1nExvM2Fb4OTh3RUlCARr00OQfescAOxBB7kGwB8ni49HlpP3hqrbEFEkL853I
-         qEDOGbXotw0i9Wb/p/mqsXIQ9hLInoXcG0eIEboa/OaqZq/n7LGouKlUyzdlg+Hl1x1S
-         cwnVWh7S94xFfcslXraNfh/ONokmVplLzBH0nv2QDn0mvWBJb8qVgEHMzY0Q4N1TdFOr
-         EMig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o/MjM9n8lcw4go9hM9V6jfDtkHJJ9OY553EV40YViXc=;
-        b=BV5ioH4ydtaQWaTScM4D4+PjeBHnefvKc1nBNCHPrFW7sMiVwG4VT25p12F1lcIf/Y
-         nUMyX13lfN+lbDIIpxSLJDpVMsbpzPLVlaq2/NCXv/A0gJcJ0Y2iOR34lOXo/4pBoujL
-         lwD6N/oQOKUiBpIX4i+6cNWzUaOExCWICqghFxRIQbCU3Kz6rQxapr1N8NV4c9jxZ4TM
-         BKIu+OfUPwfcS3QZ3gTQFq/7uCtpjnBNSk6oh6ObVYBnpaLQV/GelDCLYl0cofiOZgv7
-         I3hLXpkOy3GjX9j+i54sc3P2XDdTLzWtKIX1XgJD75n0iDXgR4Iq7Bl+97N/zeff9UmL
-         YCDw==
-X-Gm-Message-State: APjAAAU4v7Mo8FyRxvPxboxCKpPQMlKVifLRssBZW+S6Xm6D85jUXbBI
-        N7xJknn7FHJGI9vIxA7HNpF0HNG4M3WvtDw7rQQ=
-X-Google-Smtp-Source: APXvYqwmgH8ITwrdnbYcdkYHW7Lk6bOY4+gRvm+01zIYN0XFhQlFKFAcuRI5Kn2qdPxicg93ogpO/C0grXYHfQadKM0=
-X-Received: by 2002:a17:906:339a:: with SMTP id v26mr77372625eja.2.1577804000760;
- Tue, 31 Dec 2019 06:53:20 -0800 (PST)
+        Tue, 31 Dec 2019 10:02:32 -0500
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id F3BBC2005E4;
+        Tue, 31 Dec 2019 15:02:30 +0000 (UTC)
+Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
+        id AC6A920EB0; Tue, 31 Dec 2019 16:02:26 +0100 (CET)
+Date:   Tue, 31 Dec 2019 16:02:26 +0100
+From:   Dominik Brodowski <linux@dominikbrodowski.net>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        youling257@gmail.com
+Subject: [PATCH] early init: open /dev/console with O_LARGEFILE
+Message-ID: <20191231150226.GA523748@light.dominikbrodowski.net>
 MIME-Version: 1.0
-References: <20191229080610.7597-1-tiny.windzz@gmail.com> <20191229080610.7597-14-tiny.windzz@gmail.com>
-In-Reply-To: <20191229080610.7597-14-tiny.windzz@gmail.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 31 Dec 2019 15:53:09 +0100
-Message-ID: <CAFBinCDQGGyYxDS9L5iJQpXMpp_+7WW227jVcxWcHhEWcUJLbA@mail.gmail.com>
-Subject: Re: [PATCH 14/32] pwm: meson: convert to devm_platform_ioremap_resource
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     claudiu.beznea@microchip.com, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, f.fainelli@gmail.com,
-        nsaenzjulienne@suse.de, shc_work@mail.ru, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de,
-        Fabio Estevam <festevam@gmail.com>, linux-imx@nxp.com,
-        vz@mleia.com, slemieux.tyco@gmail.com, khilman@baylibre.com,
-        matthias.bgg@gmail.com, heiko@sntech.de, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, mripard@kernel.org, wens@csie.org,
-        jonathanh@nvidia.com, linux@prisktech.co.nz,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org, linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 29, 2019 at 9:16 AM Yangtao Li <tiny.windzz@gmail.com> wrote:
->
-> Use devm_platform_ioremap_resource() to simplify code.
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+If force_o_largefile() is true, /dev/console used to be opened
+with O_LARGEFILE. Retain that behaviour.
 
-thank you for taking care of this cleanup!
+Fixes: 8243186f0cc7 ("fs: remove ksys_dup()")
+Signed-off-by: Dominik Brodowski <linux@dominikbrodowski.net>
 
-
-Martin
+diff --git a/init/main.c b/init/main.c
+index 1ecfd43ed464..d12777775cb0 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -1162,7 +1162,8 @@ void console_on_rootfs(void)
+ 	unsigned int i;
+ 
+ 	/* Open /dev/console in kernelspace, this should never fail */
+-	file = filp_open("/dev/console", O_RDWR, 0);
++	file = filp_open("/dev/console",
++			  O_RDWR | (force_o_largefile() ? O_LARGEFILE : 0), 0);
+ 	if (IS_ERR(file))
+ 		goto err_out;
+ 
