@@ -2,161 +2,219 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C2FC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 10:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FAFC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 10:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51133206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 10:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F159206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 10:08:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfLaKGu (ORCPT
+        id S1727069AbfLaKIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 05:06:50 -0500
-Received: from mailoutvs52.siol.net ([185.57.226.243]:58020 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726334AbfLaKGu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 05:06:50 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id DEE665219D1;
-        Tue, 31 Dec 2019 11:06:47 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id jzCOG0hi0pwy; Tue, 31 Dec 2019 11:06:47 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 79ADF5219D9;
-        Tue, 31 Dec 2019 11:06:47 +0100 (CET)
-Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 8A75A5219D1;
-        Tue, 31 Dec 2019 11:06:43 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        roman.stratiienko@globallogic.com
-Cc:     Roman Stratiienko <roman.stratiienko@globallogic.com>
-Subject: Re: [PATCH v2 1/2] drm/sun4i: Add alpha property for sun8i UI layer
-Date:   Tue, 31 Dec 2019 11:06:43 +0100
-Message-ID: <1972955.OBFZWjSADL@jernej-laptop>
-In-Reply-To: <20191230180842.13393-1-roman.stratiienko@globallogic.com>
-References: <20191230180842.13393-1-roman.stratiienko@globallogic.com>
+        Tue, 31 Dec 2019 05:08:05 -0500
+Received: from gofer.mess.org ([88.97.38.141]:41115 "EHLO gofer.mess.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726334AbfLaKIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 05:08:04 -0500
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id 89ED511A001; Tue, 31 Dec 2019 10:08:02 +0000 (GMT)
+Date:   Tue, 31 Dec 2019 10:08:02 +0000
+From:   Sean Young <sean@mess.org>
+To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Cc:     mchehab@kernel.org, gregkh@linuxfoundation.org,
+        rfontana@redhat.com, kstewart@linuxfoundation.org,
+        tglx@linutronix.de, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/6] media: dvb_dummy_fe: Fix ERROR: POINTER_LOCATION
+Message-ID: <20191231100802.GE24469@gofer.mess.org>
+References: <20191201161542.69535-1-dwlsalmeida@gmail.com>
+ <20191201161542.69535-4-dwlsalmeida@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191201161542.69535-4-dwlsalmeida@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+Hi Daniel,
 
-Dne ponedeljek, 30. december 2019 ob 19:08:41 CET je 
-roman.stratiienko@globallogic.com napisal(a):
-> From: Roman Stratiienko <roman.stratiienko@globallogic.com>
+On Sun, Dec 01, 2019 at 01:15:39PM -0300, Daniel W. S. Almeida wrote:
+> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 > 
-> DE2.0 and DE3.0 UI layers supports plane-global alpha channel.
-> Add alpha property to the DRM plane and connect it to the
-> corresponding registers in mixer.
+> Change foo* bar to foo *bar to avoid ERROR: POINTER_LOCATION in checkpatch.pl
 > 
-> Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
+> ERROR: "foo* bar" should be "foo *bar"
+> +static int dvb_dummy_fe_read_signal_strength(struct dvb_frontend* fe, u16* strength)
+> 
+> ERROR: "foo* bar" should be "foo *bar"
+> +static int dvb_dummy_fe_read_signal_strength(struct dvb_frontend* fe, u16* strength)
+> 
+> ERROR: "foo* bar" should be "foo *bar"
+> +static int dvb_dummy_fe_read_snr(struct dvb_frontend* fe, u16* snr)
+> 
+> ERROR: "foo* bar" should be "foo *bar"
+> +static int dvb_dummy_fe_read_snr(struct dvb_frontend* fe, u16* snr)
+> 
+> ERROR: "foo* bar" should be "foo *bar"
+> +static int dvb_dummy_fe_read_ucblocks(struct dvb_frontend* fe, u32* ucblocks)
+> 
+> ERROR: "foo* bar" should be "foo *bar"
+> +static int dvb_dummy_fe_read_ucblocks(struct dvb_frontend* fe, u32* ucblocks)
+> 
+> ERROR: "foo* bar" should be "foo *bar"
+> +static int dvb_dummy_fe_sleep(struct dvb_frontend* fe)
+> 
+> ERROR: "foo* bar" should be "foo *bar"
+> +static int dvb_dummy_fe_init(struct dvb_frontend* fe)
+> 
+> ERROR: "foo* bar" should be "foo *bar"
+> +static void dvb_dummy_fe_release(struct dvb_frontend* fe)
+> 
+> ERROR: "foo* bar" should be "foo *bar"
+> +	struct dvb_dummy_fe_state* state = fe->demodulator_priv;
+> 
+> ERROR: "foo* bar" should be "foo *bar"
+> +struct dvb_frontend* dvb_dummy_fe_ofdm_attach(void)
+> 
+> ERROR: "foo* bar" should be "foo *bar"
+> +	struct dvb_dummy_fe_state* state = NULL;
+> 
+> ERROR: "foo* bar" should be "foo *bar"
+> +	struct dvb_dummy_fe_state* state = NULL;
+> 
+> ERROR: "foo* bar" should be "foo *bar"
+> +	struct dvb_dummy_fe_state* state = NULL;
+> 
+> Suggested-by: Shuah Khan <skhan@linuxfoundation.org>
+> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
 
-Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
+The comments from Mauro in the previous version of this patch have not been
+addressed:
 
-BTW, patch is marked as v2, but I don't see any changelog. What did you 
-change?
+https://patchwork.linuxtv.org/patch/60048/#114016
 
-Best regards,
-Jernej
+Thanks,
+
+Sean
+
 
 > ---
->  drivers/gpu/drm/sun4i/sun8i_ui_layer.c | 29 ++++++++++++++++++++++++++
->  drivers/gpu/drm/sun4i/sun8i_ui_layer.h |  5 +++++
->  2 files changed, 34 insertions(+)
+>  drivers/media/dvb-frontends/dvb_dummy_fe.c | 24 +++++++++++-----------
+>  drivers/media/dvb-frontends/dvb_dummy_fe.h |  6 +++---
+>  2 files changed, 15 insertions(+), 15 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c index c87fd842918e..4343ea9f8cf8
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> @@ -72,6 +72,27 @@ static void sun8i_ui_layer_enable(struct sun8i_mixer
-> *mixer, int channel, }
+> diff --git a/drivers/media/dvb-frontends/dvb_dummy_fe.c b/drivers/media/dvb-frontends/dvb_dummy_fe.c
+> index 987c3488fe6c..209e7ac0de33 100644
+> --- a/drivers/media/dvb-frontends/dvb_dummy_fe.c
+> +++ b/drivers/media/dvb-frontends/dvb_dummy_fe.c
+> @@ -31,25 +31,25 @@ static int dvb_dummy_fe_read_status(struct dvb_frontend *fe,
+>  	return 0;
 >  }
-> 
-> +static void sun8i_ui_layer_update_alpha(struct sun8i_mixer *mixer, int
-> channel, +					int overlay, struct 
-drm_plane *plane)
-> +{
-> +	u32 mask, val, ch_base;
-> +
-> +	ch_base = sun8i_channel_base(mixer, channel);
-> +
-> +	mask = SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_MASK |
-> +		SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MASK;
-> +
-> +	val = SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA(plane->state->alpha >> 
-8);
-> +
-> +	val |= (plane->state->alpha == DRM_BLEND_ALPHA_OPAQUE) ?
-> +		SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_PIXEL :
-> +		SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_COMBINED;
-> +
-> +	regmap_update_bits(mixer->engine.regs,
-> +			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR(ch_base, 
-overlay),
-> +			   mask, val);
-> +}
-> +
->  static int sun8i_ui_layer_update_coord(struct sun8i_mixer *mixer, int
-> channel, int overlay, struct drm_plane *plane,
->  				       unsigned int zpos)
-> @@ -288,6 +309,8 @@ static void sun8i_ui_layer_atomic_update(struct
-> drm_plane *plane,
-> 
->  	sun8i_ui_layer_update_coord(mixer, layer->channel,
->  				    layer->overlay, plane, zpos);
-> +	sun8i_ui_layer_update_alpha(mixer, layer->channel,
-> +				    layer->overlay, plane);
->  	sun8i_ui_layer_update_formats(mixer, layer->channel,
->  				      layer->overlay, plane);
->  	sun8i_ui_layer_update_buffer(mixer, layer->channel,
-> @@ -365,6 +388,12 @@ struct sun8i_ui_layer *sun8i_ui_layer_init_one(struct
-> drm_device *drm,
-> 
->  	plane_cnt = mixer->cfg->ui_num + mixer->cfg->vi_num;
-> 
-> +	ret = drm_plane_create_alpha_property(&layer->plane);
-> +	if (ret) {
-> +		dev_err(drm->dev, "Couldn't add alpha property\n");
-> +		return ERR_PTR(ret);
-> +	}
-> +
->  	ret = drm_plane_create_zpos_property(&layer->plane, channel,
->  					     0, plane_cnt - 
-1);
->  	if (ret) {
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_ui_layer.h
-> b/drivers/gpu/drm/sun4i/sun8i_ui_layer.h index f4ab1cf6cded..e3e32ee1178d
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_ui_layer.h
-> +++ b/drivers/gpu/drm/sun4i/sun8i_ui_layer.h
-> @@ -40,6 +40,11 @@
->  #define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_FBFMT_MASK	GENMASK(12, 8)
->  #define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_FBFMT_OFFSET	8
->  #define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MASK	GENMASK(31, 24)
-> +#define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA(x)		((x) << 24)
-> +
-> +#define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_PIXEL		
-((0) << 1)
-> +#define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_LAYER		
-((1) << 1)
-> +#define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_COMBINED	((2) << 1)
-> 
->  struct sun8i_mixer;
-
-
-
-
+>  
+> -static int dvb_dummy_fe_read_ber(struct dvb_frontend* fe, u32* ber)
+> +static int dvb_dummy_fe_read_ber(struct dvb_frontend *fe, u32 *ber)
+>  {
+>  	*ber = 0;
+>  	return 0;
+>  }
+>  
+> -static int dvb_dummy_fe_read_signal_strength(struct dvb_frontend* fe, u16* strength)
+> +static int dvb_dummy_fe_read_signal_strength(struct dvb_frontend *fe, u16 *strength)
+>  {
+>  	*strength = 0;
+>  	return 0;
+>  }
+>  
+> -static int dvb_dummy_fe_read_snr(struct dvb_frontend* fe, u16* snr)
+> +static int dvb_dummy_fe_read_snr(struct dvb_frontend *fe, u16 *snr)
+>  {
+>  	*snr = 0;
+>  	return 0;
+>  }
+>  
+> -static int dvb_dummy_fe_read_ucblocks(struct dvb_frontend* fe, u32* ucblocks)
+> +static int dvb_dummy_fe_read_ucblocks(struct dvb_frontend *fe, u32 *ucblocks)
+>  {
+>  	*ucblocks = 0;
+>  	return 0;
+> @@ -77,12 +77,12 @@ static int dvb_dummy_fe_set_frontend(struct dvb_frontend *fe)
+>  	return 0;
+>  }
+>  
+> -static int dvb_dummy_fe_sleep(struct dvb_frontend* fe)
+> +static int dvb_dummy_fe_sleep(struct dvb_frontend *fe)
+>  {
+>  	return 0;
+>  }
+>  
+> -static int dvb_dummy_fe_init(struct dvb_frontend* fe)
+> +static int dvb_dummy_fe_init(struct dvb_frontend *fe)
+>  {
+>  	return 0;
+>  }
+> @@ -99,17 +99,17 @@ static int dvb_dummy_fe_set_voltage(struct dvb_frontend *fe,
+>  	return 0;
+>  }
+>  
+> -static void dvb_dummy_fe_release(struct dvb_frontend* fe)
+> +static void dvb_dummy_fe_release(struct dvb_frontend *fe)
+>  {
+> -	struct dvb_dummy_fe_state* state = fe->demodulator_priv;
+> +	struct dvb_dummy_fe_state *state = fe->demodulator_priv;
+>  	kfree(state);
+>  }
+>  
+>  static const struct dvb_frontend_ops dvb_dummy_fe_ofdm_ops;
+>  
+> -struct dvb_frontend* dvb_dummy_fe_ofdm_attach(void)
+> +struct dvb_frontend *dvb_dummy_fe_ofdm_attach(void)
+>  {
+> -	struct dvb_dummy_fe_state* state = NULL;
+> +	struct dvb_dummy_fe_state *state = NULL;
+>  
+>  	/* allocate memory for the internal state */
+>  	state = kzalloc(sizeof(struct dvb_dummy_fe_state), GFP_KERNEL);
+> @@ -131,7 +131,7 @@ static const struct dvb_frontend_ops dvb_dummy_fe_qpsk_ops;
+>  
+>  struct dvb_frontend *dvb_dummy_fe_qpsk_attach(void)
+>  {
+> -	struct dvb_dummy_fe_state* state = NULL;
+> +	struct dvb_dummy_fe_state *state = NULL;
+>  
+>  	/* allocate memory for the internal state */
+>  	state = kzalloc(sizeof(struct dvb_dummy_fe_state), GFP_KERNEL);
+> @@ -153,7 +153,7 @@ static const struct dvb_frontend_ops dvb_dummy_fe_qam_ops;
+>  
+>  struct dvb_frontend *dvb_dummy_fe_qam_attach(void)
+>  {
+> -	struct dvb_dummy_fe_state* state = NULL;
+> +	struct dvb_dummy_fe_state *state = NULL;
+>  
+>  	/* allocate memory for the internal state */
+>  	state = kzalloc(sizeof(struct dvb_dummy_fe_state), GFP_KERNEL);
+> diff --git a/drivers/media/dvb-frontends/dvb_dummy_fe.h b/drivers/media/dvb-frontends/dvb_dummy_fe.h
+> index 526fabd7751f..35efe2ce1a88 100644
+> --- a/drivers/media/dvb-frontends/dvb_dummy_fe.h
+> +++ b/drivers/media/dvb-frontends/dvb_dummy_fe.h
+> @@ -12,9 +12,9 @@
+>  #include <media/dvb_frontend.h>
+>  
+>  #if IS_REACHABLE(CONFIG_DVB_DUMMY_FE)
+> -extern struct dvb_frontend* dvb_dummy_fe_ofdm_attach(void);
+> -extern struct dvb_frontend* dvb_dummy_fe_qpsk_attach(void);
+> -extern struct dvb_frontend* dvb_dummy_fe_qam_attach(void);
+> +extern struct dvb_frontend *dvb_dummy_fe_ofdm_attach(void);
+> +extern struct dvb_frontend *dvb_dummy_fe_qpsk_attach(void);
+> +extern struct dvb_frontend *dvb_dummy_fe_qam_attach(void);
+>  #else
+>  static inline struct dvb_frontend *dvb_dummy_fe_ofdm_attach(void)
+>  {
+> -- 
+> 2.24.0
