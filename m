@@ -2,106 +2,265 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF1FC2D0DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 19:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34476C2D0DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 19:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7B46206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 19:15:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fVT0/zuI"
+	by mail.kernel.org (Postfix) with ESMTP id 123B0206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 19:39:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577821148;
+	bh=7BkgTPAURlo2cKkGKAcuJgLPZT5ysHihsvL+LOChv40=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Xn6ypxWlTFBgfkgFCv/SujI9GogHik9E8jb04o+njNmn3WCLUN4MggQ2aLKfsJ4MG
+	 nFZZvYTts/+wcnnf9XsW3qB921zlO7Z3w53Hh2bim1gNTgzlxQ95VOloLAUaC8Nofc
+	 5FNm6tAZB8qJYCoKnCiCUK7o1y+cav9Lp631LlII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfLaTPK (ORCPT
+        id S1727113AbfLaTjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 14:15:10 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:52391 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727071AbfLaTPJ (ORCPT
+        Tue, 31 Dec 2019 14:39:07 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:44327 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbfLaTjG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 14:15:09 -0500
-Received: by mail-pj1-f66.google.com with SMTP id a6so1472224pjh.2;
-        Tue, 31 Dec 2019 11:15:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=TbFdMRwsDwrVRhSr4fXNZgyq0tBrF3Naz329XDmz+JQ=;
-        b=fVT0/zuIPIoa3+zheP+Xi4xB9iw8A+Ju2xLq4Amg+9jgoHVb/DtbfAGQRZQnFxjMIz
-         zOjIO2eEV2tSIgvOZjfZ3Q16F/TmlIF+5yvcpuI7dt9MmG8IVlTle8D3W94Y1zkaNwjT
-         jIrKJLr/6mp3FH+EgWMDws/5PmBlsbtT1UaKZfNO7kQk/ReTUUNNYnHyshA6VvHUEatj
-         Yg+aQzwDyEVV0xRN+qrV+yrPC0loOHsBSL/K2OuRPY5iRxpuNkwxlh20PThnKhbFGAh2
-         xeYeySGCKdDO1oLVc+dCKtQNDShM37mWx3xiW9GU5sQlCdBGFnJ3po4aGjo/k4lzQbat
-         SF9Q==
+        Tue, 31 Dec 2019 14:39:06 -0500
+Received: by mail-il1-f194.google.com with SMTP id z12so30796055iln.11;
+        Tue, 31 Dec 2019 11:39:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=TbFdMRwsDwrVRhSr4fXNZgyq0tBrF3Naz329XDmz+JQ=;
-        b=QFueFX6rdggf2mfIINruJz6mqyAaEFcQ+XE/bK4zi84Ffk+EAMc4XGU9aJYYObmDyW
-         RzTdmUzf2+5t/8r8bTcKv9Wz3HXq3yG0ROGD1EPpI+BZJzLBopA5Qf0oqfvTUnXlVS2s
-         627kIiINAu0lXvoRCFzUtQaohFWeAv8JLUXMnw/LmKGrV/3WnaBFht/mhbNSRUOWJ4Nn
-         VmPhh46xekKbxUaNnR+NKyNP+/wYPwFmIcmeq4Di7MhUWJsAf/HJ61iAmORp9nEFxoJ+
-         vSkngHZCpJkup3lAZC9Wy9cZK1Xl9Dju+kzM2VlH1uKyjR6csZl3mGM/qT6PoSM9nrEz
-         aqJQ==
-X-Gm-Message-State: APjAAAXILmxy05LCzeyc9xGfOREwnwGJmOaWsWp+kYFOSJgP8fw5Vauk
-        2kxBjfawHAreF4wFTb2L58o=
-X-Google-Smtp-Source: APXvYqxJncWlLsvGB12dfYWmOfOGkuRhv6SWAyyjOAEhxEQ5ldop6Il/xKZrK9dDCaRlN0Nx8mBEgg==
-X-Received: by 2002:a17:90a:6a81:: with SMTP id u1mr8122549pjj.4.1577819708890;
-        Tue, 31 Dec 2019 11:15:08 -0800 (PST)
-Received: from ?IPv6:2804:14d:72b1:8920:a2ce:f815:f14d:bfac? ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
-        by smtp.gmail.com with ESMTPSA id m45sm4488158pje.32.2019.12.31.11.15.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Dec 2019 11:15:08 -0800 (PST)
-Subject: Re: [PATCH v2 2/8] Documentation: nfsroot.txt: convert to ReST
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     mchehab+samsung@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-References: <cover.1577681164.git.dwlsalmeida@gmail.com>
- <92be5a49b967ce35a305fc5ccfb3efea3f61a19a.1577681164.git.dwlsalmeida@gmail.com>
- <20191230121807.3a1f5f38@lwn.net>
- <47e2ea6e-a808-5012-6f9a-8800fbd3be00@gmail.com>
- <20191231083213.0786bda1@lwn.net>
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-Message-ID: <ef2785ae-5205-9840-e0b1-3ab920b35482@gmail.com>
-Date:   Tue, 31 Dec 2019 16:15:05 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5BOi9Tqo4u9dYQQhDN+ySIfVzD3y1wIv8SexC5Jote4=;
+        b=n/j91Mt9s8PZIauFC+5UN1uUoqP8byDLd3XZlyd26G94OHGk7gkYc2ZhxiI17aY/Rq
+         5Vy3jctTGJKZkA+6qTlHhLYZ0OUOGGuxm/C5K0EeFuPKANavKa75Q94AnzzmULE7eTIA
+         JrpUZcE1H82kWdN6dVQIlcWjkN6EXX9Zmr/yerbMCg06CsSiETQCTGK6TV5JEtl+w9rO
+         LboSkp+z0owbAoZORQiqkRDo/OjRi2g8hsNDTNkstiYpPJaO33pVV+3zGeXReUGi90fp
+         VP39U9jPrEohUeZUKXhp42TyzLkjcNy2SzI7ugV9SM9dIP38mQt/IhTu8jFjjt2eriJU
+         AFWg==
+X-Gm-Message-State: APjAAAUTxWLZaR1PpnzeCBHmnfCloseU7dRmIHgHM/gN5T4PN1El5Twz
+        bZdBGllcaWuAwCjYja65s6FqFdY=
+X-Google-Smtp-Source: APXvYqxlaSqk40VJbvxuwIXBoXMWsJitWhxWLA/op5SG2khYQCoeQkACswmjqJbzMJaU2Mft98+Lyg==
+X-Received: by 2002:a92:1087:: with SMTP id 7mr32572188ilq.275.1577821145826;
+        Tue, 31 Dec 2019 11:39:05 -0800 (PST)
+Received: from xps15.herring.priv ([64.188.179.250])
+        by smtp.googlemail.com with ESMTPSA id e1sm17860074ill.47.2019.12.31.11.39.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Dec 2019 11:39:05 -0800 (PST)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v2 1/3] dt-bindings: PCI: Convert Arm Versatile binding to DT schema
+Date:   Tue, 31 Dec 2019 12:39:01 -0700
+Message-Id: <20191231193903.15929-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191231083213.0786bda1@lwn.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Changing text in an existing paragraph can
-> result in line lengths that are inconsistent and ragged, leading to a less
-> pleasant appearance
-> and the temptation to "refill" the paragraph so that the
-> lines are all approximately equal in length.  The problem with yielding
-> to that temptation is that it messes up
-> the diff output so that you can no longer easily see the actual
-> text changes that were made.
->
-> Thus, when making such changes, it can be better to not refill the
-> paragraphs - as, indeed, you did not.  But if the result becomes too
-> difficult to read (as in, it creates lines that are waaaay to long), it
-> can be good to create a second patch that makes only the cosmetic changes
-> without any associated text changes.  I was suggesting doing that in this
-> case.
+Convert the Arm Versatile PCI host binding to a DT schema.
 
-> Does that help?
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Andrew Murray <andrew.murray@arm.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+v2: no change
 
-Yes, that's better!
+ .../devicetree/bindings/pci/versatile.txt     | 59 ------------
+ .../devicetree/bindings/pci/versatile.yaml    | 92 +++++++++++++++++++
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 93 insertions(+), 60 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/versatile.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/versatile.yaml
 
-Thank you.
-
+diff --git a/Documentation/devicetree/bindings/pci/versatile.txt b/Documentation/devicetree/bindings/pci/versatile.txt
+deleted file mode 100644
+index 0a702b13d2ac..000000000000
+--- a/Documentation/devicetree/bindings/pci/versatile.txt
++++ /dev/null
+@@ -1,59 +0,0 @@
+-* ARM Versatile Platform Baseboard PCI interface
+-
+-PCI host controller found on the ARM Versatile PB board's FPGA.
+-
+-Required properties:
+-- compatible: should contain "arm,versatile-pci" to identify the Versatile PCI
+-  controller.
+-- reg: base addresses and lengths of the PCI controller. There must be 3
+-  entries:
+-	- Versatile-specific registers
+-	- Self Config space
+-	- Config space
+-- #address-cells: set to <3>
+-- #size-cells: set to <2>
+-- device_type: set to "pci"
+-- bus-range: set to <0 0xff>
+-- ranges: ranges for the PCI memory and I/O regions
+-- #interrupt-cells: set to <1>
+-- interrupt-map-mask and interrupt-map: standard PCI properties to define
+-	the mapping of the PCI interface to interrupt numbers.
+-
+-Example:
+-
+-pci-controller@10001000 {
+-	compatible = "arm,versatile-pci";
+-	device_type = "pci";
+-	reg = <0x10001000 0x1000
+-	       0x41000000 0x10000
+-	       0x42000000 0x100000>;
+-	bus-range = <0 0xff>;
+-	#address-cells = <3>;
+-	#size-cells = <2>;
+-	#interrupt-cells = <1>;
+-
+-	ranges = <0x01000000 0 0x00000000 0x43000000 0 0x00010000   /* downstream I/O */
+-		  0x02000000 0 0x50000000 0x50000000 0 0x10000000   /* non-prefetchable memory */
+-		  0x42000000 0 0x60000000 0x60000000 0 0x10000000>; /* prefetchable memory */
+-
+-	interrupt-map-mask = <0x1800 0 0 7>;
+-	interrupt-map = <0x1800 0 0 1 &sic 28
+-			 0x1800 0 0 2 &sic 29
+-			 0x1800 0 0 3 &sic 30
+-			 0x1800 0 0 4 &sic 27
+-
+-			 0x1000 0 0 1 &sic 27
+-			 0x1000 0 0 2 &sic 28
+-			 0x1000 0 0 3 &sic 29
+-			 0x1000 0 0 4 &sic 30
+-
+-			 0x0800 0 0 1 &sic 30
+-			 0x0800 0 0 2 &sic 27
+-			 0x0800 0 0 3 &sic 28
+-			 0x0800 0 0 4 &sic 29
+-
+-			 0x0000 0 0 1 &sic 29
+-			 0x0000 0 0 2 &sic 30
+-			 0x0000 0 0 3 &sic 27
+-			 0x0000 0 0 4 &sic 28>;
+-};
+diff --git a/Documentation/devicetree/bindings/pci/versatile.yaml b/Documentation/devicetree/bindings/pci/versatile.yaml
+new file mode 100644
+index 000000000000..07a48c27db1f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/versatile.yaml
+@@ -0,0 +1,92 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/versatile.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ARM Versatile Platform Baseboard PCI interface
++
++maintainers:
++  - Rob Herring <robh@kernel.org>
++
++description: |+
++  PCI host controller found on the ARM Versatile PB board's FPGA.
++
++allOf:
++  - $ref: /schemas/pci/pci-bus.yaml#
++
++properties:
++  compatible:
++    const: arm,versatile-pci
++
++  reg:
++    items:
++      - description: Versatile-specific registers
++      - description: Self Config space
++      - description: Config space
++
++  ranges:
++    maxItems: 3
++
++  "#interrupt-cells": true
++
++  interrupt-map:
++    maxItems: 16
++
++  interrupt-map-mask:
++    items:
++      - const: 0x1800
++      - const: 0
++      - const: 0
++      - const: 7
++
++required:
++  - compatible
++  - reg
++  - ranges
++  - "#interrupt-cells"
++  - interrupt-map
++  - interrupt-map-mask
++
++examples:
++  - |
++    pci@10001000 {
++      compatible = "arm,versatile-pci";
++      device_type = "pci";
++      reg = <0x10001000 0x1000>,
++            <0x41000000 0x10000>,
++            <0x42000000 0x100000>;
++      bus-range = <0 0xff>;
++      #address-cells = <3>;
++      #size-cells = <2>;
++      #interrupt-cells = <1>;
++
++      ranges =
++          <0x01000000 0 0x00000000 0x43000000 0 0x00010000>,  /* downstream I/O */
++          <0x02000000 0 0x50000000 0x50000000 0 0x10000000>,  /* non-prefetchable memory */
++          <0x42000000 0 0x60000000 0x60000000 0 0x10000000>;  /* prefetchable memory */
++
++      interrupt-map-mask = <0x1800 0 0 7>;
++      interrupt-map = <0x1800 0 0 1 &sic 28>,
++          <0x1800 0 0 2 &sic 29>,
++          <0x1800 0 0 3 &sic 30>,
++          <0x1800 0 0 4 &sic 27>,
++
++          <0x1000 0 0 1 &sic 27>,
++          <0x1000 0 0 2 &sic 28>,
++          <0x1000 0 0 3 &sic 29>,
++          <0x1000 0 0 4 &sic 30>,
++
++          <0x0800 0 0 1 &sic 30>,
++          <0x0800 0 0 2 &sic 27>,
++          <0x0800 0 0 3 &sic 28>,
++          <0x0800 0 0 4 &sic 29>,
++
++          <0x0000 0 0 1 &sic 29>,
++          <0x0000 0 0 2 &sic 30>,
++          <0x0000 0 0 3 &sic 27>,
++          <0x0000 0 0 4 &sic 28>;
++    };
++
++
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cc0a4a8ae06a..1072745a8fda 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12580,7 +12580,7 @@ M:	Rob Herring <robh@kernel.org>
+ L:	linux-pci@vger.kernel.org
+ L:	linux-arm-kernel@lists.infradead.org
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/pci/versatile.txt
++F:	Documentation/devicetree/bindings/pci/versatile.yaml
+ F:	drivers/pci/controller/pci-versatile.c
+ 
+ PCI DRIVER FOR ARMADA 8K
+-- 
+2.20.1
 
