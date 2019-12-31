@@ -8,158 +8,96 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD33C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 20:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3C8C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 20:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED6C206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 20:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADD82205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 20:57:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gt88ScDF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vTVkJzzZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfLaUxx (ORCPT
+        id S1727118AbfLaU4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 15:53:53 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33043 "EHLO
+        Tue, 31 Dec 2019 15:56:13 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34189 "EHLO
         mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbfLaUxw (ORCPT
+        with ESMTP id S1726534AbfLaU4M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 15:53:52 -0500
-Received: by mail-ed1-f66.google.com with SMTP id r21so35978837edq.0
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Dec 2019 12:53:51 -0800 (PST)
+        Tue, 31 Dec 2019 15:56:12 -0500
+Received: by mail-ed1-f66.google.com with SMTP id l8so36012513edw.1
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Dec 2019 12:56:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id;
-        bh=NxVPnp1vgRmjH7L7kENjVVXZ5KNtEIGxlFIHfBLkDO0=;
-        b=Gt88ScDFSWLyoxvwTcRbq/5RlwwcCXcfGvg/V8/xg1HspxXhgUgOTDJHotVZbkGEUa
-         hRKxkFOtZ6FPJ8HmLF2h7/oxLvn/+rTsGl5YJbjSlqpFlDPoOke5h56RrKl12GepViuz
-         SlAtu/m7n/+ZlgvIgYDNk1SRN8raTca+hfNKWHyg5n1l8K6zY2rCCI4ykQ7V20XWcdo4
-         Pq1yUdjXqPNYwWWFmUFUGIOPkFsuvrXE3RlmTnkt47TfUJ/c+4B0bpqe05u6eVjmTn39
-         t0RcCciVUWjgJp9feY1rGp7whMb4RCRRg+rLRBWj0huSpYNMa2YWfMCw8HGJdjT1wvZN
-         j61w==
+        bh=Z+jvCslck9jvZyqIDORlvWYlx3m5W/qD1J93hFFm1XI=;
+        b=vTVkJzzZyTHRnHwXoQ+eaVI3+LJyxV952KBN+N+Q/ZpyUXtN/8gNFsObt12NPIwVo4
+         uZRpH8xALxFjZQKvaSGKY3I2tfoT73sv+Lqes0GyJjlJkfh5ZH3ckmHEfnJyWvDTFuUa
+         f+BgxgScMy8o1UaqUz6y943UUrImEa7YrILZITWYD7glhutNyPO4MSNw2qYkmnZlqhhh
+         tao2d9IOAcF238DT0AegtIKHWs2+moRepni8WZS2g/1M+PLIx+LkkZXkKMzA64o7atbb
+         uGXqQOOB4R9PftsHT44ao8N/+mmH25ApN4MS4UXykKwVqW2dpLUeouVrmUCg9gs9qRWD
+         sJ3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=NxVPnp1vgRmjH7L7kENjVVXZ5KNtEIGxlFIHfBLkDO0=;
-        b=t0I7sjnuxchQ5d4O2MQt9EaufqibY+fwYRgi7luDLaL6uSKhc3AuPuBrPsCFnEz6Pb
-         RhdZgjqK9u1VBE9DlG+GJmY57lYWmIc1iPAgcyPxN3IWo36W3G3SWA9gJ7PFKXJXswW3
-         B6Hmt7X5gDQlGP5+OOCHZwURldk7+T4GTY7bgHx1I/wbs36/BtA1RcPXfpKFdYQuM2cS
-         4WTd/6dWLmij8iNmkNeHHcd1MXAlW2jOf/pza7GwioLJJy9+xcX5sTDVoNwj4j0Vwscf
-         BWulov4fR2OrZ3cL7xjcFhnTpeyqDwKRb1nKOUA3EMXIoqjoHJz2UykLZS+2pZBA4pCE
-         C7bw==
-X-Gm-Message-State: APjAAAVX2zgDBBK60+tOW20SCyh7VSWEkUm/qt6LcQwDulbz6r5iQL4p
-        e5IKYPxujsCAv5f1Xj3gikNY2fqu+Rkaow==
-X-Google-Smtp-Source: APXvYqxxUopZ/8pdt6GG0GgS0PFcwFypu8zzOhpDLyQ5fvLYLnMBZmjcdQphbEQIDVYCAE0DxMeoOA==
-X-Received: by 2002:a50:fb0b:: with SMTP id d11mr78494047edq.252.1577825630876;
-        Tue, 31 Dec 2019 12:53:50 -0800 (PST)
+        bh=Z+jvCslck9jvZyqIDORlvWYlx3m5W/qD1J93hFFm1XI=;
+        b=LkyMHOpKeJT4yT5JszNh7arSOg2dBaSKZ0PJLMQcWuYAY5TzYAcc1GcYUt2Xz4sgEn
+         2BSpkWE2RRmqDlNHbTgRZnj5NqyBkxHiAUGaI+1o7tD7DIlftaqVp4vmcvSZzw/jLxO8
+         BrpAJ7jSKsy7ozzb7bnM2//pU1k6iWL831RklqwFFcI3Rl0KVfkn/5hoj91G1wa/vO1c
+         r0IRBMCVwWXmixPN6WqKyGlcAzAF3DiyMnEzxzJv3bbrhKBlx4GntgH2k/89henunF5g
+         5kg4REwV/Blv4GOqFulC6efNLE0flyAH/0m4G0nri6atACL2iRPHcI1Xv5Tz98VOvdea
+         OLOg==
+X-Gm-Message-State: APjAAAWg66XuBxzsyU0+lJLF23ciTo3Hirp/fEu7vuKV1khYrzs3JJhf
+        GTIe4yug5Avc+h+JkcnoSxQ=
+X-Google-Smtp-Source: APXvYqxJ3dpj0n5GpU6dZRMCRgNpsDhzBQryxTk7/n7qJ79bFKRe5XPY0TwPd5dLwuEVv4yJNJ7lhQ==
+X-Received: by 2002:a05:6402:609:: with SMTP id n9mr79544990edv.305.1577825771379;
+        Tue, 31 Dec 2019 12:56:11 -0800 (PST)
 Received: from localhost.localdomain ([197.254.95.38])
-        by smtp.googlemail.com with ESMTPSA id y25sm6367432ejj.68.2019.12.31.12.53.48
+        by smtp.googlemail.com with ESMTPSA id r9sm6341288ejx.31.2019.12.31.12.56.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Dec 2019 12:53:50 -0800 (PST)
+        Tue, 31 Dec 2019 12:56:10 -0800 (PST)
 From:   Wambui Karuga <wambui.karugax@gmail.com>
 To:     bskeggs@redhat.com, airlied@linux.ie, daniel@ffwll.ch,
         dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/nouveau: declare constants as unsigned long.
-Date:   Tue, 31 Dec 2019 23:53:45 +0300
-Message-Id: <20191231205345.32615-1-wambui.karugax@gmail.com>
+Subject: [PATCH] drm/nouveau: remove set but unused variable.
+Date:   Tue, 31 Dec 2019 23:56:07 +0300
+Message-Id: <20191231205607.1005-1-wambui.karugax@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explicitly declare constants are unsigned long to address the following
-sparse warnings:
-warning: constant is so big it is long
+The local variable `pclks` is defined and set but not used and can
+therefore be removed.
+Issue found by coccinelle.
 
 Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgf100.c | 2 +-
- drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgf108.c | 2 +-
- drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgk104.c | 2 +-
- drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgm107.c | 2 +-
- drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgm200.c | 2 +-
- drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgp100.c | 2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/nouveau/dispnv04/arb.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgf100.c b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgf100.c
-index ac87a3b6b7c9..506b358fcdb6 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgf100.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgf100.c
-@@ -655,7 +655,7 @@ gf100_ram_new_(const struct nvkm_ram_func *func,
+diff --git a/drivers/gpu/drm/nouveau/dispnv04/arb.c b/drivers/gpu/drm/nouveau/dispnv04/arb.c
+index 362495535e69..f607a04d262d 100644
+--- a/drivers/gpu/drm/nouveau/dispnv04/arb.c
++++ b/drivers/gpu/drm/nouveau/dispnv04/arb.c
+@@ -54,7 +54,7 @@ static void
+ nv04_calc_arb(struct nv_fifo_info *fifo, struct nv_sim_state *arb)
+ {
+ 	int pagemiss, cas, width, bpp;
+-	int nvclks, mclks, pclks, crtpagemiss;
++	int nvclks, mclks, crtpagemiss;
+ 	int found, mclk_extra, mclk_loop, cbs, m1, p1;
+ 	int mclk_freq, pclk_freq, nvclk_freq;
+ 	int us_m, us_n, us_p, crtc_drain_rate;
+@@ -69,7 +69,6 @@ nv04_calc_arb(struct nv_fifo_info *fifo, struct nv_sim_state *arb)
+ 	bpp = arb->bpp;
+ 	cbs = 128;
  
- static const struct nvkm_ram_func
- gf100_ram = {
--	.upper = 0x0200000000,
-+	.upper = 0x0200000000UL,
- 	.probe_fbp = gf100_ram_probe_fbp,
- 	.probe_fbp_amount = gf100_ram_probe_fbp_amount,
- 	.probe_fbpa_amount = gf100_ram_probe_fbpa_amount,
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgf108.c b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgf108.c
-index 70a06e3cd55a..3bc39895bbce 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgf108.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgf108.c
-@@ -43,7 +43,7 @@ gf108_ram_probe_fbp_amount(const struct nvkm_ram_func *func, u32 fbpao,
- 
- static const struct nvkm_ram_func
- gf108_ram = {
--	.upper = 0x0200000000,
-+	.upper = 0x0200000000UL,
- 	.probe_fbp = gf100_ram_probe_fbp,
- 	.probe_fbp_amount = gf108_ram_probe_fbp_amount,
- 	.probe_fbpa_amount = gf100_ram_probe_fbpa_amount,
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgk104.c b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgk104.c
-index 456aed1f2a02..d01f32c0956a 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgk104.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgk104.c
-@@ -1698,7 +1698,7 @@ gk104_ram_new_(const struct nvkm_ram_func *func, struct nvkm_fb *fb,
- 
- static const struct nvkm_ram_func
- gk104_ram = {
--	.upper = 0x0200000000,
-+	.upper = 0x0200000000UL,
- 	.probe_fbp = gf100_ram_probe_fbp,
- 	.probe_fbp_amount = gf108_ram_probe_fbp_amount,
- 	.probe_fbpa_amount = gf100_ram_probe_fbpa_amount,
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgm107.c b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgm107.c
-index 27c68e3f9772..e24ac664eb15 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgm107.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgm107.c
-@@ -33,7 +33,7 @@ gm107_ram_probe_fbp(const struct nvkm_ram_func *func,
- 
- static const struct nvkm_ram_func
- gm107_ram = {
--	.upper = 0x1000000000,
-+	.upper = 0x1000000000UL,
- 	.probe_fbp = gm107_ram_probe_fbp,
- 	.probe_fbp_amount = gf108_ram_probe_fbp_amount,
- 	.probe_fbpa_amount = gf100_ram_probe_fbpa_amount,
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgm200.c b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgm200.c
-index 6b0cac1fe7b4..17994cbda54b 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgm200.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgm200.c
-@@ -48,7 +48,7 @@ gm200_ram_probe_fbp_amount(const struct nvkm_ram_func *func, u32 fbpao,
- 
- static const struct nvkm_ram_func
- gm200_ram = {
--	.upper = 0x1000000000,
-+	.upper = 0x1000000000UL,
- 	.probe_fbp = gm107_ram_probe_fbp,
- 	.probe_fbp_amount = gm200_ram_probe_fbp_amount,
- 	.probe_fbpa_amount = gf100_ram_probe_fbpa_amount,
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgp100.c b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgp100.c
-index adb62a6beb63..7a07a6ed4578 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgp100.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgp100.c
-@@ -79,7 +79,7 @@ gp100_ram_probe_fbpa(struct nvkm_device *device, int fbpa)
- 
- static const struct nvkm_ram_func
- gp100_ram = {
--	.upper = 0x1000000000,
-+	.upper = 0x1000000000UL,
- 	.probe_fbp = gm107_ram_probe_fbp,
- 	.probe_fbp_amount = gm200_ram_probe_fbp_amount,
- 	.probe_fbpa_amount = gp100_ram_probe_fbpa,
+-	pclks = 2;
+ 	nvclks = 10;
+ 	mclks = 13 + cas;
+ 	mclk_extra = 3;
 -- 
 2.17.1
 
