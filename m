@@ -2,333 +2,188 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5220DC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 01:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C15C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 01:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2633E206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 01:22:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45C42206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 01:24:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ikdBnJaf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbfLaBWp (ORCPT
+        id S1727867AbfLaBX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 20:22:45 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56354 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727804AbfLaBWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 20:22:44 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B41BCD80AC00A7A9161D;
-        Tue, 31 Dec 2019 09:22:41 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 31 Dec
- 2019 09:22:37 +0800
-Subject: Re: [f2fs-dev] [PATCH 1/4] f2fs: convert inline_dir early before
- starting rename
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20191218200947.20445-1-jaegeuk@kernel.org>
- <ed9a4733-9374-deae-8f70-d84a0ed686de@huawei.com>
- <20191231000645.GB77418@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <d4ea0c19-61da-8181-8fd9-62c3dfd42493@huawei.com>
-Date:   Tue, 31 Dec 2019 09:22:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 30 Dec 2019 20:23:59 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60407 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727804AbfLaBX6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 20:23:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577755437;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=rZs5fSfkspX5k7SEN56HkbJ355HhzFKAitrls3/od1w=;
+        b=ikdBnJaf97DhRY/UF3QzR5+TwbbFCHQh59KIRev/ptluo1DtTHWx3yhp8mpdc/90ESJBPo
+        hx/Xo2eUQPW+r9H7hVvAcOxVhyYbGCVgYTaYbUBHqip+eKT1dR55uENsBm+jQz+9aN8G9z
+        +ZxCKo4DAMXhC3btjawGD3tI75DHTu4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-323-xt2uAFOpNr6ILg6Dm-iOHA-1; Mon, 30 Dec 2019 20:23:52 -0500
+X-MC-Unique: xt2uAFOpNr6ILg6Dm-iOHA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B7110801E72;
+        Tue, 31 Dec 2019 01:23:49 +0000 (UTC)
+Received: from localhost (ovpn-12-53.pek2.redhat.com [10.72.12.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 69B77620BC;
+        Tue, 31 Dec 2019 01:23:48 +0000 (UTC)
+Date:   Tue, 31 Dec 2019 09:23:45 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mel Gorman <mgorman@suse.de>,
+        "Jin, Zhi" <zhi.jin@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH] mm/page_alloc: Skip non present sections on zone
+ initialization
+Message-ID: <20191231012345.GA26758@MiWiFi-R3L-srv>
+References: <20191230093828.24613-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191231000645.GB77418@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191230093828.24613-1-kirill.shutemov@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/31 8:06, Jaegeuk Kim wrote:
-> On 12/28, Chao Yu wrote:
->> On 2019/12/19 4:09, Jaegeuk Kim wrote:
->>> If we hit an error during rename, we'll get two dentries in different
->>> directories.
->>>
->>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
->>> ---
->>>  fs/f2fs/f2fs.h   |  1 +
->>>  fs/f2fs/inline.c | 30 ++++++++++++++++++++++++++++--
->>>  fs/f2fs/namei.c  | 36 +++++++++++++-----------------------
->>>  3 files changed, 42 insertions(+), 25 deletions(-)
->>>
->>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->>> index dbc20d33d0e1..8d64525743cb 100644
->>> --- a/fs/f2fs/f2fs.h
->>> +++ b/fs/f2fs/f2fs.h
->>> @@ -3490,6 +3490,7 @@ void f2fs_truncate_inline_inode(struct inode *inode,
->>>  int f2fs_read_inline_data(struct inode *inode, struct page *page);
->>>  int f2fs_convert_inline_page(struct dnode_of_data *dn, struct page *page);
->>>  int f2fs_convert_inline_inode(struct inode *inode);
->>> +int f2fs_convert_inline_dir(struct inode *dir);
->>>  int f2fs_write_inline_data(struct inode *inode, struct page *page);
->>>  bool f2fs_recover_inline_data(struct inode *inode, struct page *npage);
->>>  struct f2fs_dir_entry *f2fs_find_in_inline_dir(struct inode *dir,
->>> diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
->>> index 52f85ed07a15..f82c3d9cf333 100644
->>> --- a/fs/f2fs/inline.c
->>> +++ b/fs/f2fs/inline.c
->>> @@ -530,7 +530,7 @@ static int f2fs_move_rehashed_dirents(struct inode *dir, struct page *ipage,
->>>  	return err;
->>>  }
->>>  
->>> -static int f2fs_convert_inline_dir(struct inode *dir, struct page *ipage,
->>> +static int do_convert_inline_dir(struct inode *dir, struct page *ipage,
->>>  							void *inline_dentry)
->>>  {
->>>  	if (!F2FS_I(dir)->i_dir_level)
->>> @@ -539,6 +539,32 @@ static int f2fs_convert_inline_dir(struct inode *dir, struct page *ipage,
->>>  		return f2fs_move_rehashed_dirents(dir, ipage, inline_dentry);
->>>  }
->>>  
->>> +int f2fs_convert_inline_dir(struct inode *dir)
->>> +{
->>> +	struct f2fs_sb_info *sbi = F2FS_I_SB(dir);
->>> +	struct page *ipage;
->>> +	void *inline_dentry = NULL;
->>> +	int err;
->>> +
->>> +	if (!f2fs_has_inline_dentry(dir))
->>> +		return 0;
->>> +
->>> +	f2fs_lock_op(sbi);
->>> +
->>> +	ipage = f2fs_get_node_page(sbi, dir->i_ino);
->>> +	if (IS_ERR(ipage))
->>> +		return PTR_ERR(ipage);
->>> +
->>> +	inline_dentry = inline_data_addr(dir, ipage);
->>> +
->>> +	err = do_convert_inline_dir(dir, ipage, inline_dentry);
->>> +	if (!err)
->>> +		f2fs_put_page(ipage, 1);
->>> +
->>> +	f2fs_unlock_op(sbi);
->>> +	return err;
->>> +}
->>> +
->>>  int f2fs_add_inline_entry(struct inode *dir, const struct qstr *new_name,
->>>  				const struct qstr *orig_name,
->>>  				struct inode *inode, nid_t ino, umode_t mode)
->>> @@ -562,7 +588,7 @@ int f2fs_add_inline_entry(struct inode *dir, const struct qstr *new_name,
->>>  
->>>  	bit_pos = f2fs_room_for_filename(d.bitmap, slots, d.max);
->>>  	if (bit_pos >= d.max) {
->>> -		err = f2fs_convert_inline_dir(dir, ipage, inline_dentry);
->>> +		err = do_convert_inline_dir(dir, ipage, inline_dentry);
->>>  		if (err)
->>>  			return err;
->>>  		err = -EAGAIN;
->>> diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
->>> index 5d9584281935..61615ab466c2 100644
->>> --- a/fs/f2fs/namei.c
->>> +++ b/fs/f2fs/namei.c
->>> @@ -855,7 +855,6 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
->>>  	struct f2fs_dir_entry *old_dir_entry = NULL;
->>>  	struct f2fs_dir_entry *old_entry;
->>>  	struct f2fs_dir_entry *new_entry;
->>> -	bool is_old_inline = f2fs_has_inline_dentry(old_dir);
->>>  	int err;
->>>  
->>>  	if (unlikely(f2fs_cp_error(sbi)))
->>> @@ -868,6 +867,19 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
->>>  			F2FS_I(old_dentry->d_inode)->i_projid)))
->>>  		return -EXDEV;
->>>  
->>> +	/*
->>> +	 * old entry and new entry can locate in the same inline
->>> +	 * dentry in inode, when attaching new entry in inline dentry,
->>> +	 * it could force inline dentry conversion, after that,
->>> +	 * old_entry and old_page will point to wrong address, in
->>> +	 * order to avoid this, let's do the check and update here.
->>> +	 */
->>
->> The comment is out-of-update here...
->>
->> If there is enough room for the new dentry in old directory's inline space,
->> how about just keeping inline dir state for old directory?
+On 12/30/19 at 12:38pm, Kirill A. Shutemov wrote:
+> memmap_init_zone() can be called on the ranges with holes during the
+> boot. It will skip any non-valid PFNs one-by-one. It works fine as long
+> as holes are not too big.
 > 
-> It'd work, but how can we deal with race conditions?
-
-In rename() syscall, both src/dst's parent inode lock should has been hold to
-prevent race condition.
-
-Thanks,
-
+> But huge holes in the memory map causes a problem. It takes over 20
+> seconds to walk 32TiB hole. x86-64 with 5-level paging allows for much
+> larger holes in the memory map which would practically hang the system.
 > 
->>
->>
->> ---
->>  fs/f2fs/dir.c    | 14 ++++++++++++++
->>  fs/f2fs/f2fs.h   |  4 +++-
->>  fs/f2fs/inline.c | 22 +++++++++++++++++-----
->>  fs/f2fs/namei.c  |  2 +-
->>  4 files changed, 35 insertions(+), 7 deletions(-)
->>
->> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
->> index c967cacf979e..b56f6060c1a6 100644
->> --- a/fs/f2fs/dir.c
->> +++ b/fs/f2fs/dir.c
->> @@ -578,6 +578,20 @@ int f2fs_room_for_filename(const void *bitmap, int slots, int max_slots)
->>  	goto next;
->>  }
->>
->> +bool f2fs_has_enough_room(struct inode *dir, struct page *ipage,
->> +					struct fscrypt_name *fname)
->> +{
->> +	struct f2fs_dentry_ptr d;
->> +	unsigned int bit_pos;
->> +	int slots = GET_DENTRY_SLOTS(fname_len(fname));
->> +
->> +	make_dentry_ptr_inline(dir, &d, inline_data_addr(dir, ipage));
->> +
->> +	bit_pos = f2fs_room_for_filename(d.bitmap, slots, d.max);
->> +
->> +	return bit_pos < d.max;
->> +}
->> +
->>  void f2fs_update_dentry(nid_t ino, umode_t mode, struct f2fs_dentry_ptr *d,
->>  				const struct qstr *name, f2fs_hash_t name_hash,
->>  				unsigned int bit_pos)
->> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->> index 5d55cef66410..ce4ce33a40ce 100644
->> --- a/fs/f2fs/f2fs.h
->> +++ b/fs/f2fs/f2fs.h
->> @@ -3120,6 +3120,8 @@ ino_t f2fs_inode_by_name(struct inode *dir, const struct qstr *qstr,
->>  			struct page **page);
->>  void f2fs_set_link(struct inode *dir, struct f2fs_dir_entry *de,
->>  			struct page *page, struct inode *inode);
->> +bool f2fs_has_enough_room(struct inode *dir, struct page *ipage,
->> +					struct fscrypt_name *fname);
->>  void f2fs_update_dentry(nid_t ino, umode_t mode, struct f2fs_dentry_ptr *d,
->>  			const struct qstr *name, f2fs_hash_t name_hash,
->>  			unsigned int bit_pos);
->> @@ -3662,7 +3664,7 @@ void f2fs_truncate_inline_inode(struct inode *inode,
->>  int f2fs_read_inline_data(struct inode *inode, struct page *page);
->>  int f2fs_convert_inline_page(struct dnode_of_data *dn, struct page *page);
->>  int f2fs_convert_inline_inode(struct inode *inode);
->> -int f2fs_convert_inline_dir(struct inode *dir);
->> +int f2fs_try_convert_inline_dir(struct inode *dir, struct dentry *dentry);
->>  int f2fs_write_inline_data(struct inode *inode, struct page *page);
->>  bool f2fs_recover_inline_data(struct inode *inode, struct page *npage);
->>  struct f2fs_dir_entry *f2fs_find_in_inline_dir(struct inode *dir,
->> diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
->> index f82c3d9cf333..4167e5408151 100644
->> --- a/fs/f2fs/inline.c
->> +++ b/fs/f2fs/inline.c
->> @@ -539,28 +539,40 @@ static int do_convert_inline_dir(struct inode *dir, struct page *ipage,
->>  		return f2fs_move_rehashed_dirents(dir, ipage, inline_dentry);
->>  }
->>
->> -int f2fs_convert_inline_dir(struct inode *dir)
->> +int f2fs_try_convert_inline_dir(struct inode *dir, struct dentry *dentry)
->>  {
->>  	struct f2fs_sb_info *sbi = F2FS_I_SB(dir);
->>  	struct page *ipage;
->> +	struct fscrypt_name fname;
->>  	void *inline_dentry = NULL;
->> -	int err;
->> +	int err = 0;
->>
->>  	if (!f2fs_has_inline_dentry(dir))
->>  		return 0;
->>
->>  	f2fs_lock_op(sbi);
->>
->> +	err = fscrypt_setup_filename(dir, &dentry->d_name, 0, &fname);
->> +	if (err)
->> +		goto out;
->> +
->>  	ipage = f2fs_get_node_page(sbi, dir->i_ino);
->> -	if (IS_ERR(ipage))
->> -		return PTR_ERR(ipage);
->> +	if (IS_ERR(ipage)) {
->> +		err = PTR_ERR(ipage);
->> +		goto out;
->> +	}
->> +
->> +	if (f2fs_has_enough_room(dir, ipage, &fname)) {
->> +		f2fs_put_page(ipage, 1);
->> +		goto out;
->> +	}
->>
->>  	inline_dentry = inline_data_addr(dir, ipage);
->>
->>  	err = do_convert_inline_dir(dir, ipage, inline_dentry);
->>  	if (!err)
->>  		f2fs_put_page(ipage, 1);
->> -
->> +out:
->>  	f2fs_unlock_op(sbi);
->>  	return err;
->>  }
->> diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
->> index 1daa54c8d8d8..856f0f984549 100644
->> --- a/fs/f2fs/namei.c
->> +++ b/fs/f2fs/namei.c
->> @@ -927,7 +927,7 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
->>  	 * order to avoid this, let's do the check and update here.
->>  	 */
->>  	if (old_dir == new_dir && !new_inode) {
->> -		err = f2fs_convert_inline_dir(old_dir);
->> +		err = f2fs_try_convert_inline_dir(old_dir, new_dentry);
->>  		if (err)
->>  			return err;
->>  	}
->> -- 
->> 2.18.0.rc1
->>
->> Thanks,
->>
->>> +	if (old_dir == new_dir && !new_inode) {
->>> +		err = f2fs_convert_inline_dir(old_dir);
->>> +		if (err)
->>> +			return err;
->>> +	}
->>> +
->>>  	if (flags & RENAME_WHITEOUT) {
->>>  		err = f2fs_create_whiteout(old_dir, &whiteout);
->>>  		if (err)
->>> @@ -954,28 +966,6 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
->>>  
->>>  		if (old_dir_entry)
->>>  			f2fs_i_links_write(new_dir, true);
->>> -
->>> -		/*
->>> -		 * old entry and new entry can locate in the same inline
->>> -		 * dentry in inode, when attaching new entry in inline dentry,
->>> -		 * it could force inline dentry conversion, after that,
->>> -		 * old_entry and old_page will point to wrong address, in
->>> -		 * order to avoid this, let's do the check and update here.
->>> -		 */
->>> -		if (is_old_inline && !f2fs_has_inline_dentry(old_dir)) {
->>> -			f2fs_put_page(old_page, 0);
->>> -			old_page = NULL;
->>> -
->>> -			old_entry = f2fs_find_entry(old_dir,
->>> -						&old_dentry->d_name, &old_page);
->>> -			if (!old_entry) {
->>> -				err = -ENOENT;
->>> -				if (IS_ERR(old_page))
->>> -					err = PTR_ERR(old_page);
->>> -				f2fs_unlock_op(sbi);
->>> -				goto out_dir;
->>> -			}
->>> -		}
->>>  	}
->>>  
->>>  	down_write(&F2FS_I(old_inode)->i_sem);
->>>
-> .
+> Deferred struct page init doesn't help here. It only works on the
+> present ranges.
 > 
+> Skipping non-present sections would fix the issue.
+> 
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> ---
+> 
+> The situation can be emulated using the following QEMU patch:
+> 
+> diff --git a/hw/i386/pc.c b/hw/i386/pc.c
+> index ac08e6360437..f5f2258092e1 100644
+> --- a/hw/i386/pc.c
+> +++ b/hw/i386/pc.c
+> @@ -1159,13 +1159,14 @@ void pc_memory_init(PCMachineState *pcms,
+>      memory_region_add_subregion(system_memory, 0, ram_below_4g);
+>      e820_add_entry(0, x86ms->below_4g_mem_size, E820_RAM);
+>      if (x86ms->above_4g_mem_size > 0) {
+> +        int shift = 45;
+>          ram_above_4g = g_malloc(sizeof(*ram_above_4g));
+>          memory_region_init_alias(ram_above_4g, NULL, "ram-above-4g", ram,
+>                                   x86ms->below_4g_mem_size,
+>                                   x86ms->above_4g_mem_size);
+> -        memory_region_add_subregion(system_memory, 0x100000000ULL,
+> +        memory_region_add_subregion(system_memory, 1ULL << shift,
+>                                      ram_above_4g);
+> -        e820_add_entry(0x100000000ULL, x86ms->above_4g_mem_size, E820_RAM);
+> +        e820_add_entry(1ULL << shift, x86ms->above_4g_mem_size, E820_RAM);
+>      }
+>  
+>      if (!pcmc->has_reserved_memory &&
+> diff --git a/target/i386/cpu.h b/target/i386/cpu.h
+> index cde2a16b941a..694c26947bf6 100644
+> --- a/target/i386/cpu.h
+> +++ b/target/i386/cpu.h
+> @@ -1928,7 +1928,7 @@ uint64_t cpu_get_tsc(CPUX86State *env);
+>  /* XXX: This value should match the one returned by CPUID
+>   * and in exec.c */
+>  # if defined(TARGET_X86_64)
+> -# define TCG_PHYS_ADDR_BITS 40
+> +# define TCG_PHYS_ADDR_BITS 52
+>  # else
+>  # define TCG_PHYS_ADDR_BITS 36
+>  # endif
+> 
+> ---
+>  mm/page_alloc.c | 28 +++++++++++++++++++++++++++-
+>  1 file changed, 27 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index df62a49cd09e..442dc0244bb4 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -5873,6 +5873,30 @@ overlap_memmap_init(unsigned long zone, unsigned long *pfn)
+>  	return false;
+>  }
+>  
+> +#ifdef CONFIG_SPARSEMEM
+> +/* Skip PFNs that belong to non-present sections */
+> +static inline __meminit unsigned long next_pfn(unsigned long pfn)
+> +{
+> +	unsigned long section_nr;
+> +
+> +	section_nr = pfn_to_section_nr(++pfn);
+> +	if (present_section_nr(section_nr))
+> +		return pfn;
+> +
+> +	while (++section_nr <= __highest_present_section_nr) {
+> +		if (present_section_nr(section_nr))
+> +			return section_nr_to_pfn(section_nr);
+> +	}
+> +
+> +	return -1;
+> +}
+> +#else
+> +static inline __meminit unsigned long next_pfn(unsigned long pfn)
+> +{
+> +	return pfn++;
+> +}
+> +#endif
+> +
+>  /*
+>   * Initially all pages are reserved - free ones are freed
+>   * up by memblock_free_all() once the early boot process is
+> @@ -5912,8 +5936,10 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
+>  		 * function.  They do not exist on hotplugged memory.
+>  		 */
+>  		if (context == MEMMAP_EARLY) {
+> -			if (!early_pfn_valid(pfn))
+> +			if (!early_pfn_valid(pfn)) {
+> +				pfn = next_pfn(pfn) - 1;
+
+Just pass by, I think this is a necessary optimization. Wondering why
+next_pfn(pfn) is not put in for loop:
+-	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
++	for (pfn = start_pfn; pfn < end_pfn; pfn=next_pfn(pfn)) {
+
+
+>  				continue;
+> +			}
+>  			if (!early_pfn_in_nid(pfn, nid))
+>  				continue;
+
+Why the other two 'continue' don't need be worried on the huge hole
+case?
+
+Thanks
+Baoquan
+
