@@ -2,129 +2,79 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A258C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 03:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66135C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 03:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EACB2206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 03:51:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t0MQrtdI"
+	by mail.kernel.org (Postfix) with ESMTP id 36BC6206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 03:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbfLaDv2 (ORCPT
+        id S1726573AbfLaDxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 22:51:28 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43434 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbfLaDv2 (ORCPT
+        Mon, 30 Dec 2019 22:53:22 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:56266 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbfLaDxW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 22:51:28 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k197so18986971pga.10
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 19:51:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=LxqW63gNt+zxxT7StUjJBELGbfxi8smcFBc9U8y/oWA=;
-        b=t0MQrtdIJr5pIctu01WazQGkAdXvUFIB9grH2WFsfV9MlDQXmFJNNJJgt8nfqq0BNp
-         BHahrrVFwiz9LA5ZRCQY+KO0Rt3UTP7gx0sN+u9IdbgctcIjpjaBthxp+ZPScBbZ2Hnr
-         LZ98mmCd/rUMjQAFvU/G02i7Bf1hpNonxt/NzzD4zzURL4dofxhMQcTUiBk2myZ7MNLw
-         DkunLCpi5Gmu5JbRAc3nQRf1oR65hYgUjhvHmYnUazWwU6o4uFYqDrC9IcqA3LpePLuJ
-         IHRbUhZhjhXTtrA0U4L2kS3VCBkEHzoJL0Tn6CFLq6iotbW2Xq05OHfoHpY+RlwQzufj
-         NLsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=LxqW63gNt+zxxT7StUjJBELGbfxi8smcFBc9U8y/oWA=;
-        b=TPhZyhM47UeNSkmc0qdGR45zPaJRkYwMbZB8mlKpbZvb+igBEhXFBPHOH4pd+jRcRb
-         HIB5ZH9zhyuMW+NHsG5BB2o219AlrOaMyDUkKIvEPOxNDuZOswPo7NPMYdBwtCeZ+4im
-         kgWpuC/FmmpuYCKipbbpls5nkyL6FPX7pjS+YVC1lNxcUBH3yhDULqGwtuNRJUawNfgy
-         xOJmO7+ep4+5XR/y+gDqJbSbhiftzTcBj4hCbo7M9aWQStHwMuZFlLcODZMenc/0EaXo
-         set6klH4korovePtZ7Ggxr0mTmSkeFilZLfnf2GQGqiPZbhf4Qyd3l6AvyqzgCbTYVgY
-         CYdw==
-X-Gm-Message-State: APjAAAVKsWC6BuspkAHIAmXvWUTfXC2RNf7aeVRQKKRJsnnUdU+U6Id+
-        qxjGH34cHnyfNZBCA2eXS2hS0o0d
-X-Google-Smtp-Source: APXvYqz5ALH7Gaz+AbsCkkXgzxET9EFLBCMJ7EW/RwWpwwIjmw9uoA7XwLeXb9R3PaPbBPBvj8/55Q==
-X-Received: by 2002:a63:590e:: with SMTP id n14mr74433933pgb.10.1577764287205;
-        Mon, 30 Dec 2019 19:51:27 -0800 (PST)
-Received: from iZj6chx1xj0e0buvshuecpZ ([47.75.1.235])
-        by smtp.gmail.com with ESMTPSA id y21sm32635523pfm.136.2019.12.30.19.51.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Dec 2019 19:51:26 -0800 (PST)
-Date:   Tue, 31 Dec 2019 11:51:22 +0800
-From:   Peng Liu <iwtbavbm@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        qais.yousef@arm.com, morten.rasmussen@arm.com
-Subject: [PATCH] sched/fair: fix sgc->{min,max}_capacity miscalculate
-Message-ID: <20191231035122.GA10020@iZj6chx1xj0e0buvshuecpZ>
+        Mon, 30 Dec 2019 22:53:22 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1im8at-0003A2-3j; Tue, 31 Dec 2019 03:53:19 +0000
+Date:   Tue, 31 Dec 2019 03:53:19 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Rob Landley <rob@landley.net>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Subject: Re: Why is CONFIG_VT forced on?
+Message-ID: <20191231035319.GE4203@ZenIV.linux.org.uk>
+References: <9b79fb95-f20c-f299-f568-0ffb60305f04@landley.net>
+ <b3cf8faf-ef04-2f55-3ccb-772e18a57d7b@infradead.org>
+ <ac0e5b3b-6e70-6ab0-0c7f-43175b73058f@landley.net>
+ <e55624fa-7112-1733-8ddd-032b134da737@infradead.org>
+ <018540ef-0327-78dc-ea5c-a43318f1f640@landley.net>
+ <774dfe49-61a0-0144-42b7-c2cbac150687@landley.net>
+ <20191231024054.GC4203@ZenIV.linux.org.uk>
+ <20191231025255.GD4203@ZenIV.linux.org.uk>
+ <ffa8ec1d-71d7-a153-eed9-8e2daee40949@landley.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <ffa8ec1d-71d7-a153-eed9-8e2daee40949@landley.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit bf475ce0a3dd ("sched/fair: Add per-CPU min capacity to
-sched_group_capacity") introduced per-cpu min_capacity.
+On Mon, Dec 30, 2019 at 09:27:50PM -0600, Rob Landley wrote:
 
-commit e3d6d0cb66f2 ("sched/fair: Add sched_group per-CPU max capacity")
-introduced per-cpu max_capacity.
+> > Your complaint is basically that the same thing is forcing all of those on
+> > in default configs.
+> 
+> No, my complaint was that kconfig basically has the concept of symbols that turn
+> _off_ something that is otherwise on by default ("Disable X" instead of "Enable
+> X"), but it was implemented it in an awkward way then allowed to scale to silly
+> levels, and now the fact it exists is being used as evidence that it was a good
+> idea.
 
-sgc->capacity is the *SUM* of all CPU's capacity in the group.
-sgc->{min,max}_capacity are the sg per-cpu variables. Compare with
-sgc->capacity to get sgc->{min,max}_capacity makes no sense. Instead,
-we should compare one by one in each iteration to get
-sgc->{min,max}_capacity of the group.
+Where and by whom?
 
-Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
----
- kernel/sched/fair.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+> I had to work out a way to work around this design breakage, which I did and had
+> moved on before this email, but I thought pointing out the awkwardness might
+> help a design discussion.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 2d170b5da0e3..97b164fcda93 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7795,6 +7795,7 @@ void update_group_capacity(struct sched_domain *sd, int cpu)
- 		for_each_cpu(cpu, sched_group_span(sdg)) {
- 			struct sched_group_capacity *sgc;
- 			struct rq *rq = cpu_rq(cpu);
-+			unsigned long cap;
- 
- 			/*
- 			 * build_sched_domains() -> init_sched_groups_capacity()
-@@ -7808,14 +7809,16 @@ void update_group_capacity(struct sched_domain *sd, int cpu)
- 			 * causing divide-by-zero issues on boot.
- 			 */
- 			if (unlikely(!rq->sd)) {
--				capacity += capacity_of(cpu);
-+				cap = capacity_of(cpu);
-+				capacity += cap;
-+				min_capacity = min(cap, min_capacity);
-+				max_capacity = max(cap, max_capacity);
- 			} else {
- 				sgc = rq->sd->groups->sgc;
- 				capacity += sgc->capacity;
-+				min_capacity = min(sgc->min_capacity, min_capacity);
-+				max_capacity = max(sgc->max_capacity, max_capacity);
- 			}
--
--			min_capacity = min(capacity, min_capacity);
--			max_capacity = max(capacity, max_capacity);
- 		}
- 	} else  {
- 		/*
--- 
-2.17.1
+What design discussion?  Where?
 
+> My mistake.
+
+Generally a passive-aggressive flame (complete with comparisons to INTERCAL)
+and not a shred of reference to any design issues in it tends to
+be rather ineffecient way to start such discussion...
+
+> The thread _started_ because menuconfig help has a blind spot (which seemed like
+> a bug to me, it _used_ to say why), and then I found the syntax you changed a
+> year or two back non-obvious when I tried to RTFM but that part got answered.
+
+_I_ have changed???  What the hell?  I have never touched kconfig syntax in any
+way; what are you talking about?  Care to post commit IDs in question?
