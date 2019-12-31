@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 625A7C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 13:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6CEC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 13:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EA6E206E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 13:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10D62206E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 13:06:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="MdCq41of"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Xf+YTt7D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbfLaNGT (ORCPT
+        id S1727232AbfLaNGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 08:06:19 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42014 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbfLaNGS (ORCPT
+        Tue, 31 Dec 2019 08:06:24 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:56300 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727109AbfLaNGX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 08:06:18 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 4so19722830pfz.9
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Dec 2019 05:06:18 -0800 (PST)
+        Tue, 31 Dec 2019 08:06:23 -0500
+Received: by mail-pj1-f65.google.com with SMTP id d5so1171631pjz.5
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Dec 2019 05:06:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=httxNtiAtTuNvzz6MxoyCtXDBVFL0u6yHkvzNjKde9c=;
-        b=MdCq41ofpEY8c34RFkP1S5dM234FR2fXVDzxinANFdkXgf0FmIvFirPZtrEymmP3rZ
-         LRs/Acpaff/uiK9bcF0jbGBfc4NqQsBHRXTV5RGNJtDUQMjnEHt3B4Fek+onqtGLlGXR
-         6h2gMOSkO3d5uyOGF/tLmDijKezdJdS0sH1+4=
+        bh=WXe17pB2YX4+a+B1E8N8lDCTkuNeVa3zzzOGyzeuSys=;
+        b=Xf+YTt7DfVvRCedUsAinpV3gLCg7SQWb27vKaMoWf0AxV5Ig7mLEyrsAaBoKisMnpo
+         kGQVw1Tzx4RxuNcQ8CW292dVNXAccfNluNAT1XJL9XHIe1o5EriOTeHp6Z/Izy71lKNf
+         ieLQ7eq/kP+w1W9qC/RIQ3WAHWZG3kTzWynY8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=httxNtiAtTuNvzz6MxoyCtXDBVFL0u6yHkvzNjKde9c=;
-        b=Q4DjuWGMEvawLsXENeBqi06sOYRKYeUDDYpdMHZyfR69Nopyul2AiVzQ4xF5TifAmZ
-         gnD/stiLGXMMkIvj3ZTHQedhHKL+Y0QLd4x+BIQl/MDFmk9OquFzGK1FlSwFgZ2gMGMB
-         RN5M1Dskmizp0G6cST+2IzCiny3TbLOrdIbQLvNyxbxOKFDOnBIabFYbdVrPl9imvANE
-         utDNrdI9HoFmG0Try+F1CnYFlpEv/vLQY5G7R/z6f6S2XWW7+xmrlWIpDNFx886AllUy
-         rCNlMtZ1BECc/+dSi+hShO6liO7Su+DIkuNDYz4XNRM7QWLU/KT/jKPMe35ZXNzGI+z/
-         Nqnw==
-X-Gm-Message-State: APjAAAUUJBU/Pli4uuxbbdg+NqtyH/56PcFtbzbLkuDGlPiQ+ahDhA+H
-        vnPryB+7Yezyiq73Ydq12KcTeA==
-X-Google-Smtp-Source: APXvYqzP7Mrk8jxC0HNGSJpd7IzJbAguLU0Np2bAgt6OGvXHASkOvcgw72p733pq9UW4WQ3i9a9jJg==
-X-Received: by 2002:a65:4501:: with SMTP id n1mr76072356pgq.336.1577797577740;
-        Tue, 31 Dec 2019 05:06:17 -0800 (PST)
+        bh=WXe17pB2YX4+a+B1E8N8lDCTkuNeVa3zzzOGyzeuSys=;
+        b=E6YCpKVWTRvWoZpN2AUSN2t9bUQTf9YwUYWucRwPNorOQqlp0lPfhfhafB77TKLuva
+         kjU0v+S5hoIVDW9cB0PTZQiFUYdII/kDtf6YnFx48LswjEkTQKRetsHglPF6W/SHXK0K
+         QZjzfYlG9AaPAcXADqvl/No91eUqOFX5yPdaCnENEe47FfCrsRjsbx/haVzHj2yUv6og
+         lJs+DIuoCYwDfQxLvxCbcWw5iPILbPI4kE/bJwlmNjPVQSLTUntFpJ3O1Y/RwMPt63TY
+         ca0aNVQZxEFvwxm3RA1TGwhn68CwNZa568trwVor7EaITiM2Qj53v2txBzrhE1guiGvM
+         B2Og==
+X-Gm-Message-State: APjAAAUbbHlDs0hZ5ADXHwvlNQ72GRUXkQWkYol6Ie8LyB/J+h5J9rv0
+        UKQQ7Q51IZDh0CqXigk3O//uLw==
+X-Google-Smtp-Source: APXvYqwgs9Bcy+Z1Q95DxDdQGebtt2lr2Jj5jnrCw2RqXNwEkWy7kQOj9wu1KDy5cwYGG9UM+31XiA==
+X-Received: by 2002:a17:90a:e657:: with SMTP id ep23mr5986713pjb.105.1577797582087;
+        Tue, 31 Dec 2019 05:06:22 -0800 (PST)
 Received: from localhost.localdomain ([49.206.202.115])
-        by smtp.gmail.com with ESMTPSA id i3sm55204089pfg.94.2019.12.31.05.06.12
+        by smtp.gmail.com with ESMTPSA id i3sm55204089pfg.94.2019.12.31.05.06.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Dec 2019 05:06:17 -0800 (PST)
+        Tue, 31 Dec 2019 05:06:21 -0800 (PST)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Jernej Skrabec <jernej.skrabec@siol.net>,
@@ -65,9 +65,9 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         linux-sunxi <linux-sunxi@googlegroups.com>,
         linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v3 7/9] dt-bindings: sun6i-dsi: Document R40 MIPI-DSI controller (w/ A64 fallback)
-Date:   Tue, 31 Dec 2019 18:35:26 +0530
-Message-Id: <20191231130528.20669-8-jagan@amarulasolutions.com>
+Subject: [PATCH v3 8/9] ARM: dts: sun8i: r40: Add MIPI DSI pipeline
+Date:   Tue, 31 Dec 2019 18:35:27 +0530
+Message-Id: <20191231130528.20669-9-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20191231130528.20669-1-jagan@amarulasolutions.com>
 References: <20191231130528.20669-1-jagan@amarulasolutions.com>
@@ -78,38 +78,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MIPI DSI controller on Allwinner R40 is similar on
-the one on A64 like doesn't associate any DSI_SCLK gating.
+Add MIPI DSI pipeline for Allwinner R40.
 
-So, add R40 compatible and append A64 compatible as fallback.
+Unlike conventional Display pipeline in allwinner, R40 have
+TCON TCOP which would interact various block like muxes,
+tcon lcd, tcon_tv for better pipeline fitting.
+
+For MIPI DSI pipeline, we have to configure the tcon_lcd0
+block which would interact with tcon_top for upper pipeline
+connections and dsi block for lower pipeline connections.
+
+So, this patch created that pipeline by adding new nodes
+for tcon_lcd0, dsi, dphy and connet them to make proper
+pipeline fitting.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v3:
-- update the binding in new yaml format
+- drop clock-names in dsi node
 
- .../bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml    | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/sun8i-r40.dtsi | 72 ++++++++++++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-index d41ecb5e7f7c..138ffb6ae403 100644
---- a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-+++ b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-@@ -15,9 +15,11 @@ properties:
-   "#size-cells": true
+diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+index 3faa35d43afa..4c61e93d9a0b 100644
+--- a/arch/arm/boot/dts/sun8i-r40.dtsi
++++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+@@ -628,6 +628,7 @@
  
-   compatible:
--    enum:
--      - allwinner,sun6i-a31-mipi-dsi
--      - allwinner,sun50i-a64-mipi-dsi
-+    oneOf:
-+      - const: allwinner,sun6i-a31-mipi-dsi
-+      - const: allwinner,sun50i-a64-mipi-dsi
-+      - items:
-+          - const: allwinner,sun8i-r40-mipi-dsi
+ 					tcon_top_mixer0_out_tcon_lcd0: endpoint@0 {
+ 						reg = <0>;
++						remote-endpoint = <&tcon_lcd0_in_tcon_top_mixer0>;
+ 					};
  
-   reg:
-     maxItems: 1
+ 					tcon_top_mixer0_out_tcon_lcd1: endpoint@1 {
+@@ -706,6 +707,45 @@
+ 			};
+ 		};
+ 
++		tcon_lcd0: lcd-controller@1c71000 {
++			compatible = "allwinner,sun8i-r40-tcon-lcd";
++			reg = <0x01c71000 0x1000>;
++			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_TCON_LCD0>, <&ccu CLK_TCON_LCD0>;
++			clock-names = "ahb", "tcon-ch0";
++			clock-output-names = "tcon-pixel-clock";
++			resets = <&ccu RST_BUS_TCON_LCD0>, <&ccu RST_BUS_LVDS>;
++			reset-names = "lcd", "lvds";
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				tcon_lcd0_in: port@0 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <0>;
++
++					tcon_lcd0_in_tcon_top_mixer0: endpoint@0 {
++						reg = <0>;
++						remote-endpoint = <&tcon_top_mixer0_out_tcon_lcd0>;
++					};
++				};
++
++				tcon_lcd0_out: port@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <1>;
++
++					tcon_lcd0_out_dsi_out: endpoint@1 {
++						reg = <1>;
++						remote-endpoint = <&dsi_in_tcon_lcd0_out>;
++					};
++				};
++			};
++		};
++
+ 		tcon_tv0: lcd-controller@1c73000 {
+ 			compatible = "allwinner,sun8i-r40-tcon-tv";
+ 			reg = <0x01c73000 0x1000>;
+@@ -803,6 +843,38 @@
+ 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		};
+ 
++		dsi: dsi@1ca0000 {
++			compatible = "allwinner,sun8i-r40-mipi-dsi",
++				     "allwinner,sun50i-a64-mipi-dsi";
++			reg = <0x01ca0000 0x1000>;
++			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_MIPI_DSI>;
++			resets = <&ccu RST_BUS_MIPI_DSI>;
++			phys = <&dphy>;
++			phy-names = "dphy";
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port {
++				dsi_in_tcon_lcd0_out: endpoint {
++					remote-endpoint = <&tcon_lcd0_out_dsi_out>;
++				};
++			};
++		};
++
++		dphy: d-phy@1ca1000 {
++			compatible = "allwinner,sun8i-r40-mipi-dphy",
++				     "allwinner,sun6i-a31-mipi-dphy";
++			reg = <0x01ca1000 0x1000>;
++			clocks = <&ccu CLK_BUS_MIPI_DSI>,
++				 <&tcon_top CLK_TCON_TOP_DSI>;
++			clock-names = "bus", "mod";
++			resets = <&ccu RST_BUS_MIPI_DSI>;
++			status = "disabled";
++			#phy-cells = <0>;
++		};
++
+ 		hdmi: hdmi@1ee0000 {
+ 			compatible = "allwinner,sun8i-r40-dw-hdmi",
+ 				     "allwinner,sun8i-a83t-dw-hdmi";
 -- 
 2.18.0.321.gffc6fa0e3
 
