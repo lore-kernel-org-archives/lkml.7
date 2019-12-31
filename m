@@ -2,94 +2,86 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDCEC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 09:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 223A3C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 09:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E582206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 09:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFCDD206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 09:32:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="S50zf1Gi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfLaJaz (ORCPT
+        id S1726416AbfLaJcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 04:30:55 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:60036 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfLaJaz (ORCPT
+        Tue, 31 Dec 2019 04:32:53 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:36522 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725793AbfLaJcx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 04:30:55 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xBV9UUbh030702, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCAS12.realtek.com.tw[172.21.6.16])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xBV9UUbh030702
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 31 Dec 2019 17:30:31 +0800
-Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
- RTITCAS12.realtek.com.tw (172.21.6.16) with Microsoft SMTP Server (TLS) id
- 14.3.468.0; Tue, 31 Dec 2019 17:30:30 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXMB04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 31 Dec 2019 17:30:30 +0800
-Received: from RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d]) by
- RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d%8]) with mapi id
- 15.01.1779.005; Tue, 31 Dec 2019 17:30:30 +0800
-From:   James Tai <james.tai@realtek.com>
-To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
-        "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH 10/14] ARM: dts: rtd1195: Add SB2 and SCPU Wrapper syscon nodes
-Thread-Topic: [PATCH 10/14] ARM: dts: rtd1195: Add SB2 and SCPU Wrapper syscon
- nodes
-Thread-Index: AQHVqT1w3e0DCQM4MUy3rWx8/bISHqfUJzhw
-Date:   Tue, 31 Dec 2019 09:30:30 +0000
-Message-ID: <0f3c6ae55b524367913a68fe3f7faa47@realtek.com>
-References: <20191202182205.14629-1-afaerber@suse.de>
- <20191202182205.14629-11-afaerber@suse.de>
-In-Reply-To: <20191202182205.14629-11-afaerber@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.190.187]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 31 Dec 2019 04:32:53 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577784772; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=ClcdqW/NIWX8BzrOCLt7qizKBDk6kEpUK40BUI6Fl0M=; b=S50zf1GiU6AGJK/JFr64HelgzM6HhM//OG0gSf1Xh0gQQFsMWu+qkJfH4MtGiAAPsYowGHqh
+ tRm3Im+tLCt6eXQMo3+Um6ANB8QfGaKon5HIC5gL2rpZhO69y1eRt0yMbecoUrm0zm7iwn7D
+ mi0alH9lKXSOLo2W7c/1mmvQHXc=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e0b15c3.7f32760de618-smtp-out-n03;
+ Tue, 31 Dec 2019 09:32:51 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 86616C433CB; Tue, 31 Dec 2019 09:32:50 +0000 (UTC)
+Received: from wgong-HP-Z240-SFF-Workstation.qca.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wgong)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 191A8C43383;
+        Tue, 31 Dec 2019 09:32:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 191A8C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wgong@codeaurora.org
+From:   Wen Gong <wgong@codeaurora.org>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ath11k@lists.infradead.org
+Subject: [PATCH] net: qrtr: fix len of skb_put_padto in qrtr_node_enqueue
+Date:   Tue, 31 Dec 2019 17:32:42 +0800
+Message-Id: <20191231093242.6320-1-wgong@codeaurora.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBBZGQgc3lzY29uIG1mZCBub2RlcyBmb3IgU0IyIGFuZCBTQ1BVIFdyYXBwZXIgdG8gUlREMTE5
-NSBEVC4NCj4gDQo+IENjOiBKYW1lcyBUYWkgPGphbWVzLnRhaUByZWFsdGVrLmNvbT4NCj4gU2ln
-bmVkLW9mZi1ieTogQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPg0KPiAtLS0NCj4g
-IGFyY2gvYXJtL2Jvb3QvZHRzL3J0ZDExOTUuZHRzaSB8IDE4ICsrKysrKysrKysrKysrKysrKw0K
-PiAgMSBmaWxlIGNoYW5nZWQsIDE4IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9h
-cmNoL2FybS9ib290L2R0cy9ydGQxMTk1LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9ydGQxMTk1
-LmR0c2kNCj4gaW5kZXggMDlhY2I5OTA4M2MxLi4yMTg5NzIxMGQ5ZDAgMTAwNjQ0DQo+IC0tLSBh
-L2FyY2gvYXJtL2Jvb3QvZHRzL3J0ZDExOTUuZHRzaQ0KPiArKysgYi9hcmNoL2FybS9ib290L2R0
-cy9ydGQxMTk1LmR0c2kNCj4gQEAgLTExOSw2ICsxMTksMTUgQEANCj4gIAkJCQlyYW5nZXMgPSA8
-MHgwIDB4NzAwMCAweDEwMDA+Ow0KPiAgCQkJfTsNCj4gDQo+ICsJCQlzYjI6IHN5c2NvbkAxYTAw
-MCB7DQo+ICsJCQkJY29tcGF0aWJsZSA9ICJzeXNjb24iLCAic2ltcGxlLW1mZCI7DQo+ICsJCQkJ
-cmVnID0gPDB4MWEwMDAgMHgxMDAwPjsNCj4gKwkJCQlyZWctaW8td2lkdGggPSA8ND47DQo+ICsJ
-CQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsJCQkJI3NpemUtY2VsbHMgPSA8MT47DQo+ICsJ
-CQkJcmFuZ2VzID0gPDB4MCAweDFhMDAwIDB4MTAwMD47DQo+ICsJCQl9Ow0KPiArDQo+ICAJCQlt
-aXNjOiBzeXNjb25AMWIwMDAgew0KPiAgCQkJCWNvbXBhdGlibGUgPSAic3lzY29uIiwgInNpbXBs
-ZS1tZmQiOw0KPiAgCQkJCXJlZyA9IDwweDFiMDAwIDB4MTAwMD47DQo+IEBAIC0xMjcsNiArMTM2
-LDE1IEBADQo+ICAJCQkJI3NpemUtY2VsbHMgPSA8MT47DQo+ICAJCQkJcmFuZ2VzID0gPDB4MCAw
-eDFiMDAwIDB4MTAwMD47DQo+ICAJCQl9Ow0KPiArDQo+ICsJCQlzY3B1X3dyYXBwZXI6IHN5c2Nv
-bkAxZDAwMCB7DQo+ICsJCQkJY29tcGF0aWJsZSA9ICJzeXNjb24iLCAic2ltcGxlLW1mZCI7DQo+
-ICsJCQkJcmVnID0gPDB4MWQwMDAgMHgxMDAwPjsNCj4gKwkJCQlyZWctaW8td2lkdGggPSA8ND47
-DQo+ICsJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsJCQkJI3NpemUtY2VsbHMgPSA8MT47
-DQo+ICsJCQkJcmFuZ2VzID0gPDB4MCAweDFkMDAwIDB4MTAwMD47DQo+ICsJCQl9Ow0KPiAgCQl9
-Ow0KPiANCj4gIAkJZ2ljOiBpbnRlcnJ1cHQtY29udHJvbGxlckBmZjAxMTAwMCB7DQo+IC0tDQo+
-IDIuMTYuNA0KPiANCj4gDQpBY2tlZC1ieTogSmFtZXMgVGFpIDxqYW1lcy50YWlAcmVhbHRlay5j
-b20+DQoNCg==
+From: Carl Huang <cjhuang@codeaurora.org>
+
+The len used for skb_put_padto is wrong, it need to add len of hdr.
+
+Signed-off-by: Carl Huang <cjhuang@codeaurora.org>
+Signed-off-by: Wen Gong <wgong@codeaurora.org>
+---
+ net/qrtr/qrtr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
+index 88f98f27ad88..3d24d45be5f4 100644
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -196,7 +196,7 @@ static int qrtr_node_enqueue(struct qrtr_node *node, struct sk_buff *skb,
+ 	hdr->size = cpu_to_le32(len);
+ 	hdr->confirm_rx = 0;
+ 
+-	skb_put_padto(skb, ALIGN(len, 4));
++	skb_put_padto(skb, ALIGN(len, 4) + sizeof(*hdr));
+ 
+ 	mutex_lock(&node->ep_lock);
+ 	if (node->ep)
+-- 
+2.23.0
