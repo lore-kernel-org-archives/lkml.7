@@ -2,214 +2,123 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18651C2D0C2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75205C2D0DC
 	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 12:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4FB220409
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 12:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49BD4206E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 12:13:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfLaMGH (ORCPT
+        id S1727077AbfLaMNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 07:06:07 -0500
-Received: from mailoutvs57.siol.net ([185.57.226.248]:47604 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726334AbfLaMGH (ORCPT
+        Tue, 31 Dec 2019 07:13:10 -0500
+Received: from smtp-sh.infomaniak.ch ([128.65.195.4]:42905 "EHLO
+        smtp-sh.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbfLaMNK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 07:06:07 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 5A4B05234D4;
-        Tue, 31 Dec 2019 13:06:04 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 2dJjqKlJ9pgR; Tue, 31 Dec 2019 13:06:03 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id DD6FD52345B;
-        Tue, 31 Dec 2019 13:06:03 +0100 (CET)
-Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id A6E955234B2;
-        Tue, 31 Dec 2019 13:06:03 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        roman.stratiienko@globallogic.com
-Cc:     Roman Stratiienko <roman.stratiienko@globallogic.com>
-Subject: Re: [PATCH v2 3/4] drm/sun4i: Use CRTC size instead of PRIMARY plane size as mixer frame.
-Date:   Tue, 31 Dec 2019 13:06:03 +0100
-Message-ID: <6139998.4vTCxPXJkl@jernej-laptop>
-In-Reply-To: <20191229162828.3326-3-roman.stratiienko@globallogic.com>
-References: <20191229162828.3326-1-roman.stratiienko@globallogic.com> <20191229162828.3326-3-roman.stratiienko@globallogic.com>
+        Tue, 31 Dec 2019 07:13:10 -0500
+Received: from smtp-2-0000.mail.infomaniak.ch ([10.5.36.107])
+        by smtp-sh.infomaniak.ch (8.14.5/8.14.5) with ESMTP id xBVCCBnS003437
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 31 Dec 2019 13:12:11 +0100
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 36C571028F798;
+        Tue, 31 Dec 2019 13:12:07 +0100 (CET)
+Subject: Re: [PATCH bpf-next v1 00/13] MAC and Audit policy using eBPF (KRSI)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     KP Singh <kpsingh@chromium.org>, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>
+References: <20191220154208.15895-1-kpsingh@chromium.org>
+ <a6b61f33-82dc-0c1c-7a6c-1926343ef63e@digikod.net>
+ <201912301128.B37D55AB44@keescook>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Autocrypt: addr=mic@digikod.net; prefer-encrypt=mutual; keydata=
+ mQINBFNUOTgBEAC5HCwtCH/iikbZRDkXUSZa078Fz8H/21oNdzi13NM0ZdeR9KVq28ZCBAud
+ law2P+HhaPFuZLqzRiy+iNOumPgrUyNphLhxWby/JgD7hvhYs5HJgdX0VTwzGqprmAeDKbnS
+ G0Q2zxmnkb1/ENRTfrOIBm5LwyRhWIw5hg+HKh88g6qztDHdVSGqgWGLhj7RqDgHCgC4kAve
+ /tWwfnpmMMndi5V+wg5EanyiffjAq6GHwzWbal+u3lkV8zNo15VZ+6mOY3X6dfYFVeX8hAP4
+ u6OxzK4dQhDMVnJux5jum8RXtkSASiQpvx80npFbToIMgziWoWPV+Ag3Ti9JsactNzygozjL
+ G0j8nc4dtfdkFoflEqtFIz2ZVWlmvcjbxTbvFpK2TwbVSiXe3Iyn4FIatk8tPsyY+mwKLzsc
+ RNXaOXXB3kza0JmmnOyLCZuCTkds8FHvEG3nMIvyzXiobFM5F2b5Xo5x0fSo2ycIXXWgNJFn
+ X1QXiPEM+emIRH0q2mHNAdvDki/Ns+qmkI4MQjWNGLGzlzb2GJBb5jXmkxEhk0/hUXVK3WYu
+ /jGRQAbyX3XASArcw4RNFWd6fwzsX4Ras52BwI2qZaVAh4OclArEoSh5lGweizpN+1K8SnxG
+ zVmvUDS8MfwlO97Kge4jzD0nRFOVE/z2DOLp6ZOcdRTxmTZNEwARAQABtCJNaWNrYcOrbCBT
+ YWxhw7xuIDxtaWNAZGlnaWtvZC5uZXQ+iQI9BBMBCgAnBQJTVDk4AhsDBQkLRzUABQsJCAcD
+ BRUKCQgLBRYDAgEAAh4BAheAAAoJECkv1ZR9XFaW/64P/3wPay/u16aRGeRgUl7ZZ8aZ50WH
+ kCZHmX/aemxBk4lKNjbghzQFcuRkLODN0HXHZqqObLo77BKrSiVwlPSTNguXs9R6IaRfITvP
+ 6k1ka/1I5ItczhHq0Ewf0Qs9SUphIGa71aE0zoWC4AWMz/avx/tvPdI4HoQop4K3DCJU5BXS
+ NYDVOc8Ug9Zq+C1dM3PnLbL1BR1/K3D+fqAetQ9Aq/KP1NnsfSYQvkMoHIJ/6s0p3cUTkWJ3
+ 0TjkJliErYdn+V3Uj049XPe1KN04jldZ5MJDEQv5G3o4zEGcMpziYxw75t6SJ+/lzeJyzJjy
+ uYYzg8fqxJ8x9CYVrG1s8xcXu9TqPzFcHszfl9N01gOaT5UbJrjI8d2b2SG7SR9Wzn9FWNdy
+ Uc/r/enMcnRkiMgadt6qSG+Z0UMwxPt/DTOkv5ISxyY8IzDJDCZ5HrBd9hTmTSztS+UUC2r1
+ 5ijaOSCTWtGgJz/86ERDiUULZmhmQ1C9On46ilAgKEq4Eg3fXy6+kMaZXT3RTDrCtVrD4U58
+ 11KD1mR4y8WwW5LJvKikqspaqrEVC4AyAbLwEsdjVmEVkdFqm6qW4YbaK+g/Wkr0jxuJ0bVn
+ PTABQxmDBVUxsE6qDy6+s8ZWoPfwI1FK2TZwoIH0OQiffSXx6mdEO5X4O4Pj7f8pz723xCxV
+ 1hqz/rrZ
+Message-ID: <6bb12d3a-5613-2891-83af-43e3176481dc@digikod.net>
+Date:   Tue, 31 Dec 2019 13:11:51 +0100
+User-Agent: 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <201912301128.B37D55AB44@keescook>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
 
-Sorry that I missed few details in first review. Please take a look below.
-
-Dne nedelja, 29. december 2019 ob 17:28:27 CET je 
-roman.stratiienko@globallogic.com napisal(a):
-> From: Roman Stratiienko <roman.stratiienko@globallogic.com>
+On 30/12/2019 20:30, Kees Cook wrote:
+> On Fri, Dec 20, 2019 at 11:46:47PM +0100, Mickaël Salaün wrote:
+>> I'm working on a version of Landlock without eBPF, but still with the
+>> initial sought properties: safe unprivileged composability, modularity, and
+>> dynamic update. I'll send this version soon.
+>>
+>> I hope that the work and experience from Landlock to bring eBPF to LSM will
+>> continue to be used through KRSI. Landlock will now focus on the
+>> unprivileged sandboxing part, without eBPF. Stay tuned!
 > 
-> According to DRM documentation the only difference between PRIMARY
-> and OVERLAY plane is that each CRTC must have PRIMARY plane and
-> OVERLAY are optional.
+> Will it end up looking at all like pledge? I'm still struggling to come
+> up with a sensible pledge-like design on top of seccomp, especially
+> given the need to have it very closely tied to the running libc...
 > 
-> Allow PRIMARY plane to have dimension different from full-screen.
-> 
-> Fixes: 90212fffa4fc ("drm/sun4i: Use values calculated by atomic check")
 
-This fixes tag doesn't seem to be a good choice. First time where code in 
-question was introduced was:
+Yes, it's similar to Pledge/Unveil but with fine-grained control (and a
+more flexible design). And because it is not tied to syscall, there is
+no similar issues than with seccomp and libc. In fact, there is no more
+relationship with seccomp neither. The version I'm working on is similar
+in principle to the patch series v10 [1], without the usage complexity
+brought by eBPF, but with a more polished file-based access-control. The
+demo from LSS 2018 [2] gives an overview of the possibilities.
 
-9d75b8c0b999 drm/sun4i: add support for Allwinner DE2 mixers
-
-and it was later moved to sun8i_ui_layer.c in:
-
-5bb5f5dafa1a drm/sun4i: Reorganize UI layer code in DE2
-
-Not sure which one is better. You can also include both.
-
-> Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
-> ---
-> v2:
-> - Split commit in 2 parts
-> - Add Fixes line to the commit message
-> ---
->  drivers/gpu/drm/sun4i/sun8i_mixer.c    | 35 ++++++++++++++++++++++++++
->  drivers/gpu/drm/sun4i/sun8i_ui_layer.c | 30 ----------------------
->  2 files changed, 35 insertions(+), 30 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> b/drivers/gpu/drm/sun4i/sun8i_mixer.c index d306ad5dc093..5d90a95ff855
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> @@ -257,6 +257,40 @@ const struct de2_fmt_info *sun8i_mixer_format_info(u32
-> format) return NULL;
->  }
-> 
-> +static void sun8i_mode_set(struct sunxi_engine *engine,
-> +			   struct drm_display_mode *mode)
-> +{
-> +	u32 dst_w = mode->crtc_hdisplay;
-> +	u32 dst_h = mode->crtc_vdisplay;
-
-Now that you moved code in separate function, "dst_" prefix doesn't make sense 
-anymore. Plain "width" and "height" work just fine.
-
-> +	u32 outsize = SUN8I_MIXER_SIZE(dst_w, dst_h);
-> +	bool interlaced = false;
-
-No need to initialize above variable. This value is never used.
-
-> +	u32 val;
-> +	struct sun8i_mixer *mixer = engine_to_sun8i_mixer(engine);
-> +	u32 bld_base = sun8i_blender_base(mixer);
-
-Not extremely important, but can you move above two lines to the top? At least 
-I prefer to have those lines sorted from longest to shortest as much as 
-possible.
-
-Once above comments are addressed, code is:
-Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
-
-Best regards,
-Jernej
-
-> +
-> +	DRM_DEBUG_DRIVER("Mode change, updating global size W: %u H: %u\n",
-> +			 dst_w, dst_h);
-> +	regmap_write(mixer->engine.regs,
-> +		     SUN8I_MIXER_GLOBAL_SIZE,
-> +		     outsize);
-> +	regmap_write(mixer->engine.regs,
-> +		     SUN8I_MIXER_BLEND_OUTSIZE(bld_base), outsize);
-> +
-> +	interlaced = mode->flags & DRM_MODE_FLAG_INTERLACE;
-> +
-> +	if (interlaced)
-> +		val = SUN8I_MIXER_BLEND_OUTCTL_INTERLACED;
-> +	else
-> +		val = 0;
-> +
-> +	regmap_update_bits(mixer->engine.regs,
-> +			   SUN8I_MIXER_BLEND_OUTCTL(bld_base),
-> +			   SUN8I_MIXER_BLEND_OUTCTL_INTERLACED,
-> +			   val);
-> +	DRM_DEBUG_DRIVER("Switching display mixer interlaced mode %s\n",
-> +			 interlaced ? "on" : "off");
-> +}
-> +
->  static void sun8i_mixer_commit(struct sunxi_engine *engine)
->  {
->  	struct sun8i_mixer *mixer = engine_to_sun8i_mixer(engine);
-> @@ -356,6 +390,7 @@ static struct drm_plane **sun8i_layers_init(struct
-> drm_device *drm, static const struct sunxi_engine_ops sun8i_engine_ops = {
->  	.commit		= sun8i_mixer_commit,
->  	.layers_init	= sun8i_layers_init,
-> +	.mode_set	= sun8i_mode_set,
->  };
-> 
->  static struct regmap_config sun8i_mixer_regmap_config = {
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c index ee7c13d8710f..23c2f4b68c89
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> @@ -72,36 +72,6 @@ static int sun8i_ui_layer_update_coord(struct sun8i_mixer
-> *mixer, int channel, insize = SUN8I_MIXER_SIZE(src_w, src_h);
->  	outsize = SUN8I_MIXER_SIZE(dst_w, dst_h);
-> 
-> -	if (plane->type == DRM_PLANE_TYPE_PRIMARY) {
-> -		bool interlaced = false;
-> -		u32 val;
-> -
-> -		DRM_DEBUG_DRIVER("Primary layer, updating global size 
-W: %u H: %u\n",
-> -				 dst_w, dst_h);
-> -		regmap_write(mixer->engine.regs,
-> -			     SUN8I_MIXER_GLOBAL_SIZE,
-> -			     outsize);
-> -		regmap_write(mixer->engine.regs,
-> -			     SUN8I_MIXER_BLEND_OUTSIZE(bld_base), 
-outsize);
-> -
-> -		if (state->crtc)
-> -			interlaced = state->crtc->state-
->adjusted_mode.flags
-> -				& DRM_MODE_FLAG_INTERLACE;
-> -
-> -		if (interlaced)
-> -			val = SUN8I_MIXER_BLEND_OUTCTL_INTERLACED;
-> -		else
-> -			val = 0;
-> -
-> -		regmap_update_bits(mixer->engine.regs,
-> -				   
-SUN8I_MIXER_BLEND_OUTCTL(bld_base),
-> -				   
-SUN8I_MIXER_BLEND_OUTCTL_INTERLACED,
-> -				   val);
-> -
-> -		DRM_DEBUG_DRIVER("Switching display mixer interlaced 
-mode %s\n",
-> -				 interlaced ? "on" : "off");
-> -	}
-> -
->  	/* Set height and width */
->  	DRM_DEBUG_DRIVER("Layer source offset X: %d Y: %d\n",
->  			 state->src.x1 >> 16, state->src.y1 >> 16);
-
-
-
-
+[1] https://lore.kernel.org/lkml/20190721213116.23476-1-mic@digikod.net/
+[2] https://landlock.io/talks/2018-08-27_landlock-lss_demo-1-web.mkv
