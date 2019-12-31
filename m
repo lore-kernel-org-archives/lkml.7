@@ -2,88 +2,104 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5995C2D0DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 11:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3571C2D0DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 11:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88D2B206E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 11:01:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rLxxsHYP"
+	by mail.kernel.org (Postfix) with ESMTP id 91291206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 11:02:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfLaLBQ (ORCPT
+        id S1727075AbfLaLCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 06:01:16 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:22936 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727070AbfLaLBP (ORCPT
+        Tue, 31 Dec 2019 06:02:37 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:45666 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726658AbfLaLCh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 06:01:15 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577790075; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=EuaD3sqTQ2Mb1L2LetavYIQctg0Kmht3QfCcxsN8GZA=; b=rLxxsHYPCde1IpTgLTFoRsl9WDfRhTT09pdVUUeH5mEIP9klpbFQXCKq3vdB4ujS3d0Ue/l2
- ash0vwgEpGt9AGCfi1FN2G/G+Uo3s1YIttDW0G40X7jlDzVNQjcALX2be37/zNHlqDF8/xD+
- 7By/d6d++KbNtfcR3qi8Y2DAslE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e0b2a77.7ff4dbd9ced8-smtp-out-n01;
- Tue, 31 Dec 2019 11:01:11 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 19758C43383; Tue, 31 Dec 2019 11:01:10 +0000 (UTC)
-Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 94571C433CB;
-        Tue, 31 Dec 2019 11:01:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 94571C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v1 2/2] clk: qcom: rpmh: Add IPA clock for SC7180
-Date:   Tue, 31 Dec 2019 16:30:48 +0530
-Message-Id: <1577790048-18263-3-git-send-email-tdas@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1577790048-18263-1-git-send-email-tdas@codeaurora.org>
-References: <1577790048-18263-1-git-send-email-tdas@codeaurora.org>
+        Tue, 31 Dec 2019 06:02:37 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 554DE1C2605; Tue, 31 Dec 2019 12:02:35 +0100 (CET)
+Date:   Tue, 31 Dec 2019 12:02:34 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 4.19 215/219] mmc: sdhci: Update the tuning failed
+ messages to pr_debug level
+Message-ID: <20191231110234.GA14641@amd>
+References: <20191229162508.458551679@linuxfoundation.org>
+ <20191229162542.999358059@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
+Content-Disposition: inline
+In-Reply-To: <20191229162542.999358059@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Qualcomm IP Accelerator (IPA) clock resource that is managed by the BCM is
-required by the IPA driver in order to scale its core clock.
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- drivers/clk/qcom/clk-rpmh.c | 1 +
- 1 file changed, 1 insertion(+)
+--vkogqOf2sHV7VnPd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
-index 05cbe6f..b186479 100644
---- a/drivers/clk/qcom/clk-rpmh.c
-+++ b/drivers/clk/qcom/clk-rpmh.c
-@@ -396,6 +396,7 @@ static struct clk_hw *sc7180_rpmh_clocks[] = {
- 	[RPMH_RF_CLK1_A]	= &sdm845_rf_clk1_ao.hw,
- 	[RPMH_RF_CLK2]		= &sdm845_rf_clk2.hw,
- 	[RPMH_RF_CLK2_A]	= &sdm845_rf_clk2_ao.hw,
-+	[RPMH_IPA_CLK]		= &sdm845_ipa.hw,
- };
+On Sun 2019-12-29 18:20:17, Greg Kroah-Hartman wrote:
+> From: Faiz Abbas <faiz_abbas@ti.com>
+>=20
+> commit 2c92dd20304f505b6ef43d206fff21bda8f1f0ae upstream.
+>=20
+> Tuning support in DDR50 speed mode was added in SD Specifications Part1
+> Physical Layer Specification v3.01. Its not possible to distinguish
+> between v3.00 and v3.01 from the SCR and that is why since
+> commit 4324f6de6d2e ("mmc: core: enable CMD19 tuning for DDR50 mode")
+> tuning failures are ignored in DDR50 speed mode.
+>=20
+> Cards compatible with v3.00 don't respond to CMD19 in DDR50 and this
+> error gets printed during enumeration and also if retune is triggered at
+> any time during operation. Update the printk level to pr_debug so that
+> these errors don't lead to false error reports.
 
- static const struct clk_rpmh_desc clk_rpmh_sc7180 = {
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
+Well, downgrading level might be ok, but people will still see the
+message in dmesg.
+
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -2244,8 +2244,8 @@ static void __sdhci_execute_tuning(struc
+>  		sdhci_send_tuning(host, opcode);
+> =20
+>  		if (!host->tuning_done) {
+> -			pr_info("%s: Tuning timeout, falling back to fixed sampling clock\n",
+> -				mmc_hostname(host->mmc));
+> +			pr_debug("%s: Tuning timeout, falling back to fixed sampling clock\n",
+> +				 mmc_hostname(host->mmc));
+
+Maybe adding something like "(this is expected on SD cards
+implementing phy specification v3.00)" to the user-visible text would
+be even better?=20
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--vkogqOf2sHV7VnPd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl4LKsoACgkQMOfwapXb+vKHgACbBlWS6E/Nn/z1rfJwBpatiK/S
+SQIAoImGETp/MGWkJGSVdtofXsJmuf4p
+=h7c1
+-----END PGP SIGNATURE-----
+
+--vkogqOf2sHV7VnPd--
