@@ -2,107 +2,142 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CEEDC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D5FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0925B206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31ED820733
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:23:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbfLaIVI (ORCPT
+        id S1726377AbfLaIXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 03:21:08 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:43858 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfLaIVH (ORCPT
+        Tue, 31 Dec 2019 03:23:54 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41921 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfLaIXy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 03:21:07 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 9B55F1C2605; Tue, 31 Dec 2019 09:21:05 +0100 (CET)
-Date:   Tue, 31 Dec 2019 09:21:04 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        kbuild test robot <lkp@intel.com>,
-        Lianbo Jiang <lijiang@redhat.com>,
-        Borislav Petkov <bp@suse.de>, bhe@redhat.com,
-        d.hatayama@fujitsu.com, dhowells@redhat.com, dyoung@redhat.com,
-        ebiederm@xmission.com, horms@verge.net.au,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        =?iso-8859-1?Q?J=FCrgen?= Gross <jgross@suse.com>,
-        kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>, vgoyal@redhat.com,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 159/219] x86/crash: Add a forward declaration of
- struct kimage
-Message-ID: <20191231082104.GA18654@amd>
-References: <20191229162508.458551679@linuxfoundation.org>
- <20191229162532.764428471@linuxfoundation.org>
+        Tue, 31 Dec 2019 03:23:54 -0500
+Received: by mail-ot1-f68.google.com with SMTP id r27so49465455otc.8;
+        Tue, 31 Dec 2019 00:23:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=exbpjm8R+9VG0LXo53eXq/JhXDU32icBm8b7iAcsrrE=;
+        b=i3Wxe0Y8JvJoL3QnoADXcbxDv88kne5wunme+8tkCLtTL3j2tqfyp+VwrrZebF1isY
+         Brh7RO0jsJGPGoHnCMR7FQ+VylzZLWfSjPf2H0/93/PJ5a2KvZ8+6tGm96R07nrbzDwA
+         JAGaKDCw+Xb4AoX325e/FlU56e38gy0UAvhXle76xejbm/9VEn/NUBi9FfQcS5RJDs0C
+         QOmt0uq0bF6X5Lxvv3CRTZ49I4X6vZndAKjHY6AMcn/5Rp4waqjAncohIsma5JDXcPpB
+         xEaAIm5raBYfF8pplLUEAdiKXCBQ2jd3S/uqrWtlhO8rG6SBql/rTlBAz8Dp1OPJ1ExD
+         659g==
+X-Gm-Message-State: APjAAAX7REPno25mLqC2Efe1F6g9brc3bOEHL0iAY8q34RF7AenoqP9W
+        SiU/vr2MtoS3cZooeGXgAXkNol8ZnbwqI1r1KRA=
+X-Google-Smtp-Source: APXvYqyNXKUrqWbQ3GKR/KvwCtjIAXctgLXNr5s7v9TX4B69OhYh51yZVdBnhbmzbfErcyqtCy7X45zpE7TsSY5A/m4=
+X-Received: by 2002:a05:6830:2141:: with SMTP id r1mr79413312otd.39.1577780633088;
+ Tue, 31 Dec 2019 00:23:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
-Content-Disposition: inline
-In-Reply-To: <20191229162532.764428471@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20191116005240.15722-1-robh@kernel.org> <20191116005240.15722-3-robh@kernel.org>
+ <CAMuHMdX20LvK2o1cZJ8q83Q08JQzH6L07gmqBm0V0xSc5GHk4A@mail.gmail.com> <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 31 Dec 2019 09:23:41 +0100
+Message-ID: <CAMuHMdXBVyutji67Ladvoh3NhrPNTYfAKS4pmOQcOouZGokYvQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] dt-bindings: PCI: Convert generic host binding to DT schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Will Deacon <will@kernel.org>,
+        David Daney <david.daney@cavium.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Rob,
 
---mYCpIKhGyMATD0i+
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Dec 31, 2019 at 12:30 AM Rob Herring <robh@kernel.org> wrote:
+> On Thu, Dec 12, 2019 at 7:41 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Sat, Nov 16, 2019 at 1:53 AM Rob Herring <robh@kernel.org> wrote:
+> > > Convert the generic PCI host binding to DT schema. The derivative Juno,
+> > > PLDA XpressRICH3-AXI, and Designware ECAM bindings all just vary in
+> > > their compatible strings. The simplest way to convert those to
+> > > schema is just add them into the common generic PCI host schema.
+> > >
+> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > Cc: Andrew Murray <andrew.murray@arm.com>
+> > > Cc: Zhou Wang <wangzhou1@hisilicon.com>
+> > > Cc: Will Deacon <will@kernel.org>
+> > > Cc: David Daney <david.daney@cavium.com>
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> >
+> > > index 515b2f9542e5..000000000000
+> > > --- a/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
+> > > +++ /dev/null
+> >
+> > > -Example:
+> > > -
+> > > -    pcie1: pcie@7f000000 {
+> > > -        compatible = "socionext,synquacer-pcie-ecam", "snps,dw-pcie-ecam";
+> > > -        device_type = "pci";
+> > > -        reg = <0x0 0x7f000000 0x0 0xf00000>;
+> > > -        bus-range = <0x0 0xe>;
+> > > -        #address-cells = <3>;
+> > > -        #size-cells = <2>;
+> > > -        ranges = <0x1000000 0x00 0x00010000 0x00 0x7ff00000 0x0 0x00010000>,
+> > > -                 <0x2000000 0x00 0x70000000 0x00 0x70000000 0x0 0x0f000000>,
+> > > -                 <0x3000000 0x3f 0x00000000 0x3f 0x00000000 0x1 0x00000000>;
+> > > -
+> > > -        #interrupt-cells = <0x1>;
+> > > -        interrupt-map-mask = <0x0 0x0 0x0 0x0>;
+> >
+> > An all-zeroes interrupt-map-mask seems to be very common on embedded
+> > SoCs, where all devices are mapped to a single interrupt.
+>
+> Indeed.
+>
+> > However, schemas/pci/pci-bus.yaml says:
+> >
+> >   interrupt-map-mask:
+> >     items:
+> >       - description: PCI high address cell
+> >         minimum: 0
+> >         maximum: 0xf800
+> >       - description: PCI mid address cell
+> >         const: 0
+> >       - description: PCI low address cell
+> >         const: 0
+> >       - description: PCI IRQ cell
+> >         minimum: 1
+> >         maximum: 7
+> >
+> > and thus complains about an all-zeroes mask, e.g.
+> >
+> >     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dt.yaml:
+> > pcie@fe000000: interrupt-map-mask:0:3: 0 is less than the minimum of 1
+>
+> Now fixed.
 
-On Sun 2019-12-29 18:19:21, Greg Kroah-Hartman wrote:
-> From: Lianbo Jiang <lijiang@redhat.com>
->=20
-> [ Upstream commit 112eee5d06007dae561f14458bde7f2a4879ef4e ]
->=20
-> Add a forward declaration of struct kimage to the crash.h header because
-> future changes will invoke a crash-specific function from the realmode
-> init path and the compiler will complain otherwise like this:
->=20
->   In file included from arch/x86/realmode/init.c:11:
->   ./arch/x86/include/asm/crash.h:5:32: warning: =E2=80=98struct kimage=E2=
-=80=99 declared inside\
+Thank you, confirmed.
 
-This is not needed in 4.19-stable, as
-6f599d84231fd27e42f4ca2a786a6641e8cddf00 is not being backported
-there. (But is simple enough not to do harm).
+Gr{oetje,eeting}s,
 
-Best regards,
-									Pavel
+                        Geert
 
-> @@ -2,6 +2,8 @@
->  #ifndef _ASM_X86_CRASH_H
->  #define _ASM_X86_CRASH_H
-> =20
-> +struct kimage;
-> +
->  int crash_load_segments(struct kimage *image);
->  int crash_copy_backup_region(struct kimage *image);
->  int crash_setup_memmap_entries(struct kimage *image,
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---mYCpIKhGyMATD0i+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl4LBPAACgkQMOfwapXb+vI1YwCgkt7BeSAXQG8Y9wgvq32qdefL
-FEMAnAnUXf/SFS6l9L7ov4sP9dCPQc4D
-=WrFA
------END PGP SIGNATURE-----
-
---mYCpIKhGyMATD0i+--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
