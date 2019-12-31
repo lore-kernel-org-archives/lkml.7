@@ -2,159 +2,115 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E77EC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CA8C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D5EA206E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:15:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="iY7AF2Hk"
+	by mail.kernel.org (Postfix) with ESMTP id C9044206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:20:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577780433;
+	bh=83SkJ5U4qt8cGpALTMPAtCqZv2hXGLYY7N1ppWznu20=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2Ig25RZdhumDpAKvqZ5JkHOzHDGx2iCMCg+N4lbexw8+LOEnHxp6yR7Ib8Io995I6
+	 5167KPSYm9WNrlYKpPk7UiTWB/PHw09sDXnDF1+vuaCt4ZATk1u9VkHL2VbIz7G8Nf
+	 JVL7BTEPyPYzpgJT7QIEhEUZfPPJBInY4TsAKT+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbfLaIPc (ORCPT
+        id S1726334AbfLaIUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 03:15:32 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:12370 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfLaIPb (ORCPT
+        Tue, 31 Dec 2019 03:20:32 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41500 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfLaIUc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 03:15:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1577780129;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=1zb1yyg45rffTMBSTY3brW53GCegT+pQHuPQHh8FR7E=;
-        b=iY7AF2HkRPj48jdFCvBJ8GBjhrR/kUJCqk5Si28roU6del0bNM/UoJEpcnWHFb00ay
-        LKTrHBlfGeQHaTEvWr6lvLfdVcvSQlWAxtHNtvfFk/puaeSQ9dukyAyP6ih/fg6LWzR6
-        zP0BfhG4xy8XPr+gWOJdBcyZjuX9lph0qHm/3exP+s2Dfo7i3UrVsCQmj33A0ApkXiKb
-        zAHKIRS33bLplgM4mVi5yRUasvbjSDrz+3N1JGTa1zVoyoowBehTqddsDTzXMKFtvRp8
-        Ha2Mq2HkNfAlaRAaQ38PD+OzP2aBkx0RtGA4zxS95CvkG2NgL4gZZGQNj7N1fwBgaw3E
-        b1HQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vswDOsxLg="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
-        with ESMTPSA id a09dafvBV8ECFj7
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Tue, 31 Dec 2019 09:14:12 +0100 (CET)
+        Tue, 31 Dec 2019 03:20:32 -0500
+Received: by mail-ed1-f68.google.com with SMTP id c26so34723090eds.8
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Dec 2019 00:20:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OCioKZCCJQ7tT73SyyKzkO9RMHazBLb5Wt3QDWkITuY=;
+        b=c8pe6da5culV4fCK/YEMQF6A+9HUwa8avPJWypUWrVIsc45xWq3FcJDC/NOGhuFtRP
+         Jehf2V7B6ZfCxR5IqyrhOgImMVsaVxamhE5k37Nr7e+IcBsJJ/NkDb/6AEwDPX/NTnIR
+         Iyj0qN3J1UKFktwakBEDdmL9zpA9Bu075S+zJzlY8PQ8AfAifSiD6OVgi5oIRwPu1u8A
+         DMRLKX4SHmeomjqNYq0qrgkh+6SewEXmvLj2g1tVJ2n9AdWHoeNPExYLAADBKD9xr1V0
+         oUq1kinSMNR3YFQXk/Zzy5j3qakJlwT8TzBMdJO7y+fN5/Ilsm87TApCByLA5LcLIcdG
+         vc/w==
+X-Gm-Message-State: APjAAAXTh3P1x6Uh1VowMjv4EjanvJEALrV3riNlhUyol7k+HrsT7qNm
+        AUzu9W+DzNBarLq+5S4Jpeo=
+X-Google-Smtp-Source: APXvYqyY2gPXd0BiQQrtUFNJI/5iVX0C/CtQWvEacT6jWsjUbweBcqZjXhfz4qpJbuWs2pkwg5NIgQ==
+X-Received: by 2002:aa7:cf81:: with SMTP id z1mr75335663edx.234.1577780431167;
+        Tue, 31 Dec 2019 00:20:31 -0800 (PST)
+Received: from pi3 ([194.230.155.138])
+        by smtp.googlemail.com with ESMTPSA id r24sm5708609edp.15.2019.12.31.00.20.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Dec 2019 00:20:30 -0800 (PST)
+Date:   Tue, 31 Dec 2019 09:20:28 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 2/2] phy: Enable compile testing for some of drivers
+Message-ID: <20191231082028.GC6804@pi3>
+References: <20191230172449.17648-1-krzk@kernel.org>
+ <20191230172449.17648-2-krzk@kernel.org>
+ <791d83ef-faee-d6e6-445e-a8088c5ac654@gmail.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH] ARM: dts: Add omap3-echo
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20191230172948.GL35479@atomide.com>
-Date:   Tue, 31 Dec 2019 09:14:12 +0100
-Cc:     =?utf-8?Q?Andr=C3=A9_Hentschel?= <nerv@dawncrow.de>,
-        Adam Ford <aford173@gmail.com>, linux@arm.linux.org.uk,
-        robh+dt@kernel.org, mark.rutland@arm.com, bcousson@baylibre.com,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <55E6481C-2137-4086-ACDF-5F7D86E41A21@goldelico.com>
-References: <20191224161005.28083-1-nerv@dawncrow.de> <20191224184503.GK35479@atomide.com> <60412339-53BF-4DC1-8AF6-4FB0E75D429C@goldelico.com> <53e6cbbd-1094-cba2-4942-981502a738d4@dawncrow.de> <20191230172948.GL35479@atomide.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+Content-Disposition: inline
+In-Reply-To: <791d83ef-faee-d6e6-445e-a8088c5ac654@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
+On Mon, Dec 30, 2019 at 12:10:51PM -0800, Florian Fainelli wrote:
+> Hi Krzysztof,
+> 
+> On 12/30/19 9:24 AM, Krzysztof Kozlowski wrote:
+> > Some of the phy drivers can be compile tested to increase build
+> > coverage.
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> This looks fine, you could also consider adding a bunch of other
+> Broadcom PHY drivers which are not currently under COMPILE_TEST, yet
+> build fine:
 
-> Am 30.12.2019 um 18:29 schrieb Tony Lindgren <tony@atomide.com>:
->=20
-> * Andr=C3=A9 Hentschel <nerv@dawncrow.de> [191227 14:29]:
->> Am 25.12.19 um 18:01 schrieb H. Nikolaus Schaller:
->>> I think the am3703 is a dm3730 (omap3630) where the SGX and the
->>> DSP have not passed production test and are "disabled" by eFuses.
->>> This is a common procedure in silicon production to increase yield.
->>>=20
->>> Therefore, there is a register which allows to dynamically determine
->>> what components (SGX and DSP) are available on a specific SoC chip.
->>> See "Table 1-6. Chip Identification" in the common
->>> "AM/DM37x Multimedia Device TRM".
->>>=20
->>> Such bits exists for omap34xx and for omap36xx (aka am37xx/dm37xx).
->>>=20
->>> That way there is no need to disable/enable sgx through device tree
->>> variations and introducing more complexity by introducing more and =
-more
->>> DTS for variants (am3703.dtsi, am3715.dtsi, dm3720.dtsi, =
-dm3730.dtsi?).
->>>=20
->>> BTW: what about a board that is/was produced in either am3703 or =
-dm3730
->>> variants? Can they still share an omap36xx.dtsi based DTB?
->>>=20
->>> So IMHO if there is an issue with sgx enabled on am3703 but no SGX
->>> hardware available on a specific SoC, the sysc setup should somehow =
-read
->>> the bits and effectively disable all SGX related setup if it is not
->>> available on the SoC. If I remember correctly, some older hwmods did
->>> such things by checking SoC variant bits.
->>=20
->> I like the idea, but I'm not in the position to vote for it and I =
-don't
->> understand the sysc code enough to implement that.
->=20
-> We can easily do both. So no worries, I can easily add SoC capabilites
-> support at some point.
->=20
->> Am 25.12.19 um 13:53 schrieb Adam Ford:
->>> On Wed, Dec 25, 2019 at 6:05 AM Andr=C3=A9 Hentschel =
-<nerv@dawncrow.de> wrote:
->>>> And then include am3703.dtsi in omap36xx.dtsi before sgx support?
->>> I can see value in having a 3703 base and including that in the 36xx
->>> with SGX and DSP nodes, but why not jus make SGX disabled by =
-default.
->>> Those who want/need it can enable it on a per-board basis.
->>>> Or would it be better to have sgx support in a separate dtsi?
->>>=20
->>> I am not sure how much DSP stuff is in there, but the DM3730 is the
->>> AM3703 + DSP and 3D.
->>=20
->> For clarification this reduced table should help:
->>     DM3730 | DM3725 | AM3715 | AM3703
->> DSP    X    |   X    |        |   =20
->> SGX    X    |        |   X    |   =20
->>=20
->> Where X is "supported"
->=20
-> And let's also add minimal dm3725.dtsi, am3715.dtsi and am3703.dtsi
-> to make things simple.
+I'll send a v2 with them as well. They seem to compile fine.
 
-Well, is that "simple"?
+Best regards,
+Krzysztof
 
-We also have to add omap3503, omap3515, omap3520, omap3530.dtsi.
-And probably am3351,2,4,6,7,8,9 variants with different capabilities
-(PRU, SGX, CAN, ZCZ ports to name some).
-
-And to be correct, there should be a different "compatible".
-
-Rob asked me when reviewing the pvrsgx bindings if the img,5xx variants
-can be autodetected to reduce bindings complexity.
-
-> The device tree is supposed to describe the
-> hardware, and in most cases the SoC version is fixed and need no
-> dynamic detection.
-
-There may be exactly the same board populated with either one since
-they are drop-in pin compatible. So this may proliferate to the
-board.dts files and u-boot can have to load different .dtb.
-
->=20
-> Andr=C3=A9, can you please add those three dtsi files since you have =
-at
-> least one test case? :)
->=20
-> Regards,
->=20
-> Tony
-
-BR,
-Nikolaus
-
-
+> 
+> diff --git a/drivers/phy/broadcom/Kconfig b/drivers/phy/broadcom/Kconfig
+> index d3d983c128ea..d56db6d375e1 100644
+> --- a/drivers/phy/broadcom/Kconfig
+> +++ b/drivers/phy/broadcom/Kconfig
+> @@ -50,7 +50,7 @@ config PHY_BCM_NS_USB3
+> 
+>  config PHY_NS2_PCIE
+>         tristate "Broadcom Northstar2 PCIe PHY driver"
+> -       depends on OF && MDIO_BUS_MUX_BCM_IPROC
+> +       depends on (OF && MDIO_BUS_MUX_BCM_IPROC) || COMPILE_TEST
+>         select GENERIC_PHY
+>         default ARCH_BCM_IPROC
+>         help
+> @@ -83,7 +83,7 @@ config PHY_BRCM_SATA
+> 
+>  config PHY_BRCM_USB
+>         tristate "Broadcom STB USB PHY driver"
+> -       depends on ARCH_BRCMSTB
+> +       depends on ARCH_BRCMSTB || COMPILE_TEST
+>         depends on OF
+>         select GENERIC_PHY
+>         select SOC_BRCMSTB
+> 
