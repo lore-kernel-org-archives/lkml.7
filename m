@@ -2,110 +2,99 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 630E3C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 15:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC34C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 15:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35C65206E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 15:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65AE2206E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 15:24:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="cbmWvu80"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OTgo03Gv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbfLaPVM (ORCPT
+        id S1727101AbfLaPY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 10:21:12 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:36485 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbfLaPVM (ORCPT
+        Tue, 31 Dec 2019 10:24:56 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:47149 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726659AbfLaPYz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 10:21:12 -0500
-Received: by mail-il1-f193.google.com with SMTP id b15so30408550iln.3
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Dec 2019 07:21:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M7wDnYJLkdZ3OOSrLZqOeBqYHWkaMb/EXIdOIWi2ux8=;
-        b=cbmWvu809wZwdtci+lKYzW4AhYVpnBdlWm0HloHr3t0MlPEoqkF+d3fd81CayHS+fh
-         /A5cRX5GGeuxhJP503RVB9OZnzNuQCi33fmHjYSpw4ibMEb507/yR94QpjQCbTtvR4lI
-         2ZR1pqe2d7rGSsTnq5T/ocPoKQjPUSsxO9bUua5KZW1NXDr+JCaOVDiiXIwU1Itc9Zu1
-         A0XVdMFQvblvWdVT8PcxSdFkKxJ41sNrAYO4zptbeglWbEsFKtccfsBEa3PuoXrSgQEc
-         96nk7odHY5j7Ts6/fRh/1njXnhM1uuPGX/TTkcTq0TmGb9jMorJph/R6weDxi8hEbJKL
-         KKEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M7wDnYJLkdZ3OOSrLZqOeBqYHWkaMb/EXIdOIWi2ux8=;
-        b=D5h14Aw83ztoTtHyZG9YuSxcqIXY/INaZobH6H9HZFhvQXj6HfCLDk9QRQ7SnKb2zX
-         /RChRtRsDCFoZZms7uJOZmaXZY07vFhDvkrf086M4Vg1/lmyW8rUHOlClMMGndlMy4yU
-         dxFJQiXmFZIQxkxBWI0I5cl12CHZs1xVRyis/vJKDtmrpIyokMs8XUsb50NOV7g6NvaR
-         e23G8ukUy0zVXg3oW82U7E5gL+xMymnQCWdUSeFF6kgOXGMpC+H64PFCFOOGPn0DkVms
-         dDiCOAwi7Tt1T3rvLUGzIVBt2RpqXlC/lTfIdywsaXIW1vGgo1bAF0o/WO/tlCtNmP7V
-         FFJA==
-X-Gm-Message-State: APjAAAVawMPKg/Izq/tW+I5aJWopCRUAEua/BoE7IH1EU1eI0fNhLAYQ
-        YRyZOlVUd1Bh1+8EFmBqxCtUkTLLOJJeHfqFP5MwJg==
-X-Google-Smtp-Source: APXvYqy3MQrOnoaWbnV7vTPuZtjUUgc057hivbXdtKRtupkYm0cWiXJtUpFsHUEFrTtUPNyNYDJrHT3Sn1/xfTDTMZ0=
-X-Received: by 2002:a92:5d92:: with SMTP id e18mr60949654ilg.75.1577805671148;
- Tue, 31 Dec 2019 07:21:11 -0800 (PST)
+        Tue, 31 Dec 2019 10:24:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577805894;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=zFvHM3AeFQ6gPIf7yqo2C1O21SKvnYRszvRgL2Vd76U=;
+        b=OTgo03Gvj0HUfPlfSt8yUYRABI9qWoe/6bBc+47jy1u21DS2cBpLFF95iUg3tXQ0uTPN55
+        IQ/bUKyY8MRxMgvSmF6orqpgOuoPHKri8uL4len6f1a1d0bf1I55tdk8k152TtyIK/+Jfc
+        h2W/8xf0jSgK4GV7pfRX3w5iAfxJfk8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-348-M8HKX7AbPbmilX0GP3moIw-1; Tue, 31 Dec 2019 10:24:51 -0500
+X-MC-Unique: M8HKX7AbPbmilX0GP3moIw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 25BB910054E3;
+        Tue, 31 Dec 2019 15:24:50 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 195C981E35;
+        Tue, 31 Dec 2019 15:24:48 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 1/3] keys: Fix request_key() cache
+From:   David Howells <dhowells@redhat.com>
+To:     linux-afs@lists.infradead.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org, dhowells@redhat.com
+Date:   Tue, 31 Dec 2019 15:24:48 +0000
+Message-ID: <157780588822.25571.7926816048227538205.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-References: <20191230194102.2843-1-wambui.karugax@gmail.com>
-In-Reply-To: <20191230194102.2843-1-wambui.karugax@gmail.com>
-From:   Sean Paul <sean@poorly.run>
-Date:   Tue, 31 Dec 2019 10:20:35 -0500
-Message-ID: <CAMavQKLzkP6WKkxkNRYmvo7uhJFuvXjs_ryasFEMi3MeGMhaGQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm: use BUG_ON macro for debugging.
-To:     Wambui Karuga <wambui.karugax@gmail.com>
-Cc:     Rob Clark <robdclark@gmail.com>, Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 2:41 PM Wambui Karuga <wambui.karugax@gmail.com> wrote:
->
-> As the if statement only checks for the value of the offset_name
-> variable, it can be replaced by the more conscise BUG_ON macro for error
-> reporting.
->
-> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
-> ---
->  drivers/gpu/drm/msm/adreno/adreno_gpu.h | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-> index c7441fb8313e..0fe7907f5a7d 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-> @@ -315,10 +315,7 @@ OUT_PKT7(struct msm_ringbuffer *ring, uint8_t opcode, uint16_t cnt)
->  static inline bool adreno_reg_check(struct adreno_gpu *gpu,
->                 enum adreno_regs offset_name)
->  {
-> -       if (offset_name >= REG_ADRENO_REGISTER_MAX ||
-> -                       !gpu->reg_offsets[offset_name]) {
-> -               BUG();
-> -       }
-> +       BUG_ON(offset_name >= REG_ADRENO_REGISTER_MAX || !gpu->reg_offsets[offset_name]);
->
+When the key cached by request_key() and co. is cleaned up on exit(), the
+code looks in the wrong task_struct, and so clears the wrong cache.  This
+leads to anomalies in key refcounting when doing, say, a kernel build on an
+afs volume, that then trigger kasan to report a use-after-free when the key
+is viewed in /proc/keys.
 
-Minor nit: This line is longer than 80 chars
+Fix this by making exit_creds() look in the passed-in task_struct rather
+than in current (the task_struct cleanup code is deferred by RCU and
+potentially run in another task).
 
-Other than that,
+Fixes: 7743c48e54ee ("keys: Cache result of request_key*() temporarily in task_struct")
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
 
-Reviewed-by: Sean Paul <sean@poorly.run>
+ kernel/cred.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
->         /*
->          * REG_SKIP is a special value that tell us that the register in
-> --
-> 2.17.1
->
+diff --git a/kernel/cred.c b/kernel/cred.c
+index c0a4c12d38b2..56395be1c2a8 100644
+--- a/kernel/cred.c
++++ b/kernel/cred.c
+@@ -175,8 +175,8 @@ void exit_creds(struct task_struct *tsk)
+ 	put_cred(cred);
+ 
+ #ifdef CONFIG_KEYS_REQUEST_CACHE
+-	key_put(current->cached_requested_key);
+-	current->cached_requested_key = NULL;
++	key_put(tsk->cached_requested_key);
++	tsk->cached_requested_key = NULL;
+ #endif
+ }
+ 
+
