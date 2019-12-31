@@ -2,81 +2,100 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0647DC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 22:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 343C7C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 22:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEA3F206E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 22:33:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577831613;
-	bh=QaZbUxjuLY1oPNTNyLwTGDZ9ozsSFFrFCBC1boCwOD0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lG/3r8iRKLKSarC0WijYBIJ3ZS4YipksxRBOFprvgnhOqiDy2AVlBUFReyVv2MDK/
-	 RuGF+cENFLNUSg9V2FnO5K0AvEQxi1hv/xxSxZxCmxDkHJwVVLwm10rCxXOYn1e8AM
-	 GTEbjp/yyKn+nw7GSuShx2K/UnRgIPQPANItFwIE=
+	by mail.kernel.org (Postfix) with ESMTP id 06622206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 22:54:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QERVFuI1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfLaWdd (ORCPT
+        id S1727130AbfLaWy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 17:33:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56726 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727031AbfLaWdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 17:33:32 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 31 Dec 2019 17:54:27 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25251 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727054AbfLaWy0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 17:54:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577832865;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=slmh9bW+4V4Ot0eIs6GceXv6tZVqhiaH5L3lUPXogb8=;
+        b=QERVFuI1GnIfl0T8YJovza3lKcxTI+kD+rVqA7JEyDl9EGIyGqXNtBwXfwaYwwyzpQz3PV
+        5koAnTrR3g8qZizC/657rx+YS248Nlxf/+lDldoqgpUWidqTgu9uUpBXmAPwYYIz3A1kLm
+        K/hmzJBvnkaFDvA0/WPtceLo5TzgWzM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-359-NwmcAXVlPQSfYh0kDQn1ZQ-1; Tue, 31 Dec 2019 17:54:22 -0500
+X-MC-Unique: NwmcAXVlPQSfYh0kDQn1ZQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE0E5205ED;
-        Tue, 31 Dec 2019 22:33:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577831612;
-        bh=QaZbUxjuLY1oPNTNyLwTGDZ9ozsSFFrFCBC1boCwOD0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=b8cExrddR70yQfCVlcvn8ljGEw0XzycDsmGTgca2kgOKJDaKrWquZGTFbI+XFUM0k
-         w/fZgXaPi1gTZHLlh6/5QBCZhmiqqd6yUzuNsxKyceGAysr49rt2A1keUOayLqwdSE
-         8/eB5jjSnDJFLqDVV3V8jqc8ffQwFNZwb3/5mbuY=
-Date:   Tue, 31 Dec 2019 14:33:31 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Gang He <GHe@suse.com>
-Cc:     "mark@fasheh.com" <mark@fasheh.com>,
-        "jlbec@evilplan.org" <jlbec@evilplan.org>,
-        "joseph.qi@linux.alibaba.com" <joseph.qi@linux.alibaba.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>
-Subject: Re: [PATCH] ocfs2: make local header paths relative to C files
-Message-Id: <20191231143331.9b77ee5709f2662c54d76a51@linux-foundation.org>
-In-Reply-To: <20191227022950.14804-1-ghe@suse.com>
-References: <20191227022950.14804-1-ghe@suse.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7AE21107ACC5;
+        Tue, 31 Dec 2019 22:54:20 +0000 (UTC)
+Received: from [127.0.0.1] (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8863960579;
+        Tue, 31 Dec 2019 22:54:19 +0000 (UTC)
+Subject: Re: FS_IOC_GETFSLABEL and FS_IOC_SETFSLABEL
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
+        Andreas Dilger <adilger@dilger.ca>,
+        David Sterba <dsterba@suse.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191228143651.bjb4sjirn2q3xup4@pali>
+From:   Eric Sandeen <sandeen@redhat.com>
+Message-ID: <517472d1-c686-2f18-4e0b-000cda7e88c7@redhat.com>
+Date:   Tue, 31 Dec 2019 16:54:18 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <20191228143651.bjb4sjirn2q3xup4@pali>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Dec 2019 02:30:15 +0000 Gang He <GHe@suse.com> wrote:
+On 12/28/19 6:36 AM, Pali Roh=C3=A1r wrote:
+> Hello!
+>=20
+> I see that you have introduced in commit 62750d0 two new IOCTLs for
+> filesyetems: FS_IOC_GETFSLABEL and FS_IOC_SETFSLABEL.
+>=20
+> I would like to ask, are these two new ioctls mean to be generic way fo=
+r
+> userspace to get or set fs label independently of which filesystem is
+> used? Or are they only for btrfs?
 
-> From: Masahiro Yamada <masahiroy@kernel.org>
-> 
-> Gang He reports the failure of building fs/ocfs2/ as an external module
-> of the kernel installed on the system:
-> 
->  $ cd fs/ocfs2
->  $ make -C /lib/modules/`uname -r`/build M=`pwd` modules
-> 
-> If you want to make it work reliably, I'd recommend to remove ccflags-y
-> from the Makefiles, and to make header paths relative to the C files.
-> I think this is the correct usage of the #include "..." directive.
-> 
-> Reported-by: Gang He <ghe@suse.com>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> Reviewed-by: Gang He <ghe@suse.com>
+The reason it was lifted out of btrfs to the vfs is so that other filesys=
+tems
+can use the same interface.  However, it is up to each filesystem to impl=
+ement
+it (and to interpret what's been written to or read from disk.)
 
-Your signed-off-by should appear here, since you were on the patch
-delivery path.  I have made that change, OK?
+> Because I was not able to find any documentation for it, what is format
+> of passed buffer... null-term string? fixed-length? and in which
+> encoding? utf-8? latin1? utf-16? or filesystem dependent?
+
+It simply copies the bits from the memory location you pass in, it knows
+nothing of encodings.
+
+For the most part it's up to the filesystem's own utilities to do any
+interpretation of the resulting bits on disk, null-terminating maximal-le=
+ngth
+label strings, etc.
+
+-Eric
+
