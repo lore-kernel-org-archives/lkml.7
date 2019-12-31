@@ -2,84 +2,97 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BADC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 00:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73025C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 00:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C939A206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 00:26:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="dgIoT0J4"
+	by mail.kernel.org (Postfix) with ESMTP id 34560206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 00:29:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577752173;
+	bh=NjDyBj0VsqIxWyVqW+2dH9nRDhHyqeGwr1C+KeBjwZM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=M49r91Nvmu5Ltyr9t2BoB7FoDF0WrawYiMNheBOGfNvkR9+yxhXNtoeftJQSV75tT
+	 vbIe4bntG3JCQ0161XxdnTCCSjPdN7YI1Vd484Sw2YJEgb930MXsPDMX8zcRLoO8Z6
+	 yHZ2Q2JyPX9Ay/9nV8FZtqC1Wz5HgcEvdmG0//mA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbfLaA0X (ORCPT
+        id S1727807AbfLaA3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 19:26:23 -0500
-Received: from mail-ot1-f49.google.com ([209.85.210.49]:45616 "EHLO
-        mail-ot1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727750AbfLaA0X (ORCPT
+        Mon, 30 Dec 2019 19:29:32 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44134 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727750AbfLaA3b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 19:26:23 -0500
-Received: by mail-ot1-f49.google.com with SMTP id 59so48303954otp.12
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 16:26:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=tY8Yrw8DIjJkDyO6sYUuU7SfuMklcdzGkff08hmE4Ao=;
-        b=dgIoT0J42Ou7CHq8ICw+sB1EJ0GvPVzM/1LtOcfGmbiYc7gi2/anT3BpZYQvUTFoGu
-         /iUEqFHSP7CUp0DxHeEFkTr3/RuRSenVe3vuH7sg8Uil71DzcMU/mYYx4tmF5zTK3Izz
-         TVxYsN7VzAnkJfMLfzzJscJ6owOm7SJevg5dKiTOKnKLp0PLAh0kuy/xVFnpSanC+QDA
-         kM6b6po7oo9E+WUHkZsQFg5tJNg9XsiIWpM3tN3YWO+m1xviudu5d7bmIwv/qd+ddrj6
-         DaH1hCZZJA2Lb/1oOk84R/kTIIjNW+MW7BPGuM6MyPYNhl64nEJvtDWFN5h+r+kqG7BA
-         1NuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=tY8Yrw8DIjJkDyO6sYUuU7SfuMklcdzGkff08hmE4Ao=;
-        b=o+kPZejE4GZ/Ub4TpflnGtZKG0cmRp1MygldJJL3vON8BJueiDo8eEfor7fwOqZSgf
-         NW/OibMeM8tdiA7Aui+i9Kh+kRwihrrg+ml4x3T0cLFaSDZxPBXYecQMMZJfFAVCyDbT
-         klWNGyGvcHxkTT4seoLKMk2IVrOInBEndxAGI2Iu87AMbw1tw8+GA2QYNzFGYHK7/Dwd
-         Zwqa5qZeeMYzc9Y0LAS1Wn1Td/bFZ3V74NjdtOX/dz6sW9QajlbK/Nf5ktHzv6aNWKHd
-         cyztYQxNUlCmCAexEF6memvj+967Oycy+8mD7WiVD5n9JK4H4A6lrVQfHHTEGp1eSCnI
-         kiJg==
-X-Gm-Message-State: APjAAAVUHKdqYq9ABVKzls/M01NjSdHsKxFAEezVl0C8IbuMYKwk2+Oy
-        9Uyx0RNOgpvE4RxrYKAQe2tl8+QQOd4=
-X-Google-Smtp-Source: APXvYqy9LfAQrOgHl5HalyErom/kVuj4JuD9Fyfi8LQik12tw0zIu6+2vXHMVCgu+FJSxZnPEsNGWw==
-X-Received: by 2002:a9d:67ce:: with SMTP id c14mr51731605otn.106.1577751982462;
-        Mon, 30 Dec 2019 16:26:22 -0800 (PST)
-Received: from ?IPv6:2607:fb90:d7a:dfab:6680:99ff:fe6f:cb54? ([2607:fb90:d7a:dfab:6680:99ff:fe6f:cb54])
-        by smtp.googlemail.com with ESMTPSA id 6sm9101246oil.43.2019.12.30.16.26.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 30 Dec 2019 16:26:22 -0800 (PST)
-To:     linux-kernel@vger.kernel.org
-From:   Rob Landley <rob@landley.net>
-Subject: Why is CONFIG_VT forced on?
-Message-ID: <9b79fb95-f20c-f299-f568-0ffb60305f04@landley.net>
-Date:   Mon, 30 Dec 2019 18:30:15 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 30 Dec 2019 19:29:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=E2CRVJ0pla31OGboSymJBtJ7FSxHvmOY1w9JQQvCD/A=; b=GrnftHYLdETCv0Vpbc20gNKrT
+        /9Sz3zOodG517fi/mF0KZxhh41t7FO7B809arEewV5h72lnVOgkPVR6GiH9act/hzi/JQtJ/OOQTj
+        BKqkIq3O1ZbRvXunl0PS+sBESQLSd9cYc37b9FCQbpHUvtGmeVZdKsC5HebVUVCGIF+lk=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1im5Pd-0002nL-4G; Tue, 31 Dec 2019 00:29:29 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 87AD4D01A22; Tue, 31 Dec 2019 00:29:28 +0000 (GMT)
+Date:   Tue, 31 Dec 2019 00:29:28 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     "wuxu.wu" <wuxu.wu@huawei.com>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hushiyuan@huawei.com
+Subject: Re: [PATCH] spi: spi-dw: Add lock protect dw_spi rx/tx to prevent
+ concurrent calls
+Message-ID: <20191231002928.GD3897@sirena.org.uk>
+References: <1577418669-34821-1-git-send-email-wuxu.wu@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="iVCmgExH7+hIHJ1A"
+Content-Disposition: inline
+In-Reply-To: <1577418669-34821-1-git-send-email-wuxu.wu@huawei.com>
+X-Cookie: Programming is an unnatural act.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On x86-64 menuconfig, CONFIG_VT is forced on (in drivers->char devices->virtual
-terminal), but the help doesn't mention a "selects", and I didn't spot anything
-obvious in "find . -name 'Kconfig*' | xargs grep -rw VT".
 
-Congratulations, you've reinvented "come from". I'm mostly familiar with the
-kconfig plumbing from _before_ you made it turing complete: how do I navigate this?
+--iVCmgExH7+hIHJ1A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'm guessing "stick printfs into the menuconfig binary" is the recommended next
-step for investigating this? Or is there a trick I'm missing?
+On Fri, Dec 27, 2019 at 11:51:09AM +0800, wuxu.wu wrote:
 
-Rob
+>  static void dw_writer(struct dw_spi *dws)
+>  {
+> -	u32 max = tx_max(dws);
+> +	u32 max
+>  	u16 txw = 0;
+
+This is going to break the build, there's a missing ; in the
+declaration of max.  Otherwise this looks good.
+
+--iVCmgExH7+hIHJ1A
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4KlmcACgkQJNaLcl1U
+h9AA4Qf8DzOXFKYiWrGAwiKjNf1jfbj33s54tU8nmpfWwnaLfIgpqwSj0fTRnfwy
+tznV4UozcwcguyMAsbl4vn5Q0OrJOQfeLhwGdVBKXkJYOJLI40cgn0MFC6Ts4Ux3
+il8MXI4Y93xXZ0OJh2BoW+j1MGNsCmAJ8PqtWiGr7yNygcp8aNmyytjXGbuBVooe
+aiKeSt2yCDXUgWkkPS5CEcuLFmjodgumOlHravhrdDpRcAUR00YuTPCooZ28AMpx
+kq+DAG4w0CcSyOsZcm0+ZJjIyO1DY5BYbNlb4TJJNPYQ6wNBi/3buiDZXfeBlGIN
+DwRokHH0vSzHS75GN7ha/Shm8Bq0WQ==
+=UER1
+-----END PGP SIGNATURE-----
+
+--iVCmgExH7+hIHJ1A--
