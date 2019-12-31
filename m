@@ -2,123 +2,106 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75205C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 12:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0508C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 12:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49BD4206E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 12:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9264A20409
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 12:13:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="L1M0d2Mf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbfLaMNK (ORCPT
+        id S1727106AbfLaMNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 07:13:10 -0500
-Received: from smtp-sh.infomaniak.ch ([128.65.195.4]:42905 "EHLO
-        smtp-sh.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbfLaMNK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 07:13:10 -0500
-Received: from smtp-2-0000.mail.infomaniak.ch ([10.5.36.107])
-        by smtp-sh.infomaniak.ch (8.14.5/8.14.5) with ESMTP id xBVCCBnS003437
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 31 Dec 2019 13:12:11 +0100
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 36C571028F798;
-        Tue, 31 Dec 2019 13:12:07 +0100 (CET)
-Subject: Re: [PATCH bpf-next v1 00/13] MAC and Audit policy using eBPF (KRSI)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     KP Singh <kpsingh@chromium.org>, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>
-References: <20191220154208.15895-1-kpsingh@chromium.org>
- <a6b61f33-82dc-0c1c-7a6c-1926343ef63e@digikod.net>
- <201912301128.B37D55AB44@keescook>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Autocrypt: addr=mic@digikod.net; prefer-encrypt=mutual; keydata=
- mQINBFNUOTgBEAC5HCwtCH/iikbZRDkXUSZa078Fz8H/21oNdzi13NM0ZdeR9KVq28ZCBAud
- law2P+HhaPFuZLqzRiy+iNOumPgrUyNphLhxWby/JgD7hvhYs5HJgdX0VTwzGqprmAeDKbnS
- G0Q2zxmnkb1/ENRTfrOIBm5LwyRhWIw5hg+HKh88g6qztDHdVSGqgWGLhj7RqDgHCgC4kAve
- /tWwfnpmMMndi5V+wg5EanyiffjAq6GHwzWbal+u3lkV8zNo15VZ+6mOY3X6dfYFVeX8hAP4
- u6OxzK4dQhDMVnJux5jum8RXtkSASiQpvx80npFbToIMgziWoWPV+Ag3Ti9JsactNzygozjL
- G0j8nc4dtfdkFoflEqtFIz2ZVWlmvcjbxTbvFpK2TwbVSiXe3Iyn4FIatk8tPsyY+mwKLzsc
- RNXaOXXB3kza0JmmnOyLCZuCTkds8FHvEG3nMIvyzXiobFM5F2b5Xo5x0fSo2ycIXXWgNJFn
- X1QXiPEM+emIRH0q2mHNAdvDki/Ns+qmkI4MQjWNGLGzlzb2GJBb5jXmkxEhk0/hUXVK3WYu
- /jGRQAbyX3XASArcw4RNFWd6fwzsX4Ras52BwI2qZaVAh4OclArEoSh5lGweizpN+1K8SnxG
- zVmvUDS8MfwlO97Kge4jzD0nRFOVE/z2DOLp6ZOcdRTxmTZNEwARAQABtCJNaWNrYcOrbCBT
- YWxhw7xuIDxtaWNAZGlnaWtvZC5uZXQ+iQI9BBMBCgAnBQJTVDk4AhsDBQkLRzUABQsJCAcD
- BRUKCQgLBRYDAgEAAh4BAheAAAoJECkv1ZR9XFaW/64P/3wPay/u16aRGeRgUl7ZZ8aZ50WH
- kCZHmX/aemxBk4lKNjbghzQFcuRkLODN0HXHZqqObLo77BKrSiVwlPSTNguXs9R6IaRfITvP
- 6k1ka/1I5ItczhHq0Ewf0Qs9SUphIGa71aE0zoWC4AWMz/avx/tvPdI4HoQop4K3DCJU5BXS
- NYDVOc8Ug9Zq+C1dM3PnLbL1BR1/K3D+fqAetQ9Aq/KP1NnsfSYQvkMoHIJ/6s0p3cUTkWJ3
- 0TjkJliErYdn+V3Uj049XPe1KN04jldZ5MJDEQv5G3o4zEGcMpziYxw75t6SJ+/lzeJyzJjy
- uYYzg8fqxJ8x9CYVrG1s8xcXu9TqPzFcHszfl9N01gOaT5UbJrjI8d2b2SG7SR9Wzn9FWNdy
- Uc/r/enMcnRkiMgadt6qSG+Z0UMwxPt/DTOkv5ISxyY8IzDJDCZ5HrBd9hTmTSztS+UUC2r1
- 5ijaOSCTWtGgJz/86ERDiUULZmhmQ1C9On46ilAgKEq4Eg3fXy6+kMaZXT3RTDrCtVrD4U58
- 11KD1mR4y8WwW5LJvKikqspaqrEVC4AyAbLwEsdjVmEVkdFqm6qW4YbaK+g/Wkr0jxuJ0bVn
- PTABQxmDBVUxsE6qDy6+s8ZWoPfwI1FK2TZwoIH0OQiffSXx6mdEO5X4O4Pj7f8pz723xCxV
- 1hqz/rrZ
-Message-ID: <6bb12d3a-5613-2891-83af-43e3176481dc@digikod.net>
-Date:   Tue, 31 Dec 2019 13:11:51 +0100
-User-Agent: 
+        Tue, 31 Dec 2019 07:13:42 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:43534 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726334AbfLaMNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 07:13:42 -0500
+Received: from zn.tnic (p4FED3FEE.dip0.t-ipconnect.de [79.237.63.238])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C266E1EC0216;
+        Tue, 31 Dec 2019 13:13:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1577794421;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=oR2xbj0U/pPGMoJ8gZOuKTnC6YknArbdAxhM7IvzOgI=;
+        b=L1M0d2MfDvXwB06BInNWbNrRyxXJ4p8eDWXOOC1n/RXs6mpQ2saXsgVesChtYtCn60jG7+
+        SBCfc9UtbWk0c6apV5LWzFHPhERhSr3VoPf1lCSNVyNciCmnC8tHSycqfsu4pL/EZgPGlQ
+        28R/sA9gg+yXZLyaBXZGDBcyGdJlvSI=
+Date:   Tue, 31 Dec 2019 13:11:21 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jann Horn <jannh@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v7 3/4] x86/dumpstack: Introduce die_addr() for die()
+ with #GP fault address
+Message-ID: <20191231121121.GA13549@zn.tnic>
+References: <20191218231150.12139-1-jannh@google.com>
+ <20191218231150.12139-3-jannh@google.com>
 MIME-Version: 1.0
-In-Reply-To: <201912301128.B37D55AB44@keescook>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191218231150.12139-3-jannh@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Dec 19, 2019 at 12:11:49AM +0100, Jann Horn wrote:
+> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+> index c8b4ae6aed5b..4c691bb9e0d9 100644
+> --- a/arch/x86/kernel/traps.c
+> +++ b/arch/x86/kernel/traps.c
+> @@ -621,7 +621,10 @@ do_general_protection(struct pt_regs *regs, long error_code)
+>  				 "maybe for address",
+>  				 gp_addr);
 
-On 30/12/2019 20:30, Kees Cook wrote:
-> On Fri, Dec 20, 2019 at 11:46:47PM +0100, Mickaël Salaün wrote:
->> I'm working on a version of Landlock without eBPF, but still with the
->> initial sought properties: safe unprivileged composability, modularity, and
->> dynamic update. I'll send this version soon.
->>
->> I hope that the work and experience from Landlock to bring eBPF to LSM will
->> continue to be used through KRSI. Landlock will now focus on the
->> unprivileged sandboxing part, without eBPF. Stay tuned!
-> 
-> Will it end up looking at all like pledge? I'm still struggling to come
-> up with a sensible pledge-like design on top of seccomp, especially
-> given the need to have it very closely tied to the running libc...
-> 
+ 
+> -		die(desc, regs, error_code);
 
-Yes, it's similar to Pledge/Unveil but with fine-grained control (and a
-more flexible design). And because it is not tied to syscall, there is
-no similar issues than with seccomp and libc. In fact, there is no more
-relationship with seccomp neither. The version I'm working on is similar
-in principle to the patch series v10 [1], without the usage complexity
-brought by eBPF, but with a more polished file-based access-control. The
-demo from LSS 2018 [2] gives an overview of the possibilities.
+I've added here:
 
-[1] https://lore.kernel.org/lkml/20190721213116.23476-1-mic@digikod.net/
-[2] https://landlock.io/talks/2018-08-27_landlock-lss_demo-1-web.mkv
+                /*
+                 * KASAN is interested only in the non-canonical case, clear it
+                 * otherwise.
+                 */
+
+> +		if (hint != GP_NON_CANONICAL)
+> +			gp_addr = 0;
+
+
+otherwise you have:
+
+	if (hint != GP_NO_HINT)
+		...
+
+	if (hint != GP_NON_CANONICAL)
+		...
+
+which is kinda confusing at a first glance and one has to follow the
+code into die_addr() to figure out the usage of the address argument.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
