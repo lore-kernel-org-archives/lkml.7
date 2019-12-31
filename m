@@ -2,197 +2,102 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70E3C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 10:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A05AC2D0DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 10:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF441206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 10:38:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577788698;
-	bh=m7kqKRaz9I7n5UoZ+mA+Vd26mdg3UIRo076jMwTZUKs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=D8OsNqE2mt6zQG+/RwkuUCvWFEh1u4FnGgQdEQYEvJhvq8CGWJxyqQHxsbScVqvjO
-	 UXd0h71Q+zolQuV2AWVtI+tokSt87uUgqStTBh3AS2Lm/Awvp2nGCAdNGG15I0pzbT
-	 VFf+HaFIwu7/9dodY9VPRYn2K+1oP+S4vp7K+6qs=
+	by mail.kernel.org (Postfix) with ESMTP id 6327A206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 10:41:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfLaKiR (ORCPT
+        id S1727066AbfLaKlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 05:38:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40130 "EHLO mail.kernel.org"
+        Tue, 31 Dec 2019 05:41:19 -0500
+Received: from mga12.intel.com ([192.55.52.136]:33889 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726658AbfLaKiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 05:38:17 -0500
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6053420718;
-        Tue, 31 Dec 2019 10:38:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577788695;
-        bh=m7kqKRaz9I7n5UoZ+mA+Vd26mdg3UIRo076jMwTZUKs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Q3XoN1vz6LEKRxchVQUr7q5oeq2tsBMYmGeUf4u/OvhOMxaAKr4vG/QYUDqaVVHwX
-         QGqDAcHdwH5Mob7lbwJF9zVBS0hCj69c3rl/IKR5Ux6RX3MBMMNew0m75CxF8EULHk
-         mjKvIEbQ3et3gumhM7Po42lSgQbrtY8SxP2QHFpg=
-Received: by mail-lj1-f172.google.com with SMTP id m26so33528288ljc.13;
-        Tue, 31 Dec 2019 02:38:15 -0800 (PST)
-X-Gm-Message-State: APjAAAUOUl6/P/jSjsWAuucDcpTpSwbtphSSWFdg5ac4AtyCzxp0WGTe
-        Ww1UOnCCxR1zwOJkyhlN7eLrpoH54RhMZN6ND5M=
-X-Google-Smtp-Source: APXvYqzMKfKZfiRH2jKjUg/iq48Ir3TkHa0dR/6uA47j3MXuIg/2O24VXSsRqlCLUUsAC2Ywf0ObYtS3A/s2A3dYGAc=
-X-Received: by 2002:a05:651c:232:: with SMTP id z18mr37049562ljn.85.1577788693398;
- Tue, 31 Dec 2019 02:38:13 -0800 (PST)
+        id S1726421AbfLaKlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 05:41:18 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Dec 2019 02:41:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,379,1571727600"; 
+   d="scan'208";a="220913973"
+Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.159.39])
+  by orsmga006.jf.intel.com with ESMTP; 31 Dec 2019 02:41:13 -0800
+Date:   Tue, 31 Dec 2019 18:40:36 +0800
+From:   Philip Li <philip.li@intel.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [kbuild-all] Re: [PATCH 2/7] misc: pci_endpoint_test: Do not
+ request or allocate IRQs in probe
+Message-ID: <20191231104036.GB26177@intel.com>
+References: <20191230123315.31037-3-kishon@ti.com>
+ <201912310039.Jef27rlg%lkp@intel.com>
+ <b561503f-a753-7750-2a43-78509755eb83@ti.com>
 MIME-Version: 1.0
-References: <20191220115653.6487-1-a.swigon@samsung.com> <CGME20191220120144eucas1p119ececf161a6d45a6a194e432bbbd1f9@eucas1p1.samsung.com>
- <20191220115653.6487-5-a.swigon@samsung.com> <20191230154405.GC4918@pi3>
- <2922135223b01126277ef92a53e6b294bc17bb5c.camel@samsung.com>
- <20191231092254.GA6939@pi3> <99427c18b1fcca3bc21e69609500abdbbef59167.camel@samsung.com>
- <20191231100234.GA7024@pi3> <29ed54c7700e35fb95fff4f4f5580eba24ffbb35.camel@samsung.com>
-In-Reply-To: <29ed54c7700e35fb95fff4f4f5580eba24ffbb35.camel@samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Tue, 31 Dec 2019 11:38:02 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPezRMb0OnpcRWrRheKbBjyzqNXG3TDX-MQkjAm2sTSr1w@mail.gmail.com>
-Message-ID: <CAJKOXPezRMb0OnpcRWrRheKbBjyzqNXG3TDX-MQkjAm2sTSr1w@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 4/7] arm: dts: exynos: Add interconnect bindings
- for Exynos4412
-To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com,
-        Inki Dae <inki.dae@samsung.com>,
-        Seung Woo Kim <sw0312.kim@samsung.com>,
-        georgi.djakov@linaro.org, leonard.crestez@nxp.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b561503f-a753-7750-2a43-78509755eb83@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 31 Dec 2019 at 11:23, Artur =C5=9Awigo=C5=84 <a.swigon@samsung.com>=
- wrote:
-> >
-> > The order of patches should reflect first of all real dependency.
-> > Whether it compiles, works at all and does not break anything.  Logical
-> > dependency of "when the feature will start working" is
-> > irrelevant to DTS because DTS goes in separate way and driver is
-> > independent of it.
->
-> The order of patches does indeed reflect real dependency. I can also reor=
-der
-> them (preserving the dependencies) so that DTS patches go first in the se=
-ries
-> if this is the more preferred way.
+On Tue, Dec 31, 2019 at 02:05:15PM +0530, Kishon Vijay Abraham I wrote:
+> Hi,
+> 
+> On 30/12/19 10:40 PM, kbuild test robot wrote:
+> > Hi Kishon,
+> > 
+> > I love your patch! Perhaps something to improve:
+> > 
+> > [auto build test WARNING on char-misc/char-misc-testing]
+> > [also build test WARNING on pci/next arm-soc/for-next linus/master v5.5-rc4 next-20191220]
+> > [if your patch is applied to the wrong git tree, please drop us a note to help
+> > improve the system. BTW, we also suggest to use '--base' option to specify the
+> > base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> > 
+> > url:    https://github.com/0day-ci/linux/commits/Kishon-Vijay-Abraham-I/Improvements-to-pci_endpoint_test-driver/20191230-203402
+> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git d1eef1c619749b2a57e514a3fa67d9a516ffa919
+> > config: arm-randconfig-a001-20191229 (attached as .config)
+> > compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
+> > reproduce:
+> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >         chmod +x ~/bin/make.cross
+> >         # save the attached .config to linux build tree
+> >         GCC_VERSION=7.5.0 make.cross ARCH=arm 
+> > 
+> > If you fix the issue, kindly add following tag
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > 
+> > All warnings (new ones prefixed by >>):
+> > 
+> >    In file included from include/linux/kernel.h:11:0,
+> >                     from include/linux/delay.h:22,
+> >                     from drivers/[1] -> http://lore.kernel.org/r/20191209092147.22901-1-kishon@ti.commisc/pci_endpoint_test.c:10:
+> >    drivers/misc/pci_endpoint_test.c: In function 'pci_endpoint_test_probe':
+> >    drivers/misc/pci_endpoint_test.c:73:22: error: 'PCI_DEVICE_ID_TI_J721E' undeclared (first use in this function); did you mean 'PCI_DEVICE_ID_TI_7510'?
+> >       ((pdev)->device == PCI_DEVICE_ID_TI_J721E)
+> 
+> The patches in this series should be merged only after [1]. With that
+> this error wouldn't be seen.
+thanks Kishon for the info, sorry for the false positive.
 
-It looks wrong then. Driver should not depend on DTS. I cannot find
-the patch changing bindings (should be first in patchset) which could
-also point to this problem.
-
-It seems you added requirement for interconnect properties while it
-should be rather optional.
-
-> > > I still think the order of these patches is the most logical one for =
-someone
-> > > reading this RFC as a whole.
-> >
-> > I am sorry but it brings only confusion. DTS is orthogonal of the
-> > driver code. You could even post the patchset without DTS (although the=
-n
-> > it would raise questions where is the user of it, but still, you
-> > could).
-> >
-> > Further, DTS describes also hardware so you could send certain DTS
-> > patches without driver implementation to describe the hardware.
-> >
-> > Driver code and DTS are kind of different worlds so mixing them up for
-> > logical review does not really make any sense.
-> >
-> > Not mentioning it is different than most of other patches on mailing
-> > lists.
-> >
-> > BTW, it is the same as bindings which should (almost) always go first a=
-s
-> > separate patches.
->
-> Thanks for elaborating on this, I appreciate it.
-> Regarding your original concern, patches 04 & 06 are separate for several
-> reasons, one of which is that they are related to two different drivers
-> (exynos-bus vs. exynos-mixer).
-
-It's okay then (for them to be split).
-
->
-> > >
-> > > > In certain cases dependency on DTS changes is ok:
-> > > > 1. Cleaning up deprecated properties,
-> > > > 2. Ignoring the backward compatibility for e.g. new platforms.
-> > > >
-> > > > None of these are applicable here.
-> > > >
-> > > > You need to rework it, put DTS changes at the end. This clearly sho=
-ws
-> > > > that there is no wrong dependency.
-> > > >
-> > > > >
-> > > > > > Adjust the title to match the contents - you are not adding bin=
-dings but
-> > > > > > properties to bus nodes. Also the prefix is ARM: (look at recen=
-t
-> > > > > > commits).
-> > > > >
-> > > > > OK.
-> > > > >
-> > > > > > >
-> > > > > > > diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi =
-b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> > > > > > > index 4ce3d77a6704..d9d70eacfcaf 100644
-> > > > > > > --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> > > > > > > +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> > > > > > > @@ -90,6 +90,7 @@
-> > > > > > >  &bus_dmc {
-> > > > > > >     exynos,ppmu-device =3D <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
-> > > > > > >     vdd-supply =3D <&buck1_reg>;
-> > > > > > > +   #interconnect-cells =3D <0>;
-> > > > > >
-> > > > > > This does not look like property of Odroid but Exynos4412 or Ex=
-ynos4.
-> > > > >
-> > > > > Strangely enough, this file is where the 'exynos,parent-bus' (aka=
-. 'devfreq')
-> > > > > properties are located (and everything in this RFC concerns devfr=
-eq).
-> > > >
-> > > > I cannot find exynos,parent-bus in exynos4412-odroid-common.dtsi. C=
-an
-> > > > you elaborate?
-> > >
-> > > Currently a name change is being made: 'devfreq' -> 'exynos,parent-bu=
-s'
-> > > https://patchwork.kernel.org/patch/11304549/
-> > > (a dependency of this RFC; also available in devfreq-testing branch)
-> >
-> > I see. That property also does not look like board (Odroid) specific so
-> > it should be moved to Exynos4412 DTSI.
->
-> Makes sense to me. Just from looking at the patch I referenced above, the=
-re is
-> a significant level of code duplication between
-> * arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi
-> * arch/arm/boot/dts/exynos4412-midas.dtsi
-> * arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> with relation to the devfreq*/exynos,* properties.
-
-If you have in mind all the nodes with "status=3Dokay", it's fine to
-duplicate them.
-
-Best regards,
-Krzysztof
+> 
+> [1] -> http://lore.kernel.org/r/20191209092147.22901-1-kishon@ti.com
+> 
+> Thanks
+> Kishon
+> _______________________________________________
+> kbuild-all mailing list -- kbuild-all@lists.01.org
+> To unsubscribe send an email to kbuild-all-leave@lists.01.org
