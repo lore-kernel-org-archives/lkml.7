@@ -7,58 +7,65 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 822DFC2D0D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 00:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C42C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 00:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 584B1206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 00:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCFE3206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 00:30:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577752246;
-	bh=vsPS4RrjpH/WmuFp50fCqtim0YRuiLX1Kwdw7CpSG80=;
+	s=default; t=1577752249;
+	bh=blw4x22xrbNI+tZkdMxAL/mwV97EzQUolmSdLgpbZy4=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=lmjI7N7ds6W/r2LI0gVLqZAQsuIkv0APXiWDuy6O30CqPLMooBdfSEDXN4zfQT2JG
-	 7954bdcPOWCzbyS47mgdy51qwnrf8tgtGBqYZZbdCSD7FLKCiBkouWSMVCmqCASjvu
-	 T7M2ikjImoiM/harSI0ScpyhTuqz6Tn1tRl/tim4=
+	b=XxHti+tUHxrmrBKqbupPrf1Z5YGlRLBdY8MZEvZx09cAftPgMcG30AD4Io/1/3R+M
+	 FbMVGM3XNINSJgLEyZwNAr/rpm+aZ8P9IOXlaTEKf1q1T/2lp6rUS5TesZwLrCJzHz
+	 gQbDa3jrbls8P3LIrkNxAg9wuHSTLdFqLvdJ9wXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfLaAap (ORCPT
+        id S1727856AbfLaAat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 19:30:45 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46324 "EHLO
+        Mon, 30 Dec 2019 19:30:49 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46334 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbfLaAao (ORCPT
+        with ESMTP id S1727792AbfLaAap (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 19:30:44 -0500
+        Mon, 30 Dec 2019 19:30:45 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=q9DgC2JorIRoqJhF31krGorwxtftpf4/q1uLy/wL7Rk=; b=tB/IfDFnF3Fh
-        dMnBqp4+ZZmSaDOKLYo4X2z67JeplcAANmUjrQeNCKSiwjYlm2UZctXBCqeMqxpdmTP/ZR72gN0fE
-        Fdyq9rbtfSWEIEab5wB2YRw0ZFs8E3pGLPtiise0oq1f1ZJczZF4TE5DeoZ1s444yjBO8UmqGfcz0
-        7hPvQ=;
+        List-Archive; bh=x+tq/P7MFfoTpVq1wYknSSh2xy/H5XU8JlazuogWVHk=; b=CoYuxl0dN7iT
+        P40XlnMV5r4YAQ9ds2ivLwaOQY47y5JejlvuhA8Ow4Cjbb1UWUZAS5P8xBezQkcT31EKXVEtBZSrs
+        3IKLbnNXxZCorckVPXXOgXKZzK6xd5GXF1HPOqJestGlrAClerK5oszgce+LXrj6nyGRdJvIMIcEY
+        a/N+M=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1im5Qg-0002nr-Rs; Tue, 31 Dec 2019 00:30:34 +0000
+        id 1im5Qf-0002nS-Mm; Tue, 31 Dec 2019 00:30:33 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 62549D01A24; Tue, 31 Dec 2019 00:30:34 +0000 (GMT)
+        id 41A01D01A22; Tue, 31 Dec 2019 00:30:33 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     alsa-devel@alsa-project.org, brian.austin@cirrus.com,
-        broonie@kernel.org, Charles Keepax <ckeepax@opensource.cirrus.com>,
-        ckeepax@opensource.cirrus.com, kernel-janitors@vger.kernel.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, patches@opensource.cirrus.com,
-        Paul.Handrigan@cirrus.com, perex@perex.cz,
-        rf@opensource.cirrus.com, tiwai@suse.com
-Subject: Applied "ASoC: cs47l92: Simplify error handling code in 'cs47l92_probe()'" to the asoc tree
-In-Reply-To: <20191226162907.9490-1-christophe.jaillet@wanadoo.fr>
-Message-Id: <applied-20191226162907.9490-1-christophe.jaillet@wanadoo.fr>
+To:     Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+Cc:     Alexander.Deucher@amd.com, alsa-devel@alsa-project.org,
+        broonie@kernel.org, "Cc:"@sirena.org.uk, "Cc:"@sirena.org.uk,
+        Colin Ian King <colin.king@canonical.com>,
+        djkurtz@google.com, Gustavo@sirena.org.uk,
+        Jaroslav Kysela <perex@perex.cz>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Liam@sirena.org.uk, Mark Brown <broonie@kernel.org>,
+        moderated@sirena.org.uk, "list:SOUND"@sirena.org.uk,
+        -@sirena.org.uk, SOC@sirena.org.uk, LAYER@sirena.org.uk,
+        /@sirena.org.uk, DYNAMIC@sirena.org.uk, AUDIO@sirena.org.uk,
+        open list <linux-kernel@vger.kernel.org>,
+        Takashi@sirena.org.uk, Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: Applied "ASoC: amd MMAP_INTERLEAVED Support" to the asoc tree
+In-Reply-To: <1577540460-21438-7-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+Message-Id: <applied-1577540460-21438-7-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
 X-Patchwork-Hint: ignore
-Date:   Tue, 31 Dec 2019 00:30:34 +0000 (GMT)
+Date:   Tue, 31 Dec 2019 00:30:33 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +73,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: cs47l92: Simplify error handling code in 'cs47l92_probe()'
+   ASoC: amd MMAP_INTERLEAVED Support
 
 has been applied to the asoc tree at
 
@@ -91,41 +98,43 @@ to this mail.
 Thanks,
 Mark
 
-From 9ea7a991cc27e9af1099b7a628c0ab210dc70a69 Mon Sep 17 00:00:00 2001
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Date: Thu, 26 Dec 2019 17:29:07 +0100
-Subject: [PATCH] ASoC: cs47l92: Simplify error handling code in
- 'cs47l92_probe()'
+From 3d8cbeda38f1cc51733715f0a02b338b4f75fad0 Mon Sep 17 00:00:00 2001
+From: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
+Date: Sat, 28 Dec 2019 19:11:00 +0530
+Subject: [PATCH] ASoC: amd MMAP_INTERLEAVED Support
 
-If 'madera_init_bus_error_irq()' fails,
-'wm_adsp2_remove(&cs47l92->core.adsp[0])' will be called twice.
-Once in the 'if' block, and once in the error handling path.
-This is harmless, but one of this call can be axed.
+ACP-I2S device support MMAP_INTERLEAVED.
+Added support for the same.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20191226162907.9490-1-christophe.jaillet@wanadoo.fr
+Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
+Link: https://lore.kernel.org/r/1577540460-21438-7-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/cs47l92.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ sound/soc/amd/raven/acp3x-pcm-dma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/cs47l92.c b/sound/soc/codecs/cs47l92.c
-index d50f75f3b3e4..536b7d35d6b2 100644
---- a/sound/soc/codecs/cs47l92.c
-+++ b/sound/soc/codecs/cs47l92.c
-@@ -1959,10 +1959,8 @@ static int cs47l92_probe(struct platform_device *pdev)
- 		goto error_dsp_irq;
- 
- 	ret = madera_init_bus_error_irq(&cs47l92->core, 0, wm_adsp2_bus_error);
--	if (ret != 0) {
--		wm_adsp2_remove(&cs47l92->core.adsp[0]);
-+	if (ret != 0)
- 		goto error_adsp;
--	}
- 
- 	madera_init_fll(madera, 1, MADERA_FLL1_CONTROL_1 - 1,
- 			&cs47l92->fll[0]);
+diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
+index 151daa996343..5c3ec3c58e3b 100644
+--- a/sound/soc/amd/raven/acp3x-pcm-dma.c
++++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
+@@ -21,6 +21,7 @@ static const struct snd_pcm_hardware acp3x_pcm_hardware_playback = {
+ 	.info = SNDRV_PCM_INFO_INTERLEAVED |
+ 		SNDRV_PCM_INFO_BLOCK_TRANSFER |
+ 		SNDRV_PCM_INFO_BATCH |
++		SNDRV_PCM_INFO_MMAP | SNDRV_PCM_INFO_MMAP_VALID |
+ 		SNDRV_PCM_INFO_PAUSE | SNDRV_PCM_INFO_RESUME,
+ 	.formats = SNDRV_PCM_FMTBIT_S16_LE |  SNDRV_PCM_FMTBIT_S8 |
+ 		   SNDRV_PCM_FMTBIT_U8 | SNDRV_PCM_FMTBIT_S24_LE |
+@@ -41,7 +42,8 @@ static const struct snd_pcm_hardware acp3x_pcm_hardware_capture = {
+ 	.info = SNDRV_PCM_INFO_INTERLEAVED |
+ 		SNDRV_PCM_INFO_BLOCK_TRANSFER |
+ 		SNDRV_PCM_INFO_BATCH |
+-	    SNDRV_PCM_INFO_PAUSE | SNDRV_PCM_INFO_RESUME,
++		SNDRV_PCM_INFO_MMAP | SNDRV_PCM_INFO_MMAP_VALID |
++		SNDRV_PCM_INFO_PAUSE | SNDRV_PCM_INFO_RESUME,
+ 	.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S8 |
+ 		   SNDRV_PCM_FMTBIT_U8 | SNDRV_PCM_FMTBIT_S24_LE |
+ 		   SNDRV_PCM_FMTBIT_S32_LE,
 -- 
 2.20.1
 
