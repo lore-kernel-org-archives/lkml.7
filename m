@@ -2,101 +2,115 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9990C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 02:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AD9C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 02:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF500206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 02:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D80E020748
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 02:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfLaCk6 (ORCPT
+        id S1726780AbfLaCth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 21:40:58 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:55612 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfLaCk6 (ORCPT
+        Mon, 30 Dec 2019 21:49:37 -0500
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:45542 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725813AbfLaCth (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 21:40:58 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1im7So-0001le-HG; Tue, 31 Dec 2019 02:40:54 +0000
-Date:   Tue, 31 Dec 2019 02:40:54 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Rob Landley <rob@landley.net>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
-Subject: Re: Why is CONFIG_VT forced on?
-Message-ID: <20191231024054.GC4203@ZenIV.linux.org.uk>
-References: <9b79fb95-f20c-f299-f568-0ffb60305f04@landley.net>
- <b3cf8faf-ef04-2f55-3ccb-772e18a57d7b@infradead.org>
- <ac0e5b3b-6e70-6ab0-0c7f-43175b73058f@landley.net>
- <e55624fa-7112-1733-8ddd-032b134da737@infradead.org>
- <018540ef-0327-78dc-ea5c-a43318f1f640@landley.net>
- <774dfe49-61a0-0144-42b7-c2cbac150687@landley.net>
+        Mon, 30 Dec 2019 21:49:37 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TmNSLzV_1577760569;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TmNSLzV_1577760569)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 31 Dec 2019 10:49:32 +0800
+Subject: Re: [PATCH] move_pages.2: not return ENOENT if the page are already
+ on the target nodes
+To:     John Hubbard <jhubbard@nvidia.com>,
+        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
+        cl@linux.com, mhocko@suse.com, cai@lca.pw,
+        akpm@linux-foundation.org
+Cc:     linux-man@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1575596090-115377-1-git-send-email-yang.shi@linux.alibaba.com>
+ <0dc96e40-5f2b-a2fe-6e5f-b6f3d5e9ebde@nvidia.com>
+ <95170ea5-5b62-9168-fcd9-93b43330a1b4@linux.alibaba.com>
+ <092adc11-7039-9343-7067-0e0199c9dc13@gmail.com>
+ <51dd767a-221f-882d-c7f6-45bd0c217a67@nvidia.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <51a37061-8d95-eca1-a1d9-e6e8f4dc884d@linux.alibaba.com>
+Date:   Mon, 30 Dec 2019 18:49:29 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <774dfe49-61a0-0144-42b7-c2cbac150687@landley.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <51dd767a-221f-882d-c7f6-45bd0c217a67@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 08:04:35PM -0600, Rob Landley wrote:
-> 
-> 
-> On 12/30/19 7:45 PM, Rob Landley wrote:
-> > On 12/30/19 6:59 PM, Randy Dunlap wrote:
-> >> #
-> >> # Character devices
-> >> #
-> >> CONFIG_TTY=y
-> >> # CONFIG_VT is not set
-> >>
-> >> But first you must set/enable EXPERT.  See the bool prompt.
-> > 
-> > Wait, the if doesn't _disable_ the symbol? It disables _editability_ of the
-> > symbol, but the symbol can still be on (and displayed) when the if is false?
-> > (Why would...)
-> > 
-> > Ok. Thanks for pointing that out. Any idea why the menuconfig help text has no
-> > mention of this?
-> 
-> So if I disable CONFIG_EXPERT, using miniconfig I then need to manually switch on:
-> 
-> ./init/Kconfig:	bool "Namespaces support" if EXPERT
-> ./init/Kconfig:	bool "Multiple users, groups and capabilities support" if EXPERT
-> ./init/Kconfig:	bool "Sysfs syscall support" if EXPERT
-> ./init/Kconfig:	bool "open by fhandle syscalls" if EXPERT
-> ./init/Kconfig:	bool "Posix Clocks & timers" if EXPERT
-> ./init/Kconfig:	bool "Enable support for printk" if EXPERT
-> ./init/Kconfig:	bool "BUG() support" if EXPERT
-> ./init/Kconfig:	bool "Enable ELF core dumps" if EXPERT
-> ./init/Kconfig:	bool "Enable full-sized data structures for core" if EXPERT
-> ./init/Kconfig:	bool "Enable futex support" if EXPERT
-> ./init/Kconfig:	bool "Enable eventpoll support" if EXPERT
-> ./init/Kconfig:	bool "Enable signalfd() system call" if EXPERT
-> ./init/Kconfig:	bool "Enable timerfd() system call" if EXPERT
-> ./init/Kconfig:	bool "Enable eventfd() system call" if EXPERT
-> ./init/Kconfig:	bool "Use full shmem filesystem" if EXPERT
-> ./init/Kconfig:	bool "Enable AIO support" if EXPERT
-> ./init/Kconfig:	bool "Enable IO uring support" if EXPERT
-> ./init/Kconfig:	bool "Enable madvise/fadvise syscalls" if EXPERT
-> ./init/Kconfig:	bool "Enable membarrier() system call" if EXPERT
-> ./init/Kconfig:	bool "Load all symbols for debugging/ksymoops" if EXPERT
-> ./init/Kconfig:	bool "Enable rseq() system call" if EXPERT
-> ./init/Kconfig:	bool "Enabled debugging of rseq() system call" if EXPERT
-> ./init/Kconfig:	bool "PC/104 support" if EXPERT
-> ./init/Kconfig:	bool "Enable VM event counters for /proc/vmstat" if EXPERT
 
-No.  What you need is
-	* actually attempt to flip CONFIG_EXPERT (go to "General setup" submenu and
-set "Configure standard kernel features (expert users)" there)
-	* check the resulting .config (or look at the items in question via
-menuconfig)
-	* get enlightened
 
-Rob, if you are in a mood for a long wank, it's your business.  But try to avoid
-spraying the results over public lists.
+On 12/17/19 11:36 PM, John Hubbard wrote:
+> On 12/13/19 5:55 PM, Michael Kerrisk (man-pages) wrote:
+> ...
+>>>> whoa, hold on. If I'm reading through the various error paths
+>>>> correctly, then this
+>>>> code is *never* going to return ENOENT for the whole function. It can
+>>>> fill in that
+>>>> value per-page, in the status array, but that's all. Did I get that
+>>>> right?
+>>>
+>>> Nice catch. Yes, you are right.
+>>>
+>>>>
+>>>> If so, we need to redo this part of the man page.
+>>>
+>>> Yes.
+>>
+>> So where are things at with this? Is an improved man-pages
+>> patch on the way, or is some other action (on the API) planned?
+>>
+>
+> I was waiting to see if Yang was going to respond...anyway, I think
+> we're looking at approximately this sort of change:
+>
+
+Hi John,
+
+I apologize for the delay, just came back from vacation. Thanks for 
+taking care of the patch.
+
+> diff --git a/man2/move_pages.2 b/man2/move_pages.2
+> index 2d96468fa..1bf1053f2 100644
+> --- a/man2/move_pages.2
+> +++ b/man2/move_pages.2
+> @@ -191,12 +191,6 @@ was specified or an attempt was made to migrate 
+> pages of a kernel thread.
+>  .B ENODEV
+>  One of the target nodes is not online.
+>  .TP
+> -.B ENOENT
+> -No pages were found that require moving.
+> -All pages are either already
+> -on the target node, not present, had an invalid address or could not be
+> -moved because they were mapped by multiple processes.
+> -.TP
+>  .B EPERM
+>  The caller specified
+>  .B MPOL_MF_MOVE_ALL
+>
+> ...But I'm not sure if we should change the implementation, instead, so
+> that it *can* return ENOENT. That's the main question to resolve before
+> creating any more patches, I think.
+>
+> In addition, Michal mentioned that the page states in the status array 
+> also
+> need updated documentation.
+>
+>
+> thanks,
+
