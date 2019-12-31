@@ -2,140 +2,149 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF7CC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59888C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80602206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28BBE206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:06:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=inango-systems.com header.i=@inango-systems.com header.b="oSprewSs"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ObZjbs8O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbfLaIAi (ORCPT
+        id S1726377AbfLaIGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 03:00:38 -0500
-Received: from mail.inango-systems.com ([178.238.230.57]:54166 "EHLO
-        mail.inango-sw.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfLaIAi (ORCPT
+        Tue, 31 Dec 2019 03:06:04 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:43529 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725497AbfLaIGD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 03:00:38 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.inango-sw.com (Postfix) with ESMTP id D6E55108023B;
-        Tue, 31 Dec 2019 10:00:35 +0200 (IST)
-Received: from mail.inango-sw.com ([127.0.0.1])
-        by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 37p05ZsNb_tb; Tue, 31 Dec 2019 10:00:35 +0200 (IST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.inango-sw.com (Postfix) with ESMTP id 2B3421080793;
-        Tue, 31 Dec 2019 10:00:35 +0200 (IST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.inango-sw.com 2B3421080793
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inango-systems.com;
-        s=45A440E0-D841-11E8-B985-5FCC721607E0; t=1577779235;
-        bh=8QoFj6020f2oz7cgEpv34krD08H/vaMw8FFEohnLH5Q=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=oSprewSsRZeHfjXco1in1triItB0VnrIoxm6QyIBgZ+x5qJ43I9q8tuPszUzois5i
-         w+ubfcSfcjoaVN07FH/Su7m/CCHtOnd9RUQmEnTBN5Yx/adsN55ENFm5zqRLYjeERj
-         HbmMNP1v3nsJk3/UnyWOSBXRr6svUxyt8j3c+xJDHig3u0nifxvHY8WPT/PUWubQl/
-         DvaN6DEGFHmQTaJyA+gNAuJKv8VZzhXSH2FK/w/wgUd7MYRJ6pYPe8GxKwL5IBk8IO
-         U7vNtRYhahqy2DQDF5aRNkYAihrE66lf/wJ3FEneoTh0xDtMW36a8QsyEd3E930dJo
-         Q6dqDHy17zcpQ==
-X-Virus-Scanned: amavisd-new at inango-sw.com
-Received: from mail.inango-sw.com ([127.0.0.1])
-        by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id gsy2vsuohm1Z; Tue, 31 Dec 2019 10:00:35 +0200 (IST)
-Received: from mail.inango-sw.com (mail.inango-sw.com [172.17.220.3])
-        by mail.inango-sw.com (Postfix) with ESMTP id 09BD2108023B;
-        Tue, 31 Dec 2019 10:00:35 +0200 (IST)
-Date:   Tue, 31 Dec 2019 10:00:34 +0200 (IST)
-From:   Nikolai Merinov <n.merinov@inango-systems.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
-        Aleksandr Yashkin <a.yashkin@inango-systems.com>,
-        Ariel Gilman <a.gilman@inango-systems.com>
-Message-ID: <1964542716.432661.1577779234764.JavaMail.zimbra@inango-systems.com>
-In-Reply-To: <201912301227.47AE22C61@keescook>
-References: <20191223133816.28155-1-n.merinov@inango-systems.com> <201912301227.47AE22C61@keescook>
-Subject: Re: [PATCH] pstore/ram: fix for adding dumps to non-empty zone
+        Tue, 31 Dec 2019 03:06:03 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577779563; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=BbUFBKLuGvpwFWTaBaOIbSVqQ9CkH2lY2UR83lDpcCo=;
+ b=ObZjbs8OqS/bmDQzLj4vwCwyGD7upoAyr9DNGu5NB5mpQIK8u5+XEODGJjkjnqqxv17eq2sQ
+ clVRbzHeGs3EY7gIqDcv/XXelUQFq2hJSUcK0AiGRZeHm1H4gg7FPWFAYy/6ZVqesv6p/mYE
+ ICnjzkjlNxLqfGMhv/fYelwr39w=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e0b0168.7f6e35fae068-smtp-out-n01;
+ Tue, 31 Dec 2019 08:06:00 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 44B27C447A3; Tue, 31 Dec 2019 08:06:00 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 25D52C43383;
+        Tue, 31 Dec 2019 08:05:59 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.17.220.3]
-X-Mailer: Zimbra 8.8.15_GA_3888 (ZimbraWebClient - GC78 (Linux)/8.8.15_GA_3890)
-Thread-Topic: pstore/ram: fix for adding dumps to non-empty zone
-Thread-Index: 36Ysipr7NL/eU1rEZu744OuMFxwNVw==
+Date:   Tue, 31 Dec 2019 16:05:59 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     linux-scsi-owner@vger.kernel.org, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, subhashj@codeaurora.org,
+        jejb@linux.ibm.com, chun-hung.wu@mediatek.com,
+        kuohong.wang@mediatek.com, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, avri.altman@wdc.com,
+        linux-mediatek@lists.infradead.org, peter.wang@mediatek.com,
+        alim.akhtar@samsung.com, andy.teng@mediatek.com,
+        matthias.bgg@gmail.com, beanhuo@micron.com,
+        pedrom.sousa@synopsys.com, bvanassche@acm.org,
+        linux-arm-kernel@lists.infradead.org, asutoshd@codeaurora.org
+Subject: Re: [PATCH v1 1/2] scsi: ufs: set device as default active power mode
+ during initialization only
+In-Reply-To: <1577766179.13164.24.camel@mtkswgap22>
+References: <1577693546-7598-1-git-send-email-stanley.chu@mediatek.com>
+ <1577693546-7598-2-git-send-email-stanley.chu@mediatek.com>
+ <fd129b859c013852bd80f60a36425757@codeaurora.org>
+ <1577754469.13164.5.camel@mtkswgap22>
+ <836772092daffd8283a97d633e59fc34@codeaurora.org>
+ <1577766179.13164.24.camel@mtkswgap22>
+Message-ID: <cf94a0e8f8e0746ae5f8434631207ea4@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Dec 31, 2019, at 1:37 AM, Kees Cook keescook@chromium.org wrote:
-> On Mon, Dec 23, 2019 at 06:38:16PM +0500, Nikolai Merinov wrote:
->> From: Aleksandr Yashkin <a.yashkin@inango-systems.com>
+On 2019-12-31 12:22, Stanley Chu wrote:
+> Hi Can,
+> 
+> 
+>> Hi Stanley,
 >> 
->> The circle buffer in ramoops zones has a problem for adding a new
->> oops dump to already an existing one.
+>> I see skipping ufshcd_set_ufs_dev_active() in ufshcd_probe_hba()
+>> if it is called from ufshcd_resume() path is the purpose here.
 >> 
->> The solution to this problem is to reset the circle buffer state before
->> writing a new oops dump.
+>> If so, then ufshcd_set_dev_pwr_mode() would be called, meaning
+>> SSU command will be sent. Why is this SSU command needed to be
+>> sent after a full host reset and restore? Is ufshcd_probe_hba()
+>> not enough to make UFS device fully functional?
 > 
-> Ah, I see it now. When the crashes wrap around, the header is written at
-> the end of the (possibly incompletely filled) buffer, instead of at the
-> start, since it wasn't explicitly zapped.
+> After resume (for both runtime resume and system resume), device power
+> mode shall be back to "Active" to service incoming requests.
+> 
+> I see two cases need device power mode transition during resume flow
+> 1. Device Power Mode = Sleep
+> 2. Device Power Mode = PowerDown
+> 
+> For 1, ufshcd_probe_hba() is not invoked during resume flow,
+> hba->curr_dev_pwr_mode = SLEEP, thus ufshcd_resume() can invoke
+> ufshcd_set_dev_pwr_mode() to change device power mode.
+> 
+> For 2, ufshcd_probe_hba() is invoked during resume flow, before this
+> fix, hba->curr_dev_pwr_mode will be set to ACTIVE (note that only this
+> flag is set as ACTIVE, but device may be still in PowerDown state if
+> device power is not fully shutdown or device HW reset is not executed
+> before resume), in the end, ufshcd_resume() will not invoke
+> ufshcd_set_dev_pwr_mode() to send SSU command to make device change 
+> back
+> to Active power mode.
 
-Yes, you are right. We observed this issue when we got two consecutive
-reboots with a kernel panic: After the first reboot the pstore was able
-to parse the saved data, but after the second we got a part of the
-previous compressed message and the new compressed message with the
-ramoops message header at the middle of the file. 
+Hi Stanley,
 
-According to our analysis the same issue can occur if we get more
-than (rampoops.mem_size/ramoops.record_size) kernel oops during work.
+Isn't below change fixing the problem you are saying above?
+With it, after ufshcd_link_startup(), UFS device's power mode will
+become Active anyways. Do you mean below change is not working properly
+and you are removing it?
+
+commit 7caf489b99a42a9017ef3d733912aea8794677e7
+Author: subhashj@codeaurora.org <subhashj@codeaurora.org>
+Date:   Wed Nov 23 16:32:20 2016 -0800
+
+     scsi: ufs: issue link starup 2 times if device isn't active
+
+     If we issue the link startup to the device while its UniPro state is
+     LinkDown (and device state is sleep/power-down) then link startup
+     will not move the device state to Active. Device will only move to
+     active state if the link starup is issued when its UniPro state is
+     LinkUp. So in this case, we would have to issue the link startup 2
+     times to make sure that device moves to active state.
+
+Thanks,
+
+Can Guo
 
 > 
-> Yes, this is important; thank you for tracking this down! This bug has
-> existed for a very long time. I'll try to find the right Fixes tag for
-> it...
-
-We would like to see this changes in the LTS kernel releases. Could you
-please point me the manual about propagation such fixes?
-
+> But if device is fully reset before resume (not by current mainstream
+> driver), device can be already in "Active" power mode after power on
+> again during resume flow. In this case, it is OK to set
+> hba->curr_dev_pwr_mode as ACTIVE in ufshcd_probe_hba() and SSU command
+> is not necessary.
 > 
-> -Kees
+> Thanks,
+> Stanley
 > 
->> Signed-off-by: Aleksandr Yashkin <a.yashkin@inango-systems.com>
->> Signed-off-by: Nikolay Merinov <n.merinov@inango-systems.com>
->> Signed-off-by: Ariel Gilman <a.gilman@inango-systems.com>
->> 
->> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
->> index 8caff834f002..33fceadbf515 100644
->> --- a/fs/pstore/ram.c
->> +++ b/fs/pstore/ram.c
->> @@ -407,6 +407,13 @@ static int notrace ramoops_pstore_write(struct
->> pstore_record *record)
->>  
->>  	prz = cxt->dprzs[cxt->dump_write_cnt];
->>  
->> +	/* Clean the buffer from old info.
->> +	 * `ramoops_read_kmsg_hdr' expects to find a header in the beginning of
->> +	 * buffer data, so we must to reset the buffer values, in order to
->> +	 * ensure that the header will be written to the beginning of the buffer
->> +	 */
->> +	persistent_ram_zap(prz);
->> +
->>  	/* Build header and append record contents. */
->>  	hlen = ramoops_write_kmsg_hdr(prz, record);
->>  	if (!hlen)
->> --
->> 2.17.1
->> 
-> 
-> --
-> Kees Cook
---
-Nikolai Merinov
+>> _______________________________________________
+>> Linux-mediatek mailing list
+>> Linux-mediatek@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-mediatek
