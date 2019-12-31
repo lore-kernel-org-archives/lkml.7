@@ -2,133 +2,129 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1649C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 11:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4FEC2D0DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 11:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C5C5206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 11:13:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vnBD1qz6"
+	by mail.kernel.org (Postfix) with ESMTP id 19FFB206E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 11:24:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbfLaLNn (ORCPT
+        id S1727069AbfLaLYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 06:13:43 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:59722 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbfLaLNn (ORCPT
+        Tue, 31 Dec 2019 06:24:08 -0500
+Received: from mailoutvs13.siol.net ([185.57.226.204]:36391 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726643AbfLaLYH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 06:13:43 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBVBDgWY114782;
-        Tue, 31 Dec 2019 05:13:42 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577790822;
-        bh=qYB3z4BIBCUTy/5rxLIcscJ5qRoXJ0wRgvPpS0tdPPg=;
-        h=From:To:CC:Subject:Date;
-        b=vnBD1qz6YyFxBdsJ7okDt43FjPIRKKrbHQcubUjh7xr3rlw1lVwPcXplRkHsmKK91
-         RJxJH8n35WQlnu8rSwEa3Hg+S8mx2uBlVvGZExoWJIqJyG/tREUw04W6zaoK2IYiy8
-         eg2gxn1m2Fv7jknvOhr6NylzTka9Xk378ng15670=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBVBDgai012808
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 31 Dec 2019 05:13:42 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 31
- Dec 2019 05:13:41 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 31 Dec 2019 05:13:42 -0600
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBVBDeT4011884;
-        Tue, 31 Dec 2019 05:13:40 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] PHY: for 5.5 -rc
-Date:   Tue, 31 Dec 2019 16:45:41 +0530
-Message-ID: <20191231111541.29702-1-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 31 Dec 2019 06:24:07 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id A35B1523032;
+        Tue, 31 Dec 2019 12:24:04 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id mVev96vKAiOH; Tue, 31 Dec 2019 12:24:04 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 4A6DB523035;
+        Tue, 31 Dec 2019 12:24:04 +0100 (CET)
+Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 01118523020;
+        Tue, 31 Dec 2019 12:24:03 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     mripard@kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        roman.stratiienko@globallogic.com
+Cc:     Roman Stratiienko <roman.stratiienko@globallogic.com>
+Subject: Re: [PATCH v2 2/4] drm/sun4i: Add mode_set callback to the engine
+Date:   Tue, 31 Dec 2019 12:24:03 +0100
+Message-ID: <2843589.CbtlEUcBR6@jernej-laptop>
+In-Reply-To: <20191229162828.3326-2-roman.stratiienko@globallogic.com>
+References: <20191229162828.3326-1-roman.stratiienko@globallogic.com> <20191229162828.3326-2-roman.stratiienko@globallogic.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Hi!
 
-Please find the pull request for 5.5 -rc cycle.
+Dne nedelja, 29. december 2019 ob 17:28:26 CET je 
+roman.stratiienko@globallogic.com napisal(a):
+> From: Roman Stratiienko <roman.stratiienko@globallogic.com>
+> 
+> Create callback to update engine's registers on mode change.
+> 
+> Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
 
-It includes a bunch of bug fixes for cpcap-usb PHY driver which is used
-for configuring USB PHY and debug UART used in certain Motorola droid4
-phones. It also includes a minor fix in qcom-qmp PHY driver and
-rockchip-inno-hdmi causing a display issue in RK3328.
+Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
 
-Please see the tag message below for the complete list of changes and
-let me know If I have to change something.
+Best regards,
+Jernej
 
-Thanks
-Kishon
+> ---
+> v2:
+> - Split commit in 2 parts.
+> - Add description to mode_set callback
+> - Dropped 1 line from sun4i_crtc_mode_set_nofb()
+> - Add struct drm_display_mode declaration (fix build warning)
+> ---
+>  drivers/gpu/drm/sun4i/sun4i_crtc.c   |  3 +++
+>  drivers/gpu/drm/sun4i/sunxi_engine.h | 12 ++++++++++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_crtc.c
+> b/drivers/gpu/drm/sun4i/sun4i_crtc.c index 3a153648b369..f9c627d601c3
+> 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_crtc.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_crtc.c
+> @@ -141,6 +141,9 @@ static void sun4i_crtc_mode_set_nofb(struct drm_crtc
+> *crtc) struct sun4i_crtc *scrtc = drm_crtc_to_sun4i_crtc(crtc);
+> 
+>  	sun4i_tcon_mode_set(scrtc->tcon, encoder, mode);
+> +
+> +	if (scrtc->engine->ops->mode_set)
+> +		scrtc->engine->ops->mode_set(scrtc->engine, mode);
+>  }
+> 
+>  static const struct drm_crtc_helper_funcs sun4i_crtc_helper_funcs = {
+> diff --git a/drivers/gpu/drm/sun4i/sunxi_engine.h
+> b/drivers/gpu/drm/sun4i/sunxi_engine.h index 548710a936d5..44102783ee3c
+> 100644
+> --- a/drivers/gpu/drm/sun4i/sunxi_engine.h
+> +++ b/drivers/gpu/drm/sun4i/sunxi_engine.h
+> @@ -9,6 +9,7 @@
+>  struct drm_plane;
+>  struct drm_device;
+>  struct drm_crtc_state;
+> +struct drm_display_mode;
+> 
+>  struct sunxi_engine;
+> 
+> @@ -108,6 +109,17 @@ struct sunxi_engine_ops {
+>  	 * This function is optional.
+>  	 */
+>  	void (*vblank_quirk)(struct sunxi_engine *engine);
+> +
+> +	/**
+> +	 * @mode_set:
+> +	 *
+> +	 * This callback is used to update engine registers that
+> +	 * responsible for display frame size other mode attributes.
+> +	 *
+> +	 * This function is optional.
+> +	 */
+> +	void (*mode_set)(struct sunxi_engine *engine,
+> +			 struct drm_display_mode *mode);
+>  };
+> 
+>  /**
 
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
 
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git tags/phy-for-5.5-rc
-
-for you to fetch changes up to 4f510aa10468954b1da4e94689c38ac6ea8d3627:
-
-  phy/rockchip: inno-hdmi: round clock rate down to closest 1000 Hz (2019-12-31 15:46:08 +0530)
-
-----------------------------------------------------------------
-phy: for 5.5-rc
-
-*) Fix error path in cpcap-usb driver when no host driver is loaded to
-   avoid debug serial console from stop working
-*) Fix to let USB host idle before switching to UART mode in cpcap-usb
-   driver in order to avoid flakey enumeration next time
-*) Prevent USB line glitches from waking up modem by enabling the USB
-   lines (GPIO mux) after configuring the cpcap-usb PHY
-*) Improve host vs docked mode detection in cpcap-usb PHY driver to keep
-   VBUS enabled in host mode
-*) Fix to prevent cpcap-usb PHY driver from enabling the PHY twice
-*) Increase PHY ready timeout in qcom-qmp PHY as it takes more than 1ms
-   to initialize
-*) Round clock rate down to closest 1000 Hz in phy-rockchip-inno-hdmi to
-   prevent wrong pixel clock to be used and result in no-signal when
-   configuring a mode on RK3328
-
-----------------------------------------------------------------
-Bjorn Andersson (1):
-      phy: qcom-qmp: Increase PHY ready timeout
-
-Jonas Karlman (1):
-      phy/rockchip: inno-hdmi: round clock rate down to closest 1000 Hz
-
-Tony Lindgren (6):
-      phy: cpcap-usb: Fix error path when no host driver is loaded
-      phy: cpcap-usb: Fix flakey host idling and enumerating of devices
-      phy: mapphone-mdm6600: Fix uninitialized status value regression
-      phy: cpcap-usb: Prevent USB line glitches from waking up modem
-      phy: cpcap-usb: Improve host vs docked mode detection
-      phy: cpcap-usb: Drop extra write to usb2 register
-
- drivers/phy/motorola/phy-cpcap-usb.c          | 128 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------------------------------------
- drivers/phy/motorola/phy-mapphone-mdm6600.c   |  11 +++--------
- drivers/phy/qualcomm/phy-qcom-qmp.c           |   2 +-
- drivers/phy/rockchip/phy-rockchip-inno-hdmi.c |   4 ++++
- 4 files changed, 98 insertions(+), 47 deletions(-)
--- 
-2.17.1
 
