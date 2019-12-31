@@ -2,114 +2,133 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43213C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 00:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A63C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 00:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15EC6206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 00:17:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577751457;
-	bh=/1kIBLHWq+f/VWD+eJhmzw9yaHG84UVZ1rPWecWotyY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YfkqygkLyLKEv4mFz/0AIZLZcZ3LA0QVDoyzoFkH7U4dddaEEpQB5+O0k/37+gF8J
-	 +69LZAiNbklZ7l5uCZu3W9A51O2hwEIe1RPfSjoUnKou1SdUQ6AVl2T1cW+zoGtmMu
-	 ooul17ubI/U++MrieegM1YHm0lU7Av5eEvgeSXog=
+	by mail.kernel.org (Postfix) with ESMTP id 683FB206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 00:21:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OrONicy6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbfLaARe (ORCPT
+        id S1727792AbfLaAVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 19:17:34 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52258 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727744AbfLaARe (ORCPT
+        Mon, 30 Dec 2019 19:21:08 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37214 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727750AbfLaAVH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 19:17:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RbisTe+iB3aSugYpvz9elCfJ1m1jElfgrG8cOw7p7uQ=; b=heqQ65uOQruVqrBdkas8NwERq
-        5jwYd62w0bDd1Y1a7yJo/gb2KHpaIM9PH/PVC1PuxdBGVSRIJkIl4cwMPE/w9Dit0UvGWrQla0Iv7
-        cp7KLYK78VdkcUZeUHjC3w3EQGXDiZEBUnOpONHruGyQnElwaRVey/yPLQuPS7xTt9xc8=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1im5Ds-0002iq-71; Tue, 31 Dec 2019 00:17:20 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 8BCC4D01A22; Tue, 31 Dec 2019 00:17:19 +0000 (GMT)
-Date:   Tue, 31 Dec 2019 00:17:19 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Bard Liao <bardliao@realtek.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>, linux-tegra@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] ASoC: rt5640: Fix NULL dereference on module unload
-Message-ID: <20191231001719.GC3897@sirena.org.uk>
-References: <20191229150454.2127-1-digetx@gmail.com>
+        Mon, 30 Dec 2019 19:21:07 -0500
+Received: by mail-ed1-f66.google.com with SMTP id cy15so34159908edb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 16:21:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nq2qLM+ldDGbo3KqEbg/2SHDvGelrcv8ab8F/WIjQTk=;
+        b=OrONicy6E3ewJpZEj0f2BfXQ0AGl/3JidHk5elKMBSSKDW937hs+WBQjj9q8LYohkA
+         Zmira+Jncb7oQgSVxBg9efsUhdrlL6E7REPxbuszwg968Iqx6cTt/K0P/EzijizUIq0J
+         WCfyk/ImlXF5RRYvzkuXSrbmxvUbX2wZz1MrliJxdkObh7diHH9w2hM8Dr3cEovR9ot/
+         4uaOwsX4R8r0mEqlZKVQXSaeZyEIwE0709jTQO6jBKhHzhWmSiirH9k/2x+eldtQFrUl
+         OCYwegJ/jz2WyAAG9oV+JCqx4+C6uDwrGvVRMbzpvMUB9Y4xW4bSauwXyDucKR8XweYd
+         fdUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nq2qLM+ldDGbo3KqEbg/2SHDvGelrcv8ab8F/WIjQTk=;
+        b=JEIV2x5QKhT/iMHoya4PagoqDybNtfoCIzk2k94c+EFUyHhwivDW0z+5CZApO+Chgp
+         wFIqi3mHIAzo4aPDvGAXctMMaaVX1QUokAcKry7Q4HYXrcpMEBsuR82rY4LbV1Qess6N
+         /g2s1RtmNBz8O3+KymkFffLt9SNlXO1iChnubMzSmgUeTSfE86lrigm7XVLO9QRv0jJa
+         73SD6w5EwfkGI5oAwPNRXY09n0ZFeDifE5GX1IO9lLl7wCD2rZz4P8EShsCFyg4WwbQn
+         U92AruuNsICPu+LfcCCZ5U3H4La0RJ03/a+DpwiffYhb2wuaKgUankqBKV1Fr6fcxF8K
+         s4xw==
+X-Gm-Message-State: APjAAAV2jw11BJbUno6hExcUV1YnkPKtvip+GP8ObTdO/hORlfj4J1mO
+        csB09ozaN4ADkPVzJJCqBzG0xAoEBuc=
+X-Google-Smtp-Source: APXvYqzNBRSrfS5KQ3SgkmJWdOik57w3b6mvgOpqJAAlYh2kpNHKBwTcXq0jog+Nt701sUg8oHewyw==
+X-Received: by 2002:aa7:da42:: with SMTP id w2mr73419856eds.3.1577751665723;
+        Mon, 30 Dec 2019 16:21:05 -0800 (PST)
+Received: from [192.168.0.38] ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id y5sm5221392ejm.57.2019.12.30.16.21.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Dec 2019 16:21:05 -0800 (PST)
+Subject: Re: [PATCH] usb: dwc3: gadget: Fix failure to detect end of transfer
+From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     balbi@kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191230161321.2738541-1-bryan.odonoghue@linaro.org>
+ <20191230185703.GA1763367@kroah.com>
+ <e772c382-b820-355d-f2b9-8690a5f85885@linaro.org>
+Message-ID: <0c183570-38cc-c27e-f5ab-606387a88dff@linaro.org>
+Date:   Tue, 31 Dec 2019 00:21:29 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jy6Sn24JjFx/iggw"
-Content-Disposition: inline
-In-Reply-To: <20191229150454.2127-1-digetx@gmail.com>
-X-Cookie: Programming is an unnatural act.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e772c382-b820-355d-f2b9-8690a5f85885@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 31/12/2019 00:05, Bryan O'Donoghue wrote:
+> On 30/12/2019 18:57, Greg KH wrote:
+>> On Mon, Dec 30, 2019 at 04:13:21PM +0000, Bryan O'Donoghue wrote:
+>>> A recent bugfix 8c7d4b7b3d43 ("usb: dwc3: gadget: Fix logical 
+>>> condition")
+>>> correctly fixes a logical error in the gadget driver but, exposes a 
+>>> further
+>>> bug in determining when a transfer has completed.
+>>>
+>>> Prior to 8c7d4b7b3d43 we were calling dwc3_gadget_giveback() when we
+>>> shouldn't have been. Afer this change the below test fails to 
+>>> complete on
+>>> my hardware.
+>>>
+>>> Host:
+>>> echo "host" > /dev/ttyACM0
+>>>
+>>> Device:
+>>> cat < /dev/ttyGS0
+>>>
+>>> This is caused by the driver incorrectly detecting end of transfer, a
+>>> problem that had previous been masked by the continuous calling of
+>>> dwc3_gadget_giveback() prior to 8c7d4b7b3d43.
+>>>
+>>> Remediate by making the test <= instead of ==
+>>>
+>>> Fixes: e0c42ce590fe ("usb: dwc3: gadget: simplify IOC handling")
+>>>
+>>> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+>>> ---
+>>>   drivers/usb/dwc3/gadget.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> I think this patch:
+>>     https://lore.kernel.org/linux-usb/ac5a3593a94fdaa3d92e6352356b5f7a01ccdc7c.1576291140.git.thinhn@synopsys.com/ 
+>>
+>>
+>> should fix this issue instead, right?
+>>
+>> If not, do I need to include both of these?
+> 
+> Yep, works fine in isolation.
+> 
 
---jy6Sn24JjFx/iggw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I don't have that in my inbox anywhere - not sure why, would have saved 
+me 1/2 a day of work.
 
-On Sun, Dec 29, 2019 at 06:04:54PM +0300, Dmitry Osipenko wrote:
-> The rt5640->jack is NULL if jack is already disabled at the time of
-> driver's module unloading.
->=20
->  Unable to handle kernel NULL pointer dereference at virtual address 0000=
-0024
->  ...
->  (rt5640_set_jack [snd_soc_rt5640]) from [<bf86f7ed>] (snd_soc_component_=
-set_jack+0x11/0x1c [snd_soc_core])
->  (snd_soc_component_set_jack [snd_soc_core]) from [<bf8675cf>] (soc_remov=
-e_component+0x1b/0x54 [snd_soc_core])
->  (soc_remove_component [snd_soc_core]) from [<bf868859>] (soc_cleanup_car=
-d_resources+0xad/0x1cc [snd_soc_core])
+Anyway, please feel free to add my
 
-In addition to what Takashi said:
+Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> to Thinh's patch
 
-Please think hard before including complete backtraces in upstream
-reports, they are very large and contain almost no useful information
-relative to their size so often obscure the relevant content in your
-message. If part of the backtrace is usefully illustrative then it's
-usually better to pull out the relevant sections.
-
---jy6Sn24JjFx/iggw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4Kk44ACgkQJNaLcl1U
-h9B0vAf+Jesim6R6yU2diF32zHcRsUbMmsppI6c2j5Th/D8i5h+fRxjvXEvVkuGI
-XjQkntGRuppBqIv7EcVt19JhOaO2S2+dCWskZY9G1C2t0k/i4FaGv20iVr+Zd1qI
-po2/Sv/mjruuFZqpx8ZVGdGVwrdCB8EnANT6k62eFFGb+bvrE9k6xh4db9CyYBKH
-EO+NXjIDf/115a4XcHEfWGe3627k8rlw5llArmHyp+kTo2jq5jbCVcUxsXGTsz7W
-QyGsYgljmuJ7OVMZv2lpHa4Wxl1hdCobWS8TCrjK5gMFmlWZypw1zOh5Z9lkEVcl
-nm/taB4a/p7GEMWOa+AJevErYZjl2w==
-=D3/K
------END PGP SIGNATURE-----
-
---jy6Sn24JjFx/iggw--
+---
+bod
