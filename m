@@ -2,205 +2,118 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 767BBC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 16:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D89C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 16:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43470206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 16:31:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="aZh/zyjU"
+	by mail.kernel.org (Postfix) with ESMTP id 718EC206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 16:41:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbfLaQbS (ORCPT
+        id S1727082AbfLaQkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 11:31:18 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:47296 "EHLO mail.skyhub.de"
+        Tue, 31 Dec 2019 11:40:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:35776 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726060AbfLaQbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 11:31:18 -0500
-Received: from zn.tnic (p200300EC2F00E7007CEDBF47C01C0A42.dip0.t-ipconnect.de [IPv6:2003:ec:2f00:e700:7ced:bf47:c01c:a42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 823371EC0273;
-        Tue, 31 Dec 2019 17:31:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1577809876;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=XLKvpbF/byz3Z6T7cOCCHGN1ZNPGh/rIhiwmf7WR9SA=;
-        b=aZh/zyjUpkE7oqr4WKclNJ6Hjkima9b/OTjhub45rFI7P/lCOjAS24rd3915L8lBoel76q
-        hSsCNMhJGYzkhFEU6zGOTXLka+L75QOvunZ2WbenwRuifOre1FlO8gmNEesbFnAxqkK2uC
-        22trVeJGKL1draP8JmLvw1ROYNprE3o=
-Date:   Tue, 31 Dec 2019 17:31:08 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jann Horn <jannh@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH] x86/traps: Cleanup do_general_protection()
-Message-ID: <20191231163108.GC13549@zn.tnic>
-References: <20191218231150.12139-1-jannh@google.com>
- <20191218231150.12139-3-jannh@google.com>
- <20191231121121.GA13549@zn.tnic>
+        id S1726060AbfLaQkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 11:40:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0C84328;
+        Tue, 31 Dec 2019 08:40:00 -0800 (PST)
+Received: from [192.168.1.123] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 263263F68F;
+        Tue, 31 Dec 2019 08:39:59 -0800 (PST)
+Subject: Re: [RFC v2 1/1] drm/lima: Add optional devfreq support
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     yuq825@gmail.com, dri-devel@lists.freedesktop.org, robh@kernel.org,
+        tomeu.vizoso@collabora.com, airlied@linux.ie,
+        linux-kernel@vger.kernel.org, steven.price@arm.com,
+        linux-rockchip@lists.infradead.org, wens@csie.org,
+        alyssa.rosenzweig@collabora.com, daniel@ffwll.ch,
+        linux-amlogic@lists.infradead.org
+References: <20191227173707.20413-1-martin.blumenstingl@googlemail.com>
+ <20191227173707.20413-2-martin.blumenstingl@googlemail.com>
+ <dd38ff5c-6a14-bb6a-4df5-d706f99234e9@arm.com>
+ <CAFBinCDs3a8TJcQKgHUkDvssMR6Y2Kys38p50P0q=2KOiDTNHg@mail.gmail.com>
+ <fe45f4f8-8c67-ded2-90bf-8d5fd6874876@arm.com>
+ <CAFBinCByzLLdVTL0v=eC-TbZQnwnDY7cBLf4jyWq7N4PA1rr+A@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <ff2bdd26-3c34-63db-beb5-8f7c9fc7e790@arm.com>
+Date:   Tue, 31 Dec 2019 16:39:58 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191231121121.GA13549@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAFBinCByzLLdVTL0v=eC-TbZQnwnDY7cBLf4jyWq7N4PA1rr+A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-... and a cleanup ontop:
+On 2019-12-31 2:17 pm, Martin Blumenstingl wrote:
+> Hi Robin,
+> 
+> On Mon, Dec 30, 2019 at 1:47 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>>
+>> On 2019-12-29 11:19 pm, Martin Blumenstingl wrote:
+>>> Hi Robin,
+>>>
+>>> On Sun, Dec 29, 2019 at 11:58 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>>>>
+>>>> Hi Martin,
+>>>>
+>>>> On 2019-12-27 5:37 pm, Martin Blumenstingl wrote:
+>>>>> Most platforms with a Mali-400 or Mali-450 GPU also have support for
+>>>>> changing the GPU clock frequency. Add devfreq support so the GPU clock
+>>>>> rate is updated based on the actual GPU usage when the
+>>>>> "operating-points-v2" property is present in the board.dts.
+>>>>>
+>>>>> The actual devfreq code is taken from panfrost_devfreq.c and modified so
+>>>>> it matches what the lima hardware needs:
+>>>>> - a call to dev_pm_opp_set_clkname() during initialization because there
+>>>>>      are two clocks on Mali-4x0 IPs. "core" is the one that actually clocks
+>>>>>      the GPU so we need to control it using devfreq.
+>>>>> - locking when reading or writing the devfreq statistics because (unlike
+>>>>>      than panfrost) we have multiple PP and GP IRQs which may finish jobs
+>>>>>      concurrently.
+>>>>
+>>>> I gave this a quick try on my RK3328, and the clock scaling indeed kicks
+>>>> in nicely on the glmark2 scenes that struggle, however something appears
+>>>> to be missing in terms of regulator association, as the appropriate OPP
+>>>> voltages aren't reflected in the GPU supply (fortunately the initial
+>>>> voltage seems close enough to that of the highest OPP not to cause major
+>>>> problems, on my box at least). With panfrost on RK3399 I do see the
+>>>> supply voltage scaling accordingly, but I don't know my way around
+>>>> devfreq well enough to know what matters in the difference :/
+>>> first of all: thank you for trying this out! :-)
+>>>
+>>> does your kernel include commit 221bc77914cbcc ("drm/panfrost: Use
+>>> generic code for devfreq") for your panfrost test?
+>>> if I understand the devfreq API correct then I suspect with that
+>>> commit panfrost also won't change the voltage anymore.
+>>
+>> Oh, you're quite right - I was already considering that change as
+>> ancient history, but indeed it's only in 5.5-rc, while that board is
+>> still on 5.4.y release kernels. No wonder I couldn't make sense of how
+>> the (current) code could possibly be working :)
+>>
+>> I'll try the latest -rc kernel tomorrow to confirm (now that PCIe is
+>> hopefully fixed), but I'm already fairly confident you've called it
+>> correctly.
+> I just tested it with the lima driver (by undervolting the GPU by
+> 0.05V) and it seems that dev_pm_opp_set_regulators is really needed.
+> I'll fix this in the next version of this patch and also submit a fix
+> for panfrost (I won't be able to test that though, so help is
+> appreciated in terms of testing :))
 
----
-From: Borislav Petkov <bp@suse.de>
-Date: Tue, 31 Dec 2019 17:15:35 +0100
+Yeah, I started hacking something up for panfrost yesterday, but at the 
+point of realising the core OPP code wants refactoring to actually 
+handle optional regulators without spewing errors, decided that was 
+crossing the line into "work" and thus could wait until next week :D
 
-Hoist the user_mode() case up because it is less code and can be dealt
-with up-front like the other special cases UMIP and vm86.
-
-This saves an indentation level for the kernel-mode #GP case and allows
-to "unfold" the code more so that it is more readable.
-
-No functional changes.
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Jann Horn <jannh@google.com>
-Cc: x86@kernel.org
----
- arch/x86/kernel/traps.c | 79 +++++++++++++++++++++--------------------
- 1 file changed, 40 insertions(+), 39 deletions(-)
-
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 2afd7d8d4007..ca395ad28b4e 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -567,7 +567,10 @@ static enum kernel_gp_hint get_kernel_gp_address(struct pt_regs *regs,
- dotraplinkage void do_general_protection(struct pt_regs *regs, long error_code)
- {
- 	char desc[sizeof(GPFSTR) + 50 + 2*sizeof(unsigned long) + 1] = GPFSTR;
-+	enum kernel_gp_hint hint = GP_NO_HINT;
- 	struct task_struct *tsk;
-+	unsigned long gp_addr;
-+	int ret;
- 
- 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
- 	cond_local_irq_enable(regs);
-@@ -584,58 +587,56 @@ dotraplinkage void do_general_protection(struct pt_regs *regs, long error_code)
- 	}
- 
- 	tsk = current;
--	if (!user_mode(regs)) {
--		enum kernel_gp_hint hint = GP_NO_HINT;
--		unsigned long gp_addr;
--
--		if (fixup_exception(regs, X86_TRAP_GP, error_code, 0))
--			return;
- 
-+	if (user_mode(regs)) {
- 		tsk->thread.error_code = error_code;
- 		tsk->thread.trap_nr = X86_TRAP_GP;
- 
--		/*
--		 * To be potentially processing a kprobe fault and to
--		 * trust the result from kprobe_running(), we have to
--		 * be non-preemptible.
--		 */
--		if (!preemptible() && kprobe_running() &&
--		    kprobe_fault_handler(regs, X86_TRAP_GP))
--			return;
-+		show_signal(tsk, SIGSEGV, "", desc, regs, error_code);
-+		force_sig(SIGSEGV);
- 
--		if (notify_die(DIE_GPF, desc, regs, error_code,
--			       X86_TRAP_GP, SIGSEGV) == NOTIFY_STOP)
--			return;
-+		return;
-+	}
- 
--		if (error_code)
--			snprintf(desc, sizeof(desc), "segment-related " GPFSTR);
--		else
--			hint = get_kernel_gp_address(regs, &gp_addr);
-+	if (fixup_exception(regs, X86_TRAP_GP, error_code, 0))
-+		return;
- 
--		if (hint != GP_NO_HINT)
--			snprintf(desc, sizeof(desc), GPFSTR ", %s 0x%lx",
--				 (hint == GP_NON_CANONICAL) ?
--				 "probably for non-canonical address" :
--				 "maybe for address",
--				 gp_addr);
-+	tsk->thread.error_code = error_code;
-+	tsk->thread.trap_nr = X86_TRAP_GP;
- 
--		/*
--		 * KASAN is interested only in the non-canonical case, clear it
--		 * otherwise.
--		 */
--		if (hint != GP_NON_CANONICAL)
--			gp_addr = 0;
-+	/*
-+	 * To be potentially processing a kprobe fault and to trust the result
-+	 * from kprobe_running(), we have to be non-preemptible.
-+	 */
-+	if (!preemptible() &&
-+	    kprobe_running() &&
-+	    kprobe_fault_handler(regs, X86_TRAP_GP))
-+		return;
- 
--		die_addr(desc, regs, error_code, gp_addr);
-+	ret = notify_die(DIE_GPF, desc, regs, error_code, X86_TRAP_GP, SIGSEGV);
-+	if (ret == NOTIFY_STOP)
- 		return;
--	}
- 
--	tsk->thread.error_code = error_code;
--	tsk->thread.trap_nr = X86_TRAP_GP;
-+	if (error_code)
-+		snprintf(desc, sizeof(desc), "segment-related " GPFSTR);
-+	else
-+		hint = get_kernel_gp_address(regs, &gp_addr);
-+
-+	if (hint != GP_NO_HINT)
-+		snprintf(desc, sizeof(desc), GPFSTR ", %s 0x%lx",
-+			 (hint == GP_NON_CANONICAL) ? "probably for non-canonical address"
-+						    : "maybe for address",
-+			 gp_addr);
-+
-+	/*
-+	 * KASAN is interested only in the non-canonical case, clear it
-+	 * otherwise.
-+	 */
-+	if (hint != GP_NON_CANONICAL)
-+		gp_addr = 0;
- 
--	show_signal(tsk, SIGSEGV, "", desc, regs, error_code);
-+	die_addr(desc, regs, error_code, gp_addr);
- 
--	force_sig(SIGSEGV);
- }
- NOKPROBE_SYMBOL(do_general_protection);
- 
--- 
-2.21.0
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Cheers,
+Robin.
