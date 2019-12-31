@@ -2,120 +2,110 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF04AC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 15:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 630E3C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 15:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7796D206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 15:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35C65206E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 15:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hePclLS7"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="cbmWvu80"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbfLaPQY (ORCPT
+        id S1727079AbfLaPVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 10:16:24 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37463 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbfLaPQG (ORCPT
+        Tue, 31 Dec 2019 10:21:12 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:36485 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbfLaPVM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 10:16:06 -0500
-Received: by mail-wm1-f68.google.com with SMTP id f129so2069625wmf.2;
-        Tue, 31 Dec 2019 07:16:05 -0800 (PST)
+        Tue, 31 Dec 2019 10:21:12 -0500
+Received: by mail-il1-f193.google.com with SMTP id b15so30408550iln.3
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Dec 2019 07:21:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=JnHdGaV2EYztRNWEzGusYVpDY82eC9xf3HPJR7UpcnU=;
-        b=hePclLS7i3OzVaMuvM1NYINH4n6cJpNx1kqWuxiyOESHzYvPrtaB4pe6x8VGpmFQ5r
-         6faEdO+yI9sopEDrpSPpkh6fzLRMD/SS5sNvN8+hvOYdhEHfJYzLGuhs3mMksitQtwcG
-         cWW6baz6Z8w8ER63VMWEW3Lu0ZyBVkjdQdaVe2tMJFLGx68UbhLoFXel5nYocuyW3oon
-         O1DXOpkTsUnyAeJthGrfjnkHy6IBcuycUj2gUCvOQwI532hUHmRGqs/zCgN3ub0WCrm6
-         G2fyDrNPSvoB4TKId2+OJsOZhO+Pim55guzaDguMV6ButumbiH1+eERbK7Sv5eECTe3w
-         px3A==
+        d=poorly.run; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M7wDnYJLkdZ3OOSrLZqOeBqYHWkaMb/EXIdOIWi2ux8=;
+        b=cbmWvu809wZwdtci+lKYzW4AhYVpnBdlWm0HloHr3t0MlPEoqkF+d3fd81CayHS+fh
+         /A5cRX5GGeuxhJP503RVB9OZnzNuQCi33fmHjYSpw4ibMEb507/yR94QpjQCbTtvR4lI
+         2ZR1pqe2d7rGSsTnq5T/ocPoKQjPUSsxO9bUua5KZW1NXDr+JCaOVDiiXIwU1Itc9Zu1
+         A0XVdMFQvblvWdVT8PcxSdFkKxJ41sNrAYO4zptbeglWbEsFKtccfsBEa3PuoXrSgQEc
+         96nk7odHY5j7Ts6/fRh/1njXnhM1uuPGX/TTkcTq0TmGb9jMorJph/R6weDxi8hEbJKL
+         KKEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=JnHdGaV2EYztRNWEzGusYVpDY82eC9xf3HPJR7UpcnU=;
-        b=aZilCx/HK/8nryeRQm5yHpQAkSvrr4VhkMxbB2oZuc8JKDBuD7XA1cIQD1ndnVl9R1
-         RG1m3Dk5GqVWVhYTWSkqEyMSgbPvazQFJt/Z94UylyrW32SznC2fToMTcAxXo+tdhaOH
-         QiccewdIdWUX7x4T5f097M+hU6CLwaldXBqC7EjIkwIfWpMP3nZFrB+HmD6r5COqicKf
-         mrvUqY0vUcFDxuqWuC3p6Pe6+6MArI1/ZLoEgIJ9Zuk8mHM/qXoQV+R068FZipcl23MI
-         cNljF3SUQba973Bn1nx+CCugr7uVy5p9DKlI2JkxOKIu/2/QzL91Uijb+tvB2gUKCTN8
-         3hjw==
-X-Gm-Message-State: APjAAAWwlPWvVZY4tx9EXKFgvMVk3zEHIVq3bOLCQgqKgOwLj0WmnBaE
-        oco1Y6E/fWjyOxm6QQQD0PvrDblhd7U=
-X-Google-Smtp-Source: APXvYqzlRTk9w2B921KGJceQlHsXVKusg3BiCjxha/HlLbDewSERlFQxsVtBQmkFSvF9KNjhvJ+HXg==
-X-Received: by 2002:a1c:1fd0:: with SMTP id f199mr4845448wmf.113.1577805364433;
-        Tue, 31 Dec 2019 07:16:04 -0800 (PST)
-Received: from localhost.localdomain ([2a02:2450:10d2:194d:45f9:d1e3:14f9:8ba2])
-        by smtp.gmail.com with ESMTPSA id e12sm49228468wrn.56.2019.12.31.07.16.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Dec 2019 07:16:03 -0800 (PST)
-From:   sj38.park@gmail.com
-X-Google-Original-From: sjpark@amazon.de
-To:     paulmck@kernel.org
-Cc:     corbet@lwn.net, rcu@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, SeongJae Park <sjpark@amazon.de>
-Subject: [PATCH 4/7] doc/RCU/rcu: Use ':ref:' for links to other docs
-Date:   Tue, 31 Dec 2019 16:15:46 +0100
-Message-Id: <20191231151549.12797-5-sjpark@amazon.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191231151549.12797-1-sjpark@amazon.de>
-References: <20191231151549.12797-1-sjpark@amazon.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M7wDnYJLkdZ3OOSrLZqOeBqYHWkaMb/EXIdOIWi2ux8=;
+        b=D5h14Aw83ztoTtHyZG9YuSxcqIXY/INaZobH6H9HZFhvQXj6HfCLDk9QRQ7SnKb2zX
+         /RChRtRsDCFoZZms7uJOZmaXZY07vFhDvkrf086M4Vg1/lmyW8rUHOlClMMGndlMy4yU
+         dxFJQiXmFZIQxkxBWI0I5cl12CHZs1xVRyis/vJKDtmrpIyokMs8XUsb50NOV7g6NvaR
+         e23G8ukUy0zVXg3oW82U7E5gL+xMymnQCWdUSeFF6kgOXGMpC+H64PFCFOOGPn0DkVms
+         dDiCOAwi7Tt1T3rvLUGzIVBt2RpqXlC/lTfIdywsaXIW1vGgo1bAF0o/WO/tlCtNmP7V
+         FFJA==
+X-Gm-Message-State: APjAAAVawMPKg/Izq/tW+I5aJWopCRUAEua/BoE7IH1EU1eI0fNhLAYQ
+        YRyZOlVUd1Bh1+8EFmBqxCtUkTLLOJJeHfqFP5MwJg==
+X-Google-Smtp-Source: APXvYqy3MQrOnoaWbnV7vTPuZtjUUgc057hivbXdtKRtupkYm0cWiXJtUpFsHUEFrTtUPNyNYDJrHT3Sn1/xfTDTMZ0=
+X-Received: by 2002:a92:5d92:: with SMTP id e18mr60949654ilg.75.1577805671148;
+ Tue, 31 Dec 2019 07:21:11 -0800 (PST)
+MIME-Version: 1.0
+References: <20191230194102.2843-1-wambui.karugax@gmail.com>
+In-Reply-To: <20191230194102.2843-1-wambui.karugax@gmail.com>
+From:   Sean Paul <sean@poorly.run>
+Date:   Tue, 31 Dec 2019 10:20:35 -0500
+Message-ID: <CAMavQKLzkP6WKkxkNRYmvo7uhJFuvXjs_ryasFEMi3MeGMhaGQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm: use BUG_ON macro for debugging.
+To:     Wambui Karuga <wambui.karugax@gmail.com>
+Cc:     Rob Clark <robdclark@gmail.com>, Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Mon, Dec 30, 2019 at 2:41 PM Wambui Karuga <wambui.karugax@gmail.com> wrote:
+>
+> As the if statement only checks for the value of the offset_name
+> variable, it can be replaced by the more conscise BUG_ON macro for error
+> reporting.
+>
+> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+> ---
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.h | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+> index c7441fb8313e..0fe7907f5a7d 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+> @@ -315,10 +315,7 @@ OUT_PKT7(struct msm_ringbuffer *ring, uint8_t opcode, uint16_t cnt)
+>  static inline bool adreno_reg_check(struct adreno_gpu *gpu,
+>                 enum adreno_regs offset_name)
+>  {
+> -       if (offset_name >= REG_ADRENO_REGISTER_MAX ||
+> -                       !gpu->reg_offsets[offset_name]) {
+> -               BUG();
+> -       }
+> +       BUG_ON(offset_name >= REG_ADRENO_REGISTER_MAX || !gpu->reg_offsets[offset_name]);
+>
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- Documentation/RCU/rcu.rst | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Minor nit: This line is longer than 80 chars
 
-diff --git a/Documentation/RCU/rcu.rst b/Documentation/RCU/rcu.rst
-index 8dfb437dacc3..a1dd71d01862 100644
---- a/Documentation/RCU/rcu.rst
-+++ b/Documentation/RCU/rcu.rst
-@@ -11,8 +11,8 @@ must be long enough that any readers accessing the item being deleted have
- since dropped their references.  For example, an RCU-protected deletion
- from a linked list would first remove the item from the list, wait for
- a grace period to elapse, then free the element.  See the
--Documentation/RCU/listRCU.rst file for more information on using RCU with
--linked lists.
-+:ref:`Documentation/RCU/listRCU.rst <list_rcu_doc>` for more information on
-+using RCU with linked lists.
- 
- Frequently Asked Questions
- --------------------------
-@@ -50,7 +50,7 @@ Frequently Asked Questions
- - If I am running on a uniprocessor kernel, which can only do one
-   thing at a time, why should I wait for a grace period?
- 
--  See the Documentation/RCU/UP.rst file for more information.
-+  See :ref:`Documentation/RCU/UP.rst <up_doc>` for more information.
- 
- - How can I see where RCU is currently used in the Linux kernel?
- 
-@@ -68,9 +68,9 @@ Frequently Asked Questions
- 
- - Why the name "RCU"?
- 
--  "RCU" stands for "read-copy update".  The file Documentation/RCU/listRCU.rst
--  has more information on where this name came from, search for
--  "read-copy update" to find it.
-+  "RCU" stands for "read-copy update".
-+  :ref:`Documentation/RCU/listRCU.rst <list_rcu_doc>` has more information on where
-+  this name came from, search for "read-copy update" to find it.
- 
- - I hear that RCU is patented?  What is with that?
- 
--- 
-2.17.1
+Other than that,
 
+Reviewed-by: Sean Paul <sean@poorly.run>
+
+>         /*
+>          * REG_SKIP is a special value that tell us that the register in
+> --
+> 2.17.1
+>
