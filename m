@@ -2,151 +2,100 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE9BC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 06:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2270EC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 06:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5705206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 06:33:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="M8kl9BB2"
+	by mail.kernel.org (Postfix) with ESMTP id E0D00206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 06:42:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725989AbfLaGdj (ORCPT
+        id S1725945AbfLaGmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 01:33:39 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:42742 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbfLaGdj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 01:33:39 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBV6XYo0022364;
-        Tue, 31 Dec 2019 00:33:34 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577774014;
-        bh=YbA1Qym2RVyrrVUhDtwgxhKRyf5pbUKxrxDqH7eoJzQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=M8kl9BB2h4mOVPXLmB3Qg50XCDppTiuvBkkKQTrp0bwb44lUKla30CmlzmnAAuBEV
-         p4FjUh1Jo0uAsG+HESHvkodkFZAEaaruuWSaPf+aVWcs/VQ+D8LcN3lWXVJB0ELV8Y
-         8o6+qO+hTQ/BvoU7cxSKQsfsjVWIHDbMRLP6PvWs=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBV6XYfA029783
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 31 Dec 2019 00:33:34 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 31
- Dec 2019 00:33:34 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 31 Dec 2019 00:33:34 -0600
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBV6XWRC001420;
-        Tue, 31 Dec 2019 00:33:33 -0600
-Subject: Re: [PATCH v3 2/4] ARM: OMAP2+: Introduce check for OP-TEE in
- omap_secure_init()
-To:     "Andrew F. Davis" <afd@ti.com>, Tony Lindgren <tony@atomide.com>
-CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191230185004.32279-1-afd@ti.com>
- <20191230185004.32279-3-afd@ti.com>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <b4773b91-9893-830d-7b1b-b63eb4077cf7@ti.com>
-Date:   Tue, 31 Dec 2019 12:02:41 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 31 Dec 2019 01:42:51 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:53478 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725468AbfLaGmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 01:42:51 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id BBB959DF03C5317FAABC;
+        Tue, 31 Dec 2019 14:42:48 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 31 Dec 2019 14:42:42 +0800
+From:   Tian Tao <tiantao6@hisilicon.com>
+To:     <puck.chen@hisilicon.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <tzimmermann@suse.de>, <kraxel@redhat.com>,
+        <alexander.deucher@amd.com>, <tglx@linutronix.de>,
+        <dri-devel@lists.freedesktop.org>, <xinliang.liu@linaro.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <linuxarm@huawei.com>
+Subject: [PATCH] drm/hisilicon: Add new clock/resolution configurations
+Date:   Tue, 31 Dec 2019 14:42:51 +0800
+Message-ID: <1577774571-60493-1-git-send-email-tiantao6@hisilicon.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20191230185004.32279-3-afd@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add the three new pll config for corresponding resolution 1440x900 and
+1600x900, 640x480 for hibmc
 
+Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+Signed-off-by: Gong junjie <gongjunjie2@huawei.com>
+---
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c   | 3 +++
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_regs.h | 2 ++
+ 2 files changed, 5 insertions(+)
 
-On 31/12/19 12:20 AM, Andrew F. Davis wrote:
-> This check and associated flag can be used to signal the presence
-> of OP-TEE on the platform. This can be used to determine which
-> SMC calls to make to perform secure operations.
-> 
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
-> ---
->  arch/arm/mach-omap2/omap-secure.c | 14 ++++++++++++++
->  arch/arm/mach-omap2/omap-secure.h |  3 +++
->  2 files changed, 17 insertions(+)
-> 
-> diff --git a/arch/arm/mach-omap2/omap-secure.c b/arch/arm/mach-omap2/omap-secure.c
-> index e936732cdc4f..39d8070aede6 100644
-> --- a/arch/arm/mach-omap2/omap-secure.c
-> +++ b/arch/arm/mach-omap2/omap-secure.c
-> @@ -12,6 +12,7 @@
->  #include <linux/init.h>
->  #include <linux/io.h>
->  #include <linux/memblock.h>
-> +#include <linux/of.h>
->  
->  #include <asm/cacheflush.h>
->  #include <asm/memblock.h>
-> @@ -20,6 +21,18 @@
->  
->  static phys_addr_t omap_secure_memblock_base;
->  
-> +bool optee_available;
-> +
-> +static void __init omap_optee_init_check(void)
-> +{
-> +	struct device_node *np;
-> +
-> +	np = of_find_node_by_path("/firmware/optee");
-> +	if (np && of_device_is_available(np))
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
+index f1ce6cb..6bf4334 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
+@@ -40,6 +40,7 @@ struct hibmc_dislay_pll_config {
+ };
+ 
+ static const struct hibmc_dislay_pll_config hibmc_pll_table[] = {
++	{640, 480, CRT_PLL1_HS_25MHZ, CRT_PLL2_HS_25MHZ},
+ 	{800, 600, CRT_PLL1_HS_40MHZ, CRT_PLL2_HS_40MHZ},
+ 	{1024, 768, CRT_PLL1_HS_65MHZ, CRT_PLL2_HS_65MHZ},
+ 	{1152, 864, CRT_PLL1_HS_80MHZ_1152, CRT_PLL2_HS_80MHZ},
+@@ -47,6 +48,8 @@ static const struct hibmc_dislay_pll_config hibmc_pll_table[] = {
+ 	{1280, 720, CRT_PLL1_HS_74MHZ, CRT_PLL2_HS_74MHZ},
+ 	{1280, 960, CRT_PLL1_HS_108MHZ, CRT_PLL2_HS_108MHZ},
+ 	{1280, 1024, CRT_PLL1_HS_108MHZ, CRT_PLL2_HS_108MHZ},
++	{1440, 900, CRT_PLL1_HS_106MHZ, CRT_PLL2_HS_106MHZ},
++	{1600, 900, CRT_PLL1_HS_108MHZ, CRT_PLL2_HS_108MHZ},
+ 	{1600, 1200, CRT_PLL1_HS_162MHZ, CRT_PLL2_HS_162MHZ},
+ 	{1920, 1080, CRT_PLL1_HS_148MHZ, CRT_PLL2_HS_148MHZ},
+ 	{1920, 1200, CRT_PLL1_HS_193MHZ, CRT_PLL2_HS_193MHZ},
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_regs.h b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_regs.h
+index 9b7e859..17b30c3 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_regs.h
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_regs.h
+@@ -179,6 +179,7 @@
+ #define CRT_PLL1_HS_74MHZ			0x23941dc2
+ #define CRT_PLL1_HS_80MHZ			0x23941001
+ #define CRT_PLL1_HS_80MHZ_1152			0x23540fc2
++#define CRT_PLL1_HS_106MHZ			0x237C1641
+ #define CRT_PLL1_HS_108MHZ			0x23b41b01
+ #define CRT_PLL1_HS_162MHZ			0x23480681
+ #define CRT_PLL1_HS_148MHZ			0x23541dc2
+@@ -191,6 +192,7 @@
+ #define CRT_PLL2_HS_78MHZ			0x50E147AE
+ #define CRT_PLL2_HS_74MHZ			0x602B6AE7
+ #define CRT_PLL2_HS_80MHZ			0x70000000
++#define CRT_PLL2_HS_106MHZ			0x0075c28f
+ #define CRT_PLL2_HS_108MHZ			0x80000000
+ #define CRT_PLL2_HS_162MHZ			0xA0000000
+ #define CRT_PLL2_HS_148MHZ			0xB0CCCCCD
+-- 
+2.7.4
 
-This doesn't guarantee that optee driver is probed successfully or firmware
-installed correctly. Isn't there a better way to detect? Doesn't tee core layer
-exposes anything?
-
-Thanks and regards,
-Lokesh
-
-> +		optee_available = true;
-> +	of_node_put(np);
-> +}
-> +
->  /**
->   * omap_sec_dispatcher: Routine to dispatch low power secure
->   * service routines
-> @@ -166,4 +179,5 @@ u32 rx51_secure_rng_call(u32 ptr, u32 count, u32 flag)
->  
->  void __init omap_secure_init(void)
->  {
-> +	omap_optee_init_check();
->  }
-> diff --git a/arch/arm/mach-omap2/omap-secure.h b/arch/arm/mach-omap2/omap-secure.h
-> index 9aeeb236a224..78a1c4f04bbe 100644
-> --- a/arch/arm/mach-omap2/omap-secure.h
-> +++ b/arch/arm/mach-omap2/omap-secure.h
-> @@ -10,6 +10,8 @@
->  #ifndef OMAP_ARCH_OMAP_SECURE_H
->  #define OMAP_ARCH_OMAP_SECURE_H
->  
-> +#include <linux/types.h>
-> +
->  /* Monitor error code */
->  #define  API_HAL_RET_VALUE_NS2S_CONVERSION_ERROR	0xFFFFFFFE
->  #define  API_HAL_RET_VALUE_SERVICE_UNKNWON		0xFFFFFFFF
-> @@ -72,6 +74,7 @@ extern u32 rx51_secure_dispatcher(u32 idx, u32 process, u32 flag, u32 nargs,
->  extern u32 rx51_secure_update_aux_cr(u32 set_bits, u32 clear_bits);
->  extern u32 rx51_secure_rng_call(u32 ptr, u32 count, u32 flag);
->  
-> +extern bool optee_available;
->  void omap_secure_init(void);
->  
->  #ifdef CONFIG_SOC_HAS_REALTIME_COUNTER
-> 
