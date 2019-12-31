@@ -2,217 +2,124 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DE5C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 10:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD6CC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 10:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2642206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 10:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4242C206E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 10:20:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfLaKQc (ORCPT
+        id S1727074AbfLaKUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 05:16:32 -0500
-Received: from mailoutvs37.siol.net ([185.57.226.228]:33817 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726421AbfLaKQc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 05:16:32 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id CB4C6521B79;
-        Tue, 31 Dec 2019 11:16:28 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id e2Qj27Lh67RF; Tue, 31 Dec 2019 11:16:28 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 58EC8521B81;
-        Tue, 31 Dec 2019 11:16:28 +0100 (CET)
-Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 223B8521B79;
-        Tue, 31 Dec 2019 11:16:28 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        roman.stratiienko@globallogic.com
-Cc:     Roman Stratiienko <roman.stratiienko@globallogic.com>
-Subject: Re: [PATCH v2 2/2] drm/sun4i: Add alpha property for sun8i and sun50i VI layer
-Date:   Tue, 31 Dec 2019 11:16:27 +0100
-Message-ID: <1663300.TLkxdtWsSY@jernej-laptop>
-In-Reply-To: <20191230180842.13393-2-roman.stratiienko@globallogic.com>
-References: <20191230180842.13393-1-roman.stratiienko@globallogic.com> <20191230180842.13393-2-roman.stratiienko@globallogic.com>
+        Tue, 31 Dec 2019 05:20:23 -0500
+Received: from gofer.mess.org ([88.97.38.141]:37603 "EHLO gofer.mess.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726334AbfLaKUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 05:20:22 -0500
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id CCC0111A001; Tue, 31 Dec 2019 10:20:20 +0000 (GMT)
+Date:   Tue, 31 Dec 2019 10:20:20 +0000
+From:   Sean Young <sean@mess.org>
+To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Cc:     mchehab@kernel.org, gregkh@linuxfoundation.org,
+        rfontana@redhat.com, kstewart@linuxfoundation.org,
+        tglx@linutronix.de, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/6] media: dvb_dummy_fe: Add error messages in case of
+ attach failure
+Message-ID: <20191231102020.GG24469@gofer.mess.org>
+References: <20191201161542.69535-1-dwlsalmeida@gmail.com>
+ <20191201161542.69535-3-dwlsalmeida@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191201161542.69535-3-dwlsalmeida@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
-
-Dne ponedeljek, 30. december 2019 ob 19:08:42 CET je 
-roman.stratiienko@globallogic.com napisal(a):
-> From: Roman Stratiienko <roman.stratiienko@globallogic.com>
+On Sun, Dec 01, 2019 at 01:15:38PM -0300, Daniel W. S. Almeida wrote:
+> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 > 
-> DE3.0 VI layers supports plane-global alpha channel.
-> DE2.0 FCC block have GLOBAL_ALPHA register that can be used as alpha source
-> for blender.
+> Complain if the attach functions fail, for any reason. This is helpful
+> when debugging.
 > 
-> Add alpha property to the DRM plane and connect it to the
-> corresponding registers in the mixer.
-> 
-> Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
+> Suggested-by: Shuah Khan <skhan@linuxfoundation.org>
+> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
 > ---
->  drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 46 +++++++++++++++++++++-----
->  drivers/gpu/drm/sun4i/sun8i_vi_layer.h | 11 ++++++
->  2 files changed, 49 insertions(+), 8 deletions(-)
+>  drivers/media/dvb-frontends/dvb_dummy_fe.c | 18 +++++++++++++++---
+>  1 file changed, 15 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c index 42d445d23773..db32a78c75d9
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> @@ -65,6 +65,36 @@ static void sun8i_vi_layer_enable(struct sun8i_mixer
-> *mixer, int channel, }
+> diff --git a/drivers/media/dvb-frontends/dvb_dummy_fe.c b/drivers/media/dvb-frontends/dvb_dummy_fe.c
+> index 909dac2345c4..987c3488fe6c 100644
+> --- a/drivers/media/dvb-frontends/dvb_dummy_fe.c
+> +++ b/drivers/media/dvb-frontends/dvb_dummy_fe.c
+> @@ -114,12 +114,16 @@ struct dvb_frontend* dvb_dummy_fe_ofdm_attach(void)
+>  	/* allocate memory for the internal state */
+>  	state = kzalloc(sizeof(struct dvb_dummy_fe_state), GFP_KERNEL);
+>  	if (!state)
+> -		return NULL;
+> +		goto err;
+>  
+>  	/* create dvb_frontend */
+>  	memcpy(&state->frontend.ops, &dvb_dummy_fe_ofdm_ops, sizeof(struct dvb_frontend_ops));
+>  	state->frontend.demodulator_priv = state;
+>  	return &state->frontend;
+> +
+> +err:
+> +	pr_err("%s: DVB Dummy frontend driver attach failed\n", __func__);
+> +	return NULL;
+
+No need to log anything after k[zm]alloc() failures.
+
+Thanks
+
+Sean
+
 >  }
-> 
-> +static void sun8i_vi_layer_update_alpha(struct sun8i_mixer *mixer, int
-> channel, +					int overlay, struct 
-drm_plane *plane)
-> +{
-> +	u32 mask, val, ch_base;
+>  EXPORT_SYMBOL(dvb_dummy_fe_ofdm_attach);
+>  
+> @@ -132,12 +136,16 @@ struct dvb_frontend *dvb_dummy_fe_qpsk_attach(void)
+>  	/* allocate memory for the internal state */
+>  	state = kzalloc(sizeof(struct dvb_dummy_fe_state), GFP_KERNEL);
+>  	if (!state)
+> -		return NULL;
+> +		goto err;
+>  
+>  	/* create dvb_frontend */
+>  	memcpy(&state->frontend.ops, &dvb_dummy_fe_qpsk_ops, sizeof(struct dvb_frontend_ops));
+>  	state->frontend.demodulator_priv = state;
+>  	return &state->frontend;
 > +
-> +	ch_base = sun8i_channel_base(mixer, channel);
-> +
-> +	if (mixer->cfg->is_de3) {
-> +		mask = SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MASK |
-> +		       SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_MASK;
-> +		val = SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA
-> +			(plane->state->alpha >> 8);
-> +
-> +		val |= (plane->state->alpha == DRM_BLEND_ALPHA_OPAQUE) ?
-> +			
-SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_PIXEL :
-> +			
-SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_COMBINED;
-> +
-> +		regmap_update_bits(mixer->engine.regs,
-> +				   
-SUN8I_MIXER_CHAN_VI_LAYER_ATTR(ch_base,
-> +								
-  overlay),
-> +				   mask, val);
-> +	} else {
-> +		regmap_update_bits(mixer->engine.regs,
-> +				   
-SUN8I_MIXER_FCC_GLOBAL_ALPHA_REG,
-> +				   
-SUN8I_MIXER_FCC_GLOBAL_ALPHA_MASK,
-> +				   SUN8I_MIXER_FCC_GLOBAL_ALPHA
-> +					(plane->state->alpha >> 
-8));
-
-In general, this is fine, except I don't know how this will work on V3. V3 is 
-the only SoC which have 2 VI layers in one mixer. I checked DE2 BSP sources 
-and only only one VI alpha is defined in FCC, also for V3. BSP driver also 
-doesn't use this field at all, so I don't know if they missed it or it's really 
-only one alpha for both VI layers. I don't have V3 board, so I can't do any 
-experiment. To be on the safe side, we could check if mixer has > 1 VI plane 
-and if it is DE2 and skip adding alpha property for such combination for now.
-
-What do you think?
-
-Best regards,
-Jernej
-
-> +	}
-> +}
-> +
->  static int sun8i_vi_layer_update_coord(struct sun8i_mixer *mixer, int
-> channel, int overlay, struct drm_plane *plane,
->  				       unsigned int zpos)
-> @@ -248,14 +278,6 @@ static int sun8i_vi_layer_update_formats(struct
-> sun8i_mixer *mixer, int channel, SUN8I_MIXER_CHAN_VI_LAYER_ATTR(ch_base,
-> overlay),
->  			   SUN8I_MIXER_CHAN_VI_LAYER_ATTR_RGB_MODE, 
-val);
-> 
-> -	/* It seems that YUV formats use global alpha setting. */
-> -	if (mixer->cfg->is_de3)
-> -		regmap_update_bits(mixer->engine.regs,
-> -				   
-SUN8I_MIXER_CHAN_VI_LAYER_ATTR(ch_base,
-> -								
-  overlay),
-> -				   
-SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MASK,
-> -				   
-SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA(0xff));
-> -
->  	return 0;
+> +err:
+> +	pr_err("%s: DVB Dummy frontend driver attach failed\n", __func__);
+> +	return NULL;
 >  }
-> 
-> @@ -373,6 +395,8 @@ static void sun8i_vi_layer_atomic_update(struct
-> drm_plane *plane,
-> 
->  	sun8i_vi_layer_update_coord(mixer, layer->channel,
->  				    layer->overlay, plane, zpos);
-> +	sun8i_vi_layer_update_alpha(mixer, layer->channel,
-> +				    layer->overlay, plane);
->  	sun8i_vi_layer_update_formats(mixer, layer->channel,
->  				      layer->overlay, plane);
->  	sun8i_vi_layer_update_buffer(mixer, layer->channel,
-> @@ -464,6 +488,12 @@ struct sun8i_vi_layer *sun8i_vi_layer_init_one(struct
-> drm_device *drm,
-> 
->  	plane_cnt = mixer->cfg->ui_num + mixer->cfg->vi_num;
-> 
-> +	ret = drm_plane_create_alpha_property(&layer->plane);
-> +	if (ret) {
-> +		dev_err(drm->dev, "Couldn't add alpha property\n");
-> +		return ERR_PTR(ret);
-> +	}
+>  EXPORT_SYMBOL(dvb_dummy_fe_qpsk_attach);
+>  
+> @@ -150,12 +158,16 @@ struct dvb_frontend *dvb_dummy_fe_qam_attach(void)
+>  	/* allocate memory for the internal state */
+>  	state = kzalloc(sizeof(struct dvb_dummy_fe_state), GFP_KERNEL);
+>  	if (!state)
+> -		return NULL;
+> +		goto err;
+>  
+>  	/* create dvb_frontend */
+>  	memcpy(&state->frontend.ops, &dvb_dummy_fe_qam_ops, sizeof(struct dvb_frontend_ops));
+>  	state->frontend.demodulator_priv = state;
+>  	return &state->frontend;
 > +
->  	ret = drm_plane_create_zpos_property(&layer->plane, index,
->  					     0, plane_cnt - 
-1);
->  	if (ret) {
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.h
-> b/drivers/gpu/drm/sun4i/sun8i_vi_layer.h index eaa6076f5dbc..48c399e1c86d
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.h
-> +++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.h
-> @@ -29,14 +29,25 @@
->  #define SUN8I_MIXER_CHAN_VI_VDS_UV(base) \
->  		((base) + 0xfc)
-> 
-> +#define SUN8I_MIXER_FCC_GLOBAL_ALPHA_REG \
-> +		(0xAA000 + 0x90)
-> +
-> +#define SUN8I_MIXER_FCC_GLOBAL_ALPHA(x)			((x) << 24)
-> +#define SUN8I_MIXER_FCC_GLOBAL_ALPHA_MASK		GENMASK(31, 
-24)
-> +
->  #define SUN8I_MIXER_CHAN_VI_LAYER_ATTR_EN		BIT(0)
->  /* RGB mode should be set for RGB formats and cleared for YCbCr */
->  #define SUN8I_MIXER_CHAN_VI_LAYER_ATTR_RGB_MODE		BIT(15)
->  #define SUN8I_MIXER_CHAN_VI_LAYER_ATTR_FBFMT_OFFSET	8
->  #define SUN8I_MIXER_CHAN_VI_LAYER_ATTR_FBFMT_MASK	GENMASK(12, 8)
-> +#define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_MASK	GENMASK(2, 1)
->  #define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MASK	GENMASK(31, 24)
->  #define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA(x)	((x) << 24)
-> 
-> +#define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_PIXEL	((0) << 1)
-> +#define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_LAYER	((1) << 1)
-> +#define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_COMBINED	((2) << 1)
-> +
->  #define SUN8I_MIXER_CHAN_VI_DS_N(x)			((x) << 16)
->  #define SUN8I_MIXER_CHAN_VI_DS_M(x)			((x) << 0)
-
-
-
-
+> +err:
+> +	pr_err("%s: DVB Dummy frontend driver attach failed\n", __func__);
+> +	return NULL;
+>  }
+>  EXPORT_SYMBOL(dvb_dummy_fe_qam_attach);
+>  
+> -- 
+> 2.24.0
