@@ -2,100 +2,117 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DCFC2D0DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95ED1C2D0DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DFDF20718
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:31:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577781078;
-	bh=rvMR+E9omx4eCaqSUjlIrwJ0PKoCXLsH6vsG5WrM0jA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sMTLvRONiloi6i9FmR+iq58X51z1UE14EHorHSOkXj8cMSeSz067s2B7MDx0w2s9s
-	 pdPfN9sJ+xqQpNjbtLCeIshKmm/+70WLU5BVXJiEKsdH5YNHvwI/Tsc8rgie3WenJ3
-	 CMbXzZ44XjbYZZU/V+SM3EPygl9+I+T3t6XRx0us=
+	by mail.kernel.org (Postfix) with ESMTP id 63832206EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:33:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="r7+o6Off"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbfLaIbS (ORCPT
+        id S1726388AbfLaIdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 03:31:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35274 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbfLaIbR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 03:31:17 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D6EE206DB;
-        Tue, 31 Dec 2019 08:31:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577781076;
-        bh=rvMR+E9omx4eCaqSUjlIrwJ0PKoCXLsH6vsG5WrM0jA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2MTQVTjLkNboVCVdRdsrDI8w3KmvExh+24BuU8xlw8yAzBuQbWEIMTupedv/Y//WM
-         Depsi/TCA9b+N9ELGzvn8AySLcin5u/QbP0wwGsxQfvXOrn9IE+dGRs6JWYFAHnTTw
-         XQmLIcS+jdgHH77M4cka+38/KEg7LqI2c3rNOZj0=
-Date:   Tue, 31 Dec 2019 09:31:14 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.4 000/434] 5.4.7-stable review
-Message-ID: <20191231083114.GB1928116@kroah.com>
-References: <20191229172702.393141737@linuxfoundation.org>
- <43686be4-0ea2-472f-8b8f-2c69e16de96d@nvidia.com>
+        Tue, 31 Dec 2019 03:33:36 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:43494 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfLaIdg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 03:33:36 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBV8XIpv039830;
+        Tue, 31 Dec 2019 02:33:18 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1577781198;
+        bh=jbOv1LVbSazAXgc+tVdf1lshir3VjpBQ9GhevKwekk8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=r7+o6OffmTxm00zXbxuk2arAa6kz5nEw+UIp4kePDchAbpZ4KlHXxLAdnSOyjpl5O
+         GlwjRBFqjGrIvptP+WgjzySX+BJ2kjZgLx/ejB68e0dB+nxOl0uKDPPWj0eFRKaWU6
+         VE1qelkQVC98qpqL9kaXZNpNtMURAhzlUS+7R/NY=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBV8XHDu082565;
+        Tue, 31 Dec 2019 02:33:17 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 31
+ Dec 2019 02:33:17 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 31 Dec 2019 02:33:17 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBV8XEaC127311;
+        Tue, 31 Dec 2019 02:33:15 -0600
+Subject: Re: [PATCH 2/7] misc: pci_endpoint_test: Do not request or allocate
+ IRQs in probe
+To:     kbuild test robot <lkp@intel.com>
+CC:     <kbuild-all@lists.01.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191230123315.31037-3-kishon@ti.com>
+ <201912310039.Jef27rlg%lkp@intel.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <b561503f-a753-7750-2a43-78509755eb83@ti.com>
+Date:   Tue, 31 Dec 2019 14:05:15 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <43686be4-0ea2-472f-8b8f-2c69e16de96d@nvidia.com>
+In-Reply-To: <201912310039.Jef27rlg%lkp@intel.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 08:20:41PM +0000, Jon Hunter wrote:
-> 
-> On 29/12/2019 17:20, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.4.7 release.
-> > There are 434 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Tue, 31 Dec 2019 17:25:52 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.7-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> > 
-> > -------------
-> 
-> All tests are passing for Tegra ...
-> 
-> Test results for stable-v5.4:
->     13 builds:	13 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     38 tests:	38 pass, 0 fail
-> 
-> Linux version:	5.4.7-rc1-g6bc086f94af5
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra30-cardhu-a04
-> 
+Hi,
 
-Thanks for testing all of these and letting me know.
+On 30/12/19 10:40 PM, kbuild test robot wrote:
+> Hi Kishon,
+> 
+> I love your patch! Perhaps something to improve:
+> 
+> [auto build test WARNING on char-misc/char-misc-testing]
+> [also build test WARNING on pci/next arm-soc/for-next linus/master v5.5-rc4 next-20191220]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Kishon-Vijay-Abraham-I/Improvements-to-pci_endpoint_test-driver/20191230-203402
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git d1eef1c619749b2a57e514a3fa67d9a516ffa919
+> config: arm-randconfig-a001-20191229 (attached as .config)
+> compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.5.0 make.cross ARCH=arm 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>    In file included from include/linux/kernel.h:11:0,
+>                     from include/linux/delay.h:22,
+>                     from drivers/[1] -> http://lore.kernel.org/r/20191209092147.22901-1-kishon@ti.commisc/pci_endpoint_test.c:10:
+>    drivers/misc/pci_endpoint_test.c: In function 'pci_endpoint_test_probe':
+>    drivers/misc/pci_endpoint_test.c:73:22: error: 'PCI_DEVICE_ID_TI_J721E' undeclared (first use in this function); did you mean 'PCI_DEVICE_ID_TI_7510'?
+>       ((pdev)->device == PCI_DEVICE_ID_TI_J721E)
 
-greg k-h
+The patches in this series should be merged only after [1]. With that
+this error wouldn't be seen.
+
+[1] -> http://lore.kernel.org/r/20191209092147.22901-1-kishon@ti.com
+
+Thanks
+Kishon
