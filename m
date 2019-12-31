@@ -2,149 +2,158 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59888C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5913CC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28BBE206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:06:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ObZjbs8O"
+	by mail.kernel.org (Postfix) with ESMTP id 2207C206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:07:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577779649;
+	bh=4rf1EGZ1dD8xBoMjvu9e8yy5rn5psHM91b0SJBhtKj8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rNt3LjdEEgP2b1zaBeoSz62ws53eSj/SiWW/42sEBUOl6tO1x+hXHEcZoPYALK0aK
+	 uAkGFvwUJmTfJXrZybCnlh6DZSLqi51KvUV55+aNemmtHBR8bpVRO6rx7b00vHSIKk
+	 CKtJQwtzSe6pwfm/KdjPqaiGIK6xArHq4DW9xRqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbfLaIGE (ORCPT
+        id S1726400AbfLaIH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 03:06:04 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:43529 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725497AbfLaIGD (ORCPT
+        Tue, 31 Dec 2019 03:07:28 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37202 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfLaIH1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 03:06:03 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577779563; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=BbUFBKLuGvpwFWTaBaOIbSVqQ9CkH2lY2UR83lDpcCo=;
- b=ObZjbs8OqS/bmDQzLj4vwCwyGD7upoAyr9DNGu5NB5mpQIK8u5+XEODGJjkjnqqxv17eq2sQ
- clVRbzHeGs3EY7gIqDcv/XXelUQFq2hJSUcK0AiGRZeHm1H4gg7FPWFAYy/6ZVqesv6p/mYE
- ICnjzkjlNxLqfGMhv/fYelwr39w=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e0b0168.7f6e35fae068-smtp-out-n01;
- Tue, 31 Dec 2019 08:06:00 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 44B27C447A3; Tue, 31 Dec 2019 08:06:00 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 25D52C43383;
-        Tue, 31 Dec 2019 08:05:59 +0000 (UTC)
+        Tue, 31 Dec 2019 03:07:27 -0500
+Received: by mail-ed1-f66.google.com with SMTP id cy15so34720049edb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Dec 2019 00:07:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bGuUl/aBL2OgivOMmQPi9elv22h6HOh655j0TjOw9KI=;
+        b=RMnfp3dB1Kup4J3kOKHF+QeukevxkucgDYpbFzzw6h/xTpd0/spkMTo+aC1h1KgcF0
+         kQ4bxxvSVa9go73vm20lLpj9V3PFn5b6h1MdDUkOFAMdx+Ni/aO1bGOqWzLdaoKK5wWs
+         FOOH9DCY7NyXg3C4zU/Pd5cuC1uKID6b2Pno9ySK53FTg2ze+UnUMTpTDwjZ8tI81kuW
+         KSUHKOiPmqviR1ushDQkfJjqybGkt6ivOWLZuOw+v/Q43hgmuyYvnFkqdXiUmUBeAbQN
+         ACr87gPbBWIuH1qBLDSda1eEqJnZHCIA1JIHqVNmz+Kw1DUiaCLdaKkbYM89CzW3YLMM
+         C3yw==
+X-Gm-Message-State: APjAAAXuVBqp+/9Szm3nXobOXcNJ7fKAetJg9OtG2twU9ubjZffmstKx
+        LMvef619aleEX1iRew/y72g=
+X-Google-Smtp-Source: APXvYqyUAj8bK+pKQYVDqB5++Bf/GRvlOmPn+lZAb7XKAKfKly/WHhtd4ywRHtqTB+Dy6Q87e8va7w==
+X-Received: by 2002:a17:906:ed1:: with SMTP id u17mr74859457eji.286.1577779645556;
+        Tue, 31 Dec 2019 00:07:25 -0800 (PST)
+Received: from pi3 ([194.230.155.138])
+        by smtp.googlemail.com with ESMTPSA id dh4sm5818294edb.77.2019.12.31.00.07.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Dec 2019 00:07:24 -0800 (PST)
+Date:   Tue, 31 Dec 2019 09:07:22 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] iommu: Enable compile testing for some of drivers
+Message-ID: <20191231080722.GA6804@pi3>
+References: <20191230172619.17814-3-krzk@kernel.org>
+ <201912311551.tBrb3BhH%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 31 Dec 2019 16:05:59 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi-owner@vger.kernel.org, linux-scsi@vger.kernel.org,
-        martin.petersen@oracle.com, subhashj@codeaurora.org,
-        jejb@linux.ibm.com, chun-hung.wu@mediatek.com,
-        kuohong.wang@mediatek.com, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, avri.altman@wdc.com,
-        linux-mediatek@lists.infradead.org, peter.wang@mediatek.com,
-        alim.akhtar@samsung.com, andy.teng@mediatek.com,
-        matthias.bgg@gmail.com, beanhuo@micron.com,
-        pedrom.sousa@synopsys.com, bvanassche@acm.org,
-        linux-arm-kernel@lists.infradead.org, asutoshd@codeaurora.org
-Subject: Re: [PATCH v1 1/2] scsi: ufs: set device as default active power mode
- during initialization only
-In-Reply-To: <1577766179.13164.24.camel@mtkswgap22>
-References: <1577693546-7598-1-git-send-email-stanley.chu@mediatek.com>
- <1577693546-7598-2-git-send-email-stanley.chu@mediatek.com>
- <fd129b859c013852bd80f60a36425757@codeaurora.org>
- <1577754469.13164.5.camel@mtkswgap22>
- <836772092daffd8283a97d633e59fc34@codeaurora.org>
- <1577766179.13164.24.camel@mtkswgap22>
-Message-ID: <cf94a0e8f8e0746ae5f8434631207ea4@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <201912311551.tBrb3BhH%lkp@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-31 12:22, Stanley Chu wrote:
-> Hi Can,
+On Tue, Dec 31, 2019 at 03:43:39PM +0800, kbuild test robot wrote:
+> Hi Krzysztof,
 > 
+> I love your patch! Perhaps something to improve:
 > 
->> Hi Stanley,
->> 
->> I see skipping ufshcd_set_ufs_dev_active() in ufshcd_probe_hba()
->> if it is called from ufshcd_resume() path is the purpose here.
->> 
->> If so, then ufshcd_set_dev_pwr_mode() would be called, meaning
->> SSU command will be sent. Why is this SSU command needed to be
->> sent after a full host reset and restore? Is ufshcd_probe_hba()
->> not enough to make UFS device fully functional?
+> [auto build test WARNING on iommu/next]
+> [also build test WARNING on v5.5-rc4]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 > 
-> After resume (for both runtime resume and system resume), device power
-> mode shall be back to "Active" to service incoming requests.
+> url:    https://github.com/0day-ci/linux/commits/Krzysztof-Kozlowski/iommu-omap-Fix-pointer-cast-Wpointer-to-int-cast-warnings-on-64-bit/20191231-022212
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git next
+> config: ia64-allmodconfig (attached as .config)
+> compiler: ia64-linux-gcc (GCC) 7.5.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.5.0 make.cross ARCH=ia64 
 > 
-> I see two cases need device power mode transition during resume flow
-> 1. Device Power Mode = Sleep
-> 2. Device Power Mode = PowerDown
-> 
-> For 1, ufshcd_probe_hba() is not invoked during resume flow,
-> hba->curr_dev_pwr_mode = SLEEP, thus ufshcd_resume() can invoke
-> ufshcd_set_dev_pwr_mode() to change device power mode.
-> 
-> For 2, ufshcd_probe_hba() is invoked during resume flow, before this
-> fix, hba->curr_dev_pwr_mode will be set to ACTIVE (note that only this
-> flag is set as ACTIVE, but device may be still in PowerDown state if
-> device power is not fully shutdown or device HW reset is not executed
-> before resume), in the end, ufshcd_resume() will not invoke
-> ufshcd_set_dev_pwr_mode() to send SSU command to make device change 
-> back
-> to Active power mode.
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
 
-Hi Stanley,
+I saw it already while compile testing my patch. I must admit that I
+could not find easy/fast fix for it.  Probably the
+omap_iommu_translate() helper should be made 64-bit friendly but this
+obfuscates the code. The driver and hardware supports only 32-bit addresses.
 
-Isn't below change fixing the problem you are saying above?
-With it, after ufshcd_link_startup(), UFS device's power mode will
-become Active anyways. Do you mean below change is not working properly
-and you are removing it?
+Best regards,
+Krzysztof
 
-commit 7caf489b99a42a9017ef3d733912aea8794677e7
-Author: subhashj@codeaurora.org <subhashj@codeaurora.org>
-Date:   Wed Nov 23 16:32:20 2016 -0800
-
-     scsi: ufs: issue link starup 2 times if device isn't active
-
-     If we issue the link startup to the device while its UniPro state is
-     LinkDown (and device state is sleep/power-down) then link startup
-     will not move the device state to Active. Device will only move to
-     active state if the link starup is issued when its UniPro state is
-     LinkUp. So in this case, we would have to issue the link startup 2
-     times to make sure that device moves to active state.
-
-Thanks,
-
-Can Guo
 
 > 
-> But if device is fully reset before resume (not by current mainstream
-> driver), device can be already in "Active" power mode after power on
-> again during resume flow. In this case, it is OK to set
-> hba->curr_dev_pwr_mode as ACTIVE in ufshcd_probe_hba() and SSU command
-> is not necessary.
+> All warnings (new ones prefixed by >>):
 > 
-> Thanks,
-> Stanley
+>    In file included from drivers/iommu/omap-iommu.c:33:0:
+>    drivers/iommu/omap-iommu.c: In function 'omap_iommu_iova_to_phys':
+> >> drivers/iommu/omap-iopgtable.h:44:21: warning: large integer implicitly truncated to unsigned type [-Woverflow]
+>     #define IOPTE_MASK  (~(IOPTE_SIZE - 1))
+>                         ^
+> >> drivers/iommu/omap-iommu.c:1641:41: note: in expansion of macro 'IOPTE_MASK'
+>        ret = omap_iommu_translate(*pte, da, IOPTE_MASK);
+>                                             ^~~~~~~~~~
+>    drivers/iommu/omap-iopgtable.h:51:23: warning: large integer implicitly truncated to unsigned type [-Woverflow]
+>     #define IOLARGE_MASK  (~(IOLARGE_SIZE - 1))
+>                           ^
+> >> drivers/iommu/omap-iommu.c:1643:41: note: in expansion of macro 'IOLARGE_MASK'
+>        ret = omap_iommu_translate(*pte, da, IOLARGE_MASK);
+>                                             ^~~~~~~~~~~~
+>    drivers/iommu/omap-iopgtable.h:27:25: warning: large integer implicitly truncated to unsigned type [-Woverflow]
+>     #define IOSECTION_MASK  (~(IOSECTION_SIZE - 1))
+>                             ^
+> >> drivers/iommu/omap-iommu.c:1649:41: note: in expansion of macro 'IOSECTION_MASK'
+>        ret = omap_iommu_translate(*pgd, da, IOSECTION_MASK);
+>                                             ^~~~~~~~~~~~~~
+>    drivers/iommu/omap-iopgtable.h:34:23: warning: large integer implicitly truncated to unsigned type [-Woverflow]
+>     #define IOSUPER_MASK  (~(IOSUPER_SIZE - 1))
+>                           ^
+> >> drivers/iommu/omap-iommu.c:1651:41: note: in expansion of macro 'IOSUPER_MASK'
+>        ret = omap_iommu_translate(*pgd, da, IOSUPER_MASK);
+>                                             ^~~~~~~~~~~~
 > 
->> _______________________________________________
->> Linux-mediatek mailing list
->> Linux-mediatek@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> vim +44 drivers/iommu/omap-iopgtable.h
+> 
+> 97ec7d585b33bb arch/arm/plat-omap/iopgtable.h Hiroshi DOYU 2010-02-15  38  
+> 97ec7d585b33bb arch/arm/plat-omap/iopgtable.h Hiroshi DOYU 2010-02-15  39  /*
+> 97ec7d585b33bb arch/arm/plat-omap/iopgtable.h Hiroshi DOYU 2010-02-15  40   * "small page" address mask and size definitions.
+> 97ec7d585b33bb arch/arm/plat-omap/iopgtable.h Hiroshi DOYU 2010-02-15  41   */
+> a9dcad5e375800 arch/arm/plat-omap/iopgtable.h Hiroshi DOYU 2009-01-26  42  #define IOPTE_SHIFT		12
+> 5ff98fa68c88d7 drivers/iommu/omap-iopgtable.h Suman Anna   2015-07-20  43  #define IOPTE_SIZE		BIT(IOPTE_SHIFT)
+> a9dcad5e375800 arch/arm/plat-omap/iopgtable.h Hiroshi DOYU 2009-01-26 @44  #define IOPTE_MASK		(~(IOPTE_SIZE - 1))
+> a9dcad5e375800 arch/arm/plat-omap/iopgtable.h Hiroshi DOYU 2009-01-26  45  
+> 
+> :::::: The code at line 44 was first introduced by commit
+> :::::: a9dcad5e375800fcb07f7617dba23b3aade8f09d omap iommu: tlb and pagetable primitives
+> 
+> :::::: TO: Hiroshi DOYU <Hiroshi.DOYU@nokia.com>
+> :::::: CC: Hiroshi DOYU <Hiroshi.DOYU@nokia.com>
+> 
+> ---
+> 0-DAY kernel test infrastructure                 Open Source Technology Center
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+
+
