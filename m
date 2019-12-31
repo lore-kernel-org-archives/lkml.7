@@ -2,112 +2,140 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4553AC2D0DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 07:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF7CC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B01B20718
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 07:58:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577779118;
-	bh=fl8RoGLJ0Bkf3yCH1QLnzjV3P/tl6iQW6a0+tUPE/Mk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iASniwah96YH60J7QP5pZEpWUXW/Vk1tpmoS3YiNDc3nUfKMjf4WT9XLewbvRE4e/
-	 Qq4EHWUfme04Z4EE72yciVvR55XbTt96P7j+C4cKLm2cT49K99FafTJCyW0DCuxdgC
-	 7WenEVzaYV3Ail2VO33RKDoy1LKViKjIe/SFzQr4=
+	by mail.kernel.org (Postfix) with ESMTP id 80602206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:00:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=inango-systems.com header.i=@inango-systems.com header.b="oSprewSs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbfLaH6h (ORCPT
+        id S1726396AbfLaIAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 02:58:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725497AbfLaH6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 02:58:37 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84A91206D9;
-        Tue, 31 Dec 2019 07:58:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577779116;
-        bh=fl8RoGLJ0Bkf3yCH1QLnzjV3P/tl6iQW6a0+tUPE/Mk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NrjhCO77dz/ZYeJPLhPRQi/8p/IolRtyGUUXMnbC3Ue1/q1iQ3X311qRgzcRO0qAK
-         p0AntSL+ok3jBooT/+g2eQn1mpETDdJjC3pitQRlWXJ+7Y1YE3SV6D3KC1Sj8Df6Ax
-         MSF9REoZjsKqmxuE+nzuAMwCGNVlzmle234SV1eg=
-Date:   Tue, 31 Dec 2019 09:00:02 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawnguo@kernel.org, heiko@sntech.de,
-        sam@ravnborg.org, icenowy@aosc.io,
-        laurent.pinchart@ideasonboard.com, gregkh@linuxfoundation.org,
-        Jonathan.Cameron@huawei.com, davem@davemloft.net,
-        mchehab+samsung@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] dt-bindings: regulator: add document bindings for
- mpq7920
-Message-ID: <20191231080002.efq3yeomzktepegk@hendrix.lan>
-References: <20191222204507.32413-1-sravanhome@gmail.com>
- <20191222204507.32413-3-sravanhome@gmail.com>
- <20191223105028.amtzf62yjdpdsfrt@hendrix.home>
- <ec7d8937-724e-946c-0569-da685223d21d@gmail.com>
+        Tue, 31 Dec 2019 03:00:38 -0500
+Received: from mail.inango-systems.com ([178.238.230.57]:54166 "EHLO
+        mail.inango-sw.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfLaIAi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 03:00:38 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.inango-sw.com (Postfix) with ESMTP id D6E55108023B;
+        Tue, 31 Dec 2019 10:00:35 +0200 (IST)
+Received: from mail.inango-sw.com ([127.0.0.1])
+        by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 37p05ZsNb_tb; Tue, 31 Dec 2019 10:00:35 +0200 (IST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.inango-sw.com (Postfix) with ESMTP id 2B3421080793;
+        Tue, 31 Dec 2019 10:00:35 +0200 (IST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.inango-sw.com 2B3421080793
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inango-systems.com;
+        s=45A440E0-D841-11E8-B985-5FCC721607E0; t=1577779235;
+        bh=8QoFj6020f2oz7cgEpv34krD08H/vaMw8FFEohnLH5Q=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=oSprewSsRZeHfjXco1in1triItB0VnrIoxm6QyIBgZ+x5qJ43I9q8tuPszUzois5i
+         w+ubfcSfcjoaVN07FH/Su7m/CCHtOnd9RUQmEnTBN5Yx/adsN55ENFm5zqRLYjeERj
+         HbmMNP1v3nsJk3/UnyWOSBXRr6svUxyt8j3c+xJDHig3u0nifxvHY8WPT/PUWubQl/
+         DvaN6DEGFHmQTaJyA+gNAuJKv8VZzhXSH2FK/w/wgUd7MYRJ6pYPe8GxKwL5IBk8IO
+         U7vNtRYhahqy2DQDF5aRNkYAihrE66lf/wJ3FEneoTh0xDtMW36a8QsyEd3E930dJo
+         Q6dqDHy17zcpQ==
+X-Virus-Scanned: amavisd-new at inango-sw.com
+Received: from mail.inango-sw.com ([127.0.0.1])
+        by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id gsy2vsuohm1Z; Tue, 31 Dec 2019 10:00:35 +0200 (IST)
+Received: from mail.inango-sw.com (mail.inango-sw.com [172.17.220.3])
+        by mail.inango-sw.com (Postfix) with ESMTP id 09BD2108023B;
+        Tue, 31 Dec 2019 10:00:35 +0200 (IST)
+Date:   Tue, 31 Dec 2019 10:00:34 +0200 (IST)
+From:   Nikolai Merinov <n.merinov@inango-systems.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
+        Aleksandr Yashkin <a.yashkin@inango-systems.com>,
+        Ariel Gilman <a.gilman@inango-systems.com>
+Message-ID: <1964542716.432661.1577779234764.JavaMail.zimbra@inango-systems.com>
+In-Reply-To: <201912301227.47AE22C61@keescook>
+References: <20191223133816.28155-1-n.merinov@inango-systems.com> <201912301227.47AE22C61@keescook>
+Subject: Re: [PATCH] pstore/ram: fix for adding dumps to non-empty zone
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ec7d8937-724e-946c-0569-da685223d21d@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.17.220.3]
+X-Mailer: Zimbra 8.8.15_GA_3888 (ZimbraWebClient - GC78 (Linux)/8.8.15_GA_3890)
+Thread-Topic: pstore/ram: fix for adding dumps to non-empty zone
+Thread-Index: 36Ysipr7NL/eU1rEZu744OuMFxwNVw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 11:23:36PM +0100, saravanan sekar wrote:
-> > > +  mps,inc-off-time:
-> > > +     description: |
-> > > +        mutually exclusive to mps,fixed-off-time an array of 8, linearly increase
-> > > +        output delay during power off sequence based on factor of time slot/interval
-> > > +        for each regulator.
-> > > +     allOf:
-> > > +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
-> > > +       - minimum: 0
-> > > +       - maximum: 15
-> > > +       - default: [ 0, 6, 0, 6, 7, 7, 7, 9 ]
-> > You should check the size of the array too, but if it's a property of
-> > the regulators, why not have it in the regulators node?
->
-> the node regulators & sub-node of regulators are parsed (initdata) by
-> regulator framework during regulator registration,
-> so it would be redundant parsing all the node if mentioned under each
-> regulator node and this is optional. If you still not
-> convinced I will change.
+On Dec 31, 2019, at 1:37 AM, Kees Cook keescook@chromium.org wrote:
+> On Mon, Dec 23, 2019 at 06:38:16PM +0500, Nikolai Merinov wrote:
+>> From: Aleksandr Yashkin <a.yashkin@inango-systems.com>
+>> 
+>> The circle buffer in ramoops zones has a problem for adding a new
+>> oops dump to already an existing one.
+>> 
+>> The solution to this problem is to reset the circle buffer state before
+>> writing a new oops dump.
+> 
+> Ah, I see it now. When the crashes wrap around, the header is written at
+> the end of the (possibly incompletely filled) buffer, instead of at the
+> start, since it wasn't explicitly zapped.
 
-It's not really redundant, since the regulator framework will ignore
-whatever custom property you would put there, and your driver would
-ignore any generic property in those nodes.
+Yes, you are right. We observed this issue when we got two consecutive
+reboots with a kernel panic: After the first reboot the pstore was able
+to parse the saved data, but after the second we got a part of the
+previous compressed message and the new compressed message with the
+ramoops message header at the middle of the file. 
 
-> > > +  regulators:
-> > > +    type: object
-> > > +    description:
-> > > +      list of regulators provided by this controller, must be named
-> > > +      after their hardware counterparts BUCK[1-4], one LDORTC, and LDO[2-5]
-> > > +      The valid names for regulators are
-> > > +      buck1, buck2, buck3, buck4, ldortc, ldo2, ldo3, ldo4, ldo5
-> > For the third times now, the names should be validated using
-> > propertyNames.
->
-> Not sure did I understand your question correctly.
-> all the node name under regulators node are parsed by regulator
-> framework & validated against
-> name in regulator descriptors.
+According to our analysis the same issue can occur if we get more
+than (rampoops.mem_size/ramoops.record_size) kernel oops during work.
 
-Yes, and the point of the bindings in YAML is to make sure all the
-constraints we might have can be catched at compilation / validation
-time.
+> 
+> Yes, this is important; thank you for tracking this down! This bug has
+> existed for a very long time. I'll try to find the right Fixes tag for
+> it...
 
-The names of the nodes are a constraint, and propertyNames allows you
-to express it.
+We would like to see this changes in the LTS kernel releases. Could you
+please point me the manual about propagation such fixes?
 
-Maxime
+> 
+> -Kees
+> 
+>> Signed-off-by: Aleksandr Yashkin <a.yashkin@inango-systems.com>
+>> Signed-off-by: Nikolay Merinov <n.merinov@inango-systems.com>
+>> Signed-off-by: Ariel Gilman <a.gilman@inango-systems.com>
+>> 
+>> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+>> index 8caff834f002..33fceadbf515 100644
+>> --- a/fs/pstore/ram.c
+>> +++ b/fs/pstore/ram.c
+>> @@ -407,6 +407,13 @@ static int notrace ramoops_pstore_write(struct
+>> pstore_record *record)
+>>  
+>>  	prz = cxt->dprzs[cxt->dump_write_cnt];
+>>  
+>> +	/* Clean the buffer from old info.
+>> +	 * `ramoops_read_kmsg_hdr' expects to find a header in the beginning of
+>> +	 * buffer data, so we must to reset the buffer values, in order to
+>> +	 * ensure that the header will be written to the beginning of the buffer
+>> +	 */
+>> +	persistent_ram_zap(prz);
+>> +
+>>  	/* Build header and append record contents. */
+>>  	hlen = ramoops_write_kmsg_hdr(prz, record);
+>>  	if (!hlen)
+>> --
+>> 2.17.1
+>> 
+> 
+> --
+> Kees Cook
+--
+Nikolai Merinov
