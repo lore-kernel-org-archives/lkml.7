@@ -2,94 +2,109 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D14C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 13:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D746C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 13:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17906206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 13:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D5B9206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 13:35:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zhk6YlRo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="izoC2nmZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfLaNeF (ORCPT
+        id S1727074AbfLaNfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 08:34:05 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42961 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfLaNeF (ORCPT
+        Tue, 31 Dec 2019 08:35:46 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:39401 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbfLaNfp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 08:34:05 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 66so50297798otd.9;
-        Tue, 31 Dec 2019 05:34:04 -0800 (PST)
+        Tue, 31 Dec 2019 08:35:45 -0500
+Received: by mail-pj1-f66.google.com with SMTP id t101so1232277pjb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Dec 2019 05:35:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=t6C5LPsLTqJDJKDYSJYKcbXwVWDP7se8O6qosRVSE2M=;
-        b=Zhk6YlRoJwnFLwl6JxKwQXSjRZW/U0atOImEN4j2QdR5XGkF9/D1iTLH0TxF5PUbSo
-         DWNrIGDz0h05yPGLjov+MCKZFGQJxi9C3KXz2IAsZp+UhG0A6uFiTjGgn9UIKoWnPyMS
-         yoTQzpATUoXsZPO+BLMk2OAk1Mi8dhud7KKZCFnFszVoSpWmdCG21DWxMqPqSGNNbfFn
-         JMQAxuF06wrvi0ljubIrOALcLbx1Sa7v6F7LDUPrAZZrUElVSN34DMejKBD9wrJ05lvw
-         YAQyOcYNJ1v4LvHiHELD4Xp9NTA3CVPu8O3GCVot4cLOV1CkAcfILWG7QM4QXNYPM8c9
-         G2Yg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dEit719n2Ik36OhY/hE3/4A9AQeh6rXuvoLsvQp2DrE=;
+        b=izoC2nmZ/zXLGi9aRbnLJsWJYaP4LeBp8QtAfnx+zUT2T8CxRnppRCRNji8J0K4CA8
+         PYDe/gZSqieXnH4mEqfd+EFHUZ6Kq4fbED4NImWxh72N7GNwGIEB6txrOk291AT2g6cz
+         OFzrRzn3wScUNxx9XFNXxCmt7firufX3/QJuw2CxiBGr/8OQDDM8I2mtqvMSlksTouzP
+         pF9Duy1pjVCcqdOeRMjxITT98eDFT7/KjNiFwFgsF0R8ASfUSBjTI02CgoFygEv+s7xq
+         IiI68FLkhCElwGaCQEwzog4T2MZaAfRyZe+ZDjkY6ZfTy+jRY2wDntV9cSo7ec5Wf6Kr
+         Asdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=t6C5LPsLTqJDJKDYSJYKcbXwVWDP7se8O6qosRVSE2M=;
-        b=raoAISozzL3HtVPnOC5AmMd1Ux4zmFyQ9SnEh0zfhMwjPFu27/nZ19Tc4kDZ0PfjCK
-         JgZCMFNGARvQoFbPJBlV1TaFULhZ4NLk05mfwZ9a0zEeZg3PwDyCAfWTvUyaSpVt9mLH
-         bXYM9NNb1B7eEufYt/C2QbEIacbObUuQ3UPGj8wHNNoIVXth8OkIiINbXAjMi+NGn+KE
-         ff+L+v6FHj05zssi+C1LO2s5a2kb/x+RBxE8b4h0PFAIK8eeH31Yz++ruFoVrSKtNaxU
-         SWLnoJ8qB2fzvXZGgXVuVNz2BpOm8H9WxI0NXsd9NkHBADP0RNKS1ktEP3EAKne5lFZo
-         KZMw==
-X-Gm-Message-State: APjAAAWpaOsLCUotLSmLzfR7McHNVuuMVqWWvFrBr6pM9TLIOQLNarKk
-        BUhdeKLhNOBY/zEFkYyrlP8EjrQDcx0NblimLDc=
-X-Google-Smtp-Source: APXvYqw/2awvEbeLXzhYq9dxklhI8V0k8YOnYWx25+izppgBT+RdnG4y9c33rNOCK/gBQ4tA+rmDguEZUZCcxCrqliI=
-X-Received: by 2002:a05:6830:10d7:: with SMTP id z23mr79289151oto.114.1577799244703;
- Tue, 31 Dec 2019 05:34:04 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dEit719n2Ik36OhY/hE3/4A9AQeh6rXuvoLsvQp2DrE=;
+        b=VJYwjaIkXZKvY+TXNzV9Djp7PPYQ0uj8FFMirsdpiEHZXna697lwl2CSiDY8FTU6j6
+         7/o29KCiITqOdW7AwvioQEVD9l9ie0/NsAR9Pmb7bVZAY+yuf7iEKsfqi215dKsJxYvA
+         YAQ+D5fhYty2arlz2gtYD7wuENZUrCG80Q3RxRrT6bJkB8MUTGriOI7F9igGXcCOTiu7
+         c6HA3EPiAy3CH7RVy9ujuTPlPF0EaLmbFIexPR+TjHC79jebVeaDS1Z5GuhmDVMc9Ju9
+         5cpyiKr3m0Q8i3TasSZzn/3kkptwzybF7w5awYtubBFh99HtZK6eBs1sSMtCk8WUsR0u
+         wTPw==
+X-Gm-Message-State: APjAAAUMYVTFT//soIozOsT32NlsIR0fr/iyD2Ae37bswXM8QRf/VjxM
+        KPQvvYUUHauZ+meNmvGkyus=
+X-Google-Smtp-Source: APXvYqwzn5JhjM0MgDhpzTd9WBBz3GkKR/NF1IZ58WLZ9wuo9W9MtKDxIZhl5VIadzV54kOpQJ2SjA==
+X-Received: by 2002:a17:90a:35e6:: with SMTP id r93mr6362250pjb.44.1577799345086;
+        Tue, 31 Dec 2019 05:35:45 -0800 (PST)
+Received: from localhost.localdomain ([2408:8025:ad:7e20:f8a1:4793:6c48:941])
+        by smtp.gmail.com with ESMTPSA id e10sm57903910pfj.7.2019.12.31.05.35.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Dec 2019 05:35:44 -0800 (PST)
+From:   chengkaitao <pilgrimtao@gmail.com>
+To:     rostedt@goodmis.org
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org, smuchun@gmail.com,
+        Kaitao Cheng <pilgrimtao@gmail.com>
+Subject: [PATCH] kernel/trace: Fix do not unregister tracepoints when register sched_migrate_task fail
+Date:   Tue, 31 Dec 2019 05:35:30 -0800
+Message-Id: <20191231133530.2794-1-pilgrimtao@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Received: by 2002:a8a:87:0:0:0:0:0 with HTTP; Tue, 31 Dec 2019 05:34:04 -0800 (PST)
-In-Reply-To: <20191229140005.qrffmjnmizstjkh4@pali>
-References: <20191220062419.23516-1-namjae.jeon@samsung.com>
- <CGME20191220062737epcas1p3c0f9e408640148c9186b84efc6d6658b@epcas1p3.samsung.com>
- <20191220062419.23516-10-namjae.jeon@samsung.com> <20191229140005.qrffmjnmizstjkh4@pali>
-From:   Namjae Jeon <linkinjeon@gmail.com>
-Date:   Tue, 31 Dec 2019 22:34:04 +0900
-Message-ID: <CAKYAXd_KLP_179DA9GbAdHyF=A9G9dnWm5hR4pGqds9OSgJhcw@mail.gmail.com>
-Subject: Re: [PATCH v8 09/13] exfat: add misc operations
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> +#if (BITS_PER_LONG == 64)
->> +	if (second >= UNIX_SECS_2108) {
->> +		tp->second  = 59;
->> +		tp->minute  = 59;
->> +		tp->hour = 23;
->> +		tp->day  = 31;
->> +		tp->month  = 12;
->> +		tp->year = 127;
->> +		return;
->> +	}
->> +#endif
->
-> Hello! Why is this code #if-ed? Kernel supports 64 bit long long
-> integers also for 32 bit platforms.
->
-> Function parameter struct timespec64 *ts is already 64 bit. so above
-> #if-code looks really suspicious.
-Right, Will remove it.
+From: Kaitao Cheng <pilgrimtao@gmail.com>
 
-Thanks for your review!
+In the function, if register_trace_sched_migrate_task() returns error,
+sched_switch/sched_wakeup_new/sched_wakeup won't unregister. That is
+why fail_deprobe_sched_switch was added.
+
+Signed-off-by: Kaitao Cheng <pilgrimtao@gmail.com>
+---
+ kernel/trace/trace_sched_wakeup.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
+index 5e43b9664eca..617e297f46dc 100644
+--- a/kernel/trace/trace_sched_wakeup.c
++++ b/kernel/trace/trace_sched_wakeup.c
+@@ -630,7 +630,7 @@ static void start_wakeup_tracer(struct trace_array *tr)
+ 	if (ret) {
+ 		pr_info("wakeup trace: Couldn't activate tracepoint"
+ 			" probe to kernel_sched_migrate_task\n");
+-		return;
++		goto fail_deprobe_sched_switch;
+ 	}
+ 
+ 	wakeup_reset(tr);
+@@ -648,6 +648,8 @@ static void start_wakeup_tracer(struct trace_array *tr)
+ 		printk(KERN_ERR "failed to start wakeup tracer\n");
+ 
+ 	return;
++fail_deprobe_sched_switch:
++	unregister_trace_sched_switch(probe_wakeup_sched_switch, NULL);
+ fail_deprobe_wake_new:
+ 	unregister_trace_sched_wakeup_new(probe_wakeup, NULL);
+ fail_deprobe:
+-- 
+2.20.1
+
