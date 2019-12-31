@@ -2,143 +2,162 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30519C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 14:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F7AC2D0DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 14:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8EDD206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 14:24:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="rClWCZEf"
+	by mail.kernel.org (Postfix) with ESMTP id CA9FD206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 14:31:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbfLaOYL (ORCPT
+        id S1727074AbfLaOb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 09:24:11 -0500
-Received: from mout.web.de ([212.227.17.12]:44861 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726229AbfLaOYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 09:24:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1577802235;
-        bh=njW70Kvt6w+HPNlPF02qIWP2tFKDZNV6eGaoaDh4Uzs=;
-        h=X-UI-Sender-Class:Cc:References:Subject:From:To:Date:In-Reply-To;
-        b=rClWCZEfooJsOCeHFtsUogo1A29BELPlWj+X719iCy/bB35BxBO/w3umMGoQZb4Rr
-         61LQBF8QYLEspd8YWuPkte54KTXJii2FZpJ7mSlTt0/OFqYaDIJYtSUknzoT3/mCe/
-         rqgFaV6glvpkfuLsSd5yfI5FdxHHrr0mj9BRfNnk=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.105.164]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lx7Ir-1jntOk1wL3-016eNL; Tue, 31
- Dec 2019 15:23:55 +0100
-Cc:     linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        linkinjeon@gmail.com
-References: <20191220062419.23516-11-namjae.jeon@samsung.com>
-Subject: Re: [PATCH v8 10/13] exfat: add nls operations
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org
-Message-ID: <5b0febd5-642b-83f2-7d81-7a1cbb302e3c@web.de>
-Date:   Tue, 31 Dec 2019 15:23:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Tue, 31 Dec 2019 09:31:29 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36780 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbfLaOb3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 09:31:29 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 19so38010017otz.3;
+        Tue, 31 Dec 2019 06:31:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aNGy9k3GjPpQw+gLldMaMw00/W7LQuR5voB3/IzYKmU=;
+        b=A4s+RdqrRThC+T8F0yWQ21ggg3gg5MZoJMepfyKSDYu70vhsvbV5vZFHehBEMdCrXA
+         4WgxthNWd8yZ8qgrqyt0DPc0ZK/FOshI/9y9aI9/RNhNhA3SUVSWMKkjxBQ7fnDu5gw2
+         jpn2HLbUf5Xh8vvd5CvNZyHSnEWzzQBelE2t0gfTS0Spy1iGjfxvyXz6LIk5SUm250Px
+         N7WJ8cP5KdJH5EQk5XArItk/N4S2Jpay3TB1sfM1i/K3JWMEx21HqXDh4nz440/1cSLT
+         2Rr9vDQ0Ceo43zRFHEGYjwN5hyGdgyqUGfGdo4TL0AxgrUOHreVXRb3btWI07q977OtA
+         Gyaw==
+X-Gm-Message-State: APjAAAU1lWrxkuFtbsLHtSlc98l0MMI9iEvIx8m7OaU4mpyr2TplUav/
+        6ccRVGTAAstVjCJ9Dvr6iMMwCI7zti/P7sL/zMM=
+X-Google-Smtp-Source: APXvYqyRede9nj6QX/J+h2iPj3015tGZi4SSxVB405gFFdOzF7lG31k2iCzmQCt8rAqZ0PIbsv+1WWhJh/5VIYtn99c=
+X-Received: by 2002:a9d:8f1:: with SMTP id 104mr75063793otf.107.1577802688662;
+ Tue, 31 Dec 2019 06:31:28 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191220062419.23516-11-namjae.jeon@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:RPqLzP+zYG43xDh+ViQocUOWTIevtgfMrRQuxh+8eGCfX0xKREN
- cPxffMC07AL319H9Zd8xsPGqEHVMV30kVGVrIeYXdtTfzs1ZDSXCmqoCqd4KB0xrJo7x63v
- 3ER0+1Gv/TbyzXzYSbMHNEzHf+tTqrzCaYSA9XyQD72N+lnM0ADs3k6O26fqLTSiRLdgJTQ
- rO/v3vxd7bo49zRx3s+TA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:B2iCt72mcfw=:0gqFdzlfarZRBcKSTGIVPH
- S8fXMbI8c/oKhfJCqvPG77+vOig7kTpTRMop9JWO6bu7X9pL48sp8IkkVnJH4K5aH57hK3lyR
- cGEijjeKbs4ZEH1at4YavsoW5oLpTLML9e6MLJRbhdmdMsNs1VHK5ERclvdv1Fhe/Ic2ue751
- bfvrvK7cv7O0SK/EvrcKBJQQVsvE9TU8kryX0OxfXbOiK2Mb35omX6S4GLwEvKQRKhCF8zcs0
- UlLSqp+zjQHGhtcHhNT57+zdubdkN7+dz/CJJpiXSi7wdgTsKb51zWdqisWFo7ahcn9XfAC45
- w0daxpyesvPV+YM+dVQzq30brtsBmfHVR6RIop78P+SUXIzHtGNBIuGXZ0D0SHhWxpvohJMNe
- k0oEuuM+cdU0DzYYOgDc9Wgw//U6YNajBq/yi6TGJUPBitSpbiLy0BaMTZ8tDvgwmhsg40Lt1
- Im4WXqCdB/iKwQyrQIrYNXvMPG4MTrMB72VgbTgJuXkBoQFzzcSaVh89LcMbjia8V3k6/Do/s
- 4KOUSC/mOlXZGfaCz/rz+O/2imjUX5vd0fj5NZgE/MFozV5UDdYZz/LJZuorQYPku618MjojE
- +++N4wQ1DTABsyUlMmKqX6q7B4D6SbJrBiDZspS1BLJNqqtimkkO7wlx5OXNcUzrrg2yy6Yar
- +fU2okOvE6vOXdAYIP11EEmi+aIUvjOFAXuspS1VVvgKp71US7vigWocmtmeVJ/PRTSJ4j6Gs
- 4gLSLc+ldJIKBi9n+d34YksEEE+PJcBgaPm5OLmvsLU+If9MJHRC5560kY6cCGw5J2Y9GfAMo
- TyuoctLStimZFT74xiwgtfnHOj1xEFjoQi/X29XcLYIVLln5aMzWMkV9Gpv44U3C0bivK2kAt
- f13xX1I4mHR6B5Cql+RkjejMGtmrk6rfvpl3APIhSAgUmqr6p/ynRh2pWZlbp6e/rXJ+euFms
- 9NQhNMInn6f9WqhjRxkpGHkqbFz59EVS4GHQDZIT8fRGnSymyiSfjXU/Xb6lGe/pSNwK0BCQD
- iSCzQbIU+Ew8F0tWmAqPzeymCRFSsyWHO33dnhLRAiU0q5CtW7NNpbd+oBlhFLFjwlqhAiq+0
- 9Bbcx8hXdTnY3WH/dyxalFMjZJTduUI67lYoggwZ6VLI7UXCh7qEMMfIIUoAWHzrR+qrZwjMX
- BBGD4sFme1Mg7Dl6NiUVoOfRCVDzqgL8clhVXxQbBaXSmL/GB20FzsrFI9dZZL/rl+roDtYhV
- lBucA29XyX8TPoirlB52M0XFMD5kDreeVep7mGGSahxYQ5yR37WLg/1hN2So=
+References: <20191116005240.15722-1-robh@kernel.org> <20191116005240.15722-3-robh@kernel.org>
+ <CAMuHMdX20LvK2o1cZJ8q83Q08JQzH6L07gmqBm0V0xSc5GHk4A@mail.gmail.com>
+ <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com> <CAMuHMdXBVyutji67Ladvoh3NhrPNTYfAKS4pmOQcOouZGokYvQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdXBVyutji67Ladvoh3NhrPNTYfAKS4pmOQcOouZGokYvQ@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 31 Dec 2019 15:31:17 +0100
+Message-ID: <CAMuHMdU0K3n4CandL2RKrVmzmbBMt2Mw3WWM4JZoZcK3h8yZNA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] dt-bindings: PCI: Convert generic host binding to DT schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Will Deacon <will@kernel.org>,
+        David Daney <david.daney@cavium.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> +++ b/fs/exfat/nls.c
-=E2=80=A6
-> +int exfat_nls_cmp_uniname(struct super_block *sb, unsigned short *a,
-> +		unsigned short *b)
-> +{
-> +	int i;
-> +
-> +	for (i =3D 0; i < MAX_NAME_LENGTH; i++, a++, b++) {
-> +		if (exfat_nls_upper(sb, *a) !=3D exfat_nls_upper(sb, *b))
+Hi Rob,
 
-Can it matter to compare run time characteristics with the following
-code variant?
+On Tue, Dec 31, 2019 at 9:23 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Tue, Dec 31, 2019 at 12:30 AM Rob Herring <robh@kernel.org> wrote:
+> > On Thu, Dec 12, 2019 at 7:41 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > On Sat, Nov 16, 2019 at 1:53 AM Rob Herring <robh@kernel.org> wrote:
+> > > > Convert the generic PCI host binding to DT schema. The derivative Juno,
+> > > > PLDA XpressRICH3-AXI, and Designware ECAM bindings all just vary in
+> > > > their compatible strings. The simplest way to convert those to
+> > > > schema is just add them into the common generic PCI host schema.
+> > > >
+> > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > > Cc: Andrew Murray <andrew.murray@arm.com>
+> > > > Cc: Zhou Wang <wangzhou1@hisilicon.com>
+> > > > Cc: Will Deacon <will@kernel.org>
+> > > > Cc: David Daney <david.daney@cavium.com>
+> > > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > >
+> > > > index 515b2f9542e5..000000000000
+> > > > --- a/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
+> > > > +++ /dev/null
+> > >
+> > > > -Example:
+> > > > -
+> > > > -    pcie1: pcie@7f000000 {
+> > > > -        compatible = "socionext,synquacer-pcie-ecam", "snps,dw-pcie-ecam";
+> > > > -        device_type = "pci";
+> > > > -        reg = <0x0 0x7f000000 0x0 0xf00000>;
+> > > > -        bus-range = <0x0 0xe>;
+> > > > -        #address-cells = <3>;
+> > > > -        #size-cells = <2>;
+> > > > -        ranges = <0x1000000 0x00 0x00010000 0x00 0x7ff00000 0x0 0x00010000>,
+> > > > -                 <0x2000000 0x00 0x70000000 0x00 0x70000000 0x0 0x0f000000>,
+> > > > -                 <0x3000000 0x3f 0x00000000 0x3f 0x00000000 0x1 0x00000000>;
+> > > > -
+> > > > -        #interrupt-cells = <0x1>;
+> > > > -        interrupt-map-mask = <0x0 0x0 0x0 0x0>;
+> > >
+> > > An all-zeroes interrupt-map-mask seems to be very common on embedded
+> > > SoCs, where all devices are mapped to a single interrupt.
+> >
+> > Indeed.
+> >
+> > > However, schemas/pci/pci-bus.yaml says:
+> > >
+> > >   interrupt-map-mask:
+> > >     items:
+> > >       - description: PCI high address cell
+> > >         minimum: 0
+> > >         maximum: 0xf800
+> > >       - description: PCI mid address cell
+> > >         const: 0
+> > >       - description: PCI low address cell
+> > >         const: 0
+> > >       - description: PCI IRQ cell
+> > >         minimum: 1
+> > >         maximum: 7
+> > >
+> > > and thus complains about an all-zeroes mask, e.g.
+> > >
+> > >     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dt.yaml:
+> > > pcie@fe000000: interrupt-map-mask:0:3: 0 is less than the minimum of 1
+> >
+> > Now fixed.
+>
+> Thank you, confirmed.
 
-+	for (i =3D 0; i < MAX_NAME_LENGTH; i++) {
-+		if (exfat_nls_upper(sb, a[i]) !=3D exfat_nls_upper(sb, b[i]))
+And with latest renesas-drivers, I started seeing:
 
-Regards,
-Markus
+    arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
+interrupt-map:0: [0, 0, 0, 1] is too short
+    arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
+interrupt-map:1: [5, 0, 113, 4] is too short
+    arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
+interrupt-map:2: [2048, 0, 0, 1] is too short
+    arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
+interrupt-map:3: [5, 0, 113, 4] is too short
+    arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
+interrupt-map:4: [4096, 0, 0, 2] is too short
+    arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
+interrupt-map:5: [5, 0, 113, 4] is too short
+
+Looks like interrupt-map is split incorrectly: shouldn't each entry have 8
+cells?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
