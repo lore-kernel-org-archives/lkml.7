@@ -2,142 +2,100 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D5FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DCFC2D0DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31ED820733
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DFDF20718
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:31:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577781078;
+	bh=rvMR+E9omx4eCaqSUjlIrwJ0PKoCXLsH6vsG5WrM0jA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sMTLvRONiloi6i9FmR+iq58X51z1UE14EHorHSOkXj8cMSeSz067s2B7MDx0w2s9s
+	 pdPfN9sJ+xqQpNjbtLCeIshKmm/+70WLU5BVXJiEKsdH5YNHvwI/Tsc8rgie3WenJ3
+	 CMbXzZ44XjbYZZU/V+SM3EPygl9+I+T3t6XRx0us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbfLaIXy (ORCPT
+        id S1726334AbfLaIbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 03:23:54 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41921 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfLaIXy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 03:23:54 -0500
-Received: by mail-ot1-f68.google.com with SMTP id r27so49465455otc.8;
-        Tue, 31 Dec 2019 00:23:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=exbpjm8R+9VG0LXo53eXq/JhXDU32icBm8b7iAcsrrE=;
-        b=i3Wxe0Y8JvJoL3QnoADXcbxDv88kne5wunme+8tkCLtTL3j2tqfyp+VwrrZebF1isY
-         Brh7RO0jsJGPGoHnCMR7FQ+VylzZLWfSjPf2H0/93/PJ5a2KvZ8+6tGm96R07nrbzDwA
-         JAGaKDCw+Xb4AoX325e/FlU56e38gy0UAvhXle76xejbm/9VEn/NUBi9FfQcS5RJDs0C
-         QOmt0uq0bF6X5Lxvv3CRTZ49I4X6vZndAKjHY6AMcn/5Rp4waqjAncohIsma5JDXcPpB
-         xEaAIm5raBYfF8pplLUEAdiKXCBQ2jd3S/uqrWtlhO8rG6SBql/rTlBAz8Dp1OPJ1ExD
-         659g==
-X-Gm-Message-State: APjAAAX7REPno25mLqC2Efe1F6g9brc3bOEHL0iAY8q34RF7AenoqP9W
-        SiU/vr2MtoS3cZooeGXgAXkNol8ZnbwqI1r1KRA=
-X-Google-Smtp-Source: APXvYqyNXKUrqWbQ3GKR/KvwCtjIAXctgLXNr5s7v9TX4B69OhYh51yZVdBnhbmzbfErcyqtCy7X45zpE7TsSY5A/m4=
-X-Received: by 2002:a05:6830:2141:: with SMTP id r1mr79413312otd.39.1577780633088;
- Tue, 31 Dec 2019 00:23:53 -0800 (PST)
+        Tue, 31 Dec 2019 03:31:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35274 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725536AbfLaIbR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 03:31:17 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D6EE206DB;
+        Tue, 31 Dec 2019 08:31:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577781076;
+        bh=rvMR+E9omx4eCaqSUjlIrwJ0PKoCXLsH6vsG5WrM0jA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2MTQVTjLkNboVCVdRdsrDI8w3KmvExh+24BuU8xlw8yAzBuQbWEIMTupedv/Y//WM
+         Depsi/TCA9b+N9ELGzvn8AySLcin5u/QbP0wwGsxQfvXOrn9IE+dGRs6JWYFAHnTTw
+         XQmLIcS+jdgHH77M4cka+38/KEg7LqI2c3rNOZj0=
+Date:   Tue, 31 Dec 2019 09:31:14 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 5.4 000/434] 5.4.7-stable review
+Message-ID: <20191231083114.GB1928116@kroah.com>
+References: <20191229172702.393141737@linuxfoundation.org>
+ <43686be4-0ea2-472f-8b8f-2c69e16de96d@nvidia.com>
 MIME-Version: 1.0
-References: <20191116005240.15722-1-robh@kernel.org> <20191116005240.15722-3-robh@kernel.org>
- <CAMuHMdX20LvK2o1cZJ8q83Q08JQzH6L07gmqBm0V0xSc5GHk4A@mail.gmail.com> <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 31 Dec 2019 09:23:41 +0100
-Message-ID: <CAMuHMdXBVyutji67Ladvoh3NhrPNTYfAKS4pmOQcOouZGokYvQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: PCI: Convert generic host binding to DT schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Will Deacon <will@kernel.org>,
-        David Daney <david.daney@cavium.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <43686be4-0ea2-472f-8b8f-2c69e16de96d@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Mon, Dec 30, 2019 at 08:20:41PM +0000, Jon Hunter wrote:
+> 
+> On 29/12/2019 17:20, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.4.7 release.
+> > There are 434 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Tue, 31 Dec 2019 17:25:52 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.7-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> > -------------
+> 
+> All tests are passing for Tegra ...
+> 
+> Test results for stable-v5.4:
+>     13 builds:	13 pass, 0 fail
+>     22 boots:	22 pass, 0 fail
+>     38 tests:	38 pass, 0 fail
+> 
+> Linux version:	5.4.7-rc1-g6bc086f94af5
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra30-cardhu-a04
+> 
 
-On Tue, Dec 31, 2019 at 12:30 AM Rob Herring <robh@kernel.org> wrote:
-> On Thu, Dec 12, 2019 at 7:41 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Sat, Nov 16, 2019 at 1:53 AM Rob Herring <robh@kernel.org> wrote:
-> > > Convert the generic PCI host binding to DT schema. The derivative Juno,
-> > > PLDA XpressRICH3-AXI, and Designware ECAM bindings all just vary in
-> > > their compatible strings. The simplest way to convert those to
-> > > schema is just add them into the common generic PCI host schema.
-> > >
-> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > Cc: Andrew Murray <andrew.murray@arm.com>
-> > > Cc: Zhou Wang <wangzhou1@hisilicon.com>
-> > > Cc: Will Deacon <will@kernel.org>
-> > > Cc: David Daney <david.daney@cavium.com>
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> >
-> > > index 515b2f9542e5..000000000000
-> > > --- a/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
-> > > +++ /dev/null
-> >
-> > > -Example:
-> > > -
-> > > -    pcie1: pcie@7f000000 {
-> > > -        compatible = "socionext,synquacer-pcie-ecam", "snps,dw-pcie-ecam";
-> > > -        device_type = "pci";
-> > > -        reg = <0x0 0x7f000000 0x0 0xf00000>;
-> > > -        bus-range = <0x0 0xe>;
-> > > -        #address-cells = <3>;
-> > > -        #size-cells = <2>;
-> > > -        ranges = <0x1000000 0x00 0x00010000 0x00 0x7ff00000 0x0 0x00010000>,
-> > > -                 <0x2000000 0x00 0x70000000 0x00 0x70000000 0x0 0x0f000000>,
-> > > -                 <0x3000000 0x3f 0x00000000 0x3f 0x00000000 0x1 0x00000000>;
-> > > -
-> > > -        #interrupt-cells = <0x1>;
-> > > -        interrupt-map-mask = <0x0 0x0 0x0 0x0>;
-> >
-> > An all-zeroes interrupt-map-mask seems to be very common on embedded
-> > SoCs, where all devices are mapped to a single interrupt.
->
-> Indeed.
->
-> > However, schemas/pci/pci-bus.yaml says:
-> >
-> >   interrupt-map-mask:
-> >     items:
-> >       - description: PCI high address cell
-> >         minimum: 0
-> >         maximum: 0xf800
-> >       - description: PCI mid address cell
-> >         const: 0
-> >       - description: PCI low address cell
-> >         const: 0
-> >       - description: PCI IRQ cell
-> >         minimum: 1
-> >         maximum: 7
-> >
-> > and thus complains about an all-zeroes mask, e.g.
-> >
-> >     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dt.yaml:
-> > pcie@fe000000: interrupt-map-mask:0:3: 0 is less than the minimum of 1
->
-> Now fixed.
+Thanks for testing all of these and letting me know.
 
-Thank you, confirmed.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+greg k-h
