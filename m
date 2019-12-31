@@ -2,102 +2,74 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A05AC2D0DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 10:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C92BC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 11:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6327A206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 10:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D533E206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 11:01:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="D8k1qtJI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfLaKlT (ORCPT
+        id S1727068AbfLaLBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 05:41:19 -0500
-Received: from mga12.intel.com ([192.55.52.136]:33889 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbfLaKlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 05:41:18 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Dec 2019 02:41:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,379,1571727600"; 
-   d="scan'208";a="220913973"
-Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.159.39])
-  by orsmga006.jf.intel.com with ESMTP; 31 Dec 2019 02:41:13 -0800
-Date:   Tue, 31 Dec 2019 18:40:36 +0800
-From:   Philip Li <philip.li@intel.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [kbuild-all] Re: [PATCH 2/7] misc: pci_endpoint_test: Do not
- request or allocate IRQs in probe
-Message-ID: <20191231104036.GB26177@intel.com>
-References: <20191230123315.31037-3-kishon@ti.com>
- <201912310039.Jef27rlg%lkp@intel.com>
- <b561503f-a753-7750-2a43-78509755eb83@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b561503f-a753-7750-2a43-78509755eb83@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 31 Dec 2019 06:01:04 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:12639 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726643AbfLaLBD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 06:01:03 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577790063; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=m61M2js+jrSrrH/126W/2QGGPCgkQ9DaoPMsFQSdJlM=; b=D8k1qtJIYqF6Ck66ToP/Og2Ef2YgE45X5F1bgKEWGy4qpPAXSPwY+msab8BRpz1e9qrhgZOa
+ 7OchX5rH23ETVNDxab799BgFjo/y7y41oSh0MVD5u4SK5VBJHF4gGgCEyy74GAcJY3ZhbmAB
+ S9u/aheVWt9p6mYbJ7iLdt4tE2U=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e0b2a6c.7fca16f85ed8-smtp-out-n02;
+ Tue, 31 Dec 2019 11:01:00 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2F4D9C4479C; Tue, 31 Dec 2019 11:00:59 +0000 (UTC)
+Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1F234C433CB;
+        Tue, 31 Dec 2019 11:00:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1F234C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v1 0/2] Add support for IPA clock for SC7180
+Date:   Tue, 31 Dec 2019 16:30:46 +0530
+Message-Id: <1577790048-18263-1-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 31, 2019 at 02:05:15PM +0530, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On 30/12/19 10:40 PM, kbuild test robot wrote:
-> > Hi Kishon,
-> > 
-> > I love your patch! Perhaps something to improve:
-> > 
-> > [auto build test WARNING on char-misc/char-misc-testing]
-> > [also build test WARNING on pci/next arm-soc/for-next linus/master v5.5-rc4 next-20191220]
-> > [if your patch is applied to the wrong git tree, please drop us a note to help
-> > improve the system. BTW, we also suggest to use '--base' option to specify the
-> > base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> > 
-> > url:    https://github.com/0day-ci/linux/commits/Kishon-Vijay-Abraham-I/Improvements-to-pci_endpoint_test-driver/20191230-203402
-> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git d1eef1c619749b2a57e514a3fa67d9a516ffa919
-> > config: arm-randconfig-a001-20191229 (attached as .config)
-> > compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
-> > reproduce:
-> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >         chmod +x ~/bin/make.cross
-> >         # save the attached .config to linux build tree
-> >         GCC_VERSION=7.5.0 make.cross ARCH=arm 
-> > 
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > 
-> > All warnings (new ones prefixed by >>):
-> > 
-> >    In file included from include/linux/kernel.h:11:0,
-> >                     from include/linux/delay.h:22,
-> >                     from drivers/[1] -> http://lore.kernel.org/r/20191209092147.22901-1-kishon@ti.commisc/pci_endpoint_test.c:10:
-> >    drivers/misc/pci_endpoint_test.c: In function 'pci_endpoint_test_probe':
-> >    drivers/misc/pci_endpoint_test.c:73:22: error: 'PCI_DEVICE_ID_TI_J721E' undeclared (first use in this function); did you mean 'PCI_DEVICE_ID_TI_7510'?
-> >       ((pdev)->device == PCI_DEVICE_ID_TI_J721E)
-> 
-> The patches in this series should be merged only after [1]. With that
-> this error wouldn't be seen.
-thanks Kishon for the info, sorry for the false positive.
+Support IPA clock for SC7180 and also handle undefined clock registration
+in clk-rpmh driver.
 
-> 
-> [1] -> http://lore.kernel.org/r/20191209092147.22901-1-kishon@ti.com
-> 
-> Thanks
-> Kishon
-> _______________________________________________
-> kbuild-all mailing list -- kbuild-all@lists.01.org
-> To unsubscribe send an email to kbuild-all-leave@lists.01.org
+Taniya Das (2):
+  clk: qcom: rpmh: skip undefined clocks when registering
+  clk: qcom: rpmh: Add IPA clock for SC7180
+
+ drivers/clk/qcom/clk-rpmh.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
