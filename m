@@ -2,94 +2,139 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDBFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 04:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CC4C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 04:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82BF120730
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 04:08:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asSVrFaS"
+	by mail.kernel.org (Postfix) with ESMTP id 575D8205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 04:18:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbfLaEIR (ORCPT
+        id S1726589AbfLaESS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 23:08:17 -0500
-Received: from mail-pj1-f47.google.com ([209.85.216.47]:37857 "EHLO
-        mail-pj1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbfLaEIR (ORCPT
+        Mon, 30 Dec 2019 23:18:18 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:56552 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbfLaESR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 23:08:17 -0500
-Received: by mail-pj1-f47.google.com with SMTP id m13so710488pjb.2;
-        Mon, 30 Dec 2019 20:08:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=gmHUJOLLaB9uQbD8xdSCvMaI/BTVpj9YMHVwUXulGHY=;
-        b=asSVrFaSM3ptGq2G1MOscGcpUb01d26yJ1MzLhamktRoZQ8FiIByFbu4HdTPDnyuwS
-         1fTRng1wvRzkpGYrqENuhUmdXDUqWJidl8EKK462/b3EMgBvoRCpt3VLzzBU2cZgEms8
-         JRUNiERTzLQltnJJCAy1PRQSqI766WvO0gQ/PqEO7mwVPx4Kl7aQHjoSvRVYGdymAYT/
-         YyKtW9wrzRD6+lnuz8n40iyHhjofP0RamyjZQrwTJMLDozxGLKomLvugc5EU1ZUYAHri
-         K9kKSeiBOL6CFFkrMlmllIle4HgXUTJU682iRuwtttYH98Hl0w06kNpB10iIX19/TFei
-         jGLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=gmHUJOLLaB9uQbD8xdSCvMaI/BTVpj9YMHVwUXulGHY=;
-        b=TJeTzsxF9YzF9Tu3Vw0FhRBNbPf4Ot7XPdwJ2WuGvLP3Z6bOPjFls6uE32KicRMUcl
-         0LE+8R6gjhbrHx9tlHaO+7BXfxuIjXMRKMIS2X8nuwBJsGbzch/3M13yftewq0kxG+TY
-         /Me5fxsyg4Y7Z0rQhqLqdvjfqovUu6BXwdZTIvkBg3RUvUS/KF0yO4W4LiCBEkbMd+Pm
-         FSor9TG1sqwQPeLZOmnQwryotvx3DpDtxe3lhjaz4YcHEAEnOUcVBfc1R1tP7RXqgYPf
-         wUFkdl9YNbRfAg4mnpisI6ANuJKS3YSsP9xtb/YZR3MxGaG4TVusOj9A8E2wW6igSbSA
-         8giw==
-X-Gm-Message-State: APjAAAVIy8CRUDRHsaW7LCJk87zLTsh60++tEKOUrQRpjsJ422iy6h7V
-        ISbJcHDcrkqEokYGQuXLGio=
-X-Google-Smtp-Source: APXvYqwsLEkZt9ztYkbDCkRzSfI9MOyqrR4KZI+qAEuOfLBSooRKkbzRvuewk5oCTkPh9BXzgrJ7tg==
-X-Received: by 2002:a17:902:728b:: with SMTP id d11mr59344353pll.49.1577765296478;
-        Mon, 30 Dec 2019 20:08:16 -0800 (PST)
-Received: from ?IPv6:2804:14d:72b1:8920:da15:c0bd:33c1:e2ad? ([2804:14d:72b1:8920:da15:c0bd:33c1:e2ad])
-        by smtp.gmail.com with ESMTPSA id c184sm54318701pfa.39.2019.12.30.20.08.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Dec 2019 20:08:15 -0800 (PST)
-Subject: Re: [PATCH v2 2/8] Documentation: nfsroot.txt: convert to ReST
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     mchehab+samsung@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-References: <cover.1577681164.git.dwlsalmeida@gmail.com>
- <92be5a49b967ce35a305fc5ccfb3efea3f61a19a.1577681164.git.dwlsalmeida@gmail.com>
- <20191230121807.3a1f5f38@lwn.net>
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-Message-ID: <47e2ea6e-a808-5012-6f9a-8800fbd3be00@gmail.com>
-Date:   Tue, 31 Dec 2019 01:08:11 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Mon, 30 Dec 2019 23:18:17 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1im8z1-0003cH-N5; Tue, 31 Dec 2019 04:18:15 +0000
+Date:   Tue, 31 Dec 2019 04:18:15 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Rob Landley <rob@landley.net>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Subject: Re: Why is CONFIG_VT forced on?
+Message-ID: <20191231041815.GF4203@ZenIV.linux.org.uk>
+References: <9b79fb95-f20c-f299-f568-0ffb60305f04@landley.net>
+ <b3cf8faf-ef04-2f55-3ccb-772e18a57d7b@infradead.org>
+ <ac0e5b3b-6e70-6ab0-0c7f-43175b73058f@landley.net>
+ <e55624fa-7112-1733-8ddd-032b134da737@infradead.org>
+ <018540ef-0327-78dc-ea5c-a43318f1f640@landley.net>
+ <774dfe49-61a0-0144-42b7-c2cbac150687@landley.net>
+ <20191231024054.GC4203@ZenIV.linux.org.uk>
+ <20191231025255.GD4203@ZenIV.linux.org.uk>
+ <ffa8ec1d-71d7-a153-eed9-8e2daee40949@landley.net>
+ <20191231035319.GE4203@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20191230121807.3a1f5f38@lwn.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191231035319.GE4203@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jon, thanks for the review.
+On Tue, Dec 31, 2019 at 03:53:19AM +0000, Al Viro wrote:
+> On Mon, Dec 30, 2019 at 09:27:50PM -0600, Rob Landley wrote:
+> 
+> > > Your complaint is basically that the same thing is forcing all of those on
+> > > in default configs.
+> > 
+> > No, my complaint was that kconfig basically has the concept of symbols that turn
+> > _off_ something that is otherwise on by default ("Disable X" instead of "Enable
+> > X"), but it was implemented it in an awkward way then allowed to scale to silly
+> > levels, and now the fact it exists is being used as evidence that it was a good
+> > idea.
+> 
+> Where and by whom?
+> 
+> > I had to work out a way to work around this design breakage, which I did and had
+> > moved on before this email, but I thought pointing out the awkwardness might
+> > help a design discussion.
+> 
+> What design discussion?  Where?
+> 
+> > My mistake.
+> 
+> Generally a passive-aggressive flame (complete with comparisons to INTERCAL)
+> and not a shred of reference to any design issues in it tends to
+> be rather ineffecient way to start such discussion...
+> 
+> > The thread _started_ because menuconfig help has a blind spot (which seemed like
+> > a bug to me, it _used_ to say why), and then I found the syntax you changed a
+> > year or two back non-obvious when I tried to RTFM but that part got answered.
+> 
+> _I_ have changed???  What the hell?  I have never touched kconfig syntax in any
+> way; what are you talking about?  Care to post commit IDs in question?
 
+BTW, in 2.6.12 drivers/char/Kconfig has
+config VT
+	bool "Virtual terminal" if EMBEDDED
 
-Would you please rephrase this? My first language isn't English and I am 
-not sure I understood that.
+so the syntax appears to be identical all way back to 2005.  Going to the historical
+tree, we have
+commit eda30c2b338cdc099951f45eb45d1ce7055706e3
+Author: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Date:   Thu Jul 31 05:15:05 2003 -0700
 
-> It's best in general to avoid refilling paragraphs so as to make it clear
-> what is being changed.  But we would also like to avoid creating such long
-> lines.  Perhaps an add-on patch refilling things would satisfy both
-> criteria here.
+    [PATCH] console on by default if not embedded (save mucho pain)
+    
+    (Andi Kleen)
 
+diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
+index f0ce5d7473ad..d16c54b65102 100644
+--- a/drivers/char/Kconfig
++++ b/drivers/char/Kconfig
+@@ -5,8 +5,9 @@
+ menu "Character devices"
+ 
+ config VT
+-       bool "Virtual terminal"
++       bool "Virtual terminal" if EMBEDDED
+        requires INPUT=y
++       default y
 
+So application of that particular syntax to VT goes back to 2003.  I've no idea
+how far back the syntax itself goes.
 
+One change that might be relevant appears to have happened circa 3.15, when
+allnoconfig started playing odd games with EXPERT; bisect points to
+commit 5d2acfc7b974bbd3858b4dd3f2cdc6362dd8843a
+Author: Josh Triplett <josh@joshtriplett.org>
+Date:   Mon Apr 7 15:39:09 2014 -0700
+
+    kconfig: make allnoconfig disable options behind EMBEDDED and EXPERT
+
+Mind explaining what exactly are you talking about and how exactly have
+I been involved in it?  My only involvement with kconfig (thorough all
+its history) had been
+commit 6b87b70c5339f30e3c5b32085e69625906513dc2
+Author: Al Viro <viro@ZenIV.linux.org.uk>
+Date:   Thu Jan 14 18:13:49 2016 +0000
+
+    unbreak allmodconfig KCONFIG_ALLCONFIG=...
+and
+commit ce97e13e52848c6388598696b7d44748598db759
+Author: Al Viro <viro@ZenIV.linux.org.uk>
+Date:   Sun Oct 26 05:12:34 2008 +0000
+
+    fix allmodconfig breakage
+
+Neither of those has happened within the last couple of years and if either
+has caused any breakage relevant to whatever you are doing, I would rather
+hear details.  Certainly no syntax changes had been intended by either
+commit and rereading those I see no likely candidates.
