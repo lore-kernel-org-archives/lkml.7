@@ -2,210 +2,148 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C23C2D0DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 16:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B10C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 16:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC9A205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 16:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E0A9205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 16:15:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="IFjjpyeF"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="SYjdUsh3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727173AbfLaQMl (ORCPT
+        id S1727149AbfLaQPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 11:12:41 -0500
-Received: from mail-co1nam11on2109.outbound.protection.outlook.com ([40.107.220.109]:50689
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727071AbfLaQMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 11:12:41 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mfpMXs7L8ZyZtu3yrPtfPephUmqBb4UItFIIeDEGWT3yd1LYueTO/IO3uqVtY/kz3Wtw1pXlQILHGcqGN5gg28+FQMLxO/O3TfMBeH3rCN+Jbp0WmM3cfxM1QcDV92lkK6G+XmADB60tAh3Nih1zzxO8aTUYtAvKUONmqPLvz6455JtYnr/neSfkJ9t9ryONCFsDySxr8NIeRmuXOdyGFDWoHLBix/etjacMunq0ftT6lZEfrYJtHO4ngzsGjBwm9Z2tPmUH96g7bjrp/A3S9lf/Pkcp8YV5rqZd/XB5csG9B9Lhv5Ydm+j5RvZ/PTKac1BTkG6TZI6FGJSogWViiQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DFcOrsJWnhnWYE1Bm2mQ89IikbOPI+LdbnjuXoMNZUU=;
- b=fk91IKmEXZPmYrI5+GwfkzJdUCOJaNBKwnYuRWO/mvA1vDuKAJYRUDMsk7wEMTrSzj870K2dfvwM3FbXjxMex83th/CFyTGgOnfoNK0w4wAMMt9H2Z1/KdE1Q8tHDhxWklvjWm9Eodvwn+RP7wisNo0SRWArKA2wFNfwJpg4EffbQeZIx+7KBtZriUTxW2Zi9XllqtLaBhl7yOOpDj4nqiGRseCkQpKxPmifSn7nfRm2KHWoSVQgSu0UK6sfKluf8S819jLl/lFG3O1KGqtzv3HTgWMHLDH9TmUUTtCTwVbd9tjgnafH6rIh7ciosh6lYOWEQgUHkKrH8EZF6MxJuQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DFcOrsJWnhnWYE1Bm2mQ89IikbOPI+LdbnjuXoMNZUU=;
- b=IFjjpyeFG+agROQP5Z/qmHFNTQyVSzR100qtA7/OTEF/MAH1sFh/tqvYVYA3sA2xUWeCKjygSWhTmOJ3o7WnngoxCyvmZoBU4Sox1+KSDoZZA5/5OhbHOh9tOAv2CLxeAvX08+LJCJ2NoPKfcfwcdT2IjdJ/Sz733vLGPlpHzAk=
-Received: from MN2PR21MB1375.namprd21.prod.outlook.com (20.179.23.160) by
- MN2PR21MB1215.namprd21.prod.outlook.com (20.179.20.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.8; Tue, 31 Dec 2019 16:12:36 +0000
-Received: from MN2PR21MB1375.namprd21.prod.outlook.com
- ([fe80::6de3:c062:9e55:ffc4]) by MN2PR21MB1375.namprd21.prod.outlook.com
- ([fe80::6de3:c062:9e55:ffc4%5]) with mapi id 15.20.2623.002; Tue, 31 Dec 2019
- 16:12:36 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Roman Kagan <rkagan@virtuozzo.com>
-CC:     "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH V2,net-next, 3/3] hv_netvsc: Name NICs based on vmbus
- offer sequence and use async probe
-Thread-Topic: [PATCH V2,net-next, 3/3] hv_netvsc: Name NICs based on vmbus
- offer sequence and use async probe
-Thread-Index: AQHVv027GHCeFuKLhUO4V+gfj0XECKfUHfwAgABK1lA=
-Date:   Tue, 31 Dec 2019 16:12:36 +0000
-Message-ID: <MN2PR21MB1375D41039A8A68A2117DDFCCA260@MN2PR21MB1375.namprd21.prod.outlook.com>
-References: <1577736814-21112-1-git-send-email-haiyangz@microsoft.com>
- <1577736814-21112-4-git-send-email-haiyangz@microsoft.com>
- <20191231113440.GA380228@rkaganb.sw.ru>
-In-Reply-To: <20191231113440.GA380228@rkaganb.sw.ru>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-31T16:12:35.0522984Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4b094d31-eadc-468c-a104-560efbd636a0;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haiyangz@microsoft.com; 
-x-originating-ip: [96.61.92.94]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7b083eab-7ba7-40c9-9d05-08d78e0c406a
-x-ms-traffictypediagnostic: MN2PR21MB1215:|MN2PR21MB1215:|MN2PR21MB1215:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MN2PR21MB12153412C5C71AFF16615EB0CA260@MN2PR21MB1215.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0268246AE7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(346002)(376002)(136003)(396003)(366004)(13464003)(199004)(189003)(66446008)(66946007)(64756008)(66556008)(66476007)(81166006)(8936002)(8676002)(81156014)(33656002)(10290500003)(4326008)(9686003)(55016002)(5660300002)(71200400001)(54906003)(76116006)(316002)(8990500004)(2906002)(6916009)(52536014)(6506007)(186003)(7696005)(478600001)(86362001)(26005)(53546011);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR21MB1215;H:MN2PR21MB1375.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: reKVrnE/IFhKI/yltPr9es2FQS+C1eBSnS/kP4a2UKDhCxWOYSBbMhH2vI5bMSjzMsNtoluZJsLk7qmIDmR0EqCHmeKZE5OvPlrYUrcobofA+6wZiuxvKMB1uREb4XUy2UyV5hRo4O0Ue2Ha+m5S9szmVoSZ4+qedUAZAFUhTWbt5IASrlMdvL8rtD34T14wnPFcJEMkGQHXSeOZpNbZmHlNHYI5gwALg/J+f1/0w9jVixil+8epNWsVb/2xl1tudJ1IrExZp0loJKxKTAYp6IloWDWmd9l9j9l5Z2atw2jPorJ3Zg8+3I/uom0DiSOJuv2mUYkd3AeRmHWZmjuhiX2BEF90DSEGez7pFTl79W/lOzkvIiBQN8eE0mFf5V1vRXj6XlT33uDS7ugHO5GBlA4KbiiM4R5gelv11AyfNNs7Njj516848XaUE+TaccYmBaB74pEvpXtFqL+MmHZe/WTPpRJVVIRH3NUr3bnvxOJaYGCwJvsvYUZr98oxFhre
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 31 Dec 2019 11:15:13 -0500
+Received: from mout.gmx.net ([212.227.15.18]:59211 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727064AbfLaQPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 11:15:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1577808910;
+        bh=OtAgXsVaxSz45qKCSAsIJHX4jeOwSjqGKiMpwOqHY9o=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=SYjdUsh35lXhD1ZcDXDOSehzkAp/f7k0cBC5YzvJc8CCBLBqM7M9VXv2Ilf6F3SmL
+         NZuaulBxf1ztZJDycRe/j5fg9vUFJcd6BKD6S2wBdrDdbqqeNfyEV4xESqpeGikjKp
+         C5KcJbrQOOq2ltB1LJh5Yn73zl3P/ow4AEvIMYRU=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.178.24] ([77.10.141.27]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mel7v-1jMTwB06h3-00aoWi; Tue, 31
+ Dec 2019 17:15:10 +0100
+Subject: Re: BTRFS with kernel 5.4.1: df -h shows 0 Bytes available but btrfs
+ tells me that there are 1.06 TiB free
+To:     Chris Murphy <lists@colorremedies.com>
+Cc:     "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+References: <9df7f98b-271f-8b1d-f360-00a737d49911@gmx.de>
+ <CAJCQCtSWW4ageK56PdHtSmgrFrDf_Qy0PbxZ5LSYYCbr3Z10ug@mail.gmail.com>
+From:   =?UTF-8?Q?Toralf_F=c3=b6rster?= <toralf.foerster@gmx.de>
+Autocrypt: addr=toralf.foerster@gmx.de; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <6c75e143-bae0-3057-f97b-eba9e7a068f6@gmx.de>
+Date:   Tue, 31 Dec 2019 17:15:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b083eab-7ba7-40c9-9d05-08d78e0c406a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Dec 2019 16:12:36.5346
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tlH+l21cTlzIAzjJs2gJzOo4/jeJF1T2JSvjUHdaxgqwiuWRaeJJs+93ud1+opWT+/yn+EUBs0lLHenvo5FuVA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1215
+In-Reply-To: <CAJCQCtSWW4ageK56PdHtSmgrFrDf_Qy0PbxZ5LSYYCbr3Z10ug@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:az3bPQtvYBF6Iyejbp5i3ZJCA/ey7gFZEqsIyjhH9zxBuwXEnyE
+ KmM9pC1cCT+NGHVrzsFM+D4Xx0EEanJXA0zzBQKq4eYLlzxdwBgYa6kaSOkY0Gzmut3qhuM
+ G4jDNPCfrNwIxvyfbjql8YV4ZPJvGFvcovfWz04npx9bl5M58+7QM5/iEBLFiradD8gJhZv
+ Wih3gmZH+o6yN6i/swcrg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:c6ha+UPxl54=:pdLMqm6pMB2jfkykQeakTQ
+ u84Hrr8/gw6dgFuVJbee3JC2sJKpaR7N6GUSEaDJKhk+7hP+SLpD5He/MQeM/jq0AYP5FHZCV
+ dunUmNHQ5j8QUWPndM0YkRChWGj2GKwA91I3DtqFV2WbH1lmZ0+xWhR1yGkdUrmKtkN6n0/Z5
+ rTNNEau0Ye0ODkbTwwrPi9J7SnetpEs5V9KuD2N90ZTsOfdAW1PbOUOrhjAUTcbTM4bEq+kiG
+ IWK1G0vtP1yhYeDYKfW33Hl2IxJjeRQ9Cd8xy0+WuybNh7Rh28BvcP3PYaU1lBOKsuXCnqftG
+ YaaX3cuYlvDN/ayqyBKgLijhnMkqz52Q7nzLc50fy6A6M4zlkNzeeZQWaimZVPNxneynyNv8H
+ QoQATN0FjXJzIjdpZTk5ty7aStTh6F/vJGByuyXkA7HN0x60GUmMjr3VPdpn9Q4u+6zNDlXOl
+ 6xRm7lBAZ+Mt8Ha5b69tuhMvf6EELS+H3e3gW5HXHnJceaRYZi/FRhIpIqAC6UOtadSCIyfUp
+ xDHUJwGuuvc6mrurrwGSFJ8CWtBF//UiHCJDJmk7d6/LPSp7trhtP8FCQtISKWpPxYsikpQWM
+ 7vSNIhTs0rzFGOe+rsnHqiqYdFtBRrq6PQpAj5WoB9p2fnrOK7EUpC+uCHXCNCySM4y9thNBL
+ w8cfo5sYwzBc0xu10jUG3x92/Xh2Ugpa83cWXWVQ9QEM3DE2u9Ub3fL0ewXfZqPpUdEAf48E/
+ dgTWcDqOgt4GMoA20qnFHc1hLLFqMJTV1+p4p27ecZxMOFTWWWbj6siGAmr/VUkz1fg54ortG
+ CRgvGv9TkHn4oCr1uCLw0ZCD83jCWZqQleGbVp/76ohetL0Ikjd4W+CeKwZF/78iSBAjwjYDG
+ PsxubcUvGwZvVzOnUXZty2JaiqeNAhuhf6psOlZP4i/wGDvtUeWstGrwbdHCSBjtKkLuWt3wF
+ 8UdDJ65md2nRKDhvwjN1MEDtFBfcMI4H1fyte6U75wi9x1pEVGNOn/gVR/h8jMNiwmNtC4IaB
+ KaFbc0qaicqqEWazlpwpdD+D+d0SgzDrGH4S6gKWKGCZLCvNxLADMCSSrbzfemNnucAs47scb
+ kvmQCJg0lMPPwLNGYrUPNUr3tOXHljSE5g57655KWqJO8dFvo6dnDgRrRawb71zfBecOk4L4e
+ AOWhPOurB8xeJmongbQWA58uezeGAMe74YeKO78ini2QA4naVsbRyNYHCm0mMuxhsRlBNBsmi
+ bX6HQJFh49KdvVOrDZz/2AN3usJaZO9GE51WGwMtsZV8BwLzsP3KAxT+fyjk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/11/19 7:58 PM, Chris Murphy wrote:
+> Hi,
+>
+> Yes this is being discussed in two other threads:
+>
+> "df shows no available space in 5.4.1"
+> "100% disk usage reported by "df", 60% disk usage reported by "btrfs
+> fi usage" - this breaks userspace behaviour"
+>
+> Seems pretty clear there is a bug, it just needs to be located and fixed=
+.
+>
+> --
+> Chris Murphy
+>
 
+I checked the git log of the stable kernel v5.4..v5.4.7 but it seems this =
+issue is not yet addressed in the stable tree, or?
 
-> -----Original Message-----
-> From: Roman Kagan <rkagan@virtuozzo.com>
-> Sent: Tuesday, December 31, 2019 6:35 AM
-> To: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: sashal@kernel.org; linux-hyperv@vger.kernel.org; netdev@vger.kernel.o=
-rg;
-> KY Srinivasan <kys@microsoft.com>; Stephen Hemminger
-> <sthemmin@microsoft.com>; olaf@aepfle.de; vkuznets
-> <vkuznets@redhat.com>; davem@davemloft.net; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH V2,net-next, 3/3] hv_netvsc: Name NICs based on vmbus
-> offer sequence and use async probe
->=20
-> On Mon, Dec 30, 2019 at 12:13:34PM -0800, Haiyang Zhang wrote:
-> > The dev_num field in vmbus channel structure is assigned to the first
-> > available number when the channel is offered. So netvsc driver uses it
-> > for NIC naming based on channel offer sequence. Now re-enable the
-> > async probing mode for faster probing.
-> >
-> > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > ---
-> >  drivers/net/hyperv/netvsc_drv.c | 18 +++++++++++++++---
-> >  1 file changed, 15 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/net/hyperv/netvsc_drv.c
-> > b/drivers/net/hyperv/netvsc_drv.c index f3f9eb8..39c412f 100644
-> > --- a/drivers/net/hyperv/netvsc_drv.c
-> > +++ b/drivers/net/hyperv/netvsc_drv.c
-> > @@ -2267,10 +2267,14 @@ static int netvsc_probe(struct hv_device *dev,
-> >  	struct net_device_context *net_device_ctx;
-> >  	struct netvsc_device_info *device_info =3D NULL;
-> >  	struct netvsc_device *nvdev;
-> > +	char name[IFNAMSIZ];
-> >  	int ret =3D -ENOMEM;
-> >
-> > -	net =3D alloc_etherdev_mq(sizeof(struct net_device_context),
-> > -				VRSS_CHANNEL_MAX);
-> > +	snprintf(name, IFNAMSIZ, "eth%d", dev->channel->dev_num);
->=20
-> How is this supposed to work when there are other ethernet device types o=
-n the
-> system, which may claim the same device names?
->=20
-> > +	net =3D alloc_netdev_mqs(sizeof(struct net_device_context), name,
-> > +			       NET_NAME_ENUM, ether_setup,
-> > +			       VRSS_CHANNEL_MAX, VRSS_CHANNEL_MAX);
-> > +
-> >  	if (!net)
-> >  		goto no_net;
-> >
-> > @@ -2355,6 +2359,14 @@ static int netvsc_probe(struct hv_device *dev,
-> >  		net->max_mtu =3D ETH_DATA_LEN;
-> >
-> >  	ret =3D register_netdevice(net);
-> > +
-> > +	if (ret =3D=3D -EEXIST) {
-> > +		pr_info("NIC name %s exists, request another name.\n",
-> > +			net->name);
-> > +		strlcpy(net->name, "eth%d", IFNAMSIZ);
-> > +		ret =3D register_netdevice(net);
-> > +	}
->=20
-> IOW you want the device naming to be predictable, but don't guarantee thi=
-s?
->=20
-> I think the problem this patchset is trying to solve is much better solve=
-d with a
-> udev rule, similar to how it's done for PCI net devices.
-> And IMO the primary channel number, being a device's "hardware"
-> property, is more suited to be used in the device name, than this complet=
-ely
-> ephemeral device number.
-
-The vmbus number can be affected by other types of devices and/or subchanne=
-l
-offerings. They are not stable either. That's why this patch set keeps trac=
-k of the=20
-offering sequence within the same device type in a new variable "dev_num".
-
-As in my earlier email, to avoid impact by other types of NICs, we should p=
-ut them
-into different naming formats, like "vf*", "enP*", etc. And yes, these can =
-be done in
-udev.
-
-But for netvsc (synthetic) NICs, we still want the default naming format "e=
-th*". And
-the variable "dev_num" gives them the basis for stable naming with Async pr=
-obing.
-
-Thanks,
-- Haiyang
-
+=2D-
+Toralf
