@@ -2,104 +2,190 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B780DC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 11:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15545C2D0DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 11:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC7320409
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 11:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0E7420409
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 11:35:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MHqSgTK5"
+	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="mpNgr/Tw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfLaLes (ORCPT
+        id S1727256AbfLaLfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 06:34:48 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:32842 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727121AbfLaLeq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 06:34:46 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBVBYHGs097830;
-        Tue, 31 Dec 2019 05:34:17 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577792057;
-        bh=wyWNxMP+yMhE2vhg63JvjcfQkIOPbmIBjduJwe6FrHA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=MHqSgTK5pL83EbaxttUKDQWDjwyKXlVMYbglNHVZ0qkO9XVsmr4QHJFIjAK4Noimo
-         7wG375clbDJ/tHkNGuzmVBeoj470VECaxsoFDay3H6uhjOmstQheQqy37JV2xDjYsr
-         3+1Z52ijtA7UB9qHEGXy7IAnlWdHyAG8Vx1rrmxM=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBVBYHQB091197
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 31 Dec 2019 05:34:17 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 31
- Dec 2019 05:34:17 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 31 Dec 2019 05:34:17 -0600
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBVBXX38024759;
-        Tue, 31 Dec 2019 05:34:11 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-doc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH 7/7] misc: pci_endpoint_test: Populate sriov_configure ops to configure SR-IOV device
-Date:   Tue, 31 Dec 2019 17:05:34 +0530
-Message-ID: <20191231113534.30405-8-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191231113534.30405-1-kishon@ti.com>
-References: <20191231113534.30405-1-kishon@ti.com>
+        Tue, 31 Dec 2019 06:35:38 -0500
+Received: from mail-he1eur04hn2080.outbound.protection.outlook.com ([52.101.137.80]:48355
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726659AbfLaLfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 06:35:38 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j+UzeDrneiApAIVpCay4uAI96cb+HIWHOErJ+yfrOjikPptQAHokk+UiBe/nkUXsKd2+WarT+Ia0vsIm/KVSg7JmK0eN8UHV4Qtj2dDB00730U4gYq7XhAlRsIR3Eact1d9Oul3yLFP1Pvwe5D8opbuk87EuaKlTWFmvvdaFPX0Cv+plE+hCWGA3+UwOwtIB5Yq2vHY7uphv0C1LKQUSFl+W0njjXpSGqE6Z50sscfxKxcZYUcdOeyFge5ey22Jkr2JtJddZFYqYUceWW1nZke/jELH/hVXowQdlu/DQqaBNNm/oJCXTatXLsUiU5WP0+uH+GEWRSvVJsvUQZECSDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dLS1qIm9Xr7h8dtoVOkjJQC7YykMD5LDx6JoRXpPelw=;
+ b=aCQGRZ5pCDm1SCLdiPVldduHGd90s5Lkq61ABLqm5E+9YJoyNyT2ORGtAh5+u6gPy4AdKlah1iOoVkFXOlWduq5WDVNq0xKhO8GDyvH6kpvRQ2Fntnj0tyomLZ0NPnj4bBJ/qPz6sh+HH6f/g8jXjR6scXcA9I0N1bfhTU2tVVWhLbU1Ab1gLO4gjnnOmm6UBtf1Ll4F1uee/MAVTVN5yg8ZSHr+knjvkp7fWgOmFW5XAr/kqVUajh+b/ZgSbn/N8ExrGK3byu8/3aQp50VIVthBS0iKkR2kWZsVMBsfJWvDTopATWeagK4ZZTReAOF2cr1ipDRDRAiNTtfAy/e6tQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
+ header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dLS1qIm9Xr7h8dtoVOkjJQC7YykMD5LDx6JoRXpPelw=;
+ b=mpNgr/TwI9oDm6neeHEmmkNV1gVqxp92r+97gT4A533z45RDRAK7+LrILwJRkjLIRFYCL1aprF0iht9UNtcdUEMBeKaimJPVK/F7UwyI68QsBSMrU9jeXxlV+iFavyfo4/baoLekd/qJwAJaoDT/SY70URh4iVdIUXE1zuYFJkE=
+Received: from VI1PR08MB4608.eurprd08.prod.outlook.com (20.178.80.22) by
+ VI1PR08MB3439.eurprd08.prod.outlook.com (20.177.59.82) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2581.12; Tue, 31 Dec 2019 11:34:44 +0000
+Received: from VI1PR08MB4608.eurprd08.prod.outlook.com
+ ([fe80::acb0:a61d:f08a:1c12]) by VI1PR08MB4608.eurprd08.prod.outlook.com
+ ([fe80::acb0:a61d:f08a:1c12%7]) with mapi id 15.20.2581.007; Tue, 31 Dec 2019
+ 11:34:44 +0000
+Received: from rkaganb.sw.ru (185.231.240.5) by HE1P189CA0008.EURP189.PROD.OUTLOOK.COM (2603:10a6:7:53::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.10 via Frontend Transport; Tue, 31 Dec 2019 11:34:43 +0000
+From:   Roman Kagan <rkagan@virtuozzo.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+CC:     "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "kys@microsoft.com" <kys@microsoft.com>,
+        "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2,net-next, 3/3] hv_netvsc: Name NICs based on vmbus
+ offer sequence and use async probe
+Thread-Topic: [PATCH V2,net-next, 3/3] hv_netvsc: Name NICs based on vmbus
+ offer sequence and use async probe
+Thread-Index: AQHVv03LHhmTIWa4QkCi/JM0N1XuXafUHfgA
+Date:   Tue, 31 Dec 2019 11:34:44 +0000
+Message-ID: <20191231113440.GA380228@rkaganb.sw.ru>
+References: <1577736814-21112-1-git-send-email-haiyangz@microsoft.com>
+ <1577736814-21112-4-git-send-email-haiyangz@microsoft.com>
+In-Reply-To: <1577736814-21112-4-git-send-email-haiyangz@microsoft.com>
+Accept-Language: en-US, ru-RU
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+mail-followup-to: Roman Kagan <rkagan@virtuozzo.com>,   Haiyang Zhang
+ <haiyangz@microsoft.com>, sashal@kernel.org,   linux-hyperv@vger.kernel.org,
+ netdev@vger.kernel.org,        kys@microsoft.com, sthemmin@microsoft.com,
+ olaf@aepfle.de,        vkuznets@redhat.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+x-originating-ip: [185.231.240.5]
+x-clientproxiedby: HE1P189CA0008.EURP189.PROD.OUTLOOK.COM (2603:10a6:7:53::21)
+ To VI1PR08MB4608.eurprd08.prod.outlook.com (2603:10a6:803:c0::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=rkagan@virtuozzo.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4fc0f803-5cef-4acf-90c0-08d78de56ec3
+x-ms-traffictypediagnostic: VI1PR08MB3439:|VI1PR08MB3439:|VI1PR08MB3439:
+x-microsoft-antispam-prvs: <VI1PR08MB3439EDA69115A7AA246AFD85C9260@VI1PR08MB3439.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0268246AE7
+x-forefront-antispam-report: SFV:SPM;SFS:(10019020)(346002)(39840400004)(376002)(366004)(136003)(396003)(199004)(189003)(55016002)(66476007)(478600001)(66446008)(4326008)(66556008)(33656002)(5660300002)(64756008)(66946007)(9686003)(6506007)(7416002)(86362001)(52116002)(6916009)(8936002)(956004)(81166006)(7696005)(54906003)(71200400001)(186003)(316002)(26005)(8676002)(36756003)(2906002)(16526019)(1076003)(81156014)(30126003);DIR:OUT;SFP:1501;SCL:5;SRVR:VI1PR08MB3439;H:VI1PR08MB4608.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;CAT:OSPM;
+received-spf: None (protection.outlook.com: virtuozzo.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: zIhszu+VGE6/aaBr3RPCxV+yjuEoKwTIJ3W5C2ax1tT8NpnRRt4aUH25wsMq3OMlVFI6rqNT462avneG44Tpc6KWcbjCPDC0EQSJwgYN2GRfwJ9/uvswkDQblkd3HBvkThqYJQjM8iVhMac1EiEugDTXAgIWGZuVYMl74Lg+7L0KUmBwNqnn2EJaDTpjkBhs9XJQUWVaUl4eiM512MN/2JXtEhEo10S2/5yZH4abnUCFhRSBn9cILiFiNYBXvOHEJxaZDHaOP5xeQoAPlQoGwz55QCuYsEPCIJdH5Yvlcv/nEWNs/MbXGPEKYRgIUALLhuQLcDu0+nq+TU8QiI/E+RU7KFDTy5QFuMTmW8mizw2AZ+EW3SBvBc3OBY++R8XzzIssUw6mH/hbEN9+NGfG+IJag3qKZxZWjkSMcup69IG29+aZavXaEZy5N/LH39gsfQ07XuJ3nr+RsIb00CML4l9p3Y2ihyGmYFaWHruUpUThZ00JfWBnunLl/Z8U/EnUoYmXpmCxhq0Ifz/fm7Kv21956AGkALVnxbtFsckukxSmsZ64j+rjqn6pGJiXKILA9D3INL5l+O/uSitrnnzc4Tl1hh/5d+PMYgDFlEE80S5DN0Ztt80m0EETBNYq44W8ECy2pWLycElnyUDiAVlWYIlOLXF8viNCiISc1/Q2wdF5R1Ge8hlt9neOof4AXzUNacQjagG+JxBNREaGJL/kuJDObNhpBzkEzH2IJWTZXi68FVvF9fhMtAKiig3ispr+i2IfFMOg4vwK/Zf0JcZGBA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3A4816A744BDFA418BF8E475928DE17C@eurprd08.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-OriginatorOrg: virtuozzo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4fc0f803-5cef-4acf-90c0-08d78de56ec3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Dec 2019 11:34:44.3680
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6Qrgaj3CLSfuSlAY+uwP94wiX0CnOiRTM5UI3M+YtIuG40Llf701QQn9qHVObf9TFZ3XZ+kfPDMdeElMBCIzMQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3439
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Populate sriov_configure ops with pci_sriov_configure_simple to
-configure SR-IOV device.
+On Mon, Dec 30, 2019 at 12:13:34PM -0800, Haiyang Zhang wrote:
+> The dev_num field in vmbus channel structure is assigned to the first
+> available number when the channel is offered. So netvsc driver uses it
+> for NIC naming based on channel offer sequence. Now re-enable the async
+> probing mode for faster probing.
+> 
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> ---
+>  drivers/net/hyperv/netvsc_drv.c | 18 +++++++++++++++---
+>  1 file changed, 15 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+> index f3f9eb8..39c412f 100644
+> --- a/drivers/net/hyperv/netvsc_drv.c
+> +++ b/drivers/net/hyperv/netvsc_drv.c
+> @@ -2267,10 +2267,14 @@ static int netvsc_probe(struct hv_device *dev,
+>  	struct net_device_context *net_device_ctx;
+>  	struct netvsc_device_info *device_info = NULL;
+>  	struct netvsc_device *nvdev;
+> +	char name[IFNAMSIZ];
+>  	int ret = -ENOMEM;
+>  
+> -	net = alloc_etherdev_mq(sizeof(struct net_device_context),
+> -				VRSS_CHANNEL_MAX);
+> +	snprintf(name, IFNAMSIZ, "eth%d", dev->channel->dev_num);
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/misc/pci_endpoint_test.c | 1 +
- 1 file changed, 1 insertion(+)
+How is this supposed to work when there are other ethernet device types
+on the system, which may claim the same device names?
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index b2458988939e..0f448c33f45c 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -840,6 +840,7 @@ static struct pci_driver pci_endpoint_test_driver = {
- 	.id_table	= pci_endpoint_test_tbl,
- 	.probe		= pci_endpoint_test_probe,
- 	.remove		= pci_endpoint_test_remove,
-+	.sriov_configure = pci_sriov_configure_simple,
- };
- module_pci_driver(pci_endpoint_test_driver);
- 
--- 
-2.17.1
+> +	net = alloc_netdev_mqs(sizeof(struct net_device_context), name,
+> +			       NET_NAME_ENUM, ether_setup,
+> +			       VRSS_CHANNEL_MAX, VRSS_CHANNEL_MAX);
+> +
+>  	if (!net)
+>  		goto no_net;
+>  
+> @@ -2355,6 +2359,14 @@ static int netvsc_probe(struct hv_device *dev,
+>  		net->max_mtu = ETH_DATA_LEN;
+>  
+>  	ret = register_netdevice(net);
+> +
+> +	if (ret == -EEXIST) {
+> +		pr_info("NIC name %s exists, request another name.\n",
+> +			net->name);
+> +		strlcpy(net->name, "eth%d", IFNAMSIZ);
+> +		ret = register_netdevice(net);
+> +	}
 
+IOW you want the device naming to be predictable, but don't guarantee
+this?
+
+I think the problem this patchset is trying to solve is much better
+solved with a udev rule, similar to how it's done for PCI net devices.
+And IMO the primary channel number, being a device's "hardware"
+property, is more suited to be used in the device name, than this
+completely ephemeral device number.
+
+Thanks,
+Roman.
+
+> +
+>  	if (ret != 0) {
+>  		pr_err("Unable to register netdev.\n");
+>  		goto register_failed;
+> @@ -2496,7 +2508,7 @@ static int netvsc_resume(struct hv_device *dev)
+>  	.suspend = netvsc_suspend,
+>  	.resume = netvsc_resume,
+>  	.driver = {
+> -		.probe_type = PROBE_FORCE_SYNCHRONOUS,
+> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+>  	},
+>  };
+>  
+> -- 
+> 1.8.3.1
+> 
