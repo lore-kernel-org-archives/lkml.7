@@ -2,117 +2,158 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95ED1C2D0DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0A2C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63832206EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 100B1206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 08:35:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="r7+o6Off"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EaskGOhh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbfLaIdg (ORCPT
+        id S1725875AbfLaIfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 03:33:36 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:43494 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfLaIdg (ORCPT
+        Tue, 31 Dec 2019 03:35:15 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:46330 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725793AbfLaIfN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 03:33:36 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBV8XIpv039830;
-        Tue, 31 Dec 2019 02:33:18 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577781198;
-        bh=jbOv1LVbSazAXgc+tVdf1lshir3VjpBQ9GhevKwekk8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=r7+o6OffmTxm00zXbxuk2arAa6kz5nEw+UIp4kePDchAbpZ4KlHXxLAdnSOyjpl5O
-         GlwjRBFqjGrIvptP+WgjzySX+BJ2kjZgLx/ejB68e0dB+nxOl0uKDPPWj0eFRKaWU6
-         VE1qelkQVC98qpqL9kaXZNpNtMURAhzlUS+7R/NY=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBV8XHDu082565;
-        Tue, 31 Dec 2019 02:33:17 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 31
- Dec 2019 02:33:17 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 31 Dec 2019 02:33:17 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBV8XEaC127311;
-        Tue, 31 Dec 2019 02:33:15 -0600
-Subject: Re: [PATCH 2/7] misc: pci_endpoint_test: Do not request or allocate
- IRQs in probe
-To:     kbuild test robot <lkp@intel.com>
-CC:     <kbuild-all@lists.01.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191230123315.31037-3-kishon@ti.com>
- <201912310039.Jef27rlg%lkp@intel.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <b561503f-a753-7750-2a43-78509755eb83@ti.com>
-Date:   Tue, 31 Dec 2019 14:05:15 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 31 Dec 2019 03:35:13 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577781312; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=/MyzgTAoW84poPoGQNDvx4+/Q3RCJgT0vSrB6UE39Ec=;
+ b=EaskGOhhGl9zE+i3m4via1P21uHkBLczEZnKZgfHlsUfwz5z1AZB9vQTAd7nZORmhI4GiTqh
+ HiAI1NWY9NXPSxWT62gJ4Fj5eAceWUi9oor0oNz78NBT1F/SUTjvAcoD+EuQaaqJ5tLhr6DK
+ CiRp6o6MAa3DYhBGfbsx3DT0tyk=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e0b083d.7fe0130850a0-smtp-out-n03;
+ Tue, 31 Dec 2019 08:35:09 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id ADB6CC447A4; Tue, 31 Dec 2019 08:35:07 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A3C10C433CB;
+        Tue, 31 Dec 2019 08:35:06 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <201912310039.Jef27rlg%lkp@intel.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Date:   Tue, 31 Dec 2019 16:35:06 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     linux-scsi-owner@vger.kernel.org, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, subhashj@codeaurora.org,
+        jejb@linux.ibm.com, chun-hung.wu@mediatek.com,
+        kuohong.wang@mediatek.com, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, avri.altman@wdc.com,
+        linux-mediatek@lists.infradead.org, peter.wang@mediatek.com,
+        alim.akhtar@samsung.com, andy.teng@mediatek.com,
+        matthias.bgg@gmail.com, beanhuo@micron.com,
+        pedrom.sousa@synopsys.com, bvanassche@acm.org,
+        linux-arm-kernel@lists.infradead.org, asutoshd@codeaurora.org
+Subject: Re: [PATCH v1 1/2] scsi: ufs: set device as default active power mode
+ during initialization only
+In-Reply-To: <1577778290.13164.45.camel@mtkswgap22>
+References: <1577693546-7598-1-git-send-email-stanley.chu@mediatek.com>
+ <1577693546-7598-2-git-send-email-stanley.chu@mediatek.com>
+ <fd129b859c013852bd80f60a36425757@codeaurora.org>
+ <1577754469.13164.5.camel@mtkswgap22>
+ <836772092daffd8283a97d633e59fc34@codeaurora.org>
+ <1577766179.13164.24.camel@mtkswgap22>
+ <1577778290.13164.45.camel@mtkswgap22>
+Message-ID: <44393ed9ff3ba9878bae838307e7eec0@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 2019-12-31 15:44, Stanley Chu wrote:
+> Hi Can,
+> 
+> On Tue, 2019-12-31 at 12:22 +0800, Stanley Chu wrote:
+>> Hi Can,
+>> 
+>> 
+>> > Hi Stanley,
+>> >
+>> > I see skipping ufshcd_set_ufs_dev_active() in ufshcd_probe_hba()
+>> > if it is called from ufshcd_resume() path is the purpose here.
+>> >
+>> > If so, then ufshcd_set_dev_pwr_mode() would be called, meaning
+>> > SSU command will be sent. Why is this SSU command needed to be
+>> > sent after a full host reset and restore? Is ufshcd_probe_hba()
+>> > not enough to make UFS device fully functional?
+>> 
+>> After resume (for both runtime resume and system resume), device power
+>> mode shall be back to "Active" to service incoming requests.
+>> 
+>> I see two cases need device power mode transition during resume flow
+>> 1. Device Power Mode = Sleep
+>> 2. Device Power Mode = PowerDown
+>> 
+>> For 1, ufshcd_probe_hba() is not invoked during resume flow,
+>> hba->curr_dev_pwr_mode = SLEEP, thus ufshcd_resume() can invoke
+>> ufshcd_set_dev_pwr_mode() to change device power mode.
+>> 
+>> For 2, ufshcd_probe_hba() is invoked during resume flow, before this
+>> fix, hba->curr_dev_pwr_mode will be set to ACTIVE (note that only this
+>> flag is set as ACTIVE, but device may be still in PowerDown state if
+>> device power is not fully shutdown or device HW reset is not executed
+>> before resume), in the end, ufshcd_resume() will not invoke
+>> ufshcd_set_dev_pwr_mode() to send SSU command to make device change 
+>> back
+>> to Active power mode.
+>> 
+>> But if device is fully reset before resume (not by current mainstream
+>> driver), device can be already in "Active" power mode after power on
+>> again during resume flow. In this case, it is OK to set
+>> hba->curr_dev_pwr_mode as ACTIVE in ufshcd_probe_hba() and SSU command
+>> is not necessary.
+>> 
+>> Thanks,
+>> Stanley
+> 
+> I think currently the assumption in ufshcd_probe_hba() that "device
+> shall be already in Active power mode" makes sense because many device
+> commands will be sent to device in ufshcd_probe_hba() but device is not
+> promised to handle those commands in PowerDown power mode according to
+> UFS spec.
+> 
+> So, maybe always ensuring device being Active power mode before leaving
+> ufshcd_probe_hba() is more reasonable. If so, I will drop this patch
+> first.
+> 
+> Thanks so much for your reviews.
+> 
+> Happy new year!
+> 
+> Thanks,
+> Stanley
 
-On 30/12/19 10:40 PM, kbuild test robot wrote:
-> Hi Kishon,
-> 
-> I love your patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on char-misc/char-misc-testing]
-> [also build test WARNING on pci/next arm-soc/for-next linus/master v5.5-rc4 next-20191220]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Kishon-Vijay-Abraham-I/Improvements-to-pci_endpoint_test-driver/20191230-203402
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git d1eef1c619749b2a57e514a3fa67d9a516ffa919
-> config: arm-randconfig-a001-20191229 (attached as .config)
-> compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.5.0 make.cross ARCH=arm 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>):
-> 
->    In file included from include/linux/kernel.h:11:0,
->                     from include/linux/delay.h:22,
->                     from drivers/[1] -> http://lore.kernel.org/r/20191209092147.22901-1-kishon@ti.commisc/pci_endpoint_test.c:10:
->    drivers/misc/pci_endpoint_test.c: In function 'pci_endpoint_test_probe':
->    drivers/misc/pci_endpoint_test.c:73:22: error: 'PCI_DEVICE_ID_TI_J721E' undeclared (first use in this function); did you mean 'PCI_DEVICE_ID_TI_7510'?
->       ((pdev)->device == PCI_DEVICE_ID_TI_J721E)
+Hi Stanley,
 
-The patches in this series should be merged only after [1]. With that
-this error wouldn't be seen.
+I missed this mail before I hit send. In current code, as per my 
+understanding,
+UFS device's power state should be Active after ufshcd_link_startup() 
+returns.
+If I am wrong, please feel free to correct me.
 
-[1] -> http://lore.kernel.org/r/20191209092147.22901-1-kishon@ti.com
+Due to you are almost trying to revert commit 7caf489b99a42a, I am just 
+wondering
+if you encounter failure/error caused by it.
 
-Thanks
-Kishon
+Happy new year to you too!
+
+Thanks,
+
+Can Guo
