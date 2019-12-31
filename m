@@ -2,103 +2,127 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E059C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 11:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DBEC2D0DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 11:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA48820409
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 11:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1524206E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 11:34:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="prJhyB6u"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xpYlx9RH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfLaLdp (ORCPT
+        id S1727106AbfLaLeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 06:33:45 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36580 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbfLaLdp (ORCPT
+        Tue, 31 Dec 2019 06:34:08 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:33404 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbfLaLeH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 06:33:45 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k3so19448738pgc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Dec 2019 03:33:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vT5dBaJiwzxpEHvp7zKJaSnGeHGYjZq7+yzqZJHM94Y=;
-        b=prJhyB6uVNCOKLpi+JAG+XgnvuPtmJ+n+tv57IddOyIjZ7S3dLcVXXlJgMvHgV2Pwd
-         wjmKvUeXGPsmVjJPTqIVdImW/9l+LvcAsZMhUmtzWQhMBF437ZUMjJPlGczTPVt0YTpi
-         qUgVEDAFpF/YfzTH5euC0M0mSezKPNOzVNt0Axa5db8FMBiB2tw/n5/c4prCoVRdqXx0
-         gD036xEemY+F8fLnnrTvP5wlb7OaYKFaMd2/6dzFB+8alexYibxzUyRvFEi5i5cYgZZS
-         /TCmZzaD2uj/GkOYGD2lqkt5Y4CY2QU9fwfg+/oFk1bZTetrUSrxAqMRCYtT0VWQ0T0v
-         y3og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vT5dBaJiwzxpEHvp7zKJaSnGeHGYjZq7+yzqZJHM94Y=;
-        b=tc/zo6JWcNA3M60ZifRnQ/moxEdYG4S8r7kzAhUU9nk9zxD5m+tuw1Jre6BAYNCLXU
-         p493aAVscsvzYhdRNRpn/KH3MVwaW1EJYBNoNIAQShns6GwYJ1/cAlvvLShi5swvV13R
-         nS8h9ufXI3GthWFZesNFcMjpClHFVPetFMKjJlrPUGmk3rSeyObeqfyyElnvhfwrDQSD
-         xjyyCJRRYsTwKGMxRelFKMcRDsyBDr5hBdToShXFKydBH43OmmLdrrP7yNTZ1LqpnuKe
-         BNYTCprSLaaJzFDj+L0TUckYSZgkyZV66fS0w4TeMuagEDDiF1pcU9IYbcZVXHrOVQZB
-         Zohw==
-X-Gm-Message-State: APjAAAWWW/0xckrsEQ3VWl25rAiMr3k/halexQ0UcM4bTe7klTYpdyVk
-        MrJSHIwAK/IrLcCYyeX7SXhJ0w==
-X-Google-Smtp-Source: APXvYqxmkIym5DGEdRsYPSAKxmedCSqXsKvVY1rzp2ePuMjKUIR4m77CB8VoPlgmC3MdOcmU2oYFCA==
-X-Received: by 2002:aa7:9474:: with SMTP id t20mr75308382pfq.241.1577792024342;
-        Tue, 31 Dec 2019 03:33:44 -0800 (PST)
-Received: from debian ([27.57.18.230])
-        by smtp.gmail.com with ESMTPSA id b15sm52706468pft.58.2019.12.31.03.33.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Dec 2019 03:33:43 -0800 (PST)
-Date:   Tue, 31 Dec 2019 17:03:36 +0530
-From:   Jeffrin Jose <jeffrin@rajagiritech.edu.in>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        jeffrin@rajagiritech.edu.in
-Subject: Re: [PATCH 5.4 000/434] 5.4.7-stable review
-Message-ID: <20191231113336.GA3016@debian>
-References: <20191229172702.393141737@linuxfoundation.org>
+        Tue, 31 Dec 2019 06:34:07 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBVBXdPS121093;
+        Tue, 31 Dec 2019 05:33:39 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1577792019;
+        bh=Pajx8yxPYy9hpNMBr5wGSpnGBlMhhMxaOBX8Gt0CXWc=;
+        h=From:To:CC:Subject:Date;
+        b=xpYlx9RH8ZH2mpS8/0vaGZcJSzosrfpZvtfmjD+XskBPHD7wRj7lmrQdKnAWcps01
+         XgIP7Jx1gW8KBXspH1MtP0jXF0Q77WwGlKCgrA48SkReVbeZJcBVVk2QFkuuCJCIPA
+         Xe+tPtDK3uDAHChnP0yA5QxGTW6jrGSnfDLfS2NA=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBVBXd3M090029
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 31 Dec 2019 05:33:39 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 31
+ Dec 2019 05:33:39 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 31 Dec 2019 05:33:39 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBVBXX31024759;
+        Tue, 31 Dec 2019 05:33:34 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-doc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH 0/7] Add SR-IOV support in PCIe Endpoint Core
+Date:   Tue, 31 Dec 2019 17:05:27 +0530
+Message-ID: <20191231113534.30405-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 29, 2019 at 06:20:53PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.7 release.
-> There are 434 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Tue, 31 Dec 2019 17:25:52 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.7-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
->
+Patch series
+*) Adds support to add virtual functions to enable endpoint controller
+   which supports SR-IOV capability
+*) Add support in Cadence endpoint driver to configure virtual functions
+*) Enable pci_endpoint_test driver to create pci_device for virtual
+   functions
 
-i have compiled 5.4.7-rc2+ related and "dmesg -l err" has no new errors.
-"dmesg -l warn" all clean
+Here both physical functions and virtual functions use the same
+pci_endpoint_test driver and existing pcitest utility can be used
+to test virtual functions also.
 
---
-software engineer
-rajagiri school of engineering and technology
+This series is created on top of [1], [2], [3] & [4]
+[1] -> http://lore.kernel.org/r/20191209092147.22901-1-kishon@ti.com
+[2] -> http://lore.kernel.org/r/20191211124608.887-1-kishon@ti.com
+[3] -> http://lore.kernel.org/r/20191230123315.31037-1-kishon@ti.com
+[4] -> http://lore.kernel.org/r/20191231100331.6316-1-kishon@ti.com
+
+Kishon Vijay Abraham I (7):
+  Documentation: PCI: endpoint/pci-endpoint-cfs: Guide to use SR-IOV
+  dt-bindings: PCI: cadence: Add binding to specify max virtual
+    functions
+  PCI: endpoint: Add support to add virtual function in endpoint core
+  PCI: endpoint: Add support to link a physical function to a virtual
+    function
+  PCI: endpoint: Add virtual function number in pci_epc ops
+  PCI: cadence: Add support to configure virtual functions
+  misc: pci_endpoint_test: Populate sriov_configure ops to configure
+    SR-IOV device
+
+ .../PCI/endpoint/pci-endpoint-cfs.rst         |  12 +-
+ .../bindings/pci/cdns,cdns-pcie-ep.txt        |   2 +
+ .../bindings/pci/ti,j721e-pci-ep.yaml         |   8 +
+ drivers/misc/pci_endpoint_test.c              |   1 +
+ .../pci/controller/cadence/pcie-cadence-ep.c  | 232 +++++++++++++++---
+ drivers/pci/controller/cadence/pcie-cadence.h |   7 +
+ .../pci/controller/dwc/pcie-designware-ep.c   |  36 +--
+ drivers/pci/controller/pcie-rockchip-ep.c     |  18 +-
+ drivers/pci/endpoint/functions/pci-epf-test.c |  64 ++---
+ drivers/pci/endpoint/pci-ep-cfs.c             |  24 ++
+ drivers/pci/endpoint/pci-epc-core.c           | 126 +++++++---
+ drivers/pci/endpoint/pci-epf-core.c           |  92 ++++++-
+ include/linux/pci-epc.h                       |  53 ++--
+ include/linux/pci-epf.h                       |  16 +-
+ 14 files changed, 541 insertions(+), 150 deletions(-)
+
+-- 
+2.17.1
 
