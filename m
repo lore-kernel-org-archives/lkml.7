@@ -2,223 +2,94 @@ Return-Path: <SRS0=Meup=2V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 480F9C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 16:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A32C2D0DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 16:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03BCD206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 16:01:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 861E3206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 16:03:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="PaKjq00u"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g5nurgns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfLaQBI (ORCPT
+        id S1727132AbfLaQD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 11:01:08 -0500
-Received: from mail-eopbgr700100.outbound.protection.outlook.com ([40.107.70.100]:18145
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726060AbfLaQBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 11:01:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MfELhsHRkrqONLCXCSEWMlpLQFLCLX4PKIad2qK8nWffc/DHRDbUDkON+pLL/tIsVKif4bXEuZGNe4yXa3OWr+VjVNxEbJl7T+1Wz3eO6+3/3Js3Op1PiCCnfLQim0Pwh79KQJqZQlgVnNAd1lRbt+FtOpNNPsfcnUHnc9PPl615pI1nqRJPvmFpc6LAND9PqG5UlySmPZKIUBF8Gprs9wGo1jM6AYt3uA+IEnQ1ycLRFZz9TmL52rX4y0afNbVwN/jK+onIxqDAePhCmeLr7a39ljIWR4+DZZykFvpOpvCQYC0pB0tDkvnf9y99PVZWhBPCKOnUFpn/aWpYZn6EIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iuNuj3P+Gu4jbIzqvMkOLd0/2dIAR+Shal3mUdbP5uc=;
- b=LyiHyimM3TSDhvAl8LXnrrXVmQbRcEElKqBLQP+l3NZVRlrBFWjs5RLO5rR/SWYjPLsn9nfXvbiU55eEiM18MXClWaFOJvguf0n4T080Ml1tT0YhXZ1xLsyRzoE0sgYc/Kn1hhTBXW4oPsP/ndww3LAkHpgaBs91yDrfc6JXtb5Yq0P3b+mjv9ZlVLNsZnSt88Uekw8OImnMbAlb2sM/GGDbpIQafP1Jv/4aPzRlThyn+Q1rbUbib1hEJmMYzXFrfkuIvUCf5Wekiu1zLVpxzZ/01KhlWOjmhYaGBW0FNZzV6O4AZhpChR0CdFIk3mhx28YhSWISsEy+cD9wEsmfjw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iuNuj3P+Gu4jbIzqvMkOLd0/2dIAR+Shal3mUdbP5uc=;
- b=PaKjq00uBFrS8moTAFI2AEo6YnGXIZQpoleUi60qL+eiQKXA0TNLqzRa+TKRtr1voNaZpVHC7uSu9k0P31X4I0PTRSsOa4Vtp62CBasiwEvdm3yyZgNO/CkPoZa1YSbuK5R4v25mrIiVOJkl4yrI2dEWOfaYFqv+ZxS3m3lj6JY=
-Received: from MN2PR21MB1375.namprd21.prod.outlook.com (20.179.23.160) by
- MN2PR21MB1517.namprd21.prod.outlook.com (20.179.223.77) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.1; Tue, 31 Dec 2019 16:01:02 +0000
-Received: from MN2PR21MB1375.namprd21.prod.outlook.com
- ([fe80::6de3:c062:9e55:ffc4]) by MN2PR21MB1375.namprd21.prod.outlook.com
- ([fe80::6de3:c062:9e55:ffc4%5]) with mapi id 15.20.2623.002; Tue, 31 Dec 2019
- 16:01:02 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH V2,net-next, 3/3] hv_netvsc: Name NICs based on vmbus
- offer sequence and use async probe
-Thread-Topic: [PATCH V2,net-next, 3/3] hv_netvsc: Name NICs based on vmbus
- offer sequence and use async probe
-Thread-Index: AQHVv027GHCeFuKLhUO4V+gfj0XECKfTdnmAgADvB5A=
-Date:   Tue, 31 Dec 2019 16:01:02 +0000
-Message-ID: <MN2PR21MB1375F8871A9AEFE95C96FAFACA260@MN2PR21MB1375.namprd21.prod.outlook.com>
-References: <1577736814-21112-1-git-send-email-haiyangz@microsoft.com>
- <1577736814-21112-4-git-send-email-haiyangz@microsoft.com>
- <CY4PR21MB0629771D2D6FECB76339EFA0D7260@CY4PR21MB0629.namprd21.prod.outlook.com>
-In-Reply-To: <CY4PR21MB0629771D2D6FECB76339EFA0D7260@CY4PR21MB0629.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-31T01:35:09.3127531Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7a2a8dcb-4e6c-4c83-96e4-76533ee43af9;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haiyangz@microsoft.com; 
-x-originating-ip: [96.61.92.94]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: da4cf225-ffcf-4025-d42a-08d78e0aa2dc
-x-ms-traffictypediagnostic: MN2PR21MB1517:|MN2PR21MB1517:|MN2PR21MB1517:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MN2PR21MB15172534E0D0BAE1B66439A8CA260@MN2PR21MB1517.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0268246AE7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(346002)(376002)(39860400002)(136003)(13464003)(199004)(189003)(55016002)(9686003)(26005)(186003)(86362001)(66446008)(6506007)(7696005)(71200400001)(8936002)(53546011)(64756008)(4326008)(66556008)(10290500003)(66476007)(2906002)(66946007)(76116006)(5660300002)(478600001)(52536014)(33656002)(8990500004)(110136005)(54906003)(8676002)(316002)(81156014)(81166006);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR21MB1517;H:MN2PR21MB1375.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MIoJgb+qh690mqNedKtDpMQg+xSE9+YSGrDrkPJV2k2NyoNzf6D86MhJg7+s+1a6xWIfLQCU+STLRNCTcmrONA4M3Z2yzmGW9JmLx85wAKBCuRXAIGAkPTAf6P1n/AdwzpZXkhHqRD+HjRp/KdoQCI5sXMCATe1J1W2bGqKssxrk/jmi4pvSAaehy24mc43S+ewpRdQldTaa5jlHyZfsDXnNDvXv5OKzl56VtP862vs5JWTpdqNF6UzfuJ1GdMgCre/B9LYUWprDXv7RR8j4GAp7KAX73hnVqv69rYVKLm20cThQ87SQkibJRDCZN+5njUSWzfgSvNVH0Y7q5Scyc1ONyMSPeuBVR36vrDwYFABr6oAVvuMAZ/H9H6Zm0Yrz1vIUf9WqeZ8Hg/kGyIecRQi4T5zT62bv77PdCC+Ff/Nnz144Wf9Eaw32lrhu8QZM+sl/KKn0cvR4ySTvxrJcGKdCoJBSMC6r6iCyt1w1W3T4JA4tH3KsHV3WXA+PMz9s
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 31 Dec 2019 11:03:28 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36359 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbfLaQD1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 11:03:27 -0500
+Received: by mail-pg1-f193.google.com with SMTP id k3so19695764pgc.3;
+        Tue, 31 Dec 2019 08:03:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gYY8tRl4k68rJ9RJ3qf1OX97DTcbAI9maOR8pJnYvvg=;
+        b=g5nurgnsyzOUL7BulOK8UfCi2moz/WyyYNhSJJHyvI5T4FhzRa1uIaiJSdw5QDqKp3
+         tz53QVnDwMpB8GJKKOUIdqX10CIsbVYhJaA5fxSbNGa6xngZ9wXx8VQ83IZXCQlYJZnp
+         DwVYE/tYnKhy7MgGsM423c6d0bCqPQDmqBcQHwRVrtaUm2puyVKe6E4OvF/6HhJbwf1z
+         xgeozCYn1u6KY18E2RtQ/2SS7W+7ogMPNJiRCmcnYhhD6oVlk8wT3T/Tgo2ICF9LuSTT
+         vo++KD612NTQJbBt1P6UswXE+EFPukFQqaP01sLSuzQoGwzUgtvKGCALUptYAHj3bDbO
+         aQsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gYY8tRl4k68rJ9RJ3qf1OX97DTcbAI9maOR8pJnYvvg=;
+        b=JQwzqu7EDy/V9TxF/40llzZUqMZIHeYQPh6Z56v7S8p5r+YiQMbn6MPnGLxdqv2feO
+         TJgHDhB8oosL5t5VtFOc4XMvtlvH6qMudxqUaBnrg1UYR9EMAbYnj4sAcMHeTEAuMYRi
+         v4SquwFMOmdF60J+FHHVYHC0TJBzp+crjpl92eig38i1w1ocI5weDJ3+3pfaL9d5T8hx
+         vAMMSsfKEepSspEQendPT6jYpiVD/a497xO2Z3yZhkTBIViSaNy8lTz10IFmr3CBL8eS
+         AzWH9uigCUniOJO3rLGUr1ul/wVHuxDfwfnxQwfGJVSmQpubrljS5f6Li2SAYrti6fHw
+         10Rw==
+X-Gm-Message-State: APjAAAUn9b4ItJmqkthI8xHSdwSNwyoddBsjK+1Ck2Jk9H0skprs1Trk
+        TxwsymmQRwZ6dOlwLyU/Gbc05tXV
+X-Google-Smtp-Source: APXvYqw2jwGACF5ql25fmRNUB2jWSBqemAwmyZB4ApIcNaapuW8X5HQt2+AsQvUI/AXJEKi3CjCZPg==
+X-Received: by 2002:aa7:8687:: with SMTP id d7mr77722817pfo.164.1577808207289;
+        Tue, 31 Dec 2019 08:03:27 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l8sm4100041pjy.24.2019.12.31.08.03.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 31 Dec 2019 08:03:26 -0800 (PST)
+Date:   Tue, 31 Dec 2019 08:03:25 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 000/161] 4.14.161-stable review
+Message-ID: <20191231160325.GA11542@roeck-us.net>
+References: <20191229162355.500086350@linuxfoundation.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: da4cf225-ffcf-4025-d42a-08d78e0aa2dc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Dec 2019 16:01:02.7134
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Grfj7VXcXa++AdQIuR+EcJkP5UrVYxFK36/Ch+fuosMbtkYK6QtH+ddYLaKcpYORL7zV8Dc9tWab44aMxESviw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1517
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Dec 29, 2019 at 06:17:28PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.161 release.
+> There are 161 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Tue, 31 Dec 2019 16:17:25 +0000.
+> Anything received after that time might be too late.
+> 
 
+For -rc2:
 
-> -----Original Message-----
-> From: Michael Kelley <mikelley@microsoft.com>
-> Sent: Monday, December 30, 2019 8:35 PM
-> To: Haiyang Zhang <haiyangz@microsoft.com>; sashal@kernel.org; linux-
-> hyperv@vger.kernel.org; netdev@vger.kernel.org
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>; KY Srinivasan
-> <kys@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> olaf@aepfle.de; vkuznets <vkuznets@redhat.com>; davem@davemloft.net;
-> linux-kernel@vger.kernel.org
-> Subject: RE: [PATCH V2,net-next, 3/3] hv_netvsc: Name NICs based on vmbus
-> offer sequence and use async probe
->=20
-> From: Haiyang Zhang <haiyangz@microsoft.com> Sent: Monday, December 30,
-> 2019 12:14 PM
-> >
-> > The dev_num field in vmbus channel structure is assigned to the first
->=20
-> Let's use "VMBus" in text.
-I will.
+Build results:
+	total: 172 pass: 172 fail: 0
+Qemu test results:
+	total: 373 pass: 373 fail: 0
 
->=20
-> > available number when the channel is offered. So netvsc driver uses it
-> > for NIC naming based on channel offer sequence. Now re-enable the async
-> > probing mode for faster probing.
-> >
-> > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > ---
-> >  drivers/net/hyperv/netvsc_drv.c | 18 +++++++++++++++---
-> >  1 file changed, 15 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvs=
-c_drv.c
-> > index f3f9eb8..39c412f 100644
-> > --- a/drivers/net/hyperv/netvsc_drv.c
-> > +++ b/drivers/net/hyperv/netvsc_drv.c
-> > @@ -2267,10 +2267,14 @@ static int netvsc_probe(struct hv_device *dev,
-> >  	struct net_device_context *net_device_ctx;
-> >  	struct netvsc_device_info *device_info =3D NULL;
-> >  	struct netvsc_device *nvdev;
-> > +	char name[IFNAMSIZ];
-> >  	int ret =3D -ENOMEM;
-> >
-> > -	net =3D alloc_etherdev_mq(sizeof(struct net_device_context),
-> > -				VRSS_CHANNEL_MAX);
-> > +	snprintf(name, IFNAMSIZ, "eth%d", dev->channel->dev_num);
-> > +	net =3D alloc_netdev_mqs(sizeof(struct net_device_context), name,
-> > +			       NET_NAME_ENUM, ether_setup,
-> > +			       VRSS_CHANNEL_MAX, VRSS_CHANNEL_MAX);
-> > +
-> >  	if (!net)
-> >  		goto no_net;
-> >
-> > @@ -2355,6 +2359,14 @@ static int netvsc_probe(struct hv_device *dev,
-> >  		net->max_mtu =3D ETH_DATA_LEN;
-> >
-> >  	ret =3D register_netdevice(net);
-> > +
-> > +	if (ret =3D=3D -EEXIST) {
-> > +		pr_info("NIC name %s exists, request another name.\n",
-> > +			net->name);
-> > +		strlcpy(net->name, "eth%d", IFNAMSIZ);
-> > +		ret =3D register_netdevice(net);
->=20
-> The message above could be confusing.  "request another name" sounds
-> like a directive to the user/sysadmin, which I don't think it is.  Perhap=
-s
-> better would be "requesting another name", which says the system is
-> handling the collision automatically.
->=20
-> Also will this second call to register_netdevice() actually assign a nume=
-ric
-> name?  If so, it would be really nice for the message to be output *after=
-*
-> the second call to register_netdevice() and to show both the originally
-> selected name that collided as well as the new name.  We sometimes get
-> into NIC naming issues with customers in Azure, and when a new name
-> has to be selected it will help debugging if we can show both the origina=
-l
-> selection and the new selection.  With both pieces of data, there's less
-> guessing about who did what regarding NIC naming.
-Good idea! I will include both new and old names in the log messages.
-
->=20
-> Finally, having to choose a different name because of a collision does
-> *not* update the channel->dev_num value.  Subsequent calls to
-> hv_set_devnum() will detect "in use" based on the originally assigned
-> dev_num value.  I don't think that fundamentally breaks anything, but
-> I wondered if you had thought about that case.   Maybe a comment here
-> to that effect would help a future reader of this code.
-
-That's correct. And I'm aware of this situation. But, the dev_num shouldn't=
-=20
-be changed, because we want it to keep track of the sequence of device=20
-offering.
-Avoid single or multiple collisions, we should use udev or other daemons to
-set name of VF or other types of NICs to different formats, like "vf*", or =
-"enP*",
-etc. For distros have not done so already, we need to work with the distro =
-vendors
-to ensure udev or other settings are correctly included in Distros, and Azu=
-re images.
-
-Thanks,
-- Haiyang
-
+Guenter
