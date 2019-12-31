@@ -5,114 +5,89 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B165C2D0DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 19:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58969C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 19:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B95A206E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 19:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37C68206E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Dec 2019 19:12:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f2E0eSG3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hPoYQr6h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbfLaTLw (ORCPT
+        id S1727225AbfLaTMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 14:11:52 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45842 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727071AbfLaTLu (ORCPT
+        Tue, 31 Dec 2019 14:12:03 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43675 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727071AbfLaTMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 14:11:50 -0500
-Received: by mail-pg1-f195.google.com with SMTP id b9so19840762pgk.12;
-        Tue, 31 Dec 2019 11:11:50 -0800 (PST)
+        Tue, 31 Dec 2019 14:12:03 -0500
+Received: by mail-wr1-f65.google.com with SMTP id d16so35810629wre.10;
+        Tue, 31 Dec 2019 11:12:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=s7NsGFyL6ByjBH13eAXZBut56mwO2xt3ZeGeMcb+Hlk=;
-        b=f2E0eSG3VPeN1Itxwp9OiDcbMBPFeXFrp6ejxUcR0RkjQIFjoFziKemsGuZH/1cyMt
-         X0bfUbxzDlxEMZzlN6pfA1ZF2b0eW9nIvfYIO8FbQ62UT7nzhgvt5+u6Lf9A7m/s7QNM
-         EdsqCWy6kNb2FVJvJCds8Du7MwicmEhhSVpUOJ0CutvU9CbNKak65z5YJPSp+IPZMyHa
-         ZBp6Wdiw1VMwCpdXE75Jb1fX0POMy0VSVSygCsxiPFsJyQMDI8lkMgZmVEIxudTlUfqw
-         SlMqMybXsl5NtLUloXuI+XkuKANsI3rDO+krPa3GI6sNH9qQHvg4RF3sJ23+v6Fln5X3
-         knHg==
+        h=from:to:cc:subject:date:message-id;
+        bh=Ugkmn+9FfNrqX0nLEPxcXHS7THYr0ykg5MLCv/1z8zQ=;
+        b=hPoYQr6hMewVT8HtmuJwWQC8WdcrMBGE/UrhU2h5c5RnmqBdO49jlqYz8Y9MkJTNs9
+         k1WVy2CyUSgJyQmeko3i8bczYU7u1ATfoFn+nRmG0luUfq6PfNHNgE1dsaxNOMCWDqNz
+         xatqT2VOpXN/e0Oy8UVoJ3fo4Gk+LthmCCENPLQOQridmr7QnkY49h9mqPo9i4wEYPJn
+         kH7YsFPZwsQlu1tHi0hk/U5I9FazLr7NeAWxvuiCDPVCvmQXrmaAckzKEqM5NFRsP6Z7
+         IJOIiwNvOAK3vfOfgXyaTZCPLWSZ5H1a1v8nB8H/UveDGaN+72Gc9utfRL4E3RfFMK7Z
+         KuGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=s7NsGFyL6ByjBH13eAXZBut56mwO2xt3ZeGeMcb+Hlk=;
-        b=iX+uU4biUusZh2omV9ShMtE+k2gNttOHI+32414XrzNj4LTvzsa6sSdSaBDvPpyQsP
-         HK6x3Yv5xRwEbkh3OG6fxxonumfSKbgs52idLmLCuKVN03JdfkQtXQKhvBeB2/QpKpRG
-         b2yfCA5CEeD/RBgRj6GM0/WuraOVatbPuW3YsvmYevVOLasjnYjYItlfT2qUo4hNrcK+
-         UgXRmyffCbm7jeh7Jjf+kXoOMNlG/qCG0QKAeAREjDmolovI1lcuPwZ+kJYUPCHMkhpn
-         0vQktxH3alTJiZ9VR65Dl/B/+4RsOggTrC+ibsMHdZhhDElCLs27PXwnbq1so1d0Ym2A
-         KEOQ==
-X-Gm-Message-State: APjAAAVn7/FvHnrjhmku/gjM4oR7+giwompycWTbLfL9vTb37KjARjFi
-        MjByK2niJhzO+I5Q4S00mMA=
-X-Google-Smtp-Source: APXvYqx5y1vzawjtwVueYppF+V0vbzdFcCD9/8ei8Oup39lR4dzKiCzp/e1weIe0JQq76mIxic9NVA==
-X-Received: by 2002:a63:d249:: with SMTP id t9mr81411546pgi.263.1577819509949;
-        Tue, 31 Dec 2019 11:11:49 -0800 (PST)
-Received: from localhost.localdomain ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
-        by smtp.gmail.com with ESMTPSA id s24sm4366134pjp.17.2019.12.31.11.11.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Dec 2019 11:11:49 -0800 (PST)
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-X-Google-Original-From: Daniel W. S. Almeida
-To:     mchehab@kernel.org, gregkh@linuxfoundation.org,
-        rfontana@redhat.com, kstewart@linuxfoundation.org,
-        tglx@linutronix.de
-Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/4] media: dvb_dummy_fe: change printk to pr_warn
-Date:   Tue, 31 Dec 2019 16:11:23 -0300
-Message-Id: <c6be59de9adeb9586be82bff56c951257c371fab.1577819245.git.dwlsalmeida@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <cover.1577819245.git.dwlsalmeida@gmail.com>
-References: <cover.1577819245.git.dwlsalmeida@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Ugkmn+9FfNrqX0nLEPxcXHS7THYr0ykg5MLCv/1z8zQ=;
+        b=fLQHtfM/enq7gpTKuOK12fmToXVkVUkYjnLqqmzrPlLLU68Euy9IVJX1DGE2WimO9L
+         Vl+Lq1wmR+fmnOMfzhdTdSkSjNY8dptVkeYl5f6DQ4i9iBD3D3/bE8MQUsv8/aopUsJH
+         rYeDHQ7djq0GOl2p7zseUZHF2NLwkdFuIi2i+Bmg43KPdwZvU5cnHCi/M9YIL00EU4cq
+         0JUEWZ2wIEK6lSbkhul8brwraEQ23nQUezZ6+2ba/bxE7Gb8fI/8wOzqV0Mr9eQ6JWCD
+         FRipnPBOjI1Lk1jEqQXFRDYcOqEj5scS1+n8LOZhOU7CHja3+NKbkDFwfLN9l0JQMYsr
+         bEjQ==
+X-Gm-Message-State: APjAAAWmpfnMWT6woOQgo6LlCsJ/odDCV5nYf0ALZvqWV5RCf9X33guc
+        /8FSYzdd42u9xosW7EI9I/g=
+X-Google-Smtp-Source: APXvYqyF0D0ikIVwTiFMzj6mqfRpTZsJr/v++9vO8XHr7OjNm2eCLMU36XEndCzwnyitR0Cm69XkjA==
+X-Received: by 2002:adf:d183:: with SMTP id v3mr43483613wrc.180.1577819520818;
+        Tue, 31 Dec 2019 11:12:00 -0800 (PST)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id q6sm53695403wrx.72.2019.12.31.11.11.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 31 Dec 2019 11:12:00 -0800 (PST)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, heiko@sntech.de, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: rockchip: rk3399-firefly: remove num-slots from &sdio0 node
+Date:   Tue, 31 Dec 2019 20:11:54 +0100
+Message-Id: <20191231191154.5587-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+The option "num-slots" was deprecated long time ago, so remove it.
 
-Replaces printk with pr_err to fix warnings from checkpatch.pl
-
-Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- drivers/media/dvb-frontends/dvb_dummy_fe.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3399-firefly.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/media/dvb-frontends/dvb_dummy_fe.h b/drivers/media/dvb-frontends/dvb_dummy_fe.h
-index 1c82338e0c8a..9e974397a246 100644
---- a/drivers/media/dvb-frontends/dvb_dummy_fe.h
-+++ b/drivers/media/dvb-frontends/dvb_dummy_fe.h
-@@ -18,17 +18,17 @@ struct dvb_frontend *dvb_dummy_fe_qam_attach(void);
- #else
- static inline struct dvb_frontend *dvb_dummy_fe_ofdm_attach(void)
- {
--	printk(KERN_WARNING "%s: driver disabled by Kconfig\n", __func__);
-+	pr_warn( "%s: driver disabled by Kconfig\n", __func__);
- 	return NULL;
- }
- static inline struct dvb_frontend *dvb_dummy_fe_qpsk_attach(void)
- {
--	printk(KERN_WARNING "%s: driver disabled by Kconfig\n", __func__);
-+	pr_warn("%s: driver disabled by Kconfig\n", __func__);
- 	return NULL;
- }
- static inline struct dvb_frontend *dvb_dummy_fe_qam_attach(void)
- {
--	printk(KERN_WARNING "%s: driver disabled by Kconfig\n", __func__);
-+	pr_warn("%s: driver disabled by Kconfig\n", __func__);
- 	return NULL;
- }
- #endif /* CONFIG_DVB_DUMMY_FE */
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+index 92de83dd4..7584351a1 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+@@ -660,7 +660,6 @@
+ 	keep-power-in-suspend;
+ 	mmc-pwrseq = <&sdio_pwrseq>;
+ 	non-removable;
+-	num-slots = <1>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
+ 	sd-uhs-sdr104;
 -- 
-2.24.1
+2.11.0
 
