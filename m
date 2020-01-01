@@ -2,124 +2,156 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC9BC2D0DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 05:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E04C32764
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 05:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AEA9206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 05:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D97142072C
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 05:57:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbgAAF2a (ORCPT
+        id S1725911AbgAAF47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 00:28:30 -0500
-Received: from mga01.intel.com ([192.55.52.88]:55757 "EHLO mga01.intel.com"
+        Wed, 1 Jan 2020 00:56:59 -0500
+Received: from foss.arm.com ([217.140.110.172]:38866 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725765AbgAAF23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 00:28:29 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Dec 2019 21:28:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,382,1571727600"; 
-   d="scan'208";a="244319525"
-Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by fmsmga004.fm.intel.com with ESMTP; 31 Dec 2019 21:28:27 -0800
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [RFC PATCH 4/4] iommu: Determine default domain type before allocating domain
-Date:   Wed,  1 Jan 2020 13:26:48 +0800
-Message-Id: <20200101052648.14295-5-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200101052648.14295-1-baolu.lu@linux.intel.com>
-References: <20200101052648.14295-1-baolu.lu@linux.intel.com>
+        id S1725372AbgAAF47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jan 2020 00:56:59 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 679E81FB;
+        Tue, 31 Dec 2019 21:56:58 -0800 (PST)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE70E3F237;
+        Tue, 31 Dec 2019 21:56:56 -0800 (PST)
+Subject: Re: [PATCH] sched/fair: fix sgc->{min,max}_capacity miscalculate
+To:     Peng Liu <iwtbavbm@gmail.com>, linux-kernel@vger.kernel.org
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        qais.yousef@arm.com, morten.rasmussen@arm.com
+References: <20191231035122.GA10020@iZj6chx1xj0e0buvshuecpZ>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <ec390ddb-c015-a467-2f88-47c00f23e27b@arm.com>
+Date:   Wed, 1 Jan 2020 05:56:49 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20191231035122.GA10020@iZj6chx1xj0e0buvshuecpZ>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Determine the default domain type for each group and use it to
-allocate the iommu domain.
+Hi Peng,
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+On 31/12/2019 03:51, Peng Liu wrote:
+> commit bf475ce0a3dd ("sched/fair: Add per-CPU min capacity to
+> sched_group_capacity") introduced per-cpu min_capacity.
+> 
+> commit e3d6d0cb66f2 ("sched/fair: Add sched_group per-CPU max capacity")
+> introduced per-cpu max_capacity.
+> 
+> sgc->capacity is the *SUM* of all CPU's capacity in the group.
+> sgc->{min,max}_capacity are the sg per-cpu variables. Compare with
+> sgc->capacity to get sgc->{min,max}_capacity makes no sense. Instead,
+> we should compare one by one in each iteration to get
+> sgc->{min,max}_capacity of the group.
+> 
+
+Worth noting this only affects the SD_OVERLAP case, the other case is fine
+(I checked again just to be sure).
+
+Now, on the bright side of things I don't think this currently causes any
+harm. The {min,max}_capacity values are used in bits of code that only
+gets run on topologies with asymmetric CPU µarchs (SD_ASYM_CPUCAPACITY), and
+I know of no such system that is also NUMA, i.e. end up with SD_OVERLAP
+(here's hoping nobody gets any funny idea).
+
+Still, nice find!
+
+> Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
+> ---
+>  kernel/sched/fair.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 2d170b5da0e3..97b164fcda93 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -7795,6 +7795,7 @@ void update_group_capacity(struct sched_domain *sd, int cpu)
+>  		for_each_cpu(cpu, sched_group_span(sdg)) {
+>  			struct sched_group_capacity *sgc;
+>  			struct rq *rq = cpu_rq(cpu);
+> +			unsigned long cap;
+>  
+>  			/*
+>  			 * build_sched_domains() -> init_sched_groups_capacity()
+> @@ -7808,14 +7809,16 @@ void update_group_capacity(struct sched_domain *sd, int cpu)
+>  			 * causing divide-by-zero issues on boot.
+>  			 */
+>  			if (unlikely(!rq->sd)) {
+> -				capacity += capacity_of(cpu);
+> +				cap = capacity_of(cpu);
+> +				capacity += cap;
+> +				min_capacity = min(cap, min_capacity);
+> +				max_capacity = max(cap, max_capacity);
+>  			} else {
+>  				sgc = rq->sd->groups->sgc;
+>  				capacity += sgc->capacity;
+> +				min_capacity = min(sgc->min_capacity, min_capacity);
+> +				max_capacity = max(sgc->max_capacity, max_capacity);
+>  			}
+> -
+> -			min_capacity = min(capacity, min_capacity);
+> -			max_capacity = max(capacity, max_capacity);
+>  		}
+>  	} else  {
+>  		/*
+> 
+
+All that could be shortened like the below, no? 
+
 ---
- drivers/iommu/iommu.c | 35 ++++++++++++++++++++++++++++++++---
- 1 file changed, 32 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 716326a2ee5b..fc1df1acbd25 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -43,6 +43,7 @@ struct iommu_group {
- 	int id;
- 	struct iommu_domain *default_domain;
- 	struct iommu_domain *domain;
-+	unsigned int def_domain_type;
- };
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 08a233e97a01..9f6c015639ef 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7773,8 +7773,8 @@ void update_group_capacity(struct sched_domain *sd, int cpu)
+ 		 */
  
- struct group_device {
-@@ -1383,6 +1384,33 @@ static int alloc_iommu_group(struct device *dev, void *data)
- 	return 0;
- }
+ 		for_each_cpu(cpu, sched_group_span(sdg)) {
+-			struct sched_group_capacity *sgc;
+ 			struct rq *rq = cpu_rq(cpu);
++			unsigned long cpu_cap;
  
-+static void get_group_def_domain_type(struct iommu_group *group)
-+{
-+	struct group_device *tmp = NULL;
+ 			/*
+ 			 * build_sched_domains() -> init_sched_groups_capacity()
+@@ -7787,15 +7787,15 @@ void update_group_capacity(struct sched_domain *sd, int cpu)
+ 			 * This avoids capacity from being 0 and
+ 			 * causing divide-by-zero issues on boot.
+ 			 */
+-			if (unlikely(!rq->sd)) {
+-				capacity += capacity_of(cpu);
+-			} else {
+-				sgc = rq->sd->groups->sgc;
+-				capacity += sgc->capacity;
+-			}
++			if (unlikely(!rq->sd))
++				cpu_cap = capacity_of(cpu);
++			else
++				cpu_cap = rq->sd->groups->sgc->capacity;
 +
-+	mutex_lock(&group->mutex);
-+	list_for_each_entry(tmp, &group->devices, list) {
-+		struct device *dev = tmp->dev;
-+
-+		/*
-+		 * If there are any untrusted devices in the group, force
-+		 * IOMMU_DOMAIN_DMA to prevent DMA attack from malicious
-+		 * devices.
-+		 */
-+		if (dev_is_pci(dev) && to_pci_dev(dev)->untrusted) {
-+			group->def_domain_type = IOMMU_DOMAIN_DMA;
-+			break;
-+		}
-+
-+		if (dev->iommu_passthrough)
-+			group->def_domain_type = IOMMU_DOMAIN_IDENTITY;
-+	}
-+	mutex_unlock(&group->mutex);
-+
-+	if (!group->def_domain_type)
-+		group->def_domain_type = iommu_def_domain_type;
-+}
-+
- /**
-  * iommu_group_get_for_dev - Find or create the IOMMU group for a device
-  * @dev: target device
-@@ -1412,13 +1440,14 @@ struct iommu_group *iommu_group_get_for_dev(struct device *dev)
- 	if (!group->default_domain) {
- 		struct iommu_domain *dom;
++			min_capacity = min(cpu_cap, min_capacity);
++			max_capacity = max(cpu_cap, max_capacity);
  
--		dom = __iommu_domain_alloc(dev->bus, iommu_def_domain_type);
--		if (!dom && iommu_def_domain_type != IOMMU_DOMAIN_DMA) {
-+		get_group_def_domain_type(group);
-+		dom = __iommu_domain_alloc(dev->bus, group->def_domain_type);
-+		if (!dom && group->def_domain_type != IOMMU_DOMAIN_DMA) {
- 			dom = __iommu_domain_alloc(dev->bus, IOMMU_DOMAIN_DMA);
- 			if (dom) {
- 				dev_warn(dev,
- 					 "failed to allocate default IOMMU domain of type %u; falling back to IOMMU_DOMAIN_DMA",
--					 iommu_def_domain_type);
-+					 group->def_domain_type);
- 			}
+-			min_capacity = min(capacity, min_capacity);
+-			max_capacity = max(capacity, max_capacity);
++			capacity += cpu_cap;
  		}
- 
--- 
-2.17.1
-
+ 	} else  {
+ 		/*
