@@ -2,128 +2,153 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A575FC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 18:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A582C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 19:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 850782072C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 18:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DEF22072C
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 19:05:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727407AbgAASz7 (ORCPT
+        id S1727408AbgAATFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 13:55:59 -0500
-Received: from foss.arm.com ([217.140.110.172]:41758 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727352AbgAASz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 13:55:59 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8AF9F31B;
-        Wed,  1 Jan 2020 10:55:58 -0800 (PST)
-Received: from [10.0.2.15] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0BF523F68F;
-        Wed,  1 Jan 2020 10:55:56 -0800 (PST)
-Subject: Re: [PATCH] sched/fair: fix sgc->{min,max}_capacity miscalculate
-To:     Peng Liu <iwtbavbm@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        qais.yousef@arm.com, morten.rasmussen@arm.com
-References: <20191231035122.GA10020@iZj6chx1xj0e0buvshuecpZ>
- <ec390ddb-c015-a467-2f88-47c00f23e27b@arm.com>
- <20200101141329.GA12809@iZj6chx1xj0e0buvshuecpZ>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <e41793bc-daaf-b224-1f3d-a3e468072592@arm.com>
-Date:   Wed, 1 Jan 2020 18:55:48 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 1 Jan 2020 14:05:24 -0500
+Received: from isilmar-4.linta.de ([136.243.71.142]:59564 "EHLO
+        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727268AbgAATFX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jan 2020 14:05:23 -0500
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id 418D72009FC;
+        Wed,  1 Jan 2020 19:05:21 +0000 (UTC)
+Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
+        id 97A2820343; Wed,  1 Jan 2020 20:05:03 +0100 (CET)
+Date:   Wed, 1 Jan 2020 20:05:03 +0100
+From:   Dominik Brodowski <linux@dominikbrodowski.net>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        youling257@gmail.com, Arvind Sankar <nivedita@alum.mit.edu>
+Subject: [PATCH] Revert "fs: remove ksys_dup()"
+Message-ID: <20200101190503.GA43718@light.dominikbrodowski.net>
 MIME-Version: 1.0
-In-Reply-To: <20200101141329.GA12809@iZj6chx1xj0e0buvshuecpZ>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/01/2020 14:13, Peng Liu wrote:
->> ---
->> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->> index 08a233e97a01..9f6c015639ef 100644
->> --- a/kernel/sched/fair.c
->> +++ b/kernel/sched/fair.c
->> @@ -7773,8 +7773,8 @@ void update_group_capacity(struct sched_domain *sd, int cpu)
->>  		 */
->>  
->>  		for_each_cpu(cpu, sched_group_span(sdg)) {
->> -			struct sched_group_capacity *sgc;
->>  			struct rq *rq = cpu_rq(cpu);
->> +			unsigned long cpu_cap;
->>  
->>  			/*
->>  			 * build_sched_domains() -> init_sched_groups_capacity()
->> @@ -7787,15 +7787,15 @@ void update_group_capacity(struct sched_domain *sd, int cpu)
->>  			 * This avoids capacity from being 0 and
->>  			 * causing divide-by-zero issues on boot.
->>  			 */
->> -			if (unlikely(!rq->sd)) {
->> -				capacity += capacity_of(cpu);
->> -			} else {
->> -				sgc = rq->sd->groups->sgc;
->> -				capacity += sgc->capacity;
->> -			}
->> +			if (unlikely(!rq->sd))
->> +				cpu_cap = capacity_of(cpu);
-> 
-> --------------------------------------------------------------
->> +			else
->> +				cpu_cap = rq->sd->groups->sgc->capacity;
-> 
-> sgc->capacity is the *sum* of all CPU's capacity in that group, right?
+This reverts commit 8243186f0cc7c57cf9d6a110cd7315c44e3e0be8 and
+additionally the fix in commit 2d3145f8d2809592ef803a30c8a342b5a9e2de9a.
 
-Right
+Trying to use filp_open() and f_dupfd() instead of pseudo-syscalls
+caused more trouble than what is worth it: it requires accessing
+vfs internals and causes a strange issue on Androidx86 long after
+boot.
 
-> {min,max}_capacity are per CPU variables(*part* of a group). So we can't
-> compare *part* to *sum*. Am I overlooking something? Thanks.
-> 
+Reported-by: youling 257 <youling257@gmail.com>
+Signed-off-by: Dominik Brodowski <linux@dominikbrodowski.net>
 
-AIUI rq->sd->groups->sgc->capacity should be the capacity of the rq's CPU
-(IOW the groups here should be made of single CPUs).
+---
 
-This should be true regardless of overlapping domains, since they sit on top
-of the regular domains. Let me paint an example with a simple 2-core SMT2
-system:
+Instead of that (seemingly suboptimal) approach in trying to get the
+fake __user char out of init/main.c, I'll prepare some patches which
+have ksys_open() [and a few other ksys_*() functions] operate on
+kernelspace pointers instead. That will be more compatible with
+keeping vfs internals internal, and actually move us faster in the
+direction to let kernel init run with USER_DS. Moreover, that approach
+doesn't seem to break youling 257's setup.
 
-  MC  [          ]
-  SMT [    ][    ]
-       0  1  2  3
-
-cpu_rq(0)->sd will point to the sched_domain of CPU0 at SMT level (it is the
-"base domain", IOW the lowest domain in the topology hierarchy). Its groups
-will be:
-
-  {0} ----> {1}
-    ^       /
-     `-----'
-
-and sd->groups will point at the group spanning the "local" CPU, in our case
-CPU0, and thus here will be a group containing only CPU0.
+Thanks,
+	Dominik
 
 
-I do not know why sched_group_capacity is used here however. As I understand
-things, we could use cpu_capacity() unconditionally.
-
-
->> +
->> +			min_capacity = min(cpu_cap, min_capacity);
->> +			max_capacity = max(cpu_cap, max_capacity);
->>  
->> -			min_capacity = min(capacity, min_capacity);
->> -			max_capacity = max(capacity, max_capacity);
->> +			capacity += cpu_cap;
->>  		}
->>  	} else  {
->>  		/*
+diff --git a/fs/file.c b/fs/file.c
+index 2f4fcf985079..3da91a112bab 100644
+--- a/fs/file.c
++++ b/fs/file.c
+@@ -960,7 +960,7 @@ SYSCALL_DEFINE2(dup2, unsigned int, oldfd, unsigned int, newfd)
+ 	return ksys_dup3(oldfd, newfd, 0);
+ }
+ 
+-SYSCALL_DEFINE1(dup, unsigned int, fildes)
++int ksys_dup(unsigned int fildes)
+ {
+ 	int ret = -EBADF;
+ 	struct file *file = fget_raw(fildes);
+@@ -975,6 +975,11 @@ SYSCALL_DEFINE1(dup, unsigned int, fildes)
+ 	return ret;
+ }
+ 
++SYSCALL_DEFINE1(dup, unsigned int, fildes)
++{
++	return ksys_dup(fildes);
++}
++
+ int f_dupfd(unsigned int from, struct file *file, unsigned flags)
+ {
+ 	int err;
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 2960dedcfde8..5262b7a76d39 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -1232,6 +1232,7 @@ asmlinkage long sys_ni_syscall(void);
+  */
+ 
+ int ksys_umount(char __user *name, int flags);
++int ksys_dup(unsigned int fildes);
+ int ksys_chroot(const char __user *filename);
+ ssize_t ksys_write(unsigned int fd, const char __user *buf, size_t count);
+ int ksys_chdir(const char __user *filename);
+diff --git a/init/main.c b/init/main.c
+index 1ecfd43ed464..2cd736059416 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -93,7 +93,6 @@
+ #include <linux/rodata_test.h>
+ #include <linux/jump_label.h>
+ #include <linux/mem_encrypt.h>
+-#include <linux/file.h>
+ 
+ #include <asm/io.h>
+ #include <asm/bugs.h>
+@@ -1158,26 +1157,13 @@ static int __ref kernel_init(void *unused)
+ 
+ void console_on_rootfs(void)
+ {
+-	struct file *file;
+-	unsigned int i;
+-
+-	/* Open /dev/console in kernelspace, this should never fail */
+-	file = filp_open("/dev/console", O_RDWR, 0);
+-	if (IS_ERR(file))
+-		goto err_out;
+-
+-	/* create stdin/stdout/stderr, this should never fail */
+-	for (i = 0; i < 3; i++) {
+-		if (f_dupfd(i, file, 0) != i)
+-			goto err_out;
+-	}
+-
+-	return;
++	/* Open the /dev/console as stdin, this should never fail */
++	if (ksys_open((const char __user *) "/dev/console", O_RDWR, 0) < 0)
++		pr_err("Warning: unable to open an initial console.\n");
+ 
+-err_out:
+-	/* no panic -- this might not be fatal */
+-	pr_err("Warning: unable to open an initial console.\n");
+-	return;
++	/* create stdout/stderr */
++	(void) ksys_dup(0);
++	(void) ksys_dup(0);
+ }
+ 
+ static noinline void __init kernel_init_freeable(void)
