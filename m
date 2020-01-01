@@ -4,39 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9619EC2D0DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 08:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92709C2D0DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 08:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 727C820848
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 08:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 739E6206E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 08:20:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727320AbgAAIUg (ORCPT
+        id S1727238AbgAAIUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 03:20:36 -0500
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:56920 "EHLO
+        Wed, 1 Jan 2020 03:20:18 -0500
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:56955 "EHLO
         mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727240AbgAAIUT (ORCPT
+        by vger.kernel.org with ESMTP id S1727075AbgAAIUQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 03:20:19 -0500
+        Wed, 1 Jan 2020 03:20:16 -0500
 X-IronPort-AV: E=Sophos;i="5.69,382,1571695200"; 
-   d="scan'208";a="429578765"
+   d="scan'208";a="429578758"
 Received: from palace.rsr.lip6.fr (HELO palace.lip6.fr) ([132.227.105.202])
   by mail2-relais-roc.national.inria.fr with ESMTP/TLS/AES128-SHA256; 01 Jan 2020 09:20:08 +0100
 From:   Julia Lawall <Julia.Lawall@inria.fr>
-To:     Andrzej Hajda <a.hajda@samsung.com>
+To:     Andy Gross <agross@kernel.org>
 Cc:     kernel-janitors@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 15/16] drm: bridge: dw-hdmi: constify copied structure
-Date:   Wed,  1 Jan 2020 08:43:33 +0100
-Message-Id: <1577864614-5543-16-git-send-email-Julia.Lawall@inria.fr>
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 08/16] pinctrl: ssbi-mpp: constify copied structure
+Date:   Wed,  1 Jan 2020 08:43:26 +0100
+Message-Id: <1577864614-5543-9-git-send-email-Julia.Lawall@inria.fr>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1577864614-5543-1-git-send-email-Julia.Lawall@inria.fr>
 References: <1577864614-5543-1-git-send-email-Julia.Lawall@inria.fr>
@@ -45,7 +42,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The dw_hdmi_hw structure is only copied into another structure,
+The pm8xxx_pinctrl_desc structure is only copied into another structure,
 so make it const.
 
 The opportunity for this change was found using Coccinelle.
@@ -53,20 +50,20 @@ The opportunity for this change was found using Coccinelle.
 Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi-ahb-audio.c |    2 +-
+ drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-ahb-audio.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-ahb-audio.c
-index 2b7539701b42..dd56996fe9c7 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-ahb-audio.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-ahb-audio.c
-@@ -291,7 +291,7 @@ static irqreturn_t snd_dw_hdmi_irq(int irq, void *data)
- 	return IRQ_HANDLED;
- }
+diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c b/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
+index 3d8b1d74fa2f..681d8dcf37e3 100644
+--- a/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
++++ b/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
+@@ -430,7 +430,7 @@ static const struct pinconf_ops pm8xxx_pinconf_ops = {
+ 	.pin_config_group_set = pm8xxx_pin_config_set,
+ };
  
--static struct snd_pcm_hardware dw_hdmi_hw = {
-+static const struct snd_pcm_hardware dw_hdmi_hw = {
- 	.info = SNDRV_PCM_INFO_INTERLEAVED |
- 		SNDRV_PCM_INFO_BLOCK_TRANSFER |
- 		SNDRV_PCM_INFO_MMAP |
+-static struct pinctrl_desc pm8xxx_pinctrl_desc = {
++static const struct pinctrl_desc pm8xxx_pinctrl_desc = {
+ 	.name = "pm8xxx_mpp",
+ 	.pctlops = &pm8xxx_pinctrl_ops,
+ 	.pmxops = &pm8xxx_pinmux_ops,
 
