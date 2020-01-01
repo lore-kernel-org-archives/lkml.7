@@ -2,85 +2,126 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE8EC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 15:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1ADC32764
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 16:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811A1207E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 15:43:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pXz7cfi3"
+	by mail.kernel.org (Postfix) with ESMTP id 6CB702084D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 16:24:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577895858;
+	bh=M73trg+hti0X9pmV9ciObDeyGTVINgCWgga6e9ms7Q0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gf5Iq45VXQbGh9hRQk+T79PkNR5WzMvUvLUJ6VvNJwBjoIL5P2rjagiQIqX+4unr1
+	 pYdfOt6BDtAkaealIXiqwmiT1HM3srbnDP864aunhBQuDysqXAQ+WqpHV3Om9EG/gp
+	 g8R/1ONzjbpxfF2dSKw8TVT2q5PbRPrtj9ODUPGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727200AbgAAPn6 (ORCPT
+        id S1727206AbgAAQYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 10:43:58 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:39848 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbgAAPn6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 10:43:58 -0500
-Received: by mail-pj1-f67.google.com with SMTP id t101so2285986pjb.4;
-        Wed, 01 Jan 2020 07:43:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VdaVqR2ujWwMtU+rRnAVHf5ttw+w7rhJxthTZ3o7ZdQ=;
-        b=pXz7cfi3EsWcEnPF2R7r6XUehvtBhb8oLqgYGXM1qmty3/xRgtWPNrc5iwQrvGuzcp
-         gll7CuU2fOve7A+HNTtB/hbvtIu9nig7s63HSFlNa2q0D+DitiPXWnCaTg7dnQT/C8MQ
-         0MzjFuvTfkH5zZl7gg7XmX1O8KUQOVKi6bWSPDlQcltdo3ZSClqYmMDSW4H4msFN2o+B
-         5AtFu3lm4XiD7hlmgtVx0T/exmkZ+I19+AsSqLt4dqwNQPdujDRkdyejxZ1Bs0QnuLzJ
-         Ys3haTm0PUQsjoxGWGCjgOFOWE0QvmHo2NEm1kUBTQ1jHpbPMpWyeSXFLAg3O5BmnFWz
-         kk2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VdaVqR2ujWwMtU+rRnAVHf5ttw+w7rhJxthTZ3o7ZdQ=;
-        b=SBWj9rWEsHi+M9KBu3jCZFI02GbuCJ7Ms/OFDnyy7DEfzyrT1+tAAcIxBdWIDARrIs
-         AAih8tn12NoMdcrvOX9f3WlAO86sF/GLn0WtCE+x3/yTeuPh098tS511SkU25PF5iEKZ
-         Qx46Z8yR+UtTgMEMo3RKcLDa+LYrGfBCDBgYudX5Mx0+79LUKTNhAaf0QhN5YIPMRQ2v
-         WrhTwIXW+wHYxjJO3NvPWiH3D3F167/l9X0PjCu8wiM6kYB26+wHVEhxbniZUvk874pR
-         VQcTOTmE1qo9ZyExS3+X/1ys2lZkbgpsrxHtRjnKiOPaxY7ojCgVQrNYMEDlFzsPIq7D
-         e5kg==
-X-Gm-Message-State: APjAAAVNP0Su31Pgh2DMY1gx6cxBzURWr6IwPeayRD0p9WWFoYHT2wd7
-        t/mKwG3W+j9oqhvUDN6VMzQ=
-X-Google-Smtp-Source: APXvYqxy864mqKVWWZVzvp8LHO7Vz1nEwOFv5RJYWjdi22BGg2ETNlOr2YHhBAtNvgUjlvjdpJ4d8Q==
-X-Received: by 2002:a17:902:8f97:: with SMTP id z23mr80638474plo.170.1577893437376;
-        Wed, 01 Jan 2020 07:43:57 -0800 (PST)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id m6sm7589154pjv.23.2020.01.01.07.43.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jan 2020 07:43:56 -0800 (PST)
-Date:   Wed, 1 Jan 2020 07:43:54 -0800
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Julia Lawall <Julia.Lawall@inria.fr>
-Cc:     kernel-janitors@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 13/16] ptp: ptp_clockmatrix: constify copied structure
-Message-ID: <20200101154354.GA1524@localhost>
-References: <1577864614-5543-1-git-send-email-Julia.Lawall@inria.fr>
- <1577864614-5543-14-git-send-email-Julia.Lawall@inria.fr>
+        Wed, 1 Jan 2020 11:24:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59582 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727154AbgAAQYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jan 2020 11:24:16 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79B752072C;
+        Wed,  1 Jan 2020 16:24:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577895855;
+        bh=M73trg+hti0X9pmV9ciObDeyGTVINgCWgga6e9ms7Q0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NXdX2yC022QFzTENm7uEgH4n82hF4nKBoUhUVoAzd6J9YKmODfrVjLsXPpqMzNDJV
+         O/3C6mWTqYIwB7yEaQSvIrfT2sPBIxZ8DpBDUSogskcolSBPjx+dR3Ybzs5fHdjz56
+         +4JAJYuuHr3Ug4gNXQC7iw828uJmnSzzLcVsAY/8=
+Date:   Wed, 1 Jan 2020 17:24:13 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 000/219] 4.19.92-stable review
+Message-ID: <20200101162413.GA2682113@kroah.com>
+References: <20191229162508.458551679@linuxfoundation.org>
+ <20191230171959.GC12958@roeck-us.net>
+ <20191230173506.GB1350143@kroah.com>
+ <7c5b2866-39d9-5c5f-0282-eef2f34c7fe8@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1577864614-5543-14-git-send-email-Julia.Lawall@inria.fr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7c5b2866-39d9-5c5f-0282-eef2f34c7fe8@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 01, 2020 at 08:43:31AM +0100, Julia Lawall wrote:
-> The idtcm_caps structure is only copied into another structure,
-> so make it const.
+On Tue, Dec 31, 2019 at 06:01:12PM -0800, Guenter Roeck wrote:
+> On 12/30/19 9:35 AM, Greg Kroah-Hartman wrote:
+> > On Mon, Dec 30, 2019 at 09:19:59AM -0800, Guenter Roeck wrote:
+> > > On Sun, Dec 29, 2019 at 06:16:42PM +0100, Greg Kroah-Hartman wrote:
+> > > > This is the start of the stable review cycle for the 4.19.92 release.
+> > > > There are 219 patches in this series, all will be posted as a response
+> > > > to this one.  If anyone has any issues with these being applied, please
+> > > > let me know.
+> > > > 
+> > > > Responses should be made by Tue, 31 Dec 2019 16:17:25 +0000.
+> > > > Anything received after that time might be too late.
+> > > > 
+> > > Build results:
+> > > 	total: 156 pass: 141 fail: 15
+> > > Failed builds:
+> > > 	i386:tools/perf
+> > > 	<all mips>
+> > > 	x86_64:tools/perf
+> > > Qemu test results:
+> > > 	total: 381 pass: 316 fail: 65
+> > > Failed tests:
+> > > 	<all mips>
+> > > 	<all ppc64_book3s_defconfig>
+> > > 
+> > > perf as with v4.14.y.
+> > > 
+> > > arch/mips/kernel/syscall.c:40:10: fatal error: asm/sync.h: No such file or directory
+> > 
+> > Ah, will go drop the offending patch and push out a -rc2 with both of
+> > these issues fixed.
+> > 
+> > > arch/powerpc/include/asm/spinlock.h:56:1: error: type defaults to ‘int’ in declaration of ‘DECLARE_STATIC_KEY_FALSE’
+> > > and similar errors.
+> > > 
+> > > The powerpc build problem is inherited from mainline and has not been fixed
+> > > there as far as I can see. I guess that makes 4.19.y bug-for-bug "compatible"
+> > > with mainline in that regard.
+> > 
+> > bug compatible is fun :(
+> > 
 > 
-> The opportunity for this change was found using Coccinelle.
+> Not really. It is a terrible idea and results in the opposite of what I would
+> call a "stable" release.
 > 
-> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+> Anyway, turns out the offending commit is 14c73bd344d ("powerpc/vcpu: Assume
+> dedicated processors as non-preempt"), which uses static_branch_unlikely().
 
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+It does?  I see:
+
++               if (lppaca_shared_proc(get_lppaca()))
++                       static_branch_enable(&shared_processor);
+
+> This function does not exist for ppc in v4.19.y and v5.4.y. Thus, the _impact_
+> of the error in v4.19.y and v5.4.y is the same as in mainline, but the _cause_
+> is different. Upstream commit 14c73bd344d should not have been applied to
+> v4.19.y and v5.4.y and needs to be reverted from those branches.
+
+I'll go revert this patch, but as it was marked for stable by the
+authors of the patch, as relevant back to 4.18, I would have hoped that
+they knew what they were doing :)
+
+thanks,
+
+greg k-h
