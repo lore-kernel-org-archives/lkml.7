@@ -2,98 +2,119 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A13AC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 02:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AE7C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 03:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1E65206E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 02:43:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZjwNHHOJ"
+	by mail.kernel.org (Postfix) with ESMTP id 06B82206DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 03:08:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbgAACnZ (ORCPT
+        id S1727161AbgAADIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 21:43:25 -0500
-Received: from mail-pg1-f173.google.com ([209.85.215.173]:45276 "EHLO
-        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbgAACnY (ORCPT
+        Tue, 31 Dec 2019 22:08:30 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:42142 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727132AbgAADIa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 21:43:24 -0500
-Received: by mail-pg1-f173.google.com with SMTP id b9so20156433pgk.12
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Dec 2019 18:43:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mail-followup-to:mime-version
-         :content-disposition:user-agent;
-        bh=RiungAfe6C+5SeklziAwU3LRS+YiPryH6DunWlSldAc=;
-        b=ZjwNHHOJxg4HoyiWliQbtIeqG/w9Bv8yyhSuyXjJezxPKS3dtOIWnN/qoWT2AvWXGp
-         XGkrLMsJA9+CRuySJ7KSzvoTrzpfksmmdOD0VmGlaOR4CANVoXylze3mWgRBPU9mLNaE
-         7IXELjehg7TZdSmi75hDPPgEc2sB8HAR3Vo0h8kl6RHUsErfIYAxrlyyplDNuci3NPHI
-         BahJtXKTB/oBxCfT6qFOaMISvdXS3ww4mJ+AwMtnFsmczY90Wt4mbap3zAs80h/1h+jo
-         Du9TmHMGos9iOLqosPvQIXj20/eLaAYGIHPFjCZp/k7oj1XHldSB4ivLZnSlo+Br6Zab
-         Dy6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mail-followup-to
-         :mime-version:content-disposition:user-agent;
-        bh=RiungAfe6C+5SeklziAwU3LRS+YiPryH6DunWlSldAc=;
-        b=Z2LAJNRuuToCxWQJvSAMeaUMDzygVih71K81sMrg12RfdSeONy+NdjsD1bytgyT/Ir
-         Rzfqxx32rbV4+/MagdB4W96eqYJ18Q3q+UJv2Z382gJ4t+6TOIbDoQ4cVOR9ooDfJtwo
-         kmYih4OL5mCqHOLbarVnOM+u928yyepMmZxWpHMPXutRL+PVxvFg6xFiq+csecf/pLUf
-         3lYq1IbV0L8OvmErXeLnb62NHe2QGQiojtYQ+/FeqiVZAz9oSPjpI6/avx0a1WxdE7UF
-         asB5gA0z1vgqmTN/ZJUa+h+ILTP9kaYMAGxMQOdQ5dwpGvey6Ky3FfJ71FBasGC8dZVY
-         zbEA==
-X-Gm-Message-State: APjAAAXLJjNV9vz0tx9ZydOWAoR8a8W5MlBan7sBJKt4h7pTqSjW91cZ
-        hCQ21wRP3/faM8tkUIcjNJNmgE0X
-X-Google-Smtp-Source: APXvYqwKwhPCeN1QSSE0U561mJhFGsCK36OOsoTLhBhYsdGdjHlJjY40vDAhy8jlRFHHf+Zrx2FLKQ==
-X-Received: by 2002:a62:1a16:: with SMTP id a22mr80859531pfa.34.1577846603661;
-        Tue, 31 Dec 2019 18:43:23 -0800 (PST)
-Received: from Gentoo ([103.231.90.173])
-        by smtp.gmail.com with ESMTPSA id z11sm48971599pfk.96.2019.12.31.18.43.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 31 Dec 2019 18:43:22 -0800 (PST)
-Date:   Wed, 1 Jan 2020 08:13:04 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     LinuxKernel <linux-kernel@vger.kernel.org>
-Subject: Have a prosperous year , every one of you! 
-Message-ID: <20200101024301.GB30021@Gentoo>
-Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        LinuxKernel <linux-kernel@vger.kernel.org>
+        Tue, 31 Dec 2019 22:08:30 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1imUMp-00079e-Tz; Wed, 01 Jan 2020 03:08:15 +0000
+Date:   Wed, 1 Jan 2020 03:08:15 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
+ symlinks
+Message-ID: <20200101030815.GA17593@ZenIV.linux.org.uk>
+References: <20191230052036.8765-1-cyphar@cyphar.com>
+ <20191230054413.GX4203@ZenIV.linux.org.uk>
+ <20191230054913.c5avdjqbygtur2l7@yavin.dot.cyphar.com>
+ <20191230072959.62kcojxpthhdwmfa@yavin.dot.cyphar.com>
+ <20200101004324.GA11269@ZenIV.linux.org.uk>
+ <20200101005446.GH4203@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="DBIVS5p969aUjpLe"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200101005446.GH4203@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jan 01, 2020 at 12:54:46AM +0000, Al Viro wrote:
+> Note, BTW, that lookup_last() (aka walk_component()) does just
+> that - we only hit step_into() on LAST_NORM.  The same goes
+> for do_last().  mountpoint_last() not doing the same is _not_
+> intentional - it's definitely a bug.
+> 
+> Consider your testcase; link points to . here.  So the only
+> thing you could expect from trying to follow it would be
+> the directory 'link' lives in.  And you don't have it
+> when you reach the fscker via /proc/self/fd/3; what happens
+> instead is nd->path set to ./link (by nd_jump_link()) *AND*
+> step_into() called, pushing the same ./link onto stack.
+> It violates all kinds of assumptions made by fs/namei.c -
+> when pushing a symlink onto stack nd->path is expected to
+> contain the base directory for resolving it.
+> 
+> I'm fairly sure that this is the cause of at least some
+> of the insanity you've caught; there always could be
+> something else, of course, but this hole needs to be
+> closed in any case.
 
---DBIVS5p969aUjpLe
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+... and with removal of now unused local variable, that's
 
+mountpoint_last(): fix the treatment of LAST_BIND
 
+step_into() should be attempted only in LAST_NORM
+case, when we have the parent directory (in nd->path).
+We get away with that for LAST_DOT and LOST_DOTDOT,
+since those can't be symlinks, making step_init() and
+equivalent of path_to_nameidata() - we do a bit of
+useless work, but that's it.  For LAST_BIND (i.e.
+the case when we'd just followed a procfs-style
+symlink) we really can't go there - result might
+be a symlink and we really can't attempt following
+it.
 
---DBIVS5p969aUjpLe
-Content-Type: application/pgp-signature; name="signature.asc"
+lookup_last() and do_last() do handle that properly;
+mountpoint_last() should do the same.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl4MBzEACgkQsjqdtxFL
-KRUIFggAo+HPa/4uC9N3PBljBOjEGYk3irdrzymDxFFgfywSv2QYXzVz+t0VXsh1
-pyTHIZIWkh/wv3wxfYT+FCamuc5IaNBR3XsBTMouFCSWa3t6JEUvuN9kDs8KEMaw
-NQBmnn8nCQFdf5NrHYr2RT6mdYk1iJ8/hc4t89uFm64XlKVTsqysPWqcJ8F76/Op
-zSAETff/hQ6j+e5sSbgtL3AO20vxgoNcvXDGAITQwnt+wnHDtSLIm+mAcWJsMsXZ
-/9nUQZFSSHQDoNX7+jC1T6kQf+dUjDFy468Z8B3ZcLcKhKbdFKLcTJhuJGIk7v2v
-mKiemja0R3DJczITlG6cZ2Ct2xEQaw==
-=pEHj
------END PGP SIGNATURE-----
-
---DBIVS5p969aUjpLe--
+Cc: stable@vger.kernel.org
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+diff --git a/fs/namei.c b/fs/namei.c
+index d6c91d1e88cb..13f9f973722b 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -2643,7 +2643,6 @@ EXPORT_SYMBOL(user_path_at_empty);
+ static int
+ mountpoint_last(struct nameidata *nd)
+ {
+-	int error = 0;
+ 	struct dentry *dir = nd->path.dentry;
+ 	struct path path;
+ 
+@@ -2656,10 +2655,7 @@ mountpoint_last(struct nameidata *nd)
+ 	nd->flags &= ~LOOKUP_PARENT;
+ 
+ 	if (unlikely(nd->last_type != LAST_NORM)) {
+-		error = handle_dots(nd, nd->last_type);
+-		if (error)
+-			return error;
+-		path.dentry = dget(nd->path.dentry);
++		return handle_dots(nd, nd->last_type);
+ 	} else {
+ 		path.dentry = d_lookup(dir, &nd->last);
+ 		if (!path.dentry) {
