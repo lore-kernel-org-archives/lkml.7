@@ -2,97 +2,61 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9610C32764
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 20:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5650C2D0DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 21:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A359A208C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 20:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E562064B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 21:04:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbgAAUvW (ORCPT
+        id S1727309AbgAAVEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 15:51:22 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:56947 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727215AbgAAUvV (ORCPT
+        Wed, 1 Jan 2020 16:04:33 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:58440 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbgAAVEd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 15:51:21 -0500
-Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MWBGG-1jG20514Qc-00Xf5u; Wed, 01 Jan 2020 21:51:19 +0100
-Received: by mail-qk1-f178.google.com with SMTP id x129so30166581qke.8;
-        Wed, 01 Jan 2020 12:51:18 -0800 (PST)
-X-Gm-Message-State: APjAAAWSqrOU/sHxPHKlWeKo828rBE0U0DVU7TqNMtKhhvffNl5rYXmO
-        YAkB2W+/gVgELNz/hVD9tcVp3lLPgTX+09e4J2g=
-X-Google-Smtp-Source: APXvYqwPUffdxOwkYrrGlQKEUjh0DqO0/sbzUbDfmtql+dmrfAoS6A5yQuvY8II40XAftlk8yxtyRvUCyFvgSLjFMYA=
-X-Received: by 2002:a37:2f02:: with SMTP id v2mr61985919qkh.3.1577911877938;
- Wed, 01 Jan 2020 12:51:17 -0800 (PST)
+        Wed, 1 Jan 2020 16:04:33 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1imlAI-000GeY-2c; Wed, 01 Jan 2020 21:04:26 +0000
+Date:   Wed, 1 Jan 2020 21:04:26 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kbuild@vger.kernel.org, Rob Landley <rob@landley.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] menuconfig: restore prompt dependencies in help text
+Message-ID: <20200101210426.GA8904@ZenIV.linux.org.uk>
+References: <20191231055839.GG4203@ZenIV.linux.org.uk>
+ <20200101204152.402906-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-References: <20200101175916.558284-1-paulburton@kernel.org>
-In-Reply-To: <20200101175916.558284-1-paulburton@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 1 Jan 2020 21:51:02 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2a1aY9G+Nh9fy+NU=YA_m1dxm-4SCHgydVO5kcydh77g@mail.gmail.com>
-Message-ID: <CAK8P3a2a1aY9G+Nh9fy+NU=YA_m1dxm-4SCHgydVO5kcydh77g@mail.gmail.com>
-Subject: Re: [PATCH] MIPS: Don't declare __current_thread_info globally
-To:     Paul Burton <paulburton@kernel.org>
-Cc:     "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Christian Brauner <christian.brauner@canonical.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        "# 3.4.x" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:2rtdkpAtrO0rIVNjV1PXPRT+x8s3zFerjLVvDm+ppkfNc7XJJEK
- AiDvikYtt3241DVPkLSLr+K2fHRZuP4gxEPIdDvDbezRbFeJy3JkevOYVRGXRMuDFMCvCFO
- Lnm9lg8vSVpYV57tQa7eTEcfA8H5FjNMIQkcAR9hjp1W4Bo16HE+aCdQURqu4AYV369SPZg
- JKyA1VT3AeZGpVZBE1yyw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:AqZ9YiHFvQI=:jC67QZvuDmpFXxawCRXEsa
- RrW2E3H5LRNThKJnVq2V6Tz2EuehJm5Ve9ex4cVLCvN2ayOlhTf/nDxaSh3a2GwY52ssH8yO4
- zn4oMlz+xNSqzkcwBsPU10rjsx5BweuGdgudFdSoQnKBQgqHUq3hAF6BYVDtJaGkOKMGokZla
- epXCh6sEHPoIbuBPuZ95GK/qSnulXbr2NHuy8zTp7HxL37N503i0Eg8FskyzYuhzUqHZg4fBP
- JgMVSg6mJf5o5iPjHEoMwqOlwprhvb3mVDWlKGMRsApdi8Sbcbrp7fBxn4yeFUZbM0ti+VGa7
- tt7fcVxICve2K53j+s+IIUcjofffK66rOx7NDiHoTxV2irVnCBiR29aUO8nF2MczpQmiWcq1Q
- /q/kj6LKAaBhCklOt1riFBhKWS1VAR3BmkMH0aegN7rIYNQfKD5NM+1mUjkw3Vngvpr/F33sn
- Rhe+7m0fHO6tIYTVrxsp6CDOzxeQ+dK4PUpacTpQ0TvFWXDx0eABuEhip2DwtKVGu08SdDKVI
- 8regV24yt/5+HXdLNXq3u6rd01a4WGWtPE9YYAUskv4ZXQ3kT7OlZaOOzKAHW53Iv1e4+NefT
- D67Vs+DaDtqnf9Qqbi1CaoLAK9kwPtFGI2G250FH7hZ2dJHou23+RF04WvUrImUAoEkHrIbVS
- Jn+TY8XJIY9OmeDmObBsm7Vc/XtS2cppyGAjuUQZcS6inEAd/rGt1Ewka27JWuUOPAuh+Gr+c
- 5vhg3wCoXv4ij6BFvxB68FgFLK2W4WKrQSEOK7I7Bx9iUjn6SBAPzqa/IYuSAEf+sbqFuCxgP
- almClZtq4DrEQAvqURUKGNu//z1TGTj204w6VeqSD4XX35MvfreohfinUWDmGqrJkC5/VmJAM
- 5GOnnA/zdVa+e9DtdH7g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200101204152.402906-1-nivedita@alum.mit.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 1, 2020 at 6:57 PM Paul Burton <paulburton@kernel.org> wrote:
-> diff --git a/arch/mips/include/asm/thread_info.h b/arch/mips/include/asm/thread_info.h
-> index 4993db40482c..aceefc3f9a1a 100644
-> --- a/arch/mips/include/asm/thread_info.h
-> +++ b/arch/mips/include/asm/thread_info.h
-> @@ -50,10 +50,10 @@ struct thread_info {
->  }
->
->  /* How to get the thread information struct from C.  */
-> -register struct thread_info *__current_thread_info __asm__("$28");
-> -
->  static inline struct thread_info *current_thread_info(void)
->  {
-> +       register struct thread_info *__current_thread_info __asm__("$28");
-> +
->         return __current_thread_info;
->  }
+On Wed, Jan 01, 2020 at 03:41:52PM -0500, Arvind Sankar wrote:
+> Commit bcdedcc1afd6 ("menuconfig: print more info for symbol without
+> prompts") moved some code from get_prompt_str to get_symbol_str so that
+> dependency information for symbols without prompts could be shown.
+> 
+> This code would be better copied rather than moved, as the change had
+> the side-effect of not showing any extra dependencies that the prompt
+> might have over the symbol.
+> 
+> Put back a copy of the dependency printing code in get_prompt_str.
 
-This looks like a nice fix, but are you sure it doesn't allow the compiler to
-reuse $28 for another purpose in the kernel under register pressure,
-which would break current_thread_info()?
+Umm... Is "visible" really accurate in this case?  AFAICS, the
+entry (and help for it) _is_ visible with EXPERT=n.  OTOH, with
+EXPERT=y and MULTIUSER=n it disappears completely.
 
-I see in the MIPS ABI document that $28 is preserved across function
-calls, but I don't see any indication that a function is not allowed
-to modify it and later restore the original content.
-
-        Arnd
+I'm not familiar with kconfig guts (and not too concerned about that
+feature of help there, TBH), but it looks like what you are printing
+there is some mix of dependencies ("visible when") and selectability...
