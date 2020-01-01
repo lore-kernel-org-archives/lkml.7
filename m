@@ -2,240 +2,588 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C6EC2D0DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 10:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B16BCC32764
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 10:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21221206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 10:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72106206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 10:10:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbgAAKHd (ORCPT
+        id S1727152AbgAAKKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 05:07:33 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:52325 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbgAAKHb (ORCPT
+        Wed, 1 Jan 2020 05:10:12 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:52078 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgAAKKM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 05:07:31 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1imauH-0004P0-MQ; Wed, 01 Jan 2020 11:07:14 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 169A81C2BFF;
-        Wed,  1 Jan 2020 11:07:13 +0100 (CET)
-Date:   Wed, 01 Jan 2020 10:07:12 -0000
-From:   "tip-bot2 for Jann Horn" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/kasan: Print original address on #GP
-Cc:     Jann Horn <jannh@google.com>, Borislav Petkov <bp@suse.de>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        kasan-dev@googlegroups.com, "linux-mm" <linux-mm@kvack.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86-ml" <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191218231150.12139-4-jannh@google.com>
-References: <20191218231150.12139-4-jannh@google.com>
+        Wed, 1 Jan 2020 05:10:12 -0500
+Received: from [IPv6:2a02:810a:113f:ad1c:8124:c8f:bb09:d48e] (unknown [IPv6:2a02:810a:113f:ad1c:8124:c8f:bb09:d48e])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: dafna)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 5DFB12611CB;
+        Wed,  1 Jan 2020 10:10:07 +0000 (GMT)
+Subject: Re: [PATCH v4] media: vimc: Enable set resolution at the scaler src
+ pad
+To:     Helen Koike <helen.koike@collabora.com>,
+        Pedro Terra <pirate@terraco.de>, mchehab@kernel.org,
+        skhan@linuxfoundation.org, hverkuil-cisco@xs4all.nl,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org
+Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
+        Gabriel Francisco Mandaji <gfmandaji@gmail.com>
+References: <20191229194214.4592-1-pirate@terraco.de>
+ <5b0227ba-dd3d-abb9-073f-2b778310cf44@collabora.com>
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Message-ID: <b8a8da93-f36f-6401-75dc-f5cb66a0fa89@collabora.com>
+Date:   Wed, 1 Jan 2020 11:10:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Message-ID: <157787323296.30329.6279558999926427913.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <5b0227ba-dd3d-abb9-073f-2b778310cf44@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/core branch of tip:
+Hi,
 
-Commit-ID:     2f004eea0fc8f86b45dfc2007add2d4986de8d02
-Gitweb:        https://git.kernel.org/tip/2f004eea0fc8f86b45dfc2007add2d4986de8d02
-Author:        Jann Horn <jannh@google.com>
-AuthorDate:    Thu, 19 Dec 2019 00:11:50 +01:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 31 Dec 2019 13:15:38 +01:00
 
-x86/kasan: Print original address on #GP
+On 30.12.19 14:59, Helen Koike wrote:
+> Hi,
+> 
+> Thanks for the patch, just minor comments below.
+> 
+> On 12/29/19 5:42 PM, Pedro Terra wrote:
+>> Modify the scaler subdevice to accept setting the resolution of the source
+>> pad (previously the source resolution would always be 3 times the sink for
+>> both dimensions). Now any resolution can be set at src (even smaller ones)
+>> and the sink video will be scaled to match it.
+>>
+>> Test example: With the vimc module up (using the default vimc topology)
+>> media-ctl -d /dev/media0 -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
+>> media-ctl -d /dev/media0 -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
+>> media-ctl -d /dev/media0 -V '"Scaler":0[fmt:RGB888_1X24/640x480]'
+>> media-ctl -d /dev/media0 -V '"Scaler":0[crop:(100,50)/400x150]'
+>> media-ctl -d /dev/media0 -V '"Scaler":1[fmt:RGB888_1X24/300x700]'
+>> v4l2-ctl -d /dev/video2 -v width=300,height=700
+>> v4l2-ctl -d /dev/video0 -v pixelformat=BA81
+>> v4l2-ctl --stream-mmap --stream-count=10 -d /dev/video2 \
+>> 	--stream-to=test.raw
+>> ffplay -loglevel warning -v info -f rawvideo -pixel_format rgb24 \
+>> 	-video_size "300x700" test.raw
+>>
+>> Co-developed-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+>> Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+>> Co-developed-by: Gabriel Francisco Mandaji <gfmandaji@gmail.com>
+>> Signed-off-by: Gabriel Francisco Mandaji <gfmandaji@gmail.com>
+>> Signed-off-by: Pedro "pirate" Terra <pirate@terraco.de>
+>>
+>> ---
+>>
+>> Changes in V4:
+>> * Rebased with media/master
+>> * Scaling is now compatible with crop
+>> * Updated test example at the commit message
+>> * Add vimc prefix to the pad enumeration
+>>
+>> Changes in V3:
+>> * Corrections suggested by Hans:
+>> 	- Default scaling factor is now 1 (we removed the define and
+>> 	  set the source format equals the sink).
+>> 	- Removed SCA_COUNT (enum that represents the number of pads)
+>> 	  as there always 2
+>> 	- Swapped the per byte pixel copy to memcpy.
+>> * Corrections suggested by Dafna:
+>> 	- Removed from the documentation the old scaler parameter which
+>> 	  isn't necessary anymore.
+>> * Added a thank you note at the end of the email
+>>
+>> Changes in V2:
+>> * Patch was not sent to media list mail for some reason (even though it
+>> was on the Cc list), trying again.
+>> * Updating documentation.
+>>
+>> Hello!
+>> This code is the result of friends getting together with too much
+>> coffee, sugar and beer trying to get started with some kernel coding.
+>> Please, don't go easy on us! s2
+>>
+>> Running
+>> /usr/local/bin/v4l2-compliance -m /dev/media0
+>> Gave the following result:
+>> v4l2-compliance SHA: b393a5408383b7341883857dfda78537f2f85ef6, 64 bits
+>> Grand Total for vimc device /dev/media0: 451, Succeeded: 451, Failed: 0, Warnings: 0
+>> ---
+>>   Documentation/media/v4l-drivers/vimc.rst  |  21 +-
+>>   drivers/media/platform/vimc/vimc-scaler.c | 248 +++++++---------------
+>>   2 files changed, 87 insertions(+), 182 deletions(-)
+>>
+>> diff --git a/Documentation/media/v4l-drivers/vimc.rst b/Documentation/media/v4l-drivers/vimc.rst
+>> index 8f5d7f8d83bb..af04ebbd4fa1 100644
+>> --- a/Documentation/media/v4l-drivers/vimc.rst
+>> +++ b/Documentation/media/v4l-drivers/vimc.rst
+>> @@ -61,9 +61,11 @@ vimc-debayer:
+>>   	* 1 Pad source
+>>   
+>>   vimc-scaler:
+>> -	Scale up the image by a factor of 3. E.g.: a 640x480 image becomes a
+>> -        1920x1440 image. (this value can be configured, see at
+>> -        `Module options`_).
+>> +	Re-size the image to meet the source pad resolution. E.g.: if the sync pad
+>> +is configured to 360x480 and the source to 1280x720, the image will be stretched
+>> +to fit the source resolution. Works for any resolution within the vimc
+>> +limitations (even shrinking the image if necessary).
+>> +
+>>   	Exposes:
+>>   
+>>   	* 1 Pad sink
+>> @@ -76,19 +78,6 @@ vimc-capture:
+>>   	* 1 Pad sink
+>>   	* 1 Pad source
+>>   
+>> -
+>> -Module options
+>> ---------------
+>> -
+>> -Vimc has a module parameter to configure the driver.
+>> -
+>> -* ``sca_mult=<unsigned int>``
+>> -
+>> -        Image size multiplier factor to be used to multiply both width and
+>> -        height, so the image size will be ``sca_mult^2`` bigger than the
+>> -        original one. Currently, only supports scaling up (the default value
+>> -        is 3).
+>> -
+>>   Source code documentation
+>>   -------------------------
+>>   
+>> diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
+>> index e2e551bc3ded..785009b7ac9e 100644
+>> --- a/drivers/media/platform/vimc/vimc-scaler.c
+>> +++ b/drivers/media/platform/vimc/vimc-scaler.c
+>> @@ -6,6 +6,7 @@
+>>    */
+>>   
+>>   #include <linux/moduleparam.h>
+>> +#include <linux/string.h>
+>>   #include <linux/vmalloc.h>
+>>   #include <linux/v4l2-mediabus.h>
+>>   #include <media/v4l2-rect.h>
+>> @@ -13,11 +14,11 @@
+>>   
+>>   #include "vimc-common.h"
+>>   
+>> -static unsigned int sca_mult = 3;
+>> -module_param(sca_mult, uint, 0000);
+>> -MODULE_PARM_DESC(sca_mult, " the image size multiplier");
+>> -
+>> -#define MAX_ZOOM	8
+>> +/* Pad identifier */
+>> +enum vimc_sca_pad {
+>> +	VIMC_SCA_SINK = 0,
+>> +	VIMC_SCA_SRC = 1,
+>> +};
+>>   
+>>   #define VIMC_SCA_FMT_WIDTH_DEFAULT  640
+>>   #define VIMC_SCA_FMT_HEIGHT_DEFAULT 480
+>> @@ -25,14 +26,11 @@ MODULE_PARM_DESC(sca_mult, " the image size multiplier");
+>>   struct vimc_sca_device {
+>>   	struct vimc_ent_device ved;
+>>   	struct v4l2_subdev sd;
+>> -	/* NOTE: the source fmt is the same as the sink
+>> -	 * with the width and hight multiplied by mult
+>> -	 */
+>> -	struct v4l2_mbus_framefmt sink_fmt;
+>>   	struct v4l2_rect crop_rect;
+>> +	/* Frame format for both sink and src pad */
+>> +	struct v4l2_mbus_framefmt fmt[2];
+>>   	/* Values calculated when the stream starts */
+>>   	u8 *src_frame;
+>> -	unsigned int src_line_size;
+>>   	unsigned int bpp;
+>>   	struct media_pad pads[2];
+>>   };
+>> @@ -90,17 +88,15 @@ static int vimc_sca_init_cfg(struct v4l2_subdev *sd,
+>>   	struct v4l2_rect *r;
+>>   	unsigned int i;
+>>   
+>> -	mf = v4l2_subdev_get_try_format(sd, cfg, 0);
+>> +	mf = v4l2_subdev_get_try_format(sd, cfg, VIMC_SCA_SINK);
+>>   	*mf = sink_fmt_default;
+>>   
+>> -	r = v4l2_subdev_get_try_crop(sd, cfg, 0);
+>> +	r = v4l2_subdev_get_try_crop(sd, cfg, VIMC_SCA_SINK);
+>>   	*r = crop_rect_default;
+>>   
+>>   	for (i = 1; i < sd->entity.num_pads; i++) {
+>>   		mf = v4l2_subdev_get_try_format(sd, cfg, i);
+>>   		*mf = sink_fmt_default;
+>> -		mf->width = mf->width * sca_mult;
+>> -		mf->height = mf->height * sca_mult;
+>>   	}
+>>   
+>>   	return 0;
+>> @@ -137,14 +133,8 @@ static int vimc_sca_enum_frame_size(struct v4l2_subdev *sd,
+>>   
+>>   	fse->min_width = VIMC_FRAME_MIN_WIDTH;
+>>   	fse->min_height = VIMC_FRAME_MIN_HEIGHT;
+>> -
+>> -	if (VIMC_IS_SINK(fse->pad)) {
+>> -		fse->max_width = VIMC_FRAME_MAX_WIDTH;
+>> -		fse->max_height = VIMC_FRAME_MAX_HEIGHT;
+>> -	} else {
+>> -		fse->max_width = VIMC_FRAME_MAX_WIDTH * MAX_ZOOM;
+>> -		fse->max_height = VIMC_FRAME_MAX_HEIGHT * MAX_ZOOM;
+>> -	}
+>> +	fse->max_width = VIMC_FRAME_MAX_WIDTH;
+>> +	fse->max_height = VIMC_FRAME_MAX_HEIGHT;
+>>   
+>>   	return 0;
+>>   }
+>> @@ -154,95 +144,73 @@ static int vimc_sca_get_fmt(struct v4l2_subdev *sd,
+>>   			    struct v4l2_subdev_format *format)
+>>   {
+>>   	struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
+>> -	struct v4l2_rect *crop_rect;
+>>   
+>> -	/* Get the current sink format */
+>> -	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
+>> -		format->format = *v4l2_subdev_get_try_format(sd, cfg, 0);
+>> -		crop_rect = v4l2_subdev_get_try_crop(sd, cfg, 0);
+>> -	} else {
+>> -		format->format = vsca->sink_fmt;
+>> -		crop_rect = &vsca->crop_rect;
+>> -	}
+>> -
+>> -	/* Scale the frame size for the source pad */
+>> -	if (VIMC_IS_SRC(format->pad)) {
+>> -		format->format.width = crop_rect->width * sca_mult;
+>> -		format->format.height = crop_rect->height * sca_mult;
+>> -	}
+>> +	if (format->which == V4L2_SUBDEV_FORMAT_TRY)
+>> +		format->format = *v4l2_subdev_get_try_format(sd, cfg,
+>> +							     format->pad);
+>> +	else
+>> +		format->format = vsca->fmt[format->pad];
+>>   
+>>   	return 0;
+>>   }
+>>   
+>> -static void vimc_sca_adjust_sink_fmt(struct v4l2_mbus_framefmt *fmt)
+>> +static void vimc_sca_adjust_fmt(struct v4l2_mbus_framefmt *fmt[], __u32 pad)
+>>   {
+>> -	const struct vimc_pix_map *vpix;
+>> +	if (pad == VIMC_SCA_SINK) {
+>> +		const struct vimc_pix_map *vpix;
+>>   
+>> -	/* Only accept code in the pix map table in non bayer format */
+>> -	vpix = vimc_pix_map_by_code(fmt->code);
+>> -	if (!vpix || vpix->bayer)
+>> -		fmt->code = sink_fmt_default.code;
+>> +		/* Only accept code in the pix map table in non bayer format */
+>> +		vpix = vimc_pix_map_by_code(fmt[VIMC_SCA_SINK]->code);
+>> +		if (!vpix || vpix->bayer)
+>> +			fmt[VIMC_SCA_SINK]->code = sink_fmt_default.code;
+>> +		if (fmt[VIMC_SCA_SINK]->field == V4L2_FIELD_ANY)
+>> +			fmt[VIMC_SCA_SINK]->field = sink_fmt_default.field;
+>>   
+>> -	fmt->width = clamp_t(u32, fmt->width, VIMC_FRAME_MIN_WIDTH,
+>> +		vimc_colorimetry_clamp(fmt[VIMC_SCA_SINK]);
+>> +	}
+>> +
+>> +	fmt[pad]->width = clamp_t(u32, fmt[pad]->width, VIMC_FRAME_MIN_WIDTH,
+>>   			     VIMC_FRAME_MAX_WIDTH) & ~1;
+> 
+> Could you fix the alignment here?
+> For some reason checkpatch doesn't catch this :(
+> 
+>> -	fmt->height = clamp_t(u32, fmt->height, VIMC_FRAME_MIN_HEIGHT,
+>> +	fmt[pad]->height = clamp_t(u32, fmt[pad]->height, VIMC_FRAME_MIN_HEIGHT,
+>>   			      VIMC_FRAME_MAX_HEIGHT) & ~1;
+> 
+> Also here.
+> 
+>>   
+>> -	if (fmt->field == V4L2_FIELD_ANY)
+>> -		fmt->field = sink_fmt_default.field;
+>> -
+>> -	vimc_colorimetry_clamp(fmt);
+>> +	/* Assure src pad attributes besides dimensions are the same as sink */
+>> +	fmt[VIMC_SCA_SRC]->code = fmt[VIMC_SCA_SINK]->code;
+>> +	fmt[VIMC_SCA_SRC]->field = fmt[VIMC_SCA_SINK]->field;
+>> +	fmt[VIMC_SCA_SRC]->colorspace = fmt[VIMC_SCA_SINK]->colorspace;
+> 
+> Ideally we should propagate all the other fields to src. Maybe save width and height to
+> a tmp var, assing the whole sink fmt to src, and restore width and height.
+> 
+Acctually according to the subdevices documentation, when changing the 
+sink format, the width and height of the src format should reset to the 
+same values:
 
-Make #GP exceptions caused by out-of-bounds KASAN shadow accesses easier
-to understand by computing the address of the original access and
-printing that. More details are in the comments in the patch.
+""
+-  Sub-devices that scale frames using variable scaling factors should
+    reset the scale factors to default values when sink pads formats are
+    modified. If the 1:1 scaling ratio is supported, this means that
+    source pads formats should be reset to the sink pads formats.
+""
+> 
+> 
+> With these changes:
+> Acked-by: Helen Koike <helen.koike@collabora.com>
+> 
+> Thanks
+> Helen
+> 
+> 
+>>   }
+>>   
+>>   static int vimc_sca_set_fmt(struct v4l2_subdev *sd,
+>>   			    struct v4l2_subdev_pad_config *cfg,
+>> -			    struct v4l2_subdev_format *fmt)
+>> +			    struct v4l2_subdev_format *format)
+>>   {
+>>   	struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
+>> -	struct v4l2_mbus_framefmt *sink_fmt;
+>> +	struct v4l2_mbus_framefmt *fmt[2];
+>>   	struct v4l2_rect *crop_rect;
+>>   
+>> -	if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
+>> +	if (format->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
+>>   		/* Do not change the format while stream is on */
+>>   		if (vsca->src_frame)
+>>   			return -EBUSY;
+>>   
+>> -		sink_fmt = &vsca->sink_fmt;
+>> +		fmt[VIMC_SCA_SINK] = &vsca->fmt[VIMC_SCA_SINK];
+>> +		fmt[VIMC_SCA_SRC] = &vsca->fmt[VIMC_SCA_SRC];
+>>   		crop_rect = &vsca->crop_rect;
+>>   	} else {
+>> -		sink_fmt = v4l2_subdev_get_try_format(sd, cfg, 0);
+>> -		crop_rect = v4l2_subdev_get_try_crop(sd, cfg, 0);
+>> +		fmt[VIMC_SCA_SINK] = v4l2_subdev_get_try_format(sd, cfg,
+>> +								VIMC_SCA_SINK);
+>> +		fmt[VIMC_SCA_SRC] = v4l2_subdev_get_try_format(sd, cfg,
+>> +							       VIMC_SCA_SRC);
+>> +		crop_rect = v4l2_subdev_get_try_crop(sd, cfg, VIMC_SCA_SINK);
+>>   	}
+>>   
+>> -	/*
+>> -	 * Do not change the format of the source pad,
+>> -	 * it is propagated from the sink
+>> -	 */
+>> -	if (VIMC_IS_SRC(fmt->pad)) {
+>> -		fmt->format = *sink_fmt;
+>> -		fmt->format.width = crop_rect->width * sca_mult;
+>> -		fmt->format.height = crop_rect->height * sca_mult;
+>> -	} else {
+>> -		/* Set the new format in the sink pad */
+>> -		vimc_sca_adjust_sink_fmt(&fmt->format);
+>> -
+>> -		dev_dbg(vsca->ved.dev, "%s: sink format update: "
+>> -			"old:%dx%d (0x%x, %d, %d, %d, %d) "
+>> -			"new:%dx%d (0x%x, %d, %d, %d, %d)\n", vsca->sd.name,
+>> -			/* old */
+>> -			sink_fmt->width, sink_fmt->height, sink_fmt->code,
+>> -			sink_fmt->colorspace, sink_fmt->quantization,
+>> -			sink_fmt->xfer_func, sink_fmt->ycbcr_enc,
+>> -			/* new */
+>> -			fmt->format.width, fmt->format.height, fmt->format.code,
+>> -			fmt->format.colorspace,	fmt->format.quantization,
+>> -			fmt->format.xfer_func, fmt->format.ycbcr_enc);
+>> -
+>> -		*sink_fmt = fmt->format;
+>> +	*fmt[format->pad] = format->format;
+>> +	vimc_sca_adjust_fmt(fmt, format->pad);
+>> +	format->format = *fmt[format->pad];
+>>   
+>> +	if (format->pad == VIMC_SCA_SINK)
+>>   		/* Do the crop, but respect the current bounds */
+>> -		vimc_sca_adjust_sink_crop(crop_rect, sink_fmt);
+>> -	}
+>> +		vimc_sca_adjust_sink_crop(crop_rect, fmt[VIMC_SCA_SINK]);
+>>   
+>>   	return 0;
+>>   }
+>> @@ -259,11 +227,11 @@ static int vimc_sca_get_selection(struct v4l2_subdev *sd,
+>>   		return -EINVAL;
+>>   
+>>   	if (sel->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
+>> -		sink_fmt = &vsca->sink_fmt;
+>> +		sink_fmt = &vsca->fmt[VIMC_SCA_SINK];
+>>   		crop_rect = &vsca->crop_rect;
+>>   	} else {
+>> -		sink_fmt = v4l2_subdev_get_try_format(sd, cfg, 0);
+>> -		crop_rect = v4l2_subdev_get_try_crop(sd, cfg, 0);
+>> +		sink_fmt = v4l2_subdev_get_try_format(sd, cfg, VIMC_SCA_SINK);
+>> +		crop_rect = v4l2_subdev_get_try_crop(sd, cfg, VIMC_SCA_SINK);
+>>   	}
+>>   
+>>   	switch (sel->target) {
+>> @@ -297,10 +265,10 @@ static int vimc_sca_set_selection(struct v4l2_subdev *sd,
+>>   			return -EBUSY;
+>>   
+>>   		crop_rect = &vsca->crop_rect;
+>> -		sink_fmt = &vsca->sink_fmt;
+>> +		sink_fmt = &vsca->fmt[VIMC_SCA_SINK];
+>>   	} else {
+>> -		crop_rect = v4l2_subdev_get_try_crop(sd, cfg, 0);
+>> -		sink_fmt = v4l2_subdev_get_try_format(sd, cfg, 0);
+>> +		crop_rect = v4l2_subdev_get_try_crop(sd, cfg, VIMC_SCA_SINK);
+>> +		sink_fmt = v4l2_subdev_get_try_format(sd, cfg, VIMC_SCA_SINK);
+>>   	}
+>>   
+>>   	switch (sel->target) {
+>> @@ -338,16 +306,12 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
+>>   			return 0;
+>>   
+>>   		/* Save the bytes per pixel of the sink */
+>> -		vpix = vimc_pix_map_by_code(vsca->sink_fmt.code);
+>> +		vpix = vimc_pix_map_by_code(vsca->fmt[VIMC_SCA_SINK].code);
+>>   		vsca->bpp = vpix->bpp;
+>>   
+>> -		/* Calculate the width in bytes of the src frame */
+>> -		vsca->src_line_size = vsca->crop_rect.width *
+>> -				      sca_mult * vsca->bpp;
+>> -
+>>   		/* Calculate the frame size of the source pad */
+>> -		frame_size = vsca->src_line_size * vsca->crop_rect.height *
+>> -			     sca_mult;
+>> +		frame_size = vsca->fmt[VIMC_SCA_SRC].width
+>> +			     * vsca->fmt[VIMC_SCA_SRC].height * vsca->bpp;
+>>   
+>>   		/* Allocate the frame buffer. Use vmalloc to be able to
+>>   		 * allocate a large amount of memory
+>> @@ -376,77 +340,28 @@ static const struct v4l2_subdev_ops vimc_sca_ops = {
+>>   	.video = &vimc_sca_video_ops,
+>>   };
+>>   
+>> -static void vimc_sca_fill_pix(u8 *const ptr,
+>> -			      const u8 *const pixel,
+>> -			      const unsigned int bpp)
+>> -{
+>> -	unsigned int i;
+>> -
+>> -	/* copy the pixel to the pointer */
+>> -	for (i = 0; i < bpp; i++)
+>> -		ptr[i] = pixel[i];
+>> -}
+>> -
+>> -static void vimc_sca_scale_pix(const struct vimc_sca_device *const vsca,
+>> -			       unsigned int lin, unsigned int col,
+>> -			       const u8 *const sink_frame)
+>> -{
+>> -	const struct v4l2_rect crop_rect = vsca->crop_rect;
+>> -	unsigned int i, j, index;
+>> -	const u8 *pixel;
+>> -
+>> -	/* Point to the pixel value in position (lin, col) in the sink frame */
+>> -	index = VIMC_FRAME_INDEX(lin, col,
+>> -				 vsca->sink_fmt.width,
+>> -				 vsca->bpp);
+>> -	pixel = &sink_frame[index];
+>> -
+>> -	dev_dbg(vsca->ved.dev,
+>> -		"sca: %s: --- scale_pix sink pos %dx%d, index %d ---\n",
+>> -		vsca->sd.name, lin, col, index);
+>> -
+>> -	/* point to the place we are going to put the first pixel
+>> -	 * in the scaled src frame
+>> -	 */
+>> -	lin -= crop_rect.top;
+>> -	col -= crop_rect.left;
+>> -	index = VIMC_FRAME_INDEX(lin * sca_mult, col * sca_mult,
+>> -				 crop_rect.width * sca_mult, vsca->bpp);
+>> -
+>> -	dev_dbg(vsca->ved.dev, "sca: %s: scale_pix src pos %dx%d, index %d\n",
+>> -		vsca->sd.name, lin * sca_mult, col * sca_mult, index);
+>> -
+>> -	/* Repeat this pixel mult times */
+>> -	for (i = 0; i < sca_mult; i++) {
+>> -		/* Iterate through each beginning of a
+>> -		 * pixel repetition in a line
+>> -		 */
+>> -		for (j = 0; j < sca_mult * vsca->bpp; j += vsca->bpp) {
+>> -			dev_dbg(vsca->ved.dev,
+>> -				"sca: %s: sca: scale_pix src pos %d\n",
+>> -				vsca->sd.name, index + j);
+>> -
+>> -			/* copy the pixel to the position index + j */
+>> -			vimc_sca_fill_pix(&vsca->src_frame[index + j],
+>> -					  pixel, vsca->bpp);
+>> -		}
+>> -
+>> -		/* move the index to the next line */
+>> -		index += vsca->src_line_size;
+>> -	}
+>> -}
+>> -
+>>   static void vimc_sca_fill_src_frame(const struct vimc_sca_device *const vsca,
+>>   				    const u8 *const sink_frame)
+>>   {
+>> -	const struct v4l2_rect r = vsca->crop_rect;
+>> -	unsigned int i, j;
+>> -
+>> -	/* Scale each pixel from the original sink frame */
+>> -	/* TODO: implement scale down, only scale up is supported for now */
+>> -	for (i = r.top; i < r.top + r.height; i++)
+>> -		for (j = r.left; j < r.left + r.width; j++)
+>> -			vimc_sca_scale_pix(vsca, i, j, sink_frame);
+>> +	const struct v4l2_mbus_framefmt *src_fmt = &vsca->fmt[VIMC_SCA_SRC];
+>> +	const struct v4l2_rect *r = &vsca->crop_rect;
+>> +	unsigned int s_width = vsca->fmt[VIMC_SCA_SINK].width;
+better replace 's_width' with 'snk_width' (s can also indicate 'source')
 
-This turns an error like this:
+>> +	unsigned int lin, col, index;
+maybe replace 'lin' and 'col' with 'src_lin' 'src_col' and move 'index' 
+to inside the loop
+>> +	u8 *walker = vsca->src_frame;
+>> +
+>> +	/* Set each pixel at the src_frame to its sink_frame equivalent */
+>> +	for (lin = 0; lin < src_fmt->height; lin++) {
+>> +		for (col = 0; col < src_fmt->width; col++) {
+>> +			unsigned int s_lin, s_col;
+the 's_' prefix is confusing, better replace with 'snk_'
+>> +
+>> +			s_lin = (lin * r->height) / src_fmt->height + r->top;
+>> +			s_col = (col * r->width) / src_fmt->width + r->left;
+>> +			index = VIMC_FRAME_INDEX(s_lin, s_col, s_width,
+>> +						 vsca->bpp);
+>> +			memcpy(walker, &sink_frame[index], vsca->bpp);
+>> +			walker += vsca->bpp;
+>> +		}
+>> +	}
+>>   }
+>>   
+>>   static void *vimc_sca_process_frame(struct vimc_ent_device *ved,
+>> @@ -498,8 +413,8 @@ struct vimc_ent_device *vimc_sca_add(struct vimc_device *vimc,
+>>   		return NULL;
+>>   
+>>   	/* Initialize ved and sd */
+>> -	vsca->pads[0].flags = MEDIA_PAD_FL_SINK;
+>> -	vsca->pads[1].flags = MEDIA_PAD_FL_SOURCE;
+>> +	vsca->pads[VIMC_SCA_SINK].flags = MEDIA_PAD_FL_SINK;
+>> +	vsca->pads[VIMC_SCA_SRC].flags = MEDIA_PAD_FL_SOURCE;
+>>   
+>>   	ret = vimc_ent_sd_register(&vsca->ved, &vsca->sd, v4l2_dev,
+>>   				   vcfg_name,
+>> @@ -515,7 +430,8 @@ struct vimc_ent_device *vimc_sca_add(struct vimc_device *vimc,
+>>   	vsca->ved.dev = &vimc->pdev.dev;
+>>   
+>>   	/* Initialize the frame format */
+>> -	vsca->sink_fmt = sink_fmt_default;
+>> +	vsca->fmt[VIMC_SCA_SINK] = sink_fmt_default;
+>> +	vsca->fmt[VIMC_SCA_SRC] = sink_fmt_default;
+>>   
+>>   	/* Initialize the crop selection */
+>>   	vsca->crop_rect = crop_rect_default;
+>>
 
-  kasan: CONFIG_KASAN_INLINE enabled
-  kasan: GPF could be caused by NULL-ptr deref or user memory access
-  general protection fault, probably for non-canonical address
-      0xe017577ddf75b7dd: 0000 [#1] PREEMPT SMP KASAN PTI
-
-into this:
-
-  general protection fault, probably for non-canonical address
-      0xe017577ddf75b7dd: 0000 [#1] PREEMPT SMP KASAN PTI
-  KASAN: maybe wild-memory-access in range
-      [0x00badbeefbadbee8-0x00badbeefbadbeef]
-
-The hook is placed in architecture-independent code, but is currently
-only wired up to the X86 exception handler because I'm not sufficiently
-familiar with the address space layout and exception handling mechanisms
-on other architectures.
-
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: kasan-dev@googlegroups.com
-Cc: linux-mm <linux-mm@kvack.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191218231150.12139-4-jannh@google.com
----
- arch/x86/kernel/dumpstack.c |  2 ++-
- arch/x86/mm/kasan_init_64.c | 21 +-------------------
- include/linux/kasan.h       |  6 +++++-
- mm/kasan/report.c           | 40 ++++++++++++++++++++++++++++++++++++-
- 4 files changed, 48 insertions(+), 21 deletions(-)
-
-diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
-index 8995bf1..ae64ec7 100644
---- a/arch/x86/kernel/dumpstack.c
-+++ b/arch/x86/kernel/dumpstack.c
-@@ -427,6 +427,8 @@ void die_addr(const char *str, struct pt_regs *regs, long err, long gp_addr)
- 	int sig = SIGSEGV;
- 
- 	__die_header(str, regs, err);
-+	if (gp_addr)
-+		kasan_non_canonical_hook(gp_addr);
- 	if (__die_body(str, regs, err))
- 		sig = 0;
- 	oops_end(flags, regs, sig);
-diff --git a/arch/x86/mm/kasan_init_64.c b/arch/x86/mm/kasan_init_64.c
-index cf5bc37..763e71a 100644
---- a/arch/x86/mm/kasan_init_64.c
-+++ b/arch/x86/mm/kasan_init_64.c
-@@ -288,23 +288,6 @@ static void __init kasan_shallow_populate_pgds(void *start, void *end)
- 	} while (pgd++, addr = next, addr != (unsigned long)end);
- }
- 
--#ifdef CONFIG_KASAN_INLINE
--static int kasan_die_handler(struct notifier_block *self,
--			     unsigned long val,
--			     void *data)
--{
--	if (val == DIE_GPF) {
--		pr_emerg("CONFIG_KASAN_INLINE enabled\n");
--		pr_emerg("GPF could be caused by NULL-ptr deref or user memory access\n");
--	}
--	return NOTIFY_OK;
--}
--
--static struct notifier_block kasan_die_notifier = {
--	.notifier_call = kasan_die_handler,
--};
--#endif
--
- void __init kasan_early_init(void)
- {
- 	int i;
-@@ -341,10 +324,6 @@ void __init kasan_init(void)
- 	int i;
- 	void *shadow_cpu_entry_begin, *shadow_cpu_entry_end;
- 
--#ifdef CONFIG_KASAN_INLINE
--	register_die_notifier(&kasan_die_notifier);
--#endif
--
- 	memcpy(early_top_pgt, init_top_pgt, sizeof(early_top_pgt));
- 
- 	/*
-diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-index e18fe54..5cde9e7 100644
---- a/include/linux/kasan.h
-+++ b/include/linux/kasan.h
-@@ -228,4 +228,10 @@ static inline void kasan_release_vmalloc(unsigned long start,
- 					 unsigned long free_region_end) {}
- #endif
- 
-+#ifdef CONFIG_KASAN_INLINE
-+void kasan_non_canonical_hook(unsigned long addr);
-+#else /* CONFIG_KASAN_INLINE */
-+static inline void kasan_non_canonical_hook(unsigned long addr) { }
-+#endif /* CONFIG_KASAN_INLINE */
-+
- #endif /* LINUX_KASAN_H */
-diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-index 6217821..5ef9f24 100644
---- a/mm/kasan/report.c
-+++ b/mm/kasan/report.c
-@@ -512,3 +512,43 @@ void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned lon
- 
- 	end_report(&flags);
- }
-+
-+#ifdef CONFIG_KASAN_INLINE
-+/*
-+ * With CONFIG_KASAN_INLINE, accesses to bogus pointers (outside the high
-+ * canonical half of the address space) cause out-of-bounds shadow memory reads
-+ * before the actual access. For addresses in the low canonical half of the
-+ * address space, as well as most non-canonical addresses, that out-of-bounds
-+ * shadow memory access lands in the non-canonical part of the address space.
-+ * Help the user figure out what the original bogus pointer was.
-+ */
-+void kasan_non_canonical_hook(unsigned long addr)
-+{
-+	unsigned long orig_addr;
-+	const char *bug_type;
-+
-+	if (addr < KASAN_SHADOW_OFFSET)
-+		return;
-+
-+	orig_addr = (addr - KASAN_SHADOW_OFFSET) << KASAN_SHADOW_SCALE_SHIFT;
-+	/*
-+	 * For faults near the shadow address for NULL, we can be fairly certain
-+	 * that this is a KASAN shadow memory access.
-+	 * For faults that correspond to shadow for low canonical addresses, we
-+	 * can still be pretty sure - that shadow region is a fairly narrow
-+	 * chunk of the non-canonical address space.
-+	 * But faults that look like shadow for non-canonical addresses are a
-+	 * really large chunk of the address space. In that case, we still
-+	 * print the decoded address, but make it clear that this is not
-+	 * necessarily what's actually going on.
-+	 */
-+	if (orig_addr < PAGE_SIZE)
-+		bug_type = "null-ptr-deref";
-+	else if (orig_addr < TASK_SIZE)
-+		bug_type = "probably user-memory-access";
-+	else
-+		bug_type = "maybe wild-memory-access";
-+	pr_alert("KASAN: %s in range [0x%016lx-0x%016lx]\n", bug_type,
-+		 orig_addr, orig_addr + KASAN_SHADOW_MASK);
-+}
-+#endif
+Thanks,
+Dafna
