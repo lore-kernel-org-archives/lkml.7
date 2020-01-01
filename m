@@ -2,234 +2,135 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C75BC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 17:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F902C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 17:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CF09207E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 17:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B412073D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 17:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbgAARa0 (ORCPT
+        id S1727302AbgAARkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 12:30:26 -0500
-Received: from isilmar-4.linta.de ([136.243.71.142]:55976 "EHLO
-        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbgAARaZ (ORCPT
+        Wed, 1 Jan 2020 12:40:11 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:33311 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbgAARkL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 12:30:25 -0500
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id CCB46200A62;
-        Wed,  1 Jan 2020 17:30:22 +0000 (UTC)
-Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id CB22920342; Wed,  1 Jan 2020 18:24:38 +0100 (CET)
-Date:   Wed, 1 Jan 2020 18:24:38 +0100
-From:   Dominik Brodowski <linux@dominikbrodowski.net>
-To:     youling 257 <youling257@gmail.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        viro@zeniv.linux.org.uk
-Subject: Re: [PATCH] early init: open /dev/console with O_LARGEFILE
-Message-ID: <20200101172438.GA38218@light.dominikbrodowski.net>
-References: <20191231150226.GA523748@light.dominikbrodowski.net>
- <20200101003017.GA116793@rani.riverdale.lan>
- <20200101104313.GA666771@light.dominikbrodowski.net>
- <CAOzgRdZ0eBNKAP_T8r=MF35WUtUMn07-14OwA+AXACyY=r5hqA@mail.gmail.com>
+        Wed, 1 Jan 2020 12:40:11 -0500
+Received: by mail-il1-f197.google.com with SMTP id s9so10202508ilk.0
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 09:40:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=dlDUquUSid34wTs0EaeCvi3g5BVDKJEYFR2h2rGAZUY=;
+        b=Wg0GJnrfuKD/vWBDo6O2oTJoXKV8JZMQjU6Wu/EItFX9uNElnzWwaQYLRdkP/kIrDO
+         v8EDbcJ81PrzwBA+ZfDanWFpp1qKPjZjO+0rrRWP+m6+p4L/WqsqbfdcqSRUx2kYUE5Q
+         KT+nDj4DCM4nfgStS4S59sa/idjUYUYh2m2IfHNJmukBecjNlM8++178WRx7VfPPe3K3
+         CAvOETMltJpPCgCMMJWk054PsZFedsUepQr1wD2xjrCPYE//eL8TGM49oXXFvdVilIvi
+         uWKx/3R59y7T8J7JBa4msxkQvdXp16shfVFs8jYJFsFPKl3ftYUMJeilq/LtUA0wRH5L
+         tGpA==
+X-Gm-Message-State: APjAAAVZFnFqB/3F2av0uZFSAtYGOWKNo6srB97pV38AqKi11CvnJEv9
+        BlVFNQ5JF37eEfY1Fq5TBjKnJtw3Q/QEBZDyD2NEM4UseOiP
+X-Google-Smtp-Source: APXvYqwjLWzQhtldHSIvSoxEpIFmm1yMqfa38TDZsfdOnP8uZ5u4pwDFKG45bWIvUtPnXFYz7ab9KhYx9kGXOaFNxaUHqKuN+GAf
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOzgRdZ0eBNKAP_T8r=MF35WUtUMn07-14OwA+AXACyY=r5hqA@mail.gmail.com>
+X-Received: by 2002:a6b:6d0f:: with SMTP id a15mr11076772iod.86.1577900408977;
+ Wed, 01 Jan 2020 09:40:08 -0800 (PST)
+Date:   Wed, 01 Jan 2020 09:40:08 -0800
+In-Reply-To: <0000000000006b9e8d059952095e@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005e40e3059b17917c@google.com>
+Subject: Re: KASAN: global-out-of-bounds Read in fbcon_get_font
+From:   syzbot <syzbot+29d4ed7f3bdedf2aa2fd@syzkaller.appspotmail.com>
+To:     b.zolnierkie@samsung.com, daniel.vetter@ffwll.ch,
+        dri-devel@lists.freedesktop.org, ghalat@redhat.com,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        maarten.lankhorst@linux.intel.com, sam@ravnborg.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 01, 2020 at 09:27:27PM +0800, youling 257 wrote:
-> Unfortunately, test this patch still no help, has system/bin/sh warning.
+syzbot has found a reproducer for the following crash on:
 
-Thanks for testing! Could you test one more try, please (on top of current
-mainline)? It's mainly a revert, and then an attempt to get ksys_open()
-right.
+HEAD commit:    738d2902 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14e396c1e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=874bac2ff63646fa
+dashboard link: https://syzkaller.appspot.com/bug?extid=29d4ed7f3bdedf2aa2fd
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17a0b866e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15fc963ee00000
 
-Thanks,
-	Dominik
+Bisection is inconclusive: the bug happens on the oldest tested release.
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15b75532e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=17b75532e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13b75532e00000
 
-NOTE: test patch only. Do not commit.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+29d4ed7f3bdedf2aa2fd@syzkaller.appspotmail.com
 
-diff --git a/fs/file.c b/fs/file.c
-index 2f4fcf985079..3da91a112bab 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -960,7 +960,7 @@ SYSCALL_DEFINE2(dup2, unsigned int, oldfd, unsigned int, newfd)
- 	return ksys_dup3(oldfd, newfd, 0);
- }
- 
--SYSCALL_DEFINE1(dup, unsigned int, fildes)
-+int ksys_dup(unsigned int fildes)
- {
- 	int ret = -EBADF;
- 	struct file *file = fget_raw(fildes);
-@@ -975,6 +975,11 @@ SYSCALL_DEFINE1(dup, unsigned int, fildes)
- 	return ret;
- }
- 
-+SYSCALL_DEFINE1(dup, unsigned int, fildes)
-+{
-+	return ksys_dup(fildes);
-+}
-+
- int f_dupfd(unsigned int from, struct file *file, unsigned flags)
- {
- 	int err;
-diff --git a/fs/open.c b/fs/open.c
-index b62f5c0923a8..270767c9966b 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -1079,7 +1079,50 @@ struct file *file_open_root(struct dentry *dentry, struct vfsmount *mnt,
- }
- EXPORT_SYMBOL(file_open_root);
- 
--long do_sys_open(int dfd, const char __user *filename, int flags, umode_t mode)
-+/**
-+ * ksys_open - open file and return fd
-+ *
-+ * @filename:	path to open
-+ * @flags:	open flags as per the open(2) second argument
-+ * @mode:	mode for the new file if O_CREAT is set, else ignored
-+ *
-+ * This is the helper to open a file from kernelspace if you really
-+ * have to.  But in generally you should not do this, so please move
-+ * along, nothing to see here..
-+ */
-+long ksys_open(const char *filename, int flags, umode_t mode)
-+{
-+	struct open_flags op;
-+	struct filename *tmp;
-+	int fd;
-+
-+	if (force_o_largefile())
-+		flags |= O_LARGEFILE;
-+
-+	fd = build_open_flags(flags, mode, &op);
-+	if (fd)
-+		return fd;
-+
-+	tmp = getname_kernel(filename);
-+	if (IS_ERR(tmp))
-+		return PTR_ERR(tmp);
-+
-+	fd = get_unused_fd_flags(flags);
-+	if (fd >= 0) {
-+		struct file *f = do_filp_open(AT_FDCWD, tmp, &op);
-+		if (IS_ERR(f)) {
-+			put_unused_fd(fd);
-+			fd = PTR_ERR(f);
-+		} else {
-+			fsnotify_open(f);
-+			fd_install(fd, f);
-+		}
-+	}
-+	putname(tmp);
-+	return fd;
-+}
-+
-+static long do_sys_open(int dfd, const char __user *filename, int flags, umode_t mode)
- {
- 	struct open_flags op;
- 	int fd = build_open_flags(flags, mode, &op);
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 98e0349adb52..8ffe1fd6b6dc 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2528,8 +2528,6 @@ extern int do_truncate(struct dentry *, loff_t start, unsigned int time_attrs,
- 		       struct file *filp);
- extern int vfs_fallocate(struct file *file, int mode, loff_t offset,
- 			loff_t len);
--extern long do_sys_open(int dfd, const char __user *filename, int flags,
--			umode_t mode);
- extern struct file *file_open_name(struct filename *, int, umode_t);
- extern struct file *filp_open(const char *, int, umode_t);
- extern struct file *file_open_root(struct dentry *, struct vfsmount *,
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index 2960dedcfde8..6aa988e66e7b 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -1232,6 +1232,7 @@ asmlinkage long sys_ni_syscall(void);
-  */
- 
- int ksys_umount(char __user *name, int flags);
-+int ksys_dup(unsigned int fildes);
- int ksys_chroot(const char __user *filename);
- ssize_t ksys_write(unsigned int fd, const char __user *buf, size_t count);
- int ksys_chdir(const char __user *filename);
-@@ -1371,16 +1372,7 @@ static inline int ksys_close(unsigned int fd)
- 	return __close_fd(current->files, fd);
- }
- 
--extern long do_sys_open(int dfd, const char __user *filename, int flags,
--			umode_t mode);
--
--static inline long ksys_open(const char __user *filename, int flags,
--			     umode_t mode)
--{
--	if (force_o_largefile())
--		flags |= O_LARGEFILE;
--	return do_sys_open(AT_FDCWD, filename, flags, mode);
--}
-+extern long ksys_open(const char *filename, int flags, umode_t mode);
- 
- extern long do_sys_truncate(const char __user *pathname, loff_t length);
- 
-diff --git a/init/main.c b/init/main.c
-index 1ecfd43ed464..72aa063bf29e 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -93,7 +93,6 @@
- #include <linux/rodata_test.h>
- #include <linux/jump_label.h>
- #include <linux/mem_encrypt.h>
--#include <linux/file.h>
- 
- #include <asm/io.h>
- #include <asm/bugs.h>
-@@ -1158,26 +1157,13 @@ static int __ref kernel_init(void *unused)
- 
- void console_on_rootfs(void)
- {
--	struct file *file;
--	unsigned int i;
--
--	/* Open /dev/console in kernelspace, this should never fail */
--	file = filp_open("/dev/console", O_RDWR, 0);
--	if (IS_ERR(file))
--		goto err_out;
--
--	/* create stdin/stdout/stderr, this should never fail */
--	for (i = 0; i < 3; i++) {
--		if (f_dupfd(i, file, 0) != i)
--			goto err_out;
--	}
--
--	return;
-+	/* Open the /dev/console as stdin, this should never fail */
-+	if (ksys_open("/dev/console", O_RDWR, 0) < 0)
-+		pr_err("Warning: unable to open an initial console.\n");
- 
--err_out:
--	/* no panic -- this might not be fatal */
--	pr_err("Warning: unable to open an initial console.\n");
--	return;
-+	/* create stdout/stderr */
-+	(void) ksys_dup(0);
-+	(void) ksys_dup(0);
- }
- 
- static noinline void __init kernel_init_freeable(void)
+==================================================================
+BUG: KASAN: global-out-of-bounds in memcpy include/linux/string.h:380  
+[inline]
+BUG: KASAN: global-out-of-bounds in fbcon_get_font+0x2b2/0x5e0  
+drivers/video/fbdev/core/fbcon.c:2465
+Read of size 32 at addr ffffffff88729e80 by task syz-executor334/10190
+
+CPU: 0 PID: 10190 Comm: syz-executor334 Not tainted 5.5.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_address_description.constprop.0.cold+0x5/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:639
+  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
+  memcpy+0x24/0x50 mm/kasan/common.c:125
+  memcpy include/linux/string.h:380 [inline]
+  fbcon_get_font+0x2b2/0x5e0 drivers/video/fbdev/core/fbcon.c:2465
+  con_font_get drivers/tty/vt/vt.c:4446 [inline]
+  con_font_op+0x20b/0x1270 drivers/tty/vt/vt.c:4605
+  vt_ioctl+0xd2e/0x26d0 drivers/tty/vt/vt_ioctl.c:913
+  tty_ioctl+0xa37/0x14f0 drivers/tty/tty_io.c:2660
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4412d9
+Code: e8 3c ad 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffc49b97f18 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000004a2487 RCX: 00000000004412d9
+RDX: 0000000020000200 RSI: 0000000000004b60 RDI: 0000000000000004
+RBP: 0000000000018ac7 R08: 000000000000000d R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402100
+R13: 0000000000402190 R14: 0000000000000000 R15: 0000000000000000
+
+The buggy address belongs to the variable:
+  fontdata_8x16+0x1000/0x1120
+
+Memory state around the buggy address:
+  ffffffff88729d80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  ffffffff88729e00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> ffffffff88729e80: fa fa fa fa 06 fa fa fa fa fa fa fa 05 fa fa fa
+                    ^
+  ffffffff88729f00: fa fa fa fa 06 fa fa fa fa fa fa fa 00 00 03 fa
+  ffffffff88729f80: fa fa fa fa 00 00 00 00 00 00 00 00 00 00 00 00
+==================================================================
+
