@@ -2,157 +2,98 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE5AC2D0DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 07:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8919EC32764
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 07:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1164A2072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 07:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA3720722
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 07:23:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="trMtSEBm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HMTmPSu5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725883AbgAAHUa (ORCPT
+        id S1725933AbgAAHXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 02:20:30 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40730 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgAAHU3 (ORCPT
+        Wed, 1 Jan 2020 02:23:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43360 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725787AbgAAHXC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 02:20:29 -0500
-Received: by mail-pf1-f196.google.com with SMTP id q8so20537092pfh.7
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Dec 2019 23:20:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vy4x1uZ6KviudWnvu6W2UMmvm4EQwTGZG2bElmjYCN8=;
-        b=trMtSEBmMAZrGlO66FIry9BOrqXyvdjGQq6m9t53Dz8bt3tj8h7gBxEaZUQkYmxg9l
-         QMwvTW5T6y8ZKbF2EXpd8eQxtTUVyi3EhfGk9QA4XEo5aADu3NDyFR3vaddU3GZJD2jq
-         IcHM4g5RQASd4XzqbIGSpt5ka6i1XTytRE3Ao3qmWK0uWi3L87wX9OoJMyXhjOmtCmyk
-         Ufc/clPY4khUoiSfOWJeaZuTSPnVo9JtISHmnqxW+t2s34sYjtwD5U4VxfA93FkXCaTY
-         A4pqVAVcAEQ9J+QOgvSIqO3bknNvAbk3ml9EgbshkYPD21moXPjDDVCYZ2cJYzuQd9Gm
-         +CVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vy4x1uZ6KviudWnvu6W2UMmvm4EQwTGZG2bElmjYCN8=;
-        b=Ow961hQ1bNVruppbGOZWK8JBjrzVGMH1uYG2OQ8nCJhs+U7xagTo/tJiddteAF4w2K
-         IXsKiiLinw+4TIza+TxslzuUKLxNVpLS8ep9bnPm5AMvGTk00J05neR/l8OTxD356Jex
-         n0DY2CBvEngEpI/m21ll8+ER6Pd2eb8B/NEzcYpIJrKnFx5jNZnqOVInGNE23TTDVedy
-         SkPS25Bl0fUyKbDBf95klTDU745pBfDkuKkC6ZFKnPsag/HrwEEwitGQKogp3gZuAm9A
-         /t1xakjkSorLw6GhywJ6AJb2H3W04RS87heJePMGMbihqaLMPCweOoOjtQTS+QmohRFu
-         oCVA==
-X-Gm-Message-State: APjAAAXVL7Z69Zw5DSB9xICs6H3gYZ4pM1yFgpCGvQ5lI3ARKaHTsanM
-        ziGkxYoaPuBn6vxMvqO+zs0=
-X-Google-Smtp-Source: APXvYqy5fr+0W52631Igzr71SbvaPZfYIQgYCLSUBBCxchNuyMa+KeaxXy/U1JlCE0pkBOyD6kpW0g==
-X-Received: by 2002:a63:62c2:: with SMTP id w185mr79715130pgb.271.1577863229319;
-        Tue, 31 Dec 2019 23:20:29 -0800 (PST)
-Received: from localhost.localdomain ([139.180.133.10])
-        by smtp.gmail.com with ESMTPSA id c68sm59993423pfc.156.2019.12.31.23.20.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Dec 2019 23:20:28 -0800 (PST)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, x86@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH] x86/nmi: remove the irqwork from long duration nmi handler
-Date:   Wed,  1 Jan 2020 15:20:17 +0800
-Message-Id: <20200101072017.82990-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Wed, 1 Jan 2020 02:23:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577863381;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZkJ1mIbTrrBOlKZUoQPdf32Q2bHvXxd3EaQrbVcK/wk=;
+        b=HMTmPSu5gdMK/K5C9ATTLOARBM7Og2aKuM3vrOVm4lws9KzxwNXrCm+0EM855oDzxcM1bE
+        2pgRk2E6BRZrKuOU0n0kbBo7Iq3fwu/vHy+8N559a3j4VY/HL+2T/2COpK9I4hC3RSvObk
+        KLYhgOqWqaGGd+HSDwtdD0YWboNEE7U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-52-FPJNVcs3Ocm2QR97esNbTQ-1; Wed, 01 Jan 2020 01:20:58 -0500
+X-MC-Unique: FPJNVcs3Ocm2QR97esNbTQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 36F75185432D;
+        Wed,  1 Jan 2020 06:20:56 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-60.pek2.redhat.com [10.72.12.60])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5BE2A5D9E2;
+        Wed,  1 Jan 2020 06:20:51 +0000 (UTC)
+Date:   Wed, 1 Jan 2020 14:20:47 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Taku Izumi <izumi.taku@jp.fujitsu.com>,
+        Michael Weiser <michael@weiser.dinsnail.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>, kexec@lists.infradead.org,
+        X86 ML <x86@kernel.org>
+Subject: Re: [PATCH v2 4/4] efi: Fix handling of multiple efi_fake_mem=
+ entries
+Message-ID: <20200101062047.GA16393@dhcp-128-65.nay.redhat.com>
+References: <157782985777.367056.14741265874314204783.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <157782987865.367056.15199592105978588123.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20200101045141.GA15155@dhcp-128-65.nay.redhat.com>
+ <CAPcyv4hSB9B5tiKVwtNOgDS6KS2Pj6f962OPBZVZpPjrBt6Z8A@mail.gmail.com>
+ <20200101061505.GA15717@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200101061505.GA15717@dhcp-128-65.nay.redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First, printk is NMI context safe now since the safe printk has been
-implemented. The safe printk already has an irqwork to make NMI context
-safe.
+> > Does kexec preserve iomem? I.e. as long as the initial translation of
+> > efi entries to e820, and resulting resource tree, is preserved by
+> > successive kexec cycles then I think we're ok.
+> 
+> It will not preserve them automatically, but that can be fixed if
+> needed.
+> 
+> There are two places:
+> 1. the in kernel loader, we can do similar with below commit (for Soft
+> Reseved instead):
+> commit 980621daf368f2b9aa69c7ea01baa654edb7577b
+> Author: Lianbo Jiang <lijiang@redhat.com>
+> Date:   Tue Apr 23 09:30:07 2019 +0800
+> 
+>     x86/crash: Add e820 reserved ranges to kdump kernel's e820 table
 
-Second, the NMI irqwork actually does not work if a NMI handler causes
-panic by watchdog timeout. This NMI irqwork have no chance to run in such
-case, while the safe printk will flush its per-cpu buffer before panic.
+Oops, that is for kdump only, for kexec, should update the kexec e820
+table.  But before doing that we need first to see if this is necessary. 
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- arch/x86/include/asm/nmi.h |  1 -
- arch/x86/kernel/nmi.c      | 20 +++++++++-----------
- 2 files changed, 9 insertions(+), 12 deletions(-)
-
-diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
-index 75ded1d13d98..9d5d949e662e 100644
---- a/arch/x86/include/asm/nmi.h
-+++ b/arch/x86/include/asm/nmi.h
-@@ -41,7 +41,6 @@ struct nmiaction {
- 	struct list_head	list;
- 	nmi_handler_t		handler;
- 	u64			max_duration;
--	struct irq_work		irq_work;
- 	unsigned long		flags;
- 	const char		*name;
- };
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index e676a9916c49..aa15d4f2340f 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -104,18 +104,22 @@ static int __init nmi_warning_debugfs(void)
- }
- fs_initcall(nmi_warning_debugfs);
- 
--static void nmi_max_handler(struct irq_work *w)
-+static void nmi_check_duration(struct nmiaction *action, u64 duration)
- {
--	struct nmiaction *a = container_of(w, struct nmiaction, irq_work);
- 	int remainder_ns, decimal_msecs;
--	u64 whole_msecs = READ_ONCE(a->max_duration);
-+	u64 whole_msecs = READ_ONCE(action->max_duration);
-+
-+	if (duration < nmi_longest_ns || duration < action->max_duration)
-+		return;
-+
-+	action->max_duration = duration;
- 
- 	remainder_ns = do_div(whole_msecs, (1000 * 1000));
- 	decimal_msecs = remainder_ns / 1000;
- 
- 	printk_ratelimited(KERN_INFO
- 		"INFO: NMI handler (%ps) took too long to run: %lld.%03d msecs\n",
--		a->handler, whole_msecs, decimal_msecs);
-+		action->handler, whole_msecs, decimal_msecs);
- }
- 
- static int nmi_handle(unsigned int type, struct pt_regs *regs)
-@@ -142,11 +146,7 @@ static int nmi_handle(unsigned int type, struct pt_regs *regs)
- 		delta = sched_clock() - delta;
- 		trace_nmi_handler(a->handler, (int)delta, thishandled);
- 
--		if (delta < nmi_longest_ns || delta < a->max_duration)
--			continue;
--
--		a->max_duration = delta;
--		irq_work_queue(&a->irq_work);
-+		nmi_check_duration(a, delta);
- 	}
- 
- 	rcu_read_unlock();
-@@ -164,8 +164,6 @@ int __register_nmi_handler(unsigned int type, struct nmiaction *action)
- 	if (!action->handler)
- 		return -EINVAL;
- 
--	init_irq_work(&action->irq_work, nmi_max_handler);
--
- 	raw_spin_lock_irqsave(&desc->lock, flags);
- 
- 	/*
--- 
-2.24.0
+Thanks
+Dave
 
