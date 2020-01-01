@@ -2,206 +2,167 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30113C32765
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 13:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEB0C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 14:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06E2A2073D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 13:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0250E2073D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 14:02:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iEEMJN4C"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="A7cCZzyG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgAANx5 (ORCPT
+        id S1727132AbgAAOCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 08:53:57 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:41296 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725876AbgAANx5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 08:53:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577886835;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HwvLbKIvcaSue/UhCU7AMwSy+1EPkPc59XQUGBzzxDI=;
-        b=iEEMJN4CHDBXwuQ3xAdvZuk7GFDMaHDbpv/TeojaKLLSzg09gaqsyyr4qrgCOXBC4sSxPo
-        TuzGJ2bm4kWCTmKHOKkMHqqysnapw/B1rWdlT4GMoyVfOxGR5RwQgD9XTTg5Pyuw2IXwrV
-        duFhibTOnTfmgKYrP7fe4FcxQGSAnDk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-364-ZpcFGxb5NUiWVoSkctzOjg-1; Wed, 01 Jan 2020 08:53:52 -0500
-X-MC-Unique: ZpcFGxb5NUiWVoSkctzOjg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DDCA8800D41;
-        Wed,  1 Jan 2020 13:53:48 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-21.pek2.redhat.com [10.72.8.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5917D5C3FD;
-        Wed,  1 Jan 2020 13:53:35 +0000 (UTC)
-Date:   Wed, 1 Jan 2020 21:53:31 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Andrea Vai <andrea.vai@unipv.it>,
-        "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        USB list <linux-usb@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: slow IO on USB media
-Message-ID: <20200101135331.GA7688@ming.t460p>
-References: <20191223162619.GA3282@mit.edu>
- <4c85fd3f2ec58694cc1ff7ab5c88d6e11ab6efec.camel@unipv.it>
- <20191223172257.GB3282@mit.edu>
- <bb5d395fe47f033be0b8ed96cbebf8867d2416c4.camel@unipv.it>
- <20191223195301.GC3282@mit.edu>
- <20191224012707.GA13083@ming.t460p>
- <20191225051722.GA119634@mit.edu>
- <20191226022702.GA2901@ming.t460p>
- <20191226033057.GA10794@mit.edu>
- <20200101074310.10904-1-hdanton@sina.com>
+        Wed, 1 Jan 2020 09:02:44 -0500
+Received: from mout.gmx.net ([212.227.17.20]:47441 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725809AbgAAOCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jan 2020 09:02:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1577887359;
+        bh=7kmhkdXPBbL1jj3zc0sr6uH68l4x5u6bSPbY7lCoBww=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=A7cCZzyGsDJswKneoS/KZOFCYPG6K4mjXjjrjgbtEnzSqmm42WhRFJ6FYfoRYsdEC
+         P9MzhVYjaGu7w9s6TBEFCHBWElSlAeueLgY6eMszYXC+PN1COuxuEgBGNccf2a4R2M
+         kNpp0kDwzLrTonFR6nidu4Ag+3mVaOLQmYPRCtf0=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([37.4.249.154]) by mail.gmx.com
+ (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MJmGP-1j2PDC1OWn-00K6si; Wed, 01 Jan 2020 15:02:39 +0100
+From:   Stefan Wahren <wahrenst@gmx.net>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megous@megous.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH] Bluetooth: hci_bcm: Drive RTS only for BCM43438
+Date:   Wed,  1 Jan 2020 15:01:34 +0100
+Message-Id: <1577887294-6089-1-git-send-email-wahrenst@gmx.net>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200101074310.10904-1-hdanton@sina.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:xJplZGoEroUu1vuigD0tjAl4Wq6KAohLgNWl31Vnp+DQVNJEcCr
+ 948uuc7lO2JhdSbqS6YKnb1ZuFph4Rb65Dq+KbnDq2Yjb89E5HMSvhsg4ks0btvwBWzqFpR
+ rnb/9JBS2kjbHKjY0RoVpw8fYBaboX/YFSAjSFnoN6/TFOkmACbfzBMvLNx9ckVMOepfuhG
+ xv/e3EnT97QEUNV8XrbJw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mNWhPzDDukc=:PIiLxvNGg5nMACH6n4Ux/0
+ r57jFafuT9qFBrJ5TfaOk5/pLaYpQ4NU3rakKvNjaFEwx2bva3Wm6p4Ei7bFS1Ku+cHPzsOzM
+ 2MXZAaP8Gx4r9+irKQ6hJxUjyJ0RSk6TzEIBOG9dVjx7TwjaI2YWaFBYK5sEk6qw4XVrh/DS5
+ GetEVxYil8b1b4e3Jch+yeayLNlnb10APwpVF9KhWAU97a53GeX2CgUuHBLZHAwwTDglf+fyH
+ O/VpNTfQfTMsCRkBM2GY+PoPRhwQRTLqtI+0m6n6kHpcOCBhVWSPFxQ9YDzpqikWAHvl5LhaE
+ RW5Grs51hRolQrjF0MF4I6Nn60x1esqo4g8N+vcwgjfcuXeFJMJbtr1WoMs1RYi2Bw+zBCZ2Q
+ 5KX/zN+oDk1Cy+WOBwthIEiaF4IZPxErz3/gteHgmbXyw02rNbz3te5Z56ZwzsxYUGI77so+O
+ HgHXCmD95JP+coIhU8gxwCH1HSeXjT7i8OKxPgL0m1bBtR3f9c4fdSMuB4CIY4o+kZ90RzKrd
+ L0kqaMkydPv02o4ILtkB1tmL/13rtwB9jADJHCyrcztawypK1Sy5hRNtd+l+4Y+Os00ASopMk
+ glO1ZrXEa/00ipVnFUQ56QXLQtA/F6QQ1d1BL8FCI4sqknupHffxd6QrQW9ICYR6LWvGO0m2I
+ WnNx2fAf9Wo+LHGfv9avKtub6tiYcFs4/8KNQ+f/Nc534+37kd6nIE5Q9FYoZ3liJrEcZsvEo
+ F7jtu8oN2C+j7jOwaxd+CIH6WkBZlJhBdPPSzWeSrUCTsxF7Jp1wQulS4snH2qLU5c/lDTkTS
+ +YiSmVnMteaAP0GsW98SJdZjnBeZDY/b0XNbky1KDwaSVouffmALLq0urAmbyYPB9T5AIeGDp
+ mlm2DKLbBAF3OlPXlW636oxewJko9SNzzQ26b+Lf682HJV8z3SzcHt0q2Q4O6OQuRg8HqUP4W
+ nPcdv7I1+57wuOoXC/y0jBMBEHkVqdeaVZlNjSOlCn7KgEkNGCAudS6V8c+gbOACv/Si/+cZt
+ H1e6jWA5h/ylGISEnrk1lHRwK6tyCP6Znzxun8AkG4gyDeCOxmpImBbOXXzklktlzhhMVEwg6
+ dqJ2FXaNzMDtqikLXlGixJdmiI57oW+cdENh2BhHFxbxludi5V06GPtFdoh3tR/zdb6Z/DN6/
+ CGpxykKtMCd9Nf5EMOPUHXofGBNkSKMN17RDdfEsgN3B5KQ2hWw0f8E981pVbbLoF0GTSr9pK
+ 3g5dioNizp4zHqG4fTKUbMWvynRrFZ7m1hgyn//Weyzxx0ycMGEl6ZtS3AQI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 01, 2020 at 03:43:10PM +0800, Hillf Danton wrote:
-> 
-> On Thu, 26 Dec 2019 16:37:06 +0800 Ming Lei wrote:
-> > On Wed, Dec 25, 2019 at 10:30:57PM -0500, Theodore Y. Ts'o wrote:
-> > > On Thu, Dec 26, 2019 at 10:27:02AM +0800, Ming Lei wrote:
-> > > > Maybe we need to be careful for HDD., since the request count in scheduler
-> > > > queue is double of in-flight request count, and in theory NCQ should only
-> > > > cover all in-flight 32 requests. I will find a sata HDD., and see if
-> > > > performance drop can be observed in the similar 'cp' test.
-> > >
-> > > Please try to measure it, but I'd be really surprised if it's
-> > > significant with with modern HDD's.
-> > 
-> > Just find one machine with AHCI SATA, and run the following xfs
-> > overwrite test:
-> > 
-> > #!/bin/bash
-> > DIR=$1
-> > echo 3 > /proc/sys/vm/drop_caches
-> > fio --readwrite=write --filesize=5g --overwrite=1 --filename=$DIR/fiofile \
-> >         --runtime=60s --time_based --ioengine=psync --direct=0 --bs=4k
-> > 		--iodepth=128 --numjobs=2 --group_reporting=1 --name=overwrite
-> > 
-> > FS is xfs, and disk is LVM over AHCI SATA with NCQ(depth 32), because the
-> > machine is picked up from RH beaker, and it is the only disk in the box.
-> > 
-> > #lsblk
-> > NAME                            MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
-> > sda                               8:0    0 931.5G  0 disk
-> > =E2=94=9C=E2=94=80sda1                            8:1    0     1G  0 part /boot
-> > =E2=94=94=E2=94=80sda2                            8:2    0 930.5G  0 part
-> >   =E2=94=9C=E2=94=80rhel_hpe--ml10gen9--01-root 253:0    0    50G  0 lvm  /
-> >   =E2=94=9C=E2=94=80rhel_hpe--ml10gen9--01-swap 253:1    0   3.9G  0 lvm  [SWAP]
-> >   =E2=94=94=E2=94=80rhel_hpe--ml10gen9--01-home 253:2    0 876.6G  0 lvm  /home
-> > 
-> > 
-> > kernel: 3a7ea2c483a53fc("scsi: provide mq_ops->busy() hook") which is
-> > the previous commit of f664a3cc17b7 ("scsi: kill off the legacy IO path").
-> > 
-> >             |scsi_mod.use_blk_mq=N |scsi_mod.use_blk_mq=Y |
-> > -----------------------------------------------------------
-> > throughput: |244MB/s               |169MB/s               |
-> > -----------------------------------------------------------
-> > 
-> > Similar result can be observed on v5.4 kernel(184MB/s) with same test
-> > steps.
-> 
-> 
-> The simple diff makes direct issue of requests take pending requests
-> also into account and goes the nornal enqueue-and-dequeue path if any
-> pending requests exist.
-> 
-> Then it sorts requests regardless of the number of hard queues in a
-> bid to make requests as sequencial as they are. Let's see if the
-> added sorting cost can make any sense.
-> 
-> --->8---
-> 
-> --- a/block/blk-mq-sched.c
-> +++ b/block/blk-mq-sched.c
-> @@ -410,6 +410,11 @@ run:
->  		blk_mq_run_hw_queue(hctx, async);
->  }
->  
-> +static inline bool blk_mq_sched_hctx_has_pending_rq(struct blk_mq_hw_ctx *hctx)
-> +{
-> +	return sbitmap_any_bit_set(&hctx->ctx_map);
-> +}
-> +
->  void blk_mq_sched_insert_requests(struct blk_mq_hw_ctx *hctx,
->  				  struct blk_mq_ctx *ctx,
->  				  struct list_head *list, bool run_queue_async)
-> @@ -433,7 +438,8 @@ void blk_mq_sched_insert_requests(struct
->  		 * busy in case of 'none' scheduler, and this way may save
->  		 * us one extra enqueue & dequeue to sw queue.
->  		 */
-> -		if (!hctx->dispatch_busy && !e && !run_queue_async) {
-> +		if (!hctx->dispatch_busy && !e && !run_queue_async &&
-> +		    !blk_mq_sched_hctx_has_pending_rq(hctx)) {
->  			blk_mq_try_issue_list_directly(hctx, list);
->  			if (list_empty(list))
->  				goto out;
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -1692,7 +1692,7 @@ void blk_mq_flush_plug_list(struct blk_p
->  
->  	list_splice_init(&plug->mq_list, &list);
->  
-> -	if (plug->rq_count > 2 && plug->multiple_queues)
-> +	if (plug->rq_count > 1)
->  		list_sort(NULL, &list, plug_rq_cmp);
->  
->  	plug->rq_count = 0;
+The commit 3347a80965b3 ("Bluetooth: hci_bcm: Fix RTS handling during
+startup") is causing at least a regression for AP6256 on Orange Pi 3.
+So do the RTS line handing during startup only on the necessary platform.
 
-I guess you may not understand the reason, and the issue is related
-with neither MQ nor plug.
+Fixes: 3347a80965b3 ("Bluetooth: hci_bcm: Fix RTS handling during startup"=
+)
+Reported-by: Ond=C5=99ej Jirman <megous@megous.com>
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+=2D--
+ drivers/bluetooth/hci_bcm.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-AHCI/SATA is single queue drive, and for HDD. IO throughput is very
-sensitive with IO order in case of sequential IO.
+diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
+index bbfaf0c..769bb44 100644
+=2D-- a/drivers/bluetooth/hci_bcm.c
++++ b/drivers/bluetooth/hci_bcm.c
+@@ -53,6 +53,7 @@
+  */
+ struct bcm_device_data {
+ 	bool	no_early_set_baudrate;
++	bool	drive_rts_on_open;
+ };
 
-Legacy IO path supports ioc batching and BDI queue congestion. When
-there are more than one writeback IO paths, there may be only one
-active IO submission path, meantime others are blocked attributed to
-ioc batching, so writeback IO is still dispatched to disk in strict
-IO order.
+ /**
+@@ -122,6 +123,7 @@ struct bcm_device {
+ 	bool			is_suspended;
+ #endif
+ 	bool			no_early_set_baudrate;
++	bool			drive_rts_on_open;
+ 	u8			pcm_int_params[5];
+ };
 
-But ioc batching and BDI queue congestion is killed when converting to
-blk-mq.
+@@ -456,7 +458,9 @@ static int bcm_open(struct hci_uart *hu)
 
-Please see the following IO trace with legacy IO request path:
+ out:
+ 	if (bcm->dev) {
+-		hci_uart_set_flow_control(hu, true);
++		if (bcm->dev->drive_rts_on_open)
++			hci_uart_set_flow_control(hu, true);
++
+ 		hu->init_speed =3D bcm->dev->init_speed;
 
-https://lore.kernel.org/linux-scsi/f82fd5129e3dcacae703a689be60b20a7fedadf6.camel@unipv.it/2-log_ming_20191128_182751.zip
+ 		/* If oper_speed is set, ldisc/serdev will set the baudrate
+@@ -466,7 +470,10 @@ static int bcm_open(struct hci_uart *hu)
+ 			hu->oper_speed =3D bcm->dev->oper_speed;
 
+ 		err =3D bcm_gpio_set_power(bcm->dev, true);
+-		hci_uart_set_flow_control(hu, false);
++
++		if (bcm->dev->drive_rts_on_open)
++			hci_uart_set_flow_control(hu, false);
++
+ 		if (err)
+ 			goto err_unset_hu;
+ 	}
+@@ -1447,8 +1454,10 @@ static int bcm_serdev_probe(struct serdev_device *s=
+erdev)
+ 		dev_err(&serdev->dev, "Failed to power down\n");
 
-Thanks,
-Ming
+ 	data =3D device_get_match_data(bcmdev->dev);
+-	if (data)
++	if (data) {
+ 		bcmdev->no_early_set_baudrate =3D data->no_early_set_baudrate;
++		bcmdev->drive_rts_on_open =3D data->drive_rts_on_open;
++	}
+
+ 	return hci_uart_register_device(&bcmdev->serdev_hu, &bcm_proto);
+ }
+@@ -1465,12 +1474,16 @@ static struct bcm_device_data bcm4354_device_data =
+=3D {
+ 	.no_early_set_baudrate =3D true,
+ };
+
++static struct bcm_device_data bcm43438_device_data =3D {
++	.drive_rts_on_open =3D true,
++};
++
+ static const struct of_device_id bcm_bluetooth_of_match[] =3D {
+ 	{ .compatible =3D "brcm,bcm20702a1" },
+ 	{ .compatible =3D "brcm,bcm4329-bt" },
+ 	{ .compatible =3D "brcm,bcm4345c5" },
+ 	{ .compatible =3D "brcm,bcm4330-bt" },
+-	{ .compatible =3D "brcm,bcm43438-bt" },
++	{ .compatible =3D "brcm,bcm43438-bt", .data =3D &bcm43438_device_data },
+ 	{ .compatible =3D "brcm,bcm43540-bt", .data =3D &bcm4354_device_data },
+ 	{ .compatible =3D "brcm,bcm4335a0" },
+ 	{ },
+=2D-
+2.7.4
 
