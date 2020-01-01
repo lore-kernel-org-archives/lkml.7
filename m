@@ -2,161 +2,104 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D692C2D0DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 22:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEA1C2D0DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 23:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3ABC20722
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 22:55:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="JSHvqra0"
+	by mail.kernel.org (Postfix) with ESMTP id 4630B20722
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 23:01:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577919694;
+	bh=+i35ERBwW360ij3oAhsL59qGMF/FQpEEC1YFqKhKm9E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ADd9+O5zwtDrztBnkwAdwh9L3Jyb2Y4iZMjMFIfbKlU8G82jBkrSG+V8KWbXZSXM0
+	 XaI6tcLs/o4FZyNF2XRNzHBlmPTg2FgFxrQLoW2W6HaX5ODogW+YboOZxnTRqriXT3
+	 PYfPe6DGoiakUt9xdWYyIHq4iwDDGGRQxzlviDT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727482AbgAAWzq (ORCPT
+        id S1727459AbgAAXBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 17:55:46 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41484 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727428AbgAAWzq (ORCPT
+        Wed, 1 Jan 2020 18:01:32 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44852 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727372AbgAAXBb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 17:55:46 -0500
-Received: by mail-ot1-f65.google.com with SMTP id r27so54665422otc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 14:55:46 -0800 (PST)
+        Wed, 1 Jan 2020 18:01:31 -0500
+Received: by mail-lf1-f66.google.com with SMTP id v201so28813938lfa.11
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 15:01:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=m4g1EM/uMp6lAFpxtQOB5KdZUvd0RzaZy5BdRaHYtGA=;
-        b=JSHvqra0nthVS/WZxbIUDhbkerztX4y6s1EJjespY6G9TCweChl7HbJNm1e4fAlegf
-         sdU7DDAz1G1mSxB2Zcq8Ud74p6a5nXJaC8n7VAkjEg9e1ppOfy4r44K/t5D020wTsOI2
-         5kANlserTPCD/A6FRqOZpINlCVTxNOgd0MgPyzM0EUoFMFb2/bUIQ3hs/vBbphKhHVsu
-         KGa3yJwGWPM/dQHcpRxuWZ9C2gBmT/6gpy3qAHkXW/JTMYzyb+X4KbMjIuthIP29USjX
-         XTN0EbfsS2xSs8vB0OVXo9QP+86xYHA9airQntOhF4Ebz8Taq022dlgkXcA4J+UHsLH8
-         wOIQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JasYi67QqqR/bQFvtusaBY+N2VpDxfNqKz3KIu6InR0=;
+        b=B74IeM9Cw1Tjn+MVVpL2o37ZTVmNIVOjuTqHwS04fn7jzJys06+of5G7mnpZgZlqfW
+         Sq/wfVjwdSOrq+AIV23ux5f6ckYbqhkngQJ/zMDcjdoWMXBYdQBWQHhht12vZBQ1jZJF
+         vqBFHfhel5F4vNYexMVXQVBNi7FkRSDs4mENU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=m4g1EM/uMp6lAFpxtQOB5KdZUvd0RzaZy5BdRaHYtGA=;
-        b=hclRDzAfjM8Pnz9HPI0yxyoauzlx7GDOPv5pyx3n/xOxLTBWX9eLwqKIDuERItp+Cb
-         dY1xqUZ/zmhMsPiOePpgJiMGI8XXTdS6LNItvUWCALtyk5YdVOicuL/locn+t4cjDIIF
-         YGaARMkQOu/1vA5X/Q+rhepRC9OHLXujv1Rl4ZiG9L0uY0xphGFpbCyv/7GTb5WZlIwZ
-         sVXKM4gTk2K73uktCQv5fjh141SLII2Ihgqm/ihuZMzqVQ9kXiUNpRB1gPFkgm/h+iD5
-         gceYplSuBFOgzviCt5feTW2T2s+LLx8TLNRtp8U+4qEI2+4+TRu0oLfnMWRu21QJk8Rn
-         fe6w==
-X-Gm-Message-State: APjAAAVqiISGWbnu5ukal8nsrlzxeV9vHN2H8jsQkQ2MTxtIXeqPtdol
-        pZRGebkIeAziq/HkQQe4c/a3lvnIrpzYgNjlXsW+Bg==
-X-Google-Smtp-Source: APXvYqyYggHHo/cuYKjfWS1CkiqpAHZXjkTpGGQGho5N7S1Q4W2SsnIRK0vsM33tBCqAX9hWIyBRV08CgneULQDz+5U=
-X-Received: by 2002:a9d:6f11:: with SMTP id n17mr73904211otq.126.1577919345862;
- Wed, 01 Jan 2020 14:55:45 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=JasYi67QqqR/bQFvtusaBY+N2VpDxfNqKz3KIu6InR0=;
+        b=cjM2zbUJMUQR2FoSp106CROQ45PGZLoKf95fo3LE7hnpc9fzxe1Fzjcl7OHzdibLu4
+         RboxsmaQLory6yF6YPF6sYAHRHffOJiWqYEOx5ve4Z838cOSucKc55/k6DCeaE9LJ4MU
+         8AW79XKHSK/h5aqOUYr49dQvDJY1RtiWMRiDxEgfoAWlPshdHBjRRsNYt98n6xmNfhxa
+         0YeYJG3Z8TK68vGwQYdfZBt3wjqNhhOTv98EoGVa2FUSm0bhCMq17rxki2cfTDxDhFDa
+         Iv2ouapCjMTzNSr4gwoV/WMLVbXEtG55bX3TK/dAf8GkYSWssqtFkjNilO88wc5B6c8Q
+         E4fw==
+X-Gm-Message-State: APjAAAUa+vcfYOUsP+Z3M9nz9WrkLB++3ihn+T0NriBg4J4dQtQX5On8
+        nQ7XD82+/aMFxMjF2IvTQWHrsuAgcc4=
+X-Google-Smtp-Source: APXvYqxPQIDqEESRuE6lqwHmUivVnZ/H7jRTX0qwh728lL9EEEMGac9PS9htbjS4Rdo0JdD/Ef9zkA==
+X-Received: by 2002:a19:c382:: with SMTP id t124mr44665674lff.124.1577919689446;
+        Wed, 01 Jan 2020 15:01:29 -0800 (PST)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id m13sm22284051lfo.40.2020.01.01.15.01.28
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jan 2020 15:01:28 -0800 (PST)
+Received: by mail-lf1-f48.google.com with SMTP id m30so28843259lfp.8
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 15:01:28 -0800 (PST)
+X-Received: by 2002:ac2:555c:: with SMTP id l28mr44060584lfk.52.1577919688226;
+ Wed, 01 Jan 2020 15:01:28 -0800 (PST)
 MIME-Version: 1.0
-References: <1577122577157232@kroah.com> <CAPcyv4jfpOX85GWgNTyugWksU=e-j=RhU_fcrcHBo4GMZ8_bhw@mail.gmail.com>
- <c6ce34b130210d2d1330fc4079d6d82bd74dcef1.camel@linux.intel.com>
- <50217a688ffa56cf5f150ffd358daba2a88cad48.camel@linux.intel.com>
- <20191228151526.GA6971@linux.intel.com> <CAPcyv4i_frm8jZeknniPexp8AAmGsaq0_DHegmL4XZHQi1ThxA@mail.gmail.com>
- <CAPcyv4iyQeXBWvp8V_UPBsOk29cfmTVZGYrrDgyYYqzsQvTjNA@mail.gmail.com> <20191231003000.ywdvfjdhqadnl6wo@cantor>
-In-Reply-To: <20191231003000.ywdvfjdhqadnl6wo@cantor>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 1 Jan 2020 14:55:35 -0800
-Message-ID: <CAPcyv4gs66ME_iLjew-fvvdX5mojdjpyZ5Zitvg738rXzOOxKQ@mail.gmail.com>
-Subject: Re: Patch "tpm_tis: reserve chip for duration of tpm_tis_core_init"
- has been added to the 5.4-stable tree
-To:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Christian Bundy <christianbundy@fraction.io>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable-commits@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191231150226.GA523748@light.dominikbrodowski.net>
+ <20200101003017.GA116793@rani.riverdale.lan> <20200101183243.GB183871@rani.riverdale.lan>
+ <CAHk-=whzgLPi4szh8xOKysuS9CKaQESngc=n0omBVpwdQ822aw@mail.gmail.com> <20200101225049.GB438328@rani.riverdale.lan>
+In-Reply-To: <20200101225049.GB438328@rani.riverdale.lan>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 1 Jan 2020 15:01:12 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgHg8z5WQBoypjyi0VPp3E44oO_Szuvk9f6v1mGMqsSZg@mail.gmail.com>
+Message-ID: <CAHk-=wgHg8z5WQBoypjyi0VPp3E44oO_Szuvk9f6v1mGMqsSZg@mail.gmail.com>
+Subject: Re: [PATCH] early init: open /dev/console with O_LARGEFILE
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        youling 257 <youling257@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 4:30 PM Jerry Snitselaar <jsnitsel@redhat.com> wrote:
+On Wed, Jan 1, 2020 at 2:50 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
 >
-> On Sun Dec 29 19, Dan Williams wrote:
-> >On Sat, Dec 28, 2019 at 9:17 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> >>
-> >> On Sat, Dec 28, 2019 at 7:15 AM Jarkko Sakkinen
-> >> <jarkko.sakkinen@linux.intel.com> wrote:
-> >> >
-> >> > On Fri, Dec 27, 2019 at 08:11:50AM +0200, Jarkko Sakkinen wrote:
-> >> > > Dan, please also test the branch and tell if other patches are needed.
-> >> > > I'm a bit blind with this as I don't have direct access to the faulting
-> >> > > hardware. Thanks. [*]
-> >> > >
-> >> > > [*] https://lkml.org/lkml/2019/12/27/12
-> >> >
-> >> > Given that:
-> >> >
-> >> > 1. I cannot reproduce the bug locally.
-> >> > 2. Neither of the patches have any appropriate tags (tested-by and
-> >> >    reviewed-by). [*]
-> >> >
-> >> > I'm sorry but how am I expected to include these patches?
-> >>
-> >> Thanks for the branch, I'll get it tested on the failing hardware.
-> >> Might be a few days due to holiday lag.
-> >
-> >This looked like the wrong revert to me, and testing confirms that
-> >this does not fix the problem.
-> >
-> >As I mentioned in the original report [1] the commit that bisect flagged was:
-> >
-> >    5b359c7c4372 tpm_tis_core: Turn on the TPM before probing IRQ's
-> >
-> >That commit moved tpm_chip_start() before irq probing. Commit
-> >21df4a8b6018 "tpm_tis: reserve chip for duration of tpm_tis_core_init"
-> >does not appear to change anything in that regard.
-> >
-> >Perhaps this hardware has always had broken interrupts and needs to be
-> >quirked off? I'm trying an experiment with tpm_tis_core.interrupts=0
-> >workaround.
-> >
->
-> Hi Dan,
->
-> Just to make sure I understand correctly are you saying you still have
-> the screaming interrupt with the flag commit reverted,
+> Shouldn't that only affect init though? The getty's it spawns should be
+> in their own sessions.
 
-Correct.
+They *should* be in their own sessions, and clearly this problem
+doesn't seem to really affect much anybody else.
 
-> or that it is
-> polling instead of using interrupts [2]? Was that testing with both
-> commits reverted, or just the flag commit?
+But I think youling has some limited and/or odd init userspace, and I
+think it gets confused.
 
-With both patches reverted the driver falls back to polled mode, with
-just the flag commit reverted the screaming interrupt issue is still
-present.
+So my theory is that because of the file descriptor leak, that "forget
+the old controlling tty" doesn't happen, and then subsequent tty opens
+don't do the right thing.
 
-> What kernel were you
-> running before you saw the issue with 5.3 stable?
+Maybe.
 
-The regression was detected when moving to v5.3.6 which includes
-commit 7f064c378e2c "tpm_tis_core: Turn on the TPM before probing
-IRQ's".
+But it's the only real semantic change I can see in that whole patch.
 
-> On that kernel you
-> weren't seeing the polling message, and interrupts were working?
-
-I've never seen interrupts working.
-
-> Are
-> you able to boot a 5.0 kernel on the system? It would be interesting
-> to see how it was behaving before the power gating changes. I think it
-> would be using polling due to how the code behaves because of that
-> flag. It looks like without the flag being enabled by Stefan's commit
-> TPM_GLOBAL_INT_ENABLE will never get cleared because tpm_tis_probe_irq_single
-> expects tpm_tis_send to clear it if there is a problem, and without the
-> flag being set that whole section of code is skipped.
-
-I'll try to get a result from a pre-5.3.4 kernel to see what the
-behavior is. I did have system owner run an experiment with
-tpm_tis.interrupts=0 on the kernel command line and that also avoids
-the problem.
+                 Linus
