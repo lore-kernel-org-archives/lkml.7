@@ -2,119 +2,81 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AE7C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 03:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0DEC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 03:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B82206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 03:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 863EF206E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 03:24:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bo2Og8iA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbgAADIa (ORCPT
+        id S1727156AbgAADYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 22:08:30 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:42142 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727132AbgAADIa (ORCPT
+        Tue, 31 Dec 2019 22:24:10 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29036 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727133AbgAADYK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 22:08:30 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1imUMp-00079e-Tz; Wed, 01 Jan 2020 03:08:15 +0000
-Date:   Wed, 1 Jan 2020 03:08:15 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        stable@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
- symlinks
-Message-ID: <20200101030815.GA17593@ZenIV.linux.org.uk>
-References: <20191230052036.8765-1-cyphar@cyphar.com>
- <20191230054413.GX4203@ZenIV.linux.org.uk>
- <20191230054913.c5avdjqbygtur2l7@yavin.dot.cyphar.com>
- <20191230072959.62kcojxpthhdwmfa@yavin.dot.cyphar.com>
- <20200101004324.GA11269@ZenIV.linux.org.uk>
- <20200101005446.GH4203@ZenIV.linux.org.uk>
+        Tue, 31 Dec 2019 22:24:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577849049;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Fv/kC8iDABf6sLfJmiILU6rh8XitUBjaUMc9ljl9uGs=;
+        b=bo2Og8iACrzdf81J0a6xspza0FeSLe9Gnqj5NlYKzrPgjQ3WJxp8hpKStinOcSJz/vgLps
+        5JKTl8A7ILUsYI3Flf/I3eFHl6kE6G6qQ/hNLtbiHq55nxyWt6j5N9Gi2VKrCrAx8/BhTl
+        c+2DfgIZOrNAqFE6av9OO4VXhTP0Rrk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-112-YecvINgbMrm6ZQxKgbv6vQ-1; Tue, 31 Dec 2019 22:24:05 -0500
+X-MC-Unique: YecvINgbMrm6ZQxKgbv6vQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A58A7800EB8;
+        Wed,  1 Jan 2020 03:24:03 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-60.pek2.redhat.com [10.72.12.60])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 81CA660BE2;
+        Wed,  1 Jan 2020 03:23:59 +0000 (UTC)
+Date:   Wed, 1 Jan 2020 11:23:55 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Taku Izumi <izumi.taku@jp.fujitsu.com>,
+        Michael Weiser <michael@weiser.dinsnail.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>, kexec@lists.infradead.org
+Subject: Re: [PATCH] efi: Fix handling of multiple contiguous efi_fake_mem=
+ entries
+Message-ID: <20200101032355.GA14346@dhcp-128-65.nay.redhat.com>
+References: <157773590338.4153451.5898675419563883883.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20191231014630.GA24942@dhcp-128-65.nay.redhat.com>
+ <CAPcyv4heY1CKAWo1AKKifYUtXdKjoUt45dZbCNhB2o59hkXY6g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200101005446.GH4203@ZenIV.linux.org.uk>
+In-Reply-To: <CAPcyv4heY1CKAWo1AKKifYUtXdKjoUt45dZbCNhB2o59hkXY6g@mail.gmail.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 01, 2020 at 12:54:46AM +0000, Al Viro wrote:
-> Note, BTW, that lookup_last() (aka walk_component()) does just
-> that - we only hit step_into() on LAST_NORM.  The same goes
-> for do_last().  mountpoint_last() not doing the same is _not_
-> intentional - it's definitely a bug.
-> 
-> Consider your testcase; link points to . here.  So the only
-> thing you could expect from trying to follow it would be
-> the directory 'link' lives in.  And you don't have it
-> when you reach the fscker via /proc/self/fd/3; what happens
-> instead is nd->path set to ./link (by nd_jump_link()) *AND*
-> step_into() called, pushing the same ./link onto stack.
-> It violates all kinds of assumptions made by fs/namei.c -
-> when pushing a symlink onto stack nd->path is expected to
-> contain the base directory for resolving it.
-> 
-> I'm fairly sure that this is the cause of at least some
-> of the insanity you've caught; there always could be
-> something else, of course, but this hole needs to be
-> closed in any case.
+> Perhaps a prettier way to do this is to push the handling of each
+> efi_fake_mem entry into a subroutine. However, I notice when a memmap
+> allocated by efi_memmap_alloc() is replaced by another dynamically
+> allocated memmap the previous one isn't released. I have a series that
+> fixes that up as well.
 
-... and with removal of now unused local variable, that's
+Yes, agreed, thanks for the fix:)
 
-mountpoint_last(): fix the treatment of LAST_BIND
-
-step_into() should be attempted only in LAST_NORM
-case, when we have the parent directory (in nd->path).
-We get away with that for LAST_DOT and LOST_DOTDOT,
-since those can't be symlinks, making step_init() and
-equivalent of path_to_nameidata() - we do a bit of
-useless work, but that's it.  For LAST_BIND (i.e.
-the case when we'd just followed a procfs-style
-symlink) we really can't go there - result might
-be a symlink and we really can't attempt following
-it.
-
-lookup_last() and do_last() do handle that properly;
-mountpoint_last() should do the same.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
-diff --git a/fs/namei.c b/fs/namei.c
-index d6c91d1e88cb..13f9f973722b 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -2643,7 +2643,6 @@ EXPORT_SYMBOL(user_path_at_empty);
- static int
- mountpoint_last(struct nameidata *nd)
- {
--	int error = 0;
- 	struct dentry *dir = nd->path.dentry;
- 	struct path path;
- 
-@@ -2656,10 +2655,7 @@ mountpoint_last(struct nameidata *nd)
- 	nd->flags &= ~LOOKUP_PARENT;
- 
- 	if (unlikely(nd->last_type != LAST_NORM)) {
--		error = handle_dots(nd, nd->last_type);
--		if (error)
--			return error;
--		path.dentry = dget(nd->path.dentry);
-+		return handle_dots(nd, nd->last_type);
- 	} else {
- 		path.dentry = d_lookup(dir, &nd->last);
- 		if (!path.dentry) {
