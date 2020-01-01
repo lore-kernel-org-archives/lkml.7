@@ -2,111 +2,76 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F353C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 16:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B90BEC32764
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 17:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24FCF206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 16:38:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="efIoY73Q"
+	by mail.kernel.org (Postfix) with ESMTP id 8E8EB2080A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 17:01:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577898062;
+	bh=p44QX7qkhhAsrDQvnh6TLdMG6Dc5n99KiON82LzgW1Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MmoTUHsHgnO2cp2FjoJLKwunxx6/uWH/FtRizuNu+4mt6VWaGMMNiYn/QNtTS7PJi
+	 03EBtgcgoRFIFnZtKpAk0Xs20BIhxAF9p5f2g/71cEPHw2cNsY0RmO9MguysdCdaT6
+	 ipBYW5qdqG77Xe8fhzu7dtqtMNjZV8EF2BqlRItk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbgAAQi1 (ORCPT
+        id S1727230AbgAARBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 11:38:27 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:38656 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbgAAQi1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 11:38:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=e9xmC6WZve72kHa7WhwPzTlTU4WTjL1WO/1gzCOJ5zo=; b=efIoY73QpMA4ZHweuOSr4KR7k
-        F/QRCsWO5WCO5ZOU+XHd62ji24UBRSDQU9EzyLPl2V0gEHXDd++oKBqOfbtd52htq0TCqpohg+riD
-        safH+ibGhGvx2esBP++fXKRmKkSSHwmcmgoekupvjRAv3JlGsC/hnRSbfsTVZej1qV7PW1n/WMD3h
-        MbcrFzkBO1NYXZH9ApA/eGZQoDN7I9kHZnZ3j7kxxCWp9T+LIZJg0gkhmLEolhuwoGHtpyzLdTpMx
-        IfWz2S23pTlupTNKuAkv4vaEK3bQbPaTgJ6A76oPL/M2zS58Ci0PDotf81ajSSd7BPYyh3CtolNVL
-        sGSrb7nDw==;
-Received: from [2601:1c0:6280:3f0::34d9]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1imh0s-0004pt-JU; Wed, 01 Jan 2020 16:38:26 +0000
-Subject: Re: Fw: usbcore missing parentheses in USE_NEW_SCHEME
-To:     atmgnd <atmgnd@protonmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>
-References: <7sP4K0IcPrf4Z5urpZjWaiquSFhnNSNGLGsuYj8jbRl8aGGboUyknXW1w7DSBIYNUY308G2QnfDOTmblnyPKyoWMeiYwtqS6mdTxKZqfBO8=@protonmail.com>
- <S5_bTeKG4QYpmSUODHFha_LSjMOM5NMirKYBTHik11iEynJ-WjOAofdiOboo502BpM9CV2Z9xkU93MnoqGz7zdCzwLY7fpqiL5PZZ0-ByQk=@protonmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ca600d41-d978-d799-a871-ce6e1438a4cc@infradead.org>
-Date:   Wed, 1 Jan 2020 08:38:25 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 1 Jan 2020 12:01:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55434 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727170AbgAARBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jan 2020 12:01:01 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 662F92073D;
+        Wed,  1 Jan 2020 17:01:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577898060;
+        bh=p44QX7qkhhAsrDQvnh6TLdMG6Dc5n99KiON82LzgW1Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jYnN4sP9K+rdgnisY++8fHI9VICwuScNDaIt299Ip8jo+TXVLszbUsC4dd+pMna3J
+         hi+ixD8jPsMvi6wJEsZth2rQG/FJdzOOLgQabDDCds9Dps5HubFYSUlH4U0ewM8v3h
+         lJwCfjg7vnDPU+iVonIeEFKC/b0sfY3qu3bqvibc=
+Date:   Wed, 1 Jan 2020 18:00:58 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Siddharth Chandrasekaran <csiddharth@vmware.com>
+Cc:     torvalds@linux-foundation.org, sashal@kernel.org, jannh@google.com,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        siddharth@embedjournal.com
+Subject: Re: [PATCH 4.14 0/2] Backport readdir sanity checking patches
+Message-ID: <20200101170058.GB2712976@kroah.com>
+References: <cover.1577128778.git.csiddharth@vmware.com>
 MIME-Version: 1.0
-In-Reply-To: <S5_bTeKG4QYpmSUODHFha_LSjMOM5NMirKYBTHik11iEynJ-WjOAofdiOboo502BpM9CV2Z9xkU93MnoqGz7zdCzwLY7fpqiL5PZZ0-ByQk=@protonmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1577128778.git.csiddharth@vmware.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[adding linux-usb mailing list]
+On Tue, Dec 24, 2019 at 01:06:25AM +0530, Siddharth Chandrasekaran wrote:
+> Hello,
+> 
+> This patchset is a backport of upstream commits that makes getdents() and
+> getdents64() do sanity checking on the pathname that it gives to user
+> space.
+> 
+> Sid
+> 
+> Linus Torvalds (2):
+>   Make filldir[64]() verify the directory entry filename is valid
+>   filldir[64]: remove WARN_ON_ONCE() for bad directory entries
+> 
+>  fs/readdir.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
 
-On 1/1/20 6:46 AM, atmgnd wrote:
-> I think there is missing parentheses in macro USE_NEW_SCHEME, it should be:
-> #define USE_NEW_SCHEME(i, scheme)      ((i) / 2 == (int)(scheme))
-> 
-> causes a fail wiht "device descriptor read/64, error -110" using my usb drive on vmware using usb 3.0 hub.
-> from https://github.com/torvalds/linux/commit/25244227158e1502062041365a439a54cb8fe673#diff-28615d62e1250eadc353d804f49bc6d6
-> 
-> someone changed USE_NEW_SCHEME, but without parentheses for second parameter. as result. in fuction use_new_scheme when old_scheme_first is 1, use_new_scheme will return 1 always(actullay is should return 0). it also make https://github.com/torvalds/linux/commit/bd0e6c9614b95352eb31d0207df16dc156c527fa#diff-28615d62e1250eadc353d804f49bc6d6 fails.
-> 
-> I cannot use git send-mail, there some issue with my network provider. patch below, :
-> 
-> 
-> From 85f01b89d050a988f4d9fc78232de47e793c6a7c Mon Sep 17 00:00:00 2001
-> From: atmgnd <atmgnd@outlook.com>
-> Date: Wed, 1 Jan 2020 21:27:13 +0800
-> Subject: [PATCH] usb: hub: missing parentheses in USE_NEW_SCHEME
-> 
-> accroding to bd0e6c9#diff-28615d62e1250eadc353d804f49bc6d6, will try old enumeration
-> scheme first for high speed devices. for example, when a high speed device pluged in,
-> line 2720 should expand to 0 at the first time. USE_NEW_SCHEME(0, 0 || 0 || 1) === 0.
-> but it wrongly expand to 1(alway expand to 1 for high speed device), and change
-> USE_NEW_SCHEME to USE_NEW_SCHEME((i) % 2 == (int)(scheme)) may be better ?
-> 
-> Signed-off-by: atmgnd <atmgnd@outlook.com>
-> ---
->  drivers/usb/core/hub.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-> index f229ad6952c0..7d17deca7021 100644
-> --- a/drivers/usb/core/hub.c
-> +++ b/drivers/usb/core/hub.c
-> @@ -2692,7 +2692,7 @@ static unsigned hub_is_wusb(struct usb_hub *hub)
->  #define SET_ADDRESS_TRIES 2
->  #define GET_DESCRIPTOR_TRIES 2
->  #define SET_CONFIG_TRIES (2 * (use_both_schemes + 1))
-> -#define USE_NEW_SCHEME(i, scheme) ((i) / 2 == (int)scheme)
-> +#define USE_NEW_SCHEME(i, scheme) ((i) / 2 == (int)(scheme))
-> 
->  #define HUB_ROOT_RESET_TIME 60 /* times are in msec */
->  #define HUB_SHORT_RESET_TIME 10
-> --
-> 2.17.1
-> 
+All applied to all branches, thanks.
 
-
--- 
-~Randy
-
+greg k-h
