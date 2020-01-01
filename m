@@ -6,35 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5679AC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 18:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3F9C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 18:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 386E920842
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 18:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DFF820848
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 18:27:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbgAAS0w (ORCPT
+        id S1727518AbgAAS07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 13:26:52 -0500
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:13063
+        Wed, 1 Jan 2020 13:26:59 -0500
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:13092
         "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727170AbgAAS03 (ORCPT
+        by vger.kernel.org with ESMTP id S1727374AbgAAS02 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 13:26:29 -0500
+        Wed, 1 Jan 2020 13:26:28 -0500
 X-IronPort-AV: E=Sophos;i="5.69,382,1571695200"; 
-   d="scan'208";a="334542276"
+   d="scan'208";a="334542275"
 Received: from palace.rsr.lip6.fr (HELO palace.lip6.fr) ([132.227.105.202])
   by mail3-relais-sop.national.inria.fr with ESMTP/TLS/AES128-SHA256; 01 Jan 2020 19:26:24 +0100
 From:   Julia Lawall <Julia.Lawall@inria.fr>
-To:     Scott Wood <oss@buserror.net>
+To:     Madalin Bucur <madalin.bucur@nxp.com>
 Cc:     kernel-janitors@vger.kernel.org,
-        Kumar Gala <galak@kernel.crashing.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 05/10] powerpc/83xx: use resource_size
-Date:   Wed,  1 Jan 2020 18:49:45 +0100
-Message-Id: <1577900990-8588-6-git-send-email-Julia.Lawall@inria.fr>
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 04/10] fsl/fman: use resource_size
+Date:   Wed,  1 Jan 2020 18:49:44 +0100
+Message-Id: <1577900990-8588-5-git-send-email-Julia.Lawall@inria.fr>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1577900990-8588-1-git-send-email-Julia.Lawall@inria.fr>
 References: <1577900990-8588-1-git-send-email-Julia.Lawall@inria.fr>
@@ -46,32 +43,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Use resource_size rather than a verbose computation on
 the end and start fields.
 
-The semantic patch that makes this change is as follows:
+The semantic patch that makes these changes is as follows:
 (http://coccinelle.lip6.fr/)
 
 <smpl>
 @@ struct resource ptr; @@
-- (ptr.end - ptr.start + 1)
+- (ptr.end + 1 - ptr.start)
 + resource_size(&ptr)
+
+@@ struct resource *ptr; @@
+- (ptr->end + 1 - ptr->start)
++ resource_size(ptr)
 </smpl>
 
 Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
 ---
- arch/powerpc/platforms/83xx/km83xx.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/freescale/fman/mac.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/platforms/83xx/km83xx.c b/arch/powerpc/platforms/83xx/km83xx.c
-index 3d89569e9e71..ada42f03915a 100644
---- a/arch/powerpc/platforms/83xx/km83xx.c
-+++ b/arch/powerpc/platforms/83xx/km83xx.c
-@@ -63,7 +63,7 @@ static void quirk_mpc8360e_qe_enet10(void)
- 		return;
+diff --git a/drivers/net/ethernet/freescale/fman/mac.c b/drivers/net/ethernet/freescale/fman/mac.c
+index f0806ace1ae2..55f2122c3217 100644
+--- a/drivers/net/ethernet/freescale/fman/mac.c
++++ b/drivers/net/ethernet/freescale/fman/mac.c
+@@ -692,7 +692,7 @@ static int mac_probe(struct platform_device *_of_dev)
+ 
+ 	mac_dev->res = __devm_request_region(dev,
+ 					     fman_get_mem_region(priv->fman),
+-					     res.start, res.end + 1 - res.start,
++					     res.start, resource_size(&res),
+ 					     "mac");
+ 	if (!mac_dev->res) {
+ 		dev_err(dev, "__devm_request_mem_region(mac) failed\n");
+@@ -701,7 +701,7 @@ static int mac_probe(struct platform_device *_of_dev)
  	}
  
--	base = ioremap(res.start, res.end - res.start + 1);
-+	base = ioremap(res.start, resource_size(&res));
- 
- 	/*
- 	 * set output delay adjustments to default values according
+ 	priv->vaddr = devm_ioremap(dev, mac_dev->res->start,
+-				   mac_dev->res->end + 1 - mac_dev->res->start);
++				   resource_size(mac_dev->res));
+ 	if (!priv->vaddr) {
+ 		dev_err(dev, "devm_ioremap() failed\n");
+ 		err = -EIO;
 
