@@ -2,77 +2,189 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3920BC32764
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 09:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C28C32764
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 10:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0672072C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 09:48:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="kTmOmH49"
+	by mail.kernel.org (Postfix) with ESMTP id C1E5E207E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 10:07:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgAAJsG (ORCPT
+        id S1725933AbgAAKHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 04:48:06 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:41593 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbgAAJsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 04:48:05 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 7fc75bb9;
-        Wed, 1 Jan 2020 08:49:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=4nCgc7Qb9E7eYO93853bCxTMK74=; b=kTmOmH
-        49DW4v6oeBQGMPvU1UhSofwORtT15Z7AoFZoynVmQ5w31kigpkKqs3Zc72IN87E+
-        T42lKUZiWuxh1I7CNkssJ4QrzhAp8BuBi4yPnOOUOwEHROW8sR2ANTTBitntG3a/
-        Ib/E6TaoGRfhBXbuurtMlrRtCVkiXOuCXgofX/wMdH+8E6xEQ9Xz4gVmDr67DFgm
-        FJhOagghnZAqwfTHi7exefoXWhDL+LQEAVQ+nwmTAEZNpY2FEPMEmLGz1NRvQ7M0
-        ++/vl6fXkyOgcwgiGWQFXdb7KHWK48oSIjZgF3YCHNzsoqlQgUIy/8+JnIttYY+d
-        +c0E2nhC7O/4cupw==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id ed3fc7d3 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Wed, 1 Jan 2020 08:49:43 +0000 (UTC)
-Received: by mail-ot1-f49.google.com with SMTP id a15so52950499otf.1;
-        Wed, 01 Jan 2020 01:48:04 -0800 (PST)
-X-Gm-Message-State: APjAAAXPGtbQwHjcdWCqClv771346epw+OY6wNV0gf6SIX715dAyG8zN
-        RroJ/1eajufMs8/jFK+gF5YczpJ5jhgLa4mKPSc=
-X-Google-Smtp-Source: APXvYqwrDKduC7Zu3uMDHzPtb7RFYOiEYHz9UT3Ywk5GWuJ7cvUOGftCePjlEuapEGhFWIdS6jF9bRrQTaSneCjaWEA=
-X-Received: by 2002:a9d:1e88:: with SMTP id n8mr87394263otn.369.1577872083283;
- Wed, 01 Jan 2020 01:48:03 -0800 (PST)
+        Wed, 1 Jan 2020 05:07:18 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:52286 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgAAKHS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jan 2020 05:07:18 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1imauH-0004Oz-GT; Wed, 01 Jan 2020 11:07:13 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DA3FF1C19B0;
+        Wed,  1 Jan 2020 11:07:12 +0100 (CET)
+Date:   Wed, 01 Jan 2020 10:07:12 -0000
+From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/core] x86/traps: Cleanup do_general_protection()
+Cc:     Borislav Petkov <bp@suse.de>, Jann Horn <jannh@google.com>,
+        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHmME9o==nBONywVgSjsmjs2H_A8itgmwibqzPmvivcSocKWRQ@mail.gmail.com>
- <CAK8P3a11g-UXcYdudDtp0TWCQAfotpc-63BqYwn-a9LDxV-b+Q@mail.gmail.com>
- <CAHmME9pnBtjJ86gsWgK8DCYKo_HFpyViHoGpJPTrYBONT01YVA@mail.gmail.com>
- <CAK8P3a0NBuqDX63+920q7Q+yO2xCoSd0O7xUDJv6BBoco2kVOg@mail.gmail.com>
- <CAHmME9rnnoFwh=EHAgdQFM+c33D9mgCoVML_+d=Js=pXPnsxKQ@mail.gmail.com>
- <CAK8P3a1AYGbgf6mmL-863+PXPBQw3AAtp5wQPL5duLCONGhHuw@mail.gmail.com>
- <CAHmME9r2G4viiF4sYqpuYOnFCtjWpjugqenoEeUrsU6MGBeSuQ@mail.gmail.com>
- <CAHmME9rCCei_CL1evDYQ44Eu8erbjx_jDzbpKeXD4jTGBu8v8A@mail.gmail.com>
- <CAHmME9q0z4RBhy7AETo0sPt+SfV7=zFra0iyZ-Sm54c-WG6CVg@mail.gmail.com>
- <20200101041056.xionott76qbrffih@lantea.localdomain> <20200101042500.zmhldrthr3l45trq@lantea.localdomain>
-In-Reply-To: <20200101042500.zmhldrthr3l45trq@lantea.localdomain>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Wed, 1 Jan 2020 10:47:52 +0100
-X-Gmail-Original-Message-ID: <CAHmME9rgH=LmbVeq7Vs-Hxo6s0+gyeB7s5fBFt2fXvgMKw3=3g@mail.gmail.com>
-Message-ID: <CAHmME9rgH=LmbVeq7Vs-Hxo6s0+gyeB7s5fBFt2fXvgMKw3=3g@mail.gmail.com>
-Subject: Re: [PATCH] mips: vdso: conditionalize 32-bit time functions on COMPAT_32BIT_TIME
-To:     Paul Burton <paulburton@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Christian Brauner <christian.brauner@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <157787323274.30329.10602804082016510286.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 1, 2020 at 5:22 AM Paul Burton <paulburton@kernel.org> wrote:
-> That makes sense then. What doesn't make sense is how this ever
-> worked. A question for another day...
+The following commit has been merged into the x86/core branch of tip:
 
-In most other cases, calls to the vdso would be followed in the parent
-function immediately by a return, restoring gp then.
+Commit-ID:     36209766cede1fe9d39f3d3418d93bbf71ad21c4
+Gitweb:        https://git.kernel.org/tip/36209766cede1fe9d39f3d3418d93bbf71ad21c4
+Author:        Borislav Petkov <bp@suse.de>
+AuthorDate:    Tue, 31 Dec 2019 17:15:35 +01:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 31 Dec 2019 17:29:29 +01:00
+
+x86/traps: Cleanup do_general_protection()
+
+Hoist the user_mode() case up because it is less code and can be dealt
+with up-front like the other special cases UMIP and vm86.
+
+This saves an indentation level for the kernel-mode #GP case and allows
+to "unfold" the code more so that it is more readable.
+
+No functional changes.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Jann Horn <jannh@google.com>
+Cc: x86@kernel.org
+---
+ arch/x86/kernel/traps.c | 79 ++++++++++++++++++++--------------------
+ 1 file changed, 40 insertions(+), 39 deletions(-)
+
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 2afd7d8..ca395ad 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -567,7 +567,10 @@ static enum kernel_gp_hint get_kernel_gp_address(struct pt_regs *regs,
+ dotraplinkage void do_general_protection(struct pt_regs *regs, long error_code)
+ {
+ 	char desc[sizeof(GPFSTR) + 50 + 2*sizeof(unsigned long) + 1] = GPFSTR;
++	enum kernel_gp_hint hint = GP_NO_HINT;
+ 	struct task_struct *tsk;
++	unsigned long gp_addr;
++	int ret;
+ 
+ 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
+ 	cond_local_irq_enable(regs);
+@@ -584,58 +587,56 @@ dotraplinkage void do_general_protection(struct pt_regs *regs, long error_code)
+ 	}
+ 
+ 	tsk = current;
+-	if (!user_mode(regs)) {
+-		enum kernel_gp_hint hint = GP_NO_HINT;
+-		unsigned long gp_addr;
+-
+-		if (fixup_exception(regs, X86_TRAP_GP, error_code, 0))
+-			return;
+ 
++	if (user_mode(regs)) {
+ 		tsk->thread.error_code = error_code;
+ 		tsk->thread.trap_nr = X86_TRAP_GP;
+ 
+-		/*
+-		 * To be potentially processing a kprobe fault and to
+-		 * trust the result from kprobe_running(), we have to
+-		 * be non-preemptible.
+-		 */
+-		if (!preemptible() && kprobe_running() &&
+-		    kprobe_fault_handler(regs, X86_TRAP_GP))
+-			return;
++		show_signal(tsk, SIGSEGV, "", desc, regs, error_code);
++		force_sig(SIGSEGV);
+ 
+-		if (notify_die(DIE_GPF, desc, regs, error_code,
+-			       X86_TRAP_GP, SIGSEGV) == NOTIFY_STOP)
+-			return;
++		return;
++	}
+ 
+-		if (error_code)
+-			snprintf(desc, sizeof(desc), "segment-related " GPFSTR);
+-		else
+-			hint = get_kernel_gp_address(regs, &gp_addr);
++	if (fixup_exception(regs, X86_TRAP_GP, error_code, 0))
++		return;
+ 
+-		if (hint != GP_NO_HINT)
+-			snprintf(desc, sizeof(desc), GPFSTR ", %s 0x%lx",
+-				 (hint == GP_NON_CANONICAL) ?
+-				 "probably for non-canonical address" :
+-				 "maybe for address",
+-				 gp_addr);
++	tsk->thread.error_code = error_code;
++	tsk->thread.trap_nr = X86_TRAP_GP;
+ 
+-		/*
+-		 * KASAN is interested only in the non-canonical case, clear it
+-		 * otherwise.
+-		 */
+-		if (hint != GP_NON_CANONICAL)
+-			gp_addr = 0;
++	/*
++	 * To be potentially processing a kprobe fault and to trust the result
++	 * from kprobe_running(), we have to be non-preemptible.
++	 */
++	if (!preemptible() &&
++	    kprobe_running() &&
++	    kprobe_fault_handler(regs, X86_TRAP_GP))
++		return;
+ 
+-		die_addr(desc, regs, error_code, gp_addr);
++	ret = notify_die(DIE_GPF, desc, regs, error_code, X86_TRAP_GP, SIGSEGV);
++	if (ret == NOTIFY_STOP)
+ 		return;
+-	}
+ 
+-	tsk->thread.error_code = error_code;
+-	tsk->thread.trap_nr = X86_TRAP_GP;
++	if (error_code)
++		snprintf(desc, sizeof(desc), "segment-related " GPFSTR);
++	else
++		hint = get_kernel_gp_address(regs, &gp_addr);
++
++	if (hint != GP_NO_HINT)
++		snprintf(desc, sizeof(desc), GPFSTR ", %s 0x%lx",
++			 (hint == GP_NON_CANONICAL) ? "probably for non-canonical address"
++						    : "maybe for address",
++			 gp_addr);
++
++	/*
++	 * KASAN is interested only in the non-canonical case, clear it
++	 * otherwise.
++	 */
++	if (hint != GP_NON_CANONICAL)
++		gp_addr = 0;
+ 
+-	show_signal(tsk, SIGSEGV, "", desc, regs, error_code);
++	die_addr(desc, regs, error_code, gp_addr);
+ 
+-	force_sig(SIGSEGV);
+ }
+ NOKPROBE_SYMBOL(do_general_protection);
+ 
