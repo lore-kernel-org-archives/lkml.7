@@ -2,165 +2,144 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A78C32764
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 14:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65213C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 14:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 434392073D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 14:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D75392072C
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 14:52:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="w0uZKgAY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbgAAOob (ORCPT
+        id S1727152AbgAAOwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 09:44:31 -0500
-Received: from mout-p-202.mailbox.org ([80.241.56.172]:32404 "EHLO
-        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgAAOob (ORCPT
+        Wed, 1 Jan 2020 09:52:17 -0500
+Received: from mail-40135.protonmail.ch ([185.70.40.135]:28391 "EHLO
+        mail-40135.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgAAOwQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 09:44:31 -0500
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 47nv7v6kC5zQlCT;
-        Wed,  1 Jan 2020 15:44:27 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id gxnyw7SGBm-n; Wed,  1 Jan 2020 15:44:20 +0100 (CET)
-Date:   Thu, 2 Jan 2020 01:44:07 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        stable@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
- symlinks
-Message-ID: <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
-References: <20191230052036.8765-1-cyphar@cyphar.com>
- <20191230054413.GX4203@ZenIV.linux.org.uk>
- <20191230054913.c5avdjqbygtur2l7@yavin.dot.cyphar.com>
- <20191230072959.62kcojxpthhdwmfa@yavin.dot.cyphar.com>
- <20200101004324.GA11269@ZenIV.linux.org.uk>
- <20200101005446.GH4203@ZenIV.linux.org.uk>
- <20200101030815.GA17593@ZenIV.linux.org.uk>
+        Wed, 1 Jan 2020 09:52:16 -0500
+Date:   Wed, 01 Jan 2020 14:46:15 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1577889982;
+        bh=T8FitbDzab8rolKo3AvZBRjfivDw+/pmx6LxDnYYhBo=;
+        h=Date:To:From:Reply-To:Subject:In-Reply-To:References:Feedback-ID:
+         From;
+        b=w0uZKgAYKvdWnvKUdXS9+uAPbvpWKEjyTo8y7IAdMxdq4BRvdBLXGmHlzNCXWrAQs
+         OSMXrgSebXx/dC2MrheKfbNS5kp+GNGkMn4mM3/mIn2RqWfeUchWAwfTa9Y92D3NSv
+         VHuZRZJhwg2pnagRjQikFzoSLHS64DyQAEeXyF/M=
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   atmgnd <atmgnd@protonmail.com>
+Reply-To: atmgnd <atmgnd@protonmail.com>
+Subject: Fw: usbcore missing parentheses in USE_NEW_SCHEME
+Message-ID: <S5_bTeKG4QYpmSUODHFha_LSjMOM5NMirKYBTHik11iEynJ-WjOAofdiOboo502BpM9CV2Z9xkU93MnoqGz7zdCzwLY7fpqiL5PZZ0-ByQk=@protonmail.com>
+In-Reply-To: <7sP4K0IcPrf4Z5urpZjWaiquSFhnNSNGLGsuYj8jbRl8aGGboUyknXW1w7DSBIYNUY308G2QnfDOTmblnyPKyoWMeiYwtqS6mdTxKZqfBO8=@protonmail.com>
+References: <7sP4K0IcPrf4Z5urpZjWaiquSFhnNSNGLGsuYj8jbRl8aGGboUyknXW1w7DSBIYNUY308G2QnfDOTmblnyPKyoWMeiYwtqS6mdTxKZqfBO8=@protonmail.com>
+Feedback-ID: py-oVO8Vt0vS1FKaKugS2_MTpFC3lKhHMurhoXPAalWk9Eh40Mo1lZOn2CI1vswSSKJBwBLYgn_VKFu9qW3csg==:Ext:ProtonMail
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xjferel7t3bvq2hc"
-Content-Disposition: inline
-In-Reply-To: <20200101030815.GA17593@ZenIV.linux.org.uk>
+Content-Type: multipart/mixed;
+        boundary="b1_75cbd74c8b9beee31bf8ab7672b19bdd"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is a multi-part message in MIME format.
 
---xjferel7t3bvq2hc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--b1_75cbd74c8b9beee31bf8ab7672b19bdd
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On 2020-01-01, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Wed, Jan 01, 2020 at 12:54:46AM +0000, Al Viro wrote:
-> > Note, BTW, that lookup_last() (aka walk_component()) does just
-> > that - we only hit step_into() on LAST_NORM.  The same goes
-> > for do_last().  mountpoint_last() not doing the same is _not_
-> > intentional - it's definitely a bug.
-> >=20
-> > Consider your testcase; link points to . here.  So the only
-> > thing you could expect from trying to follow it would be
-> > the directory 'link' lives in.  And you don't have it
-> > when you reach the fscker via /proc/self/fd/3; what happens
-> > instead is nd->path set to ./link (by nd_jump_link()) *AND*
-> > step_into() called, pushing the same ./link onto stack.
-> > It violates all kinds of assumptions made by fs/namei.c -
-> > when pushing a symlink onto stack nd->path is expected to
-> > contain the base directory for resolving it.
-> >=20
-> > I'm fairly sure that this is the cause of at least some
-> > of the insanity you've caught; there always could be
-> > something else, of course, but this hole needs to be
-> > closed in any case.
->=20
-> ... and with removal of now unused local variable, that's
->=20
-> mountpoint_last(): fix the treatment of LAST_BIND
->=20
-> step_into() should be attempted only in LAST_NORM
-> case, when we have the parent directory (in nd->path).
-> We get away with that for LAST_DOT and LOST_DOTDOT,
-> since those can't be symlinks, making step_init() and
-> equivalent of path_to_nameidata() - we do a bit of
-> useless work, but that's it.  For LAST_BIND (i.e.
-> the case when we'd just followed a procfs-style
-> symlink) we really can't go there - result might
-> be a symlink and we really can't attempt following
-> it.
->=20
-> lookup_last() and do_last() do handle that properly;
-> mountpoint_last() should do the same.
->=20
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+I think there is missing parentheses in macro USE_NEW_SCHEME, it should be:
+#define USE_NEW_SCHEME(i, scheme)      ((i) / 2 =3D=3D (int)(scheme))
 
-Thanks, this fixes the issue for me (and also fixes another reproducer I
-found -- mounting a symlink on top of itself then trying to umount it).
+causes a fail wiht "device descriptor read/64, error -110" using my usb dri=
+ve on vmware using usb 3.0 hub.
+from https://github.com/torvalds/linux/commit/25244227158e1502062041365a439=
+a54cb8fe673#diff-28615d62e1250eadc353d804f49bc6d6
 
-Reported-by: Aleksa Sarai <cyphar@cyphar.com>
-Tested-by: Aleksa Sarai <cyphar@cyphar.com>
+someone changed USE_NEW_SCHEME, but without parentheses for second paramete=
+r. as result. in fuction use_new_scheme when old_scheme_first is 1, use_new=
+_scheme will return 1 always(actullay is should return 0). it also make htt=
+ps://github.com/torvalds/linux/commit/bd0e6c9614b95352eb31d0207df16dc156c52=
+7fa#diff-28615d62e1250eadc353d804f49bc6d6 fails.
 
-As for the original topic of bind-mounting symlinks -- given this is a
-supported feature, would you be okay with me sending an updated
-O_EMPTYPATH series?
-
-> ---
-> diff --git a/fs/namei.c b/fs/namei.c
-> index d6c91d1e88cb..13f9f973722b 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -2643,7 +2643,6 @@ EXPORT_SYMBOL(user_path_at_empty);
->  static int
->  mountpoint_last(struct nameidata *nd)
->  {
-> -	int error =3D 0;
->  	struct dentry *dir =3D nd->path.dentry;
->  	struct path path;
-> =20
-> @@ -2656,10 +2655,7 @@ mountpoint_last(struct nameidata *nd)
->  	nd->flags &=3D ~LOOKUP_PARENT;
-> =20
->  	if (unlikely(nd->last_type !=3D LAST_NORM)) {
-> -		error =3D handle_dots(nd, nd->last_type);
-> -		if (error)
-> -			return error;
-> -		path.dentry =3D dget(nd->path.dentry);
-> +		return handle_dots(nd, nd->last_type);
->  	} else {
->  		path.dentry =3D d_lookup(dir, &nd->last);
->  		if (!path.dentry) {
+I cannot use git send-mail, there some issue with my network provider. patc=
+h below, :
 
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+From 85f01b89d050a988f4d9fc78232de47e793c6a7c Mon Sep 17 00:00:00 2001
+From: atmgnd <atmgnd@outlook.com>
+Date: Wed, 1 Jan 2020 21:27:13 +0800
+Subject: [PATCH] usb: hub: missing parentheses in USE_NEW_SCHEME
 
---xjferel7t3bvq2hc
-Content-Type: application/pgp-signature; name="signature.asc"
+accroding to bd0e6c9#diff-28615d62e1250eadc353d804f49bc6d6, will try old en=
+umeration
+scheme first for high speed devices. for example, when a high speed device =
+pluged in,
+line 2720 should expand to 0 at the first time. USE_NEW_SCHEME(0, 0 || 0 ||=
+ 1) =3D=3D=3D 0.
+but it wrongly expand to 1(alway expand to 1 for high speed device), and ch=
+ange
+USE_NEW_SCHEME to USE_NEW_SCHEME((i) % 2 =3D=3D (int)(scheme)) may be bette=
+r ?
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: atmgnd <atmgnd@outlook.com>
+---
+ drivers/usb/core/hub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXgywNAAKCRCdlLljIbnQ
-EsuYAQDIYw8NDiAZ+6tshuBDOmloG4oZ5/lI0VBqyR9iCJagsAEAvR+VsXd2zUhu
-+siCNs00CJsZyNZ2Cez3Ln/1mdJj4A0=
-=Br0a
------END PGP SIGNATURE-----
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index f229ad6952c0..7d17deca7021 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -2692,7 +2692,7 @@ static unsigned hub_is_wusb(struct usb_hub *hub)
+ #define SET_ADDRESS_TRIES 2
+ #define GET_DESCRIPTOR_TRIES 2
+ #define SET_CONFIG_TRIES (2 * (use_both_schemes + 1))
+-#define USE_NEW_SCHEME(i, scheme) ((i) / 2 =3D=3D (int)scheme)
++#define USE_NEW_SCHEME(i, scheme) ((i) / 2 =3D=3D (int)(scheme))
 
---xjferel7t3bvq2hc--
+ #define HUB_ROOT_RESET_TIME 60 /* times are in msec */
+ #define HUB_SHORT_RESET_TIME 10
+--
+2.17.1
+
+--b1_75cbd74c8b9beee31bf8ab7672b19bdd
+Content-Type: text/x-patch; name="0001-usb-hub-missing-parentheses-in-USE_NEW_SCHEME.patch"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=0001-usb-hub-missing-parentheses-in-USE_NEW_SCHEME.patch
+
+RnJvbSA4NWYwMWI4OWQwNTBhOTg4ZjRkOWZjNzgyMzJkZTQ3ZTc5M2M2YTdjIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBhdG1nbmQgPGF0bWduZEBvdXRsb29rLmNvbT4KRGF0ZTogV2Vk
+LCAxIEphbiAyMDIwIDIxOjI3OjEzICswODAwClN1YmplY3Q6IFtQQVRDSF0gdXNiOiBodWI6IG1p
+c3NpbmcgcGFyZW50aGVzZXMgaW4gVVNFX05FV19TQ0hFTUUKCmFjY3JvZGluZyB0byBiZDBlNmM5
+I2RpZmYtMjg2MTVkNjJlMTI1MGVhZGMzNTNkODA0ZjQ5YmM2ZDYsIHdpbGwgdHJ5IG9sZCBlbnVt
+ZXJhdGlvbgpzY2hlbWUgZmlyc3QgZm9yIGhpZ2ggc3BlZWQgZGV2aWNlcy4gZm9yIGV4YW1wbGUs
+IHdoZW4gYSBoaWdoIHNwZWVkIGRldmljZSBwbHVnZWQgaW4sCmxpbmUgMjcyMCBzaG91bGQgZXhw
+YW5kIHRvIDAgYXQgdGhlIGZpcnN0IHRpbWUuIFVTRV9ORVdfU0NIRU1FKDAsIDAgfHwgMCB8fCAx
+KSA9PT0gMC4KYnV0IGl0IHdyb25nbHkgZXhwYW5kIHRvIDEoYWx3YXkgZXhwYW5kIHRvIDEgZm9y
+IGhpZ2ggc3BlZWQgZGV2aWNlKSwgYW5kIGNoYW5nZQpVU0VfTkVXX1NDSEVNRSB0byBVU0VfTkVX
+X1NDSEVNRSgoaSkgJSAyID09IChpbnQpKHNjaGVtZSkpIG1heSBiZSBiZXR0ZXIgPwoKU2lnbmVk
+LW9mZi1ieTogYXRtZ25kIDxhdG1nbmRAb3V0bG9vay5jb20+Ci0tLQogZHJpdmVycy91c2IvY29y
+ZS9odWIuYyB8IDIgKy0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlv
+bigtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2NvcmUvaHViLmMgYi9kcml2ZXJzL3VzYi9j
+b3JlL2h1Yi5jCmluZGV4IGYyMjlhZDY5NTJjMC4uN2QxN2RlY2E3MDIxIDEwMDY0NAotLS0gYS9k
+cml2ZXJzL3VzYi9jb3JlL2h1Yi5jCisrKyBiL2RyaXZlcnMvdXNiL2NvcmUvaHViLmMKQEAgLTI2
+OTIsNyArMjY5Miw3IEBAIHN0YXRpYyB1bnNpZ25lZCBodWJfaXNfd3VzYihzdHJ1Y3QgdXNiX2h1
+YiAqaHViKQogI2RlZmluZSBTRVRfQUREUkVTU19UUklFUwkyCiAjZGVmaW5lIEdFVF9ERVNDUklQ
+VE9SX1RSSUVTCTIKICNkZWZpbmUgU0VUX0NPTkZJR19UUklFUwkoMiAqICh1c2VfYm90aF9zY2hl
+bWVzICsgMSkpCi0jZGVmaW5lIFVTRV9ORVdfU0NIRU1FKGksIHNjaGVtZSkJKChpKSAvIDIgPT0g
+KGludClzY2hlbWUpCisjZGVmaW5lIFVTRV9ORVdfU0NIRU1FKGksIHNjaGVtZSkJKChpKSAvIDIg
+PT0gKGludCkoc2NoZW1lKSkKIAogI2RlZmluZSBIVUJfUk9PVF9SRVNFVF9USU1FCTYwCS8qIHRp
+bWVzIGFyZSBpbiBtc2VjICovCiAjZGVmaW5lIEhVQl9TSE9SVF9SRVNFVF9USU1FCTEwCi0tIAoy
+LjE3LjEKCg==
+
+
+--b1_75cbd74c8b9beee31bf8ab7672b19bdd--
+
