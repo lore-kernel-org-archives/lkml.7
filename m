@@ -2,203 +2,98 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F55FC2D0DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 05:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1886EC2D0DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 05:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECDE72072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 05:05:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="JOVHi6tq"
+	by mail.kernel.org (Postfix) with ESMTP id E325E206DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 05:28:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725895AbgAAFFA (ORCPT
+        id S1725943AbgAAF2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 00:05:00 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39788 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgAAFFA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 00:05:00 -0500
-Received: by mail-oi1-f193.google.com with SMTP id a67so12375506oib.6
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Dec 2019 21:05:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eOPNXB6Xk/9bMW2uOkkU+s8IZY30ZYawh5JZf1y2MIo=;
-        b=JOVHi6tqb1rlBNhPbFm9/EEa5MJto3/i/WyNI0+4nYE4wpjHIhXajOPXthUsvX6/f1
-         D9pPf1QaZczjBgWkBb9l7MlflvcqQ3838uhdJ6JDfCKLsnqRaW8taEBmgQkxy4uoHr9M
-         9pm1AtwOrFLpdpqv0U+zWStXwlwGsArzSI76T51MGHBYYmIEcuqLXN5bCTvynMPRA/qr
-         roAAOKM4f5zkT+6GoPGxqivOq8pFBT9V1lJ/DfauIb79aW5xsM41GGBAVUDRoIUlRFnb
-         MEOBNtwCkBl9oPw6qyMEJYBkIPE30rKP7m63syzGlcGTQszVvmgunv73cTfrVCZFCUxp
-         ibpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eOPNXB6Xk/9bMW2uOkkU+s8IZY30ZYawh5JZf1y2MIo=;
-        b=GO3/PVUif/ndSG2+gONVLbO5MwVskX1xcP5Ryuct9Y+DklR1REQU/OOQa5Gx9mAcYo
-         XjLtANAe6wrLmbUKEwPrszDsrZgWamglCzTeeq/0ZmyslXFgaSmeQ9RxMGXeaDzMqaBJ
-         dbQ7199Dgkb4ktkrR6qwVaAvAXLLbMEHbIW44lR+T1KAq/Nn1nteTNhQzIom0NOfHEZN
-         Qf/Wae+WDytaXSm8+drQ5UC7DLnd65I7KRFrWB/2HwEGFNnskM94EGaF/226Gun5F1X/
-         LyQP4Ha87IrMZU631KM6/H5H7QFD/Kj0BCHszjyzHgTsxGEfsdQpfkGWoh1aNC4GAqrC
-         iFDQ==
-X-Gm-Message-State: APjAAAVUDW+p6f7jxoyRdAKRC0wIlb21Pv5mJDIf1agIW77TWGGU7jdx
-        2XEZfTGOkmac+mNph2KXnvRt7quoBt4AGgib4lTh3w==
-X-Google-Smtp-Source: APXvYqytitIOduL+M4M9U0lY09BLNrz5HLgUQb45VAorwwNMnbqRHTSGtQd3uN/0akWinU9KA0zJXFG/+BnDPhkUTPs=
-X-Received: by 2002:a05:6808:a83:: with SMTP id q3mr1870737oij.0.1577855099505;
- Tue, 31 Dec 2019 21:04:59 -0800 (PST)
-MIME-Version: 1.0
-References: <157782985777.367056.14741265874314204783.stgit@dwillia2-desk3.amr.corp.intel.com>
- <157782987865.367056.15199592105978588123.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20200101045141.GA15155@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20200101045141.GA15155@dhcp-128-65.nay.redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 31 Dec 2019 21:04:48 -0800
-Message-ID: <CAPcyv4hSB9B5tiKVwtNOgDS6KS2Pj6f962OPBZVZpPjrBt6Z8A@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] efi: Fix handling of multiple efi_fake_mem= entries
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Taku Izumi <izumi.taku@jp.fujitsu.com>,
-        Michael Weiser <michael@weiser.dinsnail.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>, kexec@lists.infradead.org,
-        X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 1 Jan 2020 00:28:22 -0500
+Received: from mga01.intel.com ([192.55.52.88]:55757 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725765AbgAAF2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jan 2020 00:28:22 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Dec 2019 21:28:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,382,1571727600"; 
+   d="scan'208";a="244319507"
+Received: from allen-box.sh.intel.com ([10.239.159.136])
+  by fmsmga004.fm.intel.com with ESMTP; 31 Dec 2019 21:28:19 -0800
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     Joerg Roedel <joro@8bytes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, kevin.tian@intel.com,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [RFC PATCH 0/4] iommu: Per-group default domain type
+Date:   Wed,  1 Jan 2020 13:26:44 +0800
+Message-Id: <20200101052648.14295-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 31, 2019 at 8:52 PM Dave Young <dyoung@redhat.com> wrote:
->
-> Hi Dan,
-> On 12/31/19 at 02:04pm, Dan Williams wrote:
-> > Dave noticed that when specifying multiple efi_fake_mem= entries only
-> > the last entry was successfully being reflected in the efi memory map.
-> > This is due to the fact that the efi_memmap_insert() is being called
-> > multiple times, but on successive invocations the insertion should be
-> > applied to the last new memmap rather than the original map at
-> > efi_fake_memmap() entry.
-> >
-> > Rework efi_fake_memmap() to install the new memory map after each
-> > efi_fake_mem= entry is parsed.
-> >
-> > This also fixes an issue in efi_fake_memmap() that caused it to litter
-> > emtpy entries into the end of the efi memory map. The empty entry causes
-> > efi_memmap_insert() to attempt more memmap splits / copies than
-> > efi_memmap_split_count() accounted for when sizing the new map.
-> >
-> >     BUG: unable to handle page fault for address: ffffffffff281000
-> >     [..]
-> >     RIP: 0010:efi_memmap_insert+0x11d/0x191
-> >     [..]
-> >     Call Trace:
-> >      ? bgrt_init+0xbe/0xbe
-> >      ? efi_arch_mem_reserve+0x1cb/0x228
-> >      ? acpi_parse_bgrt+0xa/0xd
-> >      ? acpi_table_parse+0x86/0xb8
-> >      ? acpi_boot_init+0x494/0x4e3
-> >      ? acpi_parse_x2apic+0x87/0x87
-> >      ? setup_acpi_sci+0xa2/0xa2
-> >      ? setup_arch+0x8db/0x9e1
-> >      ? start_kernel+0x6a/0x547
-> >      ? secondary_startup_64+0xb6/0xc0
-> >
-> > Commit af1648984828 "x86/efi: Update e820 with reserved EFI boot
-> > services data to fix kexec breakage" is listed in Fixes: since it
-> > introduces more occurrences where efi_memmap_insert() is invoked after
-> > an efi_fake_mem= configuration has been parsed. Previously the side
-> > effects of vestigial empty entries were benign, but with commit
-> > af1648984828 that follow-on efi_memmap_insert() invocation triggers the
-> > above crash signature.
-> >
-> > Fixes: 0f96a99dab36 ("efi: Add 'efi_fake_mem' boot option")
-> > Fixes: af1648984828 ("x86/efi: Update e820 with reserved EFI boot services...")
-> > Link: https://lore.kernel.org/r/20191231014630.GA24942@dhcp-128-65.nay.redhat.com
-> > Reported-by: Dave Young <dyoung@redhat.com>
-> > Cc: Taku Izumi <izumi.taku@jp.fujitsu.com>
-> > Cc: Michael Weiser <michael@weiser.dinsnail.net>
-> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Ingo Molnar <mingo@kernel.org>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > ---
-> >  drivers/firmware/efi/fake_mem.c |   32 +++++++++++++++++---------------
-> >  drivers/firmware/efi/memmap.c   |    2 +-
-> >  include/linux/efi.h             |    2 ++
-> >  3 files changed, 20 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/drivers/firmware/efi/fake_mem.c b/drivers/firmware/efi/fake_mem.c
-> > index 7e53e5520548..68d752d8af21 100644
-> > --- a/drivers/firmware/efi/fake_mem.c
-> > +++ b/drivers/firmware/efi/fake_mem.c
-> > @@ -34,26 +34,17 @@ static int __init cmp_fake_mem(const void *x1, const void *x2)
-> >       return 0;
-> >  }
-> >
-> > -void __init efi_fake_memmap(void)
-> > +static void __init efi_fake_range(struct efi_mem_range *efi_range)
-> >  {
-> >       int new_nr_map = efi.memmap.nr_map;
-> >       efi_memory_desc_t *md;
-> >       phys_addr_t new_memmap_phy;
-> >       unsigned long flags = 0;
-> >       void *new_memmap;
-> > -     int i;
-> > -
-> > -     if (!efi_enabled(EFI_MEMMAP) || !nr_fake_mem)
-> > -             return;
-> >
-> >       /* count up the number of EFI memory descriptor */
-> > -     for (i = 0; i < nr_fake_mem; i++) {
-> > -             for_each_efi_memory_desc(md) {
-> > -                     struct range *r = &efi_fake_mems[i].range;
-> > -
-> > -                     new_nr_map += efi_memmap_split_count(md, r);
-> > -             }
-> > -     }
-> > +     for_each_efi_memory_desc(md)
-> > +             new_nr_map += efi_memmap_split_count(md, &efi_range->range);
->
-> I have another concern here :(
->
-> THe efi_memmap_split_count mean to only split for a specific md, and you
-> can see arch/x86/platform/efi/quirks.c about the use:
->         if (addr + size > md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT)) {
->                 pr_err("Region spans EFI memory descriptors, %pa\n", &addr);
->                 return;
->         }
->
-> Any memory region to be inserted but spans different md will be
-> rejected.  So the memmap insert logic seems does not support the
-> spanned ranges.  I did not find a case two contiguous same type ranges
-> eg. two "Conventional memory", if have they should have been merged.
->
-> So maybe just use same way as the quirks.c here to find the valid md first
-> then get the split count?
+An IOMMU group represents the smallest set of devices that are considered
+to be isolated. All devices belonging to an IOMMU group share a default
+domain for DMA APIs. There are two types of default domain: IOMMU_DOMAIN_DMA
+and IOMMU_DOMAIN_IDENTITY. The former means IOMMU translation, while the
+latter means IOMMU by-pass.
 
-I don't immediately see why it would be a problem to just let the md
-loop that efi_fake_memmap() performs try to split multiple entries. It
-may end up with more splits than necessary in which case we'll need
-that piece from my original patch to clean those up. Thanks for the
-heads up, I'll give it a try and see what shakes out. Are you seeing
-any misbehavior on your end?
+Currently, the default domain type for the IOMMU groups is determined
+globally. All IOMMU groups use a single default domain type. The global
+default domain type can be adjusted by kernel build configuration or
+kernel parameters.
 
->
-> Otherwise I tested the series bootup test passed.
->
-> BTW, another issue about fakemem,  currently it only works with normal
-> physical boot,  in case of kexec reboot the kernel only aware of EFI
-> runtime memory ranges, we do not pass other types in memmap.  But maybe
-> we can live with it considering fake mem is only for debugging purpose.
+More and more users are looking forward to a fine grained default domain
+type. For example, with the global default domain type set to translation,
+the OEM verndors or end users might want some trusted and fast-speed devices
+to bypass IOMMU for performance gains. On the other hand, with global
+default domain type set to by-pass, some devices with limited system
+memory addressing capability might want IOMMU translation to remove the
+bounce buffer overhead.
 
-Does kexec preserve iomem? I.e. as long as the initial translation of
-efi entries to e820, and resulting resource tree, is preserved by
-successive kexec cycles then I think we're ok.
+This series proposes per-group default domain type to meet these demands.
+It adds a per-device iommu_passthrough attribute. By setting this
+attribute, end users or device vendors are able to tell the IOMMU subsystem
+that this device is willing to use a default domain of IOMMU_DOMAIN_IDENTITY.
+The IOMMU device probe procedure is reformed to pre-allocate groups for
+all devices on a specific bus before adding the devices into the groups.
+This enables the IOMMU device probe precedure to determine a per-group
+default domain type before allocating IOMMU domains and attaching them
+to devices.
+
+Please help to review it. Your comments and suggestions are appricated.
+
+Best regards,
+baolu 
+
+Lu Baolu (4):
+  driver core: Add iommu_passthrough to struct device
+  PCI: Add "pci=iommu_passthrough=" parameter for iommu passthrough
+  iommu: Preallocate iommu group when probing devices
+  iommu: Determine default domain type before allocating domain
+
+ .../admin-guide/kernel-parameters.txt         |   5 +
+ drivers/iommu/iommu.c                         | 127 ++++++++++++++----
+ drivers/pci/pci.c                             |  34 +++++
+ drivers/pci/pci.h                             |   1 +
+ drivers/pci/probe.c                           |   2 +
+ include/linux/device.h                        |   3 +
+ 6 files changed, 143 insertions(+), 29 deletions(-)
+
+-- 
+2.17.1
+
