@@ -2,113 +2,114 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC90C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 13:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0B9C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 13:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF3AE206E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 13:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A7DB2072C
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 13:33:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BipOJKK+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hzrg9gIk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725989AbgAANS0 (ORCPT
+        id S1725933AbgAAN13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 08:18:26 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:39023 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgAANS0 (ORCPT
+        Wed, 1 Jan 2020 08:27:29 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37463 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgAAN12 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 08:18:26 -0500
-Received: by mail-pj1-f65.google.com with SMTP id t101so2185681pjb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 05:18:26 -0800 (PST)
+        Wed, 1 Jan 2020 08:27:28 -0500
+Received: by mail-io1-f65.google.com with SMTP id k24so5781131ioc.4
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 05:27:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Y73WD0esFVIiFKwnv49K8dSksfT/GdQG+qhY8YjmiSI=;
-        b=BipOJKK+MrbPsqPnJ6WVVV5UqsZU/CD8nlnLhr+rXryGQzXaLfZu1VefIOB4BaFIOX
-         SMs/uO+ouFRqvOStoOO3a/oq0Az4gd3G0mAaEpBZotVAW6v9WMVV0U0+2yx88rFqTppC
-         RBWOqAEIreLq6CY8mFw02CC9pZ5htfjkpTiS5vpfImQKKHj0JEVBOgxr1E7v3ZwQjtJa
-         UMchZ/IXXWL/j8wXbsuFLzSdgVmb2y9HPadjOSM307TSmMOv8wz5td5oTBRldiLhomhD
-         2F+STESbVH7Xe53MT/5ZGTtuaZJQhgBA3Vtum+wO9grOzt9HlmJUTNONtMKW+Mr5c7Ft
-         LYLQ==
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=pGOzii5pjqcqWkUrkDhE9mT1sdWAp5pPuwdqfoXWtAI=;
+        b=Hzrg9gIkl2MahbihUjuszDAby0q4kQ/O2c2kSYG9+R6rZEzdwTTysSRk9LkcNZdNG5
+         x1CcJhNMLvQozSgxxWyv7l45t161c+ogAG12Zh/lqXxdtLLKvU6Eazcp1fCv7lkuj1Co
+         EOxM3PZkgnhrDNDYO7+YsG9iT1DPoxUggey6BflzOuL9Iy1XVsHLZe1T3VgskNsla679
+         j3k0rdrB1BSsoeKXHHgoYQ0GI8jfGSv3HySKDzcgLdKvxVniigEy6qyln1obN8FF0Atz
+         dlTqPmufz5ZD1NbnwW9jN/nGVhwAcSKVPG/zuHs7CnZKYQ6kPE1NXcASAdAKxKd5PndN
+         LsZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Y73WD0esFVIiFKwnv49K8dSksfT/GdQG+qhY8YjmiSI=;
-        b=NvRi/mgZ2RgChOf4IW5xee1nE+4Q2wdWyMbVrNprrKWty09IVKZyO1tsPzi5gChF2f
-         ZNkGn6M0ARanzDbtUfIgRIwtjunZwQXV3DPCpMnImUBM2UrUtbw8DzH90UDXUBbshSAG
-         ktyUSfpJu6IlEw+4xgb3IfXq1BVlmRoHBNvQ/ltrPIdSbEGCk/Oy2nKcSmKX6q8S8IIY
-         00pItwwf5bN5KMtmxT4rV3pjYP6jyQClnmUHsEoP2csSK6dM/KoKXRbliaNom1AZC2Sr
-         mem5UkL1VHyh35jjmq1OacahPxZUIwvyq1pDOM47i0JGSz1WMqb+dCqCfKW+rcr3MDeT
-         HMiA==
-X-Gm-Message-State: APjAAAVBa5cePQQgnzKBtfTtJfeRmoraFcr3il0as0Gl6GWmiDsqTYul
-        aBNpHdYGEP1b58YcQzgFAp8=
-X-Google-Smtp-Source: APXvYqxlH6P3MmEX0ilr1ZXn9Vfx+MzG+wKLV/MLddlx/93PRfl+ux4aqt0UIBTGjTooVcn3IQssoQ==
-X-Received: by 2002:a17:90a:9284:: with SMTP id n4mr13300122pjo.84.1577884705698;
-        Wed, 01 Jan 2020 05:18:25 -0800 (PST)
-Received: from nishad ([106.51.232.103])
-        by smtp.gmail.com with ESMTPSA id g8sm59323171pfh.43.2020.01.01.05.18.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 Jan 2020 05:18:25 -0800 (PST)
-Date:   Wed, 1 Jan 2020 18:48:19 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thorsten Scherer <t.scherer@eckelmann.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] siox: Use the correct style for SPDX License Identifier
-Message-ID: <20200101131817.GA2895@nishad>
-References: <20191228071544.GA5214@nishad>
- <20191230125232.5ykjy3foljqjvhz4@pengutronix.de>
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=pGOzii5pjqcqWkUrkDhE9mT1sdWAp5pPuwdqfoXWtAI=;
+        b=jlsD3IJZir0SD6QisGpk2W8pphVmWxiDa+ZdF7MlCzN6h3yVdGpT7kxEd0asIUyPVD
+         go3Fj38l8uTAfq3WcI9aQTwm4Sg5RNmXdNMY69nGCz4uboHR+jwpfqZNbK1asWhd10GZ
+         7RfpI65eUabT5hdUvWB5lpe0CEBjW8b7qMdvGhqJMkUlIe28keoCyUxcfLClHODe4aMy
+         Yf7g/45X/nCnMBvhxF0UCg4dQD5nv3XnZ90rmlCfGZIc3GGBo4ze3tiA27RkPcI0Pmfs
+         rvkyVpysrbHteBIAnRCHqAL3zIM5N9kKz62Jpu6gMQPjK6S3J5H9KfT/DLq89WsiKX4I
+         elAQ==
+X-Gm-Message-State: APjAAAWrsfLyJWCzJerSvpm5+gvxDUY9ngXLFHmVXIbOvNpoHCidd8YP
+        /o2lYjwjxyC4F9hdrnJL5hOxMjS40LdtIjIFdUc=
+X-Google-Smtp-Source: APXvYqwg47twzkebdo7/rRsHK+uNTOXKMXFhUZXxxBct3KF9NuPa9ySUV/0S3U2qc9GRBfY1FMdlGi7Ea9kIIk4kO2o=
+X-Received: by 2002:a02:780f:: with SMTP id p15mr60464329jac.91.1577885248116;
+ Wed, 01 Jan 2020 05:27:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191230125232.5ykjy3foljqjvhz4@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Received: by 2002:ac0:9191:0:0:0:0:0 with HTTP; Wed, 1 Jan 2020 05:27:27 -0800 (PST)
+In-Reply-To: <20200101104313.GA666771@light.dominikbrodowski.net>
+References: <20191231150226.GA523748@light.dominikbrodowski.net>
+ <20200101003017.GA116793@rani.riverdale.lan> <20200101104313.GA666771@light.dominikbrodowski.net>
+From:   youling 257 <youling257@gmail.com>
+Date:   Wed, 1 Jan 2020 21:27:27 +0800
+Message-ID: <CAOzgRdZ0eBNKAP_T8r=MF35WUtUMn07-14OwA+AXACyY=r5hqA@mail.gmail.com>
+Subject: Re: [PATCH] early init: open /dev/console with O_LARGEFILE
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 01:52:32PM +0100, Uwe Kleine-König wrote:
-> On Sat, Dec 28, 2019 at 12:45:48PM +0530, Nishad Kamdar wrote:
-> > This patch corrects the SPDX License Identifier style in
-> > header file related to Ecklemann SIOX driver.
-> 
-> s/Ecklemann/Eckelmann/
-> 
-> > For C header files Documentation/process/license-rules.rst
-> > mandates C-like comments (opposed to C source files where
-> > C++ style should be used).
-> > 
-> > Changes made by using a script provided by Joe Perches here:
-> > https://lkml.org/lkml/2019/2/7/46.
-> 
-> Other than that, I assume this is fine. So if you fix the name above,
-> you can add my Acked-by:.
-> 
-> Best regards
-> Uwe
-> 
-> -- 
-> Pengutronix e.K.                           | Uwe Kleine-König            |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Unfortunately, test this patch still no help, has system/bin/sh warning.
 
-Ok, I'll do that.
-
-Thank you very much for the review.
-
-Regards,
-Nishad
+2020-01-01 18:43 GMT+08:00, Dominik Brodowski <linux@dominikbrodowski.net>:
+> @youling 257: could you test the attached patch, please?
+>
+> Thanks,
+> 	Dominik
+>
+> On Tue, Dec 31, 2019 at 07:30:19PM -0500, Arvind Sankar wrote:
+>> On Tue, Dec 31, 2019 at 04:02:26PM +0100, Dominik Brodowski wrote:
+>> > If force_o_largefile() is true, /dev/console used to be opened
+>> > with O_LARGEFILE. Retain that behaviour.
+>> >
+>>
+>> One other thing that used to happen is fsnotify_open() -- I don't know
+>> how that might affect this, but it seems like the only thing left that's
+>> different.
+>
+> Suggested-by: Arvind Sankar <nivedita@alum.mit.edu>
+> Signed-off-by: Dominik Brodowski <linux@dominikbrodowski.net>
+>
+> diff --git a/init/main.c b/init/main.c
+> index d12777775cb0..3f4163046200 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -94,6 +94,7 @@
+>  #include <linux/jump_label.h>
+>  #include <linux/mem_encrypt.h>
+>  #include <linux/file.h>
+> +#include <linux/fsnotify.h>
+>
+>  #include <asm/io.h>
+>  #include <asm/bugs.h>
+> @@ -1166,6 +1167,7 @@ void console_on_rootfs(void)
+>  			  O_RDWR | (force_o_largefile() ? O_LARGEFILE : 0), 0);
+>  	if (IS_ERR(file))
+>  		goto err_out;
+> +	fsnotify_open(file);
+>
+>  	/* create stdin/stdout/stderr, this should never fail */
+>  	for (i = 0; i < 3; i++) {
+>
