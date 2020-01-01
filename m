@@ -4,36 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92709C2D0DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 08:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6903CC2D0DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 08:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 739E6206E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 08:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4660D206E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 08:20:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbgAAIUS (ORCPT
+        id S1727340AbgAAIUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 03:20:18 -0500
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:56955 "EHLO
+        Wed, 1 Jan 2020 03:20:42 -0500
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:56920 "EHLO
         mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727075AbgAAIUQ (ORCPT
+        by vger.kernel.org with ESMTP id S1727226AbgAAIUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 03:20:16 -0500
+        Wed, 1 Jan 2020 03:20:18 -0500
 X-IronPort-AV: E=Sophos;i="5.69,382,1571695200"; 
-   d="scan'208";a="429578758"
+   d="scan'208";a="429578764"
 Received: from palace.rsr.lip6.fr (HELO palace.lip6.fr) ([132.227.105.202])
   by mail2-relais-roc.national.inria.fr with ESMTP/TLS/AES128-SHA256; 01 Jan 2020 09:20:08 +0100
 From:   Julia Lawall <Julia.Lawall@inria.fr>
-To:     Andy Gross <agross@kernel.org>
-Cc:     kernel-janitors@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     kernel-janitors@vger.kernel.org, Andy Gross <agross@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 08/16] pinctrl: ssbi-mpp: constify copied structure
-Date:   Wed,  1 Jan 2020 08:43:26 +0100
-Message-Id: <1577864614-5543-9-git-send-email-Julia.Lawall@inria.fr>
+Subject: [PATCH 14/16] pinctrl: qcom: ssbi-gpio: constify copied structure
+Date:   Wed,  1 Jan 2020 08:43:32 +0100
+Message-Id: <1577864614-5543-15-git-send-email-Julia.Lawall@inria.fr>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1577864614-5543-1-git-send-email-Julia.Lawall@inria.fr>
 References: <1577864614-5543-1-git-send-email-Julia.Lawall@inria.fr>
@@ -42,28 +41,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pm8xxx_pinctrl_desc structure is only copied into another structure,
-so make it const.
+The pm8xxx_pinctrl_desc structure is only copied into another
+structure, so make it const.
 
 The opportunity for this change was found using Coccinelle.
 
 Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
 ---
- drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c |    2 +-
+ drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c b/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
-index 3d8b1d74fa2f..681d8dcf37e3 100644
---- a/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
-@@ -430,7 +430,7 @@ static const struct pinconf_ops pm8xxx_pinconf_ops = {
+diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+index dca86886b1f9..c7912135bbfb 100644
+--- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+@@ -439,7 +439,7 @@ static const struct pinconf_ops pm8xxx_pinconf_ops = {
  	.pin_config_group_set = pm8xxx_pin_config_set,
  };
  
 -static struct pinctrl_desc pm8xxx_pinctrl_desc = {
 +static const struct pinctrl_desc pm8xxx_pinctrl_desc = {
- 	.name = "pm8xxx_mpp",
+ 	.name = "pm8xxx_gpio",
  	.pctlops = &pm8xxx_pinctrl_ops,
  	.pmxops = &pm8xxx_pinmux_ops,
 
