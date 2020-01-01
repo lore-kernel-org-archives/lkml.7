@@ -2,81 +2,120 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05535C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 09:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD04AC32764
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 09:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C909E2072C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 09:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D0D72072C
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 09:47:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="iOuTX6vX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726004AbgAAJmt (ORCPT
+        id S1725933AbgAAJrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 04:42:49 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:44732 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725783AbgAAJmt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 04:42:49 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R311e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TmUDZF-_1577871758;
-Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TmUDZF-_1577871758)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 01 Jan 2020 17:42:46 +0800
-From:   Wen Yang <wenyang@linux.alibaba.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     xlpang@linux.alibaba.com, Wen Yang <wenyang@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] ftrace: avoid potential division by zero
-Date:   Wed,  1 Jan 2020 17:42:33 +0800
-Message-Id: <20200101094233.3804-1-wenyang@linux.alibaba.com>
-X-Mailer: git-send-email 2.23.0
+        Wed, 1 Jan 2020 04:47:18 -0500
+Received: from frisell.zx2c4.com ([192.95.5.64]:39895 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725783AbgAAJrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jan 2020 04:47:18 -0500
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id bd1be872;
+        Wed, 1 Jan 2020 08:48:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=f4mgsSbWhcX4nb7z42nkbcoWQxI=; b=iOuTX6
+        vXDXalEy4fj2MK3JPzn4z1XtUrC7p+tzNZ6YaTqvuibNZZN83SNrnnoMrDAkEaTr
+        vfClH+1tOZlQDkWKrKffSwI9FDTPbAYrEh8j8XxHa6IkoFjbWeNidMqVo84F41s4
+        Ff7p72Tl9YSoqEMRZbQkb0yNejek/TKQBM1/pHpB3qvfN9Ecz5P1+feFkIwn8lnX
+        iNq86kR3cNi0+wcxbrCwirwtZYwnd0eZpOClk9fpO2o2912GvTCXsOH4dZmbMUfk
+        zqgeMjZQsZ3nec14r+4mkhRB1zoXShLERiSRtxjv4XQGYqSaXwBN9UIbyDhhaok/
+        2n+KkxuYds3CVFKw==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 4ae2b616 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Wed, 1 Jan 2020 08:48:55 +0000 (UTC)
+Received: by mail-ot1-f48.google.com with SMTP id k8so35773047otl.13;
+        Wed, 01 Jan 2020 01:47:16 -0800 (PST)
+X-Gm-Message-State: APjAAAWgtoic/A8xMvPvm3w2t210Z4KggP5i/d+SbdNyVa20mC1h9Hen
+        6qF0SW2+ll3DT7ea8oQkBGlI7sEB/qKTJu0Cg1I=
+X-Google-Smtp-Source: APXvYqyIGS/wGj0v8cKxqgpqX78Pmba4r9awIczCf4DM7aqu48j7WnOiSxJVH0qsSeYGd1jM3RtIAnq5f01SqVXXCsg=
+X-Received: by 2002:a9d:674f:: with SMTP id w15mr87300086otm.243.1577872035434;
+ Wed, 01 Jan 2020 01:47:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAK8P3a0sWObusG3xO_JE9CXCyNfFN0p6OgPjUyU2CHLBBZNpZw@mail.gmail.com>
+ <CAHmME9o==nBONywVgSjsmjs2H_A8itgmwibqzPmvivcSocKWRQ@mail.gmail.com>
+ <CAK8P3a11g-UXcYdudDtp0TWCQAfotpc-63BqYwn-a9LDxV-b+Q@mail.gmail.com>
+ <CAHmME9pnBtjJ86gsWgK8DCYKo_HFpyViHoGpJPTrYBONT01YVA@mail.gmail.com>
+ <CAK8P3a0NBuqDX63+920q7Q+yO2xCoSd0O7xUDJv6BBoco2kVOg@mail.gmail.com>
+ <CAHmME9rnnoFwh=EHAgdQFM+c33D9mgCoVML_+d=Js=pXPnsxKQ@mail.gmail.com>
+ <CAK8P3a1AYGbgf6mmL-863+PXPBQw3AAtp5wQPL5duLCONGhHuw@mail.gmail.com>
+ <CAHmME9r2G4viiF4sYqpuYOnFCtjWpjugqenoEeUrsU6MGBeSuQ@mail.gmail.com>
+ <CAHmME9rCCei_CL1evDYQ44Eu8erbjx_jDzbpKeXD4jTGBu8v8A@mail.gmail.com>
+ <CAHmME9q0z4RBhy7AETo0sPt+SfV7=zFra0iyZ-Sm54c-WG6CVg@mail.gmail.com> <20200101041056.xionott76qbrffih@lantea.localdomain>
+In-Reply-To: <20200101041056.xionott76qbrffih@lantea.localdomain>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Wed, 1 Jan 2020 10:47:04 +0100
+X-Gmail-Original-Message-ID: <CAHmME9pvMmnN_=enz7k_hU=KjEtOiDL6dFa42E3mLPDdZ+M1cg@mail.gmail.com>
+Message-ID: <CAHmME9pvMmnN_=enz7k_hU=KjEtOiDL6dFa42E3mLPDdZ+M1cg@mail.gmail.com>
+Subject: Re: [PATCH] mips: vdso: conditionalize 32-bit time functions on COMPAT_32BIT_TIME
+To:     Paul Burton <paulburton@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Christian Brauner <christian.brauner@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ftrace_profile->counter is unsigned long and
-do_div truncates it to 32 bits, which means it can test
-non-zero and be truncated to zero for division.
-Fix this issue by using div64_ul() instead.
+On Wed, Jan 1, 2020 at 5:08 AM Paul Burton <paulburton@kernel.org> wrote:
+>
+> Hi Jason,
+>
+> On Tue, Dec 31, 2019 at 05:14:41PM +0100, Jason A. Donenfeld wrote:
+> > Here's a "one click" reproducer:
+> > https://data.zx2c4.com/mips-musl-libc-weird-crash-time32-compat.tar.xz
+> >
+> > Untar that and hit `make -j$(nproc)`, and you'll get a freshly built
+> > and crashing kernel+userland.
+>
+> Thanks for the test case. It seems like the VDSO code isn't saving &
+> restoring $gp/$28, even though it's meant to be callee-saved in both the
+> n32 & n64 ABIs. With some digging I found that the below seems to
+> resolve the issue. Could you check whether it works for you?
+>
+> I'm still not quite sure *why* this happens; perhaps GCC just decides it
+> doesn't need to save & restore $gp/$28 when it spots that it's being
+> "used" for __current_thread_info (even though that's never actually
+> referenced in the VDSO)?
+>
+> Just moving the declaration of __current_thread_info inside the
+> current_thread_info() function seems to do the trick too, and is
+> probably a bit neater.
+>
+> Thanks,
+>     Paul
+>
+> ---
+> diff --git a/arch/mips/include/asm/thread_info.h b/arch/mips/include/asm/thread_info.h
+> index 4993db40482c..ac33959bbb1f 100644
+> --- a/arch/mips/include/asm/thread_info.h
+> +++ b/arch/mips/include/asm/thread_info.h
+> @@ -50,7 +50,11 @@ struct thread_info {
+>  }
+>
+>  /* How to get the thread information struct from C.  */
+> +#ifdef __VDSO__
+> +register struct thread_info *__current_thread_info __asm__("$0");
+> +#else
+>  register struct thread_info *__current_thread_info __asm__("$28");
+> +#endif
+>
+>  static inline struct thread_info *current_thread_info(void)
+>  {
 
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-kernel@vger.kernel.org
----
- kernel/trace/ftrace.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Holy guacamole, nice catch. That's interesting behavior indeed...
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index ac99a35..342e286 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -527,7 +527,7 @@ static int function_stat_show(struct seq_file *m, void *v)
- 
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
- 	avg = rec->time;
--	do_div(avg, rec->counter);
-+	avg = div64_ul(avg, rec->counter);
- 	if (tracing_thresh && (avg < tracing_thresh))
- 		goto out;
- #endif
-@@ -553,7 +553,8 @@ static int function_stat_show(struct seq_file *m, void *v)
- 		 * Divide only 1000 for ns^2 -> us^2 conversion.
- 		 * trace_print_graph_duration will divide 1000 again.
- 		 */
--		do_div(stddev, rec->counter * (rec->counter - 1) * 1000);
-+		stddev = div64_ul(stddev,
-+				  rec->counter * (rec->counter - 1) * 1000);
- 	}
- 
- 	trace_seq_init(&s);
--- 
-1.8.3.1
-
+I'll leave it to you to submit for 5.5?
