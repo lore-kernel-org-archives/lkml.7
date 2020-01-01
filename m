@@ -2,98 +2,65 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8919EC32764
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 07:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A19C2D0DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 08:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA3720722
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 07:23:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HMTmPSu5"
+	by mail.kernel.org (Postfix) with ESMTP id C7EDC206E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 08:20:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725933AbgAAHXC (ORCPT
+        id S1725911AbgAAIUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 02:23:02 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43360 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725787AbgAAHXC (ORCPT
+        Wed, 1 Jan 2020 03:20:10 -0500
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:56920 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725783AbgAAIUK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 02:23:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577863381;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZkJ1mIbTrrBOlKZUoQPdf32Q2bHvXxd3EaQrbVcK/wk=;
-        b=HMTmPSu5gdMK/K5C9ATTLOARBM7Og2aKuM3vrOVm4lws9KzxwNXrCm+0EM855oDzxcM1bE
-        2pgRk2E6BRZrKuOU0n0kbBo7Iq3fwu/vHy+8N559a3j4VY/HL+2T/2COpK9I4hC3RSvObk
-        KLYhgOqWqaGGd+HSDwtdD0YWboNEE7U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-52-FPJNVcs3Ocm2QR97esNbTQ-1; Wed, 01 Jan 2020 01:20:58 -0500
-X-MC-Unique: FPJNVcs3Ocm2QR97esNbTQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 36F75185432D;
-        Wed,  1 Jan 2020 06:20:56 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-60.pek2.redhat.com [10.72.12.60])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5BE2A5D9E2;
-        Wed,  1 Jan 2020 06:20:51 +0000 (UTC)
-Date:   Wed, 1 Jan 2020 14:20:47 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Taku Izumi <izumi.taku@jp.fujitsu.com>,
-        Michael Weiser <michael@weiser.dinsnail.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>, kexec@lists.infradead.org,
-        X86 ML <x86@kernel.org>
-Subject: Re: [PATCH v2 4/4] efi: Fix handling of multiple efi_fake_mem=
- entries
-Message-ID: <20200101062047.GA16393@dhcp-128-65.nay.redhat.com>
-References: <157782985777.367056.14741265874314204783.stgit@dwillia2-desk3.amr.corp.intel.com>
- <157782987865.367056.15199592105978588123.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20200101045141.GA15155@dhcp-128-65.nay.redhat.com>
- <CAPcyv4hSB9B5tiKVwtNOgDS6KS2Pj6f962OPBZVZpPjrBt6Z8A@mail.gmail.com>
- <20200101061505.GA15717@dhcp-128-65.nay.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200101061505.GA15717@dhcp-128-65.nay.redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Wed, 1 Jan 2020 03:20:10 -0500
+X-IronPort-AV: E=Sophos;i="5.69,382,1571695200"; 
+   d="scan'208";a="429578749"
+Received: from palace.rsr.lip6.fr (HELO palace.lip6.fr) ([132.227.105.202])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/AES128-SHA256; 01 Jan 2020 09:20:08 +0100
+From:   Julia Lawall <Julia.Lawall@inria.fr>
+To:     Jaroslav Kysela <perex@perex.cz>
+Cc:     kernel-janitors@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 01/16] ALSA: ad1816a: constify copied structure
+Date:   Wed,  1 Jan 2020 08:43:19 +0100
+Message-Id: <1577864614-5543-2-git-send-email-Julia.Lawall@inria.fr>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1577864614-5543-1-git-send-email-Julia.Lawall@inria.fr>
+References: <1577864614-5543-1-git-send-email-Julia.Lawall@inria.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Does kexec preserve iomem? I.e. as long as the initial translation of
-> > efi entries to e820, and resulting resource tree, is preserved by
-> > successive kexec cycles then I think we're ok.
-> 
-> It will not preserve them automatically, but that can be fixed if
-> needed.
-> 
-> There are two places:
-> 1. the in kernel loader, we can do similar with below commit (for Soft
-> Reseved instead):
-> commit 980621daf368f2b9aa69c7ea01baa654edb7577b
-> Author: Lianbo Jiang <lijiang@redhat.com>
-> Date:   Tue Apr 23 09:30:07 2019 +0800
-> 
->     x86/crash: Add e820 reserved ranges to kdump kernel's e820 table
+The snd_ad1816a_timer_table structure is only copied into
+another structure, so make it const.
 
-Oops, that is for kdump only, for kexec, should update the kexec e820
-table.  But before doing that we need first to see if this is necessary. 
+The opportunity for this change was found using Coccinelle.
 
-Thanks
-Dave
+Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+
+---
+ sound/isa/ad1816a/ad1816a_lib.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sound/isa/ad1816a/ad1816a_lib.c b/sound/isa/ad1816a/ad1816a_lib.c
+index e1aa5372c483..da6f68b8c248 100644
+--- a/sound/isa/ad1816a/ad1816a_lib.c
++++ b/sound/isa/ad1816a/ad1816a_lib.c
+@@ -409,7 +409,7 @@ static int snd_ad1816a_timer_stop(struct snd_timer *timer)
+ 	return 0;
+ }
+ 
+-static struct snd_timer_hardware snd_ad1816a_timer_table = {
++static const struct snd_timer_hardware snd_ad1816a_timer_table = {
+ 	.flags =	SNDRV_TIMER_HW_AUTO,
+ 	.resolution =	10000,
+ 	.ticks =	65535,
 
