@@ -2,116 +2,112 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5277EC2D0DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 22:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BEBC2D0DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 22:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24A572073D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 22:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36F012073D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 22:26:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ia/fc+sU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UZQGAnB0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbgAAW0w (ORCPT
+        id S1727552AbgAAW04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 17:26:52 -0500
-Received: from mail-pg1-f179.google.com ([209.85.215.179]:35024 "EHLO
-        mail-pg1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727496AbgAAW0s (ORCPT
+        Wed, 1 Jan 2020 17:26:56 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34123 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727524AbgAAW0t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 17:26:48 -0500
-Received: by mail-pg1-f179.google.com with SMTP id l24so21042131pgk.2;
+        Wed, 1 Jan 2020 17:26:49 -0500
+Received: by mail-qt1-f193.google.com with SMTP id 5so33647989qtz.1;
         Wed, 01 Jan 2020 14:26:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=S+dkYv5HLHzNOWTER7d+8BqEGnKLKwfpZv5Uz3xEK7E=;
-        b=ia/fc+sUcStdQiY1tRyj3gBK8XL+cN/P7Afp7l/5pUEUexWwwzTPk0TtNNLa9RJ9Zl
-         10fSpovx1pR8Gv3QwyEFQ9gri0PJ2TpQNqmlbFPpe4xTxpbqbCR8Yn0n19zY7s5UvtiT
-         thrF/RYf9JvJM8lxEdW3m2KS+Kv6k4mCo5s2K0uaB/PuXmPbiRh/DaxPaPJWRJTVQDVX
-         NGiWj9S9LsK/CWxXYnrxMBgpiMiNm7td5XN8VaKOo5J5pNwRLRxnFKWauJ1KzVBOiCyD
-         WIV4htAlm2N4oAL1BGzyV6H7FIaErK9SFKG++xLYxoUU7UOAHcU8+dluvso0PNehgI+B
-         Ew2A==
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=iQu0HUIm4XiQGFH+gozGoo1Hyw0Z/oVPbsqjgUDbkQs=;
+        b=UZQGAnB0WHkCOm9SaQvxU69RMIY+H8W9HB5hRVflXlemoAdJIVULy7WXiJl8N/1lHP
+         NIaDesHRyo8ATOwAy4elZAdpYwEfoH2dyCxk7JL6GQQahEqyJNCTSht1qRO1GQL0xXAQ
+         HEtpgtFHjBb4Pmz3GBOwcmEfIPEq49+Dewg5m1R3/KSr0HOPDtgepo/hXhE8VZj59AOD
+         Lmz2HyC+8nBHqPVyg1KMfufBYyEtI1esnyHO5GqXhsyRiXHMrBmrsYxJVGcQ7tltErVK
+         LR29eFpA5o1GYNpQvFn3urfKGcYWLH20aixPIvZCH5C5sV7BMghLjtiHvQeCshzhQLlI
+         Sa4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=S+dkYv5HLHzNOWTER7d+8BqEGnKLKwfpZv5Uz3xEK7E=;
-        b=jaU0GwmkUyHeiBW+nY9jVp/fLu/C/rGVdULgb4HSFQevBP6BhQWAVBVotbLUcJ4jAt
-         KIceaTMwAlzFUV6XaSW2TQwqJX2YBXOF3TPwpyqg08akODEKdjDgVfIEN0E9gM8Ijxiu
-         EbZgwxejCURdPywqrQ27lPj6VsOUsRPVk0gOPqLsOfvxM146zZI6OVSQ0GlvFXQk0t8u
-         pZFhi1gKJ/NgZo9IiRq7pPPyCm3lCkLEUAI3JDoMcUWiJ560atOEuwAyjQN2+ecBIAVN
-         WBri5GSDZKghnizULpY0j7XBf5plLJJ4Z4giH1dBFPRFecA6KKxrsz6XTuqriv0tdv6M
-         L4og==
-X-Gm-Message-State: APjAAAVIJ7P61lD0NSpdZ91cUGWvGsziqyAUuPAv8mHHg222X57QTTe1
-        NPacZhj28gdcg1z6Z6XrD4I=
-X-Google-Smtp-Source: APXvYqzst1YW5MTfyOVJ9oyIhHWFUBIalWaKhBwd2RW0ubsenUzXdgCWymwZV1GrDQLlZmlb0/3lhg==
-X-Received: by 2002:aa7:870d:: with SMTP id b13mr65507563pfo.212.1577917607944;
-        Wed, 01 Jan 2020 14:26:47 -0800 (PST)
-Received: from localhost.localdomain ([2804:14d:72b1:8920:da15:c0bd:33c1:e2ad])
-        by smtp.gmail.com with ESMTPSA id o2sm8601008pjo.26.2020.01.01.14.26.45
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iQu0HUIm4XiQGFH+gozGoo1Hyw0Z/oVPbsqjgUDbkQs=;
+        b=GwBF0MK1NMnDkyhUBLxCsPTRnw02sN+Wwlvbxdjv+TZaBP5UVXyZNlL/rG2Ww9dPjX
+         qBxRUT2et+dXHthrH7PzRqPZRVKpzfvURJt5ebHyyyOeu2NdD2JbxmQwMObTaroF4Erx
+         ATNhYbG+WI3j68mQQYaghIu1StY/5kY97xFfKhmrko7pKG+iQ1vBnxftErTH+e6fQgp5
+         ThKBmrIEKaEp6RQlltXqXCJNxDGRLY2ABK7HJOVVftJ1/DG61CfiGAcPrrNeawojR3TY
+         SDQ1UqJPLBP/Pq7OjxHqE12G+CLSvxagYlZnaoHXMeQpZQWOPVYS/VaQchJiA/RXiM1l
+         v1Eg==
+X-Gm-Message-State: APjAAAU1YifptuLrgEJNQciWXnY02LSmo7k4P2z20Xca5Lb8XSolSoTn
+        3/M/Eyc0pnETF+uMqTyKRofJ1QhLkPA=
+X-Google-Smtp-Source: APXvYqzRAwIdTPkxSN+ZKzNoKkU5CLgN87X53bEd2zz8bNCDtKte97iuXjNRUFTASEYMAhoTO04CJQ==
+X-Received: by 2002:ac8:2af4:: with SMTP id c49mr59212013qta.367.1577917608415;
+        Wed, 01 Jan 2020 14:26:48 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id 3sm16193583qte.59.2020.01.01.14.26.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jan 2020 14:26:47 -0800 (PST)
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-X-Google-Original-From: Daniel W. S. Almeida
-To:     mchehab+samsung@kernel.org, corbet@lwn.net
-Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH v3 7/8] Documentation: nfs: pnfs-scsi-server: convert to ReST
-Date:   Wed,  1 Jan 2020 19:26:14 -0300
-Message-Id: <adbb8abe0f8bd4f58c79fd503822604bdd2b9bd4.1577917076.git.dwlsalmeida@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <cover.1577917076.git.dwlsalmeida@gmail.com>
-References: <cover.1577917076.git.dwlsalmeida@gmail.com>
+        Wed, 01 Jan 2020 14:26:48 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 1 Jan 2020 17:26:45 -0500
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kbuild@vger.kernel.org, Rob Landley <rob@landley.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] menuconfig: restore prompt dependencies in help text
+Message-ID: <20200101222644.GA438328@rani.riverdale.lan>
+References: <20191231055839.GG4203@ZenIV.linux.org.uk>
+ <20200101204152.402906-1-nivedita@alum.mit.edu>
+ <20200101210426.GA8904@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200101210426.GA8904@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+On Wed, Jan 01, 2020 at 09:04:26PM +0000, Al Viro wrote:
+> On Wed, Jan 01, 2020 at 03:41:52PM -0500, Arvind Sankar wrote:
+> > Commit bcdedcc1afd6 ("menuconfig: print more info for symbol without
+> > prompts") moved some code from get_prompt_str to get_symbol_str so that
+> > dependency information for symbols without prompts could be shown.
+> > 
+> > This code would be better copied rather than moved, as the change had
+> > the side-effect of not showing any extra dependencies that the prompt
+> > might have over the symbol.
+> > 
+> > Put back a copy of the dependency printing code in get_prompt_str.
+> 
+> Umm... Is "visible" really accurate in this case?  AFAICS, the
+> entry (and help for it) _is_ visible with EXPERT=n.  OTOH, with
+> EXPERT=y and MULTIUSER=n it disappears completely.
+> 
+> I'm not familiar with kconfig guts (and not too concerned about that
+> feature of help there, TBH), but it looks like what you are printing
+> there is some mix of dependencies ("visible when") and selectability...
 
-Convert pnfs-scsi-server to ReST and move it to admin-guide. Content
-remains mostly unchanged.
+Perhaps not the most accurate term. For NAMESPACES it has a submenu, so
+it can't disappear as long as its selected, even if it's not editable
+any more. A "leaf" level option like MULTIUSER, otoh, does disappear
+completely (even though it's still selected).
 
-Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
----
- Documentation/admin-guide/nfs/index.rst                          | 1 +
- .../nfs/pnfs-scsi-server.rst}                                    | 1 +
- 2 files changed, 2 insertions(+)
- rename Documentation/{filesystems/nfs/pnfs-scsi-server.txt => admin-guide/nfs/pnfs-scsi-server.rst} (97%)
+But there are also things like CONFIG_VT, which stays visible, even
+though its not a menu.. I think because there is a visible option that
+depends on it and immediately follows, which menuconfig shows by
+indenting. If the order of UNIX98_PTYS and VT_HW_CONSOLE_BINDING is
+flipped in drivers/tty/Kconfig, then VT disappears when EXPERT=n.
 
-diff --git a/Documentation/admin-guide/nfs/index.rst b/Documentation/admin-guide/nfs/index.rst
-index f3bfd0f5a362..c96e93b61744 100644
---- a/Documentation/admin-guide/nfs/index.rst
-+++ b/Documentation/admin-guide/nfs/index.rst
-@@ -11,4 +11,5 @@ NFS
-     nfsd-admin-interfaces
-     nfs-idmapper
-     pnfs-block-server
-+    pnfs-scsi-server
- 
-diff --git a/Documentation/filesystems/nfs/pnfs-scsi-server.txt b/Documentation/admin-guide/nfs/pnfs-scsi-server.rst
-similarity index 97%
-rename from Documentation/filesystems/nfs/pnfs-scsi-server.txt
-rename to Documentation/admin-guide/nfs/pnfs-scsi-server.rst
-index 5bef7268bd9f..d2f6ee558071 100644
---- a/Documentation/filesystems/nfs/pnfs-scsi-server.txt
-+++ b/Documentation/admin-guide/nfs/pnfs-scsi-server.rst
-@@ -1,4 +1,5 @@
- 
-+==================================
- pNFS SCSI layout server user guide
- ==================================
- 
--- 
-2.24.1
-
+Dunno, maybe Editable would be a better word than Visible?
