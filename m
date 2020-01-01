@@ -2,131 +2,126 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F29C32764
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 17:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38220C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 17:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7D9F20842
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 17:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1048A207E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 17:50:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UNRFGzzS"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="H3sNLMfJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727280AbgAARq0 (ORCPT
+        id S1727310AbgAARuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 12:46:26 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45891 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbgAARqZ (ORCPT
+        Wed, 1 Jan 2020 12:50:16 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53760 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727226AbgAARuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 12:46:25 -0500
-Received: by mail-pl1-f196.google.com with SMTP id b22so16949359pls.12;
-        Wed, 01 Jan 2020 09:46:25 -0800 (PST)
+        Wed, 1 Jan 2020 12:50:15 -0500
+Received: by mail-wm1-f67.google.com with SMTP id m24so3904368wmc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 09:50:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jgFQTqseU0AOmtbn0bXATUNb8DmaYbEHD/mrJGCMGbQ=;
-        b=UNRFGzzS1y/I5c1sv6nxOMRtNrS0HCd6gOFGIT8F4wnx2BxLzNpbEgKDfjeczU2Sq8
-         tBK+RKZT+k30Ckh6kPObJXTldb8lu4hb2yUEtJbIRPsNBSwyGNgazVBLlB6Udpwst5bL
-         MosjSgK9f8FwGbSNCvAUaS8irkq86BjjJO2SuVZ8EPFSq5+sS8WMcsH067BjfOPNZH3z
-         9Ch9WnaIqp60Sn/ACxxtR8Jvcbde7APYD9mxuZ4RsFOx8KqwbwALWcifnPzolYPHPY+U
-         sJg/9giUIn+YCHloFsDxmIsxhUJ/Por0Yl6zJrlgyI9XqIUNJnnSIu/TKgeoK69ADiZp
-         Za5w==
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=12nPZoYm5B9O7/gN39AnPaKov7Kvb+XDvIXAHahnWys=;
+        b=H3sNLMfJYn4R9zMIiXkpZ3A7/6KfGkNQ70mnqEN648stOCgYDViADXf0NZu+KNUsIG
+         qXNFEm8YZ1TL8C2VIdUsljDE//Fudcw63RR1r4UDapnpeHwRLUIlG519IueS5L1GOUtk
+         lpxxIBJN8eQL+NigCBLgtSumUzQEpipSX9UuI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jgFQTqseU0AOmtbn0bXATUNb8DmaYbEHD/mrJGCMGbQ=;
-        b=soaN8MKUX07aLYKG8ul8Axt2/wW6gFAzzOKxigALHlZX5/aSRqEvzHHg3wPgTQ57Pr
-         +hycxPr74KiasUnnRQfvCv+5ST8fJEsp5o6uXj40G6HsaE69MGF5j/QmCNLM8/ErWLtG
-         UCoyiqrNsuACbbPAtGnoRN3f+pT9bR/V386698ygSidytAtUCEazK5WMtN6M/aVWWoKv
-         XcY9aCI9GfykHWxqdnZFoJaA8RNX+/GbynBGw5XIrXRQV5pGIeRk9Lo4xtymtQ1Odcb+
-         oTZuM4r1a5u6qDAgNynrYwMjcigOhatPqMs0h6u2uoNATiK+PyPcwFMXhVyjD+bzwNJV
-         aI1Q==
-X-Gm-Message-State: APjAAAWEcbg/JYGL+G4QWjqdCdc9SB9JAXOT7+GEwfQ2O16KxNPkLPNQ
-        3UcEBNWocvW3ttkL+Ia04Qk=
-X-Google-Smtp-Source: APXvYqy1a++YnyCNOnWLIYqvsCOFO/RVcKBMCIhyX+zWGvbzERkJB9E/9pn3Z5EQ8i/HKKGvIQigzQ==
-X-Received: by 2002:a17:902:d694:: with SMTP id v20mr41272054ply.127.1577900784990;
-        Wed, 01 Jan 2020 09:46:24 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b128sm56470997pga.43.2020.01.01.09.46.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jan 2020 09:46:24 -0800 (PST)
-Subject: Re: [PATCH v2] hwmon: Driver for temperature sensors on SATA drives
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
-        Chris Healy <cphealy@gmail.com>
-References: <20191215174509.1847-1-linux@roeck-us.net>
- <20191215174509.1847-2-linux@roeck-us.net> <yq1r211dvck.fsf@oracle.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <b22a519c-8f26-e731-345f-9deca1b2150e@roeck-us.net>
-Date:   Wed, 1 Jan 2020 09:46:23 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <yq1r211dvck.fsf@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=12nPZoYm5B9O7/gN39AnPaKov7Kvb+XDvIXAHahnWys=;
+        b=VpjFMKOrINkvmBk3EA8e2nQEYiUu06sZ2yBYrx37BmH6S062wymssg6MDc+Dta1KQB
+         cNEbFfjQDmQEwbE6x0rxBUtfWqTwoL5waw8ebP411vMLOnoZ8Z3vg8CwfvFypyeGmtmb
+         vncAEpFuy/2M/GDdBWY9Rc9JC2H9x9t7i26LTIRPfX21qDQdLayf3FaM1CssuUdE2u6x
+         dHnpt57EGowSlrgo/GHiUQpU2KAvO9m7MNlGxZJTHaN7ReHALQGyfkasKwi/DXDFdggC
+         wBgY74uUMU0EgoEMlVt3flbMghRE+gH9m3dR68f6bDTtDvk+Ev0RL6Pg4WGftPHEJtcA
+         zJNg==
+X-Gm-Message-State: APjAAAXE5PLy5XaMHawe/I0Fr3CMGxYa3jtXeXg2VEN3FKpzeDGop7Ds
+        iLjDn5byuS6Q1ZSR1U+IzDffPfQ2IdE=
+X-Google-Smtp-Source: APXvYqwcPN+/qIwHkLsDYh4D9zpy2hKTq1vCs5L7oZr5hU2Vk65Fa/hXgcdbiqJcMmVYFV4CyHk7OA==
+X-Received: by 2002:a05:600c:248:: with SMTP id 8mr10708929wmj.175.1577901012933;
+        Wed, 01 Jan 2020 09:50:12 -0800 (PST)
+Received: from panicking.lan (93-46-124-24.ip107.fastwebnet.it. [93.46.124.24])
+        by smtp.gmail.com with ESMTPSA id r15sm6025085wmh.21.2020.01.01.09.50.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jan 2020 09:50:12 -0800 (PST)
+From:   Michael Trimarchi <michael@amarulasolutions.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-amarula@amarulasolutions.com,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-crypto@vger.kernel.org
+Subject: [PATCH 1/2] arm64: dts: imx8mm: Add CAAM node
+Date:   Wed,  1 Jan 2020 18:50:10 +0100
+Message-Id: <20200101175011.1875-1-michael@amarulasolutions.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Martin,
+Add node for CAAM - Cryptographic Acceleration and Assurance Module.
 
-On 12/18/19 4:15 PM, Martin K. Petersen wrote:
-> 
-> Guenter,
-> 
->> This driver solves this problem by adding support for reading the
->> temperature of SATA drives from the kernel using the hwmon API and
->> by adding a temperature zone for each drive.
-> 
-> My working tree is available here:
-> 
->    https://git.kernel.org/pub/scm/linux/kernel/git/mkp/linux.git/log/?h=5.6/drivetemp
-> 
-> A few notes:
-> 
->   - Before applying your patch I did s/satatemp/drivetemp/
-> 
->   - I get a crash in the driver core during probe if the drivetemp module
->     is loaded prior to loading ahci or a SCSI HBA driver. This crash is
->     unrelated to my changes. Haven't had time to debug.
-> 
+Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 31 +++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-Any idea how I might be able to reproduce this ? So far I have been
-unsuccessful.
-
-Building drivetemp into the kernel, with ahci and everything SCSI
-built as module, doesn't trigger the crash for me. This is with the
-drivetemp patch (v3) as well as commit d188b0675b ("scsi: core: Add
-sysfs attributes for VPD pages 0h and 89h") applied on top of v5.4.7.
-
-Thanks,
-Guenter
-
->   - I tweaked your ATA detection heuristics and now use the cached VPD
->     page 0x89 instead of fetching one from the device.
-> 
->   - I also added support for reading the temperature log page on SCSI
->     drives.
-> 
->   - Tested with a mixed bag of about 40 SCSI and SATA drives attached.
-> 
->   - I still think sensor naming needs work. How and where are the
->     "drivetemp-scsi-8-140" names generated?
-> 
-> I'll tinker some more but thought I'd share what I have for now.
-> 
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 7360dc0685eb..428a8b43086e 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -667,6 +667,37 @@
+ 				status = "disabled";
+ 			};
+ 
++			crypto: crypto@30900000 {
++				compatible = "fsl,sec-v4.0";
++				#address-cells = <1>;
++				#size-cells = <1>;
++				reg = <0x30900000 0x40000>;
++				ranges = <0 0x30900000 0x40000>;
++				interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_AHB>,
++					 <&clk IMX8MM_CLK_IPG_ROOT>;
++				clock-names = "aclk", "ipg";
++				status = "disabled";
++
++				sec_jr0: jr0@1000 {
++					 compatible = "fsl,sec-v4.0-job-ring";
++					 reg = <0x1000 0x1000>;
++					 interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
++				};
++
++				sec_jr1: jr1@2000 {
++					 compatible = "fsl,sec-v4.0-job-ring";
++					 reg = <0x2000 0x1000>;
++					 interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
++				};
++
++				sec_jr2: jr2@3000 {
++					 compatible = "fsl,sec-v4.0-job-ring";
++					 reg = <0x3000 0x1000>;
++					 interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
++				};
++			};
++
+ 			i2c1: i2c@30a20000 {
+ 				compatible = "fsl,imx8mm-i2c", "fsl,imx21-i2c";
+ 				#address-cells = <1>;
+-- 
+2.17.1
 
