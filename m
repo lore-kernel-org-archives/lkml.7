@@ -2,104 +2,98 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B12C2D0DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 22:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 396A2C2D0DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 22:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21A552072C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 22:02:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kNzFC2zq"
+	by mail.kernel.org (Postfix) with ESMTP id 129ED2072C
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 22:02:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbgAAWCS (ORCPT
+        id S1727438AbgAAWCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 17:02:18 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43966 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727348AbgAAWCR (ORCPT
+        Wed, 1 Jan 2020 17:02:55 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:51552 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727290AbgAAWCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 17:02:17 -0500
-Received: by mail-qt1-f193.google.com with SMTP id d18so30917795qtj.10
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 14:02:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iSAH0evlJoolUg87ShH4FeC0OktYI7yfMEPySwsd/b8=;
-        b=kNzFC2zq2jVyayEiCm2cd4o0F6BR7IlP8Va+bVQKPiq/CEhUeqyqRItdtQoNOM4ewm
-         OWAW2zqenChAUlMr8pqkFnGY8EolCxcaa/Wfm3cpTQGDVZIBY+rn3TkbxTTmInYhAU40
-         l8zNu6g/OYnIDwixdm652WnyoqomC3BOJJkTGP3tV9eAxu82KAegfKZwpJv4Sytu2Rq9
-         1MPmZ4+F9KdzZL9J1I054nt7y2qb3YAvAfr3lgUoGocdtqU6zbZpjaj4e5C7BVzanMcu
-         j/5taaEkYhzkrZy+JS3gdQH+yuQ7WIZ0qXTNpdqkCL1caM7yXWG9HJkBLjEU2IlmvK/n
-         JWRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iSAH0evlJoolUg87ShH4FeC0OktYI7yfMEPySwsd/b8=;
-        b=UynK0yITVRNMcXQs5ZCIkUHoUd+a0g7VjW2o09V3VDB029k008uTV6KSrlABckp+Eo
-         hMi/N85aPSHWaSQb0FzfwF4i7dkcV6cCHVadr+COA+AZFahbstE22zAHkJD3CBoh30RP
-         Of3O+dT3/IrSSEX+98KhLLSCFpuUsel0onj4uV4b5uN+V8Awjd2LkvlIEpHa6IVCNgB2
-         5zOoKFxXpLyV4TknR75yUrJzqNNHTAFqkLZ1mEIvybRWxhNc21iP+gqYR+gn43ObTxSQ
-         0TZbipfHcr8PwX/h+Yh9NEyKuHjBziy5EZ1zFEwvGzHQUtyq+zNXoge8bxVn45muS/rX
-         lP3g==
-X-Gm-Message-State: APjAAAUpydAyT2OSrj5fn0kZ0aTJs4A1dQjjXYpolw5/4YAQWaXSxNpc
-        tTVjZkH7PsPmMQ5dkG7wvGBg93cV3ySG32BcLqY4Sw==
-X-Google-Smtp-Source: APXvYqx29giRIfb/J5Ll9wzRWiEijGwOJsbRuTySE2FESqx85g1GgxWW5fjeubtW4Lpvwq624vg1S5WejKNLgJ6xyjA=
-X-Received: by 2002:aed:2584:: with SMTP id x4mr59867591qtc.343.1577916136881;
- Wed, 01 Jan 2020 14:02:16 -0800 (PST)
+        Wed, 1 Jan 2020 17:02:55 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 5172B1C25F4; Wed,  1 Jan 2020 23:02:53 +0100 (CET)
+Date:   Wed, 1 Jan 2020 23:02:37 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
+        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz
+Subject: Re: Droid 4 on 5.5-rc3
+Message-ID: <20200101220237.GA13059@amd>
+References: <20191228162929.GA29269@duo.ucw.cz>
+ <20191228193622.GA13047@duo.ucw.cz>
+ <20191230173507.GM35479@atomide.com>
 MIME-Version: 1.0
-References: <cover.1576146898.git.amit.kucheria@linaro.org>
- <cea3317c5d793db312064d68b261ad420a4a81b1.1576146898.git.amit.kucheria@linaro.org>
- <be07b05d-421f-35a7-0582-a04a226c8c2c@linaro.org> <CAHLCerMYkEBs7HfYV0WNfypNPCRBEeU3w7ye=4+VxiiXVZT9GQ@mail.gmail.com>
- <5458f285-ec7e-0dc6-ab61-e5d05c76f013@linaro.org>
-In-Reply-To: <5458f285-ec7e-0dc6-ab61-e5d05c76f013@linaro.org>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Thu, 2 Jan 2020 03:32:05 +0530
-Message-ID: <CAP245DV+x-Lpo-SyyzZbK3AVSHkpFpWKSKPngxgLGTwdNxHANg@mail.gmail.com>
-Subject: Re: [PATCH v2] drivers: thermal: tsens: Work with old DTBs
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Olof Johansson <olof@lixom.net>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
+Content-Disposition: inline
+In-Reply-To: <20191230173507.GM35479@atomide.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 2, 2020 at 3:14 AM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
->
-> On 01/01/2020 22:15, Amit Kucheria wrote:
-> > On Mon, Dec 16, 2019 at 2:58 PM Daniel Lezcano
-> > <daniel.lezcano@linaro.org> wrote:
-> >>
-> >> On 12/12/2019 11:38, Amit Kucheria wrote:
-> >>> In order for the old DTBs to continue working, the new interrupt code
-> >>> must not return an error if interrupts are not defined. Don't return an
-> >>> error in case of -ENXIO.
-> >>>
-> >>> Fixes: 634e11d5b450a ("drivers: thermal: tsens: Add interrupt support")
-> >>> Suggested-by: Stephan Gerhold <stephan@gerhold.net>
-> >>> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> >>
-> >> Applied.
-> >
-> > Hi Daniel,
-> >
-> > I haven't seen this fix until -rc4. Do you plan to send it?
->
-> Hi Amit,
->
-> right, I've put it in the thermal/linux-next branch. I'll move it to
-> thermal/fixes and send a PR tomorrow.
 
-Thanks.
+--mP3DRpeJDSE+ciuQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon 2019-12-30 09:35:07, Tony Lindgren wrote:
+> * Pavel Machek <pavel@ucw.cz> [191228 19:37]:
+> > Hi!
+> >=20
+> > > 5.4-based kernel works ok on my droid 4.
+> > >=20
+> > > 5.5-rc3 based kernel has problems; it reboots when I try to kexec it.
+> > >=20
+> > > Vanilla 5.5-rc3 reboots, too.
+> > >=20
+> > > If you have any ideas, let me know.
+> >=20
+> > I managed to get partial serial dump. This should be 5.5-rc3: And then
+> > a bit better serial dump (below). But it is silent for few seconds,
+> > and then it restarts...
+>=20
+> If spi or regulators have problems, nothing will really work..
+
+Hmmm. I'm too lazy to think. 5.4 is okay, 5.5-rc3 is broken... Let me
+try 5.5-rc1 and then bisect. Unfortunately getting serial output is
+tricky, too, since I need the USB for kexec...
+
+If you know that there's known bug somewhere in 5.5-rc1, tell
+me. Bisect can only locate one bug....
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--mP3DRpeJDSE+ciuQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl4NFv0ACgkQMOfwapXb+vIF3wCcDMrs0bs+1JWU3nnm2hPedrZ9
+I+0AoK0newXf9VEBn/TY7kJrz1pSg+qu
+=8xnV
+-----END PGP SIGNATURE-----
+
+--mP3DRpeJDSE+ciuQ--
