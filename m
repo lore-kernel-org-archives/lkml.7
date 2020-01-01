@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05602C32764
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 10:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C6EC2D0DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 10:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAA6E206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 10:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21221206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 10:07:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgAAKHb (ORCPT
+        id S1727142AbgAAKHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 05:07:31 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:52322 "EHLO
+        Wed, 1 Jan 2020 05:07:33 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:52325 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbgAAKHa (ORCPT
+        with ESMTP id S1726687AbgAAKHb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 05:07:30 -0500
+        Wed, 1 Jan 2020 05:07:31 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1imauI-0004P7-2q; Wed, 01 Jan 2020 11:07:14 +0100
+        id 1imauH-0004P0-MQ; Wed, 01 Jan 2020 11:07:14 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A273C1C2C2F;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 169A81C2BFF;
         Wed,  1 Jan 2020 11:07:13 +0100 (CET)
-Date:   Wed, 01 Jan 2020 10:07:13 -0000
+Date:   Wed, 01 Jan 2020 10:07:12 -0000
 From:   "tip-bot2 for Jann Horn" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/insn-eval: Add support for 64-bit kernel mode
+Subject: [tip: x86/core] x86/kasan: Print original address on #GP
 Cc:     Jann Horn <jannh@google.com>, Borislav Petkov <bp@suse.de>,
+        Dmitry Vyukov <dvyukov@google.com>,
         Alexander Potapenko <glider@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Andrey Konovalov <andreyknvl@google.com>,
         Andrey Ryabinin <aryabinin@virtuozzo.com>,
         Andy Lutomirski <luto@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        kasan-dev@googlegroups.com, Oleg Nesterov <oleg@redhat.com>,
+        kasan-dev@googlegroups.com, "linux-mm" <linux-mm@kvack.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         "x86-ml" <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191218231150.12139-1-jannh@google.com>
-References: <20191218231150.12139-1-jannh@google.com>
+In-Reply-To: <20191218231150.12139-4-jannh@google.com>
+References: <20191218231150.12139-4-jannh@google.com>
 MIME-Version: 1.0
-Message-ID: <157787323354.30329.6908978173787271263.tip-bot2@tip-bot2>
+Message-ID: <157787323296.30329.6279558999926427913.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -65,157 +67,175 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/core branch of tip:
 
-Commit-ID:     7be4412721aee25e35583a20a896085dc6b99c3e
-Gitweb:        https://git.kernel.org/tip/7be4412721aee25e35583a20a896085dc6b99c3e
+Commit-ID:     2f004eea0fc8f86b45dfc2007add2d4986de8d02
+Gitweb:        https://git.kernel.org/tip/2f004eea0fc8f86b45dfc2007add2d4986de8d02
 Author:        Jann Horn <jannh@google.com>
-AuthorDate:    Thu, 19 Dec 2019 00:11:47 +01:00
+AuthorDate:    Thu, 19 Dec 2019 00:11:50 +01:00
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 30 Dec 2019 20:17:15 +01:00
+CommitterDate: Tue, 31 Dec 2019 13:15:38 +01:00
 
-x86/insn-eval: Add support for 64-bit kernel mode
+x86/kasan: Print original address on #GP
 
-To support evaluating 64-bit kernel mode instructions:
+Make #GP exceptions caused by out-of-bounds KASAN shadow accesses easier
+to understand by computing the address of the original access and
+printing that. More details are in the comments in the patch.
 
-* Replace existing checks for user_64bit_mode() with a new helper that
-checks whether code is being executed in either 64-bit kernel mode or
-64-bit user mode.
+This turns an error like this:
 
-* Select the GS base depending on whether the instruction is being
-evaluated in kernel mode.
+  kasan: CONFIG_KASAN_INLINE enabled
+  kasan: GPF could be caused by NULL-ptr deref or user memory access
+  general protection fault, probably for non-canonical address
+      0xe017577ddf75b7dd: 0000 [#1] PREEMPT SMP KASAN PTI
+
+into this:
+
+  general protection fault, probably for non-canonical address
+      0xe017577ddf75b7dd: 0000 [#1] PREEMPT SMP KASAN PTI
+  KASAN: maybe wild-memory-access in range
+      [0x00badbeefbadbee8-0x00badbeefbadbeef]
+
+The hook is placed in architecture-independent code, but is currently
+only wired up to the X86 exception handler because I'm not sufficiently
+familiar with the address space layout and exception handling mechanisms
+on other architectures.
 
 Signed-off-by: Jann Horn <jannh@google.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
 Cc: Alexander Potapenko <glider@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Andrey Konovalov <andreyknvl@google.com>
 Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
 Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: kasan-dev@googlegroups.com
-Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: linux-mm <linux-mm@kvack.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Sean Christopherson <sean.j.christopherson@intel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191218231150.12139-1-jannh@google.com
+Link: https://lkml.kernel.org/r/20191218231150.12139-4-jannh@google.com
 ---
- arch/x86/include/asm/ptrace.h | 13 +++++++++++++
- arch/x86/lib/insn-eval.c      | 26 +++++++++++++++-----------
- 2 files changed, 28 insertions(+), 11 deletions(-)
+ arch/x86/kernel/dumpstack.c |  2 ++-
+ arch/x86/mm/kasan_init_64.c | 21 +-------------------
+ include/linux/kasan.h       |  6 +++++-
+ mm/kasan/report.c           | 40 ++++++++++++++++++++++++++++++++++++-
+ 4 files changed, 48 insertions(+), 21 deletions(-)
 
-diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
-index 5057a8e..ac45b06 100644
---- a/arch/x86/include/asm/ptrace.h
-+++ b/arch/x86/include/asm/ptrace.h
-@@ -159,6 +159,19 @@ static inline bool user_64bit_mode(struct pt_regs *regs)
- #endif
+diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
+index 8995bf1..ae64ec7 100644
+--- a/arch/x86/kernel/dumpstack.c
++++ b/arch/x86/kernel/dumpstack.c
+@@ -427,6 +427,8 @@ void die_addr(const char *str, struct pt_regs *regs, long err, long gp_addr)
+ 	int sig = SIGSEGV;
+ 
+ 	__die_header(str, regs, err);
++	if (gp_addr)
++		kasan_non_canonical_hook(gp_addr);
+ 	if (__die_body(str, regs, err))
+ 		sig = 0;
+ 	oops_end(flags, regs, sig);
+diff --git a/arch/x86/mm/kasan_init_64.c b/arch/x86/mm/kasan_init_64.c
+index cf5bc37..763e71a 100644
+--- a/arch/x86/mm/kasan_init_64.c
++++ b/arch/x86/mm/kasan_init_64.c
+@@ -288,23 +288,6 @@ static void __init kasan_shallow_populate_pgds(void *start, void *end)
+ 	} while (pgd++, addr = next, addr != (unsigned long)end);
  }
  
-+/*
-+ * Determine whether the register set came from any context that is running in
-+ * 64-bit mode.
-+ */
-+static inline bool any_64bit_mode(struct pt_regs *regs)
-+{
-+#ifdef CONFIG_X86_64
-+	return !user_mode(regs) || user_64bit_mode(regs);
-+#else
-+	return false;
-+#endif
-+}
-+
- #ifdef CONFIG_X86_64
- #define current_user_stack_pointer()	current_pt_regs()->sp
- #define compat_user_stack_pointer()	current_pt_regs()->sp
-diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
-index 306c3a0..31600d8 100644
---- a/arch/x86/lib/insn-eval.c
-+++ b/arch/x86/lib/insn-eval.c
-@@ -155,7 +155,7 @@ static bool check_seg_overrides(struct insn *insn, int regoff)
-  */
- static int resolve_default_seg(struct insn *insn, struct pt_regs *regs, int off)
+-#ifdef CONFIG_KASAN_INLINE
+-static int kasan_die_handler(struct notifier_block *self,
+-			     unsigned long val,
+-			     void *data)
+-{
+-	if (val == DIE_GPF) {
+-		pr_emerg("CONFIG_KASAN_INLINE enabled\n");
+-		pr_emerg("GPF could be caused by NULL-ptr deref or user memory access\n");
+-	}
+-	return NOTIFY_OK;
+-}
+-
+-static struct notifier_block kasan_die_notifier = {
+-	.notifier_call = kasan_die_handler,
+-};
+-#endif
+-
+ void __init kasan_early_init(void)
  {
--	if (user_64bit_mode(regs))
-+	if (any_64bit_mode(regs))
- 		return INAT_SEG_REG_IGNORE;
- 	/*
- 	 * Resolve the default segment register as described in Section 3.7.4
-@@ -266,7 +266,7 @@ static int resolve_seg_reg(struct insn *insn, struct pt_regs *regs, int regoff)
- 	 * which may be invalid at this point.
- 	 */
- 	if (regoff == offsetof(struct pt_regs, ip)) {
--		if (user_64bit_mode(regs))
-+		if (any_64bit_mode(regs))
- 			return INAT_SEG_REG_IGNORE;
- 		else
- 			return INAT_SEG_REG_CS;
-@@ -289,7 +289,7 @@ static int resolve_seg_reg(struct insn *insn, struct pt_regs *regs, int regoff)
- 	 * In long mode, segment override prefixes are ignored, except for
- 	 * overrides for FS and GS.
- 	 */
--	if (user_64bit_mode(regs)) {
-+	if (any_64bit_mode(regs)) {
- 		if (idx != INAT_SEG_REG_FS &&
- 		    idx != INAT_SEG_REG_GS)
- 			idx = INAT_SEG_REG_IGNORE;
-@@ -646,23 +646,27 @@ unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx)
- 		 */
- 		return (unsigned long)(sel << 4);
+ 	int i;
+@@ -341,10 +324,6 @@ void __init kasan_init(void)
+ 	int i;
+ 	void *shadow_cpu_entry_begin, *shadow_cpu_entry_end;
  
--	if (user_64bit_mode(regs)) {
-+	if (any_64bit_mode(regs)) {
- 		/*
- 		 * Only FS or GS will have a base address, the rest of
- 		 * the segments' bases are forced to 0.
- 		 */
- 		unsigned long base;
- 
--		if (seg_reg_idx == INAT_SEG_REG_FS)
-+		if (seg_reg_idx == INAT_SEG_REG_FS) {
- 			rdmsrl(MSR_FS_BASE, base);
--		else if (seg_reg_idx == INAT_SEG_REG_GS)
-+		} else if (seg_reg_idx == INAT_SEG_REG_GS) {
- 			/*
- 			 * swapgs was called at the kernel entry point. Thus,
- 			 * MSR_KERNEL_GS_BASE will have the user-space GS base.
- 			 */
--			rdmsrl(MSR_KERNEL_GS_BASE, base);
--		else
-+			if (user_mode(regs))
-+				rdmsrl(MSR_KERNEL_GS_BASE, base);
-+			else
-+				rdmsrl(MSR_GS_BASE, base);
-+		} else {
- 			base = 0;
-+		}
- 		return base;
- 	}
- 
-@@ -703,7 +707,7 @@ static unsigned long get_seg_limit(struct pt_regs *regs, int seg_reg_idx)
- 	if (sel < 0)
- 		return 0;
- 
--	if (user_64bit_mode(regs) || v8086_mode(regs))
-+	if (any_64bit_mode(regs) || v8086_mode(regs))
- 		return -1L;
- 
- 	if (!sel)
-@@ -948,7 +952,7 @@ static int get_eff_addr_modrm(struct insn *insn, struct pt_regs *regs,
- 	 * following instruction.
- 	 */
- 	if (*regoff == -EDOM) {
--		if (user_64bit_mode(regs))
-+		if (any_64bit_mode(regs))
- 			tmp = regs->ip + insn->length;
- 		else
- 			tmp = 0;
-@@ -1250,7 +1254,7 @@ static void __user *get_addr_ref_32(struct insn *insn, struct pt_regs *regs)
- 	 * After computed, the effective address is treated as an unsigned
- 	 * quantity.
- 	 */
--	if (!user_64bit_mode(regs) && ((unsigned int)eff_addr > seg_limit))
-+	if (!any_64bit_mode(regs) && ((unsigned int)eff_addr > seg_limit))
- 		goto out;
+-#ifdef CONFIG_KASAN_INLINE
+-	register_die_notifier(&kasan_die_notifier);
+-#endif
+-
+ 	memcpy(early_top_pgt, init_top_pgt, sizeof(early_top_pgt));
  
  	/*
+diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+index e18fe54..5cde9e7 100644
+--- a/include/linux/kasan.h
++++ b/include/linux/kasan.h
+@@ -228,4 +228,10 @@ static inline void kasan_release_vmalloc(unsigned long start,
+ 					 unsigned long free_region_end) {}
+ #endif
+ 
++#ifdef CONFIG_KASAN_INLINE
++void kasan_non_canonical_hook(unsigned long addr);
++#else /* CONFIG_KASAN_INLINE */
++static inline void kasan_non_canonical_hook(unsigned long addr) { }
++#endif /* CONFIG_KASAN_INLINE */
++
+ #endif /* LINUX_KASAN_H */
+diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+index 6217821..5ef9f24 100644
+--- a/mm/kasan/report.c
++++ b/mm/kasan/report.c
+@@ -512,3 +512,43 @@ void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned lon
+ 
+ 	end_report(&flags);
+ }
++
++#ifdef CONFIG_KASAN_INLINE
++/*
++ * With CONFIG_KASAN_INLINE, accesses to bogus pointers (outside the high
++ * canonical half of the address space) cause out-of-bounds shadow memory reads
++ * before the actual access. For addresses in the low canonical half of the
++ * address space, as well as most non-canonical addresses, that out-of-bounds
++ * shadow memory access lands in the non-canonical part of the address space.
++ * Help the user figure out what the original bogus pointer was.
++ */
++void kasan_non_canonical_hook(unsigned long addr)
++{
++	unsigned long orig_addr;
++	const char *bug_type;
++
++	if (addr < KASAN_SHADOW_OFFSET)
++		return;
++
++	orig_addr = (addr - KASAN_SHADOW_OFFSET) << KASAN_SHADOW_SCALE_SHIFT;
++	/*
++	 * For faults near the shadow address for NULL, we can be fairly certain
++	 * that this is a KASAN shadow memory access.
++	 * For faults that correspond to shadow for low canonical addresses, we
++	 * can still be pretty sure - that shadow region is a fairly narrow
++	 * chunk of the non-canonical address space.
++	 * But faults that look like shadow for non-canonical addresses are a
++	 * really large chunk of the address space. In that case, we still
++	 * print the decoded address, but make it clear that this is not
++	 * necessarily what's actually going on.
++	 */
++	if (orig_addr < PAGE_SIZE)
++		bug_type = "null-ptr-deref";
++	else if (orig_addr < TASK_SIZE)
++		bug_type = "probably user-memory-access";
++	else
++		bug_type = "maybe wild-memory-access";
++	pr_alert("KASAN: %s in range [0x%016lx-0x%016lx]\n", bug_type,
++		 orig_addr, orig_addr + KASAN_SHADOW_MASK);
++}
++#endif
