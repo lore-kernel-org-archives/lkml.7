@@ -2,202 +2,161 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDF9C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 14:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38DE7C47409
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 14:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA992072C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 14:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE742073D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 14:36:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CGeQ0wxV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HerjmcCR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgAAONg (ORCPT
+        id S1727082AbgAAOgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 09:13:36 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41350 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgAAONf (ORCPT
+        Wed, 1 Jan 2020 09:36:54 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43095 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgAAOgx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 09:13:35 -0500
-Received: by mail-pl1-f194.google.com with SMTP id bd4so16812541plb.8
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 06:13:35 -0800 (PST)
+        Wed, 1 Jan 2020 09:36:53 -0500
+Received: by mail-lj1-f194.google.com with SMTP id a13so38445985ljm.10
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 06:36:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=+l61iY8UCZT+9rPDa5ppeVv5ndFumdyzfuuo1mO7NGk=;
-        b=CGeQ0wxVpVKIxvUdWEssAOWfmv3iCRloGmETOtyCH2HfP8LW9PzeGEE7Evg9hWEGYP
-         5Qv8nlmjJOvvCexrWKuRyGJ1jEWKumPvNVLmu1/z+cS7UzokWuvboH2K13Qpt7UBD5tL
-         zlM5uRoNrgGB4zRh7TsxnJZSz/akJfS71BoqCg+Mcje6+IMavlFnwLSURHreOyojRrDW
-         sON5UBiySZgx48JaLGvfgfS/G2EQZu+sBIL0lreYTm5v7maN1YOM39JvKTGR6hKuaIJ3
-         SQVKUCEHt4FX6BaSrqUWFLIOMJ/GFdqnEWlpv3asY14WB7VoB55tJwmSy3YAGQzsHf74
-         Vjew==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8O70E37h24vkoHiMNJvNiwTAZ71A5RPO6yfcxT8SqIQ=;
+        b=HerjmcCR/AkztR7YuD0XP2NDZIC/Q5IMdllq8QBoARmG5gh1G0ca8btZLYCc7agV9p
+         07cxuV6+/WQV0D70gORpg+QS4E8AyBw6WNZGDp7bPUmIqv2YqIwVJTOCDE5hLwIdIGuW
+         d/51lVyK7p792csF4U7Zf+2Uo7u2oJyT8whIZ+R6EMYHaOdjmyBNck8Oxrz8pqR9cp+Q
+         +wBoSV89JZTt9ML7bRPss6JiPLYO2HqTfk2E/5Ygyn6eg/7UrXznON3nzjoEtsYpEG9/
+         B6WglfQ4NazSCPCSf5kNLo3LyBwmPechg61U5mXfUImi9h+fxlwKoSirJDN9JnahBZlj
+         63Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=+l61iY8UCZT+9rPDa5ppeVv5ndFumdyzfuuo1mO7NGk=;
-        b=CpcYn60jgwHobA1cF1ep5rIIa99W9bN1zHieh7VmRXM68M0Ygeko8KKosR+MRcG3c1
-         OuFDaxfJnCf1077ZowBUN0N4taofNRYck5NYFvGSwz7cLObiyMuEuR5/oOT1pnuesdlo
-         A9DdIk844nlMYgmcERseoVIMTip+CW8aH7JhSDKfFV3MvNDra8MBbfjzjjqFaxn0hqe7
-         3H8VGYyHHjkjFog39Xi0d1Or6BWfkOL1SgYRTXb6A2s0ovY+8wCSFqQOwE/e5LpXEyN5
-         TZCKVte4lnbmw2vdquLS4BKID7FTDfE3jvjRwveGb6OSalnRXfQL7CRvmONt8yor/lba
-         AWKQ==
-X-Gm-Message-State: APjAAAUNfpAU0IYy8TpO39Ll8Zr6PWAJ5xs7DiEtfdZE8488OLiXHnSS
-        3DZixRO4um7CCvM0acbRKkA=
-X-Google-Smtp-Source: APXvYqy0QEIQIXne0u4xagyO7B91Jtl+x/+gkgoX6DJp/ql6VWmMPFIyhtKfcw+wvYLnoydT0zc0Wg==
-X-Received: by 2002:a17:902:302:: with SMTP id 2mr12981854pld.58.1577888014522;
-        Wed, 01 Jan 2020 06:13:34 -0800 (PST)
-Received: from iZj6chx1xj0e0buvshuecpZ ([47.75.1.235])
-        by smtp.gmail.com with ESMTPSA id u23sm59905114pfm.29.2020.01.01.06.13.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 Jan 2020 06:13:33 -0800 (PST)
-Date:   Wed, 1 Jan 2020 22:13:29 +0800
-From:   Peng Liu <iwtbavbm@gmail.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        qais.yousef@arm.com, morten.rasmussen@arm.com
-Subject: Re: [PATCH] sched/fair: fix sgc->{min,max}_capacity miscalculate
-Message-ID: <20200101141329.GA12809@iZj6chx1xj0e0buvshuecpZ>
-References: <20191231035122.GA10020@iZj6chx1xj0e0buvshuecpZ>
- <ec390ddb-c015-a467-2f88-47c00f23e27b@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8O70E37h24vkoHiMNJvNiwTAZ71A5RPO6yfcxT8SqIQ=;
+        b=B6kNWQpeDrRU5fFsh6IDALyrZ2oOmacDYcPgzR+85qoRGTc7E2V9/uA62QJ6lCh2wr
+         KbSNBIFUAkaawOyZHVnJg5QiuOj5iSP5XwOk0GVz9am7xqFPWqEJORKV8DE+2EwEzGMf
+         L2Z51e3t1RPH18czx05MhVZkvnerlR+ZwvUy02WI9BnHqz2k8NQYnyHql/DM9L6OFg8I
+         ybZQOH0n/wLhfyK+cVG6OP/LLthsFuZPLWdujXessz9iJPq9goeuIKGP0Z9+lBT7KGdu
+         oiWo2Gg/tEAQkuVwTzJd7VvCsd8yQeoNKxwe3gpVh4vuPSsHR//lm26++ho+L+upAqig
+         FdiA==
+X-Gm-Message-State: APjAAAX93jv+2Ij5bK1abv2+9mtCjT5Z1XUpUcOx4LTPrMhzzY8muwat
+        yNpisRcCXwB+Qw3Mdf1wzFCiXrirzZaBaHZR5nVGfA==
+X-Google-Smtp-Source: APXvYqzt9vsXSeRCw3uCB3GWXCfo51EaaziA1khmXLcgZ0iBGlbzvQULCBw/u6Az40zhZlPPLgjyollLCWEkt22Nr2A=
+X-Received: by 2002:a2e:b4f6:: with SMTP id s22mr46532718ljm.218.1577889411528;
+ Wed, 01 Jan 2020 06:36:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ec390ddb-c015-a467-2f88-47c00f23e27b@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191226175051.31664-1-linux@roeck-us.net> <20191226175051.31664-2-linux@roeck-us.net>
+In-Reply-To: <20191226175051.31664-2-linux@roeck-us.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 1 Jan 2020 15:36:40 +0100
+Message-ID: <CACRpkdb8rehAPKE2Zu-Jf4TSE2m6ks91vZdrVy+HitijabeVbg@mail.gmail.com>
+Subject: Re: [RFT PATCH v3 1/1] hwmon: Driver for disk and solid state drives
+ with temperature sensors
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
+        Chris Healy <cphealy@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 01, 2020 at 05:56:49AM +0000, Valentin Schneider wrote:
-> Hi Peng,
-> 
-> On 31/12/2019 03:51, Peng Liu wrote:
-> > commit bf475ce0a3dd ("sched/fair: Add per-CPU min capacity to
-> > sched_group_capacity") introduced per-cpu min_capacity.
-> > 
-> > commit e3d6d0cb66f2 ("sched/fair: Add sched_group per-CPU max capacity")
-> > introduced per-cpu max_capacity.
-> > 
-> > sgc->capacity is the *SUM* of all CPU's capacity in the group.
-> > sgc->{min,max}_capacity are the sg per-cpu variables. Compare with
-> > sgc->capacity to get sgc->{min,max}_capacity makes no sense. Instead,
-> > we should compare one by one in each iteration to get
-> > sgc->{min,max}_capacity of the group.
-> > 
-> 
-> Worth noting this only affects the SD_OVERLAP case, the other case is fine
-> (I checked again just to be sure).
-> 
-> Now, on the bright side of things I don't think this currently causes any
-> harm. The {min,max}_capacity values are used in bits of code that only
-> gets run on topologies with asymmetric CPU µarchs (SD_ASYM_CPUCAPACITY), and
-> I know of no such system that is also NUMA, i.e. end up with SD_OVERLAP
-> (here's hoping nobody gets any funny idea).
-> 
-> Still, nice find!
+On Thu, Dec 26, 2019 at 6:51 PM Guenter Roeck <linux@roeck-us.net> wrote:
 
-Valentin, thanks for your time!
+> Reading the temperature of ATA drives has been supported for years
+> by userspace tools such as smarttools or hddtemp. The downside of
+> such tools is that they need to run with super-user privilege, that
+> the temperatures are not reported by standard tools such as 'sensors'
+> or 'libsensors', and that drive temperatures are not available for use
+> in the kernel's thermal subsystem.
+(...)
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Martin K. Petersen <martin.petersen@oracle.com>
+> Cc: Bart Van Assche <bvanassche@acm.org>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 
-> 
-> > Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
-> > ---
-> >  kernel/sched/fair.c | 11 +++++++----
-> >  1 file changed, 7 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 2d170b5da0e3..97b164fcda93 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -7795,6 +7795,7 @@ void update_group_capacity(struct sched_domain *sd, int cpu)
-> >  		for_each_cpu(cpu, sched_group_span(sdg)) {
-> >  			struct sched_group_capacity *sgc;
-> >  			struct rq *rq = cpu_rq(cpu);
-> > +			unsigned long cap;
-> >  
-> >  			/*
-> >  			 * build_sched_domains() -> init_sched_groups_capacity()
-> > @@ -7808,14 +7809,16 @@ void update_group_capacity(struct sched_domain *sd, int cpu)
-> >  			 * causing divide-by-zero issues on boot.
-> >  			 */
-> >  			if (unlikely(!rq->sd)) {
-> > -				capacity += capacity_of(cpu);
-> > +				cap = capacity_of(cpu);
-> > +				capacity += cap;
-> > +				min_capacity = min(cap, min_capacity);
-> > +				max_capacity = max(cap, max_capacity);
-> >  			} else {
-> >  				sgc = rq->sd->groups->sgc;
-> >  				capacity += sgc->capacity;
-> > +				min_capacity = min(sgc->min_capacity, min_capacity);
-> > +				max_capacity = max(sgc->max_capacity, max_capacity);
-> >  			}
-> > -
-> > -			min_capacity = min(capacity, min_capacity);
-> > -			max_capacity = max(capacity, max_capacity);
-> >  		}
-> >  	} else  {
-> >  		/*
-> > 
-> 
-> All that could be shortened like the below, no? 
-> 
-> ---
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 08a233e97a01..9f6c015639ef 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -7773,8 +7773,8 @@ void update_group_capacity(struct sched_domain *sd, int cpu)
->  		 */
->  
->  		for_each_cpu(cpu, sched_group_span(sdg)) {
-> -			struct sched_group_capacity *sgc;
->  			struct rq *rq = cpu_rq(cpu);
-> +			unsigned long cpu_cap;
->  
->  			/*
->  			 * build_sched_domains() -> init_sched_groups_capacity()
-> @@ -7787,15 +7787,15 @@ void update_group_capacity(struct sched_domain *sd, int cpu)
->  			 * This avoids capacity from being 0 and
->  			 * causing divide-by-zero issues on boot.
->  			 */
-> -			if (unlikely(!rq->sd)) {
-> -				capacity += capacity_of(cpu);
-> -			} else {
-> -				sgc = rq->sd->groups->sgc;
-> -				capacity += sgc->capacity;
-> -			}
-> +			if (unlikely(!rq->sd))
-> +				cpu_cap = capacity_of(cpu);
+I took the v3 patch for a test run on the D-Link DIR-695 NAS/router
+and it works like a charm.
 
---------------------------------------------------------------
-> +			else
-> +				cpu_cap = rq->sd->groups->sgc->capacity;
+With a few additional patches (that I am
+starting to upstream) the temperature zone in the drive can be used
+to control the GPIO-based fan in the NAS to keep the enclosure/chassis
+temperature down.
 
-sgc->capacity is the *sum* of all CPU's capacity in that group, right?
-{min,max}_capacity are per CPU variables(*part* of a group). So we can't
-compare *part* to *sum*. Am I overlooking something? Thanks.
+I define a thermal zone in device tree like this:
 
-> +
-> +			min_capacity = min(cpu_cap, min_capacity);
-> +			max_capacity = max(cpu_cap, max_capacity);
->  
-> -			min_capacity = min(capacity, min_capacity);
-> -			max_capacity = max(capacity, max_capacity);
-> +			capacity += cpu_cap;
->  		}
->  	} else  {
->  		/*
++       thermal-zones {
++               chassis-thermal {
++                       /* Poll every 20 seconds */
++                       polling-delay = <20000>;
++                       /* Poll every 2nd second when cooling */
++                       polling-delay-passive = <2000>;
++                       /*  Use the thermal sensor in the hard drive */
++                       thermal-sensors = <&sata_drive>;
++
++                       /* Tripping points from the fan.script in the rootfs */
++                       trips {
++                               alert: chassis-alert {
++                                       /* At 43 degrees turn on the fan */
++                                       temperature = <43000>;
++                                       hysteresis = <3000>;
++                                       type = "active";
++                               };
++                               crit: chassis-crit {
++                                       /* Just shut down at 60 degrees */
++                                       temperature = <60000>;
++                                       hysteresis = <2000>;
++                                       type = "critical";
++                               };
++                       };
++
++                       cooling-maps {
++                               map0 {
++                                       trip = <&alert>;
++                                       cooling-device = <&fan0 1 1>;
++                               };
++                       };
++               };
++       };
+(...)
+                pata-controller@63000000 {
+                        status = "okay";
++
++                       /*
++                        * This drive may have a temperature sensor with a
++                        * thermal zone we can use for thermal control of the
++                        * chassis temperature using the fan.
++                        */
++                       sata_drive: drive@0 {
++                               reg = <0>;
++                               #thermal-sensor-cells = <0>;
++                       };
+                };
+
+The temperature started out at household temperature 26 degrees
+this morning, leaving the device running it gradually reached
+the trip point at 43 degrees and runs the fan. It then switches
+the fan off/on with some hysteresis keeping the temperature
+around 43 degreed.
+
+The PID-controller in the thermal framework handles it all
+in-kernel as expected.
+
+Tested-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
