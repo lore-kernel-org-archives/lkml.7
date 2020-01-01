@@ -2,161 +2,165 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38DE7C47409
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 14:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A78C32764
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 14:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE742073D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 14:36:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HerjmcCR"
+	by mail.kernel.org (Postfix) with ESMTP id 434392073D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 14:44:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgAAOgy (ORCPT
+        id S1727134AbgAAOob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 09:36:54 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43095 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgAAOgx (ORCPT
+        Wed, 1 Jan 2020 09:44:31 -0500
+Received: from mout-p-202.mailbox.org ([80.241.56.172]:32404 "EHLO
+        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgAAOob (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 09:36:53 -0500
-Received: by mail-lj1-f194.google.com with SMTP id a13so38445985ljm.10
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 06:36:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8O70E37h24vkoHiMNJvNiwTAZ71A5RPO6yfcxT8SqIQ=;
-        b=HerjmcCR/AkztR7YuD0XP2NDZIC/Q5IMdllq8QBoARmG5gh1G0ca8btZLYCc7agV9p
-         07cxuV6+/WQV0D70gORpg+QS4E8AyBw6WNZGDp7bPUmIqv2YqIwVJTOCDE5hLwIdIGuW
-         d/51lVyK7p792csF4U7Zf+2Uo7u2oJyT8whIZ+R6EMYHaOdjmyBNck8Oxrz8pqR9cp+Q
-         +wBoSV89JZTt9ML7bRPss6JiPLYO2HqTfk2E/5Ygyn6eg/7UrXznON3nzjoEtsYpEG9/
-         B6WglfQ4NazSCPCSf5kNLo3LyBwmPechg61U5mXfUImi9h+fxlwKoSirJDN9JnahBZlj
-         63Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8O70E37h24vkoHiMNJvNiwTAZ71A5RPO6yfcxT8SqIQ=;
-        b=B6kNWQpeDrRU5fFsh6IDALyrZ2oOmacDYcPgzR+85qoRGTc7E2V9/uA62QJ6lCh2wr
-         KbSNBIFUAkaawOyZHVnJg5QiuOj5iSP5XwOk0GVz9am7xqFPWqEJORKV8DE+2EwEzGMf
-         L2Z51e3t1RPH18czx05MhVZkvnerlR+ZwvUy02WI9BnHqz2k8NQYnyHql/DM9L6OFg8I
-         ybZQOH0n/wLhfyK+cVG6OP/LLthsFuZPLWdujXessz9iJPq9goeuIKGP0Z9+lBT7KGdu
-         oiWo2Gg/tEAQkuVwTzJd7VvCsd8yQeoNKxwe3gpVh4vuPSsHR//lm26++ho+L+upAqig
-         FdiA==
-X-Gm-Message-State: APjAAAX93jv+2Ij5bK1abv2+9mtCjT5Z1XUpUcOx4LTPrMhzzY8muwat
-        yNpisRcCXwB+Qw3Mdf1wzFCiXrirzZaBaHZR5nVGfA==
-X-Google-Smtp-Source: APXvYqzt9vsXSeRCw3uCB3GWXCfo51EaaziA1khmXLcgZ0iBGlbzvQULCBw/u6Az40zhZlPPLgjyollLCWEkt22Nr2A=
-X-Received: by 2002:a2e:b4f6:: with SMTP id s22mr46532718ljm.218.1577889411528;
- Wed, 01 Jan 2020 06:36:51 -0800 (PST)
+        Wed, 1 Jan 2020 09:44:31 -0500
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 47nv7v6kC5zQlCT;
+        Wed,  1 Jan 2020 15:44:27 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id gxnyw7SGBm-n; Wed,  1 Jan 2020 15:44:20 +0100 (CET)
+Date:   Thu, 2 Jan 2020 01:44:07 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
+ symlinks
+Message-ID: <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
+References: <20191230052036.8765-1-cyphar@cyphar.com>
+ <20191230054413.GX4203@ZenIV.linux.org.uk>
+ <20191230054913.c5avdjqbygtur2l7@yavin.dot.cyphar.com>
+ <20191230072959.62kcojxpthhdwmfa@yavin.dot.cyphar.com>
+ <20200101004324.GA11269@ZenIV.linux.org.uk>
+ <20200101005446.GH4203@ZenIV.linux.org.uk>
+ <20200101030815.GA17593@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-References: <20191226175051.31664-1-linux@roeck-us.net> <20191226175051.31664-2-linux@roeck-us.net>
-In-Reply-To: <20191226175051.31664-2-linux@roeck-us.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 1 Jan 2020 15:36:40 +0100
-Message-ID: <CACRpkdb8rehAPKE2Zu-Jf4TSE2m6ks91vZdrVy+HitijabeVbg@mail.gmail.com>
-Subject: Re: [RFT PATCH v3 1/1] hwmon: Driver for disk and solid state drives
- with temperature sensors
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
-        Chris Healy <cphealy@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xjferel7t3bvq2hc"
+Content-Disposition: inline
+In-Reply-To: <20200101030815.GA17593@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 6:51 PM Guenter Roeck <linux@roeck-us.net> wrote:
 
-> Reading the temperature of ATA drives has been supported for years
-> by userspace tools such as smarttools or hddtemp. The downside of
-> such tools is that they need to run with super-user privilege, that
-> the temperatures are not reported by standard tools such as 'sensors'
-> or 'libsensors', and that drive temperatures are not available for use
-> in the kernel's thermal subsystem.
-(...)
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Martin K. Petersen <martin.petersen@oracle.com>
-> Cc: Bart Van Assche <bvanassche@acm.org>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+--xjferel7t3bvq2hc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I took the v3 patch for a test run on the D-Link DIR-695 NAS/router
-and it works like a charm.
+On 2020-01-01, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> On Wed, Jan 01, 2020 at 12:54:46AM +0000, Al Viro wrote:
+> > Note, BTW, that lookup_last() (aka walk_component()) does just
+> > that - we only hit step_into() on LAST_NORM.  The same goes
+> > for do_last().  mountpoint_last() not doing the same is _not_
+> > intentional - it's definitely a bug.
+> >=20
+> > Consider your testcase; link points to . here.  So the only
+> > thing you could expect from trying to follow it would be
+> > the directory 'link' lives in.  And you don't have it
+> > when you reach the fscker via /proc/self/fd/3; what happens
+> > instead is nd->path set to ./link (by nd_jump_link()) *AND*
+> > step_into() called, pushing the same ./link onto stack.
+> > It violates all kinds of assumptions made by fs/namei.c -
+> > when pushing a symlink onto stack nd->path is expected to
+> > contain the base directory for resolving it.
+> >=20
+> > I'm fairly sure that this is the cause of at least some
+> > of the insanity you've caught; there always could be
+> > something else, of course, but this hole needs to be
+> > closed in any case.
+>=20
+> ... and with removal of now unused local variable, that's
+>=20
+> mountpoint_last(): fix the treatment of LAST_BIND
+>=20
+> step_into() should be attempted only in LAST_NORM
+> case, when we have the parent directory (in nd->path).
+> We get away with that for LAST_DOT and LOST_DOTDOT,
+> since those can't be symlinks, making step_init() and
+> equivalent of path_to_nameidata() - we do a bit of
+> useless work, but that's it.  For LAST_BIND (i.e.
+> the case when we'd just followed a procfs-style
+> symlink) we really can't go there - result might
+> be a symlink and we really can't attempt following
+> it.
+>=20
+> lookup_last() and do_last() do handle that properly;
+> mountpoint_last() should do the same.
+>=20
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 
-With a few additional patches (that I am
-starting to upstream) the temperature zone in the drive can be used
-to control the GPIO-based fan in the NAS to keep the enclosure/chassis
-temperature down.
+Thanks, this fixes the issue for me (and also fixes another reproducer I
+found -- mounting a symlink on top of itself then trying to umount it).
 
-I define a thermal zone in device tree like this:
+Reported-by: Aleksa Sarai <cyphar@cyphar.com>
+Tested-by: Aleksa Sarai <cyphar@cyphar.com>
 
-+       thermal-zones {
-+               chassis-thermal {
-+                       /* Poll every 20 seconds */
-+                       polling-delay = <20000>;
-+                       /* Poll every 2nd second when cooling */
-+                       polling-delay-passive = <2000>;
-+                       /*  Use the thermal sensor in the hard drive */
-+                       thermal-sensors = <&sata_drive>;
-+
-+                       /* Tripping points from the fan.script in the rootfs */
-+                       trips {
-+                               alert: chassis-alert {
-+                                       /* At 43 degrees turn on the fan */
-+                                       temperature = <43000>;
-+                                       hysteresis = <3000>;
-+                                       type = "active";
-+                               };
-+                               crit: chassis-crit {
-+                                       /* Just shut down at 60 degrees */
-+                                       temperature = <60000>;
-+                                       hysteresis = <2000>;
-+                                       type = "critical";
-+                               };
-+                       };
-+
-+                       cooling-maps {
-+                               map0 {
-+                                       trip = <&alert>;
-+                                       cooling-device = <&fan0 1 1>;
-+                               };
-+                       };
-+               };
-+       };
-(...)
-                pata-controller@63000000 {
-                        status = "okay";
-+
-+                       /*
-+                        * This drive may have a temperature sensor with a
-+                        * thermal zone we can use for thermal control of the
-+                        * chassis temperature using the fan.
-+                        */
-+                       sata_drive: drive@0 {
-+                               reg = <0>;
-+                               #thermal-sensor-cells = <0>;
-+                       };
-                };
+As for the original topic of bind-mounting symlinks -- given this is a
+supported feature, would you be okay with me sending an updated
+O_EMPTYPATH series?
 
-The temperature started out at household temperature 26 degrees
-this morning, leaving the device running it gradually reached
-the trip point at 43 degrees and runs the fan. It then switches
-the fan off/on with some hysteresis keeping the temperature
-around 43 degreed.
+> ---
+> diff --git a/fs/namei.c b/fs/namei.c
+> index d6c91d1e88cb..13f9f973722b 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -2643,7 +2643,6 @@ EXPORT_SYMBOL(user_path_at_empty);
+>  static int
+>  mountpoint_last(struct nameidata *nd)
+>  {
+> -	int error =3D 0;
+>  	struct dentry *dir =3D nd->path.dentry;
+>  	struct path path;
+> =20
+> @@ -2656,10 +2655,7 @@ mountpoint_last(struct nameidata *nd)
+>  	nd->flags &=3D ~LOOKUP_PARENT;
+> =20
+>  	if (unlikely(nd->last_type !=3D LAST_NORM)) {
+> -		error =3D handle_dots(nd, nd->last_type);
+> -		if (error)
+> -			return error;
+> -		path.dentry =3D dget(nd->path.dentry);
+> +		return handle_dots(nd, nd->last_type);
+>  	} else {
+>  		path.dentry =3D d_lookup(dir, &nd->last);
+>  		if (!path.dentry) {
 
-The PID-controller in the thermal framework handles it all
-in-kernel as expected.
 
-Tested-by: Linus Walleij <linus.walleij@linaro.org>
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
-Yours,
-Linus Walleij
+--xjferel7t3bvq2hc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXgywNAAKCRCdlLljIbnQ
+EsuYAQDIYw8NDiAZ+6tshuBDOmloG4oZ5/lI0VBqyR9iCJagsAEAvR+VsXd2zUhu
++siCNs00CJsZyNZ2Cez3Ln/1mdJj4A0=
+=Br0a
+-----END PGP SIGNATURE-----
+
+--xjferel7t3bvq2hc--
