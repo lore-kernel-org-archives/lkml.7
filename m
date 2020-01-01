@@ -2,133 +2,125 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7AEC2D0DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 21:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCC0C2D0DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 21:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53D1C206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 21:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A52C4206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 21:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577914777;
-	bh=wD12BHaJhMgBAePC6cSGJBDf6v/Nbp0L/uTUtBhwHdc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Il8ONVyCU9Vfv8S+96BS2ZD8wVDAeubiGKQ4Wn1LSqfmkaFhtretwyEfDuH0AEdsp
-	 Fph9Ok0D1fkyYB/jfEn3aFfSIfGY7BHzoW178u/eUz1sV/dCrrVTXUuHmAl6GSzuQW
-	 Mp77Rg3Y6sxy/Lrs/O1oxGn1t/Rtsb4VRT9fdfic=
+	s=default; t=1577914929;
+	bh=Ap3v9GdMzBTVEPJPIJGw7zBqfKdFHr5buh/VGHR7FIg=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=NaqYZ7R0QZfNDSzTYXZ5XJudmUY7t/ZBAvGGleRWIB4CEB8OxZ+ZECRvAaBvUIyXT
+	 btd1TjRbDKbrQcYpjddf6ovkOqEXKS2OISK09dp6+yVfnj5XjrXP+ryEQm33l4EV5I
+	 pFYFQ/6ejYYRFzK9kA8tnwcOyjC726sVomQYyL8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbgAAVjU (ORCPT
+        id S1727420AbgAAVmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 16:39:20 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35343 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbgAAVjU (ORCPT
+        Wed, 1 Jan 2020 16:42:08 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56504 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbgAAVmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 16:39:20 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 15so28802641lfr.2
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 13:39:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kHPJhXYkezST1Eae4XgEkOOylkj1TqP4v+xkR6EhUQo=;
-        b=UqilqWGwrY43jYSFs+AEUHzfz+SAWFEN1YG/VzXyLpLDfpNuDj6PpNPx2w7OFyyQ/I
-         5/WtkbMq5MccAyUW2aa9c7TeDE7hEsH94zawg7I+II41dAchmZQjcTfyVt2zkXrcQW9I
-         potvW0sBLPVmxr7ahcvSUAHZ/YKSyu+wXDwwg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kHPJhXYkezST1Eae4XgEkOOylkj1TqP4v+xkR6EhUQo=;
-        b=Qj4TCFPRVwjujMQBwVG1YcUoGD6wws3m7b+jSsIelOLQ057kmHqS+PRMe+xt8a6G/G
-         6tFOeJ0C6b3pml2o4EY1ELG9zrL1SkKI0MCdeE8V3mfHdEs0rxx65qXpnIgkW/Ong1Xq
-         nDuO3jxm+7HpMcXMnvZnZ5zBxAIShaWIBlnVgeqhCEIbOvS313EDTMMNL5OjgbU8y9BD
-         sJhTHr4+29ezfv3ytMbs432Dih3MOYffeVOF7gTRdnHyd0TraN+PlPsUjOmtAshib8pw
-         IPjAGSiGCJY25unLSdKIRXrfQ4UFw65IUUZtWD5ripoVKl/QmSwSl/LlnIjFbaYVvcBd
-         cMPg==
-X-Gm-Message-State: APjAAAUKTtU7aI5zqAoTdpMODYHqTtpLXKLNuUfp4kiNGbGNz9ApqdTY
-        WL1HkXaMrycgkO/Qmql08paiMSfWQzY=
-X-Google-Smtp-Source: APXvYqyTaI8E2IO55GigVQW95Pen7AgqvgWHKX46LfncQA1budY9+40yYw0g8WxWsTLPbYTAcmMPEg==
-X-Received: by 2002:a19:5007:: with SMTP id e7mr45747475lfb.153.1577914758463;
-        Wed, 01 Jan 2020 13:39:18 -0800 (PST)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id s1sm15560249ljc.3.2020.01.01.13.39.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jan 2020 13:39:17 -0800 (PST)
-Received: by mail-lj1-f169.google.com with SMTP id w1so17067291ljh.5
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 13:39:16 -0800 (PST)
-X-Received: by 2002:a05:651c:239:: with SMTP id z25mr47217329ljn.48.1577914756672;
- Wed, 01 Jan 2020 13:39:16 -0800 (PST)
-MIME-Version: 1.0
-References: <20191231150226.GA523748@light.dominikbrodowski.net>
- <20200101003017.GA116793@rani.riverdale.lan> <20200101183243.GB183871@rani.riverdale.lan>
-In-Reply-To: <20200101183243.GB183871@rani.riverdale.lan>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 1 Jan 2020 13:39:00 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whzgLPi4szh8xOKysuS9CKaQESngc=n0omBVpwdQ822aw@mail.gmail.com>
-Message-ID: <CAHk-=whzgLPi4szh8xOKysuS9CKaQESngc=n0omBVpwdQ822aw@mail.gmail.com>
-Subject: Re: [PATCH] early init: open /dev/console with O_LARGEFILE
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        youling 257 <youling257@gmail.com>
-Content-Type: multipart/mixed; boundary="0000000000008ed5e7059b1ae88f"
+        Wed, 1 Jan 2020 16:42:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=1GJeXqBZgwVZGjKHCG8CUrT1zbGnow5SWLDAyMEOoqA=; b=rrfujMrMQDqx
+        694ngqHc4672jevij1CmPFnBhzJy+5Fvxpv2Nv3EaaEgSD470jKdcT627rGJ+Bp/FQwery4QDsWNA
+        c+jHgtzNwwFSM6iJIHZNUeTXsZPtqT2WVjkyg2kXY16D9R/+KofPO0ceLc64VAqhh16uGS92Kv53Z
+        4Xu4k=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1imlke-0002aP-75; Wed, 01 Jan 2020 21:42:00 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 78EFFD057C6; Wed,  1 Jan 2020 21:41:59 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Julia Lawall <Julia.Lawall@inria.fr>
+Cc:     alsa-devel@alsa-project.org,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        kernel-janitors@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: qdsp6: q6asm-dai: constify copied structure" to the asoc tree
+In-Reply-To:  <1577864614-5543-11-git-send-email-Julia.Lawall@inria.fr>
+Message-Id:  <applied-1577864614-5543-11-git-send-email-Julia.Lawall@inria.fr>
+X-Patchwork-Hint: ignore
+Date:   Wed,  1 Jan 2020 21:41:59 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000008ed5e7059b1ae88f
-Content-Type: text/plain; charset="UTF-8"
+The patch
 
-On Wed, Jan 1, 2020 at 10:32 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> Also, this shouldn't impact the current issue I think, but won't doing
-> filp_open followed by 3 f_dupfd's cause the file->f_count to become 4
-> but with only 3 open fd's? Don't we have to do an fd_install for the
-> first one and only 2 f_dupfd's?
+   ASoC: qdsp6: q6asm-dai: constify copied structure
 
-I think *this* is the real reason for the odd regression.
+has been applied to the asoc tree at
 
-Because we're leaking a file count, the original /dev/console stays
-open, and we end up never calling file->f_op->release().
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-So we don't call tty_release() on that original /dev/console open, and
-one effect of that is that we never then call session_clear_tty(),
-which should make sure that all the processes in that session ID have
-their controlling tty (signal->tty pointer) cleared.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-And if that original controlling tty wasn't cleared, then subsequent
-calls to set the controlling tty won't do anything, and who knows what
-odd session leader confusion we might have.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-youling, can you check if - instead of the revert - this simple 'add
-an fput' fixes your warning.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-I'm not saying that the revert is wrong at this point, but honestly,
-I'd like to avoid the "we revert because we didn't understand what
-went wrong". It would be good to go "Aaaahhhh, _that_ was the
-problem".
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-                 Linus
+Thanks,
+Mark
 
---0000000000008ed5e7059b1ae88f
-Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k4vtp0lu0>
-X-Attachment-Id: f_k4vtp0lu0
+From 0da390ba86d841b1f9770c0a67bdebb4d8dc8be5 Mon Sep 17 00:00:00 2001
+From: Julia Lawall <Julia.Lawall@inria.fr>
+Date: Wed, 1 Jan 2020 08:43:28 +0100
+Subject: [PATCH] ASoC: qdsp6: q6asm-dai: constify copied structure
 
-IGluaXQvbWFpbi5jIHwgMiArKwogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQoKZGlm
-ZiAtLWdpdCBhL2luaXQvbWFpbi5jIGIvaW5pdC9tYWluLmMKaW5kZXggMWVjZmQ0M2VkNDY0Li43
-YjNhY2NiZDIyMTEgMTAwNjQ0Ci0tLSBhL2luaXQvbWFpbi5jCisrKyBiL2luaXQvbWFpbi5jCkBA
-IC0xMTcxLDYgKzExNzEsOCBAQCB2b2lkIGNvbnNvbGVfb25fcm9vdGZzKHZvaWQpCiAJCWlmIChm
-X2R1cGZkKGksIGZpbGUsIDApICE9IGkpCiAJCQlnb3RvIGVycl9vdXQ7CiAJfQorCS8qIHB1dCB0
-aGUgb3JpZ2luYWwgcmVmIGZyb20gZmlscF9vcGVuLCBmX2R1cGZkKCkgaGFzIGluc3RhbGxlZCBu
-ZXcgb25lcyAqLworCWZwdXQoZmlsZSk7CiAKIAlyZXR1cm47CiAK
---0000000000008ed5e7059b1ae88f--
+The q6asm_dai_hardware_capture structure is only copied into another
+structure, so make it const.
+
+The opportunity for this change was found using Coccinelle.
+
+Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+Link: https://lore.kernel.org/r/1577864614-5543-11-git-send-email-Julia.Lawall@inria.fr
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/qcom/qdsp6/q6asm-dai.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
+index 5e2327708772..c0d422d0ab94 100644
+--- a/sound/soc/qcom/qdsp6/q6asm-dai.c
++++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
+@@ -72,7 +72,7 @@ struct q6asm_dai_data {
+ 	long long int sid;
+ };
+ 
+-static struct snd_pcm_hardware q6asm_dai_hardware_capture = {
++static const struct snd_pcm_hardware q6asm_dai_hardware_capture = {
+ 	.info =                 (SNDRV_PCM_INFO_MMAP |
+ 				SNDRV_PCM_INFO_BLOCK_TRANSFER |
+ 				SNDRV_PCM_INFO_MMAP_VALID |
+-- 
+2.20.1
+
