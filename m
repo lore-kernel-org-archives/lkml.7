@@ -2,270 +2,115 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 614BCC2D0DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 22:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8432C2D0DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 22:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2910B2072C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 22:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8060E2072C
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 22:50:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HcNO/0Du"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JUagTsNi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727496AbgAAWqp (ORCPT
+        id S1727453AbgAAWux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 17:46:45 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40564 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727393AbgAAWqg (ORCPT
+        Wed, 1 Jan 2020 17:50:53 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45186 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727372AbgAAWux (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 17:46:36 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c14so37744142wrn.7;
-        Wed, 01 Jan 2020 14:46:35 -0800 (PST)
+        Wed, 1 Jan 2020 17:50:53 -0500
+Received: by mail-qk1-f195.google.com with SMTP id x1so30250741qkl.12
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 14:50:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+giR89WDjZU7dYJgn+VeERWM0MCUeGo4U5OGWtnpSHY=;
-        b=HcNO/0Dus47RfAYdDwVWc+xNcxffaIXyZc0qawWBum9Tvlju7ZdvWtJO+xmmbRYnf3
-         VZM1BBFknkj2dCS3X/PNHI0Dh0bn/4t3FIGP+xqFZtneQwV5u5Z/fFLP/0c/g0iJUDJJ
-         FrHjJMYV0x9/jZVP7FL4Roupf7LviilKWQt9oZP0f+1YG3i7sqJyjMxa8RWIf5zy5yu/
-         wsDh4xXkTeYSS7HFjGbhngEWYK9tST7nAAlopuPh2G0LTHuXYqxDdx/ZY1uYdqmMFIYX
-         lGGiiWKsPwWnmhAlogu/1ODgJTFAAHlY1U9C+MESXg3owIX30Lm1FqLlE4VVNyyW9V9a
-         RnCw==
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ypv53uIb6kuw7M/5S57dRaQlQX5A0Akbwb84pMvM1bE=;
+        b=JUagTsNiPiJoebWjJs2NII/lUJJ4GiuDl5aSoJ2O9XsTW8JDLYUOW/du6wyp6FFrtz
+         1zwMOhEiMJs9JHSrb60fPOeuem98OCRtrASVUSVJU1YzCDtCpPkZqOD5Yrr3rvdzKsy3
+         G9dqXUOKM8pGp4Xd8PHdJTSv49u0wEwbCUUhjEGuI1esZvZtscQKzTzxy4qKmSksvaMO
+         nF5rKxyMzN6mCkyujnoo95JVkV5Z+acJ4EKkSwN1aFxELSZHfXu6YfqVOofDsgEDQyMP
+         owcVdHnUqVuzywY7eDpH6t04/G7f0Wxe57B/fBtknQMcXl87zlXMZGq7UezvY6pWzBWR
+         xSig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+giR89WDjZU7dYJgn+VeERWM0MCUeGo4U5OGWtnpSHY=;
-        b=fYguGAIFsZSBICdMS2Ug35c1ArTFH6ahbJihPC15CkwRKI5hxiz0DakyV1Z6xd3t0x
-         llL8oPMW+zOlW3IYRCKManY/XaJkw0Gap71QtevaxqMRF+zLD+DbdlZ4F0Apq4JWKOGX
-         heirJW6/HfGBP4Dd2wJI4z24CdSOZ4h4bykOkPjDNL36sZTEuv/E3waKT873TH/HRw5+
-         UTwCHAID6TEGT32zm5w55X08uJ8B1xRn+iKStH46KSU5Wbr32noF7u6VD0p7055j89az
-         ez64w3gXORomqjx8MjdyXgT9xS10+xiMY3PVyYRbFHo2shnAfdcmdvTNZxf6Dq7+Kgqc
-         BTyA==
-X-Gm-Message-State: APjAAAWft4FYJY/vJ73Tm1BrGjbKY6drQouv8PxmqahuMzWomr2VgQfK
-        WcRaOGOQuAk3Go4YnwF32H4=
-X-Google-Smtp-Source: APXvYqy8Hj2CdTKm8VIldyNL9lpKTrZpAFzd1CsGxkdx6C7PHnHTylEJy2tuN8ol4wcSL1oV/Ml04g==
-X-Received: by 2002:a5d:51cc:: with SMTP id n12mr80782539wrv.177.1577918794594;
-        Wed, 01 Jan 2020 14:46:34 -0800 (PST)
-Received: from localhost.localdomain ([46.216.160.87])
-        by smtp.gmail.com with ESMTPSA id j12sm57716173wrw.54.2020.01.01.14.46.33
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ypv53uIb6kuw7M/5S57dRaQlQX5A0Akbwb84pMvM1bE=;
+        b=JvSMPgghVzKjgbtMik6EaHZUxJ6WYpZFm3wYVAwjNwR46NNmqViK13VZWwmzXMTOIi
+         GZXav6jbeHD2ebegxU2xEGnwBkDpwTDOO9X0Jcqvr0Te1hOQI00zJ8IR6C5Dv+e4ZzB9
+         pdciOzGticLT+9Hm0labENI0WLVjP4iHaKIkvwUEiR13uEsJCIfPQqszJWXOFECMRSNc
+         A6N0BYdhqt1J3goWWXUxOSQnYjCw4uSvbfvO/K3uMGKbJNOmNHAHgMxdL/FDaG0Z+2Gl
+         3K6DrCjFzN5+ytOqTCq5zBls7Ca1habS+i8hUZ1geXZPmfx4NaQT6pcKq8gmxy8QPLPg
+         9XqA==
+X-Gm-Message-State: APjAAAXDLnVTtp/sJkC0ROTR1qal4dW1Nz78Pz+3kVbIxmFbBGR32u33
+        d6a0pXTGGdvAMZ5ymCYAFBc=
+X-Google-Smtp-Source: APXvYqzCjOnpQD5aj7zJNzkPqlMVxzj6dkZ2A/CeHKO/ghcWL/EF7U5791gdtgFoGgM2+QNR3hUGDw==
+X-Received: by 2002:a37:e317:: with SMTP id y23mr64466613qki.431.1577919052325;
+        Wed, 01 Jan 2020 14:50:52 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id z4sm16520428qta.73.2020.01.01.14.50.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jan 2020 14:46:33 -0800 (PST)
-Received: from jek by localhost.localdomain with local (Exim 4.93)
-        (envelope-from <jekhor@gmail.com>)
-        id 1imml6-00039p-5B; Thu, 02 Jan 2020 01:46:32 +0300
-From:   Yauhen Kharuzhy <jekhor@gmail.com>
-To:     linux-pm@vger.kernel.org
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yauhen Kharuzhy <jekhor@gmail.com>
-Subject: [PATCH 1/3] power: supply: bq25890_charger: Add support of BQ25892 and BQ25896 chips
-Date:   Thu,  2 Jan 2020 01:46:25 +0300
-Message-Id: <20200101224627.12093-1-jekhor@gmail.com>
-X-Mailer: git-send-email 2.25.0.rc0
+        Wed, 01 Jan 2020 14:50:51 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 1 Jan 2020 17:50:50 -0500
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        youling 257 <youling257@gmail.com>
+Subject: Re: [PATCH] early init: open /dev/console with O_LARGEFILE
+Message-ID: <20200101225049.GB438328@rani.riverdale.lan>
+References: <20191231150226.GA523748@light.dominikbrodowski.net>
+ <20200101003017.GA116793@rani.riverdale.lan>
+ <20200101183243.GB183871@rani.riverdale.lan>
+ <CAHk-=whzgLPi4szh8xOKysuS9CKaQESngc=n0omBVpwdQ822aw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whzgLPi4szh8xOKysuS9CKaQESngc=n0omBVpwdQ822aw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support BQ25892 and BQ25896 chips by this driver. They shared one chip
-ID 0, so distinquish them by device revisions (2 for 25896 and 1 for
-25892).
+On Wed, Jan 01, 2020 at 01:39:00PM -0800, Linus Torvalds wrote:
+> On Wed, Jan 1, 2020 at 10:32 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > Also, this shouldn't impact the current issue I think, but won't doing
+> > filp_open followed by 3 f_dupfd's cause the file->f_count to become 4
+> > but with only 3 open fd's? Don't we have to do an fd_install for the
+> > first one and only 2 f_dupfd's?
+> 
+> I think *this* is the real reason for the odd regression.
+> 
+> Because we're leaking a file count, the original /dev/console stays
+> open, and we end up never calling file->f_op->release().
+> 
+> So we don't call tty_release() on that original /dev/console open, and
+> one effect of that is that we never then call session_clear_tty(),
+> which should make sure that all the processes in that session ID have
+> their controlling tty (signal->tty pointer) cleared.
+> 
+> And if that original controlling tty wasn't cleared, then subsequent
+> calls to set the controlling tty won't do anything, and who knows what
+> odd session leader confusion we might have.
+> 
+> youling, can you check if - instead of the revert - this simple 'add
+> an fput' fixes your warning.
+> 
+> I'm not saying that the revert is wrong at this point, but honestly,
+> I'd like to avoid the "we revert because we didn't understand what
+> went wrong". It would be good to go "Aaaahhhh, _that_ was the
+> problem".
+> 
+>                  Linus
 
-Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
----
- drivers/power/supply/bq25890_charger.c | 97 ++++++++++++++++++++------
- 1 file changed, 76 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
-index 9d1ec8d677de..a3dcd4eb1287 100644
---- a/drivers/power/supply/bq25890_charger.c
-+++ b/drivers/power/supply/bq25890_charger.c
-@@ -25,12 +25,20 @@
- #define BQ25895_ID			7
- #define BQ25896_ID			0
- 
-+enum bq25890_chip_version {
-+	BQ25890,
-+	BQ25892,
-+	BQ25895,
-+	BQ25896,
-+};
-+
- enum bq25890_fields {
- 	F_EN_HIZ, F_EN_ILIM, F_IILIM,				     /* Reg00 */
- 	F_BHOT, F_BCOLD, F_VINDPM_OFS,				     /* Reg01 */
- 	F_CONV_START, F_CONV_RATE, F_BOOSTF, F_ICO_EN,
- 	F_HVDCP_EN, F_MAXC_EN, F_FORCE_DPM, F_AUTO_DPDM_EN,	     /* Reg02 */
--	F_BAT_LOAD_EN, F_WD_RST, F_OTG_CFG, F_CHG_CFG, F_SYSVMIN,    /* Reg03 */
-+	F_BAT_LOAD_EN, F_WD_RST, F_OTG_CFG, F_CHG_CFG, F_SYSVMIN,
-+	F_MIN_VBAT_SEL,						     /* Reg03 */
- 	F_PUMPX_EN, F_ICHG,					     /* Reg04 */
- 	F_IPRECHG, F_ITERM,					     /* Reg05 */
- 	F_VREG, F_BATLOWV, F_VRECHG,				     /* Reg06 */
-@@ -39,8 +47,9 @@ enum bq25890_fields {
- 	F_BATCMP, F_VCLAMP, F_TREG,				     /* Reg08 */
- 	F_FORCE_ICO, F_TMR2X_EN, F_BATFET_DIS, F_JEITA_VSET,
- 	F_BATFET_DLY, F_BATFET_RST_EN, F_PUMPX_UP, F_PUMPX_DN,	     /* Reg09 */
--	F_BOOSTV, F_BOOSTI,					     /* Reg0A */
--	F_VBUS_STAT, F_CHG_STAT, F_PG_STAT, F_SDP_STAT, F_VSYS_STAT, /* Reg0B */
-+	F_BOOSTV, F_PFM_OTG_DIS, F_BOOSTI,			     /* Reg0A */
-+	F_VBUS_STAT, F_CHG_STAT, F_PG_STAT, F_SDP_STAT, F_0B_RSVD,
-+	F_VSYS_STAT,						     /* Reg0B */
- 	F_WD_FAULT, F_BOOST_FAULT, F_CHG_FAULT, F_BAT_FAULT,
- 	F_NTC_FAULT,						     /* Reg0C */
- 	F_FORCE_VINDPM, F_VINDPM,				     /* Reg0D */
-@@ -91,7 +100,7 @@ struct bq25890_device {
- 	struct regmap *rmap;
- 	struct regmap_field *rmap_fields[F_MAX_FIELDS];
- 
--	int chip_id;
-+	enum bq25890_chip_version chip_version;
- 	struct bq25890_init_data init_data;
- 	struct bq25890_state state;
- 
-@@ -111,8 +120,7 @@ static const struct regmap_access_table bq25890_writeable_regs = {
- static const struct regmap_range bq25890_volatile_reg_ranges[] = {
- 	regmap_reg_range(0x00, 0x00),
- 	regmap_reg_range(0x09, 0x09),
--	regmap_reg_range(0x0b, 0x0c),
--	regmap_reg_range(0x0e, 0x14),
-+	regmap_reg_range(0x0b, 0x14),
- };
- 
- static const struct regmap_access_table bq25890_volatile_regs = {
-@@ -155,7 +163,7 @@ static const struct reg_field bq25890_reg_fields[] = {
- 	[F_OTG_CFG]		= REG_FIELD(0x03, 5, 5),
- 	[F_CHG_CFG]		= REG_FIELD(0x03, 4, 4),
- 	[F_SYSVMIN]		= REG_FIELD(0x03, 1, 3),
--	/* MIN_VBAT_SEL on BQ25896 */
-+	[F_MIN_VBAT_SEL]	= REG_FIELD(0x03, 0, 0), // BQ25896 only
- 	/* REG04 */
- 	[F_PUMPX_EN]		= REG_FIELD(0x04, 7, 7),
- 	[F_ICHG]		= REG_FIELD(0x04, 0, 6),
-@@ -188,8 +196,8 @@ static const struct reg_field bq25890_reg_fields[] = {
- 	[F_PUMPX_DN]		= REG_FIELD(0x09, 0, 0),
- 	/* REG0A */
- 	[F_BOOSTV]		= REG_FIELD(0x0A, 4, 7),
--	/* PFM_OTG_DIS 3 on BQ25896 */
- 	[F_BOOSTI]		= REG_FIELD(0x0A, 0, 2), // reserved on BQ25895
-+	[F_PFM_OTG_DIS]		= REG_FIELD(0x0A, 3, 3), // BQ25896 only
- 	/* REG0B */
- 	[F_VBUS_STAT]		= REG_FIELD(0x0B, 5, 7),
- 	[F_CHG_STAT]		= REG_FIELD(0x0B, 3, 4),
-@@ -275,6 +283,7 @@ static const union {
- 	struct bq25890_lookup lt;
- } bq25890_tables[] = {
- 	/* range tables */
-+	/* TODO: BQ25896 has max ICHG 3008 mA */
- 	[TBL_ICHG] =	{ .rt = {0,	  5056000, 64000} },	 /* uA */
- 	[TBL_ITERM] =	{ .rt = {64000,   1024000, 64000} },	 /* uA */
- 	[TBL_VREG] =	{ .rt = {3840000, 4608000, 16000} },	 /* uV */
-@@ -391,11 +400,13 @@ static int bq25890_power_supply_get_property(struct power_supply *psy,
- 		break;
- 
- 	case POWER_SUPPLY_PROP_MODEL_NAME:
--		if (bq->chip_id == BQ25890_ID)
-+		if (bq->chip_version == BQ25890)
- 			val->strval = "BQ25890";
--		else if (bq->chip_id == BQ25895_ID)
-+		else if (bq->chip_version == BQ25892)
-+			val->strval = "BQ25892";
-+		else if (bq->chip_version == BQ25895)
- 			val->strval = "BQ25895";
--		else if (bq->chip_id == BQ25896_ID)
-+		else if (bq->chip_version == BQ25896)
- 			val->strval = "BQ25896";
- 		else
- 			val->strval = "UNKNOWN";
-@@ -741,6 +752,56 @@ static int bq25890_usb_notifier(struct notifier_block *nb, unsigned long val,
- 	return NOTIFY_OK;
- }
- 
-+static int bq25890_get_chip_version(struct bq25890_device *bq)
-+{
-+	int id, rev;
-+
-+	id = bq25890_field_read(bq, F_PN);
-+	if (id < 0) {
-+		dev_err(bq->dev, "Cannot read chip ID.\n");
-+		return id;
-+	}
-+
-+	rev = bq25890_field_read(bq, F_DEV_REV);
-+	if (rev < 0) {
-+		dev_err(bq->dev, "Cannot read chip revision.\n");
-+		return id;
-+	}
-+
-+	switch (id) {
-+	case BQ25890_ID:
-+		bq->chip_version = BQ25890;
-+		break;
-+
-+	/* BQ25892 and BQ25896 share same ID 0 */
-+	case BQ25896_ID:
-+		switch (rev) {
-+		case 0:
-+			bq->chip_version = BQ25896;
-+			break;
-+		case 1:
-+			bq->chip_version = BQ25892;
-+			break;
-+		default:
-+			dev_err(bq->dev,
-+				"Unknown device revision %d, assume BQ25892\n",
-+				rev);
-+			bq->chip_version = BQ25892;
-+		}
-+		break;
-+
-+	case BQ25895_ID:
-+		bq->chip_version = BQ25895;
-+		break;
-+
-+	default:
-+		dev_err(bq->dev, "Unknown chip ID %d\n", id);
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
- static int bq25890_irq_probe(struct bq25890_device *bq)
- {
- 	struct gpio_desc *irq;
-@@ -859,16 +920,10 @@ static int bq25890_probe(struct i2c_client *client,
- 
- 	i2c_set_clientdata(client, bq);
- 
--	bq->chip_id = bq25890_field_read(bq, F_PN);
--	if (bq->chip_id < 0) {
--		dev_err(dev, "Cannot read chip ID.\n");
--		return bq->chip_id;
--	}
--
--	if ((bq->chip_id != BQ25890_ID) && (bq->chip_id != BQ25895_ID)
--			&& (bq->chip_id != BQ25896_ID)) {
--		dev_err(dev, "Chip with ID=%d, not supported!\n", bq->chip_id);
--		return -ENODEV;
-+	ret = bq25890_get_chip_version(bq);
-+	if (ret) {
-+		dev_err(dev, "Cannot read chip ID or unknown chip.\n");
-+		return ret;
- 	}
- 
- 	if (!dev->platform_data) {
--- 
-2.25.0.rc0
-
+Shouldn't that only affect init though? The getty's it spawns should be
+in their own sessions.
