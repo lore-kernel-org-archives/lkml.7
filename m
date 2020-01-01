@@ -2,224 +2,165 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9B3C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 17:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B02EC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 17:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9893D206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 17:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1885207E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 17:28:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k5h4TOkX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbgAARXA (ORCPT
+        id S1727349AbgAAR2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 12:23:00 -0500
-Received: from lnfm1.sai.msu.ru ([93.180.26.255]:35309 "EHLO lnfm1.sai.msu.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727350AbgAARW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 12:22:57 -0500
-X-Greylist: delayed 3350 seconds by postgrey-1.27 at vger.kernel.org; Wed, 01 Jan 2020 12:22:39 EST
-Received: from dragon.sai.msu.ru (dragon.sai.msu.ru [93.180.26.172])
-        by lnfm1.sai.msu.ru (8.14.1/8.12.8) with ESMTP id 001GQNsD001801;
-        Wed, 1 Jan 2020 19:26:28 +0300
-Received: from oak.local (unknown [188.123.231.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client did not present a certificate)
-        by dragon.sai.msu.ru (Postfix) with ESMTPSA id 863FC106E3B;
-        Wed,  1 Jan 2020 19:26:22 +0300 (MSK)
-From:   "Matwey V. Kornilov" <matwey@sai.msu.ru>
-To:     b-liu@ti.com, gregkh@linuxfoundation.org, stern@rowland.harvard.edu
-Cc:     matwey.kornilov@gmail.com,
-        "Matwey V. Kornilov" <matwey@sai.msu.ru>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND v2 6/6] usb: musb: Decrease URB starting latency in musb_advance_schedule()
-Date:   Wed,  1 Jan 2020 19:26:10 +0300
-Message-Id: <20200101162610.15819-7-matwey@sai.msu.ru>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20200101162610.15819-1-matwey@sai.msu.ru>
-References: <20200101162610.15819-1-matwey@sai.msu.ru>
-In-Reply-To: <20190403185310.8437-1-matwey@sai.msu.ru>
-References: <20190403185310.8437-1-matwey@sai.msu.ru>
+        Wed, 1 Jan 2020 12:28:33 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38452 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727215AbgAAR2c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jan 2020 12:28:32 -0500
+Received: by mail-pf1-f196.google.com with SMTP id x185so20985636pfc.5;
+        Wed, 01 Jan 2020 09:28:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AD/HrvCXyBMqbCwXJfBLDLjC/lvvltW4aPvXtIv1Yqs=;
+        b=k5h4TOkXEPAuus8ebUkfM3bpTWC8rhbM8RwQAp36f4fxlSuQmB1EX2eguHlk7MfIox
+         RfJHvtExPm02S0dhTZzE6Tm48XRko/uogUBUtgkxS8nXbJy75CEtCUlIZwN2OCcQg7wJ
+         m7Q62iwFTsKFrNC6KgGOPrqCw4R7B7mriedPKgeJDWXHv96bnfZtn6m450wX0e8WyNCh
+         3Z7JHWMimB0XD2pBGo/9EIpZOcrGX6MgMOd5s2XZ1yRVb5X0Rtmo6Ggq51nn7BAZpxYJ
+         3ZLy/0T5W/ZYUnRI77ZZ4P+okOhxFTJTxEYbh8508lyfPCb6HdgZZs4KdnXmqmo2Uk+H
+         GPkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AD/HrvCXyBMqbCwXJfBLDLjC/lvvltW4aPvXtIv1Yqs=;
+        b=TdfqMKnNsux+2+GO8Qg2PtJcSNM2IuPl/BkR2vU0g3lnABurBcFvpnWfWriGnIE005
+         qArLR4ixnfnEOTnPvX3qPlE1VRzkXmos3KVpLmicXGpjOtCY/A1Qe8TxaiXxbPuyBRAy
+         qOa09iTkjbJBqBZ1NjZrkyZTy1b2/lZwlKo0s72dLtOSwENWAMMHwA9eDYfKerkSJPlH
+         oRfinweRgaLOxe+gr96b8qbFyA7iO9ZLm312dwHXEEDWQNWT6rkQEzjfv3lze4cdsVAc
+         gcfAUtM8CM7PYWWIR6XVAhnglf6yEqN4k+ndUpyB8GDjos70RDTkPUZVhIbpL+fzDXVZ
+         90TA==
+X-Gm-Message-State: APjAAAWC0t7aVAkOHZEsQrfveazc4dzH6Y6NJoCfZoqGrTHZCKMQoJX1
+        GhSskeQ9jiz/m7SjrwcQkhGosSgr
+X-Google-Smtp-Source: APXvYqz9PEBoBd0OpMuGUmgPrLJT9jC4D0bs7i4pk7nhL338o1SZUujoVSXYC5ycmEUE55Suj3C7ZQ==
+X-Received: by 2002:aa7:988e:: with SMTP id r14mr85400862pfl.126.1577899711919;
+        Wed, 01 Jan 2020 09:28:31 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g2sm47510736pgn.59.2020.01.01.09.28.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jan 2020 09:28:30 -0800 (PST)
+Subject: Re: [PATCH 4.19 000/219] 4.19.92-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, mpe@ellerman.id.au,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20191229162508.458551679@linuxfoundation.org>
+ <20191230171959.GC12958@roeck-us.net> <20191230173506.GB1350143@kroah.com>
+ <7c5b2866-39d9-5c5f-0282-eef2f34c7fe8@roeck-us.net>
+ <20200101162413.GA2682113@kroah.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <5454eee6-a94b-9254-512e-e8e685778b26@roeck-us.net>
+Date:   Wed, 1 Jan 2020 09:28:29 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20200101162413.GA2682113@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously, the algorithm was the following:
+On 1/1/20 8:24 AM, Greg Kroah-Hartman wrote:
+> On Tue, Dec 31, 2019 at 06:01:12PM -0800, Guenter Roeck wrote:
+>> On 12/30/19 9:35 AM, Greg Kroah-Hartman wrote:
+>>> On Mon, Dec 30, 2019 at 09:19:59AM -0800, Guenter Roeck wrote:
+>>>> On Sun, Dec 29, 2019 at 06:16:42PM +0100, Greg Kroah-Hartman wrote:
+>>>>> This is the start of the stable review cycle for the 4.19.92 release.
+>>>>> There are 219 patches in this series, all will be posted as a response
+>>>>> to this one.  If anyone has any issues with these being applied, please
+>>>>> let me know.
+>>>>>
+>>>>> Responses should be made by Tue, 31 Dec 2019 16:17:25 +0000.
+>>>>> Anything received after that time might be too late.
+>>>>>
+>>>> Build results:
+>>>> 	total: 156 pass: 141 fail: 15
+>>>> Failed builds:
+>>>> 	i386:tools/perf
+>>>> 	<all mips>
+>>>> 	x86_64:tools/perf
+>>>> Qemu test results:
+>>>> 	total: 381 pass: 316 fail: 65
+>>>> Failed tests:
+>>>> 	<all mips>
+>>>> 	<all ppc64_book3s_defconfig>
+>>>>
+>>>> perf as with v4.14.y.
+>>>>
+>>>> arch/mips/kernel/syscall.c:40:10: fatal error: asm/sync.h: No such file or directory
+>>>
+>>> Ah, will go drop the offending patch and push out a -rc2 with both of
+>>> these issues fixed.
+>>>
+>>>> arch/powerpc/include/asm/spinlock.h:56:1: error: type defaults to ‘int’ in declaration of ‘DECLARE_STATIC_KEY_FALSE’
+>>>> and similar errors.
+>>>>
+>>>> The powerpc build problem is inherited from mainline and has not been fixed
+>>>> there as far as I can see. I guess that makes 4.19.y bug-for-bug "compatible"
+>>>> with mainline in that regard.
+>>>
+>>> bug compatible is fun :(
+>>>
+>>
+>> Not really. It is a terrible idea and results in the opposite of what I would
+>> call a "stable" release.
+>>
+>> Anyway, turns out the offending commit is 14c73bd344d ("powerpc/vcpu: Assume
+>> dedicated processors as non-preempt"), which uses static_branch_unlikely().
+> 
+> It does?  I see:
+> 
+> +               if (lppaca_shared_proc(get_lppaca()))
+> +                       static_branch_enable(&shared_processor);
+> 
+>> This function does not exist for ppc in v4.19.y and v5.4.y. Thus, the _impact_
+>> of the error in v4.19.y and v5.4.y is the same as in mainline, but the _cause_
+>> is different. Upstream commit 14c73bd344d should not have been applied to
+>> v4.19.y and v5.4.y and needs to be reverted from those branches.
+> 
+> I'll go revert this patch, but as it was marked for stable by the
+> authors of the patch, as relevant back to 4.18, I would have hoped that
+> they knew what they were doing :)
+> 
 
- 1. giveback current URB
- 2. if current qh is not empty
-    then start next URB
- 3. if current qh is empty
-    then dispose the qh, find next qh if any, and start URB.
+I probably didn't have enough champagne last night when I wrote my previous e-mail.
+No, the problem is the same as with the upstream kernel, so feel free to drop
+the revert if you prefer "bug-for-bug compatibility". Given where we are, that
+is probably better than dropping the patch and re-applying it after its fix
+is available.
 
-It may take a while to run urb->callback inside URB giveback which is
-run synchronously in musb. In order to improve the latency we rearrange
-the function behaviour for the case when qh is not empty: next URB is
-started before URB giveback. When qh is empty or current URB has an
-error then the behaviour is intentionally kept in order
-  a) not to break existing inter qh scheduling: URB giveback could
-potentionally enqueue other URB to the empty qh preventing it from being
-disposed;
-  b) allow the class driver to cancel outstanding URBs in the queue.
+The underlying problem is that the offending patch introduces the use of
+jump label code into arch/powerpc/include/asm/spinlock.h without including
+linux/jump_label.h. Depending on the configuration, this results in the observed
+build errors.
 
-Correct URB giveback order is guaranteed as the following. For each
-qh there can be at most three ready URBs processing by the driver.
-Indeed, every ready URB can send at most one URB in
-musb_advance_schedule(), and in the worst case scenario we have the
-following ready URBs:
-  1) URB in the giveback lock protected section inside musb_giveback()
-  2) URB waiting at the giveback lock acqusition in musb_giveback()
-  3) URB waiting at the controller lock acqusition in the glue layer
-     interrput handler
-Here URB #2 and URB #3 are triggered by URB #1 and URB #2
-correspondingly when they passed through musb_advance_schedule().
-Since URB #3 is waiting before musb_advance_schedule(), no other new
-URBs will be sent until URB#1 is finished, URB#2 goes to the giveback
-lock protected section, and URB#3 goes to the controller lock protected
-musb_advance_schedule().
+Patches were submitted upstream to fix the problem, but the fix has not been
+applied to mainline, and I don't see a maintainer reaction. Maybe everyone
+is off for the holidays.
 
-Before this patch, time spent in urb->callback led to the following
-glitches between the host and a hub during isoc transfer (line 4):
+https://patchwork.ozlabs.org/patch/1215380/
+https://patchwork.ozlabs.org/patch/1214954/
 
-    11.624492 d=  0.000124 [130.6 +  1.050] [  4] SPLIT
-    11.624492 d=  0.000000 [130.6 +  1.467] [  3] IN   : 3.5
-    11.624493 d=  0.000000 [130.6 +  1.967] [ 37] DATA0: aa 08 [skipped...]
-    11.625617 d=  0.001124 [131.7 +  1.050] [  4] SPLIT
-    11.625617 d=  0.000000 [131.7 +  1.467] [  3] IN   : 3.5
-    11.625867 d=  0.000250 [132.1 +  1.050] [  4] SPLIT
-    11.625867 d=  0.000000 [132.1 +  1.467] [  3] IN   : 3.5
-    11.625868 d=  0.000001 [132.1 +  1.983] [  3] DATA0: 00 00
-    11.626617 d=  0.000749 [132.7 +  1.050] [  4] SPLIT
-    11.626617 d=  0.000000 [132.7 +  1.467] [  3] IN   : 3.5
-    11.626867 d=  0.000250 [133.1 +  1.050] [  4] SPLIT
-    11.626867 d=  0.000000 [133.1 +  1.467] [  3] IN   : 3.5
-    11.626868 d=  0.000000 [133.1 +  1.967] [  3] DATA0: 00 00
-
-After the hub, they look as the following and may lead to broken
-perepherial transfer (as in case of PWC based webcam):
-
-    11.332004 d=  0.000997 [ 30.0 +  3.417] [  3] IN   : 5.5
-    11.332007 d=  0.000003 [ 30.0 +  6.833] [800] DATA0: 8a 1c [skipped...]
-    11.334004 d=  0.001997 [ 32.0 +  3.417] [  3] IN   : 5.5
-    11.334007 d=  0.000003 [ 32.0 +  6.750] [  3] DATA0: 00 00
-    11.335004 d=  0.000997 [ 33   +  3.417] [  3] IN   : 5.5
-    11.335007 d=  0.000003 [ 33   +  6.750] [  3] DATA0: 00 00
-
-Removing this glitches makes us able to successfully run 10fps
-video stream from the webcam attached via USB hub. That was
-previously impossible.
-
-Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
----
- drivers/usb/musb/musb_host.c | 36 ++++++++++++++++++++++++++++++++----
- drivers/usb/musb/musb_host.h |  1 +
- 2 files changed, 33 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/usb/musb/musb_host.c b/drivers/usb/musb/musb_host.c
-index ed99ecd4e63a..5c43996f2de5 100644
---- a/drivers/usb/musb/musb_host.c
-+++ b/drivers/usb/musb/musb_host.c
-@@ -85,6 +85,11 @@ static bool musb_qh_empty(struct musb_qh *qh)
- 	return list_empty(&qh->hep->urb_list);
- }
- 
-+static bool musb_qh_singular(struct musb_qh *qh)
-+{
-+	return list_is_singular(&qh->hep->urb_list);
-+}
-+
- static void musb_qh_unlink_hep(struct musb_qh *qh)
- {
- 	if (!qh->hep)
-@@ -301,15 +306,24 @@ musb_start_next_urb(struct musb *musb, int is_in, struct musb_qh *qh)
- }
- 
- /* Context: caller owns controller lock, IRQs are blocked */
--static void musb_giveback(struct musb *musb, struct urb *urb, int status)
-+static void musb_giveback(struct musb *musb, struct musb_qh *qh, struct urb *urb, int status)
- __releases(musb->lock)
- __acquires(musb->lock)
- {
- 	trace_musb_urb_gb(musb, urb);
- 
-+	/*
-+	 * This line is protected by the controller lock: at most
-+	 * one thread waiting on the giveback lock.
-+	 */
-+	spin_lock(&qh->giveback_lock);
- 	usb_hcd_unlink_urb_from_ep(musb->hcd, urb);
-+
- 	spin_unlock(&musb->lock);
-+
- 	usb_hcd_giveback_urb(musb->hcd, urb, status);
-+	spin_unlock(&qh->giveback_lock);
-+
- 	spin_lock(&musb->lock);
- }
- 
-@@ -362,8 +376,21 @@ static void musb_advance_schedule(struct musb *musb, struct urb *urb,
- 		break;
- 	}
- 
-+	if (ready && !musb_qh_singular(qh) && !status) {
-+		struct urb *next_urb = list_next_entry(urb, urb_list);
-+
-+		musb_dbg(musb, "... next ep%d %cX urb %p", hw_ep->epnum, is_in ? 'R' : 'T', next_urb);
-+		musb_start_urb(musb, is_in, qh, next_urb);
-+
-+		qh->is_ready = 0;
-+		musb_giveback(musb, qh, urb, status);
-+		qh->is_ready = ready;
-+
-+		return;
-+	}
-+
- 	qh->is_ready = 0;
--	musb_giveback(musb, urb, status);
-+	musb_giveback(musb, qh, urb, status);
- 	qh->is_ready = ready;
- 
- 	/* reclaim resources (and bandwidth) ASAP; deschedule it, and
-@@ -2207,6 +2234,7 @@ static int musb_urb_enqueue(
- 	qh->hep = hep;
- 	qh->dev = urb->dev;
- 	INIT_LIST_HEAD(&qh->ring);
-+	spin_lock_init(&qh->giveback_lock);
- 	qh->is_ready = 1;
- 
- 	qh->maxpacket = usb_endpoint_maxp(epd);
-@@ -2439,7 +2467,7 @@ static int musb_urb_dequeue(struct usb_hcd *hcd, struct urb *urb, int status)
- 		int	ready = qh->is_ready;
- 
- 		qh->is_ready = 0;
--		musb_giveback(musb, urb, 0);
-+		musb_giveback(musb, qh, urb, 0);
- 		qh->is_ready = ready;
- 
- 		/* If nothing else (usually musb_giveback) is using it
-@@ -2498,7 +2526,7 @@ musb_h_disable(struct usb_hcd *hcd, struct usb_host_endpoint *hep)
- 		 * will activate any of these as it advances.
- 		 */
- 		while (!musb_qh_empty(qh))
--			musb_giveback(musb, next_urb(qh), -ESHUTDOWN);
-+			musb_giveback(musb, qh, next_urb(qh), -ESHUTDOWN);
- 
- 		musb_qh_free(qh);
- 	}
-diff --git a/drivers/usb/musb/musb_host.h b/drivers/usb/musb/musb_host.h
-index 2999845632ce..6223b0177c68 100644
---- a/drivers/usb/musb/musb_host.h
-+++ b/drivers/usb/musb/musb_host.h
-@@ -19,6 +19,7 @@ struct musb_qh {
- 	struct musb_hw_ep	*hw_ep;		/* current binding */
- 
- 	struct list_head	ring;		/* of musb_qh */
-+	spinlock_t		giveback_lock;	/* to keep URB giveback order */
- 	/* struct musb_qh		*next; */	/* for periodic tree */
- 	u8			mux;		/* qh multiplexed to hw_ep */
- 
--- 
-2.16.4
-
+Guenter
