@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73847C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 11:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06069C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 11:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 405C0206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 11:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1F1A2073D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 11:25:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="IXadCyul"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="bRoDYVtQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbgAALZT (ORCPT
+        id S1727142AbgAALZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 06:25:19 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37319 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbgAALZS (ORCPT
+        Wed, 1 Jan 2020 06:25:23 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37020 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726927AbgAALZW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 06:25:18 -0500
-Received: by mail-pg1-f194.google.com with SMTP id q127so20540252pga.4
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 03:25:18 -0800 (PST)
+        Wed, 1 Jan 2020 06:25:22 -0500
+Received: by mail-pl1-f193.google.com with SMTP id c23so16720675plz.4
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 03:25:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xyLN4iY9zmJMkQfktKnQpRiD7IFHvGjo95ULoKZuL/c=;
-        b=IXadCyul++yY5mPG22iSFOMQRK+KL5L9ALKOUeFfEH4nm+B5LBFbNpcHQb3/HrwRg3
-         ZhVM3dPBunkPVLHx63K2jTaoz74vOIFPiBSyqo35wKbNw4jZSy51Nz9YgQcWRY0D54vv
-         i+lN4Nxnt1ydsCzbq+6FROXZ/vibC0ATowOjo=
+        bh=kGyS2va2MM5LlItUz13S22TtfwiSSFhRb47vRs7rcSA=;
+        b=bRoDYVtQ1NYUFDceNj0TvN7AgLnYHCKEZc9F2ihByaESmLqX4XnrdAyOdO4dIcdRNd
+         BPIkUn4kHcXhQ90ZIpwuCpprRMAd9REj4spU0ZHxdb7GuFfpFARUird/OWwD74k/7O9q
+         6R61h1eJJ/m91+hWicSXyQHEFX4LaY2hg7YyI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xyLN4iY9zmJMkQfktKnQpRiD7IFHvGjo95ULoKZuL/c=;
-        b=KCOrK7eZQ4CC89v9cMeDqhPWZWwsAXFWg09p8ZbOMAXgg/1hfPcyzv64uYVNFS0zfV
-         yDqcUS/4U4JzWxk8vOk6e7VXm/3TvbWLr7dhhWqPMEh0tsKj65wM+0M7Vb/BSAD6QSMq
-         aufsBsKamH6L5CavBq8JX4ASn6MXGUbnTU+6hwU21nqAzKjF4mWbOyT489os61TQIHwe
-         9hGFyDPri579dZIFxfdatgX5aDFW8cNVuIOMyUL8dCEUE8lu96pobLssK/uZjVv/h18w
-         oLMAZ40+eHNIZlFp3dI15ozHHdvq05l9enGuASYy8I3sKkJCRF86X8+6tw9wy1dMcoJL
-         RRAQ==
-X-Gm-Message-State: APjAAAXvwFDGAdATG7B1NPgZNaDnOULc88/ggyIRjpuMT6lI+WMd9q+1
-        eziYe+nLsQRWdDsE9DFbQr5dcg==
-X-Google-Smtp-Source: APXvYqzJsxHKB6CYiuv0K6eWz0RNBAElBtDwT3PR+UKjW90HgavORgR7YgQVx/CpMu50nzTTp1RO7g==
-X-Received: by 2002:a62:3343:: with SMTP id z64mr80281149pfz.150.1577877917923;
-        Wed, 01 Jan 2020 03:25:17 -0800 (PST)
+        bh=kGyS2va2MM5LlItUz13S22TtfwiSSFhRb47vRs7rcSA=;
+        b=ZwmjzN2uNmLfTequtWqswKsdPzGKKKJuyqyn+YxkTf1s3kk8IIukYtQN4qdJMSfSPk
+         YSmJJ9LLcJSLO9YYHcGfoMlI22sFyMrjT3X0XLO/mOZ7dNafi98QsSPtEhBphvOha2V9
+         cqYda8yUHTwPPcFPGp6dPNnOAglStpwniyf6bbUdEDOOehfj9Z3mLkm0s1GZOLOPG0dN
+         RBKM+e4s3AlYTCrWzlYJ7auPP4VcwL4emxYnAhhb6k/mYLFs8+f/xlSzVY8V8VBc+Z17
+         4tE5DPYhBDfhv99/ZLlhuLHB0gHeOadK/B5tYzy9Skme3zjsiIUx8j9COGlXom7V4v6m
+         23pA==
+X-Gm-Message-State: APjAAAURTjpCnw0fVucvXGtu6hySLRlu+kta/vfnj2RMMZpYMKsO3SfJ
+        dRIMbBa0+JvkVZ557UQY/I+Lng==
+X-Google-Smtp-Source: APXvYqx1w7BI3kSg5znfx18d2dqgKYCH7WWv2q9ctxYTFGBJxvjbzmixsUdL7wGN2fv0ZiGpf8bK6g==
+X-Received: by 2002:a17:902:6b8a:: with SMTP id p10mr64853544plk.47.1577877921397;
+        Wed, 01 Jan 2020 03:25:21 -0800 (PST)
 Received: from localhost.localdomain ([2405:201:c809:c7d5:d0fe:8978:1b04:ff94])
-        by smtp.gmail.com with ESMTPSA id y7sm51945439pfb.139.2020.01.01.03.25.14
+        by smtp.gmail.com with ESMTPSA id y7sm51945439pfb.139.2020.01.01.03.25.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jan 2020 03:25:17 -0800 (PST)
+        Wed, 01 Jan 2020 03:25:20 -0800 (PST)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -62,9 +62,9 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 2/6] dt-bindings: display: panel: Convert sitronix,st7701 to DT schema
-Date:   Wed,  1 Jan 2020 16:54:40 +0530
-Message-Id: <20200101112444.16250-3-jagan@amarulasolutions.com>
+Subject: [PATCH 3/6] MAINTAINERS: Update feiyang, st7701 panel bindings converted as YAML
+Date:   Wed,  1 Jan 2020 16:54:41 +0530
+Message-Id: <20200101112444.16250-4-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20200101112444.16250-1-jagan@amarulasolutions.com>
 References: <20200101112444.16250-1-jagan@amarulasolutions.com>
@@ -75,119 +75,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the sitronix,st7701 panel bindings to DT schema.
+The feiyang,fy07024di26a30d.txt and sitronix,st7701.txt has been
+converted to YAML schemas, update MAINTAINERS to match them again.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- .../display/panel/sitronix,st7701.txt         | 30 ---------
- .../display/panel/sitronix,st7701.yaml        | 61 +++++++++++++++++++
- 2 files changed, 61 insertions(+), 30 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/sitronix,st7701.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/sitronix,st7701.yaml
+ MAINTAINERS | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/sitronix,st7701.txt b/Documentation/devicetree/bindings/display/panel/sitronix,st7701.txt
-deleted file mode 100644
-index ccd17597f1f6..000000000000
---- a/Documentation/devicetree/bindings/display/panel/sitronix,st7701.txt
-+++ /dev/null
-@@ -1,30 +0,0 @@
--Sitronix ST7701 based LCD panels
--
--ST7701 designed for small and medium sizes of TFT LCD display, is
--capable of supporting up to 480RGBX864 in resolution. It provides
--several system interfaces like MIPI/RGB/SPI.
--
--Techstar TS8550B is 480x854, 2-lane MIPI DSI LCD panel which has
--inbuilt ST7701 chip.
--
--Required properties:
--- compatible: must be "sitronix,st7701" and one of
--  * "techstar,ts8550b"
--- reset-gpios: a GPIO phandle for the reset pin
--
--Required properties for techstar,ts8550b:
--- reg: DSI virtual channel used by that screen
--- VCC-supply: analog regulator for MIPI circuit
--- IOVCC-supply: I/O system regulator
--
--Optional properties:
--- backlight: phandle for the backlight control.
--
--panel@0 {
--	compatible = "techstar,ts8550b", "sitronix,st7701";
--	reg = <0>;
--	VCC-supply = <&reg_dldo2>;
--	IOVCC-supply = <&reg_dldo2>;
--	reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
--	backlight = <&backlight>;
--};
-diff --git a/Documentation/devicetree/bindings/display/panel/sitronix,st7701.yaml b/Documentation/devicetree/bindings/display/panel/sitronix,st7701.yaml
-new file mode 100644
-index 000000000000..49e4b54ecf7c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/sitronix,st7701.yaml
-@@ -0,0 +1,61 @@
-+# SPDX-License-Identifier: (GPL-2.0+ OR X11)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/sitronix,st7701.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Sitronix ST7701 based LCD panels
-+
-+maintainers:
-+  - Jagan Teki <jagan@amarulasolutions.com>
-+
-+description: |
-+  ST7701 designed for small and medium sizes of TFT LCD display, is
-+  capable of supporting up to 480RGBX864 in resolution. It provides
-+  several system interfaces like MIPI/RGB/SPI.
-+
-+  Techstar TS8550B is 480x854, 2-lane MIPI DSI LCD panel which has
-+  inbuilt ST7701 chip.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: sitronix,st7701
-+      - items:
-+          - const: techstar,ts8550b
-+
-+  reg:
-+    description: DSI virtual channel used by that screen
-+
-+  VCC-supply:
-+    description: analog regulator for MIPI circuit
-+
-+  IOVCC-supply:
-+    description: I/O system regulator
-+
-+  reset-gpios:
-+    description: a GPIO phandle for the reset pin
-+
-+  backlight:
-+    description: Backlight used by the panel
-+    $ref: "/schemas/types.yaml#/definitions/phandle"
-+
-+required:
-+  - compatible
-+  - reg
-+  - VCC-supply
-+  - IOVCC-supply
-+  - reset-gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    panel@0 {
-+            compatible = "techstar,ts8550b", "sitronix,st7701";
-+            reg = <0>;
-+            VCC-supply = <&reg_dldo2>;
-+            IOVCC-supply = <&reg_dldo2>;
-+            reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
-+            backlight = <&backlight>;
-+    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8b2e6c68832d..4d6e4febd170 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5169,7 +5169,7 @@ DRM DRIVER FOR FEIYANG FY07024DI26A30-D MIPI-DSI LCD PANELS
+ M:	Jagan Teki <jagan@amarulasolutions.com>
+ S:	Maintained
+ F:	drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
+-F:	Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
++F:	Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
+ 
+ DRM DRIVER FOR GRAIN MEDIA GM12U320 PROJECTORS
+ M:	Hans de Goede <hdegoede@redhat.com>
+@@ -5298,7 +5298,7 @@ DRM DRIVER FOR SITRONIX ST7701 PANELS
+ M:	Jagan Teki <jagan@amarulasolutions.com>
+ S:	Maintained
+ F:	drivers/gpu/drm/panel/panel-sitronix-st7701.c
+-F:	Documentation/devicetree/bindings/display/panel/sitronix,st7701.txt
++F:	Documentation/devicetree/bindings/display/panel/sitronix,st7701.yaml
+ 
+ DRM DRIVER FOR SITRONIX ST7586 PANELS
+ M:	David Lechner <david@lechnology.com>
 -- 
 2.18.0.321.gffc6fa0e3
 
