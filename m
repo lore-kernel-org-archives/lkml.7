@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 367E0C2D0DC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7601AC3F68F
 	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 17:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 104C1206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 17:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 529E0206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 17:22:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbgAARWk (ORCPT
+        id S1727272AbgAARWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 12:22:40 -0500
+        Wed, 1 Jan 2020 12:22:42 -0500
 Received: from lnfm1.sai.msu.ru ([93.180.26.255]:35309 "EHLO lnfm1.sai.msu.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727215AbgAARWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 12:22:40 -0500
+        id S1727215AbgAARWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jan 2020 12:22:42 -0500
 X-Greylist: delayed 3350 seconds by postgrey-1.27 at vger.kernel.org; Wed, 01 Jan 2020 12:22:39 EST
 Received: from dragon.sai.msu.ru (dragon.sai.msu.ru [93.180.26.172])
-        by lnfm1.sai.msu.ru (8.14.1/8.12.8) with ESMTP id 001GQIrU001781;
-        Wed, 1 Jan 2020 19:26:23 +0300
+        by lnfm1.sai.msu.ru (8.14.1/8.12.8) with ESMTP id 001GQNNS001800;
+        Wed, 1 Jan 2020 19:26:28 +0300
 Received: from oak.local (unknown [188.123.231.178])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (Client did not present a certificate)
-        by dragon.sai.msu.ru (Postfix) with ESMTPSA id DD9457FDE6;
-        Wed,  1 Jan 2020 19:26:19 +0300 (MSK)
+        by dragon.sai.msu.ru (Postfix) with ESMTPSA id 07445106DD8;
+        Wed,  1 Jan 2020 19:26:21 +0300 (MSK)
 From:   "Matwey V. Kornilov" <matwey@sai.msu.ru>
 To:     b-liu@ti.com, gregkh@linuxfoundation.org, stern@rowland.harvard.edu
 Cc:     matwey.kornilov@gmail.com,
         "Matwey V. Kornilov" <matwey@sai.msu.ru>,
         linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND v2 1/6] usb: musb: Use USB_DIR_IN when calling musb_advance_schedule()
-Date:   Wed,  1 Jan 2020 19:26:05 +0300
-Message-Id: <20200101162610.15819-2-matwey@sai.msu.ru>
+Subject: [PATCH RESEND v2 5/6] usb: musb: Introduce musb_start_urb()
+Date:   Wed,  1 Jan 2020 19:26:09 +0300
+Message-Id: <20200101162610.15819-6-matwey@sai.msu.ru>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200101162610.15819-1-matwey@sai.msu.ru>
 References: <20200101162610.15819-1-matwey@sai.msu.ru>
@@ -46,28 +46,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use USB_DIR_IN instead of 1 when calling musb_advance_schedule().
-This is consistent with the rest of musb_host.c code and impoves
-the readability.
+This function allows us to start arbitrary urb.
 
 Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
 ---
- drivers/usb/musb/musb_host.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/musb/musb_host.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/usb/musb/musb_host.c b/drivers/usb/musb/musb_host.c
-index eb308ec35c66..3ffea6a5e022 100644
+index 3a202a2a521d..ed99ecd4e63a 100644
 --- a/drivers/usb/musb/musb_host.c
 +++ b/drivers/usb/musb/musb_host.c
-@@ -1195,7 +1195,7 @@ irqreturn_t musb_h_ep0_irq(struct musb *musb)
- 
- 	/* call completion handler if done */
- 	if (complete)
--		musb_advance_schedule(musb, urb, hw_ep, 1);
-+		musb_advance_schedule(musb, urb, hw_ep, USB_DIR_IN);
- done:
- 	return retval;
+@@ -213,11 +213,10 @@ static struct musb_qh *musb_ep_get_qh(struct musb_hw_ep *ep, int is_in)
+  * Context: controller locked, irqs blocked
+  */
+ static void
+-musb_start_next_urb(struct musb *musb, int is_in, struct musb_qh *qh)
++musb_start_urb(struct musb *musb, int is_in, struct musb_qh *qh, struct urb *urb)
+ {
+ 	u32			len;
+ 	void __iomem		*mbase =  musb->mregs;
+-	struct urb		*urb = next_urb(qh);
+ 	void			*buf = urb->transfer_buffer;
+ 	u32			offset = 0;
+ 	struct musb_hw_ep	*hw_ep = qh->hw_ep;
+@@ -293,6 +292,14 @@ musb_start_next_urb(struct musb *musb, int is_in, struct musb_qh *qh)
+ 	}
  }
+ 
++static void
++musb_start_next_urb(struct musb *musb, int is_in, struct musb_qh *qh)
++{
++	struct urb *urb = next_urb(qh);
++
++	musb_start_urb(musb, is_in, qh, urb);
++}
++
+ /* Context: caller owns controller lock, IRQs are blocked */
+ static void musb_giveback(struct musb *musb, struct urb *urb, int status)
+ __releases(musb->lock)
 -- 
 2.16.4
 
