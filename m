@@ -6,32 +6,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84241C2D0DE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6576C2D0DF
 	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 08:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6240F206E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 08:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4F0A2072C
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 08:20:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgAAIUN (ORCPT
+        id S1727218AbgAAIUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 03:20:13 -0500
+        Wed, 1 Jan 2020 03:20:16 -0500
 Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:56920 "EHLO
         mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725916AbgAAIUM (ORCPT
+        by vger.kernel.org with ESMTP id S1726820AbgAAIUP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 03:20:12 -0500
+        Wed, 1 Jan 2020 03:20:15 -0500
 X-IronPort-AV: E=Sophos;i="5.69,382,1571695200"; 
-   d="scan'208";a="429578752"
+   d="scan'208";a="429578757"
 Received: from palace.rsr.lip6.fr (HELO palace.lip6.fr) ([132.227.105.202])
   by mail2-relais-roc.national.inria.fr with ESMTP/TLS/AES128-SHA256; 01 Jan 2020 09:20:08 +0100
 From:   Julia Lawall <Julia.Lawall@inria.fr>
-To:     Antti Palosaari <crope@iki.fi>
-Cc:     kernel-janitors@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 03/16] [media] anysee: constify copied structure
-Date:   Wed,  1 Jan 2020 08:43:21 +0100
-Message-Id: <1577864614-5543-4-git-send-email-Julia.Lawall@inria.fr>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     kernel-janitors@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 07/16] video: sa1100fb: constify copied structure
+Date:   Wed,  1 Jan 2020 08:43:25 +0100
+Message-Id: <1577864614-5543-8-git-send-email-Julia.Lawall@inria.fr>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1577864614-5543-1-git-send-email-Julia.Lawall@inria.fr>
 References: <1577864614-5543-1-git-send-email-Julia.Lawall@inria.fr>
@@ -40,36 +39,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The anysee_tda18212_config and anysee_tda18212_config2 structures
-are only copied into other structures, so make them const.
+The monspecs structure is only copied into another structure,
+so make it const.
 
 The opportunity for this change was found using Coccinelle.
 
 Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
 ---
- drivers/media/usb/dvb-usb-v2/anysee.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/video/fbdev/sa1100fb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/usb/dvb-usb-v2/anysee.c b/drivers/media/usb/dvb-usb-v2/anysee.c
-index fb6d99dea31a..94b8d3e5d8f7 100644
---- a/drivers/media/usb/dvb-usb-v2/anysee.c
-+++ b/drivers/media/usb/dvb-usb-v2/anysee.c
-@@ -318,14 +318,14 @@ static struct tda10023_config anysee_tda10023_tda18212_config = {
- 	.deltaf = 0xba02,
- };
+diff --git a/drivers/video/fbdev/sa1100fb.c b/drivers/video/fbdev/sa1100fb.c
+index 4680cc3efb81..c77b43dbc256 100644
+--- a/drivers/video/fbdev/sa1100fb.c
++++ b/drivers/video/fbdev/sa1100fb.c
+@@ -1053,7 +1053,7 @@ static int sa1100fb_map_video_memory(struct sa1100fb_info *fbi)
+ }
  
--static struct tda18212_config anysee_tda18212_config = {
-+static const struct tda18212_config anysee_tda18212_config = {
- 	.if_dvbt_6 = 4150,
- 	.if_dvbt_7 = 4150,
- 	.if_dvbt_8 = 4150,
- 	.if_dvbc = 5000,
- };
- 
--static struct tda18212_config anysee_tda18212_config2 = {
-+static const struct tda18212_config anysee_tda18212_config2 = {
- 	.if_dvbt_6 = 3550,
- 	.if_dvbt_7 = 3700,
- 	.if_dvbt_8 = 4150,
+ /* Fake monspecs to fill in fbinfo structure */
+-static struct fb_monspecs monspecs = {
++static const struct fb_monspecs monspecs = {
+ 	.hfmin	= 30000,
+ 	.hfmax	= 70000,
+ 	.vfmin	= 50,
 
