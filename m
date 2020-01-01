@@ -2,117 +2,128 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B681C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 18:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A575FC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 18:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2EC0206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 18:51:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="CovNZjlE"
+	by mail.kernel.org (Postfix) with ESMTP id 850782072C
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 18:56:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbgAASvx (ORCPT
+        id S1727407AbgAASz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 13:51:53 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55031 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727311AbgAASvx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 13:51:53 -0500
-Received: by mail-wm1-f66.google.com with SMTP id b19so3973323wmj.4
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 10:51:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=D8uPCxi3Y1/pc0576oAFGCcv9ILxWB3/3GiCiHCXgko=;
-        b=CovNZjlE6y41FxRRV2dQgC2LXmUHj1E8p0Nrv8qiRfWxbkQdYpbWLSMjj/b+oII78U
-         wl3wEHZITaqtJDiX2UUnM3rU9Poj3VDz0KTlFfXfgsLsgcwqUU8n+ad18kAFMtdYP3Nl
-         H6F+gk0amyScbp2FsWH2Pzgq8Mylv+lGIT/y0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=D8uPCxi3Y1/pc0576oAFGCcv9ILxWB3/3GiCiHCXgko=;
-        b=X5afWAIkhnPv1AqPp40LBJzwAz2crIlHEj2QxicWgaDe+mRtRUIvF7HgQsE/JGPErd
-         2zgXwBzkO7bYBM7Tk22wuQrY96442EdVTbkqInAPce0pg6HKWINpWE6atBuhdlok/q6V
-         3/fSZMynW9u+pm1JfcfUDoEWXP5UXIQs/ZJ4awzcgZQm336GCo/hXJxcOSkaqqgSI5yw
-         Od4JGVt/QbUW5oRtZ7BVe4/b/7Han78ggWcJWAvJVfmpKFgz3Apr3i/iAehufOYdllwC
-         NOI2FhJg4EjEcfV78oQvq+rrRU6It26JzRzA2j26iPrlxrezQ/9iCSmLUJ56MXaVKPZQ
-         rA2Q==
-X-Gm-Message-State: APjAAAWJ8b5ZkplEUNxZ3rZtte6hoEb1XAD3KZLZdSKFs93/z4rxHG9F
-        Fs5Lt6YZGVmHkMMUbuysde+OxHPmiMk=
-X-Google-Smtp-Source: APXvYqyjqRvgYGtxavvSSbnVsxx3hbCvsLvioRActoXXQldrptMzEMi+l6Q2nwcO1dPqXP/rbpsjRA==
-X-Received: by 2002:a05:600c:224d:: with SMTP id a13mr10459265wmm.70.1577904711502;
-        Wed, 01 Jan 2020 10:51:51 -0800 (PST)
-Received: from dvetter-linux.ger.corp.intel.com ([194.230.159.125])
-        by smtp.gmail.com with ESMTPSA id b21sm6272694wmd.37.2020.01.01.10.51.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jan 2020 10:51:50 -0800 (PST)
-Date:   Wed, 1 Jan 2020 19:51:47 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Wambui Karuga <wambui.karugax@gmail.com>
-Cc:     bskeggs@redhat.com, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/nouveau: use NULL for pointer assignment.
-Message-ID: <20200101185147.GB3856@dvetter-linux.ger.corp.intel.com>
-Mail-Followup-To: Wambui Karuga <wambui.karugax@gmail.com>,
-        bskeggs@redhat.com, airlied@linux.ie,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <20191231205734.1452-1-wambui.karugax@gmail.com>
+        Wed, 1 Jan 2020 13:55:59 -0500
+Received: from foss.arm.com ([217.140.110.172]:41758 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727352AbgAASz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jan 2020 13:55:59 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8AF9F31B;
+        Wed,  1 Jan 2020 10:55:58 -0800 (PST)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0BF523F68F;
+        Wed,  1 Jan 2020 10:55:56 -0800 (PST)
+Subject: Re: [PATCH] sched/fair: fix sgc->{min,max}_capacity miscalculate
+To:     Peng Liu <iwtbavbm@gmail.com>, linux-kernel@vger.kernel.org
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        qais.yousef@arm.com, morten.rasmussen@arm.com
+References: <20191231035122.GA10020@iZj6chx1xj0e0buvshuecpZ>
+ <ec390ddb-c015-a467-2f88-47c00f23e27b@arm.com>
+ <20200101141329.GA12809@iZj6chx1xj0e0buvshuecpZ>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <e41793bc-daaf-b224-1f3d-a3e468072592@arm.com>
+Date:   Wed, 1 Jan 2020 18:55:48 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191231205734.1452-1-wambui.karugax@gmail.com>
-X-Operating-System: Linux dvetter-linux.ger.corp.intel.com
- 5.2.11-200.fc30.x86_64 
+In-Reply-To: <20200101141329.GA12809@iZj6chx1xj0e0buvshuecpZ>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 31, 2019 at 11:57:34PM +0300, Wambui Karuga wrote:
-> Replace the use of 0 in the pointer assignment with NULL to address the
-> following sparse warning:
-> drivers/gpu/drm/nouveau/nouveau_hwmon.c:744:29: warning: Using plain integer as NULL pointer
+On 01/01/2020 14:13, Peng Liu wrote:
+>> ---
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index 08a233e97a01..9f6c015639ef 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -7773,8 +7773,8 @@ void update_group_capacity(struct sched_domain *sd, int cpu)
+>>  		 */
+>>  
+>>  		for_each_cpu(cpu, sched_group_span(sdg)) {
+>> -			struct sched_group_capacity *sgc;
+>>  			struct rq *rq = cpu_rq(cpu);
+>> +			unsigned long cpu_cap;
+>>  
+>>  			/*
+>>  			 * build_sched_domains() -> init_sched_groups_capacity()
+>> @@ -7787,15 +7787,15 @@ void update_group_capacity(struct sched_domain *sd, int cpu)
+>>  			 * This avoids capacity from being 0 and
+>>  			 * causing divide-by-zero issues on boot.
+>>  			 */
+>> -			if (unlikely(!rq->sd)) {
+>> -				capacity += capacity_of(cpu);
+>> -			} else {
+>> -				sgc = rq->sd->groups->sgc;
+>> -				capacity += sgc->capacity;
+>> -			}
+>> +			if (unlikely(!rq->sd))
+>> +				cpu_cap = capacity_of(cpu);
 > 
-> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
-
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-
-I'll check with Ben next week or so whether he wants to pick these up or
-whether I should stuff them into drm-misc-next.
--Daniel
-
-> ---
->  drivers/gpu/drm/nouveau/nouveau_hwmon.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> --------------------------------------------------------------
+>> +			else
+>> +				cpu_cap = rq->sd->groups->sgc->capacity;
 > 
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_hwmon.c b/drivers/gpu/drm/nouveau/nouveau_hwmon.c
-> index d445c6f3fece..1c3104d20571 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_hwmon.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_hwmon.c
-> @@ -741,7 +741,7 @@ nouveau_hwmon_init(struct drm_device *dev)
->  			special_groups[i++] = &pwm_fan_sensor_group;
->  	}
->  
-> -	special_groups[i] = 0;
-> +	special_groups[i] = NULL;
->  	hwmon_dev = hwmon_device_register_with_info(dev->dev, "nouveau", dev,
->  							&nouveau_chip_info,
->  							special_groups);
-> -- 
-> 2.17.1
+> sgc->capacity is the *sum* of all CPU's capacity in that group, right?
+
+Right
+
+> {min,max}_capacity are per CPU variables(*part* of a group). So we can't
+> compare *part* to *sum*. Am I overlooking something? Thanks.
 > 
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+AIUI rq->sd->groups->sgc->capacity should be the capacity of the rq's CPU
+(IOW the groups here should be made of single CPUs).
+
+This should be true regardless of overlapping domains, since they sit on top
+of the regular domains. Let me paint an example with a simple 2-core SMT2
+system:
+
+  MC  [          ]
+  SMT [    ][    ]
+       0  1  2  3
+
+cpu_rq(0)->sd will point to the sched_domain of CPU0 at SMT level (it is the
+"base domain", IOW the lowest domain in the topology hierarchy). Its groups
+will be:
+
+  {0} ----> {1}
+    ^       /
+     `-----'
+
+and sd->groups will point at the group spanning the "local" CPU, in our case
+CPU0, and thus here will be a group containing only CPU0.
+
+
+I do not know why sched_group_capacity is used here however. As I understand
+things, we could use cpu_capacity() unconditionally.
+
+
+>> +
+>> +			min_capacity = min(cpu_cap, min_capacity);
+>> +			max_capacity = max(cpu_cap, max_capacity);
+>>  
+>> -			min_capacity = min(capacity, min_capacity);
+>> -			max_capacity = max(capacity, max_capacity);
+>> +			capacity += cpu_cap;
+>>  		}
+>>  	} else  {
+>>  		/*
