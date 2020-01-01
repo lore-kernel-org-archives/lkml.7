@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2F5C32764
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 16:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2720C2D0DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 16:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A419B20863
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 16:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A9632080A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 16:31:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="XrhJoKJb"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="hp+dQqpa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbgAAQbq (ORCPT
+        id S1727240AbgAAQbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 11:31:46 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34664 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbgAAQbm (ORCPT
+        Wed, 1 Jan 2020 11:31:45 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36182 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727173AbgAAQbo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 11:31:42 -0500
-Received: by mail-wm1-f68.google.com with SMTP id c127so3488915wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 08:31:40 -0800 (PST)
+        Wed, 1 Jan 2020 11:31:44 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so3827036wma.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 08:31:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=P5gcp8jIwlMlhfhGOxLkJPAb88nDGX2ujZMaHgP9/W0=;
-        b=XrhJoKJbQRExNFti0kMwDLAzp0S+NSzIhbKuIYC8w1mnxFJSKDcwAAiXfm4FBeCnIJ
-         Qo2fBIDpJKTN0XtijveXmDroFU5Mi/iSBNGD23YDJX1mp3NBzPczmlEoMvFujf7MN7Js
-         6NXZufugfGdxSRl7t/YyMMtDeVg34A0GYwD04=
+        bh=0FtJRvYoh9q2xNKRzVf3Zc+0eiYysgU3x6WIKkWsIjw=;
+        b=hp+dQqpauRcTWXe7d7Bs+XBu7BAh1P7y4cscKHejI9NSq3wYic3U/SvcPZZlP5RRtI
+         GymzFS+BeeC2vL0nLX95WlZ1939z9jrVJsiawpHveS/VOEvQbrLEBxvvTzkuXeVr0arh
+         xVWvmQXQykzAxTV/NXHpnyw8Rv0DVRC5pLrsU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=P5gcp8jIwlMlhfhGOxLkJPAb88nDGX2ujZMaHgP9/W0=;
-        b=pWaZhT3m7HucSqjLbv3KKC7loj4bHXwNUzKdsSFtnRKkxGLb1TZx5GbfBNftkuI2dM
-         93rpPt68Pios1i+lOK+V/N8hA2+FeV2EarY+Criow6yx9MqeIzwanHE/MdvFQ3DX9GIB
-         2tYvTrN5V+tgYknAn5hSOV7cwhghkmng8TVjWucVeq53E9Bc+Pc3tqv9NnddKX5igEpX
-         tqKOFiD8356H4oaHrUekDqmUJTrAB+D+apa5Fj1/kUfz/kOrOhSXhut1BZEsdrw9+cwb
-         eDbtrJOri+WAYvibLaGaw/HdR0lXDbZzL3ZaTHT6YvXbDRm/VMu6FM2d13VBcXavHjKt
-         ECZw==
-X-Gm-Message-State: APjAAAWAvA5TU1jz0iV9wHRegufgL6pLr1sgVPHGk4WNV9/Ej5VoaxAk
-        osiHMwd6wjqwANjnNe1UmXE5KQ==
-X-Google-Smtp-Source: APXvYqzyCqNI+hQChtNv+8k7Qpq+1EPqbn+aZkknE+byT1tLYtzhPovzew9UfcDU8bZ9VYyM/i95AQ==
-X-Received: by 2002:a1c:740b:: with SMTP id p11mr10763156wmc.78.1577896299551;
-        Wed, 01 Jan 2020 08:31:39 -0800 (PST)
+        bh=0FtJRvYoh9q2xNKRzVf3Zc+0eiYysgU3x6WIKkWsIjw=;
+        b=jhmE2nGhQK5PpPi87QpJFUqm7TVaBD39oHZus+sjJwuF8NONuOXOIpLcqAUw1fdGJH
+         LjDU0m0WLVAaVjF13GB/ELsSJMcGdl9KnEXXxqKm/P1wsQ7NNOpQRstfS9Ljgvf893pN
+         IowQY3xv40bKUCp3eoUW1nqk0ehY2FyHKuA5MSxL/UGnVdWVUtQ1eHbVpUbeRgXrllht
+         W+D3sBOhiOKJHVMiZPpF7FvkX/NjA+WW6/g/eaM7vh0Hjmr+3y06r+Up2Yz2bR2jSXEX
+         A8NGl4zaXn/WsXe6SH0LLPcowroVfgHLrZ8Q8dz8DuyqjSwOhXyeTt1WeDbQNq6VnU1K
+         glUQ==
+X-Gm-Message-State: APjAAAU2mb1ADrK/CAY3T4i/Vnzf2rj8WdmWv5g2yoo9sjnjdU96skHP
+        FFNP0YcPdhbj/LGUgzZcdAzFBg==
+X-Google-Smtp-Source: APXvYqwnzMEJJ+SPGaqW/TD6mWsxkHENHtRUYQ8D7TWsJAz4BFnTHQ45khvMiDb7JM9kBxIMPqa9Kw==
+X-Received: by 2002:a7b:cfc9:: with SMTP id f9mr10515511wmm.1.1577896301541;
+        Wed, 01 Jan 2020 08:31:41 -0800 (PST)
 Received: from panicking.lan (93-46-124-24.ip107.fastwebnet.it. [93.46.124.24])
-        by smtp.gmail.com with ESMTPSA id u13sm6108580wmd.36.2020.01.01.08.31.38
+        by smtp.gmail.com with ESMTPSA id u13sm6108580wmd.36.2020.01.01.08.31.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jan 2020 08:31:39 -0800 (PST)
+        Wed, 01 Jan 2020 08:31:41 -0800 (PST)
 From:   Michael Trimarchi <michael@amarulasolutions.com>
 To:     Shawn Guo <shawnguo@kernel.org>
 Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
@@ -62,9 +62,9 @@ Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-amarula@amarulasolutions.com
-Subject: [PATCH 1/3] soc: imx: gpcv2: add support for i.MX8MM SoC
-Date:   Wed,  1 Jan 2020 17:31:34 +0100
-Message-Id: <20200101163136.1586-2-michael@amarulasolutions.com>
+Subject: [PATCH 3/3] arm64: dts: imx8mm: properly describe IRQ hierarchy
+Date:   Wed,  1 Jan 2020 17:31:36 +0100
+Message-Id: <20200101163136.1586-4-michael@amarulasolutions.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200101163136.1586-1-michael@amarulasolutions.com>
 References: <20200101163136.1586-1-michael@amarulasolutions.com>
@@ -73,193 +73,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GPCv2 on the Freescale i.MX8MM SoC works in the same way as the
-GPCv2 on the i.MX8MQ, with a slight different mapping.
+The GPCv2 sits between most of the peripherals and the GIC and
+functions as a wakeup controller for the CPU cores. Add already
+two power domains. Those domains was tested on imx8mm board
 
 Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
 ---
- .../bindings/power/fsl,imx-gpcv2.txt          |   4 +-
- drivers/soc/imx/gpcv2.c                       | 110 ++++++++++++++++++
- 2 files changed, 113 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 31 ++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
-index 61649202f6f5..fde651cd06d0 100644
---- a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
-+++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
-@@ -9,6 +9,7 @@ Required properties:
- - compatible: Should be one of:
- 	- "fsl,imx7d-gpc"
- 	- "fsl,imx8mq-gpc"
-+	- "fsl,imx8mm-gpc"
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 6edbdfe2d0d7..7360dc0685eb 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -4,6 +4,7 @@
+  */
  
- - reg: should be register base and length as documented in the
-   datasheet
-@@ -25,7 +26,8 @@ Required properties:
- 
- - reg: Power domain index. Valid values are defined in
-   include/dt-bindings/power/imx7-power.h for fsl,imx7d-gpc and
--  include/dt-bindings/power/imx8m-power.h for fsl,imx8mq-gpc
-+  include/dt-bindings/power/imx8m-power.h for fsl,imx8mq-gpc and
-+  include/dt-bindings/power/imx8mm-power.h for fsl,imx8mm-gpc
- 
- - #power-domain-cells: Should be 0
- 
-diff --git a/drivers/soc/imx/gpcv2.c b/drivers/soc/imx/gpcv2.c
-index b0dffb06c05d..d3c012a61c11 100644
---- a/drivers/soc/imx/gpcv2.c
-+++ b/drivers/soc/imx/gpcv2.c
-@@ -16,6 +16,7 @@
- #include <linux/regulator/consumer.h>
- #include <dt-bindings/power/imx7-power.h>
- #include <dt-bindings/power/imx8mq-power.h>
+ #include <dt-bindings/clock/imx8mm-clock.h>
 +#include <dt-bindings/power/imx8mm-power.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+@@ -12,7 +13,7 @@
+ #include "imx8mm-pinfunc.h"
  
- #define GPC_LPCR_A_CORE_BSC			0x000
+ / {
+-	interrupt-parent = <&gic>;
++	interrupt-parent = <&gpc>;
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
  
-@@ -41,6 +42,20 @@
- #define IMX8M_PCIE1_A53_DOMAIN			BIT(3)
- #define IMX8M_MIPI_A53_DOMAIN			BIT(2)
+@@ -197,6 +198,7 @@
+ 		interrupts = <GIC_PPI 7
+ 			     (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		interrupt-affinity = <&A53_0>, <&A53_1>, <&A53_2>, <&A53_3>;
++		interrupt-parent = <&gic>;
+ 	};
  
-+#define IMX8MM_VPU_H1_A53_DOMAIN		BIT(15)
-+#define IMX8MM_VPU_G2_A53_DOMAIN		BIT(14)
-+#define IMX8MM_VPU_G1_A53_DOMAIN		BIT(13)
-+#define IMX8MM_DISPMIX_A53_DOMAIN		BIT(12)
-+#define IMX8MM_GPU_3D_A53_DOMAIN		BIT(11)
-+#define IMX8MM_VPUMIX_A53_DOMAIN		BIT(10)
-+#define IMX8MM_GPUMIX_A53_DOMAIN		BIT(9)
-+#define IMX8MM_GPU_2D_A53_DOMAIN		BIT(8)
-+#define IMX8MM_DDR1_A53_DOMAIN			BIT(7)
-+#define IMX8MM_OTG2_A53_DOMAIN			BIT(5)
-+#define IMX8MM_OTG1_A53_DOMAIN			BIT(4)
-+#define IMX8MM_PCIE1_A53_DOMAIN			BIT(3)
-+#define IMX8MM_MIPI_A53_DOMAIN			BIT(2)
+ 	timer {
+@@ -206,6 +208,7 @@
+ 			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>, /* Virtual */
+ 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>; /* Hypervisor */
+ 		clock-frequency = <8000000>;
++		interrupt-parent = <&gic>;
+ 		arm,no-tick-in-suspend;
+ 	};
+ 
+@@ -498,6 +501,29 @@
+ 				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+ 				#reset-cells = <1>;
+ 			};
 +
- #define GPC_PU_PGC_SW_PUP_REQ		0x0f8
- #define GPC_PU_PGC_SW_PDN_REQ		0x104
- 
-@@ -64,6 +79,20 @@
- #define IMX8M_PCIE1_SW_Pxx_REQ			BIT(1)
- #define IMX8M_MIPI_SW_Pxx_REQ			BIT(0)
- 
-+#define IMX8MM_VPU_H1_SW_Pxx_REQ		BIT(13)
-+#define IMX8MN_VPU_G2_SW_Pxx_REQ		BIT(12)
-+#define IMX8MN_VPU_G1_SW_Pxx_REQ		BIT(11)
-+#define IMX8MM_DISPMIX_SW_Pxx_REQ		BIT(10)
-+#define IMX8MM_GPU_3D_SW_Pxx_REQ		BIT(9)
-+#define IMX8MM_VPUMIX_SW_Pxx_REQ		BIT(8)
-+#define IMX8MM_GPUMIX_SW_Pxx_REQ		BIT(7)
-+#define IMX8MM_GPU_2D_SW_Pxx_REQ		BIT(6)
-+#define IMX8MM_DDR1_SW_Pxx_REQ			BIT(5)
-+#define IMX8MM_OTG2_SW_Pxx_REQ			BIT(3)
-+#define IMX8MM_OTG1_SW_Pxx_REQ			BIT(2)
-+#define IMX8MM_PCIE1_SW_Pxx_REQ			BIT(1)
-+#define IMX8MM_MIPI_SW_Pxx_REQ			BIT(0)
++			gpc: gpc@303a0000 {
++				compatible = "fsl,imx8mm-gpc";
++				reg = <0x303a0000 0x10000>;
++				interrupt-parent = <&gic>;
++				interrupt-controller;
++				#interrupt-cells = <3>;
 +
- #define GPC_M4_PU_PDN_FLG		0x1bc
++				pgc {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					pgc_otg1: power-domain@2 {
++						#power-domain-cells = <0>;
++						reg = <IMX8MM_POWER_DOMAIN_USB_OTG1>;
++					};
++
++					pgc_otg2: power-domain@3 {
++						#power-domain-cells = <0>;
++						reg = <IMX8MM_POWER_DOMAIN_USB_OTG2>;
++					};
++				};
++			};
+ 		};
  
- #define GPC_PU_PWRHSK			0x1fc
-@@ -94,6 +123,20 @@
- #define IMX8M_PGC_MIPI_CSI2		28
- #define IMX8M_PGC_PCIE2			29
+ 		aips2: bus@30400000 {
+@@ -790,6 +816,7 @@
+ 				assigned-clock-parents = <&clk IMX8MM_SYS_PLL2_500M>;
+ 				fsl,usbphy = <&usbphynop1>;
+ 				fsl,usbmisc = <&usbmisc1 0>;
++				power-domains = <&pgc_otg1>;
+ 				status = "disabled";
+ 			};
  
-+#define IMX8MM_PGC_MIPI			16
-+#define IMX8MM_PGC_PCIE1		17
-+#define IMX8MM_PGC_OTG1			18
-+#define IMX8MM_PGC_OTG2			19
-+#define IMX8MM_PGC_DDR1			21
-+#define IMX8MM_PGC_GPU_2D		22
-+#define IMX8MM_PGC_GPUMIX		17
-+#define IMX8MM_PGC_VPUMIX		18
-+#define IMX8MM_PGC_GPU_3D		19
-+#define IMX8MM_PGC_DSPMIX		20
-+#define IMX8MM_PGC_VPU_G1		21
-+#define IMX8MM_PGC_VPU_G2		22
-+#define IMX8MM_PGC_VPU_H1		22
-+
- #define GPC_PGC_CTRL(n)			(0x800 + (n) * 0x40)
- #define GPC_PGC_SR(n)			(GPC_PGC_CTRL(n) + 0xc)
+@@ -809,6 +836,7 @@
+ 				assigned-clock-parents = <&clk IMX8MM_SYS_PLL2_500M>;
+ 				fsl,usbphy = <&usbphynop2>;
+ 				fsl,usbmisc = <&usbmisc2 0>;
++				power-domains = <&pgc_otg2>;
+ 				status = "disabled";
+ 			};
  
-@@ -442,6 +485,72 @@ static const struct imx_pgc_domain_data imx8m_pgc_domain_data = {
- 	.reg_access_table = &imx8m_access_table,
- };
+@@ -856,6 +884,7 @@
+ 			#interrupt-cells = <3>;
+ 			interrupt-controller;
+ 			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-parent = <&gic>;
+ 		};
  
-+static const struct imx_pgc_domain imx8mm_pgc_domains[] = {
-+	[IMX8MM_POWER_DOMAIN_USB_OTG1] = {
-+		.genpd = {
-+			.name = "usb-otg1",
-+		},
-+		.bits  = {
-+			.pxx = IMX8MM_OTG1_SW_Pxx_REQ,
-+			.map = IMX8MM_OTG1_A53_DOMAIN,
-+		},
-+		.pgc   = IMX8MM_PGC_OTG1,
-+	},
-+
-+	[IMX8MM_POWER_DOMAIN_USB_OTG2] = {
-+		.genpd = {
-+			.name = "usb-otg2",
-+		},
-+		.bits  = {
-+			.pxx = IMX8MM_OTG2_SW_Pxx_REQ,
-+			.map = IMX8MM_OTG2_A53_DOMAIN,
-+		},
-+		.pgc   = IMX8MM_PGC_OTG2,
-+	},
-+};
-+
-+static const struct regmap_range imx8mm_yes_ranges[] = {
-+		regmap_reg_range(GPC_LPCR_A_CORE_BSC,
-+				 GPC_PU_PWRHSK),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_MIPI),
-+				 GPC_PGC_SR(IMX8MM_PGC_MIPI)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_PCIE1),
-+				 GPC_PGC_SR(IMX8MM_PGC_PCIE1)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_OTG1),
-+				 GPC_PGC_SR(IMX8MM_PGC_OTG1)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_OTG2),
-+				 GPC_PGC_SR(IMX8MM_PGC_OTG2)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_DDR1),
-+				 GPC_PGC_SR(IMX8MM_PGC_DDR1)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_GPU_2D),
-+				 GPC_PGC_SR(IMX8MM_PGC_GPU_2D)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_GPUMIX),
-+				 GPC_PGC_SR(IMX8MM_PGC_GPUMIX)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_VPUMIX),
-+				 GPC_PGC_SR(IMX8MM_PGC_VPUMIX)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_GPU_3D),
-+				 GPC_PGC_SR(IMX8MM_PGC_GPU_3D)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_DSPMIX),
-+				 GPC_PGC_SR(IMX8MM_PGC_DSPMIX)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_VPU_G1),
-+				 GPC_PGC_SR(IMX8MM_PGC_VPU_G1)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_VPU_G2),
-+				 GPC_PGC_SR(IMX8MM_PGC_VPU_G2)),
-+		regmap_reg_range(GPC_PGC_CTRL(IMX8MM_PGC_VPU_H1),
-+				 GPC_PGC_SR(IMX8MM_PGC_VPU_H1)),
-+};
-+
-+static const struct regmap_access_table imx8mm_access_table = {
-+	.yes_ranges	= imx8mm_yes_ranges,
-+	.n_yes_ranges	= ARRAY_SIZE(imx8mm_yes_ranges),
-+};
-+
-+static const struct imx_pgc_domain_data imx8mm_pgc_domain_data = {
-+	.domains = imx8mm_pgc_domains,
-+	.domains_num = ARRAY_SIZE(imx8mm_pgc_domains),
-+	.reg_access_table = &imx8mm_access_table,
-+};
-+
- static int imx_pgc_get_clocks(struct imx_pgc_domain *domain)
- {
- 	int i, ret;
-@@ -641,6 +750,7 @@ static int imx_gpcv2_probe(struct platform_device *pdev)
- static const struct of_device_id imx_gpcv2_dt_ids[] = {
- 	{ .compatible = "fsl,imx7d-gpc", .data = &imx7_pgc_domain_data, },
- 	{ .compatible = "fsl,imx8mq-gpc", .data = &imx8m_pgc_domain_data, },
-+	{ .compatible = "fsl,imx8mm-gpc", .data = &imx8mm_pgc_domain_data, },
- 	{ }
- };
- 
+ 		ddr-pmu@3d800000 {
 -- 
 2.17.1
 
