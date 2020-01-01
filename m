@@ -2,128 +2,112 @@ Return-Path: <SRS0=1Df5=2W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CB4C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 03:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B56C2D0DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 03:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7BD206CC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 03:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0203B2072C
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jan 2020 03:37:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c6mzRu2Y"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="cuwUcU9W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbgAADfb (ORCPT
+        id S1727169AbgAADhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Dec 2019 22:35:31 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43576 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727036AbgAADfb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Dec 2019 22:35:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577849729;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xGzTIGJEZW1rd19x+B/i8LC/d+Fdo/UuA9DXF5ovwZU=;
-        b=c6mzRu2YA7y8/ZaFOUGQuMWQZ/1DjL85H7UwSqAJK2xCxN5uvxI2LtLvyowOgyOLSGzeTW
-        T85zzhMnkNAkn9T9SxE6gg4LDjCuhFerx4kGgUsdwSt52qBFfH9EGlNUlM40ITRfPQdAF1
-        xRBgiv95UaxPDmas1GUDlbvsO3I7THI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-235-roboTYx1PPClg702gfWojQ-1; Tue, 31 Dec 2019 22:35:26 -0500
-X-MC-Unique: roboTYx1PPClg702gfWojQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 31 Dec 2019 22:37:14 -0500
+Received: from onstation.org ([52.200.56.107]:51180 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727105AbgAADhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Dec 2019 22:37:14 -0500
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 94034477;
-        Wed,  1 Jan 2020 03:35:24 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-60.pek2.redhat.com [10.72.12.60])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2A9ED5C1D8;
-        Wed,  1 Jan 2020 03:35:20 +0000 (UTC)
-Date:   Wed, 1 Jan 2020 11:35:17 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     mingo@redhat.com, Taku Izumi <izumi.taku@jp.fujitsu.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        kexec@lists.infradead.org, x86@kernel.org
-Subject: Re: [PATCH v2 3/4] efi: Fix efi_memmap_alloc() leaks
-Message-ID: <20200101033517.GB14346@dhcp-128-65.nay.redhat.com>
-References: <157782985777.367056.14741265874314204783.stgit@dwillia2-desk3.amr.corp.intel.com>
- <157782987346.367056.16932641815225610530.stgit@dwillia2-desk3.amr.corp.intel.com>
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 2D1E43E9DC;
+        Wed,  1 Jan 2020 03:37:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1577849833;
+        bh=RGCPcDUKbPetkDE7FuEoQ8XfM4bfw2xCgy4VWuugn3g=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cuwUcU9WjPruzvvuITwzFQONu++vaiNQjg5tbZQBhLYY8QUlVja+yW6v21cySqY71
+         ioNuv6UYS5fNYayI9/VfjgOS6L4vmAWoh44Gqg44eqS5YZzLmYLtKCR/YIyPVwzuZ5
+         EpgjZGhuNPPQ9ynVmh4WlBlNW5qIiaon3OM7a58I=
+From:   Brian Masney <masneyb@onstation.org>
+To:     bjorn.andersson@linaro.org
+Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] firmware: qcom: scm: add 32 bit iommu page table support
+Date:   Tue, 31 Dec 2019 22:37:04 -0500
+Message-Id: <20200101033704.32264-1-masneyb@onstation.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <157782987346.367056.16932641815225610530.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
-On 12/31/19 at 02:04pm, Dan Williams wrote:
-> With efi_fake_memmap() and efi_arch_mem_reserve() the efi table may be
-> updated and replaced multiple times. When that happens a previous
-> dynamically allocated efi memory map can be garbage collected. Use the
-> new EFI_MEMMAP_{SLAB,MEMBLOCK} flags to detect when a dynamically
-> allocated memory map is being replaced.
-> 
-> Cc: Taku Izumi <izumi.taku@jp.fujitsu.com>
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  drivers/firmware/efi/memmap.c |   24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/drivers/firmware/efi/memmap.c b/drivers/firmware/efi/memmap.c
-> index 2b81ee6858a9..188ab3cd5c52 100644
-> --- a/drivers/firmware/efi/memmap.c
-> +++ b/drivers/firmware/efi/memmap.c
-> @@ -29,6 +29,28 @@ static phys_addr_t __init __efi_memmap_alloc_late(unsigned long size)
->  	return PFN_PHYS(page_to_pfn(p));
->  }
->  
-> +static void __init __efi_memmap_free(u64 phys, unsigned long size, unsigned long flags)
-> +{
-> +	if (WARN_ON(slab_is_available() && (flags & EFI_MEMMAP_MEMBLOCK)))
-> +		return;
-> +
-> +	if (flags & EFI_MEMMAP_MEMBLOCK) {
-> +		memblock_free(phys, size);
-> +	} else if (flags & EFI_MEMMAP_SLAB) {
-> +		struct page *p = pfn_to_page(PHYS_PFN(phys));
-> +		unsigned int order = get_order(size);
-> +
-> +		free_pages((unsigned long) page_address(p), order);
-> +	}
-> +}
-> +
-> +static void __init efi_memmap_free(void)
-> +{
-> +	__efi_memmap_free(efi.memmap.phys_map,
-> +			efi.memmap.desc_size * efi.memmap.nr_map,
-> +			efi.memmap.flags);
-> +}
-> +
->  /**
->   * efi_memmap_alloc - Allocate memory for the EFI memory map
->   * @num_entries: Number of entries in the allocated map.
-> @@ -209,6 +231,8 @@ int __init efi_memmap_install(phys_addr_t addr, unsigned int nr_map,
->  	data.desc_size = efi.memmap.desc_size;
->  	flags |= efi.memmap.flags & EFI_MEMMAP_LATE;
->  
-> +	efi_memmap_free();
-> +
->  	return __efi_memmap_init(&data, flags);
+Add 32 bit implmentations of the functions
+__qcom_scm_iommu_secure_ptbl_size() and
+__qcom_scm_iommu_secure_ptbl_init() that are required by the qcom_iommu
+driver.
 
-Hmm, only free the memmap in case __efi_memmap_init succeeded..
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+---
+ drivers/firmware/qcom_scm-32.c | 32 ++++++++++++++++++++++++++++++--
+ 1 file changed, 30 insertions(+), 2 deletions(-)
 
-Thanks
-Dave
+diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
+index 48e2ef794ea3..f149a85d36b0 100644
+--- a/drivers/firmware/qcom_scm-32.c
++++ b/drivers/firmware/qcom_scm-32.c
+@@ -638,13 +638,41 @@ int __qcom_scm_restore_sec_cfg(struct device *dev, u32 device_id,
+ int __qcom_scm_iommu_secure_ptbl_size(struct device *dev, u32 spare,
+ 				      size_t *size)
+ {
+-	return -ENODEV;
++	int psize[2] = { 0, 0 };
++	int ret;
++
++	ret = qcom_scm_call(dev, QCOM_SCM_SVC_MP,
++			    QCOM_SCM_IOMMU_SECURE_PTBL_SIZE,
++			    &spare, sizeof(spare), &psize, sizeof(psize));
++	if (ret || psize[1])
++		return ret ? ret : -EINVAL;
++
++	*size = psize[0];
++
++	return 0;
+ }
+ 
+ int __qcom_scm_iommu_secure_ptbl_init(struct device *dev, u64 addr, u32 size,
+ 				      u32 spare)
+ {
+-	return -ENODEV;
++	struct msm_scm_ptbl_init {
++		__le32 paddr;
++		__le32 size;
++		__le32 spare;
++	} req;
++	int ret, scm_ret = 0;
++
++	req.paddr = addr;
++	req.size = size;
++	req.spare = spare;
++
++	ret = qcom_scm_call(dev, QCOM_SCM_SVC_MP,
++			    QCOM_SCM_IOMMU_SECURE_PTBL_INIT,
++			    &req, sizeof(req), &scm_ret, sizeof(scm_ret));
++	if (ret || scm_ret)
++		return ret ? ret : -EINVAL;
++
++	return 0;
+ }
+ 
+ int __qcom_scm_io_readl(struct device *dev, phys_addr_t addr,
+-- 
+2.21.0
 
