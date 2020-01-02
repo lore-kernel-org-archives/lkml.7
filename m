@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADE0C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11050C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3342F20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E4B20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005261;
-	bh=mtzmqGg3QZ/YgGmPmq8BQn51XP27MECATe9X3l1cymk=;
+	s=default; t=1578005266;
+	bh=0q0liihG/rS2VbIemaU/lIs9XpyflQYud4IQ5oZsDHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yyjb7ch+ZvF3qE1+wtxv9twetIXVEcEUeBcVMOlQyNfg1E6/fykmawEmKxHL4Z8zB
-	 uAFeTjgL5GFQCVl1drYtjXSLO4SRZF8Q8uksCeWpgmtyTQRurDKtVfFvd+DcMUiLE+
-	 Px4JVq0IWAclZEoMQXCyZQfjfUjBDz00ir+KAGPU=
+	b=VuQPQxns2WSYQPEzjSlrNrCJHv+kn2zZL0682V5SkKLBpQHD4pkvuJugeaHx7uCPx
+	 peVU9nzFYH4+hmF8PLvdt/oe7t8ROJSUruEKZ9PQqHqNzzyVbM8j0r+G84ebkV0ohY
+	 98qhPjPb9pLiC5QmvhQPhfZfyFR17bRZQ2dKkzJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730598AbgABWrk (ORCPT
+        id S1729671AbgABWrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:47:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60266 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:47:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbgABW3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:29:20 -0500
+        id S1729706AbgABW3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:29:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B16C20866;
-        Thu,  2 Jan 2020 22:29:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5111122525;
+        Thu,  2 Jan 2020 22:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004159;
-        bh=mtzmqGg3QZ/YgGmPmq8BQn51XP27MECATe9X3l1cymk=;
+        s=default; t=1578004152;
+        bh=0q0liihG/rS2VbIemaU/lIs9XpyflQYud4IQ5oZsDHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x/iFHEDyoh712Vq2qS19TTEjRrwiBry+xbNcu/oEkJBg9lxwgRuQ/VbhjWyG9EuUk
-         NKmF/dpqf8+xUfdapvaRtoz4btdoyePxAJdU7PWofbm1DDh7ag0egrmGucRbDNIrOy
-         2U7mgUh4qbLYGWJPUb20s9RSKtCp0LdlJnBw0sI4=
+        b=vX7oYh4x/y2MSyuLvkhwINW92f0VgviREeYELIzZQe68eCQdvl9ysP9745EHy2jHl
+         U/jpaTxxglxdoU1LW3dWN/7uCi+kITzjCCO7txcSmKptiZk4rVcKoYKaEaq3r3JI3v
+         AINlCACrhKOq/2IViZ60l4rKs//nsXucYB0ubZr4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hou Bao Hou <houbao@codeaurora.org>,
-        Anilkumar Kolli <akolli@codeaurora.org>,
-        Miaoqing Pan <miaoqing@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 062/171] ath10k: fix get invalid tx rate for Mesh metric
-Date:   Thu,  2 Jan 2020 23:06:33 +0100
-Message-Id: <20200102220555.498918634@linuxfoundation.org>
+Subject: [PATCH 4.9 060/171] perf probe: Skip end-of-sequence and non statement lines
+Date:   Thu,  2 Jan 2020 23:06:31 +0100
+Message-Id: <20200102220555.227215580@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -62,40 +62,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaoqing Pan <miaoqing@codeaurora.org>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 05a11003a56507023f18d3249a4d4d119c0a3e9c ]
+[ Upstream commit f4d99bdfd124823a81878b44b5e8750b97f73902 ]
 
-ath10k does not provide transmit rate info per MSDU
-in tx completion, mark that as -1 so mac80211
-will ignore the rates. This fixes mac80211 update Mesh
-link metric with invalid transmit rate info.
+Skip end-of-sequence and non-statement lines while walking through lines
+list.
 
-Tested HW: QCA9984
-Tested FW: 10.4-3.9.0.2-00035
+The "end-of-sequence" line information means:
 
-Signed-off-by: Hou Bao Hou <houbao@codeaurora.org>
-Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
-Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+ "the current address is that of the first byte after the
+  end of a sequence of target machine instructions."
+ (DWARF version 4 spec 6.2.2)
+
+This actually means out of scope and we can not probe on it.
+
+On the other hand, the statement lines (is_stmt) means:
+
+ "the current instruction is a recommended breakpoint location.
+  A recommended breakpoint location is intended to “represent”
+  a line, a statement and/or a semantically distinct subpart
+  of a statement."
+
+ (DWARF version 4 spec 6.2.2)
+
+So, non-statement line info also should be skipped.
+
+These can reduce unneeded probe points and also avoid an error.
+
+E.g. without this patch:
+
+  # perf probe -a "clear_tasks_mm_cpumask:1"
+  Added new events:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_2 (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_3 (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_4 (on clear_tasks_mm_cpumask:1)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask_4 -aR sleep 1
+
+  #
+
+This puts 5 probes on one line, but acutally it's not inlined function.
+This is because there are many non statement instructions at the
+function prologue.
+
+With this patch:
+
+  # perf probe -a "clear_tasks_mm_cpumask:1"
+  Added new event:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
+
+  #
+
+Now perf-probe skips unneeded addresses.
+
+Committer testing:
+
+Slightly different results, but similar:
+
+Before:
+
+  # uname -a
+  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+  #
+  # perf probe -a "clear_tasks_mm_cpumask:1"
+  Added new events:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_2 (on clear_tasks_mm_cpumask:1)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask_2 -aR sleep 1
+
+  #
+
+After:
+
+  # perf probe -a "clear_tasks_mm_cpumask:1"
+  Added new event:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
+
+  # perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
+  #
+
+Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157241936090.32002.12156347518596111660.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/txrx.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/util/dwarf-aux.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath10k/txrx.c b/drivers/net/wireless/ath/ath10k/txrx.c
-index 9852c5d51139..beeb6be06939 100644
---- a/drivers/net/wireless/ath/ath10k/txrx.c
-+++ b/drivers/net/wireless/ath/ath10k/txrx.c
-@@ -99,6 +99,8 @@ int ath10k_txrx_tx_unref(struct ath10k_htt *htt,
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 41bfb4c977d0..7eec3ae7b3c5 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -770,6 +770,7 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
+ 	int decl = 0, inl;
+ 	Dwarf_Die die_mem, *cu_die;
+ 	size_t nlines, i;
++	bool flag;
  
- 	info = IEEE80211_SKB_CB(msdu);
- 	memset(&info->status, 0, sizeof(info->status));
-+	info->status.rates[0].idx = -1;
-+
- 	trace_ath10k_txrx_tx_unref(ar, tx_done->msdu_id);
- 
- 	if (tx_done->status == HTT_TX_COMPL_STATE_DISCARD) {
+ 	/* Get the CU die */
+ 	if (dwarf_tag(rt_die) != DW_TAG_compile_unit) {
+@@ -800,6 +801,12 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
+ 				  "Possible error in debuginfo.\n");
+ 			continue;
+ 		}
++		/* Skip end-of-sequence */
++		if (dwarf_lineendsequence(line, &flag) != 0 || flag)
++			continue;
++		/* Skip Non statement line-info */
++		if (dwarf_linebeginstatement(line, &flag) != 0 || !flag)
++			continue;
+ 		/* Filter lines based on address */
+ 		if (rt_die != cu_die) {
+ 			/*
 -- 
 2.20.1
 
