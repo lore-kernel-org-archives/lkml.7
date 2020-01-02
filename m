@@ -2,192 +2,84 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_QP_LONG_LINE,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FF6C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E75CDC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB01520692
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:19:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="sL1RfpVM"
+	by mail.kernel.org (Postfix) with ESMTP id BE9BE215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:21:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbgABQT4 (ORCPT
+        id S1728839AbgABQVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 11:19:56 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36662 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728678AbgABQTz (ORCPT
+        Thu, 2 Jan 2020 11:21:40 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:49852 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728678AbgABQVj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 11:19:55 -0500
-Received: by mail-qk1-f196.google.com with SMTP id a203so32083729qkc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 08:19:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=AvD0QiBESqW0G7LnvKlO+TVu2M/tDLdQS5v3bjNXQuk=;
-        b=sL1RfpVM5J8OwjnlP/uhIc5WMEFW17QfPvDDaB23wQx3uNHW4WV11QGWSfkyNqg03Y
-         nsn+88VOiuLBEQUbY3255KMO5YJ9Dsv7+TbmLXPLD1B1FkkqluxHvgWPVBUzLBgXwtgs
-         BUMmza2bSw5cgisGNTWNLUjYH5Aa+/upH17JBl4cX9DAI4i/SdeKmElV9DltvAjH+A+U
-         FxhPNb3dnyTpQuyhy0X9Apb3bTcj1vIsaiV3Zbo+Vm/ldxYfuMwJ9JzsHMKy12NVylQW
-         Ij4PVE9Ryi3GyxAgZ4BicSt2oqq0HfihZ1E3kICcNDILJCTHZVyNF8Z/JEKhn2BkiHn1
-         wb6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=AvD0QiBESqW0G7LnvKlO+TVu2M/tDLdQS5v3bjNXQuk=;
-        b=Bt64hQ22s3SVWyKZiiPWGCq/jyEQRhh/j0L1bCUtXhsNi5z2a2Lc23l6xRn1PJBRsx
-         AMeJJcxFR9gRxc18bm2hb6HQB2rPU/zPD5clKqxfvYKf3wuMLlB2VLGbYquQdzk5NddI
-         Mjw5rjGWZZtvjJp8Vljb3KJ5ldpDKEpfqcD0FVyOoRx6K2pC+ufDxSim9Qs2+Kij87ka
-         tPYfIkNB7q9/ar1XqewLqy1vCSMY7e5yEPE5+fcui9SP2SvJeQK06s09J9NZtRDj4d2m
-         LPIQzBJojdqJAWVOY4WTcpNMOoHERiwV/p3z/wBwNClv/vUIVJ6pCPjapedIacK/BZHJ
-         ibRw==
-X-Gm-Message-State: APjAAAW0O1fW+PZ3Jo0d+q/Oj+LRlNMlotT7qGp5jYDDaGDaGCMPG28D
-        etpcqkifmuTb7LjINv4PcsAeYQ==
-X-Google-Smtp-Source: APXvYqxnMnJA0eF10zGRq9HRnzIjXOCnkugv43lLuLc++hI4RTeu/Z0R0juFtbIhR5TeSm2ZrG/a9A==
-X-Received: by 2002:a05:620a:136e:: with SMTP id d14mr65398571qkl.342.1577981994212;
-        Thu, 02 Jan 2020 08:19:54 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id w1sm17341776qtk.31.2020.01.02.08.19.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jan 2020 08:19:53 -0800 (PST)
+        Thu, 2 Jan 2020 11:21:39 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id ECD25804DA;
+        Thu,  2 Jan 2020 17:21:35 +0100 (CET)
+Date:   Thu, 2 Jan 2020 17:21:34 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        boris.brezillon@bootlin.com, airlied@linux.ie,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        peda@axentia.se, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] fixes for atmel-hlcdc
+Message-ID: <20200102162134.GA13454@ravnborg.org>
+References: <1576672109-22707-1-git-send-email-claudiu.beznea@microchip.com>
+ <20200102090554.GB29446@ravnborg.org>
+ <20200102160534.GJ22390@dell>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] xfs: Fix false positive lockdep warning with sb_internal & fs_reclaim
-Date:   Thu, 2 Jan 2020 11:19:51 -0500
-Message-Id: <24F33D67-E975-48E1-A285-0D0129CC3033@lca.pw>
-References: <20200102155208.8977-1-longman@redhat.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dave Chinner <david@fromorbit.com>,
-        Eric Sandeen <sandeen@redhat.com>
-In-Reply-To: <20200102155208.8977-1-longman@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-X-Mailer: iPhone Mail (17C54)
+Content-Disposition: inline
+In-Reply-To: <20200102160534.GJ22390@dell>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=sy_eDPmhS6KF6TahjTwA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Lee.
 
+> > >   ("drm/atmel-hlcdc: allow selecting a higher pixel-clock than requested")
+> > > 
+> > > Claudiu Beznea (5):
+> > >   drm: atmel-hlcdc: use double rate for pixel clock only if supported
+> > >   drm: atmel-hlcdc: enable clock before configuring timing engine
+> > 
+> > >   mfd: atmel-hlcdc: add struct device member to struct
+> > >     atmel_hlcdc_regmap
+> > >   mfd: atmel-hlcdc: return in case of error
+> > 
+> > Would it be OK to apply the to drm-misc-next, or shal they go in via
+> > your mfd tree?
+> 
+> How are they related to the other patches?  Do they have build-time
+> dependencies on any of the other patches, or vice versa? 
+No build time dependencies.
 
-> On Jan 2, 2020, at 10:52 AM, Waiman Long <longman@redhat.com> wrote:
->=20
-> Depending on the workloads, the following circular locking dependency
-> warning between sb_internal (a percpu rwsem) and fs_reclaim (a pseudo
-> lock) may show up:
->=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-> WARNING: possible circular locking dependency detected
-> 5.0.0-rc1+ #60 Tainted: G        W
-> ------------------------------------------------------
-> fsfreeze/4346 is trying to acquire lock:
-> 0000000026f1d784 (fs_reclaim){+.+.}, at:
-> fs_reclaim_acquire.part.19+0x5/0x30
->=20
-> but task is already holding lock:
-> 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
->=20
-> which lock already depends on the new lock.
->  :
-> Possible unsafe locking scenario:
->=20
->       CPU0                    CPU1
->       ----                    ----
->  lock(sb_internal);
->                               lock(fs_reclaim);
->                               lock(sb_internal);
->  lock(fs_reclaim);
->=20
-> *** DEADLOCK ***
->=20
-> 4 locks held by fsfreeze/4346:
-> #0: 00000000b478ef56 (sb_writers#8){++++}, at: percpu_down_write+0xb4/0x65=
-0
-> #1: 000000001ec487a9 (&type->s_umount_key#28){++++}, at: freeze_super+0xda=
-/0x290
-> #2: 000000003edbd5a0 (sb_pagefaults){++++}, at: percpu_down_write+0xb4/0x6=
-50
-> #3: 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650=
+But from the description of "atmel-hlcdc: return in case of error":
+"
+For HLCDC timing engine configurations bit ATMEL_HLCDC_SIP of
+ATMEL_HLCDC_SR needs to be polled before applying new config.
+"
+I get that changing timing for the HLCDC may fail if these
+patches are not applied.
+So it is only to have updated hlcdc support in drm-misc-next
+for further testing.
 
->=20
-> stack backtrace:
-> Call Trace:
-> dump_stack+0xe0/0x19a
-> print_circular_bug.isra.10.cold.34+0x2f4/0x435
-> check_prev_add.constprop.19+0xca1/0x15f0
-> validate_chain.isra.14+0x11af/0x3b50
-> __lock_acquire+0x728/0x1200
-> lock_acquire+0x269/0x5a0
-> fs_reclaim_acquire.part.19+0x29/0x30
-> fs_reclaim_acquire+0x19/0x20
-> kmem_cache_alloc+0x3e/0x3f0
-> kmem_zone_alloc+0x79/0x150
-> xfs_trans_alloc+0xfa/0x9d0
-> xfs_sync_sb+0x86/0x170
-> xfs_log_sbcount+0x10f/0x140
-> xfs_quiesce_attr+0x134/0x270
-> xfs_fs_freeze+0x4a/0x70
-> freeze_super+0x1af/0x290
-> do_vfs_ioctl+0xedc/0x16c0
-> ksys_ioctl+0x41/0x80
-> __x64_sys_ioctl+0x73/0xa9
-> do_syscall_64+0x18f/0xd23
-> entry_SYSCALL_64_after_hwframe+0x49/0xbe
->=20
-> According to Dave Chinner:
->=20
->  Freezing the filesystem, after all the data has been cleaned. IOWs
->  memory reclaim will never run the above writeback path when
->  the freeze process is trying to allocate a transaction here because
->  there are no dirty data pages in the filesystem at this point.
->=20
->  Indeed, this xfs_sync_sb() path sets XFS_TRANS_NO_WRITECOUNT so that
->  it /doesn't deadlock/ by taking freeze references for the
->  transaction. We've just drained all the transactions
->  in progress and written back all the dirty metadata, too, and so the
->  filesystem is completely clean and only needs the superblock to be
->  updated to complete the freeze process. And to do that, it does not
->  take a freeze reference because calling sb_start_intwrite() here
->  would deadlock.
->=20
->  IOWs, this is a false positive, caused by the fact that
->  xfs_trans_alloc() is called from both above and below memory reclaim
->  as well as within /every level/ of freeze processing. Lockdep is
->  unable to describe the staged flush logic in the freeze process that
->  prevents deadlocks from occurring, and hence we will pretty much
->  always see false positives in the freeze path....
->=20
-> Perhaps breaking the fs_reclaim pseudo lock into a per filesystem lock
-> may fix the issue. However, that will greatly complicate the logic and
-> may not be worth it.
->=20
-> Another way to fix it is to disable the taking of the fs_reclaim
-> pseudo lock when in the freezing code path as a reclaim on the freezed
-> filesystem is not possible as stated above. This patch takes this
-> approach by setting the __GFP_NOLOCKDEP flag in the slab memory
-> allocation calls when the filesystem has been freezed.
->=20
-> Without this patch, the command sequence below will show that the lock
-> dependency chain sb_internal -> fs_reclaim exists.
->=20
-> # fsfreeze -f /home
-> # fsfreeze --unfreeze /home
-> # grep -i fs_reclaim -C 3 /proc/lockdep_chains | grep -C 5 sb_internal
->=20
-> After applying the patch, such sb_internal -> fs_reclaim lock dependency
-> chain can no longer be found. Because of that, the locking dependency
-> warning will not be shown.
-
-There was an attempt to fix this in the past, but Dave rejected right away f=
-or any workaround in xfs and insisted to make lockdep smarter instead. No su=
-re your approach will make any difference this time. Good luck.=
+	Sam
