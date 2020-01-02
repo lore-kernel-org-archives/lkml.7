@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9031C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA092C3276E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9EFC2467A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F77420866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:23:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003804;
-	bh=d4sefYQ2m87dOwAhA8yb6VvH2WIHKektXLZdHJodcCg=;
+	s=default; t=1578003810;
+	bh=IBcn7uMd9ZRLxR7Vh+lZjNGm/8Vp8UOrr27oApXzvhQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KqejgQLRsgCCjxv++tD+nzfrxRe3i5lkHqo/K3uk5BOES/0eeoAQknKICH/i82e8a
-	 EjTsHHCEKT9W5xJVFRbZTEQqHxPydugi85n7rXw2+G8jSQkpf/utRM33FyFq0iGH0m
-	 wzOrF8vJ7yWZFIKxWOqt4Q+Lu+4KEGkTfsL9budM=
+	b=l2U2U/Fuy8A6clwtLntLWHN7h8QrRRbICLpdxghP9O8qLp44FYZQWBIpZmlC/o4n+
+	 losVrf/Qjt4KDnv7qRUupx3I8SIJ6QdTiKPoQcA42/y37SlWZNUZlj1wVOY2cBptvb
+	 6UquRL2yfsNjN1CURQRmgTb93aXwP5lCiSWagk3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbgABWXX (ORCPT
+        id S1729231AbgABWX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:23:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44808 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:23:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729221AbgABWXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:23:11 -0500
+        id S1728144AbgABWX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:23:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22F9020863;
-        Thu,  2 Jan 2020 22:23:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C87A20866;
+        Thu,  2 Jan 2020 22:23:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003790;
-        bh=d4sefYQ2m87dOwAhA8yb6VvH2WIHKektXLZdHJodcCg=;
+        s=default; t=1578003805;
+        bh=IBcn7uMd9ZRLxR7Vh+lZjNGm/8Vp8UOrr27oApXzvhQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UOed+SrYOFyNXZy6DQxe5WKgOEB1TI8oFCxRKK+1ZMM7xtKcVOioCak1Zo1/uuHvd
-         Qdq5bBgMjRwk8QX30g6XtOvjUMGWH67xloV+0huh2BFdabFp8J+PdKxHDEbFETxUll
-         V4XAH4sBV2KbDud5vs8atn59BQ4HZE5UvVLFE6zc=
+        b=e6LPgiRFewSwPzFlLaokNBG4bUC6POdRLTzIZWQXFWP8AJ/eCSpyhZx6w1F+0KOKG
+         7wpses/MewHrPsbGwBwSPT+J4WquqGx4otybY3NsAIgs1xER31/Sk2zFC9elaPbBu/
+         VjChXYHWIbT7d6SG3W3gP5mqqKMwqaOniqx67ni4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        David Ahern <dsahern@gmail.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 104/114] net/dst: do not confirm neighbor for vxlan and geneve pmtu update
-Date:   Thu,  2 Jan 2020 23:07:56 +0100
-Message-Id: <20200102220039.676886345@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 4.19 110/114] gtp: fix an use-after-free in ipv4_pdp_find()
+Date:   Thu,  2 Jan 2020 23:08:02 +0100
+Message-Id: <20200102220040.214375202@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -61,44 +59,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit f081042d128a0c7acbd67611def62e1b52e2d294 ]
+[ Upstream commit 94dc550a5062030569d4aa76e10e50c8fc001930 ]
 
-When do IPv6 tunnel PMTU update and calls __ip6_rt_update_pmtu() in the end,
-we should not call dst_confirm_neigh() as there is no two-way communication.
+ipv4_pdp_find() is called in TX packet path of GTP.
+ipv4_pdp_find() internally uses gtp->tid_hash to lookup pdp context.
+In the current code, gtp->tid_hash and gtp->addr_hash are freed by
+->dellink(), which is gtp_dellink().
+But gtp_dellink() would be called while packets are processing.
+So, gtp_dellink() should not free gtp->tid_hash and gtp->addr_hash.
+Instead, dev->priv_destructor() would be used because this callback
+is called after all packet processing safely.
 
-So disable the neigh confirm for vxlan and geneve pmtu update.
+Test commands:
+    ip link add veth1 type veth peer name veth2
+    ip a a 172.0.0.1/24 dev veth1
+    ip link set veth1 up
+    ip a a 172.99.0.1/32 dev lo
 
-v5: No change.
-v4: No change.
-v3: Do not remove dst_confirm_neigh, but add a new bool parameter in
-    dst_ops.update_pmtu to control whether we should do neighbor confirm.
-    Also split the big patch to small ones for each area.
-v2: Remove dst_confirm_neigh in __ip6_rt_update_pmtu.
+    gtp-link add gtp1 &
 
-Fixes: a93bf0ff4490 ("vxlan: update skb dst pmtu on tx path")
-Fixes: 52a589d51f10 ("geneve: update skb dst pmtu on tx path")
-Reviewed-by: Guillaume Nault <gnault@redhat.com>
-Tested-by: Guillaume Nault <gnault@redhat.com>
-Acked-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+    gtp-tunnel add gtp1 v1 200 100 172.99.0.2 172.0.0.2
+    ip r a  172.99.0.2/32 dev gtp1
+    ip link set gtp1 mtu 1500
+
+    ip netns add ns2
+    ip link set veth2 netns ns2
+    ip netns exec ns2 ip a a 172.0.0.2/24 dev veth2
+    ip netns exec ns2 ip link set veth2 up
+    ip netns exec ns2 ip a a 172.99.0.2/32 dev lo
+    ip netns exec ns2 ip link set lo up
+
+    ip netns exec ns2 gtp-link add gtp2 &
+    ip netns exec ns2 gtp-tunnel add gtp2 v1 100 200 172.99.0.1 172.0.0.1
+    ip netns exec ns2 ip r a 172.99.0.1/32 dev gtp2
+    ip netns exec ns2 ip link set gtp2 mtu 1500
+
+    hping3 172.99.0.2 -2 --flood &
+    ip link del gtp1
+
+Splat looks like:
+[   72.568081][ T1195] BUG: KASAN: use-after-free in ipv4_pdp_find.isra.12+0x130/0x170 [gtp]
+[   72.568916][ T1195] Read of size 8 at addr ffff8880b9a35d28 by task hping3/1195
+[   72.569631][ T1195]
+[   72.569861][ T1195] CPU: 2 PID: 1195 Comm: hping3 Not tainted 5.5.0-rc1 #199
+[   72.570547][ T1195] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[   72.571438][ T1195] Call Trace:
+[   72.571764][ T1195]  dump_stack+0x96/0xdb
+[   72.572171][ T1195]  ? ipv4_pdp_find.isra.12+0x130/0x170 [gtp]
+[   72.572761][ T1195]  print_address_description.constprop.5+0x1be/0x360
+[   72.573400][ T1195]  ? ipv4_pdp_find.isra.12+0x130/0x170 [gtp]
+[   72.573971][ T1195]  ? ipv4_pdp_find.isra.12+0x130/0x170 [gtp]
+[   72.574544][ T1195]  __kasan_report+0x12a/0x16f
+[   72.575014][ T1195]  ? ipv4_pdp_find.isra.12+0x130/0x170 [gtp]
+[   72.575593][ T1195]  kasan_report+0xe/0x20
+[   72.576004][ T1195]  ipv4_pdp_find.isra.12+0x130/0x170 [gtp]
+[   72.576577][ T1195]  gtp_build_skb_ip4+0x199/0x1420 [gtp]
+[ ... ]
+[   72.647671][ T1195] BUG: unable to handle page fault for address: ffff8880b9a35d28
+[   72.648512][ T1195] #PF: supervisor read access in kernel mode
+[   72.649158][ T1195] #PF: error_code(0x0000) - not-present page
+[   72.649849][ T1195] PGD a6c01067 P4D a6c01067 PUD 11fb07067 PMD 11f939067 PTE 800fffff465ca060
+[   72.652958][ T1195] Oops: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+[   72.653834][ T1195] CPU: 2 PID: 1195 Comm: hping3 Tainted: G    B             5.5.0-rc1 #199
+[   72.668062][ T1195] RIP: 0010:ipv4_pdp_find.isra.12+0x86/0x170 [gtp]
+[ ... ]
+[   72.679168][ T1195] Call Trace:
+[   72.679603][ T1195]  gtp_build_skb_ip4+0x199/0x1420 [gtp]
+[   72.681915][ T1195]  ? ipv4_pdp_find.isra.12+0x170/0x170 [gtp]
+[   72.682513][ T1195]  ? lock_acquire+0x164/0x3b0
+[   72.682966][ T1195]  ? gtp_dev_xmit+0x35e/0x890 [gtp]
+[   72.683481][ T1195]  gtp_dev_xmit+0x3c2/0x890 [gtp]
+[ ... ]
+
+Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/dst.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/gtp.c |   34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
---- a/include/net/dst.h
-+++ b/include/net/dst.h
-@@ -546,7 +546,7 @@ static inline void skb_tunnel_check_pmtu
- 	u32 encap_mtu = dst_mtu(encap_dst);
- 
- 	if (skb->len > encap_mtu - headroom)
--		skb_dst_update_pmtu(skb, encap_mtu - headroom);
-+		skb_dst_update_pmtu_no_confirm(skb, encap_mtu - headroom);
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -644,9 +644,16 @@ static void gtp_link_setup(struct net_de
  }
  
- #endif /* _NET_DST_H */
+ static int gtp_hashtable_new(struct gtp_dev *gtp, int hsize);
+-static void gtp_hashtable_free(struct gtp_dev *gtp);
+ static int gtp_encap_enable(struct gtp_dev *gtp, struct nlattr *data[]);
+ 
++static void gtp_destructor(struct net_device *dev)
++{
++	struct gtp_dev *gtp = netdev_priv(dev);
++
++	kfree(gtp->addr_hash);
++	kfree(gtp->tid_hash);
++}
++
+ static int gtp_newlink(struct net *src_net, struct net_device *dev,
+ 		       struct nlattr *tb[], struct nlattr *data[],
+ 		       struct netlink_ext_ack *extack)
+@@ -681,13 +688,15 @@ static int gtp_newlink(struct net *src_n
+ 
+ 	gn = net_generic(dev_net(dev), gtp_net_id);
+ 	list_add_rcu(&gtp->list, &gn->gtp_dev_list);
++	dev->priv_destructor = gtp_destructor;
+ 
+ 	netdev_dbg(dev, "registered new GTP interface\n");
+ 
+ 	return 0;
+ 
+ out_hashtable:
+-	gtp_hashtable_free(gtp);
++	kfree(gtp->addr_hash);
++	kfree(gtp->tid_hash);
+ out_encap:
+ 	gtp_encap_disable(gtp);
+ 	return err;
+@@ -696,9 +705,14 @@ out_encap:
+ static void gtp_dellink(struct net_device *dev, struct list_head *head)
+ {
+ 	struct gtp_dev *gtp = netdev_priv(dev);
++	struct pdp_ctx *pctx;
++	int i;
++
++	for (i = 0; i < gtp->hash_size; i++)
++		hlist_for_each_entry_rcu(pctx, &gtp->tid_hash[i], hlist_tid)
++			pdp_context_delete(pctx);
+ 
+ 	gtp_encap_disable(gtp);
+-	gtp_hashtable_free(gtp);
+ 	list_del_rcu(&gtp->list);
+ 	unregister_netdevice_queue(dev, head);
+ }
+@@ -776,20 +790,6 @@ err1:
+ 	return -ENOMEM;
+ }
+ 
+-static void gtp_hashtable_free(struct gtp_dev *gtp)
+-{
+-	struct pdp_ctx *pctx;
+-	int i;
+-
+-	for (i = 0; i < gtp->hash_size; i++)
+-		hlist_for_each_entry_rcu(pctx, &gtp->tid_hash[i], hlist_tid)
+-			pdp_context_delete(pctx);
+-
+-	synchronize_rcu();
+-	kfree(gtp->addr_hash);
+-	kfree(gtp->tid_hash);
+-}
+-
+ static struct sock *gtp_encap_enable_socket(int fd, int type,
+ 					    struct gtp_dev *gtp)
+ {
 
 
