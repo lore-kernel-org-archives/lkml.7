@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85302C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56C4C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6102464E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D84F227BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004118;
-	bh=JmWdkvsqbTXLiuAcRrK4BVTSN7ED4satjx6b3f6/RAA=;
+	s=default; t=1578004121;
+	bh=kl4Ff26FZIbpndBMnWNEJ8X5DcfRqeLex2D91wYf+dI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v3AJeriaA2AifqjCUWcrTAcSL4M9kFdk9k5fQj9Uy/HHJtJsGgpVCuLMnoajhJJLW
-	 YrT2fMReWF0CBgmKz96VmN1abDYdqzHHpc9wpObpFWa+ymsvDEnux3WM/eW3ZnYbxa
-	 QNJpmUony3AVldKs9azRqIw55+jK/MzsNLFvimkQ=
+	b=vSqfDyyMQ0iyGkBa7JW5bkmxmXvWTTRORc3NKvQ8YdNJ+K/DZSxHd+X3TtITWEesq
+	 gzrZSl6s42wJvske6c7Zskgg5s72mgx2SctVH4/EXM+cppmrGAGBb5gyRVI+aG8JT3
+	 poCEMVpYJI3QqqiTQZwPpO/rTb/ySdJL24dM+TOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729473AbgABW2g (ORCPT
+        id S1727384AbgABW2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:28:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58376 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:28:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729670AbgABW2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:28:31 -0500
+        id S1729892AbgABW2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:28:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E65642464E;
-        Thu,  2 Jan 2020 22:28:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B642222525;
+        Thu,  2 Jan 2020 22:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004110;
-        bh=JmWdkvsqbTXLiuAcRrK4BVTSN7ED4satjx6b3f6/RAA=;
+        s=default; t=1578004115;
+        bh=kl4Ff26FZIbpndBMnWNEJ8X5DcfRqeLex2D91wYf+dI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cb2vvpjQGgP71RxxtHMAUiH85NKCSc30G9qEr3g2QKs+w2GcXgNDt9PHAa5vAZYs6
-         bc4qQtxO2zmOGGZXvLclr4W0MEGL4Sjx6upiB4tJZ8EEbdNluM30gOtcilrHK0DdGc
-         66vMCa0/f1uGszuR+UY3J5+/pAv2sX6o8HKR/XtQ=
+        b=yiPWpS/PANE71wI8iU9l841wiEtgKpUBg9Fuyjdq6MUF4MEZWDJr4pwItFMn28C3i
+         lU7UmxpcHxC//TPnm+9owLJm3BiyUnDYKSS+ZHDp/XqUpvweOQ5lQcslkkhpUeKn5G
+         CCv2X5VZO7i3CNtKIY0Nv9BJpw1oflLRbtyS7BsQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Allen Pais <allen.pais@oracle.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 014/171] libertas: fix a potential NULL pointer dereference
-Date:   Thu,  2 Jan 2020 23:05:45 +0100
-Message-Id: <20200102220548.982792915@linuxfoundation.org>
+Subject: [PATCH 4.9 016/171] media: am437x-vpfe: Setting STD to current value is not an error
+Date:   Thu,  2 Jan 2020 23:05:47 +0100
+Message-Id: <20200102220549.248125902@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -60,43 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Allen Pais <allen.pais@oracle.com>
+From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit 7da413a18583baaf35dd4a8eb414fa410367d7f2 ]
+[ Upstream commit 13aa21cfe92ce9ebb51824029d89f19c33f81419 ]
 
-alloc_workqueue is not checked for errors and as a result,
-a potential NULL dereference could occur.
+VIDIOC_S_STD should not return an error if the value is identical
+to the current one.
+This error was highlighted by the v4l2-compliance test.
 
-Signed-off-by: Allen Pais <allen.pais@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Acked-by: Lad Prabhakar <prabhakar.csengg@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/libertas/if_sdio.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/media/platform/am437x/am437x-vpfe.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/wireless/marvell/libertas/if_sdio.c b/drivers/net/wireless/marvell/libertas/if_sdio.c
-index 06a57c708992..44da911c9a1a 100644
---- a/drivers/net/wireless/marvell/libertas/if_sdio.c
-+++ b/drivers/net/wireless/marvell/libertas/if_sdio.c
-@@ -1229,6 +1229,10 @@ static int if_sdio_probe(struct sdio_func *func,
+diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+index 05489a401c5c..bd500f12d0f7 100644
+--- a/drivers/media/platform/am437x/am437x-vpfe.c
++++ b/drivers/media/platform/am437x/am437x-vpfe.c
+@@ -1847,6 +1847,10 @@ static int vpfe_s_std(struct file *file, void *priv, v4l2_std_id std_id)
+ 	if (!(sdinfo->inputs[0].capabilities & V4L2_IN_CAP_STD))
+ 		return -ENODATA;
  
- 	spin_lock_init(&card->lock);
- 	card->workqueue = alloc_workqueue("libertas_sdio", WQ_MEM_RECLAIM, 0);
-+	if (unlikely(!card->workqueue)) {
-+		ret = -ENOMEM;
-+		goto err_queue;
-+	}
- 	INIT_WORK(&card->packet_worker, if_sdio_host_to_card_worker);
- 	init_waitqueue_head(&card->pwron_waitq);
- 
-@@ -1282,6 +1286,7 @@ err_activate_card:
- 	lbs_remove_card(priv);
- free:
- 	destroy_workqueue(card->workqueue);
-+err_queue:
- 	while (card->packets) {
- 		packet = card->packets;
- 		card->packets = card->packets->next;
++	/* if trying to set the same std then nothing to do */
++	if (vpfe_standards[vpfe->std_index].std_id == std_id)
++		return 0;
++
+ 	/* If streaming is started, return error */
+ 	if (vb2_is_busy(&vpfe->buffer_queue)) {
+ 		vpfe_err(vpfe, "%s device busy\n", __func__);
 -- 
 2.20.1
 
