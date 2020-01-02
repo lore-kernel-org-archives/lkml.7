@@ -2,193 +2,101 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FD7C2D0DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A94FAC2D0DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 654B821655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7539521655
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:48:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="OXFQiSuv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727704AbgABHm5 (ORCPT
+        id S1727708AbgABHrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 02:42:57 -0500
-Received: from mailoutvs63.siol.net ([185.57.226.254]:36069 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726145AbgABHm4 (ORCPT
+        Thu, 2 Jan 2020 02:47:09 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44846 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbgABHrI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 02:42:56 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 8082052133B;
-        Thu,  2 Jan 2020 08:42:52 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id ad5ClAWr3I4e; Thu,  2 Jan 2020 08:42:52 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 09C39521341;
-        Thu,  2 Jan 2020 08:42:52 +0100 (CET)
-Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id A612F52133B;
-        Thu,  2 Jan 2020 08:42:51 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        roman.stratiienko@globallogic.com
-Cc:     Roman Stratiienko <roman.stratiienko@globallogic.com>
-Subject: Re: [PATCH v3 2/2] drm/sun4i: Use CRTC size instead of PRIMARY plane size as mixer frame.
-Date:   Thu, 02 Jan 2020 08:42:51 +0100
-Message-ID: <2989265.aV6nBDHxoP@jernej-laptop>
-In-Reply-To: <20200101204750.50541-2-roman.stratiienko@globallogic.com>
-References: <20200101204750.50541-1-roman.stratiienko@globallogic.com> <20200101204750.50541-2-roman.stratiienko@globallogic.com>
+        Thu, 2 Jan 2020 02:47:08 -0500
+Received: by mail-lj1-f194.google.com with SMTP id u71so39853026lje.11
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 23:47:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UMsZF9sy1sW5J3kVgI/fUJy6gl0uFtVuKYIkDGAzFWk=;
+        b=OXFQiSuvcrGsBxZPaeQirPMFrClNc9rDGbdyE6WGJrLnluSMK/JxkV6wp3qL3rrGcg
+         0W9yJj/F/VsGBt1ubZQiz5WOVNVXq+K4JE9iUJHCTqRu2NPvcNHPkqF3HqMmEVTWLjdo
+         eOuQVuA14rxB2aatZqQHIOTFs7x3bg6wO5LBoaMjaG7OBpLxL+HE6xUQcbuZYOVMOZVi
+         tKCutxoMGHTdyMj7Bxfk9EZMInhx0rPic1cpynmCz0/B9rIU/S2YtffUNkjXm4t/UK5e
+         whbNjDIPkHBZ7wO37ouNQgaJ/UvxTA49ndlm3LDOEoOY4nYBbAd2ejQdXoLAntOuqeIM
+         Ergg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UMsZF9sy1sW5J3kVgI/fUJy6gl0uFtVuKYIkDGAzFWk=;
+        b=a0cXByHH5JXCTJpVhiGDcpIM2ihGeZRs8oF05czhdJBxPtFwZrsA74UjlGmL4UZYD8
+         O1C4qwqZLrtzHFNf+zSWxkaeUVs4/gHLmreSVcG60f7QCDu5IS3LrXzwTilHXObNxckR
+         f9gZjqrMMewnI70Be6pupiklsNDz/VMc3+WmWWbNmxQ52OvcmPKV7zg8kCHWyTQEP2xS
+         oDwbOA/a0Chy/9VRdxkQ7ZTkK7QuQ6NezCWS9HpTiPw6v/B10XxXQ/8LF5iEzHRCQ5Lb
+         14Lni1WTZxxazGi4SzbYK7++4Ikg1mfPe2L0BSqbKtVSKGk96/tNkXZprZ+s0ZOAzIO+
+         gjig==
+X-Gm-Message-State: APjAAAXsO008LpVsD/9NxxUM64hiF/Fq4czU/mWth0MzY0O7jiK7mCl/
+        HfhFXyV8dlgP91lNH+grLl4WVQ==
+X-Google-Smtp-Source: APXvYqzXvJvrB746bC+D5/vKo4dprhrPwEdoz38wU1naeszOJA2/HlfkUqvs1vOG8GuyNYSLVhd1MA==
+X-Received: by 2002:a2e:8651:: with SMTP id i17mr38826910ljj.121.1577951226498;
+        Wed, 01 Jan 2020 23:47:06 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id u16sm22081579ljo.22.2020.01.01.23.47.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jan 2020 23:47:05 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id D26CE100528; Thu,  2 Jan 2020 10:47:05 +0300 (+03)
+Date:   Thu, 2 Jan 2020 10:47:05 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Jann Horn <jannh@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v7 1/4] x86/insn-eval: Add support for 64-bit kernel mode
+Message-ID: <20200102074705.n6cnvxrcojhlxqr5@box.shutemov.name>
+References: <20191218231150.12139-1-jannh@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218231150.12139-1-jannh@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
-
-Dne sreda, 01. januar 2020 ob 21:47:50 CET je 
-roman.stratiienko@globallogic.com napisal(a):
-> From: Roman Stratiienko <roman.stratiienko@globallogic.com>
+On Thu, Dec 19, 2019 at 12:11:47AM +0100, Jann Horn wrote:
+> To support evaluating 64-bit kernel mode instructions:
 > 
-> According to DRM documentation the only difference between PRIMARY
-> and OVERLAY plane is that each CRTC must have PRIMARY plane and
-> OVERLAY are optional.
+> Replace existing checks for user_64bit_mode() with a new helper that
+> checks whether code is being executed in either 64-bit kernel mode or
+> 64-bit user mode.
 > 
-> Allow PRIMARY plane to have dimension different from full-screen.
+> Select the GS base depending on whether the instruction is being
+> evaluated in kernel mode.
 > 
-> Fixes: 5bb5f5dafa1a ("drm/sun4i: Reorganize UI layer code in DE2")
-> Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
+> Signed-off-by: Jann Horn <jannh@google.com>
 
-This looks great now.
+In most cases you have struct insn around (or can easily pass it down to
+the place). Why not use insn->x86_64?
 
-Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
-
-What happened to other patches in the series? It would be nice to have a cover 
-letter for such cases, where you can explain reasons for dropped patches.
-
-Best regards,
-Jernej
-
-> ---
-> v2:
-> - Split commit in 2 parts
-> - Add Fixes line to the commit message
-> 
-> v3:
-> - Address review comments of v2 + removed 3 local varibles
-> - Change 'Fixes' line
-> 
-> Since I've put more changes from my side, please review/sign again.
-> ---
->  drivers/gpu/drm/sun4i/sun8i_mixer.c    | 28 ++++++++++++++++++++++++
->  drivers/gpu/drm/sun4i/sun8i_ui_layer.c | 30 --------------------------
->  2 files changed, 28 insertions(+), 30 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> b/drivers/gpu/drm/sun4i/sun8i_mixer.c index 8b803eb903b8..658cf442c121
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> @@ -257,6 +257,33 @@ const struct de2_fmt_info *sun8i_mixer_format_info(u32
-> format) return NULL;
->  }
-> 
-> +static void sun8i_mode_set(struct sunxi_engine *engine,
-> +			   struct drm_display_mode *mode)
-> +{
-> +	u32 size = SUN8I_MIXER_SIZE(mode->crtc_hdisplay, mode-
->crtc_vdisplay);
-> +	struct sun8i_mixer *mixer = engine_to_sun8i_mixer(engine);
-> +	u32 bld_base = sun8i_blender_base(mixer);
-> +	u32 val;
-> +
-> +	DRM_DEBUG_DRIVER("Mode change, updating global size W: %u H: %u\n",
-> +			 mode->crtc_hdisplay, mode->crtc_vdisplay);
-> +	regmap_write(mixer->engine.regs, SUN8I_MIXER_GLOBAL_SIZE, size);
-> +	regmap_write(mixer->engine.regs,
-> +		     SUN8I_MIXER_BLEND_OUTSIZE(bld_base), size);
-> +
-> +	if (mode->flags & DRM_MODE_FLAG_INTERLACE)
-> +		val = SUN8I_MIXER_BLEND_OUTCTL_INTERLACED;
-> +	else
-> +		val = 0;
-> +
-> +	regmap_update_bits(mixer->engine.regs,
-> +			   SUN8I_MIXER_BLEND_OUTCTL(bld_base),
-> +			   SUN8I_MIXER_BLEND_OUTCTL_INTERLACED,
-> +			   val);
-> +	DRM_DEBUG_DRIVER("Switching display mixer interlaced mode %s\n",
-> +			 val ? "on" : "off");
-> +}
-> +
->  static void sun8i_mixer_commit(struct sunxi_engine *engine)
->  {
->  	DRM_DEBUG_DRIVER("Committing changes\n");
-> @@ -310,6 +337,7 @@ static struct drm_plane **sun8i_layers_init(struct
-> drm_device *drm, static const struct sunxi_engine_ops sun8i_engine_ops = {
->  	.commit		= sun8i_mixer_commit,
->  	.layers_init	= sun8i_layers_init,
-> +	.mode_set	= sun8i_mode_set,
->  };
-> 
->  static struct regmap_config sun8i_mixer_regmap_config = {
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c index 4343ea9f8cf8..f01ac55191f1
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> @@ -120,36 +120,6 @@ static int sun8i_ui_layer_update_coord(struct
-> sun8i_mixer *mixer, int channel, insize = SUN8I_MIXER_SIZE(src_w, src_h);
->  	outsize = SUN8I_MIXER_SIZE(dst_w, dst_h);
-> 
-> -	if (plane->type == DRM_PLANE_TYPE_PRIMARY) {
-> -		bool interlaced = false;
-> -		u32 val;
-> -
-> -		DRM_DEBUG_DRIVER("Primary layer, updating global size 
-W: %u H: %u\n",
-> -				 dst_w, dst_h);
-> -		regmap_write(mixer->engine.regs,
-> -			     SUN8I_MIXER_GLOBAL_SIZE,
-> -			     outsize);
-> -		regmap_write(mixer->engine.regs,
-> -			     SUN8I_MIXER_BLEND_OUTSIZE(bld_base), 
-outsize);
-> -
-> -		if (state->crtc)
-> -			interlaced = state->crtc->state-
->adjusted_mode.flags
-> -				& DRM_MODE_FLAG_INTERLACE;
-> -
-> -		if (interlaced)
-> -			val = SUN8I_MIXER_BLEND_OUTCTL_INTERLACED;
-> -		else
-> -			val = 0;
-> -
-> -		regmap_update_bits(mixer->engine.regs,
-> -				   
-SUN8I_MIXER_BLEND_OUTCTL(bld_base),
-> -				   
-SUN8I_MIXER_BLEND_OUTCTL_INTERLACED,
-> -				   val);
-> -
-> -		DRM_DEBUG_DRIVER("Switching display mixer interlaced 
-mode %s\n",
-> -				 interlaced ? "on" : "off");
-> -	}
-> -
->  	/* Set height and width */
->  	DRM_DEBUG_DRIVER("Layer source offset X: %d Y: %d\n",
->  			 state->src.x1 >> 16, state->src.y1 >> 16);
-
-
-
-
+-- 
+ Kirill A. Shutemov
