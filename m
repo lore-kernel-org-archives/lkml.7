@@ -2,114 +2,128 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A87FCC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 18:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DF2C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 18:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB5E222C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 18:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3533A21655
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 18:55:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BLJ//U7l"
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="fGyQZIUO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgABSvb (ORCPT
+        id S1728189AbgABSz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 13:51:31 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18446 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727951AbgABSvb (ORCPT
+        Thu, 2 Jan 2020 13:55:58 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40192 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727951AbgABSz6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 13:51:31 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e0e3ba20000>; Thu, 02 Jan 2020 10:51:15 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 02 Jan 2020 10:51:30 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 02 Jan 2020 10:51:30 -0800
-Received: from [10.19.66.63] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 Jan
- 2020 18:51:27 +0000
-Subject: Re: [PATCH V1] nvmem: core: fix memory abort in cleanup path
-To:     Thierry Reding <treding@nvidia.com>
-CC:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-References: <1577592162-14817-1-git-send-email-bbiswas@nvidia.com>
- <20200102124445.GB1924669@ulmo>
-From:   Bitan Biswas <bbiswas@nvidia.com>
-Message-ID: <7abb79c6-b497-98b3-45ff-44d751f1c781@nvidia.com>
-Date:   Thu, 2 Jan 2020 10:51:24 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 2 Jan 2020 13:55:58 -0500
+Received: by mail-qk1-f196.google.com with SMTP id c17so32072369qkg.7
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 10:55:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google;
+        h=from:date:to:cc:subject:message-id:user-agent:mime-version;
+        bh=SVhqJNc9KZvv3EKUfF1sirEUq6RG4WOzhSxBPIcUwS8=;
+        b=fGyQZIUOE1EwKvzSQHfBo9D3ndHkj15jXCmb5aymGBAJQfOtBwHVCRboNJoRoIcuGy
+         KneQgA1RZQFkATPeiB9vPaiszLvna07HrPQkzMpne4sSlSGbKu0kc8WBF6XnL8ZvaQOi
+         G7rByV+7OuPjDQmfQHsZwZTOGeYvxOViiRS58=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=SVhqJNc9KZvv3EKUfF1sirEUq6RG4WOzhSxBPIcUwS8=;
+        b=pHlyfeiCAWEM0ZrOt9UhrFzdC5DUC5VrFhrbdP6W7scuLeNhepOKr8xbu8VQ66WLy+
+         /y6vH3rBCeiyDECnqd0oQRZje9yQYXTGOgk2IS72R6Py3P0rY0LFiQmc5kQEmd7nn+Zs
+         q0UDJ+D/WWxuq44zCNB6srkSfo2APJmeGOIgXwugI2eEl2yDaMCbEoBam5RJafVvPJQ9
+         egDU63wJYX+3pPpcmr2xp+1ew5RLd+huGxlRHxDFIqLzcdnxPINtSminpPUhqsC6EyRY
+         taM3zq2kJuZCxv1HvbxzWn0GiNu9Df5keSpxA/1kOcoSz9hmmqTiJbHO6bVdNLAro9N0
+         VA3A==
+X-Gm-Message-State: APjAAAU/I3Hw+2KC1/iPY98aLU/kEGP4+Iy5QSPAk+jNMhvf1O9gixkh
+        rlHFLu0smnthOZ5RN53/3zykPH0Kix8=
+X-Google-Smtp-Source: APXvYqx6atPtouviklmhlnmFklzEranEIF2Jip5ea8rQYQBjG9DwH0ytDunhIrUtXJh3ZFm3gCr/8w==
+X-Received: by 2002:a05:620a:16c6:: with SMTP id a6mr69034478qkn.140.1577991356527;
+        Thu, 02 Jan 2020 10:55:56 -0800 (PST)
+Received: from macbook-air (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id v5sm17210024qth.70.2020.01.02.10.55.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 10:55:55 -0800 (PST)
+From:   Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date:   Thu, 2 Jan 2020 13:55:47 -0500 (EST)
+X-X-Sender: vince@macbook-air
+To:     linux-kernel@vger.kernel.org
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: [perf] perf_event_open() sometimes returning 0
+Message-ID: <alpine.DEB.2.21.2001021349390.11372@macbook-air>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20200102124445.GB1924669@ulmo>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1577991075; bh=LKWul6VuIcqOmJe2hTl+48jJBrbC7VDeo7XRKHTaOJ0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=BLJ//U7liEBkIdDIa89X8zJh1f6ilvsj5JxAq+u9GmX9K7/A/+Z+IOt+HfmTdsqaK
-         Nwmw6U+dEUE9kC3rDRAxMfY7E0kyqEWITj03tbz5nP3qG9IBNdMiXsnHPznsSyPkKu
-         RBAgUg4jsiWqinQpU4PrYYGZjjrgcOFykvpUr/qU5cSaSWd87BxlZX2aleVfNamuMX
-         jX9MgkKrolkg15/scLbQI2kbjBM2FukdWyE6FMCYUdXW8/Q6KaSDBDs0DMZYvuftHJ
-         CRosZkrSv2aOd+0eDKOYpvfy6P9o41fteIhflElFLdcT5eCaQD4RpbVnSQFH/CqK6u
-         b7J4NbfFJIHjQ==
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello
 
-Hi Thierry,
+so I was tracking down some odd behavior in the perf_fuzzer which turns 
+out to be because perf_even_open() sometimes returns 0 (indicating a file 
+descriptor of 0) even though as far as I can tell stdin is still open.
 
-On 1/2/20 4:44 AM, Thierry Reding wrote:
-> On Sat, Dec 28, 2019 at 08:02:42PM -0800, Bitan Biswas wrote:
->> nvmem_cell_info_to_nvmem_cell implementation has static
->> allocation of name. nvmem_add_cells_from_of() call may
->> return error and kfree name results in memory abort. Use
->> kasprintf() instead of assigning pointer and prevent kfree crash.
->>
->> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
->> index 9f1ee9c..0fc66e1 100644
->> --- a/drivers/nvmem/core.c
->> +++ b/drivers/nvmem/core.c
->> @@ -110,7 +110,7 @@ static int nvmem_cell_info_to_nvmem_cell(struct nvmem_device *nvmem,
->>   	cell->nvmem = nvmem;
->>   	cell->offset = info->offset;
->>   	cell->bytes = info->bytes;
->> -	cell->name = info->name;
->> +	cell->name = kasprintf(GFP_KERNEL, "%s", info->name);
+Before I waste too much time trying to track this down, is this a known 
+issue?
 
-> 
-> kstrdup() seems more appropriate here.
-Thanks. I shall update the patch as suggested.
+Some sample strace output:
 
-> 
-> A slightly more efficient way to do this would be to use a combination
-> of kstrdup_const() and kfree_const(), which would allow read-only
-> strings to be replicated by simple assignment rather than duplication.
-> Note that in that case you'd need to carefully replace all kfree() calls
-> on cell->name by a kfree_const() to ensure they do the right thing.
-kfree(cell->name) is also called for allocations in function 
-nvmem_add_cells_from_of() through below call
-kasprintf(GFP_KERNEL, "%pOFn", child);
+perf_event_open({type=PERF_TYPE_RAW, size=0x78 /* PERF_ATTR_SIZE_??? */, config=0x1313, ...}, 0, 3, -1, PERF_FLAG_FD_NO_GROUP) = 0
+perf_event_open({type=PERF_TYPE_SOFTWARE, size=0x78 /* PERF_ATTR_SIZE_??? */, config=PERF_COUNT_SW_DUMMY, ...}, -1, 3, -1, PERF_FLAG_FD_NO_GROUP|PERF_FLAG_FD_OUTPUT) = 0
+perf_event_open({type=PERF_TYPE_SOFTWARE, size=0x78 /* PERF_ATTR_SIZE_??? */, config=PERF_COUNT_SW_PAGE_FAULTS_MIN, ...}, 158266, 2, -1, PERF_FLAG_FD_CLOEXEC) = 0
+perf_event_open({type=PERF_TYPE_HW_CACHE, size=0x78 /* PERF_ATTR_SIZE_??? */, config=PERF_COUNT_HW_CACHE_DTLB|PERF_COUNT_HW_CACHE_OP_READ<<8|PERF_COUNT_HW_CACHE_RESULT_MISS<<16, ...}, 0, 4, -1, PERF_FLAG_FD_NO_GROUP|PERF_FLAG_FD_CLOEXEC) = 0
+perf_event_open({type=PERF_TYPE_RAW, size=0x78 /* PERF_ATTR_SIZE_??? */, config=0, ...}, -1, 0, -1, PERF_FLAG_FD_OUTPUT|PERF_FLAG_FD_CLOEXEC) = 0
 
-My understanding is kfree_const may not work for above allocation.
+On my Haswell system (running current git) I can reproduce things with a 
+single call:
 
+	memset(&pe[0],0,sizeof(struct perf_event_attr));
+	pe[0].type=PERF_TYPE_RAW;
+	pe[0].size=120;
+	pe[0].config=0x0ULL;
+	pe[0].sample_period=0x4777c3ULL;
+	pe[0].sample_type=PERF_SAMPLE_STREAM_ID; /* 200 */
+	pe[0].read_format=PERF_FORMAT_TOTAL_TIME_RUNNING|PERF_FORMAT_ID|PERF_FORMAT_GROUP; /* e */
+	pe[0].inherit=1;
+	pe[0].exclude_hv=1;
+	pe[0].exclude_idle=1;
+	pe[0].enable_on_exec=1;
+	pe[0].watermark=1;
+	pe[0].precise_ip=0; /* arbitrary skid */
+	pe[0].mmap_data=1;
+	pe[0].exclude_guest=1;
+	pe[0].exclude_callchain_kernel=1;
+	pe[0].mmap2=1;
+	pe[0].comm_exec=1;
+	pe[0].context_switch=1;
+	pe[0].bpf_event=1;
+	pe[0].wakeup_watermark=47545;
+	pe[0].bp_type=HW_BREAKPOINT_EMPTY;
+	pe[0].branch_sample_type=PERF_SAMPLE_BRANCH_KERNEL|PERF_SAMPLE_BRANCH_ANY_RETURN|PERF_SAMPLE_BRANCH_COND|0x800ULL;
+	pe[0].sample_regs_user=42ULL;
+	pe[0].sample_stack_user=0xfffffffd;
+	pe[0].aux_watermark=25443;
+	pe[0].aux_sample_size=8192;
 
-
--regards,
-  Bitan
+	fd[0]=perf_event_open(&pe[0],
+				-1, /* current thread */
+				0, /* Only cpu 0 */
+				-1, /* New Group Leader */
+				PERF_FLAG_FD_OUTPUT|PERF_FLAG_FD_CLOEXEC /*a*/ );
 
