@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69110C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2E2C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 317A120863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:41:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF79F20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:41:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004878;
-	bh=oAKlgiLASENKMc8vSC96bQbrxPcQYChYFw69i5cC5YA=;
+	s=default; t=1578004885;
+	bh=yQaPYKQgh+LTD+y5wyvQ6MOmFZ2kc32fexLYKgvurRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lxIqe//V+VREmzPuOLZaVB+o+leD5b7QGWPQH6s07hrHMCOL4YTi1MJfxSiv2PJuy
-	 ABKDe9+XpgLHor1p3GfAeVlsgTCb0bR3JoRBOjx0bnBHjyqucOOPqk05sfS7VBOOsz
-	 QCmcPdfJg+m5TY9V1mByzBY3/PKkIZfnyjvBfiM8=
+	b=O8sFJxAV1z9Y58TJIexH0aeGjMsxdHyFc/hRrJu0hpi7tdWrz2apwvJkvESTar/O9
+	 2XjqgxWVWh/eOolDoP0Ihz0lnsdkGEHg34LA5Y0nS5aY+fevOxlGkjcrcQL6XeyeZe
+	 Aqd64M9+gTRkdPp93H4ta20xgzyR9sfUqu9Yh/qY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731240AbgABWlR (ORCPT
+        id S1731253AbgABWlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:41:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50006 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:41:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731086AbgABWh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:37:28 -0500
+        id S1727282AbgABWhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:37:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8007820866;
-        Thu,  2 Jan 2020 22:37:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D096217F4;
+        Thu,  2 Jan 2020 22:37:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004648;
-        bh=oAKlgiLASENKMc8vSC96bQbrxPcQYChYFw69i5cC5YA=;
+        s=default; t=1578004640;
+        bh=yQaPYKQgh+LTD+y5wyvQ6MOmFZ2kc32fexLYKgvurRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pYoQZW+YxcEsEQTULL8JABI71mlcB0ofTupSeKYudWknYzNbCcOOVdCkTR6p8PsTE
-         mwFCy3kS8PDdGyKhdl1XHQFUew80wE4lcT+Jbdi0Dk4iaF5dKPjnmx9NjxB9r2WZ/t
-         23OO5X2oFUNa+5IqGo5oLJ2KO47/xLluzLnmSj+Y=
+        b=EQGUSoWeHKnn4RCOtWndgwHfnkr6Ia64rSSGF27SRK9OqRMi5bmAKAoSExnkGnTNf
+         SSh+EueKdPS8INHkDwzBax01J3197+zACPepAxlRic2+iMQbtOEwpaUgyGxSrvfDBD
+         YEDXmLacM8F2zs4OnT8K7/ep+u5V3spc2KycBJEk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 095/137] scsi: lpfc: Fix SLI3 hba in loop mode not discovering devices
-Date:   Thu,  2 Jan 2020 23:07:48 +0100
-Message-Id: <20200102220559.762033259@linuxfoundation.org>
+Subject: [PATCH 4.4 092/137] Input: atmel_mxt_ts - disable IRQ across suspend
+Date:   Thu,  2 Jan 2020 23:07:45 +0100
+Message-Id: <20200102220559.219860390@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -61,43 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Evan Green <evgreen@chromium.org>
 
-[ Upstream commit feff8b3d84d3d9570f893b4d83e5eab6693d6a52 ]
+[ Upstream commit 463fa44eec2fef50d111ed0199cf593235065c04 ]
 
-When operating in private loop mode, PLOGI exchanges are racing and the
-driver tries to abort it's PLOGI. But the PLOGI abort ends up terminating
-the login with the other end causing the other end to abort its PLOGI as
-well. Discovery never fully completes.
+Across suspend and resume, we are seeing error messages like the following:
 
-Fix by disabling the PLOGI abort when private loop and letting the state
-machine play out.
+atmel_mxt_ts i2c-PRP0001:00: __mxt_read_reg: i2c transfer failed (-121)
+atmel_mxt_ts i2c-PRP0001:00: Failed to read T44 and T5 (-121)
 
-Link: https://lore.kernel.org/r/20191018211832.7917-5-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This occurs because the driver leaves its IRQ enabled. Upon resume, there
+is an IRQ pending, but the interrupt is serviced before both the driver and
+the underlying I2C bus have been resumed. This causes EREMOTEIO errors.
+
+Disable the IRQ in suspend, and re-enable it on resume. If there are cases
+where the driver enters suspend with interrupts disabled, that's a bug we
+should fix separately.
+
+Signed-off-by: Evan Green <evgreen@chromium.org>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_nportdisc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nportdisc.c b/drivers/scsi/lpfc/lpfc_nportdisc.c
-index 3a4613f9fb9f..6aa0698925da 100644
---- a/drivers/scsi/lpfc/lpfc_nportdisc.c
-+++ b/drivers/scsi/lpfc/lpfc_nportdisc.c
-@@ -454,8 +454,10 @@ lpfc_rcv_plogi(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp,
- 	 * single discovery thread, this will cause a huge delay in
- 	 * discovery. Also this will cause multiple state machines
- 	 * running in parallel for this node.
-+	 * This only applies to a fabric environment.
- 	 */
--	if (ndlp->nlp_state == NLP_STE_PLOGI_ISSUE) {
-+	if ((ndlp->nlp_state == NLP_STE_PLOGI_ISSUE) &&
-+	    (vport->fc_flag & FC_FABRIC)) {
- 		/* software abort outstanding PLOGI */
- 		lpfc_els_abort(phba, ndlp);
- 	}
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index be2f2521c1c5..d955841da57d 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -2701,6 +2701,8 @@ static int __maybe_unused mxt_suspend(struct device *dev)
+ 
+ 	mutex_unlock(&input_dev->mutex);
+ 
++	disable_irq(data->irq);
++
+ 	return 0;
+ }
+ 
+@@ -2713,6 +2715,8 @@ static int __maybe_unused mxt_resume(struct device *dev)
+ 	if (!input_dev)
+ 		return 0;
+ 
++	enable_irq(data->irq);
++
+ 	mutex_lock(&input_dev->mutex);
+ 
+ 	if (input_dev->users)
 -- 
 2.20.1
 
