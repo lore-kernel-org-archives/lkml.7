@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BF7C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9FBC47409
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC06F20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9759521D7D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005652;
-	bh=d8OYjwglSwSZ+zYIi3BgcyA/ugNN0+pst0NzjE764HM=;
+	s=default; t=1578005654;
+	bh=l0lnWMKFbSvkJ0RjmrMFRUbEtOFifJZOAfuYohiIE8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UhjVV4Zmf/m2pB3OVPxAwzU7FxR55BR2jVebLWnVQtU+OIgM1vO3LobykkBIK5lLr
-	 lmmo/C2KWTZJtBZTKBxq/VgnsnHMi3HygMhifnUkRjiQt1ULlnwJISsGSB2MxCdKJV
-	 aqETlzGf1sijkbsoHs9lAWcP/Iqr/zQEjwVv4gTs=
+	b=T/ek8WdUNNdKhLEPPUnAJ0tTb53trN2rdlb1BZEXDu88Ha+WmnhjZPpCmSTPvP+cS
+	 Us2kJe521HO6Sfg8N8R1zVYF46RliujUQqJ7fkOYw/ZWj6/JxFqgCzkFDIg8W+flH1
+	 GcjxnazPibs4o1QXKcKr0K4DSQnJ4YutGRvA3/BQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbgABWVD (ORCPT
+        id S1728922AbgABWVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:21:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39384 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:21:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728048AbgABWU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:20:59 -0500
+        id S1727657AbgABWU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:20:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3199021582;
-        Thu,  2 Jan 2020 22:20:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA46821582;
+        Thu,  2 Jan 2020 22:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003658;
-        bh=d8OYjwglSwSZ+zYIi3BgcyA/ugNN0+pst0NzjE764HM=;
+        s=default; t=1578003656;
+        bh=l0lnWMKFbSvkJ0RjmrMFRUbEtOFifJZOAfuYohiIE8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ps1dkUPy8v3AZAvxVQH/sWXAGGq9VCWookRVWGToP6evkSE07wKag1oRiJvtpuHrc
-         XtoXX1Zb8vFKTIsNMfKAst8QNRyXUL+HR7EbHDjmolo0CyvZwykAEPkwfpjRqxxPN8
-         GXtLgiZT3HmCWsh0CDFJTIkmCo5ycetlOkpxXPr8=
+        b=TcC2GfEtHCFzsVqrGfVHXlASJ8XrodkjkGTwLvrTjxjTL9CTx4sac1YdNULce1sF3
+         YsWMZV4+yKuTYp2eIG1PoSWqlX5ZHNmpRg0s0r6dawRwkoBPWp+znexSgu3PpqoNI9
+         7SJQsSYYp3UY51SkLAgnzWRhfQ/8z25X42473RxQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Axtens <dja@axtens.net>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 061/114] powerpc: Dont add -mabi= flags when building with Clang
-Date:   Thu,  2 Jan 2020 23:07:13 +0100
-Message-Id: <20200102220035.195017102@linuxfoundation.org>
+Subject: [PATCH 4.19 060/114] scripts/kallsyms: fix definitely-lost memory leak
+Date:   Thu,  2 Jan 2020 23:07:12 +0100
+Message-Id: <20200102220035.073333687@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -61,95 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit 465bfd9c44dea6b55962b5788a23ac87a467c923 ]
+[ Upstream commit 21915eca088dc271c970e8351290e83d938114ac ]
 
-When building pseries_defconfig, building vdso32 errors out:
+build_initial_tok_table() overwrites unused sym_entry to shrink the
+table size. Before the entry is overwritten, table[i].sym must be freed
+since it is malloc'ed data.
 
-  error: unknown target ABI 'elfv1'
+This fixes the 'definitely lost' report from valgrind. I ran valgrind
+against x86_64_defconfig of v5.4-rc8 kernel, and here is the summary:
 
-This happens because -m32 in clang changes the target to 32-bit,
-which does not allow the ABI to be changed.
+[Before the fix]
 
-Commit 4dc831aa8813 ("powerpc: Fix compiling a BE kernel with a
-powerpc64le toolchain") added these flags to fix building big endian
-kernels with a little endian GCC.
+  LEAK SUMMARY:
+     definitely lost: 53,184 bytes in 2,874 blocks
 
-Clang doesn't need -mabi because the target triple controls the
-default value. -mlittle-endian and -mbig-endian manipulate the triple
-into either powerpc64-* or powerpc64le-*, which properly sets the
-default ABI.
+[After the fix]
 
-Adding a debug print out in the PPC64TargetInfo constructor after line
-383 above shows this:
+  LEAK SUMMARY:
+     definitely lost: 0 bytes in 0 blocks
 
-  $ echo | ./clang -E --target=powerpc64-linux -mbig-endian -o /dev/null -
-  Default ABI: elfv1
-
-  $ echo | ./clang -E --target=powerpc64-linux -mlittle-endian -o /dev/null -
-  Default ABI: elfv2
-
-  $ echo | ./clang -E --target=powerpc64le-linux -mbig-endian -o /dev/null -
-  Default ABI: elfv1
-
-  $ echo | ./clang -E --target=powerpc64le-linux -mlittle-endian -o /dev/null -
-  Default ABI: elfv2
-
-Don't specify -mabi when building with clang to avoid the build error
-with -m32 and not change any code generation.
-
--mcall-aixdesc is not an implemented flag in clang so it can be safely
-excluded as well, see commit 238abecde8ad ("powerpc: Don't use gcc
-specific options on clang").
-
-pseries_defconfig successfully builds after this patch and
-powernv_defconfig and ppc44x_defconfig don't regress.
-
-Reviewed-by: Daniel Axtens <dja@axtens.net>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-[mpe: Trim clang links in change log]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191119045712.39633-2-natechancellor@gmail.com
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
+ scripts/kallsyms.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
-index dfcb698ec8f3..e43321f46a3b 100644
---- a/arch/powerpc/Makefile
-+++ b/arch/powerpc/Makefile
-@@ -90,11 +90,13 @@ MULTIPLEWORD	:= -mmultiple
- endif
- 
- ifdef CONFIG_PPC64
-+ifndef CONFIG_CC_IS_CLANG
- cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mabi=elfv1)
- cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mcall-aixdesc)
- aflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mabi=elfv1)
- aflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mabi=elfv2
- endif
-+endif
- 
- ifneq ($(cc-name),clang)
-   cflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mno-strict-align
-@@ -134,6 +136,7 @@ endif
- endif
- 
- CFLAGS-$(CONFIG_PPC64)	:= $(call cc-option,-mtraceback=no)
-+ifndef CONFIG_CC_IS_CLANG
- ifdef CONFIG_CPU_LITTLE_ENDIAN
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2,$(call cc-option,-mcall-aixdesc))
- AFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2)
-@@ -142,6 +145,7 @@ CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcall-aixdesc)
- AFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
- endif
-+endif
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcmodel=medium,$(call cc-option,-mminimal-toc))
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mno-pointers-to-nested-functions)
- 
+diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
+index 31ed7f3f0e15..4b2711c23f4e 100644
+--- a/scripts/kallsyms.c
++++ b/scripts/kallsyms.c
+@@ -491,6 +491,8 @@ static void build_initial_tok_table(void)
+ 				table[pos] = table[i];
+ 			learn_symbol(table[pos].sym, table[pos].len);
+ 			pos++;
++		} else {
++			free(table[i].sym);
+ 		}
+ 	}
+ 	table_cnt = pos;
 -- 
 2.20.1
 
