@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B437C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFEFC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 010AE20863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E55C820866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:35:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004530;
-	bh=7+JSJnLaWm9rB9v4jCs3lqAMZplg4udQOpIcjK9RwUE=;
+	s=default; t=1578004534;
+	bh=scHw81928gop1ZE0UAGcwRdBbSOsWLPj8/dTEaxSuqs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fr6Ykqn4yIK2b6jG2Vi8+GaeFL7gU04ZBH0DOl6UeJoQXGJ6tnY0/nFsPQE19oZtz
-	 +x1LFFBiTrEOtFUJ3jDaQ8nEU8ULud4ChlNLS/aEM23McoV4hmF9MnDeHb0Oy3VmGM
-	 fp9F1hyzao3d47+uEvICLHwRB3XFA+gaOMkhW5f0=
+	b=OlOled/gqlYmQHcKMlxh/kmsf37LtasDMlyYQkvJPFiuQCP7X3U5nmG8SfvA9Cg7h
+	 8GXG3+B4wKx04j3kYXdiNHgeNKJGhFxHlsMqXfkFj5iClRgR6P6oNv+invlEPMHJ+/
+	 ZPbXU8o+OwtSJ2GM2bF7S6qnQ5WNZ8FoOgAiYRuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730825AbgABWf2 (ORCPT
+        id S1730832AbgABWfc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:35:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45092 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:35:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730697AbgABWfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:35:24 -0500
+        id S1730827AbgABWf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:35:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 329C620866;
-        Thu,  2 Jan 2020 22:35:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3ECD20866;
+        Thu,  2 Jan 2020 22:35:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004523;
-        bh=7+JSJnLaWm9rB9v4jCs3lqAMZplg4udQOpIcjK9RwUE=;
+        s=default; t=1578004528;
+        bh=scHw81928gop1ZE0UAGcwRdBbSOsWLPj8/dTEaxSuqs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d3NdsKIo/2HPgS1cGYlHsJW2xVT3KcQonpg0E96C2YGa22H4U1SdCd4CHG/v4ry9y
-         iq42Rp2D85pQc/G3ya8tM0CovybnqwMQFulWY0F43uvcXIrFgoYviorjh5GPYzWsfT
-         3HiOIpSpBlQazgUNEiX2A0Om/ZnIqxCOTJsNT95U=
+        b=klT/jN53FssTM3tM9MFuuS1fzsePiTpfrwD4D8rg7lAkb8PvE0972uGbE0DpENYTa
+         CohicJ1r077obL7NvaR3P2pfVP250WcfHWnyzEyN4fYlPXTFVrglSTmCQ9Bqeboaa1
+         B7OdsdhWT5bK2kVH23bmeSOVFxHTUoGTbRB/kKvY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 025/137] extcon: sm5502: Reset registers during initialization
-Date:   Thu,  2 Jan 2020 23:06:38 +0100
-Message-Id: <20200102220549.980968649@linuxfoundation.org>
+Subject: [PATCH 4.4 044/137] perf probe: Skip overlapped location on searching variables
+Date:   Thu,  2 Jan 2020 23:06:57 +0100
+Message-Id: <20200102220552.511521256@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -60,61 +62,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 6942635032cfd3e003e980d2dfa4e6323a3ce145 ]
+[ Upstream commit dee36a2abb67c175265d49b9a8c7dfa564463d9a ]
 
-On some devices (e.g. Samsung Galaxy A5 (2015)), the bootloader
-seems to keep interrupts enabled for SM5502 when booting Linux.
-Changing the cable state (i.e. plugging in a cable) - until the driver
-is loaded - will therefore produce an interrupt that is never read.
+Since debuginfo__find_probes() callback function can be called with  the
+location which already passed, the callback function must filter out
+such overlapped locations.
 
-In this situation, the cable state will be stuck forever on the
-initial state because SM5502 stops sending interrupts.
-This can be avoided by clearing those pending interrupts after
-the driver has been loaded.
+add_probe_trace_event() has already done it by commit 1a375ae7659a
+("perf probe: Skip same probe address for a given line"), but
+add_available_vars() doesn't. Thus perf probe -v shows same address
+repeatedly as below:
 
-One way to do this is to reset all registers to default state
-by writing to SM5502_REG_RESET. This ensures that we start from
-a clean state, with all interrupts disabled.
+  # perf probe -V vfs_read:18
+  Available variables at vfs_read:18
+          @<vfs_read+217>
+                  char*   buf
+                  loff_t* pos
+                  ssize_t ret
+                  struct file*    file
+          @<vfs_read+217>
+                  char*   buf
+                  loff_t* pos
+                  ssize_t ret
+                  struct file*    file
+          @<vfs_read+226>
+                  char*   buf
+                  loff_t* pos
+                  ssize_t ret
+                  struct file*    file
 
-Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+With this fix, perf probe -V shows it correctly:
+
+  # perf probe -V vfs_read:18
+  Available variables at vfs_read:18
+          @<vfs_read+217>
+                  char*   buf
+                  loff_t* pos
+                  ssize_t ret
+                  struct file*    file
+          @<vfs_read+226>
+                  char*   buf
+                  loff_t* pos
+                  ssize_t ret
+                  struct file*    file
+
+Fixes: cf6eb489e5c0 ("perf probe: Show accessible local variables")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157241938927.32002.4026859017790562751.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/extcon/extcon-sm5502.c | 4 ++++
- drivers/extcon/extcon-sm5502.h | 2 ++
- 2 files changed, 6 insertions(+)
+ tools/perf/util/probe-finder.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/extcon/extcon-sm5502.c b/drivers/extcon/extcon-sm5502.c
-index 7aac3cc7efd7..f63f9961ac12 100644
---- a/drivers/extcon/extcon-sm5502.c
-+++ b/drivers/extcon/extcon-sm5502.c
-@@ -69,6 +69,10 @@ struct sm5502_muic_info {
- /* Default value of SM5502 register to bring up MUIC device. */
- static struct reg_data sm5502_reg_data[] = {
- 	{
-+		.reg = SM5502_REG_RESET,
-+		.val = SM5502_REG_RESET_MASK,
-+		.invert = true,
-+	}, {
- 		.reg = SM5502_REG_CONTROL,
- 		.val = SM5502_REG_CONTROL_MASK_INT_MASK,
- 		.invert = false,
-diff --git a/drivers/extcon/extcon-sm5502.h b/drivers/extcon/extcon-sm5502.h
-index 974b53222f56..12f8b01e5753 100644
---- a/drivers/extcon/extcon-sm5502.h
-+++ b/drivers/extcon/extcon-sm5502.h
-@@ -241,6 +241,8 @@ enum sm5502_reg {
- #define DM_DP_SWITCH_UART			((DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DP_SHIFT) \
- 						| (DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DM_SHIFT))
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 28a0f37b05c0..d917f83e8e85 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -1331,6 +1331,18 @@ static int collect_variables_cb(Dwarf_Die *die_mem, void *data)
+ 		return DIE_FIND_CB_SIBLING;
+ }
  
-+#define SM5502_REG_RESET_MASK			(0x1)
++static bool available_var_finder_overlap(struct available_var_finder *af)
++{
++	int i;
 +
- /* SM5502 Interrupts */
- enum sm5502_irq {
- 	/* INT1 */
++	for (i = 0; i < af->nvls; i++) {
++		if (af->pf.addr == af->vls[i].point.address)
++			return true;
++	}
++	return false;
++
++}
++
+ /* Add a found vars into available variables list */
+ static int add_available_vars(Dwarf_Die *sc_die, struct probe_finder *pf)
+ {
+@@ -1341,6 +1353,14 @@ static int add_available_vars(Dwarf_Die *sc_die, struct probe_finder *pf)
+ 	Dwarf_Die die_mem;
+ 	int ret;
+ 
++	/*
++	 * For some reason (e.g. different column assigned to same address),
++	 * this callback can be called with the address which already passed.
++	 * Ignore it first.
++	 */
++	if (available_var_finder_overlap(af))
++		return 0;
++
+ 	/* Check number of tevs */
+ 	if (af->nvls == af->max_vls) {
+ 		pr_warning("Too many( > %d) probe point found.\n", af->max_vls);
 -- 
 2.20.1
 
