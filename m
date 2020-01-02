@@ -2,54 +2,55 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF614C3276F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C7EC3276E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 953E621582
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D3B22314
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003398;
-	bh=GVo4GKy7q082vEvWrIg+e60rbluAIwFbPYrVXvcfSnc=;
+	s=default; t=1578003404;
+	bh=70aTdiQgJsFIJCW4mqmXNycIive18GHAshoWKj+6q18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zemrw/VrsNjoQ2kiFR/18ozUJg5DK1GVGJDP8c7ugwNQ9oBryzbdxeLaNzbzocGoE
-	 LR/UxCu+PtlOOQBtZjRRSl+Soh/1saEL6DMvoe5OH0gHvJohuMiFID8DGr+YY4g2n6
-	 xjckAcn2s5ngjz+F4ioLJ5TTbUZOFrPvTW3F0gok=
+	b=ETaChexBan1WGoAA/uw/anC9V4Elwgxd6agm8om1742fscKqC9uldDy8mPGJmrK/v
+	 e68lr1vEbKGZLMLgqF6HPeR8011rBPvkHA6Wb/iNaPikckMZieccONkhCCeOY2dXaE
+	 qiLwW44P6pl+CCJXkkOr22A5qBI/UkgEug3Eg2YQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgABWQh (ORCPT
+        id S1727982AbgABWQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:16:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58584 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:16:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728267AbgABWQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:16:35 -0500
+        id S1728282AbgABWQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:16:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 113B221582;
-        Thu,  2 Jan 2020 22:16:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCD2F21582;
+        Thu,  2 Jan 2020 22:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003394;
-        bh=GVo4GKy7q082vEvWrIg+e60rbluAIwFbPYrVXvcfSnc=;
+        s=default; t=1578003399;
+        bh=70aTdiQgJsFIJCW4mqmXNycIive18GHAshoWKj+6q18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XRyYn+mZdf0oefKBOG3CbOVw0iuv+dFkXmoKjJlbFz4Cst2dcHySLa8tyLHALHn3O
-         8EgIbOlpRtnb3irfWvbUEVNwTu/tcLZxJW5CnunXjtz1foiJtsWFqSpDkZC4nKEiEX
-         aYqmx4evTybljX1R7sHkBMBHgN9jl3E3durjI8Wk=
+        b=IheE8AvifDFTdXJvS7181Au0de7jz4sJ1lUYjpSNPWHsYohsM0iw3joAH8pWeevoX
+         zgOi6lZHluZsCXmXNSXtLwzQWU0Mo6hArkZAy5uPOJsQAQcz7P1k49cEZoOS1ILXrB
+         H48Brb8jwQotYG3lBMj1k+wmOAI8zvPy9xTjU/bU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 117/191] perf regs: Make perf_reg_name() return "unknown" instead of NULL
-Date:   Thu,  2 Jan 2020 23:06:39 +0100
-Message-Id: <20200102215842.391232934@linuxfoundation.org>
+Subject: [PATCH 5.4 119/191] mailbox: imx: Clear the right interrupts at shutdown
+Date:   Thu,  2 Jan 2020 23:06:41 +0100
+Message-Id: <20200102215842.592971839@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -62,84 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Daniel Baluta <daniel.baluta@nxp.com>
 
-[ Upstream commit 5b596e0ff0e1852197d4c82d3314db5e43126bf7 ]
+[ Upstream commit 5f0af07e89199ac51cdd4f25bc303bdc703f4e9c ]
 
-To avoid breaking the build on arches where this is not wired up, at
-least all the other features should be made available and when using
-this specific routine, the "unknown" should point the user/developer to
-the need to wire this up on this particular hardware architecture.
+Make sure to only clear enabled interrupts keeping count
+of the connection type.
 
-Detected in a container mipsel debian cross build environment, where it
-shows up as:
-
-  In file included from /usr/mipsel-linux-gnu/include/stdio.h:867,
-                   from /git/linux/tools/perf/lib/include/perf/cpumap.h:6,
-                   from util/session.c:13:
-  In function 'printf',
-      inlined from 'regs_dump__printf' at util/session.c:1103:3,
-      inlined from 'regs__printf' at util/session.c:1131:2:
-  /usr/mipsel-linux-gnu/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
-    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-cross compiler details:
-
-  mipsel-linux-gnu-gcc (Debian 9.2.1-8) 9.2.1 20190909
-
-Also on mips64:
-
-  In file included from /usr/mips64-linux-gnuabi64/include/stdio.h:867,
-                   from /git/linux/tools/perf/lib/include/perf/cpumap.h:6,
-                   from util/session.c:13:
-  In function 'printf',
-      inlined from 'regs_dump__printf' at util/session.c:1103:3,
-      inlined from 'regs__printf' at util/session.c:1131:2,
-      inlined from 'regs_user__printf' at util/session.c:1139:3,
-      inlined from 'dump_sample' at util/session.c:1246:3,
-      inlined from 'machines__deliver_event' at util/session.c:1421:3:
-  /usr/mips64-linux-gnuabi64/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
-    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  In function 'printf',
-      inlined from 'regs_dump__printf' at util/session.c:1103:3,
-      inlined from 'regs__printf' at util/session.c:1131:2,
-      inlined from 'regs_intr__printf' at util/session.c:1147:3,
-      inlined from 'dump_sample' at util/session.c:1249:3,
-      inlined from 'machines__deliver_event' at util/session.c:1421:3:
-  /usr/mips64-linux-gnuabi64/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
-    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-cross compiler details:
-
-  mips64-linux-gnuabi64-gcc (Debian 9.2.1-8) 9.2.1 20190909
-
-Fixes: 2bcd355b71da ("perf tools: Add interface to arch registers sets")
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-95wjyv4o65nuaeweq31t7l1s@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Suggested-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/perf_regs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mailbox/imx-mailbox.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-index 47fe34e5f7d5..ec7640cc4c91 100644
---- a/tools/perf/util/perf_regs.h
-+++ b/tools/perf/util/perf_regs.h
-@@ -41,7 +41,7 @@ int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
+diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
+index 9f74dee1a58c..d28bbd47ff88 100644
+--- a/drivers/mailbox/imx-mailbox.c
++++ b/drivers/mailbox/imx-mailbox.c
+@@ -217,8 +217,19 @@ static void imx_mu_shutdown(struct mbox_chan *chan)
+ 	if (cp->type == IMX_MU_TYPE_TXDB)
+ 		tasklet_kill(&cp->txdb_tasklet);
  
- static inline const char *perf_reg_name(int id __maybe_unused)
- {
--	return NULL;
-+	return "unknown";
+-	imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_TIEn(cp->idx) |
+-		       IMX_MU_xCR_RIEn(cp->idx) | IMX_MU_xCR_GIEn(cp->idx));
++	switch (cp->type) {
++	case IMX_MU_TYPE_TX:
++		imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_TIEn(cp->idx));
++		break;
++	case IMX_MU_TYPE_RX:
++		imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_RIEn(cp->idx));
++		break;
++	case IMX_MU_TYPE_RXDB:
++		imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_GIEn(cp->idx));
++		break;
++	default:
++		break;
++	}
+ 
+ 	free_irq(priv->irq, chan);
  }
- 
- static inline int perf_reg_value(u64 *valp __maybe_unused,
 -- 
 2.20.1
 
