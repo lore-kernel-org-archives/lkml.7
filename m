@@ -2,53 +2,53 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B92EC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C30C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E87F320848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DEF220848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005200;
-	bh=RqPbXn9WCFczp8Txz+bqmcTAIDrgHDVNoUmCRT01amE=;
+	s=default; t=1578005211;
+	bh=62y6fMdHxwp4nQAatzWsMLdvOZXd8xkaWKa+8vceoJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pjkvO9RoBYD3xhcOau1wsj/aofUxEiJbd6ExAFMoeTSP319U4S+KdOVHlHWTu7jkb
-	 K1VXu5c4QchFTv+eMT+nFFlmdPkHfhd09xRhtRJ9CaQ4CM+la7Vxlmvsdackn+XVgm
-	 mq1Gp9uX2aEuX8djdUBqFPwnGAsRoE1L49yjU1SM=
+	b=vKWV8JYAxKpW8kVp+iOOVkRJ6rdejdFXlWMA9yw6jP8n7jHZAPfc3X8oKpawhFSn7
+	 r1V82lyTNA9OAtQQlrKHqqRQC3mJFrPeyyo6YJ4nc5CiGgVvJfvRhWp5azyFoWCWMw
+	 Om/IVLqWAIj2aJYG/2kN0SmYeowcy3uvvRQP0QNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730189AbgABWqi (ORCPT
+        id S1730163AbgABWaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:46:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34760 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:30:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730184AbgABWaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:30:39 -0500
+        id S1730142AbgABWaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:30:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93DC620863;
-        Thu,  2 Jan 2020 22:30:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BC7620866;
+        Thu,  2 Jan 2020 22:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004239;
-        bh=RqPbXn9WCFczp8Txz+bqmcTAIDrgHDVNoUmCRT01amE=;
+        s=default; t=1578004212;
+        bh=62y6fMdHxwp4nQAatzWsMLdvOZXd8xkaWKa+8vceoJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rn11TSlknAOU3VoCHJiNUg1aY4wkhkFdVMUQfyBwl5CkHCCr8QfVnAR1GLrjmhYUf
-         c+KgiEzHR7t2huDamoMe+QQk0dN4+bCQbBN9kIOPVochAoT0S3jGBmqWNavirZ/8v4
-         Jdt2aocd/ltKQ5u9w2ceypKmfFcEw6+YfKADuUo8=
+        b=zBr/vhwKBIBsOkik7hBSRDku6YgK+OaqCb4A30rVkKootGtDwAYczUawoQC/VDMNO
+         JaDpkTEoPUXaKTsyqDY2Sq3C0CKyzqB/uTWUuWiXGAKDV+EsMhpNB1OKJ7y2085zSp
+         Jpv61HTlRXaPrs7bSUb6lbDk0b9zii997MvS0oKI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 095/171] mod_devicetable: fix PHY module format
-Date:   Thu,  2 Jan 2020 23:07:06 +0100
-Message-Id: <20200102220600.388131080@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
+        Omar Sandoval <osandov@fb.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 085/171] btrfs: dont prematurely free work in reada_start_machine_worker()
+Date:   Thu,  2 Jan 2020 23:06:56 +0100
+Message-Id: <20200102220558.786641120@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -61,43 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Omar Sandoval <osandov@fb.com>
 
-[ Upstream commit d2ed49cf6c13e379c5819aa5ac20e1f9674ebc89 ]
+[ Upstream commit e732fe95e4cad35fc1df278c23a32903341b08b3 ]
 
-When a PHY is probed, if the top bit is set, we end up requesting a
-module with the string "mdio:-10101110000000100101000101010001" -
-the top bit is printed to a signed -1 value. This leads to the module
-not being loaded.
+Currently, reada_start_machine_worker() frees the reada_machine_work and
+then calls __reada_start_machine() to do readahead. This is another
+potential instance of the bug in "btrfs: don't prematurely free work in
+run_ordered_work()".
 
-Fix the module format string and the macro generating the values for
-it to ensure that we only print unsigned types and the top bit is
-always 0/1. We correctly end up with
-"mdio:10101110000000100101000101010001".
+There _might_ already be a deadlock here: reada_start_machine_worker()
+can depend on itself through stacked filesystems (__read_start_machine()
+-> reada_start_machine_dev() -> reada_tree_block_flagged() ->
+read_extent_buffer_pages() -> submit_one_bio() ->
+btree_submit_bio_hook() -> btrfs_map_bio() -> submit_stripe_bio() ->
+submit_bio() onto a loop device can trigger readahead on the lower
+filesystem).
 
-Fixes: 8626d3b43280 ("phylib: Support phy module autoloading")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Either way, let's fix it by freeing the work at the end.
+
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mod_devicetable.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/btrfs/reada.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -502,9 +502,9 @@ struct platform_device_id {
+diff --git a/fs/btrfs/reada.c b/fs/btrfs/reada.c
+index 94441fdb1ecf..0d1565d71231 100644
+--- a/fs/btrfs/reada.c
++++ b/fs/btrfs/reada.c
+@@ -734,21 +734,19 @@ static int reada_start_machine_dev(struct btrfs_fs_info *fs_info,
+ static void reada_start_machine_worker(struct btrfs_work *work)
+ {
+ 	struct reada_machine_work *rmw;
+-	struct btrfs_fs_info *fs_info;
+ 	int old_ioprio;
  
- #define MDIO_MODULE_PREFIX	"mdio:"
+ 	rmw = container_of(work, struct reada_machine_work, work);
+-	fs_info = rmw->fs_info;
+-
+-	kfree(rmw);
  
--#define MDIO_ID_FMT "%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d"
-+#define MDIO_ID_FMT "%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u"
- #define MDIO_ID_ARGS(_id) \
--	(_id)>>31, ((_id)>>30) & 1, ((_id)>>29) & 1, ((_id)>>28) & 1,	\
-+	((_id)>>31) & 1, ((_id)>>30) & 1, ((_id)>>29) & 1, ((_id)>>28) & 1, \
- 	((_id)>>27) & 1, ((_id)>>26) & 1, ((_id)>>25) & 1, ((_id)>>24) & 1, \
- 	((_id)>>23) & 1, ((_id)>>22) & 1, ((_id)>>21) & 1, ((_id)>>20) & 1, \
- 	((_id)>>19) & 1, ((_id)>>18) & 1, ((_id)>>17) & 1, ((_id)>>16) & 1, \
+ 	old_ioprio = IOPRIO_PRIO_VALUE(task_nice_ioclass(current),
+ 				       task_nice_ioprio(current));
+ 	set_task_ioprio(current, BTRFS_IOPRIO_READA);
+-	__reada_start_machine(fs_info);
++	__reada_start_machine(rmw->fs_info);
+ 	set_task_ioprio(current, old_ioprio);
+ 
+-	atomic_dec(&fs_info->reada_works_cnt);
++	atomic_dec(&rmw->fs_info->reada_works_cnt);
++
++	kfree(rmw);
+ }
+ 
+ static void __reada_start_machine(struct btrfs_fs_info *fs_info)
+-- 
+2.20.1
+
 
 
