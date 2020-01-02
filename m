@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2FBC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1564CC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADC8F21582
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF297222C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003664;
-	bh=iprWCtLGEBo8BgYJE9kAck3R9X49tsn0AWg2uJ6REZQ=;
+	s=default; t=1578003667;
+	bh=IMSOtqcwaP6UlIqYmPsM13lnT/jot8oLkrsfRUmghbg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pCFt/m6zBZWufT8nwoPyL+wjqn/SZjiO3hz6beaNd0Zza9iSTm57TAe2reyFIskG3
-	 j8e88jSwquhnj9lR1GtkX17vcRSBTJdc82Z5UwU0moUDWgfphWZM5YvDYLL9Mj3RkH
-	 pjc9Jc9/TtOSNmE/wf/V2NCqKYIEOvwcSqMtTJyY=
+	b=DbEEII9VylBAqQQq5hhNSwC07udchlBp20cmht+RJnEn3illD95VsPnxsnspGlhYs
+	 wG3uuFpR1Vecc34XFxO6FVrdI0r83tW3YBPCPkKC/1x+m3w6Xlx6qhhL9i+L9RfhrB
+	 bBeHbCtOJU2d+aBhvUk7/88gC/rCKLhbe6USRZeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgABWVE (ORCPT
+        id S1728743AbgABWVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:21:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39504 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:21:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728920AbgABWVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:21:01 -0500
+        id S1728931AbgABWVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:21:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A68920866;
-        Thu,  2 Jan 2020 22:21:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6FC021582;
+        Thu,  2 Jan 2020 22:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003661;
-        bh=iprWCtLGEBo8BgYJE9kAck3R9X49tsn0AWg2uJ6REZQ=;
+        s=default; t=1578003663;
+        bh=IMSOtqcwaP6UlIqYmPsM13lnT/jot8oLkrsfRUmghbg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rDX2BFz2/A7osvKq9EZ0IFU2LQs2ovhoSsk8XsO5h8Dpvh3VzLreLPYeZfL9PD4xE
-         GG3FXUJ+GwlHYzxjGEMhAxjeYuDn6YweraIdb03yUxtPR+GaBm71zNOLYDjLCxgvRw
-         JQz1hnSfte86Abcccd/N8b+06NbygEKY6HA8sf3s=
+        b=sPoP68wSNv3TPcxrz0YtV6+MFhpfCkgOgQ0P0pVX3MchcJ1eYhtbGWvzkZCEIGJc1
+         XdbTICVQ74SGTyaFy3MNSUG55x45bUYXtIjNinjvRpaeasK61T7PTJ6FTq0+lz2xvF
+         L9TqbxOO8jbhzg0Eu5TLLt8eifw18SBWnq1bIx+M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, linux-scsi@vger.kernel.org,
+        =?UTF-8?q?Diego=20Elio=20Petten=C3=B2?= <flameeyes@flameeyes.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 062/114] f2fs: choose hardlimit when softlimit is larger than hardlimit in f2fs_statfs_project()
-Date:   Thu,  2 Jan 2020 23:07:14 +0100
-Message-Id: <20200102220035.294585461@linuxfoundation.org>
+Subject: [PATCH 4.19 063/114] cdrom: respect device capabilities during opening action
+Date:   Thu,  2 Jan 2020 23:07:15 +0100
+Message-Id: <20200102220035.429538902@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -60,89 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@mykernel.net>
+From: Diego Elio Pettenò <flameeyes@flameeyes.com>
 
-[ Upstream commit 909110c060f22e65756659ec6fa957ae75777e00 ]
+[ Upstream commit 366ba7c71ef77c08d06b18ad61b26e2df7352338 ]
 
-Setting softlimit larger than hardlimit seems meaningless
-for disk quota but currently it is allowed. In this case,
-there may be a bit of comfusion for users when they run
-df comamnd to directory which has project quota.
+Reading the TOC only works if the device can play audio, otherwise
+these commands fail (and possibly bring the device to an unhealthy
+state.)
 
-For example, we set 20M softlimit and 10M hardlimit of
-block usage limit for project quota of test_dir(project id 123).
+Similarly, cdrom_mmc3_profile() should only be called if the device
+supports generic packet commands.
 
-[root@hades f2fs]# repquota -P -a
-*** Report for project quotas on device /dev/nvme0n1p8
-Block grace time: 7days; Inode grace time: 7days
-Block limits File limits
-Project used soft hard grace used soft hard grace
-----------------------------------------------------------------------
-0 -- 4 0 0 1 0 0
-123 +- 10248 20480 10240 2 0 0
-
-The result of df command as below:
-
-[root@hades f2fs]# df -h /mnt/f2fs/test
-Filesystem Size Used Avail Use% Mounted on
-/dev/nvme0n1p8 20M 11M 10M 51% /mnt/f2fs
-
-Even though it looks like there is another 10M free space to use,
-if we write new data to diretory test(inherit project id),
-the write will fail with errno(-EDQUOT).
-
-After this patch, the df result looks like below.
-
-[root@hades f2fs]# df -h /mnt/f2fs/test
-Filesystem Size Used Avail Use% Mounted on
-/dev/nvme0n1p8 10M 10M 0 100% /mnt/f2fs
-
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-scsi@vger.kernel.org
+Signed-off-by: Diego Elio Pettenò <flameeyes@flameeyes.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/super.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ drivers/cdrom/cdrom.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 7a9cc64f5ca3..662c7de58b99 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1148,9 +1148,13 @@ static int f2fs_statfs_project(struct super_block *sb,
- 		return PTR_ERR(dquot);
- 	spin_lock(&dquot->dq_dqb_lock);
- 
--	limit = (dquot->dq_dqb.dqb_bsoftlimit ?
--		 dquot->dq_dqb.dqb_bsoftlimit :
--		 dquot->dq_dqb.dqb_bhardlimit) >> sb->s_blocksize_bits;
-+	limit = 0;
-+	if (dquot->dq_dqb.dqb_bsoftlimit)
-+		limit = dquot->dq_dqb.dqb_bsoftlimit;
-+	if (dquot->dq_dqb.dqb_bhardlimit &&
-+			(!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
-+		limit = dquot->dq_dqb.dqb_bhardlimit;
+diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+index 933268b8d6a5..d3947388a3ef 100644
+--- a/drivers/cdrom/cdrom.c
++++ b/drivers/cdrom/cdrom.c
+@@ -996,6 +996,12 @@ static void cdrom_count_tracks(struct cdrom_device_info *cdi, tracktype *tracks)
+ 	tracks->xa = 0;
+ 	tracks->error = 0;
+ 	cd_dbg(CD_COUNT_TRACKS, "entering cdrom_count_tracks\n");
 +
- 	if (limit && buf->f_blocks > limit) {
- 		curblock = dquot->dq_dqb.dqb_curspace >> sb->s_blocksize_bits;
- 		buf->f_blocks = limit;
-@@ -1159,9 +1163,13 @@ static int f2fs_statfs_project(struct super_block *sb,
- 			 (buf->f_blocks - curblock) : 0;
- 	}
- 
--	limit = dquot->dq_dqb.dqb_isoftlimit ?
--		dquot->dq_dqb.dqb_isoftlimit :
--		dquot->dq_dqb.dqb_ihardlimit;
-+	limit = 0;
-+	if (dquot->dq_dqb.dqb_isoftlimit)
-+		limit = dquot->dq_dqb.dqb_isoftlimit;
-+	if (dquot->dq_dqb.dqb_ihardlimit &&
-+			(!limit || dquot->dq_dqb.dqb_ihardlimit < limit))
-+		limit = dquot->dq_dqb.dqb_ihardlimit;
++	if (!CDROM_CAN(CDC_PLAY_AUDIO)) {
++		tracks->error = CDS_NO_INFO;
++		return;
++	}
 +
- 	if (limit && buf->f_files > limit) {
- 		buf->f_files = limit;
- 		buf->f_ffree =
+ 	/* Grab the TOC header so we can see how many tracks there are */
+ 	ret = cdi->ops->audio_ioctl(cdi, CDROMREADTOCHDR, &header);
+ 	if (ret) {
+@@ -1162,7 +1168,8 @@ int cdrom_open(struct cdrom_device_info *cdi, struct block_device *bdev,
+ 		ret = open_for_data(cdi);
+ 		if (ret)
+ 			goto err;
+-		cdrom_mmc3_profile(cdi);
++		if (CDROM_CAN(CDC_GENERIC_PACKET))
++			cdrom_mmc3_profile(cdi);
+ 		if (mode & FMODE_WRITE) {
+ 			ret = -EROFS;
+ 			if (cdrom_open_write(cdi))
+@@ -2882,6 +2889,9 @@ int cdrom_get_last_written(struct cdrom_device_info *cdi, long *last_written)
+ 	   it doesn't give enough information or fails. then we return
+ 	   the toc contents. */
+ use_toc:
++	if (!CDROM_CAN(CDC_PLAY_AUDIO))
++		return -ENOSYS;
++
+ 	toc.cdte_format = CDROM_MSF;
+ 	toc.cdte_track = CDROM_LEADOUT;
+ 	if ((ret = cdi->ops->audio_ioctl(cdi, CDROMREADTOCENTRY, &toc)))
 -- 
 2.20.1
 
