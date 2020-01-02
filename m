@@ -2,109 +2,192 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_QP_LONG_LINE,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D59E9C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FF6C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A896920692
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB01520692
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:19:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dwDccB8G"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="sL1RfpVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728838AbgABQOq (ORCPT
+        id S1728816AbgABQT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 11:14:46 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:42264 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728780AbgABQOq (ORCPT
+        Thu, 2 Jan 2020 11:19:56 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36662 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728678AbgABQTz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 11:14:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ZIlIhj6T1GPGAChnUyIP7cY1+AAB0fs5v+t/uRkEsgo=; b=dwDccB8G6vqBRm61ohhaOaOgK
-        w3mEJ3sUqIafWUpbtWV76qPPfuOCg5LHD0er5OyxmVMEDQFVcDC3N1tjiQxb3occlGA5FuiU7OT0r
-        wENSqalZnTFMVSxu0EvctKXfl72+84sWhFcU5XUnR/PerrLnySgrbEPyl2bjNq5gGSkT6bKEohjps
-        e7ljvXUm3xP7s5cT1LFOntDM48aKifd/a8HE27kpSKaIMtcSM6spbJZGEcLgBw9GW2/foBl553IFX
-        YvRmUxvh6wP2VILvmMeesb4seqrZmQkyyyVPifTPvZPpFBVXUYky7dY6sAyLib/c3c1T+jtCAVdW1
-        JaWCm84ag==;
-Received: from [2601:1c0:6280:3f0::34d9]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1in37V-0005nO-8G; Thu, 02 Jan 2020 16:14:45 +0000
-Subject: Re: [PATCH] menuconfig: restore prompt dependencies in help text
-To:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org, Rob Landley <rob@landley.net>,
-        linux-kernel@vger.kernel.org
-References: <20191231055839.GG4203@ZenIV.linux.org.uk>
- <20200101204152.402906-1-nivedita@alum.mit.edu>
- <20200101210426.GA8904@ZenIV.linux.org.uk>
- <20200101222644.GA438328@rani.riverdale.lan>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <0ea3e528-4835-ff9c-f5a2-f711666ba75f@infradead.org>
-Date:   Thu, 2 Jan 2020 08:14:43 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20200101222644.GA438328@rani.riverdale.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 2 Jan 2020 11:19:55 -0500
+Received: by mail-qk1-f196.google.com with SMTP id a203so32083729qkc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 08:19:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=AvD0QiBESqW0G7LnvKlO+TVu2M/tDLdQS5v3bjNXQuk=;
+        b=sL1RfpVM5J8OwjnlP/uhIc5WMEFW17QfPvDDaB23wQx3uNHW4WV11QGWSfkyNqg03Y
+         nsn+88VOiuLBEQUbY3255KMO5YJ9Dsv7+TbmLXPLD1B1FkkqluxHvgWPVBUzLBgXwtgs
+         BUMmza2bSw5cgisGNTWNLUjYH5Aa+/upH17JBl4cX9DAI4i/SdeKmElV9DltvAjH+A+U
+         FxhPNb3dnyTpQuyhy0X9Apb3bTcj1vIsaiV3Zbo+Vm/ldxYfuMwJ9JzsHMKy12NVylQW
+         Ij4PVE9Ryi3GyxAgZ4BicSt2oqq0HfihZ1E3kICcNDILJCTHZVyNF8Z/JEKhn2BkiHn1
+         wb6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=AvD0QiBESqW0G7LnvKlO+TVu2M/tDLdQS5v3bjNXQuk=;
+        b=Bt64hQ22s3SVWyKZiiPWGCq/jyEQRhh/j0L1bCUtXhsNi5z2a2Lc23l6xRn1PJBRsx
+         AMeJJcxFR9gRxc18bm2hb6HQB2rPU/zPD5clKqxfvYKf3wuMLlB2VLGbYquQdzk5NddI
+         Mjw5rjGWZZtvjJp8Vljb3KJ5ldpDKEpfqcD0FVyOoRx6K2pC+ufDxSim9Qs2+Kij87ka
+         tPYfIkNB7q9/ar1XqewLqy1vCSMY7e5yEPE5+fcui9SP2SvJeQK06s09J9NZtRDj4d2m
+         LPIQzBJojdqJAWVOY4WTcpNMOoHERiwV/p3z/wBwNClv/vUIVJ6pCPjapedIacK/BZHJ
+         ibRw==
+X-Gm-Message-State: APjAAAW0O1fW+PZ3Jo0d+q/Oj+LRlNMlotT7qGp5jYDDaGDaGCMPG28D
+        etpcqkifmuTb7LjINv4PcsAeYQ==
+X-Google-Smtp-Source: APXvYqxnMnJA0eF10zGRq9HRnzIjXOCnkugv43lLuLc++hI4RTeu/Z0R0juFtbIhR5TeSm2ZrG/a9A==
+X-Received: by 2002:a05:620a:136e:: with SMTP id d14mr65398571qkl.342.1577981994212;
+        Thu, 02 Jan 2020 08:19:54 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id w1sm17341776qtk.31.2020.01.02.08.19.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Jan 2020 08:19:53 -0800 (PST)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] xfs: Fix false positive lockdep warning with sb_internal & fs_reclaim
+Date:   Thu, 2 Jan 2020 11:19:51 -0500
+Message-Id: <24F33D67-E975-48E1-A285-0D0129CC3033@lca.pw>
+References: <20200102155208.8977-1-longman@redhat.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dave Chinner <david@fromorbit.com>,
+        Eric Sandeen <sandeen@redhat.com>
+In-Reply-To: <20200102155208.8977-1-longman@redhat.com>
+To:     Waiman Long <longman@redhat.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/1/20 2:26 PM, Arvind Sankar wrote:
-> On Wed, Jan 01, 2020 at 09:04:26PM +0000, Al Viro wrote:
->> On Wed, Jan 01, 2020 at 03:41:52PM -0500, Arvind Sankar wrote:
->>> Commit bcdedcc1afd6 ("menuconfig: print more info for symbol without
->>> prompts") moved some code from get_prompt_str to get_symbol_str so that
->>> dependency information for symbols without prompts could be shown.
->>>
->>> This code would be better copied rather than moved, as the change had
->>> the side-effect of not showing any extra dependencies that the prompt
->>> might have over the symbol.
->>>
->>> Put back a copy of the dependency printing code in get_prompt_str.
->>
->> Umm... Is "visible" really accurate in this case?  AFAICS, the
->> entry (and help for it) _is_ visible with EXPERT=n.  OTOH, with
->> EXPERT=y and MULTIUSER=n it disappears completely.
->>
->> I'm not familiar with kconfig guts (and not too concerned about that
->> feature of help there, TBH), but it looks like what you are printing
->> there is some mix of dependencies ("visible when") and selectability...
-> 
-> Perhaps not the most accurate term. For NAMESPACES it has a submenu, so
-> it can't disappear as long as its selected, even if it's not editable
-> any more. A "leaf" level option like MULTIUSER, otoh, does disappear
-> completely (even though it's still selected).
-> 
-> But there are also things like CONFIG_VT, which stays visible, even
-> though its not a menu.. I think because there is a visible option that
-> depends on it and immediately follows, which menuconfig shows by
-> indenting. If the order of UNIX98_PTYS and VT_HW_CONSOLE_BINDING is
-> flipped in drivers/tty/Kconfig, then VT disappears when EXPERT=n.
-> 
-> Dunno, maybe Editable would be a better word than Visible?
-
-I would prefer Editable instead of Visible.
-
-and the Subject should be more than menuconfig since the patch also
-"fixes" nconfig, xconfig, and gconfig.
 
 
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
+> On Jan 2, 2020, at 10:52 AM, Waiman Long <longman@redhat.com> wrote:
+>=20
+> Depending on the workloads, the following circular locking dependency
+> warning between sb_internal (a percpu rwsem) and fs_reclaim (a pseudo
+> lock) may show up:
+>=20
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> WARNING: possible circular locking dependency detected
+> 5.0.0-rc1+ #60 Tainted: G        W
+> ------------------------------------------------------
+> fsfreeze/4346 is trying to acquire lock:
+> 0000000026f1d784 (fs_reclaim){+.+.}, at:
+> fs_reclaim_acquire.part.19+0x5/0x30
+>=20
+> but task is already holding lock:
+> 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
+>=20
+> which lock already depends on the new lock.
+>  :
+> Possible unsafe locking scenario:
+>=20
+>       CPU0                    CPU1
+>       ----                    ----
+>  lock(sb_internal);
+>                               lock(fs_reclaim);
+>                               lock(sb_internal);
+>  lock(fs_reclaim);
+>=20
+> *** DEADLOCK ***
+>=20
+> 4 locks held by fsfreeze/4346:
+> #0: 00000000b478ef56 (sb_writers#8){++++}, at: percpu_down_write+0xb4/0x65=
+0
+> #1: 000000001ec487a9 (&type->s_umount_key#28){++++}, at: freeze_super+0xda=
+/0x290
+> #2: 000000003edbd5a0 (sb_pagefaults){++++}, at: percpu_down_write+0xb4/0x6=
+50
+> #3: 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650=
 
-Thanks.
--- 
-~Randy
+>=20
+> stack backtrace:
+> Call Trace:
+> dump_stack+0xe0/0x19a
+> print_circular_bug.isra.10.cold.34+0x2f4/0x435
+> check_prev_add.constprop.19+0xca1/0x15f0
+> validate_chain.isra.14+0x11af/0x3b50
+> __lock_acquire+0x728/0x1200
+> lock_acquire+0x269/0x5a0
+> fs_reclaim_acquire.part.19+0x29/0x30
+> fs_reclaim_acquire+0x19/0x20
+> kmem_cache_alloc+0x3e/0x3f0
+> kmem_zone_alloc+0x79/0x150
+> xfs_trans_alloc+0xfa/0x9d0
+> xfs_sync_sb+0x86/0x170
+> xfs_log_sbcount+0x10f/0x140
+> xfs_quiesce_attr+0x134/0x270
+> xfs_fs_freeze+0x4a/0x70
+> freeze_super+0x1af/0x290
+> do_vfs_ioctl+0xedc/0x16c0
+> ksys_ioctl+0x41/0x80
+> __x64_sys_ioctl+0x73/0xa9
+> do_syscall_64+0x18f/0xd23
+> entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>=20
+> According to Dave Chinner:
+>=20
+>  Freezing the filesystem, after all the data has been cleaned. IOWs
+>  memory reclaim will never run the above writeback path when
+>  the freeze process is trying to allocate a transaction here because
+>  there are no dirty data pages in the filesystem at this point.
+>=20
+>  Indeed, this xfs_sync_sb() path sets XFS_TRANS_NO_WRITECOUNT so that
+>  it /doesn't deadlock/ by taking freeze references for the
+>  transaction. We've just drained all the transactions
+>  in progress and written back all the dirty metadata, too, and so the
+>  filesystem is completely clean and only needs the superblock to be
+>  updated to complete the freeze process. And to do that, it does not
+>  take a freeze reference because calling sb_start_intwrite() here
+>  would deadlock.
+>=20
+>  IOWs, this is a false positive, caused by the fact that
+>  xfs_trans_alloc() is called from both above and below memory reclaim
+>  as well as within /every level/ of freeze processing. Lockdep is
+>  unable to describe the staged flush logic in the freeze process that
+>  prevents deadlocks from occurring, and hence we will pretty much
+>  always see false positives in the freeze path....
+>=20
+> Perhaps breaking the fs_reclaim pseudo lock into a per filesystem lock
+> may fix the issue. However, that will greatly complicate the logic and
+> may not be worth it.
+>=20
+> Another way to fix it is to disable the taking of the fs_reclaim
+> pseudo lock when in the freezing code path as a reclaim on the freezed
+> filesystem is not possible as stated above. This patch takes this
+> approach by setting the __GFP_NOLOCKDEP flag in the slab memory
+> allocation calls when the filesystem has been freezed.
+>=20
+> Without this patch, the command sequence below will show that the lock
+> dependency chain sb_internal -> fs_reclaim exists.
+>=20
+> # fsfreeze -f /home
+> # fsfreeze --unfreeze /home
+> # grep -i fs_reclaim -C 3 /proc/lockdep_chains | grep -C 5 sb_internal
+>=20
+> After applying the patch, such sb_internal -> fs_reclaim lock dependency
+> chain can no longer be found. Because of that, the locking dependency
+> warning will not be shown.
 
+There was an attempt to fix this in the past, but Dave rejected right away f=
+or any workaround in xfs and insisted to make lockdep smarter instead. No su=
+re your approach will make any difference this time. Good luck.=
