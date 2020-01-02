@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5F2C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 041F2C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 552F52464B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4D09222C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004002;
-	bh=Yb86dZj1zmqQt6V3G33LYnP/wlfh0kQGGKcZlNl/Qlg=;
+	s=default; t=1578004005;
+	bh=acmRMlViayMjg+TGBcAMp3fREFhCF9WtXzdHfgDleL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BwM6BkXxk/uciJpS+IgJ/Is2lRNKUuACKAz4ctE8KqX15YXHhLXhjkZguOe4Et+Lw
-	 ymyoXiQd5LhLQ8I7h72qvP4T9HiT1eowClpewJlp/4pi/j3eeUCx5HQT0Epam2L8Il
-	 9NKjbGOItFTzu5ApvF6r/USmd1+2thzJNi+EtpTo=
+	b=UVy+WRA+XnNbmdweljhYXdQPvweAVKnV6I87/Rmc3/mYop5KGRqzbMPhEVGYU/nTJ
+	 w+Ku6Ult9DqGV7LLEMjTO+PfGYMX3hTYYaIXnjiXp+6ON0kaB37rrw9X6o3TpNE2td
+	 v/VZemiJFOZBeEKAi2USKThzuS4N6N5NSvpcW9Bk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbgABW0l (ORCPT
+        id S1729666AbgABW0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:26:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54060 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:26:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729054AbgABW0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:26:36 -0500
+        id S1729545AbgABW0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:26:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BF75222C3;
-        Thu,  2 Jan 2020 22:26:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D19A724649;
+        Thu,  2 Jan 2020 22:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003995;
-        bh=Yb86dZj1zmqQt6V3G33LYnP/wlfh0kQGGKcZlNl/Qlg=;
+        s=default; t=1578004000;
+        bh=acmRMlViayMjg+TGBcAMp3fREFhCF9WtXzdHfgDleL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KO9qjTJDMMS7tQlXyGE/MUv8lZa1sxDMd+jFt8DDGPCv7wZ+ikf71f+RaBkIs1oct
-         K+FNjFNVpORC1tAEgFVw/LPpPx+0y1UDJWXbrYl40ATpdspMdhYr/jz1RQYWhfIdvK
-         0/5vc9iG0I0ziGI4CvPpfRhRWwMs2gkTlc/Mil8U=
+        b=AVc5KjLMxk6POJwQ/LEZetWqh0NTX8uXnpN4C+nYvbRTlNC6hx+u2KzF9PsfY1tXS
+         HMUQev0X23YVE57E5i6J2XmoGuhtK7oEpALsgojgclwmM1QS4snhd2wZVcHf9QnDz6
+         jgy9cW4/OY6Vo/Mc05dkUY8yo5pUz4dGmTFE2hP4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mattias Jacobsson <2pi@mok.nu>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sanskriti Sharma <sansharm@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH 4.14 60/91] perf strbuf: Remove redundant va_end() in strbuf_addv()
-Date:   Thu,  2 Jan 2020 23:07:42 +0100
-Message-Id: <20200102220440.879731229@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+3031f712c7ad5dd4d926@syzkaller.appspotmail.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Siddharth Chandrasekaran <csiddharth@vmware.com>
+Subject: [PATCH 4.14 62/91] filldir[64]: remove WARN_ON_ONCE() for bad directory entries
+Date:   Thu,  2 Jan 2020 23:07:44 +0100
+Message-Id: <20200102220441.560177243@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -63,37 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mattias Jacobsson <2pi@mok.nu>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 099be748865eece21362aee416c350c0b1ae34df upstream.
+commit b9959c7a347d6adbb558fba7e36e9fef3cba3b07 upstream.
 
-Each call to va_copy() should have one, and only one, corresponding call
-to va_end(). In strbuf_addv() some code paths result in va_end() getting
-called multiple times. Remove the superfluous va_end().
+This was always meant to be a temporary thing, just for testing and to
+see if it actually ever triggered.
 
-Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sanskriti Sharma <sansharm@redhat.com>
-Link: http://lkml.kernel.org/r/20181229141750.16945-1-2pi@mok.nu
-Fixes: ce49d8436cff ("perf strbuf: Match va_{add,copy} with va_end")
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+The only thing that reported it was syzbot doing disk image fuzzing, and
+then that warning is expected.  So let's just remove it before -rc4,
+because the extra sanity testing should probably go to -stable, but we
+don't want the warning to do so.
+
+Reported-by: syzbot+3031f712c7ad5dd4d926@syzkaller.appspotmail.com
+Fixes: 8a23eb804ca4 ("Make filldir[64]() verify the directory entry filename is valid")
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Siddharth Chandrasekaran <csiddharth@vmware.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/strbuf.c |    1 -
- 1 file changed, 1 deletion(-)
+ fs/readdir.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/tools/perf/util/strbuf.c
-+++ b/tools/perf/util/strbuf.c
-@@ -109,7 +109,6 @@ static int strbuf_addv(struct strbuf *sb
- 			return ret;
- 		}
- 		len = vsnprintf(sb->buf + sb->len, sb->alloc - sb->len, fmt, ap_saved);
--		va_end(ap_saved);
- 		if (len > strbuf_avail(sb)) {
- 			pr_debug("this should not happen, your vsnprintf is broken");
- 			va_end(ap_saved);
+--- a/fs/readdir.c
++++ b/fs/readdir.c
+@@ -92,9 +92,9 @@ EXPORT_SYMBOL(iterate_dir);
+  */
+ static int verify_dirent_name(const char *name, int len)
+ {
+-	if (WARN_ON_ONCE(!len))
++	if (!len)
+ 		return -EIO;
+-	if (WARN_ON_ONCE(memchr(name, '/', len)))
++	if (memchr(name, '/', len))
+ 		return -EIO;
+ 	return 0;
+ }
 
 
