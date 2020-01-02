@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B87BC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 390C8C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 512F324125
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B0C821835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003859;
-	bh=ahhPLmHnpeiZ5zIMVY1mHLBA2HgPkgXBFbDu4dmrIR0=;
+	s=default; t=1578003863;
+	bh=pzmlnWYb9wFVxE9KF237+gEu5W98hLchlUIJRs9BXPw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ao1IbXo6eoU8X6YTSzt1VAKxv9A6zWU3O9WrvKVRw5y5WM0Xs5g1tNSJ5SVz39MeA
-	 OFd5dLzuXKoLjajbtgpY3QuJ9HCHd+EUAoPvFZmgtTACClrm+xJ5KsnS4WRj6/1m74
-	 FpdyPe03uOowAWxHmTxULZvoFgARE9oY0fL4H97Y=
+	b=jt+bT1QO9Bn5p2LnBNUoM/9jIdo/qm7pdbNW3/6IJkor57GuFEsmhLhKPCiyZI4Ef
+	 65ws68WGh4WMQZr6lsaNSIyAKDPYZchb3wagx8ilyH0LYdGEaCr0DMDkon+He0prg/
+	 E51Ck4AOyjJ/FWMxyElVw7jAn6W8o74hKWd1NUi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729383AbgABWYR (ORCPT
+        id S1729396AbgABWYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:24:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47762 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:24:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729216AbgABWYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:24:11 -0500
+        id S1729384AbgABWYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:24:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8804D20863;
-        Thu,  2 Jan 2020 22:24:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C052120863;
+        Thu,  2 Jan 2020 22:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003851;
-        bh=ahhPLmHnpeiZ5zIMVY1mHLBA2HgPkgXBFbDu4dmrIR0=;
+        s=default; t=1578003858;
+        bh=pzmlnWYb9wFVxE9KF237+gEu5W98hLchlUIJRs9BXPw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YZDWA9FmMfQuuUnvl+R93EK8pvXpcaMdFPy7XKDGDKi09Ngy9v77H49sGEnztqAh+
-         tqTBhjNVdR5nmNyjaAcc3J7H579ODYUlvqoRU69TbUajVYJXP7Xk7PtPwLzVlf87d0
-         It+bFfJo1xLMMP0YvVGKdhVdL21Bzsw/wMzIk+MQ=
+        b=zwMOPbYomaPn6CiQmQsrDCExF3LpAcGp9TfoYp+QnmnKFW/QgYdG0DmWtoWyJfhmm
+         uXDabyNiFfGQ1Vr5NmbbsPmxHGjQHRcOOUaKN0z4yXDq60E6TEl4ioMDF48Egw3RAi
+         GumIz8ARHACfnAvIU8mDEVTRemkjbnZaakjRd4E8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 25/91] fs/quota: handle overflows of sysctl fs.quota.* and report as unsigned long
-Date:   Thu,  2 Jan 2020 23:07:07 +0100
-Message-Id: <20200102220425.643813788@linuxfoundation.org>
+        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 05/91] iommu/tegra-smmu: Fix page tables in > 4 GiB memory
+Date:   Thu,  2 Jan 2020 23:06:47 +0100
+Message-Id: <20200102220402.956343552@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -60,144 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 6fcbcec9cfc7b3c6a2c1f1a23ebacedff7073e0a ]
+[ Upstream commit 96d3ab802e4930a29a33934373157d6dff1b2c7e ]
 
-Quota statistics counted as 64-bit per-cpu counter. Reading sums per-cpu
-fractions as signed 64-bit int, filters negative values and then reports
-lower half as signed 32-bit int.
+Page tables that reside in physical memory beyond the 4 GiB boundary are
+currently not working properly. The reason is that when the physical
+address for page directory entries is read, it gets truncated at 32 bits
+and can cause crashes when passing that address to the DMA API.
 
-Result may looks like:
+Fix this by first casting the PDE value to a dma_addr_t and then using
+the page frame number mask for the SMMU instance to mask out the invalid
+bits, which are typically used for mapping attributes, etc.
 
-fs.quota.allocated_dquots = 22327
-fs.quota.cache_hits = -489852115
-fs.quota.drops = -487288718
-fs.quota.free_dquots = 22083
-fs.quota.lookups = -486883485
-fs.quota.reads = 22327
-fs.quota.syncs = 335064
-fs.quota.writes = 3088689
-
-Values bigger than 2^31-1 reported as negative.
-
-All counters except "allocated_dquots" and "free_dquots" are monotonic,
-thus they should be reported as is without filtering negative values.
-
-Kernel doesn't have generic helper for 64-bit sysctl yet,
-let's use at least unsigned long.
-
-Link: https://lore.kernel.org/r/157337934693.2078.9842146413181153727.stgit@buzz
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/quota/dquot.c      | 29 +++++++++++++++++------------
- include/linux/quota.h |  2 +-
- 2 files changed, 18 insertions(+), 13 deletions(-)
+ drivers/iommu/tegra-smmu.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-index 3254c90fd899..3fdbdd29702b 100644
---- a/fs/quota/dquot.c
-+++ b/fs/quota/dquot.c
-@@ -2849,68 +2849,73 @@ EXPORT_SYMBOL(dquot_quotactl_sysfile_ops);
- static int do_proc_dqstats(struct ctl_table *table, int write,
- 		     void __user *buffer, size_t *lenp, loff_t *ppos)
- {
--	unsigned int type = (int *)table->data - dqstats.stat;
-+	unsigned int type = (unsigned long *)table->data - dqstats.stat;
-+	s64 value = percpu_counter_sum(&dqstats.counter[type]);
-+
-+	/* Filter negative values for non-monotonic counters */
-+	if (value < 0 && (type == DQST_ALLOC_DQUOTS ||
-+			  type == DQST_FREE_DQUOTS))
-+		value = 0;
- 
- 	/* Update global table */
--	dqstats.stat[type] =
--			percpu_counter_sum_positive(&dqstats.counter[type]);
--	return proc_dointvec(table, write, buffer, lenp, ppos);
-+	dqstats.stat[type] = value;
-+	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
+diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
+index 40eb8138546a..848dac3e4580 100644
+--- a/drivers/iommu/tegra-smmu.c
++++ b/drivers/iommu/tegra-smmu.c
+@@ -156,9 +156,9 @@ static bool smmu_dma_addr_valid(struct tegra_smmu *smmu, dma_addr_t addr)
+ 	return (addr & smmu->pfn_mask) == addr;
  }
  
- static struct ctl_table fs_dqstats_table[] = {
- 	{
- 		.procname	= "lookups",
- 		.data		= &dqstats.stat[DQST_LOOKUPS],
--		.maxlen		= sizeof(int),
-+		.maxlen		= sizeof(unsigned long),
- 		.mode		= 0444,
- 		.proc_handler	= do_proc_dqstats,
- 	},
- 	{
- 		.procname	= "drops",
- 		.data		= &dqstats.stat[DQST_DROPS],
--		.maxlen		= sizeof(int),
-+		.maxlen		= sizeof(unsigned long),
- 		.mode		= 0444,
- 		.proc_handler	= do_proc_dqstats,
- 	},
- 	{
- 		.procname	= "reads",
- 		.data		= &dqstats.stat[DQST_READS],
--		.maxlen		= sizeof(int),
-+		.maxlen		= sizeof(unsigned long),
- 		.mode		= 0444,
- 		.proc_handler	= do_proc_dqstats,
- 	},
- 	{
- 		.procname	= "writes",
- 		.data		= &dqstats.stat[DQST_WRITES],
--		.maxlen		= sizeof(int),
-+		.maxlen		= sizeof(unsigned long),
- 		.mode		= 0444,
- 		.proc_handler	= do_proc_dqstats,
- 	},
- 	{
- 		.procname	= "cache_hits",
- 		.data		= &dqstats.stat[DQST_CACHE_HITS],
--		.maxlen		= sizeof(int),
-+		.maxlen		= sizeof(unsigned long),
- 		.mode		= 0444,
- 		.proc_handler	= do_proc_dqstats,
- 	},
- 	{
- 		.procname	= "allocated_dquots",
- 		.data		= &dqstats.stat[DQST_ALLOC_DQUOTS],
--		.maxlen		= sizeof(int),
-+		.maxlen		= sizeof(unsigned long),
- 		.mode		= 0444,
- 		.proc_handler	= do_proc_dqstats,
- 	},
- 	{
- 		.procname	= "free_dquots",
- 		.data		= &dqstats.stat[DQST_FREE_DQUOTS],
--		.maxlen		= sizeof(int),
-+		.maxlen		= sizeof(unsigned long),
- 		.mode		= 0444,
- 		.proc_handler	= do_proc_dqstats,
- 	},
- 	{
- 		.procname	= "syncs",
- 		.data		= &dqstats.stat[DQST_SYNCS],
--		.maxlen		= sizeof(int),
-+		.maxlen		= sizeof(unsigned long),
- 		.mode		= 0444,
- 		.proc_handler	= do_proc_dqstats,
- 	},
-diff --git a/include/linux/quota.h b/include/linux/quota.h
-index 5ac9de4fcd6f..aa9a42eceab0 100644
---- a/include/linux/quota.h
-+++ b/include/linux/quota.h
-@@ -263,7 +263,7 @@ enum {
- };
+-static dma_addr_t smmu_pde_to_dma(u32 pde)
++static dma_addr_t smmu_pde_to_dma(struct tegra_smmu *smmu, u32 pde)
+ {
+-	return pde << 12;
++	return (dma_addr_t)(pde & smmu->pfn_mask) << 12;
+ }
  
- struct dqstats {
--	int stat[_DQST_DQSTAT_LAST];
-+	unsigned long stat[_DQST_DQSTAT_LAST];
- 	struct percpu_counter counter[_DQST_DQSTAT_LAST];
- };
+ static void smmu_flush_ptc_all(struct tegra_smmu *smmu)
+@@ -543,6 +543,7 @@ static u32 *tegra_smmu_pte_lookup(struct tegra_smmu_as *as, unsigned long iova,
+ 				  dma_addr_t *dmap)
+ {
+ 	unsigned int pd_index = iova_pd_index(iova);
++	struct tegra_smmu *smmu = as->smmu;
+ 	struct page *pt_page;
+ 	u32 *pd;
+ 
+@@ -551,7 +552,7 @@ static u32 *tegra_smmu_pte_lookup(struct tegra_smmu_as *as, unsigned long iova,
+ 		return NULL;
+ 
+ 	pd = page_address(as->pd);
+-	*dmap = smmu_pde_to_dma(pd[pd_index]);
++	*dmap = smmu_pde_to_dma(smmu, pd[pd_index]);
+ 
+ 	return tegra_smmu_pte_offset(pt_page, iova);
+ }
+@@ -593,7 +594,7 @@ static u32 *as_get_pte(struct tegra_smmu_as *as, dma_addr_t iova,
+ 	} else {
+ 		u32 *pd = page_address(as->pd);
+ 
+-		*dmap = smmu_pde_to_dma(pd[pde]);
++		*dmap = smmu_pde_to_dma(smmu, pd[pde]);
+ 	}
+ 
+ 	return tegra_smmu_pte_offset(as->pts[pde], iova);
+@@ -618,7 +619,7 @@ static void tegra_smmu_pte_put_use(struct tegra_smmu_as *as, unsigned long iova)
+ 	if (--as->count[pde] == 0) {
+ 		struct tegra_smmu *smmu = as->smmu;
+ 		u32 *pd = page_address(as->pd);
+-		dma_addr_t pte_dma = smmu_pde_to_dma(pd[pde]);
++		dma_addr_t pte_dma = smmu_pde_to_dma(smmu, pd[pde]);
+ 
+ 		tegra_smmu_set_pde(as, iova, 0);
  
 -- 
 2.20.1
