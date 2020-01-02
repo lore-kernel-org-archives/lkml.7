@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD23C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA986C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BDC822525
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF26B21D7D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003110;
-	bh=DxqR4VUkN2TARIE5Vj2hlvUJOeh9mYE+qU4MaUy6i7o=;
+	s=default; t=1578003114;
+	bh=P/0TEYIsc/mAFLoitRlrODTkg60QhxkoxOSox9ThY2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G2YOTznhRMF0T5rsjOQljxwNmxgbwYwQO0AJIh7OFhHgJ6S84R5xy353amXq0qHVh
-	 yLCgv9fGgvOme95l68TuPiEq7vTn4eKwUBMFAlW92mZKFokCYjayHwPV9SGr/xR8Qk
-	 dAFj5qo8y/da+N0voGALArLAJ76RPyIVjmd0/nto=
+	b=fqtxIYx2wAb5uB6yydkUkEZyY0dHNK03IGqXI8qv476FRAa5oltrf40WVPHQrgJdj
+	 89kIEiZcTxyN7GU3K2ztSZjmiAnNYFbopa+bJlqwgV0yXeUpDF9fov7iYC9ZIt+7hB
+	 ntxoo60WWNq/4dKMOYDCQHrAckKqBe7gY7psognw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbgABWLt (ORCPT
+        id S1727313AbgABWLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:11:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50358 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:11:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727264AbgABWLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:11:48 -0500
+        id S1727264AbgABWLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:11:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 123D621D7D;
-        Thu,  2 Jan 2020 22:11:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7587B222C3;
+        Thu,  2 Jan 2020 22:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003107;
-        bh=DxqR4VUkN2TARIE5Vj2hlvUJOeh9mYE+qU4MaUy6i7o=;
+        s=default; t=1578003109;
+        bh=P/0TEYIsc/mAFLoitRlrODTkg60QhxkoxOSox9ThY2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PqfwCyaOVM0Tl7+z6r7caYvstTV/JbxjpoXNgJhdffmzEgks5BYZdIMw3b58m42Yy
-         f0bWQj5yl+RIx+ADxJ/Xh38DsqC+Sp4kRlwVwzy2CESd0J8W1zxxIDP+MOq3sMmfS5
-         DHNG/ysgab9zjcrgSrAH624KsoliOyZMysJXqN58=
+        b=kfCZEKeDZhdDkcE5JlxxFJmo3Zdp8+9iqLh8H6Yg0OUisfpRjwmLDWXocwvXW1ZLN
+         cUG9xUujP+i7wtGQdKqMDTjYeHpwiBg9NQ30npSnVb9TbtYf2xLa6Dw9vJF9MHIDfa
+         rYVSR1kFdWR7jJLgEunWQePXo2PADRtPO8mk2glg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
+        stable@vger.kernel.org, Luo Jiaxing <luojiaxing@huawei.com>,
         John Garry <john.garry@huawei.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 022/191] scsi: hisi_sas: Replace in_softirq() check in hisi_sas_task_exec()
-Date:   Thu,  2 Jan 2020 23:05:04 +0100
-Message-Id: <20200102215832.289906204@linuxfoundation.org>
+Subject: [PATCH 5.4 023/191] scsi: hisi_sas: Delete the debugfs folder of hisi_sas when the probe fails
+Date:   Thu,  2 Jan 2020 23:05:05 +0100
+Message-Id: <20200102215832.429052690@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,83 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiang Chen <chenxiang66@hisilicon.com>
+From: Luo Jiaxing <luojiaxing@huawei.com>
 
-[ Upstream commit 550c0d89d52d3bec5c299f69b4ed5d2ee6b8a9a6 ]
+[ Upstream commit cabe7c10c97a0857a9fb14b6c772ab784947995d ]
 
-For IOs from upper layer, preemption may be disabled as it may be called by
-function __blk_mq_delay_run_hw_queue which will call get_cpu() (it disables
-preemption). So if flags HISI_SAS_REJECT_CMD_BIT is set in function
-hisi_sas_task_exec(), it may disable preempt twice after down() and up()
-which will cause following call trace:
+Although if the debugfs initialization fails, we will delete the debugfs
+folder of hisi_sas, but we did not consider the scenario where debugfs was
+successfully initialized, but the probe failed for other reasons. We found
+out that hisi_sas folder is still remain after the probe failed.
 
-BUG: scheduling while atomic: fio/60373/0x00000002
-Call trace:
-dump_backtrace+0x0/0x150
-show_stack+0x24/0x30
-dump_stack+0xa0/0xc4
-__schedule_bug+0x68/0x88
-__schedule+0x4b8/0x548
-schedule+0x40/0xd0
-schedule_timeout+0x200/0x378
-__down+0x78/0xc8
-down+0x54/0x70
-hisi_sas_task_exec.isra.10+0x598/0x8d8 [hisi_sas_main]
-hisi_sas_queue_command+0x28/0x38 [hisi_sas_main]
-sas_queuecommand+0x168/0x1b0 [libsas]
-scsi_queue_rq+0x2ac/0x980
-blk_mq_dispatch_rq_list+0xb0/0x550
-blk_mq_do_dispatch_sched+0x6c/0x110
-blk_mq_sched_dispatch_requests+0x114/0x1d8
-__blk_mq_run_hw_queue+0xb8/0x130
-__blk_mq_delay_run_hw_queue+0x1c0/0x220
-blk_mq_run_hw_queue+0xb0/0x128
-blk_mq_sched_insert_requests+0xdc/0x208
-blk_mq_flush_plug_list+0x1b4/0x3a0
-blk_flush_plug_list+0xdc/0x110
-blk_finish_plug+0x3c/0x50
-blkdev_direct_IO+0x404/0x550
-generic_file_read_iter+0x9c/0x848
-blkdev_read_iter+0x50/0x78
-aio_read+0xc8/0x170
-io_submit_one+0x1fc/0x8d8
-__arm64_sys_io_submit+0xdc/0x280
-el0_svc_common.constprop.0+0xe0/0x1e0
-el0_svc_handler+0x34/0x90
-el0_svc+0x10/0x14
-...
+When probe fail, we should delete debugfs folder to avoid the above issue.
 
-To solve the issue, check preemptible() to avoid disabling preempt multiple
-when flag HISI_SAS_REJECT_CMD_BIT is set.
-
-Link: https://lore.kernel.org/r/1571926105-74636-5-git-send-email-john.garry@huawei.com
-Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
+Link: https://lore.kernel.org/r/1571926105-74636-18-git-send-email-john.garry@huawei.com
+Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
 Signed-off-by: John Garry <john.garry@huawei.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/hisi_sas/hisi_sas_main.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/scsi/hisi_sas/hisi_sas_main.c  | 1 +
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 1 +
+ 2 files changed, 2 insertions(+)
 
 diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index 0847e682797b..20f0cb4698b7 100644
+index 20f0cb4698b7..633effb09c9c 100644
 --- a/drivers/scsi/hisi_sas/hisi_sas_main.c
 +++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -587,7 +587,13 @@ static int hisi_sas_task_exec(struct sas_task *task, gfp_t gfp_flags,
- 	dev = hisi_hba->dev;
- 
- 	if (unlikely(test_bit(HISI_SAS_REJECT_CMD_BIT, &hisi_hba->flags))) {
--		if (in_softirq())
-+		/*
-+		 * For IOs from upper layer, it may already disable preempt
-+		 * in the IO path, if disable preempt again in down(),
-+		 * function schedule() will report schedule_bug(), so check
-+		 * preemptible() before goto down().
-+		 */
-+		if (!preemptible())
- 			return -EINVAL;
- 
- 		down(&hisi_hba->sem);
+@@ -2682,6 +2682,7 @@ int hisi_sas_probe(struct platform_device *pdev,
+ err_out_register_ha:
+ 	scsi_remove_host(shost);
+ err_out_ha:
++	hisi_sas_debugfs_exit(hisi_hba);
+ 	hisi_sas_free(hisi_hba);
+ 	scsi_host_put(shost);
+ 	return rc;
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+index cb8d087762db..ef32ee12f606 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+@@ -3259,6 +3259,7 @@ hisi_sas_v3_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ err_out_register_ha:
+ 	scsi_remove_host(shost);
+ err_out_ha:
++	hisi_sas_debugfs_exit(hisi_hba);
+ 	scsi_host_put(shost);
+ err_out_regions:
+ 	pci_release_regions(pdev);
 -- 
 2.20.1
 
