@@ -2,51 +2,53 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98686C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0162C3276F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64CE721D7D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9794A22314
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005183;
-	bh=iT8ha0g8v8WDWsKNDeVxAqM6YfuJogpdYejcBs+bGI8=;
+	s=default; t=1578005186;
+	bh=obYcbybQK0iRzuQodJ35Y2/yu1p1+C2bxabYBA70L0c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ADwJY+40+J89jg906LsfLmbE7uDJEXkPfxa0ZqP6XCUqdxBorhLullphZEB/YmSQb
-	 0wybCnD7bt2sOAUuHUfqwu+G4dCMeHIKYm1H+oDR5cfVEjag1Hky2bzlwWtb/tdGcx
-	 v4aJhbc5Ojcw9EAnrTS8mX8av6CDExFEtr2lkEHA=
+	b=AIHFGldHKv0jk6qnOq7pHeiDrxpJm52IBVJATxQ1eVQc15/6jpUsU9AOSMB+FyMN4
+	 1ibKLwePxH53aKQEozHYSgZ31HC9zNH2vQLOe8uZcN5Pa6DeWfv8HVCSaLzbV5YkW4
+	 HvmB44np+sC0kXG/hZMb3gtNeIi/PfXPsQX/vrrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730736AbgABWqW (ORCPT
+        id S1730210AbgABWay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:46:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35652 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:30:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730226AbgABWbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:31:01 -0500
+        id S1730019AbgABWav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:30:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F5D520863;
-        Thu,  2 Jan 2020 22:30:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C02820863;
+        Thu,  2 Jan 2020 22:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004260;
-        bh=iT8ha0g8v8WDWsKNDeVxAqM6YfuJogpdYejcBs+bGI8=;
+        s=default; t=1578004251;
+        bh=obYcbybQK0iRzuQodJ35Y2/yu1p1+C2bxabYBA70L0c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f4YYhI2FXWujTFBzM64OH2ZT2PhUIyzvy+Ktn0ihCcav8itKz+ZysCTj0iP/oYSI1
-         TzXAJ3UPzurZoDZooPxNl0kxNr2J+tFNQY0tP0hhFqLglT43P2/Wx6ZZIXhelICBxI
-         rzypfTlgQhwIG5B5A7HJLx99OuadmhfupW2gsoks=
+        b=MfwnlQQOvgNIh0qLMZiGXcxFfLSZQloPPa9ljjmIri81y5sZqGmJrhQfl9yQ/E2go
+         gY1TeVDl0fcNsu27R1a3NJ+Zj/F1wPXipZxVhRAuRnGNtH4l63Uuur2o8x0jxUnaA1
+         dYvXc+MRHUOyT7WqFdYUA0pqZRAOgbQ9bNsV9axw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 097/171] net: nfc: nci: fix a possible sleep-in-atomic-context bug in nci_uart_tty_receive()
-Date:   Thu,  2 Jan 2020 23:07:08 +0100
-Message-Id: <20200102220600.726195922@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
+        Omar Sandoval <osandov@fb.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 075/171] btrfs: dont prematurely free work in end_workqueue_fn()
+Date:   Thu,  2 Jan 2020 23:06:46 +0100
+Message-Id: <20200102220557.382989729@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -59,45 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Omar Sandoval <osandov@fb.com>
 
-[ Upstream commit b7ac893652cafadcf669f78452329727e4e255cc ]
+[ Upstream commit 9be490f1e15c34193b1aae17da58e14dd9f55a95 ]
 
-The kernel may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+Currently, end_workqueue_fn() frees the end_io_wq entry (which embeds
+the work item) and then calls bio_endio(). This is another potential
+instance of the bug in "btrfs: don't prematurely free work in
+run_ordered_work()".
 
-net/nfc/nci/uart.c, 349:
-	nci_skb_alloc in nci_uart_default_recv_buf
-net/nfc/nci/uart.c, 255:
-	(FUNC_PTR)nci_uart_default_recv_buf in nci_uart_tty_receive
-net/nfc/nci/uart.c, 254:
-	spin_lock in nci_uart_tty_receive
+In particular, the endio call may depend on other work items. For
+example, btrfs_end_dio_bio() can call btrfs_subio_endio_read() ->
+__btrfs_correct_data_nocsum() -> dio_read_error() ->
+submit_dio_repair_bio(), which submits a bio that is also completed
+through a end_workqueue_fn() work item. However,
+__btrfs_correct_data_nocsum() waits for the newly submitted bio to
+complete, thus it depends on another work item.
 
-nci_skb_alloc(GFP_KERNEL) can sleep at runtime.
-(FUNC_PTR) means a function pointer is called.
+This example currently usually works because we use different workqueue
+helper functions for BTRFS_WQ_ENDIO_DATA and BTRFS_WQ_ENDIO_DIO_REPAIR.
+However, it may deadlock with stacked filesystems and is fragile
+overall. The proper fix is to free the work item at the very end of the
+work function, so let's do that.
 
-To fix this bug, GFP_KERNEL is replaced with GFP_ATOMIC for
-nci_skb_alloc().
-
-This bug is found by a static analysis tool STCheck written by myself.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/nfc/nci/uart.c |    2 +-
+ fs/btrfs/disk-io.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/nfc/nci/uart.c
-+++ b/net/nfc/nci/uart.c
-@@ -348,7 +348,7 @@ static int nci_uart_default_recv_buf(str
- 			nu->rx_packet_len = -1;
- 			nu->rx_skb = nci_skb_alloc(nu->ndev,
- 						   NCI_MAX_PACKET_SIZE,
--						   GFP_KERNEL);
-+						   GFP_ATOMIC);
- 			if (!nu->rx_skb)
- 				return -ENOMEM;
- 		}
+diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+index 9d3352fe8dc9..b37519241eb1 100644
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -1712,8 +1712,8 @@ static void end_workqueue_fn(struct btrfs_work *work)
+ 	bio->bi_error = end_io_wq->error;
+ 	bio->bi_private = end_io_wq->private;
+ 	bio->bi_end_io = end_io_wq->end_io;
+-	kmem_cache_free(btrfs_end_io_wq_cache, end_io_wq);
+ 	bio_endio(bio);
++	kmem_cache_free(btrfs_end_io_wq_cache, end_io_wq);
+ }
+ 
+ static int cleaner_kthread(void *arg)
+-- 
+2.20.1
+
 
 
