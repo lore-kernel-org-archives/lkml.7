@@ -2,115 +2,132 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2C2C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88958C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D87320848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:48:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LZENSqWA"
+	by mail.kernel.org (Postfix) with ESMTP id 5AF5C20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:48:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578005301;
+	bh=gn4Dwm6ilXM8y8DJXcystWpVTJVTceOPjVD5ByPFPKc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xN3zoCQt3EyKZUIJE3/rEnSZFdxySdglaobXGOPxqcSnB93Vgm5INUdh6tLJ7JYlK
+	 lwmb7dRgRuNQgGX/XwD4peIQEB7DOoXocJF9yaUL6vXjJXYpWxv3iFdCxTGIIF8T0D
+	 EZb4Us0xmUZKszSqZEVbXaRfMxh/LmekGsIDv9fw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731226AbgABWsN (ORCPT
+        id S1730636AbgABWsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:48:13 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:42097 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731214AbgABWsK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:48:10 -0500
-Received: by mail-ed1-f66.google.com with SMTP id e10so40337240edv.9;
-        Thu, 02 Jan 2020 14:48:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FxDVgAWCt/FxweqZJ9ECXtjAagQu09sD0MoBdlNxryg=;
-        b=LZENSqWA7RVFQddHBKJZYPDG2/cwJ5/SRNHmORY6N0r2a9n46mzde3B6/50GhghXJ0
-         uh7+1ZGWPkTWY1KTpkEjbTZ74Hw6i2gL+YWZ3WqAA9r2mEUIzBF6Ttoao/2P9jmgHGOE
-         1WNlkVX6Kv2+xEqdpzhLiILQynLl9RMPf8kBPW0kgLIf/CDJhOeI8F0K5R3MAN2V3KQD
-         wha2jJ2G9h83MvVJWgu9wht/zKW5KGK9GsHAzutAqSkhU3wgTQeMyoutDg7QhjO3Ji1c
-         U3wr52sY9R9bfb0Yei7zIrXN4ES+L7+KSaoBW2nIztlDWgGarEISWH48RosfnAuYoZqd
-         GKXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FxDVgAWCt/FxweqZJ9ECXtjAagQu09sD0MoBdlNxryg=;
-        b=TgAvYHfhI4yn2I23fNpxPHzcBl2dDC4BK4zclErlIir9K+ew+JtU2Vax6B3sPa49rd
-         NYzel33Chtx5fiWnZsJCOWrVLcmt5JDpVPPvIgkO6n0c+5JWz3CH4ps0NvroIfT5bIgc
-         2yfJwgXPESw1AbRrjPTlz0IINmyU/TRVCY/JAcE4bR5s9kgSrPKcKEcAME0d/oF9+OvF
-         WSkxzjVTrznwnOr6mlJqJMOv0IOCNliw8L+WsNAzxjTXjSbH5dCu+9O4uM79lJ0wrLLN
-         grmxaC9s60JvbYD4Ua5W/gm8+Z3HnEKkE+Kl4YgrLyBc5lE4ganuFz9O5XAMh1v13XZg
-         jSkA==
-X-Gm-Message-State: APjAAAVgvpxSXY4Cy8kM9NRa2pOGAdEJRpN+jEbcRznlTseTKpoEyUGi
-        slIHwsi7nIfT4VD0MUmuYEZtdaVEkluoNF/mTj0=
-X-Google-Smtp-Source: APXvYqzODZU0xZFkiQbV2oHfKdWv2Gs85kBFpFSsOl9X7Khg89bfVon2QfK8B95R1BbTnQxJrnue+OzlbfWN8xx3r4g=
-X-Received: by 2002:a17:907:11cc:: with SMTP id va12mr91018831ejb.164.1578005288253;
- Thu, 02 Jan 2020 14:48:08 -0800 (PST)
+        Thu, 2 Jan 2020 17:48:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58274 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729867AbgABW22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:28:28 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A4A021835;
+        Thu,  2 Jan 2020 22:28:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578004108;
+        bh=gn4Dwm6ilXM8y8DJXcystWpVTJVTceOPjVD5ByPFPKc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=R1Jwp2JKhzDxciNB4qnWPmtlTb307hUWRGZXhLEm0R9qrQNs45Zs/Yqpo+OBgettb
+         OuNix1qQW+rN9jZSGKkLG07CnA9Xceszp8aZARfHZjcnv58ulnZz5P9WiIYtltgiNZ
+         4wAMo3sO/V/gyG+e/XfYadmwggCqTkFFq84aF+YU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chris Chiu <chiu@endlessm.com>,
+        Jes Sorensen <Jes.Sorensen@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 040/171] rtl8xxxu: fix RTL8723BU connection failure issue after warm reboot
+Date:   Thu,  2 Jan 2020 23:06:11 +0100
+Message-Id: <20200102220552.562528125@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
+References: <20200102220546.960200039@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20191227014208.7189-1-olteanv@gmail.com> <20200102.134952.739616655559887645.davem@davemloft.net>
-In-Reply-To: <20200102.134952.739616655559887645.davem@davemloft.net>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Fri, 3 Jan 2020 00:47:57 +0200
-Message-ID: <CA+h21horyGwqBTyBSVDRSSOSAPr_3i1dvz40=qKQMD_Nddtk3Q@mail.gmail.com>
-Subject: Re: [PATCH net-next 0/2] Improvements to the DSA deferred xmit
-To:     David Miller <davem@davemloft.net>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+From: Chris Chiu <chiu@endlessm.com>
 
-On Thu, 2 Jan 2020 at 23:49, David Miller <davem@davemloft.net> wrote:
->
-> Two comments about this patch series, I think it needs more work:
->
+[ Upstream commit 0eeb91ade90ce06d2fa1e2fcb55e3316b64c203c ]
 
-Thanks for looking at this series.
+The RTL8723BU has problems connecting to AP after each warm reboot.
+Sometimes it returns no scan result, and in most cases, it fails
+the authentication for unknown reason. However, it works totally
+fine after cold reboot.
 
-> 1) This adds the thread and the xmit queue but not code that actually
->    uses it.  You really have to provide the support code in the driver
->    at the same time you add the new facitlity so we can actually see
->    how it'll be used.
->
+Compare the value of register SYS_CR and SYS_CLK_MAC_CLK_ENABLE
+for cold reboot and warm reboot, the registers imply that the MAC
+is already powered and thus some procedures are skipped during
+driver initialization. Double checked the vendor driver, it reads
+the SYS_CR and SYS_CLK_MAC_CLK_ENABLE also but doesn't skip any
+during initialization based on them. This commit only tells the
+RTL8723BU to do full initialization without checking MAC status.
 
-There is no API change here. There was, and still is, a single caller
-of dsa_defer_xmit in the kernel, from net/dsa/tag_sja1105.c:
+Signed-off-by: Chris Chiu <chiu@endlessm.com>
+Signed-off-by: Jes Sorensen <Jes.Sorensen@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h       | 1 +
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c | 1 +
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  | 3 +++
+ 3 files changed, 5 insertions(+)
 
-    if (unlikely(sja1105_is_link_local(skb)))
-        return dsa_defer_xmit(skb, netdev);
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+index 08d587a342d3..9143b173935d 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+@@ -1348,6 +1348,7 @@ struct rtl8xxxu_fileops {
+ 	u8 has_s0s1:1;
+ 	u8 has_tx_report:1;
+ 	u8 gen2_thermal_meter:1;
++	u8 needs_full_init:1;
+ 	u32 adda_1t_init;
+ 	u32 adda_1t_path_on;
+ 	u32 adda_2t_path_on_a;
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+index 02b8ddd98a95..f51ee88d692b 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+@@ -1673,6 +1673,7 @@ struct rtl8xxxu_fileops rtl8723bu_fops = {
+ 	.has_s0s1 = 1,
+ 	.has_tx_report = 1,
+ 	.gen2_thermal_meter = 1,
++	.needs_full_init = 1,
+ 	.adda_1t_init = 0x01c00014,
+ 	.adda_1t_path_on = 0x01c00014,
+ 	.adda_2t_path_on_a = 0x01c00014,
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+index e78545d4add3..6d34d442294a 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -3905,6 +3905,9 @@ static int rtl8xxxu_init_device(struct ieee80211_hw *hw)
+ 	else
+ 		macpower = true;
+ 
++	if (fops->needs_full_init)
++		macpower = false;
++
+ 	ret = fops->power_on(priv);
+ 	if (ret < 0) {
+ 		dev_warn(dev, "%s: Failed power on\n", __func__);
+-- 
+2.20.1
 
-The whole difference is that what used to be a schedule_work() in that
-function is now a kthread_queue_work() call.
 
-> 2) Patch #1 talks about a tradeoff.  Replacing the CB initialization of
->    the field skb_get().  But this skb_get() is an atomic operation and
->    thus much more expensive for users of the deferred xmit scheme.
->
 
-Ok, I'll admit I hadn't considered the exact penalty introduced by
-skb_get, but I think it is a matter of proportions.
-Worst case I expect no more than 64 packets per second to be
-transmitted using the deferred xmit mechanism: there are 4 switch
-ports, PTP runs with a sync interval of 1/8 seconds, and the STP hello
-timer is 2 seconds. So, not a lot of traffic.
-On the other hand, clearing the deferred_xmit bool from the skb->cb is
-something that everybody else (including this driver for "normal"
-traffic) needs to do at line rate, just for the above 64 packets per
-second (in the worst case) to be possible.
-
-> Thanks.
-
-Regards,
--Vladimir
