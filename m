@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 356C7C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D1FC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3DC120848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E1C20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005351;
-	bh=k6bgISmFVXAejLhew9BLRgiogl5bQXZsj+xCKYwJyhg=;
+	s=default; t=1578005355;
+	bh=U91LhnmEMjYOi3Oo29SjooxKMkH9Z6LjFhSMF75SUDg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rgfxy96A3oniBfozPiTL+fb6RAQkCdcjCPHizQIYS7HEiQqoz5bCmuZijJ5XU3Xgt
-	 /iDG4bQn9/ponCs41riHmvWst8bh+uGxkMo9kDvt8nGlroskJTuKMKzNG+cbY/yldn
-	 YIPS6DwUKlXwu4nZ7JiKKmph1o2RvZCPjf04WhDQ=
+	b=SjQm0hJvHw+F+jlqBocxdThgkI42yGf3UDn9am1VQoBGkzFwSIOtZFZStCDrzzC64
+	 tJQ62DSuY49nEyXEx+0AsomFZPM2cVoKDT9iii9Pem+O/3qdNoSQweacxMgqEgXy1P
+	 ff73121Bw9PJB8egTXXtwZDuF3HcZ/7CusYNBig0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730379AbgABWtK (ORCPT
+        id S1730473AbgABWtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:49:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55236 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:49:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729620AbgABW1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:27:09 -0500
+        id S1729692AbgABW1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:27:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B75820863;
-        Thu,  2 Jan 2020 22:27:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 573F120863;
+        Thu,  2 Jan 2020 22:27:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004028;
-        bh=k6bgISmFVXAejLhew9BLRgiogl5bQXZsj+xCKYwJyhg=;
+        s=default; t=1578004021;
+        bh=U91LhnmEMjYOi3Oo29SjooxKMkH9Z6LjFhSMF75SUDg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jIM2LRJILMmGa5+YAU4PfOw7emn6c8iRt+rAN/m1j2auR8KSdwK8pKPOBdrgptxky
-         y2Cq5d+9USzn4JYquG3J9CboTs4yz08Ud6iffG+2HHEeT7N7HnMAhrRMLD5DdbMg7g
-         +2lTUO0PGuqnhOfae7nav2Q/L5vPofyfcgqVDuzs=
+        b=MCQzyw1zKBmshPE9QeGzrrjAuPXsTB4AU1DdMil/INMW+bq+rqYHow+x1d68tS2Dq
+         G5179up3ci+Zj45Y9xJ2GV2denk4CGcleuH9jiSglSzZheMlx8DJbmAD1mjvGzPuIg
+         8Q5Mw1auNAddMbzU4rufhS+cgKcuD/t7X6Z+qyms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        David Ahern <dsahern@gmail.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 82/91] net/dst: add new function skb_dst_update_pmtu_no_confirm
-Date:   Thu,  2 Jan 2020 23:08:04 +0100
-Message-Id: <20200102220450.485033666@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 4.14 89/91] gtp: fix wrong condition in gtp_genl_dump_pdp()
+Date:   Thu,  2 Jan 2020 23:08:11 +0100
+Message-Id: <20200102220453.112109771@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -61,44 +59,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 07dc35c6e3cc3c001915d05f5bf21f80a39a0970 ]
+[ Upstream commit 94a6d9fb88df43f92d943c32b84ce398d50bf49f ]
 
-Add a new function skb_dst_update_pmtu_no_confirm() for callers who need
-update pmtu but should not do neighbor confirm.
+gtp_genl_dump_pdp() is ->dumpit() callback of GTP module and it is used
+to dump pdp contexts. it would be re-executed because of dump packet size.
 
-v5: No change.
-v4: No change.
-v3: Do not remove dst_confirm_neigh, but add a new bool parameter in
-    dst_ops.update_pmtu to control whether we should do neighbor confirm.
-    Also split the big patch to small ones for each area.
-v2: Remove dst_confirm_neigh in __ip6_rt_update_pmtu.
+If dump packet size is too big, it saves current dump pointer
+(gtp interface pointer, bucket, TID value) then it restarts dump from
+last pointer.
+Current GTP code allows adding zero TID pdp context but dump code
+ignores zero TID value. So, last dump pointer will not be found.
 
-Reviewed-by: Guillaume Nault <gnault@redhat.com>
-Acked-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+In addition, this patch adds missing rcu_read_lock() in
+gtp_genl_dump_pdp().
+
+Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/dst.h |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/net/gtp.c |   36 +++++++++++++++++++-----------------
+ 1 file changed, 19 insertions(+), 17 deletions(-)
 
---- a/include/net/dst.h
-+++ b/include/net/dst.h
-@@ -531,4 +531,13 @@ static inline void skb_dst_update_pmtu(s
- 		dst->ops->update_pmtu(dst, NULL, skb, mtu, true);
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -42,7 +42,6 @@ struct pdp_ctx {
+ 	struct hlist_node	hlist_addr;
+ 
+ 	union {
+-		u64		tid;
+ 		struct {
+ 			u64	tid;
+ 			u16	flow;
+@@ -1247,43 +1246,46 @@ static int gtp_genl_dump_pdp(struct sk_b
+ 				struct netlink_callback *cb)
+ {
+ 	struct gtp_dev *last_gtp = (struct gtp_dev *)cb->args[2], *gtp;
++	int i, j, bucket = cb->args[0], skip = cb->args[1];
+ 	struct net *net = sock_net(skb->sk);
+-	struct gtp_net *gn = net_generic(net, gtp_net_id);
+-	unsigned long tid = cb->args[1];
+-	int i, k = cb->args[0], ret;
+ 	struct pdp_ctx *pctx;
++	struct gtp_net *gn;
++
++	gn = net_generic(net, gtp_net_id);
+ 
+ 	if (cb->args[4])
+ 		return 0;
+ 
++	rcu_read_lock();
+ 	list_for_each_entry_rcu(gtp, &gn->gtp_dev_list, list) {
+ 		if (last_gtp && last_gtp != gtp)
+ 			continue;
+ 		else
+ 			last_gtp = NULL;
+ 
+-		for (i = k; i < gtp->hash_size; i++) {
+-			hlist_for_each_entry_rcu(pctx, &gtp->tid_hash[i], hlist_tid) {
+-				if (tid && tid != pctx->u.tid)
+-					continue;
+-				else
+-					tid = 0;
+-
+-				ret = gtp_genl_fill_info(skb,
+-							 NETLINK_CB(cb->skb).portid,
+-							 cb->nlh->nlmsg_seq,
+-							 cb->nlh->nlmsg_type, pctx);
+-				if (ret < 0) {
++		for (i = bucket; i < gtp->hash_size; i++) {
++			j = 0;
++			hlist_for_each_entry_rcu(pctx, &gtp->tid_hash[i],
++						 hlist_tid) {
++				if (j >= skip &&
++				    gtp_genl_fill_info(skb,
++					    NETLINK_CB(cb->skb).portid,
++					    cb->nlh->nlmsg_seq,
++					    cb->nlh->nlmsg_type, pctx)) {
+ 					cb->args[0] = i;
+-					cb->args[1] = pctx->u.tid;
++					cb->args[1] = j;
+ 					cb->args[2] = (unsigned long)gtp;
+ 					goto out;
+ 				}
++				j++;
+ 			}
++			skip = 0;
+ 		}
++		bucket = 0;
+ 	}
+ 	cb->args[4] = 1;
+ out:
++	rcu_read_unlock();
+ 	return skb->len;
  }
  
-+/* update dst pmtu but not do neighbor confirm */
-+static inline void skb_dst_update_pmtu_no_confirm(struct sk_buff *skb, u32 mtu)
-+{
-+	struct dst_entry *dst = skb_dst(skb);
-+
-+	if (dst && dst->ops->update_pmtu)
-+		dst->ops->update_pmtu(dst, NULL, skb, mtu, false);
-+}
-+
- #endif /* _NET_DST_H */
 
 
