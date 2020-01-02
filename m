@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D31CBC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8C9C3276E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9C0720866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65D5A20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005969;
-	bh=RgwvjIZONL5ZWANMEt1LiIYYnYCkycmum9J0tQGrhDs=;
+	s=default; t=1578005976;
+	bh=dugGQh+eRwzgWQhTrmU1/HMjtDc/HVySpNxi+iizGws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DAVUJo83klLzmoEIiLvPnI/IOJgw9faGHY9gqEOQ42B9k8qQlkC8EAUksneDKA44V
-	 RHfPO/1W6o3ppDVu5hgOKZw3fJv0ds2CZE26wrcPcdh253CfpRkS33xQ4D9ls3haI3
-	 leSEOtIMSFLRxzspFXhZGNvW7axy+00dvShuLnvU=
+	b=Yg9Hpu4XbOmXSgLHYU2me69omonzWrstAuUazap7LLSyO9u31Wn5IDrcVIvF++IFB
+	 7ZTAU8tn+EN3JqpC4AqFP/SKuDXUImsgWiO7JREzHM3VaIl5noHpJoeow3JKN0pmR/
+	 zW+TPCJ6Sf7FzodFY3fmyxQEF4z1gDD7RJCnVWhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgABWOQ (ORCPT
+        id S1727496AbgABWOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:14:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54378 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:14:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727852AbgABWOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:14:12 -0500
+        id S1727486AbgABWOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:14:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C94E24653;
-        Thu,  2 Jan 2020 22:14:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22FDE22B48;
+        Thu,  2 Jan 2020 22:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003251;
-        bh=RgwvjIZONL5ZWANMEt1LiIYYnYCkycmum9J0tQGrhDs=;
+        s=default; t=1578003239;
+        bh=dugGQh+eRwzgWQhTrmU1/HMjtDc/HVySpNxi+iizGws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FJSb/B7tmpGbHxaZiOokRtbPEtotaGJqaWsgq1Q1BE73fc9p65spFRuPDCpNa/v0B
-         S/vmNHZ0Y4QeQ2CNLlHgtCVU74ME9EOgWGOvO66Dg65pJdlDfINsc7U4A2AsIHzezw
-         iUnJJycg+DTCN0e79iUgIbeSkUGON7yKI8zZ7xqQ=
+        b=jOBxelNwJyKzjDbxMu2/hJvATlGjN5XYFR/WNx9C1nVWRSmrGvUsNN3k0MqYlHF8c
+         aqBd+8UJrWGUYcnhgUJHWoyFlju7dxBM2j5xGLHsCKM3lltukaj9/YWt/gEbTjEj6k
+         4z0ro8N7uxXpruJPOr8qG/JQCzxYv7QLyimJxDNg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Duggan <aduggan@synaptics.com>,
-        Federico Cerutti <federico@ceres-c.it>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
         Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 082/191] HID: rmi: Check that the RMI_STARTED bit is set before unregistering the RMI transport device
-Date:   Thu,  2 Jan 2020 23:06:04 +0100
-Message-Id: <20200102215838.729753573@linuxfoundation.org>
+Subject: [PATCH 5.4 077/191] HID: logitech-hidpp: Silence intermittent get_battery_capacity errors
+Date:   Thu,  2 Jan 2020 23:05:59 +0100
+Message-Id: <20200102215838.172022489@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -60,44 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Duggan <aduggan@synaptics.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 8725aa4fa7ded30211ebd28bb1c9bae806eb3841 ]
+[ Upstream commit 61005d65b6c7dcf61c19516e6ebe5acc02d2cdda ]
 
-In the event that the RMI device is unreachable, the calls to rmi_set_mode() or
-rmi_set_page() will fail before registering the RMI transport device. When the
-device is removed, rmi_remove() will call rmi_unregister_transport_device()
-which will attempt to access the rmi_dev pointer which was not set.
-This patch adds a check of the RMI_STARTED bit before calling
-rmi_unregister_transport_device().  The RMI_STARTED bit is only set
-after rmi_register_transport_device() completes successfully.
+My Logitech M185 (PID:4038) 2.4 GHz wireless HID++ mouse is causing
+intermittent errors like these in the log:
 
-The kernel oops was reported in this message:
-https://www.spinics.net/lists/linux-input/msg58433.html
+[11091.034857] logitech-hidpp-device 0003:046D:4038.0006: hidpp20_batterylevel_get_battery_capacity: received protocol error 0x09
+[12388.031260] logitech-hidpp-device 0003:046D:4038.0006: hidpp20_batterylevel_get_battery_capacity: received protocol error 0x09
+[16613.718543] logitech-hidpp-device 0003:046D:4038.0006: hidpp20_batterylevel_get_battery_capacity: received protocol error 0x09
+[23529.938728] logitech-hidpp-device 0003:046D:4038.0006: hidpp20_batterylevel_get_battery_capacity: received protocol error 0x09
 
-[jkosina@suse.cz: reworded changelog as agreed with Andrew]
-Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
-Reported-by: Federico Cerutti <federico@ceres-c.it>
+We are already silencing error-code 0x09 (HIDPP_ERROR_RESOURCE_ERROR)
+errors in other places, lets do the same in
+hidpp20_batterylevel_get_battery_capacity to remove these harmless,
+but scary looking errors from the dmesg output.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-rmi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/hid/hid-logitech-hidpp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/hid/hid-rmi.c b/drivers/hid/hid-rmi.c
-index 7c6abd7e0979..9ce22acdfaca 100644
---- a/drivers/hid/hid-rmi.c
-+++ b/drivers/hid/hid-rmi.c
-@@ -744,7 +744,8 @@ static void rmi_remove(struct hid_device *hdev)
- {
- 	struct rmi_data *hdata = hid_get_drvdata(hdev);
- 
--	if (hdata->device_flags & RMI_DEVICE) {
-+	if ((hdata->device_flags & RMI_DEVICE)
-+	    && test_bit(RMI_STARTED, &hdata->flags)) {
- 		clear_bit(RMI_STARTED, &hdata->flags);
- 		cancel_work_sync(&hdata->reset_work);
- 		rmi_unregister_transport_device(&hdata->xport);
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index 8e91e2f06cb4..cd9193078525 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -1102,6 +1102,9 @@ static int hidpp20_batterylevel_get_battery_capacity(struct hidpp_device *hidpp,
+ 	ret = hidpp_send_fap_command_sync(hidpp, feature_index,
+ 					  CMD_BATTERY_LEVEL_STATUS_GET_BATTERY_LEVEL_STATUS,
+ 					  NULL, 0, &response);
++	/* Ignore these intermittent errors */
++	if (ret == HIDPP_ERROR_RESOURCE_ERROR)
++		return -EIO;
+ 	if (ret > 0) {
+ 		hid_err(hidpp->hid_dev, "%s: received protocol error 0x%02x\n",
+ 			__func__, ret);
 -- 
 2.20.1
 
