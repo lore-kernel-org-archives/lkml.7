@@ -7,55 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D60C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBD5C3276E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E20AC20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E299221835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004811;
-	bh=YQaGtvdPkCyGlkVgJ0R45zBbXZGNYd7ph6U3pDQ7TXk=;
+	s=default; t=1578004818;
+	bh=y21P3VUnnPL4WGdJLiMm/q6+nfqZp/lHzVZTchxWuZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FIUQGzV9b2vBBksxTjVvirf84xkNJVg/hEkoUnk4HTXPM1wKK2oniQ2fZ6yFiMrws
-	 NUNmtBqbVhfw3k6IDNxH7+8Oylu9Dq6Ap4sGzPHN5uG/zOFSnBQvZuNVi3uRjGIMxP
-	 t2XWikND3wZUwYwP2yIAuj1ojYpnmAm3zjn9x2/8=
+	b=ifWJ9dHzXUiyCJGKaLWBOtB0d+ONZfLZvBpLkPGcyossknq6Unhn8unErddgMp69y
+	 bjM4V9KAgtfqINS6j5UDnphcXdfs7/JkUOEOPOsBlwE59Sy0HHTxmdc8qPqWRAP/92
+	 hRoHCeIeFSzqM9/0clvg5Sd7ef4mBPdXU+GjpWnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731151AbgABWkJ (ORCPT
+        id S1731204AbgABWkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:40:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53080 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:40:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731328AbgABWik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:38:40 -0500
+        id S1731303AbgABWia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:38:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2378D21835;
-        Thu,  2 Jan 2020 22:38:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC11E21835;
+        Thu,  2 Jan 2020 22:38:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004719;
-        bh=YQaGtvdPkCyGlkVgJ0R45zBbXZGNYd7ph6U3pDQ7TXk=;
+        s=default; t=1578004710;
+        bh=y21P3VUnnPL4WGdJLiMm/q6+nfqZp/lHzVZTchxWuZo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uoV43hYjcoLNN9X9k+ojHTeHYD6ZHZrXiu61YhdMPVtD1lJYpjhQkKFpa50xIaMWl
-         jx7qZspOEnP6ztRKcGMnnoQnwSsUtectqxOEq9Nk9yRnHnVuAyymToMyGNhl5AwSvs
-         8YEBglH/jm0NzSN58y2pfcduW0lrE+aosnzFUz1c=
+        b=nLZ3KH80zFBH/eqI7GdTaVAi9K3OAA6yhW5UcvP5NEatJptsqtZSnRBmqvVjlNcP5
+         zpVYSFStxSsGLnnA/VOafIBiBLGG225dJ/pLJkiDVy3RvsaOkBlBuOt7iqmx5T5GaX
+         jKvg6wrIbnTVMK7cvr9qBXwEyQL6HsDV1qorlrtM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ding Xiang <dingxiang@cmss.chinamobile.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, linux-scsi@vger.kernel.org,
+        =?UTF-8?q?Diego=20Elio=20Petten=C3=B2?= <flameeyes@flameeyes.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 125/137] ocfs2: fix passing zero to PTR_ERR warning
-Date:   Thu,  2 Jan 2020 23:08:18 +0100
-Message-Id: <20200102220604.007998694@linuxfoundation.org>
+Subject: [PATCH 4.4 121/137] cdrom: respect device capabilities during opening action
+Date:   Thu,  2 Jan 2020 23:08:14 +0100
+Message-Id: <20200102220603.417947456@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -68,46 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ding Xiang <dingxiang@cmss.chinamobile.com>
+From: Diego Elio Pettenò <flameeyes@flameeyes.com>
 
-[ Upstream commit 188c523e1c271d537f3c9f55b6b65bf4476de32f ]
+[ Upstream commit 366ba7c71ef77c08d06b18ad61b26e2df7352338 ]
 
-Fix a static code checker warning:
-fs/ocfs2/acl.c:331
-	ocfs2_acl_chmod() warn: passing zero to 'PTR_ERR'
+Reading the TOC only works if the device can play audio, otherwise
+these commands fail (and possibly bring the device to an unhealthy
+state.)
 
-Link: http://lkml.kernel.org/r/1dee278b-6c96-eec2-ce76-fe6e07c6e20f@linux.alibaba.com
-Fixes: 5ee0fbd50fd ("ocfs2: revert using ocfs2_acl_chmod to avoid inode cluster lock hang")
-Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Similarly, cdrom_mmc3_profile() should only be called if the device
+supports generic packet commands.
+
+To: Jens Axboe <axboe@kernel.dk>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-scsi@vger.kernel.org
+Signed-off-by: Diego Elio Pettenò <flameeyes@flameeyes.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/acl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/cdrom/cdrom.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ocfs2/acl.c b/fs/ocfs2/acl.c
-index 1e0d8da0d3cd..80b92120c812 100644
---- a/fs/ocfs2/acl.c
-+++ b/fs/ocfs2/acl.c
-@@ -338,8 +338,8 @@ int ocfs2_acl_chmod(struct inode *inode, struct buffer_head *bh)
- 	down_read(&OCFS2_I(inode)->ip_xattr_sem);
- 	acl = ocfs2_get_acl_nolock(inode, ACL_TYPE_ACCESS, bh);
- 	up_read(&OCFS2_I(inode)->ip_xattr_sem);
--	if (IS_ERR(acl) || !acl)
--		return PTR_ERR(acl);
-+	if (IS_ERR_OR_NULL(acl))
-+		return PTR_ERR_OR_ZERO(acl);
- 	ret = __posix_acl_chmod(&acl, GFP_KERNEL, inode->i_mode);
- 	if (ret)
- 		return ret;
+diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+index aee23092f50e..2c5feb6b4a99 100644
+--- a/drivers/cdrom/cdrom.c
++++ b/drivers/cdrom/cdrom.c
+@@ -998,6 +998,12 @@ static void cdrom_count_tracks(struct cdrom_device_info *cdi, tracktype *tracks)
+ 	tracks->xa = 0;
+ 	tracks->error = 0;
+ 	cd_dbg(CD_COUNT_TRACKS, "entering cdrom_count_tracks\n");
++
++	if (!CDROM_CAN(CDC_PLAY_AUDIO)) {
++		tracks->error = CDS_NO_INFO;
++		return;
++	}
++
+ 	/* Grab the TOC header so we can see how many tracks there are */
+ 	ret = cdi->ops->audio_ioctl(cdi, CDROMREADTOCHDR, &header);
+ 	if (ret) {
+@@ -1164,7 +1170,8 @@ int cdrom_open(struct cdrom_device_info *cdi, struct block_device *bdev,
+ 		ret = open_for_data(cdi);
+ 		if (ret)
+ 			goto err;
+-		cdrom_mmc3_profile(cdi);
++		if (CDROM_CAN(CDC_GENERIC_PACKET))
++			cdrom_mmc3_profile(cdi);
+ 		if (mode & FMODE_WRITE) {
+ 			ret = -EROFS;
+ 			if (cdrom_open_write(cdi))
+@@ -2863,6 +2870,9 @@ int cdrom_get_last_written(struct cdrom_device_info *cdi, long *last_written)
+ 	   it doesn't give enough information or fails. then we return
+ 	   the toc contents. */
+ use_toc:
++	if (!CDROM_CAN(CDC_PLAY_AUDIO))
++		return -ENOSYS;
++
+ 	toc.cdte_format = CDROM_MSF;
+ 	toc.cdte_track = CDROM_LEADOUT;
+ 	if ((ret = cdi->ops->audio_ioctl(cdi, CDROMREADTOCENTRY, &toc)))
 -- 
 2.20.1
 
