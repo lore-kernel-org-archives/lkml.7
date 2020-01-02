@@ -6,139 +6,79 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A18D4C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B704C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8387D217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7269C21835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:04:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbgABOEp (ORCPT
+        id S1728533AbgABOEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 09:04:45 -0500
-Received: from michel.telenet-ops.be ([195.130.137.88]:58540 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728426AbgABOEn (ORCPT
+        Thu, 2 Jan 2020 09:04:55 -0500
+Received: from xavier.telenet-ops.be ([195.130.132.52]:59764 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728408AbgABOEn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Jan 2020 09:04:43 -0500
 Received: from ramsan ([84.195.182.253])
-        by michel.telenet-ops.be with bizsmtp
-        id lS4g2100G5USYZQ06S4g6K; Thu, 02 Jan 2020 15:04:41 +0100
+        by xavier.telenet-ops.be with bizsmtp
+        id lS4g2100N5USYZQ01S4gmy; Thu, 02 Jan 2020 15:04:41 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1in15c-0006GP-LS; Thu, 02 Jan 2020 15:04:40 +0100
+        id 1in15c-0006GP-GR; Thu, 02 Jan 2020 15:04:40 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1in0gG-0007eL-CB; Thu, 02 Jan 2020 14:38:28 +0100
+        id 1in0gG-0007eX-I8; Thu, 02 Jan 2020 14:38:28 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Mark Brown <broonie@kernel.org>
 Cc:     Chris Brandt <chris.brandt@renesas.com>,
         =?UTF-8?q?Jan=20Kundr=C3=A1t?= <jan.kundrat@cesnet.cz>,
         linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/6] spi: Add generic support for unused native cs with cs-gpios
-Date:   Thu,  2 Jan 2020 14:38:17 +0100
-Message-Id: <20200102133822.29346-2-geert+renesas@glider.be>
+Subject: [PATCH 5/6] spi: rspi: Add support for multiple native chip selects
+Date:   Thu,  2 Jan 2020 14:38:21 +0100
+Message-Id: <20200102133822.29346-6-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200102133822.29346-1-geert+renesas@glider.be>
 References: <20200102133822.29346-1-geert+renesas@glider.be>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some SPI master controllers always drive a native chip select when
-performing a transfer.  Hence when using both native and GPIO chip
-selects, at least one native chip select must be left unused, to be
-driven when performing transfers with slave devices using GPIO chip
-selects.
-
-Currently, to find an unused native chip select, SPI controller drivers
-need to parse and process cs-gpios theirselves.  This is not only
-duplicated in each driver that needs it, but also duplicates part of the
-work done later at SPI controller registration time.  Note that this
-cannot be done after spi_register_controller() returns, as at that time,
-slave devices may have been probed already.
-
-Hence add generic support to the SPI subsystem for finding an unused
-native chip select.  Optionally, this unused native chip select, and all
-other in-use native chip selects, can be validated against the maximum
-number of native chip selects available on the controller hardware.
+RSPI variants on some SuperH or R-Mobile SoCs support multiple native
+chip selects. Add support for this by configuring the SSL Assert Signal
+Setting.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-Perhaps the validation is considered overkill ("DT is assumed to be
-correct")?
+ drivers/spi/spi-rspi.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
- drivers/spi/spi.c       | 17 +++++++++++++++++
- include/linux/spi/spi.h |  8 ++++++++
- 2 files changed, 25 insertions(+)
-
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index dc453896327106a0..38b4c78df506c060 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -2458,6 +2458,8 @@ static int spi_get_gpio_descs(struct spi_controller *ctlr)
- 	int nb, i;
- 	struct gpio_desc **cs;
- 	struct device *dev = &ctlr->dev;
-+	unsigned long native_cs_mask = 0;
-+	unsigned int num_cs_gpios = 0;
+diff --git a/drivers/spi/spi-rspi.c b/drivers/spi/spi-rspi.c
+index 9eabef3d6cc478ff..2f5a856a93192702 100644
+--- a/drivers/spi/spi-rspi.c
++++ b/drivers/spi/spi-rspi.c
+@@ -159,7 +159,7 @@
+ #define SPCMD_SPIMOD_DUAL	SPCMD_SPIMOD0
+ #define SPCMD_SPIMOD_QUAD	SPCMD_SPIMOD1
+ #define SPCMD_SPRW		0x0010	/* SPI Read/Write Access (Dual/Quad) */
+-#define SPCMD_SSLA_MASK		0x0030	/* SSL Assert Signal Setting (RSPI) */
++#define SPCMD_SSLA(i)		((i) << 4)	/* SSL Assert Signal Setting */
+ #define SPCMD_BRDV_MASK		0x000c	/* Bit Rate Division Setting */
+ #define SPCMD_CPOL		0x0002	/* Clock Polarity Setting */
+ #define SPCMD_CPHA		0x0001	/* Clock Phase Setting */
+@@ -933,6 +933,9 @@ static int rspi_prepare_message(struct spi_controller *ctlr,
+ 	if (spi->mode & SPI_CPHA)
+ 		rspi->spcmd |= SPCMD_CPHA;
  
- 	nb = gpiod_count(dev, "cs");
- 	ctlr->num_chipselect = max_t(int, nb, ctlr->num_chipselect);
-@@ -2499,7 +2501,22 @@ static int spi_get_gpio_descs(struct spi_controller *ctlr)
- 			if (!gpioname)
- 				return -ENOMEM;
- 			gpiod_set_consumer_name(cs[i], gpioname);
-+			num_cs_gpios++;
-+			continue;
-+		}
++	/* Configure slave signal to assert */
++	rspi->spcmd |= SPCMD_SSLA(spi->chip_select);
 +
-+		if (ctlr->max_native_cs && i >= ctlr->max_native_cs) {
-+			dev_err(dev, "Invalid native chip select %d\n", i);
-+			return -EINVAL;
- 		}
-+		native_cs_mask |= BIT(i);
-+	}
-+
-+	ctlr->unused_native_cs = ffz(native_cs_mask);
-+	if (num_cs_gpios && ctlr->max_native_cs &&
-+	    ctlr->unused_native_cs >= ctlr->max_native_cs) {
-+		dev_err(dev, "No unused native chip select available\n");
-+		return -EINVAL;
- 	}
- 
- 	return 0;
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index 3a67a7e45633cf9c..6d16ba01ff5a2e20 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -423,6 +423,12 @@ static inline void spi_unregister_driver(struct spi_driver *sdrv)
-  *	GPIO descriptors rather than using global GPIO numbers grabbed by the
-  *	driver. This will fill in @cs_gpiods and @cs_gpios should not be used,
-  *	and SPI devices will have the cs_gpiod assigned rather than cs_gpio.
-+ * @unused_native_cs: When cs_gpiods is used, spi_register_controller() will
-+ *	fill in this field with the first unused native CS, to be used by SPI
-+ *	controller drivers that need to drive a native CS when using GPIO CS.
-+ * @max_native_cs: When cs_gpiods is used, and this field is filled in,
-+ *	spi_register_controller() will validate all native CS (including the
-+ *	unused native CS) against this value.
-  * @statistics: statistics for the spi_controller
-  * @dma_tx: DMA transmit channel
-  * @dma_rx: DMA receive channel
-@@ -624,6 +630,8 @@ struct spi_controller {
- 	int			*cs_gpios;
- 	struct gpio_desc	**cs_gpiods;
- 	bool			use_gpio_descriptors;
-+	u8			unused_native_cs;
-+	u8			max_native_cs;
- 
- 	/* statistics */
- 	struct spi_statistics	statistics;
+ 	/* CMOS output mode and MOSI signal from previous transfer */
+ 	rspi->sppcr = 0;
+ 	if (spi->mode & SPI_LOOP)
 -- 
 2.17.1
 
