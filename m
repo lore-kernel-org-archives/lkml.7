@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57789C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46967C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2757C20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 116F82253D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004209;
-	bh=A0I+346nK7GgyFDNhciJKmvsg1Oz18yitQkrdq4Biyo=;
+	s=default; t=1578004212;
+	bh=vorHKAAlo2Q/D/7oNeovywhUHPTU36ycKOYuHV/ww9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B55BOQgp8eWdXXYqxCc/OVgPvuz0WaaTomZCoT/QTkILMQ9A+RYxcRu1Kx1dy24S4
-	 H8aI/E7YVCQNWUfRl4927nIxwNIcsC6xhLlJAqldgNOMYAnapd15LL0mWFLVuf4YFO
-	 fc4kAnYluxgau1KirmSKJLY7oGr8lzJcci3TRW7Q=
+	b=PEh6o154P4hS4cWcsx6yB3PnCn0DorZMauQC6gKR1NuVLwHAoo2ahv9hynfpgujyo
+	 816Esb82UGnLpIE0/I7Z0dnuoi1ylXmbMU9Oj/JHAZwEfn42HCALJia58ur+HrpSKo
+	 2mCUrsq1mTTx60QeI6fJMsLriDXfc8TvwpIzcm/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730131AbgABWaH (ORCPT
+        id S1730128AbgABWaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:30:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33356 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:30:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729980AbgABWaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:30:03 -0500
+        id S1729980AbgABWaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:30:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F39120863;
-        Thu,  2 Jan 2020 22:30:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A8D720863;
+        Thu,  2 Jan 2020 22:30:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004203;
-        bh=A0I+346nK7GgyFDNhciJKmvsg1Oz18yitQkrdq4Biyo=;
+        s=default; t=1578004207;
+        bh=vorHKAAlo2Q/D/7oNeovywhUHPTU36ycKOYuHV/ww9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QHPGkMgEC5hX/5IN7evBJSdEyvWomTz0/OpDj33txZX8yRL9yeY4YIvFq53l9iEv5
-         kaFB4cEGaC7TNkEVyaRVMLF2wWc5Bt64xUS8U4qyia/e6Kxwp71uDl+hIrMeypfqry
-         ZLva1CqNXinQUw0wbUrCXSGKjD8QDW/XB2SaQ40Y=
+        b=fyaT7/0xbB20FG1UOJpwStTTbNIPLgnsuWopyOsYctakXF0rtXU+m5WSRvkRScVvV
+         Lfc5K4I58L/cRRR6VbxVp7F5wzEyupvht52mvgTdWRLqqtlc8buG40DmL8Lyi3pf70
+         pn+Ksrzdwhvos7rHS/gYCexzcwXWW3utcjXFYGJU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Hewenliang <hewenliang4@huawei.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 081/171] crypto: sun4i-ss - Fix 64-bit size_t warnings on sun4i-ss-hash.c
-Date:   Thu,  2 Jan 2020 23:06:52 +0100
-Message-Id: <20200102220558.159450127@linuxfoundation.org>
+Subject: [PATCH 4.9 083/171] libtraceevent: Fix memory leakage in copy_filter_type
+Date:   Thu,  2 Jan 2020 23:06:54 +0100
+Message-Id: <20200102220558.483963336@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -60,59 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
+From: Hewenliang <hewenliang4@huawei.com>
 
-[ Upstream commit a7126603d46fe8f01aeedf589e071c6aaa6c6c39 ]
+[ Upstream commit 10992af6bf46a2048ad964985a5b77464e5563b1 ]
 
-If you try to compile this driver on a 64-bit platform then you
-will get warnings because it mixes size_t with unsigned int which
-only works on 32-bit.
+It is necessary to free the memory that we have allocated when error occurs.
 
-This patch fixes all of the warnings on sun4i-ss-hash.c.
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: ef3072cd1d5c ("tools lib traceevent: Get rid of die in add_filter_type()")
+Signed-off-by: Hewenliang <hewenliang4@huawei.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Link: http://lore.kernel.org/lkml/20191119014415.57210-1-hewenliang4@huawei.com
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/sunxi-ss/sun4i-ss-hash.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ tools/lib/traceevent/parse-filter.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
-index ec16ec2e284d..b2e683713539 100644
---- a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
-+++ b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
-@@ -286,8 +286,8 @@ static int sun4i_hash(struct ahash_request *areq)
- 			 */
- 			while (op->len < 64 && i < end) {
- 				/* how many bytes we can read from current SG */
--				in_r = min3(mi.length - in_i, end - i,
--					    64 - op->len);
-+				in_r = min(end - i, 64 - op->len);
-+				in_r = min_t(size_t, mi.length - in_i, in_r);
- 				memcpy(op->buf + op->len, mi.addr + in_i, in_r);
- 				op->len += in_r;
- 				i += in_r;
-@@ -307,8 +307,8 @@ static int sun4i_hash(struct ahash_request *areq)
- 		}
- 		if (mi.length - in_i > 3 && i < end) {
- 			/* how many bytes we can read from current SG */
--			in_r = min3(mi.length - in_i, areq->nbytes - i,
--				    ((mi.length - in_i) / 4) * 4);
-+			in_r = min_t(size_t, mi.length - in_i, areq->nbytes - i);
-+			in_r = min_t(size_t, ((mi.length - in_i) / 4) * 4, in_r);
- 			/* how many bytes we can write in the device*/
- 			todo = min3((u32)(end - i) / 4, rx_cnt, (u32)in_r / 4);
- 			writesl(ss->base + SS_RXFIFO, mi.addr + in_i, todo);
-@@ -334,8 +334,8 @@ static int sun4i_hash(struct ahash_request *areq)
- 	if ((areq->nbytes - i) < 64) {
- 		while (i < areq->nbytes && in_i < mi.length && op->len < 64) {
- 			/* how many bytes we can read from current SG */
--			in_r = min3(mi.length - in_i, areq->nbytes - i,
--				    64 - op->len);
-+			in_r = min(areq->nbytes - i, 64 - op->len);
-+			in_r = min_t(size_t, mi.length - in_i, in_r);
- 			memcpy(op->buf + op->len, mi.addr + in_i, in_r);
- 			op->len += in_r;
- 			i += in_r;
+diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
+index 5e10ba796a6f..569bceff5f51 100644
+--- a/tools/lib/traceevent/parse-filter.c
++++ b/tools/lib/traceevent/parse-filter.c
+@@ -1492,8 +1492,10 @@ static int copy_filter_type(struct event_filter *filter,
+ 	if (strcmp(str, "TRUE") == 0 || strcmp(str, "FALSE") == 0) {
+ 		/* Add trivial event */
+ 		arg = allocate_arg();
+-		if (arg == NULL)
++		if (arg == NULL) {
++			free(str);
+ 			return -1;
++		}
+ 
+ 		arg->type = FILTER_ARG_BOOLEAN;
+ 		if (strcmp(str, "TRUE") == 0)
+@@ -1502,8 +1504,11 @@ static int copy_filter_type(struct event_filter *filter,
+ 			arg->boolean.value = 0;
+ 
+ 		filter_type = add_filter_type(filter, event->id);
+-		if (filter_type == NULL)
++		if (filter_type == NULL) {
++			free(str);
++			free_arg(arg);
+ 			return -1;
++		}
+ 
+ 		filter_type->filter = arg;
+ 
 -- 
 2.20.1
 
