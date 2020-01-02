@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D753DC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B101DC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A252024653
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8353A222C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003172;
-	bh=r8HOrpNAVto9yK9VmPgX9dGvmY6Z5l7uhKkZaPzar7k=;
+	s=default; t=1578003175;
+	bh=wxDmdhcUnbBX2CZ0XmoLV4M6pajezQlYetqQyaL8R+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UADd1dgYzL26IVIE1zX3xhyEFDmS9NLyutjvUqSDhIl9lj+UFw6bTEZjEXwvDEZMj
-	 JewzVW26HER9ea3eLwqnQJMTOUf0F/TRJcYvukgGC5KQoG3confXg3d1TKvhF2bUGN
-	 ks9YAzgV834q2pffl9ReQrRM4Im0T+XgGZ8ZMZp8=
+	b=DbYD3LsKYvE9JA0SJMNS2yBAOXMfPm+tJaDScY5eKsOo17AvUok91yrVMci3RQFG8
+	 rJjsqMtQx2/zbxz6gz4Dz8OYUwchw3A35DC6xrr9fVQkTZMl0/tFBsuX7g+etfn+VE
+	 xMc2UH2oxLgh6NNyrQq+QPGOLtYNpIiFAnIPmIsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbgABWMu (ORCPT
+        id S1727575AbgABWMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:12:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52108 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:12:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727535AbgABWMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:12:46 -0500
+        id S1727564AbgABWMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:12:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2BEC22314;
-        Thu,  2 Jan 2020 22:12:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3CD022314;
+        Thu,  2 Jan 2020 22:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003165;
-        bh=r8HOrpNAVto9yK9VmPgX9dGvmY6Z5l7uhKkZaPzar7k=;
+        s=default; t=1578003170;
+        bh=wxDmdhcUnbBX2CZ0XmoLV4M6pajezQlYetqQyaL8R+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PeckJHlXyVVqMkRiZh8Vledd0EJrYM/L0dFki8cnWGTmuPFAVctCWemcZBxPM//1b
-         ajQTV/Lfbn4cLMD7ky4XT6F7EbTxezxQlJM0wExGwwBQkgalVg37/ztxH1ziUv24jj
-         4rnDFVv23dp0GjkxKHD0Sq/EYhUWRPYd9luz9+nI=
+        b=JkwOrmEz5BA5zCIi+kh6LPvXY7V0rZbd9B6USlyEkOYXic3Qu9898S2aSCfbamDfq
+         c/4pDzK6FC3YrI1CyCsDGV821RJlhVdsVbVvcKrIZssS4Hfzt12rEEpZnRP51ypgTy
+         JoqcrDKV7hvyrgD7Tp5bkRVABNB+VKuBacGekkk0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 047/191] scsi: lpfc: Fix duplicate unreg_rpi error in port offline flow
-Date:   Thu,  2 Jan 2020 23:05:29 +0100
-Message-Id: <20200102215834.942431570@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Daniele Alessandrelli <daniele.alessandrelli@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 031/191] dma-mapping: fix handling of dma-ranges for reserved memory (again)
+Date:   Thu,  2 Jan 2020 23:05:13 +0100
+Message-Id: <20200102215833.327867167@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,52 +62,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Vladimir Murzin <vladimir.murzin@arm.com>
 
-[ Upstream commit 7cfd5639d99bec0d27af089d0c8c114330e43a72 ]
+[ Upstream commit a445e940ea686fc60475564009821010eb213be3 ]
 
-If the driver receives a login that is later then LOGO'd by the remote port
-(aka ndlp), the driver, upon the completion of the LOGO ACC transmission,
-will logout the node and unregister the rpi that is being used for the
-node.  As part of the unreg, the node's rpi value is replaced by the
-LPFC_RPI_ALLOC_ERROR value.  If the port is subsequently offlined, the
-offline walks the nodes and ensures they are logged out, which possibly
-entails unreg'ing their rpi values.  This path does not validate the node's
-rpi value, thus doesn't detect that it has been unreg'd already.  The
-replaced rpi value is then used when accessing the rpi bitmask array which
-tracks active rpi values.  As the LPFC_RPI_ALLOC_ERROR value is not a valid
-index for the bitmask, it may fault the system.
+Daniele reported that issue previously fixed in c41f9ea998f3
+("drivers: dma-coherent: Account dma_pfn_offset when used with device
+tree") reappear shortly after 43fc509c3efb ("dma-coherent: introduce
+interface for default DMA pool") where fix was accidentally dropped.
 
-Revise the rpi release code to detect when the rpi value is the replaced
-RPI_ALLOC_ERROR value and ignore further release steps.
+Lets put fix back in place and respect dma-ranges for reserved memory.
 
-Link: https://lore.kernel.org/r/20191105005708.7399-2-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 43fc509c3efb ("dma-coherent: introduce interface for default DMA pool")
+
+Reported-by: Daniele Alessandrelli <daniele.alessandrelli@gmail.com>
+Tested-by: Daniele Alessandrelli <daniele.alessandrelli@gmail.com>
+Tested-by: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/mm/dma-mapping-nommu.c |  2 +-
+ include/linux/dma-mapping.h     |  4 ++--
+ kernel/dma/coherent.c           | 16 +++++++++-------
+ 3 files changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 9c5b1d138eb1..2b0e7b32c2df 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -18187,6 +18187,13 @@ lpfc_sli4_alloc_rpi(struct lpfc_hba *phba)
- static void
- __lpfc_sli4_free_rpi(struct lpfc_hba *phba, int rpi)
+diff --git a/arch/arm/mm/dma-mapping-nommu.c b/arch/arm/mm/dma-mapping-nommu.c
+index db9247898300..287ef898a55e 100644
+--- a/arch/arm/mm/dma-mapping-nommu.c
++++ b/arch/arm/mm/dma-mapping-nommu.c
+@@ -35,7 +35,7 @@ static void *arm_nommu_dma_alloc(struct device *dev, size_t size,
+ 				 unsigned long attrs)
+ 
  {
-+	/*
-+	 * if the rpi value indicates a prior unreg has already
-+	 * been done, skip the unreg.
-+	 */
-+	if (rpi == LPFC_RPI_ALLOC_ERROR)
-+		return;
-+
- 	if (test_and_clear_bit(rpi, phba->sli4_hba.rpi_bmask)) {
- 		phba->sli4_hba.rpi_count--;
- 		phba->sli4_hba.max_cfg_param.rpi_used--;
+-	void *ret = dma_alloc_from_global_coherent(size, dma_handle);
++	void *ret = dma_alloc_from_global_coherent(dev, size, dma_handle);
+ 
+ 	/*
+ 	 * dma_alloc_from_global_coherent() may fail because:
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index 0aad641d662c..4d450672b7d6 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -162,7 +162,7 @@ int dma_release_from_dev_coherent(struct device *dev, int order, void *vaddr);
+ int dma_mmap_from_dev_coherent(struct device *dev, struct vm_area_struct *vma,
+ 			    void *cpu_addr, size_t size, int *ret);
+ 
+-void *dma_alloc_from_global_coherent(ssize_t size, dma_addr_t *dma_handle);
++void *dma_alloc_from_global_coherent(struct device *dev, ssize_t size, dma_addr_t *dma_handle);
+ int dma_release_from_global_coherent(int order, void *vaddr);
+ int dma_mmap_from_global_coherent(struct vm_area_struct *vma, void *cpu_addr,
+ 				  size_t size, int *ret);
+@@ -172,7 +172,7 @@ int dma_mmap_from_global_coherent(struct vm_area_struct *vma, void *cpu_addr,
+ #define dma_release_from_dev_coherent(dev, order, vaddr) (0)
+ #define dma_mmap_from_dev_coherent(dev, vma, vaddr, order, ret) (0)
+ 
+-static inline void *dma_alloc_from_global_coherent(ssize_t size,
++static inline void *dma_alloc_from_global_coherent(struct device *dev, ssize_t size,
+ 						   dma_addr_t *dma_handle)
+ {
+ 	return NULL;
+diff --git a/kernel/dma/coherent.c b/kernel/dma/coherent.c
+index 545e3869b0e3..551b0eb7028a 100644
+--- a/kernel/dma/coherent.c
++++ b/kernel/dma/coherent.c
+@@ -123,8 +123,9 @@ int dma_declare_coherent_memory(struct device *dev, phys_addr_t phys_addr,
+ 	return ret;
+ }
+ 
+-static void *__dma_alloc_from_coherent(struct dma_coherent_mem *mem,
+-		ssize_t size, dma_addr_t *dma_handle)
++static void *__dma_alloc_from_coherent(struct device *dev,
++				       struct dma_coherent_mem *mem,
++				       ssize_t size, dma_addr_t *dma_handle)
+ {
+ 	int order = get_order(size);
+ 	unsigned long flags;
+@@ -143,7 +144,7 @@ static void *__dma_alloc_from_coherent(struct dma_coherent_mem *mem,
+ 	/*
+ 	 * Memory was found in the coherent area.
+ 	 */
+-	*dma_handle = mem->device_base + (pageno << PAGE_SHIFT);
++	*dma_handle = dma_get_device_base(dev, mem) + (pageno << PAGE_SHIFT);
+ 	ret = mem->virt_base + (pageno << PAGE_SHIFT);
+ 	spin_unlock_irqrestore(&mem->spinlock, flags);
+ 	memset(ret, 0, size);
+@@ -175,17 +176,18 @@ int dma_alloc_from_dev_coherent(struct device *dev, ssize_t size,
+ 	if (!mem)
+ 		return 0;
+ 
+-	*ret = __dma_alloc_from_coherent(mem, size, dma_handle);
++	*ret = __dma_alloc_from_coherent(dev, mem, size, dma_handle);
+ 	return 1;
+ }
+ 
+-void *dma_alloc_from_global_coherent(ssize_t size, dma_addr_t *dma_handle)
++void *dma_alloc_from_global_coherent(struct device *dev, ssize_t size,
++				     dma_addr_t *dma_handle)
+ {
+ 	if (!dma_coherent_default_memory)
+ 		return NULL;
+ 
+-	return __dma_alloc_from_coherent(dma_coherent_default_memory, size,
+-			dma_handle);
++	return __dma_alloc_from_coherent(dev, dma_coherent_default_memory, size,
++					 dma_handle);
+ }
+ 
+ static int __dma_release_from_coherent(struct dma_coherent_mem *mem,
 -- 
 2.20.1
 
