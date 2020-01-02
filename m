@@ -2,106 +2,106 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD358C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3832DC3276E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CDF420848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03B2720848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:58:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578005928;
+	bh=yxRUl5bDgmXnUkV1HL7CmWXoxyfxMH8YtZWC+Kj8990=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HDOmhfxdiwizKpyOxN1oalDsC4OzzsIy2w+uSCeXfsrIFNkCjgeAjaROvamZ4uhvQ
+	 GEB9+qg6ClIEpYInSyBT5GkYrE2F681TiK1DhGZC+GnRSxBYg/oOdufIUYIyn+zhg+
+	 BXzD3b7CmQEXq0qdNrP9UlxVlWwH0mh4fWkB19wk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728981AbgABW6j (ORCPT
+        id S1728019AbgABWPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:58:39 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:58408 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728065AbgABWP1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:15:27 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R231e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TmgPslx_1578003315;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TmgPslx_1578003315)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 03 Jan 2020 06:15:24 +0800
-Subject: Re: [PATCH] move_pages.2: not return ENOENT if the page are already
- on the target nodes
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        cl@linux.com, cai@lca.pw, akpm@linux-foundation.org,
-        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1575596090-115377-1-git-send-email-yang.shi@linux.alibaba.com>
- <0dc96e40-5f2b-a2fe-6e5f-b6f3d5e9ebde@nvidia.com>
- <95170ea5-5b62-9168-fcd9-93b43330a1b4@linux.alibaba.com>
- <092adc11-7039-9343-7067-0e0199c9dc13@gmail.com>
- <51dd767a-221f-882d-c7f6-45bd0c217a67@nvidia.com>
- <20191218101711.GB21485@dhcp22.suse.cz>
- <0059a598-5726-2488-cd37-b4b7f9b3353e@linux.alibaba.com>
- <87lfqtcfyo.fsf@x220.int.ebiederm.org>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <d081b674-b360-4a0a-eec3-cf7434003cc5@linux.alibaba.com>
-Date:   Thu, 2 Jan 2020 14:15:12 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Thu, 2 Jan 2020 17:15:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55846 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727186AbgABWPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:15:09 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4ECA024649;
+        Thu,  2 Jan 2020 22:15:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578003308;
+        bh=yxRUl5bDgmXnUkV1HL7CmWXoxyfxMH8YtZWC+Kj8990=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mGn9DkS/CEyiiJRW+2B+O86Dmf5+tPBra9b8B05Fk21wG5I6g8qUu/7gVZH+kfL8b
+         g5xgOrHX/doO89rSpQ3eWfuxgdTMEhSAFT0Re3ZA7SkxpBWp1y/z4hRAIAiSTxqd+Z
+         wqJYqYIbKBur0eDGNAbeg4hTQdpE+uofeVn+a8g8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 106/191] scripts/kallsyms: fix definitely-lost memory leak
+Date:   Thu,  2 Jan 2020 23:06:28 +0100
+Message-Id: <20200102215841.293332499@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
+References: <20200102215829.911231638@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <87lfqtcfyo.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+[ Upstream commit 21915eca088dc271c970e8351290e83d938114ac ]
+
+build_initial_tok_table() overwrites unused sym_entry to shrink the
+table size. Before the entry is overwritten, table[i].sym must be freed
+since it is malloc'ed data.
+
+This fixes the 'definitely lost' report from valgrind. I ran valgrind
+against x86_64_defconfig of v5.4-rc8 kernel, and here is the summary:
+
+[Before the fix]
+
+  LEAK SUMMARY:
+     definitely lost: 53,184 bytes in 2,874 blocks
+
+[After the fix]
+
+  LEAK SUMMARY:
+     definitely lost: 0 bytes in 0 blocks
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ scripts/kallsyms.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
+index ae6504d07fd6..fb15f09e0e38 100644
+--- a/scripts/kallsyms.c
++++ b/scripts/kallsyms.c
+@@ -489,6 +489,8 @@ static void build_initial_tok_table(void)
+ 				table[pos] = table[i];
+ 			learn_symbol(table[pos].sym, table[pos].len);
+ 			pos++;
++		} else {
++			free(table[i].sym);
+ 		}
+ 	}
+ 	table_cnt = pos;
+-- 
+2.20.1
 
 
-On 12/30/19 7:49 PM, Eric W. Biederman wrote:
-> Yang Shi <yang.shi@linux.alibaba.com> writes:
->
->> On 12/18/19 2:17 AM, Michal Hocko wrote:
->>> On Tue 17-12-19 23:36:09, John Hubbard wrote:
->>> [...]
->>>> diff --git a/man2/move_pages.2 b/man2/move_pages.2
->>>> index 2d96468fa..1bf1053f2 100644
->>>> --- a/man2/move_pages.2
->>>> +++ b/man2/move_pages.2
->>>> @@ -191,12 +191,6 @@ was specified or an attempt was made to migrate pages of a kernel thread.
->>>>    .B ENODEV
->>>>    One of the target nodes is not online.
->>>>    .TP
->>>> -.B ENOENT
->>>> -No pages were found that require moving.
->>>> -All pages are either already
->>>> -on the target node, not present, had an invalid address or could not be
->>>> -moved because they were mapped by multiple processes.
->>>> -.TP
->>>>    .B EPERM
->>>>    The caller specified
->>>>    .B MPOL_MF_MOVE_ALL
->>>>
->>>> ...But I'm not sure if we should change the implementation, instead, so
->>>> that it *can* return ENOENT. That's the main question to resolve before
->>>> creating any more patches, I think.
->>> I would start by dropping any note about ENOENT first. I am not really
->>> sure there is a reasonable usecase for it but maybe somebody comes up
->>> with something and only then we should consider it.
->>>
->>> Feel free to add
->>> Acked-by: Michal Hocko <mhocko@suse.com>
->>>
->>> ideally with a kernel commit which removed the ENOENT.
->> A quick audit doesn't show kernel code or comment notes about ENOENT
->> wrongly. The status could be set as ENOENT if the page is not present
->> (follow_page() returns NULL), and man page does match what kernel
->> does.
-> Doesn't the function one layer up then consume the ENOENT?
-
-No, it doesn't. The return value would be reset unconditionally by 
-store_status(). This is what the man page patch tries to correct.
-
->
-> Eric
 
