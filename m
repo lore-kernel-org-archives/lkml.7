@@ -2,152 +2,130 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EBEC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3818C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F00572085B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:48:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nQaAgZ7F"
+	by mail.kernel.org (Postfix) with ESMTP id BF79B2085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:49:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbgABXsl (ORCPT
+        id S1727320AbgABXtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 18:48:41 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:21449 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgABXsk (ORCPT
+        Thu, 2 Jan 2020 18:49:21 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37690 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgABXtV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 18:48:40 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200102234837epoutp0457ce4826d279d881148e793bab4d4c89~mNr-rKjBv1324413244epoutp040
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jan 2020 23:48:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200102234837epoutp0457ce4826d279d881148e793bab4d4c89~mNr-rKjBv1324413244epoutp040
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1578008917;
-        bh=nsD3F5LcCYrq+OQmt3Ts6sn9EFV+R+rTzyqtxvAxOe0=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=nQaAgZ7FoyGEFqc5baKJaOj/wVWgsYVZ0q4SUKVP7fYDjhIqulUlBv8dY/LE7HS9Y
-         y5pYe9+Dab/El9MXD3I1c942nu6JmYFri20aQ7tKqsR5BKAAWJini3ZGtTqlzdf42d
-         XjeJN3gBRBWLa1RVqvYXUP7IAbaSUTGKpZIQpfkk=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200102234836epcas1p488bf634402e5579fddee68b61f48718a~mNr_empUu2478624786epcas1p4O;
-        Thu,  2 Jan 2020 23:48:36 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.159]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 47pl9G6vsVzMqYlr; Thu,  2 Jan
-        2020 23:48:34 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        8B.5F.48498.2518E0E5; Fri,  3 Jan 2020 08:48:34 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200102234834epcas1p11aec3eea675ba77414e9e7a56ad51024~mNr9F2wNx3104831048epcas1p18;
-        Thu,  2 Jan 2020 23:48:34 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200102234834epsmtrp2b7d8a1b9a59134f74efc77231636a8ad~mNr9FJv7b2626226262epsmtrp2k;
-        Thu,  2 Jan 2020 23:48:34 +0000 (GMT)
-X-AuditID: b6c32a36-a55ff7000001bd72-fb-5e0e8152ec0e
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A1.F6.06569.2518E0E5; Fri,  3 Jan 2020 08:48:34 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200102234834epsmtip1ebbaa917851f3c56f4d6382f573f570c~mNr841kzL1737017370epsmtip1g;
-        Thu,  2 Jan 2020 23:48:34 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Greg KH'" <gregkh@linuxfoundation.org>
-Cc:     =?iso-8859-1?Q?'Pali_Roh=E1r'?= <pali.rohar@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <valdis.kletnieks@vt.edu>, <hch@lst.de>, <sj1557.seo@samsung.com>,
-        "'Namjae Jeon'" <linkinjeon@gmail.com>
-In-Reply-To: <20200102141910.GA4020603@kroah.com>
-Subject: RE: [PATCH v9 12/13] exfat: add exfat in fs/Kconfig and fs/Makefile
-Date:   Fri, 3 Jan 2020 08:48:34 +0900
-Message-ID: <001401d5c1c7$2531c8d0$6f955a70$@samsung.com>
+        Thu, 2 Jan 2020 18:49:21 -0500
+Received: by mail-lj1-f194.google.com with SMTP id o13so30873403ljg.4
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 15:49:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vKUFgkAq6av3fCpY/y8sfQAdG6utgB0okP85MRpDaZQ=;
+        b=mNbOkpq105ThOruUsD3+uNqFoSf1FpBRQOk9u0iVBPKJtrPdcQg+fwlvU5sXDxb4WD
+         7U3brSbJnwreY6yaZ1DIkoFINwlbZobof+HQm52lfjFcW8No1WcOzSwE6aCsHvNSf+VS
+         h1aohpmloWMfdUZPmlJ5jPh43Q2i8ub04soBywnzVxv3IXiIaYOnnFDaWvSbSxGwLVp2
+         nDHiWWzKDreD7zvghdcojhkX5eCo8v3t/Xxp0iOQDGA9z1xqDjMdF4Wfe9TdWThk0/Vn
+         mQuuyHqnwClNwijfdfpO9sDZ9YUdu79u5Uz1UIWtToy+Kt99txEdxqFMC1A8oV7uf8vS
+         +G0g==
+X-Gm-Message-State: APjAAAVGCMXP9i9fDJ3fjfP9aqa4DZbVhYiEoAmjQmjwhLtRnNw4kTfn
+        yI3s3bSjzs1HrpD8uEyWwCg=
+X-Google-Smtp-Source: APXvYqzc6y0aRQtiH+NrSB0EgEeJWiIRr2GgD6oiptOOSmdtOsIeOgWd8rN/uoVJBvCCUhaI14CfPA==
+X-Received: by 2002:a05:651c:282:: with SMTP id b2mr49076441ljo.41.1578008959467;
+        Thu, 02 Jan 2020 15:49:19 -0800 (PST)
+Received: from localhost.localdomain ([213.87.155.29])
+        by smtp.gmail.com with ESMTPSA id d24sm23451015lja.82.2020.01.02.15.49.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 15:49:18 -0800 (PST)
+From:   Alexander Popov <alex.popov@linux.com>
+To:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Alexander Popov <alex.popov@linux.com>
+Cc:     notify@kernel.org
+Subject: [PATCH v2 1/1] lkdtm/stackleak: Make the test more verbose
+Date:   Fri,  3 Jan 2020 02:49:07 +0300
+Message-Id: <20200102234907.585508-1-alex.popov@linux.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: ko
-Thread-Index: AQJSGi/S1M7UFBjz5N3SW71o+eawLwJukssYAlUK9DECBK+/DwIuybYIAbHfR8GmihFUEA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTYRTv2727u0aT27I6GeS69LRcm3PrWi2iogYZ2ZMoyi7uY1rb3WV3
-        9iaMwFTStBR0ZfioQCsUkew1jGVUFFlq77Q3WFlZo6dRbbsL9t/v/M7vfOd3zndoQtNExdPZ
-        gge7Bd7BUkPJs1em6pNW7I3dqL9fnsrtq2ukuPpTVxXcg57HBHfJd4Pkui4cpbjSm4MKruVP
-        u5Lr/DRAzqOt5709Kmtb1WmV9eKjXMpa3NKArIHmcVZ/az+VTq1zzMnCvA27tVjIdNmyBbuF
-        XbIyY0GGyaw3JBlSuZmsVuCd2MIuTEtPWpTtCBpitVt5R06QSucliZ0xd47blePB2iyX5LGw
-        WLQ5RINe1Em8U8oR7LpMl3OWQa9PNgWVmxxZvd2HCHEfvb3pXRuRi45ThSiGBiYFPtdXKQrR
-        UFrDnENQWtUVCb4g6GqvJuXgG4K3fQHF/5KGq+0ohDWMD8Hph5tl0VsEv2r7iVCCYpLgz++2
-        cI84Zjrk37oefolg+hF09x1WhhIxjAF8tf5ggqZHMGngbbSFaJKZAM/3+sLvqJlU+FXzipTx
-        cLhR+TqMCUYHD8vLKBknQOuHo4RsTgs/35xUynwcHCnII2QPayAQOBL2AMxfCu7c+xEpWAh1
-        eS8jyxgB7661qGQcD4GPPirkDZhd8LktIs9H0PfdImMjPGpsUsp4PJwfrEJy31j4+PWAUi5V
-        Q36eRpZMhOLOK5EdjoXC/QOqEsR6oybzRk3mjZrMGzVNNSIb0CgsSk47lgxicvRvN6PwtSaa
-        z6Ha22l+xNCIHaYuua/eqFHyW6UdTj8CmmDj1NuWBym1jd+xE7tdGe4cB5b8yBTcfCkRPzLT
-        Fbx9wZNhMCUbjUYuxTzTbDKyo9X0j7sbNIyd9+AtGIvY/b9OQcfE56KiCWd5c9mgWD1p2prN
-        /b7ustU1iqfLylKTdS8qnjVf7hDEPQ5K1TGx09OrK1qXuF5oOtH8+8vBWJIet2K+fcYFPMWy
-        lO+J7fiwtqKusqW1eHxhVw2ZUP8k5cyx2bW44EmvqCwoV1Oq3UNinIo06kGdfdUrZfGl9wNT
-        F7tKXkwew5JSFm9IJNwS/w+zAjpnwwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSnG5QI1+cwc+j0hbNi9ezWaxcfZTJ
-        4vrdW8wWe/aeZLG4vGsOm8XE07+ZLLb8O8Jqcen9BxYHDo+ds+6ye+yfu4bdY/fNBjaPvi2r
-        GD0+b5LzOLT9DVsAWxSXTUpqTmZZapG+XQJXxr0rk5gLmjkqNrzaz9zAuISti5GTQ0LARGLV
-        0SOMXYxcHEICuxklJu9cygqRkJY4duIMcxcjB5AtLHH4cDFIWEjgOaPEvQ9hIDabgK7Evz/7
-        weaICOhIdJw5wQIyh1ngE6PEpf8vmSCGXmSSeLWqgRGkilPAUGLvokMsIEOFBXwkZq1PAQmz
-        CKhIPGjcywxi8wpYSvxa+JgFwhaUODnzCZjNLGAgcf9QByuELS+x/e0cZog7FSR+Pl0GFReR
-        mN3ZxgxxUJjE58+zWSYwCs9CMmoWklGzkIyahaR9ASPLKkbJ1ILi3PTcYsMCo7zUcr3ixNzi
-        0rx0veT83E2M4AjT0trBeOJE/CFGAQ5GJR7eCdd444RYE8uKK3MPMUpwMCuJ8JYHAoV4UxIr
-        q1KL8uOLSnNSiw8xSnOwKInzyucfixQSSE8sSc1OTS1ILYLJMnFwSjUwMpzWqz2woWH9/z3P
-        7Au+pqYtSw+epOVn++nW28YiPjuVNBOz+VyrIg82RNps3S655sYXt5lyM1ye7Y196lfgqpK6
-        bL9KY1/9de7baQdZDINn8n4KcGxZbnD24ZLWPRumnT9/Rqn9R83zBwZraiSy3yb+9l61revN
-        XF+WJR5G73+fM6rL++nxTYmlOCPRUIu5qDgRANHqCjasAgAA
-X-CMS-MailID: 20200102234834epcas1p11aec3eea675ba77414e9e7a56ad51024
-X-Msg-Generator: CA
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200102082408epcas1p194621a6aa6729011703f0c5a076a7396
-References: <20200102082036.29643-1-namjae.jeon@samsung.com>
-        <CGME20200102082408epcas1p194621a6aa6729011703f0c5a076a7396@epcas1p1.samsung.com>
-        <20200102082036.29643-13-namjae.jeon@samsung.com>
-        <20200102125830.z2uz673dlsdttjvo@pali>
-        <CAKYAXd9Y6o+a7q_yismLP8nNXOUqrudC3KW8N6Z05OghYLt1jg@mail.gmail.com>
-        <20200102141910.GA4020603@kroah.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Thu, Jan 02, 2020 at 10:07:16PM +0900, Namjae Jeon wrote:
-> > >> index 98be354fdb61..2c7ea7e0a95b 100644
-> > >> --- a/fs/Makefile
-> > >> +++ b/fs/Makefile
-> > >> @@ -83,6 +83,7 @@ obj-$(CONFIG_HUGETLBFS)		+=
-hugetlbfs/
-> > >>  obj-$(CONFIG_CODA_FS)		+= coda/
-> > >>  obj-$(CONFIG_MINIX_FS)		+= minix/
-> > >>  obj-$(CONFIG_FAT_FS)		+= fat/
-> > >> +obj-$(CONFIG_EXFAT)		+= exfat/
-> > >>  obj-$(CONFIG_BFS_FS)		+= bfs/
-> > >>  obj-$(CONFIG_ISO9660_FS)	+= isofs/
-> > >>  obj-$(CONFIG_HFSPLUS_FS)	+= hfsplus/ # Before hfs to find
-wrapped
-> HFS+
-> > >
-> > > Seems that all filesystems have _FS suffix in their config names. So
-> > > should not have exfat config also same convention? CONFIG_EXFAT_FS?
-> > Yeah, I know, However, That name conflicts with staging/exfat.
-> > So I subtracted _FS suffix.
-> 
-> If it's a problem, please send me a patch to rename the staging/exfat/
-> config option so that you can use the "real" one someday soon.
-Okay, I will:)
-Thanks a lot!
-> 
-> thanks,
-> 
-> greg k-h
+Make the stack erasing test more verbose about the errors that it
+can detect.
+
+Signed-off-by: Alexander Popov <alex.popov@linux.com>
+---
+ drivers/misc/lkdtm/stackleak.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/misc/lkdtm/stackleak.c b/drivers/misc/lkdtm/stackleak.c
+index d5a084475abc..d1a5c0705be3 100644
+--- a/drivers/misc/lkdtm/stackleak.c
++++ b/drivers/misc/lkdtm/stackleak.c
+@@ -16,6 +16,7 @@ void lkdtm_STACKLEAK_ERASING(void)
+ 	unsigned long *sp, left, found, i;
+ 	const unsigned long check_depth =
+ 			STACKLEAK_SEARCH_DEPTH / sizeof(unsigned long);
++	bool test_failed = false;
+ 
+ 	/*
+ 	 * For the details about the alignment of the poison values, see
+@@ -34,7 +35,8 @@ void lkdtm_STACKLEAK_ERASING(void)
+ 		left--;
+ 	} else {
+ 		pr_err("FAIL: not enough stack space for the test\n");
+-		return;
++		test_failed = true;
++		goto end;
+ 	}
+ 
+ 	pr_info("checking unused part of the thread stack (%lu bytes)...\n",
+@@ -52,22 +54,29 @@ void lkdtm_STACKLEAK_ERASING(void)
+ 	}
+ 
+ 	if (found <= check_depth) {
+-		pr_err("FAIL: thread stack is not erased (checked %lu bytes)\n",
++		pr_err("FAIL: the erased part is not found (checked %lu bytes)\n",
+ 						i * sizeof(unsigned long));
+-		return;
++		test_failed = true;
++		goto end;
+ 	}
+ 
+-	pr_info("first %lu bytes are unpoisoned\n",
++	pr_info("the erased part begins after %lu not poisoned bytes\n",
+ 				(i - found) * sizeof(unsigned long));
+ 
+ 	/* The rest of thread stack should be erased */
+ 	for (; i < left; i++) {
+ 		if (*(sp - i) != STACKLEAK_POISON) {
+-			pr_err("FAIL: thread stack is NOT properly erased\n");
+-			return;
++			pr_err("FAIL: bad value number %lu in the erased part: 0x%lx\n",
++								i, *(sp - i));
++			test_failed = true;
+ 		}
+ 	}
+ 
+-	pr_info("OK: the rest of the thread stack is properly erased\n");
+-	return;
++end:
++	if (test_failed) {
++		pr_err("FAIL: the thread stack is NOT properly erased\n");
++		dump_stack();
++	} else {
++		pr_info("OK: the rest of the thread stack is properly erased\n");
++	}
+ }
+-- 
+2.23.0
 
