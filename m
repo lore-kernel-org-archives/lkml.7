@@ -2,196 +2,341 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 987ABC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2D0C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61EB6215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CAA9217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:53:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgABLtm (ORCPT
+        id S1728259AbgABLw7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 06:49:42 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:47577 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728205AbgABLtm (ORCPT
+        Thu, 2 Jan 2020 06:52:59 -0500
+Received: from mail.athenamail.net ([185.45.49.110]:36302 "EHLO
+        mail.athenamail.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728205AbgABLw6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 06:49:42 -0500
-Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MLi4W-1j4Vpj1NnE-00HetB; Thu, 02 Jan 2020 12:49:39 +0100
-Received: by mail-qk1-f174.google.com with SMTP id x129so31153705qke.8;
-        Thu, 02 Jan 2020 03:49:39 -0800 (PST)
-X-Gm-Message-State: APjAAAUt30aUgn/jWEotCiTKYtcv+yBKK11T99O4I6k6pL3PNzPlJ9Ne
-        AUgDUNhhUhb4i1F5Ws1J036IU6wwXiY/QrwfxiU=
-X-Google-Smtp-Source: APXvYqxydssWmkTg9COOlagrp5A+51TGitaXs//MyLhzxeBFOq9tZRxhmj6IwWv8LnVZ3yHfar1ZPMwPeZq4rn9wkjU=
-X-Received: by 2002:a05:620a:a5b:: with SMTP id j27mr66559974qka.286.1577965778074;
- Thu, 02 Jan 2020 03:49:38 -0800 (PST)
+        Thu, 2 Jan 2020 06:52:58 -0500
+X-Greylist: delayed 902 seconds by postgrey-1.27 at vger.kernel.org; Thu, 02 Jan 2020 06:52:56 EST
+Received: from ATHSHREX13CAS01.ATHENAMAIL.NET (192.168.1.13) by
+ ATHSHREX13CAS01.ATHENAMAIL.NET (192.168.1.13) with Microsoft SMTP Server
+ (TLS) id 15.0.1395.4; Thu, 2 Jan 2020 12:37:53 +0100
+Received: from ATHSHREX13CAS01.ATHENAMAIL.NET ([fe80::117b:6631:8abb:95b0]) by
+ ATHSHREX13CAS01.ATHENAMAIL.NET ([fe80::117b:6631:8abb:95b0%13]) with mapi id
+ 15.00.1395.000; Thu, 2 Jan 2020 12:37:53 +0100
+From:   =?iso-8859-1?Q?Karl_Rudb=E6k_Olsen?= <karl@micro-technic.com>
+To:     "Alexandre Belloni <alexandre.belloni@bootlin.com>" 
+        <alexandre.belloni@bootlin.com>
+CC:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?iso-8859-1?Q?Karl_Rudb=E6k_Olsen?= <karl@micro-technic.com>
+Subject: Re: [PATCH] clk: at91: add sama5d3 pmc driver
+Thread-Topic: Re: [PATCH] clk: at91: add sama5d3 pmc driver
+Thread-Index: AdXBXQO2cgxJOTGmS6OJcIa5CAybyA==
+Date:   Thu, 2 Jan 2020 11:37:53 +0000
+Message-ID: <a223a3f5c8b64b80afac96a5cc2206ec@ATHSHREX13CAS01.ATHENAMAIL.NET>
+Accept-Language: da-DK, en-US
+Content-Language: da-DK
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [89.239.201.8]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20191228162929.GA29269@duo.ucw.cz> <20191228193622.GA13047@duo.ucw.cz>
- <20191230173507.GM35479@atomide.com> <20200102110025.GA29035@amd>
-In-Reply-To: <20200102110025.GA29035@amd>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 2 Jan 2020 12:49:22 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2Ya+GZRRA_THZBVDq7SWO8UYoUPwW5fEyorCVjPnd1qA@mail.gmail.com>
-Message-ID: <CAK8P3a2Ya+GZRRA_THZBVDq7SWO8UYoUPwW5fEyorCVjPnd1qA@mail.gmail.com>
-Subject: Re: Droid 4 regression in 5.5-rc1, armsoc-soc tree
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Tony Lindgren <tony@atomide.com>, Olof Johansson <olof@lixom.net>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Sebastian Reichel <sre@kernel.org>, nekit1000@gmail.com,
-        Marcel Partap <mpartap@gmx.net>, merlijn@wizzup.org,
-        martin_rysavy@centrum.cz
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:M1XUfSncVkbP6tuGpExIFJvtnZupwjb1X+Mo8MIMQvrtAc4/ais
- YEJ8NgvP6xABhyNdXS+RJt+hAJgvOMhlAa3SYhHlOnnSosYUgkPnSsgxB0j+3ceei5t6YCc
- YSqlHcQF9bNSFX5jE0NF6S5TzpfqYx8+ubLKJRgpOhRhXjzGU3IiU8alAfm1G53KPJ2iW7H
- zdXkmkBFH9FgF76NcVdaQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:iroEBpD/4Mk=:e9ze52qfzaOp/SsVeTkl90
- WgLFOnmYcni54LMgU2wdKUhsxqiBF6MbSgPRJLjuOtrzlmevKbk7eInbC9rWyhBALGU9LzzGP
- n8DTqz5ZWQs7gOMIooSYntQ2v0qgy4Uy2/2gV7k7XNQVgpSbW5903EQDNX9h25tdm0UMJQdRO
- TVb1z5crRIM1rfV+TPXdtBrPuW0NlUyl8Cg2NnP9O0dY+nvsOXPyFFXBa+a+s6wUDrjvksnvt
- 6afZO5ayvqPcnOztEbHsmN9RHyTBUNXLnpeBvjJPZ+0WIN112uKYYhX9uIGJWxfYecdRTAFit
- +y5XNLw1VDnN+8K65+B1Qb++SMpl1OqxJrZegLcFsr0hqtwuWtYGtkmyyydyNBlBwxCh3Vh4L
- v8un3gp4JUEOZqJLlvH9+i3pBwhQOT+F2dQLetS/Wn1nYwSyM7XcGw1gKR/BbVxv65tEFeNMS
- IN7ZmBSiM/b3EFI/90znIToUXV3wthz4UrYCjhoyUo8Ask8Od6CEFLoH68LHrZSWxMH+KHTDV
- ocUNEBvte/8j2faNz/FRE73uHHPhKmaXNyZ/krrfOcHgU1vmhPdYf4tIx1KjeO0uDZVg/+sfI
- aE7JNPkPgk8YxemiL1B9K+IHwclDdI/H/iqGX1ClkI2s7E2eDA4nAxO8xRfKfLZrN7LZHOfz4
- Vwc0BpD1sygKExt/PSIPVTf++tIProJMA+ClBEnQDznx6HkCM8GguP4tYQ0UzSK2A5DgQ0vI/
- asafJMr7CkkDcRxvY1U8I451OTfVKmTQPqIdJzzUdYTHjUe8mRBT9GrztcKUCD/ly4Wf2/A7s
- /pupnP2VYDKmeJUJa59R1qvP18s0bf2D7B8BjdInTh72DVYZ1tR0eR6UZCmcPQYfGrHO34lyq
- XwxqbM9jlVmi4eIBXxPQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 2, 2020 at 12:00 PM Pavel Machek <pavel@ucw.cz> wrote:
->
-> On Mon 2019-12-30 09:35:07, Tony Lindgren wrote:
-> > * Pavel Machek <pavel@ucw.cz> [191228 19:37]:
-> > > Hi!
-> > >
-> > > > 5.4-based kernel works ok on my droid 4.
-> > > >
-> > > > 5.5-rc3 based kernel has problems; it reboots when I try to kexec it.
-> > > >
-> > > > Vanilla 5.5-rc3 reboots, too.
-> > > >
-> > > > If you have any ideas, let me know.
-> > >
-> > > I managed to get partial serial dump. This should be 5.5-rc3: And then
-> > > a bit better serial dump (below). But it is silent for few seconds,
-> > > and then it restarts...
-> >
-> > If spi or regulators have problems, nothing will really work..
->
-> arm-soc merge seems to be responsible:
->
-> bad 38206c24ab09b4f4c2a57de5c1af0bb2e69cf5b6 Merge tag 'armsoc-soc' of
-> good d9e48dc2a71a836f17d1febbedb31470f957edb4 Merge tag
->
->                                                                         Pavel
->
-> # bad: [738d2902773e30939a982c8df7a7f94293659810] Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
-> # good: [219d54332a09e8d8741c1e1982f5eae56099de85] Linux 5.4
-> git bisect start '738d2902773e' '219d54332a09'
-> # bad: [46cf053efec6a3a5f343fead837777efe8252a46] Linux 5.5-rc3
-> git bisect bad 46cf053efec6a3a5f343fead837777efe8252a46
-> # bad: [e42617b825f8073569da76dc4510bfa019b1c35a] Linux 5.5-rc1
-> git bisect bad e42617b825f8073569da76dc4510bfa019b1c35a
-> # good: [9a3d7fd275be4559277667228902824165153c80] Merge tag 'driver-core-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
-> git bisect good 9a3d7fd275be4559277667228902824165153c80
-> # good: [0b4295b5e2b9b42f3f3096496fe4775b656c9ba6] io_uring: fix a typo in a comment
-> git bisect good 0b4295b5e2b9b42f3f3096496fe4775b656c9ba6
-> # good: [056df578c2dcac1e624254567f5df5ddaa223234] Merge tag 'arc-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/vgupta/arc
-> git bisect good 056df578c2dcac1e624254567f5df5ddaa223234
-> # bad: [25cfb0c7de3f14e283a43dcd6de903657f9f98c7] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu
-> git bisect bad 25cfb0c7de3f14e283a43dcd6de903657f9f98c7
-> # bad: [38206c24ab09b4f4c2a57de5c1af0bb2e69cf5b6] Merge tag 'armsoc-soc' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-> git bisect bad 38206c24ab09b4f4c2a57de5c1af0bb2e69cf5b6
-> # good: [d9e48dc2a71a836f17d1febbedb31470f957edb4] Merge tag 'pwm/for-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm
-> git bisect good d9e48dc2a71a836f17d1febbedb31470f957edb4
+On 2019-12-29 21:29, Alexandre Belloni <alexandre.belloni@bootlin.com> wrote:
+> Add a driver for the PMC clocks of the sama5d3.
+> 
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-In that branch, I see the following non-merge commits:
+The datasheet lists the maximum peripheral clock frequencies in terms of
+MCK dividers, and for those of us using MCK = 134 MHz instead of 133 MHz,
+the .max values will make the peripherals run at half the possible clock.
+Could we use .max values based on 134 MHz instead? Or based on 166 MHz
+which is the maximum allowed MCK?
 
-0b491904f053 ARM: OMAP2+: Add missing put_device() call in omapdss_init_of()
-7b6560b4bc62 OMAP2: fixup doc comments in omap_device
-dafd24c727e8 ARM: OMAP1: drop duplicated dependency on ARCH_OMAP1
-a3ee4fea24e8 ARM: ASPEED: update default ARCH_NR_GPIO for ARCH_ASPEED
-d7eb28d2740f ARM: imx: use generic function to exit coherency
-91d7ff5aa7e3 ARM: tegra: Use WFE for power-gating on Tegra30
-d70f7d31a9e2 ARM: tegra: Fix FLOW_CTLR_HALT register clobbering by
-tegra_resume()
-4134b762eb13 ARM: exynos: Enable exynos-asv driver for ARCH_EXYNOS
-603bba8d0e05 ARM: s3c: Rename s5p_usb_phy functions
-e966fedeabe1 ARM: s3c: Rename s3c64xx_spi_setname() function
-8267ff89b713 ARM: imx: Add serial number support for i.MX6/7 SoCs
-427fca60ee45 ARM: imx: Drop imx_anatop_usb_chrg_detect_disable()
-3d4e0158c1db arm64: Introduce config for S32
-88ae095b2855 ARM: hisi: drop useless depend on ARCH_MULTI_V7
-e3ca9556f75c arm64: realtek: Select reset controller
-0a4319b5c87a ARM: shmobile: rcar-gen2: Drop legacy DT clock support
-0a4818c19221 ARM: OMAP2+: Remove duplicated include from pmic-cpcap.c
-ed2b6b129c2b ARM: OMAP1: ams-delta FIQ: Fix a typo ("Initiaize")
-93a212ebfb08 MAINTAINERS: Add logicpd-som-lv and logicpd-torpedo to OMAP TREE
-1994ebd1f746 ARM: OMAP2+: pdata-quirks: drop TI_ST/KIM support
-06bd77f965ae ARM: OMAP2+: make omap44xx_sha0_hwmod and
-omap44xx_l3_main_2__des static
-89ffcdba95bd ARM: OMAP2+: prm44xx: make prm_{save,restore}_context static
-607295af8870 ARM: OMAP2+: make dra7xx_sha0_hwmod static
-87c59ca22b48 ARM: OMAP2+: do not export am43xx_control functions
-3a828f5eda30 MAINTAINERS: Add mailing list for Realtek SoCs
-c145649bf262 ARM: OMAP2+: Configure voltage controller for cpcap to low-speed
-71065d3fe82d ARM: OMAP2+: Configure voltage controller for retention
-821093e1fd3c ARM: OMAP2+: Make some functions static
-759c2837f7e4 MAINTAINERS: mmp: add Git repository
-dde465457fc9 ARM: mmp: remove MMP3 USB PHY registers from regs-usb.h
-32adcaa010fa ARM: mmp: move cputype.h to include/linux/soc/
-d093bc0378f5 ARM: mmp: add SMP support
-a9372a5fb205 ARM: mmp: add support for MMP3 SoC
-199c936e37f9 ARM: mmp: define MMP_CHIPID by the means of CIU_REG()
-1732050f48a3 ARM: mmp: DT: convert timer driver to use TIMER_OF_DECLARE
-e69fd5090dbd ARM: mmp: map the PGU as well
-df8bf2d8a020 ARM: mmp: don't select CACHE_TAUROS2 on all ARCH_MMP
-b513d3ff267d ARM: l2c: add definition for FWA in PL310 aux register
-b47879aa85ed ARM: bcm: fix missing __iomem in bcm_kona_smc.c
-d67fa6caae51 ARM: bcm: include local platsmp.h for bcm2836_smp_ops
-21a18129edd7 ARM: OMAP2+: Simplify code for clkdm_clock_enable and disable
-645ad6f3ca45 ARM: OMAP2+: Drop unused enable_wakeup and disable_wakeup
-4873843718f9 ARM: OMAP2+: Initialize voltage controller for omap4
-caf8c87d7ff2 ARM: OMAP2+: Allow core oswr for omap4
-623429d5b901 ARM: OMAP2+: Allow per oswr for omap4
-d44fa156dcb2 ARM: OMAP2+: Configure voltage controller for cpcap
-32236a84906f ARM: OMAP2+: Update 4430 voltage controller operating points
-ccd369455a23 ARM: OMAP2+: Remove bogus warnings for machines without twl PMIC
-dfc065aa8963 ARM: OMAP2+: Drop bogus wkup domain oswr setting
-5395b5557acb ARM: OMAP2+: Remove unused wakeup_cpu
-781fa0a95424 ARM: bcm: Add support for BCM2711 SoC
+See also comments inline.
 
-Among these, the most likely candidates would be
+Thanks,
+Karl Olsen
 
-0b491904f053 ARM: OMAP2+: Add missing put_device() call in omapdss_init_of()
-06bd77f965ae ARM: OMAP2+: make omap44xx_sha0_hwmod and
-omap44xx_l3_main_2__des static
-c145649bf262 ARM: OMAP2+: Configure voltage controller for cpcap to low-speed
-71065d3fe82d ARM: OMAP2+: Configure voltage controller for retention
-21a18129edd7 ARM: OMAP2+: Simplify code for clkdm_clock_enable and disable
-4873843718f9 ARM: OMAP2+: Initialize voltage controller for omap4
-caf8c87d7ff2 ARM: OMAP2+: Allow core oswr for omap4
-623429d5b901 ARM: OMAP2+: Allow per oswr for omap4
-d44fa156dcb2 ARM: OMAP2+: Configure voltage controller for cpcap
-32236a84906f ARM: OMAP2+: Update 4430 voltage controller operating points
-ccd369455a23 ARM: OMAP2+: Remove bogus warnings for machines without twl PMIC
-dfc065aa8963 ARM: OMAP2+: Drop bogus wkup domain oswr setting
-5395b5557acb ARM: OMAP2+: Remove unused wakeup_cpu
+> ---
+>  drivers/clk/at91/Makefile  |   1 +
+>  drivers/clk/at91/sama5d3.c | 236 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 237 insertions(+)
+>  create mode 100644 drivers/clk/at91/sama5d3.c
+> 
+> diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
+> index 3732241352ce..e3be7f40f79e 100644
+> --- a/drivers/clk/at91/Makefile
+> +++ b/drivers/clk/at91/Makefile
+> @@ -17,5 +17,6 @@ obj-$(CONFIG_HAVE_AT91_I2S_MUX_CLK)	+= clk-i2s-mux.o
+>  obj-$(CONFIG_HAVE_AT91_SAM9X60_PLL)	+= clk-sam9x60-pll.o
+>  obj-$(CONFIG_SOC_AT91SAM9) += at91sam9260.o at91sam9rl.o at91sam9x5.o
+>  obj-$(CONFIG_SOC_SAM9X60) += sam9x60.o
+> +obj-$(CONFIG_SOC_SAMA5D3) += sama5d3.o
+>  obj-$(CONFIG_SOC_SAMA5D4) += sama5d4.o
+>  obj-$(CONFIG_SOC_SAMA5D2) += sama5d2.o
+> diff --git a/drivers/clk/at91/sama5d3.c b/drivers/clk/at91/sama5d3.c
+> new file mode 100644
+> index 000000000000..0b73c174ab56
+> --- /dev/null
+> +++ b/drivers/clk/at91/sama5d3.c
+> @@ -0,0 +1,236 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/clk-provider.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/slab.h>
+> +
+> +#include <dt-bindings/clock/at91.h>
+> +
+> +#include "pmc.h"
+> +
+> +static const struct clk_master_characteristics mck_characteristics = {
+> +	.output = { .min = 0, .max = 166000000 },
+> +	.divisors = { 1, 2, 4, 3 },
+> +};
+> +
+> +static u8 plla_out[] = { 0 };
+> +
+> +static u16 plla_icpll[] = { 0 };
+> +
+> +static const struct clk_range plla_outputs[] = {
+> +	{ .min = 400000000, .max = 1000000000 },
+> +};
+> +
+> +static const struct clk_pll_characteristics plla_characteristics = {
+> +	.input = { .min = 8000000, .max = 50000000 },
+> +	.num_output = ARRAY_SIZE(plla_outputs),
+> +	.output = plla_outputs,
+> +	.icpll = plla_icpll,
+> +	.out = plla_out,
+> +};
+> +
+> +static const struct clk_pcr_layout sama5d3_pcr_layout = {
+> +	.offset = 0x10c,
+> +	.cmd = BIT(12),
+> +	.pid_mask = GENMASK(6, 0),
+> +	.div_mask = GENMASK(17, 16),
+> +};
+> +
+> +static const struct {
+> +	char *n;
+> +	char *p;
+> +	u8 id;
+> +} sama5d3_systemck[] = {
+> +	{ .n = "ddrck", .p = "masterck", .id = 2 },
+> +	{ .n = "lcdck", .p = "masterck", .id = 3 },
+> +	{ .n = "smdck", .p = "smdclk",   .id = 4 },
+> +	{ .n = "uhpck", .p = "usbck",    .id = 6 },
+> +	{ .n = "udpck", .p = "usbck",    .id = 7 },
+> +	{ .n = "pck0",  .p = "prog0",    .id = 8 },
+> +	{ .n = "pck1",  .p = "prog1",    .id = 9 },
+> +	{ .n = "pck2",  .p = "prog2",    .id = 10 },
+> +};
+> +
+> +static const struct {
+> +	char *n;
+> +	u8 id;
+> +	struct clk_range r;
+> +} sama5d3_periphck[] = {
+> +	{ .n = "dbgu_clk", .id = 2, },
+> +	{ .n = "hsmc_clk", .id = 5, },
+> +	{ .n = "pioA_clk", .id = 6, },
+> +	{ .n = "pioB_clk", .id = 7, },
+> +	{ .n = "pioC_clk", .id = 8, },
+> +	{ .n = "pioD_clk", .id = 9, },
+> +	{ .n = "pioE_clk", .id = 10, },
+> +	{ .n = "usart0_clk", .id = 12, .r = { .min = 0, .max = 66000000 }, },
+> +	{ .n = "usart1_clk", .id = 13, .r = { .min = 0, .max = 66000000 }, },
+> +	{ .n = "usart2_clk", .id = 14, .r = { .min = 0, .max = 66000000 }, },
+> +	{ .n = "usart3_clk", .id = 15, .r = { .min = 0, .max = 66000000 }, },
+> +	{ .n = "uart0_clk", .id = 16, .r = { .min = 0, .max = 66000000 }, },
+> +	{ .n = "uart1_clk", .id = 17, .r = { .min = 0, .max = 66000000 }, },
+> +	{ .n = "twi0_clk", .id = 18, .r = { .min = 0, .max = 16625000 }, },
+> +	{ .n = "twi1_clk", .id = 19, .r = { .min = 0, .max = 16625000 }, },
+> +	{ .n = "twi2_clk", .id = 20, .r = { .min = 0, .max = 16625000 }, },
 
-Maybe try reverting these on top of the latest version to narrow it
-down further?
+The datasheet says max freq for TWI is MCK/4, not MCK/8.
 
-       Arnd
+> +	{ .n = "mci0_clk", .id = 21, },
+> +	{ .n = "mci1_clk", .id = 22, },
+> +	{ .n = "mci2_clk", .id = 23, },
+> +	{ .n = "spi0_clk", .id = 24, .r = { .min = 0, .max = 133000000 }, },
+> +	{ .n = "spi1_clk", .id = 25, .r = { .min = 0, .max = 133000000 }, },
+> +	{ .n = "tcb0_clk", .id = 26, .r = { .min = 0, .max = 133000000 }, },
+> +	{ .n = "tcb1_clk", .id = 27, },
+
+tcb1_clk should also have .min and .max?
+
+> +	{ .n = "pwm_clk", .id = 28, },
+> +	{ .n = "adc_clk", .id = 29, .r = { .min = 0, .max = 66000000 }, },
+> +	{ .n = "dma0_clk", .id = 30, },
+> +	{ .n = "dma1_clk", .id = 31, },
+> +	{ .n = "uhphs_clk", .id = 32, },
+> +	{ .n = "udphs_clk", .id = 33, },
+> +	{ .n = "macb0_clk", .id = 34, },
+> +	{ .n = "macb1_clk", .id = 35, },
+> +	{ .n = "lcdc_clk", .id = 36, },
+> +	{ .n = "isi_clk", .id = 37, },
+> +	{ .n = "ssc0_clk", .id = 38, .r = { .min = 0, .max = 66000000 }, },
+> +	{ .n = "ssc1_clk", .id = 39, .r = { .min = 0, .max = 66000000 }, },
+> +	{ .n = "can0_clk", .id = 40, .r = { .min = 0, .max = 66000000 }, },
+> +	{ .n = "can1_clk", .id = 41, .r = { .min = 0, .max = 66000000 }, },
+> +	{ .n = "sha_clk", .id = 42, },
+> +	{ .n = "aes_clk", .id = 43, },
+> +	{ .n = "tdes_clk", .id = 44, },
+> +	{ .n = "trng_clk", .id = 45, },
+> +	{ .n = "fuse_clk", .id = 48, },
+> +	{ .n = "mpddr_clk", .id = 49, },
+> +};
+> +
+> +static void __init sama5d3_pmc_setup(struct device_node *np)
+> +{
+> +	const char *slck_name, *mainxtal_name;
+> +	struct pmc_data *sama5d3_pmc;
+> +	const char *parent_names[5];
+> +	struct regmap *regmap;
+> +	struct clk_hw *hw;
+> +	int i;
+> +	bool bypass;
+> +
+> +	i = of_property_match_string(np, "clock-names", "slow_clk");
+> +	if (i < 0)
+> +		return;
+> +
+> +	slck_name = of_clk_get_parent_name(np, i);
+> +
+> +	i = of_property_match_string(np, "clock-names", "main_xtal");
+> +	if (i < 0)
+> +		return;
+> +	mainxtal_name = of_clk_get_parent_name(np, i);
+> +
+> +	regmap = syscon_node_to_regmap(np);
+> +	if (IS_ERR(regmap))
+> +		return;
+> +
+> +	sama5d3_pmc = pmc_data_allocate(PMC_MAIN + 1,
+> +					nck(sama5d3_systemck),
+> +					nck(sama5d3_periphck), 0);
+> +	if (!sama5d3_pmc)
+> +		return;
+> +
+> +	hw = at91_clk_register_main_rc_osc(regmap, "main_rc_osc", 12000000,
+> +					   50000000);
+> +	if (IS_ERR(hw))
+> +		goto err_free;
+> +
+> +	bypass = of_property_read_bool(np, "atmel,osc-bypass");
+> +
+> +	hw = at91_clk_register_main_osc(regmap, "main_osc", mainxtal_name,
+> +					bypass);
+> +	if (IS_ERR(hw))
+> +		goto err_free;
+> +
+> +	parent_names[0] = "main_rc_osc";
+> +	parent_names[1] = "main_osc";
+> +	hw = at91_clk_register_sam9x5_main(regmap, "mainck", parent_names, 2);
+> +	if (IS_ERR(hw))
+> +		goto err_free;
+> +
+> +	hw = at91_clk_register_pll(regmap, "pllack", "mainck", 0,
+> +				   &sama5d3_pll_layout, &plla_characteristics);
+> +	if (IS_ERR(hw))
+> +		goto err_free;
+> +
+> +	hw = at91_clk_register_plldiv(regmap, "plladivck", "pllack");
+> +	if (IS_ERR(hw))
+> +		goto err_free;
+> +
+> +	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
+> +	if (IS_ERR(hw))
+> +		goto err_free;
+> +
+> +	sama5d3_pmc->chws[PMC_UTMI] = hw;
+> +
+> +	parent_names[0] = slck_name;
+> +	parent_names[1] = "mainck";
+> +	parent_names[2] = "plladivck";
+> +	parent_names[3] = "utmick";
+> +	hw = at91_clk_register_master(regmap, "masterck", 4, parent_names,
+> +				      &at91sam9x5_master_layout,
+> +				      &mck_characteristics);
+> +	if (IS_ERR(hw))
+> +		goto err_free;
+> +
+> +	sama5d3_pmc->chws[PMC_MCK] = hw;
+> +
+> +	parent_names[0] = "plladivck";
+> +	parent_names[1] = "utmick";
+> +	hw = at91sam9x5_clk_register_usb(regmap, "usbck", parent_names, 2);
+> +	if (IS_ERR(hw))
+> +		goto err_free;
+> +
+> +	hw = at91sam9x5_clk_register_smd(regmap, "smdclk", parent_names, 2);
+> +	if (IS_ERR(hw))
+> +		goto err_free;
+> +
+> +	parent_names[0] = slck_name;
+> +	parent_names[1] = "mainck";
+> +	parent_names[2] = "plladivck";
+> +	parent_names[3] = "utmick";
+> +	parent_names[4] = "masterck";
+> +	for (i = 0; i < 3; i++) {
+> +		char name[6];
+> +
+> +		snprintf(name, sizeof(name), "prog%d", i);
+> +
+> +		hw = at91_clk_register_programmable(regmap, name,
+> +						    parent_names, 5, i,
+> +						    &at91sam9x5_programmable_layout);
+> +		if (IS_ERR(hw))
+> +			goto err_free;
+> +	}
+> +
+> +	for (i = 0; i < ARRAY_SIZE(sama5d3_systemck); i++) {
+> +		hw = at91_clk_register_system(regmap, sama5d3_systemck[i].n,
+> +					      sama5d3_systemck[i].p,
+> +					      sama5d3_systemck[i].id);
+> +		if (IS_ERR(hw))
+> +			goto err_free;
+> +
+> +		sama5d3_pmc->shws[sama5d3_systemck[i].id] = hw;
+> +	}
+> +
+> +	for (i = 0; i < ARRAY_SIZE(sama5d3_periphck); i++) {
+> +		hw = at91_clk_register_sam9x5_peripheral(regmap, &pmc_pcr_lock,
+> +							 &sama5d3_pcr_layout,
+> +							 sama5d3_periphck[i].n,
+> +							 "masterck",
+> +							 sama5d3_periphck[i].id,
+> +							 &sama5d3_periphck[i].r);
+> +		if (IS_ERR(hw))
+> +			goto err_free;
+> +
+> +		sama5d3_pmc->phws[sama5d3_periphck[i].id] = hw;
+> +	}
+> +
+> +	of_clk_add_hw_provider(np, of_clk_hw_pmc_get, sama5d3_pmc);
+> +
+> +	return;
+> +
+> +err_free:
+> +	pmc_data_free(sama5d3_pmc);
+> +}
+> +CLK_OF_DECLARE_DRIVER(sama5d3_pmc, "atmel,sama5d3-pmc", sama5d3_pmc_setup);
+> --
+> 2.23.0
