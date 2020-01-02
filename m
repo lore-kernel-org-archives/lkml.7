@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A16C3276F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AEDC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D8EB21835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0666C20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004502;
-	bh=HdQ/o7CWYE3V9qn1x9H2B6elzdMDx5vxzQUWP3T8quI=;
+	s=default; t=1578004505;
+	bh=UFVz64uh2lUuB3uEQ3v7ZEdeVfbYQUHHdz7SF4UbtXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=As1CKBG2W42PRvWKtQFpjvii+FTevBVQKkMKAVCsfcRiES22b3aX9w23Nx0Jr/pWe
-	 hobVck1yD7tJzGJRRbRoVa6zoHhDK1O/DKBlQ7zmgARD0O5vQg8lepR02Vpd8+C38G
-	 PBr/0+AVFscnhTxu99nXUZeR0gXbWFcpvRCLj2PM=
+	b=aWEVMOBOq9Tl0N3ACIJG/j+1siOG4/kiQcgJrxe4iW3NKcDCxYTbL4KrE0AXCHy0d
+	 nTnzzplwAlCdgGGVINUJDiebxZyZKgGZAF16ezQQxYWq7fGVCOkfis6liiWLZjyyxT
+	 WdzSbK24sPWPJWfDjpaEJLXp+D6F64tWYjdzatsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730760AbgABWfB (ORCPT
+        id S1730769AbgABWfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:35:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44206 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:35:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729967AbgABWe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:34:57 -0500
+        id S1730314AbgABWfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:35:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CD2821D7D;
-        Thu,  2 Jan 2020 22:34:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB44421835;
+        Thu,  2 Jan 2020 22:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004497;
-        bh=HdQ/o7CWYE3V9qn1x9H2B6elzdMDx5vxzQUWP3T8quI=;
+        s=default; t=1578004499;
+        bh=UFVz64uh2lUuB3uEQ3v7ZEdeVfbYQUHHdz7SF4UbtXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=07f3bQ+TU0y+KdcWnVUsGeZgx0XM6cPaP/uOI1pnMV69xXBDA8M/XfTO3ZlkLK0j5
-         wNYZCfw8+EG+D/nIcbvjhIg2xNR2Ei/TV3UmSEVcx3uAnfMtuuMIxf8ZmTXCLz2Hhn
-         VCeNYoYhYZXkrBED1RuEm9/R9PkavH+fDorakjPo=
+        b=uTE9jaKJJqZmIGz6WwZCzLlGpyIHKPq7xb7KvntA0dImQRqemk3CpKTzjNRSqEozU
+         bjRXatt1ixSP2nvjhhRfLz5Ju/9Y++q1DVawux44idruzZNlQkfsJ8TfYnDfcz//Qe
+         g6yIhd9IS4GZua3z7S1s6apDGFH1+b6Bp2bjf0UE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 024/137] media: ti-vpe: vpe: Make sure YUYV is set as default format
-Date:   Thu,  2 Jan 2020 23:06:37 +0100
-Message-Id: <20200102220549.876224377@linuxfoundation.org>
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 033/137] libata: Ensure ata_port probe has completed before detach
+Date:   Thu,  2 Jan 2020 23:06:46 +0100
+Message-Id: <20200102220551.115986332@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -62,51 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit e20b248051ca0f90d84b4d9378e4780bc31f16c6 ]
+[ Upstream commit 130f4caf145c3562108b245a576db30b916199d2 ]
 
-v4l2-compliance fails with this message:
+With CONFIG_DEBUG_TEST_DRIVER_REMOVE set, we may find the following WARN:
 
-   fail: v4l2-test-formats.cpp(672): \
-	Video Capture Multiplanar: TRY_FMT(G_FMT) != G_FMT
-   fail: v4l2-test-formats.cpp(672): \
-	Video Output Multiplanar: TRY_FMT(G_FMT) != G_FMT
-	...
-   test VIDIOC_TRY_FMT: FAIL
+[   23.452574] ------------[ cut here ]------------
+[   23.457190] WARNING: CPU: 59 PID: 1 at drivers/ata/libata-core.c:6676 ata_host_detach+0x15c/0x168
+[   23.466047] Modules linked in:
+[   23.469092] CPU: 59 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc1-00010-g5b83fd27752b-dirty #296
+[   23.477776] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 - V1.16.01 03/15/2019
+[   23.486286] pstate: a0c00009 (NzCv daif +PAN +UAO)
+[   23.491065] pc : ata_host_detach+0x15c/0x168
+[   23.495322] lr : ata_host_detach+0x88/0x168
+[   23.499491] sp : ffff800011cabb50
+[   23.502792] x29: ffff800011cabb50 x28: 0000000000000007
+[   23.508091] x27: ffff80001137f068 x26: ffff8000112c0c28
+[   23.513390] x25: 0000000000003848 x24: ffff0023ea185300
+[   23.518689] x23: 0000000000000001 x22: 00000000000014c0
+[   23.523987] x21: 0000000000013740 x20: ffff0023bdc20000
+[   23.529286] x19: 0000000000000000 x18: 0000000000000004
+[   23.534584] x17: 0000000000000001 x16: 00000000000000f0
+[   23.539883] x15: ffff0023eac13790 x14: ffff0023eb76c408
+[   23.545181] x13: 0000000000000000 x12: ffff0023eac13790
+[   23.550480] x11: ffff0023eb76c228 x10: 0000000000000000
+[   23.555779] x9 : ffff0023eac13798 x8 : 0000000040000000
+[   23.561077] x7 : 0000000000000002 x6 : 0000000000000001
+[   23.566376] x5 : 0000000000000002 x4 : 0000000000000000
+[   23.571674] x3 : ffff0023bf08a0bc x2 : 0000000000000000
+[   23.576972] x1 : 3099674201f72700 x0 : 0000000000400284
+[   23.582272] Call trace:
+[   23.584706]  ata_host_detach+0x15c/0x168
+[   23.588616]  ata_pci_remove_one+0x10/0x18
+[   23.592615]  ahci_remove_one+0x20/0x40
+[   23.596356]  pci_device_remove+0x3c/0xe0
+[   23.600267]  really_probe+0xdc/0x3e0
+[   23.603830]  driver_probe_device+0x58/0x100
+[   23.608000]  device_driver_attach+0x6c/0x90
+[   23.612169]  __driver_attach+0x84/0xc8
+[   23.615908]  bus_for_each_dev+0x74/0xc8
+[   23.619730]  driver_attach+0x20/0x28
+[   23.623292]  bus_add_driver+0x148/0x1f0
+[   23.627115]  driver_register+0x60/0x110
+[   23.630938]  __pci_register_driver+0x40/0x48
+[   23.635199]  ahci_pci_driver_init+0x20/0x28
+[   23.639372]  do_one_initcall+0x5c/0x1b0
+[   23.643199]  kernel_init_freeable+0x1a4/0x24c
+[   23.647546]  kernel_init+0x10/0x108
+[   23.651023]  ret_from_fork+0x10/0x18
+[   23.654590] ---[ end trace 634a14b675b71c13 ]---
 
-The default pixel format was setup as pointing to a specific offset in
-the vpe_formats table assuming it was pointing to the V4L2_PIX_FMT_YUYV
-entry. This became false after the addition on the NV21 format (see
-above commid-id)
+With KASAN also enabled, we may also get many use-after-free reports.
 
-So instead of hard-coding an offset which might change over time we need
-to use a lookup helper instead so we know the default will always be what
-we intended.
+The issue is that when CONFIG_DEBUG_TEST_DRIVER_REMOVE is set, we may
+attempt to detach the ata_port before it has been probed.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Fixes: 40cc823f7005 ("media: ti-vpe: Add support for NV21 format")
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+This is because the ata_ports are async probed, meaning that there is no
+guarantee that the ata_port has probed prior to detach. When the ata_port
+does probe in this scenario, we get all sorts of issues as the detach may
+have already happened.
+
+Fix by ensuring synchronisation with async_synchronize_full(). We could
+alternatively use the cookie returned from the ata_port probe
+async_schedule() call, but that means managing the cookie, so more
+complicated.
+
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ata/libata-core.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index aa2870e864f9..b5f8c425cd2e 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -2000,7 +2000,7 @@ static int vpe_open(struct file *file)
- 	v4l2_ctrl_handler_setup(hdl);
+diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+index a352f09baef6..fc4bf8ff40ea 100644
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -6355,6 +6355,9 @@ void ata_host_detach(struct ata_host *host)
+ {
+ 	int i;
  
- 	s_q_data = &ctx->q_data[Q_DATA_SRC];
--	s_q_data->fmt = &vpe_formats[2];
-+	s_q_data->fmt = __find_format(V4L2_PIX_FMT_YUYV);
- 	s_q_data->width = 1920;
- 	s_q_data->height = 1080;
- 	s_q_data->bytesperline[VPE_LUMA] = (s_q_data->width *
++	/* Ensure ata_port probe has completed */
++	async_synchronize_full();
++
+ 	for (i = 0; i < host->n_ports; i++)
+ 		ata_port_detach(host->ports[i]);
+ 
 -- 
 2.20.1
 
