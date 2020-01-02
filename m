@@ -2,189 +2,228 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D682C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9BAC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF4BF215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:40:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TJWGw7Gu"
+	by mail.kernel.org (Postfix) with ESMTP id 007C1215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:43:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbgABLki (ORCPT
+        id S1728241AbgABLnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 06:40:38 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54031 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbgABLkh (ORCPT
+        Thu, 2 Jan 2020 06:43:16 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41941 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgABLnP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 06:40:37 -0500
-Received: by mail-wm1-f66.google.com with SMTP id m24so5327590wmc.3;
-        Thu, 02 Jan 2020 03:40:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=RWu+gH3W2FAZzPLej4otzZ2FiR4SGwDwk7fqLb7ZrJo=;
-        b=TJWGw7GuH45CCygsnCC9lWkvRL9jW43HEU3F3JOL+K7bEiAt+l3XTGf5WdhPQSLR7o
-         +HiFMwiN7RQ4x02F7BD2kOd1OTEM+3pgVBoJGxXyf5F4bL3vSSgMMwbAQNOGDStwBPum
-         JZ6xgDWMYjANjFb7YzVOGWkPb37zZLAtOeZTpwhwH9GYdnXh2T4ACL1sj3qSpg1vELzV
-         O072Z1+USC8PCKWyecSVUtU93S62Q/cVe3Ff3CUgumQR2bZwPcWdl0owfUnjYmV3fXSG
-         QAAld+ZjCwcjwWW8qpDS01xSFr7E2lg1usfr9IId2Jhux3TCQ6oTV60/Lzk5M6qn3ryM
-         9P6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=RWu+gH3W2FAZzPLej4otzZ2FiR4SGwDwk7fqLb7ZrJo=;
-        b=gpHQMwaI2c7+g7p5LW6jkukIuDTK1qEf/iZVgKG+pW9Wwa3AcCXWlDY1ajmwpI9Tdz
-         R5cvc9GEx6uOqyQlzFs/8yg/wdBTm1t7C/rzJ6jpTWfsAusFSBnSzhE8LiKYdYvNvQU9
-         9brDISDSu7Sc7RaUEESyRsDBE2PAHXswnmaZ556lu/athkELAIWv+6DD+jEmYHg82xqB
-         JQ0g3uQvl/mrPlyWA1SMRau2fZteD1EC+8NqfQ+55bNmHx7OccNDC4/OkszdDMQxoNe8
-         iCxUwiUy9+4xjKhT/0DZ26Jn6GYJa2mEKcgw1ClA3RdOG8agzBHhU9X78Xt7/oO2P1b/
-         UYlQ==
-X-Gm-Message-State: APjAAAVbAgfSWJSljFk/80e6Boy+zMgFBrAtbXNGnefhR3wfyndyLJ4J
-        VuTS6VXg5KFsDtB6Uoc4BbIsilZCybM=
-X-Google-Smtp-Source: APXvYqyyk0dpfhp7UclsrPIXBTPWPVFlHMAeQ7FG7D5urplxcggNz8XUm561FgaP0LGQpngckmNc1A==
-X-Received: by 2002:a7b:cb91:: with SMTP id m17mr14154179wmi.146.1577965235477;
-        Thu, 02 Jan 2020 03:40:35 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id i16sm8358173wmb.36.2020.01.02.03.40.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 03:40:34 -0800 (PST)
-Date:   Thu, 2 Jan 2020 12:40:34 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Namjae Jeon <linkinjeon@gmail.com>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com
-Subject: Re: [PATCH v9 09/13] exfat: add misc operations
-Message-ID: <20200102114034.bjezqs45xecz4atd@pali>
-References: <20200102082036.29643-1-namjae.jeon@samsung.com>
- <CGME20200102082406epcas1p268f260d90213bdaabee25a7518f86625@epcas1p2.samsung.com>
- <20200102082036.29643-10-namjae.jeon@samsung.com>
- <20200102091902.tk374bxohvj33prz@pali>
- <CAKYAXd_9XOWtcLYk-+gg636rFCYjLgHzrP5orR3XjXGMpTKWLA@mail.gmail.com>
+        Thu, 2 Jan 2020 06:43:15 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1imysj-00019a-0J; Thu, 02 Jan 2020 12:43:13 +0100
+Message-ID: <fe55d2c00eda2d1b94e69fe2df05114ba88b5128.camel@pengutronix.de>
+Subject: Re: [PATCH v5 2/2] reset: intel: Add system reset controller driver
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Dilip Kota <eswara.kota@linux.intel.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     robh@kernel.org, martin.blumenstingl@googlemail.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+Date:   Thu, 02 Jan 2020 12:43:11 +0100
+In-Reply-To: <decb025c9bd0ddc1da96801e57242bc8f5ce35d0.1576202050.git.eswara.kota@linux.intel.com>
+References: <a58894158cba812e6d35df165252772b07c8a0b6.1576202050.git.eswara.kota@linux.intel.com>
+         <decb025c9bd0ddc1da96801e57242bc8f5ce35d0.1576202050.git.eswara.kota@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKYAXd_9XOWtcLYk-+gg636rFCYjLgHzrP5orR3XjXGMpTKWLA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 02 January 2020 20:30:03 Namjae Jeon wrote:
-> 2020-01-02 18:19 GMT+09:00, Pali Rohár <pali.rohar@gmail.com>:
-> > On Thursday 02 January 2020 16:20:32 Namjae Jeon wrote:
-> >> This adds the implementation of misc operations for exfat.
-> >>
-> >> Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-> >> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
-> >> ---
-> >>  fs/exfat/misc.c | 253 ++++++++++++++++++++++++++++++++++++++++++++++++
-> >>  1 file changed, 253 insertions(+)
-> >>  create mode 100644 fs/exfat/misc.c
-> >>
-> >> diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
-> >> new file mode 100644
-> >> index 000000000000..7f533bcb3b3f
-> >> --- /dev/null
-> >> +++ b/fs/exfat/misc.c
-> >
-> > ...
-> >
-> >> +/* <linux/time.h> externs sys_tz
-> >> + * extern struct timezone sys_tz;
-> >> + */
-> >> +#define UNIX_SECS_1980    315532800L
-> >> +
-> >> +#if BITS_PER_LONG == 64
-> >> +#define UNIX_SECS_2108    4354819200L
-> >> +#endif
-> >
-> > ...
-> >
-> >> +#define TIMEZONE_CUR_OFFSET()	((sys_tz.tz_minuteswest / (-15)) & 0x7F)
-> >> +/* Convert linear UNIX date to a FAT time/date pair. */
-> >> +void exfat_time_unix2fat(struct exfat_sb_info *sbi, struct timespec64
-> >> *ts,
-> >> +		struct exfat_date_time *tp)
-> >> +{
-> >> +	time_t second = ts->tv_sec;
-> >> +	time_t day, month, year;
-> >> +	time_t ld; /* leap day */
-> >
-> > Question for other maintainers: Has kernel code already time_t defined
-> > as 64bit? Or it is still just 32bit and 32bit systems and some time64_t
-> > needs to be used? I remember that there was discussion about these
-> > problems, but do not know if it was changed/fixed or not... Just a
-> > pointer for possible Y2038 problem. As "ts" is of type timespec64, but
-> > "second" of type time_t.
-> My bad, I will change it with time64_t.
+On Mon, 2019-12-16 at 14:55 +0800, Dilip Kota wrote:
+> Add driver for the reset controller present on Intel
+> Gateway SoCs for performing reset management of the
+> devices present on the SoC. Driver also registers a
+> reset handler to peform the entire device reset.
+> 
+> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> ---
+> Changes on v5:
+> 	Rebase patches on v5.5-rc1 kernel
+> 
+> Changes on v4:
+> 	No Change
+> 
+> Changes on v3:
+> 	Address review comments:
+> 		Remove intel_reset_device() as not supported
+> 	reset-intel-syscon.c renamed to reset-intel-gw.c
+> 	Remove syscon and add regmap logic
+> 	Add support to legacy xrx200 SoC
+> 	Use bitfield helper functions for bit operations.
+> 	Change config RESET_INTEL_SYSCON-> RESET_INTEL_GW
+>  drivers/reset/Kconfig          |   9 ++
+>  drivers/reset/Makefile         |   1 +
+>  drivers/reset/reset-intel-gw.c | 262 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 272 insertions(+)
+>  create mode 100644 drivers/reset/reset-intel-gw.c
+> 
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index 3ad7817ce1f0..218571cda38d 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -64,6 +64,15 @@ config RESET_IMX7
+>  	help
+>  	  This enables the reset controller driver for i.MX7 SoCs.
+>  
+> +config RESET_INTEL_GW
+> +	bool "Intel Reset Controller Driver"
+> +	depends on OF
+> +	select REGMAP_MMIO
+> +	help
+> +	  This enables the reset controller driver for Intel Gateway SoCs.
+> +	  Say Y to control the reset signals provided by reset controller.
+> +	  Otherwise, say N.
+> +
+>  config RESET_LANTIQ
+>  	bool "Lantiq XWAY Reset Driver" if COMPILE_TEST
+>  	default SOC_TYPE_XWAY
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index cf60ce526064..a196d545b4b8 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -10,6 +10,7 @@ obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
+>  obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
+>  obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
+>  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
+> +obj-$(CONFIG_RESET_INTEL_GW) += reset-intel-gw.o
+>  obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
+>  obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
+>  obj-$(CONFIG_RESET_MESON) += reset-meson.o
+> diff --git a/drivers/reset/reset-intel-gw.c b/drivers/reset/reset-intel-gw.c
+> new file mode 100644
+> index 000000000000..da285833cd22
+> --- /dev/null
+> +++ b/drivers/reset/reset-intel-gw.c
+> @@ -0,0 +1,262 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019 Intel Corporation.
+> + * Lei Chuanhua <Chuanhua.lei@intel.com>
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/init.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reboot.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset-controller.h>
+> +
+> +#define RCU_RST_STAT	0x0024
+> +#define RCU_RST_REQ	0x0048
+> +
+> +#define REG_OFFSET	GENMASK(31, 16)
+> +#define BIT_OFFSET	GENMASK(15, 8)
+> +#define STAT_BIT_OFFSET	GENMASK(7, 0)
+> +
+> +#define to_reset_data(x)	container_of(x, struct intel_reset_data, rcdev)
+> +
+> +struct intel_reset_soc {
+> +	bool legacy;
+> +	u32 reset_cell_count;
+> +};
+> +
+> +struct intel_reset_data {
+> +	struct reset_controller_dev rcdev;
+> +	struct notifier_block restart_nb;
+> +	const struct intel_reset_soc *soc_data;
+> +	struct regmap *regmap;
+> +	struct device *dev;
+> +	u32 reboot_id;
+> +};
+> +
+> +static const struct regmap_config intel_rcu_regmap_config = {
+> +	.name =		"intel-reset",
+> +	.reg_bits =	32,
+> +	.reg_stride =	4,
+> +	.val_bits =	32,
+> +	.fast_io =	true,
+> +};
+> +
+> +/*
+> + * Reset status register offset relative to
+> + * the reset control register(X) is X + 4
+> + */
+> +static u32 id_to_reg_and_bit_offsets(struct intel_reset_data *data,
+> +				     unsigned long id, u32 *rst_req,
+> +				     u32 *req_bit, u32 *stat_bit)
+> +{
+> +	*rst_req = FIELD_GET(REG_OFFSET, id);
+> +	*req_bit = FIELD_GET(BIT_OFFSET, id);
+> +
+> +	if (data->soc_data->legacy)
+> +		*stat_bit = FIELD_GET(STAT_BIT_OFFSET, id);
+> +	else
+> +		*stat_bit = *req_bit;
+> +
+> +	if (data->soc_data->legacy && *rst_req == RCU_RST_REQ)
+> +		return RCU_RST_STAT;
+> +	else
+> +		return *rst_req + 0x4;
+> +}
+> +
+> +static int intel_set_clr_bits(struct intel_reset_data *data,
+> +			      unsigned long id, bool set, u64 timeout)
+> +{
+> +	u32 rst_req, req_bit, rst_stat, stat_bit, val;
+> +	int ret;
+> +
+> +	rst_stat = id_to_reg_and_bit_offsets(data, id, &rst_req,
+> +					     &req_bit, &stat_bit);
+> +
+> +	val = set ? BIT(req_bit) : 0;
+> +	ret = regmap_update_bits(data->regmap, rst_req,  BIT(req_bit), val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_read_poll_timeout(data->regmap, rst_stat, val,
+> +					set == !!(val & BIT(stat_bit)),
+> +					20, timeout);
+> +}
+> +
+> +static int intel_assert_device(struct reset_controller_dev *rcdev,
+> +			       unsigned long id)
+> +{
+> +	struct intel_reset_data *data = to_reset_data(rcdev);
+> +	int ret;
+> +
+> +	ret = intel_set_clr_bits(data, id, true, 200);
 
-Now I have looked into sources and time_t is just typedef from
-__kernel_old_time_t type. So it looks like that time64_t is the type
-which should be used in new code.
+timeout doesn't have to be a parameter to intel_set_clr_bits.
 
-But somebody else should confirm this information.
+[...]
+> +struct intel_reset_soc xrx200_data = {
+> +	.legacy =		true,
+> +	.reset_cell_count =	3,
+> +};
+> +
+> +struct intel_reset_soc lgm_data = {
+> +	.legacy =		false,
+> +	.reset_cell_count =	2,
+> +};
 
-> >
-> >> +
-> >> +	/* Treats as local time with proper time */
-> >> +	second -= sys_tz.tz_minuteswest * SECS_PER_MIN;
-> >> +	tp->timezone.valid = 1;
-> >> +	tp->timezone.off = TIMEZONE_CUR_OFFSET();
-> >> +
-> >> +	/* Jan 1 GMT 00:00:00 1980. But what about another time zone? */
-> >> +	if (second < UNIX_SECS_1980) {
-> >> +		tp->second  = 0;
-> >> +		tp->minute  = 0;
-> >> +		tp->hour = 0;
-> >> +		tp->day  = 1;
-> >> +		tp->month  = 1;
-> >> +		tp->year = 0;
-> >> +		return;
-> >> +	}
-> >> +
-> >> +	if (second >= UNIX_SECS_2108) {
-> >
-> > Hello, this code cause compile errors on 32bit systems as UNIX_SECS_2108
-> > macro is not defined when BITS_PER_LONG == 32.
-> >
-> > Value 4354819200 really cannot fit into 32bit signed integer, so you
-> > should use 64bit signed integer. I would suggest to define this macro
-> > value via LL not just L suffix (and it would work on both 32 and 64bit)
-> Okay.
-> >
-> >   #define UNIX_SECS_2108    4354819200LL
-> >
-> >> +		tp->second  = 59;
-> >> +		tp->minute  = 59;
-> >> +		tp->hour = 23;
-> >> +		tp->day  = 31;
-> >> +		tp->month  = 12;
-> >> +		tp->year = 127;
-> >> +		return;
-> >> +	}
-> Okay, I will check it.
-> Thanks for your review!
-> >
-> > --
-> > Pali Rohár
-> > pali.rohar@gmail.com
-> >
+Please make these two static const, otherwise this looks fine to me.
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
+regards
+Philipp
+
