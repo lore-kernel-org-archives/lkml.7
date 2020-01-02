@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0EDC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDC4C3276E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1E8020866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 121FD20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004930;
-	bh=f160mG0OuevRzBxd7nlx3AVqJfgARLe47fn1vVaGqu4=;
+	s=default; t=1578004935;
+	bh=Z1qj7Do3EdfdXCrU8R22JG5kZqnt2C1f4Tn7aO0pYh8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kwNCFJgfo9BbXX3K0+VzwkHt678XWTcTWRPEoNkPEYAzgSVY8M+MJoDM6JHiIYusV
-	 mwY6t8YCKRzHPbOeNuLfLNO4c+FkT/Md+7DKZe7ZR55JBGLijQ25jvj+PPbq4Un7p1
-	 w03ygEeGoZeE9+J1WEVFzuVZggHEGa8t/6ket2so=
+	b=ADaD056KsGzXHG6bg++qkBXuy7UPBXR/Cy/RVY1ZlMhBESQZZxtwK/mBnoxj8DLnH
+	 5U4g8wS1P/qzHTfHlaUVVq2fmRqqETHpACIJCTOCWlWBwooN+llW8Z7NTOAFuM8OKS
+	 YZPjIv+LapB5osoSQQaYqopXjIobX+GwuOT6oeNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731294AbgABWmJ (ORCPT
+        id S1730508AbgABWgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:42:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47866 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:36:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730563AbgABWgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:36:32 -0500
+        id S1730914AbgABWgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:36:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4574421835;
-        Thu,  2 Jan 2020 22:36:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E8B220866;
+        Thu,  2 Jan 2020 22:36:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004590;
-        bh=f160mG0OuevRzBxd7nlx3AVqJfgARLe47fn1vVaGqu4=;
+        s=default; t=1578004571;
+        bh=Z1qj7Do3EdfdXCrU8R22JG5kZqnt2C1f4Tn7aO0pYh8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q8vcJXSAL5hDrr6BTMresijOUNVm9fai7PGptMBrGMqT4EHXfJit+xJJ+X3l3b/Tc
-         nXf0GtlpEFUxpw6L7DsIXjAvwnFqY8usG7VH4dCg0BJATfGr/3XXRpu16UVcbCw221
-         wI6iTEZ3iKpNyGpQfkYRpWfs73o9RTzwgOHkHKEI=
+        b=wxP/mkpP6jq5jMoy1MkScKmN7qrexL2MzNPkC0NDGFpcbrvulNsfaSEplHbCdy7gz
+         sfwQt2ujsvSevdB5kBFGOi4Jnf63sEFaw4m83C6f5QcWmz47hEz/waob85bv36UeID
+         GznOenCa+7sRhSl2YZtafDcnDpg5xD8hU75vKLrM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 053/137] spi: pxa2xx: Add missed security checks
-Date:   Thu,  2 Jan 2020 23:07:06 +0100
-Message-Id: <20200102220553.652840941@linuxfoundation.org>
+Subject: [PATCH 4.4 063/137] crypto: vmx - Avoid weird build failures
+Date:   Thu,  2 Jan 2020 23:07:16 +0100
+Message-Id: <20200102220554.978002208@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -60,43 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 5eb263ef08b5014cfc2539a838f39d2fd3531423 ]
+[ Upstream commit 4ee812f6143d78d8ba1399671d78c8d78bf2817c ]
 
-pxa2xx_spi_init_pdata misses checks for devm_clk_get and
-platform_get_irq.
-Add checks for them to fix the bugs.
+In the vmx crypto Makefile we assign to a variable called TARGET and
+pass that to the aesp8-ppc.pl and ghashp8-ppc.pl scripts.
 
-Since ssp->clk and ssp->irq are used in probe, they are mandatory here.
-So we cannot use _optional() for devm_clk_get and platform_get_irq.
+The variable is meant to describe what flavour of powerpc we're
+building for, eg. either 32 or 64-bit, and big or little endian.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191109080943.30428-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Unfortunately TARGET is a fairly common name for a make variable, and
+if it happens that TARGET is specified as a command line parameter to
+make, the value specified on the command line will override our value.
+
+In particular this can happen if the kernel Makefile is driven by an
+external Makefile that uses TARGET for something.
+
+This leads to weird build failures, eg:
+  nonsense  at /build/linux/drivers/crypto/vmx/ghashp8-ppc.pl line 45.
+  /linux/drivers/crypto/vmx/Makefile:20: recipe for target 'drivers/crypto/vmx/ghashp8-ppc.S' failed
+
+Which shows that we passed an empty value for $(TARGET) to the perl
+script, confirmed with make V=1:
+
+  perl /linux/drivers/crypto/vmx/ghashp8-ppc.pl  > drivers/crypto/vmx/ghashp8-ppc.S
+
+We can avoid this confusion by using override, to tell make that we
+don't want anything to override our variable, even a value specified
+on the command line. We can also use a less common name, given the
+script calls it "flavour", let's use that.
+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-pxa2xx.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/crypto/vmx/Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index 193aa3da5033..96ed01cb6489 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -1425,7 +1425,13 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
- 	}
+diff --git a/drivers/crypto/vmx/Makefile b/drivers/crypto/vmx/Makefile
+index d28ab96a2475..7663494809a0 100644
+--- a/drivers/crypto/vmx/Makefile
++++ b/drivers/crypto/vmx/Makefile
+@@ -2,13 +2,13 @@ obj-$(CONFIG_CRYPTO_DEV_VMX_ENCRYPT) += vmx-crypto.o
+ vmx-crypto-objs := vmx.o aesp8-ppc.o ghashp8-ppc.o aes.o aes_cbc.o aes_ctr.o ghash.o
  
- 	ssp->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(ssp->clk))
-+		return NULL;
-+
- 	ssp->irq = platform_get_irq(pdev, 0);
-+	if (ssp->irq < 0)
-+		return NULL;
-+
- 	ssp->type = type;
- 	ssp->pdev = pdev;
- 	ssp->port_id = pxa2xx_spi_get_port_id(adev);
+ ifeq ($(CONFIG_CPU_LITTLE_ENDIAN),y)
+-TARGET := linux-ppc64le
++override flavour := linux-ppc64le
+ else
+-TARGET := linux-ppc64
++override flavour := linux-ppc64
+ endif
+ 
+ quiet_cmd_perl = PERL $@
+-      cmd_perl = $(PERL) $(<) $(TARGET) > $(@)
++      cmd_perl = $(PERL) $(<) $(flavour) > $(@)
+ 
+ $(src)/aesp8-ppc.S: $(src)/aesp8-ppc.pl
+ 	$(call cmd,perl)
 -- 
 2.20.1
 
