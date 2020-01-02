@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EB2C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C68DC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9E7E24649
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C94FD24125
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003319;
-	bh=V0fFlgsZEjywMSvwazLJJImMQhrXkl4rvnE6M1h6jak=;
+	s=default; t=1578003321;
+	bh=uxom8iTWpOakVdNNsUARPsQP5eh5341Mmr3Z/419rTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GbdgdSre9LuIiubPKPcDVQyCwsnAVp12/hPdskHPy2tnU3LHAHCsqIEDAyLluK86u
-	 B/9nqcHKf6BcKOIlnfQ41vtKLyM6cWKfjuAFVd1YQsP5OboGdSOmmKdC/peqW14HGp
-	 enXkzX/hvKqjb3AdGZtmg6oZ7fNSYiMZ9BvBlIIE=
+	b=mk0C49q0br6z3E8RnpHiGZRbvqYYcNvXHEh2w4f0tiaak+6tBokjRNFhYS3fDPWoA
+	 Zs07M4sBh84A0HUOYr3g8npCLuwz8IkMoYwOdYvo2q8IClRcxID4mztemPGMY0yYBm
+	 UoASSndI9+PMenuv4G0DABf0wp2INSqicz7wS7Hs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgABWPR (ORCPT
+        id S1728057AbgABWPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:15:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55950 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:15:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728021AbgABWPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:15:14 -0500
+        id S1728035AbgABWPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:15:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C72E2253D;
-        Thu,  2 Jan 2020 22:15:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6409521582;
+        Thu,  2 Jan 2020 22:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003313;
-        bh=V0fFlgsZEjywMSvwazLJJImMQhrXkl4rvnE6M1h6jak=;
+        s=default; t=1578003315;
+        bh=uxom8iTWpOakVdNNsUARPsQP5eh5341Mmr3Z/419rTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CLvMV+ljIDWD/fXdbe4Z3/1oXzt/BSKZHQwC7MZ3mW43rkKqzDZ0nOVtKfPQKqux9
-         0r6p2f7IgNp6vD6WfO/L+KXlQh9mYqVPWGcjiN4yoNVkbgLk6b/QJtMszANlZqoSN5
-         oJqd0knzEfzX10xuEnR8cJAnJXUdrYwKRzhQoggE=
+        b=A+shXVpwlalXuzZKg5DuLBaQzg48oSn9CtPTW17jgYT1I97Gxfl81y/Iw0uqMtgK5
+         GmVLhu5OdX7GaNgFIw7Tg8D2KsaJ3MGAEo2OOIzAtEh7LDv5sGEaIooCxYfw0WgDse
+         T5BJW7VVVYFFMUSoTdiP9wQsuLPDmiHJoIFLBSBg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, "Paulo Alcantara (SUSE)" <pc@cjr.nz>,
+        Aurelien Aptel <aaptel@suse.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 108/191] f2fs: choose hardlimit when softlimit is larger than hardlimit in f2fs_statfs_project()
-Date:   Thu,  2 Jan 2020 23:06:30 +0100
-Message-Id: <20200102215841.487559565@linuxfoundation.org>
+Subject: [PATCH 5.4 109/191] cifs: Fix use-after-free bug in cifs_reconnect()
+Date:   Thu,  2 Jan 2020 23:06:31 +0100
+Message-Id: <20200102215841.573615222@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -60,89 +61,232 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@mykernel.net>
+From: Paulo Alcantara (SUSE) <pc@cjr.nz>
 
-[ Upstream commit 909110c060f22e65756659ec6fa957ae75777e00 ]
+[ Upstream commit 8354d88efdab72b4da32fc4f032448fcef22dab4 ]
 
-Setting softlimit larger than hardlimit seems meaningless
-for disk quota but currently it is allowed. In this case,
-there may be a bit of comfusion for users when they run
-df comamnd to directory which has project quota.
+Ensure we grab an active reference in cifs superblock while doing
+failover to prevent automounts (DFS links) of expiring and then
+destroying the superblock pointer.
 
-For example, we set 20M softlimit and 10M hardlimit of
-block usage limit for project quota of test_dir(project id 123).
+This patch fixes the following KASAN report:
 
-[root@hades f2fs]# repquota -P -a
-*** Report for project quotas on device /dev/nvme0n1p8
-Block grace time: 7days; Inode grace time: 7days
-Block limits File limits
-Project used soft hard grace used soft hard grace
-----------------------------------------------------------------------
-0 -- 4 0 0 1 0 0
-123 +- 10248 20480 10240 2 0 0
+[  464.301462] BUG: KASAN: use-after-free in
+cifs_reconnect+0x6ab/0x1350
+[  464.303052] Read of size 8 at addr ffff888155e580d0 by task
+cifsd/1107
 
-The result of df command as below:
+[  464.304682] CPU: 3 PID: 1107 Comm: cifsd Not tainted 5.4.0-rc4+ #13
+[  464.305552] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+BIOS rel-1.12.1-0-ga5cab58-rebuilt.opensuse.org 04/01/2014
+[  464.307146] Call Trace:
+[  464.307875]  dump_stack+0x5b/0x90
+[  464.308631]  print_address_description.constprop.0+0x16/0x200
+[  464.309478]  ? cifs_reconnect+0x6ab/0x1350
+[  464.310253]  ? cifs_reconnect+0x6ab/0x1350
+[  464.311040]  __kasan_report.cold+0x1a/0x41
+[  464.311811]  ? cifs_reconnect+0x6ab/0x1350
+[  464.312563]  kasan_report+0xe/0x20
+[  464.313300]  cifs_reconnect+0x6ab/0x1350
+[  464.314062]  ? extract_hostname.part.0+0x90/0x90
+[  464.314829]  ? printk+0xad/0xde
+[  464.315525]  ? _raw_spin_lock+0x7c/0xd0
+[  464.316252]  ? _raw_read_lock_irq+0x40/0x40
+[  464.316961]  ? ___ratelimit+0xed/0x182
+[  464.317655]  cifs_readv_from_socket+0x289/0x3b0
+[  464.318386]  cifs_read_from_socket+0x98/0xd0
+[  464.319078]  ? cifs_readv_from_socket+0x3b0/0x3b0
+[  464.319782]  ? try_to_wake_up+0x43c/0xa90
+[  464.320463]  ? cifs_small_buf_get+0x4b/0x60
+[  464.321173]  ? allocate_buffers+0x98/0x1a0
+[  464.321856]  cifs_demultiplex_thread+0x218/0x14a0
+[  464.322558]  ? cifs_handle_standard+0x270/0x270
+[  464.323237]  ? __switch_to_asm+0x40/0x70
+[  464.323893]  ? __switch_to_asm+0x34/0x70
+[  464.324554]  ? __switch_to_asm+0x40/0x70
+[  464.325226]  ? __switch_to_asm+0x40/0x70
+[  464.325863]  ? __switch_to_asm+0x34/0x70
+[  464.326505]  ? __switch_to_asm+0x40/0x70
+[  464.327161]  ? __switch_to_asm+0x34/0x70
+[  464.327784]  ? finish_task_switch+0xa1/0x330
+[  464.328414]  ? __switch_to+0x363/0x640
+[  464.329044]  ? __schedule+0x575/0xaf0
+[  464.329655]  ? _raw_spin_lock_irqsave+0x82/0xe0
+[  464.330301]  kthread+0x1a3/0x1f0
+[  464.330884]  ? cifs_handle_standard+0x270/0x270
+[  464.331624]  ? kthread_create_on_node+0xd0/0xd0
+[  464.332347]  ret_from_fork+0x35/0x40
 
-[root@hades f2fs]# df -h /mnt/f2fs/test
-Filesystem Size Used Avail Use% Mounted on
-/dev/nvme0n1p8 20M 11M 10M 51% /mnt/f2fs
+[  464.333577] Allocated by task 1110:
+[  464.334381]  save_stack+0x1b/0x80
+[  464.335123]  __kasan_kmalloc.constprop.0+0xc2/0xd0
+[  464.335848]  cifs_smb3_do_mount+0xd4/0xb00
+[  464.336619]  legacy_get_tree+0x6b/0xa0
+[  464.337235]  vfs_get_tree+0x41/0x110
+[  464.337975]  fc_mount+0xa/0x40
+[  464.338557]  vfs_kern_mount.part.0+0x6c/0x80
+[  464.339227]  cifs_dfs_d_automount+0x336/0xd29
+[  464.339846]  follow_managed+0x1b1/0x450
+[  464.340449]  lookup_fast+0x231/0x4a0
+[  464.341039]  path_openat+0x240/0x1fd0
+[  464.341634]  do_filp_open+0x126/0x1c0
+[  464.342277]  do_sys_open+0x1eb/0x2c0
+[  464.342957]  do_syscall_64+0x5e/0x190
+[  464.343555]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Even though it looks like there is another 10M free space to use,
-if we write new data to diretory test(inherit project id),
-the write will fail with errno(-EDQUOT).
+[  464.344772] Freed by task 0:
+[  464.345347]  save_stack+0x1b/0x80
+[  464.345966]  __kasan_slab_free+0x12c/0x170
+[  464.346576]  kfree+0xa6/0x270
+[  464.347211]  rcu_core+0x39c/0xc80
+[  464.347800]  __do_softirq+0x10d/0x3da
 
-After this patch, the df result looks like below.
+[  464.348919] The buggy address belongs to the object at
+ffff888155e58000
+                which belongs to the cache kmalloc-256 of size 256
+[  464.350222] The buggy address is located 208 bytes inside of
+                256-byte region [ffff888155e58000, ffff888155e58100)
+[  464.351575] The buggy address belongs to the page:
+[  464.352333] page:ffffea0005579600 refcount:1 mapcount:0
+mapping:ffff88815a803400 index:0x0 compound_mapcount: 0
+[  464.353583] flags: 0x200000000010200(slab|head)
+[  464.354209] raw: 0200000000010200 ffffea0005576200 0000000400000004
+ffff88815a803400
+[  464.355353] raw: 0000000000000000 0000000080100010 00000001ffffffff
+0000000000000000
+[  464.356458] page dumped because: kasan: bad access detected
 
-[root@hades f2fs]# df -h /mnt/f2fs/test
-Filesystem Size Used Avail Use% Mounted on
-/dev/nvme0n1p8 10M 10M 0 100% /mnt/f2fs
+[  464.367005] Memory state around the buggy address:
+[  464.367787]  ffff888155e57f80: fc fc fc fc fc fc fc fc fc fc fc fc
+fc fc fc fc
+[  464.368877]  ffff888155e58000: fb fb fb fb fb fb fb fb fb fb fb fb
+fb fb fb fb
+[  464.369967] >ffff888155e58080: fb fb fb fb fb fb fb fb fb fb fb fb
+fb fb fb fb
+[  464.371111]                                                  ^
+[  464.371775]  ffff888155e58100: fc fc fc fc fc fc fc fc fc fc fc fc
+fc fc fc fc
+[  464.372893]  ffff888155e58180: fc fc fc fc fc fc fc fc fc fc fc fc
+fc fc fc fc
+[  464.373983] ==================================================================
 
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
+Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/super.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ fs/cifs/connect.c | 46 +++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 35 insertions(+), 11 deletions(-)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 1443cee15863..a2af155567b8 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1213,9 +1213,13 @@ static int f2fs_statfs_project(struct super_block *sb,
- 		return PTR_ERR(dquot);
- 	spin_lock(&dquot->dq_dqb_lock);
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 20c70cbab1ad..02451d085ddd 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -387,7 +387,7 @@ static inline int reconn_set_ipaddr(struct TCP_Server_Info *server)
+ #ifdef CONFIG_CIFS_DFS_UPCALL
+ struct super_cb_data {
+ 	struct TCP_Server_Info *server;
+-	struct cifs_sb_info *cifs_sb;
++	struct super_block *sb;
+ };
  
--	limit = (dquot->dq_dqb.dqb_bsoftlimit ?
--		 dquot->dq_dqb.dqb_bsoftlimit :
--		 dquot->dq_dqb.dqb_bhardlimit) >> sb->s_blocksize_bits;
-+	limit = 0;
-+	if (dquot->dq_dqb.dqb_bsoftlimit)
-+		limit = dquot->dq_dqb.dqb_bsoftlimit;
-+	if (dquot->dq_dqb.dqb_bhardlimit &&
-+			(!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
-+		limit = dquot->dq_dqb.dqb_bhardlimit;
+ /* These functions must be called with server->srv_mutex held */
+@@ -398,25 +398,39 @@ static void super_cb(struct super_block *sb, void *arg)
+ 	struct cifs_sb_info *cifs_sb;
+ 	struct cifs_tcon *tcon;
+ 
+-	if (d->cifs_sb)
++	if (d->sb)
+ 		return;
+ 
+ 	cifs_sb = CIFS_SB(sb);
+ 	tcon = cifs_sb_master_tcon(cifs_sb);
+ 	if (tcon->ses->server == d->server)
+-		d->cifs_sb = cifs_sb;
++		d->sb = sb;
+ }
+ 
+-static inline struct cifs_sb_info *
+-find_super_by_tcp(struct TCP_Server_Info *server)
++static struct super_block *get_tcp_super(struct TCP_Server_Info *server)
+ {
+ 	struct super_cb_data d = {
+ 		.server = server,
+-		.cifs_sb = NULL,
++		.sb = NULL,
+ 	};
+ 
+ 	iterate_supers_type(&cifs_fs_type, super_cb, &d);
+-	return d.cifs_sb ? d.cifs_sb : ERR_PTR(-ENOENT);
 +
- 	if (limit && buf->f_blocks > limit) {
- 		curblock = dquot->dq_dqb.dqb_curspace >> sb->s_blocksize_bits;
- 		buf->f_blocks = limit;
-@@ -1224,9 +1228,13 @@ static int f2fs_statfs_project(struct super_block *sb,
- 			 (buf->f_blocks - curblock) : 0;
++	if (unlikely(!d.sb))
++		return ERR_PTR(-ENOENT);
++	/*
++	 * Grab an active reference in order to prevent automounts (DFS links)
++	 * of expiring and then freeing up our cifs superblock pointer while
++	 * we're doing failover.
++	 */
++	cifs_sb_active(d.sb);
++	return d.sb;
++}
++
++static inline void put_tcp_super(struct super_block *sb)
++{
++	if (!IS_ERR_OR_NULL(sb))
++		cifs_sb_deactive(sb);
+ }
+ 
+ static void reconn_inval_dfs_target(struct TCP_Server_Info *server,
+@@ -480,6 +494,7 @@ cifs_reconnect(struct TCP_Server_Info *server)
+ 	struct mid_q_entry *mid_entry;
+ 	struct list_head retry_list;
+ #ifdef CONFIG_CIFS_DFS_UPCALL
++	struct super_block *sb = NULL;
+ 	struct cifs_sb_info *cifs_sb = NULL;
+ 	struct dfs_cache_tgt_list tgt_list = {0};
+ 	struct dfs_cache_tgt_iterator *tgt_it = NULL;
+@@ -489,13 +504,15 @@ cifs_reconnect(struct TCP_Server_Info *server)
+ 	server->nr_targets = 1;
+ #ifdef CONFIG_CIFS_DFS_UPCALL
+ 	spin_unlock(&GlobalMid_Lock);
+-	cifs_sb = find_super_by_tcp(server);
+-	if (IS_ERR(cifs_sb)) {
+-		rc = PTR_ERR(cifs_sb);
++	sb = get_tcp_super(server);
++	if (IS_ERR(sb)) {
++		rc = PTR_ERR(sb);
+ 		cifs_dbg(FYI, "%s: will not do DFS failover: rc = %d\n",
+ 			 __func__, rc);
+-		cifs_sb = NULL;
++		sb = NULL;
+ 	} else {
++		cifs_sb = CIFS_SB(sb);
++
+ 		rc = reconn_setup_dfs_targets(cifs_sb, &tgt_list, &tgt_it);
+ 		if (rc && (rc != -EOPNOTSUPP)) {
+ 			cifs_server_dbg(VFS, "%s: no target servers for DFS failover\n",
+@@ -512,6 +529,10 @@ cifs_reconnect(struct TCP_Server_Info *server)
+ 		/* the demux thread will exit normally
+ 		next time through the loop */
+ 		spin_unlock(&GlobalMid_Lock);
++#ifdef CONFIG_CIFS_DFS_UPCALL
++		dfs_cache_free_tgts(&tgt_list);
++		put_tcp_super(sb);
++#endif
+ 		return rc;
+ 	} else
+ 		server->tcpStatus = CifsNeedReconnect;
+@@ -638,7 +659,10 @@ cifs_reconnect(struct TCP_Server_Info *server)
+ 				 __func__, rc);
+ 		}
+ 		dfs_cache_free_tgts(&tgt_list);
++
  	}
- 
--	limit = dquot->dq_dqb.dqb_isoftlimit ?
--		dquot->dq_dqb.dqb_isoftlimit :
--		dquot->dq_dqb.dqb_ihardlimit;
-+	limit = 0;
-+	if (dquot->dq_dqb.dqb_isoftlimit)
-+		limit = dquot->dq_dqb.dqb_isoftlimit;
-+	if (dquot->dq_dqb.dqb_ihardlimit &&
-+			(!limit || dquot->dq_dqb.dqb_ihardlimit < limit))
-+		limit = dquot->dq_dqb.dqb_ihardlimit;
 +
- 	if (limit && buf->f_files > limit) {
- 		buf->f_files = limit;
- 		buf->f_ffree =
++	put_tcp_super(sb);
+ #endif
+ 	if (server->tcpStatus == CifsNeedNegotiate)
+ 		mod_delayed_work(cifsiod_wq, &server->echo, 0);
 -- 
 2.20.1
 
