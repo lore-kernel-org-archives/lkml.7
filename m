@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AFCC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BDFC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D892D20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C33C20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578006034;
-	bh=3BVHwPE4q8n26a1d46lsR7hjc6VGVHopFCYsWip+P9g=;
+	s=default; t=1578006037;
+	bh=/YUthY9vE9Z0PtWMgd0UlmOKUFE+2Y8/i6JHRz80FYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JxVOQhMjyxqzfh5DcyE4HgoLq3tCOhqfDMDw/3x7Z6mc6j+x2C8GID7GXcJGMh61V
-	 /uVOA68uZB0a0p/6i7ITBpbY7oIqRQ3mkspPHe8KzftdrtJ4iP5gvAy5qWQqkJMe+I
-	 4So6yydsY9cM93ItW3L03mDgtIYkG6E5joVgNnr0=
+	b=xi7EBGN9684BJ/vojztTe3cVTSaZOO5199v7nhRMLdfQ9lDNZzwB90JV4z5ltAPZh
+	 LDPztHTZqyqnZ6VKkzg33K2foTqfP3JzZPljPmOyZV1Rk9Ei6UbFV7np39MsV7yMPT
+	 Y1pS3otxGk3BfOl9CRlsF3YnYBDcDfrjKzRf2xLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbgABXAd (ORCPT
+        id S1727544AbgABWMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 18:00:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52180 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:12:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727546AbgABWMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:12:48 -0500
+        id S1727534AbgABWMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:12:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CCDA21D7D;
-        Thu,  2 Jan 2020 22:12:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F35421582;
+        Thu,  2 Jan 2020 22:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003167;
-        bh=3BVHwPE4q8n26a1d46lsR7hjc6VGVHopFCYsWip+P9g=;
+        s=default; t=1578003160;
+        bh=/YUthY9vE9Z0PtWMgd0UlmOKUFE+2Y8/i6JHRz80FYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zGygS2LMuXUGzaJ/thsnnlABPhg7LoHa7zuQYhXcSLQVXBKrpexGFbJ2vNZW7Vxbn
-         VfogloyCXbq80iP+p2Idj2nZpe5dGrQNQquPrMvo67lb8vnYPu9yvo7UgJZEZrOsBF
-         m4EhkijVkp09kEMjMsyWI+DV9O02xa62uKMBA4zk=
+        b=q+zSZisJlAPYeoQpR7KJ3jL58U5VKngrOd2DcKZ3VX0w2a/arm5gAEcpkFk0oI8gO
+         QpqzEJAtNsBJvybj5zZj+cjMfLxxiEacDnbR43jZAS/UfdNAe//56ifS6DJ4d1srOV
+         u7CrHkllDprGqfVx0HZgKkylKsmRl9xNAWt9A27E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Hannes Reinecke <hare@suse.com>,
+        Douglas Gilbert <dgilbert@interlog.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 048/191] f2fs: fix to update dirs i_pino during cross_rename
-Date:   Thu,  2 Jan 2020 23:05:30 +0100
-Message-Id: <20200102215835.050600027@linuxfoundation.org>
+Subject: [PATCH 5.4 045/191] scsi: tracing: Fix handling of TRANSFER LENGTH == 0 for READ(6) and WRITE(6)
+Date:   Thu,  2 Jan 2020 23:05:27 +0100
+Message-Id: <20200102215834.738714064@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,92 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 2a60637f06ac94869b2e630eaf837110d39bf291 ]
+[ Upstream commit f6b8540f40201bff91062dd64db8e29e4ddaaa9d ]
 
-As Eric reported:
+According to SBC-2 a TRANSFER LENGTH field of zero means that 256 logical
+blocks must be transferred. Make the SCSI tracing code follow SBC-2.
 
-RENAME_EXCHANGE support was just added to fsstress in xfstests:
-
-	commit 65dfd40a97b6bbbd2a22538977bab355c5bc0f06
-	Author: kaixuxia <xiakaixu1987@gmail.com>
-	Date:   Thu Oct 31 14:41:48 2019 +0800
-
-	    fsstress: add EXCHANGE renameat2 support
-
-This is causing xfstest generic/579 to fail due to fsck.f2fs reporting errors.
-I'm not sure what the problem is, but it still happens even with all the
-fs-verity stuff in the test commented out, so that the test just runs fsstress.
-
-generic/579 23s ... 	[10:02:25]
-[    7.745370] run fstests generic/579 at 2019-11-04 10:02:25
-_check_generic_filesystem: filesystem on /dev/vdc is inconsistent
-(see /results/f2fs/results-default/generic/579.full for details)
- [10:02:47]
-Ran: generic/579
-Failures: generic/579
-Failed 1 of 1 tests
-Xunit report: /results/f2fs/results-default/result.xml
-
-Here's the contents of 579.full:
-
-_check_generic_filesystem: filesystem on /dev/vdc is inconsistent
-*** fsck.f2fs output ***
-[ASSERT] (__chk_dots_dentries:1378)  --> Bad inode number[0x24] for '..', parent parent ino is [0xd10]
-
-The root cause is that we forgot to update directory's i_pino during
-cross_rename, fix it.
-
-Fixes: 32f9bc25cbda0 ("f2fs: support ->rename2()")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Tested-by: Eric Biggers <ebiggers@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: bf8162354233 ("[SCSI] add scsi trace core functions and put trace points")
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Douglas Gilbert <dgilbert@interlog.com>
+Link: https://lore.kernel.org/r/20191105215553.185018-1-bvanassche@acm.org
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/namei.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/scsi/scsi_trace.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
-index 4faf06e8bf89..a1c507b0b4ac 100644
---- a/fs/f2fs/namei.c
-+++ b/fs/f2fs/namei.c
-@@ -981,7 +981,8 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
- 	if (!old_dir_entry || whiteout)
- 		file_lost_pino(old_inode);
- 	else
--		F2FS_I(old_inode)->i_pino = new_dir->i_ino;
-+		/* adjust dir's i_pino to pass fsck check */
-+		f2fs_i_pino_write(old_inode, new_dir->i_ino);
- 	up_write(&F2FS_I(old_inode)->i_sem);
+diff --git a/drivers/scsi/scsi_trace.c b/drivers/scsi/scsi_trace.c
+index 0f17e7dac1b0..07a2425ffa2c 100644
+--- a/drivers/scsi/scsi_trace.c
++++ b/drivers/scsi/scsi_trace.c
+@@ -18,15 +18,18 @@ static const char *
+ scsi_trace_rw6(struct trace_seq *p, unsigned char *cdb, int len)
+ {
+ 	const char *ret = trace_seq_buffer_ptr(p);
+-	sector_t lba = 0, txlen = 0;
++	u32 lba = 0, txlen;
  
- 	old_inode->i_ctime = current_time(old_inode);
-@@ -1141,7 +1142,11 @@ static int f2fs_cross_rename(struct inode *old_dir, struct dentry *old_dentry,
- 	f2fs_set_link(old_dir, old_entry, old_page, new_inode);
+ 	lba |= ((cdb[1] & 0x1F) << 16);
+ 	lba |=  (cdb[2] << 8);
+ 	lba |=   cdb[3];
+-	txlen = cdb[4];
++	/*
++	 * From SBC-2: a TRANSFER LENGTH field set to zero specifies that 256
++	 * logical blocks shall be read (READ(6)) or written (WRITE(6)).
++	 */
++	txlen = cdb[4] ? cdb[4] : 256;
  
- 	down_write(&F2FS_I(old_inode)->i_sem);
--	file_lost_pino(old_inode);
-+	if (!old_dir_entry)
-+		file_lost_pino(old_inode);
-+	else
-+		/* adjust dir's i_pino to pass fsck check */
-+		f2fs_i_pino_write(old_inode, new_dir->i_ino);
- 	up_write(&F2FS_I(old_inode)->i_sem);
+-	trace_seq_printf(p, "lba=%llu txlen=%llu",
+-			 (unsigned long long)lba, (unsigned long long)txlen);
++	trace_seq_printf(p, "lba=%u txlen=%u", lba, txlen);
+ 	trace_seq_putc(p, 0);
  
- 	old_dir->i_ctime = current_time(old_dir);
-@@ -1156,7 +1161,11 @@ static int f2fs_cross_rename(struct inode *old_dir, struct dentry *old_dentry,
- 	f2fs_set_link(new_dir, new_entry, new_page, old_inode);
- 
- 	down_write(&F2FS_I(new_inode)->i_sem);
--	file_lost_pino(new_inode);
-+	if (!new_dir_entry)
-+		file_lost_pino(new_inode);
-+	else
-+		/* adjust dir's i_pino to pass fsck check */
-+		f2fs_i_pino_write(new_inode, old_dir->i_ino);
- 	up_write(&F2FS_I(new_inode)->i_sem);
- 
- 	new_dir->i_ctime = current_time(new_dir);
+ 	return ret;
 -- 
 2.20.1
 
