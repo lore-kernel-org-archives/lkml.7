@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8289C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80730C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FAB520848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C61420848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005474;
-	bh=pAVe+hWOgWyKDdn9K32HXdVAcd4Lp9YJCc37+Z+FiRo=;
+	s=default; t=1578005479;
+	bh=oVwTf1C/yabIoOxrk2K4gKq/YQtGQJRmTDX44jNet1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pBc8uSr0cqy6EBpy01ADY36DKLJbVShKFp9iwu5EGDpwuSgPjJ1z+Dyn0Q7tkwe3f
-	 JPSCJSYqTvVxSsoZctq3Lprd9y5YH02DzrCnvsODrz4qLkICMqn+FewPxK7AniQ2iR
-	 NhFsAqXzI6vjBcCEnmusgOkQr679/IlcEnZklrHM=
+	b=hKyLytsRjqU1SQN6bb30EVw25fNEPIVavu/8Lds3JM5zRWPYyVxle/pGT8MSplAfa
+	 wJdrmct8p70rKqnpyQzZQPvSsc7NsHI7WcC3n4dHLXEtJ/KsPz5EvumCHH7HTjCJYf
+	 8FaZleQSJ93H2KO/MCxbXsfW7ct5kaLSdNFzMTrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729825AbgABWvM (ORCPT
+        id S1729386AbgABWYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:51:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48446 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:24:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729256AbgABWY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:24:28 -0500
+        id S1729375AbgABWYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:24:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59F0D222C3;
-        Thu,  2 Jan 2020 22:24:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6137E20863;
+        Thu,  2 Jan 2020 22:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003867;
-        bh=pAVe+hWOgWyKDdn9K32HXdVAcd4Lp9YJCc37+Z+FiRo=;
+        s=default; t=1578003855;
+        bh=oVwTf1C/yabIoOxrk2K4gKq/YQtGQJRmTDX44jNet1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sG4VUTZs/JQ45oJ9XrW/+vgSnB6E4t7mGZae7lTofLZoROnJTM62l52vQi6ILgLg6
-         EyhvcrYPtRTQQZWfJNX6LxQcEqUkuBEAjWztlbP6MgQHkMvIyOJp2lyCQGA1FbOT/B
-         cbWUK3RWgl1v8i1z/egdNq9jSfkpjOQJrpbHOrMg=
+        b=loZR1a2KNjhDyT40G9yS4g4z4wWiBUC0TjHUfp4ZH0JD6X5PQJAm18WOb9FfxtIyb
+         WuyENSQDUytqaBW8NME0LHpmXmZ3HJWu06a2VgwbuBA7GWKfxgSVIacm3vy+Uw6ZNz
+         G8djj/GYj82fASo7+0ELHByLyhOOxGqXfD8n6Q3M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 09/91] powerpc/pseries: Mark accumulate_stolen_time() as notrace
-Date:   Thu,  2 Jan 2020 23:06:51 +0100
-Message-Id: <20200102220407.826536439@linuxfoundation.org>
+Subject: [PATCH 4.14 04/91] Input: atmel_mxt_ts - disable IRQ across suspend
+Date:   Thu,  2 Jan 2020 23:06:46 +0100
+Message-Id: <20200102220402.321876076@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -59,50 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Evan Green <evgreen@chromium.org>
 
-[ Upstream commit eb8e20f89093b64f48975c74ccb114e6775cee22 ]
+[ Upstream commit 463fa44eec2fef50d111ed0199cf593235065c04 ]
 
-accumulate_stolen_time() is called prior to interrupt state being
-reconciled, which can trip the warning in arch_local_irq_restore():
+Across suspend and resume, we are seeing error messages like the following:
 
-  WARNING: CPU: 5 PID: 1017 at arch/powerpc/kernel/irq.c:258 .arch_local_irq_restore+0x9c/0x130
-  ...
-  NIP .arch_local_irq_restore+0x9c/0x130
-  LR  .rb_start_commit+0x38/0x80
-  Call Trace:
-    .ring_buffer_lock_reserve+0xe4/0x620
-    .trace_function+0x44/0x210
-    .function_trace_call+0x148/0x170
-    .ftrace_ops_no_ops+0x180/0x1d0
-    ftrace_call+0x4/0x8
-    .accumulate_stolen_time+0x1c/0xb0
-    decrementer_common+0x124/0x160
+atmel_mxt_ts i2c-PRP0001:00: __mxt_read_reg: i2c transfer failed (-121)
+atmel_mxt_ts i2c-PRP0001:00: Failed to read T44 and T5 (-121)
 
-For now just mark it as notrace. We may change the ordering to call it
-after interrupt state has been reconciled, but that is a larger
-change.
+This occurs because the driver leaves its IRQ enabled. Upon resume, there
+is an IRQ pending, but the interrupt is serviced before both the driver and
+the underlying I2C bus have been resumed. This causes EREMOTEIO errors.
 
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191024055932.27940-1-mpe@ellerman.id.au
+Disable the IRQ in suspend, and re-enable it on resume. If there are cases
+where the driver enters suspend with interrupts disabled, that's a bug we
+should fix separately.
+
+Signed-off-by: Evan Green <evgreen@chromium.org>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/time.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
-index 14f3f28a089e..66a9987dc0f8 100644
---- a/arch/powerpc/kernel/time.c
-+++ b/arch/powerpc/kernel/time.c
-@@ -241,7 +241,7 @@ static u64 scan_dispatch_log(u64 stop_tb)
-  * Accumulate stolen time by scanning the dispatch trace log.
-  * Called on entry from user mode.
-  */
--void accumulate_stolen_time(void)
-+void notrace accumulate_stolen_time(void)
- {
- 	u64 sst, ust;
- 	u8 save_soft_enabled = local_paca->soft_enabled;
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index 59aaac43db91..138d1f3b12b2 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -3257,6 +3257,8 @@ static int __maybe_unused mxt_suspend(struct device *dev)
+ 
+ 	mutex_unlock(&input_dev->mutex);
+ 
++	disable_irq(data->irq);
++
+ 	return 0;
+ }
+ 
+@@ -3269,6 +3271,8 @@ static int __maybe_unused mxt_resume(struct device *dev)
+ 	if (!input_dev)
+ 		return 0;
+ 
++	enable_irq(data->irq);
++
+ 	mutex_lock(&input_dev->mutex);
+ 
+ 	if (input_dev->users)
 -- 
 2.20.1
 
