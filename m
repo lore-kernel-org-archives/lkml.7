@@ -2,243 +2,97 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E30C2C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 19:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BBDC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 19:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC54E21835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 19:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B7B821D7D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 19:22:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="Fj90E7Xr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbgABTVK (ORCPT
+        id S1728280AbgABTWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 14:21:10 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:53160 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728135AbgABTVK (ORCPT
+        Thu, 2 Jan 2020 14:22:54 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:36309 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbgABTWy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 14:21:10 -0500
-Received: by mail-io1-f72.google.com with SMTP id d10so25962707iod.19
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 11:21:09 -0800 (PST)
+        Thu, 2 Jan 2020 14:22:54 -0500
+Received: by mail-qk1-f194.google.com with SMTP id a203so32491027qkc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 11:22:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=79zMLHtVC8xs2RALirflwpQq5tYiUVAhO2rVoiGE7aQ=;
+        b=Fj90E7Xrg7UIIOshQt+/7b8UWs93Fl4Ty9jh3sOXmr3Njz5CMuipkdCaDqdycn4S2V
+         grswIkrOntOtjjUwGZuOJlp2QdJyGMANs2uKmgqrfUGD8CROlm5neqQeV7USsAHio35Q
+         zfoVVJTUX1crQojZHf/r9EyfdpHGY9WPByQ1M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=FRfPvVAcYNlxGYRGcqUKekQKbPa/NXPujZppts6t3J8=;
-        b=O8uKPhSEboJujf6zeswZGOosi65JYN8iPjZDS0BQfutAwRDLoAKrRWac9cg7YqFOE1
-         qV0EqfKdNLFa4rO0vmYk/ykbZFZfICu/tdGhnXKFn4WG2/q9sN2gNLbhw6Uzaec/xaWS
-         1dCLAOE32AatCBl/659wBnV80cGuoX26BBqhu0AIN4o/ndO8CUXqlLkEo3CB2Yj+08xn
-         wDxC+5Pn+2jshky45jkCBwfpFdCe+bkBRndrZcl1lj0vGkaB/8Wzbi+fn9vxJ1X1uAuI
-         dNSOFJqp1GbVc+PH8IvqeU/UURnrpICyfp/Ri34TMCdLJlfPT5vY8GIwcK6AGAhti4Tf
-         ctLQ==
-X-Gm-Message-State: APjAAAVF+/UFhfxpTb7bWK9Dwj4fglZUVXNsQ/CDcawObn1BMADJVdcW
-        /CLqzISr2A7ZaGei7z+uelUIOix6uRlsR1Jgx0VpSDYL0BVE
-X-Google-Smtp-Source: APXvYqzdv5pj8G25vHrpUCrtXdvNgIqltG+j+sQzjfmP8ihm/W3n5NcIOqfcSVL1tFTJJe5LfFSYTj0aQAEFFyyqNY7yOilaZ1Nu
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=79zMLHtVC8xs2RALirflwpQq5tYiUVAhO2rVoiGE7aQ=;
+        b=FqTfkEAmTEHq4ZzKsMsIxn43o7ObDTmp5qurpcF1z9PRHU3GWwojKRUrsgRt3dAeyd
+         EEgCwXjywzPHmFPaG2Kxn51aYgplfXs2xNbwm4XkDeo78Fsz+GJFf9qbVPv4wr3XXFqm
+         FP7nqxY1iA/1itdG0FCc5o54cAdx1URve2zQ48DAR9l1TDOWv4EDRnYK7n49MTF8Uvyu
+         3yrnKw7X+Q1W9hpYSdzPEn1KoKzsm+CtKOP+xxagFldzTRWPLnv+L5q8Pw0KwuUlemAh
+         Wa2jYQdTOv/Rk4oLzdjP506e7CxKYySWxEMOCVnNO2VcQ59KAb5us1b8qt2U7OW841Bo
+         mbFg==
+X-Gm-Message-State: APjAAAVyF8qW2VGv3DTFVCfehSbn5cy9cSVyykpZS8hoMtFPILRjPACg
+        5oNPxG3ZYj6hsQn8Px/OUrJIDRS82CY=
+X-Google-Smtp-Source: APXvYqyN43NJDeYwEB+a6cY1qrCyvp6ADY9/wy2AlNTQvPM45PU9X08mtxGnArWV5fVF4LtNRzCFcg==
+X-Received: by 2002:a05:620a:166a:: with SMTP id d10mr67568449qko.37.1577992973148;
+        Thu, 02 Jan 2020 11:22:53 -0800 (PST)
+Received: from macbook-air (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id r66sm15305288qkd.125.2020.01.02.11.22.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 11:22:50 -0800 (PST)
+From:   Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date:   Thu, 2 Jan 2020 14:22:47 -0500 (EST)
+X-X-Sender: vince@macbook-air
+To:     linux-kernel@vger.kernel.org
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [perf] perf_event_open() sometimes returning 0
+In-Reply-To: <alpine.DEB.2.21.2001021349390.11372@macbook-air>
+Message-ID: <alpine.DEB.2.21.2001021418590.11372@macbook-air>
+References: <alpine.DEB.2.21.2001021349390.11372@macbook-air>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:b504:: with SMTP id e4mr13121926iof.222.1577992869205;
- Thu, 02 Jan 2020 11:21:09 -0800 (PST)
-Date:   Thu, 02 Jan 2020 11:21:09 -0800
-In-Reply-To: <000000000000a0f82805867fb67e@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006d62f4059b2d1893@google.com>
-Subject: Re: possible deadlock in seq_read (2)
-From:   syzbot <syzbot+5378878b09e052edef7f@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-unionfs@vger.kernel.org, miklos@szeredi.hu,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Thu, 2 Jan 2020, Vince Weaver wrote:
 
-HEAD commit:    7ddd09fc Add linux-next specific files for 20191220
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1648763ee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f183b01c3088afc6
-dashboard link: https://syzkaller.appspot.com/bug?extid=5378878b09e052edef7f
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17e706e1e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14478885e00000
+> so I was tracking down some odd behavior in the perf_fuzzer which turns 
+> out to be because perf_even_open() sometimes returns 0 (indicating a file 
+> descriptor of 0) even though as far as I can tell stdin is still open.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+5378878b09e052edef7f@syzkaller.appspotmail.com
+error is triggered if aux_sample_size has non-zero value.
 
-======================================================
-WARNING: possible circular locking dependency detected
-5.5.0-rc2-next-20191220-syzkaller #0 Not tainted
-------------------------------------------------------
-syz-executor877/11363 is trying to acquire lock:
-ffff8880920b8520 (&p->lock){+.+.}, at: seq_read+0x71/0x1170  
-fs/seq_file.c:161
-
-but task is already holding lock:
-ffff8880998ac428 (sb_writers#3){.+.+}, at: file_start_write  
-include/linux/fs.h:2880 [inline]
-ffff8880998ac428 (sb_writers#3){.+.+}, at: do_sendfile+0x9b9/0xd00  
-fs/read_write.c:1463
-
-which lock already depends on the new lock.
+seems to be this line in kernel/events/core.c:
 
 
-the existing dependency chain (in reverse order) is:
+ if (perf_need_aux_event(event) && !perf_get_aux_event(event, group_leader))
+                goto err_locked;
 
--> #3 (sb_writers#3){.+.+}:
-        percpu_down_read include/linux/percpu-rwsem.h:40 [inline]
-        __sb_start_write+0x241/0x460 fs/super.c:1674
-        sb_start_write include/linux/fs.h:1649 [inline]
-        mnt_want_write+0x3f/0xc0 fs/namespace.c:354
-        ovl_want_write+0x76/0xa0 fs/overlayfs/util.c:21
-        ovl_create_object+0xb3/0x2c0 fs/overlayfs/dir.c:596
-        ovl_create+0x28/0x30 fs/overlayfs/dir.c:627
-        lookup_open+0x12d5/0x1a90 fs/namei.c:3374
-        do_last fs/namei.c:3464 [inline]
-        path_openat+0xf2a/0x34d0 fs/namei.c:3670
-        do_filp_open+0x192/0x260 fs/namei.c:3700
-        do_sys_openat2+0x633/0x840 fs/open.c:1152
-        do_sys_open+0xfc/0x190 fs/open.c:1168
-        ksys_open include/linux/syscalls.h:1385 [inline]
-        __do_sys_open fs/open.c:1174 [inline]
-        __se_sys_open fs/open.c:1172 [inline]
-        __x64_sys_open+0x7e/0xc0 fs/open.c:1172
-        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
--> #2 (&ovl_i_mutex_dir_key[depth]){++++}:
-        down_read+0x95/0x440 kernel/locking/rwsem.c:1495
-        inode_lock_shared include/linux/fs.h:801 [inline]
-        do_last fs/namei.c:3463 [inline]
-        path_openat+0x1c60/0x34d0 fs/namei.c:3670
-        do_filp_open+0x192/0x260 fs/namei.c:3700
-        do_open_execat+0x13b/0x6d0 fs/exec.c:861
-        __do_execve_file.isra.0+0x1702/0x22b0 fs/exec.c:1766
-        do_execveat_common fs/exec.c:1872 [inline]
-        do_execve fs/exec.c:1889 [inline]
-        __do_sys_execve fs/exec.c:1965 [inline]
-        __se_sys_execve fs/exec.c:1960 [inline]
-        __x64_sys_execve+0x8f/0xc0 fs/exec.c:1960
-        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+(note, err is never set)
 
--> #1 (&sig->cred_guard_mutex){+.+.}:
-        __mutex_lock_common kernel/locking/mutex.c:956 [inline]
-        __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
-        mutex_lock_killable_nested+0x16/0x20 kernel/locking/mutex.c:1133
-        do_io_accounting+0x1f4/0x820 fs/proc/base.c:2772
-        proc_tgid_io_accounting+0x23/0x30 fs/proc/base.c:2821
-        proc_single_show+0xfd/0x1c0 fs/proc/base.c:756
-        seq_read+0x4ca/0x1170 fs/seq_file.c:229
-        do_loop_readv_writev fs/read_write.c:714 [inline]
-        do_loop_readv_writev fs/read_write.c:701 [inline]
-        do_iter_read+0x4a4/0x660 fs/read_write.c:935
-        vfs_readv+0xf0/0x160 fs/read_write.c:997
-        kernel_readv fs/splice.c:365 [inline]
-        default_file_splice_read+0x4fb/0xa20 fs/splice.c:422
-        do_splice_to+0x127/0x180 fs/splice.c:892
-        splice_direct_to_actor+0x320/0xa30 fs/splice.c:971
-        do_splice_direct+0x1da/0x2a0 fs/splice.c:1080
-        do_sendfile+0x597/0xd00 fs/read_write.c:1464
-        __do_sys_sendfile64 fs/read_write.c:1525 [inline]
-        __se_sys_sendfile64 fs/read_write.c:1511 [inline]
-        __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1511
-        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
--> #0 (&p->lock){+.+.}:
-        check_prev_add kernel/locking/lockdep.c:2476 [inline]
-        check_prevs_add kernel/locking/lockdep.c:2581 [inline]
-        validate_chain kernel/locking/lockdep.c:2971 [inline]
-        __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3955
-        lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
-        __mutex_lock_common kernel/locking/mutex.c:956 [inline]
-        __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
-        mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
-        seq_read+0x71/0x1170 fs/seq_file.c:161
-        do_loop_readv_writev fs/read_write.c:714 [inline]
-        do_loop_readv_writev fs/read_write.c:701 [inline]
-        do_iter_read+0x4a4/0x660 fs/read_write.c:935
-        vfs_readv+0xf0/0x160 fs/read_write.c:997
-        kernel_readv fs/splice.c:365 [inline]
-        default_file_splice_read+0x4fb/0xa20 fs/splice.c:422
-        do_splice_to+0x127/0x180 fs/splice.c:892
-        splice_direct_to_actor+0x320/0xa30 fs/splice.c:971
-        do_splice_direct+0x1da/0x2a0 fs/splice.c:1080
-        do_sendfile+0x597/0xd00 fs/read_write.c:1464
-        __do_sys_sendfile64 fs/read_write.c:1525 [inline]
-        __se_sys_sendfile64 fs/read_write.c:1511 [inline]
-        __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1511
-        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-other info that might help us debug this:
-
-Chain exists of:
-   &p->lock --> &ovl_i_mutex_dir_key[depth] --> sb_writers#3
-
-  Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock(sb_writers#3);
-                                lock(&ovl_i_mutex_dir_key[depth]);
-                                lock(sb_writers#3);
-   lock(&p->lock);
-
-  *** DEADLOCK ***
-
-1 lock held by syz-executor877/11363:
-  #0: ffff8880998ac428 (sb_writers#3){.+.+}, at: file_start_write  
-include/linux/fs.h:2880 [inline]
-  #0: ffff8880998ac428 (sb_writers#3){.+.+}, at: do_sendfile+0x9b9/0xd00  
-fs/read_write.c:1463
-
-stack backtrace:
-CPU: 0 PID: 11363 Comm: syz-executor877 Not tainted  
-5.5.0-rc2-next-20191220-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_circular_bug.isra.0.cold+0x163/0x172 kernel/locking/lockdep.c:1685
-  check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1809
-  check_prev_add kernel/locking/lockdep.c:2476 [inline]
-  check_prevs_add kernel/locking/lockdep.c:2581 [inline]
-  validate_chain kernel/locking/lockdep.c:2971 [inline]
-  __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3955
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
-  __mutex_lock_common kernel/locking/mutex.c:956 [inline]
-  __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
-  seq_read+0x71/0x1170 fs/seq_file.c:161
-  do_loop_readv_writev fs/read_write.c:714 [inline]
-  do_loop_readv_writev fs/read_write.c:701 [inline]
-  do_iter_read+0x4a4/0x660 fs/read_write.c:935
-  vfs_readv+0xf0/0x160 fs/read_write.c:997
-  kernel_readv fs/splice.c:365 [inline]
-  default_file_splice_read+0x4fb/0xa20 fs/splice.c:422
-  do_splice_to+0x127/0x180 fs/splice.c:892
-  splice_direct_to_actor+0x320/0xa30 fs/splice.c:971
-  do_splice_direct+0x1da/0x2a0 fs/splice.c:1080
-  do_sendfile+0x597/0xd00 fs/read_write.c:1464
-  __do_sys_sendfile64 fs/read_write.c:1525 [inline]
-  __se_sys_sendfile64 fs/read_write.c:1511 [inline]
-  __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1511
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x448dd9
-Code: e8 9c e6 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 3b 05 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fc37ed06ce8 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-RAX: ffffffffffffffda RBX: 00000000006e4a08 RCX: 0000000000448dd9
-RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000005
-RBP: 00000000006e4a00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000209 R11: 0000000000000246 R12: 00000000006e4a0c
-R13: 00007ffecbcb224f R14: 00007fc37ed079c0 R15: 20c49ba5e353f7cf
+Vince
 
