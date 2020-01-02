@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA97C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 404B7C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32058222C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1567621D7D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003093;
-	bh=0hcivgfnIPv5RFLLByzSdVuZjO4Jod2h9/haKpKzhhc=;
+	s=default; t=1578003095;
+	bh=5X4e9gDqzVaDUVUQN7W0flU942iFDH3f0nbHsKP9i5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bo9qgYRq/1YqhdynjTWIJd05qAKFwliz1hi3wY4gJe9N/Xrmte6OJgA+NP7QdhiDR
-	 /8Wv3vf0r2NfntmoiTVs+72VhQSjLm43+SKiCqBnnDBN4AdgnYJowp/rygqiCyHQF5
-	 BHSCQvwT5J4UUeWCaFhIU7N9r6KglAM3Hkbklddg=
+	b=yctkIhUVUsH84Od/tswVjtWSKgFnKdl5es+m0q/h1n1ehoBV/NlG42PDlbVefA+No
+	 tFYbvhAklfmrmG0nZ/++RMHNTxbO9vOLMCiz0GMei4CEwvq+bx4s3LJsgDdhmHZUMg
+	 C0o/g5P2mPaQA/0o6KNZ1PJEoC1+Hqz8jQsHQoYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbgABWLc (ORCPT
+        id S1727156AbgABWLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:11:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49582 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:11:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726702AbgABWL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:11:28 -0500
+        id S1726823AbgABWLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:11:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B279721D7D;
-        Thu,  2 Jan 2020 22:11:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AA2422314;
+        Thu,  2 Jan 2020 22:11:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003088;
-        bh=0hcivgfnIPv5RFLLByzSdVuZjO4Jod2h9/haKpKzhhc=;
+        s=default; t=1578003090;
+        bh=5X4e9gDqzVaDUVUQN7W0flU942iFDH3f0nbHsKP9i5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fYxp7PwOH58ffwkpX0nP9OvjU0yE5ZY0lD8NG0pm6DktjEo96AtVQ71lRZljrMkKi
-         s+r3/so4nrtOT8VtgVs19C28yealB/DIhOcxKHRg8A3nRqV8+cjcGxLXW2pzGSETf5
-         /Jo1dl9SJFIgDgl7OYxTbHZpP5Nlk/3uWBSl4a/E=
+        b=y+I6xLy8AuOKnzrL7ifjl2DZlRSL1t0bKrtwcxPxUQIcYkKSO9pWZ0eg/gR/o1rwq
+         siWLo/ayEdBXfxGJCu+UI5mv3TINufBKQmqDAU2XwV6xXqy0esO1Q0MTwl/OYGlwDo
+         rIA8D0d+VNjmsV5eRN3/E+VvsfxODLWC2VhzxXmE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
         Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 015/191] iommu: rockchip: Free domain on .domain_free
-Date:   Thu,  2 Jan 2020 23:04:57 +0100
-Message-Id: <20200102215831.389395073@linuxfoundation.org>
+Subject: [PATCH 5.4 016/191] iommu/tegra-smmu: Fix page tables in > 4 GiB memory
+Date:   Thu,  2 Jan 2020 23:04:58 +0100
+Message-Id: <20200102215831.515906646@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,62 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ezequiel Garcia <ezequiel@collabora.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 42bb97b80f2e3bf592e3e99d109b67309aa1b30e ]
+[ Upstream commit 96d3ab802e4930a29a33934373157d6dff1b2c7e ]
 
-IOMMU domain resource life is well-defined, managed
-by .domain_alloc and .domain_free.
+Page tables that reside in physical memory beyond the 4 GiB boundary are
+currently not working properly. The reason is that when the physical
+address for page directory entries is read, it gets truncated at 32 bits
+and can cause crashes when passing that address to the DMA API.
 
-Therefore, domain-specific resources shouldn't be tied to
-the device life, but instead to its domain.
+Fix this by first casting the PDE value to a dma_addr_t and then using
+the page frame number mask for the SMMU instance to mask out the invalid
+bits, which are typically used for mapping attributes, etc.
 
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Acked-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/rockchip-iommu.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/iommu/tegra-smmu.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/iommu/rockchip-iommu.c b/drivers/iommu/rockchip-iommu.c
-index 4dcbf68dfda4..0df091934361 100644
---- a/drivers/iommu/rockchip-iommu.c
-+++ b/drivers/iommu/rockchip-iommu.c
-@@ -980,13 +980,13 @@ static struct iommu_domain *rk_iommu_domain_alloc(unsigned type)
- 	if (!dma_dev)
- 		return NULL;
- 
--	rk_domain = devm_kzalloc(dma_dev, sizeof(*rk_domain), GFP_KERNEL);
-+	rk_domain = kzalloc(sizeof(*rk_domain), GFP_KERNEL);
- 	if (!rk_domain)
- 		return NULL;
- 
- 	if (type == IOMMU_DOMAIN_DMA &&
- 	    iommu_get_dma_cookie(&rk_domain->domain))
--		return NULL;
-+		goto err_free_domain;
- 
- 	/*
- 	 * rk32xx iommus use a 2 level pagetable.
-@@ -1021,6 +1021,8 @@ err_free_dt:
- err_put_cookie:
- 	if (type == IOMMU_DOMAIN_DMA)
- 		iommu_put_dma_cookie(&rk_domain->domain);
-+err_free_domain:
-+	kfree(rk_domain);
- 
- 	return NULL;
- }
-@@ -1049,6 +1051,7 @@ static void rk_iommu_domain_free(struct iommu_domain *domain)
- 
- 	if (domain->type == IOMMU_DOMAIN_DMA)
- 		iommu_put_dma_cookie(&rk_domain->domain);
-+	kfree(rk_domain);
+diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
+index 7293fc3f796d..dd486233e282 100644
+--- a/drivers/iommu/tegra-smmu.c
++++ b/drivers/iommu/tegra-smmu.c
+@@ -159,9 +159,9 @@ static bool smmu_dma_addr_valid(struct tegra_smmu *smmu, dma_addr_t addr)
+ 	return (addr & smmu->pfn_mask) == addr;
  }
  
- static int rk_iommu_add_device(struct device *dev)
+-static dma_addr_t smmu_pde_to_dma(u32 pde)
++static dma_addr_t smmu_pde_to_dma(struct tegra_smmu *smmu, u32 pde)
+ {
+-	return pde << 12;
++	return (dma_addr_t)(pde & smmu->pfn_mask) << 12;
+ }
+ 
+ static void smmu_flush_ptc_all(struct tegra_smmu *smmu)
+@@ -549,6 +549,7 @@ static u32 *tegra_smmu_pte_lookup(struct tegra_smmu_as *as, unsigned long iova,
+ 				  dma_addr_t *dmap)
+ {
+ 	unsigned int pd_index = iova_pd_index(iova);
++	struct tegra_smmu *smmu = as->smmu;
+ 	struct page *pt_page;
+ 	u32 *pd;
+ 
+@@ -557,7 +558,7 @@ static u32 *tegra_smmu_pte_lookup(struct tegra_smmu_as *as, unsigned long iova,
+ 		return NULL;
+ 
+ 	pd = page_address(as->pd);
+-	*dmap = smmu_pde_to_dma(pd[pd_index]);
++	*dmap = smmu_pde_to_dma(smmu, pd[pd_index]);
+ 
+ 	return tegra_smmu_pte_offset(pt_page, iova);
+ }
+@@ -599,7 +600,7 @@ static u32 *as_get_pte(struct tegra_smmu_as *as, dma_addr_t iova,
+ 	} else {
+ 		u32 *pd = page_address(as->pd);
+ 
+-		*dmap = smmu_pde_to_dma(pd[pde]);
++		*dmap = smmu_pde_to_dma(smmu, pd[pde]);
+ 	}
+ 
+ 	return tegra_smmu_pte_offset(as->pts[pde], iova);
+@@ -624,7 +625,7 @@ static void tegra_smmu_pte_put_use(struct tegra_smmu_as *as, unsigned long iova)
+ 	if (--as->count[pde] == 0) {
+ 		struct tegra_smmu *smmu = as->smmu;
+ 		u32 *pd = page_address(as->pd);
+-		dma_addr_t pte_dma = smmu_pde_to_dma(pd[pde]);
++		dma_addr_t pte_dma = smmu_pde_to_dma(smmu, pd[pde]);
+ 
+ 		tegra_smmu_set_pde(as, iova, 0);
+ 
 -- 
 2.20.1
 
