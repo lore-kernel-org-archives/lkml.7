@@ -2,109 +2,165 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3F4C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 20:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB90BC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 20:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39C9121655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 20:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0DDC21655
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 20:58:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gpBmxAFh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JsNErjk5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725970AbgABUzM (ORCPT
+        id S1725924AbgABU6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 15:55:12 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39817 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgABUzL (ORCPT
+        Thu, 2 Jan 2020 15:58:02 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33097 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbgABU6B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 15:55:11 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 77so58548404oty.6
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 12:55:11 -0800 (PST)
+        Thu, 2 Jan 2020 15:58:01 -0500
+Received: by mail-pl1-f196.google.com with SMTP id c13so18271170pls.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 12:58:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=FC+3ECJPVf1PQMuQzI/vPybo2wIB8iKB3SbvaslcqQw=;
-        b=gpBmxAFhnbb6+BqKlrGXr9yYGgZlvyk7ed2gwQlcp+iwPOHBIR71HN/4w9cMSltK9H
-         Hn7xvuly2kCKh7jku2eHhL+YosE6gZ6OT9hKNVTX8+7KDxmxnBJqCHiJKaymvGMibR3R
-         9s1DBvsZ6n7tua6j1E3znL6pXbhzZ8CDrsJHk=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=z7uC44Oc18ogP4OWB3WNFZwzRSBSoy1k7HBWtdwE8fA=;
+        b=JsNErjk57TLzLekTAMi+u1tOjxdWFRum7WeAJHfQfCWI6HiRPLEhsyaBJRIkqcKhwI
+         5N1i+XRLxrK414tYy5J4YcfhB4y+d8u8yKSI87iOCVIcmvVsdqzy1JAZ5Qh8j8LkEBA/
+         K4fSCr8i6klwM4mLEYCf+Voh5Upglfzcm3aYBWQKPVcK2Qu7JjCm5myQDLR/WOlLNHfU
+         DMRYFntzqhXZqRM1V0aXfa9l8Y9oQi+i+9lpSR9dAnkzkmg3Hb9sdrdaGWiuQU80H8gm
+         DM3pYAk9NPBmaRYF0+zqpe+rjmpDZ5vIu6HWn3qtSuBRIqGghibp/TnPy8JRYD9xvZeH
+         s2yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=FC+3ECJPVf1PQMuQzI/vPybo2wIB8iKB3SbvaslcqQw=;
-        b=mZ/dhBeOgKRDA7xsBMBDEt1RBX9XzdBaNirAHjwitDsCzsPJ7q8nHyELC0WVOmI5cW
-         l8RV0AyoPY4BjMEx3zJgcMhOtJbCIRHphrSgBhRdmo8zyfsZZGa6IOjR69b67zG/7ZER
-         Wyg+Y0Y+qM8Q6I6OKEZYsyJ+ZBdPoAimTB9/pGgeiuBNrVLW/2kThT4ssyakVMwf6Anu
-         ufDBkGJO/ikhT//DjAzBTKW3BIDqRLZL0CNGCIM7E+tX24nD9ULU7xRpixEApG4R4lVC
-         rzuacUijN+IREdxeFNkCLQOM2av4QLRgvV8QmedvI+Cvf643aW0kgJs0CzRbhQdUpWJN
-         WKXg==
-X-Gm-Message-State: APjAAAVFqVhNyCwAXN8E280CqkXQC7v4WhgCCh76irU+bsrsWrupB4Of
-        ZJZBqz/BqztEd2oRf7IDwmQGH64Bv8I=
-X-Google-Smtp-Source: APXvYqyRH+ydEoKu5X6agonlYM5uqH/0mjPZ/ps0OIJYwq3j+z9O7+Rax5LipSq9Vr1n3WYFaathOQ==
-X-Received: by 2002:a9d:68cb:: with SMTP id i11mr89413290oto.210.1577998510871;
-        Thu, 02 Jan 2020 12:55:10 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n16sm19725224otk.25.2020.01.02.12.55.09
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=z7uC44Oc18ogP4OWB3WNFZwzRSBSoy1k7HBWtdwE8fA=;
+        b=T20PfLXpIH9c9UzgmWPbGg0FXosB/daVpLDSqP/vwYeFeeB8CvpbfHqvAtpqrH2mjw
+         VBBNEG9xtcO8CyDSoFOoiu0zH0ndtfWgCtvwQNHnFAekOWRVAG1DBekzudDvLJPTbyPp
+         ajbnwL+mz6Pbic6LT34l5Zsu+EIl6uJ3tXWIIwsM/YfQWQX0EfGxJ7SLia5S9Tu0xtxe
+         Z8VdEqXUTy/p9TfR36r/1MDKPIP/iFqoiBLUDza8nVYpykZnoWsZ/2ZE5ayhANC7GZ95
+         VjwbNmXGNvbQ2xQQBuUU24vqHiSAGI2xwgIoFLQktADPaenp/i2ujrrALOToQnmdEbDN
+         vNaA==
+X-Gm-Message-State: APjAAAV+Af5qfuDmbaePUnHzjjV8wmddOOFZdPfLHX34cIi273vvQZs4
+        wRKE40Xsr6Jv1b8+f0S3nGMHrw==
+X-Google-Smtp-Source: APXvYqxh595qK4nZVB6EAkAq+RZs+ImBx7ezIU9NnHSyFGp1aQZBBUantfvrW7qXuXykQ+z4/i/9Mw==
+X-Received: by 2002:a17:90a:3945:: with SMTP id n5mr21913490pjf.34.1577998680994;
+        Thu, 02 Jan 2020 12:58:00 -0800 (PST)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id a28sm64401061pfh.119.2020.01.02.12.57.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 12:55:09 -0800 (PST)
-Date:   Thu, 2 Jan 2020 12:55:08 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Aleksandr Yashkin <a.yashkin@inango-systems.com>,
-        Ariel Gilman <a.gilman@inango-systems.com>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Nikolay Merinov <n.merinov@inango-systems.com>
-Subject: [GIT PULL] pstore fixes for v5.5-rc5
-Message-ID: <202001021254.2F43E8A@keescook>
+        Thu, 02 Jan 2020 12:58:00 -0800 (PST)
+Date:   Thu, 2 Jan 2020 12:57:57 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
+        tsoni@codeaurora.org, agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] soc: qcom: apr: Add avs/audio tracking
+ functionality
+Message-ID: <20200102205757.GH988120@minitux>
+References: <20191230050008.8143-1-sibis@codeaurora.org>
+ <20191230050008.8143-4-sibis@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191230050008.8143-4-sibis@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Sun 29 Dec 21:00 PST 2019, Sibi Sankar wrote:
+> diff --git a/drivers/soc/qcom/apr.c b/drivers/soc/qcom/apr.c
+[..]
+> -static void of_register_apr_devices(struct device *dev)
+> +static void of_apr_add_pd_lookups(struct device *dev)
+>  {
+> +	const char *service_name, *service_path;
+>  	struct apr *apr = dev_get_drvdata(dev);
+>  	struct device_node *node;
+> +	int ret;
+> +
+> +	for_each_child_of_node(dev->of_node, node) {
+> +		ret = of_property_read_string_index(node, "qcom,protection-domain",
+> +						    0, &service_name);
+> +		if (ret < 0)
+> +			continue;
 
-Please pull these two pstore fixes for v5.5-rc5.
+While this implies that the qcom,protection-domain property is
+missing...
 
-Thanks!
+> +
+> +		ret = of_property_read_string_index(node, "qcom,protection-domain",
+> +						    1, &service_path);
+> +		if (ret < 0)
+> +			continue;
 
--Kees
+...this would imply that it's there but the format is wrong. I think you
+should log this and propagate the error.
 
-The following changes since commit d1eef1c619749b2a57e514a3fa67d9a516ffa919:
+> +
+> +		ret = pdr_add_lookup(&apr->pdr, service_name, service_path);
+> +		if (ret && ret != -EALREADY)
+> +			dev_err(dev, "pdr add lookup failed: %d\n", ret);
 
-  Linux 5.5-rc2 (2019-12-15 15:16:08 -0800)
+So we have a DT that denotes that PDR is required, but we failed to
+register a lookup (for some reason). That would imply that apr is not
+going to work. I think you should propagate this and make apr_probe()
+fail to make this obvious.
 
-are available in the Git repository at:
+> +	}
+> +}
+> +
+> +static void of_register_apr_devices(struct device *dev, const char *svc_path)
+> +{
+> +	struct apr *apr = dev_get_drvdata(dev);
+> +	struct device_node *node;
+> +	const char *service_path;
+> +	int ret;
+>  
+>  	for_each_child_of_node(dev->of_node, node) {
+>  		struct apr_device_id id = { {0} };
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/pstore-v5.5-rc5
+I think you should add a comment here describing what's actually going
+on. Something along the lines of:
 
-for you to fetch changes up to 9e5f1c19800b808a37fb9815a26d382132c26c3d:
+/*
+ * This function is called with svc_path NULL during apr_probe(), in
+ * which case we register any apr devices without a
+ * qcom,protection-domain specified.
+ *
+ * Then as the protection domains becomes available (if applicable) this
+ * function is again called, but with svc_path representing the service
+ * becoming available. In this case we register any apr devices with a
+ * matching qcom,protection-domain.
+ */
 
-  pstore/ram: Write new dumps to start of recycled zones (2020-01-02 12:30:50 -0800)
+>  
+> +		ret = of_property_read_string_index(node, "qcom,protection-domain",
+> +						    1, &service_path);
+> +		if (svc_path) {
+> +			/* skip APR services that are PD independent */
+> +			if (ret)
+> +				continue;
+> +
+> +			/* skip APR services whose PD paths don't match */
+> +			if (strcmp(service_path, svc_path))
+> +				continue;
+> +		} else {
+> +			/* skip APR services whose PD lookups are registered */
+> +			if (ret == 0)
+> +				continue;
+> +		}
+> +
 
-----------------------------------------------------------------
-pstore bug fixes
-
-- always reset circular buffer state when writing new dump (Aleksandr Yashkin)
-- fix rare error-path memory leak (Kees Cook)
-
-----------------------------------------------------------------
-Aleksandr Yashkin (1):
-      pstore/ram: Write new dumps to start of recycled zones
-
-Kees Cook (1):
-      pstore/ram: Fix error-path memory leak in persistent_ram_new() callers
-
- fs/pstore/ram.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
--- 
-Kees Cook
+Regards,
+Bjorn
