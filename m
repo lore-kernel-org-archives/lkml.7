@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3676C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B56B5C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5D4C217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CCAE20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:47:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005221;
-	bh=jP6KN6XiXG5xNENjBcemcMG4vu/MV2NrrgYH7HFgZ+8=;
+	s=default; t=1578005228;
+	bh=CWTDTobjhk4lmGzUAclAMiBrtvbncrKAtTkYja5rj/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RWbT3eqNoujolwNUfDgRpVqHxBJBQ0OUOqESFXUuSw67OqY6wkQ+AWE9RBE90vth9
-	 hX1NNfRFWdjNiGXf0zvfFc+TMxjP964CF5DLGgHjs4Sjp82tAdkhjKH6UbTgPFrzCF
-	 FHg5nAu1CuA3VyVG32dMm6YmAT74uTbQZC/KzE4E=
+	b=lCkNcuejppWR1/XFNGzxYaC3j4jQ+EFJ3oLnqCuCg92UVNSDJrS6NeidNq2kKJCcm
+	 8I70cJpfllmexa+eq3SzchhiQQgVOrG/dGjflgPH3UGiK2UvhCmlNM8A3UxLwwzNkl
+	 oQVGMycPS3OWqbYdeMiAusI0GKKIojOK2UoeznIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730147AbgABWaO (ORCPT
+        id S1729805AbgABWrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:30:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33620 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:47:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730138AbgABWaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:30:11 -0500
+        id S1729425AbgABWaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:30:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A44ED222C3;
-        Thu,  2 Jan 2020 22:30:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF78F2253D;
+        Thu,  2 Jan 2020 22:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004210;
-        bh=jP6KN6XiXG5xNENjBcemcMG4vu/MV2NrrgYH7HFgZ+8=;
+        s=default; t=1578004205;
+        bh=CWTDTobjhk4lmGzUAclAMiBrtvbncrKAtTkYja5rj/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2aRfdZXr1iSqC4eMyceDFEi/C2wL/X1JyHewzNGbStX55xaCiacqWzV1JxCTM//sC
-         e6mJcoY99rOQFTvW4vq0Fk4ASOhYO6sYRZtY4lyslCawUKZpA8NsMAxSBYZ13Ee9vq
-         1dpHiMeZ2pqhGMuKAuscdiXsJh7ubkZaMmH0Qgqw=
+        b=Ck/xiuFKeNBF7g2RD4oCF9KUxhBbqNOVvvuR/RdWL3LMYL0v3qFoGsd+K9xpRwSWD
+         2BHvGHSutUDZki2IJvIYuSUYdr/dq9OCGzb2LjC1jJC637f6n7Avzmio+/tlN+krQc
+         a7JW3kRnuqIXCo4rZYCgJWb+WlKKez70DsZJXGmM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 084/171] net: phy: initialise phydev speed and duplex sanely
-Date:   Thu,  2 Jan 2020 23:06:55 +0100
-Message-Id: <20200102220558.639058050@linuxfoundation.org>
+Subject: [PATCH 4.9 082/171] crypto: vmx - Avoid weird build failures
+Date:   Thu,  2 Jan 2020 23:06:53 +0100
+Message-Id: <20200102220558.334014570@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -60,44 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit a5d66f810061e2dd70fb7a108dcd14e535bc639f ]
+[ Upstream commit 4ee812f6143d78d8ba1399671d78c8d78bf2817c ]
 
-When a phydev is created, the speed and duplex are set to zero and
--1 respectively, rather than using the predefined SPEED_UNKNOWN and
-DUPLEX_UNKNOWN constants.
+In the vmx crypto Makefile we assign to a variable called TARGET and
+pass that to the aesp8-ppc.pl and ghashp8-ppc.pl scripts.
 
-There is a window at initialisation time where we may report link
-down using the 0/-1 values.  Tidy this up and use the predefined
-constants, so debug doesn't complain with:
+The variable is meant to describe what flavour of powerpc we're
+building for, eg. either 32 or 64-bit, and big or little endian.
 
-"Unsupported (update phy-core.c)/Unsupported (update phy-core.c)"
+Unfortunately TARGET is a fairly common name for a make variable, and
+if it happens that TARGET is specified as a command line parameter to
+make, the value specified on the command line will override our value.
 
-when the speed and duplex settings are printed.
+In particular this can happen if the kernel Makefile is driven by an
+external Makefile that uses TARGET for something.
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+This leads to weird build failures, eg:
+  nonsense  at /build/linux/drivers/crypto/vmx/ghashp8-ppc.pl line 45.
+  /linux/drivers/crypto/vmx/Makefile:20: recipe for target 'drivers/crypto/vmx/ghashp8-ppc.S' failed
+
+Which shows that we passed an empty value for $(TARGET) to the perl
+script, confirmed with make V=1:
+
+  perl /linux/drivers/crypto/vmx/ghashp8-ppc.pl  > drivers/crypto/vmx/ghashp8-ppc.S
+
+We can avoid this confusion by using override, to tell make that we
+don't want anything to override our variable, even a value specified
+on the command line. We can also use a less common name, given the
+script calls it "flavour", let's use that.
+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phy_device.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/crypto/vmx/Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 5c2c72b1ef8b..3289fd910c4a 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -324,8 +324,8 @@ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, int phy_id,
- 	mdiodev->device_free = phy_mdio_device_free;
- 	mdiodev->device_remove = phy_mdio_device_remove;
+diff --git a/drivers/crypto/vmx/Makefile b/drivers/crypto/vmx/Makefile
+index de6e241b0866..957377c309a9 100644
+--- a/drivers/crypto/vmx/Makefile
++++ b/drivers/crypto/vmx/Makefile
+@@ -2,13 +2,13 @@ obj-$(CONFIG_CRYPTO_DEV_VMX_ENCRYPT) += vmx-crypto.o
+ vmx-crypto-objs := vmx.o aesp8-ppc.o ghashp8-ppc.o aes.o aes_cbc.o aes_ctr.o aes_xts.o ghash.o
  
--	dev->speed = 0;
--	dev->duplex = -1;
-+	dev->speed = SPEED_UNKNOWN;
-+	dev->duplex = DUPLEX_UNKNOWN;
- 	dev->pause = 0;
- 	dev->asym_pause = 0;
- 	dev->link = 1;
+ ifeq ($(CONFIG_CPU_LITTLE_ENDIAN),y)
+-TARGET := linux-ppc64le
++override flavour := linux-ppc64le
+ else
+-TARGET := linux-ppc64
++override flavour := linux-ppc64
+ endif
+ 
+ quiet_cmd_perl = PERL $@
+-      cmd_perl = $(PERL) $(<) $(TARGET) > $(@)
++      cmd_perl = $(PERL) $(<) $(flavour) > $(@)
+ 
+ $(src)/aesp8-ppc.S: $(src)/aesp8-ppc.pl
+ 	$(call cmd,perl)
 -- 
 2.20.1
 
