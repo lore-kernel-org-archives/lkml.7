@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1F0C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D99C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D6A20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E92A321D7D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:24:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003896;
-	bh=Zk9ABkDXXe03L68NxMgDu7zvSMfOH8F34C8GBBfkVu4=;
+	s=default; t=1578003900;
+	bh=tQMkJmGcVXYMn7aKUtS8kIoW8AssjEJpTFsjvF9lPnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YtKHGHvvVB0/SRZONl8eYLV8TOMrN++dUROcLnajeXJbl1sPjF3wkEKdJTpjxUOt7
-	 djKhuJbNH/9BuOAh2M6+vo3PgCN+6UL2yghUq/8zlYzQQ/m11pku/MbcMnRi60pnrs
-	 BXpdLTUmo6fszXobM06OSRJ1fUlDsrdTK0oK2x1Q=
+	b=kBLiPPsiHvxi9sWCRJ1z+E6rIXe3QhAGCmGDtWrLI5b03nQ4risvDyRhAqAG9mDnV
+	 yZSJowwGqLMXMVGDpdqqRC+bWln5F/WU2RMscGJ/ypyiHhbJ98beeRw58YkNKEBZ5+
+	 zF2H9DaR5LPhCV1Un6r4y+hqi1G+ozgkZfnO+Zjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729428AbgABWYz (ORCPT
+        id S1729444AbgABWY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:24:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49320 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:24:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729415AbgABWYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:24:50 -0500
+        id S1729423AbgABWYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:24:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E7E820863;
-        Thu,  2 Jan 2020 22:24:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA70F20866;
+        Thu,  2 Jan 2020 22:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003889;
-        bh=Zk9ABkDXXe03L68NxMgDu7zvSMfOH8F34C8GBBfkVu4=;
+        s=default; t=1578003894;
+        bh=tQMkJmGcVXYMn7aKUtS8kIoW8AssjEJpTFsjvF9lPnk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a9nvv4pwC7vd0f4GhwvYB8m2C1/NMNM2SLW1CcPaYzji1sTSrCQ25CA4OGDwucdNb
-         MAEunwBA0KvKOZFWZf1YEQ+V5U6IymGLgBE8ze9Kov9FcaowzjeDKG+9mKm7NN/pns
-         9eJx+Y/cqWriC8USATDc68RykiFA8tHunAzSWqQY=
+        b=kI8zPofcvJvlC2Cjf6huNu5eSI95ljpRj0LL6hy6hgY1BqhECtnnlOE1joBUH4xev
+         +0xA88BBwZQPYnpquDklIK7QsF0ijBKcG8LzTQxENd+uAXMPfFYI3sy67cHxs4/oMt
+         kkcKNVMqm2TOy5dDptJqtqE2qHreKHfzzgVkYpSk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Michael Walle <michael@walle.cc>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 42/91] gpio: mpc8xxx: Dont overwrite default irq_set_type callback
-Date:   Thu,  2 Jan 2020 23:07:24 +0100
-Message-Id: <20200102220434.142310879@linuxfoundation.org>
+Subject: [PATCH 4.14 44/91] scripts/kallsyms: fix definitely-lost memory leak
+Date:   Thu,  2 Jan 2020 23:07:26 +0100
+Message-Id: <20200102220434.581406182@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -61,54 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit 4e50573f39229d5e9c985fa3b4923a8b29619ade ]
+[ Upstream commit 21915eca088dc271c970e8351290e83d938114ac ]
 
-The per-SoC devtype structures can contain their own callbacks that
-overwrite mpc8xxx_gpio_devtype_default.
+build_initial_tok_table() overwrites unused sym_entry to shrink the
+table size. Before the entry is overwritten, table[i].sym must be freed
+since it is malloc'ed data.
 
-The clear intention is that mpc8xxx_irq_set_type is used in case the SoC
-does not specify a more specific callback. But what happens is that if
-the SoC doesn't specify one, its .irq_set_type is de-facto NULL, and
-this overwrites mpc8xxx_irq_set_type to a no-op. This means that the
-following SoCs are affected:
+This fixes the 'definitely lost' report from valgrind. I ran valgrind
+against x86_64_defconfig of v5.4-rc8 kernel, and here is the summary:
 
-- fsl,mpc8572-gpio
-- fsl,ls1028a-gpio
-- fsl,ls1088a-gpio
+[Before the fix]
 
-On these boards, the irq_set_type does exactly nothing, and the GPIO
-controller keeps its GPICR register in the hardware-default state. On
-the LS1028A, that is ACTIVE_BOTH, which means 2 interrupts are raised
-even if the IRQ client requests LEVEL_HIGH. Another implication is that
-the IRQs are not checked (e.g. level-triggered interrupts are not
-rejected, although they are not supported).
+  LEAK SUMMARY:
+     definitely lost: 53,184 bytes in 2,874 blocks
 
-Fixes: 82e39b0d8566 ("gpio: mpc8xxx: handle differences between incarnations at a single place")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Link: https://lore.kernel.org/r/20191115125551.31061-1-olteanv@gmail.com
-Tested-by: Michael Walle <michael@walle.cc>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+[After the fix]
+
+  LEAK SUMMARY:
+     definitely lost: 0 bytes in 0 blocks
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-mpc8xxx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ scripts/kallsyms.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 8c93dec498fa..e7783b852d69 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -337,7 +337,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	 * It's assumed that only a single type of gpio controller is available
- 	 * on the current machine, so overwriting global data is fine.
- 	 */
--	mpc8xxx_irq_chip.irq_set_type = devtype->irq_set_type;
-+	if (devtype->irq_set_type)
-+		mpc8xxx_irq_chip.irq_set_type = devtype->irq_set_type;
- 
- 	if (devtype->gpio_dir_out)
- 		gc->direction_output = devtype->gpio_dir_out;
+diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
+index b471022c8162..b43531899648 100644
+--- a/scripts/kallsyms.c
++++ b/scripts/kallsyms.c
+@@ -510,6 +510,8 @@ static void build_initial_tok_table(void)
+ 				table[pos] = table[i];
+ 			learn_symbol(table[pos].sym, table[pos].len);
+ 			pos++;
++		} else {
++			free(table[i].sym);
+ 		}
+ 	}
+ 	table_cnt = pos;
 -- 
 2.20.1
 
