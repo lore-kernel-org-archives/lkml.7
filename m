@@ -2,309 +2,246 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02133C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 19:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04689C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 19:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C36B02253D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 19:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C28E12253D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 19:49:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wuGhSkGb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qRZENP/0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbgABTsR (ORCPT
+        id S1728467AbgABTtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 14:48:17 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:14307 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728296AbgABTsQ (ORCPT
+        Thu, 2 Jan 2020 14:49:06 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43348 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728260AbgABTtG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 14:48:16 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577994495; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=zCeVTXfeHOc9Puc7jwFcPwhAJ0vkF2Yg4hc25BMVGUs=; b=wuGhSkGbVQq6kypqZjix3n3YcC2GGp3Ak3C5EjkFYU7lh7mBz3dBP0c76eKRd0t+KQwPryt3
- YRQXs4R49++A6BOetvYJ4zrug9deuTdOHQYRqL79MudRK6oZ8lW6LNIhZ+210Ojiu39Mem5s
- 4GWdM8U3x7tb1VVd5RALh7h9MYU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e0e48f6.7fe16d085f48-smtp-out-n03;
- Thu, 02 Jan 2020 19:48:06 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E7229C4479D; Thu,  2 Jan 2020 19:48:04 +0000 (UTC)
-Received: from [192.168.1.250] (75-31-75-218.lightspeed.sntcca.sbcglobal.net [75.31.75.218])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: daidavid1)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6A7A8C43383;
-        Thu,  2 Jan 2020 19:48:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6A7A8C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=daidavid1@codeaurora.org
-Subject: Re: [PATCH v1 1/4] dt-bindings: interconnect: Update Qualcomm SDM845
- DT bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
-        evgreen@google.com, sboyd@kernel.org, ilina@codeaurora.org,
-        seansw@qti.qualcomm.com, elder@linaro.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
-References: <1576475925-20601-1-git-send-email-daidavid1@codeaurora.org>
- <1576475925-20601-2-git-send-email-daidavid1@codeaurora.org>
- <20191226184526.GA18040@bogus>
-From:   David Dai <daidavid1@codeaurora.org>
-Message-ID: <5ee5c85e-64e3-9494-b033-5b6dec4a5152@codeaurora.org>
-Date:   Thu, 2 Jan 2020 11:48:02 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 2 Jan 2020 14:49:06 -0500
+Received: by mail-io1-f65.google.com with SMTP id n21so37756057ioo.10;
+        Thu, 02 Jan 2020 11:49:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B2dfuwRo3ioD6kNRXxkmWkiZroxsl+9K4VPPFQAZcBU=;
+        b=qRZENP/0G/t/SyW3Zsd8dU2RDoZQG+Ki7pGBC3Rbc83qNVr8XLQpQ815CbR8Fj0wnF
+         E72dcamwAxAi8iMoebk5zpJIah+MEIzLswj3aaoRJt1feafz9IspAGODkemxQIGWrqtk
+         MfUq6WppUcsyVtRPqYtQqkfr7/r6FHY4uykiUEDW1keoMf2XB3Hh8PYFcKFvr61Wxl/7
+         gDfHly+l1otYXdiOcbzZd93GnNNs66vOCXqTVh5BViuY9eSUJdBKDijsmvEposdbTKd+
+         8HG+uIksPpTYwLJ1ErOqG1GyTtJot5dB5HIs96xRVfss5nh12pJalm4/aRlKTze8BOjk
+         qIow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B2dfuwRo3ioD6kNRXxkmWkiZroxsl+9K4VPPFQAZcBU=;
+        b=DHJ/oQJFQXM7eGovQms/qFUEhGQm3d/TizmPT5RsTsuXsAklk6eiNMZNj86cZte0yx
+         lkMxEjQhfoWFoB4ryihWFv3f+8tx+CCmIy8XDPwpdDA/nIMEogS+t6E7ixeAe0TI7M3x
+         QCMBSG3tU/+DWjrjttLIQ6IhwH8CR4Fz8GLYFEZCTOgEeWZQBLSWfgmoxpQVS+uY78tc
+         pHK2MgWUlm4GHwM2Tb76wIsfyk1qIqP6sKhdOyzsYMPQgP7c8jOQrx5bl3TbH1PH74h2
+         djLeht9zs1tcXoD+45AKxAPkT5p5OvxHq7LjxB8q0dcsRvHu/Z3T8XqXekG7LJ7scLHN
+         Ue+g==
+X-Gm-Message-State: APjAAAVifrxvRzELIFh/EK5z/B72ttWZq0OuXnnEIJ1RUS+86gFYMu3T
+        cCa+gDvR4U73BA5IjSs8uAC2RLXPf5S8ZUf8X+ywQHRH
+X-Google-Smtp-Source: APXvYqzkUjErvyA0V6arg0ZS5k2LOLh5Z7ZctjCsCXlc9byeZ/USwxFzh8XszkIBKDTAx0Zn/CeCrXScNMpYDgCl9KI=
+X-Received: by 2002:a5e:9907:: with SMTP id t7mr56396437ioj.72.1577994545138;
+ Thu, 02 Jan 2020 11:49:05 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191226184526.GA18040@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <cover.1577990599.git.chris@chrisdown.name> <738b3d565fe7c65f41c38e439fe3cbfa14f87465.1577990599.git.chris@chrisdown.name>
+In-Reply-To: <738b3d565fe7c65f41c38e439fe3cbfa14f87465.1577990599.git.chris@chrisdown.name>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Thu, 2 Jan 2020 21:48:54 +0200
+Message-ID: <CAOQ4uxi0v4WL30gpedUbex-TD5wN8p8kCop_3VDYV0UBJGB21w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] tmpfs: Add per-superblock i_ino support
+To:     Chris Down <chris@chrisdown.name>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for your time.
-
-On 12/26/2019 10:45 AM, Rob Herring wrote:
-> On Sun, Dec 15, 2019 at 09:58:42PM -0800, David Dai wrote:
->> Redefine the Network-on-Chip devices to more accurately describe
->> the interconnect topology on Qualcomm's SDM845 platform. Each
->> interconnect device can communicate with different instances of the
->> RPMh hardware which are described as RSCs(Resource State Coordinators).
->>
->> As part of updating the DT bindings, convert the existing sdm845 bindings
->> to DT schema format using json-schema.
-> Too many things in one patch. Convert to schema in one patch and then
-> add new stuff in separate patch(es).
-
-Ok.
-
->> Signed-off-by: David Dai <daidavid1@codeaurora.org>
->> ---
->>   .../bindings/interconnect/qcom,bcm-voter.yaml      |  45 +++++++++
->>   .../bindings/interconnect/qcom,sdm845.txt          |  24 -----
->>   .../bindings/interconnect/qcom,sdm845.yaml         | 108 +++++++++++++++++++++
->>   3 files changed, 153 insertions(+), 24 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
->>   delete mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
->>   create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
->> new file mode 100644
->> index 0000000..74f0715
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
->> @@ -0,0 +1,45 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/interconnect/qcom,bcm-voter.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm BCM-Voter Interconnect
->> +
->> +maintainers:
->> +  - David Dai <daidavid1@codeaurora.org>
->> +
->> +description: |
->> +    The Bus Clock Manager (BCM) is a dedicated hardware accelerator
->> +    that manages shared system resources by aggregating requests
->> +    from multiple Resource State Coordinators (RSC). Interconnect
->> +    providers are able to vote for aggregated thresholds values from
->> +    consumers by communicating through their respective RSCs.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - qcom,sdm845-bcm-voter
->> +
->> +required:
->> +  - compatible
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    apps_rsc: interconnect@179c0000 {
->> +        compatible = "qcom,rpmh-rsc";
->> +
->> +        apps_bcm_voter: bcm_voter {
->> +            compatible = "qcom,sdm845-bcm-voter";
->> +        };
->> +    };
->> +
->> +    disp_rsc: interconnect@179d0000 {
->> +        compatible = "qcom,rpmh-rsc";
->> +
->> +        disp_bcm_voter: bcm_voter {
->> +            compatible = "qcom,sdm845-bcm-voter";
->> +        };
->> +    };
->> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
->> deleted file mode 100644
->> index 5c4f1d9..0000000
->> --- a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
->> +++ /dev/null
->> @@ -1,24 +0,0 @@
->> -Qualcomm SDM845 Network-On-Chip interconnect driver binding
->> ------------------------------------------------------------
->> -
->> -SDM845 interconnect providers support system bandwidth requirements through
->> -RPMh hardware accelerators known as Bus Clock Manager (BCM). The provider is
->> -able to communicate with the BCM through the Resource State Coordinator (RSC)
->> -associated with each execution environment. Provider nodes must reside within
->> -an RPMh device node pertaining to their RSC and each provider maps to a single
->> -RPMh resource.
->> -
->> -Required properties :
->> -- compatible : shall contain only one of the following:
->> -			"qcom,sdm845-rsc-hlos"
->> -- #interconnect-cells : should contain 1
->> -
->> -Examples:
->> -
->> -apps_rsc: rsc {
->> -	rsc_hlos: interconnect {
->> -		compatible = "qcom,sdm845-rsc-hlos";
->> -		#interconnect-cells = <1>;
->> -	};
->> -};
->> -
->> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
->> new file mode 100644
->> index 0000000..1aec321
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
->> @@ -0,0 +1,108 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/interconnect/qcom,sdm845.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title:  Qualcomm SDM845 Network-On-Chip Interconnect
->> +
->> +maintainers:
->> +  - David Dai <daidavid1@codeaurora.org>
->> +
->> +description: |
->> +   SDM845 interconnect providers support system bandwidth requirements through
->> +   RPMh hardware accelerators known as Bus Clock Manager (BCM). The provider is
->> +   able to communicate with the BCM through the Resource State Coordinator (RSC)
->> +   associated with each execution environment. Provider nodes must point to at
->> +   least one RPMh device child node pertaining to their RSC and each provider
->> +   can map to multiple RPMh resources.
->> +
->> +properties:
->> +  reg:
->> +    maxItems: 1
->> +
->> +  compatible:
->> +    enum:
->> +      - qcom,sdm845-aggre1-noc
->> +      - qcom,sdm845-aggre2-noc
->> +      - qcom,sdm845-config-noc
->> +      - qcom,sdm845-dc-noc
->> +      - qcom,sdm845-gladiator-noc
->> +      - qcom,sdm845-mem-noc
->> +      - qcom,sdm845-mmss-noc
->> +      - qcom,sdm845-system-noc
->> +
->> +  '#interconnect-cells':
->> +    const: 1
->> +
->> +  qcom,bcm-voters:
->> +    $ref: /schemas/types.yaml#/definitions/phandle-array
->> +    description: |
->> +      List of phandles to qcom,bcm-voter nodes that are required by
->> +      this interconnect to send RPMh commands.
->> +
->> +  qcom,bcm-voter-names:
->> +    $ref: /schemas/types.yaml#/definitions/string-array
-> Don't need a type for *-names.
-
-Ok.
-
->> +    description: |
->> +      Names for each of the qcom,bcm-voters specified.
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - '#interconnect-cells'
->> +  - qcom,bcm-voters
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +      #include <dt-bindings/interconnect/qcom,sdm845.h>
->> +
->> +      mem_noc: interconnect@1380000 {
->> +             compatible = "qcom,sdm845-mem-noc";
->> +             reg = <0 0x01380000 0 0x27200>;
->> +             #interconnect-cells = <1>;
->> +             qcom,bcm-voters = <&apps_bcm_voter>;
->> +      };
->> +
->> +      dc_noc: interconnect@14e0000 {
->> +             compatible = "qcom,sdm845-dc-noc";
->> +             reg = <0 0x014e0000 0 0x400>;
->> +             #interconnect-cells = <1>;
->> +             qcom,bcm-voters = <&apps_bcm_voter>;
->> +      };
->> +
->> +      config_noc: interconnect@1500000 {
->> +             compatible = "qcom,sdm845-config-noc";
->> +             reg = <0 0x01500000 0 0x5080>;
->> +             #interconnect-cells = <1>;
->> +             qcom,bcm-voters = <&apps_bcm_voter>;
->> +      };
->> +
->> +      system_noc: interconnect@1620000 {
->> +             compatible = "qcom,sdm845-system-noc";
->> +             reg = <0 0x01620000 0 0x18080>;
->> +             #interconnect-cells = <1>;
->> +             qcom,bcm-voters = <&apps_bcm_voter>;
->> +      };
->> +
->> +      aggre1_noc: interconnect@16e0000 {
->> +             compatible = "qcom,sdm845-aggre1-noc";
->> +             reg = <0 0x016e0000 0 0xd080>;
->> +             #interconnect-cells = <1>;
->> +             qcom,bcm-voters = <&apps_bcm_voter>;
->> +      };
->> +
->> +      aggre2_noc: interconnect@1700000 {
->> +             compatible = "qcom,sdm845-aggre2-noc";
->> +             reg = <0 0x01700000 0 0x3b100>;
->> +             #interconnect-cells = <1>;
->> +             qcom,bcm-voters = <&apps_bcm_voter>;
->> +      };
->> +
->> +      mmss_noc: interconnect@1740000 {
->> +             compatible = "qcom,sdm845-mmss-noc";
->> +             reg = <0 0x01740000 0 0x1c1000>;
->> +             #interconnect-cells = <1>;
->> +             qcom,bcm-voters = <&apps_bcm_voter>;
->> +      };
-> Examples are just examples, not an enumeration of all possible nodes.
+On Thu, Jan 2, 2020 at 8:49 PM Chris Down <chris@chrisdown.name> wrote:
 >
-> Also, when is qcom,bcm-voters more than 1 phandle.
-The mmss_noc could potentially support more than one bcm-voter, I'll 
-reduce the number of examples and show the simple case and an example 
-with multiple bcm-voters.
+> get_next_ino has a number of problems:
 >
-> Rob
+> - It uses and returns a uint, which is susceptible to become overflowed
+>   if a lot of volatile inodes that use get_next_ino are created.
+> - It's global, with no specificity per-sb or even per-filesystem. This
+>   means it's not that difficult to cause inode number wraparounds on a
+>   single device, which can result in having multiple distinct inodes
+>   with the same inode number.
+>
+> This patch adds a per-superblock counter that mitigates the second case.
+> This design also allows us to later have a specific i_ino size
+> per-device, for example, allowing users to choose whether to use 32- or
+> 64-bit inodes for each tmpfs mount. This is implemented in the next
+> commit.
+>
+> Signed-off-by: Chris Down <chris@chrisdown.name>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Amir Goldstein <amir73il@gmail.com>
+> Cc: Jeff Layton <jlayton@kernel.org>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: linux-fsdevel@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: kernel-team@fb.com
+> ---
+>  include/linux/shmem_fs.h |  1 +
+>  mm/shmem.c               | 55 ++++++++++++++++++++++++++++++++++------
+>  2 files changed, 48 insertions(+), 8 deletions(-)
+>
+> diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
+> index de8e4b71e3ba..dec4353cf3b7 100644
+> --- a/include/linux/shmem_fs.h
+> +++ b/include/linux/shmem_fs.h
+> @@ -35,6 +35,7 @@ struct shmem_sb_info {
+>         unsigned char huge;         /* Whether to try for hugepages */
+>         kuid_t uid;                 /* Mount uid for root directory */
+>         kgid_t gid;                 /* Mount gid for root directory */
+> +       ino_t last_ino;             /* The last used per-sb inode number */
+>         struct mempolicy *mpol;     /* default memory policy for mappings */
+>         spinlock_t shrinklist_lock;   /* Protects shrinklist */
+>         struct list_head shrinklist;  /* List of shinkable inodes */
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index 165fa6332993..8af9fb922a96 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -2235,8 +2235,18 @@ static int shmem_mmap(struct file *file, struct vm_area_struct *vma)
+>         return 0;
+>  }
+>
+> +/*
+> + * shmem_get_inode - reserve, allocate, and initialise a new inode
+> + *
+> + * If usb_sb_ino is true, we use the per-sb inode allocator to avoid wraparound.
+> + * Otherwise, we use get_next_ino, which is global.
+> + *
+> + * If use_sb_ino is true or max_inodes is greater than 0, we may have to grab
+> + * the per-sb stat_lock.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Wouldn't it be easier to check max_inodes instead of passing this
+use_sb_ino arg?
+Is there any case where they *need* to differ?
+
+> + */
+>  static struct inode *shmem_get_inode(struct super_block *sb, const struct inode *dir,
+> -                                    umode_t mode, dev_t dev, unsigned long flags)
+> +                                    umode_t mode, dev_t dev,
+> +                                    unsigned long flags, bool use_sb_ino)
+>  {
+>         struct inode *inode;
+>         struct shmem_inode_info *info;
+> @@ -2247,7 +2257,30 @@ static struct inode *shmem_get_inode(struct super_block *sb, const struct inode
+>
+>         inode = new_inode(sb);
+>         if (inode) {
+> -               inode->i_ino = get_next_ino();
+> +               if (use_sb_ino) {
+> +                       spin_lock(&sbinfo->stat_lock);
+> +                       inode->i_ino = sbinfo->last_ino++;
+> +                       if (unlikely(inode->i_ino >= UINT_MAX)) {
+> +                               /*
+> +                                * Emulate get_next_ino uint wraparound for
+> +                                * compatibility
+> +                                */
+> +                               pr_warn("%s: inode number overflow on device %d, consider using inode64 mount option\n",
+> +                                       __func__, MINOR(sb->s_dev));
+> +                               inode->i_ino = sbinfo->last_ino = 1;
+> +                       }
+> +                       spin_unlock(&sbinfo->stat_lock);
+> +               } else {
+> +                       /*
+> +                        * __shmem_file_setup, one of our callers, is lock-free:
+> +                        * it doesn't hold stat_lock in shmem_reserve_inode
+> +                        * since max_inodes is always 0, and is called from
+> +                        * potentially unknown contexts. As such, use the global
+> +                        * allocator which doesn't require the per-sb stat_lock.
+> +                        */
+> +                       inode->i_ino = get_next_ino();
+> +               }
+> +
+>                 inode_init_owner(inode, dir, mode);
+>                 inode->i_blocks = 0;
+>                 inode->i_atime = inode->i_mtime = inode->i_ctime = current_time(inode);
+> @@ -2881,7 +2914,7 @@ shmem_mknod(struct inode *dir, struct dentry *dentry, umode_t mode, dev_t dev)
+>         struct inode *inode;
+>         int error = -ENOSPC;
+>
+> -       inode = shmem_get_inode(dir->i_sb, dir, mode, dev, VM_NORESERVE);
+> +       inode = shmem_get_inode(dir->i_sb, dir, mode, dev, VM_NORESERVE, true);
+>         if (inode) {
+>                 error = simple_acl_create(dir, inode);
+>                 if (error)
+> @@ -2910,7 +2943,7 @@ shmem_tmpfile(struct inode *dir, struct dentry *dentry, umode_t mode)
+>         struct inode *inode;
+>         int error = -ENOSPC;
+>
+> -       inode = shmem_get_inode(dir->i_sb, dir, mode, 0, VM_NORESERVE);
+> +       inode = shmem_get_inode(dir->i_sb, dir, mode, 0, VM_NORESERVE, true);
+>         if (inode) {
+>                 error = security_inode_init_security(inode, dir,
+>                                                      NULL,
+> @@ -3106,7 +3139,7 @@ static int shmem_symlink(struct inode *dir, struct dentry *dentry, const char *s
+>                 return -ENAMETOOLONG;
+>
+>         inode = shmem_get_inode(dir->i_sb, dir, S_IFLNK | 0777, 0,
+> -                               VM_NORESERVE);
+> +                               VM_NORESERVE, true);
+>         if (!inode)
+>                 return -ENOSPC;
+>
+> @@ -3378,6 +3411,8 @@ enum shmem_param {
+>         Opt_nr_inodes,
+>         Opt_size,
+>         Opt_uid,
+> +       Opt_inode32,
+> +       Opt_inode64,
+
+Does not belong to this patch..
+
+>  };
+>
+>  static const struct fs_parameter_spec shmem_param_specs[] = {
+> @@ -3389,6 +3424,8 @@ static const struct fs_parameter_spec shmem_param_specs[] = {
+>         fsparam_string("nr_inodes",     Opt_nr_inodes),
+>         fsparam_string("size",          Opt_size),
+>         fsparam_u32   ("uid",           Opt_uid),
+> +       fsparam_flag  ("inode32",       Opt_inode32),
+> +       fsparam_flag  ("inode64",       Opt_inode64),
+
+Ditto
+
+>         {}
+>  };
+>
+> @@ -3690,7 +3727,8 @@ static int shmem_fill_super(struct super_block *sb, struct fs_context *fc)
+>  #endif
+>         uuid_gen(&sb->s_uuid);
+>
+> -       inode = shmem_get_inode(sb, NULL, S_IFDIR | sbinfo->mode, 0, VM_NORESERVE);
+> +       inode = shmem_get_inode(sb, NULL, S_IFDIR | sbinfo->mode, 0,
+> +                               VM_NORESERVE, true);
+
+Should usb_sb_ino be true for the kern_mount??
+In any case, it wouldn't matter if it was false, hence no need to pass
+an argument
+and can either check for sbinfo->max_inodes or the SB_KERNMOUNT flag in
+shmem_get_inode().
+
+Thanks,
+Amir.
