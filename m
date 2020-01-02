@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CBEC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4941DC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B683C21D7D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10F5B2253D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003635;
-	bh=zOMB2vb0NBpO4gPvywUOIcaE5uvtxmH8H97oowLidJ8=;
+	s=default; t=1578003638;
+	bh=V3dVkhxjE4e30OhRhtsDseRzbnQeEmmeGqu7vSNtaNw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OeM9zGXaE+9dyOepYpWtzkdXAc//fhWYrnPV3MlmNf70CUwPXwoe/oK9pL2GsIClb
-	 77fU07SGjkoHBdc3Bmy4iXzj4KAK8xeyUp6SnZ/UsqEuy00IhIxBrTrUaiGAfc95Q4
-	 HZ0VuL+dtnzoYk3M5ZFmgiFgeahm61oKvyNlYNck=
+	b=Kz987HvDtr6mXB8t8dq3MiL4p0zWf5lbWsef2zPzo1YcYFA77XIJldh1AJ1GQCZKm
+	 nbsDRX8fAidRqnp0QnwjNjUUp1f3jNp1GoKsVuXekjdnsy4Kh3BUxCEu9ARkQWmeTr
+	 67xbOJR24oKkKWgQ+SQYMGzCs/S4LL+LeRzY/YrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728823AbgABWUe (ORCPT
+        id S1728615AbgABWUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:20:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38218 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:20:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728609AbgABWUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:20:32 -0500
+        id S1728609AbgABWUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:20:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC72421D7D;
-        Thu,  2 Jan 2020 22:20:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4045B2253D;
+        Thu,  2 Jan 2020 22:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003632;
-        bh=zOMB2vb0NBpO4gPvywUOIcaE5uvtxmH8H97oowLidJ8=;
+        s=default; t=1578003634;
+        bh=V3dVkhxjE4e30OhRhtsDseRzbnQeEmmeGqu7vSNtaNw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NpYkW6GtjLwEYaAMVcNfQLdfjfcucCX/OdD3Ncgyaitabf7s6uMjBlqBnGkmIVDyH
-         wzIdIK9J9T7d/rROB2QjC1Hc3SAn1PwROX7yAgWSHtFs004sUbKZJHMeA6H5pPkBOt
-         YMM/q1trt2HpLDMqPEExlmuYpr9DjJIyCQ/hGhNU=
+        b=Mh6seBUKKwGkclQwGxCmeylfOi/2nnigth2Yot+yxmyJUTrlGaR3vpbRX3+6kq44U
+         aM4IT2No30FJP4PLgHkpbFJaSJaPDoEv9BVhQM9DyxkcXDGyOYUowUtjVa++eKPJWi
+         Q94FFOlEbiKUYsqkUaMJCTjwSJT8m5KwOQgi0XVM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
-        Jan Kara <jack@suse.cz>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 023/114] ext4: iomap that extends beyond EOF should be marked dirty
-Date:   Thu,  2 Jan 2020 23:06:35 +0100
-Message-Id: <20200102220031.481358640@linuxfoundation.org>
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 024/114] jbd2: Fix statistics for the number of logged blocks
+Date:   Thu,  2 Jan 2020 23:06:36 +0100
+Message-Id: <20200102220031.569867814@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -62,59 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Bobrowski <mbobrowski@mbobrowski.org>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 2e9b51d78229d5145725a481bb5464ebc0a3f9b2 ]
+[ Upstream commit 015c6033068208d6227612c878877919f3fcf6b6 ]
 
-This patch addresses what Dave Chinner had discovered and fixed within
-commit: 7684e2c4384d. This changes does not have any user visible
-impact for ext4 as none of the current users of ext4_iomap_begin()
-that extend files depend on IOMAP_F_DIRTY.
+jbd2 statistics counting number of blocks logged in a transaction was
+wrong. It didn't count the commit block and more importantly it didn't
+count revoke descriptor blocks. Make sure these get properly counted.
 
-When doing a direct IO that spans the current EOF, and there are
-written blocks beyond EOF that extend beyond the current write, the
-only metadata update that needs to be done is a file size extension.
-
-However, we don't mark such iomaps as IOMAP_F_DIRTY to indicate that
-there is IO completion metadata updates required, and hence we may
-fail to correctly sync file size extensions made in IO completion when
-O_DSYNC writes are being used and the hardware supports FUA.
-
-Hence when setting IOMAP_F_DIRTY, we need to also take into account
-whether the iomap spans the current EOF. If it does, then we need to
-mark it dirty so that IO completion will call generic_write_sync() to
-flush the inode size update to stable storage correctly.
-
-Signed-off-by: Matthew Bobrowski <mbobrowski@mbobrowski.org>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Link: https://lore.kernel.org/r/8b43ee9ee94bee5328da56ba0909b7d2229ef150.1572949325.git.mbobrowski@mbobrowski.org
+Reviewed-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191105164437.32602-13-jack@suse.cz
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/inode.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/jbd2/commit.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 00d0c4b8fa30..950e3dcff7b0 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -3544,8 +3544,14 @@ retry:
- 			return ret;
- 	}
+diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
+index 24f86ffe11d7..020bd7a0d8e0 100644
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -724,7 +724,6 @@ start_journal_io:
+ 				submit_bh(REQ_OP_WRITE, REQ_SYNC, bh);
+ 			}
+ 			cond_resched();
+-			stats.run.rs_blocks_logged += bufs;
  
-+	/*
-+	 * Writes that span EOF might trigger an I/O size update on completion,
-+	 * so consider them to be dirty for the purposes of O_DSYNC, even if
-+	 * there is no other metadata changes being made or are pending here.
-+	 */
- 	iomap->flags = 0;
--	if (ext4_inode_datasync_dirty(inode))
-+	if (ext4_inode_datasync_dirty(inode) ||
-+	    offset + length > i_size_read(inode))
- 		iomap->flags |= IOMAP_F_DIRTY;
- 	iomap->bdev = inode->i_sb->s_bdev;
- 	iomap->dax_dev = sbi->s_daxdev;
+ 			/* Force a new descriptor to be generated next
+                            time round the loop. */
+@@ -811,6 +810,7 @@ start_journal_io:
+ 		if (unlikely(!buffer_uptodate(bh)))
+ 			err = -EIO;
+ 		jbd2_unfile_log_bh(bh);
++		stats.run.rs_blocks_logged++;
+ 
+ 		/*
+ 		 * The list contains temporary buffer heads created by
+@@ -856,6 +856,7 @@ start_journal_io:
+ 		BUFFER_TRACE(bh, "ph5: control buffer writeout done: unfile");
+ 		clear_buffer_jwrite(bh);
+ 		jbd2_unfile_log_bh(bh);
++		stats.run.rs_blocks_logged++;
+ 		__brelse(bh);		/* One for getblk */
+ 		/* AKPM: bforget here */
+ 	}
+@@ -877,6 +878,7 @@ start_journal_io:
+ 	}
+ 	if (cbh)
+ 		err = journal_wait_on_commit_record(journal, cbh);
++	stats.run.rs_blocks_logged++;
+ 	if (jbd2_has_feature_async_commit(journal) &&
+ 	    journal->j_flags & JBD2_BARRIER) {
+ 		blkdev_issue_flush(journal->j_dev, GFP_NOFS, NULL);
 -- 
 2.20.1
 
