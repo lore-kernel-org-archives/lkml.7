@@ -2,52 +2,51 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D04C5C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F657C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A522B21835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3A9F217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004594;
-	bh=QtvsXyVT+bhWq34joYsYBfXNCtlQBD6/ze4JqmkUxdU=;
+	s=default; t=1578004603;
+	bh=wQT4xWXNIzsEabQI1mSrwFFkt4xowQeeU7x6mRr+IQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A5le+La2VukBX4SEwBwfw9WhFylEg+7PZTXV4muA/lMHSD+9JUwgz3CkPxqNOvZSu
-	 WNlY/J1aIMYScfQi/1D8EBYvILjxSkC61WxmuV308wHinzjeX9tRSkh1LLP3BFOsXX
-	 m+UEN1JsY51azK06iPlTHjsNLElE5SCjXJh9C8Vk=
+	b=ADmvwLa1+H1VhvAr3UYned09TkS4Tjlg8BJ34QANNpWMmop7sfmRDJntj5sZptlug
+	 VVJgeQmQUlUoCPLzwQJyZdVzCes4OcE3UbMr1NEM6U6M+6laJpMNpRDq8966kI8f63
+	 OPu7pAMZTdRsmNyNu45ucM/IfoSJ+PW5xj4KsmMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730953AbgABWgd (ORCPT
+        id S1730842AbgABWgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:36:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47646 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:36:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730622AbgABWg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:36:26 -0500
+        id S1730958AbgABWgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:36:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C524222C3;
-        Thu,  2 Jan 2020 22:36:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DD8021D7D;
+        Thu,  2 Jan 2020 22:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004586;
-        bh=QtvsXyVT+bhWq34joYsYBfXNCtlQBD6/ze4JqmkUxdU=;
+        s=default; t=1578004595;
+        bh=wQT4xWXNIzsEabQI1mSrwFFkt4xowQeeU7x6mRr+IQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e2rB1B7BZAu434I3WLa5qljyCBlpcWPtF4OTP5KnZQYddyKrT7PbmBib+Wm6D0zqQ
-         rEHquzoVgpf5l6qJE07M74Bi4qHYsyhCcpJ8sgRB086c3sfbcnUbbto+U75RN0D2D+
-         Up/jQzQkEMTIH8nap4R0A0LmDDDlZi6Db7DTGNGI=
+        b=UXkPWD9UMKSHZU8lvjIVrIAsY/SbyuRHmvYwvNbTYHEffX52Bf5ulUbss8Mrsv+by
+         MF+o5fTQpjzMuqZ2xBqQVTYoDDfvcf0Uomj+z0twdacw5KQKdqOHmnEzDU203clMBo
+         itUl/+NDWIf6PnEbhkYC+Z8GEW731BTWTjxQaQtE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 069/137] btrfs: return error pointer from alloc_test_extent_buffer
-Date:   Thu,  2 Jan 2020 23:07:22 +0100
-Message-Id: <20200102220555.852300521@linuxfoundation.org>
+        stable@vger.kernel.org, Lionel Koenig <lionel.koenig@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 072/137] ALSA: pcm: Avoid possible info leaks from PCM stream buffers
+Date:   Thu,  2 Jan 2020 23:07:25 +0100
+Message-Id: <20200102220556.320922570@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -60,66 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit b6293c821ea8fa2a631a2112cd86cd435effeb8b ]
+commit add9d56d7b3781532208afbff5509d7382fb6efe upstream.
 
-Callers of alloc_test_extent_buffer have not correctly interpreted the
-return value as error pointer, as alloc_test_extent_buffer should behave
-as alloc_extent_buffer. The self-tests were unaffected but
-btrfs_find_create_tree_block could call both functions and that would
-cause problems up in the call chain.
+The current PCM code doesn't initialize explicitly the buffers
+allocated for PCM streams, hence it might leak some uninitialized
+kernel data or previous stream contents by mmapping or reading the
+buffer before actually starting the stream.
 
-Fixes: faa2dbf004e8 ("Btrfs: add sanity tests for new qgroup accounting code")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Since this is a common problem, this patch simply adds the clearance
+of the buffer data at hw_params callback.  Although this does only
+zero-clear no matter which format is used, which doesn't mean the
+silence for some formats, but it should be OK because the intention is
+just to clear the previous data on the buffer.
+
+Reported-by: Lionel Koenig <lionel.koenig@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191211155742.3213-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/btrfs/extent_io.c          | 6 ++++--
- fs/btrfs/tests/qgroup-tests.c | 4 ++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ sound/core/pcm_native.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index a18f558b4477..6f5563ca70c1 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -4948,12 +4948,14 @@ struct extent_buffer *alloc_test_extent_buffer(struct btrfs_fs_info *fs_info,
- 		return eb;
- 	eb = alloc_dummy_extent_buffer(fs_info, start);
- 	if (!eb)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 	eb->fs_info = fs_info;
- again:
- 	ret = radix_tree_preload(GFP_NOFS & ~__GFP_HIGHMEM);
--	if (ret)
-+	if (ret) {
-+		exists = ERR_PTR(ret);
- 		goto free_eb;
-+	}
- 	spin_lock(&fs_info->buffer_lock);
- 	ret = radix_tree_insert(&fs_info->buffer_radix,
- 				start >> PAGE_CACHE_SHIFT, eb);
-diff --git a/fs/btrfs/tests/qgroup-tests.c b/fs/btrfs/tests/qgroup-tests.c
-index 2b2978c04e80..1efec40455f8 100644
---- a/fs/btrfs/tests/qgroup-tests.c
-+++ b/fs/btrfs/tests/qgroup-tests.c
-@@ -477,9 +477,9 @@ int btrfs_test_qgroups(void)
- 	 * *cough*backref walking code*cough*
- 	 */
- 	root->node = alloc_test_extent_buffer(root->fs_info, 4096);
--	if (!root->node) {
-+	if (IS_ERR(root->node)) {
- 		test_msg("Couldn't allocate dummy buffer\n");
--		ret = -ENOMEM;
-+		ret = PTR_ERR(root->node);
- 		goto out;
- 	}
- 	btrfs_set_header_level(root->node, 0);
--- 
-2.20.1
-
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -587,6 +587,10 @@ static int snd_pcm_hw_params(struct snd_
+ 	while (runtime->boundary * 2 <= LONG_MAX - runtime->buffer_size)
+ 		runtime->boundary *= 2;
+ 
++	/* clear the buffer for avoiding possible kernel info leaks */
++	if (runtime->dma_area)
++		memset(runtime->dma_area, 0, runtime->dma_bytes);
++
+ 	snd_pcm_timer_resolution_change(substream);
+ 	snd_pcm_set_state(substream, SNDRV_PCM_STATE_SETUP);
+ 
 
 
