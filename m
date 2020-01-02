@@ -2,160 +2,127 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C52C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FFCC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F5C520848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA17620848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:17:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NpXArpnX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NB20p2dp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728519AbgABONg (ORCPT
+        id S1728494AbgABORk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 09:13:36 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35892 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728427AbgABONf (ORCPT
+        Thu, 2 Jan 2020 09:17:40 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40770 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728288AbgABORj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 09:13:35 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z3so39378698wru.3;
-        Thu, 02 Jan 2020 06:13:34 -0800 (PST)
+        Thu, 2 Jan 2020 09:17:39 -0500
+Received: by mail-pl1-f196.google.com with SMTP id s21so15132569plr.7;
+        Thu, 02 Jan 2020 06:17:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Ae5j7SkNQl3JPhQ5RUwHeVy0F/34DwcVNdDsaKuNKpM=;
-        b=NpXArpnXe/W+XrixGJ+l44J8tWcn7Kg1ye66o0E8cFLDT8GFvYamZguXRBCE2c27VI
-         FZbt8B0Uo6sAAjBOukf86blhUzyM4r35Th+arBvnc2YbZ7sRR5s6z3HLER5Xm7EEJgF2
-         Y3w/7vo9T5rILwVH99odIpmIPdRSKJw/C8qESd58sVgzHGxaYNX2Rfo+BorGblUDxLn4
-         r76l6nCz6sn6pGUrIYonEV5oqRbh4OT8kjBGAPJRy77tuVu5Brg6NfvPF7WCPqayj9XK
-         MRHq1zywd3WFDzaaH9zx11aH3U5fEEng7FkCJUO+cohvCCyqjbOcc1dTlBOLVv+0TXnn
-         BAQw==
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=//H4mrg81x/IyMZipkYjmIUpZEnfAe6S836BMrRhuK8=;
+        b=NB20p2dp5Y3fHkCRPUHw306L50/kdCdxvjJcTU0+zzehndAeE0lbAVjbT7WUVfv5QT
+         T/UbjPSc4vHBmeZOMGfTYxVq+xUnKwJXhQKJ8661Nd739xyzAG1vbYsY20ckbGaNYSlO
+         G4TCWgv16S1E5v9ZL6LOS6fjfMjGloZOgNk8EP2NSpStMhFTTd/nBOVd7dZTlc4rNRd+
+         6m2YbpLu78rhCPiDtrJ5BZYHw8PerVjQr7GJmp6SrKFHNxyV3sVMURFNdqQWbeB7z6WW
+         jG6jaO/320MDE1OhVMFkIri2EcxsIGnXFj7QzeNk4worA8A111fwJlY9cHoOSveCMPHm
+         EGbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Ae5j7SkNQl3JPhQ5RUwHeVy0F/34DwcVNdDsaKuNKpM=;
-        b=m0+AIGq3TMMvCDZ8/hVTDNFkE1JKeAu65hHz/oCHzzPDiwkTzT0PnzJWl7CKzfjg/q
-         5WpV5rShgqMZCoDg5JTN7NvG3MSM1xkQszE8bFFv8ymVRn1XnqQlvViLqUtvDWUde1Zj
-         0yRD4SYRopcFAgjRX/4PGlDrQ7pINQ809JB7X06uDNBqOrtdqiA5x+O3oa3V2BTrsF6l
-         pYF0b5fv/y8xAEym2sBVztJ4/4K1ln5LNz2p+UfetCwfAGzdufcktL8m7/QCQFvYA3eG
-         13sL1vjiZGAVgjssy/3pxFG7w8UcP73Zxs6q9V9IF6cJYPwYHiV7cMSq8FTzeDi2OMWo
-         /OLA==
-X-Gm-Message-State: APjAAAXplYZUkaF2IZfzNbZPn8wLKu+k/tqjf7qwXK4wxjQrD0Vf9EPk
-        3ziZrUXJA3KBSJtQwOKYT00=
-X-Google-Smtp-Source: APXvYqyHTMsoc2dJ5aflQJBoQBf61+UZnoDdqXZWW/+wV9gv2YAZvyP6raUFxJtD4Qr0ai7K+6SyoQ==
-X-Received: by 2002:adf:eb48:: with SMTP id u8mr79749653wrn.283.1577974413990;
-        Thu, 02 Jan 2020 06:13:33 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id f17sm8688420wmc.8.2020.01.02.06.13.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 06:13:33 -0800 (PST)
-Date:   Thu, 2 Jan 2020 15:13:32 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Namjae Jeon <linkinjeon@gmail.com>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com
-Subject: Re: [PATCH v8 02/13] exfat: add super block operations
-Message-ID: <20200102141332.ibdj7gfwyyrfhkhi@pali>
-References: <20191220062419.23516-1-namjae.jeon@samsung.com>
- <CGME20191220062733epcas1p31665a3ae968ab8c70d91a3cddf529e73@epcas1p3.samsung.com>
- <20191220062419.23516-3-namjae.jeon@samsung.com>
- <20191229134025.qb3mmqatsn5c4gao@pali>
- <000701d5c132$bed73c80$3c85b580$@samsung.com>
- <20200102083029.uv2gtig3ski23dpe@pali>
- <20200102131659.r2lxzcyhvtgxmz7m@pali>
- <CAKYAXd_YHxRiFg=6m1eyXFmBWTXnEg4e-0VirNBS5q24Lz7jMg@mail.gmail.com>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=//H4mrg81x/IyMZipkYjmIUpZEnfAe6S836BMrRhuK8=;
+        b=RUHJXEycqoQ2tb11oxpG0FTngGNhHaCOf/A7GKWenjxTyyE3f2QHAHy8gr87Daekmb
+         xk5sDgBd+1LJhoJzjnXplffTjeeRMZ5WtrCBhqoPYFhQzcMhucWxs7P2RmUvwKOKTC7w
+         cDRuikrPvd+dC9PNp1Wo551+zxYT5PhEw1d6OVBypse8KSmzzhRBLDoAFLuNyPt41VQx
+         gbIJgvaLP52JcuM38UUbX+3XOvsMe4hHdd+On/4224Imzdmh8fd4Oi0Xiql0MrL0ch8j
+         eYQPtiF8Xh8/rwnFPaa0t0rCaUwu3sFEDMafTO26auHb2ydhKpkR3froYJV8+e58kKbC
+         u+5Q==
+X-Gm-Message-State: APjAAAWw5rlF3nN4Ier4eA8CyAYVhpfsLMEf+oF/vU6cLVO3yWwyu9k1
+        xg7kRMOfpp/viN1QTwSm7kBWQEKe
+X-Google-Smtp-Source: APXvYqwe9y9fqxjk7owBc10/WmKtlqGmdb14fLDVDktweQVNUHqXULApbdEb99t+u4TpKTE/N2Jg9Q==
+X-Received: by 2002:a17:90a:8043:: with SMTP id e3mr19595166pjw.24.1577974658868;
+        Thu, 02 Jan 2020 06:17:38 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c1sm31138536pfo.44.2020.01.02.06.17.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Jan 2020 06:17:38 -0800 (PST)
+Subject: Re: [PATCH v2] clk: Warn about critical clks that fail to enable
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Jerome Brunet <jbrunet@baylibre.com>
+References: <20200102005503.71923-1-sboyd@kernel.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <6d4e8c19-6cb8-b242-3efb-0854ee2a107f@roeck-us.net>
+Date:   Thu, 2 Jan 2020 06:17:37 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKYAXd_YHxRiFg=6m1eyXFmBWTXnEg4e-0VirNBS5q24Lz7jMg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200102005503.71923-1-sboyd@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 02 January 2020 22:41:40 Namjae Jeon wrote:
-> 2020-01-02 22:16 GMT+09:00, Pali Rohár <pali.rohar@gmail.com>:
-> > On Thursday 02 January 2020 09:30:29 Pali Rohár wrote:
-> >> On Thursday 02 January 2020 15:06:16 Namjae Jeon wrote:
-> >> > > > +static const struct fs_parameter_spec exfat_param_specs[] = {
-> >> > > > +	fsparam_u32("uid",			Opt_uid),
-> >> > > > +	fsparam_u32("gid",			Opt_gid),
-> >> > > > +	fsparam_u32oct("umask",			Opt_umask),
-> >> > > > +	fsparam_u32oct("dmask",			Opt_dmask),
-> >> > > > +	fsparam_u32oct("fmask",			Opt_fmask),
-> >> > > > +	fsparam_u32oct("allow_utime",		Opt_allow_utime),
-> >> > > > +	fsparam_string("iocharset",		Opt_charset),
-> >> > > > +	fsparam_flag("utf8",			Opt_utf8),
-> >> > >
-> >> > > Hello! What is the purpose of having extra special "utf8" mount
-> >> > > option?
-> >> > > Is not one "iocharset=utf8" option enough?
-> >> > utf8 nls_table supports utf8<->utf32 conversion and does not support
-> >> > surrogate character conversion.
-> >>
-> >> So in other words, this is just subset of UTF-8 just to 3 byte long
-> >> sequences (for Unicode code points up to the U+FFFF).
-> >
-> > Anyway, this is limitation of kernel's NLS framework? Or limitation in
-> > current exfat driver implementation?
-> This is not exfat driver issue. Please check fatfs, cifs, etc..
-> >
-> > Because if it is in kernel's NLS framework then all kernel drivers would
-> > be affected by this limitation, and not only exfat.
-> Yes, FATfs also has two options and There seems to be
-> CONFIG_FAT_DEFAULT_UTF8 option to avoid the issue you said.
+On 1/1/20 4:55 PM, Stephen Boyd wrote:
+> If we don't warn here users of the CLK_IS_CRITICAL flag may not know
+> that their clk isn't actually enabled because it silently fails to
+> enable. Let's print a warning in that case so developers find these
+> problems faster.
 > 
-> config FAT_DEFAULT_UTF8
->         bool "Enable FAT UTF-8 option by default"
->         depends on VFAT_FS
->         default n
->         help
->           Set this if you would like to have "utf8" mount option set
->           by default when mounting FAT filesystems.
+> Suggested-by: Jerome Brunet <jbrunet@baylibre.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
 > 
->           Even if you say Y here can always disable UTF-8 for
->           particular mount by adding "utf8=0" to mount options.
+> Changes from v1:
+>   * Switched to pr_warn and indicated clk name
 > 
->           Say Y if you use UTF-8 encoding for file names, N otherwise.
-
-I know that VFAT has two options for it, but I think this is historic
-relict (backward compatibility). There are also other suspicious options
-which today do nothing (e.g. cvf_format). So I would rather do not
-compare it with 20 years old fat code...
-
-But I have already looked at kernel's NLS implementation and it is
-really limited to Unicode code points up to the U+FFFF. Kernel's wchar_t
-type is is just for Plane-0 (u16) and all NLS encodings works with
-wchar_t.
-
-For "full Unicode" there is kernel type unicode_t.
-
-And there is another thing, utf8 NLS encoding does not have defined
-charset2upper/charset2lower tables.
-
-So for iocharset=utf8 you really do not want to use utf8 NLS module.
-
-But seem that above limitation for Plane-0 in kernel's NLS is not a
-problem as all encodings (except utf8) fit into Plane-0. So only UTF-8
-needs special handling, other encodings can use kernel's NLS tables.
-
-> But the way you suggested looks better.
+>   drivers/clk/clk.c | 7 ++++++-
+>   1 file changed, 6 insertions(+), 1 deletion(-)
 > 
-> Thanks!
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index 772258de2d1f..b03c2be4014b 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -3427,13 +3427,18 @@ static int __clk_core_init(struct clk_core *core)
+>   		unsigned long flags;
+>   
+>   		ret = clk_core_prepare(core);
+> -		if (ret)
+> +		if (ret) {
+> +			pr_warn("%s: critical clk '%s' failed to prepare\n",
+> +			       __func__, core->name);
+>   			goto out;
+> +		}
+>   
+>   		flags = clk_enable_lock();
+>   		ret = clk_core_enable(core);
+>   		clk_enable_unlock(flags);
+>   		if (ret) {
+> +			pr_warn("%s: critical clk '%s' failed to enable\n",
+> +			       __func__, core->name);
+>   			clk_core_unprepare(core);
+>   			goto out;
+>   		}
+> 
+> base-commit: 12ead77432f2ce32dea797742316d15c5800cb32
+> 
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
