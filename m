@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E45C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B5DC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 320C621835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B287221835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004016;
-	bh=pi/E5OK/dHkbntXNF3ItM8V+BH+oRqC2eUsc7jvXQOg=;
+	s=default; t=1578004018;
+	bh=1NEu7Yh/AB2e8ihR5dZl/HrmOElxNkdZTdVug8DSseU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bDz/jAYWeyYJzBYrvzhdFZRmTTZb0wWE8pU+U0YEBjPlaDkYJV6SgM7euiMzkKpuP
-	 lkk4bqi8cviGBK92Dhzees7u4Dzb8uDcZLJD0F2ZauCIlOY1OoiTaPRVSWIAW3UZbL
-	 eoUr5eUeRWswvESzQ9vfYQy6P2nn8BMd2hVzJYxQ=
+	b=vVy7N9dYdBkbNsbC7HldiSEHGOjHePsilo+sVruD0YF/qkmfjoZcpCfTya5Xf+LWo
+	 yO6lP3wOFwAJ/TGydpMiCuufK2+1xTSsP0Hvyhunw4GWNj6sZbOCU5uosnqXlOV1g/
+	 h0qtNmvXu4mOFSpB7OvOA7skXWm6KFt7On0IEzD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729681AbgABW0y (ORCPT
+        id S1729466AbgABW06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:26:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54574 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:26:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729671AbgABW0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:26:50 -0500
+        id S1729680AbgABW0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:26:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FDF7222C3;
-        Thu,  2 Jan 2020 22:26:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E3DD21835;
+        Thu,  2 Jan 2020 22:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004009;
-        bh=pi/E5OK/dHkbntXNF3ItM8V+BH+oRqC2eUsc7jvXQOg=;
+        s=default; t=1578004014;
+        bh=1NEu7Yh/AB2e8ihR5dZl/HrmOElxNkdZTdVug8DSseU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s4NIzgQ16egOpSR0+VoOZFM//4TgvJX8pJ9j9r0epf28nJhlCylLC82ZDxRHy6STH
-         //YKADRuDO/TCXxl+MJnEsRZK5QesFknm26fPfYLY6r0YSStcGQH7pZcFM7SAq16JC
-         yBzQMysWxG2wc39X4te0obMQaFlHaIVScp4SRvUk=
+        b=oemDwsdVhOR/QsQi7bNBFIlp0iiFNseDMEDTioy5aS5plardBuVnYc8tFiLXAmbXd
+         RJW1Gr1INQgn66EkBU61rfYMNE2n9PrvD232xNjSjeLyu4tKaOG9PFjzgsUEcdTw6/
+         KF/T6cMGT+IxZO+oPjs2n+yqY7i13rEDKiINcIDE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        David Ahern <dsahern@gmail.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 84/91] vti: do not confirm neighbor when do pmtu update
-Date:   Thu,  2 Jan 2020 23:08:06 +0100
-Message-Id: <20200102220451.037924125@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 4.14 86/91] gtp: do not allow adding duplicate tid and ms_addr pdp context
+Date:   Thu,  2 Jan 2020 23:08:08 +0100
+Message-Id: <20200102220451.840898460@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -61,55 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 8247a79efa2f28b44329f363272550c1738377de ]
+[ Upstream commit 6b01b1d9b2d38dc84ac398bfe9f00baff06a31e5 ]
 
-When do IPv6 tunnel PMTU update and calls __ip6_rt_update_pmtu() in the end,
-we should not call dst_confirm_neigh() as there is no two-way communication.
+GTP RX packet path lookups pdp context with TID. If duplicate TID pdp
+contexts are existing in the list, it couldn't select correct pdp context.
+So, TID value  should be unique.
+GTP TX packet path lookups pdp context with ms_addr. If duplicate ms_addr pdp
+contexts are existing in the list, it couldn't select correct pdp context.
+So, ms_addr value should be unique.
 
-Although vti and vti6 are immune to this problem because they are IFF_NOARP
-interfaces, as Guillaume pointed. There is still no sense to confirm neighbour
-here.
-
-v5: Update commit description.
-v4: No change.
-v3: Do not remove dst_confirm_neigh, but add a new bool parameter in
-    dst_ops.update_pmtu to control whether we should do neighbor confirm.
-    Also split the big patch to small ones for each area.
-v2: Remove dst_confirm_neigh in __ip6_rt_update_pmtu.
-
-Reviewed-by: Guillaume Nault <gnault@redhat.com>
-Acked-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/ip_vti.c  |    2 +-
- net/ipv6/ip6_vti.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/gtp.c |   32 ++++++++++++++++++++++----------
+ 1 file changed, 22 insertions(+), 10 deletions(-)
 
---- a/net/ipv4/ip_vti.c
-+++ b/net/ipv4/ip_vti.c
-@@ -244,7 +244,7 @@ static netdev_tx_t vti_xmit(struct sk_bu
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -929,24 +929,31 @@ static void ipv4_pdp_fill(struct pdp_ctx
+ 	}
+ }
  
- 	mtu = dst_mtu(dst);
- 	if (skb->len > mtu) {
--		skb_dst_update_pmtu(skb, mtu);
-+		skb_dst_update_pmtu_no_confirm(skb, mtu);
- 		if (skb->protocol == htons(ETH_P_IP)) {
- 			icmp_send(skb, ICMP_DEST_UNREACH, ICMP_FRAG_NEEDED,
- 				  htonl(mtu));
---- a/net/ipv6/ip6_vti.c
-+++ b/net/ipv6/ip6_vti.c
-@@ -483,7 +483,7 @@ vti6_xmit(struct sk_buff *skb, struct ne
+-static int ipv4_pdp_add(struct gtp_dev *gtp, struct sock *sk,
+-			struct genl_info *info)
++static int gtp_pdp_add(struct gtp_dev *gtp, struct sock *sk,
++		       struct genl_info *info)
+ {
++	struct pdp_ctx *pctx, *pctx_tid = NULL;
+ 	struct net_device *dev = gtp->dev;
+ 	u32 hash_ms, hash_tid = 0;
+-	struct pdp_ctx *pctx;
++	unsigned int version;
+ 	bool found = false;
+ 	__be32 ms_addr;
  
- 	mtu = dst_mtu(dst);
- 	if (skb->len > mtu) {
--		skb_dst_update_pmtu(skb, mtu);
-+		skb_dst_update_pmtu_no_confirm(skb, mtu);
+ 	ms_addr = nla_get_be32(info->attrs[GTPA_MS_ADDRESS]);
+ 	hash_ms = ipv4_hashfn(ms_addr) % gtp->hash_size;
++	version = nla_get_u32(info->attrs[GTPA_VERSION]);
  
- 		if (skb->protocol == htons(ETH_P_IPV6)) {
- 			if (mtu < IPV6_MIN_MTU)
+-	hlist_for_each_entry_rcu(pctx, &gtp->addr_hash[hash_ms], hlist_addr) {
+-		if (pctx->ms_addr_ip4.s_addr == ms_addr) {
+-			found = true;
+-			break;
+-		}
+-	}
++	pctx = ipv4_pdp_find(gtp, ms_addr);
++	if (pctx)
++		found = true;
++	if (version == GTP_V0)
++		pctx_tid = gtp0_pdp_find(gtp,
++					 nla_get_u64(info->attrs[GTPA_TID]));
++	else if (version == GTP_V1)
++		pctx_tid = gtp1_pdp_find(gtp,
++					 nla_get_u32(info->attrs[GTPA_I_TEI]));
++	if (pctx_tid)
++		found = true;
+ 
+ 	if (found) {
+ 		if (info->nlhdr->nlmsg_flags & NLM_F_EXCL)
+@@ -954,6 +961,11 @@ static int ipv4_pdp_add(struct gtp_dev *
+ 		if (info->nlhdr->nlmsg_flags & NLM_F_REPLACE)
+ 			return -EOPNOTSUPP;
+ 
++		if (pctx && pctx_tid)
++			return -EEXIST;
++		if (!pctx)
++			pctx = pctx_tid;
++
+ 		ipv4_pdp_fill(pctx, info);
+ 
+ 		if (pctx->gtp_version == GTP_V0)
+@@ -1077,7 +1089,7 @@ static int gtp_genl_new_pdp(struct sk_bu
+ 		goto out_unlock;
+ 	}
+ 
+-	err = ipv4_pdp_add(gtp, sk, info);
++	err = gtp_pdp_add(gtp, sk, info);
+ 
+ out_unlock:
+ 	rcu_read_unlock();
 
 
