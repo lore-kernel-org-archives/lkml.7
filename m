@@ -2,74 +2,93 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC34C2D0DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54281C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6586821734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F510215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:20:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LYHBU3hy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgABIPc (ORCPT
+        id S1727806AbgABIUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 03:15:32 -0500
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:35298 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727714AbgABIPb (ORCPT
+        Thu, 2 Jan 2020 03:20:02 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36201 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727688AbgABIUB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 03:15:31 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TmaHn71_1577952921;
-Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TmaHn71_1577952921)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 02 Jan 2020 16:15:28 +0800
-From:   Wen Yang <wenyang@linux.alibaba.com>
-To:     Andrew Morton <akpm@linux-foundation.org>, Qian Cai <cai@lca.pw>
-Cc:     xlpang@linux.alibaba.com, Wen Yang <wenyang@linux.alibaba.com>,
-        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] mm/page-writeback.c: improve arithmetic divisions
-Date:   Thu,  2 Jan 2020 16:14:42 +0800
-Message-Id: <20200102081442.8273-4-wenyang@linux.alibaba.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200102081442.8273-1-wenyang@linux.alibaba.com>
-References: <20200102081442.8273-1-wenyang@linux.alibaba.com>
+        Thu, 2 Jan 2020 03:20:01 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 19so43556513otz.3;
+        Thu, 02 Jan 2020 00:20:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aHriWhJI0dqaNpyRfzm/gY6/ALoua79QPBLVzGEfWhQ=;
+        b=LYHBU3hyZ4qeez/x8Dc6xNL+CoxkMucMrviIHsG4U7S2oBXfo3sm0E1OqVhgkPIAB9
+         WjbMWW1IYC1v/BXWqU2M3IcQKuR3fBjdq7oLC7Xg0Sk7WGpK3vqlqg1nF1zX8YzZSzI3
+         QkcRw7QedQurR4i+1nwDlF4PZrMY3a4U8gQZphEunf7CZ6evf6TosC1u1Ga6lvRwp8RO
+         66lR56KQoVjtDPXsILWbDNPTWU6YNMew4QFIH6sE8uqEMPq3I5xZEsdeAOoqlxJggxNA
+         /v/d830qKdKIsp4TcJQSN9+Xb98L5kBox5S/CVj8KVXlyP3FG+vhgRLKJ9zm7bwuUEuh
+         JYBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aHriWhJI0dqaNpyRfzm/gY6/ALoua79QPBLVzGEfWhQ=;
+        b=N9U+5TXT/3COIUkcyj2pFRGGebRIFr6jxDLPG8n5YBoUjU49Sla4/jLJazIcmm60q1
+         3DHmJNv4sVUDC4B71PJ/gzmkg63/1ZyRBWWUswSdCURxAWCQokEPuWjkxUJNHzJoKwGf
+         spLa3rkir/p1XQM/UL/amn5jqXkIOzcsL+J2B9UcPICol9i9Yr1j9mYo3Qvek+q8kQiZ
+         RsSINLCO3xHXDDUUjfBTIAmIvVoAHFfHls8415pip65I+rTOn+LSQvQ0CJL5b3KTHGGd
+         OvrAjuYt7HbA0xDWxV44a5tBRomIo2ON3aipGKK/n+//0AeBnlHewScc4ISLKzld29sv
+         FN0g==
+X-Gm-Message-State: APjAAAXGdo7bafLAmKJtohIzJlLHbIndUqsXBvUKBVGXOGAINM5CdnlA
+        n/7KtCiyRlgSDLcyAKPGVGovJTA6bIYVZrXZrck=
+X-Google-Smtp-Source: APXvYqyWFs4P4fJpHL4dAErb4LD+E4qkFoJIMSL10eM8o/+GIMuANvXQbWlQHIE4bI13/uvpEL312cHqld0uEKCiSXg=
+X-Received: by 2002:a05:6830:1615:: with SMTP id g21mr94672907otr.49.1577953200818;
+ Thu, 02 Jan 2020 00:20:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com>
+In-Reply-To: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com>
+From:   Ramon Fried <rfried.dev@gmail.com>
+Date:   Thu, 2 Jan 2020 10:19:49 +0200
+Message-ID: <CAGi-RUJuS540oNTtJc1zfv6tbfTtSt-S0m1tdpQ-=5JPeo92xg@mail.gmail.com>
+Subject: Re: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
+To:     hkallweit1@gmail.com, Bjorn Helgaas <bhelgaas@google.com>,
+        marc.zyngier@arm.com, tglx@linutronix.de, lorenzo.pieralisi@arm.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use div64_ul() instead of do_div() if the divisor is unsigned long,
-to avoid truncation to 32-bit on 64-bit platforms.
+Ping
 
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- mm/page-writeback.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index c74c6bd..2caf780 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -1102,7 +1102,7 @@ static void wb_update_write_bandwidth(struct bdi_writeback *wb,
- 	bw = written - min(written, wb->written_stamp);
- 	bw *= HZ;
- 	if (unlikely(elapsed > period)) {
--		do_div(bw, elapsed);
-+		bw = div64_ul(bw, elapsed);
- 		avg = bw;
- 		goto out;
- 	}
--- 
-1.8.3.1
-
+On Mon, Dec 9, 2019 at 12:27 PM Ramon Fried <rfried.dev@gmail.com> wrote:
+>
+> Hi,
+> While debugging the root cause of spurious IRQ's on my PCIe MSI line it appears
+> that because of the line:
+>     info->chip->flags |= IRQCHIP_ONESHOT_SAFE;
+> in pci_msi_create_irq_domain()
+> The IRQF_ONESHOT is ignored, especially when requesting IRQ through
+> pci_request_threaded_irq() where handler is NULL.
+>
+> The problem is that the MSI masking now only surrounds the HW handler,
+> and all additional MSI that occur before the threaded handler is
+> complete are considered by the note_interrupt() as spurious.
+>
+> Besides the side effect of that, I don't really understand the logic
+> of not masking the MSI until the threaded handler is complete,
+> especially when there's no HW handler and only threaded handler.
+>
+> Your thoughts?
+>
+> Thank,
+> Ramon.
