@@ -2,130 +2,102 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99047C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9262AC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA7920866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:16:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alumni-chalmers-se.20150623.gappssmtp.com header.i=@alumni-chalmers-se.20150623.gappssmtp.com header.b="CgtyfogB"
+	by mail.kernel.org (Postfix) with ESMTP id 6D27C24125
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:20:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgABRQ5 (ORCPT
+        id S1727779AbgABRUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 12:16:57 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33116 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbgABRQ5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 12:16:57 -0500
-Received: by mail-lj1-f194.google.com with SMTP id y6so33371782lji.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 09:16:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=alumni-chalmers-se.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=/LNnVCi/tzD+lehzuQdRtYTIPZ1Mc+i/sOxugMx3Djg=;
-        b=CgtyfogBxkPY246Nyql36knXkxj5+l3ytNlJAZm6YVRfhNsXC0pU+oIf2Yn3mYkEaV
-         OQpRC3VK3JZfJYCCN68ErKLlC0OUzRiVkVe/yU2RNLPpf7+idyGQ3OXqjtiXA6H6RTpH
-         1bffQPli4g8YHD0qIjd2wyddFuKgyUwcAHEcIn/uYMedpEcxVq8KHjx/qzKnXTi+p/SU
-         q9EmvVskXew6igu45N/V78mVP5JtsHPultL/KqoVUslvQLz9AsiIPtvuR+ZsQbaRmuNp
-         lktU3URtOQMyzxZayp9xn2KdCvry4OMKLB9typr2f9cKP2bRjwH73Zr86gdts+ZjPLiM
-         ovhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=/LNnVCi/tzD+lehzuQdRtYTIPZ1Mc+i/sOxugMx3Djg=;
-        b=H1dTzlcdpSk+nRcvyJ0DY6KGkbZ3z/Wpsliymqi+CGHXkyRa6xyUl519jhgHXqVEUk
-         4RtMVx/3YQ+XAliux+e67KqbGSun0d3bbQvl3jewaIqeTefsYbuzkwgOJDB4fTw96Hss
-         RapMyPVd0ILIt53TljK05+PjQiwOItrkkzo5bXeP1IHtlvnVAkREplwAWK0dqD/OkB0r
-         saB+AWGT7pGCf2Z+sAlKJBT7HXpO/JzbrmJylYiYuLTDzlYtGHOlCzLCA1IsLjAtbUBv
-         BXjQ96q4MALRgtOB8BsbC2h/Sfy8S5ch1MLdYzdDo1zo2+SfQrC+aJMKAQIQ7eEshbXv
-         KhWA==
-X-Gm-Message-State: APjAAAV0I7HasVgx/JBJ8Hdn1H2YEXLuJRVrcSqcxi64F+sjOpFfZIAR
-        oj+DFv6wop1klp8n60vo7J7qMpPC1xA=
-X-Google-Smtp-Source: APXvYqySqErkRCz7LQqxqAs6BcKy0nzt2T/uUFiYLKLcX0CdVD9mkB5xmWBk2TcQUECoFDLOigm5SQ==
-X-Received: by 2002:a2e:978c:: with SMTP id y12mr43102817lji.167.1577985414925;
-        Thu, 02 Jan 2020 09:16:54 -0800 (PST)
-Received: from newline.site (h-173-139.A785.priv.bahnhof.se. [98.128.173.139])
-        by smtp.gmail.com with ESMTPSA id y10sm23042372ljm.93.2020.01.02.09.16.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 Jan 2020 09:16:54 -0800 (PST)
-From:   Arseniy Lartsev <arseniy@alumni.chalmers.se>
-To:     linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: usb-audio: add implicit feedback quirk for Yamaha P-125
-Date:   Thu, 02 Jan 2020 18:16:52 +0100
-Message-ID: <6288884.Nqi5ZcYBqQ@newline.site>
-User-Agent: KMail/5.3.2 (Linux/4.4.27-2-default; KDE/5.26.0; x86_64; ; )
+        Thu, 2 Jan 2020 12:20:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726125AbgABRUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 12:20:07 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C062020866;
+        Thu,  2 Jan 2020 17:20:05 +0000 (UTC)
+Date:   Thu, 2 Jan 2020 12:20:04 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [RFC] tools lib traceevent: How to do library versioning being in
+ the Linux kernel source?
+Message-ID: <20200102122004.216c85da@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This digital piano has audio playback function with implicit feedback
-endpoint.
+First, I hope everyone had a Happy New Year!
 
-On this device in particular, if USB host sends samples slightly too fast due
-to lack of synchronization (50% chance of that happening), playback will fail
-after a few minutes. This patch fixes the problem.
+Next, Sudip has been working to get the libtraceevent library into
+Debian. As this has been happening, I've been working at how to get all
+the projects that use this, to use the library installed on the system
+if it does exist. I'm hoping that once it's in Debian, the other
+distros will follow suit.
 
-The feedback endpoint is, in fact, very nearly standard-compliant, but
-set_sync_endpoint function currently uses different logic for feedback
-endpoint discovery - the patch also adds a comment to clarify this behaviour.
+Currently, the home of libtraceevent lives in the Linux kernel source
+tree under tools/lib/traceevent. This was because perf uses it to parse
+the events, and it seemed logical (at the time) to use this location as
+the main source tree for the distributions.
 
-Signed-off-by: Arseniy Lartsev <arseniy@alumni.chalmers.se>
----
- sound/usb/pcm.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+The problem I'm now having is that I'm looking at fixing and updating
+some of the code in this library, and since library versioning is
+critical for applications that depend on it, we need to have a way to
+update the versions, and this does not correspond with the Linux
+versions.
 
-diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
-index 9c8930b..47ccea6 100644
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -351,6 +351,10 @@ static int set_sync_ep_implicit_fb_quirk(struct 
-snd_usb_substream *subs,
- 	case USB_ID(0x0582, 0x01d8): /* BOSS Katana */
- 		/* BOSS Katana amplifiers do not need quirks */
- 		return 0;
-+	case USB_ID(0x0499, 0x1718): /* Yamaha P-125 digital piano */
-+		ep = 0x86;
-+		ifnum = 2;
-+		goto add_sync_ep_from_ifnum;
- 	}
- 
- 	if (attr == USB_ENDPOINT_SYNC_ASYNC &&
-@@ -427,6 +431,21 @@ static int set_sync_endpoint(struct snd_usb_substream 
-*subs,
- 	if (err > 0)
- 		return 0;
- 
-+	/*
-+	 * Actually, what USB 2.0 standard says is this:
-+	 *
-+	 * A feedback endpoint (explicit or implicit) needs to be associated with
-+	 * one (or more) isochronous data endpoints to which it provides feedback
-+	 * service. <...> The first data endpoint and the feedback endpoint must
-+	 * have the same endpoint number (and opposite direction). This ensures
-+	 * that a data endpoint can uniquely identify its feedback endpoint by
-+	 * searching for the first feedback endpoint that has an endpoint number
-+	 * equal or less than its own endpoint number.
-+	 *
-+	 * However, it looks like hardware vendors never follow this except by
-+	 * accident, so we may as well give up on it too. Look for a feedback
-+	 * endpoint as a second endpoint on the same interface.
-+	 */
- 	if (altsd->bNumEndpoints < 2)
- 		return 0;
- 
--- 
-2.10.0
+For example, we currently have:
 
+ libtraceevent.so.1.1.0
 
+If I make some bug fixes, I probably want to change it to:
+
+ libtraceevent.so.1.1.1 or libtraceevent.so.1.2.0
+
+But if I change the API, which I plan on doing soon, I would probably
+need to update the major version.
+
+ libtraceevent.so.2.0.0
+
+The thing is, we shouldn't be making these changes for every update
+that we send to the main kernel. I would like to have a minimum of tags
+to state what the version should be, and perhaps even branches for
+working on a development version.
+
+This is a problem with living in the Linux source tree as tags and
+branches in Linus's tree are for only the Linux kernel source itself.
+This may work fine for perf, as it's not a library and there's not
+tools depending on the version of it. But it is a problem when it comes
+to shared libraries.
+
+Should we move libtraceevent into a stand alone git repo (on
+kernel.org), that can have tags and branches specifically for it? We
+can keep a copy in the Linux source tree for perf to use till it
+becomes something that is reliably in all distributions. It's not like
+perf doesn't depend on other libraries today anyway.
+
+Thoughts or suggestions?
+
+Thanks!
+
+-- Steve
