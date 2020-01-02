@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A6AC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AFCC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC0B2465D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D892D20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578006026;
-	bh=vArQ7SqQAU1H15zmxOhNazLlFgEn8vZiQwMCsvmJwEU=;
+	s=default; t=1578006034;
+	bh=3BVHwPE4q8n26a1d46lsR7hjc6VGVHopFCYsWip+P9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cl21FxFafjygNZ6y1S2uu1oO8PdonQZ4/r2S1x03Udn8kn7P3mRb5TYIVAT/UC9nC
-	 +4garRLTUw2+cgESCRogZmG3v9II50Tp83Up7a2Lq9aZA4iJAE+lPmysDQBnKdCl3C
-	 IQdC1ILwPJPlzRZ/5Vng0pKQK8803vyFB7FmP70I=
+	b=JxVOQhMjyxqzfh5DcyE4HgoLq3tCOhqfDMDw/3x7Z6mc6j+x2C8GID7GXcJGMh61V
+	 /uVOA68uZB0a0p/6i7ITBpbY7oIqRQ3mkspPHe8KzftdrtJ4iP5gvAy5qWQqkJMe+I
+	 4So6yydsY9cM93ItW3L03mDgtIYkG6E5joVgNnr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgABXAY (ORCPT
+        id S1727541AbgABXAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 18:00:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52456 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 18:00:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727183AbgABWM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:12:58 -0500
+        id S1727546AbgABWMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:12:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7A4C222C3;
-        Thu,  2 Jan 2020 22:12:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CCDA21D7D;
+        Thu,  2 Jan 2020 22:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003177;
-        bh=vArQ7SqQAU1H15zmxOhNazLlFgEn8vZiQwMCsvmJwEU=;
+        s=default; t=1578003167;
+        bh=3BVHwPE4q8n26a1d46lsR7hjc6VGVHopFCYsWip+P9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MNjruq6/sjcIFuBXVz4L3+hoZ/bh8BDTdAVToBJlZDjiLcDmpi8pK2uWxxhn4yABC
-         w21sAh5cOItXa0BHC3XZXCmQO+pAvCid1Z9QGydsHyLnYz7lYn2cWsQz/sT9TnvWUe
-         uQBITIfKqT7MxSnRFyQ9U0nTL2LQD/xQO47/wzO0=
+        b=zGygS2LMuXUGzaJ/thsnnlABPhg7LoHa7zuQYhXcSLQVXBKrpexGFbJ2vNZW7Vxbn
+         VfogloyCXbq80iP+p2Idj2nZpe5dGrQNQquPrMvo67lb8vnYPu9yvo7UgJZEZrOsBF
+         m4EhkijVkp09kEMjMsyWI+DV9O02xa62uKMBA4zk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 051/191] clk: clk-gpio: propagate rate change to parent
-Date:   Thu,  2 Jan 2020 23:05:33 +0100
-Message-Id: <20200102215835.373104247@linuxfoundation.org>
+Subject: [PATCH 5.4 048/191] f2fs: fix to update dirs i_pino during cross_rename
+Date:   Thu,  2 Jan 2020 23:05:30 +0100
+Message-Id: <20200102215835.050600027@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -62,47 +61,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Hennerich <michael.hennerich@analog.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit fc59462c5ce60da119568fac325c92fc6b7c6175 ]
+[ Upstream commit 2a60637f06ac94869b2e630eaf837110d39bf291 ]
 
-For an external clock source, which is gated via a GPIO, the
-rate change should typically be propagated to the parent clock.
+As Eric reported:
 
-The situation where we are requiring this propagation, is when an
-external clock is connected to override an internal clock (which typically
-has a fixed rate). The external clock can have a different rate than the
-internal one, and may also be variable, thus requiring the rate
-propagation.
+RENAME_EXCHANGE support was just added to fsstress in xfstests:
 
-This rate change wasn't propagated until now, and it's unclear about cases
-where this shouldn't be propagated. Thus, it's unclear whether this is
-fixing a bug, or extending the current driver behavior. Also, it's unsure
-about whether this may break any existing setups; in the case that it does,
-a device-tree property may be added to disable this flag.
+	commit 65dfd40a97b6bbbd2a22538977bab355c5bc0f06
+	Author: kaixuxia <xiakaixu1987@gmail.com>
+	Date:   Thu Oct 31 14:41:48 2019 +0800
 
-Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Link: https://lkml.kernel.org/r/20191108071718.17985-1-alexandru.ardelean@analog.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+	    fsstress: add EXCHANGE renameat2 support
+
+This is causing xfstest generic/579 to fail due to fsck.f2fs reporting errors.
+I'm not sure what the problem is, but it still happens even with all the
+fs-verity stuff in the test commented out, so that the test just runs fsstress.
+
+generic/579 23s ... 	[10:02:25]
+[    7.745370] run fstests generic/579 at 2019-11-04 10:02:25
+_check_generic_filesystem: filesystem on /dev/vdc is inconsistent
+(see /results/f2fs/results-default/generic/579.full for details)
+ [10:02:47]
+Ran: generic/579
+Failures: generic/579
+Failed 1 of 1 tests
+Xunit report: /results/f2fs/results-default/result.xml
+
+Here's the contents of 579.full:
+
+_check_generic_filesystem: filesystem on /dev/vdc is inconsistent
+*** fsck.f2fs output ***
+[ASSERT] (__chk_dots_dentries:1378)  --> Bad inode number[0x24] for '..', parent parent ino is [0xd10]
+
+The root cause is that we forgot to update directory's i_pino during
+cross_rename, fix it.
+
+Fixes: 32f9bc25cbda0 ("f2fs: support ->rename2()")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Tested-by: Eric Biggers <ebiggers@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk-gpio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/namei.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/clk-gpio.c b/drivers/clk/clk-gpio.c
-index 9d930edd6516..13304cf5f2a8 100644
---- a/drivers/clk/clk-gpio.c
-+++ b/drivers/clk/clk-gpio.c
-@@ -280,7 +280,7 @@ static int gpio_clk_driver_probe(struct platform_device *pdev)
+diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
+index 4faf06e8bf89..a1c507b0b4ac 100644
+--- a/fs/f2fs/namei.c
++++ b/fs/f2fs/namei.c
+@@ -981,7 +981,8 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 	if (!old_dir_entry || whiteout)
+ 		file_lost_pino(old_inode);
  	else
- 		clk = clk_register_gpio_gate(&pdev->dev, node->name,
- 				parent_names ?  parent_names[0] : NULL, gpiod,
--				0);
-+				CLK_SET_RATE_PARENT);
- 	if (IS_ERR(clk))
- 		return PTR_ERR(clk);
+-		F2FS_I(old_inode)->i_pino = new_dir->i_ino;
++		/* adjust dir's i_pino to pass fsck check */
++		f2fs_i_pino_write(old_inode, new_dir->i_ino);
+ 	up_write(&F2FS_I(old_inode)->i_sem);
  
+ 	old_inode->i_ctime = current_time(old_inode);
+@@ -1141,7 +1142,11 @@ static int f2fs_cross_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 	f2fs_set_link(old_dir, old_entry, old_page, new_inode);
+ 
+ 	down_write(&F2FS_I(old_inode)->i_sem);
+-	file_lost_pino(old_inode);
++	if (!old_dir_entry)
++		file_lost_pino(old_inode);
++	else
++		/* adjust dir's i_pino to pass fsck check */
++		f2fs_i_pino_write(old_inode, new_dir->i_ino);
+ 	up_write(&F2FS_I(old_inode)->i_sem);
+ 
+ 	old_dir->i_ctime = current_time(old_dir);
+@@ -1156,7 +1161,11 @@ static int f2fs_cross_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 	f2fs_set_link(new_dir, new_entry, new_page, old_inode);
+ 
+ 	down_write(&F2FS_I(new_inode)->i_sem);
+-	file_lost_pino(new_inode);
++	if (!new_dir_entry)
++		file_lost_pino(new_inode);
++	else
++		/* adjust dir's i_pino to pass fsck check */
++		f2fs_i_pino_write(new_inode, old_dir->i_ino);
+ 	up_write(&F2FS_I(new_inode)->i_sem);
+ 
+ 	new_dir->i_ctime = current_time(new_dir);
 -- 
 2.20.1
 
