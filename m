@@ -2,52 +2,54 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B092BC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5EAC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 871E62253D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1F2922314
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003392;
-	bh=xp112zKb8v80psbV/puqDOGOBn1/rLffnVodRk8j5xw=;
+	s=default; t=1578003396;
+	bh=uUdRSJuEgaeN4PO+iSnIHjeRDg0cdco+F75KCCfYWWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MEl51FLnu9xjt3jEhLRSGM74vK+t8QuQs/TP44Q+0jPFGxYvZbKNwyIhWv2RGhE1D
-	 DVUWBQD95R0FT3HIJX6ey2LRveQuGQYj42YuJxYUNk6UP+bFLMmdYCeOKDjK6VNnVd
-	 zLIxXcK4NhcV3eDIoBqO2OqrmFcuUBZSvrD+ygE4=
+	b=tagVNohjE4rI4pY/p9shfGdntmNIAHj/X/bSPK7B3tpPcyftQicwtVRXjWGf2dC9Y
+	 f3yySlv8QqrOvSugNe3z8h7Y/PBorK9hytnxKwy1zvTNrZCf6K964kU8VF8muf/Fa+
+	 vpzWykFmE2uA8qKOPoiEOqYYx/6SS0W7Dk4kmXFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbgABWQb (ORCPT
+        id S1728266AbgABWQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:16:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58386 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:16:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727171AbgABWQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:16:28 -0500
+        id S1727171AbgABWQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:16:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF02C227BF;
-        Thu,  2 Jan 2020 22:16:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A34CE227BF;
+        Thu,  2 Jan 2020 22:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003387;
-        bh=xp112zKb8v80psbV/puqDOGOBn1/rLffnVodRk8j5xw=;
+        s=default; t=1578003392;
+        bh=uUdRSJuEgaeN4PO+iSnIHjeRDg0cdco+F75KCCfYWWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U9iEUlveVhZWCgqHluZkPMsnl8vcHWwJcBEEZ3B1t+hGjtKmpOtkMkns9xFKdGyPw
-         L/1wGY0uD0q7IeF7HFH2hYYQy4S7WoB1roKetIgjMCUijX2jzC+RKXVY7soDlmox+6
-         6PaOFADtAi5yTKUIoEh6LsoENJads6CXy4H+sNZI=
+        b=PbtkJzfIPMhw1Y2ImVigOe4zf16/hnsR0I8uf3C8h+awpRL4Ah5NETEAaA2aFpvh2
+         JTzmI8x6mflVfGK4H072w9w6+RjOZNCrCxr3AjzONu3UDepGEVZ4Efjw090JNLka9R
+         OHHHLM8kI4G4Ae8oeXJzH+QR3nj+rOIi0kO9+a48=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 139/191] inetpeer: fix data-race in inet_putpeer / inet_putpeer
-Date:   Thu,  2 Jan 2020 23:07:01 +0100
-Message-Id: <20200102215844.479691102@linuxfoundation.org>
+        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 116/191] perf script: Fix brstackinsn for AUXTRACE
+Date:   Thu,  2 Jan 2020 23:06:38 +0100
+Message-Id: <20200102215842.264432860@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -60,93 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit 71685eb4ce80ae9c49eff82ca4dd15acab215de9 upstream.
+[ Upstream commit 0cd032d3b5fcebf5454315400ab310746a81ca53 ]
 
-We need to explicitely forbid read/store tearing in inet_peer_gc()
-and inet_putpeer().
+brstackinsn must be allowed to be set by the user when AUX area data has
+been captured because, in that case, the branch stack might be
+synthesized on the fly. This fixes the following error:
 
-The following syzbot report reminds us about inet_putpeer()
-running without a lock held.
+Before:
 
-BUG: KCSAN: data-race in inet_putpeer / inet_putpeer
+  $ perf record -e '{intel_pt//,cpu/mem_inst_retired.all_loads,aux-sample-size=8192/pp}:u' grep -rqs jhgjhg /boot
+  [ perf record: Woken up 19 times to write data ]
+  [ perf record: Captured and wrote 2.274 MB perf.data ]
+  $ perf script -F +brstackinsn --xed --itrace=i1usl100 | head
+  Display of branch stack assembler requested, but non all-branch filter set
+  Hint: run 'perf record -b ...'
 
-write to 0xffff888121fb2ed0 of 4 bytes by interrupt on cpu 0:
- inet_putpeer+0x37/0xa0 net/ipv4/inetpeer.c:240
- ip4_frag_free+0x3d/0x50 net/ipv4/ip_fragment.c:102
- inet_frag_destroy_rcu+0x58/0x80 net/ipv4/inet_fragment.c:228
- __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
- rcu_do_batch+0x256/0x5b0 kernel/rcu/tree.c:2157
- rcu_core+0x369/0x4d0 kernel/rcu/tree.c:2377
- rcu_core_si+0x12/0x20 kernel/rcu/tree.c:2386
- __do_softirq+0x115/0x33f kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0xbb/0xe0 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:536 [inline]
- smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
- native_safe_halt+0xe/0x10 arch/x86/kernel/paravirt.c:71
- arch_cpu_idle+0x1f/0x30 arch/x86/kernel/process.c:571
- default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
- cpuidle_idle_call kernel/sched/idle.c:154 [inline]
- do_idle+0x1af/0x280 kernel/sched/idle.c:263
+After:
 
-write to 0xffff888121fb2ed0 of 4 bytes by interrupt on cpu 1:
- inet_putpeer+0x37/0xa0 net/ipv4/inetpeer.c:240
- ip4_frag_free+0x3d/0x50 net/ipv4/ip_fragment.c:102
- inet_frag_destroy_rcu+0x58/0x80 net/ipv4/inet_fragment.c:228
- __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
- rcu_do_batch+0x256/0x5b0 kernel/rcu/tree.c:2157
- rcu_core+0x369/0x4d0 kernel/rcu/tree.c:2377
- rcu_core_si+0x12/0x20 kernel/rcu/tree.c:2386
- __do_softirq+0x115/0x33f kernel/softirq.c:292
- run_ksoftirqd+0x46/0x60 kernel/softirq.c:603
- smpboot_thread_fn+0x37d/0x4a0 kernel/smpboot.c:165
- kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+  $ perf record -e '{intel_pt//,cpu/mem_inst_retired.all_loads,aux-sample-size=8192/pp}:u' grep -rqs jhgjhg /boot
+  [ perf record: Woken up 19 times to write data ]
+  [ perf record: Captured and wrote 2.274 MB perf.data ]
+  $ perf script -F +brstackinsn --xed --itrace=i1usl100 | head
+            grep 13759 [002]  8091.310257:       1862                                        instructions:uH:      5641d58069eb bmexec+0x86b (/bin/grep)
+        bmexec+2485:
+        00005641d5806b35                        jnz 0x5641d5806bd0              # MISPRED
+        00005641d5806bd0                        movzxb  (%r13,%rdx,1), %eax
+        00005641d5806bd6                        add %rdi, %rax
+        00005641d5806bd9                        movzxb  -0x1(%rax), %edx
+        00005641d5806bdd                        cmp %rax, %r14
+        00005641d5806be0                        jnb 0x5641d58069c0              # MISPRED
+        mismatch of LBR data and executable
+        00005641d58069c0                        movzxb  (%r13,%rdx,1), %edi
 
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 16 Comm: ksoftirqd/1 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-
-Fixes: 4b9d9be839fd ("inetpeer: remove unused list")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 48d02a1d5c13 ("perf script: Add 'brstackinsn' for branch stacks")
+Reported-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Link: http://lore.kernel.org/lkml/20191127095322.15417-1-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/inetpeer.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ tools/perf/builtin-script.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/inetpeer.c
-+++ b/net/ipv4/inetpeer.c
-@@ -160,7 +160,12 @@ static void inet_peer_gc(struct inet_pee
- 					base->total / inet_peer_threshold * HZ;
- 	for (i = 0; i < gc_cnt; i++) {
- 		p = gc_stack[i];
--		delta = (__u32)jiffies - p->dtime;
-+
-+		/* The READ_ONCE() pairs with the WRITE_ONCE()
-+		 * in inet_putpeer()
-+		 */
-+		delta = (__u32)jiffies - READ_ONCE(p->dtime);
-+
- 		if (delta < ttl || !refcount_dec_if_one(&p->refcnt))
- 			gc_stack[i] = NULL;
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 6dba8b728d23..3983d6ccd14d 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -448,7 +448,7 @@ static int perf_evsel__check_attr(struct evsel *evsel,
+ 		       "selected. Hence, no address to lookup the source line number.\n");
+ 		return -EINVAL;
  	}
-@@ -237,7 +242,10 @@ EXPORT_SYMBOL_GPL(inet_getpeer);
- 
- void inet_putpeer(struct inet_peer *p)
- {
--	p->dtime = (__u32)jiffies;
-+	/* The WRITE_ONCE() pairs with itself (we run lockless)
-+	 * and the READ_ONCE() in inet_peer_gc()
-+	 */
-+	WRITE_ONCE(p->dtime, (__u32)jiffies);
- 
- 	if (refcount_dec_and_test(&p->refcnt))
- 		call_rcu(&p->rcu, inetpeer_free_rcu);
+-	if (PRINT_FIELD(BRSTACKINSN) &&
++	if (PRINT_FIELD(BRSTACKINSN) && !allow_user_set &&
+ 	    !(perf_evlist__combined_branch_type(session->evlist) &
+ 	      PERF_SAMPLE_BRANCH_ANY)) {
+ 		pr_err("Display of branch stack assembler requested, but non all-branch filter set\n"
+-- 
+2.20.1
+
 
 
