@@ -2,167 +2,137 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B87AC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3FFC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB2D217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:30:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DI7nFGHO"
+	by mail.kernel.org (Postfix) with ESMTP id B2F6A21655
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:30:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577964642;
+	bh=/3LP6kQ4cTJYiGwewWnUFXG3M77l9nXB/nSInDBy1G4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=jlWRMAlr1OVE4cDlocO2DayevuhpxLVLRKwDa6GEpIXlsUNE/K1vTLCixdYGkZ/hS
+	 SXkrVD1dc7OvKuVUUedJJ0cHQagYTkGZ0EYdSwPSNmVI6mJQO3r9NXZdpKuDUnxpIm
+	 g+gKgugLjmJ+8kQuPpNTEIiCImJVx3OfaCaVmssY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbgABLaF (ORCPT
+        id S1728256AbgABLam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 06:30:05 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37954 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728135AbgABLaE (ORCPT
+        Thu, 2 Jan 2020 06:30:42 -0500
+Received: from mail-lf1-f50.google.com ([209.85.167.50]:46290 "EHLO
+        mail-lf1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728135AbgABLal (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 06:30:04 -0500
-Received: by mail-ot1-f68.google.com with SMTP id d7so52245302otf.5;
-        Thu, 02 Jan 2020 03:30:04 -0800 (PST)
+        Thu, 2 Jan 2020 06:30:41 -0500
+Received: by mail-lf1-f50.google.com with SMTP id f15so29671403lfl.13;
+        Thu, 02 Jan 2020 03:30:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zsUL2C0WaaJc/RKLuim/CUrfNo1Iw2tHL4HfNNGKlGQ=;
-        b=DI7nFGHOQf6wsy/Ujxwg6jXNd66N92P1l1ay1EWZ94nVNSjECeIyLwYQNIXYdkY89M
-         plyTW9zXm+f2WPmwzN6KUAA12p+gE/HlMPEprAEBHpJOsGCGWq6ntnjEZnyK4C/6bfaG
-         fl/sjOVHJ+xEp0o4CT0+Frs67gBY9HcZp26dhjexvxnnCTfGtaDkpXj4wOmSvo64Q7J6
-         9m053YlV9MpzdJDaC107jepOpSYCa28GcJuG+tbiMpfdC2By/a75ieQKKL9/BLTHiVn7
-         emjN7zuXQuOnNEgY4p5LTbIUWb1PpHjgV7DuxtOee7o9EgPWe6DSregQUHPIb+X9N5RB
-         VC+w==
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=d3dulXjQFXVkZX4ZQNVnL00Ue1i2kbFWKIQHBA/xvtE=;
+        b=Ufs1HBNV8DbSoFNg9hHko7POoRf9xSir2oprEOboSNzyqghhVX9IwG5eMU+j66N1Od
+         JMeTy5zH8D7kozKgZ7xHJgzqymMCvwDCtej1ZP6egJxsGvS46KHVCUH9khqP3f7HIDUQ
+         0cAL6Pb2pBP6himB+ATXRXkFmYwbUeiM1JvMtroe5tDJGI8gCsbszfGvE2ign4GZLe3K
+         LZqlBLj6iaTjPguSlMA5WAEfi/V7ywj/jSgKz4v+PKdqBrozdJPYjMFMl7E85BzdGOZK
+         ZJRTcf3QRA2sZJAnSRH98C6J10qo0Su0lMUUsHMiTccC/IcSqRThjfbZUgtCSOGzZCxy
+         gbfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zsUL2C0WaaJc/RKLuim/CUrfNo1Iw2tHL4HfNNGKlGQ=;
-        b=fIfExfR3Yyq7Iofp5VVRXBGafuJrvieoCSGHqs+Yvh29jKxuN2nLuPEZu1KnyuDrfm
-         mQ2SyqU5QPbdxNoSJ+HCoPoL8q5v71Hhtc3s7Rek2QYb9JSMopfrnZVXp/Ar1kpsUztS
-         OpAH+HGa/3HohLIa9kpPANIdi3DjzWAalQ2e3X8L7l4OZQ/DGkoYVwczjvLv/J0ULi4n
-         tLY311fR30wFVpLgE2F3hep5HYwLppC2BgV3drFw3XANHlF7c1ViVQlOVVuUcGeVQE+R
-         ZleDYYmkX4kwsMor8333uIvnINGd4Iz5LNIz0mD3ZjlySSwRpDJ/se2SFLKdEQY/wkMP
-         6kUg==
-X-Gm-Message-State: APjAAAUx/nkPJ69v6iyLssJM3wgYr2Kag/X9cAjacsv9D5sZXRCw6Vy8
-        5zzkDDLyvEmwXUcbSSoAsm7Nhd9NT1nWrulF9FU=
-X-Google-Smtp-Source: APXvYqx8NQX+ydY+eeNDp28dUg9R1svX91x1kJ14OwQoZoSrATITd1jR8fbXt5whBGr7Ll3uhqkiyuU/GUqUX5oZEKM=
-X-Received: by 2002:a05:6830:1141:: with SMTP id x1mr17726618otq.120.1577964603627;
- Thu, 02 Jan 2020 03:30:03 -0800 (PST)
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=d3dulXjQFXVkZX4ZQNVnL00Ue1i2kbFWKIQHBA/xvtE=;
+        b=NEO6srMLlM/Cw8ex9D90vsZlooVfZp81XJpUf2dLAKH2a+OshLUX2EgWthZSHOcUyQ
+         0nol/lOmnaMESzCtMb2UjNjxvJnlw3ASeOvuym/CBz2l3X5cwWQ9KxRZgJJzpE1hwNgv
+         j+2RDDhVQlzH4qmZ06Mk1UGeu2dcg3H0D/o3g3YfHM0OpRYW0JtxyZBWOZGyWB975mro
+         Z3ur4OeXN4seg8xr4jYyEvrjgEBs/6laYK1yE5gKpqf+a99flrJ/6MHrQ2tRk+Ux5oS7
+         Le9h82JGUA4vKxG5EBMLoakwj5egeyJ28qhHcgXxsjZKSQDLF3OzetEA/r2VyiTDRNxO
+         NHAA==
+X-Gm-Message-State: APjAAAV2E4r5STVbWWYzGBicIm+Itt2r3J8mFhGthkhg3UaHuh5kVbMI
+        NsMuVZdW5WL0/5UROujbDJM=
+X-Google-Smtp-Source: APXvYqydhz/yS3LGeOOAz21CKMjo5DUc3Su4P1UZuXNmhprFWKWkuDmBSprupL8KRIAruZLi6LRbTQ==
+X-Received: by 2002:ac2:5605:: with SMTP id v5mr48019847lfd.136.1577964639485;
+        Thu, 02 Jan 2020 03:30:39 -0800 (PST)
+Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
+        by smtp.gmail.com with ESMTPSA id i9sm22970376lfd.6.2020.01.02.03.30.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 03:30:38 -0800 (PST)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCHv1 2/2] usb: gadget: add udc driver for max3420
+In-Reply-To: <CABb+yY00xOZw2uw6oK3N6RBcOurJjhiPXHs0ShCSVauwZn6TNw@mail.gmail.com>
+References: <20191210003135.32427-1-jassisinghbrar@gmail.com> <87eexclkj0.fsf@gmail.com> <CABb+yY00xOZw2uw6oK3N6RBcOurJjhiPXHs0ShCSVauwZn6TNw@mail.gmail.com>
+Date:   Thu, 02 Jan 2020 13:31:22 +0200
+Message-ID: <874kxeksc5.fsf@kernel.org>
 MIME-Version: 1.0
-Received: by 2002:a8a:87:0:0:0:0:0 with HTTP; Thu, 2 Jan 2020 03:30:03 -0800 (PST)
-In-Reply-To: <20200102091902.tk374bxohvj33prz@pali>
-References: <20200102082036.29643-1-namjae.jeon@samsung.com>
- <CGME20200102082406epcas1p268f260d90213bdaabee25a7518f86625@epcas1p2.samsung.com>
- <20200102082036.29643-10-namjae.jeon@samsung.com> <20200102091902.tk374bxohvj33prz@pali>
-From:   Namjae Jeon <linkinjeon@gmail.com>
-Date:   Thu, 2 Jan 2020 20:30:03 +0900
-Message-ID: <CAKYAXd_9XOWtcLYk-+gg636rFCYjLgHzrP5orR3XjXGMpTKWLA@mail.gmail.com>
-Subject: Re: [PATCH v9 09/13] exfat: add misc operations
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020-01-02 18:19 GMT+09:00, Pali Roh=C3=A1r <pali.rohar@gmail.com>:
-> On Thursday 02 January 2020 16:20:32 Namjae Jeon wrote:
->> This adds the implementation of misc operations for exfat.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+
+Hi,
+
+Jassi Brar <jassisinghbrar@gmail.com> writes:
+>> > +static void __max3420_start(struct max3420_udc *udc)
+>> > +{
+>> > +     u8 val;
+>> > +
+>> > +     /* Need this delay if bus-powered */
+>> > +     msleep_interruptible(250);
 >>
->> Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
->> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
->> ---
->>  fs/exfat/misc.c | 253 ++++++++++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 253 insertions(+)
->>  create mode 100644 fs/exfat/misc.c
+>> should you check if you're bus powered?
 >>
->> diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
->> new file mode 100644
->> index 000000000000..7f533bcb3b3f
->> --- /dev/null
->> +++ b/fs/exfat/misc.c
->
-> ...
->
->> +/* <linux/time.h> externs sys_tz
->> + * extern struct timezone sys_tz;
->> + */
->> +#define UNIX_SECS_1980    315532800L
->> +
->> +#if BITS_PER_LONG =3D=3D 64
->> +#define UNIX_SECS_2108    4354819200L
->> +#endif
->
-> ...
->
->> +#define TIMEZONE_CUR_OFFSET()	((sys_tz.tz_minuteswest / (-15)) & 0x7F)
->> +/* Convert linear UNIX date to a FAT time/date pair. */
->> +void exfat_time_unix2fat(struct exfat_sb_info *sbi, struct timespec64
->> *ts,
->> +		struct exfat_date_time *tp)
->> +{
->> +	time_t second =3D ts->tv_sec;
->> +	time_t day, month, year;
->> +	time_t ld; /* leap day */
->
-> Question for other maintainers: Has kernel code already time_t defined
-> as 64bit? Or it is still just 32bit and 32bit systems and some time64_t
-> needs to be used? I remember that there was discussion about these
-> problems, but do not know if it was changed/fixed or not... Just a
-> pointer for possible Y2038 problem. As "ts" is of type timespec64, but
-> "second" of type time_t.
-My bad, I will change it with time64_t.
->
->> +
->> +	/* Treats as local time with proper time */
->> +	second -=3D sys_tz.tz_minuteswest * SECS_PER_MIN;
->> +	tp->timezone.valid =3D 1;
->> +	tp->timezone.off =3D TIMEZONE_CUR_OFFSET();
->> +
->> +	/* Jan 1 GMT 00:00:00 1980. But what about another time zone? */
->> +	if (second < UNIX_SECS_1980) {
->> +		tp->second  =3D 0;
->> +		tp->minute  =3D 0;
->> +		tp->hour =3D 0;
->> +		tp->day  =3D 1;
->> +		tp->month  =3D 1;
->> +		tp->year =3D 0;
->> +		return;
->> +	}
->> +
->> +	if (second >=3D UNIX_SECS_2108) {
->
-> Hello, this code cause compile errors on 32bit systems as UNIX_SECS_2108
-> macro is not defined when BITS_PER_LONG =3D=3D 32.
->
-> Value 4354819200 really cannot fit into 32bit signed integer, so you
-> should use 64bit signed integer. I would suggest to define this macro
-> value via LL not just L suffix (and it would work on both 32 and 64bit)
-Okay.
->
->   #define UNIX_SECS_2108    4354819200LL
->
->> +		tp->second  =3D 59;
->> +		tp->minute  =3D 59;
->> +		tp->hour =3D 23;
->> +		tp->day  =3D 31;
->> +		tp->month  =3D 12;
->> +		tp->year =3D 127;
->> +		return;
->> +	}
-Okay, I will check it.
-Thanks for your review!
->
-> --
-> Pali Roh=C3=A1r
-> pali.rohar@gmail.com
->
+> for some reason, even for self-powered, it helped reliability.
+
+Perhaps update the comment, in that case? It would be better if we had
+a proper explanation for this sleep here.
+
+>> > +static int max3420_thread(void *dev_id)
+>>
+>> Why do you need this thread? Sure you can't live without it?
+>>
+> All the slow spi-bus transfers are handled at one place here without
+> blocking any api call. IMO it is cleaner and easier to manage.
+
+Fair enough, I won't complain. But it looks odd :-p
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl4N1IoACgkQzL64meEa
+mQYumA//SLi6nGyho7AKjNXUijFlpjaeLmciwptf1cywEjRc8vdVq699u6H+Z+yr
+bQq3iGahlsfYszmsGWsGUYauJyY3+gxBVJb7xmPMpzrzmM3bchdNGLyIJBDfoKoX
+OJSMSbll3C5cKEM+hImwnp4ikEoKp4yGdHaPKxH0RKfHMLfIWaOf5Q1NeTOnF1K7
+6Rw+8S97fVMwy8zL/roatNlC3Y6dSYjD4ahU3WVXL5CrC9IYhpIYomZ7+MzQ0iWN
+tDsT+QsLpBEIJaMMT9WCfnymCAKbvTvRq2S07SSbZMXx6g8TQtkGhA8E8zglt7hZ
+0tsCHi2kLBmKTKzOZ+/VEFFQaAuMFC6G3nMl70Pf5LIiYTQTUu3BBO1E1YwIGNOr
+ukWKCmBC48/wig/C/juMKotiP8gg8V1OX9rnHQjsHXq4jfj2DCu9bOBD3a5/bokn
+uwtC+ULssM4B7JqASQXygzsM1eN9daLGIqKdI10lnruPW2YuSXqEoYFQx0tDiZdD
+bqEmo+9UMBNVzH7ehawJ90FixIgrnxsFbd6vwuNGqUF09UDKzKRkEIljah2gkyK4
+Xfpo53Q4Y1QEAayrtycA05Wpilwf3sTAVg6cu0LvMsbbDcCw7kPMhjEC9HJA2Z2T
+HY3SbjksbpEqiqH3k4bVnall6ltCYdBOlFqXx70Aao0CCZhDP1E=
+=sA7L
+-----END PGP SIGNATURE-----
+--=-=-=--
