@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99128C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA040C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B1AE21D7D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F085227BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003220;
-	bh=PnzNLiDnWas2XHdCagKVmGcoV2eKhA9wVBfBVy19N4U=;
+	s=default; t=1578003222;
+	bh=FfGRDsOa077Vrq/0aEEXxJBym2aW9dkpdNIfmIGUXtg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MuWKYBI7P1hth98TYh51JU/dc92GYWGITXWCkiVfcDfny4UMhgQHtv2kt+uY3yO4B
-	 rFAx0SgcYRxMFeeV4WAgXD1zwc3UQ9IxH6PrJFdYSOGi13874u01HkS1YW7TR6MSXl
-	 qiSSYg2CO94LcDxvO+NpPec4qk4NlvCbpojjQh3k=
+	b=SjhUiYd2rcjOWDPoTqDuWH/kxLt+2Jv44+feXgdki9kjJlb3qW08zaDnZlFevlEuJ
+	 2XoSQuw3ehVFRgfkc9RJtYy+8b8U9se3KrCff4lFIlHQ85WJvFnJaQHpUYupLEyzI2
+	 /yu+alQgEBcu6t7HjPrSBPwyg81wXhtKmoVbWaSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbgABWNj (ORCPT
+        id S1727749AbgABWNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:13:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53414 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:13:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727711AbgABWNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:13:34 -0500
+        id S1727428AbgABWNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:13:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C28BB227BF;
-        Thu,  2 Jan 2020 22:13:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CC7521D7D;
+        Thu,  2 Jan 2020 22:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003213;
-        bh=PnzNLiDnWas2XHdCagKVmGcoV2eKhA9wVBfBVy19N4U=;
+        s=default; t=1578003218;
+        bh=FfGRDsOa077Vrq/0aEEXxJBym2aW9dkpdNIfmIGUXtg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wCRgWwG7fX/RrRvRYvnP8bn/r/86K1T1/5Ny4egoPhQK/osfAIEzF9/ct6KR+f89f
-         f9z3fWHhrrwiD+jE34ba2ETHwed8xDGLr7tcxmQEsA59XJtiYt4z3K/tunnVKpE1WA
-         LSiLNWofdJG7mSBWtNvjm5x+3aa1qeYHqw9352OY=
+        b=dChddzFOzPe5sJFL6YqiTK0BdIm6xLOS7h95vcAoUGSvbLV/M5rmTMYmwdSvsdVoY
+         12Nw6itxlacOoh9PUh2OfOoDThamdawXp1rIt3iBd3d55bvGz4PPyi//xpGqyGKSyF
+         xRv0qfjYvqeOX1NOpapnmsAkIoseeBOMg2OGi6vU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        stable@vger.kernel.org,
+        "Gustavo L. F. Walbon" <gwalbon@linux.ibm.com>,
+        "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 067/191] PCI: rpaphp: Annotate and correctly byte swap DRC properties
-Date:   Thu,  2 Jan 2020 23:05:49 +0100
-Message-Id: <20200102215837.141166366@linuxfoundation.org>
+Subject: [PATCH 5.4 069/191] powerpc/security: Fix wrong message when RFI Flush is disable
+Date:   Thu,  2 Jan 2020 23:05:51 +0100
+Message-Id: <20200102215837.338429804@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,114 +62,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyrel Datwyler <tyreld@linux.ibm.com>
+From: Gustavo L. F. Walbon <gwalbon@linux.ibm.com>
 
-[ Upstream commit 0737686778c6dbe0908d684dd5b9c05b127526ba ]
+[ Upstream commit 4e706af3cd8e1d0503c25332b30cad33c97ed442 ]
 
-The device tree is in big endian format and any properties directly
-retrieved using OF helpers that don't explicitly byte swap should
-be annotated. In particular there are several places where we grab
-the opaque property value for the old ibm,drc-* properties and the
-ibm,my-drc-index property.
+The issue was showing "Mitigation" message via sysfs whatever the
+state of "RFI Flush", but it should show "Vulnerable" when it is
+disabled.
 
-Fix this for better static checking by annotating values we know to
-explicitly big endian, and byte swap where appropriate.
+If you have "L1D private" feature enabled and not "RFI Flush" you are
+vulnerable to meltdown attacks.
 
-Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+"RFI Flush" is the key feature to mitigate the meltdown whatever the
+"L1D private" state.
+
+SEC_FTR_L1D_THREAD_PRIV is a feature for Power9 only.
+
+So the message should be as the truth table shows:
+
+  CPU | L1D private | RFI Flush |                sysfs
+  ----|-------------|-----------|-------------------------------------
+   P9 |    False    |   False   | Vulnerable
+   P9 |    False    |   True    | Mitigation: RFI Flush
+   P9 |    True     |   False   | Vulnerable: L1D private per thread
+   P9 |    True     |   True    | Mitigation: RFI Flush, L1D private per thread
+   P8 |    False    |   False   | Vulnerable
+   P8 |    False    |   True    | Mitigation: RFI Flush
+
+Output before this fix:
+  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+  Mitigation: RFI Flush, L1D private per thread
+  # echo 0 > /sys/kernel/debug/powerpc/rfi_flush
+  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+  Mitigation: L1D private per thread
+
+Output after fix:
+  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+  Mitigation: RFI Flush, L1D private per thread
+  # echo 0 > /sys/kernel/debug/powerpc/rfi_flush
+  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+  Vulnerable: L1D private per thread
+
+Signed-off-by: Gustavo L. F. Walbon <gwalbon@linux.ibm.com>
+Signed-off-by: Mauro S. M. Rodrigues <maurosr@linux.vnet.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1573449697-5448-9-git-send-email-tyreld@linux.ibm.com
+Link: https://lore.kernel.org/r/20190502210907.42375-1-gwalbon@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/hotplug/rpaphp_core.c | 29 +++++++++++++++--------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+ arch/powerpc/kernel/security.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-index e18e9a0e959c..abb10b3c0b70 100644
---- a/drivers/pci/hotplug/rpaphp_core.c
-+++ b/drivers/pci/hotplug/rpaphp_core.c
-@@ -154,11 +154,11 @@ static enum pci_bus_speed get_max_bus_speed(struct slot *slot)
- 	return speed;
- }
+diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
+index 298a2e3ad6f4..d341b464f23c 100644
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -142,26 +142,22 @@ ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, cha
  
--static int get_children_props(struct device_node *dn, const int **drc_indexes,
--		const int **drc_names, const int **drc_types,
--		const int **drc_power_domains)
-+static int get_children_props(struct device_node *dn, const __be32 **drc_indexes,
-+			      const __be32 **drc_names, const __be32 **drc_types,
-+			      const __be32 **drc_power_domains)
- {
--	const int *indexes, *names, *types, *domains;
-+	const __be32 *indexes, *names, *types, *domains;
+ 	thread_priv = security_ftr_enabled(SEC_FTR_L1D_THREAD_PRIV);
  
- 	indexes = of_get_property(dn, "ibm,drc-indexes", NULL);
- 	names = of_get_property(dn, "ibm,drc-names", NULL);
-@@ -194,8 +194,8 @@ static int rpaphp_check_drc_props_v1(struct device_node *dn, char *drc_name,
- 				char *drc_type, unsigned int my_index)
- {
- 	char *name_tmp, *type_tmp;
--	const int *indexes, *names;
--	const int *types, *domains;
-+	const __be32 *indexes, *names;
-+	const __be32 *types, *domains;
- 	int i, rc;
+-	if (rfi_flush || thread_priv) {
++	if (rfi_flush) {
+ 		struct seq_buf s;
+ 		seq_buf_init(&s, buf, PAGE_SIZE - 1);
  
- 	rc = get_children_props(dn->parent, &indexes, &names, &types, &domains);
-@@ -208,7 +208,7 @@ static int rpaphp_check_drc_props_v1(struct device_node *dn, char *drc_name,
+-		seq_buf_printf(&s, "Mitigation: ");
+-
+-		if (rfi_flush)
+-			seq_buf_printf(&s, "RFI Flush");
+-
+-		if (rfi_flush && thread_priv)
+-			seq_buf_printf(&s, ", ");
+-
++		seq_buf_printf(&s, "Mitigation: RFI Flush");
+ 		if (thread_priv)
+-			seq_buf_printf(&s, "L1D private per thread");
++			seq_buf_printf(&s, ", L1D private per thread");
  
- 	/* Iterate through parent properties, looking for my-drc-index */
- 	for (i = 0; i < be32_to_cpu(indexes[0]); i++) {
--		if ((unsigned int) indexes[i + 1] == my_index)
-+		if (be32_to_cpu(indexes[i + 1]) == my_index)
- 			break;
+ 		seq_buf_printf(&s, "\n");
  
- 		name_tmp += (strlen(name_tmp) + 1);
-@@ -267,7 +267,7 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
- int rpaphp_check_drc_props(struct device_node *dn, char *drc_name,
- 			char *drc_type)
- {
--	const unsigned int *my_index;
-+	const __be32 *my_index;
+ 		return s.len;
+ 	}
  
- 	my_index = of_get_property(dn, "ibm,my-drc-index", NULL);
- 	if (!my_index) {
-@@ -277,10 +277,10 @@ int rpaphp_check_drc_props(struct device_node *dn, char *drc_name,
- 
- 	if (of_find_property(dn->parent, "ibm,drc-info", NULL))
- 		return rpaphp_check_drc_props_v2(dn, drc_name, drc_type,
--						*my_index);
-+						be32_to_cpu(*my_index));
- 	else
- 		return rpaphp_check_drc_props_v1(dn, drc_name, drc_type,
--						*my_index);
-+						be32_to_cpu(*my_index));
- }
- EXPORT_SYMBOL_GPL(rpaphp_check_drc_props);
- 
-@@ -311,10 +311,11 @@ static int is_php_type(char *drc_type)
-  * for built-in pci slots (even when the built-in slots are
-  * dlparable.)
-  */
--static int is_php_dn(struct device_node *dn, const int **indexes,
--		const int **names, const int **types, const int **power_domains)
-+static int is_php_dn(struct device_node *dn, const __be32 **indexes,
-+		     const __be32 **names, const __be32 **types,
-+		     const __be32 **power_domains)
- {
--	const int *drc_types;
-+	const __be32 *drc_types;
- 	int rc;
- 
- 	rc = get_children_props(dn, indexes, names, &drc_types, power_domains);
-@@ -349,7 +350,7 @@ int rpaphp_add_slot(struct device_node *dn)
- 	struct slot *slot;
- 	int retval = 0;
- 	int i;
--	const int *indexes, *names, *types, *power_domains;
-+	const __be32 *indexes, *names, *types, *power_domains;
- 	char *name, *type;
- 
- 	if (!dn->name || strcmp(dn->name, "pci"))
++	if (thread_priv)
++		return sprintf(buf, "Vulnerable: L1D private per thread\n");
++
+ 	if (!security_ftr_enabled(SEC_FTR_L1D_FLUSH_HV) &&
+ 	    !security_ftr_enabled(SEC_FTR_L1D_FLUSH_PR))
+ 		return sprintf(buf, "Not affected\n");
 -- 
 2.20.1
 
