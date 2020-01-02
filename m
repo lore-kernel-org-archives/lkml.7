@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D226C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD4EC3276E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB6D20863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E883C21835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:34:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004453;
-	bh=rWJp6GDobf35G+1n6raP2ZZNu5JthYLuD+SILOkRHN4=;
+	s=default; t=1578004455;
+	bh=WuOTrhe1MT5gXBM21AyMAoDkO+ydPyhQwQulNz828aA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S6ANx4Ml85YLOu6h5hoS4hdBD4VQlacdLAuLjWoOIAWe7vaFI1wTLfs1GoSKW5VXH
-	 /XvoIc51E7F9Ux163W/jGcnThlqWz8DukVtTTQB9qBa56D4FEF9U2A6ZlOxNK98N3S
-	 CVoj2+yAof7QlagiJd2cTe434+qMM0MIKI8dG21g=
+	b=pQhzYn1x8YV+e1jRtKFElGHZrdISaQm4r1TEge1VGUPcB4kWPNNqprpZJWZrThZVr
+	 9RdT7hb3YmZvJ8hmdt6w59dQUhAX/CEPNc9DA9Yr7aRDMgawyHf2d5r+1k1yLx7987
+	 1rKIDOFNe8ovR2tpZmZgOl5DAepc+6zalNS8qEFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730540AbgABWdN (ORCPT
+        id S1730687AbgABWeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:33:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40332 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:34:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730508AbgABWdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:33:11 -0500
+        id S1730676AbgABWeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:34:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEC2720866;
-        Thu,  2 Jan 2020 22:33:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6716522525;
+        Thu,  2 Jan 2020 22:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004390;
-        bh=rWJp6GDobf35G+1n6raP2ZZNu5JthYLuD+SILOkRHN4=;
+        s=default; t=1578004447;
+        bh=WuOTrhe1MT5gXBM21AyMAoDkO+ydPyhQwQulNz828aA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yfScDTkiEGL9qDZExV6xSsYTOmI2OakDTYj46PNFspWo+kKn+0Mc2AFa8Z9XfIOZS
-         Dn6j9XDheI0/V3SNP11DZ/qWb/fRe1sh9sep90zU/Aijm/S9Js6SdIXdWmXO8I0TC5
-         PfiQREXK+/lh+grSQWr4eTo9ZV3DyjdG2gjJFsLA=
+        b=oYO6DMnsrRZ17sYXYVydWbycEyPxQgQexROdr2PpMxW8RlaiOKbzoLP6AsI67Z7K/
+         unnMdYl4fRatVD8A4fBngamGjrOFnUfaoZ/hSEFE/7HxZ3K396uAQ4nqrhKqc0Zbho
+         W9HfbHJ5zX+Sa2SMF4v5f7iea6sDg5wzE5hQTJu8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Bean Huo <beanhuo@micron.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 133/171] scsi: ufs: fix potential bug which ends in system hang
-Date:   Thu,  2 Jan 2020 23:07:44 +0100
-Message-Id: <20200102220605.500917569@linuxfoundation.org>
+Subject: [PATCH 4.4 011/137] media: am437x-vpfe: Setting STD to current value is not an error
+Date:   Thu,  2 Jan 2020 23:06:24 +0100
+Message-Id: <20200102220548.272324246@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
-References: <20200102220546.960200039@linuxfoundation.org>
+In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
+References: <20200102220546.618583146@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,80 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit cfcbae3895b86c390ede57b2a8f601dd5972b47b ]
+[ Upstream commit 13aa21cfe92ce9ebb51824029d89f19c33f81419 ]
 
-In function __ufshcd_query_descriptor(), in the event of an error
-happening, we directly goto out_unlock and forget to invaliate
-hba->dev_cmd.query.descriptor pointer. This results in this pointer still
-valid in ufshcd_copy_query_response() for other query requests which go
-through ufshcd_exec_raw_upiu_cmd(). This will cause __memcpy() crash and
-system hangs. Log as shown below:
+VIDIOC_S_STD should not return an error if the value is identical
+to the current one.
+This error was highlighted by the v4l2-compliance test.
 
-Unable to handle kernel paging request at virtual address
-ffff000012233c40
-Mem abort info:
-   ESR = 0x96000047
-   Exception class = DABT (current EL), IL = 32 bits
-   SET = 0, FnV = 0
-   EA = 0, S1PTW = 0
-Data abort info:
-   ISV = 0, ISS = 0x00000047
-   CM = 0, WnR = 1
-swapper pgtable: 4k pages, 48-bit VAs, pgdp = 0000000028cc735c
-[ffff000012233c40] pgd=00000000bffff003, pud=00000000bfffe003,
-pmd=00000000ba8b8003, pte=0000000000000000
- Internal error: Oops: 96000047 [#2] PREEMPT SMP
- ...
- Call trace:
-  __memcpy+0x74/0x180
-  ufshcd_issue_devman_upiu_cmd+0x250/0x3c0
-  ufshcd_exec_raw_upiu_cmd+0xfc/0x1a8
-  ufs_bsg_request+0x178/0x3b0
-  bsg_queue_rq+0xc0/0x118
-  blk_mq_dispatch_rq_list+0xb0/0x538
-  blk_mq_sched_dispatch_requests+0x18c/0x1d8
-  __blk_mq_run_hw_queue+0xb4/0x118
-  blk_mq_run_work_fn+0x28/0x38
-  process_one_work+0x1ec/0x470
-  worker_thread+0x48/0x458
-  kthread+0x130/0x138
-  ret_from_fork+0x10/0x1c
- Code: 540000ab a8c12027 a88120c7 a8c12027 (a88120c7)
- ---[ end trace 793e1eb5dff69f2d ]---
- note: kworker/0:2H[2054] exited with preempt_count 1
-
-This patch is to move "descriptor = NULL" down to below the label
-"out_unlock".
-
-Fixes: d44a5f98bb49b2(ufs: query descriptor API)
-Link: https://lore.kernel.org/r/20191112223436.27449-3-huobean@gmail.com
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Acked-by: Lad Prabhakar <prabhakar.csengg@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/am437x/am437x-vpfe.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 26f259fb6e3c..094e879af121 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -2006,10 +2006,10 @@ static int __ufshcd_query_descriptor(struct ufs_hba *hba,
- 		goto out_unlock;
- 	}
+diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+index 572bc043b62d..36add3c463f7 100644
+--- a/drivers/media/platform/am437x/am437x-vpfe.c
++++ b/drivers/media/platform/am437x/am437x-vpfe.c
+@@ -1847,6 +1847,10 @@ static int vpfe_s_std(struct file *file, void *priv, v4l2_std_id std_id)
+ 	if (!(sdinfo->inputs[0].capabilities & V4L2_IN_CAP_STD))
+ 		return -ENODATA;
  
--	hba->dev_cmd.query.descriptor = NULL;
- 	*buf_len = be16_to_cpu(response->upiu_res.length);
- 
- out_unlock:
-+	hba->dev_cmd.query.descriptor = NULL;
- 	mutex_unlock(&hba->dev_cmd.lock);
- out:
- 	ufshcd_release(hba);
++	/* if trying to set the same std then nothing to do */
++	if (vpfe_standards[vpfe->std_index].std_id == std_id)
++		return 0;
++
+ 	/* If streaming is started, return error */
+ 	if (vb2_is_busy(&vpfe->buffer_queue)) {
+ 		vpfe_err(vpfe, "%s device busy\n", __func__);
 -- 
 2.20.1
 
