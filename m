@@ -2,128 +2,135 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DF2C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 18:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969DCC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 18:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3533A21655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 18:55:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C16B2464B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 18:56:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="fGyQZIUO"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="YSKX/O3b";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="ZapIHTBv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbgABSz6 (ORCPT
+        id S1728272AbgABS4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 13:55:58 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:40192 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727951AbgABSz6 (ORCPT
+        Thu, 2 Jan 2020 13:56:43 -0500
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:6784 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727951AbgABS4m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 13:55:58 -0500
-Received: by mail-qk1-f196.google.com with SMTP id c17so32072369qkg.7
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 10:55:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google;
-        h=from:date:to:cc:subject:message-id:user-agent:mime-version;
-        bh=SVhqJNc9KZvv3EKUfF1sirEUq6RG4WOzhSxBPIcUwS8=;
-        b=fGyQZIUOE1EwKvzSQHfBo9D3ndHkj15jXCmb5aymGBAJQfOtBwHVCRboNJoRoIcuGy
-         KneQgA1RZQFkATPeiB9vPaiszLvna07HrPQkzMpne4sSlSGbKu0kc8WBF6XnL8ZvaQOi
-         G7rByV+7OuPjDQmfQHsZwZTOGeYvxOViiRS58=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=SVhqJNc9KZvv3EKUfF1sirEUq6RG4WOzhSxBPIcUwS8=;
-        b=pHlyfeiCAWEM0ZrOt9UhrFzdC5DUC5VrFhrbdP6W7scuLeNhepOKr8xbu8VQ66WLy+
-         /y6vH3rBCeiyDECnqd0oQRZje9yQYXTGOgk2IS72R6Py3P0rY0LFiQmc5kQEmd7nn+Zs
-         q0UDJ+D/WWxuq44zCNB6srkSfo2APJmeGOIgXwugI2eEl2yDaMCbEoBam5RJafVvPJQ9
-         egDU63wJYX+3pPpcmr2xp+1ew5RLd+huGxlRHxDFIqLzcdnxPINtSminpPUhqsC6EyRY
-         taM3zq2kJuZCxv1HvbxzWn0GiNu9Df5keSpxA/1kOcoSz9hmmqTiJbHO6bVdNLAro9N0
-         VA3A==
-X-Gm-Message-State: APjAAAU/I3Hw+2KC1/iPY98aLU/kEGP4+Iy5QSPAk+jNMhvf1O9gixkh
-        rlHFLu0smnthOZ5RN53/3zykPH0Kix8=
-X-Google-Smtp-Source: APXvYqx6atPtouviklmhlnmFklzEranEIF2Jip5ea8rQYQBjG9DwH0ytDunhIrUtXJh3ZFm3gCr/8w==
-X-Received: by 2002:a05:620a:16c6:: with SMTP id a6mr69034478qkn.140.1577991356527;
-        Thu, 02 Jan 2020 10:55:56 -0800 (PST)
-Received: from macbook-air (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id v5sm17210024qth.70.2020.01.02.10.55.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 10:55:55 -0800 (PST)
-From:   Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date:   Thu, 2 Jan 2020 13:55:47 -0500 (EST)
-X-X-Sender: vince@macbook-air
-To:     linux-kernel@vger.kernel.org
-cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [perf] perf_event_open() sometimes returning 0
-Message-ID: <alpine.DEB.2.21.2001021349390.11372@macbook-air>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 2 Jan 2020 13:56:42 -0500
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 002IqZhs008348;
+        Thu, 2 Jan 2020 10:56:22 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=PN6Ey2Usone41hog2N5ThwwMNZdc9RzobwGcqx5jMHo=;
+ b=YSKX/O3bs5CvfKjyPLQYAeX1cQ+9WiuPkP3VlpTORBID5z7FWR4zHjVdgkFaob83TlSu
+ 6fEtYZ5m+kSx2uiJtAMm5HvgTOJYu8MQ09IP7ipd9/wp+rBSrx79OSqCSo9nUGZel3yE
+ 4pFSsMvzFmc9ZS7lnoacTApHp2q3N/CXk4M= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by m0089730.ppops.net with ESMTP id 2x9ddw20vf-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 02 Jan 2020 10:56:22 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 2 Jan 2020 10:56:20 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=N4J8xKLmdOXR1jpq+lziyFaYVPTjmehskmoc34HZxaRMqMn9bUklhDrmd+8ko1945QnhAxGoaw+rVear+vdXJC4p2dVu1mSTWVRq63nCinO5vf1ATtGeUuulsc76M7GzIF9UPCI03e0DJpcVrNQHMARsepbLByD9k6RbUTOV4TayeQo7IUBU+r4GqlbJiJDFfl/xRkggWwPpvQP5qvG7ScX+/x3ts4hQ8iAc3TUOC2i4AoelhW//trv1WfCqaA+MNQyFMaojsTncrpzzWayZDiHzF3+6hSFVRMPWbEXydc3sCk1BcwfLFGznt7/Zkmfd0Rg1j5JjlT5CqAtfStSj+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PN6Ey2Usone41hog2N5ThwwMNZdc9RzobwGcqx5jMHo=;
+ b=OfF9lD9BQ6+I17eYcWCD64Rb4ypW+FjSVuMYyERt2rI5MBpeBBhgjwDt+pqYx8ciVaV0EgAn3zm/xtQxEONh5zN033ZGOtPuMP5Ddu1yIYVdAx2gJENsX+NKoKblQIimPX2laqxBrPiokMMtziwFXuOF7ApGFLEeeORKLGJa0y/WMCHGNk8/XC0kZB9ZG5atE7hiwsUWXMjeFWd8Ma+c4g4fPzwTvQDjogFB498GXDPPDqM7rR3y1w3IvVv+gj4bdFjfx3IurTWcsSFAi1LbYQffeQqUwx1NR3+bbTDz0pwNbQpzawWzzLyefHXH6wYCyiaom4YQac1753m1N8wPRg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PN6Ey2Usone41hog2N5ThwwMNZdc9RzobwGcqx5jMHo=;
+ b=ZapIHTBvTQ9BFclvxyMmx7n+qAkm62GJfUHN/Pek0uQnm8CJwi5JKBOxo6KCeBWWn/dI3VquGPZA1bpe5NpnzGb+EjfiOSgzS3s92BzTNKVachpOZi/PcYUlSoUZUQ6xGczD272gG+fRd5gq+Qm5ahEp4xr5itrfnxwDQn1kOts=
+Received: from MWHPR15MB1597.namprd15.prod.outlook.com (10.173.234.137) by
+ MWHPR15MB1166.namprd15.prod.outlook.com (10.175.9.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.12; Thu, 2 Jan 2020 18:56:20 +0000
+Received: from MWHPR15MB1597.namprd15.prod.outlook.com
+ ([fe80::cdbf:b63c:437:4dd2]) by MWHPR15MB1597.namprd15.prod.outlook.com
+ ([fe80::cdbf:b63c:437:4dd2%8]) with mapi id 15.20.2602.010; Thu, 2 Jan 2020
+ 18:56:19 +0000
+From:   Vijay Khemka <vijaykhemka@fb.com>
+To:     David Miller <davem@davemloft.net>
+CC:     "sam@mendozajonas.com" <sam@mendozajonas.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        Sai Dasari <sdasari@fb.com>
+Subject: Re: [net-next PATCH] net/ncsi: Fix gma flag setting after response
+Thread-Topic: [net-next PATCH] net/ncsi: Fix gma flag setting after response
+Thread-Index: AQHVvQcvq4Utc53XEUy7GF5JxeUuH6fTrS4AgAOPSYA=
+Date:   Thu, 2 Jan 2020 18:56:19 +0000
+Message-ID: <6494F283-FC28-459D-B9DE-494FC8D0CAFA@fb.com>
+References: <20191227224349.2182366-1-vijaykhemka@fb.com>
+ <20191230.203442.69341487993928315.davem@davemloft.net>
+In-Reply-To: <20191230.203442.69341487993928315.davem@davemloft.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2620:10d:c090:200::2:c7d7]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 398c147b-7e82-4914-fcd4-08d78fb57455
+x-ms-traffictypediagnostic: MWHPR15MB1166:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR15MB11662112745547E686009690DD200@MWHPR15MB1166.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0270ED2845
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39860400002)(376002)(396003)(136003)(346002)(199004)(189003)(33656002)(8676002)(54906003)(8936002)(86362001)(81156014)(81166006)(6486002)(6512007)(186003)(6506007)(66946007)(2616005)(4326008)(36756003)(2906002)(76116006)(66446008)(66556008)(66476007)(5660300002)(478600001)(316002)(64756008)(4744005)(6916009)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1166;H:MWHPR15MB1597.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: qxt5YeVTn9Ce1Ky/siLMq/MsyquVvAZ0UpWh64nIjRRJPO7OJXdjlMEaNHjsP3QW14d5UZkvBi5Zvs+NQczA6qy6NeILMnEK/R0fl2GcafHbMb4q5eryvbWKavU9H9aCY+RYDqeMJm0RWs80rpHrOJ9BnNxPWOXAcANc4kL2Tm5f8nInG8QJaRaPB93l6n5oOAM1eEnMr9W4dz9G7E3u78T5yadFYiaSTrXt0EfBCYLRXMxI71LW+/hnfzIu2ZBNKC3uBuGphd/pFqWLmxiA/bp+07Z+1LvzGD4MJRGCT6c9Tkn5uqVq00Q7KrwaPAmvpA0JTKY7vegh20d5kdwXDSL9CO4GqUt2KGIEsXNkfAEtmEpzhNoEZSC4HESbDLBWOtVKnDFsNjAEpOvdVnRYZNhDhRxfemI4GYf2eGUrJaZftF9Q3mt46gU+X3GAp+Q/
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B719112A30903F44A2A457110E14A65F@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-MS-Exchange-CrossTenant-Network-Message-Id: 398c147b-7e82-4914-fcd4-08d78fb57455
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jan 2020 18:56:19.8320
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7tqQs5xyVSm7PuKDhGqjMnmpOTedtZRWbcA45fpFJh9YfifOFPJIqjU1QmgSo2z4C1GnssaA/ZHLULW3cMaKbQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1166
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-02_06:2020-01-02,2020-01-02 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=777
+ spamscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 phishscore=0 malwarescore=0 adultscore=0 mlxscore=0
+ suspectscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-2001020154
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
-
-so I was tracking down some odd behavior in the perf_fuzzer which turns 
-out to be because perf_even_open() sometimes returns 0 (indicating a file 
-descriptor of 0) even though as far as I can tell stdin is still open.
-
-Before I waste too much time trying to track this down, is this a known 
-issue?
-
-Some sample strace output:
-
-perf_event_open({type=PERF_TYPE_RAW, size=0x78 /* PERF_ATTR_SIZE_??? */, config=0x1313, ...}, 0, 3, -1, PERF_FLAG_FD_NO_GROUP) = 0
-perf_event_open({type=PERF_TYPE_SOFTWARE, size=0x78 /* PERF_ATTR_SIZE_??? */, config=PERF_COUNT_SW_DUMMY, ...}, -1, 3, -1, PERF_FLAG_FD_NO_GROUP|PERF_FLAG_FD_OUTPUT) = 0
-perf_event_open({type=PERF_TYPE_SOFTWARE, size=0x78 /* PERF_ATTR_SIZE_??? */, config=PERF_COUNT_SW_PAGE_FAULTS_MIN, ...}, 158266, 2, -1, PERF_FLAG_FD_CLOEXEC) = 0
-perf_event_open({type=PERF_TYPE_HW_CACHE, size=0x78 /* PERF_ATTR_SIZE_??? */, config=PERF_COUNT_HW_CACHE_DTLB|PERF_COUNT_HW_CACHE_OP_READ<<8|PERF_COUNT_HW_CACHE_RESULT_MISS<<16, ...}, 0, 4, -1, PERF_FLAG_FD_NO_GROUP|PERF_FLAG_FD_CLOEXEC) = 0
-perf_event_open({type=PERF_TYPE_RAW, size=0x78 /* PERF_ATTR_SIZE_??? */, config=0, ...}, -1, 0, -1, PERF_FLAG_FD_OUTPUT|PERF_FLAG_FD_CLOEXEC) = 0
-
-On my Haswell system (running current git) I can reproduce things with a 
-single call:
-
-	memset(&pe[0],0,sizeof(struct perf_event_attr));
-	pe[0].type=PERF_TYPE_RAW;
-	pe[0].size=120;
-	pe[0].config=0x0ULL;
-	pe[0].sample_period=0x4777c3ULL;
-	pe[0].sample_type=PERF_SAMPLE_STREAM_ID; /* 200 */
-	pe[0].read_format=PERF_FORMAT_TOTAL_TIME_RUNNING|PERF_FORMAT_ID|PERF_FORMAT_GROUP; /* e */
-	pe[0].inherit=1;
-	pe[0].exclude_hv=1;
-	pe[0].exclude_idle=1;
-	pe[0].enable_on_exec=1;
-	pe[0].watermark=1;
-	pe[0].precise_ip=0; /* arbitrary skid */
-	pe[0].mmap_data=1;
-	pe[0].exclude_guest=1;
-	pe[0].exclude_callchain_kernel=1;
-	pe[0].mmap2=1;
-	pe[0].comm_exec=1;
-	pe[0].context_switch=1;
-	pe[0].bpf_event=1;
-	pe[0].wakeup_watermark=47545;
-	pe[0].bp_type=HW_BREAKPOINT_EMPTY;
-	pe[0].branch_sample_type=PERF_SAMPLE_BRANCH_KERNEL|PERF_SAMPLE_BRANCH_ANY_RETURN|PERF_SAMPLE_BRANCH_COND|0x800ULL;
-	pe[0].sample_regs_user=42ULL;
-	pe[0].sample_stack_user=0xfffffffd;
-	pe[0].aux_watermark=25443;
-	pe[0].aux_sample_size=8192;
-
-	fd[0]=perf_event_open(&pe[0],
-				-1, /* current thread */
-				0, /* Only cpu 0 */
-				-1, /* New Group Leader */
-				PERF_FLAG_FD_OUTPUT|PERF_FLAG_FD_CLOEXEC /*a*/ );
-
+DQoNCu+7v09uIDEyLzMwLzE5LCA4OjM0IFBNLCAiRGF2aWQgTWlsbGVyIiA8ZGF2ZW1AZGF2ZW1s
+b2Z0Lm5ldD4gd3JvdGU6DQoNCiAgICBGcm9tOiBWaWpheSBLaGVta2EgPHZpamF5a2hlbWthQGZi
+LmNvbT4NCiAgICBEYXRlOiBGcmksIDI3IERlYyAyMDE5IDE0OjQzOjQ5IC0wODAwDQogICAgDQog
+ICAgPiBnbWFfZmxhZyB3YXMgc2V0IGF0IHRoZSB0aW1lIG9mIEdNQSBjb21tYW5kIHJlcXVlc3Qg
+YnV0IGl0IHNob3VsZA0KICAgID4gb25seSBiZSBzZXQgYWZ0ZXIgZ2V0dGluZyBzdWNjZXNzZnVs
+IHJlc3BvbnNlLiBNb3Zpbm5nIHRoaXMgZmxhZw0KICAgID4gc2V0dGluZyBpbiBHTUEgcmVzcG9u
+c2UgaGFuZGxlci4NCiAgICA+IA0KICAgID4gVGhpcyBmbGFnIGlzIHVzZWQgbWFpbmx5IGZvciBu
+b3QgcmVwZWF0aW5nIEdNQSBjb21tYW5kIG9uY2UNCiAgICA+IHJlY2VpdmVkIE1BQyBhZGRyZXNz
+Lg0KICAgID4gDQogICAgPiBTaWduZWQtb2ZmLWJ5OiBWaWpheSBLaGVta2EgPHZpamF5a2hlbWth
+QGZiLmNvbT4NCiAgICANCiAgICBBcHBsaWVkLg0KVGhhbmtzIERhdmlkDQogICAgDQoNCg==
