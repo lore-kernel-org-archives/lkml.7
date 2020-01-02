@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 487DBC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A6AC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA7520848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC0B2465D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578006023;
-	bh=PBHb5ijfB+T3bwG+9x4hokUpoUPYGrSirFzfyZnrxJY=;
+	s=default; t=1578006026;
+	bh=vArQ7SqQAU1H15zmxOhNazLlFgEn8vZiQwMCsvmJwEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PD8ZpI3orE1Ic9+A4DWUstnhhzqanYdOqQjNwTVoSbSDnPbvjI5BJNBfnGDUpaFun
-	 64gUZm40iF2CzrqZmDkTQZIR0WebbSP6ks7e5aR/uw0sSOVvIFH2LxkBB/rk6Y9pUP
-	 BFEPHdUXMSgNEJRGFHog1+a+Vc2TTJqV2PAzVnSw=
+	b=cl21FxFafjygNZ6y1S2uu1oO8PdonQZ4/r2S1x03Udn8kn7P3mRb5TYIVAT/UC9nC
+	 +4garRLTUw2+cgESCRogZmG3v9II50Tp83Up7a2Lq9aZA4iJAE+lPmysDQBnKdCl3C
+	 IQdC1ILwPJPlzRZ/5Vng0pKQK8803vyFB7FmP70I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbgABXAW (ORCPT
+        id S1728338AbgABXAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 18:00:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52648 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 18:00:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727226AbgABWNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:13:05 -0500
+        id S1727183AbgABWM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:12:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F6D721D7D;
-        Thu,  2 Jan 2020 22:13:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7A4C222C3;
+        Thu,  2 Jan 2020 22:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003184;
-        bh=PBHb5ijfB+T3bwG+9x4hokUpoUPYGrSirFzfyZnrxJY=;
+        s=default; t=1578003177;
+        bh=vArQ7SqQAU1H15zmxOhNazLlFgEn8vZiQwMCsvmJwEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BZT+rDLKybt1uOAMNvSI0/2gZfPqfatkYhUewVfcTTnvR4zPtcYjLxGc1XjCkVQrE
-         LMWryoQW80m6MBL/7spyXRCy/Wd3ItNVw/9TZ2qXfqiHJp8C8VkdchCHFQLsMaeRQ0
-         bnUYzTCRw6TBah1lM+J4eeazru/ZuhM8X64Luack=
+        b=MNjruq6/sjcIFuBXVz4L3+hoZ/bh8BDTdAVToBJlZDjiLcDmpi8pK2uWxxhn4yABC
+         w21sAh5cOItXa0BHC3XZXCmQO+pAvCid1Z9QGydsHyLnYz7lYn2cWsQz/sT9TnvWUe
+         uQBITIfKqT7MxSnRFyQ9U0nTL2LQD/xQO47/wzO0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 054/191] dma-direct: check for overflows on 32 bit DMA addresses
-Date:   Thu,  2 Jan 2020 23:05:36 +0100
-Message-Id: <20200102215835.696014868@linuxfoundation.org>
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 051/191] clk: clk-gpio: propagate rate change to parent
+Date:   Thu,  2 Jan 2020 23:05:33 +0100
+Message-Id: <20200102215835.373104247@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -60,67 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+From: Michael Hennerich <michael.hennerich@analog.com>
 
-[ Upstream commit b12d66278dd627cbe1ea7c000aa4715aaf8830c8 ]
+[ Upstream commit fc59462c5ce60da119568fac325c92fc6b7c6175 ]
 
-As seen on the new Raspberry Pi 4 and sta2x11's DMA implementation it is
-possible for a device configured with 32 bit DMA addresses and a partial
-DMA mapping located at the end of the address space to overflow. It
-happens when a higher physical address, not DMAable, is translated to
-it's DMA counterpart.
+For an external clock source, which is gated via a GPIO, the
+rate change should typically be propagated to the parent clock.
 
-For example the Raspberry Pi 4, configurable up to 4 GB of memory, has
-an interconnect capable of addressing the lower 1 GB of physical memory
-with a DMA offset of 0xc0000000. It transpires that, any attempt to
-translate physical addresses higher than the first GB will result in an
-overflow which dma_capable() can't detect as it only checks for
-addresses bigger then the maximum allowed DMA address.
+The situation where we are requiring this propagation, is when an
+external clock is connected to override an internal clock (which typically
+has a fixed rate). The external clock can have a different rate than the
+internal one, and may also be variable, thus requiring the rate
+propagation.
 
-Fix this by verifying in dma_capable() if the DMA address range provided
-is at any point lower than the minimum possible DMA address on the bus.
+This rate change wasn't propagated until now, and it's unclear about cases
+where this shouldn't be propagated. Thus, it's unclear whether this is
+fixing a bug, or extending the current driver behavior. Also, it's unsure
+about whether this may break any existing setups; in the case that it does,
+a device-tree property may be added to disable this flag.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Link: https://lkml.kernel.org/r/20191108071718.17985-1-alexandru.ardelean@analog.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/dma-direct.h | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/clk/clk-gpio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
-index adf993a3bd58..6a18a97b76a8 100644
---- a/include/linux/dma-direct.h
-+++ b/include/linux/dma-direct.h
-@@ -3,8 +3,11 @@
- #define _LINUX_DMA_DIRECT_H 1
- 
- #include <linux/dma-mapping.h>
-+#include <linux/memblock.h> /* for min_low_pfn */
- #include <linux/mem_encrypt.h>
- 
-+static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr);
-+
- #ifdef CONFIG_ARCH_HAS_PHYS_TO_DMA
- #include <asm/dma-direct.h>
- #else
-@@ -24,11 +27,16 @@ static inline phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t dev_addr)
- 
- static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size)
- {
-+	dma_addr_t end = addr + size - 1;
-+
- 	if (!dev->dma_mask)
- 		return false;
- 
--	return addr + size - 1 <=
--		min_not_zero(*dev->dma_mask, dev->bus_dma_mask);
-+	if (!IS_ENABLED(CONFIG_ARCH_DMA_ADDR_T_64BIT) &&
-+	    min(addr, end) < phys_to_dma(dev, PFN_PHYS(min_low_pfn)))
-+		return false;
-+
-+	return end <= min_not_zero(*dev->dma_mask, dev->bus_dma_mask);
- }
- #endif /* !CONFIG_ARCH_HAS_PHYS_TO_DMA */
+diff --git a/drivers/clk/clk-gpio.c b/drivers/clk/clk-gpio.c
+index 9d930edd6516..13304cf5f2a8 100644
+--- a/drivers/clk/clk-gpio.c
++++ b/drivers/clk/clk-gpio.c
+@@ -280,7 +280,7 @@ static int gpio_clk_driver_probe(struct platform_device *pdev)
+ 	else
+ 		clk = clk_register_gpio_gate(&pdev->dev, node->name,
+ 				parent_names ?  parent_names[0] : NULL, gpiod,
+-				0);
++				CLK_SET_RATE_PARENT);
+ 	if (IS_ERR(clk))
+ 		return PTR_ERR(clk);
  
 -- 
 2.20.1
