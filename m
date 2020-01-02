@@ -2,124 +2,97 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46459C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B1DC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13895217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:05:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JhmzFIJC"
+	by mail.kernel.org (Postfix) with ESMTP id 2F5BF20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:09:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbgABQF0 (ORCPT
+        id S1728821AbgABQJp convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 11:05:26 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50232 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728744AbgABQFZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 11:05:25 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a5so5998022wmb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 08:05:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=INDmQoNk/tJLRjiqxNPsW2gTLEyOqRnXAOa6Y+CM3Pw=;
-        b=JhmzFIJCwdx9ggVuJa79e18cPxwtou1gcE2KkF73nX52YP4KJfuBKD6A9MvYxQTB58
-         ZnhIgjy+uRa72LkOh/wX8AHmX1zPfwDvM2hpfzsCbUIZi/ccsvGD6ONponzCPHA2/406
-         9BHfB01Fm+tcSETuQixDIKAzq+WpXxLcKg2vOMEkC+DZLT53n1NWMUGolQQu0tQSxIdd
-         zr6eTSmrAxXpOS/Q/51yb93kLZsvvbmjVOyiQYQj4lClGK8OPiMQyfY2m6+7z8H9KeDK
-         XBpF6baVTfB61xHzqc3d/ze4fNF2Upt6T/lijlv5QSLL6V1VZumqs/lvEFGwT5OKOT+w
-         6K6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=INDmQoNk/tJLRjiqxNPsW2gTLEyOqRnXAOa6Y+CM3Pw=;
-        b=c6gAiX5FJRXGMX7v3961lUOmp1s+XhR5qh09SQj1a518Nvg8UQ4JTbD4kfZ/59Zpzg
-         FRQ0EBD3DMD8ZoErvoJKMmoNtUI9W/ndgaIjsP8u1VKUYWCeT0IXZAIo3OaCOQjPYbc8
-         xTssn6eZWG13QCqluRquThDuetB+9nTPp/QxJK/N8+xoXg+nx1RG7EU0WOHt4c6hWQYx
-         qI5HZ1KWaETELOglzl2vU6UG5MzW+AgSnQ2b+XZKUIJCPd0QEzcjs5Jg9mfIC9uWjlPM
-         e+qb6URQzoIbaHsLjHF0YHXLjYbWGzp2Ld0eupuDPXtI9gxz2NQFgEeSB9V0SHL/pLtk
-         +X0g==
-X-Gm-Message-State: APjAAAVV+4zbMhg4JASEj+jfNl0PztHY+WT1tvyRD491z8EEjTWqfBto
-        cDWDyiewZyBcA9ESklJccmbD1A==
-X-Google-Smtp-Source: APXvYqyEivYwaP2ns3ILcszz/Grz4Of7NPSptL4+RXbkbFEpLOYTTlIS/61sIXEmkPh/gB/NCcDmKQ==
-X-Received: by 2002:a05:600c:d7:: with SMTP id u23mr14220226wmm.145.1577981123996;
-        Thu, 02 Jan 2020 08:05:23 -0800 (PST)
-Received: from dell ([2.27.35.135])
-        by smtp.gmail.com with ESMTPSA id t125sm9077685wmf.17.2020.01.02.08.05.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 08:05:22 -0800 (PST)
-Date:   Thu, 2 Jan 2020 16:05:34 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
-        boris.brezillon@bootlin.com, airlied@linux.ie,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        peda@axentia.se, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] fixes for atmel-hlcdc
-Message-ID: <20200102160534.GJ22390@dell>
-References: <1576672109-22707-1-git-send-email-claudiu.beznea@microchip.com>
- <20200102090554.GB29446@ravnborg.org>
+        Thu, 2 Jan 2020 11:09:45 -0500
+Received: from mga18.intel.com ([134.134.136.126]:58327 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728806AbgABQJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 11:09:40 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 08:09:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,387,1571727600"; 
+   d="scan'208";a="231850442"
+Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
+  by orsmga002.jf.intel.com with ESMTP; 02 Jan 2020 08:09:39 -0800
+Received: from fmsmsx157.amr.corp.intel.com (10.18.116.73) by
+ fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 2 Jan 2020 08:09:39 -0800
+Received: from fmsmsx123.amr.corp.intel.com ([169.254.7.87]) by
+ FMSMSX157.amr.corp.intel.com ([169.254.14.70]) with mapi id 14.03.0439.000;
+ Thu, 2 Jan 2020 08:09:39 -0800
+From:   "Saleem, Shiraz" <shiraz.saleem@intel.com>
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
+CC:     "yuanxzhang@fudan.edu.cn" <yuanxzhang@fudan.edu.cn>,
+        "kjlu@umn.edu" <kjlu@umn.edu>, "leon@kernel.org" <leon@kernel.org>,
+        "Markus.Elfring@web.de" <Markus.Elfring@web.de>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "Latif, Faisal" <faisal.latif@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Shannon Nelson <shannon.nelson@intel.com>,
+        "Singhai, Anjali" <anjali.singhai@intel.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v4] infiniband: i40iw: fix a potential NULL pointer
+ dereference
+Thread-Topic: [PATCH v4] infiniband: i40iw: fix a potential NULL pointer
+ dereference
+Thread-Index: AQHVvrhzchRnSKHHyEuZXScGHS/Gk6fXj3Rw
+Date:   Thu, 2 Jan 2020 16:09:38 +0000
+Message-ID: <9DD61F30A802C4429A01CA4200E302A7C1DEF336@fmsmsx123.amr.corp.intel.com>
+References: <1577672668-46499-1-git-send-email-xiyuyang19@fudan.edu.cn>
+In-Reply-To: <1577672668-46499-1-git-send-email-xiyuyang19@fudan.edu.cn>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiODBhY2NjNWQtN2Q4NS00OTg4LTkyNWEtNTgxZDJiNjk1Y2M5IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiV0RweXNBWjVvdDBIQU9MbTBieTk0WFFnSUUwOVo5Ykw0NkpzckVpVDBNbHNpZ0lpS09mazVSMk5yKzh1cUo3TiJ9
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.1.200.108]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200102090554.GB29446@ravnborg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 02 Jan 2020, Sam Ravnborg wrote:
+> Subject: [PATCH v4] infiniband: i40iw: fix a potential NULL pointer dereference
+> 
+> A NULL pointer can be returned by in_dev_get(). Thus add a corresponding check
+> so that a NULL pointer dereference will be avoided at this place.
+> 
+> Fixes: 8e06af711bf2 ("i40iw: add main, hdr, status")
+> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+> Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+> ---
+> Changes in v2:
+> - Release rtnl lock when in_dev_get return NULL Changes in v3:
+> - Continue the next loop when in_dev_get return NULL Changes in v4:
+> - Change commit message
+> 
 
-> Hi Lee.
-> 
-> How do de handle the two mfd related patches?
-> 
-> > I have few fixes for atmel-hlcdc driver in this series as well
-> > as two reverts.
-> > Revert "drm: atmel-hlcdc: enable sys_clk during initalization." is
-> > due to the fix in in patch 2/5.
-> > 
-> > Thank you,
-> > Claudiu Beznea
-> > 
-> > Changes in v3:
-> > - changes dev_err() message in patch 4/6
-> > - collect Acked-by tags
-> > 
-> > Changes in v2:
-> > - introduce patch 3/6
-> > - use dev_err() inpatch 4/6
-> > - introduce patch 5/6 instead of reverting commit f6f7ad323461
-> >   ("drm/atmel-hlcdc: allow selecting a higher pixel-clock than requested")
-> > 
-> > Claudiu Beznea (5):
-> >   drm: atmel-hlcdc: use double rate for pixel clock only if supported
-> >   drm: atmel-hlcdc: enable clock before configuring timing engine
-> 
-> >   mfd: atmel-hlcdc: add struct device member to struct
-> >     atmel_hlcdc_regmap
-> >   mfd: atmel-hlcdc: return in case of error
-> 
-> Would it be OK to apply the to drm-misc-next, or shal they go in via
-> your mfd tree?
+Thanks! Looks ok.
 
-How are they related to the other patches?  Do they have build-time
-dependencies on any of the other patches, or vice versa? 
+I believe Leon caught another issue in how rtnl locking scheme is done in this function.
+Will fix.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Shiraz
