@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A099C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 992C8C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2593E222C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6389F21835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:55:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005753;
-	bh=tgF6Sbt5iFtppaBm3Np8pjSbN/00wXiEhv1ndWcJCWI=;
+	s=default; t=1578005759;
+	bh=jkeFTtf4Zp47zVtKtE+iaHCA9aRYTcKmzpJUTSdGcoY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Iv6+fGxpX82QcDkQ6EzSpzm3QVLzkGfrwUfiFg0yMbXBLU8pyFB+BBqnciEO+Z1If
-	 JyRlJanXcC6lmP12bXj9eIcy7TPQGfsv7CqczfKYmszybvx3MYSbq58bOgWbBD8sIb
-	 p3yctTJ9cJFzC1HgFBXXpou5g/0XWAFpBri3rOuI=
+	b=aBZejsiqk6ohuqT2nhMvl8Xd02QuckXqU9wpqSwZZDxY8dWJ+ZxYmgd1HoS+RMQeF
+	 lt44DqZcqFkbHx7+K++fjGUV7r1JiJVatkOP4WL9w7JRX+higPNrqHng3SHMgeumWh
+	 6XceFykQaiNUerNkwWCgy1WsJlzeYUkL70zjckrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbgABWzw (ORCPT
+        id S1728933AbgABWz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:55:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34452 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:55:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728077AbgABWSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:18:51 -0500
+        id S1728234AbgABWSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:18:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCE112253D;
-        Thu,  2 Jan 2020 22:18:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1917B2253D;
+        Thu,  2 Jan 2020 22:18:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003531;
-        bh=tgF6Sbt5iFtppaBm3Np8pjSbN/00wXiEhv1ndWcJCWI=;
+        s=default; t=1578003526;
+        bh=jkeFTtf4Zp47zVtKtE+iaHCA9aRYTcKmzpJUTSdGcoY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mNjDa/thaUCn6h2RjiVGgYjM6yFlHs6KuiEXtSLADUorwF3Vi1TqHrIW8kavQYgNp
-         DBalCkJz674fDm9jTzESq8aPPDHI1LRg2f7qpZkdbjId1xDCOHsGpwkLJanYekHWWK
-         gP3uSpQ6xntcf9wZP3iPyasg8UnGLZ4XLIJ/diPo=
+        b=1DWxOc0nOhldEA6xxaitAy++VpWhrbExFBp0wXkYnpCo2TH7HkuVFcoA4ZXxyFOPw
+         uCVrMaGps6gCbJ3F+YepM/nF9dZBHR2Tgud4CNahNFCOxhJg/+y1D+LKLeGBt929Y7
+         4eRFTknMtPesULUj7QlRYg1Vul1fjLFZDGVbDy2E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        David Ahern <dsahern@gmail.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 170/191] net/dst: add new function skb_dst_update_pmtu_no_confirm
-Date:   Thu,  2 Jan 2020 23:07:32 +0100
-Message-Id: <20200102215847.522437349@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 5.4 178/191] gtp: avoid zero size hashtable
+Date:   Thu,  2 Jan 2020 23:07:40 +0100
+Message-Id: <20200102215848.339891688@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,46 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 07dc35c6e3cc3c001915d05f5bf21f80a39a0970 ]
+[ Upstream commit 6a902c0f31993ab02e1b6ea7085002b9c9083b6a ]
 
-Add a new function skb_dst_update_pmtu_no_confirm() for callers who need
-update pmtu but should not do neighbor confirm.
+GTP default hashtable size is 1024 and userspace could set specific
+hashtable size with IFLA_GTP_PDP_HASHSIZE. If hashtable size is set to 0
+from userspace,  hashtable will not work and panic will occur.
 
-v5: No change.
-v4: No change.
-v3: Do not remove dst_confirm_neigh, but add a new bool parameter in
-    dst_ops.update_pmtu to control whether we should do neighbor confirm.
-    Also split the big patch to small ones for each area.
-v2: Remove dst_confirm_neigh in __ip6_rt_update_pmtu.
-
-Reviewed-by: Guillaume Nault <gnault@redhat.com>
-Acked-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/dst.h |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/net/gtp.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/include/net/dst.h
-+++ b/include/net/dst.h
-@@ -519,6 +519,15 @@ static inline void skb_dst_update_pmtu(s
- 		dst->ops->update_pmtu(dst, NULL, skb, mtu, true);
- }
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -660,10 +660,13 @@ static int gtp_newlink(struct net *src_n
+ 	if (err < 0)
+ 		return err;
  
-+/* update dst pmtu but not do neighbor confirm */
-+static inline void skb_dst_update_pmtu_no_confirm(struct sk_buff *skb, u32 mtu)
-+{
-+	struct dst_entry *dst = skb_dst(skb);
-+
-+	if (dst && dst->ops->update_pmtu)
-+		dst->ops->update_pmtu(dst, NULL, skb, mtu, false);
-+}
-+
- static inline void skb_tunnel_check_pmtu(struct sk_buff *skb,
- 					 struct dst_entry *encap_dst,
- 					 int headroom)
+-	if (!data[IFLA_GTP_PDP_HASHSIZE])
++	if (!data[IFLA_GTP_PDP_HASHSIZE]) {
+ 		hashsize = 1024;
+-	else
++	} else {
+ 		hashsize = nla_get_u32(data[IFLA_GTP_PDP_HASHSIZE]);
++		if (!hashsize)
++			hashsize = 1024;
++	}
+ 
+ 	err = gtp_hashtable_new(gtp, hashsize);
+ 	if (err < 0)
 
 
