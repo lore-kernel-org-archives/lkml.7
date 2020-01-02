@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62636C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5063C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ACB02253D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A0CE2464B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003098;
-	bh=NXLY67IDTMu6Jlymy/bPZRDp/GZiSr3IJHRem+6GoO8=;
+	s=default; t=1578003100;
+	bh=b44j38iHZ3ItcTR0oJTXn1vJs/HMycr3LGK/7wKou9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k7we+SZpIH0nuSLqtG8UlafudoiL8MoHkqDsPk0Uf6/OhBgB1b+bbzmRD4mYKcFsB
-	 A1e9usAmEi40SI+aJQlCoyaUQRzamy4RsWRz6E/ocIFHtyywrcKbH4J3QlxdhI5wX3
-	 iWeus+drIhhOraoc2VWLdgZ0+esXnbHJ9m1mWxSY=
+	b=Fnrm8P/nc3m0in5cg+K42oNbOgcwIBzcRMDfj2bu5rgYJtuM/A97VY0T9auhJMUUu
+	 iHI4eGMgvSnfF1+IMqBvL6KJAjbFvsGluAlgdraR6TJK3iPLU69OtP+qDFY7pvPySz
+	 eZXSZeDQUby7oknclgvQdXOGDQ9zXPf/paqi+yRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbgABWLh (ORCPT
+        id S1727200AbgABWLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:11:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49782 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:11:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727142AbgABWLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:11:33 -0500
+        id S1726823AbgABWLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:11:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82A5821D7D;
-        Thu,  2 Jan 2020 22:11:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE1E521582;
+        Thu,  2 Jan 2020 22:11:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003093;
-        bh=NXLY67IDTMu6Jlymy/bPZRDp/GZiSr3IJHRem+6GoO8=;
+        s=default; t=1578003095;
+        bh=b44j38iHZ3ItcTR0oJTXn1vJs/HMycr3LGK/7wKou9E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mVdZzZDZR7wH2EnbUH8NZE4/DcUVM4VfYd6Xkf8cMKirRBIe+C3BFevELsqc90im+
-         82UvDCkfkFK5bOxv7bGVOYBilZmAfHbBWaO/bID9fsJFMI/a5tU//gRG+VFQN6XPpe
-         Z9riFut5G+fe3plMTBITBwWHkC1LXtmkBv7Z/Rek=
+        b=rAawphMYSuqGLu6cJQ6D907qIoxrwdPrbWg3XtN2HdadczOl8gzqnD1JMUkLAIsV/
+         oDCQgTAxPYd/bVvJ39NjsPr/5QPMfcqbPl+3fCEXZId/8ESSHjwy9ulgekeXSkM+RY
+         XUNRPxcY8EIXNqySF+bttolRTRk8qgE3VBodW2EY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicholas Graumann <nick.graumann@gmail.com>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 017/191] dmaengine: xilinx_dma: Clear desc_pendingcount in xilinx_dma_reset
-Date:   Thu,  2 Jan 2020 23:04:59 +0100
-Message-Id: <20200102215831.673206199@linuxfoundation.org>
+        stable@vger.kernel.org, Lee Duncan <lduncan@suse.com>,
+        Mike Christie <mchristi@redhat.com>,
+        David Disseldorp <ddiss@suse.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 018/191] scsi: target: compare full CHAP_A Algorithm strings
+Date:   Thu,  2 Jan 2020 23:05:00 +0100
+Message-Id: <20200102215831.806883884@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,40 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Graumann <nick.graumann@gmail.com>
+From: David Disseldorp <ddiss@suse.de>
 
-[ Upstream commit 8a631a5a0f7d4a4a24dba8587d5d9152be0871cc ]
+[ Upstream commit 9cef2a7955f2754257a7cddedec16edae7b587d0 ]
 
-Whenever we reset the channel, we need to clear desc_pendingcount
-along with desc_submitcount. Otherwise when a new transaction is
-submitted, the irq coalesce level could be programmed to an incorrect
-value in the axidma case.
+RFC 2307 states:
 
-This behavior can be observed when terminating pending transactions
-with xilinx_dma_terminate_all() and then submitting new transactions
-without releasing and requesting the channel.
+  For CHAP [RFC1994], in the first step, the initiator MUST send:
 
-Signed-off-by: Nicholas Graumann <nick.graumann@gmail.com>
-Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Link: https://lore.kernel.org/r/1571150904-3988-8-git-send-email-radhey.shyam.pandey@xilinx.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+      CHAP_A=<A1,A2...>
+
+   Where A1,A2... are proposed algorithms, in order of preference.
+...
+   For the Algorithm, as stated in [RFC1994], one value is required to
+   be implemented:
+
+       5     (CHAP with MD5)
+
+LIO currently checks for this value by only comparing a single byte in
+the tokenized Algorithm string, which means that any value starting with
+a '5' (e.g. "55") is interpreted as "CHAP with MD5". Fix this by
+comparing the entire tokenized string.
+
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Reviewed-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: David Disseldorp <ddiss@suse.de>
+Link: https://lore.kernel.org/r/20190912095547.22427-2-ddiss@suse.de
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/xilinx/xilinx_dma.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/target/iscsi/iscsi_target_auth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 5d56f1e4d332..43acba2a1c0e 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -1433,6 +1433,7 @@ static int xilinx_dma_reset(struct xilinx_dma_chan *chan)
+diff --git a/drivers/target/iscsi/iscsi_target_auth.c b/drivers/target/iscsi/iscsi_target_auth.c
+index 51ddca2033e0..8fe9b12a07a4 100644
+--- a/drivers/target/iscsi/iscsi_target_auth.c
++++ b/drivers/target/iscsi/iscsi_target_auth.c
+@@ -70,7 +70,7 @@ static int chap_check_algorithm(const char *a_str)
+ 		if (!token)
+ 			goto out;
  
- 	chan->err = false;
- 	chan->idle = true;
-+	chan->desc_pendingcount = 0;
- 	chan->desc_submitcount = 0;
- 
- 	return err;
+-		if (!strncmp(token, "5", 1)) {
++		if (!strcmp(token, "5")) {
+ 			pr_debug("Selected MD5 Algorithm\n");
+ 			kfree(orig);
+ 			return CHAP_DIGEST_MD5;
 -- 
 2.20.1
 
