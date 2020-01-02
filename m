@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AE2C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E6BC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 083D922B48
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94D702253D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004224;
-	bh=Q0XfiEEF4+nFab0KeB9h3/YN2rBxXvvfp51xB1lxAsg=;
+	s=default; t=1578004226;
+	bh=p/VQ5XvFfXoxpzlYbitgprfWPKotHqsZENTAFtN7H3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MSzRjdMd410g+kLIBp7ziZGB7LOI6BIPzdMh5zHe0SkuDuZF3afMKjknweWNoFMeF
-	 Gn7mYct4VznubWi0rkyNhjZ9G3bxQYIpwMOa/TPd/41qHa5QM6J9Xkto9/r0aE3AXc
-	 yYfEkWeAr8GFP4ZuMW2QLbIdPudh7gSk8uFre5wY=
+	b=ZsIEHS3L5ZuuZDcsDhv5WWiquorJAd0aaCS88WH5WCcGwKHziGlQYWCBa2k7fC9FX
+	 do8cKUI4Dp4ndCcUWP+ycySZxCMiih53ljz4pSbzmct8NMagFWRoVrZQ0vqzc5fEzj
+	 f5z5YVy3CMy53Lhc6byF1YPKwdPDcP396r7xQSCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729742AbgABWaW (ORCPT
+        id S1729901AbgABWaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:30:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33994 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:30:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730012AbgABWaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:30:20 -0500
+        id S1729882AbgABWaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:30:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 349A62253D;
-        Thu,  2 Jan 2020 22:30:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D9A92253D;
+        Thu,  2 Jan 2020 22:30:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004219;
-        bh=Q0XfiEEF4+nFab0KeB9h3/YN2rBxXvvfp51xB1lxAsg=;
+        s=default; t=1578004222;
+        bh=p/VQ5XvFfXoxpzlYbitgprfWPKotHqsZENTAFtN7H3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dDMdFxpeWlTSlScb6cJymbkSwv1YjJ1fPglyFhA7FiBZeAQX41MqX71IB5/DjZwAN
-         sjwywIKaz4HMFKcbJ5ZumKZuk0z7ATkLJR475fSP6MivM5X3tc45o2ySM2FRedE86A
-         8M4aMVFknmGO+s2h5jmK8x4VIorFBV9l0gGsY+3E=
+        b=ye/nl9lOep10zxofr4r00Lr2mx3CSii1k3chEcY1jhNzQ+gOImrPVsjzo0jvL89E2
+         wASTuzmH9ChV14/hY/mGlIIUsl7og5JCE7ysSFhWNh6IlNZ+v8/hAp65ToBtZKjU4f
+         uDbVnvVPohqUOmivjEiA5WLCILrk704LKyZa0iXs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 070/171] cpufreq: Register drivers only after CPU devices have been registered
-Date:   Thu,  2 Jan 2020 23:06:41 +0100
-Message-Id: <20200102220556.622524885@linuxfoundation.org>
+Subject: [PATCH 4.9 088/171] btrfs: dont double lock the subvol_sem for rename exchange
+Date:   Thu,  2 Jan 2020 23:06:59 +0100
+Message-Id: <20200102220559.262428738@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -63,67 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit 46770be0cf94149ca48be87719bda1d951066644 ]
+[ Upstream commit 943eb3bf25f4a7b745dd799e031be276aa104d82 ]
 
-The cpufreq core heavily depends on the availability of the struct
-device for CPUs and if they aren't available at the time cpufreq driver
-is registered, we will never succeed in making cpufreq work.
+If we're rename exchanging two subvols we'll try to lock this lock
+twice, which is bad.  Just lock once if either of the ino's are subvols.
 
-This happens due to following sequence of events:
-
-- cpufreq_register_driver()
-  - subsys_interface_register()
-  - return 0; //successful registration of driver
-
-... at a later point of time
-
-- register_cpu();
-  - device_register();
-    - bus_probe_device();
-      - sif->add_dev();
-	- cpufreq_add_dev();
-	  - get_cpu_device(); //FAILS
-  - per_cpu(cpu_sys_devices, num) = &cpu->dev; //used by get_cpu_device()
-  - return 0; //CPU registered successfully
-
-Because the per-cpu variable cpu_sys_devices is set only after the CPU
-device is regsitered, cpufreq will never be able to get it when
-cpufreq_add_dev() is called.
-
-This patch avoids this failure by making sure device structure of at
-least CPU0 is available when the cpufreq driver is registered, else
-return -EPROBE_DEFER.
-
-Reported-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Co-developed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: cdd1fedf8261 ("btrfs: add support for RENAME_EXCHANGE and RENAME_WHITEOUT")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/cpufreq.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ fs/btrfs/inode.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 063ce77df619..86d48f8c6a2e 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -2449,6 +2449,13 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
- 	if (cpufreq_disabled())
- 		return -ENODEV;
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 80937c5ca477..bb8863958ac0 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -9597,9 +9597,8 @@ static int btrfs_rename_exchange(struct inode *old_dir,
+ 		return -EXDEV;
  
-+	/*
-+	 * The cpufreq core depends heavily on the availability of device
-+	 * structure, make sure they are available before proceeding further.
-+	 */
-+	if (!get_cpu_device(0))
-+		return -EPROBE_DEFER;
-+
- 	if (!driver_data || !driver_data->verify || !driver_data->init ||
- 	    !(driver_data->setpolicy || driver_data->target_index ||
- 		    driver_data->target) ||
+ 	/* close the race window with snapshot create/destroy ioctl */
+-	if (old_ino == BTRFS_FIRST_FREE_OBJECTID)
+-		down_read(&root->fs_info->subvol_sem);
+-	if (new_ino == BTRFS_FIRST_FREE_OBJECTID)
++	if (old_ino == BTRFS_FIRST_FREE_OBJECTID ||
++	    new_ino == BTRFS_FIRST_FREE_OBJECTID)
+ 		down_read(&dest->fs_info->subvol_sem);
+ 
+ 	/*
+@@ -9785,9 +9784,8 @@ static int btrfs_rename_exchange(struct inode *old_dir,
+ 	ret2 = btrfs_end_transaction(trans, root);
+ 	ret = ret ? ret : ret2;
+ out_notrans:
+-	if (new_ino == BTRFS_FIRST_FREE_OBJECTID)
+-		up_read(&dest->fs_info->subvol_sem);
+-	if (old_ino == BTRFS_FIRST_FREE_OBJECTID)
++	if (new_ino == BTRFS_FIRST_FREE_OBJECTID ||
++	    old_ino == BTRFS_FIRST_FREE_OBJECTID)
+ 		up_read(&root->fs_info->subvol_sem);
+ 
+ 	return ret;
 -- 
 2.20.1
 
