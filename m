@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB759C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB42C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B360A20863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D053120866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004414;
-	bh=emWZ48uoZHrh2YRP885xUCauJ6Maa8BFd+LRiR0Z69g=;
+	s=default; t=1578004417;
+	bh=QIJEMpMgif8cr5BfWx9VYHU4uTMqaApzdAMh4JrEtMs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0M+o8wg7MAjl0K/6Ji6qcra+27dLHxsc1tSyByIbDn+ejdLyfCrLGDhWS9ZR2QrMd
-	 E61G5GuE7ide06PvkswkjAxe5J4jf1I/JqVZu5nxdUgNTW/kwr1lIHyHGwJX+6QN2B
-	 0iLli4gJUZ/yW3Eqw1sF8NVdT1zaVLOQb8q/NZAI=
+	b=z83Kt5Cucab9qSxbG3hPiKaZnGAFmyE7si76zHLDX/1zEgnsgTsfqmwWpJ4M2dNSm
+	 qXIvKOwoli621ODX9KwXGnErp3sUfT2a60iK9rI7zVLuLzqWosSNUeUxSdJO2fWGiV
+	 gAyD7P10v07fOXFXU+L+iWoEaP+S50Wvz1dtamVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730416AbgABWdd (ORCPT
+        id S1730543AbgABWdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:33:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41010 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:33:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728764AbgABWd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:33:29 -0500
+        id S1728842AbgABWde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:33:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF0A220863;
-        Thu,  2 Jan 2020 22:33:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B365B22314;
+        Thu,  2 Jan 2020 22:33:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004409;
-        bh=emWZ48uoZHrh2YRP885xUCauJ6Maa8BFd+LRiR0Z69g=;
+        s=default; t=1578004414;
+        bh=QIJEMpMgif8cr5BfWx9VYHU4uTMqaApzdAMh4JrEtMs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AMwAE6xf9a3w+UCRHrtb73qM7D4cVyJEFtwkoyKeiblliUUItQQXHrbX/51ExKYBN
-         iENXeDa+17Pa25J9obekMirJLCWUjhavwiFnQSYa9yjMUNcAjrWuDjqDSAgFsULxQ0
-         d9QmtKogIT4qpKr8JOnJ0hLT+b6BtAoIsVcPyjV4=
+        b=T61sSChOdO/K5McHr/fc3D6qFJmT4d5+DGuH37z5asq6BOyGFtgfjYBitF4Q/IrzV
+         33IjkyZKClY1URq5hEmDig+odrbIsuIlVzH/6rq3ej3MtBbJHs1QIEWcccxT5sh9hw
+         zh2ayZSWXuamabYK5X/zbo7XIdUnyyZsS+uII6Xc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 167/171] vhost/vsock: accept only packets with the right dst_cid
-Date:   Thu,  2 Jan 2020 23:08:18 +0100
-Message-Id: <20200102220609.862791465@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Christoph Paasch <cpaasch@apple.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 4.9 169/171] tcp: do not send empty skb from tcp_write_xmit()
+Date:   Thu,  2 Jan 2020 23:08:20 +0100
+Message-Id: <20200102220610.081992094@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -59,35 +63,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 8a3cc29c316c17de590e3ff8b59f3d6cbfd37b0a ]
+[ Upstream commit 1f85e6267caca44b30c54711652b0726fadbb131 ]
 
-When we receive a new packet from the guest, we check if the
-src_cid is correct, but we forgot to check the dst_cid.
+Backport of commit fdfc5c8594c2 ("tcp: remove empty skb from
+write queue in error cases") in linux-4.14 stable triggered
+various bugs. One of them has been fixed in commit ba2ddb43f270
+("tcp: Don't dequeue SYN/FIN-segments from write-queue"), but
+we still have crashes in some occasions.
 
-The host should accept only packets where dst_cid is
-equal to the host CID.
+Root-cause is that when tcp_sendmsg() has allocated a fresh
+skb and could not append a fragment before being blocked
+in sk_stream_wait_memory(), tcp_write_xmit() might be called
+and decide to send this fresh and empty skb.
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Sending an empty packet is not only silly, it might have caused
+many issues we had in the past with tp->packets_out being
+out of sync.
+
+Fixes: c65f7f00c587 ("[TCP]: Simplify SKB data portion allocation with NETIF_F_SG.")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Christoph Paasch <cpaasch@apple.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Cc: Jason Baron <jbaron@akamai.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/vhost/vsock.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/ipv4/tcp_output.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -399,7 +399,9 @@ static void vhost_vsock_handle_tx_kick(s
- 		len = pkt->len;
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -2233,6 +2233,14 @@ static bool tcp_write_xmit(struct sock *
+ 		if (tcp_small_queue_check(sk, skb, 0))
+ 			break;
  
- 		/* Only accept correctly addressed packets */
--		if (le64_to_cpu(pkt->hdr.src_cid) == vsock->guest_cid)
-+		if (le64_to_cpu(pkt->hdr.src_cid) == vsock->guest_cid &&
-+		    le64_to_cpu(pkt->hdr.dst_cid) ==
-+		    vhost_transport_get_local_cid())
- 			virtio_transport_recv_pkt(pkt);
- 		else
- 			virtio_transport_free_pkt(pkt);
++		/* Argh, we hit an empty skb(), presumably a thread
++		 * is sleeping in sendmsg()/sk_stream_wait_memory().
++		 * We do not want to send a pure-ack packet and have
++		 * a strange looking rtx queue with empty packet(s).
++		 */
++		if (TCP_SKB_CB(skb)->end_seq == TCP_SKB_CB(skb)->seq)
++			break;
++
+ 		if (unlikely(tcp_transmit_skb(sk, skb, 1, gfp)))
+ 			break;
+ 
 
 
