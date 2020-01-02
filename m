@@ -2,55 +2,52 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E659C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E3CC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B57120866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4F7217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:39:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004754;
-	bh=DIyWtAQ7QSGL6ztK8yUbiunjL1bhrGVP3ckBM3rg+PU=;
+	s=default; t=1578004757;
+	bh=TibN/pcS0cJvQMq+vtAWj+LJC3fl3uv6/IGCKXgwJng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iIJSBKJX2HhfK94/y7qR7oN3imzdTPX7q49aXYd4zB2kgkruPiey4NbPbEKch0Wxi
-	 HbwGSz4KpgbHfQKulLPYkK1MZkequiQyVXZcrSDWTqsD6XO/u5buHtgSvast6wGvIq
-	 mp73c5uxK4LFqjmziaEggNqOrb9Ufiy7SCD6IRr8=
+	b=XlsuCvMClrCmvDan1wd70VMvNc7pHh+QnGjqYcjv+6NxKBGKU8EC9kFYq52kmbG8y
+	 OSnsBljdbmrz2Qh4Z63aMFhz3mMx3BF4/3f541bRWgYDrhIAU14PtQmoxndRoTDBKz
+	 0r5pW0xBfXjZDAZI8stB6G/uZf11c4/YLHw5zq68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731428AbgABWjN (ORCPT
+        id S1731436AbgABWjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:39:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54620 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:39:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731408AbgABWjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:39:11 -0500
+        id S1731426AbgABWjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:39:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33D1E21835;
-        Thu,  2 Jan 2020 22:39:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D23921D7D;
+        Thu,  2 Jan 2020 22:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004750;
-        bh=DIyWtAQ7QSGL6ztK8yUbiunjL1bhrGVP3ckBM3rg+PU=;
+        s=default; t=1578004753;
+        bh=TibN/pcS0cJvQMq+vtAWj+LJC3fl3uv6/IGCKXgwJng=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UayEiFilIm2Zrh/FLvvF6oqsgqfRpkSr4g6ERvMMpR8x4l7DNSxwYGF8fwkau+iib
-         U5deCQl8DFPyTA55MH6Kb7e3yAOXmGN51UcjxqFecvDkm8gZwQtf2df572wrpoy6xH
-         uA/qCyMJLD5Hx4HLyBYy9iyyj0CGLyNWllqFocn4=
+        b=cqak8oHi0lgedhEuPp/uX9k7/fKK1qMyI38ecJnmscaLxOf+28gMWzIZgPqcl1HMl
+         CFeDHj/7DaPG4VQf7T2kHA75rNWKcRVHc3b34/JTymGt7um11nz6bPZf4/U51w4RIJ
+         NiGCxhhc1UGkqT81HvmcLcQeReMIY+B8Yq/8IdNk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Christoph Paasch <cpaasch@apple.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 4.4 137/137] tcp: do not send empty skb from tcp_write_xmit()
-Date:   Thu,  2 Jan 2020 23:08:30 +0100
-Message-Id: <20200102220605.660213239@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 113/137] clk: pxa: fix one of the pxa RTC clocks
+Date:   Thu,  2 Jan 2020 23:08:06 +0100
+Message-Id: <20200102220602.363667040@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -63,53 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
 
-[ Upstream commit 1f85e6267caca44b30c54711652b0726fadbb131 ]
+[ Upstream commit 46acbcb4849b2ca2e6e975e7c8130c1d61c8fd0c ]
 
-Backport of commit fdfc5c8594c2 ("tcp: remove empty skb from
-write queue in error cases") in linux-4.14 stable triggered
-various bugs. One of them has been fixed in commit ba2ddb43f270
-("tcp: Don't dequeue SYN/FIN-segments from write-queue"), but
-we still have crashes in some occasions.
+The pxa27x platforms have a single IP with 2 drivers, sa1100-rtc and
+rtc-pxa drivers.
 
-Root-cause is that when tcp_sendmsg() has allocated a fresh
-skb and could not append a fragment before being blocked
-in sk_stream_wait_memory(), tcp_write_xmit() might be called
-and decide to send this fresh and empty skb.
+A previous patch fixed the sa1100-rtc case, but the pxa-rtc wasn't
+fixed. This patch completes the previous one.
 
-Sending an empty packet is not only silly, it might have caused
-many issues we had in the past with tp->packets_out being
-out of sync.
-
-Fixes: c65f7f00c587 ("[TCP]: Simplify SKB data portion allocation with NETIF_F_SG.")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Christoph Paasch <cpaasch@apple.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Cc: Jason Baron <jbaron@akamai.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 8b6d10345e16 ("clk: pxa: add missing pxa27x clocks for Irda and sa1100-rtc")
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Link: https://lkml.kernel.org/r/20191026194420.11918-1-robert.jarzmik@free.fr
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/tcp_output.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/clk/pxa/clk-pxa27x.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -2148,6 +2148,14 @@ static bool tcp_write_xmit(struct sock *
- 				break;
- 		}
- 
-+		/* Argh, we hit an empty skb(), presumably a thread
-+		 * is sleeping in sendmsg()/sk_stream_wait_memory().
-+		 * We do not want to send a pure-ack packet and have
-+		 * a strange looking rtx queue with empty packet(s).
-+		 */
-+		if (TCP_SKB_CB(skb)->end_seq == TCP_SKB_CB(skb)->seq)
-+			break;
-+
- 		if (unlikely(tcp_transmit_skb(sk, skb, 1, gfp)))
- 			break;
- 
+diff --git a/drivers/clk/pxa/clk-pxa27x.c b/drivers/clk/pxa/clk-pxa27x.c
+index 5b82d30baf9f..bf47737b6672 100644
+--- a/drivers/clk/pxa/clk-pxa27x.c
++++ b/drivers/clk/pxa/clk-pxa27x.c
+@@ -362,6 +362,7 @@ struct dummy_clk {
+ };
+ static struct dummy_clk dummy_clks[] __initdata = {
+ 	DUMMY_CLK(NULL, "pxa27x-gpio", "osc_32_768khz"),
++	DUMMY_CLK(NULL, "pxa-rtc", "osc_32_768khz"),
+ 	DUMMY_CLK(NULL, "sa1100-rtc", "osc_32_768khz"),
+ 	DUMMY_CLK("UARTCLK", "pxa2xx-ir", "STUART"),
+ };
+-- 
+2.20.1
+
 
 
