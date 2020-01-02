@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB3AC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D38C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9BB22314
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C707422314
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003377;
-	bh=BnANX2H2bx29XOoQujs2DDUAJ+FIpRaK3fhFyXIVyA0=;
+	s=default; t=1578003379;
+	bh=yMBh0zmrIgqBdB0ibdD6WVsRvNgih2rJdZf1gz/liqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L5A1bYUr1GeKtTV/4EEX0F4DRAGwX633PE+u9eCNM7QJ29m7A9BnrTZtb1kBAKfrv
-	 loLLuc9EtWlPKVphYTWNzU+C62zfQzo9vwhqkU4YDg0SHCbQKg3Jq1kEUBZGQYcJHy
-	 tqpH420bZi9JBdp/+Uwnj2tuABYK+m6DqZ0uUx/U=
+	b=Wjalbt7AFX7UUDMmZnFAqsT9b+hk+0s5yk+DMZyDQk6lxLDR2MLRDemIQJFgla4rV
+	 Ja8/fA6BmpLkIG6oxTJRt6s8Eyt8jfQPTFBtbt+KvwWIIyzrrJr3Kduj538lfTzvD+
+	 0ZiaogV8PH6+yR52fSPqT/iz6gmhf4efhDyJuMJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgABWQQ (ORCPT
+        id S1727654AbgABWQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:16:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57976 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:16:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728203AbgABWQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:16:13 -0500
+        id S1727915AbgABWQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:16:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7777821582;
-        Thu,  2 Jan 2020 22:16:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1C2A21582;
+        Thu,  2 Jan 2020 22:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003372;
-        bh=BnANX2H2bx29XOoQujs2DDUAJ+FIpRaK3fhFyXIVyA0=;
+        s=default; t=1578003375;
+        bh=yMBh0zmrIgqBdB0ibdD6WVsRvNgih2rJdZf1gz/liqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dWCKOar+r+tqnxyqDeJVYnoPG9KShgmNEzNoz3QwZ30qG5FohLpee2b15Ys2/FBIJ
-         uaEpRWDmbFJv0hYqv+fxgJTlt/x+HXwOU/NvhpJC9FoC7UFZvfWpCurmLLkRUfbh3l
-         24GyAMYzlVjnuPLncno14sZj1q1E7SuuiZ5D9D9A=
+        b=StQGYIS9zt6bA2ueGgNWvmLuVlehz9hSyybVXwvnVuql0oKhCa2BfD/8s0jTN2peX
+         mJp90Wng79bRHvQhBAoqCyOO2amJyspuoaEDpgVq/jvXppwrol13kjs5elZW8Hdxrw
+         AwBZHPSKcEhvxh21Obte9v0HrLyJFL9DgqXbTPY0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anders Kaseorg <andersk@mit.edu>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 133/191] Revert "iwlwifi: assign directly to iwl_trans->cfg in QuZ detection"
-Date:   Thu,  2 Jan 2020 23:06:55 +0100
-Message-Id: <20200102215843.940860373@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+f68108fed972453a0ad4@syzkaller.appspotmail.com,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.4 134/191] netfilter: ebtables: compat: reject all padding in matches/watchers
+Date:   Thu,  2 Jan 2020 23:06:56 +0100
+Message-Id: <20200102215844.024562701@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -60,61 +61,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anders Kaseorg <andersk@mit.edu>
+From: Florian Westphal <fw@strlen.de>
 
-commit db5cce1afc8d2475d2c1c37c2a8267dd0e151526 upstream.
+commit e608f631f0ba5f1fc5ee2e260a3a35d13107cbfe upstream.
 
-This reverts commit 968dcfb4905245dc64d65312c0d17692fa087b99.
+syzbot reported following splat:
 
-Both that commit and commit 809805a820c6445f7a701ded24fdc6bbc841d1e4
-attempted to fix the same bug (dead assignments to the local variable
-cfg), but they did so in incompatible ways. When they were both merged,
-independently of each other, the combination actually caused the bug to
-reappear, leading to a firmware crash on boot for some cards.
+BUG: KASAN: vmalloc-out-of-bounds in size_entry_mwt net/bridge/netfilter/ebtables.c:2063 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in compat_copy_entries+0x128b/0x1380 net/bridge/netfilter/ebtables.c:2155
+Read of size 4 at addr ffffc900004461f4 by task syz-executor267/7937
 
-https://bugzilla.kernel.org/show_bug.cgi?id=205719
+CPU: 1 PID: 7937 Comm: syz-executor267 Not tainted 5.5.0-rc1-syzkaller #0
+ size_entry_mwt net/bridge/netfilter/ebtables.c:2063 [inline]
+ compat_copy_entries+0x128b/0x1380 net/bridge/netfilter/ebtables.c:2155
+ compat_do_replace+0x344/0x720 net/bridge/netfilter/ebtables.c:2249
+ compat_do_ebt_set_ctl+0x22f/0x27e net/bridge/netfilter/ebtables.c:2333
+ [..]
 
-Signed-off-by: Anders Kaseorg <andersk@mit.edu>
-Acked-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Because padding isn't considered during computation of ->buf_user_offset,
+"total" is decremented by fewer bytes than it should.
+
+Therefore, the first part of
+
+if (*total < sizeof(*entry) || entry->next_offset < sizeof(*entry))
+
+will pass, -- it should not have.  This causes oob access:
+entry->next_offset is past the vmalloced size.
+
+Reject padding and check that computed user offset (sum of ebt_entry
+structure plus all individual matches/watchers/targets) is same
+value that userspace gave us as the offset of the next entry.
+
+Reported-by: syzbot+f68108fed972453a0ad4@syzkaller.appspotmail.com
+Fixes: 81e675c227ec ("netfilter: ebtables: add CONFIG_COMPAT support")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/drv.c |   24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ net/bridge/netfilter/ebtables.c |   33 ++++++++++++++++-----------------
+ 1 file changed, 16 insertions(+), 17 deletions(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-@@ -1111,18 +1111,18 @@ static int iwl_pci_probe(struct pci_dev
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -1867,7 +1867,7 @@ static int ebt_buf_count(struct ebt_entr
+ }
  
- 	/* same thing for QuZ... */
- 	if (iwl_trans->hw_rev == CSR_HW_REV_TYPE_QUZ) {
--		if (iwl_trans->cfg == &iwl_ax101_cfg_qu_hr)
--			iwl_trans->cfg = &iwl_ax101_cfg_quz_hr;
--		else if (iwl_trans->cfg == &iwl_ax201_cfg_qu_hr)
--			iwl_trans->cfg = &iwl_ax201_cfg_quz_hr;
--		else if (iwl_trans->cfg == &iwl9461_2ac_cfg_qu_b0_jf_b0)
--			iwl_trans->cfg = &iwl9461_2ac_cfg_quz_a0_jf_b0_soc;
--		else if (iwl_trans->cfg == &iwl9462_2ac_cfg_qu_b0_jf_b0)
--			iwl_trans->cfg = &iwl9462_2ac_cfg_quz_a0_jf_b0_soc;
--		else if (iwl_trans->cfg == &iwl9560_2ac_cfg_qu_b0_jf_b0)
--			iwl_trans->cfg = &iwl9560_2ac_cfg_quz_a0_jf_b0_soc;
--		else if (iwl_trans->cfg == &iwl9560_2ac_160_cfg_qu_b0_jf_b0)
--			iwl_trans->cfg = &iwl9560_2ac_160_cfg_quz_a0_jf_b0_soc;
-+		if (cfg == &iwl_ax101_cfg_qu_hr)
-+			cfg = &iwl_ax101_cfg_quz_hr;
-+		else if (cfg == &iwl_ax201_cfg_qu_hr)
-+			cfg = &iwl_ax201_cfg_quz_hr;
-+		else if (cfg == &iwl9461_2ac_cfg_qu_b0_jf_b0)
-+			cfg = &iwl9461_2ac_cfg_quz_a0_jf_b0_soc;
-+		else if (cfg == &iwl9462_2ac_cfg_qu_b0_jf_b0)
-+			cfg = &iwl9462_2ac_cfg_quz_a0_jf_b0_soc;
-+		else if (cfg == &iwl9560_2ac_cfg_qu_b0_jf_b0)
-+			cfg = &iwl9560_2ac_cfg_quz_a0_jf_b0_soc;
-+		else if (cfg == &iwl9560_2ac_160_cfg_qu_b0_jf_b0)
-+			cfg = &iwl9560_2ac_160_cfg_quz_a0_jf_b0_soc;
+ static int ebt_buf_add(struct ebt_entries_buf_state *state,
+-		       void *data, unsigned int sz)
++		       const void *data, unsigned int sz)
+ {
+ 	if (state->buf_kern_start == NULL)
+ 		goto count_only;
+@@ -1901,7 +1901,7 @@ enum compat_mwt {
+ 	EBT_COMPAT_TARGET,
+ };
+ 
+-static int compat_mtw_from_user(struct compat_ebt_entry_mwt *mwt,
++static int compat_mtw_from_user(const struct compat_ebt_entry_mwt *mwt,
+ 				enum compat_mwt compat_mwt,
+ 				struct ebt_entries_buf_state *state,
+ 				const unsigned char *base)
+@@ -1979,22 +1979,23 @@ static int compat_mtw_from_user(struct c
+ /* return size of all matches, watchers or target, including necessary
+  * alignment and padding.
+  */
+-static int ebt_size_mwt(struct compat_ebt_entry_mwt *match32,
++static int ebt_size_mwt(const struct compat_ebt_entry_mwt *match32,
+ 			unsigned int size_left, enum compat_mwt type,
+ 			struct ebt_entries_buf_state *state, const void *base)
+ {
++	const char *buf = (const char *)match32;
+ 	int growth = 0;
+-	char *buf;
+ 
+ 	if (size_left == 0)
+ 		return 0;
+ 
+-	buf = (char *) match32;
+-
+-	while (size_left >= sizeof(*match32)) {
++	do {
+ 		struct ebt_entry_match *match_kern;
+ 		int ret;
+ 
++		if (size_left < sizeof(*match32))
++			return -EINVAL;
++
+ 		match_kern = (struct ebt_entry_match *) state->buf_kern_start;
+ 		if (match_kern) {
+ 			char *tmp;
+@@ -2031,22 +2032,18 @@ static int ebt_size_mwt(struct compat_eb
+ 		if (match_kern)
+ 			match_kern->match_size = ret;
+ 
+-		/* rule should have no remaining data after target */
+-		if (type == EBT_COMPAT_TARGET && size_left)
+-			return -EINVAL;
+-
+ 		match32 = (struct compat_ebt_entry_mwt *) buf;
+-	}
++	} while (size_left);
+ 
+ 	return growth;
+ }
+ 
+ /* called for all ebt_entry structures. */
+-static int size_entry_mwt(struct ebt_entry *entry, const unsigned char *base,
++static int size_entry_mwt(const struct ebt_entry *entry, const unsigned char *base,
+ 			  unsigned int *total,
+ 			  struct ebt_entries_buf_state *state)
+ {
+-	unsigned int i, j, startoff, new_offset = 0;
++	unsigned int i, j, startoff, next_expected_off, new_offset = 0;
+ 	/* stores match/watchers/targets & offset of next struct ebt_entry: */
+ 	unsigned int offsets[4];
+ 	unsigned int *offsets_update = NULL;
+@@ -2132,11 +2129,13 @@ static int size_entry_mwt(struct ebt_ent
+ 			return ret;
  	}
  
- #endif
+-	startoff = state->buf_user_offset - startoff;
++	next_expected_off = state->buf_user_offset - startoff;
++	if (next_expected_off != entry->next_offset)
++		return -EINVAL;
+ 
+-	if (WARN_ON(*total < startoff))
++	if (*total < entry->next_offset)
+ 		return -EINVAL;
+-	*total -= startoff;
++	*total -= entry->next_offset;
+ 	return 0;
+ }
+ 
 
 
