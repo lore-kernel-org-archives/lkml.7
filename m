@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1C4C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56600C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A6921835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 288B321835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:32:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004369;
-	bh=FfchGuimbTQU3HAsMiYwQJjdzpWMrqD+SzjysSfU/ik=;
+	s=default; t=1578004374;
+	bh=rcnVMJc/Ue+1kfjEu7lPDDS+WJmCoToHcrT1xM+JEOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YOeWs5soIMYa78Vak8+9zTxXV0Jqn2W8x8JlR7rwgd9GZVqpwgxcBOYbFJYPWfABQ
-	 PR4flimxFL7ZaiUtitMhFiiVr3HZC7vrD08310N2YDiFc4MuZRwZ238jb/j33g0CSx
-	 Y7DABh5jZDolrCsT7M6DgvTDQHx9hFRvtrhooM1A=
+	b=Y77vDL8/gTsXiE26W5W3Ce6Bi7rLcxMRSF3lWPvroy+7L8oW0ohsfFSxlf8lXmHlJ
+	 +pb5uYIl5SB97tbJ9NdLxPe5IPpTOAEcwvL3NGxPfYOvOR9k8LqCK2wBGxi/jCTi7O
+	 V318pMzWpGVNVMhX9PxzRPmfGN9VqwfkOOjrbWm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730453AbgABWcs (ORCPT
+        id S1730470AbgABWcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:32:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39054 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:32:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730428AbgABWce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:32:34 -0500
+        id S1729861AbgABWcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:32:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1173D222C3;
-        Thu,  2 Jan 2020 22:32:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04BDA22525;
+        Thu,  2 Jan 2020 22:32:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004354;
-        bh=FfchGuimbTQU3HAsMiYwQJjdzpWMrqD+SzjysSfU/ik=;
+        s=default; t=1578004366;
+        bh=rcnVMJc/Ue+1kfjEu7lPDDS+WJmCoToHcrT1xM+JEOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a7fV4jm0JnV8yEIf16O8qw0FznwCSSSXSgYCMt9K7DNGFYVMPnGxhJ0pCun12pbBH
-         19DQB1sspEeuj/JkCYQFWVC2ner84xyVSAJ0rUDWgOeQZX7WDabvUZyLN1y931f1c7
-         9d2JedQZrKjm2M3xIqYcOU1mk03xVa/hcE4jAglk=
+        b=OLT5+ZUN6wynccRycYFu93YDVTeSkYceT6ia0rHzhtuB0V0ZjQ4/Gu3V6G6158YvJ
+         K+8bMw6IAFdi8SepcNe8zz0c+hKt5PPoZtOIFtnKNRAbU4xEGq3Vqs4ALdrVaCdBkt
+         Wi285vT8iN6rxDO5Rv/F3JEdD8r6cy5au8sfGNkw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 126/171] scsi: lpfc: Fix duplicate unreg_rpi error in port offline flow
-Date:   Thu,  2 Jan 2020 23:07:37 +0100
-Message-Id: <20200102220604.545631189@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 148/171] libfdt: define INT32_MAX and UINT32_MAX in libfdt_env.h
+Date:   Thu,  2 Jan 2020 23:07:59 +0100
+Message-Id: <20200102220607.606447479@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -61,52 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit 7cfd5639d99bec0d27af089d0c8c114330e43a72 ]
+[ Upstream commit a8de1304b7df30e3a14f2a8b9709bb4ff31a0385 ]
 
-If the driver receives a login that is later then LOGO'd by the remote port
-(aka ndlp), the driver, upon the completion of the LOGO ACC transmission,
-will logout the node and unregister the rpi that is being used for the
-node.  As part of the unreg, the node's rpi value is replaced by the
-LPFC_RPI_ALLOC_ERROR value.  If the port is subsequently offlined, the
-offline walks the nodes and ensures they are logged out, which possibly
-entails unreg'ing their rpi values.  This path does not validate the node's
-rpi value, thus doesn't detect that it has been unreg'd already.  The
-replaced rpi value is then used when accessing the rpi bitmask array which
-tracks active rpi values.  As the LPFC_RPI_ALLOC_ERROR value is not a valid
-index for the bitmask, it may fault the system.
+The DTC v1.5.1 added references to (U)INT32_MAX.
 
-Revise the rpi release code to detect when the rpi value is the replaced
-RPI_ALLOC_ERROR value and ignore further release steps.
+This is no problem for user-space programs since <stdint.h> defines
+(U)INT32_MAX along with (u)int32_t.
 
-Link: https://lore.kernel.org/r/20191105005708.7399-2-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+For the kernel space, libfdt_env.h needs to be adjusted before we
+pull in the changes.
+
+In the kernel, we usually use s/u32 instead of (u)int32_t for the
+fixed-width types.
+
+Accordingly, we already have S/U32_MAX for their max values.
+So, we should not add (U)INT32_MAX to <linux/limits.h> any more.
+
+Instead, add them to the in-kernel libfdt_env.h to compile the
+latest libfdt.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/compressed/libfdt_env.h | 4 +++-
+ arch/powerpc/boot/libfdt_env.h        | 2 ++
+ include/linux/libfdt_env.h            | 3 +++
+ 3 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 1eb9d5f6cea0..cbe808e83f47 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -15995,6 +15995,13 @@ lpfc_sli4_alloc_rpi(struct lpfc_hba *phba)
- static void
- __lpfc_sli4_free_rpi(struct lpfc_hba *phba, int rpi)
- {
-+	/*
-+	 * if the rpi value indicates a prior unreg has already
-+	 * been done, skip the unreg.
-+	 */
-+	if (rpi == LPFC_RPI_ALLOC_ERROR)
-+		return;
+diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
+index 005bf4ff1b4c..f3ddd4f599e3 100644
+--- a/arch/arm/boot/compressed/libfdt_env.h
++++ b/arch/arm/boot/compressed/libfdt_env.h
+@@ -1,11 +1,13 @@
+ #ifndef _ARM_LIBFDT_ENV_H
+ #define _ARM_LIBFDT_ENV_H
+ 
++#include <linux/limits.h>
+ #include <linux/types.h>
+ #include <linux/string.h>
+ #include <asm/byteorder.h>
+ 
+-#define INT_MAX			((int)(~0U>>1))
++#define INT32_MAX	S32_MAX
++#define UINT32_MAX	U32_MAX
+ 
+ typedef __be16 fdt16_t;
+ typedef __be32 fdt32_t;
+diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
+index 0b3db6322c79..5f2cb1c53e15 100644
+--- a/arch/powerpc/boot/libfdt_env.h
++++ b/arch/powerpc/boot/libfdt_env.h
+@@ -5,6 +5,8 @@
+ #include <string.h>
+ 
+ #define INT_MAX			((int)(~0U>>1))
++#define UINT32_MAX		((u32)~0U)
++#define INT32_MAX		((s32)(UINT32_MAX >> 1))
+ 
+ #include "of.h"
+ 
+diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+index 8850e243c940..bd0a55821177 100644
+--- a/include/linux/libfdt_env.h
++++ b/include/linux/libfdt_env.h
+@@ -6,6 +6,9 @@
+ 
+ #include <asm/byteorder.h>
+ 
++#define INT32_MAX	S32_MAX
++#define UINT32_MAX	U32_MAX
 +
- 	if (test_and_clear_bit(rpi, phba->sli4_hba.rpi_bmask)) {
- 		phba->sli4_hba.rpi_count--;
- 		phba->sli4_hba.max_cfg_param.rpi_used--;
+ typedef __be16 fdt16_t;
+ typedef __be32 fdt32_t;
+ typedef __be64 fdt64_t;
 -- 
 2.20.1
 
