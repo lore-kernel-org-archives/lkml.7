@@ -2,129 +2,66 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CF5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCCAC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A0A720863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:55:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SWA0CVMo"
+	by mail.kernel.org (Postfix) with ESMTP id C0EEC20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:56:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgABLzQ (ORCPT
+        id S1728270AbgABL4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 06:55:16 -0500
-Received: from mail-io1-f54.google.com ([209.85.166.54]:33906 "EHLO
-        mail-io1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728205AbgABLzP (ORCPT
+        Thu, 2 Jan 2020 06:56:39 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40023 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728205AbgABL4i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 06:55:15 -0500
-Received: by mail-io1-f54.google.com with SMTP id z193so38036293iof.1;
-        Thu, 02 Jan 2020 03:55:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2CXjiD6I6yu4Kt+bNv5ua4qYRJXTqkhhK9Mk3VAAT5o=;
-        b=SWA0CVMogxKPxm++1rmBHfuZa55b+UVfciSwp8DsCtA3j5SN3mqto1KwV0V5hQPq/G
-         yXsSlbivzwTAMOsVfAJTh44YmduFyn1GsF9GTNFBP8cSSYzmi46w9EeIOJJT1ok3CgYV
-         lPs9VjXcDQvh1bQsUDa0tza0QL3ebsDcwq73H4DANns17EV1H7iixalQmLBcsV9mJkKS
-         r0nHKnCHxmzJSGE98Hx8Z3EmmVjyxfytJeQCvUx0K0QjpMES0V8EWTttXiE8nzWDr5l8
-         XgNKjrRSC9QSycmOxfp1cC9m3bh7G0Cgm+Nc3dScpsnxrXabDz1WzHvi/q1xlXaCSW35
-         65ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2CXjiD6I6yu4Kt+bNv5ua4qYRJXTqkhhK9Mk3VAAT5o=;
-        b=Kv12h6w/exzQ/VVtCfqiP8KKElZz4M3g669yHSIGJ4DFs88Mh5XPD2l+ZHWDZvjkV0
-         Cs0+nU/dsDQDjBploxqMGEFpg9eXDTmlGEFDXtl7Alj3SPyfaiLGhmFmZKbvqSz3J+Qk
-         pksvisSbH4OESKRRAhh6N1BsyekzjoIwkJre8FdmbxHlVCeTfV4RCQSi3Lc7UKMnYRJB
-         ujIb5BLsTXgVRBjtMRIFfKnyNG3pAdb4TDAXf7cgOEwc1sOH1wSMVwCIqmNFG7eocDRz
-         h0eDa00Cgl3pGZPyGjaLgIWn0eWY5k3J7FKU1X/Pbr44rPqmC+7FQP2Au/VKmZiqYyUQ
-         EZ9A==
-X-Gm-Message-State: APjAAAX26aX/FeXz97unmJVLo4kZbyyfJwPUUmTcFoZIBS9jQSzWxXdJ
-        Yr0/Ur0vFWLykfATbcJucuhFAV8KOGA/Rkov52c=
-X-Google-Smtp-Source: APXvYqyejzGqQWvLQeFSNQMfcz/wgffqePxVKa45wWJfRXPGcLv+AYWkEKG6OwAE9vSojmxQ4R3v5qgInCIzI+4J8/I=
-X-Received: by 2002:a02:b385:: with SMTP id p5mr62780350jan.43.1577966114673;
- Thu, 02 Jan 2020 03:55:14 -0800 (PST)
-MIME-Version: 1.0
-References: <CABXGCsODr3tMpQxJ_nhWQQg5WGakFt4Yu5B8ev6ErOkc+zv9kA@mail.gmail.com>
- <20200101141748.GA191637@mit.edu> <CABXGCsOv26W6aqB5WPMe-mEynmwy55DTfTeL5Dg9vRq6+Y6WvA@mail.gmail.com>
- <CABXGCsNkzPrjqMRaWpssorxzhMLWBvLeSw9BpKYr_DW4LJQECQ@mail.gmail.com> <20200102110817.ahqaqidw3ztw3kax@10.255.255.10>
-In-Reply-To: <20200102110817.ahqaqidw3ztw3kax@10.255.255.10>
-From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date:   Thu, 2 Jan 2020 16:55:32 +0500
-Message-ID: <CABXGCsNkm3VuzO60WBCi4VJmDnO=DmprQ1P=dd0FcW2-+dGc0w@mail.gmail.com>
-Subject: Re: [bugreport] "hwclock -w" reset time instead of setting the right time
-To:     Karel Zak <kzak@redhat.com>
-Cc:     util-linux@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-ext4@vger.kernel.org
+        Thu, 2 Jan 2020 06:56:38 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1imz5Z-0002We-MF; Thu, 02 Jan 2020 12:56:29 +0100
+Message-ID: <f3a5ccdc211b5d94b1901e72cfc2ef57d4107054.camel@pengutronix.de>
+Subject: Re: [PATCH v7 1/2] dt-bindings: mediatek: mt8183: Add #reset-cells
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Jiaxin Yu <jiaxin.yu@mediatek.com>, yong.liang@mediatek.com,
+        wim@linux-watchdog.org, linux@roeck-us.net, matthias.bgg@gmail.com,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        chang-an.chen@mediatek.com, freddy.hsin@mediatek.com
+Cc:     yingjoe.chen@mediatek.com, sboyd@kernel.org
+Date:   Thu, 02 Jan 2020 12:56:27 +0100
+In-Reply-To: <1577437494-738-2-git-send-email-jiaxin.yu@mediatek.com>
+References: <1577437494-738-1-git-send-email-jiaxin.yu@mediatek.com>
+         <1577437494-738-2-git-send-email-jiaxin.yu@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Jan 2020 at 16:08, Karel Zak <kzak@redhat.com> wrote:
->
->  Can you try "hwclock -w -v" to get more details?
->
->  For example on my workstation:
->
->         # ./hwclock -w -v
->         hwclock from util-linux 2.35-rc1-20-63f8
->         System Time: 1577963091.683987
->         Trying to open: /dev/rtc0
->         Using the rtc interface to the clock.
->         Last drift adjustment done at 1531914946 seconds after 1969
->         Last calibration done at 1531914946 seconds after 1969
->         Hardware clock is on UTC time
->         Assuming hardware clock is kept in UTC time.
->         RTC type: 'rtc_cmos'
->         Using delay: 0.500000 seconds
->         missed it - 1577963091.684767 is too far past 1577963091.500000 (0.184767 > 0.001000)
->         1577963092.500000 is close enough to 1577963092.500000 (0.000000 < 0.002000)
->         Set RTC to 1577963092 (1577963091 + 1; refsystime = 1577963091.000000)
->         Setting Hardware Clock to 11:04:52 = 1577963092 seconds since 1969
->         ioctl(RTC_SET_TIME) was successful.
->         Not adjusting drift factor because the --update-drift option was not used.
->         New /etc/adjtime data:
->         0.000000 1577963091 0.000000
->         1577963091
->         UTC
->
+On Fri, 2019-12-27 at 17:04 +0800, Jiaxin Yu wrote:
+> Add #reset-cells property and update example
+> 
+> Signed-off-by: yong.liang <yong.liang@mediatek.com>
+> Signed-off-by: Jiaxin Yu <jiaxin.yu@mediatek.com>
+> Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
 
-# hwclock -w -v
-hwclock from util-linux 2.35-rc1-20-63f8
-System Time: 1577964536.796672
-Trying to open: /dev/rtc0
-Using the rtc interface to the clock.
-Last drift adjustment done at 1577950892 seconds after 1969
-Last calibration done at 1577950892 seconds after 1969
-Hardware clock is on UTC time
-Assuming hardware clock is kept in UTC time.
-RTC type: 'rtc_cmos'
-Using delay: 0.500000 seconds
-missed it - 1577964536.797135 is too far past 1577964536.500000
-(0.297135 > 0.001000)
-1577964537.500000 is close enough to 1577964537.500000 (0.000000 < 0.002000)
-Set RTC to 1577964537 (1577964536 + 1; refsystime = 1577964536.000000)
-Setting Hardware Clock to 11:28:57 = 1577964537 seconds since 1969
-ioctl(RTC_SET_TIME) was successful.
-Not adjusting drift factor because the --update-drift option was not used.
-New /etc/adjtime data:
-0.000000 1577964536 0.000000
-1577964536
-UTC
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-Demonstration: https://youtu.be/Yx27IH2opEc
+to be merged together with patch 2.
 
---
-Best Regards,
-Mike Gavrilov.
+regards
+Philipp
+
