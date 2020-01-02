@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FACC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A04DDC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E3DD2253D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70AE6227BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:15:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003308;
-	bh=OwbwjT2Ud/jsTN4m+FbiOjgt6LUW6jBjktDQOmeX3y0=;
+	s=default; t=1578003311;
+	bh=ZS+WlfIB8lLIxCH46STt3Cd5ZX9t2dJe7rAyLDNHfUk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JI8RJtu5KJOaLBKNH7ss9eBiDwXfbQItma/TiYz7U/YoKF9tkkmm53JdPih/Dyjod
-	 4WXjqgIUr55zzHucEbUfXXpMP+kr5ZBfC/W+dGQvH9+bS3pFL5u9Bn/AgCs1OHSwAf
-	 wudCNS01BTzAG04hQ+YjRWVgYeCoPG0zM+0y7WpU=
+	b=dc3zlD8nW3kVmmKSleoKrsj86oUuaugcI33CKxhnn0P+EqK6a74eSs8hWFWTA5jTT
+	 bPZVyeI5sPajiWIB295lOu0zHAfXEKrGfHmvlIfLpYM15BZSAvaSuP2/EVccwIkmgI
+	 k5LE5KyvaAxRpy9Pi/ikpPeZ5xy+wFITPn1pGXAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbgABWPH (ORCPT
+        id S1727534AbgABWPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:15:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55700 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:15:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727186AbgABWPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:15:04 -0500
+        id S1727708AbgABWPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:15:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B014227BF;
-        Thu,  2 Jan 2020 22:15:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC83B21582;
+        Thu,  2 Jan 2020 22:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003303;
-        bh=OwbwjT2Ud/jsTN4m+FbiOjgt6LUW6jBjktDQOmeX3y0=;
+        s=default; t=1578003306;
+        bh=ZS+WlfIB8lLIxCH46STt3Cd5ZX9t2dJe7rAyLDNHfUk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aOLRPBbx/5khxElkogdZIRBfpwfufgpXHr2W+1JHtx8wTN7RI5rTICyqGv/uEyXYd
-         L/TPym2jAvd+6S6K0pxcsJM5g5MWgMczA+R6Na/yuOrIu6MjHF6Tb/aV2f1i1sQVPB
-         pfGDqyiPgXuComDGMf4Gatw8Uf18iuDXc2Ooo2cU=
+        b=qeRFAyyQGcLf7UOk6zpFBiYnRuTKkLOIjpcVkBZSDqyoaVZ8LGc7RBfdCWhsG2KBo
+         MQKJJUXavTM+wbRBJl0ImE2vMDWH1HC8PySjsxaqEzsWNS1x5fJvTUGPsgFxTw8QkL
+         gQ4RPxSEX//O5zTF8QW/o6wsFg33BgQZPzAKPUrM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jack Wang <jinpu.wang@cloud.ionos.com>,
-        peter chang <dpf@google.com>,
-        Deepak Ukey <deepak.ukey@microchip.com>,
-        Viswas G <Viswas.G@microchip.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Philip Yang <Philip.Yang@amd.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 087/191] scsi: pm80xx: Fix for SATA device discovery
-Date:   Thu,  2 Jan 2020 23:06:09 +0100
-Message-Id: <20200102215839.284842244@linuxfoundation.org>
+Subject: [PATCH 5.4 105/191] drm/amdgpu: Call find_vma under mmap_sem
+Date:   Thu,  2 Jan 2020 23:06:27 +0100
+Message-Id: <20200102215841.191558239@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -63,39 +63,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: peter chang <dpf@google.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit ce21c63ee995b7a8b7b81245f2cee521f8c3c220 ]
+[ Upstream commit a9ae8731e6e52829a935d81a65d7f925cb95dbac ]
 
-Driver was missing complete() call in mpi_sata_completion which result in
-SATA abort error handling timing out. That causes the device to be left in
-the in_recovery state so subsequent commands sent to the device fail and
-the OS removes access to it.
+find_vma() must be called under the mmap_sem, reorganize this code to
+do the vma check after entering the lock.
 
-Link: https://lore.kernel.org/r/20191114100910.6153-2-deepak.ukey@microchip.com
-Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-Signed-off-by: peter chang <dpf@google.com>
-Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
-Signed-off-by: Viswas G <Viswas.G@microchip.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Further, fix the unlocked use of struct task_struct's mm, instead use
+the mm from hmm_mirror which has an active mm_grab. Also the mm_grab
+must be converted to a mm_get before acquiring mmap_sem or calling
+find_vma().
+
+Fixes: 66c45500bfdc ("drm/amdgpu: use new HMM APIs and helpers")
+Fixes: 0919195f2b0d ("drm/amdgpu: Enable amdgpu_ttm_tt_get_user_pages in worker threads")
+Link: https://lore.kernel.org/r/20191112202231.3856-11-jgg@ziepe.ca
+Acked-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Reviewed-by: Philip Yang <Philip.Yang@amd.com>
+Tested-by: Philip Yang <Philip.Yang@amd.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/pm8001/pm80xx_hwi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c | 37 ++++++++++++++-----------
+ 1 file changed, 21 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
-index 73261902d75d..161bf4760eac 100644
---- a/drivers/scsi/pm8001/pm80xx_hwi.c
-+++ b/drivers/scsi/pm8001/pm80xx_hwi.c
-@@ -2382,6 +2382,8 @@ mpi_sata_completion(struct pm8001_hba_info *pm8001_ha, void *piomb)
- 			pm8001_printk("task 0x%p done with io_status 0x%x"
- 			" resp 0x%x stat 0x%x but aborted by upper layer!\n",
- 			t, status, ts->resp, ts->stat));
-+		if (t->slow_task)
-+			complete(&t->slow_task->completion);
- 		pm8001_ccb_task_free(pm8001_ha, t, ccb, tag);
- 	} else {
- 		spin_unlock_irqrestore(&t->task_state_lock, flags);
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+index dff41d0a85fe..c0e41f1f0c23 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+@@ -35,6 +35,7 @@
+ #include <linux/hmm.h>
+ #include <linux/pagemap.h>
+ #include <linux/sched/task.h>
++#include <linux/sched/mm.h>
+ #include <linux/seq_file.h>
+ #include <linux/slab.h>
+ #include <linux/swap.h>
+@@ -788,7 +789,7 @@ int amdgpu_ttm_tt_get_user_pages(struct amdgpu_bo *bo, struct page **pages)
+ 	struct hmm_mirror *mirror = bo->mn ? &bo->mn->mirror : NULL;
+ 	struct ttm_tt *ttm = bo->tbo.ttm;
+ 	struct amdgpu_ttm_tt *gtt = (void *)ttm;
+-	struct mm_struct *mm = gtt->usertask->mm;
++	struct mm_struct *mm;
+ 	unsigned long start = gtt->userptr;
+ 	struct vm_area_struct *vma;
+ 	struct hmm_range *range;
+@@ -796,25 +797,14 @@ int amdgpu_ttm_tt_get_user_pages(struct amdgpu_bo *bo, struct page **pages)
+ 	uint64_t *pfns;
+ 	int r = 0;
+ 
+-	if (!mm) /* Happens during process shutdown */
+-		return -ESRCH;
+-
+ 	if (unlikely(!mirror)) {
+ 		DRM_DEBUG_DRIVER("Failed to get hmm_mirror\n");
+-		r = -EFAULT;
+-		goto out;
++		return -EFAULT;
+ 	}
+ 
+-	vma = find_vma(mm, start);
+-	if (unlikely(!vma || start < vma->vm_start)) {
+-		r = -EFAULT;
+-		goto out;
+-	}
+-	if (unlikely((gtt->userflags & AMDGPU_GEM_USERPTR_ANONONLY) &&
+-		vma->vm_file)) {
+-		r = -EPERM;
+-		goto out;
+-	}
++	mm = mirror->hmm->mmu_notifier.mm;
++	if (!mmget_not_zero(mm)) /* Happens during process shutdown */
++		return -ESRCH;
+ 
+ 	range = kzalloc(sizeof(*range), GFP_KERNEL);
+ 	if (unlikely(!range)) {
+@@ -847,6 +837,17 @@ int amdgpu_ttm_tt_get_user_pages(struct amdgpu_bo *bo, struct page **pages)
+ 	hmm_range_wait_until_valid(range, HMM_RANGE_DEFAULT_TIMEOUT);
+ 
+ 	down_read(&mm->mmap_sem);
++	vma = find_vma(mm, start);
++	if (unlikely(!vma || start < vma->vm_start)) {
++		r = -EFAULT;
++		goto out_unlock;
++	}
++	if (unlikely((gtt->userflags & AMDGPU_GEM_USERPTR_ANONONLY) &&
++		vma->vm_file)) {
++		r = -EPERM;
++		goto out_unlock;
++	}
++
+ 	r = hmm_range_fault(range, 0);
+ 	up_read(&mm->mmap_sem);
+ 
+@@ -865,15 +866,19 @@ int amdgpu_ttm_tt_get_user_pages(struct amdgpu_bo *bo, struct page **pages)
+ 	}
+ 
+ 	gtt->range = range;
++	mmput(mm);
+ 
+ 	return 0;
+ 
++out_unlock:
++	up_read(&mm->mmap_sem);
+ out_free_pfns:
+ 	hmm_range_unregister(range);
+ 	kvfree(pfns);
+ out_free_ranges:
+ 	kfree(range);
+ out:
++	mmput(mm);
+ 	return r;
+ }
+ 
 -- 
 2.20.1
 
