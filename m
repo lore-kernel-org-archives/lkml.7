@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC165C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961C2C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E12422314
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5888F22314
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003485;
-	bh=79QEl3uNsGGdQxJrS1lrgxWzg7KEIku2bSFGvvmV4+4=;
+	s=default; t=1578003493;
+	bh=Trbz3poCE7vYRJeKVa2yogUxbN/ueEuiGiOvxcyX6CU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0GamepURLyhPND4jAX148efEoX+A/Y2dIziWJhtZpL1KsXcTn49k9u3dz/SeDOKby
-	 h34fDdZO7ldtBQuSqHgln9Txp6iItj6mtkk1P3fCnoZFda9XvIMYvCP6U9b3rmRR0h
-	 rfL73KxFUctKhI1JE8dHMEpqaxIJcK7KJ9iG7bBU=
+	b=U4EkNKhxU7zyRrWi/PrQOnswa4BzYL31fpTsXBeF8hN30H3MlVUM/Pt6WbaSncTV8
+	 nmWJjXgEWzhJfMnIx06J2szKYtHTl0neYbPpEkpfhfh/DmeT6CKKH9/09ggKrBcXb3
+	 IsWu4fGsD8fQ3UqgKRA0lk+yVvxKU9za4tqnaCJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbgABWSE (ORCPT
+        id S1728408AbgABWSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:18:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60994 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:18:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728396AbgABWR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:17:59 -0500
+        id S1727670AbgABWSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:18:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E33821582;
-        Thu,  2 Jan 2020 22:17:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9035322B48;
+        Thu,  2 Jan 2020 22:18:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003478;
-        bh=79QEl3uNsGGdQxJrS1lrgxWzg7KEIku2bSFGvvmV4+4=;
+        s=default; t=1578003481;
+        bh=Trbz3poCE7vYRJeKVa2yogUxbN/ueEuiGiOvxcyX6CU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hlAiiWYrb9fzxFBqLwRhtwPilqt3YnKvbex7pMy6cZ3TzzOV/+9xM1m7TVYzaU554
-         FkyM+cugoqtKFfMtJe4BxwKQtAYyqaDRfhnPsaP6RrIazv41mi5ij1mTqr5pCaTXKk
-         nguetGCJlesBVIDIN7gZxv5dwvxVhdsa+I8a62LE=
+        b=TeiXrKi7OM/TlHCB/aO/kuKhVJFMLAE/599eAY1jmTj91jp8mrhZKIRHEUojwdhGS
+         l/wp0uw/CauUMB0NDKK5LHy22r2aQzQCvaxUPvp+IWQYjj0x4DLIKMUBX1Yu+W5c4t
+         maRtDLSFY4hEaATfSboPyl798UpxPQ+eE+eURs+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        David Ahern <dsahern@gmail.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 141/191] net: icmp: fix data-race in cmp_global_allow()
-Date:   Thu,  2 Jan 2020 23:07:03 +0100
-Message-Id: <20200102215844.681734978@linuxfoundation.org>
+Subject: [PATCH 5.4 171/191] tunnel: do not confirm neighbor when do pmtu update
+Date:   Thu,  2 Jan 2020 23:07:33 +0100
+Message-Id: <20200102215847.606311378@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -60,116 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-commit bbab7ef235031f6733b5429ae7877bfa22339712 upstream.
+[ Upstream commit 7a1592bcb15d71400a98632727791d1e68ea0ee8 ]
 
-This code reads two global variables without protection
-of a lock. We need READ_ONCE()/WRITE_ONCE() pairs to
-avoid load/store-tearing and better document the intent.
+When do tunnel PMTU update and calls __ip6_rt_update_pmtu() in the end,
+we should not call dst_confirm_neigh() as there is no two-way communication.
 
-KCSAN reported :
-BUG: KCSAN: data-race in icmp_global_allow / icmp_global_allow
+v5: No Change.
+v4: Update commit description
+v3: Do not remove dst_confirm_neigh, but add a new bool parameter in
+    dst_ops.update_pmtu to control whether we should do neighbor confirm.
+    Also split the big patch to small ones for each area.
+v2: Remove dst_confirm_neigh in __ip6_rt_update_pmtu.
 
-read to 0xffffffff861a8014 of 4 bytes by task 11201 on cpu 0:
- icmp_global_allow+0x36/0x1b0 net/ipv4/icmp.c:254
- icmpv6_global_allow net/ipv6/icmp.c:184 [inline]
- icmpv6_global_allow net/ipv6/icmp.c:179 [inline]
- icmp6_send+0x493/0x1140 net/ipv6/icmp.c:514
- icmpv6_send+0x71/0xb0 net/ipv6/ip6_icmp.c:43
- ip6_link_failure+0x43/0x180 net/ipv6/route.c:2640
- dst_link_failure include/net/dst.h:419 [inline]
- vti_xmit net/ipv4/ip_vti.c:243 [inline]
- vti_tunnel_xmit+0x27f/0xa50 net/ipv4/ip_vti.c:279
- __netdev_start_xmit include/linux/netdevice.h:4420 [inline]
- netdev_start_xmit include/linux/netdevice.h:4434 [inline]
- xmit_one net/core/dev.c:3280 [inline]
- dev_hard_start_xmit+0xef/0x430 net/core/dev.c:3296
- __dev_queue_xmit+0x14c9/0x1b60 net/core/dev.c:3873
- dev_queue_xmit+0x21/0x30 net/core/dev.c:3906
- neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
- neigh_output include/net/neighbour.h:511 [inline]
- ip6_finish_output2+0x7a6/0xec0 net/ipv6/ip6_output.c:116
- __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
- __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
- ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
- dst_output include/net/dst.h:436 [inline]
- ip6_local_out+0x74/0x90 net/ipv6/output_core.c:179
-
-write to 0xffffffff861a8014 of 4 bytes by task 11183 on cpu 1:
- icmp_global_allow+0x174/0x1b0 net/ipv4/icmp.c:272
- icmpv6_global_allow net/ipv6/icmp.c:184 [inline]
- icmpv6_global_allow net/ipv6/icmp.c:179 [inline]
- icmp6_send+0x493/0x1140 net/ipv6/icmp.c:514
- icmpv6_send+0x71/0xb0 net/ipv6/ip6_icmp.c:43
- ip6_link_failure+0x43/0x180 net/ipv6/route.c:2640
- dst_link_failure include/net/dst.h:419 [inline]
- vti_xmit net/ipv4/ip_vti.c:243 [inline]
- vti_tunnel_xmit+0x27f/0xa50 net/ipv4/ip_vti.c:279
- __netdev_start_xmit include/linux/netdevice.h:4420 [inline]
- netdev_start_xmit include/linux/netdevice.h:4434 [inline]
- xmit_one net/core/dev.c:3280 [inline]
- dev_hard_start_xmit+0xef/0x430 net/core/dev.c:3296
- __dev_queue_xmit+0x14c9/0x1b60 net/core/dev.c:3873
- dev_queue_xmit+0x21/0x30 net/core/dev.c:3906
- neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
- neigh_output include/net/neighbour.h:511 [inline]
- ip6_finish_output2+0x7a6/0xec0 net/ipv6/ip6_output.c:116
- __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
- __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
- ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 11183 Comm: syz-executor.2 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-
-Fixes: 4cdf507d5452 ("icmp: add a global rate limitation")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Fixes: 0dec879f636f ("net: use dst_confirm_neigh for UDP, RAW, ICMP, L2TP")
+Reviewed-by: Guillaume Nault <gnault@redhat.com>
+Tested-by: Guillaume Nault <gnault@redhat.com>
+Acked-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/ipv4/icmp.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ net/ipv4/ip_tunnel.c  |    2 +-
+ net/ipv6/ip6_tunnel.c |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/ipv4/icmp.c
-+++ b/net/ipv4/icmp.c
-@@ -249,10 +249,11 @@ bool icmp_global_allow(void)
- 	bool rc = false;
+--- a/net/ipv4/ip_tunnel.c
++++ b/net/ipv4/ip_tunnel.c
+@@ -505,7 +505,7 @@ static int tnl_update_pmtu(struct net_de
+ 		mtu = skb_valid_dst(skb) ? dst_mtu(skb_dst(skb)) : dev->mtu;
  
- 	/* Check if token bucket is empty and cannot be refilled
--	 * without taking the spinlock.
-+	 * without taking the spinlock. The READ_ONCE() are paired
-+	 * with the following WRITE_ONCE() in this same function.
- 	 */
--	if (!icmp_global.credit) {
--		delta = min_t(u32, now - icmp_global.stamp, HZ);
-+	if (!READ_ONCE(icmp_global.credit)) {
-+		delta = min_t(u32, now - READ_ONCE(icmp_global.stamp), HZ);
- 		if (delta < HZ / 50)
- 			return false;
+ 	if (skb_valid_dst(skb))
+-		skb_dst_update_pmtu(skb, mtu);
++		skb_dst_update_pmtu_no_confirm(skb, mtu);
+ 
+ 	if (skb->protocol == htons(ETH_P_IP)) {
+ 		if (!skb_is_gso(skb) &&
+--- a/net/ipv6/ip6_tunnel.c
++++ b/net/ipv6/ip6_tunnel.c
+@@ -640,7 +640,7 @@ ip4ip6_err(struct sk_buff *skb, struct i
+ 		if (rel_info > dst_mtu(skb_dst(skb2)))
+ 			goto out;
+ 
+-		skb_dst_update_pmtu(skb2, rel_info);
++		skb_dst_update_pmtu_no_confirm(skb2, rel_info);
  	}
-@@ -262,14 +263,14 @@ bool icmp_global_allow(void)
- 	if (delta >= HZ / 50) {
- 		incr = sysctl_icmp_msgs_per_sec * delta / HZ ;
- 		if (incr)
--			icmp_global.stamp = now;
-+			WRITE_ONCE(icmp_global.stamp, now);
- 	}
- 	credit = min_t(u32, icmp_global.credit + incr, sysctl_icmp_msgs_burst);
- 	if (credit) {
- 		credit--;
- 		rc = true;
- 	}
--	icmp_global.credit = credit;
-+	WRITE_ONCE(icmp_global.credit, credit);
- 	spin_unlock(&icmp_global.lock);
- 	return rc;
- }
+ 
+ 	icmp_send(skb2, rel_type, rel_code, htonl(rel_info));
+@@ -1132,7 +1132,7 @@ route_lookup:
+ 	mtu = max(mtu, skb->protocol == htons(ETH_P_IPV6) ?
+ 		       IPV6_MIN_MTU : IPV4_MIN_MTU);
+ 
+-	skb_dst_update_pmtu(skb, mtu);
++	skb_dst_update_pmtu_no_confirm(skb, mtu);
+ 	if (skb->len - t->tun_hlen - eth_hlen > mtu && !skb_is_gso(skb)) {
+ 		*pmtu = mtu;
+ 		err = -EMSGSIZE;
 
 
