@@ -2,53 +2,52 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F6AC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C24C3276E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 319C920848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:54:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C8D320866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:54:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005644;
-	bh=sXMuB2CZO8zNQEWG2MGhBwus/l8bV2Pqvf5j3FHDyFo=;
+	s=default; t=1578005647;
+	bh=VOUT318r59RAxhuHzAdS0CGGtsryt1VTz1lPfrvr2xY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m9vYn0b+EAkaIqcGs2uUEE+Dixg0Dj6w+VT35t/FylbMXVIlxuW7F8doMnXdISKG5
-	 ufiItPFdTfNO+s39shrDDWu/b1M8lGJrgUkPjvuZZxtgPjOQ+2TnONTd7XB+xp8wUI
-	 SNviJ2d2OKscLStRhS+NPAhAufAK2FC8wQTX/i8U=
+	b=oFtBu5Dick4bx/c2UxNtWDo0rm8PSn2jQUIfQhp/X308PkIX1Sx9bil+wrkVw6o9o
+	 YedGgG+1CZBpAmGXWhw7uHevlqHHTd04nvocAzkvu6itE3wF2pRSXaM6RuhzSOnc6L
+	 pbN+iPGinC1UZ20SUbi1LsNLFZng+VjMvjOiD8Is=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729468AbgABWyD (ORCPT
+        id S1727609AbgABWWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:54:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39864 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:22:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727834AbgABWVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:21:11 -0500
+        id S1729086AbgABWWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:22:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18C4C21582;
-        Thu,  2 Jan 2020 22:21:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B695B222C3;
+        Thu,  2 Jan 2020 22:22:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003670;
-        bh=sXMuB2CZO8zNQEWG2MGhBwus/l8bV2Pqvf5j3FHDyFo=;
+        s=default; t=1578003723;
+        bh=VOUT318r59RAxhuHzAdS0CGGtsryt1VTz1lPfrvr2xY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p5VY9EtI36NMevM1T8vRWOzsyardD+AdtU9dChMGwi5Jy3MT/gXPV1e4kjiiJoOA4
-         rNFYqhCSaGNdfgEzcNl11MChIifiXoKYcTlny6xXo8H/r+xaPirFzHwxMrWrbHNkWP
-         a/U4uBvG2hM+JfzypDy/QcjLSo8kD6PRbqmVnGAY=
+        b=KP4YzfLC0EsiAI1PoeXEk/Az1uTEOZrVfaVBht04qQLQ3yVLGjIcoCVg/ORTudAjk
+         iDStDJiBepGjQMfBgwtgJ2eSp7Q6A7Zl6KFWTSS5WWuRm2lqGGPA/AAAJfLki/KRvJ
+         AwrlicvyzFsDUU5A+Zq/gssq2OuDCF/hjcDxcrAI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 048/114] libnvdimm/btt: fix variable rc set but not used
-Date:   Thu,  2 Jan 2020 23:07:00 +0100
-Message-Id: <20200102220033.933129789@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 088/114] net: icmp: fix data-race in cmp_global_allow()
+Date:   Thu,  2 Jan 2020 23:07:40 +0100
+Message-Id: <20200102220038.083133999@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -61,50 +60,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 4e24e37d5313edca8b4ab86f240c046c731e28d6 ]
+commit bbab7ef235031f6733b5429ae7877bfa22339712 upstream.
 
-drivers/nvdimm/btt.c: In function 'btt_read_pg':
-drivers/nvdimm/btt.c:1264:8: warning: variable 'rc' set but not used
-[-Wunused-but-set-variable]
-    int rc;
-        ^~
+This code reads two global variables without protection
+of a lock. We need READ_ONCE()/WRITE_ONCE() pairs to
+avoid load/store-tearing and better document the intent.
 
-Add a ratelimited message in case a storm of errors is encountered.
+KCSAN reported :
+BUG: KCSAN: data-race in icmp_global_allow / icmp_global_allow
 
-Fixes: d9b83c756953 ("libnvdimm, btt: rework error clearing")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
-Link: https://lore.kernel.org/r/1572530719-32161-1-git-send-email-cai@lca.pw
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+read to 0xffffffff861a8014 of 4 bytes by task 11201 on cpu 0:
+ icmp_global_allow+0x36/0x1b0 net/ipv4/icmp.c:254
+ icmpv6_global_allow net/ipv6/icmp.c:184 [inline]
+ icmpv6_global_allow net/ipv6/icmp.c:179 [inline]
+ icmp6_send+0x493/0x1140 net/ipv6/icmp.c:514
+ icmpv6_send+0x71/0xb0 net/ipv6/ip6_icmp.c:43
+ ip6_link_failure+0x43/0x180 net/ipv6/route.c:2640
+ dst_link_failure include/net/dst.h:419 [inline]
+ vti_xmit net/ipv4/ip_vti.c:243 [inline]
+ vti_tunnel_xmit+0x27f/0xa50 net/ipv4/ip_vti.c:279
+ __netdev_start_xmit include/linux/netdevice.h:4420 [inline]
+ netdev_start_xmit include/linux/netdevice.h:4434 [inline]
+ xmit_one net/core/dev.c:3280 [inline]
+ dev_hard_start_xmit+0xef/0x430 net/core/dev.c:3296
+ __dev_queue_xmit+0x14c9/0x1b60 net/core/dev.c:3873
+ dev_queue_xmit+0x21/0x30 net/core/dev.c:3906
+ neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
+ neigh_output include/net/neighbour.h:511 [inline]
+ ip6_finish_output2+0x7a6/0xec0 net/ipv6/ip6_output.c:116
+ __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
+ __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
+ ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
+ NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+ ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
+ dst_output include/net/dst.h:436 [inline]
+ ip6_local_out+0x74/0x90 net/ipv6/output_core.c:179
+
+write to 0xffffffff861a8014 of 4 bytes by task 11183 on cpu 1:
+ icmp_global_allow+0x174/0x1b0 net/ipv4/icmp.c:272
+ icmpv6_global_allow net/ipv6/icmp.c:184 [inline]
+ icmpv6_global_allow net/ipv6/icmp.c:179 [inline]
+ icmp6_send+0x493/0x1140 net/ipv6/icmp.c:514
+ icmpv6_send+0x71/0xb0 net/ipv6/ip6_icmp.c:43
+ ip6_link_failure+0x43/0x180 net/ipv6/route.c:2640
+ dst_link_failure include/net/dst.h:419 [inline]
+ vti_xmit net/ipv4/ip_vti.c:243 [inline]
+ vti_tunnel_xmit+0x27f/0xa50 net/ipv4/ip_vti.c:279
+ __netdev_start_xmit include/linux/netdevice.h:4420 [inline]
+ netdev_start_xmit include/linux/netdevice.h:4434 [inline]
+ xmit_one net/core/dev.c:3280 [inline]
+ dev_hard_start_xmit+0xef/0x430 net/core/dev.c:3296
+ __dev_queue_xmit+0x14c9/0x1b60 net/core/dev.c:3873
+ dev_queue_xmit+0x21/0x30 net/core/dev.c:3906
+ neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
+ neigh_output include/net/neighbour.h:511 [inline]
+ ip6_finish_output2+0x7a6/0xec0 net/ipv6/ip6_output.c:116
+ __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
+ __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
+ ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
+ NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+ ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 11183 Comm: syz-executor.2 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+
+Fixes: 4cdf507d5452 ("icmp: add a global rate limitation")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/nvdimm/btt.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/ipv4/icmp.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
-index 0360c015f658..75ae2c508a04 100644
---- a/drivers/nvdimm/btt.c
-+++ b/drivers/nvdimm/btt.c
-@@ -1260,11 +1260,11 @@ static int btt_read_pg(struct btt *btt, struct bio_integrity_payload *bip,
+--- a/net/ipv4/icmp.c
++++ b/net/ipv4/icmp.c
+@@ -254,10 +254,11 @@ bool icmp_global_allow(void)
+ 	bool rc = false;
  
- 		ret = btt_data_read(arena, page, off, postmap, cur_len);
- 		if (ret) {
--			int rc;
--
- 			/* Media error - set the e_flag */
--			rc = btt_map_write(arena, premap, postmap, 0, 1,
--				NVDIMM_IO_ATOMIC);
-+			if (btt_map_write(arena, premap, postmap, 0, 1, NVDIMM_IO_ATOMIC))
-+				dev_warn_ratelimited(to_dev(arena),
-+					"Error persistently tracking bad blocks at %#x\n",
-+					premap);
- 			goto out_rtt;
- 		}
- 
--- 
-2.20.1
-
+ 	/* Check if token bucket is empty and cannot be refilled
+-	 * without taking the spinlock.
++	 * without taking the spinlock. The READ_ONCE() are paired
++	 * with the following WRITE_ONCE() in this same function.
+ 	 */
+-	if (!icmp_global.credit) {
+-		delta = min_t(u32, now - icmp_global.stamp, HZ);
++	if (!READ_ONCE(icmp_global.credit)) {
++		delta = min_t(u32, now - READ_ONCE(icmp_global.stamp), HZ);
+ 		if (delta < HZ / 50)
+ 			return false;
+ 	}
+@@ -267,14 +268,14 @@ bool icmp_global_allow(void)
+ 	if (delta >= HZ / 50) {
+ 		incr = sysctl_icmp_msgs_per_sec * delta / HZ ;
+ 		if (incr)
+-			icmp_global.stamp = now;
++			WRITE_ONCE(icmp_global.stamp, now);
+ 	}
+ 	credit = min_t(u32, icmp_global.credit + incr, sysctl_icmp_msgs_burst);
+ 	if (credit) {
+ 		credit--;
+ 		rc = true;
+ 	}
+-	icmp_global.credit = credit;
++	WRITE_ONCE(icmp_global.credit, credit);
+ 	spin_unlock(&icmp_global.lock);
+ 	return rc;
+ }
 
 
