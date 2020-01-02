@@ -2,207 +2,157 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84706C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B312AC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA36217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84EFC20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004973;
-	bh=X1sDydLqSX2i4y9/WNq55HXF+1lcahFGVi3B3JmDeCE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oM5QJceB0FaqTyApfsUe3n3hszDtbZYDU+CVDbwmyspUqm7tfCLkn+l5nIY7n+YFu
-	 7xMqocSA42cLaOgV/Hed5sCI9KE+RQ0x66vL41kdD6HpwO/0PBc5IVh2glVxtKhy0k
-	 5ZsVeEfcM1uBGOUJmz0RUFbbHeDPGYVm83gZjmGo=
+	s=default; t=1578004981;
+	bh=Nv6XiNZITsliWRdQc4rFMkKdM/QxaNweNuuNEPunRHs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UjJ8luZhIVe4cPwipn9LnKW57vSdXCgnyqidv6n4LgaHEuIyFhEreMDTSiDoVOey8
+	 b9LNjeswTfROjfgHi++ze6ODvtTFQM+Nwqvjc+vewIQmHJpyIfPP4CUqD/uai3ryGq
+	 l69MVkkzORPYh3UZMkxJJQct59Pwz588bW4V21rM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731063AbgABWmw (ORCPT
+        id S1731342AbgABWnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:42:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38442 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:43:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730957AbgABWmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:42:45 -0500
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729062AbgABWfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:35:22 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75157222C3;
-        Thu,  2 Jan 2020 22:42:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C604E20863;
+        Thu,  2 Jan 2020 22:35:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004964;
-        bh=X1sDydLqSX2i4y9/WNq55HXF+1lcahFGVi3B3JmDeCE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=u7Tl+fXnDkklH/8QPf1heNJVzkOJ3TaUcSY9VoqunoijYHfPC40fXtDmCAIEZOfGH
-         UT7ccdfQEQrCPns7STxeE3O8NMhJKJCAwsVBVtihW0+DDjp0SXo4+UCEX0O2kWb04S
-         pP2xETmMH+P+54UFb0Ws5HkduJ1Ewrss6SqZuZNs=
-Received: by mail-qk1-f169.google.com with SMTP id t129so32487319qke.10;
-        Thu, 02 Jan 2020 14:42:44 -0800 (PST)
-X-Gm-Message-State: APjAAAWwKL+VUZ+/7s7nOTVBO0lvFQ/eKPWTJmy2MBeIXFum9bpf1l+X
-        4OVEtcj6Yai7JTqRPXmipBDXq/KEQHQREM9boA==
-X-Google-Smtp-Source: APXvYqwHjJixw+g5oo7LgzM37cf5twPti8tRxdrwCGh+tDfV93Rz9uc+7Jw8lKgm9/CqOO54nJLkoJK64EKW6TgtHaM=
-X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr63515899qkl.119.1578004963560;
- Thu, 02 Jan 2020 14:42:43 -0800 (PST)
+        s=default; t=1578004521;
+        bh=Nv6XiNZITsliWRdQc4rFMkKdM/QxaNweNuuNEPunRHs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zhoGM7Ag8hrW6Dk2lYXOCsF4UbbS8yLhf50+DwSo2SStEv5eI0FGY/ESftwiQub8O
+         Fx2oqZumkOpFagQVwXuIFbufHVNr+7pT6XkqxhXfcdPiE80R0eFLnFmq7EdNT1zIf5
+         op3A3t3oMwDmqOh9VI/ReZsUCjY+7yeeR5qTMKbg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 042/137] perf probe: Fix to show ranges of variables in functions without entry_pc
+Date:   Thu,  2 Jan 2020 23:06:55 +0100
+Message-Id: <20200102220552.279420485@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
+References: <20200102220546.618583146@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20191216121932.22967-1-zhang.lyra@gmail.com> <20191216121932.22967-4-zhang.lyra@gmail.com>
- <20191226185623.GA4463@bogus> <CAAfSe-vL4S-w4JVzevPYxb=LNqGQEn6quM54AjPHZUe6Gw3WTg@mail.gmail.com>
-In-Reply-To: <CAAfSe-vL4S-w4JVzevPYxb=LNqGQEn6quM54AjPHZUe6Gw3WTg@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 2 Jan 2020 15:42:23 -0700
-X-Gmail-Original-Message-ID: <CAL_JsqKu5KwogNzr2wjtDFjWLH1cLOLBi0FK5ZZipdKS-MWVMQ@mail.gmail.com>
-Message-ID: <CAL_JsqKu5KwogNzr2wjtDFjWLH1cLOLBi0FK5ZZipdKS-MWVMQ@mail.gmail.com>
-Subject: Re: [PATCH V2 3/6] dt-bindings: clk: sprd: add bindings for sc9863a
- clock controller
-To:     Chunyan Zhang <zhang.lyra@gmail.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 8:07 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
->
-> On Fri, 27 Dec 2019 at 02:56, Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Mon, Dec 16, 2019 at 08:19:29PM +0800, Chunyan Zhang wrote:
-> > > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > >
-> > > add a new bindings to describe sc9863a clock compatible string.
-> > >
-> > > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > > ---
-> > >  .../bindings/clock/sprd,sc9863a-clk.yaml      | 77 +++++++++++++++++++
-> > >  1 file changed, 77 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
-> > > new file mode 100644
-> > > index 000000000000..881f0a0287e5
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
-> > > @@ -0,0 +1,77 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +# Copyright 2019 Unisoc Inc.
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: "http://devicetree.org/schemas/clock/sprd,sc9863a-clk.yaml#"
-> > > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> > > +
-> > > +title: SC9863A Clock Control Unit Device Tree Bindings
-> > > +
-> > > +maintainers:
-> > > +  - Orson Zhai <orsonzhai@gmail.com>
-> > > +  - Baolin Wang <baolin.wang7@gmail.com>
-> > > +  - Chunyan Zhang <zhang.lyra@gmail.com>
-> > > +
-> > > +properties:
-> > > +  "#clock-cells":
-> > > +    const: 1
-> > > +
-> > > +  compatible :
-> > > +    enum:
-> > > +      - sprd,sc9863a-ap-clk
-> > > +      - sprd,sc9863a-pmu-gate
-> > > +      - sprd,sc9863a-pll
-> > > +      - sprd,sc9863a-mpll
-> > > +      - sprd,sc9863a-rpll
-> > > +      - sprd,sc9863a-dpll
-> > > +      - sprd,sc9863a-aon-clk
-> > > +      - sprd,sc9863a-apahb-gate
-> > > +      - sprd,sc9863a-aonapb-gate
-> > > +      - sprd,sc9863a-mm-gate
-> > > +      - sprd,sc9863a-mm-clk
-> > > +      - sprd,sc9863a-vspahb-gate
-> > > +      - sprd,sc9863a-apapb-gate
-> >
-> > These will probably need to be split to separate schemas for the reasons
-> > below...
-> >
-> > > +
-> > > +  clocks:
-> > > +    description: |
-> > > +      The input parent clock(s) phandle for this clock, only list fixed
-> > > +      clocks which are decleared in devicetree.
-> >
-> > typo.
-> >
-> > You need to define how many clocks.
->
-> Ok, will add a define of maxItems.
->
-> >
-> > > +
-> > > +  clock-names:
-> > > +    description: |
-> > > +      Clock name strings used for driver to reference.
-> >
-> > You need to list out the names.
-> >
-> > > +
-> > > +  reg:
-> > > +    description: |
-> > > +      Contain the registers base address and length. It must be configured
-> > > +      only if no 'sprd,syscon' under the node.
-> > > +
-> > > +  sprd,syscon:
-> > > +    $ref: '/schemas/types.yaml#/definitions/phandle'
-> > > +    description: |
-> > > +      The phandle to the syscon which is in the same address area with
-> > > +      the clock, and so we can get regmap for the clocks from the
-> > > +      syscon device.
-> >
-> > It is preferred to make the clock node a child of the syscon and then
-> > you don't need this property.
->
-> According to the hardware topology, any clocks are not belonged to
-> syscon, like described here, this phandle is only used to get virtual
-> map address for clocks which have the same phsical address base with
-> one syscon.
->
-> In the past, clocks were defined like below:
->     apahb_gate: apahb-gate {
->       compatible = "sprd,sc9863a-apahb-gate";
->       reg = <0 0x20e00000 0 0x1000>;
->       #clock-cells = <1>;
->     };
->
-> And there was also a syscon which had the same base address like below:
-> ap_ahb_regs: syscon@20e00000 {
-> compatible = "sprd,sc9863a-glbregs", "syscon";
-> reg = <0 0x20e00000 0 0x4000>;
-> };
->
-> To avoid one phsical address was remapped more than one time, I think
-> using the mapped address by syscon directly would be better.
-> Any other suggestions are very appreciated.
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-I'm only suggesting you change the location of the node and get the
-syscon by getting the parent node. IOW, do this:
+[ Upstream commit af04dd2f8ebaa8fbd46f698714acbf43da14da45 ]
 
-ap_ahb_regs: syscon@20e00000 {
-    compatible = "sprd,sc9863a-glbregs", "syscon";
-    reg = <0 0x20e00000 0 0x4000>;
+Fix to show ranges of variables (--range and --vars option) in functions
+which DIE has only ranges but no entry_pc attribute.
 
-    apahb_gate: apahb-gate {
-        compatible = "sprd,sc9863a-apahb-gate";
-        #clock-cells = <1>;
-    };
-};
+Without this fix:
 
-Now, if there is a sub range of registers for the clocks that are
-contiguous, then apahb-gate should have a 'reg' property too (and
-ranges in the parent). Linux will not use that, but it's a more
-complete description of the h/w.
+  # perf probe --range -V clear_tasks_mm_cpumask
+  Available variables at clear_tasks_mm_cpumask
+  	@<clear_tasks_mm_cpumask+0>
+  		(No matched variables)
 
-Rob
+With this fix:
+
+  # perf probe --range -V clear_tasks_mm_cpumask
+  Available variables at clear_tasks_mm_cpumask
+	@<clear_tasks_mm_cpumask+0>
+		[VAL]	int	cpu	@<clear_tasks_mm_cpumask+[0-35,317-317,2052-2059]>
+
+Committer testing:
+
+Before:
+
+  [root@quaco ~]# perf probe --range -V clear_tasks_mm_cpumask
+  Available variables at clear_tasks_mm_cpumask
+          @<clear_tasks_mm_cpumask+0>
+                  (No matched variables)
+  [root@quaco ~]#
+
+After:
+
+  [root@quaco ~]# perf probe --range -V clear_tasks_mm_cpumask
+  Available variables at clear_tasks_mm_cpumask
+          @<clear_tasks_mm_cpumask+0>
+                  [VAL]   int     cpu     @<clear_tasks_mm_cpumask+[0-23,23-105,105-106,106-106,1843-1850,1850-1862]>
+  [root@quaco ~]#
+
+Using it:
+
+  [root@quaco ~]# perf probe clear_tasks_mm_cpumask cpu
+  Added new event:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask with cpu)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
+
+  [root@quaco ~]# perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c with cpu)
+  [root@quaco ~]#
+  [root@quaco ~]# perf trace -e probe:*cpumask
+  ^C[root@quaco ~]#
+
+Fixes: 349e8d261131 ("perf probe: Add --range option to show a variable's location range")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157199323018.8075.8179744380479673672.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/perf/util/dwarf-aux.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index ef6fa620a426..ed7777ed4d38 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -989,7 +989,7 @@ static int die_get_var_innermost_scope(Dwarf_Die *sp_die, Dwarf_Die *vr_die,
+ 	bool first = true;
+ 	const char *name;
+ 
+-	ret = dwarf_entrypc(sp_die, &entry);
++	ret = die_entrypc(sp_die, &entry);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1050,7 +1050,7 @@ int die_get_var_range(Dwarf_Die *sp_die, Dwarf_Die *vr_die, struct strbuf *buf)
+ 	bool first = true;
+ 	const char *name;
+ 
+-	ret = dwarf_entrypc(sp_die, &entry);
++	ret = die_entrypc(sp_die, &entry);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.20.1
+
+
+
