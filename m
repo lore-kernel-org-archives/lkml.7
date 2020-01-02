@@ -2,54 +2,52 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEF3C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B48E3C3276E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D61492464E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8009522525
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003995;
-	bh=4cj++FVsf3T8jdjkxRESByTCeCSbAi1bhmBHuAKL6Lc=;
+	s=default; t=1578003998;
+	bh=jAIf3CT/v5lg8WB6/KwtNml/dKqKx7WIzBVB3nUMhVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ui+KEzQqZruilUPAkiYsVkWyUUeUTAgLzOQdDQmzsD0/6jpY12IYevkyV1HMq99So
-	 gopJCzDj33IpFM7vuRJExqjGdvFnwIpZFDfJ3KLCPlKuNtcBm9gFDp1bSQL3C+NBs7
-	 +cJsqfCOg3HcLOoyqHgAi3jjGsUpuMQSR3+6UuZ4=
+	b=RmqG+H61LLsSXR8uXQebuobHi8OsoH/4d0cWY/1mAZQEtmXHrTfvS87pLFWg1jCWr
+	 FUlQ4yxrFH2IHZDKYzh6gAZzxr09J8/rtHwj6GbhOmVNcKIkn1x354PtQbU1CpeYJq
+	 r2FKkyTcWstUaSGZ3Jyv282SfFbfhs1vAQzR0vbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729653AbgABW0a (ORCPT
+        id S1729542AbgABW0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:26:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53598 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:26:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729635AbgABW0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:26:23 -0500
+        id S1729652AbgABW0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:26:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D06222253D;
-        Thu,  2 Jan 2020 22:26:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B12D222C3;
+        Thu,  2 Jan 2020 22:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003983;
-        bh=4cj++FVsf3T8jdjkxRESByTCeCSbAi1bhmBHuAKL6Lc=;
+        s=default; t=1578003990;
+        bh=jAIf3CT/v5lg8WB6/KwtNml/dKqKx7WIzBVB3nUMhVI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BsIiuMt7CLTnLQj5NPfW5EefK9sMCfQtTipMme2uaIEnOIp/a0gX36U0nXYbPljJD
-         l547u+TQXQihJtmjXV9zqzOfZ9MjlAWs68+8avyJVOS1WUzqYB4AOv6K8C9uk0rhkV
-         Oz7L4fpMRQ6y4XeSnQkTlR6hINcjrPOf1nb6cews=
+        b=0JczxWfZqkgu1tbRlr7yOpWITHMn5JMKTCQo9ciKe6/KuX7TTlLNTypmoq8KVkPk+
+         sUDe++7Oj9dmIZTbIq2PZe+MkGAW7y8B/ifg45v2SXpWlFw4da2h9ey385uxuWKYSE
+         Q4fQZyxDPiHgTbcFEaTOB4HYP9wy39NpLkc1f5ss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
-        Guillaume Nault <gnault@redhat.com>,
-        David Ahern <dsahern@gmail.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 80/91] ip6_gre: do not confirm neighbor when do pmtu update
-Date:   Thu,  2 Jan 2020 23:08:02 +0100
-Message-Id: <20200102220449.619515237@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+b3028ac3933f5c466389@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 58/91] ALSA: hda - Downgrade error message for single-cmd fallback
+Date:   Thu,  2 Jan 2020 23:07:40 +0100
+Message-Id: <20200102220439.850142478@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -62,47 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 675d76ad0ad5bf41c9a129772ef0aba8f57ea9a7 ]
+[ Upstream commit 475feec0c41ad71cb7d02f0310e56256606b57c5 ]
 
-When we do ipv6 gre pmtu update, we will also do neigh confirm currently.
-This will cause the neigh cache be refreshed and set to REACHABLE before
-xmit.
+We made the error message for the CORB/RIRB communication clearer by
+upgrading to dev_WARN() so that user can notice better.  But this
+struck us like a boomerang: now it caught syzbot and reported back as
+a fatal issue although it's not really any too serious bug that worth
+for stopping the whole system.
 
-But if the remote mac address changed, e.g. device is deleted and recreated,
-we will not able to notice this and still use the old mac address as the neigh
-cache is REACHABLE.
+OK, OK, let's be softy, downgrade it to the standard dev_err() again.
 
-Fix this by disable neigh confirm when do pmtu update
-
-v5: No change.
-v4: No change.
-v3: Do not remove dst_confirm_neigh, but add a new bool parameter in
-    dst_ops.update_pmtu to control whether we should do neighbor confirm.
-    Also split the big patch to small ones for each area.
-v2: Remove dst_confirm_neigh in __ip6_rt_update_pmtu.
-
-Reported-by: Jianlin Shi <jishi@redhat.com>
-Reviewed-by: Guillaume Nault <gnault@redhat.com>
-Acked-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: dd65f7e19c69 ("ALSA: hda - Show the fatal CORB/RIRB error more clearly")
+Reported-by: syzbot+b3028ac3933f5c466389@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/20191216151224.30013-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/ip6_gre.c |    2 +-
+ sound/pci/hda/hda_controller.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv6/ip6_gre.c
-+++ b/net/ipv6/ip6_gre.c
-@@ -527,7 +527,7 @@ static netdev_tx_t __gre6_xmit(struct sk
+diff --git a/sound/pci/hda/hda_controller.c b/sound/pci/hda/hda_controller.c
+index 8fcb421193e0..fa261b27d858 100644
+--- a/sound/pci/hda/hda_controller.c
++++ b/sound/pci/hda/hda_controller.c
+@@ -883,7 +883,7 @@ static int azx_rirb_get_response(struct hdac_bus *bus, unsigned int addr,
+ 		return -EAGAIN; /* give a chance to retry */
+ 	}
  
- 	/* TooBig packet may have updated dst->dev's mtu */
- 	if (dst && dst_mtu(dst) > dst->dev->mtu)
--		dst->ops->update_pmtu(dst, NULL, skb, dst->dev->mtu, true);
-+		dst->ops->update_pmtu(dst, NULL, skb, dst->dev->mtu, false);
- 
- 	return ip6_tnl_xmit(skb, dev, dsfield, fl6, encap_limit, pmtu,
- 			    NEXTHDR_GRE);
+-	dev_WARN(chip->card->dev,
++	dev_err(chip->card->dev,
+ 		"azx_get_response timeout, switching to single_cmd mode: last cmd=0x%08x\n",
+ 		bus->last_cmd[addr]);
+ 	chip->single_cmd = 1;
+-- 
+2.20.1
+
 
 
