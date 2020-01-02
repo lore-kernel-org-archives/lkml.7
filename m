@@ -2,118 +2,300 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AF3C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C85C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B497217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F73215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:02:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QZ9tQjYX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KNP/vimF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgABJBX (ORCPT
+        id S1727918AbgABJCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 04:01:23 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52524 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727877AbgABJBW (ORCPT
+        Thu, 2 Jan 2020 04:02:16 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35176 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727874AbgABJCP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 04:01:22 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p9so4994281wmc.2
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 01:01:21 -0800 (PST)
+        Thu, 2 Jan 2020 04:02:15 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p17so5035459wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 01:02:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=bY5c7mhj+MB1IJ1i7uGo/Kc8EYzOKkXDomOXublBO3U=;
-        b=QZ9tQjYXqLoZLvcnLHcsTY2qVjqjJB70qBvkd87z+jX4Z5ulLtpvH9KLzOCuCBoqEC
-         puvrqTQUSRQdxQ2OkmKp9rujNom5nuO41UowatKn5ddUTUBgZ0wc7WbgAf1/5VvZTnX6
-         FZcZuuCEqFipHb8M3BBCwGKial148goxN+jTgRhnHIqg8KrHN2ssouFPxNhGFRqpsV0p
-         VwaerlyXe6hyznrWziPw7nJ9Sggsgr8B4Sorf61KUKPYNglNXczlUghUxkCb2+xesvVf
-         B6GseKrt7B1pCfpqcWW496RV+ckSdKeK+UjUWSEloQPpMNDLblBJQYnMaLcc1mgJxZFO
-         8w/A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8cd3TpXBK+IawPjaw7aXD6zwvAgQhDNn6DDpmTH/NmA=;
+        b=KNP/vimFNK5FMj+XsgC3HDeHP790Mksx5nUjTP9WpHmZqugxqPcgVorw120zkCiCsS
+         W/vXqj8psAeKIzqQN9itoqKzpaCxtJu8DzBl9Gd2aQfHmnmeINQvVk+vWdbKlvcWV+Kz
+         Sa6X6Pd5BxM2ialVGM8Y4ZeiSalVOZ0V8M6N4b1hcFt8OZe5DCP/tvYQmM1Bmt2qG/jF
+         XbBoqje6MpbCno2d/jGlbsH0Mo5JRBwGRq+pzetLOFMBqfQJWQT/b/BsA9OvPLzVHU89
+         +29zre4T7h4FMv7rizfaWgAwT7Uua+28L4fLUBBFTlPNJO7t+aqBbAp7rQrqyEkjzefC
+         v4UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=bY5c7mhj+MB1IJ1i7uGo/Kc8EYzOKkXDomOXublBO3U=;
-        b=b4VDtM8HunShIol4xQJ/ukTBEiqNhznsDsLRR5cWBErJcAv9/1xf0Nqr8wenUZ9uFf
-         IvzWMctNcW49aEqnIDn3+cG93I4wc2BSB2wupxLycj3VSIftyyDFW6kw39kGmQrd9ghn
-         2RtgJPEAz4eSDVb20+I656QYBpNZ0d++h2T9ddaQyjwRWj0cC7SW4D9LNgRc5wJnEkIk
-         mNKqW10Qqvr8NJGnxzSf+oDcXka9cJxlKTCUP7BTXH8DmCrYRfRXAMpj6nWbbLde+vOA
-         SmOGPKnFAYw4LByMiNk94LzB8sQRfYK8z5ttydomMfOwQogQ8vn076SUq/Q2J7sTPTqf
-         UU7Q==
-X-Gm-Message-State: APjAAAWxRDvZcBvv5MAAMBcxc1a3S0TJgmubnhDZBvve10OmE1/9ot1Q
-        FRAIvkWs67GPHlsDtVF4qVMJEQ==
-X-Google-Smtp-Source: APXvYqzc1qfuS3RLws+tTcAymTsxhv+zMZcC9R7yOp7ylZs5RuOakRlsYmFitrb+VuJMsIiZ5HPG5w==
-X-Received: by 2002:a7b:c19a:: with SMTP id y26mr13333290wmi.152.1577955680655;
-        Thu, 02 Jan 2020 01:01:20 -0800 (PST)
-Received: from dell ([2.27.35.135])
-        by smtp.gmail.com with ESMTPSA id m21sm7872660wmi.27.2020.01.02.01.01.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 01:01:20 -0800 (PST)
-Date:   Thu, 2 Jan 2020 09:01:32 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 26/37] mfd: intel_soc_pmic: Add SCU IPC member to struct
- intel_soc_pmic
-Message-ID: <20200102090132.GD22390@dell>
-References: <20191223141716.13727-1-mika.westerberg@linux.intel.com>
- <20191223141716.13727-27-mika.westerberg@linux.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8cd3TpXBK+IawPjaw7aXD6zwvAgQhDNn6DDpmTH/NmA=;
+        b=tRQ86e9xMFt48twfraOiqs9fGeBX0xHjNeUR4KQI+JC7duQR8Kt7iDz9f1yjlaqADQ
+         E3LwvFvx/jl1WeE2N2BYIM5pWfXLdJMLjtlo1C83wFpJ5xV6Q6jVkUSdF4osW1mLlowP
+         rpxQSP/vuB019K1smGZDEc37fEr/ENsO93J2OXn2ejqKW0qjuBkN3o+c+iH0kGsFjb2K
+         3cEEZCwS6NP5DmXwK1VCW+iQdqCk3P0rbHckoJembc6wlFicVm3d6SX0SfIoi6R85DjF
+         SqmovFznsK58cQOhTdXpHpWqsI4E/3wMy6vdXErVF787fTzgVd8t1xmTkvJItoXbROY4
+         3ZVw==
+X-Gm-Message-State: APjAAAWRu4EaHCfG4l9CcD6NtMCOx+niqG+K72kFt1kLjVja/g6oZ6at
+        e9rj/sMelAkvHCOoYhyIL0on9YR7sj7h3eyyx9ensQ==
+X-Google-Smtp-Source: APXvYqzzB/zIGsvariBu5SIfw++3sUzS0igh4Mc8RsB9yOaotLjMsfSJvh1WK64gidIIQBjNl6FqKpqbYz3OkQY/AiA=
+X-Received: by 2002:a1c:7205:: with SMTP id n5mr13795383wmc.9.1577955732121;
+ Thu, 02 Jan 2020 01:02:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191223141716.13727-27-mika.westerberg@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <157793839827.977550.7845382457971215205.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <157793840865.977550.1385745645244916944.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <157793840865.977550.1385745645244916944.stgit@dwillia2-desk3.amr.corp.intel.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 2 Jan 2020 10:02:00 +0100
+Message-ID: <CAKv+Gu8JTha-Os6uzg_ghxodEKgjnkgLwJYFkXZiTbqqdKU6_Q@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] efi: Add tracking for dynamically allocated memmaps
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Taku Izumi <izumi.taku@jp.fujitsu.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Kexec Mailing List <kexec@lists.infradead.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Dec 2019, Mika Westerberg wrote:
+Hi Dan,
 
-> Both PMIC drivers (intel_soc_pmic_mrfld and intel_soc_pmic_bxtwc) will
-> be using this field going forward to access the SCU IPC instance.
-> 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Thanks for taking the time to really fix this properly.
+
+Comments/questions below.
+
+On Thu, 2 Jan 2020 at 05:29, Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> In preparation for fixing efi_memmap_alloc() leaks, add support for
+> recording whether the memmap was dynamically allocated from slab,
+> memblock, or is the original physical memmap provided by the platform.
+>
+> Cc: Taku Izumi <izumi.taku@jp.fujitsu.com>
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > ---
->  include/linux/mfd/intel_soc_pmic.h | 1 +
->  1 file changed, 1 insertion(+)
+>  arch/x86/platform/efi/efi.c     |    2 +-
+>  arch/x86/platform/efi/quirks.c  |   11 ++++++-----
+>  drivers/firmware/efi/fake_mem.c |    5 +++--
+>  drivers/firmware/efi/memmap.c   |   16 ++++++++++------
+>  include/linux/efi.h             |    8 ++++++--
+>  5 files changed, 26 insertions(+), 16 deletions(-)
+>
+> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+> index 38d44f36d5ed..7086afbb84fd 100644
+> --- a/arch/x86/platform/efi/efi.c
+> +++ b/arch/x86/platform/efi/efi.c
+> @@ -333,7 +333,7 @@ static void __init efi_clean_memmap(void)
+>                 u64 size = efi.memmap.nr_map - n_removal;
+>
+>                 pr_warn("Removing %d invalid memory map entries.\n", n_removal);
+> -               efi_memmap_install(efi.memmap.phys_map, size);
+> +               efi_memmap_install(efi.memmap.phys_map, size, 0);
+>         }
+>  }
+>
+> diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+> index f8f0220b6a66..4a71c790f9c3 100644
+> --- a/arch/x86/platform/efi/quirks.c
+> +++ b/arch/x86/platform/efi/quirks.c
+> @@ -244,6 +244,7 @@ EXPORT_SYMBOL_GPL(efi_query_variable_store);
+>  void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+>  {
+>         phys_addr_t new_phys, new_size;
+> +       unsigned long flags = 0;
+>         struct efi_mem_range mr;
+>         efi_memory_desc_t md;
+>         int num_entries;
+> @@ -272,8 +273,7 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+>         num_entries += efi.memmap.nr_map;
+>
+>         new_size = efi.memmap.desc_size * num_entries;
+> -
+> -       new_phys = efi_memmap_alloc(num_entries);
+> +       new_phys = efi_memmap_alloc(num_entries, &flags);
+>         if (!new_phys) {
+>                 pr_err("Could not allocate boot services memmap\n");
+>                 return;
+> @@ -288,7 +288,7 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+>         efi_memmap_insert(&efi.memmap, new, &mr);
+>         early_memunmap(new, new_size);
+>
+> -       efi_memmap_install(new_phys, num_entries);
+> +       efi_memmap_install(new_phys, num_entries, flags);
+>         e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
+>         e820__update_table(e820_table);
+>  }
+> @@ -408,6 +408,7 @@ static void __init efi_unmap_pages(efi_memory_desc_t *md)
+>  void __init efi_free_boot_services(void)
+>  {
+>         phys_addr_t new_phys, new_size;
+> +       unsigned long flags = 0;
+>         efi_memory_desc_t *md;
+>         int num_entries = 0;
+>         void *new, *new_md;
+> @@ -463,7 +464,7 @@ void __init efi_free_boot_services(void)
+>                 return;
+>
+>         new_size = efi.memmap.desc_size * num_entries;
+> -       new_phys = efi_memmap_alloc(num_entries);
+> +       new_phys = efi_memmap_alloc(num_entries, &flags);
+>         if (!new_phys) {
+>                 pr_err("Failed to allocate new EFI memmap\n");
+>                 return;
+> @@ -493,7 +494,7 @@ void __init efi_free_boot_services(void)
+>
+>         memunmap(new);
+>
+> -       if (efi_memmap_install(new_phys, num_entries)) {
+> +       if (efi_memmap_install(new_phys, num_entries, flags)) {
+>                 pr_err("Could not install new EFI memmap\n");
+>                 return;
+>         }
+> diff --git a/drivers/firmware/efi/fake_mem.c b/drivers/firmware/efi/fake_mem.c
+> index bb9fc70d0cfa..7e53e5520548 100644
+> --- a/drivers/firmware/efi/fake_mem.c
+> +++ b/drivers/firmware/efi/fake_mem.c
+> @@ -39,6 +39,7 @@ void __init efi_fake_memmap(void)
+>         int new_nr_map = efi.memmap.nr_map;
+>         efi_memory_desc_t *md;
+>         phys_addr_t new_memmap_phy;
+> +       unsigned long flags = 0;
+>         void *new_memmap;
+>         int i;
+>
+> @@ -55,7 +56,7 @@ void __init efi_fake_memmap(void)
+>         }
+>
+>         /* allocate memory for new EFI memmap */
+> -       new_memmap_phy = efi_memmap_alloc(new_nr_map);
+> +       new_memmap_phy = efi_memmap_alloc(new_nr_map, &flags);
+>         if (!new_memmap_phy)
+>                 return;
+>
+> @@ -73,7 +74,7 @@ void __init efi_fake_memmap(void)
+>         /* swap into new EFI memmap */
+>         early_memunmap(new_memmap, efi.memmap.desc_size * new_nr_map);
+>
+> -       efi_memmap_install(new_memmap_phy, new_nr_map);
+> +       efi_memmap_install(new_memmap_phy, new_nr_map, flags);
+>
 
-This might be a good time to add a Kerneldoc header.
+So it is the caller's responsibility to record the flags returned by
+efi_memmap_alloc() and pass them into efi_memmap_install(), right?
+Given that we are now passing three pieces of info that need to be in
+sync between the two, could we use a dedicated data structure instead,
+a reference to which is taken by both?
 
-> diff --git a/include/linux/mfd/intel_soc_pmic.h b/include/linux/mfd/intel_soc_pmic.h
-> index bfecd6bd4990..8ac130428bb4 100644
-> --- a/include/linux/mfd/intel_soc_pmic.h
-> +++ b/include/linux/mfd/intel_soc_pmic.h
-> @@ -24,6 +24,7 @@ struct intel_soc_pmic {
->  	struct regmap_irq_chip_data *irq_chip_data_chgr;
->  	struct regmap_irq_chip_data *irq_chip_data_crit;
->  	struct device *dev;
-> +	struct intel_scu_ipc_dev *scu;
+
+>         /* print new EFI memmap */
+>         efi_print_memmap();
+> diff --git a/drivers/firmware/efi/memmap.c b/drivers/firmware/efi/memmap.c
+> index 813674ef9000..2b81ee6858a9 100644
+> --- a/drivers/firmware/efi/memmap.c
+> +++ b/drivers/firmware/efi/memmap.c
+> @@ -32,6 +32,7 @@ static phys_addr_t __init __efi_memmap_alloc_late(unsigned long size)
+>  /**
+>   * efi_memmap_alloc - Allocate memory for the EFI memory map
+>   * @num_entries: Number of entries in the allocated map.
+> + * @flags: Late map, memblock alloc, slab alloc flags
+>   *
+>   * Depending on whether mm_init() has already been invoked or not,
+>   * either memblock or "normal" page allocation is used.
+> @@ -39,20 +40,23 @@ static phys_addr_t __init __efi_memmap_alloc_late(unsigned long size)
+>   * Returns the physical address of the allocated memory map on
+>   * success, zero on failure.
+>   */
+> -phys_addr_t __init efi_memmap_alloc(unsigned int num_entries)
+> +phys_addr_t __init efi_memmap_alloc(unsigned int num_entries, unsigned long *flags)
+>  {
+>         unsigned long size = num_entries * efi.memmap.desc_size;
+>
+> -       if (slab_is_available())
+> +       if (slab_is_available()) {
+> +               *flags |= EFI_MEMMAP_SLAB;
+>                 return __efi_memmap_alloc_late(size);
+> +       }
+>
+> +       *flags |= EFI_MEMMAP_MEMBLOCK;
+
+This assumes flags has neither bit set, but perhaps we should at least
+clear the memblock one if we set the slab one?
+
+>         return __efi_memmap_alloc_early(size);
+>  }
+>
+>  /**
+>   * __efi_memmap_init - Common code for mapping the EFI memory map
+>   * @data: EFI memory map data
+> - * @flags: Use early or late mapping function?
+> + * @flags: Use early or late mapping function, and allocator
+>   *
+>   * This function takes care of figuring out which function to use to
+>   * map the EFI memory map in efi.memmap based on how far into the boot
+> @@ -192,10 +196,10 @@ int __init efi_memmap_init_late(phys_addr_t addr, unsigned long size)
+>   *
+>   * Returns zero on success, a negative error code on failure.
+>   */
+> -int __init efi_memmap_install(phys_addr_t addr, unsigned int nr_map)
+> +int __init efi_memmap_install(phys_addr_t addr, unsigned int nr_map,
+> +               unsigned long flags)
+>  {
+>         struct efi_memory_map_data data;
+> -       unsigned long flags;
+>
+>         efi_memmap_unmap();
+>
+> @@ -203,7 +207,7 @@ int __init efi_memmap_install(phys_addr_t addr, unsigned int nr_map)
+>         data.size = efi.memmap.desc_size * nr_map;
+>         data.desc_version = efi.memmap.desc_version;
+>         data.desc_size = efi.memmap.desc_size;
+> -       flags = efi.memmap.flags & EFI_MEMMAP_LATE;
+> +       flags |= efi.memmap.flags & EFI_MEMMAP_LATE;
+>
+>         return __efi_memmap_init(&data, flags);
+>  }
+> diff --git a/include/linux/efi.h b/include/linux/efi.h
+> index b8e930f5ff77..fa2668a992ae 100644
+> --- a/include/linux/efi.h
+> +++ b/include/linux/efi.h
+> @@ -796,6 +796,8 @@ struct efi_memory_map {
+>         unsigned long desc_version;
+>         unsigned long desc_size;
+>  #define EFI_MEMMAP_LATE (1UL << 0)
+> +#define EFI_MEMMAP_MEMBLOCK (1UL << 1)
+> +#define EFI_MEMMAP_SLAB (1UL << 2)
+>         unsigned long flags;
 >  };
->  
->  int intel_soc_pmic_exec_mipi_pmic_seq_element(u16 i2c_address, u32 reg_address,
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+>
+> @@ -1057,11 +1059,13 @@ static inline efi_status_t efi_query_variable_store(u32 attributes,
+>  #endif
+>  extern void __iomem *efi_lookup_mapped_addr(u64 phys_addr);
+>
+> -extern phys_addr_t __init efi_memmap_alloc(unsigned int num_entries);
+> +extern phys_addr_t __init efi_memmap_alloc(unsigned int num_entries,
+> +               unsigned long *flags);
+>  extern int __init efi_memmap_init_early(struct efi_memory_map_data *data);
+>  extern int __init efi_memmap_init_late(phys_addr_t addr, unsigned long size);
+>  extern void __init efi_memmap_unmap(void);
+> -extern int __init efi_memmap_install(phys_addr_t addr, unsigned int nr_map);
+> +extern int __init efi_memmap_install(phys_addr_t addr, unsigned int nr_map,
+> +               unsigned long flags);
+>  extern int __init efi_memmap_split_count(efi_memory_desc_t *md,
+>                                          struct range *range);
+>  extern void __init efi_memmap_insert(struct efi_memory_map *old_memmap,
+>
