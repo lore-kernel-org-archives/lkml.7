@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E20C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF91C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6866C20863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A51D20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004271;
-	bh=Z4v0fY047Fr8jxw/FMskSquTJGFpuTPUuJw95HPMS2Q=;
+	s=default; t=1578004278;
+	bh=5+zLHn7HrkoGk5mRtLllbP3/vp81iPVrTS2zV/XIP4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Os8V+pYFGDaJumSGISadHjWU6hxST3tmTIy04QkLD0X+5ZTJwUtmeekElN8RX6V0p
-	 cwhSF1pFuVeRbYrX7jnaE5BPPT4ALmFq6JmLdSXeMjzazb2X5kvNJhFuFEv6rhwbyI
-	 +m3E6s6M1al3LKcebRRYJakOLVVbsKgR8NqnpE/4=
+	b=fE5beacHejiCcE/tP5jZHZn1l+OiNcQKQapNVFz3NCsjv7b2nbWBPZB40J7aVRheJ
+	 EBeWYoonyE+kthmSen8leCpTbk5JjAgwDomUNOAdNIZ9XclvqkTncxzS+GabA5FSoX
+	 ETs7zYJSxalF9A73iJTejR8p7uKJc2hQFsdbwHRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730253AbgABWbK (ORCPT
+        id S1728750AbgABWbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:31:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35730 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:31:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729815AbgABWbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:31:03 -0500
+        id S1730252AbgABWbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:31:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D58A20863;
-        Thu,  2 Jan 2020 22:31:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAD9520866;
+        Thu,  2 Jan 2020 22:31:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004263;
-        bh=Z4v0fY047Fr8jxw/FMskSquTJGFpuTPUuJw95HPMS2Q=;
+        s=default; t=1578004270;
+        bh=5+zLHn7HrkoGk5mRtLllbP3/vp81iPVrTS2zV/XIP4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KfPaEhiFE1PNzFwUdlmsZh53i1jI00krf50a5zdtAP3H7XAP1rGpaaFG/tZW8Xhnc
-         Ei/4UKcFpwwLeCWi28hTleyO7wa0YT3cQiEK2RK1JJ1owm+9JjmEGH8+QVFi0L8eij
-         L2m3r2ImjY4mqhzJcR5QojEa7c1xnlRqFxblO93A=
+        b=d6VKee3KApmmxXb2q/MuCApYyok0+O/XoHdL269OQgi070Lc5IjUjXx40aWGUjqgi
+         wLo7PHjrs6tuDjHpEIUoD5FQFlk5zXRbdTo0lvxAVse0UmcQLRi9DTV4ziPhAHVMJ7
+         FVGe1aQPW1qGxiwbbN0X4pTqSHmw1oKpKOioNuQc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.9 106/171] ext4: fix ext4_empty_dir() for directories with holes
-Date:   Thu,  2 Jan 2020 23:07:17 +0100
-Message-Id: <20200102220601.890579715@linuxfoundation.org>
+        stable@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.9 109/171] mmc: sdhci-of-esdhc: fix P2020 errata handling
+Date:   Thu,  2 Jan 2020 23:07:20 +0100
+Message-Id: <20200102220602.269257119@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -59,96 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Yangbo Lu <yangbo.lu@nxp.com>
 
-commit 64d4ce892383b2ad6d782e080d25502f91bf2a38 upstream.
+commit fe0acab448f68c3146235afe03fb932e242ec94c upstream.
 
-Function ext4_empty_dir() doesn't correctly handle directories with
-holes and crashes on bh->b_data dereference when bh is NULL. Reorganize
-the loop to use 'offset' variable all the times instead of comparing
-pointers to current direntry with bh->b_data pointer. Also add more
-strict checking of '.' and '..' directory entries to avoid entering loop
-in possibly invalid state on corrupted filesystems.
+Two previous patches introduced below quirks for P2020 platforms.
+- SDHCI_QUIRK_RESET_AFTER_REQUEST
+- SDHCI_QUIRK_BROKEN_TIMEOUT_VAL
 
-CC: stable@vger.kernel.org
-Fixes: 4e19d6b65fb4 ("ext4: allow directory holes")
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191202170213.4761-2-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+The patches made a mistake to add them in quirks2 of sdhci_host
+structure, while they were defined for quirks.
+	host->quirks2 |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
+	host->quirks2 |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
+
+This patch is to fix them.
+	host->quirks |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
+	host->quirks |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
+
+Fixes: 05cb6b2a66fa ("mmc: sdhci-of-esdhc: add erratum eSDHC-A001 and A-008358 support")
+Fixes: a46e42712596 ("mmc: sdhci-of-esdhc: add erratum eSDHC5 support")
+Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20191216031842.40068-1-yangbo.lu@nxp.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/namei.c |   32 ++++++++++++++++++--------------
- 1 file changed, 18 insertions(+), 14 deletions(-)
+ drivers/mmc/host/sdhci-of-esdhc.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -2721,7 +2721,7 @@ bool ext4_empty_dir(struct inode *inode)
- {
- 	unsigned int offset;
- 	struct buffer_head *bh;
--	struct ext4_dir_entry_2 *de, *de1;
-+	struct ext4_dir_entry_2 *de;
- 	struct super_block *sb;
+--- a/drivers/mmc/host/sdhci-of-esdhc.c
++++ b/drivers/mmc/host/sdhci-of-esdhc.c
+@@ -637,8 +637,8 @@ static int sdhci_esdhc_probe(struct plat
+ 		host->quirks &= ~SDHCI_QUIRK_NO_BUSY_IRQ;
  
- 	if (ext4_has_inline_data(inode)) {
-@@ -2746,19 +2746,25 @@ bool ext4_empty_dir(struct inode *inode)
- 		return true;
+ 	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc")) {
+-		host->quirks2 |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
+-		host->quirks2 |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
++		host->quirks |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
++		host->quirks |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
+ 	}
  
- 	de = (struct ext4_dir_entry_2 *) bh->b_data;
--	de1 = ext4_next_entry(de, sb->s_blocksize);
--	if (le32_to_cpu(de->inode) != inode->i_ino ||
--			le32_to_cpu(de1->inode) == 0 ||
--			strcmp(".", de->name) || strcmp("..", de1->name)) {
--		ext4_warning_inode(inode, "directory missing '.' and/or '..'");
-+	if (ext4_check_dir_entry(inode, NULL, de, bh, bh->b_data, bh->b_size,
-+				 0) ||
-+	    le32_to_cpu(de->inode) != inode->i_ino || strcmp(".", de->name)) {
-+		ext4_warning_inode(inode, "directory missing '.'");
- 		brelse(bh);
- 		return true;
- 	}
--	offset = ext4_rec_len_from_disk(de->rec_len, sb->s_blocksize) +
--		 ext4_rec_len_from_disk(de1->rec_len, sb->s_blocksize);
--	de = ext4_next_entry(de1, sb->s_blocksize);
-+	offset = ext4_rec_len_from_disk(de->rec_len, sb->s_blocksize);
-+	de = ext4_next_entry(de, sb->s_blocksize);
-+	if (ext4_check_dir_entry(inode, NULL, de, bh, bh->b_data, bh->b_size,
-+				 offset) ||
-+	    le32_to_cpu(de->inode) == 0 || strcmp("..", de->name)) {
-+		ext4_warning_inode(inode, "directory missing '..'");
-+		brelse(bh);
-+		return true;
-+	}
-+	offset += ext4_rec_len_from_disk(de->rec_len, sb->s_blocksize);
- 	while (offset < inode->i_size) {
--		if ((void *) de >= (void *) (bh->b_data+sb->s_blocksize)) {
-+		if (!(offset & (sb->s_blocksize - 1))) {
- 			unsigned int lblock;
- 			brelse(bh);
- 			lblock = offset >> EXT4_BLOCK_SIZE_BITS(sb);
-@@ -2769,12 +2775,11 @@ bool ext4_empty_dir(struct inode *inode)
- 			}
- 			if (IS_ERR(bh))
- 				return true;
--			de = (struct ext4_dir_entry_2 *) bh->b_data;
- 		}
-+		de = (struct ext4_dir_entry_2 *) (bh->b_data +
-+					(offset & (sb->s_blocksize - 1)));
- 		if (ext4_check_dir_entry(inode, NULL, de, bh,
- 					 bh->b_data, bh->b_size, offset)) {
--			de = (struct ext4_dir_entry_2 *)(bh->b_data +
--							 sb->s_blocksize);
- 			offset = (offset | (sb->s_blocksize - 1)) + 1;
- 			continue;
- 		}
-@@ -2783,7 +2788,6 @@ bool ext4_empty_dir(struct inode *inode)
- 			return false;
- 		}
- 		offset += ext4_rec_len_from_disk(de->rec_len, sb->s_blocksize);
--		de = ext4_next_entry(de, sb->s_blocksize);
- 	}
- 	brelse(bh);
- 	return true;
+ 	if (of_device_is_compatible(np, "fsl,p5040-esdhc") ||
 
 
