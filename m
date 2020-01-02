@@ -2,105 +2,120 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33409C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8943BC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F274F206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:46:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oZDMXInU"
+	by mail.kernel.org (Postfix) with ESMTP id 61F7B206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbgABQqG (ORCPT
+        id S1728891AbgABQqz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 11:46:06 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46128 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728280AbgABQqF (ORCPT
+        Thu, 2 Jan 2020 11:46:55 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:41548 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728850AbgABQqy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 11:46:05 -0500
-Received: by mail-ot1-f67.google.com with SMTP id k8so40561075otl.13
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 08:46:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HrXZHjoaqPfSnNyTU19HMM3kSDFb9R+CP52wZpLZIuo=;
-        b=oZDMXInUNArVNUW5UNFWUMC7Jp695Zoz74GDjl3LBV/bbxKG4HUUE40V3jrzG3y8Ui
-         zui1rKKQiyH1UjgmgJUeBORIa0he8Ne2fxb7MCqdhLjMnvQlSs6rMeDncPncb9oMWR++
-         SlRcj6X6nm8RU3QrlEQO0zwdSBSVKAir5650sALyjB4rksyfnGJeBaHAQHLznsN/hNgr
-         DV7Zq2a6w9mu2w0P92jtFgWwCD2gH23ZyQ8B2EpNp7Dwr2xY1jVoBZ7aOL501MrVfpJs
-         bpaMb8W8TuVqIKLf2aQOYr8rqtn3e4y74kMvmvpN2RoYk8mJsqhHCz6kcAnQKCMS/Au6
-         2/Cw==
+        Thu, 2 Jan 2020 11:46:54 -0500
+Received: from mail-pj1-f72.google.com ([209.85.216.72])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1in3ca-0000um-6n
+        for linux-kernel@vger.kernel.org; Thu, 02 Jan 2020 16:46:52 +0000
+Received: by mail-pj1-f72.google.com with SMTP id g12so5474232pje.5
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 08:46:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HrXZHjoaqPfSnNyTU19HMM3kSDFb9R+CP52wZpLZIuo=;
-        b=GxN9cdzOjD87UrYSZligXOZJpyafh4mBTBhQrgdpJEQbwd31hDjBUzaOAYD1YLfQ7I
-         yotUSj/msh43D0tcpBQ4GmkJaUziLdrbbmjnoXc94zKZPfzNhvSYICPLtZhdvOOKZsLT
-         gE3LyXKf7Ll9IT4bAJBN9IN+fJzPaWlwKyes10xRY83NTXFeBp///uXXlE0u1K6fihLQ
-         zBrU23VthTXt5c+qiyxWYCGPzS1zt9fxeopqBaDznIP56Ac/+G/e4Y4LkO74atS7EfsD
-         SAeKP0oAEXuzOGbOl+CeiLWuMwxH5dtH/NKhRnUpcpItb7Bh6tInwUB39Kt2mKJykpN3
-         gZXw==
-X-Gm-Message-State: APjAAAVwcDXJGJMIJVpIvpv3UojvXebIwEh083qk+IjLZD8O3RyIK/Nh
-        LuLg4wVVDqr+fHLG5i6I6VLP0g1jqaMK5IFpaouuUg==
-X-Google-Smtp-Source: APXvYqxNR6tJSFG+nNhBns9AiJC4Vz3aJuxdYOA+lViL6S/GhV34pahJfNY4e6HdAyOhE+9OkDjamKNTONdnU5WDZgA=
-X-Received: by 2002:a05:6830:13da:: with SMTP id e26mr19927139otq.302.1577983564414;
- Thu, 02 Jan 2020 08:46:04 -0800 (PST)
-MIME-Version: 1.0
-References: <20200102140227.77780-1-maowenan@huawei.com>
-In-Reply-To: <20200102140227.77780-1-maowenan@huawei.com>
-From:   Neal Cardwell <ncardwell@google.com>
-Date:   Thu, 2 Jan 2020 11:45:47 -0500
-Message-ID: <CADVnQy=osX-HAnRduPid27tNZHLrzudT+5C4-+K3ERY-BMW3VA@mail.gmail.com>
-Subject: Re: [PATCH net-next] tcp: use REXMIT_NEW instead of magic number
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     Eric Dumazet <edumazet@google.com>,
-        David Miller <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Yuchung Cheng <ycheng@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=N+0SMH83DEMdXBxklWnpSdQi+VtqH5p+lcgEClqwKXc=;
+        b=bKVPxrX2Qiw9tPIg+Iz+7n7wc8SWKvmd2j0aL2Ozx4HUQnGM5RgdqF4VblKENwNRUj
+         Xjl7tY5tCeT5vj22fAlb63fYOkRz6TCL3PgYM9MNQK5IjVQDtvYHwjklp7Gk7l6z1TvZ
+         U/m+tl82kpLvGlZYMhcT9HYxsnD5YWmEnkpYnBhwSVhmCSHPOsi91LJVWzu56hjP3cTV
+         IrIjX8rNi2fUwwZAcYYAj+vpdfpDTe0yRRRocHzYkWwUxXPPqYbfLNo1fAIg8lK4cqRN
+         A/TbAxSuf2UHGw4H25iiXABHWhQp6rNRaAH5E25OOtvkcORxSkZXDzSDSZyAbC5ylDhI
+         H0Kw==
+X-Gm-Message-State: APjAAAU8eJ3YJR5UtH2NRtYXt+9QNZ2Td4UdjRfRordu4xk4oEywH7PJ
+        T6QeeSG1h/8E82Iz0g9Okd0xY+mff3wZ+qe121VrJi2IuhdzRXG79bGWPPzF2PwFfu/1bAYInzI
+        Jh/FWb13/BE5AEIu3F2vfjVycGx5pDWPEBZ6Be1z2hQ==
+X-Received: by 2002:a17:902:b609:: with SMTP id b9mr85940505pls.70.1577983610835;
+        Thu, 02 Jan 2020 08:46:50 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzIk9aPVIqBcPxzYk6x48gY3qrrcgKVCBBz9vFSwtTE8Mot2uF3FKpgNC3MV0XYtVt/cJfSfw==
+X-Received: by 2002:a17:902:b609:: with SMTP id b9mr85940479pls.70.1577983610489;
+        Thu, 02 Jan 2020 08:46:50 -0800 (PST)
+Received: from 2001-b011-380f-35a3-d94d-dd84-8131-7958.dynamic-ip6.hinet.net (2001-b011-380f-35a3-d94d-dd84-8131-7958.dynamic-ip6.hinet.net. [2001:b011:380f:35a3:d94d:dd84:8131:7958])
+        by smtp.gmail.com with ESMTPSA id b4sm65574395pfd.18.2020.01.02.08.46.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 Jan 2020 08:46:49 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: SFP+ support for 8168fp/8117
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20200102152143.GB1397@lunn.ch>
+Date:   Fri, 3 Jan 2020 00:46:46 +0800
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Linux Netdev List <netdev@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Jason Yen <jason.yen@canonical.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <DC28A43E-4F1A-40B6-84B0-3E79215527C9@canonical.com>
+References: <2D8F5FFE-3EC3-480B-9D15-23CACE5556DF@canonical.com>
+ <20200102152143.GB1397@lunn.ch>
+To:     Andrew Lunn <andrew@lunn.ch>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 2, 2020 at 9:07 AM Mao Wenan <maowenan@huawei.com> wrote:
->
-> REXMIT_NEW is a macro for "FRTO-style
-> transmit of unsent/new packets", this patch
-> makes it more readable.
->
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> ---
->  net/ipv4/tcp_input.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> index 88b987ca9ebb..1d1e3493965f 100644
-> --- a/net/ipv4/tcp_input.c
-> +++ b/net/ipv4/tcp_input.c
-> @@ -3550,7 +3550,7 @@ static void tcp_xmit_recovery(struct sock *sk, int rexmit)
->         if (rexmit == REXMIT_NONE || sk->sk_state == TCP_SYN_SENT)
->                 return;
->
-> -       if (unlikely(rexmit == 2)) {
-> +       if (unlikely(rexmit == REXMIT_NEW)) {
->                 __tcp_push_pending_frames(sk, tcp_current_mss(sk),
->                                           TCP_NAGLE_OFF);
->                 if (after(tp->snd_nxt, tp->high_seq))
-> --
+Hi Andrew,
 
-Acked-by: Neal Cardwell <ncardwell@google.com>
+> On Jan 2, 2020, at 23:21, Andrew Lunn <andrew@lunn.ch> wrote:
+> 
+> On Thu, Jan 02, 2020 at 02:59:42PM +0800, Kai Heng Feng wrote:
+>> Hi Heiner,
+>> 
+>> There's an 8168fp/8117 chip has SFP+ port instead of RJ45, the phy device ID matches "Generic FE-GE Realtek PHY" nevertheless.
+>> The problems is that, since it uses SFP+, both BMCR and BMSR read are always zero, so Realtek phylib never knows if the link is up.
+>> 
+>> However, the old method to read through MMIO correctly shows the link is up:
+>> static unsigned int rtl8169_xmii_link_ok(struct rtl8169_private *tp)
+>> {
+>>       return RTL_R8(tp, PHYstatus) & LinkStatus;
+>> }
+>> 
+>> Few ideas here:
+>> - Add a link state callback for phylib like phylink's phylink_fixed_state_cb(). However there's no guarantee that other parts of this chip works.
+>> - Add SFP+ support for this chip. However the phy device matches to "Generic FE-GE Realtek PHY" which may complicate things.
+>> 
+>> Any advice will be welcome.
+> 
+> Hi Kai
+> 
+> Is the i2c bus accessible?
 
-Thanks for sending this patch!
+I don't think so. It seems to be a regular Realtek 8168 device with generic PCI ID [10ec:8168].
 
-neal
+> Is there any documentation or example code?
+
+Unfortunately no.
+
+> 
+> In order to correctly support SFP+ cages, we need access to the i2c
+> bus to determine what sort of module has been inserted. It would also
+> be good to have access to LOS, transmitter disable, etc, from the SFP
+> cage.
+
+Seems like we need Realtek to provide more information to support this chip with SFP+.
+
+Kai-Heng
+
+> 
+>   Andrew
+
