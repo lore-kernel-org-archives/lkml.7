@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BADC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E94D9C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 044EF24125
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC4F122B48
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:14:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003251;
-	bh=0C9It06bdDevtst3v5TQ4lt7SqVv3bBSLAsECQ6Yk1U=;
+	s=default; t=1578003253;
+	bh=bsY3+57MQY04MgAMVlcxdWYcdhiuZlVcMnl6sNsU96E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YF7ZtlSI8H8PQI5kSXvYzm3Q4hJJFB57guBwjvJiM+ce2pbEbh558j/rDvrzeK1Ie
-	 Fe0VdhWBnvBeuNJadM2gjRcaXQTWuuf1GK0+BI0AGuVhmwVpcxYPaneZDyN1vQpurN
-	 MreFlS+yazc654+03EJlLrKR1wNgKZck0ixKwrPA=
+	b=FUvCXjAbQ38XocTReMdwAeE757FWDS2u8PO9EDO6a6inVX1YCiXYw+QxEIZ0fYHDN
+	 Yt0WX8y+xz3J1jpusnD4k0+n0xrlr5ouK0xJe5eyrmfK39lzQKITANXqrNuOs2K0RO
+	 bCu0DKkIq2PNNt6D46PO9tcL9kEvfQ0RYZv9ohyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbgABWOJ (ORCPT
+        id S1727861AbgABWOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:14:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54258 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:14:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727825AbgABWOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:14:07 -0500
+        id S1727848AbgABWOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:14:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 539DB2464E;
-        Thu,  2 Jan 2020 22:14:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC24721D7D;
+        Thu,  2 Jan 2020 22:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003246;
-        bh=0C9It06bdDevtst3v5TQ4lt7SqVv3bBSLAsECQ6Yk1U=;
+        s=default; t=1578003249;
+        bh=bsY3+57MQY04MgAMVlcxdWYcdhiuZlVcMnl6sNsU96E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h1GVOftkNyQ7T535J69f9NNerfwzzMezOBm5bnWZ5Jrj1o/gtDqC+xnl3pQJlJwdf
-         y63aRgnm3L3+Kgi+X0RxkuZ8hiNuVyl4VB52XoQ1b7iqMKXAdEwWQWZtlfzMIyB9eK
-         kHrySddjExJL/MO1ZiyTawkIBVE3C7mEY/3wFHQk=
+        b=I47J7YfRI3tj+uifXXZVZ97QVxHvTNUuvcSeL2S6KfkCELHOewf7TUWx7/knvg+mG
+         /TzjrYGduuq9lKQekcsWSFV3weLIv5IkijrGkNAym+7TPdrFJ9fEZspy6CbgHBsUuT
+         EaprSJYF1RVKOGaLBtvXwmWRjExYHFP1V0kCJebQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 080/191] libnvdimm/btt: fix variable rc set but not used
-Date:   Thu,  2 Jan 2020 23:06:02 +0100
-Message-Id: <20200102215838.478051812@linuxfoundation.org>
+Subject: [PATCH 5.4 081/191] HID: Improve Windows Precision Touchpad detection.
+Date:   Thu,  2 Jan 2020 23:06:03 +0100
+Message-Id: <20200102215838.592071110@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,48 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Blaž Hrastnik <blaz@mxxn.io>
 
-[ Upstream commit 4e24e37d5313edca8b4ab86f240c046c731e28d6 ]
+[ Upstream commit 2dbc6f113acd74c66b04bf49fb027efd830b1c5a ]
 
-drivers/nvdimm/btt.c: In function 'btt_read_pg':
-drivers/nvdimm/btt.c:1264:8: warning: variable 'rc' set but not used
-[-Wunused-but-set-variable]
-    int rc;
-        ^~
+Per Microsoft spec, usage 0xC5 (page 0xFF) returns a blob containing
+data used to verify the touchpad as a Windows Precision Touchpad.
 
-Add a ratelimited message in case a storm of errors is encountered.
+   0x85, REPORTID_PTPHQA,    //    REPORT_ID (PTPHQA)
+    0x09, 0xC5,              //    USAGE (Vendor Usage 0xC5)
+    0x15, 0x00,              //    LOGICAL_MINIMUM (0)
+    0x26, 0xff, 0x00,        //    LOGICAL_MAXIMUM (0xff)
+    0x75, 0x08,              //    REPORT_SIZE (8)
+    0x96, 0x00, 0x01,        //    REPORT_COUNT (0x100 (256))
+    0xb1, 0x02,              //    FEATURE (Data,Var,Abs)
 
-Fixes: d9b83c756953 ("libnvdimm, btt: rework error clearing")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
-Link: https://lore.kernel.org/r/1572530719-32161-1-git-send-email-cai@lca.pw
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+However, some devices, namely Microsoft's Surface line of products
+instead implement a "segmented device certification report" (usage 0xC6)
+which returns the same report, but in smaller chunks.
+
+    0x06, 0x00, 0xff,        //     USAGE_PAGE (Vendor Defined)
+    0x85, REPORTID_PTPHQA,   //     REPORT_ID (PTPHQA)
+    0x09, 0xC6,              //     USAGE (Vendor usage for segment #)
+    0x25, 0x08,              //     LOGICAL_MAXIMUM (8)
+    0x75, 0x08,              //     REPORT_SIZE (8)
+    0x95, 0x01,              //     REPORT_COUNT (1)
+    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
+    0x09, 0xC7,              //     USAGE (Vendor Usage)
+    0x26, 0xff, 0x00,        //     LOGICAL_MAXIMUM (0xff)
+    0x95, 0x20,              //     REPORT_COUNT (32)
+    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
+
+By expanding Win8 touchpad detection to also look for the segmented
+report, all Surface touchpads are now properly recognized by
+hid-multitouch.
+
+Signed-off-by: Blaž Hrastnik <blaz@mxxn.io>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/btt.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/hid/hid-core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
-index 3e9f45aec8d1..5129543a0473 100644
---- a/drivers/nvdimm/btt.c
-+++ b/drivers/nvdimm/btt.c
-@@ -1261,11 +1261,11 @@ static int btt_read_pg(struct btt *btt, struct bio_integrity_payload *bip,
+diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+index 2fa3587d974f..e0b241bd3070 100644
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -781,6 +781,10 @@ static void hid_scan_feature_usage(struct hid_parser *parser, u32 usage)
+ 	if (usage == 0xff0000c5 && parser->global.report_count == 256 &&
+ 	    parser->global.report_size == 8)
+ 		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
++
++	if (usage == 0xff0000c6 && parser->global.report_count == 1 &&
++	    parser->global.report_size == 8)
++		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
+ }
  
- 		ret = btt_data_read(arena, page, off, postmap, cur_len);
- 		if (ret) {
--			int rc;
--
- 			/* Media error - set the e_flag */
--			rc = btt_map_write(arena, premap, postmap, 0, 1,
--				NVDIMM_IO_ATOMIC);
-+			if (btt_map_write(arena, premap, postmap, 0, 1, NVDIMM_IO_ATOMIC))
-+				dev_warn_ratelimited(to_dev(arena),
-+					"Error persistently tracking bad blocks at %#x\n",
-+					premap);
- 			goto out_rtt;
- 		}
- 
+ static void hid_scan_collection(struct hid_parser *parser, unsigned type)
 -- 
 2.20.1
 
