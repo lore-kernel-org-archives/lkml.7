@@ -6,164 +6,107 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E47C2D0DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 01:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD750C2D0DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 01:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE2821D7D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 01:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CED920863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 01:36:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727577AbgABB1Y (ORCPT
+        id S1727555AbgABBge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 20:27:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:43550 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725895AbgABB1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 20:27:23 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 258551063;
-        Wed,  1 Jan 2020 17:27:23 -0800 (PST)
-Received: from localhost.localdomain (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B0E8A3F703;
-        Wed,  1 Jan 2020 17:27:21 -0800 (PST)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH 3/3] ARM: dts: sun8i: R40: Add SPI controllers nodes and pinmuxes
-Date:   Thu,  2 Jan 2020 01:26:57 +0000
-Message-Id: <20200102012657.9278-4-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <20200102012657.9278-1-andre.przywara@arm.com>
-References: <20200102012657.9278-1-andre.przywara@arm.com>
+        Wed, 1 Jan 2020 20:36:34 -0500
+Received: from mail.windriver.com ([147.11.1.11]:64632 "EHLO
+        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbgABBgd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jan 2020 20:36:33 -0500
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 0021a62e002255
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
+        Wed, 1 Jan 2020 17:36:06 -0800 (PST)
+Received: from pek-lpggp2 (128.224.153.75) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.40) with Microsoft SMTP Server id 14.3.468.0; Wed, 1 Jan 2020
+ 17:36:06 -0800
+Received: by pek-lpggp2 (Postfix, from userid 20544)    id 41CC5720E21; Thu,  2
+ Jan 2020 09:35:44 +0800 (CST)
+From:   Jiping Ma <jiping.ma2@windriver.com>
+To:     <peppe.cavallaro@st.com>, <alexandre.torgue@st.com>
+CC:     <joabreu@synopsys.com>, <mcoquelin.stm32@gmail.com>,
+        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <jiping.ma2@windriver.com>
+Subject: [PATCH] stmmac: debugfs entry name is not be changed when udev rename device name.
+Date:   Thu, 2 Jan 2020 09:35:44 +0800
+Message-ID: <20200102013544.19271-1-jiping.ma2@windriver.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Allwinner R40 SoC contains four SPI controllers, using the newer
-sun6i design (but at the legacy addresses).
-The controller seems to be fully compatible to the A64 one, so no driver
-changes are necessary.
-The first three controller can be used on two sets of pins, but SPI3 is
-only routed to one set on Port A.
+Add one notifier for udev changes net device name.
 
-Tested by connecting a SPI flash to a Bananapi M2 Berry on the SPI0
-PortC header pins.
-
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
 ---
- arch/arm/boot/dts/sun8i-r40.dtsi | 89 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 89 insertions(+)
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index 8dcbc4465fbb..af437391dcf4 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -418,6 +418,41 @@
- 				bias-pull-up;
- 			};
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index b14f46a57154..3b05cb80eed7 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4038,6 +4038,31 @@ static int stmmac_dma_cap_show(struct seq_file *seq, void *v)
+ }
+ DEFINE_SHOW_ATTRIBUTE(stmmac_dma_cap);
  
-+			spi0_pc_pins: spi0-pc-pins {
-+				pins = "PC0", "PC1", "PC2", "PC23";
-+				function = "spi0";
-+			};
++/* Use network device events to rename debugfs file entries.
++ */
++static int stmmac_device_event(struct notifier_block *unused,
++			       unsigned long event, void *ptr)
++{
++	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
++	struct stmmac_priv *priv = netdev_priv(dev);
 +
-+			spi0_pi_pins: spi0-pi-pins {
-+				pins = "PI10", "PI11", "PI12", "PI13", "PI14";
-+				function = "spi0";
-+			};
++	switch (event) {
++	case NETDEV_CHANGENAME:
++		if (priv->dbgfs_dir)
++			priv->dbgfs_dir = debugfs_rename(stmmac_fs_dir,
++							 priv->dbgfs_dir,
++							 stmmac_fs_dir,
++							 dev->name);
++		break;
++	}
++done:
++	return NOTIFY_DONE;
++}
 +
-+			spi1_pa_pins: spi1-pa-pins {
-+				pins = "PA0", "PA1", "PA2", "PA3", "PA4";
-+				function = "spi1";
-+			};
++static struct notifier_block stmmac_notifier = {
++	.notifier_call = stmmac_device_event,
++};
 +
-+			spi1_pi_pins: spi1-pi-pins {
-+				pins = "PI15", "PI16", "PI17", "PI18", "PI19";
-+				function = "spi1";
-+			};
-+
-+			spi2_pb_pins: spi2-pb-pins {
-+				pins = "PB13", "PB14", "PB15", "PB16", "PB17";
-+				function = "spi2";
-+			};
-+
-+			spi2_pc_pins: spi2-pc-pins {
-+				pins = "PC19", "PC20", "PC21", "PC22";
-+				function = "spi2";
-+			};
-+
-+			spi3_pins: spi3-pins {
-+				pins = "PA5", "PA6", "PA7", "PA8", "PA9";
-+				function = "spi3";
-+			};
-+
- 			uart0_pb_pins: uart0-pb-pins {
- 				pins = "PB22", "PB23";
- 				function = "uart0";
-@@ -594,6 +629,60 @@
- 			#size-cells = <0>;
- 		};
+ static int stmmac_init_fs(struct net_device *dev)
+ {
+ 	struct stmmac_priv *priv = netdev_priv(dev);
+@@ -4076,6 +4101,8 @@ static int stmmac_init_fs(struct net_device *dev)
+ 		return -ENOMEM;
+ 	}
  
-+		spi0: spi@1c05000 {
-+			compatible = "allwinner,sun8i-r40-spi",
-+				     "allwinner,sun8i-h3-spi";
-+			reg = <0x01c05000 0x1000>;
-+			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_SPI0>, <&ccu CLK_SPI0>;
-+			clock-names = "ahb", "mod";
-+			resets = <&ccu RST_BUS_SPI0>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
++	register_netdevice_notifier(&stmmac_notifier);
 +
-+		spi1: spi@1c06000 {
-+			compatible = "allwinner,sun8i-r40-spi",
-+				     "allwinner,sun8i-h3-spi";
-+			reg = <0x01c06000 0x1000>;
-+			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_SPI1>, <&ccu CLK_SPI1>;
-+			clock-names = "ahb", "mod";
-+			resets = <&ccu RST_BUS_SPI1>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		spi2: spi@1c07000 {
-+			compatible = "allwinner,sun8i-r40-spi",
-+				     "allwinner,sun8i-h3-spi";
-+			reg = <0x01c07000 0x1000>;
-+			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_SPI2>, <&ccu CLK_SPI2>;
-+			clock-names = "ahb", "mod";
-+			resets = <&ccu RST_BUS_SPI2>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		spi3: spi@1c0f000 {
-+			compatible = "allwinner,sun8i-r40-spi",
-+				     "allwinner,sun8i-h3-spi";
-+			reg = <0x01c0f000 0x1000>;
-+			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_SPI3>, <&ccu CLK_SPI3>;
-+			clock-names = "ahb", "mod";
-+			pinctrl-0 = <&spi3_pins>;
-+			pinctrl-names = "default";
-+			resets = <&ccu RST_BUS_SPI3>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
- 		ahci: sata@1c18000 {
- 			compatible = "allwinner,sun8i-r40-ahci";
- 			reg = <0x01c18000 0x1000>;
+ 	return 0;
+ }
+ 
+@@ -4083,6 +4110,7 @@ static void stmmac_exit_fs(struct net_device *dev)
+ {
+ 	struct stmmac_priv *priv = netdev_priv(dev);
+ 
++	unregister_netdevice_notifier(&stmmac_notifier);
+ 	debugfs_remove_recursive(priv->dbgfs_dir);
+ }
+ #endif /* CONFIG_DEBUG_FS */
 -- 
-2.14.5
+2.23.0
 
