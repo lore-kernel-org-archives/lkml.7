@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CE3C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CECC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8684E22525
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27FD12464E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003231;
-	bh=Fra8aZasCrfdjr2SqA6CMzh9DAlocZ+YwGMIgLze7jk=;
+	s=default; t=1578003235;
+	bh=K+k3IYqfi8N7ewXk4LEx7Oz7grn9DwS3QRY13yBxM5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uKfRok25k/PQ/LlKh8vXFTKCgB0/Lpod8R90PBNOJNNsK5f9EIskWmTivWvLRsZKh
-	 N+XuYrsLxQ5PlZZS2cwycoZizVY1oZS/LkRM5OEWqjL5xYoXl/AaUH1kEk5LUa1BqX
-	 5ZRqPxDsbBAsyGH2tXrJAduLHimAV+3oo18j6acU=
+	b=KgA8fg2rMrysvW00rUKMM4YO2HYgcZdYnxoIw2rd61ns0Pu0MA/nM6cx4drRQwsCd
+	 baUeV1HMe2JONFoSiegAFV7epUxhkHwQBCC6FGzMWCCf3xHC5MeWXXTzLDYpPRQYs7
+	 44/PlikJn/a6Bbu6ltzUt3RiE3aogOhp7qKob4No=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgABWNu (ORCPT
+        id S1726112AbgABWNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:13:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53726 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:13:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727445AbgABWNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:13:43 -0500
+        id S1727763AbgABWNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:13:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66B4C21D7D;
-        Thu,  2 Jan 2020 22:13:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F00221D7D;
+        Thu,  2 Jan 2020 22:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003222;
-        bh=Fra8aZasCrfdjr2SqA6CMzh9DAlocZ+YwGMIgLze7jk=;
+        s=default; t=1578003227;
+        bh=K+k3IYqfi8N7ewXk4LEx7Oz7grn9DwS3QRY13yBxM5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QaDohJchHauPpddrFOebyQ4AXMViyr72caJvi1Dd2QlRqoCa6BQAr8iGvTk8kr/MC
-         fpYF5eipu/xJO2Ev84T6K56kTuBHcM24c6jstkFjkUMZodk8oqNrmFV+6ciyIdYYiQ
-         8VSxJGrfA00mKDZa7I6CwgvQKRuo214vaX0c3AwU=
+        b=LCVxNT7yKHdg5F+D/6v+TegbfVEfu2rif6EmxN4v1VoY+oGLDtPYY7I7MUevrPloC
+         owcnM8O/7N8lJtSogcL0rBOQ+hsDyyc72pWng44qio7zt6QbWvRmQZXgYSnUNItWlV
+         jtC9V5Al3ir2zMu459H0nsIefZdeLBbK5VgxHQhw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 071/191] powerpc/book3s/mm: Update Oops message to print the correct translation in use
-Date:   Thu,  2 Jan 2020 23:05:53 +0100
-Message-Id: <20200102215837.517222128@linuxfoundation.org>
+Subject: [PATCH 5.4 073/191] clk: pxa: fix one of the pxa RTC clocks
+Date:   Thu,  2 Jan 2020 23:05:55 +0100
+Message-Id: <20200102215837.751303668@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -63,66 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
 
-[ Upstream commit d7e02f7b7991dbe14a2acfb0e53d675cd149001c ]
+[ Upstream commit 46acbcb4849b2ca2e6e975e7c8130c1d61c8fd0c ]
 
-Avoids confusion when printing Oops message like below
+The pxa27x platforms have a single IP with 2 drivers, sa1100-rtc and
+rtc-pxa drivers.
 
- Faulting instruction address: 0xc00000000008bdb4
- Oops: Kernel access of bad area, sig: 11 [#1]
- LE PAGE_SIZE=64K MMU=Radix MMU=Hash SMP NR_CPUS=2048 NUMA PowerNV
+A previous patch fixed the sa1100-rtc case, but the pxa-rtc wasn't
+fixed. This patch completes the previous one.
 
-This was because we never clear the MMU_FTR_HPTE_TABLE feature flag
-even if we run with radix translation. It was discussed that we should
-look at this feature flag as an indication of the capability to run
-hash translation and we should not clear the flag even if we run in
-radix translation. All the code paths check for radix_enabled() check and
-if found true consider we are running with radix translation. Follow the
-same sequence for finding the MMU translation string to be used in Oops
-message.
-
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Acked-by: Nicholas Piggin <npiggin@gmail.com>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190711145814.17970-1-aneesh.kumar@linux.ibm.com
+Fixes: 8b6d10345e16 ("clk: pxa: add missing pxa27x clocks for Irda and sa1100-rtc")
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Link: https://lkml.kernel.org/r/20191026194420.11918-1-robert.jarzmik@free.fr
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/traps.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ drivers/clk/pxa/clk-pxa27x.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
-index 82f43535e686..014ff0701f24 100644
---- a/arch/powerpc/kernel/traps.c
-+++ b/arch/powerpc/kernel/traps.c
-@@ -250,15 +250,22 @@ static void oops_end(unsigned long flags, struct pt_regs *regs,
- }
- NOKPROBE_SYMBOL(oops_end);
- 
-+static char *get_mmu_str(void)
-+{
-+	if (early_radix_enabled())
-+		return " MMU=Radix";
-+	if (early_mmu_has_feature(MMU_FTR_HPTE_TABLE))
-+		return " MMU=Hash";
-+	return "";
-+}
-+
- static int __die(const char *str, struct pt_regs *regs, long err)
- {
- 	printk("Oops: %s, sig: %ld [#%d]\n", str, err, ++die_counter);
- 
--	printk("%s PAGE_SIZE=%luK%s%s%s%s%s%s%s %s\n",
-+	printk("%s PAGE_SIZE=%luK%s%s%s%s%s%s %s\n",
- 	       IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN) ? "LE" : "BE",
--	       PAGE_SIZE / 1024,
--	       early_radix_enabled() ? " MMU=Radix" : "",
--	       early_mmu_has_feature(MMU_FTR_HPTE_TABLE) ? " MMU=Hash" : "",
-+	       PAGE_SIZE / 1024, get_mmu_str(),
- 	       IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "",
- 	       IS_ENABLED(CONFIG_SMP) ? " SMP" : "",
- 	       IS_ENABLED(CONFIG_SMP) ? (" NR_CPUS=" __stringify(NR_CPUS)) : "",
+diff --git a/drivers/clk/pxa/clk-pxa27x.c b/drivers/clk/pxa/clk-pxa27x.c
+index 287fdeae7c7c..7b123105b5de 100644
+--- a/drivers/clk/pxa/clk-pxa27x.c
++++ b/drivers/clk/pxa/clk-pxa27x.c
+@@ -459,6 +459,7 @@ struct dummy_clk {
+ };
+ static struct dummy_clk dummy_clks[] __initdata = {
+ 	DUMMY_CLK(NULL, "pxa27x-gpio", "osc_32_768khz"),
++	DUMMY_CLK(NULL, "pxa-rtc", "osc_32_768khz"),
+ 	DUMMY_CLK(NULL, "sa1100-rtc", "osc_32_768khz"),
+ 	DUMMY_CLK("UARTCLK", "pxa2xx-ir", "STUART"),
+ };
 -- 
 2.20.1
 
