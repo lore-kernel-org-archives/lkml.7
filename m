@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F400AC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F21EC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6F1F2464E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D757227BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004064;
-	bh=2VAUqrholuYPMGeuanwvXUapeVk4jHRMXcGUjox4HQw=;
+	s=default; t=1578004067;
+	bh=KQKVW3kOPEqijQOC3uCUsmVpJX3Z1+YzIy1XRRtZZOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2qoMvCTDtu6airTzd+kijAr0T+l2gGMP/kkXYjSbyXD+dKbnZ2jF6I0rOvQj2Unap
-	 ibMXulhfZ+HS+wSFzyRAoWxbQMQmS785OAPtoQwprXZIgrBJ1NJ5xXBmmwaPKSV0Hl
-	 p55yIX0BoctqY6ZQAW6yK5GloxCDBN1is7/hTkyE=
+	b=GbHJDCSph0HuU3KpzTH1sKIH3wxUoabsdZOYvEXIn/G2sx2O1pjEAFU7D7YDPY6UO
+	 Sn/3exH92p8Lm4SEGFFDEEPizI5QQcOdBIt4ZZX3MiQJCBX8QXLGAhA5dNGD2w2jQW
+	 w6RNWvrkeuBRb97l8bJd1bcrQsdaLJb3EcwUsYvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729328AbgABW1n (ORCPT
+        id S1729654AbgABW1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:27:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56388 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:27:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729655AbgABW1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:27:38 -0500
+        id S1729761AbgABW1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:27:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A44F2253D;
-        Thu,  2 Jan 2020 22:27:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED60F227BF;
+        Thu,  2 Jan 2020 22:27:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004058;
-        bh=2VAUqrholuYPMGeuanwvXUapeVk4jHRMXcGUjox4HQw=;
+        s=default; t=1578004060;
+        bh=KQKVW3kOPEqijQOC3uCUsmVpJX3Z1+YzIy1XRRtZZOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iu91/APgxapL73Q8BoVAOUFlyKb8XW0p64Y9mninMyOj1BNdCBwY2MCp32VGHdGCI
-         phmd8z5IMu/+bazC5DFlMsGrokU7Dj3mS2RdryVCIlToyAJTGcUo/EPfynzQi4e5x0
-         9yLrIf2pNboCrBo4kAQT1iQ03c3uWP4cTx6+mCns=
+        b=jjpwL9SRJPncTHPGdSJJe1xxCYJwHYn7v94HJROw+V9aUL4YXIYhDmvZ+56pg2Zqg
+         /7xgV+f2BQppLFYvO4MhzHqhsHgjejmWDQ6zRB3Qm0TyVxU8RLhv1TYpWBzKJ4jait
+         Yi74zzUk+teqIQ3JzaWS+6Fye+mgtuCPfmugdYQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Connor Kuehl <connor.kuehl@canonical.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
+        stable@vger.kernel.org,
+        Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 012/171] staging: rtl8188eu: fix possible null dereference
-Date:   Thu,  2 Jan 2020 23:05:43 +0100
-Message-Id: <20200102220548.710946180@linuxfoundation.org>
+Subject: [PATCH 4.9 021/171] usb: renesas_usbhs: add suspend event support in gadget mode
+Date:   Thu,  2 Jan 2020 23:05:52 +0100
+Message-Id: <20200102220550.032462769@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -60,52 +62,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Connor Kuehl <connor.kuehl@canonical.com>
+From: Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>
 
-[ Upstream commit 228241944a48113470d3c3b46c88ba7fbe0a274b ]
+[ Upstream commit 39abcc84846bbc0538f13c190b6a9c7e36890cd2 ]
 
-Inside a nested 'else' block at the beginning of this function is a
-call that assigns 'psta' to the return value of 'rtw_get_stainfo()'.
-If 'rtw_get_stainfo()' returns NULL and the flow of control reaches
-the 'else if' where 'psta' is dereferenced, then we will dereference
-a NULL pointer.
+When R-Car Gen3 USB 2.0 is in Gadget mode, if host is detached an interrupt
+will be generated and Suspended state bit is set in interrupt status
+register. Interrupt handler will call driver->suspend(composite_suspend)
+if suspended state bit is set. composite_suspend will call
+ffs_func_suspend which will post FUNCTIONFS_SUSPEND and will be consumed
+by user space application via /dev/ep0.
 
-Fix this by checking if 'psta' is not NULL before reading its
-'psta->qos_option' data member.
+To be able to detect host detach, extend the DVSQ_MASK to cover the
+Suspended bit of the DVSQ[2:0] bitfield from the Interrupt Status
+Register 0 (INTSTS0) register and perform appropriate action in the
+DVST interrupt handler (usbhsg_irq_dev_state).
 
-Addresses-Coverity: ("Dereference null return value")
+Without this commit, disconnection of the phone from R-Car-H3 ES2.0
+Salvator-X CN9 port is not recognized and reverse role switch does
+not happen. If phone is connected again it does not enumerate.
 
-Signed-off-by: Connor Kuehl <connor.kuehl@canonical.com>
-Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
-Link: https://lore.kernel.org/r/20190926150317.5894-1-connor.kuehl@canonical.com
+With this commit, disconnection will be recognized and reverse role
+switch will happen by a user space application. If phone is connected
+again it will enumerate properly and will become visible in the output
+of 'lsusb'.
+
+Signed-off-by: Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Link: https://lore.kernel.org/r/1568207756-22325-3-git-send-email-external.veeraiyan.c@de.adit-jv.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/rtl8188eu/core/rtw_xmit.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/renesas_usbhs/common.h     |  3 ++-
+ drivers/usb/renesas_usbhs/mod_gadget.c | 12 +++++++++---
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_xmit.c b/drivers/staging/rtl8188eu/core/rtw_xmit.c
-index 0f8b8e0bffdf..dedc313e9dea 100644
---- a/drivers/staging/rtl8188eu/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_xmit.c
-@@ -805,7 +805,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
- 			memcpy(pwlanhdr->addr2, get_bssid(pmlmepriv), ETH_ALEN);
- 			memcpy(pwlanhdr->addr3, pattrib->src, ETH_ALEN);
+diff --git a/drivers/usb/renesas_usbhs/common.h b/drivers/usb/renesas_usbhs/common.h
+index b8620aa6b72e..8424c165f732 100644
+--- a/drivers/usb/renesas_usbhs/common.h
++++ b/drivers/usb/renesas_usbhs/common.h
+@@ -163,11 +163,12 @@ struct usbhs_priv;
+ #define VBSTS	(1 << 7)	/* VBUS_0 and VBUSIN_0 Input Status */
+ #define VALID	(1 << 3)	/* USB Request Receive */
  
--			if (psta->qos_option)
-+			if (psta && psta->qos_option)
- 				qos_option = true;
- 		} else if (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) ||
- 			   check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE)) {
-@@ -813,7 +813,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
- 			memcpy(pwlanhdr->addr2, pattrib->src, ETH_ALEN);
- 			memcpy(pwlanhdr->addr3, get_bssid(pmlmepriv), ETH_ALEN);
+-#define DVSQ_MASK		(0x3 << 4)	/* Device State */
++#define DVSQ_MASK		(0x7 << 4)	/* Device State */
+ #define  POWER_STATE		(0 << 4)
+ #define  DEFAULT_STATE		(1 << 4)
+ #define  ADDRESS_STATE		(2 << 4)
+ #define  CONFIGURATION_STATE	(3 << 4)
++#define  SUSPENDED_STATE	(4 << 4)
  
--			if (psta->qos_option)
-+			if (psta && psta->qos_option)
- 				qos_option = true;
- 		} else {
- 			RT_TRACE(_module_rtl871x_xmit_c_, _drv_err_, ("fw_state:%x is not allowed to xmit frame\n", get_fwstate(pmlmepriv)));
+ #define CTSQ_MASK		(0x7)	/* Control Transfer Stage */
+ #define  IDLE_SETUP_STAGE	0	/* Idle stage or setup stage */
+diff --git a/drivers/usb/renesas_usbhs/mod_gadget.c b/drivers/usb/renesas_usbhs/mod_gadget.c
+index 6898ca1ef98c..b0397bcfe1f6 100644
+--- a/drivers/usb/renesas_usbhs/mod_gadget.c
++++ b/drivers/usb/renesas_usbhs/mod_gadget.c
+@@ -465,12 +465,18 @@ static int usbhsg_irq_dev_state(struct usbhs_priv *priv,
+ {
+ 	struct usbhsg_gpriv *gpriv = usbhsg_priv_to_gpriv(priv);
+ 	struct device *dev = usbhsg_gpriv_to_dev(gpriv);
++	int state = usbhs_status_get_device_state(irq_state);
+ 
+ 	gpriv->gadget.speed = usbhs_bus_get_speed(priv);
+ 
+-	dev_dbg(dev, "state = %x : speed : %d\n",
+-		usbhs_status_get_device_state(irq_state),
+-		gpriv->gadget.speed);
++	dev_dbg(dev, "state = %x : speed : %d\n", state, gpriv->gadget.speed);
++
++	if (gpriv->gadget.speed != USB_SPEED_UNKNOWN &&
++	    (state & SUSPENDED_STATE)) {
++		if (gpriv->driver && gpriv->driver->suspend)
++			gpriv->driver->suspend(&gpriv->gadget);
++		usb_gadget_set_state(&gpriv->gadget, USB_STATE_SUSPENDED);
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
