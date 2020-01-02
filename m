@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61358C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48041C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF1822525
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A62C21D7D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004249;
-	bh=Tj/9HI+043J3G7z/Ustf6rJ/jR00Aw9f9WNcSX0ryok=;
+	s=default; t=1578004252;
+	bh=7vokpCAWoIM3+rwzL4QEUq/n0M2dfXFM+FRzOMeKScg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cC7DrYVjKvfEU7FiOvWKPuL9FmHSSImeu17/5BlzRi0nw0DPvDaIUwtVcI9Q3/SN/
-	 DYdLG2F3Xy92Usa+EaMzwqowcYgBpAfJA7Ubw11Oo+6RWH7O1lxJZGIli852P2oHob
-	 pzhpheMaYK/hvJJQTn41El7jDbkwdjid1joC1ufI=
+	b=pyXG9N3k0kEQKz71YLgG8d+e8ExDgWScpPOetITrC7M/zxOr3c5VIbz7i90UqW5uo
+	 oysMPs2xQU2zUwvymAN6byMPlmZ+dB79inb/zNiCy4pHw1pMSk6ef7+6CSNWsNKxsQ
+	 6tShKyTtxGyUMsBNgGWRDO2ISV+TlmTNOZ78ubKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730206AbgABWas (ORCPT
+        id S1730076AbgABWav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:30:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34972 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:30:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730196AbgABWao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:30:44 -0500
+        id S1729790AbgABWat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:30:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4418B20863;
-        Thu,  2 Jan 2020 22:30:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 144AA22314;
+        Thu,  2 Jan 2020 22:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004243;
-        bh=Tj/9HI+043J3G7z/Ustf6rJ/jR00Aw9f9WNcSX0ryok=;
+        s=default; t=1578004248;
+        bh=7vokpCAWoIM3+rwzL4QEUq/n0M2dfXFM+FRzOMeKScg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rlQUyKVhMfbakTFkl/SXaRnhhCXcZ3MusBVkd7/JkX3qkBINzpe09PmojI0PTJRW/
-         aiBDZblhgMrNQlp8Zg8wtmx/03QPbbPvnCNkVKAe8kj4HfStqIBa0zIXC88gewvfTp
-         8IHGHJJYOA48X4ZqjZ+gMKI2cn9bla7CMLudLSNM=
+        b=bFTNpH5mrsocoljpzSuTcBFPFNBv1hPzYn78PY4fM3zZyjxdtgKsiodL19vRF321p
+         19u7y+opA8x0NCj51wsIuqLCsTpAEI7ET0ASdyRqsjlX0K379/DfcK/juclgMIYK9g
+         tD3gJdl9OyFAqYTs+9i9De25Rgx9D4GTwan758Y8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wang Xuerui <wangxuerui@qiniu.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 072/171] iwlwifi: mvm: fix unaligned read of rx_pkt_status
-Date:   Thu,  2 Jan 2020 23:06:43 +0100
-Message-Id: <20200102220556.908450992@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Harish Jenny K N <harish_kandiga@mentor.com>
+Subject: [PATCH 4.9 074/171] mmc: tmio: Add MMC_CAP_ERASE to allow erase/discard/trim requests
+Date:   Thu,  2 Jan 2020 23:06:45 +0100
+Message-Id: <20200102220557.261486915@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -61,48 +65,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Xuerui <wangxuerui@qiniu.com>
+From: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-[ Upstream commit c5aaa8be29b25dfe1731e9a8b19fd91b7b789ee3 ]
+[ Upstream commit c91843463e9e821dc3b48fe37e3155fa38299f6e ]
 
-This is present since the introduction of iwlmvm.
-Example stack trace on MIPS:
+Isolated initially to renesas_sdhi_internal_dmac [1], Ulf suggested
+adding MMC_CAP_ERASE to the TMIO mmc core:
 
-[<ffffffffc0789328>] iwl_mvm_rx_rx_mpdu+0xa8/0xb88 [iwlmvm]
-[<ffffffffc0632b40>] iwl_pcie_rx_handle+0x420/0xc48 [iwlwifi]
+On Fri, Nov 15, 2019 at 10:27:25AM +0100, Ulf Hansson wrote:
+ -- snip --
+ This test and due to the discussions with Wolfram and you in this
+ thread, I would actually suggest that you enable MMC_CAP_ERASE for all
+ tmio variants, rather than just for this particular one.
 
-Tested with a Wireless AC 7265 for ~6 months, confirmed to fix the
-problem. No other unaligned accesses are spotted yet.
+ In other words, set the cap in tmio_mmc_host_probe() should be fine,
+ as it seems none of the tmio variants supports HW busy detection at
+ this point.
+ -- snip --
 
-Signed-off-by: Wang Xuerui <wangxuerui@qiniu.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Testing on R-Car H3ULCB-KF doesn't reveal any issues (v5.4-rc7):
+
+root@rcar-gen3:~# lsblk
+NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+mmcblk0      179:0    0 59.2G  0 disk  <--- eMMC
+mmcblk0boot0 179:8    0    4M  1 disk
+mmcblk0boot1 179:16   0    4M  1 disk
+mmcblk1      179:24   0   30G  0 disk  <--- SD card
+
+root@rcar-gen3:~# time blkdiscard /dev/mmcblk0
+real    0m8.659s
+user    0m0.001s
+sys     0m1.920s
+
+root@rcar-gen3:~# time blkdiscard /dev/mmcblk1
+real    0m1.176s
+user    0m0.001s
+sys     0m0.124s
+
+[1] https://lore.kernel.org/linux-renesas-soc/20191112134808.23546-1-erosca@de.adit-jv.com/
+
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Originally-by: Harish Jenny K N <harish_kandiga@mentor.com>
+Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/rx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/mmc/host/tmio_mmc_pio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rx.c b/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
-index b78e60eb600f..d0aa4d0a5537 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
-@@ -62,6 +62,7 @@
-  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *****************************************************************************/
-+#include <asm/unaligned.h>
- #include <linux/etherdevice.h>
- #include <linux/skbuff.h>
- #include "iwl-trans.h"
-@@ -289,7 +290,7 @@ void iwl_mvm_rx_rx_mpdu(struct iwl_mvm *mvm, struct napi_struct *napi,
- 	rx_res = (struct iwl_rx_mpdu_res_start *)pkt->data;
- 	hdr = (struct ieee80211_hdr *)(pkt->data + sizeof(*rx_res));
- 	len = le16_to_cpu(rx_res->byte_count);
--	rx_pkt_status = le32_to_cpup((__le32 *)
-+	rx_pkt_status = get_unaligned_le32((__le32 *)
- 		(pkt->data + sizeof(*rx_res) + len));
+diff --git a/drivers/mmc/host/tmio_mmc_pio.c b/drivers/mmc/host/tmio_mmc_pio.c
+index 0fc1f73b0d23..3e025766181b 100644
+--- a/drivers/mmc/host/tmio_mmc_pio.c
++++ b/drivers/mmc/host/tmio_mmc_pio.c
+@@ -1076,7 +1076,7 @@ int tmio_mmc_host_probe(struct tmio_mmc_host *_host,
+ 	tmio_mmc_ops.start_signal_voltage_switch = _host->start_signal_voltage_switch;
+ 	mmc->ops = &tmio_mmc_ops;
  
- 	/* Dont use dev_alloc_skb(), we'll have enough headroom once
+-	mmc->caps |= MMC_CAP_4_BIT_DATA | pdata->capabilities;
++	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_4_BIT_DATA | pdata->capabilities;
+ 	mmc->caps2 |= pdata->capabilities2;
+ 	mmc->max_segs = 32;
+ 	mmc->max_blk_size = 512;
 -- 
 2.20.1
 
