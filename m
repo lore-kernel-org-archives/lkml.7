@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73820C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDA9C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F50B22314
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3870B21582
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003338;
-	bh=P3a/ZEkweCnG571B9JxdD9lRevBt7k9vKFOiEEnafLg=;
+	s=default; t=1578003341;
+	bh=myurz9Mbl4cu2OyNTosGleoyKh9RLVlKrS/4ZRULdsI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mT9CP1zTqAenL/Dv+qu+YT0HQtqbKD/YU9Pfh9kQ+9gxcP+c7Uk5p1yTRO9avepLd
-	 xS7AYFl2CRsOvN7gjwZKFrXe9nElaUJFMHHpsl7Eur9hcHWWjr20TFtBBfrTBdyJY6
-	 K6lgRe1NBW+OmYkKafOivzpNuHU4vrsIuX/Iwm/0=
+	b=0k906YDrKoEE24OF8T17022SLb1VjVkBWcejGHngNVYSP3EbUF1MdsDiFaA6awFaX
+	 wc+7PqD8nDfc0GW4+CgqvbhGhtu1ys+KGWtGKppUcOhhh5Bfsinfe+/S6M+9gTtLaH
+	 Tdt4iIcslPaNCzCAVUNlyxLi8n7uMJiEFS7gEVhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgABWPa (ORCPT
+        id S1728105AbgABWPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:15:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56220 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:15:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727134AbgABWPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:15:24 -0500
+        id S1727233AbgABWPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:15:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A178C24649;
-        Thu,  2 Jan 2020 22:15:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40308227BF;
+        Thu,  2 Jan 2020 22:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003323;
-        bh=P3a/ZEkweCnG571B9JxdD9lRevBt7k9vKFOiEEnafLg=;
+        s=default; t=1578003332;
+        bh=myurz9Mbl4cu2OyNTosGleoyKh9RLVlKrS/4ZRULdsI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VYny6OlfeiX0VvqWuYEYiKca7ub+mtW8iCbxidyCY6bacKZjgQVYL5y79+Ekis+do
-         oUN+STMaEqUfr/f3prTSAhFdR9UUDPC6lmoRz/zbewf1wdBXbyk9qYFW0B9pHqbQs3
-         r60PGbDpxZe6UmWzvfSj+HkrjCHZLd6dWvlkqz84=
+        b=MUX3nYB5xN9rxjRkTX/ll18Bw2SxSMOxWakMajXiwPh3b8/Kjm5+xD6/3rY2ZEkfH
+         u4UhWvAJlTYquBLsGj++75bmMgwlUe1axlDHVEdL8BOwLkOqILmSOm+rum2ApMIvqL
+         OXOcySdvK+6IIfiZzFbtmkvgYjavZ88BioaD1Pg8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erhard Furtner <erhard_f@mailbox.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 112/191] of: unittest: fix memory leak in attach_node_and_children
-Date:   Thu,  2 Jan 2020 23:06:34 +0100
-Message-Id: <20200102215841.878154675@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Christie <mchristi@redhat.com>,
+        Roman Bolshakov <r.bolshakov@yadro.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 091/191] scsi: target: core: Release SPC-2 reservations when closing a session
+Date:   Thu,  2 Jan 2020 23:06:13 +0100
+Message-Id: <20200102215839.679018970@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,45 +62,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erhard Furtner <erhard_f@mailbox.org>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 2aacace6dbbb6b6ce4e177e6c7ea901f389c0472 ]
+[ Upstream commit 80647a89eaf3f2549741648f3230cd6ff68c23b4 ]
 
-In attach_node_and_children memory is allocated for full_name via
-kasprintf. If the condition of the 1st if is not met the function
-returns early without freeing the memory. Add a kfree() to fix that.
+The SCSI specs require releasing SPC-2 reservations when a session is
+closed. Make sure that the target core does this.
 
-This has been detected with kmemleak:
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=205327
+Running the libiscsi tests triggers the KASAN complaint shown below.  This
+patch fixes that use-after-free.
 
-It looks like the leak was introduced by this commit:
-Fixes: 5babefb7f7ab ("of: unittest: allow base devicetree to have symbol metadata")
+BUG: KASAN: use-after-free in target_check_reservation+0x171/0x980 [target_core_mod]
+Read of size 8 at addr ffff88802ecd1878 by task iscsi_trx/17200
 
-Signed-off-by: Erhard Furtner <erhard_f@mailbox.org>
-Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+CPU: 0 PID: 17200 Comm: iscsi_trx Not tainted 5.4.0-rc1-dbg+ #1
+Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
+Call Trace:
+ dump_stack+0x8a/0xd6
+ print_address_description.constprop.0+0x40/0x60
+ __kasan_report.cold+0x1b/0x34
+ kasan_report+0x16/0x20
+ __asan_load8+0x58/0x90
+ target_check_reservation+0x171/0x980 [target_core_mod]
+ __target_execute_cmd+0xb1/0xf0 [target_core_mod]
+ target_execute_cmd+0x22d/0x4d0 [target_core_mod]
+ transport_generic_new_cmd+0x31f/0x5b0 [target_core_mod]
+ transport_handle_cdb_direct+0x6f/0x90 [target_core_mod]
+ iscsit_execute_cmd+0x381/0x3f0 [iscsi_target_mod]
+ iscsit_sequence_cmd+0x13b/0x1f0 [iscsi_target_mod]
+ iscsit_process_scsi_cmd+0x4c/0x130 [iscsi_target_mod]
+ iscsit_get_rx_pdu+0x8e8/0x15f0 [iscsi_target_mod]
+ iscsi_target_rx_thread+0x105/0x1b0 [iscsi_target_mod]
+ kthread+0x1bc/0x210
+ ret_from_fork+0x24/0x30
+
+Allocated by task 1079:
+ save_stack+0x23/0x90
+ __kasan_kmalloc.constprop.0+0xcf/0xe0
+ kasan_slab_alloc+0x12/0x20
+ kmem_cache_alloc+0xfe/0x3a0
+ transport_alloc_session+0x29/0x80 [target_core_mod]
+ iscsi_target_login_thread+0xceb/0x1920 [iscsi_target_mod]
+ kthread+0x1bc/0x210
+ ret_from_fork+0x24/0x30
+
+Freed by task 17193:
+ save_stack+0x23/0x90
+ __kasan_slab_free+0x13a/0x190
+ kasan_slab_free+0x12/0x20
+ kmem_cache_free+0xc8/0x3e0
+ transport_free_session+0x179/0x2f0 [target_core_mod]
+ transport_deregister_session+0x121/0x170 [target_core_mod]
+ iscsit_close_session+0x12c/0x350 [iscsi_target_mod]
+ iscsit_logout_post_handler+0x136/0x380 [iscsi_target_mod]
+ iscsit_response_queue+0x8fa/0xc00 [iscsi_target_mod]
+ iscsi_target_tx_thread+0x28e/0x390 [iscsi_target_mod]
+ kthread+0x1bc/0x210
+ ret_from_fork+0x24/0x30
+
+The buggy address belongs to the object at ffff88802ecd1860
+ which belongs to the cache se_sess_cache of size 352
+The buggy address is located 24 bytes inside of
+ 352-byte region [ffff88802ecd1860, ffff88802ecd19c0)
+The buggy address belongs to the page:
+page:ffffea0000bb3400 refcount:1 mapcount:0 mapping:ffff8880bef2ed00 index:0x0 compound_mapcount: 0
+flags: 0x1000000000010200(slab|head)
+raw: 1000000000010200 dead000000000100 dead000000000122 ffff8880bef2ed00
+raw: 0000000000000000 0000000080270027 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88802ecd1700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88802ecd1780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88802ecd1800: fb fb fb fb fc fc fc fc fc fc fc fc fb fb fb fb
+                                                                ^
+ ffff88802ecd1880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88802ecd1900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+
+Cc: Mike Christie <mchristi@redhat.com>
+Link: https://lore.kernel.org/r/20191113220508.198257-2-bvanassche@acm.org
+Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/unittest.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/target/target_core_transport.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 92e895d86458..ca7823eef2b4 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -1146,8 +1146,10 @@ static void attach_node_and_children(struct device_node *np)
- 	full_name = kasprintf(GFP_KERNEL, "%pOF", np);
+diff --git a/drivers/target/target_core_transport.c b/drivers/target/target_core_transport.c
+index 7f06a62f8661..eda8b4736c15 100644
+--- a/drivers/target/target_core_transport.c
++++ b/drivers/target/target_core_transport.c
+@@ -584,6 +584,15 @@ void transport_free_session(struct se_session *se_sess)
+ }
+ EXPORT_SYMBOL(transport_free_session);
  
- 	if (!strcmp(full_name, "/__local_fixups__") ||
--	    !strcmp(full_name, "/__fixups__"))
-+	    !strcmp(full_name, "/__fixups__")) {
-+		kfree(full_name);
- 		return;
-+	}
++static int target_release_res(struct se_device *dev, void *data)
++{
++	struct se_session *sess = data;
++
++	if (dev->reservation_holder == sess)
++		target_release_reservation(dev);
++	return 0;
++}
++
+ void transport_deregister_session(struct se_session *se_sess)
+ {
+ 	struct se_portal_group *se_tpg = se_sess->se_tpg;
+@@ -600,6 +609,12 @@ void transport_deregister_session(struct se_session *se_sess)
+ 	se_sess->fabric_sess_ptr = NULL;
+ 	spin_unlock_irqrestore(&se_tpg->session_lock, flags);
  
- 	dup = of_find_node_by_path(full_name);
- 	kfree(full_name);
++	/*
++	 * Since the session is being removed, release SPC-2
++	 * reservations held by the session that is disappearing.
++	 */
++	target_for_each_device(target_release_res, se_sess);
++
+ 	pr_debug("TARGET_CORE[%s]: Deregistered fabric_sess\n",
+ 		se_tpg->se_tpg_tfo->fabric_name);
+ 	/*
 -- 
 2.20.1
 
