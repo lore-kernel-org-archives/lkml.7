@@ -2,157 +2,108 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D42C2D0DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E17C2D0DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE4CD20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF52420866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:55:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="w8EXAoZm"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="d85ZQ8Qf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbgABHyP (ORCPT
+        id S1727750AbgABHz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 02:54:15 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:45400 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727756AbgABHyO (ORCPT
+        Thu, 2 Jan 2020 02:55:27 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39355 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727663AbgABHz1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 02:54:14 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577951654; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=yJYJDd1Z2YXAv6jesy41e54rJyXI82cXXASQ0/OaVFU=;
- b=w8EXAoZmP0u5NS5uqE6rkkHcIxVt/pzDIK10sdFl1xJwHCUpHZgJrsZv5B/a3lgokDcac4/m
- PFYXlZzGkzw4Leou7zI5MZ1JnRzh7B+J3QYY9WlZuZ0zYRLowDAAFAI/rh+gTFpIDhPaBIlM
- DVrSOWcjr8TMpLPa+g5b3aP+khs=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e0da1a2.7fb722093458-smtp-out-n02;
- Thu, 02 Jan 2020 07:54:10 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A0A10C4479C; Thu,  2 Jan 2020 07:54:09 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: vgarodia)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 062CEC433CB;
-        Thu,  2 Jan 2020 07:54:09 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 02 Jan 2020 13:24:08 +0530
-From:   vgarodia@codeaurora.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Dikshita Agarwal <dikshita@codeaurora.org>,
-        linux-media@vger.kernel.org, stanimir.varbanov@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] arm64: dts: sc7180: Add Venus video codec DT node
-In-Reply-To: <20191229031853.GL3755841@builder>
-References: <1576828760-13176-1-git-send-email-dikshita@codeaurora.org>
- <1576828760-13176-2-git-send-email-dikshita@codeaurora.org>
- <20191229031853.GL3755841@builder>
-Message-ID: <17bc9ed78316f483fea273849d39d6a8@codeaurora.org>
-X-Sender: vgarodia@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Thu, 2 Jan 2020 02:55:27 -0500
+Received: by mail-pl1-f193.google.com with SMTP id g6so14582954plp.6
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 23:55:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=sJ16jnOhr3QUr3TB0LIZMFGSCmwDcNlgrayZJgkHF8s=;
+        b=d85ZQ8Qf1C6rSGTtqE9vzmhUlpU1i86WxYukWtgBheyHtfWLatiqdZYlddml435kvq
+         f6bRaQ6Db7aXkStAjQUSjLjNTZP9AMCgPhdM7kgG/rlOdScniDBL0b7vP4C8/go/z2l9
+         Voa+O15p5SVnc2KGMc/4Ge4wMhwLaFQRfsnOO33tH9HQJknLD4sF+9XvYG1a+VV/mADz
+         Mn8EXcfy+00EY7P3qgy1XKOjHbP8LNQGM/mgeFmbLm+MFxZ2s5MAE3YSmTtY0DI/l7DG
+         TLh/h/KlVvOpv5eZzIGDS71RF/maL0jGI0hXlNZQDa4vM8J0T7Lvsn760hMj7XX5idJF
+         eG7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=sJ16jnOhr3QUr3TB0LIZMFGSCmwDcNlgrayZJgkHF8s=;
+        b=ULHqQoA9B8mI0OxxGzryZ5oN0U27Xaulh/1tajykYQVU7Xe+N09y5YF17dw4SFrsI3
+         z2zTxst20L5E7DEQVY5cKcr+pFituuqE8k+RfwpDOa8HMbmJJE4HGpGCjkYTnz5S8Tiq
+         BQu1HZFSD6jgvO7Tkc+jj7MvT+93dHAU4aOapx1VZbyfM7SJ85mYmnLToTd+4Qt7V8sa
+         lNv5ovnUaudkKOPPF8Y2DXs3RBBAjYH7rzn9ZYA2TI4NvuyYPcJZC+UOTvYFIfkwQ8ft
+         PDE2reeqDAfJSFwQSQreA8C7RqX4N9TSQWaU165I8vtRx7xxBtvpk/9GfBFS+94qHEjr
+         ZOjg==
+X-Gm-Message-State: APjAAAWxDGphwV2r4/oK7Sih3vv58FL3iYLmFuY4OLzLpbqko/oKN4EH
+        A4fAaHtLrlDUA2dL5aGX54AySc2+kvqtQw==
+X-Google-Smtp-Source: APXvYqzyMlk0BDFzd1sE3mSiZRlp/TfMc4PWjjUFhTKju697Yrgu9yZtGW/UqbxmgK/QPWCyhvT0Vg==
+X-Received: by 2002:a17:90a:8a98:: with SMTP id x24mr18878530pjn.113.1577951726559;
+        Wed, 01 Jan 2020 23:55:26 -0800 (PST)
+Received: from [10.145.97.154] ([203.129.124.82])
+        by smtp.gmail.com with ESMTPSA id j14sm57009728pgs.57.2020.01.01.23.55.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jan 2020 23:55:25 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v7 1/4] x86/insn-eval: Add support for 64-bit kernel mode
+Date:   Thu, 2 Jan 2020 16:55:22 +0900
+Message-Id: <498AAA9C-4779-4557-BBF5-A05C55563204@amacapital.net>
+References: <20200102074705.n6cnvxrcojhlxqr5@box.shutemov.name>
+Cc:     Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+In-Reply-To: <20200102074705.n6cnvxrcojhlxqr5@box.shutemov.name>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
 
-Thanks for your review comments.
 
-On 2019-12-29 08:48, Bjorn Andersson wrote:
-> On Thu 19 Dec 23:59 PST 2019, Dikshita Agarwal wrote:
-> 
->> This adds Venus video codec DT node for sc7180.
->> 
->> Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
->> ---
->>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 36 
->> ++++++++++++++++++++++++++++++++++++
->>  1 file changed, 36 insertions(+)
->> 
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi 
->> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> index 6876aae2..42c70f5 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> @@ -10,6 +10,7 @@
->>  #include <dt-bindings/interrupt-controller/arm-gic.h>
->>  #include <dt-bindings/phy/phy-qcom-qusb2.h>
->>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
->> +#include <dt-bindings/clock/qcom,videocc-sc7180.h>
->> 
->>  / {
->>  	interrupt-parent = <&intc>;
->> @@ -66,6 +67,11 @@
->>  			compatible = "qcom,cmd-db";
->>  			no-map;
->>  		};
->> +
->> +		venus_mem: memory@8F600000 {
->> +			reg = <0 0x8F600000 0 0x500000>;
->> +			no-map;
->> +		};
->>  	};
->> 
->>  	cpus {
->> @@ -1042,6 +1048,36 @@
->>  			};
->>  		};
->> 
->> +		venus: video-codec@aa00000 {
->> +			compatible = "qcom,sc7180-venus";
->> +			reg = <0 0x0aa00000 0 0xff000>;
->> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
->> +			power-domains = <&videocc VENUS_GDSC>,
-> 
-> Should this be aligned with the DT refactoring done for sdm845, where
-> the GDSC is moved into the *-core subnodes etc?
-This is already aligned to new refactored design i.e clocks/GDSCs are no 
-more
-core specific.
+> On Jan 2, 2020, at 4:47 PM, Kirill A. Shutemov <kirill@shutemov.name> wrot=
+e:
+>=20
+> =EF=BB=BFOn Thu, Dec 19, 2019 at 12:11:47AM +0100, Jann Horn wrote:
+>> To support evaluating 64-bit kernel mode instructions:
+>>=20
+>> Replace existing checks for user_64bit_mode() with a new helper that
+>> checks whether code is being executed in either 64-bit kernel mode or
+>> 64-bit user mode.
+>>=20
+>> Select the GS base depending on whether the instruction is being
+>> evaluated in kernel mode.
+>>=20
+>> Signed-off-by: Jann Horn <jannh@google.com>
+>=20
+> In most cases you have struct insn around (or can easily pass it down to
+> the place). Why not use insn->x86_64?
+>=20
+>=20
 
-> Regards,
-> Bjorn
-> 
->> +					<&videocc VCODEC0_GDSC>;
->> +			power-domain-names = "venus", "vcodec0";
->> +			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
->> +				<&videocc VIDEO_CC_VENUS_AHB_CLK>,
->> +				<&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
->> +				<&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
->> +				<&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
->> +			clock-names = "core", "iface", "bus",
->> +					"vcodec0_core", "vcodec0_bus";
->> +			iommus = <&apps_smmu 0x0C00 0x60>;
->> +			memory-region = <&venus_mem>;
->> +
->> +			video-core0 {
->> +					compatible = "venus-decoder";
->> +			};
->> +
->> +			video-core1 {
->> +					compatible = "venus-encoder";
->> +			};
->> +
->> +			video-firmware {
->> +					iommus = <&apps_smmu 0x0C42 0x0>;
->> +			};
->> +		};
->> +
->>  		pdc: interrupt-controller@b220000 {
->>  			compatible = "qcom,sc7180-pdc", "qcom,pdc";
->>  			reg = <0 0x0b220000 0 0x30000>;
->> --
->> 1.9.1
->> 
+What populates that?
+
+FWIW, this code is a bit buggy: it gets EFI mixed mode wrong. I=E2=80=99m no=
+t entirely sure we care.=
