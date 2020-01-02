@@ -2,150 +2,91 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7718C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A35DCC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE7C2215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:19:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hLLJcsjC"
+	by mail.kernel.org (Postfix) with ESMTP id 7B8BB20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgABNTM (ORCPT
+        id S1728349AbgABNWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 08:19:12 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:59462 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728330AbgABNTK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 08:19:10 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 002DJ8AE035103;
-        Thu, 2 Jan 2020 07:19:08 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577971148;
-        bh=9nz8I3FlvwbtR6z+Kh50FcpfT6Ue0HAht142PF2OSrE=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=hLLJcsjCZ3vAYF5LZLaQQ3Gqs7sAGISlXBNfigBtHkzc4U2clm+M1LR/zt6MpJ9SV
-         a+HuV3716Yxd5la4d1KaQUtJRoCHsbwIgV5azaWXJ/CXJCfNYut7aaQo5BTMPhFtEj
-         OpLNWf/od/Ev2jHCah9UWu/MGfV8GatACJ+gniYw=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 002DJ8uD090160
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 2 Jan 2020 07:19:08 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 2 Jan
- 2020 07:19:04 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 2 Jan 2020 07:19:04 -0600
-Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 002DIp3W075354;
-        Thu, 2 Jan 2020 07:19:02 -0600
-From:   Tero Kristo <t-kristo@ti.com>
-To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
-        <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
-        <linux-omap@vger.kernel.org>, <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>
-Subject: [PATCHv4 05/14] remoteproc/omap: Add the rproc ops .da_to_va() implementation
-Date:   Thu, 2 Jan 2020 15:18:36 +0200
-Message-ID: <20200102131845.12992-6-t-kristo@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200102131845.12992-1-t-kristo@ti.com>
-References: <20200102131845.12992-1-t-kristo@ti.com>
+        Thu, 2 Jan 2020 08:22:22 -0500
+Received: from foss.arm.com ([217.140.110.172]:47148 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728298AbgABNWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 08:22:22 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 437CF1FB;
+        Thu,  2 Jan 2020 05:22:21 -0800 (PST)
+Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C13C3F703;
+        Thu,  2 Jan 2020 05:22:20 -0800 (PST)
+Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations conflicts with
+ lower layer
+To:     "Zengtao (B)" <prime.zeng@hisilicon.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Linuxarm <linuxarm@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Morten Rasmussen <morten.rasmussen@arm.com>
+References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
+ <20191231164051.GA4864@bogus>
+ <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
+ <20200102112955.GC4864@bogus>
+ <678F3D1BB717D949B966B68EAEB446ED340AEB67@dggemm526-mbx.china.huawei.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <c43342d0-7e4d-3be0-0fe1-8d802b0d7065@arm.com>
+Date:   Thu, 2 Jan 2020 13:22:19 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <678F3D1BB717D949B966B68EAEB446ED340AEB67@dggemm526-mbx.china.huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+On 02/01/2020 12:47, Zengtao (B) wrote:
+>>
+>> As I said, wrong configurations need to be detected when generating
+>> DT/ACPI if possible. The above will print warning on systems with NUMA
+>> within package.
+>>
+>> NUMA:  0-7, 8-15
+>> core_siblings:   0-15
+>>
+>> The above is the example where the die has 16 CPUs and 2 NUMA nodes
+>> within a package, your change throws error to the above config which is
+>> wrong.
+>>
+> From your example, the core 7 and core 8 has got different LLC but the same Low
+> Level cache?
 
-An implementation for the rproc ops .da_to_va() has been added
-that provides the address translation between device addresses
-to kernel virtual addresses for internal RAMs present on that
-particular remote processor device. The implementation provides
-the translations based on the addresses parsed and stored during
-the probe.
+AFAIA what matters here is memory controllers, less so LLCs. Cores within
+a single die could have private LLCs and separate memory controllers, or
+shared LLC and separate memory controllers.
 
-This ops gets invoked by the exported rproc_da_to_va() function
-and allows the remoteproc core's ELF loader to be able to load
-program data directly into the internal memories.
+> From schedule view of point, lower level sched domain should be a subset of higher
+> Level sched domain.
+> 
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
-v4:
-  - some whitespace fixes
+Right, and that is checked when you have sched_debug on the cmdline
+(or write 1 to /sys/kernel/debug/sched_debug & regenerate the sched domains)
 
- drivers/remoteproc/omap_remoteproc.c | 39 ++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+Now, I don't know how this plays out for the numa-in-package topologies like
+the one suggested by Sudeep. x86 and AMD had to play some games to get
+numa-in-package topologies working, see e.g.
 
-diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-index e429b2296d7a..9ca337f18ac2 100644
---- a/drivers/remoteproc/omap_remoteproc.c
-+++ b/drivers/remoteproc/omap_remoteproc.c
-@@ -245,10 +245,49 @@ static int omap_rproc_stop(struct rproc *rproc)
- 	return 0;
- }
- 
-+/**
-+ * omap_rproc_da_to_va() - internal memory translation helper
-+ * @rproc: remote processor to apply the address translation for
-+ * @da: device address to translate
-+ * @len: length of the memory buffer
-+ *
-+ * Custom function implementing the rproc .da_to_va ops to provide address
-+ * translation (device address to kernel virtual address) for internal RAMs
-+ * present in a DSP or IPU device). The translated addresses can be used
-+ * either by the remoteproc core for loading, or by any rpmsg bus drivers.
-+ * Returns the translated virtual address in kernel memory space, or NULL
-+ * in failure.
-+ */
-+static void *omap_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-+{
-+	struct omap_rproc *oproc = rproc->priv;
-+	int i;
-+	u32 offset;
-+
-+	if (len <= 0)
-+		return NULL;
-+
-+	if (!oproc->num_mems)
-+		return NULL;
-+
-+	for (i = 0; i < oproc->num_mems; i++) {
-+		if (da >= oproc->mem[i].dev_addr && da + len <=
-+		    oproc->mem[i].dev_addr + oproc->mem[i].size) {
-+			offset = da - oproc->mem[i].dev_addr;
-+			/* __force to make sparse happy with type conversion */
-+			return (__force void *)(oproc->mem[i].cpu_addr +
-+						offset);
-+		}
-+	}
-+
-+	return NULL;
-+}
-+
- static const struct rproc_ops omap_rproc_ops = {
- 	.start		= omap_rproc_start,
- 	.stop		= omap_rproc_stop,
- 	.kick		= omap_rproc_kick,
-+	.da_to_va	= omap_rproc_da_to_va,
- };
- 
- static const struct omap_rproc_mem_data ipu_mems[] = {
--- 
-2.17.1
+  cebf15eb09a2 ("x86, sched: Add new topology for multi-NUMA-node CPUs")
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+perhaps you need to "lie" here and ensure sub-NUMA sched domain levels are
+a subset of the NUMA levels, i.e. lie for core_siblings. I might go and
+play with this to see how it behaves.
