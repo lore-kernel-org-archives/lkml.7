@@ -7,55 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B43BFC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C8FC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AAFA20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BE1020866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005636;
-	bh=d18jTLWfApfwUh6KARUD1FZQRxSZd5VOJTbozrBOtrQ=;
+	s=default; t=1578005639;
+	bh=HGgnOYkB19A8Cw6IPyxZwHC7IDJme7G/UiR6JnagRPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a779WEA5pNus5plIDeK01z7vT9zyKbmlWMUhCz10Vm9FOE0qpwwqcM31WI9qB69Ii
-	 0InNU168m3w1gQOVlKJzwgPg/EW0CcGTK8gjkGwRJrEDQqYWJL4mep48DfyaPIYJTy
-	 Or1BUQmCwv+RGpy8+iEXyrAhlH3oqQEwO/pqVp4Y=
+	b=J7K6GiwxlA0toLVT6RBNHi1HR09B/RlVOi4eOEo6bwkFWwfTsIaMYIs1PGA3+P9gd
+	 w9gccsp6FwaKDsXzAwqYMb8kzr2H6ZjXfigZeDaaAb8azWKcmTeGz2TYvqwRgaNDI8
+	 qJ0S/PYIyMJcGgbyNuoeWc/aHHWB2R98iyKk+HXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729388AbgABWxz (ORCPT
+        id S1728965AbgABWVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:53:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40278 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:21:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728432AbgABWVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:21:20 -0500
+        id S1728957AbgABWVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:21:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C27C222C3;
-        Thu,  2 Jan 2020 22:21:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 856EE21582;
+        Thu,  2 Jan 2020 22:21:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003680;
-        bh=d18jTLWfApfwUh6KARUD1FZQRxSZd5VOJTbozrBOtrQ=;
+        s=default; t=1578003673;
+        bh=HGgnOYkB19A8Cw6IPyxZwHC7IDJme7G/UiR6JnagRPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VI/btbdtiEbY12kOBu0xixGh45DssxNPWmJ6hoNRrDKGJ/FHVmgfpUlWBrRc02CvV
-         odfvr4yVVkgiAPSOrd0AnIBQBe+svvnoaMykrv/R0oM1TgAFRpy6K4XBgYC76hBqv/
-         +9Ajdvt5KH8+mR8Anlc0+oPG0l5Ck7SsrIuY8Qus=
+        b=fATuGpeOZryiEr1Pd76QvzL/ZTj3NwCXqrB0/S1q+9oUSMAy1YG0z6eUmsKuiIn4j
+         6ND6e8OeG8L08Vw+2hCmnmJA40dfdtxkbxf5LBsOO1B2copP10w1LDCrXf/F6DdpRm
+         5CDsL09NEIeDpjgPgd2PRX6nNpYLjYj6Ewa5OAp8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Ding Xiang <dingxiang@cmss.chinamobile.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 069/114] ocfs2: fix passing zero to PTR_ERR warning
-Date:   Thu,  2 Jan 2020 23:07:21 +0100
-Message-Id: <20200102220036.033585825@linuxfoundation.org>
+Subject: [PATCH 4.19 066/114] s390/zcrypt: handle new reply code FILTERED_BY_HYPERVISOR
+Date:   Thu,  2 Jan 2020 23:07:18 +0100
+Message-Id: <20200102220035.719088798@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -68,46 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ding Xiang <dingxiang@cmss.chinamobile.com>
+From: Harald Freudenberger <freude@linux.ibm.com>
 
-[ Upstream commit 188c523e1c271d537f3c9f55b6b65bf4476de32f ]
+[ Upstream commit 6733775a92eacd612ac88afa0fd922e4ffeb2bc7 ]
 
-Fix a static code checker warning:
-fs/ocfs2/acl.c:331
-	ocfs2_acl_chmod() warn: passing zero to 'PTR_ERR'
+This patch introduces support for a new architectured reply
+code 0x8B indicating that a hypervisor layer (if any) has
+rejected an ap message.
 
-Link: http://lkml.kernel.org/r/1dee278b-6c96-eec2-ce76-fe6e07c6e20f@linux.alibaba.com
-Fixes: 5ee0fbd50fd ("ocfs2: revert using ocfs2_acl_chmod to avoid inode cluster lock hang")
-Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Linux may run as a guest on top of a hypervisor like zVM
+or KVM. So the crypto hardware seen by the ap bus may be
+restricted by the hypervisor for example only a subset like
+only clear key crypto requests may be supported. Other
+requests will be filtered out - rejected by the hypervisor.
+The new reply code 0x8B will appear in such cases and needs
+to get recognized by the ap bus and zcrypt device driver zoo.
+
+Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/acl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/s390/crypto/zcrypt_error.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/ocfs2/acl.c b/fs/ocfs2/acl.c
-index 917fadca8a7b..b73b78771915 100644
---- a/fs/ocfs2/acl.c
-+++ b/fs/ocfs2/acl.c
-@@ -335,8 +335,8 @@ int ocfs2_acl_chmod(struct inode *inode, struct buffer_head *bh)
- 	down_read(&OCFS2_I(inode)->ip_xattr_sem);
- 	acl = ocfs2_get_acl_nolock(inode, ACL_TYPE_ACCESS, bh);
- 	up_read(&OCFS2_I(inode)->ip_xattr_sem);
--	if (IS_ERR(acl) || !acl)
--		return PTR_ERR(acl);
-+	if (IS_ERR_OR_NULL(acl))
-+		return PTR_ERR_OR_ZERO(acl);
- 	ret = __posix_acl_chmod(&acl, GFP_KERNEL, inode->i_mode);
- 	if (ret)
- 		return ret;
+diff --git a/drivers/s390/crypto/zcrypt_error.h b/drivers/s390/crypto/zcrypt_error.h
+index 2e1a27bd97d1..2126f4cc6d37 100644
+--- a/drivers/s390/crypto/zcrypt_error.h
++++ b/drivers/s390/crypto/zcrypt_error.h
+@@ -62,6 +62,7 @@ struct error_hdr {
+ #define REP82_ERROR_EVEN_MOD_IN_OPND	    0x85
+ #define REP82_ERROR_RESERVED_FIELD	    0x88
+ #define REP82_ERROR_INVALID_DOMAIN_PENDING  0x8A
++#define REP82_ERROR_FILTERED_BY_HYPERVISOR  0x8B
+ #define REP82_ERROR_TRANSPORT_FAIL	    0x90
+ #define REP82_ERROR_PACKET_TRUNCATED	    0xA0
+ #define REP82_ERROR_ZERO_BUFFER_LEN	    0xB0
+@@ -92,6 +93,7 @@ static inline int convert_error(struct zcrypt_queue *zq,
+ 	case REP82_ERROR_INVALID_DOMAIN_PRECHECK:
+ 	case REP82_ERROR_INVALID_DOMAIN_PENDING:
+ 	case REP82_ERROR_INVALID_SPECIAL_CMD:
++	case REP82_ERROR_FILTERED_BY_HYPERVISOR:
+ 	//   REP88_ERROR_INVALID_KEY		// '82' CEX2A
+ 	//   REP88_ERROR_OPERAND		// '84' CEX2A
+ 	//   REP88_ERROR_OPERAND_EVEN_MOD	// '85' CEX2A
 -- 
 2.20.1
 
