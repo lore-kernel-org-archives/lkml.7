@@ -2,217 +2,124 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A32EC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E8FC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2B8E21734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D7620863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:47:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="GNJfKR2B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbgABMrM convert rfc822-to-8bit (ORCPT
+        id S1728331AbgABMr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 07:47:12 -0500
-Received: from szxga08-in.huawei.com ([45.249.212.255]:42558 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728288AbgABMrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 07:47:11 -0500
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id E330456DA67CEAB62900;
-        Thu,  2 Jan 2020 20:47:08 +0800 (CST)
-Received: from DGGEMM422-HUB.china.huawei.com (10.1.198.39) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 2 Jan 2020 20:47:08 +0800
-Received: from DGGEMM526-MBX.china.huawei.com ([169.254.8.143]) by
- dggemm422-hub.china.huawei.com ([10.1.198.39]) with mapi id 14.03.0439.000;
- Thu, 2 Jan 2020 20:47:01 +0800
-From:   "Zengtao (B)" <prime.zeng@hisilicon.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-CC:     Linuxarm <linuxarm@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Morten Rasmussen" <morten.rasmussen@arm.com>
-Subject: RE: [PATCH] cpu-topology: warn if NUMA configurations conflicts
- with lower layer
-Thread-Topic: [PATCH] cpu-topology: warn if NUMA configurations conflicts
- with lower layer
-Thread-Index: AQHVuWnsK0zwK8RxTkqe/SNAoYeaUKfT+S+AgALBI6CAAAyngIAAlqWw
-Date:   Thu, 2 Jan 2020 12:47:01 +0000
-Message-ID: <678F3D1BB717D949B966B68EAEB446ED340AEB67@dggemm526-mbx.china.huawei.com>
-References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
- <20191231164051.GA4864@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
- <20200102112955.GC4864@bogus>
-In-Reply-To: <20200102112955.GC4864@bogus>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.74.221.187]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 2 Jan 2020 07:47:58 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42149 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728288AbgABMr5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 07:47:57 -0500
+Received: by mail-wr1-f65.google.com with SMTP id q6so39043284wro.9
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 04:47:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=ZPjjlsLBRy/AsEOd+5TSLn081vD0O0nsEFO/LF3ENuo=;
+        b=GNJfKR2BW87CUTDAdER/HrYYLqseSgCIl1bZUDk4RmYZCp4/Z0iULdGwZYN6A8LFIU
+         NVpa5uSYKjQ5lujMZfT+b1X0G8kamQVGs1ru8vVPMk/Ka5Sh1/uHDyrkuLKsINdOnOcB
+         N1DK/TgTCX3jezUlxvz4SnkpByciHZZjGYtImSdU11ikysE6tfwlY8B67ctRZ4ewZryC
+         Dro6n8qznNkXTgbbbScuLuZA5Lit5zdyN8C1+Yj26GmrK9vduR6HLXsq/0iYZTVepNgV
+         FOIfYu8f/pv8p01ABASWH6H8VUow27wT2bg2Oq+LXE5D1gY9QG28+VD549EP4RO/b8sI
+         fEHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=ZPjjlsLBRy/AsEOd+5TSLn081vD0O0nsEFO/LF3ENuo=;
+        b=rpd3E/gIM/ymdao1vUD2MKhT2/DRQ0L9zpNbDx6RoaJMQB7IGIjeW+w4keXb+XiFHd
+         zZGdXtUHE/y+FvG7+6fVY5zb+RMrVB3g+UN3K7WBs07LvIsp9M1X2JmEBdzgLs42etOn
+         McTYYnjPJcH6yxnfKie6Q92JvKiwhgJah3uvHGJG1vtFohq2eiGm82h1rqSr1hmYe7xj
+         Z7oo7Xs7GrOwDt2DzHg7EyFvRsTmumboaJyu7PAHnlzjK046fvmLYpcXLkcgLyW475sH
+         v4CPD5cVk+W8gOpSMWznZPItGNZWxtrKc6ZbFfSsFyyXdho1endTUMjgiyjsNJi8zfu/
+         bKuQ==
+X-Gm-Message-State: APjAAAUeyCc7QD6VP+agvUSGUvrmZV8l5bp1Ic6oJ4YbzKjxSeM/tFT3
+        QHKLEfREW484Mia4wgILeHN3fA==
+X-Google-Smtp-Source: APXvYqzwGUgWcvkkN8gOC3/lVJJr0Lne8X1G54XU++EANytHtRvN2z6E9NP6cuFHkOL/vDpXUUvwFg==
+X-Received: by 2002:adf:d846:: with SMTP id k6mr78632937wrl.337.1577969275854;
+        Thu, 02 Jan 2020 04:47:55 -0800 (PST)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id t8sm54509968wrp.69.2020.01.02.04.47.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 04:47:54 -0800 (PST)
+References: <20200102005503.71923-1-sboyd@kernel.org>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2] clk: Warn about critical clks that fail to enable
+In-reply-to: <20200102005503.71923-1-sboyd@kernel.org>
+Date:   Thu, 02 Jan 2020 13:47:53 +0100
+Message-ID: <1j8smqja86.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Sudeep Holla [mailto:sudeep.holla@arm.com]
-> Sent: Thursday, January 02, 2020 7:30 PM
-> To: Zengtao (B)
-> Cc: Linuxarm; Greg Kroah-Hartman; Rafael J. Wysocki;
-> linux-kernel@vger.kernel.org; Morten Rasmussen
-> Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations conflicts
-> with lower layer
-> 
-> On Thu, Jan 02, 2020 at 03:05:40AM +0000, Zengtao (B) wrote:
-> > Hi Sudeep:
-> >
-> > Thanks for your reply.
-> >
-> > > -----Original Message-----
-> > > From: Sudeep Holla [mailto:sudeep.holla@arm.com]
-> > > Sent: Wednesday, January 01, 2020 12:41 AM
-> > > To: Zengtao (B)
-> > > Cc: Linuxarm; Greg Kroah-Hartman; Rafael J. Wysocki;
-> > > linux-kernel@vger.kernel.org; Sudeep Holla; Morten Rasmussen
-> > > Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations
-> conflicts
-> > > with lower layer
-> > >
-> > > On Mon, Dec 23, 2019 at 04:16:19PM +0800, z00214469 wrote:
-> > > > As we know, from sched domain's perspective, the DIE layer should
-> be
-> > > > larger than or at least equal to the MC layer, and in some cases, MC
-> > > > is defined by the arch specified hardware, MPIDR for example, but
-> > > NUMA
-> > > > can be defined by users,
-> > >
-> > > Who are the users you are referring above ?
-> > For example, when I use QEMU to start a guest linux, I can define the
-> > NUMA topology of the guest linux whatever i want.
-> 
-> OK and how is the information passed to the kernel ? DT or ACPI ?
-> We need to fix the miss match if any during the initial parse of those
-> information.
-> 
 
-Both, For the current QEMU, we don't have the correct cpu topology
-passed to linux. Luckily drjones planed to deal with the issue.
-https://patchwork.ozlabs.org/cover/939301/
+On Thu 02 Jan 2020 at 01:55, Stephen Boyd <sboyd@kernel.org> wrote:
 
-> > > > with the following system configrations:
-> > >
-> > > Do you mean ACPI tables or DT or some firmware tables ?
-> > >
-> > > > *************************************
-> > > > NUMA:      	 0-2,  3-7
-> > >
-> > > Is the above simply wrong with respect to hardware and it actually
-> match
-> > > core_siblings ?
-> > >
-> > Actually, we can't simply say this is wrong, i just want to show an
-> example.
-> > And this example also can be:
-> > NUMA:  0-23,  24-47
-> > core_siblings:   0-15,  16-31, 32-47
-> >
-> 
-> Are you sure of the above ? Possible values w.r.t hardware config:
-> core_siblings:   0-15,  16-23, 24-31, 32-47
-> 
-> But what you have specified above is still wrong core_siblings IMO.
-> 
-It depends on the hardware, on my platform, 16 cores per cluster.
+> If we don't warn here users of the CLK_IS_CRITICAL flag may not know
+> that their clk isn't actually enabled because it silently fails to
+> enable. Let's print a warning in that case so developers find these
+> problems faster.
 
-> 
-> [...]
-> 
-> > > > diff --git a/drivers/base/arch_topology.c
-> b/drivers/base/arch_topology.c
-> > > > index 1eb81f11..5fe44b3 100644
-> > > > --- a/drivers/base/arch_topology.c
-> > > > +++ b/drivers/base/arch_topology.c
-> > > > @@ -439,10 +439,18 @@ const struct cpumask
-> > > *cpu_coregroup_mask(int cpu)
-> > > >  	if (cpumask_subset(&cpu_topology[cpu].core_sibling,
-> core_mask)) {
-> > > >  		/* not numa in package, lets use the package siblings */
-> > > >  		core_mask = &cpu_topology[cpu].core_sibling;
-> > > > -	}
-> > > > +	} else
-> > > > +		pr_warn_once("Warning: suspicous broken topology:
-> cpu:[%d]'s
-> > > core_sibling:[%*pbl] not a subset of numa node:[%*pbl]\n",
-> > > > +			cpu,
-> cpumask_pr_args(&cpu_topology[cpu].core_sibling),
-> > > > +			cpumask_pr_args(core_mask));
-> > > > +
-> > >
-> > > Won't this print warning on all systems that don't have numa within a
-> > > package ? What are you trying to achieve here ?
-> >
-> > Since in my case, when this corner case happens, the linux kernel just fall
-> into
-> > dead loop with no prompt, here this is a helping message will help a lot.
-> >
-> 
-> As I said, wrong configurations need to be detected when generating
-> DT/ACPI if possible. The above will print warning on systems with NUMA
-> within package.
-> 
-> NUMA:  0-7, 8-15
-> core_siblings:   0-15
-> 
-> The above is the example where the die has 16 CPUs and 2 NUMA nodes
-> within a package, your change throws error to the above config which is
-> wrong.
+Thanks Stephen !
+Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+
 >
-From your example, the core 7 and core 8 has got different LLC but the same Low
-Level cache?
-From schedule view of point, lower level sched domain should be a subset of higher
-Level sched domain.
-
-> > >
-> > > >  	if (cpu_topology[cpu].llc_id != -1) {
-> > > >  		if (cpumask_subset(&cpu_topology[cpu].llc_sibling,
-> core_mask))
-> > > >  			core_mask = &cpu_topology[cpu].llc_sibling;
-> > > > +		else
-> > > > +			pr_warn_once("Warning: suspicous broken topology:
-> > > cpu:[%d]'s llc_sibling:[%*pbl] not a subset of numa node:[%*pbl]\n",
-> > > > +				cpu,
-> > > cpumask_pr_args(&cpu_topology[cpu].llc_sibling),
-> > > > +				cpumask_pr_args(core_mask));
-> > > >  	}
-> > > >
-> > >
-> > > This will trigger warning on all systems that lack cacheinfo topology.
-> > > I don't understand the intent of this patch at all. Can you explain
-> > > all the steps you follow and the issue you face ?
-> >
-> > Can you show me an example, what I really want to warn is the case that
-> > NUMA topology conflicts with lower level.
-> >
-> 
-> I was wrong here, I mis-read this section. I still fail to understand
-> why the above change is needed. I understood the QEMU example, but you
-> haven't specified how cacheinfo looks like there.
-> 
-
-My idea:
-(1) If the dtb/acpi is not legal, the linux kernel should check or prompt to help debug.
-(2)From scheduler view of point, low level sched domain should be a subset of high level
-Sched domain.
-
-I am very sure about (2), any example to show me (2) is wrong?
-
-Thanks. 
-Zengtao 
+> Suggested-by: Jerome Brunet <jbrunet@baylibre.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> ---
+>
+> Changes from v1:
+>  * Switched to pr_warn and indicated clk name
+>
+>  drivers/clk/clk.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index 772258de2d1f..b03c2be4014b 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -3427,13 +3427,18 @@ static int __clk_core_init(struct clk_core *core)
+>  		unsigned long flags;
+>  
+>  		ret = clk_core_prepare(core);
+> -		if (ret)
+> +		if (ret) {
+> +			pr_warn("%s: critical clk '%s' failed to prepare\n",
+> +			       __func__, core->name);
+>  			goto out;
+> +		}
+>  
+>  		flags = clk_enable_lock();
+>  		ret = clk_core_enable(core);
+>  		clk_enable_unlock(flags);
+>  		if (ret) {
+> +			pr_warn("%s: critical clk '%s' failed to enable\n",
+> +			       __func__, core->name);
+>  			clk_core_unprepare(core);
+>  			goto out;
+>  		}
+>
+> base-commit: 12ead77432f2ce32dea797742316d15c5800cb32
 
