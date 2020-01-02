@@ -2,200 +2,83 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 375C9C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7822FC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D49221734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EB59215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577965001;
-	bh=zM9MCsx/9OGUfNFPKxz5tp5JZ14pedfFKc7NWY5Lrt0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EfDGioislFLLDftEhapuo6RFlENX3ujwuB2gykwrp1t9aye/VA7ptxsolb7R2NMKn
-	 TXCHNc6V0t5HC63hM/06zSyGUY+W7YwTtxDpksprpCKtzsI8mdfrGLN0vzrfw54OvP
-	 8uDYbW/p9sI1//B2Rtt0+K7G0R5Samk0V+lE7aZ8=
+	s=default; t=1577965059;
+	bh=dVLZU28mf4rEeV3D9kqoKamX2gSw2vFcl/WB8a+iNKg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0DU9Km1mZjLI0LHF5/7A1r8/LpAnThE3+SZjw8ugCY696BGnBq/z6tdNtb27sgyGB
+	 jxknEvjjPTxj0cOKpE2CrNOC9q1jIzDOfe7Sy/yJBoLup5GVoGM7E56liro3G7t9Jt
+	 WOcY0EQpw7lSQIjNH8+J9Ah2eHwuJR0j+Vhd+0SQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbgABLgk (ORCPT
+        id S1728242AbgABLhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 06:36:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45586 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 06:37:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726647AbgABLgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 06:36:39 -0500
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726647AbgABLhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 06:37:38 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DCCA21734;
-        Thu,  2 Jan 2020 11:36:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5F0B215A4;
+        Thu,  2 Jan 2020 11:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577964998;
-        bh=zM9MCsx/9OGUfNFPKxz5tp5JZ14pedfFKc7NWY5Lrt0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GYG18pHqDyqJXhISbE4hOqZb0+R8U9CLEgpVRTc9n7jH7NQ8oB3ao3D0JPXclOdXF
-         jhtOaHFb+t3vRXgelzKJYyZPBaXXsps3xoG3u41Jj6qt0NUqBBPPqOzFxK/WvEizw7
-         zYDqlB+oyYJoDm1RUpd5n8msDS72mhUE0ehGlPpM=
-Received: by mail-wr1-f45.google.com with SMTP id b6so38992704wrq.0;
-        Thu, 02 Jan 2020 03:36:38 -0800 (PST)
-X-Gm-Message-State: APjAAAVEINsvCcmWaGx0w44CsJtXrzmks1x972y5u2r46QMtVwkEX4kL
-        D+obtqqO+cmwYRRw0ovJr+M18r+gYIJErLh/SJA=
-X-Google-Smtp-Source: APXvYqxfTCU4CionKBFMX77BDzhVbicdSu++uerfKitSljA+/XSf4LgB4wuOzctngS/MZNKN3Jot1JoIjWX6fRJDrHE=
-X-Received: by 2002:a5d:6b88:: with SMTP id n8mr63096150wrx.288.1577964997031;
- Thu, 02 Jan 2020 03:36:37 -0800 (PST)
+        s=default; t=1577965056;
+        bh=dVLZU28mf4rEeV3D9kqoKamX2gSw2vFcl/WB8a+iNKg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AjpVsgNA64z8Vt+dlQ8jB6BAvdFasxa7kU/hOlfwIu/lcqYVrlgFNPZS+w87StMV4
+         O1MGt0372QdKHtjdeXNwsanA4rmM77Vnn7nC5OidP4Zd4STOAkmg2w4AsqFPyUPdU6
+         ft65Ts5RqXj1zksypEYRBMkZPxxSwngRZeMUqzKQ=
+Date:   Thu, 2 Jan 2020 12:37:23 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] PHY: for 5.5 -rc
+Message-ID: <20200102113723.GA3987146@kroah.com>
+References: <20191231111541.29702-1-kishon@ti.com>
 MIME-Version: 1.0
-References: <20191215165924.28314-1-wens@kernel.org> <20191215165924.28314-7-wens@kernel.org>
- <20200102113319.GJ19828@paasikivi.fi.intel.com>
-In-Reply-To: <20200102113319.GJ19828@paasikivi.fi.intel.com>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Thu, 2 Jan 2020 19:36:25 +0800
-X-Gmail-Original-Message-ID: <CAGb2v642Ky6ztuwBs9cOxr4RLKS2q9Do+ZCUzc399z+ppCMqmg@mail.gmail.com>
-Message-ID: <CAGb2v642Ky6ztuwBs9cOxr4RLKS2q9Do+ZCUzc399z+ppCMqmg@mail.gmail.com>
-Subject: Re: [PATCH 06/14] media: sun4i-csi: Add support for A10 CSI1 camera
- sensor interface
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Chen-Yu Tsai <wens@kernel.org>, Maxime Ripard <mripard@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191231111541.29702-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 2, 2020 at 7:33 PM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
->
-> Hi Chen-Yu,
->
-> Thanks for the patchset.
->
-> On Mon, Dec 16, 2019 at 12:59:16AM +0800, Chen-Yu Tsai wrote:
-> > From: Chen-Yu Tsai <wens@csie.org>
-> >
-> > The A10/A20 Allwinner SoCs have two camera sensor interface blocks,
-> > named CSI0 and CSI1. The two have the same register layouts with
-> > slightly different features:
-> >
-> >   - CSI0 has an image signal processor (ISP); CSI1 doesn't
-> >
-> >   - CSI0 can support up to four separate channels under CCIR656;
-> >     CSI1 can only support one
-> >
-> >   - CSI0 can support up to 16-bit wide bus with YUV422;
-> >     CSI1 can support up to 24-bit wide bus with YUV444
-> >
-> > For now the driver doesn't support wide busses, nor CCIR656. So the
-> > only relevant difference is whether a clock needs to be taken and
-> > enabled for the ISP.
-> >
-> > Add structs to record the differences, tie them to the compatible
-> > strings, and deal with the ISP clock. Support for the new CSI1
-> > hardware block is added as well.
-> >
-> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> > ---
-> >  .../platform/sunxi/sun4i-csi/sun4i_csi.c      | 35 ++++++++++++++++---
-> >  .../platform/sunxi/sun4i-csi/sun4i_csi.h      |  2 ++
-> >  2 files changed, 32 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
-> > index b8b07c1de2a8..be2466930a49 100644
-> > --- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
-> > +++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
-> > @@ -29,6 +29,12 @@
-> >
-> >  #include "sun4i_csi.h"
-> >
-> > +struct sun4i_csi_traits {
-> > +     unsigned int channels;
-> > +     unsigned int max_width;
-> > +     bool has_isp;
-> > +};
-> > +
-> >  static const struct media_entity_operations sun4i_csi_video_entity_ops = {
-> >       .link_validate = v4l2_subdev_link_validate,
-> >  };
-> > @@ -156,6 +162,10 @@ static int sun4i_csi_probe(struct platform_device *pdev)
-> >       subdev = &csi->subdev;
-> >       vdev = &csi->vdev;
-> >
-> > +     csi->traits = of_device_get_match_data(&pdev->dev);
-> > +     if (!csi->traits)
-> > +             return -EINVAL;
-> > +
-> >       /*
-> >        * On Allwinner SoCs, some high memory bandwidth devices do DMA
-> >        * directly over the memory bus (called MBUS), instead of the
-> > @@ -199,10 +209,12 @@ static int sun4i_csi_probe(struct platform_device *pdev)
-> >               return PTR_ERR(csi->bus_clk);
-> >       }
-> >
-> > -     csi->isp_clk = devm_clk_get(&pdev->dev, "isp");
-> > -     if (IS_ERR(csi->isp_clk)) {
-> > -             dev_err(&pdev->dev, "Couldn't get our ISP clock\n");
-> > -             return PTR_ERR(csi->isp_clk);
-> > +     if (csi->traits->has_isp) {
-> > +             csi->isp_clk = devm_clk_get(&pdev->dev, "isp");
-> > +             if (IS_ERR(csi->isp_clk)) {
-> > +                     dev_err(&pdev->dev, "Couldn't get our ISP clock\n");
-> > +                     return PTR_ERR(csi->isp_clk);
-> > +             }
-> >       }
-> >
-> >       csi->ram_clk = devm_clk_get(&pdev->dev, "ram");
-> > @@ -280,8 +292,21 @@ static int sun4i_csi_remove(struct platform_device *pdev)
-> >       return 0;
-> >  }
-> >
-> > +struct sun4i_csi_traits sun4i_a10_csi1_traits = {
-> > +     .channels = 1,
-> > +     .max_width = 24,
-> > +     .has_isp = false,
-> > +};
-> > +
-> > +struct sun4i_csi_traits sun7i_a20_csi0_traits = {
->
-> These two should be static const, right?
+On Tue, Dec 31, 2019 at 04:45:41PM +0530, Kishon Vijay Abraham I wrote:
+> Hi Greg,
+> 
+> Please find the pull request for 5.5 -rc cycle.
+> 
+> It includes a bunch of bug fixes for cpcap-usb PHY driver which is used
+> for configuring USB PHY and debug UART used in certain Motorola droid4
+> phones. It also includes a minor fix in qcom-qmp PHY driver and
+> rockchip-inno-hdmi causing a display issue in RK3328.
+> 
+> Please see the tag message below for the complete list of changes and
+> let me know If I have to change something.
+> 
+> Thanks
+> Kishon
+> 
+> The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+> 
+>   Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git tags/phy-for-5.5-rc
 
-You're right. I'll wait for the remaining reviews before sending v2.
+Pulled and pushed out, thanks.
 
-ChenYu
-
-> > +     .channels = 4,
-> > +     .max_width = 16,
-> > +     .has_isp = true,
-> > +};
-> > +
-> >  static const struct of_device_id sun4i_csi_of_match[] = {
-> > -     { .compatible = "allwinner,sun7i-a20-csi0" },
-> > +     { .compatible = "allwinner,sun4i-a10-csi1", .data = &sun4i_a10_csi1_traits },
-> > +     { .compatible = "allwinner,sun7i-a20-csi0", .data = &sun7i_a20_csi0_traits },
-> >       { /* Sentinel */ }
-> >  };
-> >  MODULE_DEVICE_TABLE(of, sun4i_csi_of_match);
-> > diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
-> > index 88d39b3554c4..0f67ff652c2e 100644
-> > --- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
-> > +++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
-> > @@ -108,6 +108,8 @@ struct sun4i_csi {
-> >       /* Device resources */
-> >       struct device                   *dev;
-> >
-> > +     const struct sun4i_csi_traits   *traits;
-> > +
-> >       void __iomem                    *regs;
-> >       struct clk                      *bus_clk;
-> >       struct clk                      *isp_clk;
->
-> --
-> Kind regards,
->
-> Sakari Ailus
+greg k-h
