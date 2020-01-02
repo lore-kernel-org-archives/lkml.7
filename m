@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24200C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FACC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED78724649
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E3DD2253D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003305;
-	bh=zYCLXWmHDfa1SipQIKdc3r1yJUfAljpCwyDls8BLOgA=;
+	s=default; t=1578003308;
+	bh=OwbwjT2Ud/jsTN4m+FbiOjgt6LUW6jBjktDQOmeX3y0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NxnvCIfpCzwCS5GaD9TTDTNZPK9+DmJoO0bpo/XSR4eyaj6LXL0L8AvohLrVctLt3
-	 o5ZZBsNXdPsPatycLYvPg155wxXGbHQEKCtPl3ouBm/0qsVri+qaUpCkiEmLeN3Esm
-	 akcCHyt5DCePM/Ngr2tI6OwlB0tZ9FcpIS1IAIrk=
+	b=JI8RJtu5KJOaLBKNH7ss9eBiDwXfbQItma/TiYz7U/YoKF9tkkmm53JdPih/Dyjod
+	 4WXjqgIUr55zzHucEbUfXXpMP+kr5ZBfC/W+dGQvH9+bS3pFL5u9Bn/AgCs1OHSwAf
+	 wudCNS01BTzAG04hQ+YjRWVgYeCoPG0zM+0y7WpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727599AbgABWPD (ORCPT
+        id S1728009AbgABWPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:15:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55406 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:15:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727308AbgABWOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:14:55 -0500
+        id S1727186AbgABWPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:15:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F030222314;
-        Thu,  2 Jan 2020 22:14:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B014227BF;
+        Thu,  2 Jan 2020 22:15:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003294;
-        bh=zYCLXWmHDfa1SipQIKdc3r1yJUfAljpCwyDls8BLOgA=;
+        s=default; t=1578003303;
+        bh=OwbwjT2Ud/jsTN4m+FbiOjgt6LUW6jBjktDQOmeX3y0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kq1CMefU8pzHu8JyKWpwPSOJMzIevu9A+opdpYHDawO0lOAuZecwjNwGBBT7zaIQD
-         27G2rs5PEeFYFy2BmGbp5uca5vS8YIooZSBHkoVYOOfvSn4t3fDepPIav+BhB20QXd
-         9nubIq/GIkObn0TIFy85S940uqQq5VHShl3TpWEA=
+        b=aOLRPBbx/5khxElkogdZIRBfpwfufgpXHr2W+1JHtx8wTN7RI5rTICyqGv/uEyXYd
+         L/TPym2jAvd+6S6K0pxcsJM5g5MWgMczA+R6Na/yuOrIu6MjHF6Tb/aV2f1i1sQVPB
+         pfGDqyiPgXuComDGMf4Gatw8Uf18iuDXc2Ooo2cU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Jack Wang <jinpu.wang@cloud.ionos.com>,
+        peter chang <dpf@google.com>,
+        Deepak Ukey <deepak.ukey@microchip.com>,
+        Viswas G <Viswas.G@microchip.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 101/191] gpio: lynxpoint: Setup correct IRQ handlers
-Date:   Thu,  2 Jan 2020 23:06:23 +0100
-Message-Id: <20200102215840.765336057@linuxfoundation.org>
+Subject: [PATCH 5.4 087/191] scsi: pm80xx: Fix for SATA device discovery
+Date:   Thu,  2 Jan 2020 23:06:09 +0100
+Message-Id: <20200102215839.284842244@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,42 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: peter chang <dpf@google.com>
 
-[ Upstream commit e272f7ec070d212b9301d5a465bc8952f8dcf908 ]
+[ Upstream commit ce21c63ee995b7a8b7b81245f2cee521f8c3c220 ]
 
-When commit 75e99bf5ed8f ("gpio: lynxpoint: set default handler to be
-handle_bad_irq()") switched default handler to be handle_bad_irq() the
-lp_irq_type() function remained untouched. It means that even request_irq()
-can't change the handler and we are not able to handle IRQs properly anymore.
-Fix it by setting correct handlers in the lp_irq_type() callback.
+Driver was missing complete() call in mpi_sata_completion which result in
+SATA abort error handling timing out. That causes the device to be left in
+the in_recovery state so subsequent commands sent to the device fail and
+the OS removes access to it.
 
-Fixes: 75e99bf5ed8f ("gpio: lynxpoint: set default handler to be handle_bad_irq()")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://lore.kernel.org/r/20191118180251.31439-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20191114100910.6153-2-deepak.ukey@microchip.com
+Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+Signed-off-by: peter chang <dpf@google.com>
+Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
+Signed-off-by: Viswas G <Viswas.G@microchip.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-lynxpoint.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/scsi/pm8001/pm80xx_hwi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpio/gpio-lynxpoint.c b/drivers/gpio/gpio-lynxpoint.c
-index e9e47c0d5be7..490ce7bae25e 100644
---- a/drivers/gpio/gpio-lynxpoint.c
-+++ b/drivers/gpio/gpio-lynxpoint.c
-@@ -164,6 +164,12 @@ static int lp_irq_type(struct irq_data *d, unsigned type)
- 		value |= TRIG_SEL_BIT | INT_INV_BIT;
- 
- 	outl(value, reg);
-+
-+	if (type & IRQ_TYPE_EDGE_BOTH)
-+		irq_set_handler_locked(d, handle_edge_irq);
-+	else if (type & IRQ_TYPE_LEVEL_MASK)
-+		irq_set_handler_locked(d, handle_level_irq);
-+
- 	spin_unlock_irqrestore(&lg->lock, flags);
- 
- 	return 0;
+diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
+index 73261902d75d..161bf4760eac 100644
+--- a/drivers/scsi/pm8001/pm80xx_hwi.c
++++ b/drivers/scsi/pm8001/pm80xx_hwi.c
+@@ -2382,6 +2382,8 @@ mpi_sata_completion(struct pm8001_hba_info *pm8001_ha, void *piomb)
+ 			pm8001_printk("task 0x%p done with io_status 0x%x"
+ 			" resp 0x%x stat 0x%x but aborted by upper layer!\n",
+ 			t, status, ts->resp, ts->stat));
++		if (t->slow_task)
++			complete(&t->slow_task->completion);
+ 		pm8001_ccb_task_free(pm8001_ha, t, ccb, tag);
+ 	} else {
+ 		spin_unlock_irqrestore(&t->task_state_lock, flags);
 -- 
 2.20.1
 
