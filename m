@@ -4,57 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D92C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 049FDC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB4E421582
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB6012253D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003537;
-	bh=Dupq50N1G2KBIYbVmQMEw4LpptEWkvK00ll+rCy/DAo=;
+	s=default; t=1578003544;
+	bh=6v7SqYOffrsxvnPYUOOCvnJoyLw2eZJ622LJOKWVnSc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hdmsffYLY/tp/cY8ktUBiimDAkWjeyizCJf+ZPFkkj7G9fWmgDpxagMxpzWjJJtZ7
-	 QDs6SGr27EqyrV8Y2F1AQBh2aRPPwCW17Tyl3+eJoMD7QUCfT2S16LczEqi8MTmbkn
-	 H/lYaFV8FB3D4ZI8qzDMow/nbdLTZNEhqGj2Mbz8=
+	b=e7QQQdkHPjGbGFD+9wtb0jn84rpukgFqqB+wfo1bw13yLs+zFycLqPQutU9huVnVi
+	 QKQdeBOKMZTchecJOKs0stZgvEi/UHX+ICqCp225o1zDxN3kEyLjEYEc/nLtid7waz
+	 S9G9IXiy0PgzLSPx7uvSl6b1kZBNy5KwJdqmDRcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgABWS4 (ORCPT
+        id S1728526AbgABWTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:18:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34530 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:19:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727996AbgABWSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:18:54 -0500
+        id S1728497AbgABWTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:19:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E41B21582;
-        Thu,  2 Jan 2020 22:18:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98F2821582;
+        Thu,  2 Jan 2020 22:19:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003533;
-        bh=Dupq50N1G2KBIYbVmQMEw4LpptEWkvK00ll+rCy/DAo=;
+        s=default; t=1578003541;
+        bh=6v7SqYOffrsxvnPYUOOCvnJoyLw2eZJ622LJOKWVnSc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ytM5Fyo3HJCOXi+Kj06Hho8s8TuWH5TJ3+rejF3CoDzKkm8WINOWX/LfuMCZEL+jv
-         OazYeog5sLoGMXBSGEgPKCmDNyd0WVOqGzDdVk5xKAPhh4R2jFrXnRuvM9xLzGHOJ8
-         SPmc2SHol/8CG0cEWrpK2uXF29Y8G1FDtTGYZJI0=
+        b=YrHNAEGljCxW9U5vAzVG7ppx6aaWsJzzgN4/oyqm8dhT5VdrUTDIVFzNC/zTGct1x
+         GPMWXnDI4fmsXalIVGDxPX4Oky7SaV9Hsm/EKeDSWQrTxEQVS9epSdzgZoh+cCqPeF
+         vnf7zfIjx4TwQ14P6DraacfvGHSJ90FWGwlxfz7k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
+        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
+        John Garry <john.garry@huawei.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 001/114] scsi: lpfc: Fix discovery failures when target device connectivity bounces
-Date:   Thu,  2 Jan 2020 23:06:13 +0100
-Message-Id: <20200102220029.311794077@linuxfoundation.org>
+Subject: [PATCH 4.19 012/114] scsi: hisi_sas: Replace in_softirq() check in hisi_sas_task_exec()
+Date:   Thu,  2 Jan 2020 23:06:24 +0100
+Message-Id: <20200102220030.364541809@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,57 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Xiang Chen <chenxiang66@hisilicon.com>
 
-[ Upstream commit 3f97aed6117c7677eb16756c4ec8b86000fd5822 ]
+[ Upstream commit 550c0d89d52d3bec5c299f69b4ed5d2ee6b8a9a6 ]
 
-An issue was seen discovering all SCSI Luns when a target device undergoes
-link bounce.
+For IOs from upper layer, preemption may be disabled as it may be called by
+function __blk_mq_delay_run_hw_queue which will call get_cpu() (it disables
+preemption). So if flags HISI_SAS_REJECT_CMD_BIT is set in function
+hisi_sas_task_exec(), it may disable preempt twice after down() and up()
+which will cause following call trace:
 
-The driver currently does not qualify the FC4 support on the target.
-Therefore it will send a SCSI PRLI and an NVMe PRLI. The expectation is
-that the target will reject the PRLI if it is not supported. If a PRLI
-times out, the driver will retry. The driver will not proceed with the
-device until both SCSI and NVMe PRLIs are resolved.  In the failure case,
-the device is FCP only and does not respond to the NVMe PRLI, thus
-initiating the wait/retry loop in the driver.  During that time, a RSCN is
-received (device bounced) causing the driver to issue a GID_FT.  The GID_FT
-response comes back before the PRLI mess is resolved and it prematurely
-cancels the PRLI retry logic and leaves the device in a STE_PRLI_ISSUE
-state. Discovery with the target never completes or resets.
+BUG: scheduling while atomic: fio/60373/0x00000002
+Call trace:
+dump_backtrace+0x0/0x150
+show_stack+0x24/0x30
+dump_stack+0xa0/0xc4
+__schedule_bug+0x68/0x88
+__schedule+0x4b8/0x548
+schedule+0x40/0xd0
+schedule_timeout+0x200/0x378
+__down+0x78/0xc8
+down+0x54/0x70
+hisi_sas_task_exec.isra.10+0x598/0x8d8 [hisi_sas_main]
+hisi_sas_queue_command+0x28/0x38 [hisi_sas_main]
+sas_queuecommand+0x168/0x1b0 [libsas]
+scsi_queue_rq+0x2ac/0x980
+blk_mq_dispatch_rq_list+0xb0/0x550
+blk_mq_do_dispatch_sched+0x6c/0x110
+blk_mq_sched_dispatch_requests+0x114/0x1d8
+__blk_mq_run_hw_queue+0xb8/0x130
+__blk_mq_delay_run_hw_queue+0x1c0/0x220
+blk_mq_run_hw_queue+0xb0/0x128
+blk_mq_sched_insert_requests+0xdc/0x208
+blk_mq_flush_plug_list+0x1b4/0x3a0
+blk_flush_plug_list+0xdc/0x110
+blk_finish_plug+0x3c/0x50
+blkdev_direct_IO+0x404/0x550
+generic_file_read_iter+0x9c/0x848
+blkdev_read_iter+0x50/0x78
+aio_read+0xc8/0x170
+io_submit_one+0x1fc/0x8d8
+__arm64_sys_io_submit+0xdc/0x280
+el0_svc_common.constprop.0+0xe0/0x1e0
+el0_svc_handler+0x34/0x90
+el0_svc+0x10/0x14
+...
 
-Fix by resetting the node state back to STE_NPR_NODE when GID_FT completes,
-thereby restarting the discovery process for the node.
+To solve the issue, check preemptible() to avoid disabling preempt multiple
+when flag HISI_SAS_REJECT_CMD_BIT is set.
 
-Link: https://lore.kernel.org/r/20190922035906.10977-10-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
+Link: https://lore.kernel.org/r/1571926105-74636-5-git-send-email-john.garry@huawei.com
+Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_hbadisc.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
-index b36b3da323a0..5d657178c2b9 100644
---- a/drivers/scsi/lpfc/lpfc_hbadisc.c
-+++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
-@@ -5231,9 +5231,14 @@ lpfc_setup_disc_node(struct lpfc_vport *vport, uint32_t did)
- 			/* If we've already received a PLOGI from this NPort
- 			 * we don't need to try to discover it again.
- 			 */
--			if (ndlp->nlp_flag & NLP_RCV_PLOGI)
-+			if (ndlp->nlp_flag & NLP_RCV_PLOGI &&
-+			    !(ndlp->nlp_type &
-+			     (NLP_FCP_TARGET | NLP_NVME_TARGET)))
- 				return NULL;
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index f35c56217694..33191673249c 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -485,7 +485,13 @@ static int hisi_sas_task_exec(struct sas_task *task, gfp_t gfp_flags,
+ 	struct hisi_sas_dq *dq = NULL;
  
-+			ndlp->nlp_prev_state = ndlp->nlp_state;
-+			lpfc_nlp_set_state(vport, ndlp, NLP_STE_NPR_NODE);
-+
- 			spin_lock_irq(shost->host_lock);
- 			ndlp->nlp_flag |= NLP_NPR_2B_DISC;
- 			spin_unlock_irq(shost->host_lock);
+ 	if (unlikely(test_bit(HISI_SAS_REJECT_CMD_BIT, &hisi_hba->flags))) {
+-		if (in_softirq())
++		/*
++		 * For IOs from upper layer, it may already disable preempt
++		 * in the IO path, if disable preempt again in down(),
++		 * function schedule() will report schedule_bug(), so check
++		 * preemptible() before goto down().
++		 */
++		if (!preemptible())
+ 			return -EINVAL;
+ 
+ 		down(&hisi_hba->sem);
 -- 
 2.20.1
 
