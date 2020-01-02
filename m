@@ -6,668 +6,423 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45544C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3C4C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DEE32072C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7240220848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:04:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbgABPEM (ORCPT
+        id S1728730AbgABPE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 10:04:12 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:47589 "EHLO
+        Thu, 2 Jan 2020 10:04:29 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:59515 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728571AbgABPEL (ORCPT
+        with ESMTP id S1728571AbgABPE3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 10:04:11 -0500
+        Thu, 2 Jan 2020 10:04:29 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MnJUy-1jU5yG242e-00jFzj; Thu, 02 Jan 2020 16:01:28 +0100
+ 1MjjOl-1jSjaW31yt-00lBfc; Thu, 02 Jan 2020 16:02:15 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Doug Gilbert <dgilbert@interlog.com>,
-        =?UTF-8?q?Kai=20M=C3=A4kisara?= <Kai.Makisara@kolumbus.fi>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dongli Zhang <dongli.zhang@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        John Garry <john.garry@huawei.com>,
-        Martin Wilck <mwilck@suse.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ira Weiny <ira.weiny@intel.com>, Iustin Pop <iustin@k1024.org>,
+        David Howells <dhowells@redhat.com>,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v3 13/22] compat_ioctl: scsi: move ioctl handling into drivers
-Date:   Thu,  2 Jan 2020 15:55:31 +0100
-Message-Id: <20200102145552.1853992-14-arnd@arndb.de>
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Song Liu <songliubraving@fb.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Phillip Potter <phil@philpotter.co.uk>,
+        Waiman Long <longman@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 15/22] compat_ioctl: simplify the implementation
+Date:   Thu,  2 Jan 2020 15:55:33 +0100
+Message-Id: <20200102145552.1853992-16-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20200102145552.1853992-1-arnd@arndb.de>
 References: <20200102145552.1853992-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:/e80zwdT+wTicn0NMZuh6AZ7aAB/UfmFnLijkeDZsj8gxRxFW5k
- N//+5PnYmCiu9NnLxiRRE0mJZsNb5V80V0Ex9rjoeqi05jIqFZUh7ziOTX1gQPinUT7BRpl
- jeZoob0rgUjez9ZHLn85pzbYf/4sEvUOCPWPa7vZZizKKCEb9w9+sVRqZzLRRJXjzvWZ0R9
- cMqCviOyZOxSKDQ9baMYQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:x/Q6tmSDxu8=:OjjUVNa82AbH3RiNJYC9Xv
- mVO9b74kQFTgrYlXKNbSlG6Vs6Vo86LTUPlv7WUijUK9dAJWI30NUAICkIZeWWQDt4J8/G9/I
- rBiyU5BTmVPe9ZTaxtUKgYpGXr1BnqCVSpj7sb85DTv5pERnqhIthEtb8SjBT2U5W7k61RrOa
- ldAV9tfo8NkGWJnxXUe0hGwQJJwcjW/eRNwO6rXGiTGuu6RfJsdfw+p1HkjxjQjNJe+mhRrrA
- qQpNP4iMPELMR3BoMoZVSWDJrD4ltCbNQOHfR85DpIvWIsQW7EwwCeC/xk6fm4uXj8DX4q9U7
- FMf0y/fMe7VWuVdULYRQ7qIHqiAqHxvSm0RvN/tziqyJLnu80Z/qK6/DIRDh7TwdeB3n2zpkN
- hQN4Tq8t/HP6CAmpo5DuqHZu+hADe0ktznB3OK/tc5TJwtET7m1UGsCiUqX3PKAj3wLv569uh
- o6XQjGR4upeSYjmR5idXvJ/L6/cShVxi7MsCE8AHbRiECso0UO6vgwgupC2uIajcZShqUQxQT
- oaTXT8hBNfNxUoqB9EgBgsFkcIcPR80Lqx73PsG/EkkDaJpyKx/6nQi6Ba5QToJIuOKfREgA8
- aYWUSUEVWXR2d3EB8Soc1y8AQycGifnC+HDL3KfEHC8hq5rHSxtesh5QFjpA4GOREGY/GT/Sq
- nZk66EO/rPHdkPHpitzqWFE00YZE8ft9h8rGiDBM7xp+mP5g8sRWY9WUOexnpzUeEYJPx9LA5
- GkFt3CagmES56AkxBD2bG69vytWcWvhj4XvwxUZ3siOohsKkXrTe5/Lf0EZjjbTDyDZytu5nr
- VdBBmsD+8jFaNJDY97oPQgDUR3ixrIB8ow5brQo2wbKZMST9Y76+MXU5pnKiAheYhoWYc809T
- ujWAXClkzLx9abc/N5Yg==
+X-Provags-ID: V03:K1:K5WlkTNEfH+REKaJDhqjUSdnzSt9VBS40wtvD48rRQ+DNG8JQU5
+ 1F53SJnrIyH+2LC8JYCsRZ0sIb7G3wP5g9kJdvlY9pVBEAa9XgO0jSZUVzAzSZmsIOPcJuW
+ XmKZIBnDYtPLBsrFff6dBSN7OPXTvAEDCStW5zn9uPsvJcQjYh8K7ofbDLkDW67I755bkMX
+ iZWpMG7rZoaZ03YuJIFxA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:eXINiXNcmFM=:FK9dBUizpEm2yXmS8jSHY7
+ eqfjK1QBjRc7E6llT2aECiLbUgr3UuMXf04ZCDXs0MSCLoFTZy/0y4D3QvA9PPPptSs9EwLpP
+ ojF/Imy4laIiOXW9tDA4nQFsbn+4Kj2PChO1gtBcUCVhbrjgc3jdj7NroMO6AFj5AsPp9K1sL
+ 70C/rYNMVGYBMah9PRPTUH3sJCuMjkmz6N1f8Snt6yga1bXtHkwn2WDQxX7zjydFg3P1nQvWR
+ qQLZHJMCcw/zQcytmQhEGmD5C9EXd1elZNUv3buL9+Rb5Da+22EMNvMJ4DVcqOMiarqGBnSvp
+ A6fqPTycn2qt4/vu3m0acvOT3CdXq1+TIR1v4gF87mthmOtp7YCuY1efLKcUAmsQCp02h2dSN
+ zt42Qh8mQhupoGV6mLKy/306UZOqqfwQQY4EgW4l9BE6O87aMrsCjRDHdVYoqo8lEizqcHtpt
+ 8EKBcBMZ8wmyQV7Mzl3V6K1yNTkhWgGLSqUD+XgZVYWZ36xEfZa5LDwotQtUF8X1KrttUQtsQ
+ V4BB+V/gCutIyY9QqpW4bea2/INttaX9SDZy84wbfyIs153mNtgkHMJrHIFFYhmp96OebR1A0
+ iG4yV/a9I8zNDghtSaRdDFqR+3RyBFEQQ3nMhlaWTNEMgnnXr+AtTX5ZfzRJOej5s+wI6QJ58
+ w5gx9+uKGITyZKs5gO0we1qee0CUoag2nLoIiYSeyb/xhz4dM7O3+2IpuyZwjchP+MQoqPSLs
+ yQkTrXiGcotapqYRWBCwEqRY8DQebwgk2NB5CrBkkne0pOxzE6mSNW9Tj1KvzZRzw1kRhWr2l
+ mqfKtoZtv9pGCcBtSFV7k4QjE1XJI5ZP4VMvAkPP0AX8aSFrRqyB03mChsvSxY9B4lY/C/ENu
+ TQ89mD8cPux/2vh8hBnA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each driver calling scsi_ioctl() gets an equivalent compat_ioctl()
-handler that implements the same commands by calling scsi_compat_ioctl().
+Now that both native and compat ioctl syscalls are
+in the same file, a couple of simplifications can
+be made, bringing the implementation closer together:
 
-The scsi_cmd_ioctl() and scsi_cmd_blk_ioctl() functions are compatible
-at this point, so any driver that calls those can do so for both native
-and compat mode, with the argument passed through compat_ptr().
+- do_vfs_ioctl(), ioctl_preallocate(), and compat_ioctl_preallocate()
+  can become static, allowing the compiler to optimize better
 
-With this, we can remove the entries from fs/compat_ioctl.c.  The new
-code is larger, but should be easier to maintain and keep updated with
-newly added commands.
+- slightly update the coding style for consistency between
+  the functions.
+
+- rather than listing each command in two switch statements
+  for the compat case, just call a single function that has
+  all the common commands.
+
+As a side-effect, FS_IOC_RESVSP/FS_IOC_RESVSP64 are now available
+to x86 compat tasks, along with FS_IOC_RESVSP_32/FS_IOC_RESVSP64_32.
+This is harmless for i386 emulation, and can be considered a bugfix
+for x32 emulation, which never supported these in the past.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/block/virtio_blk.c |   3 +
- drivers/scsi/ch.c          |   9 ++-
- drivers/scsi/sd.c          |  50 ++++++--------
- drivers/scsi/sg.c          |  44 ++++++++-----
- drivers/scsi/sr.c          |  57 ++++++++++++++--
- drivers/scsi/st.c          |  51 ++++++++------
- fs/compat_ioctl.c          | 132 +------------------------------------
- 7 files changed, 142 insertions(+), 204 deletions(-)
+ fs/internal.h          |   6 --
+ fs/ioctl.c             | 157 +++++++++++++++++------------------------
+ include/linux/falloc.h |   2 -
+ include/linux/fs.h     |   4 --
+ 4 files changed, 64 insertions(+), 105 deletions(-)
 
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 7ffd719d89de..fbbf18ac1d5d 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -405,6 +405,9 @@ static int virtblk_getgeo(struct block_device *bd, struct hd_geometry *geo)
+diff --git a/fs/internal.h b/fs/internal.h
+index 4a7da1df573d..d46247850ad7 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -180,11 +180,5 @@ extern void mnt_pin_kill(struct mount *m);
+  */
+ extern const struct dentry_operations ns_dentry_operations;
  
- static const struct block_device_operations virtblk_fops = {
- 	.ioctl  = virtblk_ioctl,
-+#ifdef CONFIG_COMPAT
-+	.compat_ioctl = blkdev_compat_ptr_ioctl,
-+#endif
- 	.owner  = THIS_MODULE,
- 	.getgeo = virtblk_getgeo,
- };
-diff --git a/drivers/scsi/ch.c b/drivers/scsi/ch.c
-index 76751d6c7f0d..ed5f4a6ae270 100644
---- a/drivers/scsi/ch.c
-+++ b/drivers/scsi/ch.c
-@@ -872,6 +872,10 @@ static long ch_ioctl_compat(struct file * file,
- 			    unsigned int cmd, unsigned long arg)
+-/*
+- * fs/ioctl.c
+- */
+-extern int do_vfs_ioctl(struct file *file, unsigned int fd, unsigned int cmd,
+-		    unsigned long arg);
+-
+ /* direct-io.c: */
+ int sb_init_dio_done_wq(struct super_block *sb);
+diff --git a/fs/ioctl.c b/fs/ioctl.c
+index 8f22f7817edb..7c9a5df5a597 100644
+--- a/fs/ioctl.c
++++ b/fs/ioctl.c
+@@ -467,7 +467,7 @@ EXPORT_SYMBOL(generic_block_fiemap);
+  * Only the l_start, l_len and l_whence fields of the 'struct space_resv'
+  * are used here, rest are ignored.
+  */
+-int ioctl_preallocate(struct file *filp, int mode, void __user *argp)
++static int ioctl_preallocate(struct file *filp, int mode, void __user *argp)
  {
- 	scsi_changer *ch = file->private_data;
-+	int retval = scsi_ioctl_block_when_processing_errors(ch->device, cmd,
-+							file->f_flags & O_NDELAY);
-+	if (retval)
-+		return retval;
+ 	struct inode *inode = file_inode(filp);
+ 	struct space_resv sr;
+@@ -495,8 +495,8 @@ int ioctl_preallocate(struct file *filp, int mode, void __user *argp)
+ /* on ia32 l_start is on a 32-bit boundary */
+ #if defined CONFIG_COMPAT && defined(CONFIG_X86_64)
+ /* just account for different alignment */
+-int compat_ioctl_preallocate(struct file *file, int mode,
+-				struct space_resv_32 __user *argp)
++static int compat_ioctl_preallocate(struct file *file, int mode,
++				    struct space_resv_32 __user *argp)
+ {
+ 	struct inode *inode = file_inode(file);
+ 	struct space_resv_32 sr;
+@@ -521,11 +521,9 @@ int compat_ioctl_preallocate(struct file *file, int mode,
+ }
+ #endif
+ 
+-static int file_ioctl(struct file *filp, unsigned int cmd,
+-		unsigned long arg)
++static int file_ioctl(struct file *filp, unsigned int cmd, int __user *p)
+ {
+ 	struct inode *inode = file_inode(filp);
+-	int __user *p = (int __user *)arg;
  
  	switch (cmd) {
- 	case CHIOGPARAMS:
-@@ -883,7 +887,7 @@ static long ch_ioctl_compat(struct file * file,
- 	case CHIOINITELEM:
- 	case CHIOSVOLTAG:
- 		/* compatible */
--		return ch_ioctl(file, cmd, arg);
-+		return ch_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
- 	case CHIOGSTATUS32:
- 	{
- 		struct changer_element_status32 ces32;
-@@ -898,8 +902,7 @@ static long ch_ioctl_compat(struct file * file,
- 		return ch_gstatus(ch, ces32.ces_type, data);
+ 	case FIBMAP:
+@@ -542,7 +540,7 @@ static int file_ioctl(struct file *filp, unsigned int cmd,
+ 		return ioctl_preallocate(filp, FALLOC_FL_ZERO_RANGE, p);
  	}
+ 
+-	return vfs_ioctl(filp, cmd, arg);
++	return -ENOIOCTLCMD;
+ }
+ 
+ static int ioctl_fionbio(struct file *filp, int __user *argp)
+@@ -661,53 +659,48 @@ static int ioctl_file_dedupe_range(struct file *file,
+ }
+ 
+ /*
+- * When you add any new common ioctls to the switches above and below
+- * please update compat_sys_ioctl() too.
+- *
+  * do_vfs_ioctl() is not for drivers and not intended to be EXPORT_SYMBOL()'d.
+  * It's just a simple helper for sys_ioctl and compat_sys_ioctl.
++ *
++ * When you add any new common ioctls to the switches above and below,
++ * please ensure they have compatible arguments in compat mode.
+  */
+-int do_vfs_ioctl(struct file *filp, unsigned int fd, unsigned int cmd,
+-	     unsigned long arg)
++static int do_vfs_ioctl(struct file *filp, unsigned int fd,
++			unsigned int cmd, unsigned long arg)
+ {
+-	int error = 0;
+ 	void __user *argp = (void __user *)arg;
+ 	struct inode *inode = file_inode(filp);
+ 
+ 	switch (cmd) {
+ 	case FIOCLEX:
+ 		set_close_on_exec(fd, 1);
+-		break;
++		return 0;
+ 
+ 	case FIONCLEX:
+ 		set_close_on_exec(fd, 0);
+-		break;
++		return 0;
+ 
+ 	case FIONBIO:
+-		error = ioctl_fionbio(filp, argp);
+-		break;
++		return ioctl_fionbio(filp, argp);
+ 
+ 	case FIOASYNC:
+-		error = ioctl_fioasync(fd, filp, argp);
+-		break;
++		return ioctl_fioasync(fd, filp, argp);
+ 
+ 	case FIOQSIZE:
+ 		if (S_ISDIR(inode->i_mode) || S_ISREG(inode->i_mode) ||
+ 		    S_ISLNK(inode->i_mode)) {
+ 			loff_t res = inode_get_bytes(inode);
+-			error = copy_to_user(argp, &res, sizeof(res)) ?
+-					-EFAULT : 0;
+-		} else
+-			error = -ENOTTY;
+-		break;
++			return copy_to_user(argp, &res, sizeof(res)) ?
++					    -EFAULT : 0;
++		}
++
++		return -ENOTTY;
+ 
+ 	case FIFREEZE:
+-		error = ioctl_fsfreeze(filp);
+-		break;
++		return ioctl_fsfreeze(filp);
+ 
+ 	case FITHAW:
+-		error = ioctl_fsthaw(filp);
+-		break;
++		return ioctl_fsthaw(filp);
+ 
+ 	case FS_IOC_FIEMAP:
+ 		return ioctl_fiemap(filp, argp);
+@@ -716,6 +709,7 @@ int do_vfs_ioctl(struct file *filp, unsigned int fd, unsigned int cmd,
+ 		/* anon_bdev filesystems may not have a block size */
+ 		if (!inode->i_sb->s_blocksize)
+ 			return -EINVAL;
++
+ 		return put_user(inode->i_sb->s_blocksize, (int __user *)argp);
+ 
+ 	case FICLONE:
+@@ -729,24 +723,30 @@ int do_vfs_ioctl(struct file *filp, unsigned int fd, unsigned int cmd,
+ 
  	default:
--		// return scsi_ioctl_compat(ch->device, cmd, (void*)arg);
--		return -ENOIOCTLCMD;
-+		return scsi_compat_ioctl(ch->device, cmd, compat_ptr(arg));
- 
+ 		if (S_ISREG(inode->i_mode))
+-			error = file_ioctl(filp, cmd, arg);
+-		else
+-			error = vfs_ioctl(filp, cmd, arg);
++			return file_ioctl(filp, cmd, argp);
+ 		break;
  	}
- }
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index cea625906440..5afb0046b12a 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -1465,13 +1465,12 @@ static int sd_getgeo(struct block_device *bdev, struct hd_geometry *geo)
-  *	Note: most ioctls are forward onto the block subsystem or further
-  *	down in the scsi subsystem.
-  **/
--static int sd_ioctl(struct block_device *bdev, fmode_t mode,
--		    unsigned int cmd, unsigned long arg)
-+static int sd_ioctl_common(struct block_device *bdev, fmode_t mode,
-+			   unsigned int cmd, void __user *p)
- {
- 	struct gendisk *disk = bdev->bd_disk;
- 	struct scsi_disk *sdkp = scsi_disk(disk);
- 	struct scsi_device *sdp = sdkp->device;
--	void __user *p = (void __user *)arg;
- 	int error;
-     
- 	SCSI_LOG_IOCTL(1, sd_printk(KERN_INFO, sdkp, "sd_ioctl: disk=%s, "
-@@ -1507,9 +1506,6 @@ static int sd_ioctl(struct block_device *bdev, fmode_t mode,
- 			break;
- 		default:
- 			error = scsi_cmd_blk_ioctl(bdev, mode, cmd, p);
--			if (error != -ENOTTY)
--				break;
--			error = scsi_ioctl(sdp, cmd, p);
- 			break;
- 	}
- out:
-@@ -1691,39 +1687,31 @@ static void sd_rescan(struct device *dev)
- 	revalidate_disk(sdkp->disk);
- }
- 
-+static int sd_ioctl(struct block_device *bdev, fmode_t mode,
-+		    unsigned int cmd, unsigned long arg)
-+{
-+	void __user *p = (void __user *)arg;
-+	int ret;
-+
-+	ret = sd_ioctl_common(bdev, mode, cmd, p);
-+	if (ret != -ENOTTY)
-+		return ret;
-+
-+	return scsi_ioctl(scsi_disk(bdev->bd_disk)->device, cmd, p);
-+}
- 
- #ifdef CONFIG_COMPAT
--/* 
-- * This gets directly called from VFS. When the ioctl 
-- * is not recognized we go back to the other translation paths. 
-- */
- static int sd_compat_ioctl(struct block_device *bdev, fmode_t mode,
- 			   unsigned int cmd, unsigned long arg)
- {
--	struct gendisk *disk = bdev->bd_disk;
--	struct scsi_disk *sdkp = scsi_disk(disk);
--	struct scsi_device *sdev = sdkp->device;
- 	void __user *p = compat_ptr(arg);
--	int error;
--
--	error = scsi_verify_blk_ioctl(bdev, cmd);
--	if (error < 0)
--		return error;
-+	int ret;
- 
--	error = scsi_ioctl_block_when_processing_errors(sdev, cmd,
--			(mode & FMODE_NDELAY) != 0);
--	if (error)
--		return error;
-+	ret = sd_ioctl_common(bdev, mode, cmd, p);
-+	if (ret != -ENOTTY)
-+		return ret;
- 
--	if (is_sed_ioctl(cmd))
--		return sed_ioctl(sdkp->opal_dev, cmd, p);
--	       
--	/* 
--	 * Let the static ioctl translation table take care of it.
--	 */
--	if (!sdev->host->hostt->compat_ioctl)
--		return -ENOIOCTLCMD; 
--	return sdev->host->hostt->compat_ioctl(sdev, cmd, p);
-+	return scsi_compat_ioctl(scsi_disk(bdev->bd_disk)->device, cmd, p);
- }
- #endif
- 
-diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
-index eace8886d95a..bafeaf7b9ad8 100644
---- a/drivers/scsi/sg.c
-+++ b/drivers/scsi/sg.c
-@@ -911,19 +911,14 @@ static int put_compat_request_table(struct compat_sg_req_info __user *o,
- #endif
- 
- static long
--sg_ioctl(struct file *filp, unsigned int cmd_in, unsigned long arg)
-+sg_ioctl_common(struct file *filp, Sg_device *sdp, Sg_fd *sfp,
-+		unsigned int cmd_in, void __user *p)
- {
--	void __user *p = (void __user *)arg;
- 	int __user *ip = p;
- 	int result, val, read_only;
--	Sg_device *sdp;
--	Sg_fd *sfp;
- 	Sg_request *srp;
- 	unsigned long iflags;
- 
--	if ((!(sfp = (Sg_fd *) filp->private_data)) || (!(sdp = sfp->parentdp)))
--		return -ENXIO;
--
- 	SCSI_LOG_TIMEOUT(3, sg_printk(KERN_INFO, sdp,
- 				   "sg_ioctl: cmd=0x%x\n", (int) cmd_in));
- 	read_only = (O_RDWR != (filp->f_flags & O_ACCMODE));
-@@ -1146,29 +1141,44 @@ sg_ioctl(struct file *filp, unsigned int cmd_in, unsigned long arg)
- 			cmd_in, filp->f_flags & O_NDELAY);
- 	if (result)
- 		return result;
+-	return error;
 +
 +	return -ENOIOCTLCMD;
-+}
-+
-+static long
-+sg_ioctl(struct file *filp, unsigned int cmd_in, unsigned long arg)
-+{
-+	void __user *p = (void __user *)arg;
-+	Sg_device *sdp;
-+	Sg_fd *sfp;
-+	int ret;
-+
-+	if ((!(sfp = (Sg_fd *) filp->private_data)) || (!(sdp = sfp->parentdp)))
-+		return -ENXIO;
-+
-+	ret = sg_ioctl_common(filp, sdp, sfp, cmd_in, p);
-+	if (ret != -ENOIOCTLCMD)
-+		return ret;
-+
- 	return scsi_ioctl(sdp->device, cmd_in, p);
  }
  
- #ifdef CONFIG_COMPAT
- static long sg_compat_ioctl(struct file *filp, unsigned int cmd_in, unsigned long arg)
+ int ksys_ioctl(unsigned int fd, unsigned int cmd, unsigned long arg)
  {
-+	void __user *p = compat_ptr(arg);
- 	Sg_device *sdp;
- 	Sg_fd *sfp;
--	struct scsi_device *sdev;
-+	int ret;
+-	int error;
+ 	struct fd f = fdget(fd);
++	int error;
  
- 	if ((!(sfp = (Sg_fd *) filp->private_data)) || (!(sdp = sfp->parentdp)))
- 		return -ENXIO;
- 
--	sdev = sdp->device;
--	if (sdev->host->hostt->compat_ioctl) { 
--		int ret;
--
--		ret = sdev->host->hostt->compat_ioctl(sdev, cmd_in, (void __user *)arg);
--
-+	ret = sg_ioctl_common(filp, sdp, sfp, cmd_in, p);
-+	if (ret != -ENOIOCTLCMD)
- 		return ret;
--	}
--	
--	return -ENOIOCTLCMD;
+ 	if (!f.file)
+ 		return -EBADF;
 +
-+	return scsi_compat_ioctl(sdp->device, cmd_in, p);
- }
- #endif
- 
-diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
-index 4664fdf75c0f..6033a886c42c 100644
---- a/drivers/scsi/sr.c
-+++ b/drivers/scsi/sr.c
-@@ -38,6 +38,7 @@
- #include <linux/kernel.h>
- #include <linux/mm.h>
- #include <linux/bio.h>
-+#include <linux/compat.h>
- #include <linux/string.h>
- #include <linux/errno.h>
- #include <linux/cdrom.h>
-@@ -598,6 +599,55 @@ static int sr_block_ioctl(struct block_device *bdev, fmode_t mode, unsigned cmd,
- 	return ret;
- }
- 
-+#ifdef CONFIG_COMPAT
-+static int sr_block_compat_ioctl(struct block_device *bdev, fmode_t mode, unsigned cmd,
-+			  unsigned long arg)
-+{
-+	struct scsi_cd *cd = scsi_cd(bdev->bd_disk);
-+	struct scsi_device *sdev = cd->device;
-+	void __user *argp = compat_ptr(arg);
-+	int ret;
-+
-+	mutex_lock(&sr_mutex);
-+
-+	ret = scsi_ioctl_block_when_processing_errors(sdev, cmd,
-+			(mode & FMODE_NDELAY) != 0);
-+	if (ret)
+ 	error = security_file_ioctl(f.file, cmd, arg);
+-	if (!error)
+-		error = do_vfs_ioctl(f.file, fd, cmd, arg);
++	if (error)
 +		goto out;
 +
-+	scsi_autopm_get_device(sdev);
-+
-+	/*
-+	 * Send SCSI addressing ioctls directly to mid level, send other
-+	 * ioctls to cdrom/block level.
-+	 */
-+	switch (cmd) {
-+	case SCSI_IOCTL_GET_IDLUN:
-+	case SCSI_IOCTL_GET_BUS_NUMBER:
-+		ret = scsi_compat_ioctl(sdev, cmd, argp);
-+		goto put;
-+	}
-+
-+	/*
-+	 * CDROM ioctls are handled in the block layer, but
-+	 * do the scsi blk ioctls here.
-+	 */
-+	ret = scsi_cmd_blk_ioctl(bdev, mode, cmd, argp);
-+	if (ret != -ENOTTY)
-+		return ret;
-+
-+	ret = scsi_compat_ioctl(sdev, cmd, argp);
-+
-+put:
-+	scsi_autopm_put_device(sdev);
++	error = do_vfs_ioctl(f.file, fd, cmd, arg);
++	if (error == -ENOIOCTLCMD)
++		error = vfs_ioctl(f.file, cmd, arg);
 +
 +out:
-+	mutex_unlock(&sr_mutex);
-+	return ret;
-+
-+}
-+#endif
-+
- static unsigned int sr_block_check_events(struct gendisk *disk,
- 					  unsigned int clearing)
- {
-@@ -641,12 +691,11 @@ static const struct block_device_operations sr_bdops =
- 	.open		= sr_block_open,
- 	.release	= sr_block_release,
- 	.ioctl		= sr_block_ioctl,
-+#ifdef CONFIG_COMPAT
-+	.ioctl		= sr_block_compat_ioctl,
-+#endif
- 	.check_events	= sr_block_check_events,
- 	.revalidate_disk = sr_block_revalidate_disk,
--	/* 
--	 * No compat_ioctl for now because sr_block_ioctl never
--	 * seems to pass arbitrary ioctls down to host drivers.
--	 */
- };
- 
- static int sr_open(struct cdrom_device_info *cdi, int purpose)
-diff --git a/drivers/scsi/st.c b/drivers/scsi/st.c
-index 9e3fff2de83e..393f3019ccac 100644
---- a/drivers/scsi/st.c
-+++ b/drivers/scsi/st.c
-@@ -3501,7 +3501,7 @@ static int partition_tape(struct scsi_tape *STp, int size)
- 
- 
- /* The ioctl command */
--static long st_ioctl(struct file *file, unsigned int cmd_in, unsigned long arg)
-+static long st_ioctl_common(struct file *file, unsigned int cmd_in, void __user *p)
- {
- 	int i, cmd_nr, cmd_type, bt;
- 	int retval = 0;
-@@ -3509,7 +3509,6 @@ static long st_ioctl(struct file *file, unsigned int cmd_in, unsigned long arg)
- 	struct scsi_tape *STp = file->private_data;
- 	struct st_modedef *STm;
- 	struct st_partstat *STps;
--	void __user *p = (void __user *)arg;
- 
- 	if (mutex_lock_interruptible(&STp->lock))
- 		return -ERESTARTSYS;
-@@ -3824,9 +3823,19 @@ static long st_ioctl(struct file *file, unsigned int cmd_in, unsigned long arg)
- 	}
- 	mutex_unlock(&STp->lock);
- 	switch (cmd_in) {
-+		case SCSI_IOCTL_STOP_UNIT:
-+			/* unload */
-+			retval = scsi_ioctl(STp->device, cmd_in, p);
-+			if (!retval) {
-+				STp->rew_at_close = 0;
-+				STp->ready = ST_NO_TAPE;
-+			}
-+			return retval;
-+
- 		case SCSI_IOCTL_GET_IDLUN:
- 		case SCSI_IOCTL_GET_BUS_NUMBER:
- 			break;
-+
- 		default:
- 			if ((cmd_in == SG_IO ||
- 			     cmd_in == SCSI_IOCTL_SEND_COMMAND ||
-@@ -3840,42 +3849,46 @@ static long st_ioctl(struct file *file, unsigned int cmd_in, unsigned long arg)
- 				return i;
- 			break;
- 	}
--	retval = scsi_ioctl(STp->device, cmd_in, p);
--	if (!retval && cmd_in == SCSI_IOCTL_STOP_UNIT) { /* unload */
--		STp->rew_at_close = 0;
--		STp->ready = ST_NO_TAPE;
--	}
--	return retval;
-+	return -ENOTTY;
- 
-  out:
- 	mutex_unlock(&STp->lock);
- 	return retval;
- }
- 
-+static long st_ioctl(struct file *file, unsigned int cmd_in, unsigned long arg)
-+{
-+	void __user *p = (void __user *)arg;
-+	struct scsi_tape *STp = file->private_data;
-+	int ret;
-+
-+	ret = st_ioctl_common(file, cmd_in, p);
-+	if (ret != -ENOTTY)
-+		return ret;
-+
-+	return scsi_ioctl(STp->device, cmd_in, p);
-+}
-+
- #ifdef CONFIG_COMPAT
- static long st_compat_ioctl(struct file *file, unsigned int cmd_in, unsigned long arg)
- {
- 	void __user *p = compat_ptr(arg);
- 	struct scsi_tape *STp = file->private_data;
--	struct scsi_device *sdev = STp->device;
--	int ret = -ENOIOCTLCMD;
-+	int ret;
- 
- 	/* argument conversion is handled using put_user_mtpos/put_user_mtget */
- 	switch (cmd_in) {
--	case MTIOCTOP:
--		return st_ioctl(file, MTIOCTOP, (unsigned long)p);
- 	case MTIOCPOS32:
--		return st_ioctl(file, MTIOCPOS, (unsigned long)p);
-+		return st_ioctl_common(file, MTIOCPOS, p);
- 	case MTIOCGET32:
--		return st_ioctl(file, MTIOCGET, (unsigned long)p);
-+		return st_ioctl_common(file, MTIOCGET, p);
- 	}
- 
--	if (sdev->host->hostt->compat_ioctl) { 
-+	ret = st_ioctl_common(file, cmd_in, p);
-+	if (ret != -ENOTTY)
-+		return ret;
- 
--		ret = sdev->host->hostt->compat_ioctl(sdev, cmd_in, (void __user *)arg);
--
--	}
--	return ret;
-+	return scsi_compat_ioctl(STp->device, cmd_in, p);
- }
- #endif
- 
-diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index 358ea2ecf36b..ab4471f469e6 100644
---- a/fs/compat_ioctl.c
-+++ b/fs/compat_ioctl.c
-@@ -36,109 +36,11 @@
- 
- #include "internal.h"
- 
--#ifdef CONFIG_BLOCK
--#include <linux/cdrom.h>
--#include <linux/fd.h>
--#include <scsi/scsi.h>
--#include <scsi/scsi_ioctl.h>
--#include <scsi/sg.h>
--#endif
--
- #include <linux/uaccess.h>
- #include <linux/watchdog.h>
- 
- #include <linux/hiddev.h>
- 
--
--#include <linux/sort.h>
--
--/*
-- * simple reversible transform to make our table more evenly
-- * distributed after sorting.
-- */
--#define XFORM(i) (((i) ^ ((i) << 27) ^ ((i) << 17)) & 0xffffffff)
--
--#define COMPATIBLE_IOCTL(cmd) XFORM((u32)cmd),
--static unsigned int ioctl_pointer[] = {
--#ifdef CONFIG_BLOCK
--/* Big S */
--COMPATIBLE_IOCTL(SCSI_IOCTL_GET_IDLUN)
--COMPATIBLE_IOCTL(SCSI_IOCTL_DOORLOCK)
--COMPATIBLE_IOCTL(SCSI_IOCTL_DOORUNLOCK)
--COMPATIBLE_IOCTL(SCSI_IOCTL_TEST_UNIT_READY)
--COMPATIBLE_IOCTL(SCSI_IOCTL_GET_BUS_NUMBER)
--COMPATIBLE_IOCTL(SCSI_IOCTL_SEND_COMMAND)
--COMPATIBLE_IOCTL(SCSI_IOCTL_PROBE_HOST)
--COMPATIBLE_IOCTL(SCSI_IOCTL_GET_PCI)
--#endif
--#ifdef CONFIG_BLOCK
--/* SG stuff */
--COMPATIBLE_IOCTL(SG_IO)
--COMPATIBLE_IOCTL(SG_GET_REQUEST_TABLE)
--COMPATIBLE_IOCTL(SG_SET_TIMEOUT)
--COMPATIBLE_IOCTL(SG_GET_TIMEOUT)
--COMPATIBLE_IOCTL(SG_EMULATED_HOST)
--COMPATIBLE_IOCTL(SG_GET_TRANSFORM)
--COMPATIBLE_IOCTL(SG_SET_RESERVED_SIZE)
--COMPATIBLE_IOCTL(SG_GET_RESERVED_SIZE)
--COMPATIBLE_IOCTL(SG_GET_SCSI_ID)
--COMPATIBLE_IOCTL(SG_SET_FORCE_LOW_DMA)
--COMPATIBLE_IOCTL(SG_GET_LOW_DMA)
--COMPATIBLE_IOCTL(SG_SET_FORCE_PACK_ID)
--COMPATIBLE_IOCTL(SG_GET_PACK_ID)
--COMPATIBLE_IOCTL(SG_GET_NUM_WAITING)
--COMPATIBLE_IOCTL(SG_SET_DEBUG)
--COMPATIBLE_IOCTL(SG_GET_SG_TABLESIZE)
--COMPATIBLE_IOCTL(SG_GET_COMMAND_Q)
--COMPATIBLE_IOCTL(SG_SET_COMMAND_Q)
--COMPATIBLE_IOCTL(SG_GET_VERSION_NUM)
--COMPATIBLE_IOCTL(SG_NEXT_CMD_LEN)
--COMPATIBLE_IOCTL(SG_SCSI_RESET)
--COMPATIBLE_IOCTL(SG_GET_REQUEST_TABLE)
--COMPATIBLE_IOCTL(SG_SET_KEEP_ORPHAN)
--COMPATIBLE_IOCTL(SG_GET_KEEP_ORPHAN)
--#endif
--};
--
--/*
-- * Convert common ioctl arguments based on their command number
-- *
-- * Please do not add any code in here. Instead, implement
-- * a compat_ioctl operation in the place that handleѕ the
-- * ioctl for the native case.
-- */
--static long do_ioctl_trans(unsigned int cmd,
--		 unsigned long arg, struct file *file)
--{
--	return -ENOIOCTLCMD;
--}
--
--static int compat_ioctl_check_table(unsigned int xcmd)
--{
--#ifdef CONFIG_BLOCK
--	int i;
--	const int max = ARRAY_SIZE(ioctl_pointer) - 1;
--
--	BUILD_BUG_ON(max >= (1 << 16));
--
--	/* guess initial offset into table, assuming a
--	   normalized distribution */
--	i = ((xcmd >> 16) * max) >> 16;
--
--	/* do linear search up first, until greater or equal */
--	while (ioctl_pointer[i] < xcmd && i < max)
--		i++;
--
--	/* then do linear search down */
--	while (ioctl_pointer[i] > xcmd && i > 0)
--		i--;
--
--	return ioctl_pointer[i] == xcmd;
--#else
--	return 0;
--#endif
--}
--
- COMPAT_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd,
- 		       compat_ulong_t, arg32)
- {
-@@ -216,19 +118,9 @@ COMPAT_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd,
- 				goto out_fput;
- 		}
- 
--		if (!f.file->f_op->unlocked_ioctl)
--			goto do_ioctl;
--		break;
--	}
--
--	if (compat_ioctl_check_table(XFORM(cmd)))
--		goto found_handler;
--
--	error = do_ioctl_trans(cmd, arg, f.file);
--	if (error == -ENOIOCTLCMD)
- 		error = -ENOTTY;
--
--	goto out_fput;
-+		goto out_fput;
-+	}
- 
-  found_handler:
- 	arg = (unsigned long)compat_ptr(arg);
-@@ -239,23 +131,3 @@ COMPAT_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd,
-  out:
+ 	fdput(f);
  	return error;
  }
+@@ -790,92 +790,63 @@ long compat_ptr_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ EXPORT_SYMBOL(compat_ptr_ioctl);
+ 
+ COMPAT_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd,
+-		       compat_ulong_t, arg32)
++		       compat_ulong_t, arg)
+ {
+-	unsigned long arg = arg32;
+ 	struct fd f = fdget(fd);
+-	int error = -EBADF;
++	int error;
++
+ 	if (!f.file)
+-		goto out;
++		return -EBADF;
+ 
+ 	/* RED-PEN how should LSM module know it's handling 32bit? */
+ 	error = security_file_ioctl(f.file, cmd, arg);
+ 	if (error)
+-		goto out_fput;
++		goto out;
+ 
+ 	switch (cmd) {
+-	/* these are never seen by ->ioctl(), no argument or int argument */
+-	case FIOCLEX:
+-	case FIONCLEX:
+-	case FIFREEZE:
+-	case FITHAW:
++	/* FICLONE takes an int argument, so don't use compat_ptr() */
+ 	case FICLONE:
+-		goto do_ioctl;
+-	/* these are never seen by ->ioctl(), pointer argument */
+-	case FIONBIO:
+-	case FIOASYNC:
+-	case FIOQSIZE:
+-	case FS_IOC_FIEMAP:
+-	case FIGETBSZ:
+-	case FICLONERANGE:
+-	case FIDEDUPERANGE:
+-		goto found_handler;
+-	/*
+-	 * The next group is the stuff handled inside file_ioctl().
+-	 * For regular files these never reach ->ioctl(); for
+-	 * devices, sockets, etc. they do and one (FIONREAD) is
+-	 * even accepted in some cases.  In all those cases
+-	 * argument has the same type, so we can handle these
+-	 * here, shunting them towards do_vfs_ioctl().
+-	 * ->compat_ioctl() will never see any of those.
+-	 */
+-	/* pointer argument, never actually handled by ->ioctl() */
+-	case FIBMAP:
+-		goto found_handler;
+-	/* handled by some ->ioctl(); always a pointer to int */
+-	case FIONREAD:
+-		goto found_handler;
+-	/* these get messy on amd64 due to alignment differences */
++		error = ioctl_file_clone(f.file, arg, 0, 0, 0);
++		break;
++
+ #if defined(CONFIG_X86_64)
++	/* these get messy on amd64 due to alignment differences */
+ 	case FS_IOC_RESVSP_32:
+ 	case FS_IOC_RESVSP64_32:
+ 		error = compat_ioctl_preallocate(f.file, 0, compat_ptr(arg));
+-		goto out_fput;
++		break;
+ 	case FS_IOC_UNRESVSP_32:
+ 	case FS_IOC_UNRESVSP64_32:
+ 		error = compat_ioctl_preallocate(f.file, FALLOC_FL_PUNCH_HOLE,
+ 				compat_ptr(arg));
+-		goto out_fput;
++		break;
+ 	case FS_IOC_ZERO_RANGE_32:
+ 		error = compat_ioctl_preallocate(f.file, FALLOC_FL_ZERO_RANGE,
+ 				compat_ptr(arg));
+-		goto out_fput;
+-#else
+-	case FS_IOC_RESVSP:
+-	case FS_IOC_RESVSP64:
+-	case FS_IOC_UNRESVSP:
+-	case FS_IOC_UNRESVSP64:
+-	case FS_IOC_ZERO_RANGE:
+-		goto found_handler;
++		break;
+ #endif
+ 
++	/*
++	 * everything else in do_vfs_ioctl() takes either a compatible
++	 * pointer argument or no argument -- call it with a modified
++	 * argument.
++	 */
+ 	default:
+-		if (f.file->f_op->compat_ioctl) {
++		error = do_vfs_ioctl(f.file, fd, cmd,
++				     (unsigned long)compat_ptr(arg));
++		if (error != -ENOIOCTLCMD)
++			break;
++
++		if (f.file->f_op->compat_ioctl)
+ 			error = f.file->f_op->compat_ioctl(f.file, cmd, arg);
+-			if (error != -ENOIOCTLCMD)
+-				goto out_fput;
+-		}
+-		error = -ENOTTY;
+-		goto out_fput;
++		if (error == -ENOIOCTLCMD)
++			error = -ENOTTY;
++		break;
+ 	}
+ 
+- found_handler:
+-	arg = (unsigned long)compat_ptr(arg);
+- do_ioctl:
+-	error = do_vfs_ioctl(f.file, fd, cmd, arg);
+- out_fput:
+-	fdput(f);
+  out:
++	fdput(f);
++
+ 	return error;
+ }
+ #endif
+diff --git a/include/linux/falloc.h b/include/linux/falloc.h
+index 8bf3d79f3e82..f3f0b97b1675 100644
+--- a/include/linux/falloc.h
++++ b/include/linux/falloc.h
+@@ -51,8 +51,6 @@ struct space_resv_32 {
+ #define FS_IOC_UNRESVSP64_32	_IOW ('X', 43, struct space_resv_32)
+ #define FS_IOC_ZERO_RANGE_32	_IOW ('X', 57, struct space_resv_32)
+ 
+-int compat_ioctl_preallocate(struct file *, int, struct space_resv_32 __user *);
 -
--static int __init init_sys32_ioctl_cmp(const void *p, const void *q)
--{
--	unsigned int a, b;
--	a = *(unsigned int *)p;
--	b = *(unsigned int *)q;
--	if (a > b)
--		return 1;
--	if (a < b)
--		return -1;
--	return 0;
--}
+ #endif
+ 
+ #endif /* _FALLOC_H_ */
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 98e0349adb52..daf570bca42a 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2552,10 +2552,6 @@ extern int finish_open(struct file *file, struct dentry *dentry,
+ 			int (*open)(struct inode *, struct file *));
+ extern int finish_no_open(struct file *file, struct dentry *dentry);
+ 
+-/* fs/ioctl.c */
 -
--static int __init init_sys32_ioctl(void)
--{
--	sort(ioctl_pointer, ARRAY_SIZE(ioctl_pointer), sizeof(*ioctl_pointer),
--		init_sys32_ioctl_cmp, NULL);
--	return 0;
--}
--__initcall(init_sys32_ioctl);
+-extern int ioctl_preallocate(struct file *filp, int mode, void __user *argp);
+-
+ /* fs/dcache.c */
+ extern void __init vfs_caches_init_early(void);
+ extern void __init vfs_caches_init(void);
 -- 
 2.20.0
 
