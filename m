@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A354C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FB9C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED28222C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DCF42253D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003763;
-	bh=jQybQAdyx9ZBDl/KAmYyeRIYex04N12HCfmKKKywYCg=;
+	s=default; t=1578003768;
+	bh=jAIf3CT/v5lg8WB6/KwtNml/dKqKx7WIzBVB3nUMhVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pxHmjJmPmX73QyzM4XwCpyGOsj5+Jsa3E+7iGW/P5hD/ke3v/nPM2QYkqv2M2hK0e
-	 1eyQkjlBJ9ZzXEP7lcHCKm3ph0mU2DfDUG2Qp5e9DFzb8n+6vVUSVY1Bw3Gv6olFvV
-	 HPpdkl4xc4Nc0r3Sb0F2Afa2LFfBEluhEAQ3Hot8=
+	b=gk7DwJ/wpAOhRVrPK+suByF9Itb2lt9TbfHvaYa4nNIP2faP1fV+BHsQkl8itB7sa
+	 AgePsuSgyKkZ7TNeRbzubof2S8IKoSYDLTPp+pe8pGHBBnow4S3RqVfyktfpyA0mwm
+	 +MLEx0QgFDrc7LAU+B+Q4M1ARyOlImDHZ3zD9d2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbgABWWm (ORCPT
+        id S1729180AbgABWWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:22:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43374 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:22:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729029AbgABWWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:22:37 -0500
+        id S1727432AbgABWWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:22:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85A2A20863;
-        Thu,  2 Jan 2020 22:22:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75B7F22B48;
+        Thu,  2 Jan 2020 22:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003757;
-        bh=jQybQAdyx9ZBDl/KAmYyeRIYex04N12HCfmKKKywYCg=;
+        s=default; t=1578003761;
+        bh=jAIf3CT/v5lg8WB6/KwtNml/dKqKx7WIzBVB3nUMhVI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sL4VJNY3kVMN+vL5GzZ33LTalChpkCHg5zlZLsdnjk2smDCJ1Q3KyDt5TdYrV0rdl
-         Y8bDP+c7ExauNX5XbfaY18x/bj8p2sa7UCbtiJctRRTaTnFrZI0rJaxrzprhaQzrGk
-         wBcqkqDXbEuUdimeiodjdqXFHhg/9X1f9k550PC0=
+        b=AeOpyoTa+KDXWHW3brteArU5ezoai+seunRaRCOCXTPeMaS4hW88glgxZm5zRrYWl
+         rcmvMxwt8nvHbBwCIbRVjZMp96dkxFHTSBuFz6mw/GYyI583g0hEu3gBWaTmuQ5f8K
+         B5uT7czkSqfPXeObmShDmG42buR4QK3uQQWEQ4hU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 075/114] net, sysctl: Fix compiler warning when only cBPF is present
-Date:   Thu,  2 Jan 2020 23:07:27 +0100
-Message-Id: <20200102220036.657934932@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+b3028ac3933f5c466389@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 077/114] ALSA: hda - Downgrade error message for single-cmd fallback
+Date:   Thu,  2 Jan 2020 23:07:29 +0100
+Message-Id: <20200102220036.847521443@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -60,64 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@dlink.ru>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 1148f9adbe71415836a18a36c1b4ece999ab0973 ]
+[ Upstream commit 475feec0c41ad71cb7d02f0310e56256606b57c5 ]
 
-proc_dointvec_minmax_bpf_restricted() has been firstly introduced
-in commit 2e4a30983b0f ("bpf: restrict access to core bpf sysctls")
-under CONFIG_HAVE_EBPF_JIT. Then, this ifdef has been removed in
-ede95a63b5e8 ("bpf: add bpf_jit_limit knob to restrict unpriv
-allocations"), because a new sysctl, bpf_jit_limit, made use of it.
-Finally, this parameter has become long instead of integer with
-fdadd04931c2 ("bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K")
-and thus, a new proc_dolongvec_minmax_bpf_restricted() has been
-added.
+We made the error message for the CORB/RIRB communication clearer by
+upgrading to dev_WARN() so that user can notice better.  But this
+struck us like a boomerang: now it caught syzbot and reported back as
+a fatal issue although it's not really any too serious bug that worth
+for stopping the whole system.
 
-With this last change, we got back to that
-proc_dointvec_minmax_bpf_restricted() is used only under
-CONFIG_HAVE_EBPF_JIT, but the corresponding ifdef has not been
-brought back.
+OK, OK, let's be softy, downgrade it to the standard dev_err() again.
 
-So, in configurations like CONFIG_BPF_JIT=y && CONFIG_HAVE_EBPF_JIT=n
-since v4.20 we have:
-
-  CC      net/core/sysctl_net_core.o
-net/core/sysctl_net_core.c:292:1: warning: ‘proc_dointvec_minmax_bpf_restricted’ defined but not used [-Wunused-function]
-  292 | proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Suppress this by guarding it with CONFIG_HAVE_EBPF_JIT again.
-
-Fixes: fdadd04931c2 ("bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K")
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20191218091821.7080-1-alobakin@dlink.ru
+Fixes: dd65f7e19c69 ("ALSA: hda - Show the fatal CORB/RIRB error more clearly")
+Reported-by: syzbot+b3028ac3933f5c466389@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/20191216151224.30013-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/sysctl_net_core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/pci/hda/hda_controller.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/core/sysctl_net_core.c b/net/core/sysctl_net_core.c
-index d67ec17f2cc8..6cec08cd0bb9 100644
---- a/net/core/sysctl_net_core.c
-+++ b/net/core/sysctl_net_core.c
-@@ -281,6 +281,7 @@ static int proc_dointvec_minmax_bpf_enable(struct ctl_table *table, int write,
- 	return ret;
- }
+diff --git a/sound/pci/hda/hda_controller.c b/sound/pci/hda/hda_controller.c
+index 8fcb421193e0..fa261b27d858 100644
+--- a/sound/pci/hda/hda_controller.c
++++ b/sound/pci/hda/hda_controller.c
+@@ -883,7 +883,7 @@ static int azx_rirb_get_response(struct hdac_bus *bus, unsigned int addr,
+ 		return -EAGAIN; /* give a chance to retry */
+ 	}
  
-+# ifdef CONFIG_HAVE_EBPF_JIT
- static int
- proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
- 				    void __user *buffer, size_t *lenp,
-@@ -291,6 +292,7 @@ proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
- 
- 	return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
- }
-+# endif /* CONFIG_HAVE_EBPF_JIT */
- 
- static int
- proc_dolongvec_minmax_bpf_restricted(struct ctl_table *table, int write,
+-	dev_WARN(chip->card->dev,
++	dev_err(chip->card->dev,
+ 		"azx_get_response timeout, switching to single_cmd mode: last cmd=0x%08x\n",
+ 		bus->last_cmd[addr]);
+ 	chip->single_cmd = 1;
 -- 
 2.20.1
 
