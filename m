@@ -2,135 +2,443 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 969DCC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 18:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1D3C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 19:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C16B2464B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 18:56:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="YSKX/O3b";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="ZapIHTBv"
+	by mail.kernel.org (Postfix) with ESMTP id 1C47D217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 19:00:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577991607;
+	bh=wzd5vGv+NY8rW6icu7fH11OpcK8cT4C3Zrd0wOkIzG4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0E6TBS9FG6rM6P9XOAAyOYCcFE8fWCGbVzz1jvQJ1mF8nW1AwJiqdsuS8jmSpg8ZT
+	 UNogHI2TZM1zEMDfxXoSxGpeKO6zISqmEsLXBADGFObcUPxIpInoKAymS1rC7DRbW9
+	 as2KYkqiYDEM05kJKN48jUyKDyJeJXsXKMwigLso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbgABS4n (ORCPT
+        id S1728167AbgABTAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 13:56:43 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:6784 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727951AbgABS4m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 13:56:42 -0500
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 002IqZhs008348;
-        Thu, 2 Jan 2020 10:56:22 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=PN6Ey2Usone41hog2N5ThwwMNZdc9RzobwGcqx5jMHo=;
- b=YSKX/O3bs5CvfKjyPLQYAeX1cQ+9WiuPkP3VlpTORBID5z7FWR4zHjVdgkFaob83TlSu
- 6fEtYZ5m+kSx2uiJtAMm5HvgTOJYu8MQ09IP7ipd9/wp+rBSrx79OSqCSo9nUGZel3yE
- 4pFSsMvzFmc9ZS7lnoacTApHp2q3N/CXk4M= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0089730.ppops.net with ESMTP id 2x9ddw20vf-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 02 Jan 2020 10:56:22 -0800
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 2 Jan 2020 10:56:20 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N4J8xKLmdOXR1jpq+lziyFaYVPTjmehskmoc34HZxaRMqMn9bUklhDrmd+8ko1945QnhAxGoaw+rVear+vdXJC4p2dVu1mSTWVRq63nCinO5vf1ATtGeUuulsc76M7GzIF9UPCI03e0DJpcVrNQHMARsepbLByD9k6RbUTOV4TayeQo7IUBU+r4GqlbJiJDFfl/xRkggWwPpvQP5qvG7ScX+/x3ts4hQ8iAc3TUOC2i4AoelhW//trv1WfCqaA+MNQyFMaojsTncrpzzWayZDiHzF3+6hSFVRMPWbEXydc3sCk1BcwfLFGznt7/Zkmfd0Rg1j5JjlT5CqAtfStSj+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PN6Ey2Usone41hog2N5ThwwMNZdc9RzobwGcqx5jMHo=;
- b=OfF9lD9BQ6+I17eYcWCD64Rb4ypW+FjSVuMYyERt2rI5MBpeBBhgjwDt+pqYx8ciVaV0EgAn3zm/xtQxEONh5zN033ZGOtPuMP5Ddu1yIYVdAx2gJENsX+NKoKblQIimPX2laqxBrPiokMMtziwFXuOF7ApGFLEeeORKLGJa0y/WMCHGNk8/XC0kZB9ZG5atE7hiwsUWXMjeFWd8Ma+c4g4fPzwTvQDjogFB498GXDPPDqM7rR3y1w3IvVv+gj4bdFjfx3IurTWcsSFAi1LbYQffeQqUwx1NR3+bbTDz0pwNbQpzawWzzLyefHXH6wYCyiaom4YQac1753m1N8wPRg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PN6Ey2Usone41hog2N5ThwwMNZdc9RzobwGcqx5jMHo=;
- b=ZapIHTBvTQ9BFclvxyMmx7n+qAkm62GJfUHN/Pek0uQnm8CJwi5JKBOxo6KCeBWWn/dI3VquGPZA1bpe5NpnzGb+EjfiOSgzS3s92BzTNKVachpOZi/PcYUlSoUZUQ6xGczD272gG+fRd5gq+Qm5ahEp4xr5itrfnxwDQn1kOts=
-Received: from MWHPR15MB1597.namprd15.prod.outlook.com (10.173.234.137) by
- MWHPR15MB1166.namprd15.prod.outlook.com (10.175.9.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.12; Thu, 2 Jan 2020 18:56:20 +0000
-Received: from MWHPR15MB1597.namprd15.prod.outlook.com
- ([fe80::cdbf:b63c:437:4dd2]) by MWHPR15MB1597.namprd15.prod.outlook.com
- ([fe80::cdbf:b63c:437:4dd2%8]) with mapi id 15.20.2602.010; Thu, 2 Jan 2020
- 18:56:19 +0000
-From:   Vijay Khemka <vijaykhemka@fb.com>
-To:     David Miller <davem@davemloft.net>
-CC:     "sam@mendozajonas.com" <sam@mendozajonas.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        Sai Dasari <sdasari@fb.com>
-Subject: Re: [net-next PATCH] net/ncsi: Fix gma flag setting after response
-Thread-Topic: [net-next PATCH] net/ncsi: Fix gma flag setting after response
-Thread-Index: AQHVvQcvq4Utc53XEUy7GF5JxeUuH6fTrS4AgAOPSYA=
-Date:   Thu, 2 Jan 2020 18:56:19 +0000
-Message-ID: <6494F283-FC28-459D-B9DE-494FC8D0CAFA@fb.com>
-References: <20191227224349.2182366-1-vijaykhemka@fb.com>
- <20191230.203442.69341487993928315.davem@davemloft.net>
-In-Reply-To: <20191230.203442.69341487993928315.davem@davemloft.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2620:10d:c090:200::2:c7d7]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 398c147b-7e82-4914-fcd4-08d78fb57455
-x-ms-traffictypediagnostic: MWHPR15MB1166:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR15MB11662112745547E686009690DD200@MWHPR15MB1166.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0270ED2845
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39860400002)(376002)(396003)(136003)(346002)(199004)(189003)(33656002)(8676002)(54906003)(8936002)(86362001)(81156014)(81166006)(6486002)(6512007)(186003)(6506007)(66946007)(2616005)(4326008)(36756003)(2906002)(76116006)(66446008)(66556008)(66476007)(5660300002)(478600001)(316002)(64756008)(4744005)(6916009)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1166;H:MWHPR15MB1597.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: qxt5YeVTn9Ce1Ky/siLMq/MsyquVvAZ0UpWh64nIjRRJPO7OJXdjlMEaNHjsP3QW14d5UZkvBi5Zvs+NQczA6qy6NeILMnEK/R0fl2GcafHbMb4q5eryvbWKavU9H9aCY+RYDqeMJm0RWs80rpHrOJ9BnNxPWOXAcANc4kL2Tm5f8nInG8QJaRaPB93l6n5oOAM1eEnMr9W4dz9G7E3u78T5yadFYiaSTrXt0EfBCYLRXMxI71LW+/hnfzIu2ZBNKC3uBuGphd/pFqWLmxiA/bp+07Z+1LvzGD4MJRGCT6c9Tkn5uqVq00Q7KrwaPAmvpA0JTKY7vegh20d5kdwXDSL9CO4GqUt2KGIEsXNkfAEtmEpzhNoEZSC4HESbDLBWOtVKnDFsNjAEpOvdVnRYZNhDhRxfemI4GYf2eGUrJaZftF9Q3mt46gU+X3GAp+Q/
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B719112A30903F44A2A457110E14A65F@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 2 Jan 2020 14:00:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727951AbgABTAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 14:00:05 -0500
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BA3B21655;
+        Thu,  2 Jan 2020 19:00:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577991604;
+        bh=wzd5vGv+NY8rW6icu7fH11OpcK8cT4C3Zrd0wOkIzG4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=g1VXVZsqZf4x8H1g5zREfvhpB4fyci+6APWXuWc/91hQHx8g6RbATDJeEGYZNolh0
+         U6ohMM39ktNKn+dN3RY6IudS2eVpMNCvS088oCfLcI4Mpqs9zmqJUfq8vD4fbeRLvo
+         Vz/SkgBhR3YtdOCK0d8DOiDZNz+CrKD75+9bHU6g=
+Date:   Thu, 2 Jan 2020 11:00:03 -0800
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [RFC PATCH v5] f2fs: support data compression
+Message-ID: <20200102190003.GA7597@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20191216062806.112361-1-yuchao0@huawei.com>
+ <20191218214619.GA20072@jaegeuk-macbookpro.roam.corp.google.com>
+ <c7035795-73b3-d832-948f-deb36213ba07@huawei.com>
+ <20191231004633.GA85441@jaegeuk-macbookpro.roam.corp.google.com>
+ <7a579223-39d4-7e51-c361-4aa592b2500d@huawei.com>
+ <20200102181832.GA1953@jaegeuk-macbookpro.roam.corp.google.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 398c147b-7e82-4914-fcd4-08d78fb57455
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jan 2020 18:56:19.8320
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7tqQs5xyVSm7PuKDhGqjMnmpOTedtZRWbcA45fpFJh9YfifOFPJIqjU1QmgSo2z4C1GnssaA/ZHLULW3cMaKbQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1166
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2020-01-02_06:2020-01-02,2020-01-02 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=777
- spamscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0
- priorityscore=1501 phishscore=0 malwarescore=0 adultscore=0 mlxscore=0
- suspectscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-2001020154
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200102181832.GA1953@jaegeuk-macbookpro.roam.corp.google.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCu+7v09uIDEyLzMwLzE5LCA4OjM0IFBNLCAiRGF2aWQgTWlsbGVyIiA8ZGF2ZW1AZGF2ZW1s
-b2Z0Lm5ldD4gd3JvdGU6DQoNCiAgICBGcm9tOiBWaWpheSBLaGVta2EgPHZpamF5a2hlbWthQGZi
-LmNvbT4NCiAgICBEYXRlOiBGcmksIDI3IERlYyAyMDE5IDE0OjQzOjQ5IC0wODAwDQogICAgDQog
-ICAgPiBnbWFfZmxhZyB3YXMgc2V0IGF0IHRoZSB0aW1lIG9mIEdNQSBjb21tYW5kIHJlcXVlc3Qg
-YnV0IGl0IHNob3VsZA0KICAgID4gb25seSBiZSBzZXQgYWZ0ZXIgZ2V0dGluZyBzdWNjZXNzZnVs
-IHJlc3BvbnNlLiBNb3Zpbm5nIHRoaXMgZmxhZw0KICAgID4gc2V0dGluZyBpbiBHTUEgcmVzcG9u
-c2UgaGFuZGxlci4NCiAgICA+IA0KICAgID4gVGhpcyBmbGFnIGlzIHVzZWQgbWFpbmx5IGZvciBu
-b3QgcmVwZWF0aW5nIEdNQSBjb21tYW5kIG9uY2UNCiAgICA+IHJlY2VpdmVkIE1BQyBhZGRyZXNz
-Lg0KICAgID4gDQogICAgPiBTaWduZWQtb2ZmLWJ5OiBWaWpheSBLaGVta2EgPHZpamF5a2hlbWth
-QGZiLmNvbT4NCiAgICANCiAgICBBcHBsaWVkLg0KVGhhbmtzIERhdmlkDQogICAgDQoNCg==
+On 01/02, Jaegeuk Kim wrote:
+> On 12/31, Chao Yu wrote:
+> > On 2019/12/31 8:46, Jaegeuk Kim wrote:
+> > > On 12/23, Chao Yu wrote:
+> > >> Hi Jaegeuk,
+> > >>
+> > >> Sorry for the delay.
+> > >>
+> > >> On 2019/12/19 5:46, Jaegeuk Kim wrote:
+> > >>> Hi Chao,
+> > >>>
+> > >>> I still see some diffs from my latest testing version, so please check anything
+> > >>> that you made additionally from here.
+> > >>>
+> > >>> https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git/commit/?h=dev&id=25d18e19a91e60837d36368ee939db13fd16dc64
+> > >>
+> > >> I've checked the diff and picked up valid parts, could you please check and
+> > >> comment on it?
+> > >>
+> > >> ---
+> > >>  fs/f2fs/compress.c |  8 ++++----
+> > >>  fs/f2fs/data.c     | 18 +++++++++++++++---
+> > >>  fs/f2fs/f2fs.h     |  3 +++
+> > >>  fs/f2fs/file.c     |  1 -
+> > >>  4 files changed, 22 insertions(+), 8 deletions(-)
+> > >>
+> > >> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+> > >> index af23ed6deffd..1bc86a54ad71 100644
+> > >> --- a/fs/f2fs/compress.c
+> > >> +++ b/fs/f2fs/compress.c
+> > >> @@ -593,7 +593,7 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
+> > >>  							fgp_flag, GFP_NOFS);
+> > >>  		if (!page) {
+> > >>  			ret = -ENOMEM;
+> > >> -			goto unlock_pages;
+> > >> +			goto release_pages;
+> > >>  		}
+> > >>
+> > >>  		if (PageUptodate(page))
+> > >> @@ -608,13 +608,13 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
+> > >>  		ret = f2fs_read_multi_pages(cc, &bio, cc->cluster_size,
+> > >>  						&last_block_in_bio, false);
+> > >>  		if (ret)
+> > >> -			goto release_pages;
+> > >> +			goto unlock_pages;
+> > >>  		if (bio)
+> > >>  			f2fs_submit_bio(sbi, bio, DATA);
+> > >>
+> > >>  		ret = f2fs_init_compress_ctx(cc);
+> > >>  		if (ret)
+> > >> -			goto release_pages;
+> > >> +			goto unlock_pages;
+> > >>  	}
+> > >>
+> > >>  	for (i = 0; i < cc->cluster_size; i++) {
+> > >> @@ -762,7 +762,7 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+> > >>  	if (err)
+> > >>  		goto out_unlock_op;
+> > >>
+> > >> -	psize = (cc->rpages[last_index]->index + 1) << PAGE_SHIFT;
+> > >> +	psize = (loff_t)(cc->rpages[last_index]->index + 1) << PAGE_SHIFT;
+> > >>
+> > >>  	err = f2fs_get_node_info(fio.sbi, dn.nid, &ni);
+> > >>  	if (err)
+> > >> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> > >> index 19cd03450066..f1f5c701228d 100644
+> > >> --- a/fs/f2fs/data.c
+> > >> +++ b/fs/f2fs/data.c
+> > >> @@ -184,13 +184,18 @@ static void f2fs_decompress_work(struct bio_post_read_ctx *ctx)
+> > >>  }
+> > >>
+> > >>  #ifdef CONFIG_F2FS_FS_COMPRESSION
+> > >> +void f2fs_verify_pages(struct page **rpages, unsigned int cluster_size)
+> > >> +{
+> > >> +	f2fs_decompress_end_io(rpages, cluster_size, false, true);
+> > >> +}
+> > >> +
+> > >>  static void f2fs_verify_bio(struct bio *bio)
+> > >>  {
+> > >>  	struct page *page = bio_first_page_all(bio);
+> > >>  	struct decompress_io_ctx *dic =
+> > >>  			(struct decompress_io_ctx *)page_private(page);
+> > >>
+> > >> -	f2fs_decompress_end_io(dic->rpages, dic->cluster_size, false, true);
+> > >> +	f2fs_verify_pages(dic->rpages, dic->cluster_size);
+> > >>  	f2fs_free_dic(dic);
+> > >>  }
+> > >>  #endif
+> > >> @@ -507,10 +512,16 @@ static bool __has_merged_page(struct bio *bio, struct inode *inode,
+> > >>  	bio_for_each_segment_all(bvec, bio, iter_all) {
+> > >>  		struct page *target = bvec->bv_page;
+> > >>
+> > >> -		if (fscrypt_is_bounce_page(target))
+> > >> +		if (fscrypt_is_bounce_page(target)) {
+> > >>  			target = fscrypt_pagecache_page(target);
+> > >> -		if (f2fs_is_compressed_page(target))
+> > >> +			if (IS_ERR(target))
+> > >> +				continue;
+> > >> +		}
+> > >> +		if (f2fs_is_compressed_page(target)) {
+> > >>  			target = f2fs_compress_control_page(target);
+> > >> +			if (IS_ERR(target))
+> > >> +				continue;
+> > >> +		}
+> > >>
+> > >>  		if (inode && inode == target->mapping->host)
+> > >>  			return true;
+> > >> @@ -2039,6 +2050,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
+> > >>  	if (ret)
+> > >>  		goto out;
+> > >>
+> > >> +	/* cluster was overwritten as normal cluster */
+> > >>  	if (dn.data_blkaddr != COMPRESS_ADDR)
+> > >>  		goto out;
+> > >>
+> > >> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> > >> index 5d55cef66410..17d2af4eeafb 100644
+> > >> --- a/fs/f2fs/f2fs.h
+> > >> +++ b/fs/f2fs/f2fs.h
+> > >> @@ -2719,6 +2719,7 @@ static inline void set_compress_context(struct inode *inode)
+> > >>  			1 << F2FS_I(inode)->i_log_cluster_size;
+> > >>  	F2FS_I(inode)->i_flags |= F2FS_COMPR_FL;
+> > >>  	set_inode_flag(inode, FI_COMPRESSED_FILE);
+> > >> +	stat_inc_compr_inode(inode);
+> > >>  }
+> > >>
+> > >>  static inline unsigned int addrs_per_inode(struct inode *inode)
+> > >> @@ -3961,6 +3962,8 @@ static inline bool f2fs_force_buffered_io(struct inode *inode,
+> > >>  		return true;
+> > >>  	if (f2fs_is_multi_device(sbi))
+> > >>  		return true;
+> > >> +	if (f2fs_compressed_file(inode))
+> > >> +		return true;
+> > >>  	/*
+> > >>  	 * for blkzoned device, fallback direct IO to buffered IO, so
+> > >>  	 * all IOs can be serialized by log-structured write.
+> > >> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> > >> index bde5612f37f5..9aeadf14413c 100644
+> > >> --- a/fs/f2fs/file.c
+> > >> +++ b/fs/f2fs/file.c
+> > >> @@ -1828,7 +1828,6 @@ static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
+> > >>  				return -EINVAL;
+> > >>
+> > >>  			set_compress_context(inode);
+> > >> -			stat_inc_compr_inode(inode);
+> > > 
+> > > As this breaks the count, I'll keep as is.
+> > 
+> > @@ -2719,6 +2719,7 @@ static inline void set_compress_context(struct inode *inode)
+> >  			1 << F2FS_I(inode)->i_log_cluster_size;
+> >  	F2FS_I(inode)->i_flags |= F2FS_COMPR_FL;
+> >  	set_inode_flag(inode, FI_COMPRESSED_FILE);
+> > +	stat_inc_compr_inode(inode);
+> > 
+> > If I'm not missing anything, stat_inc_compr_inode() should be called inside
+> > set_compress_context() in where we convert normal inode to compress one,
+> > right?
+> 
+> I don't care much whether that's right or not. If we want to do that, I found
+> another line to remove in f2fs_create(). Let me give it a try.
+> 
+> Thanks,
+> 
+
+This works to me. Could you run fsstress tests on compressed root directory?
+It seems still there are some bugs.
+
+---
+ fs/f2fs/compress.c | 14 ++++++++++----
+ fs/f2fs/data.c     | 25 ++++++++++++++++++++++---
+ fs/f2fs/f2fs.h     | 31 +++++++++++++++++--------------
+ fs/f2fs/file.c     |  1 -
+ fs/f2fs/namei.c    |  1 -
+ 5 files changed, 49 insertions(+), 23 deletions(-)
+
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index af23ed6deffd..fa67ffd9d79d 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -593,7 +593,7 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
+ 							fgp_flag, GFP_NOFS);
+ 		if (!page) {
+ 			ret = -ENOMEM;
+-			goto unlock_pages;
++			goto release_pages;
+ 		}
+ 
+ 		if (PageUptodate(page))
+@@ -608,13 +608,13 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
+ 		ret = f2fs_read_multi_pages(cc, &bio, cc->cluster_size,
+ 						&last_block_in_bio, false);
+ 		if (ret)
+-			goto release_pages;
++			goto unlock_pages;
+ 		if (bio)
+ 			f2fs_submit_bio(sbi, bio, DATA);
+ 
+ 		ret = f2fs_init_compress_ctx(cc);
+ 		if (ret)
+-			goto release_pages;
++			goto unlock_pages;
+ 	}
+ 
+ 	for (i = 0; i < cc->cluster_size; i++) {
+@@ -762,7 +762,13 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+ 	if (err)
+ 		goto out_unlock_op;
+ 
+-	psize = (cc->rpages[last_index]->index + 1) << PAGE_SHIFT;
++	for (i = 0; i < cc->cluster_size; i++) {
++		if (datablock_addr(dn.inode, dn.node_page,
++					dn.ofs_in_node + i) == NULL_ADDR)
++			goto out_put_dnode;
++	}
++
++	psize = (loff_t)(cc->rpages[last_index]->index + 1) << PAGE_SHIFT;
+ 
+ 	err = f2fs_get_node_info(fio.sbi, dn.nid, &ni);
+ 	if (err)
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 356642e8c3b3..5476d33f2d76 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -184,13 +184,18 @@ static void f2fs_decompress_work(struct bio_post_read_ctx *ctx)
+ }
+ 
+ #ifdef CONFIG_F2FS_FS_COMPRESSION
++void f2fs_verify_pages(struct page **rpages, unsigned int cluster_size)
++{
++	f2fs_decompress_end_io(rpages, cluster_size, false, true);
++}
++
+ static void f2fs_verify_bio(struct bio *bio)
+ {
+ 	struct page *page = bio_first_page_all(bio);
+ 	struct decompress_io_ctx *dic =
+ 			(struct decompress_io_ctx *)page_private(page);
+ 
+-	f2fs_decompress_end_io(dic->rpages, dic->cluster_size, false, true);
++	f2fs_verify_pages(dic->rpages, dic->cluster_size);
+ 	f2fs_free_dic(dic);
+ }
+ #endif
+@@ -520,10 +525,16 @@ static bool __has_merged_page(struct bio *bio, struct inode *inode,
+ 	bio_for_each_segment_all(bvec, bio, iter_all) {
+ 		struct page *target = bvec->bv_page;
+ 
+-		if (fscrypt_is_bounce_page(target))
++		if (fscrypt_is_bounce_page(target)) {
+ 			target = fscrypt_pagecache_page(target);
+-		if (f2fs_is_compressed_page(target))
++			if (IS_ERR(target))
++				continue;
++		}
++		if (f2fs_is_compressed_page(target)) {
+ 			target = f2fs_compress_control_page(target);
++			if (IS_ERR(target))
++				continue;
++		}
+ 
+ 		if (inode && inode == target->mapping->host)
+ 			return true;
+@@ -2049,6 +2060,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
+ 	if (ret)
+ 		goto out;
+ 
++	/* cluster was overwritten as normal cluster */
+ 	if (dn.data_blkaddr != COMPRESS_ADDR)
+ 		goto out;
+ 
+@@ -2694,12 +2706,16 @@ static int f2fs_write_data_page(struct page *page,
+ #ifdef CONFIG_F2FS_FS_COMPRESSION
+ 	struct inode *inode = page->mapping->host;
+ 
++	if (unlikely(f2fs_cp_error(F2FS_I_SB(inode))))
++		goto out;
++
+ 	if (f2fs_compressed_file(inode)) {
+ 		if (f2fs_is_compressed_cluster(inode, page->index)) {
+ 			redirty_page_for_writepage(wbc, page);
+ 			return AOP_WRITEPAGE_ACTIVATE;
+ 		}
+ 	}
++out:
+ #endif
+ 
+ 	return f2fs_write_single_data_page(page, NULL, NULL, NULL,
+@@ -2809,6 +2825,9 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
+ 					goto result;
+ 				}
+ 
++				if (unlikely(f2fs_cp_error(sbi)))
++					goto lock_page;
++
+ 				if (f2fs_cluster_is_empty(&cc)) {
+ 					void *fsdata = NULL;
+ 					struct page *pagep;
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index de494fc9d596..a95369e32876 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2707,20 +2707,6 @@ static inline int f2fs_compressed_file(struct inode *inode)
+ 		is_inode_flag_set(inode, FI_COMPRESSED_FILE);
+ }
+ 
+-static inline void set_compress_context(struct inode *inode)
+-{
+-	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+-
+-	F2FS_I(inode)->i_compress_algorithm =
+-			F2FS_OPTION(sbi).compress_algorithm;
+-	F2FS_I(inode)->i_log_cluster_size =
+-			F2FS_OPTION(sbi).compress_log_size;
+-	F2FS_I(inode)->i_cluster_size =
+-			1 << F2FS_I(inode)->i_log_cluster_size;
+-	F2FS_I(inode)->i_flags |= F2FS_COMPR_FL;
+-	set_inode_flag(inode, FI_COMPRESSED_FILE);
+-}
+-
+ static inline unsigned int addrs_per_inode(struct inode *inode)
+ {
+ 	unsigned int addrs = CUR_ADDRS_PER_INODE(inode) -
+@@ -3808,6 +3794,21 @@ static inline struct page *f2fs_compress_control_page(struct page *page)
+ }
+ #endif
+ 
++static inline void set_compress_context(struct inode *inode)
++{
++	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
++
++	F2FS_I(inode)->i_compress_algorithm =
++			F2FS_OPTION(sbi).compress_algorithm;
++	F2FS_I(inode)->i_log_cluster_size =
++			F2FS_OPTION(sbi).compress_log_size;
++	F2FS_I(inode)->i_cluster_size =
++			1 << F2FS_I(inode)->i_log_cluster_size;
++	F2FS_I(inode)->i_flags |= F2FS_COMPR_FL;
++	set_inode_flag(inode, FI_COMPRESSED_FILE);
++	stat_inc_compr_inode(inode);
++}
++
+ static inline u64 f2fs_disable_compressed_file(struct inode *inode)
+ {
+ 	struct f2fs_inode_info *fi = F2FS_I(inode);
+@@ -3963,6 +3964,8 @@ static inline bool f2fs_force_buffered_io(struct inode *inode,
+ 		return true;
+ 	if (f2fs_is_multi_device(sbi))
+ 		return true;
++	if (f2fs_compressed_file(inode))
++		return true;
+ 	/*
+ 	 * for blkzoned device, fallback direct IO to buffered IO, so
+ 	 * all IOs can be serialized by log-structured write.
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index f66c4cd067f5..cd84b3d9aa17 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -1831,7 +1831,6 @@ static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
+ 				return -EINVAL;
+ 
+ 			set_compress_context(inode);
+-			stat_inc_compr_inode(inode);
+ 		}
+ 	}
+ 	if ((iflags ^ fi->i_flags) & F2FS_NOCOMP_FL) {
+diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
+index cf3a286106ed..2aa035422c0f 100644
+--- a/fs/f2fs/namei.c
++++ b/fs/f2fs/namei.c
+@@ -348,7 +348,6 @@ static int f2fs_create(struct inode *dir, struct dentry *dentry, umode_t mode,
+ 		goto out;
+ 	f2fs_unlock_op(sbi);
+ 
+-	stat_inc_compr_inode(inode);
+ 	f2fs_alloc_nid_done(sbi, ino);
+ 
+ 	d_instantiate_new(dentry, inode);
+-- 
+2.24.0.525.g8f36a354ae-goog
+
