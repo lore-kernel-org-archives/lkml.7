@@ -8,138 +8,120 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B5EC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FFFC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC86F2072C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3FF021734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:58:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p/DlE16f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uPEKQrBN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbgABMxm (ORCPT
+        id S1728329AbgABM6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 07:53:42 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35504 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728297AbgABMxm (ORCPT
+        Thu, 2 Jan 2020 07:58:34 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40418 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728278AbgABM6e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 07:53:42 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so5570262wmb.0;
-        Thu, 02 Jan 2020 04:53:41 -0800 (PST)
+        Thu, 2 Jan 2020 07:58:34 -0500
+Received: by mail-wr1-f67.google.com with SMTP id c14so39119433wrn.7;
+        Thu, 02 Jan 2020 04:58:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=YwBwOFr2GTeVQt8tImFqrPLqlCxuVqOvF8sYlUHm2+Q=;
-        b=p/DlE16fJVziot3niZucLMnORocGMIL+ZirYo/4YUbuvBiIHVKkOJ7EhWFE69ABIKg
-         YGL50ANCbvnvq7e7Gg0PPE317Rg0EbHIMf0ixGjyYiJwPvrTNG67j1Jnc26jbJXSy0lA
-         6dGRJqi9Zot5iEumK8FfUA6Yw8xC3qg5wtaCsX5h+eLYorKl9N9uj3WwlqkewAJ10bSh
-         YDvZYvTDbBuN638FKFp6SFxud4Z3bWjvECswQVN6+8Y/j77JR4T0l3LJZIJzWCE52VXP
-         Nbgo6UDmfXtCAQe+UIjBy5iRcmvSPxSPZfo8BwP96A4Vm9dwTmbOOIQuovylwZJJGc8I
-         U1EQ==
+        bh=42ZkJ1/HkGSp5JEAa8sLLmu5GQJaZejYjvN6y481Vvk=;
+        b=uPEKQrBNQJahhicTSehio5Xpx5wW6bXGv7UxESVKj15uxLNUoLhRUlqhMkKIP46/U3
+         sYypGMdgqchLktk3DELlvWoTndFXC4mlikcLUKgKBrJN21NjkdGrOL6fQp/CYzBxz3I7
+         jKN+X8Horvpuj7Ccq4B0XLHRnSLV/glwcmyKnFg0z7QSWXXpTOCetFiLLLP0f+V8Wd/V
+         /tJHafUJsQJ3L3vW/oG43fO5Xb3CbtSWYxsPfEN4i/pHJUfMtokosCEuZ1j9CyZMOi1B
+         ogVC8HhpwapvQllEc9Svkh1DS2MMfWizyb8wxaiPGg9ilUFCwY1kOzeV4D6tmZ92rpIA
+         KAFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=YwBwOFr2GTeVQt8tImFqrPLqlCxuVqOvF8sYlUHm2+Q=;
-        b=caadJEaAo/OKZw2YdVKIIpgUckA68aRq2VEmzg0MK1fpKYNr9qjVBvAKkCr/ViL3g8
-         0tHpSN8zbNM3vrjMbCTbRqxKmKTIGINtLaadAm4GKUcs62BvKf+op7kQ3GQGwktwN8Z5
-         9N4JsJkKaif/U5ZVGMJx+9HjyBHw5AQoCfm4ZhDnjAkGiCn/MshVLUNPcWVUpidRY20i
-         AbVkrq4IMvmsn2c2qSxoP+77zPvrJsrm4Z/FrcNfsfG9zyys41veLjkvhl+4tmg6didj
-         Y2xPG3Uc3jbN+fm5CwuWcETs/ToJ31KJD0bTJGpLcslfaXu0vG/egitnmaOJ7HU6zjNb
-         f7KQ==
-X-Gm-Message-State: APjAAAWlZKGuzIW5AaHJ0FfGYnCRQpmki7XMDp4LiUuJGR8ZvbHQ2hU7
-        KehS7i69rBkmmAqZWa7nV6w=
-X-Google-Smtp-Source: APXvYqz+dvHUrW9CNP28JElRU2HRzVrtAusa1wqO20Yf+ipAm5KyW+ec/KZa5sNIXWt8dEw0UFinXA==
-X-Received: by 2002:a1c:1b41:: with SMTP id b62mr14098075wmb.53.1577969620616;
-        Thu, 02 Jan 2020 04:53:40 -0800 (PST)
+        bh=42ZkJ1/HkGSp5JEAa8sLLmu5GQJaZejYjvN6y481Vvk=;
+        b=JcjnGzOpDvWP2aQLNBQzSZhNmCULtckOYVrCjtID/nw/hXnVG8km4iL0K7O4hmszVL
+         QZ5e3HotZgsngAUIg84+FTZoCMx+v6ko0togdPMjiWEXU7QXzVNh9q5Z4cveqocv1IL8
+         DNNmg6xuWkbz+HyLDLhKqntBaUwyfEc+OGSUKgwj81SJdZnrWewMXQfM5eemZ766JXyQ
+         FZbJ8f6RAGIyGcvLM3HQo5nc7R+NmrYYmfZrw97qoCdRdAEf11XHc6zGHcehX3LCTAVL
+         oGpp0w4qBWszRJtzkWgx7YUAROk34WyImXXWBiVoidZGjW0APjm+vhe7GFamWh5ZNb3h
+         5KMQ==
+X-Gm-Message-State: APjAAAVYv8xqdIT8Yqbkt8q/D04u1G5PojvthUkG6RxaQBz5kJ/iXhMk
+        tRwamg6fGvMSSbEVZFvV15I=
+X-Google-Smtp-Source: APXvYqzWhhp+shL8VGy4yNyc8NoX5E7wN3rF8KQHlMLauv8mOQfjfGpyH/0DTQX0fXluFWcqOC024A==
+X-Received: by 2002:adf:eb89:: with SMTP id t9mr83746667wrn.5.1577969911891;
+        Thu, 02 Jan 2020 04:58:31 -0800 (PST)
 Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id d8sm57064112wre.13.2020.01.02.04.53.39
+        by smtp.gmail.com with ESMTPSA id p18sm8438385wmb.8.2020.01.02.04.58.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 04:53:39 -0800 (PST)
-Date:   Thu, 2 Jan 2020 13:53:38 +0100
+        Thu, 02 Jan 2020 04:58:31 -0800 (PST)
+Date:   Thu, 2 Jan 2020 13:58:30 +0100
 From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
 To:     Namjae Jeon <namjae.jeon@samsung.com>
 Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
         sj1557.seo@samsung.com, linkinjeon@gmail.com
-Subject: Re: [PATCH v9 11/13] exfat: add Kconfig and Makefile
-Message-ID: <20200102125338.pf3aw62qtnch5oqa@pali>
+Subject: Re: [PATCH v9 12/13] exfat: add exfat in fs/Kconfig and fs/Makefile
+Message-ID: <20200102125830.z2uz673dlsdttjvo@pali>
 References: <20200102082036.29643-1-namjae.jeon@samsung.com>
- <CGME20200102082408epcas1p28d46af675103d2cd92232a4f7b712c46@epcas1p2.samsung.com>
- <20200102082036.29643-12-namjae.jeon@samsung.com>
+ <CGME20200102082408epcas1p194621a6aa6729011703f0c5a076a7396@epcas1p1.samsung.com>
+ <20200102082036.29643-13-namjae.jeon@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200102082036.29643-12-namjae.jeon@samsung.com>
+In-Reply-To: <20200102082036.29643-13-namjae.jeon@samsung.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 02 January 2020 16:20:34 Namjae Jeon wrote:
-> This adds the Kconfig and Makefile for exfat.
+On Thursday 02 January 2020 16:20:35 Namjae Jeon wrote:
+> Add exfat in fs/Kconfig and fs/Makefile.
 > 
 > Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
 > Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
 > ---
->  fs/exfat/Kconfig  | 21 +++++++++++++++++++++
->  fs/exfat/Makefile |  8 ++++++++
->  2 files changed, 29 insertions(+)
->  create mode 100644 fs/exfat/Kconfig
->  create mode 100644 fs/exfat/Makefile
+>  fs/Kconfig  | 3 ++-
+>  fs/Makefile | 1 +
+>  2 files changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/fs/exfat/Kconfig b/fs/exfat/Kconfig
-> new file mode 100644
-> index 000000000000..11d841a5f7f0
-> --- /dev/null
-> +++ b/fs/exfat/Kconfig
-> @@ -0,0 +1,21 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +
-> +config EXFAT
-> +	tristate "exFAT filesystem support"
-> +	select NLS
-> +	help
-> +	  This allows you to mount devices formatted with the exFAT file system.
-> +	  exFAT is typically used on SD-Cards or USB sticks.
-> +
-> +	  To compile this as a module, choose M here: the module will be called
-> +	  exfat.
-> +
-> +config EXFAT_FS_DEFAULT_IOCHARSET
-> +	string "Default iocharset for exFAT"
-> +	default "utf8"
-> +	depends on EXFAT
-> +	help
+> diff --git a/fs/Kconfig b/fs/Kconfig
+> index 7b623e9fc1b0..5edd87eb5c13 100644
+> --- a/fs/Kconfig
+> +++ b/fs/Kconfig
+> @@ -139,9 +139,10 @@ endmenu
+>  endif # BLOCK
+>  
+>  if BLOCK
+> -menu "DOS/FAT/NT Filesystems"
+> +menu "DOS/FAT/EXFAT/NT Filesystems"
+>  
+>  source "fs/fat/Kconfig"
+> +source "fs/exfat/Kconfig"
+>  source "fs/ntfs/Kconfig"
+>  
+>  endmenu
+> diff --git a/fs/Makefile b/fs/Makefile
+> index 98be354fdb61..2c7ea7e0a95b 100644
+> --- a/fs/Makefile
+> +++ b/fs/Makefile
+> @@ -83,6 +83,7 @@ obj-$(CONFIG_HUGETLBFS)		+= hugetlbfs/
+>  obj-$(CONFIG_CODA_FS)		+= coda/
+>  obj-$(CONFIG_MINIX_FS)		+= minix/
+>  obj-$(CONFIG_FAT_FS)		+= fat/
+> +obj-$(CONFIG_EXFAT)		+= exfat/
+>  obj-$(CONFIG_BFS_FS)		+= bfs/
+>  obj-$(CONFIG_ISO9660_FS)	+= isofs/
+>  obj-$(CONFIG_HFSPLUS_FS)	+= hfsplus/ # Before hfs to find wrapped HFS+
 
-Hello! We have already config option FAT_DEFAULT_IOCHARSET. Cannot it be
-reused? FAT_DEFAULT_IOCHARSET is used for msdos.ko and vfat.ko, both are
-from FAT drivers family. So it looks like that FAT_DEFAULT_IOCHARSET
-could be used also for exFAT which belongs to FAT fs family.
-
-> +	  Set this to the default input/output character set you'd
-> +	  like exFAT to use. It should probably match the character set
-> +	  that most of your exFAT filesystems use, and can be overridden
-> +	  with the "iocharset" mount option for exFAT filesystems.
-> diff --git a/fs/exfat/Makefile b/fs/exfat/Makefile
-> new file mode 100644
-> index 000000000000..e9193346c80c
-> --- /dev/null
-> +++ b/fs/exfat/Makefile
-> @@ -0,0 +1,8 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +#
-> +# Makefile for the linux exFAT filesystem support.
-> +#
-> +obj-$(CONFIG_EXFAT) += exfat.o
-> +
-> +exfat-y	:= inode.o namei.o dir.o super.o fatent.o cache.o nls.o misc.o \
-> +	   file.o balloc.o
+Seems that all filesystems have _FS suffix in their config names. So
+should not have exfat config also same convention? CONFIG_EXFAT_FS?
 
 -- 
 Pali Rohár
