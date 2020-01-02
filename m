@@ -2,196 +2,89 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65521C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38288C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46A1B20863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0389D20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:28:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbgABN0y (ORCPT
+        id S1728409AbgABN2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 08:26:54 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:55851 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728341AbgABN0w (ORCPT
+        Thu, 2 Jan 2020 08:28:51 -0500
+Received: from s3.sipsolutions.net ([144.76.43.62]:57490 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728323AbgABN2u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 08:26:52 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 02 Jan 2020 18:55:47 +0530
-Received: from dikshita-linux.qualcomm.com ([10.204.65.237])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 02 Jan 2020 18:55:36 +0530
-Received: by dikshita-linux.qualcomm.com (Postfix, from userid 347544)
-        id 24B4434E1; Thu,  2 Jan 2020 18:55:35 +0530 (IST)
-From:   Dikshita Agarwal <dikshita@codeaurora.org>
-To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, vgarodia@codeaurora.org,
-        Dikshita Agarwal <dikshita@codeaurora.org>
-Subject: [PATCH V3 2/4] dt-bindings: media: venus: Add sc7180 DT schema
-Date:   Thu,  2 Jan 2020 18:54:59 +0530
-Message-Id: <1577971501-3732-3-git-send-email-dikshita@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1577971501-3732-1-git-send-email-dikshita@codeaurora.org>
-References: <1577971501-3732-1-git-send-email-dikshita@codeaurora.org>
+        Thu, 2 Jan 2020 08:28:50 -0500
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.92.3)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1in0Wl-005R8Q-C2; Thu, 02 Jan 2020 14:28:39 +0100
+Message-ID: <1762437703fd150bb535ee488c78c830f107a531.camel@sipsolutions.net>
+Subject: Re: PROBLEM: Wireless networking goes down on Acer C720P Chromebook
+ (bisected)
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Stephen Oberholtzer <stevie@qrpff.net>, toke@redhat.com
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 02 Jan 2020 14:28:35 +0100
+In-Reply-To: <CAD_xR9eDL+9jzjYxPXJjS7U58ypCPWHYzrk0C3_vt-w26FZeAQ@mail.gmail.com> (sfid-20200101_015805_066597_5A8428D1)
+References: <CAD_xR9eDL+9jzjYxPXJjS7U58ypCPWHYzrk0C3_vt-w26FZeAQ@mail.gmail.com>
+         (sfid-20200101_015805_066597_5A8428D1)
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new qcom,sc7180-venus DT binding schema.
+On Tue, 2019-12-31 at 19:49 -0500, Stephen Oberholtzer wrote:
+> Wireless networking goes down on Acer C720P Chromebook (bisected)
+> 
+> Culprit: 7a89233a ("mac80211: Use Airtime-based Queue Limits (AQL) on
+> packet dequeue")
+> 
+> I found that the newest kernel (5.4) displayed a curious issue on my
+> Acer C720P Chromebook: shortly after bringing networking up, all
+> connections would suddenly fail.  I discovered that I could
+> consistently reproduce the issue by ssh'ing into the machine and
+> running 'dmesg' -- on a non-working kernel; I would get partial
+> output, and then the connection would completely hang. This was so
+> consistent, in fact, that I was able to leverage it to automate the
+> process from 'git bisect run'.
+> 
+> KEYWORDS: c720p, chromebook, wireless, networking, mac80211
+> 
+> KERNEL: any kernel containing commit 7a89233a ("mac80211: Use
+> Airtime-based Queue Limits (AQL) on packet dequeue")
+> 
+> I find this bit in the offending commit's message suspicious:
+> 
+> > This patch does *not* include any mechanism to wake a throttled TXQ again,
+> > on the assumption that this will happen anyway as a side effect of whatever
+> >  freed the skb (most commonly a TX completion).
+> 
+> Methinks this assumption is not a fully valid one.
 
-Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
----
- .../bindings/media/qcom,venus-sc7180.yaml          | 136 +++++++++++++++++++++
- 1 file changed, 136 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/qcom,venus-sc7180.yaml
+I think I found at least one hole in this, but IIRC (it was before my
+vacation, sorry) it was pretty unlikely to actually happen. Perhaps
+there are more though.
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,venus-sc7180.yaml b/Documentation/devicetree/bindings/media/qcom,venus-sc7180.yaml
-new file mode 100644
-index 0000000..b78952c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/qcom,venus-sc7180.yaml
-@@ -0,0 +1,136 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/media/qcom,venus-sc7180.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Qualcomm Venus video encode and decode accelerators
-+
-+maintainers:
-+  - Stanimir Varbanov <stanimir.varbanov@linaro.org>
-+
-+description: |
-+  The Venus IP is a video encode and decode accelerator present
-+  on Qualcomm platforms
-+
-+properties:
-+  compatible:
-+    const: "qcom,sc7180-venus"
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  power-domains:
-+    maxItems: 2
-+
-+  power-domain-names:
-+    maxItems: 2
-+    items:
-+      - const: venus
-+      - const: vcodec0
-+
-+  clocks:
-+    maxItems: 5
-+
-+  clock-names:
-+    items:
-+      - const: core
-+      - const: iface
-+      - const: bus
-+      - const: vcodec0_core
-+      - const: vcodec0_bus
-+
-+  iommus:
-+    minItems: 1
-+    maxItems: 20
-+
-+  memory-region:
-+    maxItems: 1
-+
-+  video-core0:
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: "venus-decoder"
-+
-+    required:
-+      - compatible
-+
-+    additionalProperties: false
-+
-+  video-core1:
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: "venus-encoder"
-+
-+    required:
-+      - compatible
-+
-+    additionalProperties: false
-+
-+  video-firmware:
-+    type: object
-+
-+    description: |
-+      Firmware subnode is needed when the platform does not
-+      have TrustZone.
-+
-+    properties:
-+      iommus:
-+        minItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - power-domains
-+  - power-domain-names
-+  - clocks
-+  - clock-names
-+  - iommus
-+  - memory-region
-+  - video-core0
-+  - video-core1
-+
-+examples:
-+  - |
-+        #include <dt-bindings/interrupt-controller/arm-gic.h>
-+        #include <dt-bindings/clock/qcom,videocc-sc7180.h>
-+
-+		venus: video-codec@aa00000 {
-+			compatible = "qcom,sc7180-venus";
-+			reg = <0 0x0aa00000 0 0xff000>;
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+			power-domains = <&videocc VENUS_GDSC>,
-+					<&videocc VCODEC0_GDSC>;
-+			power-domain-names = "venus", "vcodec0";
-+			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
-+				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
-+				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
-+				 <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
-+				 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
-+			clock-names = "core", "iface", "bus",
-+				"vcodec0_core", "vcodec0_bus";
-+			iommus = <&apps_smmu 0x0c00 0x60>;
-+			memory-region = <&venus_mem>;
-+
-+			interconnects = <&mmss_noc MASTER_VIDEO_P0 &mc_virt SLAVE_EBI1>,
-+					<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_VENUS_CFG>;
-+			interconnect-names = "video-mem", "cpu-cfg";
-+
-+			video-core0 {
-+				compatible = "venus-decoder";
-+			};
-+
-+			video-core1 {
-+				compatible = "venus-encoder";
-+			};
-+
-+		};
--- 
-1.9.1
+https://lore.kernel.org/r/b14519e81b6d2335bd0cb7dcf074f0d1a4eec707.camel@sipsolutions.net
+
+
+> I'll be happy to test any patches. If you need some printk calls, just
+> tell me where to put 'em.
+
+Do you get any output at all? Like a WARN_ON() for an underflow, or
+something?
+
+johannes
 
