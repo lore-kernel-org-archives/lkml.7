@@ -2,82 +2,86 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B65C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF5FC2D0DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A82DA21655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63E92053B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:55:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NGnPh4TF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbgABGvl (ORCPT
+        id S1727642AbgABGzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 01:51:41 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:54962 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbgABGvk (ORCPT
+        Thu, 2 Jan 2020 01:55:51 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21503 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726078AbgABGzv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 01:51:40 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-91-5e0d92faa440
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 0A.D9.08102.AF29D0E5; Thu,  2 Jan 2020 07:51:38 +0100 (CET)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Thu, 2 Jan 2020 07:51:34 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "axel.lin@ingics.com" <axel.lin@ingics.com>
-CC:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] regulator: bd70528: Remove .set_ramp_delay for
- bd70528_ldo_ops
-Thread-Topic: [PATCH] regulator: bd70528: Remove .set_ramp_delay for
- bd70528_ldo_ops
-Thread-Index: AQHVwEqUU274yDAdXUmbzUTRoKdhqafW384AgAAAngCAAABjgA==
-Date:   Thu, 2 Jan 2020 06:51:33 +0000
-Message-ID: <6ff5a32a00d62ba4c35e61de0e04c2dbcad27fab.camel@fi.rohmeurope.com>
-References: <20200101022406.15176-1-axel.lin@ingics.com>
-         <356b68fe844846c7fa1e6b7cefae93220508e4b0.camel@fi.rohmeurope.com>
-         <CAFRkauBs6QPUrco+aNaXXE0vd_0GXyXTWz0qRxNkKsH7a4f9Rg@mail.gmail.com>
-In-Reply-To: <CAFRkauBs6QPUrco+aNaXXE0vd_0GXyXTWz0qRxNkKsH7a4f9Rg@mail.gmail.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DB0E9C1694E8E843B7501C0FC7656BF8@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Thu, 2 Jan 2020 01:55:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577948150;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HFnrFbEd7Usrj70sMvjy0ZqsMPetc5P0NiNISsY2Z5c=;
+        b=NGnPh4TFZ/xjFyE1bH0mWG23JOiGJGsDvLyP5fnc8o8sIHMJy8vjChiMUB3LsUIWR+rrO0
+        6O/Re9KIJds+sa+X+i4iXhj7M3aJkfcimu0yz+rojiHn3ot6nLMKLEcitNQEdkYcDcqYGt
+        3uPGz2x+qaXfz2vXPlxqTv3miIPQ+r4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-325-K48g7XQBOhe_rNJWIKkHdA-1; Thu, 02 Jan 2020 01:55:49 -0500
+X-MC-Unique: K48g7XQBOhe_rNJWIKkHdA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9B1E2801E76;
+        Thu,  2 Jan 2020 06:55:47 +0000 (UTC)
+Received: from [10.72.12.230] (ovpn-12-230.pek2.redhat.com [10.72.12.230])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5D6D519C5B;
+        Thu,  2 Jan 2020 06:55:33 +0000 (UTC)
+Subject: Re: [PATCH v1 0/2] support virtio mmio specification Version 3
+To:     Zha Bin <zhabin@linux.alibaba.com>, linux-kernel@vger.kernel.org
+Cc:     mst@redhat.com, slp@redhat.com, virtio-dev@lists.oasis-open.org,
+        gerry@linux.alibaba.com, jing2.liu@intel.com, chao.p.peng@intel.com
+References: <cover.1577240905.git.zhabin@linux.alibaba.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <6143fb9b-ad2e-a771-f7a2-91bd9f1b7873@redhat.com>
+Date:   Thu, 2 Jan 2020 14:55:27 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SfUgTYRjn3d22182Lc9N8XfY1IulDl2GwwkKEwiAisUSE1NOdbjS3dftI
-        I0gIrC3KDxJtaqUzNUOToaGWJks0TUipjAyhoQkK6R+Zpn3Y3U6df93vnt/XA+8DMdl3oQLq
-        DBaaMVB6pUiC9zb+dkeulBJphwYaYtR9VT8xdZl3SqRe/HBLoH7fVSWKwxM6nRPihMJlW4K7
-        yS5K+OHecQ5PlcZmUhZbki7HoDqRIdW+aJ8RmfqEea7JsALQKnSAAIjIGDQ05BE4gATKyI8A
-        PS0bxfmfAYBcjStiB4BQRMYix2cxZwgmVahieFDMaTCyGqDmkVFfkpy8gCYqP2G8KBl5nr8G
-        PI5HFT3dAg7j5B70q8jtmxPkWTQ/XYfxZf0AuTsmRRwRQCYie8W4DwNyO7IXzPnMGBmK3NNL
-        a2uTqO7lO4zHIWhm8t/aXIm6l704tzRG7kPPulQ8jENPyrR8ym5077ZXzK8QhAbvT+HFYKtz
-        U4HTb3b6zc5NZucm8yMgbAIol9LpcygLHR3F0NYoxqjNZT9Zxlw34J9voQOsek57gAACDwiD
-        AmUI0RgnSZNtyTRq8rWUWZvOWPW02QMQxJTBxJVEIk1GaKj8qzRjXKe2QVwZSkR4Sy7KSK7r
-        Ek2baGadDYdQiYj5O6wxiKFz6Lxsnd7ipwUwgAuXKILNtEFDM5TVok3nriPdzJ4HRwWyveUl
-        XK/ZROWyU946BA7A4pnqWgz2VT+uxWS4wWigFaFETzErJTmp1mrYKJoFoRAo5QTkggLZG97I
-        mWUrBGzF0t8ArsJC+SlFATif/8d1pL5bbla16ecamC+G5Iyx4RrPqZTCqYH49uLY+bNk8Hh4
-        tPrr6lTNwtHhuw17nfXXk771SDsHhdmRlf31mc0rWeUni1ZLbakpLWMxpRnt9pYHWTdchx/a
-        UivepvZOv5JGvInt2+XQHLs5slOiOojOHF+8drltqNWRxshNStyspaL3Y4yZ+g89n4xwgAMA
-        AA==
+In-Reply-To: <cover.1577240905.git.zhabin@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBUaHUsIDIwMjAtMDEtMDIgYXQgMTQ6NTAgKzA4MDAsIEF4ZWwgTGluIHdyb3RlOg0KPiBW
-YWl0dGluZW4sIE1hdHRpIDxNYXR0aS5WYWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20+IOaWvCAy
-MDIw5bm0MeaciDLml6Ug6YCx5ZubDQo+IOS4i+WNiDI6NDjlr6vpgZPvvJoNCj4gPiBIZWxsbyBB
-eGVsLA0KPiA+IA0KPiA+IE9uIFdlZCwgMjAyMC0wMS0wMSBhdCAxMDoyNCArMDgwMCwgQXhlbCBM
-aW4gd3JvdGU6DQo+ID4gPiBUaGUgLnNldF9yYW1wX2RlbGF5IHNob3VsZCBiZSBmb3IgYmQ3MDUy
-OF9idWNrX29wcyBvbmx5Lg0KPiA+IEluZGVlZCEgT25seSB0aGUgYnVja3Mgb24gQkQ3MDUyOCBj
-YW4gY2hhbmdlIHRoZSByYW1wLWRlbGF5LiBUaGFuaw0KPiA+IHlvdQ0KPiA+IGZvciBmaXhpbmcg
-dGhpcyEgTWF5IEkgYXNrLCBob3cgZGlkIHlvdSBub3RpY2UgdGhpcyBwcm9sZW0/DQo+IEkganVz
-dCByZWFkIHRoZSBjb2RlLg0KDQpJbXByZXNzaXZlIDopIFRoYW5rcyBhZ2FpbiENCg0KLS1NYXR0
-aQ0K
+
+On 2019/12/25 =E4=B8=8A=E5=8D=8810:50, Zha Bin wrote:
+> With the virtio spec proposal[1], other VMMs (e.g. Qemu) can also make =
+use
+> of the new features to get a enhancing performance.
+>
+> [1]https://lkml.org/lkml/2019/12/20/113
+>
+> Liu Jiang (2):
+>    x86/msi: Enhance x86 to support platform_msi
+>    virtio-mmio: add features for virtio-mmio specification version 3
+
+
+Btw, for next version I suggest to copy both kvm-devel list and=20
+qemu-devel list.
+
+Thanks
+
+
