@@ -2,86 +2,116 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0D0C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB61FC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D307722525
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81CBF206DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:54:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tronnes.org header.i=@tronnes.org header.b="FizrheWO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BWwaYA6v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbgABOwt (ORCPT
+        id S1728574AbgABOyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 09:52:49 -0500
-Received: from smtp.domeneshop.no ([194.63.252.55]:39335 "EHLO
-        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728528AbgABOwt (ORCPT
+        Thu, 2 Jan 2020 09:54:44 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:34092 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728551AbgABOyn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 09:52:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
-        ; s=ds201912; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=OAnAY2vaA2S1dqxbsSKJAdvKdXR2aLsZd3RWqY191tg=; b=FizrheWOtuPgPxIwSY3pmaukdy
-        qcfrcCXhyJ6PVkypQHNu5mFvM7XrDvPEzrrRKiP03hLsAO4G2L1HMc04Cs+33YWU69ig1HQEq7GYE
-        VgAE5hlIs5s8Bb8B/SejLyUKV9MSeAKRNv9ip9q67BqI4tJ1kitg6OfFn91jLhphnhaAwjApOmuLc
-        QY8lCXBNPPyLLstZX7rFpVPgvJHZMfZXrTF1X1uJQ2bhns7A9fXy+RNa0g/SPaBTyaREIBafz/D0v
-        WPZceY2kEttZHY9NJvwcmHtHspH8Z+nSnudItDpyH92lAGSCTWE4ujempd9WWAn+juyKvfcmVH8C9
-        aDSiBFUQ==;
-Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:57723 helo=[192.168.10.61])
-        by smtp.domeneshop.no with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <noralf@tronnes.org>)
-        id 1in1qA-0005O0-Jf; Thu, 02 Jan 2020 15:52:46 +0100
-Subject: Re: [PATCH] drm/mipi_dbi: Fix off-by-one bugs in mipi_dbi_blank()
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Thierry Reding <treding@nvidia.com>,
-        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191230130604.31006-1-geert+renesas@glider.be>
-From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Message-ID: <4702e72d-b452-2f87-6c5c-f46321eb071a@tronnes.org>
-Date:   Thu, 2 Jan 2020 15:52:40 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 2 Jan 2020 09:54:43 -0500
+Received: by mail-pj1-f68.google.com with SMTP id s94so2072617pjc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 06:54:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VtDUTQjwQa4iJtNbmp2oh8w540jx+9fBWmE0OFJWN5s=;
+        b=BWwaYA6vNRkCdYaWQy6Xo1X1nAgYmYYaM7X09iTP5li6SWvSHs5nZvbJsVKpQvMHtf
+         zdojI0OK6raZEtT6w9mR+8Iv9LXNaDdjuqH+91QIsfVVe4MvXLCFAurL+c7CCjzyENzQ
+         kwzjzxbnG8sqoqAZ914QuEGjIGupcxixZHb9tgEYMcr6CiV6QCbTwgQbluB/1DdDAksf
+         OCqWkgsX6l21elKxZdelw+vznZzdX4Cr6nfppWMGyohTlMS4ijaU1KN9VwnRizKqOgU/
+         rh07FXy3kdW819H5vP4skfEhulDJhhdsrEt/19qEEVo1mx67TB66sZsNrrdwPSRFcQPf
+         z9WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VtDUTQjwQa4iJtNbmp2oh8w540jx+9fBWmE0OFJWN5s=;
+        b=VhcVYH0/Cv8TjeLHTeb9CQ6wMkqzlymJ0jR10gobqWPPLbTvXpAum7ij/kacGRMsPC
+         X/mWj2RTZd8QqdHRQ5dg/Kb+4+v3bAntgzquYA9ZA1GsCB21wHQjKs8G59JgjxC4HVht
+         JadXBMhLTGf+Fa+m67vIEUlwDNge0wSUraOM6IrUItdAyxViTf/14VYCxfhKwYBw8Owf
+         ferMCnGmgrdE4SgECrss4h/ho6DyoOFhzwgVNezjygqHUw079yE1BcFJrV+yW2fwU59+
+         qgOkKvSNEA/rqzBX3HJdi2NzHkeFujr5zt2QPq+RN8wfj/TMbRLa/89jrVXVRsNSi9oX
+         JrdQ==
+X-Gm-Message-State: APjAAAWa3bRoqHWaVXp2zT1V13JrbS1gb0rxghQeMIMXmodhzGj+3AN5
+        csfyl8k7oJAE0dfG6k4sLEkunzQ5iIktwA==
+X-Google-Smtp-Source: APXvYqx/t9weau/82TBMzffkI1Rt4tlViNW0WGABJ+oSXsGqWDmmqCdMRwpjK0DHHZU1ry16gVuZxg==
+X-Received: by 2002:a17:902:bf49:: with SMTP id u9mr32469865pls.199.1577976880635;
+        Thu, 02 Jan 2020 06:54:40 -0800 (PST)
+Received: from localhost ([103.195.202.148])
+        by smtp.gmail.com with ESMTPSA id q25sm65113198pfg.41.2020.01.02.06.54.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 06:54:40 -0800 (PST)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, swboyd@chromium.org,
+        sivaa@codeaurora.org, Andy Gross <agross@kernel.org>
+Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH v3 0/9] thermal: tsens: Handle critical interrupts
+Date:   Thu,  2 Jan 2020 20:24:25 +0530
+Message-Id: <cover.1577976221.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191230130604.31006-1-geert+renesas@glider.be>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+TSENS IP v2.x supports critical interrupts and v2.3+ adds watchdog support
+in case the FSM is stuck. Enable support in the driver.
+
+This series was generated on top of linux-next from 20191202 to capture
+const changes for msm8976 that is queued currently.
+
+Changes from v2:
+- Handle old DTBs w/o critical irq in the same way as fix sent for 5.5
+
+Changes from v1:
+- Make tsens_features non-const to allow run time detection of features
+- Pass tsens_sensor around as a const
+- Fix a bug to release dev pointer in success path
+- Address review comments from Bjorn and Stephen (thanks for the review)
+- Add msm8998 and msm8996 DTSI changes for critical interrupts
 
 
-Den 30.12.2019 14.06, skrev Geert Uytterhoeven:
-> When configuring the frame memory window, the last column and row
-> numbers are written to the column resp. page address registers.  These
-> numbers are thus one less than the actual window width resp. height.
-> 
-> While this is handled correctly in mipi_dbi_fb_dirty() since commit
-> 03ceb1c8dfd1e293 ("drm/tinydrm: Fix setting of the column/page end
-> addresses."), it is not in mipi_dbi_blank().  The latter still forgets
-> to subtract one when calculating the most significant bytes of the
-> column and row numbers, thus programming wrong values when the display
-> width or height is a multiple of 256.
-> 
-> Fixes: 02dd95fe31693626 ("drm/tinydrm: Add MIPI DBI support")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
+Amit Kucheria (9):
+  drivers: thermal: tsens: De-constify struct tsens_features
+  drivers: thermal: tsens: Pass around struct tsens_sensor as a constant
+  drivers: thermal: tsens: use simpler variables
+  drivers: thermal: tsens: Release device in success path
+  drivers: thermal: tsens: Add critical interrupt support
+  drivers: thermal: tsens: Add watchdog support
+  arm64: dts: sdm845: thermal: Add critical interrupt support
+  arm64: dts: msm8996: thermal: Add critical interrupt support
+  arm64: dts: msm8998: thermal: Add critical interrupt support
 
-Thanks, applied to drm-misc-next.
+ arch/arm64/boot/dts/qcom/msm8996.dtsi |  10 +-
+ arch/arm64/boot/dts/qcom/msm8998.dtsi |  10 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi  |  10 +-
+ drivers/thermal/qcom/tsens-8960.c     |   4 +-
+ drivers/thermal/qcom/tsens-common.c   | 188 +++++++++++++++++++++++---
+ drivers/thermal/qcom/tsens-v0_1.c     |   6 +-
+ drivers/thermal/qcom/tsens-v1.c       |   6 +-
+ drivers/thermal/qcom/tsens-v2.c       |  24 +++-
+ drivers/thermal/qcom/tsens.c          |  24 +++-
+ drivers/thermal/qcom/tsens.h          | 104 ++++++++++++--
+ 10 files changed, 330 insertions(+), 56 deletions(-)
 
-Noralf.
+-- 
+2.20.1
+
