@@ -2,52 +2,51 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AC3C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E20C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF31220866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6866C20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004268;
-	bh=rvDDPH2iFigv1nS+TAS1khRR8+8SMltKfuS6SkknOAE=;
+	s=default; t=1578004271;
+	bh=Z4v0fY047Fr8jxw/FMskSquTJGFpuTPUuJw95HPMS2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VCNgSCAUDCqup6LujTURs18wnqGC+/HW2DOeKNUtw1BC4iZxLUgmepPI5MKPZaxsj
-	 jschA5ui0d0f59hazGuBQyDe0ePZHdBAEM0pEc50hwsm2ldOs2nb46ttqZ/ffE0Zey
-	 m8gkhYpGQivQ5OgQVSVya3U46Tn/tz6qtr5sfSKY=
+	b=Os8V+pYFGDaJumSGISadHjWU6hxST3tmTIy04QkLD0X+5ZTJwUtmeekElN8RX6V0p
+	 cwhSF1pFuVeRbYrX7jnaE5BPPT4ALmFq6JmLdSXeMjzazb2X5kvNJhFuFEv6rhwbyI
+	 +m3E6s6M1al3LKcebRRYJakOLVVbsKgR8NqnpE/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730244AbgABWbG (ORCPT
+        id S1730253AbgABWbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:31:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35538 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:31:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730220AbgABWa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:30:58 -0500
+        id S1729815AbgABWbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:31:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B067720863;
-        Thu,  2 Jan 2020 22:30:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D58A20863;
+        Thu,  2 Jan 2020 22:31:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004258;
-        bh=rvDDPH2iFigv1nS+TAS1khRR8+8SMltKfuS6SkknOAE=;
+        s=default; t=1578004263;
+        bh=Z4v0fY047Fr8jxw/FMskSquTJGFpuTPUuJw95HPMS2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YX+Ayh33fk304huiOGwDdh3lxyTdNwUACMjG2hStbAYswXQQmzP7AZWubaQh+Qw76
-         b3V8JgO2F47XB7YLcpDM28zLDOXrZqaTki8ct4XeEdGrfAtsZjqGSJRkqyZgxaaS15
-         yLLfNKA59APCG5pOLdMK6VZ9rYaHPnPhC47XJ0xg=
+        b=KfPaEhiFE1PNzFwUdlmsZh53i1jI00krf50a5zdtAP3H7XAP1rGpaaFG/tZW8Xhnc
+         Ei/4UKcFpwwLeCWi28hTleyO7wa0YT3cQiEK2RK1JJ1owm+9JjmEGH8+QVFi0L8eij
+         L2m3r2ImjY4mqhzJcR5QojEa7c1xnlRqFxblO93A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 068/171] s390/disassembler: dont hide instruction addresses
-Date:   Thu,  2 Jan 2020 23:06:39 +0100
-Message-Id: <20200102220556.286898713@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.9 106/171] ext4: fix ext4_empty_dir() for directories with holes
+Date:   Thu,  2 Jan 2020 23:07:17 +0100
+Message-Id: <20200102220601.890579715@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -60,73 +59,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 544f1d62e3e6c6e6d17a5e56f6139208acb5ff46 ]
+commit 64d4ce892383b2ad6d782e080d25502f91bf2a38 upstream.
 
-Due to kptr_restrict, JITted BPF code is now displayed like this:
+Function ext4_empty_dir() doesn't correctly handle directories with
+holes and crashes on bh->b_data dereference when bh is NULL. Reorganize
+the loop to use 'offset' variable all the times instead of comparing
+pointers to current direntry with bh->b_data pointer. Also add more
+strict checking of '.' and '..' directory entries to avoid entering loop
+in possibly invalid state on corrupted filesystems.
 
-000000000b6ed1b2: ebdff0800024  stmg    %r13,%r15,128(%r15)
-000000004cde2ba0: 41d0f040      la      %r13,64(%r15)
-00000000fbad41b0: a7fbffa0      aghi    %r15,-96
+CC: stable@vger.kernel.org
+Fixes: 4e19d6b65fb4 ("ext4: allow directory holes")
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191202170213.4761-2-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Leaking kernel addresses to dmesg is not a concern in this case, because
-this happens only when JIT debugging is explicitly activated, which only
-root can do.
-
-Use %px in this particular instance, and also to print an instruction
-address in show_code and PCREL (e.g. brasl) arguments in print_insn.
-While at present functionally equivalent to %016lx, %px is recommended
-by Documentation/core-api/printk-formats.rst for such cases.
-
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/dis.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ fs/ext4/namei.c |   32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/arch/s390/kernel/dis.c b/arch/s390/kernel/dis.c
-index aaf9dab3c193..f9dca1aed9a4 100644
---- a/arch/s390/kernel/dis.c
-+++ b/arch/s390/kernel/dis.c
-@@ -1930,10 +1930,11 @@ static int print_insn(char *buffer, unsigned char *code, unsigned long addr)
- 				ptr += sprintf(ptr, "%%c%i", value);
- 			else if (operand->flags & OPERAND_VR)
- 				ptr += sprintf(ptr, "%%v%i", value);
--			else if (operand->flags & OPERAND_PCREL)
--				ptr += sprintf(ptr, "%lx", (signed int) value
--								      + addr);
--			else if (operand->flags & OPERAND_SIGNED)
-+			else if (operand->flags & OPERAND_PCREL) {
-+				void *pcrel = (void *)((int)value + addr);
-+
-+				ptr += sprintf(ptr, "%px", pcrel);
-+			} else if (operand->flags & OPERAND_SIGNED)
- 				ptr += sprintf(ptr, "%i", value);
- 			else
- 				ptr += sprintf(ptr, "%u", value);
-@@ -2005,7 +2006,7 @@ void show_code(struct pt_regs *regs)
- 		else
- 			*ptr++ = ' ';
- 		addr = regs->psw.addr + start - 32;
--		ptr += sprintf(ptr, "%016lx: ", addr);
-+		ptr += sprintf(ptr, "%px: ", (void *)addr);
- 		if (start + opsize >= end)
- 			break;
- 		for (i = 0; i < opsize; i++)
-@@ -2033,7 +2034,7 @@ void print_fn_code(unsigned char *code, unsigned long len)
- 		opsize = insn_length(*code);
- 		if (opsize > len)
- 			break;
--		ptr += sprintf(ptr, "%p: ", code);
-+		ptr += sprintf(ptr, "%px: ", code);
- 		for (i = 0; i < opsize; i++)
- 			ptr += sprintf(ptr, "%02x", code[i]);
- 		*ptr++ = '\t';
--- 
-2.20.1
-
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -2721,7 +2721,7 @@ bool ext4_empty_dir(struct inode *inode)
+ {
+ 	unsigned int offset;
+ 	struct buffer_head *bh;
+-	struct ext4_dir_entry_2 *de, *de1;
++	struct ext4_dir_entry_2 *de;
+ 	struct super_block *sb;
+ 
+ 	if (ext4_has_inline_data(inode)) {
+@@ -2746,19 +2746,25 @@ bool ext4_empty_dir(struct inode *inode)
+ 		return true;
+ 
+ 	de = (struct ext4_dir_entry_2 *) bh->b_data;
+-	de1 = ext4_next_entry(de, sb->s_blocksize);
+-	if (le32_to_cpu(de->inode) != inode->i_ino ||
+-			le32_to_cpu(de1->inode) == 0 ||
+-			strcmp(".", de->name) || strcmp("..", de1->name)) {
+-		ext4_warning_inode(inode, "directory missing '.' and/or '..'");
++	if (ext4_check_dir_entry(inode, NULL, de, bh, bh->b_data, bh->b_size,
++				 0) ||
++	    le32_to_cpu(de->inode) != inode->i_ino || strcmp(".", de->name)) {
++		ext4_warning_inode(inode, "directory missing '.'");
+ 		brelse(bh);
+ 		return true;
+ 	}
+-	offset = ext4_rec_len_from_disk(de->rec_len, sb->s_blocksize) +
+-		 ext4_rec_len_from_disk(de1->rec_len, sb->s_blocksize);
+-	de = ext4_next_entry(de1, sb->s_blocksize);
++	offset = ext4_rec_len_from_disk(de->rec_len, sb->s_blocksize);
++	de = ext4_next_entry(de, sb->s_blocksize);
++	if (ext4_check_dir_entry(inode, NULL, de, bh, bh->b_data, bh->b_size,
++				 offset) ||
++	    le32_to_cpu(de->inode) == 0 || strcmp("..", de->name)) {
++		ext4_warning_inode(inode, "directory missing '..'");
++		brelse(bh);
++		return true;
++	}
++	offset += ext4_rec_len_from_disk(de->rec_len, sb->s_blocksize);
+ 	while (offset < inode->i_size) {
+-		if ((void *) de >= (void *) (bh->b_data+sb->s_blocksize)) {
++		if (!(offset & (sb->s_blocksize - 1))) {
+ 			unsigned int lblock;
+ 			brelse(bh);
+ 			lblock = offset >> EXT4_BLOCK_SIZE_BITS(sb);
+@@ -2769,12 +2775,11 @@ bool ext4_empty_dir(struct inode *inode)
+ 			}
+ 			if (IS_ERR(bh))
+ 				return true;
+-			de = (struct ext4_dir_entry_2 *) bh->b_data;
+ 		}
++		de = (struct ext4_dir_entry_2 *) (bh->b_data +
++					(offset & (sb->s_blocksize - 1)));
+ 		if (ext4_check_dir_entry(inode, NULL, de, bh,
+ 					 bh->b_data, bh->b_size, offset)) {
+-			de = (struct ext4_dir_entry_2 *)(bh->b_data +
+-							 sb->s_blocksize);
+ 			offset = (offset | (sb->s_blocksize - 1)) + 1;
+ 			continue;
+ 		}
+@@ -2783,7 +2788,6 @@ bool ext4_empty_dir(struct inode *inode)
+ 			return false;
+ 		}
+ 		offset += ext4_rec_len_from_disk(de->rec_len, sb->s_blocksize);
+-		de = ext4_next_entry(de, sb->s_blocksize);
+ 	}
+ 	brelse(bh);
+ 	return true;
 
 
