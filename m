@@ -2,137 +2,139 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCD6C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 610E2C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23FF420866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38231215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:34:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AV/Uk42A"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="gelJmfqD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728851AbgABQde (ORCPT
+        id S1728863AbgABQew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 11:33:34 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48822 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728833AbgABQdd (ORCPT
+        Thu, 2 Jan 2020 11:34:52 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38223 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728819AbgABQew (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 11:33:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577982812;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TlchMaIvasLMm30BcrAzvO65BEfeYNv4RmHmgwKHDHM=;
-        b=AV/Uk42ASCaTxh4rK+oyrgmCjHXNj5r5vyKYmcFGQaE/LI7TkqXVpjNIFauWL7cLKtiVvt
-        jppTczM+bTWeaA3kX5RyJnAtw08xP7Tuh9HxgWKJMQbrr8Jnm6QNdP5WTBYqoySUjeCjRE
-        Xz1POlZV+IOeRW15jC8+pqm81xBjSVM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-326-f6RSfu66O-SgKyoHEVPNVg-1; Thu, 02 Jan 2020 11:33:31 -0500
-X-MC-Unique: f6RSfu66O-SgKyoHEVPNVg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 76E6F800D55;
-        Thu,  2 Jan 2020 16:33:27 +0000 (UTC)
-Received: from localhost (ovpn-117-73.ams2.redhat.com [10.36.117.73])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 654815D9C9;
-        Thu,  2 Jan 2020 16:33:23 +0000 (UTC)
-Date:   Thu, 2 Jan 2020 16:33:21 +0000
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Doug Gilbert <dgilbert@interlog.com>,
-        Kai =?iso-8859-1?Q?M=E4kisara?= <Kai.Makisara@kolumbus.fi>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dongli Zhang <dongli.zhang@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        John Garry <john.garry@huawei.com>,
-        Martin Wilck <mwilck@suse.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ira Weiny <ira.weiny@intel.com>, Iustin Pop <iustin@k1024.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 13/22] compat_ioctl: scsi: move ioctl handling into
- drivers
-Message-ID: <20200102163321.GA129642@stefanha-x1.localdomain>
-References: <20200102145552.1853992-1-arnd@arndb.de>
- <20200102145552.1853992-14-arnd@arndb.de>
+        Thu, 2 Jan 2020 11:34:52 -0500
+Received: by mail-io1-f67.google.com with SMTP id v3so38830663ioj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 08:34:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n02NZb1q13MC+D+YIZeKacRc8gevOmHNy1haOLJb4io=;
+        b=gelJmfqDyUmjwBH/XMMX/bBXaKDVC6YTmAj8rPELVV13MZipjbHUb7JPhFkSuDop1U
+         ByiLKjmlDBsd8mhMeRa6Is5L7PN0Wzk2rxFBkZqRfzxyPP1Bgn9Y5J2iih8/libglJ22
+         dOtjW3gXu4mZCdjaMzxLU4AnQWrng2RGMawBo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n02NZb1q13MC+D+YIZeKacRc8gevOmHNy1haOLJb4io=;
+        b=n5sgnHP4W5QWhpogomUcz2F9RbXu1DBQOAyI3tQNdd7Iwbovww9saBnO1rcZ4LhTkM
+         AsON51g4ihviuAxIOA2e+aWJpSxMT31aFgELoVDt1cyL1Seao7s5k2z05khehiynF2Qn
+         aIkwKlFz+G/YvpJbcRrwIpW1UPhv9Ykxprf0z3/asgdTD6KLAXmfbbk33rF1zF2hKamj
+         yAPZcQBcFFGjUSTrbva4liXOF9wPneUcafjCmYLH7ZDSnTK/r+YD7D0ArThH2Cmw2nX6
+         FmSkcaLUKY0ZdPXxJl3gHO8EFQSXagjnP04PB6NGB6HulEmEW184Mz/8swBjjFYfMRf9
+         s/0A==
+X-Gm-Message-State: APjAAAU664rfO9c45+Ms3IGc3jGLxV9iFHajnW1Rw3JY1CY45qNsMd3P
+        PtvdxBqyfw+Kxz3B2EvntCq2d/mV+vqon9l03xWIww==
+X-Google-Smtp-Source: APXvYqz8y/GovnsF0D2tm3lNOpYaS0G7+35htjGwpcyBgB9MdOWIe9CYMW8Ole+deE4SlX9aakNc01/kDuMb4EgOvMg=
+X-Received: by 2002:a02:b897:: with SMTP id p23mr67001302jam.58.1577982891338;
+ Thu, 02 Jan 2020 08:34:51 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200102145552.1853992-14-arnd@arndb.de>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Mimecast-Spam-Score: 0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="d6Gm4EdcadzBjdND"
-Content-Disposition: inline
+References: <20191231130528.20669-1-jagan@amarulasolutions.com>
+ <20191231130528.20669-3-jagan@amarulasolutions.com> <20200102105424.kmte7aooh2gkrcnu@gilmour.lan>
+ <CAMty3ZA0e8eJZWvAh0x=KGAZVL3apdao3COvR6j3-ckv0cdvcg@mail.gmail.com> <20200102154703.3prgwcjyo36g5g5u@gilmour.lan>
+In-Reply-To: <20200102154703.3prgwcjyo36g5g5u@gilmour.lan>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Thu, 2 Jan 2020 22:04:40 +0530
+Message-ID: <CAMty3ZB_6GyK=hhJU-8yAQiom1Uq25ojFbKaGrK1fmW8SnDV_A@mail.gmail.com>
+Subject: Re: [PATCH v3 2/9] drm/sun4i: tcon: Add TCON LCD support for R40
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---d6Gm4EdcadzBjdND
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jan 2, 2020 at 9:17 PM Maxime Ripard <mripard@kernel.org> wrote:
+>
+> On Thu, Jan 02, 2020 at 09:10:31PM +0530, Jagan Teki wrote:
+> > On Thu, Jan 2, 2020 at 4:24 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > >
+> > > On Tue, Dec 31, 2019 at 06:35:21PM +0530, Jagan Teki wrote:
+> > > > TCON LCD0, LCD1 in allwinner R40, are used for managing
+> > > > LCD interfaces like RGB, LVDS and DSI.
+> > > >
+> > > > Like TCON TV0, TV1 these LCD0, LCD1 are also managed via
+> > > > tcon top.
+> > > >
+> > > > Add support for it, in tcon driver.
+> > > >
+> > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > ---
+> > > > Changes for v3:
+> > > > - none
+> > > >
+> > > >  drivers/gpu/drm/sun4i/sun4i_tcon.c | 8 ++++++++
+> > > >  1 file changed, 8 insertions(+)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > > index fad72799b8df..69611d38c844 100644
+> > > > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > > @@ -1470,6 +1470,13 @@ static const struct sun4i_tcon_quirks sun8i_a83t_tv_quirks = {
+> > > >       .has_channel_1          = true,
+> > > >  };
+> > > >
+> > > > +static const struct sun4i_tcon_quirks sun8i_r40_lcd_quirks = {
+> > > > +     .supports_lvds          = true,
+> > > > +     .has_channel_0          = true,
+> > > > +     /* TODO Need to support TCON output muxing via GPIO pins */
+> > > > +     .set_mux                = sun8i_r40_tcon_tv_set_mux,
+> > >
+> > > What is this muking about? And why is it a TODO?
+> >
+> > Muxing similar like how TCON TOP handle TV0, TV1 I have reused the
+> > same so-that it would configure de port selection via
+> > sun8i_tcon_top_de_config
+> >
+> > TCON output muxing have gpio with GPIOD and GPIOH bits, which select
+> > which of LCD or TV TCON outputs to the LCD function pins. I have
+> > marked these has TODO for further support as mentioned by Chen-Yu in
+> > v1[1].
+>
+> It should be in the commit log.
 
-On Thu, Jan 02, 2020 at 03:55:31PM +0100, Arnd Bergmann wrote:
-> Each driver calling scsi_ioctl() gets an equivalent compat_ioctl()
-> handler that implements the same commands by calling scsi_compat_ioctl().
->=20
-> The scsi_cmd_ioctl() and scsi_cmd_blk_ioctl() functions are compatible
-> at this point, so any driver that calls those can do so for both native
-> and compat mode, with the argument passed through compat_ptr().
->=20
-> With this, we can remove the entries from fs/compat_ioctl.c.  The new
-> code is larger, but should be easier to maintain and keep updated with
-> newly added commands.
->=20
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/block/virtio_blk.c |   3 +
->  drivers/scsi/ch.c          |   9 ++-
->  drivers/scsi/sd.c          |  50 ++++++--------
->  drivers/scsi/sg.c          |  44 ++++++++-----
->  drivers/scsi/sr.c          |  57 ++++++++++++++--
->  drivers/scsi/st.c          |  51 ++++++++------
->  fs/compat_ioctl.c          | 132 +------------------------------------
->  7 files changed, 142 insertions(+), 204 deletions(-)
+Make sense.
 
-virtio_blk.c changes:
+>
+> What's the plan to support that when needed? And that means that the
+> LCD and TV outputs are mutually exclusive? We should at the very least
+> check that both aren't enabled at the same time.
 
-Acked-by: Stefan Hajnoczi <stefanha@redhat.com>
-
---d6Gm4EdcadzBjdND
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl4OG1AACgkQnKSrs4Gr
-c8gMMQf/cVfSKOJIWw9oQSb1Jtb5IIqXpqhGWNQXQPYbbsemSZJf8GuCcr81Y/O8
-thKinuXXPDyxp2YiInq3zMfIn72igNBLu6R7+vlLftbmMGpcrz6NNeZHGqCrYYpH
-tAbiYVKixufdkX3Z7zYKF17i1dNJNpfUojqhkjgV6v0/T/p6kaf1B7wzJa1Jxwol
-Et0imw7jvfyzjcKb285/9aX+zWpzupOPtjuBwZdqxW/UU6RtNq4zw0aqT3HtxKRH
-pU/1PuaHsZPWdag7TssEimmaRlgOkAlGr5zxjQXEeVV+Cx9rVJEr+Alnl/NB2qrY
-AOe6O0GvhUnX+3rYXUwaVHnsPPkEPw==
-=C/4U
------END PGP SIGNATURE-----
-
---d6Gm4EdcadzBjdND--
-
+Yes, LCD or TV within the outselect seems to be mutually exclusive.
+Like LCD0 or TV0 can output to GPIOD incase of TV0_OUTSEL and LCD1 or
+TV1 can output to GPIOH incase of TV1_OUTSEL. I think checking them
+before configuring TCON_TOP_PORT_SEL_REG would make sense, let me know
+if you have any suggestions?
