@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F3DC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F35BAC3276F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 645DB20863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF2820863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005131;
-	bh=gDNljlF11NNJt87x/cTDiyTrXxvQj868zamGs1Win84=;
+	s=default; t=1578005135;
+	bh=Qb3m8o3v/CT1jaIGRbSVS20mboLUBUtnyX6r/TOUIO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NgkBBjsH+Fw1Fq3IQelq4SLtD/oV2GM1xDZwnuzq0QI8xTk0ROT/BQQPeC2XnUzzE
-	 rk1DVgQFRpD+44YkcJb3W8ZcpXlnqcKiFX+wjavsWnMsmRMir9bG73azuBFPFW9ZyC
-	 ayNOJtkfxPZ/aAx0OeQHU1l8vTpL/DvIoAWXgdGQ=
+	b=mkxGgwIB5hJZlGDuIVmBJWa0CpWGfuKsZlXsEwNLletN/2xu2yZBgHNJL6NLt+9NV
+	 3tJ9wdThlKUcpJDesDaXKvq8MwkYnQa09m/NN/YcuWLg7z+W/NRQTO+utqMhFM1WC1
+	 ZtftyHd9MhU0oPd3pzY77reJg1bQI/Ou/oag4eSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730514AbgABWpa (ORCPT
+        id S1729953AbgABWby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:45:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37826 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:31:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730358AbgABWcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:32:03 -0500
+        id S1728581AbgABWbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:31:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7B1221835;
-        Thu,  2 Jan 2020 22:32:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5761621835;
+        Thu,  2 Jan 2020 22:31:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004323;
-        bh=gDNljlF11NNJt87x/cTDiyTrXxvQj868zamGs1Win84=;
+        s=default; t=1578004308;
+        bh=Qb3m8o3v/CT1jaIGRbSVS20mboLUBUtnyX6r/TOUIO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BIeeYJ+G8F1PnvqzYBcAWZvVPRir+9pbdZPNDgjtfN0N/Zw/DzrDMrOK10m8obR/n
-         44vXgTaGUbi3LxNSSZJ5sfknMqHlUdZslrzlJHz0T0zOoCOREeRZl1pOghZcNjkb4H
-         0LgjYBr8A66w5ZhF8NfuoRADGN9DmkiKwTwEgV1E=
+        b=n3LBaVzmFbZMcrc3RXIE/j4p4qSZgn5INr9vMnjrKVneWGq8nVS2yiiEr4N3cMJvb
+         yZWUf59JItnN5czGoioKRB8mxH5TjVMSYTvI0EAwX7D02yQtfgjx1u8Fw1hfMfenaE
+         ZmYPNhVsdZ7a/rgUopsM19eglOTb+urtN4/axDBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.9 105/171] staging: comedi: gsc_hpdi: check dma_alloc_coherent() return value
-Date:   Thu,  2 Jan 2020 23:07:16 +0100
-Message-Id: <20200102220601.724084391@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Cristian Birsan <cristian.birsan@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 099/171] net: usb: lan78xx: Fix suspend/resume PHY register access error
+Date:   Thu,  2 Jan 2020 23:07:10 +0100
+Message-Id: <20200102220600.957092549@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -58,54 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Cristian Birsan <cristian.birsan@microchip.com>
 
-commit ab42b48f32d4c766420c3499ee9c0289b7028182 upstream.
+[ Upstream commit 20032b63586ac6c28c936dff696981159913a13f ]
 
-The "auto-attach" handler function `gsc_hpdi_auto_attach()` calls
-`dma_alloc_coherent()` in a loop to allocate some DMA data buffers, and
-also calls it to allocate a buffer for a DMA descriptor chain.  However,
-it does not check the return value of any of these calls.  Change
-`gsc_hpdi_auto_attach()` to return `-ENOMEM` if any of these
-`dma_alloc_coherent()` calls fail.  This will result in the comedi core
-calling the "detach" handler `gsc_hpdi_detach()` as part of the
-clean-up, which will call `gsc_hpdi_free_dma()` to free any allocated
-DMA coherent memory buffers.
+Lan78xx driver accesses the PHY registers through MDIO bus over USB
+connection. When performing a suspend/resume, the PHY registers can be
+accessed before the USB connection is resumed. This will generate an
+error and will prevent the device to resume correctly.
+This patch adds the dependency between the MDIO bus and USB device to
+allow correct handling of suspend/resume.
 
-Cc: <stable@vger.kernel.org> #4.6+
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Link: https://lore.kernel.org/r/20191216110823.216237-1-abbotti@mev.co.uk
+Fixes: ce85e13ad6ef ("lan78xx: Update to use phylib instead of mii_if_info.")
+Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/staging/comedi/drivers/gsc_hpdi.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/net/usb/lan78xx.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/staging/comedi/drivers/gsc_hpdi.c
-+++ b/drivers/staging/comedi/drivers/gsc_hpdi.c
-@@ -632,6 +632,11 @@ static int gsc_hpdi_auto_attach(struct c
- 		    dma_alloc_coherent(&pcidev->dev, DMA_BUFFER_SIZE,
- 				       &devpriv->dio_buffer_phys_addr[i],
- 				       GFP_KERNEL);
-+		if (!devpriv->dio_buffer[i]) {
-+			dev_warn(dev->class_dev,
-+				 "failed to allocate DMA buffer\n");
-+			return -ENOMEM;
-+		}
- 	}
- 	/* allocate dma descriptors */
- 	devpriv->dma_desc = dma_alloc_coherent(&pcidev->dev,
-@@ -639,6 +644,11 @@ static int gsc_hpdi_auto_attach(struct c
- 					       NUM_DMA_DESCRIPTORS,
- 					       &devpriv->dma_desc_phys_addr,
- 					       GFP_KERNEL);
-+	if (!devpriv->dma_desc) {
-+		dev_warn(dev->class_dev,
-+			 "failed to allocate DMA descriptors\n");
-+		return -ENOMEM;
-+	}
- 	if (devpriv->dma_desc_phys_addr & 0xf) {
- 		dev_warn(dev->class_dev,
- 			 " dma descriptors not quad-word aligned (bug)\n");
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -1763,6 +1763,7 @@ static int lan78xx_mdio_init(struct lan7
+ 	dev->mdiobus->read = lan78xx_mdiobus_read;
+ 	dev->mdiobus->write = lan78xx_mdiobus_write;
+ 	dev->mdiobus->name = "lan78xx-mdiobus";
++	dev->mdiobus->parent = &dev->udev->dev;
+ 
+ 	snprintf(dev->mdiobus->id, MII_BUS_ID_SIZE, "usb-%03d:%03d",
+ 		 dev->udev->bus->busnum, dev->udev->devnum);
 
 
