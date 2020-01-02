@@ -2,84 +2,87 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8427FC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B568AC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5995A2072C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:41:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="e75wHxGn"
+	by mail.kernel.org (Postfix) with ESMTP id 8FE592072C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:50:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgABRlx (ORCPT
+        id S1727912AbgABRuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 12:41:53 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:40200 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727829AbgABRlw (ORCPT
+        Thu, 2 Jan 2020 12:50:22 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:42356 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727857AbgABRuW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 12:41:52 -0500
-Received: by mail-qv1-f66.google.com with SMTP id dp13so15279971qvb.7
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 09:41:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IKwnMz4e63VKZilbDOGb2I7aKNEn21Vd5Ru0YbiCZDI=;
-        b=e75wHxGnbpPFzBqIDLFaZvH714OeRG+U8IBZte2LJuCehmSyARdnQF54xugAKU4SyQ
-         n6dl4Pvds2zhSFknt+DREXQWDm2iQ20pTvhWue87dz+dTdJfyuR8eNRjixxkLtjSkleU
-         bPQ3wpolp+00qLYIAaX/oVh2X7izaAMqoCtuw9RM2qZMdJL0QPAX6hD+bI9SrzKvwwpE
-         gAOkAsQ9id32uxuTsgdl7N/cn3HDYiDLfd69bpgYIYOgLbYnBI0OPELXC8CrJzP9CKuR
-         9Jjc9cu38mo4WmZqc/iEfs0fLAjm6wDq75qz0IwjK1ciUmTsEl6Z5YxvOEuxeDl6FkRZ
-         dQ2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IKwnMz4e63VKZilbDOGb2I7aKNEn21Vd5Ru0YbiCZDI=;
-        b=erV2d7e3d+p++fB0fW5hAqxWbXiswcZSe5f/musrcSq+3Q4teQOs4NuLn8LZ7xn6pw
-         Ff+2N0i2Ah6tW8cn0ubwegg+OyY/x8eXXGnAp4FHfpCG8BPpmRcpV0xCh8BI7rsEc+qm
-         2ep8qct2a+YsjLymwD7sBTzeNWYqv81CFi+KPik4wQjIpkCzjsPpD+aM4DFljsnUl7Fy
-         XG8wfx1pdwaaUpBcbV9I0sW8x4PzW0rFoPOR8R/dJ3uzZZDiyuPILUrYmoyhcqyfnE7R
-         QAnMgHvDsvgDVduEn914NaBaiX63AxCI3mFN4FXNGsUzg28Ifik0+oWeDqlIs15LygwS
-         T11g==
-X-Gm-Message-State: APjAAAW9Cg3JmLalAlgaNWOrZqb5iRPjSoFqyMrnz3x19E2yYHHzWNhg
-        mB/+dIDJw6r562KgJkURKG79U43BbiQXfRKlxYGwmgIo
-X-Google-Smtp-Source: APXvYqwO8doe54/rCFcY5tcQfFh/7vJk0PPh/rrnHgc+GTFet+8pm81kW3bXrD/CFwELjeDhBVn8ZH/v9IlDESq+ldc=
-X-Received: by 2002:a05:6214:923:: with SMTP id dk3mr61936227qvb.96.1577986911821;
- Thu, 02 Jan 2020 09:41:51 -0800 (PST)
+        Thu, 2 Jan 2020 12:50:22 -0500
+Received: from [172.58.107.60] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1in4bz-0006FT-1r; Thu, 02 Jan 2020 17:50:19 +0000
+Date:   Thu, 2 Jan 2020 18:50:13 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Amanieu d'Antras <amanieu@gmail.com>, arnd@arndb.de
+Cc:     linux-kernel@vger.kernel.org,
+        Christian Brauner <christian@brauner.io>,
+        stable@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/7] arm64: Move __ARCH_WANT_SYS_CLONE3 definition to
+ uapi headers
+Message-ID: <20200102175011.q7afo45nc2togtfh@wittgenstein>
+References: <20200102172413.654385-1-amanieu@gmail.com>
+ <20200102172413.654385-2-amanieu@gmail.com>
 MIME-Version: 1.0
-References: <1577362338-28744-1-git-send-email-srinivas.neeli@xilinx.com> <1577362338-28744-6-git-send-email-srinivas.neeli@xilinx.com>
-In-Reply-To: <1577362338-28744-6-git-send-email-srinivas.neeli@xilinx.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 2 Jan 2020 18:41:40 +0100
-Message-ID: <CAMpxmJVbWY_ZRvyrRW9xrV152vezHg-ZES660PCaJQrW5Zs_-g@mail.gmail.com>
-Subject: Re: [PATCH 5/8] gpio: zynq: Add Versal support
-To:     Srinivas Neeli <srinivas.neeli@xilinx.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        shubhrajyoti.datta@xilinx.com,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, git@xilinx.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200102172413.654385-2-amanieu@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 26 gru 2019 o 13:12 Srinivas Neeli <srinivas.neeli@xilinx.com> napisa=
-=C5=82(a):
->
-> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
->
-> Add Versal support in gpio.
+[Cc Arnd. I'd like his Ack on this]
 
-Please, provide some background in the commit message. I have no idea
-what Versal is.
-
-Bart
+On Thu, Jan 02, 2020 at 06:24:07PM +0100, Amanieu d'Antras wrote:
+> Previously this was only defined in the internal headers which
+> resulted in __NR_clone3 not being defined in the user headers.
+> 
+> Signed-off-by: Amanieu d'Antras <amanieu@gmail.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: <stable@vger.kernel.org> # 5.3.x
+> ---
+>  arch/arm64/include/asm/unistd.h      | 1 -
+>  arch/arm64/include/uapi/asm/unistd.h | 1 +
+>  2 files changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
+> index 2629a68b8724..5af82587909e 100644
+> --- a/arch/arm64/include/asm/unistd.h
+> +++ b/arch/arm64/include/asm/unistd.h
+> @@ -42,7 +42,6 @@
+>  #endif
+>  
+>  #define __ARCH_WANT_SYS_CLONE
+> -#define __ARCH_WANT_SYS_CLONE3
+>  
+>  #ifndef __COMPAT_SYSCALL_NR
+>  #include <uapi/asm/unistd.h>
+> diff --git a/arch/arm64/include/uapi/asm/unistd.h b/arch/arm64/include/uapi/asm/unistd.h
+> index 4703d218663a..f83a70e07df8 100644
+> --- a/arch/arm64/include/uapi/asm/unistd.h
+> +++ b/arch/arm64/include/uapi/asm/unistd.h
+> @@ -19,5 +19,6 @@
+>  #define __ARCH_WANT_NEW_STAT
+>  #define __ARCH_WANT_SET_GET_RLIMIT
+>  #define __ARCH_WANT_TIME32_SYSCALLS
+> +#define __ARCH_WANT_SYS_CLONE3
+>  
+>  #include <asm-generic/unistd.h>
+> -- 
+> 2.24.1
+> 
