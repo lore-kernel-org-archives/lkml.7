@@ -2,141 +2,114 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94753C2D0DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB50CC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F25217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0FCD215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:38:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="I+IBuo4B";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PNdqt8Mv"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pJXkWvF3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbgABGg5 (ORCPT
+        id S1727599AbgABGiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 01:36:57 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:33447 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725788AbgABGgh (ORCPT
+        Thu, 2 Jan 2020 01:38:52 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:56751 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725788AbgABGiw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 01:36:37 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 825A722221;
-        Thu,  2 Jan 2020 01:36:36 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Thu, 02 Jan 2020 01:36:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=4Zei3onZIbAQA
-        SHFAQksIE2T7Lb45MHUrb0VzLsfOHU=; b=I+IBuo4BwUgT5mxrIoJJilvwguMb1
-        akjSzlKbgwcaIOmTcCP5hArDNBR2gBHXJNcu08sNr+VY3lkHFjUBiqCt8dImr0Hh
-        MNLXLJ6JA2/DHX10yofUoWOY6bctCt4l3Qaj7r75zkGi0JZg8n/KuYDuAVDLzrmJ
-        VEYAZoRa3HqbyF0XMEyxU2F0Szs8bWZQcjMpuaovVovjgVWPC6GT3FQe1A9LEAYB
-        iXP3d6lqEQJjgaC9B4RQAMwAqjZET8h6rDjP5l2dZm9zFJYCIJnpKihFxXmr2Fy/
-        rN6dgs2caRjgRAQ2KpmeijP6S135xR/B7FUyRgKDByGafnQji666iYiOA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=4Zei3onZIbAQASHFAQksIE2T7Lb45MHUrb0VzLsfOHU=; b=PNdqt8Mv
-        aKjtuDDXO7NjFmN3FVf/El/XZiOuJDxx6++n1n6tjxKbTUK0WCcL+9/B3UDG32fc
-        anDuC9SaYHcF2yEwUNXEkSQiRXo2hZG3uPdv0OFXF7W6fVV7/olUX7BrAGiZ2oAS
-        4a/2wka0T+5y7tFY7BZGl/Dhi6ehEem5lcukP8nI52rrZE7dH+CrPt6wJ+DYD/JI
-        PdRtKB2/5ZcECTXp5R1chiX95LekLw38cjcmZVBPIq7wf7afGos1SDrSylcmulbv
-        PIdJx7woXXWOP+GmpOpqBjpDZaZF2YB2nXsWAW0cwVlaAQU3NMmpAWLGLA/UTmNk
-        2edFEZhomBn2Ow==
-X-ME-Sender: <xms:dI8NXiotze41GLOmHRwqdx_o0yDXF7Ky8dXJYfk6D_3EdmNnVAfSNw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdegtddgledvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
-    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
-    epjedtrddufeehrddugeekrdduhedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghm
-    uhgvlhesshhhohhllhgrnhgurdhorhhgnecuvehluhhsthgvrhfuihiivgepvd
-X-ME-Proxy: <xmx:dI8NXu58IHXQyOPk-EK7ZmgZu2JIlc8P076M2btqiXSicOH5454fJA>
-    <xmx:dI8NXghJyZUmwaqUBnR0dfmoADA0h6NZJpAo2or5ITqZHm31gnFAOQ>
-    <xmx:dI8NXk4bltgZG8Hh70gxumNmQjWNHib4fZpRPLoacZVQDFaEvj2gSw>
-    <xmx:dI8NXvsXZR8w0ubnqeaqq1aH2An-942YRZDUes4jd2AgctZcJ8mYVQ>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 002C88005B;
-        Thu,  2 Jan 2020 01:36:35 -0500 (EST)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Chen-Yu Tsai <wens@csie.org>, Sebastian Reichel <sre@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH 5/7] power: supply: axp20x_usb_power: Allow offlining
-Date:   Thu,  2 Jan 2020 00:36:31 -0600
-Message-Id: <20200102063633.65388-5-samuel@sholland.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200102063633.65388-1-samuel@sholland.org>
-References: <20200102063633.65388-1-samuel@sholland.org>
+        Thu, 2 Jan 2020 01:38:52 -0500
+X-UUID: d0ef305adcd9465cb3f179a9a6b233e0-20200102
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=EY8CHJ1MOwpTVq0/F8e5ITYSow6Z2y2qYGrDALgu+g0=;
+        b=pJXkWvF37dqw5HMuhYArqf40LDfY6vEeWuJv+6ij/MSLg4rCvjnOYACql3gZWmbFBPpxGhzMQ05Xs8LfANxbX8hIGahW42esE5XHwspiatuUM/0vyxW/2ox/jcKFz2WOPy4798wqBx/YPXUyq/gfzeljK/wB41Qx8+X+dD0ZYSM=;
+X-UUID: d0ef305adcd9465cb3f179a9a6b233e0-20200102
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1107668345; Thu, 02 Jan 2020 14:38:46 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 2 Jan 2020 14:37:59 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 2 Jan 2020 14:38:03 +0800
+Message-ID: <1577947124.13164.75.camel@mtkswgap22>
+Subject: Re: [PATCH v1 1/2] scsi: ufs: set device as default active power
+ mode during initialization only
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Can Guo <cang@codeaurora.org>
+CC:     <martin.petersen@oracle.com>, <linux-scsi@vger.kernel.org>,
+        <andy.teng@mediatek.com>, <jejb@linux.ibm.com>,
+        <chun-hung.wu@mediatek.com>, <kuohong.wang@mediatek.com>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        <asutoshd@codeaurora.org>, <avri.altman@wdc.com>,
+        <linux-mediatek@lists.infradead.org>, <peter.wang@mediatek.com>,
+        <linux-scsi-owner@vger.kernel.org>, <subhashj@codeaurora.org>,
+        <alim.akhtar@samsung.com>, <beanhuo@micron.com>,
+        <pedrom.sousa@synopsys.com>, <bvanassche@acm.org>,
+        <linux-arm-kernel@lists.infradead.org>, <matthias.bgg@gmail.com>,
+        <ron.hsu@mediatek.com>, <cc.chou@mediatek.com>
+Date:   Thu, 2 Jan 2020 14:38:44 +0800
+In-Reply-To: <44393ed9ff3ba9878bae838307e7eec0@codeaurora.org>
+References: <1577693546-7598-1-git-send-email-stanley.chu@mediatek.com>
+         <1577693546-7598-2-git-send-email-stanley.chu@mediatek.com>
+         <fd129b859c013852bd80f60a36425757@codeaurora.org>
+         <1577754469.13164.5.camel@mtkswgap22>
+         <836772092daffd8283a97d633e59fc34@codeaurora.org>
+         <1577766179.13164.24.camel@mtkswgap22>
+         <1577778290.13164.45.camel@mtkswgap22>
+         <44393ed9ff3ba9878bae838307e7eec0@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: 6DF2DA8F51F0E1171061F223F8110C3970D122A74F33AAB3D5F7588FEE5DB6412000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AXP803/AXP813 have a flag that enables/disables the USB power supply
-input. Allow control of this flag via the ONLINE property on those
-variants.
-
-It may be necessary to offline the USB power supply input when using
-the USB port in OTG mode, or to allow userspace to disable charging.
-
-Signed-off-by: Samuel Holland <samuel@sholland.org>
----
- drivers/power/supply/axp20x_usb_power.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
-index 2d7272e19a87..f49c8ff4a3f0 100644
---- a/drivers/power/supply/axp20x_usb_power.c
-+++ b/drivers/power/supply/axp20x_usb_power.c
-@@ -29,6 +29,8 @@
- 
- #define AXP20X_USB_STATUS_VBUS_VALID	BIT(2)
- 
-+#define AXP20X_VBUS_PATH_SELECT		BIT(7)
-+
- #define AXP20X_VBUS_VHOLD_uV(b)		(4000000 + (((b) >> 3) & 7) * 100000)
- #define AXP20X_VBUS_VHOLD_MASK		GENMASK(5, 3)
- #define AXP20X_VBUS_VHOLD_OFFSET	3
-@@ -344,6 +346,12 @@ static int axp20x_usb_power_set_property(struct power_supply *psy,
- 	struct axp20x_usb_power *power = power_supply_get_drvdata(psy);
- 
- 	switch (psp) {
-+	case POWER_SUPPLY_PROP_ONLINE:
-+		return regmap_update_bits(power->regmap,
-+					  AXP20X_VBUS_IPSOUT_MGMT,
-+					  AXP20X_VBUS_PATH_SELECT,
-+					  !val->intval);
-+
- 	case POWER_SUPPLY_PROP_VOLTAGE_MIN:
- 		return axp20x_usb_power_set_voltage_min(power, val->intval);
- 
-@@ -363,6 +371,17 @@ static int axp20x_usb_power_set_property(struct power_supply *psy,
- static int axp20x_usb_power_prop_writeable(struct power_supply *psy,
- 					   enum power_supply_property psp)
- {
-+	struct axp20x_usb_power *power = power_supply_get_drvdata(psy);
-+
-+	/*
-+	 * Both AXP2xx and AXP8xx have a VBUS path select flag.
-+	 * On AXP2xx, setting the flag enables VBUS (ignoring N_VBUSEN).
-+	 * On AXP8xx, setting the flag disables VBUS (ignoring N_VBUSEN).
-+	 * So we only expose the control on AXP8xx where it is meaningful.
-+	 */
-+	if (psp == POWER_SUPPLY_PROP_ONLINE)
-+		return power->axp20x_id == AXP813_ID;
-+
- 	return psp == POWER_SUPPLY_PROP_VOLTAGE_MIN ||
- 	       psp == POWER_SUPPLY_PROP_CURRENT_MAX;
- }
--- 
-2.23.0
+SGkgQ2FuLA0KDQpPbiBUdWUsIDIwMTktMTItMzEgYXQgMTY6MzUgKzA4MDAsIENhbiBHdW8gd3Jv
+dGU6DQoNCj4gSGkgU3RhbmxleSwNCj4gDQo+IEkgbWlzc2VkIHRoaXMgbWFpbCBiZWZvcmUgSSBo
+aXQgc2VuZC4gSW4gY3VycmVudCBjb2RlLCBhcyBwZXIgbXkgDQo+IHVuZGVyc3RhbmRpbmcsDQo+
+IFVGUyBkZXZpY2UncyBwb3dlciBzdGF0ZSBzaG91bGQgYmUgQWN0aXZlIGFmdGVyIHVmc2hjZF9s
+aW5rX3N0YXJ0dXAoKSANCj4gcmV0dXJucy4NCj4gSWYgSSBhbSB3cm9uZywgcGxlYXNlIGZlZWwg
+ZnJlZSB0byBjb3JyZWN0IG1lLg0KPiANCg0KWWVzLCB0aGlzIGFzc3VtcHRpb24gb2YgdWZzaGNk
+X3Byb2JlX2hiYSgpIGlzIHRydWUgc28gSSB3aWxsIGRyb3AgdGhpcw0KcGF0Y2guDQpUaGFua3Mg
+Zm9yIHJlbWluZC4NCg0KPiBEdWUgdG8geW91IGFyZSBhbG1vc3QgdHJ5aW5nIHRvIHJldmVydCBj
+b21taXQgN2NhZjQ4OWI5OWE0MmEsIEkgYW0ganVzdCANCj4gd29uZGVyaW5nDQo+IGlmIHlvdSBl
+bmNvdW50ZXIgZmFpbHVyZS9lcnJvciBjYXVzZWQgYnkgaXQuDQoNClllcywgd2UgYWN0dWFsbHkg
+aGF2ZSBzb21lIGRvdWJ0cyBmcm9tIHRoZSBjb21taXQgbWVzc2FnZSBvZiAic2NzaTogdWZzOg0K
+aXNzdWUgbGluayBzdGFydHVwIDIgdGltZXMgaWYgZGV2aWNlIGlzbid0IGFjdGl2ZSINCg0KSWYg
+d2UgY29uZmlndXJlZCBzeXN0ZW0gc3VzcGVuZCBhcyBkZXZpY2U9UG93ZXJEb3duL0xpbms9TGlu
+a0Rvd24gbW9kZSwNCmR1cmluZyByZXN1bWUsIHRoZSAxc3QgbGluayBzdGFydHVwIHdpbGwgYmUg
+c3VjY2Vzc2Z1bCwgYW5kIGFmdGVyIHRoYXQNCmRldmljZSBjb3VsZCBiZSBhY2Nlc3NlZCBub3Jt
+YWxseSBzbyBpdCBzaGFsbCBiZSBhbHJlYWR5IGluIEFjdGl2ZSBwb3dlcg0KbW9kZS4gV2UgZGlk
+IG5vdCBmaW5kIGRldmljZXMgd2hpY2ggbmVlZCB0d2ljZSBsaW5rdXAgZm9yIG5vcm1hbCB3b3Jr
+Lg0KDQpBbmQgYmVjYXVzZSB0aGUgMXN0IGxpbmt1cCBpcyBPSywgdGhlIGZvcmNlZCAybmQgbGlu
+a3VwIGJ5IGNvbW1pdCAic2NzaToNCnVmczogaXNzdWUgbGluayBzdGFydHVwIDIgdGltZXMgaWYg
+ZGV2aWNlIGlzbid0IGFjdGl2ZSIgbGVhZHMgdG8gbGluaw0KbG9zdCBhbmQgZmluYWxseSB0aGUg
+M3JkIGxpbmt1cCBpcyBtYWRlIGFnYWluIGJ5IHJldHJ5IG1lY2hhbmlzbSBpbg0KdWZzaGNkX2xp
+bmtfc3RhcnR1cCgpIGFuZCBiZSBzdWNjZXNzZnVsLiBTbyBhIGxpbmt1cCBwZXJmb3JtYW5jZSBp
+c3N1ZQ0KaXMgaW50cm9kdWNlZCBoZXJlOiBXZSBhY3R1YWxseSBuZWVkIG9uZS10aW1lIGxpbmt1
+cCBvbmx5IGJ1dCBmaW5hbGx5DQpnb3QgMyBsaW5rdXAgb3BlcmF0aW9ucy4NCg0KQWNjb3JkaW5n
+IHRvIHRoZSBVRlMgc3BlYywgYWxsIHJlc2V0IHR5cGVzIChpbmNsdWRpbmcgUE9SIGFuZCBIb3N0
+DQpVbmlQcm8gV2FybSBSZXNldCB3aGljaCBib3RoIG1heSBoYXBwZW4gaW4gYWJvdmUgY29uZmln
+dXJhdGlvbnMpIG90aGVyDQp0aGFuIExVIHJlc2V0LCBVRlMgZGV2aWNlIHBvd2VyIG1vZGUgc2hh
+bGwgcmV0dXJuIHRvIFNsZWVwIG1vZGUgb3INCkFjdGl2ZSBtb2RlIGRlcGVuZGluZyBvbiBiSW5p
+dFBvd2VyTW9kZSwgYnkgZGVmYXVsdCwgaXQncyBBY3RpdmUgbW9kZS4NCg0KU28gd2UgYXJlIGN1
+cmlvdXMgdGhhdCB3aHkgZW5mb3JjaW5nIHR3aWNlIGxpbmt1cCBpcyBuZWNlc3NhcnkgaGVyZT8N
+CkNvdWxkIHlvdSBraW5kbHkgaGVscCB1cyBjbGFyaWZ5IHRoaXM/DQoNCklmIGFueXRoaW5nIHdy
+b25nIGluIGFib3ZlIGRlc2NyaXB0aW9uLCBwbGVhc2UgZmVlbCBmcmVlIHRvIGNvcnJlY3QgbWUu
+DQoNCj4gDQo+IEhhcHB5IG5ldyB5ZWFyIHRvIHlvdSB0b28hDQo+IA0KPiBUaGFua3MsDQo+IA0K
+PiBDYW4gR3VvDQoNClRoYW5rcywNCg0KU3RhbmxleQ0KDQo+IA0KPiBfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiBMaW51eC1tZWRpYXRlayBtYWlsaW5n
+IGxpc3QNCj4gTGludXgtbWVkaWF0ZWtAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LW1lZGlhdGVrDQoNCg==
 
