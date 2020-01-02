@@ -2,106 +2,99 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA687C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 10:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3279C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 10:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C39121D7D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 10:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EDCD20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 10:07:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgABKFp (ORCPT
+        id S1728021AbgABKHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 05:05:45 -0500
-Received: from mga11.intel.com ([192.55.52.93]:1240 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727987AbgABKFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 05:05:45 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 02:05:44 -0800
-X-IronPort-AV: E=Sophos;i="5.69,386,1571727600"; 
-   d="scan'208";a="214112239"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 02:05:40 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Wambui Karuga <wambui.karugax@gmail.com>,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/i915: remove boolean comparisons in conditionals.
-In-Reply-To: <20200102094921.6274-1-wambui.karugax@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200102094921.6274-1-wambui.karugax@gmail.com>
-Date:   Thu, 02 Jan 2020 12:05:38 +0200
-Message-ID: <87eewitbpp.fsf@intel.com>
+        Thu, 2 Jan 2020 05:07:23 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55351 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727978AbgABKHX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 05:07:23 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1imxNp-0007Sk-0f; Thu, 02 Jan 2020 11:07:13 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4A5CD1C2BEB;
+        Thu,  2 Jan 2020 11:07:12 +0100 (CET)
+Date:   Thu, 02 Jan 2020 10:07:12 -0000
+From:   "tip-bot2 for Anthony Steinhauser" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86/nospec: Remove unused RSB_FILL_LOOPS
+Cc:     Anthony Steinhauser <asteinhauser@google.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "x86-ml" <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191226204512.24524-1-asteinhauser@google.com>
+References: <20191226204512.24524-1-asteinhauser@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Message-ID: <157795963208.30329.11151985298082895162.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 02 Jan 2020, Wambui Karuga <wambui.karugax@gmail.com> wrote:
-> Remove unnecessary comparisons to true/false in if statements.
-> Issues found by coccinelle.
->
-> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+The following commit has been merged into the x86/cleanups branch of tip:
 
-Thanks for the patch.
+Commit-ID:     fae7bfcc78146057ac2730719de8d5e41de19540
+Gitweb:        https://git.kernel.org/tip/fae7bfcc78146057ac2730719de8d5e41de19540
+Author:        Anthony Steinhauser <asteinhauser@google.com>
+AuthorDate:    Thu, 26 Dec 2019 12:45:12 -08:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Thu, 02 Jan 2020 10:54:53 +01:00
 
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+x86/nospec: Remove unused RSB_FILL_LOOPS
 
-> ---
->  drivers/gpu/drm/i915/display/intel_ddi.c  | 2 +-
->  drivers/gpu/drm/i915/display/intel_dp.c   | 2 +-
->  drivers/gpu/drm/i915/display/intel_sdvo.c | 4 ++--
->  3 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i915/display/intel_ddi.c
-> index 9ba794cb9b4f..c065078b3be2 100644
-> --- a/drivers/gpu/drm/i915/display/intel_ddi.c
-> +++ b/drivers/gpu/drm/i915/display/intel_ddi.c
-> @@ -1812,7 +1812,7 @@ void intel_ddi_set_vc_payload_alloc(const struct intel_crtc_state *crtc_state,
->  	u32 temp;
->  
->  	temp = I915_READ(TRANS_DDI_FUNC_CTL(cpu_transcoder));
-> -	if (state == true)
-> +	if (state)
->  		temp |= TRANS_DDI_DP_VC_PAYLOAD_ALLOC;
->  	else
->  		temp &= ~TRANS_DDI_DP_VC_PAYLOAD_ALLOC;
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-> index aa515261cb9f..93140c75386a 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-> @@ -4958,7 +4958,7 @@ intel_dp_check_mst_status(struct intel_dp *intel_dp)
->  		WARN_ON_ONCE(intel_dp->active_mst_links < 0);
->  		bret = intel_dp_get_sink_irq_esi(intel_dp, esi);
->  go_again:
-> -		if (bret == true) {
-> +		if (bret) {
->  
->  			/* check link status - esi[10] = 0x200c */
->  			if (intel_dp->active_mst_links > 0 &&
-> diff --git a/drivers/gpu/drm/i915/display/intel_sdvo.c b/drivers/gpu/drm/i915/display/intel_sdvo.c
-> index 47f5d87a938a..cff254c52f5e 100644
-> --- a/drivers/gpu/drm/i915/display/intel_sdvo.c
-> +++ b/drivers/gpu/drm/i915/display/intel_sdvo.c
-> @@ -3292,8 +3292,8 @@ bool intel_sdvo_init(struct drm_i915_private *dev_priv,
->  	if (!intel_sdvo_get_capabilities(intel_sdvo, &intel_sdvo->caps))
->  		goto err;
->  
-> -	if (intel_sdvo_output_setup(intel_sdvo,
-> -				    intel_sdvo->caps.output_flags) != true) {
-> +	if (!intel_sdvo_output_setup(intel_sdvo,
-> +				     intel_sdvo->caps.output_flags)) {
->  		DRM_DEBUG_KMS("SDVO output failed to setup on %s\n",
->  			      SDVO_NAME(intel_sdvo));
->  		/* Output_setup can leave behind connectors! */
+It was never really used, see
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+  117cc7a908c8 ("x86/retpoline: Fill return stack buffer on vmexit")
+
+  [ bp: Massage. ]
+
+Signed-off-by: Anthony Steinhauser <asteinhauser@google.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191226204512.24524-1-asteinhauser@google.com
+---
+ arch/x86/include/asm/nospec-branch.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/nospec-branch.h
+index 5c24a7b..07e95dc 100644
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -37,7 +37,6 @@
+  */
+ 
+ #define RSB_CLEAR_LOOPS		32	/* To forcibly overwrite all entries */
+-#define RSB_FILL_LOOPS		16	/* To avoid underflow */
+ 
+ /*
+  * Google experimented with loop-unrolling and this turned out to be
