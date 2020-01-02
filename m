@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DA5C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 443BBC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51CD921582
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17D432464B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003525;
-	bh=GT98iZjKaCrHRL5l1UxVJ9CxZ/AVP+iKA7RnFMB2bIw=;
+	s=default; t=1578003527;
+	bh=0LXVk6jEhqxeLmaZ4jPfN2Vp4to1fWueQPFCjiLDdgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MRRV3X1x9VQ8NLG4m1SRZvuMM+fYijxY7Js6ECSqoEv8TUm/R8MumDgZm2aSwNHT9
-	 mq/AW4w3ecKwhQLszhTCd9HdeNCekrLQUr2OnhG0yuaudl8RwlbCk9tk3yqAvLG85N
-	 U20D+M3je4/mUd5Pl89Wd4bNH1fh+44jjxvO0+Cg=
+	b=i+0WSu817ehWs3ogAd4WW7UNAgqYfDqC8c/poVKPC36ZlPd7idDxFaiTHkHmuntJh
+	 ld0kXRT8hoZ8MAudGk2ZAoXWzT6Cak7g6+upYnFH/9NrXj0TZWgm9OhQjHLf4MQxQX
+	 DD2ZnW+XHEekeNtPiMVPQR/D3+AgEJQKXO7i/bGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728476AbgABWSo (ORCPT
+        id S1728256AbgABWSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:18:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34094 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:18:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727904AbgABWSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:18:40 -0500
+        id S1728362AbgABWSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:18:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF72D21582;
-        Thu,  2 Jan 2020 22:18:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5783421582;
+        Thu,  2 Jan 2020 22:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003519;
-        bh=GT98iZjKaCrHRL5l1UxVJ9CxZ/AVP+iKA7RnFMB2bIw=;
+        s=default; t=1578003521;
+        bh=0LXVk6jEhqxeLmaZ4jPfN2Vp4to1fWueQPFCjiLDdgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HyDAOvDar9bR3PwR6lvpChoL+GZgp8jrjznT30+BXLKjGMBhCVHz6hzLAA2zfJZAh
-         /LJ6pHj9n6afZJxQwoT4cBZdpY6vb/XtjWEWYsXRwoWvF1tByljsLG4D2p5KYtcNAf
-         z/c/0QJ7utcrQAxE0IM3y2wDpw80UV5vA9VcWUSs=
+        b=0kUI8KHQd5bODERye9O7mQ7hWHQyoNiOyUrh3Hdmv+Dl4xDsQA8Jf9WyAGAPzyJF0
+         3otDhMdcTQ9L73Wsj2MUIDjHQxPGzZnVi05a++vX+Z7kYHRsRs+4DXco/R8f8D5EaN
+         Gzzaj1pCq5e97ljrWdW/Viy6ErOHMwDlQglUgRgQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 175/191] net: dsa: sja1105: Reconcile the meaning of TPID and TPID2 for E/T and P/Q/R/S
-Date:   Thu,  2 Jan 2020 23:07:37 +0100
-Message-Id: <20200102215848.054114222@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Auhagen <sven.auhagen@voleatech.de>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 5.4 176/191] net: marvell: mvpp2: phylink requires the link interrupt
+Date:   Thu,  2 Jan 2020 23:07:38 +0100
+Message-Id: <20200102215848.146757519@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -59,90 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 54fa49ee88138756df0fcf867cb1849904710a8c ]
+[ Upstream commit f3f2364ea14d1cf6bf966542f31eadcf178f1577 ]
 
-For first-generation switches (SJA1105E and SJA1105T):
-- TPID means C-Tag (typically 0x8100)
-- TPID2 means S-Tag (typically 0x88A8)
+phylink requires the MAC to report when its link status changes when
+operating in inband modes.  Failure to report link status changes
+means that phylink has no idea when the link events happen, which
+results in either the network interface's carrier remaining up or
+remaining permanently down.
 
-While for the second generation switches (SJA1105P, SJA1105Q, SJA1105R,
-SJA1105S) it is the other way around:
-- TPID means S-Tag (typically 0x88A8)
-- TPID2 means C-Tag (typically 0x8100)
+For example, with a fiber module, if the interface is brought up and
+link is initially established, taking the link down at the far end
+will cut the optical power.  The SFP module's LOS asserts, we
+deactivate the link, and the network interface reports no carrier.
 
-In other words, E/T tags untagged traffic with TPID, and P/Q/R/S with
-TPID2.
+When the far end is brought back up, the SFP module's LOS deasserts,
+but the MAC may be slower to establish link.  If this happens (which
+in my tests is a certainty) then phylink never hears that the MAC
+has established link with the far end, and the network interface is
+stuck reporting no carrier.  This means the interface is
+non-functional.
 
-So the patch mentioned below fixed VLAN filtering for P/Q/R/S, but broke
-it for E/T.
+Avoiding the link interrupt when we have phylink is basically not
+an option, so remove the !port->phylink from the test.
 
-We strive for a common code path for all switches in the family, so just
-lie in the static config packing functions that TPID and TPID2 are at
-swapped bit offsets than they actually are, for P/Q/R/S. This will make
-both switches understand TPID to be ETH_P_8021Q and TPID2 to be
-ETH_P_8021AD. The meaning from the original E/T was chosen over P/Q/R/S
-because E/T is actually the one with public documentation available
-(UM10944.pdf).
-
-Fixes: f9a1a7646c0d ("net: dsa: sja1105: Reverse TPID and TPID2")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 4bb043262878 ("net: mvpp2: phylink support")
+Tested-by: Sven Auhagen <sven.auhagen@voleatech.de>
+Tested-by: Antoine Tenart <antoine.tenart@bootlin.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/sja1105/sja1105_main.c          |    8 ++++----
- drivers/net/dsa/sja1105/sja1105_static_config.c |    7 +++++--
- 2 files changed, 9 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/dsa/sja1105/sja1105_main.c
-+++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -1560,8 +1560,8 @@ static int sja1105_vlan_filtering(struct
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -3674,7 +3674,7 @@ static int mvpp2_open(struct net_device
+ 		valid = true;
+ 	}
  
- 	if (enabled) {
- 		/* Enable VLAN filtering. */
--		tpid  = ETH_P_8021AD;
--		tpid2 = ETH_P_8021Q;
-+		tpid  = ETH_P_8021Q;
-+		tpid2 = ETH_P_8021AD;
- 	} else {
- 		/* Disable VLAN filtering. */
- 		tpid  = ETH_P_SJA1105;
-@@ -1570,9 +1570,9 @@ static int sja1105_vlan_filtering(struct
- 
- 	table = &priv->static_config.tables[BLK_IDX_GENERAL_PARAMS];
- 	general_params = table->entries;
--	/* EtherType used to identify outer tagged (S-tag) VLAN traffic */
--	general_params->tpid = tpid;
- 	/* EtherType used to identify inner tagged (C-tag) VLAN traffic */
-+	general_params->tpid = tpid;
-+	/* EtherType used to identify outer tagged (S-tag) VLAN traffic */
- 	general_params->tpid2 = tpid2;
- 	/* When VLAN filtering is on, we need to at least be able to
- 	 * decode management traffic through the "backup plan".
---- a/drivers/net/dsa/sja1105/sja1105_static_config.c
-+++ b/drivers/net/dsa/sja1105/sja1105_static_config.c
-@@ -142,6 +142,9 @@ static size_t sja1105et_general_params_e
- 	return size;
- }
- 
-+/* TPID and TPID2 are intentionally reversed so that semantic
-+ * compatibility with E/T is kept.
-+ */
- static size_t
- sja1105pqrs_general_params_entry_packing(void *buf, void *entry_ptr,
- 					 enum packing_op op)
-@@ -166,9 +169,9 @@ sja1105pqrs_general_params_entry_packing
- 	sja1105_packing(buf, &entry->mirr_port,   141, 139, size, op);
- 	sja1105_packing(buf, &entry->vlmarker,    138, 107, size, op);
- 	sja1105_packing(buf, &entry->vlmask,      106,  75, size, op);
--	sja1105_packing(buf, &entry->tpid,         74,  59, size, op);
-+	sja1105_packing(buf, &entry->tpid2,        74,  59, size, op);
- 	sja1105_packing(buf, &entry->ignore2stf,   58,  58, size, op);
--	sja1105_packing(buf, &entry->tpid2,        57,  42, size, op);
-+	sja1105_packing(buf, &entry->tpid,         57,  42, size, op);
- 	sja1105_packing(buf, &entry->queue_ts,     41,  41, size, op);
- 	sja1105_packing(buf, &entry->egrmirrvid,   40,  29, size, op);
- 	sja1105_packing(buf, &entry->egrmirrpcp,   28,  26, size, op);
+-	if (priv->hw_version == MVPP22 && port->link_irq && !port->phylink) {
++	if (priv->hw_version == MVPP22 && port->link_irq) {
+ 		err = request_irq(port->link_irq, mvpp2_link_status_isr, 0,
+ 				  dev->name, port);
+ 		if (err) {
 
 
