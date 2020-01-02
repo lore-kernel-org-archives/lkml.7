@@ -2,162 +2,96 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9305CC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1E4C3276E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62C4320848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:01:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578006091;
-	bh=nEmCH8FIOJvwpG1CKDyvod+lwXCSTiUJilMAN/cIPWU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=adtUQaMJ18I/FC4ga6l59VfiUhXHiQncmFAVMjWjFqct5Qvi1doP0YXm80g9L2C4i
-	 z1cgah8UEgNqQGpHAtHHnQV8mLfV5+GH7lccylXb0cV6Dkl+jRVLQ++/SKUMtsTIuZ
-	 D73sRKpR4tMdVkVtV/sztMAxY+sDatwFKa0XggAc=
+	by mail.kernel.org (Postfix) with ESMTP id 8ED2620848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:05:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aLeDg29p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbgABWLX (ORCPT
+        id S1726293AbgABXFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:11:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49246 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbgABWLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:11:19 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3768D21835;
-        Thu,  2 Jan 2020 22:11:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003078;
-        bh=nEmCH8FIOJvwpG1CKDyvod+lwXCSTiUJilMAN/cIPWU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ElmgKwIADB5ScfEw8ZoMLWAFdek1rSdTZ685hXg0Tl0dI73AEbayEJ352Ay+PQbDJ
-         XeSzuyG8VaF/vK5J5/EvgYGqVbFKdZEaQKTP2e9dzNhJR7omELSTjnHU8ohVOGiZCP
-         Am2O5p4OzCBd79odJeSoRvO+s135ReCMa3VX/t+M=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 011/191] f2fs: fix to update time in lazytime mode
-Date:   Thu,  2 Jan 2020 23:04:53 +0100
-Message-Id: <20200102215830.944028838@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
-References: <20200102215829.911231638@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 2 Jan 2020 18:05:20 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38644 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgABXFU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 18:05:20 -0500
+Received: by mail-pf1-f193.google.com with SMTP id x185so22717752pfc.5;
+        Thu, 02 Jan 2020 15:05:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ryxK0mpRSxESJVWZudLQb/s67AYldpkB0jSH1Eh1Afw=;
+        b=aLeDg29p2KmC/fcmH39b5xWwftAl2vmN2tDI78IvgZ6okRJ5LBdipUUBwbatq4qlgJ
+         1aNDo7E/8HYOiiwV6+iY3XlcZ4+tTrQPKH8kXppZaAs3ViSizlVTHQn32A7F8pYo+yxP
+         7A9EUxHltGR3cLoMw0+gZWuVT8IuAQRyLXPVAI68sXpVdu+2Vu+mhE03ChwzjPXC7+na
+         MEXkHYURiJrTFz6joKR56JNB71mt0ISgWE+/4JTflb7xdoPcHHxPz8HZlnkmsLBKhftm
+         F7hlGnTQ90SgE6yzVUUsjaSHYcqHCccfHHNZH2Sc+18odqiYAX2nq3ilFvlob1N+JY8V
+         W3/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ryxK0mpRSxESJVWZudLQb/s67AYldpkB0jSH1Eh1Afw=;
+        b=bPzJwnVa0lSw92x1NdO+RLDoesLU5auKqwh5/YB5XZmDJPZ/6tgRKIg6tTYx0Am73v
+         LaRBdS4OOCZiK7YWpeTCRg5WrHRMOd6YJiioCst3sAsidY2cIHCAvGlJCYBL/fKWvdtZ
+         N6kCN6eHEyX5z3G8Kh/1kVfLdAbXW524HkxkaUf7nEWHX5h6J7gsaURKTPFlXw29Msa0
+         w2xF3CJR+dSQMNF4Ju1MJn2ZNvIyEZv2CxGDjdIsCLp60x48V3l+JiS08dBTUirgwwyy
+         XbDc9nO1+eoLiLPADQLg2WbGUaoW0HvxepJfC6lSKqWXdyBwFtGpM6UiIyJPSvRbEG1i
+         VoFw==
+X-Gm-Message-State: APjAAAVL22iarJ8n2E78YyFhAWg308560eXQ05Rot9cSTbemJLmlm2bP
+        OERM1h+yjhaDYIDOS8GgObM=
+X-Google-Smtp-Source: APXvYqzRWoUbS3Y9gTmH/CRnK1CzA1PLL56ZbDydCwBi6vJWZQmBQydnOJ6BNg36lSEJWkP6r4NRZw==
+X-Received: by 2002:aa7:968d:: with SMTP id f13mr88709714pfk.67.1578006319882;
+        Thu, 02 Jan 2020 15:05:19 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q15sm60886561pgi.55.2020.01.02.15.05.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 02 Jan 2020 15:05:19 -0800 (PST)
+Date:   Thu, 2 Jan 2020 15:05:18 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/91] 4.14.162-stable review
+Message-ID: <20200102230518.GA1087@roeck-us.net>
+References: <20200102220356.856162165@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+On Thu, Jan 02, 2020 at 11:06:42PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.162 release.
+> There are 91 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 04 Jan 2020 22:01:54 +0000.
+> Anything received after that time might be too late.
+> 
 
-[ Upstream commit fe1897eaa6646f5a64a4cee0e6473ed9887d324b ]
+drivers/pci/switch/switchtec.c: In function 'ioctl_event_summary':
+drivers/pci/switch/switchtec.c:901:18: error: implicit declaration of function 'readq'; did you mean 'readl'?
 
-generic/018 reports an inconsistent status of atime, the
-testcase is as below:
-- open file with O_SYNC
-- write file to construct fraged space
-- calc md5 of file
-- record {a,c,m}time
-- defrag file --- do nothing
-- umount & mount
-- check {a,c,m}time
+The problem also affects v4.19.y. Seen with various 32-bit builds,
+including i386:allmodconfig and arm:allmodconfig.
 
-The root cause is, as f2fs enables lazytime by default, atime
-update will dirty vfs inode, rather than dirtying f2fs inode (by set
-with FI_DIRTY_INODE), so later f2fs_write_inode() called from VFS will
-fail to update inode page due to our skip:
+The backport replaces ioread64 with readq, which may not have been
+such a good idea.
 
-f2fs_write_inode()
-	if (is_inode_flag_set(inode, FI_DIRTY_INODE))
-		return 0;
-
-So eventually, after evict(), we lose last atime for ever.
-
-To fix this issue, we need to check whether {a,c,m,cr}time is
-consistent in between inode cache and inode page, and only skip
-f2fs_update_inode() if f2fs inode is not dirty and time is
-consistent as well.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/f2fs/f2fs.h  | 23 +++++++++++++++--------
- fs/f2fs/inode.c |  6 +++++-
- 2 files changed, 20 insertions(+), 9 deletions(-)
-
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 4024790028aa..f078cd20dab8 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -2704,6 +2704,20 @@ static inline void clear_file(struct inode *inode, int type)
- 	f2fs_mark_inode_dirty_sync(inode, true);
- }
- 
-+static inline bool f2fs_is_time_consistent(struct inode *inode)
-+{
-+	if (!timespec64_equal(F2FS_I(inode)->i_disk_time, &inode->i_atime))
-+		return false;
-+	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 1, &inode->i_ctime))
-+		return false;
-+	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 2, &inode->i_mtime))
-+		return false;
-+	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 3,
-+						&F2FS_I(inode)->i_crtime))
-+		return false;
-+	return true;
-+}
-+
- static inline bool f2fs_skip_inode_update(struct inode *inode, int dsync)
- {
- 	bool ret;
-@@ -2721,14 +2735,7 @@ static inline bool f2fs_skip_inode_update(struct inode *inode, int dsync)
- 			i_size_read(inode) & ~PAGE_MASK)
- 		return false;
- 
--	if (!timespec64_equal(F2FS_I(inode)->i_disk_time, &inode->i_atime))
--		return false;
--	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 1, &inode->i_ctime))
--		return false;
--	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 2, &inode->i_mtime))
--		return false;
--	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 3,
--						&F2FS_I(inode)->i_crtime))
-+	if (!f2fs_is_time_consistent(inode))
- 		return false;
- 
- 	down_read(&F2FS_I(inode)->i_sem);
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index db4fec30c30d..386ad54c13c3 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -615,7 +615,11 @@ int f2fs_write_inode(struct inode *inode, struct writeback_control *wbc)
- 			inode->i_ino == F2FS_META_INO(sbi))
- 		return 0;
- 
--	if (!is_inode_flag_set(inode, FI_DIRTY_INODE))
-+	/*
-+	 * atime could be updated without dirtying f2fs inode in lazytime mode
-+	 */
-+	if (f2fs_is_time_consistent(inode) &&
-+		!is_inode_flag_set(inode, FI_DIRTY_INODE))
- 		return 0;
- 
- 	if (!f2fs_is_checkpoint_ready(sbi))
--- 
-2.20.1
-
-
-
+Guenter
