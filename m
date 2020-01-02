@@ -4,50 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19AF1C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F10BC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D756920866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73C7D21835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578006007;
-	bh=4X3EMyJ0yJG6dcvF3YVvO9otDvVgBRj4flXFT3gicCQ=;
+	s=default; t=1578006008;
+	bh=OhY9CAsLkxIZOLlGYxFrgHEj3kuAGOIgU1jy5q4CoRU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h76WMUeo8FL71SoYDy4EoZ7KM0duMiRu6wyK3Ls9a9ciMma6A+C8M6gVeZqMejC+w
-	 /kRWT+iVBfGoqOkfwyK3TgyJmftOMFlp40lqfTkmxjxEZNbfxLFYPuQKIy3pQcdKuh
-	 ZomuA567JDFvO2BqYaOkpzt+imrl+T3mFtC0ClI4=
+	b=Wkwh2TNk6CTFh2FKn/8uly5MZM3Eg5iDFDjPTBKb1LVQwu8XJyqnbx2uOtPOMbMBT
+	 kX/0QwXiLpL/jStJXMfNi0pQ+oZeTM9jksC2nRDJhGYjldfHL6cGxACinI74IsY0uF
+	 YUSIAJSchTBbaM3K3tBW98ducajcmpysLbonpHqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbgABXAF (ORCPT
+        id S1728719AbgABW6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 18:00:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53198 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:58:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727379AbgABWN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:13:26 -0500
+        id S1727701AbgABWQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:16:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F4512253D;
-        Thu,  2 Jan 2020 22:13:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B29F621582;
+        Thu,  2 Jan 2020 22:16:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003206;
-        bh=4X3EMyJ0yJG6dcvF3YVvO9otDvVgBRj4flXFT3gicCQ=;
+        s=default; t=1578003361;
+        bh=OhY9CAsLkxIZOLlGYxFrgHEj3kuAGOIgU1jy5q4CoRU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U5Hm7LgyowJIw9aJSBS2D0KXaz13pqz1pTC4ZbL892gyikYYDn8g71FfYT1+fgxTh
-         dWoA3mByAwVuJIiaKfXZRRQJbmpb4Ph+ijU0OaOplTI++4n6w85lfDAyy7cQBA256m
-         IfwM4H7uueNJIY5TeFZJhszdA4TN6oIHqGYjr0KM=
+        b=vxk2GpUYMS4cPlMdygqkpq3RUrtrXpEe7jCFIiffEP7svpLto3W9pmuR2yOSVQ5/n
+         6hl78bLeavBMGbu9HfoSJG5vL76sZPlUzYhk6K7MDJ9oDWONeh9bAq/QJKIjmg4NEr
+         61GrGLwZw12kxqY88S+qIq1sq2lxz2QOh9Dxe9B4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pavel Modilaynen <pavel.modilaynen@axis.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 038/191] dtc: Use pkg-config to locate libyaml
-Date:   Thu,  2 Jan 2020 23:05:20 +0100
-Message-Id: <20200102215834.015953905@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Daniel Colascione <dancol@google.com>,
+        Jann Horn <jannh@google.com>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Nosh Minwalla <nosh@google.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Tim Murray <timmurray@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 129/191] userfaultfd: require CAP_SYS_PTRACE for UFFD_FEATURE_EVENT_FORK
+Date:   Thu,  2 Jan 2020 23:06:51 +0100
+Message-Id: <20200102215843.542976659@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -60,51 +70,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Modilaynen <pavel.modilaynen@axis.com>
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-[ Upstream commit 067c650c456e758f933aaf87a202f841d34be269 ]
+[ Upstream commit 3c1c24d91ffd536de0a64688a9df7f49e58fadbc ]
 
-Using Makefile's wildcard with absolute path to detect
-the presence of libyaml results in false-positive
-detection when cross-compiling e.g. in yocto environment.
-The latter results in build error:
-| scripts/dtc/yamltree.o: In function `yaml_propval_int':
-| yamltree.c: undefined reference to `yaml_sequence_start_event_initialize'
-| yamltree.c: undefined reference to `yaml_emitter_emit'
-| yamltree.c: undefined reference to `yaml_scalar_event_initialize'
-...
-Use pkg-config to locate libyaml to address this scenario.
+A while ago Andy noticed
+(http://lkml.kernel.org/r/CALCETrWY+5ynDct7eU_nDUqx=okQvjm=Y5wJvA4ahBja=CQXGw@mail.gmail.com)
+that UFFD_FEATURE_EVENT_FORK used by an unprivileged user may have
+security implications.
 
-Signed-off-by: Pavel Modilaynen <pavel.modilaynen@axis.com>
-[robh: silence stderr]
-Signed-off-by: Rob Herring <robh@kernel.org>
+As the first step of the solution the following patch limits the availably
+of UFFD_FEATURE_EVENT_FORK only for those having CAP_SYS_PTRACE.
+
+The usage of CAP_SYS_PTRACE ensures compatibility with CRIU.
+
+Yet, if there are other users of non-cooperative userfaultfd that run
+without CAP_SYS_PTRACE, they would be broken :(
+
+Current implementation of UFFD_FEATURE_EVENT_FORK modifies the file
+descriptor table from the read() implementation of uffd, which may have
+security implications for unprivileged use of the userfaultfd.
+
+Limit availability of UFFD_FEATURE_EVENT_FORK only for callers that have
+CAP_SYS_PTRACE.
+
+Link: http://lkml.kernel.org/r/1572967777-8812-2-git-send-email-rppt@linux.ibm.com
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Daniel Colascione <dancol@google.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Lokesh Gidra <lokeshgidra@google.com>
+Cc: Nick Kralevich <nnk@google.com>
+Cc: Nosh Minwalla <nosh@google.com>
+Cc: Pavel Emelyanov <ovzxemul@gmail.com>
+Cc: Tim Murray <timmurray@google.com>
+Cc: Aleksa Sarai <cyphar@cyphar.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/dtc/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/userfaultfd.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
-index 82160808765c..b5a5b1c548c9 100644
---- a/scripts/dtc/Makefile
-+++ b/scripts/dtc/Makefile
-@@ -11,7 +11,7 @@ dtc-objs	+= dtc-lexer.lex.o dtc-parser.tab.o
- # Source files need to get at the userspace version of libfdt_env.h to compile
- HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index f9fd18670e22..d99d166fd892 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -1834,13 +1834,12 @@ static int userfaultfd_api(struct userfaultfd_ctx *ctx,
+ 	if (copy_from_user(&uffdio_api, buf, sizeof(uffdio_api)))
+ 		goto out;
+ 	features = uffdio_api.features;
+-	if (uffdio_api.api != UFFD_API || (features & ~UFFD_API_FEATURES)) {
+-		memset(&uffdio_api, 0, sizeof(uffdio_api));
+-		if (copy_to_user(buf, &uffdio_api, sizeof(uffdio_api)))
+-			goto out;
+-		ret = -EINVAL;
+-		goto out;
+-	}
++	ret = -EINVAL;
++	if (uffdio_api.api != UFFD_API || (features & ~UFFD_API_FEATURES))
++		goto err_out;
++	ret = -EPERM;
++	if ((features & UFFD_FEATURE_EVENT_FORK) && !capable(CAP_SYS_PTRACE))
++		goto err_out;
+ 	/* report all available features and ioctls to userland */
+ 	uffdio_api.features = UFFD_API_FEATURES;
+ 	uffdio_api.ioctls = UFFD_API_IOCTLS;
+@@ -1853,6 +1852,11 @@ static int userfaultfd_api(struct userfaultfd_ctx *ctx,
+ 	ret = 0;
+ out:
+ 	return ret;
++err_out:
++	memset(&uffdio_api, 0, sizeof(uffdio_api));
++	if (copy_to_user(buf, &uffdio_api, sizeof(uffdio_api)))
++		ret = -EFAULT;
++	goto out;
+ }
  
--ifeq ($(wildcard /usr/include/yaml.h),)
-+ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
- ifneq ($(CHECK_DTBS),)
- $(error dtc needs libyaml for DT schema validation support. \
- 	Install the necessary libyaml development package.)
-@@ -19,7 +19,7 @@ endif
- HOST_EXTRACFLAGS += -DNO_YAML
- else
- dtc-objs	+= yamltree.o
--HOSTLDLIBS_dtc	:= -lyaml
-+HOSTLDLIBS_dtc	:= $(shell pkg-config yaml-0.1 --libs)
- endif
- 
- # Generated files need one more search path to include headers in source tree
+ static long userfaultfd_ioctl(struct file *file, unsigned cmd,
 -- 
 2.20.1
 
