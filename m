@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0A9C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FD3C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7383E21582
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0A2D24125
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003451;
-	bh=TUF6l8qqFHFTpbCmAeUfedIvNbaM8HwzC82v6RJxrsI=;
+	s=default; t=1578003454;
+	bh=xZQLgMunRJyO2nb4wPwgaz0jgqxLQJDMF+Jhyi9R9Ds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=evFx7i7Jz1bVNr17TdJUpOeywmhuYihOcSPBv15FU5krxUHTShQxkABGC45IM5sgC
-	 LCTeqXvexsoAYl/o0IK2S7AInR3VTg/pNU0nn/ATOtBPdZtHB98LPT+jbI+QtGqdE2
-	 zfFYzQujwcXzJVy/F4RoBZi/rKTQ7UHGdVw4jWOk=
+	b=J5nFz83BWOeJGCG4x/cKY5vK2XeTwKhiaPauPssKSfDUIcfZpoAzsv8js4ChWiCcn
+	 NW+2DhuIkwpxZAeBJLRJwYC2LwBeVfwAUIHNZPOuvDEnweVKKfUxovR/q5XZAf6vup
+	 TGCnkagn1yne1F7KP5UJ5qy8zw1q7L3voiPjiH6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgABWRa (ORCPT
+        id S1728361AbgABWRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:17:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59892 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:17:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728350AbgABWR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:17:26 -0500
+        id S1728168AbgABWRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:17:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D76C21582;
-        Thu,  2 Jan 2020 22:17:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5674A24125;
+        Thu,  2 Jan 2020 22:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003445;
-        bh=TUF6l8qqFHFTpbCmAeUfedIvNbaM8HwzC82v6RJxrsI=;
+        s=default; t=1578003449;
+        bh=xZQLgMunRJyO2nb4wPwgaz0jgqxLQJDMF+Jhyi9R9Ds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oh8GEUcrWfYnZPNWCVWRiHyugSxk2I56/jXZ2/R9J6Go+7dy9zS4OfbEHbhxmxNeN
-         5LVyh/p2GqdBVdkdlYE68Cxysnb1taayhsAk0x3cAlLddju8NS0yuTGuX/7lKjUJ3l
-         iTHY8HyY9PI+I7PBhwt9X2HfxRv9pHM6v7QKsUQU=
+        b=BQ32KbMfUJQNc2DW5OMcW7xVdI2i2UxJk41W1VMJmS8u1o3q2lf3NlHbqPzovajWp
+         li+r8/BR7X27x2E4quUInI9N0T2XPPj8zgKdPuNr0XYFgv5LW22GHWYwQVczL35mIW
+         t/uwe++I1aYwXEIg1rMewIlfJ6s/elixW2i62YyA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
+        stable@vger.kernel.org, Amit Cohen <amitc@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 163/191] bnxt_en: Fix the logic that creates the health reporters.
-Date:   Thu,  2 Jan 2020 23:07:25 +0100
-Message-Id: <20200102215846.854474500@linuxfoundation.org>
+Subject: [PATCH 5.4 165/191] mlxsw: spectrum_router: Skip loopback RIFs during MAC validation
+Date:   Thu,  2 Jan 2020 23:07:27 +0100
+Message-Id: <20200102215847.025180886@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,195 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Amit Cohen <amitc@mellanox.com>
 
-[ Upstream commit 937f188c1f4f89b3fa93ba31fc8587dc1fb14a22 ]
+[ Upstream commit 314bd842d98e1035cc40b671a71e07f48420e58f ]
 
-Fix the logic to properly check the fw capabilities and create the
-devlink health reporters only when needed.  The current code creates
-the reporters unconditionally as long as bp->fw_health is valid, and
-that's not correct.
+When a router interface (RIF) is created the MAC address of the backing
+netdev is verified to have the same MSBs as existing RIFs. This is
+required in order to avoid changing existing RIF MAC addresses that all
+share the same MSBs.
 
-Call bnxt_dl_fw_reporters_create() directly from the init and reset
-code path instead of from bnxt_dl_register().  This allows the
-reporters to be adjusted when capabilities change.  The same
-applies to bnxt_dl_fw_reporters_destroy().
+Loopback RIFs are special in this regard as they do not have a MAC
+address, given they are only used to loop packets from the overlay to
+the underlay.
 
-Fixes: 6763c779c2d8 ("bnxt_en: Add new FW devlink_health_reporter")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Without this change, an error is returned when trying to create a RIF
+after the creation of a GRE tunnel that is represented by a loopback
+RIF. 'rif->dev->dev_addr' points to the GRE device's local IP, which
+does not share the same MSBs as physical interfaces. Adding an IP
+address to any physical interface results in:
+
+Error: mlxsw_spectrum: All router interface MAC addresses must have the
+same prefix.
+
+Fix this by skipping loopback RIFs during MAC validation.
+
+Fixes: 74bc99397438 ("mlxsw: spectrum_router: Veto unsupported RIF MAC addresses")
+Signed-off-by: Amit Cohen <amitc@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c         |   11 +++
- drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c |   64 +++++++++++++++-------
- drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.h |    2 
- 3 files changed, 56 insertions(+), 21 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -10563,6 +10563,12 @@ static int bnxt_fw_init_one(struct bnxt
- 	rc = bnxt_approve_mac(bp, bp->dev->dev_addr, false);
- 	if (rc)
- 		return rc;
-+
-+	/* In case fw capabilities have changed, destroy the unneeded
-+	 * reporters and create newly capable ones.
-+	 */
-+	bnxt_dl_fw_reporters_destroy(bp, false);
-+	bnxt_dl_fw_reporters_create(bp);
- 	bnxt_fw_init_one_p3(bp);
- 	return 0;
- }
-@@ -11339,6 +11345,7 @@ static void bnxt_remove_one(struct pci_d
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+@@ -6985,6 +6985,9 @@ static int mlxsw_sp_router_port_check_ri
  
- 	if (BNXT_PF(bp)) {
- 		bnxt_sriov_disable(bp);
-+		bnxt_dl_fw_reporters_destroy(bp, true);
- 		bnxt_dl_unregister(bp);
- 	}
- 
-@@ -11837,8 +11844,10 @@ static int bnxt_init_one(struct pci_dev
- 	if (rc)
- 		goto init_err_cleanup_tc;
- 
--	if (BNXT_PF(bp))
-+	if (BNXT_PF(bp)) {
- 		bnxt_dl_register(bp);
-+		bnxt_dl_fw_reporters_create(bp);
-+	}
- 
- 	netdev_info(dev, "%s found at mem %lx, node addr %pM\n",
- 		    board_info[ent->driver_data].name,
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
-@@ -102,21 +102,15 @@ struct devlink_health_reporter_ops bnxt_
- 	.recover = bnxt_fw_fatal_recover,
- };
- 
--static void bnxt_dl_fw_reporters_create(struct bnxt *bp)
-+void bnxt_dl_fw_reporters_create(struct bnxt *bp)
- {
- 	struct bnxt_fw_health *health = bp->fw_health;
- 
--	if (!health)
-+	if (!bp->dl || !health)
- 		return;
- 
--	health->fw_reporter =
--		devlink_health_reporter_create(bp->dl, &bnxt_dl_fw_reporter_ops,
--					       0, false, bp);
--	if (IS_ERR(health->fw_reporter)) {
--		netdev_warn(bp->dev, "Failed to create FW health reporter, rc = %ld\n",
--			    PTR_ERR(health->fw_reporter));
--		health->fw_reporter = NULL;
--	}
-+	if (!(bp->fw_cap & BNXT_FW_CAP_HOT_RESET) || health->fw_reset_reporter)
-+		goto err_recovery;
- 
- 	health->fw_reset_reporter =
- 		devlink_health_reporter_create(bp->dl,
-@@ -126,8 +120,30 @@ static void bnxt_dl_fw_reporters_create(
- 		netdev_warn(bp->dev, "Failed to create FW fatal health reporter, rc = %ld\n",
- 			    PTR_ERR(health->fw_reset_reporter));
- 		health->fw_reset_reporter = NULL;
-+		bp->fw_cap &= ~BNXT_FW_CAP_HOT_RESET;
- 	}
- 
-+err_recovery:
-+	if (!(bp->fw_cap & BNXT_FW_CAP_ERROR_RECOVERY))
-+		return;
-+
-+	if (!health->fw_reporter) {
-+		health->fw_reporter =
-+			devlink_health_reporter_create(bp->dl,
-+						       &bnxt_dl_fw_reporter_ops,
-+						       0, false, bp);
-+		if (IS_ERR(health->fw_reporter)) {
-+			netdev_warn(bp->dev, "Failed to create FW health reporter, rc = %ld\n",
-+				    PTR_ERR(health->fw_reporter));
-+			health->fw_reporter = NULL;
-+			bp->fw_cap &= ~BNXT_FW_CAP_ERROR_RECOVERY;
-+			return;
-+		}
-+	}
-+
-+	if (health->fw_fatal_reporter)
-+		return;
-+
- 	health->fw_fatal_reporter =
- 		devlink_health_reporter_create(bp->dl,
- 					       &bnxt_dl_fw_fatal_reporter_ops,
-@@ -136,24 +152,35 @@ static void bnxt_dl_fw_reporters_create(
- 		netdev_warn(bp->dev, "Failed to create FW fatal health reporter, rc = %ld\n",
- 			    PTR_ERR(health->fw_fatal_reporter));
- 		health->fw_fatal_reporter = NULL;
-+		bp->fw_cap &= ~BNXT_FW_CAP_ERROR_RECOVERY;
- 	}
- }
- 
--static void bnxt_dl_fw_reporters_destroy(struct bnxt *bp)
-+void bnxt_dl_fw_reporters_destroy(struct bnxt *bp, bool all)
- {
- 	struct bnxt_fw_health *health = bp->fw_health;
- 
--	if (!health)
-+	if (!bp->dl || !health)
- 		return;
- 
--	if (health->fw_reporter)
--		devlink_health_reporter_destroy(health->fw_reporter);
--
--	if (health->fw_reset_reporter)
-+	if ((all || !(bp->fw_cap & BNXT_FW_CAP_HOT_RESET)) &&
-+	    health->fw_reset_reporter) {
- 		devlink_health_reporter_destroy(health->fw_reset_reporter);
-+		health->fw_reset_reporter = NULL;
-+	}
- 
--	if (health->fw_fatal_reporter)
-+	if ((bp->fw_cap & BNXT_FW_CAP_ERROR_RECOVERY) && !all)
-+		return;
-+
-+	if (health->fw_reporter) {
-+		devlink_health_reporter_destroy(health->fw_reporter);
-+		health->fw_reporter = NULL;
-+	}
-+
-+	if (health->fw_fatal_reporter) {
- 		devlink_health_reporter_destroy(health->fw_fatal_reporter);
-+		health->fw_fatal_reporter = NULL;
-+	}
- }
- 
- void bnxt_devlink_health_report(struct bnxt *bp, unsigned long event)
-@@ -458,8 +485,6 @@ int bnxt_dl_register(struct bnxt *bp)
- 
- 	devlink_params_publish(dl);
- 
--	bnxt_dl_fw_reporters_create(bp);
--
- 	return 0;
- 
- err_dl_port_unreg:
-@@ -482,7 +507,6 @@ void bnxt_dl_unregister(struct bnxt *bp)
- 	if (!dl)
- 		return;
- 
--	bnxt_dl_fw_reporters_destroy(bp);
- 	devlink_port_params_unregister(&bp->dl_port, bnxt_dl_port_params,
- 				       ARRAY_SIZE(bnxt_dl_port_params));
- 	devlink_port_unregister(&bp->dl_port);
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.h
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.h
-@@ -57,6 +57,8 @@ struct bnxt_dl_nvm_param {
- };
- 
- void bnxt_devlink_health_report(struct bnxt *bp, unsigned long event);
-+void bnxt_dl_fw_reporters_create(struct bnxt *bp);
-+void bnxt_dl_fw_reporters_destroy(struct bnxt *bp, bool all);
- int bnxt_dl_register(struct bnxt *bp);
- void bnxt_dl_unregister(struct bnxt *bp);
- 
+ 	for (i = 0; i < MLXSW_CORE_RES_GET(mlxsw_sp->core, MAX_RIFS); i++) {
+ 		rif = mlxsw_sp->router->rifs[i];
++		if (rif && rif->ops &&
++		    rif->ops->type == MLXSW_SP_RIF_TYPE_IPIP_LB)
++			continue;
+ 		if (rif && rif->dev && rif->dev != dev &&
+ 		    !ether_addr_equal_masked(rif->dev->dev_addr, dev_addr,
+ 					     mlxsw_sp->mac_mask)) {
 
 
