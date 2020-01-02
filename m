@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51521C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69110C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2459720863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 317A120863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004872;
-	bh=K7SE10bigZvxGl43MedsdOZk/x9XA9Zvd33+Z36It54=;
+	s=default; t=1578004878;
+	bh=oAKlgiLASENKMc8vSC96bQbrxPcQYChYFw69i5cC5YA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t4y9R0jqBmnkg+Co/qaCqkIqugSiYo1CgebZaLgp8qenchZQS3M6XGC6NBnVEBlBD
-	 FY1apQzjsWrfBcMZBL7jDFI5JeNobF09w5qGdw5mE9G2aKu76S146pepoY79djbnEh
-	 fFkKIgMP9xMx68fXhGlnOLE+3z6UzqztofCsoHH0=
+	b=lxIqe//V+VREmzPuOLZaVB+o+leD5b7QGWPQH6s07hrHMCOL4YTi1MJfxSiv2PJuy
+	 ABKDe9+XpgLHor1p3GfAeVlsgTCb0bR3JoRBOjx0bnBHjyqucOOPqk05sfS7VBOOsz
+	 QCmcPdfJg+m5TY9V1mByzBY3/PKkIZfnyjvBfiM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731232AbgABWlK (ORCPT
+        id S1731240AbgABWlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:41:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50274 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:41:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730932AbgABWhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:37:35 -0500
+        id S1731086AbgABWh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:37:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB1CE20863;
-        Thu,  2 Jan 2020 22:37:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8007820866;
+        Thu,  2 Jan 2020 22:37:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004655;
-        bh=K7SE10bigZvxGl43MedsdOZk/x9XA9Zvd33+Z36It54=;
+        s=default; t=1578004648;
+        bh=oAKlgiLASENKMc8vSC96bQbrxPcQYChYFw69i5cC5YA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2J4sjLkAvZAoivMjO+UB/3aSuwitkPwP5iQk1uGq/Pe2jkov0VnNGReOYldKPnAvL
-         v5o1Uy3MeMkQP9l/J0W8boSk0lhoOI5EuSVUeQG1dTRoeA8u5mfiClrmTFg5jxIZLz
-         zSk9wL8YwhqvhpXu/4ywaPG/hQ3nYrXG7vHE7Yvs=
+        b=pYoQZW+YxcEsEQTULL8JABI71mlcB0ofTupSeKYudWknYzNbCcOOVdCkTR6p8PsTE
+         mwFCy3kS8PDdGyKhdl1XHQFUew80wE4lcT+Jbdi0Dk4iaF5dKPjnmx9NjxB9r2WZ/t
+         23OO5X2oFUNa+5IqGo5oLJ2KO47/xLluzLnmSj+Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 098/137] dma-debug: add a schedule point in debug_dma_dump_mappings()
-Date:   Thu,  2 Jan 2020 23:07:51 +0100
-Message-Id: <20200102220600.245410965@linuxfoundation.org>
+Subject: [PATCH 4.4 095/137] scsi: lpfc: Fix SLI3 hba in loop mode not discovering devices
+Date:   Thu,  2 Jan 2020 23:07:48 +0100
+Message-Id: <20200102220559.762033259@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -62,43 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 9ff6aa027dbb98755f0265695354f2dd07c0d1ce ]
+[ Upstream commit feff8b3d84d3d9570f893b4d83e5eab6693d6a52 ]
 
-debug_dma_dump_mappings() can take a lot of cpu cycles :
+When operating in private loop mode, PLOGI exchanges are racing and the
+driver tries to abort it's PLOGI. But the PLOGI abort ends up terminating
+the login with the other end causing the other end to abort its PLOGI as
+well. Discovery never fully completes.
 
-lpk43:/# time wc -l /sys/kernel/debug/dma-api/dump
-163435 /sys/kernel/debug/dma-api/dump
+Fix by disabling the PLOGI abort when private loop and letting the state
+machine play out.
 
-real	0m0.463s
-user	0m0.003s
-sys	0m0.459s
-
-Let's add a cond_resched() to avoid holding cpu for too long.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Corentin Labbe <clabbe@baylibre.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Link: https://lore.kernel.org/r/20191018211832.7917-5-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/dma-debug.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/lpfc/lpfc_nportdisc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/lib/dma-debug.c b/lib/dma-debug.c
-index 51a76af25c66..173013f5e41b 100644
---- a/lib/dma-debug.c
-+++ b/lib/dma-debug.c
-@@ -427,6 +427,7 @@ void debug_dma_dump_mappings(struct device *dev)
- 		}
- 
- 		spin_unlock_irqrestore(&bucket->lock, flags);
-+		cond_resched();
+diff --git a/drivers/scsi/lpfc/lpfc_nportdisc.c b/drivers/scsi/lpfc/lpfc_nportdisc.c
+index 3a4613f9fb9f..6aa0698925da 100644
+--- a/drivers/scsi/lpfc/lpfc_nportdisc.c
++++ b/drivers/scsi/lpfc/lpfc_nportdisc.c
+@@ -454,8 +454,10 @@ lpfc_rcv_plogi(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp,
+ 	 * single discovery thread, this will cause a huge delay in
+ 	 * discovery. Also this will cause multiple state machines
+ 	 * running in parallel for this node.
++	 * This only applies to a fabric environment.
+ 	 */
+-	if (ndlp->nlp_state == NLP_STE_PLOGI_ISSUE) {
++	if ((ndlp->nlp_state == NLP_STE_PLOGI_ISSUE) &&
++	    (vport->fc_flag & FC_FABRIC)) {
+ 		/* software abort outstanding PLOGI */
+ 		lpfc_els_abort(phba, ndlp);
  	}
- }
- EXPORT_SYMBOL(debug_dma_dump_mappings);
 -- 
 2.20.1
 
