@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB71BC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 04:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B05C2D0DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 04:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEB2021734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 04:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C964621734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 04:31:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RvwUp7Xl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rX61RXPG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgABEbX (ORCPT
+        id S1727674AbgABEb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 23:31:23 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:40181 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727750AbgABEbV (ORCPT
+        Wed, 1 Jan 2020 23:31:27 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45302 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727741AbgABEbU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 23:31:21 -0500
-Received: by mail-qk1-f196.google.com with SMTP id c17so30614988qkg.7
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 20:31:20 -0800 (PST)
+        Wed, 1 Jan 2020 23:31:20 -0500
+Received: by mail-qk1-f195.google.com with SMTP id x1so30577588qkl.12
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 20:31:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vQjqa8LyABcBdUeE2JB5NAzR+hXd6lMpx7BCUYqPi/M=;
-        b=RvwUp7XlHPAhl+sESC0uANnFLglo7t0+euz6UR3seyqX0O1hossA2B64dzgTT1JhmE
-         SiSVmEeOzoEFwsl652KzZXIsXZs06XR9BY0/f8Faa73+Sg4SjwSie4C3rTdxhu39MoqZ
-         BUMq2Bh3LRfqSeGUyLuicmFhZebOJ0UAaXnPhJlOLwyMhdx2JJSKOWLTox+ouck9dSlR
-         kKyS8FTdxr/kIDyAoVChJ0Egf0cStkmnIKol81UNKPGWNm7GPXu84WKvKn9ONOhWOVNS
-         XL2d8zX1bl61uia72dWPH2tXr2jKoUUEV6RAtn9ypOls5g/drpcLrrGZ0HEGWeJUL2N+
-         eWgw==
+        bh=8yle5SGT2LD8EPGS4O93IAzsD2MIvygf12/flk+DQCQ=;
+        b=rX61RXPGBTCZxmJLV+CXp5tMUXb/AB3GBIjTf7InZxDZaQsofQO2fCvJ9YBjUmQYKu
+         JldBaF/DW0IIXCt9+ViHWvoNams5n755ziWMXGxJ46sU8xF9VVTHROTGGX65efHV345y
+         Z93pPyqSXAaBK/sSdIbkZJNGQ33snj7vyFcAHP/uGvRN7aGNqkFpefXTMI5CUrlhP6od
+         C8t86dxLViFbjbDdR+RJ7gFp4fbDRgwvau7eH7DV/SoAjbD5O4/KG94f8YWsJZVBB2Qk
+         EgOD4LBTlwvDAI+zPF/N2Wg3JX4w6HnNvWH/lDqBi9eXM8QtHW+z0olyS4Vu7qN7+ib3
+         LIZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vQjqa8LyABcBdUeE2JB5NAzR+hXd6lMpx7BCUYqPi/M=;
-        b=q3cIgXua6z/YmDjSj6dIRLlwSDHYb0+ujmF1NfRbnwcfuyNvsrqAi5ZcC4Y70pCfAQ
-         1ubGZ8ahlxgRRZDO2SQs/wXuH+v6L+X9/GCKW4X1Sf4i0XARPUaoGZTOjkeIrU8rnoHK
-         dYaikkzbKm326V4ojVmftcEIhzDFWzQ4VX4piWmXIP8/zsVRAlXFd+UhMDRu3RxGgsSy
-         U40pEiQ7Lz49jsnihIi+DgoPSkk8Z/8d1xaWYmpBssRhb+mqfboWxEU89Rdcti5d1F8f
-         64f3yPSMujBG+/DNt3J0Q9MIW4pDvzjb4wA+JH0ynw0eIKiHK8yJZU0KdNMne4hSNWk5
-         u5DA==
-X-Gm-Message-State: APjAAAXqALPcHjetzM2eOm8W5SgMoBDVojKPW5mS7i7VrXM8zgabgYg7
-        pQV0A/DeGlZl6YuG2NPi35g=
-X-Google-Smtp-Source: APXvYqzZkF8qqwlW2leReKONWBDhTwZKaJkR3cYtufHA7ObNTymVTB+lnxvWzbmMFNwmUZZfqnto+w==
-X-Received: by 2002:a37:c244:: with SMTP id j4mr64044378qkm.433.1577939480463;
-        Wed, 01 Jan 2020 20:31:20 -0800 (PST)
+        bh=8yle5SGT2LD8EPGS4O93IAzsD2MIvygf12/flk+DQCQ=;
+        b=asDyKpary3gNibNg7wuCAAdnv8lyEn0xjYDu3sc7CbKmw3YP06ZdYfhLF3A9OPstU3
+         CsWjlZxRWQSNfQMBhvvbopUBjq0goqt/uoKJbSulszBZ0q/d47xTo2gbZ3RmN0Xvxlvs
+         SFUN0+AbW8PqChm9nAywqDckKiSarkAkUMDwnQBEZFhhJgjj+CEONbsHY53RiuCtV3XB
+         jGGWpW28qIL++wYTe5gUygwa2/BIPRtclDRDEH1vGow4Wrz8ZDVNexeMl7brG2sM9bLx
+         KivOD347jDPuKLyxmtjd1Kp53/r3a1S+hgR8qulD2VGaZXzjyGleqolbNP/OUT1s29f+
+         nFtg==
+X-Gm-Message-State: APjAAAUfWSoPElalHaOzIxVVyoQ2Qh1LIoXaLF49F13SLFjbQtExRMFs
+        W6Drc1LBL0wgeGGyu8wku3c=
+X-Google-Smtp-Source: APXvYqy9lFMtn+6Qy59YIGby0n7GWWHxTBTmNYV4w/XsS3+y2SQ6Bj+mnign1qI1MSncAjI9A3dNyg==
+X-Received: by 2002:a05:620a:b04:: with SMTP id t4mr66854077qkg.7.1577939479179;
+        Wed, 01 Jan 2020 20:31:19 -0800 (PST)
 Received: from yury-thinkpad.dhcp.amer.jpmchase.net ([2604:2000:4185:2300:b196:4884:e960:2cb8])
-        by smtp.gmail.com with ESMTPSA id 16sm14876857qkj.77.2020.01.01.20.31.19
+        by smtp.gmail.com with ESMTPSA id 16sm14876857qkj.77.2020.01.01.20.31.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jan 2020 20:31:20 -0800 (PST)
+        Wed, 01 Jan 2020 20:31:18 -0800 (PST)
 From:   Yury Norov <yury.norov@gmail.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -77,9 +77,9 @@ To:     Andrew Morton <akpm@linux-foundation.org>,
         linux-kernel@vger.kernel.org
 Cc:     Yury Norov <yury.norov@gmail.com>, Jens Axboe <axboe@kernel.dk>,
         Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 7/7] cpumask: don't calculate length of the input string
-Date:   Wed,  1 Jan 2020 20:30:31 -0800
-Message-Id: <20200102043031.30357-8-yury.norov@gmail.com>
+Subject: [PATCH 6/7] lib: new testcases for bitmap_parse{_user}
+Date:   Wed,  1 Jan 2020 20:30:30 -0800
+Message-Id: <20200102043031.30357-7-yury.norov@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200102043031.30357-1-yury.norov@gmail.com>
 References: <20200102043031.30357-1-yury.norov@gmail.com>
@@ -92,30 +92,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From Yury Norov <yury.norov@gmail.com>
 
-New design of inner bitmap_parse() allows to avoid
-calculating the size of a null-terminated string.
+New version of bitmap_parse() is unified with bitmap_parse_list(),
+and therefore:
+ - weakens rules on whitespaces and commas between hex chunks;
+ - in addition to \0 allows using \n as the line ending symbol;
+ - allows passing UINT_MAX or any other big number as the length
+   of input string instead of actual string length.
+
+The patch covers the cases.
 
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Yury Norov <yury.norov@gmail.com>
 ---
- include/linux/cpumask.h | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ lib/test_bitmap.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-index 78a73eba64dd6..d5cc88514aee6 100644
---- a/include/linux/cpumask.h
-+++ b/include/linux/cpumask.h
-@@ -663,9 +663,7 @@ static inline int cpumask_parselist_user(const char __user *buf, int len,
-  */
- static inline int cpumask_parse(const char *buf, struct cpumask *dstp)
- {
--	unsigned int len = strchrnul(buf, '\n') - buf;
--
--	return bitmap_parse(buf, len, cpumask_bits(dstp), nr_cpumask_bits);
-+	return bitmap_parse(buf, UINT_MAX, cpumask_bits(dstp), nr_cpumask_bits);
- }
+diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
+index 830c9b195e405..fb4ffb88a8160 100644
+--- a/lib/test_bitmap.c
++++ b/lib/test_bitmap.c
+@@ -415,14 +415,22 @@ static const unsigned long parse_test2[] __initconst = {
+ };
  
- /**
+ static const struct test_bitmap_parselist parse_tests[] __initconst = {
++	{0, "",				&parse_test[0 * step], 32, 0},
++	{0, " ",			&parse_test[0 * step], 32, 0},
+ 	{0, "0",			&parse_test[0 * step], 32, 0},
++	{0, "0\n",			&parse_test[0 * step], 32, 0},
+ 	{0, "1",			&parse_test[1 * step], 32, 0},
+ 	{0, "deadbeef",			&parse_test[2 * step], 32, 0},
+ 	{0, "1,0",			&parse_test[3 * step], 33, 0},
++	{0, "deadbeef,\n,0,1",		&parse_test[2 * step], 96, 0},
+ 
+ 	{0, "deadbeef,1,0",		&parse_test2[0 * 2 * step], 96, 0},
+ 	{0, "baadf00d,deadbeef,1,0",	&parse_test2[1 * 2 * step], 128, 0},
+ 	{0, "badf00d,deadbeef,1,0",	&parse_test2[2 * 2 * step], 124, 0},
++	{0, "badf00d,deadbeef,1,0",	&parse_test2[2 * 2 * step], 124, NO_LEN},
++	{0, "  badf00d,deadbeef,1,0  ",	&parse_test2[2 * 2 * step], 124, 0},
++	{0, " , badf00d,deadbeef,1,0 , ",	&parse_test2[2 * 2 * step], 124, 0},
++	{0, " , badf00d, ,, ,,deadbeef,1,0 , ",	&parse_test2[2 * 2 * step], 124, 0},
+ 
+ 	{-EINVAL,    "goodfood,deadbeef,1,0",	NULL, 128, 0},
+ 	{-EOVERFLOW, "3,0",			NULL, 33, 0},
 -- 
 2.20.1
 
