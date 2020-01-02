@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0EAC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CAFC3276E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEA73222C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF100222C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:23:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003832;
-	bh=bM3yZUBVUr9Q9zX5/Cv/jK9Pdngg3VbaUWLDtozTXk4=;
+	s=default; t=1578003836;
+	bh=yzxD6HKKw68W+50LlaU+rd6VsjAH0kcFO5/v4j3i8bw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iNnEwTbXZ5ZXSJ3rQuRio7R6Wo3WZy9XqKTLX8fjqPxEIiDkpP57Rr38gHZ0GtroI
-	 0c/uLuQZxpzJDD8WHVtOy0A++UvivZtkh0mk6+ChrprFbCubcx5zch+AqVULxhWg2l
-	 U3yu13kbFQWZfg6cz3YtttiFOPDS9GuaSqC8B1e4=
+	b=LPX4A8HZqRaFJSgMTy6xQ/JFSnSy0sCGQsAw0TNhnBL886BAVmlSujlNk9zV+vOV2
+	 CuFqkNvhg/3B2de+AmUz90fH5I053O+suy4eekOaCxXs4tpIVtZueIJGPo7kiyq1fD
+	 QJaJKV+nhj06ZTXs2fz80VvDvKqi5b8Wqpv0gE5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729331AbgABWXv (ORCPT
+        id S1729336AbgABWXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:23:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46668 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:23:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729321AbgABWXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:23:47 -0500
+        id S1728564AbgABWXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:23:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 593B220863;
-        Thu,  2 Jan 2020 22:23:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2971B20863;
+        Thu,  2 Jan 2020 22:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003826;
-        bh=bM3yZUBVUr9Q9zX5/Cv/jK9Pdngg3VbaUWLDtozTXk4=;
+        s=default; t=1578003831;
+        bh=yzxD6HKKw68W+50LlaU+rd6VsjAH0kcFO5/v4j3i8bw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a5l8JgiDD2SNNgkjUJZ9yZv8/N4NvV9Enz0qxW+Fvzs3dCmgpsFvzx6rL5L7PnWfD
-         Nrinj6f4Xmc+IEC+EpoXmeF8Vpm/8OxQm6vwpUlKM4+koZ0JPJgWCelkyAJlZRPbyo
-         5ZlQ3zzzWIw9lIE6Kk98jGZRaLr4cLbxL+JSH+HA=
+        b=eFZPfZ4uOaQ82aeZYnCEXO1jK5pob7I+XJm6RJNKXPhJiBir7JWbJfW5ItHxj2dfT
+         lzrjE9Mywk+lXHGkENZxeN+SHS2M+HCSG0KlQuftfSGHTwxmGuLkw0rcCKR2EO2LFV
+         GOLCfvWG9FiGb7BkrJxqrM1nYyYwuZnPSNorZzoU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
-        Jan Kara <jack@suse.cz>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 16/91] ext4: update direct I/O read lock pattern for IOCB_NOWAIT
-Date:   Thu,  2 Jan 2020 23:06:58 +0100
-Message-Id: <20200102220414.036786948@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Hannes Reinecke <hare@suse.com>,
+        Douglas Gilbert <dgilbert@interlog.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 18/91] scsi: tracing: Fix handling of TRANSFER LENGTH == 0 for READ(6) and WRITE(6)
+Date:   Thu,  2 Jan 2020 23:07:00 +0100
+Message-Id: <20200102220417.770985468@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -62,45 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Bobrowski <mbobrowski@mbobrowski.org>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 548feebec7e93e58b647dba70b3303dcb569c914 ]
+[ Upstream commit f6b8540f40201bff91062dd64db8e29e4ddaaa9d ]
 
-This patch updates the lock pattern in ext4_direct_IO_read() to not
-block on inode lock in cases of IOCB_NOWAIT direct I/O reads. The
-locking condition implemented here is similar to that of 942491c9e6d6
-("xfs: fix AIM7 regression").
+According to SBC-2 a TRANSFER LENGTH field of zero means that 256 logical
+blocks must be transferred. Make the SCSI tracing code follow SBC-2.
 
-Fixes: 16c54688592c ("ext4: Allow parallel DIO reads")
-Signed-off-by: Matthew Bobrowski <mbobrowski@mbobrowski.org>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Link: https://lore.kernel.org/r/c5d5e759f91747359fbd2c6f9a36240cf75ad79f.1572949325.git.mbobrowski@mbobrowski.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: bf8162354233 ("[SCSI] add scsi trace core functions and put trace points")
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Douglas Gilbert <dgilbert@interlog.com>
+Link: https://lore.kernel.org/r/20191105215553.185018-1-bvanassche@acm.org
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/inode.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/scsi/scsi_trace.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index c2920cbfa3bf..a91b8404d3dc 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -3796,7 +3796,13 @@ static ssize_t ext4_direct_IO_read(struct kiocb *iocb, struct iov_iter *iter)
- 	 * writes & truncates and since we take care of writing back page cache,
- 	 * we are protected against page writeback as well.
- 	 */
--	inode_lock_shared(inode);
-+	if (iocb->ki_flags & IOCB_NOWAIT) {
-+		if (!inode_trylock_shared(inode))
-+			return -EAGAIN;
-+	} else {
-+		inode_lock_shared(inode);
-+	}
-+
- 	ret = filemap_write_and_wait_range(mapping, iocb->ki_pos,
- 					   iocb->ki_pos + count - 1);
- 	if (ret)
+diff --git a/drivers/scsi/scsi_trace.c b/drivers/scsi/scsi_trace.c
+index 0ff083bbf5b1..617a60737590 100644
+--- a/drivers/scsi/scsi_trace.c
++++ b/drivers/scsi/scsi_trace.c
+@@ -30,15 +30,18 @@ static const char *
+ scsi_trace_rw6(struct trace_seq *p, unsigned char *cdb, int len)
+ {
+ 	const char *ret = trace_seq_buffer_ptr(p);
+-	sector_t lba = 0, txlen = 0;
++	u32 lba = 0, txlen;
+ 
+ 	lba |= ((cdb[1] & 0x1F) << 16);
+ 	lba |=  (cdb[2] << 8);
+ 	lba |=   cdb[3];
+-	txlen = cdb[4];
++	/*
++	 * From SBC-2: a TRANSFER LENGTH field set to zero specifies that 256
++	 * logical blocks shall be read (READ(6)) or written (WRITE(6)).
++	 */
++	txlen = cdb[4] ? cdb[4] : 256;
+ 
+-	trace_seq_printf(p, "lba=%llu txlen=%llu",
+-			 (unsigned long long)lba, (unsigned long long)txlen);
++	trace_seq_printf(p, "lba=%u txlen=%u", lba, txlen);
+ 	trace_seq_putc(p, 0);
+ 
+ 	return ret;
 -- 
 2.20.1
 
