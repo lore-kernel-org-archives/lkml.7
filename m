@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DECF8C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E562CC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE8CC20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B081820866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004655;
-	bh=K7Da7CfJG3el96WvT6CvaZfsTE8nEfsPdfq4Qrvr6vU=;
+	s=default; t=1578004659;
+	bh=5BdZNPlIuoHYht69VTOQ8owNdfGgzIMJwxpwq/gplxk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g7c8mFSkme2lfukzYXTfC39neKqQfXaTFjLLAKY6oQ2iv562rVBnEisdhDn3un8sc
-	 I17YHQPB5sXCcIYFLzVWmdcE0YpXMM7mWPCCVNWpBDFHRCzW5QQFHqmU2dwDb2e3IF
-	 rAeuDlfXQM/ATgZFq13ShMlHq4Rsaag2FOlxCNV0=
+	b=GUKxXcHGObnlvDXw1b54C8DpUbbBTimjebIvWmZPtVpiI67485sZ8nZ6/nDmUjpg6
+	 TCsyq1IXXh5Sl0GCgJsnFQVDGtG/lr3L0IsB3G+U3JJoDt0fYKnww8Ytp0LsKWwtHQ
+	 pu+Ln86G3yq7PGSUJb6ipJBe4utM9SUEaLJ11vws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730844AbgABWhe (ORCPT
+        id S1731110AbgABWhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:37:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50094 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:37:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731094AbgABWhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:37:31 -0500
+        id S1731103AbgABWhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:37:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E41C420863;
-        Thu,  2 Jan 2020 22:37:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BCBB20866;
+        Thu,  2 Jan 2020 22:37:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004650;
-        bh=K7Da7CfJG3el96WvT6CvaZfsTE8nEfsPdfq4Qrvr6vU=;
+        s=default; t=1578004652;
+        bh=5BdZNPlIuoHYht69VTOQ8owNdfGgzIMJwxpwq/gplxk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z32qUxjVvQn3/DFpOHqk2NiVrcgBJ8lFBPTE5AC9DMsBbXdKlR6w9juU8LV8zyRux
-         3/6e7+EbP7+OIbkG17nO1TkCFQLCH7fLffzCT4KggDUfypgQRd5GqrmXLbYC7+ouv9
-         N6AwsbhMjkEU8WSRPPuKcPRpoSsm2alOV8s50kMY=
+        b=eSblfb6vgX9Q7/E3KFp4zNwIPMvq2zU4twY6PADWFnwMRWhLh+QwoOKfsD/qTX5B/
+         HDFHg1278nA1YpEfWcwPAUSZLkxJU6KgtSO3/Z69Q2oLG+rQtxxpK1eFmyJwKGd7vo
+         7ZkYz/5aGkyzYGiUO3GPENNuXYyUYXZrJB4YKxr8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 096/137] scsi: csiostor: Dont enable IRQs too early
-Date:   Thu,  2 Jan 2020 23:07:49 +0100
-Message-Id: <20200102220559.922043209@linuxfoundation.org>
+Subject: [PATCH 4.4 097/137] powerpc/pseries: Mark accumulate_stolen_time() as notrace
+Date:   Thu,  2 Jan 2020 23:07:50 +0100
+Message-Id: <20200102220600.092568994@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -60,98 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit d6c9b31ac3064fbedf8961f120a4c117daa59932 ]
+[ Upstream commit eb8e20f89093b64f48975c74ccb114e6775cee22 ]
 
-These are called with IRQs disabled from csio_mgmt_tmo_handler() so we
-can't call spin_unlock_irq() or it will enable IRQs prematurely.
+accumulate_stolen_time() is called prior to interrupt state being
+reconciled, which can trip the warning in arch_local_irq_restore():
 
-Fixes: a3667aaed569 ("[SCSI] csiostor: Chelsio FCoE offload driver")
-Link: https://lore.kernel.org/r/20191019085913.GA14245@mwanda
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+  WARNING: CPU: 5 PID: 1017 at arch/powerpc/kernel/irq.c:258 .arch_local_irq_restore+0x9c/0x130
+  ...
+  NIP .arch_local_irq_restore+0x9c/0x130
+  LR  .rb_start_commit+0x38/0x80
+  Call Trace:
+    .ring_buffer_lock_reserve+0xe4/0x620
+    .trace_function+0x44/0x210
+    .function_trace_call+0x148/0x170
+    .ftrace_ops_no_ops+0x180/0x1d0
+    ftrace_call+0x4/0x8
+    .accumulate_stolen_time+0x1c/0xb0
+    decrementer_common+0x124/0x160
+
+For now just mark it as notrace. We may change the ordering to call it
+after interrupt state has been reconciled, but that is a larger
+change.
+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191024055932.27940-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/csiostor/csio_lnode.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ arch/powerpc/kernel/time.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/csiostor/csio_lnode.c b/drivers/scsi/csiostor/csio_lnode.c
-index be5ee2d37815..957767d38361 100644
---- a/drivers/scsi/csiostor/csio_lnode.c
-+++ b/drivers/scsi/csiostor/csio_lnode.c
-@@ -301,6 +301,7 @@ csio_ln_fdmi_rhba_cbfn(struct csio_hw *hw, struct csio_ioreq *fdmi_req)
- 	struct fc_fdmi_port_name *port_name;
- 	uint8_t buf[64];
- 	uint8_t *fc4_type;
-+	unsigned long flags;
+diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
+index 2e9cae5f8d17..397076474a71 100644
+--- a/arch/powerpc/kernel/time.c
++++ b/arch/powerpc/kernel/time.c
+@@ -245,7 +245,7 @@ static u64 scan_dispatch_log(u64 stop_tb)
+  * Accumulate stolen time by scanning the dispatch trace log.
+  * Called on entry from user mode.
+  */
+-void accumulate_stolen_time(void)
++void notrace accumulate_stolen_time(void)
+ {
+ 	u64 sst, ust;
  
- 	if (fdmi_req->wr_status != FW_SUCCESS) {
- 		csio_ln_dbg(ln, "WR error:%x in processing fdmi rhba cmd\n",
-@@ -377,13 +378,13 @@ csio_ln_fdmi_rhba_cbfn(struct csio_hw *hw, struct csio_ioreq *fdmi_req)
- 	len = (uint32_t)(pld - (uint8_t *)cmd);
- 
- 	/* Submit FDMI RPA request */
--	spin_lock_irq(&hw->lock);
-+	spin_lock_irqsave(&hw->lock, flags);
- 	if (csio_ln_mgmt_submit_req(fdmi_req, csio_ln_fdmi_done,
- 				FCOE_CT, &fdmi_req->dma_buf, len)) {
- 		CSIO_INC_STATS(ln, n_fdmi_err);
- 		csio_ln_dbg(ln, "Failed to issue fdmi rpa req\n");
- 	}
--	spin_unlock_irq(&hw->lock);
-+	spin_unlock_irqrestore(&hw->lock, flags);
- }
- 
- /*
-@@ -404,6 +405,7 @@ csio_ln_fdmi_dprt_cbfn(struct csio_hw *hw, struct csio_ioreq *fdmi_req)
- 	struct fc_fdmi_rpl *reg_pl;
- 	struct fs_fdmi_attrs *attrib_blk;
- 	uint8_t buf[64];
-+	unsigned long flags;
- 
- 	if (fdmi_req->wr_status != FW_SUCCESS) {
- 		csio_ln_dbg(ln, "WR error:%x in processing fdmi dprt cmd\n",
-@@ -483,13 +485,13 @@ csio_ln_fdmi_dprt_cbfn(struct csio_hw *hw, struct csio_ioreq *fdmi_req)
- 	attrib_blk->numattrs = htonl(numattrs);
- 
- 	/* Submit FDMI RHBA request */
--	spin_lock_irq(&hw->lock);
-+	spin_lock_irqsave(&hw->lock, flags);
- 	if (csio_ln_mgmt_submit_req(fdmi_req, csio_ln_fdmi_rhba_cbfn,
- 				FCOE_CT, &fdmi_req->dma_buf, len)) {
- 		CSIO_INC_STATS(ln, n_fdmi_err);
- 		csio_ln_dbg(ln, "Failed to issue fdmi rhba req\n");
- 	}
--	spin_unlock_irq(&hw->lock);
-+	spin_unlock_irqrestore(&hw->lock, flags);
- }
- 
- /*
-@@ -504,6 +506,7 @@ csio_ln_fdmi_dhba_cbfn(struct csio_hw *hw, struct csio_ioreq *fdmi_req)
- 	void *cmd;
- 	struct fc_fdmi_port_name *port_name;
- 	uint32_t len;
-+	unsigned long flags;
- 
- 	if (fdmi_req->wr_status != FW_SUCCESS) {
- 		csio_ln_dbg(ln, "WR error:%x in processing fdmi dhba cmd\n",
-@@ -534,13 +537,13 @@ csio_ln_fdmi_dhba_cbfn(struct csio_hw *hw, struct csio_ioreq *fdmi_req)
- 	len += sizeof(*port_name);
- 
- 	/* Submit FDMI request */
--	spin_lock_irq(&hw->lock);
-+	spin_lock_irqsave(&hw->lock, flags);
- 	if (csio_ln_mgmt_submit_req(fdmi_req, csio_ln_fdmi_dprt_cbfn,
- 				FCOE_CT, &fdmi_req->dma_buf, len)) {
- 		CSIO_INC_STATS(ln, n_fdmi_err);
- 		csio_ln_dbg(ln, "Failed to issue fdmi dprt req\n");
- 	}
--	spin_unlock_irq(&hw->lock);
-+	spin_unlock_irqrestore(&hw->lock, flags);
- }
- 
- /**
 -- 
 2.20.1
 
