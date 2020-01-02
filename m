@@ -2,127 +2,86 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FFCC3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21501C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA17620848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:17:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NB20p2dp"
+	by mail.kernel.org (Postfix) with ESMTP id DC24121734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:19:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577974760;
+	bh=azw6s+4YpK/zg0zwfD1zIRd9wypiLG8FH6IqHaoMSdY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pBwqIwaklkNJbTBvGFptzbKP2WCzeGHZC+h867Q7r/Ksli2+M8xpM9Wp5sSSzVojr
+	 ZflxdYRsGzbnWcjomCtzZdoLNV7v+zf9AM34DDFnPAPNGi4rD92GSkSqeZ8S/PUf5h
+	 3CEk+MT+wAhH0aJnzXJhfQK36xYu0L0nBrMyow+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbgABORk (ORCPT
+        id S1728521AbgABOTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 09:17:40 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40770 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728288AbgABORj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 09:17:39 -0500
-Received: by mail-pl1-f196.google.com with SMTP id s21so15132569plr.7;
-        Thu, 02 Jan 2020 06:17:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=//H4mrg81x/IyMZipkYjmIUpZEnfAe6S836BMrRhuK8=;
-        b=NB20p2dp5Y3fHkCRPUHw306L50/kdCdxvjJcTU0+zzehndAeE0lbAVjbT7WUVfv5QT
-         T/UbjPSc4vHBmeZOMGfTYxVq+xUnKwJXhQKJ8661Nd739xyzAG1vbYsY20ckbGaNYSlO
-         G4TCWgv16S1E5v9ZL6LOS6fjfMjGloZOgNk8EP2NSpStMhFTTd/nBOVd7dZTlc4rNRd+
-         6m2YbpLu78rhCPiDtrJ5BZYHw8PerVjQr7GJmp6SrKFHNxyV3sVMURFNdqQWbeB7z6WW
-         jG6jaO/320MDE1OhVMFkIri2EcxsIGnXFj7QzeNk4worA8A111fwJlY9cHoOSveCMPHm
-         EGbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=//H4mrg81x/IyMZipkYjmIUpZEnfAe6S836BMrRhuK8=;
-        b=RUHJXEycqoQ2tb11oxpG0FTngGNhHaCOf/A7GKWenjxTyyE3f2QHAHy8gr87Daekmb
-         xk5sDgBd+1LJhoJzjnXplffTjeeRMZ5WtrCBhqoPYFhQzcMhucWxs7P2RmUvwKOKTC7w
-         cDRuikrPvd+dC9PNp1Wo551+zxYT5PhEw1d6OVBypse8KSmzzhRBLDoAFLuNyPt41VQx
-         gbIJgvaLP52JcuM38UUbX+3XOvsMe4hHdd+On/4224Imzdmh8fd4Oi0Xiql0MrL0ch8j
-         eYQPtiF8Xh8/rwnFPaa0t0rCaUwu3sFEDMafTO26auHb2ydhKpkR3froYJV8+e58kKbC
-         u+5Q==
-X-Gm-Message-State: APjAAAWw5rlF3nN4Ier4eA8CyAYVhpfsLMEf+oF/vU6cLVO3yWwyu9k1
-        xg7kRMOfpp/viN1QTwSm7kBWQEKe
-X-Google-Smtp-Source: APXvYqwe9y9fqxjk7owBc10/WmKtlqGmdb14fLDVDktweQVNUHqXULApbdEb99t+u4TpKTE/N2Jg9Q==
-X-Received: by 2002:a17:90a:8043:: with SMTP id e3mr19595166pjw.24.1577974658868;
-        Thu, 02 Jan 2020 06:17:38 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c1sm31138536pfo.44.2020.01.02.06.17.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jan 2020 06:17:38 -0800 (PST)
-Subject: Re: [PATCH v2] clk: Warn about critical clks that fail to enable
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        Jerome Brunet <jbrunet@baylibre.com>
-References: <20200102005503.71923-1-sboyd@kernel.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <6d4e8c19-6cb8-b242-3efb-0854ee2a107f@roeck-us.net>
-Date:   Thu, 2 Jan 2020 06:17:37 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 2 Jan 2020 09:19:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56166 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728288AbgABOTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 09:19:18 -0500
+Received: from localhost (unknown [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B840520848;
+        Thu,  2 Jan 2020 14:19:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577974758;
+        bh=azw6s+4YpK/zg0zwfD1zIRd9wypiLG8FH6IqHaoMSdY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s7A4dqgONgna/uhxg1dWe7oStJT/A7WggEj56SZbprqOf5F1CTit165Ag6P+oZiNx
+         E4gFXxnyMejVLppWzuIZ1eonVB7NjZFbPkCTmxisMVkCi5e4V20TLgmtaOVQmmgYCC
+         st7q6gqK0zbcW17JMAGzqeFMYdtbDEmoin7tv6mM=
+Date:   Thu, 2 Jan 2020 15:19:10 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Namjae Jeon <linkinjeon@gmail.com>
+Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        valdis.kletnieks@vt.edu, hch@lst.de, sj1557.seo@samsung.com
+Subject: Re: [PATCH v9 12/13] exfat: add exfat in fs/Kconfig and fs/Makefile
+Message-ID: <20200102141910.GA4020603@kroah.com>
+References: <20200102082036.29643-1-namjae.jeon@samsung.com>
+ <CGME20200102082408epcas1p194621a6aa6729011703f0c5a076a7396@epcas1p1.samsung.com>
+ <20200102082036.29643-13-namjae.jeon@samsung.com>
+ <20200102125830.z2uz673dlsdttjvo@pali>
+ <CAKYAXd9Y6o+a7q_yismLP8nNXOUqrudC3KW8N6Z05OghYLt1jg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200102005503.71923-1-sboyd@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKYAXd9Y6o+a7q_yismLP8nNXOUqrudC3KW8N6Z05OghYLt1jg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/1/20 4:55 PM, Stephen Boyd wrote:
-> If we don't warn here users of the CLK_IS_CRITICAL flag may not know
-> that their clk isn't actually enabled because it silently fails to
-> enable. Let's print a warning in that case so developers find these
-> problems faster.
-> 
-> Suggested-by: Jerome Brunet <jbrunet@baylibre.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+On Thu, Jan 02, 2020 at 10:07:16PM +0900, Namjae Jeon wrote:
+> >> index 98be354fdb61..2c7ea7e0a95b 100644
+> >> --- a/fs/Makefile
+> >> +++ b/fs/Makefile
+> >> @@ -83,6 +83,7 @@ obj-$(CONFIG_HUGETLBFS)		+= hugetlbfs/
+> >>  obj-$(CONFIG_CODA_FS)		+= coda/
+> >>  obj-$(CONFIG_MINIX_FS)		+= minix/
+> >>  obj-$(CONFIG_FAT_FS)		+= fat/
+> >> +obj-$(CONFIG_EXFAT)		+= exfat/
+> >>  obj-$(CONFIG_BFS_FS)		+= bfs/
+> >>  obj-$(CONFIG_ISO9660_FS)	+= isofs/
+> >>  obj-$(CONFIG_HFSPLUS_FS)	+= hfsplus/ # Before hfs to find wrapped HFS+
+> >
+> > Seems that all filesystems have _FS suffix in their config names. So
+> > should not have exfat config also same convention? CONFIG_EXFAT_FS?
+> Yeah, I know, However, That name conflicts with staging/exfat.
+> So I subtracted _FS suffix.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+If it's a problem, please send me a patch to rename the staging/exfat/
+config option so that you can use the "real" one someday soon.
 
-> ---
-> 
-> Changes from v1:
->   * Switched to pr_warn and indicated clk name
-> 
->   drivers/clk/clk.c | 7 ++++++-
->   1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index 772258de2d1f..b03c2be4014b 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -3427,13 +3427,18 @@ static int __clk_core_init(struct clk_core *core)
->   		unsigned long flags;
->   
->   		ret = clk_core_prepare(core);
-> -		if (ret)
-> +		if (ret) {
-> +			pr_warn("%s: critical clk '%s' failed to prepare\n",
-> +			       __func__, core->name);
->   			goto out;
-> +		}
->   
->   		flags = clk_enable_lock();
->   		ret = clk_core_enable(core);
->   		clk_enable_unlock(flags);
->   		if (ret) {
-> +			pr_warn("%s: critical clk '%s' failed to enable\n",
-> +			       __func__, core->name);
->   			clk_core_unprepare(core);
->   			goto out;
->   		}
-> 
-> base-commit: 12ead77432f2ce32dea797742316d15c5800cb32
-> 
+thanks,
 
+greg k-h
