@@ -2,138 +2,188 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F5BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4D6C2D0DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF6F321734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:06:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="n8L6eoWi"
+	by mail.kernel.org (Postfix) with ESMTP id 9A34021655
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:09:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbgABGGV (ORCPT
+        id S1726204AbgABGJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 01:06:21 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:21638 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbgABGGU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 01:06:20 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200102060619epoutp03d992f9745b9b5e14975ff497f3831088~l-Met75ui0432704327epoutp03B
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jan 2020 06:06:19 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200102060619epoutp03d992f9745b9b5e14975ff497f3831088~l-Met75ui0432704327epoutp03B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1577945179;
-        bh=iiwDFsSq7I+vznqNBy0yhlQ/JOVo+ktu5saryrjetFM=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=n8L6eoWiVHxtI7PIEGu7Gic0KkaMPo5/DTQHwjmXwW4AhZchue6GVBImi7H3NvdbB
-         93ENkKejJvUYs7ig2KE5NCYwXBG47a5Z7vY8j+LkG9B3ykDpNHErh/oE9D/FjUmFKJ
-         kaZ4Unr/SIv0z2Hg++whvhTDHert5ptZA2EEHrqs=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200102060618epcas1p38591a94fdad40315ec7bf587f9baae06~l-MeRJECH2982729827epcas1p3t;
-        Thu,  2 Jan 2020 06:06:18 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.162]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 47pHbY48VNzMqYkj; Thu,  2 Jan
-        2020 06:06:17 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        76.EC.48498.9588D0E5; Thu,  2 Jan 2020 15:06:17 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200102060617epcas1p19e7808cf1f4008f9b906f902ec969b20~l-MdDMptW1921619216epcas1p1I;
-        Thu,  2 Jan 2020 06:06:17 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200102060617epsmtrp1bf7c264a94bcd14151b92c7a9ad8e29b~l-MdCe0fY1453814538epsmtrp1A;
-        Thu,  2 Jan 2020 06:06:17 +0000 (GMT)
-X-AuditID: b6c32a36-ea9ad9c00001bd72-87-5e0d88599598
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        85.1F.06569.9588D0E5; Thu,  2 Jan 2020 15:06:17 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200102060617epsmtip15751be7503d40289c7d56b096ffd3b3a~l-Mc7ki4m2577025770epsmtip1E;
-        Thu,  2 Jan 2020 06:06:17 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     =?utf-8?Q?'Pali_Roh=C3=A1r'?= <pali.rohar@gmail.com>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>, <valdis.kletnieks@vt.edu>,
-        <hch@lst.de>, <sj1557.seo@samsung.com>, <linkinjeon@gmail.com>
-In-Reply-To: <20191229134025.qb3mmqatsn5c4gao@pali>
-Subject: RE: [PATCH v8 02/13] exfat: add super block operations
-Date:   Thu, 2 Jan 2020 15:06:16 +0900
-Message-ID: <000701d5c132$bed73c80$3c85b580$@samsung.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQHsN8nXp7WTsPLA/dnVZpcSktwQNAEpoQLVAH0AW2oCon8f8qeHqjkw
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRTm3d3urtbqdjM9GOS61A+F5eacXstlUdhAqZn0oyDXTW9utS92
-        t74Msi8zM0vyT0vFPiHLrLTUlRgriVX0sSgzEFFMnH0XZrGott1F/nvOeZ9znnOe9xAY1YIn
-        Eiark3NYWTONx4pv3UtOVayvlBUp28bmMQfOteLMpcu9IqZv4A3G3On2iZkXnnqcqX0UFDHt
-        v+9LGP+nz+JlhK7LPSDV9TRckepu95fjupr2ZqT7dmOeztvxHtfjG8zZRo4t4RxyzlpsKzFZ
-        S7V0XqFhhUGToVQpVFlMJi23shZOS6/M1ytyTebQQLR8O2t2hVJ6lufp1KXZDpvLycmNNt6p
-        pTl7idmuUtoX8ayFd1lLFxXbLItVSmWaJsTcZDa++v4T2evxnUF/JV6O6iRViCCATIeTY+lV
-        KJagyE4EjZcbcCH4iiA4ekEiBN8RPOy7i1WhmEjFed87SRhTZDeCb4NRUgDB7cMtePgBJxXw
-        +1dPBMeRDHT2TkbaYuRdBENXr0eqY0g17GsKREizyRy49qxNFJ5JTC6AN8Orw2kZmQW1I/US
-        Ac8C36kRcRhjZBJ0fKiPDiSHn28vSgStXPC9rEMCJw5OH6nAwrpA/sHB+yEoEQpWQnXjMVzA
-        s2H8QbtUwIkQOF4hFXwpgy890f6VCMYmtQJWQ3/rtYh1GJkMrZ5UIT0fuoINUdkZ8HGiOuqu
-        DCorKIGyEGr890QCngtVhz9LTyDaPWUx95TF3FMWcP8Xa0LiZhTP2XlLKcer7GlTv/oGipxq
-        SkYnOvsk34tIAtHTZa8bpxdREnY7v8viRUBgdJxsR4GsiJKVsLt2cw6bweEyc7wXaUK212KJ
-        c4ptocO3Og0qTZparWbSMzIzNGo6QUb8eL6RIktZJ7eN4+yc41+diIhJLEfSJ1kdOTnZ2rlJ
-        E6/ib+6/qT8Yd2ZQaRvU9TzqJbR98YpDHzd39y9/MWyiHL6nrrWmzoMtR/ito4bnE0dnFRiS
-        mpdsG55ZkLBq1aGF4+MeT12h/umcZWdMZW3KPdSke0VOvnFaXlcuNbRlXewmT8D/oOwXDf7H
-        AXyDL2XN2ry952kxb2RVKZiDZ/8CSiiTV8ADAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSnG5kB2+cwdRebovmxevZLFauPspk
-        cf3uLWaLPXtPslhc3jWHzWLi6d9MFlv+HWG1uPT+A4sDh8fOWXfZPfbPXcPusftmA5tH35ZV
-        jB6fN8l5HNr+hi2ALYrLJiU1J7MstUjfLoEr49q3n4wFc9gqfl/qYGtgnMLaxcjJISFgIrHk
-        5Gsgm4tDSGA3o8ThrkMsEAlpiWMnzjB3MXIA2cIShw8XQ9Q8Z5SYMauTHaSGTUBX4t+f/Wwg
-        toiAhcSOo9/ZQIqYBU4wSpzpvwW2QUjgGaPE6mXeIDangLFE44KXYA3CAvYSGy5sZgJZwCKg
-        InHrkR9ImFfAUmLikzmsELagxMmZT8DuYRbQlnh68ymULS+x/e0cZog7FSR+Pl3GCnGDm8TJ
-        q1MYIWpEJGZ3tjFPYBSehWTULCSjZiEZNQtJywJGllWMkqkFxbnpucWGBUZ5qeV6xYm5xaV5
-        6XrJ+bmbGMERpqW1g/HEifhDjAIcjEo8vDfm8cQJsSaWFVfmHmKU4GBWEuEtD+SNE+JNSays
-        Si3Kjy8qzUktPsQozcGiJM4rn38sUkggPbEkNTs1tSC1CCbLxMEp1cAoObllS5hhaOuGQ2IH
-        Ly34s9SG33u92YnZe5L3JBpo/6urufHZ+IXl5UP+v3IbKzfoPzXbeOv8WeZuaTtWEXtbi67e
-        tFs2Gy9LrL4zSTuHPfffCvsKrsiQFxsK+du++G3jKZaZWKAWWGR/UGb75ogv4Zn/5scdObKi
-        ue3kRLlzV1masx68PumtxFKckWioxVxUnAgA6rMR+qwCAAA=
-X-CMS-MailID: 20200102060617epcas1p19e7808cf1f4008f9b906f902ec969b20
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191220062733epcas1p31665a3ae968ab8c70d91a3cddf529e73
-References: <20191220062419.23516-1-namjae.jeon@samsung.com>
-        <CGME20191220062733epcas1p31665a3ae968ab8c70d91a3cddf529e73@epcas1p3.samsung.com>
-        <20191220062419.23516-3-namjae.jeon@samsung.com>
-        <20191229134025.qb3mmqatsn5c4gao@pali>
+        Thu, 2 Jan 2020 01:09:23 -0500
+Received: from mga07.intel.com ([134.134.136.100]:3898 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725788AbgABGJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 01:09:23 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jan 2020 22:09:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,385,1571727600"; 
+   d="scan'208";a="224706697"
+Received: from local-michael-cet-test.sh.intel.com ([10.239.159.128])
+  by fmsmga001.fm.intel.com with ESMTP; 01 Jan 2020 22:09:20 -0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, jmattson@google.com,
+        sean.j.christopherson@intel.com
+Cc:     yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
+        edwin.zhai@intel.com, Yang Weijiang <weijiang.yang@intel.com>
+Subject: [RESEND PATCH v10 00/10] Enable Sub-Page Write Protection Support
+Date:   Thu,  2 Jan 2020 14:13:09 +0800
+Message-Id: <20200102061319.10077-1-weijiang.yang@intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > +static const struct fs_parameter_spec exfat_param_specs[] = {
-> > +	fsparam_u32("uid",			Opt_uid),
-> > +	fsparam_u32("gid",			Opt_gid),
-> > +	fsparam_u32oct("umask",			Opt_umask),
-> > +	fsparam_u32oct("dmask",			Opt_dmask),
-> > +	fsparam_u32oct("fmask",			Opt_fmask),
-> > +	fsparam_u32oct("allow_utime",		Opt_allow_utime),
-> > +	fsparam_string("iocharset",		Opt_charset),
-> > +	fsparam_flag("utf8",			Opt_utf8),
-> 
-> Hello! What is the purpose of having extra special "utf8" mount option?
-> Is not one "iocharset=utf8" option enough?
-utf8 nls_table supports utf8<->utf32 conversion and does not support
-surrogate character conversion. The utf8 option can support the surrogate
-character conversion of utf16 using utf16s_to_utf8s/utf8s_to_utf16s of
-the nls base.
+EPT-Based Sub-Page write Protection(SPP) allows Virtual Machine Monitor(VMM)
+specify write-permission for guest physical memory at a sub-page(128 byte)
+granularity. When SPP works, HW enforces write-access check for sub-pages
+within a protected 4KB page.
 
-Thanks!
+The feature targets to provide fine-grained memory protection for
+usages such as memory guard and VM introspection etc.
+
+SPP is active when the "sub-page write protection" (bit 23) is 1 in
+Secondary VM-Execution Controls. The feature is backed with a Sub-Page
+Permission Table(SPPT), and subpage permission vector is stored in the
+leaf entry of SPPT. The root page is referenced via a Sub-Page Permission
+Table Pointer (SPPTP) in VMCS.
+
+To enable SPP for guest memory, the guest page should be first mapped
+to a 4KB EPT entry, then set SPP bit 61 of the corresponding entry. 
+While HW walks EPT, it traverses SPPT with the gpa to look up the sub-page
+permission vector within SPPT leaf entry. If the corresponding bit is set,
+write to sub-page is permitted, otherwise, SPP induced EPT violation is generated.
+
+This patch serial passed SPP function test and selftest on Ice-Lake platform.
+
+Please refer to the SPP introduction document in this patch set and
+Intel SDM for details:
+
+Intel SDM:
+https://software.intel.com/sites/default/files/managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
+
+Patch 1: Documentation for SPP and related API.
+Patch 2: Add control flags for Sub-Page Protection(SPP).
+Patch 3: Add SPP Table setup functions.
+Patch 4: Add functions to create/destroy SPP bitmap block.
+Patch 5: Introduce user-space SPP IOCTLs.
+Patch 6: Set up SPP paging table at vmentry/vmexit.
+Patch 7: Enable Lazy mode SPP protection.
+Patch 8: Handle SPP protected pages when VM memory changes.
+Patch 9: Add SPP protection check in emulation case.
+Patch 10: SPP selftest.
+
+Change logs:
+
+v9 ->v10
+  1. Cleared SPP active flag on VM resetting.
+  2. Added trancepoints on subpage setup and SPP induced vmexits.
+  3. Fixed a few code issues reported by Intel test robot.
+
+v8 ->v9:
+  1. Added SPP protection check in pte prefetch case.
+  2. Flushed EPT rmap to remove existing mappings of the target gfns.
+  3. Modified documentation to reflect recent changes.
+  4. Other minor code refactor.
+
+v7 -> v8:
+  1. Changed ioctl interface definition per Paolo's comments.
+  2. Replaced SPP_INIT ioctl funciton with KVM_ENABLE_CAP.
+  3. Removed SPP bit from X86 feature word.
+  4. Returned instruction length to user-space when SPP induced EPT
+     violation happens, this is to provide flexibility to use SPP,
+     revert write or track write.
+  5. Modified selftest application and added into this serial.
+  6. Simplified SPP permission vector check.
+  7. Moved spp.c and spp.h to kvm/mmu folder.
+  8. Other code fix according to Paolo's feedback and testing.
+
+v6 -> v7:
+  1. Configured all available protected pages once SPP induced vmexit
+     happens since there's no PRESENT bit in SPPT leaf entry.
+  2. Changed SPP protection check flow in tdp_page_fault().
+  3. Code refactor and minior fixes.
+
+v5 -> v6:
+  1. Added SPP protection patch for emulation cases per Jim's review.
+  2. Modified documentation and added API description per Jim's review.
+  3. Other minior changes suggested by Jim.
+
+v4 -> v5:
+  1. Enable SPP support for Hugepage(1GB/2MB) to extend application.
+  2. Make SPP miss vm-exit handler as the unified place to set up SPPT.
+  3. If SPP protected pages are access-tracked or dirty-page-tracked,
+     store SPP flag in reserved address bit, restore it in
+     fast_page_fault() handler.
+  4. Move SPP specific functions to vmx/spp.c and vmx/spp.h
+  5. Rebased code to kernel v5.3
+  6. Other change suggested by KVM community.
+  
+v3 -> v4:
+  1. Modified documentation to make it consistent with patches.
+  2. Allocated SPPT root page in init_spp() instead of vmx_set_cr3() to
+     avoid SPPT miss error.
+  3. Added back co-developers and sign-offs.
+
+v2 -> v3:                                                                
+  1. Rebased patches to kernel 5.1 release                                
+  2. Deferred SPPT setup to EPT fault handler if the page is not
+     available while set_subpage() is being called.
+  3. Added init IOCTL to reduce extra cost if SPP is not used.
+  4. Refactored patch structure, cleaned up cross referenced functions.
+  5. Added code to deal with memory swapping/migration/shrinker cases.
+
+v2 -> v1:
+  1. Rebased to 4.20-rc1
+  2. Move VMCS change to a separated patch.
+  3. Code refine and Bug fix 
+
+
+
+Yang Weijiang (10):
+  Documentation: Add EPT based Subpage Protection and related APIs
+  vmx: spp: Add control flags for Sub-Page Protection(SPP)
+  mmu: spp: Add SPP Table setup functions
+  mmu: spp: Add functions to operate SPP access bitmap
+  x86: spp: Introduce user-space SPP IOCTLs
+  vmx: spp: Set up SPP paging table at vmentry/vmexit
+  mmu: spp: Enable Lazy mode SPP protection
+  mmu: spp: Handle SPP protected pages when VM memory changes
+  x86: spp: Add SPP protection check in emulation
+  kvm: selftests: selftest for Sub-Page protection
+
+ Documentation/virt/kvm/api.txt                |  39 ++
+ Documentation/virtual/kvm/spp_kvm.txt         | 179 +++++
+ arch/x86/include/asm/kvm_host.h               |  11 +-
+ arch/x86/include/asm/vmx.h                    |  10 +
+ arch/x86/include/uapi/asm/vmx.h               |   2 +
+ arch/x86/kvm/mmu.h                            |   2 +
+ arch/x86/kvm/mmu/mmu.c                        | 106 ++-
+ arch/x86/kvm/mmu/spp.c                        | 660 ++++++++++++++++++
+ arch/x86/kvm/mmu/spp.h                        |  35 +
+ arch/x86/kvm/trace.h                          |  66 ++
+ arch/x86/kvm/vmx/capabilities.h               |   5 +
+ arch/x86/kvm/vmx/vmx.c                        | 104 ++-
+ arch/x86/kvm/x86.c                            | 136 +++-
+ include/uapi/linux/kvm.h                      |  17 +
+ tools/testing/selftests/kvm/Makefile          |   2 +-
+ tools/testing/selftests/kvm/lib/kvm_util.c    |   1 +
+ tools/testing/selftests/kvm/x86_64/spp_test.c | 234 +++++++
+ 17 files changed, 1599 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/virtual/kvm/spp_kvm.txt
+ create mode 100644 arch/x86/kvm/mmu/spp.c
+ create mode 100644 arch/x86/kvm/mmu/spp.h
+ create mode 100644 tools/testing/selftests/kvm/x86_64/spp_test.c
+
+-- 
+2.17.2
 
