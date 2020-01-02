@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 720B0C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F59C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4811A20863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 698E720848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005143;
-	bh=6sjVKtc0kCiTiKhyKbAVxJ2gWded0kH98fqjv3yB+zQ=;
+	s=default; t=1578005147;
+	bh=kWYJw8yz98cDlxYMDB+WRSgLhd+BiUXxFTIFTO0ALxg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a8SADDl9j7qh1mL1hoaHeNiT5APczMH19RsKyVsIgFvKM91oZbfPUt08BBuekJwCd
-	 mU9gdcFazqlhFjm0Tw7oLkQZ5cM77WHY98WBEbDUPceduex19ExSYspg6/1saFiSm/
-	 0WC/3LQQJxMIzD60WvNJgsvIpIjf2GmD/ebuTpuc=
+	b=z3Ej52pAp8WT+jPO0/wuiUpZ82XFTKLdGFE0aj0kpgAQCKYx4pqflILi5u7rxklSY
+	 qENtf3qr32rSt8gQtbIM/yo7viZpJd74kYB60rp94tP0Q3w2FCUC2gYY/ypZlq04rq
+	 k1T7hyw/8tc7++H/c9Hr0le37gAShfX4hCV64AJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730317AbgABWbm (ORCPT
+        id S1730559AbgABWpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:31:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36968 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:45:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730301AbgABWbh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:31:37 -0500
+        id S1730312AbgABWbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:31:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67E7C22525;
-        Thu,  2 Jan 2020 22:31:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BF5521D7D;
+        Thu,  2 Jan 2020 22:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004296;
-        bh=6sjVKtc0kCiTiKhyKbAVxJ2gWded0kH98fqjv3yB+zQ=;
+        s=default; t=1578004301;
+        bh=kWYJw8yz98cDlxYMDB+WRSgLhd+BiUXxFTIFTO0ALxg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YuaTbVsjXX9lQPq5RDEV9KeYacHOCmTVAeGiOOF2xWrAdmx1LvW6Y7OJ/9Gh48euS
-         bzclT4bExozu7aMsTuKjOkgEj1+W18MEmGbvqCDgHJQAyTbfxiwWhrM9RX9khf4hza
-         sxivDzuIry8Nm3AU2eQaKwGOt8EbUG9GoxioRQz4=
+        b=LKhdi/rZuLUIrlhzWg8eYyCuBtml9o8yyb/IMyY+IuOdyV6x35N1qKf+CL5LvdDl7
+         ijRgX0wPnK0spEmbCTP9XR851kQKxtEHWqh3evLWXw8If0dwWpJ87Pg//C/GCU3WvD
+         sTRfkQTuGKqDBFAgQXlrruKcJdOfHuImdJyRxT8g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 119/171] powerpc/pseries: Dont fail hash page table insert for bolted mapping
-Date:   Thu,  2 Jan 2020 23:07:30 +0100
-Message-Id: <20200102220603.584558473@linuxfoundation.org>
+Subject: [PATCH 4.9 121/171] clocksource/drivers/asm9260: Add a check for of_clk_get
+Date:   Thu,  2 Jan 2020 23:07:32 +0100
+Message-Id: <20200102220603.868172548@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -61,65 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 75838a3290cd4ebbd1f567f310ba04b6ef017ce4 ]
+[ Upstream commit 6e001f6a4cc73cd06fc7b8c633bc4906c33dd8ad ]
 
-If the hypervisor returned H_PTEG_FULL for H_ENTER hcall, retry a hash page table
-insert by removing a random entry from the group.
+asm9260_timer_init misses a check for of_clk_get.
+Add a check for it and print errors like other clocksource drivers.
 
-After some runtime, it is very well possible to find all the 8 hash page table
-entry slot in the hpte group used for mapping. Don't fail a bolted entry insert
-in that case. With Storage class memory a user can find this error easily since
-a namespace enable/disable is equivalent to memory add/remove.
-
-This results in failures as reported below:
-
-$ ndctl create-namespace -r region1 -t pmem -m devdax -a 65536 -s 100M
-libndctl: ndctl_dax_enable: dax1.3: failed to enable
-  Error: namespace1.2: failed to enable
-
-failed to create namespace: No such device or address
-
-In kernel log we find the details as below:
-
-Unable to create mapping for hot added memory 0xc000042006000000..0xc00004200d000000: -1
-dax_pmem: probe of dax1.3 failed with error -14
-
-This indicates that we failed to create a bolted hash table entry for direct-map
-address backing the namespace.
-
-We also observe failures such that not all namespaces will be enabled with
-ndctl enable-namespace all command.
-
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191024093542.29777-2-aneesh.kumar@linux.ibm.com
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20191016124330.22211-1-hslester96@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/hash_utils_64.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/clocksource/asm9260_timer.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
-index bd666287c5ed..de1d8cdd2991 100644
---- a/arch/powerpc/mm/hash_utils_64.c
-+++ b/arch/powerpc/mm/hash_utils_64.c
-@@ -289,7 +289,14 @@ int htab_bolt_mapping(unsigned long vstart, unsigned long vend,
- 		ret = mmu_hash_ops.hpte_insert(hpteg, vpn, paddr, tprot,
- 					       HPTE_V_BOLTED, psize, psize,
- 					       ssize);
--
-+		if (ret == -1) {
-+			/* Try to remove a non bolted entry */
-+			ret = mmu_hash_ops.hpte_remove(hpteg);
-+			if (ret != -1)
-+				ret = mmu_hash_ops.hpte_insert(hpteg, vpn, paddr, tprot,
-+							       HPTE_V_BOLTED, psize, psize,
-+							       ssize);
-+		}
- 		if (ret < 0)
- 			break;
+diff --git a/drivers/clocksource/asm9260_timer.c b/drivers/clocksource/asm9260_timer.c
+index 1ba871b7fe11..e5717807c00a 100644
+--- a/drivers/clocksource/asm9260_timer.c
++++ b/drivers/clocksource/asm9260_timer.c
+@@ -198,6 +198,10 @@ static int __init asm9260_timer_init(struct device_node *np)
+ 	}
  
+ 	clk = of_clk_get(np, 0);
++	if (IS_ERR(clk)) {
++		pr_err("Failed to get clk!\n");
++		return PTR_ERR(clk);
++	}
+ 
+ 	ret = clk_prepare_enable(clk);
+ 	if (ret) {
 -- 
 2.20.1
 
