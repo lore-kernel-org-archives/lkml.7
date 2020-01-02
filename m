@@ -2,161 +2,112 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B92C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 03:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3D4C2D0DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 03:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D02C421655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 03:02:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vIBadxwj"
+	by mail.kernel.org (Postfix) with ESMTP id 960CC215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 03:04:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbgABDCd (ORCPT
+        id S1727602AbgABDEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 22:02:33 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44101 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727509AbgABDCc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 22:02:32 -0500
-Received: by mail-ot1-f67.google.com with SMTP id h9so52592777otj.11;
-        Wed, 01 Jan 2020 19:02:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Fsf4Kv4GKfEO6/i6UJSN8gP+gZz4MfI3CR+WieAs89w=;
-        b=vIBadxwjvV/v/SLLefWz19+1AioDTALvEnFaP8rT95BPmtN3e/62j76b1AOORG48Qe
-         IDRXd+Xn+DAvBi7BY4A2BoUsUDhOYPA2wTwCW9bLcOGsVAgjRzd0910Z/na4RFILuHWS
-         J1a+YJq0keFdCwqEOd+rz6C0zUZLekApIqb9XNDErzrJKaKjqaIBWuo0wLgV4p7wuuy8
-         m/jfmtsJh2BpuCR4QdYB9/YRgPhbWtCCELjI9A42EHfX2CuG496gcAF5iqwsVOwRVQEq
-         kZhJeb4E2Lz1tQZPYSZvfzqxBf7mWqh1TExjAXqitiBtYF+eS63SV1Ox26gC7H+B/+B8
-         pqNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Fsf4Kv4GKfEO6/i6UJSN8gP+gZz4MfI3CR+WieAs89w=;
-        b=pl1LlwxnZzk7k9b30XD2447vxNUFkSKDbgiTihwyf8+k4P1ta1S0rvtoFU+G5Q8pvQ
-         F3sjmhJEAZq74X+k7jz6OatZZlqKyb96Pj7aDbIIB27yYchtsCr2PSe4mSyOKefJkAov
-         XFiXkVYS41kDXQ9GsPXEpqx0M67ITVphnpx0lr5bRbrmLPNj1+hNmbUGPBdDtZGiof4Y
-         WMGhsojrqDVP6eL3AsCzthXlxw6XO8ZbF96lmJguAEsk2dszBPsTNjgXjZEgh5xMTorg
-         Gf0L3FX9y/RzLx3Jogkz5ctr9lV1T608or8R4bTO4sX5N46xILrJoCHs686nD9LwOFz3
-         hHVw==
-X-Gm-Message-State: APjAAAVCGvWx6gcK5te6G8iXMnrtAkTnNk1DESaB2BL1jO14dWdBJvW+
-        coZ5BODNNIvlSEx9FSIrDrw=
-X-Google-Smtp-Source: APXvYqzoLpLSXZFPvEA4NYFeyEPZZRJGs7+UcTKd38N7T/VHbUGey27aXUQ8MAS5JAtnEFArNcgiMQ==
-X-Received: by 2002:a05:6830:15a:: with SMTP id j26mr85700884otp.137.1577934151509;
-        Wed, 01 Jan 2020 19:02:31 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id o20sm15235472oie.23.2020.01.01.19.02.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 Jan 2020 19:02:30 -0800 (PST)
-Date:   Wed, 1 Jan 2020 20:02:29 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Paul Burton <paulburton@kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Christian Brauner <christian.brauner@canonical.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] MIPS: Don't declare __current_thread_info globally
-Message-ID: <20200102030229.GA4478@ubuntu-m2-xlarge-x86>
-References: <20200101175916.558284-1-paulburton@kernel.org>
- <CAK8P3a2a1aY9G+Nh9fy+NU=YA_m1dxm-4SCHgydVO5kcydh77g@mail.gmail.com>
- <20200102005343.GA495913@rani.riverdale.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200102005343.GA495913@rani.riverdale.lan>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 1 Jan 2020 22:04:25 -0500
+Received: from mga14.intel.com ([192.55.52.115]:54253 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727526AbgABDEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jan 2020 22:04:25 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jan 2020 19:04:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,385,1571727600"; 
+   d="scan'208";a="252112736"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga002.fm.intel.com with ESMTP; 01 Jan 2020 19:04:23 -0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     akpm@linux-foundation.org, kirill.shutemov@linux.intel.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        richard.weiyang@gmail.com, Wei Yang <richardw.yang@linux.intel.com>
+Subject: [RFC PATCH] mm/rmap.c: finer hwpoison granularity for PTE-mapped THP
+Date:   Thu,  2 Jan 2020 11:04:21 +0800
+Message-Id: <20200102030421.30799-1-richardw.yang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 01, 2020 at 07:53:45PM -0500, Arvind Sankar wrote:
-> On Wed, Jan 01, 2020 at 09:51:02PM +0100, Arnd Bergmann wrote:
-> > On Wed, Jan 1, 2020 at 6:57 PM Paul Burton <paulburton@kernel.org> wrote:
-> > > diff --git a/arch/mips/include/asm/thread_info.h b/arch/mips/include/asm/thread_info.h
-> > > index 4993db40482c..aceefc3f9a1a 100644
-> > > --- a/arch/mips/include/asm/thread_info.h
-> > > +++ b/arch/mips/include/asm/thread_info.h
-> > > @@ -50,10 +50,10 @@ struct thread_info {
-> > >  }
-> > >
-> > >  /* How to get the thread information struct from C.  */
-> > > -register struct thread_info *__current_thread_info __asm__("$28");
-> > > -
-> > >  static inline struct thread_info *current_thread_info(void)
-> > >  {
-> > > +       register struct thread_info *__current_thread_info __asm__("$28");
-> > > +
-> > >         return __current_thread_info;
-> > >  }
-> > 
-> > This looks like a nice fix, but are you sure it doesn't allow the compiler to
-> > reuse $28 for another purpose in the kernel under register pressure,
-> > which would break current_thread_info()?
-> > 
-> > I see in the MIPS ABI document that $28 is preserved across function
-> > calls, but I don't see any indication that a function is not allowed
-> > to modify it and later restore the original content.
-> > 
-> >         Arnd
-> 
-> The compiler can already do that even with a global definition.
-> 
-> The doc since gcc 9 [1] says:
-> 
-> "Accesses to the variable may be optimized as usual and the register
-> remains available for allocation and use in any computations, provided
-> that observable values of the variable are not affected."
-> 
-> and
-> 
-> "Furthermore, since the register is not reserved exclusively for the
-> variable, accessing it from handlers of asynchronous signals may observe
-> unrelated temporary values residing in the register."
-> 
-> I'm not sure if this was a change in gcc 9 or simply the doc was wrong
-> earlier.
-> 
-> Should there be a -ffixed-28 cflag for MIPS? alpha and hexagon seem to
-> have that and they also keep current_thread_info in a register.
-> 
-> Also, commit fe92da0f355e9 ("MIPS: Changed current_thread_info() to an
-> equivalent supported by both clang and GCC") moved this from local to
-> global because local apparently didn't work on clang?
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc-9.1.0/gcc/Global-Register-Variables.html
+Currently we behave differently between PMD-mapped THP and PTE-mapped
+THP on memory_failure.
 
-Yeah this patch appears to break booting malta_defconfig in QEMU when
-built with clang; additionally, there are a TON of warnings about this
-variable being uninitialized:
+User detected difference:
 
-../arch/mips/include/asm/thread_info.h:57:9: warning: variable '__current_thread_info' is uninitialized when used here [-Wuninitialized]
-        return __current_thread_info;
-               ^~~~~~~~~~~~~~~~~~~~~
-../arch/mips/include/asm/thread_info.h:55:52: note: initialize the variable '__current_thread_info' to silence this warning
-        register struct thread_info *__current_thread_info __asm__("$28");
-                                                          ^
-                                                           = NULL
-1 warning generated.
+    For PTE-mapped THP, the whole 2M range will trigger MCE after
+    memory_failure(), while only 4K range for PMD-mapped THP will.
 
-Seems like this is expected according to that previous commit? I
-noticed there is another instance in arch/mips but it doesn't appear to
-affect everything.
+Direct reason:
 
-https://github.com/ClangBuiltLinux/linux/issues/606
+    All the 512 PTE entry will be marked as hwpoison entry for a PTE-mapped
+    THP while only one PTE will be marked for a PMD-mapped THP.
 
-Cheers,
-Nathan
+Root reason:
+
+    The root cause is PTE-mapped page doesn't need to split pmd which skip
+    the SPLIT_FREEZE process. This makes try_to_unmap_one() do its job when
+    the THP is not splited. And since page is HWPOISON, all the entries in
+    THP is marked as hwpoison entry.
+
+    While for the PMD-mapped THP, SPLIT_FREEZE will save migration entry to
+    pte and this skip try_to_unmap_one() before THP splited. And then only
+    the affected 4k page is marked as hwpoison entry.
+
+This patch tries to provide a finer granularity for PTE-mapped THP by
+only mark the affected subpage as hwpoison entry when THP is not
+split.
+
+Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+
+---
+This complicates the picture a little, while I don't find a better way to
+improve. 
+
+Also I may miss some case or not handle this properly.
+
+Look forward your comments.
+---
+ mm/rmap.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/mm/rmap.c b/mm/rmap.c
+index b3e381919835..90229917dd64 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -1554,10 +1554,11 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
+ 				set_huge_swap_pte_at(mm, address,
+ 						     pvmw.pte, pteval,
+ 						     vma_mmu_pagesize(vma));
+-			} else {
++			} else if (!PageAnon(page) || page == subpage) {
+ 				dec_mm_counter(mm, mm_counter(page));
+ 				set_pte_at(mm, address, pvmw.pte, pteval);
+-			}
++			} else
++				goto freeze;
+ 
+ 		} else if (pte_unused(pteval) && !userfaultfd_armed(vma)) {
+ 			/*
+@@ -1579,6 +1580,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
+ 			swp_entry_t entry;
+ 			pte_t swp_pte;
+ 
++freeze:
+ 			if (arch_unmap_one(mm, vma, address, pteval) < 0) {
+ 				set_pte_at(mm, address, pvmw.pte, pteval);
+ 				ret = false;
+-- 
+2.17.1
+
