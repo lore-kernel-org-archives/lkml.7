@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8524C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 599B1C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC8220866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EAE420863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005025;
-	bh=Y6oTPyUWl/LYXYiiXw8VnlrTivTKYu9uWlex9b/y5nM=;
+	s=default; t=1578005031;
+	bh=OCdidjW7ild2TktUOp5xo7IMaHhoQNPDEyF4cxNTNAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xk9etVn5U9/FAr5n4/XhgoiHcePQ14ZxWzJr4RfyM1jcQNFTdrEBS8gysZlIS+NR4
-	 nMfAJUVeQVj2eYqrbD71AmN/vBsIjO/LPyM0TMXoo1afW7Ti4sFKcIlIDAL6ynxXsx
-	 cLOpQ50c4jtqtPxScKG+CYj34b8CY940LlmbZnLE=
+	b=pZr/8o8W5l4DVhF540kFN3BZ08oTPSOn8yq+feYzfVHOUkxdFKHBtqBcGkTmjyRF8
+	 aITey309twRjYOnOrL6Zxd4fvjQ99kkeJCTAiAO9Mho6W7UZfwJPpp5ENt2JN321+H
+	 qSIEMLY0Vf0w1HIEPJjFaRrmLvU27llBypMsvbzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbgABWno (ORCPT
+        id S1730448AbgABWnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:43:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42912 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:43:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728341AbgABWeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:34:24 -0500
+        id S1730688AbgABWeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:34:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FD3320866;
-        Thu,  2 Jan 2020 22:34:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AE0820863;
+        Thu,  2 Jan 2020 22:34:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004463;
-        bh=Y6oTPyUWl/LYXYiiXw8VnlrTivTKYu9uWlex9b/y5nM=;
+        s=default; t=1578004454;
+        bh=OCdidjW7ild2TktUOp5xo7IMaHhoQNPDEyF4cxNTNAE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qGOuBZZla0WedbfUfZ+Qi0VwrLRnJHxu9NBqze0R63sFWAA191nLaoBAN7/pR5x3T
-         hl5QQFGTDj3Sgy3hrpIOT2lR4sASWwF4F9Q/JtlxftyNj+XL0iceq/xiR8N8qZ2sVU
-         MSP3tiAEBVm2/GlDWahhZt2Xo4MmlUQuyV9iV56k=
+        b=rhdMtTuTd9mMJiYeKHCcj8sJZwJvbvSQyiRwJS47gOHnfMA+lNL95FK8BXzwul+Y8
+         rwRP0xRXjovhO3JbwnXv420ii9qyik6RPrwlh5/wx2y1xuZmNZyz36feVVi0pitpIq
+         B8eI6ccELmiDdtovvlj+ZIsGRmcPII6Wu/YkqQnw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yizhuo <yzhai003@ucr.edu>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 018/137] regulator: max8907: Fix the usage of uninitialized variable in max8907_regulator_probe()
-Date:   Thu,  2 Jan 2020 23:06:31 +0100
-Message-Id: <20200102220549.118412336@linuxfoundation.org>
+Subject: [PATCH 4.4 014/137] media: ov6650: Fix stored frame format not in sync with hardware
+Date:   Thu,  2 Jan 2020 23:06:27 +0100
+Message-Id: <20200102220548.630836067@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -60,62 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yizhuo <yzhai003@ucr.edu>
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-[ Upstream commit 472b39c3d1bba0616eb0e9a8fa3ad0f56927c7d7 ]
+[ Upstream commit 3143b459de4cdcce67b36827476c966e93c1cf01 ]
 
-Inside function max8907_regulator_probe(), variable val could
-be uninitialized if regmap_read() fails. However, val is used
-later in the if statement to decide the content written to
-"pmic", which is potentially unsafe.
+The driver stores frame format settings supposed to be in line with
+hardware state in a device private structure.  Since the driver initial
+submission, those settings are updated before they are actually applied
+on hardware.  If an error occurs on device update, the stored settings
+my not reflect hardware state anymore and consecutive calls to
+.get_fmt() may return incorrect information.  That in turn may affect
+ability of a bridge device to use correct DMA transfer settings if such
+incorrect informmation on active frame format returned by .get_fmt() is
+used.
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
-Link: https://lore.kernel.org/r/20191003175813.16415-1-yzhai003@ucr.edu
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Assuming a failed device update means its state hasn't changed, update
+frame format related settings stored in the device private structure
+only after they are successfully applied so the stored values always
+reflect hardware state as closely as possible.
+
+Fixes: 2f6e2404799a ("[media] SoC Camera: add driver for OV6650 sensor")
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/max8907-regulator.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/media/i2c/soc_camera/ov6650.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/regulator/max8907-regulator.c b/drivers/regulator/max8907-regulator.c
-index 5e941db5ccaf..c7e70cfb581f 100644
---- a/drivers/regulator/max8907-regulator.c
-+++ b/drivers/regulator/max8907-regulator.c
-@@ -299,7 +299,10 @@ static int max8907_regulator_probe(struct platform_device *pdev)
- 	memcpy(pmic->desc, max8907_regulators, sizeof(pmic->desc));
+diff --git a/drivers/media/i2c/soc_camera/ov6650.c b/drivers/media/i2c/soc_camera/ov6650.c
+index 4e19f5e5d8cf..bb55ddfbf733 100644
+--- a/drivers/media/i2c/soc_camera/ov6650.c
++++ b/drivers/media/i2c/soc_camera/ov6650.c
+@@ -611,7 +611,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
+ 		dev_err(&client->dev, "Pixel format not handled: 0x%x\n", code);
+ 		return -EINVAL;
+ 	}
+-	priv->code = code;
  
- 	/* Backwards compatibility with MAX8907B; SD1 uses different voltages */
--	regmap_read(max8907->regmap_gen, MAX8907_REG_II2RR, &val);
-+	ret = regmap_read(max8907->regmap_gen, MAX8907_REG_II2RR, &val);
-+	if (ret)
-+		return ret;
-+
- 	if ((val & MAX8907_II2RR_VERSION_MASK) ==
- 	    MAX8907_II2RR_VERSION_REV_B) {
- 		pmic->desc[MAX8907_SD1].min_uV = 637500;
-@@ -336,14 +339,20 @@ static int max8907_regulator_probe(struct platform_device *pdev)
- 		}
+ 	if (code == MEDIA_BUS_FMT_Y8_1X8 ||
+ 			code == MEDIA_BUS_FMT_SBGGR8_1X8) {
+@@ -637,7 +636,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
+ 		dev_dbg(&client->dev, "max resolution: CIF\n");
+ 		coma_mask |= COMA_QCIF;
+ 	}
+-	priv->half_scale = half_scale;
  
- 		if (pmic->desc[i].ops == &max8907_ldo_ops) {
--			regmap_read(config.regmap, pmic->desc[i].enable_reg,
-+			ret = regmap_read(config.regmap, pmic->desc[i].enable_reg,
- 				    &val);
-+			if (ret)
-+				return ret;
+ 	if (sense) {
+ 		if (sense->master_clock == 8000000) {
+@@ -677,8 +675,13 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
+ 		ret = ov6650_reg_rmw(client, REG_COMA, coma_set, coma_mask);
+ 	if (!ret)
+ 		ret = ov6650_reg_write(client, REG_CLKRC, clkrc);
+-	if (!ret)
++	if (!ret) {
++		priv->half_scale = half_scale;
 +
- 			if ((val & MAX8907_MASK_LDO_SEQ) !=
- 			    MAX8907_MASK_LDO_SEQ)
- 				pmic->desc[i].ops = &max8907_ldo_hwctl_ops;
- 		} else if (pmic->desc[i].ops == &max8907_out5v_ops) {
--			regmap_read(config.regmap, pmic->desc[i].enable_reg,
-+			ret = regmap_read(config.regmap, pmic->desc[i].enable_reg,
- 				    &val);
-+			if (ret)
-+				return ret;
-+
- 			if ((val & (MAX8907_MASK_OUT5V_VINEN |
- 						MAX8907_MASK_OUT5V_ENSRC)) !=
- 			    MAX8907_MASK_OUT5V_ENSRC)
+ 		ret = ov6650_reg_rmw(client, REG_COML, coml_set, coml_mask);
++	}
++	if (!ret)
++		priv->code = code;
+ 
+ 	if (!ret) {
+ 		mf->colorspace	= priv->colorspace;
 -- 
 2.20.1
 
