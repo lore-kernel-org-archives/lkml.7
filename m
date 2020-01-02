@@ -2,52 +2,51 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBD5C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D67C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E299221835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB4920863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:40:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004818;
-	bh=y21P3VUnnPL4WGdJLiMm/q6+nfqZp/lHzVZTchxWuZo=;
+	s=default; t=1578004829;
+	bh=1no84OwhjmvmHKpesHvV6bG38grz6JAXz/O5PiNgOFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ifWJ9dHzXUiyCJGKaLWBOtB0d+ONZfLZvBpLkPGcyossknq6Unhn8unErddgMp69y
-	 bjM4V9KAgtfqINS6j5UDnphcXdfs7/JkUOEOPOsBlwE59Sy0HHTxmdc8qPqWRAP/92
-	 hRoHCeIeFSzqM9/0clvg5Sd7ef4mBPdXU+GjpWnc=
+	b=BO/5GpY51Xo5fthjUxuKR6vE6jpb8iNy+VQCBjFWbLtmmgk4hMFmTpt6SOKJpSEm/
+	 HaMHWJQDzddBpBrXaPgdWcGjiainLonrrA+7AhC01cmgimK5Gj++Icdc6T6h3MMwQC
+	 jpJ5VodfuHlioD/whbYI05mcrcHZEKDfuCKCgR/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731204AbgABWkR (ORCPT
+        id S1731191AbgABWiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:40:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52602 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:38:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731303AbgABWia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:38:30 -0500
+        id S1731263AbgABWiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:38:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC11E21835;
-        Thu,  2 Jan 2020 22:38:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4911E20863;
+        Thu,  2 Jan 2020 22:38:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004710;
-        bh=y21P3VUnnPL4WGdJLiMm/q6+nfqZp/lHzVZTchxWuZo=;
+        s=default; t=1578004688;
+        bh=1no84OwhjmvmHKpesHvV6bG38grz6JAXz/O5PiNgOFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nLZ3KH80zFBH/eqI7GdTaVAi9K3OAA6yhW5UcvP5NEatJptsqtZSnRBmqvVjlNcP5
-         zpVYSFStxSsGLnnA/VOafIBiBLGG225dJ/pLJkiDVy3RvsaOkBlBuOt7iqmx5T5GaX
-         jKvg6wrIbnTVMK7cvr9qBXwEyQL6HsDV1qorlrtM=
+        b=pCZL7gwCWAUHHv5QxJK9O3RKHGzxrUT3F10PUnp4li1IRPkLN41/A6cgbzTQPXwEZ
+         dYGtGhPBgGYL9J/UAS/X3bUtcC/1alJx28/zIJp5FTprfPOIQCHnJIC7n69T91ddRY
+         +qY5lAJbD0Y/If89UTSM89Z6I6RSku1g53lnefxo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linux-scsi@vger.kernel.org,
-        =?UTF-8?q?Diego=20Elio=20Petten=C3=B2?= <flameeyes@flameeyes.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 121/137] cdrom: respect device capabilities during opening action
-Date:   Thu,  2 Jan 2020 23:08:14 +0100
-Message-Id: <20200102220603.417947456@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.4 084/137] platform/x86: hp-wmi: Make buffer for HPWMI_FEATURE2_QUERY 128 bytes
+Date:   Thu,  2 Jan 2020 23:07:37 +0100
+Message-Id: <20200102220557.990485445@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -60,66 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Diego Elio Pettenò <flameeyes@flameeyes.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 366ba7c71ef77c08d06b18ad61b26e2df7352338 ]
+commit 133b2acee3871ae6bf123b8fe34be14464aa3d2c upstream.
 
-Reading the TOC only works if the device can play audio, otherwise
-these commands fail (and possibly bring the device to an unhealthy
-state.)
+At least on the HP Envy x360 15-cp0xxx model the WMI interface
+for HPWMI_FEATURE2_QUERY requires an outsize of at least 128 bytes,
+otherwise it fails with an error code 5 (HPWMI_RET_INVALID_PARAMETERS):
 
-Similarly, cdrom_mmc3_profile() should only be called if the device
-supports generic packet commands.
+Dec 06 00:59:38 kernel: hp_wmi: query 0xd returned error 0x5
 
-To: Jens Axboe <axboe@kernel.dk>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-scsi@vger.kernel.org
-Signed-off-by: Diego Elio Pettenò <flameeyes@flameeyes.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+We do not care about the contents of the buffer, we just want to know
+if the HPWMI_FEATURE2_QUERY command is supported.
+
+This commits bumps the buffer size, fixing the error.
+
+Fixes: 8a1513b4932 ("hp-wmi: limit hotkey enable")
+Cc: stable@vger.kernel.org
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1520703
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/cdrom/cdrom.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/platform/x86/hp-wmi.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index aee23092f50e..2c5feb6b4a99 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -998,6 +998,12 @@ static void cdrom_count_tracks(struct cdrom_device_info *cdi, tracktype *tracks)
- 	tracks->xa = 0;
- 	tracks->error = 0;
- 	cd_dbg(CD_COUNT_TRACKS, "entering cdrom_count_tracks\n");
-+
-+	if (!CDROM_CAN(CDC_PLAY_AUDIO)) {
-+		tracks->error = CDS_NO_INFO;
-+		return;
-+	}
-+
- 	/* Grab the TOC header so we can see how many tracks there are */
- 	ret = cdi->ops->audio_ioctl(cdi, CDROMREADTOCHDR, &header);
- 	if (ret) {
-@@ -1164,7 +1170,8 @@ int cdrom_open(struct cdrom_device_info *cdi, struct block_device *bdev,
- 		ret = open_for_data(cdi);
- 		if (ret)
- 			goto err;
--		cdrom_mmc3_profile(cdi);
-+		if (CDROM_CAN(CDC_GENERIC_PACKET))
-+			cdrom_mmc3_profile(cdi);
- 		if (mode & FMODE_WRITE) {
- 			ret = -EROFS;
- 			if (cdrom_open_write(cdi))
-@@ -2863,6 +2870,9 @@ int cdrom_get_last_written(struct cdrom_device_info *cdi, long *last_written)
- 	   it doesn't give enough information or fails. then we return
- 	   the toc contents. */
- use_toc:
-+	if (!CDROM_CAN(CDC_PLAY_AUDIO))
-+		return -ENOSYS;
-+
- 	toc.cdte_format = CDROM_MSF;
- 	toc.cdte_track = CDROM_LEADOUT;
- 	if ((ret = cdi->ops->audio_ioctl(cdi, CDROMREADTOCENTRY, &toc)))
--- 
-2.20.1
-
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -309,7 +309,7 @@ static int __init hp_wmi_bios_2008_later
+ 
+ static int __init hp_wmi_bios_2009_later(void)
+ {
+-	int state = 0;
++	u8 state[128];
+ 	int ret = hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, 0, &state,
+ 				       sizeof(state), sizeof(state));
+ 	if (!ret)
 
 
