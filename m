@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0A8C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FC4C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 465A720866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D3320848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005590;
-	bh=sjRlUUsGI2JlRaUtjC8OFuSLF8vEs4KJRKVVozL2pUY=;
+	s=default; t=1578005596;
+	bh=zZsaeynMCpwoa3ybK+tlz92a77OWMbnxZCQX6T/LXss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c8CxBOwlqxY2GrWYTtDP9eP1gTWc1Sg0x2Io/hZdu9DaHwsGuqWd5sxRxcdbsMPFf
-	 LFvlV1hlQDrtku8i8Crj8lVblClendPSHcwehngzYvWfvyf2QGk51U5JDjdSU8PJQn
-	 mBHvMSh/jd7Sl5fqYYxvpRdNwgKSRs5Y5jjLdbBc=
+	b=ffoAhUJ+MqgRlhbw+y3BMeaBCDXyAPmbz/2EO8C2d93Eq2zJV0Eh3BkJ47MbpYBLE
+	 8nhBJsTZaJwGKWgYWj5E+KpKCb6URvjYqZsv3VhUeh9TxIBJZLix+bAlRrjWvD22Pl
+	 OxZPqWTgqIWegnjvd+OZQVC3pT5r31DuAyz1MVog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbgABWWK (ORCPT
+        id S1729081AbgABWWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:22:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42170 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:22:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729097AbgABWWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:22:07 -0500
+        id S1728611AbgABWVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:21:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 251B921D7D;
-        Thu,  2 Jan 2020 22:22:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AED1E21D7D;
+        Thu,  2 Jan 2020 22:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003725;
-        bh=sjRlUUsGI2JlRaUtjC8OFuSLF8vEs4KJRKVVozL2pUY=;
+        s=default; t=1578003711;
+        bh=zZsaeynMCpwoa3ybK+tlz92a77OWMbnxZCQX6T/LXss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YIjdewOH/vjWlDs3uga3quk13AvyOP4oPnFA0eXairWfUOAhi6B/T8OtE79TYs+HE
-         XaanHACfFvOYf9tdex7qSyPtDwmC4L9IKuE8xuLkVTT8fEsObn7hG0vU6cfY0hywDj
-         brAsqxoL9g0w/LnCgJTrD6qKDDrk7WXfyY+YFkRI=
+        b=kmI/oxtWkROBJy0amHfcgNUB8MX1YNIFsUepopUui5q6BPi6kuiEAjx4/JgB8fmKF
+         0EwzuV/AxpWGsaAHwEgPWAzgWUdnHflHO0AhudQ2JbHvc+YMZjmD3np51MogLTbQ3n
+         vuQHHXIYDwDPibKVLpZIZS7/sZ2VpfJxwwjTRNqQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.19 089/114] hrtimer: Annotate lockless access to timer->state
-Date:   Thu,  2 Jan 2020 23:07:41 +0100
-Message-Id: <20200102220038.167049649@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+f68108fed972453a0ad4@syzkaller.appspotmail.com,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.19 083/114] netfilter: ebtables: compat: reject all padding in matches/watchers
+Date:   Thu,  2 Jan 2020 23:07:35 +0100
+Message-Id: <20200102220037.546181771@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -60,160 +61,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Florian Westphal <fw@strlen.de>
 
-commit 56144737e67329c9aaed15f942d46a6302e2e3d8 upstream.
+commit e608f631f0ba5f1fc5ee2e260a3a35d13107cbfe upstream.
 
-syzbot reported various data-race caused by hrtimer_is_queued() reading
-timer->state. A READ_ONCE() is required there to silence the warning.
+syzbot reported following splat:
 
-Also add the corresponding WRITE_ONCE() when timer->state is set.
+BUG: KASAN: vmalloc-out-of-bounds in size_entry_mwt net/bridge/netfilter/ebtables.c:2063 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in compat_copy_entries+0x128b/0x1380 net/bridge/netfilter/ebtables.c:2155
+Read of size 4 at addr ffffc900004461f4 by task syz-executor267/7937
 
-In remove_hrtimer() the hrtimer_is_queued() helper is open coded to avoid
-loading timer->state twice.
+CPU: 1 PID: 7937 Comm: syz-executor267 Not tainted 5.5.0-rc1-syzkaller #0
+ size_entry_mwt net/bridge/netfilter/ebtables.c:2063 [inline]
+ compat_copy_entries+0x128b/0x1380 net/bridge/netfilter/ebtables.c:2155
+ compat_do_replace+0x344/0x720 net/bridge/netfilter/ebtables.c:2249
+ compat_do_ebt_set_ctl+0x22f/0x27e net/bridge/netfilter/ebtables.c:2333
+ [..]
 
-KCSAN reported these cases:
+Because padding isn't considered during computation of ->buf_user_offset,
+"total" is decremented by fewer bytes than it should.
 
-BUG: KCSAN: data-race in __remove_hrtimer / tcp_pacing_check
+Therefore, the first part of
 
-write to 0xffff8880b2a7d388 of 1 bytes by interrupt on cpu 0:
- __remove_hrtimer+0x52/0x130 kernel/time/hrtimer.c:991
- __run_hrtimer kernel/time/hrtimer.c:1496 [inline]
- __hrtimer_run_queues+0x250/0x600 kernel/time/hrtimer.c:1576
- hrtimer_run_softirq+0x10e/0x150 kernel/time/hrtimer.c:1593
- __do_softirq+0x115/0x33f kernel/softirq.c:292
- run_ksoftirqd+0x46/0x60 kernel/softirq.c:603
- smpboot_thread_fn+0x37d/0x4a0 kernel/smpboot.c:165
- kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+if (*total < sizeof(*entry) || entry->next_offset < sizeof(*entry))
 
-read to 0xffff8880b2a7d388 of 1 bytes by task 24652 on cpu 1:
- tcp_pacing_check net/ipv4/tcp_output.c:2235 [inline]
- tcp_pacing_check+0xba/0x130 net/ipv4/tcp_output.c:2225
- tcp_xmit_retransmit_queue+0x32c/0x5a0 net/ipv4/tcp_output.c:3044
- tcp_xmit_recovery+0x7c/0x120 net/ipv4/tcp_input.c:3558
- tcp_ack+0x17b6/0x3170 net/ipv4/tcp_input.c:3717
- tcp_rcv_established+0x37e/0xf50 net/ipv4/tcp_input.c:5696
- tcp_v4_do_rcv+0x381/0x4e0 net/ipv4/tcp_ipv4.c:1561
- sk_backlog_rcv include/net/sock.h:945 [inline]
- __release_sock+0x135/0x1e0 net/core/sock.c:2435
- release_sock+0x61/0x160 net/core/sock.c:2951
- sk_stream_wait_memory+0x3d7/0x7c0 net/core/stream.c:145
- tcp_sendmsg_locked+0xb47/0x1f30 net/ipv4/tcp.c:1393
- tcp_sendmsg+0x39/0x60 net/ipv4/tcp.c:1434
- inet_sendmsg+0x6d/0x90 net/ipv4/af_inet.c:807
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0x9f/0xc0 net/socket.c:657
+will pass, -- it should not have.  This causes oob access:
+entry->next_offset is past the vmalloced size.
 
-BUG: KCSAN: data-race in __remove_hrtimer / __tcp_ack_snd_check
+Reject padding and check that computed user offset (sum of ebt_entry
+structure plus all individual matches/watchers/targets) is same
+value that userspace gave us as the offset of the next entry.
 
-write to 0xffff8880a3a65588 of 1 bytes by interrupt on cpu 0:
- __remove_hrtimer+0x52/0x130 kernel/time/hrtimer.c:991
- __run_hrtimer kernel/time/hrtimer.c:1496 [inline]
- __hrtimer_run_queues+0x250/0x600 kernel/time/hrtimer.c:1576
- hrtimer_run_softirq+0x10e/0x150 kernel/time/hrtimer.c:1593
- __do_softirq+0x115/0x33f kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0xbb/0xe0 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:536 [inline]
- smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
-
-read to 0xffff8880a3a65588 of 1 bytes by task 22891 on cpu 1:
- __tcp_ack_snd_check+0x415/0x4f0 net/ipv4/tcp_input.c:5265
- tcp_ack_snd_check net/ipv4/tcp_input.c:5287 [inline]
- tcp_rcv_established+0x750/0xf50 net/ipv4/tcp_input.c:5708
- tcp_v4_do_rcv+0x381/0x4e0 net/ipv4/tcp_ipv4.c:1561
- sk_backlog_rcv include/net/sock.h:945 [inline]
- __release_sock+0x135/0x1e0 net/core/sock.c:2435
- release_sock+0x61/0x160 net/core/sock.c:2951
- sk_stream_wait_memory+0x3d7/0x7c0 net/core/stream.c:145
- tcp_sendmsg_locked+0xb47/0x1f30 net/ipv4/tcp.c:1393
- tcp_sendmsg+0x39/0x60 net/ipv4/tcp.c:1434
- inet_sendmsg+0x6d/0x90 net/ipv4/af_inet.c:807
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0x9f/0xc0 net/socket.c:657
- __sys_sendto+0x21f/0x320 net/socket.c:1952
- __do_sys_sendto net/socket.c:1964 [inline]
- __se_sys_sendto net/socket.c:1960 [inline]
- __x64_sys_sendto+0x89/0xb0 net/socket.c:1960
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 24652 Comm: syz-executor.3 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-
-[ tglx: Added comments ]
-
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191106174804.74723-1-edumazet@google.com
+Reported-by: syzbot+f68108fed972453a0ad4@syzkaller.appspotmail.com
+Fixes: 81e675c227ec ("netfilter: ebtables: add CONFIG_COMPAT support")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/hrtimer.h |   14 ++++++++++----
- kernel/time/hrtimer.c   |   11 +++++++----
- 2 files changed, 17 insertions(+), 8 deletions(-)
+ net/bridge/netfilter/ebtables.c |   33 ++++++++++++++++-----------------
+ 1 file changed, 16 insertions(+), 17 deletions(-)
 
---- a/include/linux/hrtimer.h
-+++ b/include/linux/hrtimer.h
-@@ -430,12 +430,18 @@ extern u64 hrtimer_next_event_without(co
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -1876,7 +1876,7 @@ static int ebt_buf_count(struct ebt_entr
+ }
  
- extern bool hrtimer_active(const struct hrtimer *timer);
+ static int ebt_buf_add(struct ebt_entries_buf_state *state,
+-		       void *data, unsigned int sz)
++		       const void *data, unsigned int sz)
+ {
+ 	if (state->buf_kern_start == NULL)
+ 		goto count_only;
+@@ -1910,7 +1910,7 @@ enum compat_mwt {
+ 	EBT_COMPAT_TARGET,
+ };
  
--/*
-- * Helper function to check, whether the timer is on one of the queues
-+/**
-+ * hrtimer_is_queued = check, whether the timer is on one of the queues
-+ * @timer:	Timer to check
-+ *
-+ * Returns: True if the timer is queued, false otherwise
-+ *
-+ * The function can be used lockless, but it gives only a current snapshot.
+-static int compat_mtw_from_user(struct compat_ebt_entry_mwt *mwt,
++static int compat_mtw_from_user(const struct compat_ebt_entry_mwt *mwt,
+ 				enum compat_mwt compat_mwt,
+ 				struct ebt_entries_buf_state *state,
+ 				const unsigned char *base)
+@@ -1988,22 +1988,23 @@ static int compat_mtw_from_user(struct c
+ /* return size of all matches, watchers or target, including necessary
+  * alignment and padding.
   */
--static inline int hrtimer_is_queued(struct hrtimer *timer)
-+static inline bool hrtimer_is_queued(struct hrtimer *timer)
+-static int ebt_size_mwt(struct compat_ebt_entry_mwt *match32,
++static int ebt_size_mwt(const struct compat_ebt_entry_mwt *match32,
+ 			unsigned int size_left, enum compat_mwt type,
+ 			struct ebt_entries_buf_state *state, const void *base)
  {
--	return timer->state & HRTIMER_STATE_ENQUEUED;
-+	/* The READ_ONCE pairs with the update functions of timer->state */
-+	return !!(READ_ONCE(timer->state) & HRTIMER_STATE_ENQUEUED);
- }
++	const char *buf = (const char *)match32;
+ 	int growth = 0;
+-	char *buf;
  
- /*
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -955,7 +955,8 @@ static int enqueue_hrtimer(struct hrtime
+ 	if (size_left == 0)
+ 		return 0;
  
- 	base->cpu_base->active_bases |= 1 << base->index;
+-	buf = (char *) match32;
+-
+-	while (size_left >= sizeof(*match32)) {
++	do {
+ 		struct ebt_entry_match *match_kern;
+ 		int ret;
  
--	timer->state = HRTIMER_STATE_ENQUEUED;
-+	/* Pairs with the lockless read in hrtimer_is_queued() */
-+	WRITE_ONCE(timer->state, HRTIMER_STATE_ENQUEUED);
- 
- 	return timerqueue_add(&base->active, &timer->node);
- }
-@@ -977,7 +978,8 @@ static void __remove_hrtimer(struct hrti
- 	struct hrtimer_cpu_base *cpu_base = base->cpu_base;
- 	u8 state = timer->state;
- 
--	timer->state = newstate;
-+	/* Pairs with the lockless read in hrtimer_is_queued() */
-+	WRITE_ONCE(timer->state, newstate);
- 	if (!(state & HRTIMER_STATE_ENQUEUED))
- 		return;
- 
-@@ -1002,8 +1004,9 @@ static void __remove_hrtimer(struct hrti
- static inline int
- remove_hrtimer(struct hrtimer *timer, struct hrtimer_clock_base *base, bool restart)
- {
--	if (hrtimer_is_queued(timer)) {
--		u8 state = timer->state;
-+	u8 state = timer->state;
++		if (size_left < sizeof(*match32))
++			return -EINVAL;
 +
-+	if (state & HRTIMER_STATE_ENQUEUED) {
- 		int reprogram;
+ 		match_kern = (struct ebt_entry_match *) state->buf_kern_start;
+ 		if (match_kern) {
+ 			char *tmp;
+@@ -2040,22 +2041,18 @@ static int ebt_size_mwt(struct compat_eb
+ 		if (match_kern)
+ 			match_kern->match_size = ret;
  
- 		/*
+-		/* rule should have no remaining data after target */
+-		if (type == EBT_COMPAT_TARGET && size_left)
+-			return -EINVAL;
+-
+ 		match32 = (struct compat_ebt_entry_mwt *) buf;
+-	}
++	} while (size_left);
+ 
+ 	return growth;
+ }
+ 
+ /* called for all ebt_entry structures. */
+-static int size_entry_mwt(struct ebt_entry *entry, const unsigned char *base,
++static int size_entry_mwt(const struct ebt_entry *entry, const unsigned char *base,
+ 			  unsigned int *total,
+ 			  struct ebt_entries_buf_state *state)
+ {
+-	unsigned int i, j, startoff, new_offset = 0;
++	unsigned int i, j, startoff, next_expected_off, new_offset = 0;
+ 	/* stores match/watchers/targets & offset of next struct ebt_entry: */
+ 	unsigned int offsets[4];
+ 	unsigned int *offsets_update = NULL;
+@@ -2141,11 +2138,13 @@ static int size_entry_mwt(struct ebt_ent
+ 			return ret;
+ 	}
+ 
+-	startoff = state->buf_user_offset - startoff;
++	next_expected_off = state->buf_user_offset - startoff;
++	if (next_expected_off != entry->next_offset)
++		return -EINVAL;
+ 
+-	if (WARN_ON(*total < startoff))
++	if (*total < entry->next_offset)
+ 		return -EINVAL;
+-	*total -= startoff;
++	*total -= entry->next_offset;
+ 	return 0;
+ }
+ 
 
 
