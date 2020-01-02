@@ -6,39 +6,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F644C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B15C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EEC020863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E13121655
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:06:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgABMCJ (ORCPT
+        id S1728279AbgABMGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 07:02:09 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53147 "EHLO
+        Thu, 2 Jan 2020 07:06:52 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35291 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728205AbgABMCI (ORCPT
+        with ESMTP id S1728205AbgABMGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 07:02:08 -0500
+        Thu, 2 Jan 2020 07:06:52 -0500
 Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
         by metis.ext.pengutronix.de with esmtp (Exim 4.92)
         (envelope-from <p.zabel@pengutronix.de>)
-        id 1imzAw-00030W-Mq; Thu, 02 Jan 2020 13:02:02 +0100
-Message-ID: <7b3bfaa065dd5c647522baaac4dcd9a3b34dfb44.camel@pengutronix.de>
-Subject: Re: [PATCH v3 2/2] PCI: qcom: Add support for SDM845 PCIe controller
+        id 1imzFN-0003cs-KI; Thu, 02 Jan 2020 13:06:37 +0100
+Message-ID: <1cb30ea7ed8acabb02dc78f6f054be19d4b5b609.camel@pengutronix.de>
+Subject: Re: [PATCH v5 3/8] mailbox: sun6i-msgbox: Add a new mailbox driver
 From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>
-Date:   Thu, 02 Jan 2020 13:02:00 +0100
-In-Reply-To: <20191107001642.1127561-3-bjorn.andersson@linaro.org>
-References: <20191107001642.1127561-1-bjorn.andersson@linaro.org>
-         <20191107001642.1127561-3-bjorn.andersson@linaro.org>
+To:     Samuel Holland <samuel@sholland.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Ondrej Jirman <megous@megous.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Date:   Thu, 02 Jan 2020 13:06:34 +0100
+In-Reply-To: <20191215042455.51001-4-samuel@sholland.org>
+References: <20191215042455.51001-1-samuel@sholland.org>
+         <20191215042455.51001-4-samuel@sholland.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
@@ -52,109 +58,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-11-06 at 16:16 -0800, Bjorn Andersson wrote:
-> The SDM845 has one Gen2 and one Gen3 controller, add support for these.
+On Sat, 2019-12-14 at 22:24 -0600, Samuel Holland wrote:
+> Allwinner sun6i, sun8i, sun9i, and sun50i SoCs contain a hardware
+> message box used for communication between the ARM CPUs and the ARISC
+> management coprocessor. This mailbox contains 8 unidirectional
+> 4-message FIFOs.
 > 
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Add a driver for it, so it can be used for SCPI or other communication
+> protocols.
+> 
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 > ---
+>  drivers/mailbox/Kconfig        |   9 +
+>  drivers/mailbox/Makefile       |   2 +
+>  drivers/mailbox/sun6i-msgbox.c | 332 +++++++++++++++++++++++++++++++++
+>  3 files changed, 343 insertions(+)
+>  create mode 100644 drivers/mailbox/sun6i-msgbox.c
 > 
-> Changes since v1:
-> - Don't assert the reset in the failure path
-> 
->  drivers/pci/controller/dwc/pcie-qcom.c | 150 +++++++++++++++++++++++++
->  1 file changed, 150 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 7e581748ee9f..5ea527a6bd9f 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
 [...]
-> @@ -139,12 +142,20 @@ struct qcom_pcie_resources_2_3_3 {
->  	struct reset_control *rst[7];
->  };
->  
-> +struct qcom_pcie_resources_2_7_0 {
-> +	struct clk_bulk_data clks[6];
-> +	struct regulator_bulk_data supplies[2];
-> +	struct reset_control *pci_reset;
-> +	struct clk *pipe_clk;
-> +};
-> +
->  union qcom_pcie_resources {
->  	struct qcom_pcie_resources_1_0_0 v1_0_0;
->  	struct qcom_pcie_resources_2_1_0 v2_1_0;
->  	struct qcom_pcie_resources_2_3_2 v2_3_2;
->  	struct qcom_pcie_resources_2_3_3 v2_3_3;
->  	struct qcom_pcie_resources_2_4_0 v2_4_0;
-> +	struct qcom_pcie_resources_2_7_0 v2_7_0;
->  };
->  
->  struct qcom_pcie;
-> @@ -1068,6 +1079,134 @@ static int qcom_pcie_init_2_3_3(struct qcom_pcie *pcie)
->  	return ret;
->  }
->  
-> +static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
+> diff --git a/drivers/mailbox/sun6i-msgbox.c b/drivers/mailbox/sun6i-msgbox.c
+> new file mode 100644
+> index 000000000000..7a41e732457c
+> --- /dev/null
+> +++ b/drivers/mailbox/sun6i-msgbox.c
+> @@ -0,0 +1,332 @@
+[...]
+> +static int sun6i_msgbox_probe(struct platform_device *pdev)
 > +{
-> +	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct device *dev = pci->dev;
-> +	int ret;
+> +	struct device *dev = &pdev->dev;
+> +	struct mbox_chan *chans;
+> +	struct reset_control *reset;
+> +	struct resource *res;
+> +	struct sun6i_msgbox *mbox;
+> +	int i, ret;
 > +
-> +	res->pci_reset = devm_reset_control_get_exclusive(dev, "pci");
-> +	if (IS_ERR(res->pci_reset))
-> +		return PTR_ERR(res->pci_reset);
+> +	mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
+> +	if (!mbox)
+> +		return -ENOMEM;
 > +
-> +	res->supplies[0].supply = "vdda";
-> +	res->supplies[1].supply = "vddpe-3v3";
-> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(res->supplies),
-> +				      res->supplies);
-> +	if (ret)
-> +		return ret;
+> +	chans = devm_kcalloc(dev, NUM_CHANS, sizeof(*chans), GFP_KERNEL);
+> +	if (!chans)
+> +		return -ENOMEM;
 > +
-> +	res->clks[0].id = "aux";
-> +	res->clks[1].id = "cfg";
-> +	res->clks[2].id = "bus_master";
-> +	res->clks[3].id = "bus_slave";
-> +	res->clks[4].id = "slave_q2a";
-> +	res->clks[5].id = "tbu";
+> +	for (i = 0; i < NUM_CHANS; ++i)
+> +		chans[i].con_priv = mbox;
 > +
-> +	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	res->pipe_clk = devm_clk_get(dev, "pipe");
-> +	return PTR_ERR_OR_ZERO(res->pipe_clk);
-> +}
-> +
-> +static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct device *dev = pci->dev;
-> +	u32 val;
-> +	int ret;
-> +
-> +	ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
-> +	if (ret < 0) {
-> +		dev_err(dev, "cannot enable regulators\n");
+> +	mbox->clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(mbox->clk)) {
+> +		ret = PTR_ERR(mbox->clk);
+> +		dev_err(dev, "Failed to get clock: %d\n", ret);
 > +		return ret;
 > +	}
 > +
-> +	ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
-> +	if (ret < 0)
-> +		goto err_disable_regulators;
+> +	ret = clk_prepare_enable(mbox->clk);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to enable clock: %d\n", ret);
+> +		return ret;
+> +	}
 > +
-> +	ret = reset_control_assert(res->pci_reset);
-> +	if (ret < 0) {
-> +		dev_err(dev, "cannot deassert pci reset\n");
+> +	reset = devm_reset_control_get(dev, NULL);
 
-s/deassert/assert/
-
-in the error message. Apart from that,
-
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Please use devm_reset_control_get_exclusive() explicitly.
 
 regards
 Philipp
