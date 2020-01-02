@@ -2,202 +2,103 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E1FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC08BC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3965520866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:44:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005049;
-	bh=5WK5Lvi1zvF6yFk+wD1iaLyN3/vKf4+AP3pnlwernI4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FS502eqLoJ4ib1oJWHAL/Bj+oUgrkSrbhz3NkeLjSJ3XrR0IIOPPdfmtWyVnZPver
-	 Fg4iEDCcfVe/cUqh2TgpFFkOagSpmE/UB7gCcdpi6utA8Qy4yMqPVllzmnCiZcKcwz
-	 fbTzI37TagIHpJmdzuDBHQh3iiUI/zt53hYaKVDI=
+	by mail.kernel.org (Postfix) with ESMTP id 7DAFB20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:44:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AADIQQKS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730571AbgABWdt (ORCPT
+        id S1730022AbgABWoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:33:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730320AbgABWdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:33:47 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9F4120866;
-        Thu,  2 Jan 2020 22:33:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004426;
-        bh=5WK5Lvi1zvF6yFk+wD1iaLyN3/vKf4+AP3pnlwernI4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NRX8PopOeaAlACmzK3PTM9i/l8OjGezZWvurjogOqzYUFw0uLSEQf6d/RdAtsVmXc
-         R0pkXCVILHfkY+jbnGhO2gmqWbl7V7JDO1kDoxldJ29//YxV5dHnR9ATYULONk5Ah5
-         MK8T0g+HoVt7O61w/ydsmYSyV5NVF9om7+ieu+Hw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jann Horn <jannh@google.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Siddharth Chandrasekaran <csiddharth@vmware.com>
-Subject: [PATCH 4.9 156/171] Make filldir[64]() verify the directory entry filename is valid
-Date:   Thu,  2 Jan 2020 23:08:07 +0100
-Message-Id: <20200102220608.429623475@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
-References: <20200102220546.960200039@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 2 Jan 2020 17:44:14 -0500
+Received: from mail-ot1-f44.google.com ([209.85.210.44]:39285 "EHLO
+        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729648AbgABWoL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:44:11 -0500
+Received: by mail-ot1-f44.google.com with SMTP id 77so58836981oty.6;
+        Thu, 02 Jan 2020 14:44:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4UPLplmo5AOYVGqcjtpqI2E26h8IabatP5llWHkVEeo=;
+        b=AADIQQKSbx9mp65JscmKBxpR/0JaqscxGCSncyebyIfSDz1kdN6R6h8nbqhET796Dy
+         sM6c7h4ATffbD9uCsnCu+zMwCkEd5fl9w5L5qhRMaGnoTNfJZlSkwDK1PDguSXRx4zfq
+         T1R46eGsOTeSAwe2IIi5glKFv64W6gSBgOHaWthXgZxc51XBUDS46DcnDHzLiLBcJKpK
+         8Xf6q+6VkEMlaBgzWipPynZ9yHP1/9m6Tv7WpQgM5MA01v4252gIwsLkqmVZBoQoRcO0
+         K7jZ/jC93/aEv/DfT3eUyyGCtuId/mWMlTc+fvP3OjpJtEekLqZRo5/HJ+WITn0ipA0F
+         xB8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4UPLplmo5AOYVGqcjtpqI2E26h8IabatP5llWHkVEeo=;
+        b=LEDy9crY7arN/2cZQOpzsYbOQyMiZvW6ZFMksDsFqOud/zcyyWNsunlxIOrrOehFQg
+         a82EBYrFoWzULjDV9IRDwhNDrlPvRh5hynrmL398YrykFxpn3eukXCitlsodi0zV5Ikn
+         TQudHa8uyJQ2O/LSlmV7Jh+t6HfrMMwm/aBu1fYeE0bHLp6Pnzk7AJEqRCKCgdsp9erW
+         PwLGzPjc5t/zAVlcK0LJrzcQ+5NGb9KgSUzSC4PkD7aMwtpzSTvazXZpTb369Q00wUWw
+         R3zkkupP36G72H90UuFUDGXkMQMybHRl6wk+GsHUna3Uyfya+X6NPBzMezq1rLxjR9hU
+         abdA==
+X-Gm-Message-State: APjAAAUr1NcwPAUP9UCtEuYToLFYs0R1ZBeA1RwrYbo10GlHcAGb6poJ
+        t6WeHETuIAEctF8vZYfZ3U3HcZKdo+TztiFbgcw=
+X-Google-Smtp-Source: APXvYqwB9iEM7ZbeZGoKl9mZU5Op4kRYRl8Y6bsc7G1ZKimVF+NO5DgS7HD7lcUOx9nfnwLJ5dxNMgDpTjqrZeKeWuc=
+X-Received: by 2002:a05:6830:1e37:: with SMTP id t23mr9310819otr.16.1578005050928;
+ Thu, 02 Jan 2020 14:44:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200102122004.216c85da@gandalf.local.home>
+In-Reply-To: <20200102122004.216c85da@gandalf.local.home>
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Date:   Thu, 2 Jan 2020 22:43:34 +0000
+Message-ID: <CADVatmO8mvhtgZ=CNv8uxhVkh2nqg5bjCLzTxyA9UDerRox8Ug@mail.gmail.com>
+Subject: Re: [RFC] tools lib traceevent: How to do library versioning being in
+ the Linux kernel source?
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+On Thu, Jan 2, 2020 at 5:20 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> First, I hope everyone had a Happy New Year!
 
-commit 8a23eb804ca4f2be909e372cf5a9e7b30ae476cd upstream.
+Happy New Year to you too.
 
-This has been discussed several times, and now filesystem people are
-talking about doing it individually at the filesystem layer, so head
-that off at the pass and just do it in getdents{64}().
+>
+> Next, Sudip has been working to get the libtraceevent library into
+> Debian. As this has been happening, I've been working at how to get all
+> the projects that use this, to use the library installed on the system
+> if it does exist. I'm hoping that once it's in Debian, the other
+> distros will follow suit.
 
-This is partially based on a patch by Jann Horn, but checks for NUL
-bytes as well, and somewhat simplified.
+I have sent you another patch for libtraceevent. And, assuming that
+you will not have any objection to that patch libtraceevent has been
+merged in Debian and is now available in Debian Sid releases. Thanks
+to Ben for all his suggestion and help.
 
-There's also commentary about how it might be better if invalid names
-due to filesystem corruption don't cause an immediate failure, but only
-an error at the end of the readdir(), so that people can still see the
-filenames that are ok.
-
-There's also been discussion about just how much POSIX strictly speaking
-requires this since it's about filesystem corruption.  It's really more
-"protect user space from bad behavior" as pointed out by Jann.  But
-since Eric Biederman looked up the POSIX wording, here it is for context:
-
- "From readdir:
-
-   The readdir() function shall return a pointer to a structure
-   representing the directory entry at the current position in the
-   directory stream specified by the argument dirp, and position the
-   directory stream at the next entry. It shall return a null pointer
-   upon reaching the end of the directory stream. The structure dirent
-   defined in the <dirent.h> header describes a directory entry.
-
-  From definitions:
-
-   3.129 Directory Entry (or Link)
-
-   An object that associates a filename with a file. Several directory
-   entries can associate names with the same file.
-
-  ...
-
-   3.169 Filename
-
-   A name consisting of 1 to {NAME_MAX} bytes used to name a file. The
-   characters composing the name may be selected from the set of all
-   character values excluding the slash character and the null byte. The
-   filenames dot and dot-dot have special meaning. A filename is
-   sometimes referred to as a 'pathname component'."
-
-Note that I didn't bother adding the checks to any legacy interfaces
-that nobody uses.
-
-Also note that if this ends up being noticeable as a performance
-regression, we can fix that to do a much more optimized model that
-checks for both NUL and '/' at the same time one word at a time.
-
-We haven't really tended to optimize 'memchr()', and it only checks for
-one pattern at a time anyway, and we really _should_ check for NUL too
-(but see the comment about "soft errors" in the code about why it
-currently only checks for '/')
-
-See the CONFIG_DCACHE_WORD_ACCESS case of hash_name() for how the name
-lookup code looks for pathname terminating characters in parallel.
-
-Link: https://lore.kernel.org/lkml/20190118161440.220134-2-jannh@google.com/
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Jann Horn <jannh@google.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Siddharth Chandrasekaran <csiddharth@vmware.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/readdir.c |   40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
---- a/fs/readdir.c
-+++ b/fs/readdir.c
-@@ -64,6 +64,40 @@ out:
- EXPORT_SYMBOL(iterate_dir);
- 
- /*
-+ * POSIX says that a dirent name cannot contain NULL or a '/'.
-+ *
-+ * It's not 100% clear what we should really do in this case.
-+ * The filesystem is clearly corrupted, but returning a hard
-+ * error means that you now don't see any of the other names
-+ * either, so that isn't a perfect alternative.
-+ *
-+ * And if you return an error, what error do you use? Several
-+ * filesystems seem to have decided on EUCLEAN being the error
-+ * code for EFSCORRUPTED, and that may be the error to use. Or
-+ * just EIO, which is perhaps more obvious to users.
-+ *
-+ * In order to see the other file names in the directory, the
-+ * caller might want to make this a "soft" error: skip the
-+ * entry, and return the error at the end instead.
-+ *
-+ * Note that this should likely do a "memchr(name, 0, len)"
-+ * check too, since that would be filesystem corruption as
-+ * well. However, that case can't actually confuse user space,
-+ * which has to do a strlen() on the name anyway to find the
-+ * filename length, and the above "soft error" worry means
-+ * that it's probably better left alone until we have that
-+ * issue clarified.
-+ */
-+static int verify_dirent_name(const char *name, int len)
-+{
-+	if (WARN_ON_ONCE(!len))
-+		return -EIO;
-+	if (WARN_ON_ONCE(memchr(name, '/', len)))
-+		return -EIO;
-+	return 0;
-+}
-+
-+/*
-  * Traditional linux readdir() handling..
-  *
-  * "count=1" is a special case, meaning that the buffer is one
-@@ -172,6 +206,9 @@ static int filldir(struct dir_context *c
- 	int reclen = ALIGN(offsetof(struct linux_dirent, d_name) + namlen + 2,
- 		sizeof(long));
- 
-+	buf->error = verify_dirent_name(name, namlen);
-+	if (unlikely(buf->error))
-+		return buf->error;
- 	buf->error = -EINVAL;	/* only used if we fail.. */
- 	if (reclen > buf->count)
- 		return -EINVAL;
-@@ -258,6 +295,9 @@ static int filldir64(struct dir_context
- 	int reclen = ALIGN(offsetof(struct linux_dirent64, d_name) + namlen + 1,
- 		sizeof(u64));
- 
-+	buf->error = verify_dirent_name(name, namlen);
-+	if (unlikely(buf->error))
-+		return buf->error;
- 	buf->error = -EINVAL;	/* only used if we fail.. */
- 	if (reclen > buf->count)
- 		return -EINVAL;
+The packages are at:
+https://packages.debian.org/unstable/libtraceevent1
+https://packages.debian.org/unstable/libtraceevent-dev
+https://packages.debian.org/unstable/libtraceevent1-plugin
 
 
+-- 
+Regards
+Sudip
