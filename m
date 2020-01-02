@@ -2,52 +2,55 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FB9C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0C8C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCF42253D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31BBA222C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003768;
-	bh=jAIf3CT/v5lg8WB6/KwtNml/dKqKx7WIzBVB3nUMhVI=;
+	s=default; t=1578003772;
+	bh=Yb86dZj1zmqQt6V3G33LYnP/wlfh0kQGGKcZlNl/Qlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gk7DwJ/wpAOhRVrPK+suByF9Itb2lt9TbfHvaYa4nNIP2faP1fV+BHsQkl8itB7sa
-	 AgePsuSgyKkZ7TNeRbzubof2S8IKoSYDLTPp+pe8pGHBBnow4S3RqVfyktfpyA0mwm
-	 +MLEx0QgFDrc7LAU+B+Q4M1ARyOlImDHZ3zD9d2M=
+	b=mf206iuzVRkmhcOkIxAPMbqopOBve/pELr3rehn8CmKua3SOXMA2s+daDOMjVSD6p
+	 2LM6qmP0dfJk/frpKGk2XpEL5yzBX1TeQQuyznNSLRq0I2e74tFEjmmXPRsrnJf5G0
+	 /eBSzrTBQeaNaUD0hAV7q+ReQ5wHzCcFPuRELZ4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbgABWWr (ORCPT
+        id S1729185AbgABWWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:22:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43574 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:22:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727432AbgABWWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:22:42 -0500
+        id S1728966AbgABWWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:22:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75B7F22B48;
-        Thu,  2 Jan 2020 22:22:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F322222C3;
+        Thu,  2 Jan 2020 22:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003761;
-        bh=jAIf3CT/v5lg8WB6/KwtNml/dKqKx7WIzBVB3nUMhVI=;
+        s=default; t=1578003766;
+        bh=Yb86dZj1zmqQt6V3G33LYnP/wlfh0kQGGKcZlNl/Qlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AeOpyoTa+KDXWHW3brteArU5ezoai+seunRaRCOCXTPeMaS4hW88glgxZm5zRrYWl
-         rcmvMxwt8nvHbBwCIbRVjZMp96dkxFHTSBuFz6mw/GYyI583g0hEu3gBWaTmuQ5f8K
-         B5uT7czkSqfPXeObmShDmG42buR4QK3uQQWEQ4hU=
+        b=05QjX7kKOt+H19WxBw1Q0hNiZaepLCPuxB+E3G7ASZArOHM5PeqwU5WSGdjFhj9lr
+         +cQrw4yPK3jxwetSYKHJEU55amuBMXe4UyrM/1EYwkmDPHJOTh15CxNZ3sawTrTjQR
+         m01t1kP4MBY+qHoqFVugaW3zILSeihmLmiTQpFKs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+b3028ac3933f5c466389@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 077/114] ALSA: hda - Downgrade error message for single-cmd fallback
-Date:   Thu,  2 Jan 2020 23:07:29 +0100
-Message-Id: <20200102220036.847521443@linuxfoundation.org>
+        stable@vger.kernel.org, Mattias Jacobsson <2pi@mok.nu>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sanskriti Sharma <sansharm@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH 4.19 079/114] perf strbuf: Remove redundant va_end() in strbuf_addv()
+Date:   Thu,  2 Jan 2020 23:07:31 +0100
+Message-Id: <20200102220037.065790380@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -60,42 +63,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Mattias Jacobsson <2pi@mok.nu>
 
-[ Upstream commit 475feec0c41ad71cb7d02f0310e56256606b57c5 ]
+commit 099be748865eece21362aee416c350c0b1ae34df upstream.
 
-We made the error message for the CORB/RIRB communication clearer by
-upgrading to dev_WARN() so that user can notice better.  But this
-struck us like a boomerang: now it caught syzbot and reported back as
-a fatal issue although it's not really any too serious bug that worth
-for stopping the whole system.
+Each call to va_copy() should have one, and only one, corresponding call
+to va_end(). In strbuf_addv() some code paths result in va_end() getting
+called multiple times. Remove the superfluous va_end().
 
-OK, OK, let's be softy, downgrade it to the standard dev_err() again.
+Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sanskriti Sharma <sansharm@redhat.com>
+Link: http://lkml.kernel.org/r/20181229141750.16945-1-2pi@mok.nu
+Fixes: ce49d8436cff ("perf strbuf: Match va_{add,copy} with va_end")
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: dd65f7e19c69 ("ALSA: hda - Show the fatal CORB/RIRB error more clearly")
-Reported-by: syzbot+b3028ac3933f5c466389@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/20191216151224.30013-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_controller.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/strbuf.c |    1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/sound/pci/hda/hda_controller.c b/sound/pci/hda/hda_controller.c
-index 8fcb421193e0..fa261b27d858 100644
---- a/sound/pci/hda/hda_controller.c
-+++ b/sound/pci/hda/hda_controller.c
-@@ -883,7 +883,7 @@ static int azx_rirb_get_response(struct hdac_bus *bus, unsigned int addr,
- 		return -EAGAIN; /* give a chance to retry */
- 	}
- 
--	dev_WARN(chip->card->dev,
-+	dev_err(chip->card->dev,
- 		"azx_get_response timeout, switching to single_cmd mode: last cmd=0x%08x\n",
- 		bus->last_cmd[addr]);
- 	chip->single_cmd = 1;
--- 
-2.20.1
-
+--- a/tools/perf/util/strbuf.c
++++ b/tools/perf/util/strbuf.c
+@@ -109,7 +109,6 @@ static int strbuf_addv(struct strbuf *sb
+ 			return ret;
+ 		}
+ 		len = vsnprintf(sb->buf + sb->len, sb->alloc - sb->len, fmt, ap_saved);
+-		va_end(ap_saved);
+ 		if (len > strbuf_avail(sb)) {
+ 			pr_debug("this should not happen, your vsnprintf is broken");
+ 			va_end(ap_saved);
 
 
