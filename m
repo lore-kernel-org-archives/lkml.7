@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F21EC3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9D6C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D757227BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6EE1222C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:27:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004067;
-	bh=KQKVW3kOPEqijQOC3uCUsmVpJX3Z1+YzIy1XRRtZZOQ=;
+	s=default; t=1578004072;
+	bh=iaAB1UP2/ipYxTs9HP+qrYGox4Mpulz0HRRkbq4v94g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GbHJDCSph0HuU3KpzTH1sKIH3wxUoabsdZOYvEXIn/G2sx2O1pjEAFU7D7YDPY6UO
-	 Sn/3exH92p8Lm4SEGFFDEEPizI5QQcOdBIt4ZZX3MiQJCBX8QXLGAhA5dNGD2w2jQW
-	 w6RNWvrkeuBRb97l8bJd1bcrQsdaLJb3EcwUsYvE=
+	b=zyKLStx1WYK46N/8AzjOGyKnVVxBhbkSlDnfLdhwrFGnO+qoVTCTqtIYjn0HD7lbT
+	 hbWwywlQ5Bv25z0QapPJuw555IfyoUxRTcnsTh4TgrKraHjKGolr0Dbc688Ld8MU2k
+	 KBXOXYtPdURPYRzLeqKs8ip4hV5lHgYfwq10ucdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbgABW1q (ORCPT
+        id S1729794AbgABW1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:27:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56470 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:27:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729761AbgABW1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:27:41 -0500
+        id S1728289AbgABW1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:27:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED60F227BF;
-        Thu,  2 Jan 2020 22:27:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6769F24649;
+        Thu,  2 Jan 2020 22:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004060;
-        bh=KQKVW3kOPEqijQOC3uCUsmVpJX3Z1+YzIy1XRRtZZOQ=;
+        s=default; t=1578004062;
+        bh=iaAB1UP2/ipYxTs9HP+qrYGox4Mpulz0HRRkbq4v94g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jjpwL9SRJPncTHPGdSJJe1xxCYJwHYn7v94HJROw+V9aUL4YXIYhDmvZ+56pg2Zqg
-         /7xgV+f2BQppLFYvO4MhzHqhsHgjejmWDQ6zRB3Qm0TyVxU8RLhv1TYpWBzKJ4jait
-         Yi74zzUk+teqIQ3JzaWS+6Fye+mgtuCPfmugdYQs=
+        b=J74lOLQJu7Y2SSOmyONXcuFIMpFcsX/uEx9mAPXUL8Ky24C9lU7LbAcqfOZ888rCn
+         TSybeeaJ9OS3REDsWnIA9LbblU8UU6BR3YWgT71HXNi8LDUYkUEkYqgOP9yxHLJJMp
+         5ZZ2ORrbqZ4DTBqmsW4gbW98tyAxzg5RqIlsPbl0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 021/171] usb: renesas_usbhs: add suspend event support in gadget mode
-Date:   Thu,  2 Jan 2020 23:05:52 +0100
-Message-Id: <20200102220550.032462769@linuxfoundation.org>
+Subject: [PATCH 4.9 022/171] hwrng: omap3-rom - Call clk_disable_unprepare() on exit only if not idled
+Date:   Thu,  2 Jan 2020 23:05:53 +0100
+Message-Id: <20200102220550.169658007@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -62,87 +65,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 39abcc84846bbc0538f13c190b6a9c7e36890cd2 ]
+[ Upstream commit eaecce12f5f0d2c35d278e41e1bc4522393861ab ]
 
-When R-Car Gen3 USB 2.0 is in Gadget mode, if host is detached an interrupt
-will be generated and Suspended state bit is set in interrupt status
-register. Interrupt handler will call driver->suspend(composite_suspend)
-if suspended state bit is set. composite_suspend will call
-ffs_func_suspend which will post FUNCTIONFS_SUSPEND and will be consumed
-by user space application via /dev/ep0.
+When unloading omap3-rom-rng, we'll get the following:
 
-To be able to detect host detach, extend the DVSQ_MASK to cover the
-Suspended bit of the DVSQ[2:0] bitfield from the Interrupt Status
-Register 0 (INTSTS0) register and perform appropriate action in the
-DVST interrupt handler (usbhsg_irq_dev_state).
+WARNING: CPU: 0 PID: 100 at drivers/clk/clk.c:948 clk_core_disable
 
-Without this commit, disconnection of the phone from R-Car-H3 ES2.0
-Salvator-X CN9 port is not recognized and reverse role switch does
-not happen. If phone is connected again it does not enumerate.
+This is because the clock may be already disabled by omap3_rom_rng_idle().
+Let's fix the issue by checking for rng_idle on exit.
 
-With this commit, disconnection will be recognized and reverse role
-switch will happen by a user space application. If phone is connected
-again it will enumerate properly and will become visible in the output
-of 'lsusb'.
-
-Signed-off-by: Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Link: https://lore.kernel.org/r/1568207756-22325-3-git-send-email-external.veeraiyan.c@de.adit-jv.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Adam Ford <aford173@gmail.com>
+Cc: Pali Rohár <pali.rohar@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: Tero Kristo <t-kristo@ti.com>
+Fixes: 1c6b7c2108bd ("hwrng: OMAP3 ROM Random Number Generator support")
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/renesas_usbhs/common.h     |  3 ++-
- drivers/usb/renesas_usbhs/mod_gadget.c | 12 +++++++++---
- 2 files changed, 11 insertions(+), 4 deletions(-)
+ drivers/char/hw_random/omap3-rom-rng.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/renesas_usbhs/common.h b/drivers/usb/renesas_usbhs/common.h
-index b8620aa6b72e..8424c165f732 100644
---- a/drivers/usb/renesas_usbhs/common.h
-+++ b/drivers/usb/renesas_usbhs/common.h
-@@ -163,11 +163,12 @@ struct usbhs_priv;
- #define VBSTS	(1 << 7)	/* VBUS_0 and VBUSIN_0 Input Status */
- #define VALID	(1 << 3)	/* USB Request Receive */
- 
--#define DVSQ_MASK		(0x3 << 4)	/* Device State */
-+#define DVSQ_MASK		(0x7 << 4)	/* Device State */
- #define  POWER_STATE		(0 << 4)
- #define  DEFAULT_STATE		(1 << 4)
- #define  ADDRESS_STATE		(2 << 4)
- #define  CONFIGURATION_STATE	(3 << 4)
-+#define  SUSPENDED_STATE	(4 << 4)
- 
- #define CTSQ_MASK		(0x7)	/* Control Transfer Stage */
- #define  IDLE_SETUP_STAGE	0	/* Idle stage or setup stage */
-diff --git a/drivers/usb/renesas_usbhs/mod_gadget.c b/drivers/usb/renesas_usbhs/mod_gadget.c
-index 6898ca1ef98c..b0397bcfe1f6 100644
---- a/drivers/usb/renesas_usbhs/mod_gadget.c
-+++ b/drivers/usb/renesas_usbhs/mod_gadget.c
-@@ -465,12 +465,18 @@ static int usbhsg_irq_dev_state(struct usbhs_priv *priv,
+diff --git a/drivers/char/hw_random/omap3-rom-rng.c b/drivers/char/hw_random/omap3-rom-rng.c
+index 37a58d78aab3..3324a7f4bee3 100644
+--- a/drivers/char/hw_random/omap3-rom-rng.c
++++ b/drivers/char/hw_random/omap3-rom-rng.c
+@@ -114,7 +114,8 @@ static int omap3_rom_rng_remove(struct platform_device *pdev)
  {
- 	struct usbhsg_gpriv *gpriv = usbhsg_priv_to_gpriv(priv);
- 	struct device *dev = usbhsg_gpriv_to_dev(gpriv);
-+	int state = usbhs_status_get_device_state(irq_state);
- 
- 	gpriv->gadget.speed = usbhs_bus_get_speed(priv);
- 
--	dev_dbg(dev, "state = %x : speed : %d\n",
--		usbhs_status_get_device_state(irq_state),
--		gpriv->gadget.speed);
-+	dev_dbg(dev, "state = %x : speed : %d\n", state, gpriv->gadget.speed);
-+
-+	if (gpriv->gadget.speed != USB_SPEED_UNKNOWN &&
-+	    (state & SUSPENDED_STATE)) {
-+		if (gpriv->driver && gpriv->driver->suspend)
-+			gpriv->driver->suspend(&gpriv->gadget);
-+		usb_gadget_set_state(&gpriv->gadget, USB_STATE_SUSPENDED);
-+	}
- 
+ 	cancel_delayed_work_sync(&idle_work);
+ 	hwrng_unregister(&omap3_rom_rng_ops);
+-	clk_disable_unprepare(rng_clk);
++	if (!rng_idle)
++		clk_disable_unprepare(rng_clk);
  	return 0;
  }
+ 
 -- 
 2.20.1
 
