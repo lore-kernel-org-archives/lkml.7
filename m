@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80510C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CF5C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4809A2253D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C94821582
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003556;
-	bh=KcelGyWJAYZ6r/myYq/loWbcnlucF4JKI0LqQ0izcgI=;
+	s=default; t=1578003566;
+	bh=l4Rh4lLq40MIpr85MoMhUIi1rERQOkwAm72pRm+hrCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pK15MeQgKl/l2hDacHHYzChe1M/sHtgpiPLGMJjlSVVnOpueDJwI2kvHJjd+W8+pf
-	 mSVIZLdukm6CFxb1Tq8EGnDqVqNPiOhM+7UpGHJu/o4G10ELYGC2EW0JyIrveBvIKO
-	 yaVtdb+f69aEe3buvo8pRZWH4SfbsUBkWWxuUT1Q=
+	b=hTVNcfTajtGQm3jwnFmvCuWN6iHsr5wr8M7tDp7MnQVh7FNeod6PCQJ8djZqfzf2K
+	 lijQkj79WW1gRZHSsvjnaQBbH/d52PvrH3dn1avUmR+N2HvFOYKfgjqL+cOwqT2s42
+	 g4zkTK2ze3BkxbWwVyP3KWkAKpu0GOKCf3n2igg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728556AbgABWTP (ORCPT
+        id S1728588AbgABWTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:19:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35102 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:19:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727984AbgABWTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:19:11 -0500
+        id S1728574AbgABWTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:19:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ABA12253D;
-        Thu,  2 Jan 2020 22:19:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6AB721582;
+        Thu,  2 Jan 2020 22:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003550;
-        bh=KcelGyWJAYZ6r/myYq/loWbcnlucF4JKI0LqQ0izcgI=;
+        s=default; t=1578003560;
+        bh=l4Rh4lLq40MIpr85MoMhUIi1rERQOkwAm72pRm+hrCI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NDpwJCma5+6TJYgpokpAeUC5SKj3XiGW2wMRwSrtVpra7NJ7GPXZfs/HhNzHCY/R+
-         oA9juyCqI5oinOQR8bg6r0vym5/snWSvEa0Dbcw8b7VSMeQ4YZDbVhIvEAddBtKjLX
-         M0/UxE87VKeyh+MbO5QyOcl1OlBCGJHfFblUAvsA=
+        b=dXqfFoydh4nSjVQW7Pg8p2UMM5k7giB0DhC1HcvZ8lFgaxr8gWpIXOKsqW170YtKU
+         0YBu0oHN8R8OAQVLBQoHzBTNs+OPBi2drVNF1sJ+tTeXZo+TISS503PrfayDXXXZgI
+         cuMHy4g5anuXx5PQdi2/T8w9L/+bP2/50zHS96TU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 016/114] dma-debug: add a schedule point in debug_dma_dump_mappings()
-Date:   Thu,  2 Jan 2020 23:06:28 +0100
-Message-Id: <20200102220030.772529004@linuxfoundation.org>
+Subject: [PATCH 4.19 005/114] f2fs: fix to update time in lazytime mode
+Date:   Thu,  2 Jan 2020 23:06:17 +0100
+Message-Id: <20200102220029.687778806@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -62,43 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 9ff6aa027dbb98755f0265695354f2dd07c0d1ce ]
+[ Upstream commit fe1897eaa6646f5a64a4cee0e6473ed9887d324b ]
 
-debug_dma_dump_mappings() can take a lot of cpu cycles :
+generic/018 reports an inconsistent status of atime, the
+testcase is as below:
+- open file with O_SYNC
+- write file to construct fraged space
+- calc md5 of file
+- record {a,c,m}time
+- defrag file --- do nothing
+- umount & mount
+- check {a,c,m}time
 
-lpk43:/# time wc -l /sys/kernel/debug/dma-api/dump
-163435 /sys/kernel/debug/dma-api/dump
+The root cause is, as f2fs enables lazytime by default, atime
+update will dirty vfs inode, rather than dirtying f2fs inode (by set
+with FI_DIRTY_INODE), so later f2fs_write_inode() called from VFS will
+fail to update inode page due to our skip:
 
-real	0m0.463s
-user	0m0.003s
-sys	0m0.459s
+f2fs_write_inode()
+	if (is_inode_flag_set(inode, FI_DIRTY_INODE))
+		return 0;
 
-Let's add a cond_resched() to avoid holding cpu for too long.
+So eventually, after evict(), we lose last atime for ever.
 
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Corentin Labbe <clabbe@baylibre.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+To fix this issue, we need to check whether {a,c,m,cr}time is
+consistent in between inode cache and inode page, and only skip
+f2fs_update_inode() if f2fs inode is not dirty and time is
+consistent as well.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/dma/debug.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/f2fs/f2fs.h  | 23 +++++++++++++++--------
+ fs/f2fs/inode.c |  6 +++++-
+ 2 files changed, 20 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
-index c007d25bee09..3a2397444076 100644
---- a/kernel/dma/debug.c
-+++ b/kernel/dma/debug.c
-@@ -442,6 +442,7 @@ void debug_dma_dump_mappings(struct device *dev)
- 		}
- 
- 		spin_unlock_irqrestore(&bucket->lock, flags);
-+		cond_resched();
- 	}
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 34e48bcf5087..72d154e71bb5 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2578,6 +2578,20 @@ static inline void clear_file(struct inode *inode, int type)
+ 	f2fs_mark_inode_dirty_sync(inode, true);
  }
  
++static inline bool f2fs_is_time_consistent(struct inode *inode)
++{
++	if (!timespec64_equal(F2FS_I(inode)->i_disk_time, &inode->i_atime))
++		return false;
++	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 1, &inode->i_ctime))
++		return false;
++	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 2, &inode->i_mtime))
++		return false;
++	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 3,
++						&F2FS_I(inode)->i_crtime))
++		return false;
++	return true;
++}
++
+ static inline bool f2fs_skip_inode_update(struct inode *inode, int dsync)
+ {
+ 	bool ret;
+@@ -2595,14 +2609,7 @@ static inline bool f2fs_skip_inode_update(struct inode *inode, int dsync)
+ 			i_size_read(inode) & ~PAGE_MASK)
+ 		return false;
+ 
+-	if (!timespec64_equal(F2FS_I(inode)->i_disk_time, &inode->i_atime))
+-		return false;
+-	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 1, &inode->i_ctime))
+-		return false;
+-	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 2, &inode->i_mtime))
+-		return false;
+-	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 3,
+-						&F2FS_I(inode)->i_crtime))
++	if (!f2fs_is_time_consistent(inode))
+ 		return false;
+ 
+ 	down_read(&F2FS_I(inode)->i_sem);
+diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+index 540d45759621..a01be7d8db86 100644
+--- a/fs/f2fs/inode.c
++++ b/fs/f2fs/inode.c
+@@ -614,7 +614,11 @@ int f2fs_write_inode(struct inode *inode, struct writeback_control *wbc)
+ 			inode->i_ino == F2FS_META_INO(sbi))
+ 		return 0;
+ 
+-	if (!is_inode_flag_set(inode, FI_DIRTY_INODE))
++	/*
++	 * atime could be updated without dirtying f2fs inode in lazytime mode
++	 */
++	if (f2fs_is_time_consistent(inode) &&
++		!is_inode_flag_set(inode, FI_DIRTY_INODE))
+ 		return 0;
+ 
+ 	/*
 -- 
 2.20.1
 
