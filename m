@@ -2,54 +2,54 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE08C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FF8C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 402A420866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C062253D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003671;
-	bh=bYBlGQ76oF4r5ksCFJzmbgT5wpBN8C0wyZkAm30cKPg=;
+	s=default; t=1578003674;
+	bh=miIK85yk0a1NO2PCsbAMRy5Kn05eMMdekSaRaXVId84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gwN+JeB2mI8Gl+nUoR0vBT+Va5xDuDetbuesuq30wq3IFyUYJWColSCslIZ8EjK5E
-	 iFixg2flpq0DyzUHgW/6zA5Ij2nsibrX9hqV9L0F4IbEK6yNTWMMSGH4KTIlcmqWed
-	 lnXeDlCw2HxXCI+Y5WzZRFU6G2PMC2CMT028gPpA=
+	b=TZiW/2xpBNJgQY/MDcNrrKayussom6h6ltXRt0DI0HkdggjbEVdcbUcLJI3Svmr7x
+	 D+wlqUObLlpW2rFDkEL/pxlcFXj+NFLpZdSaEFwJ1BW+a+5erC3TBIBRXUq0ieji/s
+	 k+ihFFAm4DQWqESdShs/RzZH6VyjLIgfZwo2XOeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728952AbgABWVK (ORCPT
+        id S1728959AbgABWVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:21:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39684 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:21:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728943AbgABWVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:21:07 -0500
+        id S1728674AbgABWVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:21:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C06721582;
-        Thu,  2 Jan 2020 22:21:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABE9120866;
+        Thu,  2 Jan 2020 22:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003665;
-        bh=bYBlGQ76oF4r5ksCFJzmbgT5wpBN8C0wyZkAm30cKPg=;
+        s=default; t=1578003668;
+        bh=miIK85yk0a1NO2PCsbAMRy5Kn05eMMdekSaRaXVId84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XZbjoDoGJW/c3NX1OSvLDeivz3FUpDHTb3B89jLoW4byZg6pbjeQ07DhRWWeAJXGj
-         tBsXEj/DvLRKxzYbaUc+Fci/NgHO8Yayxbr9qSaoqgtcPlvFZznqrXAw2oB1KBrbYb
-         iP3nWo1meJKO5qqFc+0ksFX1YY6/90cwZeb/91Rk=
+        b=XlduCR3gvf9kqvzNgV26nrCleyfa4s8imkaXonhhUR4X9kRBsrP/uT4fv+3teWoM0
+         1Uem163mpZpaANooshivnf1hluSQj3wuoSRuoBayrDpsBtRsT3ZRXV7MimQQ1zVn5w
+         oKxCQiSCgwstvoNY4UjgFSLEY2/gQPhdhMHI4PnY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 064/114] perf script: Fix brstackinsn for AUXTRACE
-Date:   Thu,  2 Jan 2020 23:07:16 +0100
-Message-Id: <20200102220035.520418674@linuxfoundation.org>
+Subject: [PATCH 4.19 065/114] perf regs: Make perf_reg_name() return "unknown" instead of NULL
+Date:   Thu,  2 Jan 2020 23:07:17 +0100
+Message-Id: <20200102220035.632712594@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -62,64 +62,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 0cd032d3b5fcebf5454315400ab310746a81ca53 ]
+[ Upstream commit 5b596e0ff0e1852197d4c82d3314db5e43126bf7 ]
 
-brstackinsn must be allowed to be set by the user when AUX area data has
-been captured because, in that case, the branch stack might be
-synthesized on the fly. This fixes the following error:
+To avoid breaking the build on arches where this is not wired up, at
+least all the other features should be made available and when using
+this specific routine, the "unknown" should point the user/developer to
+the need to wire this up on this particular hardware architecture.
 
-Before:
+Detected in a container mipsel debian cross build environment, where it
+shows up as:
 
-  $ perf record -e '{intel_pt//,cpu/mem_inst_retired.all_loads,aux-sample-size=8192/pp}:u' grep -rqs jhgjhg /boot
-  [ perf record: Woken up 19 times to write data ]
-  [ perf record: Captured and wrote 2.274 MB perf.data ]
-  $ perf script -F +brstackinsn --xed --itrace=i1usl100 | head
-  Display of branch stack assembler requested, but non all-branch filter set
-  Hint: run 'perf record -b ...'
+  In file included from /usr/mipsel-linux-gnu/include/stdio.h:867,
+                   from /git/linux/tools/perf/lib/include/perf/cpumap.h:6,
+                   from util/session.c:13:
+  In function 'printf',
+      inlined from 'regs_dump__printf' at util/session.c:1103:3,
+      inlined from 'regs__printf' at util/session.c:1131:2:
+  /usr/mipsel-linux-gnu/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
+    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
+        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-After:
+cross compiler details:
 
-  $ perf record -e '{intel_pt//,cpu/mem_inst_retired.all_loads,aux-sample-size=8192/pp}:u' grep -rqs jhgjhg /boot
-  [ perf record: Woken up 19 times to write data ]
-  [ perf record: Captured and wrote 2.274 MB perf.data ]
-  $ perf script -F +brstackinsn --xed --itrace=i1usl100 | head
-            grep 13759 [002]  8091.310257:       1862                                        instructions:uH:      5641d58069eb bmexec+0x86b (/bin/grep)
-        bmexec+2485:
-        00005641d5806b35                        jnz 0x5641d5806bd0              # MISPRED
-        00005641d5806bd0                        movzxb  (%r13,%rdx,1), %eax
-        00005641d5806bd6                        add %rdi, %rax
-        00005641d5806bd9                        movzxb  -0x1(%rax), %edx
-        00005641d5806bdd                        cmp %rax, %r14
-        00005641d5806be0                        jnb 0x5641d58069c0              # MISPRED
-        mismatch of LBR data and executable
-        00005641d58069c0                        movzxb  (%r13,%rdx,1), %edi
+  mipsel-linux-gnu-gcc (Debian 9.2.1-8) 9.2.1 20190909
 
-Fixes: 48d02a1d5c13 ("perf script: Add 'brstackinsn' for branch stacks")
-Reported-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20191127095322.15417-1-adrian.hunter@intel.com
+Also on mips64:
+
+  In file included from /usr/mips64-linux-gnuabi64/include/stdio.h:867,
+                   from /git/linux/tools/perf/lib/include/perf/cpumap.h:6,
+                   from util/session.c:13:
+  In function 'printf',
+      inlined from 'regs_dump__printf' at util/session.c:1103:3,
+      inlined from 'regs__printf' at util/session.c:1131:2,
+      inlined from 'regs_user__printf' at util/session.c:1139:3,
+      inlined from 'dump_sample' at util/session.c:1246:3,
+      inlined from 'machines__deliver_event' at util/session.c:1421:3:
+  /usr/mips64-linux-gnuabi64/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
+    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
+        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In function 'printf',
+      inlined from 'regs_dump__printf' at util/session.c:1103:3,
+      inlined from 'regs__printf' at util/session.c:1131:2,
+      inlined from 'regs_intr__printf' at util/session.c:1147:3,
+      inlined from 'dump_sample' at util/session.c:1249:3,
+      inlined from 'machines__deliver_event' at util/session.c:1421:3:
+  /usr/mips64-linux-gnuabi64/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
+    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
+        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+cross compiler details:
+
+  mips64-linux-gnuabi64-gcc (Debian 9.2.1-8) 9.2.1 20190909
+
+Fixes: 2bcd355b71da ("perf tools: Add interface to arch registers sets")
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-95wjyv4o65nuaeweq31t7l1s@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-script.c | 2 +-
+ tools/perf/util/perf_regs.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index a4c78499c838..1200973c77cb 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -428,7 +428,7 @@ static int perf_evsel__check_attr(struct perf_evsel *evsel,
- 		       "selected. Hence, no address to lookup the source line number.\n");
- 		return -EINVAL;
- 	}
--	if (PRINT_FIELD(BRSTACKINSN) &&
-+	if (PRINT_FIELD(BRSTACKINSN) && !allow_user_set &&
- 	    !(perf_evlist__combined_branch_type(session->evlist) &
- 	      PERF_SAMPLE_BRANCH_ANY)) {
- 		pr_err("Display of branch stack assembler requested, but non all-branch filter set\n"
+diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+index c9319f8d17a6..f732e3af2bd4 100644
+--- a/tools/perf/util/perf_regs.h
++++ b/tools/perf/util/perf_regs.h
+@@ -34,7 +34,7 @@ int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
+ 
+ static inline const char *perf_reg_name(int id __maybe_unused)
+ {
+-	return NULL;
++	return "unknown";
+ }
+ 
+ static inline int perf_reg_value(u64 *valp __maybe_unused,
 -- 
 2.20.1
 
