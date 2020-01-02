@@ -2,142 +2,136 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E08FC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A079C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC98D21734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:55:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W6MKeho9"
+	by mail.kernel.org (Postfix) with ESMTP id 5CFCF215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:59:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbgABNzF (ORCPT
+        id S1728416AbgABN7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 08:55:05 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37896 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728342AbgABNzF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 08:55:05 -0500
-Received: by mail-wm1-f67.google.com with SMTP id u2so5700477wmc.3;
-        Thu, 02 Jan 2020 05:55:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Umw3KabgQc+joAVZVI/kqZfdiIRA+6g2g4xfLJJZ/Ts=;
-        b=W6MKeho9eQynkeDso8Ap8avMGZoSiEZy9PoRcCXamHEpKXKVXeb7UhSzOMr259Bp7d
-         mhf27AUh3BZkAdcmB2YdYYSuBiqE+/cKgmcSNsHgmmKoR7kAfdj+HaE78jc/45raO0h3
-         bW6yKE+KXVRlEWiBTVftfape34T3lSwfTvNvi0fzy4VuUKFi4ZwFeXzfuhR+LmpSRj3I
-         j34XadXGgRwyxLIrI6cvGRwFts0h9rpEJmlpt1+dWtReAiszQAT4fyIFeEtkOCE3H+4s
-         EjVy4SohDJp5rGoXovhyQVDoLQU0A6+LhVe+ZZC1CHe4eavB/IU8vm6hTLhFIXhv/FAG
-         50pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Umw3KabgQc+joAVZVI/kqZfdiIRA+6g2g4xfLJJZ/Ts=;
-        b=COVQZHEj3aIHia5BN/yIuFV4gZpgTsd6nwhkvQcz2DN2r+i9ZGaNekM6tzXOdCluH8
-         06Aq09cHUUuPB/q81Xe8qc1jaSShk9oFNC5KQ2I4TZYpRPWfHKbgy2IBrJR1alOMG6LH
-         gwzVH0v56SYhSmj49b9th6QdDcw6xJfFaEUA0sUNkfHwtd6eHjVPHk6CcFEINE5ELAeX
-         K8Q87q13r/UJ2cOOfOD8y+SQIUoU4zD4RhnRw+CSkVqzpL5ut7JdV34/CEKIKvtCVMjx
-         rDCEul4dPrm2yyJ9GCfcSpeeLSBfvQnkZYioKo7ge3yY7WTa0Mo+QBkgk7cgib7mXI77
-         a6NQ==
-X-Gm-Message-State: APjAAAX+1WB2tLpAVT35YfSYOJ07gpRq3K+KVkgr+lTEZiHKzbAdrK9T
-        OUVNML0G8m17+34/VSdBqC8=
-X-Google-Smtp-Source: APXvYqzH+bnnP2wiom274iCBMvTz7vSwKEfteTZgsf9jqEkx9QNftRRR/QFV7K1ZUpOcajGbx9Acag==
-X-Received: by 2002:a1c:2786:: with SMTP id n128mr14851523wmn.47.1577973303893;
-        Thu, 02 Jan 2020 05:55:03 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id i16sm8689698wmb.36.2020.01.02.05.55.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 05:55:03 -0800 (PST)
-Date:   Thu, 2 Jan 2020 14:55:02 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, linkinjeon@gmail.com
-Subject: Re: [PATCH v9 10/13] exfat: add nls operations
-Message-ID: <20200102135502.hkey7z45gnprinpp@pali>
-References: <20200102082036.29643-1-namjae.jeon@samsung.com>
- <CGME20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05@epcas1p4.samsung.com>
- <20200102082036.29643-11-namjae.jeon@samsung.com>
+        Thu, 2 Jan 2020 08:59:52 -0500
+Received: from foss.arm.com ([217.140.110.172]:47398 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728288AbgABN7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 08:59:52 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65EDA1FB;
+        Thu,  2 Jan 2020 05:59:51 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 667E23F68F;
+        Thu,  2 Jan 2020 05:59:50 -0800 (PST)
+Date:   Thu, 2 Jan 2020 13:59:48 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     "Zengtao (B)" <prime.zeng@hisilicon.com>
+Cc:     Linuxarm <linuxarm@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations conflicts with
+ lower layer
+Message-ID: <20200102135948.GD4864@bogus>
+References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
+ <20191231164051.GA4864@bogus>
+ <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
+ <20200102112955.GC4864@bogus>
+ <678F3D1BB717D949B966B68EAEB446ED340AEB67@dggemm526-mbx.china.huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200102082036.29643-11-namjae.jeon@samsung.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <678F3D1BB717D949B966B68EAEB446ED340AEB67@dggemm526-mbx.china.huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 02 January 2020 16:20:33 Namjae Jeon wrote:
-> This adds the implementation of nls operations for exfat.
-> 
-> Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
-> ---
->  fs/exfat/nls.c | 809 +++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 809 insertions(+)
->  create mode 100644 fs/exfat/nls.c
-> 
-> diff --git a/fs/exfat/nls.c b/fs/exfat/nls.c
-> new file mode 100644
-> index 000000000000..af52328e28ff
-> --- /dev/null
-> +++ b/fs/exfat/nls.c
+On Thu, Jan 02, 2020 at 12:47:01PM +0000, Zengtao (B) wrote:
+> > -----Original Message-----
+> > From: Sudeep Holla [mailto:sudeep.holla@arm.com]
+> > Sent: Thursday, January 02, 2020 7:30 PM
+> > To: Zengtao (B)
+> > Cc: Linuxarm; Greg Kroah-Hartman; Rafael J. Wysocki;
+> > linux-kernel@vger.kernel.org; Morten Rasmussen
+> > Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations conflicts
+> > with lower layer
+> >
+> > On Thu, Jan 02, 2020 at 03:05:40AM +0000, Zengtao (B) wrote:
+> > > Hi Sudeep:
+> > >
+> > > Thanks for your reply.
+> > >
+> > > > -----Original Message-----
+> > > > From: Sudeep Holla [mailto:sudeep.holla@arm.com]
+> > > > Sent: Wednesday, January 01, 2020 12:41 AM
+> > > > To: Zengtao (B)
+> > > > Cc: Linuxarm; Greg Kroah-Hartman; Rafael J. Wysocki;
+> > > > linux-kernel@vger.kernel.org; Sudeep Holla; Morten Rasmussen
+> > > > Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations
+> > conflicts
+> > > > with lower layer
+> > > >
+> > > > On Mon, Dec 23, 2019 at 04:16:19PM +0800, z00214469 wrote:
+> > > > > As we know, from sched domain's perspective, the DIE layer should
+> > be
+> > > > > larger than or at least equal to the MC layer, and in some cases, MC
+> > > > > is defined by the arch specified hardware, MPIDR for example, but
+> > > > NUMA
+> > > > > can be defined by users,
+> > > >
+> > > > Who are the users you are referring above ?
+> > > For example, when I use QEMU to start a guest linux, I can define the
+> > > NUMA topology of the guest linux whatever i want.
+> >
+> > OK and how is the information passed to the kernel ? DT or ACPI ?
+> > We need to fix the miss match if any during the initial parse of those
+> > information.
+> >
+>
+> Both, For the current QEMU, we don't have the correct cpu topology
+> passed to linux. Luckily drjones planed to deal with the issue.
+> https://patchwork.ozlabs.org/cover/939301/
+>
+> > > > > with the following system configrations:
+> > > >
+> > > > Do you mean ACPI tables or DT or some firmware tables ?
+> > > >
+> > > > > *************************************
+> > > > > NUMA:      	 0-2,  3-7
+> > > >
+> > > > Is the above simply wrong with respect to hardware and it actually
+> > match
+> > > > core_siblings ?
+> > > >
+> > > Actually, we can't simply say this is wrong, i just want to show an
+> > example.
+> > > And this example also can be:
+> > > NUMA:  0-23,  24-47
+> > > core_siblings:   0-15,  16-31, 32-47
+> > >
+> >
+> > Are you sure of the above ? Possible values w.r.t hardware config:
+> > core_siblings:   0-15,  16-23, 24-31, 32-47
+> >
+> > But what you have specified above is still wrong core_siblings IMO.
+> >
+> It depends on the hardware, on my platform, 16 cores per cluster.
+>
 
-...
+Sorry, I made mistake with my examples above, I was assuming 8 CPUs
+per cluster but didn't represent it well. Anyways my point was:
 
-> +int exfat_nls_uni16s_to_vfsname(struct super_block *sb,
-> +		struct exfat_uni_name *uniname, unsigned char *p_cstring,
-> +		int buflen)
-> +{
-> +	if (EXFAT_SB(sb)->options.utf8)
-> +		return __exfat_nls_utf16s_to_vfsname(sb, uniname, p_cstring,
-> +				buflen);
-> +	return __exfat_nls_uni16s_to_vfsname(sb, uniname, p_cstring, buflen);
-> +}
+Can few CPUs in a cluster be part of one NUMA node while the remaining
+CPUs of the same cluster part of another NUMA node ? That sounds
+interesting and quite complex topology to me. How does the cache
+topology look like in that case ?
 
-Hello, I'm looking at this function and basically it do nothing.
-Or was it supposed that this function should do something more for UTF-8
-encoding?
-
-There is one if- statement, but in both branches is executed exactly
-same code.
-
-And executed function just pass same arguments as current callee
-function.
-
-So calls to exfat_nls_uni16s_to_vfsname() can be replaced by direct
-calls to __exfat_nls_uni16s_to_vfsname().
-
-Or maybe better, rename __exfat_nls_uni16s_to_vfsname() function to
-exfat_nls_uni16s_to_vfsname().
-
-> +int exfat_nls_vfsname_to_uni16s(struct super_block *sb,
-> +		const unsigned char *p_cstring, const int len,
-> +		struct exfat_uni_name *uniname, int *p_lossy)
-> +{
-> +	if (EXFAT_SB(sb)->options.utf8)
-> +		return __exfat_nls_vfsname_to_utf16s(sb, p_cstring, len,
-> +				uniname, p_lossy);
-> +	return __exfat_nls_vfsname_to_uni16s(sb, p_cstring, len, uniname,
-> +			p_lossy);
-> +}
-
-And same for this function.
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+--
+Regards,
+Sudeep
