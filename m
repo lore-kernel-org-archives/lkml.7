@@ -2,200 +2,150 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EECC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 04:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDBBC2D0DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 04:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E7A215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 04:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D818217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 04:31:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NM1VzFAJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbgABE3n (ORCPT
+        id S1727705AbgABEbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 23:29:43 -0500
-Received: from mga09.intel.com ([134.134.136.24]:12925 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726234AbgABE3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 23:29:41 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jan 2020 20:29:41 -0800
-X-IronPort-AV: E=Sophos;i="5.69,385,1571727600"; 
-   d="scan'208";a="221785785"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jan 2020 20:29:40 -0800
-Subject: [PATCH v3 4/4] efi: Fix handling of multiple efi_fake_mem= entries
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     mingo@redhat.com
-Cc:     Dave Young <dyoung@redhat.com>,
-        Taku Izumi <izumi.taku@jp.fujitsu.com>,
-        Michael Weiser <michael@weiser.dinsnail.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-efi@vger.kernel.org, kexec@lists.infradead.org,
-        x86@kernel.org
-Date:   Wed, 01 Jan 2020 20:13:39 -0800
-Message-ID: <157793841895.977550.10417217401147507173.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <157793839827.977550.7845382457971215205.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <157793839827.977550.7845382457971215205.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        Wed, 1 Jan 2020 23:31:12 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40172 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbgABEbM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jan 2020 23:31:12 -0500
+Received: by mail-qk1-f196.google.com with SMTP id c17so30614848qkg.7
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 20:31:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7C7vqdvOVkcCV6TQUOU2EDm+a1PuU4xGb4U1yWcJLYw=;
+        b=NM1VzFAJ+qtBPFHCl97CbDX7IboZMPWPwDjAfFMlRWk4k8axSRQseh0ja9OawGiPXL
+         4p1Sx92WQcs6547PEk3PNfhG1c2VxM+u2sKYTdvpuQvkQ6wJdGb4HvXphs0AvJD/AL0K
+         HM/3dIY4c1Z6ktmFTfR84K2BOzNg3OpYZvSYpHFS70Je/qZoBmwUsC6UEV1flOoL9m9h
+         c9VBWbTtj4eu2BfanIsUk3sztT6asttP8zJsV6aZOTpd90majnOrYXxgxafGAnEhuco4
+         2Nl9dVt+Ebs8DfqSy/PzpvkXlPngbJi78ULqJeqa3HwM3mLGENqYXWOVtnicbcj1LHu9
+         GRjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7C7vqdvOVkcCV6TQUOU2EDm+a1PuU4xGb4U1yWcJLYw=;
+        b=i/EglIvd4AvITRBvHt+de5onuyf9rV4+EqSNm1xOnHsRzFzAAiX5Opm+oLGIg9dm/r
+         xJiGOCKrIxDks+rPh7CAdFrMZ24hsoFdO5UaQ9zi1uNJH4TlCS7UjUO1QIo/nFWNyCRV
+         isiL0wTldmDQT8fvHNQD9mewNDdJLxWhC4LDbveSJ04JvsO1mPXp5De124nLFeSdb+tO
+         il1SuOAySiiq3t2JXKKO+LMziXzRQzfDN53FQJTJsCo4J4DsGxE0a0fZyp6tTvsGv2sl
+         Bq6u4gJmN9MZvtS9/DvCs74DI2ddkTZPKLnVhelMaJZX3nhVf4TBgE49Wfdxgwz9BxWc
+         TDWw==
+X-Gm-Message-State: APjAAAXB/u3kNaAlDpjgCPMxKlGdK9S6DWnRHpdnhlg0ekGR7plwFNub
+        x+JkIx5/74pExWIzroJsH04=
+X-Google-Smtp-Source: APXvYqw8OaX/9yXsGpfwhB/K32zxhH19rgoIpggvB8lKBM5HBSstyQHqCDWuU4Yh7tYQaU6yN+4pBw==
+X-Received: by 2002:a37:a5d7:: with SMTP id o206mr65294634qke.227.1577939471232;
+        Wed, 01 Jan 2020 20:31:11 -0800 (PST)
+Received: from yury-thinkpad.dhcp.amer.jpmchase.net ([2604:2000:4185:2300:b196:4884:e960:2cb8])
+        by smtp.gmail.com with ESMTPSA id 16sm14876857qkj.77.2020.01.01.20.31.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jan 2020 20:31:10 -0800 (PST)
+From:   Yury Norov <yury.norov@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Yury Norov <yury.norov@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH v5 0/7] lib: rework bitmap_parse 
+Date:   Wed,  1 Jan 2020 20:30:24 -0800
+Message-Id: <20200102043031.30357-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dave noticed that when specifying multiple efi_fake_mem= entries only
-the last entry was successfully being reflected in the efi memory map.
-This is due to the fact that the efi_memmap_insert() is being called
-multiple times, but on successive invocations the insertion should be
-applied to the last new memmap rather than the original map at
-efi_fake_memmap() entry.
+On top of next-20191220.
 
-Rework efi_fake_memmap() to install the new memory map after each
-efi_fake_mem= entry is parsed.
+Similarly to recently revisited bitmap_parselist(), bitmap_parse()
+is ineffective and overcomplicated. This series reworks it, aligns
+its interface with bitmap_parselist() and makes it simpler to use.
 
-This also fixes an issue in efi_fake_memmap() that caused it to litter
-emtpy entries into the end of the efi memory map. The empty entry causes
-efi_memmap_insert() to attempt more memmap splits / copies than
-efi_memmap_split_count() accounted for when sizing the new map.
+The series also adds a test for the function and fixes usage of it
+in cpumask_parse() according to the new design - drops the calculating
+of length of an input string.
 
-    BUG: unable to handle page fault for address: ffffffffff281000
-    [..]
-    RIP: 0010:efi_memmap_insert+0x11d/0x191
-    [..]
-    Call Trace:
-     ? bgrt_init+0xbe/0xbe
-     ? efi_arch_mem_reserve+0x1cb/0x228
-     ? acpi_parse_bgrt+0xa/0xd
-     ? acpi_table_parse+0x86/0xb8
-     ? acpi_boot_init+0x494/0x4e3
-     ? acpi_parse_x2apic+0x87/0x87
-     ? setup_acpi_sci+0xa2/0xa2
-     ? setup_arch+0x8db/0x9e1
-     ? start_kernel+0x6a/0x547
-     ? secondary_startup_64+0xb6/0xc0
+bitmap_parse() takes the array of numbers to be put into the map in
+the BE order which is reversed to the natural LE order for bitmaps.
+For example, to construct bitmap containing a bit on the position 42,
+we have to put a line '400,0'. Current implementation reads chunk
+one by one from the beginning ('400' before '0') and makes bitmap
+shift after each successful parse. It makes the complexity of the
+whole process as O(n^2). We can do it in reverse direction ('0'
+before '400') and avoid shifting, but it requires reverse parsing
+helpers.
 
-Commit af1648984828 "x86/efi: Update e820 with reserved EFI boot
-services data to fix kexec breakage" is listed in Fixes: since it
-introduces more occurrences where efi_memmap_insert() is invoked after
-an efi_fake_mem= configuration has been parsed. Previously the side
-effects of vestigial empty entries were benign, but with commit
-af1648984828 that follow-on efi_memmap_insert() invocation triggers the
-above crash signature.
+Tested on arm64 and BE mips.
 
-Fixes: 0f96a99dab36 ("efi: Add 'efi_fake_mem' boot option")
-Fixes: af1648984828 ("x86/efi: Update e820 with reserved EFI boot services...")
-Link: https://lore.kernel.org/r/20191231014630.GA24942@dhcp-128-65.nay.redhat.com
-Reported-by: Dave Young <dyoung@redhat.com>
-Cc: Taku Izumi <izumi.taku@jp.fujitsu.com>
-Cc: Michael Weiser <michael@weiser.dinsnail.net>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/firmware/efi/fake_mem.c |   32 +++++++++++++++++---------------
- drivers/firmware/efi/memmap.c   |    2 +-
- include/linux/efi.h             |    2 ++
- 3 files changed, 20 insertions(+), 16 deletions(-)
+v1: https://lkml.org/lkml/2019/4/27/597
+v2:
+ - strnchrnul() signature and description changed, ifdeffery and
+   exporting removed;
+ - test split for better demonstration of before/after changes;
+ - minor naming and formatting issues fixed.
+v3:
+  - fix bitmap_clear() misuse.
+  - opencode in_str() helper.
+  - simplify while() in bitmap_parse()
+v4:
+  - use isxdigit() where appropriate.
+  - clean signed-off-by list.
+v5:
+  - remove isxdigit() with hex_to_bin() to avoid cache use by ctype
+  table.
+  - rebase on top of next-20191220.
+ 
+Yury Norov (7):
+  lib/string: add strnchrnul()
+  bitops: more BITS_TO_* macros
+  lib: add test for bitmap_parse()
+  lib: make bitmap_parse_user a wrapper on bitmap_parse
+  lib: rework bitmap_parse()
+  lib: new testcases for bitmap_parse{_user}
+  cpumask: don't calculate length of the input string
 
-diff --git a/drivers/firmware/efi/fake_mem.c b/drivers/firmware/efi/fake_mem.c
-index 7e53e5520548..68d752d8af21 100644
---- a/drivers/firmware/efi/fake_mem.c
-+++ b/drivers/firmware/efi/fake_mem.c
-@@ -34,26 +34,17 @@ static int __init cmp_fake_mem(const void *x1, const void *x2)
- 	return 0;
- }
- 
--void __init efi_fake_memmap(void)
-+static void __init efi_fake_range(struct efi_mem_range *efi_range)
- {
- 	int new_nr_map = efi.memmap.nr_map;
- 	efi_memory_desc_t *md;
- 	phys_addr_t new_memmap_phy;
- 	unsigned long flags = 0;
- 	void *new_memmap;
--	int i;
--
--	if (!efi_enabled(EFI_MEMMAP) || !nr_fake_mem)
--		return;
- 
- 	/* count up the number of EFI memory descriptor */
--	for (i = 0; i < nr_fake_mem; i++) {
--		for_each_efi_memory_desc(md) {
--			struct range *r = &efi_fake_mems[i].range;
--
--			new_nr_map += efi_memmap_split_count(md, r);
--		}
--	}
-+	for_each_efi_memory_desc(md)
-+		new_nr_map += efi_memmap_split_count(md, &efi_range->range);
- 
- 	/* allocate memory for new EFI memmap */
- 	new_memmap_phy = efi_memmap_alloc(new_nr_map, &flags);
-@@ -64,17 +55,28 @@ void __init efi_fake_memmap(void)
- 	new_memmap = early_memremap(new_memmap_phy,
- 				    efi.memmap.desc_size * new_nr_map);
- 	if (!new_memmap) {
--		memblock_free(new_memmap_phy, efi.memmap.desc_size * new_nr_map);
-+		__efi_memmap_free(new_memmap_phy,
-+				efi.memmap.desc_size * new_nr_map, flags);
- 		return;
- 	}
- 
--	for (i = 0; i < nr_fake_mem; i++)
--		efi_memmap_insert(&efi.memmap, new_memmap, &efi_fake_mems[i]);
-+	efi_memmap_insert(&efi.memmap, new_memmap, efi_range);
- 
- 	/* swap into new EFI memmap */
- 	early_memunmap(new_memmap, efi.memmap.desc_size * new_nr_map);
- 
- 	efi_memmap_install(new_memmap_phy, new_nr_map, flags);
-+}
-+
-+void __init efi_fake_memmap(void)
-+{
-+	int i;
-+
-+	if (!efi_enabled(EFI_MEMMAP) || !nr_fake_mem)
-+		return;
-+
-+	for (i = 0; i < nr_fake_mem; i++)
-+		efi_fake_range(&efi_fake_mems[i]);
- 
- 	/* print new EFI memmap */
- 	efi_print_memmap();
-diff --git a/drivers/firmware/efi/memmap.c b/drivers/firmware/efi/memmap.c
-index 46c8b4056cc1..157b7776caf5 100644
---- a/drivers/firmware/efi/memmap.c
-+++ b/drivers/firmware/efi/memmap.c
-@@ -29,7 +29,7 @@ static phys_addr_t __init __efi_memmap_alloc_late(unsigned long size)
- 	return PFN_PHYS(page_to_pfn(p));
- }
- 
--static void __init __efi_memmap_free(u64 phys, unsigned long size, unsigned long flags)
-+void __init __efi_memmap_free(u64 phys, unsigned long size, unsigned long flags)
- {
- 	if (flags & EFI_MEMMAP_MEMBLOCK) {
- 		if (slab_is_available())
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index fa2668a992ae..6ae31e064321 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -1061,6 +1061,8 @@ extern void __iomem *efi_lookup_mapped_addr(u64 phys_addr);
- 
- extern phys_addr_t __init efi_memmap_alloc(unsigned int num_entries,
- 		unsigned long *flags);
-+extern void __efi_memmap_free(u64 phys, unsigned long size,
-+		unsigned long flags);
- extern int __init efi_memmap_init_early(struct efi_memory_map_data *data);
- extern int __init efi_memmap_init_late(phys_addr_t addr, unsigned long size);
- extern void __init efi_memmap_unmap(void);
+ include/linux/bitmap.h       |   8 +-
+ include/linux/bitops.h       |   5 +-
+ include/linux/cpumask.h      |   4 +-
+ include/linux/string.h       |   1 +
+ lib/bitmap.c                 | 193 +++++++++++++++++------------------
+ lib/string.c                 |  17 +++
+ lib/test_bitmap.c            | 102 +++++++++++++++++-
+ tools/include/linux/bitops.h |   9 +-
+ 8 files changed, 222 insertions(+), 117 deletions(-)
+
+-- 
+2.20.1
 
