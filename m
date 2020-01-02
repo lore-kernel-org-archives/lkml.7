@@ -2,195 +2,217 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAF7C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A32EC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A7AD20863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:44:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YFrVFtek"
+	by mail.kernel.org (Postfix) with ESMTP id E2B8E21734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:47:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbgABMov (ORCPT
+        id S1728319AbgABMrM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 07:44:51 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:18433 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728288AbgABMou (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 07:44:50 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e0de5960000>; Thu, 02 Jan 2020 04:44:06 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 02 Jan 2020 04:44:49 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 02 Jan 2020 04:44:49 -0800
-Received: from localhost (10.124.1.5) by HQMAIL107.nvidia.com (172.20.187.13)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 Jan 2020 12:44:48
- +0000
-Date:   Thu, 2 Jan 2020 13:44:45 +0100
-From:   Thierry Reding <treding@nvidia.com>
-To:     Bitan Biswas <bbiswas@nvidia.com>
-CC:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Thu, 2 Jan 2020 07:47:12 -0500
+Received: from szxga08-in.huawei.com ([45.249.212.255]:42558 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728288AbgABMrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 07:47:11 -0500
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id E330456DA67CEAB62900;
+        Thu,  2 Jan 2020 20:47:08 +0800 (CST)
+Received: from DGGEMM422-HUB.china.huawei.com (10.1.198.39) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 2 Jan 2020 20:47:08 +0800
+Received: from DGGEMM526-MBX.china.huawei.com ([169.254.8.143]) by
+ dggemm422-hub.china.huawei.com ([10.1.198.39]) with mapi id 14.03.0439.000;
+ Thu, 2 Jan 2020 20:47:01 +0800
+From:   "Zengtao (B)" <prime.zeng@hisilicon.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+CC:     Linuxarm <linuxarm@huawei.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH V1] nvmem: core: fix memory abort in cleanup path
-Message-ID: <20200102124445.GB1924669@ulmo>
-References: <1577592162-14817-1-git-send-email-bbiswas@nvidia.com>
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Morten Rasmussen" <morten.rasmussen@arm.com>
+Subject: RE: [PATCH] cpu-topology: warn if NUMA configurations conflicts
+ with lower layer
+Thread-Topic: [PATCH] cpu-topology: warn if NUMA configurations conflicts
+ with lower layer
+Thread-Index: AQHVuWnsK0zwK8RxTkqe/SNAoYeaUKfT+S+AgALBI6CAAAyngIAAlqWw
+Date:   Thu, 2 Jan 2020 12:47:01 +0000
+Message-ID: <678F3D1BB717D949B966B68EAEB446ED340AEB67@dggemm526-mbx.china.huawei.com>
+References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
+ <20191231164051.GA4864@bogus>
+ <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
+ <20200102112955.GC4864@bogus>
+In-Reply-To: <20200102112955.GC4864@bogus>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.74.221.187]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <1577592162-14817-1-git-send-email-bbiswas@nvidia.com>
-X-NVConfidentiality: public
-User-Agent: Mutt/1.13.1 (2019-12-14)
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Y7xTucakfITjPcLV"
-Content-Disposition: inline
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1577969047; bh=M4nXVwwJGqs+aUDvMZNjphqsYWX228oIK/q6HAWvcb4=;
-        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
-         MIME-Version:In-Reply-To:X-NVConfidentiality:User-Agent:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:
-         Content-Disposition;
-        b=YFrVFtek5KChbulujGCab3wmjKXcgTSy1EY0AHygnYTGrhgP5x4646f7OHqCUrq0N
-         vMWee0KMUBmFSRCvQFPAsjqoFtXl8hvdGFWHwYIesXUp62Jc6upvI0OIK8shrl47Q7
-         VLope7GuSzoIisf5YmXTgpB+YDfrD8g6+0oRQXHsDOd8EvNsBEiLewLeWDP0ZP0df+
-         /qmNzr5MCqwqR9dvymUHNmfnot2lr6UaBBnxFvYFgH5abkDUQT/IaNSoaIVXraZgey
-         XtSpcxpFeL/pw2INyAfg6PGputMUIBBX506iPGKoBcXlnfhf1dT8MdAzJVl8Welhvj
-         dzmgsO1odBKTw==
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Y7xTucakfITjPcLV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> -----Original Message-----
+> From: Sudeep Holla [mailto:sudeep.holla@arm.com]
+> Sent: Thursday, January 02, 2020 7:30 PM
+> To: Zengtao (B)
+> Cc: Linuxarm; Greg Kroah-Hartman; Rafael J. Wysocki;
+> linux-kernel@vger.kernel.org; Morten Rasmussen
+> Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations conflicts
+> with lower layer
+> 
+> On Thu, Jan 02, 2020 at 03:05:40AM +0000, Zengtao (B) wrote:
+> > Hi Sudeep:
+> >
+> > Thanks for your reply.
+> >
+> > > -----Original Message-----
+> > > From: Sudeep Holla [mailto:sudeep.holla@arm.com]
+> > > Sent: Wednesday, January 01, 2020 12:41 AM
+> > > To: Zengtao (B)
+> > > Cc: Linuxarm; Greg Kroah-Hartman; Rafael J. Wysocki;
+> > > linux-kernel@vger.kernel.org; Sudeep Holla; Morten Rasmussen
+> > > Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations
+> conflicts
+> > > with lower layer
+> > >
+> > > On Mon, Dec 23, 2019 at 04:16:19PM +0800, z00214469 wrote:
+> > > > As we know, from sched domain's perspective, the DIE layer should
+> be
+> > > > larger than or at least equal to the MC layer, and in some cases, MC
+> > > > is defined by the arch specified hardware, MPIDR for example, but
+> > > NUMA
+> > > > can be defined by users,
+> > >
+> > > Who are the users you are referring above ?
+> > For example, when I use QEMU to start a guest linux, I can define the
+> > NUMA topology of the guest linux whatever i want.
+> 
+> OK and how is the information passed to the kernel ? DT or ACPI ?
+> We need to fix the miss match if any during the initial parse of those
+> information.
+> 
 
-On Sat, Dec 28, 2019 at 08:02:42PM -0800, Bitan Biswas wrote:
-> nvmem_cell_info_to_nvmem_cell implementation has static
-> allocation of name. nvmem_add_cells_from_of() call may
-> return error and kfree name results in memory abort. Use
-> kasprintf() instead of assigning pointer and prevent kfree crash.
->=20
-> [    8.076461] Unable to handle kernel paging request at virtual address =
-ffffffffffe44888
-> [    8.084762] Mem abort info:
-> [    8.087694]   ESR =3D 0x96000006
-> [    8.090906]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
-> [    8.096476]   SET =3D 0, FnV =3D 0
-> [    8.099683]   EA =3D 0, S1PTW =3D 0
-> [    8.102976] Data abort info:
-> [    8.106004]   ISV =3D 0, ISS =3D 0x00000006
-> [    8.110026]   CM =3D 0, WnR =3D 0
-> [    8.113154] swapper pgtable: 64k pages, 48-bit VAs, pgdp=3D00000000815=
-d0000
-> [    8.120279] [ffffffffffe44888] pgd=3D0000000081d30803, pud=3D000000008=
-1d30803, pmd=3D0000000000000000
-> [    8.129429] Internal error: Oops: 96000006 [#1] PREEMPT SMP
-> [    8.135257] Modules linked in:
-> [    8.138456] CPU: 2 PID: 43 Comm: kworker/2:1 Tainted: G S             =
-   5.5.0-rc3-tegra-00051-g6989dd3-dirty #3   [    8.149098] Hardware name: =
-quill (DT)
-> [    8.152968] Workqueue: events deferred_probe_work_func
-> [    8.158350] pstate: a0000005 (NzCv daif -PAN -UAO)
-> [    8.163386] pc : kfree+0x38/0x278
-> [    8.166873] lr : nvmem_cell_drop+0x68/0x80
-> [    8.171154] sp : ffff80001284f9d0
-> [    8.174620] x29: ffff80001284f9d0 x28: ffff0001f677e830
-> [    8.180189] x27: ffff800011b0b000 x26: ffff0001c36e1008
-> [    8.185755] x25: ffff8000112ad000 x24: ffff8000112c9000
-> [    8.191311] x23: ffffffffffffffea x22: ffff800010adc7f0
-> [    8.196865] x21: ffffffffffe44880 x20: ffff800011b0b068
-> [    8.202424] x19: ffff80001122d380 x18: ffffffffffffffff
-> [    8.207987] x17: 00000000d5cb4756 x16: 0000000070b193b8
-> [    8.213550] x15: ffff8000119538c8 x14: 0720072007200720
-> [    8.219120] x13: 07200720076e0772 x12: 07750762072d0765
-> [    8.224685] x11: 0773077507660765 x10: 072f073007300730
-> [    8.230253] x9 : 0730073207380733 x8 : 0000000000000151
-> [    8.235818] x7 : 07660765072f0720 x6 : ffff0001c00e0f00
-> [    8.241382] x5 : 0000000000000000 x4 : ffff0001c0b43800
-> [    8.247007] x3 : ffff800011b0b068 x2 : 0000000000000000
-> [    8.252567] x1 : 0000000000000000 x0 : ffffffdfffe00000
-> [    8.258126] Call trace:
-> [    8.260705]  kfree+0x38/0x278
-> [    8.263827]  nvmem_cell_drop+0x68/0x80
-> [    8.267773]  nvmem_device_remove_all_cells+0x2c/0x50
-> [    8.272988]  nvmem_register.part.9+0x520/0x628
-> [    8.277655]  devm_nvmem_register+0x48/0xa0
-> [    8.281966]  tegra_fuse_probe+0x140/0x1f0
-> [    8.286181]  platform_drv_probe+0x50/0xa0
-> [    8.290397]  really_probe+0x108/0x348
-> [    8.294243]  driver_probe_device+0x58/0x100
-> [    8.298618]  __device_attach_driver+0x90/0xb0
-> [    8.303172]  bus_for_each_drv+0x64/0xc8
-> [    8.307184]  __device_attach+0xd8/0x138
-> [    8.311195]  device_initial_probe+0x10/0x18
-> [    8.315562]  bus_probe_device+0x90/0x98
-> [    8.319572]  deferred_probe_work_func+0x74/0xb0
-> [    8.324304]  process_one_work+0x1e0/0x358
-> [    8.328490]  worker_thread+0x208/0x488
-> [    8.332411]  kthread+0x118/0x120
-> [    8.335783]  ret_from_fork+0x10/0x18
-> [    8.339561] Code: d350feb5 f2dffbe0 aa1e03f6 8b151815 (f94006a0)
-> [    8.345939] ---[ end trace 49b1303c6b83198e ]---
->=20
-> Fixes: badcdff107cbf ("nvmem: Convert to using %pOFn instead of device_no=
-de.name")
->=20
-> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
-> ---
->  drivers/nvmem/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> index 9f1ee9c..0fc66e1 100644
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
-> @@ -110,7 +110,7 @@ static int nvmem_cell_info_to_nvmem_cell(struct nvmem=
-_device *nvmem,
->  	cell->nvmem =3D nvmem;
->  	cell->offset =3D info->offset;
->  	cell->bytes =3D info->bytes;
-> -	cell->name =3D info->name;
-> +	cell->name =3D kasprintf(GFP_KERNEL, "%s", info->name);
+Both, For the current QEMU, we don't have the correct cpu topology
+passed to linux. Luckily drjones planed to deal with the issue.
+https://patchwork.ozlabs.org/cover/939301/
 
-kstrdup() seems more appropriate here.
+> > > > with the following system configrations:
+> > >
+> > > Do you mean ACPI tables or DT or some firmware tables ?
+> > >
+> > > > *************************************
+> > > > NUMA:      	 0-2,  3-7
+> > >
+> > > Is the above simply wrong with respect to hardware and it actually
+> match
+> > > core_siblings ?
+> > >
+> > Actually, we can't simply say this is wrong, i just want to show an
+> example.
+> > And this example also can be:
+> > NUMA:  0-23,  24-47
+> > core_siblings:   0-15,  16-31, 32-47
+> >
+> 
+> Are you sure of the above ? Possible values w.r.t hardware config:
+> core_siblings:   0-15,  16-23, 24-31, 32-47
+> 
+> But what you have specified above is still wrong core_siblings IMO.
+> 
+It depends on the hardware, on my platform, 16 cores per cluster.
 
-A slightly more efficient way to do this would be to use a combination
-of kstrdup_const() and kfree_const(), which would allow read-only
-strings to be replicated by simple assignment rather than duplication.
-Note that in that case you'd need to carefully replace all kfree() calls
-on cell->name by a kfree_const() to ensure they do the right thing.
+> 
+> [...]
+> 
+> > > > diff --git a/drivers/base/arch_topology.c
+> b/drivers/base/arch_topology.c
+> > > > index 1eb81f11..5fe44b3 100644
+> > > > --- a/drivers/base/arch_topology.c
+> > > > +++ b/drivers/base/arch_topology.c
+> > > > @@ -439,10 +439,18 @@ const struct cpumask
+> > > *cpu_coregroup_mask(int cpu)
+> > > >  	if (cpumask_subset(&cpu_topology[cpu].core_sibling,
+> core_mask)) {
+> > > >  		/* not numa in package, lets use the package siblings */
+> > > >  		core_mask = &cpu_topology[cpu].core_sibling;
+> > > > -	}
+> > > > +	} else
+> > > > +		pr_warn_once("Warning: suspicous broken topology:
+> cpu:[%d]'s
+> > > core_sibling:[%*pbl] not a subset of numa node:[%*pbl]\n",
+> > > > +			cpu,
+> cpumask_pr_args(&cpu_topology[cpu].core_sibling),
+> > > > +			cpumask_pr_args(core_mask));
+> > > > +
+> > >
+> > > Won't this print warning on all systems that don't have numa within a
+> > > package ? What are you trying to achieve here ?
+> >
+> > Since in my case, when this corner case happens, the linux kernel just fall
+> into
+> > dead loop with no prompt, here this is a helping message will help a lot.
+> >
+> 
+> As I said, wrong configurations need to be detected when generating
+> DT/ACPI if possible. The above will print warning on systems with NUMA
+> within package.
+> 
+> NUMA:  0-7, 8-15
+> core_siblings:   0-15
+> 
+> The above is the example where the die has 16 CPUs and 2 NUMA nodes
+> within a package, your change throws error to the above config which is
+> wrong.
+>
+From your example, the core 7 and core 8 has got different LLC but the same Low
+Level cache?
+From schedule view of point, lower level sched domain should be a subset of higher
+Level sched domain.
 
-Thierry
+> > >
+> > > >  	if (cpu_topology[cpu].llc_id != -1) {
+> > > >  		if (cpumask_subset(&cpu_topology[cpu].llc_sibling,
+> core_mask))
+> > > >  			core_mask = &cpu_topology[cpu].llc_sibling;
+> > > > +		else
+> > > > +			pr_warn_once("Warning: suspicous broken topology:
+> > > cpu:[%d]'s llc_sibling:[%*pbl] not a subset of numa node:[%*pbl]\n",
+> > > > +				cpu,
+> > > cpumask_pr_args(&cpu_topology[cpu].llc_sibling),
+> > > > +				cpumask_pr_args(core_mask));
+> > > >  	}
+> > > >
+> > >
+> > > This will trigger warning on all systems that lack cacheinfo topology.
+> > > I don't understand the intent of this patch at all. Can you explain
+> > > all the steps you follow and the issue you face ?
+> >
+> > Can you show me an example, what I really want to warn is the case that
+> > NUMA topology conflicts with lower level.
+> >
+> 
+> I was wrong here, I mis-read this section. I still fail to understand
+> why the above change is needed. I understood the QEMU example, but you
+> haven't specified how cacheinfo looks like there.
+> 
 
---Y7xTucakfITjPcLV
-Content-Type: application/pgp-signature; name="signature.asc"
+My idea:
+(1) If the dtb/acpi is not legal, the linux kernel should check or prompt to help debug.
+(2)From scheduler view of point, low level sched domain should be a subset of high level
+Sched domain.
 
------BEGIN PGP SIGNATURE-----
+I am very sure about (2), any example to show me (2) is wrong?
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4N5b0ACgkQ3SOs138+
-s6G/vg//Q+sdp1CPN/wq2VdLF/KNzLIwvNN7HimV9+xkfaimySCH37f6QIdfLXon
-h1y80U7c0vZ4dJVeyjsTjPX1k9xdQN4M+DfMIRFP62HgkwuqOdKd86YMs9o2jv54
-4n5iX70pwu3bAtGA953HbsVzlqBORl4QZR/OxAcLXLzqY8aOgSxp8eU55wPhmN81
-vTW8TODQsWekv3iWbRbLbMRc0o2Oso3X74j6LGyMKjpzwdk5Rb6ZjZ6SZyp6Yp43
-fkadHHK5W2oxBcllAsiH2UuI7asntwAbxed6+kQp0fqJZXO39Lbev+vL29bG/lVB
-1u2OCupr49r0Q0Q9TOyyR8z8Kogtds99MnnK7coADKue+7Ayi9/hc9pBgjl7HK5i
-DVKoapEqWkkhBWsfTmRj8G8dJuFzq15JxkJ6DjfM2S0sgIv1nukWOHMTqa/WKWBq
-SzzdVGLl2In6j3GOwY5N2fegYQNiKWVy61bpnODwmtF7RbTaBFh9f49OCLzv+sny
-dS0Qgz7hi18f8czcB7/Ove4hvyai4bOySOSiJQlelO/SY1lYesN2YMS5NsMKtqZD
-h7m2Kxgyn6vUIcfSQk1WsKiO/T77kVfGLfr8eyyccJ5E7cWM+HStR3Tr4shnUDJP
-y9L8IgLrP1oGUxiic2jzn6wGN8XyGzCHHgkec3k1ZH2liZ5sRsM=
-=uEQX
------END PGP SIGNATURE-----
+Thanks. 
+Zengtao 
 
---Y7xTucakfITjPcLV--
