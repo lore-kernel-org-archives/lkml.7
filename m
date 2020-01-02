@@ -2,240 +2,100 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0BCC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A07C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC750217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5031A20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:56:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbgABO4f (ORCPT
+        id S1728621AbgABO4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 09:56:35 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:44851 "EHLO
+        Thu, 2 Jan 2020 09:56:49 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:46391 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728544AbgABO4e (ORCPT
+        with ESMTP id S1728544AbgABO4t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 09:56:34 -0500
+        Thu, 2 Jan 2020 09:56:49 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MbAxU-1jKAn32tui-00bb23; Thu, 02 Jan 2020 15:56:17 +0100
+ 1MD9jV-1iw8he44g5-0095hC; Thu, 02 Jan 2020 15:56:36 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-scsi@vger.kernel.org,
-        linux-block@vger.kernel.org, y2038@lists.linaro.org,
-        linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux-doc@vger.kernel.org, corbet@lwn.net, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL v3 00/27] block, scsi: final compat_ioctl cleanup
-Date:   Thu,  2 Jan 2020 15:55:18 +0100
-Message-Id: <20200102145552.1853992-1-arnd@arndb.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 01/22] compat: ARM64: always include asm-generic/compat.h
+Date:   Thu,  2 Jan 2020 15:55:19 +0100
+Message-Id: <20200102145552.1853992-2-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20200102145552.1853992-1-arnd@arndb.de>
+References: <20200102145552.1853992-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:RN5FG3a22wHmkIpHaHUqEjmhCcVfp18qzdGmYwNx+0Xw7GzT0S1
- EISjiyHJbbFeeht4Se7zxWIbgYjPD6ZDhYzt+lZK068EvNUTT9jMLxqwgtP3CTDdiLqgcaf
- yZ6ubv8TY3XlF7JBIYoa6wRh7mkIkbgZ9sAeppsLeXu6UJFKWYJng9f/5/xPmxC49kk/qCD
- uJJwopaugKkyIBribgcDA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:QYcPG+gLiC8=:lBVJ8B67jqqyuuBfc3KmUJ
- Gv9xY2R6Cb7GsdXNu6UVZgo6sUNZIVbX+rouPy1AbAywl3d3VFLyq6L+qsrQbfIEHDolo7vbW
- iVDKppmS5DLsyc/2fnCgaCJVkrkkKLSGfKFKELJjPJyiQKD4M+qdG+c0E4IUGUOMB1rth3d0L
- q3xRktib3QE/+/Q22CxRIQMBQ7Ayy9BJzJpZfGSCeLg5ftwYmk615qoyeboEDWH9YuJonhhH4
- 7McorCy3eBvWl023gYELN4FkMqwnHc1W43d3LzwQPRbQUwRrvPetZMtCut/EG9Q3xBgSPOgnb
- XlG6d4A+09kpoglUJ+WfAjvEgcgUgrdHPx3h2BojApX4gu1yfkcY7mqJ73e/m5g39qQhF+1gh
- FBG6Wbm3UVwrNDuisuJXY+n5tXrzNusbwhlD7AR03htWIO4C2M9MF3E8mU049SyQi3Yln3b4r
- 16/NYydRuQ/1FYPlaU0mtg4xlLpNliS818PQyyG8JgwF2HfcUvO5/jLrRRTyJeaZmNsPE2h4j
- wwSpGs+zdvZ1LbzcGWoyW1NRVmLaBChZOhF5ms8q3bDB23/6bolhvK3JDInA7wtmCTfBY1AJR
- MQpdl+vCFYNEiXraUKFqpC83GjJGIq0X1jGoOCwWUUd1hLa2a/vOlzmhlHoLh3z3uX6oUm8K1
- ZvAVOF2Mz9OniLBNejsZeAtI1qchsylAOMRioYf7YtVtBaCO7eWLqxfSlxpaeCDO5OvTWZMXx
- AA73cpBZJuyV9aRN3Nlu+mruxPV34P5el7KA3heupbJdIp+dZdy2Qvz4ZBJDQthFQrC1CBbXc
- 2oX7O6a1fmgqnjHn0L8kQTVcJHGdXOD/i4VPWc2eDbj7wJFKW7NgdUrLZiQqK7nqh6AETnWe0
- AFqHkPMnGh+4Edaw3fZw==
+X-Provags-ID: V03:K1:pr65T4i4ui5sl6aC4/5W8ioQHxGj1wu7GIvRZlZ8gpRo78AYq44
+ cTImIvZTqlh2VCXLOa9jmynpkvETB6vlBls9J0U8coLl8xzrhJlZ+D3JvBCSnnmpAs27CVB
+ mE48d68xq4PKsEwnNPlDYFMRBTBLJN7XdP/RMNsrRuWGfk2eEZMjO8Eq6Gzwbr8dWDgt77D
+ OvfzOaKUXSLJInQPDBPTA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:p32MzLkRC7s=:Kgp26Bnq7sxJGSCTcjlzhh
+ /wMW7eDh3Qu9/ZQ58XNLyUlvH5S9fJOvSyKT/8UvYXhuW92wCj7ggT5BVBzVOHdTq9FjuAXCE
+ 1HC8lwfXFUNLhDULu7FyVD4bwEQG56ssAwOq8bEPWBIbIXUlPzcfWqjcZHs1KUvitMsMJ4wEh
+ SmAvPfxpwKSNnAYorv+884U+R1IHDJgI5z/d/xfUqbb+8e2FvZcv11QhstK4HUt6TJF+7yibf
+ d0WtBnyy3uqy8QtX2dU4nHOr27JpPOYmXmF/vqYPqi9pLVbsrUrKNdTIW9PouWw9Ph+C23/xv
+ 69KiLOByQtmB79mk+d7mjo36fRE8DrguSa9QbO6wvZ+5cMiBYlblh1NFSPTOBWM0xsYcuwn8C
+ 0nKEf6X6Pg4TuOJu+eejTorzLGNqXXBlgiYc2+fGw4hQUp/BcdDly3F4T33+5iNiPlNeC1Vil
+ tNnkRIK5Fxln+mdkNQJU3w4E1mHeaWKq17vUC8qV/b4HgtdIvNAo63eI9UjVUS2VLw54UlEAL
+ CpRhfAwEau2vNqXyXesLtyzCKBGXZDhst6T14RDdjq2LPZC3w5d3CTwutGCQklNb1DGZoKrxc
+ CAC2UTwBJ7dHBRfJceFTwDUekb+xTnZu1loUs/boghikwqfhKpilW6B88ZH0YjXVuyuqzruAQ
+ QXQiFeuDLjoTBfAnL2qJBeqq5xmTGx4LL8HUjkim2DlwYqkV/hm5VZgFvzLRxyz3HQ1iVDNb6
+ n3wI5YqhddSrXYm/E0tJmx6gExd7Mvucg9iD7b/3fxZwNemtwpFhurufR5iW4VPWVvdXFkKJJ
+ 9OIR3cuAtGAlspgdhizLoaeSERk4+1Jh8RPoM8ihV/bMSmJeawuHxZIaqTEEEMGuzqLZ4MGe/
+ UBr5wHWCiye5ccxLXdmQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Martin, James,
+In order to use compat_* type defininitions in device drivers
+outside of CONFIG_COMPAT, move the inclusion of asm-generic/compat.h
+ahead of the #ifdef.
 
-If this version seems ok to everyone, please pull into
-the scsi tree.
+All other architectures already do this.
 
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+Acked-by: Will Deacon <will@kernel.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/arm64/include/asm/compat.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-  Linux 5.5-rc4 (2019-12-08 14:57:55 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org:/pub/scm/linux/kernel/git/arnd/playground.git tags/block-ioctl-cleanup-5.6
-
-for you to fetch changes up to d1329555e914109846283e469b5077e7500ecfaf
-
-  Documentation: document ioctl interfaces better (2019-12-17 22:45:18 +0100)
-
-----------------------------------------------------------------
-block, scsi: final compat_ioctl cleanup
-
-This series concludes the work I did for linux-5.5 on the compat_ioctl()
-cleanup, killing off fs/compat_ioctl.c and block/compat_ioctl.c by moving
-everything into drivers.
-
-Overall this would be a reduction both in complexity and line count, but
-as I'm also adding documentation the overall number of lines increases
-in the end.
-
-My plan was originally to keep the SCSI and block parts separate.
-This did not work easily because of interdependencies: I cannot
-do the final SCSI cleanup in a good way without first addressing the
-CDROM ioctls, so this is one series that I hope could be merged through
-either the block or the scsi git trees, or possibly both if you can
-pull in the same branch.
-
-The series comes in these steps:
-
-1. clean up the sg v3 interface as suggested by Linus. I have
-   talked about this with Doug Gilbert as well, and he would
-   rebase his sg v4 patches on top of "compat: scsi: sg: fix v3
-   compat read/write interface"
-
-2. Actually moving handlers out of block/compat_ioctl.c and
-   block/scsi_ioctl.c into drivers, mixed in with cleanup
-   patches
-
-3. Document how to do this right. I keep getting asked about this,
-   and it helps to point to some documentation file.
-
-The branch is based on another one that fixes a couple of bugs found
-during the creation of this series.
-
-Changes since v2:
-- Rebase to v5.5-rc4, which contains the earlier bugfixes
-- Fix sr_block_compat_ioctl() error handling bug found by
-  Ben Hutchings
-- Fix idecd_locked_compat_ioctl() compat_ptr() bug
-- Don't try to handle HDIO_DRIVE_TASKFILE in drivers/ide
-- More documentation improvements
-
-Changes since v1:
-- move out the bugfixes into a branch for itself
-- clean up scsi sg driver further as suggested by Christoph Hellwig
-- avoid some ifdefs by moving compat_ptr() out of asm/compat.h
-- split out the blkdev_compat_ptr_ioctl function; bug spotted by
-  Ben Hutchings
-- Improve formatting of documentation
-
-[1] https://lore.kernel.org/linux-block/20191211204306.1207817-1-arnd@arndb.de/T/#m9f89df30565fc66abbded5d01f4db553b16f129f
-
-----------------------------------------------------------------
-
-Arnd Bergmann (22):
-  compat: ARM64: always include asm-generic/compat.h
-  compat: provide compat_ptr() on all architectures
-  compat: scsi: sg: fix v3 compat read/write interface
-  compat_ioctl: block: add blkdev_compat_ptr_ioctl
-  compat_ioctl: ubd, aoe: use blkdev_compat_ptr_ioctl
-  compat_ioctl: move CDROM_SEND_PACKET handling into scsi
-  compat_ioctl: move CDROMREADADIO to cdrom.c
-  compat_ioctl: cdrom: handle CDROM_LAST_WRITTEN
-  compat_ioctl: block: handle cdrom compat ioctl in non-cdrom drivers
-  compat_ioctl: add scsi_compat_ioctl
-  compat_ioctl: bsg: add handler
-  compat_ioctl: ide: floppy: add handler
-  compat_ioctl: scsi: move ioctl handling into drivers
-  compat_ioctl: move sys_compat_ioctl() to ioctl.c
-  compat_ioctl: simplify the implementation
-  compat_ioctl: move cdrom commands into cdrom.c
-  compat_ioctl: scsi: handle HDIO commands from drivers
-  compat_ioctl: move HDIO ioctl handling into drivers/ide
-  compat_ioctl: block: move blkdev_compat_ioctl() into ioctl.c
-  compat_ioctl: block: simplify compat_blkpg_ioctl()
-  compat_ioctl: simplify up block/ioctl.c
-  Documentation: document ioctl interfaces better
-
- Documentation/core-api/index.rst       |   1 +
- Documentation/core-api/ioctl.rst       | 253 +++++++++++++++
- arch/arm64/include/asm/compat.h        |  22 +-
- arch/mips/include/asm/compat.h         |  18 --
- arch/parisc/include/asm/compat.h       |  17 -
- arch/powerpc/include/asm/compat.h      |  17 -
- arch/powerpc/oprofile/backtrace.c      |   2 +-
- arch/s390/include/asm/compat.h         |   6 +-
- arch/sparc/include/asm/compat.h        |  17 -
- arch/um/drivers/ubd_kern.c             |   1 +
- arch/x86/include/asm/compat.h          |  17 -
- block/Makefile                         |   1 -
- block/bsg.c                            |   1 +
- block/compat_ioctl.c                   | 427 -------------------------
- block/ioctl.c                          | 319 ++++++++++++++----
- block/scsi_ioctl.c                     | 214 ++++++++-----
- drivers/ata/libata-scsi.c              |   9 +
- drivers/block/aoe/aoeblk.c             |   1 +
- drivers/block/floppy.c                 |   3 +
- drivers/block/paride/pcd.c             |   3 +
- drivers/block/paride/pd.c              |   1 +
- drivers/block/paride/pf.c              |   1 +
- drivers/block/pktcdvd.c                |  26 +-
- drivers/block/sunvdc.c                 |   1 +
- drivers/block/virtio_blk.c             |   3 +
- drivers/block/xen-blkfront.c           |   1 +
- drivers/cdrom/cdrom.c                  |  35 +-
- drivers/cdrom/gdrom.c                  |   3 +
- drivers/ide/ide-cd.c                   |  38 +++
- drivers/ide/ide-disk.c                 |   1 +
- drivers/ide/ide-floppy.c               |   4 +
- drivers/ide/ide-floppy.h               |   2 +
- drivers/ide/ide-floppy_ioctl.c         |  35 ++
- drivers/ide/ide-gd.c                   |  17 +
- drivers/ide/ide-ioctls.c               |  47 ++-
- drivers/ide/ide-tape.c                 |  11 +
- drivers/scsi/aic94xx/aic94xx_init.c    |   3 +
- drivers/scsi/ch.c                      |   9 +-
- drivers/scsi/hisi_sas/hisi_sas_v1_hw.c |   3 +
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c |   3 +
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c |   3 +
- drivers/scsi/ipr.c                     |   3 +
- drivers/scsi/isci/init.c               |   3 +
- drivers/scsi/mvsas/mv_init.c           |   3 +
- drivers/scsi/pm8001/pm8001_init.c      |   3 +
- drivers/scsi/scsi_ioctl.c              |  54 +++-
- drivers/scsi/sd.c                      |  50 ++-
- drivers/scsi/sg.c                      | 170 +++++-----
- drivers/scsi/sr.c                      |  53 ++-
- drivers/scsi/st.c                      |  51 +--
- fs/Makefile                            |   2 +-
- fs/compat_ioctl.c                      | 261 ---------------
- fs/internal.h                          |   6 -
- fs/ioctl.c                             | 131 ++++++--
- include/linux/blkdev.h                 |   7 +
- include/linux/compat.h                 |  18 ++
- include/linux/falloc.h                 |   2 -
- include/linux/fs.h                     |   4 -
- include/linux/ide.h                    |   2 +
- include/linux/libata.h                 |   6 +
- include/scsi/scsi_ioctl.h              |   1 +
- include/scsi/sg.h                      |  30 ++
- 62 files changed, 1269 insertions(+), 1187 deletions(-)
- create mode 100644 Documentation/core-api/ioctl.rst
- delete mode 100644 block/compat_ioctl.c
- delete mode 100644 fs/compat_ioctl.c
-
+diff --git a/arch/arm64/include/asm/compat.h b/arch/arm64/include/asm/compat.h
+index b0d53a265f1d..7b4172ce497c 100644
+--- a/arch/arm64/include/asm/compat.h
++++ b/arch/arm64/include/asm/compat.h
+@@ -4,6 +4,9 @@
+  */
+ #ifndef __ASM_COMPAT_H
+ #define __ASM_COMPAT_H
++
++#include <asm-generic/compat.h>
++
+ #ifdef CONFIG_COMPAT
+ 
+ /*
+@@ -13,8 +16,6 @@
+ #include <linux/sched.h>
+ #include <linux/sched/task_stack.h>
+ 
+-#include <asm-generic/compat.h>
+-
+ #define COMPAT_USER_HZ		100
+ #ifdef __AARCH64EB__
+ #define COMPAT_UTS_MACHINE	"armv8b\0\0"
 -- 
 2.20.0
 
-Cc: linux-scsi@vger.kernel.org
-Cc: linux-block@vger.kernel.org
-Cc: y2038@lists.linaro.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Cc: linux-doc@vger.kernel.org
-Cc: corbet@lwn.net
-Cc: viro@zeniv.linux.org.uk
-Cc: linux-fsdevel@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>
