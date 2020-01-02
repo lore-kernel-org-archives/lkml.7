@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B387DC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D31CBC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83CD820866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9C0720866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005967;
-	bh=YD5Qd+d9+AvbAi/KPYotBzxb9IG9TQDX7dJEYehuDCs=;
+	s=default; t=1578005969;
+	bh=RgwvjIZONL5ZWANMEt1LiIYYnYCkycmum9J0tQGrhDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NuaGIq9tAwz3/EREb7VefQLSzqmegVmeKvTZCv7KxsQXgLECp6XvWghO1hrQWvGy/
-	 pNpoB3qoYZ3N/Q9fwOSAgThjk8f4UvMW4Ko/dCFAWtt/vjhfu/3a6qIlDy13qUX325
-	 +eavpOOXHAtC7uHUTjiCdSVOlawhO6WcClw5trTY=
+	b=DAVUJo83klLzmoEIiLvPnI/IOJgw9faGHY9gqEOQ42B9k8qQlkC8EAUksneDKA44V
+	 RHfPO/1W6o3ppDVu5hgOKZw3fJv0ds2CZE26wrcPcdh253CfpRkS33xQ4D9ls3haI3
+	 leSEOtIMSFLRxzspFXhZGNvW7axy+00dvShuLnvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgABWOS (ORCPT
+        id S1727875AbgABWOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:14:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54434 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:14:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727862AbgABWOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:14:14 -0500
+        id S1727852AbgABWOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:14:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8491221D7D;
-        Thu,  2 Jan 2020 22:14:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C94E24653;
+        Thu,  2 Jan 2020 22:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003254;
-        bh=YD5Qd+d9+AvbAi/KPYotBzxb9IG9TQDX7dJEYehuDCs=;
+        s=default; t=1578003251;
+        bh=RgwvjIZONL5ZWANMEt1LiIYYnYCkycmum9J0tQGrhDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T429RGus5MCafrAUlLRxkyAXQLgpFDhPn0qpKYy4v9lFY/p+g/tBwAmYz5nBWiHTz
-         q2TSoXBZxFgU0jk99wgeiXwxay54t8XbwG0rfMvyffy1SgRBEkzW8i5nTRQ7OVLGxY
-         VpYnr9Zaxbz5TRL5bxvsEW9aGweErfwwGirpZg+4=
+        b=FJSb/B7tmpGbHxaZiOokRtbPEtotaGJqaWsgq1Q1BE73fc9p65spFRuPDCpNa/v0B
+         S/vmNHZ0Y4QeQ2CNLlHgtCVU74ME9EOgWGOvO66Dg65pJdlDfINsc7U4A2AsIHzezw
+         iUnJJycg+DTCN0e79iUgIbeSkUGON7yKI8zZ7xqQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 083/191] watchdog: imx7ulp: Fix reboot hang
-Date:   Thu,  2 Jan 2020 23:06:05 +0100
-Message-Id: <20200102215838.833496463@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Duggan <aduggan@synaptics.com>,
+        Federico Cerutti <federico@ceres-c.it>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 082/191] HID: rmi: Check that the RMI_STARTED bit is set before unregistering the RMI transport device
+Date:   Thu,  2 Jan 2020 23:06:04 +0100
+Message-Id: <20200102215838.729753573@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,71 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Andrew Duggan <aduggan@synaptics.com>
 
-[ Upstream commit 6083ab7b2f3f25022e2e8f4c42f14a8521f47873 ]
+[ Upstream commit 8725aa4fa7ded30211ebd28bb1c9bae806eb3841 ]
 
-The following hang is observed when a 'reboot' command is issued:
+In the event that the RMI device is unreachable, the calls to rmi_set_mode() or
+rmi_set_page() will fail before registering the RMI transport device. When the
+device is removed, rmi_remove() will call rmi_unregister_transport_device()
+which will attempt to access the rmi_dev pointer which was not set.
+This patch adds a check of the RMI_STARTED bit before calling
+rmi_unregister_transport_device().  The RMI_STARTED bit is only set
+after rmi_register_transport_device() completes successfully.
 
-# reboot
-# Stopping network: OK
-Stopping klogd: OK
-Stopping syslogd: OK
-umount: devtmpfs busy - remounted read-only
-[    8.612079] EXT4-fs (mmcblk0p2): re-mounted. Opts: (null)
-The system is going down NOW!
-Sent SIGTERM to all processes
-Sent SIGKILL to all processes
-Requesting system reboot
-[   10.694753] reboot: Restarting system
-[   11.699008] Reboot failed -- System halted
+The kernel oops was reported in this message:
+https://www.spinics.net/lists/linux-input/msg58433.html
 
-Fix this problem by adding a .restart ops member.
-
-Fixes: 41b630f41bf7 ("watchdog: Add i.MX7ULP watchdog support")
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20191029174037.25381-1-festevam@gmail.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+[jkosina@suse.cz: reworded changelog as agreed with Andrew]
+Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
+Reported-by: Federico Cerutti <federico@ceres-c.it>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/imx7ulp_wdt.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/hid/hid-rmi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/watchdog/imx7ulp_wdt.c b/drivers/watchdog/imx7ulp_wdt.c
-index 5ce51026989a..ba5d535a6db2 100644
---- a/drivers/watchdog/imx7ulp_wdt.c
-+++ b/drivers/watchdog/imx7ulp_wdt.c
-@@ -106,12 +106,28 @@ static int imx7ulp_wdt_set_timeout(struct watchdog_device *wdog,
- 	return 0;
- }
+diff --git a/drivers/hid/hid-rmi.c b/drivers/hid/hid-rmi.c
+index 7c6abd7e0979..9ce22acdfaca 100644
+--- a/drivers/hid/hid-rmi.c
++++ b/drivers/hid/hid-rmi.c
+@@ -744,7 +744,8 @@ static void rmi_remove(struct hid_device *hdev)
+ {
+ 	struct rmi_data *hdata = hid_get_drvdata(hdev);
  
-+static int imx7ulp_wdt_restart(struct watchdog_device *wdog,
-+			       unsigned long action, void *data)
-+{
-+	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
-+
-+	imx7ulp_wdt_enable(wdt->base, true);
-+	imx7ulp_wdt_set_timeout(&wdt->wdd, 1);
-+
-+	/* wait for wdog to fire */
-+	while (true)
-+		;
-+
-+	return NOTIFY_DONE;
-+}
-+
- static const struct watchdog_ops imx7ulp_wdt_ops = {
- 	.owner = THIS_MODULE,
- 	.start = imx7ulp_wdt_start,
- 	.stop  = imx7ulp_wdt_stop,
- 	.ping  = imx7ulp_wdt_ping,
- 	.set_timeout = imx7ulp_wdt_set_timeout,
-+	.restart = imx7ulp_wdt_restart,
- };
- 
- static const struct watchdog_info imx7ulp_wdt_info = {
+-	if (hdata->device_flags & RMI_DEVICE) {
++	if ((hdata->device_flags & RMI_DEVICE)
++	    && test_bit(RMI_STARTED, &hdata->flags)) {
+ 		clear_bit(RMI_STARTED, &hdata->flags);
+ 		cancel_work_sync(&hdata->reset_work);
+ 		rmi_unregister_transport_device(&hdata->xport);
 -- 
 2.20.1
 
