@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D6FC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 936E4C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4743E21835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BDFA22314
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003084;
-	bh=JrOqbF6YDPDMz5f+9FqIzqyRoV/6CWGrgcynEh5Fehw=;
+	s=default; t=1578003088;
+	bh=IeJ6x5BZrVJtQg3SHJegVlPO8lhZFQ7CoeSf1gsbnCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NKnrcMToR5cWKQjv9c+mPRdvjiwHUpm/UOYHQ1qVvKSrn25sPQl9zeytUTXTl8CeS
-	 BrmlkRc++uAER+sEcMLlSWwoXr8GIp/F0SBISsfCiXtG6E3dG9+OUBj6HsLdGiUkbt
-	 myheEh6YpEB08k8uw7o7+l6OUmHYvEKQcGRroCL8=
+	b=nMsgmzpEpTVdQsEbf3DEBzApSKgdZI8cL3CiQGGAOpC6jlMZ4KvIEwwZ7ZhhGUnNJ
+	 DPgOs7NYIdzF/wpHUJSY8jQzWLPWZRQuXnfrKe44f0CMct1drm4EOoK0ErEfFyXsn1
+	 kAq9kZVJRQ+6g1sju18ebRXTCfBoS2JXOuwMdqwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgABWLX (ORCPT
+        id S1726643AbgABWL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:11:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49344 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:11:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726194AbgABWLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:11:21 -0500
+        id S1726307AbgABWLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:11:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91B6C21D7D;
-        Thu,  2 Jan 2020 22:11:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9713222C3;
+        Thu,  2 Jan 2020 22:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003081;
-        bh=JrOqbF6YDPDMz5f+9FqIzqyRoV/6CWGrgcynEh5Fehw=;
+        s=default; t=1578003083;
+        bh=IeJ6x5BZrVJtQg3SHJegVlPO8lhZFQ7CoeSf1gsbnCc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VcP2dqXUsRr1nwcT+0xQFzQJVtZcwfw9kXjj9LkELOmqXOqfnRFdTbqKlKnIRq9zv
-         Fe0L84dxFlgsUEhprjDbK29+87tE4EH0y45ZGbS464FA0CR39B7j/i1oD7paMmoWCo
-         96a4WisZnpSQG3UF0SMo1+OixahlrViy3EBSzcB0=
+        b=U+uRkcIhMISvDtTC1G6yornfUk0GZXwGApY2erP1jZONiUVyHgrc9euJ5BHYOYXIU
+         riO14Jfprrs0qETjfKa0oKpoSBwQyZq9kaVjuZqKL8ne0smnV7Y4saGy7mffVaHsFa
+         oCBiJbbA52olcQbdZTMcM24D/WwVqjT8q15n8ox4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vaibhav Jain <vaibhav@linux.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 012/191] powerpc/papr_scm: Fix an off-by-one check in papr_scm_meta_{get, set}
-Date:   Thu,  2 Jan 2020 23:04:54 +0100
-Message-Id: <20200102215831.033993270@linuxfoundation.org>
+Subject: [PATCH 5.4 013/191] tools/power/x86/intel-speed-select: Remove warning for unused result
+Date:   Thu,  2 Jan 2020 23:04:55 +0100
+Message-Id: <20200102215831.136234211@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,58 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vaibhav Jain <vaibhav@linux.ibm.com>
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-[ Upstream commit 612ee81b9461475b5a5612c2e8d71559dd3c7920 ]
+[ Upstream commit abd120e3bdf3dd72ba1ed9ac077a861e0e3dc43a ]
 
-A validation check to prevent out of bounds read/write inside
-functions papr_scm_meta_{get,set}() is off-by-one that prevent reads
-and writes to the last byte of the label area.
+Fix warning for:
+isst-config.c: In function ‘set_cpu_online_offline’:
+isst-config.c:221:3: warning: ignoring return value of ‘write’,
+declared with attribute warn_unused_result [-Wunused-result]
+   write(fd, "1\n", 2);
 
-This bug manifests as a failure to probe a dimm when libnvdimm is
-unable to read the entire config-area as advertised by
-ND_CMD_GET_CONFIG_SIZE. This usually happens when there are large
-number of namespaces created in the region backed by the dimm and the
-label-index spans max possible config-area. An error of the form below
-usually reported in the kernel logs:
-
-[  255.293912] nvdimm: probe of nmem0 failed with error -22
-
-The patch fixes these validation checks there by letting libnvdimm
-access the entire config-area.
-
-Fixes: 53e80bd042773('powerpc/nvdimm: Add support for multibyte read/write for metadata')
-Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
-Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190927062002.3169-1-vaibhav@linux.ibm.com
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/papr_scm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/power/x86/intel-speed-select/isst-config.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
-index 61883291defc..ee07d0718bf1 100644
---- a/arch/powerpc/platforms/pseries/papr_scm.c
-+++ b/arch/powerpc/platforms/pseries/papr_scm.c
-@@ -152,7 +152,7 @@ static int papr_scm_meta_get(struct papr_scm_priv *p,
- 	int len, read;
- 	int64_t ret;
+diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
+index 2a9890c8395a..21fcfe621d3a 100644
+--- a/tools/power/x86/intel-speed-select/isst-config.c
++++ b/tools/power/x86/intel-speed-select/isst-config.c
+@@ -169,7 +169,7 @@ int get_topo_max_cpus(void)
+ static void set_cpu_online_offline(int cpu, int state)
+ {
+ 	char buffer[128];
+-	int fd;
++	int fd, ret;
  
--	if ((hdr->in_offset + hdr->in_length) >= p->metadata_size)
-+	if ((hdr->in_offset + hdr->in_length) > p->metadata_size)
- 		return -EINVAL;
+ 	snprintf(buffer, sizeof(buffer),
+ 		 "/sys/devices/system/cpu/cpu%d/online", cpu);
+@@ -179,9 +179,12 @@ static void set_cpu_online_offline(int cpu, int state)
+ 		err(-1, "%s open failed", buffer);
  
- 	for (len = hdr->in_length; len; len -= read) {
-@@ -206,7 +206,7 @@ static int papr_scm_meta_set(struct papr_scm_priv *p,
- 	__be64 data_be;
- 	int64_t ret;
+ 	if (state)
+-		write(fd, "1\n", 2);
++		ret = write(fd, "1\n", 2);
+ 	else
+-		write(fd, "0\n", 2);
++		ret = write(fd, "0\n", 2);
++
++	if (ret == -1)
++		perror("Online/Offline: Operation failed\n");
  
--	if ((hdr->in_offset + hdr->in_length) >= p->metadata_size)
-+	if ((hdr->in_offset + hdr->in_length) > p->metadata_size)
- 		return -EINVAL;
- 
- 	for (len = hdr->in_length; len; len -= wrote) {
+ 	close(fd);
+ }
 -- 
 2.20.1
 
