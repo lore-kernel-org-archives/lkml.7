@@ -2,176 +2,99 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A416FC2D0DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 05:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D54CC2D0DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 05:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71A3221655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 05:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3DCA20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 05:03:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LX03GlaD"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="VrgzzEsR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbgABFDR (ORCPT
+        id S1726121AbgABFDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 00:03:17 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49098 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgABFDR (ORCPT
+        Thu, 2 Jan 2020 00:03:23 -0500
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:1511 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725788AbgABFDX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 00:03:17 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00253DtI038466;
-        Wed, 1 Jan 2020 23:03:13 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577941393;
-        bh=2JBpoNtOtupEcNKplnC4aYCfr97euILV8B9kr6D9dhY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=LX03GlaDFQd0iCbGTQ3SB19HPtwboeTdqJW5JPdnROJ57cPbQ4cfoWbwuEOr3LSYP
-         GnHRTnx1lRzVJmmSNjhfl5kCIw1FwKXhJ6ZPcvx5ZW2XhVa5485iJu3OLuBkOiNh+X
-         UQwVnqHRY/TYx4/rJXc73MC6aIgsyoi7T64d5/vk=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00253D2l122211
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 1 Jan 2020 23:03:13 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 1 Jan
- 2020 23:03:12 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 1 Jan 2020 23:03:12 -0600
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00253AeO043636;
-        Wed, 1 Jan 2020 23:03:11 -0600
-Subject: Re: [PATCH v3 4/4] ARM: OMAP2+: sleep43xx: Call secure suspend/resume
- handlers
-To:     "Andrew F. Davis" <afd@ti.com>, Tony Lindgren <tony@atomide.com>
-CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191230185004.32279-1-afd@ti.com>
- <20191230185004.32279-5-afd@ti.com>
- <a29d1e78-9736-ea93-8a53-4600f8f48cde@ti.com>
- <344674f2-6996-0f02-5507-f35190fb66b0@ti.com>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <6e1df3fc-c6c3-7dc4-1f91-b0a0aeaa3b0f@ti.com>
-Date:   Thu, 2 Jan 2020 10:32:19 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 2 Jan 2020 00:03:23 -0500
+X-UUID: 85a4205535a8485fa0f63cd14d3ab35f-20200102
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=B9oImeZ40IpDKQMsA5+OevUOG/21QHxukfJzn2BEkvI=;
+        b=VrgzzEsR2xl8GEGgdAkOcQ3gEXP1Z/QNx0BMgrR0TGXAbYuf0OcLtP+cr3vhKVlrOKsGyNrCtEmKpKLkONBweRF2J6CP6GUhTcP8DIR/LPlV7reqIEj2rYUZbWZeHLDroEaM5CVdQHnPGibwrGyaiNAVePw4OhhjgQhVV7kSY5k=;
+X-UUID: 85a4205535a8485fa0f63cd14d3ab35f-20200102
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 2111093749; Thu, 02 Jan 2020 13:03:11 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 2 Jan 2020 13:02:02 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 2 Jan 2020 13:02:28 +0800
+Message-ID: <1577941388.24650.2.camel@mtksdaap41>
+Subject: Re: [PATCH v6, 02/14] drm/mediatek: move dsi/dpi select input into
+ mtk_ddp_sel_in
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Thu, 2 Jan 2020 13:03:08 +0800
+In-Reply-To: <1577937624-14313-3-git-send-email-yongqiang.niu@mediatek.com>
+References: <1577937624-14313-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1577937624-14313-3-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <344674f2-6996-0f02-5507-f35190fb66b0@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-TM-SNTS-SMTP: C9B08F994A7286C74E48B5B525F960C34C42DFAE9C3B659B0BFDC3F25B28B5952000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+SGksIFlvbmdxaWFuZzoNCg0KT24gVGh1LCAyMDIwLTAxLTAyIGF0IDEyOjAwICswODAwLCBZb25n
+cWlhbmcgTml1IHdyb3RlOg0KPiBtb3ZlIGRzaS9kcGkgc2VsZWN0IGlucHV0IGludG8gbXRrX2Rk
+cF9zZWxfaW4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5u
+aXVAbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
+ZHJtX2RkcC5jIHwgMTAgKysrKysrLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9u
+cygrKSwgNCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
+bWVkaWF0ZWsvbXRrX2RybV9kZHAuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
+X2RkcC5jDQo+IGluZGV4IDM5NzAwYjkuLjkxYzliMTkgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9t
+ZWRpYXRlay9tdGtfZHJtX2RkcC5jDQo+IEBAIC0zNzYsNiArMzc2LDEyIEBAIHN0YXRpYyB1bnNp
+Z25lZCBpbnQgbXRrX2RkcF9zZWxfaW4oZW51bSBtdGtfZGRwX2NvbXBfaWQgY3VyLA0KPiAgCX0g
+ZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfQkxTICYmIG5leHQgPT0gRERQX0NPTVBPTkVO
+VF9EU0kwKSB7DQo+ICAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RTSV9TRUw7DQo+ICAJCXZh
+bHVlID0gRFNJX1NFTF9JTl9CTFM7DQo+ICsJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVO
+VF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMCkgew0KPiArCQkqYWRkciA9IERJ
+U1BfUkVHX0NPTkZJR19EU0lfU0VMOw0KPiArCQl2YWx1ZSA9IERTSV9TRUxfSU5fUkRNQTsNCg0K
+SW4gb3JpZ2luYWwgY29kZSwgdGhpcyBpcyBzZXQgd2hlbiBjdXIgPT0gRERQX0NPTVBPTkVOVF9C
+TFMgYW5kIG5leHQgPT0NCkREUF9DT01QT05FTlRfRFBJMC4gV2h5IGRvIHlvdSBjaGFuZ2UgdGhl
+IGNvbmRpdGlvbj8NCg0KUmVnYXJkcywNCkNLDQoNCj4gKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBf
+Q09NUE9ORU5UX0JMUyAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFBJMCkgew0KPiArCQkqYWRk
+ciA9IERJU1BfUkVHX0NPTkZJR19EUElfU0VMOw0KPiArCQl2YWx1ZSA9IERQSV9TRUxfSU5fQkxT
+Ow0KPiAgCX0gZWxzZSB7DQo+ICAJCXZhbHVlID0gMDsNCj4gIAl9DQo+IEBAIC0zOTMsMTAgKzM5
+OSw2IEBAIHN0YXRpYyB2b2lkIG10a19kZHBfc291dF9zZWwoc3RydWN0IHJlZ21hcCAqY29uZmln
+X3JlZ3MsDQo+ICAJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9CTFMgJiYgbmV4dCA9
+PSBERFBfQ09NUE9ORU5UX0RQSTApIHsNCj4gIAkJcmVnbWFwX3dyaXRlKGNvbmZpZ19yZWdzLCBE
+SVNQX1JFR19DT05GSUdfT1VUX1NFTCwNCj4gIAkJCQlCTFNfVE9fRFBJX1JETUExX1RPX0RTSSk7
+DQo+IC0JCXJlZ21hcF93cml0ZShjb25maWdfcmVncywgRElTUF9SRUdfQ09ORklHX0RTSV9TRUws
+DQo+IC0JCQkJRFNJX1NFTF9JTl9SRE1BKTsNCj4gLQkJcmVnbWFwX3dyaXRlKGNvbmZpZ19yZWdz
+LCBESVNQX1JFR19DT05GSUdfRFBJX1NFTCwNCj4gLQkJCQlEUElfU0VMX0lOX0JMUyk7DQo+ICAJ
+fQ0KPiAgfQ0KPiAgDQoNCg==
 
-
-On 31/12/19 7:47 PM, Andrew F. Davis wrote:
-> On 12/31/19 1:20 AM, Lokesh Vutla wrote:
->>
->>
->> On 31/12/19 12:20 AM, Andrew F. Davis wrote:
->>> During suspend CPU context may be lost in both non-secure and secure CPU
->>> states. The kernel can handle saving and restoring the non-secure context
->>> but must call into the secure side to allow it to save any context it may
->>> lose. Add these calls here.
->>>
->>> Note that on systems with OP-TEE available the suspend call is issued to
->>> OP-TEE using the ARM SMCCC, but the resume call is always issued to the
->>> ROM. This is because on waking from suspend the ROM is restored as the
->>> secure monitor. It is this resume call that instructs the ROM to restore
->>> OP-TEE, all subsequent calls will be handled by OP-TEE and should use the
->>> ARM SMCCC.
->>>
->>> Signed-off-by: Andrew F. Davis <afd@ti.com>
->>> Acked-by: Dave Gerlach <d-gerlach@ti.com>
->>> ---
->>>  arch/arm/mach-omap2/omap-secure.h |  3 +++
->>>  arch/arm/mach-omap2/pm33xx-core.c | 17 +++++++++++++++++
->>>  2 files changed, 20 insertions(+)
->>>
->>> diff --git a/arch/arm/mach-omap2/omap-secure.h b/arch/arm/mach-omap2/omap-secure.h
->>> index 736e594365f4..ba8c486c0454 100644
->>> --- a/arch/arm/mach-omap2/omap-secure.h
->>> +++ b/arch/arm/mach-omap2/omap-secure.h
->>> @@ -53,6 +53,9 @@
->>>  #define OMAP4_PPA_L2_POR_INDEX		0x23
->>>  #define OMAP4_PPA_CPU_ACTRL_SMP_INDEX	0x25
->>>  
->>> +#define AM43xx_PPA_SVC_PM_SUSPEND	0x71
->>> +#define AM43xx_PPA_SVC_PM_RESUME	0x72
->>> +
->>>  /* Secure RX-51 PPA (Primary Protected Application) APIs */
->>>  #define RX51_PPA_HWRNG			29
->>>  #define RX51_PPA_L2_INVAL		40
->>> diff --git a/arch/arm/mach-omap2/pm33xx-core.c b/arch/arm/mach-omap2/pm33xx-core.c
->>> index f11442ed3eff..4a564f676ff9 100644
->>> --- a/arch/arm/mach-omap2/pm33xx-core.c
->>> +++ b/arch/arm/mach-omap2/pm33xx-core.c
->>> @@ -28,6 +28,7 @@
->>>  #include "prm33xx.h"
->>>  #include "soc.h"
->>>  #include "sram.h"
->>> +#include "omap-secure.h"
->>>  
->>>  static struct powerdomain *cefuse_pwrdm, *gfx_pwrdm, *per_pwrdm, *mpu_pwrdm;
->>>  static struct clockdomain *gfx_l4ls_clkdm;
->>> @@ -166,6 +167,16 @@ static int am43xx_suspend(unsigned int state, int (*fn)(unsigned long),
->>>  {
->>>  	int ret = 0;
->>>  
->>> +	/* Suspend secure side on HS devices */
->>> +	if (omap_type() != OMAP2_DEVICE_TYPE_GP) {
->>> +		if (optee_available)
->>> +			omap_smccc_smc(AM43xx_PPA_SVC_PM_SUSPEND, 0);
->>> +		else
->>> +			omap_secure_dispatcher(AM43xx_PPA_SVC_PM_SUSPEND,
->>> +					       FLAG_START_CRITICAL,
->>> +					       0, 0, 0, 0, 0);
->>> +	}
->>> +
->>>  	amx3_pre_suspend_common();
->>>  	scu_power_mode(scu_base, SCU_PM_POWEROFF);
->>>  	ret = cpu_suspend(args, fn);
->>> @@ -174,6 +185,12 @@ static int am43xx_suspend(unsigned int state, int (*fn)(unsigned long),
->>>  	if (!am43xx_check_off_mode_enable())
->>>  		amx3_post_suspend_common();
->>>  
->>> +	/* Resume secure side on HS devices */
->>> +	if (omap_type() != OMAP2_DEVICE_TYPE_GP)
->>> +		omap_secure_dispatcher(AM43xx_PPA_SVC_PM_RESUME,
->>> +				       FLAG_START_CRITICAL,
->>> +				       0, 0, 0, 0, 0);
->>
->> Don't you need to check optee_available here?
->>
-> 
-> 
-> I address this in the second paragraph of the commit message. I can add
-> a comment in code also if you think anyone will find it confusing.
-
-Yeah, a comment would help.
-
-Thanks and regards,
-Lokesh
-
-> 
-> Andrew
-> 
-> 
->> Thanks and regards,
->> Lokesh
->>
->>> +
->>>  	return ret;
->>>  }
->>>  
->>>
