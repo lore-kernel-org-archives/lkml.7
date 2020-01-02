@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B312AC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD87BC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84EFC20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86AD120863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004981;
-	bh=Nv6XiNZITsliWRdQc4rFMkKdM/QxaNweNuuNEPunRHs=;
+	s=default; t=1578004994;
+	bh=Q8ckFmLk3fzclWZ/XYT5Lu6vhrYngCaehPp/248MpIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UjJ8luZhIVe4cPwipn9LnKW57vSdXCgnyqidv6n4LgaHEuIyFhEreMDTSiDoVOey8
-	 b9LNjeswTfROjfgHi++ze6ODvtTFQM+Nwqvjc+vewIQmHJpyIfPP4CUqD/uai3ryGq
-	 l69MVkkzORPYh3UZMkxJJQct59Pwz588bW4V21rM=
+	b=RZG+wRWMQQweDp8pi+grZUILiRe80n40AovYDTvIfQoY664Zj+v4g/F6u11og1O2w
+	 MUw3+QkGGsYE2RJKiH11mFGj9lG+kij4NYOT91dtV5/xdCeOCM0uKQi3cSZ6EB8039
+	 O7cJvFTQVvIIeZ3Zjj/xcL7c9kBh1enMTqP+nq88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731342AbgABWnA (ORCPT
+        id S1729489AbgABWnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:43:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45018 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:43:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729062AbgABWfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:35:22 -0500
+        id S1730771AbgABWfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:35:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C604E20863;
-        Thu,  2 Jan 2020 22:35:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D307021835;
+        Thu,  2 Jan 2020 22:35:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004521;
-        bh=Nv6XiNZITsliWRdQc4rFMkKdM/QxaNweNuuNEPunRHs=;
+        s=default; t=1578004504;
+        bh=Q8ckFmLk3fzclWZ/XYT5Lu6vhrYngCaehPp/248MpIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zhoGM7Ag8hrW6Dk2lYXOCsF4UbbS8yLhf50+DwSo2SStEv5eI0FGY/ESftwiQub8O
-         Fx2oqZumkOpFagQVwXuIFbufHVNr+7pT6XkqxhXfcdPiE80R0eFLnFmq7EdNT1zIf5
-         op3A3t3oMwDmqOh9VI/ReZsUCjY+7yeeR5qTMKbg=
+        b=Sspxrw3Qcf4dcVEBZA8VqWsc7bFk6etIf1uOExgKCj9lUH1B9DUtUYMGQFl4EdwRS
+         xtrccq86ohmwgu2YRRbw458Vf6pP8W1nKZDap+79fcFHkBherX3PqzTDk+23UFNoL8
+         JwDauWkDlEwIJF5G9ZkISrcT2S/+b3Ev6x7HDxX4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 042/137] perf probe: Fix to show ranges of variables in functions without entry_pc
-Date:   Thu,  2 Jan 2020 23:06:55 +0100
-Message-Id: <20200102220552.279420485@linuxfoundation.org>
+Subject: [PATCH 4.4 035/137] bnx2x: Fix PF-VF communication over multi-cos queues.
+Date:   Thu,  2 Jan 2020 23:06:48 +0100
+Message-Id: <20200102220551.371362423@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -62,94 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Manish Chopra <manishc@marvell.com>
 
-[ Upstream commit af04dd2f8ebaa8fbd46f698714acbf43da14da45 ]
+[ Upstream commit dc5a3d79c345871439ffe72550b604fcde9770e1 ]
 
-Fix to show ranges of variables (--range and --vars option) in functions
-which DIE has only ranges but no entry_pc attribute.
+PF driver doesn't enable tx-switching for all cos queues/clients,
+which causes packets drop from PF to VF. Fix this by enabling
+tx-switching on all cos queues/clients.
 
-Without this fix:
-
-  # perf probe --range -V clear_tasks_mm_cpumask
-  Available variables at clear_tasks_mm_cpumask
-  	@<clear_tasks_mm_cpumask+0>
-  		(No matched variables)
-
-With this fix:
-
-  # perf probe --range -V clear_tasks_mm_cpumask
-  Available variables at clear_tasks_mm_cpumask
-	@<clear_tasks_mm_cpumask+0>
-		[VAL]	int	cpu	@<clear_tasks_mm_cpumask+[0-35,317-317,2052-2059]>
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe --range -V clear_tasks_mm_cpumask
-  Available variables at clear_tasks_mm_cpumask
-          @<clear_tasks_mm_cpumask+0>
-                  (No matched variables)
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe --range -V clear_tasks_mm_cpumask
-  Available variables at clear_tasks_mm_cpumask
-          @<clear_tasks_mm_cpumask+0>
-                  [VAL]   int     cpu     @<clear_tasks_mm_cpumask+[0-23,23-105,105-106,106-106,1843-1850,1850-1862]>
-  [root@quaco ~]#
-
-Using it:
-
-  [root@quaco ~]# perf probe clear_tasks_mm_cpumask cpu
-  Added new event:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask with cpu)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
-
-  [root@quaco ~]# perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c with cpu)
-  [root@quaco ~]#
-  [root@quaco ~]# perf trace -e probe:*cpumask
-  ^C[root@quaco ~]#
-
-Fixes: 349e8d261131 ("perf probe: Add --range option to show a variable's location range")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199323018.8075.8179744380479673672.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../net/ethernet/broadcom/bnx2x/bnx2x_sriov.c    | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index ef6fa620a426..ed7777ed4d38 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -989,7 +989,7 @@ static int die_get_var_innermost_scope(Dwarf_Die *sp_die, Dwarf_Die *vr_die,
- 	bool first = true;
- 	const char *name;
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
+index 5780830f78ad..55a7774e8ef5 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
+@@ -2384,15 +2384,21 @@ static int bnx2x_set_pf_tx_switching(struct bnx2x *bp, bool enable)
+ 	/* send the ramrod on all the queues of the PF */
+ 	for_each_eth_queue(bp, i) {
+ 		struct bnx2x_fastpath *fp = &bp->fp[i];
++		int tx_idx;
  
--	ret = dwarf_entrypc(sp_die, &entry);
-+	ret = die_entrypc(sp_die, &entry);
- 	if (ret)
- 		return ret;
+ 		/* Set the appropriate Queue object */
+ 		q_params.q_obj = &bnx2x_sp_obj(bp, fp).q_obj;
  
-@@ -1050,7 +1050,7 @@ int die_get_var_range(Dwarf_Die *sp_die, Dwarf_Die *vr_die, struct strbuf *buf)
- 	bool first = true;
- 	const char *name;
- 
--	ret = dwarf_entrypc(sp_die, &entry);
-+	ret = die_entrypc(sp_die, &entry);
- 	if (ret)
- 		return ret;
+-		/* Update the Queue state */
+-		rc = bnx2x_queue_state_change(bp, &q_params);
+-		if (rc) {
+-			BNX2X_ERR("Failed to configure Tx switching\n");
+-			return rc;
++		for (tx_idx = FIRST_TX_COS_INDEX;
++		     tx_idx < fp->max_cos; tx_idx++) {
++			q_params.params.update.cid_index = tx_idx;
++
++			/* Update the Queue state */
++			rc = bnx2x_queue_state_change(bp, &q_params);
++			if (rc) {
++				BNX2X_ERR("Failed to configure Tx switching\n");
++				return rc;
++			}
+ 		}
+ 	}
  
 -- 
 2.20.1
