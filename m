@@ -2,113 +2,153 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AA7C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49ADBC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA3320848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DF2D20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:36:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Es9bqKua"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Pic/0Amy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbgABV2e (ORCPT
+        id S1725972AbgABVgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 16:28:34 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37262 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgABV2d (ORCPT
+        Thu, 2 Jan 2020 16:36:25 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:41366 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgABVgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 16:28:33 -0500
-Received: by mail-ot1-f66.google.com with SMTP id k14so58697188otn.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 13:28:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=mPyYNeuJ8jdelp0hEmXr58iJYwW0qjnIucFiePEeqCY=;
-        b=Es9bqKuaYrLvmKq0wWpuMM26XVR2BxXZklRDrYgUK9uzqOSjN+iZ/VUTD1JwFgCmwh
-         MdY7lIS6zvsH6eqhmf7FUtH6Fseg18CDeJI8iTOjen9wG9bT9jWvzZfVd4AVQ7gmvhOi
-         1UDkOEJWbf1zimW/X2Q9oeVu3KR0CEvVAq2UM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=mPyYNeuJ8jdelp0hEmXr58iJYwW0qjnIucFiePEeqCY=;
-        b=jtv/AFmzKSQpHVmC0vNvyZYUX6Cfryg1FP7WKi/VoQkfTaZJffA1E44M3bAm4sxSL8
-         JiXlOxWS193CHwEZrkxKC8OragW52uGeWWM65lDP9QLWwp5mt8PSEl+5zBcMpPGCpQvs
-         l/q38m/B/wjdlVsvDwJ6Tc4dzdgL7dAL3jATFuIUeLcIsobvk9QWdk4bOHoKoh3wEZuy
-         cGIfdYPgToRjieNXPYzoZkBTPVxQaGvnY9ztbBzisk42PbdI45ghZturptNAbYwQGDfc
-         aBmFd1n7mBmR00aX/uYZRpVxdZBX3c5OH//8tXX6Zsyq/7ecpfKNgwEO+A0yMsBCEC8+
-         VF7A==
-X-Gm-Message-State: APjAAAXkv3gHNapQpttwBHKOpLSwzMqRo8PthAOlSpHs+KIZkB3bmyGa
-        qq3Pf7o8DiZeGywJOM55JzRR6h/pdsE=
-X-Google-Smtp-Source: APXvYqwL22kyN5PQ36kmExSkoSiq+INoOb3DODfZFAI+PI0qAJfMkbdPfTJ+xTEKDZJyp0AxtsqtPA==
-X-Received: by 2002:a05:6830:110a:: with SMTP id w10mr97739164otq.300.1578000513407;
-        Thu, 02 Jan 2020 13:28:33 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l82sm17066060oib.41.2020.01.02.13.28.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 13:28:32 -0800 (PST)
-Date:   Thu, 2 Jan 2020 13:28:30 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Tycho Andersen <tycho@tycho.ws>
-Subject: [GIT PULL] seccomp fixes for v5.5-rc5
-Message-ID: <202001021325.8D02D326B2@keescook>
+        Thu, 2 Jan 2020 16:36:25 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 002LYO4A092326;
+        Thu, 2 Jan 2020 21:36:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=WdbEvlXPNO8UciqSpYhraRuue7z62HSL2d4h0PKjj0M=;
+ b=Pic/0AmyVOQqpaJP47OGOE+N+YaQDgPmPN3c1FN3MrPAtdgvL2Zx9zq+KsgjSNS0XU7/
+ mQXD4+g7v1Fwm4ircbhTWiMnox+0G1TSz1v/rBhtX2Va3fH8/kCGCdUDtmRfsDuGvihQ
+ X23FUNrMdSKX42iBqugsOGJ/pLr+M2cWBjv3XIGT+FW6D6wuOd5OaYbrODgA/sZE22aO
+ IBCCzBcmxRJIfHLMoIOLLNjLdu6XCGXHFtrIYbp5dRldN+fIhh6ThDL8/KjoCiTqohCI
+ 7uvvbjqUiyeg8KPUHixyffgQqHkaRmtkOzQxs4pcRkCiOy1+/dLVmCqOp19sN4Kxl5xj xw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2x5xftsprx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Jan 2020 21:36:18 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 002LXoXD033160;
+        Thu, 2 Jan 2020 21:36:18 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2x8gut8g6q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Jan 2020 21:36:17 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 002LaE0S011410;
+        Thu, 2 Jan 2020 21:36:14 GMT
+Received: from localhost (/10.145.178.64)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 02 Jan 2020 13:36:14 -0800
+Date:   Thu, 2 Jan 2020 13:36:12 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>,
+        Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH v3 1/2] fs: New zonefs file system
+Message-ID: <20200102213612.GD1508633@magnolia>
+References: <20191224020615.134668-1-damien.lemoal@wdc.com>
+ <20191224020615.134668-2-damien.lemoal@wdc.com>
+ <20191224044001.GA2982727@magnolia>
+ <BYAPR04MB5816B3322FD95BD987A982C1E7280@BYAPR04MB5816.namprd04.prod.outlook.com>
+ <BYAPR04MB58167AD3E7519632746CDE72E7280@BYAPR04MB5816.namprd04.prod.outlook.com>
+ <BYAPR04MB58160982BF645C23505BA085E7280@BYAPR04MB5816.namprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <BYAPR04MB58160982BF645C23505BA085E7280@BYAPR04MB5816.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001020174
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001020174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, Dec 25, 2019 at 08:21:58AM +0000, Damien Le Moal wrote:
+> On 2019/12/25 16:20, Damien Le Moal wrote:
+> > On 2019/12/25 15:05, Damien Le Moal wrote:
+> >>>> +		inode->i_mode = S_IFREG;
+> >>>
+> >>> i_mode &= ~S_IRWXUGO; ?
+> >>
+> >> Yes, indeed that is better. checkpatch.pl does spit out a warning if one
+> >> uses the S_Ixxx macros though. See below.
+> > 
+> > Please disregard this comment. checkpatch is fine. For some reasons I
+> > had warnings in the past but they are now gone. So using the macros
+> > instead of the harder to read hard-coded values.
+> 
+> Retracting this... My apologies for the noise.
+> 
+> Checkpatch does complain about the use of symbolic permissions:
+> 
+> WARNING: Symbolic permissions 'S_IRWXUGO' are not preferred. Consider
+> using octal permissions '0777'.
+> #657: FILE: fs/zonefs/super.c:400:
+> +               inode->i_mode &= ~S_IRWXUGO;
+> 
+> I do not understand why this would be a problem. I still went ahead and
+> used the macros as I find the code more readable using them. Please let
+> me know if that is not recommended (checking the code, not surprisingly,
+> many FS use these macros).
 
-Please pull these seccomp fixes for v5.5-rc5. The bulk of this is fixing
-the surrounding samples and selftests so that seccomp can correctly
-validate the seccomp_notify_ioctl buffer as being initially zeroed.
+/me shrugs, I guess we're not supposed to use S_* in code.  Sorry about
+the unnecessary churn. :/
 
-Thanks!
+--D
 
--Kees
-
-The following changes since commit fd6988496e79a6a4bdb514a4655d2920209eb85d:
-
-  Linux 5.5-rc4 (2019-12-29 15:29:16 -0800)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/seccomp-v5.5-rc5
-
-for you to fetch changes up to e4ab5ccc357b978999328fadae164e098c26fa40:
-
-  selftests/seccomp: Catch garbage on SECCOMP_IOCTL_NOTIF_RECV (2020-01-02 13:15:45 -0800)
-
-----------------------------------------------------------------
-Fixes for seccomp_notify_ioctl uapi sanity
-
-- Fix samples and selftests to zero passed-in buffer (Sargun Dhillon)
-- Enforce zeroed buffer checking (Sargun Dhillon)
-- Verify buffer sanity check in selftest (Sargun Dhillon)
-
-----------------------------------------------------------------
-Sargun Dhillon (4):
-      samples/seccomp: Zero out members based on seccomp_notif_sizes
-      selftests/seccomp: Zero out seccomp_notif
-      seccomp: Check that seccomp_notif is zeroed out by the user
-      selftests/seccomp: Catch garbage on SECCOMP_IOCTL_NOTIF_RECV
-
- kernel/seccomp.c                              |  7 +++++++
- samples/seccomp/user-trap.c                   |  4 ++--
- tools/testing/selftests/seccomp/seccomp_bpf.c | 15 ++++++++++++++-
- 3 files changed, 23 insertions(+), 3 deletions(-)
-
--- 
-Kees Cook
+> > 
+> >>
+> >>>
+> >>> Note that clearing the mode flags won't prevent programs with an
+> >>> existing writable fd from being able to call write().  I'd imagine that
+> >>> they'd hit EIO pretty fast though, so that might not matter.
+> >>>
+> >>>> +		zone->wp = zone->start;
+> >>>> +	} else if (zone->cond == BLK_ZONE_COND_READONLY) {
+> >>>> +		inode->i_flags |= S_IMMUTABLE;
+> >>>> +		inode->i_mode &= ~(0222); /* S_IWUGO */
+> >>>
+> >>> Might as well just use S_IWUGO directly here?
+> > 
+> > Yes, I did in v4.
+> > 
+> >> Because checkpatch spits out a warning if I do. I would prefer using the
+> >> macro as I find it much easier to read. Should I just ignore checkpatch
+> >> warning ?
+> > 
+> > My mistake. No warnings :)
+> > 
+> > 
+> 
+> 
+> -- 
+> Damien Le Moal
+> Western Digital Research
