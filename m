@@ -2,52 +2,51 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08669C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 940DEC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF48D21835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A2CE21835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003969;
-	bh=MTf0aAiPTOiajZujZI+wd/PHq0w7Fnm3cm7lguMSgSo=;
+	s=default; t=1578003973;
+	bh=TTrH4AKxvepDzY/FRGVncaQTflBmRdZjrfprl3Qu84g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sGF9MKZSlfeD9GTQrGkeY0PsFIjvU9LeO7CgF64Rv5lPHYSwxv9bKDTAx2B5AkC0u
-	 +Yc1V8v1pATA7NEcsnsjWKb32Hfx/46LrVFtSiBokoH8Ext9PqC2LE2HvDjbwHTZlG
-	 Gx99SdMi+791pR8lU6IDTUyWWqsUmr6slS7Fl3KA=
+	b=IjJe82pXli3+J/ExwhyrxmhfbRPqQdI3/b85DyXy9WSa6yuXLbauvRnIBEDkfxQv0
+	 fAIKTaKrAm283Y8TlX2+yhXtq7sc58D/bXbj24cAmnH/gNx7XZuXFLLW9yE5ayFe/x
+	 6NbhyhaxwSFtbBsaG/WSHFlYbr+t96FCmOqYqJJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729616AbgABW0I (ORCPT
+        id S1729436AbgABW0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:26:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52836 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:26:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729608AbgABW0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:26:06 -0500
+        id S1729617AbgABW0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:26:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE3112253D;
-        Thu,  2 Jan 2020 22:26:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EBB420863;
+        Thu,  2 Jan 2020 22:26:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003966;
-        bh=MTf0aAiPTOiajZujZI+wd/PHq0w7Fnm3cm7lguMSgSo=;
+        s=default; t=1578003968;
+        bh=TTrH4AKxvepDzY/FRGVncaQTflBmRdZjrfprl3Qu84g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E4eA7nRurvHX27gn0j5WGOdvo7bNam+XJ7ga9yjnF30hASXJ4Q/hF0gRhlCM3HeYl
-         uiSirQjpWQKn1+TalNXMR13HvURjLRE3KrqNdpf3/EYTC4O4CvoglnNsOjbBZ9HVdY
-         qxPMzLSj7k41+nHOlgDWPPP0gNZNPy3K+IoG43uA=
+        b=BpEx7OZ14dH0GAQxHNbA8WtNZH4t+Xu/wIXcSx4wmZ8FjxAGymwZpXAlep8nqWmHg
+         Fzfhx7Q4qK8I4qaXsYnvODW4XK4/UGzntsqqdyGhDvmC17GNC4f6v4R/BqW2bqYr9m
+         /T0hTpAdtLf+FLM0+2O8wwidrZIQVCVzWqU6e4Ys=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 56/91] net, sysctl: Fix compiler warning when only cBPF is present
-Date:   Thu,  2 Jan 2020 23:07:38 +0100
-Message-Id: <20200102220439.135595611@linuxfoundation.org>
+        stable@vger.kernel.org, Netanel Belgazal <netanel@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 74/91] net: ena: fix napi handler misbehavior when the napi budget is zero
+Date:   Thu,  2 Jan 2020 23:07:56 +0100
+Message-Id: <20200102220447.623164175@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -60,66 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@dlink.ru>
+From: Netanel Belgazal <netanel@amazon.com>
 
-[ Upstream commit 1148f9adbe71415836a18a36c1b4ece999ab0973 ]
+[ Upstream commit 24dee0c7478d1a1e00abdf5625b7f921467325dc ]
 
-proc_dointvec_minmax_bpf_restricted() has been firstly introduced
-in commit 2e4a30983b0f ("bpf: restrict access to core bpf sysctls")
-under CONFIG_HAVE_EBPF_JIT. Then, this ifdef has been removed in
-ede95a63b5e8 ("bpf: add bpf_jit_limit knob to restrict unpriv
-allocations"), because a new sysctl, bpf_jit_limit, made use of it.
-Finally, this parameter has become long instead of integer with
-fdadd04931c2 ("bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K")
-and thus, a new proc_dolongvec_minmax_bpf_restricted() has been
-added.
+In netpoll the napi handler could be called with budget equal to zero.
+Current ENA napi handler doesn't take that into consideration.
 
-With this last change, we got back to that
-proc_dointvec_minmax_bpf_restricted() is used only under
-CONFIG_HAVE_EBPF_JIT, but the corresponding ifdef has not been
-brought back.
+The napi handler handles Rx packets in a do-while loop.
+Currently, the budget check happens only after decrementing the
+budget, therefore the napi handler, in rare cases, could run over
+MAX_INT packets.
 
-So, in configurations like CONFIG_BPF_JIT=y && CONFIG_HAVE_EBPF_JIT=n
-since v4.20 we have:
+In addition to that, this moves all budget related variables to int
+calculation and stop mixing u32 to avoid ambiguity
 
-  CC      net/core/sysctl_net_core.o
-net/core/sysctl_net_core.c:292:1: warning: ‘proc_dointvec_minmax_bpf_restricted’ defined but not used [-Wunused-function]
-  292 | proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Suppress this by guarding it with CONFIG_HAVE_EBPF_JIT again.
-
-Fixes: fdadd04931c2 ("bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K")
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20191218091821.7080-1-alobakin@dlink.ru
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Netanel Belgazal <netanel@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/sysctl_net_core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/amazon/ena/ena_netdev.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/net/core/sysctl_net_core.c b/net/core/sysctl_net_core.c
-index 144cd1acd7e3..069e3c4fcc44 100644
---- a/net/core/sysctl_net_core.c
-+++ b/net/core/sysctl_net_core.c
-@@ -274,6 +274,7 @@ static int proc_dointvec_minmax_bpf_enable(struct ctl_table *table, int write,
- 	return ret;
- }
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -1196,8 +1196,8 @@ static int ena_io_poll(struct napi_struc
+ 	struct ena_napi *ena_napi = container_of(napi, struct ena_napi, napi);
+ 	struct ena_ring *tx_ring, *rx_ring;
  
-+# ifdef CONFIG_HAVE_EBPF_JIT
- static int
- proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
- 				    void __user *buffer, size_t *lenp,
-@@ -284,6 +285,7 @@ proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
+-	u32 tx_work_done;
+-	u32 rx_work_done;
++	int tx_work_done;
++	int rx_work_done = 0;
+ 	int tx_budget;
+ 	int napi_comp_call = 0;
+ 	int ret;
+@@ -1214,7 +1214,11 @@ static int ena_io_poll(struct napi_struc
+ 	}
  
- 	return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
- }
-+# endif /* CONFIG_HAVE_EBPF_JIT */
+ 	tx_work_done = ena_clean_tx_irq(tx_ring, tx_budget);
+-	rx_work_done = ena_clean_rx_irq(rx_ring, napi, budget);
++	/* On netpoll the budget is zero and the handler should only clean the
++	 * tx completions.
++	 */
++	if (likely(budget))
++		rx_work_done = ena_clean_rx_irq(rx_ring, napi, budget);
  
- static int
- proc_dolongvec_minmax_bpf_restricted(struct ctl_table *table, int write,
--- 
-2.20.1
-
+ 	/* If the device is about to reset or down, avoid unmask
+ 	 * the interrupt and return 0 so NAPI won't reschedule
 
 
