@@ -2,94 +2,176 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 374FDC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 18:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE87AC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 18:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14E2420866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 18:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92E6D21582
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 18:41:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EE7NFbPx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbgABSjl (ORCPT
+        id S1728173AbgABSlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 13:39:41 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:55798 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727951AbgABSjk (ORCPT
+        Thu, 2 Jan 2020 13:41:20 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38840 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727951AbgABSlU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 13:39:40 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id B0E981C25EC; Thu,  2 Jan 2020 19:39:38 +0100 (CET)
-Date:   Thu, 2 Jan 2020 19:39:38 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Sebastian Reichel <sre@kernel.org>, nekit1000@gmail.com,
-        Marcel Partap <mpartap@gmx.net>, merlijn@wizzup.org,
-        martin_rysavy@centrum.cz
-Subject: Re: Droid 4 regression in 5.5-rc1, armsoc-soc tree
-Message-ID: <20200102183938.4kazwvk3ecgfwvy7@ucw.cz>
-References: <20191228162929.GA29269@duo.ucw.cz>
- <20191228193622.GA13047@duo.ucw.cz>
- <20191230173507.GM35479@atomide.com>
- <20200102110025.GA29035@amd>
- <CAK8P3a2Ya+GZRRA_THZBVDq7SWO8UYoUPwW5fEyorCVjPnd1qA@mail.gmail.com>
- <20200102140609.7vsfwcjyvbbrmcjx@ucw.cz>
- <CAK8P3a1NU62zf8zJAMZq5KFNuvDdrf3dUcLU4HY83Q=oDC611w@mail.gmail.com>
- <20200102171140.GB16702@atomide.com>
+        Thu, 2 Jan 2020 13:41:20 -0500
+Received: by mail-pl1-f196.google.com with SMTP id f20so18135974plj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 10:41:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2P1i80VyW1xqH3NqUoar2oHl+i0gCk3q+IZQrBX1Ayc=;
+        b=EE7NFbPxMgwS+IAAlM3nTY4eDNc+9iyOzif9o6qghjLAOe8EAdCxMP9fyx9mC4y6JY
+         +7a+GihvaTg5XuNxTVC+mIZeGY78rUGUngCaWI3n2aOF5GjC3DFgFBClGu8hUyUaho7q
+         H1t1WoYJ3m8cGNSghV1Tdhy3nn0q4hlrdWj8Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2P1i80VyW1xqH3NqUoar2oHl+i0gCk3q+IZQrBX1Ayc=;
+        b=Bye+kn2go2YTQBNPQS4lYyLSa4uiedEPyT8c1/GobZkIT/BH+cEMQmx8GWxONvQU0p
+         lCxzgxeTsCSETiJR60/QYaC1v/cBYDSUFUPIZnjp9yu31bixtnGRiJBR0QBwhs0NvqtD
+         eu237jkCqzMs4Gf03EotJFWhX3F3IYbHn71ppk0u8AODXhVteCHMtfREkOUnXbw1pp/z
+         NahZRc2ZJpIObcOxEQNTkrepx6p3xPJTC76Nw66VPYweV+rJmK7gaWsWCo6P+aUvHdzx
+         +cO6wQQ3H7f8BYkiHsmUTS36xe/SR0snk53auOqcHqYvwS7+VmtAIFlgLhg7VIMdnO5Z
+         8dlw==
+X-Gm-Message-State: APjAAAWmUt12hwFi0FXy1SeM7reDYWkFoBH5ApwgwmvnKv61yhaYvozm
+        rsVsXJtKNh2Gi1VhrF+ZvJ11og==
+X-Google-Smtp-Source: APXvYqzobi0Z4e4D0XEc3q+qOlwqMndFh8kYSP6PuxP7Mmeb303hLQ8mU0YDTBBywtGpXI9B52/RWA==
+X-Received: by 2002:a17:90a:b10a:: with SMTP id z10mr21795407pjq.115.1577990478311;
+        Thu, 02 Jan 2020 10:41:18 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id k3sm61963109pgc.3.2020.01.02.10.41.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Jan 2020 10:41:17 -0800 (PST)
+Date:   Thu, 2 Jan 2020 10:41:16 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rocky Liao <rjliao@codeaurora.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] Bluetooth: hci_qca: Retry btsoc initialize when
+ it fails
+Message-ID: <20200102184116.GA89495@google.com>
+References: <20191225060317.5258-1-rjliao@codeaurora.org>
+ <20191227072130.29431-1-rjliao@codeaurora.org>
+ <20191227072130.29431-2-rjliao@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200102171140.GB16702@atomide.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191227072130.29431-2-rjliao@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+Hi Rocky,
 
-> * Arnd Bergmann <arnd@arndb.de> [200102 14:48]:
-> > On Thu, Jan 2, 2020 at 3:06 PM Pavel Machek <pavel@ucw.cz> wrote:
-> > 
-> > > # good: [ab818f0999dc73af3f966194d087e9f6650f939f] Merge tag
-> > > # 'omap-for-v5.5/maintainers-signed' of
-> > > # git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap into
-> > > # arm/soc
-> > > git bisect good ab818f0999dc73af3f966194d087e9f6650f939f
-> > > # first bad commit: [38206c24ab09b4f4c2a57de5c1af0bb2e69cf5b6] Merge tag
-> > > # 'armsoc-soc' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-> > >
-> > > ...and am not sure how to interpret the result, or what to do next :(.
-> > 
-> > This means that either the bisection is unreliable (it might be 100%
-> > reproducible or you mixed up good/bad once), or that the arm-soc
-> > branch was indeed good by itself but had a conflict with some other
-> > change that torvalds merged earlier.
-> > 
-> > I would suggest to go back to the list I had extracted in my previous
-> > email and revert all the commits that I identify there, on top of
-> > linux-5.5-rc4. If some commit is not easily reverted, skip that one
-> > at first.
-> > 
-> > Ideally this gets you a working kernel based on -rc4, and then
-> > you can bisect that to find which revert fixed it.
+On Fri, Dec 27, 2019 at 03:21:28PM +0800, Rocky Liao wrote:
+> This patch adds the retry of btsoc initialization when it fails. There are
+> reports that the btsoc initialization may fail on some platforms but the
+> repro ratio is very low. The failure may be caused by UART, platform HW or
+> the btsoc itself but it's very difficlut to root cause, given the repro
+> ratio is very low. Add a retry for the btsoc initialization will resolve
+> most of the failures and make Bluetooth finally works.
+
+Is this problem specific to a certain chipset?
+
+What are the symptoms?
+
+> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+> ---
 > 
-> Also please check your dtb is up to date. We still have a lot of
-> stuff missing from the device tree meaning an old dtb will likely
-> be incomplete for many devices.
+> Changes in v2: None
+> Changes in v3: None
+> 
+>  drivers/bluetooth/hci_qca.c | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index 43fd84028786..45042aa27fa4 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -53,6 +53,9 @@
+>  /* Controller debug log header */
+>  #define QCA_DEBUG_HANDLE	0x2EDC
+>  
+> +/* max retry count when init fails */
+> +#define QCA_MAX_INIT_RETRY_COUNT 3
 
-Aha, thanks for a hint!
+nit: MAX_RETRIES or MAX_INIT_RETRIES?
 
-Yes, due to the kexec setup, I was using old dtb (5.3-rc?) with new
-kernel...
+The QCA prefix just adds noise here IMO, there's no need to disambiguate
+the constant from other retries since it is defined in hci_qca.c.
 
-Let me try with matching kernel+dtb combination.
+> +
+>  enum qca_flags {
+>  	QCA_IBS_ENABLED,
+>  	QCA_DROP_VENDOR_EVENT,
+> @@ -1257,7 +1260,9 @@ static int qca_setup(struct hci_uart *hu)
+>  {
+>  	struct hci_dev *hdev = hu->hdev;
+>  	struct qca_data *qca = hu->priv;
+> +	struct qca_serdev *qcadev;
+>  	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
+> +	unsigned int init_retry_count = 0;
 
-Best regards,
-								Pavel
+nit: the name is a bit clunky, how about 'retries'?
+
+>  	enum qca_btsoc_type soc_type = qca_soc_type(hu);
+>  	const char *firmware_name = qca_get_firmware_name(hu);
+>  	int ret;
+> @@ -1275,6 +1280,7 @@ static int qca_setup(struct hci_uart *hu)
+>  	 */
+>  	set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
+>  
+> +retry:
+>  	if (qca_is_wcn399x(soc_type)) {
+>  		bt_dev_info(hdev, "setting up wcn3990");
+>  
+> @@ -1293,6 +1299,12 @@ static int qca_setup(struct hci_uart *hu)
+>  			return ret;
+>  	} else {
+>  		bt_dev_info(hdev, "ROME setup");
+> +		if (hu->serdev) {
+> +			qcadev = serdev_device_get_drvdata(hu->serdev);
+> +			gpiod_set_value_cansleep(qcadev->bt_en, 1);
+> +			/* Controller needs time to bootup. */
+> +			msleep(150);
+
+Shouldn't this be in qca_power_on(), analogous to the power off code from
+"[1/4]Bluetooth: hci_qca: Add QCA Rome power off support to the
+qca_power_off()"?
+
+qca_power_on() should then also be called for ROME. If you opt for this it
+should be done in a separate patch, or possibly merged into the one
+mentioned above.
+
+> +		}
+>  		qca_set_speed(hu, QCA_INIT_SPEED);
+>  	}
+>  
+> @@ -1329,6 +1341,20 @@ static int qca_setup(struct hci_uart *hu)
+>  		 * patch/nvm-config is found, so run with original fw/config.
+>  		 */
+>  		ret = 0;
+> +	} else {
+> +		if (init_retry_count < QCA_MAX_INIT_RETRY_COUNT) {
+> +			qca_power_off(hdev);
+> +			if (hu->serdev) {
+> +				serdev_device_close(hu->serdev);
+> +				ret = serdev_device_open(hu->serdev);
+> +				if (ret) {
+> +					bt_dev_err(hu->hdev, "open port fail");
+
+nit: "failed to open port"
