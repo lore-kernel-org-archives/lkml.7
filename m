@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DFAC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE274C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E27D24676
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C48EA217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004957;
-	bh=/mpjo9GtSVF0JqQWMjKN3FUVwZ7JiXVEZcdh8LhQQUk=;
+	s=default; t=1578004959;
+	bh=PomQWtk5Aqk0M4fjZ4wvcJhhd57S9AsXiAXyEeCOMK0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=osNIez9iV2fQx61tJDaTpcySPnEKIWC0IBAOUQBuMhRUTe2HYmMbgegPLCvddDDKR
-	 WU0hoVKERxlZ79gwpgwaur3n0mJduJDKqYUcd4IJfVG4mrGSSZU1fRq2USPVMIjb67
-	 YucX5VstYziyVn3RYHW+WMZB7QbWGwLKfq60m6Yk=
+	b=oBBwwBNrSallHBRYeBxVcYKC1RBFc68vz1/uLfef7kZDoUtlKgEfi28KApd7JtjW1
+	 69eRHtd6bFdDagOHbz+ir336tmWHoLws+jB8JrXOEUU+nBChAA0k4ITXoLzcv+mjfK
+	 xKaKRZbg0WuxOXFslMvo4Y04fWWV2PGqL8FZCP9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730704AbgABWfm (ORCPT
+        id S1730597AbgABWmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:35:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45562 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:42:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730658AbgABWfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:35:39 -0500
+        id S1730658AbgABWfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:35:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B05D20863;
-        Thu,  2 Jan 2020 22:35:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6877422314;
+        Thu,  2 Jan 2020 22:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004538;
-        bh=/mpjo9GtSVF0JqQWMjKN3FUVwZ7JiXVEZcdh8LhQQUk=;
+        s=default; t=1578004542;
+        bh=PomQWtk5Aqk0M4fjZ4wvcJhhd57S9AsXiAXyEeCOMK0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iS2snx1y0sgob1lQfclrO4jStRn1coKrCK8ARCGmrr3CzdNJ3eofmhKqo78IxpGvc
-         HLT2iV2oeLGsNLccSbqBWk+feU6+5G7j3kJJ20b048FzZZVDWWUXCHzeHUka8ZNZzN
-         zMoIDVqB3Jhbtu9L4y/eF03k4VzN7EpFVNncQmj0=
+        b=ex3VTBAEV/HEPNJzjLU70SFDn6k6+d6ijjGUqYixf6F+UVwmJvh3jgbTMm1rnCPlC
+         uX/7vO/IUR3PsgLVIFdueparq/N/MUoOYqSFZT7FU+n+3b5fknWMT+X/VepHM1VTGC
+         LX8XAiN8ryJuoaaN8JAMG2ZZ4ZQCrgJhzT32z/qE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        stable@vger.kernel.org, Mike Isely <isely@pobox.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 048/137] perf probe: Filter out instances except for inlined subroutine and subprogram
-Date:   Thu,  2 Jan 2020 23:07:01 +0100
-Message-Id: <20200102220553.054410292@linuxfoundation.org>
+Subject: [PATCH 4.4 050/137] media: pvrusb2: Fix oops on tear-down when radio support is not present
+Date:   Thu,  2 Jan 2020 23:07:03 +0100
+Message-Id: <20200102220553.306302974@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -62,119 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Mike Isely <isely@pobox.com>
 
-[ Upstream commit da6cb952a89efe24bb76c4971370d485737a2d85 ]
+[ Upstream commit 7f404ae9cf2a285f73b3c18ab9303d54b7a3d8e1 ]
 
-Filter out instances except for inlined_subroutine and subprogram DIE in
-die_walk_instances() and die_is_func_instance().
+In some device configurations there's no radio or radio support in the
+driver.  That's OK, as the driver sets itself up accordingly.  However
+on tear-down in these caes it's still trying to tear down radio
+related context when there isn't anything there, leading to
+dereferences through a null pointer and chaos follows.
 
-This fixes an issue that perf probe sets some probes on calling address
-instead of a target function itself.
+How this bug survived unfixed for 11 years in the pvrusb2 driver is a
+mystery to me.
 
-When perf probe walks on instances of an abstruct origin (a kind of
-function prototype of inlined function), die_walk_instances() can also
-pass a GNU_call_site (a GNU extension for call site) to callback. Since
-it is not an inlined instance of target function, we have to filter out
-when searching a probe point.
+[hverkuil: fix two checkpatch warnings]
 
-Without this patch, perf probe sets probes on call site address too.This
-can happen on some function which is marked "inlined", but has actual
-symbol. (I'm not sure why GCC mark it "inlined"):
-
-  # perf probe -D vfs_read
-  p:probe/vfs_read _text+2500017
-  p:probe/vfs_read_1 _text+2499468
-  p:probe/vfs_read_2 _text+2499563
-  p:probe/vfs_read_3 _text+2498876
-  p:probe/vfs_read_4 _text+2498512
-  p:probe/vfs_read_5 _text+2498627
-
-With this patch:
-
-Slightly different results, similar tho:
-
-  # perf probe -D vfs_read
-  p:probe/vfs_read _text+2498512
-
-Committer testing:
-
-  # uname -a
-  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
-
-Before:
-
-  # perf probe -D vfs_read
-  p:probe/vfs_read _text+3131557
-  p:probe/vfs_read_1 _text+3130975
-  p:probe/vfs_read_2 _text+3131047
-  p:probe/vfs_read_3 _text+3130380
-  p:probe/vfs_read_4 _text+3130000
-  # uname -a
-  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
-  #
-
-After:
-
-  # perf probe -D vfs_read
-  p:probe/vfs_read _text+3130000
-  #
-
-Fixes: db0d2c6420ee ("perf probe: Search concrete out-of-line instances")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157241937063.32002.11024544873990816590.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Mike Isely <isely@pobox.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ drivers/media/usb/pvrusb2/pvrusb2-v4l2.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 8d6eaaab4739..388c9dcba976 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -298,18 +298,22 @@ bool die_is_func_def(Dwarf_Die *dw_die)
-  * @dw_die: a DIE
-  *
-  * Ensure that this DIE is an instance (which has an entry address).
-- * This returns true if @dw_die is a function instance. If not, you need to
-- * call die_walk_instances() to find actual instances.
-+ * This returns true if @dw_die is a function instance. If not, the @dw_die
-+ * must be a prototype. You can use die_walk_instances() to find actual
-+ * instances.
-  **/
- bool die_is_func_instance(Dwarf_Die *dw_die)
- {
- 	Dwarf_Addr tmp;
- 	Dwarf_Attribute attr_mem;
-+	int tag = dwarf_tag(dw_die);
- 
--	/* Actually gcc optimizes non-inline as like as inlined */
--	return !dwarf_func_inline(dw_die) &&
--	       (dwarf_entrypc(dw_die, &tmp) == 0 ||
--		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL);
-+	if (tag != DW_TAG_subprogram &&
-+	    tag != DW_TAG_inlined_subroutine)
-+		return false;
-+
-+	return dwarf_entrypc(dw_die, &tmp) == 0 ||
-+		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL;
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+index 1c5f85bf7ed4..2d6195e9a195 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+@@ -886,8 +886,12 @@ static void pvr2_v4l2_internal_check(struct pvr2_channel *chp)
+ 	pvr2_v4l2_dev_disassociate_parent(vp->dev_video);
+ 	pvr2_v4l2_dev_disassociate_parent(vp->dev_radio);
+ 	if (!list_empty(&vp->dev_video->devbase.fh_list) ||
+-	    !list_empty(&vp->dev_radio->devbase.fh_list))
++	    (vp->dev_radio &&
++	     !list_empty(&vp->dev_radio->devbase.fh_list))) {
++		pvr2_trace(PVR2_TRACE_STRUCT,
++			   "pvr2_v4l2 internal_check exit-empty id=%p", vp);
+ 		return;
++	}
+ 	pvr2_v4l2_destroy_no_lock(vp);
  }
  
- /**
-@@ -588,6 +592,9 @@ static int __die_walk_instances_cb(Dwarf_Die *inst, void *data)
- 	Dwarf_Die *origin;
- 	int tmp;
- 
-+	if (!die_is_func_instance(inst))
-+		return DIE_FIND_CB_CONTINUE;
-+
- 	attr = dwarf_attr(inst, DW_AT_abstract_origin, &attr_mem);
- 	if (attr == NULL)
- 		return DIE_FIND_CB_CONTINUE;
+@@ -961,7 +965,8 @@ static int pvr2_v4l2_release(struct file *file)
+ 	kfree(fhp);
+ 	if (vp->channel.mc_head->disconnect_flag &&
+ 	    list_empty(&vp->dev_video->devbase.fh_list) &&
+-	    list_empty(&vp->dev_radio->devbase.fh_list)) {
++	    (!vp->dev_radio ||
++	     list_empty(&vp->dev_radio->devbase.fh_list))) {
+ 		pvr2_v4l2_destroy_no_lock(vp);
+ 	}
+ 	return 0;
 -- 
 2.20.1
 
