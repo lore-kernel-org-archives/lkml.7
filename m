@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 750EEC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E54C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44E9920848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E37A020848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:52:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005540;
-	bh=Q44C4gQ8BTkRax/mfAigimfuYjNy/Gv3YYDqor7x0Mk=;
+	s=default; t=1578005546;
+	bh=m+bg6XXI3F0uyLMsrHSQ2CbN2ECiRxioO839FmuczGU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dZXC1WnGB4EvmRx3HXipKJzJSp3A5xul9F/hMVGKg3IEs3M3dj/SA2Y3v7RvROlBO
-	 GEiDYCLU+5azLedIOSnRpaPEnVZ/9iKYGHb13xpHZv0HqDZqGY3JQVJ46HTuX+c+zN
-	 1NpF3vZjOEHCIKxVvlnhsCzKrsyIYdf/tr+ezVkQ=
+	b=qlMNPtoILcknefl0gCNBvC6qxbnZpfzdGCEywbIUpN0UQCtpvgh4zgjGkmx3vRiht
+	 FFqp+sWHz398y5zTK0jCkejmBahh3C4Za65Ab8Ufyp1+m4wuLjiYvfL43Y80c4cXQu
+	 c0mj+egA/F50wuEGPCy8/cG4IQoh8f5ZIX7EzmDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729627AbgABWwS (ORCPT
+        id S1729852AbgABWwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:52:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45016 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:52:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727944AbgABWXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:23:15 -0500
+        id S1729195AbgABWW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:22:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBA3220863;
-        Thu,  2 Jan 2020 22:23:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5A8A20863;
+        Thu,  2 Jan 2020 22:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003795;
-        bh=Q44C4gQ8BTkRax/mfAigimfuYjNy/Gv3YYDqor7x0Mk=;
+        s=default; t=1578003776;
+        bh=m+bg6XXI3F0uyLMsrHSQ2CbN2ECiRxioO839FmuczGU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=onMwDCbMbf2jykKjDzfFqtz+ew3/do30DRr5nwotVqNAGPjr7+S3RBzq+LaUPcgJx
-         ML9PGc6el1Em0H8J0SRe3A6js/eVBxunbW5Ul71pFMWjU5V0zW63WD1b8InqtJ+sgL
-         Z8VKAW/LsxlBbvQxQnWbKJNz15RKhEJJCmEViORM=
+        b=oi5oaZsuMeOep39GqyGArcIR7/95qQdnjf/f2DOujBw5a2rAWbZWzDSdJ2fI4hMvT
+         ol96nbRoM/4NN3zezjquRa9u001BhbcOSqy6W53zxTh4SS5tkyf0e3LqjtJEhgQ61V
+         /ZWgbvg7RwFlzuCSRe4/Yi7k8QPzf7JJSI05Dg6A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Auhagen <sven.auhagen@voleatech.de>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 4.19 106/114] net: marvell: mvpp2: phylink requires the link interrupt
-Date:   Thu,  2 Jan 2020 23:07:58 +0100
-Message-Id: <20200102220039.850727167@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        David Ahern <dsahern@gmail.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 102/114] vti: do not confirm neighbor when do pmtu update
+Date:   Thu,  2 Jan 2020 23:07:54 +0100
+Message-Id: <20200102220039.477125871@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -61,51 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit f3f2364ea14d1cf6bf966542f31eadcf178f1577 ]
+[ Upstream commit 8247a79efa2f28b44329f363272550c1738377de ]
 
-phylink requires the MAC to report when its link status changes when
-operating in inband modes.  Failure to report link status changes
-means that phylink has no idea when the link events happen, which
-results in either the network interface's carrier remaining up or
-remaining permanently down.
+When do IPv6 tunnel PMTU update and calls __ip6_rt_update_pmtu() in the end,
+we should not call dst_confirm_neigh() as there is no two-way communication.
 
-For example, with a fiber module, if the interface is brought up and
-link is initially established, taking the link down at the far end
-will cut the optical power.  The SFP module's LOS asserts, we
-deactivate the link, and the network interface reports no carrier.
+Although vti and vti6 are immune to this problem because they are IFF_NOARP
+interfaces, as Guillaume pointed. There is still no sense to confirm neighbour
+here.
 
-When the far end is brought back up, the SFP module's LOS deasserts,
-but the MAC may be slower to establish link.  If this happens (which
-in my tests is a certainty) then phylink never hears that the MAC
-has established link with the far end, and the network interface is
-stuck reporting no carrier.  This means the interface is
-non-functional.
+v5: Update commit description.
+v4: No change.
+v3: Do not remove dst_confirm_neigh, but add a new bool parameter in
+    dst_ops.update_pmtu to control whether we should do neighbor confirm.
+    Also split the big patch to small ones for each area.
+v2: Remove dst_confirm_neigh in __ip6_rt_update_pmtu.
 
-Avoiding the link interrupt when we have phylink is basically not
-an option, so remove the !port->phylink from the test.
-
-Fixes: 4bb043262878 ("net: mvpp2: phylink support")
-Tested-by: Sven Auhagen <sven.auhagen@voleatech.de>
-Tested-by: Antoine Tenart <antoine.tenart@bootlin.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Guillaume Nault <gnault@redhat.com>
+Acked-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/ip_vti.c  |    2 +-
+ net/ipv6/ip6_vti.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -3341,7 +3341,7 @@ static int mvpp2_open(struct net_device
- 		valid = true;
- 	}
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -235,7 +235,7 @@ static netdev_tx_t vti_xmit(struct sk_bu
  
--	if (priv->hw_version == MVPP22 && port->link_irq && !port->phylink) {
-+	if (priv->hw_version == MVPP22 && port->link_irq) {
- 		err = request_irq(port->link_irq, mvpp2_link_status_isr, 0,
- 				  dev->name, port);
- 		if (err) {
+ 	mtu = dst_mtu(dst);
+ 	if (skb->len > mtu) {
+-		skb_dst_update_pmtu(skb, mtu);
++		skb_dst_update_pmtu_no_confirm(skb, mtu);
+ 		if (skb->protocol == htons(ETH_P_IP)) {
+ 			icmp_send(skb, ICMP_DEST_UNREACH, ICMP_FRAG_NEEDED,
+ 				  htonl(mtu));
+--- a/net/ipv6/ip6_vti.c
++++ b/net/ipv6/ip6_vti.c
+@@ -483,7 +483,7 @@ vti6_xmit(struct sk_buff *skb, struct ne
+ 
+ 	mtu = dst_mtu(dst);
+ 	if (skb->len > mtu) {
+-		skb_dst_update_pmtu(skb, mtu);
++		skb_dst_update_pmtu_no_confirm(skb, mtu);
+ 
+ 		if (skb->protocol == htons(ETH_P_IPV6)) {
+ 			if (mtu < IPV6_MIN_MTU)
 
 
