@@ -2,194 +2,195 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EF8C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAF7C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3915420863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A7AD20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:44:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YFrVFtek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgABMjF (ORCPT
+        id S1728312AbgABMov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 07:39:05 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47947 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728274AbgABMjE (ORCPT
+        Thu, 2 Jan 2020 07:44:51 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:18433 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728288AbgABMou (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 07:39:04 -0500
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1imzki-0006Kg-KQ; Thu, 02 Jan 2020 13:39:00 +0100
-Received: from [IPv6:2a03:f580:87bc:d400:c097:3b50:f886:b2e] (unknown [IPv6:2a03:f580:87bc:d400:c097:3b50:f886:b2e])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 8131749A134;
-        Thu,  2 Jan 2020 12:38:59 +0000 (UTC)
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20191210163204.28225-1-dmurphy@ti.com>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- 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
-Subject: Re: [PATCH v2] can: tcan4x5x: Turn on the power before parsing the
- config
-Message-ID: <4a2e80f0-13c5-df7b-65af-25f86ca48f2a@pengutronix.de>
-Date:   Thu, 2 Jan 2020 13:38:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 2 Jan 2020 07:44:50 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e0de5960000>; Thu, 02 Jan 2020 04:44:06 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 02 Jan 2020 04:44:49 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 02 Jan 2020 04:44:49 -0800
+Received: from localhost (10.124.1.5) by HQMAIL107.nvidia.com (172.20.187.13)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 Jan 2020 12:44:48
+ +0000
+Date:   Thu, 2 Jan 2020 13:44:45 +0100
+From:   Thierry Reding <treding@nvidia.com>
+To:     Bitan Biswas <bbiswas@nvidia.com>
+CC:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH V1] nvmem: core: fix memory abort in cleanup path
+Message-ID: <20200102124445.GB1924669@ulmo>
+References: <1577592162-14817-1-git-send-email-bbiswas@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20191210163204.28225-1-dmurphy@ti.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="gZi7TfwV0CRbGkF9I4vj7UoxElcfrKbDR"
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <1577592162-14817-1-git-send-email-bbiswas@nvidia.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.13.1 (2019-12-14)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Y7xTucakfITjPcLV"
+Content-Disposition: inline
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1577969047; bh=M4nXVwwJGqs+aUDvMZNjphqsYWX228oIK/q6HAWvcb4=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:In-Reply-To:X-NVConfidentiality:User-Agent:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:
+         Content-Disposition;
+        b=YFrVFtek5KChbulujGCab3wmjKXcgTSy1EY0AHygnYTGrhgP5x4646f7OHqCUrq0N
+         vMWee0KMUBmFSRCvQFPAsjqoFtXl8hvdGFWHwYIesXUp62Jc6upvI0OIK8shrl47Q7
+         VLope7GuSzoIisf5YmXTgpB+YDfrD8g6+0oRQXHsDOd8EvNsBEiLewLeWDP0ZP0df+
+         /qmNzr5MCqwqR9dvymUHNmfnot2lr6UaBBnxFvYFgH5abkDUQT/IaNSoaIVXraZgey
+         XtSpcxpFeL/pw2INyAfg6PGputMUIBBX506iPGKoBcXlnfhf1dT8MdAzJVl8Welhvj
+         dzmgsO1odBKTw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---gZi7TfwV0CRbGkF9I4vj7UoxElcfrKbDR
-Content-Type: multipart/mixed; boundary="coBL95FV6eyGNpCrrK4NMQqNOfZpzPW3X";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Dan Murphy <dmurphy@ti.com>
-Cc: linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-Message-ID: <4a2e80f0-13c5-df7b-65af-25f86ca48f2a@pengutronix.de>
-Subject: Re: [PATCH v2] can: tcan4x5x: Turn on the power before parsing the
- config
-References: <20191210163204.28225-1-dmurphy@ti.com>
-In-Reply-To: <20191210163204.28225-1-dmurphy@ti.com>
-
---coBL95FV6eyGNpCrrK4NMQqNOfZpzPW3X
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+--Y7xTucakfITjPcLV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On 12/10/19 5:32 PM, Dan Murphy wrote:
-> The parse config function now performs action on the device either
-> reading or writing and a reset.  If the regulator is managed it needs
-> to be turned on.  So turn on the regulator if available if the parsing
-> fails then turn off the regulator.
+On Sat, Dec 28, 2019 at 08:02:42PM -0800, Bitan Biswas wrote:
+> nvmem_cell_info_to_nvmem_cell implementation has static
+> allocation of name. nvmem_add_cells_from_of() call may
+> return error and kfree name results in memory abort. Use
+> kasprintf() instead of assigning pointer and prevent kfree crash.
+>=20
+> [    8.076461] Unable to handle kernel paging request at virtual address =
+ffffffffffe44888
+> [    8.084762] Mem abort info:
+> [    8.087694]   ESR =3D 0x96000006
+> [    8.090906]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+> [    8.096476]   SET =3D 0, FnV =3D 0
+> [    8.099683]   EA =3D 0, S1PTW =3D 0
+> [    8.102976] Data abort info:
+> [    8.106004]   ISV =3D 0, ISS =3D 0x00000006
+> [    8.110026]   CM =3D 0, WnR =3D 0
+> [    8.113154] swapper pgtable: 64k pages, 48-bit VAs, pgdp=3D00000000815=
+d0000
+> [    8.120279] [ffffffffffe44888] pgd=3D0000000081d30803, pud=3D000000008=
+1d30803, pmd=3D0000000000000000
+> [    8.129429] Internal error: Oops: 96000006 [#1] PREEMPT SMP
+> [    8.135257] Modules linked in:
+> [    8.138456] CPU: 2 PID: 43 Comm: kworker/2:1 Tainted: G S             =
+   5.5.0-rc3-tegra-00051-g6989dd3-dirty #3   [    8.149098] Hardware name: =
+quill (DT)
+> [    8.152968] Workqueue: events deferred_probe_work_func
+> [    8.158350] pstate: a0000005 (NzCv daif -PAN -UAO)
+> [    8.163386] pc : kfree+0x38/0x278
+> [    8.166873] lr : nvmem_cell_drop+0x68/0x80
+> [    8.171154] sp : ffff80001284f9d0
+> [    8.174620] x29: ffff80001284f9d0 x28: ffff0001f677e830
+> [    8.180189] x27: ffff800011b0b000 x26: ffff0001c36e1008
+> [    8.185755] x25: ffff8000112ad000 x24: ffff8000112c9000
+> [    8.191311] x23: ffffffffffffffea x22: ffff800010adc7f0
+> [    8.196865] x21: ffffffffffe44880 x20: ffff800011b0b068
+> [    8.202424] x19: ffff80001122d380 x18: ffffffffffffffff
+> [    8.207987] x17: 00000000d5cb4756 x16: 0000000070b193b8
+> [    8.213550] x15: ffff8000119538c8 x14: 0720072007200720
+> [    8.219120] x13: 07200720076e0772 x12: 07750762072d0765
+> [    8.224685] x11: 0773077507660765 x10: 072f073007300730
+> [    8.230253] x9 : 0730073207380733 x8 : 0000000000000151
+> [    8.235818] x7 : 07660765072f0720 x6 : ffff0001c00e0f00
+> [    8.241382] x5 : 0000000000000000 x4 : ffff0001c0b43800
+> [    8.247007] x3 : ffff800011b0b068 x2 : 0000000000000000
+> [    8.252567] x1 : 0000000000000000 x0 : ffffffdfffe00000
+> [    8.258126] Call trace:
+> [    8.260705]  kfree+0x38/0x278
+> [    8.263827]  nvmem_cell_drop+0x68/0x80
+> [    8.267773]  nvmem_device_remove_all_cells+0x2c/0x50
+> [    8.272988]  nvmem_register.part.9+0x520/0x628
+> [    8.277655]  devm_nvmem_register+0x48/0xa0
+> [    8.281966]  tegra_fuse_probe+0x140/0x1f0
+> [    8.286181]  platform_drv_probe+0x50/0xa0
+> [    8.290397]  really_probe+0x108/0x348
+> [    8.294243]  driver_probe_device+0x58/0x100
+> [    8.298618]  __device_attach_driver+0x90/0xb0
+> [    8.303172]  bus_for_each_drv+0x64/0xc8
+> [    8.307184]  __device_attach+0xd8/0x138
+> [    8.311195]  device_initial_probe+0x10/0x18
+> [    8.315562]  bus_probe_device+0x90/0x98
+> [    8.319572]  deferred_probe_work_func+0x74/0xb0
+> [    8.324304]  process_one_work+0x1e0/0x358
+> [    8.328490]  worker_thread+0x208/0x488
+> [    8.332411]  kthread+0x118/0x120
+> [    8.335783]  ret_from_fork+0x10/0x18
+> [    8.339561] Code: d350feb5 f2dffbe0 aa1e03f6 8b151815 (f94006a0)
+> [    8.345939] ---[ end trace 49b1303c6b83198e ]---
+>=20
+> Fixes: badcdff107cbf ("nvmem: Convert to using %pOFn instead of device_no=
+de.name")
+>=20
+> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+> ---
+>  drivers/nvmem/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> index 9f1ee9c..0fc66e1 100644
+> --- a/drivers/nvmem/core.c
+> +++ b/drivers/nvmem/core.c
+> @@ -110,7 +110,7 @@ static int nvmem_cell_info_to_nvmem_cell(struct nvmem=
+_device *nvmem,
+>  	cell->nvmem =3D nvmem;
+>  	cell->offset =3D info->offset;
+>  	cell->bytes =3D info->bytes;
+> -	cell->name =3D info->name;
+> +	cell->name =3D kasprintf(GFP_KERNEL, "%s", info->name);
 
-Another BTW:
-Consider converting the switching of the vsup to runtime_pm.
+kstrdup() seems more appropriate here.
 
-Yet another one:
-Why do you disable the clocks in the error path of tcan4x5x_can_probe(),
-but never enable them?
+A slightly more efficient way to do this would be to use a combination
+of kstrdup_const() and kfree_const(), which would allow read-only
+strings to be replicated by simple assignment rather than duplication.
+Note that in that case you'd need to carefully replace all kfree() calls
+on cell->name by a kfree_const() to ensure they do the right thing.
 
-> out_clk:
-> 	if (!IS_ERR(mcan_class->cclk)) {
-> 		clk_disable_unprepare(mcan_class->cclk);
-> 		clk_disable_unprepare(mcan_class->hclk);
-> 	}
+Thierry
 
-- please move the clock handling from the m_can.c to the individual
-  driver
-- please move the clock handling to runtime_pm in the individual driver
-- remove the obsolete m_can_class_get_clocks()
-- make runtime_pm mandatory
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
-
-
---coBL95FV6eyGNpCrrK4NMQqNOfZpzPW3X--
-
---gZi7TfwV0CRbGkF9I4vj7UoxElcfrKbDR
+--Y7xTucakfITjPcLV
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl4N5F8ACgkQWsYho5Hk
-nSDtHgf9Fuf8bub7UBmK2jcLUq6z/osEin6/bLXyIr4fp7ynFdmK8UMLrrCnmmhQ
-JRcv0H+M4b8en91CE/9mBWOC+ZJ8+YVuZvAVyKd8EKzTM5zR87mo7BCDySZ07cFH
-qH3aBrn2Sq8++79T9d/1UmA0rPQ43bLvnZg3w7BqOF1ZZzmQ/D81QkccYCXh91Kd
-RFOmwWUtgY2C5KBOIcI0kiU+bwVvHablhfJKeZMw90v/bGdDbAFCXo7YakTfkyNF
-BXQ5h8bkij7OEKv8esC+8VtIivy8hwLzabGMB/ewwN5xI2tGAvMX49TFiEM/t51H
-DQH+BxTY9wB5TrnqdiXl0hBYdzr3pw==
-=7WTX
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4N5b0ACgkQ3SOs138+
+s6G/vg//Q+sdp1CPN/wq2VdLF/KNzLIwvNN7HimV9+xkfaimySCH37f6QIdfLXon
+h1y80U7c0vZ4dJVeyjsTjPX1k9xdQN4M+DfMIRFP62HgkwuqOdKd86YMs9o2jv54
+4n5iX70pwu3bAtGA953HbsVzlqBORl4QZR/OxAcLXLzqY8aOgSxp8eU55wPhmN81
+vTW8TODQsWekv3iWbRbLbMRc0o2Oso3X74j6LGyMKjpzwdk5Rb6ZjZ6SZyp6Yp43
+fkadHHK5W2oxBcllAsiH2UuI7asntwAbxed6+kQp0fqJZXO39Lbev+vL29bG/lVB
+1u2OCupr49r0Q0Q9TOyyR8z8Kogtds99MnnK7coADKue+7Ayi9/hc9pBgjl7HK5i
+DVKoapEqWkkhBWsfTmRj8G8dJuFzq15JxkJ6DjfM2S0sgIv1nukWOHMTqa/WKWBq
+SzzdVGLl2In6j3GOwY5N2fegYQNiKWVy61bpnODwmtF7RbTaBFh9f49OCLzv+sny
+dS0Qgz7hi18f8czcB7/Ove4hvyai4bOySOSiJQlelO/SY1lYesN2YMS5NsMKtqZD
+h7m2Kxgyn6vUIcfSQk1WsKiO/T77kVfGLfr8eyyccJ5E7cWM+HStR3Tr4shnUDJP
+y9L8IgLrP1oGUxiic2jzn6wGN8XyGzCHHgkec3k1ZH2liZ5sRsM=
+=uEQX
 -----END PGP SIGNATURE-----
 
---gZi7TfwV0CRbGkF9I4vj7UoxElcfrKbDR--
+--Y7xTucakfITjPcLV--
