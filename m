@@ -2,163 +2,98 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B11BC3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9D3C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 046E1215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:53:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpAs5Ymn"
+	by mail.kernel.org (Postfix) with ESMTP id A6EEF215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:54:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbgABNx4 (ORCPT
+        id S1728462AbgABNy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 08:53:56 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34952 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728342AbgABNxz (ORCPT
+        Thu, 2 Jan 2020 08:54:26 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:51205 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728427AbgABNy0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 08:53:55 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so5721278wmb.0;
-        Thu, 02 Jan 2020 05:53:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UWP8T2dSY7on4bhuJvvJczYvJx5ExaoKE13WYmlRLaE=;
-        b=BpAs5Ymn625eA/7UDL2mngUe6FHCqNi1N5DPpTwF++MjAalqhYw13VZ121XTxdW3bc
-         k8XUmRiv8I/FedSc6Z4suNRUXX70I53CVZXDmBIbOaN3+WvwJfRqxu7CJTqxlJQOsX5w
-         oKyuAo9tHeP2XALMiOaRJIyKsgirGl96iFYh7ACCMujtTGqKdCQC48ImRJ7UsqB4u5EY
-         QxpwwRl5coiAMuozQqicMQxMsvRhOk5KPvqUUulgtNY3GOZoKevSI3F2UMdYeZs/y4u8
-         CvHPtK7IZk6u9KQbPqjOuZ5w6eiaHGTfIdy8WzjjtuOZ6viGLVL30rkCth30aDrWxMX2
-         QlAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UWP8T2dSY7on4bhuJvvJczYvJx5ExaoKE13WYmlRLaE=;
-        b=dmh+oSGhA+dWujlajUY8HMRwoW+akNUJQ6VvdPPI0QUjSH9EKRPQbItGVlNdueMz2V
-         NCuxQoL13TA6LmAm2FjKrVyEYO+ImAW1Z1HR3NKhawGnwU2/AQDtloCNav7i8dlXnGyc
-         IByiLM7fIRBtaFMVXV8CQD/jkM+ynCEohwFyqN1Ap4al73ST+SJLrNozcbl2dI78LBKs
-         wXCEEOGkm3odDIIXYPn85ROUiRutGwMTIY5tIkw0u8XwH9pJnLVD+McGVDCtxkdrZU2W
-         I+hUCHsEwkcSeK3uyyzGmtsGRkLZP1hY0BaO/9y/JdcMAZXrD3GmQ+ZvVs8G/54UT4Zq
-         0YfQ==
-X-Gm-Message-State: APjAAAUMKEttCUSmxcW4V9uV74v2ZTV3WMVzqbfFOU2zJXdZwWr4zuLi
-        k/9TtMJEOd2feH2Sv4d+wD3OZFxXsog=
-X-Google-Smtp-Source: APXvYqxufgSY0u9Yp9j7987C/5ccAx6l5mQEkU9dAfV0VueShs93vukz+XU6wUh2h1CSSgsoa0ZKlw==
-X-Received: by 2002:a1c:4d18:: with SMTP id o24mr14415612wmh.35.1577973232941;
-        Thu, 02 Jan 2020 05:53:52 -0800 (PST)
-Received: from localhost.localdomain ([46.216.160.87])
-        by smtp.gmail.com with ESMTPSA id a184sm8755176wmf.29.2020.01.02.05.53.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 05:53:52 -0800 (PST)
-Received: from [127.0.0.1] (helo=jeknote.loshitsa1.net)
-        by localhost.localdomain with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <jekhor@gmail.com>)
-        id 1in0v8-00055Z-WC; Thu, 02 Jan 2020 16:53:51 +0300
-Date:   Thu, 2 Jan 2020 16:53:35 +0300
-From:   Yauhen Kharuzhy <jekhor@gmail.com>
-To:     linux-pm@vger.kernel.org
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] power: supply: bq25890_charger: Add support of
- BQ25892 and BQ25896 chips
-Message-ID: <20200102135335.GA13218@jeknote.loshitsa1.net>
-References: <20200101224627.12093-1-jekhor@gmail.com>
+        Thu, 2 Jan 2020 08:54:26 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1Mz9pT-1jiGIP0xBz-00wBuB; Thu, 02 Jan 2020 14:53:26 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Naveen Manohar <naveen.m@intel.com>,
+        Sathya Prakash M R <sathya.prakash.m.r@intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: Intel: boards: Fix compile-testing RT1011/RT5682
+Date:   Thu,  2 Jan 2020 14:52:55 +0100
+Message-Id: <20200102135322.1841053-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200101224627.12093-1-jekhor@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:zxRcnJYM3Qwzugm8PjSAcZhaHwSkpBGtFfHipa588cNnptL2qON
+ NSD9i7Qg/kZPN617VR9sOzheMm2RYqcM3nybT8U9auEe4SXnAWg2PIDbYTRvXuNVgL8MM/h
+ hOHQdhTLQB3rxThMssg/aqy5TMs4OFxtvMeIzodOFBTnozUp48zN5rn5PiMNUrrgV1K1SKG
+ prSoLK4CbtvFyqyFpX03A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bEdlaOzjlc4=:Rlb5ilrlSlSqshcCQuCuTW
+ BzyisJQmkkEAA9eevZIA8cW7rwyN1A/6V3ZJjvyWSKSomEVuzw27CS+piy7o+v8J1BVD4uH4C
+ i9okx2bEx6iOmdvPiktk9ek1RwJF+3TC5uJnsMzXBD1r4L+Y4x/zdi5cYapmXBfKZcrz7Nswo
+ 67qs1iFcCijMdTRFK3S1X0tp1iGOdt3kQMA995Mnwzz7xgos+DFpxvVtV/YMm/ZOGUEcJeDct
+ X6FC0QqxUDmqOgaaI+bJJbaFdG7001rMc/IXxYVgwMuUMRUWoheozga9LBpa8RIoFks6Cji3q
+ /VyPve6BUbSneIjhjFZO2hIlpbAhQIeL6pJbBJGBDJyuA7h/iaZag8EoQXvC6HHSWemxwl/2V
+ dc4Vo2VlgCxrIuFEnwcGn3a9FfDKuw+Z+HqE4tcEZPkstnIIVd3pmWS27ESezqHGGSEyOWOHY
+ IEMuKQmaFSDsCxNuQqTZUDFbsezR2+P02U8sC3RM4H2SMl7t/jZ2Wgvkc302gpYLMJK+eae2N
+ 0CmuYuD6XOszSyfA/VdkRCStuqSiZTou8yg7G4iQMqPxyrBtBnFRaKkLA8Q9qTKVunPHXSG1j
+ EWvIvhuiYgYSGjaeplMv5glG0Ku+1HW523OhJGxTm6bHlY5cs2Yia20P3Vj/h7S0MlvIPOAkE
+ NQZ7Mx1pZcpgsY/dz+UavTiY+C8IcnLvpiB4OU2BNuFFmI01YFzHXQ57+DuJp9lluUCn57L9K
+ 2Vb47OXSeMWL+wrPNZkLjjMs8JOl8eufizUqum7QqVGFt2llvXGZFzUpFcajXXu3olLXfm34S
+ ZMRN6P8NC4G1syIun+MiDSFO0AzqetX8GR0GhSC1ZJ21WT1JFh2Wox7hgTfh01/GmO9LbGVvg
+ rhW/LNNkbQApzDsZfFkw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 01:46:25AM +0300, Yauhen Kharuzhy wrote:
-> Support BQ25892 and BQ25896 chips by this driver. They shared one chip
-> ID 0, so distinquish them by device revisions (2 for 25896 and 1 for
-> 25892).
-> 
-> Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
-> ---
->  drivers/power/supply/bq25890_charger.c | 97 ++++++++++++++++++++------
->  1 file changed, 76 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
-> index 9d1ec8d677de..a3dcd4eb1287 100644
-> --- a/drivers/power/supply/bq25890_charger.c
-> +++ b/drivers/power/supply/bq25890_charger.c
-> @@ -25,12 +25,20 @@
->  #define BQ25895_ID			7
->  #define BQ25896_ID			0
->  
-> +enum bq25890_chip_version {
-> +	BQ25890,
-> +	BQ25892,
-> +	BQ25895,
-> +	BQ25896,
-> +};
-> +
-...
-> +static int bq25890_get_chip_version(struct bq25890_device *bq)
-> +{
-> +	int id, rev;
-> +
-> +	id = bq25890_field_read(bq, F_PN);
-> +	if (id < 0) {
-> +		dev_err(bq->dev, "Cannot read chip ID.\n");
-> +		return id;
-> +	}
-> +
-> +	rev = bq25890_field_read(bq, F_DEV_REV);
-> +	if (rev < 0) {
-> +		dev_err(bq->dev, "Cannot read chip revision.\n");
-> +		return id;
-> +	}
-> +
-> +	switch (id) {
-> +	case BQ25890_ID:
-> +		bq->chip_version = BQ25890;
-> +		break;
-> +
-> +	/* BQ25892 and BQ25896 share same ID 0 */
-> +	case BQ25896_ID:
-> +		switch (rev) {
-> +		case 0:
-Sorry, typo here: should be 2 for 25896, I will fix this in v2.
+On non-x86, the new driver results in a build failure:
 
-> +			bq->chip_version = BQ25896;
-> +			break;
-> +		case 1:
-> +			bq->chip_version = BQ25892;
-> +			break;
-> +		default:
-> +			dev_err(bq->dev,
-> +				"Unknown device revision %d, assume BQ25892\n",
-> +				rev);
-> +			bq->chip_version = BQ25892;
-> +		}
-> +		break;
-> +
-> +	case BQ25895_ID:
-> +		bq->chip_version = BQ25895;
-> +		break;
-> +
-> +	default:
-> +		dev_err(bq->dev, "Unknown chip ID %d\n", id);
-> +		return -ENODEV;
-> +	}
-> +
-> +	return 0;
-> +}
-...
+sound/soc/intel/boards/cml_rt1011_rt5682.c:14:10: fatal error: asm/cpu_device_id.h: No such file or directory
 
+The asm/cpu_device_id.h header is not actually needed here,
+so don't include it.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+I found this last week, but the patch still seems to be needed
+as I could not find a fix in mainline or -next.
+
+Please ignore if there is already a fix in some other tree.
+
+
+ sound/soc/intel/boards/cml_rt1011_rt5682.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/sound/soc/intel/boards/cml_rt1011_rt5682.c b/sound/soc/intel/boards/cml_rt1011_rt5682.c
+index a22f97234201..5f1bf6d3800c 100644
+--- a/sound/soc/intel/boards/cml_rt1011_rt5682.c
++++ b/sound/soc/intel/boards/cml_rt1011_rt5682.c
+@@ -11,7 +11,6 @@
+ #include <linux/clk.h>
+ #include <linux/dmi.h>
+ #include <linux/slab.h>
+-#include <asm/cpu_device_id.h>
+ #include <linux/acpi.h>
+ #include <sound/core.h>
+ #include <sound/jack.h>
 -- 
-Yauhen Kharuzhy
+2.20.0
+
