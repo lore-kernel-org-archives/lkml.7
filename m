@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8B4C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E33AC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74FEB20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 296BA20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003654;
-	bh=xpuavt0l/B8Up3G4C4+YoY9yXA4EyFB+vgczoHm8ip0=;
+	s=default; t=1578003658;
+	bh=1HQOmY+/vAg36JcMkUhBh/Zavmr/ssHnliyiwLhDux8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QiRzPuRk0fVslTVeSQF3h4urPOghnfiVzanVjAYkG8T3+2tIZWzlLVxcXylJgIzI6
-	 tVT8ozMXj2VzjKFL3wz+aQrkKGjJijkY7B8z8KR6Ec4Sepsf2Ku1Yts/10oDN5qmkZ
-	 0BSYtGyz/sX68BmdPaE8Lf+im9Pz/Q/DNCmgLi9g=
+	b=EMrJLHxx86bfwbm5Wn37c98viEByE1+X8RyvyxoWOsjqqkf3nvEp2wg7xYqEBtjN9
+	 ZLkwcBQB6/WxCKg3QpipUS5+jpJxBmdFKcH7KCyhsQ6cIOJK+yrn9Zxw3/Xzm1J1pz
+	 gKNCOvcyuY5k918cc30lF1V5OzxpXuGyZ3HjgkV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbgABWUx (ORCPT
+        id S1728904AbgABWU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:20:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38956 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:20:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728886AbgABWUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:20:50 -0500
+        id S1726927AbgABWUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:20:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9FDA21582;
-        Thu,  2 Jan 2020 22:20:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DC3D21582;
+        Thu,  2 Jan 2020 22:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003649;
-        bh=xpuavt0l/B8Up3G4C4+YoY9yXA4EyFB+vgczoHm8ip0=;
+        s=default; t=1578003653;
+        bh=1HQOmY+/vAg36JcMkUhBh/Zavmr/ssHnliyiwLhDux8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LRi8kfuiv3RL47SbYHScOSH4fGziCGT8aoEmIujNrdpS+jw+jbIp8+VfqGU2IX1tr
-         bRKQRjfY2PA0MbjOe0JIY/MNqoQJH/LYjSsxvPNNTUpX6kUSiY2nFuP85ob7l7Nq+C
-         fr8p4901g7DLZ8LXZRc5oUErLR0CV667lbLdly0c=
+        b=bB6N+WIfWcBohw6kFVbm0kr73+AXu3u8hAWou9a/s55o4hJAgKpqm7dnwBt+PP40c
+         4R5Ci+b5/6kP55tniOSaMux8DAX2DDfcvinDudilU2S6VEuoEHvcp0d09Fsak7Z4gw
+         E2UNVdIlPJG9DaUNB7N8enrbFJ1mY/bBnBdmkngI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Christie <mchristi@redhat.com>,
-        Roman Bolshakov <r.bolshakov@yadro.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        John Johansen <john.johansen@canonical.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 057/114] scsi: target: iscsi: Wait for all commands to finish before freeing a session
-Date:   Thu,  2 Jan 2020 23:07:09 +0100
-Message-Id: <20200102220034.794667046@linuxfoundation.org>
+Subject: [PATCH 4.19 059/114] apparmor: fix unsigned len comparison with less than zero
+Date:   Thu,  2 Jan 2020 23:07:11 +0100
+Message-Id: <20200102220034.968393658@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -62,141 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit e9d3009cb936bd0faf0719f68d98ad8afb1e613b ]
+[ Upstream commit 00e0590dbaec6f1bcaa36a85467d7e3497ced522 ]
 
-The iSCSI target driver is the only target driver that does not wait for
-ongoing commands to finish before freeing a session. Make the iSCSI target
-driver wait for ongoing commands to finish before freeing a session. This
-patch fixes the following KASAN complaint:
+The sanity check in macro update_for_len checks to see if len
+is less than zero, however, len is a size_t so it can never be
+less than zero, so this sanity check is a no-op.  Fix this by
+making len a ssize_t so the comparison will work and add ulen
+that is a size_t copy of len so that the min() macro won't
+throw warnings about comparing different types.
 
-BUG: KASAN: use-after-free in __lock_acquire+0xb1a/0x2710
-Read of size 8 at addr ffff8881154eca70 by task kworker/0:2/247
-
-CPU: 0 PID: 247 Comm: kworker/0:2 Not tainted 5.4.0-rc1-dbg+ #6
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-Workqueue: target_completion target_complete_ok_work [target_core_mod]
-Call Trace:
- dump_stack+0x8a/0xd6
- print_address_description.constprop.0+0x40/0x60
- __kasan_report.cold+0x1b/0x33
- kasan_report+0x16/0x20
- __asan_load8+0x58/0x90
- __lock_acquire+0xb1a/0x2710
- lock_acquire+0xd3/0x200
- _raw_spin_lock_irqsave+0x43/0x60
- target_release_cmd_kref+0x162/0x7f0 [target_core_mod]
- target_put_sess_cmd+0x2e/0x40 [target_core_mod]
- lio_check_stop_free+0x12/0x20 [iscsi_target_mod]
- transport_cmd_check_stop_to_fabric+0xd8/0xe0 [target_core_mod]
- target_complete_ok_work+0x1b0/0x790 [target_core_mod]
- process_one_work+0x549/0xa40
- worker_thread+0x7a/0x5d0
- kthread+0x1bc/0x210
- ret_from_fork+0x24/0x30
-
-Allocated by task 889:
- save_stack+0x23/0x90
- __kasan_kmalloc.constprop.0+0xcf/0xe0
- kasan_slab_alloc+0x12/0x20
- kmem_cache_alloc+0xf6/0x360
- transport_alloc_session+0x29/0x80 [target_core_mod]
- iscsi_target_login_thread+0xcd6/0x18f0 [iscsi_target_mod]
- kthread+0x1bc/0x210
- ret_from_fork+0x24/0x30
-
-Freed by task 1025:
- save_stack+0x23/0x90
- __kasan_slab_free+0x13a/0x190
- kasan_slab_free+0x12/0x20
- kmem_cache_free+0x146/0x400
- transport_free_session+0x179/0x2f0 [target_core_mod]
- transport_deregister_session+0x130/0x180 [target_core_mod]
- iscsit_close_session+0x12c/0x350 [iscsi_target_mod]
- iscsit_logout_post_handler+0x136/0x380 [iscsi_target_mod]
- iscsit_response_queue+0x8de/0xbe0 [iscsi_target_mod]
- iscsi_target_tx_thread+0x27f/0x370 [iscsi_target_mod]
- kthread+0x1bc/0x210
- ret_from_fork+0x24/0x30
-
-The buggy address belongs to the object at ffff8881154ec9c0
- which belongs to the cache se_sess_cache of size 352
-The buggy address is located 176 bytes inside of
- 352-byte region [ffff8881154ec9c0, ffff8881154ecb20)
-The buggy address belongs to the page:
-page:ffffea0004553b00 refcount:1 mapcount:0 mapping:ffff888101755400 index:0x0 compound_mapcount: 0
-flags: 0x2fff000000010200(slab|head)
-raw: 2fff000000010200 dead000000000100 dead000000000122 ffff888101755400
-raw: 0000000000000000 0000000080130013 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881154ec900: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff8881154ec980: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
->ffff8881154eca00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                             ^
- ffff8881154eca80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8881154ecb00: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
-
-Cc: Mike Christie <mchristi@redhat.com>
-Link: https://lore.kernel.org/r/20191113220508.198257-3-bvanassche@acm.org
-Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Addresses-Coverity: ("Macro compares unsigned to 0")
+Fixes: f1bd904175e8 ("apparmor: add the base fns() for domain labels")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/iscsi/iscsi_target.c | 10 ++++++++--
- include/scsi/iscsi_proto.h          |  1 +
- 2 files changed, 9 insertions(+), 2 deletions(-)
+ security/apparmor/label.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
-index 03e9cb156df9..317d0f3f7a14 100644
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -1157,7 +1157,9 @@ int iscsit_setup_scsi_cmd(struct iscsi_conn *conn, struct iscsi_cmd *cmd,
- 		hdr->cmdsn, be32_to_cpu(hdr->data_length), payload_length,
- 		conn->cid);
+diff --git a/security/apparmor/label.c b/security/apparmor/label.c
+index ba11bdf9043a..2469549842d2 100644
+--- a/security/apparmor/label.c
++++ b/security/apparmor/label.c
+@@ -1462,11 +1462,13 @@ static inline bool use_label_hname(struct aa_ns *ns, struct aa_label *label,
+ /* helper macro for snprint routines */
+ #define update_for_len(total, len, size, str)	\
+ do {					\
++	size_t ulen = len;		\
++					\
+ 	AA_BUG(len < 0);		\
+-	total += len;			\
+-	len = min(len, size);		\
+-	size -= len;			\
+-	str += len;			\
++	total += ulen;			\
++	ulen = min(ulen, size);		\
++	size -= ulen;			\
++	str += ulen;			\
+ } while (0)
  
--	target_get_sess_cmd(&cmd->se_cmd, true);
-+	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
-+		return iscsit_add_reject_cmd(cmd,
-+				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
+ /**
+@@ -1601,7 +1603,7 @@ int aa_label_snxprint(char *str, size_t size, struct aa_ns *ns,
+ 	struct aa_ns *prev_ns = NULL;
+ 	struct label_it i;
+ 	int count = 0, total = 0;
+-	size_t len;
++	ssize_t len;
  
- 	cmd->sense_reason = transport_lookup_cmd_lun(&cmd->se_cmd,
- 						     scsilun_to_int(&hdr->lun));
-@@ -1998,7 +2000,9 @@ iscsit_handle_task_mgt_cmd(struct iscsi_conn *conn, struct iscsi_cmd *cmd,
- 			      conn->sess->se_sess, 0, DMA_NONE,
- 			      TCM_SIMPLE_TAG, cmd->sense_buffer + 2);
- 
--	target_get_sess_cmd(&cmd->se_cmd, true);
-+	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
-+		return iscsit_add_reject_cmd(cmd,
-+				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
- 
- 	/*
- 	 * TASK_REASSIGN for ERL=2 / connection stays inside of
-@@ -4204,6 +4208,8 @@ int iscsit_close_connection(
- 	 * must wait until they have completed.
- 	 */
- 	iscsit_check_conn_usage_count(conn);
-+	target_sess_cmd_list_set_waiting(sess->se_sess);
-+	target_wait_for_sess_cmds(sess->se_sess);
- 
- 	ahash_request_free(conn->conn_tx_hash);
- 	if (conn->conn_rx_hash) {
-diff --git a/include/scsi/iscsi_proto.h b/include/scsi/iscsi_proto.h
-index df156f1d50b2..f0a01a54bd15 100644
---- a/include/scsi/iscsi_proto.h
-+++ b/include/scsi/iscsi_proto.h
-@@ -638,6 +638,7 @@ struct iscsi_reject {
- #define ISCSI_REASON_BOOKMARK_INVALID	9
- #define ISCSI_REASON_BOOKMARK_NO_RESOURCES	10
- #define ISCSI_REASON_NEGOTIATION_RESET	11
-+#define ISCSI_REASON_WAITING_FOR_LOGOUT	12
- 
- /* Max. number of Key=Value pairs in a text message */
- #define MAX_KEY_VALUE_PAIRS	8192
+ 	AA_BUG(!str && size != 0);
+ 	AA_BUG(!label);
 -- 
 2.20.1
 
