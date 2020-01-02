@@ -2,109 +2,126 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1763C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 19:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62279C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 19:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A091820848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 19:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33BCA20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 19:29:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zu8FI6S0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbgABT27 (ORCPT
+        id S1728771AbgABT33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 14:28:59 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33142 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728239AbgABT2R (ORCPT
+        Thu, 2 Jan 2020 14:29:29 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41858 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728420AbgABT33 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 14:28:17 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 002JGuO7073375;
-        Thu, 2 Jan 2020 14:28:02 -0500
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2x6njck2bb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Jan 2020 14:28:01 -0500
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 002JRgw3002729;
-        Thu, 2 Jan 2020 19:28:07 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma01wdc.us.ibm.com with ESMTP id 2x5xp6k0et-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Jan 2020 19:28:07 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 002JS0MH11534656
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 Jan 2020 19:28:00 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4466CBE04F;
-        Thu,  2 Jan 2020 19:28:00 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B07A0BE051;
-        Thu,  2 Jan 2020 19:27:59 +0000 (GMT)
-Received: from talon7.ibm.com (unknown [9.41.103.158])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  2 Jan 2020 19:27:59 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-aspeed@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com, jason@lakedaemon.net, maz@kernel.org,
-        robh+dt@kernel.org, tglx@linutronix.de, joel@jms.id.au,
-        andrew@aj.id.au, eajames@linux.ibm.com
-Subject: [PATCH v4 04/12] ARM: dts: aspeed: ast2600: Add SCU interrupt controllers
-Date:   Thu,  2 Jan 2020 13:27:48 -0600
-Message-Id: <1577993276-2184-5-git-send-email-eajames@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1577993276-2184-1-git-send-email-eajames@linux.ibm.com>
-References: <1577993276-2184-1-git-send-email-eajames@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2020-01-02_06:2020-01-02,2020-01-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=666 bulkscore=0
- spamscore=0 suspectscore=1 mlxscore=0 impostorscore=0 phishscore=0
- lowpriorityscore=0 adultscore=0 priorityscore=1501 malwarescore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001020156
+        Thu, 2 Jan 2020 14:29:29 -0500
+Received: by mail-pl1-f196.google.com with SMTP id bd4so18178790plb.8
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 11:29:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NvU0yti40S840n5QG3gVP/0HZjtdrLIA9EgmtFMdjeY=;
+        b=zu8FI6S0upnpm0ix25G3oaUOc0+/iGH++sv5Bcj2kBLoEdj4G5VLPaG3P9qofdE3jM
+         kGUCcRTgL2gpIFpgfYy8+7EBIN+kA18SrgprqG1Hx2JUlzDb9GtY/RrrYMUXbtDVY2DB
+         5cY4cvup5gLoGT5jtbYCYsnjZNTuWdUlxaDvbCd8bANScYTV7mYZG90qRPPJleqWen+C
+         ZZpw+5VbdODX/MT7Q74c02z/z69qpq5ZkU6j45apQgPvUEMPYVW2IwjU0LH0Klr6uZx5
+         EclAgxpf4f65o/gcdnf98we6dlSPeYiAHl1H1Mx+nTezrYAoOEKzzFbKGKSohdq2K+s/
+         YwTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NvU0yti40S840n5QG3gVP/0HZjtdrLIA9EgmtFMdjeY=;
+        b=CcHbUoAR9AQCnLMUMqEhO/ANK8MkCxNngZM2fkv/LScN4z3UwMB/zCPu1oUFigL9oQ
+         tK60vXVb1h1btSGb4r+TiNlBIk8WCXk3pnuGvPwzauAkv/yZITNcIsoIqk5DwWosiKUX
+         3QwaqHEQoxH/k8iQcoLbT9oei9QGqpBg9LH4ePulzbRRrV5DXOZpzyl8H5O/O4TJwMD4
+         mrphI7NFBtpA2ZveAXALJqZCi8ZML376jshLW44XGijgt7EtiHLSnei2B7WL0zJjwY7w
+         noD9hfHkcmyUmyLrJUHvgVNyHkWA86ibLEK3zEtZDXlGxa9JvS+GGYM3Xdpf3na2gy4b
+         73PA==
+X-Gm-Message-State: APjAAAUczjkDGy8B+s4z5+8wF/m8K4tngKbizmjuJvDGFDnyzugM2Hlj
+        rYRn2Js4Ucl9SNCuDxkB+WEKFA==
+X-Google-Smtp-Source: APXvYqzK6klpqUHj5VLLlr49JBuhy2FCQTzFaMgfn5/VXfd20M9M3/Lj/GoFiNaoEiw0ndMfgfZ6Mg==
+X-Received: by 2002:a17:902:aa46:: with SMTP id c6mr88130383plr.200.1577993368332;
+        Thu, 02 Jan 2020 11:29:28 -0800 (PST)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id b193sm56938366pfb.57.2020.01.02.11.29.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 11:29:27 -0800 (PST)
+Date:   Thu, 2 Jan 2020 11:29:25 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        swboyd@chromium.org, sivaa@codeaurora.org,
+        Andy Gross <agross@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v3 4/9] drivers: thermal: tsens: Release device in
+ success path
+Message-ID: <20200102192925.GC988120@minitux>
+References: <cover.1577976221.git.amit.kucheria@linaro.org>
+ <0a969ecd48910dac4da81581eff45b5e579b2bfc.1577976221.git.amit.kucheria@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0a969ecd48910dac4da81581eff45b5e579b2bfc.1577976221.git.amit.kucheria@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add nodes for the interrupt controllers provided by the SCU.
+On Thu 02 Jan 06:54 PST 2020, Amit Kucheria wrote:
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
----
- arch/arm/boot/dts/aspeed-g6.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+> We don't currently call put_device in case of successfully initialising
+> the device.
+> 
+> Allow control to fall through so we can use same code for success and
+> error paths to put_device.
+> 
 
-diff --git a/arch/arm/boot/dts/aspeed-g6.dtsi b/arch/arm/boot/dts/aspeed-g6.dtsi
-index 5f6142d99eeb..ead336e93a12 100644
---- a/arch/arm/boot/dts/aspeed-g6.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g6.dtsi
-@@ -288,6 +288,20 @@ smp-memram@180 {
- 					compatible = "aspeed,ast2600-smpmem";
- 					reg = <0x180 0x40>;
- 				};
-+
-+				scu_ic0: interrupt-controller@0 {
-+					#interrupt-cells = <1>;
-+					compatible = "aspeed,ast2600-scu-ic0";
-+					interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+					interrupt-controller;
-+				};
-+
-+				scu_ic1: interrupt-controller@1 {
-+					#interrupt-cells = <1>;
-+					compatible = "aspeed,ast2600-scu-ic1";
-+					interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+					interrupt-controller;
-+				};
- 			};
- 
- 			rng: hwrng@1e6e2524 {
--- 
-2.24.0
+Given the relationship between priv->dev and op I think this wouldn't be
+a problem in practice, but there's two devm_ioremap_resource() done on
+op->dev in this function. So you're depending on op->dev to stick
+around, but with this patch you're no longer expressing that dependency.
 
+That said, it looks iffy to do devm_ioremap_resource() on op->dev and
+then create a regmap on priv->dev using that resource. So I think it
+would be better to do platform_get_source() on op, and then
+devm_ioremap_resource() on priv->dev, in which case the regmap backing
+memory will be related to the same struct device as the regmap and it
+makes perfect sense to put_device() the op->dev when you're done
+inspecting it's resources.
+
+Regards,
+Bjorn
+
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  drivers/thermal/qcom/tsens-common.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+> index 1cbc5a6e5b4f..e84e94a6f1a7 100644
+> --- a/drivers/thermal/qcom/tsens-common.c
+> +++ b/drivers/thermal/qcom/tsens-common.c
+> @@ -687,8 +687,6 @@ int __init init_common(struct tsens_priv *priv)
+>  	tsens_enable_irq(priv);
+>  	tsens_debug_init(op);
+>  
+> -	return 0;
+> -
+>  err_put_device:
+>  	put_device(&op->dev);
+>  	return ret;
+> -- 
+> 2.20.1
+> 
