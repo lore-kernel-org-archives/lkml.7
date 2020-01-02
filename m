@@ -2,127 +2,122 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4CCC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A9EC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87DC1217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59477217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:02:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gGDN7WHu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgABLA3 (ORCPT
+        id S1728126AbgABLC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 06:00:29 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:50038 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728044AbgABLA3 (ORCPT
+        Thu, 2 Jan 2020 06:02:29 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:24647 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728103AbgABLC3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 06:00:29 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 68A1D1C25CE; Thu,  2 Jan 2020 12:00:26 +0100 (CET)
-Date:   Thu, 2 Jan 2020 12:00:25 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Tony Lindgren <tony@atomide.com>, olof@lixom.net, arnd@arndb.de
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
-        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz
-Subject: Droid 4 regression in 5.5-rc1, armsoc-soc tree
-Message-ID: <20200102110025.GA29035@amd>
-References: <20191228162929.GA29269@duo.ucw.cz>
- <20191228193622.GA13047@duo.ucw.cz>
- <20191230173507.GM35479@atomide.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
-Content-Disposition: inline
-In-Reply-To: <20191230173507.GM35479@atomide.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Thu, 2 Jan 2020 06:02:29 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577962948; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=tkKCPLe79npIk6waelmBeTcR6XDop2zkLNOKqt/0Dq0=; b=gGDN7WHuabmV5XpJNk/hUOib0fK82QPh64/wjG3Y7JbwfzOTs2BSTqrlAaPhgHFnWj1vzeGh
+ 80pshInHzIzKdtuHte2ioOibjPBmd8R2XNY0Fq+QGJSbpbinbPBh9zcRmE5+x4AZ2ME1baAq
+ ggju27OjwHBu+cXuY7pIbmk3uJQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e0dcdc2.7f9514158618-smtp-out-n01;
+ Thu, 02 Jan 2020 11:02:26 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4CBD6C447A0; Thu,  2 Jan 2020 11:02:26 +0000 (UTC)
+Received: from smasetty-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: smasetty)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C9813C43383;
+        Thu,  2 Jan 2020 11:02:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C9813C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
+From:   Sharat Masetty <smasetty@codeaurora.org>
+To:     freedreno@lists.freedesktop.org
+Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, will@kernel.org,
+        robin.murphy@arm.com, joro@8bytes.org,
+        iommu@lists.linux-foundation.org, jcrouse@codeaurora.org,
+        saiprakash.ranjan@codeaurora.org,
+        Sharat Masetty <smasetty@codeaurora.org>
+Subject: [PATCH v2 0/7] drm/msm/a6xx: System Cache Support
+Date:   Thu,  2 Jan 2020 16:32:06 +0530
+Message-Id: <1577962933-13577-1-git-send-email-smasetty@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Some hardware variants contain a system level cache or the last level
+cache(llc). This cache is typically a large block which is shared by multiple
+clients on the SOC. GPU uses the system cache to cache both the GPU data
+buffers(like textures) as well the SMMU pagetables. This helps with
+improved render performance as well as lower power consumption by reducing
+the bus traffic to the system memory.
 
---ew6BAiZeqk4r7MaW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The system cache architecture allows the cache to be split into slices which
+then be used by multiple SOC clients. This patch series is an effort to enable
+and use two of those slices perallocated for the GPU, one for the GPU data
+buffers and another for the GPU SMMU hardware pagetables.
 
-On Mon 2019-12-30 09:35:07, Tony Lindgren wrote:
-> * Pavel Machek <pavel@ucw.cz> [191228 19:37]:
-> > Hi!
-> >=20
-> > > 5.4-based kernel works ok on my droid 4.
-> > >=20
-> > > 5.5-rc3 based kernel has problems; it reboots when I try to kexec it.
-> > >=20
-> > > Vanilla 5.5-rc3 reboots, too.
-> > >=20
-> > > If you have any ideas, let me know.
-> >=20
-> > I managed to get partial serial dump. This should be 5.5-rc3: And then
-> > a bit better serial dump (below). But it is silent for few seconds,
-> > and then it restarts...
->=20
-> If spi or regulators have problems, nothing will really work..
+v2: Code reviews and rebased code on top of Jordan's split pagetables series
 
-arm-soc merge seems to be responsible:
+To enable the system cache driver, add [1] to your stack if not already
+present. Please review.
 
-bad 38206c24ab09b4f4c2a57de5c1af0bb2e69cf5b6 Merge tag 'armsoc-soc' of
-good d9e48dc2a71a836f17d1febbedb31470f957edb4 Merge tag
+[1] https://lore.kernel.org/patchwork/patch/1165298/
 
-									Pavel
+Jordan Crouse (3):
+  iommu/arm-smmu: Pass io_pgtable_cfg to impl specific init_context
+  drm/msm: Attach the IOMMU device during initialization
+  drm/msm: Refactor address space initialization
 
-# bad: [738d2902773e30939a982c8df7a7f94293659810] Merge git://git.kernel.or=
-g/pub/scm/linux/kernel/git/netdev/net
-# good: [219d54332a09e8d8741c1e1982f5eae56099de85] Linux 5.4
-git bisect start '738d2902773e' '219d54332a09'
-# bad: [46cf053efec6a3a5f343fead837777efe8252a46] Linux 5.5-rc3
-git bisect bad 46cf053efec6a3a5f343fead837777efe8252a46
-# bad: [e42617b825f8073569da76dc4510bfa019b1c35a] Linux 5.5-rc1
-git bisect bad e42617b825f8073569da76dc4510bfa019b1c35a
-# good: [9a3d7fd275be4559277667228902824165153c80] Merge tag 'driver-core-5=
-=2E5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-co=
-re
-git bisect good 9a3d7fd275be4559277667228902824165153c80
-# good: [0b4295b5e2b9b42f3f3096496fe4775b656c9ba6] io_uring: fix a typo in =
-a comment
-git bisect good 0b4295b5e2b9b42f3f3096496fe4775b656c9ba6
-# good: [056df578c2dcac1e624254567f5df5ddaa223234] Merge tag 'arc-5.5-rc1' =
-of git://git.kernel.org/pub/scm/linux/kernel/git/vgupta/arc
-git bisect good 056df578c2dcac1e624254567f5df5ddaa223234
-# bad: [25cfb0c7de3f14e283a43dcd6de903657f9f98c7] Merge branch 'for-next' o=
-f git://git.kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu
-git bisect bad 25cfb0c7de3f14e283a43dcd6de903657f9f98c7
-# bad: [38206c24ab09b4f4c2a57de5c1af0bb2e69cf5b6] Merge tag 'armsoc-soc' of=
- git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-git bisect bad 38206c24ab09b4f4c2a57de5c1af0bb2e69cf5b6
-# good: [d9e48dc2a71a836f17d1febbedb31470f957edb4] Merge tag 'pwm/for-5.5-r=
-c1' of git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-p=
-wm
-git bisect good d9e48dc2a71a836f17d1febbedb31470f957edb4
+Sharat Masetty (3):
+  drm: msm: a6xx: Properly free up the iommu objects
+  drm/msm: rearrange the gpu_rmw() function
+  drm/msm/a6xx: Add support for using system cache(LLC)
 
+Vivek Gautam (1):
+  iommu/arm-smmu: Add domain attribute for QCOM system cache
 
+ drivers/gpu/drm/msm/adreno/a2xx_gpu.c    |  16 ++++
+ drivers/gpu/drm/msm/adreno/a3xx_gpu.c    |   1 +
+ drivers/gpu/drm/msm/adreno/a4xx_gpu.c    |   1 +
+ drivers/gpu/drm/msm/adreno/a5xx_gpu.c    |   1 +
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c    | 124 +++++++++++++++++++++++++++++++
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.h    |   3 +
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c  |  23 ++++--
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h  |   8 ++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c  |  19 ++---
+ drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c |  19 ++---
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c |   4 -
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c |  19 +++--
+ drivers/gpu/drm/msm/msm_drv.c            |   8 ++
+ drivers/gpu/drm/msm/msm_drv.h            |   9 +--
+ drivers/gpu/drm/msm/msm_gem_vma.c        |  37 ++-------
+ drivers/gpu/drm/msm/msm_gpu.c            |  49 +-----------
+ drivers/gpu/drm/msm/msm_gpu.h            |   9 +--
+ drivers/gpu/drm/msm/msm_gpummu.c         |   7 --
+ drivers/gpu/drm/msm/msm_iommu.c          |  22 +++---
+ drivers/gpu/drm/msm/msm_mmu.h            |   5 +-
+ drivers/iommu/arm-smmu-impl.c            |   3 +-
+ drivers/iommu/arm-smmu-qcom.c            |  10 +++
+ drivers/iommu/arm-smmu.c                 |  25 +++++--
+ drivers/iommu/arm-smmu.h                 |   4 +-
+ include/linux/iommu.h                    |   1 +
+ 25 files changed, 269 insertions(+), 158 deletions(-)
 
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---ew6BAiZeqk4r7MaW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl4NzUkACgkQMOfwapXb+vL/lwCeMuMUzLWhBOPsJT5QSoBhPbAp
-qYMAoKLdeCAROa7G9Cn8n2x1ZOigQ5cE
-=rq58
------END PGP SIGNATURE-----
-
---ew6BAiZeqk4r7MaW--
+--
+1.9.1
