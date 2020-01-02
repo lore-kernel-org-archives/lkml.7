@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 762BFC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89586C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A1FA20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BB3422525
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004090;
-	bh=IzsDQutEVlev7dG8kLWfrE7D83sLY5Fum0VDhlMzY8k=;
+	s=default; t=1578004098;
+	bh=Mn1stkTUadTf5t6OBvjLLCSukrrImTF7x1U8LI0v+4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TP/1Q5qgLGtOPc9MxsGBFQM+JkkrI5z3/IZQbox0erlFlb94kwcqJASfnV1cxyS4Y
-	 zrE9Cg67iXX6HjM1i/EyJEn/P9vaCBG/RJIIvk8PoEi5C5QYj1p19VJ3pLC9XQTjtG
-	 21E5pr+pbjal2ceTESOEyesiq5j/6IqGZ2tZJUBg=
+	b=m9DUXw4kLXnYKAYp+Npq54vGyc/jbt78cvCx1jpKI2trBZRV7T36KK0NV77nnqGQX
+	 Pr+xbXXi7FdqJTLXPSRJ1H3IwRlJEjNaBzpsRUp2EIrLZjMIrXt5NjtM7il7MWmldD
+	 k86MF+8hVtJ//vI5eeaf53vrLyIEqbHTBPF0qmys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729839AbgABW2I (ORCPT
+        id S1727699AbgABW2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:28:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57336 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:28:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729822AbgABW2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:28:04 -0500
+        id S1729695AbgABW2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:28:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5A6B2467D;
-        Thu,  2 Jan 2020 22:28:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 502FA20863;
+        Thu,  2 Jan 2020 22:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004084;
-        bh=IzsDQutEVlev7dG8kLWfrE7D83sLY5Fum0VDhlMzY8k=;
+        s=default; t=1578004086;
+        bh=Mn1stkTUadTf5t6OBvjLLCSukrrImTF7x1U8LI0v+4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jo4b3/Nlv+SnB9kZYX6QEpzo/mQ4t1IcZzqj7U151wKInsRZcDwdk53PwMG0aHcfJ
-         uMteY44k0IaP37FcFCtrEu+voks6IanA1mLokOVuhkfcmnitSXc+xZgdrqPQav69wB
-         ccRgQ+8p1oSWedamkxWPFBwooreKTtsCJyJAVMNI=
+        b=yaGNTJK1o59AvoG6Jw5ZvJhn0XhhXxfHhH8yReuYOAoIWVB4TEwXokRqbixk6LSmx
+         C2AcZt/PAGxxcOLwtNyltbP+UZKYHzai/SaSSepubq5WFX1qy3ob6qy4VwHU973j0e
+         AuZHB1g1ZDDB4KGbbbxTGyLf3SKBoqW5bTjE6ik4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 013/171] rtlwifi: prevent memory leak in rtl_usb_probe
-Date:   Thu,  2 Jan 2020 23:05:44 +0100
-Message-Id: <20200102220548.822313312@linuxfoundation.org>
+Subject: [PATCH 4.9 031/171] extcon: sm5502: Reset registers during initialization
+Date:   Thu,  2 Jan 2020 23:06:02 +0100
+Message-Id: <20200102220551.356605930@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -61,45 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 3f93616951138a598d930dcaec40f2bfd9ce43bb ]
+[ Upstream commit 6942635032cfd3e003e980d2dfa4e6323a3ce145 ]
 
-In rtl_usb_probe if allocation for usb_data fails the allocated hw
-should be released. In addition the allocated rtlpriv->usb_data should
-be released on error handling path.
+On some devices (e.g. Samsung Galaxy A5 (2015)), the bootloader
+seems to keep interrupts enabled for SM5502 when booting Linux.
+Changing the cable state (i.e. plugging in a cable) - until the driver
+is loaded - will therefore produce an interrupt that is never read.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+In this situation, the cable state will be stuck forever on the
+initial state because SM5502 stops sending interrupts.
+This can be avoided by clearing those pending interrupts after
+the driver has been loaded.
+
+One way to do this is to reset all registers to default state
+by writing to SM5502_REG_RESET. This ensures that we start from
+a clean state, with all interrupts disabled.
+
+Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/usb.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/extcon/extcon-sm5502.c | 4 ++++
+ drivers/extcon/extcon-sm5502.h | 2 ++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
-index ae0c48f3c2bc..1f02461de261 100644
---- a/drivers/net/wireless/realtek/rtlwifi/usb.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
-@@ -1088,8 +1088,10 @@ int rtl_usb_probe(struct usb_interface *intf,
- 	rtlpriv->hw = hw;
- 	rtlpriv->usb_data = kzalloc(RTL_USB_MAX_RX_COUNT * sizeof(u32),
- 				    GFP_KERNEL);
--	if (!rtlpriv->usb_data)
-+	if (!rtlpriv->usb_data) {
-+		ieee80211_free_hw(hw);
- 		return -ENOMEM;
-+	}
+diff --git a/drivers/extcon/extcon-sm5502.c b/drivers/extcon/extcon-sm5502.c
+index b22325688503..9d2d8a6673c8 100644
+--- a/drivers/extcon/extcon-sm5502.c
++++ b/drivers/extcon/extcon-sm5502.c
+@@ -69,6 +69,10 @@ struct sm5502_muic_info {
+ /* Default value of SM5502 register to bring up MUIC device. */
+ static struct reg_data sm5502_reg_data[] = {
+ 	{
++		.reg = SM5502_REG_RESET,
++		.val = SM5502_REG_RESET_MASK,
++		.invert = true,
++	}, {
+ 		.reg = SM5502_REG_CONTROL,
+ 		.val = SM5502_REG_CONTROL_MASK_INT_MASK,
+ 		.invert = false,
+diff --git a/drivers/extcon/extcon-sm5502.h b/drivers/extcon/extcon-sm5502.h
+index 974b53222f56..12f8b01e5753 100644
+--- a/drivers/extcon/extcon-sm5502.h
++++ b/drivers/extcon/extcon-sm5502.h
+@@ -241,6 +241,8 @@ enum sm5502_reg {
+ #define DM_DP_SWITCH_UART			((DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DP_SHIFT) \
+ 						| (DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DM_SHIFT))
  
- 	/* this spin lock must be initialized early */
- 	spin_lock_init(&rtlpriv->locks.usb_lock);
-@@ -1152,6 +1154,7 @@ error_out:
- 	_rtl_usb_io_handler_release(hw);
- 	usb_put_dev(udev);
- 	complete(&rtlpriv->firmware_loading_complete);
-+	kfree(rtlpriv->usb_data);
- 	return -ENODEV;
- }
- EXPORT_SYMBOL(rtl_usb_probe);
++#define SM5502_REG_RESET_MASK			(0x1)
++
+ /* SM5502 Interrupts */
+ enum sm5502_irq {
+ 	/* INT1 */
 -- 
 2.20.1
 
