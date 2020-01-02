@@ -2,51 +2,55 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F24C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5255C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DDBA22B48
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6A3224679
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:32:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004333;
-	bh=z7fnNHlOtntI+6PPW3XY2967h6pBm3S2QYCo9C8eF6Y=;
+	s=default; t=1578004336;
+	bh=yzxD6HKKw68W+50LlaU+rd6VsjAH0kcFO5/v4j3i8bw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BnFnRHIifxTVF8SYOOuhbGxqN/9Jv+eQ/KMWarnIl9V7jAAeULfYhPHa0+if8favW
-	 XzzkkTGEwzZRmEcB6UijcDVs5lsf2dOcdDpZAkkKRV5tMxH13LTqW/tzvmGBPA4hpo
-	 k1VV3+rQxP6w+/X5cKSzLijnGZO9nBXsSADgY+pI=
+	b=Et7XWMgxdW8wAK2tWNC7C7FNwrjHr8S0qHy67Jk53LscIJBnG3i7BDkgl/qbg8uS/
+	 pBr7Mlq7lDsV/loXBnuPTJYERZK9waUUXCcg28pQ1JKrZAerrrJ8OcL45LGmznaHuT
+	 aZBY7Y6Mv6vFeAGWos0kQwesJTMWH32Da8N8kbNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730373AbgABWcL (ORCPT
+        id S1730237AbgABWcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:32:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37906 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:32:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730360AbgABWcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:32:06 -0500
+        id S1730366AbgABWcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:32:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 311EF20866;
-        Thu,  2 Jan 2020 22:32:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92B4D21835;
+        Thu,  2 Jan 2020 22:32:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004325;
-        bh=z7fnNHlOtntI+6PPW3XY2967h6pBm3S2QYCo9C8eF6Y=;
+        s=default; t=1578004328;
+        bh=yzxD6HKKw68W+50LlaU+rd6VsjAH0kcFO5/v4j3i8bw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c/zTczNjK2/k8sONZt2w4TAJcc47Ah7l42RkFVk8/lrpzLFGCQeiXCeusIZMSVt0M
-         gfPcOqx3Wi4YN11k78FH3qdxrO2Qnv89l49V+xXL2g+GIymB0Lt8dfAy5wFmehZmre
-         Ib3jEFEo0s/9+klOtkGs1Yq3wkkPouwGAaJ8UYRY=
+        b=A9co1EAi8RY6Etq6NXBIzj9tb/ll9X5MB7+HeMmn4kasF7UKhGDAX44nhairPmrPH
+         k3rPJe75y2E855Eg/duRwKKf1+Vy2CCfBYc/Qo9EJV3AVhjrQtvvDtPr0e1YDLP1mi
+         3eECX9cVH7JvJHt7OyFOotYkLtyLSh3rBQA25kSA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 096/171] net: hisilicon: Fix a BUG trigered by wrong bytes_compl
-Date:   Thu,  2 Jan 2020 23:07:07 +0100
-Message-Id: <20200102220600.553861907@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Hannes Reinecke <hare@suse.com>,
+        Douglas Gilbert <dgilbert@interlog.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 125/171] scsi: tracing: Fix handling of TRANSFER LENGTH == 0 for READ(6) and WRITE(6)
+Date:   Thu,  2 Jan 2020 23:07:36 +0100
+Message-Id: <20200102220604.429135969@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -59,90 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 90b3b339364c76baa2436445401ea9ade040c216 ]
+[ Upstream commit f6b8540f40201bff91062dd64db8e29e4ddaaa9d ]
 
-When doing stress test, we get the following trace:
-kernel BUG at lib/dynamic_queue_limits.c:26!
-Internal error: Oops - BUG: 0 [#1] SMP ARM
-Modules linked in: hip04_eth
-CPU: 0 PID: 2003 Comm: tDblStackPcap0 Tainted: G           O L  4.4.197 #1
-Hardware name: Hisilicon A15
-task: c3637668 task.stack: de3bc000
-PC is at dql_completed+0x18/0x154
-LR is at hip04_tx_reclaim+0x110/0x174 [hip04_eth]
-pc : [<c041abfc>]    lr : [<bf0003a8>]    psr: 800f0313
-sp : de3bdc2c  ip : 00000000  fp : c020fb10
-r10: 00000000  r9 : c39b4224  r8 : 00000001
-r7 : 00000046  r6 : c39b4000  r5 : 0078f392  r4 : 0078f392
-r3 : 00000047  r2 : 00000000  r1 : 00000046  r0 : df5d5c80
-Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
-Control: 32c5387d  Table: 1e189b80  DAC: 55555555
-Process tDblStackPcap0 (pid: 2003, stack limit = 0xde3bc190)
-Stack: (0xde3bdc2c to 0xde3be000)
-[<c041abfc>] (dql_completed) from [<bf0003a8>] (hip04_tx_reclaim+0x110/0x174 [hip04_eth])
-[<bf0003a8>] (hip04_tx_reclaim [hip04_eth]) from [<bf0012c0>] (hip04_rx_poll+0x20/0x388 [hip04_eth])
-[<bf0012c0>] (hip04_rx_poll [hip04_eth]) from [<c04c8d9c>] (net_rx_action+0x120/0x374)
-[<c04c8d9c>] (net_rx_action) from [<c021eaf4>] (__do_softirq+0x218/0x318)
-[<c021eaf4>] (__do_softirq) from [<c021eea0>] (irq_exit+0x88/0xac)
-[<c021eea0>] (irq_exit) from [<c0240130>] (msa_irq_exit+0x11c/0x1d4)
-[<c0240130>] (msa_irq_exit) from [<c0267ba8>] (__handle_domain_irq+0x110/0x148)
-[<c0267ba8>] (__handle_domain_irq) from [<c0201588>] (gic_handle_irq+0xd4/0x118)
-[<c0201588>] (gic_handle_irq) from [<c0558360>] (__irq_svc+0x40/0x58)
-Exception stack(0xde3bdde0 to 0xde3bde28)
-dde0: 00000000 00008001 c3637668 00000000 00000000 a00f0213 dd3627a0 c0af6380
-de00: c086d380 a00f0213 c0a22a50 de3bde6c 00000002 de3bde30 c0558138 c055813c
-de20: 600f0213 ffffffff
-[<c0558360>] (__irq_svc) from [<c055813c>] (_raw_spin_unlock_irqrestore+0x44/0x54)
-Kernel panic - not syncing: Fatal exception in interrupt
+According to SBC-2 a TRANSFER LENGTH field of zero means that 256 logical
+blocks must be transferred. Make the SCSI tracing code follow SBC-2.
 
-Pre-modification code:
-int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-{
-[...]
-[1]	priv->tx_head = TX_NEXT(tx_head);
-[2]	count++;
-[3]	netdev_sent_queue(ndev, skb->len);
-[...]
-}
-An rx interrupt occurs if hip04_mac_start_xmit just executes to the line 2,
-tx_head has been updated, but corresponding 'skb->len' has not been
-added to dql_queue.
-
-And then
-hip04_mac_interrupt->__napi_schedule->hip04_rx_poll->hip04_tx_reclaim
-
-In hip04_tx_reclaim, because tx_head has been updated,
-bytes_compl will plus an additional "skb-> len"
-which has not been added to dql_queue. And then
-trigger the BUG_ON(bytes_compl > num_queued - dql->num_completed).
-
-To solve the problem described above, we put
-"netdev_sent_queue(ndev, skb->len);"
-before
-"priv->tx_head = TX_NEXT(tx_head);"
-
-Fixes: a41ea46a9a12 ("net: hisilicon: new hip04 ethernet driver")
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: bf8162354233 ("[SCSI] add scsi trace core functions and put trace points")
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Douglas Gilbert <dgilbert@interlog.com>
+Link: https://lore.kernel.org/r/20191105215553.185018-1-bvanassche@acm.org
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/scsi_trace.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -455,9 +455,9 @@ static int hip04_mac_start_xmit(struct s
- 	skb_tx_timestamp(skb);
+diff --git a/drivers/scsi/scsi_trace.c b/drivers/scsi/scsi_trace.c
+index 0ff083bbf5b1..617a60737590 100644
+--- a/drivers/scsi/scsi_trace.c
++++ b/drivers/scsi/scsi_trace.c
+@@ -30,15 +30,18 @@ static const char *
+ scsi_trace_rw6(struct trace_seq *p, unsigned char *cdb, int len)
+ {
+ 	const char *ret = trace_seq_buffer_ptr(p);
+-	sector_t lba = 0, txlen = 0;
++	u32 lba = 0, txlen;
  
- 	hip04_set_xmit_desc(priv, phys);
--	priv->tx_head = TX_NEXT(tx_head);
- 	count++;
- 	netdev_sent_queue(ndev, skb->len);
-+	priv->tx_head = TX_NEXT(tx_head);
+ 	lba |= ((cdb[1] & 0x1F) << 16);
+ 	lba |=  (cdb[2] << 8);
+ 	lba |=   cdb[3];
+-	txlen = cdb[4];
++	/*
++	 * From SBC-2: a TRANSFER LENGTH field set to zero specifies that 256
++	 * logical blocks shall be read (READ(6)) or written (WRITE(6)).
++	 */
++	txlen = cdb[4] ? cdb[4] : 256;
  
- 	stats->tx_bytes += skb->len;
- 	stats->tx_packets++;
+-	trace_seq_printf(p, "lba=%llu txlen=%llu",
+-			 (unsigned long long)lba, (unsigned long long)txlen);
++	trace_seq_printf(p, "lba=%u txlen=%u", lba, txlen);
+ 	trace_seq_putc(p, 0);
+ 
+ 	return ret;
+-- 
+2.20.1
+
 
 
