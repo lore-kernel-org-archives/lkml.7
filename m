@@ -2,160 +2,250 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B581EC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC9AC2D0DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD98206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF27020866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:46:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdiUCeOP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BCROBod9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbgABIou (ORCPT
+        id S1727851AbgABIql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 03:44:50 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42070 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727756AbgABIot (ORCPT
+        Thu, 2 Jan 2020 03:46:41 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46750 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727756AbgABIqk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 03:44:49 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 66so56084251otd.9;
-        Thu, 02 Jan 2020 00:44:49 -0800 (PST)
+        Thu, 2 Jan 2020 03:46:40 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z7so38428706wrl.13
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 00:46:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RJXFVlyRwTqj9HkStatG/uviJjFGvZJlZBeqka9UDNY=;
-        b=gdiUCeOPqScjXzrbvIh+ShMJdMtOIFx3qiDxl8Rnx0tRID+ljoSEDWZXifZyy+UDoK
-         ZbP+uX2yH0Lua7XN3AMGacK2rVrdEAdaFX09Pn8/uzG3t01jvXUKjmInkQIVS+QHIezD
-         VXX6JM5ur/SC4XeH73Y6MZ2pf8t8dk3hLl6vy6PahZF9tKuqXwq53iy00PMcaIcImJvz
-         a0qOXjUw9jKbNkcQk34Ejg4DCSj/O8c7yFs5z0bZaMFOy6CrljgugPlFvg6n+X9/iQEw
-         F/xgEeo5JX2ZN4LVxKsTrzXDRQO8ty7llvBlWTz/fa7rkDg9PweY+jOm9fuFBl4kD2F5
-         0bPg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=J4BV4xVxmbRJ/r05rBs0QYCjejbH9ewz1c2yLbanQBw=;
+        b=BCROBod9j1yy6ajGa+uGcRO+X7a2oqm4ydiMzZwtcBr9thqmJoeDeB8vBmZ8hG0bas
+         pRPAAfyxHm4lV8LwRhEx8jE7sUssEq5x7jyXSEWyaeVjbx6ftoR15mx1tVsz9zBJPr7c
+         XKAtOPTAmr9rL8LaoS6MAbOmkxPCkurDhm33TvQuGx+C4zXTRjiHvzEgka/uTyIuQRQZ
+         4okHxCZsuUbIzRcY+45HcNOTYwAZ9GKO2r45tzSpjwejmSI5KqXeACQ7w61v6Pvkr5HN
+         sAcbzQvhK41LfV8r0fmaOsCu/wE88cGOus0huQH7AwGLIQ5s63Vl1ClDEY5SRBvILAPv
+         CzOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RJXFVlyRwTqj9HkStatG/uviJjFGvZJlZBeqka9UDNY=;
-        b=RL2nRiSN6pm26gySagtnGSBdpJFox4fSSxM0bkFoFZhavUAvTp9lk1wV+v1BmsvU4y
-         789IjyZYuEBkldfyMvSe82ptq4Lcp0Wsg2j0oscyzeCrYS8hv4+hfVjdZnzMlIcBW03a
-         h5lCgvSY1Is6zfofSLM4K9HIq6mkmTUl8feVUM64lK0hdZUKfXqujfqRtc6UExvz14QJ
-         BfE6oQKFx+/piAnrLsyCrDo1atLPQioJzpHU1HFty4u66VHPjAHTVhU7JrblJDLITEV/
-         tqpyPEomO13AUAPaKlaAL5QNremkrs2coRdNVtfzkEOLGD5WUGDZASA8BwD2ZCs/r8Qy
-         B8CA==
-X-Gm-Message-State: APjAAAVOTxiJbxzCAeuNrYa9Mxeo9kOw8qLrwofBhvqOmJNZlIl3R6fR
-        q2Fe0897JKIDyKcwvobKAl+o5lNXp87uZ9B2bok=
-X-Google-Smtp-Source: APXvYqzOhzS82AptAf2MZPwDekJw6thW0D54iQ6Qt4TuLUMBcVXdHaCHrtJnYpVCXcsxnGiGCP9GyLgDg6gsrK4LUGE=
-X-Received: by 2002:a9d:5c02:: with SMTP id o2mr83617674otk.176.1577954688818;
- Thu, 02 Jan 2020 00:44:48 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=J4BV4xVxmbRJ/r05rBs0QYCjejbH9ewz1c2yLbanQBw=;
+        b=b/2uJVVszw6Kq0TAeRgOmP0pidpgRsTXcwSAPbyaL5KxTthHXck9WFUJr2aqPGglNV
+         bvEp38Jcw0ybk1E1TwaKb47YpbLmn8V0WwKh6FJjhf59ThAUVz9Y6hgmqhC4I8EGaEJ1
+         gqsFNKacUPJlJbhAnCtZyDVWeMu16CpSoKOJX86uq0y4P5hbB/iSXeMlI2UyLXrfAx55
+         NnqZShW3+guloinqzu6uViEW3f/AbRKnMep5bbPBKgWh0oZmtnhuGEfmMppET8G139+M
+         sg4IWq2igyHR1n4JGNZEV8h/Xk/Ft+Cz5GwHbAZNjSuxuip+Ph0VhNRb/peWNALeOv+Z
+         Pgwg==
+X-Gm-Message-State: APjAAAW/9FcGWn4fro1ISi02MPd+yKhaqMBB1JZs3kReTPn7nGG/ubC/
+        /UApEmxInwSDBEBC76YI3huLGw==
+X-Google-Smtp-Source: APXvYqwSDKoiB5ra6drQsoyYVfGcpU9ytlL7NbMzlMJbbOVavFr5G0msLQo7wTmzibB98v+znbhMpQ==
+X-Received: by 2002:a5d:68c5:: with SMTP id p5mr83053200wrw.193.1577954798497;
+        Thu, 02 Jan 2020 00:46:38 -0800 (PST)
+Received: from dell ([2.27.35.135])
+        by smtp.gmail.com with ESMTPSA id g2sm54686011wrw.76.2020.01.02.00.46.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 00:46:37 -0800 (PST)
+Date:   Thu, 2 Jan 2020 08:46:50 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+Subject: Re: [PATCH v6] mfd: mt6360: add pmic mt6360 driver
+Message-ID: <20200102084650.GA22390@dell>
+References: <20191225014148.19082-1-gene.chen.richtek@gmail.com>
 MIME-Version: 1.0
-References: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20191213084748.11210-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAL_JsqLSYroDZGWksJJ=E+01X=3Tji4+GmK8s3i+d2BJphqiLQ@mail.gmail.com>
- <CA+V-a8uKBuVUQvkoJ9pJYX97Qy3JazTyLCy-2T35gOX77AP8vg@mail.gmail.com> <20191219233129.GA5484@bogus>
-In-Reply-To: <20191219233129.GA5484@bogus>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 2 Jan 2020 08:44:23 +0000
-Message-ID: <CA+V-a8vjwqkH5rYsy_rsHF93d91izsaEwmFXNpYqk3_=_Asd2g@mail.gmail.com>
-Subject: Re: [v2 3/6] of: address: add support to parse PCI outbound-ranges
-To:     Rob Herring <robh@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191225014148.19082-1-gene.chen.richtek@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Wed, 25 Dec 2019, Gene Chen wrote:
 
-On Thu, Dec 19, 2019 at 11:31 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Dec 16, 2019 at 08:49:23AM +0000, Lad, Prabhakar wrote:
-> > Hi Rob,
-> >
-> > Thank you for the review.
-> >
-> > On Fri, Dec 13, 2019 at 8:37 PM Rob Herring <robh+dt@kernel.org> wrote:
-> > >
-> > > On Fri, Dec 13, 2019 at 2:48 AM Lad Prabhakar
-> > > <prabhakar.csengg@gmail.com> wrote:
-> > > >
-> > > > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > this patch adds support to parse PCI outbound-ranges, the
-> > > > outbound-regions are similar to pci ranges except it doesn't
-> > > > have pci address, below is the format for bar-ranges:
-> > > >
-> > > > outbound-ranges = <flags upper32_cpuaddr lower32_cpuaddr
-> > > >                    upper32_size lower32_size>;
-> > >
-> > > You can't just make up a new ranges property. Especially one that
-> > > doesn't follow how 'ranges' works. We already have 'dma-ranges' to
-> > > translate device to memory addresses.
-> > >
-> > > Explain the problem or feature you need, not the solution you came up
-> > > with. Why do you need this and other endpoint bindings haven't?
-> > >
-> > rcar SoC's supports multiple outbound region for mapping the PCI address
-> > locally to the system. This lead to discussion where there exist controllers
-> > which support regions for high/low priority transfer and similarly regions
-> > for large/small memory allocations, as a result a new ranges property was
-> > added, where we can specify the flags which would indicate how the outbound
-> > region can be used during requests.
->
-> What are the flags?
+> From: Gene Chen <gene_chen@richtek.com>
+> 
+> Add mfd driver for mt6360 pmic chip include
+> Battery Charger/USB_PD/Flash LED/RGB LED/LDO/Buck
+> 
+> Signed-off-by: Gene Chen <gene_chen@richtek.com
+> ---
+>  drivers/mfd/Kconfig                |  12 +
+>  drivers/mfd/Makefile               |   1 +
+>  drivers/mfd/mt6360-core.c          | 426 +++++++++++++++++++++++++++++
+>  include/linux/mfd/mt6360-private.h | 217 +++++++++++++++
+>  include/linux/mfd/mt6360.h         |  32 +++
+>  5 files changed, 688 insertions(+)
+>  create mode 100644 drivers/mfd/mt6360-core.c
+>  create mode 100644 include/linux/mfd/mt6360-private.h
+>  create mode 100644 include/linux/mfd/mt6360.h
+> 
+> changelogs between v1 & v2
+> - include missing header file
+> 
+> changelogs between v2 & v3
+> - add changelogs
+> 
+> changelogs between v3 & v4
+> - fix Kconfig description
+> - replace mt6360_pmu_info with mt6360_pmu_data
+> - replace probe with probe_new
+> - remove unnecessary irq_chip variable
+> - remove annotation
+> - replace MT6360_MFD_CELL with OF_MFD_CELL
+> 
+> changelogs between v4 & v5
+> - remove unnecessary parse dt function
+> - use devm_i2c_new_dummy_device
+> - add base-commit message
+> 
+> changelogs between v5 & v6
+> - review return value
+> - remove i2c id_table
+> - use GPL license v2
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 420900852166..e6df91d55405 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -856,6 +856,18 @@ config MFD_MAX8998
+>  	  additional drivers must be enabled in order to use the functionality
+>  	  of the device.
+>  
+> +config MFD_MT6360
+> +	tristate "Mediatek MT6360 SubPMIC"
+> +	select MFD_CORE
+> +	select REGMAP_I2C
+> +	select REGMAP_IRQ
+> +	depends on I2C
+> +	help
+> +	  Say Y here to enable MT6360 PMU/PMIC/LDO functional support.
+> +	  PMU part includes Charger, Flashlight, RGB LED
+> +	  PMIC part includes 2-channel BUCKs and 2-channel LDOs
+> +	  LDO part includes 4-channel LDOs
+> +
+>  config MFD_MT6397
+>  	tristate "MediaTek MT6397 PMIC Support"
+>  	select MFD_CORE
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index aed99f08739f..f5f80d75ee53 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -237,6 +237,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
+> +obj-$(CONFIG_MFD_MT6360)	+= mt6360-core.o
+>  mt6397-objs	:= mt6397-core.o mt6397-irq.o
+>  obj-$(CONFIG_MFD_MT6397)	+= mt6397.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_MRFLD)	+= intel_soc_pmic_mrfld.o
+> diff --git a/drivers/mfd/mt6360-core.c b/drivers/mfd/mt6360-core.c
+> new file mode 100644
+> index 000000000000..f6d43b6dad4e
+> --- /dev/null
+> +++ b/drivers/mfd/mt6360-core.c
+> @@ -0,0 +1,426 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
 
-below are the flags which were discussed in first version of the
-series, but since the driver is
-currently using just PCI_EPC_WINDOW_FLAG_NON_MULTI_ALLOC flag I'll be
-dropping them in
-next version (suggested by Kishon) and rest will be added as and when
-required by the driver.
+No author?
 
- * @PCI_EPC_WINDOW_FLAG_MULTI_ALLOC: Indicates multiple chunks of memory can be
- *                                  allocated from same window
- * @PCI_EPC_WINDOW_FLAG_NON_MULTI_ALLOC: Indicates only single memory allocation
- *                                      is possible on the window
- * @PCI_EPC_WINDOW_FLAG_LARGE_ALLOC: Window is used for large memory allocation
- * @PCI_EPC_WINDOW_FLAG_SMALL_ALLOC: Window is used for small memory allocation
- * @PCI_EPC_WINDOW_FLAG_HIGH_PRI_ALLOC: Window is used for high priority data
- *                                     transfers
- * @PCI_EPC_WINDOW_FLAG_LOW_PRI_ALLOC: Window is used for low priority data
- *                                    transfers
+> + */
+> +
+> +#include <linux/i2c.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/module.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/version.h>
+> +
+> +#include <linux/mfd/mt6360.h>
+> +#include <linux/mfd/mt6360-private.h>
 
-Cheers,
---Prabhakar
+[...]
+
+> +#define MT6360_REGMAP_IRQ_REG(_irq_evt)		\
+> +	REGMAP_IRQ_REG(_irq_evt, (_irq_evt) / 8, BIT((_irq_evt) % 8))
+
+No need to roll your own macros for this.  I think
+REGMAP_IRQ_REG_LINE() is what you're looking for.
+
+> +static const struct regmap_irq mt6360_pmu_irqs[] =  {
+
+	REGMAP_IRQ_REG_LINE(MT6360_CHG_TREG_EVT, 8),
+
+... etc.
+
+> +	MT6360_REGMAP_IRQ_REG(MT6360_CHG_TREG_EVT),
+> +	MT6360_REGMAP_IRQ_REG(MT6360_CHG_AICR_EVT),
+
+[...]
+
+> +	MT6360_REGMAP_IRQ_REG(MT6360_LDO7_PGB_EVT),
+> +};
+
+[...]
+
+> diff --git a/include/linux/mfd/mt6360-private.h b/include/linux/mfd/mt6360-private.h
+> new file mode 100644
+> index 000000000000..d542652f4de0
+> --- /dev/null
+> +++ b/include/linux/mfd/mt6360-private.h
+
+As there are only appropriately namespaced macros in here, I would
+move them to the normal header file and dispose of this one.
+
+> @@ -0,0 +1,217 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + */
+> +
+> +#ifndef __MT6360_PRIVATE_H__
+> +#define __MT6360_PRIVATE_H__
+> +
+> +/* PMU register defininition */
+> +#define MT6360_PMU_DEV_INFO			(0x00)
+> +#define MT6360_PMU_CORE_CTRL1			(0x01)
+
+[...]
+
+> +#define MT6360_PMU_LDO_MASK2			(0xFF)
+> +#define MT6360_PMU_MAXREG			(MT6360_PMU_LDO_MASK2)
+> +
+> +/* MT6360_PMU_IRQ_SET */
+> +#define MT6360_PMU_IRQ_REGNUM	(MT6360_PMU_LDO_IRQ2 - MT6360_PMU_CHG_IRQ1 + 1)
+> +#define MT6360_IRQ_RETRIG	BIT(2)
+> +
+> +#define CHIP_VEN_MASK				(0xF0)
+> +#define CHIP_VEN_MT6360				(0x50)
+> +#define CHIP_REV_MASK				(0x0F)
+> +
+> +#endif /* __MT6360_PRIVATE_H__ */
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
