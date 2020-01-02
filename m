@@ -2,90 +2,82 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD44C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 10:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F28C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 10:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8146421734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 10:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF9A421734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 10:30:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="DXaAe4bi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbgABK2K (ORCPT
+        id S1728071AbgABKa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 05:28:10 -0500
-Received: from mx2.suse.de ([195.135.220.15]:52276 "EHLO mx2.suse.de"
+        Thu, 2 Jan 2020 05:30:57 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:6023 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727990AbgABK2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 05:28:10 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1BB2BB2DB;
-        Thu,  2 Jan 2020 10:28:08 +0000 (UTC)
-Date:   Thu, 2 Jan 2020 11:28:07 +0100
-From:   Daniel Wagner <dwagner@suse.de>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, Long Li <longli@microsoft.com>,
-        Ingo Molnar <mingo@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        John Garry <john.garry@huawei.com>,
-        Hannes Reinecke <hare@suse.com>
-Subject: Re: [RFC PATCH 2/3] softirq: implement interrupt flood detection
-Message-ID: <20200102102807.dc7yf6choxre2lbg@beryllium.lan>
-References: <20191218071942.22336-1-ming.lei@redhat.com>
- <20191218071942.22336-3-ming.lei@redhat.com>
- <20191218104941.GR2844@hirez.programming.kicks-ass.net>
- <20191219015948.GB6080@ming.t460p>
- <20191219092319.GX2844@hirez.programming.kicks-ass.net>
- <20191219104347.ql6shgh2x7hk6iid@boron>
- <20191231034806.GB20062@ming.t460p>
+        id S1727990AbgABKa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 05:30:57 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47pPSs5fcMz9d;
+        Thu,  2 Jan 2020 11:30:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1577961054; bh=+y18ZtRqL20vwnFJzTy9vluqY/s49t024oi+gFIwAUE=;
+        h=Date:From:Subject:To:Cc:From;
+        b=DXaAe4bikHDm1EgyvVJUYtCQRE8aD2UL43f5LqeXB4cz+0IAmpE4A/TsrPnpO8wUy
+         3T0yLBXdwFGtI0Ow/AjmO220Tw0CXR8v03u+VNUls/aG2EkamLTUEJ5bxNNaGEUsQE
+         4eetRTutA+wHYQnBm/sFKZFFisK0BLeO1UIfT+7NEm0zgCzVFnzqViBPJxBOOQfYo6
+         fm6fExTf/XnOqUwQHFJfmFoYj7o4PyX3A1jdzn8Iw2TzQ6UcNWLulfjIjdBxnKY6kA
+         xFcWlLBrQ1xW9TtX/NiFYiRaPuyPCkk9GwuPMg28WudzGEKlUTvxiIrO5/+9S5nMCd
+         9kuO6PrvRPKiw==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+Date:   Thu, 02 Jan 2020 11:30:50 +0100
+Message-Id: <245d569e4c258063dbd78bd30c7027638b30f059.1577960737.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH] mmc: tegra: fix SDR50 tuning override
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191231034806.GB20062@ming.t460p>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     linux-mmc@vger.kernel.org
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Lucas Stach <dev@lynxeye.de>, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Commit 7ad2ed1dfcbe inadvertently mixed up a quirk flag's name and
+broke SDR50 tuning override. Use correct NVQUIRK_ name.
 
-On Tue, Dec 31, 2019 at 11:48:06AM +0800, Ming Lei wrote:
-> On Thu, Dec 19, 2019 at 11:43:47AM +0100, Daniel Wagner wrote:
-> get_util_irq() only works in case of HAVE_SCHED_AVG_IRQ which depends
-> on IRQ_TIME_ACCOUNTING or PARAVIRT_TIME_ACCOUNTING.
-> 
-> Also rq->avg_irq.util_avg is only updated when there is scheduler
-> activities. However, when interrupt flood happens, scheduler can't
-> have chance to be called. Looks get_util_irq() can't be relied on
-> for this task.
+Fixes: 7ad2ed1dfcbe ("mmc: tegra: enable UHS-I modes")
+Depends-on: 4f6aa3264af4 ("mmc: tegra: Only advertise UHS modes if IO regulator is present")
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+---
+ drivers/mmc/host/sdhci-tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I am not totally sold on the idea to do so as much work as possible in
-the IRQ context. I started to play with the patches from Keith [1] which
-move the work to proper kernel thread.
+diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+index 7bc950520fd9..403ac44a7378 100644
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -386,7 +386,7 @@ static void tegra_sdhci_reset(struct sdhci_host *host, u8 mask)
+ 			misc_ctrl |= SDHCI_MISC_CTRL_ENABLE_DDR50;
+ 		if (soc_data->nvquirks & NVQUIRK_ENABLE_SDR104)
+ 			misc_ctrl |= SDHCI_MISC_CTRL_ENABLE_SDR104;
+-		if (soc_data->nvquirks & SDHCI_MISC_CTRL_ENABLE_SDR50)
++		if (soc_data->nvquirks & NVQUIRK_ENABLE_SDR50)
+ 			clk_ctrl |= SDHCI_CLOCK_CTRL_SDR50_TUNING_OVERRIDE;
+ 	}
+ 
+-- 
+2.20.1
 
-> > ps: A customer observes the same problem as Ming is reporting.
-> 
-> Actually this issue should be more serious on ARM64 system, in which
-> there are more CPU cores, and each CPU core is often slower than
-> x86's, and each interrupt is only delivered to single CPU target.
-> 
-> Meantime the storage device performance is same for the two kinds of
-> systems.
-
-As it turnes out, we missed one fix 2887e41b910b ("blk-wbt: Avoid lock
-contention and thundering herd issue in wbt_wait") in our enterprise
-kernel which helps but doesn't solve the real cause. But as I said
-moving the work out of the IRQ context will address all those
-problems. Obvious there is no free lunch, let's see if we find a way
-to address all the performance issues.
-
-Thanks,
-Daniel
-
-[1] https://lore.kernel.org/linux-nvme/20191209175622.1964-1-kbusch@kernel.org/
