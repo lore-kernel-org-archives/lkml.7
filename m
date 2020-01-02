@@ -2,54 +2,54 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5063C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CF9C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A0CE2464B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BA36222C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003100;
-	bh=b44j38iHZ3ItcTR0oJTXn1vJs/HMycr3LGK/7wKou9E=;
+	s=default; t=1578003104;
+	bh=MgInnI9rBtUuTBZbaRpOVlK8CZPmjqXevC8yS5bKwYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fnrm8P/nc3m0in5cg+K42oNbOgcwIBzcRMDfj2bu5rgYJtuM/A97VY0T9auhJMUUu
-	 iHI4eGMgvSnfF1+IMqBvL6KJAjbFvsGluAlgdraR6TJK3iPLU69OtP+qDFY7pvPySz
-	 eZXSZeDQUby7oknclgvQdXOGDQ9zXPf/paqi+yRE=
+	b=qZIAwtL7y56p9+HwyGgxuK8VpK9juns5+OCIlyXsWLqUziyKjGjhNaOLGITWI/Ciq
+	 ItHDTc0/irZOql3Eo6q1Yc0/1cNPwT4MQ2UEG4++eDru+lKiAGs/4ntoVvBy95NVIK
+	 8vpSn89r99jVMox1BWHvHESWcdGdjxcQSB/OV7Lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727200AbgABWLj (ORCPT
+        id S1727222AbgABWLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:11:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49904 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:11:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbgABWLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:11:36 -0500
+        id S1726823AbgABWLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:11:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE1E521582;
-        Thu,  2 Jan 2020 22:11:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B343D21582;
+        Thu,  2 Jan 2020 22:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003095;
-        bh=b44j38iHZ3ItcTR0oJTXn1vJs/HMycr3LGK/7wKou9E=;
+        s=default; t=1578003100;
+        bh=MgInnI9rBtUuTBZbaRpOVlK8CZPmjqXevC8yS5bKwYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rAawphMYSuqGLu6cJQ6D907qIoxrwdPrbWg3XtN2HdadczOl8gzqnD1JMUkLAIsV/
-         oDCQgTAxPYd/bVvJ39NjsPr/5QPMfcqbPl+3fCEXZId/8ESSHjwy9ulgekeXSkM+RY
-         XUNRPxcY8EIXNqySF+bttolRTRk8qgE3VBodW2EY=
+        b=LbF+e/fiK7p6xUv+W3kzPzeNvL3vUCzKXzgwv2Ujtx1n9zqhDKeyNEA0qIpaJcuZv
+         dDTfganEtx1YYU7w3RRnRuB9toNzDSmMCgt+2YEUflrWckrNPBUgS0+qshxJbI1miE
+         Fc3vWgyJX1wgWdGV3RVKj30vHmIlnQto87J1nDO4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lee Duncan <lduncan@suse.com>,
-        Mike Christie <mchristi@redhat.com>,
-        David Disseldorp <ddiss@suse.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 018/191] scsi: target: compare full CHAP_A Algorithm strings
-Date:   Thu,  2 Jan 2020 23:05:00 +0100
-Message-Id: <20200102215831.806883884@linuxfoundation.org>
+Subject: [PATCH 5.4 002/191] Revert "MIPS: futex: Emit Loongson3 sync workarounds within asm"
+Date:   Thu,  2 Jan 2020 23:04:44 +0100
+Message-Id: <20200102215830.136388186@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -62,53 +62,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Disseldorp <ddiss@suse.de>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit 9cef2a7955f2754257a7cddedec16edae7b587d0 ]
+This reverts commit d754a529a8be55f009c6679d772c472c1632cd5b which was
+commit 3c1d3f0979721a39dd2980c97466127ce65aa130 upstream.
 
-RFC 2307 states:
+This breaks the build and should be reverted.
 
-  For CHAP [RFC1994], in the first step, the initiator MUST send:
-
-      CHAP_A=<A1,A2...>
-
-   Where A1,A2... are proposed algorithms, in order of preference.
-...
-   For the Algorithm, as stated in [RFC1994], one value is required to
-   be implemented:
-
-       5     (CHAP with MD5)
-
-LIO currently checks for this value by only comparing a single byte in
-the tokenized Algorithm string, which means that any value starting with
-a '5' (e.g. "55") is interpreted as "CHAP with MD5". Fix this by
-comparing the entire tokenized string.
-
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Reviewed-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: David Disseldorp <ddiss@suse.de>
-Link: https://lore.kernel.org/r/20190912095547.22427-2-ddiss@suse.de
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: Huacai Chen <chenhc@lemote.com>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/target/iscsi/iscsi_target_auth.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/include/asm/barrier.h |   13 ++++++-------
+ arch/mips/include/asm/futex.h   |   15 ++++++++-------
+ 2 files changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/target/iscsi/iscsi_target_auth.c b/drivers/target/iscsi/iscsi_target_auth.c
-index 51ddca2033e0..8fe9b12a07a4 100644
---- a/drivers/target/iscsi/iscsi_target_auth.c
-+++ b/drivers/target/iscsi/iscsi_target_auth.c
-@@ -70,7 +70,7 @@ static int chap_check_algorithm(const char *a_str)
- 		if (!token)
- 			goto out;
+--- a/arch/mips/include/asm/barrier.h
++++ b/arch/mips/include/asm/barrier.h
+@@ -218,14 +218,13 @@
+  * ordering will be done by smp_llsc_mb() and friends.
+  */
+ #if defined(CONFIG_WEAK_REORDERING_BEYOND_LLSC) && defined(CONFIG_SMP)
+-# define __WEAK_LLSC_MB		sync
+-# define smp_llsc_mb() \
+-	__asm__ __volatile__(__stringify(__WEAK_LLSC_MB) : : :"memory")
+-# define __LLSC_CLOBBER
++#define __WEAK_LLSC_MB		"	sync	\n"
++#define smp_llsc_mb()		__asm__ __volatile__(__WEAK_LLSC_MB : : :"memory")
++#define __LLSC_CLOBBER
+ #else
+-# define __WEAK_LLSC_MB
+-# define smp_llsc_mb()		do { } while (0)
+-# define __LLSC_CLOBBER		"memory"
++#define __WEAK_LLSC_MB		"		\n"
++#define smp_llsc_mb()		do { } while (0)
++#define __LLSC_CLOBBER		"memory"
+ #endif
  
--		if (!strncmp(token, "5", 1)) {
-+		if (!strcmp(token, "5")) {
- 			pr_debug("Selected MD5 Algorithm\n");
- 			kfree(orig);
- 			return CHAP_DIGEST_MD5;
--- 
-2.20.1
-
+ #ifdef CONFIG_CPU_CAVIUM_OCTEON
+--- a/arch/mips/include/asm/futex.h
++++ b/arch/mips/include/asm/futex.h
+@@ -16,7 +16,6 @@
+ #include <asm/barrier.h>
+ #include <asm/compiler.h>
+ #include <asm/errno.h>
+-#include <asm/sync.h>
+ #include <asm/war.h>
+ 
+ #define __futex_atomic_op(insn, ret, oldval, uaddr, oparg)		\
+@@ -33,7 +32,7 @@
+ 		"	.set	arch=r4000			\n"	\
+ 		"2:	sc	$1, %2				\n"	\
+ 		"	beqzl	$1, 1b				\n"	\
+-		__stringify(__WEAK_LLSC_MB)				\
++		__WEAK_LLSC_MB						\
+ 		"3:						\n"	\
+ 		"	.insn					\n"	\
+ 		"	.set	pop				\n"	\
+@@ -51,19 +50,19 @@
+ 		  "i" (-EFAULT)						\
+ 		: "memory");						\
+ 	} else if (cpu_has_llsc) {					\
++		loongson_llsc_mb();					\
+ 		__asm__ __volatile__(					\
+ 		"	.set	push				\n"	\
+ 		"	.set	noat				\n"	\
+ 		"	.set	push				\n"	\
+ 		"	.set	"MIPS_ISA_ARCH_LEVEL"		\n"	\
+-		"	" __SYNC(full, loongson3_war) "		\n"	\
+ 		"1:	"user_ll("%1", "%4")" # __futex_atomic_op\n"	\
+ 		"	.set	pop				\n"	\
+ 		"	" insn	"				\n"	\
+ 		"	.set	"MIPS_ISA_ARCH_LEVEL"		\n"	\
+ 		"2:	"user_sc("$1", "%2")"			\n"	\
+ 		"	beqz	$1, 1b				\n"	\
+-		__stringify(__WEAK_LLSC_MB)				\
++		__WEAK_LLSC_MB						\
+ 		"3:						\n"	\
+ 		"	.insn					\n"	\
+ 		"	.set	pop				\n"	\
+@@ -148,7 +147,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval,
+ 		"	.set	arch=r4000				\n"
+ 		"2:	sc	$1, %2					\n"
+ 		"	beqzl	$1, 1b					\n"
+-		__stringify(__WEAK_LLSC_MB)
++		__WEAK_LLSC_MB
+ 		"3:							\n"
+ 		"	.insn						\n"
+ 		"	.set	pop					\n"
+@@ -165,13 +164,13 @@ futex_atomic_cmpxchg_inatomic(u32 *uval,
+ 		  "i" (-EFAULT)
+ 		: "memory");
+ 	} else if (cpu_has_llsc) {
++		loongson_llsc_mb();
+ 		__asm__ __volatile__(
+ 		"# futex_atomic_cmpxchg_inatomic			\n"
+ 		"	.set	push					\n"
+ 		"	.set	noat					\n"
+ 		"	.set	push					\n"
+ 		"	.set	"MIPS_ISA_ARCH_LEVEL"			\n"
+-		"	" __SYNC(full, loongson3_war) "			\n"
+ 		"1:	"user_ll("%1", "%3")"				\n"
+ 		"	bne	%1, %z4, 3f				\n"
+ 		"	.set	pop					\n"
+@@ -179,7 +178,8 @@ futex_atomic_cmpxchg_inatomic(u32 *uval,
+ 		"	.set	"MIPS_ISA_ARCH_LEVEL"			\n"
+ 		"2:	"user_sc("$1", "%2")"				\n"
+ 		"	beqz	$1, 1b					\n"
+-		"3:	" __SYNC_ELSE(full, loongson3_war, __WEAK_LLSC_MB) "\n"
++		__WEAK_LLSC_MB
++		"3:							\n"
+ 		"	.insn						\n"
+ 		"	.set	pop					\n"
+ 		"	.section .fixup,\"ax\"				\n"
+@@ -194,6 +194,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval,
+ 		: GCC_OFF_SMALL_ASM() (*uaddr), "Jr" (oldval), "Jr" (newval),
+ 		  "i" (-EFAULT)
+ 		: "memory");
++		loongson_llsc_mb();
+ 	} else
+ 		return -ENOSYS;
+ 
 
 
