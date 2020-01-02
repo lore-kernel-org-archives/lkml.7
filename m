@@ -2,111 +2,114 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 619C4C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B43BFC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F0B421835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AAFA20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578005636;
+	bh=d18jTLWfApfwUh6KARUD1FZQRxSZd5VOJTbozrBOtrQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=a779WEA5pNus5plIDeK01z7vT9zyKbmlWMUhCz10Vm9FOE0qpwwqcM31WI9qB69Ii
+	 0InNU168m3w1gQOVlKJzwgPg/EW0CcGTK8gjkGwRJrEDQqYWJL4mep48DfyaPIYJTy
+	 Or1BUQmCwv+RGpy8+iEXyrAhlH3oqQEwO/pqVp4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbgABWxs (ORCPT
+        id S1729388AbgABWxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:53:48 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:40043 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728988AbgABWV1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:21:27 -0500
-Received: by mail-pj1-f67.google.com with SMTP id bg7so3934426pjb.5;
-        Thu, 02 Jan 2020 14:21:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=w8RjK4aftLZxkYESHjiXhuMfaSosoMz2QGwQm1yGCxw=;
-        b=M0/X2u5+kxoL3yppAOAUg9+0tKFNNhbjkhpgqPbgp1rdHptNqWTfpBuyf4GuWd5eTX
-         pHIjNh5i84gbtmKQAXhfjHOZeq4+SYycicWuUH/Tcj5R5KbYIy+/YsaWeDbxD+35UtE1
-         xLmIf48PLaQ/VDpJ9uAqt0uai/+9p5ARuzfl2topyuTHrPadcEIUb/9LAaM40rjn0S4d
-         iNz19nLs5AvSKoCstGcoqqOl3RBzTMDVenB0ZmHUs6UyQq909mlodKVAUF2QjOiAtNut
-         Fukg6sna0FoCVudMJ0ty8TBRQWtbbW++eNTaPs7Ru+ZXrA3WKYS40v0dUehZdXeHtT3Y
-         AlEA==
-X-Gm-Message-State: APjAAAXHBDttFkloMew+JG96rOrcLJuWwFGAc5U6aNzNn/rAt5JpFgN1
-        yAuowqfANy7sjoprfHnGbnCKlXgv
-X-Google-Smtp-Source: APXvYqzKn2fxYO5t+3k2rLLRrKegG6hlyWEbJfBx++NBBKCapm8vcB1QCRucYm5+8zR1Rzjhs1aiYA==
-X-Received: by 2002:a17:90a:6484:: with SMTP id h4mr21717824pjj.84.1578003686433;
-        Thu, 02 Jan 2020 14:21:26 -0800 (PST)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id 199sm67865209pfv.81.2020.01.02.14.21.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jan 2020 14:21:25 -0800 (PST)
-Subject: Re: [PATCH v6 14/25] rtrs: a bit of documentation
-To:     Jack Wang <jinpuwang@gmail.com>, linux-block@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
-        leon@kernel.org, dledford@redhat.com, danil.kipnis@cloud.ionos.com,
-        jinpu.wang@cloud.ionos.com, rpenyaev@suse.de,
-        linux-kernel@vger.kernel.org
-References: <20191230102942.18395-1-jinpuwang@gmail.com>
- <20191230102942.18395-15-jinpuwang@gmail.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <bb668d4e-f768-a408-c541-d862d1a2f959@acm.org>
-Date:   Thu, 2 Jan 2020 14:21:24 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 2 Jan 2020 17:53:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728432AbgABWVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:21:20 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C27C222C3;
+        Thu,  2 Jan 2020 22:21:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578003680;
+        bh=d18jTLWfApfwUh6KARUD1FZQRxSZd5VOJTbozrBOtrQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VI/btbdtiEbY12kOBu0xixGh45DssxNPWmJ6hoNRrDKGJ/FHVmgfpUlWBrRc02CvV
+         odfvr4yVVkgiAPSOrd0AnIBQBe+svvnoaMykrv/R0oM1TgAFRpy6K4XBgYC76hBqv/
+         +9Ajdvt5KH8+mR8Anlc0+oPG0l5Ck7SsrIuY8Qus=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Ding Xiang <dingxiang@cmss.chinamobile.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 069/114] ocfs2: fix passing zero to PTR_ERR warning
+Date:   Thu,  2 Jan 2020 23:07:21 +0100
+Message-Id: <20200102220036.033585825@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
+References: <20200102220029.183913184@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20191230102942.18395-15-jinpuwang@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/30/19 2:29 AM, Jack Wang wrote:
-> diff --git a/Documentation/ABI/testing/sysfs-class-rtrs-client b/Documentation/ABI/testing/sysfs-class-rtrs-client
-> new file mode 100644
-> index 000000000000..8b219cf6c5c4
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-class-rtrs-client
-> @@ -0,0 +1,190 @@
-> +What:		/sys/class/rtrs-client
-> +Date:		Jan 2020
-> +KernelVersion:	5.6
-> +Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
-> +Description:
-> +When a user of RTRS API creates a new session, a directory entry with
-> +the name of that session is created under /sys/class/rtrs-client/<session-name>/
+From: Ding Xiang <dingxiang@cmss.chinamobile.com>
 
-Thank you for having included this ABI description. This is very 
-helpful. Please follow the format documented in Documentation/ABI/README 
-and make sure that all text, including the description, start in column 
-17 and please use tabs for indentation.
+[ Upstream commit 188c523e1c271d537f3c9f55b6b65bf4476de32f ]
 
-> diff --git a/drivers/infiniband/ulp/rtrs/README b/drivers/infiniband/ulp/rtrs/README
-> new file mode 100644
-> index 000000000000..59ad60318a18
-> --- /dev/null
-> +++ b/drivers/infiniband/ulp/rtrs/README
-> @@ -0,0 +1,149 @@
-> +****************************
-> +InfiniBand Transport (RTRS)
-> +****************************
-> +
-> +RTRS (InfiniBand Transport) is a reliable high speed transport library
-> +which provides support to establish optimal number of connections
-> +between client and server machines using RDMA (InfiniBand, RoCE, iWarp)
-> +transport. It is optimized to transfer (read/write) IO blocks.
+Fix a static code checker warning:
+fs/ocfs2/acl.c:331
+	ocfs2_acl_chmod() warn: passing zero to 'PTR_ERR'
 
-Is it explained somewhere how the optimal number of connections is 
-determined and also according to which metric the number of connections 
-is optimized? Is the number of connections chosen to minimize latency, 
-maximize IOPS or perhaps to optimize yet another metric?
+Link: http://lkml.kernel.org/r/1dee278b-6c96-eec2-ce76-fe6e07c6e20f@linux.alibaba.com
+Fixes: 5ee0fbd50fd ("ocfs2: revert using ocfs2_acl_chmod to avoid inode cluster lock hang")
+Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/ocfs2/acl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks,
+diff --git a/fs/ocfs2/acl.c b/fs/ocfs2/acl.c
+index 917fadca8a7b..b73b78771915 100644
+--- a/fs/ocfs2/acl.c
++++ b/fs/ocfs2/acl.c
+@@ -335,8 +335,8 @@ int ocfs2_acl_chmod(struct inode *inode, struct buffer_head *bh)
+ 	down_read(&OCFS2_I(inode)->ip_xattr_sem);
+ 	acl = ocfs2_get_acl_nolock(inode, ACL_TYPE_ACCESS, bh);
+ 	up_read(&OCFS2_I(inode)->ip_xattr_sem);
+-	if (IS_ERR(acl) || !acl)
+-		return PTR_ERR(acl);
++	if (IS_ERR_OR_NULL(acl))
++		return PTR_ERR_OR_ZERO(acl);
+ 	ret = __posix_acl_chmod(&acl, GFP_KERNEL, inode->i_mode);
+ 	if (ret)
+ 		return ret;
+-- 
+2.20.1
 
-Bart.
+
+
