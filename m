@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB42C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE75C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D053120866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F4B420866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004417;
-	bh=QIJEMpMgif8cr5BfWx9VYHU4uTMqaApzdAMh4JrEtMs=;
+	s=default; t=1578004421;
+	bh=ljE6LJalJQ4T2iuSgGcVOWSJgzZoXUCBg5/49+IIkrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z83Kt5Cucab9qSxbG3hPiKaZnGAFmyE7si76zHLDX/1zEgnsgTsfqmwWpJ4M2dNSm
-	 qXIvKOwoli621ODX9KwXGnErp3sUfT2a60iK9rI7zVLuLzqWosSNUeUxSdJO2fWGiV
-	 gAyD7P10v07fOXFXU+L+iWoEaP+S50Wvz1dtamVw=
+	b=S6Z9fTvis+MxOlCqjbaBlMSDJ90ffkfh/ceCcRbLHrBtcxX8Psj74TwKOgD3Z2C7+
+	 ngKrojfwG2kV9yMclLDtJI1KaM8tTKAhMTHBN3ZgNGk0LqALVl0N9i6z6kPYMs+Ny7
+	 Mu3e4T2vgQHn/bG1RzYwD7YUl88bbYpzdEzuaiHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730543AbgABWdg (ORCPT
+        id S1730567AbgABWdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:33:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41162 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:33:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728842AbgABWde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:33:34 -0500
+        id S1730530AbgABWdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:33:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B365B22314;
-        Thu,  2 Jan 2020 22:33:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F75521D7D;
+        Thu,  2 Jan 2020 22:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004414;
-        bh=QIJEMpMgif8cr5BfWx9VYHU4uTMqaApzdAMh4JrEtMs=;
+        s=default; t=1578004416;
+        bh=ljE6LJalJQ4T2iuSgGcVOWSJgzZoXUCBg5/49+IIkrM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T61sSChOdO/K5McHr/fc3D6qFJmT4d5+DGuH37z5asq6BOyGFtgfjYBitF4Q/IrzV
-         33IjkyZKClY1URq5hEmDig+odrbIsuIlVzH/6rq3ej3MtBbJHs1QIEWcccxT5sh9hw
-         zh2ayZSWXuamabYK5X/zbo7XIdUnyyZsS+uII6Xc=
+        b=e1CIe/h0DpYduba/V/BS3M1xG/9P2L64e+ejoExeLYLXSQFtljONdypTtWSCF0wM2
+         yWL0vz3ESP/YbPgBHHppl7Bu2eQS5KQJsF3lAwypqGTwP/vntict8KuwNwc4c5K/zC
+         sCjZ3BBhZgnehROaL0e5rKVpv0dRD2RkTss+gVKA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Christoph Paasch <cpaasch@apple.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 4.9 169/171] tcp: do not send empty skb from tcp_write_xmit()
-Date:   Thu,  2 Jan 2020 23:08:20 +0100
-Message-Id: <20200102220610.081992094@linuxfoundation.org>
+Subject: [PATCH 4.9 170/171] gtp: fix wrong condition in gtp_genl_dump_pdp()
+Date:   Thu,  2 Jan 2020 23:08:21 +0100
+Message-Id: <20200102220610.205742114@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -63,53 +59,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 1f85e6267caca44b30c54711652b0726fadbb131 ]
+[ Upstream commit 94a6d9fb88df43f92d943c32b84ce398d50bf49f ]
 
-Backport of commit fdfc5c8594c2 ("tcp: remove empty skb from
-write queue in error cases") in linux-4.14 stable triggered
-various bugs. One of them has been fixed in commit ba2ddb43f270
-("tcp: Don't dequeue SYN/FIN-segments from write-queue"), but
-we still have crashes in some occasions.
+gtp_genl_dump_pdp() is ->dumpit() callback of GTP module and it is used
+to dump pdp contexts. it would be re-executed because of dump packet size.
 
-Root-cause is that when tcp_sendmsg() has allocated a fresh
-skb and could not append a fragment before being blocked
-in sk_stream_wait_memory(), tcp_write_xmit() might be called
-and decide to send this fresh and empty skb.
+If dump packet size is too big, it saves current dump pointer
+(gtp interface pointer, bucket, TID value) then it restarts dump from
+last pointer.
+Current GTP code allows adding zero TID pdp context but dump code
+ignores zero TID value. So, last dump pointer will not be found.
 
-Sending an empty packet is not only silly, it might have caused
-many issues we had in the past with tp->packets_out being
-out of sync.
+In addition, this patch adds missing rcu_read_lock() in
+gtp_genl_dump_pdp().
 
-Fixes: c65f7f00c587 ("[TCP]: Simplify SKB data portion allocation with NETIF_F_SG.")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Christoph Paasch <cpaasch@apple.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Cc: Jason Baron <jbaron@akamai.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp_output.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/gtp.c |   36 +++++++++++++++++++-----------------
+ 1 file changed, 19 insertions(+), 17 deletions(-)
 
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -2233,6 +2233,14 @@ static bool tcp_write_xmit(struct sock *
- 		if (tcp_small_queue_check(sk, skb, 0))
- 			break;
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -42,7 +42,6 @@ struct pdp_ctx {
+ 	struct hlist_node	hlist_addr;
  
-+		/* Argh, we hit an empty skb(), presumably a thread
-+		 * is sleeping in sendmsg()/sk_stream_wait_memory().
-+		 * We do not want to send a pure-ack packet and have
-+		 * a strange looking rtx queue with empty packet(s).
-+		 */
-+		if (TCP_SKB_CB(skb)->end_seq == TCP_SKB_CB(skb)->seq)
-+			break;
+ 	union {
+-		u64		tid;
+ 		struct {
+ 			u64	tid;
+ 			u16	flow;
+@@ -1221,43 +1220,46 @@ static int gtp_genl_dump_pdp(struct sk_b
+ 				struct netlink_callback *cb)
+ {
+ 	struct gtp_dev *last_gtp = (struct gtp_dev *)cb->args[2], *gtp;
++	int i, j, bucket = cb->args[0], skip = cb->args[1];
+ 	struct net *net = sock_net(skb->sk);
+-	struct gtp_net *gn = net_generic(net, gtp_net_id);
+-	unsigned long tid = cb->args[1];
+-	int i, k = cb->args[0], ret;
+ 	struct pdp_ctx *pctx;
++	struct gtp_net *gn;
 +
- 		if (unlikely(tcp_transmit_skb(sk, skb, 1, gfp)))
- 			break;
++	gn = net_generic(net, gtp_net_id);
+ 
+ 	if (cb->args[4])
+ 		return 0;
+ 
++	rcu_read_lock();
+ 	list_for_each_entry_rcu(gtp, &gn->gtp_dev_list, list) {
+ 		if (last_gtp && last_gtp != gtp)
+ 			continue;
+ 		else
+ 			last_gtp = NULL;
+ 
+-		for (i = k; i < gtp->hash_size; i++) {
+-			hlist_for_each_entry_rcu(pctx, &gtp->tid_hash[i], hlist_tid) {
+-				if (tid && tid != pctx->u.tid)
+-					continue;
+-				else
+-					tid = 0;
+-
+-				ret = gtp_genl_fill_info(skb,
+-							 NETLINK_CB(cb->skb).portid,
+-							 cb->nlh->nlmsg_seq,
+-							 cb->nlh->nlmsg_type, pctx);
+-				if (ret < 0) {
++		for (i = bucket; i < gtp->hash_size; i++) {
++			j = 0;
++			hlist_for_each_entry_rcu(pctx, &gtp->tid_hash[i],
++						 hlist_tid) {
++				if (j >= skip &&
++				    gtp_genl_fill_info(skb,
++					    NETLINK_CB(cb->skb).portid,
++					    cb->nlh->nlmsg_seq,
++					    cb->nlh->nlmsg_type, pctx)) {
+ 					cb->args[0] = i;
+-					cb->args[1] = pctx->u.tid;
++					cb->args[1] = j;
+ 					cb->args[2] = (unsigned long)gtp;
+ 					goto out;
+ 				}
++				j++;
+ 			}
++			skip = 0;
+ 		}
++		bucket = 0;
+ 	}
+ 	cb->args[4] = 1;
+ out:
++	rcu_read_unlock();
+ 	return skb->len;
+ }
  
 
 
