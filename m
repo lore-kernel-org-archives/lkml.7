@@ -2,214 +2,136 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 690EBC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 459B9C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C28820866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004259;
-	bh=0GLaHmphvTeubZvC5uU6aC4Qva0bhqO0+4200B/F0ek=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JxiNgo9yvAMZZ9+KnJbAGsY5EIEgkajmSoJCNv3r45Na2ChDNd1eH+y6MEE/6n7Gy
-	 YOcRcFGNAcopJLEu+UTArUkspUnvxfTMvXgcpOuKNQpABczZN5MEu1NERvIvxJWCyE
-	 m8mSL/xPwsT3aycbgktn1tZxWYeZa+zUe5yFWc+o=
+	by mail.kernel.org (Postfix) with ESMTP id 18FAB2465A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="h0vLtx81"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729672AbgABWa6 (ORCPT
+        id S1730228AbgABWbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:30:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35336 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729915AbgABWay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:30:54 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D842921835;
-        Thu,  2 Jan 2020 22:30:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004253;
-        bh=0GLaHmphvTeubZvC5uU6aC4Qva0bhqO0+4200B/F0ek=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2ufJyT3KAiW5CF1j0epxXmLvSziF904OXKrM8wBX5uQvLVe6pGYDLrd1biSbUf4rv
-         gYJnlZWnSVuOzOLiEB6yrgSiWXDGi7zMNAeiJYzFV51fgNQxUKOVB2HJu2OiiP4PQ4
-         HDu2wGskB5Lxt+8+cVdJtMLfgXse2c8koQJq3wWA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Omar Sandoval <osandov@fb.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 076/171] btrfs: dont prematurely free work in run_ordered_work()
-Date:   Thu,  2 Jan 2020 23:06:47 +0100
-Message-Id: <20200102220557.515041444@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
-References: <20200102220546.960200039@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 2 Jan 2020 17:31:01 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:50134 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730212AbgABWaz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:30:55 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 002MUgnv064697;
+        Thu, 2 Jan 2020 16:30:42 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578004242;
+        bh=u/NjnNFDv+DUjWFH0ZddWGRh3O0gXqdBXm664jtPmcM=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=h0vLtx81Nijrya0QkJAbUn8q4GVV76NzhkqR9m8sKlNpODjCBpCqwATbV+niICcjT
+         W4X5GSdr6VI47oYFty0egsWwnUVuyqjZLBtiQViGMI3m1BdvASAlE2y51tE3/p70pY
+         TrU1mCQV0MDln72oUwvtQqfanbD+YQzNQOG+NPes=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 002MUggq073137
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 2 Jan 2020 16:30:42 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 2 Jan
+ 2020 16:30:42 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 2 Jan 2020 16:30:42 -0600
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 002MUgIU053811;
+        Thu, 2 Jan 2020 16:30:42 -0600
+Subject: Re: [PATCH 2/3] iommu: omap: Fix printing format for size_t on 64-bit
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>
+References: <20191230172619.17814-1-krzk@kernel.org>
+ <20191230172619.17814-2-krzk@kernel.org>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <2c797855-1967-007e-bbbc-e9f414fc9887@ti.com>
+Date:   Thu, 2 Jan 2020 16:30:42 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20191230172619.17814-2-krzk@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omar Sandoval <osandov@fb.com>
+On 12/30/19 11:26 AM, Krzysztof Kozlowski wrote:
+> Print size_t as %zu or %zx to fix -Wformat warnings when compiling on
+> 64-bit platform (e.g. with COMPILE_TEST):
+> 
+>     drivers/iommu/omap-iommu.c: In function ‘flush_iotlb_page’:
+>     drivers/iommu/omap-iommu.c:437:47: warning:
+>         format ‘%x’ expects argument of type ‘unsigned int’,
+>         but argument 7 has type ‘size_t {aka long unsigned int}’ [-Wformat=]
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-[ Upstream commit c495dcd6fbe1dce51811a76bb85b4675f6494938 ]
+With "iommu/omap: ..." on the subject-line as per the current convention,
 
-We hit the following very strange deadlock on a system with Btrfs on a
-loop device backed by another Btrfs filesystem:
+Acked-by: Suman Anna <s-anna@ti.com>
 
-1. The top (loop device) filesystem queues an async_cow work item from
-   cow_file_range_async(). We'll call this work X.
-2. Worker thread A starts work X (normal_work_helper()).
-3. Worker thread A executes the ordered work for the top filesystem
-   (run_ordered_work()).
-4. Worker thread A finishes the ordered work for work X and frees X
-   (work->ordered_free()).
-5. Worker thread A executes another ordered work and gets blocked on I/O
-   to the bottom filesystem (still in run_ordered_work()).
-6. Meanwhile, the bottom filesystem allocates and queues an async_cow
-   work item which happens to be the recently-freed X.
-7. The workqueue code sees that X is already being executed by worker
-   thread A, so it schedules X to be executed _after_ worker thread A
-   finishes (see the find_worker_executing_work() call in
-   process_one_work()).
+regards
+Suman
 
-Now, the top filesystem is waiting for I/O on the bottom filesystem, but
-the bottom filesystem is waiting for the top filesystem to finish, so we
-deadlock.
-
-This happens because we are breaking the workqueue assumption that a
-work item cannot be recycled while it still depends on other work. Fix
-it by waiting to free the work item until we are done with all of the
-related ordered work.
-
-P.S.:
-
-One might ask why the workqueue code doesn't try to detect a recycled
-work item. It actually does try by checking whether the work item has
-the same work function (find_worker_executing_work()), but in our case
-the function is the same. This is the only key that the workqueue code
-has available to compare, short of adding an additional, layer-violating
-"custom key". Considering that we're the only ones that have ever hit
-this, we should just play by the rules.
-
-Unfortunately, we haven't been able to create a minimal reproducer other
-than our full container setup using a compress-force=zstd filesystem on
-top of another compress-force=zstd filesystem.
-
-Suggested-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Omar Sandoval <osandov@fb.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/btrfs/async-thread.c | 56 ++++++++++++++++++++++++++++++++---------
- 1 file changed, 44 insertions(+), 12 deletions(-)
-
-diff --git a/fs/btrfs/async-thread.c b/fs/btrfs/async-thread.c
-index ff0b0be92d61..a3de11d52ad0 100644
---- a/fs/btrfs/async-thread.c
-+++ b/fs/btrfs/async-thread.c
-@@ -265,16 +265,17 @@ out:
- 	}
- }
- 
--static void run_ordered_work(struct __btrfs_workqueue *wq)
-+static void run_ordered_work(struct __btrfs_workqueue *wq,
-+			     struct btrfs_work *self)
- {
- 	struct list_head *list = &wq->ordered_list;
- 	struct btrfs_work *work;
- 	spinlock_t *lock = &wq->list_lock;
- 	unsigned long flags;
-+	void *wtag;
-+	bool free_self = false;
- 
- 	while (1) {
--		void *wtag;
--
- 		spin_lock_irqsave(lock, flags);
- 		if (list_empty(list))
- 			break;
-@@ -300,16 +301,47 @@ static void run_ordered_work(struct __btrfs_workqueue *wq)
- 		list_del(&work->ordered_list);
- 		spin_unlock_irqrestore(lock, flags);
- 
--		/*
--		 * We don't want to call the ordered free functions with the
--		 * lock held though. Save the work as tag for the trace event,
--		 * because the callback could free the structure.
--		 */
--		wtag = work;
--		work->ordered_free(work);
--		trace_btrfs_all_work_done(wq->fs_info, wtag);
-+		if (work == self) {
-+			/*
-+			 * This is the work item that the worker is currently
-+			 * executing.
-+			 *
-+			 * The kernel workqueue code guarantees non-reentrancy
-+			 * of work items. I.e., if a work item with the same
-+			 * address and work function is queued twice, the second
-+			 * execution is blocked until the first one finishes. A
-+			 * work item may be freed and recycled with the same
-+			 * work function; the workqueue code assumes that the
-+			 * original work item cannot depend on the recycled work
-+			 * item in that case (see find_worker_executing_work()).
-+			 *
-+			 * Note that the work of one Btrfs filesystem may depend
-+			 * on the work of another Btrfs filesystem via, e.g., a
-+			 * loop device. Therefore, we must not allow the current
-+			 * work item to be recycled until we are really done,
-+			 * otherwise we break the above assumption and can
-+			 * deadlock.
-+			 */
-+			free_self = true;
-+		} else {
-+			/*
-+			 * We don't want to call the ordered free functions with
-+			 * the lock held though. Save the work as tag for the
-+			 * trace event, because the callback could free the
-+			 * structure.
-+			 */
-+			wtag = work;
-+			work->ordered_free(work);
-+			trace_btrfs_all_work_done(wq->fs_info, wtag);
-+		}
- 	}
- 	spin_unlock_irqrestore(lock, flags);
-+
-+	if (free_self) {
-+		wtag = self;
-+		self->ordered_free(self);
-+		trace_btrfs_all_work_done(wq->fs_info, wtag);
-+	}
- }
- 
- static void normal_work_helper(struct btrfs_work *work)
-@@ -337,7 +369,7 @@ static void normal_work_helper(struct btrfs_work *work)
- 	work->func(work);
- 	if (need_order) {
- 		set_bit(WORK_DONE_BIT, &work->flags);
--		run_ordered_work(wq);
-+		run_ordered_work(wq, work);
- 	}
- 	if (!need_order)
- 		trace_btrfs_all_work_done(wq->fs_info, wtag);
--- 
-2.20.1
-
-
+> ---
+>  drivers/iommu/omap-iommu.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iommu/omap-iommu.c b/drivers/iommu/omap-iommu.c
+> index 50e8acf88ec4..887fefcb03b4 100644
+> --- a/drivers/iommu/omap-iommu.c
+> +++ b/drivers/iommu/omap-iommu.c
+> @@ -434,7 +434,7 @@ static void flush_iotlb_page(struct omap_iommu *obj, u32 da)
+>  		bytes = iopgsz_to_bytes(cr.cam & 3);
+>  
+>  		if ((start <= da) && (da < start + bytes)) {
+> -			dev_dbg(obj->dev, "%s: %08x<=%08x(%x)\n",
+> +			dev_dbg(obj->dev, "%s: %08x<=%08x(%zx)\n",
+>  				__func__, start, da, bytes);
+>  			iotlb_load_cr(obj, &cr);
+>  			iommu_write_reg(obj, 1, MMU_FLUSH_ENTRY);
+> @@ -1352,11 +1352,11 @@ static int omap_iommu_map(struct iommu_domain *domain, unsigned long da,
+>  
+>  	omap_pgsz = bytes_to_iopgsz(bytes);
+>  	if (omap_pgsz < 0) {
+> -		dev_err(dev, "invalid size to map: %d\n", bytes);
+> +		dev_err(dev, "invalid size to map: %zu\n", bytes);
+>  		return -EINVAL;
+>  	}
+>  
+> -	dev_dbg(dev, "mapping da 0x%lx to pa %pa size 0x%x\n", da, &pa, bytes);
+> +	dev_dbg(dev, "mapping da 0x%lx to pa %pa size 0x%zx\n", da, &pa, bytes);
+>  
+>  	iotlb_init_entry(&e, da, pa, omap_pgsz);
+>  
+> @@ -1393,7 +1393,7 @@ static size_t omap_iommu_unmap(struct iommu_domain *domain, unsigned long da,
+>  	size_t bytes = 0;
+>  	int i;
+>  
+> -	dev_dbg(dev, "unmapping da 0x%lx size %u\n", da, size);
+> +	dev_dbg(dev, "unmapping da 0x%lx size %zu\n", da, size);
+>  
+>  	iommu = omap_domain->iommus;
+>  	for (i = 0; i < omap_domain->num_iommus; i++, iommu++) {
+> 
 
