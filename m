@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BE6C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06835C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D464322314
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C676824649
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:15:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003355;
-	bh=ZMbrNIIoItAzyHQtsTUS7XyHOzTm8U/IXoFwb/X6Cp0=;
+	s=default; t=1578003358;
+	bh=iXszqpez7cW5kFoYt1EbqfL7aHPMczCqNvmErBzKnmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H1KuVGGNs8seUh+qulC9EZ3y9qvvKv6YXQ3Izvz1DdGoQS4na4B5yn2asryCOzpzZ
-	 gdZ9Ww1u1Fp2zB7Ir0qClkcq54aGrD+/ndiGFxAJZd66MUCdiAGMr18hXdRi5a+S9R
-	 ogLZulh0+/54yu+r9q3xPvusXYeGDyg+/qPu5lH0=
+	b=08mkglQ8UsneT9lSsNtb+9XP+3wuz3dKeutDuw7ltQrB4JSw/jGDL+QAXTjNOCpZk
+	 Mp7eeQHUs2wnp/E2jtcog5lInTcqNafkUde6Qziv2bZemfZ3Qaz4+F2XEBo2hXgLaD
+	 3cMlzhBgklWb4L9qhmeLUISwgyAoutCS2W1Nes0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbgABWPy (ORCPT
+        id S1728174AbgABWP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:15:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57260 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:15:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728147AbgABWPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:15:52 -0500
+        id S1728153AbgABWPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:15:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 459912253D;
-        Thu,  2 Jan 2020 22:15:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1D3A22314;
+        Thu,  2 Jan 2020 22:15:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003351;
-        bh=ZMbrNIIoItAzyHQtsTUS7XyHOzTm8U/IXoFwb/X6Cp0=;
+        s=default; t=1578003354;
+        bh=iXszqpez7cW5kFoYt1EbqfL7aHPMczCqNvmErBzKnmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N4+5WaPPhIGd3pkaQvhG5WyVcEwzoUTPd5WWWOtV3+4VdDnbAQxtvFJbkT2JaOcz8
-         3+J7bb/875fjOlxsFz++v9QJ4dEi4jxNueRs8FPtdr0qkG86F6QXZeNoe+PJ6bTypZ
-         XAdXXS3kCJL6qqPU2U7b3ftz/+ovxMEjD2mQd1LI=
+        b=dQYU04NmP1W1/OP+jdOnsjyAvNjo6tSrlMOgGPwLs/QApSB6Vu39auacipxd65uef
+         TCDCXdJ91Cv8/A9+opMREZxJ7RmxpMlTmzqgjRlqml8NrB4a70TaL9h+TMHhRFikRo
+         kB2d9Pju9oiWxDiAj0xoTKcsxAu3FYshUht6QFHM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
+        Shuah Khan <shuah@kernel.org>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 125/191] s390: disable preemption when switching to nodat stack with CALL_ON_STACK
-Date:   Thu,  2 Jan 2020 23:06:47 +0100
-Message-Id: <20200102215843.173677161@linuxfoundation.org>
+Subject: [PATCH 5.4 126/191] selftests: vm: add fragment CONFIG_TEST_VMALLOC
+Date:   Thu,  2 Jan 2020 23:06:48 +0100
+Message-Id: <20200102215843.267990228@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -60,58 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Anders Roxell <anders.roxell@linaro.org>
 
-[ Upstream commit 7f28dad395243c5026d649136823bbc40029a828 ]
+[ Upstream commit 746dd4012d215b53152f0001a48856e41ea31730 ]
 
-Make sure preemption is disabled when temporary switching to nodat
-stack with CALL_ON_STACK helper, because nodat stack is per cpu.
+When running test_vmalloc.sh smoke the following print out states that
+the fragment is missing.
 
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+ # ./test_vmalloc.sh: You must have the following enabled in your kernel:
+ # CONFIG_TEST_VMALLOC=m
+
+Rework to add the fragment 'CONFIG_TEST_VMALLOC=m' to the config file.
+
+Link: http://lkml.kernel.org/r/20190916095217.19665-1-anders.roxell@linaro.org
+Fixes: a05ef00c9790 ("selftests/vm: add script helper for CONFIG_TEST_VMALLOC_MODULE")
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/machine_kexec.c |  2 ++
- arch/s390/mm/maccess.c           | 12 +++++++++---
- 2 files changed, 11 insertions(+), 3 deletions(-)
+ tools/testing/selftests/vm/config | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/s390/kernel/machine_kexec.c b/arch/s390/kernel/machine_kexec.c
-index d402ced7f7c3..cb8b1cc285c9 100644
---- a/arch/s390/kernel/machine_kexec.c
-+++ b/arch/s390/kernel/machine_kexec.c
-@@ -164,7 +164,9 @@ static bool kdump_csum_valid(struct kimage *image)
- #ifdef CONFIG_CRASH_DUMP
- 	int rc;
- 
-+	preempt_disable();
- 	rc = CALL_ON_STACK(do_start_kdump, S390_lowcore.nodat_stack, 1, image);
-+	preempt_enable();
- 	return rc == 0;
- #else
- 	return false;
-diff --git a/arch/s390/mm/maccess.c b/arch/s390/mm/maccess.c
-index 59ad7997fed1..de7ca4b6718f 100644
---- a/arch/s390/mm/maccess.c
-+++ b/arch/s390/mm/maccess.c
-@@ -119,9 +119,15 @@ static unsigned long __no_sanitize_address _memcpy_real(unsigned long dest,
-  */
- int memcpy_real(void *dest, void *src, size_t count)
- {
--	if (S390_lowcore.nodat_stack != 0)
--		return CALL_ON_STACK(_memcpy_real, S390_lowcore.nodat_stack,
--				     3, dest, src, count);
-+	int rc;
-+
-+	if (S390_lowcore.nodat_stack != 0) {
-+		preempt_disable();
-+		rc = CALL_ON_STACK(_memcpy_real, S390_lowcore.nodat_stack, 3,
-+				   dest, src, count);
-+		preempt_enable();
-+		return rc;
-+	}
- 	/*
- 	 * This is a really early memcpy_real call, the stacks are
- 	 * not set up yet. Just call _memcpy_real on the early boot
+diff --git a/tools/testing/selftests/vm/config b/tools/testing/selftests/vm/config
+index 1c0d76cb5adf..93b90a9b1eeb 100644
+--- a/tools/testing/selftests/vm/config
++++ b/tools/testing/selftests/vm/config
+@@ -1,2 +1,3 @@
+ CONFIG_SYSVIPC=y
+ CONFIG_USERFAULTFD=y
++CONFIG_TEST_VMALLOC=m
 -- 
 2.20.1
 
