@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC67C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08120C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F93A20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE81320866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004236;
-	bh=m5jp6toHKvY6DICKeFo4tapw/949r6gZ/yCWEKg4VJw=;
+	s=default; t=1578004239;
+	bh=j0Yy2ANRHWCq+YRclRmXdKIpPCA73fKlGYs5FvjcUCg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aa9MvTbqNnq6MRWSMV/k2bAlzJWelmBzpPknFAPsok7YQeGMjv9Ap0anRhiXwU0jp
-	 6+GukVTCgc3vY8XTeVmJdrLDF2oHEzw2XZ+GIRo62od93SHUE94/lWl9qXhFqVcjg9
-	 VFla8IxzAJrTpMuUljlq4x4ESecRnsw80l0TzObQ=
+	b=Cn6QVUiXJTM+RmOlBtMJS1dFfAgk9/ia8ZnWbnIYbd0RrTYPcHFOh2+NQ7Vb5gcbu
+	 ZaN6oap3oEWui4ojygjrwpP2VYBTmLN4pCTxLZrQQgyqq0dcVjPMwcAvrDzje/E6DJ
+	 Xo/R/r3vD8eZ7LdNaYYcOe9PLUD8sR3cQcisXljM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730012AbgABWa2 (ORCPT
+        id S1730182AbgABWai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:30:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34168 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:30:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729899AbgABWaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:30:25 -0500
+        id S1730170AbgABWad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:30:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9EA220863;
-        Thu,  2 Jan 2020 22:30:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CD6421835;
+        Thu,  2 Jan 2020 22:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004224;
-        bh=m5jp6toHKvY6DICKeFo4tapw/949r6gZ/yCWEKg4VJw=;
+        s=default; t=1578004231;
+        bh=j0Yy2ANRHWCq+YRclRmXdKIpPCA73fKlGYs5FvjcUCg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2bQ3BXDR4LWA2BFtmzyfuTqnhUDfBgVUjkMR9v9o6vMARSO2zWCakPA4mrFqx62NT
-         SPjGtwlXbNF9Xk3eFyddst0kFe3zYO11usjSfyC0hpcaRHB8Wta/93ePuI9YGNMNfd
-         i4w7UmakKt1WPqY8iBM9FnCxcMw1OuS/XMnHQ3J0=
+        b=g5CdmlAlBIdPY1TamZ9Xjoij8MerDUK4nSwZsgyX+Jl4064kENanJQRjww3RNcU40
+         zfbCWByQJK3T2yc7LDkUV5bvcu692s5cf8DMrAm96eyXAowxg9GnvgWzdV3537BVka
+         jhEwqUcny2BbozcMe8YcmJD4wEXAL02/8ZBsPN6Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 089/171] btrfs: do not call synchronize_srcu() in inode_tree_del
-Date:   Thu,  2 Jan 2020 23:07:00 +0100
-Message-Id: <20200102220559.438935083@linuxfoundation.org>
+Subject: [PATCH 4.9 092/171] Btrfs: fix removal logic of the tree mod log that leads to use-after-free issues
+Date:   Thu,  2 Jan 2020 23:07:03 +0100
+Message-Id: <20200102220559.911282020@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -60,59 +61,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit f72ff01df9cf5db25c76674cac16605992d15467 ]
+[ Upstream commit 6609fee8897ac475378388238456c84298bff802 ]
 
-Testing with the new fsstress uncovered a pretty nasty deadlock with
-lookup and snapshot deletion.
+When a tree mod log user no longer needs to use the tree it calls
+btrfs_put_tree_mod_seq() to remove itself from the list of users and
+delete all no longer used elements of the tree's red black tree, which
+should be all elements with a sequence number less then our equals to
+the caller's sequence number. However the logic is broken because it
+can delete and free elements from the red black tree that have a
+sequence number greater then the caller's sequence number:
 
-Process A
-unlink
- -> final iput
-   -> inode_tree_del
-     -> synchronize_srcu(subvol_srcu)
+1) At a point in time we have sequence numbers 1, 2, 3 and 4 in the
+   tree mod log;
 
-Process B
-btrfs_lookup  <- srcu_read_lock() acquired here
-  -> btrfs_iget
-    -> find inode that has I_FREEING set
-      -> __wait_on_freeing_inode()
+2) The task which got assigned the sequence number 1 calls
+   btrfs_put_tree_mod_seq();
 
-We're holding the srcu_read_lock() while doing the iget in order to make
-sure our fs root doesn't go away, and then we are waiting for the inode
-to finish freeing.  However because the free'ing process is doing a
-synchronize_srcu() we deadlock.
+3) Sequence number 1 is deleted from the list of sequence numbers;
 
-Fix this by dropping the synchronize_srcu() in inode_tree_del().  We
-don't need people to stop accessing the fs root at this point, we're
-only adding our empty root to the dead roots list.
+4) The current minimum sequence number is computed to be the sequence
+   number 2;
 
-A larger much more invasive fix is forthcoming to address how we deal
-with fs roots, but this fixes the immediate problem.
+5) A task using sequence number 2 is at tree_mod_log_rewind() and gets
+   a pointer to one of its elements from the red black tree through
+   a call to tree_mod_log_search();
 
-Fixes: 76dda93c6ae2 ("Btrfs: add snapshot/subvolume destroy ioctl")
+6) The task with sequence number 1 iterates the red black tree of tree
+   modification elements and deletes (and frees) all elements with a
+   sequence number less then or equals to 2 (the computed minimum sequence
+   number) - it ends up only leaving elements with sequence numbers of 3
+   and 4;
+
+7) The task with sequence number 2 now uses the pointer to its element,
+   already freed by the other task, at __tree_mod_log_rewind(), resulting
+   in a use-after-free issue. When CONFIG_DEBUG_PAGEALLOC=y it produces
+   a trace like the following:
+
+  [16804.546854] general protection fault: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC PTI
+  [16804.547451] CPU: 0 PID: 28257 Comm: pool Tainted: G        W         5.4.0-rc8-btrfs-next-51 #1
+  [16804.548059] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
+  [16804.548666] RIP: 0010:rb_next+0x16/0x50
+  (...)
+  [16804.550581] RSP: 0018:ffffb948418ef9b0 EFLAGS: 00010202
+  [16804.551227] RAX: 6b6b6b6b6b6b6b6b RBX: ffff90e0247f6600 RCX: 6b6b6b6b6b6b6b6b
+  [16804.551873] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff90e0247f6600
+  [16804.552504] RBP: ffff90dffe0d4688 R08: 0000000000000001 R09: 0000000000000000
+  [16804.553136] R10: ffff90dffa4a0040 R11: 0000000000000000 R12: 000000000000002e
+  [16804.553768] R13: ffff90e0247f6600 R14: 0000000000001663 R15: ffff90dff77862b8
+  [16804.554399] FS:  00007f4b197ae700(0000) GS:ffff90e036a00000(0000) knlGS:0000000000000000
+  [16804.555039] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  [16804.555683] CR2: 00007f4b10022000 CR3: 00000002060e2004 CR4: 00000000003606f0
+  [16804.556336] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  [16804.556968] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  [16804.557583] Call Trace:
+  [16804.558207]  __tree_mod_log_rewind+0xbf/0x280 [btrfs]
+  [16804.558835]  btrfs_search_old_slot+0x105/0xd00 [btrfs]
+  [16804.559468]  resolve_indirect_refs+0x1eb/0xc70 [btrfs]
+  [16804.560087]  ? free_extent_buffer.part.19+0x5a/0xc0 [btrfs]
+  [16804.560700]  find_parent_nodes+0x388/0x1120 [btrfs]
+  [16804.561310]  btrfs_check_shared+0x115/0x1c0 [btrfs]
+  [16804.561916]  ? extent_fiemap+0x59d/0x6d0 [btrfs]
+  [16804.562518]  extent_fiemap+0x59d/0x6d0 [btrfs]
+  [16804.563112]  ? __might_fault+0x11/0x90
+  [16804.563706]  do_vfs_ioctl+0x45a/0x700
+  [16804.564299]  ksys_ioctl+0x70/0x80
+  [16804.564885]  ? trace_hardirqs_off_thunk+0x1a/0x20
+  [16804.565461]  __x64_sys_ioctl+0x16/0x20
+  [16804.566020]  do_syscall_64+0x5c/0x250
+  [16804.566580]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  [16804.567153] RIP: 0033:0x7f4b1ba2add7
+  (...)
+  [16804.568907] RSP: 002b:00007f4b197adc88 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+  [16804.569513] RAX: ffffffffffffffda RBX: 00007f4b100210d8 RCX: 00007f4b1ba2add7
+  [16804.570133] RDX: 00007f4b100210d8 RSI: 00000000c020660b RDI: 0000000000000003
+  [16804.570726] RBP: 000055de05a6cfe0 R08: 0000000000000000 R09: 00007f4b197add44
+  [16804.571314] R10: 0000000000000000 R11: 0000000000000246 R12: 00007f4b197add48
+  [16804.571905] R13: 00007f4b197add40 R14: 00007f4b100210d0 R15: 00007f4b197add50
+  (...)
+  [16804.575623] ---[ end trace 87317359aad4ba50 ]---
+
+Fix this by making btrfs_put_tree_mod_seq() skip deletion of elements that
+have a sequence number equals to the computed minimum sequence number, and
+not just elements with a sequence number greater then that minimum.
+
+Fixes: bd989ba359f2ac ("Btrfs: add tree modification log functions")
 CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/inode.c | 1 -
- 1 file changed, 1 deletion(-)
+ fs/btrfs/ctree.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index bb8863958ac0..250c8403ec67 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -5576,7 +5576,6 @@ static void inode_tree_del(struct inode *inode)
- 	spin_unlock(&root->inode_lock);
- 
- 	if (empty && btrfs_root_refs(&root->root_item) == 0) {
--		synchronize_srcu(&root->fs_info->subvol_srcu);
- 		spin_lock(&root->inode_lock);
- 		empty = RB_EMPTY_ROOT(&root->inode_tree);
- 		spin_unlock(&root->inode_lock);
+diff --git a/fs/btrfs/ctree.c b/fs/btrfs/ctree.c
+index 3faccbf35e9f..305deb6e59c3 100644
+--- a/fs/btrfs/ctree.c
++++ b/fs/btrfs/ctree.c
+@@ -424,7 +424,7 @@ void btrfs_put_tree_mod_seq(struct btrfs_fs_info *fs_info,
+ 	for (node = rb_first(tm_root); node; node = next) {
+ 		next = rb_next(node);
+ 		tm = container_of(node, struct tree_mod_elem, node);
+-		if (tm->seq > min_seq)
++		if (tm->seq >= min_seq)
+ 			continue;
+ 		rb_erase(node, tm_root);
+ 		kfree(tm);
 -- 
 2.20.1
 
