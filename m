@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CBEC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4871DC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A29F20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1396D20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:48:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005327;
-	bh=igtje2sxIE0jWVQ9TyhlJzluBvsYKWwRtv29gkF8azM=;
+	s=default; t=1578005336;
+	bh=LtoQL/EWMcRI+N8UsFtKtoltRqp9udZk7tULpAar5I8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e3rNhLWULFLv7maNjET8dm8Qu28wxgngBA790tajtT78FphTPdNqa3qDFDhIHn7uN
-	 3ByZWC5zKvXnmNHfV3dWsIHvbXCG81QAhFq9FELW20aRt9fAoTMei4Hiy6IVk0NZK7
-	 QPaE3gNolk9dSv4J2KJZebDm+8cEFbSH5EKHCjqQ=
+	b=Qe7MusoMHVtEqVvwpjxRJVq1ClaoStTyWvSWw7jYXao4kZmfBvHTkOjk1kzsaWkPK
+	 RWsRSfYr2dttMthMaCjrEyb3BsUKx3DZ6plTZdBtTaOqc6+c7BOEBwg+kfANGRe9je
+	 rGxiwsVCE0uM1x1jdV0stVRbqzkCdtHK3dFgIkjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730119AbgABWsq (ORCPT
+        id S1730134AbgABWsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:48:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56758 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:48:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729664AbgABW1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:27:48 -0500
+        id S1729739AbgABW1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:27:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D059222C3;
-        Thu,  2 Jan 2020 22:27:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66AA62253D;
+        Thu,  2 Jan 2020 22:27:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004067;
-        bh=igtje2sxIE0jWVQ9TyhlJzluBvsYKWwRtv29gkF8azM=;
+        s=default; t=1578004052;
+        bh=LtoQL/EWMcRI+N8UsFtKtoltRqp9udZk7tULpAar5I8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CAJqsRvsI6gm99AE0ROnzyYLEIeEBlhvXoeDDLrk2fMZHjte+oK7qQoKoQBOceZ/+
-         ThZtJsDbUzeeReEhH5hVMnD0I5C3+zBU7eIkq1ch2p5EUIdLye88bMrY+xtRqUDF0H
-         fkW/DFthTVYsgfBdTnfeVGRyleHlIB33Pj4bbNCo=
+        b=TMM6/BdeqhUSeZm9SUo5es/eJ++J7XGx6bu122mGztIMhnikULcVOCfOlJh5wLL/S
+         BbSZgizYISXCNJ4AZVFrstMMtWgys7fFn4TEg/+a4LOxyOfyKMVw8INR98mP+zRI30
+         murK8/lFdXWuYDVYNeZNyRzvlB1AKMx+GmViA2jY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Krzysztof Wilczynski <kw@linux.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 024/171] media: flexcop-usb: fix NULL-ptr deref in flexcop_usb_transfer_init()
-Date:   Thu,  2 Jan 2020 23:05:55 +0100
-Message-Id: <20200102220550.463413694@linuxfoundation.org>
+Subject: [PATCH 4.9 009/171] iio: light: bh1750: Resolve compiler warning and make code more readable
+Date:   Thu,  2 Jan 2020 23:05:40 +0100
+Message-Id: <20200102220548.211776990@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -61,44 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+From: Krzysztof Wilczynski <kw@linux.com>
 
-[ Upstream commit 649cd16c438f51d4cd777e71ca1f47f6e0c5e65d ]
+[ Upstream commit f552fde983d378e7339f9ea74a25f918563bf0d3 ]
 
-If usb_set_interface() failed, iface->cur_altsetting will
-not be assigned and it will be used in flexcop_usb_transfer_init()
-It may lead a NULL pointer dereference.
+Separate the declaration of struct bh1750_chip_info from definition
+of bh1750_chip_info_tbl[] in a single statement as it makes the code
+hard to read, and with the extra newline it makes it look as if the
+bh1750_chip_info_tbl[] had no explicit type.
 
-Check usb_set_interface() return value in flexcop_usb_init()
-and return failed to avoid using this NULL pointer.
+This change also resolves the following compiler warning about the
+unusual position of the static keyword that can be seen when building
+with warnings enabled (W=1):
 
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+drivers/iio/light/bh1750.c:64:1: warning:
+  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
+
+Related to commit 3a11fbb037a1 ("iio: light: add support for ROHM
+BH1710/BH1715/BH1721/BH1750/BH1751 ambient light sensors").
+
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/b2c2/flexcop-usb.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/iio/light/bh1750.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/usb/b2c2/flexcop-usb.c b/drivers/media/usb/b2c2/flexcop-usb.c
-index 1fc3c8d7dd9b..2594d6a7393f 100644
---- a/drivers/media/usb/b2c2/flexcop-usb.c
-+++ b/drivers/media/usb/b2c2/flexcop-usb.c
-@@ -504,7 +504,13 @@ urb_error:
- static int flexcop_usb_init(struct flexcop_usb *fc_usb)
- {
- 	/* use the alternate setting with the larges buffer */
--	usb_set_interface(fc_usb->udev,0,1);
-+	int ret = usb_set_interface(fc_usb->udev, 0, 1);
-+
-+	if (ret) {
-+		err("set interface failed.");
-+		return ret;
-+	}
-+
- 	switch (fc_usb->udev->speed) {
- 	case USB_SPEED_LOW:
- 		err("cannot handle USB speed because it is too slow.");
+diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
+index b05946604f80..6d5bb11594dc 100644
+--- a/drivers/iio/light/bh1750.c
++++ b/drivers/iio/light/bh1750.c
+@@ -62,9 +62,9 @@ struct bh1750_chip_info {
+ 
+ 	u16 int_time_low_mask;
+ 	u16 int_time_high_mask;
+-}
++};
+ 
+-static const bh1750_chip_info_tbl[] = {
++static const struct bh1750_chip_info bh1750_chip_info_tbl[] = {
+ 	[BH1710] = { 140, 1022, 300, 400,  250000000, 2, 0x001F, 0x03E0 },
+ 	[BH1721] = { 140, 1020, 300, 400,  250000000, 2, 0x0010, 0x03E0 },
+ 	[BH1750] = { 31,  254,  69,  1740, 57500000,  1, 0x001F, 0x00E0 },
 -- 
 2.20.1
 
