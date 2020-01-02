@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF76C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22FDC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCE7F227BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9269A22B48
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003381;
-	bh=SPNuXtTsCz42tF8nID8YBLFySIOZUVg24mPrGAVF3+I=;
+	s=default; t=1578003384;
+	bh=P9zYL2IjlJKQhbkr4O2SVoC2nzZza+pLAq77UjV2kn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lMkogGL53UIrtY8awEyCy2eIeV3xNAfmUSS/Al5XdiC7LnGBNWimHCFUoX1+Zx7r1
-	 50ngpsCDkR+GdSLF6ykosiWnF31jTcBc8i/LL44GZsMlFHfYNTsLTCx7sWuf6xC5IO
-	 +/UV04f7XFuTjNwghOuw+KI3fCm8J1NYoNTAtUw4=
+	b=ImMe1Zdol9uwuetDFcufgWLRfFBwgyoWsT4FUZf0RKEdWQ8wNEnMhEZgcyAD4uqO5
+	 BpS4y93bXKy1Og+csLMkgRltFsAW5HGc3rBxXPf+vkC1fYWfj9OYtwoEeRZ8iUMXpI
+	 zrHHwVUxOCcGtlFUYC3bhBncgbUh7tAiluinaBaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725933AbgABWQU (ORCPT
+        id S1728237AbgABWQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:16:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58096 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:16:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728223AbgABWQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:16:18 -0500
+        id S1728231AbgABWQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:16:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F67922B48;
-        Thu,  2 Jan 2020 22:16:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE8ED21582;
+        Thu,  2 Jan 2020 22:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003377;
-        bh=SPNuXtTsCz42tF8nID8YBLFySIOZUVg24mPrGAVF3+I=;
+        s=default; t=1578003380;
+        bh=P9zYL2IjlJKQhbkr4O2SVoC2nzZza+pLAq77UjV2kn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QYgbc3NWzevTq2oPgarkM8fCFfCssgYp6DO7eEdn6QKS1Tu17aAgY/lj/Jb7+QrjY
-         kTxrh89p9l0MY2NQcM4WJxNH27rgSqAlqjtk0kw/14edxyByK+tNrhobPaBaiqR8y4
-         +3CYdnQ02sniHXm68mRqdpKQkCxT7LODDolzksV4=
+        b=dm5vCe0nA05XBME4DOcLVOHwxB1aaJLKG6SZ3VPQlWMLVa9255wLbQFjJe/+JtK1Z
+         ilRZiIngD0wYE3e+JeF8VohF1YEhILSjfB8BeLf8n0GUqIqYszrJYatnTqFZmQP7ga
+         H5JuZ5bceoSYlih/6LZWNeLFFqUbUx9V/+Ba6NQo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 5.4 135/191] 6pack,mkiss: fix possible deadlock
-Date:   Thu,  2 Jan 2020 23:06:57 +0100
-Message-Id: <20200102215844.111908200@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+f25ecf4b2982d8c7a640@syzkaller-ppc64.appspotmail.com,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Donnellan <ajd@linux.ibm.com>
+Subject: [PATCH 5.4 136/191] powerpc: Fix __clear_user() with KUAP enabled
+Date:   Thu,  2 Jan 2020 23:06:58 +0100
+Message-Id: <20200102215844.202313478@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,178 +62,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Andrew Donnellan <ajd@linux.ibm.com>
 
-commit 5c9934b6767b16ba60be22ec3cbd4379ad64170d upstream.
+commit 61e3acd8c693a14fc69b824cb5b08d02cb90a6e7 upstream.
 
-We got another syzbot report [1] that tells us we must use
-write_lock_irq()/write_unlock_irq() to avoid possible deadlock.
+The KUAP implementation adds calls in clear_user() to enable and
+disable access to userspace memory. However, it doesn't add these to
+__clear_user(), which is used in the ptrace regset code.
 
-[1]
+As there's only one direct user of __clear_user() (the regset code),
+and the time taken to set the AMR for KUAP purposes is going to
+dominate the cost of a quick access_ok(), there's not much point
+having a separate path.
 
-WARNING: inconsistent lock state
-5.5.0-rc1-syzkaller #0 Not tainted
---------------------------------
-inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-R} usage.
-syz-executor826/9605 [HC1[1]:SC0[0]:HE0:SE1] takes:
-ffffffff8a128718 (disc_data_lock){+-..}, at: sp_get.isra.0+0x1d/0xf0 drivers/net/ppp/ppp_synctty.c:138
-{HARDIRQ-ON-W} state was registered at:
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
-  __raw_write_lock_bh include/linux/rwlock_api_smp.h:203 [inline]
-  _raw_write_lock_bh+0x33/0x50 kernel/locking/spinlock.c:319
-  sixpack_close+0x1d/0x250 drivers/net/hamradio/6pack.c:657
-  tty_ldisc_close.isra.0+0x119/0x1a0 drivers/tty/tty_ldisc.c:489
-  tty_set_ldisc+0x230/0x6b0 drivers/tty/tty_ldisc.c:585
-  tiocsetd drivers/tty/tty_io.c:2337 [inline]
-  tty_ioctl+0xe8d/0x14f0 drivers/tty/tty_io.c:2597
-  vfs_ioctl fs/ioctl.c:47 [inline]
-  file_ioctl fs/ioctl.c:545 [inline]
-  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
-  __do_sys_ioctl fs/ioctl.c:756 [inline]
-  __se_sys_ioctl fs/ioctl.c:754 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-irq event stamp: 3946
-hardirqs last  enabled at (3945): [<ffffffff87c86e43>] __raw_spin_unlock_irq include/linux/spinlock_api_smp.h:168 [inline]
-hardirqs last  enabled at (3945): [<ffffffff87c86e43>] _raw_spin_unlock_irq+0x23/0x80 kernel/locking/spinlock.c:199
-hardirqs last disabled at (3946): [<ffffffff8100675f>] trace_hardirqs_off_thunk+0x1a/0x1c arch/x86/entry/thunk_64.S:42
-softirqs last  enabled at (2658): [<ffffffff86a8b4df>] spin_unlock_bh include/linux/spinlock.h:383 [inline]
-softirqs last  enabled at (2658): [<ffffffff86a8b4df>] clusterip_netdev_event+0x46f/0x670 net/ipv4/netfilter/ipt_CLUSTERIP.c:222
-softirqs last disabled at (2656): [<ffffffff86a8b22b>] spin_lock_bh include/linux/spinlock.h:343 [inline]
-softirqs last disabled at (2656): [<ffffffff86a8b22b>] clusterip_netdev_event+0x1bb/0x670 net/ipv4/netfilter/ipt_CLUSTERIP.c:196
+Rename __clear_user() to __arch_clear_user(), and make __clear_user()
+just call clear_user().
 
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(disc_data_lock);
-  <Interrupt>
-    lock(disc_data_lock);
-
- *** DEADLOCK ***
-
-5 locks held by syz-executor826/9605:
- #0: ffff8880a905e198 (&tty->legacy_mutex){+.+.}, at: tty_lock+0xc7/0x130 drivers/tty/tty_mutex.c:19
- #1: ffffffff899a56c0 (rcu_read_lock){....}, at: mutex_spin_on_owner+0x0/0x330 kernel/locking/mutex.c:413
- #2: ffff8880a496a2b0 (&(&i->lock)->rlock){-.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
- #2: ffff8880a496a2b0 (&(&i->lock)->rlock){-.-.}, at: serial8250_interrupt+0x2d/0x1a0 drivers/tty/serial/8250/8250_core.c:116
- #3: ffffffff8c104048 (&port_lock_key){-.-.}, at: serial8250_handle_irq.part.0+0x24/0x330 drivers/tty/serial/8250/8250_port.c:1823
- #4: ffff8880a905e090 (&tty->ldisc_sem){++++}, at: tty_ldisc_ref+0x22/0x90 drivers/tty/tty_ldisc.c:288
-
-stack backtrace:
-CPU: 1 PID: 9605 Comm: syz-executor826 Not tainted 5.5.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- print_usage_bug.cold+0x327/0x378 kernel/locking/lockdep.c:3101
- valid_state kernel/locking/lockdep.c:3112 [inline]
- mark_lock_irq kernel/locking/lockdep.c:3309 [inline]
- mark_lock+0xbb4/0x1220 kernel/locking/lockdep.c:3666
- mark_usage kernel/locking/lockdep.c:3554 [inline]
- __lock_acquire+0x1e55/0x4a00 kernel/locking/lockdep.c:3909
- lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
- __raw_read_lock include/linux/rwlock_api_smp.h:149 [inline]
- _raw_read_lock+0x32/0x50 kernel/locking/spinlock.c:223
- sp_get.isra.0+0x1d/0xf0 drivers/net/ppp/ppp_synctty.c:138
- sixpack_write_wakeup+0x25/0x340 drivers/net/hamradio/6pack.c:402
- tty_wakeup+0xe9/0x120 drivers/tty/tty_io.c:536
- tty_port_default_wakeup+0x2b/0x40 drivers/tty/tty_port.c:50
- tty_port_tty_wakeup+0x57/0x70 drivers/tty/tty_port.c:387
- uart_write_wakeup+0x46/0x70 drivers/tty/serial/serial_core.c:104
- serial8250_tx_chars+0x495/0xaf0 drivers/tty/serial/8250/8250_port.c:1761
- serial8250_handle_irq.part.0+0x2a2/0x330 drivers/tty/serial/8250/8250_port.c:1834
- serial8250_handle_irq drivers/tty/serial/8250/8250_port.c:1820 [inline]
- serial8250_default_handle_irq+0xc0/0x150 drivers/tty/serial/8250/8250_port.c:1850
- serial8250_interrupt+0xf1/0x1a0 drivers/tty/serial/8250/8250_core.c:126
- __handle_irq_event_percpu+0x15d/0x970 kernel/irq/handle.c:149
- handle_irq_event_percpu+0x74/0x160 kernel/irq/handle.c:189
- handle_irq_event+0xa7/0x134 kernel/irq/handle.c:206
- handle_edge_irq+0x25e/0x8d0 kernel/irq/chip.c:830
- generic_handle_irq_desc include/linux/irqdesc.h:156 [inline]
- do_IRQ+0xde/0x280 arch/x86/kernel/irq.c:250
- common_interrupt+0xf/0xf arch/x86/entry/entry_64.S:607
- </IRQ>
-RIP: 0010:cpu_relax arch/x86/include/asm/processor.h:685 [inline]
-RIP: 0010:mutex_spin_on_owner+0x247/0x330 kernel/locking/mutex.c:579
-Code: c3 be 08 00 00 00 4c 89 e7 e8 e5 06 59 00 4c 89 e0 48 c1 e8 03 42 80 3c 38 00 0f 85 e1 00 00 00 49 8b 04 24 a8 01 75 96 f3 90 <e9> 2f fe ff ff 0f 0b e8 0d 19 09 00 84 c0 0f 85 ff fd ff ff 48 c7
-RSP: 0018:ffffc90001eafa20 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffd7
-RAX: 0000000000000000 RBX: ffff88809fd9e0c0 RCX: 1ffffffff13266dd
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: 0000000000000000
-RBP: ffffc90001eafa60 R08: 1ffff11013d22898 R09: ffffed1013d22899
-R10: ffffed1013d22898 R11: ffff88809e9144c7 R12: ffff8880a905e138
-R13: ffff88809e9144c0 R14: 0000000000000000 R15: dffffc0000000000
- mutex_optimistic_spin kernel/locking/mutex.c:673 [inline]
- __mutex_lock_common kernel/locking/mutex.c:962 [inline]
- __mutex_lock+0x32b/0x13c0 kernel/locking/mutex.c:1106
- mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1121
- tty_lock+0xc7/0x130 drivers/tty/tty_mutex.c:19
- tty_release+0xb5/0xe90 drivers/tty/tty_io.c:1665
- __fput+0x2ff/0x890 fs/file_table.c:280
- ____fput+0x16/0x20 fs/file_table.c:313
- task_work_run+0x145/0x1c0 kernel/task_work.c:113
- exit_task_work include/linux/task_work.h:22 [inline]
- do_exit+0x8e7/0x2ef0 kernel/exit.c:797
- do_group_exit+0x135/0x360 kernel/exit.c:895
- __do_sys_exit_group kernel/exit.c:906 [inline]
- __se_sys_exit_group kernel/exit.c:904 [inline]
- __x64_sys_exit_group+0x44/0x50 kernel/exit.c:904
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x43fef8
-Code: Bad RIP value.
-RSP: 002b:00007ffdb07d2338 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043fef8
-RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
-RBP: 00000000004bf730 R08: 00000000000000e7 R09: ffffffffffffffd0
-R10: 00000000004002c8 R11: 0000000000000246 R12: 0000000000000001
-R13: 00000000006d1180 R14: 0000000000000000 R15: 0000000000000000
-
-Fixes: 6e4e2f811bad ("6pack,mkiss: fix lock inconsistency")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reported-by: syzbot+f25ecf4b2982d8c7a640@syzkaller-ppc64.appspotmail.com
+Reported-by: Daniel Axtens <dja@axtens.net>
+Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: de78a9c42a79 ("powerpc: Add a framework for Kernel Userspace Access Protection")
+Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
+[mpe: Use __arch_clear_user() for the asm version like arm64 & nds32]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191209132221.15328-1-ajd@linux.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/hamradio/6pack.c |    4 ++--
- drivers/net/hamradio/mkiss.c |    4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/powerpc/include/asm/uaccess.h |    9 +++++++--
+ arch/powerpc/lib/string_32.S       |    4 ++--
+ arch/powerpc/lib/string_64.S       |    6 +++---
+ 3 files changed, 12 insertions(+), 7 deletions(-)
 
---- a/drivers/net/hamradio/6pack.c
-+++ b/drivers/net/hamradio/6pack.c
-@@ -654,10 +654,10 @@ static void sixpack_close(struct tty_str
+--- a/arch/powerpc/include/asm/uaccess.h
++++ b/arch/powerpc/include/asm/uaccess.h
+@@ -401,7 +401,7 @@ copy_to_user_mcsafe(void __user *to, con
+ 	return n;
+ }
+ 
+-extern unsigned long __clear_user(void __user *addr, unsigned long size);
++unsigned long __arch_clear_user(void __user *addr, unsigned long size);
+ 
+ static inline unsigned long clear_user(void __user *addr, unsigned long size)
  {
- 	struct sixpack *sp;
+@@ -409,12 +409,17 @@ static inline unsigned long clear_user(v
+ 	might_fault();
+ 	if (likely(access_ok(addr, size))) {
+ 		allow_write_to_user(addr, size);
+-		ret = __clear_user(addr, size);
++		ret = __arch_clear_user(addr, size);
+ 		prevent_write_to_user(addr, size);
+ 	}
+ 	return ret;
+ }
  
--	write_lock_bh(&disc_data_lock);
-+	write_lock_irq(&disc_data_lock);
- 	sp = tty->disc_data;
- 	tty->disc_data = NULL;
--	write_unlock_bh(&disc_data_lock);
-+	write_unlock_irq(&disc_data_lock);
- 	if (!sp)
- 		return;
++static inline unsigned long __clear_user(void __user *addr, unsigned long size)
++{
++	return clear_user(addr, size);
++}
++
+ extern long strncpy_from_user(char *dst, const char __user *src, long count);
+ extern __must_check long strnlen_user(const char __user *str, long n);
  
---- a/drivers/net/hamradio/mkiss.c
-+++ b/drivers/net/hamradio/mkiss.c
-@@ -773,10 +773,10 @@ static void mkiss_close(struct tty_struc
- {
- 	struct mkiss *ax;
+--- a/arch/powerpc/lib/string_32.S
++++ b/arch/powerpc/lib/string_32.S
+@@ -17,7 +17,7 @@ CACHELINE_BYTES = L1_CACHE_BYTES
+ LG_CACHELINE_BYTES = L1_CACHE_SHIFT
+ CACHELINE_MASK = (L1_CACHE_BYTES-1)
  
--	write_lock_bh(&disc_data_lock);
-+	write_lock_irq(&disc_data_lock);
- 	ax = tty->disc_data;
- 	tty->disc_data = NULL;
--	write_unlock_bh(&disc_data_lock);
-+	write_unlock_irq(&disc_data_lock);
+-_GLOBAL(__clear_user)
++_GLOBAL(__arch_clear_user)
+ /*
+  * Use dcbz on the complete cache lines in the destination
+  * to set them to zero.  This requires that the destination
+@@ -87,4 +87,4 @@ _GLOBAL(__clear_user)
+ 	EX_TABLE(8b, 91b)
+ 	EX_TABLE(9b, 91b)
  
- 	if (!ax)
- 		return;
+-EXPORT_SYMBOL(__clear_user)
++EXPORT_SYMBOL(__arch_clear_user)
+--- a/arch/powerpc/lib/string_64.S
++++ b/arch/powerpc/lib/string_64.S
+@@ -17,7 +17,7 @@ PPC64_CACHES:
+ 	.section	".text"
+ 
+ /**
+- * __clear_user: - Zero a block of memory in user space, with less checking.
++ * __arch_clear_user: - Zero a block of memory in user space, with less checking.
+  * @to:   Destination address, in user space.
+  * @n:    Number of bytes to zero.
+  *
+@@ -58,7 +58,7 @@ err3;	stb	r0,0(r3)
+ 	mr	r3,r4
+ 	blr
+ 
+-_GLOBAL_TOC(__clear_user)
++_GLOBAL_TOC(__arch_clear_user)
+ 	cmpdi	r4,32
+ 	neg	r6,r3
+ 	li	r0,0
+@@ -181,4 +181,4 @@ err1;	dcbz	0,r3
+ 	cmpdi	r4,32
+ 	blt	.Lshort_clear
+ 	b	.Lmedium_clear
+-EXPORT_SYMBOL(__clear_user)
++EXPORT_SYMBOL(__arch_clear_user)
 
 
