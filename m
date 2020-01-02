@@ -2,148 +2,240 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3E5C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE875C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF61222525
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862332465B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:52:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="V9mfQO+l"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ST1wSuao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728823AbgABPvV (ORCPT
+        id S1728775AbgABPw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 10:51:21 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42612 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728770AbgABPvU (ORCPT
+        Thu, 2 Jan 2020 10:52:29 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40055 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728692AbgABPw3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 10:51:20 -0500
-Received: by mail-pl1-f196.google.com with SMTP id p9so17955776plk.9
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 07:51:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=l8GiNbTzB0gxgqSfCeGUqR2N+xB9TfANszBuH6xbhVk=;
-        b=V9mfQO+lvFeoyC1d29u4/iGjL9H5Kx7299Phh07rMp8378POUNc83NRtQwgB6UuNE4
-         wtTjq8Hj7hmFN0IAZhc0+Q6SA1+BGLFrNK/ItlzwXNL+LTB4iFpQ4ntD8lbhXlaz1Y+T
-         AvUAqBz/N/bI0m2byK+NEugJ5lI+wCFqTmQjg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=l8GiNbTzB0gxgqSfCeGUqR2N+xB9TfANszBuH6xbhVk=;
-        b=k/ksdsHU0eozwg95CFtX/zsX3cahm5cqVpoTWQtY6FYij7syiD+OHU58GAF8o8OKwo
-         8AX9+PB4L9hZfIvshTNbhokNCuY+KS7Zh3NCWR94Vumb7ippIing6iLuOyoIArR8wobN
-         mw1R0NCW2DamjujI6YuZj9EByUBGGlHP+PNJl74xHyCt1sB24bcYF/iw9Xh+SvwN0Gky
-         RxaAkxAgdTysjh1qW8clP0SMh3Ze7aOG+7iYv0ao69a3QLgNZMnS2fvoV0M1bPKUzpJt
-         VwUisl4X+AXsB9DcrrM5YzpdTDtxtFvgRwwamPGuPLwq8HBqvE+RDMs7fTLUVFMcCcrl
-         XYww==
-X-Gm-Message-State: APjAAAWDofGo3JpPS6wrSk8Cm4qlaLABPfRZKk1KXg9zwCy3pMGFa80x
-        9UaXeVGYgV2PK248+TTXhrlakw==
-X-Google-Smtp-Source: APXvYqw1oN4gWnsrwdlNQQB/kqEr/Ia2EGgZDAwGDeuYjFRcd01TGnYijs/cVowvM9nEGABw5DYJlw==
-X-Received: by 2002:a17:902:b10d:: with SMTP id q13mr77923301plr.14.1577980280225;
-        Thu, 02 Jan 2020 07:51:20 -0800 (PST)
-Received: from Ninja.ibn.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id d2sm11499420pjv.18.2020.01.02.07.51.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 02 Jan 2020 07:51:19 -0800 (PST)
-From:   Vikas Gupta <vikas.gupta@broadcom.com>
-To:     Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     vasundhara-v.volam@broadcom.com, vikram.prakash@broadcom.com,
-        Vikas Gupta <vikas.gupta@broadcom.com>
-Subject: [PATCH v1 3/3] bnxt_en: Call recovery done after reset is successfully done
-Date:   Thu,  2 Jan 2020 21:18:11 +0530
-Message-Id: <1577980091-25118-4-git-send-email-vikas.gupta@broadcom.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1577980091-25118-1-git-send-email-vikas.gupta@broadcom.com>
-References: <1577980091-25118-1-git-send-email-vikas.gupta@broadcom.com>
+        Thu, 2 Jan 2020 10:52:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577980347;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=tcdT+WBt9piwYSkuFEZriwn4HoTv8JvjfaEstULl0KM=;
+        b=ST1wSuaoaC1gb0Wc+3ykUjsm0zeYW8y0CBlieoc/7Kwp14enZfPILhfLYJS+vvL3vvJFlp
+        t+fwPL7KdUnwFcgyvas62V4dvs68Ej/QaXKoXT5xrnAVaMSOyqlHmICVcAD7B9sUc0nNNG
+        CW1h5UP82aiCQMuv8kSQyypihIexC1k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-77-DYS2THfOPOGmYZ9hxdsWHw-1; Thu, 02 Jan 2020 10:52:24 -0500
+X-MC-Unique: DYS2THfOPOGmYZ9hxdsWHw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0A79F800EB6;
+        Thu,  2 Jan 2020 15:52:23 +0000 (UTC)
+Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6944C675AE;
+        Thu,  2 Jan 2020 15:52:17 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dave Chinner <david@fromorbit.com>, Qian Cai <cai@lca.pw>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH] xfs: Fix false positive lockdep warning with sb_internal & fs_reclaim
+Date:   Thu,  2 Jan 2020 10:52:08 -0500
+Message-Id: <20200102155208.8977-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Return EINPROGRESS to devlink health reporter recover as we are not yet
-done and call devlink_health_reporter_recovery_done once reset is
-successfully completed from workqueue context.
+Depending on the workloads, the following circular locking dependency
+warning between sb_internal (a percpu rwsem) and fs_reclaim (a pseudo
+lock) may show up:
 
-Signed-off-by: Vikas Gupta <vikas.gupta@broadcom.com>
+======================================================
+WARNING: possible circular locking dependency detected
+5.0.0-rc1+ #60 Tainted: G        W
+------------------------------------------------------
+fsfreeze/4346 is trying to acquire lock:
+0000000026f1d784 (fs_reclaim){+.+.}, at:
+fs_reclaim_acquire.part.19+0x5/0x30
+
+but task is already holding lock:
+0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
+
+which lock already depends on the new lock.
+  :
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(sb_internal);
+                               lock(fs_reclaim);
+                               lock(sb_internal);
+  lock(fs_reclaim);
+
+ *** DEADLOCK ***
+
+4 locks held by fsfreeze/4346:
+ #0: 00000000b478ef56 (sb_writers#8){++++}, at: percpu_down_write+0xb4/0x650
+ #1: 000000001ec487a9 (&type->s_umount_key#28){++++}, at: freeze_super+0xda/0x290
+ #2: 000000003edbd5a0 (sb_pagefaults){++++}, at: percpu_down_write+0xb4/0x650
+ #3: 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
+
+stack backtrace:
+Call Trace:
+ dump_stack+0xe0/0x19a
+ print_circular_bug.isra.10.cold.34+0x2f4/0x435
+ check_prev_add.constprop.19+0xca1/0x15f0
+ validate_chain.isra.14+0x11af/0x3b50
+ __lock_acquire+0x728/0x1200
+ lock_acquire+0x269/0x5a0
+ fs_reclaim_acquire.part.19+0x29/0x30
+ fs_reclaim_acquire+0x19/0x20
+ kmem_cache_alloc+0x3e/0x3f0
+ kmem_zone_alloc+0x79/0x150
+ xfs_trans_alloc+0xfa/0x9d0
+ xfs_sync_sb+0x86/0x170
+ xfs_log_sbcount+0x10f/0x140
+ xfs_quiesce_attr+0x134/0x270
+ xfs_fs_freeze+0x4a/0x70
+ freeze_super+0x1af/0x290
+ do_vfs_ioctl+0xedc/0x16c0
+ ksys_ioctl+0x41/0x80
+ __x64_sys_ioctl+0x73/0xa9
+ do_syscall_64+0x18f/0xd23
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+According to Dave Chinner:
+
+  Freezing the filesystem, after all the data has been cleaned. IOWs
+  memory reclaim will never run the above writeback path when
+  the freeze process is trying to allocate a transaction here because
+  there are no dirty data pages in the filesystem at this point.
+
+  Indeed, this xfs_sync_sb() path sets XFS_TRANS_NO_WRITECOUNT so that
+  it /doesn't deadlock/ by taking freeze references for the
+  transaction. We've just drained all the transactions
+  in progress and written back all the dirty metadata, too, and so the
+  filesystem is completely clean and only needs the superblock to be
+  updated to complete the freeze process. And to do that, it does not
+  take a freeze reference because calling sb_start_intwrite() here
+  would deadlock.
+
+  IOWs, this is a false positive, caused by the fact that
+  xfs_trans_alloc() is called from both above and below memory reclaim
+  as well as within /every level/ of freeze processing. Lockdep is
+  unable to describe the staged flush logic in the freeze process that
+  prevents deadlocks from occurring, and hence we will pretty much
+  always see false positives in the freeze path....
+
+Perhaps breaking the fs_reclaim pseudo lock into a per filesystem lock
+may fix the issue. However, that will greatly complicate the logic and
+may not be worth it.
+
+Another way to fix it is to disable the taking of the fs_reclaim
+pseudo lock when in the freezing code path as a reclaim on the freezed
+filesystem is not possible as stated above. This patch takes this
+approach by setting the __GFP_NOLOCKDEP flag in the slab memory
+allocation calls when the filesystem has been freezed.
+
+Without this patch, the command sequence below will show that the lock
+dependency chain sb_internal -> fs_reclaim exists.
+
+ # fsfreeze -f /home
+ # fsfreeze --unfreeze /home
+ # grep -i fs_reclaim -C 3 /proc/lockdep_chains | grep -C 5 sb_internal
+
+After applying the patch, such sb_internal -> fs_reclaim lock dependency
+chain can no longer be found. Because of that, the locking dependency
+warning will not be shown.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c         |  1 +
- drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c | 14 ++++++++++++--
- drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.h |  1 +
- 3 files changed, 14 insertions(+), 2 deletions(-)
+ fs/xfs/kmem.h      | 11 ++++++++++-
+ fs/xfs/xfs_log.c   |  3 ++-
+ fs/xfs/xfs_trans.c |  8 +++++++-
+ 3 files changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 7b0fe19..39d4309 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -10822,6 +10822,7 @@ static void bnxt_fw_reset_task(struct work_struct *work)
- 		smp_mb__before_atomic();
- 		clear_bit(BNXT_STATE_IN_FW_RESET, &bp->state);
- 		bnxt_ulp_start(bp, rc);
-+		bnxt_dl_health_recovery_done(bp);
- 		bnxt_dl_health_status_update(bp, true);
- 		rtnl_unlock();
- 		break;
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
-index 3eedd44..0c3d224 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
-@@ -89,7 +89,7 @@ static int bnxt_fw_reset_recover(struct devlink_health_reporter *reporter,
- 		return -EOPNOTSUPP;
+diff --git a/fs/xfs/kmem.h b/fs/xfs/kmem.h
+index 6143117770e9..901189dcc474 100644
+--- a/fs/xfs/kmem.h
++++ b/fs/xfs/kmem.h
+@@ -20,6 +20,12 @@ typedef unsigned __bitwise xfs_km_flags_t;
+ #define KM_MAYFAIL	((__force xfs_km_flags_t)0x0008u)
+ #define KM_ZERO		((__force xfs_km_flags_t)0x0010u)
  
- 	bnxt_fw_reset(bp);
--	return 0;
-+	return -EINPROGRESS;
- }
- 
- static const
-@@ -116,7 +116,7 @@ static int bnxt_fw_fatal_recover(struct devlink_health_reporter *reporter,
- 	else if (event == BNXT_FW_EXCEPTION_SP_EVENT)
- 		bnxt_fw_exception(bp);
- 
--	return 0;
-+	return -EINPROGRESS;
- }
- 
- static const
-@@ -262,6 +262,16 @@ void bnxt_dl_health_status_update(struct bnxt *bp, bool healthy)
- 	health->fatal = false;
- }
- 
-+void bnxt_dl_health_recovery_done(struct bnxt *bp)
-+{
-+	struct bnxt_fw_health *hlth = bp->fw_health;
++#ifdef CONFIG_LOCKDEP
++#define KM_NOLOCKDEP	((__force xfs_km_flags_t)0x0020u)
++#else
++#define KM_NOLOCKDEP	((__force xfs_km_flags_t)0)
++#endif
 +
-+	if (hlth->fatal)
-+		devlink_health_reporter_recovery_done(hlth->fw_fatal_reporter);
-+	else
-+		devlink_health_reporter_recovery_done(hlth->fw_reset_reporter);
-+}
-+
- static const struct devlink_ops bnxt_dl_ops = {
- #ifdef CONFIG_BNXT_SRIOV
- 	.eswitch_mode_set = bnxt_dl_eswitch_mode_set,
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.h b/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.h
-index 6db6c3d..08aaa44 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.h
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.h
-@@ -58,6 +58,7 @@ struct bnxt_dl_nvm_param {
+ /*
+  * We use a special process flag to avoid recursive callbacks into
+  * the filesystem during transactions.  We will also issue our own
+@@ -30,7 +36,7 @@ kmem_flags_convert(xfs_km_flags_t flags)
+ {
+ 	gfp_t	lflags;
  
- void bnxt_devlink_health_report(struct bnxt *bp, unsigned long event);
- void bnxt_dl_health_status_update(struct bnxt *bp, bool healthy);
-+void bnxt_dl_health_recovery_done(struct bnxt *bp);
- void bnxt_dl_fw_reporters_create(struct bnxt *bp);
- void bnxt_dl_fw_reporters_destroy(struct bnxt *bp, bool all);
- int bnxt_dl_register(struct bnxt *bp);
+-	BUG_ON(flags & ~(KM_NOFS|KM_MAYFAIL|KM_ZERO));
++	BUG_ON(flags & ~(KM_NOFS|KM_MAYFAIL|KM_ZERO|KM_NOLOCKDEP));
+ 
+ 	lflags = GFP_KERNEL | __GFP_NOWARN;
+ 	if (flags & KM_NOFS)
+@@ -49,6 +55,9 @@ kmem_flags_convert(xfs_km_flags_t flags)
+ 	if (flags & KM_ZERO)
+ 		lflags |= __GFP_ZERO;
+ 
++	if (flags & KM_NOLOCKDEP)
++		lflags |= __GFP_NOLOCKDEP;
++
+ 	return lflags;
+ }
+ 
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index f6006d94a581..b1997649ecd8 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -454,7 +454,8 @@ xfs_log_reserve(
+ 	XFS_STATS_INC(mp, xs_try_logspace);
+ 
+ 	ASSERT(*ticp == NULL);
+-	tic = xlog_ticket_alloc(log, unit_bytes, cnt, client, permanent, 0);
++	tic = xlog_ticket_alloc(log, unit_bytes, cnt, client, permanent,
++			mp->m_super->s_writers.frozen ? KM_NOLOCKDEP : 0);
+ 	*ticp = tic;
+ 
+ 	xlog_grant_push_ail(log, tic->t_cnt ? tic->t_unit_res * tic->t_cnt
+diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+index 3b208f9a865c..c0e42e4f5b77 100644
+--- a/fs/xfs/xfs_trans.c
++++ b/fs/xfs/xfs_trans.c
+@@ -262,8 +262,14 @@ xfs_trans_alloc(
+ 	 * Allocate the handle before we do our freeze accounting and setting up
+ 	 * GFP_NOFS allocation context so that we avoid lockdep false positives
+ 	 * by doing GFP_KERNEL allocations inside sb_start_intwrite().
++	 *
++	 * To prevent false positive lockdep warning of circular locking
++	 * dependency between sb_internal and fs_reclaim, disable the
++	 * acquisition of the fs_reclaim pseudo-lock when the superblock
++	 * has been frozen or in the process of being frozen.
+ 	 */
+-	tp = kmem_zone_zalloc(xfs_trans_zone, 0);
++	tp = kmem_zone_zalloc(xfs_trans_zone,
++		mp->m_super->s_writers.frozen ? KM_NOLOCKDEP : 0);
+ 	if (!(flags & XFS_TRANS_NO_WRITECOUNT))
+ 		sb_start_intwrite(mp->m_super);
+ 
 -- 
-2.7.4
+2.18.1
 
