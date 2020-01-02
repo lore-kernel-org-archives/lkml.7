@@ -2,110 +2,206 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F24B0C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E17C2D0DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C97C7217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E00A8215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:04:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BH0kFVI/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f43dtVLE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726136AbgABGCh (ORCPT
+        id S1726234AbgABGED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 01:02:37 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:2170 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725788AbgABGCg (ORCPT
+        Thu, 2 Jan 2020 01:04:03 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36101 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgABGEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 01:02:36 -0500
-X-UUID: dd7d204af3d64f0a9d0cc923b9ac291b-20200102
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=VDLfXcYUJeQkJKhzGgI3LI0lhtwysIGtBl5WGX6utNk=;
-        b=BH0kFVI/GfyFnrjxaR1KLl8zPJfGM+eUIy2VW299DXTrYnDB5XZcB2PN0fD+1v2h7vZacl6yO7aSkzSrotC4BXYTcfJBczEu3kato1AB6+5lIyIJUd6rpreIV8dsNiiPj690hxK37PAgc304s0V1m90JPvz6RvJGQPK99qCwqrE=;
-X-UUID: dd7d204af3d64f0a9d0cc923b9ac291b-20200102
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1129739519; Thu, 02 Jan 2020 14:02:31 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 2 Jan 2020 14:02:00 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 2 Jan 2020 14:02:56 +0800
-Message-ID: <1577944949.32066.1.camel@mtksdaap41>
-Subject: Re: [PATCH v6, 02/14] drm/mediatek: move dsi/dpi select input into
- mtk_ddp_sel_in
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Thu, 2 Jan 2020 14:02:29 +0800
-In-Reply-To: <1577943579.15116.1.camel@mhfsdcap03>
-References: <1577937624-14313-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1577937624-14313-3-git-send-email-yongqiang.niu@mediatek.com>
-         <1577941388.24650.2.camel@mtksdaap41> <1577943579.15116.1.camel@mhfsdcap03>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 2 Jan 2020 01:04:02 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 19so43171918otz.3;
+        Wed, 01 Jan 2020 22:04:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PkkzfRfLclc3mdFH+VRL0+gF0bnoP7beI/xdBP95oXE=;
+        b=f43dtVLEFGJ/myRkbv51HVHgqyy7kbhiZEQ+1edeQZRRgX6I1JP896HJWFhM5U9bZD
+         ObAfqehcQt+q5J/IMOMP5mKQGprjldV/H7DGcyg/cLbB3hlU2yBvVCJyiUfeGji0vxLr
+         JsEYfOwFh3YLAI3BQYNmuxmzpHWBQKWdKYGtvUqc7aoxLSgCahP1XUq0oY4lHXRnHOE7
+         sikBKsd0NDKuOyhBGkObbdyypp3Qg4BNnayYyiovPjoSk622ytArAY9LhWCDDoot2TA0
+         5qusI+Se3WH2JX+J1Dj961Dzr0kYkKMLu6jTT0lCKd3flsAkvs44qktibVhtQM4jmrlq
+         yS7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PkkzfRfLclc3mdFH+VRL0+gF0bnoP7beI/xdBP95oXE=;
+        b=aNB+YiX2JLZvZEbU5QCMrwuiMxbKEHN/mcUxURg5UU4ifI4kNQO8Po2SW7ldenaIq7
+         mJrHKKzmbdajhnwE3zR86FbGJDDhG/6ytOwEJL9pWvQ3v2+YRSeq3dDV8dKIt5gArRGe
+         ZVTlGr5+fE2foWrCOaMu0ITtqkR1NLE65qBcw5xHKeHiZKo7gXE650QsSof3TSZncGy6
+         nnd8dxc7dFaBwB/eQvz/mB3jq2L7Gg1KzjmiwqRckcNmu9t0JNEYxPzlrIcHL0hhW1br
+         6hR4EYBBPQksSluTF7eBJeYXGMB35ScvKyF/ErOxkwSM+YhiM4czlGMz+Z0afyX2yjjJ
+         13qg==
+X-Gm-Message-State: APjAAAW/H2T0O0Gfb37GR9iT1+8ZLASzsuaMf4Z0V0UiU1SbEKH7vz1b
+        udl2yHqE9JlmhgVCXnd3V4jygOPk9A7aQ5TH0BY=
+X-Google-Smtp-Source: APXvYqz4mYWq5mK6aHxgJ2hSTAhExRG23JCyVmVnG4f3RwJ5bW740BxGzqMyxTtrWMldH88EkxJtO+uzdWVmO9mfYuI=
+X-Received: by 2002:a9d:6c92:: with SMTP id c18mr75128173otr.157.1577945041391;
+ Wed, 01 Jan 2020 22:04:01 -0800 (PST)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: A1684504572D72737A9A3F6FE56B804FCF8791910A3C4C4D11C54BBD967F1E9D2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20191230132006.7401-1-masahiroy@kernel.org> <CAMrEMU_5XmUmKmF99gg-RBkBAvpAbnM6G=Y0cBajcE2HMUQssg@mail.gmail.com>
+ <CAK7LNASh89xrM3Q2VwSgufU05prVDUz8Lo0eQC+QfmH=eFXJmg@mail.gmail.com>
+In-Reply-To: <CAK7LNASh89xrM3Q2VwSgufU05prVDUz8Lo0eQC+QfmH=eFXJmg@mail.gmail.com>
+From:   Justin Capella <justincapella@gmail.com>
+Date:   Wed, 1 Jan 2020 22:03:49 -0800
+Message-ID: <CAMrEMU88d0dZdcMkdcT8t8TB7FSyttgdMaZVoiwA_8OLt+cFKw@mail.gmail.com>
+Subject: Re: [PATCH] initramfs: fix 'bad variable name' error in gen_initramfs_list.sh
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "Jory A . Pratt" <anarchy@gentoo.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoNCg0KT24gVGh1LCAyMDIwLTAxLTAyIGF0IDEzOjM5ICswODAwLCBZb25n
-cWlhbmcgTml1IHdyb3RlOg0KPiBPbiBUaHUsIDIwMjAtMDEtMDIgYXQgMTM6MDMgKzA4MDAsIENL
-IEh1IHdyb3RlOg0KPiA+IEhpLCBZb25ncWlhbmc6DQo+ID4gDQo+ID4gT24gVGh1LCAyMDIwLTAx
-LTAyIGF0IDEyOjAwICswODAwLCBZb25ncWlhbmcgTml1IHdyb3RlOg0KPiA+ID4gbW92ZSBkc2kv
-ZHBpIHNlbGVjdCBpbnB1dCBpbnRvIG10a19kZHBfc2VsX2luDQo+ID4gPiANCj4gPiA+IFNpZ25l
-ZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29tPg0KPiA+
-ID4gLS0tDQo+ID4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgfCAx
-MCArKysrKystLS0tDQo+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgNCBk
-ZWxldGlvbnMoLSkNCj4gPiA+IA0KPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9t
-ZWRpYXRlay9tdGtfZHJtX2RkcC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
-ZGRwLmMNCj4gPiA+IGluZGV4IDM5NzAwYjkuLjkxYzliMTkgMTAwNjQ0DQo+ID4gPiAtLS0gYS9k
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYw0KPiA+ID4gKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMNCj4gPiA+IEBAIC0zNzYsNiArMzc2LDEy
-IEBAIHN0YXRpYyB1bnNpZ25lZCBpbnQgbXRrX2RkcF9zZWxfaW4oZW51bSBtdGtfZGRwX2NvbXBf
-aWQgY3VyLA0KPiA+ID4gIAl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX0JMUyAmJiBu
-ZXh0ID09IEREUF9DT01QT05FTlRfRFNJMCkgew0KPiA+ID4gIAkJKmFkZHIgPSBESVNQX1JFR19D
-T05GSUdfRFNJX1NFTDsNCj4gPiA+ICAJCXZhbHVlID0gRFNJX1NFTF9JTl9CTFM7DQo+ID4gPiAr
-CX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTEgJiYgbmV4dCA9PSBERFBfQ09N
-UE9ORU5UX0RTSTApIHsNCj4gPiA+ICsJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RTSV9TRUw7
-DQo+ID4gPiArCQl2YWx1ZSA9IERTSV9TRUxfSU5fUkRNQTsNCj4gPiANCj4gPiBJbiBvcmlnaW5h
-bCBjb2RlLCB0aGlzIGlzIHNldCB3aGVuIGN1ciA9PSBERFBfQ09NUE9ORU5UX0JMUyBhbmQgbmV4
-dCA9PQ0KPiA+IEREUF9DT01QT05FTlRfRFBJMC4gV2h5IGRvIHlvdSBjaGFuZ2UgdGhlIGNvbmRp
-dGlvbj8NCj4gPiANCj4gPiBSZWdhcmRzLA0KPiA+IENLDQo+IA0KPiBpZiBibHMgY29ubmVjdCB3
-aXRoIGRwaTAsIHJkbWExIHNob3VsZCBjb25uZWN0IHdpdGggZHNpMCwgdGhlIGNvbmRpdGlvbg0K
-PiBpcyBzYW1lIHdpdGggYmVmb3JlLg0KDQpZb3Ugc3VnZ2VzdCB0aGF0IHR3byBjcnRjcyBhcmUg
-Ym90aCBlbmFibGVkLiBJZiBvbmx5IG9uZSBjcnRjIGlzDQplbmFibGVkLCBqdXN0IG9uZSBvZiB0
-aGVzZSB0d28gd291bGQgYmUgc2V0Lg0KDQpSZWdhcmRzLA0KQ0sNCg0KPiA+IA0KPiA+ID4gKwl9
-IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX0JMUyAmJiBuZXh0ID09IEREUF9DT01QT05F
-TlRfRFBJMCkgew0KPiA+ID4gKwkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRFBJX1NFTDsNCj4g
-PiA+ICsJCXZhbHVlID0gRFBJX1NFTF9JTl9CTFM7DQo+ID4gPiAgCX0gZWxzZSB7DQo+ID4gPiAg
-CQl2YWx1ZSA9IDA7DQo+ID4gPiAgCX0NCj4gPiA+IEBAIC0zOTMsMTAgKzM5OSw2IEBAIHN0YXRp
-YyB2b2lkIG10a19kZHBfc291dF9zZWwoc3RydWN0IHJlZ21hcCAqY29uZmlnX3JlZ3MsDQo+ID4g
-PiAgCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfQkxTICYmIG5leHQgPT0gRERQX0NP
-TVBPTkVOVF9EUEkwKSB7DQo+ID4gPiAgCQlyZWdtYXBfd3JpdGUoY29uZmlnX3JlZ3MsIERJU1Bf
-UkVHX0NPTkZJR19PVVRfU0VMLA0KPiA+ID4gIAkJCQlCTFNfVE9fRFBJX1JETUExX1RPX0RTSSk7
-DQo+ID4gPiAtCQlyZWdtYXBfd3JpdGUoY29uZmlnX3JlZ3MsIERJU1BfUkVHX0NPTkZJR19EU0lf
-U0VMLA0KPiA+ID4gLQkJCQlEU0lfU0VMX0lOX1JETUEpOw0KPiA+ID4gLQkJcmVnbWFwX3dyaXRl
-KGNvbmZpZ19yZWdzLCBESVNQX1JFR19DT05GSUdfRFBJX1NFTCwNCj4gPiA+IC0JCQkJRFBJX1NF
-TF9JTl9CTFMpOw0KPiA+ID4gIAl9DQo+ID4gPiAgfQ0KPiA+ID4gIA0KPiA+IA0KPiA+IA0KPiAN
-Cj4gDQoNCg==
+Ah, I was wondering where the magic cmd_ prefix was coming from. But I
+still think that there is an issue there-- initfs vs initRAMfs
 
+On Tue, Dec 31, 2019 at 2:28 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> On Tue, Dec 31, 2019 at 12:13 AM Justin Capella <justincapella@gmail.com> wrote:
+> >
+> > I was looking at this, and in theory there are other problems that
+> > could arise from non-escaped characters, or things with leading
+> > hyphens... In general it isn't great to assume ls output will play
+> > nicely with the internal field separator / IFS. I think a better
+> > solution would be to use something like ${foo@Q} and instead of trying
+> > to scrape ls -l, maybe using stat, since it can be asked to print out
+> > the device number.
+>
+> I am not sure if 'stat' is necessarily preferred over 'ls -l'.
+>
+> Commit a670b0b4aed129dc11b465c1c330bfe9202023e5
+> says 'stat' is not standardized.
+>
+> There is some room for argument
+> how far we should care about the portability, though.
+>
+>
+> >
+> > But I don't think this patch fixes the problem mentioned at all-- I
+> > think the problem is initfs is not a variable name on line 61:
+>
+> cmd_initramfs is defined at line 46.
+>
+> Look into scripts/Kbuild.include
+> if you want to know how if_changed works.
+>
+>
+> > $(call if_changed,initfs)
+> >
+> > https://github.com/torvalds/linux/blob/351c8a09b00b5c51c8f58b016fffe51f87e2d820/usr/Makefile#L61
+> >
+> > The Makefile and script look like more patches would be needed to fix
+> > mentioned issue, and I'm kind of wondering what the intent behind
+> > lines 31-32 is...
+> >
+> > ramfs-input := $(if $(filter-out "",$(CONFIG_INITRAMFS_SOURCE)), \
+> > $(shell echo $(CONFIG_INITRAMFS_SOURCE)),-d)
+> >
+> > why filter nothing, why shell echo?
+>
+> It does filter "", which is different from nothing.
+>
+> You need to notice GNU Make handles double-quote (")
+> as a normal character.
+> There is no special meaning as it has in shell.
+>
+> 'echo' is used just for ripping off the double-quotes.
+>
+>
+> >
+> > Quoting and/or proper escaping would be needed in many other places,
+> > and I suspect cpio input is always regenerated...
+>
+> I do not think so.
+>
+> If the cpio input is regenerated,
+> the following log is shown.
+>
+> GEN     usr/initramfs_data.cpio
+>
+>
+> I do not see it every time.
+>
+>
+> > The use of sed to
+> > manually escape things and suggesting using \ instead of using the
+> > argument terminator "--"... If weird paths with spaces and stuff are a
+> > requirement for the script needs some overhauling
+>
+> If you find a problem in particular, a patch is welcome.
+>
+> But, what you stated above comes from your misunderstanding.
+>
+>
+>
+>
+> > On Mon, Dec 30, 2019 at 5:21 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > >
+> > > Prior to commit 858805b336be ("kbuild: add $(BASH) to run scripts with
+> > > bash-extension"), this shell script was almost always run by bash since
+> > > bash is usually installed on the system by default.
+> > >
+> > > Now, this script is run by sh, which might be a symlink to dash. On such
+> > > distros, the following code emits an error:
+> > >
+> > >   local dev=`LC_ALL=C ls -l "${location}"`
+> > >
+> > > You can reproduce the build error, for example by setting
+> > > CONFIG_INITRAMFS_SOURCE="/dev".
+> > >
+> > >     GEN     usr/initramfs_data.cpio.gz
+> > >   ./usr/gen_initramfs_list.sh: 131: local: 1: bad variable name
+> > >   make[1]: *** [usr/Makefile:61: usr/initramfs_data.cpio.gz] Error 2
+> > >
+> > > This is because `LC_ALL=C ls -l "${location}"` contains spaces.
+> > > Surrounding it with double-quotes fixes the error.
+> > >
+> > > Fixes: 858805b336be ("kbuild: add $(BASH) to run scripts with bash-extension")
+> > > Reported-by: Jory A. Pratt <anarchy@gentoo.org>
+> > > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > > ---
+> > >
+> > >  usr/gen_initramfs_list.sh | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/usr/gen_initramfs_list.sh b/usr/gen_initramfs_list.sh
+> > > index 0aad760fcd8c..2bbac73e6477 100755
+> > > --- a/usr/gen_initramfs_list.sh
+> > > +++ b/usr/gen_initramfs_list.sh
+> > > @@ -128,7 +128,7 @@ parse() {
+> > >                         str="${ftype} ${name} ${location} ${str}"
+> > >                         ;;
+> > >                 "nod")
+> > > -                       local dev=`LC_ALL=C ls -l "${location}"`
+> > > +                       local dev="`LC_ALL=C ls -l "${location}"`"
+> > >                         local maj=`field 5 ${dev}`
+> > >                         local min=`field 6 ${dev}`
+> > >                         maj=${maj%,}
+> > > --
+> > > 2.17.1
+> > >
+>
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
