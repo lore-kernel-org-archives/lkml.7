@@ -4,57 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5FAC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28321C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B58B120866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F22D120866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005516;
-	bh=jiSvaxBDjkCBemgJ5XeB3xgTB9iiVkXAPKRc9uT66Ms=;
+	s=default; t=1578005519;
+	bh=NTude421O7wRuk91q6VqmT4Lm56y8Mn+TAu/ykcgd0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jvXLQFnYTx+acKLGohJ//4lPQQkL1SQs5ffJfjvD9vibGn0zZnaQ0vHMyJu5enF9q
-	 ydrlCYTEF6i1aM7KZOvV8QJqvtT6ygbrYNMPjyhDlDnVrTMl7H/jtcDBHLCz95cgVS
-	 sd/DdeSt7sSq249DqjVHxEleGgwouJTYyMUkMoc8=
+	b=X1Mzycj6n/83NYTX6yT1IKNvjrRVxMsqhaQt2YkSEhjtENz8nZ2rHxF+SzlpYDNLj
+	 EMNT3o7Ss7wY8ZFLTXxweKH9CvvCmxm1K6nks7be62HEDAFBOro0+rQVanJqLJAHuJ
+	 74inAxUun5Zg/XjBhCd+aj8FjaOKvE+PBvVIOn7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729263AbgABWXg (ORCPT
+        id S1729235AbgABWXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:23:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45748 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:23:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728702AbgABWXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:23:30 -0500
+        id S1728427AbgABWXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:23:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C19A20863;
-        Thu,  2 Jan 2020 22:23:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D977F20866;
+        Thu,  2 Jan 2020 22:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003809;
-        bh=jiSvaxBDjkCBemgJ5XeB3xgTB9iiVkXAPKRc9uT66Ms=;
+        s=default; t=1578003812;
+        bh=NTude421O7wRuk91q6VqmT4Lm56y8Mn+TAu/ykcgd0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fT6lYxno+X4Wdlj0q/5TvcPJ+ss3/lcxD0MXWgOZH5PImUOJlOfSp09B/NCl951KV
-         4xL+nn8qYAdWU2w+OFD3Vz47sO9bmBr5Wr6QiJvlO/uyH568GOeBverc+qdCngH83H
-         mP+IPz9hQ/xAj2ZenH111IkwLXsykYSo69brJIYA=
+        b=gIoVgorpyHgnqpY4jcLbdy83+ybrzIdB4pVpfFUz6aUDPBkiFZww5gF/jnKzRTi9L
+         ls3SirhQcX3U4MN8bgW05VZB8G3IVOE1Zsw1FQpR4jbowKJbQC/JyE5+qjV5t17AyO
+         //IjmpI4QYsYAuHnw0w6vTj5Rnb4Mx7KvyQrAs1k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 01/91] scsi: lpfc: Fix discovery failures when target device connectivity bounces
-Date:   Thu,  2 Jan 2020 23:06:43 +0100
-Message-Id: <20200102220358.173292458@linuxfoundation.org>
+Subject: [PATCH 4.14 10/91] powerpc/pseries: Dont fail hash page table insert for bolted mapping
+Date:   Thu,  2 Jan 2020 23:06:52 +0100
+Message-Id: <20200102220409.314933080@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,57 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit 3f97aed6117c7677eb16756c4ec8b86000fd5822 ]
+[ Upstream commit 75838a3290cd4ebbd1f567f310ba04b6ef017ce4 ]
 
-An issue was seen discovering all SCSI Luns when a target device undergoes
-link bounce.
+If the hypervisor returned H_PTEG_FULL for H_ENTER hcall, retry a hash page table
+insert by removing a random entry from the group.
 
-The driver currently does not qualify the FC4 support on the target.
-Therefore it will send a SCSI PRLI and an NVMe PRLI. The expectation is
-that the target will reject the PRLI if it is not supported. If a PRLI
-times out, the driver will retry. The driver will not proceed with the
-device until both SCSI and NVMe PRLIs are resolved.  In the failure case,
-the device is FCP only and does not respond to the NVMe PRLI, thus
-initiating the wait/retry loop in the driver.  During that time, a RSCN is
-received (device bounced) causing the driver to issue a GID_FT.  The GID_FT
-response comes back before the PRLI mess is resolved and it prematurely
-cancels the PRLI retry logic and leaves the device in a STE_PRLI_ISSUE
-state. Discovery with the target never completes or resets.
+After some runtime, it is very well possible to find all the 8 hash page table
+entry slot in the hpte group used for mapping. Don't fail a bolted entry insert
+in that case. With Storage class memory a user can find this error easily since
+a namespace enable/disable is equivalent to memory add/remove.
 
-Fix by resetting the node state back to STE_NPR_NODE when GID_FT completes,
-thereby restarting the discovery process for the node.
+This results in failures as reported below:
 
-Link: https://lore.kernel.org/r/20190922035906.10977-10-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+$ ndctl create-namespace -r region1 -t pmem -m devdax -a 65536 -s 100M
+libndctl: ndctl_dax_enable: dax1.3: failed to enable
+  Error: namespace1.2: failed to enable
+
+failed to create namespace: No such device or address
+
+In kernel log we find the details as below:
+
+Unable to create mapping for hot added memory 0xc000042006000000..0xc00004200d000000: -1
+dax_pmem: probe of dax1.3 failed with error -14
+
+This indicates that we failed to create a bolted hash table entry for direct-map
+address backing the namespace.
+
+We also observe failures such that not all namespaces will be enabled with
+ndctl enable-namespace all command.
+
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191024093542.29777-2-aneesh.kumar@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_hbadisc.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/powerpc/mm/hash_utils_64.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
-index 3f88f3d79622..4a0889dd4c1d 100644
---- a/drivers/scsi/lpfc/lpfc_hbadisc.c
-+++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
-@@ -5220,9 +5220,14 @@ lpfc_setup_disc_node(struct lpfc_vport *vport, uint32_t did)
- 			/* If we've already received a PLOGI from this NPort
- 			 * we don't need to try to discover it again.
- 			 */
--			if (ndlp->nlp_flag & NLP_RCV_PLOGI)
-+			if (ndlp->nlp_flag & NLP_RCV_PLOGI &&
-+			    !(ndlp->nlp_type &
-+			     (NLP_FCP_TARGET | NLP_NVME_TARGET)))
- 				return NULL;
+diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
+index 58c14749bb0c..cf1d76e03635 100644
+--- a/arch/powerpc/mm/hash_utils_64.c
++++ b/arch/powerpc/mm/hash_utils_64.c
+@@ -292,7 +292,14 @@ int htab_bolt_mapping(unsigned long vstart, unsigned long vend,
+ 		ret = mmu_hash_ops.hpte_insert(hpteg, vpn, paddr, tprot,
+ 					       HPTE_V_BOLTED, psize, psize,
+ 					       ssize);
+-
++		if (ret == -1) {
++			/* Try to remove a non bolted entry */
++			ret = mmu_hash_ops.hpte_remove(hpteg);
++			if (ret != -1)
++				ret = mmu_hash_ops.hpte_insert(hpteg, vpn, paddr, tprot,
++							       HPTE_V_BOLTED, psize, psize,
++							       ssize);
++		}
+ 		if (ret < 0)
+ 			break;
  
-+			ndlp->nlp_prev_state = ndlp->nlp_state;
-+			lpfc_nlp_set_state(vport, ndlp, NLP_STE_NPR_NODE);
-+
- 			spin_lock_irq(shost->host_lock);
- 			ndlp->nlp_flag |= NLP_NPR_2B_DISC;
- 			spin_unlock_irq(shost->host_lock);
 -- 
 2.20.1
 
