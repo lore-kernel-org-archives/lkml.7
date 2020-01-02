@@ -2,99 +2,187 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D54CC2D0DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 05:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5103C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 05:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3DCA20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 05:03:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="VrgzzEsR"
+	by mail.kernel.org (Postfix) with ESMTP id C6C2B21655
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 05:15:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgABFDX (ORCPT
+        id S1726094AbgABFPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 00:03:23 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:1511 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725788AbgABFDX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 00:03:23 -0500
-X-UUID: 85a4205535a8485fa0f63cd14d3ab35f-20200102
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=B9oImeZ40IpDKQMsA5+OevUOG/21QHxukfJzn2BEkvI=;
-        b=VrgzzEsR2xl8GEGgdAkOcQ3gEXP1Z/QNx0BMgrR0TGXAbYuf0OcLtP+cr3vhKVlrOKsGyNrCtEmKpKLkONBweRF2J6CP6GUhTcP8DIR/LPlV7reqIEj2rYUZbWZeHLDroEaM5CVdQHnPGibwrGyaiNAVePw4OhhjgQhVV7kSY5k=;
-X-UUID: 85a4205535a8485fa0f63cd14d3ab35f-20200102
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 2111093749; Thu, 02 Jan 2020 13:03:11 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 2 Jan 2020 13:02:02 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 2 Jan 2020 13:02:28 +0800
-Message-ID: <1577941388.24650.2.camel@mtksdaap41>
-Subject: Re: [PATCH v6, 02/14] drm/mediatek: move dsi/dpi select input into
- mtk_ddp_sel_in
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Thu, 2 Jan 2020 13:03:08 +0800
-In-Reply-To: <1577937624-14313-3-git-send-email-yongqiang.niu@mediatek.com>
-References: <1577937624-14313-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1577937624-14313-3-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: C9B08F994A7286C74E48B5B525F960C34C42DFAE9C3B659B0BFDC3F25B28B5952000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Thu, 2 Jan 2020 00:15:09 -0500
+Received: from mga12.intel.com ([192.55.52.136]:22040 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725788AbgABFPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 00:15:08 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jan 2020 21:15:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,385,1571727600"; 
+   d="scan'208";a="369236511"
+Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
+  by orsmga004.jf.intel.com with ESMTP; 01 Jan 2020 21:15:05 -0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, jmattson@google.com,
+        sean.j.christopherson@intel.com
+Cc:     yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
+        edwin.zhai@intel.com, Yang Weijiang <weijiang.yang@intel.com>
+Subject: [RESEND PATCH v10 00/10] Enable Sub-Page Write Protection Support
+Date:   Thu,  2 Jan 2020 13:18:54 +0800
+Message-Id: <20200102051904.32090-1-weijiang.yang@intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoNCg0KT24gVGh1LCAyMDIwLTAxLTAyIGF0IDEyOjAwICswODAwLCBZb25n
-cWlhbmcgTml1IHdyb3RlOg0KPiBtb3ZlIGRzaS9kcGkgc2VsZWN0IGlucHV0IGludG8gbXRrX2Rk
-cF9zZWxfaW4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5u
-aXVAbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
-ZHJtX2RkcC5jIHwgMTAgKysrKysrLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9u
-cygrKSwgNCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
-bWVkaWF0ZWsvbXRrX2RybV9kZHAuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
-X2RkcC5jDQo+IGluZGV4IDM5NzAwYjkuLjkxYzliMTkgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMv
-Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9t
-ZWRpYXRlay9tdGtfZHJtX2RkcC5jDQo+IEBAIC0zNzYsNiArMzc2LDEyIEBAIHN0YXRpYyB1bnNp
-Z25lZCBpbnQgbXRrX2RkcF9zZWxfaW4oZW51bSBtdGtfZGRwX2NvbXBfaWQgY3VyLA0KPiAgCX0g
-ZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfQkxTICYmIG5leHQgPT0gRERQX0NPTVBPTkVO
-VF9EU0kwKSB7DQo+ICAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RTSV9TRUw7DQo+ICAJCXZh
-bHVlID0gRFNJX1NFTF9JTl9CTFM7DQo+ICsJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVO
-VF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMCkgew0KPiArCQkqYWRkciA9IERJ
-U1BfUkVHX0NPTkZJR19EU0lfU0VMOw0KPiArCQl2YWx1ZSA9IERTSV9TRUxfSU5fUkRNQTsNCg0K
-SW4gb3JpZ2luYWwgY29kZSwgdGhpcyBpcyBzZXQgd2hlbiBjdXIgPT0gRERQX0NPTVBPTkVOVF9C
-TFMgYW5kIG5leHQgPT0NCkREUF9DT01QT05FTlRfRFBJMC4gV2h5IGRvIHlvdSBjaGFuZ2UgdGhl
-IGNvbmRpdGlvbj8NCg0KUmVnYXJkcywNCkNLDQoNCj4gKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBf
-Q09NUE9ORU5UX0JMUyAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFBJMCkgew0KPiArCQkqYWRk
-ciA9IERJU1BfUkVHX0NPTkZJR19EUElfU0VMOw0KPiArCQl2YWx1ZSA9IERQSV9TRUxfSU5fQkxT
-Ow0KPiAgCX0gZWxzZSB7DQo+ICAJCXZhbHVlID0gMDsNCj4gIAl9DQo+IEBAIC0zOTMsMTAgKzM5
-OSw2IEBAIHN0YXRpYyB2b2lkIG10a19kZHBfc291dF9zZWwoc3RydWN0IHJlZ21hcCAqY29uZmln
-X3JlZ3MsDQo+ICAJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9CTFMgJiYgbmV4dCA9
-PSBERFBfQ09NUE9ORU5UX0RQSTApIHsNCj4gIAkJcmVnbWFwX3dyaXRlKGNvbmZpZ19yZWdzLCBE
-SVNQX1JFR19DT05GSUdfT1VUX1NFTCwNCj4gIAkJCQlCTFNfVE9fRFBJX1JETUExX1RPX0RTSSk7
-DQo+IC0JCXJlZ21hcF93cml0ZShjb25maWdfcmVncywgRElTUF9SRUdfQ09ORklHX0RTSV9TRUws
-DQo+IC0JCQkJRFNJX1NFTF9JTl9SRE1BKTsNCj4gLQkJcmVnbWFwX3dyaXRlKGNvbmZpZ19yZWdz
-LCBESVNQX1JFR19DT05GSUdfRFBJX1NFTCwNCj4gLQkJCQlEUElfU0VMX0lOX0JMUyk7DQo+ICAJ
-fQ0KPiAgfQ0KPiAgDQoNCg==
+EPT-Based Sub-Page write Protection(SPP) allows Virtual Machine Monitor(VMM)
+specify write-permission for guest physical memory at a sub-page(128 byte)
+granularity. When SPP works, HW enforces write-access check for sub-pages
+within a protected 4KB page.
+
+The feature targets to provide fine-grained memory protection for
+usages such as memory guard and VM introspection etc.
+
+SPP is active when the "sub-page write protection" (bit 23) is 1 in
+Secondary VM-Execution Controls. The feature is backed with a Sub-Page
+Permission Table(SPPT), and subpage permission vector is stored in the
+leaf entry of SPPT. The root page is referenced via a Sub-Page Permission
+Table Pointer (SPPTP) in VMCS.
+
+To enable SPP for guest memory, the guest page should be first mapped
+to a 4KB EPT entry, then set SPP bit 61 of the corresponding entry. 
+While HW walks EPT, it traverses SPPT with the gpa to look up the sub-page
+permission vector within SPPT leaf entry. If the corresponding bit is set,
+write to sub-page is permitted, otherwise, SPP induced EPT violation is generated.
+
+This patch serial passed SPP function test and selftest on Ice-Lake platform.
+
+Please refer to the SPP introduction document in this patch set and
+Intel SDM for details:
+
+Intel SDM:
+https://software.intel.com/sites/default/files/managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
+
+Patch 1: Documentation for SPP and related API.
+Patch 2: Add control flags for Sub-Page Protection(SPP).
+Patch 3: Add SPP Table setup functions.
+Patch 4: Add functions to create/destroy SPP bitmap block.
+Patch 5: Introduce user-space SPP IOCTLs.
+Patch 6: Set up SPP paging table at vmentry/vmexit.
+Patch 7: Enable Lazy mode SPP protection.
+Patch 8: Handle SPP protected pages when VM memory changes.
+Patch 9: Add SPP protection check in emulation case.
+Patch 10: SPP selftest.
+
+Change logs:
+
+v9 ->v10
+  1. Cleared SPP active flag on VM resetting.
+  2. Added trancepoints on subpage setup and SPP induced vmexits.
+  3. Fixed a few code issues reported by Intel test robot.
+
+v8 ->v9:
+  1. Added SPP protection check in pte prefetch case.
+  2. Flushed EPT rmap to remove existing mappings of the target gfns.
+  3. Modified documentation to reflect recent changes.
+  4. Other minor code refactor.
+
+v7 -> v8:
+  1. Changed ioctl interface definition per Paolo's comments.
+  2. Replaced SPP_INIT ioctl funciton with KVM_ENABLE_CAP.
+  3. Removed SPP bit from X86 feature word.
+  4. Returned instruction length to user-space when SPP induced EPT
+     violation happens, this is to provide flexibility to use SPP,
+     revert write or track write.
+  5. Modified selftest application and added into this serial.
+  6. Simplified SPP permission vector check.
+  7. Moved spp.c and spp.h to kvm/mmu folder.
+  8. Other code fix according to Paolo's feedback and testing.
+
+v6 -> v7:
+  1. Configured all available protected pages once SPP induced vmexit
+     happens since there's no PRESENT bit in SPPT leaf entry.
+  2. Changed SPP protection check flow in tdp_page_fault().
+  3. Code refactor and minior fixes.
+
+v5 -> v6:
+  1. Added SPP protection patch for emulation cases per Jim's review.
+  2. Modified documentation and added API description per Jim's review.
+  3. Other minior changes suggested by Jim.
+
+v4 -> v5:
+  1. Enable SPP support for Hugepage(1GB/2MB) to extend application.
+  2. Make SPP miss vm-exit handler as the unified place to set up SPPT.
+  3. If SPP protected pages are access-tracked or dirty-page-tracked,
+     store SPP flag in reserved address bit, restore it in
+     fast_page_fault() handler.
+  4. Move SPP specific functions to vmx/spp.c and vmx/spp.h
+  5. Rebased code to kernel v5.3
+  6. Other change suggested by KVM community.
+  
+v3 -> v4:
+  1. Modified documentation to make it consistent with patches.
+  2. Allocated SPPT root page in init_spp() instead of vmx_set_cr3() to
+     avoid SPPT miss error.
+  3. Added back co-developers and sign-offs.
+
+v2 -> v3:                                                                
+  1. Rebased patches to kernel 5.1 release                                
+  2. Deferred SPPT setup to EPT fault handler if the page is not
+     available while set_subpage() is being called.
+  3. Added init IOCTL to reduce extra cost if SPP is not used.
+  4. Refactored patch structure, cleaned up cross referenced functions.
+  5. Added code to deal with memory swapping/migration/shrinker cases.
+
+v2 -> v1:
+  1. Rebased to 4.20-rc1
+  2. Move VMCS change to a separated patch.
+  3. Code refine and Bug fix 
+
+
+Yang Weijiang (10):
+  Documentation: Add EPT based Subpage Protection and related APIs
+  vmx: spp: Add control flags for Sub-Page Protection(SPP)
+  mmu: spp: Add SPP Table setup functions
+  mmu: spp: Add functions to operate SPP access bitmap
+  x86: spp: Introduce user-space SPP IOCTLs
+  vmx: spp: Set up SPP paging table at vmentry/vmexit
+  mmu: spp: Enable Lazy mode SPP protection
+  mmu: spp: Handle SPP protected pages when VM memory changes
+  x86: spp: Add SPP protection check in emulation
+  kvm: selftests: selftest for Sub-Page protection
+
+ Documentation/virt/kvm/api.txt                |  39 ++
+ Documentation/virtual/kvm/spp_kvm.txt         | 179 +++++
+ arch/x86/include/asm/kvm_host.h               |  11 +-
+ arch/x86/include/asm/vmx.h                    |  10 +
+ arch/x86/include/uapi/asm/vmx.h               |   2 +
+ arch/x86/kvm/mmu.h                            |   2 +
+ arch/x86/kvm/mmu/mmu.c                        | 106 ++-
+ arch/x86/kvm/mmu/spp.c                        | 660 ++++++++++++++++++
+ arch/x86/kvm/mmu/spp.h                        |  35 +
+ arch/x86/kvm/trace.h                          |  66 ++
+ arch/x86/kvm/vmx/capabilities.h               |   5 +
+ arch/x86/kvm/vmx/vmx.c                        | 104 ++-
+ arch/x86/kvm/x86.c                            | 136 +++-
+ include/uapi/linux/kvm.h                      |  17 +
+ tools/testing/selftests/kvm/Makefile          |   2 +-
+ tools/testing/selftests/kvm/lib/kvm_util.c    |   1 +
+ tools/testing/selftests/kvm/x86_64/spp_test.c | 234 +++++++
+ 17 files changed, 1599 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/virtual/kvm/spp_kvm.txt
+ create mode 100644 arch/x86/kvm/mmu/spp.c
+ create mode 100644 arch/x86/kvm/mmu/spp.h
+ create mode 100644 tools/testing/selftests/kvm/x86_64/spp_test.c
+
+-- 
+2.17.2
 
