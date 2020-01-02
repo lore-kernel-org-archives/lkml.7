@@ -2,102 +2,127 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C8EC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 19:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1DDC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 19:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F00FE21655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 19:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93EB421655
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 19:58:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o10CEcaJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mShZz6nU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728561AbgABT5Z (ORCPT
+        id S1728609AbgABT6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 14:57:25 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:36484 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728260AbgABT5Y (ORCPT
+        Thu, 2 Jan 2020 14:58:09 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:54283 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728404AbgABT6J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 14:57:24 -0500
-Received: by mail-il1-f193.google.com with SMTP id b15so34968231iln.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 11:57:24 -0800 (PST)
+        Thu, 2 Jan 2020 14:58:09 -0500
+Received: by mail-pj1-f67.google.com with SMTP id kx11so3676555pjb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 11:58:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R4iJSqevWdPyqOUmhE3mWH5fpeZvhvCfBp6cN45qRtI=;
-        b=o10CEcaJsvbpjVX6UPZffvRUyKoYVDNats6yRm5uzS0NEeH88LH3Atvn6UTrlRLLz3
-         /myAsYDWqGtiMWng3rJKHPAfoJNgcgAIpon3T8rORwGzebHvzsb0/PvEokm+hetSUK2w
-         XoTgnxzI+c85ygnUrH1dIqa9LrDpiddlbTZupWUqzSAVm+55WwTsDXRW94wPoAN1ihn/
-         /xYz9XGWmMSTDdis5QQcfV00JC+Is1ev9Q/1w5npKbLvGK2dbApMhHkiAZrUxOigf5WR
-         qJTUkJErHoyjCXLofenxYlIHbRDJC5VM9uMfGpJc28o92pR76m37a5CmQiMvKPiDEMaK
-         OXzg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=//zj6SbVl4l4Dy70+h80nhCy3QhRZVce+ij1LDk6fWU=;
+        b=mShZz6nUhFXPyEo1K5ViUN6WbTJXV2K56ZHN7OIK01/63zdSt50PHxsOHSh4ofAHEw
+         YwpZczPI8Pw8t29hmvO1YumXXRwTLV9kn6FE8iQ8BgS7pVkIsRr/kCzB7PCguX0x8AiZ
+         OLJyIJOnAHIskWV0r/9znRQ45gl++mEAlIkUkCsLr2C+MTDCrr+Ct2L1IR5SiuAMVgIz
+         qYU5quV0fKHK4frCf5hgRlAFImCjPFy8yJiOZ6+fgid5pWWJmJqdzvKCOOjlpdlUw7Ma
+         bK6bZGlWTWauS61aM1nTnSbw6R8zPGih8yjTY56Ce5MInrB+NBrvh1g2ZbIYe1Rldw54
+         /HbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R4iJSqevWdPyqOUmhE3mWH5fpeZvhvCfBp6cN45qRtI=;
-        b=g7Qemtja8jBPwvL7G7p1EsPT5CzqNJJGzWFcHXwyOBE9ctJePW4CgwjaZwWjLPC4qe
-         lJ/xkN5ZhfXXQgItWB4bjjivm4oV4yIWAfP+YpjzQQSpDuXMmyxpPoimLu8mWmszp1jU
-         eRTjBaat3dZAMnoXvGe0WqANG8hdrGCk37wzKPFNdIkqYWjkdeCyRh0epB5cckML3Kki
-         igB//VzEJ7mCSaaBt2mvgDKxQM1XXRnLBwFr6SCLczEhDurz5WPb31YusHJX9ZhLSmtP
-         9z+2HuYh9ssJESwypkZLwB9EIoz7/jDdSRl80tn3EriWv+NIFGTFIcXJN3yrtauyKxXE
-         QlLA==
-X-Gm-Message-State: APjAAAWaJN92fYh87mqOW7VjfSQMXW2XoCMMgzWUVfGfjd0bHQShgtxd
-        ReSffjZto6fxUEh+EK6Z0QGWaPDjrABf5lCbP7nqOQ==
-X-Google-Smtp-Source: APXvYqybSlxSM8g3AGH9sbux2INMPOuflfSmt+mRtxlt8FjsryRwB8tnU1cF8H4UA1L5VIEsWtxiU0vFtmlzs2DAFn8=
-X-Received: by 2002:a92:d642:: with SMTP id x2mr71408859ilp.169.1577995043289;
- Thu, 02 Jan 2020 11:57:23 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=//zj6SbVl4l4Dy70+h80nhCy3QhRZVce+ij1LDk6fWU=;
+        b=O7dd2CtdU2g9YDf6E8rto0p1GuqWJaEqk7oIAJgJDxmLxQGEeC6C2omVsqgcBV0wsL
+         TlKf3MoMBAHoHMgZYZpJApGZrjtevkca1S9upWbxHgk2t73tKXSuC5RwK5eYSDJOpqOz
+         BsQIqeZcbWLEnHoWEO3QWzbWb9Diq1Uk+jyoTOZcODh+4jHTZmi2t2bxhazZMYldVHHn
+         GuQmBpc+DyNMwkvpLocBa4zPVv7balaO88GxuIEDtofCU+ADKdMrYOaILJtNI5lbrS7u
+         GGgxq57GniEhmhkQQ1hQZ9JcGyev3P6+wxOzvwZG7h5gPkzXEuan5XM3FHUc+x0KQUUi
+         9A+g==
+X-Gm-Message-State: APjAAAUkjSknHcRWNy3otKHyF9M2zASZEgTR1jmyd8XOk5pXlUYUucMb
+        Qyaxqf+dGiT0aMO7OIJLm8uVMQ==
+X-Google-Smtp-Source: APXvYqwdxMXn05Qla4baD33J5OtsqHVuSY0QhHbQcUXhxugasbUiogtjvkASblvhYNf+o3NUIqXtZQ==
+X-Received: by 2002:a17:90a:9bc3:: with SMTP id b3mr22055052pjw.76.1577995088582;
+        Thu, 02 Jan 2020 11:58:08 -0800 (PST)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id j14sm59138415pgs.57.2020.01.02.11.58.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 11:58:07 -0800 (PST)
+Date:   Thu, 2 Jan 2020 11:58:05 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        swboyd@chromium.org, sivaa@codeaurora.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 7/9] arm64: dts: sdm845: thermal: Add critical
+ interrupt support
+Message-ID: <20200102195805.GF988120@minitux>
+References: <cover.1577976221.git.amit.kucheria@linaro.org>
+ <a86be6121986d1c37b34f791532cd65ec13f1e00.1577976221.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-References: <20191216095955.9886-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20191216114636.GB1515069@kroah.com> <ce36371b-0ca6-5819-2604-65627ce58fc8@i-love.sakura.ne.jp>
- <20191216201834.GA785904@mit.edu> <46e8f6b3-46ac-6600-ba40-9545b7e44016@i-love.sakura.ne.jp>
- <CACT4Y+ZLaR=GR2nssb_buGC0ULNpQW6jvX0p8NAE-vReDY5fPA@mail.gmail.com> <CACT4Y+Y1NTsRmifm2QLCnGom_=TnOo5Nf4EzQ=7gCJLYzx9gKA@mail.gmail.com>
-In-Reply-To: <CACT4Y+Y1NTsRmifm2QLCnGom_=TnOo5Nf4EzQ=7gCJLYzx9gKA@mail.gmail.com>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Thu, 2 Jan 2020 11:57:12 -0800
-Message-ID: <CACdnJut=Sp9fF7ysb+Giiky0QRfakczJyK2AH2puJPYWQQKhdQ@mail.gmail.com>
-Subject: Re: [PATCH] kconfig: Add kernel config option for fuzz testing.
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jiri Slaby <jslaby@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a86be6121986d1c37b34f791532cd65ec13f1e00.1577976221.git.amit.kucheria@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 12:53 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> +Matthew for a lockdown question
-> We are considering [ab]using lockdown (you knew this will happen!) for
-> fuzzing kernel. LOCKDOWN_DEBUGFS is a no-go for us and we may want a
-> few other things that may be fuzzing-specific.
-> The current inflexibility comes from the global ordering of levels:
->
-> if (kernel_locked_down >= level)
-> if (kernel_locked_down >= what) {
->
-> Is it done for performance? Or for simplicity?
+On Thu 02 Jan 06:54 PST 2020, Amit Kucheria wrote:
 
-Simplicity. Based on discussion, we didn't want the lockdown LSM to
-enable arbitrary combinations of lockdown primitives, both because
-that would make it extremely difficult for userland developers and
-because it would make it extremely easy for local admins to
-accidentally configure policies that didn't achieve the desired
-outcome. There's no inherent problem in adding new options, but really
-right now they should fall into cases where they're protecting either
-the integrity of the kernel or preventing leakage of confidential
-information from the kernel.
+> Register critical interrupts for each of the two tsens controllers
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Link: https://lore.kernel.org/r/3686bd40c99692feb955e936b608b080e2cb1826.1568624011.git.amit.kucheria@linaro.org
+
+I was under the impression that this series was already picked up, so I
+merged the three dts patches last week (it's a nop until the driver is
+updated anyways).
+
+Regards,
+Bjorn
+
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index ddb1f23c936f..8986553cf2eb 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -2950,8 +2950,9 @@
+>  			reg = <0 0x0c263000 0 0x1ff>, /* TM */
+>  			      <0 0x0c222000 0 0x1ff>; /* SROT */
+>  			#qcom,sensors = <13>;
+> -			interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
+> -			interrupt-names = "uplow";
+> +			interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "uplow", "critical";
+>  			#thermal-sensor-cells = <1>;
+>  		};
+>  
+> @@ -2960,8 +2961,9 @@
+>  			reg = <0 0x0c265000 0 0x1ff>, /* TM */
+>  			      <0 0x0c223000 0 0x1ff>; /* SROT */
+>  			#qcom,sensors = <8>;
+> -			interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>;
+> -			interrupt-names = "uplow";
+> +			interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "uplow", "critical";
+>  			#thermal-sensor-cells = <1>;
+>  		};
+>  
+> -- 
+> 2.20.1
+> 
