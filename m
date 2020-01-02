@@ -5,165 +5,381 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C935AC2D0DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A0DC2D0DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C29E21655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDF8D21655
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:24:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Y14UMEyP"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fsfUd2Eu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgABIYe (ORCPT
+        id S1727960AbgABIYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 03:24:34 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:52927 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727890AbgABIYO (ORCPT
+        Thu, 2 Jan 2020 03:24:40 -0500
+Received: from mailout4.samsung.com ([203.254.224.34]:34759 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727873AbgABIYL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 03:24:14 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200102082411epoutp03a71fd4b714a70b9152ac030b23c4c044~mBE2-rusl3211832118epoutp03Y
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jan 2020 08:24:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200102082411epoutp03a71fd4b714a70b9152ac030b23c4c044~mBE2-rusl3211832118epoutp03Y
+        Thu, 2 Jan 2020 03:24:11 -0500
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200102082409epoutp049ec55aefa2e0aa55b1beacf47cd9c4bb~mBE0wUI0B0383403834epoutp04R
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jan 2020 08:24:09 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200102082409epoutp049ec55aefa2e0aa55b1beacf47cd9c4bb~mBE0wUI0B0383403834epoutp04R
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1577953451;
-        bh=W/nvY8vh7b5VKEGm7/5P+NKNPdIjQbHkTzk7gijW0ro=;
+        s=mail20170921; t=1577953449;
+        bh=lxkFqc0ygThCmwF5n0ai/z3zixLCrXftHW3rR5k+E7s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y14UMEyPC8N7vHYb5Pa9C0mNd8AvF888al6G1qQBRALVEfQEkBpGvbiS/Kx3p13LY
-         cbxM2SBtxMNn1X14TiLkLFAGrvtmRisA3PTXktho5lqhwcGXWG1yZ9ovFnG2FSMvI1
-         QNlzMlcn6C8+ri8940XJS69rYAZkz0VEgRpkrlC4=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        b=fsfUd2EuScWamwP0kvpVurFGP4qnTpugtNlnLWU8BgpzWRJTQwJWtA5iZ7Wprm8+S
+         9r6cGvHySoajak8bMebbfwsmaGOOXsDqn4tLGdizRrG4dJr22rdJlifaSIPy7F15z0
+         Qm7c64xswtqqX+xvULKEi/uWH7okgYvNwfiSrYec=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
         epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200102082410epcas1p20401d707ee4bad518820feed6f1f3680~mBE2ce8B81480914809epcas1p2q;
-        Thu,  2 Jan 2020 08:24:10 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.163]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 47pLfc3m8CzMqYkj; Thu,  2 Jan
-        2020 08:24:08 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5E.C1.51241.8A8AD0E5; Thu,  2 Jan 2020 17:24:08 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        20200102082408epcas1p270c325b5a8c444b498675378ad05faee~mBE0MMgLy1717417174epcas1p29;
+        Thu,  2 Jan 2020 08:24:08 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.159]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 47pLfZ6VFSzMqYkY; Thu,  2 Jan
+        2020 08:24:06 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        50.2F.48019.6A8AD0E5; Thu,  2 Jan 2020 17:24:06 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
         epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200102082408epcas1p28d46af675103d2cd92232a4f7b712c46~mBEz6nkDe1480914809epcas1p2i;
-        Thu,  2 Jan 2020 08:24:08 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200102082408epsmtrp2c10d5b46b46004d915366c2f186147fd~mBEz52yoW2039720397epsmtrp2a;
-        Thu,  2 Jan 2020 08:24:08 +0000 (GMT)
-X-AuditID: b6c32a39-163ff7000001c829-83-5e0da8a8914b
+        20200102082406epcas1p268f260d90213bdaabee25a7518f86625~mBEyfWriF0996409964epcas1p2v;
+        Thu,  2 Jan 2020 08:24:06 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200102082406epsmtrp1bc34cfd727213cf6768f05cd635103de~mBEyetmAv2232622326epsmtrp1a;
+        Thu,  2 Jan 2020 08:24:06 +0000 (GMT)
+X-AuditID: b6c32a38-257ff7000001bb93-1b-5e0da8a66ee1
 Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E8.68.10238.7A8AD0E5; Thu,  2 Jan 2020 17:24:07 +0900 (KST)
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        EB.88.06569.6A8AD0E5; Thu,  2 Jan 2020 17:24:06 +0900 (KST)
 Received: from localhost.localdomain (unknown [10.88.103.87]) by
         epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200102082407epsmtip2e61e00a38690d85e4542edfb809756c0~mBEzuQiIA2215622156epsmtip2Z;
-        Thu,  2 Jan 2020 08:24:07 +0000 (GMT)
+        20200102082406epsmtip26852754a0c70b2c1a847cb9a5e2f8b64~mBEyV3bkk2215622156epsmtip2Y;
+        Thu,  2 Jan 2020 08:24:06 +0000 (GMT)
 From:   Namjae Jeon <namjae.jeon@samsung.com>
 To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
         sj1557.seo@samsung.com, linkinjeon@gmail.com, pali.rohar@gmail.com,
         Namjae Jeon <namjae.jeon@samsung.com>
-Subject: [PATCH v9 11/13] exfat: add Kconfig and Makefile
-Date:   Thu,  2 Jan 2020 16:20:34 +0800
-Message-Id: <20200102082036.29643-12-namjae.jeon@samsung.com>
+Subject: [PATCH v9 09/13] exfat: add misc operations
+Date:   Thu,  2 Jan 2020 16:20:32 +0800
+Message-Id: <20200102082036.29643-10-namjae.jeon@samsung.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200102082036.29643-1-namjae.jeon@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKKsWRmVeSWpSXmKPExsWy7bCmvu6KFbxxBi8nS1s0L17PZrFy9VEm
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKKsWRmVeSWpSXmKPExsWy7bCmru6yFbxxBps+mVg0L17PZrFy9VEm
         i+t3bzFb7Nl7ksXi8q45bBY/ptdbTDz9m8liy78jrBaX3n9gceD02DnrLrvH/rlr2D1232xg
         8+jbsorR4/MmOY9D29+wBbBF5dhkpCampBYppOYl56dk5qXbKnkHxzvHm5oZGOoaWlqYKynk
         Jeam2iq5+AToumXmAB2lpFCWmFMKFApILC5W0rezKcovLUlVyMgvLrFVSi1IySkwNCjQK07M
-        LS7NS9dLzs+1MjQwMDIFqkzIyTjyxrOgg7diwp9mlgbGS1xdjJwcEgImEtsaN7CA2EICOxgl
-        przW7mLkArI/MUq8mrmZDcL5xijRcHkPI1zHt/0sEIm9jBLdT98xw7VsevAPKMPBwSagLfFn
-        iyhIg4iAvcTm2QfAGpgFNjFK7Jn/lRUkISxgKTGxZQnYVBYBVYmDn3vAbF4BW4nDZ36xQ2yT
-        l1i94QAziM0JFJ/5vhXsJAmBLWwSW6ZdgjrJRWLa3scsELawxKvjW6CapSQ+v9vLBnKQhEC1
-        xMf9zBDhDkaJF99tIWxjiZvrN7CClDALaEqs36UPEVaU2Pl7Lth0ZgE+iXdfe1ghpvBKdLQJ
-        QZSoSvRdOswEYUtLdLV/YIco8ZB4NMcEEiITGCU2rNjDOIFRbhbCggWMjKsYxVILinPTU4sN
-        C0yRo2sTIzjJaVnuYDx2zucQowAHoxIP7415PHFCrIllxZW5hxglOJiVRHjLA3njhHhTEiur
-        Uovy44tKc1KLDzGaAsNxIrOUaHI+MAHnlcQbmhoZGxtbmJiZm5kaK4nzcvy4GCskkJ5Ykpqd
-        mlqQWgTTx8TBKdXA2BdqquiVndO8tmP5vD1vssPCX6+OXCD29p3xQ53k5frnrR/WnHhYbhew
-        oLXtkMh2g237Hy1prYlnFVTnmWn7fP9dhX2zso5rW8odeSSj3yh2hjlT8+TXRg6FB4+K3u7j
-        qj289rxl8vVYQ0Fb7lvL1vz5ZRtX+/B9a2m/X1f8cZkTbhWpfWd9lFiKMxINtZiLihMBuf5l
-        dYgDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrALMWRmVeSWpSXmKPExsWy7bCSvO7yFbxxBife21g0L17PZrFy9VEm
-        i+t3bzFb7Nl7ksXi8q45bBY/ptdbTDz9m8liy78jrBaX3n9gceD02DnrLrvH/rlr2D1232xg
-        8+jbsorR4/MmOY9D29+wBbBFcdmkpOZklqUW6dslcGUceeNZ0MFbMeFPM0sD4yWuLkZODgkB
-        E4lt3/azdDFycQgJ7GaUaJjUxAaRkJY4duIMcxcjB5AtLHH4cDFEzQdGiTXfbrOAxNkEtCX+
-        bBEFKRcRcJTo3XUYbA6zwC5GiROnTzOCJIQFLCUmtiwBs1kEVCUOfu4Bs3kFbCUOn/nFDrFL
-        XmL1hgPMIDYnUHzm+1awG4QEbCRe/XvMNoGRbwEjwypGydSC4tz03GLDAsO81HK94sTc4tK8
-        dL3k/NxNjOBw1NLcwXh5SfwhRgEORiUe3hvzeOKEWBPLiitzDzFKcDArifCWB/LGCfGmJFZW
-        pRblxxeV5qQWH2KU5mBREud9mncsUkggPbEkNTs1tSC1CCbLxMEp1cBo6r6lPc3H9oWcgevK
-        51MOMrrMakm8vXCrYknrokNpv2cYrbmopsD2ZFn93d2W0Rt+iH9P+cKk6r78yImDh79suSy5
-        94sVf4UIlzXrsqdZyVY7DZby3RB7afBxzmE5ET2Znucp0T1+b/f5zMpY9jI5e/m8qRXn2uTn
-        /G7TuRT4r3767fzzm1lVlViKMxINtZiLihMBWezbcUMCAAA=
-X-CMS-MailID: 20200102082408epcas1p28d46af675103d2cd92232a4f7b712c46
+        LS7NS9dLzs+1MjQwMDIFqkzIyTjwPq3gjU3FvsN5DYzz9bsYOTkkBEwkWg7vZu9i5OIQEtjB
+        KHH5XhcjhPOJUWLrs8tQmW+MEoe3nWKBafm/rR2qai+jxMkZ31hBEmAtT+eKdDFycLAJaEv8
+        2SIKEhYRsJfYPPsAC0g9s8AmRok987+C1QsDDZp/dSLYUBYBVYlPC5exg9i8ArYSv5oeM0Es
+        k5dYveEAM4jNCRSf+b6VDWSQhMAWNome1U/ZIYpcJJY+fMUIYQtLvDq+BSouJfGyv40d5CAJ
+        gWqJj/uZIcIdjBIvvttC2MYSN9dvYAUpYRbQlFi/CxosihI7f88Fm8gswCfx7msPK8QUXomO
+        NiGIElWJvkuHoa6Uluhq/wC11EPi56FuaLhNYJRY96qRZQKj3CyEDQsYGVcxiqUWFOempxYb
+        FpggR9cmRnCS07LYwbjnnM8hRgEORiUe3hvzeOKEWBPLiitzDzFKcDArifCWB/LGCfGmJFZW
+        pRblxxeV5qQWH2I0BQbkRGYp0eR8YALOK4k3NDUyNja2MDEzNzM1VhLn5fhxMVZIID2xJDU7
+        NbUgtQimj4mDU6qBcbv7DT5nrbZTfy5cOpXzS9y1+GKQe/MOHpfk666vyxmWaM87ckg4L2Z1
+        8EyRh2m+v0ImWj+eML340o25snJnFndtK3x6d/LZ2L2XVtYFzFh482pVC6tFtEcqy3S7zLo9
+        j76LLogQ/dblPHG6Tepmux3LQ6956FfJznbfs0bvUKHRze86nTqOGkosxRmJhlrMRcWJAPLR
+        NnCIAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPLMWRmVeSWpSXmKPExsWy7bCSvO6yFbxxBk2f5S2aF69ns1i5+iiT
+        xfW7t5gt9uw9yWJxedccNosf0+stJp7+zWSx5d8RVotL7z+wOHB67Jx1l91j/9w17B67bzaw
+        efRtWcXo8XmTnMeh7W/YAtiiuGxSUnMyy1KL9O0SuDIOvE8reGNTse9wXgPjfP0uRk4OCQET
+        if/b2hm7GLk4hAR2M0rcmf+FDSIhLXHsxBnmLkYOIFtY4vDhYoiaD4wS0/5/YwSJswloS/zZ
+        IgpSLiLgKNG76zALSA2zwC5GiROnTzOCJISBFsy/OpEFxGYRUJX4tHAZO4jNK2Ar8avpMRPE
+        LnmJ1RsOMIPYnEDxme9bwW4QErCRePXvMdsERr4FjAyrGCVTC4pz03OLDQuM8lLL9YoTc4tL
+        89L1kvNzNzGCg1FLawfjiRPxhxgFOBiVeHhvzOOJE2JNLCuuzD3EKMHBrCTCWx7IGyfEm5JY
+        WZValB9fVJqTWnyIUZqDRUmcVz7/WKSQQHpiSWp2ampBahFMlomDU6qBMeHqhS35K/+Hm7nM
+        svEvEHxyypHziNSeWwweHbn7FydZXd9/+H/90UDDf0tv6B48uPIdxyEzWb8gjgOZ1k66+fu3
+        m+csDVGpnfxbcabVpGMyEh6uTTzzOI+pd7/KWWu5Yt+0wzucmne1svivm2/LO2/Zb9Oj10wu
+        93lpJR/kPF80/YPXnW/+s5VYijMSDbWYi4oTAd+AihtCAgAA
+X-CMS-MailID: 20200102082406epcas1p268f260d90213bdaabee25a7518f86625
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: SVC_REQ_APPROVE
 CMS-TYPE: 101P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200102082408epcas1p28d46af675103d2cd92232a4f7b712c46
+X-CMS-RootMailID: 20200102082406epcas1p268f260d90213bdaabee25a7518f86625
 References: <20200102082036.29643-1-namjae.jeon@samsung.com>
-        <CGME20200102082408epcas1p28d46af675103d2cd92232a4f7b712c46@epcas1p2.samsung.com>
+        <CGME20200102082406epcas1p268f260d90213bdaabee25a7518f86625@epcas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the Kconfig and Makefile for exfat.
+This adds the implementation of misc operations for exfat.
 
 Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
 Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
 ---
- fs/exfat/Kconfig  | 21 +++++++++++++++++++++
- fs/exfat/Makefile |  8 ++++++++
- 2 files changed, 29 insertions(+)
- create mode 100644 fs/exfat/Kconfig
- create mode 100644 fs/exfat/Makefile
+ fs/exfat/misc.c | 253 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 253 insertions(+)
+ create mode 100644 fs/exfat/misc.c
 
-diff --git a/fs/exfat/Kconfig b/fs/exfat/Kconfig
+diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
 new file mode 100644
-index 000000000000..11d841a5f7f0
+index 000000000000..7f533bcb3b3f
 --- /dev/null
-+++ b/fs/exfat/Kconfig
-@@ -0,0 +1,21 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
++++ b/fs/exfat/misc.c
+@@ -0,0 +1,253 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ *  Written 1992,1993 by Werner Almesberger
++ *  22/11/2000 - Fixed fat_date_unix2dos for dates earlier than 01/01/1980
++ *		 and date_dos2unix for date==0 by Igor Zhbanov(bsg@uniyar.ac.ru)
++ * Copyright (C) 2012-2013 Samsung Electronics Co., Ltd.
++ */
 +
-+config EXFAT
-+	tristate "exFAT filesystem support"
-+	select NLS
-+	help
-+	  This allows you to mount devices formatted with the exFAT file system.
-+	  exFAT is typically used on SD-Cards or USB sticks.
++#include <linux/time.h>
++#include <linux/fs.h>
++#include <linux/slab.h>
++#include <linux/buffer_head.h>
 +
-+	  To compile this as a module, choose M here: the module will be called
-+	  exfat.
++#include "exfat_raw.h"
++#include "exfat_fs.h"
 +
-+config EXFAT_FS_DEFAULT_IOCHARSET
-+	string "Default iocharset for exFAT"
-+	default "utf8"
-+	depends on EXFAT
-+	help
-+	  Set this to the default input/output character set you'd
-+	  like exFAT to use. It should probably match the character set
-+	  that most of your exFAT filesystems use, and can be overridden
-+	  with the "iocharset" mount option for exFAT filesystems.
-diff --git a/fs/exfat/Makefile b/fs/exfat/Makefile
-new file mode 100644
-index 000000000000..e9193346c80c
---- /dev/null
-+++ b/fs/exfat/Makefile
-@@ -0,0 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+#
-+# Makefile for the linux exFAT filesystem support.
-+#
-+obj-$(CONFIG_EXFAT) += exfat.o
++/*
++ * exfat_fs_error reports a file system problem that might indicate fa data
++ * corruption/inconsistency. Depending on 'errors' mount option the
++ * panic() is called, or error message is printed FAT and nothing is done,
++ * or filesystem is remounted read-only (default behavior).
++ * In case the file system is remounted read-only, it can be made writable
++ * again by remounting it.
++ */
++void __exfat_fs_error(struct super_block *sb, int report, const char *fmt, ...)
++{
++	struct exfat_mount_options *opts = &EXFAT_SB(sb)->options;
++	va_list args;
++	struct va_format vaf;
 +
-+exfat-y	:= inode.o namei.o dir.o super.o fatent.o cache.o nls.o misc.o \
-+	   file.o balloc.o
++	if (report) {
++		va_start(args, fmt);
++		vaf.fmt = fmt;
++		vaf.va = &args;
++		exfat_msg(sb, KERN_ERR, "error, %pV\n", &vaf);
++		va_end(args);
++	}
++
++	if (opts->errors == EXFAT_ERRORS_PANIC) {
++		panic("exFAT-fs (%s): fs panic from previous error\n",
++			sb->s_id);
++	} else if (opts->errors == EXFAT_ERRORS_RO && !sb_rdonly(sb)) {
++		sb->s_flags |= SB_RDONLY;
++		exfat_msg(sb, KERN_ERR, "Filesystem has been set read-only");
++	}
++}
++
++/*
++ * exfat_msg() - print preformated EXFAT specific messages.
++ * All logs except what uses exfat_fs_error() should be written by exfat_msg()
++ */
++void exfat_msg(struct super_block *sb, const char *level, const char *fmt, ...)
++{
++	struct va_format vaf;
++	va_list args;
++
++	va_start(args, fmt);
++	vaf.fmt = fmt;
++	vaf.va = &args;
++	/* level means KERN_ pacility level */
++	printk("%sexFAT-fs (%s): %pV\n", level, sb->s_id, &vaf);
++	va_end(args);
++}
++
++/* <linux/time.h> externs sys_tz
++ * extern struct timezone sys_tz;
++ */
++#define UNIX_SECS_1980    315532800L
++
++#if BITS_PER_LONG == 64
++#define UNIX_SECS_2108    4354819200L
++#endif
++
++/* days between 1970/01/01 and 1980/01/01 (2 leap days) */
++#define DAYS_DELTA_DECADE    (365 * 10 + 2)
++/* 120 (2100 - 1980) isn't leap year */
++#define NO_LEAP_YEAR_2100    (120)
++#define IS_LEAP_YEAR(y)    (!((y) & 0x3) && (y) != NO_LEAP_YEAR_2100)
++
++#define SECS_PER_MIN    (60)
++#define SECS_PER_HOUR   (60 * SECS_PER_MIN)
++#define SECS_PER_DAY    (24 * SECS_PER_HOUR)
++
++#define MAKE_LEAP_YEAR(leap_year, year)                         \
++	do {                                                    \
++		/* 2100 isn't leap year */                      \
++		if (unlikely(year > NO_LEAP_YEAR_2100))         \
++			leap_year = ((year + 3) / 4) - 1;       \
++		else                                            \
++			leap_year = ((year + 3) / 4);           \
++	} while (0)
++
++/* Linear day numbers of the respective 1sts in non-leap years. */
++static time_t accum_days_in_year[] = {
++	/* Month : N 01  02  03  04  05  06  07  08  09  10  11  12 */
++	0, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 0, 0, 0,
++};
++
++#define TIMEZONE_SEC(x)	((x) * 15 * SECS_PER_MIN)
++/* Convert a FAT time/date pair to a UNIX date (seconds since 1 1 70). */
++void exfat_time_fat2unix(struct exfat_sb_info *sbi, struct timespec64 *ts,
++		struct exfat_date_time *tp)
++{
++	time_t year = tp->year;
++	time_t ld; /* leap day */
++
++	MAKE_LEAP_YEAR(ld, year);
++
++	if (IS_LEAP_YEAR(year) && (tp->month) > 2)
++		ld++;
++
++	ts->tv_sec =  tp->second  + tp->minute * SECS_PER_MIN +
++		tp->hour * SECS_PER_HOUR +
++		(year * 365 + ld + accum_days_in_year[tp->month] +
++		(tp->day - 1) + DAYS_DELTA_DECADE) * SECS_PER_DAY;
++
++	ts->tv_nsec = 0;
++
++	/* Treat as local time */
++	if (!tp->timezone.valid) {
++		ts->tv_sec += sys_tz.tz_minuteswest * SECS_PER_MIN;
++		return;
++	}
++
++	/* Treat as UTC time, but need to adjust timezone to UTC0 */
++	if (tp->timezone.off <= 0x3F)
++		ts->tv_sec -= TIMEZONE_SEC(tp->timezone.off);
++	else /* 0x40 <= (tp->timezone & 0x7F) <=0x7F */
++		ts->tv_sec += TIMEZONE_SEC(0x80 - tp->timezone.off);
++}
++
++#define TIMEZONE_CUR_OFFSET()	((sys_tz.tz_minuteswest / (-15)) & 0x7F)
++/* Convert linear UNIX date to a FAT time/date pair. */
++void exfat_time_unix2fat(struct exfat_sb_info *sbi, struct timespec64 *ts,
++		struct exfat_date_time *tp)
++{
++	time_t second = ts->tv_sec;
++	time_t day, month, year;
++	time_t ld; /* leap day */
++
++	/* Treats as local time with proper time */
++	second -= sys_tz.tz_minuteswest * SECS_PER_MIN;
++	tp->timezone.valid = 1;
++	tp->timezone.off = TIMEZONE_CUR_OFFSET();
++
++	/* Jan 1 GMT 00:00:00 1980. But what about another time zone? */
++	if (second < UNIX_SECS_1980) {
++		tp->second  = 0;
++		tp->minute  = 0;
++		tp->hour = 0;
++		tp->day  = 1;
++		tp->month  = 1;
++		tp->year = 0;
++		return;
++	}
++
++	if (second >= UNIX_SECS_2108) {
++		tp->second  = 59;
++		tp->minute  = 59;
++		tp->hour = 23;
++		tp->day  = 31;
++		tp->month  = 12;
++		tp->year = 127;
++		return;
++	}
++
++	day = second / SECS_PER_DAY - DAYS_DELTA_DECADE;
++	year = day / 365;
++
++	MAKE_LEAP_YEAR(ld, year);
++	if (year * 365 + ld > day)
++		year--;
++
++	MAKE_LEAP_YEAR(ld, year);
++	day -= year * 365 + ld;
++
++	if (IS_LEAP_YEAR(year) && day == accum_days_in_year[3]) {
++		month = 2;
++	} else {
++		if (IS_LEAP_YEAR(year) && day > accum_days_in_year[3])
++			day--;
++		for (month = 1; month < 12; month++) {
++			if (accum_days_in_year[month + 1] > day)
++				break;
++		}
++	}
++	day -= accum_days_in_year[month];
++
++	tp->second  = second % SECS_PER_MIN;
++	tp->minute  = (second / SECS_PER_MIN) % 60;
++	tp->hour = (second / SECS_PER_HOUR) % 24;
++	tp->day  = day + 1;
++	tp->month  = month;
++	tp->year = year;
++}
++
++struct exfat_timestamp *exfat_tm_now(struct exfat_sb_info *sbi,
++		struct exfat_timestamp *tp)
++{
++	struct timespec64 ts;
++	struct exfat_date_time dt;
++
++	ktime_get_real_ts64(&ts);
++	exfat_time_unix2fat(sbi, &ts, &dt);
++
++	tp->year = dt.year;
++	tp->mon = dt.month;
++	tp->day = dt.day;
++	tp->hour = dt.hour;
++	tp->min = dt.minute;
++	tp->sec = dt.second;
++	tp->tz.value = dt.timezone.value;
++
++	return tp;
++}
++
++unsigned short exfat_calc_chksum_2byte(void *data, int len,
++		unsigned short chksum, int type)
++{
++	int i;
++	unsigned char *c = (unsigned char *)data;
++
++	for (i = 0; i < len; i++, c++) {
++		if (((i == 2) || (i == 3)) && (type == CS_DIR_ENTRY))
++			continue;
++		chksum = (((chksum & 1) << 15) | ((chksum & 0xFFFE) >> 1)) +
++			(unsigned short)*c;
++	}
++	return chksum;
++}
++
++void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync)
++{
++	set_bit(EXFAT_SB_DIRTY, &EXFAT_SB(sb)->s_state);
++	set_buffer_uptodate(bh);
++	mark_buffer_dirty(bh);
++
++	if (sync)
++		sync_dirty_buffer(bh);
++}
++
++void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
++		unsigned int size, unsigned char flags)
++{
++	ec->dir = dir;
++	ec->size = size;
++	ec->flags = flags;
++}
++
++void exfat_chain_dup(struct exfat_chain *dup, struct exfat_chain *ec)
++{
++	return exfat_chain_set(dup, ec->dir, ec->size, ec->flags);
++}
 -- 
 2.17.1
 
