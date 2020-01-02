@@ -2,70 +2,90 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CD0C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 10:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD44C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 10:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5698321734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 10:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8146421734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 10:28:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgABKWo (ORCPT
+        id S1728055AbgABK2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 05:22:44 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:36329 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727990AbgABKWo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 05:22:44 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R931e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0Tmc9SUd_1577960560;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Tmc9SUd_1577960560)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 02 Jan 2020 18:22:40 +0800
-Subject: Re: [PATCH v7 00/10] per lruvec lru_lock for memcg
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, mgorman@techsingularity.net, tj@kernel.org,
-        hughd@google.com, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
-        willy@infradead.org, shakeelb@google.com, hannes@cmpxchg.org
-References: <1577264666-246071-1-git-send-email-alex.shi@linux.alibaba.com>
- <20191231150514.61c2b8c8354320f09b09f377@linux-foundation.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <944f0f6a-466a-7ce3-524c-f6db86fd0891@linux.alibaba.com>
-Date:   Thu, 2 Jan 2020 18:21:47 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.1
+        Thu, 2 Jan 2020 05:28:10 -0500
+Received: from mx2.suse.de ([195.135.220.15]:52276 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727990AbgABK2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 05:28:10 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 1BB2BB2DB;
+        Thu,  2 Jan 2020 10:28:08 +0000 (UTC)
+Date:   Thu, 2 Jan 2020 11:28:07 +0100
+From:   Daniel Wagner <dwagner@suse.de>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, Long Li <longli@microsoft.com>,
+        Ingo Molnar <mingo@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        John Garry <john.garry@huawei.com>,
+        Hannes Reinecke <hare@suse.com>
+Subject: Re: [RFC PATCH 2/3] softirq: implement interrupt flood detection
+Message-ID: <20200102102807.dc7yf6choxre2lbg@beryllium.lan>
+References: <20191218071942.22336-1-ming.lei@redhat.com>
+ <20191218071942.22336-3-ming.lei@redhat.com>
+ <20191218104941.GR2844@hirez.programming.kicks-ass.net>
+ <20191219015948.GB6080@ming.t460p>
+ <20191219092319.GX2844@hirez.programming.kicks-ass.net>
+ <20191219104347.ql6shgh2x7hk6iid@boron>
+ <20191231034806.GB20062@ming.t460p>
 MIME-Version: 1.0
-In-Reply-To: <20191231150514.61c2b8c8354320f09b09f377@linux-foundation.org>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191231034806.GB20062@ming.t460p>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-
-ÔÚ 2020/1/1 ÉÏÎç7:05, Andrew Morton Ð´µÀ:
-> On Wed, 25 Dec 2019 17:04:16 +0800 Alex Shi <alex.shi@linux.alibaba.com> wrote:
+On Tue, Dec 31, 2019 at 11:48:06AM +0800, Ming Lei wrote:
+> On Thu, Dec 19, 2019 at 11:43:47AM +0100, Daniel Wagner wrote:
+> get_util_irq() only works in case of HAVE_SCHED_AVG_IRQ which depends
+> on IRQ_TIME_ACCOUNTING or PARAVIRT_TIME_ACCOUNTING.
 > 
->> This patchset move lru_lock into lruvec, give a lru_lock for each of
->> lruvec, thus bring a lru_lock for each of memcg per node.
+> Also rq->avg_irq.util_avg is only updated when there is scheduler
+> activities. However, when interrupt flood happens, scheduler can't
+> have chance to be called. Looks get_util_irq() can't be relied on
+> for this task.
+
+I am not totally sold on the idea to do so as much work as possible in
+the IRQ context. I started to play with the patches from Keith [1] which
+move the work to proper kernel thread.
+
+> > ps: A customer observes the same problem as Ming is reporting.
 > 
-> I see that there has been plenty of feedback on previous versions, but
-> no acked/reviewed tags as yet.
+> Actually this issue should be more serious on ARM64 system, in which
+> there are more CPU cores, and each CPU core is often slower than
+> x86's, and each interrupt is only delivered to single CPU target.
 > 
-> I think I'll take a pass for now, see what the audience feedback looks
-> like ;)
-> 
+> Meantime the storage device performance is same for the two kinds of
+> systems.
 
+As it turnes out, we missed one fix 2887e41b910b ("blk-wbt: Avoid lock
+contention and thundering herd issue in wbt_wait") in our enterprise
+kernel which helps but doesn't solve the real cause. But as I said
+moving the work out of the IRQ context will address all those
+problems. Obvious there is no free lunch, let's see if we find a way
+to address all the performance issues.
 
-Thanks a lot! Andrew.
+Thanks,
+Daniel
 
-Please drop the 10th patch since it's for debug only and cost performance drop.
-
-Best regards & Happy new year! :)
-Alex
+[1] https://lore.kernel.org/linux-nvme/20191209175622.1964-1-kbusch@kernel.org/
