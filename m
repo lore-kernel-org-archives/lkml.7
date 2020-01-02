@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EC1C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEA6C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14C9220866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D182217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004618;
-	bh=HfxmJov3jysFVXqwPS9/x0Kez02+vReiXBOF2m6UGz0=;
+	s=default; t=1578004621;
+	bh=0Dblhok8bPA/sWIxPAeAa083kIyZzTF6dnuS/BlAs2U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kCgdTlGXZTU3H/TY7l65Y8cM5500bXtKv6FKf9nEfUrEtRFQcXYuVI26IZwNf5lt/
-	 0TvWCtpHH5WkfbBaTNJnIzrAhaprVZ3G3sRKrvK/xWSPpVbIk/sgx76XgL/u6Jf1We
-	 7ld4Yw/kmNIyFvnewd+JDlmKBEJIzdms4v9ayraU=
+	b=EfwB6vsdVvMrJkFRwanbuu82eIUci/Ye0x7AaHJwsbKP9uLbL+p0v0L5kJp2VrGse
+	 6ROpUlS1Qi83XmfIH/zWmdGkLysDJ0nqe4J56k5hToJl3bEXM+8zbP87jRYmPyT+on
+	 r9weeYT/peq3qDArGPsgLsz1RqoqKFLhMNYPQt5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731024AbgABWg5 (ORCPT
+        id S1731034AbgABWg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:36:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48658 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:36:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730507AbgABWgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:36:55 -0500
+        id S1731025AbgABWg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:36:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2016F20866;
-        Thu,  2 Jan 2020 22:36:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DF9921835;
+        Thu,  2 Jan 2020 22:36:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004614;
-        bh=HfxmJov3jysFVXqwPS9/x0Kez02+vReiXBOF2m6UGz0=;
+        s=default; t=1578004617;
+        bh=0Dblhok8bPA/sWIxPAeAa083kIyZzTF6dnuS/BlAs2U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ovkaDDFhXdiwJDiTpK7g94lsK9RJG4ArLytLxyKtpcPYDuyA2HG2m4CjMk4R3QXjg
-         XwlqVSW60AZi/w7Rwph9s7p8ipEisaQWhtH8d6lpK/mHwY3DM+HuQ8oSFbm/VoB3FE
-         bx6poTHj1ljN7TdeBc3AB08lBBi+YODUnkT5lvJ8=
+        b=fIn+25JbsvRMj6MfssXjArT0WTqB+F7I56l1Y0Fm3dK1EP/PDymZpC7efkazEuZfT
+         NMfdnw3DG47U09qHYFkygNVynbtQVElh8O5AdEtoCr0Hr5WU68hTKvNRcIUgPIVnh+
+         AogLFgD8C2LxutB2VCIWUhOxvR/wDBL0ODU1xw28=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Zhang <benzh@chromium.org>,
-        Curtis Malainey <cujomalainey@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 054/137] ASoC: rt5677: Mark reg RT5677_PWR_ANLG2 as volatile
-Date:   Thu,  2 Jan 2020 23:07:07 +0100
-Message-Id: <20200102220553.765864082@linuxfoundation.org>
+Subject: [PATCH 4.4 055/137] parport: load lowlevel driver if ports not found
+Date:   Thu,  2 Jan 2020 23:07:08 +0100
+Message-Id: <20200102220553.948985356@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -61,41 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Zhang <benzh@chromium.org>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-[ Upstream commit eabf424f7b60246c76dcb0ea6f1e83ef9abbeaa6 ]
+[ Upstream commit 231ec2f24dad18d021b361045bbd618ba62a274e ]
 
-The codec dies when RT5677_PWR_ANLG2(MX-64h) is set to 0xACE1
-while it's streaming audio over SPI. The DSP firmware turns
-on PLL2 (MX-64 bit 8) when SPI streaming starts.  However regmap
-does not believe that register can change by itself. When
-BST1 (bit 15) is turned on with regmap_update_bits(), it doesn't
-read the register first before write, so PLL2 power bit is
-cleared by accident.
+Usually all the distro will load the parport low level driver as part
+of their initialization. But we can get into a situation where all the
+parallel port drivers are built as module and we unload all the modules
+at a later time. Then if we just do "modprobe parport" it will only
+load the parport module and will not load the low level driver which
+will actually register the ports. So, check the bus if there is any
+parport registered, if not, load the low level driver.
 
-Marking MX-64h as volatile in regmap solved the issue.
+We can get into the above situation with all distro but only Suse has
+setup the alias for "parport_lowlevel" and so it only works in Suse.
+Users of Debian based distro will need to load the lowlevel module
+manually.
 
-Signed-off-by: Ben Zhang <benzh@chromium.org>
-Signed-off-by: Curtis Malainey <cujomalainey@chromium.org>
-Link: https://lore.kernel.org/r/20191106011335.223061-6-cujomalainey@chromium.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Link: https://lore.kernel.org/r/20191016144540.18810-3-sudipm.mukherjee@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/rt5677.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/parport/share.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/sound/soc/codecs/rt5677.c b/sound/soc/codecs/rt5677.c
-index 69d987a9935c..90f8173123f6 100644
---- a/sound/soc/codecs/rt5677.c
-+++ b/sound/soc/codecs/rt5677.c
-@@ -295,6 +295,7 @@ static bool rt5677_volatile_register(struct device *dev, unsigned int reg)
- 	case RT5677_I2C_MASTER_CTRL7:
- 	case RT5677_I2C_MASTER_CTRL8:
- 	case RT5677_HAP_GENE_CTRL2:
-+	case RT5677_PWR_ANLG2: /* Modified by DSP firmware */
- 	case RT5677_PWR_DSP_ST:
- 	case RT5677_PRIV_DATA:
- 	case RT5677_PLL1_CTRL2:
+diff --git a/drivers/parport/share.c b/drivers/parport/share.c
+index f26af0214ab3..3be1f4a041d4 100644
+--- a/drivers/parport/share.c
++++ b/drivers/parport/share.c
+@@ -228,6 +228,18 @@ static int port_check(struct device *dev, void *dev_drv)
+ 	return 0;
+ }
+ 
++/*
++ * Iterates through all the devices connected to the bus and return 1
++ * if the device is a parallel port.
++ */
++
++static int port_detect(struct device *dev, void *dev_drv)
++{
++	if (is_parport(dev))
++		return 1;
++	return 0;
++}
++
+ /**
+  *	parport_register_driver - register a parallel port device driver
+  *	@drv: structure describing the driver
+@@ -280,6 +292,15 @@ int __parport_register_driver(struct parport_driver *drv, struct module *owner,
+ 		if (ret)
+ 			return ret;
+ 
++		/*
++		 * check if bus has any parallel port registered, if
++		 * none is found then load the lowlevel driver.
++		 */
++		ret = bus_for_each_dev(&parport_bus_type, NULL, NULL,
++				       port_detect);
++		if (!ret)
++			get_lowlevel_driver();
++
+ 		mutex_lock(&registration_lock);
+ 		if (drv->match_port)
+ 			bus_for_each_dev(&parport_bus_type, NULL, drv,
 -- 
 2.20.1
 
