@@ -2,185 +2,141 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F38DC3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B29C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 162A520848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:59:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W45FbXt0"
+	by mail.kernel.org (Postfix) with ESMTP id 7562B2072C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbgABO7m (ORCPT
+        id S1728703AbgABO7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 09:59:42 -0500
-Received: from mail-io1-f43.google.com ([209.85.166.43]:33115 "EHLO
-        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728544AbgABO7m (ORCPT
+        Thu, 2 Jan 2020 09:59:46 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:60677 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728544AbgABO7p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 09:59:42 -0500
-Received: by mail-io1-f43.google.com with SMTP id z8so38508344ioh.0;
-        Thu, 02 Jan 2020 06:59:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SbJOwHXw4vfZE5TxEI4aCOOsbnyKNkt4sp9tT+NxXPQ=;
-        b=W45FbXt0jdFw5R4/KptHImueplu6OsOwANUlORGQJ9H4rKCjCmmhZVbgaPSdpcH6/8
-         Bx4Np0c0ishKn7k6cx6ibQVdpRHuf/1+w0kzCpD3DUpL1RiIt+qx5XqAK8Sblkr0M2+M
-         POqksZ11t5S91ZqLM6JBpkvyTcI+URPU45h9jfyuqtlCKhcVFyr8Y219a6CmwksEGgsP
-         rJBnHykcc2DBcLILKsf6Fx7M+cQZrZoboXjz2g0eZBEYbUBnAXUKIBKTyrMVtY7rj5Nc
-         go0guGQwUwNX+3N6ZF2ef/2lzIopry5CiGT3pFVc/HiTVyiKwR1zp/6Ttqd9haqE10CC
-         ZTjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SbJOwHXw4vfZE5TxEI4aCOOsbnyKNkt4sp9tT+NxXPQ=;
-        b=ENgq7qJ/9eJv6SrpEPEunLurTI3zrPeCd9pJfd1DQ+4dHqFO7JtHeoKLTjqz6IsrRR
-         azEXKpV/l1OG3OVf61TDtzrYXO19awGvtPPSLF93Gg+IGbPEq3SPgBXGaEMz1ktjmFmZ
-         FH22dsi1wN1rcTqpika5MENIzTzyHIPFIEmffa46Scb1E+0Q9AN75uBgXgkl7nw99enF
-         Z6ghqkO8XH8PP0u4OztvdWRZBZl74xUrbysvgowMYFb6feWBN1KvsGPeYPmeB2NFMLKk
-         P7epzR6EQPv6uuCokvqKF8dZ8obuIjeocwImg9IVvrUTRyDBra6DXDKypsImHiWCMbLL
-         MfNA==
-X-Gm-Message-State: APjAAAWmThjmTG3A4i3ZMs8IipA+TeaEGeIKbUOGJhhf/cojemhkZfE+
-        Z4VrNeS4Lt0RoiID4RGOH7Ynzj6KpCyH3GXRhEI=
-X-Google-Smtp-Source: APXvYqwtnVBhFgvdrLrZmgps62Q2fDKSg8rKuzc/RCagPcGTllYeU98rOhGq5p4TeUZHZ757HhKg19VgJpFiLmxhLdE=
-X-Received: by 2002:a5e:a614:: with SMTP id q20mr46610554ioi.36.1577977181127;
- Thu, 02 Jan 2020 06:59:41 -0800 (PST)
+        Thu, 2 Jan 2020 09:59:45 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N49xZ-1jn8pu1q4X-0105tC; Thu, 02 Jan 2020 15:59:07 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-block@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, Hannes Reinecke <hare@suse.de>,
+        Martin Wilck <mwilck@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        =?UTF-8?q?Diego=20Elio=20Petten=C3=B2?= <flameeyes@flameeyes.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 08/22] compat_ioctl: cdrom: handle CDROM_LAST_WRITTEN
+Date:   Thu,  2 Jan 2020 15:55:26 +0100
+Message-Id: <20200102145552.1853992-9-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20200102145552.1853992-1-arnd@arndb.de>
+References: <20200102145552.1853992-1-arnd@arndb.de>
 MIME-Version: 1.0
-References: <CABXGCsODr3tMpQxJ_nhWQQg5WGakFt4Yu5B8ev6ErOkc+zv9kA@mail.gmail.com>
- <20200101141748.GA191637@mit.edu> <CABXGCsOv26W6aqB5WPMe-mEynmwy55DTfTeL5Dg9vRq6+Y6WvA@mail.gmail.com>
- <CABXGCsNkzPrjqMRaWpssorxzhMLWBvLeSw9BpKYr_DW4LJQECQ@mail.gmail.com>
- <20200102110817.ahqaqidw3ztw3kax@10.255.255.10> <CABXGCsNkm3VuzO60WBCi4VJmDnO=DmprQ1P=dd0FcW2-+dGc0w@mail.gmail.com>
- <20200102131434.tky2hquki23laqqo@10.255.255.10>
-In-Reply-To: <20200102131434.tky2hquki23laqqo@10.255.255.10>
-From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date:   Thu, 2 Jan 2020 20:00:20 +0500
-Message-ID: <CABXGCsMV1GRiqrXCQGHqvpBiendU3mG36h0YoG=4nw6spZHq=w@mail.gmail.com>
-Subject: Re: [bugreport] "hwclock -w" reset time instead of setting the right time
-To:     Karel Zak <kzak@redhat.com>
-Cc:     util-linux@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:IWmxlyxI1qDwOyVeMVL1WEG4Wr9pkXMYxQX0pGf2w844D03lneV
+ mJ+v/3Zju8V9e+ypSQIdzA7JlLVZDaOpD4oA+aLLJN9iDnF3iB0zWPl9PwpeYIrAMzq1yxa
+ 5emoGaoNRK+PsiIAybanfpyNDZr8DB0jz8KcocrzKhStdA5dDEwNZPLKWSS23HS5ffM/zEx
+ gIpNBKqIzppGYrr3etarA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1IH1nB+jcXY=:HSkthDNTH1sqo6kPxACiAN
+ 31gKDaW2LonLFIknfehsDRwI8jCQ/x4+dX7A/MFQphAzpdmupNQosnyjmKgRL4oiTp5p2NZjw
+ nWZM5IadK8L5/enUkP9N7fhF/NOxlF2y/tbPuUwa88yG7BrDDbb1T0W6GN/I5p7MFcHl66dKW
+ AfwKqOSgSzIwg0KOSRKtBzMPsfavscLljV4oDfYcBknrpux5V7f22qySw3jSeidJ/I0SmW6h/
+ 6NpG4ZJLlOchf5vV0zQUkcUsOk+nECfl8ukIbXLTheGkeODX/8s8KwtFQr7P5Yykq+g4GV8iZ
+ HDykSId0YwNcmn7nZTDKBPrqqRA7XMhoI9mwqTULGEGW+E0Y3Du2w6hgwwh23lOGt/iIN5thE
+ MkCvBWqZZWYlWwvKdu3ZklZsEIe4Sst5fF3i6tdtKSZn1IlmX428IpmyIJj5jO3To0bd8WwOP
+ 4k2NchSVuF5hYan2+nlikM+scEclYSg3LojcmKzh07wLR0tH1GESd7di1eseVp1U1FNUy8jwr
+ iWz853oY0iPx4dbBhqYN+U+QS+y5UINZ3eo1JJ3cnT1eUZFJ4ALPBLpQvoYdZ5Od3SmB8tODS
+ SptVWPTIJK6Sz5cartwYIZxoCjtoV35hvPQO7AKDWgMm8FsQ5RkmIZj8xjMqA+jIX3IPepPVq
+ BlYkEIxNKghbtycuROaZazY42KOyi+bm53XovQgC0bgJmRtMBDLDY52cguuGRzFKUMIda/h/h
+ 6ix+khD0ESk4QbdhJtmojUjUKpwkDQ93dLiNvqVbOk5637CxBE6EBLTSqw55Qd8CrJ2++GysO
+ iHAm3iNRqDlNjDOSHir/6LmTkAobhf1E4VP8TJpS5q+6KqHFHo7+rFa9NO2DpUam4YdD0VVbN
+ 96L9Bcrit/jRuaAjbsTQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Jan 2020 at 18:14, Karel Zak <kzak@redhat.com> wrote:
->
-> At first glance it seems hwclock works as expected, I do not see
-> anything wrong in the output.
->
-> > Demonstration: https://youtu.be/Yx27IH2opEc
->
-> What is hw time before reboot? Can you verify that hwclock reset the
-> clock? (or is it system reboot?)
->
->     # hwclock -w -v
->     # hwclock -v
->
-> Do you see anything interesting in dmesg output before reboot and after
-> hwclock -w?
->
->
+This is the only ioctl command that does not have a proper
+compat handler. Making the normal implementation do the
+right thing is actually very simply, so just do that by
+using an in_compat_syscall() check to avoid the special
+case in the pkcdvd driver.
 
-Yes, before reboot all look like good:
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/block/pktcdvd.c | 24 +-----------------------
+ drivers/cdrom/cdrom.c   |  7 ++++---
+ 2 files changed, 5 insertions(+), 26 deletions(-)
 
-[root@localhost ~]# hwclock -v
-hwclock from util-linux 2.35-rc1-20-63f8
-System Time: 1577977370.909455
-Trying to open: /dev/rtc0
-Using the rtc interface to the clock.
-Last drift adjustment done at 1577973311 seconds after 1969
-Last calibration done at 1577973311 seconds after 1969
-Hardware clock is on UTC time
-Assuming hardware clock is kept in UTC time.
-Waiting for clock tick...
-...got clock tick
-Time read from Hardware Clock: 2020/01/02 15:02:52
-Hw clock time : 2020/01/02 15:02:52 = 1577977372 seconds since 1969
-Time since last adjustment is 4061 seconds
-Calculated Hardware Clock drift is 0.000000 seconds
-2020-01-02 20:02:51.077494+05:00
+diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
+index ab4d3be4b646..5f970a7d32c0 100644
+--- a/drivers/block/pktcdvd.c
++++ b/drivers/block/pktcdvd.c
+@@ -2663,26 +2663,6 @@ static int pkt_ioctl(struct block_device *bdev, fmode_t mode, unsigned int cmd,
+ 	return ret;
+ }
+ 
+-#ifdef CONFIG_COMPAT
+-static int pkt_compat_ioctl(struct block_device *bdev, fmode_t mode, unsigned int cmd, unsigned long arg)
+-{
+-	switch (cmd) {
+-	/* compatible */
+-	case CDROMEJECT:
+-	case CDROMMULTISESSION:
+-	case CDROMREADTOCENTRY:
+-	case CDROM_SEND_PACKET: /* compat mode handled in scsi_cmd_ioctl */
+-	case SCSI_IOCTL_SEND_COMMAND:
+-		return pkt_ioctl(bdev, mode, cmd, (unsigned long)compat_ptr(arg));
+-
+-	/* FIXME: no handler so far */
+-	default:
+-	case CDROM_LAST_WRITTEN:
+-		return -ENOIOCTLCMD;
+-	}
+-}
+-#endif
+-
+ static unsigned int pkt_check_events(struct gendisk *disk,
+ 				     unsigned int clearing)
+ {
+@@ -2704,9 +2684,7 @@ static const struct block_device_operations pktcdvd_ops = {
+ 	.open =			pkt_open,
+ 	.release =		pkt_close,
+ 	.ioctl =		pkt_ioctl,
+-#ifdef CONFIG_COMPAT
+-	.compat_ioctl =		pkt_compat_ioctl,
+-#endif
++	.compat_ioctl =		blkdev_compat_ptr_ioctl,
+ 	.check_events =		pkt_check_events,
+ };
+ 
+diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+index 48095025e588..faca0f346fff 100644
+--- a/drivers/cdrom/cdrom.c
++++ b/drivers/cdrom/cdrom.c
+@@ -3293,9 +3293,10 @@ static noinline int mmc_ioctl_cdrom_last_written(struct cdrom_device_info *cdi,
+ 	ret = cdrom_get_last_written(cdi, &last);
+ 	if (ret)
+ 		return ret;
+-	if (copy_to_user((long __user *)arg, &last, sizeof(last)))
+-		return -EFAULT;
+-	return 0;
++	if (in_compat_syscall())
++		return put_user(last, (__s32 __user *)arg);
++
++	return put_user(last, (long __user *)arg);
+ }
+ 
+ static int mmc_ioctl(struct cdrom_device_info *cdi, unsigned int cmd,
+-- 
+2.20.0
 
-
-[root@localhost ~]# hwclock -w -v
-hwclock from util-linux 2.35-rc1-20-63f8
-System Time: 1577977383.789039
-Trying to open: /dev/rtc0
-Using the rtc interface to the clock.
-Last drift adjustment done at 1577973311 seconds after 1969
-Last calibration done at 1577973311 seconds after 1969
-Hardware clock is on UTC time
-Assuming hardware clock is kept in UTC time.
-RTC type: 'rtc_cmos'
-Using delay: 0.500000 seconds
-missed it - 1577977383.789405 is too far past 1577977383.500000
-(0.289405 > 0.001000)
-1577977384.500000 is close enough to 1577977384.500000 (0.000000 < 0.002000)
-Set RTC to 1577977384 (1577977383 + 1; refsystime = 1577977383.000000)
-Setting Hardware Clock to 15:03:04 = 1577977384 seconds since 1969
-ioctl(RTC_SET_TIME) was successful.
-Not adjusting drift factor because the --update-drift option was not used.
-New /etc/adjtime data:
-0.000000 1577977383 0.000000
-1577977383
-UTC
-
-
-[root@localhost ~]# hwclock -v
-hwclock from util-linux 2.35-rc1-20-63f8
-System Time: 1577977389.540630
-Trying to open: /dev/rtc0
-Using the rtc interface to the clock.
-Last drift adjustment done at 1577977383 seconds after 1969
-Last calibration done at 1577977383 seconds after 1969
-Hardware clock is on UTC time
-Assuming hardware clock is kept in UTC time.
-Waiting for clock tick...
-...got clock tick
-Time read from Hardware Clock: 2020/01/02 15:03:10
-Hw clock time : 2020/01/02 15:03:10 = 1577977390 seconds since 1969
-Time since last adjustment is 7 seconds
-Calculated Hardware Clock drift is 0.000000 seconds
-2020-01-02 20:03:09.718222+05:00
-
-But after reboot, the hwtime is reset:
-
-=== Reboot ===
-
-
-[root@localhost ~]# hwclock -v
-hwclock from util-linux 2.35-rc1-20-63f8
-System Time: 1576407103.342223
-Trying to open: /dev/rtc0
-Using the rtc interface to the clock.
-Last drift adjustment done at 1577977383 seconds after 1969
-Last calibration done at 1577977383 seconds after 1969
-Hardware clock is on UTC time
-Assuming hardware clock is kept in UTC time.
-Waiting for clock tick...
-...got clock tick
-Time read from Hardware Clock: 2019/01/01 00:05:31
-Hw clock time : 2019/01/01 00:05:31 = 1546301131 seconds since 1969
-Time since last adjustment is -31676252 seconds
-Calculated Hardware Clock drift is 0.000000 seconds
-2019-01-01 05:05:30.170661+05:00
-
-[root@localhost ~]# date
-Sun 15 Dec 2019 03:52:01 PM +05
-
-
-Demonstration: https://youtu.be/X0w2hbAmKmM
-
-
---
-Best Regards,
-Mike Gavrilov.
