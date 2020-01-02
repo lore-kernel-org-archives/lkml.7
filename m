@@ -2,107 +2,122 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35864C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACDEC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FBCE21655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F4F21655
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:13:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgABJJv (ORCPT
+        id S1727908AbgABJNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 04:09:51 -0500
-Received: from mout-p-201.mailbox.org ([80.241.56.171]:20516 "EHLO
-        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbgABJJu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 04:09:50 -0500
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 47pMgJ3j5zzQlBc;
-        Thu,  2 Jan 2020 10:09:48 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
-        with ESMTP id froh9y1uxPey; Thu,  2 Jan 2020 10:09:43 +0100 (CET)
-Date:   Thu, 2 Jan 2020 20:09:20 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        stable <stable@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        "dev@opencontainers.org" <dev@opencontainers.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
- symlinks
-Message-ID: <20200102090920.gmvq45gqopbzmrgk@yavin.dot.cyphar.com>
-References: <20191230052036.8765-1-cyphar@cyphar.com>
- <20191230054413.GX4203@ZenIV.linux.org.uk>
- <20191230054913.c5avdjqbygtur2l7@yavin.dot.cyphar.com>
- <20191230072959.62kcojxpthhdwmfa@yavin.dot.cyphar.com>
- <CAHk-=whxNw7hYT6bJn9mVrB_a=7Y-irmpaPsp1R4xbHHkicv7g@mail.gmail.com>
- <20191230083224.sbk2jspqmup43obs@yavin.dot.cyphar.com>
- <e1066da936244de99e7ee827695d6583@AcuMS.aculab.com>
+        Thu, 2 Jan 2020 04:13:32 -0500
+Received: from mga07.intel.com ([134.134.136.100]:44707 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727801AbgABJNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 04:13:32 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 01:13:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,386,1571727600"; 
+   d="scan'208";a="214099642"
+Received: from liujing-mobl1.ccr.corp.intel.com (HELO [10.238.130.173]) ([10.238.130.173])
+  by orsmga008.jf.intel.com with ESMTP; 02 Jan 2020 01:13:28 -0800
+Subject: Re: [virtio-dev] Re: [PATCH v1 2/2] virtio-mmio: add features for
+ virtio-mmio specification version 3
+To:     Jason Wang <jasowang@redhat.com>,
+        Zha Bin <zhabin@linux.alibaba.com>,
+        linux-kernel@vger.kernel.org
+Cc:     mst@redhat.com, slp@redhat.com, virtio-dev@lists.oasis-open.org,
+        gerry@linux.alibaba.com, jing2.liu@intel.com, chao.p.peng@intel.com
+References: <cover.1577240905.git.zhabin@linux.alibaba.com>
+ <a11d4c616158c9fb1ca4575ca0530b2e17b952fa.1577240905.git.zhabin@linux.alibaba.com>
+ <85eeab19-1f53-6c45-95a2-44c1cfd39184@redhat.com>
+ <28da67db-73ab-f772-fb00-5a471b746fc5@linux.intel.com>
+ <683cac51-853d-c8c8-24c6-b01886978ca4@redhat.com>
+From:   "Liu, Jing2" <jing2.liu@linux.intel.com>
+Message-ID: <42346d41-b758-967a-30b7-95aa0d383beb@linux.intel.com>
+Date:   Thu, 2 Jan 2020 17:13:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="aavym7oejblostsf"
-Content-Disposition: inline
-In-Reply-To: <e1066da936244de99e7ee827695d6583@AcuMS.aculab.com>
+In-Reply-To: <683cac51-853d-c8c8-24c6-b01886978ca4@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[...]
 
---aavym7oejblostsf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>>>
+>>>> +
+>>>> +/* RO: MSI feature enabled mask */
+>>>> +#define VIRTIO_MMIO_MSI_ENABLE_MASK    0x8000
+>>>> +/* RO: Maximum queue size available */
+>>>> +#define VIRTIO_MMIO_MSI_STATUS_QMASK    0x07ff
+>>>> +/* Reserved */
+>>>> +#define VIRTIO_MMIO_MSI_STATUS_RESERVED    0x7800
+>>>> +
+>>>> +#define VIRTIO_MMIO_MSI_CMD_UPDATE    0x1
+>>>
+>>>
+>>> I believe we need a command to read the number of vectors supported 
+>>> by the device, or 2048 is assumed to be a fixed size here?
+>>
+>> For not bringing much complexity, we proposed vector per queue and 
+>> fixed relationship between events and vectors.
+>
+>
+> It's a about the number of MSIs not the mapping between queues to 
+> MSIs.And it looks to me it won't bring obvious complexity, just need a 
+> register to read the #MSIs. Device implementation may stick to a fixed 
+> size.
 
-On 2020-01-02, David Laight <David.Laight@ACULAB.COM> wrote:
-> From: Aleksa Sarai
-> > Sent: 30 December 2019 08:32
-> ...
-> > I'm not sure I agree -- as I mentioned in my other mail, re-opening
-> > through /proc/self/fd/$n works *very* well and has for a long time (in
-> > fact, both LXC and runc depend on this working).
->=20
-> I thought it was marginally broken because it is followed as a symlink?
-> On, for example, NetBSD /proc/<n>/fd/<n> is a real reference to the
-> filesystem inode and can be used to link the file back into the filesystem
-> if all the directory entries have been removed.
+Based on that assumption, the device supports #MSIs = #queues + #config. 
+Then driver need not read the register.
 
-That is also the case on Linux. It (strictly speaking) isn't a symlink
-in the normal sense of the word, it's a magic-link (nd_jump_link
-switches the nd->path to the actual 'struct file' in the case of
-/proc/self/fd/$n).
+We're trying to make such kind of agreement on spec level.
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+>
+> Having few pages for a device that only have one queue is kind of a 
+> waste.
 
---aavym7oejblostsf
-Content-Type: application/pgp-signature; name="signature.asc"
+Could I ask what's the meaning of few pages here? BTW, we didn't define 
+MSIx-like tables for virtio-mmio.
 
------BEGIN PGP SIGNATURE-----
+Thanks,
 
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXg2zPQAKCRCdlLljIbnQ
-EvDUAQD/miJLSU0UGR24uJ4vorUDe6zn8CWjBhcDBgK2ejycbgD/RUnnLLzg2tDG
-DxDaMXQZ+/wUmmG8jNkAC1kHBVf3PAY=
-=PoFx
------END PGP SIGNATURE-----
+Jing
 
---aavym7oejblostsf--
+>
+> Thanks
+>
+>
+>>
+>>
+>> So the number of vectors supported by device is equal to the total 
+>> number of vqs and config.
+>>
+>> We will try to explicitly highlight this point in spec for later 
+>> version.
+>>
+>>
+>> Thanks!
+>>
+>> Jing
+>>
+>>>
+>>> ---------------------------------------------------------------------
+>>> To unsubscribe, e-mail: virtio-dev-unsubscribe@lists.oasis-open.org
+>>> For additional commands, e-mail: virtio-dev-help@lists.oasis-open.org
+>>>
+>>
+>
