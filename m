@@ -2,149 +2,232 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0EBC3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E553FC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE30215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:11:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rdx9u2/0"
+	by mail.kernel.org (Postfix) with ESMTP id B7D692085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:12:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbgABLLj (ORCPT
+        id S1728177AbgABLMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 06:11:39 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39228 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728115AbgABLLj (ORCPT
+        Thu, 2 Jan 2020 06:12:05 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44207 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728115AbgABLMF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 06:11:39 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 77so56564032oty.6;
-        Thu, 02 Jan 2020 03:11:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=lJv/sGamCsPGIzZo8ylSMHSYu87RpYOKF5XXlTD11As=;
-        b=rdx9u2/0F8mDVBh8cLkBvEZu5bK10KX7ZJ/uhkZz3819AR84f7KeoMsDCacgHhQNBD
-         Z649Sim2THydSXNXpc5U+mZ9qJb3B30viRCLVcogQEuIdV4IotTmEiyAQ30ZyQOVHsW2
-         0Qdwpve43tb+jZQuYQUqv8cX82b8tmESY23IBm9fAaxKNg6LhDNfgftSsc6FcbFNF7FY
-         RqB5WmGikQDynkxvHM4Gx3vc2g3AMzAGFjl110uOetHuMtrEAwpi/DzPjpEyPXTPu4g2
-         tqDIs/fEer1+HdiM7oWQXrkZ3aQu6yRlHVon8v75I/UMLSkjHcmy4jrGbijfR4z1TjI1
-         9WrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lJv/sGamCsPGIzZo8ylSMHSYu87RpYOKF5XXlTD11As=;
-        b=Vl+MhL7cFd1GLGoeUelYeqI0NM1Fcf5CeuoQV1DGdgbFpKCFVESio+xexxZ+wUn1kC
-         oBEspg1uyS+yfNc34VdzAlsYlCJEM/WcC/vj/+dhJ6J8EtvjoVQUDBuHgT+HN3NmeDkx
-         Jee1W6TgyekzB7YzymMmzI1sADgv1sBMn4gEjBH+GBkOJ4giVDwYih0RugBK2uETMtiW
-         IrOwUsEsEj75dDE4FgKw42VUqPYeKej0aCnffNQgREGEgNFVPRAPgfJT4L01lOIOd9fv
-         FdRxaOWZqqFjREAd3e1QoNqPc9101L1xXmXkIZkfQ1p8BLa3J+XQGdfdTuAoJpaqJFa7
-         Kgpg==
-X-Gm-Message-State: APjAAAWoDo68nxdiYIeuKVv2gG98vNVw0fuPfNINDNPBI1xT09P9pIBs
-        NTvlRje/c6bRB5ZjESqKGZrcHMTPnX056OaqUxU=
-X-Google-Smtp-Source: APXvYqwCbvnwXKd4CdiE90h+yoBsoKxLpJ0Xd8NGFXH1EC9//GJi45HpBQW8nxwCyJKpgJhkFkj3KfcdDoWnSu3i3Ag=
-X-Received: by 2002:a05:6830:1691:: with SMTP id k17mr94660414otr.282.1577963498118;
- Thu, 02 Jan 2020 03:11:38 -0800 (PST)
+        Thu, 2 Jan 2020 06:12:05 -0500
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1imyOX-0006zL-2Q; Thu, 02 Jan 2020 12:12:01 +0100
+Received: from [IPv6:2a03:f580:87bc:d400:c097:3b50:f886:b2e] (unknown [IPv6:2a03:f580:87bc:d400:c097:3b50:f886:b2e])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id C1C5549A0B9;
+        Thu,  2 Jan 2020 11:11:59 +0000 (UTC)
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20191210163204.28225-1-dmurphy@ti.com>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ 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
+Subject: Re: [PATCH v2] can: tcan4x5x: Turn on the power before parsing the
+ config
+Message-ID: <32ea95b2-25fe-8c26-cc90-9f9264e0d8f5@pengutronix.de>
+Date:   Thu, 2 Jan 2020 12:11:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Received: by 2002:a8a:87:0:0:0:0:0 with HTTP; Thu, 2 Jan 2020 03:11:37 -0800 (PST)
-In-Reply-To: <20200102110604.acdilxek5w22q5bg@pali>
-References: <20191220062419.23516-1-namjae.jeon@samsung.com>
- <CGME20191220062732epcas1p17f3b1066fb4d6496559f349f950e1751@epcas1p1.samsung.com>
- <20191220062419.23516-2-namjae.jeon@samsung.com> <20191229141108.ufnu6lbu7qvl5oxj@pali>
- <20200102110604.acdilxek5w22q5bg@pali>
-From:   Namjae Jeon <linkinjeon@gmail.com>
-Date:   Thu, 2 Jan 2020 20:11:37 +0900
-Message-ID: <CAKYAXd9HVGCGfX+6V_zi=BfFpYkLjN1zwB73Awvomd-NTNi8bQ@mail.gmail.com>
-Subject: Re: [PATCH v8 01/13] exfat: add in-memory and on-disk structures and headers
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191210163204.28225-1-dmurphy@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="Di8rHTXB2rcggZJiDjV7RER7SlJVMpnFs"
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020-01-02 20:06 GMT+09:00, Pali Roh=C3=A1r <pali.rohar@gmail.com>:
-> Hello, just remainder for question below, so it would not be lost.
->
-> I guess that if comment for structure says that it needs to have exact
-> size then structure should be marked as packed to prevent any unexpected
-> paddings added by compiler (as IIRC compiler is free to add any padding
-> between any structure members).
-Okay, I will fix it on next version.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--Di8rHTXB2rcggZJiDjV7RER7SlJVMpnFs
+Content-Type: multipart/mixed; boundary="q6xRA7IIHSCP9XlJg1YgufvurNBMMGnOB";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Dan Murphy <dmurphy@ti.com>
+Cc: linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+Message-ID: <32ea95b2-25fe-8c26-cc90-9f9264e0d8f5@pengutronix.de>
+Subject: Re: [PATCH v2] can: tcan4x5x: Turn on the power before parsing the
+ config
+References: <20191210163204.28225-1-dmurphy@ti.com>
+In-Reply-To: <20191210163204.28225-1-dmurphy@ti.com>
 
-Thanks!
->
-> On Sunday 29 December 2019 15:11:08 Pali Roh=C3=A1r wrote:
->> On Friday 20 December 2019 01:24:07 Namjae Jeon wrote:
->> > +
->> > +#define JUMP_BOOT_LEN			3
->> > +#define OEM_NAME_LEN			8
->> > +#define MUST_BE_ZERO_LEN		53
->> > +#define EXFAT_FILE_NAME_LEN		15
->> > +
->> > +/* EXFAT BIOS parameter block (64 bytes) */
->> > +struct bpb64 {
->> > +	__u8 jmp_boot[JUMP_BOOT_LEN];
->> > +	__u8 oem_name[OEM_NAME_LEN];
->> > +	__u8 res_zero[MUST_BE_ZERO_LEN];
->> > +};
->> > +
->> > +/* EXFAT EXTEND BIOS parameter block (56 bytes) */
->> > +struct bsx64 {
->> > +	__le64 vol_offset;
->> > +	__le64 vol_length;
->> > +	__le32 fat_offset;
->> > +	__le32 fat_length;
->> > +	__le32 clu_offset;
->> > +	__le32 clu_count;
->> > +	__le32 root_cluster;
->> > +	__le32 vol_serial;
->> > +	__u8 fs_version[2];
->> > +	__le16 vol_flags;
->> > +	__u8 sect_size_bits;
->> > +	__u8 sect_per_clus_bits;
->> > +	__u8 num_fats;
->> > +	__u8 phy_drv_no;
->> > +	__u8 perc_in_use;
->> > +	__u8 reserved2[7];
->> > +};
->>
->> Should not be this structure marked as packed? Also those two below.
->>
->> > +/* EXFAT PBR[BPB+BSX] (120 bytes) */
->> > +struct pbr64 {
->> > +	struct bpb64 bpb;
->> > +	struct bsx64 bsx;
->> > +};
->> > +
->> > +/* Common PBR[Partition Boot Record] (512 bytes) */
->> > +struct pbr {
->> > +	union {
->> > +		__u8 raw[64];
->> > +		struct bpb64 f64;
->> > +	} bpb;
->> > +	union {
->> > +		__u8 raw[56];
->> > +		struct bsx64 f64;
->> > +	} bsx;
->> > +	__u8 boot_code[390];
->> > +	__le16 signature;
->> > +};
->>
->
-> --
-> Pali Roh=C3=A1r
-> pali.rohar@gmail.com
->
+--q6xRA7IIHSCP9XlJg1YgufvurNBMMGnOB
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
+
+On 12/10/19 5:32 PM, Dan Murphy wrote:
+> The parse config function now performs action on the device either
+> reading or writing and a reset.  If the regulator is managed it needs
+> to be turned on.  So turn on the regulator if available if the parsing
+> fails then turn off the regulator.
+>=20
+> Fixes: a5235f3c7c23 ("can: tcan45x: Make wake-up GPIO an optional GPIO"=
+)
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>=20
+> v2 - Added error handling and moved regulator_get to probe
+>=20
+>  drivers/net/can/m_can/tcan4x5x.c | 17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/net/can/m_can/tcan4x5x.c b/drivers/net/can/m_can/t=
+can4x5x.c
+> index 4e1789ea2bc3..ddf7db498241 100644
+> --- a/drivers/net/can/m_can/tcan4x5x.c
+> +++ b/drivers/net/can/m_can/tcan4x5x.c
+> @@ -374,11 +374,6 @@ static int tcan4x5x_parse_config(struct m_can_clas=
+sdev *cdev)
+>  	if (IS_ERR(tcan4x5x->device_state_gpio))
+>  		tcan4x5x->device_state_gpio =3D NULL;
+> =20
+> -	tcan4x5x->power =3D devm_regulator_get_optional(cdev->dev,
+> -						      "vsup");
+> -	if (PTR_ERR(tcan4x5x->power) =3D=3D -EPROBE_DEFER)
+> -		return -EPROBE_DEFER;
+> -
+>  	return 0;
+>  }
+> =20
+> @@ -412,6 +407,12 @@ static int tcan4x5x_can_probe(struct spi_device *s=
+pi)
+>  	if (!priv)
+>  		return -ENOMEM;
+> =20
+> +	priv->power =3D devm_regulator_get_optional(&spi->dev, "vsup");
+> +	if (PTR_ERR(priv->power) =3D=3D -EPROBE_DEFER)
+> +		return -EPROBE_DEFER;
+> +	else
+> +		priv->power =3D NULL;
+> +
+
+BTW: you are leaking the netdev allocated with m_can_class_allocate_dev()=
+=2E
+
+In order to fix this:
+
+- introduce a m_can_class_free_dev() function that calls the
+  free_candev().
+- fix error path in tcan4x5x_can_probe() and m_can_plat_probe() by
+  adding the missing m_can_class_free_dev()
+- remove the free_candev() from the error path in m_can_class_register()
+  it makes no sense that this function free a ressource it has not
+  allocated
+- remove the free_candev() from m_can_class_unregister()
+  it makes no sense that this function free a ressource it has not
+  allocated
+- add needed m_can_class_free_dev() to tcan4x5x_can_remove() and
+  m_can_plat_remove()
+
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+
+
+--q6xRA7IIHSCP9XlJg1YgufvurNBMMGnOB--
+
+--Di8rHTXB2rcggZJiDjV7RER7SlJVMpnFs
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl4Nz/gACgkQWsYho5Hk
+nSCpKwf/ZHsmy0A40kM8GPLEqFNrKr1+0fshcdbJnyiDzKvAPXuix0GsWQ3vDCaJ
+WhfJLCKsUlNYokayw1MCv1jRj20QfkjXLeVnf8ygr8uU+BSgFCk76+8ZUpi0iqOh
+6329aYUA6W0+aJ57D9wr1SfcmOMF9CWIXTpfX7fKLbjpa0S3FTwIgubYDeX1t3hT
+XA82dejocKG8pTzWnPEjZqTqKQ2MKFzphdwRB2Skvfmoe9Ke3IS98h/BKw6ciosz
+dAJ5RBidNUao6NFVqj4IBJSlBFYtuPj9TAn7p0uNXxCUNYa5Mnfqc4MFIgGxkEKx
+rrsHl3tnEfSNRr0+J5kt+ltf9ZbFaw==
+=/g3H
+-----END PGP SIGNATURE-----
+
+--Di8rHTXB2rcggZJiDjV7RER7SlJVMpnFs--
