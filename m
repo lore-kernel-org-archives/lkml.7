@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7299C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D153C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D06020848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D27820848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005826;
-	bh=slQbVtF+GXopB5WGJzRj5aJidD4gfzmVZdsJhf0mx5U=;
+	s=default; t=1578005831;
+	bh=cTA2eAYld73xYFoSNXCACbowDDFywcmMTcA6QE+outE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XnLei4OOHVKnNYpIYpjWFuUZNUL5WcnVBi4NQOFbRlegKIF2jpA2Wv7MpmkuloxrG
-	 TBGAApOpQPJEgLuXMM/TLjhHtCpnSO1SrOQvYDX5nAddR2JHtbSnugk7UPlz6N9btA
-	 LN9Mp0T6+QoGifhDfHz5GRa34ghgAHVnLzp5wPXc=
+	b=yr0QD/B2xj3TLahr3IGGkKqK1BwUxDebMBe+YT6mHwSkBcK/kg0mGpXD7G4wwMHd8
+	 2uwOLzIDjKRe+IRoj8FSrF6wyzi/0upQymird64ncbKFMkPxq3x2YMHLidBfzGHjvu
+	 CktpEnC1l8Hsuu+Kj/tfpiEHVWM2KsmdNyMGG/C8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728929AbgABW5F (ORCPT
+        id S1729087AbgABW5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:57:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59924 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:57:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726781AbgABWR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:17:28 -0500
+        id S1727627AbgABWRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:17:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E83DD21582;
-        Thu,  2 Jan 2020 22:17:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5BCE21582;
+        Thu,  2 Jan 2020 22:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003447;
-        bh=slQbVtF+GXopB5WGJzRj5aJidD4gfzmVZdsJhf0mx5U=;
+        s=default; t=1578003440;
+        bh=cTA2eAYld73xYFoSNXCACbowDDFywcmMTcA6QE+outE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P0ti6p/eT353ZMm6/p4QRDSL5ksY2pJu0xeZjQSorK4DbLd9Jj+F6sNZpVkXhgEh+
-         Fzo+DOSLJLGdZTHrkPP0ZHSVDKvmEAWiVg87EF5L0qLU9i94Fds4LmUYAL044bdZyP
-         OoanVHYYOzsSneupRos3yRFn/wt0/sV5gakHzwbM=
+        b=AgX6OQUzmwniEpqWxlxJsnAtX4VvW8i4SZX/DoSgSMuc6z0WEqKLm18ga6YvBJQ+D
+         zqHx9fTShRlSAnRmrr0CY1QtcrOze/QEl8aLT1YK2CG2PvIMudRxy65N7pbnPVlEEH
+         JbbBfnVzTSFbJ06kGnPXgGdJs3vmHQIKmOwO+QSQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
         Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 164/191] bnxt_en: Add missing devlink health reporters for VFs.
-Date:   Thu,  2 Jan 2020 23:07:26 +0100
-Message-Id: <20200102215846.940065716@linuxfoundation.org>
+Subject: [PATCH 5.4 161/191] bnxt_en: Fix bp->fw_health allocation and free logic.
+Date:   Thu,  2 Jan 2020 23:07:23 +0100
+Message-Id: <20200102215846.635578505@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -63,108 +63,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-[ Upstream commit 7e334fc8003c7a38372cc98e7be6082670a47d29 ]
+[ Upstream commit 8280b38e01f71e0f89389ccad3fa43b79e57c604 ]
 
-The VF driver also needs to create the health reporters since
-VFs are also involved in firmware reset and recovery.  Modify
-bnxt_dl_register() and bnxt_dl_unregister() so that they can
-be called by the VFs to register/unregister devlink.  Only the PF
-will register the devlink parameters.  With devlink registered,
-we can now create the health reporters on the VFs.
+bp->fw_health needs to be allocated for either the firmware initiated
+reset feature or the driver initiated error recovery feature.  The
+current code is not allocating bp->fw_health for all the necessary cases.
+This patch corrects the logic to allocate bp->fw_health correctly when
+needed.  If allocation fails, we clear the feature flags.
 
-Fixes: 6763c779c2d8 ("bnxt_en: Add new FW devlink_health_reporter")
+We also add the the missing kfree(bp->fw_health) when the driver is
+unloaded.  If we get an async reset message from the firmware, we also
+need to make sure that we have a valid bp->fw_health before proceeding.
+
+Fixes: 07f83d72d238 ("bnxt_en: Discover firmware error recovery capabilities.")
 Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c         |   13 ++++--------
- drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c |   23 ++++++++++++++++------
- 2 files changed, 22 insertions(+), 14 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |   36 +++++++++++++++++++++---------
+ drivers/net/ethernet/broadcom/bnxt/bnxt.h |    1 
+ 2 files changed, 27 insertions(+), 10 deletions(-)
 
 --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
 +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -11343,12 +11343,11 @@ static void bnxt_remove_one(struct pci_d
- 	struct net_device *dev = pci_get_drvdata(pdev);
- 	struct bnxt *bp = netdev_priv(dev);
+@@ -1995,6 +1995,9 @@ static int bnxt_async_event_process(stru
+ 	case ASYNC_EVENT_CMPL_EVENT_ID_RESET_NOTIFY: {
+ 		u32 data1 = le32_to_cpu(cmpl->event_data1);
  
--	if (BNXT_PF(bp)) {
-+	if (BNXT_PF(bp))
- 		bnxt_sriov_disable(bp);
--		bnxt_dl_fw_reporters_destroy(bp, true);
--		bnxt_dl_unregister(bp);
--	}
++		if (!bp->fw_health)
++			goto async_event_process_exit;
++
+ 		bp->fw_reset_timestamp = jiffies;
+ 		bp->fw_reset_min_dsecs = cmpl->timestamp_lo;
+ 		if (!bp->fw_reset_min_dsecs)
+@@ -4438,8 +4441,9 @@ static int bnxt_hwrm_func_drv_rgtr(struc
+ 			    FUNC_DRV_RGTR_REQ_ENABLES_VER);
  
-+	bnxt_dl_fw_reporters_destroy(bp, true);
-+	bnxt_dl_unregister(bp);
- 	pci_disable_pcie_error_reporting(pdev);
- 	unregister_netdev(dev);
- 	bnxt_shutdown_tc(bp);
-@@ -11844,10 +11843,8 @@ static int bnxt_init_one(struct pci_dev
+ 	req.os_type = cpu_to_le16(FUNC_DRV_RGTR_REQ_OS_TYPE_LINUX);
+-	flags = FUNC_DRV_RGTR_REQ_FLAGS_16BIT_VER_MODE |
+-		FUNC_DRV_RGTR_REQ_FLAGS_HOT_RESET_SUPPORT;
++	flags = FUNC_DRV_RGTR_REQ_FLAGS_16BIT_VER_MODE;
++	if (bp->fw_cap & BNXT_FW_CAP_HOT_RESET)
++		flags |= FUNC_DRV_RGTR_REQ_FLAGS_HOT_RESET_SUPPORT;
+ 	if (bp->fw_cap & BNXT_FW_CAP_ERROR_RECOVERY)
+ 		flags |= FUNC_DRV_RGTR_REQ_FLAGS_ERROR_RECOVERY_SUPPORT;
+ 	req.flags = cpu_to_le32(flags);
+@@ -7096,14 +7100,6 @@ static int bnxt_hwrm_error_recovery_qcfg
+ 	rc = _hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT);
  	if (rc)
- 		goto init_err_cleanup_tc;
- 
--	if (BNXT_PF(bp)) {
--		bnxt_dl_register(bp);
--		bnxt_dl_fw_reporters_create(bp);
+ 		goto err_recovery_out;
+-	if (!fw_health) {
+-		fw_health = kzalloc(sizeof(*fw_health), GFP_KERNEL);
+-		bp->fw_health = fw_health;
+-		if (!fw_health) {
+-			rc = -ENOMEM;
+-			goto err_recovery_out;
+-		}
 -	}
-+	bnxt_dl_register(bp);
-+	bnxt_dl_fw_reporters_create(bp);
- 
- 	netdev_info(dev, "%s found at mem %lx, node addr %pM\n",
- 		    board_info[ent->driver_data].name,
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
-@@ -226,6 +226,8 @@ static const struct devlink_ops bnxt_dl_
- #endif /* CONFIG_BNXT_SRIOV */
- };
- 
-+static const struct devlink_ops bnxt_vf_dl_ops;
-+
- enum bnxt_dl_param_id {
- 	BNXT_DEVLINK_PARAM_ID_BASE = DEVLINK_PARAM_GENERIC_ID_MAX,
- 	BNXT_DEVLINK_PARAM_ID_GRE_VER_CHECK,
-@@ -439,7 +441,10 @@ int bnxt_dl_register(struct bnxt *bp)
- 		return -ENOTSUPP;
- 	}
- 
--	dl = devlink_alloc(&bnxt_dl_ops, sizeof(struct bnxt_dl));
-+	if (BNXT_PF(bp))
-+		dl = devlink_alloc(&bnxt_dl_ops, sizeof(struct bnxt_dl));
-+	else
-+		dl = devlink_alloc(&bnxt_vf_dl_ops, sizeof(struct bnxt_dl));
- 	if (!dl) {
- 		netdev_warn(bp->dev, "devlink_alloc failed");
- 		return -ENOMEM;
-@@ -458,6 +463,9 @@ int bnxt_dl_register(struct bnxt *bp)
- 		goto err_dl_free;
- 	}
- 
-+	if (!BNXT_PF(bp))
-+		return 0;
-+
- 	rc = devlink_params_register(dl, bnxt_dl_params,
- 				     ARRAY_SIZE(bnxt_dl_params));
- 	if (rc) {
-@@ -507,11 +515,14 @@ void bnxt_dl_unregister(struct bnxt *bp)
- 	if (!dl)
- 		return;
- 
--	devlink_port_params_unregister(&bp->dl_port, bnxt_dl_port_params,
--				       ARRAY_SIZE(bnxt_dl_port_params));
--	devlink_port_unregister(&bp->dl_port);
--	devlink_params_unregister(dl, bnxt_dl_params,
--				  ARRAY_SIZE(bnxt_dl_params));
-+	if (BNXT_PF(bp)) {
-+		devlink_port_params_unregister(&bp->dl_port,
-+					       bnxt_dl_port_params,
-+					       ARRAY_SIZE(bnxt_dl_port_params));
-+		devlink_port_unregister(&bp->dl_port);
-+		devlink_params_unregister(dl, bnxt_dl_params,
-+					  ARRAY_SIZE(bnxt_dl_params));
-+	}
- 	devlink_unregister(dl);
- 	devlink_free(dl);
+ 	fw_health->flags = le32_to_cpu(resp->flags);
+ 	if ((fw_health->flags & ERROR_RECOVERY_QCFG_RESP_FLAGS_CO_CPU) &&
+ 	    !(bp->fw_cap & BNXT_FW_CAP_KONG_MB_CHNL)) {
+@@ -10419,6 +10415,23 @@ static void bnxt_init_dflt_coal(struct b
+ 	bp->stats_coal_ticks = BNXT_DEF_STATS_COAL_TICKS;
  }
+ 
++static void bnxt_alloc_fw_health(struct bnxt *bp)
++{
++	if (bp->fw_health)
++		return;
++
++	if (!(bp->fw_cap & BNXT_FW_CAP_HOT_RESET) &&
++	    !(bp->fw_cap & BNXT_FW_CAP_ERROR_RECOVERY))
++		return;
++
++	bp->fw_health = kzalloc(sizeof(*bp->fw_health), GFP_KERNEL);
++	if (!bp->fw_health) {
++		netdev_warn(bp->dev, "Failed to allocate fw_health\n");
++		bp->fw_cap &= ~BNXT_FW_CAP_HOT_RESET;
++		bp->fw_cap &= ~BNXT_FW_CAP_ERROR_RECOVERY;
++	}
++}
++
+ static int bnxt_fw_init_one_p1(struct bnxt *bp)
+ {
+ 	int rc;
+@@ -10465,6 +10478,7 @@ static int bnxt_fw_init_one_p2(struct bn
+ 		netdev_warn(bp->dev, "hwrm query adv flow mgnt failure rc: %d\n",
+ 			    rc);
+ 
++	bnxt_alloc_fw_health(bp);
+ 	rc = bnxt_hwrm_error_recovery_qcfg(bp);
+ 	if (rc)
+ 		netdev_warn(bp->dev, "hwrm query error recovery failure rc: %d\n",
+@@ -11344,6 +11358,8 @@ static void bnxt_remove_one(struct pci_d
+ 	bnxt_dcb_free(bp);
+ 	kfree(bp->edev);
+ 	bp->edev = NULL;
++	kfree(bp->fw_health);
++	bp->fw_health = NULL;
+ 	bnxt_cleanup_pci(bp);
+ 	bnxt_free_ctx_mem(bp);
+ 	kfree(bp->ctx);
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
+@@ -1658,6 +1658,7 @@ struct bnxt {
+ 	#define BNXT_FW_CAP_PCIE_STATS_SUPPORTED	0x00020000
+ 	#define BNXT_FW_CAP_EXT_STATS_SUPPORTED		0x00040000
+ 	#define BNXT_FW_CAP_ERR_RECOVER_RELOAD		0x00100000
++	#define BNXT_FW_CAP_HOT_RESET			0x00200000
+ 
+ #define BNXT_NEW_RM(bp)		((bp)->fw_cap & BNXT_FW_CAP_NEW_RM)
+ 	u32			hwrm_spec_code;
 
 
