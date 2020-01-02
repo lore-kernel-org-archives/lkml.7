@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C42C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 198F8C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CECEA222C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E02A120866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005948;
-	bh=y39XHn13WKrb3P2w/HCNKsTKr5QrxtrqjPkgUGvJwbU=;
+	s=default; t=1578005952;
+	bh=rvBKXNL2zspQZcX54WvZYh3lHndspUwQyuz6IcZK5+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WUkeHMwUG2l1yOoysWHoLPUBrCJ0942uHejbmb+WWRKX3GvnpEBMZl9rcitsBimAv
-	 AiInrbKjMNI/S6b8LeOZHo+aaH2lwuzlMNuwvSF9U+GR7hWqTAg8FOhVt6q1SXdN6I
-	 7Y44ZxiAgLr2xbCjCNkpzzEjSbKzFdmo8if221zM=
+	b=tlUSMJnrGSoFfA8cKEVs6+Z05gOggOMTOjnBIFnE5xOnZv/WUZ9YFNSDsHr6LMStl
+	 8A6yAdBsrQ3qt3YD9V9iAU4I50CjGtU6fvhyoAXy83ctHss0bwnUdjPBK4kZKQQ4a8
+	 tS64S88VluHbz6/JnDi3GuC6pBqH6ylqYiLdHwrQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgABWOn (ORCPT
+        id S1728529AbgABW7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:14:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54972 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:59:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727937AbgABWOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:14:38 -0500
+        id S1727948AbgABWOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:14:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 750D121D7D;
-        Thu,  2 Jan 2020 22:14:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F60E21D7D;
+        Thu,  2 Jan 2020 22:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003277;
-        bh=y39XHn13WKrb3P2w/HCNKsTKr5QrxtrqjPkgUGvJwbU=;
+        s=default; t=1578003282;
+        bh=rvBKXNL2zspQZcX54WvZYh3lHndspUwQyuz6IcZK5+U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R4KxmqRGmAw4aPgAHyZhawTxSKNC8n0tvTFBTLt4sl/9VBg2FUO3bV3kkBcNTKluz
-         y4jXiO/YlXJiHCm/+G9dJscX8gsY2OZdep9R37fZUO+QTohLpW4WHpQOHeyb3ndJ+r
-         B4j2BHxCTBAJyic9cDzQp97AUSOXrvibVbwQsokA=
+        b=q8ki3vhRs3l0HpqlUbkSObj13hpA9NRgpInDCpWBabHCOEOKTepPF22/EJE3RTZHu
+         zaWHmv2/eW/TmoPd4W0kgZbYQGLf5EuzX7CalQuOLoSGabb6JbShJ3U5EzNlNWgK7/
+         HdDwz+5sMoNNrhtOAeKuTrH0dl5EbWe9cy0ys1Xk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Omer Shpigelman <oshpigelman@habana.ai>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 086/191] powerpc/fixmap: Use __fix_to_virt() instead of fix_to_virt()
-Date:   Thu,  2 Jan 2020 23:06:08 +0100
-Message-Id: <20200102215839.149918121@linuxfoundation.org>
+Subject: [PATCH 5.4 096/191] habanalabs: skip VA block list update in reset flow
+Date:   Thu,  2 Jan 2020 23:06:18 +0100
+Message-Id: <20200102215840.195594801@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -60,66 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Omer Shpigelman <oshpigelman@habana.ai>
 
-[ Upstream commit 77693a5fb57be4606a6024ec8e3076f9499b906b ]
+[ Upstream commit 71c5e55e7c077fa17c42fbda91a8d14322825c44 ]
 
-Modify back __set_fixmap() to using __fix_to_virt() instead
-of fix_to_virt() otherwise the following happens because it
-seems GCC doesn't see idx as a builtin const.
+Reduce context close time by skipping the VA block free list update in
+order to avoid hard reset with open contexts.
+Reset with open contexts can potentially lead to a kernel crash as the
+generic pool of the MMU hops is destroyed while it is not empty because
+some unmap operations are not done.
+The commit affect mainly when running on simulator.
 
-  CC      mm/early_ioremap.o
-In file included from ./include/linux/kernel.h:11:0,
-                 from mm/early_ioremap.c:11:
-In function ‘fix_to_virt’,
-    inlined from ‘__set_fixmap’ at ./arch/powerpc/include/asm/fixmap.h:87:2,
-    inlined from ‘__early_ioremap’ at mm/early_ioremap.c:156:4:
-./include/linux/compiler.h:350:38: error: call to ‘__compiletime_assert_32’ declared with attribute error: BUILD_BUG_ON failed: idx >= __end_of_fixed_addresses
-  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-                                      ^
-./include/linux/compiler.h:331:4: note: in definition of macro ‘__compiletime_assert’
-    prefix ## suffix();    \
-    ^
-./include/linux/compiler.h:350:2: note: in expansion of macro ‘_compiletime_assert’
-  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-  ^
-./include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
- #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-                                     ^
-./include/linux/build_bug.h:50:2: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
-  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-  ^
-./include/asm-generic/fixmap.h:32:2: note: in expansion of macro ‘BUILD_BUG_ON’
-  BUILD_BUG_ON(idx >= __end_of_fixed_addresses);
-  ^
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 4cfac2f9c7f1 ("powerpc/mm: Simplify __set_fixmap()")
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/f4984c615f90caa3277775a68849afeea846850d.1568295907.git.christophe.leroy@c-s.fr
+Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/fixmap.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/misc/habanalabs/memory.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/fixmap.h b/arch/powerpc/include/asm/fixmap.h
-index 0cfc365d814b..722289a1d000 100644
---- a/arch/powerpc/include/asm/fixmap.h
-+++ b/arch/powerpc/include/asm/fixmap.h
-@@ -77,7 +77,12 @@ enum fixed_addresses {
- static inline void __set_fixmap(enum fixed_addresses idx,
- 				phys_addr_t phys, pgprot_t flags)
+diff --git a/drivers/misc/habanalabs/memory.c b/drivers/misc/habanalabs/memory.c
+index 365fb0cb8dff..22566b75ca50 100644
+--- a/drivers/misc/habanalabs/memory.c
++++ b/drivers/misc/habanalabs/memory.c
+@@ -965,17 +965,19 @@ init_page_pack_err:
+  *
+  * @ctx                 : current context
+  * @vaddr               : device virtual address to unmap
++ * @ctx_free            : true if in context free flow, false otherwise.
+  *
+  * This function does the following:
+  * - Unmap the physical pages related to the given virtual address
+  * - return the device virtual block to the virtual block list
+  */
+-static int unmap_device_va(struct hl_ctx *ctx, u64 vaddr)
++static int unmap_device_va(struct hl_ctx *ctx, u64 vaddr, bool ctx_free)
  {
--	map_kernel_page(fix_to_virt(idx), phys, flags);
-+	if (__builtin_constant_p(idx))
-+		BUILD_BUG_ON(idx >= __end_of_fixed_addresses);
-+	else if (WARN_ON(idx >= __end_of_fixed_addresses))
-+		return;
-+
-+	map_kernel_page(__fix_to_virt(idx), phys, flags);
- }
+ 	struct hl_device *hdev = ctx->hdev;
+ 	struct hl_vm_phys_pg_pack *phys_pg_pack = NULL;
+ 	struct hl_vm_hash_node *hnode = NULL;
+ 	struct hl_userptr *userptr = NULL;
++	struct hl_va_range *va_range;
+ 	enum vm_type_t *vm_type;
+ 	u64 next_vaddr, i;
+ 	u32 page_size;
+@@ -1003,6 +1005,7 @@ static int unmap_device_va(struct hl_ctx *ctx, u64 vaddr)
  
- #endif /* !__ASSEMBLY__ */
+ 	if (*vm_type == VM_TYPE_USERPTR) {
+ 		is_userptr = true;
++		va_range = &ctx->host_va_range;
+ 		userptr = hnode->ptr;
+ 		rc = init_phys_pg_pack_from_userptr(ctx, userptr,
+ 				&phys_pg_pack);
+@@ -1014,6 +1017,7 @@ static int unmap_device_va(struct hl_ctx *ctx, u64 vaddr)
+ 		}
+ 	} else if (*vm_type == VM_TYPE_PHYS_PACK) {
+ 		is_userptr = false;
++		va_range = &ctx->dram_va_range;
+ 		phys_pg_pack = hnode->ptr;
+ 	} else {
+ 		dev_warn(hdev->dev,
+@@ -1052,12 +1056,18 @@ static int unmap_device_va(struct hl_ctx *ctx, u64 vaddr)
+ 
+ 	mutex_unlock(&ctx->mmu_lock);
+ 
+-	if (add_va_block(hdev,
+-			is_userptr ? &ctx->host_va_range : &ctx->dram_va_range,
+-			vaddr,
+-			vaddr + phys_pg_pack->total_size - 1))
+-		dev_warn(hdev->dev, "add va block failed for vaddr: 0x%llx\n",
+-				vaddr);
++	/*
++	 * No point in maintaining the free VA block list if the context is
++	 * closing as the list will be freed anyway
++	 */
++	if (!ctx_free) {
++		rc = add_va_block(hdev, va_range, vaddr,
++					vaddr + phys_pg_pack->total_size - 1);
++		if (rc)
++			dev_warn(hdev->dev,
++					"add va block failed for vaddr: 0x%llx\n",
++					vaddr);
++	}
+ 
+ 	atomic_dec(&phys_pg_pack->mapping_cnt);
+ 	kfree(hnode);
+@@ -1189,8 +1199,8 @@ int hl_mem_ioctl(struct hl_fpriv *hpriv, void *data)
+ 		break;
+ 
+ 	case HL_MEM_OP_UNMAP:
+-		rc = unmap_device_va(ctx,
+-				args->in.unmap.device_virt_addr);
++		rc = unmap_device_va(ctx, args->in.unmap.device_virt_addr,
++					false);
+ 		break;
+ 
+ 	default:
+@@ -1620,7 +1630,7 @@ void hl_vm_ctx_fini(struct hl_ctx *ctx)
+ 		dev_dbg(hdev->dev,
+ 			"hl_mem_hash_node of vaddr 0x%llx of asid %d is still alive\n",
+ 			hnode->vaddr, ctx->asid);
+-		unmap_device_va(ctx, hnode->vaddr);
++		unmap_device_va(ctx, hnode->vaddr, true);
+ 	}
+ 
+ 	spin_lock(&vm->idr_lock);
 -- 
 2.20.1
 
