@@ -2,91 +2,141 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35DCC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E9CC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B8BB20863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64F6620863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:24:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Kz+SHpD4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgABNWW (ORCPT
+        id S1728371AbgABNYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 08:22:22 -0500
-Received: from foss.arm.com ([217.140.110.172]:47148 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728298AbgABNWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 08:22:22 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 437CF1FB;
-        Thu,  2 Jan 2020 05:22:21 -0800 (PST)
-Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C13C3F703;
-        Thu,  2 Jan 2020 05:22:20 -0800 (PST)
-Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations conflicts with
- lower layer
-To:     "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Linuxarm <linuxarm@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Morten Rasmussen <morten.rasmussen@arm.com>
-References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
- <20191231164051.GA4864@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
- <20200102112955.GC4864@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340AEB67@dggemm526-mbx.china.huawei.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <c43342d0-7e4d-3be0-0fe1-8d802b0d7065@arm.com>
-Date:   Thu, 2 Jan 2020 13:22:19 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <678F3D1BB717D949B966B68EAEB446ED340AEB67@dggemm526-mbx.china.huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Thu, 2 Jan 2020 08:24:00 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:36064 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728298AbgABNYA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 08:24:00 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 002DMQkW074848;
+        Thu, 2 Jan 2020 13:22:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=E58dPgAUN7qsIQeKA+zHJ3+zUCt1y/EVyKTFMcsGSJo=;
+ b=Kz+SHpD4btPYSgwtW5zjM8cC7w79xYikWd8b5pXBtTC9WjddOHkgjQm94e1yHvtva4TB
+ 6MtgKIVaGC1+QOYaPLo2dPZ+kWeiju5DFyR1URrrVBEXT4I3a+Sn0S/w8qHFzb2ggUn6
+ FBSvVF7WsKrMVru9PB0BzFlzkPXONFNqkOmPRrjVuYq6HOq4PwRZOMryOolAtNMvWgGd
+ 0sWDqUy9UtD3vFF+7LUgKWqhiQEMJ67ZU+MRMOudg7pVz3tVE6FNyiTB5dDoUFpRLTW+
+ jGTW6RBcnHV7iifq9Lwjx87pyu/wkP+0PvyzSuxF+yHRL6EV6pbMN8apm9l7f1ExciaA Tw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2x5ypqq8mc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Jan 2020 13:22:26 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 002DJ8UU066806;
+        Thu, 2 Jan 2020 13:22:26 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2x8gjajhxw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Jan 2020 13:22:26 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 002DMLiO004117;
+        Thu, 2 Jan 2020 13:22:21 GMT
+Received: from [192.168.14.112] (/79.178.220.19)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 02 Jan 2020 05:22:21 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [PATCH] KVM: SVM: Fix potential memory leak in svm_cpu_init()
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <1577931640-29420-1-git-send-email-linmiaohe@huawei.com>
+Date:   Thu, 2 Jan 2020 15:22:14 +0200
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
 Content-Transfer-Encoding: 7bit
+Message-Id: <BEE0CD6D-B921-4FFE-ADD6-76A7A170C2B0@oracle.com>
+References: <1577931640-29420-1-git-send-email-linmiaohe@huawei.com>
+To:     linmiaohe <linmiaohe@huawei.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001020120
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9487 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001020120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/01/2020 12:47, Zengtao (B) wrote:
->>
->> As I said, wrong configurations need to be detected when generating
->> DT/ACPI if possible. The above will print warning on systems with NUMA
->> within package.
->>
->> NUMA:  0-7, 8-15
->> core_siblings:   0-15
->>
->> The above is the example where the die has 16 CPUs and 2 NUMA nodes
->> within a package, your change throws error to the above config which is
->> wrong.
->>
-> From your example, the core 7 and core 8 has got different LLC but the same Low
-> Level cache?
 
-AFAIA what matters here is memory controllers, less so LLCs. Cores within
-a single die could have private LLCs and separate memory controllers, or
-shared LLC and separate memory controllers.
 
-> From schedule view of point, lower level sched domain should be a subset of higher
-> Level sched domain.
+> On 2 Jan 2020, at 4:20, linmiaohe <linmiaohe@huawei.com> wrote:
+> 
+> From: Miaohe Lin <linmiaohe@huawei.com>
+> 
+> When kmalloc memory for sd->sev_vmcbs failed, we forget to free the page
+> held by sd->save_area.
+> 
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+
+Reviewed-by: Liran Alon <liran.alon@oracle.com>
+
+-Liran
+
+> ---
+> arch/x86/kvm/svm.c | 8 +++++---
+> 1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 8f1b715dfde8..89eb382e8580 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -1012,7 +1012,7 @@ static int svm_cpu_init(int cpu)
+> 	r = -ENOMEM;
+> 	sd->save_area = alloc_page(GFP_KERNEL);
+> 	if (!sd->save_area)
+> -		goto err_1;
+> +		goto free_cpu_data;
+> 
+> 	if (svm_sev_enabled()) {
+> 		r = -ENOMEM;
+> @@ -1020,14 +1020,16 @@ static int svm_cpu_init(int cpu)
+> 					      sizeof(void *),
+> 					      GFP_KERNEL);
+> 		if (!sd->sev_vmcbs)
+> -			goto err_1;
+> +			goto free_save_area;
+> 	}
+> 
+> 	per_cpu(svm_data, cpu) = sd;
+> 
+> 	return 0;
+> 
+> -err_1:
+> +free_save_area:
+> +	__free_page(sd->save_area);
+> +free_cpu_data:
+> 	kfree(sd);
+> 	return r;
+> 
+> -- 
+> 2.19.1
 > 
 
-Right, and that is checked when you have sched_debug on the cmdline
-(or write 1 to /sys/kernel/debug/sched_debug & regenerate the sched domains)
-
-Now, I don't know how this plays out for the numa-in-package topologies like
-the one suggested by Sudeep. x86 and AMD had to play some games to get
-numa-in-package topologies working, see e.g.
-
-  cebf15eb09a2 ("x86, sched: Add new topology for multi-NUMA-node CPUs")
-
-perhaps you need to "lie" here and ensure sub-NUMA sched domain levels are
-a subset of the NUMA levels, i.e. lie for core_siblings. I might go and
-play with this to see how it behaves.
