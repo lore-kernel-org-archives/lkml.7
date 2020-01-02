@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4005C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DDEC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68C3220848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74AF720866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005307;
-	bh=d4fAy5rDX6QwqHSUYhcNoWbFNfPiR5H9GxDDuECfseo=;
+	s=default; t=1578005316;
+	bh=gGXxGcUoJPOrJ/1CptDxvcsik+gYEf+rUZ+DvOihoEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YDOVu6U806pIcMxmncRXEqMhz4QpgsnyoGDbXNE7xvM3FmsIJzZNa4pJIX6DsZAmv
-	 giSt9hdNsowJZXIA3PmffE9kMsseNgqw+QC+q7az78mDl4spRaENxTax+7InFrI11/
-	 MBVN3q+xo6e4U/384W4Uhp4ZWKNjKLjBnwvg6zfw=
+	b=OficmggyxXSGm6Oo9/qsGqRvXxp2mZvw/jp4hc1+dwTNM2LE3EpHjFfKpiRfyVUeN
+	 2Fwc7NV81hxaALYz859XlPDQKspeZNvX8FD1WNolUrzGNh8Pw5avqMVZz0kyOgb1T4
+	 fIYbXau7H7ji9fjTVQktOFB/iH62ysFLLn7bGgJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbgABWs0 (ORCPT
+        id S1729812AbgABW17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:48:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58184 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:27:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729941AbgABW20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:28:26 -0500
+        id S1729586AbgABW1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:27:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B04321835;
-        Thu,  2 Jan 2020 22:28:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46364222C3;
+        Thu,  2 Jan 2020 22:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004105;
-        bh=d4fAy5rDX6QwqHSUYhcNoWbFNfPiR5H9GxDDuECfseo=;
+        s=default; t=1578004074;
+        bh=gGXxGcUoJPOrJ/1CptDxvcsik+gYEf+rUZ+DvOihoEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SrGpp6FPlmIdL7M2DIKqGP2m7euEWhE6XYOXRTG9cAjkg1mYUtyeBSlkHbbaj8fnP
-         nDIlQffdnV3vBHInsgTjHy1v1+5ftANkiDaZysbu2o/zppgRcB7S7fE+jpCk3NGtIo
-         /rxo96vH+/Rwb2X3XWu3WMs0rTgIFe3Sasr5QqaM=
+        b=id0XoKlsHCveCUusRlU/+P65z2nXBO1wvY+UBR+NUU8J/61/LjUViEpX3jDKfkoBn
+         o2veQV9S2eH+4RitgMyRhfwN9bBj4/obasYMIuDG5PXFvKCqL8jqbQ15fd8X1c+avc
+         EGp0YnOe1GGUhgTl7vRjOlH10H0VEfzlqHzAwyBI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 039/171] drm/gma500: fix memory disclosures due to uninitialized bytes
-Date:   Thu,  2 Jan 2020 23:06:10 +0100
-Message-Id: <20200102220552.426035377@linuxfoundation.org>
+Subject: [PATCH 4.9 027/171] mwifiex: pcie: Fix memory leak in mwifiex_pcie_init_evt_ring
+Date:   Thu,  2 Jan 2020 23:05:58 +0100
+Message-Id: <20200102220550.832390709@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -60,42 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit ec3b7b6eb8c90b52f61adff11b6db7a8db34de19 ]
+[ Upstream commit d10dcb615c8e29d403a24d35f8310a7a53e3050c ]
 
-"clock" may be copied to "best_clock". Initializing best_clock
-is not sufficient. The fix initializes clock as well to avoid
-memory disclosures and informaiton leaks.
+In mwifiex_pcie_init_evt_ring, a new skb is allocated which should be
+released if mwifiex_map_pci_memory() fails. The release for skb and
+card->evtbd_ring_vbase is added.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191018044150.1899-1-kjlu@umn.edu
+Fixes: 0732484b47b5 ("mwifiex: separate ring initialization and ring creation routines")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Acked-by: Ganapathi Bhat <gbhat@marvell.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/gma500/oaktrail_crtc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wireless/marvell/mwifiex/pcie.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/gma500/oaktrail_crtc.c b/drivers/gpu/drm/gma500/oaktrail_crtc.c
-index da9fd34b9550..caa6da02206a 100644
---- a/drivers/gpu/drm/gma500/oaktrail_crtc.c
-+++ b/drivers/gpu/drm/gma500/oaktrail_crtc.c
-@@ -139,6 +139,7 @@ static bool mrst_sdvo_find_best_pll(const struct gma_limit_t *limit,
- 	s32 freq_error, min_error = 100000;
+diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
+index cb681b265b10..38d45a77c06b 100644
+--- a/drivers/net/wireless/marvell/mwifiex/pcie.c
++++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
+@@ -632,8 +632,11 @@ static int mwifiex_pcie_init_evt_ring(struct mwifiex_adapter *adapter)
+ 		skb_put(skb, MAX_EVENT_SIZE);
  
- 	memset(best_clock, 0, sizeof(*best_clock));
-+	memset(&clock, 0, sizeof(clock));
+ 		if (mwifiex_map_pci_memory(adapter, skb, MAX_EVENT_SIZE,
+-					   PCI_DMA_FROMDEVICE))
++					   PCI_DMA_FROMDEVICE)) {
++			kfree_skb(skb);
++			kfree(card->evtbd_ring_vbase);
+ 			return -1;
++		}
  
- 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
- 		for (clock.n = limit->n.min; clock.n <= limit->n.max;
-@@ -195,6 +196,7 @@ static bool mrst_lvds_find_best_pll(const struct gma_limit_t *limit,
- 	int err = target;
+ 		buf_pa = MWIFIEX_SKB_DMA_ADDR(skb);
  
- 	memset(best_clock, 0, sizeof(*best_clock));
-+	memset(&clock, 0, sizeof(clock));
- 
- 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
- 		for (clock.p1 = limit->p1.min; clock.p1 <= limit->p1.max;
 -- 
 2.20.1
 
