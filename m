@@ -2,98 +2,156 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0A1C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C2CC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FA1921655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE4C221655
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:58:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vMMuuA9l"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l27tJV/1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgABV6I (ORCPT
+        id S1726199AbgABV6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 16:58:08 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36820 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbgABV6H (ORCPT
+        Thu, 2 Jan 2020 16:58:13 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:34258 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbgABV6I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 16:58:07 -0500
-Received: by mail-lf1-f67.google.com with SMTP id n12so30759736lfe.3;
-        Thu, 02 Jan 2020 13:58:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=35q6Jfi2CC23jXWt4F+Y2RbWyKxhwN9lDjJC7r78ZIs=;
-        b=vMMuuA9l9972ihHdc7hjdkhsUVFWoxUnVs30y5dRjb3CjWQx9INuW//pxcQsuPE3lK
-         Qs5GuIuqd652A0/gkHUbVATgkvp+BBRr99JZEmO00EZzL5OhL8yhYWuRwYnAJ7B1JKsa
-         L+JcjINjfBEmT57PMS2GroCkEB98e8ZJW5a3Sj8ySANKrEra0SoIwIlBU1jMMG1/ASQ5
-         FulOqXC4EGJf8f7vUmi1EA3uyutDHPMdRRLljmIKD13XEzZmnicUFeo6fsqXIOZUr2pq
-         JtQ+EGKef/UYlcc5aSKTtSUtwKgqjtnOR7mNL7uh6TEakjx0EkK5/P9FBdo+353rQVUc
-         MOaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=35q6Jfi2CC23jXWt4F+Y2RbWyKxhwN9lDjJC7r78ZIs=;
-        b=kCDe4SdOYQc6rtrtIyxa/UtIbyp13NxElF1cwWl58dLCy9D6n1QLSTQCpdBgKy6M/q
-         LMIZSfCAhKXvzADUZbKtmSIgx/PR0DAnk1/q/ZbJbXAX7knPR3VW3O80cecQuq9mdyoO
-         +h9z4QHtn2NcjKFENZsWvImc05ksHpIJNFrpBiCaRMLhhA4jg5LLlOXnvrLyo7k4WSW4
-         Fy4pmwKRiB3tWMLO2DKxSl1IL43pFMk86b/azQyvy7+n2w0WYc+sIRlbSRMNLhjUiovB
-         PO/iEdWt4bcke/HbvfNYSsHNFs7L4mja3PQ7H542b3VSukMqsD5bd3tnzhEeWEMlz3Rr
-         +abw==
-X-Gm-Message-State: APjAAAWt3E26J1ZuiGuBxQdJPFBYP28nGHMEjxD3Ao3owN3HctcbgvPH
-        O31NmQTKJ8/HbjqExfZK6cMK0yGlurE=
-X-Google-Smtp-Source: APXvYqwNwYpvQH3/oHzSQ5p43kTZlE979UrLxObLsg8UQhaOw2EWVmcuqb7E91wSH4HsXr7hSAKeBQ==
-X-Received: by 2002:a19:6a06:: with SMTP id u6mr48503903lfu.187.1578002285376;
-        Thu, 02 Jan 2020 13:58:05 -0800 (PST)
-Received: from jonathartonsmbp.lan (83-245-229-102-nat-p.elisa-mobile.fi. [83.245.229.102])
-        by smtp.gmail.com with ESMTPSA id p12sm23687003lfc.43.2020.01.02.13.58.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 Jan 2020 13:58:04 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Subject: Re: [Cake] [PATCH] sch_cake: avoid possible divide by zero in
- cake_enqueue()
-From:   Jonathan Morton <chromatix99@gmail.com>
-In-Reply-To: <20200102092143.8971-1-wenyang@linux.alibaba.com>
-Date:   Thu, 2 Jan 2020 23:58:02 +0200
-Cc:     =?utf-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cake@lists.bufferbloat.net,
-        Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0750BA89-01A1-4126-9BEF-2C6AC607A5BD@gmail.com>
-References: <20200102092143.8971-1-wenyang@linux.alibaba.com>
-To:     Wen Yang <wenyang@linux.alibaba.com>
-X-Mailer: Apple Mail (2.3445.9.1)
+        Thu, 2 Jan 2020 16:58:08 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 002LsRxn088500;
+        Thu, 2 Jan 2020 21:57:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2019-08-05;
+ bh=c9CiFIyiVXzLlpT9+lnQQn3z7fPJn3E86zFXm4+hGo8=;
+ b=l27tJV/1FLn856+Rp/OjZkzDW2jl7hotIb6XEilTNAo7KS7Rl39jaLx7IT3t5WgPzclf
+ ZDGYMC/EgYCPjcwv1xhButdkXpUrfNMjVCX+99Kmg0aMg7pviO73tTWHYWxLqZFL16kV
+ qxRYuaEwynUH+0BjB5fty3tIp/E4Ge6H2nsdSJWv28D5YVtPPtwIio8wHWudjFJyC8xz
+ X+2Xl3m92k3NSGsQncZqrFDMttmje6oOGXnpjtj+bt4OXUwp+mEIm7aJW+Vkn9uj3EHB
+ EWRA8bAlyfC4yIaFEPKoFSI6tFW/5spkqoPiUMqgIViXzZ/EhCZ31U1al+HsD89MLpqM Hw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2x5ypqsku0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Jan 2020 21:57:57 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 002LmiPw101439;
+        Thu, 2 Jan 2020 21:57:56 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2x9jm6n3tw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Jan 2020 21:57:56 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 002LvtAF000910;
+        Thu, 2 Jan 2020 21:57:55 GMT
+Received: from localhost (/10.145.178.64)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 02 Jan 2020 13:57:55 -0800
+Date:   Thu, 2 Jan 2020 13:57:54 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Andreas Dilger <adilger@dilger.ca>,
+        David Sterba <dsterba@suse.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: FS_IOC_GETFSLABEL and FS_IOC_SETFSLABEL
+Message-ID: <20200102215754.GA1508646@magnolia>
+References: <20191228143651.bjb4sjirn2q3xup4@pali>
+ <517472d1-c686-2f18-4e0b-000cda7e88c7@redhat.com>
+ <20200101181054.GB191637@mit.edu>
+ <20200101183920.imncit5sllj46c22@pali>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200101183920.imncit5sllj46c22@pali>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001020176
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001020177
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On 2 Jan, 2020, at 11:21 am, Wen Yang <wenyang@linux.alibaba.com> =
-wrote:
->=20
-> The variables 'window_interval' is u64 and do_div()
-> truncates it to 32 bits, which means it can test
-> non-zero and be truncated to zero for division.
-> The unit of window_interval is nanoseconds,
-> so its lower 32-bit is relatively easy to exceed.
-> Fix this issue by using div64_u64() instead.
+On Wed, Jan 01, 2020 at 07:39:20PM +0100, Pali Rohár wrote:
+> On Wednesday 01 January 2020 13:10:54 Theodore Y. Ts'o wrote:
+> > On Tue, Dec 31, 2019 at 04:54:18PM -0600, Eric Sandeen wrote:
+> > > > Because I was not able to find any documentation for it, what is format
+> > > > of passed buffer... null-term string? fixed-length? and in which
+> > > > encoding? utf-8? latin1? utf-16? or filesystem dependent?
+> > > 
+> > > It simply copies the bits from the memory location you pass in, it knows
+> > > nothing of encodings.
+> > > 
+> > > For the most part it's up to the filesystem's own utilities to do any
+> > > interpretation of the resulting bits on disk, null-terminating maximal-length
+> > > label strings, etc.
+> > 
+> > I'm not sure this is going to be the best API design choice.  The
+> > blkid library interprets the on disk format for each file syustem
+> > knowing what is the "native" format for that particular file system.
+> > This is mainly an issue only for the non-Linux file systems; for the
+> > Linux file system, the party line has historically been that we don't
+> > get involved with character encoding, but in practice, what that has
+> > evolved into is that userspace has standardized on UTF-8, and that's
+> > what we pass into the kernel from userspace by convention.
+> > 
+> > But the problem is that if the goal is to make FS_IOC_GETFSLABEL and
+> > FS_IOC_SETFSLABEL work without the calling program knowing what file
+> > system type a particular pathname happens to be, then it would be
+> > easist for the userspace program if it can expect that it can always
+> > pass in a null-terminated UTF-8 string, and get back a null-terminated
+> > UTF-8.  I bet that in practice, that is what most userspace programs
+> > are going to be do anyway, since it works that way for all other file
+> > system syscalls.
 
-That might actually explain a few things.  I approve.
+"Null terminated sequence of bytes*" is more or less what xfsprogs do,
+and it looks like btrfs does that as well.
 
-Honestly the *correct* fix is for the compiler to implement division in =
-a way that doesn't require substituting it with function calls.  As this =
-shows, it's error-prone to do this manually.
+(* with the idiotic exception that if the label is exactly 256 bytes long
+then the array is not required to have a null terminator, because btrfs
+encoded that quirk of their ondisk format into the API. <grumble>)
 
- - Jonathan Morton=
+So for VFAT, I think you can use the same code that does the name
+encoding transformations for iocharset= to handle labels, right?
+
+> > So for a file system which is a non-Linux-native file system, if it
+> > happens to store the its label using utf-16, or some other
+> > Windows-system-silliness, it would work a lot better if it assumed
+> > that it was passed in utf-8, and stored in the the Windows file system
+> > using whatever crazy encoding Windows wants to use.  Otherwise, why
+> > bother uplifting the ioctl to one which is file system independent, if
+> > the paramters are defined to be file system *dependent*?
+> 
+> Exactly. In another email I wrote that for those non-Linux-native
+> filesystem could be used encoding specified in iocharset= mount
+> parameter. I think it is better as usage of one fixing encoding (e.g.
+> UTF-8) if other filesystem strings are propagated to userspace in other
+> encoding (as specified by iocharset=).
+
+I'm confused by this statement... but I think we're saying the same
+thing?
+
+--D
+
+> 
+> -- 
+> Pali Rohár
+> pali.rohar@gmail.com
+
+
