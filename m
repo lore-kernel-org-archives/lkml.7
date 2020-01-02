@@ -2,156 +2,178 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC48C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C80C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C143217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDF7321582
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:08:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SoIvfKdm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g4fnXkQZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726052AbgABWF0 (ORCPT
+        id S1726083AbgABWIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:05:26 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36344 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgABWF0 (ORCPT
+        Thu, 2 Jan 2020 17:08:06 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38521 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgABWIF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:05:26 -0500
-Received: by mail-oi1-f193.google.com with SMTP id c16so13646581oic.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 14:05:25 -0800 (PST)
+        Thu, 2 Jan 2020 17:08:05 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y17so40741693wrh.5;
+        Thu, 02 Jan 2020 14:08:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cB5/TfS+9oh4EQGMYevcc+P8vQxKX09YhHxFSkP0EAw=;
-        b=SoIvfKdmMGqdcPIIHUxkj+qmGvmf922xK7i/as2s4MZdgstK11XdL+NxHOnjodRfq8
-         WELQWdpW1UQis9xdxb8QKsbUMvOSE/mD4sAHxRJ2VFUlbyEJAkye2eypjZO564oiz1We
-         5rbnVOwCxC7jwxvm1X5PmNFpyeNCCSUD4Bs34=
+         :content-disposition:in-reply-to:user-agent;
+        bh=hSkCZSCwVDDUrbTtmDApYqi12CUPtLMPAOuxrPvJKGM=;
+        b=g4fnXkQZ6tQvKDJCtac9JIAAN3qok68nbRZH+Ug/JaKrjdH00nsqlLJUkFEBJCKqsu
+         dmoif8pslECzeKCb5JAMGtNhSVtuaboSJC6Q18T87ttI6PKPgBxJsirHN7HDhtayf/Nk
+         knm+LExorhsD5Ngn7JbZxb02mJNUo0+8RsEFFDMUjtoX5eo/bPuoUQbX+OVvcYhgj0xu
+         JhCyOi6C3gA6/mVB8fdbqZS6V64bI22THEIQNABRvxtw69YpQ6+5vsRjLosoAFx4CTar
+         b5IPh2l86VfYGudHcEQYhiXmwyFmEUOW48SLd+fOtH1xBECvbRpp4omc3Qqfn28yMgdp
+         emEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cB5/TfS+9oh4EQGMYevcc+P8vQxKX09YhHxFSkP0EAw=;
-        b=oIF75XAL86XX9TwcWaaAO3f9kCkWFbLPW7117h5JlN+IijTwmV8yPi0KQyY3IRtyGX
-         qRgI2RMBtIP8r/4+vEqqf3iTNGGXDVY2lMk5ObrgLxxxsW1tYm/qcg+g4PctIrEpkFpL
-         ZyiOl1/mX+EWPgZC0GlSKamEpeM2FLYYyUjLeugw7kAMC4MITcBems+Frr8ttDKrD3qG
-         4xLpWJk5VtheEwnJh40wPZ34VAf2D6wclGcXP5DncVos+cXGMoUrphlwIGH18H8tWlLL
-         +EYnMAvkDyXpf+HrSQwKUPruEXddXms8MIxaMG/8CgInH8DH+lj54Y/+0HyuZVX5NsV2
-         Uweg==
-X-Gm-Message-State: APjAAAV3/jhmhv0vh8CT3zR1PijGLyOwObmzhuDbA7UtnBC3FEFkLGhD
-        +LhGVsHZlI79nKQRGcDiWID3iQ==
-X-Google-Smtp-Source: APXvYqy2wJQ6w5qrY2GWj4wLitQzqBVRz7s4vI4qGCXjHrYJ6k7BAB7N0GibJEPNj7V286n+kz8ucw==
-X-Received: by 2002:aca:cc08:: with SMTP id c8mr2990525oig.42.1578002725586;
-        Thu, 02 Jan 2020 14:05:25 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u33sm15182790otb.49.2020.01.02.14.05.24
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hSkCZSCwVDDUrbTtmDApYqi12CUPtLMPAOuxrPvJKGM=;
+        b=j2GVDzcBm2z2aI9JialtlBcVlZcy2wkCfe178co4dWVL7I+KiQR+MMCPaSj22hWwIh
+         W1Ux2FdEgx04OLHow+TydDh9qPb4awEx81ZsTmN8yKmg6GANtN7dmqdH8pZl+oeUCPiz
+         9v+GIs7BjQmh6Mna+tUduJzRQOhuGqtkxNNxV+LLPbJ3d2WpP1nCvhc+6KOvnWQaF63k
+         48WOtqRQYnTqNNLAymndOwoKrxE8p9HlfltVXR1J28Gnfv0Q28cYa5rhPMWYF7ERXFDL
+         RgjgliS2UewBdeiU2h2zABC4Ri3asPoTu1ymQ/e84RFsXSw1a8XbWVAi57O6cMY+RRZZ
+         ImuA==
+X-Gm-Message-State: APjAAAVv5KN5dnN05ZgiCAlnp6ZKtp8nf9Iu1hlyFU0xJi3Cofydrah9
+        TcTIrfP/bx1zz6sbIQP24KI=
+X-Google-Smtp-Source: APXvYqy52IHkgh40mflvMKl6Meyj6hzKveJQJrwEcbpDiar3fGS4/Q6qnjD0W9jPOKaQc2u89W0IMw==
+X-Received: by 2002:adf:fd07:: with SMTP id e7mr82186374wrr.21.1578002882675;
+        Thu, 02 Jan 2020 14:08:02 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id e8sm57670997wrt.7.2020.01.02.14.08.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 14:05:24 -0800 (PST)
-Date:   Thu, 2 Jan 2020 14:05:23 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Nikolai Merinov <n.merinov@inango-systems.com>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
-        Aleksandr Yashkin <a.yashkin@inango-systems.com>,
-        Ariel Gilman <a.gilman@inango-systems.com>
-Subject: Re: [PATCH] pstore/ram: fix for adding dumps to non-empty zone
-Message-ID: <202001021403.535C210D@keescook>
-References: <20191223133816.28155-1-n.merinov@inango-systems.com>
- <201912301227.47AE22C61@keescook>
- <1964542716.432661.1577779234764.JavaMail.zimbra@inango-systems.com>
+        Thu, 02 Jan 2020 14:08:01 -0800 (PST)
+Date:   Thu, 2 Jan 2020 23:08:00 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Andreas Dilger <adilger@dilger.ca>,
+        David Sterba <dsterba@suse.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: FS_IOC_GETFSLABEL and FS_IOC_SETFSLABEL
+Message-ID: <20200102220800.nasrhtz23xkqxxkg@pali>
+References: <20191228143651.bjb4sjirn2q3xup4@pali>
+ <517472d1-c686-2f18-4e0b-000cda7e88c7@redhat.com>
+ <20200101181054.GB191637@mit.edu>
+ <20200101183920.imncit5sllj46c22@pali>
+ <20200102215754.GA1508646@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="l7bzeipaopuephkr"
 Content-Disposition: inline
-In-Reply-To: <1964542716.432661.1577779234764.JavaMail.zimbra@inango-systems.com>
+In-Reply-To: <20200102215754.GA1508646@magnolia>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 31, 2019 at 10:00:34AM +0200, Nikolai Merinov wrote:
-> On Dec 31, 2019, at 1:37 AM, Kees Cook keescook@chromium.org wrote:
-> > On Mon, Dec 23, 2019 at 06:38:16PM +0500, Nikolai Merinov wrote:
-> >> From: Aleksandr Yashkin <a.yashkin@inango-systems.com>
-> >> 
-> >> The circle buffer in ramoops zones has a problem for adding a new
-> >> oops dump to already an existing one.
-> >> 
-> >> The solution to this problem is to reset the circle buffer state before
-> >> writing a new oops dump.
-> > 
-> > Ah, I see it now. When the crashes wrap around, the header is written at
-> > the end of the (possibly incompletely filled) buffer, instead of at the
-> > start, since it wasn't explicitly zapped.
-> 
-> Yes, you are right. We observed this issue when we got two consecutive
-> reboots with a kernel panic: After the first reboot the pstore was able
-> to parse the saved data, but after the second we got a part of the
-> previous compressed message and the new compressed message with the
-> ramoops message header at the middle of the file. 
-> 
-> According to our analysis the same issue can occur if we get more
-> than (rampoops.mem_size/ramoops.record_size) kernel oops during work.
 
-Yup, perfect. Thanks for confirming! I've tested the patches with this
-in mind and everything seems to be working correctly.
+--l7bzeipaopuephkr
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> > 
-> > Yes, this is important; thank you for tracking this down! This bug has
-> > existed for a very long time. I'll try to find the right Fixes tag for
-> > it...
-> 
-> We would like to see this changes in the LTS kernel releases. Could you
-> please point me the manual about propagation such fixes?
+On Thursday 02 January 2020 13:57:54 Darrick J. Wong wrote:
+> On Wed, Jan 01, 2020 at 07:39:20PM +0100, Pali Roh=C3=A1r wrote:
+> > On Wednesday 01 January 2020 13:10:54 Theodore Y. Ts'o wrote:
+> > > On Tue, Dec 31, 2019 at 04:54:18PM -0600, Eric Sandeen wrote:
+> > > > > Because I was not able to find any documentation for it, what is =
+format
+> > > > > of passed buffer... null-term string? fixed-length? and in which
+> > > > > encoding? utf-8? latin1? utf-16? or filesystem dependent?
+> > > >=20
+> > > > It simply copies the bits from the memory location you pass in, it =
+knows
+> > > > nothing of encodings.
+> > > >=20
+> > > > For the most part it's up to the filesystem's own utilities to do a=
+ny
+> > > > interpretation of the resulting bits on disk, null-terminating maxi=
+mal-length
+> > > > label strings, etc.
+> > >=20
+> > > I'm not sure this is going to be the best API design choice.  The
+> > > blkid library interprets the on disk format for each file syustem
+> > > knowing what is the "native" format for that particular file system.
+> > > This is mainly an issue only for the non-Linux file systems; for the
+> > > Linux file system, the party line has historically been that we don't
+> > > get involved with character encoding, but in practice, what that has
+> > > evolved into is that userspace has standardized on UTF-8, and that's
+> > > what we pass into the kernel from userspace by convention.
+> > >=20
+> > > But the problem is that if the goal is to make FS_IOC_GETFSLABEL and
+> > > FS_IOC_SETFSLABEL work without the calling program knowing what file
+> > > system type a particular pathname happens to be, then it would be
+> > > easist for the userspace program if it can expect that it can always
+> > > pass in a null-terminated UTF-8 string, and get back a null-terminated
+> > > UTF-8.  I bet that in practice, that is what most userspace programs
+> > > are going to be do anyway, since it works that way for all other file
+> > > system syscalls.
+>=20
+> "Null terminated sequence of bytes*" is more or less what xfsprogs do,
+> and it looks like btrfs does that as well.
+>=20
+> (* with the idiotic exception that if the label is exactly 256 bytes long
+> then the array is not required to have a null terminator, because btrfs
+> encoded that quirk of their ondisk format into the API. <grumble>)
+>=20
+> So for VFAT, I think you can use the same code that does the name
+> encoding transformations for iocharset=3D to handle labels, right?
 
-You don't need to do anything. :) I have already marked it for -stable,
-and it'll end up there as it makes its way through the development
-process.
+Yes I can! But I need to process also codepage=3D transformation (details
+in email <20191228200523.eaxpwxkpswzuihow@pali>). And I already have
+this implementation in progress.
 
--Kees
+> > > So for a file system which is a non-Linux-native file system, if it
+> > > happens to store the its label using utf-16, or some other
+> > > Windows-system-silliness, it would work a lot better if it assumed
+> > > that it was passed in utf-8, and stored in the the Windows file system
+> > > using whatever crazy encoding Windows wants to use.  Otherwise, why
+> > > bother uplifting the ioctl to one which is file system independent, if
+> > > the paramters are defined to be file system *dependent*?
+> >=20
+> > Exactly. In another email I wrote that for those non-Linux-native
+> > filesystem could be used encoding specified in iocharset=3D mount
+> > parameter. I think it is better as usage of one fixing encoding (e.g.
+> > UTF-8) if other filesystem strings are propagated to userspace in other
+> > encoding (as specified by iocharset=3D).
+>=20
+> I'm confused by this statement... but I think we're saying the same
+> thing?
 
-> 
-> > 
-> > -Kees
-> > 
-> >> Signed-off-by: Aleksandr Yashkin <a.yashkin@inango-systems.com>
-> >> Signed-off-by: Nikolay Merinov <n.merinov@inango-systems.com>
-> >> Signed-off-by: Ariel Gilman <a.gilman@inango-systems.com>
-> >> 
-> >> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-> >> index 8caff834f002..33fceadbf515 100644
-> >> --- a/fs/pstore/ram.c
-> >> +++ b/fs/pstore/ram.c
-> >> @@ -407,6 +407,13 @@ static int notrace ramoops_pstore_write(struct
-> >> pstore_record *record)
-> >>  
-> >>  	prz = cxt->dprzs[cxt->dump_write_cnt];
-> >>  
-> >> +	/* Clean the buffer from old info.
-> >> +	 * `ramoops_read_kmsg_hdr' expects to find a header in the beginning of
-> >> +	 * buffer data, so we must to reset the buffer values, in order to
-> >> +	 * ensure that the header will be written to the beginning of the buffer
-> >> +	 */
-> >> +	persistent_ram_zap(prz);
-> >> +
-> >>  	/* Build header and append record contents. */
-> >>  	hlen = ramoops_write_kmsg_hdr(prz, record);
-> >>  	if (!hlen)
-> >> --
-> >> 2.17.1
-> >> 
-> > 
-> > --
-> > Kees Cook
-> --
-> Nikolai Merinov
+Theodore suggested to use UTF-8 encoding for FS_IOC_GETFSLABEL. And I
+suggested to use iocharset=3D encoding for FS_IOC_GETFSLABEL. You said to
+use for VFAT "same code that does the name encoding", so if I'm
+understanding correctly, yes it is the same thing (as VFAT use
+iocharset=3D and codepage=3D mount options for name encoding). Right?
 
--- 
-Kees Cook
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--l7bzeipaopuephkr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXg5pvgAKCRCL8Mk9A+RD
+Ukr4AJ98GAta9U2OaTiGsrOMG9ps/7zVSwCfStjpkSU7g+R0WVUO3TWvEWLJuTk=
+=oufg
+-----END PGP SIGNATURE-----
+
+--l7bzeipaopuephkr--
