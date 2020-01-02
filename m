@@ -7,148 +7,408 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EE5C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4850FC2D0DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 658EF21655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0353E21734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:24:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FbrvQujt"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rR8gx0X1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgABIYU (ORCPT
+        id S1727913AbgABIYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 03:24:20 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:56248 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727887AbgABIYN (ORCPT
+        Thu, 2 Jan 2020 03:24:16 -0500
+Received: from mailout4.samsung.com ([203.254.224.34]:34725 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727857AbgABIYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 03:24:13 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200102082411epoutp011c1d66553aa9de065451e44fe95ed1b9~mBE2t4v5K1725517255epoutp01E
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jan 2020 08:24:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200102082411epoutp011c1d66553aa9de065451e44fe95ed1b9~mBE2t4v5K1725517255epoutp01E
+        Thu, 2 Jan 2020 03:24:09 -0500
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200102082406epoutp04416932899522edc29deb546d1bfdfb45~mBEyvnZJ30383903839epoutp04M
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jan 2020 08:24:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200102082406epoutp04416932899522edc29deb546d1bfdfb45~mBEyvnZJ30383903839epoutp04M
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1577953451;
-        bh=AzBION1P1SSnBVcusv/wNk1xYVspkZx+OM0dfZawxd4=;
+        s=mail20170921; t=1577953446;
+        bh=1LnUulq5gwtyRrrIOVhZDkN56Ab6+IhciLYTwDgRufk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FbrvQujt2AVQj8qEuFQpEeAODiDHppHbahe8FLaO94KlDG5/OSGOqiuHXbiGNYguJ
-         p/Ig9bKqhvj/+zw9/txKgsb0Tu7/Ktq5WnW+f1HTra7WtrNuaMTzmZXPX5lFYSTO9A
-         MX/HAJjmGiyTOy7D2Xs/bcnyTS3BkzfHLi7rzfYE=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        b=rR8gx0X1yEj/KEr2mQiKxEpbvA/qPQz8YFfdCcCxuTPDz/AqJs3pstBTbqbxGGFdL
+         IN1R7oNQqzgWfwpJYIvBmKhZJ4m064Wfnh/DOUyFGYp8ZZCiVHWO5LsGF7Gq++1asN
+         Y13nxNKNTpxd6GVWjIeF8GRZFxAGt2Bl5m7gPJQw=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
         epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200102082410epcas1p3ee8b96c0264eb9f9cfdac8342c46d527~mBE2IdrLR3061930619epcas1p3i;
-        Thu,  2 Jan 2020 08:24:10 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.159]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 47pLfd0nNgzMqYkk; Thu,  2 Jan
-        2020 08:24:09 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DD.12.57028.9A8AD0E5; Thu,  2 Jan 2020 17:24:09 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200102082408epcas1p194621a6aa6729011703f0c5a076a7396~mBE0op36r3218732187epcas1p1w;
-        Thu,  2 Jan 2020 08:24:08 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200102082408epsmtrp128bbb0a33f8d9b600cea7e795b610f4b~mBE0n5wL_2259122591epsmtrp1A;
-        Thu,  2 Jan 2020 08:24:08 +0000 (GMT)
-X-AuditID: b6c32a35-4f3ff7000001dec4-7f-5e0da8a9cf49
+        20200102082406epcas1p384a2b9c271c3795a09ea54e5ceecc537~mBEyTFMc13061930619epcas1p3B;
+        Thu,  2 Jan 2020 08:24:06 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.162]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 47pLfY3SzTzMqYkj; Thu,  2 Jan
+        2020 08:24:05 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        FD.1F.48019.5A8AD0E5; Thu,  2 Jan 2020 17:24:05 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200102082405epcas1p41dd62d00104cb0daa4fe85641cb8ee22~mBExH18wQ2549925499epcas1p41;
+        Thu,  2 Jan 2020 08:24:05 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200102082405epsmtrp27f3962fb2d66a6d759196fd26433233c~mBExG3vJZ2039720397epsmtrp2T;
+        Thu,  2 Jan 2020 08:24:05 +0000 (GMT)
+X-AuditID: b6c32a38-257ff7000001bb93-13-5e0da8a55e9a
 Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        2D.88.06569.8A8AD0E5; Thu,  2 Jan 2020 17:24:08 +0900 (KST)
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F7.68.10238.4A8AD0E5; Thu,  2 Jan 2020 17:24:04 +0900 (KST)
 Received: from localhost.localdomain (unknown [10.88.103.87]) by
         epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200102082408epsmtip23d0d018dc3c9f748066f5cb41b1af119~mBE0aXQZS2457824578epsmtip2k;
-        Thu,  2 Jan 2020 08:24:08 +0000 (GMT)
+        20200102082404epsmtip2702326355ae308fabad3309ed635850c~mBEw5xeFS2457824578epsmtip2h;
+        Thu,  2 Jan 2020 08:24:04 +0000 (GMT)
 From:   Namjae Jeon <namjae.jeon@samsung.com>
 To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
         sj1557.seo@samsung.com, linkinjeon@gmail.com, pali.rohar@gmail.com,
         Namjae Jeon <namjae.jeon@samsung.com>
-Subject: [PATCH v9 12/13] exfat: add exfat in fs/Kconfig and fs/Makefile
-Date:   Thu,  2 Jan 2020 16:20:35 +0800
-Message-Id: <20200102082036.29643-13-namjae.jeon@samsung.com>
+Subject: [PATCH v9 07/13] exfat: add bitmap operations
+Date:   Thu,  2 Jan 2020 16:20:30 +0800
+Message-Id: <20200102082036.29643-8-namjae.jeon@samsung.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200102082036.29643-1-namjae.jeon@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOKsWRmVeSWpSXmKPExsWy7bCmge7KFbxxBisOs1o0L17PZrFy9VEm
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH++1u1zvxxm2Z/VpR60ZFme7l5tVcBUVcKMrQfyrSrnrZpL3a
+        3UqLSLKH2AONIp3PyMpHoNnI18ZkJqaJqIFlYPiPlL3UJLUMabdrj/++v/P7fM85nHMwRDYj
+        kWOZVifrsDJmEg0VP+3Yooy6X42nqL73r6Fy79WjVE1dp4h6NfIGoby+bjH1srUUpebunKcK
+        X8yLKM/CMwk1ODEp3iWlW9wjIbS/7FEI3Tacg9I3PLWAnm5cSweaPqGJ6BFzgollMliHgrWm
+        2zIyrUYDuS8pdXeqTq9SR6njqFhSYWUsrIHcsz8xam+mOdgUqTjFmF3BUCLDcaRyR4LD5nKy
+        CpONcxpI1p5htqtV9miOsXAuqzE63WaJV6tUGl2QPG42TZWXiezVdFZD63VxDuiPzQdSDBIx
+        sM29APJBKCYjmgEccleJhMdXADufj4TwlIyYAbC0V/PH0V95dRHyATj/YAD56/hwvyTowDCU
+        iIQ/PSt4QzixEz4paRfzDEI0Auit+CbhP5YTelj0zCfmtZjYCO9MNqO8xokEWPM2BxWqrYN1
+        De0Ir6WEARZPXEL5RJDwovBmwZMQAdoDZ8cfI4JeDj90eRbjcjj9xYfyDUHiLJzyLyJ5AL6f
+        NQhaC4frGyQ8ghBbYH2rUgivhy3zZYDXCLEUfvl2TSJkwWHeZZmAbIQ3BjtEgl4N869MLhal
+        4b2e26gwtwIAL5QkFYC17n8FKgGoBRGsnbMYWU5tj/l/X43g981tpZqBt29/ABAYIMPw1+Vh
+        KTIJc4rLtgQAxBAyHD99CE+R4RlM9hnWYUt1uMwsFwC64BwLEfmKdFvwgq3OVLVOo9VqqRh9
+        rF6nJVfi2NzAMRlhZJzsCZa1s44/PhEmleeAKrf+In14rKrhrNfQnHb0XVFkj//mwTfbW37s
+        LuwCVE98nv9ITXfpLmRBmfxxfKz3etxAX1Juwa3ZB6CrInfba6m1fHulKCu4urt0vGc0+vbD
+        IcWBzg3uCM25tLhhZNmqmcjkQ5+XbJLjvUdn0ZNNWMIQ6yTzRgNxoZvHfFPFpJgzMeqtiINj
+        fgEkdBt5iQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrILMWRmVeSWpSXmKPExsWy7bCSvO6SFbxxBs8fWVs0L17PZrFy9VEm
         i+t3bzFb7Nl7ksXi8q45bBY/ptdbTDz9m8liy78jrBaX3n9gceD02DnrLrvH/rlr2D1232xg
-        8+jbsorR4/MmOY9D29+wBbBF5dhkpCampBYppOYl56dk5qXbKnkHxzvHm5oZGOoaWlqYKynk
-        Jeam2iq5+AToumXmAB2lpFCWmFMKFApILC5W0rezKcovLUlVyMgvLrFVSi1IySkwNCjQK07M
-        LS7NS9dLzs+1MjQwMDIFqkzIyXjf/JutYBlHxfW3HewNjO/Zuhg5OSQETCSeN8xi72Lk4hAS
-        2MEosXDaW0YI5xOjxLtN+5kgnG+MEvMeX4FreXPsJlTLXkaJLZumI7T0H/4G1MLBwSagLfFn
-        iyhIg4iAvcTm2QdYQGqYBTYxSuyZ/5UVJCEs4CGx8dVVJhCbRUBVouHuDzCbV8BWYtf1Tqht
-        8hKrNxxgBrE5geIz37eygQySENjCJnH3fD8TRJGLxKHbx1kgbGGJV8e3sEPYUhIv+9vYQQ6S
-        EKiW+LifGSLcwSjx4rsthG0scXP9BlaQEmYBTYn1u/QhwooSO3/PZQSxmQX4JN597WGFmMIr
-        0dEmBFGiKtF36TDUAdISXe0foBZ5SCyZmQ0JkQmMEqcPXGScwCg3C2HBAkbGVYxiqQXFuemp
-        xYYFhsgRtokRnOi0THcwTjnnc4hRgINRiYf3xjyeOCHWxLLiytxDjBIczEoivOWBvHFCvCmJ
-        lVWpRfnxRaU5qcWHGE2B4TiRWUo0OR+YhPNK4g1NjYyNjS1MzMzNTI2VxHk5flyMFRJITyxJ
-        zU5NLUgtgulj4uCUamBc0NK2UIXLJtJkR3PXCt0VqrtWOYhGP1zp+I/Z7efUAoOV1pMSv9z9
-        xc3aJL1yc++suPJNBeK8DUdZevZlcjxepHnfXu5Q+DKj9ZZPww1/298JKn/OcW91+5NX50Rf
-        7zkmfXexQP+6Y+LbV4idqN+5RHZu9ZR3V7I4H1y74Z+5asOpicwKS5y1lFiKMxINtZiLihMB
-        Oe93jYoDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrILMWRmVeSWpSXmKPExsWy7bCSvO6KFbxxBnva9C2aF69ns1i5+iiT
-        xfW7t5gt9uw9yWJxedccNosf0+stJp7+zWSx5d8RVotL7z+wOHB67Jx1l91j/9w17B67bzaw
-        efRtWcXo8XmTnMeh7W/YAtiiuGxSUnMyy1KL9O0SuDLeN/9mK1jGUXH9bQd7A+N7ti5GTg4J
-        AROJN8dusncxcnEICexmlPh4vp0ZIiEtcezEGSCbA8gWljh8uBii5gOjRPP+Z0wgcTYBbYk/
-        W0RBykUEHCV6dx1mAalhFtjFKHHi9GlGkISwgIfExldXmUBsFgFViYa7P8BsXgFbiV3XO6GO
-        kJdYveEA2F5OoPjM961gcSEBG4lX/x6zTWDkW8DIsIpRMrWgODc9t9iwwCgvtVyvODG3uDQv
-        XS85P3cTIzggtbR2MJ44EX+IUYCDUYmH98Y8njgh1sSy4srcQ4wSHMxKIrzlgbxxQrwpiZVV
-        qUX58UWlOanFhxilOViUxHnl849FCgmkJ5akZqemFqQWwWSZODilGhh9De7f4LP567/F8uDp
-        n0suvplcZPbtyhq+vvaiwrLV2kvu3pxZdfjsYjujKcdS8zZWLT1RNK/J/Guuz6anOsem8K2L
-        K690yQl3yzzwZ0Gt/em2GQlK/y/P9J68bUnUsyUL/9i3Mmx/5fNK+U6FoNrkTYKVay+eOsdg
-        dPBrxW3XYyZPrnz4/ihHRomlOCPRUIu5qDgRAPIbDuNEAgAA
-X-CMS-MailID: 20200102082408epcas1p194621a6aa6729011703f0c5a076a7396
+        8+jbsorR4/MmOY9D29+wBbBFcdmkpOZklqUW6dslcGV8nDeXqWCFR8WGXb0sDYwXzLsYOTkk
+        BEwkLizoZupi5OIQEtjNKNG09CMTREJa4tiJM8xdjBxAtrDE4cPFEDUfGCXuTuplBYmzCWhL
+        /NkiClIuIuAo0bvrMAtIDbPALkaJE6dPM4IkhAXMJGYc2csCYrMIqEpM/7CDDcTmFbCRWHmv
+        gQ1il7zE6g0HmEFsTgFbiZnvW8HiQkA1r/49ZpvAyLeAkWEVo2RqQXFuem6xYYFhXmq5XnFi
+        bnFpXrpecn7uJkZwQGpp7mC8vCT+EKMAB6MSD++NeTxxQqyJZcWVuYcYJTiYlUR4ywN544R4
+        UxIrq1KL8uOLSnNSiw8xSnOwKInzPs07FikkkJ5YkpqdmlqQWgSTZeLglGpgTD6zx3e+/+Jj
+        i1YWGV3ILWux31Rw+t/S8JC/0cf3FOwVW/Gd3bXK8NDZiVJbD3tprOdTKI1IZxfTFJ5z6Ld3
+        2E7Tcu+tF5fdcZywyOmf6N90+cz9k++6bpz+1oAvICVuYqYq8z+zyZWbGNesNJi3m8fy6km2
+        hHnTxKV3rHrOGnvtctHx5ycn2CqxFGckGmoxFxUnAgBQBo2GRAIAAA==
+X-CMS-MailID: 20200102082405epcas1p41dd62d00104cb0daa4fe85641cb8ee22
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: SVC_REQ_APPROVE
 CMS-TYPE: 101P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200102082408epcas1p194621a6aa6729011703f0c5a076a7396
+X-CMS-RootMailID: 20200102082405epcas1p41dd62d00104cb0daa4fe85641cb8ee22
 References: <20200102082036.29643-1-namjae.jeon@samsung.com>
-        <CGME20200102082408epcas1p194621a6aa6729011703f0c5a076a7396@epcas1p1.samsung.com>
+        <CGME20200102082405epcas1p41dd62d00104cb0daa4fe85641cb8ee22@epcas1p4.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add exfat in fs/Kconfig and fs/Makefile.
+This adds the implementation of bitmap operations for exfat.
 
 Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
 Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
 ---
- fs/Kconfig  | 3 ++-
- fs/Makefile | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ fs/exfat/balloc.c | 282 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 282 insertions(+)
+ create mode 100644 fs/exfat/balloc.c
 
-diff --git a/fs/Kconfig b/fs/Kconfig
-index 7b623e9fc1b0..5edd87eb5c13 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -139,9 +139,10 @@ endmenu
- endif # BLOCK
- 
- if BLOCK
--menu "DOS/FAT/NT Filesystems"
-+menu "DOS/FAT/EXFAT/NT Filesystems"
- 
- source "fs/fat/Kconfig"
-+source "fs/exfat/Kconfig"
- source "fs/ntfs/Kconfig"
- 
- endmenu
-diff --git a/fs/Makefile b/fs/Makefile
-index 98be354fdb61..2c7ea7e0a95b 100644
---- a/fs/Makefile
-+++ b/fs/Makefile
-@@ -83,6 +83,7 @@ obj-$(CONFIG_HUGETLBFS)		+= hugetlbfs/
- obj-$(CONFIG_CODA_FS)		+= coda/
- obj-$(CONFIG_MINIX_FS)		+= minix/
- obj-$(CONFIG_FAT_FS)		+= fat/
-+obj-$(CONFIG_EXFAT)		+= exfat/
- obj-$(CONFIG_BFS_FS)		+= bfs/
- obj-$(CONFIG_ISO9660_FS)	+= isofs/
- obj-$(CONFIG_HFSPLUS_FS)	+= hfsplus/ # Before hfs to find wrapped HFS+
+diff --git a/fs/exfat/balloc.c b/fs/exfat/balloc.c
+new file mode 100644
+index 000000000000..7612d68f5664
+--- /dev/null
++++ b/fs/exfat/balloc.c
+@@ -0,0 +1,282 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ *  Copyright (C) 2012-2013 Samsung Electronics Co., Ltd.
++ */
++
++#include <linux/blkdev.h>
++#include <linux/slab.h>
++#include <linux/buffer_head.h>
++
++#include "exfat_raw.h"
++#include "exfat_fs.h"
++
++static const unsigned char free_bit[] = {
++	0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2,/*  0 ~  19*/
++	0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 5, 0, 1, 0, 2, 0, 1, 0, 3,/* 20 ~  39*/
++	0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2,/* 40 ~  59*/
++	0, 1, 0, 6, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4,/* 60 ~  79*/
++	0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 5, 0, 1, 0, 2,/* 80 ~  99*/
++	0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3,/*100 ~ 119*/
++	0, 1, 0, 2, 0, 1, 0, 7, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2,/*120 ~ 139*/
++	0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 5,/*140 ~ 159*/
++	0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2,/*160 ~ 179*/
++	0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 6, 0, 1, 0, 2, 0, 1, 0, 3,/*180 ~ 199*/
++	0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2,/*200 ~ 219*/
++	0, 1, 0, 5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4,/*220 ~ 239*/
++	0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0                /*240 ~ 254*/
++};
++
++static const unsigned char used_bit[] = {
++	0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4, 1, 2, 2, 3,/*  0 ~  19*/
++	2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 1, 2, 2, 3, 2, 3, 3, 4,/* 20 ~  39*/
++	2, 3, 3, 4, 3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5,/* 40 ~  59*/
++	4, 5, 5, 6, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,/* 60 ~  79*/
++	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 2, 3, 3, 4,/* 80 ~  99*/
++	3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6,/*100 ~ 119*/
++	4, 5, 5, 6, 5, 6, 6, 7, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4,/*120 ~ 139*/
++	3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,/*140 ~ 159*/
++	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5,/*160 ~ 179*/
++	4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 2, 3, 3, 4, 3, 4, 4, 5,/*180 ~ 199*/
++	3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6,/*200 ~ 219*/
++	5, 6, 6, 7, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,/*220 ~ 239*/
++	4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8             /*240 ~ 255*/
++};
++
++/*
++ *  Allocation Bitmap Management Functions
++ */
++static int exfat_allocate_bitmap(struct super_block *sb,
++		struct exfat_dentry *ep)
++{
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++	long long map_size;
++	unsigned int i, need_map_size;
++	sector_t sector;
++
++	sbi->map_clu = le32_to_cpu(ep->bitmap_start_clu);
++	map_size = le64_to_cpu(ep->bitmap_size);
++	need_map_size = ((EXFAT_DATA_CLUSTER_COUNT(sbi) - 1) / BITS_PER_BYTE)
++		+ 1;
++	if (need_map_size != map_size) {
++		exfat_msg(sb, KERN_ERR,
++				"bogus allocation bitmap size(need : %u, cur : %lld)",
++				need_map_size, map_size);
++		/*
++		 * Only allowed when bogus allocation
++		 * bitmap size is large
++		 */
++		if (need_map_size > map_size)
++			return -EIO;
++	}
++	sbi->map_sectors = ((need_map_size - 1) >>
++			(sb->s_blocksize_bits)) + 1;
++	sbi->vol_amap = kmalloc_array(sbi->map_sectors,
++				sizeof(struct buffer_head *), GFP_KERNEL);
++	if (!sbi->vol_amap)
++		return -ENOMEM;
++
++	sector = exfat_cluster_to_sector(sbi, sbi->map_clu);
++	for (i = 0; i < sbi->map_sectors; i++) {
++		sbi->vol_amap[i] = sb_bread(sb, sector + i);
++		if (!sbi->vol_amap[i]) {
++			/* release all buffers and free vol_amap */
++			int j = 0;
++
++			while (j < i)
++				brelse(sbi->vol_amap[j++]);
++
++			kfree(sbi->vol_amap);
++			sbi->vol_amap = NULL;
++			return -EIO;
++		}
++	}
++
++	sbi->pbr_bh = NULL;
++	return 0;
++}
++
++int exfat_load_bitmap(struct super_block *sb)
++{
++	unsigned int i, type;
++	struct exfat_chain clu;
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++
++	exfat_chain_set(&clu, sbi->root_dir, 0, ALLOC_FAT_CHAIN);
++	while (clu.dir != EXFAT_EOF_CLUSTER) {
++		for (i = 0; i < sbi->dentries_per_clu; i++) {
++			struct exfat_dentry *ep;
++			struct buffer_head *bh;
++
++			ep = exfat_get_dentry(sb, &clu, i, &bh, NULL);
++			if (!ep)
++				return -EIO;
++
++			type = exfat_get_entry_type(ep);
++			if (type == TYPE_UNUSED)
++				break;
++			if (type != TYPE_BITMAP)
++				continue;
++			if (ep->bitmap_flags == 0x0) {
++				int err;
++
++				err = exfat_allocate_bitmap(sb, ep);
++				brelse(bh);
++				return err;
++			}
++			brelse(bh);
++		}
++
++		if (exfat_get_next_cluster(sb, &clu.dir))
++			return -EIO;
++	}
++
++	return -EINVAL;
++}
++
++void exfat_free_bitmap(struct super_block *sb)
++{
++	int i;
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++
++	brelse(sbi->pbr_bh);
++
++	for (i = 0; i < sbi->map_sectors; i++)
++		__brelse(sbi->vol_amap[i]);
++
++	kfree(sbi->vol_amap);
++	sbi->vol_amap = NULL;
++}
++
++/*
++ * If the value of "clu" is 0, it means cluster 2 which is the first cluster of
++ * the cluster heap.
++ */
++int exfat_set_bitmap(struct inode *inode, unsigned int clu)
++{
++	int i, b;
++	unsigned int ent_idx;
++	struct super_block *sb = inode->i_sb;
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++
++	WARN_ON(clu < EXFAT_FIRST_CLUSTER);
++	ent_idx = CLUSTER_TO_BITMAP_ENT(clu);
++	i = BITMAP_OFFSET_SECTOR_INDEX(sb, ent_idx);
++	b = BITMAP_OFFSET_BIT_IN_SECTOR(sb, ent_idx);
++
++	set_bit_le(b, sbi->vol_amap[i]->b_data);
++	exfat_update_bh(sb, sbi->vol_amap[i], IS_DIRSYNC(inode));
++	return 0;
++}
++
++/*
++ * If the value of "clu" is 0, it means cluster 2 which is the first cluster of
++ * the cluster heap.
++ */
++void exfat_clear_bitmap(struct inode *inode, unsigned int clu)
++{
++	int i, b;
++	unsigned int ent_idx;
++	struct super_block *sb = inode->i_sb;
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++	struct exfat_mount_options *opts = &sbi->options;
++
++	WARN_ON(clu < EXFAT_FIRST_CLUSTER);
++	ent_idx = CLUSTER_TO_BITMAP_ENT(clu);
++	i = BITMAP_OFFSET_SECTOR_INDEX(sb, ent_idx);
++	b = BITMAP_OFFSET_BIT_IN_SECTOR(sb, ent_idx);
++
++	clear_bit_le(b, sbi->vol_amap[i]->b_data);
++	exfat_update_bh(sb, sbi->vol_amap[i], IS_DIRSYNC(inode));
++
++	if (opts->discard) {
++		int ret_discard;
++
++		ret_discard = sb_issue_discard(sb,
++			exfat_cluster_to_sector(sbi, clu +
++						EXFAT_RESERVED_CLUSTERS),
++			(1 << sbi->sect_per_clus_bits), GFP_NOFS, 0);
++
++		if (ret_discard == -EOPNOTSUPP) {
++			exfat_msg(sb, KERN_ERR,
++				"discard not supported by device, disabling");
++			opts->discard = 0;
++		}
++	}
++}
++
++/*
++ * If the value of "clu" is 0, it means cluster 2 which is the first cluster of
++ * the cluster heap.
++ */
++unsigned int exfat_find_free_bitmap(struct super_block *sb, unsigned int clu)
++{
++	unsigned int i, map_i, map_b, ent_idx;
++	unsigned int clu_base, clu_free;
++	unsigned char k, clu_mask;
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++
++	WARN_ON(clu < EXFAT_FIRST_CLUSTER);
++	ent_idx = CLUSTER_TO_BITMAP_ENT(clu);
++	clu_base = BITMAP_ENT_TO_CLUSTER(ent_idx & ~(BITS_PER_BYTE_MASK));
++	clu_mask = IGNORED_BITS_REMAINED(clu, clu_base);
++
++	map_i = BITMAP_OFFSET_SECTOR_INDEX(sb, ent_idx);
++	map_b = BITMAP_OFFSET_BYTE_IN_SECTOR(sb, ent_idx);
++
++	for (i = EXFAT_FIRST_CLUSTER; i < sbi->num_clusters;
++	     i += BITS_PER_BYTE) {
++		k = *(sbi->vol_amap[map_i]->b_data + map_b);
++		if (clu_mask > 0) {
++			k |= clu_mask;
++			clu_mask = 0;
++		}
++		if (k < 0xFF) {
++			clu_free = clu_base + free_bit[k];
++			if (clu_free < sbi->num_clusters)
++				return clu_free;
++		}
++		clu_base += BITS_PER_BYTE;
++
++		if (++map_b >= sb->s_blocksize ||
++		    clu_base >= sbi->num_clusters) {
++			if (++map_i >= sbi->map_sectors) {
++				clu_base = EXFAT_FIRST_CLUSTER;
++				map_i = 0;
++			}
++			map_b = 0;
++		}
++	}
++
++	return EXFAT_EOF_CLUSTER;
++}
++
++int exfat_count_used_clusters(struct super_block *sb, unsigned int *ret_count)
++{
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++	unsigned int count = 0;
++	unsigned int i, map_i = 0, map_b = 0;
++	unsigned int total_clus = EXFAT_DATA_CLUSTER_COUNT(sbi);
++	unsigned int last_mask = total_clus & BITS_PER_BYTE_MASK;
++	unsigned char clu_bits;
++	const unsigned char last_bit_mask[] = {0, 0b00000001, 0b00000011,
++		0b00000111, 0b00001111, 0b00011111, 0b00111111, 0b01111111};
++
++	total_clus &= ~last_mask;
++	for (i = 0; i < total_clus; i += BITS_PER_BYTE) {
++		clu_bits = *(sbi->vol_amap[map_i]->b_data + map_b);
++		count += used_bit[clu_bits];
++		if (++map_b >= (unsigned int)sb->s_blocksize) {
++			map_i++;
++			map_b = 0;
++		}
++	}
++
++	if (last_mask) {
++		clu_bits = *(sbi->vol_amap[map_i]->b_data + map_b);
++		clu_bits &= last_bit_mask[last_mask];
++		count += used_bit[clu_bits];
++	}
++
++	*ret_count = count;
++	return 0;
++}
 -- 
 2.17.1
 
