@@ -2,178 +2,123 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BEEC3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86198C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2543221734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C73B21655
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:33:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577964809;
+	bh=Yt1VY/j0TGIIB859c29ReVlv8mUX3f+l/kjMgy/It3M=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=sZgqFVu2IBsHOlKQICZC3gpFUbzdWFup4r9mmYnk5v9UAsSX9aHJ83Ons0Pf0PU7x
+	 EKkZd8sVdU9LqjTdCehN+6Swe2EI38/mcDK2OoVhTFfCSbOwyL3aA5gBEmsz9v9oTm
+	 5Hq9ngSl4BgI9+yKrP2xLeDL6zdpbg9pfw/25cJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgABLdZ (ORCPT
+        id S1728254AbgABLd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 06:33:25 -0500
-Received: from mga04.intel.com ([192.55.52.120]:22863 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726647AbgABLdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 06:33:24 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 03:33:24 -0800
-X-IronPort-AV: E=Sophos;i="5.69,386,1571727600"; 
-   d="scan'208";a="421110783"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 03:33:20 -0800
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id D5A6720705; Thu,  2 Jan 2020 13:33:19 +0200 (EET)
-Date:   Thu, 2 Jan 2020 13:33:19 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 06/14] media: sun4i-csi: Add support for A10 CSI1 camera
- sensor interface
-Message-ID: <20200102113319.GJ19828@paasikivi.fi.intel.com>
-References: <20191215165924.28314-1-wens@kernel.org>
- <20191215165924.28314-7-wens@kernel.org>
+        Thu, 2 Jan 2020 06:33:28 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40053 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgABLd1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 06:33:27 -0500
+Received: by mail-lj1-f196.google.com with SMTP id u1so40381067ljk.7;
+        Thu, 02 Jan 2020 03:33:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=Yt1VY/j0TGIIB859c29ReVlv8mUX3f+l/kjMgy/It3M=;
+        b=jdcgdeu4Lk496FcrbhnaSzTx87bPtS3KWWDConCPBtRLilRhlL/KX5suSw72NqWaZe
+         D4QTr+X/H9Gz9iwzQIJ6pmbamICkD3t85K5xarQ5Yp3rf20lszhwH8G2CTYc6G6NTTDt
+         i3xsQK3kh1rJzb8Le4k32aE/RvAqVXtpX9fgH2gVGlZkeIYRVABkja02oTh8O93P7lRP
+         lICTIWuasf0Ucw5ihlYBP8Cp6mtPpYDpRpp5sFHH7yPoo8s5kcxR6zFC/J1i5XZYpT+Y
+         3hm7qL/+HHFtPgaHgYBUrN8SUyDPyCFXl+D5bDfMy7bhIBrnaNgC4P/b8RMwoSKboVHv
+         Netw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=Yt1VY/j0TGIIB859c29ReVlv8mUX3f+l/kjMgy/It3M=;
+        b=ULdRvkmIozPFt5usJ39dzJzAg01TXTnZ9efAfNI3AVSPuYs8EJVol+EpuCLnuYq+WT
+         xeWs1IXOs7kLS5tyOKhCIEO8jIsF40V2uGGOlD6auoOJfitrnaTj7FAOKmpzKXCM7dGo
+         hS73xk/qdVgX7MMxuwm66nQS+1CriObGAZNbaX9NEypF/sCqVpc0RiONhPvsu2j+USaa
+         LkNxgneZoMkK0tJrzTJbD0IF45U26ji+5QeLVZymKyZ+oFJjhikLsWREJJ81Cc3GXxVC
+         gB3/LoLCulnOboUQzh/HCZ0nQnEZwokCAM6V7Htw83ylo+Z+55JS9e6/8xTbdJU2EUuL
+         AShw==
+X-Gm-Message-State: APjAAAVfn4lCIV0zJcQRM3Ru1PzLCeuA8JEJklg21MWc+BS1JBbftfPn
+        ZOZAWUoshTD5VKkZ44vqnc8=
+X-Google-Smtp-Source: APXvYqygBYeKqrIrR2UfhmiCUnIcXOWBB9CsVGmFoEfPfmqE1tf5KYfGieECiO8eHB8aLzwbneFDkw==
+X-Received: by 2002:a2e:9243:: with SMTP id v3mr40422038ljg.73.1577964805303;
+        Thu, 02 Jan 2020 03:33:25 -0800 (PST)
+Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
+        by smtp.gmail.com with ESMTPSA id s22sm22615229ljm.41.2020.01.02.03.33.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 03:33:24 -0800 (PST)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Roger Quadros <rogerq@ti.com>
+Cc:     gregkh@linuxfoundation.org, nsekhar@ti.com,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH] usb: gadget: legacy: set max_speed to super-speed
+In-Reply-To: <20191223064735.24662-1-rogerq@ti.com>
+References: <20191223064735.24662-1-rogerq@ti.com>
+Date:   Thu, 02 Jan 2020 13:34:08 +0200
+Message-ID: <871rsiks7j.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191215165924.28314-7-wens@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chen-Yu,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the patchset.
 
-On Mon, Dec 16, 2019 at 12:59:16AM +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
-> 
-> The A10/A20 Allwinner SoCs have two camera sensor interface blocks,
-> named CSI0 and CSI1. The two have the same register layouts with
-> slightly different features:
-> 
->   - CSI0 has an image signal processor (ISP); CSI1 doesn't
-> 
->   - CSI0 can support up to four separate channels under CCIR656;
->     CSI1 can only support one
-> 
->   - CSI0 can support up to 16-bit wide bus with YUV422;
->     CSI1 can support up to 24-bit wide bus with YUV444
-> 
-> For now the driver doesn't support wide busses, nor CCIR656. So the
-> only relevant difference is whether a clock needs to be taken and
-> enabled for the ISP.
-> 
-> Add structs to record the differences, tie them to the compatible
-> strings, and deal with the ISP clock. Support for the new CSI1
-> hardware block is added as well.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Hi,
+
+Roger Quadros <rogerq@ti.com> writes:
+> These interfaces do support super-speed so let's not
+> limit maximum speed to high-speed.
+>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
 > ---
->  .../platform/sunxi/sun4i-csi/sun4i_csi.c      | 35 ++++++++++++++++---
->  .../platform/sunxi/sun4i-csi/sun4i_csi.h      |  2 ++
->  2 files changed, 32 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
-> index b8b07c1de2a8..be2466930a49 100644
-> --- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
-> +++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
-> @@ -29,6 +29,12 @@
->  
->  #include "sun4i_csi.h"
->  
-> +struct sun4i_csi_traits {
-> +	unsigned int channels;
-> +	unsigned int max_width;
-> +	bool has_isp;
-> +};
-> +
->  static const struct media_entity_operations sun4i_csi_video_entity_ops = {
->  	.link_validate = v4l2_subdev_link_validate,
->  };
-> @@ -156,6 +162,10 @@ static int sun4i_csi_probe(struct platform_device *pdev)
->  	subdev = &csi->subdev;
->  	vdev = &csi->vdev;
->  
-> +	csi->traits = of_device_get_match_data(&pdev->dev);
-> +	if (!csi->traits)
-> +		return -EINVAL;
-> +
->  	/*
->  	 * On Allwinner SoCs, some high memory bandwidth devices do DMA
->  	 * directly over the memory bus (called MBUS), instead of the
-> @@ -199,10 +209,12 @@ static int sun4i_csi_probe(struct platform_device *pdev)
->  		return PTR_ERR(csi->bus_clk);
->  	}
->  
-> -	csi->isp_clk = devm_clk_get(&pdev->dev, "isp");
-> -	if (IS_ERR(csi->isp_clk)) {
-> -		dev_err(&pdev->dev, "Couldn't get our ISP clock\n");
-> -		return PTR_ERR(csi->isp_clk);
-> +	if (csi->traits->has_isp) {
-> +		csi->isp_clk = devm_clk_get(&pdev->dev, "isp");
-> +		if (IS_ERR(csi->isp_clk)) {
-> +			dev_err(&pdev->dev, "Couldn't get our ISP clock\n");
-> +			return PTR_ERR(csi->isp_clk);
-> +		}
->  	}
->  
->  	csi->ram_clk = devm_clk_get(&pdev->dev, "ram");
-> @@ -280,8 +292,21 @@ static int sun4i_csi_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +struct sun4i_csi_traits sun4i_a10_csi1_traits = {
-> +	.channels = 1,
-> +	.max_width = 24,
-> +	.has_isp = false,
-> +};
-> +
-> +struct sun4i_csi_traits sun7i_a20_csi0_traits = {
+>
+> Hi Felipe,
+>
+> Please queue this for -rc. Thanks.
 
-These two should be static const, right?
+This is probably one of those "has never worked before" changes. Doesn't
+seem really important for the -rc. I'll add a Cc stable instead
 
-> +	.channels = 4,
-> +	.max_width = 16,
-> +	.has_isp = true,
-> +};
-> +
->  static const struct of_device_id sun4i_csi_of_match[] = {
-> -	{ .compatible = "allwinner,sun7i-a20-csi0" },
-> +	{ .compatible = "allwinner,sun4i-a10-csi1", .data = &sun4i_a10_csi1_traits },
-> +	{ .compatible = "allwinner,sun7i-a20-csi0", .data = &sun7i_a20_csi0_traits },
->  	{ /* Sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, sun4i_csi_of_match);
-> diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
-> index 88d39b3554c4..0f67ff652c2e 100644
-> --- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
-> +++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
-> @@ -108,6 +108,8 @@ struct sun4i_csi {
->  	/* Device resources */
->  	struct device			*dev;
->  
-> +	const struct sun4i_csi_traits	*traits;
-> +
->  	void __iomem			*regs;
->  	struct clk			*bus_clk;
->  	struct clk			*isp_clk;
+=2D-=20
+balbi
 
--- 
-Kind regards,
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Sakari Ailus
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl4N1TAACgkQzL64meEa
+mQZXXQ/8DyALVTCnVPskGXceUQRTlGV1vmU3pbijjMlMdf4FwpcE41UpTkmIOXzy
+6LxbuQJZvr0KJjaFIYQ5rTJSIj7OQjWH8ATHNToGMh8XITRzXdbq2lYLU+4XXYW5
+tHng7/zCqGU3N9HOAF+4iYR8zi0/An6Q8II0HienO0unUF+HhEsnIkPOFWnM/UES
+9zDktF0jlNSem/pjdGJExGcV894YTpd2tuxg9+IIBAYylETMYwIqiksZJIP+aCdf
+UK4ebDnYJozPGCEQS/tQmw4nSOeXf/Kwkl++L0cYRniElwpW5FjELxYg7mkjjn4Z
+JrDW+OjfAwqmT2lJUsXVYJU2fmV//YpzaZrZqOpk4w7iFOXjJMhCJBZX9IksnSN7
+WeMpKfU74ZFUeif1PL45auBEhfBgp6P7ZKxehjYTbcB3S7uwAHCxsQluIFDfcDl0
+34jKnE6pGAwrIECQNbsNKKS8heorsd32GqBveUG/iXmoDJBpIdL90IJ6LQuaIi9d
+G6uWVup2Yp+KTPOylCguwWQL8k75GAZmQ2hEBUImS/NpXRhS4vT2ZYpSeebRM6PP
+QU6MM+bBiP7vRcx7eacN5wmVL/sMZ3hh+enPeqLNU1lzfzmTtdvn97RJTXGo1ILU
+V2iGIgnMKUWgCpkGcyqbvaH1u7d5ZCxyjPD4N8sUO6yPzJa2cjg=
+=WRVQ
+-----END PGP SIGNATURE-----
+--=-=-=--
