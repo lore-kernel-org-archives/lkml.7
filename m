@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD192C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B42C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 904D720848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3946F20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005901;
-	bh=usbU/9TTaGzHUphDwuTEElrLNlnL60+yZvSP/bfdlHo=;
+	s=default; t=1578005906;
+	bh=Grg0PjgHxAQQmYLCt//jN7JuUDhZh26GwsjENSsfhbE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vBX1/7I9/bjdIHhGR/3h5SjDgAUBfsa8sjWhU31Uuzao15ch1lSkV33BJa/oXTCPM
-	 k6kK+Huvc2cKjMOiNk8Rz7Z/oNODgCtl+2+6h98wSorDZGOQ+FhFxtS9l2AAF+bGWJ
-	 em17jEzaDuHPYbnme79gKxeGk1T7gFXqFoGm6310=
+	b=cWvETRJDoI+BZPc0JS1Q+3w78DNmptcEyLfyxZyh5bgt9+7dNxbTZYDp/LNqEi46d
+	 6XSaXZY8lpNxi2EW7i4YQ6T89qsoipAVpKNWbikbVyYZqjOY9XTRTha+XpkLEWPk06
+	 GRea8Kdu8DjriXptNG5HfQ+WIiU3f5+8kztnW3xo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728602AbgABW6U (ORCPT
+        id S1728109AbgABWPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:58:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57050 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:15:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727233AbgABWPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:15:45 -0500
+        id S1727233AbgABWPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:15:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F7072253D;
-        Thu,  2 Jan 2020 22:15:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68F9E22314;
+        Thu,  2 Jan 2020 22:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003344;
-        bh=usbU/9TTaGzHUphDwuTEElrLNlnL60+yZvSP/bfdlHo=;
+        s=default; t=1578003339;
+        bh=Grg0PjgHxAQQmYLCt//jN7JuUDhZh26GwsjENSsfhbE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RcsVZ8sdHic1RREMoD6ylwr2Idz+5hBfLo1oI9PW1m0IixSp/Z5oFbFCJ+H3GnZKr
-         3vBCYVUq2NpzaLd3dCkRJPQ/J7rizAQTrnQEKJxHm3Ni3detZw2g4BynNQGErjMIA6
-         elGp/jSftHHT7WB+RrE14Mts7qwlYSGkBnKHl07U=
+        b=fKENWhZB1tA6942AclBNQ2fk+1N9Jke/kUMp6IQnZHq8cVYq175wAEjLV2iT0A8uL
+         sE/cXQ4JYHPHal14/KZFuIbU3QYT92kcbHjTbQqvjluJ1bfP+TtxQs7PnyZ/IOjeBi
+         hiZg/yjUBiIZOQ/1mVHQrjFr0j+ycIx1Ckz9ZOO4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frank Sorenson <sorenson@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
+        stable@vger.kernel.org, Mike Christie <mchristi@redhat.com>,
+        Roman Bolshakov <r.bolshakov@yadro.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 114/191] cifs: move cifsFileInfo_put logic into a work-queue
-Date:   Thu,  2 Jan 2020 23:06:36 +0100
-Message-Id: <20200102215842.068701889@linuxfoundation.org>
+Subject: [PATCH 5.4 094/191] scsi: target: iscsi: Wait for all commands to finish before freeing a session
+Date:   Thu,  2 Jan 2020 23:06:16 +0100
+Message-Id: <20200102215839.998688827@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -62,491 +62,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 32546a9586aa4565035bb557e191648e022b29e8 ]
+[ Upstream commit e9d3009cb936bd0faf0719f68d98ad8afb1e613b ]
 
-This patch moves the final part of the cifsFileInfo_put() logic where we
-need a write lock on lock_sem to be processed in a separate thread that
-holds no other locks.
-This is to prevent deadlocks like the one below:
+The iSCSI target driver is the only target driver that does not wait for
+ongoing commands to finish before freeing a session. Make the iSCSI target
+driver wait for ongoing commands to finish before freeing a session. This
+patch fixes the following KASAN complaint:
 
-> there are 6 processes looping to while trying to down_write
-> cinode->lock_sem, 5 of them from _cifsFileInfo_put, and one from
-> cifs_new_fileinfo
->
-> and there are 5 other processes which are blocked, several of them
-> waiting on either PG_writeback or PG_locked (which are both set), all
-> for the same page of the file
->
-> 2 inode_lock() (inode->i_rwsem) for the file
-> 1 wait_on_page_writeback() for the page
-> 1 down_read(inode->i_rwsem) for the inode of the directory
-> 1 inode_lock()(inode->i_rwsem) for the inode of the directory
-> 1 __lock_page
->
->
-> so processes are blocked waiting on:
->   page flags PG_locked and PG_writeback for one specific page
->   inode->i_rwsem for the directory
->   inode->i_rwsem for the file
->   cifsInodeInflock_sem
->
->
->
-> here are the more gory details (let me know if I need to provide
-> anything more/better):
->
-> [0 00:48:22.765] [UN]  PID: 8863   TASK: ffff8c691547c5c0  CPU: 3
-> COMMAND: "reopen_file"
->  #0 [ffff9965007e3ba8] __schedule at ffffffff9b6e6095
->  #1 [ffff9965007e3c38] schedule at ffffffff9b6e64df
->  #2 [ffff9965007e3c48] rwsem_down_write_slowpath at ffffffff9af283d7
->  #3 [ffff9965007e3cb8] legitimize_path at ffffffff9b0f975d
->  #4 [ffff9965007e3d08] path_openat at ffffffff9b0fe55d
->  #5 [ffff9965007e3dd8] do_filp_open at ffffffff9b100a33
->  #6 [ffff9965007e3ee0] do_sys_open at ffffffff9b0eb2d6
->  #7 [ffff9965007e3f38] do_syscall_64 at ffffffff9ae04315
-> * (I think legitimize_path is bogus)
->
-> in path_openat
->         } else {
->                 const char *s = path_init(nd, flags);
->                 while (!(error = link_path_walk(s, nd)) &&
->                         (error = do_last(nd, file, op)) > 0) {  <<<<
->
-> do_last:
->         if (open_flag & O_CREAT)
->                 inode_lock(dir->d_inode);  <<<<
->         else
-> so it's trying to take inode->i_rwsem for the directory
->
->      DENTRY           INODE           SUPERBLK     TYPE PATH
-> ffff8c68bb8e79c0 ffff8c691158ef20 ffff8c6915bf9000 DIR  /mnt/vm1_smb/
-> inode.i_rwsem is ffff8c691158efc0
->
-> <struct rw_semaphore 0xffff8c691158efc0>:
->         owner: <struct task_struct 0xffff8c6914275d00> (UN -   8856 -
-> reopen_file), counter: 0x0000000000000003
->         waitlist: 2
->         0xffff9965007e3c90     8863   reopen_file      UN 0  1:29:22.926
->   RWSEM_WAITING_FOR_WRITE
->         0xffff996500393e00     9802   ls               UN 0  1:17:26.700
->   RWSEM_WAITING_FOR_READ
->
->
-> the owner of the inode.i_rwsem of the directory is:
->
-> [0 00:00:00.109] [UN]  PID: 8856   TASK: ffff8c6914275d00  CPU: 3
-> COMMAND: "reopen_file"
->  #0 [ffff99650065b828] __schedule at ffffffff9b6e6095
->  #1 [ffff99650065b8b8] schedule at ffffffff9b6e64df
->  #2 [ffff99650065b8c8] schedule_timeout at ffffffff9b6e9f89
->  #3 [ffff99650065b940] msleep at ffffffff9af573a9
->  #4 [ffff99650065b948] _cifsFileInfo_put.cold.63 at ffffffffc0a42dd6 [cifs]
->  #5 [ffff99650065ba38] cifs_writepage_locked at ffffffffc0a0b8f3 [cifs]
->  #6 [ffff99650065bab0] cifs_launder_page at ffffffffc0a0bb72 [cifs]
->  #7 [ffff99650065bb30] invalidate_inode_pages2_range at ffffffff9b04d4bd
->  #8 [ffff99650065bcb8] cifs_invalidate_mapping at ffffffffc0a11339 [cifs]
->  #9 [ffff99650065bcd0] cifs_revalidate_mapping at ffffffffc0a1139a [cifs]
-> #10 [ffff99650065bcf0] cifs_d_revalidate at ffffffffc0a014f6 [cifs]
-> #11 [ffff99650065bd08] path_openat at ffffffff9b0fe7f7
-> #12 [ffff99650065bdd8] do_filp_open at ffffffff9b100a33
-> #13 [ffff99650065bee0] do_sys_open at ffffffff9b0eb2d6
-> #14 [ffff99650065bf38] do_syscall_64 at ffffffff9ae04315
->
-> cifs_launder_page is for page 0xffffd1e2c07d2480
->
-> crash> page.index,mapping,flags 0xffffd1e2c07d2480
->       index = 0x8
->       mapping = 0xffff8c68f3cd0db0
->   flags = 0xfffffc0008095
->
->   PAGE-FLAG       BIT  VALUE
->   PG_locked         0  0000001
->   PG_uptodate       2  0000004
->   PG_lru            4  0000010
->   PG_waiters        7  0000080
->   PG_writeback     15  0008000
->
->
-> inode is ffff8c68f3cd0c40
-> inode.i_rwsem is ffff8c68f3cd0ce0
->      DENTRY           INODE           SUPERBLK     TYPE PATH
-> ffff8c68a1f1b480 ffff8c68f3cd0c40 ffff8c6915bf9000 REG
-> /mnt/vm1_smb/testfile.8853
->
->
-> this process holds the inode->i_rwsem for the parent directory, is
-> laundering a page attached to the inode of the file it's opening, and in
-> _cifsFileInfo_put is trying to down_write the cifsInodeInflock_sem
-> for the file itself.
->
->
-> <struct rw_semaphore 0xffff8c68f3cd0ce0>:
->         owner: <struct task_struct 0xffff8c6914272e80> (UN -   8854 -
-> reopen_file), counter: 0x0000000000000003
->         waitlist: 1
->         0xffff9965005dfd80     8855   reopen_file      UN 0  1:29:22.912
->   RWSEM_WAITING_FOR_WRITE
->
-> this is the inode.i_rwsem for the file
->
-> the owner:
->
-> [0 00:48:22.739] [UN]  PID: 8854   TASK: ffff8c6914272e80  CPU: 2
-> COMMAND: "reopen_file"
->  #0 [ffff99650054fb38] __schedule at ffffffff9b6e6095
->  #1 [ffff99650054fbc8] schedule at ffffffff9b6e64df
->  #2 [ffff99650054fbd8] io_schedule at ffffffff9b6e68e2
->  #3 [ffff99650054fbe8] __lock_page at ffffffff9b03c56f
->  #4 [ffff99650054fc80] pagecache_get_page at ffffffff9b03dcdf
->  #5 [ffff99650054fcc0] grab_cache_page_write_begin at ffffffff9b03ef4c
->  #6 [ffff99650054fcd0] cifs_write_begin at ffffffffc0a064ec [cifs]
->  #7 [ffff99650054fd30] generic_perform_write at ffffffff9b03bba4
->  #8 [ffff99650054fda8] __generic_file_write_iter at ffffffff9b04060a
->  #9 [ffff99650054fdf0] cifs_strict_writev.cold.70 at ffffffffc0a4469b [cifs]
-> #10 [ffff99650054fe48] new_sync_write at ffffffff9b0ec1dd
-> #11 [ffff99650054fed0] vfs_write at ffffffff9b0eed35
-> #12 [ffff99650054ff00] ksys_write at ffffffff9b0eefd9
-> #13 [ffff99650054ff38] do_syscall_64 at ffffffff9ae04315
->
-> the process holds the inode->i_rwsem for the file to which it's writing,
-> and is trying to __lock_page for the same page as in the other processes
->
->
-> the other tasks:
-> [0 00:00:00.028] [UN]  PID: 8859   TASK: ffff8c6915479740  CPU: 2
-> COMMAND: "reopen_file"
->  #0 [ffff9965007b39d8] __schedule at ffffffff9b6e6095
->  #1 [ffff9965007b3a68] schedule at ffffffff9b6e64df
->  #2 [ffff9965007b3a78] schedule_timeout at ffffffff9b6e9f89
->  #3 [ffff9965007b3af0] msleep at ffffffff9af573a9
->  #4 [ffff9965007b3af8] cifs_new_fileinfo.cold.61 at ffffffffc0a42a07 [cifs]
->  #5 [ffff9965007b3b78] cifs_open at ffffffffc0a0709d [cifs]
->  #6 [ffff9965007b3cd8] do_dentry_open at ffffffff9b0e9b7a
->  #7 [ffff9965007b3d08] path_openat at ffffffff9b0fe34f
->  #8 [ffff9965007b3dd8] do_filp_open at ffffffff9b100a33
->  #9 [ffff9965007b3ee0] do_sys_open at ffffffff9b0eb2d6
-> #10 [ffff9965007b3f38] do_syscall_64 at ffffffff9ae04315
->
-> this is opening the file, and is trying to down_write cinode->lock_sem
->
->
-> [0 00:00:00.041] [UN]  PID: 8860   TASK: ffff8c691547ae80  CPU: 2
-> COMMAND: "reopen_file"
-> [0 00:00:00.057] [UN]  PID: 8861   TASK: ffff8c6915478000  CPU: 3
-> COMMAND: "reopen_file"
-> [0 00:00:00.059] [UN]  PID: 8858   TASK: ffff8c6914271740  CPU: 2
-> COMMAND: "reopen_file"
-> [0 00:00:00.109] [UN]  PID: 8862   TASK: ffff8c691547dd00  CPU: 6
-> COMMAND: "reopen_file"
->  #0 [ffff9965007c3c78] __schedule at ffffffff9b6e6095
->  #1 [ffff9965007c3d08] schedule at ffffffff9b6e64df
->  #2 [ffff9965007c3d18] schedule_timeout at ffffffff9b6e9f89
->  #3 [ffff9965007c3d90] msleep at ffffffff9af573a9
->  #4 [ffff9965007c3d98] _cifsFileInfo_put.cold.63 at ffffffffc0a42dd6 [cifs]
->  #5 [ffff9965007c3e88] cifs_close at ffffffffc0a07aaf [cifs]
->  #6 [ffff9965007c3ea0] __fput at ffffffff9b0efa6e
->  #7 [ffff9965007c3ee8] task_work_run at ffffffff9aef1614
->  #8 [ffff9965007c3f20] exit_to_usermode_loop at ffffffff9ae03d6f
->  #9 [ffff9965007c3f38] do_syscall_64 at ffffffff9ae0444c
->
-> closing the file, and trying to down_write cifsi->lock_sem
->
->
-> [0 00:48:22.839] [UN]  PID: 8857   TASK: ffff8c6914270000  CPU: 7
-> COMMAND: "reopen_file"
->  #0 [ffff9965006a7cc8] __schedule at ffffffff9b6e6095
->  #1 [ffff9965006a7d58] schedule at ffffffff9b6e64df
->  #2 [ffff9965006a7d68] io_schedule at ffffffff9b6e68e2
->  #3 [ffff9965006a7d78] wait_on_page_bit at ffffffff9b03cac6
->  #4 [ffff9965006a7e10] __filemap_fdatawait_range at ffffffff9b03b028
->  #5 [ffff9965006a7ed8] filemap_write_and_wait at ffffffff9b040165
->  #6 [ffff9965006a7ef0] cifs_flush at ffffffffc0a0c2fa [cifs]
->  #7 [ffff9965006a7f10] filp_close at ffffffff9b0e93f1
->  #8 [ffff9965006a7f30] __x64_sys_close at ffffffff9b0e9a0e
->  #9 [ffff9965006a7f38] do_syscall_64 at ffffffff9ae04315
->
-> in __filemap_fdatawait_range
->                         wait_on_page_writeback(page);
-> for the same page of the file
->
->
->
-> [0 00:48:22.718] [UN]  PID: 8855   TASK: ffff8c69142745c0  CPU: 7
-> COMMAND: "reopen_file"
->  #0 [ffff9965005dfc98] __schedule at ffffffff9b6e6095
->  #1 [ffff9965005dfd28] schedule at ffffffff9b6e64df
->  #2 [ffff9965005dfd38] rwsem_down_write_slowpath at ffffffff9af283d7
->  #3 [ffff9965005dfdf0] cifs_strict_writev at ffffffffc0a0c40a [cifs]
->  #4 [ffff9965005dfe48] new_sync_write at ffffffff9b0ec1dd
->  #5 [ffff9965005dfed0] vfs_write at ffffffff9b0eed35
->  #6 [ffff9965005dff00] ksys_write at ffffffff9b0eefd9
->  #7 [ffff9965005dff38] do_syscall_64 at ffffffff9ae04315
->
->         inode_lock(inode);
->
->
-> and one 'ls' later on, to see whether the rest of the mount is available
-> (the test file is in the root, so we get blocked up on the directory
-> ->i_rwsem), so the entire mount is unavailable
->
-> [0 00:36:26.473] [UN]  PID: 9802   TASK: ffff8c691436ae80  CPU: 4
-> COMMAND: "ls"
->  #0 [ffff996500393d28] __schedule at ffffffff9b6e6095
->  #1 [ffff996500393db8] schedule at ffffffff9b6e64df
->  #2 [ffff996500393dc8] rwsem_down_read_slowpath at ffffffff9b6e9421
->  #3 [ffff996500393e78] down_read_killable at ffffffff9b6e95e2
->  #4 [ffff996500393e88] iterate_dir at ffffffff9b103c56
->  #5 [ffff996500393ec8] ksys_getdents64 at ffffffff9b104b0c
->  #6 [ffff996500393f30] __x64_sys_getdents64 at ffffffff9b104bb6
->  #7 [ffff996500393f38] do_syscall_64 at ffffffff9ae04315
->
-> in iterate_dir:
->         if (shared)
->                 res = down_read_killable(&inode->i_rwsem);  <<<<
->         else
->                 res = down_write_killable(&inode->i_rwsem);
->
+BUG: KASAN: use-after-free in __lock_acquire+0xb1a/0x2710
+Read of size 8 at addr ffff8881154eca70 by task kworker/0:2/247
 
-Reported-by: Frank Sorenson <sorenson@redhat.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+CPU: 0 PID: 247 Comm: kworker/0:2 Not tainted 5.4.0-rc1-dbg+ #6
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+Workqueue: target_completion target_complete_ok_work [target_core_mod]
+Call Trace:
+ dump_stack+0x8a/0xd6
+ print_address_description.constprop.0+0x40/0x60
+ __kasan_report.cold+0x1b/0x33
+ kasan_report+0x16/0x20
+ __asan_load8+0x58/0x90
+ __lock_acquire+0xb1a/0x2710
+ lock_acquire+0xd3/0x200
+ _raw_spin_lock_irqsave+0x43/0x60
+ target_release_cmd_kref+0x162/0x7f0 [target_core_mod]
+ target_put_sess_cmd+0x2e/0x40 [target_core_mod]
+ lio_check_stop_free+0x12/0x20 [iscsi_target_mod]
+ transport_cmd_check_stop_to_fabric+0xd8/0xe0 [target_core_mod]
+ target_complete_ok_work+0x1b0/0x790 [target_core_mod]
+ process_one_work+0x549/0xa40
+ worker_thread+0x7a/0x5d0
+ kthread+0x1bc/0x210
+ ret_from_fork+0x24/0x30
+
+Allocated by task 889:
+ save_stack+0x23/0x90
+ __kasan_kmalloc.constprop.0+0xcf/0xe0
+ kasan_slab_alloc+0x12/0x20
+ kmem_cache_alloc+0xf6/0x360
+ transport_alloc_session+0x29/0x80 [target_core_mod]
+ iscsi_target_login_thread+0xcd6/0x18f0 [iscsi_target_mod]
+ kthread+0x1bc/0x210
+ ret_from_fork+0x24/0x30
+
+Freed by task 1025:
+ save_stack+0x23/0x90
+ __kasan_slab_free+0x13a/0x190
+ kasan_slab_free+0x12/0x20
+ kmem_cache_free+0x146/0x400
+ transport_free_session+0x179/0x2f0 [target_core_mod]
+ transport_deregister_session+0x130/0x180 [target_core_mod]
+ iscsit_close_session+0x12c/0x350 [iscsi_target_mod]
+ iscsit_logout_post_handler+0x136/0x380 [iscsi_target_mod]
+ iscsit_response_queue+0x8de/0xbe0 [iscsi_target_mod]
+ iscsi_target_tx_thread+0x27f/0x370 [iscsi_target_mod]
+ kthread+0x1bc/0x210
+ ret_from_fork+0x24/0x30
+
+The buggy address belongs to the object at ffff8881154ec9c0
+ which belongs to the cache se_sess_cache of size 352
+The buggy address is located 176 bytes inside of
+ 352-byte region [ffff8881154ec9c0, ffff8881154ecb20)
+The buggy address belongs to the page:
+page:ffffea0004553b00 refcount:1 mapcount:0 mapping:ffff888101755400 index:0x0 compound_mapcount: 0
+flags: 0x2fff000000010200(slab|head)
+raw: 2fff000000010200 dead000000000100 dead000000000122 ffff888101755400
+raw: 0000000000000000 0000000080130013 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881154ec900: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8881154ec980: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+>ffff8881154eca00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                             ^
+ ffff8881154eca80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8881154ecb00: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
+
+Cc: Mike Christie <mchristi@redhat.com>
+Link: https://lore.kernel.org/r/20191113220508.198257-3-bvanassche@acm.org
+Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/cifsfs.c   | 13 +++++++-
- fs/cifs/cifsglob.h |  5 +++-
- fs/cifs/file.c     | 74 ++++++++++++++++++++++++++++++----------------
- 3 files changed, 65 insertions(+), 27 deletions(-)
+ drivers/target/iscsi/iscsi_target.c | 10 ++++++++--
+ include/scsi/iscsi_proto.h          |  1 +
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cifs/cifsfs.c b/fs/cifs/cifsfs.c
-index 1a135d1b85bd..07d8ace61f77 100644
---- a/fs/cifs/cifsfs.c
-+++ b/fs/cifs/cifsfs.c
-@@ -119,6 +119,7 @@ extern mempool_t *cifs_mid_poolp;
+diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
+index d19e051f2bc2..f194ffc4699e 100644
+--- a/drivers/target/iscsi/iscsi_target.c
++++ b/drivers/target/iscsi/iscsi_target.c
+@@ -1165,7 +1165,9 @@ int iscsit_setup_scsi_cmd(struct iscsi_conn *conn, struct iscsi_cmd *cmd,
+ 		hdr->cmdsn, be32_to_cpu(hdr->data_length), payload_length,
+ 		conn->cid);
  
- struct workqueue_struct	*cifsiod_wq;
- struct workqueue_struct	*decrypt_wq;
-+struct workqueue_struct	*fileinfo_put_wq;
- struct workqueue_struct	*cifsoplockd_wq;
- __u32 cifs_lock_secret;
+-	target_get_sess_cmd(&cmd->se_cmd, true);
++	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
++		return iscsit_add_reject_cmd(cmd,
++				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
  
-@@ -1554,11 +1555,18 @@ init_cifs(void)
- 		goto out_destroy_cifsiod_wq;
- 	}
+ 	cmd->sense_reason = transport_lookup_cmd_lun(&cmd->se_cmd,
+ 						     scsilun_to_int(&hdr->lun));
+@@ -2002,7 +2004,9 @@ iscsit_handle_task_mgt_cmd(struct iscsi_conn *conn, struct iscsi_cmd *cmd,
+ 			      conn->sess->se_sess, 0, DMA_NONE,
+ 			      TCM_SIMPLE_TAG, cmd->sense_buffer + 2);
  
-+	fileinfo_put_wq = alloc_workqueue("cifsfileinfoput",
-+				     WQ_UNBOUND|WQ_FREEZABLE|WQ_MEM_RECLAIM, 0);
-+	if (!fileinfo_put_wq) {
-+		rc = -ENOMEM;
-+		goto out_destroy_decrypt_wq;
-+	}
-+
- 	cifsoplockd_wq = alloc_workqueue("cifsoplockd",
- 					 WQ_FREEZABLE|WQ_MEM_RECLAIM, 0);
- 	if (!cifsoplockd_wq) {
- 		rc = -ENOMEM;
--		goto out_destroy_decrypt_wq;
-+		goto out_destroy_fileinfo_put_wq;
- 	}
+-	target_get_sess_cmd(&cmd->se_cmd, true);
++	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
++		return iscsit_add_reject_cmd(cmd,
++				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
  
- 	rc = cifs_fscache_register();
-@@ -1624,6 +1632,8 @@ out_unreg_fscache:
- 	cifs_fscache_unregister();
- out_destroy_cifsoplockd_wq:
- 	destroy_workqueue(cifsoplockd_wq);
-+out_destroy_fileinfo_put_wq:
-+	destroy_workqueue(fileinfo_put_wq);
- out_destroy_decrypt_wq:
- 	destroy_workqueue(decrypt_wq);
- out_destroy_cifsiod_wq:
-@@ -1653,6 +1663,7 @@ exit_cifs(void)
- 	cifs_fscache_unregister();
- 	destroy_workqueue(cifsoplockd_wq);
- 	destroy_workqueue(decrypt_wq);
-+	destroy_workqueue(fileinfo_put_wq);
- 	destroy_workqueue(cifsiod_wq);
- 	cifs_proc_clean();
- }
-diff --git a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h
-index 5d2dd04b55a6..f55e53486e74 100644
---- a/fs/cifs/cifsglob.h
-+++ b/fs/cifs/cifsglob.h
-@@ -1265,6 +1265,7 @@ struct cifsFileInfo {
- 	struct mutex fh_mutex; /* prevents reopen race after dead ses*/
- 	struct cifs_search_info srch_inf;
- 	struct work_struct oplock_break; /* work for oplock breaks */
-+	struct work_struct put; /* work for the final part of _put */
- };
+ 	/*
+ 	 * TASK_REASSIGN for ERL=2 / connection stays inside of
+@@ -4232,6 +4236,8 @@ int iscsit_close_connection(
+ 	 * must wait until they have completed.
+ 	 */
+ 	iscsit_check_conn_usage_count(conn);
++	target_sess_cmd_list_set_waiting(sess->se_sess);
++	target_wait_for_sess_cmds(sess->se_sess);
  
- struct cifs_io_parms {
-@@ -1370,7 +1371,8 @@ cifsFileInfo_get_locked(struct cifsFileInfo *cifs_file)
- }
+ 	ahash_request_free(conn->conn_tx_hash);
+ 	if (conn->conn_rx_hash) {
+diff --git a/include/scsi/iscsi_proto.h b/include/scsi/iscsi_proto.h
+index b71b5c4f418c..533f56733ba8 100644
+--- a/include/scsi/iscsi_proto.h
++++ b/include/scsi/iscsi_proto.h
+@@ -627,6 +627,7 @@ struct iscsi_reject {
+ #define ISCSI_REASON_BOOKMARK_INVALID	9
+ #define ISCSI_REASON_BOOKMARK_NO_RESOURCES	10
+ #define ISCSI_REASON_NEGOTIATION_RESET	11
++#define ISCSI_REASON_WAITING_FOR_LOGOUT	12
  
- struct cifsFileInfo *cifsFileInfo_get(struct cifsFileInfo *cifs_file);
--void _cifsFileInfo_put(struct cifsFileInfo *cifs_file, bool wait_oplock_hdlr);
-+void _cifsFileInfo_put(struct cifsFileInfo *cifs_file, bool wait_oplock_hdlr,
-+		       bool offload);
- void cifsFileInfo_put(struct cifsFileInfo *cifs_file);
- 
- #define CIFS_CACHE_READ_FLG	1
-@@ -1908,6 +1910,7 @@ void cifs_queue_oplock_break(struct cifsFileInfo *cfile);
- extern const struct slow_work_ops cifs_oplock_break_ops;
- extern struct workqueue_struct *cifsiod_wq;
- extern struct workqueue_struct *decrypt_wq;
-+extern struct workqueue_struct *fileinfo_put_wq;
- extern struct workqueue_struct *cifsoplockd_wq;
- extern __u32 cifs_lock_secret;
- 
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index c32650f14c9b..969543034b4d 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -288,6 +288,8 @@ cifs_down_write(struct rw_semaphore *sem)
- 		msleep(10);
- }
- 
-+static void cifsFileInfo_put_work(struct work_struct *work);
-+
- struct cifsFileInfo *
- cifs_new_fileinfo(struct cifs_fid *fid, struct file *file,
- 		  struct tcon_link *tlink, __u32 oplock)
-@@ -322,6 +324,7 @@ cifs_new_fileinfo(struct cifs_fid *fid, struct file *file,
- 	cfile->invalidHandle = false;
- 	cfile->tlink = cifs_get_tlink(tlink);
- 	INIT_WORK(&cfile->oplock_break, cifs_oplock_break);
-+	INIT_WORK(&cfile->put, cifsFileInfo_put_work);
- 	mutex_init(&cfile->fh_mutex);
- 	spin_lock_init(&cfile->file_info_lock);
- 
-@@ -376,6 +379,41 @@ cifsFileInfo_get(struct cifsFileInfo *cifs_file)
- 	return cifs_file;
- }
- 
-+static void cifsFileInfo_put_final(struct cifsFileInfo *cifs_file)
-+{
-+	struct inode *inode = d_inode(cifs_file->dentry);
-+	struct cifsInodeInfo *cifsi = CIFS_I(inode);
-+	struct cifsLockInfo *li, *tmp;
-+	struct super_block *sb = inode->i_sb;
-+
-+	/*
-+	 * Delete any outstanding lock records. We'll lose them when the file
-+	 * is closed anyway.
-+	 */
-+	cifs_down_write(&cifsi->lock_sem);
-+	list_for_each_entry_safe(li, tmp, &cifs_file->llist->locks, llist) {
-+		list_del(&li->llist);
-+		cifs_del_lock_waiters(li);
-+		kfree(li);
-+	}
-+	list_del(&cifs_file->llist->llist);
-+	kfree(cifs_file->llist);
-+	up_write(&cifsi->lock_sem);
-+
-+	cifs_put_tlink(cifs_file->tlink);
-+	dput(cifs_file->dentry);
-+	cifs_sb_deactive(sb);
-+	kfree(cifs_file);
-+}
-+
-+static void cifsFileInfo_put_work(struct work_struct *work)
-+{
-+	struct cifsFileInfo *cifs_file = container_of(work,
-+			struct cifsFileInfo, put);
-+
-+	cifsFileInfo_put_final(cifs_file);
-+}
-+
- /**
-  * cifsFileInfo_put - release a reference of file priv data
-  *
-@@ -383,15 +421,15 @@ cifsFileInfo_get(struct cifsFileInfo *cifs_file)
-  */
- void cifsFileInfo_put(struct cifsFileInfo *cifs_file)
- {
--	_cifsFileInfo_put(cifs_file, true);
-+	_cifsFileInfo_put(cifs_file, true, true);
- }
- 
- /**
-  * _cifsFileInfo_put - release a reference of file priv data
-  *
-  * This may involve closing the filehandle @cifs_file out on the
-- * server. Must be called without holding tcon->open_file_lock and
-- * cifs_file->file_info_lock.
-+ * server. Must be called without holding tcon->open_file_lock,
-+ * cinode->open_file_lock and cifs_file->file_info_lock.
-  *
-  * If @wait_for_oplock_handler is true and we are releasing the last
-  * reference, wait for any running oplock break handler of the file
-@@ -399,7 +437,8 @@ void cifsFileInfo_put(struct cifsFileInfo *cifs_file)
-  * oplock break handler, you need to pass false.
-  *
-  */
--void _cifsFileInfo_put(struct cifsFileInfo *cifs_file, bool wait_oplock_handler)
-+void _cifsFileInfo_put(struct cifsFileInfo *cifs_file,
-+		       bool wait_oplock_handler, bool offload)
- {
- 	struct inode *inode = d_inode(cifs_file->dentry);
- 	struct cifs_tcon *tcon = tlink_tcon(cifs_file->tlink);
-@@ -407,7 +446,6 @@ void _cifsFileInfo_put(struct cifsFileInfo *cifs_file, bool wait_oplock_handler)
- 	struct cifsInodeInfo *cifsi = CIFS_I(inode);
- 	struct super_block *sb = inode->i_sb;
- 	struct cifs_sb_info *cifs_sb = CIFS_SB(sb);
--	struct cifsLockInfo *li, *tmp;
- 	struct cifs_fid fid;
- 	struct cifs_pending_open open;
- 	bool oplock_break_cancelled;
-@@ -468,24 +506,10 @@ void _cifsFileInfo_put(struct cifsFileInfo *cifs_file, bool wait_oplock_handler)
- 
- 	cifs_del_pending_open(&open);
- 
--	/*
--	 * Delete any outstanding lock records. We'll lose them when the file
--	 * is closed anyway.
--	 */
--	cifs_down_write(&cifsi->lock_sem);
--	list_for_each_entry_safe(li, tmp, &cifs_file->llist->locks, llist) {
--		list_del(&li->llist);
--		cifs_del_lock_waiters(li);
--		kfree(li);
--	}
--	list_del(&cifs_file->llist->llist);
--	kfree(cifs_file->llist);
--	up_write(&cifsi->lock_sem);
--
--	cifs_put_tlink(cifs_file->tlink);
--	dput(cifs_file->dentry);
--	cifs_sb_deactive(sb);
--	kfree(cifs_file);
-+	if (offload)
-+		queue_work(fileinfo_put_wq, &cifs_file->put);
-+	else
-+		cifsFileInfo_put_final(cifs_file);
- }
- 
- int cifs_open(struct inode *inode, struct file *file)
-@@ -816,7 +840,7 @@ reopen_error_exit:
- int cifs_close(struct inode *inode, struct file *file)
- {
- 	if (file->private_data != NULL) {
--		cifsFileInfo_put(file->private_data);
-+		_cifsFileInfo_put(file->private_data, true, false);
- 		file->private_data = NULL;
- 	}
- 
-@@ -4688,7 +4712,7 @@ void cifs_oplock_break(struct work_struct *work)
- 							     cinode);
- 		cifs_dbg(FYI, "Oplock release rc = %d\n", rc);
- 	}
--	_cifsFileInfo_put(cfile, false /* do not wait for ourself */);
-+	_cifsFileInfo_put(cfile, false /* do not wait for ourself */, false);
- 	cifs_done_oplock_break(cinode);
- }
- 
+ /* Max. number of Key=Value pairs in a text message */
+ #define MAX_KEY_VALUE_PAIRS	8192
 -- 
 2.20.1
 
