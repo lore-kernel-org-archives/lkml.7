@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 357DDC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76403C3276E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1D0F24650
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 424AC24650
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003587;
-	bh=mhhFsvZD7JJ4GBURdn8QBsD1PYSlO46h7vMKzJUHME0=;
+	s=default; t=1578003591;
+	bh=AFNVl8nrgOrO2tqw7CjSzHBMngU35vBQOYU2AwsBhrk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=opbekXfPW3/Zy0JRjNuLXemvtpxGQQgInhLUdl5HYGFE8AF/UeYF0ifYyJFGYialK
-	 xzkN5qvPOFoDQyNwyNECn8lc3JbaMs0F0zyVqFoxFqt0ZXoGnMBcXvnl7fLP6jJx0X
-	 +VjGbmIpo6uYoK06die78pVpcVDBlCgBLJljS+5Y=
+	b=2JlTG/zQwnKTwqac705l/RklrfRfePYy+kkm/wR2muzpC82mzjYSmYIgRTNzujqEp
+	 00Y/qM+FcHSPW4+v9DkLeJ8rEK3dezDsVxnsY+mxYWPHy0IgaiJvOxYM709ocjrZHE
+	 IbyJX4pVA/C2YAJ4+osN19BihL7BImJHb/mAkLl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgABWTq (ORCPT
+        id S1728672AbgABWTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:19:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36176 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:19:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727944AbgABWTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:19:42 -0500
+        id S1728657AbgABWTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:19:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AB2121582;
-        Thu,  2 Jan 2020 22:19:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 489AB21582;
+        Thu,  2 Jan 2020 22:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003581;
-        bh=mhhFsvZD7JJ4GBURdn8QBsD1PYSlO46h7vMKzJUHME0=;
+        s=default; t=1578003586;
+        bh=AFNVl8nrgOrO2tqw7CjSzHBMngU35vBQOYU2AwsBhrk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B5XQwFE7b4OVHlTHjFn/YQpb4R0xZUd8ekzPfPj0dGRSAOjtmDAsmxHUAJZyLF70Y
-         jJghbntW0XbSNl3qbseF/HC6gHI9zbQB03ck0ckXiekrkiSTHUfZOASsTvA2I4xm/Q
-         aBs6GDGUfRYyEVXky9FbgCs1nLl1dJUyG+NtNGbA=
+        b=BZtjUkK5SItZ1f+Dcqfc7MxigmmT7nRATkSF2Ut7qPC2/wOYedyDtLHLqf0R5Js+B
+         QVScHDn0rdkcfglkYAKhiR8YYouZVtxEBhJ739C/Vsen8Eeyw59nUVa70qYDBDOVS6
+         MlQhAiUUTYTQ2BprC/bEOo60Lup1Dh5JE2NRyc6M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 029/114] clk: clk-gpio: propagate rate change to parent
-Date:   Thu,  2 Jan 2020 23:06:41 +0100
-Message-Id: <20200102220032.059523763@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 031/114] irqchip: ingenic: Error out if IRQ domain creation failed
+Date:   Thu,  2 Jan 2020 23:06:43 +0100
+Message-Id: <20200102220032.233364107@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -62,47 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Hennerich <michael.hennerich@analog.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-[ Upstream commit fc59462c5ce60da119568fac325c92fc6b7c6175 ]
+[ Upstream commit 52ecc87642f273a599c9913b29fd179c13de457b ]
 
-For an external clock source, which is gated via a GPIO, the
-rate change should typically be propagated to the parent clock.
+If we cannot create the IRQ domain, the driver should fail to probe
+instead of succeeding with just a warning message.
 
-The situation where we are requiring this propagation, is when an
-external clock is connected to override an internal clock (which typically
-has a fixed rate). The external clock can have a different rate than the
-internal one, and may also be variable, thus requiring the rate
-propagation.
-
-This rate change wasn't propagated until now, and it's unclear about cases
-where this shouldn't be propagated. Thus, it's unclear whether this is
-fixing a bug, or extending the current driver behavior. Also, it's unsure
-about whether this may break any existing setups; in the case that it does,
-a device-tree property may be added to disable this flag.
-
-Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Link: https://lkml.kernel.org/r/20191108071718.17985-1-alexandru.ardelean@analog.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/1570015525-27018-3-git-send-email-zhouyanjie@zoho.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk-gpio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/irqchip/irq-ingenic.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clk/clk-gpio.c b/drivers/clk/clk-gpio.c
-index 40af4fbab4d2..af9cc00d2d92 100644
---- a/drivers/clk/clk-gpio.c
-+++ b/drivers/clk/clk-gpio.c
-@@ -248,7 +248,7 @@ static int gpio_clk_driver_probe(struct platform_device *pdev)
- 	else
- 		clk = clk_register_gpio_gate(&pdev->dev, node->name,
- 				parent_names ?  parent_names[0] : NULL, gpiod,
--				0);
-+				CLK_SET_RATE_PARENT);
- 	if (IS_ERR(clk))
- 		return PTR_ERR(clk);
+diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
+index 2ff08986b536..be6923abf9a4 100644
+--- a/drivers/irqchip/irq-ingenic.c
++++ b/drivers/irqchip/irq-ingenic.c
+@@ -117,6 +117,14 @@ static int __init ingenic_intc_of_init(struct device_node *node,
+ 		goto out_unmap_irq;
+ 	}
  
++	domain = irq_domain_add_legacy(node, num_chips * 32,
++				       JZ4740_IRQ_BASE, 0,
++				       &irq_domain_simple_ops, NULL);
++	if (!domain) {
++		err = -ENOMEM;
++		goto out_unmap_base;
++	}
++
+ 	for (i = 0; i < num_chips; i++) {
+ 		/* Mask all irqs */
+ 		writel(0xffffffff, intc->base + (i * CHIP_SIZE) +
+@@ -143,14 +151,11 @@ static int __init ingenic_intc_of_init(struct device_node *node,
+ 				       IRQ_NOPROBE | IRQ_LEVEL);
+ 	}
+ 
+-	domain = irq_domain_add_legacy(node, num_chips * 32, JZ4740_IRQ_BASE, 0,
+-				       &irq_domain_simple_ops, NULL);
+-	if (!domain)
+-		pr_warn("unable to register IRQ domain\n");
+-
+ 	setup_irq(parent_irq, &intc_cascade_action);
+ 	return 0;
+ 
++out_unmap_base:
++	iounmap(intc->base);
+ out_unmap_irq:
+ 	irq_dispose_mapping(parent_irq);
+ out_free:
 -- 
 2.20.1
 
