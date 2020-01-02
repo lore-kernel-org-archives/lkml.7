@@ -2,117 +2,116 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FECC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1ED7C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F23F9215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83DDD21734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:14:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DNR98hYT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XsxUF7hz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbgABNNw (ORCPT
+        id S1728345AbgABNOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 08:13:52 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33319 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728165AbgABNNv (ORCPT
+        Thu, 2 Jan 2020 08:14:42 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29304 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728165AbgABNOm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 08:13:51 -0500
-Received: by mail-oi1-f193.google.com with SMTP id v140so12768631oie.0;
-        Thu, 02 Jan 2020 05:13:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9QcNKEGDiVHTxJaK9sSzJDKZz/8tGzml6xrrUnRcC94=;
-        b=DNR98hYT9md7ibZzsf9cAHpaUhqIkw6rzfrvVCQnyhjys9mXDaxNYjMkoKaiCf/8xV
-         sF/2eNukwqj4A4uV/9LRCWxUJnCqmZxJ+sKTgYPD5Gw5iG9QRrTDEpEQBuC6n0ZvumFe
-         RkQ0Cpkm5gu1sspOyH+C7+wtYnudr3LYA9SfSZA23VSbq1yEiboHbiva+zBFOYBlqzcg
-         bmhc7LIkzw13ELHo822ShA49LOz7NUh46ZOxzsiTlwwG/jcZ6fpsKg/9csyVxofHLMXg
-         J12zmFqTeV+0UzM7W+pXK6HNTwO3G7WlKh73QCFTz7SswKPKsCcD8GV0iXvah3ho/BoQ
-         /9Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9QcNKEGDiVHTxJaK9sSzJDKZz/8tGzml6xrrUnRcC94=;
-        b=Wg/rb255qmSedlvRfJ0bcp1ioz0woKTMO01+hB+6NgvvlQForYSokKQt2q5eqMU1lI
-         lDes9rzavcybjMpYuC9nS95sZERBcviNKmjSsGNTliSv41yK6GIY2FGZeM75GhG0d04n
-         y+4YwiElcN1Zi2nZBHY/4BZ6tFkz/gws0gVjbWkhq60wEATH8YfW5q7zf7Qdl6M1z0hU
-         HxgCxUBQqhqU6KpEih+FPw+6Z7VO1vS7vLqtN635MPFMmCuYZJWVnLodEZYiTzXRfuyS
-         CYGoFIeBhrRtouWeiWZUC5cnLPh8HjGc9gJaZANCxvRcC8jf0pOY1NPsb4KVulp32S2r
-         V2Tw==
-X-Gm-Message-State: APjAAAU9pA22SyMRjly7Nr16w+3tdDqR1f9jcOBXIP77Z7A3MpbMT2db
-        dGiBUUKWmd8EBtOvvzfPylMs+9/y7NpoURrrqew=
-X-Google-Smtp-Source: APXvYqwPehMWtJxpOaaDSRC5EVqb7sCbG3k7EcqpXmvX7UerLZdVhfLa0kbWa6l+HdzzZAWcAWnCyf7PZl2YIf0XRNo=
-X-Received: by 2002:a05:6808:a11:: with SMTP id n17mr1949987oij.94.1577970831213;
- Thu, 02 Jan 2020 05:13:51 -0800 (PST)
+        Thu, 2 Jan 2020 08:14:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577970880;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=eICqUZWHS7swGBDV3nYGnBDUTKdhLfVD0+54z2FAMDU=;
+        b=XsxUF7hzJkR1IYitDjZ1c1sy3qZ3XL7T4lXrXVeYVDYVT0QbDvFKNcGaEssS0pnPCzG6Np
+        N49n/DNjISjF3s6a4i77n0Xw0RcMSBg7rG2epoicCGF7TsNpreaqYTeErBn8omnSJgv5L+
+        c09lL7O7JQdPB9i6eB7zdi69P1nLHkg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-408-ro_Lx_qPM8CH5w8VCS-2AA-1; Thu, 02 Jan 2020 08:14:39 -0500
+X-MC-Unique: ro_Lx_qPM8CH5w8VCS-2AA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 914A7593A0;
+        Thu,  2 Jan 2020 13:14:38 +0000 (UTC)
+Received: from 10.255.255.10 (ovpn-204-196.brq.redhat.com [10.40.204.196])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 732A860BF4;
+        Thu,  2 Jan 2020 13:14:37 +0000 (UTC)
+Date:   Thu, 2 Jan 2020 14:14:34 +0100
+From:   Karel Zak <kzak@redhat.com>
+To:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc:     util-linux@vger.kernel.org,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-rtc@vger.kernel.org
+Subject: Re: [bugreport] "hwclock -w" reset time instead of setting the right
+ time
+Message-ID: <20200102131434.tky2hquki23laqqo@10.255.255.10>
+References: <CABXGCsODr3tMpQxJ_nhWQQg5WGakFt4Yu5B8ev6ErOkc+zv9kA@mail.gmail.com>
+ <20200101141748.GA191637@mit.edu>
+ <CABXGCsOv26W6aqB5WPMe-mEynmwy55DTfTeL5Dg9vRq6+Y6WvA@mail.gmail.com>
+ <CABXGCsNkzPrjqMRaWpssorxzhMLWBvLeSw9BpKYr_DW4LJQECQ@mail.gmail.com>
+ <20200102110817.ahqaqidw3ztw3kax@10.255.255.10>
+ <CABXGCsNkm3VuzO60WBCi4VJmDnO=DmprQ1P=dd0FcW2-+dGc0w@mail.gmail.com>
 MIME-Version: 1.0
-Received: by 2002:a8a:87:0:0:0:0:0 with HTTP; Thu, 2 Jan 2020 05:13:50 -0800 (PST)
-In-Reply-To: <20200102083029.uv2gtig3ski23dpe@pali>
-References: <20191220062419.23516-1-namjae.jeon@samsung.com>
- <CGME20191220062733epcas1p31665a3ae968ab8c70d91a3cddf529e73@epcas1p3.samsung.com>
- <20191220062419.23516-3-namjae.jeon@samsung.com> <20191229134025.qb3mmqatsn5c4gao@pali>
- <000701d5c132$bed73c80$3c85b580$@samsung.com> <20200102083029.uv2gtig3ski23dpe@pali>
-From:   Namjae Jeon <linkinjeon@gmail.com>
-Date:   Thu, 2 Jan 2020 22:13:50 +0900
-Message-ID: <CAKYAXd-CUyC9vTLH7ANumLxrAQCmb8Xi=2v4-uotLFBuxf_+Cw@mail.gmail.com>
-Subject: Re: [PATCH v8 02/13] exfat: add super block operations
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABXGCsNkm3VuzO60WBCi4VJmDnO=DmprQ1P=dd0FcW2-+dGc0w@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020-01-02 17:30 GMT+09:00, Pali Roh=C3=A1r <pali.rohar@gmail.com>:
-> On Thursday 02 January 2020 15:06:16 Namjae Jeon wrote:
->> > > +static const struct fs_parameter_spec exfat_param_specs[] =3D {
->> > > +	fsparam_u32("uid",			Opt_uid),
->> > > +	fsparam_u32("gid",			Opt_gid),
->> > > +	fsparam_u32oct("umask",			Opt_umask),
->> > > +	fsparam_u32oct("dmask",			Opt_dmask),
->> > > +	fsparam_u32oct("fmask",			Opt_fmask),
->> > > +	fsparam_u32oct("allow_utime",		Opt_allow_utime),
->> > > +	fsparam_string("iocharset",		Opt_charset),
->> > > +	fsparam_flag("utf8",			Opt_utf8),
->> >
->> > Hello! What is the purpose of having extra special "utf8" mount option=
-?
->> > Is not one "iocharset=3Dutf8" option enough?
->> utf8 nls_table supports utf8<->utf32 conversion and does not support
->> surrogate character conversion.
->
-> So in other words, this is just subset of UTF-8 just to 3 byte long
-> sequences (for Unicode code points up to the U+FFFF).
->
->> The utf8 option can support the surrogate
->> character conversion of utf16 using utf16s_to_utf8s/utf8s_to_utf16s of
->> the nls base.
->
-> So this is full UTF-8 support, right?
->
-> And what is the point to have two options for UTF-8 support, when one is
-> incomplete / broken? I see no benefit to have first option at all.
-> Providing incomplete / broken support to userspace does not make much
-> sense if we already have full and working support via different mount
-> option. Maybe second option with full UTF-8 support should be used also
-> by iocharset=3Dutf8 and then we do not need utf8 option at all?
-Make sense. I will make it one option.
+On Thu, Jan 02, 2020 at 04:55:32PM +0500, Mikhail Gavrilov wrote:
+> # hwclock -w -v
+> hwclock from util-linux 2.35-rc1-20-63f8
+> System Time: 1577964536.796672
+> Trying to open: /dev/rtc0
+> Using the rtc interface to the clock.
+> Last drift adjustment done at 1577950892 seconds after 1969
+> Last calibration done at 1577950892 seconds after 1969
+> Hardware clock is on UTC time
+> Assuming hardware clock is kept in UTC time.
+> RTC type: 'rtc_cmos'
+> Using delay: 0.500000 seconds
+> missed it - 1577964536.797135 is too far past 1577964536.500000
+> (0.297135 > 0.001000)
+> 1577964537.500000 is close enough to 1577964537.500000 (0.000000 < 0.002000)
+> Set RTC to 1577964537 (1577964536 + 1; refsystime = 1577964536.000000)
+> Setting Hardware Clock to 11:28:57 = 1577964537 seconds since 1969
+> ioctl(RTC_SET_TIME) was successful.
+> Not adjusting drift factor because the --update-drift option was not used.
+> New /etc/adjtime data:
+> 0.000000 1577964536 0.000000
+> 1577964536
+> UTC
 
-Thanks!
->
-> --
-> Pali Roh=C3=A1r
-> pali.rohar@gmail.com
->
+At first glance it seems hwclock works as expected, I do not see
+anything wrong in the output.
+
+> Demonstration: https://youtu.be/Yx27IH2opEc
+
+What is hw time before reboot? Can you verify that hwclock reset the
+clock? (or is it system reboot?)
+
+    # hwclock -w -v
+    # hwclock -v
+
+Do you see anything interesting in dmesg output before reboot and after
+hwclock -w? 
+
+
+(CC: to linux-rtc@vger.kernel.org).
+
+    Karel
+
+-- 
+ Karel Zak  <kzak@redhat.com>
+ http://karelzak.blogspot.com
+
