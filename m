@@ -2,53 +2,52 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87074C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A354C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5394520866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED28222C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003758;
-	bh=1eaTU/ag9x+F7XSNOX59Gr70kIYFMlNTRF77kgMWL74=;
+	s=default; t=1578003763;
+	bh=jQybQAdyx9ZBDl/KAmYyeRIYex04N12HCfmKKKywYCg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H96bseVSRT6UkGHhOdX3hLVCKVp+ZdF+tL1fUhUWjYUq/QGm95o90G36B5gkkkbs6
-	 X9r8d7qj6EltZdo1CNoOEhfCqZbb69Y713mxZCGwsinvncvc3TI6fZq75OoeX/4j58
-	 /YOm47YhjZ6MS+l5UUcAU41OTBm36Y2d+p6mIrsg=
+	b=pxHmjJmPmX73QyzM4XwCpyGOsj5+Jsa3E+7iGW/P5hD/ke3v/nPM2QYkqv2M2hK0e
+	 1eyQkjlBJ9ZzXEP7lcHCKm3ph0mU2DfDUG2Qp5e9DFzb8n+6vVUSVY1Bw3Gv6olFvV
+	 HPpdkl4xc4Nc0r3Sb0F2Afa2LFfBEluhEAQ3Hot8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgABWWh (ORCPT
+        id S1727745AbgABWWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:22:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43220 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:22:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729150AbgABWWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:22:32 -0500
+        id S1729029AbgABWWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:22:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B32F220863;
-        Thu,  2 Jan 2020 22:22:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85A2A20863;
+        Thu,  2 Jan 2020 22:22:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003752;
-        bh=1eaTU/ag9x+F7XSNOX59Gr70kIYFMlNTRF77kgMWL74=;
+        s=default; t=1578003757;
+        bh=jQybQAdyx9ZBDl/KAmYyeRIYex04N12HCfmKKKywYCg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WbWH8hgZ2T2BjWI37hpmrEf1+N8u0f6qdVWWRZnOZHZlaBEzxxmxNHjyRrn1utEII
-         400dokW3YiidL1QP025aRGbaQwDAELG7ciA2lV17JMN8sH8fl/+zt0Xp6IjdVcHunh
-         hdFO8Sw8ELnUEHY3SLDP8XSdooaQDfkdQ1n/i86w=
+        b=sL4VJNY3kVMN+vL5GzZ33LTalChpkCHg5zlZLsdnjk2smDCJ1Q3KyDt5TdYrV0rdl
+         Y8bDP+c7ExauNX5XbfaY18x/bj8p2sa7UCbtiJctRRTaTnFrZI0rJaxrzprhaQzrGk
+         wBcqkqDXbEuUdimeiodjdqXFHhg/9X1f9k550PC0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        David Ahern <dsahern@gmail.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 099/114] gtp: do not confirm neighbor when do pmtu update
-Date:   Thu,  2 Jan 2020 23:07:51 +0100
-Message-Id: <20200102220039.186556057@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 075/114] net, sysctl: Fix compiler warning when only cBPF is present
+Date:   Thu,  2 Jan 2020 23:07:27 +0100
+Message-Id: <20200102220036.657934932@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -61,43 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Alexander Lobakin <alobakin@dlink.ru>
 
-[ Upstream commit 6e9105c73f8d2163d12d5dfd762fd75483ed30f5 ]
+[ Upstream commit 1148f9adbe71415836a18a36c1b4ece999ab0973 ]
 
-When do IPv6 tunnel PMTU update and calls __ip6_rt_update_pmtu() in the end,
-we should not call dst_confirm_neigh() as there is no two-way communication.
+proc_dointvec_minmax_bpf_restricted() has been firstly introduced
+in commit 2e4a30983b0f ("bpf: restrict access to core bpf sysctls")
+under CONFIG_HAVE_EBPF_JIT. Then, this ifdef has been removed in
+ede95a63b5e8 ("bpf: add bpf_jit_limit knob to restrict unpriv
+allocations"), because a new sysctl, bpf_jit_limit, made use of it.
+Finally, this parameter has become long instead of integer with
+fdadd04931c2 ("bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K")
+and thus, a new proc_dolongvec_minmax_bpf_restricted() has been
+added.
 
-Although GTP only support ipv4 right now, and __ip_rt_update_pmtu() does not
-call dst_confirm_neigh(), we still set it to false to keep consistency with
-IPv6 code.
+With this last change, we got back to that
+proc_dointvec_minmax_bpf_restricted() is used only under
+CONFIG_HAVE_EBPF_JIT, but the corresponding ifdef has not been
+brought back.
 
-v5: No change.
-v4: No change.
-v3: Do not remove dst_confirm_neigh, but add a new bool parameter in
-    dst_ops.update_pmtu to control whether we should do neighbor confirm.
-    Also split the big patch to small ones for each area.
-v2: Remove dst_confirm_neigh in __ip6_rt_update_pmtu.
+So, in configurations like CONFIG_BPF_JIT=y && CONFIG_HAVE_EBPF_JIT=n
+since v4.20 we have:
 
-Reviewed-by: Guillaume Nault <gnault@redhat.com>
-Acked-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  CC      net/core/sysctl_net_core.o
+net/core/sysctl_net_core.c:292:1: warning: ‘proc_dointvec_minmax_bpf_restricted’ defined but not used [-Wunused-function]
+  292 | proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Suppress this by guarding it with CONFIG_HAVE_EBPF_JIT again.
+
+Fixes: fdadd04931c2 ("bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K")
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/20191218091821.7080-1-alobakin@dlink.ru
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/sysctl_net_core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -545,7 +545,7 @@ static int gtp_build_skb_ip4(struct sk_b
- 		mtu = dst_mtu(&rt->dst);
- 	}
+diff --git a/net/core/sysctl_net_core.c b/net/core/sysctl_net_core.c
+index d67ec17f2cc8..6cec08cd0bb9 100644
+--- a/net/core/sysctl_net_core.c
++++ b/net/core/sysctl_net_core.c
+@@ -281,6 +281,7 @@ static int proc_dointvec_minmax_bpf_enable(struct ctl_table *table, int write,
+ 	return ret;
+ }
  
--	rt->dst.ops->update_pmtu(&rt->dst, NULL, skb, mtu, true);
-+	rt->dst.ops->update_pmtu(&rt->dst, NULL, skb, mtu, false);
++# ifdef CONFIG_HAVE_EBPF_JIT
+ static int
+ proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
+ 				    void __user *buffer, size_t *lenp,
+@@ -291,6 +292,7 @@ proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
  
- 	if (!skb_is_gso(skb) && (iph->frag_off & htons(IP_DF)) &&
- 	    mtu < ntohs(iph->tot_len)) {
+ 	return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+ }
++# endif /* CONFIG_HAVE_EBPF_JIT */
+ 
+ static int
+ proc_dolongvec_minmax_bpf_restricted(struct ctl_table *table, int write,
+-- 
+2.20.1
+
 
 
