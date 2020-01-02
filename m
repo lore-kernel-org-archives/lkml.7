@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47711C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9581BC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 186B3217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 659AD217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:39:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004771;
-	bh=liVOqEbYsjnp9kexAog0eNjejiLk8FqGLE9ZfglAC4A=;
+	s=default; t=1578004775;
+	bh=ekqCwYEYGEF20WFESDIo3WgiPNVLmqvdubZPncIpGAY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cSjfNuV978Geb0NWE2hjYYe9xGtF5uVSRsqtC1bV6eUy6NMTNUOcvhyFkL70DogDT
-	 20ZaAVuv/Y1BR1knl9SFbUUKJKY1k7iAIuyUNN3E0yhpZzdv7DBuQ0UW9jaCcwA2AZ
-	 KFpIxENnQZVzEu+Yglud+NNsIIpTSNbLXJHcW82o=
+	b=Kv+sWVOMgnUuIQ7CyJdB8eGpg1FH4/k/XNCayCrzMNF5F1c+J3XZ7A0ayKd+N8qFX
+	 rB4r6cXHUl6OF+PLJ1AiNc3xE7sdvz5GE6MMDpK1QM1U5QsJquL+o2kwFIw1GvAS8S
+	 sLTwfUbqmwnl+wcQ17CdwGi++ydkiSLO5sWcxbDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731478AbgABWja (ORCPT
+        id S1731494AbgABWje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:39:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55602 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:39:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731470AbgABWjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:39:25 -0500
+        id S1730922AbgABWja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:39:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FEE120866;
-        Thu,  2 Jan 2020 22:39:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6258F20866;
+        Thu,  2 Jan 2020 22:39:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004765;
-        bh=liVOqEbYsjnp9kexAog0eNjejiLk8FqGLE9ZfglAC4A=;
+        s=default; t=1578004769;
+        bh=ekqCwYEYGEF20WFESDIo3WgiPNVLmqvdubZPncIpGAY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FVznKco1paO9MisF5QImORSd1kB46uM+bYHsgeWsg7Feu5KYakFTt2jcGgwo71ZOU
-         r81dwNvt2A15cB9NNJkMwvoJQi6EuNFME14ic/RO0Js4njZIzgmgAjO/EZLf1YrHQJ
-         EAfrYdchhKi1pbD81r4xvZZto6SiNBGknmsWjrDA=
+        b=x5sbzKdTzGa+EX+X381SCxnrFVwSFXEOaSVLlhdfHv7UZ7YOZAVVgEHtFTp5WNS9c
+         c4M73zrNVuhxLDOU3Ysbtqsp6QtRoKmlGS5lb+0dA7VJTGgWdRMzgyPzMLoka/Pt0j
+         gCKdjt7GtHw9z5wbE7NoJPJ9wDsWgE4uLPJzyF70=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Christie <mchristi@redhat.com>,
-        Roman Bolshakov <r.bolshakov@yadro.com>,
+        stable@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
         Bart Van Assche <bvanassche@acm.org>,
+        Bean Huo <beanhuo@micron.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 118/137] scsi: target: iscsi: Wait for all commands to finish before freeing a session
-Date:   Thu,  2 Jan 2020 23:08:11 +0100
-Message-Id: <20200102220603.022745299@linuxfoundation.org>
+Subject: [PATCH 4.4 110/137] scsi: ufs: fix potential bug which ends in system hang
+Date:   Thu,  2 Jan 2020 23:08:03 +0100
+Message-Id: <20200102220601.952122769@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -62,141 +62,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Bean Huo <beanhuo@micron.com>
 
-[ Upstream commit e9d3009cb936bd0faf0719f68d98ad8afb1e613b ]
+[ Upstream commit cfcbae3895b86c390ede57b2a8f601dd5972b47b ]
 
-The iSCSI target driver is the only target driver that does not wait for
-ongoing commands to finish before freeing a session. Make the iSCSI target
-driver wait for ongoing commands to finish before freeing a session. This
-patch fixes the following KASAN complaint:
+In function __ufshcd_query_descriptor(), in the event of an error
+happening, we directly goto out_unlock and forget to invaliate
+hba->dev_cmd.query.descriptor pointer. This results in this pointer still
+valid in ufshcd_copy_query_response() for other query requests which go
+through ufshcd_exec_raw_upiu_cmd(). This will cause __memcpy() crash and
+system hangs. Log as shown below:
 
-BUG: KASAN: use-after-free in __lock_acquire+0xb1a/0x2710
-Read of size 8 at addr ffff8881154eca70 by task kworker/0:2/247
+Unable to handle kernel paging request at virtual address
+ffff000012233c40
+Mem abort info:
+   ESR = 0x96000047
+   Exception class = DABT (current EL), IL = 32 bits
+   SET = 0, FnV = 0
+   EA = 0, S1PTW = 0
+Data abort info:
+   ISV = 0, ISS = 0x00000047
+   CM = 0, WnR = 1
+swapper pgtable: 4k pages, 48-bit VAs, pgdp = 0000000028cc735c
+[ffff000012233c40] pgd=00000000bffff003, pud=00000000bfffe003,
+pmd=00000000ba8b8003, pte=0000000000000000
+ Internal error: Oops: 96000047 [#2] PREEMPT SMP
+ ...
+ Call trace:
+  __memcpy+0x74/0x180
+  ufshcd_issue_devman_upiu_cmd+0x250/0x3c0
+  ufshcd_exec_raw_upiu_cmd+0xfc/0x1a8
+  ufs_bsg_request+0x178/0x3b0
+  bsg_queue_rq+0xc0/0x118
+  blk_mq_dispatch_rq_list+0xb0/0x538
+  blk_mq_sched_dispatch_requests+0x18c/0x1d8
+  __blk_mq_run_hw_queue+0xb4/0x118
+  blk_mq_run_work_fn+0x28/0x38
+  process_one_work+0x1ec/0x470
+  worker_thread+0x48/0x458
+  kthread+0x130/0x138
+  ret_from_fork+0x10/0x1c
+ Code: 540000ab a8c12027 a88120c7 a8c12027 (a88120c7)
+ ---[ end trace 793e1eb5dff69f2d ]---
+ note: kworker/0:2H[2054] exited with preempt_count 1
 
-CPU: 0 PID: 247 Comm: kworker/0:2 Not tainted 5.4.0-rc1-dbg+ #6
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-Workqueue: target_completion target_complete_ok_work [target_core_mod]
-Call Trace:
- dump_stack+0x8a/0xd6
- print_address_description.constprop.0+0x40/0x60
- __kasan_report.cold+0x1b/0x33
- kasan_report+0x16/0x20
- __asan_load8+0x58/0x90
- __lock_acquire+0xb1a/0x2710
- lock_acquire+0xd3/0x200
- _raw_spin_lock_irqsave+0x43/0x60
- target_release_cmd_kref+0x162/0x7f0 [target_core_mod]
- target_put_sess_cmd+0x2e/0x40 [target_core_mod]
- lio_check_stop_free+0x12/0x20 [iscsi_target_mod]
- transport_cmd_check_stop_to_fabric+0xd8/0xe0 [target_core_mod]
- target_complete_ok_work+0x1b0/0x790 [target_core_mod]
- process_one_work+0x549/0xa40
- worker_thread+0x7a/0x5d0
- kthread+0x1bc/0x210
- ret_from_fork+0x24/0x30
+This patch is to move "descriptor = NULL" down to below the label
+"out_unlock".
 
-Allocated by task 889:
- save_stack+0x23/0x90
- __kasan_kmalloc.constprop.0+0xcf/0xe0
- kasan_slab_alloc+0x12/0x20
- kmem_cache_alloc+0xf6/0x360
- transport_alloc_session+0x29/0x80 [target_core_mod]
- iscsi_target_login_thread+0xcd6/0x18f0 [iscsi_target_mod]
- kthread+0x1bc/0x210
- ret_from_fork+0x24/0x30
-
-Freed by task 1025:
- save_stack+0x23/0x90
- __kasan_slab_free+0x13a/0x190
- kasan_slab_free+0x12/0x20
- kmem_cache_free+0x146/0x400
- transport_free_session+0x179/0x2f0 [target_core_mod]
- transport_deregister_session+0x130/0x180 [target_core_mod]
- iscsit_close_session+0x12c/0x350 [iscsi_target_mod]
- iscsit_logout_post_handler+0x136/0x380 [iscsi_target_mod]
- iscsit_response_queue+0x8de/0xbe0 [iscsi_target_mod]
- iscsi_target_tx_thread+0x27f/0x370 [iscsi_target_mod]
- kthread+0x1bc/0x210
- ret_from_fork+0x24/0x30
-
-The buggy address belongs to the object at ffff8881154ec9c0
- which belongs to the cache se_sess_cache of size 352
-The buggy address is located 176 bytes inside of
- 352-byte region [ffff8881154ec9c0, ffff8881154ecb20)
-The buggy address belongs to the page:
-page:ffffea0004553b00 refcount:1 mapcount:0 mapping:ffff888101755400 index:0x0 compound_mapcount: 0
-flags: 0x2fff000000010200(slab|head)
-raw: 2fff000000010200 dead000000000100 dead000000000122 ffff888101755400
-raw: 0000000000000000 0000000080130013 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881154ec900: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff8881154ec980: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
->ffff8881154eca00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                             ^
- ffff8881154eca80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8881154ecb00: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
-
-Cc: Mike Christie <mchristi@redhat.com>
-Link: https://lore.kernel.org/r/20191113220508.198257-3-bvanassche@acm.org
-Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Fixes: d44a5f98bb49b2(ufs: query descriptor API)
+Link: https://lore.kernel.org/r/20191112223436.27449-3-huobean@gmail.com
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Bean Huo <beanhuo@micron.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/iscsi/iscsi_target.c | 10 ++++++++--
- include/scsi/iscsi_proto.h          |  1 +
- 2 files changed, 9 insertions(+), 2 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
-index cbb4414edd71..564828554ca0 100644
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -993,7 +993,9 @@ int iscsit_setup_scsi_cmd(struct iscsi_conn *conn, struct iscsi_cmd *cmd,
- 		hdr->cmdsn, be32_to_cpu(hdr->data_length), payload_length,
- 		conn->cid);
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 504d36796152..fcf5141bf950 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1809,10 +1809,10 @@ static int ufshcd_query_descriptor(struct ufs_hba *hba,
+ 		goto out_unlock;
+ 	}
  
--	target_get_sess_cmd(&cmd->se_cmd, true);
-+	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
-+		return iscsit_add_reject_cmd(cmd,
-+				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
+-	hba->dev_cmd.query.descriptor = NULL;
+ 	*buf_len = be16_to_cpu(response->upiu_res.length);
  
- 	cmd->sense_reason = transport_lookup_cmd_lun(&cmd->se_cmd,
- 						     scsilun_to_int(&hdr->lun));
-@@ -1804,7 +1806,9 @@ iscsit_handle_task_mgt_cmd(struct iscsi_conn *conn, struct iscsi_cmd *cmd,
- 			      conn->sess->se_sess, 0, DMA_NONE,
- 			      TCM_SIMPLE_TAG, cmd->sense_buffer + 2);
- 
--	target_get_sess_cmd(&cmd->se_cmd, true);
-+	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
-+		return iscsit_add_reject_cmd(cmd,
-+				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
- 
- 	/*
- 	 * TASK_REASSIGN for ERL=2 / connection stays inside of
-@@ -4390,6 +4394,8 @@ int iscsit_close_connection(
- 	 * must wait until they have completed.
- 	 */
- 	iscsit_check_conn_usage_count(conn);
-+	target_sess_cmd_list_set_waiting(sess->se_sess);
-+	target_wait_for_sess_cmds(sess->se_sess);
- 
- 	if (conn->conn_rx_hash.tfm)
- 		crypto_free_hash(conn->conn_rx_hash.tfm);
-diff --git a/include/scsi/iscsi_proto.h b/include/scsi/iscsi_proto.h
-index c1260d80ef30..1a2ae0862e23 100644
---- a/include/scsi/iscsi_proto.h
-+++ b/include/scsi/iscsi_proto.h
-@@ -638,6 +638,7 @@ struct iscsi_reject {
- #define ISCSI_REASON_BOOKMARK_INVALID	9
- #define ISCSI_REASON_BOOKMARK_NO_RESOURCES	10
- #define ISCSI_REASON_NEGOTIATION_RESET	11
-+#define ISCSI_REASON_WAITING_FOR_LOGOUT	12
- 
- /* Max. number of Key=Value pairs in a text message */
- #define MAX_KEY_VALUE_PAIRS	8192
+ out_unlock:
++	hba->dev_cmd.query.descriptor = NULL;
+ 	mutex_unlock(&hba->dev_cmd.lock);
+ out:
+ 	ufshcd_release(hba);
 -- 
 2.20.1
 
