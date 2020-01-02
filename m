@@ -2,86 +2,89 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF5FC2D0DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4870C2D0DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D63E92053B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:55:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NGnPh4TF"
+	by mail.kernel.org (Postfix) with ESMTP id BB26820672
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:59:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727642AbgABGzv (ORCPT
+        id S1726504AbgABG7t convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 01:55:51 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21503 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726078AbgABGzv (ORCPT
+        Thu, 2 Jan 2020 01:59:49 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:33502 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbgABG7t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 01:55:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577948150;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HFnrFbEd7Usrj70sMvjy0ZqsMPetc5P0NiNISsY2Z5c=;
-        b=NGnPh4TFZ/xjFyE1bH0mWG23JOiGJGsDvLyP5fnc8o8sIHMJy8vjChiMUB3LsUIWR+rrO0
-        6O/Re9KIJds+sa+X+i4iXhj7M3aJkfcimu0yz+rojiHn3ot6nLMKLEcitNQEdkYcDcqYGt
-        3uPGz2x+qaXfz2vXPlxqTv3miIPQ+r4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-325-K48g7XQBOhe_rNJWIKkHdA-1; Thu, 02 Jan 2020 01:55:49 -0500
-X-MC-Unique: K48g7XQBOhe_rNJWIKkHdA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9B1E2801E76;
-        Thu,  2 Jan 2020 06:55:47 +0000 (UTC)
-Received: from [10.72.12.230] (ovpn-12-230.pek2.redhat.com [10.72.12.230])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5D6D519C5B;
-        Thu,  2 Jan 2020 06:55:33 +0000 (UTC)
-Subject: Re: [PATCH v1 0/2] support virtio mmio specification Version 3
-To:     Zha Bin <zhabin@linux.alibaba.com>, linux-kernel@vger.kernel.org
-Cc:     mst@redhat.com, slp@redhat.com, virtio-dev@lists.oasis-open.org,
-        gerry@linux.alibaba.com, jing2.liu@intel.com, chao.p.peng@intel.com
-References: <cover.1577240905.git.zhabin@linux.alibaba.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <6143fb9b-ad2e-a771-f7a2-91bd9f1b7873@redhat.com>
-Date:   Thu, 2 Jan 2020 14:55:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <cover.1577240905.git.zhabin@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+        Thu, 2 Jan 2020 01:59:49 -0500
+Received: from mail-pg1-f200.google.com ([209.85.215.200])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1imuSR-0000rC-8y
+        for linux-kernel@vger.kernel.org; Thu, 02 Jan 2020 06:59:47 +0000
+Received: by mail-pg1-f200.google.com with SMTP id l13so27287370pgt.5
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 22:59:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=+4ASNLI8hemylDXAQ26bv8KzwuXrMFomc4dsXqfBlnQ=;
+        b=d0wd5cytftD3chjgDGN/+3YDsIRTKVkjvp7uLciVM4ZBY+HTeyS1oErfy3nACOZ7w8
+         EZETZ+u+rgL6ZdOkawBWmwUDHBj5jTOKmv4x2hTKp+v159ZeMBXWdWmo4e2inpPfpBu4
+         /vohxOB9JrrD1HcwzQXC9i5s2tSpQvAeFN7+FFWZftc/mcGZtzcPfRfR9JVSX3JCOjg4
+         odTtpzwGBxzIF5WKToePCGN1zvp0vrNCm+sSJrgv8AO9EOjJz6v4svLUh3TyPy9OFP+3
+         JIA/l64N01aQNxL091gRZvwbvPBDB+R4J9Ani4KbYXVkXznlavq1Opj6SIQ7+8AcO7mx
+         Oe0g==
+X-Gm-Message-State: APjAAAUv3RVP8jM+JXN8kTcDmRGjzwTiPs17cowDW2AQceKvDoPrCIJI
+        HNVJPh+RY/jSQceNX+xeiI6Jhh5klrZLPC6lvS3lHCWoeOHsvhFIniXdpWTEGRF4vFGvA13PNaw
+        A58/wGyx4oilnlCeJfl9iH0BBiWTxQNxfRdrgF5SIEw==
+X-Received: by 2002:a63:4b24:: with SMTP id y36mr87026089pga.176.1577948385890;
+        Wed, 01 Jan 2020 22:59:45 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy4u7csTaenM6SHfp5W1eAmF77TctrCSAsskp7RkLMW0KhIV5dmXnThBwvIiiJsX1YvyWbuUA==
+X-Received: by 2002:a63:4b24:: with SMTP id y36mr87026049pga.176.1577948385382;
+        Wed, 01 Jan 2020 22:59:45 -0800 (PST)
+Received: from [10.101.46.91] (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
+        by smtp.gmail.com with ESMTPSA id o7sm64953508pfg.138.2020.01.01.22.59.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 Jan 2020 22:59:44 -0800 (PST)
+From:   Kai Heng Feng <kai.heng.feng@canonical.com>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.19\))
+Subject: SFP+ support for 8168fp/8117
+Message-Id: <2D8F5FFE-3EC3-480B-9D15-23CACE5556DF@canonical.com>
+Date:   Thu, 2 Jan 2020 14:59:42 +0800
+Cc:     Linux Netdev List <netdev@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Jason Yen <jason.yen@canonical.com>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+X-Mailer: Apple Mail (2.3594.4.19)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Heiner,
 
-On 2019/12/25 =E4=B8=8A=E5=8D=8810:50, Zha Bin wrote:
-> With the virtio spec proposal[1], other VMMs (e.g. Qemu) can also make =
-use
-> of the new features to get a enhancing performance.
->
-> [1]https://lkml.org/lkml/2019/12/20/113
->
-> Liu Jiang (2):
->    x86/msi: Enhance x86 to support platform_msi
->    virtio-mmio: add features for virtio-mmio specification version 3
+There's an 8168fp/8117 chip has SFP+ port instead of RJ45, the phy device ID matches "Generic FE-GE Realtek PHY" nevertheless.
+The problems is that, since it uses SFP+, both BMCR and BMSR read are always zero, so Realtek phylib never knows if the link is up.
 
+However, the old method to read through MMIO correctly shows the link is up:
+static unsigned int rtl8169_xmii_link_ok(struct rtl8169_private *tp)
+{
+       return RTL_R8(tp, PHYstatus) & LinkStatus;
+}
 
-Btw, for next version I suggest to copy both kvm-devel list and=20
-qemu-devel list.
+Few ideas here:
+- Add a link state callback for phylib like phylink's phylink_fixed_state_cb(). However there's no guarantee that other parts of this chip works.
+- Add SFP+ support for this chip. However the phy device matches to "Generic FE-GE Realtek PHY" which may complicate things.
 
-Thanks
+Any advice will be welcome.
 
-
+Kai-Heng
