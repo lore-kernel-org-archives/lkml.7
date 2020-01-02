@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE75C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5832C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F4B420866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81A4620866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004421;
-	bh=ljE6LJalJQ4T2iuSgGcVOWSJgzZoXUCBg5/49+IIkrM=;
+	s=default; t=1578004423;
+	bh=VJZ/oYc6ReQtUDu6H24cPfLjQVk3H/I46//pOOe/Uw8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S6Z9fTvis+MxOlCqjbaBlMSDJ90ffkfh/ceCcRbLHrBtcxX8Psj74TwKOgD3Z2C7+
-	 ngKrojfwG2kV9yMclLDtJI1KaM8tTKAhMTHBN3ZgNGk0LqALVl0N9i6z6kPYMs+Ny7
-	 Mu3e4T2vgQHn/bG1RzYwD7YUl88bbYpzdEzuaiHo=
+	b=v4M54WMVdbTgTcatYvx9R71klEqpTvWgJqrZfgS3jqyr046YA2KwG5Ha4BUSeKDgU
+	 9i6gzclPQS1G7JUYI9wJLTqNKt3P6if0qOkLOV/qEZsNup6yNCUAHTjXyMsNlRQTAZ
+	 phexdI81Rpyuwg2pbG0TM1LwmNBj5ckVaR/ZdfJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730567AbgABWdj (ORCPT
+        id S1730575AbgABWdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:33:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41252 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:33:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730530AbgABWdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:33:37 -0500
+        id S1730430AbgABWdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:33:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F75521D7D;
-        Thu,  2 Jan 2020 22:33:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 821F220863;
+        Thu,  2 Jan 2020 22:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004416;
-        bh=ljE6LJalJQ4T2iuSgGcVOWSJgzZoXUCBg5/49+IIkrM=;
+        s=default; t=1578004419;
+        bh=VJZ/oYc6ReQtUDu6H24cPfLjQVk3H/I46//pOOe/Uw8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e1CIe/h0DpYduba/V/BS3M1xG/9P2L64e+ejoExeLYLXSQFtljONdypTtWSCF0wM2
-         yWL0vz3ESP/YbPgBHHppl7Bu2eQS5KQJsF3lAwypqGTwP/vntict8KuwNwc4c5K/zC
-         sCjZ3BBhZgnehROaL0e5rKVpv0dRD2RkTss+gVKA=
+        b=EiPJSqb5B0Ae0y/7EtdsB3m+tLqAx1phNUm+PZKZ7MIWy+xlmJRsn/0Xr8mGWciIg
+         QIExnL/LuSMJMWmsYi47SBbH1hNGlNdBu2vtf0SSDWIvaJTNiMkH3Wv72c5zSy9RH/
+         soIePACl1eRr4SBGPYWAPQAhbSQLU515vTymfjFk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 4.9 170/171] gtp: fix wrong condition in gtp_genl_dump_pdp()
-Date:   Thu,  2 Jan 2020 23:08:21 +0100
-Message-Id: <20200102220610.205742114@linuxfoundation.org>
+Subject: [PATCH 4.9 171/171] gtp: avoid zero size hashtable
+Date:   Thu,  2 Jan 2020 23:08:22 +0100
+Message-Id: <20200102220610.316545567@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -61,100 +61,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 94a6d9fb88df43f92d943c32b84ce398d50bf49f ]
+[ Upstream commit 6a902c0f31993ab02e1b6ea7085002b9c9083b6a ]
 
-gtp_genl_dump_pdp() is ->dumpit() callback of GTP module and it is used
-to dump pdp contexts. it would be re-executed because of dump packet size.
-
-If dump packet size is too big, it saves current dump pointer
-(gtp interface pointer, bucket, TID value) then it restarts dump from
-last pointer.
-Current GTP code allows adding zero TID pdp context but dump code
-ignores zero TID value. So, last dump pointer will not be found.
-
-In addition, this patch adds missing rcu_read_lock() in
-gtp_genl_dump_pdp().
+GTP default hashtable size is 1024 and userspace could set specific
+hashtable size with IFLA_GTP_PDP_HASHSIZE. If hashtable size is set to 0
+from userspace,  hashtable will not work and panic will occur.
 
 Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
 Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/gtp.c |   36 +++++++++++++++++++-----------------
- 1 file changed, 19 insertions(+), 17 deletions(-)
+ drivers/net/gtp.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
 --- a/drivers/net/gtp.c
 +++ b/drivers/net/gtp.c
-@@ -42,7 +42,6 @@ struct pdp_ctx {
- 	struct hlist_node	hlist_addr;
+@@ -677,10 +677,13 @@ static int gtp_newlink(struct net *src_n
+ 	if (err < 0)
+ 		goto out_err;
  
- 	union {
--		u64		tid;
- 		struct {
- 			u64	tid;
- 			u16	flow;
-@@ -1221,43 +1220,46 @@ static int gtp_genl_dump_pdp(struct sk_b
- 				struct netlink_callback *cb)
- {
- 	struct gtp_dev *last_gtp = (struct gtp_dev *)cb->args[2], *gtp;
-+	int i, j, bucket = cb->args[0], skip = cb->args[1];
- 	struct net *net = sock_net(skb->sk);
--	struct gtp_net *gn = net_generic(net, gtp_net_id);
--	unsigned long tid = cb->args[1];
--	int i, k = cb->args[0], ret;
- 	struct pdp_ctx *pctx;
-+	struct gtp_net *gn;
-+
-+	gn = net_generic(net, gtp_net_id);
+-	if (!data[IFLA_GTP_PDP_HASHSIZE])
++	if (!data[IFLA_GTP_PDP_HASHSIZE]) {
+ 		hashsize = 1024;
+-	else
++	} else {
+ 		hashsize = nla_get_u32(data[IFLA_GTP_PDP_HASHSIZE]);
++		if (!hashsize)
++			hashsize = 1024;
++	}
  
- 	if (cb->args[4])
- 		return 0;
- 
-+	rcu_read_lock();
- 	list_for_each_entry_rcu(gtp, &gn->gtp_dev_list, list) {
- 		if (last_gtp && last_gtp != gtp)
- 			continue;
- 		else
- 			last_gtp = NULL;
- 
--		for (i = k; i < gtp->hash_size; i++) {
--			hlist_for_each_entry_rcu(pctx, &gtp->tid_hash[i], hlist_tid) {
--				if (tid && tid != pctx->u.tid)
--					continue;
--				else
--					tid = 0;
--
--				ret = gtp_genl_fill_info(skb,
--							 NETLINK_CB(cb->skb).portid,
--							 cb->nlh->nlmsg_seq,
--							 cb->nlh->nlmsg_type, pctx);
--				if (ret < 0) {
-+		for (i = bucket; i < gtp->hash_size; i++) {
-+			j = 0;
-+			hlist_for_each_entry_rcu(pctx, &gtp->tid_hash[i],
-+						 hlist_tid) {
-+				if (j >= skip &&
-+				    gtp_genl_fill_info(skb,
-+					    NETLINK_CB(cb->skb).portid,
-+					    cb->nlh->nlmsg_seq,
-+					    cb->nlh->nlmsg_type, pctx)) {
- 					cb->args[0] = i;
--					cb->args[1] = pctx->u.tid;
-+					cb->args[1] = j;
- 					cb->args[2] = (unsigned long)gtp;
- 					goto out;
- 				}
-+				j++;
- 			}
-+			skip = 0;
- 		}
-+		bucket = 0;
- 	}
- 	cb->args[4] = 1;
- out:
-+	rcu_read_unlock();
- 	return skb->len;
- }
- 
+ 	err = gtp_hashtable_new(gtp, hashsize);
+ 	if (err < 0)
 
 
