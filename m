@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2E2C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1689C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF79F20863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71D9F20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:41:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004885;
-	bh=yQaPYKQgh+LTD+y5wyvQ6MOmFZ2kc32fexLYKgvurRg=;
+	s=default; t=1578004889;
+	bh=U2qYoOiaGhL2B9XinPMYzI08i3GZ/0YyIxkN8c2aBDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O8sFJxAV1z9Y58TJIexH0aeGjMsxdHyFc/hRrJu0hpi7tdWrz2apwvJkvESTar/O9
-	 2XjqgxWVWh/eOolDoP0Ihz0lnsdkGEHg34LA5Y0nS5aY+fevOxlGkjcrcQL6XeyeZe
-	 Aqd64M9+gTRkdPp93H4ta20xgzyR9sfUqu9Yh/qY=
+	b=pNF3CchJAWxz80Hd30ENasHrK29kXeVpJoiuUWOq/D5Xh9VEsQMSWX2wACYxlEQEj
+	 pvXJfW845nhaG4w/WLf7FbAPw+6SIbq5PYNeXB4LqvXQAg8jqHrYcM+V99k4Mpjw2c
+	 F0r49CDZ/TOZxlXP2aCbTTRuim5NuP3NVJ4rSbZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731253AbgABWlY (ORCPT
+        id S1730913AbgABWhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:41:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49758 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:37:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727282AbgABWhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:37:21 -0500
+        id S1730775AbgABWhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:37:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D096217F4;
-        Thu,  2 Jan 2020 22:37:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C04820866;
+        Thu,  2 Jan 2020 22:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004640;
-        bh=yQaPYKQgh+LTD+y5wyvQ6MOmFZ2kc32fexLYKgvurRg=;
+        s=default; t=1578004626;
+        bh=U2qYoOiaGhL2B9XinPMYzI08i3GZ/0YyIxkN8c2aBDE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EQGUSoWeHKnn4RCOtWndgwHfnkr6Ia64rSSGF27SRK9OqRMi5bmAKAoSExnkGnTNf
-         SSh+EueKdPS8INHkDwzBax01J3197+zACPepAxlRic2+iMQbtOEwpaUgyGxSrvfDBD
-         YEDXmLacM8F2zs4OnT8K7/ep+u5V3spc2KycBJEk=
+        b=KsvVl848kQUQiNdnpcsJq3ffmaR7fTpIG2US5dx1mqfaFWIyPpye+tSlqLy+TJ6f+
+         G6BVZteAAFH6tgeSKmcGEpQ5ThdI45++N1cdxrh0SQ+eEeXW7nymWF1aGgiSrzJjhj
+         w9onCgYZQcKOiSFyJJpCfD3tluHy7kBG5m3VrDzI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
+        Omar Sandoval <osandov@fb.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 092/137] Input: atmel_mxt_ts - disable IRQ across suspend
-Date:   Thu,  2 Jan 2020 23:07:45 +0100
-Message-Id: <20200102220559.219860390@linuxfoundation.org>
+Subject: [PATCH 4.4 059/137] btrfs: dont prematurely free work in end_workqueue_fn()
+Date:   Thu,  2 Jan 2020 23:07:12 +0100
+Message-Id: <20200102220554.475553450@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -60,52 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Green <evgreen@chromium.org>
+From: Omar Sandoval <osandov@fb.com>
 
-[ Upstream commit 463fa44eec2fef50d111ed0199cf593235065c04 ]
+[ Upstream commit 9be490f1e15c34193b1aae17da58e14dd9f55a95 ]
 
-Across suspend and resume, we are seeing error messages like the following:
+Currently, end_workqueue_fn() frees the end_io_wq entry (which embeds
+the work item) and then calls bio_endio(). This is another potential
+instance of the bug in "btrfs: don't prematurely free work in
+run_ordered_work()".
 
-atmel_mxt_ts i2c-PRP0001:00: __mxt_read_reg: i2c transfer failed (-121)
-atmel_mxt_ts i2c-PRP0001:00: Failed to read T44 and T5 (-121)
+In particular, the endio call may depend on other work items. For
+example, btrfs_end_dio_bio() can call btrfs_subio_endio_read() ->
+__btrfs_correct_data_nocsum() -> dio_read_error() ->
+submit_dio_repair_bio(), which submits a bio that is also completed
+through a end_workqueue_fn() work item. However,
+__btrfs_correct_data_nocsum() waits for the newly submitted bio to
+complete, thus it depends on another work item.
 
-This occurs because the driver leaves its IRQ enabled. Upon resume, there
-is an IRQ pending, but the interrupt is serviced before both the driver and
-the underlying I2C bus have been resumed. This causes EREMOTEIO errors.
+This example currently usually works because we use different workqueue
+helper functions for BTRFS_WQ_ENDIO_DATA and BTRFS_WQ_ENDIO_DIO_REPAIR.
+However, it may deadlock with stacked filesystems and is fragile
+overall. The proper fix is to free the work item at the very end of the
+work function, so let's do that.
 
-Disable the IRQ in suspend, and re-enable it on resume. If there are cases
-where the driver enters suspend with interrupts disabled, that's a bug we
-should fix separately.
-
-Signed-off-by: Evan Green <evgreen@chromium.org>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/btrfs/disk-io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index be2f2521c1c5..d955841da57d 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -2701,6 +2701,8 @@ static int __maybe_unused mxt_suspend(struct device *dev)
- 
- 	mutex_unlock(&input_dev->mutex);
- 
-+	disable_irq(data->irq);
-+
- 	return 0;
+diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+index 78722aaffecd..d50fc503f73b 100644
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -1698,8 +1698,8 @@ static void end_workqueue_fn(struct btrfs_work *work)
+ 	bio->bi_error = end_io_wq->error;
+ 	bio->bi_private = end_io_wq->private;
+ 	bio->bi_end_io = end_io_wq->end_io;
+-	kmem_cache_free(btrfs_end_io_wq_cache, end_io_wq);
+ 	bio_endio(bio);
++	kmem_cache_free(btrfs_end_io_wq_cache, end_io_wq);
  }
  
-@@ -2713,6 +2715,8 @@ static int __maybe_unused mxt_resume(struct device *dev)
- 	if (!input_dev)
- 		return 0;
- 
-+	enable_irq(data->irq);
-+
- 	mutex_lock(&input_dev->mutex);
- 
- 	if (input_dev->users)
+ static int cleaner_kthread(void *arg)
 -- 
 2.20.1
 
