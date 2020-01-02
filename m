@@ -2,138 +2,119 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC242C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 816DFC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC21121835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 551EC20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 16:32:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=globallogic.com header.i=@globallogic.com header.b="Yxb2DtgB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbgABQVw (ORCPT
+        id S1728831AbgABQcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 11:21:52 -0500
-Received: from foss.arm.com ([217.140.110.172]:48318 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728678AbgABQVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 11:21:51 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2E78328;
-        Thu,  2 Jan 2020 08:21:50 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B3873F68F;
-        Thu,  2 Jan 2020 08:21:50 -0800 (PST)
-Date:   Thu, 2 Jan 2020 16:21:48 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     kvm@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
-        will@kernel.org, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 02/18] arm64: KVM: reset E2PB correctly in MDCR_EL2
- when exiting the guest(VHE)
-Message-ID: <20200102162147.GQ42593@e119886-lin.cambridge.arm.com>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
- <20191220143025.33853-3-andrew.murray@arm.com>
- <20191221131214.769a140e@why>
- <20191224102949.GD42593@e119886-lin.cambridge.arm.com>
+        Thu, 2 Jan 2020 11:32:21 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37703 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728795AbgABQcV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 11:32:21 -0500
+Received: by mail-ed1-f65.google.com with SMTP id cy15so39554885edb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 08:32:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=globallogic.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2Tko8occFlhTAmLh+pmq5km+IinxZOdXNCIFDK4BrgI=;
+        b=Yxb2DtgByNnm2fvJC5grlaYIWQcduaEV1xN7bE+1BWv/5kIsEJGJzn9NPu60o6gEGk
+         glSFoj0DxpmRKQ3KN+2OW667MMbrcOpFVILpvUMgzz25kWv5AmCq76nosJLB38Qy5t9/
+         BaeF0w5f11a83pMJHTlEO8TUuLJSgrOKMAb2L6HMcgquZoDgGnW8O9Q2vMtV8OJrHB/X
+         cRHSKwZKg1BAaOmUbpunrXdAFZOL17dgxP4hYHB95aM1oBz9s9BVJFfNU4Zjjy5JDmJ5
+         n5917hecOxtC2Ntp4XqcebffaigCfGTiha5Qu2ErrHP+ZeTx+RWp8D4YFOJu7BpcnsGg
+         ILFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2Tko8occFlhTAmLh+pmq5km+IinxZOdXNCIFDK4BrgI=;
+        b=tGtu31ZUlIjmDtsntMvH1qZmCnpPhe4KfcuUHjrTyxTQLBr4q5jdReLUTq/3evxArr
+         DkVJrmLfeflrnRGEnEZwpth7o2tN1YOTC1my6RB0xzyXJ5P61ki+NamEkBRY+J7dGLO4
+         1ZEw/IEffj5MF/P2gBTOX1/JSrC+4vAiIiiekbxpNyoYdwPqrvyTiVf9SZooinJPaz1J
+         6L9VKCKFXqJpC9AEksZLG6VIv8a3Iyu62T9mekCJJ7FvJH+Sy09gDGKPn3S1QS4Tw0Vy
+         Qd4dG/dqPc9IgxsJHfYYBSyoRZUEZnDtxWfMrGYAPg147ZGp1x+v5Y8713rgCmDJaVvZ
+         5XDw==
+X-Gm-Message-State: APjAAAVrbug6LsF5fnf5SKQ0ruNbZXamkhr6sMvZohfAmY4tbIO8JP2H
+        FVYuVpdVucEZe06+rjCuMfoLN1oz2tIzC2STmZDZXsBm
+X-Google-Smtp-Source: APXvYqwOVsilnsl9v7DZx9xZbGwuN9vKn2FxzE+O5mvOq1IVT7wX95EXQ3BZUT6bjQZc4po8c435XGCjM9jRP1YMO2s=
+X-Received: by 2002:a50:9f65:: with SMTP id b92mr87854876edf.275.1577982739378;
+ Thu, 02 Jan 2020 08:32:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191224102949.GD42593@e119886-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+References: <20200101204750.50541-1-roman.stratiienko@globallogic.com>
+ <20200101204750.50541-2-roman.stratiienko@globallogic.com> <20200102100832.c5fc4imjdmr7otam@gilmour.lan>
+In-Reply-To: <20200102100832.c5fc4imjdmr7otam@gilmour.lan>
+From:   Roman Stratiienko <roman.stratiienko@globallogic.com>
+Date:   Thu, 2 Jan 2020 18:32:07 +0200
+Message-ID: <CAODwZ7uqf4v8XjOLCn=SoUQchst_b96VCNdaunzn9Q21zPcQ7w@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] drm/sun4i: Use CRTC size instead of PRIMARY plane
+ size as mixer frame.
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@siol.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 10:29:50AM +0000, Andrew Murray wrote:
-> On Sat, Dec 21, 2019 at 01:12:14PM +0000, Marc Zyngier wrote:
-> > On Fri, 20 Dec 2019 14:30:09 +0000
-> > Andrew Murray <andrew.murray@arm.com> wrote:
-> > 
-> > > From: Sudeep Holla <sudeep.holla@arm.com>
-> > > 
-> > > On VHE systems, the reset value for MDCR_EL2.E2PB=b00 which defaults
-> > > to profiling buffer using the EL2 stage 1 translations. 
-> > 
-> > Does the reset value actually matter here? I don't see it being
-> > specific to VHE systems, and all we're trying to achieve is to restore
-> > the SPE configuration to a state where it can be used by the host.
-> > 
-> > > However if the
-> > > guest are allowed to use profiling buffers changing E2PB settings, we
-> > 
-> > How can the guest be allowed to change E2PB settings? Or do you mean
-> > here that allowing the guest to use SPE will mandate changes of the
-> > E2PB settings, and that we'd better restore the hypervisor state once
-> > we exit?
-> > 
-> > > need to ensure we resume back MDCR_EL2.E2PB=b00. Currently we just
-> > > do bitwise '&' with MDCR_EL2_E2PB_MASK which will retain the value.
-> > > 
-> > > So fix it by clearing all the bits in E2PB.
-> > > 
-> > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > > Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-> > > ---
-> > >  arch/arm64/kvm/hyp/switch.c | 4 +---
-> > >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > > 
-> > > diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
-> > > index 72fbbd86eb5e..250f13910882 100644
-> > > --- a/arch/arm64/kvm/hyp/switch.c
-> > > +++ b/arch/arm64/kvm/hyp/switch.c
-> > > @@ -228,9 +228,7 @@ void deactivate_traps_vhe_put(void)
-> > >  {
-> > >  	u64 mdcr_el2 = read_sysreg(mdcr_el2);
-> > >  
-> > > -	mdcr_el2 &= MDCR_EL2_HPMN_MASK |
-> > > -		    MDCR_EL2_E2PB_MASK << MDCR_EL2_E2PB_SHIFT |
-> > > -		    MDCR_EL2_TPMS;
-> > > +	mdcr_el2 &= MDCR_EL2_HPMN_MASK | MDCR_EL2_TPMS;
-> > >  
-> > >  	write_sysreg(mdcr_el2, mdcr_el2);
-> > >  
-> > 
-> > I'm OK with this change, but I believe the commit message could use
-> > some tidying up.
-> 
-> No problem, I'll update the commit message.
+=D1=87=D1=82, 2 =D1=8F=D0=BD=D0=B2. 2020 =D0=B3., 12:08 Maxime Ripard <mrip=
+ard@kernel.org>:
+>
+> Hi,
+>
+> On Wed, Jan 01, 2020 at 10:47:50PM +0200, roman.stratiienko@globallogic.c=
+om wrote:
+> > From: Roman Stratiienko <roman.stratiienko@globallogic.com>
+> >
+> > According to DRM documentation the only difference between PRIMARY
+> > and OVERLAY plane is that each CRTC must have PRIMARY plane and
+> > OVERLAY are optional.
+> >
+> > Allow PRIMARY plane to have dimension different from full-screen.
+> >
+> > Fixes: 5bb5f5dafa1a ("drm/sun4i: Reorganize UI layer code in DE2")
+> > Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
+>
+> So it applies to all the 4 patches you've sent, but this lacks some
+> context.
+>
+> There's a few questions that should be answered here:
+>   - Which situation is it fixing?
 
-This is my new description:
+Setting primary plane size less than crtc breaks composition. Also
+shifting top left corner also breaks it.
 
-    arm64: KVM: reset E2PB correctly in MDCR_EL2 when exiting the guest (VHE)
-    
-    Upon leaving the guest on VHE systems we currently preserve the value of
-    MDCR_EL2.E2PB. This register determines if the SPE profiling buffer controls
-    are trapped and which translation regime they use.
-    
-    In order to permit guest access to SPE we may use a different translation
-    regime whilst the vCPU is scheduled - therefore let's ensure that upon leaving
-    the guest we set E2PB back to the value expected by the host (b00).
-    
-    For nVHE systems we already explictly set E2PB back to the expected value
-    of 0b11 in __deactivate_traps_nvhe.
+>   - What tool / userspace stack is it fixing?
 
-Thanks,
+I am using Android userspace and drm_hwcomposer HAL.
 
-Andrew Murray
+@Jernej, you've said that you observed similar issue. Could you share
+what userspace have you used?
 
-> 
-> Thanks,
-> 
-> Andrew Murray
-> 
-> > 
-> > Thanks,
-> > 
-> > 	M.
-> > -- 
-> > Jazz is not dead. It just smells funny...
-> _______________________________________________
-> kvmarm mailing list
-> kvmarm@lists.cs.columbia.edu
-> https://lists.cs.columbia.edu/mailman/listinfo/kvmarm
+>   - What happens with your fix? Do you set the plane at coordinates
+>     0,0 (meaning you'll crop the top-lef corner), do you center it? If
+>     the plane is smaller than the CTRC size, what is set on the edges?
+
+You can put primary plane to any part of the screen and make it as
+small as 8x8 (according to the datasheet) . Background would be filled
+with black color, that is default, but it also could be overridden by
+setting corresponding registers.
+
+>
+>
+> Thanks!
+> Maxime
