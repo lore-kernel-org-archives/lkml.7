@@ -2,108 +2,80 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFE5C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 18:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B20CC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 18:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 595E120866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 18:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D918921582
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 18:01:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="PQAb8bkB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgABSBn (ORCPT
+        id S1728000AbgABSBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 2 Jan 2020 13:01:44 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:54980 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727890AbgABSBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Jan 2020 13:01:43 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:42431 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727755AbgABSBn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 13:01:43 -0500
-Received: from [172.58.107.60] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1in4mw-0007Lz-Sp; Thu, 02 Jan 2020 18:01:39 +0000
-Date:   Thu, 2 Jan 2020 19:01:33 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Amanieu d'Antras <amanieu@gmail.com>, will.deacon@arm.com
-Cc:     linux-kernel@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        stable@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/7] arm64: Implement copy_thread_tls
-Message-ID: <20200102180130.hmpipoiiu3zsl2d6@wittgenstein>
-References: <20200102172413.654385-1-amanieu@gmail.com>
- <20200102172413.654385-3-amanieu@gmail.com>
+Received: from zn.tnic (p200300EC2F00E700329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f00:e700:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7A2E51EC0419;
+        Thu,  2 Jan 2020 19:01:37 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1577988097;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=tT0jvwjEfaD2BIfE3OdrlYZgbSWvbo0cYYcu6rKbP80=;
+        b=PQAb8bkB51WAgC5xGXXhFRDSY09onyZvEJoWoMXreMVZWQWnzog+GHEVELPv7STBa53feX
+        MK6obYcvNOZIc5L1kHTN9iKY6PAf+I37Xc4/aMJ135WO9SQOwrstgKhttGgydPvPidAaDy
+        z7rYqs+AuvvPDKmA53Ia+Y26j/90+uI=
+Date:   Thu, 2 Jan 2020 19:01:30 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Bhaskar Upadhaya <bupadhaya@marvell.com>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-edac@vger.kernel.org, lenb@kernel.org, rafael@kernel.org,
+        gkulkarni@marvell.com, rrichter@marvell.com,
+        bhaskar.upadhaya.linux@gmail.com
+Subject: Re: [RFC PATCH] apei/ghes: fix ghes_poll_func by registering in
+ non-deferrable mode
+Message-ID: <20200102180130.GG8345@zn.tnic>
+References: <1576652618-27017-1-git-send-email-bupadhaya@marvell.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200102172413.654385-3-amanieu@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1576652618-27017-1-git-send-email-bupadhaya@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 06:24:08PM +0100, Amanieu d'Antras wrote:
-> This is required for clone3 which passes the TLS value through a
-> struct rather than a register.
+On Tue, Dec 17, 2019 at 11:03:38PM -0800, Bhaskar Upadhaya wrote:
+> Currently Linux register ghes_poll_func with TIMER_DEFERRABLE flag,
+> because of which it is serviced when the CPU eventually wakes up with a
+> subsequent non-deferrable timer and not at the configured polling interval.
 > 
-> Signed-off-by: Amanieu d'Antras <amanieu@gmail.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: <stable@vger.kernel.org> # 5.3.x
+> For polling mode, the polling interval configured by firmware should not
+> be exceeded as per ACPI_6_3 spec[refer Table 18-394],
 
-This looks sane to me but I'd like an ack from someone who knows his arm
-from his arse before taking this. :)
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+I see
 
-> ---
->  arch/arm64/Kconfig          |  1 +
->  arch/arm64/kernel/process.c | 10 +++++-----
->  2 files changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index b1b4476ddb83..e688dfad0b72 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -138,6 +138,7 @@ config ARM64
->  	select HAVE_CMPXCHG_DOUBLE
->  	select HAVE_CMPXCHG_LOCAL
->  	select HAVE_CONTEXT_TRACKING
-> +	select HAVE_COPY_THREAD_TLS
->  	select HAVE_DEBUG_BUGVERBOSE
->  	select HAVE_DEBUG_KMEMLEAK
->  	select HAVE_DMA_CONTIGUOUS
-> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-> index 71f788cd2b18..d54586d5b031 100644
-> --- a/arch/arm64/kernel/process.c
-> +++ b/arch/arm64/kernel/process.c
-> @@ -360,8 +360,8 @@ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
->  
->  asmlinkage void ret_from_fork(void) asm("ret_from_fork");
->  
-> -int copy_thread(unsigned long clone_flags, unsigned long stack_start,
-> -		unsigned long stk_sz, struct task_struct *p)
-> +int copy_thread_tls(unsigned long clone_flags, unsigned long stack_start,
-> +		unsigned long stk_sz, struct task_struct *p, unsigned long tls)
->  {
->  	struct pt_regs *childregs = task_pt_regs(p);
->  
-> @@ -394,11 +394,11 @@ int copy_thread(unsigned long clone_flags, unsigned long stack_start,
->  		}
->  
->  		/*
-> -		 * If a TLS pointer was passed to clone (4th argument), use it
-> -		 * for the new thread.
-> +		 * If a TLS pointer was passed to clone, use it for the new
-> +		 * thread.
->  		 */
->  		if (clone_flags & CLONE_SETTLS)
-> -			p->thread.uw.tp_value = childregs->regs[3];
-> +			p->thread.uw.tp_value = tls;
->  	} else {
->  		memset(childregs, 0, sizeof(struct pt_regs));
->  		childregs->pstate = PSR_MODE_EL1h;
-> -- 
-> 2.24.1
-> 
+"Table 18-394 Hardware Error Notification Structure"
+
+where does it say that the interval should not be exceeded and what is
+going to happen if it gets exceeded?
+
+IOW, are you fixing something you're observing on some platform or
+you're reading the spec only?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
