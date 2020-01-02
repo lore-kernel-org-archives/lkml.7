@@ -2,206 +2,138 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E17C2D0DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F5BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E00A8215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF6F321734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:06:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f43dtVLE"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="n8L6eoWi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbgABGED (ORCPT
+        id S1726282AbgABGGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 01:04:03 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36101 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgABGEC (ORCPT
+        Thu, 2 Jan 2020 01:06:21 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:21638 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbgABGGU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 01:04:02 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 19so43171918otz.3;
-        Wed, 01 Jan 2020 22:04:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PkkzfRfLclc3mdFH+VRL0+gF0bnoP7beI/xdBP95oXE=;
-        b=f43dtVLEFGJ/myRkbv51HVHgqyy7kbhiZEQ+1edeQZRRgX6I1JP896HJWFhM5U9bZD
-         ObAfqehcQt+q5J/IMOMP5mKQGprjldV/H7DGcyg/cLbB3hlU2yBvVCJyiUfeGji0vxLr
-         JsEYfOwFh3YLAI3BQYNmuxmzpHWBQKWdKYGtvUqc7aoxLSgCahP1XUq0oY4lHXRnHOE7
-         sikBKsd0NDKuOyhBGkObbdyypp3Qg4BNnayYyiovPjoSk622ytArAY9LhWCDDoot2TA0
-         5qusI+Se3WH2JX+J1Dj961Dzr0kYkKMLu6jTT0lCKd3flsAkvs44qktibVhtQM4jmrlq
-         yS7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PkkzfRfLclc3mdFH+VRL0+gF0bnoP7beI/xdBP95oXE=;
-        b=aNB+YiX2JLZvZEbU5QCMrwuiMxbKEHN/mcUxURg5UU4ifI4kNQO8Po2SW7ldenaIq7
-         mJrHKKzmbdajhnwE3zR86FbGJDDhG/6ytOwEJL9pWvQ3v2+YRSeq3dDV8dKIt5gArRGe
-         ZVTlGr5+fE2foWrCOaMu0ITtqkR1NLE65qBcw5xHKeHiZKo7gXE650QsSof3TSZncGy6
-         nnd8dxc7dFaBwB/eQvz/mB3jq2L7Gg1KzjmiwqRckcNmu9t0JNEYxPzlrIcHL0hhW1br
-         6hR4EYBBPQksSluTF7eBJeYXGMB35ScvKyF/ErOxkwSM+YhiM4czlGMz+Z0afyX2yjjJ
-         13qg==
-X-Gm-Message-State: APjAAAW/H2T0O0Gfb37GR9iT1+8ZLASzsuaMf4Z0V0UiU1SbEKH7vz1b
-        udl2yHqE9JlmhgVCXnd3V4jygOPk9A7aQ5TH0BY=
-X-Google-Smtp-Source: APXvYqz4mYWq5mK6aHxgJ2hSTAhExRG23JCyVmVnG4f3RwJ5bW740BxGzqMyxTtrWMldH88EkxJtO+uzdWVmO9mfYuI=
-X-Received: by 2002:a9d:6c92:: with SMTP id c18mr75128173otr.157.1577945041391;
- Wed, 01 Jan 2020 22:04:01 -0800 (PST)
+        Thu, 2 Jan 2020 01:06:20 -0500
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200102060619epoutp03d992f9745b9b5e14975ff497f3831088~l-Met75ui0432704327epoutp03B
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jan 2020 06:06:19 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200102060619epoutp03d992f9745b9b5e14975ff497f3831088~l-Met75ui0432704327epoutp03B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1577945179;
+        bh=iiwDFsSq7I+vznqNBy0yhlQ/JOVo+ktu5saryrjetFM=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=n8L6eoWiVHxtI7PIEGu7Gic0KkaMPo5/DTQHwjmXwW4AhZchue6GVBImi7H3NvdbB
+         93ENkKejJvUYs7ig2KE5NCYwXBG47a5Z7vY8j+LkG9B3ykDpNHErh/oE9D/FjUmFKJ
+         kaZ4Unr/SIv0z2Hg++whvhTDHert5ptZA2EEHrqs=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200102060618epcas1p38591a94fdad40315ec7bf587f9baae06~l-MeRJECH2982729827epcas1p3t;
+        Thu,  2 Jan 2020 06:06:18 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.162]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 47pHbY48VNzMqYkj; Thu,  2 Jan
+        2020 06:06:17 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        76.EC.48498.9588D0E5; Thu,  2 Jan 2020 15:06:17 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200102060617epcas1p19e7808cf1f4008f9b906f902ec969b20~l-MdDMptW1921619216epcas1p1I;
+        Thu,  2 Jan 2020 06:06:17 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200102060617epsmtrp1bf7c264a94bcd14151b92c7a9ad8e29b~l-MdCe0fY1453814538epsmtrp1A;
+        Thu,  2 Jan 2020 06:06:17 +0000 (GMT)
+X-AuditID: b6c32a36-ea9ad9c00001bd72-87-5e0d88599598
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        85.1F.06569.9588D0E5; Thu,  2 Jan 2020 15:06:17 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200102060617epsmtip15751be7503d40289c7d56b096ffd3b3a~l-Mc7ki4m2577025770epsmtip1E;
+        Thu,  2 Jan 2020 06:06:17 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     =?utf-8?Q?'Pali_Roh=C3=A1r'?= <pali.rohar@gmail.com>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>, <valdis.kletnieks@vt.edu>,
+        <hch@lst.de>, <sj1557.seo@samsung.com>, <linkinjeon@gmail.com>
+In-Reply-To: <20191229134025.qb3mmqatsn5c4gao@pali>
+Subject: RE: [PATCH v8 02/13] exfat: add super block operations
+Date:   Thu, 2 Jan 2020 15:06:16 +0900
+Message-ID: <000701d5c132$bed73c80$3c85b580$@samsung.com>
 MIME-Version: 1.0
-References: <20191230132006.7401-1-masahiroy@kernel.org> <CAMrEMU_5XmUmKmF99gg-RBkBAvpAbnM6G=Y0cBajcE2HMUQssg@mail.gmail.com>
- <CAK7LNASh89xrM3Q2VwSgufU05prVDUz8Lo0eQC+QfmH=eFXJmg@mail.gmail.com>
-In-Reply-To: <CAK7LNASh89xrM3Q2VwSgufU05prVDUz8Lo0eQC+QfmH=eFXJmg@mail.gmail.com>
-From:   Justin Capella <justincapella@gmail.com>
-Date:   Wed, 1 Jan 2020 22:03:49 -0800
-Message-ID: <CAMrEMU88d0dZdcMkdcT8t8TB7FSyttgdMaZVoiwA_8OLt+cFKw@mail.gmail.com>
-Subject: Re: [PATCH] initramfs: fix 'bad variable name' error in gen_initramfs_list.sh
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "Jory A . Pratt" <anarchy@gentoo.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQHsN8nXp7WTsPLA/dnVZpcSktwQNAEpoQLVAH0AW2oCon8f8qeHqjkw
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRTm3d3urtbqdjM9GOS61A+F5eacXstlUdhAqZn0oyDXTW9utS92
+        t74Msi8zM0vyT0vFPiHLrLTUlRgriVX0sSgzEFFMnH0XZrGott1F/nvOeZ9znnOe9xAY1YIn
+        Eiark3NYWTONx4pv3UtOVayvlBUp28bmMQfOteLMpcu9IqZv4A3G3On2iZkXnnqcqX0UFDHt
+        v+9LGP+nz+JlhK7LPSDV9TRckepu95fjupr2ZqT7dmOeztvxHtfjG8zZRo4t4RxyzlpsKzFZ
+        S7V0XqFhhUGToVQpVFlMJi23shZOS6/M1ytyTebQQLR8O2t2hVJ6lufp1KXZDpvLycmNNt6p
+        pTl7idmuUtoX8ayFd1lLFxXbLItVSmWaJsTcZDa++v4T2evxnUF/JV6O6iRViCCATIeTY+lV
+        KJagyE4EjZcbcCH4iiA4ekEiBN8RPOy7i1WhmEjFed87SRhTZDeCb4NRUgDB7cMtePgBJxXw
+        +1dPBMeRDHT2TkbaYuRdBENXr0eqY0g17GsKREizyRy49qxNFJ5JTC6AN8Orw2kZmQW1I/US
+        Ac8C36kRcRhjZBJ0fKiPDiSHn28vSgStXPC9rEMCJw5OH6nAwrpA/sHB+yEoEQpWQnXjMVzA
+        s2H8QbtUwIkQOF4hFXwpgy890f6VCMYmtQJWQ3/rtYh1GJkMrZ5UIT0fuoINUdkZ8HGiOuqu
+        DCorKIGyEGr890QCngtVhz9LTyDaPWUx95TF3FMWcP8Xa0LiZhTP2XlLKcer7GlTv/oGipxq
+        SkYnOvsk34tIAtHTZa8bpxdREnY7v8viRUBgdJxsR4GsiJKVsLt2cw6bweEyc7wXaUK212KJ
+        c4ptocO3Og0qTZparWbSMzIzNGo6QUb8eL6RIktZJ7eN4+yc41+diIhJLEfSJ1kdOTnZ2rlJ
+        E6/ib+6/qT8Yd2ZQaRvU9TzqJbR98YpDHzd39y9/MWyiHL6nrrWmzoMtR/ito4bnE0dnFRiS
+        mpdsG55ZkLBq1aGF4+MeT12h/umcZWdMZW3KPdSke0VOvnFaXlcuNbRlXewmT8D/oOwXDf7H
+        AXyDL2XN2ry952kxb2RVKZiDZ/8CSiiTV8ADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSnG5kB2+cwdRebovmxevZLFauPspk
+        cf3uLWaLPXtPslhc3jWHzWLi6d9MFlv+HWG1uPT+A4sDh8fOWXfZPfbPXcPusftmA5tH35ZV
+        jB6fN8l5HNr+hi2ALYrLJiU1J7MstUjfLoEr49q3n4wFc9gqfl/qYGtgnMLaxcjJISFgIrHk
+        5Gsgm4tDSGA3o8ThrkMsEAlpiWMnzjB3MXIA2cIShw8XQ9Q8Z5SYMauTHaSGTUBX4t+f/Wwg
+        toiAhcSOo9/ZQIqYBU4wSpzpvwW2QUjgGaPE6mXeIDangLFE44KXYA3CAvYSGy5sZgJZwCKg
+        InHrkR9ImFfAUmLikzmsELagxMmZT8DuYRbQlnh68ymULS+x/e0cZog7FSR+Pl3GCnGDm8TJ
+        q1MYIWpEJGZ3tjFPYBSehWTULCSjZiEZNQtJywJGllWMkqkFxbnpucWGBUZ5qeV6xYm5xaV5
+        6XrJ+bmbGMERpqW1g/HEifhDjAIcjEo8vDfm8cQJsSaWFVfmHmKU4GBWEuEtD+SNE+JNSays
+        Si3Kjy8qzUktPsQozcGiJM4rn38sUkggPbEkNTs1tSC1CCbLxMEp1cAoObllS5hhaOuGQ2IH
+        Ly34s9SG33u92YnZe5L3JBpo/6urufHZ+IXl5UP+v3IbKzfoPzXbeOv8WeZuaTtWEXtbi67e
+        tFs2Gy9LrL4zSTuHPfffCvsKrsiQFxsK+du++G3jKZaZWKAWWGR/UGb75ogv4Zn/5scdObKi
+        ue3kRLlzV1masx68PumtxFKckWioxVxUnAgA6rMR+qwCAAA=
+X-CMS-MailID: 20200102060617epcas1p19e7808cf1f4008f9b906f902ec969b20
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191220062733epcas1p31665a3ae968ab8c70d91a3cddf529e73
+References: <20191220062419.23516-1-namjae.jeon@samsung.com>
+        <CGME20191220062733epcas1p31665a3ae968ab8c70d91a3cddf529e73@epcas1p3.samsung.com>
+        <20191220062419.23516-3-namjae.jeon@samsung.com>
+        <20191229134025.qb3mmqatsn5c4gao@pali>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ah, I was wondering where the magic cmd_ prefix was coming from. But I
-still think that there is an issue there-- initfs vs initRAMfs
+> > +static const struct fs_parameter_spec exfat_param_specs[] = {
+> > +	fsparam_u32("uid",			Opt_uid),
+> > +	fsparam_u32("gid",			Opt_gid),
+> > +	fsparam_u32oct("umask",			Opt_umask),
+> > +	fsparam_u32oct("dmask",			Opt_dmask),
+> > +	fsparam_u32oct("fmask",			Opt_fmask),
+> > +	fsparam_u32oct("allow_utime",		Opt_allow_utime),
+> > +	fsparam_string("iocharset",		Opt_charset),
+> > +	fsparam_flag("utf8",			Opt_utf8),
+> 
+> Hello! What is the purpose of having extra special "utf8" mount option?
+> Is not one "iocharset=utf8" option enough?
+utf8 nls_table supports utf8<->utf32 conversion and does not support
+surrogate character conversion. The utf8 option can support the surrogate
+character conversion of utf16 using utf16s_to_utf8s/utf8s_to_utf16s of
+the nls base.
 
-On Tue, Dec 31, 2019 at 2:28 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> On Tue, Dec 31, 2019 at 12:13 AM Justin Capella <justincapella@gmail.com> wrote:
-> >
-> > I was looking at this, and in theory there are other problems that
-> > could arise from non-escaped characters, or things with leading
-> > hyphens... In general it isn't great to assume ls output will play
-> > nicely with the internal field separator / IFS. I think a better
-> > solution would be to use something like ${foo@Q} and instead of trying
-> > to scrape ls -l, maybe using stat, since it can be asked to print out
-> > the device number.
->
-> I am not sure if 'stat' is necessarily preferred over 'ls -l'.
->
-> Commit a670b0b4aed129dc11b465c1c330bfe9202023e5
-> says 'stat' is not standardized.
->
-> There is some room for argument
-> how far we should care about the portability, though.
->
->
-> >
-> > But I don't think this patch fixes the problem mentioned at all-- I
-> > think the problem is initfs is not a variable name on line 61:
->
-> cmd_initramfs is defined at line 46.
->
-> Look into scripts/Kbuild.include
-> if you want to know how if_changed works.
->
->
-> > $(call if_changed,initfs)
-> >
-> > https://github.com/torvalds/linux/blob/351c8a09b00b5c51c8f58b016fffe51f87e2d820/usr/Makefile#L61
-> >
-> > The Makefile and script look like more patches would be needed to fix
-> > mentioned issue, and I'm kind of wondering what the intent behind
-> > lines 31-32 is...
-> >
-> > ramfs-input := $(if $(filter-out "",$(CONFIG_INITRAMFS_SOURCE)), \
-> > $(shell echo $(CONFIG_INITRAMFS_SOURCE)),-d)
-> >
-> > why filter nothing, why shell echo?
->
-> It does filter "", which is different from nothing.
->
-> You need to notice GNU Make handles double-quote (")
-> as a normal character.
-> There is no special meaning as it has in shell.
->
-> 'echo' is used just for ripping off the double-quotes.
->
->
-> >
-> > Quoting and/or proper escaping would be needed in many other places,
-> > and I suspect cpio input is always regenerated...
->
-> I do not think so.
->
-> If the cpio input is regenerated,
-> the following log is shown.
->
-> GEN     usr/initramfs_data.cpio
->
->
-> I do not see it every time.
->
->
-> > The use of sed to
-> > manually escape things and suggesting using \ instead of using the
-> > argument terminator "--"... If weird paths with spaces and stuff are a
-> > requirement for the script needs some overhauling
->
-> If you find a problem in particular, a patch is welcome.
->
-> But, what you stated above comes from your misunderstanding.
->
->
->
->
-> > On Mon, Dec 30, 2019 at 5:21 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > >
-> > > Prior to commit 858805b336be ("kbuild: add $(BASH) to run scripts with
-> > > bash-extension"), this shell script was almost always run by bash since
-> > > bash is usually installed on the system by default.
-> > >
-> > > Now, this script is run by sh, which might be a symlink to dash. On such
-> > > distros, the following code emits an error:
-> > >
-> > >   local dev=`LC_ALL=C ls -l "${location}"`
-> > >
-> > > You can reproduce the build error, for example by setting
-> > > CONFIG_INITRAMFS_SOURCE="/dev".
-> > >
-> > >     GEN     usr/initramfs_data.cpio.gz
-> > >   ./usr/gen_initramfs_list.sh: 131: local: 1: bad variable name
-> > >   make[1]: *** [usr/Makefile:61: usr/initramfs_data.cpio.gz] Error 2
-> > >
-> > > This is because `LC_ALL=C ls -l "${location}"` contains spaces.
-> > > Surrounding it with double-quotes fixes the error.
-> > >
-> > > Fixes: 858805b336be ("kbuild: add $(BASH) to run scripts with bash-extension")
-> > > Reported-by: Jory A. Pratt <anarchy@gentoo.org>
-> > > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> > > ---
-> > >
-> > >  usr/gen_initramfs_list.sh | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/usr/gen_initramfs_list.sh b/usr/gen_initramfs_list.sh
-> > > index 0aad760fcd8c..2bbac73e6477 100755
-> > > --- a/usr/gen_initramfs_list.sh
-> > > +++ b/usr/gen_initramfs_list.sh
-> > > @@ -128,7 +128,7 @@ parse() {
-> > >                         str="${ftype} ${name} ${location} ${str}"
-> > >                         ;;
-> > >                 "nod")
-> > > -                       local dev=`LC_ALL=C ls -l "${location}"`
-> > > +                       local dev="`LC_ALL=C ls -l "${location}"`"
-> > >                         local maj=`field 5 ${dev}`
-> > >                         local min=`field 6 ${dev}`
-> > >                         maj=${maj%,}
-> > > --
-> > > 2.17.1
-> > >
->
->
->
-> --
-> Best Regards
-> Masahiro Yamada
+Thanks!
+
