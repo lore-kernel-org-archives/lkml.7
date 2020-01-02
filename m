@@ -2,50 +2,58 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B95C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB71C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E5E02253D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8508324649
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:27:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004050;
-	bh=iPj0zluIWzyqWRoO57oi2l4TB1Hqdaa8CAffhmRVyYI=;
+	s=default; t=1578004053;
+	bh=yfX2936HdLwEjC2mjPifYsObvdINNUm4mZVAF/eQtqc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I/Mn0M7nfzzlO0NmGkcF8NyE1pRFXrlVZ12/wiwy69r+bF9Ne5dzNyub12gvBTelr
-	 ne5yx82cCD94bohUAe90YcGtykMVMe0GV1TxC575sXeQke4bb+fGdC6zJW+oHP1goa
-	 jR7H8vwo/c3qoJa6HL9jpQFE+WQ7to2ORAAnu0Ao=
+	b=tL8L+vPDF+WGGh61UXGV3GLPRc9niYiVDepO6iVKlvKljGVoAWOxAFWRvM267kW2a
+	 tzgMvgCbk8ngGRzKz2O5px2GuP3zC31exdH+yhFW4SoKc1+L/FjbwqvWhCIvQUZ0HF
+	 4gsFa/1AR7fUenEx7cZJDhjABXZzEBMLDSyteTV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729747AbgABW13 (ORCPT
+        id S1729544AbgABW1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:27:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55868 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:27:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729737AbgABW10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:27:26 -0500
+        id S1729739AbgABW12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:27:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FCF42253D;
-        Thu,  2 Jan 2020 22:27:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 891D220863;
+        Thu,  2 Jan 2020 22:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004045;
-        bh=iPj0zluIWzyqWRoO57oi2l4TB1Hqdaa8CAffhmRVyYI=;
+        s=default; t=1578004048;
+        bh=yfX2936HdLwEjC2mjPifYsObvdINNUm4mZVAF/eQtqc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=csbm6LuH9Zh8UIeN2Rv8suH0bQ4UHJU/Yksj1lsxiEMCVC+gPSWAUT9sBmmxIf+59
-         eS3cjnP9F0gc8040+kK3xJoIa1KsMMWTs8/SLqx2yQY2dAlGnQmE6pt2U1Bdm8M++q
-         dNgWbV4/xbHwqqOWVBN58I2OE2e8a+ULERu7CTi8=
+        b=daNf4ZqB9GyWkZceTSd2rjPHjO48Xs76IKALVsanEFC1YA+S6649HHq7AMk/7Zvdk
+         9VHbO8/UeSNA+1d8iOe7121f4aHL4+T66B54U4U9orQVuXOmmCHTrr/oCCCuuoiedE
+         /+McsK5W0gz9W7d12uLoENU0TdlAgIApUpKUPW7Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 006/171] ALSA: hda/ca0132 - Avoid endless loop
-Date:   Thu,  2 Jan 2020 23:05:37 +0100
-Message-Id: <20200102220547.819086859@linuxfoundation.org>
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        Todd Previte <tprevite@gmail.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 007/171] drm: mst: Fix query_payload ack reply struct
+Date:   Thu,  2 Jan 2020 23:05:38 +0100
+Message-Id: <20200102220547.954943579@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -58,42 +66,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Sean Paul <seanpaul@chromium.org>
 
-commit cb04fc3b6b076f67d228a0b7d096c69ad486c09c upstream.
+[ Upstream commit 268de6530aa18fe5773062367fd119f0045f6e88 ]
 
-Introduce a timeout to dspio_clear_response_queue() so that it won't
-be caught in an endless loop even if the hardware doesn't respond
-properly.
+Spec says[1] Allocated_PBN is 16 bits
 
-Fixes: a73d511c4867 ("ALSA: hda/ca0132: Add unsol handler for DSP and jack detection")
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191213085111.22855-3-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[1]- DisplayPort 1.2 Spec, Section 2.11.9.8, Table 2-98
 
+Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0.6)")
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Todd Previte <tprevite@gmail.com>
+Cc: Dave Airlie <airlied@redhat.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190829165223.129662-1-sean@poorly.run
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_ca0132.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ include/drm/drm_dp_mst_helper.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_ca0132.c
-+++ b/sound/pci/hda/patch_ca0132.c
-@@ -1300,13 +1300,14 @@ struct scp_msg {
+diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helper.h
+index 003207670597..c0542de64690 100644
+--- a/include/drm/drm_dp_mst_helper.h
++++ b/include/drm/drm_dp_mst_helper.h
+@@ -312,7 +312,7 @@ struct drm_dp_resource_status_notify {
  
- static void dspio_clear_response_queue(struct hda_codec *codec)
- {
-+	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
- 	unsigned int dummy = 0;
--	int status = -1;
-+	int status;
+ struct drm_dp_query_payload_ack_reply {
+ 	u8 port_number;
+-	u8 allocated_pbn;
++	u16 allocated_pbn;
+ };
  
- 	/* clear all from the response queue */
- 	do {
- 		status = dspio_read(codec, &dummy);
--	} while (status == 0);
-+	} while (status == 0 && time_before(jiffies, timeout));
- }
- 
- static int dspio_get_response_data(struct hda_codec *codec)
+ struct drm_dp_sideband_msg_req_body {
+-- 
+2.20.1
+
 
 
