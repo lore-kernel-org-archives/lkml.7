@@ -2,51 +2,54 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB5FC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E2BC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 707C520848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E805720863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005162;
-	bh=aynnZg1Zp9sJfa60R+Dxa0s0biQO2MN521u2guWaLWY=;
+	s=default; t=1578005165;
+	bh=DF/zNNSmy9moWJcGF6ffgJY4tdKF7S2cTuVnmuVeuDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dRqKuqja2T+Kg310vSdhbeyYxodHGsYqeHYqLg7en0RkEn1tdO99uJ/JIZHIzOD4V
-	 DwpBnAXGqUiJI7W8cFjN/FUrIhguebloCj1bvy+7hkTF16MOc4xQ9XfU9mvfZiQ75A
-	 1c5gqcZOujGyqBWyWuJRzJS6wLvEr+FQ5O0Ir1pM=
+	b=1zYT2C5VW2lrlslhBO2FLJvkPK7FrOOCkZktfUpEh5jbhWdVg3aQG87kmS8K7vkm1
+	 SxURfBspwi/cNR/PSlKqoHIC++NrYC842hA2E8+ZSKmHNrQ4irL78sd25X9rbiMnJh
+	 HAuKpr3IwpEJNTtKlbl/z/5GGSNTttFREbQIVX2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730583AbgABWqB (ORCPT
+        id S1730270AbgABWbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:46:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36464 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:31:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730276AbgABWbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:31:22 -0500
+        id S1730120AbgABWbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:31:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2D13222C3;
-        Thu,  2 Jan 2020 22:31:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2ACEE20866;
+        Thu,  2 Jan 2020 22:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004282;
-        bh=aynnZg1Zp9sJfa60R+Dxa0s0biQO2MN521u2guWaLWY=;
+        s=default; t=1578004272;
+        bh=DF/zNNSmy9moWJcGF6ffgJY4tdKF7S2cTuVnmuVeuDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=elPd0c7Y1C42A2BxAIJTIhAuTGWmeWFqy5qG/9PAmor7yt0phheWfS9jwre0T1Q3M
-         0S35nGtu0fhAnYaH/Al0wNjURu8YU4jHxpwD5ccOLLMdgHMBmrivutFL3tsDa2cOdS
-         X9p5nrgKFAeDbIW97zxoWg/fa01xNOAa7Tj6Y8Cs=
+        b=j1vjZYyca/6V7yIX9zRMnXtPQyzATLYCW2bwj0D02dthUE5q2uDQ46sOhiRzYewXF
+         1sFSGJw/odXx9yPg/jpAKeVKoyVz5DO3m5oyqDpv+KoG2aXYvGnduzKA1nb3zwdGNn
+         QwcElm/IUwki2DpZFupAuo5n2uMuU5GsqLcim3Dk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 114/171] iommu/tegra-smmu: Fix page tables in > 4 GiB memory
-Date:   Thu,  2 Jan 2020 23:07:25 +0100
-Message-Id: <20200102220602.935641330@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Thomas Backlund <tmb@mageia.org>
+Subject: [PATCH 4.9 110/171] perf probe: Fix to show function entry line as probe-able
+Date:   Thu,  2 Jan 2020 23:07:21 +0100
+Message-Id: <20200102220602.398963748@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -59,79 +62,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 96d3ab802e4930a29a33934373157d6dff1b2c7e ]
+commit 91e2f539eeda26ab00bd03fae8dc434c128c85ed upstream.
 
-Page tables that reside in physical memory beyond the 4 GiB boundary are
-currently not working properly. The reason is that when the physical
-address for page directory entries is read, it gets truncated at 32 bits
-and can cause crashes when passing that address to the DMA API.
+Fix die_walk_lines() to list the function entry line correctly.  Since
+the dwarf_entrypc() does not return the entry pc if the DIE has only
+range attribute, __die_walk_funclines() fails to list the declaration
+line (entry line) in that case.
 
-Fix this by first casting the PDE value to a dma_addr_t and then using
-the page frame number mask for the SMMU instance to mask out the invalid
-bits, which are typically used for mapping attributes, etc.
+To solve this issue, this introduces die_entrypc() which correctly
+returns the entry PC (the first address range) even if the DIE has only
+range attribute. With this fix die_walk_lines() shows the function entry
+line is able to probe correctly.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157190837419.1859.4619125803596816752.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Thomas Backlund <tmb@mageia.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/iommu/tegra-smmu.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ tools/perf/util/dwarf-aux.c |   24 +++++++++++++++++++++++-
+ tools/perf/util/dwarf-aux.h |    3 +++
+ 2 files changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-index c4eb293b1524..04cec050e42b 100644
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -153,9 +153,9 @@ static bool smmu_dma_addr_valid(struct tegra_smmu *smmu, dma_addr_t addr)
- 	return (addr & smmu->pfn_mask) == addr;
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -318,6 +318,28 @@ bool die_is_func_def(Dwarf_Die *dw_die)
  }
  
--static dma_addr_t smmu_pde_to_dma(u32 pde)
-+static dma_addr_t smmu_pde_to_dma(struct tegra_smmu *smmu, u32 pde)
- {
--	return pde << 12;
-+	return (dma_addr_t)(pde & smmu->pfn_mask) << 12;
- }
+ /**
++ * die_entrypc - Returns entry PC (the lowest address) of a DIE
++ * @dw_die: a DIE
++ * @addr: where to store entry PC
++ *
++ * Since dwarf_entrypc() does not return entry PC if the DIE has only address
++ * range, we have to use this to retrieve the lowest address from the address
++ * range attribute.
++ */
++int die_entrypc(Dwarf_Die *dw_die, Dwarf_Addr *addr)
++{
++	Dwarf_Addr base, end;
++
++	if (!addr)
++		return -EINVAL;
++
++	if (dwarf_entrypc(dw_die, addr) == 0)
++		return 0;
++
++	return dwarf_ranges(dw_die, 0, &base, addr, &end) < 0 ? -ENOENT : 0;
++}
++
++/**
+  * die_is_func_instance - Ensure that this DIE is an instance of a subprogram
+  * @dw_die: a DIE
+  *
+@@ -730,7 +752,7 @@ static int __die_walk_funclines(Dwarf_Di
+ 	/* Handle function declaration line */
+ 	fname = dwarf_decl_file(sp_die);
+ 	if (fname && dwarf_decl_line(sp_die, &lineno) == 0 &&
+-	    dwarf_entrypc(sp_die, &addr) == 0) {
++	    die_entrypc(sp_die, &addr) == 0) {
+ 		lw.retval = callback(fname, lineno, addr, data);
+ 		if (lw.retval != 0)
+ 			goto done;
+--- a/tools/perf/util/dwarf-aux.h
++++ b/tools/perf/util/dwarf-aux.h
+@@ -41,6 +41,9 @@ int cu_walk_functions_at(Dwarf_Die *cu_d
+ /* Get DW_AT_linkage_name (should be NULL for C binary) */
+ const char *die_get_linkage_name(Dwarf_Die *dw_die);
  
- static void smmu_flush_ptc_all(struct tegra_smmu *smmu)
-@@ -540,6 +540,7 @@ static u32 *tegra_smmu_pte_lookup(struct tegra_smmu_as *as, unsigned long iova,
- 				  dma_addr_t *dmap)
- {
- 	unsigned int pd_index = iova_pd_index(iova);
-+	struct tegra_smmu *smmu = as->smmu;
- 	struct page *pt_page;
- 	u32 *pd;
++/* Get the lowest PC in DIE (including range list) */
++int die_entrypc(Dwarf_Die *dw_die, Dwarf_Addr *addr);
++
+ /* Ensure that this DIE is a subprogram and definition (not declaration) */
+ bool die_is_func_def(Dwarf_Die *dw_die);
  
-@@ -548,7 +549,7 @@ static u32 *tegra_smmu_pte_lookup(struct tegra_smmu_as *as, unsigned long iova,
- 		return NULL;
- 
- 	pd = page_address(as->pd);
--	*dmap = smmu_pde_to_dma(pd[pd_index]);
-+	*dmap = smmu_pde_to_dma(smmu, pd[pd_index]);
- 
- 	return tegra_smmu_pte_offset(pt_page, iova);
- }
-@@ -590,7 +591,7 @@ static u32 *as_get_pte(struct tegra_smmu_as *as, dma_addr_t iova,
- 	} else {
- 		u32 *pd = page_address(as->pd);
- 
--		*dmap = smmu_pde_to_dma(pd[pde]);
-+		*dmap = smmu_pde_to_dma(smmu, pd[pde]);
- 	}
- 
- 	return tegra_smmu_pte_offset(as->pts[pde], iova);
-@@ -615,7 +616,7 @@ static void tegra_smmu_pte_put_use(struct tegra_smmu_as *as, unsigned long iova)
- 	if (--as->count[pde] == 0) {
- 		struct tegra_smmu *smmu = as->smmu;
- 		u32 *pd = page_address(as->pd);
--		dma_addr_t pte_dma = smmu_pde_to_dma(pd[pde]);
-+		dma_addr_t pte_dma = smmu_pde_to_dma(smmu, pd[pde]);
- 
- 		tegra_smmu_set_pde(as, iova, 0);
- 
--- 
-2.20.1
-
 
 
