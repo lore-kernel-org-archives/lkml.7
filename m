@@ -2,134 +2,68 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2943C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF3AC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8317020848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 342FF206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:35:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728747AbgABP1Y convert rfc822-to-8bit (ORCPT
+        id S1728729AbgABPfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 10:27:24 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2221 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728561AbgABP1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 10:27:24 -0500
-Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id B45E849FCBA97A570CA8;
-        Thu,  2 Jan 2020 15:27:22 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- LHREML714-CAH.china.huawei.com (10.201.108.37) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 2 Jan 2020 15:27:22 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Thu, 2 Jan 2020
- 15:27:22 +0000
-Date:   Thu, 2 Jan 2020 15:27:19 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Brice Goglin <brice.goglin@gmail.com>
-CC:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>,
-        Keith Busch <kbusch@kernel.org>, <jglisse@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>, <linuxarm@huawei.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tao Xu <tao3.xu@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V6 0/7] ACPI: Support Generic Initiator proximity
- domains
-Message-ID: <20200102152604.000039f1@Huawei.com>
-In-Reply-To: <1867024e-b0c4-c291-7190-262cc4b297a8@gmail.com>
-References: <20191216153809.105463-1-Jonathan.Cameron@huawei.com>
- <dc5f5502-09c6-d476-db0e-0af3412bb031@gmail.com>
- <20191218145041.00005a11@Huawei.com>
- <1867024e-b0c4-c291-7190-262cc4b297a8@gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Thu, 2 Jan 2020 10:35:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:59156 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728561AbgABPfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 10:35:50 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3F850AD31;
+        Thu,  2 Jan 2020 15:35:49 +0000 (UTC)
+Date:   Thu, 2 Jan 2020 16:35:48 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     John Ogness <john.ogness@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] printk: fix exclusive_console replaying
+Message-ID: <20200102153548.nrn4cce4gg4oiwhe@pathway.suse.cz>
+References: <20191219115322.31160-1-john.ogness@linutronix.de>
+ <20191223001801.GA121292@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191223001801.GA121292@google.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Dec 2019 22:40:18 +0100
-Brice Goglin <brice.goglin@gmail.com> wrote:
-
-> Le 18/12/2019 à 15:50, Jonathan Cameron a écrit :
-> > On Wed, 18 Dec 2019 12:32:06 +0100
-> > Brice Goglin <brice.goglin@gmail.com> wrote:
-> >  
-> >> Le 16/12/2019 à 16:38, Jonathan Cameron a écrit :  
-> >>> Introduces a new type of NUMA node for cases where we want to represent
-> >>> the access characteristics of a non CPU initiator of memory requests,
-> >>> as these differ from all those for existing nodes containing CPUs and/or
-> >>> memory.
-> >>>
-> >>> These Generic Initiators are presented by the node access0 class in
-> >>> sysfs in the same way as a CPU.   It seems likely that there will be
-> >>> usecases in which the best 'CPU' is desired and Generic Initiators
-> >>> should be ignored.  The final few patches in this series introduced
-> >>> access1 which is a new performance class in the sysfs node description
-> >>> which presents only CPU to memory relationships.  Test cases for this
-> >>> are described below.    
-> >>
-> >> Hello Jonathan
-> >>
-> >> If I want to test this with a fake GI, what are the minimal set of
-> >> changes I should put in my ACPI tables? Can I just specify a dummy GI in
-> >> SRAT? What handle should I use there?  
-> > Exactly that for a dummy GI.  Also extend HMAT and SLIT for the extra
-> > proximity domain / initiator.  
+On Mon 2019-12-23 09:18:01, Sergey Senozhatsky wrote:
+> On (19/12/19 12:59), John Ogness wrote:
+> > Commit f92b070f2dc8 ("printk: Do not miss new messages when replaying
+> > the log") introduced a new variable @exclusive_console_stop_seq to
+> > store when an exclusive console should stop printing. It should be
+> > set to the @console_seq value at registration. However, @console_seq
+> > is previously set to @syslog_seq so that the exclusive console knows
+> > where to begin. This results in the exclusive console immediately
+> > reactivating all the other consoles and thus repeating the messages
+> > for those consoles.
+> > 
+> > Set @console_seq after @exclusive_console_stop_seq has stored the
+> > current @console_seq value.
+> > 
+> > Fixes: f92b070f2dc8 ("printk: Do not miss new messages when replaying the log")
+> > Signed-off-by: John Ogness <john.ogness@linutronix.de>
 > 
-> 
-> I couldn't get this to work (your patches on top of 5.5-rc2). I added
-> the GI in SRAT, and extended HMAT and SLIT accordingly.
-> 
-> I don't know if that's expected but I get an additional node in sysfs,
-> with 0kB memory.
-> 
-> However the HMAT table gets ignored because find_mem_target() fails in
-> hmat_parse_proximity_domain(). The target should have been allocated in
-> alloc_memory_target() which is called in srat_parse_mem_affinity(), but
-> it seems to me that this function isn't called for GI nodes. Or should
-> SRAT also contain a normal Memory node with same PM as the GI?
-> 
-Hi Brice,
+> Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-Yes you should see a node with 0kB memory.  Same as you get for a processor
-only node I believe.
+The patch has been commited into printk.git, branch for-5.6.
 
-srat_parse_mem_affinity shouldn't call alloc_memory_target for the GI nodes
-as they don't have any memory.   The hmat table should only refer to
-GI domains as initiators.  Just to check, do you have them listed as
-a target node?  Or perhaps in some hmat proximity entry as memory_PD?
-
-To answer your question, SRAT should not contain a normal memory node
-with the same PXM as that would defeat the whole purpose as we would have
-been able to have such a domain without Generic Initiators.
-
-Also, just to check, x86 or arm64?
-
-Thanks for testing this.
-
-Jonathan
-
-
-> Brice
-> 
-> 
-
-
+Best Regards,
+Petr
