@@ -2,56 +2,54 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4E5C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41491C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E510121835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1195820863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003813;
-	bh=BSA/pcBUGl1nwFwAirAYzR7/hzKPhS7OOnadprGSpm0=;
+	s=default; t=1578003819;
+	bh=8IWJOi6KRoy257bmHLGoFSeIOMVROHSJj/ROJ37nNPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ettBi7YlwURnQaKVEEHOc125CXv7Rui3l/HwtDKQ2hIRzWiRqYXUgAIcPBAoHRiIj
-	 r950+uasr7VDbdbwcWjT7qOXuV6YCggH+r7hHtCtGIEFLDSl1FMfluiSbMY3yzFO5T
-	 q4LlcQF7AZpzpF0u61j1VPA/yCjg78gAxNCGq+hA=
+	b=dsIQMQ68vphbyGBeCWKulaMCLUxhYO6kiwRHiEwFOkq/bO9jz3SjFJ1UU9awh9xSa
+	 tWgMPC+bvRfC8HehGLN67uFxn1d8JZSI0ISset6TJXvmCyFNpwpU5YLfvNvGirY6Nx
+	 3AUyxC6DOcnn8jiL7p5nFOIxXTQ22t6hK0qbm/ck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729257AbgABWXb (ORCPT
+        id S1729082AbgABWXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:23:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45642 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:23:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729228AbgABWX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:23:28 -0500
+        id S1727859AbgABWXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:23:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED84620866;
-        Thu,  2 Jan 2020 22:23:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D85120863;
+        Thu,  2 Jan 2020 22:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003807;
-        bh=BSA/pcBUGl1nwFwAirAYzR7/hzKPhS7OOnadprGSpm0=;
+        s=default; t=1578003814;
+        bh=8IWJOi6KRoy257bmHLGoFSeIOMVROHSJj/ROJ37nNPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1uZfoBniFXz62yG8/sK2J1ehnxOaqnwTRuF3vp6GUZgD3n6qMoKXnM3IjgjmYaXet
-         ZZ/s/rotmmUt/t9+cWCaiyDr050eeaXrY5sV2Dw530iu6fzj/eim+oCGSWl01raIZh
-         Y9lWKD9zwEoFhPOYUpiDllAvjWIaXrXiyyQiE/kU=
+        b=LupnzSYXq1QAQsMJDcsPKm3MysfC6UIwA4AORvc+f8TiYenO/tvadsEq3EQjBdRKR
+         wK3KU5Qam6dOK3m8NjewWvZOaFUyiRvG3YAw4Q4vKys9YK0ZTcQ3+XWiC+I/R5+Vq7
+         6CGbCqQ0ZXjmhvCLVIzGDF2vdKJtwFpuK0xJJdZ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        David Ahern <dsahern@gmail.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 101/114] tunnel: do not confirm neighbor when do pmtu update
-Date:   Thu,  2 Jan 2020 23:07:53 +0100
-Message-Id: <20200102220039.383709605@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 11/91] powerpc/tools: Dont quote $objdump in scripts
+Date:   Thu,  2 Jan 2020 23:06:53 +0100
+Message-Id: <20200102220410.556782500@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
-References: <20200102220029.183913184@linuxfoundation.org>
+In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
+References: <20200102220356.856162165@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,62 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 7a1592bcb15d71400a98632727791d1e68ea0ee8 ]
+[ Upstream commit e44ff9ea8f4c8a90c82f7b85bd4f5e497c841960 ]
 
-When do tunnel PMTU update and calls __ip6_rt_update_pmtu() in the end,
-we should not call dst_confirm_neigh() as there is no two-way communication.
+Some of our scripts are passed $objdump and then call it as
+"$objdump". This doesn't work if it contains spaces because we're
+using ccache, for example you get errors such as:
 
-v5: No Change.
-v4: Update commit description
-v3: Do not remove dst_confirm_neigh, but add a new bool parameter in
-    dst_ops.update_pmtu to control whether we should do neighbor confirm.
-    Also split the big patch to small ones for each area.
-v2: Remove dst_confirm_neigh in __ip6_rt_update_pmtu.
+  ./arch/powerpc/tools/relocs_check.sh: line 48: ccache ppc64le-objdump: No such file or directory
+  ./arch/powerpc/tools/unrel_branch_check.sh: line 26: ccache ppc64le-objdump: No such file or directory
 
-Fixes: 0dec879f636f ("net: use dst_confirm_neigh for UDP, RAW, ICMP, L2TP")
-Reviewed-by: Guillaume Nault <gnault@redhat.com>
-Tested-by: Guillaume Nault <gnault@redhat.com>
-Acked-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix it by not quoting the string when we expand it, allowing the shell
+to do the right thing for us.
+
+Fixes: a71aa05e1416 ("powerpc: Convert relocs_check to a shell script using grep")
+Fixes: 4ea80652dc75 ("powerpc/64s: Tool to flag direct branches from unrelocated interrupt vectors")
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191024004730.32135-1-mpe@ellerman.id.au
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/ip_tunnel.c  |    2 +-
- net/ipv6/ip6_tunnel.c |    4 ++--
+ arch/powerpc/tools/relocs_check.sh       | 2 +-
+ arch/powerpc/tools/unrel_branch_check.sh | 4 ++--
  2 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/ipv4/ip_tunnel.c
-+++ b/net/ipv4/ip_tunnel.c
-@@ -513,7 +513,7 @@ static int tnl_update_pmtu(struct net_de
- 	else
- 		mtu = skb_dst(skb) ? dst_mtu(skb_dst(skb)) : dev->mtu;
+diff --git a/arch/powerpc/tools/relocs_check.sh b/arch/powerpc/tools/relocs_check.sh
+index ec2d5c835170..d6c16e7faa38 100755
+--- a/arch/powerpc/tools/relocs_check.sh
++++ b/arch/powerpc/tools/relocs_check.sh
+@@ -23,7 +23,7 @@ objdump="$1"
+ vmlinux="$2"
  
--	skb_dst_update_pmtu(skb, mtu);
-+	skb_dst_update_pmtu_no_confirm(skb, mtu);
+ bad_relocs=$(
+-"$objdump" -R "$vmlinux" |
++$objdump -R "$vmlinux" |
+ 	# Only look at relocation lines.
+ 	grep -E '\<R_' |
+ 	# These relocations are okay
+diff --git a/arch/powerpc/tools/unrel_branch_check.sh b/arch/powerpc/tools/unrel_branch_check.sh
+index 1e972df3107e..77114755dc6f 100755
+--- a/arch/powerpc/tools/unrel_branch_check.sh
++++ b/arch/powerpc/tools/unrel_branch_check.sh
+@@ -18,14 +18,14 @@ vmlinux="$2"
+ #__end_interrupts should be located within the first 64K
  
- 	if (skb->protocol == htons(ETH_P_IP)) {
- 		if (!skb_is_gso(skb) &&
---- a/net/ipv6/ip6_tunnel.c
-+++ b/net/ipv6/ip6_tunnel.c
-@@ -645,7 +645,7 @@ ip4ip6_err(struct sk_buff *skb, struct i
- 		if (rel_info > dst_mtu(skb_dst(skb2)))
- 			goto out;
+ end_intr=0x$(
+-"$objdump" -R "$vmlinux" -d --start-address=0xc000000000000000		\
++$objdump -R "$vmlinux" -d --start-address=0xc000000000000000           \
+ 		 --stop-address=0xc000000000010000 |
+ grep '\<__end_interrupts>:' |
+ awk '{print $1}'
+ )
  
--		skb_dst_update_pmtu(skb2, rel_info);
-+		skb_dst_update_pmtu_no_confirm(skb2, rel_info);
- 	}
- 
- 	icmp_send(skb2, rel_type, rel_code, htonl(rel_info));
-@@ -1137,7 +1137,7 @@ route_lookup:
- 	mtu = max(mtu, skb->protocol == htons(ETH_P_IPV6) ?
- 		       IPV6_MIN_MTU : IPV4_MIN_MTU);
- 
--	skb_dst_update_pmtu(skb, mtu);
-+	skb_dst_update_pmtu_no_confirm(skb, mtu);
- 	if (skb->len - t->tun_hlen - eth_hlen > mtu && !skb_is_gso(skb)) {
- 		*pmtu = mtu;
- 		err = -EMSGSIZE;
+ BRANCHES=$(
+-"$objdump" -R "$vmlinux" -D --start-address=0xc000000000000000		\
++$objdump -R "$vmlinux" -D --start-address=0xc000000000000000           \
+ 		--stop-address=${end_intr} |
+ grep -e "^c[0-9a-f]*:[[:space:]]*\([0-9a-f][0-9a-f][[:space:]]\)\{4\}[[:space:]]*b" |
+ grep -v '\<__start_initialization_multiplatform>' |
+-- 
+2.20.1
+
 
 
