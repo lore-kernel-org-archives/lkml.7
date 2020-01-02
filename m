@@ -3,101 +3,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9262AC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E75DDC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D27C24125
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C944D21582
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:21:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgABRUH (ORCPT
+        id S1727835AbgABRVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 12:20:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55764 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 12:21:00 -0500
+Received: from mga12.intel.com ([192.55.52.136]:20085 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726125AbgABRUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 12:20:07 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C062020866;
-        Thu,  2 Jan 2020 17:20:05 +0000 (UTC)
-Date:   Thu, 2 Jan 2020 12:20:04 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC] tools lib traceevent: How to do library versioning being in
- the Linux kernel source?
-Message-ID: <20200102122004.216c85da@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726125AbgABRU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 12:20:59 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 09:20:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,387,1571727600"; 
+   d="scan'208";a="216043280"
+Received: from krominsx-mobl.ger.corp.intel.com (HELO localhost) ([10.252.21.64])
+  by fmsmga007.fm.intel.com with ESMTP; 02 Jan 2020 09:20:55 -0800
+Date:   Thu, 2 Jan 2020 19:20:53 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Christian Bundy <christianbundy@fraction.io>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable-commits@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Patch "tpm_tis: reserve chip for duration of tpm_tis_core_init"
+ has been added to the 5.4-stable tree
+Message-ID: <20200102171922.GA20989@linux.intel.com>
+References: <CAPcyv4jfpOX85GWgNTyugWksU=e-j=RhU_fcrcHBo4GMZ8_bhw@mail.gmail.com>
+ <c6ce34b130210d2d1330fc4079d6d82bd74dcef1.camel@linux.intel.com>
+ <50217a688ffa56cf5f150ffd358daba2a88cad48.camel@linux.intel.com>
+ <20191228151526.GA6971@linux.intel.com>
+ <CAPcyv4i_frm8jZeknniPexp8AAmGsaq0_DHegmL4XZHQi1ThxA@mail.gmail.com>
+ <CAPcyv4iyQeXBWvp8V_UPBsOk29cfmTVZGYrrDgyYYqzsQvTjNA@mail.gmail.com>
+ <2c4a80e0d30bf1dfe89c6e3469d1dbfb008275fa.camel@linux.intel.com>
+ <20191231010256.kymv4shwmx5jcmey@cantor>
+ <20191231155944.GA4790@linux.intel.com>
+ <be07a1e4-c290-4185-8c23-d97050279564@www.fastmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <be07a1e4-c290-4185-8c23-d97050279564@www.fastmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First, I hope everyone had a Happy New Year!
+On Tue, Dec 31, 2019 at 11:47:37AM -0800, Christian Bundy wrote:
+> > Christian, were you having any issues with interrupts? You system was going
+> > into this code as well.
+> 
+> Unfortunately I'm now unable to test, sorry for the trouble. I replaced my BIOS
+> with UEFI firmware and the problem has disappeared. Please let me know if there
+> is anything else I can do to help.
+> 
+> Christian
 
-Next, Sudip has been working to get the libtraceevent library into
-Debian. As this has been happening, I've been working at how to get all
-the projects that use this, to use the library installed on the system
-if it does exist. I'm hoping that once it's in Debian, the other
-distros will follow suit.
+Takashi wrote yesterday [*]:
 
-Currently, the home of libtraceevent lives in the Linux kernel source
-tree under tools/lib/traceevent. This was because perf uses it to parse
-the events, and it seemed logical (at the time) to use this location as
-the main source tree for the distributions.
+"I'm building a test kernel package based on 5.5-rc4 with Jarkko's revert
+patches"
 
-The problem I'm now having is that I'm looking at fixing and updating
-some of the code in this library, and since library versioning is
-critical for applications that depend on it, we need to have a way to
-update the versions, and this does not correspond with the Linux
-versions.
+[*] https://bugzilla.kernel.org/show_bug.cgi?id=205935
 
-For example, we currently have:
-
- libtraceevent.so.1.1.0
-
-If I make some bug fixes, I probably want to change it to:
-
- libtraceevent.so.1.1.1 or libtraceevent.so.1.2.0
-
-But if I change the API, which I plan on doing soon, I would probably
-need to update the major version.
-
- libtraceevent.so.2.0.0
-
-The thing is, we shouldn't be making these changes for every update
-that we send to the main kernel. I would like to have a minimum of tags
-to state what the version should be, and perhaps even branches for
-working on a development version.
-
-This is a problem with living in the Linux source tree as tags and
-branches in Linus's tree are for only the Linux kernel source itself.
-This may work fine for perf, as it's not a library and there's not
-tools depending on the version of it. But it is a problem when it comes
-to shared libraries.
-
-Should we move libtraceevent into a stand alone git repo (on
-kernel.org), that can have tags and branches specifically for it? We
-can keep a copy in the Linux source tree for perf to use till it
-becomes something that is reliably in all distributions. It's not like
-perf doesn't depend on other libraries today anyway.
-
-Thoughts or suggestions?
-
-Thanks!
-
--- Steve
+/Jarkko
