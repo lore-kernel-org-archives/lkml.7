@@ -2,119 +2,107 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 206E3C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FC9C3276E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE81621655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2971721835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:14:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nxptlg01"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbgABXOF (ORCPT
+        id S1727297AbgABXOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 18:14:05 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:36011 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726019AbgABXOE (ORCPT
+        Thu, 2 Jan 2020 18:14:49 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33339 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbgABXOs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 18:14:04 -0500
-Received: by mail-qk1-f194.google.com with SMTP id a203so32914818qkc.3;
-        Thu, 02 Jan 2020 15:14:03 -0800 (PST)
+        Thu, 2 Jan 2020 18:14:48 -0500
+Received: by mail-wm1-f65.google.com with SMTP id d139so5866401wmd.0;
+        Thu, 02 Jan 2020 15:14:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=KIhQOqEe7EmmQGE/mkr/xtA4d+4/jOmGUgTZDhxFJXw=;
+        b=Nxptlg01yX+CNwhEMLeFiWfYuPDjJhRqRaljQa0cqonHGZkufwmL/N5FBev4z6Pb28
+         WjL145tIb1igsQzmsU7NYTZY/jtKeL4GOwIJ148ucviQyCsyGtk0N+7jeoHcelNCM6dC
+         R3z65FdeskvymbGWrdQOnGdy9aUytSk6SmatHO9UdoNhBReKb8jJAQPsPFc2i2FI+mhg
+         /1ojXlRAidKvWaOJRQ7orSZbDJYXyZZR77udPSv+Vm9f9FSOwMfVdF0yMbRrLUSwiRdv
+         oA0kF4YYVUEuHMgiFxJaSiVKwY2UgKayu0ABg/A0/YXajWa04qqucIdg2ESO2ejx0gMk
+         LITw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8XxaXjSkhsNEq88yHyI55+nl1NneR/5BQXJWdBH8eks=;
-        b=aPCcQuVcTJ9C0GvET70tfVOO52fdogtt45Ti/AlGSMA/Si32M5he5y/389IQx25+sl
-         DIUfwMsTINLOCS8A6MrWm+q5kfq3zBCcdVHfsL5m6E68y2dX5ifxy7I0UQ23+KB/67Kk
-         7gDodjDv9gzWpDaPPhWqnI0qTbXO1i/qWGtX3fobsFsuQSmtD10hr/l07NSM3Kkjczsk
-         yCjhjNzVQ2VW6lNCeqOTvDwPz4nJUk6mLRzxW4n+pq3nOd6yfT32qVX0c9Zh4d5i6BFG
-         9exyQglo5k/Gd1q/+fLqhLM+4Zabu2W/PoXbiVX/dj+kM+2PtEn9562IW7jkX/C7OjhF
-         xTFA==
-X-Gm-Message-State: APjAAAWVu+jhDgmLg0CgTr8UOw/0CmZ4S19fN62S4LhSMgdS9LB6eeBg
-        VYoj73m7ld0OMsYK1M20e3U=
-X-Google-Smtp-Source: APXvYqyoEGvziciuWD4DGuvfEZRhqtM9H1ZAVdiRT6f0pT0U5+wNIpZ6YQnP97qPvMo13y2j8rMfFA==
-X-Received: by 2002:a05:620a:23a:: with SMTP id u26mr66830107qkm.426.1578006843314;
-        Thu, 02 Jan 2020 15:14:03 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id g81sm15547949qkb.70.2020.01.02.15.14.02
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=KIhQOqEe7EmmQGE/mkr/xtA4d+4/jOmGUgTZDhxFJXw=;
+        b=IVQq7iCrTKliTTintgDbQcmZKHx3/WA/dNWccTuyekIz7PIOSw+wZFlwSGR7lua9Gr
+         mQ4XzBHva8Dv8aMXlT9UbwSUNMTklCJNwa8yph9hOaMxa/IvUxL0sEthygas/fSeGVMN
+         S+5fQbOOXJRPNcaL2qCF/BDPEwUbaOcT/RkNrAN2AwOJEMo9AoQHBcRzSli3KfNqBgut
+         EOjpTOVqIdEIDV+wu6pGEy9ejJnW8OLNeHXBTwvr+yCqX91bzHAiywd+R6kPZCCePRjH
+         yPzKWlVXtKVPx4iU6kOKPRuOs60s4uOLPZvnMZ30o8f3xWuZK9A702WxCb18TAD+Twt9
+         qxSA==
+X-Gm-Message-State: APjAAAVN0wQGYdmMlmbEQiGR6Xjy8oifowoKzumcdyV0dyZEwgvtgsui
+        8hkfKbLc9hg9U+SHg6N0X+CVb8uX
+X-Google-Smtp-Source: APXvYqy7lGzUcji2+wbHLwiEZiPkKTrJ9CoCPhvioi+YnSYV1R2H9gBNAJc92ACnCCfWLxPFR52/Bg==
+X-Received: by 2002:a7b:c386:: with SMTP id s6mr15700620wmj.105.1578006885873;
+        Thu, 02 Jan 2020 15:14:45 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id i10sm58214711wru.16.2020.01.02.15.14.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 15:14:02 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Rob Landley <rob@landley.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kconfig: restore prompt dependencies in help text
-Date:   Thu,  2 Jan 2020 18:14:02 -0500
-Message-Id: <20200102231402.1052657-1-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <0ea3e528-4835-ff9c-f5a2-f711666ba75f@infradead.org>
-References: <0ea3e528-4835-ff9c-f5a2-f711666ba75f@infradead.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 02 Jan 2020 15:14:45 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
+        ARCHITECTURE),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE), Jim Quinlan <jim2101024@gmail.com>
+Subject: [PATCH v2 0/2] reset: Add Broadcom STB RESCAL reset controller
+Date:   Thu,  2 Jan 2020 15:14:33 -0800
+Message-Id: <20200102231435.21703-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit bcdedcc1afd6 ("menuconfig: print more info for symbol without
-prompts") moved some code from get_prompt_str to get_symbol_str so that
-dependency information for symbols without prompts could be shown.
+Hi Philipp,
 
-This code would be better copied rather than moved, as the change had
-the side-effect of not showing any extra dependencies that the prompt
-might have over the symbol.
+This patch series adds support for the BCM7216 RESCAL reset controller
+which is necessary to initialize SATA and PCIe0/1 on that chip.
 
-Put back a copy of the dependency printing code in get_prompt_str.
+Please let us know if you have any comments. Thanks!
 
-The following is an example for NAMESPACES:
+Changes in v2:
 
-Before:
-	Symbol: NAMESPACES [=y]
-	Type  : bool
-	Prompt: Namespaces support
-	  Location:
-	(2) -> General setup
-	  Defined at init/Kconfig:1064
-	  Depends on: MULTIUSER [=y]
+- binding document is in YAML format per Rob's suggestion
+- indented bit definitions the same way for all definitions
+- moved reset logic to the .reset() callback
+- removed the XOR operation which is not necessary after clarifying with
+  Jim that this was not necessary
+- use readl_poll_timeout()
 
-After:
-	Symbol: NAMESPACES [=y]
-	Type  : bool
-	Prompt: Namespaces support
-	  Editable if: MULTIUSER [=y] && EXPERT [=y]
-	  Location:
-	(2) -> General setup
-	  Defined at init/Kconfig:1064
-	  Depends on: MULTIUSER [=y]
+Jim Quinlan (2):
+  dt-bindings: reset: Document BCM7216 RESCAL reset controller
+  reset: Add Broadcom STB RESCAL reset controller
 
-Fixes: bcdedcc1afd6 ("menuconfig: print more info for symbol without prompts")
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
----
- scripts/kconfig/menu.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../reset/brcm,bcm7216-pcie-sata-rescal.yaml  |  37 ++++++
+ drivers/reset/Kconfig                         |   7 ++
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-brcmstb-rescal.c          | 110 ++++++++++++++++++
+ 4 files changed, 155 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm7216-pcie-sata-rescal.yaml
+ create mode 100644 drivers/reset/reset-brcmstb-rescal.c
 
-diff --git a/scripts/kconfig/menu.c b/scripts/kconfig/menu.c
-index d9d16469859a..6fbbe41302dc 100644
---- a/scripts/kconfig/menu.c
-+++ b/scripts/kconfig/menu.c
-@@ -706,6 +706,12 @@ static void get_prompt_str(struct gstr *r, struct property *prop,
- 	struct jump_key *jump = NULL;
- 
- 	str_printf(r, "Prompt: %s\n", prop->text);
-+	if (!expr_is_yes(prop->visible.expr)) {
-+		str_append(r, "  Editable if: ");
-+		expr_gstr_print(prop->visible.expr, r);
-+		str_append(r, "\n");
-+	}
-+
- 	menu = prop->menu->parent;
- 	for (i = 0; menu != &rootmenu && i < 8; menu = menu->parent) {
- 		bool accessible = menu_is_visible(menu);
 -- 
-2.24.1
+2.17.1
 
