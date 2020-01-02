@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EE6C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AC3C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2952320863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF31220866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004265;
-	bh=lUUJhjEuGA3Oseknaq7GlT9S4DmCuURlVakH+oLWOAo=;
+	s=default; t=1578004268;
+	bh=rvDDPH2iFigv1nS+TAS1khRR8+8SMltKfuS6SkknOAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LQX4HFHp6UGp3fNzv1FOon1gIGxwQSKjujWNcI2r9/MdGx/v/Vvr84fJb+lwqTzYg
-	 Vc+ETLr3nsJYa+YYgIdKE4t7k+i6Y9M6x8UUtB1HD6KIApfmaZLYMGBh1juI9QPvIY
-	 tNZiylU6X50xc1laYVs/ByfOS1SytZavXN9oxN2I=
+	b=VCNgSCAUDCqup6LujTURs18wnqGC+/HW2DOeKNUtw1BC4iZxLUgmepPI5MKPZaxsj
+	 jschA5ui0d0f59hazGuBQyDe0ePZHdBAEM0pEc50hwsm2ldOs2nb46ttqZ/ffE0Zey
+	 m8gkhYpGQivQ5OgQVSVya3U46Tn/tz6qtr5sfSKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730230AbgABWbD (ORCPT
+        id S1730244AbgABWbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:31:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35450 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:31:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729966AbgABWa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:30:56 -0500
+        id S1730220AbgABWa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:30:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F89420863;
-        Thu,  2 Jan 2020 22:30:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B067720863;
+        Thu,  2 Jan 2020 22:30:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004255;
-        bh=lUUJhjEuGA3Oseknaq7GlT9S4DmCuURlVakH+oLWOAo=;
+        s=default; t=1578004258;
+        bh=rvDDPH2iFigv1nS+TAS1khRR8+8SMltKfuS6SkknOAE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QMT7uf7Nnhpz/Rxq2SWvTmJBy1PMTeCFdS8NYNRxqr2+05seKnUFvZkOR0dQWsWLR
-         vkM2NSMIF+zG5psdjsnaIHzdcrQvwNztCH0f+KjP6WFe31z87UF3oNY+yGPOWgQET/
-         LU6KuOVXpDHFC142wFRka1Hoy2RCScV21wZMUJOs=
+        b=YX+Ayh33fk304huiOGwDdh3lxyTdNwUACMjG2hStbAYswXQQmzP7AZWubaQh+Qw76
+         b3V8JgO2F47XB7YLcpDM28zLDOXrZqaTki8ct4XeEdGrfAtsZjqGSJRkqyZgxaaS15
+         yLLfNKA59APCG5pOLdMK6VZ9rYaHPnPhC47XJ0xg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 077/171] spi: st-ssc4: add missed pm_runtime_disable
-Date:   Thu,  2 Jan 2020 23:06:48 +0100
-Message-Id: <20200102220557.617918001@linuxfoundation.org>
+Subject: [PATCH 4.9 068/171] s390/disassembler: dont hide instruction addresses
+Date:   Thu,  2 Jan 2020 23:06:39 +0100
+Message-Id: <20200102220556.286898713@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -60,43 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-[ Upstream commit cd050abeba2a95fe5374eec28ad2244617bcbab6 ]
+[ Upstream commit 544f1d62e3e6c6e6d17a5e56f6139208acb5ff46 ]
 
-The driver forgets to call pm_runtime_disable in probe failure
-and remove.
-Add the missed calls to fix it.
+Due to kptr_restrict, JITted BPF code is now displayed like this:
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191118024848.21645-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+000000000b6ed1b2: ebdff0800024  stmg    %r13,%r15,128(%r15)
+000000004cde2ba0: 41d0f040      la      %r13,64(%r15)
+00000000fbad41b0: a7fbffa0      aghi    %r15,-96
+
+Leaking kernel addresses to dmesg is not a concern in this case, because
+this happens only when JIT debugging is explicitly activated, which only
+root can do.
+
+Use %px in this particular instance, and also to print an instruction
+address in show_code and PCREL (e.g. brasl) arguments in print_insn.
+While at present functionally equivalent to %016lx, %px is recommended
+by Documentation/core-api/printk-formats.rst for such cases.
+
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-st-ssc4.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/s390/kernel/dis.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/spi/spi-st-ssc4.c b/drivers/spi/spi-st-ssc4.c
-index e54b59638458..710adbc2485f 100644
---- a/drivers/spi/spi-st-ssc4.c
-+++ b/drivers/spi/spi-st-ssc4.c
-@@ -385,6 +385,7 @@ static int spi_st_probe(struct platform_device *pdev)
- 	return 0;
- 
- clk_disable:
-+	pm_runtime_disable(&pdev->dev);
- 	clk_disable_unprepare(spi_st->clk);
- put_master:
- 	spi_master_put(master);
-@@ -396,6 +397,8 @@ static int spi_st_remove(struct platform_device *pdev)
- 	struct spi_master *master = platform_get_drvdata(pdev);
- 	struct spi_st *spi_st = spi_master_get_devdata(master);
- 
-+	pm_runtime_disable(&pdev->dev);
+diff --git a/arch/s390/kernel/dis.c b/arch/s390/kernel/dis.c
+index aaf9dab3c193..f9dca1aed9a4 100644
+--- a/arch/s390/kernel/dis.c
++++ b/arch/s390/kernel/dis.c
+@@ -1930,10 +1930,11 @@ static int print_insn(char *buffer, unsigned char *code, unsigned long addr)
+ 				ptr += sprintf(ptr, "%%c%i", value);
+ 			else if (operand->flags & OPERAND_VR)
+ 				ptr += sprintf(ptr, "%%v%i", value);
+-			else if (operand->flags & OPERAND_PCREL)
+-				ptr += sprintf(ptr, "%lx", (signed int) value
+-								      + addr);
+-			else if (operand->flags & OPERAND_SIGNED)
++			else if (operand->flags & OPERAND_PCREL) {
++				void *pcrel = (void *)((int)value + addr);
 +
- 	clk_disable_unprepare(spi_st->clk);
- 
- 	pinctrl_pm_select_sleep_state(&pdev->dev);
++				ptr += sprintf(ptr, "%px", pcrel);
++			} else if (operand->flags & OPERAND_SIGNED)
+ 				ptr += sprintf(ptr, "%i", value);
+ 			else
+ 				ptr += sprintf(ptr, "%u", value);
+@@ -2005,7 +2006,7 @@ void show_code(struct pt_regs *regs)
+ 		else
+ 			*ptr++ = ' ';
+ 		addr = regs->psw.addr + start - 32;
+-		ptr += sprintf(ptr, "%016lx: ", addr);
++		ptr += sprintf(ptr, "%px: ", (void *)addr);
+ 		if (start + opsize >= end)
+ 			break;
+ 		for (i = 0; i < opsize; i++)
+@@ -2033,7 +2034,7 @@ void print_fn_code(unsigned char *code, unsigned long len)
+ 		opsize = insn_length(*code);
+ 		if (opsize > len)
+ 			break;
+-		ptr += sprintf(ptr, "%p: ", code);
++		ptr += sprintf(ptr, "%px: ", code);
+ 		for (i = 0; i < opsize; i++)
+ 			ptr += sprintf(ptr, "%02x", code[i]);
+ 		*ptr++ = '\t';
 -- 
 2.20.1
 
