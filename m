@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D2CC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29473C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CCDB2464E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C3C2253D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003689;
-	bh=dRUxQmiTazbrVsjjmAMxwSYiCkunN4KSxORzQPmk5gY=;
+	s=default; t=1578003692;
+	bh=HrTVBqJGvBqiSddNJgGarJ2BT+eOP7XFbllL+9PsWnw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tdv6OThtAn3tmW+ShP/sB0hzo3I1bpnG7wJ/deMzzeuF3d9KLeSrr6bON1ColxXEZ
-	 cyWM8FF0jef4A7QKk13riz8+YwjZXTExFGjWUghdZ84RoF67qrcS/ZiHf6RLt3gRRv
-	 vvDgDZYfxW8P49w5CIP3q+sqbhPZm6Xfv+knQee0=
+	b=N5ior6/Zp0VuipJWNSKaV8JBcLokVSWjNfuFcd2829BxeclHd46acTw4NwdnJdqmG
+	 r2tOuxpmchJomVktu1xdkbGbYOP0xv82yZVkeaj07Ug5bG9TCj3YRcxUJHcRJC+RPW
+	 AU9a/+f3w/8JjZrGB8qnMy76/p6TgyKsJBaCSf+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728789AbgABWV2 (ORCPT
+        id S1728998AbgABWVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:21:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40370 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:21:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728341AbgABWVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:21:23 -0500
+        id S1728752AbgABWVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:21:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12EFF2253D;
-        Thu,  2 Jan 2020 22:21:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4ED6224125;
+        Thu,  2 Jan 2020 22:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003682;
-        bh=dRUxQmiTazbrVsjjmAMxwSYiCkunN4KSxORzQPmk5gY=;
+        s=default; t=1578003684;
+        bh=HrTVBqJGvBqiSddNJgGarJ2BT+eOP7XFbllL+9PsWnw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0N2nn3m6ZAnZ4CY+2vdrZi93JyfXnceiAECTJjwslFugHd+VfKXEMnHZ03aB/1B5k
-         6BteG1iHPwgM9QrESBOhww8mK2BsjRjshkE3zDljwV5kkSSF//qGm+1Aq7TzmjftJQ
-         Zqk17rAScyqo3donphc4F+sfu00DGTu64ei+nJZM=
+        b=EbMovZjbhnFlu0eRV43NAnxB+oDzTBVReW5lA7A9if77Vga5/K7TrjXHM+7D8q/ky
+         NAse5r+Jf0tyPoqcISuhRMHY9KedweZFs76oop0kkRoz4xj7HnKi3acdoQLcs9XH96
+         DyVirMWmsNngpOC0KqzkTP7xz2u2UUfYAcskl7oY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
+        stable@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Chris Down <chris@chrisdown.name>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 070/114] mailbox: imx: Fix Tx doorbell shutdown path
-Date:   Thu,  2 Jan 2020 23:07:22 +0100
-Message-Id: <20200102220036.133311996@linuxfoundation.org>
+Subject: [PATCH 4.19 071/114] kernel: sysctl: make drop_caches write-only
+Date:   Thu,  2 Jan 2020 23:07:23 +0100
+Message-Id: <20200102220036.228967185@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -63,77 +66,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Baluta <daniel.baluta@nxp.com>
+From: Johannes Weiner <hannes@cmpxchg.org>
 
-[ Upstream commit bf159d151a0b844be28882f39e316b5800acaa2b ]
+[ Upstream commit 204cb79ad42f015312a5bbd7012d09c93d9b46fb ]
 
-Tx doorbell is handled by txdb_tasklet and doesn't
-have an associated IRQ.
+Currently, the drop_caches proc file and sysctl read back the last value
+written, suggesting this is somehow a stateful setting instead of a
+one-time command.  Make it write-only, like e.g.  compact_memory.
 
-Anyhow, imx_mu_shutdown ignores this and tries to
-free an IRQ that wasn't requested for Tx DB resulting
-in the following warning:
+While mitigating a VM problem at scale in our fleet, there was confusion
+about whether writing to this file will permanently switch the kernel into
+a non-caching mode.  This influences the decision making in a tense
+situation, where tens of people are trying to fix tens of thousands of
+affected machines: Do we need a rollback strategy?  What are the
+performance implications of operating in a non-caching state for several
+days?  It also caused confusion when the kernel team said we may need to
+write the file several times to make sure it's effective ("But it already
+reads back 3?").
 
-[    1.967644] Trying to free already-free IRQ 26
-[    1.972108] WARNING: CPU: 2 PID: 157 at kernel/irq/manage.c:1708 __free_irq+0xc0/0x358
-[    1.980024] Modules linked in:
-[    1.983088] CPU: 2 PID: 157 Comm: kworker/2:1 Tainted: G
-[    1.993524] Hardware name: Freescale i.MX8QXP MEK (DT)
-[    1.998668] Workqueue: events deferred_probe_work_func
-[    2.003812] pstate: 60000085 (nZCv daIf -PAN -UAO)
-[    2.008607] pc : __free_irq+0xc0/0x358
-[    2.012364] lr : __free_irq+0xc0/0x358
-[    2.016111] sp : ffff00001179b7e0
-[    2.019422] x29: ffff00001179b7e0 x28: 0000000000000018
-[    2.024736] x27: ffff000011233000 x26: 0000000000000004
-[    2.030053] x25: 000000000000001a x24: ffff80083bec74d4
-[    2.035369] x23: 0000000000000000 x22: ffff80083bec7588
-[    2.040686] x21: ffff80083b1fe8d8 x20: ffff80083bec7400
-[    2.046003] x19: 0000000000000000 x18: ffffffffffffffff
-[    2.051320] x17: 0000000000000000 x16: 0000000000000000
-[    2.056637] x15: ffff0000111296c8 x14: ffff00009179b517
-[    2.061953] x13: ffff00001179b525 x12: ffff000011142000
-[    2.067270] x11: ffff000011129f20 x10: ffff0000105da970
-[    2.072587] x9 : 00000000ffffffd0 x8 : 0000000000000194
-[    2.077903] x7 : 612065657266206f x6 : ffff0000111e7b09
-[    2.083220] x5 : 0000000000000003 x4 : 0000000000000000
-[    2.088537] x3 : 0000000000000000 x2 : 00000000ffffffff
-[    2.093854] x1 : 28b70f0a2b60a500 x0 : 0000000000000000
-[    2.099173] Call trace:
-[    2.101618]  __free_irq+0xc0/0x358
-[    2.105021]  free_irq+0x38/0x98
-[    2.108170]  imx_mu_shutdown+0x90/0xb0
-[    2.111921]  mbox_free_channel.part.2+0x24/0xb8
-[    2.116453]  mbox_free_channel+0x18/0x28
-
-This bug is present from the beginning of times.
-
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+Link: http://lkml.kernel.org/r/20191031221602.9375-1-hannes@cmpxchg.org
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Acked-by: Chris Down <chris@chrisdown.name>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Alexey Dobriyan <adobriyan@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mailbox/imx-mailbox.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kernel/sysctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-index 363d35d5e49d..2f47023cab2b 100644
---- a/drivers/mailbox/imx-mailbox.c
-+++ b/drivers/mailbox/imx-mailbox.c
-@@ -214,8 +214,10 @@ static void imx_mu_shutdown(struct mbox_chan *chan)
- 	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
- 	struct imx_mu_con_priv *cp = chan->con_priv;
- 
--	if (cp->type == IMX_MU_TYPE_TXDB)
-+	if (cp->type == IMX_MU_TYPE_TXDB) {
- 		tasklet_kill(&cp->txdb_tasklet);
-+		return;
-+	}
- 
- 	imx_mu_xcr_rmw(priv, 0,
- 		   IMX_MU_xCR_TIEn(cp->idx) | IMX_MU_xCR_RIEn(cp->idx));
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index f8576509c7be..4c4fd4339d33 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -1411,7 +1411,7 @@ static struct ctl_table vm_table[] = {
+ 		.procname	= "drop_caches",
+ 		.data		= &sysctl_drop_caches,
+ 		.maxlen		= sizeof(int),
+-		.mode		= 0644,
++		.mode		= 0200,
+ 		.proc_handler	= drop_caches_sysctl_handler,
+ 		.extra1		= &one,
+ 		.extra2		= &four,
 -- 
 2.20.1
 
