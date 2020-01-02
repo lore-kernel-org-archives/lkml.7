@@ -2,92 +2,124 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F018C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F728C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D001D21835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62AB1215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:58:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WdYBfOGl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgABI6P convert rfc822-to-8bit (ORCPT
+        id S1727906AbgABI6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 03:58:15 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:21313 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727843AbgABI6O (ORCPT
+        Thu, 2 Jan 2020 03:58:20 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50661 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727890AbgABI6T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 03:58:14 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-62-0-8UGkBPNxus61PG9BdnHA-1; Thu, 02 Jan 2020 08:58:10 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 2 Jan 2020 08:58:09 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 2 Jan 2020 08:58:09 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Aleksa Sarai' <cyphar@cyphar.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        stable <stable@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        "dev@opencontainers.org" <dev@opencontainers.org>,
-        "Linux Containers" <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH RFC 0/1] mount: universally disallow mounting over
- symlinks
-Thread-Topic: [PATCH RFC 0/1] mount: universally disallow mounting over
- symlinks
-Thread-Index: AQHVvuu3ha8TNgK7w0ufQ/mBgQviWKfXFrEg
-Date:   Thu, 2 Jan 2020 08:58:09 +0000
-Message-ID: <e1066da936244de99e7ee827695d6583@AcuMS.aculab.com>
-References: <20191230052036.8765-1-cyphar@cyphar.com>
- <20191230054413.GX4203@ZenIV.linux.org.uk>
- <20191230054913.c5avdjqbygtur2l7@yavin.dot.cyphar.com>
- <20191230072959.62kcojxpthhdwmfa@yavin.dot.cyphar.com>
- <CAHk-=whxNw7hYT6bJn9mVrB_a=7Y-irmpaPsp1R4xbHHkicv7g@mail.gmail.com>
- <20191230083224.sbk2jspqmup43obs@yavin.dot.cyphar.com>
-In-Reply-To: <20191230083224.sbk2jspqmup43obs@yavin.dot.cyphar.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 2 Jan 2020 03:58:19 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a5so4982526wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 00:58:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=rF2GOyv1qKGyelgCdXaDqFp0t9OEft8RgfjG8RbwO0g=;
+        b=WdYBfOGlojX9ZqStJz1WXUnBMUzLjdK/UCEb6Ud+cEJP3dGhy5l6Keo36jtRwRolDI
+         7zCbowej+lKkQ9Zmii6ybxQmoDVpRw+nPCHKdEUpVAuFgvZu4aQxYOigJUFR1UngqOCW
+         fYp3Wed5OBfOfmpnsIrlyQF2PZ+M+OdXqylyroPTY6o/HJJu92n+LeCGezfhCHd8t85F
+         UmmRR6QaHd5FwebIpksnyQiqZ3rSS0FiPgpMZH24bGh2YbdvOOlGojZSLjpzORg/XVda
+         GAoXFcNvtwawh+MRfiaQ0PJI3mwoQz0vyl59HJINE/DuHGX133t2R4qt/X9nV8mCBbs8
+         +vfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=rF2GOyv1qKGyelgCdXaDqFp0t9OEft8RgfjG8RbwO0g=;
+        b=CzNuSlgSdxvhDm6gYaFxYxkfjuWOPkb8S81a9HzMqWSFQUmbJP/xrNE/+0dGLLGKbI
+         bgmr54lJbR0cUOY9sjc641E382VyeD7kVWqw/yNFvg9t1tSzEDaWfFaXy4B5+zBHw3Kp
+         54kVsLSIdHZ1mCR1AUJbSJRQ888EYnjVmXp8nfvHyz69DGsxq7mwICVMIzbolBJdAzaJ
+         IGKz59UsUbduNJTc5bcYvFNYWCRtlIASWA8ghGvSA73Qw0fY7/PguxRHw/V4rYuPQMBJ
+         2Fm32OQNWABaoGKc9KgUaNIe1cdHRKsIBaLON8kkEwGJL5lQ6cbRi0VY21igbit3dGEE
+         v9tQ==
+X-Gm-Message-State: APjAAAW4C8JcrOzc7BTJF3czE+dpjjkBKJaEzmpRj1pTTV8QqTLaMu8T
+        47IBCMzix+eqagGaQIymRU47Ug==
+X-Google-Smtp-Source: APXvYqzESLZ8jsgLl2vRzwsDxjMT2dpWZawd9oCfmtbFbTfYjQgGcWbkV5MaIcusnw57GoneJeOMnQ==
+X-Received: by 2002:a05:600c:230d:: with SMTP id 13mr13680648wmo.13.1577955497057;
+        Thu, 02 Jan 2020 00:58:17 -0800 (PST)
+Received: from dell ([2.27.35.135])
+        by smtp.gmail.com with ESMTPSA id t125sm8025145wmf.17.2020.01.02.00.58.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 00:58:16 -0800 (PST)
+Date:   Thu, 2 Jan 2020 08:58:28 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 12/37] platform/x86: intel_scu_ipc: Split out SCU IPC
+ functionality from the SCU driver
+Message-ID: <20200102085828.GC22390@dell>
+References: <20191223141716.13727-1-mika.westerberg@linux.intel.com>
+ <20191223141716.13727-13-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-X-MC-Unique: 0-8UGkBPNxus61PG9BdnHA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191223141716.13727-13-mika.westerberg@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aleksa Sarai
-> Sent: 30 December 2019 08:32
-...
-> I'm not sure I agree -- as I mentioned in my other mail, re-opening
-> through /proc/self/fd/$n works *very* well and has for a long time (in
-> fact, both LXC and runc depend on this working).
+On Mon, 23 Dec 2019, Mika Westerberg wrote:
 
-I thought it was marginally broken because it is followed as a symlink?
-On, for example, NetBSD /proc/<n>/fd/<n> is a real reference to the
-filesystem inode and can be used to link the file back into the filesystem
-if all the directory entries have been removed.
+> The SCU IPC functionality is usable outside of Intel MID devices. For
+> example modern Intel CPUs include the same thing but now it is called
+> PMC (Power Management Controller) instead of SCU. To make the IPC
+> available for those split the driver into library part (intel_scu_ipc.c)
+> and the SCU PCI driver part (intel_scu_pcidrv.c) which then calls the
+> former before it goes and creates rest of the SCU devices.
+> 
+> We also split the Kconfig symbols so that INTEL_SCU_IPC enables the SCU
+> IPC library and INTEL_SCU_PCI the SCU driver and convert the users
+> accordingly. While there remove default y from the INTEL_SCU_PCI symbol
+> as it is already selected by X86_INTEL_MID.
+> 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  arch/x86/Kconfig                        |  2 +-
+>  arch/x86/include/asm/intel_scu_ipc.h    | 15 +++++
 
-	David
+>  drivers/mfd/Kconfig                     |  4 +-
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
+>  drivers/platform/x86/Kconfig            | 26 ++++++---
+>  drivers/platform/x86/Makefile           |  1 +
+>  drivers/platform/x86/intel_scu_ipc.c    | 77 +++++++++----------------
+>  drivers/platform/x86/intel_scu_pcidrv.c | 61 ++++++++++++++++++++
+>  7 files changed, 125 insertions(+), 61 deletions(-)
+>  create mode 100644 drivers/platform/x86/intel_scu_pcidrv.c
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
