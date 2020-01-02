@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 082A7C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99BEC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB0B20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8937020866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005959;
-	bh=eofsLENhT2RlPaALZDa2KWrt/kUmXpwMYTgW9ahZ3Cg=;
+	s=default; t=1578005963;
+	bh=YKzmLDGM+26DWt1qYfbrH6yMPu9ZkjIK/pFyMAkhQ98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vRlMmlTpKHKOb5oiRmsDvOtof5nhzHIUAE2v0sBXEfzqZC13/ewepfG0JBSLk8Z5C
-	 E4nxjPhI3BXFXstdeMcnkSNlPxXZabrkPpR+AyDQ9QFp9/0W+KiJdZgcdFyvzHNVD7
-	 OjICoVHzfGMfCF7QAqPSJyYl895WN6GKOVtBe4VU=
+	b=URCjIsuf919nN0HufdqQExiZdJO9vLns+xHezp16MV+pCZVL3Q//QQ46MmsTM3Q1d
+	 XDi3WmzfeG2Hf99zRJN7a3mSRrzfQ3Wv8K7htOAM/Tfmvzk73mADohlIlwmn0nrZS+
+	 zbjOO7R4Ua/lPBzE5NoY5McJShnK2aHOHSMdJfXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbgABW7T (ORCPT
+        id S1727899AbgABWOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:59:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54762 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:14:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727557AbgABWO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:14:29 -0500
+        id S1727361AbgABWOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:14:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF70C227BF;
-        Thu,  2 Jan 2020 22:14:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65B6D24125;
+        Thu,  2 Jan 2020 22:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003268;
-        bh=eofsLENhT2RlPaALZDa2KWrt/kUmXpwMYTgW9ahZ3Cg=;
+        s=default; t=1578003258;
+        bh=YKzmLDGM+26DWt1qYfbrH6yMPu9ZkjIK/pFyMAkhQ98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sOo1aYIk77NHVgA6FMQulyklYmrRxZx8z5mzXJwDDOumOP9iJEknCTCyYeMIQx/1O
-         s8ypDrIBhtljvUCU2aqHLelQh4Z1IDRxwjOC870H4EPBs2rhrBloQLDZpLD2vBRlxM
-         2a1J2CSpiA+wUTqy3woJYCGvWTn1/idMH633tfPE=
+        b=DHHbvCbkQVHGCJcbPanFkJ/R8UGqI7QGH+qCh/7rNahU+Z5D474zhA4JV346+wXxR
+         vW9GH2p/efvyjQ+JWZFmF4On9Fh8Cc9E85XIavHRat5PBy7QQOWfaSVB3bHsuBQozO
+         kX8/1b6ZqbPoIs88MhuvPRVTHaCFGuC4sEbPR34M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Bean Huo <beanhuo@micron.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 064/191] scsi: ufs: fix potential bug which ends in system hang
-Date:   Thu,  2 Jan 2020 23:05:46 +0100
-Message-Id: <20200102215836.830540266@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>
+Subject: [PATCH 5.4 060/191] Input: ili210x - handle errors from input_mt_init_slots()
+Date:   Thu,  2 Jan 2020 23:05:42 +0100
+Message-Id: <20200102215836.397291369@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -62,80 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-[ Upstream commit cfcbae3895b86c390ede57b2a8f601dd5972b47b ]
+[ Upstream commit 43f06a4c639de8ee89fc348a9a3ecd70320a04dd ]
 
-In function __ufshcd_query_descriptor(), in the event of an error
-happening, we directly goto out_unlock and forget to invaliate
-hba->dev_cmd.query.descriptor pointer. This results in this pointer still
-valid in ufshcd_copy_query_response() for other query requests which go
-through ufshcd_exec_raw_upiu_cmd(). This will cause __memcpy() crash and
-system hangs. Log as shown below:
+input_mt_init_slots() may fail and we need to handle such failures.
 
-Unable to handle kernel paging request at virtual address
-ffff000012233c40
-Mem abort info:
-   ESR = 0x96000047
-   Exception class = DABT (current EL), IL = 32 bits
-   SET = 0, FnV = 0
-   EA = 0, S1PTW = 0
-Data abort info:
-   ISV = 0, ISS = 0x00000047
-   CM = 0, WnR = 1
-swapper pgtable: 4k pages, 48-bit VAs, pgdp = 0000000028cc735c
-[ffff000012233c40] pgd=00000000bffff003, pud=00000000bfffe003,
-pmd=00000000ba8b8003, pte=0000000000000000
- Internal error: Oops: 96000047 [#2] PREEMPT SMP
- ...
- Call trace:
-  __memcpy+0x74/0x180
-  ufshcd_issue_devman_upiu_cmd+0x250/0x3c0
-  ufshcd_exec_raw_upiu_cmd+0xfc/0x1a8
-  ufs_bsg_request+0x178/0x3b0
-  bsg_queue_rq+0xc0/0x118
-  blk_mq_dispatch_rq_list+0xb0/0x538
-  blk_mq_sched_dispatch_requests+0x18c/0x1d8
-  __blk_mq_run_hw_queue+0xb4/0x118
-  blk_mq_run_work_fn+0x28/0x38
-  process_one_work+0x1ec/0x470
-  worker_thread+0x48/0x458
-  kthread+0x130/0x138
-  ret_from_fork+0x10/0x1c
- Code: 540000ab a8c12027 a88120c7 a8c12027 (a88120c7)
- ---[ end trace 793e1eb5dff69f2d ]---
- note: kworker/0:2H[2054] exited with preempt_count 1
-
-This patch is to move "descriptor = NULL" down to below the label
-"out_unlock".
-
-Fixes: d44a5f98bb49b2(ufs: query descriptor API)
-Link: https://lore.kernel.org/r/20191112223436.27449-3-huobean@gmail.com
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Tested-by: Adam Ford <aford173@gmail.com> #imx6q-logicpd
+Tested-by: Sven Van Asbroeck <TheSven73@gmail.com> # ILI2118A variant
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/touchscreen/ili210x.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 11a87f51c442..358ff7b01568 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -2986,10 +2986,10 @@ static int __ufshcd_query_descriptor(struct ufs_hba *hba,
- 		goto out_unlock;
- 	}
+diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
+index e9006407c9bc..f4ebdab06280 100644
+--- a/drivers/input/touchscreen/ili210x.c
++++ b/drivers/input/touchscreen/ili210x.c
+@@ -334,7 +334,12 @@ static int ili210x_i2c_probe(struct i2c_client *client,
+ 	input_set_abs_params(input, ABS_MT_POSITION_X, 0, 0xffff, 0, 0);
+ 	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, 0xffff, 0, 0);
+ 	touchscreen_parse_properties(input, true, &priv->prop);
+-	input_mt_init_slots(input, priv->max_touches, INPUT_MT_DIRECT);
++
++	error = input_mt_init_slots(input, priv->max_touches, INPUT_MT_DIRECT);
++	if (error) {
++		dev_err(dev, "Unable to set up slots, err: %d\n", error);
++		return error;
++	}
  
--	hba->dev_cmd.query.descriptor = NULL;
- 	*buf_len = be16_to_cpu(response->upiu_res.length);
- 
- out_unlock:
-+	hba->dev_cmd.query.descriptor = NULL;
- 	mutex_unlock(&hba->dev_cmd.lock);
- out:
- 	ufshcd_release(hba);
+ 	error = devm_add_action(dev, ili210x_cancel_work, priv);
+ 	if (error)
 -- 
 2.20.1
 
