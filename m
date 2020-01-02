@@ -2,564 +2,190 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D28C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B40C3276E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B31821655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:43:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=dawncrow.de header.i=@dawncrow.de header.b="R1W6cXF5"
+	by mail.kernel.org (Postfix) with ESMTP id D0BAB20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:45:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726146AbgABVnU (ORCPT
+        id S1726004AbgABVpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 16:43:20 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.84]:28027 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbgABVnU (ORCPT
+        Thu, 2 Jan 2020 16:45:51 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:57248 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbgABVpu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 16:43:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1578001394;
-        s=strato-dkim-0002; d=dawncrow.de;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=2ybO91+sIGWWiqva4k0hPFQJ3Ojd56EgxL+m2iZs7b8=;
-        b=R1W6cXF5XlBVP+V7tWepYs/Liou8oFfkqw8MRClBFgotgsmUEJrKjw1XVFdbI92UFZ
-        dehbcmoir9pwRPpEYGgaxBwdrwhYA3/X/VRhdlSrnIZFf14QCWD+JbgWnQ+kf/V2V6bd
-        hQlJ9zHYtCdzl0JUZXzywHM9FY3GHNG8nkxblDOrQjYwK3Sl7UNX+AY6qBKAqHWDeglG
-        38QHdngONDaHJRMvRKhFTdzQE8QSo8ktTcA+WgLYGROgnXg245/JCCU8/iQiZ1HMF4XW
-        5aBTGeUKBCoHlbyu1ber6zyfj+BPiRT35XVgMuO4s191v4S8iEVOycpfN56CN+A0hTBJ
-        /ddQ==
-X-RZG-AUTH: ":ImkWY2CseuihIZy6ZWWciR6unPhpN+aXzZGGjY6ptdusOaLnXzn3ovD+FrFdXyk="
-X-RZG-CLASS-ID: mo00
-Received: from tesla.fritz.box
-        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
-        with ESMTPSA id I099d1w02LhALOJ
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Thu, 2 Jan 2020 22:43:10 +0100 (CET)
-From:   =?UTF-8?q?Andr=C3=A9=20Hentschel?= <nerv@dawncrow.de>
-To:     linux@arm.linux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com,
-        bcousson@baylibre.com, tony@atomide.com, linux-omap@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] ARM: dts: Add omap3-echo
-Date:   Thu,  2 Jan 2020 22:43:04 +0100
-Message-Id: <20200102214304.8225-2-nerv@dawncrow.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200102214304.8225-1-nerv@dawncrow.de>
-References: <20200102214304.8225-1-nerv@dawncrow.de>
+        Thu, 2 Jan 2020 16:45:50 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 88A261C25EC; Thu,  2 Jan 2020 22:45:48 +0100 (CET)
+Date:   Thu, 2 Jan 2020 22:45:48 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmurphy@ti.com
+Subject: leds: lm3642: remove warnings for bad strtol, cleanup gotos
+Message-ID: <20200102214547.GA3616@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="AqsLC8rIMeq19msA"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the first generation Amazon Echo from 2016.
-Audio support is not yet implemented.
 
-Signed-off-by: André Hentschel <nerv@dawncrow.de>
----
+--AqsLC8rIMeq19msA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-v2: Don't disable sgx, as the previous patch changes dtsi files accordingly
-v3: Include dm3725.dtsi
+Hi!
 
-I have local patches for the microphone array, but cleaning that up will take some time.
-Audio output seems to be even harder work...
-You can find a tutorial on how to boot the Echo here:
-https://labs.f-secure.com/archive/alexa-are-you-listening/
+I've applied this to for-next tree. If you see something very wrong,
+let me know.
 
- arch/arm/boot/dts/Makefile       |   1 +
- arch/arm/boot/dts/omap3-echo.dts | 462 +++++++++++++++++++++++++++++++
- 2 files changed, 463 insertions(+)
- create mode 100644 arch/arm/boot/dts/omap3-echo.dts
+--
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b21b3a64641a..923dabc09203 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -685,6 +685,7 @@ dtb-$(CONFIG_ARCH_OMAP3) += \
- 	omap3-devkit8000.dtb \
- 	omap3-devkit8000-lcd43.dtb \
- 	omap3-devkit8000-lcd70.dtb \
-+	omap3-echo.dtb \
- 	omap3-evm.dtb \
- 	omap3-evm-37xx.dtb \
- 	omap3-gta04a3.dtb \
-diff --git a/arch/arm/boot/dts/omap3-echo.dts b/arch/arm/boot/dts/omap3-echo.dts
-new file mode 100644
-index 000000000000..f892e85d0ffc
---- /dev/null
-+++ b/arch/arm/boot/dts/omap3-echo.dts
-@@ -0,0 +1,462 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2019 André Hentschel <nerv@dawncrow.de>
-+ */
-+/dts-v1/;
-+
-+#include "dm3725.dtsi"
-+
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model = "Amazon Echo (first generation)";
-+	compatible = "amazon,omap3-echo", "ti,omap3630", "ti,omap3";
-+
-+	cpus {
-+		cpu@0 {
-+			cpu0-supply = <&vdd1_reg>;
-+		};
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0xc600000>; /* 198 MB */
-+	};
-+
-+	vcc5v: fixedregulator0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	vcc3v3: fixedregulator1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	vcc1v8: fixedregulator2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc1v8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpio1 21 GPIO_ACTIVE_LOW>;
-+		post-power-on-delay-ms = <40>;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&button_pins>;
-+
-+		mute-button {
-+			label = "mute";
-+			linux,code = <KEY_MUTE>;
-+			gpios = <&gpio3 6 GPIO_ACTIVE_LOW>;	/* GPIO_70 */
-+			wakeup-source;
-+		};
-+
-+		help-button {
-+			label = "help";
-+			linux,code = <KEY_HELP>;
-+			gpios = <&gpio3 8 GPIO_ACTIVE_LOW>;	/* GPIO_72 */
-+			wakeup-source;
-+		};
-+	};
-+
-+	rotary: rotary-encoder {
-+		compatible = "rotary-encoder";
-+		gpios = <
-+			&gpio3  5 GPIO_ACTIVE_HIGH /* GPIO_69 */
-+			&gpio3 12 GPIO_ACTIVE_HIGH /* GPIO_76 */
-+		>;
-+		linux,axis = <REL_X>;
-+		rotary-encoder,relative-axis;
-+	};
-+};
-+
-+&i2c1 {
-+	clock-frequency = <400000>;
-+
-+	tps: tps@2d {
-+		reg = <0x2d>;
-+	};
-+};
-+
-+&i2c2 {
-+	clock-frequency = <400000>;
-+
-+	lp5523A: lp5523A@32 {
-+		compatible = "national,lp5523";
-+		label = "q1";
-+		reg = <0x32>;
-+		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
-+		enable-gpio = <&gpio4 13 GPIO_ACTIVE_HIGH>; /* GPIO_109 */
-+
-+		chan0 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan1 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan2 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan3 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan4 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan5 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan6 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan7 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan8 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+	};
-+
-+	lp5523B: lp5523B@33 {
-+		compatible = "national,lp5523";
-+		label = "q3";
-+		reg = <0x33>;
-+		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
-+
-+		chan0 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan1 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan2 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan3 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan4 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan5 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan6 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan7 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan8 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+	};
-+
-+	lp5523C: lp5523C@34 {
-+		compatible = "national,lp5523";
-+		label = "q4";
-+		reg = <0x34>;
-+		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
-+
-+		chan0 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan1 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan2 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan3 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan4 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan5 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan6 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan7 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan8 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+	};
-+
-+	lp5523D: lp552D@35 {
-+		compatible = "national,lp5523";
-+		label = "q2";
-+		reg = <0x35>;
-+		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
-+
-+		chan0 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan1 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan2 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan3 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan4 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan5 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan6 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan7 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan8 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+	};
-+};
-+
-+#include "tps65910.dtsi"
-+
-+&omap3_pmx_core {
-+	tps_pins: pinmux_tps_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x21e0, PIN_INPUT_PULLUP | PIN_OFF_INPUT_PULLUP | PIN_OFF_OUTPUT_LOW | PIN_OFF_WAKEUPENABLE | MUX_MODE0) /* sys_nirq.sys_nirq */ 
-+		>;
-+	};
-+
-+	button_pins: pinmux_button_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x20dc, PIN_INPUT | MUX_MODE4)	/* dss_data0.gpio_70 */
-+			OMAP3_CORE1_IOPAD(0x20e0, PIN_INPUT | MUX_MODE4)	/* dss_data2.gpio_72 */
-+		>;
-+	};
-+
-+	mmc1_pins: pinmux_mmc1_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x2144, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_clk.sdmmc1_clk */
-+			OMAP3_CORE1_IOPAD(0x2146, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_cmd.sdmmc1_cmd */
-+			OMAP3_CORE1_IOPAD(0x2148, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_dat0.sdmmc1_dat0 */
-+			OMAP3_CORE1_IOPAD(0x214a, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_dat1.sdmmc1_dat1 */
-+			OMAP3_CORE1_IOPAD(0x214c, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_dat2.sdmmc1_dat2 */
-+			OMAP3_CORE1_IOPAD(0x214e, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_dat3.sdmmc1_dat3 */
-+		>;
-+	};
-+
-+	mmc2_pins: pinmux_mmc2_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x2158, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_clk.sdmmc2_clk */
-+			OMAP3_CORE1_IOPAD(0x215a, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_cmd.sdmmc2_cmd */
-+			OMAP3_CORE1_IOPAD(0x215c, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat0.sdmmc2_dat0 */
-+			OMAP3_CORE1_IOPAD(0x215e, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat1.sdmmc2_dat1 */
-+			OMAP3_CORE1_IOPAD(0x2160, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat2.sdmmc2_dat2 */
-+			OMAP3_CORE1_IOPAD(0x2162, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat3.sdmmc2_dat3 */
-+			OMAP3_CORE1_IOPAD(0x2164, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat4.sdmmc2_dat4 */
-+			OMAP3_CORE1_IOPAD(0x2166, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat5.sdmmc2_dat5 */
-+			OMAP3_CORE1_IOPAD(0x2168, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat6.sdmmc2_dat6 */
-+			OMAP3_CORE1_IOPAD(0x216a, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat7.sdmmc2_dat7 */
-+		>;
-+	};
-+};
-+
-+&omap3_pmx_core2 {
-+	mmc3_pins: pinmux_mmc3_pins {
-+		pinctrl-single,pins = <
-+			OMAP3630_CORE2_IOPAD(0x25d8, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_clk.sdmmc3_clk */
-+			OMAP3630_CORE2_IOPAD(0x25da, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_ctl.sdmmc3_cmd */
-+			OMAP3630_CORE2_IOPAD(0x25e2, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d3.sdmmc3_dat3 */
-+			OMAP3630_CORE2_IOPAD(0x25e4, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d4.sdmmc3_dat0 */
-+			OMAP3630_CORE2_IOPAD(0x25e6, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d5.sdmmc3_dat1 */
-+			OMAP3630_CORE2_IOPAD(0x25e8, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d6.sdmmc3_dat2 */
-+		>;
-+	};
-+};
-+
-+&mmc1 {
-+	status = "okay";
-+	bus-width = <4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	vmmc-supply = <&vmmc_reg>;
-+};
-+
-+&mmc2 {
-+	status = "okay";
-+	bus-width = <8>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_pins>;
-+	vmmc-supply = <&vmmc_reg>;
-+};
-+
-+&mmc3 {
-+	status = "okay";
-+	bus-width = <4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc3_pins>;
-+	non-removable;
-+	disable-wp;
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+	vmmc-supply = <&vcc3v3>;
-+	vqmmc-supply = <&vcc1v8>;
-+};
-+
-+
-+&tps {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&tps_pins>;
-+
-+	interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-+	interrupt-parent = <&intc>;
-+
-+	ti,en-ck32k-xtal;
-+	ti,system-power-controller;
-+
-+	vcc1-supply = <&vcc5v>;
-+	vcc2-supply = <&vcc5v>;
-+	vcc3-supply = <&vcc5v>;
-+	vcc4-supply = <&vcc5v>;
-+	vcc5-supply = <&vcc5v>;
-+	vcc6-supply = <&vcc5v>;
-+	vcc7-supply = <&vcc5v>;
-+	vccio-supply = <&vcc5v>;
-+
-+	regulators {
-+
-+		vio_reg: regulator@1 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+
-+		vdd1_reg: regulator@2 {
-+			regulator-name = "vdd_mpu";
-+			regulator-min-microvolt = <600000>;
-+			regulator-max-microvolt = <1500000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		vdd2_reg: regulator@3 {
-+			regulator-name = "vdd_dsp";
-+			regulator-min-microvolt = <600000>;
-+			regulator-max-microvolt = <1500000>;
-+			regulator-always-on;
-+		};
-+
-+		vdd3_reg: regulator@4 {
-+			regulator-name = "vdd_core";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			regulator-always-on;
-+		};
-+
-+		vdig1_reg: regulator@5 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <2700000>;
-+			regulator-always-on;
-+		};
-+
-+		vdig2_reg: regulator@6 {
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+
-+		vpll_reg: regulator@7 {
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <2500000>;
-+			regulator-always-on;
-+		};
-+
-+		vdac_reg: regulator@8 {
-+			regulator-min-microvolt = <1100000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vaux1_reg: regulator@9 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2850000>;
-+			regulator-always-on;
-+		};
-+
-+		vaux2_reg: regulator@10 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vaux33_reg: regulator@11 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vmmc_reg: regulator@12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3000000>;
-+			regulator-always-on;
-+		};
-+	};
-+};
--- 
-2.17.1
+    leds: lm3642: remove warnings for bad strtol, cleanup gotos
+   =20
+    Bad string from userspace is not worth printing warning on; gotos that
+    just directly return are not good, plus a comment fix.
+   =20
+    Cc: jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org, linux-kerne=
+l@vger.kernel.org, dmurphy@ti.com
+    Signed-off-by: Pavel Machek <pavel@ucw.cz>
 
+diff --git a/drivers/leds/leds-lm3642.c b/drivers/leds/leds-lm3642.c
+index 480575442ed8..4232906fcb75 100644
+--- a/drivers/leds/leds-lm3642.c
++++ b/drivers/leds/leds-lm3642.c
+@@ -106,7 +106,7 @@ static int lm3642_control(struct lm3642_chip_data *chip,
+ 	ret =3D regmap_read(chip->regmap, REG_FLAG, &chip->last_flag);
+ 	if (ret < 0) {
+ 		dev_err(chip->dev, "Failed to read REG_FLAG Register\n");
+-		goto out;
++		return ret;
+ 	}
+=20
+ 	if (chip->last_flag)
+@@ -146,11 +146,11 @@ static int lm3642_control(struct lm3642_chip_data *ch=
+ip,
+ 		break;
+=20
+ 	default:
+-		return ret;
++		return -EINVAL;
+ 	}
+ 	if (ret < 0) {
+ 		dev_err(chip->dev, "Failed to write REG_I_CTRL Register\n");
+-		goto out;
++		return ret;
+ 	}
+=20
+ 	if (chip->tx_pin)
+@@ -159,13 +159,12 @@ static int lm3642_control(struct lm3642_chip_data *ch=
+ip,
+ 	ret =3D regmap_update_bits(chip->regmap, REG_ENABLE,
+ 				 MODE_BITS_MASK << MODE_BITS_SHIFT,
+ 				 opmode << MODE_BITS_SHIFT);
+-out:
+ 	return ret;
+ }
+=20
+ /* torch */
+=20
+-/* torch pin config for lm3642*/
++/* torch pin config for lm3642 */
+ static ssize_t lm3642_torch_pin_store(struct device *dev,
+ 				      struct device_attribute *attr,
+ 				      const char *buf, size_t size)
+@@ -178,7 +177,7 @@ static ssize_t lm3642_torch_pin_store(struct device *de=
+v,
+=20
+ 	ret =3D kstrtouint(buf, 10, &state);
+ 	if (ret)
+-		goto out_strtoint;
++		return ret;
+ 	if (state !=3D 0)
+ 		state =3D 0x01 << TORCH_PIN_EN_SHIFT;
+=20
+@@ -186,16 +185,12 @@ static ssize_t lm3642_torch_pin_store(struct device *=
+dev,
+ 	ret =3D regmap_update_bits(chip->regmap, REG_ENABLE,
+ 				 TORCH_PIN_EN_MASK << TORCH_PIN_EN_SHIFT,
+ 				 state);
+-	if (ret < 0)
+-		goto out;
++	if (ret < 0) {
++		dev_err(chip->dev, "%s:i2c access fail to register\n", __func__);
++		return ret;
++	}
+=20
+ 	return size;
+-out:
+-	dev_err(chip->dev, "%s:i2c access fail to register\n", __func__);
+-	return ret;
+-out_strtoint:
+-	dev_err(chip->dev, "%s: fail to change str to int\n", __func__);
+-	return ret;
+ }
+=20
+ static DEVICE_ATTR(torch_pin, S_IWUSR, NULL, lm3642_torch_pin_store);
+@@ -229,7 +224,7 @@ static ssize_t lm3642_strobe_pin_store(struct device *d=
+ev,
+=20
+ 	ret =3D kstrtouint(buf, 10, &state);
+ 	if (ret)
+-		goto out_strtoint;
++		return ret;
+ 	if (state !=3D 0)
+ 		state =3D 0x01 << STROBE_PIN_EN_SHIFT;
+=20
+@@ -237,16 +232,12 @@ static ssize_t lm3642_strobe_pin_store(struct device =
+*dev,
+ 	ret =3D regmap_update_bits(chip->regmap, REG_ENABLE,
+ 				 STROBE_PIN_EN_MASK << STROBE_PIN_EN_SHIFT,
+ 				 state);
+-	if (ret < 0)
+-		goto out;
++	if (ret < 0) {
++		dev_err(chip->dev, "%s:i2c access fail to register\n", __func__);
++		return ret;
++	}
+=20
+ 	return size;
+-out:
+-	dev_err(chip->dev, "%s:i2c access fail to register\n", __func__);
+-	return ret;
+-out_strtoint:
+-	dev_err(chip->dev, "%s: fail to change str to int\n", __func__);
+-	return ret;
+ }
+=20
+ static DEVICE_ATTR(strobe_pin, S_IWUSR, NULL, lm3642_strobe_pin_store);
+
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--AqsLC8rIMeq19msA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl4OZIsACgkQMOfwapXb+vJ5yQCeIEdYuR6T299iXmfBG1IzksO+
+VgwAoL3CJVlauuqPxDpaPAx3H/+p2q8N
+=K6X0
+-----END PGP SIGNATURE-----
+
+--AqsLC8rIMeq19msA--
