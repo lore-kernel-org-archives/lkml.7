@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F63BC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A953C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DF3121835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C378222C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003649;
-	bh=ep9gLDaU4fQuW4s5VjCKlb/xQtq90DV88lZZIOURVh0=;
+	s=default; t=1578003651;
+	bh=jOOzvq5ORcSHs/dfITV3t/TYLOXAFsVSdo+42xIWT94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K0p6HrcioG7FsyqZX+YoAz66TlV0a1NAMz/EtM+ydMjG1DodWZoNWkurNo50fOlXz
-	 83VpSgTrKYt2uE5mQ0GhbxqJhy8uaSkuhmVCBBSBfQ+hVPzxvBaGEtw8lYX2k3M9jF
-	 1ecCa5XsHtvcsB5xr/1EScrVUJImQZfIbGTKVYGY=
+	b=GXJFuOeKHkuFqFeR4q5Y2cBVl3uCxBwnysxXiPyaspwkGwCxIwzfeimUvHo/Tj9Xz
+	 M5rVgeKUTZmOkft/kAeoho1PfJd8fAInJOqVxmhbbdapTTKZGKQxhpDd/+i3w7rPrw
+	 h8lLfDYQkWpKIL/Yy2fLzSSSQpZF4UqFPWscL7/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbgABWUs (ORCPT
+        id S1728891AbgABWUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:20:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38776 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:20:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728864AbgABWUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:20:44 -0500
+        id S1728228AbgABWUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:20:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D90F624650;
-        Thu,  2 Jan 2020 22:20:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5062020866;
+        Thu,  2 Jan 2020 22:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003644;
-        bh=ep9gLDaU4fQuW4s5VjCKlb/xQtq90DV88lZZIOURVh0=;
+        s=default; t=1578003646;
+        bh=jOOzvq5ORcSHs/dfITV3t/TYLOXAFsVSdo+42xIWT94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uTSPwpC6T12g8zgK1Qtb098eeyviwPbE0lIx4R6YeBt+4JpoJ9g9UHtffclnfg2ZD
-         cWCU5pfVUMI+ZsluNq8hsdV7uCab4NE9MdMn0qihjsaJvQaIvh9kQjNpzz8+IX5lJx
-         uaZ0R/kB7j0JodoogVyla4u5sg0mwQ3zp2VMC0a4=
+        b=D6jFCDLghlJw2LrFpkzPtUTVekx4ZeUlok/gJ+dgjf3+uSq5cV3QLVPjblRBI8jrI
+         CtU8a/Naqhb68mT9DWbT+wibeCJeDZ/JOPZItdovJMEmoG9UCxZbWx2xRso5MsxEJT
+         hf8uHlWRPFpCWx64Xv44Bm7rnQTSgVtWfEn5UENc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Anatol Pomazau <anatol@google.com>,
+        Frank Mayhar <fmayhar@google.com>,
+        Bharath Ravi <rbharath@google.com>,
+        Khazhimsel Kumykov <khazhy@google.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Lee Duncan <lduncan@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 047/114] ARM: 8937/1: spectre-v2: remove Brahma-B53 from hardening
-Date:   Thu,  2 Jan 2020 23:06:59 +0100
-Message-Id: <20200102220033.831569340@linuxfoundation.org>
+Subject: [PATCH 4.19 056/114] scsi: iscsi: Dont send data to unbound connection
+Date:   Thu,  2 Jan 2020 23:07:08 +0100
+Message-Id: <20200102220034.705851515@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -61,43 +65,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Anatol Pomazau <anatol@google.com>
 
-[ Upstream commit 4ae5061a19b550dfe25397843427ed2ebab16b16 ]
+[ Upstream commit 238191d65d7217982d69e21c1d623616da34b281 ]
 
-When the default processor handling was added to the function
-cpu_v7_spectre_init() it only excluded other ARM implemented processor
-cores. The Broadcom Brahma B53 core is not implemented by ARM so it
-ended up falling through into the set of processors that attempt to use
-the ARM_SMCCC_ARCH_WORKAROUND_1 service to harden the branch predictor.
+If a faulty initiator fails to bind the socket to the iSCSI connection
+before emitting a command, for instance, a subsequent send_pdu, it will
+crash the kernel due to a null pointer dereference in sock_sendmsg(), as
+shown in the log below.  This patch makes sure the bind succeeded before
+trying to use the socket.
 
-Since this workaround is not necessary for the Brahma-B53 this commit
-explicitly checks for it and prevents it from applying a branch
-predictor hardening workaround.
+BUG: kernel NULL pointer dereference, address: 0000000000000018
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+PGD 0 P4D 0
+Oops: 0000 [#1] SMP PTI
+CPU: 3 PID: 7 Comm: kworker/u8:0 Not tainted 5.4.0-rc2.iscsi+ #13
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+[   24.158246] Workqueue: iscsi_q_0 iscsi_xmitworker
+[   24.158883] RIP: 0010:apparmor_socket_sendmsg+0x5/0x20
+[...]
+[   24.161739] RSP: 0018:ffffab6440043ca0 EFLAGS: 00010282
+[   24.162400] RAX: ffffffff891c1c00 RBX: ffffffff89d53968 RCX: 0000000000000001
+[   24.163253] RDX: 0000000000000030 RSI: ffffab6440043d00 RDI: 0000000000000000
+[   24.164104] RBP: 0000000000000030 R08: 0000000000000030 R09: 0000000000000030
+[   24.165166] R10: ffffffff893e66a0 R11: 0000000000000018 R12: ffffab6440043d00
+[   24.166038] R13: 0000000000000000 R14: 0000000000000000 R15: ffff9d5575a62e90
+[   24.166919] FS:  0000000000000000(0000) GS:ffff9d557db80000(0000) knlGS:0000000000000000
+[   24.167890] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   24.168587] CR2: 0000000000000018 CR3: 000000007a838000 CR4: 00000000000006e0
+[   24.169451] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   24.170320] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   24.171214] Call Trace:
+[   24.171537]  security_socket_sendmsg+0x3a/0x50
+[   24.172079]  sock_sendmsg+0x16/0x60
+[   24.172506]  iscsi_sw_tcp_xmit_segment+0x77/0x120
+[   24.173076]  iscsi_sw_tcp_pdu_xmit+0x58/0x170
+[   24.173604]  ? iscsi_dbg_trace+0x63/0x80
+[   24.174087]  iscsi_tcp_task_xmit+0x101/0x280
+[   24.174666]  iscsi_xmit_task+0x83/0x110
+[   24.175206]  iscsi_xmitworker+0x57/0x380
+[   24.175757]  ? __schedule+0x2a2/0x700
+[   24.176273]  process_one_work+0x1b5/0x360
+[   24.176837]  worker_thread+0x50/0x3c0
+[   24.177353]  kthread+0xf9/0x130
+[   24.177799]  ? process_one_work+0x360/0x360
+[   24.178401]  ? kthread_park+0x90/0x90
+[   24.178915]  ret_from_fork+0x35/0x40
+[   24.179421] Modules linked in:
+[   24.179856] CR2: 0000000000000018
+[   24.180327] ---[ end trace b4b7674b6df5f480 ]---
 
-Fixes: 10115105cb3a ("ARM: spectre-v2: add firmware based hardening")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Anatol Pomazau <anatol@google.com>
+Co-developed-by: Frank Mayhar <fmayhar@google.com>
+Signed-off-by: Frank Mayhar <fmayhar@google.com>
+Co-developed-by: Bharath Ravi <rbharath@google.com>
+Signed-off-by: Bharath Ravi <rbharath@google.com>
+Co-developed-by: Khazhimsel Kumykov <khazhy@google.com>
+Signed-off-by: Khazhimsel Kumykov <khazhy@google.com>
+Co-developed-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/proc-v7-bugs.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/scsi/iscsi_tcp.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/mm/proc-v7-bugs.c b/arch/arm/mm/proc-v7-bugs.c
-index 9a07916af8dd..a6554fdb56c5 100644
---- a/arch/arm/mm/proc-v7-bugs.c
-+++ b/arch/arm/mm/proc-v7-bugs.c
-@@ -65,6 +65,9 @@ static void cpu_v7_spectre_init(void)
- 		break;
+diff --git a/drivers/scsi/iscsi_tcp.c b/drivers/scsi/iscsi_tcp.c
+index 23354f206533..55181d28291e 100644
+--- a/drivers/scsi/iscsi_tcp.c
++++ b/drivers/scsi/iscsi_tcp.c
+@@ -374,8 +374,16 @@ static int iscsi_sw_tcp_pdu_xmit(struct iscsi_task *task)
+ {
+ 	struct iscsi_conn *conn = task->conn;
+ 	unsigned int noreclaim_flag;
++	struct iscsi_tcp_conn *tcp_conn = conn->dd_data;
++	struct iscsi_sw_tcp_conn *tcp_sw_conn = tcp_conn->dd_data;
+ 	int rc = 0;
  
- #ifdef CONFIG_ARM_PSCI
-+	case ARM_CPU_PART_BRAHMA_B53:
-+		/* Requires no workaround */
-+		break;
- 	default:
- 		/* Other ARM CPUs require no workaround */
- 		if (read_cpuid_implementor() == ARM_CPU_IMP_ARM)
++	if (!tcp_sw_conn->sock) {
++		iscsi_conn_printk(KERN_ERR, conn,
++				  "Transport not bound to socket!\n");
++		return -EINVAL;
++	}
++
+ 	noreclaim_flag = memalloc_noreclaim_save();
+ 
+ 	while (iscsi_sw_tcp_xmit_qlen(conn)) {
 -- 
 2.20.1
 
