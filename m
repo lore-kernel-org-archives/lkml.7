@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B739EC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21ECCC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87A1D22525
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB24D222C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004133;
-	bh=5h2VMuozqT83+Xvki4/sTYdyUzjxrDIHWWjHu3k4QyU=;
+	s=default; t=1578004136;
+	bh=jZM6XJMeqo7saqhRTRc4VmRtoNuUJQ9hBG+NCriRYSo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YbDAvc9GVxfmNVQJYhh7Dz5sz7L7eOaw5lRObd7WeQaVvDzjAZQBRecuzt06irLmq
-	 TgboTF67jvPZrtKRB5eCBSy2z1eQvKsgk6kkmgmr2Svd2zDPIn+M+HVu/YrKMiEpAt
-	 kupRr0XHTEqYthQJdzBOqyhw8ELpid8Jpb6lir5E=
+	b=fRjObId8fA1eTVmeSLC+cshhAmZO4xKx+wmi2v+wJJ83eU7JODliT83utP0cmJuEx
+	 XlMKj34mLNulzO0a85XpUKixWke5xRtbDTqygQO9oorwWESwueHRgEB/g68vqpJ6yO
+	 +nozSxOeTvHcaYicYZ6c1rUTeKMChUtr7+Zifgxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728557AbgABW2w (ORCPT
+        id S1729969AbgABW2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:28:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59118 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:28:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729954AbgABW2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:28:49 -0500
+        id S1729534AbgABW2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:28:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45CDD20863;
-        Thu,  2 Jan 2020 22:28:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A33D420866;
+        Thu,  2 Jan 2020 22:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004128;
-        bh=5h2VMuozqT83+Xvki4/sTYdyUzjxrDIHWWjHu3k4QyU=;
+        s=default; t=1578004131;
+        bh=jZM6XJMeqo7saqhRTRc4VmRtoNuUJQ9hBG+NCriRYSo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BxEK+ANMHBO31pNtiiesOhMZEJrMH9j6B9dNzGm6ZQlWAcFqEqd8uKQ5v0KuexYyW
-         gikg9MsKbZ6EXqlgqJKDkFDI1QxrKosXTHDeHmW3dcmuhEIft6dCi9TSOAqVtMDMmA
-         7eGZUmMUiVNLYD9vjp2ZXZP/JAw5ACLt9l2XYhu0=
+        b=c5annuJ5M5g6MKwS1ZS4UPAoFpYQ5hcjDVEONhy3+sAerDpFjICUkN9McI6ER0IPF
+         MmBHdwMYI2hOwtnSZU3R2ICw1hcAkaC6ku2G/dAbmNEMWDUbKuGE96zzwcEypIRrrI
+         W3rpoxUFSAvBZ/TB+d+D/Lpj4sZaAv23ufYcWLvY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 042/171] arm64: psci: Reduce the waiting time for cpu_psci_cpu_kill()
-Date:   Thu,  2 Jan 2020 23:06:13 +0100
-Message-Id: <20200102220552.809554624@linuxfoundation.org>
+Subject: [PATCH 4.9 051/171] perf probe: Fix to list probe event with correct line number
+Date:   Thu,  2 Jan 2020 23:06:22 +0100
+Message-Id: <20200102220554.031050526@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -61,71 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit bfcef4ab1d7ee8921bc322109b1692036cc6cbe0 ]
+[ Upstream commit 3895534dd78f0fd4d3f9e05ee52b9cdd444a743e ]
 
-In cases like suspend-to-disk and suspend-to-ram, a large number of CPU
-cores need to be shut down. At present, the CPU hotplug operation is
-serialised, and the CPU cores can only be shut down one by one. In this
-process, if PSCI affinity_info() does not return LEVEL_OFF quickly,
-cpu_psci_cpu_kill() needs to wait for 10ms. If hundreds of CPU cores
-need to be shut down, it will take a long time.
+Since debuginfo__find_probe_point() uses dwarf_entrypc() for finding the
+entry address of the function on which a probe is, it will fail when the
+function DIE has only ranges attribute.
 
-Normally, there is no need to wait 10ms in cpu_psci_cpu_kill(). So
-change the wait interval from 10 ms to max 1 ms and use usleep_range()
-instead of msleep() for more accurate timer.
+To fix this issue, use die_entrypc() instead of dwarf_entrypc().
 
-In addition, reducing the time interval will increase the messages
-output, so remove the "Retry ..." message, instead, track time and
-output to the the sucessful message.
+Without this fix, perf probe -l shows incorrect offset:
 
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+  # perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask+18446744071579263632@work/linux/linux/kernel/cpu.c)
+    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask+18446744071579263752@work/linux/linux/kernel/cpu.c)
+
+With this:
+
+  # perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@work/linux/linux/kernel/cpu.c)
+    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:21@work/linux/linux/kernel/cpu.c)
+
+Committer testing:
+
+Before:
+
+  [root@quaco ~]# perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask+18446744071579765152@kernel/cpu.c)
+  [root@quaco ~]#
+
+After:
+
+  [root@quaco ~]# perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
+  [root@quaco ~]#
+
+Fixes: 1d46ea2a6a40 ("perf probe: Fix listing incorrect line number with inline function")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157199321227.8075.14655572419136993015.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/psci.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ tools/perf/util/probe-finder.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
-index 42816bebb1e0..e3713d6fb8e0 100644
---- a/arch/arm64/kernel/psci.c
-+++ b/arch/arm64/kernel/psci.c
-@@ -83,7 +83,8 @@ static void cpu_psci_cpu_die(unsigned int cpu)
- 
- static int cpu_psci_cpu_kill(unsigned int cpu)
- {
--	int err, i;
-+	int err;
-+	unsigned long start, end;
- 
- 	if (!psci_ops.affinity_info)
- 		return 0;
-@@ -93,16 +94,18 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
- 	 * while it is dying. So, try again a few times.
- 	 */
- 
--	for (i = 0; i < 10; i++) {
-+	start = jiffies;
-+	end = start + msecs_to_jiffies(100);
-+	do {
- 		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
- 		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
--			pr_info("CPU%d killed.\n", cpu);
-+			pr_info("CPU%d killed (polled %d ms)\n", cpu,
-+				jiffies_to_msecs(jiffies - start));
- 			return 0;
- 		}
- 
--		msleep(10);
--		pr_info("Retrying again to check for CPU kill\n");
--	}
-+		usleep_range(100, 1000);
-+	} while (time_before(jiffies, end));
- 
- 	pr_warn("CPU%d may not have shut down cleanly (AFFINITY_INFO reports %d)\n",
- 			cpu, err);
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 0d9d6e0803b8..248d3ff7e345 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -1567,7 +1567,7 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, unsigned long addr,
+ 		/* Get function entry information */
+ 		func = basefunc = dwarf_diename(&spdie);
+ 		if (!func ||
+-		    dwarf_entrypc(&spdie, &baseaddr) != 0 ||
++		    die_entrypc(&spdie, &baseaddr) != 0 ||
+ 		    dwarf_decl_line(&spdie, &baseline) != 0) {
+ 			lineno = 0;
+ 			goto post;
+@@ -1584,7 +1584,7 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, unsigned long addr,
+ 		while (die_find_top_inlinefunc(&spdie, (Dwarf_Addr)addr,
+ 						&indie)) {
+ 			/* There is an inline function */
+-			if (dwarf_entrypc(&indie, &_addr) == 0 &&
++			if (die_entrypc(&indie, &_addr) == 0 &&
+ 			    _addr == addr) {
+ 				/*
+ 				 * addr is at an inline function entry.
 -- 
 2.20.1
 
