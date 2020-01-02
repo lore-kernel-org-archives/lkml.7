@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C28C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42572C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97BAD21D7D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F32F20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578006056;
-	bh=3CZRpoCYbEuB7Sm43TDfe1oKWGuVqkSm8Cgi9hPRVvY=;
+	s=default; t=1578006063;
+	bh=mpWw2p0GyPJ4Re3CGneFaF4x7vus9wJFbsb/Ipu6+24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wn8V5L8dHF9XfpxqLURQy0YDZBiN6WmlZctH/Yhx/4LfaeZYvUMPFVXgTQb7OuWK0
-	 iTgHT8guRfdBo8Oi9SwNFcnP6sB47tsXQYx97wJkqytT43zUx3N3RKdLIOHp4sZxbG
-	 DLlRQzuyRu5tn11Q6zWFN/qyBpZJtXyN0XXuk34c=
+	b=GqvBLYGC2YZFzUyE21ZWDiepwnBVRPr0w5ouTlXL2obM3fHqOzTDHqKppHtt+iyxT
+	 gnXIbKD553l6WJ7RKErr0ryUugb0mUvqu1BDw2PHVd6DfLoltBlNrzB0EARROusUV2
+	 CogPRZuySPbxLM/gcGkd8YT21q9+vL0bO1x1l5OY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbgABXAz (ORCPT
+        id S1728457AbgABXBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 18:00:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51280 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 18:01:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727442AbgABWMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:12:17 -0500
+        id S1727388AbgABWMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:12:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E098221835;
-        Thu,  2 Jan 2020 22:12:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44B9721D7D;
+        Thu,  2 Jan 2020 22:12:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003136;
-        bh=3CZRpoCYbEuB7Sm43TDfe1oKWGuVqkSm8Cgi9hPRVvY=;
+        s=default; t=1578003126;
+        bh=mpWw2p0GyPJ4Re3CGneFaF4x7vus9wJFbsb/Ipu6+24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JDe/BcE5Pv/KKbBVRHeg53QgRMoRhJIthjdTItdUc/gh7IedhNe5b2jR3EdnDr1gp
-         Lz8wNcXRITXDyGey+e4nAxNCB0mLqTFPYZZucBoavWwB+j0I+GJssDWLqYlfp/7u5y
-         8A3vjJEKLiW/KuBzAMo8rB5667w+bn/+EIf1AOeA=
+        b=o76QCAPGrQ0w8GtrX4yk1NM80aT4ssmFaQHKEU5sETn/qVGf9DPrsu0XY0BTco2tb
+         mSVQ+GXFIAIcyahASUxUuQog5eS+WA/KkrxRpzmiSzNyLHQIK1z0BvKKmDpf8GSWkX
+         T2OEj/tK+87Zl/s7WfOXen0Lk0ullQx7gzperWfw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 008/191] gpio: mxc: Only get the second IRQ when there is more than one IRQ
-Date:   Thu,  2 Jan 2020 23:04:50 +0100
-Message-Id: <20200102215830.678377647@linuxfoundation.org>
+Subject: [PATCH 5.4 004/191] scsi: lpfc: Fix discovery failures when target device connectivity bounces
+Date:   Thu,  2 Jan 2020 23:04:46 +0100
+Message-Id: <20200102215830.321822997@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -60,61 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit c8f3d144004dd3f471ffd414690d15a005e4acd6 ]
+[ Upstream commit 3f97aed6117c7677eb16756c4ec8b86000fd5822 ]
 
-On some of i.MX SoCs like i.MX8QXP, there is ONLY one IRQ for each
-GPIO bank, so it is better to check the IRQ count before getting
-second IRQ to avoid below error message during probe:
+An issue was seen discovering all SCSI Luns when a target device undergoes
+link bounce.
 
-[    1.070908] gpio-mxc 5d080000.gpio: IRQ index 1 not found
-[    1.077420] gpio-mxc 5d090000.gpio: IRQ index 1 not found
-[    1.083766] gpio-mxc 5d0a0000.gpio: IRQ index 1 not found
-[    1.090122] gpio-mxc 5d0b0000.gpio: IRQ index 1 not found
-[    1.096470] gpio-mxc 5d0c0000.gpio: IRQ index 1 not found
-[    1.102804] gpio-mxc 5d0d0000.gpio: IRQ index 1 not found
-[    1.109144] gpio-mxc 5d0e0000.gpio: IRQ index 1 not found
-[    1.115475] gpio-mxc 5d0f0000.gpio: IRQ index 1 not found
+The driver currently does not qualify the FC4 support on the target.
+Therefore it will send a SCSI PRLI and an NVMe PRLI. The expectation is
+that the target will reject the PRLI if it is not supported. If a PRLI
+times out, the driver will retry. The driver will not proceed with the
+device until both SCSI and NVMe PRLIs are resolved.  In the failure case,
+the device is FCP only and does not respond to the NVMe PRLI, thus
+initiating the wait/retry loop in the driver.  During that time, a RSCN is
+received (device bounced) causing the driver to issue a GID_FT.  The GID_FT
+response comes back before the PRLI mess is resolved and it prematurely
+cancels the PRLI retry logic and leaves the device in a STE_PRLI_ISSUE
+state. Discovery with the target never completes or resets.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Fix by resetting the node state back to STE_NPR_NODE when GID_FT completes,
+thereby restarting the discovery process for the node.
+
+Link: https://lore.kernel.org/r/20190922035906.10977-10-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-mxc.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/scsi/lpfc/lpfc_hbadisc.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-index 7907a8755866..c77d474185f3 100644
---- a/drivers/gpio/gpio-mxc.c
-+++ b/drivers/gpio/gpio-mxc.c
-@@ -411,6 +411,7 @@ static int mxc_gpio_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
- 	struct mxc_gpio_port *port;
-+	int irq_count;
- 	int irq_base;
- 	int err;
+diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
+index 749286acdc17..f7c205e1da48 100644
+--- a/drivers/scsi/lpfc/lpfc_hbadisc.c
++++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
+@@ -5405,9 +5405,14 @@ lpfc_setup_disc_node(struct lpfc_vport *vport, uint32_t did)
+ 			/* If we've already received a PLOGI from this NPort
+ 			 * we don't need to try to discover it again.
+ 			 */
+-			if (ndlp->nlp_flag & NLP_RCV_PLOGI)
++			if (ndlp->nlp_flag & NLP_RCV_PLOGI &&
++			    !(ndlp->nlp_type &
++			     (NLP_FCP_TARGET | NLP_NVME_TARGET)))
+ 				return NULL;
  
-@@ -426,9 +427,15 @@ static int mxc_gpio_probe(struct platform_device *pdev)
- 	if (IS_ERR(port->base))
- 		return PTR_ERR(port->base);
- 
--	port->irq_high = platform_get_irq(pdev, 1);
--	if (port->irq_high < 0)
--		port->irq_high = 0;
-+	irq_count = platform_irq_count(pdev);
-+	if (irq_count < 0)
-+		return irq_count;
++			ndlp->nlp_prev_state = ndlp->nlp_state;
++			lpfc_nlp_set_state(vport, ndlp, NLP_STE_NPR_NODE);
 +
-+	if (irq_count > 1) {
-+		port->irq_high = platform_get_irq(pdev, 1);
-+		if (port->irq_high < 0)
-+			port->irq_high = 0;
-+	}
- 
- 	port->irq = platform_get_irq(pdev, 0);
- 	if (port->irq < 0)
+ 			spin_lock_irq(shost->host_lock);
+ 			ndlp->nlp_flag |= NLP_NPR_2B_DISC;
+ 			spin_unlock_irq(shost->host_lock);
 -- 
 2.20.1
 
