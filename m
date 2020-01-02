@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEFAC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DFAC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C637F20863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E27D24676
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004954;
-	bh=kI714KhdZOV86NSLDIwxv61nxxSXvDcFcQ6Rb3avn6I=;
+	s=default; t=1578004957;
+	bh=/mpjo9GtSVF0JqQWMjKN3FUVwZ7JiXVEZcdh8LhQQUk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c/4KtcpHLtJWZunB0Tcjymb2TWjXzEWpVoMRk/VwdVNyjZkQBgFHREkcqe/vBRP9d
-	 69eZl0W4IA88ONAAOnaks3kRZYLczd9fyhZ/iisNTsbDtjt/8PrdK+pTz+JbcL9IDZ
-	 zcIwMtRCm6l32YnqMwF1UUCzEf8+cJVr+jSrWWbI=
+	b=osNIez9iV2fQx61tJDaTpcySPnEKIWC0IBAOUQBuMhRUTe2HYmMbgegPLCvddDDKR
+	 WU0hoVKERxlZ79gwpgwaur3n0mJduJDKqYUcd4IJfVG4mrGSSZU1fRq2USPVMIjb67
+	 YucX5VstYziyVn3RYHW+WMZB7QbWGwLKfq60m6Yk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731328AbgABWme (ORCPT
+        id S1730704AbgABWfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:42:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45956 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:35:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730597AbgABWfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:35:50 -0500
+        id S1730658AbgABWfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:35:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77B2F20863;
-        Thu,  2 Jan 2020 22:35:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B05D20863;
+        Thu,  2 Jan 2020 22:35:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004549;
-        bh=kI714KhdZOV86NSLDIwxv61nxxSXvDcFcQ6Rb3avn6I=;
+        s=default; t=1578004538;
+        bh=/mpjo9GtSVF0JqQWMjKN3FUVwZ7JiXVEZcdh8LhQQUk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TYJQDMN6kdbaj/jtF1pxTD6qGZz8EozPR/BEV0m/8jgp2QnLzenrv/HHIFijHpHqQ
-         KlIUARVHtujL2Nfm76zYlo9F00GYMCxJikuk9NXcSX/XIVhTBQ41bWtCN2yhKZSMnM
-         yspolCxPHxVXP+K0Gh8HtPKUnjTpxzjTHUkFC4eA=
+        b=iS2snx1y0sgob1lQfclrO4jStRn1coKrCK8ARCGmrr3CzdNJ3eofmhKqo78IxpGvc
+         HLT2iV2oeLGsNLccSbqBWk+feU6+5G7j3kJJ20b048FzZZVDWWUXCHzeHUka8ZNZzN
+         zMoIDVqB3Jhbtu9L4y/eF03k4VzN7EpFVNncQmj0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 028/137] iio: adc: max1027: Reset the device at probe time
-Date:   Thu,  2 Jan 2020 23:06:41 +0100
-Message-Id: <20200102220550.401050486@linuxfoundation.org>
+Subject: [PATCH 4.4 048/137] perf probe: Filter out instances except for inlined subroutine and subprogram
+Date:   Thu,  2 Jan 2020 23:07:01 +0100
+Message-Id: <20200102220553.054410292@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -60,40 +62,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit db033831b4f5589f9fcbadb837614a7c4eac0308 ]
+[ Upstream commit da6cb952a89efe24bb76c4971370d485737a2d85 ]
 
-All the registers are configured by the driver, let's reset the chip
-at probe time, avoiding any conflict with a possible earlier
-configuration.
+Filter out instances except for inlined_subroutine and subprogram DIE in
+die_walk_instances() and die_is_func_instance().
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+This fixes an issue that perf probe sets some probes on calling address
+instead of a target function itself.
+
+When perf probe walks on instances of an abstruct origin (a kind of
+function prototype of inlined function), die_walk_instances() can also
+pass a GNU_call_site (a GNU extension for call site) to callback. Since
+it is not an inlined instance of target function, we have to filter out
+when searching a probe point.
+
+Without this patch, perf probe sets probes on call site address too.This
+can happen on some function which is marked "inlined", but has actual
+symbol. (I'm not sure why GCC mark it "inlined"):
+
+  # perf probe -D vfs_read
+  p:probe/vfs_read _text+2500017
+  p:probe/vfs_read_1 _text+2499468
+  p:probe/vfs_read_2 _text+2499563
+  p:probe/vfs_read_3 _text+2498876
+  p:probe/vfs_read_4 _text+2498512
+  p:probe/vfs_read_5 _text+2498627
+
+With this patch:
+
+Slightly different results, similar tho:
+
+  # perf probe -D vfs_read
+  p:probe/vfs_read _text+2498512
+
+Committer testing:
+
+  # uname -a
+  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+
+Before:
+
+  # perf probe -D vfs_read
+  p:probe/vfs_read _text+3131557
+  p:probe/vfs_read_1 _text+3130975
+  p:probe/vfs_read_2 _text+3131047
+  p:probe/vfs_read_3 _text+3130380
+  p:probe/vfs_read_4 _text+3130000
+  # uname -a
+  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+  #
+
+After:
+
+  # perf probe -D vfs_read
+  p:probe/vfs_read _text+3130000
+  #
+
+Fixes: db0d2c6420ee ("perf probe: Search concrete out-of-line instances")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157241937063.32002.11024544873990816590.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/max1027.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/perf/util/dwarf-aux.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-index 41d495c6035e..7d5e4114e7a8 100644
---- a/drivers/iio/adc/max1027.c
-+++ b/drivers/iio/adc/max1027.c
-@@ -470,6 +470,14 @@ static int max1027_probe(struct spi_device *spi)
- 		goto fail_dev_register;
- 	}
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 8d6eaaab4739..388c9dcba976 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -298,18 +298,22 @@ bool die_is_func_def(Dwarf_Die *dw_die)
+  * @dw_die: a DIE
+  *
+  * Ensure that this DIE is an instance (which has an entry address).
+- * This returns true if @dw_die is a function instance. If not, you need to
+- * call die_walk_instances() to find actual instances.
++ * This returns true if @dw_die is a function instance. If not, the @dw_die
++ * must be a prototype. You can use die_walk_instances() to find actual
++ * instances.
+  **/
+ bool die_is_func_instance(Dwarf_Die *dw_die)
+ {
+ 	Dwarf_Addr tmp;
+ 	Dwarf_Attribute attr_mem;
++	int tag = dwarf_tag(dw_die);
  
-+	/* Internal reset */
-+	st->reg = MAX1027_RST_REG;
-+	ret = spi_write(st->spi, &st->reg, 1);
-+	if (ret < 0) {
-+		dev_err(&indio_dev->dev, "Failed to reset the ADC\n");
-+		return ret;
-+	}
+-	/* Actually gcc optimizes non-inline as like as inlined */
+-	return !dwarf_func_inline(dw_die) &&
+-	       (dwarf_entrypc(dw_die, &tmp) == 0 ||
+-		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL);
++	if (tag != DW_TAG_subprogram &&
++	    tag != DW_TAG_inlined_subroutine)
++		return false;
 +
- 	/* Disable averaging */
- 	st->reg = MAX1027_AVG_REG;
- 	ret = spi_write(st->spi, &st->reg, 1);
++	return dwarf_entrypc(dw_die, &tmp) == 0 ||
++		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL;
+ }
+ 
+ /**
+@@ -588,6 +592,9 @@ static int __die_walk_instances_cb(Dwarf_Die *inst, void *data)
+ 	Dwarf_Die *origin;
+ 	int tmp;
+ 
++	if (!die_is_func_instance(inst))
++		return DIE_FIND_CB_CONTINUE;
++
+ 	attr = dwarf_attr(inst, DW_AT_abstract_origin, &attr_mem);
+ 	if (attr == NULL)
+ 		return DIE_FIND_CB_CONTINUE;
 -- 
 2.20.1
 
