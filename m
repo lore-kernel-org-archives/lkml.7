@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1C0C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4393C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB93E22525
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A037227BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003870;
-	bh=gswYiLu3FlwC8HmRfHwjDATuJUwUjszRLkoCYGdkelQ=;
+	s=default; t=1578003872;
+	bh=K7Da7CfJG3el96WvT6CvaZfsTE8nEfsPdfq4Qrvr6vU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CMSxkm4TRvRGuoLQSJjVFk2wMhgpc69smsC1Hx6pt3ong324L8MKG/VGX74BG9lgo
-	 +EctCX2CqSFT8zTdRf9eYZ76Cu3oPoexSDuB+LS4li5yCdRyD/3M2/KQCLCz8oqiRb
-	 7xUzzx8ZWGqjh+cHKA4u10oDWjd4aA2sMGRhRk8Q=
+	b=tHhDWI3LhOe7gNFf9GV9u4zJqIH8aTPmeLROhxRtIl67q7axOqa+9v6vpCPGRYdFV
+	 aTrbHumYMoHm4cOHJ86wDMC0K+fZipCz/5zjtKD3vEus/GWZfUbedUavsCuJsjKzFS
+	 qPhIkIRYIksifKK02jltzFVQvCCQfwYalJspKDe8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbgABWY2 (ORCPT
+        id S1729286AbgABWYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:24:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48250 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:24:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729398AbgABWYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:24:23 -0500
+        id S1728909AbgABWY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:24:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A35420866;
-        Thu,  2 Jan 2020 22:24:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0F7D20866;
+        Thu,  2 Jan 2020 22:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003863;
-        bh=gswYiLu3FlwC8HmRfHwjDATuJUwUjszRLkoCYGdkelQ=;
+        s=default; t=1578003865;
+        bh=K7Da7CfJG3el96WvT6CvaZfsTE8nEfsPdfq4Qrvr6vU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LlsErYJjk54/SJiAmC6xHjzyuYkoqVubiIx68PFp0kFQ6Kh7a4Mcli2vF90zhzOBC
-         6xhcsRa3t3tZWerhSLxIIJS2Fx4P49qNAX2nUWwaWxbQ4tgYn3Z3HHJE+W2oiOAfr+
-         j1xsMD66w7HTKBYO9K652qjU1vVh9RX+rGGHKNME=
+        b=j7R2K13xeiGPMusotecmi4dFUop1hZjdm3PIaPHjrEfcn+my9toXrAYZLXNRiF3gv
+         nFQsyNSAlwbjK1pFfCNp3XpAdAerr+kCX/PzgwxXeHE9M7tNpJTwXX5/wmCSiImazp
+         1eHZ79+b9b4+L6z6ES5N1o6vJ4tgrHw2axo5d8ss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 07/91] scsi: lpfc: Fix SLI3 hba in loop mode not discovering devices
-Date:   Thu,  2 Jan 2020 23:06:49 +0100
-Message-Id: <20200102220405.119689544@linuxfoundation.org>
+Subject: [PATCH 4.14 08/91] scsi: csiostor: Dont enable IRQs too early
+Date:   Thu,  2 Jan 2020 23:06:50 +0100
+Message-Id: <20200102220406.922826555@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -61,43 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit feff8b3d84d3d9570f893b4d83e5eab6693d6a52 ]
+[ Upstream commit d6c9b31ac3064fbedf8961f120a4c117daa59932 ]
 
-When operating in private loop mode, PLOGI exchanges are racing and the
-driver tries to abort it's PLOGI. But the PLOGI abort ends up terminating
-the login with the other end causing the other end to abort its PLOGI as
-well. Discovery never fully completes.
+These are called with IRQs disabled from csio_mgmt_tmo_handler() so we
+can't call spin_unlock_irq() or it will enable IRQs prematurely.
 
-Fix by disabling the PLOGI abort when private loop and letting the state
-machine play out.
-
-Link: https://lore.kernel.org/r/20191018211832.7917-5-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
+Fixes: a3667aaed569 ("[SCSI] csiostor: Chelsio FCoE offload driver")
+Link: https://lore.kernel.org/r/20191019085913.GA14245@mwanda
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_nportdisc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/scsi/csiostor/csio_lnode.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nportdisc.c b/drivers/scsi/lpfc/lpfc_nportdisc.c
-index 043bca6449cd..96411754aa43 100644
---- a/drivers/scsi/lpfc/lpfc_nportdisc.c
-+++ b/drivers/scsi/lpfc/lpfc_nportdisc.c
-@@ -483,8 +483,10 @@ lpfc_rcv_plogi(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp,
- 	 * single discovery thread, this will cause a huge delay in
- 	 * discovery. Also this will cause multiple state machines
- 	 * running in parallel for this node.
-+	 * This only applies to a fabric environment.
- 	 */
--	if (ndlp->nlp_state == NLP_STE_PLOGI_ISSUE) {
-+	if ((ndlp->nlp_state == NLP_STE_PLOGI_ISSUE) &&
-+	    (vport->fc_flag & FC_FABRIC)) {
- 		/* software abort outstanding PLOGI */
- 		lpfc_els_abort(phba, ndlp);
+diff --git a/drivers/scsi/csiostor/csio_lnode.c b/drivers/scsi/csiostor/csio_lnode.c
+index be5ee2d37815..957767d38361 100644
+--- a/drivers/scsi/csiostor/csio_lnode.c
++++ b/drivers/scsi/csiostor/csio_lnode.c
+@@ -301,6 +301,7 @@ csio_ln_fdmi_rhba_cbfn(struct csio_hw *hw, struct csio_ioreq *fdmi_req)
+ 	struct fc_fdmi_port_name *port_name;
+ 	uint8_t buf[64];
+ 	uint8_t *fc4_type;
++	unsigned long flags;
+ 
+ 	if (fdmi_req->wr_status != FW_SUCCESS) {
+ 		csio_ln_dbg(ln, "WR error:%x in processing fdmi rhba cmd\n",
+@@ -377,13 +378,13 @@ csio_ln_fdmi_rhba_cbfn(struct csio_hw *hw, struct csio_ioreq *fdmi_req)
+ 	len = (uint32_t)(pld - (uint8_t *)cmd);
+ 
+ 	/* Submit FDMI RPA request */
+-	spin_lock_irq(&hw->lock);
++	spin_lock_irqsave(&hw->lock, flags);
+ 	if (csio_ln_mgmt_submit_req(fdmi_req, csio_ln_fdmi_done,
+ 				FCOE_CT, &fdmi_req->dma_buf, len)) {
+ 		CSIO_INC_STATS(ln, n_fdmi_err);
+ 		csio_ln_dbg(ln, "Failed to issue fdmi rpa req\n");
  	}
+-	spin_unlock_irq(&hw->lock);
++	spin_unlock_irqrestore(&hw->lock, flags);
+ }
+ 
+ /*
+@@ -404,6 +405,7 @@ csio_ln_fdmi_dprt_cbfn(struct csio_hw *hw, struct csio_ioreq *fdmi_req)
+ 	struct fc_fdmi_rpl *reg_pl;
+ 	struct fs_fdmi_attrs *attrib_blk;
+ 	uint8_t buf[64];
++	unsigned long flags;
+ 
+ 	if (fdmi_req->wr_status != FW_SUCCESS) {
+ 		csio_ln_dbg(ln, "WR error:%x in processing fdmi dprt cmd\n",
+@@ -483,13 +485,13 @@ csio_ln_fdmi_dprt_cbfn(struct csio_hw *hw, struct csio_ioreq *fdmi_req)
+ 	attrib_blk->numattrs = htonl(numattrs);
+ 
+ 	/* Submit FDMI RHBA request */
+-	spin_lock_irq(&hw->lock);
++	spin_lock_irqsave(&hw->lock, flags);
+ 	if (csio_ln_mgmt_submit_req(fdmi_req, csio_ln_fdmi_rhba_cbfn,
+ 				FCOE_CT, &fdmi_req->dma_buf, len)) {
+ 		CSIO_INC_STATS(ln, n_fdmi_err);
+ 		csio_ln_dbg(ln, "Failed to issue fdmi rhba req\n");
+ 	}
+-	spin_unlock_irq(&hw->lock);
++	spin_unlock_irqrestore(&hw->lock, flags);
+ }
+ 
+ /*
+@@ -504,6 +506,7 @@ csio_ln_fdmi_dhba_cbfn(struct csio_hw *hw, struct csio_ioreq *fdmi_req)
+ 	void *cmd;
+ 	struct fc_fdmi_port_name *port_name;
+ 	uint32_t len;
++	unsigned long flags;
+ 
+ 	if (fdmi_req->wr_status != FW_SUCCESS) {
+ 		csio_ln_dbg(ln, "WR error:%x in processing fdmi dhba cmd\n",
+@@ -534,13 +537,13 @@ csio_ln_fdmi_dhba_cbfn(struct csio_hw *hw, struct csio_ioreq *fdmi_req)
+ 	len += sizeof(*port_name);
+ 
+ 	/* Submit FDMI request */
+-	spin_lock_irq(&hw->lock);
++	spin_lock_irqsave(&hw->lock, flags);
+ 	if (csio_ln_mgmt_submit_req(fdmi_req, csio_ln_fdmi_dprt_cbfn,
+ 				FCOE_CT, &fdmi_req->dma_buf, len)) {
+ 		CSIO_INC_STATS(ln, n_fdmi_err);
+ 		csio_ln_dbg(ln, "Failed to issue fdmi dprt req\n");
+ 	}
+-	spin_unlock_irq(&hw->lock);
++	spin_unlock_irqrestore(&hw->lock, flags);
+ }
+ 
+ /**
 -- 
 2.20.1
 
