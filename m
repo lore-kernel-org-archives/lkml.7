@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E06BC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A6BC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 348A920866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B937120866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005853;
-	bh=/Fasbs0VlKabB4MPfOuNtzOBDcH0DoDP+7XE16/9fFg=;
+	s=default; t=1578005856;
+	bh=BqX7q04+FN+mZ1t824BNPAXjx17/+bgB/b3nPi663bg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kSeXBV8M9GDEnAqI6Oy6uIogrBwKYQfqe98iXnoRVTzsdbQ0D85ZLFbJAtiGw5VnF
-	 X2Biw5zXCA5OgmB5ZbeeFQFxrX4GLeejyf2jxL7ZGY+i0Yy+v4WOEKvST0VVISDmti
-	 4lY0r1Y7IESY+sjSG2RX7KgAurCmSv4m2iJSzr78=
+	b=Jp58tgaVjxlLjM1Tfh1wClf74SRNQfia9e+1jhym/+asE0Gj3C63FwwZND52Q5gjf
+	 O+ryQEaG4IBlLUnlNIrb5tiTIFImVWxz6AumWj55OFtJYNj9+xw4gtVUIdiRgAVPgX
+	 V1gS4bsUfdGSxpnoZDekGQ5SvxiTdGQpWHTdxiyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729214AbgABW5c (ORCPT
+        id S1729148AbgABW5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:57:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59048 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:57:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728303AbgABWQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:16:52 -0500
+        id S1727228AbgABWQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:16:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7B6821582;
-        Thu,  2 Jan 2020 22:16:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35D6522314;
+        Thu,  2 Jan 2020 22:16:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003411;
-        bh=/Fasbs0VlKabB4MPfOuNtzOBDcH0DoDP+7XE16/9fFg=;
+        s=default; t=1578003413;
+        bh=BqX7q04+FN+mZ1t824BNPAXjx17/+bgB/b3nPi663bg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZNZ9ZDHst44A/RjuBH3IYugVctIbZrTOMeGSXWwMuGvUVqA3T4FURZR3y4+QOwwr7
-         aM/USSfT2OYqyiUdE9tDxjG0SJfqiOGFaHK/OZStWq86UAC0w6qlunUMn+hcHPx9lW
-         gMCs6rE0asvK9IcS/YuQHvOTH2wK8mbQeE8fBDvA=
+        b=YcJVoj2+7xSCN3KiBomGdMq+t9bXPsQJPRgygLSLHQeofYAdXypToMUb0gp9FB/YW
+         4wFILAfLJe8/XGUfznAPMhEsqYQu758LVXPd3AE+h5b+nDcCDtLtWvNo/IKxjf1tWA
+         URTaKe0AJecvNAURXFyRVDVAZLEV0YRXSQNAIEZk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.4 142/191] hrtimer: Annotate lockless access to timer->state
-Date:   Thu,  2 Jan 2020 23:07:04 +0100
-Message-Id: <20200102215844.776889091@linuxfoundation.org>
+        stable@vger.kernel.org, Shmulik Ladkani <sladkani@proofpoint.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 151/191] net/sched: act_mirred: Pull mac prior redir to non mac_header_xmit device
+Date:   Thu,  2 Jan 2020 23:07:13 +0100
+Message-Id: <20200102215845.650407157@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -60,160 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Shmulik Ladkani <sladkani@proofpoint.com>
 
-commit 56144737e67329c9aaed15f942d46a6302e2e3d8 upstream.
+[ Upstream commit 70cf3dc7313207816255b9acb0dffb19dae78144 ]
 
-syzbot reported various data-race caused by hrtimer_is_queued() reading
-timer->state. A READ_ONCE() is required there to silence the warning.
+There's no skb_pull performed when a mirred action is set at egress of a
+mac device, with a target device/action that expects skb->data to point
+at the network header.
 
-Also add the corresponding WRITE_ONCE() when timer->state is set.
+As a result, either the target device is errornously given an skb with
+data pointing to the mac (egress case), or the net stack receives the
+skb with data pointing to the mac (ingress case).
 
-In remove_hrtimer() the hrtimer_is_queued() helper is open coded to avoid
-loading timer->state twice.
+E.g:
+ # tc qdisc add dev eth9 root handle 1: prio
+ # tc filter add dev eth9 parent 1: prio 9 protocol ip handle 9 basic \
+   action mirred egress redirect dev tun0
 
-KCSAN reported these cases:
+ (tun0 is a tun device. result: tun0 errornously gets the eth header
+  instead of the iph)
 
-BUG: KCSAN: data-race in __remove_hrtimer / tcp_pacing_check
+Revise the push/pull logic of tcf_mirred_act() to not rely on the
+skb_at_tc_ingress() vs tcf_mirred_act_wants_ingress() comparison, as it
+does not cover all "pull" cases.
 
-write to 0xffff8880b2a7d388 of 1 bytes by interrupt on cpu 0:
- __remove_hrtimer+0x52/0x130 kernel/time/hrtimer.c:991
- __run_hrtimer kernel/time/hrtimer.c:1496 [inline]
- __hrtimer_run_queues+0x250/0x600 kernel/time/hrtimer.c:1576
- hrtimer_run_softirq+0x10e/0x150 kernel/time/hrtimer.c:1593
- __do_softirq+0x115/0x33f kernel/softirq.c:292
- run_ksoftirqd+0x46/0x60 kernel/softirq.c:603
- smpboot_thread_fn+0x37d/0x4a0 kernel/smpboot.c:165
- kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+Instead, calculate whether the required action on the target device
+requires the data to point at the network header, and compare this to
+whether skb->data points to network header - and make the push/pull
+adjustments as necessary.
 
-read to 0xffff8880b2a7d388 of 1 bytes by task 24652 on cpu 1:
- tcp_pacing_check net/ipv4/tcp_output.c:2235 [inline]
- tcp_pacing_check+0xba/0x130 net/ipv4/tcp_output.c:2225
- tcp_xmit_retransmit_queue+0x32c/0x5a0 net/ipv4/tcp_output.c:3044
- tcp_xmit_recovery+0x7c/0x120 net/ipv4/tcp_input.c:3558
- tcp_ack+0x17b6/0x3170 net/ipv4/tcp_input.c:3717
- tcp_rcv_established+0x37e/0xf50 net/ipv4/tcp_input.c:5696
- tcp_v4_do_rcv+0x381/0x4e0 net/ipv4/tcp_ipv4.c:1561
- sk_backlog_rcv include/net/sock.h:945 [inline]
- __release_sock+0x135/0x1e0 net/core/sock.c:2435
- release_sock+0x61/0x160 net/core/sock.c:2951
- sk_stream_wait_memory+0x3d7/0x7c0 net/core/stream.c:145
- tcp_sendmsg_locked+0xb47/0x1f30 net/ipv4/tcp.c:1393
- tcp_sendmsg+0x39/0x60 net/ipv4/tcp.c:1434
- inet_sendmsg+0x6d/0x90 net/ipv4/af_inet.c:807
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0x9f/0xc0 net/socket.c:657
-
-BUG: KCSAN: data-race in __remove_hrtimer / __tcp_ack_snd_check
-
-write to 0xffff8880a3a65588 of 1 bytes by interrupt on cpu 0:
- __remove_hrtimer+0x52/0x130 kernel/time/hrtimer.c:991
- __run_hrtimer kernel/time/hrtimer.c:1496 [inline]
- __hrtimer_run_queues+0x250/0x600 kernel/time/hrtimer.c:1576
- hrtimer_run_softirq+0x10e/0x150 kernel/time/hrtimer.c:1593
- __do_softirq+0x115/0x33f kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0xbb/0xe0 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:536 [inline]
- smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
-
-read to 0xffff8880a3a65588 of 1 bytes by task 22891 on cpu 1:
- __tcp_ack_snd_check+0x415/0x4f0 net/ipv4/tcp_input.c:5265
- tcp_ack_snd_check net/ipv4/tcp_input.c:5287 [inline]
- tcp_rcv_established+0x750/0xf50 net/ipv4/tcp_input.c:5708
- tcp_v4_do_rcv+0x381/0x4e0 net/ipv4/tcp_ipv4.c:1561
- sk_backlog_rcv include/net/sock.h:945 [inline]
- __release_sock+0x135/0x1e0 net/core/sock.c:2435
- release_sock+0x61/0x160 net/core/sock.c:2951
- sk_stream_wait_memory+0x3d7/0x7c0 net/core/stream.c:145
- tcp_sendmsg_locked+0xb47/0x1f30 net/ipv4/tcp.c:1393
- tcp_sendmsg+0x39/0x60 net/ipv4/tcp.c:1434
- inet_sendmsg+0x6d/0x90 net/ipv4/af_inet.c:807
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0x9f/0xc0 net/socket.c:657
- __sys_sendto+0x21f/0x320 net/socket.c:1952
- __do_sys_sendto net/socket.c:1964 [inline]
- __se_sys_sendto net/socket.c:1960 [inline]
- __x64_sys_sendto+0x89/0xb0 net/socket.c:1960
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 24652 Comm: syz-executor.3 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-
-[ tglx: Added comments ]
-
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191106174804.74723-1-edumazet@google.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Shmulik Ladkani <sladkani@proofpoint.com>
+Tested-by: Jamal Hadi Salim <jhs@mojatatu.com>
+Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- include/linux/hrtimer.h |   14 ++++++++++----
- kernel/time/hrtimer.c   |   11 +++++++----
- 2 files changed, 17 insertions(+), 8 deletions(-)
+ net/sched/act_mirred.c |   22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
---- a/include/linux/hrtimer.h
-+++ b/include/linux/hrtimer.h
-@@ -456,12 +456,18 @@ extern u64 hrtimer_next_event_without(co
+--- a/net/sched/act_mirred.c
++++ b/net/sched/act_mirred.c
+@@ -219,8 +219,10 @@ static int tcf_mirred_act(struct sk_buff
+ 	bool use_reinsert;
+ 	bool want_ingress;
+ 	bool is_redirect;
++	bool expects_nh;
+ 	int m_eaction;
+ 	int mac_len;
++	bool at_nh;
  
- extern bool hrtimer_active(const struct hrtimer *timer);
+ 	rec_level = __this_cpu_inc_return(mirred_rec_level);
+ 	if (unlikely(rec_level > MIRRED_RECURSION_LIMIT)) {
+@@ -261,19 +263,19 @@ static int tcf_mirred_act(struct sk_buff
+ 			goto out;
+ 	}
  
--/*
-- * Helper function to check, whether the timer is on one of the queues
-+/**
-+ * hrtimer_is_queued = check, whether the timer is on one of the queues
-+ * @timer:	Timer to check
-+ *
-+ * Returns: True if the timer is queued, false otherwise
-+ *
-+ * The function can be used lockless, but it gives only a current snapshot.
-  */
--static inline int hrtimer_is_queued(struct hrtimer *timer)
-+static inline bool hrtimer_is_queued(struct hrtimer *timer)
- {
--	return timer->state & HRTIMER_STATE_ENQUEUED;
-+	/* The READ_ONCE pairs with the update functions of timer->state */
-+	return !!(READ_ONCE(timer->state) & HRTIMER_STATE_ENQUEUED);
- }
- 
- /*
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -966,7 +966,8 @@ static int enqueue_hrtimer(struct hrtime
- 
- 	base->cpu_base->active_bases |= 1 << base->index;
- 
--	timer->state = HRTIMER_STATE_ENQUEUED;
-+	/* Pairs with the lockless read in hrtimer_is_queued() */
-+	WRITE_ONCE(timer->state, HRTIMER_STATE_ENQUEUED);
- 
- 	return timerqueue_add(&base->active, &timer->node);
- }
-@@ -988,7 +989,8 @@ static void __remove_hrtimer(struct hrti
- 	struct hrtimer_cpu_base *cpu_base = base->cpu_base;
- 	u8 state = timer->state;
- 
--	timer->state = newstate;
-+	/* Pairs with the lockless read in hrtimer_is_queued() */
-+	WRITE_ONCE(timer->state, newstate);
- 	if (!(state & HRTIMER_STATE_ENQUEUED))
- 		return;
- 
-@@ -1013,8 +1015,9 @@ static void __remove_hrtimer(struct hrti
- static inline int
- remove_hrtimer(struct hrtimer *timer, struct hrtimer_clock_base *base, bool restart)
- {
--	if (hrtimer_is_queued(timer)) {
--		u8 state = timer->state;
-+	u8 state = timer->state;
+-	/* If action's target direction differs than filter's direction,
+-	 * and devices expect a mac header on xmit, then mac push/pull is
+-	 * needed.
+-	 */
+ 	want_ingress = tcf_mirred_act_wants_ingress(m_eaction);
+-	if (skb_at_tc_ingress(skb) != want_ingress && m_mac_header_xmit) {
+-		if (!skb_at_tc_ingress(skb)) {
+-			/* caught at egress, act ingress: pull mac */
+-			mac_len = skb_network_header(skb) - skb_mac_header(skb);
 +
-+	if (state & HRTIMER_STATE_ENQUEUED) {
- 		int reprogram;
++	expects_nh = want_ingress || !m_mac_header_xmit;
++	at_nh = skb->data == skb_network_header(skb);
++	if (at_nh != expects_nh) {
++		mac_len = skb_at_tc_ingress(skb) ? skb->mac_len :
++			  skb_network_header(skb) - skb_mac_header(skb);
++		if (expects_nh) {
++			/* target device/action expect data at nh */
+ 			skb_pull_rcsum(skb2, mac_len);
+ 		} else {
+-			/* caught at ingress, act egress: push mac */
+-			skb_push_rcsum(skb2, skb->mac_len);
++			/* target device/action expect data at mac */
++			skb_push_rcsum(skb2, mac_len);
+ 		}
+ 	}
  
- 		/*
 
 
