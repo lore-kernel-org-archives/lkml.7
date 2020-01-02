@@ -2,87 +2,68 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0C8C2D0DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 04:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD934C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 04:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D605B21734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 04:31:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CiaY/Y2h"
+	by mail.kernel.org (Postfix) with ESMTP id AA4D020866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 04:48:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577940504;
+	bh=DrqWr2KiXC4k6biPxJ21KIxxaJvRIjRLOYHeQTgyJOs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nsjqLTu8iydyiCl9fjBF+1ll2y/MWX9jy58P5rlkOi/ayjqObX6gq2Loq5YVdrfz+
+	 ltQcEqdxIElfyHbKySXZv3e6mVjqWmhrLYdMkLr8AbsIvq+IPnu/JBZoLLeZOt0x0O
+	 dQMiuyK+Ewt1WBLqEA3Rzzv+Zi3B5jmI2NGV3pAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbgABEbi (ORCPT
+        id S1727641AbgABEsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 23:31:38 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41285 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727706AbgABEbR (ORCPT
+        Wed, 1 Jan 2020 23:48:22 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37532 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbgABEsW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 23:31:17 -0500
-Received: by mail-qk1-f193.google.com with SMTP id x129so30605151qke.8
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 20:31:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NpqU1xm4hNnjdFhU/EPerrQR3O04pAhofn4iqB3IAtI=;
-        b=CiaY/Y2hjcuthGEwrWBX+bmJHvKILURe9wtlPJrITUCg0xeuX2/TmXxehxHIZ/6xTb
-         2ovevQjXdTegn8zqGWPJ2AbmhQAs3aOPIXn13Fej1lYtl3J0nB2wdlJkMIp0p4FIvPEZ
-         kyzE/Iii8OTo4IFpVZA6MJSkYcvdnYW6M/K4n4tT/ZiybWisM+1U8u1rN1NP4QmLkr/5
-         zXWipEAdgpjeUwSTsEDz0o1MZCH+0sqjBxhZhn5KF4axitUBANp44Yeojzu8N8ySEcxR
-         GIMODnOeZA2STR8zicpHuC/Rej3nA1uUSK6ffxiUCxIh/So6enUOodz+1IMh4AuxFu0f
-         VlIg==
+        Wed, 1 Jan 2020 23:48:22 -0500
+Received: by mail-pg1-f194.google.com with SMTP id q127so21343532pga.4;
+        Wed, 01 Jan 2020 20:48:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NpqU1xm4hNnjdFhU/EPerrQR3O04pAhofn4iqB3IAtI=;
-        b=g9SnY8eZmgQ43Zr1AcWi1MQueSx4VDXcFtn6t67QWXzJZgkuN7Zf/iquYumvSUtVtx
-         3khqfRA3tnWr3WrqL0QP85RCMrPCa43RyVgO4nJtSUjGBoAGBPUl/PIYey6oNgPJ83Rg
-         l6zNpOWEauPHmfmMAI7Wi+KVtZdreO18zTWRxiiBLBuKT1ca5UVDHfszX72eN+B5wHRT
-         eXrRXezgHzgyQ2Rvw8fKoVWwckKu6XJGtYVe7eHesLtWF5zimNpwFg4u6Td6BrON4tAT
-         sfU4uELOsqyVQR46U1uvZ36BNEAe9XUOopAc7vWWoHgiaod52ELkoG0x9qa47kARdB03
-         5IVg==
-X-Gm-Message-State: APjAAAVBz1QlkKTszI6Dku0MFRAf9fR1ExLD0Ip7BetXe8rRCT81dEXQ
-        AwGOz7sYlBu7c8uWGGmQT5k=
-X-Google-Smtp-Source: APXvYqxMDHpnokX5Mmv3Dv0kJCX0f2DYioVB7RYrbPHVjtWJ7/yj1LNN138aVEuAm5XrA/NnSGIeSA==
-X-Received: by 2002:a37:7b43:: with SMTP id w64mr64699250qkc.203.1577939476511;
-        Wed, 01 Jan 2020 20:31:16 -0800 (PST)
-Received: from yury-thinkpad.dhcp.amer.jpmchase.net ([2604:2000:4185:2300:b196:4884:e960:2cb8])
-        by smtp.gmail.com with ESMTPSA id 16sm14876857qkj.77.2020.01.01.20.31.15
+        bh=B7VbcHmZbM3YsGNwkGdEQ8Jr7FxCK1RfjAyLy6V4uRU=;
+        b=I6YPOk0FCuNMJTPGCC25jH5nUjKrUOVOohhy+eCyn/qs+zqBr600RclrzeTcjwpMxE
+         bbTuFv4TK/YF4gNtaIr09TP/l2iGH6x1ad1LM4ciKytel+6W5ePw85Ec1pXPaqQAoFaW
+         +HZZ29Jc2KSbnTBUnnDf21urrYqaoVs7diJloZQViIt2ZvKEiLSPB6DngW/HZ5mJ3Vnf
+         jnd3pYvWlFuba7WAru6BqCfN2QnuXpQnREJ0axWaNjrPKCjUbNpSUO+sd6BTESb/Klcp
+         0PLS8dlbPND2WjHAOxr1AiWNpueUfXEGzay3cmeGRvSZqpMafXODHKxg5grkNll0884F
+         aZtA==
+X-Gm-Message-State: APjAAAUHQbUPGa72QY8r7lqz8n4mAc6x+X+W0gBuNBHhmlcGsRTCl2Xu
+        Fc6t5iMhhXAMugLJbbnQfqKWdCCBNU9Rkox/
+X-Google-Smtp-Source: APXvYqxK9iMqZLXVnHDdjdCQZ7AhzV5WtLxYWtjbvQVsPwWaW7Y1wFjlXxKkXomeYr+p46wHO4P/vA==
+X-Received: by 2002:aa7:9d9c:: with SMTP id f28mr86834652pfq.20.1577940501206;
+        Wed, 01 Jan 2020 20:48:21 -0800 (PST)
+Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
+        by smtp.gmail.com with ESMTPSA id a10sm58253531pgm.81.2020.01.01.20.48.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jan 2020 20:31:16 -0800 (PST)
-From:   Yury Norov <yury.norov@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Amritha Nambiar <amritha.nambiar@intel.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Tobin C . Harding" <tobin@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Vineet Gupta <vineet.gupta1@synopsys.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Yury Norov <yury.norov@gmail.com>, Jens Axboe <axboe@kernel.dk>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4/7] lib: make bitmap_parse_user a wrapper on bitmap_parse
-Date:   Wed,  1 Jan 2020 20:30:28 -0800
-Message-Id: <20200102043031.30357-5-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200102043031.30357-1-yury.norov@gmail.com>
-References: <20200102043031.30357-1-yury.norov@gmail.com>
+        Wed, 01 Jan 2020 20:48:20 -0800 (PST)
+From:   Paul Burton <paulburton@kernel.org>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@canonical.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        stable@vger.kernel.org
+Subject: [PATCH v2] MIPS: Avoid VDSO ABI breakage due to global register variable
+Date:   Wed,  1 Jan 2020 20:50:38 -0800
+Message-Id: <20200102045038.102772-1-paulburton@kernel.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200102005343.GA495913@rani.riverdale.lan>
+References: <20200102005343.GA495913@rani.riverdale.lan>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -90,58 +71,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From Yury Norov <yury.norov@gmail.com>
+Declaring __current_thread_info as a global register variable has the
+effect of preventing GCC from saving & restoring its value in cases
+where the ABI would typically do so.
 
-Currently we parse user data byte after byte which leads to
-overcomplicating of parsing algorithm. There are no performance
-critical users of bitmap_parse_user(), and so we can duplicate
-user data to kernel buffer and simply call bitmap_parselist().
-This rework lets us unify and simplify bitmap_parse() and
-bitmap_parse_user(), which is done in the following patch.
+To quote GCC documentation:
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
+> If the register is a call-saved register, call ABI is affected: the
+> register will not be restored in function epilogue sequences after the
+> variable has been assigned. Therefore, functions cannot safely return
+> to callers that assume standard ABI.
+
+When our position independent VDSO is built for the n32 or n64 ABIs all
+functions it exposes should be preserving the value of $gp/$28 for their
+caller, but in the presence of the __current_thread_info global register
+variable GCC stops doing so & simply clobbers $gp/$28 when calculating
+the address of the GOT.
+
+In cases where the VDSO returns success this problem will typically be
+masked by the caller in libc returning & restoring $gp/$28 itself, but
+that is by no means guaranteed. In cases where the VDSO returns an error
+libc will typically contain a fallback path which will now fail
+(typically with a bad memory access) if it attempts anything which
+relies upon the value of $gp/$28 - eg. accessing anything via the GOT.
+
+One fix for this would be to move the declaration of
+__current_thread_info inside the current_thread_info() function,
+demoting it from global register variable to local register variable &
+avoiding inadvertently creating a non-standard calling ABI for the VDSO.
+Unfortunately this causes issues for clang, which doesn't support local
+register variables as pointed out by commit fe92da0f355e ("MIPS: Changed
+current_thread_info() to an equivalent supported by both clang and GCC")
+which introduced the global register variable before we had a VDSO to
+worry about.
+
+Instead, fix this by continuing to use the global register variable for
+the kernel proper but declare __current_thread_info as a simple extern
+variable when building the VDSO. It should never be referenced, and will
+cause a link error if it is. This resolves the calling convention issue
+for the VDSO without having any impact upon the build of the kernel
+itself for either clang or gcc.
+
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Reported-by: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Fixes: ebb5e78cc634 ("MIPS: Initial implementation of a VDSO")
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Christian Brauner <christian.brauner@canonical.com>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: <stable@vger.kernel.org> # v4.4+
 ---
- lib/bitmap.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+Changes in v2:
+- Switch to the #ifdef __VDSO__ approach rather than using a local
+  register variable which clang doesn't support.
+---
+ arch/mips/include/asm/thread_info.h | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bitmap.c b/lib/bitmap.c
-index 4250519d7d1c5..b9ac2d42b99e1 100644
---- a/lib/bitmap.c
-+++ b/lib/bitmap.c
-@@ -464,22 +464,22 @@ EXPORT_SYMBOL(__bitmap_parse);
-  *    then it must be terminated with a \0.
-  * @maskp: pointer to bitmap array that will contain result.
-  * @nmaskbits: size of bitmap, in bits.
-- *
-- * Wrapper for __bitmap_parse(), providing it with user buffer.
-- *
-- * We cannot have this as an inline function in bitmap.h because it needs
-- * linux/uaccess.h to get the access_ok() declaration and this causes
-- * cyclic dependencies.
-  */
- int bitmap_parse_user(const char __user *ubuf,
- 			unsigned int ulen, unsigned long *maskp,
- 			int nmaskbits)
- {
--	if (!access_ok(ubuf, ulen))
--		return -EFAULT;
--	return __bitmap_parse((const char __force *)ubuf,
--				ulen, 1, maskp, nmaskbits);
-+	char *buf;
-+	int ret;
- 
-+	buf = memdup_user_nul(ubuf, ulen);
-+	if (IS_ERR(buf))
-+		return PTR_ERR(buf);
-+
-+	ret = bitmap_parse(buf, ulen, maskp, nmaskbits);
-+
-+	kfree(buf);
-+	return ret;
+diff --git a/arch/mips/include/asm/thread_info.h b/arch/mips/include/asm/thread_info.h
+index 4993db40482c..ee26f9a4575d 100644
+--- a/arch/mips/include/asm/thread_info.h
++++ b/arch/mips/include/asm/thread_info.h
+@@ -49,8 +49,26 @@ struct thread_info {
+ 	.addr_limit	= KERNEL_DS,		\
  }
- EXPORT_SYMBOL(bitmap_parse_user);
  
+-/* How to get the thread information struct from C.  */
++/*
++ * A pointer to the struct thread_info for the currently executing thread is
++ * held in register $28/$gp.
++ *
++ * We declare __current_thread_info as a global register variable rather than a
++ * local register variable within current_thread_info() because clang doesn't
++ * support explicit local register variables.
++ *
++ * When building the VDSO we take care not to declare the global register
++ * variable because this causes GCC to not preserve the value of $28/$gp in
++ * functions that change its value (which is common in the PIC VDSO when
++ * accessing the GOT). Since the VDSO shouldn't be accessing
++ * __current_thread_info anyway we declare it extern in order to cause a link
++ * failure if it's referenced.
++ */
++#ifdef __VDSO__
++extern struct thread_info *__current_thread_info;
++#else
+ register struct thread_info *__current_thread_info __asm__("$28");
++#endif
+ 
+ static inline struct thread_info *current_thread_info(void)
+ {
 -- 
-2.20.1
+2.24.1
 
