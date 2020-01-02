@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA986C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EC5C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF26B21D7D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CA8C21D7D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003114;
-	bh=P/0TEYIsc/mAFLoitRlrODTkg60QhxkoxOSox9ThY2E=;
+	s=default; t=1578003120;
+	bh=Ul5qKL0qB3yThJxQQ0qEQpOIR8Eucc/E4MFyWrE4Poo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fqtxIYx2wAb5uB6yydkUkEZyY0dHNK03IGqXI8qv476FRAa5oltrf40WVPHQrgJdj
-	 89kIEiZcTxyN7GU3K2ztSZjmiAnNYFbopa+bJlqwgV0yXeUpDF9fov7iYC9ZIt+7hB
-	 ntxoo60WWNq/4dKMOYDCQHrAckKqBe7gY7psognw=
+	b=cnPPzEOKYDXJl3Mzx5kshaiem3zKWUIyF39HurFtw3Q11+0wbmIpplyy71Sz3+LjG
+	 x0P8+qeI+8JA60WDrCNm8gV+9MBHL9OLUm/hfuwcOeMTvbu08IYRVS/yX9pxD2YMOM
+	 +VDdQMVQE8afTGyaEiM/RaAiGbrRZwC1/A+bEVd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbgABWLx (ORCPT
+        id S1727336AbgABWL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:11:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50442 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:11:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727264AbgABWLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:11:50 -0500
+        id S1727264AbgABWLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:11:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7587B222C3;
-        Thu,  2 Jan 2020 22:11:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AB70222C3;
+        Thu,  2 Jan 2020 22:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003109;
-        bh=P/0TEYIsc/mAFLoitRlrODTkg60QhxkoxOSox9ThY2E=;
+        s=default; t=1578003114;
+        bh=Ul5qKL0qB3yThJxQQ0qEQpOIR8Eucc/E4MFyWrE4Poo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kfCZEKeDZhdDkcE5JlxxFJmo3Zdp8+9iqLh8H6Yg0OUisfpRjwmLDWXocwvXW1ZLN
-         cUG9xUujP+i7wtGQdKqMDTjYeHpwiBg9NQ30npSnVb9TbtYf2xLa6Dw9vJF9MHIDfa
-         rYVSR1kFdWR7jJLgEunWQePXo2PADRtPO8mk2glg=
+        b=MpYYdnVb61SRYnEma/PwbdAOfsQQ+1W/NQzmc8Wyxzw+QgG51wVhb3sHbmt5gXMjF
+         TV+vEPDbpeHve7xfqW0ZifjmAEYCOCRPlTf1IrVOQM57LBj6wshnGr94fWBUApBp5z
+         ORiEMLkNrjxmhrnhiyNumYtZHLHxJ6RBCUDhG73g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luo Jiaxing <luojiaxing@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 023/191] scsi: hisi_sas: Delete the debugfs folder of hisi_sas when the probe fails
-Date:   Thu,  2 Jan 2020 23:05:05 +0100
-Message-Id: <20200102215832.429052690@linuxfoundation.org>
+Subject: [PATCH 5.4 025/191] powerpc/pseries: Dont fail hash page table insert for bolted mapping
+Date:   Thu,  2 Jan 2020 23:05:07 +0100
+Message-Id: <20200102215832.650130058@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,51 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo Jiaxing <luojiaxing@huawei.com>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit cabe7c10c97a0857a9fb14b6c772ab784947995d ]
+[ Upstream commit 75838a3290cd4ebbd1f567f310ba04b6ef017ce4 ]
 
-Although if the debugfs initialization fails, we will delete the debugfs
-folder of hisi_sas, but we did not consider the scenario where debugfs was
-successfully initialized, but the probe failed for other reasons. We found
-out that hisi_sas folder is still remain after the probe failed.
+If the hypervisor returned H_PTEG_FULL for H_ENTER hcall, retry a hash page table
+insert by removing a random entry from the group.
 
-When probe fail, we should delete debugfs folder to avoid the above issue.
+After some runtime, it is very well possible to find all the 8 hash page table
+entry slot in the hpte group used for mapping. Don't fail a bolted entry insert
+in that case. With Storage class memory a user can find this error easily since
+a namespace enable/disable is equivalent to memory add/remove.
 
-Link: https://lore.kernel.org/r/1571926105-74636-18-git-send-email-john.garry@huawei.com
-Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This results in failures as reported below:
+
+$ ndctl create-namespace -r region1 -t pmem -m devdax -a 65536 -s 100M
+libndctl: ndctl_dax_enable: dax1.3: failed to enable
+  Error: namespace1.2: failed to enable
+
+failed to create namespace: No such device or address
+
+In kernel log we find the details as below:
+
+Unable to create mapping for hot added memory 0xc000042006000000..0xc00004200d000000: -1
+dax_pmem: probe of dax1.3 failed with error -14
+
+This indicates that we failed to create a bolted hash table entry for direct-map
+address backing the namespace.
+
+We also observe failures such that not all namespaces will be enabled with
+ndctl enable-namespace all command.
+
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191024093542.29777-2-aneesh.kumar@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/hisi_sas/hisi_sas_main.c  | 1 +
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 1 +
- 2 files changed, 2 insertions(+)
+ arch/powerpc/mm/book3s64/hash_utils.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index 20f0cb4698b7..633effb09c9c 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -2682,6 +2682,7 @@ int hisi_sas_probe(struct platform_device *pdev,
- err_out_register_ha:
- 	scsi_remove_host(shost);
- err_out_ha:
-+	hisi_sas_debugfs_exit(hisi_hba);
- 	hisi_sas_free(hisi_hba);
- 	scsi_host_put(shost);
- 	return rc;
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index cb8d087762db..ef32ee12f606 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -3259,6 +3259,7 @@ hisi_sas_v3_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- err_out_register_ha:
- 	scsi_remove_host(shost);
- err_out_ha:
-+	hisi_sas_debugfs_exit(hisi_hba);
- 	scsi_host_put(shost);
- err_out_regions:
- 	pci_release_regions(pdev);
+diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
+index 6c123760164e..6e5a769ebcb8 100644
+--- a/arch/powerpc/mm/book3s64/hash_utils.c
++++ b/arch/powerpc/mm/book3s64/hash_utils.c
+@@ -294,7 +294,14 @@ int htab_bolt_mapping(unsigned long vstart, unsigned long vend,
+ 		ret = mmu_hash_ops.hpte_insert(hpteg, vpn, paddr, tprot,
+ 					       HPTE_V_BOLTED, psize, psize,
+ 					       ssize);
+-
++		if (ret == -1) {
++			/* Try to remove a non bolted entry */
++			ret = mmu_hash_ops.hpte_remove(hpteg);
++			if (ret != -1)
++				ret = mmu_hash_ops.hpte_insert(hpteg, vpn, paddr, tprot,
++							       HPTE_V_BOLTED, psize, psize,
++							       ssize);
++		}
+ 		if (ret < 0)
+ 			break;
+ 
 -- 
 2.20.1
 
