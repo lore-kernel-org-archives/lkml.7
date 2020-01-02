@@ -2,169 +2,109 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC297C2D0DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 03:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A52C2D0DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 03:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B265F215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 03:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2120A20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 03:09:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DU3WNvMD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbgABDFu convert rfc822-to-8bit (ORCPT
+        id S1727581AbgABDJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 22:05:50 -0500
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2551 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727525AbgABDFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 22:05:50 -0500
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 60D58FD560CAB9E30672;
-        Thu,  2 Jan 2020 11:05:47 +0800 (CST)
-Received: from DGGEMM421-HUB.china.huawei.com (10.1.198.38) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 2 Jan 2020 11:05:47 +0800
-Received: from DGGEMM526-MBX.china.huawei.com ([169.254.8.143]) by
- dggemm421-hub.china.huawei.com ([10.1.198.38]) with mapi id 14.03.0439.000;
- Thu, 2 Jan 2020 11:05:40 +0800
-From:   "Zengtao (B)" <prime.zeng@hisilicon.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-CC:     Linuxarm <linuxarm@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Morten Rasmussen" <morten.rasmussen@arm.com>
-Subject: RE: [PATCH] cpu-topology: warn if NUMA configurations conflicts
- with lower layer
-Thread-Topic: [PATCH] cpu-topology: warn if NUMA configurations conflicts
- with lower layer
-Thread-Index: AQHVuWnsK0zwK8RxTkqe/SNAoYeaUKfT+S+AgALBI6A=
-Date:   Thu, 2 Jan 2020 03:05:40 +0000
-Message-ID: <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
-References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
- <20191231164051.GA4864@bogus>
-In-Reply-To: <20191231164051.GA4864@bogus>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.74.221.187]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 1 Jan 2020 22:09:49 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:47095 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727509AbgABDJt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jan 2020 22:09:49 -0500
+Received: by mail-io1-f68.google.com with SMTP id t26so37123219ioi.13
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 19:09:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=/zRNoVfSQWIdIGqBkho+JgQAlRaLk3kS8yRXPy7McZQ=;
+        b=DU3WNvMDy2db71Veo5NgVm3w4ZSMD8E8gUt2aobpSnwYCLbyOHwuMLqHKGQJXdWJMA
+         IieFfcNunORIvOd6IH/0yoGeIQyBYnimTQIpS+EAcQoYkx0Lt582MknRkuASULzfKQaz
+         Gb2LjWAnmNA0KZdvhRvAQaxBrYvNR33G7HSl2SRknrVT6ayz6HAvDoImVuS4CNjpaJPQ
+         es6iN69EpEHKuSskJtwt5iTo9Z7q0kHUC3gKxQo1XJW6DIOzPeORgZavaEjmJrQp78F9
+         rE83vbA1UVGJywd90dv9RmuGEXTVpZZDbvk7ls6l+SuXUwWP9N/DwycR4CnVPIftyL2Q
+         PbyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=/zRNoVfSQWIdIGqBkho+JgQAlRaLk3kS8yRXPy7McZQ=;
+        b=Sl8zslDfqScFogrRiDF4A+1UYsLtvn2YlJq8xkrxIPm/MWeWjendEySRABNiIo5B8+
+         TNHsp/FZTuOl8rwaSl6x9eRuc2ex9uioG9ms9CmRLW3KvTl5o1Pl0NQN/41YJNPCBtJJ
+         GJ9KU0x/e7lSCLVQrnA20qRnkzWzohcnCwHr2Ot+ClNeUrLDbxHT8iIVej4LbQkbNW8r
+         kLoazlsLc7WcA/sMahHo/W4Mxa+bxI6jY6ygTeahL8R5d/2Ih3YURTDcqGek/TzT6U7N
+         fh0nSd6D8qSfhEihq1MHEX0H1eLoMB6Hr06kjYV7NLQMWQXyfFxgeOHQOYTD1xb1f0s5
+         1oQw==
+X-Gm-Message-State: APjAAAU7cGARdByJinMOWj3vmQ7jz3rLGp0rbCyOY++ZAsOAKRzGehY8
+        7CQAcm+Am99NuJL0CqlySC5s+RzJ9/JIROdHp64=
+X-Google-Smtp-Source: APXvYqwZ5nPNbLirYyrEHYOMdTDqv88ox3on5l6T/Qzo7gN41nhvmAUNtFBmmRFBsCrpPWyrBI6OEk9k0nf+VmOS6cs=
+X-Received: by 2002:a02:780f:: with SMTP id p15mr62360863jac.91.1577934588859;
+ Wed, 01 Jan 2020 19:09:48 -0800 (PST)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Received: by 2002:ac0:9191:0:0:0:0:0 with HTTP; Wed, 1 Jan 2020 19:09:48 -0800 (PST)
+In-Reply-To: <CAHk-=whzgLPi4szh8xOKysuS9CKaQESngc=n0omBVpwdQ822aw@mail.gmail.com>
+References: <20191231150226.GA523748@light.dominikbrodowski.net>
+ <20200101003017.GA116793@rani.riverdale.lan> <20200101183243.GB183871@rani.riverdale.lan>
+ <CAHk-=whzgLPi4szh8xOKysuS9CKaQESngc=n0omBVpwdQ822aw@mail.gmail.com>
+From:   youling 257 <youling257@gmail.com>
+Date:   Thu, 2 Jan 2020 11:09:48 +0800
+Message-ID: <CAOzgRdYqqYNU8jyXCu88RLstWhQUANUroQDz71fEjfDoEg-VqQ@mail.gmail.com>
+Subject: Re: [PATCH] early init: open /dev/console with O_LARGEFILE
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sudeep:
+2020-01-02 5:39 GMT+08:00, Linus Torvalds <torvalds@linux-foundation.org>:
+> On Wed, Jan 1, 2020 at 10:32 AM Arvind Sankar <nivedita@alum.mit.edu>
+> wrote:
+>>
+>> Also, this shouldn't impact the current issue I think, but won't doing
+>> filp_open followed by 3 f_dupfd's cause the file->f_count to become 4
+>> but with only 3 open fd's? Don't we have to do an fd_install for the
+>> first one and only 2 f_dupfd's?
+>
+> I think *this* is the real reason for the odd regression.
+>
+> Because we're leaking a file count, the original /dev/console stays
+> open, and we end up never calling file->f_op->release().
+>
+> So we don't call tty_release() on that original /dev/console open, and
+> one effect of that is that we never then call session_clear_tty(),
+> which should make sure that all the processes in that session ID have
+> their controlling tty (signal->tty pointer) cleared.
+>
+> And if that original controlling tty wasn't cleared, then subsequent
+> calls to set the controlling tty won't do anything, and who knows what
+> odd session leader confusion we might have.
+>
+> youling, can you check if - instead of the revert - this simple 'add
+> an fput' fixes your warning.
+>
+> I'm not saying that the revert is wrong at this point, but honestly,
+> I'd like to avoid the "we revert because we didn't understand what
+> went wrong". It would be good to go "Aaaahhhh, _that_ was the
+> problem".
+>
+>                  Linus
+>
 
-Thanks for your reply.
-
-> -----Original Message-----
-> From: Sudeep Holla [mailto:sudeep.holla@arm.com]
-> Sent: Wednesday, January 01, 2020 12:41 AM
-> To: Zengtao (B)
-> Cc: Linuxarm; Greg Kroah-Hartman; Rafael J. Wysocki;
-> linux-kernel@vger.kernel.org; Sudeep Holla; Morten Rasmussen
-> Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations conflicts
-> with lower layer
-> 
-> On Mon, Dec 23, 2019 at 04:16:19PM +0800, z00214469 wrote:
-> > As we know, from sched domain's perspective, the DIE layer should be
-> > larger than or at least equal to the MC layer, and in some cases, MC
-> > is defined by the arch specified hardware, MPIDR for example, but
-> NUMA
-> > can be defined by users,
-> 
-> Who are the users you are referring above ?
-For example, when I use QEMU to start a guest linux, I can define the
- NUMA topology of the guest linux whatever i want.
-> > with the following system configrations:
-> 
-> Do you mean ACPI tables or DT or some firmware tables ?
-> 
-> > *************************************
-> > NUMA:      	 0-2,  3-7
-> 
-> Is the above simply wrong with respect to hardware and it actually match
-> core_siblings ?
-> 
-Actually, we can't simply say this is wrong, i just want to show an example.
- And this example also can be:
- NUMA:  0~23,  24~47
- core_siblings:   0-15,  16-31, 32~47
-
-> > core_siblings:   0-3,  4-7
-> > *************************************
-> > Per the current code, for core 3, its MC cpu map fallbacks to 3~7(its
-> > core_sibings is 0~3 while its numa node map is 3~7).
-> >
-> > For the sched MC, when we are build sched groups:
-> > step1. core3 's sched groups chain is built like this: 3->4->5->6->7->3
-> > step2. core4's sched groups chain is built like this: 4->5->6->7->4
-> > so after step2, core3's sched groups for MC level is overlapped, more
-> > importantly, it will fall to dead loop if while(sg != sg->groups)
-> >
-> > Obviously, the NUMA node with cpu 3-7 conflict with the MC level cpu
-> > map, but unfortunately, there is no way even detect such cases.
-> >
-> 
-> Again, is cpu 3-7 actually in a NUMA node or is it 4-7 ?
-> 
-> > In this patch, prompt a warning message to help with the above cases.
-> >
-> > Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
-> > ---
-> >  drivers/base/arch_topology.c | 10 +++++++++-
-> >  1 file changed, 9 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-> > index 1eb81f11..5fe44b3 100644
-> > --- a/drivers/base/arch_topology.c
-> > +++ b/drivers/base/arch_topology.c
-> > @@ -439,10 +439,18 @@ const struct cpumask
-> *cpu_coregroup_mask(int cpu)
-> >  	if (cpumask_subset(&cpu_topology[cpu].core_sibling, core_mask)) {
-> >  		/* not numa in package, lets use the package siblings */
-> >  		core_mask = &cpu_topology[cpu].core_sibling;
-> > -	}
-> > +	} else
-> > +		pr_warn_once("Warning: suspicous broken topology: cpu:[%d]'s
-> core_sibling:[%*pbl] not a subset of numa node:[%*pbl]\n",
-> > +			cpu, cpumask_pr_args(&cpu_topology[cpu].core_sibling),
-> > +			cpumask_pr_args(core_mask));
-> > +
-> 
-> Won't this print warning on all systems that don't have numa within a
-> package ? What are you trying to achieve here ?
-
-Since in my case, when this corner case happens, the linux kernel just fall into
-dead loop with no prompt, here this is a helping message will help a lot.
-
-> 
-> >  	if (cpu_topology[cpu].llc_id != -1) {
-> >  		if (cpumask_subset(&cpu_topology[cpu].llc_sibling, core_mask))
-> >  			core_mask = &cpu_topology[cpu].llc_sibling;
-> > +		else
-> > +			pr_warn_once("Warning: suspicous broken topology:
-> cpu:[%d]'s llc_sibling:[%*pbl] not a subset of numa node:[%*pbl]\n",
-> > +				cpu,
-> cpumask_pr_args(&cpu_topology[cpu].llc_sibling),
-> > +				cpumask_pr_args(core_mask));
-> >  	}
-> >
-> 
-> This will trigger warning on all systems that lack cacheinfo topology.
-> I don't understand the intent of this patch at all. Can you explain
-> all the steps you follow and the issue you face ?
-
-Can you show me an example, what I really want to warn is the case that 
-NUMA topology conflicts with lower level. 
-
-> 
-> --
-> Regards,
-> Sudeep
+test this patch.diff, no the system/bin/sh warning, fixed.
