@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFDBC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4EEC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EBD9222C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 101D820863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004562;
-	bh=XoMf6wJyLsUUUWEQUxxFJJn5wqs2g8YdtFV7Q8DoI7o=;
+	s=default; t=1578004565;
+	bh=U1Ajd+eXPu3f5Nu/n1OGGKF0w8LPmhLxyAHrWiOXMEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FRhkR+RYBXTGY9EfxsuY/Pk67Hd49CEbtUWDa/ZNJyzkVwDbmkYikdfDGWK+knbsW
-	 JaCkeyOnOVdYzfuAy5LrBMgRvKsuzC7beWLeCiBidWJFDeoPYLKE5t3PE2vEy5o62o
-	 vmw8svUNkrdQaApaFTcxcqstcBUra1MzaTAoKoFQ=
+	b=npZtWGa3KCvZyP6eIB3gKF7+2mUmKDqZeDE6TPNEB8BFrrEDviYoQvp+Ltnrq4Pky
+	 YBMO3wexnI4RZRukULigo+pnBqw5rCXDqHUiFA2ElKyk5jjOs6gLNaPD5O9PmOWG+q
+	 heL1ssxUVh/Xea0XEqGa6e6MrNB16Umhxp+NUbZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730890AbgABWgB (ORCPT
+        id S1730593AbgABWgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:36:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46094 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:36:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730652AbgABWfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:35:55 -0500
+        id S1730886AbgABWf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:35:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 503AF20863;
-        Thu,  2 Jan 2020 22:35:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13E1F21835;
+        Thu,  2 Jan 2020 22:35:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004554;
-        bh=XoMf6wJyLsUUUWEQUxxFJJn5wqs2g8YdtFV7Q8DoI7o=;
+        s=default; t=1578004559;
+        bh=U1Ajd+eXPu3f5Nu/n1OGGKF0w8LPmhLxyAHrWiOXMEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lcBwSH8bMq7wGlVeXXNZRk6cziw3pqQY+J2/d5ohahGaU7Ok2mOAuFiJijMTEoB+T
-         SS8RiDD7o3oJviu38l4MNHUX9FF8BZnoPGuZtJBlAhJZ4VZbSOvquFs6oPvHO1qgvh
-         Cd1MO5r29KKuRbwgLoix9K9NJNMxbnyv3ua1c5sA=
+        b=yAQIT3m/TbcqaBXx+ri17fqpFxyXmqmCVYMIgiRyI3ltDjaEUh3fo8hndBC8a1ps2
+         2kYnrGmtU/Ybloi/FT0OxPdaKTg+WGUiXwsTxCuz/eVfUp4ieVL0kaFMnQZGda9Qn/
+         8JpmKL3FFZZq1pb93UdsNh7A6sJrCaFsg3EBLEd8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 030/137] drm/gma500: fix memory disclosures due to uninitialized bytes
-Date:   Thu,  2 Jan 2020 23:06:43 +0100
-Message-Id: <20200102220550.699241106@linuxfoundation.org>
+Subject: [PATCH 4.4 032/137] arm64: psci: Reduce the waiting time for cpu_psci_cpu_kill()
+Date:   Thu,  2 Jan 2020 23:06:45 +0100
+Message-Id: <20200102220551.008506651@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -60,42 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-[ Upstream commit ec3b7b6eb8c90b52f61adff11b6db7a8db34de19 ]
+[ Upstream commit bfcef4ab1d7ee8921bc322109b1692036cc6cbe0 ]
 
-"clock" may be copied to "best_clock". Initializing best_clock
-is not sufficient. The fix initializes clock as well to avoid
-memory disclosures and informaiton leaks.
+In cases like suspend-to-disk and suspend-to-ram, a large number of CPU
+cores need to be shut down. At present, the CPU hotplug operation is
+serialised, and the CPU cores can only be shut down one by one. In this
+process, if PSCI affinity_info() does not return LEVEL_OFF quickly,
+cpu_psci_cpu_kill() needs to wait for 10ms. If hundreds of CPU cores
+need to be shut down, it will take a long time.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191018044150.1899-1-kjlu@umn.edu
+Normally, there is no need to wait 10ms in cpu_psci_cpu_kill(). So
+change the wait interval from 10 ms to max 1 ms and use usleep_range()
+instead of msleep() for more accurate timer.
+
+In addition, reducing the time interval will increase the messages
+output, so remove the "Retry ..." message, instead, track time and
+output to the the sucessful message.
+
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/gma500/oaktrail_crtc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/kernel/psci.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/gma500/oaktrail_crtc.c b/drivers/gpu/drm/gma500/oaktrail_crtc.c
-index 1048f0c7c6ce..31e0899035f9 100644
---- a/drivers/gpu/drm/gma500/oaktrail_crtc.c
-+++ b/drivers/gpu/drm/gma500/oaktrail_crtc.c
-@@ -139,6 +139,7 @@ static bool mrst_sdvo_find_best_pll(const struct gma_limit_t *limit,
- 	s32 freq_error, min_error = 100000;
+diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+index f67f35b6edb1..e6ad81556575 100644
+--- a/arch/arm64/kernel/psci.c
++++ b/arch/arm64/kernel/psci.c
+@@ -151,7 +151,8 @@ static void cpu_psci_cpu_die(unsigned int cpu)
  
- 	memset(best_clock, 0, sizeof(*best_clock));
-+	memset(&clock, 0, sizeof(clock));
+ static int cpu_psci_cpu_kill(unsigned int cpu)
+ {
+-	int err, i;
++	int err;
++	unsigned long start, end;
  
- 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
- 		for (clock.n = limit->n.min; clock.n <= limit->n.max;
-@@ -195,6 +196,7 @@ static bool mrst_lvds_find_best_pll(const struct gma_limit_t *limit,
- 	int err = target;
+ 	if (!psci_ops.affinity_info)
+ 		return 0;
+@@ -161,16 +162,18 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
+ 	 * while it is dying. So, try again a few times.
+ 	 */
  
- 	memset(best_clock, 0, sizeof(*best_clock));
-+	memset(&clock, 0, sizeof(clock));
+-	for (i = 0; i < 10; i++) {
++	start = jiffies;
++	end = start + msecs_to_jiffies(100);
++	do {
+ 		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
+ 		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
+-			pr_info("CPU%d killed.\n", cpu);
++			pr_info("CPU%d killed (polled %d ms)\n", cpu,
++				jiffies_to_msecs(jiffies - start));
+ 			return 0;
+ 		}
  
- 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
- 		for (clock.p1 = limit->p1.min; clock.p1 <= limit->p1.max;
+-		msleep(10);
+-		pr_info("Retrying again to check for CPU kill\n");
+-	}
++		usleep_range(100, 1000);
++	} while (time_before(jiffies, end));
+ 
+ 	pr_warn("CPU%d may not have shut down cleanly (AFFINITY_INFO reports %d)\n",
+ 			cpu, err);
 -- 
 2.20.1
 
