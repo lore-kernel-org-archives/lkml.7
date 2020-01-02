@@ -2,95 +2,141 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB536C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6906AC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D77A21655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36BD221734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:56:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tu/x2l1k"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="hnlrjCeU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728006AbgABJzV (ORCPT
+        id S1728010AbgABJ4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 04:55:21 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50203 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727958AbgABJzV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 04:55:21 -0500
-Received: by mail-wm1-f66.google.com with SMTP id a5so5106470wmb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 01:55:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=5OxxgqbSH1bpU+N86be2oTUHJYZJRxIbZuHPbnm3Fbw=;
-        b=tu/x2l1kltY3l/Ho0RoApMDAt/R391Ka5kJlJg6PXwy7qAgXQH6wLIfW1KvVsmQ7yk
-         bLSE0MrtY1Aw6cO8hTN2Zgx5k2t9wW2cJtXY60vcAcTMrlkxrYBc7aWFlLQVhj/uKabP
-         lwDpKRJ0gQ8KxwxqfuINc+B9wGv6WUCkoFEEB14tXtIsVuL0HeLvEAQDmhBjC8gRwYFV
-         GNlr+yv3UdPPNEVJ/DZSAox8lDlS/FS33jjU0sC9wA6wN/V+2XwcubyVVV3vUF4hee05
-         e/SeDTHCNqX55L+wJ3kAfZml00b1z2kDAdcbFHP8Gp2tR5xjWfcwsTzMZTfH+0NsJ9X2
-         ctew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5OxxgqbSH1bpU+N86be2oTUHJYZJRxIbZuHPbnm3Fbw=;
-        b=k9O2GpjLpWnkJwCnUVDWBGjiwvDYKRkLw+yEgbVi+1uzMTnrW+GiUW/NHFg083RDaL
-         Ddd4/NUyyzZRpzgE8wXBErwu4nqlxwUmKdwVpEWFU7ltDM9ialrOJBZXIspmG9kAgkYI
-         vSr/R95VSz/e0bND29sYN0ATsE0BQlUlLK8jWoJwjbD/qGzW6L/sL4B8rlAgcj50KvFa
-         FhzrBKGz+ISL5EDwFxiStTa5YSkwaK+trK9fPgIsaodbmTnTkbYBt7XllYSq3CmlOgke
-         9kcF9j9lmOgPsESI1e3VcstXg/MAQBiksZQnTvta1kzhzQOWciTGR81xP4izbPJuwmDA
-         g+yQ==
-X-Gm-Message-State: APjAAAWbXEe4KuUQlgW/QWqBHxLCmtRw5T1YtMB+4fGutYbaigffsYrd
-        jPNk2k2EPfXktHP+4rghvVnbi2XhK3Y=
-X-Google-Smtp-Source: APXvYqyfwtUdMlicWKNWxM9IPcfk7qztALI/0mg1JSh8RuszTN1DQDP3EUhmM+D0vwjfyKH01pbxIQ==
-X-Received: by 2002:a05:600c:2c7:: with SMTP id 7mr13129541wmn.87.1577958919317;
-        Thu, 02 Jan 2020 01:55:19 -0800 (PST)
-Received: from localhost.localdomain ([197.254.95.38])
-        by smtp.googlemail.com with ESMTPSA id a1sm8131464wmj.40.2020.01.02.01.55.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 01:55:18 -0800 (PST)
-From:   Wambui Karuga <wambui.karugax@gmail.com>
-To:     tomi.valkeinen@ti.com, airlied@linux.ie, daniel@ffwll.ch
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/omapdrm: use BUG_ON macro for error debugging.
-Date:   Thu,  2 Jan 2020 12:55:15 +0300
-Message-Id: <20200102095515.7106-1-wambui.karugax@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 2 Jan 2020 04:56:49 -0500
+Received: from mout.web.de ([212.227.15.3]:43771 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727958AbgABJ4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 04:56:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1577958988;
+        bh=iYNtL+PxRcjkSdwffxObOQWfik3XnwPkM/jokKb2k64=;
+        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
+        b=hnlrjCeUewfTxZ0+mDadBOEXO8uOTw3pGBExpsc1S5XDHh/Tl4IwrTiaCu5BMF9um
+         JKJpmY4xu3T8G7tKq+uFVNTL71+vICYIA9fcX0S7Nz0fMsrqxK4t1Zy6Hq45k4Vzx2
+         mibn4C4rZmPx0Bsr8Sn045sXdGE1cLIAPJCnVoFc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.119.207]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LyE3J-1jpS4v0B7N-015dbc; Thu, 02
+ Jan 2020 10:56:28 +0100
+Cc:     linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Daniel Wagner <dwagner@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        linkinjeon@gmail.com
+References: <20191220062419.23516-11-namjae.jeon@samsung.com>
+Subject: Re: [PATCH v8 10/13] exfat: add nls operations
+To:     Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <bc11e593-7943-cf78-917d-57318f0b5fe1@web.de>
+Date:   Thu, 2 Jan 2020 10:56:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <20191220062419.23516-11-namjae.jeon@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:jzAARglS6ZCwAjXLcRsWKgvPRmlf6zFPEfU32J1kZlLu20GCXl0
+ RWpn/fGE5lHZfbhvOUf8EHKlb3FbO8zVlpHJslyhFTCjlf4KE2Z8pCkbNRMXMNqD3ylIVuv
+ E/0sqEszJE0QQU1+StDfjlePB7mat7A6j9jZHDc03jd6fOdna6Ijb7as2U4DJPvM31YyrLo
+ Z7rZtL7cGBY3scIkGvB2A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Pd0Yd2Z24Wg=:pkLudLv58veIKI0BymPb/b
+ gLY2g1832kzU+AG+SqOy6U+QnMNtyk2GCxeg+ruds5UxqPC9EgRnaEdH9SgJimdvCu7NLYwwF
+ rFHDVD0PGUIoCUrxBEXRR8AWtbQiM9y/3Sgbl9ygqqlhdMn9WVIiuG4skCy4A5Em3mRWh38Mp
+ mFgkm9HO0pdc3FwHcrq/IBj9xttDIUg2OqbNXQ1AbbyFbC7B0yJJVGIW+lWjcv/MjU6s9Bfev
+ aNEM49lG2C7U+orbAaYH9/7P8ZGKl8jRx96Btx21SXD882rt4L5jkCE/Ehpk8vYx/8oA1+slP
+ HqwMOE6VdIHVpB1cnFficfvyvZB/I8KEiZkeDmObz4fmJXPBcEFy6tiRKI5L3RJMvTYIGmzuv
+ uw1izqB5N55iO78f+urUGcqSlxYRYffHSmzE9DrBO4lva/6Xa2V1vUqsm2m2WUHFX3EddXYTt
+ Ag4AscxMiJn6/hzide9HqrdPWsG6USLJIYjS9RsvuBJBhkv30yUYDmyamjIYD7RjQ0OPC671M
+ 2BwHrlO+ow0+lJ3iVX4LCZCff14rs4tg2oj9Kaf8EUASbdKJysJGpVHQxBVZ4AA4EYrnVvJa5
+ I9ogzGYADEyWiwtgqDgkc68qDgWtJADV/l9EkIIzVSwW6696b5Jc4vp3h3C5FWz9kts6c03A1
+ HNeP5ago9846haYaMjr0wpcXAp70tcWO+qTvjsMlm7gFnQ4T9TlawhYLBaoFiJAg1yHSdBl3K
+ YX6sQ2y+OsbnCuNnQ6kelgPPdm3HSRzh4ML4qjyUq91xm/aOwcGLdDjGfp6kSowHHN0TJHE92
+ kMFczPFeRRYtAN8siD4VrSIrp5rZ2OJAtR38ajh6jy/f3/rL/1n5hTxqq+KZwZtbzxRnAAT2g
+ M049/xcXnD255jwn8DiIOziHTX3gUOzs92OY28mEgoyRHGEgqiG2bRPnIrbsF/Ulc7CsJ6xBj
+ SipTs6t0utrFdl5JhuPt1gpmA2SnQXFI2ZUAcq9Uwj90lE0Qz6gM1Oa2OUKkblUu+V4GDT9zK
+ O4C6kdRfo/BbBLxyZqG02VrqfusVQSOydgWRlRsnTrwaNkQrPj2/UlnHscDE3raTivzMta6Em
+ AXgiL7ZXntXAXPC7XTn6yeU9juAz2aXNw/6O1XKNLp23HQ4GLMHxAbXhGxXy46VxnaMOx1Uqg
+ 0Md9rH4e1Iktcd3VU74OIyvVqfqvHZAlyAdPbYO6BOiQQANtSKxKtFuwuptp/KygTINnrRBZd
+ +mcFePNSv6VLc10bD/sr+lIWBH/aghEAlrpf3a1DzZrP6sYrvo2gHfzgtb+g=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the if statement only checks for the value of the `id` variable,
-it can be replaced by the more concise BUG_ON() macro for error
-reporting.
-Issue found using coccinelle.
+=E2=80=A6
+> +++ b/fs/exfat/nls.c
+=E2=80=A6
+> +static int exfat_load_upcase_table(struct super_block *sb,
+> +		sector_t sector, unsigned long long num_sectors,
+> +		unsigned int utbl_checksum)
+> +{
+=E2=80=A6
 
-Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
----
- drivers/gpu/drm/omapdrm/dss/dispc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Do you care for the clarification of remaining software development concer=
+ns
+(also for this function implementation)?
 
-diff --git a/drivers/gpu/drm/omapdrm/dss/dispc.c b/drivers/gpu/drm/omapdrm/dss/dispc.c
-index 413dbdd1771e..dbb90f2d2ccd 100644
---- a/drivers/gpu/drm/omapdrm/dss/dispc.c
-+++ b/drivers/gpu/drm/omapdrm/dss/dispc.c
-@@ -393,8 +393,7 @@ static void dispc_get_reg_field(struct dispc_device *dispc,
- 				enum dispc_feat_reg_field id,
- 				u8 *start, u8 *end)
- {
--	if (id >= dispc->feat->num_reg_fields)
--		BUG();
-+	BUG_ON(id >= dispc->feat->num_reg_fields);
- 
- 	*start = dispc->feat->reg_fields[id].start;
- 	*end = dispc->feat->reg_fields[id].end;
--- 
-2.17.1
-
+Regards,
+Markus
