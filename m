@@ -4,53 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5EEC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BEAC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 924A72253D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8435F22525
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004624;
-	bh=0BY+Su5Ly6B2LWFqAP1C7t6yhbWjY9neoXDkJ7q4lu0=;
+	s=default; t=1578004627;
+	bh=ppgK/Z1Tl2mzmrMrhwV0dBlz3PbE2nuuFq53RhKPk8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TRBo6fyEbiaJjE0PumsN0YFV7HZ3i8UMBaQdTQnyyeD5fTWPQ3614e1VphD3xTEYv
-	 whbgbwh8kYuEf3H6AupsrvSn5dNKKg9/YyvD2JYli6E5ZsVM0MJYZusSStYtMLZJOW
-	 w9E2VbGY2PGtYr9gbfpayNUWwjEQoJJzBfNC+Dlo=
+	b=vUGaY8622Q+htCbur58hkc+OitobN0qPBFFvCr1vaqWKOfmT8XBU8gpJcxIQNPsdz
+	 F/8TEgH5eER+ylEObKiurMDRKo/i5q0nVwLrs+zc+komA0195b392fvjEkNwtSlk9N
+	 HPcB9Sa1AzqdJrb+ZbXHUz4wu8FrLwQcssMZoWWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731035AbgABWhD (ORCPT
+        id S1731046AbgABWhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:37:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48840 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:37:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731032AbgABWg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:36:59 -0500
+        id S1730775AbgABWhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:37:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD50220866;
-        Thu,  2 Jan 2020 22:36:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2849121835;
+        Thu,  2 Jan 2020 22:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004619;
-        bh=0BY+Su5Ly6B2LWFqAP1C7t6yhbWjY9neoXDkJ7q4lu0=;
+        s=default; t=1578004621;
+        bh=ppgK/Z1Tl2mzmrMrhwV0dBlz3PbE2nuuFq53RhKPk8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IeWkJh1C+AEJYmr58mwM+1WruTuDDFD2gDSLr6Y6XH0+pB9jg6DXy8B92Ru4xIXdo
-         cGOlkmhnPyG+hY9g/3fqlyftLfmURchDoPF+rvkVd9SxOhm1umimakOdqL1McmZtpV
-         /A2p6gl7i8CVfHAXyq1t3PybZXS0pASPE+Z1p4yk=
+        b=cZoy/HCK2l+Ey5Y2yDysOlQ1LNbVUbjlG54K6yCfbB2q/adtiRD4DK0uPgi/kqi4I
+         +zqw75CHD8BGvDjAZ5QUkcoYGc88J/fZFV2EQgV0wvEsxp1zdkMa058399nEsVSBeL
+         JbQfmAehN1ARWC05Yymks4uOf0NnEiwVPDDEadUo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 056/137] cpufreq: Register drivers only after CPU devices have been registered
-Date:   Thu,  2 Jan 2020 23:07:09 +0100
-Message-Id: <20200102220554.086138680@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Lianbo Jiang <lijiang@redhat.com>,
+        Borislav Petkov <bp@suse.de>, bhe@redhat.com,
+        d.hatayama@fujitsu.com, dhowells@redhat.com, dyoung@redhat.com,
+        ebiederm@xmission.com, horms@verge.net.au,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        =?UTF-8?q?J=C3=BCrgen=20Gross?= <jgross@suse.com>,
+        kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>, vgoyal@redhat.com,
+        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 057/137] x86/crash: Add a forward declaration of struct kimage
+Date:   Thu,  2 Jan 2020 23:07:10 +0100
+Message-Id: <20200102220554.193611012@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -63,67 +67,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Lianbo Jiang <lijiang@redhat.com>
 
-[ Upstream commit 46770be0cf94149ca48be87719bda1d951066644 ]
+[ Upstream commit 112eee5d06007dae561f14458bde7f2a4879ef4e ]
 
-The cpufreq core heavily depends on the availability of the struct
-device for CPUs and if they aren't available at the time cpufreq driver
-is registered, we will never succeed in making cpufreq work.
+Add a forward declaration of struct kimage to the crash.h header because
+future changes will invoke a crash-specific function from the realmode
+init path and the compiler will complain otherwise like this:
 
-This happens due to following sequence of events:
+  In file included from arch/x86/realmode/init.c:11:
+  ./arch/x86/include/asm/crash.h:5:32: warning: ‘struct kimage’ declared inside\
+   parameter list will not be visible outside of this definition or declaration
+      5 | int crash_load_segments(struct kimage *image);
+        |                                ^~~~~~
+  ./arch/x86/include/asm/crash.h:6:37: warning: ‘struct kimage’ declared inside\
+   parameter list will not be visible outside of this definition or declaration
+      6 | int crash_copy_backup_region(struct kimage *image);
+        |                                     ^~~~~~
+  ./arch/x86/include/asm/crash.h:7:39: warning: ‘struct kimage’ declared inside\
+   parameter list will not be visible outside of this definition or declaration
+      7 | int crash_setup_memmap_entries(struct kimage *image,
+        |
 
-- cpufreq_register_driver()
-  - subsys_interface_register()
-  - return 0; //successful registration of driver
+ [ bp: Rewrite the commit message. ]
 
-... at a later point of time
-
-- register_cpu();
-  - device_register();
-    - bus_probe_device();
-      - sif->add_dev();
-	- cpufreq_add_dev();
-	  - get_cpu_device(); //FAILS
-  - per_cpu(cpu_sys_devices, num) = &cpu->dev; //used by get_cpu_device()
-  - return 0; //CPU registered successfully
-
-Because the per-cpu variable cpu_sys_devices is set only after the CPU
-device is regsitered, cpufreq will never be able to get it when
-cpufreq_add_dev() is called.
-
-This patch avoids this failure by making sure device structure of at
-least CPU0 is available when the cpufreq driver is registered, else
-return -EPROBE_DEFER.
-
-Reported-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Co-developed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: bhe@redhat.com
+Cc: d.hatayama@fujitsu.com
+Cc: dhowells@redhat.com
+Cc: dyoung@redhat.com
+Cc: ebiederm@xmission.com
+Cc: horms@verge.net.au
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jürgen Gross <jgross@suse.com>
+Cc: kexec@lists.infradead.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: vgoyal@redhat.com
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191108090027.11082-4-lijiang@redhat.com
+Link: https://lkml.kernel.org/r/201910310233.EJRtTMWP%25lkp@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/cpufreq.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/x86/include/asm/crash.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 2239d42bdadd..49aa58e617db 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -2426,6 +2426,13 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
- 	if (cpufreq_disabled())
- 		return -ENODEV;
+diff --git a/arch/x86/include/asm/crash.h b/arch/x86/include/asm/crash.h
+index f498411f2500..1b15304dd098 100644
+--- a/arch/x86/include/asm/crash.h
++++ b/arch/x86/include/asm/crash.h
+@@ -1,6 +1,8 @@
+ #ifndef _ASM_X86_CRASH_H
+ #define _ASM_X86_CRASH_H
  
-+	/*
-+	 * The cpufreq core depends heavily on the availability of device
-+	 * structure, make sure they are available before proceeding further.
-+	 */
-+	if (!get_cpu_device(0))
-+		return -EPROBE_DEFER;
++struct kimage;
 +
- 	if (!driver_data || !driver_data->verify || !driver_data->init ||
- 	    !(driver_data->setpolicy || driver_data->target_index ||
- 		    driver_data->target) ||
+ int crash_load_segments(struct kimage *image);
+ int crash_copy_backup_region(struct kimage *image);
+ int crash_setup_memmap_entries(struct kimage *image,
 -- 
 2.20.1
 
