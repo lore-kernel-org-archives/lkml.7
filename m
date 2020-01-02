@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E204C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B40FFC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B51622314
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FC2222314
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003191;
-	bh=ws1QO4IrZHu0wTXH+sAb39oQGJd62dPx1z4rY6Bnpz8=;
+	s=default; t=1578003195;
+	bh=MzetPlcMtO42x1sKQ4+xlUjnOHVzATAf85E4X9kGBpI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PLwR4uazfJAviZY/kMF7JO2Smvxxy56rvyC3IALUngIlOWdKnSCQqzTx8CVor6Dz0
-	 3QVki2RlFTn2Vf5z1NCshkQJ5T++a5AUaIM1E3q/JruVwOqfFPi7eAma7Hu9EIQWSR
-	 +MiFGi1IIxYmIQjZf9Q+b8erbFr4i6OOBQKFHpLA=
+	b=VjIUlGgcwJJQuE9tCm3ZI0UPgLsYiJj6T2Sv7auNG5iJzKt7rWwJZ6Cr+BZMO8ITm
+	 vYY518js/fsjnqGa20MN6QrWVtlm1D+8elv+8MpvHDA+Z8izu84jqim1QvA2Z1EheL
+	 4TQzhMswaEQA6dwOYyZIzY+O+njvOwErlWKtA48M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbgABWNJ (ORCPT
+        id S1727287AbgABWNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:13:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52692 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:13:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727614AbgABWNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:13:07 -0500
+        id S1727632AbgABWNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:13:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D35F222C3;
-        Thu,  2 Jan 2020 22:13:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58532222C3;
+        Thu,  2 Jan 2020 22:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003187;
-        bh=ws1QO4IrZHu0wTXH+sAb39oQGJd62dPx1z4rY6Bnpz8=;
+        s=default; t=1578003191;
+        bh=MzetPlcMtO42x1sKQ4+xlUjnOHVzATAf85E4X9kGBpI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cmcFG0qZZmOojpodNbZjdVXEnCUnh3lbbfF0Jqde/yxf0pfAAuHu4QlHa9I2oR7wH
-         Z2sRnNBARbC/1VhTeNhrj4Ap6NMihM7JMwdeXmdW1LGGMbfna1CfSp5t7nFn9tFvkj
-         i5uJU9rDJg2htlbAH4lmiArx6d1htd08q8o8i5f8=
+        b=tiTqHsJNFp94oQq+H7MrzWU9XwOlfCiqcPrLJI7LogKVJ8HQV1fZq8rtzqUJWMJT1
+         k/SfcVR7WwgTIGHlbbT33PLY+eBBmEDLeAbIGcBiQGSjRyBPCONo/cAzB5K0HB93AV
+         w19fvmrGifsBzbKBvQ909RTVhAPcYUSKT9wrUR7Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Barry Song <Baohua.Song@csr.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Peng Ma <peng.ma@nxp.com>, Vinod Koul <vkoul@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 055/191] mfd: mfd-core: Honour Device Trees request to disable a child-device
-Date:   Thu,  2 Jan 2020 23:05:37 +0100
-Message-Id: <20200102215835.819082035@linuxfoundation.org>
+Subject: [PATCH 5.4 032/191] dmaengine: fsl-qdma: Handle invalid qdma-queue0 IRQ
+Date:   Thu,  2 Jan 2020 23:05:14 +0100
+Message-Id: <20200102215833.437983302@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -63,47 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lee Jones <lee.jones@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-[ Upstream commit 6b5c350648b857047b47acf74a57087ad27d6183 ]
+[ Upstream commit 41814c4eadf8a791b6d07114f96e7e120e59555c ]
 
-Until now, MFD has assumed all child devices passed to it (via
-mfd_cells) are to be registered. It does not take into account
-requests from Device Tree and the like to disable child devices
-on a per-platform basis.
+platform_get_irq_byname() might return -errno which later would be cast
+to an unsigned int and used in IRQ handling code leading to usage of
+wrong ID and errors about wrong irq_base.
 
-Well now it does.
-
-Link: https://www.spinics.net/lists/arm-kernel/msg366309.html
-Link: https://lkml.org/lkml/2019/8/22/1350
-
-Reported-by: Barry Song <Baohua.Song@csr.com>
-Reported-by: Stephan Gerhold <stephan@gerhold.net>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Reviewed-by: Mark Brown <broonie@kernel.org>
-Tested-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Peng Ma <peng.ma@nxp.com>
+Tested-by: Peng Ma <peng.ma@nxp.com>
+Link: https://lore.kernel.org/r/20191004150826.6656-1-krzk@kernel.org
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/mfd-core.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/dma/fsl-qdma.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index 23276a80e3b4..b0afefdc9eac 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -174,6 +174,11 @@ static int mfd_add_device(struct device *parent, int id,
- 	if (parent->of_node && cell->of_compatible) {
- 		for_each_child_of_node(parent->of_node, np) {
- 			if (of_device_is_compatible(np, cell->of_compatible)) {
-+				if (!of_device_is_available(np)) {
-+					/* Ignore disabled devices error free */
-+					ret = 0;
-+					goto fail_alias;
-+				}
- 				pdev->dev.of_node = np;
- 				pdev->dev.fwnode = &np->fwnode;
- 				break;
+diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
+index 06664fbd2d91..89792083d62c 100644
+--- a/drivers/dma/fsl-qdma.c
++++ b/drivers/dma/fsl-qdma.c
+@@ -1155,6 +1155,9 @@ static int fsl_qdma_probe(struct platform_device *pdev)
+ 		return ret;
+ 
+ 	fsl_qdma->irq_base = platform_get_irq_byname(pdev, "qdma-queue0");
++	if (fsl_qdma->irq_base < 0)
++		return fsl_qdma->irq_base;
++
+ 	fsl_qdma->feature = of_property_read_bool(np, "big-endian");
+ 	INIT_LIST_HEAD(&fsl_qdma->dma_dev.channels);
+ 
 -- 
 2.20.1
 
