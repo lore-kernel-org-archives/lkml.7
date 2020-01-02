@@ -2,179 +2,118 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B12F9C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AF3C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 810FD217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:00:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B497217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:01:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QZ9tQjYX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgABJAv (ORCPT
+        id S1727911AbgABJBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 04:00:51 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33104 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727842AbgABJAv (ORCPT
+        Thu, 2 Jan 2020 04:01:23 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52524 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727877AbgABJBW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 04:00:51 -0500
-Received: by mail-ot1-f68.google.com with SMTP id b18so34359847otp.0;
-        Thu, 02 Jan 2020 01:00:50 -0800 (PST)
+        Thu, 2 Jan 2020 04:01:22 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p9so4994281wmc.2
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 01:01:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=bY5c7mhj+MB1IJ1i7uGo/Kc8EYzOKkXDomOXublBO3U=;
+        b=QZ9tQjYXqLoZLvcnLHcsTY2qVjqjJB70qBvkd87z+jX4Z5ulLtpvH9KLzOCuCBoqEC
+         puvrqTQUSRQdxQ2OkmKp9rujNom5nuO41UowatKn5ddUTUBgZ0wc7WbgAf1/5VvZTnX6
+         FZcZuuCEqFipHb8M3BBCwGKial148goxN+jTgRhnHIqg8KrHN2ssouFPxNhGFRqpsV0p
+         VwaerlyXe6hyznrWziPw7nJ9Sggsgr8B4Sorf61KUKPYNglNXczlUghUxkCb2+xesvVf
+         B6GseKrt7B1pCfpqcWW496RV+ckSdKeK+UjUWSEloQPpMNDLblBJQYnMaLcc1mgJxZFO
+         8w/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fJFkq9fgXdJc4mnZ6lqzSDTJfkkupEPzyOJabLJ6bv0=;
-        b=p9REWqXekPXmYokjLl1uoSbL2yEYUA760udBkAGj7QaMc2CMdnUp3Sp7l4JN3F/L1E
-         gx88GBSlLdA+b1KYILzao0whKbxsROSjfoI5Tn1mSE72r5ju6DBQZNpj8B3TtY0gX5OQ
-         QEFt6W24tZmfLVj6jouITo1kJUJ16t+J+ItAQcWF7M7h2bTkZs+9BTQU2hbSxBMbpVSE
-         95Rx2g+nwVAxaNmn1UJZXb6/jFKDEEBmRkKR7+hS9XWhbD/fz+QWqLPeebkFJmMwK7Cn
-         IquoomnRu8APPSUQwRTBE784spVhGUOgzHg0ozjj4Kr8qEkkd6+VfZTWNdcYaLqarHpY
-         1VuA==
-X-Gm-Message-State: APjAAAWxe0o82Jq1isZ1o13NMwZiNc84fLncW6Z4Kweov910MnE8fgLr
-        1ma176CKHPSx5Mqg6dQ1bvTRs2EYlf2urUtV/Kw=
-X-Google-Smtp-Source: APXvYqyUfUGFNgz0xNB0ytdDk3m9k6lvN2rSLQrWuplzu38HrzYAPZJ4cUcexs15+gohZobI23e99dHh/W90fK4UCfA=
-X-Received: by 2002:a9d:7984:: with SMTP id h4mr92750494otm.297.1577955650175;
- Thu, 02 Jan 2020 01:00:50 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=bY5c7mhj+MB1IJ1i7uGo/Kc8EYzOKkXDomOXublBO3U=;
+        b=b4VDtM8HunShIol4xQJ/ukTBEiqNhznsDsLRR5cWBErJcAv9/1xf0Nqr8wenUZ9uFf
+         IvzWMctNcW49aEqnIDn3+cG93I4wc2BSB2wupxLycj3VSIftyyDFW6kw39kGmQrd9ghn
+         2RtgJPEAz4eSDVb20+I656QYBpNZ0d++h2T9ddaQyjwRWj0cC7SW4D9LNgRc5wJnEkIk
+         mNKqW10Qqvr8NJGnxzSf+oDcXka9cJxlKTCUP7BTXH8DmCrYRfRXAMpj6nWbbLde+vOA
+         SmOGPKnFAYw4LByMiNk94LzB8sQRfYK8z5ttydomMfOwQogQ8vn076SUq/Q2J7sTPTqf
+         UU7Q==
+X-Gm-Message-State: APjAAAWxRDvZcBvv5MAAMBcxc1a3S0TJgmubnhDZBvve10OmE1/9ot1Q
+        FRAIvkWs67GPHlsDtVF4qVMJEQ==
+X-Google-Smtp-Source: APXvYqzc1qfuS3RLws+tTcAymTsxhv+zMZcC9R7yOp7ylZs5RuOakRlsYmFitrb+VuJMsIiZ5HPG5w==
+X-Received: by 2002:a7b:c19a:: with SMTP id y26mr13333290wmi.152.1577955680655;
+        Thu, 02 Jan 2020 01:01:20 -0800 (PST)
+Received: from dell ([2.27.35.135])
+        by smtp.gmail.com with ESMTPSA id m21sm7872660wmi.27.2020.01.02.01.01.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 01:01:20 -0800 (PST)
+Date:   Thu, 2 Jan 2020 09:01:32 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 26/37] mfd: intel_soc_pmic: Add SCU IPC member to struct
+ intel_soc_pmic
+Message-ID: <20200102090132.GD22390@dell>
+References: <20191223141716.13727-1-mika.westerberg@linux.intel.com>
+ <20191223141716.13727-27-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-References: <20191116005240.15722-1-robh@kernel.org> <20191116005240.15722-3-robh@kernel.org>
- <CAMuHMdX20LvK2o1cZJ8q83Q08JQzH6L07gmqBm0V0xSc5GHk4A@mail.gmail.com>
- <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com>
- <CAMuHMdXBVyutji67Ladvoh3NhrPNTYfAKS4pmOQcOouZGokYvQ@mail.gmail.com>
- <CAMuHMdU0K3n4CandL2RKrVmzmbBMt2Mw3WWM4JZoZcK3h8yZNA@mail.gmail.com> <CAL_JsqLOtT478wXZv8hshvpsdHESnDCNuwDBNj264tNu-oyVUQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqLOtT478wXZv8hshvpsdHESnDCNuwDBNj264tNu-oyVUQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 2 Jan 2020 10:00:39 +0100
-Message-ID: <CAMuHMdUq9FD8MU2iF4FPwLND+jrD5f-h8Wnp1A3=HwHmHg+nmg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: PCI: Convert generic host binding to DT schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Will Deacon <will@kernel.org>,
-        David Daney <david.daney@cavium.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191223141716.13727-27-mika.westerberg@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Mon, 23 Dec 2019, Mika Westerberg wrote:
 
-On Tue, Dec 31, 2019 at 6:10 PM Rob Herring <robh@kernel.org> wrote:
-> On Tue, Dec 31, 2019 at 7:31 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Tue, Dec 31, 2019 at 9:23 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Tue, Dec 31, 2019 at 12:30 AM Rob Herring <robh@kernel.org> wrote:
-> > > > On Thu, Dec 12, 2019 at 7:41 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > > On Sat, Nov 16, 2019 at 1:53 AM Rob Herring <robh@kernel.org> wrote:
-> > > > > > Convert the generic PCI host binding to DT schema. The derivative Juno,
-> > > > > > PLDA XpressRICH3-AXI, and Designware ECAM bindings all just vary in
-> > > > > > their compatible strings. The simplest way to convert those to
-> > > > > > schema is just add them into the common generic PCI host schema.
-> > > > > >
-> > > > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > > > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > > > > Cc: Andrew Murray <andrew.murray@arm.com>
-> > > > > > Cc: Zhou Wang <wangzhou1@hisilicon.com>
-> > > > > > Cc: Will Deacon <will@kernel.org>
-> > > > > > Cc: David Daney <david.daney@cavium.com>
-> > > > > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > > >
-> > > > > > index 515b2f9542e5..000000000000
-> > > > > > --- a/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
-> > > > > > +++ /dev/null
-> > > > >
-> > > > > > -Example:
-> > > > > > -
-> > > > > > -    pcie1: pcie@7f000000 {
-> > > > > > -        compatible = "socionext,synquacer-pcie-ecam", "snps,dw-pcie-ecam";
-> > > > > > -        device_type = "pci";
-> > > > > > -        reg = <0x0 0x7f000000 0x0 0xf00000>;
-> > > > > > -        bus-range = <0x0 0xe>;
-> > > > > > -        #address-cells = <3>;
-> > > > > > -        #size-cells = <2>;
-> > > > > > -        ranges = <0x1000000 0x00 0x00010000 0x00 0x7ff00000 0x0 0x00010000>,
-> > > > > > -                 <0x2000000 0x00 0x70000000 0x00 0x70000000 0x0 0x0f000000>,
-> > > > > > -                 <0x3000000 0x3f 0x00000000 0x3f 0x00000000 0x1 0x00000000>;
-> > > > > > -
-> > > > > > -        #interrupt-cells = <0x1>;
-> > > > > > -        interrupt-map-mask = <0x0 0x0 0x0 0x0>;
-> > > > >
-> > > > > An all-zeroes interrupt-map-mask seems to be very common on embedded
-> > > > > SoCs, where all devices are mapped to a single interrupt.
-> > > >
-> > > > Indeed.
-> > > >
-> > > > > However, schemas/pci/pci-bus.yaml says:
-> > > > >
-> > > > >   interrupt-map-mask:
-> > > > >     items:
-> > > > >       - description: PCI high address cell
-> > > > >         minimum: 0
-> > > > >         maximum: 0xf800
-> > > > >       - description: PCI mid address cell
-> > > > >         const: 0
-> > > > >       - description: PCI low address cell
-> > > > >         const: 0
-> > > > >       - description: PCI IRQ cell
-> > > > >         minimum: 1
-> > > > >         maximum: 7
-> > > > >
-> > > > > and thus complains about an all-zeroes mask, e.g.
-> > > > >
-> > > > >     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dt.yaml:
-> > > > > pcie@fe000000: interrupt-map-mask:0:3: 0 is less than the minimum of 1
-> > > >
-> > > > Now fixed.
-> > >
-> > > Thank you, confirmed.
-> >
-> > And with latest renesas-drivers, I started seeing:
-> >
-> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
-> > interrupt-map:0: [0, 0, 0, 1] is too short
-> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
-> > interrupt-map:1: [5, 0, 113, 4] is too short
-> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
-> > interrupt-map:2: [2048, 0, 0, 1] is too short
-> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
-> > interrupt-map:3: [5, 0, 113, 4] is too short
-> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
-> > interrupt-map:4: [4096, 0, 0, 2] is too short
-> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
-> > interrupt-map:5: [5, 0, 113, 4] is too short
-> >
-> > Looks like interrupt-map is split incorrectly: shouldn't each entry have 8
-> > cells?
->
-> That must be with a current dtc which now splits the array before each
-> phandle. That works for phandle+args, but not *-map properties. :( I
+> Both PMIC drivers (intel_soc_pmic_mrfld and intel_soc_pmic_bxtwc) will
+> be using this field going forward to access the SCU IPC instance.
+> 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  include/linux/mfd/intel_soc_pmic.h | 1 +
+>  1 file changed, 1 insertion(+)
 
-Ah, that explains it: renesas-drivers does include your for-next branch.
-At first I was a bit puzzled, as the messages weren't introduced by a
-dt-schema repo update...
+This might be a good time to add a Kerneldoc header.
 
-> was trying to avoid a bunch of dts updates to add brackets. I think
-> for now, I'll just drop the interrupt-map size constraint. It's not
-> all that accurate anyways as it doesn't look at cell sizes.
-
-Too late, I've already applied grouping to the Renesas ARM DTS files ;-)
-
-Gr{oetje,eeting}s,
-
-                        Geert
+> diff --git a/include/linux/mfd/intel_soc_pmic.h b/include/linux/mfd/intel_soc_pmic.h
+> index bfecd6bd4990..8ac130428bb4 100644
+> --- a/include/linux/mfd/intel_soc_pmic.h
+> +++ b/include/linux/mfd/intel_soc_pmic.h
+> @@ -24,6 +24,7 @@ struct intel_soc_pmic {
+>  	struct regmap_irq_chip_data *irq_chip_data_chgr;
+>  	struct regmap_irq_chip_data *irq_chip_data_crit;
+>  	struct device *dev;
+> +	struct intel_scu_ipc_dev *scu;
+>  };
+>  
+>  int intel_soc_pmic_exec_mipi_pmic_seq_element(u16 i2c_address, u32 reg_address,
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
