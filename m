@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFE5C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B09A5C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029E022314
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 840A722314
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:38:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004705;
-	bh=rBuRDDop1k36UBKszupfI5dnen7h0AEEYUfVHys6JLU=;
+	s=default; t=1578004707;
+	bh=Zbue8q2kxZfPhaOyrjwDmQHgF4yKqLkoQOpHHnVcPLI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eFjpxtte+60RNWuB0bTNP2kn0mDttMuZbf9t5glWqFFLFqRWEN23UrwKzOiER1GU2
-	 lQkhhTNpOyfrGEzX4WYA12kHnj9QcPnNig1SYLmXXu3W6DOuHDpTDAMtjnLqmcuEyR
-	 NlzsZPnf/uvwS9ec/16vCLTkmsf/f525Q9LM+6zo=
+	b=lP8IDm4C6W20hDmivgiCrQm/99QGpKHDFEqneB1ilWijoJ5jH/sopgNQCAeyEfz9O
+	 V4HtklgPyI34NJBsY7ACSQBsC3lhsnSM6pnrISNOPI0YhyO826ECCHwHcn+sS8Dcxe
+	 y/RWDpGDbZYliuTOPjVhgRN9INLMYN8PUwoNZE54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731293AbgABWiY (ORCPT
+        id S1731298AbgABWi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:38:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52180 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:38:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731193AbgABWiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:38:21 -0500
+        id S1731281AbgABWiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:38:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3923324650;
-        Thu,  2 Jan 2020 22:38:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94A1B20866;
+        Thu,  2 Jan 2020 22:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004700;
-        bh=rBuRDDop1k36UBKszupfI5dnen7h0AEEYUfVHys6JLU=;
+        s=default; t=1578004703;
+        bh=Zbue8q2kxZfPhaOyrjwDmQHgF4yKqLkoQOpHHnVcPLI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0aBi62IZUC7uMtHeJCnxm7kJzaFegdXvZO0fzhcBF4iitUt9YoZTH6LNCYfhVAo2/
-         kyvfRvYIz0EF0wNCAQ1GUjRRlXBXi50LArmi/aWm3khic2rsIbBMB0PAQUdTSa9cvG
-         I4Rr6fvF3/CQElz5kvKMtpH7fv5gT4ecuc+o4kXU=
+        b=IlKgfZU3pUXtQDQp5PgX0DqNtJLJynbeAjcBj06neNSC8bUiAESTI3D9rsay8VJjv
+         L9V51WBVjff8rcS6hcNBWfVo/1ynoHor0VheS4iikEyQ5YJytByZAOBtDtS9iIK8vT
+         kIvvnVcf5ZQrq8sqezxEF/CmMdU0sBBP4rFpkUiE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Thomas Backlund <tmb@mageia.org>
-Subject: [PATCH 4.4 089/137] perf probe: Fix to show function entry line as probe-able
-Date:   Thu,  2 Jan 2020 23:07:42 +0100
-Message-Id: <20200102220558.735731966@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+6dcbfea81cd3d4dd0b02@syzkaller.appspotmail.com,
+        Xin Long <lucien.xin@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 080/137] sctp: fully initialize v4 addr in some functions
+Date:   Thu,  2 Jan 2020 23:07:33 +0100
+Message-Id: <20200102220557.458458733@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -62,85 +62,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit 91e2f539eeda26ab00bd03fae8dc434c128c85ed upstream.
+[ Upstream commit b6f3320b1d5267e7b583a6d0c88dda518101740c ]
 
-Fix die_walk_lines() to list the function entry line correctly.  Since
-the dwarf_entrypc() does not return the entry pc if the DIE has only
-range attribute, __die_walk_funclines() fails to list the declaration
-line (entry line) in that case.
+Syzbot found a crash:
 
-To solve this issue, this introduces die_entrypc() which correctly
-returns the entry PC (the first address range) even if the DIE has only
-range attribute. With this fix die_walk_lines() shows the function entry
-line is able to probe correctly.
+  BUG: KMSAN: uninit-value in crc32_body lib/crc32.c:112 [inline]
+  BUG: KMSAN: uninit-value in crc32_le_generic lib/crc32.c:179 [inline]
+  BUG: KMSAN: uninit-value in __crc32c_le_base+0x4fa/0xd30 lib/crc32.c:202
+  Call Trace:
+    crc32_body lib/crc32.c:112 [inline]
+    crc32_le_generic lib/crc32.c:179 [inline]
+    __crc32c_le_base+0x4fa/0xd30 lib/crc32.c:202
+    chksum_update+0xb2/0x110 crypto/crc32c_generic.c:90
+    crypto_shash_update+0x4c5/0x530 crypto/shash.c:107
+    crc32c+0x150/0x220 lib/libcrc32c.c:47
+    sctp_csum_update+0x89/0xa0 include/net/sctp/checksum.h:36
+    __skb_checksum+0x1297/0x12a0 net/core/skbuff.c:2640
+    sctp_compute_cksum include/net/sctp/checksum.h:59 [inline]
+    sctp_packet_pack net/sctp/output.c:528 [inline]
+    sctp_packet_transmit+0x40fb/0x4250 net/sctp/output.c:597
+    sctp_outq_flush_transports net/sctp/outqueue.c:1146 [inline]
+    sctp_outq_flush+0x1823/0x5d80 net/sctp/outqueue.c:1194
+    sctp_outq_uncork+0xd0/0xf0 net/sctp/outqueue.c:757
+    sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1781 [inline]
+    sctp_side_effects net/sctp/sm_sideeffect.c:1184 [inline]
+    sctp_do_sm+0x8fe1/0x9720 net/sctp/sm_sideeffect.c:1155
+    sctp_primitive_REQUESTHEARTBEAT+0x175/0x1a0 net/sctp/primitive.c:185
+    sctp_apply_peer_addr_params+0x212/0x1d40 net/sctp/socket.c:2433
+    sctp_setsockopt_peer_addr_params net/sctp/socket.c:2686 [inline]
+    sctp_setsockopt+0x189bb/0x19090 net/sctp/socket.c:4672
 
-Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157190837419.1859.4619125803596816752.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Thomas Backlund <tmb@mageia.org>
+The issue was caused by transport->ipaddr set with uninit addr param, which
+was passed by:
+
+  sctp_transport_init net/sctp/transport.c:47 [inline]
+  sctp_transport_new+0x248/0xa00 net/sctp/transport.c:100
+  sctp_assoc_add_peer+0x5ba/0x2030 net/sctp/associola.c:611
+  sctp_process_param net/sctp/sm_make_chunk.c:2524 [inline]
+
+where 'addr' is set by sctp_v4_from_addr_param(), and it doesn't initialize
+the padding of addr->v4.
+
+Later when calling sctp_make_heartbeat(), hbinfo.daddr(=transport->ipaddr)
+will become the part of skb, and the issue occurs.
+
+This patch is to fix it by initializing the padding of addr->v4 in
+sctp_v4_from_addr_param(), as well as other functions that do the similar
+thing, and these functions shouldn't trust that the caller initializes the
+memory, as Marcelo suggested.
+
+Reported-by: syzbot+6dcbfea81cd3d4dd0b02@syzkaller.appspotmail.com
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- tools/perf/util/dwarf-aux.c |   24 +++++++++++++++++++++++-
- tools/perf/util/dwarf-aux.h |    3 +++
- 2 files changed, 26 insertions(+), 1 deletion(-)
+ net/sctp/protocol.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -294,6 +294,28 @@ bool die_is_func_def(Dwarf_Die *dw_die)
+--- a/net/sctp/protocol.c
++++ b/net/sctp/protocol.c
+@@ -255,6 +255,7 @@ static void sctp_v4_from_sk(union sctp_a
+ 	addr->v4.sin_family = AF_INET;
+ 	addr->v4.sin_port = 0;
+ 	addr->v4.sin_addr.s_addr = inet_sk(sk)->inet_rcv_saddr;
++	memset(addr->v4.sin_zero, 0, sizeof(addr->v4.sin_zero));
  }
  
- /**
-+ * die_entrypc - Returns entry PC (the lowest address) of a DIE
-+ * @dw_die: a DIE
-+ * @addr: where to store entry PC
-+ *
-+ * Since dwarf_entrypc() does not return entry PC if the DIE has only address
-+ * range, we have to use this to retrieve the lowest address from the address
-+ * range attribute.
-+ */
-+int die_entrypc(Dwarf_Die *dw_die, Dwarf_Addr *addr)
-+{
-+	Dwarf_Addr base, end;
-+
-+	if (!addr)
-+		return -EINVAL;
-+
-+	if (dwarf_entrypc(dw_die, addr) == 0)
-+		return 0;
-+
-+	return dwarf_ranges(dw_die, 0, &base, addr, &end) < 0 ? -ENOENT : 0;
-+}
-+
-+/**
-  * die_is_func_instance - Ensure that this DIE is an instance of a subprogram
-  * @dw_die: a DIE
-  *
-@@ -706,7 +728,7 @@ static int __die_walk_funclines(Dwarf_Di
- 	/* Handle function declaration line */
- 	fname = dwarf_decl_file(sp_die);
- 	if (fname && dwarf_decl_line(sp_die, &lineno) == 0 &&
--	    dwarf_entrypc(sp_die, &addr) == 0) {
-+	    die_entrypc(sp_die, &addr) == 0) {
- 		lw.retval = callback(fname, lineno, addr, data);
- 		if (lw.retval != 0)
- 			goto done;
---- a/tools/perf/util/dwarf-aux.h
-+++ b/tools/perf/util/dwarf-aux.h
-@@ -38,6 +38,9 @@ extern int cu_find_lineinfo(Dwarf_Die *c
- extern int cu_walk_functions_at(Dwarf_Die *cu_die, Dwarf_Addr addr,
- 			int (*callback)(Dwarf_Die *, void *), void *data);
+ /* Initialize sk->sk_rcv_saddr from sctp_addr. */
+@@ -277,6 +278,7 @@ static void sctp_v4_from_addr_param(unio
+ 	addr->v4.sin_family = AF_INET;
+ 	addr->v4.sin_port = port;
+ 	addr->v4.sin_addr.s_addr = param->v4.addr.s_addr;
++	memset(addr->v4.sin_zero, 0, sizeof(addr->v4.sin_zero));
+ }
  
-+/* Get the lowest PC in DIE (including range list) */
-+int die_entrypc(Dwarf_Die *dw_die, Dwarf_Addr *addr);
-+
- /* Ensure that this DIE is a subprogram and definition (not declaration) */
- extern bool die_is_func_def(Dwarf_Die *dw_die);
+ /* Initialize an address parameter from a sctp_addr and return the length
+@@ -301,6 +303,7 @@ static void sctp_v4_dst_saddr(union sctp
+ 	saddr->v4.sin_family = AF_INET;
+ 	saddr->v4.sin_port = port;
+ 	saddr->v4.sin_addr.s_addr = fl4->saddr;
++	memset(saddr->v4.sin_zero, 0, sizeof(saddr->v4.sin_zero));
+ }
  
+ /* Compare two addresses exactly. */
+@@ -323,6 +326,7 @@ static void sctp_v4_inaddr_any(union sct
+ 	addr->v4.sin_family = AF_INET;
+ 	addr->v4.sin_addr.s_addr = htonl(INADDR_ANY);
+ 	addr->v4.sin_port = port;
++	memset(addr->v4.sin_zero, 0, sizeof(addr->v4.sin_zero));
+ }
+ 
+ /* Is this a wildcard address? */
 
 
