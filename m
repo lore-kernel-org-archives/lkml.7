@@ -2,51 +2,57 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAD_ENC_HEADER,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C47C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B3BC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31D6C2465D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E00C21D7D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003733;
-	bh=PokvHP29eWUB8qkmtCFYFZdQErIwko2O5Re8dgS8JfE=;
+	s=default; t=1578003737;
+	bh=SMEJehBrbJjrA45F280FcI6aUeAE4KdjaoDeYzWp3+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jgrA9xs/Av4sF7FDuE7eR9YB+43RNO6h0TKrBS31l0uGPO48BIoyazbK+UlJ2GPoQ
-	 kVttT7u/0S2bUejLyrXN1UqOZbT/U3GYZY2PNC96v//PfHMiLm+TmgwDU+v4LuYDH4
-	 ZRgCgea2I1xEuZFzimtM/a/tFq+VGKHcUw5lzL8E=
+	b=qdyq6NZZLACd8PT/iNqw70ZlkQOUW/baHsgxAalugYVTyPSW3KBzzNBlP/SmCErri
+	 ykQp4HRujngjoEhvS43VEkuJVWpdBkDZsRAQAqOmIJgXeuqNKJ7w042TF7rCvVee8A
+	 ubIHXLN9lVkXymPzQ60D2bOMYzsJf6dlnfEmPC54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbgABWWM (ORCPT
+        id S1728968AbgABWWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:22:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42272 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:22:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729102AbgABWWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:22:08 -0500
+        id S1729102AbgABWWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:22:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 948DA222C3;
-        Thu,  2 Jan 2020 22:22:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 501D3227BF;
+        Thu,  2 Jan 2020 22:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003728;
-        bh=PokvHP29eWUB8qkmtCFYFZdQErIwko2O5Re8dgS8JfE=;
+        s=default; t=1578003732;
+        bh=SMEJehBrbJjrA45F280FcI6aUeAE4KdjaoDeYzWp3+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kbLMKAZXB600WRFOBsGkz01rdt89Cw1z2V0gBf4fLSy5iFxaA+O1GY2SwkRPXIO6H
-         mv2EQMuhsCFm1KH1x7b4ALyhVA7csSBrmOIvuaaLAo7ttlpbOJFl/kawYjepzfqc5X
-         GA58c2xauwEkPAf2+iBDdMuiwfy+uC7w2I3og69o=
+        b=YumHkAEo0smUq3IAGrV2tITj/44sV/lRKNnJaRCYG50mJ3QRYI1J/80fEhYQMLef1
+         C5NL6E5r7OSPz4sM15HedZbz4hVlXK1S9Sd9SVYpnpesBXH0s7pNAPA0qb6PF3oe++
+         iu5EEisWVcVOxLEtgjqN5BLW2M8wXi9b4kbjlkbA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Netanel Belgazal <netanel@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 090/114] net: ena: fix napi handler misbehavior when the napi budget is zero
-Date:   Thu,  2 Jan 2020 23:07:42 +0100
-Message-Id: <20200102220038.258393874@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "=?UTF-8?q?Jan=20H . =20Sch=C3=B6nherr?=" <jschoenh@amazon.de>,
+        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Yazen Ghannam <Yazen.Ghannam@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 074/114] x86/mce: Fix possibly incorrect severity calculation on AMD
+Date:   Thu,  2 Jan 2020 23:07:26 +0100
+Message-Id: <20200102220036.554952288@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -59,54 +65,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Netanel Belgazal <netanel@amazon.com>
+From: Jan H. Schönherr <jschoenh@amazon.de>
 
-[ Upstream commit 24dee0c7478d1a1e00abdf5625b7f921467325dc ]
+[ Upstream commit a3a57ddad061acc90bef39635caf2b2330ce8f21 ]
 
-In netpoll the napi handler could be called with budget equal to zero.
-Current ENA napi handler doesn't take that into consideration.
+The function mce_severity_amd_smca() requires m->bank to be initialized
+for correct operation. Fix the one case, where mce_severity() is called
+without doing so.
 
-The napi handler handles Rx packets in a do-while loop.
-Currently, the budget check happens only after decrementing the
-budget, therefore the napi handler, in rare cases, could run over
-MAX_INT packets.
-
-In addition to that, this moves all budget related variables to int
-calculation and stop mixing u32 to avoid ambiguity
-
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Netanel Belgazal <netanel@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 6bda529ec42e ("x86/mce: Grade uncorrected errors for SMCA-enabled systems")
+Fixes: d28af26faa0b ("x86/MCE: Initialize mce.bank in the case of a fatal error in mce_no_way_out()")
+Signed-off-by: Jan H. Schönherr <jschoenh@amazon.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: <stable@vger.kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Cc: Yazen Ghannam <Yazen.Ghannam@amd.com>
+Link: https://lkml.kernel.org/r/20191210000733.17979-4-jschoenh@amazon.de
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/mcheck/mce.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -1197,8 +1197,8 @@ static int ena_io_poll(struct napi_struc
- 	struct ena_napi *ena_napi = container_of(napi, struct ena_napi, napi);
- 	struct ena_ring *tx_ring, *rx_ring;
+diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
+index 87ed8462a5c7..1f69b12d5bb8 100644
+--- a/arch/x86/kernel/cpu/mcheck/mce.c
++++ b/arch/x86/kernel/cpu/mcheck/mce.c
+@@ -812,8 +812,8 @@ static int mce_no_way_out(struct mce *m, char **msg, unsigned long *validp,
+ 		if (quirk_no_way_out)
+ 			quirk_no_way_out(i, m, regs);
  
--	u32 tx_work_done;
--	u32 rx_work_done;
-+	int tx_work_done;
-+	int rx_work_done = 0;
- 	int tx_budget;
- 	int napi_comp_call = 0;
- 	int ret;
-@@ -1215,7 +1215,11 @@ static int ena_io_poll(struct napi_struc
- 	}
- 
- 	tx_work_done = ena_clean_tx_irq(tx_ring, tx_budget);
--	rx_work_done = ena_clean_rx_irq(rx_ring, napi, budget);
-+	/* On netpoll the budget is zero and the handler should only clean the
-+	 * tx completions.
-+	 */
-+	if (likely(budget))
-+		rx_work_done = ena_clean_rx_irq(rx_ring, napi, budget);
- 
- 	/* If the device is about to reset or down, avoid unmask
- 	 * the interrupt and return 0 so NAPI won't reschedule
++		m->bank = i;
+ 		if (mce_severity(m, mca_cfg.tolerant, &tmp, true) >= MCE_PANIC_SEVERITY) {
+-			m->bank = i;
+ 			mce_read_aux(m, i);
+ 			*msg = tmp;
+ 			return 1;
+-- 
+2.20.1
+
 
 
