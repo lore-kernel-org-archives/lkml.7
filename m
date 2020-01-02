@@ -2,54 +2,53 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360D9C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 720B0C3276E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0656E20863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4811A20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005141;
-	bh=Ra7SkgAlmbNH8pb22TGnp/DTOVE9GOkD+9r7D2iJyhc=;
+	s=default; t=1578005143;
+	bh=6sjVKtc0kCiTiKhyKbAVxJ2gWded0kH98fqjv3yB+zQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0DFO7YabJkhGzEOBntsuvF8I+dNSC+hGV0E4+o82UyDPtCbikZIESD2CipHu9sDV2
-	 k+cEUaUxFrP/TGRGceq5S2lPRamJrb7a50evA45YaupozgSIfOoAT0pVTtSG8enst0
-	 XVnqZtVjhLVUywniv3WDiE3cq+g2dsdWZnIe2ia4=
+	b=a8SADDl9j7qh1mL1hoaHeNiT5APczMH19RsKyVsIgFvKM91oZbfPUt08BBuekJwCd
+	 mU9gdcFazqlhFjm0Tw7oLkQZ5cM77WHY98WBEbDUPceduex19ExSYspg6/1saFiSm/
+	 0WC/3LQQJxMIzD60WvNJgsvIpIjf2GmD/ebuTpuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728612AbgABWpj (ORCPT
+        id S1730317AbgABWbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:45:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37468 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:31:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730333AbgABWbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:31:52 -0500
+        id S1730301AbgABWbh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:31:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7F3E21D7D;
-        Thu,  2 Jan 2020 22:31:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67E7C22525;
+        Thu,  2 Jan 2020 22:31:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004311;
-        bh=Ra7SkgAlmbNH8pb22TGnp/DTOVE9GOkD+9r7D2iJyhc=;
+        s=default; t=1578004296;
+        bh=6sjVKtc0kCiTiKhyKbAVxJ2gWded0kH98fqjv3yB+zQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HSd66pkkW4hh+c4X3RjCFSqrJUGZHf2HSJSUdvrBFTgbXs53r3bVnjHA8MpY4FDwI
-         kjv8+PQzyCk2aAho5BX7wtJCtLBwepp+Q8b63dP0FzCBGF+5VDHlDTCO+EYakqa9cF
-         zOkp6v4VlPtKRF/cnZK7KIeRVSvZicoVbsRt71t0=
+        b=YuaTbVsjXX9lQPq5RDEV9KeYacHOCmTVAeGiOOF2xWrAdmx1LvW6Y7OJ/9Gh48euS
+         bzclT4bExozu7aMsTuKjOkgEj1+W18MEmGbvqCDgHJQAyTbfxiwWhrM9RX9khf4hza
+         sxivDzuIry8Nm3AU2eQaKwGOt8EbUG9GoxioRQz4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+6dcbfea81cd3d4dd0b02@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 100/171] sctp: fully initialize v4 addr in some functions
-Date:   Thu,  2 Jan 2020 23:07:11 +0100
-Message-Id: <20200102220601.061751680@linuxfoundation.org>
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 119/171] powerpc/pseries: Dont fail hash page table insert for bolted mapping
+Date:   Thu,  2 Jan 2020 23:07:30 +0100
+Message-Id: <20200102220603.584558473@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -62,99 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit b6f3320b1d5267e7b583a6d0c88dda518101740c ]
+[ Upstream commit 75838a3290cd4ebbd1f567f310ba04b6ef017ce4 ]
 
-Syzbot found a crash:
+If the hypervisor returned H_PTEG_FULL for H_ENTER hcall, retry a hash page table
+insert by removing a random entry from the group.
 
-  BUG: KMSAN: uninit-value in crc32_body lib/crc32.c:112 [inline]
-  BUG: KMSAN: uninit-value in crc32_le_generic lib/crc32.c:179 [inline]
-  BUG: KMSAN: uninit-value in __crc32c_le_base+0x4fa/0xd30 lib/crc32.c:202
-  Call Trace:
-    crc32_body lib/crc32.c:112 [inline]
-    crc32_le_generic lib/crc32.c:179 [inline]
-    __crc32c_le_base+0x4fa/0xd30 lib/crc32.c:202
-    chksum_update+0xb2/0x110 crypto/crc32c_generic.c:90
-    crypto_shash_update+0x4c5/0x530 crypto/shash.c:107
-    crc32c+0x150/0x220 lib/libcrc32c.c:47
-    sctp_csum_update+0x89/0xa0 include/net/sctp/checksum.h:36
-    __skb_checksum+0x1297/0x12a0 net/core/skbuff.c:2640
-    sctp_compute_cksum include/net/sctp/checksum.h:59 [inline]
-    sctp_packet_pack net/sctp/output.c:528 [inline]
-    sctp_packet_transmit+0x40fb/0x4250 net/sctp/output.c:597
-    sctp_outq_flush_transports net/sctp/outqueue.c:1146 [inline]
-    sctp_outq_flush+0x1823/0x5d80 net/sctp/outqueue.c:1194
-    sctp_outq_uncork+0xd0/0xf0 net/sctp/outqueue.c:757
-    sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1781 [inline]
-    sctp_side_effects net/sctp/sm_sideeffect.c:1184 [inline]
-    sctp_do_sm+0x8fe1/0x9720 net/sctp/sm_sideeffect.c:1155
-    sctp_primitive_REQUESTHEARTBEAT+0x175/0x1a0 net/sctp/primitive.c:185
-    sctp_apply_peer_addr_params+0x212/0x1d40 net/sctp/socket.c:2433
-    sctp_setsockopt_peer_addr_params net/sctp/socket.c:2686 [inline]
-    sctp_setsockopt+0x189bb/0x19090 net/sctp/socket.c:4672
+After some runtime, it is very well possible to find all the 8 hash page table
+entry slot in the hpte group used for mapping. Don't fail a bolted entry insert
+in that case. With Storage class memory a user can find this error easily since
+a namespace enable/disable is equivalent to memory add/remove.
 
-The issue was caused by transport->ipaddr set with uninit addr param, which
-was passed by:
+This results in failures as reported below:
 
-  sctp_transport_init net/sctp/transport.c:47 [inline]
-  sctp_transport_new+0x248/0xa00 net/sctp/transport.c:100
-  sctp_assoc_add_peer+0x5ba/0x2030 net/sctp/associola.c:611
-  sctp_process_param net/sctp/sm_make_chunk.c:2524 [inline]
+$ ndctl create-namespace -r region1 -t pmem -m devdax -a 65536 -s 100M
+libndctl: ndctl_dax_enable: dax1.3: failed to enable
+  Error: namespace1.2: failed to enable
 
-where 'addr' is set by sctp_v4_from_addr_param(), and it doesn't initialize
-the padding of addr->v4.
+failed to create namespace: No such device or address
 
-Later when calling sctp_make_heartbeat(), hbinfo.daddr(=transport->ipaddr)
-will become the part of skb, and the issue occurs.
+In kernel log we find the details as below:
 
-This patch is to fix it by initializing the padding of addr->v4 in
-sctp_v4_from_addr_param(), as well as other functions that do the similar
-thing, and these functions shouldn't trust that the caller initializes the
-memory, as Marcelo suggested.
+Unable to create mapping for hot added memory 0xc000042006000000..0xc00004200d000000: -1
+dax_pmem: probe of dax1.3 failed with error -14
 
-Reported-by: syzbot+6dcbfea81cd3d4dd0b02@syzkaller.appspotmail.com
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This indicates that we failed to create a bolted hash table entry for direct-map
+address backing the namespace.
+
+We also observe failures such that not all namespaces will be enabled with
+ndctl enable-namespace all command.
+
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191024093542.29777-2-aneesh.kumar@linux.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sctp/protocol.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/powerpc/mm/hash_utils_64.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/net/sctp/protocol.c
-+++ b/net/sctp/protocol.c
-@@ -257,6 +257,7 @@ static void sctp_v4_from_sk(union sctp_a
- 	addr->v4.sin_family = AF_INET;
- 	addr->v4.sin_port = 0;
- 	addr->v4.sin_addr.s_addr = inet_sk(sk)->inet_rcv_saddr;
-+	memset(addr->v4.sin_zero, 0, sizeof(addr->v4.sin_zero));
- }
+diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
+index bd666287c5ed..de1d8cdd2991 100644
+--- a/arch/powerpc/mm/hash_utils_64.c
++++ b/arch/powerpc/mm/hash_utils_64.c
+@@ -289,7 +289,14 @@ int htab_bolt_mapping(unsigned long vstart, unsigned long vend,
+ 		ret = mmu_hash_ops.hpte_insert(hpteg, vpn, paddr, tprot,
+ 					       HPTE_V_BOLTED, psize, psize,
+ 					       ssize);
+-
++		if (ret == -1) {
++			/* Try to remove a non bolted entry */
++			ret = mmu_hash_ops.hpte_remove(hpteg);
++			if (ret != -1)
++				ret = mmu_hash_ops.hpte_insert(hpteg, vpn, paddr, tprot,
++							       HPTE_V_BOLTED, psize, psize,
++							       ssize);
++		}
+ 		if (ret < 0)
+ 			break;
  
- /* Initialize sk->sk_rcv_saddr from sctp_addr. */
-@@ -279,6 +280,7 @@ static void sctp_v4_from_addr_param(unio
- 	addr->v4.sin_family = AF_INET;
- 	addr->v4.sin_port = port;
- 	addr->v4.sin_addr.s_addr = param->v4.addr.s_addr;
-+	memset(addr->v4.sin_zero, 0, sizeof(addr->v4.sin_zero));
- }
- 
- /* Initialize an address parameter from a sctp_addr and return the length
-@@ -303,6 +305,7 @@ static void sctp_v4_dst_saddr(union sctp
- 	saddr->v4.sin_family = AF_INET;
- 	saddr->v4.sin_port = port;
- 	saddr->v4.sin_addr.s_addr = fl4->saddr;
-+	memset(saddr->v4.sin_zero, 0, sizeof(saddr->v4.sin_zero));
- }
- 
- /* Compare two addresses exactly. */
-@@ -325,6 +328,7 @@ static void sctp_v4_inaddr_any(union sct
- 	addr->v4.sin_family = AF_INET;
- 	addr->v4.sin_addr.s_addr = htonl(INADDR_ANY);
- 	addr->v4.sin_port = port;
-+	memset(addr->v4.sin_zero, 0, sizeof(addr->v4.sin_zero));
- }
- 
- /* Is this a wildcard address? */
+-- 
+2.20.1
+
 
 
