@@ -2,97 +2,98 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B67FC2D0DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1382BC2D0DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C00D20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:20:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uSztRpVz"
+	by mail.kernel.org (Postfix) with ESMTP id D7F72215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:26:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgABHUW (ORCPT
+        id S1727635AbgABH0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 02:20:22 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33399 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbgABHUV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 02:20:21 -0500
-Received: by mail-pl1-f195.google.com with SMTP id c13so17513404pls.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 23:20:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=cml0t0YxNWYg8r++2sRcks91RdsbKE44NnA5x7kzm6c=;
-        b=uSztRpVzjvC5aOabIn3Spd6tDWwuuS93WV+yqGSbHeB264lTwkTUCXoCoxUJYlWrYR
-         gGVRqNiojlZY8tk3TNbSCZV0f4r2RWly6T0sD7YhBey1MiBKXoiZa4kkBJ2Y6iufhlhi
-         E7YiCit2Vu/7/6ne7eD7kPz33RtMl6zWiTZ22E2BhtMvcTBizJp+PrPKoGi1xQ9sUnGu
-         iyLLbzhDkhe0J3LBMlfs7y+F/NO945x/89TiAcKqq+tZAaplM3N+tLR1k3zaknCUJMDt
-         scZo6BbZ+aRPHznBOOSYoWhl4kcdhP2oTj56FHHRmfDrjbrQSMm278ncqDEWz3h4Liaq
-         wv9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=cml0t0YxNWYg8r++2sRcks91RdsbKE44NnA5x7kzm6c=;
-        b=kGEfL4g+PmZNjfPIuazc75gTHEeGEWzQJ2ang0OlCkf7eGw/xR7qpVIb4JzC3Hq96o
-         xLCUnXrbB1cqvDIWZ+B+cHIG8C8kqYXAaPbLi+3B+HxDrZtH9mNifn1XzPLlmCqnPOQs
-         H1Aet0109OscB0Y4QEumM6QX/OU+TbVntDQrXy+wVJ6hElukYTvxz8MhYNH59MM+4mu/
-         lOTkx0x+bFDIJwjoScHkr7qpH4UJ5XaVFNSaMD/JQwRkLwzBk3BLCLDDSHCVvAlOulY2
-         zArCUcyhIcDbXxCsaPWKlH7gydqWp21LlghX7+nTQ7fXktUD/9kfmJMBpNFhI6x3iDQv
-         9pfw==
-X-Gm-Message-State: APjAAAUoBrXnC5vT5TwrIuu3yX77mUotb7i3F3dKhzAc6i2xUhotZmVr
-        QMYLqxRWINGxEi11F8thMxQ=
-X-Google-Smtp-Source: APXvYqzYKl5dMWeu8PSI5P1FF0ESSw1IDdqOUFg5t4QsETD7lPP7YvZNO5y3XrX5fsWOR+dvNBgyJA==
-X-Received: by 2002:a17:90a:8c8c:: with SMTP id b12mr18163092pjo.119.1577949621334;
-        Wed, 01 Jan 2020 23:20:21 -0800 (PST)
-Received: from localhost ([43.224.245.179])
-        by smtp.gmail.com with ESMTPSA id m6sm9525644pjv.23.2020.01.01.23.20.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 Jan 2020 23:20:20 -0800 (PST)
-From:   Junyong Sun <sunjy516@gmail.com>
-X-Google-Original-From: Junyong Sun <sunjunyong@xiaomi.com>
-To:     rostedt@goodmis.org, mingo@redhat.com, akpm@linux-foundation.org,
-        joel@joelfernandes.org, changbin.du@intel.com,
-        timmurray@google.com, sunjunyong@xiaomi.com
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] mm, tracing: Print symbol name for kmem_alloc_node call_site events
-Date:   Thu,  2 Jan 2020 15:19:28 +0800
-Message-Id: <1577949568-4518-1-git-send-email-sunjunyong@xiaomi.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 2 Jan 2020 02:26:47 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48658 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726078AbgABH0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 02:26:47 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5C13057D9FC402064E4E;
+        Thu,  2 Jan 2020 15:26:44 +0800 (CST)
+Received: from euler.huawei.com (10.175.104.193) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 2 Jan 2020 15:26:35 +0800
+From:   Wei Li <liwei391@huawei.com>
+To:     <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>, <suzuki.poulose@arm.com>,
+        <mathieu.poirier@linaro.org>, <ilubashe@akamai.com>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <huawei.libin@huawei.com>
+Subject: [PATCH] perf tools: arm-spe: fix endless record after being terminated
+Date:   Thu, 2 Jan 2020 15:40:34 +0800
+Message-ID: <20200102074034.38650-1-liwei391@huawei.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.193]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-print the call_site ip of kmem_alloc_node using '%pS' to improve
-the readability of raw slab trace points.
+In __cmd_record(), when receiving SIGINT(ctrl + c), a done flag will
+be set and the event list will be disabled by evlist__disable() once.
 
-Signed-off-by: Junyong Sun <sunjunyong@xiaomi.com>
+While in auxtrace_record.read_finish(), the related events will be
+enabled again, if they are continuous, the recording seems to be endless.
+
+If the arm_spe event is disabled, we don't enable it again here.
+
+Before the patch:
+[root@localhost ~]# ./perf record -e arm_spe_0/ts_enable=1,pct_enable=1,\
+pa_enable=1,load_filter=1,jitter=1,store_filter=1,min_latency=0/ -p 5387
+^C^C^C^C^C^C
+
+After the patch:
+[root@localhost ~]# ./perf record -e arm_spe_0/ts_enable=1,pct_enable=1,\
+pa_enable=1,load_filter=1,jitter=1,store_filter=1,min_latency=0/ -p 5387
+^C[ perf record: Woken up 0 times to write data ]
+Warning:
+AUX data lost 255 times out of 789!
+
+[ perf record: Captured and wrote 1020.719 MB perf.data ]
+
+Signed-off-by: Wei Li <liwei391@huawei.com>
 ---
- include/trace/events/kmem.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/arch/arm64/util/arm-spe.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
-index ad7e642b..f65b1f6 100644
---- a/include/trace/events/kmem.h
-+++ b/include/trace/events/kmem.h
-@@ -88,8 +88,8 @@ DECLARE_EVENT_CLASS(kmem_alloc_node,
- 		__entry->node		= node;
- 	),
+diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+index eba6541ec0f1..d1ff278a8ab2 100644
+--- a/tools/perf/arch/arm64/util/arm-spe.c
++++ b/tools/perf/arch/arm64/util/arm-spe.c
+@@ -165,9 +165,13 @@ static int arm_spe_read_finish(struct auxtrace_record *itr, int idx)
+ 	struct evsel *evsel;
  
--	TP_printk("call_site=%lx ptr=%p bytes_req=%zu bytes_alloc=%zu gfp_flags=%s node=%d",
--		__entry->call_site,
-+	TP_printk("call_site=%pS ptr=%p bytes_req=%zu bytes_alloc=%zu gfp_flags=%s node=%d",
-+		(void *)__entry->call_site,
- 		__entry->ptr,
- 		__entry->bytes_req,
- 		__entry->bytes_alloc,
+ 	evlist__for_each_entry(sper->evlist, evsel) {
+-		if (evsel->core.attr.type == sper->arm_spe_pmu->type)
+-			return perf_evlist__enable_event_idx(sper->evlist,
+-							     evsel, idx);
++		if (evsel->core.attr.type == sper->arm_spe_pmu->type) {
++			if (evsel->disabled)
++				return 0;
++			else
++				return perf_evlist__enable_event_idx(
++						sper->evlist, evsel, idx);
++		}
+ 	}
+ 	return -EINVAL;
+ }
 -- 
-2.7.4
+2.17.1
 
