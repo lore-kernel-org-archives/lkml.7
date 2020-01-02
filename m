@@ -2,129 +2,161 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14070C2D0DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 02:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B92C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 03:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA9C620866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 02:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D02C421655
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 03:02:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="Js67nZwO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vIBadxwj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbgABCfb (ORCPT
+        id S1727585AbgABDCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 21:35:31 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42559 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727511AbgABCf2 (ORCPT
+        Wed, 1 Jan 2020 22:02:33 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44101 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727509AbgABDCc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 21:35:28 -0500
-Received: by mail-pl1-f193.google.com with SMTP id p9so17275474plk.9
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 18:35:27 -0800 (PST)
+        Wed, 1 Jan 2020 22:02:32 -0500
+Received: by mail-ot1-f67.google.com with SMTP id h9so52592777otj.11;
+        Wed, 01 Jan 2020 19:02:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=w0hfOFdpppNhfx4JZoVAcogfBULm51LLYT9TT+3UyFc=;
-        b=Js67nZwO+nVQTqkYaEx6Xf/tTAeSIoxp5sPr86Z2pqgsGjEX+U3OY8mgLrBTM9r1C5
-         LgbixzeQrcBfDQ/rJtPWYom51EsTh6eJBkxB2i++nLDopKaJmfrU7hmrTxpmZCU+24q/
-         NqGPoFmaHempS0pAf8xrbcK6qrcZXYYSMFTu2y3ErmHErkhEoW12h2Y2wXO8BHjKC0qM
-         tw2vdf0e+mhgwKTMd79/V6z9x6vr09uU7xqMXAx307DNHO+2mGkvdmpQlul6SnXHeFjL
-         fdPtI4VHJFo1331IiHv7ObC+hNB4ySbAuCamBupdf1Zs2xmOzMm6aEOfxpKsEYr/+CK/
-         wXog==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Fsf4Kv4GKfEO6/i6UJSN8gP+gZz4MfI3CR+WieAs89w=;
+        b=vIBadxwjvV/v/SLLefWz19+1AioDTALvEnFaP8rT95BPmtN3e/62j76b1AOORG48Qe
+         IDRXd+Xn+DAvBi7BY4A2BoUsUDhOYPA2wTwCW9bLcOGsVAgjRzd0910Z/na4RFILuHWS
+         J1a+YJq0keFdCwqEOd+rz6C0zUZLekApIqb9XNDErzrJKaKjqaIBWuo0wLgV4p7wuuy8
+         m/jfmtsJh2BpuCR4QdYB9/YRgPhbWtCCELjI9A42EHfX2CuG496gcAF5iqwsVOwRVQEq
+         kZhJeb4E2Lz1tQZPYSZvfzqxBf7mWqh1TExjAXqitiBtYF+eS63SV1Ox26gC7H+B/+B8
+         pqNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=w0hfOFdpppNhfx4JZoVAcogfBULm51LLYT9TT+3UyFc=;
-        b=MOxI96vHnqBkGk6U/7z6LB8RNoOCA3C2LNB/Hs7p167baEhdherXj690RvMDXyxZz+
-         yafjuKxb9G9HUW/8vYustdp7uGHrD1WO6euRFvIXgx09KFMVgrQfwRjeo0VCzRjY8ZsU
-         5EyQJDzTyE12wIJC6Pt+mGcyEeG1nEJhOhkR3r93d+HpAOv/UBBckIS2NUcCiE6ZY4Ex
-         Q52jRAtx/tG9cFoAmky/usVx5TfuN4JaToJEBjtAnrtd+66WV7hN+e/NNKqMsQnkMvbd
-         UzhO3rflcCCylcP4E0SObx/5Id7WPjQfaxdDhsPnvj1EGvOJG/0gpJMtrUpXe4lRbC4d
-         cktQ==
-X-Gm-Message-State: APjAAAVR94EYclXDpXVEltMXiewLSCuYJggyE0O8aw18Q9AhbpG492GG
-        2LFRyJhHeyM14k2W5sgWXLGRZw==
-X-Google-Smtp-Source: APXvYqxf/9Q8Ac+TQyreUWpYYFYUsiYcKLQYmXqn1dMwWpID07CCOl05uetAvTn2nDhEgLHTXG4XAA==
-X-Received: by 2002:a17:90a:d807:: with SMTP id a7mr17422645pjv.15.1577932527663;
-        Wed, 01 Jan 2020 18:35:27 -0800 (PST)
-Received: from libai.bytedance.net ([61.120.150.71])
-        by smtp.gmail.com with ESMTPSA id s18sm56572809pfh.179.2020.01.01.18.35.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 Jan 2020 18:35:27 -0800 (PST)
-From:   zhenwei pi <pizhenwei@bytedance.com>
-To:     gregkh@linuxfoundation.org, arnd@arndb.de
-Cc:     linux-kernel@vger.kernel.org, pizhenwei@bytedance.com
-Subject: [PATCH v2 2/2] misc: pvpanic: add crash loaded event
-Date:   Thu,  2 Jan 2020 10:35:13 +0800
-Message-Id: <20200102023513.318836-3-pizhenwei@bytedance.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200102023513.318836-1-pizhenwei@bytedance.com>
-References: <20200102023513.318836-1-pizhenwei@bytedance.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Fsf4Kv4GKfEO6/i6UJSN8gP+gZz4MfI3CR+WieAs89w=;
+        b=pl1LlwxnZzk7k9b30XD2447vxNUFkSKDbgiTihwyf8+k4P1ta1S0rvtoFU+G5Q8pvQ
+         F3sjmhJEAZq74X+k7jz6OatZZlqKyb96Pj7aDbIIB27yYchtsCr2PSe4mSyOKefJkAov
+         XFiXkVYS41kDXQ9GsPXEpqx0M67ITVphnpx0lr5bRbrmLPNj1+hNmbUGPBdDtZGiof4Y
+         WMGhsojrqDVP6eL3AsCzthXlxw6XO8ZbF96lmJguAEsk2dszBPsTNjgXjZEgh5xMTorg
+         Gf0L3FX9y/RzLx3Jogkz5ctr9lV1T608or8R4bTO4sX5N46xILrJoCHs686nD9LwOFz3
+         hHVw==
+X-Gm-Message-State: APjAAAVCGvWx6gcK5te6G8iXMnrtAkTnNk1DESaB2BL1jO14dWdBJvW+
+        coZ5BODNNIvlSEx9FSIrDrw=
+X-Google-Smtp-Source: APXvYqzoLpLSXZFPvEA4NYFeyEPZZRJGs7+UcTKd38N7T/VHbUGey27aXUQ8MAS5JAtnEFArNcgiMQ==
+X-Received: by 2002:a05:6830:15a:: with SMTP id j26mr85700884otp.137.1577934151509;
+        Wed, 01 Jan 2020 19:02:31 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id o20sm15235472oie.23.2020.01.01.19.02.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 Jan 2020 19:02:30 -0800 (PST)
+Date:   Wed, 1 Jan 2020 20:02:29 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Paul Burton <paulburton@kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Christian Brauner <christian.brauner@canonical.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] MIPS: Don't declare __current_thread_info globally
+Message-ID: <20200102030229.GA4478@ubuntu-m2-xlarge-x86>
+References: <20200101175916.558284-1-paulburton@kernel.org>
+ <CAK8P3a2a1aY9G+Nh9fy+NU=YA_m1dxm-4SCHgydVO5kcydh77g@mail.gmail.com>
+ <20200102005343.GA495913@rani.riverdale.lan>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200102005343.GA495913@rani.riverdale.lan>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some users prefer kdump tools to generate guest kernel dumpfile,
-at the same time, need a out-of-band kernel panic event.
+On Wed, Jan 01, 2020 at 07:53:45PM -0500, Arvind Sankar wrote:
+> On Wed, Jan 01, 2020 at 09:51:02PM +0100, Arnd Bergmann wrote:
+> > On Wed, Jan 1, 2020 at 6:57 PM Paul Burton <paulburton@kernel.org> wrote:
+> > > diff --git a/arch/mips/include/asm/thread_info.h b/arch/mips/include/asm/thread_info.h
+> > > index 4993db40482c..aceefc3f9a1a 100644
+> > > --- a/arch/mips/include/asm/thread_info.h
+> > > +++ b/arch/mips/include/asm/thread_info.h
+> > > @@ -50,10 +50,10 @@ struct thread_info {
+> > >  }
+> > >
+> > >  /* How to get the thread information struct from C.  */
+> > > -register struct thread_info *__current_thread_info __asm__("$28");
+> > > -
+> > >  static inline struct thread_info *current_thread_info(void)
+> > >  {
+> > > +       register struct thread_info *__current_thread_info __asm__("$28");
+> > > +
+> > >         return __current_thread_info;
+> > >  }
+> > 
+> > This looks like a nice fix, but are you sure it doesn't allow the compiler to
+> > reuse $28 for another purpose in the kernel under register pressure,
+> > which would break current_thread_info()?
+> > 
+> > I see in the MIPS ABI document that $28 is preserved across function
+> > calls, but I don't see any indication that a function is not allowed
+> > to modify it and later restore the original content.
+> > 
+> >         Arnd
+> 
+> The compiler can already do that even with a global definition.
+> 
+> The doc since gcc 9 [1] says:
+> 
+> "Accesses to the variable may be optimized as usual and the register
+> remains available for allocation and use in any computations, provided
+> that observable values of the variable are not affected."
+> 
+> and
+> 
+> "Furthermore, since the register is not reserved exclusively for the
+> variable, accessing it from handlers of asynchronous signals may observe
+> unrelated temporary values residing in the register."
+> 
+> I'm not sure if this was a change in gcc 9 or simply the doc was wrong
+> earlier.
+> 
+> Should there be a -ffixed-28 cflag for MIPS? alpha and hexagon seem to
+> have that and they also keep current_thread_info in a register.
+> 
+> Also, commit fe92da0f355e9 ("MIPS: Changed current_thread_info() to an
+> equivalent supported by both clang and GCC") moved this from local to
+> global because local apparently didn't work on clang?
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc-9.1.0/gcc/Global-Register-Variables.html
 
-Currently if booting guest kernel with 'crash_kexec_post_notifiers',
-QEMU will receive PVPANIC_PANICKED event and stop VM. If booting
-guest kernel without 'crash_kexec_post_notifiers', guest will not
-call notifier chain.
+Yeah this patch appears to break booting malta_defconfig in QEMU when
+built with clang; additionally, there are a TON of warnings about this
+variable being uninitialized:
 
-Add PVPANIC_CRASH_LOADED bit for pvpanic event, it means that guest
-kernel actually hit a kernel panic, but the guest kernel wants to
-handle by itself.
+../arch/mips/include/asm/thread_info.h:57:9: warning: variable '__current_thread_info' is uninitialized when used here [-Wuninitialized]
+        return __current_thread_info;
+               ^~~~~~~~~~~~~~~~~~~~~
+../arch/mips/include/asm/thread_info.h:55:52: note: initialize the variable '__current_thread_info' to silence this warning
+        register struct thread_info *__current_thread_info __asm__("$28");
+                                                          ^
+                                                           = NULL
+1 warning generated.
 
-Signed-off-by: zhenwei pi <pizhenwei@bytedance.com>
----
- drivers/misc/pvpanic.c      | 9 ++++++++-
- include/uapi/misc/pvpanic.h | 1 +
- 2 files changed, 9 insertions(+), 1 deletion(-)
+Seems like this is expected according to that previous commit? I
+noticed there is another instance in arch/mips but it doesn't appear to
+affect everything.
 
-diff --git a/drivers/misc/pvpanic.c b/drivers/misc/pvpanic.c
-index 3f0de3be0a19..a6e1a8983e1f 100644
---- a/drivers/misc/pvpanic.c
-+++ b/drivers/misc/pvpanic.c
-@@ -10,6 +10,7 @@
- 
- #include <linux/acpi.h>
- #include <linux/kernel.h>
-+#include <linux/kexec.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-@@ -33,7 +34,13 @@ static int
- pvpanic_panic_notify(struct notifier_block *nb, unsigned long code,
- 		     void *unused)
- {
--	pvpanic_send_event(PVPANIC_PANICKED);
-+	unsigned int event = PVPANIC_PANICKED;
-+
-+	if (kexec_crash_loaded())
-+		event = PVPANIC_CRASH_LOADED;
-+
-+	pvpanic_send_event(event);
-+
- 	return NOTIFY_DONE;
- }
- 
-diff --git a/include/uapi/misc/pvpanic.h b/include/uapi/misc/pvpanic.h
-index cae69a822b25..54b7485390d3 100644
---- a/include/uapi/misc/pvpanic.h
-+++ b/include/uapi/misc/pvpanic.h
-@@ -4,5 +4,6 @@
- #define __PVPANIC_H__
- 
- #define PVPANIC_PANICKED	(1 << 0)
-+#define PVPANIC_CRASH_LOADED	(1 << 1)
- 
- #endif /* __PVPANIC_H__ */
--- 
-2.11.0
+https://github.com/ClangBuiltLinux/linux/issues/606
 
+Cheers,
+Nathan
