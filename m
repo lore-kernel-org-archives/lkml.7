@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5255C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EDEC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A3224679
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C22D7222C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004336;
-	bh=yzxD6HKKw68W+50LlaU+rd6VsjAH0kcFO5/v4j3i8bw=;
+	s=default; t=1578004339;
+	bh=DgE2YruiqIrozhteqtBVmjlDK5quw31v2tGDG7oUILw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Et7XWMgxdW8wAK2tWNC7C7FNwrjHr8S0qHy67Jk53LscIJBnG3i7BDkgl/qbg8uS/
-	 pBr7Mlq7lDsV/loXBnuPTJYERZK9waUUXCcg28pQ1JKrZAerrrJ8OcL45LGmznaHuT
-	 aZBY7Y6Mv6vFeAGWos0kQwesJTMWH32Da8N8kbNI=
+	b=uJ9U7tBzD7E8mQD57GnxOjqMRA4l2uND7krQ7vZEFdcZu4QcZFWmpohQCv1zcRKW/
+	 +U8BeFgz/oaQorimvuRQztZT0xUax0WJ2LQIKQLdGxIInuV5diXc8XdERvcB2o8ME1
+	 kr2VPl7y31puYmvQhcjtlSSWKgy+wAgPag1ij2v8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730237AbgABWcP (ORCPT
+        id S1730386AbgABWcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:32:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38008 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:32:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730366AbgABWcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:32:08 -0500
+        id S1730370AbgABWcL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:32:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92B4D21835;
-        Thu,  2 Jan 2020 22:32:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3E06227BF;
+        Thu,  2 Jan 2020 22:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004328;
-        bh=yzxD6HKKw68W+50LlaU+rd6VsjAH0kcFO5/v4j3i8bw=;
+        s=default; t=1578004330;
+        bh=DgE2YruiqIrozhteqtBVmjlDK5quw31v2tGDG7oUILw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A9co1EAi8RY6Etq6NXBIzj9tb/ll9X5MB7+HeMmn4kasF7UKhGDAX44nhairPmrPH
-         k3rPJe75y2E855Eg/duRwKKf1+Vy2CCfBYc/Qo9EJV3AVhjrQtvvDtPr0e1YDLP1mi
-         3eECX9cVH7JvJHt7OyFOotYkLtyLSh3rBQA25kSA=
+        b=Y+5Qn+/pSUkvGk8Wsbhp6o144oUm4BvtxkA/W4otcDFohK7diZBPojL0kTv5xfLYX
+         NBloobcSzSnYsTr8uTc7KqkpNNsus9R5yiQmuvLQXlN4GoJki/yHkzrbK8n216C54f
+         eizbEF8Ij/H/SxxT/bXLS7dJirWCzBylQ6TVxQIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Hannes Reinecke <hare@suse.com>,
-        Douglas Gilbert <dgilbert@interlog.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 125/171] scsi: tracing: Fix handling of TRANSFER LENGTH == 0 for READ(6) and WRITE(6)
-Date:   Thu,  2 Jan 2020 23:07:36 +0100
-Message-Id: <20200102220604.429135969@linuxfoundation.org>
+Subject: [PATCH 4.9 134/171] powerpc/pseries/cmm: Implement release() function for sysfs device
+Date:   Thu,  2 Jan 2020 23:07:45 +0100
+Message-Id: <20200102220605.613718505@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -63,52 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: David Hildenbrand <david@redhat.com>
 
-[ Upstream commit f6b8540f40201bff91062dd64db8e29e4ddaaa9d ]
+[ Upstream commit 7d8212747435c534c8d564fbef4541a463c976ff ]
 
-According to SBC-2 a TRANSFER LENGTH field of zero means that 256 logical
-blocks must be transferred. Make the SCSI tracing code follow SBC-2.
+When unloading the module, one gets
+  ------------[ cut here ]------------
+  Device 'cmm0' does not have a release() function, it is broken and must be fixed. See Documentation/kobject.txt.
+  WARNING: CPU: 0 PID: 19308 at drivers/base/core.c:1244 .device_release+0xcc/0xf0
+  ...
 
-Fixes: bf8162354233 ("[SCSI] add scsi trace core functions and put trace points")
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Douglas Gilbert <dgilbert@interlog.com>
-Link: https://lore.kernel.org/r/20191105215553.185018-1-bvanassche@acm.org
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+We only have one static fake device. There is nothing to do when
+releasing the device (via cmm_exit()).
+
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191031142933.10779-2-david@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_trace.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ arch/powerpc/platforms/pseries/cmm.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/scsi/scsi_trace.c b/drivers/scsi/scsi_trace.c
-index 0ff083bbf5b1..617a60737590 100644
---- a/drivers/scsi/scsi_trace.c
-+++ b/drivers/scsi/scsi_trace.c
-@@ -30,15 +30,18 @@ static const char *
- scsi_trace_rw6(struct trace_seq *p, unsigned char *cdb, int len)
- {
- 	const char *ret = trace_seq_buffer_ptr(p);
--	sector_t lba = 0, txlen = 0;
-+	u32 lba = 0, txlen;
+diff --git a/arch/powerpc/platforms/pseries/cmm.c b/arch/powerpc/platforms/pseries/cmm.c
+index 66e7227469b8..b5ff5ee3e39c 100644
+--- a/arch/powerpc/platforms/pseries/cmm.c
++++ b/arch/powerpc/platforms/pseries/cmm.c
+@@ -391,6 +391,10 @@ static struct bus_type cmm_subsys = {
+ 	.dev_name = "cmm",
+ };
  
- 	lba |= ((cdb[1] & 0x1F) << 16);
- 	lba |=  (cdb[2] << 8);
- 	lba |=   cdb[3];
--	txlen = cdb[4];
-+	/*
-+	 * From SBC-2: a TRANSFER LENGTH field set to zero specifies that 256
-+	 * logical blocks shall be read (READ(6)) or written (WRITE(6)).
-+	 */
-+	txlen = cdb[4] ? cdb[4] : 256;
++static void cmm_release_device(struct device *dev)
++{
++}
++
+ /**
+  * cmm_sysfs_register - Register with sysfs
+  *
+@@ -406,6 +410,7 @@ static int cmm_sysfs_register(struct device *dev)
  
--	trace_seq_printf(p, "lba=%llu txlen=%llu",
--			 (unsigned long long)lba, (unsigned long long)txlen);
-+	trace_seq_printf(p, "lba=%u txlen=%u", lba, txlen);
- 	trace_seq_putc(p, 0);
+ 	dev->id = 0;
+ 	dev->bus = &cmm_subsys;
++	dev->release = cmm_release_device;
  
- 	return ret;
+ 	if ((rc = device_register(dev)))
+ 		goto subsys_unregister;
 -- 
 2.20.1
 
