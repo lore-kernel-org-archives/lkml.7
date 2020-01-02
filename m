@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFF3C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A334AC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1EE1222C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79DDE222C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003839;
-	bh=8eX3qpVzlLQjVKaV2OXLycyPcB5Xn/YD58X8Azb3kpc=;
+	s=default; t=1578003842;
+	bh=pdekizaXvzqvsk7vgKpBNrciJBJfRkGBtpH/Pk0IYOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ISE5E7Yhc4hkoSuHF5oACwRvNqfoK3ZT53CmJYze3qZ488sxmHbzop2ETeRSdsBeE
-	 5Cgma8BcSEaOoFHCtNCmwTsk+HMVwCEzf62Yc79ZssX+zrIvwZEzSk2GJjIaLutI4g
-	 6dCiFnCfAnHetRnRYB9kTY/ULD96vMUplzvGASYI=
+	b=FyxBYvR6nDBFU6xzC9lHtZ1a1pcMsfp4HxFN/UaMkGO5Tn2cOFAwjJyQMycNBzQIE
+	 pj1rLBGOziqnmdYoG8kTCpficttthDPZm6Ua6dbq4NSAAMEz3yqfVHB2qxhbslUx7K
+	 dXdOcaE3Kwio90zpR1KH9SH6kvPfsqj/JYe4cFEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbgABWX6 (ORCPT
+        id S1729351AbgABWYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:23:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47054 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:24:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729334AbgABWXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:23:54 -0500
+        id S1729337AbgABWX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:23:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AC2B222C3;
-        Thu,  2 Jan 2020 22:23:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2073220863;
+        Thu,  2 Jan 2020 22:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003834;
-        bh=8eX3qpVzlLQjVKaV2OXLycyPcB5Xn/YD58X8Azb3kpc=;
+        s=default; t=1578003836;
+        bh=pdekizaXvzqvsk7vgKpBNrciJBJfRkGBtpH/Pk0IYOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2f/SdEdXgFpNRg1sHrrH1o2oaGX5GpUvSn/lrwh3G4IEEWrxEqm5axgB/kayMiQIr
-         1i9PyUBdnDx+DDiMXNeeTydA8fWTYvj9elRP+qGsswwRMOTDLE7RZU9nVY6LMjEvpl
-         3DTJcxWPOsKA/K8ynRQy7TVnUCr/2a3zh+GSzhBs=
+        b=ZABXVWc1tTfugeJULsQySfQGDof+ztc7mA0zl4c23aQ1G7UheQcBLFGx1m120gi+R
+         TPhfQsC4FcuqKcM45lyiNSFT58Wc7BdVxvmJ7hh29OJ3G7mj4OA78EZlt3fF8djBOT
+         oI1vq3AxTVtImk5dcbXa7YeaEFV1hHD4UtJJeUog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
+        stable@vger.kernel.org,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 19/91] scsi: lpfc: Fix duplicate unreg_rpi error in port offline flow
-Date:   Thu,  2 Jan 2020 23:07:01 +0100
-Message-Id: <20200102220419.274198366@linuxfoundation.org>
+Subject: [PATCH 4.14 02/91] scsi: mpt3sas: Fix clear pending bit in ioctl status
+Date:   Thu,  2 Jan 2020 23:06:44 +0100
+Message-Id: <20200102220359.894313369@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -61,52 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
 
-[ Upstream commit 7cfd5639d99bec0d27af089d0c8c114330e43a72 ]
+[ Upstream commit 782b281883caf70289ba6a186af29441a117d23e ]
 
-If the driver receives a login that is later then LOGO'd by the remote port
-(aka ndlp), the driver, upon the completion of the LOGO ACC transmission,
-will logout the node and unregister the rpi that is being used for the
-node.  As part of the unreg, the node's rpi value is replaced by the
-LPFC_RPI_ALLOC_ERROR value.  If the port is subsequently offlined, the
-offline walks the nodes and ensures they are logged out, which possibly
-entails unreg'ing their rpi values.  This path does not validate the node's
-rpi value, thus doesn't detect that it has been unreg'd already.  The
-replaced rpi value is then used when accessing the rpi bitmask array which
-tracks active rpi values.  As the LPFC_RPI_ALLOC_ERROR value is not a valid
-index for the bitmask, it may fault the system.
+When user issues diag register command from application with required size,
+and if driver unable to allocate the memory, then it will fail the register
+command. While failing the register command, driver is not currently
+clearing MPT3_CMD_PENDING bit in ctl_cmds.status variable which was set
+before trying to allocate the memory. As this bit is set, subsequent
+register command will be failed with BUSY status even when user wants to
+register the trace buffer will less memory.
 
-Revise the rpi release code to detect when the rpi value is the replaced
-RPI_ALLOC_ERROR value and ignore further release steps.
+Clear MPT3_CMD_PENDING bit in ctl_cmds.status before returning the diag
+register command with no memory status.
 
-Link: https://lore.kernel.org/r/20191105005708.7399-2-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
+Link: https://lore.kernel.org/r/1568379890-18347-4-git-send-email-sreekanth.reddy@broadcom.com
+Signed-off-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/scsi/mpt3sas/mpt3sas_ctl.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 7920b8c72caf..d8e0ba68879c 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -17492,6 +17492,13 @@ lpfc_sli4_alloc_rpi(struct lpfc_hba *phba)
- static void
- __lpfc_sli4_free_rpi(struct lpfc_hba *phba, int rpi)
- {
-+	/*
-+	 * if the rpi value indicates a prior unreg has already
-+	 * been done, skip the unreg.
-+	 */
-+	if (rpi == LPFC_RPI_ALLOC_ERROR)
-+		return;
-+
- 	if (test_and_clear_bit(rpi, phba->sli4_hba.rpi_bmask)) {
- 		phba->sli4_hba.rpi_count--;
- 		phba->sli4_hba.max_cfg_param.rpi_used--;
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+index bdffb692bded..622dcf2984a9 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+@@ -1502,7 +1502,8 @@ _ctl_diag_register_2(struct MPT3SAS_ADAPTER *ioc,
+ 			    " for diag buffers, requested size(%d)\n",
+ 			    ioc->name, __func__, request_data_sz);
+ 			mpt3sas_base_free_smid(ioc, smid);
+-			return -ENOMEM;
++			rc = -ENOMEM;
++			goto out;
+ 		}
+ 		ioc->diag_buffer[buffer_type] = request_data;
+ 		ioc->diag_buffer_sz[buffer_type] = request_data_sz;
 -- 
 2.20.1
 
