@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE828C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D705C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA86E20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA44A20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005379;
-	bh=p4Mv2ibaTAv66XQ1VweCtPx1o/WJgXnt76oOV1RZJfk=;
+	s=default; t=1578005387;
+	bh=x2lcTiBhOXdAVjBY0Kp+9U/6tGlDXi5779Q2NKQrz2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C0XJB/+5lbPOHSC/8/Q7Qlqy4wyhtUEQ+DXizyqsdl/tmyEQ9IFfqXiWtGP4LHxa8
-	 w0wtzmcnzhr7t7ixBrLEzuwDrV+E+vSilXHF9QgakQvHA+S88XvtfiDUum/cRLxwt2
-	 JKLPM+vANApsEezeR2xHr7ifsh3FQyTZg1CWxn3o=
+	b=sP6Fry7nU4YAtb1MIatRjHRRZdaSF1KB88pJUDc481pbVqXqd27QQkRlXsaI7no2q
+	 JKjQUWeGP+rxo7nCsI6qYQ+gQzfK2zZeuNUUGbf9TRSnKxq1P5Q68SL2+P+9/H+KUB
+	 WqxzNyjkrm8DsziFF0lsfCtsNA0/E0txY+dpx3xE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731009AbgABWtj (ORCPT
+        id S1731032AbgABWtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:49:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53954 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:49:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728966AbgABW0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:26:33 -0500
+        id S1729638AbgABW00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:26:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B1FC21835;
-        Thu,  2 Jan 2020 22:26:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 529F921835;
+        Thu,  2 Jan 2020 22:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003993;
-        bh=p4Mv2ibaTAv66XQ1VweCtPx1o/WJgXnt76oOV1RZJfk=;
+        s=default; t=1578003985;
+        bh=x2lcTiBhOXdAVjBY0Kp+9U/6tGlDXi5779Q2NKQrz2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kPszwXN/X6BmK0QmhRuOAFHEHURzvYJ0ki1+u1O4GTQBheTQU1Flw5koY+I0y8juH
-         x3ksBYY2Tst2BVISR4pSMFOVORFWN6C4bmGHTOB00XcTkX51gsqeka/sbyL00L4DA6
-         p+0smA+UK6GArxMAF1YYYESdClkDXzKhD2/EbT/4=
+        b=dQG/7kESuXlDG8nY3nMkfu/iApOebxuqwbPp4TAQy0T6lATN7wXZMk72tOmE85OYP
+         qdeVizQ0RfxvjoOk8/S/YsKcmnM/ini6oA+Whzzc15H3XFtsr6EfaZ+ywcqwxezmG4
+         wWefUhhHZSqXr96m3q7RDYopbBDAwDa0VCh4g9uk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jay Vosburgh <jay.vosburgh@canonical.com>,
-        Mahesh Bandewar <maheshb@google.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 59/91] bonding: fix active-backup transition after link failure
-Date:   Thu,  2 Jan 2020 23:07:41 +0100
-Message-Id: <20200102220440.474630212@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        David Ahern <dsahern@gmail.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 81/91] gtp: do not confirm neighbor when do pmtu update
+Date:   Thu,  2 Jan 2020 23:08:03 +0100
+Message-Id: <20200102220450.102582634@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -61,50 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mahesh Bandewar <maheshb@google.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit 5d485ed88d48f8101a2067348e267c0aaf4ed486 ]
+[ Upstream commit 6e9105c73f8d2163d12d5dfd762fd75483ed30f5 ]
 
-After the recent fix in commit 1899bb325149 ("bonding: fix state
-transition issue in link monitoring"), the active-backup mode with
-miimon initially come-up fine but after a link-failure, both members
-transition into backup state.
+When do IPv6 tunnel PMTU update and calls __ip6_rt_update_pmtu() in the end,
+we should not call dst_confirm_neigh() as there is no two-way communication.
 
-Following steps to reproduce the scenario (eth1 and eth2 are the
-slaves of the bond):
+Although GTP only support ipv4 right now, and __ip_rt_update_pmtu() does not
+call dst_confirm_neigh(), we still set it to false to keep consistency with
+IPv6 code.
 
-    ip link set eth1 up
-    ip link set eth2 down
-    sleep 1
-    ip link set eth2 up
-    ip link set eth1 down
-    cat /sys/class/net/eth1/bonding_slave/state
-    cat /sys/class/net/eth2/bonding_slave/state
+v5: No change.
+v4: No change.
+v3: Do not remove dst_confirm_neigh, but add a new bool parameter in
+    dst_ops.update_pmtu to control whether we should do neighbor confirm.
+    Also split the big patch to small ones for each area.
+v2: Remove dst_confirm_neigh in __ip6_rt_update_pmtu.
 
-Fixes: 1899bb325149 ("bonding: fix state transition issue in link monitoring")
-CC: Jay Vosburgh <jay.vosburgh@canonical.com>
-Signed-off-by: Mahesh Bandewar <maheshb@google.com>
-Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reviewed-by: Guillaume Nault <gnault@redhat.com>
+Acked-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/bonding/bond_main.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/net/gtp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 5f6602cb191f..fef599eb822b 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -2186,9 +2186,6 @@ static void bond_miimon_commit(struct bonding *bond)
- 			} else if (BOND_MODE(bond) != BOND_MODE_ACTIVEBACKUP) {
- 				/* make it immediately active */
- 				bond_set_active_slave(slave);
--			} else if (slave != primary) {
--				/* prevent it from being the active one */
--				bond_set_backup_slave(slave);
- 			}
+diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+index 9e3963f46458..d957ffdfec0f 100644
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -545,7 +545,7 @@ static int gtp_build_skb_ip4(struct sk_buff *skb, struct net_device *dev,
+ 		mtu = dst_mtu(&rt->dst);
+ 	}
  
- 			netdev_info(bond->dev, "link status definitely up for interface %s, %u Mbps %s duplex\n",
+-	rt->dst.ops->update_pmtu(&rt->dst, NULL, skb, mtu, true);
++	rt->dst.ops->update_pmtu(&rt->dst, NULL, skb, mtu, false);
+ 
+ 	if (!skb_is_gso(skb) && (iph->frag_off & htons(IP_DF)) &&
+ 	    mtu < ntohs(iph->tot_len)) {
 -- 
 2.20.1
 
