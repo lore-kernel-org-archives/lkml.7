@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C7BC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F5EC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B91122253D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52F7A2253D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003467;
-	bh=cDGxvQ6VaN64SpWCnKdSQZiZKTB9gPZsUPK1SbMRtkc=;
+	s=default; t=1578003471;
+	bh=lSE00O/CEuOUfS3S5Xv/5UPawzE8FOPYyp+aO5AaB3Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=156K9+ajY9o4nNcv7P0rdiIFSGpQGttJI5yJdsVugubJVRNk4sgS/OMi1UI0DOZYF
-	 lDARkvMMFjmIniPSx9TkvRBvjQWMoqtV9BS6MiD20UPu6kkFewf49Lik7YSj5LYBua
-	 G1A/s6moJVUQH2eOTP6d21HNZN5q9DsxmSyh8WEY=
+	b=JUtU8rSdvesLi5Yezl1BBVF7zElx4MqCKcp/+g+AHz99letxZPeb5m2lY0wvHB17+
+	 3b4Vyakn9tIXYGMZ7sdwBeK9lqekpG7+F7StjWylx4U6u8xYLYtMQRMmxJJZuYyyha
+	 cZNOj0XvsbfMEGFsSFlJOqggLuI2v/UJa+dZNmnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbgABWRq (ORCPT
+        id S1728257AbgABWRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:17:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60404 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:17:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728112AbgABWRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:17:42 -0500
+        id S1727931AbgABWRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:17:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B22B21582;
-        Thu,  2 Jan 2020 22:17:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B66B227BF;
+        Thu,  2 Jan 2020 22:17:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003461;
-        bh=cDGxvQ6VaN64SpWCnKdSQZiZKTB9gPZsUPK1SbMRtkc=;
+        s=default; t=1578003466;
+        bh=lSE00O/CEuOUfS3S5Xv/5UPawzE8FOPYyp+aO5AaB3Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CTpqaWOJ8DgZv5dypiPatNiT5Ae+fx0Dn+wikmJdgEAz6m/FTyCoxnEPI1jObwl5Y
-         KEkh8Xds2tdajJlEQOdx9htnaqPzWSYb6Rzn0qwCsifLqo+mBUIbsz9llBUIYkc6oA
-         70+AC8/45q60riHyBi39k3VRmUhHqQJgEE2bncds=
+        b=vjBzFkyrrBELUiILc3jCZ1uLypowdIfLGQ1vtYas4D4Z3ZY/NWgNZhCadqL8hhogw
+         QonsOmWy9Mgf3qYlF4nhBZsGOwuWLoVHj0d8ZdIekf/T6vbUjAwEeTSibXDKp94K5y
+         1HsG9pRPVAFubEYz7qxjf4ysCV60jHR/fMp4c824=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 144/191] uaccess: disallow > INT_MAX copy sizes
-Date:   Thu,  2 Jan 2020 23:07:06 +0100
-Message-Id: <20200102215844.953035794@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+c732f8644185de340492@syzkaller.appspotmail.com,
+        Brian Foster <bfoster@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: [PATCH 5.4 146/191] xfs: fix mount failure crash on invalid iclog memory access
+Date:   Thu,  2 Jan 2020 23:07:08 +0100
+Message-Id: <20200102215845.170620568@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -62,45 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Brian Foster <bfoster@redhat.com>
 
-commit 6d13de1489b6bf539695f96d945de3860e6d5e17 upstream.
+commit 798a9cada4694ca8d970259f216cec47e675bfd5 upstream.
 
-As we've done with VFS, string operations, etc, reject usercopy sizes
-larger than INT_MAX, which would be nice to have for catching bugs
-related to size calculation overflows[1].
+syzbot (via KASAN) reports a use-after-free in the error path of
+xlog_alloc_log(). Specifically, the iclog freeing loop doesn't
+handle the case of a fully initialized ->l_iclog linked list.
+Instead, it assumes that the list is partially constructed and NULL
+terminated.
 
-This adds 10 bytes to x86_64 defconfig text and 1980 bytes to the data
-section:
+This bug manifested because there was no possible error scenario
+after iclog list setup when the original code was added.  Subsequent
+code and associated error conditions were added some time later,
+while the original error handling code was never updated. Fix up the
+error loop to terminate either on a NULL iclog or reaching the end
+of the list.
 
-     text    data     bss     dec     hex filename
-  19691167        5134320 1646664 26472151        193eed7 vmlinux.before
-  19691177        5136300 1646664 26474141        193f69d vmlinux.after
-
-[1] https://marc.info/?l=linux-s390&m=156631939010493&w=2
-
-Link: http://lkml.kernel.org/r/201908251612.F9902D7A@keescook
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: syzbot+c732f8644185de340492@syzkaller.appspotmail.com
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/thread_info.h |    2 ++
+ fs/xfs/xfs_log.c |    2 ++
  1 file changed, 2 insertions(+)
 
---- a/include/linux/thread_info.h
-+++ b/include/linux/thread_info.h
-@@ -147,6 +147,8 @@ check_copy_size(const void *addr, size_t
- 			__bad_copy_to();
- 		return false;
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -1495,6 +1495,8 @@ out_free_iclog:
+ 		prev_iclog = iclog->ic_next;
+ 		kmem_free(iclog->ic_data);
+ 		kmem_free(iclog);
++		if (prev_iclog == log->l_iclog)
++			break;
  	}
-+	if (WARN_ON_ONCE(bytes > INT_MAX))
-+		return false;
- 	check_object_size(addr, bytes, is_source);
- 	return true;
- }
+ out_free_log:
+ 	kmem_free(log);
 
 
