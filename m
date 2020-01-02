@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A372C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB874C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD4B20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C7320848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005485;
-	bh=A0Ew0/2MWKBIOfu4CAM6BIGzsGfEG7tcpiHrHTTGHdM=;
+	s=default; t=1578005491;
+	bh=Pc7uPvcuM7w2rBzOwHBf9lGobcUqEHEdyQ6mhiTC5U0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g65Mpudkb4lP1xvOxj8C+Q3LeDGAqQZ3WxGXvNjVXmEZiIW/ktIBn5VSAK7U8Mq3h
-	 7MKoek2DtEd0IcNcMTaIDFGjCH8VSrEKre03I5ACe4/KEwXLnEAl6ELyShE7y5T5mx
-	 mxJ+TiLK+WKcqKtsLUvEDTMmmSHWxb+RaKJyscGg=
+	b=RA41RGt0Fss3sMfGuHG/QY5U8wUeTyCNcWRPaDt0lFu/WR5SeroT+NDI4LjRCgyQ9
+	 9ls62om6IYNBYPpgZXqvzxkRHv+1FmuiTkOJl4a1kqRbykfVwk7WkN9rIXf7cT+e7O
+	 20f+NnIvOIBTEPQEsTCQhaa/zpyHfWD0qNKIfYuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729750AbgABWvY (ORCPT
+        id S1729921AbgABWvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:51:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47852 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:51:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729374AbgABWYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:24:14 -0500
+        id S1729364AbgABWYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:24:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0FB920866;
-        Thu,  2 Jan 2020 22:24:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E31721D7D;
+        Thu,  2 Jan 2020 22:24:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003853;
-        bh=A0Ew0/2MWKBIOfu4CAM6BIGzsGfEG7tcpiHrHTTGHdM=;
+        s=default; t=1578003848;
+        bh=Pc7uPvcuM7w2rBzOwHBf9lGobcUqEHEdyQ6mhiTC5U0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GIt5wDj16fDisvKpXPV1K+5MnQPmapck3ebWXJpyL9k890JznxhizzNvMpNCH/2Ne
-         2/QdUdhq/5NEbvjdED8VDtraO1OTy41p9iRy/xd8kuqS7Rb1DWTAi43qR+OyMkXkGr
-         p/U/MVxCzeMSZo4oqeibGkUxKknYMRz1w9MtPTY0=
+        b=u2cj6BiedViZ6pqkXGcW3mTEN4juzXbD8Y7quUMwjX/69Vvcw5iN1Ej144VzNv4ZP
+         fW3TnGJrPBirT8tR2icF8IfXLBhBb3fDA8IiuIU6iSzurzQgfLpjEz830gwFhHVlkc
+         5KeM1HoGNy6slDDbUNRPllnnxMwH7U0jev2uvxck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Barry Song <Baohua.Song@csr.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 03/91] scsi: lpfc: Fix locking on mailbox command completion
-Date:   Thu,  2 Jan 2020 23:06:45 +0100
-Message-Id: <20200102220402.226244961@linuxfoundation.org>
+Subject: [PATCH 4.14 24/91] mfd: mfd-core: Honour Device Trees request to disable a child-device
+Date:   Thu,  2 Jan 2020 23:07:06 +0100
+Message-Id: <20200102220424.847265838@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -61,66 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
 
-[ Upstream commit 07b8582430370097238b589f4e24da7613ca6dd3 ]
+[ Upstream commit 6b5c350648b857047b47acf74a57087ad27d6183 ]
 
-Symptoms were seen of the driver not having valid data for mailbox
-commands. After debugging, the following sequence was found:
+Until now, MFD has assumed all child devices passed to it (via
+mfd_cells) are to be registered. It does not take into account
+requests from Device Tree and the like to disable child devices
+on a per-platform basis.
 
-The driver maintains a port-wide pointer of the mailbox command that is
-currently in execution. Once finished, the port-wide pointer is cleared
-(done in lpfc_sli4_mq_release()). The next mailbox command issued will set
-the next pointer and so on.
+Well now it does.
 
-The mailbox response data is only copied if there is a valid port-wide
-pointer.
+Link: https://www.spinics.net/lists/arm-kernel/msg366309.html
+Link: https://lkml.org/lkml/2019/8/22/1350
 
-In the failing case, it was seen that a new mailbox command was being
-attempted in parallel with the completion.  The parallel path was seeing
-the mailbox no long in use (flag check under lock) and thus set the port
-pointer.  The completion path had cleared the active flag under lock, but
-had not touched the port pointer.  The port pointer is cleared after the
-lock is released. In this case, the completion path cleared the just-set
-value by the parallel path.
-
-Fix by making the calls that clear mbox state/port pointer while under
-lock.  Also slightly cleaned up the error path.
-
-Link: https://lore.kernel.org/r/20190922035906.10977-8-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: Barry Song <Baohua.Song@csr.com>
+Reported-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Reviewed-by: Mark Brown <broonie@kernel.org>
+Tested-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/mfd/mfd-core.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index d3bad0dbfaf7..7920b8c72caf 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -12689,13 +12689,19 @@ send_current_mbox:
- 	phba->sli.sli_flag &= ~LPFC_SLI_MBOX_ACTIVE;
- 	/* Setting active mailbox pointer need to be in sync to flag clear */
- 	phba->sli.mbox_active = NULL;
-+	if (bf_get(lpfc_trailer_consumed, mcqe))
-+		lpfc_sli4_mq_release(phba->sli4_hba.mbx_wq);
- 	spin_unlock_irqrestore(&phba->hbalock, iflags);
- 	/* Wake up worker thread to post the next pending mailbox command */
- 	lpfc_worker_wake_up(phba);
-+	return workposted;
-+
- out_no_mqe_complete:
-+	spin_lock_irqsave(&phba->hbalock, iflags);
- 	if (bf_get(lpfc_trailer_consumed, mcqe))
- 		lpfc_sli4_mq_release(phba->sli4_hba.mbx_wq);
--	return workposted;
-+	spin_unlock_irqrestore(&phba->hbalock, iflags);
-+	return false;
- }
- 
- /**
+diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+index 5c8ed2150c8b..fae7bfe7a21a 100644
+--- a/drivers/mfd/mfd-core.c
++++ b/drivers/mfd/mfd-core.c
+@@ -178,6 +178,11 @@ static int mfd_add_device(struct device *parent, int id,
+ 	if (parent->of_node && cell->of_compatible) {
+ 		for_each_child_of_node(parent->of_node, np) {
+ 			if (of_device_is_compatible(np, cell->of_compatible)) {
++				if (!of_device_is_available(np)) {
++					/* Ignore disabled devices error free */
++					ret = 0;
++					goto fail_alias;
++				}
+ 				pdev->dev.of_node = np;
+ 				pdev->dev.fwnode = &np->fwnode;
+ 				break;
 -- 
 2.20.1
 
