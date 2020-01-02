@@ -2,122 +2,104 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9854C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CEF5C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ADE72072C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:40:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="CsMdcshB"
+	by mail.kernel.org (Postfix) with ESMTP id 6BE422084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:42:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbgABPko (ORCPT
+        id S1728766AbgABPmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 10:40:44 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:45043 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728561AbgABPkn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 10:40:43 -0500
-Received: by mail-il1-f195.google.com with SMTP id z12so34334734iln.11
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 07:40:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3572HIPczR9cTuPFxrESBoTgrX4d6H7x5Q/kXXuy428=;
-        b=CsMdcshBDPMrQufZIZxdudBJtg7H5PXirvxIzG5GX86qw5BbrHfL3WRLl1u9msmugU
-         4nlFujipIJd3har00SH658ONwyUzVLsynUhsbUkj7VjUYMY7VSo+tJ+VQS+oXCOGBFNH
-         WPaOFGHhMYzcCPVHv/6ulHwsoyYUumKyKR21c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3572HIPczR9cTuPFxrESBoTgrX4d6H7x5Q/kXXuy428=;
-        b=XUTNoiWn8cb14xj+W3WamEKb/P7UfJEEwcjnvsSH1r72MP1StwB909gbymsE2Uq6gi
-         M3zPIDwnKkqjdZTBkzubclEvn+LIqI3vscbCalBvnDCKdeYsZ65fT48he/rHxk100B0I
-         82l6xXfZvAcoXcw077sfW5IcufWBhemKH0EMIEO1FKLXXTdiNzVOsB+3QQlO7nXiEKmX
-         8k3gSC8ZTXueWmGa7l0uYrBOvdyRjR5hi2f6ho2D02N8hTWUiUQdfhKklDoeo41yCxbI
-         xWyBaXcUfUBsNHABZWI952kCS25SPGe95RlmMWSrxy3W66JRCNvpMasyWJnsXF1pAc1w
-         93Ag==
-X-Gm-Message-State: APjAAAUZm3NBeDTWRlT9lIRJY43PR/2Djp3tjTdiPhR3+8iGzwaPpuR4
-        MCBIKblXcnBglRjUwg8ksXabCCw/qnSbFGhObIY0LA==
-X-Google-Smtp-Source: APXvYqyktr3CqCCGml7EeAho4GJqaINKtZEGl5yX5r/Y5VF4lK9Mx3hwHRBbOa/ZWlGpatq+4kooSat9lPiBhJb0M/8=
-X-Received: by 2002:a92:c647:: with SMTP id 7mr71931846ill.28.1577979642064;
- Thu, 02 Jan 2020 07:40:42 -0800 (PST)
+        Thu, 2 Jan 2020 10:42:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728561AbgABPmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 10:42:33 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 187862072C;
+        Thu,  2 Jan 2020 15:42:32 +0000 (UTC)
+Date:   Thu, 2 Jan 2020 10:42:30 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Wen Yang <wenyang@linux.alibaba.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, xlpang@linux.alibaba.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ftrace: avoid potential division by zero
+Message-ID: <20200102104230.6125d776@gandalf.local.home>
+In-Reply-To: <20200101093219.3639-1-wenyang@linux.alibaba.com>
+References: <20200101093219.3639-1-wenyang@linux.alibaba.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20191231130528.20669-1-jagan@amarulasolutions.com>
- <20191231130528.20669-3-jagan@amarulasolutions.com> <20200102105424.kmte7aooh2gkrcnu@gilmour.lan>
-In-Reply-To: <20200102105424.kmte7aooh2gkrcnu@gilmour.lan>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Thu, 2 Jan 2020 21:10:31 +0530
-Message-ID: <CAMty3ZA0e8eJZWvAh0x=KGAZVL3apdao3COvR6j3-ckv0cdvcg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/9] drm/sun4i: tcon: Add TCON LCD support for R40
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 2, 2020 at 4:24 PM Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Tue, Dec 31, 2019 at 06:35:21PM +0530, Jagan Teki wrote:
-> > TCON LCD0, LCD1 in allwinner R40, are used for managing
-> > LCD interfaces like RGB, LVDS and DSI.
-> >
-> > Like TCON TV0, TV1 these LCD0, LCD1 are also managed via
-> > tcon top.
-> >
-> > Add support for it, in tcon driver.
-> >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> > Changes for v3:
-> > - none
-> >
-> >  drivers/gpu/drm/sun4i/sun4i_tcon.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > index fad72799b8df..69611d38c844 100644
-> > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > @@ -1470,6 +1470,13 @@ static const struct sun4i_tcon_quirks sun8i_a83t_tv_quirks = {
-> >       .has_channel_1          = true,
-> >  };
-> >
-> > +static const struct sun4i_tcon_quirks sun8i_r40_lcd_quirks = {
-> > +     .supports_lvds          = true,
-> > +     .has_channel_0          = true,
-> > +     /* TODO Need to support TCON output muxing via GPIO pins */
-> > +     .set_mux                = sun8i_r40_tcon_tv_set_mux,
->
-> What is this muking about? And why is it a TODO?
+On Wed,  1 Jan 2020 17:32:19 +0800
+Wen Yang <wenyang@linux.alibaba.com> wrote:
 
-Muxing similar like how TCON TOP handle TV0, TV1 I have reused the
-same so-that it would configure de port selection via
-sun8i_tcon_top_de_config
+> The ftrace_profile->counter is unsigned long and
+> do_div truncates it to 32 bits, which means it can test
+> non-zero and be truncated to zero for division.
+> Fix this issue by using div64_ul() instead.
 
-TCON output muxing have gpio with GPIOD and GPIOH bits, which select
-which of LCD or TV TCON outputs to the LCD function pins. I have
-marked these has TODO for further support as mentioned by Chen-Yu in
-v1[1].
+Thanks, but since we are using div64_ul() which has different semantics
+than do_div() let's clean up the code that was written to deal with the
+strange do_div() semantics.
 
-[1] https://patchwork.freedesktop.org/patch/310210/?series=62062&rev=1
+> 
+> Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  kernel/trace/ftrace.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index ac99a35..a490ba5 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -527,7 +527,7 @@ static int function_stat_show(struct seq_file *m, void *v)
+>  
+>  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>  	avg = rec->time;
+> -	do_div(avg, rec->counter);
+> +	avg = div64_ul(avg, rec->counter);
+
+The above should be:
+
+	avg = div64_ul(rec->time, rec->counter);
+
+and get rid of the pre-assigning of avg.
+
+
+>  	if (tracing_thresh && (avg < tracing_thresh))
+>  		goto out;
+>  #endif
+> @@ -553,7 +553,8 @@ static int function_stat_show(struct seq_file *m, void *v)
+>  		 * Divide only 1000 for ns^2 -> us^2 conversion.
+>  		 * trace_print_graph_duration will divide 1000 again.
+>  		 */
+> -		do_div(stddev, rec->counter * (rec->counter - 1) * 1000);
+> +		stddev = div64_ul(stddev, 
+> +				  rec->counter * (rec->counter - 1) * 1000);
+
+This can stay as is, because of the complex dividend in the equation.
+
+Thanks,
+
+-- Steve
+
+
+>  	}
+>  
+>  	trace_seq_init(&s);
+
