@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C8FC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F6AC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BE1020866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 319C920848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005639;
-	bh=HGgnOYkB19A8Cw6IPyxZwHC7IDJme7G/UiR6JnagRPE=;
+	s=default; t=1578005644;
+	bh=sXMuB2CZO8zNQEWG2MGhBwus/l8bV2Pqvf5j3FHDyFo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J7K6GiwxlA0toLVT6RBNHi1HR09B/RlVOi4eOEo6bwkFWwfTsIaMYIs1PGA3+P9gd
-	 w9gccsp6FwaKDsXzAwqYMb8kzr2H6ZjXfigZeDaaAb8azWKcmTeGz2TYvqwRgaNDI8
-	 qJ0S/PYIyMJcGgbyNuoeWc/aHHWB2R98iyKk+HXE=
+	b=m9vYn0b+EAkaIqcGs2uUEE+Dixg0Dj6w+VT35t/FylbMXVIlxuW7F8doMnXdISKG5
+	 ufiItPFdTfNO+s39shrDDWu/b1M8lGJrgUkPjvuZZxtgPjOQ+2TnONTd7XB+xp8wUI
+	 SNviJ2d2OKscLStRhS+NPAhAufAK2FC8wQTX/i8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbgABWVQ (ORCPT
+        id S1729468AbgABWyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:21:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39972 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:54:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728957AbgABWVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:21:13 -0500
+        id S1727834AbgABWVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:21:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 856EE21582;
-        Thu,  2 Jan 2020 22:21:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18C4C21582;
+        Thu,  2 Jan 2020 22:21:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003673;
-        bh=HGgnOYkB19A8Cw6IPyxZwHC7IDJme7G/UiR6JnagRPE=;
+        s=default; t=1578003670;
+        bh=sXMuB2CZO8zNQEWG2MGhBwus/l8bV2Pqvf5j3FHDyFo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fATuGpeOZryiEr1Pd76QvzL/ZTj3NwCXqrB0/S1q+9oUSMAy1YG0z6eUmsKuiIn4j
-         6ND6e8OeG8L08Vw+2hCmnmJA40dfdtxkbxf5LBsOO1B2copP10w1LDCrXf/F6DdpRm
-         5CDsL09NEIeDpjgPgd2PRX6nNpYLjYj6Ewa5OAp8=
+        b=p5VY9EtI36NMevM1T8vRWOzsyardD+AdtU9dChMGwi5Jy3MT/gXPV1e4kjiiJoOA4
+         rNFYqhCSaGNdfgEzcNl11MChIifiXoKYcTlny6xXo8H/r+xaPirFzHwxMrWrbHNkWP
+         a/U4uBvG2hM+JfzypDy/QcjLSo8kD6PRbqmVnGAY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 066/114] s390/zcrypt: handle new reply code FILTERED_BY_HYPERVISOR
-Date:   Thu,  2 Jan 2020 23:07:18 +0100
-Message-Id: <20200102220035.719088798@linuxfoundation.org>
+Subject: [PATCH 4.19 048/114] libnvdimm/btt: fix variable rc set but not used
+Date:   Thu,  2 Jan 2020 23:07:00 +0100
+Message-Id: <20200102220033.933129789@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -61,49 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harald Freudenberger <freude@linux.ibm.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 6733775a92eacd612ac88afa0fd922e4ffeb2bc7 ]
+[ Upstream commit 4e24e37d5313edca8b4ab86f240c046c731e28d6 ]
 
-This patch introduces support for a new architectured reply
-code 0x8B indicating that a hypervisor layer (if any) has
-rejected an ap message.
+drivers/nvdimm/btt.c: In function 'btt_read_pg':
+drivers/nvdimm/btt.c:1264:8: warning: variable 'rc' set but not used
+[-Wunused-but-set-variable]
+    int rc;
+        ^~
 
-Linux may run as a guest on top of a hypervisor like zVM
-or KVM. So the crypto hardware seen by the ap bus may be
-restricted by the hypervisor for example only a subset like
-only clear key crypto requests may be supported. Other
-requests will be filtered out - rejected by the hypervisor.
-The new reply code 0x8B will appear in such cases and needs
-to get recognized by the ap bus and zcrypt device driver zoo.
+Add a ratelimited message in case a storm of errors is encountered.
 
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: d9b83c756953 ("libnvdimm, btt: rework error clearing")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
+Link: https://lore.kernel.org/r/1572530719-32161-1-git-send-email-cai@lca.pw
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/crypto/zcrypt_error.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/nvdimm/btt.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/s390/crypto/zcrypt_error.h b/drivers/s390/crypto/zcrypt_error.h
-index 2e1a27bd97d1..2126f4cc6d37 100644
---- a/drivers/s390/crypto/zcrypt_error.h
-+++ b/drivers/s390/crypto/zcrypt_error.h
-@@ -62,6 +62,7 @@ struct error_hdr {
- #define REP82_ERROR_EVEN_MOD_IN_OPND	    0x85
- #define REP82_ERROR_RESERVED_FIELD	    0x88
- #define REP82_ERROR_INVALID_DOMAIN_PENDING  0x8A
-+#define REP82_ERROR_FILTERED_BY_HYPERVISOR  0x8B
- #define REP82_ERROR_TRANSPORT_FAIL	    0x90
- #define REP82_ERROR_PACKET_TRUNCATED	    0xA0
- #define REP82_ERROR_ZERO_BUFFER_LEN	    0xB0
-@@ -92,6 +93,7 @@ static inline int convert_error(struct zcrypt_queue *zq,
- 	case REP82_ERROR_INVALID_DOMAIN_PRECHECK:
- 	case REP82_ERROR_INVALID_DOMAIN_PENDING:
- 	case REP82_ERROR_INVALID_SPECIAL_CMD:
-+	case REP82_ERROR_FILTERED_BY_HYPERVISOR:
- 	//   REP88_ERROR_INVALID_KEY		// '82' CEX2A
- 	//   REP88_ERROR_OPERAND		// '84' CEX2A
- 	//   REP88_ERROR_OPERAND_EVEN_MOD	// '85' CEX2A
+diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
+index 0360c015f658..75ae2c508a04 100644
+--- a/drivers/nvdimm/btt.c
++++ b/drivers/nvdimm/btt.c
+@@ -1260,11 +1260,11 @@ static int btt_read_pg(struct btt *btt, struct bio_integrity_payload *bip,
+ 
+ 		ret = btt_data_read(arena, page, off, postmap, cur_len);
+ 		if (ret) {
+-			int rc;
+-
+ 			/* Media error - set the e_flag */
+-			rc = btt_map_write(arena, premap, postmap, 0, 1,
+-				NVDIMM_IO_ATOMIC);
++			if (btt_map_write(arena, premap, postmap, 0, 1, NVDIMM_IO_ATOMIC))
++				dev_warn_ratelimited(to_dev(arena),
++					"Error persistently tracking bad blocks at %#x\n",
++					premap);
+ 			goto out_rtt;
+ 		}
+ 
 -- 
 2.20.1
 
