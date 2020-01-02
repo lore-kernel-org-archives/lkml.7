@@ -2,51 +2,53 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42507C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9A8C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15C1921835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4128520866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003789;
-	bh=VSbxciRBW1NU4N+Z4pzUXw6YKwRStrA6h3PqUi1d9kg=;
+	s=default; t=1578003795;
+	bh=0BoAm34Asy31l41x/NqZ75+i5jcgeDXKfVAPQYuGWjg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ywkXHhXv4O2N67t9njy9VFlZpxvgTyG1HZ/Vsm1WkrGRucflTnZejlmiXIFgj7g9Z
-	 btodLFc2YDy9Amgzu1/oVFzSZLB0swh/ZkeN0Ct0I0mvTWtFSixqIDrH+y4azgEuz4
-	 xHj8Ynlxin+UZOhQFCYrUCCb5tsexxQHhZBi+rNg=
+	b=Zejb3MVH41budJBntYPX8vwaDzw3lZ6VYk5hYMDiWwCgn6Ox2c6ij75n84fK1FE3O
+	 zix2XrGyrP89OJKGJpFtxJNiDzz44USGB8cy8YK/Yer0Q0BYzrryZAXDTqCfSqWh9O
+	 JZlvJ1ww56IYG9bOTZsi9A7DZRbY3EOeMEgqt8Mw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728729AbgABWXI (ORCPT
+        id S1729219AbgABWXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:23:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44200 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:23:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728893AbgABWW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:22:59 -0500
+        id S1729203AbgABWXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:23:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20623227BF;
-        Thu,  2 Jan 2020 22:22:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6FDE21D7D;
+        Thu,  2 Jan 2020 22:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003778;
-        bh=VSbxciRBW1NU4N+Z4pzUXw6YKwRStrA6h3PqUi1d9kg=;
+        s=default; t=1578003783;
+        bh=0BoAm34Asy31l41x/NqZ75+i5jcgeDXKfVAPQYuGWjg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mFNS6H7isdL8UTfoirzHhLI/BwfZeT5J5STEnGBJ+tIoU1gAOGl65sYGMb3OednRM
-         QKaKQpP2uyRUbADPhbRHjX/Goe/P29m/LQUunakkS93YPhMXlSAsyyM6ouMk3M07Cs
-         oM3jFnsp0MTd7FMC0nJ/FBV7mqkN5V7hlUTFNANY=
+        b=lpbJH/C982QSXAMiMM2a67SgCcLWp9Sq3Laf2feMNHK+Dno6e38My/Urgkl8M7U3N
+         rAugu00wShMs32T6To9OgnC+h/JZfqE3y8cgSB0EdbI4W+ncS1/os8OhMV30bp7iP0
+         JXf05H+OVyGu8S+tFnTDNcX7GS+nHLz1SFDkIiIQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 4.19 111/114] gtp: avoid zero size hashtable
-Date:   Thu,  2 Jan 2020 23:08:03 +0100
-Message-Id: <20200102220040.300302593@linuxfoundation.org>
+        stable@vger.kernel.org, David Engraf <david.engraf@sysgo.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Richard Genoud <richard.genoud@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 113/114] tty/serial: atmel: fix out of range clock divider handling
+Date:   Thu,  2 Jan 2020 23:08:05 +0100
+Message-Id: <20200102220040.512118203@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -59,39 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: David Engraf <david.engraf@sysgo.com>
 
-[ Upstream commit 6a902c0f31993ab02e1b6ea7085002b9c9083b6a ]
+[ Upstream commit cb47b9f8630ae3fa3f5fbd0c7003faba7abdf711 ]
 
-GTP default hashtable size is 1024 and userspace could set specific
-hashtable size with IFLA_GTP_PDP_HASHSIZE. If hashtable size is set to 0
-from userspace,  hashtable will not work and panic will occur.
+Use MCK_DIV8 when the clock divider is > 65535. Unfortunately the mode
+register was already written thus the clock selection is ignored.
 
-Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fix by doing the baud rate calulation before setting the mode.
+
+Fixes: 5bf5635ac170 ("tty/serial: atmel: add fractional baud rate support")
+Signed-off-by: David Engraf <david.engraf@sysgo.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Acked-by: Richard Genoud <richard.genoud@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191216085403.17050-1-david.engraf@sysgo.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/tty/serial/atmel_serial.c | 43 ++++++++++++++++---------------
+ 1 file changed, 22 insertions(+), 21 deletions(-)
 
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -671,10 +671,13 @@ static int gtp_newlink(struct net *src_n
- 	if (err < 0)
- 		return err;
+diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+index dd8949e8fcd7..f34520e9ad6e 100644
+--- a/drivers/tty/serial/atmel_serial.c
++++ b/drivers/tty/serial/atmel_serial.c
+@@ -2154,27 +2154,6 @@ static void atmel_set_termios(struct uart_port *port, struct ktermios *termios,
+ 		mode |= ATMEL_US_USMODE_NORMAL;
+ 	}
  
--	if (!data[IFLA_GTP_PDP_HASHSIZE])
-+	if (!data[IFLA_GTP_PDP_HASHSIZE]) {
- 		hashsize = 1024;
--	else
-+	} else {
- 		hashsize = nla_get_u32(data[IFLA_GTP_PDP_HASHSIZE]);
-+		if (!hashsize)
-+			hashsize = 1024;
+-	/* set the mode, clock divisor, parity, stop bits and data size */
+-	atmel_uart_writel(port, ATMEL_US_MR, mode);
+-
+-	/*
+-	 * when switching the mode, set the RTS line state according to the
+-	 * new mode, otherwise keep the former state
+-	 */
+-	if ((old_mode & ATMEL_US_USMODE) != (mode & ATMEL_US_USMODE)) {
+-		unsigned int rts_state;
+-
+-		if ((mode & ATMEL_US_USMODE) == ATMEL_US_USMODE_HWHS) {
+-			/* let the hardware control the RTS line */
+-			rts_state = ATMEL_US_RTSDIS;
+-		} else {
+-			/* force RTS line to low level */
+-			rts_state = ATMEL_US_RTSEN;
+-		}
+-
+-		atmel_uart_writel(port, ATMEL_US_CR, rts_state);
+-	}
+-
+ 	/*
+ 	 * Set the baud rate:
+ 	 * Fractional baudrate allows to setup output frequency more
+@@ -2200,6 +2179,28 @@ static void atmel_set_termios(struct uart_port *port, struct ktermios *termios,
+ 	quot = cd | fp << ATMEL_US_FP_OFFSET;
+ 
+ 	atmel_uart_writel(port, ATMEL_US_BRGR, quot);
++
++	/* set the mode, clock divisor, parity, stop bits and data size */
++	atmel_uart_writel(port, ATMEL_US_MR, mode);
++
++	/*
++	 * when switching the mode, set the RTS line state according to the
++	 * new mode, otherwise keep the former state
++	 */
++	if ((old_mode & ATMEL_US_USMODE) != (mode & ATMEL_US_USMODE)) {
++		unsigned int rts_state;
++
++		if ((mode & ATMEL_US_USMODE) == ATMEL_US_USMODE_HWHS) {
++			/* let the hardware control the RTS line */
++			rts_state = ATMEL_US_RTSDIS;
++		} else {
++			/* force RTS line to low level */
++			rts_state = ATMEL_US_RTSEN;
++		}
++
++		atmel_uart_writel(port, ATMEL_US_CR, rts_state);
 +	}
- 
- 	err = gtp_hashtable_new(gtp, hashsize);
- 	if (err < 0)
++
+ 	atmel_uart_writel(port, ATMEL_US_CR, ATMEL_US_RSTSTA | ATMEL_US_RSTRX);
+ 	atmel_uart_writel(port, ATMEL_US_CR, ATMEL_US_TXEN | ATMEL_US_RXEN);
+ 	atmel_port->tx_stopped = false;
+-- 
+2.20.1
+
 
 
