@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF83AC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1319C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3D9920866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A37DE20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005982;
-	bh=YhmOiMled1/G2x2INpuYgJq0C1R/wZfIFZZcOdQCIao=;
+	s=default; t=1578005989;
+	bh=6AB7D4bAghPrP0v8HFm25suaOjxnmCLappmUhVWx6eQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sK0n8y12HtJvmPKKSYiOg0L1IB9ZgvU1WYTKlcPi1kdTiqRRO/r9vQaExAgzLF6su
-	 DiocZS8QJ71FgD57p7oABprAGwJnV/wXqMG5PqXZEOzaXjpNwFY+nEJpfQdEQ0MqIE
-	 YtR8YexTW5mjjl0pKX/Bjm2PIftwWFhjkzVlTTGA=
+	b=HR7itlfvjWjK03qSStkjwpe+DLg1RqlPwPcZbWG7f2Q7/map6W1ADvE70yk4vok5x
+	 E4SgyO/GiI9YdQSx5Ci7AOIWbA707XAkWfM0hA8I5HW0MGZXr+icKV1k5vfB8x9TaV
+	 sP6dDks2gZ/724JJEJSh6mGQXRnZ1E8YuI/z4nAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbgABW7l (ORCPT
+        id S1728146AbgABW7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:59:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54064 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:59:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727797AbgABWN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:13:57 -0500
+        id S1727763AbgABWNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:13:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8EF522525;
-        Thu,  2 Jan 2020 22:13:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 567EF22525;
+        Thu,  2 Jan 2020 22:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003237;
-        bh=YhmOiMled1/G2x2INpuYgJq0C1R/wZfIFZZcOdQCIao=;
+        s=default; t=1578003234;
+        bh=6AB7D4bAghPrP0v8HFm25suaOjxnmCLappmUhVWx6eQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pG3Qt/y1UdCIMkgDAjLxaCXpCZqXNmM7gTY1Mo1Co5J3BfvXRRMkDXZZ2POTCrpXs
-         E/FfAA3VhvNa6ru9Zx/CvlUikadUHRc7kAmrras7DoJj1/03T+9RuOywLmW9LK4ujo
-         bxELBjGrQMt58vLHw/3KMmRsKcuPS9AUt0hJjXa4=
+        b=QydQLhU7HH+AIdQvYeWfaY9FvDFP3REKSiW4++pVEVxxf3l2VX6ekEGfSqRWQ0GBE
+         ny0OCN8/Cr4GU/gd272qV0Fa8mfnNmm6jYmQay2crTVmPXLS+9ZB8OgswGbfl33hMJ
+         NGJEorhzRIJK53vei3zVobFNHOt1gpCNIFQOXEZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Jan Stancek <jstancek@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 059/191] iomap: fix return value of iomap_dio_bio_actor on 32bit systems
-Date:   Thu,  2 Jan 2020 23:05:41 +0100
-Message-Id: <20200102215836.298398377@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 076/191] dt-bindings: Improve validation build error handling
+Date:   Thu,  2 Jan 2020 23:05:58 +0100
+Message-Id: <20200102215838.066878098@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -62,59 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Stancek <jstancek@redhat.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit e9f930ac88a8936ccc2d021110c98810cf5aa810 ]
+[ Upstream commit 93512dad334deb444619505f1fbb761156f7471b ]
 
-Naresh reported LTP diotest4 failing for 32bit x86 and arm -next
-kernels on ext4. Same problem exists in 5.4-rc7 on xfs.
+Schema errors can cause make to exit before useful information is
+printed. This leaves developers wondering what's wrong. It can be
+overcome passing '-k' to make, but that's not an obvious solution.
+There's 2 scenarios where this happens.
 
-The failure comes down to:
-  openat(AT_FDCWD, "testdata-4.5918", O_RDWR|O_DIRECT) = 4
-  mmap2(NULL, 4096, PROT_READ, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xb7f7b000
-  read(4, 0xb7f7b000, 4096)              = 0 // expects -EFAULT
+When using DT_SCHEMA_FILES to validate with a single schema, any error
+in the schema results in processed-schema.yaml being empty causing a
+make error. The result is the specific errors in the schema are never
+shown because processed-schema.yaml is the first target built. Simply
+making processed-schema.yaml last in extra-y ensures the full schema
+validation with detailed error messages happen first.
 
-Problem is conversion at iomap_dio_bio_actor() return. Ternary
-operator has a return type and an attempt is made to convert each
-of operands to the type of the other. In this case "ret" (int)
-is converted to type of "copied" (unsigned long). Both have size
-of 4 bytes:
-    size_t copied = 0;
-    int ret = -14;
-    long long actor_ret = copied ? copied : ret;
+The 2nd problem is while schema errors are ignored for
+processed-schema.yaml, full validation of the schema still runs in
+parallel and any schema validation errors will still stop the build when
+running validation of dts files. The fix is to not add the schema
+examples to extra-y in this case. This means 'dtbs_check' is no longer a
+superset of 'dt_binding_check'. Update the documentation to make this
+clear.
 
-    On x86_64: actor_ret == -14;
-    On x86   : actor_ret == 4294967282
-
-Replace ternary operator with 2 return statements to avoid this
-unwanted conversion.
-
-Fixes: 4721a6010990 ("iomap: dio data corruption and spurious errors when pipes fill")
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Jan Stancek <jstancek@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/iomap/direct-io.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/Makefile  | 5 ++++-
+ Documentation/devicetree/writing-schema.rst | 6 ++++--
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-index fd46ec83cb04..7b5f76efef02 100644
---- a/fs/iomap/direct-io.c
-+++ b/fs/iomap/direct-io.c
-@@ -318,7 +318,9 @@ zero_tail:
- 		if (pad)
- 			iomap_dio_zero(dio, iomap, pos, fs_block_size - pad);
- 	}
--	return copied ? copied : ret;
-+	if (copied)
-+		return copied;
-+	return ret;
- }
+diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
+index 5138a2f6232a..646cb3525373 100644
+--- a/Documentation/devicetree/bindings/Makefile
++++ b/Documentation/devicetree/bindings/Makefile
+@@ -12,7 +12,6 @@ $(obj)/%.example.dts: $(src)/%.yaml FORCE
+ 	$(call if_changed,chk_binding)
  
- static loff_t
+ DT_TMP_SCHEMA := processed-schema.yaml
+-extra-y += $(DT_TMP_SCHEMA)
+ 
+ quiet_cmd_mk_schema = SCHEMA  $@
+       cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(real-prereqs)
+@@ -26,8 +25,12 @@ DT_DOCS = $(shell \
+ 
+ DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
+ 
++ifeq ($(CHECK_DTBS),)
+ extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
+ extra-y += $(patsubst $(src)/%.yaml,%.example.dt.yaml, $(DT_SCHEMA_FILES))
++endif
+ 
+ $(obj)/$(DT_TMP_SCHEMA): $(DT_SCHEMA_FILES) FORCE
+ 	$(call if_changed,mk_schema)
++
++extra-y += $(DT_TMP_SCHEMA)
+diff --git a/Documentation/devicetree/writing-schema.rst b/Documentation/devicetree/writing-schema.rst
+index f4a638072262..83e04e5c342d 100644
+--- a/Documentation/devicetree/writing-schema.rst
++++ b/Documentation/devicetree/writing-schema.rst
+@@ -130,11 +130,13 @@ binding schema. All of the DT binding documents can be validated using the
+ 
+     make dt_binding_check
+ 
+-In order to perform validation of DT source files, use the `dtbs_check` target::
++In order to perform validation of DT source files, use the ``dtbs_check`` target::
+ 
+     make dtbs_check
+ 
+-This will first run the `dt_binding_check` which generates the processed schema.
++Note that ``dtbs_check`` will skip any binding schema files with errors. It is
++necessary to use ``dt_binding_check`` to get all the validation errors in the
++binding schema files.
+ 
+ It is also possible to run checks with a single schema file by setting the
+ ``DT_SCHEMA_FILES`` variable to a specific schema file.
 -- 
 2.20.1
 
