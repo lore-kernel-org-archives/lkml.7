@@ -4,58 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DC4C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68741C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECB0F24125
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3754A2253D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004376;
-	bh=g/UeQVh4Ql3AgHXawwJEW27WiDidlUWX1zzeRx3WHJo=;
+	s=default; t=1578004380;
+	bh=EDC6HNLqHPCnjOFjZoxgAGbhLmHBfVy9HFBenvThPWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MDNZeuT6cSjk+nGdHiq476jNPuw6Ib2pwGuYCJ4o9ziqk2vYxyM+eJU7lFIl3XY+Q
-	 FfTfF8XzZXODJ+2wjbzuAje2D3UDr4FhINqpYOGjXAuN5PhrK/ksZdm092QEgkpkIq
-	 iLixAO6+j6c9ds/LF+Hb/TYIH30/aBkirab7HVII=
+	b=2PcEJhy2ToUOyjqD1lp2K0FfDBImL+gEr6kiIKtw1oNlMVk+CWvFlT/W13BEYi3bZ
+	 HeqBZaFWmG+rKkUf8S1IQFx+bqaR31DIXpFm4Cg3THwKP2UDrURnqyYFUBwyzB/0L/
+	 r31gENNZ0Qp0inlVUx60yvSMl9lUA7LRY6fUf6Rk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730480AbgABWcz (ORCPT
+        id S1730064AbgABWc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:32:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39690 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:32:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730462AbgABWcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:32:51 -0500
+        id S1730472AbgABWcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:32:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2B9320866;
-        Thu,  2 Jan 2020 22:32:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEB0520863;
+        Thu,  2 Jan 2020 22:32:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004371;
-        bh=g/UeQVh4Ql3AgHXawwJEW27WiDidlUWX1zzeRx3WHJo=;
+        s=default; t=1578004373;
+        bh=EDC6HNLqHPCnjOFjZoxgAGbhLmHBfVy9HFBenvThPWQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2X7c8e4P44xdKCcXB+bKVKLe+u6PAJAo/ZCC/lLu56bo0k/fE8AlWqD0+OjhwUy2b
-         3A4MwiVJYnjglhJOy+UDMNiUXggvEbpjEyz3ReHPatgm5eQSkWqZCjYkoI11dy9f62
-         XebJIxfA1LDs4xYMMB77FLiWim+i0C2WWmmfPtVs=
+        b=S43E+lwxdfm3EgD/owNYwdSnJyjNq4cB22XOZHbNG7VoZ+ieBn6gVPAYR+Z3OV9GR
+         QTyW233loCPwvpja9muXhw4AsHSF17F1yb4Q52qWqGu5oSMAyVQWV5/UZjWnY9fFUW
+         uZeFfdUxjiuKzRb+q0amqt6J5iyo29/8fwacgkXU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ding Xiang <dingxiang@cmss.chinamobile.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
+        stable@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Chris Down <chris@chrisdown.name>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 150/171] ocfs2: fix passing zero to PTR_ERR warning
-Date:   Thu,  2 Jan 2020 23:08:01 +0100
-Message-Id: <20200102220607.798020848@linuxfoundation.org>
+Subject: [PATCH 4.9 151/171] kernel: sysctl: make drop_caches write-only
+Date:   Thu,  2 Jan 2020 23:08:02 +0100
+Message-Id: <20200102220607.897153673@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -68,46 +66,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ding Xiang <dingxiang@cmss.chinamobile.com>
+From: Johannes Weiner <hannes@cmpxchg.org>
 
-[ Upstream commit 188c523e1c271d537f3c9f55b6b65bf4476de32f ]
+[ Upstream commit 204cb79ad42f015312a5bbd7012d09c93d9b46fb ]
 
-Fix a static code checker warning:
-fs/ocfs2/acl.c:331
-	ocfs2_acl_chmod() warn: passing zero to 'PTR_ERR'
+Currently, the drop_caches proc file and sysctl read back the last value
+written, suggesting this is somehow a stateful setting instead of a
+one-time command.  Make it write-only, like e.g.  compact_memory.
 
-Link: http://lkml.kernel.org/r/1dee278b-6c96-eec2-ce76-fe6e07c6e20f@linux.alibaba.com
-Fixes: 5ee0fbd50fd ("ocfs2: revert using ocfs2_acl_chmod to avoid inode cluster lock hang")
-Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
+While mitigating a VM problem at scale in our fleet, there was confusion
+about whether writing to this file will permanently switch the kernel into
+a non-caching mode.  This influences the decision making in a tense
+situation, where tens of people are trying to fix tens of thousands of
+affected machines: Do we need a rollback strategy?  What are the
+performance implications of operating in a non-caching state for several
+days?  It also caused confusion when the kernel team said we may need to
+write the file several times to make sure it's effective ("But it already
+reads back 3?").
+
+Link: http://lkml.kernel.org/r/20191031221602.9375-1-hannes@cmpxchg.org
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Acked-by: Chris Down <chris@chrisdown.name>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Alexey Dobriyan <adobriyan@gmail.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/acl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/sysctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ocfs2/acl.c b/fs/ocfs2/acl.c
-index ee8dbbae78b6..6dc714a56c37 100644
---- a/fs/ocfs2/acl.c
-+++ b/fs/ocfs2/acl.c
-@@ -338,8 +338,8 @@ int ocfs2_acl_chmod(struct inode *inode, struct buffer_head *bh)
- 	down_read(&OCFS2_I(inode)->ip_xattr_sem);
- 	acl = ocfs2_get_acl_nolock(inode, ACL_TYPE_ACCESS, bh);
- 	up_read(&OCFS2_I(inode)->ip_xattr_sem);
--	if (IS_ERR(acl) || !acl)
--		return PTR_ERR(acl);
-+	if (IS_ERR_OR_NULL(acl))
-+		return PTR_ERR_OR_ZERO(acl);
- 	ret = __posix_acl_chmod(&acl, GFP_KERNEL, inode->i_mode);
- 	if (ret)
- 		return ret;
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 6af1ac551ea3..34449ec0689d 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -1398,7 +1398,7 @@ static struct ctl_table vm_table[] = {
+ 		.procname	= "drop_caches",
+ 		.data		= &sysctl_drop_caches,
+ 		.maxlen		= sizeof(int),
+-		.mode		= 0644,
++		.mode		= 0200,
+ 		.proc_handler	= drop_caches_sysctl_handler,
+ 		.extra1		= &one,
+ 		.extra2		= &four,
 -- 
 2.20.1
 
