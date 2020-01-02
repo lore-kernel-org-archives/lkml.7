@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 347A4C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3E5C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0501622525
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF61222525
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:51:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="RhVR6tn8"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="V9mfQO+l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbgABPvO (ORCPT
+        id S1728823AbgABPvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 10:51:14 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37814 "EHLO
+        Thu, 2 Jan 2020 10:51:21 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42612 "EHLO
         mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728770AbgABPvN (ORCPT
+        with ESMTP id S1728770AbgABPvU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 10:51:13 -0500
-Received: by mail-pl1-f196.google.com with SMTP id c23so17958564plz.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 07:51:13 -0800 (PST)
+        Thu, 2 Jan 2020 10:51:20 -0500
+Received: by mail-pl1-f196.google.com with SMTP id p9so17955776plk.9
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 07:51:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=MhQG0/5JezNv1KtQT1rgY66YIDnDZ+v70hNo6D0LoXg=;
-        b=RhVR6tn88iqM9CAUBuIXpC8u7enUg5KhZQzj0GVrdn/23ih1Mi5aXE//i/LbuUb6JS
-         XJv5C66APOE7/VFJ7f6chnXcg3hU+P9y05EGl3LG8UGI2uYd1JJTo18ArBgTNMTqNXv7
-         pn/7QuBC8goVmWplj8gh1M37fOG+1fdQY+iVk=
+        bh=l8GiNbTzB0gxgqSfCeGUqR2N+xB9TfANszBuH6xbhVk=;
+        b=V9mfQO+lvFeoyC1d29u4/iGjL9H5Kx7299Phh07rMp8378POUNc83NRtQwgB6UuNE4
+         wtTjq8Hj7hmFN0IAZhc0+Q6SA1+BGLFrNK/ItlzwXNL+LTB4iFpQ4ntD8lbhXlaz1Y+T
+         AvUAqBz/N/bI0m2byK+NEugJ5lI+wCFqTmQjg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=MhQG0/5JezNv1KtQT1rgY66YIDnDZ+v70hNo6D0LoXg=;
-        b=IEB/6/Ou7SZyZzm26vhPGX66itMwBp7kc7STmZHZvvBqg1s9UuiB8UfZR/LRVta9PJ
-         9IbcJ2zHDqwLeXt9MVOfqLUIjQiNtKKzil921KX94FVqy7omP5KmCEa6OtDfZ14Bq1Tc
-         NQOikAIox/gYe8w5Vik2vgk4Y5ojNykIMBZ7lYpkj1Bsz05RRwZML4HYr3d0sWbbG8VR
-         6hy6s+Mifpy0E9ieMpk+/H7sA3zF9ehpiZFNVJCmG8m1I9Gv/ilKozHKD6X445Pr/M+B
-         ENE+3B8L/ERX4e7BGiljOYYkSah6t2WyLwSiwYbD7M2OMxDOq9C1EkgiFMQi7BChMv27
-         BpkQ==
-X-Gm-Message-State: APjAAAVE4xpSxENGfa8/qnmVLDkMmsiVJ7HFhmft4pBUzG9TSi3VPLoH
-        cIqOZ6pPlYhmxMPa8ooslgkBNw==
-X-Google-Smtp-Source: APXvYqxmTFehZbAfKFT1nOlnLy/69betFFYIHUPY6KrYNNfHnEW3rMAgBVj9YfpNL5BAF1lBPsgaMw==
-X-Received: by 2002:a17:90b:3004:: with SMTP id hg4mr20589047pjb.52.1577980273180;
-        Thu, 02 Jan 2020 07:51:13 -0800 (PST)
+        bh=l8GiNbTzB0gxgqSfCeGUqR2N+xB9TfANszBuH6xbhVk=;
+        b=k/ksdsHU0eozwg95CFtX/zsX3cahm5cqVpoTWQtY6FYij7syiD+OHU58GAF8o8OKwo
+         8AX9+PB4L9hZfIvshTNbhokNCuY+KS7Zh3NCWR94Vumb7ippIing6iLuOyoIArR8wobN
+         mw1R0NCW2DamjujI6YuZj9EByUBGGlHP+PNJl74xHyCt1sB24bcYF/iw9Xh+SvwN0Gky
+         RxaAkxAgdTysjh1qW8clP0SMh3Ze7aOG+7iYv0ao69a3QLgNZMnS2fvoV0M1bPKUzpJt
+         VwUisl4X+AXsB9DcrrM5YzpdTDtxtFvgRwwamPGuPLwq8HBqvE+RDMs7fTLUVFMcCcrl
+         XYww==
+X-Gm-Message-State: APjAAAWDofGo3JpPS6wrSk8Cm4qlaLABPfRZKk1KXg9zwCy3pMGFa80x
+        9UaXeVGYgV2PK248+TTXhrlakw==
+X-Google-Smtp-Source: APXvYqw1oN4gWnsrwdlNQQB/kqEr/Ia2EGgZDAwGDeuYjFRcd01TGnYijs/cVowvM9nEGABw5DYJlw==
+X-Received: by 2002:a17:902:b10d:: with SMTP id q13mr77923301plr.14.1577980280225;
+        Thu, 02 Jan 2020 07:51:20 -0800 (PST)
 Received: from Ninja.ibn.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id d2sm11499420pjv.18.2020.01.02.07.51.10
+        by smtp.gmail.com with ESMTPSA id d2sm11499420pjv.18.2020.01.02.07.51.17
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 02 Jan 2020 07:51:12 -0800 (PST)
+        Thu, 02 Jan 2020 07:51:19 -0800 (PST)
 From:   Vikas Gupta <vikas.gupta@broadcom.com>
 To:     Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>,
@@ -59,9 +59,9 @@ To:     Michael Chan <michael.chan@broadcom.com>,
         linux-kernel@vger.kernel.org
 Cc:     vasundhara-v.volam@broadcom.com, vikram.prakash@broadcom.com,
         Vikas Gupta <vikas.gupta@broadcom.com>
-Subject: [PATCH v1 2/3] devlink: add devink notification when reporter update health state
-Date:   Thu,  2 Jan 2020 21:18:10 +0530
-Message-Id: <1577980091-25118-3-git-send-email-vikas.gupta@broadcom.com>
+Subject: [PATCH v1 3/3] bnxt_en: Call recovery done after reset is successfully done
+Date:   Thu,  2 Jan 2020 21:18:11 +0530
+Message-Id: <1577980091-25118-4-git-send-email-vikas.gupta@broadcom.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1577980091-25118-1-git-send-email-vikas.gupta@broadcom.com>
 References: <1577980091-25118-1-git-send-email-vikas.gupta@broadcom.com>
@@ -70,91 +70,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add a devlink notification when reporter update the health
-state.
+Return EINPROGRESS to devlink health reporter recover as we are not yet
+done and call devlink_health_reporter_recovery_done once reset is
+successfully completed from workqueue context.
 
 Signed-off-by: Vikas Gupta <vikas.gupta@broadcom.com>
 ---
- net/core/devlink.c | 59 ++++++++++++++++++++++++++++++++++++++----------------
- 1 file changed, 42 insertions(+), 17 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c         |  1 +
+ drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c | 14 ++++++++++++--
+ drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.h |  1 +
+ 3 files changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/devlink.c b/net/core/devlink.c
-index e686ae6..d30aa47 100644
---- a/net/core/devlink.c
-+++ b/net/core/devlink.c
-@@ -4844,23 +4844,6 @@ devlink_health_reporter_destroy(struct devlink_health_reporter *reporter)
- EXPORT_SYMBOL_GPL(devlink_health_reporter_destroy);
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 7b0fe19..39d4309 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -10822,6 +10822,7 @@ static void bnxt_fw_reset_task(struct work_struct *work)
+ 		smp_mb__before_atomic();
+ 		clear_bit(BNXT_STATE_IN_FW_RESET, &bp->state);
+ 		bnxt_ulp_start(bp, rc);
++		bnxt_dl_health_recovery_done(bp);
+ 		bnxt_dl_health_status_update(bp, true);
+ 		rtnl_unlock();
+ 		break;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
+index 3eedd44..0c3d224 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
+@@ -89,7 +89,7 @@ static int bnxt_fw_reset_recover(struct devlink_health_reporter *reporter,
+ 		return -EOPNOTSUPP;
  
- void
--devlink_health_reporter_state_update(struct devlink_health_reporter *reporter,
--				     enum devlink_health_reporter_state state)
--{
--	if (WARN_ON(state != DEVLINK_HEALTH_REPORTER_STATE_HEALTHY &&
--		    state != DEVLINK_HEALTH_REPORTER_STATE_ERROR))
--		return;
--
--	if (reporter->health_state == state)
--		return;
--
--	reporter->health_state = state;
--	trace_devlink_health_reporter_state_update(reporter->devlink,
--						   reporter->ops->name, state);
--}
--EXPORT_SYMBOL_GPL(devlink_health_reporter_state_update);
--
--void
- devlink_health_reporter_recovery_done(struct devlink_health_reporter *reporter)
- {
- 	reporter->recovery_count++;
-@@ -5097,6 +5080,48 @@ devlink_nl_health_reporter_fill(struct sk_buff *msg,
- 	return -EMSGSIZE;
+ 	bnxt_fw_reset(bp);
+-	return 0;
++	return -EINPROGRESS;
  }
  
-+static void devlink_recover_notify(struct devlink_health_reporter *reporter,
-+				   enum devlink_command cmd)
+ static const
+@@ -116,7 +116,7 @@ static int bnxt_fw_fatal_recover(struct devlink_health_reporter *reporter,
+ 	else if (event == BNXT_FW_EXCEPTION_SP_EVENT)
+ 		bnxt_fw_exception(bp);
+ 
+-	return 0;
++	return -EINPROGRESS;
+ }
+ 
+ static const
+@@ -262,6 +262,16 @@ void bnxt_dl_health_status_update(struct bnxt *bp, bool healthy)
+ 	health->fatal = false;
+ }
+ 
++void bnxt_dl_health_recovery_done(struct bnxt *bp)
 +{
-+	struct sk_buff *msg;
-+	int err;
++	struct bnxt_fw_health *hlth = bp->fw_health;
 +
-+	WARN_ON(cmd != DEVLINK_CMD_HEALTH_REPORTER_RECOVER);
-+
-+	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
-+	if (!msg)
-+		return;
-+
-+	err = devlink_nl_health_reporter_fill(msg, reporter->devlink,
-+					      reporter, cmd, 0, 0, 0);
-+	if (err) {
-+		nlmsg_free(msg);
-+		return;
-+	}
-+
-+	genlmsg_multicast_netns(&devlink_nl_family,
-+				devlink_net(reporter->devlink),
-+				msg, 0, DEVLINK_MCGRP_CONFIG, GFP_KERNEL);
++	if (hlth->fatal)
++		devlink_health_reporter_recovery_done(hlth->fw_fatal_reporter);
++	else
++		devlink_health_reporter_recovery_done(hlth->fw_reset_reporter);
 +}
 +
-+void
-+devlink_health_reporter_state_update(struct devlink_health_reporter *reporter,
-+				     enum devlink_health_reporter_state state)
-+{
-+	if (WARN_ON(state != DEVLINK_HEALTH_REPORTER_STATE_HEALTHY &&
-+		    state != DEVLINK_HEALTH_REPORTER_STATE_ERROR))
-+		return;
-+
-+	if (reporter->health_state == state)
-+		return;
-+
-+	reporter->health_state = state;
-+	trace_devlink_health_reporter_state_update(reporter->devlink,
-+						   reporter->ops->name, state);
-+	devlink_recover_notify(reporter, DEVLINK_CMD_HEALTH_REPORTER_RECOVER);
-+}
-+EXPORT_SYMBOL_GPL(devlink_health_reporter_state_update);
-+
- static int devlink_nl_cmd_health_reporter_get_doit(struct sk_buff *skb,
- 						   struct genl_info *info)
- {
+ static const struct devlink_ops bnxt_dl_ops = {
+ #ifdef CONFIG_BNXT_SRIOV
+ 	.eswitch_mode_set = bnxt_dl_eswitch_mode_set,
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.h b/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.h
+index 6db6c3d..08aaa44 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.h
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.h
+@@ -58,6 +58,7 @@ struct bnxt_dl_nvm_param {
+ 
+ void bnxt_devlink_health_report(struct bnxt *bp, unsigned long event);
+ void bnxt_dl_health_status_update(struct bnxt *bp, bool healthy);
++void bnxt_dl_health_recovery_done(struct bnxt *bp);
+ void bnxt_dl_fw_reporters_create(struct bnxt *bp);
+ void bnxt_dl_fw_reporters_destroy(struct bnxt *bp, bool all);
+ int bnxt_dl_register(struct bnxt *bp);
 -- 
 2.7.4
 
