@@ -2,52 +2,50 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 690DDC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F3DC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1C5217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 645DB20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005118;
-	bh=QVQNXYhm774xEJ0esdujKP+OZHgv/yx5eUykMewmE/w=;
+	s=default; t=1578005131;
+	bh=gDNljlF11NNJt87x/cTDiyTrXxvQj868zamGs1Win84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uYTmqieT73SP2B8M5gz46SNLXtwXsme+hPmYWfrVQErpdQH9K/1sftbVDGR/wrI/N
-	 4EQ12EKPIwzNyhhpDuhadFVwvUNP9OM1Xe+NLdhAMH2LMl5oM0iY4UgdDkCc0nxoxC
-	 oXso4a7i4z69REUpllSAD2y7GTROD73+L3I1duKk=
+	b=NgkBBjsH+Fw1Fq3IQelq4SLtD/oV2GM1xDZwnuzq0QI8xTk0ROT/BQQPeC2XnUzzE
+	 rk1DVgQFRpD+44YkcJb3W8ZcpXlnqcKiFX+wjavsWnMsmRMir9bG73azuBFPFW9ZyC
+	 ayNOJtkfxPZ/aAx0OeQHU1l8vTpL/DvIoAWXgdGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730852AbgABWpR (ORCPT
+        id S1730514AbgABWpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:45:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38698 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:45:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730409AbgABWcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:32:25 -0500
+        id S1730358AbgABWcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:32:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59307222C3;
-        Thu,  2 Jan 2020 22:32:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7B1221835;
+        Thu,  2 Jan 2020 22:32:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004344;
-        bh=QVQNXYhm774xEJ0esdujKP+OZHgv/yx5eUykMewmE/w=;
+        s=default; t=1578004323;
+        bh=gDNljlF11NNJt87x/cTDiyTrXxvQj868zamGs1Win84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XD4QRki4isF9c9yxpr/3VIg1wWtQlzRggTGA2MaxEAAUT2B+PYSc0Ym2d06xecokS
-         Kj5RFGTuLjCxe4cLQuxqEOaendq2tJGDaqx2IfQ/5kDW2O3HQY8ubj8G/mrCIMDPKb
-         jTb3K6Nsk6EAmgM+R9axrlOE7BtoioIpEDNwjB6Q=
+        b=BIeeYJ+G8F1PnvqzYBcAWZvVPRir+9pbdZPNDgjtfN0N/Zw/DzrDMrOK10m8obR/n
+         44vXgTaGUbi3LxNSSZJ5sfknMqHlUdZslrzlJHz0T0zOoCOREeRZl1pOghZcNjkb4H
+         0LgjYBr8A66w5ZhF8NfuoRADGN9DmkiKwTwEgV1E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
-        stable@kernel.org, Andreas Dilger <adilger@dilger.ca>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 140/171] ext4: work around deleting a file with i_nlink == 0 safely
-Date:   Thu,  2 Jan 2020 23:07:51 +0100
-Message-Id: <20200102220606.559791102@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.9 105/171] staging: comedi: gsc_hpdi: check dma_alloc_coherent() return value
+Date:   Thu,  2 Jan 2020 23:07:16 +0100
+Message-Id: <20200102220601.724084391@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -60,65 +58,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Theodore Ts'o <tytso@mit.edu>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-[ Upstream commit c7df4a1ecb8579838ec8c56b2bb6a6716e974f37 ]
+commit ab42b48f32d4c766420c3499ee9c0289b7028182 upstream.
 
-If the file system is corrupted such that a file's i_links_count is
-too small, then it's possible that when unlinking that file, i_nlink
-will already be zero.  Previously we were working around this kind of
-corruption by forcing i_nlink to one; but we were doing this before
-trying to delete the directory entry --- and if the file system is
-corrupted enough that ext4_delete_entry() fails, then we exit with
-i_nlink elevated, and this causes the orphan inode list handling to be
-FUBAR'ed, such that when we unmount the file system, the orphan inode
-list can get corrupted.
+The "auto-attach" handler function `gsc_hpdi_auto_attach()` calls
+`dma_alloc_coherent()` in a loop to allocate some DMA data buffers, and
+also calls it to allocate a buffer for a DMA descriptor chain.  However,
+it does not check the return value of any of these calls.  Change
+`gsc_hpdi_auto_attach()` to return `-ENOMEM` if any of these
+`dma_alloc_coherent()` calls fail.  This will result in the comedi core
+calling the "detach" handler `gsc_hpdi_detach()` as part of the
+clean-up, which will call `gsc_hpdi_free_dma()` to free any allocated
+DMA coherent memory buffers.
 
-A better way to fix this is to simply skip trying to call drop_nlink()
-if i_nlink is already zero, thus moving the check to the place where
-it makes the most sense.
+Cc: <stable@vger.kernel.org> #4.6+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/20191216110823.216237-1-abbotti@mev.co.uk
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-https://bugzilla.kernel.org/show_bug.cgi?id=205433
-
-Link: https://lore.kernel.org/r/20191112032903.8828-1-tytso@mit.edu
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/namei.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/staging/comedi/drivers/gsc_hpdi.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-index 6608cc01a3db..f0ce535d514c 100644
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -3082,18 +3082,17 @@ static int ext4_unlink(struct inode *dir, struct dentry *dentry)
- 	if (IS_DIRSYNC(dir))
- 		ext4_handle_sync(handle);
- 
--	if (inode->i_nlink == 0) {
--		ext4_warning_inode(inode, "Deleting file '%.*s' with no links",
--				   dentry->d_name.len, dentry->d_name.name);
--		set_nlink(inode, 1);
--	}
- 	retval = ext4_delete_entry(handle, dir, de, bh);
- 	if (retval)
- 		goto end_unlink;
- 	dir->i_ctime = dir->i_mtime = ext4_current_time(dir);
- 	ext4_update_dx_flag(dir);
- 	ext4_mark_inode_dirty(handle, dir);
--	drop_nlink(inode);
-+	if (inode->i_nlink == 0)
-+		ext4_warning_inode(inode, "Deleting file '%.*s' with no links",
-+				   dentry->d_name.len, dentry->d_name.name);
-+	else
-+		drop_nlink(inode);
- 	if (!inode->i_nlink)
- 		ext4_orphan_add(handle, inode);
- 	inode->i_ctime = ext4_current_time(inode);
--- 
-2.20.1
-
+--- a/drivers/staging/comedi/drivers/gsc_hpdi.c
++++ b/drivers/staging/comedi/drivers/gsc_hpdi.c
+@@ -632,6 +632,11 @@ static int gsc_hpdi_auto_attach(struct c
+ 		    dma_alloc_coherent(&pcidev->dev, DMA_BUFFER_SIZE,
+ 				       &devpriv->dio_buffer_phys_addr[i],
+ 				       GFP_KERNEL);
++		if (!devpriv->dio_buffer[i]) {
++			dev_warn(dev->class_dev,
++				 "failed to allocate DMA buffer\n");
++			return -ENOMEM;
++		}
+ 	}
+ 	/* allocate dma descriptors */
+ 	devpriv->dma_desc = dma_alloc_coherent(&pcidev->dev,
+@@ -639,6 +644,11 @@ static int gsc_hpdi_auto_attach(struct c
+ 					       NUM_DMA_DESCRIPTORS,
+ 					       &devpriv->dma_desc_phys_addr,
+ 					       GFP_KERNEL);
++	if (!devpriv->dma_desc) {
++		dev_warn(dev->class_dev,
++			 "failed to allocate DMA descriptors\n");
++		return -ENOMEM;
++	}
+ 	if (devpriv->dma_desc_phys_addr & 0xf) {
+ 		dev_warn(dev->class_dev,
+ 			 " dma descriptors not quad-word aligned (bug)\n");
 
 
