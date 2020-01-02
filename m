@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F8FC2D0DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C841DC2D0DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09DD52053B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D28721835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbgABGJr (ORCPT
+        id S1727726AbgABGJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 01:09:47 -0500
-Received: from mga07.intel.com ([134.134.136.100]:3905 "EHLO mga07.intel.com"
+        Thu, 2 Jan 2020 01:09:34 -0500
+Received: from mga07.intel.com ([134.134.136.100]:3901 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727768AbgABGJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 01:09:39 -0500
+        id S1725788AbgABGJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 01:09:31 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jan 2020 22:09:38 -0800
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jan 2020 22:09:30 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,385,1571727600"; 
-   d="scan'208";a="224706788"
+   d="scan'208";a="224706742"
 Received: from local-michael-cet-test.sh.intel.com ([10.239.159.128])
-  by fmsmga001.fm.intel.com with ESMTP; 01 Jan 2020 22:09:37 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 01 Jan 2020 22:09:29 -0800
 From:   Yang Weijiang <weijiang.yang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         pbonzini@redhat.com, jmattson@google.com,
         sean.j.christopherson@intel.com
 Cc:     yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
         edwin.zhai@intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [RESEND PATCH v10 10/10] kvm: selftests: selftest for Sub-Page protection
-Date:   Thu,  2 Jan 2020 14:13:19 +0800
-Message-Id: <20200102061319.10077-11-weijiang.yang@intel.com>
+Subject: [RESEND PATCH v10 05/10] x86: spp: Introduce user-space SPP IOCTLs
+Date:   Thu,  2 Jan 2020 14:13:14 +0800
+Message-Id: <20200102061319.10077-6-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20200102061319.10077-1-weijiang.yang@intel.com>
 References: <20200102061319.10077-1-weijiang.yang@intel.com>
@@ -45,292 +45,313 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sub-Page Permission(SPP) is to protect finer granularity subpages
-(128Byte each) within a 4KB page. It's not enabled in KVM by default,
-the test first initializes the SPP runtime environment with
-KVM_ENABLE_CAP ioctl, then sets protection with KVM_SUBPAGES_SET_ACCESS
-for the target guest page, check permissions with KVM_SUBPAGES_GET_ACCESS
-to make sure they are set as expected.
+User application, e.g., QEMU or VMI, must initialize SPP
+before gets/sets SPP subpages, the dynamic initialization is to
+reduce the extra storage cost if the SPP feature is not not used.
 
-Two steps in guest code to very whether SPP is working:
-1) protect all 128byte subpages, write data to each subpage
-to see if SPP induced EPT violation happening. 2)unprotect all
-subpages, again write data to each subpage to see if SPP still
-works or not.
-
+Co-developed-by: He Chen <he.chen@linux.intel.com>
+Signed-off-by: He Chen <he.chen@linux.intel.com>
+Co-developed-by: Zhang Yi <yi.z.zhang@linux.intel.com>
+Signed-off-by: Zhang Yi <yi.z.zhang@linux.intel.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 ---
- tools/testing/selftests/kvm/Makefile          |   2 +-
- tools/testing/selftests/kvm/lib/kvm_util.c    |   1 +
- tools/testing/selftests/kvm/x86_64/spp_test.c | 234 ++++++++++++++++++
- 3 files changed, 236 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/kvm/x86_64/spp_test.c
+ arch/x86/include/asm/kvm_host.h |  4 ++
+ arch/x86/kvm/mmu/spp.c          | 44 +++++++++++++++
+ arch/x86/kvm/mmu/spp.h          |  9 ++++
+ arch/x86/kvm/vmx/vmx.c          | 15 ++++++
+ arch/x86/kvm/x86.c              | 95 ++++++++++++++++++++++++++++++++-
+ include/uapi/linux/kvm.h        |  3 ++
+ 6 files changed, 169 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index 3138a916574a..48582b7d1963 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -29,7 +29,7 @@ TEST_GEN_PROGS_x86_64 += x86_64/xss_msr_test
- TEST_GEN_PROGS_x86_64 += clear_dirty_log_test
- TEST_GEN_PROGS_x86_64 += dirty_log_test
- TEST_GEN_PROGS_x86_64 += kvm_create_max_vcpus
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index f5145b86d620..c7a9f03f39a7 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1238,6 +1238,10 @@ struct kvm_x86_ops {
+ 
+ 	bool (*apic_init_signal_blocked)(struct kvm_vcpu *vcpu);
+ 	int (*enable_direct_tlbflush)(struct kvm_vcpu *vcpu);
++
++	int (*init_spp)(struct kvm *kvm);
++	int (*flush_subpages)(struct kvm *kvm, u64 gfn, u32 npages);
++	int (*get_inst_len)(struct kvm_vcpu *vcpu);
+ };
+ 
+ struct kvm_arch_async_pf {
+diff --git a/arch/x86/kvm/mmu/spp.c b/arch/x86/kvm/mmu/spp.c
+index edab5ec83ef3..6f611e04e817 100644
+--- a/arch/x86/kvm/mmu/spp.c
++++ b/arch/x86/kvm/mmu/spp.c
+@@ -558,3 +558,47 @@ inline u64 construct_spptp(unsigned long root_hpa)
+ }
+ EXPORT_SYMBOL_GPL(construct_spptp);
+ 
++int kvm_vm_ioctl_get_subpages(struct kvm *kvm,
++			      u64 gfn,
++			      u32 npages,
++			      u32 *access_map)
++{
++	int ret;
++
++	mutex_lock(&kvm->slots_lock);
++	ret = kvm_spp_get_permission(kvm, gfn, npages, access_map);
++	mutex_unlock(&kvm->slots_lock);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(kvm_vm_ioctl_get_subpages);
++
++int kvm_vm_ioctl_set_subpages(struct kvm *kvm,
++			      u64 gfn,
++			      u32 npages,
++			      u32 *access_map)
++{
++	int ret;
++
++	if (!kvm_x86_ops->flush_subpages)
++		return -EINVAL;
++
++	spin_lock(&kvm->mmu_lock);
++	ret = kvm_x86_ops->flush_subpages(kvm, gfn, npages);
++	spin_unlock(&kvm->mmu_lock);
++
++	if (ret < 0)
++		return ret;
++
++	mutex_lock(&kvm->slots_lock);
++	spin_lock(&kvm->mmu_lock);
++
++	ret = kvm_spp_set_permission(kvm, gfn, npages, access_map);
++
++	spin_unlock(&kvm->mmu_lock);
++	mutex_unlock(&kvm->slots_lock);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(kvm_vm_ioctl_set_subpages);
++
+diff --git a/arch/x86/kvm/mmu/spp.h b/arch/x86/kvm/mmu/spp.h
+index 99d93fdc74b5..daa69bd274da 100644
+--- a/arch/x86/kvm/mmu/spp.h
++++ b/arch/x86/kvm/mmu/spp.h
+@@ -3,6 +3,7 @@
+ #define __KVM_X86_VMX_SPP_H
+ 
+ #define FULL_SPP_ACCESS		((u32)((1ULL << 32) - 1))
++#define KVM_SUBPAGE_MAX_PAGES   512
+ 
+ int kvm_spp_get_permission(struct kvm *kvm, u64 gfn, u32 npages,
+ 			   u32 *access_map);
+@@ -11,6 +12,14 @@ int kvm_spp_set_permission(struct kvm *kvm, u64 gfn, u32 npages,
+ int kvm_spp_mark_protection(struct kvm *kvm, u64 gfn, u32 access);
+ bool is_spp_spte(struct kvm_mmu_page *sp);
+ u64 construct_spptp(unsigned long root_hpa);
++int kvm_vm_ioctl_get_subpages(struct kvm *kvm,
++			      u64 gfn,
++			      u32 npages,
++			      u32 *access_map);
++int kvm_vm_ioctl_set_subpages(struct kvm *kvm,
++			      u64 gfn,
++			      u32 npages,
++			      u32 *access_map);
+ int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
+ 			    u32 access_map, gfn_t gfn);
+ int vmx_spp_flush_sppt(struct kvm *kvm, u64 gfn_base, u32 npages);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 5713e8a6224c..24e4e1c47f42 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -1424,6 +1424,11 @@ static bool emulation_required(struct kvm_vcpu *vcpu)
+ 	return emulate_invalid_guest_state && !guest_state_valid(vcpu);
+ }
+ 
++static int vmx_get_inst_len(struct kvm_vcpu *vcpu)
++{
++	return vmcs_read32(VM_EXIT_INSTRUCTION_LEN);
++}
++
+ static void vmx_decache_cr0_guest_bits(struct kvm_vcpu *vcpu);
+ 
+ unsigned long vmx_get_rflags(struct kvm_vcpu *vcpu)
+@@ -7705,6 +7710,12 @@ static __init int hardware_setup(void)
+ 		kvm_x86_ops->enable_log_dirty_pt_masked = NULL;
+ 	}
+ 
++	if (!spp_supported) {
++		kvm_x86_ops->flush_subpages = NULL;
++		kvm_x86_ops->init_spp = NULL;
++		kvm_x86_ops->get_inst_len = NULL;
++	}
++
+ 	if (!cpu_has_vmx_preemption_timer())
+ 		enable_preemption_timer = false;
+ 
+@@ -7917,6 +7928,10 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+ 	.nested_get_evmcs_version = NULL,
+ 	.need_emulation_on_page_fault = vmx_need_emulation_on_page_fault,
+ 	.apic_init_signal_blocked = vmx_apic_init_signal_blocked,
++
++	.flush_subpages = vmx_spp_flush_sppt,
++	.init_spp = vmx_spp_init,
++	.get_inst_len = vmx_get_inst_len,
+ };
+ 
+ static void vmx_cleanup_l1d_flush(void)
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index cf917139de6b..fb7da000ceaf 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -26,6 +26,7 @@
+ #include "cpuid.h"
+ #include "pmu.h"
+ #include "hyperv.h"
++#include "mmu/spp.h"
+ 
+ #include <linux/clocksource.h>
+ #include <linux/interrupt.h>
+@@ -3335,6 +3336,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_HYPERV_ENLIGHTENED_VMCS:
+ 		r = kvm_x86_ops->nested_enable_evmcs != NULL;
+ 		break;
++	case KVM_CAP_X86_SPP:
++		r = KVM_SUBPAGE_MAX_PAGES;
++		break;
+ 	default:
+ 		break;
+ 	}
+@@ -4114,7 +4118,6 @@ static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
+ 			return -ENOTTY;
+ 
+ 		return kvm_x86_ops->enable_direct_tlbflush(vcpu);
 -
-+TEST_GEN_PROGS_x86_64 += x86_64/spp_test
- TEST_GEN_PROGS_aarch64 += clear_dirty_log_test
- TEST_GEN_PROGS_aarch64 += dirty_log_test
- TEST_GEN_PROGS_aarch64 += kvm_create_max_vcpus
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index 41cf45416060..bc0a25f4276b 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -1486,6 +1486,7 @@ static struct exit_reason {
- 	{KVM_EXIT_UNKNOWN, "UNKNOWN"},
- 	{KVM_EXIT_EXCEPTION, "EXCEPTION"},
- 	{KVM_EXIT_IO, "IO"},
-+	{KVM_EXIT_SPP, "SPP"},
- 	{KVM_EXIT_HYPERCALL, "HYPERCALL"},
- 	{KVM_EXIT_DEBUG, "DEBUG"},
- 	{KVM_EXIT_HLT, "HLT"},
-diff --git a/tools/testing/selftests/kvm/x86_64/spp_test.c b/tools/testing/selftests/kvm/x86_64/spp_test.c
-new file mode 100644
-index 000000000000..2e83ff60768b
---- /dev/null
-+++ b/tools/testing/selftests/kvm/x86_64/spp_test.c
-@@ -0,0 +1,234 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Sub-Page Permission test
-+ *
-+ * Copyright (C) 2019, Intel Corp.
-+ *
-+ */
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -4830,6 +4833,9 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+ 		kvm->arch.exception_payload_enabled = cap->args[0];
+ 		r = 0;
+ 		break;
++	case KVM_CAP_X86_SPP:
++		r =  kvm_x86_ops->init_spp(kvm);
++		break;
+ 	default:
+ 		r = -EINVAL;
+ 		break;
+@@ -5134,6 +5140,93 @@ long kvm_arch_vm_ioctl(struct file *filp,
+ 	case KVM_SET_PMU_EVENT_FILTER:
+ 		r = kvm_vm_ioctl_set_pmu_event_filter(kvm, argp);
+ 		break;
++	case KVM_SUBPAGES_GET_ACCESS: {
++		struct kvm_subpage spp_info, *pinfo;
++		u32 total;
 +
-+#include <fcntl.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/ioctl.h>
++		r = -ENODEV;
++		if (!kvm->arch.spp_active)
++			goto out;
 +
-+#include "test_util.h"
-+#include "kvm_util.h"
-+#include "processor.h"
-+#include "../../lib/kvm_util_internal.h"
-+#include "linux/kvm.h"
++		r = -EFAULT;
++		if (copy_from_user(&spp_info, argp, sizeof(spp_info)))
++			goto out;
 +
-+#define VCPU_ID           1
-+#define PAGE_SIZE         (4096)
-+#define SPP_GUARD_SIZE    (16 * PAGE_SIZE)
-+#define SPP_GUARD_MEMSLOT (1)
-+#define SPP_GUARD_PAGES   (SPP_GUARD_SIZE / PAGE_SIZE)
-+#define SPP_GUARD_GPA      0x10000000
++		r = -EINVAL;
++		if (spp_info.flags != 0 ||
++		    spp_info.npages > KVM_SUBPAGE_MAX_PAGES)
++			goto out;
++		r = 0;
++		if (!spp_info.npages)
++			goto out;
 +
-+#define SUBPAGE_ACCESS_DEFAULT   (0x0)
-+#define SUBPAGE_ACCESS_FULL      (0xFFFFFFFF)
-+#define START_SPP_VM_ADDR        (0x700000)
-+#define SUBPAGE_SIZE             (128)
++		total = sizeof(spp_info) +
++			sizeof(spp_info.access_map[0]) * spp_info.npages;
++		pinfo = kvzalloc(total, GFP_KERNEL_ACCOUNT);
 +
-+vm_vaddr_t vspp_start;
-+vm_paddr_t pspp_start;
++		r = -ENOMEM;
++		if (!pinfo)
++			goto out;
 +
-+void guest_code(void)
-+{
-+	uint8_t *iterator = (uint8_t *)vspp_start;
-+	int count;
++		r = -EFAULT;
++		if (copy_from_user(pinfo, argp, total))
++			goto out;
 +
-+	GUEST_SYNC(1);
-+	/*
-+	 * expect EPT violation induced by SPP in each interation since
-+	 * the full page is protected by SPP.
-+	 */
-+	for (count = 0; count < PAGE_SIZE / SUBPAGE_SIZE; count++) {
-+		*(uint32_t *)(iterator) = 0x99;
-+		iterator += SUBPAGE_SIZE;
++		r = kvm_vm_ioctl_get_subpages(kvm,
++					      pinfo->gfn_base,
++					      pinfo->npages,
++					      pinfo->access_map);
++		if (r != pinfo->npages)
++			goto out;
++
++		r = -EFAULT;
++		if (copy_to_user(argp, pinfo, total))
++			goto out;
++
++		r = pinfo->npages;
++		kfree(pinfo);
++		break;
 +	}
-+	GUEST_SYNC(2);
-+	iterator = (uint8_t *)vspp_start;
++	case KVM_SUBPAGES_SET_ACCESS: {
++		struct kvm_subpage spp_info, *pinfo;
++		u32 total;
 +
-+	/*
-+	 * don't expect EPT violation happen since SPP is disabled
-+	 * for the page
-+	 */
-+	for (count = 0; count < PAGE_SIZE / SUBPAGE_SIZE; count++) {
-+		*(uint32_t *)(iterator) = 0x99;
-+		iterator += SUBPAGE_SIZE;
++		r = -ENODEV;
++		if (!kvm->arch.spp_active)
++			goto out;
++
++		r = -EFAULT;
++		if (copy_from_user(&spp_info, argp, sizeof(spp_info)))
++			goto out;
++
++		r = -EINVAL;
++		if (spp_info.flags != 0 ||
++		    spp_info.npages > KVM_SUBPAGE_MAX_PAGES)
++			goto out;
++
++		r = 0;
++		if (!spp_info.npages)
++			goto out;
++
++		total = sizeof(spp_info) +
++			sizeof(spp_info.access_map[0]) * spp_info.npages;
++		pinfo = kvzalloc(total, GFP_KERNEL_ACCOUNT);
++
++		r = -ENOMEM;
++		if (!pinfo)
++			goto out;
++
++		r = -EFAULT;
++		if (copy_from_user(pinfo, argp, total))
++			goto out;
++
++		r = kvm_vm_ioctl_set_subpages(kvm,
++					      pinfo->gfn_base,
++					      pinfo->npages,
++					      pinfo->access_map);
++		kfree(pinfo);
++		break;
 +	}
-+}
-+
-+void prepare_test(struct kvm_vm **g_vm, struct kvm_run **g_run)
-+{
-+	void *spp_hva;
-+	struct kvm_vm *vm;
-+	struct kvm_run *run;
-+	/* Create VM, SPP is only valid for 4KB page mode */
-+	*g_vm = vm_create_default(VCPU_ID, 0, guest_code);
-+	vm = *g_vm;
-+
-+	*g_run = vcpu_state(vm, VCPU_ID);
-+	run = *g_run;
-+
-+	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS, SPP_GUARD_GPA,
-+				    SPP_GUARD_MEMSLOT, SPP_GUARD_PAGES, 0);
-+
-+	pspp_start = vm_phy_pages_alloc(vm, 1, SPP_GUARD_GPA,
-+					SPP_GUARD_MEMSLOT);
-+
-+	memset(addr_gpa2hva(vm, SPP_GUARD_GPA), 0x0, PAGE_SIZE);
-+
-+	virt_map(vm, START_SPP_VM_ADDR, SPP_GUARD_GPA, PAGE_SIZE, 0);
-+
-+	vspp_start = vm_vaddr_alloc(vm, PAGE_SIZE, START_SPP_VM_ADDR,
-+				    SPP_GUARD_MEMSLOT, 0);
-+
-+	spp_hva = addr_gva2hva(vm, vspp_start);
-+
-+	pspp_start = addr_hva2gpa(vm, spp_hva);
-+
-+	printf("SPP protected zone: size = %d, gva = 0x%lx, gpa = 0x%lx, "
-+	       "hva = 0x%p\n", PAGE_SIZE, vspp_start, pspp_start, spp_hva);
-+
-+	/* make sure the virtual address is visible to VM. */
-+	sync_global_to_guest(vm, vspp_start);
-+
-+	vcpu_run(vm, VCPU_ID);
-+
-+	TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
-+		    "exit reason: %u (%s),\n", run->exit_reason,
-+		     exit_reason_str(run->exit_reason));
-+}
-+
-+void setup_spp(struct kvm_vm *vm)
-+{
-+	struct kvm_enable_cap cap;
-+	int ret = 0;
-+	struct kvm_subpage *sp;
-+	int len;
-+	memset(&cap, 0, sizeof(cap));
-+	cap.cap = KVM_CAP_X86_SPP;
-+	cap.flags = 0;
-+
-+	/* initialize the SPP runtime environment.*/
-+	ret = ioctl(vm->fd, KVM_ENABLE_CAP, &cap);
-+	TEST_ASSERT(ret == 0, "KVM_CAP_X86_SPP failed.");
-+	len = sizeof(*sp) + sizeof(__u32);
-+	printf("SPP initialized successfully.\n");
-+
-+	sp = malloc(len);
-+	TEST_ASSERT(sp > 0, "Low memory 1!");
-+	memset(sp, 0, len);
-+	/* set up SPP protection for the page. */
-+	sp->npages = 1;
-+	sp->gfn_base = pspp_start >> 12;
-+	sp->access_map[0] = SUBPAGE_ACCESS_DEFAULT;
-+	ret = ioctl(vm->fd, KVM_SUBPAGES_SET_ACCESS, sp);
-+
-+	TEST_ASSERT(ret == 1, "KVM_SUBPAGES_SET_ACCESS failed. ret = 0x%x, "
-+		    "gfn_base = 0x%llx\n", ret, sp->gfn_base);
-+	printf("set spp protection info: gfn = 0x%llx, access = 0x%x, "
-+	       "npages = %d\n", sp->gfn_base, sp->access_map[0],
-+	       sp->npages);
-+
-+	memset(sp, 0, len);
-+	/* make sure the SPP permission bits are actully set as expected. */
-+	sp->npages = 1;
-+	sp->gfn_base = pspp_start >> 12;
-+
-+	ret = ioctl(vm->fd, KVM_SUBPAGES_GET_ACCESS, sp);
-+
-+	TEST_ASSERT(ret == 1, "KVM_SUBPAGES_GET_ACCESS failed.");
-+
-+	TEST_ASSERT(sp->access_map[0] == SUBPAGE_ACCESS_DEFAULT,
-+		    "subpage access didn't match.");
-+	printf("get spp protection info: gfn = 0x%llx, access = 0x%x, "
-+	       "npages = %d\n", sp->gfn_base,
-+	       sp->access_map[0], sp->npages);
-+
-+	free(sp);
-+	printf("got matched subpage permission vector.\n");
-+	printf("expect VM exits caused by SPP below.\n");
-+}
-+
-+void unset_spp(struct kvm_vm *vm)
-+{
-+	struct kvm_subpage *sp;
-+	int len;
-+
-+	len = sizeof(*sp) + sizeof(__u32);
-+	sp = malloc(len);
-+	TEST_ASSERT(sp > 0, "Low memory 2!");
-+	memset(sp, 0, len);
-+
-+	/* now unprotect the SPP to the page.*/
-+	sp->npages = 1;
-+	sp->gfn_base = pspp_start >> 12;
-+	sp->access_map[0] = SUBPAGE_ACCESS_FULL;
-+	ioctl(vm->fd, KVM_SUBPAGES_SET_ACCESS, sp);
-+
-+	printf("unset SPP protection at gfn: 0x%llx\n", sp->gfn_base);
-+	printf("expect NO VM exits caused by SPP below.\n");
-+	free(sp);
-+}
-+
-+#define TEST_SYNC_FIELDS   KVM_SYNC_X86_REGS
-+
-+void run_test(struct kvm_vm *vm, struct kvm_run *run)
-+{
-+	int loop;
-+	int ept_fault = 0;
-+	struct kvm_regs regs;
-+
-+	run->kvm_valid_regs = TEST_SYNC_FIELDS;
-+	vcpu_run(vm, VCPU_ID);
-+
-+	for (loop = 0; loop < PAGE_SIZE / SUBPAGE_SIZE; loop++) {
-+		/*
-+		 * if everything goes correctly, should get VM exit
-+		 * with KVM_EXIT_SPP.
-+		 */
-+		TEST_ASSERT(run->exit_reason == KVM_EXIT_SPP,
-+			    "exit reason: %u (%s),\n", run->exit_reason,
-+			    exit_reason_str(run->exit_reason));
-+		printf("%d - exit reason: %s\n", loop + 1,
-+		       exit_reason_str(run->exit_reason));
-+		ept_fault++;
-+
-+		vcpu_regs_get(vm, VCPU_ID, &regs);
-+
-+		run->s.regs.regs.rip += run->spp.ins_len;
-+
-+		run->kvm_valid_regs = TEST_SYNC_FIELDS;
-+		run->kvm_dirty_regs = KVM_SYNC_X86_REGS;
-+
-+		vcpu_run(vm, VCPU_ID);
-+	}
-+
-+	printf("total EPT violation count: %d\n", ept_fault);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	struct kvm_vm *vm;
-+	struct kvm_run *run;
-+
-+	prepare_test(&vm, &run);
-+
-+	setup_spp(vm);
-+
-+	run_test(vm, run);
-+
-+	unset_spp(vm);
-+
-+	vcpu_run(vm, VCPU_ID);
-+
-+	printf("completed SPP test successfully!\n");
-+
-+	kvm_vm_free(vm);
-+
-+	return 0;
-+}
-+
+ 	default:
+ 		r = -ENOTTY;
+ 	}
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index eabd55ec5af7..09e5e8e6e6dd 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -1017,6 +1017,7 @@ struct kvm_ppc_resize_hpt {
+ #define KVM_CAP_PPC_GUEST_DEBUG_SSTEP 176
+ #define KVM_CAP_ARM_NISV_TO_USER 177
+ #define KVM_CAP_ARM_INJECT_EXT_DABT 178
++#define KVM_CAP_X86_SPP 179
+ 
+ #ifdef KVM_CAP_IRQ_ROUTING
+ 
+@@ -1272,6 +1273,8 @@ struct kvm_vfio_spapr_tce {
+ 					struct kvm_userspace_memory_region)
+ #define KVM_SET_TSS_ADDR          _IO(KVMIO,   0x47)
+ #define KVM_SET_IDENTITY_MAP_ADDR _IOW(KVMIO,  0x48, __u64)
++#define KVM_SUBPAGES_GET_ACCESS   _IOR(KVMIO,  0x49, __u64)
++#define KVM_SUBPAGES_SET_ACCESS   _IOW(KVMIO,  0x4a, __u64)
+ 
+ /* enable ucontrol for s390 */
+ struct kvm_s390_ucas_mapping {
 -- 
 2.17.2
 
