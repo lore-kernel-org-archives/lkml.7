@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 348EFC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1C4C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0732424125
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2A6921835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:32:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004366;
-	bh=/FHneNA4i9iipEhgAhI0j0g4oc0/aQlPjgzZ0y7QJTc=;
+	s=default; t=1578004369;
+	bh=FfchGuimbTQU3HAsMiYwQJjdzpWMrqD+SzjysSfU/ik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EIVHS4DwNNZPolvk5oqg/yz990fnGBLC5EJ/9Til5hD4ilxk6AT7bG/LWFNXXKtC/
-	 qGnkOx7xbJvciR7tCh29VwPv39mrRYLTI2CaFx7rIjo66dGA814KFGJeAR7GHgKS12
-	 u5a2JgcnG1TDkEukV6fEJWVLOIGMKcqAgD1BHQCU=
+	b=YOeWs5soIMYa78Vak8+9zTxXV0Jqn2W8x8JlR7rwgd9GZVqpwgxcBOYbFJYPWfABQ
+	 PR4flimxFL7ZaiUtitMhFiiVr3HZC7vrD08310N2YDiFc4MuZRwZ238jb/j33g0CSx
+	 Y7DABh5jZDolrCsT7M6DgvTDQHx9hFRvtrhooM1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730318AbgABWcp (ORCPT
+        id S1730453AbgABWcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:32:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39230 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:32:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728328AbgABWcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:32:39 -0500
+        id S1730428AbgABWce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:32:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3D1622525;
-        Thu,  2 Jan 2020 22:32:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1173D222C3;
+        Thu,  2 Jan 2020 22:32:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004359;
-        bh=/FHneNA4i9iipEhgAhI0j0g4oc0/aQlPjgzZ0y7QJTc=;
+        s=default; t=1578004354;
+        bh=FfchGuimbTQU3HAsMiYwQJjdzpWMrqD+SzjysSfU/ik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jhC0nFWRIDMaEZiGaiJVtLNlgJrTvHwRLTHno+rJB95F/sNx3KKwhhcV/C2L3Q+2/
-         7jJVQhHzHuJtwAuphm38omtoXk1aWEznnCDAWEDJYjcBmrW9Epr+mKW7v3BAKB+XTp
-         Qs30XSDSDnj1YbOkuNyUD8BTbwz0FQPt163CMQIQ=
+        b=a7fV4jm0JnV8yEIf16O8qw0FznwCSSSXSgYCMt9K7DNGFYVMPnGxhJ0pCun12pbBH
+         19DQB1sspEeuj/JkCYQFWVC2ner84xyVSAJ0rUDWgOeQZX7WDabvUZyLN1y931f1c7
+         9d2JedQZrKjm2M3xIqYcOU1mk03xVa/hcE4jAglk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 145/171] scripts/kallsyms: fix definitely-lost memory leak
-Date:   Thu,  2 Jan 2020 23:07:56 +0100
-Message-Id: <20200102220607.267405821@linuxfoundation.org>
+Subject: [PATCH 4.9 126/171] scsi: lpfc: Fix duplicate unreg_rpi error in port offline flow
+Date:   Thu,  2 Jan 2020 23:07:37 +0100
+Message-Id: <20200102220604.545631189@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -60,46 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 21915eca088dc271c970e8351290e83d938114ac ]
+[ Upstream commit 7cfd5639d99bec0d27af089d0c8c114330e43a72 ]
 
-build_initial_tok_table() overwrites unused sym_entry to shrink the
-table size. Before the entry is overwritten, table[i].sym must be freed
-since it is malloc'ed data.
+If the driver receives a login that is later then LOGO'd by the remote port
+(aka ndlp), the driver, upon the completion of the LOGO ACC transmission,
+will logout the node and unregister the rpi that is being used for the
+node.  As part of the unreg, the node's rpi value is replaced by the
+LPFC_RPI_ALLOC_ERROR value.  If the port is subsequently offlined, the
+offline walks the nodes and ensures they are logged out, which possibly
+entails unreg'ing their rpi values.  This path does not validate the node's
+rpi value, thus doesn't detect that it has been unreg'd already.  The
+replaced rpi value is then used when accessing the rpi bitmask array which
+tracks active rpi values.  As the LPFC_RPI_ALLOC_ERROR value is not a valid
+index for the bitmask, it may fault the system.
 
-This fixes the 'definitely lost' report from valgrind. I ran valgrind
-against x86_64_defconfig of v5.4-rc8 kernel, and here is the summary:
+Revise the rpi release code to detect when the rpi value is the replaced
+RPI_ALLOC_ERROR value and ignore further release steps.
 
-[Before the fix]
-
-  LEAK SUMMARY:
-     definitely lost: 53,184 bytes in 2,874 blocks
-
-[After the fix]
-
-  LEAK SUMMARY:
-     definitely lost: 0 bytes in 0 blocks
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Link: https://lore.kernel.org/r/20191105005708.7399-2-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kallsyms.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/lpfc/lpfc_sli.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-index 2c8b8c662da5..6402b0d36291 100644
---- a/scripts/kallsyms.c
-+++ b/scripts/kallsyms.c
-@@ -498,6 +498,8 @@ static void build_initial_tok_table(void)
- 				table[pos] = table[i];
- 			learn_symbol(table[pos].sym, table[pos].len);
- 			pos++;
-+		} else {
-+			free(table[i].sym);
- 		}
- 	}
- 	table_cnt = pos;
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index 1eb9d5f6cea0..cbe808e83f47 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -15995,6 +15995,13 @@ lpfc_sli4_alloc_rpi(struct lpfc_hba *phba)
+ static void
+ __lpfc_sli4_free_rpi(struct lpfc_hba *phba, int rpi)
+ {
++	/*
++	 * if the rpi value indicates a prior unreg has already
++	 * been done, skip the unreg.
++	 */
++	if (rpi == LPFC_RPI_ALLOC_ERROR)
++		return;
++
+ 	if (test_and_clear_bit(rpi, phba->sli4_hba.rpi_bmask)) {
+ 		phba->sli4_hba.rpi_count--;
+ 		phba->sli4_hba.max_cfg_param.rpi_used--;
 -- 
 2.20.1
 
