@@ -2,58 +2,56 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF09C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 801F7C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB73621D7D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5509A21D7D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:11:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003075;
-	bh=g0rgOA3HoY9PhWlM0zSqCVb2bgoYbxFetloP04hzmgw=;
+	s=default; t=1578003079;
+	bh=5vUWgrj5vLEdHZ9jl28RNg9+DpDqTfRnl9ZrpIKoLBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w8+jiXSozEk8vsTmHsJWRUY9uSdYdGNyt0XwMREA+K2H3NMc87lWLlD4SvqtdsIVN
-	 vSekqaDqR49z5e4Ki/IoFZ5CqzJb1nJreWQS3+affHAYn8i3IMNNCXlwmfxBvy7tg2
-	 xFIJCOVnDyTLLKV+M6Xzz297QTknBuZy1RF65zRg=
+	b=iliAB8vdaRvXFkEU0UelTI4kDerCvJIlO9r0Vd/7FFo2gDZDpP9NUw0g3jX12MDnR
+	 m8+d7KQrn9ZVIAyahmitQGepHfYTMhGPJIookIkZqVrzGQK54YL3d8Zw7wZu5iSAjf
+	 wfrUrcqUX3MtNQnkBP1C360Dx8lZAkxH0mHCqSCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726052AbgABWLP (ORCPT
+        id S1726146AbgABWLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:11:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49100 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:11:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbgABWLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:11:14 -0500
+        id S1725872AbgABWLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:11:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B6A021582;
-        Thu,  2 Jan 2020 22:11:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA90621835;
+        Thu,  2 Jan 2020 22:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003073;
-        bh=g0rgOA3HoY9PhWlM0zSqCVb2bgoYbxFetloP04hzmgw=;
+        s=default; t=1578003076;
+        bh=5vUWgrj5vLEdHZ9jl28RNg9+DpDqTfRnl9ZrpIKoLBU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EVltsG54/iWOV/H/4M7tqaTXsNZFlt4U0R4gtjGZy4Za1rOuhJ2+cCg4/23xrpkmV
-         8Uzg3bFSA8yNfxLnuFZgdzDYF2oqCmatrLuS5UBn/N3WwV4F6G4RwzR34BAECyE1/Z
-         9wVM3i2fliyN+UUYytsP2QbDkLYti4sq01iMKQHc=
+        b=vpDPA8/7f8PcqRQlE+yZCpXvsl8UyruFoXvZbvr+Dmr/EykD8bUbhJkZxvAh/FJtH
+         /f0oFn91Q7c+60EE/KmfcAFf7w5dgZ+CBBo1QavEX+6ygoMmaJxNCO+7bH1Iaj5FuO
+         Fl0MojUROxe2w2hpuzqf+lOqxgqhUqbLdV18RxB0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Paul Burton <paul.burton@mips.com>,
+        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 001/191] Revert "MIPS: futex: Restore \n after sync instructions"
-Date:   Thu,  2 Jan 2020 23:04:43 +0100
-Message-Id: <20200102215830.043513213@linuxfoundation.org>
+Subject: [PATCH 5.4 010/191] Input: atmel_mxt_ts - disable IRQ across suspend
+Date:   Thu,  2 Jan 2020 23:04:52 +0100
+Message-Id: <20200102215830.854609108@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,50 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Evan Green <evgreen@chromium.org>
 
-This reverts commit dc9d0a75ce9af74612d6a4d052e4df2bddfe8ed4 which is
-commit fd7710cb491f900eb63d2ce5aac0e682003e84e9 upstream.
+[ Upstream commit 463fa44eec2fef50d111ed0199cf593235065c04 ]
 
-This, and the follow-on patch, breaks the mips build so it needs to be
-reverted.
+Across suspend and resume, we are seeing error messages like the following:
 
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+atmel_mxt_ts i2c-PRP0001:00: __mxt_read_reg: i2c transfer failed (-121)
+atmel_mxt_ts i2c-PRP0001:00: Failed to read T44 and T5 (-121)
+
+This occurs because the driver leaves its IRQ enabled. Upon resume, there
+is an IRQ pending, but the interrupt is serviced before both the driver and
+the underlying I2C bus have been resumed. This causes EREMOTEIO errors.
+
+Disable the IRQ in suspend, and re-enable it on resume. If there are cases
+where the driver enters suspend with interrupts disabled, that's a bug we
+should fix separately.
+
+Signed-off-by: Evan Green <evgreen@chromium.org>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/futex.h |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/mips/include/asm/futex.h
-+++ b/arch/mips/include/asm/futex.h
-@@ -33,7 +33,7 @@
- 		"	.set	arch=r4000			\n"	\
- 		"2:	sc	$1, %2				\n"	\
- 		"	beqzl	$1, 1b				\n"	\
--		__stringify(__WEAK_LLSC_MB) "			\n"	\
-+		__stringify(__WEAK_LLSC_MB)				\
- 		"3:						\n"	\
- 		"	.insn					\n"	\
- 		"	.set	pop				\n"	\
-@@ -63,7 +63,7 @@
- 		"	.set	"MIPS_ISA_ARCH_LEVEL"		\n"	\
- 		"2:	"user_sc("$1", "%2")"			\n"	\
- 		"	beqz	$1, 1b				\n"	\
--		__stringify(__WEAK_LLSC_MB) "			\n"	\
-+		__stringify(__WEAK_LLSC_MB)				\
- 		"3:						\n"	\
- 		"	.insn					\n"	\
- 		"	.set	pop				\n"	\
-@@ -148,7 +148,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval,
- 		"	.set	arch=r4000				\n"
- 		"2:	sc	$1, %2					\n"
- 		"	beqzl	$1, 1b					\n"
--		__stringify(__WEAK_LLSC_MB) "				\n"
-+		__stringify(__WEAK_LLSC_MB)
- 		"3:							\n"
- 		"	.insn						\n"
- 		"	.set	pop					\n"
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index 24c4b691b1c9..ae60442efda0 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -3156,6 +3156,8 @@ static int __maybe_unused mxt_suspend(struct device *dev)
+ 
+ 	mutex_unlock(&input_dev->mutex);
+ 
++	disable_irq(data->irq);
++
+ 	return 0;
+ }
+ 
+@@ -3168,6 +3170,8 @@ static int __maybe_unused mxt_resume(struct device *dev)
+ 	if (!input_dev)
+ 		return 0;
+ 
++	enable_irq(data->irq);
++
+ 	mutex_lock(&input_dev->mutex);
+ 
+ 	if (input_dev->users)
+-- 
+2.20.1
+
 
 
