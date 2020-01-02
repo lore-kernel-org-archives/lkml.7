@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB18C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E5FC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94E2D217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 890962465A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005105;
-	bh=iHda5XgKGbk3pId6NVo3JQZl350sef0Tb2WL7hX3Jk4=;
+	s=default; t=1578005108;
+	bh=+zrt2PfYOEuMTQxgmUYYfno+qL18+KOj8WYPPz4YJmk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JrreOnK1LxVKLhxNvUm+MoScdt5zoTsSfPsOVmKzWfYtPUDSpvystztzoEoraXESP
-	 UpuYy8qmrZO8A/P/pk+7aBNWidPmwsEyzydGnCpQy4mwEGJwZQbK3tX03/UZNa1eYg
-	 j9SaOFqqfSObJwVU0RGTrB7K4w/7QV9LSVEcXGCA=
+	b=0RwLHW7hvxlnJke41EM3efmz9YM7oB55K5kQgdM2HJzx2LruTjcQo0VZEshgYOc8Q
+	 NjDImL1bzME/1rNg5mXOO6dQLU70vdmaITS/jvhTex4DAw9WYiocHHwJBwLHR/7VNr
+	 wlHYN8ebT7X2023gzAgCGZK1wPfK1wS94Gn5C4rA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730117AbgABWcb (ORCPT
+        id S1730851AbgABWpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:32:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38618 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:45:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730162AbgABWcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:32:23 -0500
+        id S1730417AbgABWc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:32:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E650C20866;
-        Thu,  2 Jan 2020 22:32:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BADEC20866;
+        Thu,  2 Jan 2020 22:32:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004342;
-        bh=iHda5XgKGbk3pId6NVo3JQZl350sef0Tb2WL7hX3Jk4=;
+        s=default; t=1578004347;
+        bh=+zrt2PfYOEuMTQxgmUYYfno+qL18+KOj8WYPPz4YJmk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q9Gv/LaPWb3slG258LKYhFUfK6sTx8VxwBGc21WaDALSE+QuIXbk/BPYAnbZxuHx4
-         jiJ0iM8biU0U+KE/Et1fMjIUOau3soP8tNtNv1VxmjOD1M0XEk5JaE4LZzyCi66jzt
-         J4Y3IDFSzHWMSQ77WZviRzAv6NqDLMtRPcis6uL0=
+        b=oblRzrpGsWHg6YakEeLYyAkQoSEK7yppO9DlPvQoOqajs02M19bDvaxTa8hzGkq1u
+         BsppBwi7WNOpn9SjXVP2utJjA1w9JmfYGZdGNT3TBvGqUQZCzPf5DaHyFDtFh7C+8R
+         Zqm1ArXsFNYh3OvCk80Fi0H4qpnjvOt6hcPvyYTk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        stable@vger.kernel.org, Jack Wang <jinpu.wang@cloud.ionos.com>,
+        peter chang <dpf@google.com>,
+        Deepak Ukey <deepak.ukey@microchip.com>,
+        Viswas G <Viswas.G@microchip.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 139/171] HID: Improve Windows Precision Touchpad detection.
-Date:   Thu,  2 Jan 2020 23:07:50 +0100
-Message-Id: <20200102220606.386475352@linuxfoundation.org>
+Subject: [PATCH 4.9 141/171] scsi: pm80xx: Fix for SATA device discovery
+Date:   Thu,  2 Jan 2020 23:07:52 +0100
+Message-Id: <20200102220606.740133097@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -61,63 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Blaž Hrastnik <blaz@mxxn.io>
+From: peter chang <dpf@google.com>
 
-[ Upstream commit 2dbc6f113acd74c66b04bf49fb027efd830b1c5a ]
+[ Upstream commit ce21c63ee995b7a8b7b81245f2cee521f8c3c220 ]
 
-Per Microsoft spec, usage 0xC5 (page 0xFF) returns a blob containing
-data used to verify the touchpad as a Windows Precision Touchpad.
+Driver was missing complete() call in mpi_sata_completion which result in
+SATA abort error handling timing out. That causes the device to be left in
+the in_recovery state so subsequent commands sent to the device fail and
+the OS removes access to it.
 
-   0x85, REPORTID_PTPHQA,    //    REPORT_ID (PTPHQA)
-    0x09, 0xC5,              //    USAGE (Vendor Usage 0xC5)
-    0x15, 0x00,              //    LOGICAL_MINIMUM (0)
-    0x26, 0xff, 0x00,        //    LOGICAL_MAXIMUM (0xff)
-    0x75, 0x08,              //    REPORT_SIZE (8)
-    0x96, 0x00, 0x01,        //    REPORT_COUNT (0x100 (256))
-    0xb1, 0x02,              //    FEATURE (Data,Var,Abs)
-
-However, some devices, namely Microsoft's Surface line of products
-instead implement a "segmented device certification report" (usage 0xC6)
-which returns the same report, but in smaller chunks.
-
-    0x06, 0x00, 0xff,        //     USAGE_PAGE (Vendor Defined)
-    0x85, REPORTID_PTPHQA,   //     REPORT_ID (PTPHQA)
-    0x09, 0xC6,              //     USAGE (Vendor usage for segment #)
-    0x25, 0x08,              //     LOGICAL_MAXIMUM (8)
-    0x75, 0x08,              //     REPORT_SIZE (8)
-    0x95, 0x01,              //     REPORT_COUNT (1)
-    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
-    0x09, 0xC7,              //     USAGE (Vendor Usage)
-    0x26, 0xff, 0x00,        //     LOGICAL_MAXIMUM (0xff)
-    0x95, 0x20,              //     REPORT_COUNT (32)
-    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
-
-By expanding Win8 touchpad detection to also look for the segmented
-report, all Surface touchpads are now properly recognized by
-hid-multitouch.
-
-Signed-off-by: Blaž Hrastnik <blaz@mxxn.io>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Link: https://lore.kernel.org/r/20191114100910.6153-2-deepak.ukey@microchip.com
+Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+Signed-off-by: peter chang <dpf@google.com>
+Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
+Signed-off-by: Viswas G <Viswas.G@microchip.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/scsi/pm8001/pm80xx_hwi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index 42d1b350afd2..c89eb3c3965c 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -761,6 +761,10 @@ static void hid_scan_feature_usage(struct hid_parser *parser, u32 usage)
- 	if (usage == 0xff0000c5 && parser->global.report_count == 256 &&
- 	    parser->global.report_size == 8)
- 		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
-+
-+	if (usage == 0xff0000c6 && parser->global.report_count == 1 &&
-+	    parser->global.report_size == 8)
-+		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
- }
- 
- static void hid_scan_collection(struct hid_parser *parser, unsigned type)
+diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
+index 9edd61c063a1..df5f0bc29587 100644
+--- a/drivers/scsi/pm8001/pm80xx_hwi.c
++++ b/drivers/scsi/pm8001/pm80xx_hwi.c
+@@ -2368,6 +2368,8 @@ mpi_sata_completion(struct pm8001_hba_info *pm8001_ha, void *piomb)
+ 			pm8001_printk("task 0x%p done with io_status 0x%x"
+ 			" resp 0x%x stat 0x%x but aborted by upper layer!\n",
+ 			t, status, ts->resp, ts->stat));
++		if (t->slow_task)
++			complete(&t->slow_task->completion);
+ 		pm8001_ccb_task_free(pm8001_ha, t, ccb, tag);
+ 	} else {
+ 		spin_unlock_irqrestore(&t->task_state_lock, flags);
 -- 
 2.20.1
 
