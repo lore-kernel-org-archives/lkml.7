@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E87DC3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C26C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA4C20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8905020848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005782;
-	bh=JWb2HTxKjwt7c+2VWSuV6dZw+rY7dUeS0VEpkgAQJ6A=;
+	s=default; t=1578005784;
+	bh=LSdjDLvKNHfNxie0XJXACoE9tDOscECLo/lBTlcOcjU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u6O2RN+zmvMiwSkt2rwsAhPJgQh5jHAc2M9/297dubTxNyGrNd6YTngsrQMHiuh75
-	 qTi/oJy1Of2c29tpGanMI5r+WjIdeKbGmV1QxgLVkKas7o+F2gyxNs+0KPcZkAZbbd
-	 c5u0T/9375Pz5LB/gscA3QUeX9uF4fkXQngvebFY=
+	b=ik4QUIsvs7UYPKe1j7ynRsXoxEthb1gjG8EVqXLjSxey7VUYZdu3QGB/XYli14VFf
+	 SpGBRO1rx5NANoUXoLnJIe+5t7FSpcrWrTVtx1smU1eJYf+53A/FNsXmmW2f+BKONy
+	 kc+5FfAJAyNrBtySOBMV+ELSU2rdIXXPk7sbzXRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbgABWSZ (ORCPT
+        id S1728421AbgABWSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:18:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33356 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:18:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728069AbgABWSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:18:16 -0500
+        id S1727677AbgABWSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:18:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F171A21582;
-        Thu,  2 Jan 2020 22:18:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88B9721582;
+        Thu,  2 Jan 2020 22:18:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003495;
-        bh=JWb2HTxKjwt7c+2VWSuV6dZw+rY7dUeS0VEpkgAQJ6A=;
+        s=default; t=1578003493;
+        bh=LSdjDLvKNHfNxie0XJXACoE9tDOscECLo/lBTlcOcjU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u4vAqq6TJnYgbwpqVfSQpaEK1t5nLpaaaycQ7EbJEkOHXtyWwEpojt6Oxd37foV9J
-         7My6iR8W1PzTdAE99fBAT1rf31SprZlxEY0gcc7uNQ3rPY0mALUlqXMNcHZfr5YOeE
-         yB9jHw9wevkqTyXND0vR9xgVw4io/orHeLKlQnhA=
+        b=Vy2G5yRwoLcO/4pgw0wdTzqEHAfPXfnlXRtW4Oq0GRnBpDgYqJ+lLQM4VQQlpa+Oo
+         /YmAO8BdgfSus3SytlQOX2fM5btcEP1Ndi79EJEn0BpJkAw4KaQD8LUK3TA++7DnxF
+         b1IgwwPwTRuktDYyo0XjPSi7eC+XC/POhjKmjOTE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Michael Chan <michael.chan@broadcom.com>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 5.4 185/191] bnxt: apply computed clamp value for coalece parameter
-Date:   Thu,  2 Jan 2020 23:07:47 +0100
-Message-Id: <20200102215849.345722090@linuxfoundation.org>
+Subject: [PATCH 5.4 184/191] gtp: do not allow adding duplicate tid and ms_addr pdp context
+Date:   Thu,  2 Jan 2020 23:07:46 +0100
+Message-Id: <20200102215849.150307012@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -60,36 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Lemon <jonathan.lemon@gmail.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 6adc4601c2a1ac87b4ab8ed0cb55db6efd0264e8 ]
+[ Upstream commit 6b01b1d9b2d38dc84ac398bfe9f00baff06a31e5 ]
 
-After executing "ethtool -C eth0 rx-usecs-irq 0", the box becomes
-unresponsive, likely due to interrupt livelock.  It appears that
-a minimum clamp value for the irq timer is computed, but is never
-applied.
+GTP RX packet path lookups pdp context with TID. If duplicate TID pdp
+contexts are existing in the list, it couldn't select correct pdp context.
+So, TID value  should be unique.
+GTP TX packet path lookups pdp context with ms_addr. If duplicate ms_addr pdp
+contexts are existing in the list, it couldn't select correct pdp context.
+So, ms_addr value should be unique.
 
-Fix by applying the corrected clamp value.
-
-Fixes: 74706afa712d ("bnxt_en: Update interrupt coalescing logic.")
-Signed-off-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/gtp.c |   32 ++++++++++++++++++++++----------
+ 1 file changed, 22 insertions(+), 10 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -6178,7 +6178,7 @@ static void bnxt_hwrm_set_coal_params(st
- 		tmr = bnxt_usec_to_coal_tmr(bp, hw_coal->coal_ticks_irq);
- 		val = clamp_t(u16, tmr, 1,
- 			      coal_cap->cmpl_aggr_dma_tmr_during_int_max);
--		req->cmpl_aggr_dma_tmr_during_int = cpu_to_le16(tmr);
-+		req->cmpl_aggr_dma_tmr_during_int = cpu_to_le16(val);
- 		req->enables |=
- 			cpu_to_le16(BNXT_COAL_CMPL_AGGR_TMR_DURING_INT_ENABLE);
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -928,24 +928,31 @@ static void ipv4_pdp_fill(struct pdp_ctx
  	}
+ }
+ 
+-static int ipv4_pdp_add(struct gtp_dev *gtp, struct sock *sk,
+-			struct genl_info *info)
++static int gtp_pdp_add(struct gtp_dev *gtp, struct sock *sk,
++		       struct genl_info *info)
+ {
++	struct pdp_ctx *pctx, *pctx_tid = NULL;
+ 	struct net_device *dev = gtp->dev;
+ 	u32 hash_ms, hash_tid = 0;
+-	struct pdp_ctx *pctx;
++	unsigned int version;
+ 	bool found = false;
+ 	__be32 ms_addr;
+ 
+ 	ms_addr = nla_get_be32(info->attrs[GTPA_MS_ADDRESS]);
+ 	hash_ms = ipv4_hashfn(ms_addr) % gtp->hash_size;
++	version = nla_get_u32(info->attrs[GTPA_VERSION]);
+ 
+-	hlist_for_each_entry_rcu(pctx, &gtp->addr_hash[hash_ms], hlist_addr) {
+-		if (pctx->ms_addr_ip4.s_addr == ms_addr) {
+-			found = true;
+-			break;
+-		}
+-	}
++	pctx = ipv4_pdp_find(gtp, ms_addr);
++	if (pctx)
++		found = true;
++	if (version == GTP_V0)
++		pctx_tid = gtp0_pdp_find(gtp,
++					 nla_get_u64(info->attrs[GTPA_TID]));
++	else if (version == GTP_V1)
++		pctx_tid = gtp1_pdp_find(gtp,
++					 nla_get_u32(info->attrs[GTPA_I_TEI]));
++	if (pctx_tid)
++		found = true;
+ 
+ 	if (found) {
+ 		if (info->nlhdr->nlmsg_flags & NLM_F_EXCL)
+@@ -953,6 +960,11 @@ static int ipv4_pdp_add(struct gtp_dev *
+ 		if (info->nlhdr->nlmsg_flags & NLM_F_REPLACE)
+ 			return -EOPNOTSUPP;
+ 
++		if (pctx && pctx_tid)
++			return -EEXIST;
++		if (!pctx)
++			pctx = pctx_tid;
++
+ 		ipv4_pdp_fill(pctx, info);
+ 
+ 		if (pctx->gtp_version == GTP_V0)
+@@ -1076,7 +1088,7 @@ static int gtp_genl_new_pdp(struct sk_bu
+ 		goto out_unlock;
+ 	}
+ 
+-	err = ipv4_pdp_add(gtp, sk, info);
++	err = gtp_pdp_add(gtp, sk, info);
+ 
+ out_unlock:
+ 	rcu_read_unlock();
 
 
