@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE0FC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9305CC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3732465A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62C4320848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578006077;
-	bh=fTwjluxhBBmv3GW4XjlrlfB97qurdemDcrxQbQXNCUk=;
+	s=default; t=1578006091;
+	bh=nEmCH8FIOJvwpG1CKDyvod+lwXCSTiUJilMAN/cIPWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LBxNOrBxcI34A5WxhpxB4S4D5GmHHbe5g0qN/XK48L9jq3KYpAaCqJ6dNj2tx51ul
-	 irwdXX/6GSC2o5mnSEkTGge5L1LtPaM+g+P8xhrKrSEDyoVxg5DRFFAUkeSQ5WxNK/
-	 vyk/E7uEOuktJkw3UwiRAAZmyq9SAUYLDQRrFa7M=
+	b=adtUQaMJ18I/FC4ga6l59VfiUhXHiQncmFAVMjWjFqct5Qvi1doP0YXm80g9L2C4i
+	 z1cgah8UEgNqQGpHAtHHnQV8mLfV5+GH7lccylXb0cV6Dkl+jRVLQ++/SKUMtsTIuZ
+	 D73sRKpR4tMdVkVtV/sztMAxY+sDatwFKa0XggAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbgABWLp (ORCPT
+        id S1726260AbgABWLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:11:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50012 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:11:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727189AbgABWLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:11:38 -0500
+        id S1725872AbgABWLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:11:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57875222C3;
-        Thu,  2 Jan 2020 22:11:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3768D21835;
+        Thu,  2 Jan 2020 22:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003097;
-        bh=fTwjluxhBBmv3GW4XjlrlfB97qurdemDcrxQbQXNCUk=;
+        s=default; t=1578003078;
+        bh=nEmCH8FIOJvwpG1CKDyvod+lwXCSTiUJilMAN/cIPWU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cEkb+DV+XfksJIZ0wZD8Lc5923gw62S+uHd4A+HiNpZhzp04x7RFAQ6e3QUi4+Gbf
-         TnTtoh8ps4/VEem7UjurtJbco6O2dkxT9EzX7sqc8UaS+nB1Htd3+LwLHCiaZXAgzm
-         3mSlxLVbcSpm5V+xee12mKbWlJxoWWrPn9o45gVk=
+        b=ElmgKwIADB5ScfEw8ZoMLWAFdek1rSdTZ685hXg0Tl0dI73AEbayEJ352Ay+PQbDJ
+         XeSzuyG8VaF/vK5J5/EvgYGqVbFKdZEaQKTP2e9dzNhJR7omELSTjnHU8ohVOGiZCP
+         Am2O5p4OzCBd79odJeSoRvO+s135ReCMa3VX/t+M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhangguanghui <zhang.guanghui@h3c.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 019/191] scsi: lpfc: Fix hardlockup in lpfc_abort_handler
-Date:   Thu,  2 Jan 2020 23:05:01 +0100
-Message-Id: <20200102215831.933817549@linuxfoundation.org>
+Subject: [PATCH 5.4 011/191] f2fs: fix to update time in lazytime mode
+Date:   Thu,  2 Jan 2020 23:04:53 +0100
+Message-Id: <20200102215830.944028838@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -62,56 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 91a52b617cdb8bf6d298892101c061d438b84a19 ]
+[ Upstream commit fe1897eaa6646f5a64a4cee0e6473ed9887d324b ]
 
-In lpfc_abort_handler, the lock acquire order is hbalock (irqsave),
-buf_lock (irq) and ring_lock (irq).  The issue is that in two places the
-locks are released out of order - the buf_lock and the hbalock - resulting
-in the cpu preemption/lock flags getting restored out of order and
-deadlocking the cpu.
+generic/018 reports an inconsistent status of atime, the
+testcase is as below:
+- open file with O_SYNC
+- write file to construct fraged space
+- calc md5 of file
+- record {a,c,m}time
+- defrag file --- do nothing
+- umount & mount
+- check {a,c,m}time
 
-Fix the unlock order by fully releasing the hbalocks as well.
+The root cause is, as f2fs enables lazytime by default, atime
+update will dirty vfs inode, rather than dirtying f2fs inode (by set
+with FI_DIRTY_INODE), so later f2fs_write_inode() called from VFS will
+fail to update inode page due to our skip:
 
-CC: Zhangguanghui <zhang.guanghui@h3c.com>
-Link: https://lore.kernel.org/r/20191018211832.7917-7-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+f2fs_write_inode()
+	if (is_inode_flag_set(inode, FI_DIRTY_INODE))
+		return 0;
+
+So eventually, after evict(), we lose last atime for ever.
+
+To fix this issue, we need to check whether {a,c,m,cr}time is
+consistent in between inode cache and inode page, and only skip
+f2fs_update_inode() if f2fs inode is not dirty and time is
+consistent as well.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_scsi.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/f2fs/f2fs.h  | 23 +++++++++++++++--------
+ fs/f2fs/inode.c |  6 +++++-
+ 2 files changed, 20 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
-index ad8ef67a1db3..aa82d538a18a 100644
---- a/drivers/scsi/lpfc/lpfc_scsi.c
-+++ b/drivers/scsi/lpfc/lpfc_scsi.c
-@@ -4846,20 +4846,21 @@ lpfc_abort_handler(struct scsi_cmnd *cmnd)
- 		ret_val = __lpfc_sli_issue_iocb(phba, LPFC_FCP_RING,
- 						abtsiocb, 0);
- 	}
--	/* no longer need the lock after this point */
--	spin_unlock_irqrestore(&phba->hbalock, flags);
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 4024790028aa..f078cd20dab8 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2704,6 +2704,20 @@ static inline void clear_file(struct inode *inode, int type)
+ 	f2fs_mark_inode_dirty_sync(inode, true);
+ }
  
- 	if (ret_val == IOCB_ERROR) {
- 		/* Indicate the IO is not being aborted by the driver. */
- 		iocb->iocb_flag &= ~LPFC_DRIVER_ABORTED;
- 		lpfc_cmd->waitq = NULL;
- 		spin_unlock(&lpfc_cmd->buf_lock);
-+		spin_unlock_irqrestore(&phba->hbalock, flags);
- 		lpfc_sli_release_iocbq(phba, abtsiocb);
- 		ret = FAILED;
- 		goto out;
- 	}
++static inline bool f2fs_is_time_consistent(struct inode *inode)
++{
++	if (!timespec64_equal(F2FS_I(inode)->i_disk_time, &inode->i_atime))
++		return false;
++	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 1, &inode->i_ctime))
++		return false;
++	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 2, &inode->i_mtime))
++		return false;
++	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 3,
++						&F2FS_I(inode)->i_crtime))
++		return false;
++	return true;
++}
++
+ static inline bool f2fs_skip_inode_update(struct inode *inode, int dsync)
+ {
+ 	bool ret;
+@@ -2721,14 +2735,7 @@ static inline bool f2fs_skip_inode_update(struct inode *inode, int dsync)
+ 			i_size_read(inode) & ~PAGE_MASK)
+ 		return false;
  
-+	/* no longer need the lock after this point */
- 	spin_unlock(&lpfc_cmd->buf_lock);
-+	spin_unlock_irqrestore(&phba->hbalock, flags);
+-	if (!timespec64_equal(F2FS_I(inode)->i_disk_time, &inode->i_atime))
+-		return false;
+-	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 1, &inode->i_ctime))
+-		return false;
+-	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 2, &inode->i_mtime))
+-		return false;
+-	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 3,
+-						&F2FS_I(inode)->i_crtime))
++	if (!f2fs_is_time_consistent(inode))
+ 		return false;
  
- 	if (phba->cfg_poll & DISABLE_FCP_RING_INT)
- 		lpfc_sli_handle_fast_ring_event(phba,
+ 	down_read(&F2FS_I(inode)->i_sem);
+diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+index db4fec30c30d..386ad54c13c3 100644
+--- a/fs/f2fs/inode.c
++++ b/fs/f2fs/inode.c
+@@ -615,7 +615,11 @@ int f2fs_write_inode(struct inode *inode, struct writeback_control *wbc)
+ 			inode->i_ino == F2FS_META_INO(sbi))
+ 		return 0;
+ 
+-	if (!is_inode_flag_set(inode, FI_DIRTY_INODE))
++	/*
++	 * atime could be updated without dirtying f2fs inode in lazytime mode
++	 */
++	if (f2fs_is_time_consistent(inode) &&
++		!is_inode_flag_set(inode, FI_DIRTY_INODE))
+ 		return 0;
+ 
+ 	if (!f2fs_is_checkpoint_ready(sbi))
 -- 
 2.20.1
 
