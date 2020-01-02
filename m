@@ -2,122 +2,150 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACDEC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 643A5C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67F4F21655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43EE221734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:14:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgABJNc (ORCPT
+        id S1727929AbgABJON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 04:13:32 -0500
-Received: from mga07.intel.com ([134.134.136.100]:44707 "EHLO mga07.intel.com"
+        Thu, 2 Jan 2020 04:14:13 -0500
+Received: from mga09.intel.com ([134.134.136.24]:25527 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727801AbgABJNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 04:13:32 -0500
+        id S1727801AbgABJON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 04:14:13 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 01:13:30 -0800
-X-ExtLoop1: 1
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 01:14:12 -0800
 X-IronPort-AV: E=Sophos;i="5.69,386,1571727600"; 
-   d="scan'208";a="214099642"
-Received: from liujing-mobl1.ccr.corp.intel.com (HELO [10.238.130.173]) ([10.238.130.173])
-  by orsmga008.jf.intel.com with ESMTP; 02 Jan 2020 01:13:28 -0800
-Subject: Re: [virtio-dev] Re: [PATCH v1 2/2] virtio-mmio: add features for
- virtio-mmio specification version 3
-To:     Jason Wang <jasowang@redhat.com>,
-        Zha Bin <zhabin@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org
-Cc:     mst@redhat.com, slp@redhat.com, virtio-dev@lists.oasis-open.org,
-        gerry@linux.alibaba.com, jing2.liu@intel.com, chao.p.peng@intel.com
-References: <cover.1577240905.git.zhabin@linux.alibaba.com>
- <a11d4c616158c9fb1ca4575ca0530b2e17b952fa.1577240905.git.zhabin@linux.alibaba.com>
- <85eeab19-1f53-6c45-95a2-44c1cfd39184@redhat.com>
- <28da67db-73ab-f772-fb00-5a471b746fc5@linux.intel.com>
- <683cac51-853d-c8c8-24c6-b01886978ca4@redhat.com>
-From:   "Liu, Jing2" <jing2.liu@linux.intel.com>
-Message-ID: <42346d41-b758-967a-30b7-95aa0d383beb@linux.intel.com>
-Date:   Thu, 2 Jan 2020 17:13:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+   d="scan'208";a="214099775"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 01:14:09 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] drm/i915/dsi: Init panel-enable GPIO to low when the LCD is initially off (v2)
+In-Reply-To: <20191216205122.1850923-4-hdegoede@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20191216205122.1850923-1-hdegoede@redhat.com> <20191216205122.1850923-4-hdegoede@redhat.com>
+Date:   Thu, 02 Jan 2020 11:14:06 +0200
+Message-ID: <871rsiuso1.fsf@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <683cac51-853d-c8c8-24c6-b01886978ca4@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[...]
-
->>>
->>>> +
->>>> +/* RO: MSI feature enabled mask */
->>>> +#define VIRTIO_MMIO_MSI_ENABLE_MASK    0x8000
->>>> +/* RO: Maximum queue size available */
->>>> +#define VIRTIO_MMIO_MSI_STATUS_QMASK    0x07ff
->>>> +/* Reserved */
->>>> +#define VIRTIO_MMIO_MSI_STATUS_RESERVED    0x7800
->>>> +
->>>> +#define VIRTIO_MMIO_MSI_CMD_UPDATE    0x1
->>>
->>>
->>> I believe we need a command to read the number of vectors supported 
->>> by the device, or 2048 is assumed to be a fixed size here?
->>
->> For not bringing much complexity, we proposed vector per queue and 
->> fixed relationship between events and vectors.
+On Mon, 16 Dec 2019, Hans de Goede <hdegoede@redhat.com> wrote:
+> When the LCD has not been turned on by the firmware/GOP, because e.g. the
+> device was booted with an external monitor connected over HDMI, we should
+> not turn on the panel-enable GPIO when we request it.
 >
+> Turning on the panel-enable GPIO when we request it, means we turn it on
+> too early in the init-sequence, which causes some panels to not correctly
+> light up.
 >
-> It's a about the number of MSIs not the mapping between queues to 
-> MSIs.And it looks to me it won't bring obvious complexity, just need a 
-> register to read the #MSIs. Device implementation may stick to a fixed 
-> size.
-
-Based on that assumption, the device supports #MSIs = #queues + #config. 
-Then driver need not read the register.
-
-We're trying to make such kind of agreement on spec level.
-
+> This commits adds a panel_is_on parameter to intel_dsi_vbt_gpio_init()
+> and makes intel_dsi_vbt_gpio_init() set the initial GPIO value accordingly.
 >
-> Having few pages for a device that only have one queue is kind of a 
-> waste.
-
-Could I ask what's the meaning of few pages here? BTW, we didn't define 
-MSIx-like tables for virtio-mmio.
-
-Thanks,
-
-Jing
-
+> This fixes the panel not lighting up on a Thundersoft TST168 tablet when
+> booted with an external monitor connected over HDMI.
 >
-> Thanks
+> Changes in v2:
+> - Call intel_dsi_get_hw_state() to check if the panel is on instead of
+>   relying on the current_mode pointer
 >
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/gpu/drm/i915/display/intel_dsi.h     | 2 +-
+>  drivers/gpu/drm/i915/display/intel_dsi_vbt.c | 7 +++----
+>  drivers/gpu/drm/i915/display/vlv_dsi.c       | 4 +++-
+>  3 files changed, 7 insertions(+), 6 deletions(-)
 >
->>
->>
->> So the number of vectors supported by device is equal to the total 
->> number of vqs and config.
->>
->> We will try to explicitly highlight this point in spec for later 
->> version.
->>
->>
->> Thanks!
->>
->> Jing
->>
->>>
->>> ---------------------------------------------------------------------
->>> To unsubscribe, e-mail: virtio-dev-unsubscribe@lists.oasis-open.org
->>> For additional commands, e-mail: virtio-dev-help@lists.oasis-open.org
->>>
->>
->
+> diff --git a/drivers/gpu/drm/i915/display/intel_dsi.h b/drivers/gpu/drm/i915/display/intel_dsi.h
+> index de7e51cd3460..675771ea91aa 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dsi.h
+> +++ b/drivers/gpu/drm/i915/display/intel_dsi.h
+> @@ -203,7 +203,7 @@ void bxt_dsi_reset_clocks(struct intel_encoder *encoder, enum port port);
+>  
+>  /* intel_dsi_vbt.c */
+>  bool intel_dsi_vbt_init(struct intel_dsi *intel_dsi, u16 panel_id);
+> -void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi);
+> +void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on);
+>  void intel_dsi_vbt_gpio_cleanup(struct intel_dsi *intel_dsi);
+>  void intel_dsi_vbt_exec_sequence(struct intel_dsi *intel_dsi,
+>  				 enum mipi_seq seq_id);
+> diff --git a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
+> index 8be7d6c507aa..4210f449553e 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
+> @@ -688,17 +688,16 @@ bool intel_dsi_vbt_init(struct intel_dsi *intel_dsi, u16 panel_id)
+>   * On some BYT/CHT devs some sequences are incomplete and we need to manually
+>   * control some GPIOs.
+>   */
+> -void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi)
+> +void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on)
+>  {
+>  	struct drm_device *dev = intel_dsi->base.base.dev;
+>  	struct drm_i915_private *dev_priv = to_i915(dev);
+>  	struct mipi_config *mipi_config = dev_priv->vbt.dsi.config;
+> +	enum gpiod_flags flags = panel_is_on ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
+>  
+>  	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
+>  	    mipi_config->pwm_blc == PPS_BLC_PMIC) {
+> -		intel_dsi->gpio_panel =
+> -			gpiod_get(dev->dev, "panel", GPIOD_OUT_HIGH);
+> -
+> +		intel_dsi->gpio_panel = gpiod_get(dev->dev, "panel", flags);
+>  		if (IS_ERR(intel_dsi->gpio_panel)) {
+>  			DRM_ERROR("Failed to own gpio for panel control\n");
+>  			intel_dsi->gpio_panel = NULL;
+> diff --git a/drivers/gpu/drm/i915/display/vlv_dsi.c b/drivers/gpu/drm/i915/display/vlv_dsi.c
+> index c1edd8857af0..d0efee09c593 100644
+> --- a/drivers/gpu/drm/i915/display/vlv_dsi.c
+> +++ b/drivers/gpu/drm/i915/display/vlv_dsi.c
+> @@ -1759,6 +1759,7 @@ void vlv_dsi_init(struct drm_i915_private *dev_priv)
+>  	struct drm_connector *connector;
+>  	struct drm_display_mode *current_mode, *fixed_mode;
+>  	enum port port;
+> +	enum pipe pipe;
+>  
+>  	DRM_DEBUG_KMS("\n");
+>  
+> @@ -1857,7 +1858,8 @@ void vlv_dsi_init(struct drm_i915_private *dev_priv)
+>  
+>  	vlv_dphy_param_init(intel_dsi);
+>  
+> -	intel_dsi_vbt_gpio_init(intel_dsi);
+> +	intel_dsi_vbt_gpio_init(intel_dsi,
+> +				intel_dsi_get_hw_state(intel_encoder, &pipe));
+
+Feels a bit scary to call into the hooks before everything is
+initialized, but this seems safe. Fingers crossed.
+
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+
+
+>  
+>  	drm_connector_init(dev, connector, &intel_dsi_connector_funcs,
+>  			   DRM_MODE_CONNECTOR_DSI);
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
