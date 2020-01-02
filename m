@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFBCC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB601C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58CA924125
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF81020866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:38:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004680;
-	bh=8oXUsVQTPdDazer0WFOtTtj/U+Sht5tkLl6KvmafhOM=;
+	s=default; t=1578004681;
+	bh=zl+jMEazS06IPnXQz5OhOUWOzZlmwFDhJDIcf0gR+Mc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eTnjdsZ4AWhBh/qDclhFgkpxRDvlRNXyS/5O+wlFIiH6mgku4a4ZFpNCXU5cxbrfE
-	 C0QuVjNUnEbyi7CgpYag6sdsgWFK8A7ezCYX8SzRg8LRUrc5aO/Ol/uXy3Yc26yfUL
-	 mURx39sb4lnXfkLP/dTQl44CbbWMrniO1RO1KbWk=
+	b=dEjxRNTJ+X9JJ96El/0TBf+cg0NNkAq8yGckELy4OwWQ3wv49m95tpOEeRj0uWhlg
+	 3zIpIZrop1VZSa0yPdYronrhfrEyv56q3qpWFYWdpY+gVH9ankybGiYqUdmBFWfG1T
+	 dpa2weyWvwVo/G+0NMBtmi6G5wbOFZsynw0z78/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731173AbgABWh6 (ORCPT
+        id S1731181AbgABWiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:37:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51098 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:38:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731158AbgABWhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:37:55 -0500
+        id S1731168AbgABWh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:37:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 168F920866;
-        Thu,  2 Jan 2020 22:37:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73CAD20863;
+        Thu,  2 Jan 2020 22:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004674;
-        bh=8oXUsVQTPdDazer0WFOtTtj/U+Sht5tkLl6KvmafhOM=;
+        s=default; t=1578004676;
+        bh=zl+jMEazS06IPnXQz5OhOUWOzZlmwFDhJDIcf0gR+Mc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Esyh0iVLF84jfVp90Fgv6igufBYRoA+TSN2LKAGZWVOFQUbvxpY+kqlqaLHjL6XS/
-         hAw0dRQzZ+RlB68hUM3J3AkOOALs7dE3gb/s0kmKJXhtOwn2o3EWi0XvNGwitsfe3O
-         dEMCE0O/SYE4aSn5zYUPYv6M+7OHH5e61CdJf3zk=
+        b=D2fI2EOqN8k4UcWeWahYUQFfNa6eolYWUhhRNWyKGtcdmE60pQWk++XDHrNvw6I02
+         kXC41oCKJkVRSP5vHzZ35OUljixEmSrGaSlojU/JThvuDPp+Rt9/B/x0Cw3dVGCOIk
+         P2OTLTxRFXLAXOjnD6ER7TO5T8EXpWo+mXSqcxts=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
         Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 105/137] irqchip/irq-bcm7038-l1: Enable parent IRQ if necessary
-Date:   Thu,  2 Jan 2020 23:07:58 +0100
-Message-Id: <20200102220601.213007846@linuxfoundation.org>
+Subject: [PATCH 4.4 106/137] irqchip: ingenic: Error out if IRQ domain creation failed
+Date:   Thu,  2 Jan 2020 23:07:59 +0100
+Message-Id: <20200102220601.372089003@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -59,36 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-[ Upstream commit 27eebb60357ed5aa6659442f92907c0f7368d6ae ]
+[ Upstream commit 52ecc87642f273a599c9913b29fd179c13de457b ]
 
-If the 'brcm,irq-can-wake' property is specified, make sure we also
-enable the corresponding parent interrupt we are attached to.
+If we cannot create the IRQ domain, the driver should fail to probe
+instead of succeeding with just a warning message.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20191024201415.23454-4-f.fainelli@gmail.com
+Link: https://lore.kernel.org/r/1570015525-27018-3-git-send-email-zhouyanjie@zoho.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-bcm7038-l1.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/irqchip/irq-ingenic.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-index 6fb34bf0f352..34e13623f29d 100644
---- a/drivers/irqchip/irq-bcm7038-l1.c
-+++ b/drivers/irqchip/irq-bcm7038-l1.c
-@@ -283,6 +283,10 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
- 		pr_err("failed to map parent interrupt %d\n", parent_irq);
- 		return -EINVAL;
+diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
+index fc5953dea509..b2e16dca76a6 100644
+--- a/drivers/irqchip/irq-ingenic.c
++++ b/drivers/irqchip/irq-ingenic.c
+@@ -117,6 +117,14 @@ static int __init ingenic_intc_of_init(struct device_node *node,
+ 		goto out_unmap_irq;
  	}
-+
-+	if (of_property_read_bool(dn, "brcm,irq-can-wake"))
-+		enable_irq_wake(parent_irq);
-+
- 	irq_set_chained_handler_and_data(parent_irq, bcm7038_l1_irq_handle,
- 					 intc);
  
++	domain = irq_domain_add_legacy(node, num_chips * 32,
++				       JZ4740_IRQ_BASE, 0,
++				       &irq_domain_simple_ops, NULL);
++	if (!domain) {
++		err = -ENOMEM;
++		goto out_unmap_base;
++	}
++
+ 	for (i = 0; i < num_chips; i++) {
+ 		/* Mask all irqs */
+ 		writel(0xffffffff, intc->base + (i * CHIP_SIZE) +
+@@ -143,14 +151,11 @@ static int __init ingenic_intc_of_init(struct device_node *node,
+ 				       IRQ_NOPROBE | IRQ_LEVEL);
+ 	}
+ 
+-	domain = irq_domain_add_legacy(node, num_chips * 32, JZ4740_IRQ_BASE, 0,
+-				       &irq_domain_simple_ops, NULL);
+-	if (!domain)
+-		pr_warn("unable to register IRQ domain\n");
+-
+ 	setup_irq(parent_irq, &intc_cascade_action);
+ 	return 0;
+ 
++out_unmap_base:
++	iounmap(intc->base);
+ out_unmap_irq:
+ 	irq_dispose_mapping(parent_irq);
+ out_free:
 -- 
 2.20.1
 
