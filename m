@@ -7,66 +7,65 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B8FC2D0DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0C5C2D0DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ACD720863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 814DD20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 06:33:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W7XXflk0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iTxriNvX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbgABG3Z (ORCPT
+        id S1726232AbgABGdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 01:29:25 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25317 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725788AbgABG3Z (ORCPT
+        Thu, 2 Jan 2020 01:33:52 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35724 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725788AbgABGdw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 01:29:25 -0500
+        Thu, 2 Jan 2020 01:33:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577946562;
+        s=mimecast20190719; t=1577946830;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=0Wy4DlJwntDGG8Dw5wwsUzHgZ7JZO21FMH3YX0CC+uQ=;
-        b=W7XXflk0C9E5la+QbcoIq25vLb9qlwP7n79RCcgn/JLokXFsnUpnx05UHP6RVl33P7Il6g
-        4hptOvVLS4OLN4jQFGCRhzOPAoCGD/8pv5zIYMql8b8iiXXFOER6b4NanOhSp4VVAInUxI
-        4gxC1VZY1CcHwX1O/BkltFe1DK9X8ZE=
+        bh=ohVOrNWpj0c3bWsX3PgzLSLsQD6hl11NBoAIGnizLQ4=;
+        b=iTxriNvXVaRVv7kqRE+5xuNqqWlgh+uTlXksaN2BaUVzH9zMPiiQSTzp01K8d4abaPDOD7
+        be2F2RME+bfO1LwVW+NKkQ8w4nuOzsdsRqYisH03Nr6uBakfk7ymHOmQ7kFaZh+9SZmDBz
+        RhWta7vhFjpU2U2JiOVuhNviqLbkcCc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-137-rcyrE958ODmgO_pURC9TVg-1; Thu, 02 Jan 2020 01:29:21 -0500
-X-MC-Unique: rcyrE958ODmgO_pURC9TVg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-223-VzjtRnStPBiYnq0VfzyZnA-1; Thu, 02 Jan 2020 01:33:47 -0500
+X-MC-Unique: VzjtRnStPBiYnq0VfzyZnA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B549710054E3;
-        Thu,  2 Jan 2020 06:29:19 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C1CC7107ACC4;
+        Thu,  2 Jan 2020 06:33:45 +0000 (UTC)
 Received: from [10.72.12.230] (ovpn-12-230.pek2.redhat.com [10.72.12.230])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0A7B460BFB;
-        Thu,  2 Jan 2020 06:28:59 +0000 (UTC)
-Subject: Re: [PATCH v1 2/2] virtio-mmio: add features for virtio-mmio
- specification version 3
-To:     "Liu, Jiang" <gerry@linux.alibaba.com>
-Cc:     Zha Bin <zhabin@linux.alibaba.com>, linux-kernel@vger.kernel.org,
-        mst@redhat.com, slp@redhat.com, virtio-dev@lists.oasis-open.org,
-        jing2.liu@intel.com, chao.p.peng@intel.com
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 416CC5DA2C;
+        Thu,  2 Jan 2020 06:33:22 +0000 (UTC)
+Subject: Re: [virtio-dev] Re: [PATCH v1 2/2] virtio-mmio: add features for
+ virtio-mmio specification version 3
+To:     "Liu, Jing2" <jing2.liu@linux.intel.com>,
+        Zha Bin <zhabin@linux.alibaba.com>,
+        linux-kernel@vger.kernel.org
+Cc:     mst@redhat.com, slp@redhat.com, virtio-dev@lists.oasis-open.org,
+        gerry@linux.alibaba.com, jing2.liu@intel.com, chao.p.peng@intel.com
 References: <cover.1577240905.git.zhabin@linux.alibaba.com>
  <a11d4c616158c9fb1ca4575ca0530b2e17b952fa.1577240905.git.zhabin@linux.alibaba.com>
- <229e689d-10f1-2bfb-c393-14dfa9c78971@redhat.com>
- <0460F92A-3DF6-4F7A-903B-6434555577CC@linux.alibaba.com>
- <f8b46502-a5a5-c5c6-88df-101dbfd02fda@redhat.com>
- <56703BDA-B7AE-4656-8061-85FD1A130597@linux.alibaba.com>
+ <85eeab19-1f53-6c45-95a2-44c1cfd39184@redhat.com>
+ <28da67db-73ab-f772-fb00-5a471b746fc5@linux.intel.com>
 From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <16000124-bf6f-5762-845c-80514d1e6ea7@redhat.com>
-Date:   Thu, 2 Jan 2020 14:28:52 +0800
+Message-ID: <683cac51-853d-c8c8-24c6-b01886978ca4@redhat.com>
+Date:   Thu, 2 Jan 2020 14:33:20 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <56703BDA-B7AE-4656-8061-85FD1A130597@linux.alibaba.com>
+In-Reply-To: <28da67db-73ab-f772-fb00-5a471b746fc5@linux.intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -74,168 +73,214 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2019/12/26 =E4=B8=8B=E5=8D=889:16, Liu, Jiang wrote:
+On 2019/12/27 =E4=B8=8B=E5=8D=885:37, Liu, Jing2 wrote:
+> Hi Jason,
 >
->> On Dec 26, 2019, at 4:09 PM, Jason Wang <jasowang@redhat.com> wrote:
->>
->>
->> On 2019/12/25 =E4=B8=8B=E5=8D=8811:20, Liu, Jiang wrote:
->>>> On Dec 25, 2019, at 6:20 PM, Jason Wang <jasowang@redhat.com> wrote:
->>>>
->>>>
->>>> On 2019/12/25 =E4=B8=8A=E5=8D=8810:50, Zha Bin wrote:
->>>>> From: Liu Jiang <gerry@linux.alibaba.com>
->>>>>
->>>>> Userspace VMMs (e.g. Qemu microvm, Firecracker) take advantage of u=
-sing
->>>>> virtio over mmio devices as a lightweight machine model for modern
->>>>> cloud. The standard virtio over MMIO transport layer only supports =
-one
->>>>> legacy interrupt, which is much heavier than virtio over PCI transp=
-ort
->>>>> layer using MSI. Legacy interrupt has long work path and causes spe=
-cific
->>>>> VMExits in following cases, which would considerably slow down the
->>>>> performance:
->>>>>
->>>>> 1) read interrupt status register
->>>>> 2) update interrupt status register
->>>>> 3) write IOAPIC EOI register
->>>>>
->>>>> We proposed to update virtio over MMIO to version 3[1] to add the
->>>>> following new features and enhance the performance.
->>>>>
->>>>> 1) Support Message Signaled Interrupt(MSI), which increases the
->>>>>     interrupt performance for virtio multi-queue devices
->>>>> 2) Support per-queue doorbell, so the guest kernel may directly wri=
-te
->>>>>     to the doorbells provided by virtio devices.
->>>>>
->>>>> The following is the network tcp_rr performance testing report, tes=
-ted
->>>>> with virtio-pci device, vanilla virtio-mmio device and patched
->>>>> virtio-mmio device (run test 3 times for each case):
->>>>>
->>>>> 	netperf -t TCP_RR -H 192.168.1.36 -l 30 -- -r 32,1024
->>>>>
->>>>> 		Virtio-PCI    Virtio-MMIO   Virtio-MMIO(MSI)
->>>>> 	trans/s	    9536	6939		9500
->>>>> 	trans/s	    9734	7029		9749
->>>>> 	trans/s	    9894	7095		9318
->>>>>
->>>>> [1] https://lkml.org/lkml/2019/12/20/113
->>>> Thanks for the patch. Two questions after a quick glance:
->>>>
->>>> 1) In PCI we choose to support MSI-X instead of MSI for having extra=
- flexibility like alias, independent data and address (e.g for affinity) =
-. Any reason for not start from MSI-X? E.g having MSI-X table and PBA (bo=
-th of which looks pretty independent).
->>> Hi Jason,
->>> 	Thanks for reviewing patches on Christmas Day:)
->>> 	The PCI MSI-x has several advantages over PCI MSI, mainly
->>> 1) support 2048 vectors, much more than 32 vectors supported by MSI.
->>> 2) dedicated address/data for each vector,
->>> 3) per vector mask/pending bits.
->>> The proposed MMIO MSI extension supports both 1) and 2),
->>
->> Aha right, I mis-read the patch. But more questions comes:
->>
->> 1) The association between vq and MSI-X vector is fixed. This means it=
- can't work for a device that have more than 2047 queues. We probably nee=
-d something similar to virtio-pci to allow a dynamic association.
-> We have considered both the PCI MSI-x like dynamic association design a=
-nd fix mapping design.
-> The fix mapping design simplifies both the interrupt configuration proc=
-ess and VMM implementations.
-
-
-Well, for VMM just an indirection and for guest, it can choose to use=20
-fixed mapping, just need to program once during probe.
-
-
-> And the virtio mmio transport layer is mainly used by light VMMs to sup=
-port small scale virtual machines,
-
-
-Let's not limit the interface to be used by a specific case :).=20
-Eliminating PCIE would be appealing for other scenarios.
-
-
->    2048 vectors should be enough for these usage cases.
-> So the fix mapping design has been used.
+> Thanks for reviewing the patches!
 >
->> 2) The mask and unmask control is missed
+> =C2=A0[...]
+>>> -
+>>> +#include <linux/msi.h>
+>>> +#include <asm/irqdomain.h>
+>>> =C2=A0 =C2=A0 /* The alignment to use between consumer and producer p=
+arts of=20
+>>> vring.
+>>> =C2=A0=C2=A0 * Currently hardcoded to the page size. */
+>>> @@ -90,6 +90,12 @@ struct virtio_mmio_device {
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* a list of queues so we can dispatch=
+ IRQs */
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spinlock_t lock;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct list_head virtqueues;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 int doorbell_base;
+>>> +=C2=A0=C2=A0=C2=A0 int doorbell_scale;
 >>
 >>
->>>   but the extension doesn=E2=80=99t support 3) because
->>> we noticed that the Linux virtio subsystem doesn=E2=80=99t really mak=
-e use of interrupt masking/unmasking.
+>> It's better to use the terminology defined by spec, e.g=20
+>> notify_base/notify_multiplexer etc.
 >>
->> Not directly used but masking/unmasking is widely used in irq subsyste=
-m which allows lots of optimizations.
+>> And we usually use unsigned type for offset.
+>
+> We will fix this in next version.
+>
+>
 >>
 >>
->>> On the other hand, we want to simplify VMM implementations as simple =
-as possible, and mimicking the PCI MSI-x
->>> will cause some complexity to VMM implementations.
+>>> +=C2=A0=C2=A0=C2=A0 bool msi_enabled;
+>>> +=C2=A0=C2=A0=C2=A0 /* Name strings for interrupts. */
+>>> +=C2=A0=C2=A0=C2=A0 char (*vm_vq_names)[256];
+>>> =C2=A0 };
+>>> =C2=A0 =C2=A0 struct virtio_mmio_vq_info {
+>>> @@ -101,6 +107,8 @@ struct virtio_mmio_vq_info {
+>>> =C2=A0 };
+>>> =C2=A0 =C2=A0 +static void vm_free_msi_irqs(struct virtio_device *vde=
+v);
+>>> +static int vm_request_msi_vectors(struct virtio_device *vdev, int=20
+>>> nirqs);
+>>> =C2=A0 =C2=A0 /* Configuration interface */
+>>> =C2=A0 @@ -273,12 +281,28 @@ static bool vm_notify(struct virtqueue *=
+vq)
+>>> =C2=A0 {
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct virtio_mmio_device *vm_dev =3D=20
+>>> to_virtio_mmio_device(vq->vdev);
+>>> =C2=A0 +=C2=A0=C2=A0=C2=A0 if (vm_dev->version =3D=3D 3) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int offset =3D vm_dev->do=
+orbell_base +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 vm_dev->doorbell_scale * vq->index;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel(vq->index, vm_dev-=
+>base + offset);
 >>
->> I agree to simplify VMM implementation, but it looks to me introducing=
- masking/pending won't cost too much code in the VMM implementation. Just=
- new type of command for VIRTIO_MMIO_MSI_COMMAND.
-> We want to make VMM implementations as simple as possible:)
-> And based on following observations, we have disabled support of mask/u=
-nmask,
-> 1) MSI is edge triggering, which means it won=E2=80=99t be shared with =
-other interrupt sources,
+>>
+>> In virtio-pci we store the doorbell address in vq->priv to avoid=20
+>> doing multiplication in fast path.
+>
+> Good suggestion. We will fix this in next version.
+>
+> [...]
+>
+>>> +
+>>> +static int vm_request_msi_vectors(struct virtio_device *vdev, int=20
+>>> nirqs)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct virtio_mmio_device *vm_dev =3D to_virtio_m=
+mio_device(vdev);
+>>> +=C2=A0=C2=A0=C2=A0 int irq, err;
+>>> +=C2=A0=C2=A0=C2=A0 u16 csr =3D readw(vm_dev->base + VIRTIO_MMIO_MSI_=
+STATUS);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 if (vm_dev->msi_enabled || (csr & VIRTIO_MMIO_MSI=
+_ENABLE_MASK)=20
+>>> =3D=3D 0)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 vm_dev->vm_vq_names =3D kmalloc_array(nirqs,=20
+>>> sizeof(*vm_dev->vm_vq_names),
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 G=
+FP_KERNEL);
+>>> +=C2=A0=C2=A0=C2=A0 if (!vm_dev->vm_vq_names)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOMEM;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 if (!vdev->dev.msi_domain)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vdev->dev.msi_domain =3D =
+platform_msi_get_def_irq_domain();
+>>> +=C2=A0=C2=A0=C2=A0 err =3D platform_msi_domain_alloc_irqs(&vdev->dev=
+, nirqs,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 m=
+mio_write_msi_msg);
+>>
+>>
+>> Can platform_msi_domain_alloc_irqs check msi_domain vs NULL?
+>>
+> Actually here, we need to firstly consider the cases that @dev doesn't=20
+> have @msi_domain,
+>
+> according to the report by lkp.
+>
+> For the platform_msi_domain_alloc_irqs, it can help check inside.
+>
+>
+>> [...]
+>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rc =3D register_virtio_device(&=
+vm_dev->vdev);
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (rc)
+>>> @@ -619,8 +819,6 @@ static int virtio_mmio_remove(struct=20
+>>> platform_device *pdev)
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>>> =C2=A0 }
+>>> =C2=A0 -
+>>> -
+>>
+>>
+>> Unnecessary changes.
+>
+> Got it. Will remove it later.
+>
+>
+>> [...]
+>>> =C2=A0 +/* MSI related registers */
+>>> +
+>>> +/* MSI status register */
+>>> +#define VIRTIO_MMIO_MSI_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 0x0c0
+>>> +/* MSI command register */
+>>> +#define VIRTIO_MMIO_MSI_COMMAND=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 0x0c2
+>>> +/* MSI low 32 bit address, 64 bits in two halves */
+>>> +#define VIRTIO_MMIO_MSI_ADDRESS_LOW=C2=A0=C2=A0=C2=A0 0x0c4
+>>> +/* MSI high 32 bit address, 64 bits in two halves */
+>>> +#define VIRTIO_MMIO_MSI_ADDRESS_HIGH=C2=A0=C2=A0=C2=A0 0x0c8
+>>> +/* MSI data */
+>>> +#define VIRTIO_MMIO_MSI_DATA=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ 0x0cc
+>>
+>>
+>> I wonder what's the advantage of using registers instead of memory=20
+>> mapped tables as PCI did. Is this because MMIO doesn't have=20
+>> capability list which makes it hard to be extended if we have=20
+>> variable size of tables?
+>>
+> Yes, mmio doesn't have capability which limits the extension.
 
 
-Is this true? I think the spec does not forbid such usages, e.g using=20
-the same MSI address/command for different queues or devices?
-
-
-> so masking/unmasking won=E2=80=99t be used for normal interrupt managem=
-ent logic.
-> 2) Linux virtio mmio transport layer doesn=E2=80=99t support  suspend/r=
-esume yet, so there=E2=80=99s no need to quiesce the device by masking in=
-terrupts.
-
-
-Yes, but it's a limitation only for virtio mmio transport. We can add it.
-
-
-> 3) The legacy PCI 2.2 devices doesn=E2=80=99t support irq masking/unmas=
-king, so irq masking/unmasking may be optional operations.
-
-
-Yes, but as you said, it helps for performance and some other cases. I=20
-still prefer to implement that consider it is not complex. If we do MSI=20
-without masking/unmasking, I suspect we will implement MSI-X finally=20
-somedays then maintaining MSI will become a burden... (still takes=20
-virtio-pci as an example, it choose to implement MSI-X not MSI).
-
-
-> So we skipped support of irq masking/unmasking. We will recheck whether=
- irq masking/unmasking is mandatory for MMIO devices.
-> On the other hand, we may enhance the spec to define command codes for =
-masking/unmasking, and VMM may optionally support masking/unmasking.
-
-
-Yes, thanks.
+We may want to revisit and add something like this for future virtio=20
+MMIO versions.
 
 
 >
-> Thanks,
-> Gerry
+> It need some registers to specify the msi table/mask table/pending=20
+> table offsets if using what pci did.
 >
->> Thanks
+> As comments previously, mask/pending can be easily extended by MSI=20
+> command.
+>
+>>
+>>> +
+>>> +/* RO: MSI feature enabled mask */
+>>> +#define VIRTIO_MMIO_MSI_ENABLE_MASK=C2=A0=C2=A0=C2=A0 0x8000
+>>> +/* RO: Maximum queue size available */
+>>> +#define VIRTIO_MMIO_MSI_STATUS_QMASK=C2=A0=C2=A0=C2=A0 0x07ff
+>>> +/* Reserved */
+>>> +#define VIRTIO_MMIO_MSI_STATUS_RESERVED=C2=A0=C2=A0=C2=A0 0x7800
+>>> +
+>>> +#define VIRTIO_MMIO_MSI_CMD_UPDATE=C2=A0=C2=A0=C2=A0 0x1
 >>
 >>
->>>> 2) It's better to split notify_multiplexer out of MSI support to eas=
-e the reviewers (apply to spec patch as well)
->>> Great suggestion, we will try to split the patch.
->>>
->>> Thanks,
->>> Gerry
->>>
->>>> Thanks
+>> I believe we need a command to read the number of vectors supported=20
+>> by the device, or 2048 is assumed to be a fixed size here?
+>
+> For not bringing much complexity, we proposed vector per queue and=20
+> fixed relationship between events and vectors.
+
+
+It's a about the number of MSIs not the mapping between queues to MSIs.=20
+And it looks to me it won't bring obvious complexity, just need a=20
+register to read the #MSIs. Device implementation may stick to a fixed si=
+ze.
+
+Having few pages for a device that only have one queue is kind of a waste=
+.
+
+Thanks
+
+
+>
+>
+> So the number of vectors supported by device is equal to the total=20
+> number of vqs and config.
+>
+> We will try to explicitly highlight this point in spec for later versio=
+n.
+>
+>
+> Thanks!
+>
+> Jing
+>
+>>
+>> ---------------------------------------------------------------------
+>> To unsubscribe, e-mail: virtio-dev-unsubscribe@lists.oasis-open.org
+>> For additional commands, e-mail: virtio-dev-help@lists.oasis-open.org
+>>
+>
 
