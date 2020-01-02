@@ -2,53 +2,53 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 780C3C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD7AC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B67820848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BABB20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005420;
-	bh=cAXW1ArC2h5cxAmqua/9/NNnDaRZDLuYbmOudVCJqjQ=;
+	s=default; t=1578005426;
+	bh=iQakv2HMdpUsEwfVpNwP9YWmVBHMaqzX4AKPcOY+4XQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XDiumArtc+r661b75hi1AmD017rx2+CPJD8CxdSxu92o6zL4MHDlEXcbvc6fjT3w5
-	 urkM5H89wjg7fXIdoGM3eLiaGuX4ykpOMgGieykZOXz+4m93iCTLrXHUTwzC6uBJlA
-	 ZSQd6U1W5h9glwyhL08qHJKFTEHh9dCmosfGe7nk=
+	b=OlMn9y1KbVG3l7L8YDu6mi1ie6h7WgtmDcrxfM8s8SNYBH/5+tGYvsOEOod5jWiHT
+	 xo+7U2yLgS2SCMJ5F3fueVfq7aqOFTxz0fSBduXvSM46pf3eI5/66ybVCcO7JkO+Rf
+	 ck67kh3C2mguLWZgVTI5JckJt+0NtcCMB8flbmOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbgABWZo (ORCPT
+        id S1729540AbgABWZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:25:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51606 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:25:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729023AbgABWZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:25:42 -0500
+        id S1728975AbgABWZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:25:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A2A62253D;
-        Thu,  2 Jan 2020 22:25:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CF6E222C3;
+        Thu,  2 Jan 2020 22:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003941;
-        bh=cAXW1ArC2h5cxAmqua/9/NNnDaRZDLuYbmOudVCJqjQ=;
+        s=default; t=1578003932;
+        bh=iQakv2HMdpUsEwfVpNwP9YWmVBHMaqzX4AKPcOY+4XQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z+TW9DeN+GD2JJlE4pJ1kT3K/FCch4tpqPWHVxcIfN4kdkBVnw7VRuRL026errXiy
-         ipUFDwbbEzlOytw+sqhW76zKOs/jaa2mOgbZCEahCAB0lLy6TpopeuX0m4w9GO5M51
-         2TUp0FePd40dIVkMYtuLKw5E4l1zLr3JCfgpc2BY=
+        b=AwHfQmZ7vqpWeyLUU944CCQyzfq/Pv0V6JGkwcTMwbsCMLf8W943+MpqZ6zPAbvtY
+         gfCHt96mmVm42225TjXHcWIgYNv1PT39iLPEU2dgKhxrLzsJm7fPfqYQNPvbo8/nMY
+         yEmb11LVgxk6D0+MrsXQK4menpyAMxmfAI+TB0L8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+f68108fed972453a0ad4@syzkaller.appspotmail.com,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.14 64/91] netfilter: ebtables: compat: reject all padding in matches/watchers
-Date:   Thu,  2 Jan 2020 23:07:46 +0100
-Message-Id: <20200102220442.509364885@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 34/91] libnvdimm/btt: fix variable rc set but not used
+Date:   Thu,  2 Jan 2020 23:07:16 +0100
+Message-Id: <20200102220431.958542621@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -61,138 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Qian Cai <cai@lca.pw>
 
-commit e608f631f0ba5f1fc5ee2e260a3a35d13107cbfe upstream.
+[ Upstream commit 4e24e37d5313edca8b4ab86f240c046c731e28d6 ]
 
-syzbot reported following splat:
+drivers/nvdimm/btt.c: In function 'btt_read_pg':
+drivers/nvdimm/btt.c:1264:8: warning: variable 'rc' set but not used
+[-Wunused-but-set-variable]
+    int rc;
+        ^~
 
-BUG: KASAN: vmalloc-out-of-bounds in size_entry_mwt net/bridge/netfilter/ebtables.c:2063 [inline]
-BUG: KASAN: vmalloc-out-of-bounds in compat_copy_entries+0x128b/0x1380 net/bridge/netfilter/ebtables.c:2155
-Read of size 4 at addr ffffc900004461f4 by task syz-executor267/7937
+Add a ratelimited message in case a storm of errors is encountered.
 
-CPU: 1 PID: 7937 Comm: syz-executor267 Not tainted 5.5.0-rc1-syzkaller #0
- size_entry_mwt net/bridge/netfilter/ebtables.c:2063 [inline]
- compat_copy_entries+0x128b/0x1380 net/bridge/netfilter/ebtables.c:2155
- compat_do_replace+0x344/0x720 net/bridge/netfilter/ebtables.c:2249
- compat_do_ebt_set_ctl+0x22f/0x27e net/bridge/netfilter/ebtables.c:2333
- [..]
-
-Because padding isn't considered during computation of ->buf_user_offset,
-"total" is decremented by fewer bytes than it should.
-
-Therefore, the first part of
-
-if (*total < sizeof(*entry) || entry->next_offset < sizeof(*entry))
-
-will pass, -- it should not have.  This causes oob access:
-entry->next_offset is past the vmalloced size.
-
-Reject padding and check that computed user offset (sum of ebt_entry
-structure plus all individual matches/watchers/targets) is same
-value that userspace gave us as the offset of the next entry.
-
-Reported-by: syzbot+f68108fed972453a0ad4@syzkaller.appspotmail.com
-Fixes: 81e675c227ec ("netfilter: ebtables: add CONFIG_COMPAT support")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: d9b83c756953 ("libnvdimm, btt: rework error clearing")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
+Link: https://lore.kernel.org/r/1572530719-32161-1-git-send-email-cai@lca.pw
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bridge/netfilter/ebtables.c |   33 ++++++++++++++++-----------------
- 1 file changed, 16 insertions(+), 17 deletions(-)
+ drivers/nvdimm/btt.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -1876,7 +1876,7 @@ static int ebt_buf_count(struct ebt_entr
- }
+diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
+index b2feda35966b..471498469d0a 100644
+--- a/drivers/nvdimm/btt.c
++++ b/drivers/nvdimm/btt.c
+@@ -1259,11 +1259,11 @@ static int btt_read_pg(struct btt *btt, struct bio_integrity_payload *bip,
  
- static int ebt_buf_add(struct ebt_entries_buf_state *state,
--		       void *data, unsigned int sz)
-+		       const void *data, unsigned int sz)
- {
- 	if (state->buf_kern_start == NULL)
- 		goto count_only;
-@@ -1910,7 +1910,7 @@ enum compat_mwt {
- 	EBT_COMPAT_TARGET,
- };
- 
--static int compat_mtw_from_user(struct compat_ebt_entry_mwt *mwt,
-+static int compat_mtw_from_user(const struct compat_ebt_entry_mwt *mwt,
- 				enum compat_mwt compat_mwt,
- 				struct ebt_entries_buf_state *state,
- 				const unsigned char *base)
-@@ -1986,22 +1986,23 @@ static int compat_mtw_from_user(struct c
- /* return size of all matches, watchers or target, including necessary
-  * alignment and padding.
-  */
--static int ebt_size_mwt(struct compat_ebt_entry_mwt *match32,
-+static int ebt_size_mwt(const struct compat_ebt_entry_mwt *match32,
- 			unsigned int size_left, enum compat_mwt type,
- 			struct ebt_entries_buf_state *state, const void *base)
- {
-+	const char *buf = (const char *)match32;
- 	int growth = 0;
--	char *buf;
- 
- 	if (size_left == 0)
- 		return 0;
- 
--	buf = (char *) match32;
+ 		ret = btt_data_read(arena, page, off, postmap, cur_len);
+ 		if (ret) {
+-			int rc;
 -
--	while (size_left >= sizeof(*match32)) {
-+	do {
- 		struct ebt_entry_match *match_kern;
- 		int ret;
+ 			/* Media error - set the e_flag */
+-			rc = btt_map_write(arena, premap, postmap, 0, 1,
+-				NVDIMM_IO_ATOMIC);
++			if (btt_map_write(arena, premap, postmap, 0, 1, NVDIMM_IO_ATOMIC))
++				dev_warn_ratelimited(to_dev(arena),
++					"Error persistently tracking bad blocks at %#x\n",
++					premap);
+ 			goto out_rtt;
+ 		}
  
-+		if (size_left < sizeof(*match32))
-+			return -EINVAL;
-+
- 		match_kern = (struct ebt_entry_match *) state->buf_kern_start;
- 		if (match_kern) {
- 			char *tmp;
-@@ -2038,22 +2039,18 @@ static int ebt_size_mwt(struct compat_eb
- 		if (match_kern)
- 			match_kern->match_size = ret;
- 
--		/* rule should have no remaining data after target */
--		if (type == EBT_COMPAT_TARGET && size_left)
--			return -EINVAL;
--
- 		match32 = (struct compat_ebt_entry_mwt *) buf;
--	}
-+	} while (size_left);
- 
- 	return growth;
- }
- 
- /* called for all ebt_entry structures. */
--static int size_entry_mwt(struct ebt_entry *entry, const unsigned char *base,
-+static int size_entry_mwt(const struct ebt_entry *entry, const unsigned char *base,
- 			  unsigned int *total,
- 			  struct ebt_entries_buf_state *state)
- {
--	unsigned int i, j, startoff, new_offset = 0;
-+	unsigned int i, j, startoff, next_expected_off, new_offset = 0;
- 	/* stores match/watchers/targets & offset of next struct ebt_entry: */
- 	unsigned int offsets[4];
- 	unsigned int *offsets_update = NULL;
-@@ -2140,11 +2137,13 @@ static int size_entry_mwt(struct ebt_ent
- 			return ret;
- 	}
- 
--	startoff = state->buf_user_offset - startoff;
-+	next_expected_off = state->buf_user_offset - startoff;
-+	if (next_expected_off != entry->next_offset)
-+		return -EINVAL;
- 
--	if (WARN_ON(*total < startoff))
-+	if (*total < entry->next_offset)
- 		return -EINVAL;
--	*total -= startoff;
-+	*total -= entry->next_offset;
- 	return 0;
- }
- 
+-- 
+2.20.1
+
 
 
