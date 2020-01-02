@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C09C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CE3C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE35E2253D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8684E22525
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003229;
-	bh=fmboPpT1eFOvDSEIEeFwDihXVDGL0lJ0p7IdzRG+nrc=;
+	s=default; t=1578003231;
+	bh=Fra8aZasCrfdjr2SqA6CMzh9DAlocZ+YwGMIgLze7jk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=svdv8yHiVsdhORuJLvJZDISgUg5EJl0rXXapY+9NyghtWNkffABI1jfGH2dkmtboh
-	 2WSjl1+Dpe3Of6FJf2ZYI0tBWy2EqWsou6uxlmTP6dFGsm6+Xbb+quNi7gOynRkN46
-	 hniVwCKw0F7ltmi8s/EHxyPZKmCueX7eUr8XTqBk=
+	b=uKfRok25k/PQ/LlKh8vXFTKCgB0/Lpod8R90PBNOJNNsK5f9EIskWmTivWvLRsZKh
+	 N+XuYrsLxQ5PlZZS2cwycoZizVY1oZS/LkRM5OEWqjL5xYoXl/AaUH1kEk5LUa1BqX
+	 5ZRqPxDsbBAsyGH2tXrJAduLHimAV+3oo18j6acU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgABWNs (ORCPT
+        id S1727786AbgABWNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:13:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53776 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:13:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727750AbgABWNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:13:46 -0500
+        id S1727445AbgABWNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:13:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9C6522525;
-        Thu,  2 Jan 2020 22:13:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66B4C21D7D;
+        Thu,  2 Jan 2020 22:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003225;
-        bh=fmboPpT1eFOvDSEIEeFwDihXVDGL0lJ0p7IdzRG+nrc=;
+        s=default; t=1578003222;
+        bh=Fra8aZasCrfdjr2SqA6CMzh9DAlocZ+YwGMIgLze7jk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FXO6AGHjSxda+QS1rYgSHBZsRZrUGVpPhN+ZpACMC2BpDg8WnADxU/Db0zystI/De
-         FrH40PRcW2OrirZ3+1zkVQ/Q2spY5ZEMeOHuVZPxQTRMiCgxgkB9wi/CrpBZrsrvh8
-         av6iwcHbnxu1r0RxsCfxDOR0JYz4ltovop4vieDs=
+        b=QaDohJchHauPpddrFOebyQ4AXMViyr72caJvi1Dd2QlRqoCa6BQAr8iGvTk8kr/MC
+         fpYF5eipu/xJO2Ev84T6K56kTuBHcM24c6jstkFjkUMZodk8oqNrmFV+6ciyIdYYiQ
+         8VSxJGrfA00mKDZa7I6CwgvQKRuo214vaX0c3AwU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 072/191] scsi: atari_scsi: sun3_scsi: Set sg_tablesize to 1 instead of SG_NONE
-Date:   Thu,  2 Jan 2020 23:05:54 +0100
-Message-Id: <20200102215837.645725038@linuxfoundation.org>
+Subject: [PATCH 5.4 071/191] powerpc/book3s/mm: Update Oops message to print the correct translation in use
+Date:   Thu,  2 Jan 2020 23:05:53 +0100
+Message-Id: <20200102215837.517222128@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,160 +63,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit 79172ab20bfd8437b277254028efdb68484e2c21 ]
+[ Upstream commit d7e02f7b7991dbe14a2acfb0e53d675cd149001c ]
 
-Since the scsi subsystem adopted the blk-mq API, a host with zero
-sg_tablesize crashes with a NULL pointer dereference.
+Avoids confusion when printing Oops message like below
 
-blk_queue_max_segments: set to minimum 1
-scsi 0:0:0:0: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
-scsi target0:0:0: Beginning Domain Validation
-scsi target0:0:0: Domain Validation skipping write tests
-scsi target0:0:0: Ending Domain Validation
-blk_queue_max_segments: set to minimum 1
-scsi 0:0:1:0: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
-scsi target0:0:1: Beginning Domain Validation
-scsi target0:0:1: Domain Validation skipping write tests
-scsi target0:0:1: Ending Domain Validation
-blk_queue_max_segments: set to minimum 1
-scsi 0:0:2:0: CD-ROM            QEMU     QEMU CD-ROM      2.5+ PQ: 0 ANSI: 5
-scsi target0:0:2: Beginning Domain Validation
-scsi target0:0:2: Domain Validation skipping write tests
-scsi target0:0:2: Ending Domain Validation
-blk_queue_max_segments: set to minimum 1
-blk_queue_max_segments: set to minimum 1
-blk_queue_max_segments: set to minimum 1
-blk_queue_max_segments: set to minimum 1
-sr 0:0:2:0: Power-on or device reset occurred
-sd 0:0:0:0: Power-on or device reset occurred
-sd 0:0:1:0: Power-on or device reset occurred
-sd 0:0:0:0: [sda] 10485762 512-byte logical blocks: (5.37 GB/5.00 GiB)
-sd 0:0:0:0: [sda] Write Protect is off
-sd 0:0:0:0: [sda] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-Unable to handle kernel NULL pointer dereference at virtual address (ptrval)
-Oops: 00000000
-Modules linked in:
-PC: [<001cd874>] blk_mq_free_request+0x66/0xe2
-SR: 2004  SP: (ptrval)  a2: 00874520
-d0: 00000000    d1: 00000000    d2: 009ba800    d3: 00000000
-d4: 00000000    d5: 08000002    a0: 0087be68    a1: 009a81e0
-Process kworker/u2:2 (pid: 15, task=(ptrval))
-Frame format=7 eff addr=0000007a ssw=0505 faddr=0000007a
-wb 1 stat/addr/data: 0000 00000000 00000000
-wb 2 stat/addr/data: 0000 00000000 00000000
-wb 3 stat/addr/data: 0000 0000007a 00000000
-push data: 00000000 00000000 00000000 00000000
-Stack from 0087bd98:
-        00000002 00000000 0087be72 009a7820 0087bdb4 001c4f6c 009a7820 0087bdd4
-        0024d200 009a7820 0024d0dc 0087be72 009baa00 0087be68 009a5000 0087be7c
-        00265d10 009a5000 0087be72 00000003 00000000 00000000 00000000 0087be68
-        00000bb8 00000005 00000000 00000000 00000000 00000000 00265c56 00000000
-        009ba60c 0036ddf4 00000002 ffffffff 009baa00 009ba600 009a50d6 0087be74
-        00227ba0 009baa08 00000001 009baa08 009ba60c 0036ddf4 00000000 00000000
-Call Trace: [<001c4f6c>] blk_put_request+0xe/0x14
- [<0024d200>] __scsi_execute+0x124/0x174
- [<0024d0dc>] __scsi_execute+0x0/0x174
- [<00265d10>] sd_revalidate_disk+0xba/0x1f02
- [<00265c56>] sd_revalidate_disk+0x0/0x1f02
- [<0036ddf4>] strlen+0x0/0x22
- [<00227ba0>] device_add+0x3da/0x604
- [<0036ddf4>] strlen+0x0/0x22
- [<00267e64>] sd_probe+0x30c/0x4b4
- [<0002da44>] process_one_work+0x0/0x402
- [<0022b978>] really_probe+0x226/0x354
- [<0022bc34>] driver_probe_device+0xa4/0xf0
- [<0002da44>] process_one_work+0x0/0x402
- [<0022bcd0>] __driver_attach_async_helper+0x50/0x70
- [<00035dae>] async_run_entry_fn+0x36/0x130
- [<0002db88>] process_one_work+0x144/0x402
- [<0002e1aa>] worker_thread+0x0/0x570
- [<0002e29a>] worker_thread+0xf0/0x570
- [<0002e1aa>] worker_thread+0x0/0x570
- [<003768d8>] schedule+0x0/0xb8
- [<0003f58c>] __init_waitqueue_head+0x0/0x12
- [<00033e92>] kthread+0xc2/0xf6
- [<000331e8>] kthread_parkme+0x0/0x4e
- [<003768d8>] schedule+0x0/0xb8
- [<00033dd0>] kthread+0x0/0xf6
- [<00002c10>] ret_from_kernel_thread+0xc/0x14
-Code: 0280 0006 0800 56c0 4400 0280 0000 00ff <52b4> 0c3a 082b 0006 0013 6706 2042 53a8 00c4 4ab9 0047 3374 6640 202d 000c 670c
-Disabling lock debugging due to kernel taint
+ Faulting instruction address: 0xc00000000008bdb4
+ Oops: Kernel access of bad area, sig: 11 [#1]
+ LE PAGE_SIZE=64K MMU=Radix MMU=Hash SMP NR_CPUS=2048 NUMA PowerNV
 
-Avoid this by setting sg_tablesize = 1.
+This was because we never clear the MMU_FTR_HPTE_TABLE feature flag
+even if we run with radix translation. It was discussed that we should
+look at this feature flag as an indication of the capability to run
+hash translation and we should not clear the flag even if we run in
+radix translation. All the code paths check for radix_enabled() check and
+if found true consider we are running with radix translation. Follow the
+same sequence for finding the MMU translation string to be used in Oops
+message.
 
-Link: https://lore.kernel.org/r/4567bcae94523b47d6f3b77450ba305823bca479.1572656814.git.fthain@telegraphics.com.au
-Reported-and-tested-by: Michael Schmitz <schmitzmic@gmail.com>
-Reviewed-by: Michael Schmitz <schmitzmic@gmail.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Acked-by: Nicholas Piggin <npiggin@gmail.com>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190711145814.17970-1-aneesh.kumar@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/atari_scsi.c | 6 +++---
- drivers/scsi/mac_scsi.c   | 2 +-
- drivers/scsi/sun3_scsi.c  | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ arch/powerpc/kernel/traps.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/atari_scsi.c b/drivers/scsi/atari_scsi.c
-index e809493d0d06..a82b63a66635 100644
---- a/drivers/scsi/atari_scsi.c
-+++ b/drivers/scsi/atari_scsi.c
-@@ -742,7 +742,7 @@ static int __init atari_scsi_probe(struct platform_device *pdev)
- 		atari_scsi_template.sg_tablesize = SG_ALL;
- 	} else {
- 		atari_scsi_template.can_queue    = 1;
--		atari_scsi_template.sg_tablesize = SG_NONE;
-+		atari_scsi_template.sg_tablesize = 1;
- 	}
+diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
+index 82f43535e686..014ff0701f24 100644
+--- a/arch/powerpc/kernel/traps.c
++++ b/arch/powerpc/kernel/traps.c
+@@ -250,15 +250,22 @@ static void oops_end(unsigned long flags, struct pt_regs *regs,
+ }
+ NOKPROBE_SYMBOL(oops_end);
  
- 	if (setup_can_queue > 0)
-@@ -751,8 +751,8 @@ static int __init atari_scsi_probe(struct platform_device *pdev)
- 	if (setup_cmd_per_lun > 0)
- 		atari_scsi_template.cmd_per_lun = setup_cmd_per_lun;
++static char *get_mmu_str(void)
++{
++	if (early_radix_enabled())
++		return " MMU=Radix";
++	if (early_mmu_has_feature(MMU_FTR_HPTE_TABLE))
++		return " MMU=Hash";
++	return "";
++}
++
+ static int __die(const char *str, struct pt_regs *regs, long err)
+ {
+ 	printk("Oops: %s, sig: %ld [#%d]\n", str, err, ++die_counter);
  
--	/* Leave sg_tablesize at 0 on a Falcon! */
--	if (ATARIHW_PRESENT(TT_SCSI) && setup_sg_tablesize >= 0)
-+	/* Don't increase sg_tablesize on Falcon! */
-+	if (ATARIHW_PRESENT(TT_SCSI) && setup_sg_tablesize > 0)
- 		atari_scsi_template.sg_tablesize = setup_sg_tablesize;
- 
- 	if (setup_hostid >= 0) {
-diff --git a/drivers/scsi/mac_scsi.c b/drivers/scsi/mac_scsi.c
-index 9c5566217ef6..b5dde9d0d054 100644
---- a/drivers/scsi/mac_scsi.c
-+++ b/drivers/scsi/mac_scsi.c
-@@ -464,7 +464,7 @@ static int __init mac_scsi_probe(struct platform_device *pdev)
- 		mac_scsi_template.can_queue = setup_can_queue;
- 	if (setup_cmd_per_lun > 0)
- 		mac_scsi_template.cmd_per_lun = setup_cmd_per_lun;
--	if (setup_sg_tablesize >= 0)
-+	if (setup_sg_tablesize > 0)
- 		mac_scsi_template.sg_tablesize = setup_sg_tablesize;
- 	if (setup_hostid >= 0)
- 		mac_scsi_template.this_id = setup_hostid & 7;
-diff --git a/drivers/scsi/sun3_scsi.c b/drivers/scsi/sun3_scsi.c
-index 955e4c938d49..701b842296f0 100644
---- a/drivers/scsi/sun3_scsi.c
-+++ b/drivers/scsi/sun3_scsi.c
-@@ -501,7 +501,7 @@ static struct scsi_host_template sun3_scsi_template = {
- 	.eh_host_reset_handler	= sun3scsi_host_reset,
- 	.can_queue		= 16,
- 	.this_id		= 7,
--	.sg_tablesize		= SG_NONE,
-+	.sg_tablesize		= 1,
- 	.cmd_per_lun		= 2,
- 	.dma_boundary		= PAGE_SIZE - 1,
- 	.cmd_size		= NCR5380_CMD_SIZE,
-@@ -523,7 +523,7 @@ static int __init sun3_scsi_probe(struct platform_device *pdev)
- 		sun3_scsi_template.can_queue = setup_can_queue;
- 	if (setup_cmd_per_lun > 0)
- 		sun3_scsi_template.cmd_per_lun = setup_cmd_per_lun;
--	if (setup_sg_tablesize >= 0)
-+	if (setup_sg_tablesize > 0)
- 		sun3_scsi_template.sg_tablesize = setup_sg_tablesize;
- 	if (setup_hostid >= 0)
- 		sun3_scsi_template.this_id = setup_hostid & 7;
+-	printk("%s PAGE_SIZE=%luK%s%s%s%s%s%s%s %s\n",
++	printk("%s PAGE_SIZE=%luK%s%s%s%s%s%s %s\n",
+ 	       IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN) ? "LE" : "BE",
+-	       PAGE_SIZE / 1024,
+-	       early_radix_enabled() ? " MMU=Radix" : "",
+-	       early_mmu_has_feature(MMU_FTR_HPTE_TABLE) ? " MMU=Hash" : "",
++	       PAGE_SIZE / 1024, get_mmu_str(),
+ 	       IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "",
+ 	       IS_ENABLED(CONFIG_SMP) ? " SMP" : "",
+ 	       IS_ENABLED(CONFIG_SMP) ? (" NR_CPUS=" __stringify(NR_CPUS)) : "",
 -- 
 2.20.1
 
