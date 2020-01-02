@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D7FC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C559C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D2320863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4018D21835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004612;
-	bh=aWwajad3FFOd5MGX83mrg5evnt4kXJ3VwXi8MagwZ7E=;
+	s=default; t=1578004614;
+	bh=vApgtmOsQVMPYg5aH4YmE1Ihj8QEHEKdTfmokdJklfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kSc8KJpthkFrEsZuNJChkAp/+MPWxHKfMqWcaylbl7UJjP1pbOKqTi4qK1XQ/s8DE
-	 z9PWaF+7RdGiRewxBLiV6/CYcNx7jaq7PoxjzAx4H5NCegXxjAqGCflCt+r9lut+Fk
-	 Wo0i3uCFEWegFhpXF/mhYuT9tn5YLaxCB+0FG2iE=
+	b=RTntZKU8EeAiP6/vPyb3NRDPIqgLhmHOTdz9x76NKUtBe/3w+7ZHFqTRogIt/Cq9d
+	 Jw2ecu8dtvy52waktKqGhFn6FTLOn1EKYY+9dBWbjvlNGQ6AKOTZuKxeqHRdMBItcM
+	 vrDZWcH6tm8vKz624Q+fcIPu5LJW22mPzUumnWXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731003AbgABWgv (ORCPT
+        id S1730741AbgABWgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:36:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48432 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:36:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730991AbgABWgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:36:47 -0500
+        id S1730998AbgABWgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:36:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03FBE20863;
-        Thu,  2 Jan 2020 22:36:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61CDC20863;
+        Thu,  2 Jan 2020 22:36:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004607;
-        bh=aWwajad3FFOd5MGX83mrg5evnt4kXJ3VwXi8MagwZ7E=;
+        s=default; t=1578004609;
+        bh=vApgtmOsQVMPYg5aH4YmE1Ihj8QEHEKdTfmokdJklfs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bY+9jX+4TQRyLrFHUHYOcTgn/wxGyO7HpgouOHjzI6fnjfcwCAYnXfnw/dKIEPW8J
-         4qfd2rX42zqCNIaJHvB03NI5D35avANdjVl4XZofgBBISTpTjQEEplIfO1WFiZ+Syf
-         BHm6+y6OMfHvLHJYmpu8BYbZYgNWfDGT6W+Jx5k4=
+        b=dQItHsPrbxxIzre/UHwnZEtp5VrKmRTaGLpjIlo9uy7rs+JKtuN3Uwb4Bjt/LbG1w
+         S9E7af6bqi6d/qgBornt4kmCLJthJYktSd0aA1GgfJZTKxSziLZSineey/qExhAM9P
+         1DV9xyST1NDPbG+ux83bHWWPOZrxZumogmklOZDE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 077/137] net: nfc: nci: fix a possible sleep-in-atomic-context bug in nci_uart_tty_receive()
-Date:   Thu,  2 Jan 2020 23:07:30 +0100
-Message-Id: <20200102220557.086899682@linuxfoundation.org>
+Subject: [PATCH 4.4 078/137] net: qlogic: Fix error paths in ql_alloc_large_buffers()
+Date:   Thu,  2 Jan 2020 23:07:31 +0100
+Message-Id: <20200102220557.200215811@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -59,45 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Ben Hutchings <ben@decadent.org.uk>
 
-[ Upstream commit b7ac893652cafadcf669f78452329727e4e255cc ]
+[ Upstream commit cad46039e4c99812db067c8ac22a864960e7acc4 ]
 
-The kernel may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+ql_alloc_large_buffers() has the usual RX buffer allocation
+loop where it allocates skbs and maps them for DMA.  It also
+treats failure as a fatal error.
 
-net/nfc/nci/uart.c, 349:
-	nci_skb_alloc in nci_uart_default_recv_buf
-net/nfc/nci/uart.c, 255:
-	(FUNC_PTR)nci_uart_default_recv_buf in nci_uart_tty_receive
-net/nfc/nci/uart.c, 254:
-	spin_lock in nci_uart_tty_receive
+There are (at least) three bugs in the error paths:
 
-nci_skb_alloc(GFP_KERNEL) can sleep at runtime.
-(FUNC_PTR) means a function pointer is called.
+1. ql_free_large_buffers() assumes that the lrg_buf[] entry for the
+first buffer that couldn't be allocated will have .skb == NULL.
+But the qla_buf[] array is not zero-initialised.
 
-To fix this bug, GFP_KERNEL is replaced with GFP_ATOMIC for
-nci_skb_alloc().
+2. ql_free_large_buffers() DMA-unmaps all skbs in lrg_buf[].  This is
+incorrect for the last allocated skb, if DMA mapping failed.
 
-This bug is found by a static analysis tool STCheck written by myself.
+3. Commit 1acb8f2a7a9f ("net: qlogic: Fix memory leak in
+ql_alloc_large_buffers") added a direct call to dev_kfree_skb_any()
+after the skb is recorded in lrg_buf[], so ql_free_large_buffers()
+will double-free it.
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+The bugs are somewhat inter-twined, so fix them all at once:
+
+* Clear each entry in qla_buf[] before attempting to allocate
+  an skb for it.  This goes half-way to fixing bug 1.
+* Set the .skb field only after the skb is DMA-mapped.  This
+  fixes the rest.
+
+Fixes: 1357bfcf7106 ("qla3xxx: Dynamically size the rx buffer queue ...")
+Fixes: 0f8ab89e825f ("qla3xxx: Check return code from pci_map_single() ...")
+Fixes: 1acb8f2a7a9f ("net: qlogic: Fix memory leak in ql_alloc_large_buffers")
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/nfc/nci/uart.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/qlogic/qla3xxx.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/net/nfc/nci/uart.c
-+++ b/net/nfc/nci/uart.c
-@@ -355,7 +355,7 @@ static int nci_uart_default_recv_buf(str
- 			nu->rx_packet_len = -1;
- 			nu->rx_skb = nci_skb_alloc(nu->ndev,
- 						   NCI_MAX_PACKET_SIZE,
--						   GFP_KERNEL);
-+						   GFP_ATOMIC);
- 			if (!nu->rx_skb)
+--- a/drivers/net/ethernet/qlogic/qla3xxx.c
++++ b/drivers/net/ethernet/qlogic/qla3xxx.c
+@@ -2752,6 +2752,9 @@ static int ql_alloc_large_buffers(struct
+ 	int err;
+ 
+ 	for (i = 0; i < qdev->num_large_buffers; i++) {
++		lrg_buf_cb = &qdev->lrg_buf[i];
++		memset(lrg_buf_cb, 0, sizeof(struct ql_rcv_buf_cb));
++
+ 		skb = netdev_alloc_skb(qdev->ndev,
+ 				       qdev->lrg_buffer_len);
+ 		if (unlikely(!skb)) {
+@@ -2762,11 +2765,7 @@ static int ql_alloc_large_buffers(struct
+ 			ql_free_large_buffers(qdev);
+ 			return -ENOMEM;
+ 		} else {
+-
+-			lrg_buf_cb = &qdev->lrg_buf[i];
+-			memset(lrg_buf_cb, 0, sizeof(struct ql_rcv_buf_cb));
+ 			lrg_buf_cb->index = i;
+-			lrg_buf_cb->skb = skb;
+ 			/*
+ 			 * We save some space to copy the ethhdr from first
+ 			 * buffer
+@@ -2788,6 +2787,7 @@ static int ql_alloc_large_buffers(struct
  				return -ENOMEM;
- 		}
+ 			}
+ 
++			lrg_buf_cb->skb = skb;
+ 			dma_unmap_addr_set(lrg_buf_cb, mapaddr, map);
+ 			dma_unmap_len_set(lrg_buf_cb, maplen,
+ 					  qdev->lrg_buffer_len -
 
 
