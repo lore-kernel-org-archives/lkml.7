@@ -2,170 +2,185 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC44FC3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F38DC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7542072C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 162A520848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:59:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W45FbXt0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbgABO7c (ORCPT
+        id S1728689AbgABO7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 09:59:32 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:60111 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728544AbgABO7c (ORCPT
+        Thu, 2 Jan 2020 09:59:42 -0500
+Received: from mail-io1-f43.google.com ([209.85.166.43]:33115 "EHLO
+        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728544AbgABO7m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 09:59:32 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MMoOy-1j3asu1Afs-00Ip7v; Thu, 02 Jan 2020 15:58:56 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?q?Diego=20Elio=20Petten=C3=B2?= <flameeyes@flameeyes.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 07/22] compat_ioctl: move CDROMREADADIO to cdrom.c
-Date:   Thu,  2 Jan 2020 15:55:25 +0100
-Message-Id: <20200102145552.1853992-8-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20200102145552.1853992-1-arnd@arndb.de>
-References: <20200102145552.1853992-1-arnd@arndb.de>
+        Thu, 2 Jan 2020 09:59:42 -0500
+Received: by mail-io1-f43.google.com with SMTP id z8so38508344ioh.0;
+        Thu, 02 Jan 2020 06:59:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SbJOwHXw4vfZE5TxEI4aCOOsbnyKNkt4sp9tT+NxXPQ=;
+        b=W45FbXt0jdFw5R4/KptHImueplu6OsOwANUlORGQJ9H4rKCjCmmhZVbgaPSdpcH6/8
+         Bx4Np0c0ishKn7k6cx6ibQVdpRHuf/1+w0kzCpD3DUpL1RiIt+qx5XqAK8Sblkr0M2+M
+         POqksZ11t5S91ZqLM6JBpkvyTcI+URPU45h9jfyuqtlCKhcVFyr8Y219a6CmwksEGgsP
+         rJBnHykcc2DBcLILKsf6Fx7M+cQZrZoboXjz2g0eZBEYbUBnAXUKIBKTyrMVtY7rj5Nc
+         go0guGQwUwNX+3N6ZF2ef/2lzIopry5CiGT3pFVc/HiTVyiKwR1zp/6Ttqd9haqE10CC
+         ZTjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SbJOwHXw4vfZE5TxEI4aCOOsbnyKNkt4sp9tT+NxXPQ=;
+        b=ENgq7qJ/9eJv6SrpEPEunLurTI3zrPeCd9pJfd1DQ+4dHqFO7JtHeoKLTjqz6IsrRR
+         azEXKpV/l1OG3OVf61TDtzrYXO19awGvtPPSLF93Gg+IGbPEq3SPgBXGaEMz1ktjmFmZ
+         FH22dsi1wN1rcTqpika5MENIzTzyHIPFIEmffa46Scb1E+0Q9AN75uBgXgkl7nw99enF
+         Z6ghqkO8XH8PP0u4OztvdWRZBZl74xUrbysvgowMYFb6feWBN1KvsGPeYPmeB2NFMLKk
+         P7epzR6EQPv6uuCokvqKF8dZ8obuIjeocwImg9IVvrUTRyDBra6DXDKypsImHiWCMbLL
+         MfNA==
+X-Gm-Message-State: APjAAAWmThjmTG3A4i3ZMs8IipA+TeaEGeIKbUOGJhhf/cojemhkZfE+
+        Z4VrNeS4Lt0RoiID4RGOH7Ynzj6KpCyH3GXRhEI=
+X-Google-Smtp-Source: APXvYqwtnVBhFgvdrLrZmgps62Q2fDKSg8rKuzc/RCagPcGTllYeU98rOhGq5p4TeUZHZ757HhKg19VgJpFiLmxhLdE=
+X-Received: by 2002:a5e:a614:: with SMTP id q20mr46610554ioi.36.1577977181127;
+ Thu, 02 Jan 2020 06:59:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:yC0KphMQ1+jnKNs/TZQcxE6mhJ8DI2BYfsTPoVcbUgaeAslYM1E
- +kDeZqbUJadN1PpR9x8xf6D1wRqI76SYi4qPB8Pn5nQ5LVbniZIaEa5h5YVIDwT0GvC4BEc
- VSbWkOJMe6hAEy4xQ5Qilz8rsgyXx60SBBEXK2X/bPWP2D+3dyjKdrOdXgRD7sf+oCaeOSw
- MvEzObUZ8SGijvgCyrrGg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0LyknXyySuU=:QGnS3AemUqQiWwsUb3cQ/0
- uuErWnUU23YRVY1fLesU2gdZctGhMViXl8+td7MXCS35Fk9iowBsTwHZRD80P/Hx91wyK6v/R
- 5nt5w2FQNTNwP8rgUFqVHjzku2BAMJPhyoj4KQ89HowsHYZim9Ldxo68o4b+8/XxWwNP2qkNz
- pnNUU8PuHd6PcfuanisY4QTXj6pk9A/67mABX40gtjRWMYddnOgA8uL1ZaY1kuwL6isZEs9Ki
- /JDLvt9IWDOIm7pYo7AKlFRW5383nr+mb+NrYM0uV3SU0412iMKKcAbkE97TDFif92HbVyfbc
- QeBy3LD2IZFHu3HFxT52awhYufiOTtQSgJkL1IPStQfWUl2JerUq9vcQqTMJt7I7UjOvtJuoL
- k9cqEqREoPTUgLY3Xq0QqnvxMjkCtihchOz6CHtpxNW763ZJjRC6zp7HZoQodID3Pea7pB4u2
- FgbeWeX+xdwf/I9UXF87392pBu0Nx+xQGf4t6whI7RTSy/NmYlROtB/9vjp0TOXiQuNGETnqm
- SMYt86fggLGoYEV5V6T/9CQEweNSxvbqouK+e1KmGvCKKNXD719X8rhh0MqOJ9LS1k6+ZfAzz
- pCPwjiU2N9LigHlM0PyXlgoM2pwP+CYbRTy9jQMzn0k6fx97qiQOC+xlurx1PiiTFw33mJGvq
- bu1DrM1gKavMfJUn8yJIFWTaLVWvFLYfpaAFci+kzktY40ScAYUbMzdOmcGG827F/Q7FRK5ez
- 2SGBpPcAaSrLNUSqVjg1vLhmCixfxq+wUHqRYHK9FtXMk1/9LvZRmhhiBKISNVyRy5iXHiwln
- Yvd5ArmMtpq1/2599K8jgYBJvrinU6YiMZELyzXSRBdwPQ1kq7hc0beTn0IGb1XZDtNP9u6hn
- UW6qirvFHKQzVxCJVrJA==
+References: <CABXGCsODr3tMpQxJ_nhWQQg5WGakFt4Yu5B8ev6ErOkc+zv9kA@mail.gmail.com>
+ <20200101141748.GA191637@mit.edu> <CABXGCsOv26W6aqB5WPMe-mEynmwy55DTfTeL5Dg9vRq6+Y6WvA@mail.gmail.com>
+ <CABXGCsNkzPrjqMRaWpssorxzhMLWBvLeSw9BpKYr_DW4LJQECQ@mail.gmail.com>
+ <20200102110817.ahqaqidw3ztw3kax@10.255.255.10> <CABXGCsNkm3VuzO60WBCi4VJmDnO=DmprQ1P=dd0FcW2-+dGc0w@mail.gmail.com>
+ <20200102131434.tky2hquki23laqqo@10.255.255.10>
+In-Reply-To: <20200102131434.tky2hquki23laqqo@10.255.255.10>
+From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date:   Thu, 2 Jan 2020 20:00:20 +0500
+Message-ID: <CABXGCsMV1GRiqrXCQGHqvpBiendU3mG36h0YoG=4nw6spZHq=w@mail.gmail.com>
+Subject: Re: [bugreport] "hwclock -w" reset time instead of setting the right time
+To:     Karel Zak <kzak@redhat.com>
+Cc:     util-linux@vger.kernel.org,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Again, there is only one file that needs this, so move the conversion
-handler into the native implementation.
+On Thu, 2 Jan 2020 at 18:14, Karel Zak <kzak@redhat.com> wrote:
+>
+> At first glance it seems hwclock works as expected, I do not see
+> anything wrong in the output.
+>
+> > Demonstration: https://youtu.be/Yx27IH2opEc
+>
+> What is hw time before reboot? Can you verify that hwclock reset the
+> clock? (or is it system reboot?)
+>
+>     # hwclock -w -v
+>     # hwclock -v
+>
+> Do you see anything interesting in dmesg output before reboot and after
+> hwclock -w?
+>
+>
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- block/compat_ioctl.c  | 36 ------------------------------------
- drivers/cdrom/cdrom.c | 28 +++++++++++++++++++++++++---
- 2 files changed, 25 insertions(+), 39 deletions(-)
+Yes, before reboot all look like good:
 
-diff --git a/block/compat_ioctl.c b/block/compat_ioctl.c
-index e34203f7d1cf..91a5dcf6e36c 100644
---- a/block/compat_ioctl.c
-+++ b/block/compat_ioctl.c
-@@ -96,40 +96,6 @@ static int compat_hdio_ioctl(struct block_device *bdev, fmode_t mode,
- 	return error;
- }
- 
--struct compat_cdrom_read_audio {
--	union cdrom_addr	addr;
--	u8			addr_format;
--	compat_int_t		nframes;
--	compat_caddr_t		buf;
--};
--
--static int compat_cdrom_read_audio(struct block_device *bdev, fmode_t mode,
--		unsigned int cmd, unsigned long arg)
--{
--	struct cdrom_read_audio __user *cdread_audio;
--	struct compat_cdrom_read_audio __user *cdread_audio32;
--	__u32 data;
--	void __user *datap;
--
--	cdread_audio = compat_alloc_user_space(sizeof(*cdread_audio));
--	cdread_audio32 = compat_ptr(arg);
--
--	if (copy_in_user(&cdread_audio->addr,
--			 &cdread_audio32->addr,
--			 (sizeof(*cdread_audio32) -
--			  sizeof(compat_caddr_t))))
--		return -EFAULT;
--
--	if (get_user(data, &cdread_audio32->buf))
--		return -EFAULT;
--	datap = compat_ptr(data);
--	if (put_user(datap, &cdread_audio->buf))
--		return -EFAULT;
--
--	return __blkdev_driver_ioctl(bdev, mode, cmd,
--			(unsigned long)cdread_audio);
--}
--
- struct compat_blkpg_ioctl_arg {
- 	compat_int_t op;
- 	compat_int_t flags;
-@@ -179,8 +145,6 @@ static int compat_blkdev_driver_ioctl(struct block_device *bdev, fmode_t mode,
- 	case HDIO_GET_ADDRESS:
- 	case HDIO_GET_BUSSTATE:
- 		return compat_hdio_ioctl(bdev, mode, cmd, arg);
--	case CDROMREADAUDIO:
--		return compat_cdrom_read_audio(bdev, mode, cmd, arg);
- 
- 	/*
- 	 * No handler required for the ones below, we just need to
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index eebdcbef0578..48095025e588 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -3017,9 +3017,31 @@ static noinline int mmc_ioctl_cdrom_read_audio(struct cdrom_device_info *cdi,
- 	struct cdrom_read_audio ra;
- 	int lba;
- 
--	if (copy_from_user(&ra, (struct cdrom_read_audio __user *)arg,
--			   sizeof(ra)))
--		return -EFAULT;
-+#ifdef CONFIG_COMPAT
-+	if (in_compat_syscall()) {
-+		struct compat_cdrom_read_audio {
-+			union cdrom_addr	addr;
-+			u8			addr_format;
-+			compat_int_t		nframes;
-+			compat_caddr_t		buf;
-+		} ra32;
-+
-+		if (copy_from_user(&ra32, arg, sizeof(ra32)))
-+			return -EFAULT;
-+
-+		ra = (struct cdrom_read_audio) {
-+			.addr		= ra32.addr,
-+			.addr_format	= ra32.addr_format,
-+			.nframes	= ra32.nframes,
-+			.buf		= compat_ptr(ra32.buf),
-+		};
-+	} else
-+#endif
-+	{
-+		if (copy_from_user(&ra, (struct cdrom_read_audio __user *)arg,
-+				   sizeof(ra)))
-+			return -EFAULT;
-+	}
- 
- 	if (ra.addr_format == CDROM_MSF)
- 		lba = msf_to_lba(ra.addr.msf.minute,
--- 
-2.20.0
+[root@localhost ~]# hwclock -v
+hwclock from util-linux 2.35-rc1-20-63f8
+System Time: 1577977370.909455
+Trying to open: /dev/rtc0
+Using the rtc interface to the clock.
+Last drift adjustment done at 1577973311 seconds after 1969
+Last calibration done at 1577973311 seconds after 1969
+Hardware clock is on UTC time
+Assuming hardware clock is kept in UTC time.
+Waiting for clock tick...
+...got clock tick
+Time read from Hardware Clock: 2020/01/02 15:02:52
+Hw clock time : 2020/01/02 15:02:52 = 1577977372 seconds since 1969
+Time since last adjustment is 4061 seconds
+Calculated Hardware Clock drift is 0.000000 seconds
+2020-01-02 20:02:51.077494+05:00
 
+
+[root@localhost ~]# hwclock -w -v
+hwclock from util-linux 2.35-rc1-20-63f8
+System Time: 1577977383.789039
+Trying to open: /dev/rtc0
+Using the rtc interface to the clock.
+Last drift adjustment done at 1577973311 seconds after 1969
+Last calibration done at 1577973311 seconds after 1969
+Hardware clock is on UTC time
+Assuming hardware clock is kept in UTC time.
+RTC type: 'rtc_cmos'
+Using delay: 0.500000 seconds
+missed it - 1577977383.789405 is too far past 1577977383.500000
+(0.289405 > 0.001000)
+1577977384.500000 is close enough to 1577977384.500000 (0.000000 < 0.002000)
+Set RTC to 1577977384 (1577977383 + 1; refsystime = 1577977383.000000)
+Setting Hardware Clock to 15:03:04 = 1577977384 seconds since 1969
+ioctl(RTC_SET_TIME) was successful.
+Not adjusting drift factor because the --update-drift option was not used.
+New /etc/adjtime data:
+0.000000 1577977383 0.000000
+1577977383
+UTC
+
+
+[root@localhost ~]# hwclock -v
+hwclock from util-linux 2.35-rc1-20-63f8
+System Time: 1577977389.540630
+Trying to open: /dev/rtc0
+Using the rtc interface to the clock.
+Last drift adjustment done at 1577977383 seconds after 1969
+Last calibration done at 1577977383 seconds after 1969
+Hardware clock is on UTC time
+Assuming hardware clock is kept in UTC time.
+Waiting for clock tick...
+...got clock tick
+Time read from Hardware Clock: 2020/01/02 15:03:10
+Hw clock time : 2020/01/02 15:03:10 = 1577977390 seconds since 1969
+Time since last adjustment is 7 seconds
+Calculated Hardware Clock drift is 0.000000 seconds
+2020-01-02 20:03:09.718222+05:00
+
+But after reboot, the hwtime is reset:
+
+=== Reboot ===
+
+
+[root@localhost ~]# hwclock -v
+hwclock from util-linux 2.35-rc1-20-63f8
+System Time: 1576407103.342223
+Trying to open: /dev/rtc0
+Using the rtc interface to the clock.
+Last drift adjustment done at 1577977383 seconds after 1969
+Last calibration done at 1577977383 seconds after 1969
+Hardware clock is on UTC time
+Assuming hardware clock is kept in UTC time.
+Waiting for clock tick...
+...got clock tick
+Time read from Hardware Clock: 2019/01/01 00:05:31
+Hw clock time : 2019/01/01 00:05:31 = 1546301131 seconds since 1969
+Time since last adjustment is -31676252 seconds
+Calculated Hardware Clock drift is 0.000000 seconds
+2019-01-01 05:05:30.170661+05:00
+
+[root@localhost ~]# date
+Sun 15 Dec 2019 03:52:01 PM +05
+
+
+Demonstration: https://youtu.be/X0w2hbAmKmM
+
+
+--
+Best Regards,
+Mike Gavrilov.
