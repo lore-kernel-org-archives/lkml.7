@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D153C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC9AC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D27820848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E5D20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005831;
-	bh=cTA2eAYld73xYFoSNXCACbowDDFywcmMTcA6QE+outE=;
+	s=default; t=1578005836;
+	bh=N0Q1CurecxHIzsCZPreE5S/u/LHdBJIDj+oV/JQGEt4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yr0QD/B2xj3TLahr3IGGkKqK1BwUxDebMBe+YT6mHwSkBcK/kg0mGpXD7G4wwMHd8
-	 2uwOLzIDjKRe+IRoj8FSrF6wyzi/0upQymird64ncbKFMkPxq3x2YMHLidBfzGHjvu
-	 CktpEnC1l8Hsuu+Kj/tfpiEHVWM2KsmdNyMGG/C8=
+	b=HUHlew8wluML4FuJhzjOns3mKmaNMemXv9LZed6Fplkol3HXpmT0DIsa5A0cWo8nW
+	 Kha6ybVjSHOP6MEPL42/qw4nXjvwIKvV5B8ryUn0T+pae3AdOqcYGbL6XW+76RemSq
+	 vhgtVmXNzkLzu5EzpV/fMPwLvVIz0FIbOBSnNDJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbgABW5J (ORCPT
+        id S1727525AbgABWRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:57:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59758 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:17:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727627AbgABWRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:17:21 -0500
+        id S1727811AbgABWRB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:17:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5BCE21582;
-        Thu,  2 Jan 2020 22:17:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E9A221582;
+        Thu,  2 Jan 2020 22:17:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003440;
-        bh=cTA2eAYld73xYFoSNXCACbowDDFywcmMTcA6QE+outE=;
+        s=default; t=1578003420;
+        bh=N0Q1CurecxHIzsCZPreE5S/u/LHdBJIDj+oV/JQGEt4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AgX6OQUzmwniEpqWxlxJsnAtX4VvW8i4SZX/DoSgSMuc6z0WEqKLm18ga6YvBJQ+D
-         zqHx9fTShRlSAnRmrr0CY1QtcrOze/QEl8aLT1YK2CG2PvIMudRxy65N7pbnPVlEEH
-         JbbBfnVzTSFbJ06kGnPXgGdJs3vmHQIKmOwO+QSQ=
+        b=gmqtEoELXDgSzM0oyD8oLNOEVBVx29D8zCvnTeCG1iTnndIQEUc30hRnLqJ63ZzMk
+         zTZ1MRWMsSCneC9d94g5l1BcSAiXfGrUUdk/poVdG08sQPCGC9M/adPgJ+PLiBvdr5
+         X87Do4Ie0mkbuCEvP70ZHz7e5Q3Al59aihh7fzTo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 161/191] bnxt_en: Fix bp->fw_health allocation and free logic.
-Date:   Thu,  2 Jan 2020 23:07:23 +0100
-Message-Id: <20200102215846.635578505@linuxfoundation.org>
+Subject: [PATCH 5.4 154/191] net: stmmac: dwmac-meson8b: Fix the RGMII TX delay on Meson8b/8m2 SoCs
+Date:   Thu,  2 Jan 2020 23:07:16 +0100
+Message-Id: <20200102215845.933194255@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,119 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit 8280b38e01f71e0f89389ccad3fa43b79e57c604 ]
+[ Upstream commit bd6f48546b9cb7a785344fc78058c420923d7ed8 ]
 
-bp->fw_health needs to be allocated for either the firmware initiated
-reset feature or the driver initiated error recovery feature.  The
-current code is not allocating bp->fw_health for all the necessary cases.
-This patch corrects the logic to allocate bp->fw_health correctly when
-needed.  If allocation fails, we clear the feature flags.
+GXBB and newer SoCs use the fixed FCLK_DIV2 (1GHz) clock as input for
+the m250_sel clock. Meson8b and Meson8m2 use MPLL2 instead, whose rate
+can be adjusted at runtime.
 
-We also add the the missing kfree(bp->fw_health) when the driver is
-unloaded.  If we get an async reset message from the firmware, we also
-need to make sure that we have a valid bp->fw_health before proceeding.
+So far we have been running MPLL2 with ~250MHz (and the internal
+m250_div with value 1), which worked enough that we could transfer data
+with an TX delay of 4ns. Unfortunately there is high packet loss with
+an RGMII PHY when transferring data (receiving data works fine though).
+Odroid-C1's u-boot is running with a TX delay of only 2ns as well as
+the internal m250_div set to 2 - no lost (TX) packets can be observed
+with that setting in u-boot.
 
-Fixes: 07f83d72d238 ("bnxt_en: Discover firmware error recovery capabilities.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Manual testing has shown that the TX packet loss goes away when using
+the following settings in Linux (the vendor kernel uses the same
+settings):
+- MPLL2 clock set to ~500MHz
+- m250_div set to 2
+- TX delay set to 2ns on the MAC side
+
+Update the m250_div divider settings to only accept dividers greater or
+equal 2 to fix the TX delay generated by the MAC.
+
+iperf3 results before the change:
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec   182 MBytes   153 Mbits/sec  514      sender
+[  5]   0.00-10.00  sec   182 MBytes   152 Mbits/sec           receiver
+
+iperf3 results after the change (including an updated TX delay of 2ns):
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-10.00  sec   927 MBytes   778 Mbits/sec    0      sender
+[  5]   0.00-10.01  sec   927 MBytes   777 Mbits/sec           receiver
+
+Fixes: 4f6a71b84e1afd ("net: stmmac: dwmac-meson8b: fix internal RGMII clock configuration")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |   36 +++++++++++++++++++++---------
- drivers/net/ethernet/broadcom/bnxt/bnxt.h |    1 
- 2 files changed, 27 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -1995,6 +1995,9 @@ static int bnxt_async_event_process(stru
- 	case ASYNC_EVENT_CMPL_EVENT_ID_RESET_NOTIFY: {
- 		u32 data1 = le32_to_cpu(cmpl->event_data1);
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
+@@ -112,6 +112,14 @@ static int meson8b_init_rgmii_tx_clk(str
+ 	struct device *dev = dwmac->dev;
+ 	const char *parent_name, *mux_parent_names[MUX_CLK_NUM_PARENTS];
+ 	struct meson8b_dwmac_clk_configs *clk_configs;
++	static const struct clk_div_table div_table[] = {
++		{ .div = 2, .val = 2, },
++		{ .div = 3, .val = 3, },
++		{ .div = 4, .val = 4, },
++		{ .div = 5, .val = 5, },
++		{ .div = 6, .val = 6, },
++		{ .div = 7, .val = 7, },
++	};
  
-+		if (!bp->fw_health)
-+			goto async_event_process_exit;
-+
- 		bp->fw_reset_timestamp = jiffies;
- 		bp->fw_reset_min_dsecs = cmpl->timestamp_lo;
- 		if (!bp->fw_reset_min_dsecs)
-@@ -4438,8 +4441,9 @@ static int bnxt_hwrm_func_drv_rgtr(struc
- 			    FUNC_DRV_RGTR_REQ_ENABLES_VER);
- 
- 	req.os_type = cpu_to_le16(FUNC_DRV_RGTR_REQ_OS_TYPE_LINUX);
--	flags = FUNC_DRV_RGTR_REQ_FLAGS_16BIT_VER_MODE |
--		FUNC_DRV_RGTR_REQ_FLAGS_HOT_RESET_SUPPORT;
-+	flags = FUNC_DRV_RGTR_REQ_FLAGS_16BIT_VER_MODE;
-+	if (bp->fw_cap & BNXT_FW_CAP_HOT_RESET)
-+		flags |= FUNC_DRV_RGTR_REQ_FLAGS_HOT_RESET_SUPPORT;
- 	if (bp->fw_cap & BNXT_FW_CAP_ERROR_RECOVERY)
- 		flags |= FUNC_DRV_RGTR_REQ_FLAGS_ERROR_RECOVERY_SUPPORT;
- 	req.flags = cpu_to_le32(flags);
-@@ -7096,14 +7100,6 @@ static int bnxt_hwrm_error_recovery_qcfg
- 	rc = _hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT);
- 	if (rc)
- 		goto err_recovery_out;
--	if (!fw_health) {
--		fw_health = kzalloc(sizeof(*fw_health), GFP_KERNEL);
--		bp->fw_health = fw_health;
--		if (!fw_health) {
--			rc = -ENOMEM;
--			goto err_recovery_out;
--		}
--	}
- 	fw_health->flags = le32_to_cpu(resp->flags);
- 	if ((fw_health->flags & ERROR_RECOVERY_QCFG_RESP_FLAGS_CO_CPU) &&
- 	    !(bp->fw_cap & BNXT_FW_CAP_KONG_MB_CHNL)) {
-@@ -10419,6 +10415,23 @@ static void bnxt_init_dflt_coal(struct b
- 	bp->stats_coal_ticks = BNXT_DEF_STATS_COAL_TICKS;
- }
- 
-+static void bnxt_alloc_fw_health(struct bnxt *bp)
-+{
-+	if (bp->fw_health)
-+		return;
-+
-+	if (!(bp->fw_cap & BNXT_FW_CAP_HOT_RESET) &&
-+	    !(bp->fw_cap & BNXT_FW_CAP_ERROR_RECOVERY))
-+		return;
-+
-+	bp->fw_health = kzalloc(sizeof(*bp->fw_health), GFP_KERNEL);
-+	if (!bp->fw_health) {
-+		netdev_warn(bp->dev, "Failed to allocate fw_health\n");
-+		bp->fw_cap &= ~BNXT_FW_CAP_HOT_RESET;
-+		bp->fw_cap &= ~BNXT_FW_CAP_ERROR_RECOVERY;
-+	}
-+}
-+
- static int bnxt_fw_init_one_p1(struct bnxt *bp)
- {
- 	int rc;
-@@ -10465,6 +10478,7 @@ static int bnxt_fw_init_one_p2(struct bn
- 		netdev_warn(bp->dev, "hwrm query adv flow mgnt failure rc: %d\n",
- 			    rc);
- 
-+	bnxt_alloc_fw_health(bp);
- 	rc = bnxt_hwrm_error_recovery_qcfg(bp);
- 	if (rc)
- 		netdev_warn(bp->dev, "hwrm query error recovery failure rc: %d\n",
-@@ -11344,6 +11358,8 @@ static void bnxt_remove_one(struct pci_d
- 	bnxt_dcb_free(bp);
- 	kfree(bp->edev);
- 	bp->edev = NULL;
-+	kfree(bp->fw_health);
-+	bp->fw_health = NULL;
- 	bnxt_cleanup_pci(bp);
- 	bnxt_free_ctx_mem(bp);
- 	kfree(bp->ctx);
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-@@ -1658,6 +1658,7 @@ struct bnxt {
- 	#define BNXT_FW_CAP_PCIE_STATS_SUPPORTED	0x00020000
- 	#define BNXT_FW_CAP_EXT_STATS_SUPPORTED		0x00040000
- 	#define BNXT_FW_CAP_ERR_RECOVER_RELOAD		0x00100000
-+	#define BNXT_FW_CAP_HOT_RESET			0x00200000
- 
- #define BNXT_NEW_RM(bp)		((bp)->fw_cap & BNXT_FW_CAP_NEW_RM)
- 	u32			hwrm_spec_code;
+ 	clk_configs = devm_kzalloc(dev, sizeof(*clk_configs), GFP_KERNEL);
+ 	if (!clk_configs)
+@@ -146,9 +154,9 @@ static int meson8b_init_rgmii_tx_clk(str
+ 	clk_configs->m250_div.reg = dwmac->regs + PRG_ETH0;
+ 	clk_configs->m250_div.shift = PRG_ETH0_CLK_M250_DIV_SHIFT;
+ 	clk_configs->m250_div.width = PRG_ETH0_CLK_M250_DIV_WIDTH;
+-	clk_configs->m250_div.flags = CLK_DIVIDER_ONE_BASED |
+-				CLK_DIVIDER_ALLOW_ZERO |
+-				CLK_DIVIDER_ROUND_CLOSEST;
++	clk_configs->m250_div.table = div_table;
++	clk_configs->m250_div.flags = CLK_DIVIDER_ALLOW_ZERO |
++				      CLK_DIVIDER_ROUND_CLOSEST;
+ 	clk = meson8b_dwmac_register_clk(dwmac, "m250_div", &parent_name, 1,
+ 					 &clk_divider_ops,
+ 					 &clk_configs->m250_div.hw);
 
 
