@@ -7,55 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C769C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E88C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7196B21835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 646762253D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003921;
-	bh=d18jTLWfApfwUh6KARUD1FZQRxSZd5VOJTbozrBOtrQ=;
+	s=default; t=1578003924;
+	bh=BchiV5Joz7jQ6Dsi93I6E9W9qyu9w853MdoklAKconY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qVrh6TPvi/2FATF+yxGmLT/OHRN6KUcDVA2aQw2C1hHBbHcPNiwJjtpb8WB6ThJbR
-	 voCazYVxMWkje0tnI3tIAm5pwYV8OvmGtYhtZgWBdcuP+8yBzlyAH0Ng0sN9rW+6g2
-	 lZhok7WEt5UlibKkNkpaAIumr7krFrmQP6dqp4rc=
+	b=cDMpGqwJBmyQu7g+16eV8ntLqknRcpx/VgHHFWoosABCFGV9Bfl6OZTIdN5CG8I8z
+	 uGXOVXj4CDY/ShHjntEfsKgILdN7GJrcBQx9k83clEViFHaWZV4tG9lFRdPbGhtOjM
+	 dMsxWpKbHPUo5d/aK9mfwg+85yXbFOotjEjmvPMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbgABWZU (ORCPT
+        id S1729512AbgABWZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:25:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50416 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:25:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729489AbgABWZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:25:16 -0500
+        id S1729489AbgABWZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:25:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6285324649;
-        Thu,  2 Jan 2020 22:25:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CC1522B48;
+        Thu,  2 Jan 2020 22:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003915;
-        bh=d18jTLWfApfwUh6KARUD1FZQRxSZd5VOJTbozrBOtrQ=;
+        s=default; t=1578003920;
+        bh=BchiV5Joz7jQ6Dsi93I6E9W9qyu9w853MdoklAKconY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q/KmEpYZvl5dJu2T+NsVWushmZlK3dNvgF1OLNQDyungBCk5p0UDZEvDKArqItahw
-         5c1tRdOGB6D6O2u20HHoD8J5rndSeeV3ruublqemW6ey8vE8n3Vs3P72Tg/Og6nQrc
-         XtqEHft9ybUgr3caCTVe20f0H/Io22aetmrh0pHQ=
+        b=FbLWpXzCYHUTr1Iiom2bM5GV3BloodRnqDIuuvD1K9xOxj/J+5zKxhO+i34qv8enm
+         Nu1Kw+bftGNY//qnCDPuUSjXhCsFtv3I/SohIntBml0OzZsw2MgmcvWJTerlrS5QmB
+         q+71dknHV9pc+VjHu0z947Jw2cGz8VTe5dXrWhc8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Ding Xiang <dingxiang@cmss.chinamobile.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Gustavo L. F. Walbon" <gwalbon@linux.ibm.com>,
+        "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 52/91] ocfs2: fix passing zero to PTR_ERR warning
-Date:   Thu,  2 Jan 2020 23:07:34 +0100
-Message-Id: <20200102220437.528488057@linuxfoundation.org>
+Subject: [PATCH 4.14 29/91] powerpc/security: Fix wrong message when RFI Flush is disable
+Date:   Thu,  2 Jan 2020 23:07:11 +0100
+Message-Id: <20200102220430.192984292@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -68,46 +62,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ding Xiang <dingxiang@cmss.chinamobile.com>
+From: Gustavo L. F. Walbon <gwalbon@linux.ibm.com>
 
-[ Upstream commit 188c523e1c271d537f3c9f55b6b65bf4476de32f ]
+[ Upstream commit 4e706af3cd8e1d0503c25332b30cad33c97ed442 ]
 
-Fix a static code checker warning:
-fs/ocfs2/acl.c:331
-	ocfs2_acl_chmod() warn: passing zero to 'PTR_ERR'
+The issue was showing "Mitigation" message via sysfs whatever the
+state of "RFI Flush", but it should show "Vulnerable" when it is
+disabled.
 
-Link: http://lkml.kernel.org/r/1dee278b-6c96-eec2-ce76-fe6e07c6e20f@linux.alibaba.com
-Fixes: 5ee0fbd50fd ("ocfs2: revert using ocfs2_acl_chmod to avoid inode cluster lock hang")
-Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+If you have "L1D private" feature enabled and not "RFI Flush" you are
+vulnerable to meltdown attacks.
+
+"RFI Flush" is the key feature to mitigate the meltdown whatever the
+"L1D private" state.
+
+SEC_FTR_L1D_THREAD_PRIV is a feature for Power9 only.
+
+So the message should be as the truth table shows:
+
+  CPU | L1D private | RFI Flush |                sysfs
+  ----|-------------|-----------|-------------------------------------
+   P9 |    False    |   False   | Vulnerable
+   P9 |    False    |   True    | Mitigation: RFI Flush
+   P9 |    True     |   False   | Vulnerable: L1D private per thread
+   P9 |    True     |   True    | Mitigation: RFI Flush, L1D private per thread
+   P8 |    False    |   False   | Vulnerable
+   P8 |    False    |   True    | Mitigation: RFI Flush
+
+Output before this fix:
+  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+  Mitigation: RFI Flush, L1D private per thread
+  # echo 0 > /sys/kernel/debug/powerpc/rfi_flush
+  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+  Mitigation: L1D private per thread
+
+Output after fix:
+  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+  Mitigation: RFI Flush, L1D private per thread
+  # echo 0 > /sys/kernel/debug/powerpc/rfi_flush
+  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+  Vulnerable: L1D private per thread
+
+Signed-off-by: Gustavo L. F. Walbon <gwalbon@linux.ibm.com>
+Signed-off-by: Mauro S. M. Rodrigues <maurosr@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190502210907.42375-1-gwalbon@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/acl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/security.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/fs/ocfs2/acl.c b/fs/ocfs2/acl.c
-index 917fadca8a7b..b73b78771915 100644
---- a/fs/ocfs2/acl.c
-+++ b/fs/ocfs2/acl.c
-@@ -335,8 +335,8 @@ int ocfs2_acl_chmod(struct inode *inode, struct buffer_head *bh)
- 	down_read(&OCFS2_I(inode)->ip_xattr_sem);
- 	acl = ocfs2_get_acl_nolock(inode, ACL_TYPE_ACCESS, bh);
- 	up_read(&OCFS2_I(inode)->ip_xattr_sem);
--	if (IS_ERR(acl) || !acl)
--		return PTR_ERR(acl);
-+	if (IS_ERR_OR_NULL(acl))
-+		return PTR_ERR_OR_ZERO(acl);
- 	ret = __posix_acl_chmod(&acl, GFP_KERNEL, inode->i_mode);
- 	if (ret)
- 		return ret;
+diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
+index fef3f09fc238..b3f540c9f410 100644
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -134,26 +134,22 @@ ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, cha
+ 
+ 	thread_priv = security_ftr_enabled(SEC_FTR_L1D_THREAD_PRIV);
+ 
+-	if (rfi_flush || thread_priv) {
++	if (rfi_flush) {
+ 		struct seq_buf s;
+ 		seq_buf_init(&s, buf, PAGE_SIZE - 1);
+ 
+-		seq_buf_printf(&s, "Mitigation: ");
+-
+-		if (rfi_flush)
+-			seq_buf_printf(&s, "RFI Flush");
+-
+-		if (rfi_flush && thread_priv)
+-			seq_buf_printf(&s, ", ");
+-
++		seq_buf_printf(&s, "Mitigation: RFI Flush");
+ 		if (thread_priv)
+-			seq_buf_printf(&s, "L1D private per thread");
++			seq_buf_printf(&s, ", L1D private per thread");
+ 
+ 		seq_buf_printf(&s, "\n");
+ 
+ 		return s.len;
+ 	}
+ 
++	if (thread_priv)
++		return sprintf(buf, "Vulnerable: L1D private per thread\n");
++
+ 	if (!security_ftr_enabled(SEC_FTR_L1D_FLUSH_HV) &&
+ 	    !security_ftr_enabled(SEC_FTR_L1D_FLUSH_PR))
+ 		return sprintf(buf, "Not affected\n");
 -- 
 2.20.1
 
