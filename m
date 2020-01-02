@@ -2,52 +2,55 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47512C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 493A4C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 195E420866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19D4D20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005870;
-	bh=Xk40KDWVWsPOKOokp67z71ab0hlRYtFhXoaXhmZD3qk=;
+	s=default; t=1578005878;
+	bh=YDl3WfqONENFhdk9Sw5GI1d/Yw/iDOBMuN8yMZliGLM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j9KqH6ctgyIPNm5YT6mM3hf8F06pKaJQXkA36sTMbrTre6YUGNQLquyHQwsuYQdWc
-	 wIy4PRPMPmE5UhSBaSVyt3X6OsT906U0nDGGi7vMJEq3vYL80Y/UZJb22QRBYe4M2j
-	 /j0SVa0+SyyiDJIrjUrTxA6u78j8wcvuXyABFGe8=
+	b=J5NHWi+/LAtN8d2b0QDnTi/pBT9Q0zpCagmje+O1I7BFfXvVDHw3zIUR7y0Md0vHV
+	 MF7RB6GRZVSOYNaypNESLMfmySAOw152H/8/rGQvUdUahF77Q5LKKonvzRIVcVcAfv
+	 J9c8/S96BHE916u9MMtlMbEoJHhpUw5qeqjABwSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbgABW5t (ORCPT
+        id S1727755AbgABWQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:57:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58456 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:16:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728251AbgABWQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:16:30 -0500
+        id S1727382AbgABWQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:16:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 415EB2253D;
-        Thu,  2 Jan 2020 22:16:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 173C822314;
+        Thu,  2 Jan 2020 22:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003389;
-        bh=Xk40KDWVWsPOKOokp67z71ab0hlRYtFhXoaXhmZD3qk=;
+        s=default; t=1578003370;
+        bh=YDl3WfqONENFhdk9Sw5GI1d/Yw/iDOBMuN8yMZliGLM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GJZDE+6FzapLEeYJmxINdocROjhYw4vn0V6zlSzUz7he8LakTGmG9sZd43r5MXF1c
-         9+IuNY01pHWXr9Y5BK0U16djTY8I07foa+aXKdef/20in+hh71xAjtsik6OxYabJ6I
-         q0DlZnAdyL/MyVQV57/47qcWR8FXd3VEW4Kr5o8w=
+        b=xKOLlSA7k0rAV+l3rD09EyO1obXMlCILeobu8vcZZ/3Sfz1z/Rb3ZhojJsL6T6kuc
+         NcW5Tuoiwu+e1zL/7emo8XapLWjZRl+bcuqGM0dr/bwhbzEQ3ir3aln3Nik7JLpFmG
+         8mZ7LVLfReuL4G27BqrVoCnGptDvAr5u3o1H6+9c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 140/191] net: add a READ_ONCE() in skb_peek_tail()
-Date:   Thu,  2 Jan 2020 23:07:02 +0100
-Message-Id: <20200102215844.576028808@linuxfoundation.org>
+        stable@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 115/191] perf diff: Use llabs() with 64-bit values
+Date:   Thu,  2 Jan 2020 23:06:37 +0100
+Message-Id: <20200102215842.157880806@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -60,90 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-commit f8cc62ca3e660ae3fdaee533b1d554297cd2ae82 upstream.
+[ Upstream commit 98e93245113d0f5c279ef77f4a9e7d097323ad71 ]
 
-skb_peek_tail() can be used without protection of a lock,
-as spotted by KCSAN [1]
+To fix these build errors on a debian mipsel cross build environment:
 
-In order to avoid load-stearing, add a READ_ONCE()
+  builtin-diff.c: In function 'block_cycles_diff_cmp':
+  builtin-diff.c:550:6: error: absolute value function 'labs' given an argument of type 's64' {aka 'long long int'} but has parameter of type 'long int' which may cause truncation of value [-Werror=absolute-value]
+    550 |  l = labs(left->diff.cycles);
+        |      ^~~~
+  builtin-diff.c:551:6: error: absolute value function 'labs' given an argument of type 's64' {aka 'long long int'} but has parameter of type 'long int' which may cause truncation of value [-Werror=absolute-value]
+    551 |  r = labs(right->diff.cycles);
+        |      ^~~~
 
-Note that the corresponding WRITE_ONCE() are already there.
-
-[1]
-BUG: KCSAN: data-race in sk_wait_data / skb_queue_tail
-
-read to 0xffff8880b36a4118 of 8 bytes by task 20426 on cpu 1:
- skb_peek_tail include/linux/skbuff.h:1784 [inline]
- sk_wait_data+0x15b/0x250 net/core/sock.c:2477
- kcm_wait_data+0x112/0x1f0 net/kcm/kcmsock.c:1103
- kcm_recvmsg+0xac/0x320 net/kcm/kcmsock.c:1130
- sock_recvmsg_nosec net/socket.c:871 [inline]
- sock_recvmsg net/socket.c:889 [inline]
- sock_recvmsg+0x92/0xb0 net/socket.c:885
- ___sys_recvmsg+0x1a0/0x3e0 net/socket.c:2480
- do_recvmmsg+0x19a/0x5c0 net/socket.c:2601
- __sys_recvmmsg+0x1ef/0x200 net/socket.c:2680
- __do_sys_recvmmsg net/socket.c:2703 [inline]
- __se_sys_recvmmsg net/socket.c:2696 [inline]
- __x64_sys_recvmmsg+0x89/0xb0 net/socket.c:2696
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-write to 0xffff8880b36a4118 of 8 bytes by task 451 on cpu 0:
- __skb_insert include/linux/skbuff.h:1852 [inline]
- __skb_queue_before include/linux/skbuff.h:1958 [inline]
- __skb_queue_tail include/linux/skbuff.h:1991 [inline]
- skb_queue_tail+0x7e/0xc0 net/core/skbuff.c:3145
- kcm_queue_rcv_skb+0x202/0x310 net/kcm/kcmsock.c:206
- kcm_rcv_strparser+0x74/0x4b0 net/kcm/kcmsock.c:370
- __strp_recv+0x348/0xf50 net/strparser/strparser.c:309
- strp_recv+0x84/0xa0 net/strparser/strparser.c:343
- tcp_read_sock+0x174/0x5c0 net/ipv4/tcp.c:1639
- strp_read_sock+0xd4/0x140 net/strparser/strparser.c:366
- do_strp_work net/strparser/strparser.c:414 [inline]
- strp_work+0x9a/0xe0 net/strparser/strparser.c:423
- process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
- worker_thread+0xa0/0x800 kernel/workqueue.c:2415
- kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 451 Comm: kworker/u4:3 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: kstrp strp_work
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 99150a1faab2 ("perf diff: Use hists to manage basic blocks per symbol")
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-pn7szy5uw384ntjgk6zckh6a@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/skbuff.h |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/builtin-diff.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -1795,7 +1795,7 @@ static inline struct sk_buff *skb_peek_n
-  */
- static inline struct sk_buff *skb_peek_tail(const struct sk_buff_head *list_)
- {
--	struct sk_buff *skb = list_->prev;
-+	struct sk_buff *skb = READ_ONCE(list_->prev);
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index c37a78677955..265682296836 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -575,8 +575,8 @@ static int64_t block_cycles_diff_cmp(struct hist_entry *left,
+ 	if (!pairs_left && !pairs_right)
+ 		return 0;
  
- 	if (skb == (struct sk_buff *)list_)
- 		skb = NULL;
-@@ -1861,7 +1861,9 @@ static inline void __skb_insert(struct s
- 				struct sk_buff *prev, struct sk_buff *next,
- 				struct sk_buff_head *list)
- {
--	/* see skb_queue_empty_lockless() for the opposite READ_ONCE() */
-+	/* See skb_queue_empty_lockless() and skb_peek_tail()
-+	 * for the opposite READ_ONCE()
-+	 */
- 	WRITE_ONCE(newsk->next, next);
- 	WRITE_ONCE(newsk->prev, prev);
- 	WRITE_ONCE(next->prev, newsk);
+-	l = labs(left->diff.cycles);
+-	r = labs(right->diff.cycles);
++	l = llabs(left->diff.cycles);
++	r = llabs(right->diff.cycles);
+ 	return r - l;
+ }
+ 
+-- 
+2.20.1
+
 
 
