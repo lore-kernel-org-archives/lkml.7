@@ -2,72 +2,141 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7237FC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFF5C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E542072C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB0AB2072C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:03:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="le0OxNIB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbgABPCn (ORCPT
+        id S1728713AbgABPDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 10:02:43 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:49114 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728625AbgABPCn (ORCPT
+        Thu, 2 Jan 2020 10:03:13 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33869 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728571AbgABPDM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 10:02:43 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 002F2WAx027963, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV02.realtek.com.tw[172.21.6.19])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 002F2WAx027963
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 2 Jan 2020 23:02:32 +0800
-Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
- RTITCASV02.realtek.com.tw (172.21.6.19) with Microsoft SMTP Server (TLS) id
- 14.3.468.0; Thu, 2 Jan 2020 23:02:32 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXMB01.realtek.com.tw (172.21.6.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 2 Jan 2020 23:02:32 +0800
-Received: from RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d]) by
- RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d%8]) with mapi id
- 15.01.1779.005; Thu, 2 Jan 2020 23:02:32 +0800
-From:   James Tai <james.tai@realtek.com>
-To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
-        "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [RFC 02/11] soc: Add Realtek chip info driver for RTD1195 and RTD1295
-Thread-Topic: [RFC 02/11] soc: Add Realtek chip info driver for RTD1195 and
- RTD1295
-Thread-Index: AQHVkedcJ4CFLsLliUi6huLyOdRzNafXzdIQ//99FgCAAIaBcA==
-Date:   Thu, 2 Jan 2020 15:02:32 +0000
-Message-ID: <e7f7ceb5f0bf4a58ae5712cdcca94ebc@realtek.com>
-References: <20191103013645.9856-1-afaerber@suse.de>
- <20191103013645.9856-3-afaerber@suse.de>
- <93eeece5be0640488096f20a9beb3d1d@realtek.com>
- <5792d721-cd67-5e19-dac2-1310894ef7c2@suse.de>
-In-Reply-To: <5792d721-cd67-5e19-dac2-1310894ef7c2@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [114.37.143.250]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 2 Jan 2020 10:03:12 -0500
+Received: by mail-lj1-f194.google.com with SMTP id z22so36178280ljg.1;
+        Thu, 02 Jan 2020 07:03:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HH6eDm5kQk8wJiajeYqrN/FAF6ogq9rMreLvIteTjRU=;
+        b=le0OxNIBlBAccUfxnlnv5DOv1ZyOwZODQUbm0VHZQ/OwMNLwMy15np2t3qhUq7FEJP
+         +82QrInMfRPdYx8vwZpAJlAykNV9JzjIl1BdE732PzZqtX58g5uUjOivB22n5I964zUU
+         I1UjTu197EIbQROekUioen7az7beXixGp0kZlbig54ZmIBgsg92LTDXKFhKJvelFXzvM
+         EkQRRMi3syV4koheRKKJaiB7Fs3McAHzAez9Cc90a5RnGOySactGibODqSrbKnZHNcf0
+         A7KvJfp6SYIdSTq2BQVDJQal0jpERUJfYrULXSBQbuGfQHxpl3IC5yefI6DruU7Fjsbr
+         +YmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HH6eDm5kQk8wJiajeYqrN/FAF6ogq9rMreLvIteTjRU=;
+        b=TCzoHIZma0fzdU4jMLyI1ZR4liB8DimHU8FjwjD+/D138vJQnGglCLdsh0pBDRXxO6
+         NmbN22bdY9SVUimathAGj+N479TKJxSd2j75Qk0K/6vn2FJjIsrkqJol9MepzlKVglkg
+         AW7ABQweBT8KrH1edl8tDmMM4GkgBJLJ1a6gMWNBzHc6OxJVbmZgVCvTWqrnB7MWdpv0
+         DZZB9b19sZohyopWZglPS4COplfrIvzObD/KZm//0BOOZTK7zb61vrBAwZ+UtY5YwHdQ
+         4PNpx50QEYnAjY0TETUWD1hM0Liy1s9weN8AcOCn06XvkptUyticoJKTwdVOg0k8zr/r
+         Me5g==
+X-Gm-Message-State: APjAAAVLkHMLZcWUhVXZZsZ7+bzMzC5A6SlO5DHBYPNOCrppVkuhYe8M
+        dXws6xcKPSYpjExhd2ELYNhy3pSf
+X-Google-Smtp-Source: APXvYqyFoYmtJNBTX9xawgIiOLVa8uzW+9I2z/FDGUauajq02zs4PyKsTDNR0Uw7MB0JKWqSK4OxyA==
+X-Received: by 2002:a05:651c:232:: with SMTP id z18mr43189783ljn.85.1577977390285;
+        Thu, 02 Jan 2020 07:03:10 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id l28sm23199797lfk.21.2020.01.02.07.03.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Jan 2020 07:03:09 -0800 (PST)
+Subject: Re: [PATCH v1 3/7] dmaengine: tegra-apb: Prevent race conditions on
+ channel's freeing
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191228204640.25163-1-digetx@gmail.com>
+ <20191228204640.25163-4-digetx@gmail.com>
+ <20191230204555.GB24135@qmqm.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4ac0c861-0497-3961-026b-8c05b739df7d@gmail.com>
+Date:   Thu, 2 Jan 2020 18:03:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
+In-Reply-To: <20191230204555.GB24135@qmqm.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBBbSAwMi4wMS4yMCB1bSAxNToyOSBzY2hyaWViIEphbWVzIFRhaToNCj4gPiBBZGQgU3Rhbmxl
-eSBDaGFuZyBmb3IgcmV2aWV3Lg0KPiANCj4gRGlkIHlvdSBmb3JnZXQgdG8gQ0MgaGltPw0KDQpO
-bywgU3RhbmxleSBDaGFuZyBpcyBpbiBsaW51eC1yZWFsdGVrLXNvYyBtYWlsaW5nIGxpc3QuDQoN
-ClRoYW5rcy4NCg0KUmVnYXJkcywNCkphbWVzDQoNCg0K
+30.12.2019 23:45, Michał Mirosław пишет:
+> On Sat, Dec 28, 2019 at 11:46:36PM +0300, Dmitry Osipenko wrote:
+>> It's unsafe to check the channel's "busy" state without taking a lock,
+>> it is also unsafe to assume that tasklet isn't in-fly.
+> 
+> 'in-flight'. Also, the patch seems to have two independent bug-fixes
+> in it. Second one doesn't look right, at least not without an explanation.
+
+Technically, this all shouldn't be needed at all since it should be a
+responsibility of the DMA client drivers to make sure that channel is
+idling before releasing it. But, AFAIK, the behavior of channel's
+releasing isn't strictly defined by the DMA API, so it should be better
+to keep the original behavior in place.
+
+> First:
+> 
+>> -	if (tdc->busy)
+>> -		tegra_dma_terminate_all(dc);
+>> +	tegra_dma_terminate_all(dc);
+> 
+> Second:
+> 
+>> +	tasklet_kill(&tdc->tasklet);
+
+Yes, it could be a separate change. Actually, this is not a fix, but a
+clean-up change that simply stops tasklet instead of trying to work
+around the fact that tasklet could be scheduled at the time channel's
+freeing.
+
+>>  	spin_lock_irqsave(&tdc->lock, flags);
+
+I now see that missed to remove this locking since it's not needed now,
+given that tasklet is already stopped after killing it by the above change.
+
+I'll update and split this patch into two in v3.
+
+>>  	list_splice_init(&tdc->pending_sg_req, &sg_req_list);
+>> @@ -1543,7 +1543,6 @@ static int tegra_dma_probe(struct platform_device *pdev)
+>>  		struct tegra_dma_channel *tdc = &tdma->channels[i];
+>>  
+>>  		free_irq(tdc->irq, tdc);
+>> -		tasklet_kill(&tdc->tasklet);
+>>  	}
+>>  
+>>  	pm_runtime_disable(&pdev->dev);
+>> @@ -1563,7 +1562,6 @@ static int tegra_dma_remove(struct platform_device *pdev)
+>>  	for (i = 0; i < tdma->chip_data->nr_channels; ++i) {
+>>  		tdc = &tdma->channels[i];
+>>  		free_irq(tdc->irq, tdc);
+>> -		tasklet_kill(&tdc->tasklet);
+>>  	}
+>>  
+>>  	pm_runtime_disable(&pdev->dev);
+
+Thank you very much for taking a look at it!
