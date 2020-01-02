@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00767C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19AF1C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB57120866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D756920866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005999;
-	bh=1+1H71gkxh1RMYV0boeJNEBPTmDAqEBkqTBL8rFOMXk=;
+	s=default; t=1578006007;
+	bh=4X3EMyJ0yJG6dcvF3YVvO9otDvVgBRj4flXFT3gicCQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S1v6oQVsfBP+KXOrBeBsOMEblfVSidpTfLGLQN8Vl9iXbFHxmFox9ElFaf7x5W+iY
-	 H56+YtQKbSNYc33rK+HGx+339C+Rh2ShF6bKXDYNjJnkDKshC0PV1/d7K5sBtFDRcx
-	 3eHXYxmBG56aatUyJa+ylh5Evg4KQY0G6fRcoFuQ=
+	b=h76WMUeo8FL71SoYDy4EoZ7KM0duMiRu6wyK3Ls9a9ciMma6A+C8M6gVeZqMejC+w
+	 /kRWT+iVBfGoqOkfwyK3TgyJmftOMFlp40lqfTkmxjxEZNbfxLFYPuQKIy3pQcdKuh
+	 ZomuA567JDFvO2BqYaOkpzt+imrl+T3mFtC0ClI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgABW76 (ORCPT
+        id S1728226AbgABXAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:59:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53500 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 18:00:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727430AbgABWNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:13:36 -0500
+        id S1727379AbgABWN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:13:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D2A922525;
-        Thu,  2 Jan 2020 22:13:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F4512253D;
+        Thu,  2 Jan 2020 22:13:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003215;
-        bh=1+1H71gkxh1RMYV0boeJNEBPTmDAqEBkqTBL8rFOMXk=;
+        s=default; t=1578003206;
+        bh=4X3EMyJ0yJG6dcvF3YVvO9otDvVgBRj4flXFT3gicCQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EcATy+zTYMRPF3UYFbNEsm3I3wx8Tczouin9vlkKTFEukAKuIAFz9h1O3klXxUh59
-         7L3tlvNfQ8YN3DZ9u49X58Z+FHHm1VZfqOPKeI3qTnnuNvVaDz3rPuRD0wp+DbH2dp
-         PJCqaldRuDzdHRFlILnwzEb7RaLCAvI6SerTFPRQ=
+        b=U5Hm7LgyowJIw9aJSBS2D0KXaz13pqz1pTC4ZbL892gyikYYDn8g71FfYT1+fgxTh
+         dWoA3mByAwVuJIiaKfXZRRQJbmpb4Ph+ijU0OaOplTI++4n6w85lfDAyy7cQBA256m
+         IfwM4H7uueNJIY5TeFZJhszdA4TN6oIHqGYjr0KM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 068/191] PCI: rpaphp: Correctly match ibm, my-drc-index to drc-name when using drc-info
-Date:   Thu,  2 Jan 2020 23:05:50 +0100
-Message-Id: <20200102215837.241451641@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pavel Modilaynen <pavel.modilaynen@axis.com>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 038/191] dtc: Use pkg-config to locate libyaml
+Date:   Thu,  2 Jan 2020 23:05:20 +0100
+Message-Id: <20200102215834.015953905@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,48 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyrel Datwyler <tyreld@linux.ibm.com>
+From: Pavel Modilaynen <pavel.modilaynen@axis.com>
 
-[ Upstream commit 4f9f2d3d7a434b7f882b72550194c9278f4a3925 ]
+[ Upstream commit 067c650c456e758f933aaf87a202f841d34be269 ]
 
-The newer ibm,drc-info property is a condensed description of the old
-ibm,drc-* properties (ie. names, types, indexes, and power-domains).
-When matching a drc-index to a drc-name we need to verify that the
-index is within the start and last drc-index range and map it to a
-drc-name using the drc-name-prefix and logical index.
+Using Makefile's wildcard with absolute path to detect
+the presence of libyaml results in false-positive
+detection when cross-compiling e.g. in yocto environment.
+The latter results in build error:
+| scripts/dtc/yamltree.o: In function `yaml_propval_int':
+| yamltree.c: undefined reference to `yaml_sequence_start_event_initialize'
+| yamltree.c: undefined reference to `yaml_emitter_emit'
+| yamltree.c: undefined reference to `yaml_scalar_event_initialize'
+...
+Use pkg-config to locate libyaml to address this scenario.
 
-Fix the mapping by checking that the index is within the range of the
-current drc-info entry, and build the name from the drc-name-prefix
-concatenated with the starting drc-name-suffix value and the sequential
-index obtained by subtracting ibm,my-drc-index from this entries
-drc-start-index.
-
-Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1573449697-5448-10-git-send-email-tyreld@linux.ibm.com
+Signed-off-by: Pavel Modilaynen <pavel.modilaynen@axis.com>
+[robh: silence stderr]
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/hotplug/rpaphp_core.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ scripts/dtc/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-index abb10b3c0b70..32eab1776cfe 100644
---- a/drivers/pci/hotplug/rpaphp_core.c
-+++ b/drivers/pci/hotplug/rpaphp_core.c
-@@ -248,9 +248,10 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
- 		/* Should now know end of current entry */
+diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
+index 82160808765c..b5a5b1c548c9 100644
+--- a/scripts/dtc/Makefile
++++ b/scripts/dtc/Makefile
+@@ -11,7 +11,7 @@ dtc-objs	+= dtc-lexer.lex.o dtc-parser.tab.o
+ # Source files need to get at the userspace version of libfdt_env.h to compile
+ HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt
  
- 		/* Found it */
--		if (my_index <= drc.last_drc_index) {
-+		if (my_index >= drc.drc_index_start && my_index <= drc.last_drc_index) {
-+			int index = my_index - drc.drc_index_start;
- 			sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
--				my_index);
-+				drc.drc_name_suffix_start + index);
- 			break;
- 		}
- 	}
+-ifeq ($(wildcard /usr/include/yaml.h),)
++ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
+ ifneq ($(CHECK_DTBS),)
+ $(error dtc needs libyaml for DT schema validation support. \
+ 	Install the necessary libyaml development package.)
+@@ -19,7 +19,7 @@ endif
+ HOST_EXTRACFLAGS += -DNO_YAML
+ else
+ dtc-objs	+= yamltree.o
+-HOSTLDLIBS_dtc	:= -lyaml
++HOSTLDLIBS_dtc	:= $(shell pkg-config yaml-0.1 --libs)
+ endif
+ 
+ # Generated files need one more search path to include headers in source tree
 -- 
 2.20.1
 
