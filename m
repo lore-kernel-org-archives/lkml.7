@@ -2,83 +2,104 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	PDS_TONAME_EQ_TOLOCAL_HDRS_LCASE,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D61C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8246C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CA1020848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:21:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="KMqWoFye"
+	by mail.kernel.org (Postfix) with ESMTP id B1D3720848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:22:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728756AbgABPVr (ORCPT
+        id S1728767AbgABPWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 10:21:47 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:45446 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728561AbgABPVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 10:21:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=IdYA3gvWlF+j5uZXez7KuYc1OVhRo4qko1KG34K9Acw=; b=KMqWoFyek+invBAycpz5c8nKt+
-        RJyDFaB7TQ3rR838gMTmqtWLs7oKZOPPrvOc/yKmHCLgtDB20L+EmV41bpjr6H6SC/dT/dDS6u7zh
-        WqhaKSoneqGg781l9GR+CNr4Oi4ovWXU2LquDFWq6d6KpaH/iwwUUzUsbwEuutf4igGI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1in2IB-0007nb-M2; Thu, 02 Jan 2020 16:21:43 +0100
-Date:   Thu, 2 Jan 2020 16:21:43 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Kai Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        Linux Netdev List <netdev@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Jason Yen <jason.yen@canonical.com>
-Subject: Re: SFP+ support for 8168fp/8117
-Message-ID: <20200102152143.GB1397@lunn.ch>
-References: <2D8F5FFE-3EC3-480B-9D15-23CACE5556DF@canonical.com>
+        Thu, 2 Jan 2020 10:22:50 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:41548 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728645AbgABPWu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 10:22:50 -0500
+Received: (qmail 1847 invoked by uid 2102); 2 Jan 2020 10:22:49 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 2 Jan 2020 10:22:49 -0500
+Date:   Thu, 2 Jan 2020 10:22:49 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     atmgnd <atmgnd@protonmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>
+Subject: Re: Fw: usbcore missing parentheses in USE_NEW_SCHEME
+In-Reply-To: <ca600d41-d978-d799-a871-ce6e1438a4cc@infradead.org>
+Message-ID: <Pine.LNX.4.44L0.2001021018330.1546-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2D8F5FFE-3EC3-480B-9D15-23CACE5556DF@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 02:59:42PM +0800, Kai Heng Feng wrote:
-> Hi Heiner,
-> 
-> There's an 8168fp/8117 chip has SFP+ port instead of RJ45, the phy device ID matches "Generic FE-GE Realtek PHY" nevertheless.
-> The problems is that, since it uses SFP+, both BMCR and BMSR read are always zero, so Realtek phylib never knows if the link is up.
-> 
-> However, the old method to read through MMIO correctly shows the link is up:
-> static unsigned int rtl8169_xmii_link_ok(struct rtl8169_private *tp)
-> {
->        return RTL_R8(tp, PHYstatus) & LinkStatus;
-> }
-> 
-> Few ideas here:
-> - Add a link state callback for phylib like phylink's phylink_fixed_state_cb(). However there's no guarantee that other parts of this chip works.
-> - Add SFP+ support for this chip. However the phy device matches to "Generic FE-GE Realtek PHY" which may complicate things.
-> 
-> Any advice will be welcome.
+On Wed, 1 Jan 2020, Randy Dunlap wrote:
 
-Hi Kai
+> [adding linux-usb mailing list]
+> 
+> On 1/1/20 6:46 AM, atmgnd wrote:
+> > I think there is missing parentheses in macro USE_NEW_SCHEME, it should be:
+> > #define USE_NEW_SCHEME(i, scheme)      ((i) / 2 == (int)(scheme))
+> > 
+> > causes a fail wiht "device descriptor read/64, error -110" using my usb drive on vmware using usb 3.0 hub.
+> > from https://github.com/torvalds/linux/commit/25244227158e1502062041365a439a54cb8fe673#diff-28615d62e1250eadc353d804f49bc6d6
+> > 
+> > someone changed USE_NEW_SCHEME, but without parentheses for second parameter. as result. in fuction use_new_scheme when old_scheme_first is 1, use_new_scheme will return 1 always(actullay is should return 0). it also make https://github.com/torvalds/linux/commit/bd0e6c9614b95352eb31d0207df16dc156c527fa#diff-28615d62e1250eadc353d804f49bc6d6 fails.
+> > 
+> > I cannot use git send-mail, there some issue with my network provider. patch below, :
+> > 
+> > 
+> > From 85f01b89d050a988f4d9fc78232de47e793c6a7c Mon Sep 17 00:00:00 2001
+> > From: atmgnd <atmgnd@outlook.com>
+> > Date: Wed, 1 Jan 2020 21:27:13 +0800
+> > Subject: [PATCH] usb: hub: missing parentheses in USE_NEW_SCHEME
+> > 
+> > accroding to bd0e6c9#diff-28615d62e1250eadc353d804f49bc6d6, will try old enumeration
+> > scheme first for high speed devices. for example, when a high speed device pluged in,
+> > line 2720 should expand to 0 at the first time. USE_NEW_SCHEME(0, 0 || 0 || 1) === 0.
+> > but it wrongly expand to 1(alway expand to 1 for high speed device), and change
+> > USE_NEW_SCHEME to USE_NEW_SCHEME((i) % 2 == (int)(scheme)) may be better ?
+> > 
+> > Signed-off-by: atmgnd <atmgnd@outlook.com>
+> > ---
+> >  drivers/usb/core/hub.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> > index f229ad6952c0..7d17deca7021 100644
+> > --- a/drivers/usb/core/hub.c
+> > +++ b/drivers/usb/core/hub.c
+> > @@ -2692,7 +2692,7 @@ static unsigned hub_is_wusb(struct usb_hub *hub)
+> >  #define SET_ADDRESS_TRIES 2
+> >  #define GET_DESCRIPTOR_TRIES 2
+> >  #define SET_CONFIG_TRIES (2 * (use_both_schemes + 1))
+> > -#define USE_NEW_SCHEME(i, scheme) ((i) / 2 == (int)scheme)
+> > +#define USE_NEW_SCHEME(i, scheme) ((i) / 2 == (int)(scheme))
+> > 
+> >  #define HUB_ROOT_RESET_TIME 60 /* times are in msec */
+> >  #define HUB_SHORT_RESET_TIME 10
+> > --
+> > 2.17.1
 
-Is the i2c bus accessible? Is there any documentation or example code?
+atmgnd:
 
-In order to correctly support SFP+ cages, we need access to the i2c
-bus to determine what sort of module has been inserted. It would also
-be good to have access to LOS, transmitter disable, etc, from the SFP
-cage.
+Please resend this patch to Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> with the appropriate CC's.  Also, your
+Signed-off-by: line should contain a real name, not an email userid
+(you probably don't use "atmgnd" as your signature on legal
+documents!).
 
-   Andrew
+When you resend the patch, you can include:
+
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+
+Alan Stern
+
