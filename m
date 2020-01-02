@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29473C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DD1C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1C3C2253D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 452BB2464B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003692;
-	bh=HrTVBqJGvBqiSddNJgGarJ2BT+eOP7XFbllL+9PsWnw=;
+	s=default; t=1578003694;
+	bh=L1eRcQZCIbPpjbfa3ub2lWJDnPPPqYK93Pv7mxJolxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N5ior6/Zp0VuipJWNSKaV8JBcLokVSWjNfuFcd2829BxeclHd46acTw4NwdnJdqmG
-	 r2tOuxpmchJomVktu1xdkbGbYOP0xv82yZVkeaj07Ug5bG9TCj3YRcxUJHcRJC+RPW
-	 AU9a/+f3w/8JjZrGB8qnMy76/p6TgyKsJBaCSf+4=
+	b=iMJAHwu/CxTHwBXfDhE3Tjc92VPUC23ljjrsbYD14OOJ53SYbiE8xXkrmV1o58SQk
+	 jFZe19LzalccNKOYyqtH25R+m5kC+ZJLhdi8D1ztHP9AQmKNkyMd9/ILI2jubW34Ev
+	 +oZ/pX58TznDpk+tBH9vcw9PFFpp1ypxq8Gr+QuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbgABWVa (ORCPT
+        id S1729006AbgABWVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:21:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40470 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:21:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728752AbgABWVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:21:25 -0500
+        id S1728990AbgABWV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:21:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4ED6224125;
-        Thu,  2 Jan 2020 22:21:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEA032253D;
+        Thu,  2 Jan 2020 22:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003684;
-        bh=HrTVBqJGvBqiSddNJgGarJ2BT+eOP7XFbllL+9PsWnw=;
+        s=default; t=1578003687;
+        bh=L1eRcQZCIbPpjbfa3ub2lWJDnPPPqYK93Pv7mxJolxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EbMovZjbhnFlu0eRV43NAnxB+oDzTBVReW5lA7A9if77Vga5/K7TrjXHM+7D8q/ky
-         NAse5r+Jf0tyPoqcISuhRMHY9KedweZFs76oop0kkRoz4xj7HnKi3acdoQLcs9XH96
-         DyVirMWmsNngpOC0KqzkTP7xz2u2UUfYAcskl7oY=
+        b=KNC3DJ8DpVF8AzOnDooiJIYKr3JDWPp3WuaKCC+OFVx3LyuMhOQXmK7U1c17GSlJ1
+         TUsdviE4cFp4Ptwaa/LhtnaZ+sNOmJaYoyOAhD+5JZo5r/aWooLpdv7IOz+U/GRSFD
+         n10R+xNS8l/yH69cdrl4V4bWrggFu9bm7Eeor7yY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Chris Down <chris@chrisdown.name>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 071/114] kernel: sysctl: make drop_caches write-only
-Date:   Thu,  2 Jan 2020 23:07:23 +0100
-Message-Id: <20200102220036.228967185@linuxfoundation.org>
+Subject: [PATCH 4.19 049/114] HID: Improve Windows Precision Touchpad detection.
+Date:   Thu,  2 Jan 2020 23:07:01 +0100
+Message-Id: <20200102220034.018208756@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -66,51 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Weiner <hannes@cmpxchg.org>
+From: Blaž Hrastnik <blaz@mxxn.io>
 
-[ Upstream commit 204cb79ad42f015312a5bbd7012d09c93d9b46fb ]
+[ Upstream commit 2dbc6f113acd74c66b04bf49fb027efd830b1c5a ]
 
-Currently, the drop_caches proc file and sysctl read back the last value
-written, suggesting this is somehow a stateful setting instead of a
-one-time command.  Make it write-only, like e.g.  compact_memory.
+Per Microsoft spec, usage 0xC5 (page 0xFF) returns a blob containing
+data used to verify the touchpad as a Windows Precision Touchpad.
 
-While mitigating a VM problem at scale in our fleet, there was confusion
-about whether writing to this file will permanently switch the kernel into
-a non-caching mode.  This influences the decision making in a tense
-situation, where tens of people are trying to fix tens of thousands of
-affected machines: Do we need a rollback strategy?  What are the
-performance implications of operating in a non-caching state for several
-days?  It also caused confusion when the kernel team said we may need to
-write the file several times to make sure it's effective ("But it already
-reads back 3?").
+   0x85, REPORTID_PTPHQA,    //    REPORT_ID (PTPHQA)
+    0x09, 0xC5,              //    USAGE (Vendor Usage 0xC5)
+    0x15, 0x00,              //    LOGICAL_MINIMUM (0)
+    0x26, 0xff, 0x00,        //    LOGICAL_MAXIMUM (0xff)
+    0x75, 0x08,              //    REPORT_SIZE (8)
+    0x96, 0x00, 0x01,        //    REPORT_COUNT (0x100 (256))
+    0xb1, 0x02,              //    FEATURE (Data,Var,Abs)
 
-Link: http://lkml.kernel.org/r/20191031221602.9375-1-hannes@cmpxchg.org
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-Acked-by: Chris Down <chris@chrisdown.name>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: David Hildenbrand <david@redhat.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Alexey Dobriyan <adobriyan@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+However, some devices, namely Microsoft's Surface line of products
+instead implement a "segmented device certification report" (usage 0xC6)
+which returns the same report, but in smaller chunks.
+
+    0x06, 0x00, 0xff,        //     USAGE_PAGE (Vendor Defined)
+    0x85, REPORTID_PTPHQA,   //     REPORT_ID (PTPHQA)
+    0x09, 0xC6,              //     USAGE (Vendor usage for segment #)
+    0x25, 0x08,              //     LOGICAL_MAXIMUM (8)
+    0x75, 0x08,              //     REPORT_SIZE (8)
+    0x95, 0x01,              //     REPORT_COUNT (1)
+    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
+    0x09, 0xC7,              //     USAGE (Vendor Usage)
+    0x26, 0xff, 0x00,        //     LOGICAL_MAXIMUM (0xff)
+    0x95, 0x20,              //     REPORT_COUNT (32)
+    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
+
+By expanding Win8 touchpad detection to also look for the segmented
+report, all Surface touchpads are now properly recognized by
+hid-multitouch.
+
+Signed-off-by: Blaž Hrastnik <blaz@mxxn.io>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sysctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index f8576509c7be..4c4fd4339d33 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -1411,7 +1411,7 @@ static struct ctl_table vm_table[] = {
- 		.procname	= "drop_caches",
- 		.data		= &sysctl_drop_caches,
- 		.maxlen		= sizeof(int),
--		.mode		= 0644,
-+		.mode		= 0200,
- 		.proc_handler	= drop_caches_sysctl_handler,
- 		.extra1		= &one,
- 		.extra2		= &four,
+diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+index b0c8fae7f903..3a359716fb38 100644
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -780,6 +780,10 @@ static void hid_scan_feature_usage(struct hid_parser *parser, u32 usage)
+ 	if (usage == 0xff0000c5 && parser->global.report_count == 256 &&
+ 	    parser->global.report_size == 8)
+ 		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
++
++	if (usage == 0xff0000c6 && parser->global.report_count == 1 &&
++	    parser->global.report_size == 8)
++		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
+ }
+ 
+ static void hid_scan_collection(struct hid_parser *parser, unsigned type)
 -- 
 2.20.1
 
