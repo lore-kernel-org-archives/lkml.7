@@ -2,117 +2,136 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1952C2D0DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 00:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 557E5C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 00:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C52220842
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 00:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D1B220672
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 00:53:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TRwALXtz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727515AbgABAih (ORCPT
+        id S1727513AbgABAxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 19:38:37 -0500
-Received: from mail.windriver.com ([147.11.1.11]:61497 "EHLO
-        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727393AbgABAig (ORCPT
+        Wed, 1 Jan 2020 19:53:48 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:42353 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbgABAxs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 19:38:36 -0500
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 0020cM24027929
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
-        Wed, 1 Jan 2020 16:38:22 -0800 (PST)
-Received: from [128.224.162.195] (128.224.162.195) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server id 14.3.468.0; Wed, 1 Jan 2020
- 16:38:20 -0800
-Subject: Re: [PATCH] stmmac: debugfs entry name is not be changed when udev
- rename device name.
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        <peppe.cavallaro@st.com>, <alexandre.torgue@st.com>
-CC:     <joabreu@synopsys.com>, <mcoquelin.stm32@gmail.com>,
-        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>
-References: <20191231020302.71792-1-jiping.ma2@windriver.com>
- <57dcdaa1-feff-1134-919e-57b37e306431@cogentembedded.com>
-From:   Jiping Ma <Jiping.Ma2@windriver.com>
-Message-ID: <4de343a7-e47f-2f72-4f5a-17ea9c7c0e1a@windriver.com>
-Date:   Thu, 2 Jan 2020 08:38:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.0
+        Wed, 1 Jan 2020 19:53:48 -0500
+Received: by mail-qt1-f195.google.com with SMTP id j5so33763195qtq.9;
+        Wed, 01 Jan 2020 16:53:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tXOgMh5GY5IXaTFYal/T2G14yEmfZPT1gYq2BJqVKdE=;
+        b=TRwALXtzVy9QuTWJnFKRDCzuFhh8GyF19wHnAnll6DhXxS9pXJ+Ch7tRRN5C3fCDkv
+         1IbVxAPIpgnQf4LD8wiy1TDG81Q0AMvgBzDmAqIBNMlcme+Lqwqzchw3cQ4KEWjb/yic
+         fu0VP9depSWuKpHSYfAvSLmUA01hktReyYnPL2GeINj7lFlAlcRmoYAvCwtwdFFKa3Un
+         qkskgM7rErT/9W1if+hA2UColo9MUAJzPr4zstlCqI5DuumejQ07HVmGStE48ZunKHMK
+         ySKCpnNUPL/FwI/iuhjqJpqNMes5lbQunBMZ0i7gZIZ4kHb3kgWRylctP67cddWJDk6C
+         WJKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tXOgMh5GY5IXaTFYal/T2G14yEmfZPT1gYq2BJqVKdE=;
+        b=Od3B8LvVI4C3pCpTJHZL+R8e5beh9TPo1Z0/WENdNvd/DxeU3YEa8IaQlvQwG88i4t
+         AutUacgGywso8hkEPWIb8JO5sHHqBDlt5i+yI1PGjqw+jCM9yo0kUjMpHNMDUQ+GlRER
+         bh+CFkkdYVrhL4CNFKUokCWuKwFxSh02n9eCN2frqjdn95hMgbWXdGlEilIfn5HQvs/Q
+         ONT64qYvXTGRoHoWUKGRdPAwLEuHcDcqr3Ztu0HjytfyWOBP0DfRHB5nrry3sne1RcRF
+         5O6V66+FCKbtN90Hg0snjnUkgDNTZtVOocX/iiq3UHQopf8VPNlkkN47ch8jtBzyYSy2
+         0o3g==
+X-Gm-Message-State: APjAAAUIaij4mdEHZ9W/4gYJngctddFgPnfo6ku7a0wZKYHEtL8UuPn9
+        J7agRIqVhe1g8/4Jol6ZWbg=
+X-Google-Smtp-Source: APXvYqzv9WjuhqYUPRh2uv1+yV26UBaEJTdz/v7WbzHkn416mRJ1ENYUceG5RPo86wsHXJqm8esF2w==
+X-Received: by 2002:ac8:3526:: with SMTP id y35mr55451559qtb.97.1577926427230;
+        Wed, 01 Jan 2020 16:53:47 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id g18sm14628275qki.13.2020.01.01.16.53.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jan 2020 16:53:47 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 1 Jan 2020 19:53:45 -0500
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Paul Burton <paulburton@kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Christian Brauner <christian.brauner@canonical.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        "# 3.4.x" <stable@vger.kernel.org>
+Subject: Re: [PATCH] MIPS: Don't declare __current_thread_info globally
+Message-ID: <20200102005343.GA495913@rani.riverdale.lan>
+References: <20200101175916.558284-1-paulburton@kernel.org>
+ <CAK8P3a2a1aY9G+Nh9fy+NU=YA_m1dxm-4SCHgydVO5kcydh77g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <57dcdaa1-feff-1134-919e-57b37e306431@cogentembedded.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2a1aY9G+Nh9fy+NU=YA_m1dxm-4SCHgydVO5kcydh77g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jan 01, 2020 at 09:51:02PM +0100, Arnd Bergmann wrote:
+> On Wed, Jan 1, 2020 at 6:57 PM Paul Burton <paulburton@kernel.org> wrote:
+> > diff --git a/arch/mips/include/asm/thread_info.h b/arch/mips/include/asm/thread_info.h
+> > index 4993db40482c..aceefc3f9a1a 100644
+> > --- a/arch/mips/include/asm/thread_info.h
+> > +++ b/arch/mips/include/asm/thread_info.h
+> > @@ -50,10 +50,10 @@ struct thread_info {
+> >  }
+> >
+> >  /* How to get the thread information struct from C.  */
+> > -register struct thread_info *__current_thread_info __asm__("$28");
+> > -
+> >  static inline struct thread_info *current_thread_info(void)
+> >  {
+> > +       register struct thread_info *__current_thread_info __asm__("$28");
+> > +
+> >         return __current_thread_info;
+> >  }
+> 
+> This looks like a nice fix, but are you sure it doesn't allow the compiler to
+> reuse $28 for another purpose in the kernel under register pressure,
+> which would break current_thread_info()?
+> 
+> I see in the MIPS ABI document that $28 is preserved across function
+> calls, but I don't see any indication that a function is not allowed
+> to modify it and later restore the original content.
+> 
+>         Arnd
 
+The compiler can already do that even with a global definition.
 
-On 12/31/2019 06:12 PM, Sergei Shtylyov wrote:
-> Hello!
->
-> On 31.12.2019 5:03, Jiping Ma wrote:
->
->> Add one notifier for udev changes net device name.
->>
->> Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
->> ---
->>   .../net/ethernet/stmicro/stmmac/stmmac_main.c | 38 ++++++++++++++++++-
->>   1 file changed, 37 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c 
->> b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->> index b14f46a57154..c1c877bb4421 100644
->> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->> @@ -4038,6 +4038,40 @@ static int stmmac_dma_cap_show(struct seq_file 
->> *seq, void *v)
->>   }
->>   DEFINE_SHOW_ATTRIBUTE(stmmac_dma_cap);
->>   +/**
->> + * Use network device events to create/remove/rename
->> + * debugfs file entries
->> + */
->> +static int stmmac_device_event(struct notifier_block *unused,
->> +                   unsigned long event, void *ptr)
->> +{
->> +    struct net_device *dev = netdev_notifier_info_to_dev(ptr);
->> +    struct stmmac_priv *priv = netdev_priv(dev);
->> +
->> +    switch (event) {
->> +    case NETDEV_CHANGENAME:
->> +        if (priv->dbgfs_dir)
->> +            priv->dbgfs_dir = debugfs_rename(stmmac_fs_dir,
->> +                             priv->dbgfs_dir,
->> +                             stmmac_fs_dir,
->> +                             dev->name);
->> +        break;
->> +
->> +    case NETDEV_GOING_DOWN:
->> +        break;
->> +
->> +    case NETDEV_UP:
->> +        break;
->
->    Why not merge the above 2 cases? Or just remove them('event' is not 
-> *enum*)?
-I will remove them.
+The doc since gcc 9 [1] says:
 
-Thanks,
->
->> +    }
->> +
->> +done:
->> +    return NOTIFY_DONE;
->> +}
-> [...]
->
-> MBR, Sergei
->
+"Accesses to the variable may be optimized as usual and the register
+remains available for allocation and use in any computations, provided
+that observable values of the variable are not affected."
 
+and
+
+"Furthermore, since the register is not reserved exclusively for the
+variable, accessing it from handlers of asynchronous signals may observe
+unrelated temporary values residing in the register."
+
+I'm not sure if this was a change in gcc 9 or simply the doc was wrong
+earlier.
+
+Should there be a -ffixed-28 cflag for MIPS? alpha and hexagon seem to
+have that and they also keep current_thread_info in a register.
+
+Also, commit fe92da0f355e9 ("MIPS: Changed current_thread_info() to an
+equivalent supported by both clang and GCC") moved this from local to
+global because local apparently didn't work on clang?
+
+[1] https://gcc.gnu.org/onlinedocs/gcc-9.1.0/gcc/Global-Register-Variables.html
