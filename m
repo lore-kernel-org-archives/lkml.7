@@ -2,186 +2,184 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CE0C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CADC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F36DA206DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F39B020848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:06:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=qrpff.net header.i=@qrpff.net header.b="kOH8+yfs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbq7shZM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbgABXFr (ORCPT
+        id S1727244AbgABXGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 18:05:47 -0500
-Received: from egyptian.birch.relay.mailchannels.net ([23.83.209.56]:1964 "EHLO
-        egyptian.birch.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725890AbgABXFr (ORCPT
+        Thu, 2 Jan 2020 18:06:03 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34298 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgABXGD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 18:05:47 -0500
-X-Sender-Id: dreamhost|x-authsender|stevie@qrpff.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 5CF175E1C9E;
-        Thu,  2 Jan 2020 23:05:45 +0000 (UTC)
-Received: from pdx1-sub0-mail-a6.g.dreamhost.com (100-96-86-164.trex.outbound.svc.cluster.local [100.96.86.164])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id BDA6A5E1854;
-        Thu,  2 Jan 2020 23:05:44 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|stevie@qrpff.net
-Received: from pdx1-sub0-mail-a6.g.dreamhost.com ([TEMPUNAVAIL].
- [64.90.62.162])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-        by 0.0.0.0:2500 (trex/5.18.5);
-        Thu, 02 Jan 2020 23:05:45 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|stevie@qrpff.net
-X-MailChannels-Auth-Id: dreamhost
-X-Daffy-Spicy: 070e7e9b61f0b289_1578006345195_399340049
-X-MC-Loop-Signature: 1578006345195:71854839
-X-MC-Ingress-Time: 1578006345194
-Received: from pdx1-sub0-mail-a6.g.dreamhost.com (localhost [127.0.0.1])
-        by pdx1-sub0-mail-a6.g.dreamhost.com (Postfix) with ESMTP id 7843B7F37E;
-        Thu,  2 Jan 2020 15:05:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=qrpff.net; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=qrpff.net; bh=rJVu1oJ5OXoPfH59J1rx+8VLjrI=; b=k
-        OH8+yfsAgBUg4q/tg+qsxE2UWzZtyuSZkapGQY5A8X8QLC1qpI0/lA1e7VZMRQBD
-        c2UeJ9GDly2OWzY6v2+YtwkZaXOd3CDcZ422lClcG09RqAUBkqNlhsnJB+YYChQC
-        rNhRnnCBhS5bn0WEsI+C8KIeAgNz1RWCugFYANGczE=
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stevie@qrpff.net)
-        by pdx1-sub0-mail-a6.g.dreamhost.com (Postfix) with ESMTPSA id 0B9427F380;
-        Thu,  2 Jan 2020 15:05:38 -0800 (PST)
-Received: by mail-lj1-f172.google.com with SMTP id y6so34212048lji.0;
-        Thu, 02 Jan 2020 15:05:38 -0800 (PST)
-X-Gm-Message-State: APjAAAXjggjtOlDoZ/sRyXJR4M6m89xaGgGLKDoGilVEC7RPpMn2bgUM
-        CkwcV/VHidJ7LzlTO4v6uDPYHaQ4FzyLHZe/qOY=
-X-Google-Smtp-Source: APXvYqyX88202Y94oL3z3iKty2TRFCRwIZICQA3PUCWFaRomHJocbdmqtWdzdWlwGQOBuUF1kmWTCVC8bsuqINoezCE=
-X-Received: by 2002:a2e:8016:: with SMTP id j22mr51293445ljg.24.1578006332987;
- Thu, 02 Jan 2020 15:05:32 -0800 (PST)
-MIME-Version: 1.0
-References: <CAD_xR9eDL+9jzjYxPXJjS7U58ypCPWHYzrk0C3_vt-w26FZeAQ@mail.gmail.com>
- <1762437703fd150bb535ee488c78c830f107a531.camel@sipsolutions.net>
-In-Reply-To: <1762437703fd150bb535ee488c78c830f107a531.camel@sipsolutions.net>
-X-DH-BACKEND: pdx1-sub0-mail-a6
-From:   Stephen Oberholtzer <stevie@qrpff.net>
-Date:   Thu, 2 Jan 2020 18:05:21 -0500
-X-Gmail-Original-Message-ID: <CAD_xR9eh=CAYeQZ3Vp9Yj9h3ifMu2exy0ihaXyE+736tJrPVLA@mail.gmail.com>
-Message-ID: <CAD_xR9eh=CAYeQZ3Vp9Yj9h3ifMu2exy0ihaXyE+736tJrPVLA@mail.gmail.com>
-Subject: Re: PROBLEM: Wireless networking goes down on Acer C720P Chromebook (bisected)
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     toke@redhat.com, "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Thu, 2 Jan 2020 18:06:03 -0500
+Received: by mail-pg1-f193.google.com with SMTP id r11so22605704pgf.1;
+        Thu, 02 Jan 2020 15:06:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Bb6h4ccFElvLG5xqjKacq3uQ2ZA+WTV9OSPOnPBr7yI=;
+        b=lbq7shZMwC/+4dAihW75yVYmcIwB76oxVMtdSmQdRyTzsDOaFoCeEoz7NsVH/baakN
+         wBCjoVYBaiOkRipBKXnfIBxNYByctXw2c3n0mN/Ku/mYXaewpl6CldC7sPHSo9dPgY+E
+         MOMepFRI3iWQeQ5UWAz4hJ8lQLMXO/CWoPylfoNwlhPo5kV6OPN13T0QSMAp0OExdze+
+         goYUS7V4pIMLobJAkMylgbaw67Dci3/FpG9uDTeFscS0tGvxKWLP/OnJaCjs91/Fd0M1
+         ligejLk5JP5nnc3Jh1tp1VFDjS5JwMFLKJ+22EX0fL61tep3QisI0fTpb7qDvgsMNjz0
+         3hVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Bb6h4ccFElvLG5xqjKacq3uQ2ZA+WTV9OSPOnPBr7yI=;
+        b=UJtUvQdFgc4pxFFlPwZYeqYwkgFPJPw18KuofATvXGUrJUmvjmoiAaUI4hJ40iGXmp
+         zqG4GKpvVsuW65/Ad/C0D1hEsvhkYEiu9sqhJw9jgn+Y2mkdkEy74orE0AqkljYRhHln
+         MUiGHaAQ2XG3MGfDzDc0W2NBrhGHH7N7en7NN6J1DtECLjk4kRFCidRpe5oURe4elyNx
+         a7j0HiIxH3cveJ7oHcBXEixH+CrtBZS89wV7Z6xm+0Jxz9ukekD/p0qzZsEF58GrI7I6
+         9chocQAAFgM3349BklX+0W7nBxyVpZrJL1cnS/2Yyd/MPk9wC9BmfmY7sAp9zMVWGiVj
+         jE2A==
+X-Gm-Message-State: APjAAAUMjWoTOXj8wkChFaijVe68vngLXkfAzZUTY+4VmwLRmwqkWm2a
+        ypERsjFjA3j+K2OS7YFAIaA/m8J3
+X-Google-Smtp-Source: APXvYqxxe7wCOB3G/7ptIEiY2cPoUZSi24nVB9ou4EPATi5X+O7Gr/v6tHy19EALuMJhymUw1ItipA==
+X-Received: by 2002:a63:696:: with SMTP id 144mr96064050pgg.260.1578006362189;
+        Thu, 02 Jan 2020 15:06:02 -0800 (PST)
+Received: from [10.67.50.49] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id a22sm69756313pfk.108.2020.01.02.15.06.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Jan 2020 15:06:01 -0800 (PST)
+Subject: Re: [PATCH 0/8] ata: ahci_brcm: Fixes and new device support
+To:     Jens Axboe <axboe@kernel.dk>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-VR-OUT-STATUS: OK
-X-VR-OUT-SCORE: -100
-X-VR-OUT-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrvdegvddgtddvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuggftfghnshhusghstghrihgsvgdpffftgfetoffjqffuvfenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepgghfjgfhfffkuffvtgesthdtredttddtjeenucfhrhhomhepufhtvghphhgvnhcuqfgsvghrhhholhhtiigvrhcuoehsthgvvhhivgesqhhrphhffhdrnhgvtheqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvddtledrkeehrddvtdekrddujedvnecurfgrrhgrmhepmhhouggvpehsmhhtphdphhgvlhhopehmrghilhdqlhhjuddqfhdujedvrdhgohhoghhlvgdrtghomhdpihhnvghtpedvtdelrdekhedrvddtkedrudejvddprhgvthhurhhnqdhprghthhepufhtvghphhgvnhcuqfgsvghrhhholhhtiigvrhcuoehsthgvvhhivgesqhhrphhffhdrnhgvtheqpdhmrghilhhfrhhomhepshhtvghvihgvsehqrhhpfhhfrdhnvghtpdhnrhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Tejun Heo <tj@kernel.org>, Jaedon Shin <jaedon.shin@gmail.com>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <20191210185351.14825-1-f.fainelli@gmail.com>
+ <b65b61a6-3cc7-1e9b-9fa7-83f314e9bbf2@redhat.com>
+ <5ef8d453-84e9-72dc-3db9-6a1923d61076@gmail.com>
+ <e1b21ba3-7129-17dc-86e1-2d2d68302e39@kernel.dk>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <81a60d6e-78f2-3f13-f5c8-cb835d31a80f@gmail.com>
+Date:   Thu, 2 Jan 2020 15:06:00 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <e1b21ba3-7129-17dc-86e1-2d2d68302e39@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 2, 2020 at 8:28 AM Johannes Berg <johannes@sipsolutions.net> wrote:
->
-> On Tue, 2019-12-31 at 19:49 -0500, Stephen Oberholtzer wrote:
-> > Wireless networking goes down on Acer C720P Chromebook (bisected)
-> >
-> > Culprit: 7a89233a ("mac80211: Use Airtime-based Queue Limits (AQL) on
-> > packet dequeue")
-> >
+On 12/25/19 7:46 PM, Jens Axboe wrote:
+> On 12/25/19 8:34 PM, Florian Fainelli wrote:
+>>
+>>
+>> On 12/11/2019 5:31 AM, Hans de Goede wrote:
+>>> Hi,
+>>>
+>>> On 10-12-2019 19:53, Florian Fainelli wrote:
+>>>> Hi Jens,
+>>>>
+>>>> The first 4 patches are fixes and should ideally be queued up/picked up
+>>>> by stable. The last 4 patches add support for BCM7216 which is one of
+>>>> our latest devices supported by this driver.
+>>>>
+>>>> Patch #2 does a few things, but it was pretty badly broken before and it
+>>>> is hard not to fix all call sites (probe, suspend, resume) in one shot.
+>>>>
+>>>> Please let me know if you have any comments.
+>>>>
+>>>> Thanks!
+>>>
+>>> The entire series looks good to me:
+>>>
+>>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>>>
+>>> Regards,
+>>
+>> Thanks Hans, Jens is this good to go from your perspective?
+> 
+> I'll queue 1-4 up for 5.5 and mark for stable, then add 5-8 for
+> 5.6. Thanks!
 
-<snip>
-
-> I think I found at least one hole in this, but IIRC (it was before my
-> vacation, sorry) it was pretty unlikely to actually happen. Perhaps
-> there are more though.
->
-> https://lore.kernel.org/r/b14519e81b6d2335bd0cb7dcf074f0d1a4eec707.camel@sipsolutions.net
-
-<snippety-snip>
-
-> Do you get any output at all? Like a WARN_ON() for an underflow, or
-> something?
->
-> johannes
->
-
-Johannes,
-
-To answer your immediate question, no, I don't get any dmesg output at
-all. Nothing about underruns.
-However, while pursuing other avenues -- specifically, enabling
-mac80211 debugfs and log messages -- I realized that my 'master' was
-out-of-date from linux-stable and did a git pull.  Imagine my surprise
-when the resulting kernel did not exhibit the problem!
-
-Apparently, I had been a bit too pessimistic; since the problem
-existed in 5.5-rc1 release, I'd assumed that the problem wouldn't get
-rectified before 5.5.
-
-However, I decided to bisect the fix, and ended up with: 911bde0f
-("mac80211: Turn AQL into an NL80211_EXT_FEATURE"), which appears to
-have "solved" the problem by just disabling the feature (this is
-ath9k, by the way.)
-
-This AQL stuff sounds pretty nifty, and I'd love to try my hand at
-making it work for ath9k (also, since I put so much effort into an
-automated build-and-test framework, it'd be a shame to just abandon
-it.)  However, the ath9k code is rather lacking for comments, so I
-don't even know where I should start, except for (I suspect) a call to
-`wiphy_ext_feature_set(whatever, NL80211_EXT_FEATURE_AQL);` from
-inside ath9k_set_hw_capab()?
-
-In the meantime, I went back to e548f749b096 -- the commit prior to
-the one making AQL support opt-in -- and cranked up the debugging.
-
-I'm not sure how to interpret any of this, but  here's what I got:
-
-dmesg output:
-
-Last relevant mention is "moving STA <my AP's MAC> to state 4" which
-happened during startup, before everything shut down.
-
-/sys/kernel/debug/ieee80211/phy0
-
-airtime_flags = 7
-
-stations/<my AP's MAC>/airtime =
-
-RX: 6583578 us
-TX: 32719 us
-Weight: 256
-Deficit: VO: -1128 us VI: 11 us BE: -5098636 us BK: 256 us
-Q depth: VO: 3868 us VI: 3636 us BE: 12284 us BK: 0 us
-Q limit[low/high]: VO: 5000/12000 VI: 5000/12000 BE: 5000/12000 BK: 5000/12000
-
-(I have no idea how to interpret this, but that '32719 us' seems odd,
-I thought the airtime usage was in 4us units?)
-
-
-Doing an 'echo 3 | tee airtime_flags' to clear the (old) AQL-enabled
-bit seemed to *immediately* restore network connectivity.
-
-I ran a ping, and saw this:
-
-- pings coming back in <5ms
-- re-enable AQL (echo 7 | tee airtime_flags)
-- pings stop coming back immediately
-- some seconds later, disable AQL again (echo 3 | tee airtime_flags)
-- immediate *flood* of ping replies registered, with times 16000ms,
-15000ms, 14000ms, .. down to 1000ms, 15ms, then stabilizing sub-5ms
-- According to the icmp_seq values, all 28 requests were replied to,
-and their replies were delivered in-order
-
-This certainly looks like a missing TX queue restart to me?
-
-
+It looks like I will have two incremental changes on top to minimize the
+number of resources that get cycled through during EPROBE_DEFER and also
+ensure that the 7216 reset line gets properly managed with a call to
+reset_control_reset() per review feedback from the reset controller
+maintainer.
 -- 
--- Stevie-O
-Real programmers use COPY CON PROGRAM.EXE
+Florian
