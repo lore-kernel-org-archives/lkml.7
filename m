@@ -2,51 +2,55 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 940DEC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2524EC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2CE21835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E923121835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003973;
-	bh=TTrH4AKxvepDzY/FRGVncaQTflBmRdZjrfprl3Qu84g=;
+	s=default; t=1578003979;
+	bh=JB+DYKIwsZBH1KvlL773j+Eii/K1XDeuwoVDewlsQYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IjJe82pXli3+J/ExwhyrxmhfbRPqQdI3/b85DyXy9WSa6yuXLbauvRnIBEDkfxQv0
-	 fAIKTaKrAm283Y8TlX2+yhXtq7sc58D/bXbj24cAmnH/gNx7XZuXFLLW9yE5ayFe/x
-	 6NbhyhaxwSFtbBsaG/WSHFlYbr+t96FCmOqYqJJI=
+	b=1iVWeQWx8zDvr4rtvix4imEG7xXJKPbL7PhgSe0iWu3I35GOrxi15vry/U1KUgvJ6
+	 2C8EHRwfDG2zQm9zSr/EF7xlYaOgVmAX7WdPctDzHxl/I39Ko0umAsmTmPhWt/V9mw
+	 Zu5lfT8vGNI7j4DjLit/joNKrzH3KSLM1DJv1EqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729436AbgABW0M (ORCPT
+        id S1729626AbgABW0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:26:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52964 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:26:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729617AbgABW0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:26:09 -0500
+        id S1729618AbgABW0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:26:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EBB420863;
-        Thu,  2 Jan 2020 22:26:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90D2A21835;
+        Thu,  2 Jan 2020 22:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003968;
-        bh=TTrH4AKxvepDzY/FRGVncaQTflBmRdZjrfprl3Qu84g=;
+        s=default; t=1578003971;
+        bh=JB+DYKIwsZBH1KvlL773j+Eii/K1XDeuwoVDewlsQYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BpEx7OZ14dH0GAQxHNbA8WtNZH4t+Xu/wIXcSx4wmZ8FjxAGymwZpXAlep8nqWmHg
-         Fzfhx7Q4qK8I4qaXsYnvODW4XK4/UGzntsqqdyGhDvmC17GNC4f6v4R/BqW2bqYr9m
-         /T0hTpAdtLf+FLM0+2O8wwidrZIQVCVzWqU6e4Ys=
+        b=qPaiezKp9ZZGrHWV4gEr2CuXnJyErZpisk2jrQV13xQj0vi8TV/WqwWOCytTeylin
+         y2s1djTprXWQN06EH0daCRWq1mwSZz+JvUj7mmmGcb8HVg7BbWF0VvU2cOsu2qXMh4
+         dMqp/8OiodZ9XqXyEPHaIdgkLYSDs0bynAt9yG5A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Netanel Belgazal <netanel@amazon.com>,
+        stable@vger.kernel.org,
+        Vladyslav Tarasiuk <vladyslavt@mellanox.com>,
+        Aya Levin <ayal@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 74/91] net: ena: fix napi handler misbehavior when the napi budget is zero
-Date:   Thu,  2 Jan 2020 23:07:56 +0100
-Message-Id: <20200102220447.623164175@linuxfoundation.org>
+Subject: [PATCH 4.14 75/91] net/mlxfw: Fix out-of-memory error in mfa2 flash burning
+Date:   Thu,  2 Jan 2020 23:07:57 +0100
+Message-Id: <20200102220447.901323997@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -59,54 +63,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Netanel Belgazal <netanel@amazon.com>
+From: Vladyslav Tarasiuk <vladyslavt@mellanox.com>
 
-[ Upstream commit 24dee0c7478d1a1e00abdf5625b7f921467325dc ]
+[ Upstream commit a5bcd72e054aabb93ddc51ed8cde36a5bfc50271 ]
 
-In netpoll the napi handler could be called with budget equal to zero.
-Current ENA napi handler doesn't take that into consideration.
+The burning process requires to perform internal allocations of large
+chunks of memory. This memory doesn't need to be contiguous and can be
+safely allocated by vzalloc() instead of kzalloc(). This patch changes
+such allocation to avoid possible out-of-memory failure.
 
-The napi handler handles Rx packets in a do-while loop.
-Currently, the budget check happens only after decrementing the
-budget, therefore the napi handler, in rare cases, could run over
-MAX_INT packets.
-
-In addition to that, this moves all budget related variables to int
-calculation and stop mixing u32 to avoid ambiguity
-
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Netanel Belgazal <netanel@amazon.com>
+Fixes: 410ed13cae39 ("Add the mlxfw module for Mellanox firmware flash process")
+Signed-off-by: Vladyslav Tarasiuk <vladyslavt@mellanox.com>
+Reviewed-by: Aya Levin <ayal@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Tested-by: Ido Schimmel <idosch@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -1196,8 +1196,8 @@ static int ena_io_poll(struct napi_struc
- 	struct ena_napi *ena_napi = container_of(napi, struct ena_napi, napi);
- 	struct ena_ring *tx_ring, *rx_ring;
+--- a/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2.c
++++ b/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2.c
+@@ -37,6 +37,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/netlink.h>
++#include <linux/vmalloc.h>
+ #include <linux/xz.h>
+ #include "mlxfw_mfa2.h"
+ #include "mlxfw_mfa2_file.h"
+@@ -579,7 +580,7 @@ mlxfw_mfa2_file_component_get(const stru
+ 	comp_size = be32_to_cpu(comp->size);
+ 	comp_buf_size = comp_size + mlxfw_mfa2_comp_magic_len;
  
--	u32 tx_work_done;
--	u32 rx_work_done;
-+	int tx_work_done;
-+	int rx_work_done = 0;
- 	int tx_budget;
- 	int napi_comp_call = 0;
- 	int ret;
-@@ -1214,7 +1214,11 @@ static int ena_io_poll(struct napi_struc
- 	}
+-	comp_data = kmalloc(sizeof(*comp_data) + comp_buf_size, GFP_KERNEL);
++	comp_data = vzalloc(sizeof(*comp_data) + comp_buf_size);
+ 	if (!comp_data)
+ 		return ERR_PTR(-ENOMEM);
+ 	comp_data->comp.data_size = comp_size;
+@@ -601,7 +602,7 @@ mlxfw_mfa2_file_component_get(const stru
+ 	comp_data->comp.data = comp_data->buff + mlxfw_mfa2_comp_magic_len;
+ 	return &comp_data->comp;
+ err_out:
+-	kfree(comp_data);
++	vfree(comp_data);
+ 	return ERR_PTR(err);
+ }
  
- 	tx_work_done = ena_clean_tx_irq(tx_ring, tx_budget);
--	rx_work_done = ena_clean_rx_irq(rx_ring, napi, budget);
-+	/* On netpoll the budget is zero and the handler should only clean the
-+	 * tx completions.
-+	 */
-+	if (likely(budget))
-+		rx_work_done = ena_clean_rx_irq(rx_ring, napi, budget);
+@@ -610,7 +611,7 @@ void mlxfw_mfa2_file_component_put(struc
+ 	const struct mlxfw_mfa2_comp_data *comp_data;
  
- 	/* If the device is about to reset or down, avoid unmask
- 	 * the interrupt and return 0 so NAPI won't reschedule
+ 	comp_data = container_of(comp, struct mlxfw_mfa2_comp_data, comp);
+-	kfree(comp_data);
++	vfree(comp_data);
+ }
+ 
+ void mlxfw_mfa2_file_fini(struct mlxfw_mfa2_file *mfa2_file)
 
 
