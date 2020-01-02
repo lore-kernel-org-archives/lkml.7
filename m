@@ -2,105 +2,159 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 650A1C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CEFC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404E5215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1751721734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:38:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="F62h7BtB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbgABMfL (ORCPT
+        id S1728317AbgABMi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 07:35:11 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:51026 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728274AbgABMfL (ORCPT
+        Thu, 2 Jan 2020 07:38:26 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6331 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728274AbgABMi0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 07:35:11 -0500
-Received: by mail-il1-f198.google.com with SMTP id z12so34782809ilh.17
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 04:35:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=y0iE5KleJVXXmUFvao8OvB4WDNhb1+wejlM/yNViWB0=;
-        b=kPcNMhqGlBX0Dac7yS9GJ1YfgK6HVg35E5nZAenC2y41fyFYIbBgsh3MDhtJkDngQq
-         XTCfJecIyh61E43BnwFJB+mGi5HF8u1A2w1/6vUnYjPWLwuDOHJwrndz+I88CXKJ0oRg
-         AQJ9fWukHEbYswcyUprx/CT7bgekV3prgy0oPWRzSrDYTVWn4Bfa/HZTDxdI0Q8HG5LD
-         CEzLGKX4BVxPkl1hrxcJugJ4tTt1kXKfgo02gpL3tKbrfnJjin8A5TJXVfS6XJYqJfoK
-         3aRrCwueJNqP+FOkeHI1oiE44kuspdPIL+aKqV/hlER7sUP2JX28TXbrgp4gbt0rncgG
-         9K1A==
-X-Gm-Message-State: APjAAAViksVOIJmpe4+m+qsKfPd/PCEdzmwLsF2nDM8cUAnccZmjmX/5
-        aQS3u/5qw4fu688j6VZqr9SoI2OByeXNWVQ0grVYL92EyTa2
-X-Google-Smtp-Source: APXvYqxFR/nfC87By5t8MAevHYJSM4hc9KgEMxwcIzCAhJzxWn8oF64cx9dgEtwx2oDUqZyG7pTghhJ6gs+7Doo5hyjT/2qCnXoB
+        Thu, 2 Jan 2020 07:38:26 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e0de4320000>; Thu, 02 Jan 2020 04:38:10 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 02 Jan 2020 04:38:25 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 02 Jan 2020 04:38:25 -0800
+Received: from localhost (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 Jan
+ 2020 12:38:24 +0000
+Date:   Thu, 2 Jan 2020 13:38:22 +0100
+From:   Thierry Reding <treding@nvidia.com>
+To:     Marcel Ziswiler <marcel@ziswiler.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Manikanta Maddireddy" <mmaddireddy@nvidia.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v1] pci: tegra: fix afi_pex2_ctrl reg offset for tegra30
+Message-ID: <20200102123822.GA1924669@ulmo>
+References: <20191230005209.1546434-1-marcel@ziswiler.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:d2:: with SMTP id 201mr72802259ila.22.1577968509084;
- Thu, 02 Jan 2020 04:35:09 -0800 (PST)
-Date:   Thu, 02 Jan 2020 04:35:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000736cbb059b276cd4@google.com>
-Subject: memory leak in path_openat
-From:   syzbot <syzbot+9c064b9ab4dbb724c806@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20191230005209.1546434-1-marcel@ziswiler.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.13.1 (2019-12-14)
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Disposition: inline
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1577968690; bh=+gSZA+gTUQa3mHgLv41Z4ncluKFa/RYi+d8qcUwlke0=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:In-Reply-To:X-NVConfidentiality:User-Agent:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:
+         Content-Disposition;
+        b=F62h7BtBAtksNCieWvQ/XnVY45rjnZZl0yl95zm7PY0a+aQTWDABa6CN+ijLRzGHP
+         5FInZvAIFCb7NWZUNY2shN8VK5RuZ2nasiP1O5Al3CvMtHzNem2TcpuOsUF1moeQ/C
+         Qmpq9uNbiZTGsvjaNxPaSDbirX5DMkXqofctzLGRPI/o7HsjtHoYIoGV9418G+Q4df
+         XQTPMiWk7ZEllOr5BD6Imx2OInvJ6GXwWV98j8AB76Ilze6DWsQeJ8A13BN7n233e8
+         z9ivb1Mz0EcA0WC2gTrQVTTheql70T1yBz8wGnp5fpvw4ivulSldUoQixOfE4xhx3r
+         WMzbarmv0b+6g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+--ibTvN161/egqYuK8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-syzbot found the following crash on:
+On Mon, Dec 30, 2019 at 01:52:09AM +0100, Marcel Ziswiler wrote:
+> Fix AFI_PEX2_CTRL reg offset for tegra30 by moving it from the tegra20
+> SoC struct where it erroneously got added by commit adb2653b3d2e
+> ("PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of SoC struct").
+> This fixes the AFI_PEX2_CTRL reg offset being uninitialised
+> subsequently failing to bring up the third PCIe port.
+>=20
+> Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
+>=20
+> ---
+>=20
+>  drivers/pci/controller/pci-tegra.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-HEAD commit:    bf8d1cd4 Merge tag 'scsi-fixes' of git://git.kernel.org/pu..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16386971e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=328af7338803d39a
-dashboard link: https://syzkaller.appspot.com/bug?extid=9c064b9ab4dbb724c806
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17f4ce15e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=153c8971e00000
+Hi Marcel,
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+9c064b9ab4dbb724c806@syzkaller.appspotmail.com
+the recipient list looks somewhat odd. Mailing lists typically go into
+the Cc: line and subsystem maintainers into the To: line. That way you
+increase chances of people's filters catching important emails.
 
-BUG: memory leak
-unreferenced object 0xffff88811f95b400 (size 256):
-   comm "syz-executor609", pid 6975, jiffies 4294945087 (age 7.980s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     a0 2b ab 1b 82 88 ff ff c0 3c 80 2b 81 88 ff ff  .+.......<.+....
-   backtrace:
-     [<00000000aa112990>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000aa112990>] slab_post_alloc_hook mm/slab.h:586 [inline]
-     [<00000000aa112990>] slab_alloc mm/slab.c:3320 [inline]
-     [<00000000aa112990>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3484
-     [<00000000a62a216f>] kmem_cache_zalloc include/linux/slab.h:660 [inline]
-     [<00000000a62a216f>] __alloc_file+0x28/0x130 fs/file_table.c:101
-     [<00000000db4f5560>] alloc_empty_file+0x50/0xd0 fs/file_table.c:151
-     [<00000000178121b2>] path_openat+0x52/0x1dd0 fs/namei.c:3526
-     [<00000000b9f51901>] do_filp_open+0xaa/0x130 fs/namei.c:3567
-     [<000000008b6c278b>] do_sys_open+0x253/0x330 fs/open.c:1097
-     [<00000000de529158>] __do_sys_openat fs/open.c:1124 [inline]
-     [<00000000de529158>] __se_sys_openat fs/open.c:1118 [inline]
-     [<00000000de529158>] __x64_sys_openat+0x24/0x30 fs/open.c:1118
-     [<000000002f0aeb7b>] do_syscall_64+0x73/0x220  
-arch/x86/entry/common.c:294
-     [<00000000720f3b5c>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+You may also want to fix up the subject line to use the more standard
+"PCI: tegra: " prefix. Also, maybe capitalize "fix" -> "Fix" to match
+standard formatting rules for commit messages. In the subject and the
+commit message, also, please spell "tegra20" and "tegra30" as "Tegra20"
+and "Tegra30", which can help when searching logs.
 
+With the above fixed, this looks good, so:
 
+Acked-by: Thierry Reding <treding@nvidia.com>
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+>=20
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/=
+pci-tegra.c
+> index 090b632965e2..ac93f5a0398e 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -2499,7 +2499,6 @@ static const struct tegra_pcie_soc tegra20_pcie =3D=
+ {
+>  	.num_ports =3D 2,
+>  	.ports =3D tegra20_pcie_ports,
+>  	.msi_base_shift =3D 0,
+> -	.afi_pex2_ctrl =3D 0x128,
+>  	.pads_pll_ctl =3D PADS_PLL_CTL_TEGRA20,
+>  	.tx_ref_sel =3D PADS_PLL_CTL_TXCLKREF_DIV10,
+>  	.pads_refclk_cfg0 =3D 0xfa5cfa5c,
+> @@ -2528,6 +2527,7 @@ static const struct tegra_pcie_soc tegra30_pcie =3D=
+ {
+>  	.num_ports =3D 3,
+>  	.ports =3D tegra30_pcie_ports,
+>  	.msi_base_shift =3D 8,
+> +	.afi_pex2_ctrl =3D 0x128,
+>  	.pads_pll_ctl =3D PADS_PLL_CTL_TEGRA30,
+>  	.tx_ref_sel =3D PADS_PLL_CTL_TXCLKREF_BUF_EN,
+>  	.pads_refclk_cfg0 =3D 0xfa5cfa5c,
+> --=20
+> 2.24.1
+>=20
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+--ibTvN161/egqYuK8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4N5DoACgkQ3SOs138+
+s6GoXw//XWzpxQnZQRdUIVGFTrjlaiqkRclRzJOtoa+mYwAOKZT86xbgsJ+na3KU
+rY2wuNZOzNfYYJDvKOloYZDMoTCsbO65uW8fXAoma7lc0JMWa0J5OnGEJKlbMQtd
+xAEFOMwSqt2m+ym5RT59Jzm/hWh6W0aYaaaT3c6TGgDfq+wyQqiOfGOTrWrZ6rRR
+EpCy7JMZ1p92nxDZDCsLUlTylc0ISJHGNy7rz7N7Xr4JNUwMMSvZ450cqQ5EwSf9
+bXsMiZIiyoO4d2gG0bkSzfBnvJMRupLCd8MDuAC0P226IXR/9lMTfl0/+1YWOQl0
+kv/osH1h+5vliuMAmlprPcERBedaNxruauTW2TJquMjvkAr4g2CJcXJzS14wOrG7
+qifI22vEyYGcOHTVt9baP2idovjO3T1w3Ba3YaEjo64MrdZNFqRZoTZY6/wEU4PD
+YocvvmP+GPjz6NLdG7DtCM9ZgGvG6iA9o6BNr85srvvJuf5DNb8u/myIywvqU/yr
+LUVwl907q8kBRpbNGhrBkltBEILRCxoaB2Aes8nNYkDFWz84MQTU664+noC7F3rt
+lD6mUfAuKDx98AR3vQSNnrxLtbAcnzWd3kHwXLSv9E4806g6+kfvdAZKsjZY7OY2
+p70Eu3q/M/0RWstQLPm5OuLB8nco/PjGf7SDu/jSyKIuDdl4xGk=
+=FH42
+-----END PGP SIGNATURE-----
+
+--ibTvN161/egqYuK8--
