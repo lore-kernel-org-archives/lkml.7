@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE712C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7234CC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7DEC20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C6420866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005507;
-	bh=xF54mOLpbSb1dQitUM6FwEUU1UUEJcNSOBzBfaDG8Ik=;
+	s=default; t=1578005512;
+	bh=q8l98h7mq7mEKiMJIZAGmt9Xo5Kz+xeUmCgSlc8gRT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WiziLAq+zBjv5J+Ot85sC4YcCrJCVLlQiRkEcxMjMYL6mUZmoMx93K27qkk7oM+xu
-	 ecx3AvUNJAxpJTPbYQ2JdjT/LKeobrxfw8Vm2ojkmFLDZzHl0eS8pRl1pQXD+LNi0t
-	 LdPBnScLdxyv7IyrgcvpVYeWWGCORtLr48Fdkqis=
+	b=hz8Lgw9kQOtc0zTRClubbpgz8o/ICPA0beezVW93TxD4O7NkcxnmjXMqm4sTj0oxr
+	 2G5cvz1/wrpQZCA3Jj6OYfywNm3PpVh5nG1arYMidzJ8AK5e+HsDR7r1YN3qWDttdc
+	 ydx4ClmYMI6raw8IfrCb1AS9TS5VUhzg1KV472nk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgABWXq (ORCPT
+        id S1729310AbgABWXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:23:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46394 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:23:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727889AbgABWXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:23:42 -0500
+        id S1728990AbgABWXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:23:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A5EE20863;
-        Thu,  2 Jan 2020 22:23:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B050720866;
+        Thu,  2 Jan 2020 22:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003822;
-        bh=xF54mOLpbSb1dQitUM6FwEUU1UUEJcNSOBzBfaDG8Ik=;
+        s=default; t=1578003817;
+        bh=q8l98h7mq7mEKiMJIZAGmt9Xo5Kz+xeUmCgSlc8gRT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uy5FQm1tToudblxkrBb9TNVp+WmPKgmPb7GsYjHjWDQUZ93GspsU5kOckcnyEBGoF
-         BKfh1VoWdIYREG3zAipaW9MumWAiTEdBs2vLh6kdsnXJMwC9loApwYEqe9tQaGJ5h/
-         9OphQ0day25JgOp4kwiRZ7ojSwwNKs5LPyHnBIzw=
+        b=FoNSIij0YnxTuyGM3NYCeMwIBSo8b7cDIubAnfdIT4rvKxJ9KZxpG7xsKFPfxLRcC
+         L/wG1HaYYVEnxFEyTck4ROisGRK9okmBMO5d2HRoH80rsYlabA7wolcpY2juvW7yai
+         rk6zJ86PqwIOuTMadC143/w3Oc6A6mKZ6azssTTw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 14/91] powerpc/security/book3s64: Report L1TF status in sysfs
-Date:   Thu,  2 Jan 2020 23:06:56 +0100
-Message-Id: <20200102220412.758106117@linuxfoundation.org>
+Subject: [PATCH 4.14 12/91] dma-debug: add a schedule point in debug_dma_dump_mappings()
+Date:   Thu,  2 Jan 2020 23:06:54 +0100
+Message-Id: <20200102220410.999563191@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -61,43 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anthony Steinhauser <asteinhauser@google.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 8e6b6da91ac9b9ec5a925b6cb13f287a54bd547d ]
+[ Upstream commit 9ff6aa027dbb98755f0265695354f2dd07c0d1ce ]
 
-Some PowerPC CPUs are vulnerable to L1TF to the same extent as to
-Meltdown. It is also mitigated by flushing the L1D on privilege
-transition.
+debug_dma_dump_mappings() can take a lot of cpu cycles :
 
-Currently the sysfs gives a false negative on L1TF on CPUs that I
-verified to be vulnerable, a Power9 Talos II Boston 004e 1202, PowerNV
-T2P9D01.
+lpk43:/# time wc -l /sys/kernel/debug/dma-api/dump
+163435 /sys/kernel/debug/dma-api/dump
 
-Signed-off-by: Anthony Steinhauser <asteinhauser@google.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-[mpe: Just have cpu_show_l1tf() call cpu_show_meltdown() directly]
-Link: https://lore.kernel.org/r/20191029190759.84821-1-asteinhauser@google.com
+real	0m0.463s
+user	0m0.003s
+sys	0m0.459s
+
+Let's add a cond_resched() to avoid holding cpu for too long.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Corentin Labbe <clabbe@baylibre.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/security.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ lib/dma-debug.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
-index f5d6541bf8c2..fef3f09fc238 100644
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -160,6 +160,11 @@ ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, cha
+diff --git a/lib/dma-debug.c b/lib/dma-debug.c
+index ea4cc3dde4f1..61e7240947f5 100644
+--- a/lib/dma-debug.c
++++ b/lib/dma-debug.c
+@@ -437,6 +437,7 @@ void debug_dma_dump_mappings(struct device *dev)
+ 		}
  
- 	return sprintf(buf, "Vulnerable\n");
+ 		spin_unlock_irqrestore(&bucket->lock, flags);
++		cond_resched();
+ 	}
  }
-+
-+ssize_t cpu_show_l1tf(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	return cpu_show_meltdown(dev, attr, buf);
-+}
- #endif
- 
- ssize_t cpu_show_spectre_v1(struct device *dev, struct device_attribute *attr, char *buf)
+ EXPORT_SYMBOL(debug_dma_dump_mappings);
 -- 
 2.20.1
 
