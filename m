@@ -2,67 +2,127 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52862C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 10:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4CCC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C089215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 10:58:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="w9VpIEWg"
+	by mail.kernel.org (Postfix) with ESMTP id 87DC1217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgABK63 (ORCPT
+        id S1728113AbgABLA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 05:58:29 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:55777 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728044AbgABK63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 05:58:29 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id f8cfe1fd;
-        Thu, 2 Jan 2020 09:59:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=1gVIOhY+u8AhCXDCI9oGBXaH8oE=; b=w9VpIE
-        Wg6c2Zj4fgbXNbMd5W9DPHSR6J7CewQ4twfNHv6AiOhYA7V++oCQuvYVsrEB+w/U
-        qHeO/fq1mhl6VU9uO8lVZj40icJ9688HNAfgM31g8AbKv51Z4iA+miVBhY6NpojF
-        o19/LDa/Nx7pIvnH3zlnWQGX7brA0Cw+SE8Z/+9e8C11zBDjeNQ4eSgJ6sC1XFZ2
-        6PQVlGqUIc3aa2JqbIAguaZ1TSys1Y2pcSeI4eeauI+vV4dO/LpjsNzF34Ud5HLZ
-        tPtykMmAE6J8Zh7ehN3oL5dadAy3kTALewvEnc4nLNeLc2llTxpZX/4xA0WHmIPY
-        agNyxZJESxKhu+OA==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id b1032272 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Thu, 2 Jan 2020 09:59:57 +0000 (UTC)
-Received: by mail-ot1-f51.google.com with SMTP id 66so56535028otd.9;
-        Thu, 02 Jan 2020 02:58:26 -0800 (PST)
-X-Gm-Message-State: APjAAAVkfU1h2PH/rowPkD1RgWXiL7Dt4coCyJFLEXfqzfNBdDRCI6t7
-        dj7ZthYXMzNQkyyrMYyl3qAkNWmAbqX/hHksPRk=
-X-Google-Smtp-Source: APXvYqw3d16YC7Jfrp9aGazNFsvu+BpYew09tXhaWieR6L/gBkf/gxI9tCzn7SRBtOsoMTyrCfsH4hY52pXEb/FixXk=
-X-Received: by 2002:a9d:4f18:: with SMTP id d24mr88169228otl.179.1577962705850;
- Thu, 02 Jan 2020 02:58:25 -0800 (PST)
+        Thu, 2 Jan 2020 06:00:29 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:50038 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728044AbgABLA3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 06:00:29 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 68A1D1C25CE; Thu,  2 Jan 2020 12:00:26 +0100 (CET)
+Date:   Thu, 2 Jan 2020 12:00:25 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Tony Lindgren <tony@atomide.com>, olof@lixom.net, arnd@arndb.de
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
+        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz
+Subject: Droid 4 regression in 5.5-rc1, armsoc-soc tree
+Message-ID: <20200102110025.GA29035@amd>
+References: <20191228162929.GA29269@duo.ucw.cz>
+ <20191228193622.GA13047@duo.ucw.cz>
+ <20191230173507.GM35479@atomide.com>
 MIME-Version: 1.0
-References: <20200102005343.GA495913@rani.riverdale.lan> <20200102045038.102772-1-paulburton@kernel.org>
-In-Reply-To: <20200102045038.102772-1-paulburton@kernel.org>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Thu, 2 Jan 2020 11:58:15 +0100
-X-Gmail-Original-Message-ID: <CAHmME9r7pzca4ccF_GT3y09_fJQw-EPG_35V2ZM7OVamwLuH0w@mail.gmail.com>
-Message-ID: <CAHmME9r7pzca4ccF_GT3y09_fJQw-EPG_35V2ZM7OVamwLuH0w@mail.gmail.com>
-Subject: Re: [PATCH v2] MIPS: Avoid VDSO ABI breakage due to global register variable
-To:     Paul Burton <paulburton@kernel.org>
-Cc:     "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Christian Brauner <christian.brauner@canonical.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        stable <stable@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
+Content-Disposition: inline
+In-Reply-To: <20191230173507.GM35479@atomide.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks, looks good to me:
 
-Reviewed-by: Jason A. Donenfeld <Jason@zx2c4.com>
-    or
-Tested-by: Jason A. Donenfeld <Jason@zx2c4.com>
+--ew6BAiZeqk4r7MaW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon 2019-12-30 09:35:07, Tony Lindgren wrote:
+> * Pavel Machek <pavel@ucw.cz> [191228 19:37]:
+> > Hi!
+> >=20
+> > > 5.4-based kernel works ok on my droid 4.
+> > >=20
+> > > 5.5-rc3 based kernel has problems; it reboots when I try to kexec it.
+> > >=20
+> > > Vanilla 5.5-rc3 reboots, too.
+> > >=20
+> > > If you have any ideas, let me know.
+> >=20
+> > I managed to get partial serial dump. This should be 5.5-rc3: And then
+> > a bit better serial dump (below). But it is silent for few seconds,
+> > and then it restarts...
+>=20
+> If spi or regulators have problems, nothing will really work..
+
+arm-soc merge seems to be responsible:
+
+bad 38206c24ab09b4f4c2a57de5c1af0bb2e69cf5b6 Merge tag 'armsoc-soc' of
+good d9e48dc2a71a836f17d1febbedb31470f957edb4 Merge tag
+
+									Pavel
+
+# bad: [738d2902773e30939a982c8df7a7f94293659810] Merge git://git.kernel.or=
+g/pub/scm/linux/kernel/git/netdev/net
+# good: [219d54332a09e8d8741c1e1982f5eae56099de85] Linux 5.4
+git bisect start '738d2902773e' '219d54332a09'
+# bad: [46cf053efec6a3a5f343fead837777efe8252a46] Linux 5.5-rc3
+git bisect bad 46cf053efec6a3a5f343fead837777efe8252a46
+# bad: [e42617b825f8073569da76dc4510bfa019b1c35a] Linux 5.5-rc1
+git bisect bad e42617b825f8073569da76dc4510bfa019b1c35a
+# good: [9a3d7fd275be4559277667228902824165153c80] Merge tag 'driver-core-5=
+=2E5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-co=
+re
+git bisect good 9a3d7fd275be4559277667228902824165153c80
+# good: [0b4295b5e2b9b42f3f3096496fe4775b656c9ba6] io_uring: fix a typo in =
+a comment
+git bisect good 0b4295b5e2b9b42f3f3096496fe4775b656c9ba6
+# good: [056df578c2dcac1e624254567f5df5ddaa223234] Merge tag 'arc-5.5-rc1' =
+of git://git.kernel.org/pub/scm/linux/kernel/git/vgupta/arc
+git bisect good 056df578c2dcac1e624254567f5df5ddaa223234
+# bad: [25cfb0c7de3f14e283a43dcd6de903657f9f98c7] Merge branch 'for-next' o=
+f git://git.kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu
+git bisect bad 25cfb0c7de3f14e283a43dcd6de903657f9f98c7
+# bad: [38206c24ab09b4f4c2a57de5c1af0bb2e69cf5b6] Merge tag 'armsoc-soc' of=
+ git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+git bisect bad 38206c24ab09b4f4c2a57de5c1af0bb2e69cf5b6
+# good: [d9e48dc2a71a836f17d1febbedb31470f957edb4] Merge tag 'pwm/for-5.5-r=
+c1' of git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-p=
+wm
+git bisect good d9e48dc2a71a836f17d1febbedb31470f957edb4
+
+
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--ew6BAiZeqk4r7MaW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl4NzUkACgkQMOfwapXb+vL/lwCeMuMUzLWhBOPsJT5QSoBhPbAp
+qYMAoKLdeCAROa7G9Cn8n2x1ZOigQ5cE
+=rq58
+-----END PGP SIGNATURE-----
+
+--ew6BAiZeqk4r7MaW--
