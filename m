@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76403C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80266C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 424AC24650
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4896622525
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003591;
-	bh=AFNVl8nrgOrO2tqw7CjSzHBMngU35vBQOYU2AwsBhrk=;
+	s=default; t=1578003594;
+	bh=4oyLsrmYWoS4GjZR0IN8IUt5EC2eJlOpBX7eJQplCFo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2JlTG/zQwnKTwqac705l/RklrfRfePYy+kkm/wR2muzpC82mzjYSmYIgRTNzujqEp
-	 00Y/qM+FcHSPW4+v9DkLeJ8rEK3dezDsVxnsY+mxYWPHy0IgaiJvOxYM709ocjrZHE
-	 IbyJX4pVA/C2YAJ4+osN19BihL7BImJHb/mAkLl4=
+	b=Dyopz1I1LuLEfhbAHnHvvGQnHC1f0ekjhA0IeeZj0j3QIBowbUPTcFwMo10NCVOrm
+	 cMnOjl8910rmKJpQtTn7dG1gVD0AYk6mbAGltlWj9SVfQcodkvcj3bObrggx7IbCAk
+	 DAtYQAlubVjUoqC8YxE4Z+gPcqEh6y3N3G12+4O8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbgABWTu (ORCPT
+        id S1728683AbgABWTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:19:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36324 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:19:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728657AbgABWTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:19:47 -0500
+        id S1728665AbgABWTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:19:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 489AB21582;
-        Thu,  2 Jan 2020 22:19:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A558622B48;
+        Thu,  2 Jan 2020 22:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003586;
-        bh=AFNVl8nrgOrO2tqw7CjSzHBMngU35vBQOYU2AwsBhrk=;
+        s=default; t=1578003589;
+        bh=4oyLsrmYWoS4GjZR0IN8IUt5EC2eJlOpBX7eJQplCFo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BZtjUkK5SItZ1f+Dcqfc7MxigmmT7nRATkSF2Ut7qPC2/wOYedyDtLHLqf0R5Js+B
-         QVScHDn0rdkcfglkYAKhiR8YYouZVtxEBhJ739C/Vsen8Eeyw59nUVa70qYDBDOVS6
-         MlQhAiUUTYTQ2BprC/bEOo60Lup1Dh5JE2NRyc6M=
+        b=nbWrLSWm/7XVzHg1D0uvebFcZEGYKDzFum7navWh0A2CLgw6kizdim7LySerQgS/O
+         kk/pfpip8ZcG30SaXPjl2wEnT1vy+cSWd694Dw2tKFZ1IN/VYevI1Fm/PIDVjuSqZi
+         +GQ2LQnLljlmH8C9A2pJT78/c+uwi3f89S+BxEnw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 031/114] irqchip: ingenic: Error out if IRQ domain creation failed
-Date:   Thu,  2 Jan 2020 23:06:43 +0100
-Message-Id: <20200102220032.233364107@linuxfoundation.org>
+        stable@vger.kernel.org, Barry Song <Baohua.Song@csr.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 032/114] mfd: mfd-core: Honour Device Trees request to disable a child-device
+Date:   Thu,  2 Jan 2020 23:06:44 +0100
+Message-Id: <20200102220032.331065471@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -59,57 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Lee Jones <lee.jones@linaro.org>
 
-[ Upstream commit 52ecc87642f273a599c9913b29fd179c13de457b ]
+[ Upstream commit 6b5c350648b857047b47acf74a57087ad27d6183 ]
 
-If we cannot create the IRQ domain, the driver should fail to probe
-instead of succeeding with just a warning message.
+Until now, MFD has assumed all child devices passed to it (via
+mfd_cells) are to be registered. It does not take into account
+requests from Device Tree and the like to disable child devices
+on a per-platform basis.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/1570015525-27018-3-git-send-email-zhouyanjie@zoho.com
+Well now it does.
+
+Link: https://www.spinics.net/lists/arm-kernel/msg366309.html
+Link: https://lkml.org/lkml/2019/8/22/1350
+
+Reported-by: Barry Song <Baohua.Song@csr.com>
+Reported-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Reviewed-by: Mark Brown <broonie@kernel.org>
+Tested-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-ingenic.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/mfd/mfd-core.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
-index 2ff08986b536..be6923abf9a4 100644
---- a/drivers/irqchip/irq-ingenic.c
-+++ b/drivers/irqchip/irq-ingenic.c
-@@ -117,6 +117,14 @@ static int __init ingenic_intc_of_init(struct device_node *node,
- 		goto out_unmap_irq;
- 	}
- 
-+	domain = irq_domain_add_legacy(node, num_chips * 32,
-+				       JZ4740_IRQ_BASE, 0,
-+				       &irq_domain_simple_ops, NULL);
-+	if (!domain) {
-+		err = -ENOMEM;
-+		goto out_unmap_base;
-+	}
-+
- 	for (i = 0; i < num_chips; i++) {
- 		/* Mask all irqs */
- 		writel(0xffffffff, intc->base + (i * CHIP_SIZE) +
-@@ -143,14 +151,11 @@ static int __init ingenic_intc_of_init(struct device_node *node,
- 				       IRQ_NOPROBE | IRQ_LEVEL);
- 	}
- 
--	domain = irq_domain_add_legacy(node, num_chips * 32, JZ4740_IRQ_BASE, 0,
--				       &irq_domain_simple_ops, NULL);
--	if (!domain)
--		pr_warn("unable to register IRQ domain\n");
--
- 	setup_irq(parent_irq, &intc_cascade_action);
- 	return 0;
- 
-+out_unmap_base:
-+	iounmap(intc->base);
- out_unmap_irq:
- 	irq_dispose_mapping(parent_irq);
- out_free:
+diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+index 182973df1aed..99a9c5c56ea9 100644
+--- a/drivers/mfd/mfd-core.c
++++ b/drivers/mfd/mfd-core.c
+@@ -178,6 +178,11 @@ static int mfd_add_device(struct device *parent, int id,
+ 	if (parent->of_node && cell->of_compatible) {
+ 		for_each_child_of_node(parent->of_node, np) {
+ 			if (of_device_is_compatible(np, cell->of_compatible)) {
++				if (!of_device_is_available(np)) {
++					/* Ignore disabled devices error free */
++					ret = 0;
++					goto fail_alias;
++				}
+ 				pdev->dev.of_node = np;
+ 				pdev->dev.fwnode = &np->fwnode;
+ 				break;
 -- 
 2.20.1
 
