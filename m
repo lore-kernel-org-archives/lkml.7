@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63AAC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C35C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF59121835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE30221835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004909;
-	bh=RqPbXn9WCFczp8Txz+bqmcTAIDrgHDVNoUmCRT01amE=;
+	s=default; t=1578004912;
+	bh=t3aBh3Tx1OF2v9SdH8U1e/PU0MvipSraLBO4pgUP378=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yippHqMIABDsr01s2KjIr6DooqKXcusHOqKfMzjyayMeDiqsPhbrJ1aVbbdTRUejc
-	 Leige7d+4iW44EAVpfr9eE0wUk+xdomZt0XN+br3ww41CG6VRiuHl2aJqwljcd5MYy
-	 oprIUZAWbfjffpjsub3EnzwTAAjgZrVCWZbdWwgE=
+	b=hzDZeqmB96QH6s/IueH8CGJYqn2VMolJ/7ge1/YKd3XQTBSmUYLGrRCm2FswFdCfz
+	 ODlInWed28Eb4UUkH87Mu1Z5nt5t8+UL1XgOxMkeEfHYYExqafKMHy67FhB2jU8iCa
+	 1lOBGN9W5CNzgOsROzAXNxYbiHV/uhq0rrTyjql0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730988AbgABWgq (ORCPT
+        id S1730980AbgABWgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:36:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48264 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:36:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730861AbgABWgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:36:43 -0500
+        id S1730856AbgABWgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:36:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A62920863;
-        Thu,  2 Jan 2020 22:36:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1021217F4;
+        Thu,  2 Jan 2020 22:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004602;
-        bh=RqPbXn9WCFczp8Txz+bqmcTAIDrgHDVNoUmCRT01amE=;
+        s=default; t=1578004600;
+        bh=t3aBh3Tx1OF2v9SdH8U1e/PU0MvipSraLBO4pgUP378=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nSwuVHzG6fq9Fv0gblB2KUKiIj2M1q5Gh8BC7FLKmEJiGjjk+YduxgioEP9yUn0BD
-         mAoRrh5GBK8ZLxaLqV22e7miHzm5HyZKeJXQ/x4x1IwCGNVaO7/WB+vHyge9PzgibP
-         9/QLBFbA6s5VhiEzH0aNi8b4eAz7/OjJYDbISjQ4=
+        b=QDrbrbPGzhq99ssHf6fG87fm6MJ1vWAJbn7tbm8GOhAC7vBFX2uyqzFI3Fy83/kva
+         RlhsAGKV02dWN08CkaUjdvl2F6IumWmH+OOOtDQJq/SaIvjWP+RgMOq6E2Lh6N80DF
+         Y8IPo0cjGIHzxqqM6hZfAH9Bk76oyPRvBRxfrDXI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 075/137] mod_devicetable: fix PHY module format
-Date:   Thu,  2 Jan 2020 23:07:28 +0100
-Message-Id: <20200102220556.759324709@linuxfoundation.org>
+Subject: [PATCH 4.4 074/137] fjes: fix missed check in fjes_acpi_add
+Date:   Thu,  2 Jan 2020 23:07:27 +0100
+Message-Id: <20200102220556.608097392@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -61,43 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit d2ed49cf6c13e379c5819aa5ac20e1f9674ebc89 ]
+[ Upstream commit a288f105a03a7e0e629a8da2b31f34ebf0343ee2 ]
 
-When a PHY is probed, if the top bit is set, we end up requesting a
-module with the string "mdio:-10101110000000100101000101010001" -
-the top bit is printed to a signed -1 value. This leads to the module
-not being loaded.
+fjes_acpi_add() misses a check for platform_device_register_simple().
+Add a check to fix it.
 
-Fix the module format string and the macro generating the values for
-it to ensure that we only print unsigned types and the top bit is
-always 0/1. We correctly end up with
-"mdio:10101110000000100101000101010001".
-
-Fixes: 8626d3b43280 ("phylib: Support phy module autoloading")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: 658d439b2292 ("fjes: Introduce FUJITSU Extended Socket Network Device driver")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/mod_devicetable.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/fjes/fjes_main.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -502,9 +502,9 @@ struct platform_device_id {
+--- a/drivers/net/fjes/fjes_main.c
++++ b/drivers/net/fjes/fjes_main.c
+@@ -149,6 +149,9 @@ static int fjes_acpi_add(struct acpi_dev
+ 	/* create platform_device */
+ 	plat_dev = platform_device_register_simple(DRV_NAME, 0, fjes_resource,
+ 						   ARRAY_SIZE(fjes_resource));
++	if (IS_ERR(plat_dev))
++		return PTR_ERR(plat_dev);
++
+ 	device->driver_data = plat_dev;
  
- #define MDIO_MODULE_PREFIX	"mdio:"
- 
--#define MDIO_ID_FMT "%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d"
-+#define MDIO_ID_FMT "%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u"
- #define MDIO_ID_ARGS(_id) \
--	(_id)>>31, ((_id)>>30) & 1, ((_id)>>29) & 1, ((_id)>>28) & 1,	\
-+	((_id)>>31) & 1, ((_id)>>30) & 1, ((_id)>>29) & 1, ((_id)>>28) & 1, \
- 	((_id)>>27) & 1, ((_id)>>26) & 1, ((_id)>>25) & 1, ((_id)>>24) & 1, \
- 	((_id)>>23) & 1, ((_id)>>22) & 1, ((_id)>>21) & 1, ((_id)>>20) & 1, \
- 	((_id)>>19) & 1, ((_id)>>18) & 1, ((_id)>>17) & 1, ((_id)>>16) & 1, \
+ 	return 0;
 
 
