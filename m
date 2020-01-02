@@ -2,56 +2,56 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F44C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A099C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BAD420848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2593E222C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:55:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005749;
-	bh=EAOBqE7aU4vFwt1GRkHSNLiSPr86ybJAklPz60GXpHU=;
+	s=default; t=1578005753;
+	bh=tgF6Sbt5iFtppaBm3Np8pjSbN/00wXiEhv1ndWcJCWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HYB/+4OmZWDu/eKIYpkokL1NMKWpUCdC9lA/ELPIvYOp6JQltHxVuuvAiIBF8Nk8b
-	 hjSqh9LlYyPPbXFF9sTF8jDewTHRnTLzGu+oaQZsKx3ZcDYtmbFUynpAi8ocRi8sRo
-	 0dslaUsDG2pOr80YOR/aqbUgBtSDZqQWQ48Mewks=
+	b=Iv6+fGxpX82QcDkQ6EzSpzm3QVLzkGfrwUfiFg0yMbXBLU8pyFB+BBqnciEO+Z1If
+	 JyRlJanXcC6lmP12bXj9eIcy7TPQGfsv7CqczfKYmszybvx3MYSbq58bOgWbBD8sIb
+	 p3yctTJ9cJFzC1HgFBXXpou5g/0XWAFpBri3rOuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbgABWTB (ORCPT
+        id S1728835AbgABWzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:19:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34628 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:55:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728497AbgABWS4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:18:56 -0500
+        id S1728077AbgABWSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:18:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B455E22314;
-        Thu,  2 Jan 2020 22:18:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCE112253D;
+        Thu,  2 Jan 2020 22:18:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003536;
-        bh=EAOBqE7aU4vFwt1GRkHSNLiSPr86ybJAklPz60GXpHU=;
+        s=default; t=1578003531;
+        bh=tgF6Sbt5iFtppaBm3Np8pjSbN/00wXiEhv1ndWcJCWI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MCF89ew579GG4jEBgFDU1R8MCQGln4m3aTI6cnfj0HyDut3ZqabrrptrkvfE+Gtt/
-         D6RlwXjYUbMog5//s+5qsiEIilkqRfX+VDRBTUg4oSHA/Im3EdtUPf+y79tnXT9S6d
-         94UilAlSb+dYHkDx0kyxEZCBjXyB0vnKJInz161o=
+        b=mNjDa/thaUCn6h2RjiVGgYjM6yFlHs6KuiEXtSLADUorwF3Vi1TqHrIW8kavQYgNp
+         DBalCkJz674fDm9jTzESq8aPPDHI1LRg2f7qpZkdbjId1xDCOHsGpwkLJanYekHWWK
+         gP3uSpQ6xntcf9wZP3iPyasg8UnGLZ4XLIJ/diPo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 010/114] scsi: lpfc: Fix SLI3 hba in loop mode not discovering devices
-Date:   Thu,  2 Jan 2020 23:06:22 +0100
-Message-Id: <20200102220030.180212003@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        David Ahern <dsahern@gmail.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 170/191] net/dst: add new function skb_dst_update_pmtu_no_confirm
+Date:   Thu,  2 Jan 2020 23:07:32 +0100
+Message-Id: <20200102215847.522437349@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
-References: <20200102220029.183913184@linuxfoundation.org>
+In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
+References: <20200102215829.911231638@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,45 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit feff8b3d84d3d9570f893b4d83e5eab6693d6a52 ]
+[ Upstream commit 07dc35c6e3cc3c001915d05f5bf21f80a39a0970 ]
 
-When operating in private loop mode, PLOGI exchanges are racing and the
-driver tries to abort it's PLOGI. But the PLOGI abort ends up terminating
-the login with the other end causing the other end to abort its PLOGI as
-well. Discovery never fully completes.
+Add a new function skb_dst_update_pmtu_no_confirm() for callers who need
+update pmtu but should not do neighbor confirm.
 
-Fix by disabling the PLOGI abort when private loop and letting the state
-machine play out.
+v5: No change.
+v4: No change.
+v3: Do not remove dst_confirm_neigh, but add a new bool parameter in
+    dst_ops.update_pmtu to control whether we should do neighbor confirm.
+    Also split the big patch to small ones for each area.
+v2: Remove dst_confirm_neigh in __ip6_rt_update_pmtu.
 
-Link: https://lore.kernel.org/r/20191018211832.7917-5-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reviewed-by: Guillaume Nault <gnault@redhat.com>
+Acked-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/scsi/lpfc/lpfc_nportdisc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ include/net/dst.h |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nportdisc.c b/drivers/scsi/lpfc/lpfc_nportdisc.c
-index bd8dc6a2243c..3dfed191252c 100644
---- a/drivers/scsi/lpfc/lpfc_nportdisc.c
-+++ b/drivers/scsi/lpfc/lpfc_nportdisc.c
-@@ -483,8 +483,10 @@ lpfc_rcv_plogi(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp,
- 	 * single discovery thread, this will cause a huge delay in
- 	 * discovery. Also this will cause multiple state machines
- 	 * running in parallel for this node.
-+	 * This only applies to a fabric environment.
- 	 */
--	if (ndlp->nlp_state == NLP_STE_PLOGI_ISSUE) {
-+	if ((ndlp->nlp_state == NLP_STE_PLOGI_ISSUE) &&
-+	    (vport->fc_flag & FC_FABRIC)) {
- 		/* software abort outstanding PLOGI */
- 		lpfc_els_abort(phba, ndlp);
- 	}
--- 
-2.20.1
-
+--- a/include/net/dst.h
++++ b/include/net/dst.h
+@@ -519,6 +519,15 @@ static inline void skb_dst_update_pmtu(s
+ 		dst->ops->update_pmtu(dst, NULL, skb, mtu, true);
+ }
+ 
++/* update dst pmtu but not do neighbor confirm */
++static inline void skb_dst_update_pmtu_no_confirm(struct sk_buff *skb, u32 mtu)
++{
++	struct dst_entry *dst = skb_dst(skb);
++
++	if (dst && dst->ops->update_pmtu)
++		dst->ops->update_pmtu(dst, NULL, skb, mtu, false);
++}
++
+ static inline void skb_tunnel_check_pmtu(struct sk_buff *skb,
+ 					 struct dst_entry *encap_dst,
+ 					 int headroom)
 
 
