@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C559C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC22C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4018D21835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 504FC20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004614;
-	bh=vApgtmOsQVMPYg5aH4YmE1Ihj8QEHEKdTfmokdJklfs=;
+	s=default; t=1578004616;
+	bh=V/gy+YkzeOgdnynA/ZcHtlCiX4G0to+VmVLRwR3TjFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RTntZKU8EeAiP6/vPyb3NRDPIqgLhmHOTdz9x76NKUtBe/3w+7ZHFqTRogIt/Cq9d
-	 Jw2ecu8dtvy52waktKqGhFn6FTLOn1EKYY+9dBWbjvlNGQ6AKOTZuKxeqHRdMBItcM
-	 vrDZWcH6tm8vKz624Q+fcIPu5LJW22mPzUumnWXc=
+	b=L0t/+avBGActNOzX7rGk+ZYfFBzISY/ReMOzochC3/GwGYC958LRUrdlxECq/IJ44
+	 Pa3ULGTkEbAif8FL6XF/vSzKqtYIvmbNu1HfOVWJFgiYD6bRF2KKYmwUiZMJKjWj5Y
+	 JE2WeJbqyrRyeMmxY9sEoonUJerAqhTw7BBUluGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730741AbgABWgx (ORCPT
+        id S1731017AbgABWgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:36:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48486 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:36:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730998AbgABWgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:36:51 -0500
+        id S1730833AbgABWgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:36:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61CDC20863;
-        Thu,  2 Jan 2020 22:36:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA45320866;
+        Thu,  2 Jan 2020 22:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004609;
-        bh=vApgtmOsQVMPYg5aH4YmE1Ihj8QEHEKdTfmokdJklfs=;
+        s=default; t=1578004612;
+        bh=V/gy+YkzeOgdnynA/ZcHtlCiX4G0to+VmVLRwR3TjFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dQItHsPrbxxIzre/UHwnZEtp5VrKmRTaGLpjIlo9uy7rs+JKtuN3Uwb4Bjt/LbG1w
-         S9E7af6bqi6d/qgBornt4kmCLJthJYktSd0aA1GgfJZTKxSziLZSineey/qExhAM9P
-         1DV9xyST1NDPbG+ux83bHWWPOZrxZumogmklOZDE=
+        b=S2PL7D5IzOpx3UFaijPYu692pUbf2tuj4A32frhvOZfWVylHBk1AleOK67n2UbE+K
+         cAHpa62tD5MTfRa95Dq/VPQfybrTYoFDjuybf7jegyw1F0SwWGlMP7WvPHYXZleXFy
+         VQO9W2c6O/mL2ZWDC50hzUZaVUbGNEWNHBC6y0ak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>,
+        stable@vger.kernel.org,
+        Cristian Birsan <cristian.birsan@microchip.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 078/137] net: qlogic: Fix error paths in ql_alloc_large_buffers()
-Date:   Thu,  2 Jan 2020 23:07:31 +0100
-Message-Id: <20200102220557.200215811@linuxfoundation.org>
+Subject: [PATCH 4.4 079/137] net: usb: lan78xx: Fix suspend/resume PHY register access error
+Date:   Thu,  2 Jan 2020 23:07:32 +0100
+Message-Id: <20200102220557.332025042@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -59,76 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: Cristian Birsan <cristian.birsan@microchip.com>
 
-[ Upstream commit cad46039e4c99812db067c8ac22a864960e7acc4 ]
+[ Upstream commit 20032b63586ac6c28c936dff696981159913a13f ]
 
-ql_alloc_large_buffers() has the usual RX buffer allocation
-loop where it allocates skbs and maps them for DMA.  It also
-treats failure as a fatal error.
+Lan78xx driver accesses the PHY registers through MDIO bus over USB
+connection. When performing a suspend/resume, the PHY registers can be
+accessed before the USB connection is resumed. This will generate an
+error and will prevent the device to resume correctly.
+This patch adds the dependency between the MDIO bus and USB device to
+allow correct handling of suspend/resume.
 
-There are (at least) three bugs in the error paths:
-
-1. ql_free_large_buffers() assumes that the lrg_buf[] entry for the
-first buffer that couldn't be allocated will have .skb == NULL.
-But the qla_buf[] array is not zero-initialised.
-
-2. ql_free_large_buffers() DMA-unmaps all skbs in lrg_buf[].  This is
-incorrect for the last allocated skb, if DMA mapping failed.
-
-3. Commit 1acb8f2a7a9f ("net: qlogic: Fix memory leak in
-ql_alloc_large_buffers") added a direct call to dev_kfree_skb_any()
-after the skb is recorded in lrg_buf[], so ql_free_large_buffers()
-will double-free it.
-
-The bugs are somewhat inter-twined, so fix them all at once:
-
-* Clear each entry in qla_buf[] before attempting to allocate
-  an skb for it.  This goes half-way to fixing bug 1.
-* Set the .skb field only after the skb is DMA-mapped.  This
-  fixes the rest.
-
-Fixes: 1357bfcf7106 ("qla3xxx: Dynamically size the rx buffer queue ...")
-Fixes: 0f8ab89e825f ("qla3xxx: Check return code from pci_map_single() ...")
-Fixes: 1acb8f2a7a9f ("net: qlogic: Fix memory leak in ql_alloc_large_buffers")
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Fixes: ce85e13ad6ef ("lan78xx: Update to use phylib instead of mii_if_info.")
+Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/qlogic/qla3xxx.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/usb/lan78xx.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/qlogic/qla3xxx.c
-+++ b/drivers/net/ethernet/qlogic/qla3xxx.c
-@@ -2752,6 +2752,9 @@ static int ql_alloc_large_buffers(struct
- 	int err;
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -1448,6 +1448,7 @@ static int lan78xx_mdio_init(struct lan7
+ 	dev->mdiobus->read = lan78xx_mdiobus_read;
+ 	dev->mdiobus->write = lan78xx_mdiobus_write;
+ 	dev->mdiobus->name = "lan78xx-mdiobus";
++	dev->mdiobus->parent = &dev->udev->dev;
  
- 	for (i = 0; i < qdev->num_large_buffers; i++) {
-+		lrg_buf_cb = &qdev->lrg_buf[i];
-+		memset(lrg_buf_cb, 0, sizeof(struct ql_rcv_buf_cb));
-+
- 		skb = netdev_alloc_skb(qdev->ndev,
- 				       qdev->lrg_buffer_len);
- 		if (unlikely(!skb)) {
-@@ -2762,11 +2765,7 @@ static int ql_alloc_large_buffers(struct
- 			ql_free_large_buffers(qdev);
- 			return -ENOMEM;
- 		} else {
--
--			lrg_buf_cb = &qdev->lrg_buf[i];
--			memset(lrg_buf_cb, 0, sizeof(struct ql_rcv_buf_cb));
- 			lrg_buf_cb->index = i;
--			lrg_buf_cb->skb = skb;
- 			/*
- 			 * We save some space to copy the ethhdr from first
- 			 * buffer
-@@ -2788,6 +2787,7 @@ static int ql_alloc_large_buffers(struct
- 				return -ENOMEM;
- 			}
- 
-+			lrg_buf_cb->skb = skb;
- 			dma_unmap_addr_set(lrg_buf_cb, mapaddr, map);
- 			dma_unmap_len_set(lrg_buf_cb, maplen,
- 					  qdev->lrg_buffer_len -
+ 	snprintf(dev->mdiobus->id, MII_BUS_ID_SIZE, "usb-%03d:%03d",
+ 		 dev->udev->bus->busnum, dev->udev->devnum);
 
 
