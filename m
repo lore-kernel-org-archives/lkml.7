@@ -2,53 +2,52 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EF9C3276F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F19DAC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 489C420866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC91D20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004777;
-	bh=rmBM8hCrQCClvasxTyLfIr9x/PvBxvVO+DVsv6jXjdw=;
+	s=default; t=1578004787;
+	bh=tfMfKm18pz50KFEDBtUwDNHwvLlw3QMjqXbJ5CMcbg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bdOAMbULzV5qNjYPuA0sxQOIK4QJ64YAlddkW6jOkg55gqn8ZtKWyzznorE0i9274
-	 YWshYeMW4RSCCuoMCIBas5BXkjXbynRet6KZFtWQ/ta4kiAuIbHmY3OhHHou56+i5N
-	 gDJdx2bKLgO3JHV29AMHC3wOhNPNmucCQjTL4YPU=
+	b=yowXK0PCYhi9yWhbXytQMD12/ifXSYT6WCAVegXxz5kouQSie12dXj2AJgTXIwClI
+	 qM9k+QqrGCr7b2e7yuj2B+r3wWcEB08TVZ5MoIvlF1wHDc2dRz9N4Wwm0HJL7Cc0ch
+	 yfgdsquplypPXtN3eLwCXH85KNQmBQqFbnfvAd9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731194AbgABWjd (ORCPT
+        id S1731418AbgABWjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:39:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55778 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:39:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731201AbgABWj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:39:27 -0500
+        id S1731396AbgABWjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:39:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCE73217F4;
-        Thu,  2 Jan 2020 22:39:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72544217F4;
+        Thu,  2 Jan 2020 22:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004767;
-        bh=rmBM8hCrQCClvasxTyLfIr9x/PvBxvVO+DVsv6jXjdw=;
+        s=default; t=1578004745;
+        bh=tfMfKm18pz50KFEDBtUwDNHwvLlw3QMjqXbJ5CMcbg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KiR5E5pWOxDBr5F94YSVUdx59h+lE0RQgAZw5GbCGUF+j0xeK/5ON6/0cQNscrQgr
-         rkLeFOYsAqB8zgnOOZditO0liCDRpIPuR98GzP0BKN5cf7iwmCXBrhWZOcwq98cEuO
-         AWAB9xpHjao1i/CuMYOUV3dfiucoBWtnPmD+MdkQ=
+        b=Z9mlBRNx6Qjd30zQy/FppXalQUC2fttawCNrgOyt6sladQNrZjcsTODHSQ0vQRo2n
+         +qdLK6Ahp5a+MNOGxkVHJ7r3RuAdb0GCOgXs8ERQOrC7mOJzJKGGZkrj/WhrVHZ53e
+         Ln6KT5EEAagQJkbXZ6kHDqpPySvBs3HXxIegySNg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Michael Walle <michael@walle.cc>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 119/137] gpio: mpc8xxx: Dont overwrite default irq_set_type callback
-Date:   Thu,  2 Jan 2020 23:08:12 +0100
-Message-Id: <20200102220603.140332024@linuxfoundation.org>
+        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.4 135/137] hrtimer: Annotate lockless access to timer->state
+Date:   Thu,  2 Jan 2020 23:08:28 +0100
+Message-Id: <20200102220605.386390552@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -61,56 +60,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 4e50573f39229d5e9c985fa3b4923a8b29619ade ]
+commit 56144737e67329c9aaed15f942d46a6302e2e3d8 upstream.
 
-The per-SoC devtype structures can contain their own callbacks that
-overwrite mpc8xxx_gpio_devtype_default.
+syzbot reported various data-race caused by hrtimer_is_queued() reading
+timer->state. A READ_ONCE() is required there to silence the warning.
 
-The clear intention is that mpc8xxx_irq_set_type is used in case the SoC
-does not specify a more specific callback. But what happens is that if
-the SoC doesn't specify one, its .irq_set_type is de-facto NULL, and
-this overwrites mpc8xxx_irq_set_type to a no-op. This means that the
-following SoCs are affected:
+Also add the corresponding WRITE_ONCE() when timer->state is set.
 
-- fsl,mpc8572-gpio
-- fsl,ls1028a-gpio
-- fsl,ls1088a-gpio
+In remove_hrtimer() the hrtimer_is_queued() helper is open coded to avoid
+loading timer->state twice.
 
-On these boards, the irq_set_type does exactly nothing, and the GPIO
-controller keeps its GPICR register in the hardware-default state. On
-the LS1028A, that is ACTIVE_BOTH, which means 2 interrupts are raised
-even if the IRQ client requests LEVEL_HIGH. Another implication is that
-the IRQs are not checked (e.g. level-triggered interrupts are not
-rejected, although they are not supported).
+KCSAN reported these cases:
 
-Fixes: 82e39b0d8566 ("gpio: mpc8xxx: handle differences between incarnations at a single place")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Link: https://lore.kernel.org/r/20191115125551.31061-1-olteanv@gmail.com
-Tested-by: Michael Walle <michael@walle.cc>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+BUG: KCSAN: data-race in __remove_hrtimer / tcp_pacing_check
+
+write to 0xffff8880b2a7d388 of 1 bytes by interrupt on cpu 0:
+ __remove_hrtimer+0x52/0x130 kernel/time/hrtimer.c:991
+ __run_hrtimer kernel/time/hrtimer.c:1496 [inline]
+ __hrtimer_run_queues+0x250/0x600 kernel/time/hrtimer.c:1576
+ hrtimer_run_softirq+0x10e/0x150 kernel/time/hrtimer.c:1593
+ __do_softirq+0x115/0x33f kernel/softirq.c:292
+ run_ksoftirqd+0x46/0x60 kernel/softirq.c:603
+ smpboot_thread_fn+0x37d/0x4a0 kernel/smpboot.c:165
+ kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+
+read to 0xffff8880b2a7d388 of 1 bytes by task 24652 on cpu 1:
+ tcp_pacing_check net/ipv4/tcp_output.c:2235 [inline]
+ tcp_pacing_check+0xba/0x130 net/ipv4/tcp_output.c:2225
+ tcp_xmit_retransmit_queue+0x32c/0x5a0 net/ipv4/tcp_output.c:3044
+ tcp_xmit_recovery+0x7c/0x120 net/ipv4/tcp_input.c:3558
+ tcp_ack+0x17b6/0x3170 net/ipv4/tcp_input.c:3717
+ tcp_rcv_established+0x37e/0xf50 net/ipv4/tcp_input.c:5696
+ tcp_v4_do_rcv+0x381/0x4e0 net/ipv4/tcp_ipv4.c:1561
+ sk_backlog_rcv include/net/sock.h:945 [inline]
+ __release_sock+0x135/0x1e0 net/core/sock.c:2435
+ release_sock+0x61/0x160 net/core/sock.c:2951
+ sk_stream_wait_memory+0x3d7/0x7c0 net/core/stream.c:145
+ tcp_sendmsg_locked+0xb47/0x1f30 net/ipv4/tcp.c:1393
+ tcp_sendmsg+0x39/0x60 net/ipv4/tcp.c:1434
+ inet_sendmsg+0x6d/0x90 net/ipv4/af_inet.c:807
+ sock_sendmsg_nosec net/socket.c:637 [inline]
+ sock_sendmsg+0x9f/0xc0 net/socket.c:657
+
+BUG: KCSAN: data-race in __remove_hrtimer / __tcp_ack_snd_check
+
+write to 0xffff8880a3a65588 of 1 bytes by interrupt on cpu 0:
+ __remove_hrtimer+0x52/0x130 kernel/time/hrtimer.c:991
+ __run_hrtimer kernel/time/hrtimer.c:1496 [inline]
+ __hrtimer_run_queues+0x250/0x600 kernel/time/hrtimer.c:1576
+ hrtimer_run_softirq+0x10e/0x150 kernel/time/hrtimer.c:1593
+ __do_softirq+0x115/0x33f kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0xbb/0xe0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+ smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+
+read to 0xffff8880a3a65588 of 1 bytes by task 22891 on cpu 1:
+ __tcp_ack_snd_check+0x415/0x4f0 net/ipv4/tcp_input.c:5265
+ tcp_ack_snd_check net/ipv4/tcp_input.c:5287 [inline]
+ tcp_rcv_established+0x750/0xf50 net/ipv4/tcp_input.c:5708
+ tcp_v4_do_rcv+0x381/0x4e0 net/ipv4/tcp_ipv4.c:1561
+ sk_backlog_rcv include/net/sock.h:945 [inline]
+ __release_sock+0x135/0x1e0 net/core/sock.c:2435
+ release_sock+0x61/0x160 net/core/sock.c:2951
+ sk_stream_wait_memory+0x3d7/0x7c0 net/core/stream.c:145
+ tcp_sendmsg_locked+0xb47/0x1f30 net/ipv4/tcp.c:1393
+ tcp_sendmsg+0x39/0x60 net/ipv4/tcp.c:1434
+ inet_sendmsg+0x6d/0x90 net/ipv4/af_inet.c:807
+ sock_sendmsg_nosec net/socket.c:637 [inline]
+ sock_sendmsg+0x9f/0xc0 net/socket.c:657
+ __sys_sendto+0x21f/0x320 net/socket.c:1952
+ __do_sys_sendto net/socket.c:1964 [inline]
+ __se_sys_sendto net/socket.c:1960 [inline]
+ __x64_sys_sendto+0x89/0xb0 net/socket.c:1960
+ do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 24652 Comm: syz-executor.3 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+
+[ tglx: Added comments ]
+
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20191106174804.74723-1-edumazet@google.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpio/gpio-mpc8xxx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/hrtimer.h |   14 ++++++++++----
+ kernel/time/hrtimer.c   |   11 +++++++----
+ 2 files changed, 17 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 9e02cb6afb0b..ce6e15167d0b 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -409,7 +409,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	 * It's assumed that only a single type of gpio controller is available
- 	 * on the current machine, so overwriting global data is fine.
- 	 */
--	mpc8xxx_irq_chip.irq_set_type = devtype->irq_set_type;
-+	if (devtype->irq_set_type)
-+		mpc8xxx_irq_chip.irq_set_type = devtype->irq_set_type;
+--- a/include/linux/hrtimer.h
++++ b/include/linux/hrtimer.h
+@@ -424,12 +424,18 @@ extern u64 hrtimer_get_next_event(void);
  
- 	gc->direction_output = devtype->gpio_dir_out ?: mpc8xxx_gpio_dir_out;
- 	gc->get = devtype->gpio_get ?: mpc8xxx_gpio_get;
--- 
-2.20.1
-
+ extern bool hrtimer_active(const struct hrtimer *timer);
+ 
+-/*
+- * Helper function to check, whether the timer is on one of the queues
++/**
++ * hrtimer_is_queued = check, whether the timer is on one of the queues
++ * @timer:	Timer to check
++ *
++ * Returns: True if the timer is queued, false otherwise
++ *
++ * The function can be used lockless, but it gives only a current snapshot.
+  */
+-static inline int hrtimer_is_queued(struct hrtimer *timer)
++static inline bool hrtimer_is_queued(struct hrtimer *timer)
+ {
+-	return timer->state & HRTIMER_STATE_ENQUEUED;
++	/* The READ_ONCE pairs with the update functions of timer->state */
++	return !!(READ_ONCE(timer->state) & HRTIMER_STATE_ENQUEUED);
+ }
+ 
+ /*
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -887,7 +887,8 @@ static int enqueue_hrtimer(struct hrtime
+ 
+ 	base->cpu_base->active_bases |= 1 << base->index;
+ 
+-	timer->state = HRTIMER_STATE_ENQUEUED;
++	/* Pairs with the lockless read in hrtimer_is_queued() */
++	WRITE_ONCE(timer->state, HRTIMER_STATE_ENQUEUED);
+ 
+ 	return timerqueue_add(&base->active, &timer->node);
+ }
+@@ -909,7 +910,8 @@ static void __remove_hrtimer(struct hrti
+ 	struct hrtimer_cpu_base *cpu_base = base->cpu_base;
+ 	u8 state = timer->state;
+ 
+-	timer->state = newstate;
++	/* Pairs with the lockless read in hrtimer_is_queued() */
++	WRITE_ONCE(timer->state, newstate);
+ 	if (!(state & HRTIMER_STATE_ENQUEUED))
+ 		return;
+ 
+@@ -936,8 +938,9 @@ static void __remove_hrtimer(struct hrti
+ static inline int
+ remove_hrtimer(struct hrtimer *timer, struct hrtimer_clock_base *base, bool restart)
+ {
+-	if (hrtimer_is_queued(timer)) {
+-		u8 state = timer->state;
++	u8 state = timer->state;
++
++	if (state & HRTIMER_STATE_ENQUEUED) {
+ 		int reprogram;
+ 
+ 		/*
 
 
