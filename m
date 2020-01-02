@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9120BC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C81C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5693E22525
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F1224653
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004633;
-	bh=7yEOn4Jd5O+dOTLP0g3C1EaU2y36JagguQ6im/ODAfw=;
+	s=default; t=1578004636;
+	bh=nAcI7t8OhKaTP++QeUcoAQ6fI7SyHY73WwVP837wTKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZE1MVXnxJ3GxHyORw5lLmT88vr3CkmpV6odwKkU2R9mkNFMTzEeWRVG31GqMSljo3
-	 YXkP3kaX+T4SjDWhDbxqHV/r6xMMXzKAtIq+InAv4hQRAYjGALgIjZUKFfc7FLxB4m
-	 u6lKnWQWbsvQNbq7z0M8rZtc9rftZIMD/P2W6Cls=
+	b=RqbidJgH359Mdcv1wQEW7c/xHfW0S5Zztm1hM6vGe2OT4FbwWhdABIS/fXrLNxuYn
+	 Fq29KS0/46j1aS1jqfanRzU+o5ow0WxkCrEybq4MHPn8Q6ieGbXQ9zr3MFJnrQE7FO
+	 2MyRYGiXeMGGt2HFWdNGoI6L95jipK0tNASe6Do0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731057AbgABWhM (ORCPT
+        id S1730804AbgABWhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:37:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49286 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:37:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731048AbgABWhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:37:09 -0500
+        id S1731056AbgABWhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:37:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6837C22314;
-        Thu,  2 Jan 2020 22:37:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C635720866;
+        Thu,  2 Jan 2020 22:37:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004628;
-        bh=7yEOn4Jd5O+dOTLP0g3C1EaU2y36JagguQ6im/ODAfw=;
+        s=default; t=1578004631;
+        bh=nAcI7t8OhKaTP++QeUcoAQ6fI7SyHY73WwVP837wTKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y0g3hstXhYYbdj0IqHBD/s81uX1BCVwPZoTRpsW5nIUzUHZPah74dJLZ2A+86r7dp
-         y3ivVXEewa+Lwl1uS+Ex/PwGW3RvBLYp77SW81+v7bL4ugXLiIZb+fueZ8fU+HmRE4
-         3ie5Hco0ega9gXk2xzzw9xVO8UPNnyo5HFxmWccA=
+        b=GQ1IFb0Q4MuNezOjzhXIFmsAV9h9XnoUfKNB9lJo9iWA0CyHrjZTJX8dGJ7fSyUZ4
+         3HYKhwWd5XdTWSsQJdLYuX2WbadQ3Q/ZVaPO1Zk5UGYJsbcqLE9UvS0nzII6E7YAo+
+         lfW0mvkGuWNhI8znaQ4PlZDtu5PXVteNgh4Rl+TI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 060/137] iwlwifi: check kasprintf() return value
-Date:   Thu,  2 Jan 2020 23:07:13 +0100
-Message-Id: <20200102220554.581199875@linuxfoundation.org>
+Subject: [PATCH 4.4 051/137] media: si470x-i2c: add missed operations in remove
+Date:   Thu,  2 Jan 2020 23:07:04 +0100
+Message-Id: <20200102220553.434186982@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -60,49 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 5974fbb5e10b018fdbe3c3b81cb4cc54e1105ab9 ]
+[ Upstream commit 2df200ab234a86836a8879a05a8007d6b884eb14 ]
 
-kasprintf() can fail, we should check the return value.
+The driver misses calling v4l2_ctrl_handler_free and
+v4l2_device_unregister in remove like what is done in probe failure.
+Add the calls to fix it.
 
-Fixes: 5ed540aecc2a ("iwlwifi: use mac80211 throughput trigger")
-Fixes: 8ca151b568b6 ("iwlwifi: add the MVM driver")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/iwlwifi/dvm/led.c | 3 +++
- drivers/net/wireless/iwlwifi/mvm/led.c | 3 +++
- 2 files changed, 6 insertions(+)
+ drivers/media/radio/si470x/radio-si470x-i2c.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/iwlwifi/dvm/led.c b/drivers/net/wireless/iwlwifi/dvm/led.c
-index ca4d6692cc4e..47e5fa70483d 100644
---- a/drivers/net/wireless/iwlwifi/dvm/led.c
-+++ b/drivers/net/wireless/iwlwifi/dvm/led.c
-@@ -184,6 +184,9 @@ void iwl_leds_init(struct iwl_priv *priv)
+diff --git a/drivers/media/radio/si470x/radio-si470x-i2c.c b/drivers/media/radio/si470x/radio-si470x-i2c.c
+index 9326439bc49c..f9e1768b8d31 100644
+--- a/drivers/media/radio/si470x/radio-si470x-i2c.c
++++ b/drivers/media/radio/si470x/radio-si470x-i2c.c
+@@ -460,6 +460,8 @@ static int si470x_i2c_remove(struct i2c_client *client)
+ 	video_unregister_device(&radio->videodev);
+ 	kfree(radio);
  
- 	priv->led.name = kasprintf(GFP_KERNEL, "%s-led",
- 				   wiphy_name(priv->hw->wiphy));
-+	if (!priv->led.name)
-+		return;
-+
- 	priv->led.brightness_set = iwl_led_brightness_set;
- 	priv->led.blink_set = iwl_led_blink_set;
- 	priv->led.max_brightness = 1;
-diff --git a/drivers/net/wireless/iwlwifi/mvm/led.c b/drivers/net/wireless/iwlwifi/mvm/led.c
-index e3b3cf4dbd77..948be43e4d26 100644
---- a/drivers/net/wireless/iwlwifi/mvm/led.c
-+++ b/drivers/net/wireless/iwlwifi/mvm/led.c
-@@ -109,6 +109,9 @@ int iwl_mvm_leds_init(struct iwl_mvm *mvm)
- 
- 	mvm->led.name = kasprintf(GFP_KERNEL, "%s-led",
- 				   wiphy_name(mvm->hw->wiphy));
-+	if (!mvm->led.name)
-+		return -ENOMEM;
-+
- 	mvm->led.brightness_set = iwl_led_brightness_set;
- 	mvm->led.max_brightness = 1;
++	v4l2_ctrl_handler_free(&radio->hdl);
++	v4l2_device_unregister(&radio->v4l2_dev);
+ 	return 0;
+ }
  
 -- 
 2.20.1
