@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E344C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C1DC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4540A21835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9EA1217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577963032;
-	bh=lyuQwYk6duK7MRRoZwouWCgWYszfADDHUK+QRJ9MmW0=;
+	s=default; t=1577963059;
+	bh=3LNe3iq4StFtI2iDqoiQdEX5CNmS4n6Pm0K46y0rQn4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xMWmxZOTd6uDJnPQNlXwjuTokq+o5JS0xv7Vaee1mt55Ge4Bb2sMSi9d3b0pqRCWK
-	 rRrd/vCeAJnHJ3PDq+HMJkUXb3wHmp6lindJdtZZ2vVozLhJDjhcseaOMa8Vc7gGL7
-	 aY6lhVJKBWiRddE4G2P5KNsrIrVJ4gHsg3U0coV0=
+	b=a0wpGf6JAIuH3bsoLy2E8dm0bi+uMAlhj2Dyn8fEo+Pf2pDfLe627RmAzYLM6kKVl
+	 adzSFEcD3lnbARDqw3xEhpt4KpBzvt5sX2wo+BH1hS8pwi9+WxKtEJxzma7jTEhW/v
+	 /bUCx0D1h+raGrZEacEbZPwIVplWPA6yE6RL8MM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbgABLDv (ORCPT
+        id S1728150AbgABLES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 06:03:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38946 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 06:04:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728100AbgABLDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 06:03:51 -0500
+        id S1728093AbgABLES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 06:04:18 -0500
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 140F2215A4;
-        Thu,  2 Jan 2020 11:03:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47207215A4;
+        Thu,  2 Jan 2020 11:04:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577963030;
-        bh=lyuQwYk6duK7MRRoZwouWCgWYszfADDHUK+QRJ9MmW0=;
+        s=default; t=1577963057;
+        bh=3LNe3iq4StFtI2iDqoiQdEX5CNmS4n6Pm0K46y0rQn4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B9F7Onm8xocF2Q+5nqgcr+BNQIIsFDSMp1mLSNtnpHRUwDXcAn0vdgfxYhKm9z2aY
-         LENy+LulhaOZmhM+KRmCYsGpCyY12E6fxwnNKZ78vnSe7EktsiTP5xBhmAKaBztR42
-         hAgg9HmVyHQRWAAxwZJ7gJsuBzYGpjHKPq0m3JlI=
-Date:   Thu, 2 Jan 2020 12:03:47 +0100
+        b=dVtGJkDM8+eS4K5lHhsXqMDzObmErV/mA0SM43IPLKAiQMWCxyfiXAl7ZN0g9WEK6
+         +uBi06ZlcF8DQgbWHRW/MC1034bd9h3uP2mvCBp6xSx1JjII8dpuawFMIrC7kwMABZ
+         zIbSjojPzOsg/GnURuFNNHxlK7lPValhQDKlafNI=
+Date:   Thu, 2 Jan 2020 12:04:15 +0100
 From:   Maxime Ripard <mripard@kernel.org>
 To:     Jagan Teki <jagan@amarulasolutions.com>
 Cc:     Chen-Yu Tsai <wens@csie.org>,
@@ -52,73 +52,70 @@ Cc:     Chen-Yu Tsai <wens@csie.org>,
         devicetree@vger.kernel.org,
         linux-sunxi <linux-sunxi@googlegroups.com>,
         linux-amarula@amarulasolutions.com
-Subject: Re: [PATCH v3 6/9] dt-bindings: sun6i-dsi: Add R40 DPHY compatible
- (w/ A31 fallback)
-Message-ID: <20200102110347.v7lsnmmsbp66r3ia@gilmour.lan>
+Subject: Re: [PATCH v3 7/9] dt-bindings: sun6i-dsi: Document R40 MIPI-DSI
+ controller (w/ A64 fallback)
+Message-ID: <20200102110415.rtehrvtq3darfv35@gilmour.lan>
 References: <20191231130528.20669-1-jagan@amarulasolutions.com>
- <20191231130528.20669-7-jagan@amarulasolutions.com>
+ <20191231130528.20669-8-jagan@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5qm5gfldbu2p5gzt"
+        protocol="application/pgp-signature"; boundary="ryvuaned34qshr7z"
 Content-Disposition: inline
-In-Reply-To: <20191231130528.20669-7-jagan@amarulasolutions.com>
+In-Reply-To: <20191231130528.20669-8-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---5qm5gfldbu2p5gzt
+--ryvuaned34qshr7z
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Dec 31, 2019 at 06:35:25PM +0530, Jagan Teki wrote:
-> The MIPI DSI PHY controller on Allwinner R40 is similar
-> on the one on A31.
+On Tue, Dec 31, 2019 at 06:35:26PM +0530, Jagan Teki wrote:
+> The MIPI DSI controller on Allwinner R40 is similar on
+> the one on A64 like doesn't associate any DSI_SCLK gating.
 >
-> Add R40 compatible and append A31 compatible as fallback.
+> So, add R40 compatible and append A64 compatible as fallback.
 >
 > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 > ---
 > Changes for v3:
 > - update the binding in new yaml format
 >
->  .../devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml   | 1 +
->  1 file changed, 1 insertion(+)
+>  .../bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml    | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
-> index 8841938050b2..0c283fe79402 100644
-> --- a/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
-> +++ b/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
-> @@ -18,6 +18,7 @@ properties:
->      oneOf:
->        - const: allwinner,sun6i-a31-mipi-dphy
->        - items:
-> +          - const: allwinner,sun8i-r40-mipi-dphy
->            - const: allwinner,sun50i-a64-mipi-dphy
->            - const: allwinner,sun6i-a31-mipi-dphy
+> diff --git a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+> index d41ecb5e7f7c..138ffb6ae403 100644
+> --- a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+> +++ b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+> @@ -15,9 +15,11 @@ properties:
+>    "#size-cells": true
+>
+>    compatible:
+> -    enum:
+> -      - allwinner,sun6i-a31-mipi-dsi
+> -      - allwinner,sun50i-a64-mipi-dsi
+> +    oneOf:
+> +      - const: allwinner,sun6i-a31-mipi-dsi
+> +      - const: allwinner,sun50i-a64-mipi-dsi
+> +      - items:
+> +          - const: allwinner,sun8i-r40-mipi-dsi
 
-This isn't doing what you say it does.
-
-Here you're stating that there's two valid values, one that is a
-single element allwinner,sun6i-a31-mipi-dphy, and another which is a
-list of three elements allwinner,sun8i-r40-mipi-dphy,
-allwinner,sun50i-a64-mipi-dphy and allwinner,sun6i-a31-mipi-dphy, in
-that order.
-
-Did you run make dtbs_check and dt_bindings_check?
+Again, this isn't what you claim it does.
 
 Maxime
 
---5qm5gfldbu2p5gzt
+--ryvuaned34qshr7z
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXg3OEwAKCRDj7w1vZxhR
-xYg8AQD+cQIazIyZ31zNcUjJMQLtkQ/R7hrnYDW+zDPmikoO1gEAjLRGNbqfmTOI
-GKoV946i+sXeig/aykX9B6o8FpF0cg0=
-=rFQC
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXg3OLwAKCRDj7w1vZxhR
+xchiAP93RIGrX3ISxW0q1Z138tIsQSb3kOZXPC1XEawoRlNQHwEAzJ9E6ZE37C7r
+7TLlBdK3HIs6GDySKpbjycSin4zM6wc=
+=bTyi
 -----END PGP SIGNATURE-----
 
---5qm5gfldbu2p5gzt--
+--ryvuaned34qshr7z--
