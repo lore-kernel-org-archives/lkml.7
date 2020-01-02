@@ -2,241 +2,106 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB62C2D0DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71478C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20FCE21655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47CC5217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:53:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="wEv2x8t7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbgABHsy convert rfc822-to-8bit (ORCPT
+        id S1727747AbgABHxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 02:48:54 -0500
-Received: from mail.wangsu.com ([123.103.51.198]:42910 "EHLO wangsu.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726145AbgABHsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 02:48:53 -0500
-Received: from XMCDN1207038 (unknown [59.61.78.137])
-        by app1 (Coremail) with SMTP id xjNnewDnab1DoA1eQc8WAA--.66S2;
-        Thu, 02 Jan 2020 15:48:20 +0800 (CST)
-From:   =?UTF-8?B?5p2o6bmP56iL?= <yangpc@wangsu.com>
-To:     "'Eric Dumazet'" <edumazet@google.com>
-Cc:     "'David Miller'" <davem@davemloft.net>,
-        "'Alexey Kuznetsov'" <kuznet@ms2.inr.ac.ru>,
-        "'Hideaki YOSHIFUJI'" <yoshfuji@linux-ipv6.org>,
-        "'Alexei Starovoitov'" <ast@kernel.org>,
-        "'Daniel Borkmann'" <daniel@iogearbox.net>,
-        "'Martin KaFai Lau'" <kafai@fb.com>,
-        "'Song Liu'" <songliubraving@fb.com>,
-        "'Yonghong Song'" <yhs@fb.com>, <andriin@fb.com>,
-        "'netdev'" <netdev@vger.kernel.org>,
-        "'LKML'" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tcp: fix "old stuff" D-SACK causing SACK to be treated as D-SACK
-Date:   Thu, 2 Jan 2020 15:48:01 +0800
-Message-ID: <000201d5c140$f5dd0cb0$e1972610$@wangsu.com>
+        Thu, 2 Jan 2020 02:53:25 -0500
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:35797 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbgABHxZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 02:53:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1577951605; x=1609487605;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=bFqvuHtUJ2uTuBGE5u3MI0p2QpGGNs+AUqkx0RpdLvY=;
+  b=wEv2x8t7KYv9Lih6EHzXMF8++oG5ZlHqJuhW7PJFSmIh+2pAmL8sRShl
+   jij0QyEyazFcn7sOYjZ3kpDPw4VnqyO9QFKokfWvJbTRWJFi62nU/r4UE
+   HHeHojS0EzWkrKWzxbIEUUM7W6gXLAaLYwj8BV2PSQDMR3m8mTl/UWm/c
+   k=;
+IronPort-SDR: RNTC/4q3xGWHPIh9vssYnvrzBZGJuP19UJzRbqvoIonGLncvhmcp0JXo+YaHAWgnXjsCY0bewp
+ oZ4tNqPWAC5A==
+X-IronPort-AV: E=Sophos;i="5.69,386,1571702400"; 
+   d="scan'208";a="9797737"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-e7be2041.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 02 Jan 2020 07:53:22 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-e7be2041.us-west-2.amazon.com (Postfix) with ESMTPS id 438D1A1E23;
+        Thu,  2 Jan 2020 07:53:21 +0000 (UTC)
+Received: from EX13D11UWB003.ant.amazon.com (10.43.161.206) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 2 Jan 2020 07:53:20 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13D11UWB003.ant.amazon.com (10.43.161.206) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 2 Jan 2020 07:53:20 +0000
+Received: from localhost (172.23.204.141) by mail-relay.amazon.com
+ (10.43.61.243) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
+ Transport; Thu, 2 Jan 2020 07:53:19 +0000
+From:   Balbir Singh <sblbir@amazon.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-nvme@lists.infradead.org>
+CC:     <axboe@kernel.dk>, <ssomesh@amazon.com>, <jejb@linux.ibm.com>,
+        <hch@lst.de>, <mst@redhat.com>, <Chaitanya.Kulkarni@wdc.com>,
+        Balbir Singh <sblbir@amazon.com>
+Subject: [resend v1 2/5] drivers/block/virtio_blk.c: Convert to use disk_set_capacity
+Date:   Thu, 2 Jan 2020 07:53:12 +0000
+Message-ID: <20200102075315.22652-3-sblbir@amazon.com>
+X-Mailer: git-send-email 2.16.5
+In-Reply-To: <20200102075315.22652-1-sblbir@amazon.com>
+References: <20200102075315.22652-1-sblbir@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AdXAmTvGSt3UBdpWS06LqBel1jbauAAoqjMw
-Content-Language: zh-cn
-X-CM-TRANSID: xjNnewDnab1DoA1eQc8WAA--.66S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3Jw48WrW5Xw1ftrW3tF13Jwb_yoWxCr1xpa
-        15Kry7Krn5Ary8C3Wqgr18ua48Wan7Ca13GryIkrZF9w45Cw1ruF4FgF4Y9FW2gFWvgFW0
-        yryjg3yq9a98GaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkCb7Iv0xC_KF4lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
-        cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
-        v20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl6s0DM28EF7xvwVC2
-        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
-        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaVAv8VW8GwAv
-        7VCY1x0262k0Y48FwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-        8JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAFwVW8CwCF04k20xvY0x0EwIxGrwCF
-        04k20xvE74AGY7Cv6cx26r48MxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
-        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-        W8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8
-        JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU8qXdUU
-        UUU
-X-CM-SenderInfo: p1dqw1nf6zt0xjvxhudrp/
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric Dumazet,
+block/genhd provides disk_set_capacity() for sending
+RESIZE notifications via uevents.
 
-I'm sorry there was a slight error in the packetdrill test case of the previous email reply,
-the ACK segment should not carry data, although this does not affect the description of the situation.
-I fixed the packetdrill test and resent it as follows:
+Signed-off-by: Balbir Singh <sblbir@amazon.com>
+---
+ drivers/block/virtio_blk.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-packetdrill test case:
-// Verify the "old stuff" D-SACK causing SACK to be treated as D-SACK
---tolerance_usecs=10000
-
-// enable RACK and TLP
-    0 `sysctl -q net.ipv4.tcp_recovery=1; sysctl -q net.ipv4.tcp_early_retrans=3`
-
-// Establish a connection, rtt = 10ms
-   +0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
-   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
-   +0 bind(3, ..., ...) = 0
-   +0 listen(3, 1) = 0
-
-  +.1 < S 0:0(0) win 32792 <mss 1000,sackOK,nop,nop,nop,wscale 7>
-   +0 > S. 0:0(0) ack 1 <...>
- +.01 < . 1:1(0) ack 1 win 320
-   +0 accept(3, ..., ...) = 4
-
-// send 10 data segments
-   +0 write(4, ..., 10000) = 10000
-   +0 > P. 1:10001(10000) ack 1
-
-// send TLP
- +.02 > P. 9001:10001(1000) ack 1
-
-// enter recovery and retransmit 1:1001, now undo_marker = 1
-+.015 < . 1:1(0) ack 1 win 320 <sack 9001:10001, nop, nop>
-   +0 > . 1:1001(1000) ack 1
-
-// ack 1:1001 and retransmit 1001:3001
- +.01 < . 1:1(0) ack 1001 win 320 <sack 9001:10001, nop, nop>
-   +0 > . 1001:3001(2000) ack 1
-
-// sack 2001:3001, now 2001:3001 has R|S
- +.01 < . 1:1(0) ack 1001 win 320 <sack 2001:3001 9001:10001, nop, nop>
-
-+0 %{ assert tcpi_reordering == 3, tcpi_reordering }%
-
-// d-sack 1:1001, satisfies: undo_marker(1) <= start_seq < end_seq <= prior_snd_una(1001)
-// BUG: 2001:3001 is treated as D-SACK then reordering is modified in tcp_sacktag_one()
-   +0 < . 1:1(0) ack 1001 win 320 <sack 1:1001 2001:3001 9001:10001, nop, nop>
-
-// reordering was modified to 8
-+0 %{ assert tcpi_reordering == 3, tcpi_reordering }%
-
-
-
------邮件原件-----
-发件人: 杨鹏程 <yangpc@wangsu.com> 
-发送时间: 2020年1月1日 19:47
-收件人: 'Eric Dumazet' <edumazet@google.com>
-抄送: 'David Miller' <davem@davemloft.net>; 'Alexey Kuznetsov' <kuznet@ms2.inr.ac.ru>; 'Hideaki YOSHIFUJI' <yoshfuji@linux-ipv6.org>; 'Alexei Starovoitov' <ast@kernel.org>; 'Daniel Borkmann' <daniel@iogearbox.net>; 'Martin KaFai Lau' <kafai@fb.com>; 'Song Liu' <songliubraving@fb.com>; 'Yonghong Song' <yhs@fb.com>; 'andriin@fb.com' <andriin@fb.com>; 'netdev' <netdev@vger.kernel.org>; 'LKML' <linux-kernel@vger.kernel.org>
-主题: Re: [PATCH] tcp: fix "old stuff" D-SACK causing SACK to be treated as D-SACK
-
-Hi Eric Dumazet,
-
-Thanks for discussing this issue.
-
-'previous sack segment was lost' means that the SACK segment carried by D-SACK will be processed by tcp_sacktag_one () due to the previous SACK loss, but this is not necessary.
-
-Here is the packetdrill test, this example shows that the reordering was modified because the SACK segment was treated as D-SACK.
-
-//dsack-old-stuff-bug.pkt
-// Verify the "old stuff" D-SACK causing SACK to be treated as D-SACK
---tolerance_usecs=10000
-
-// enable RACK and TLP
-    0 `sysctl -q net.ipv4.tcp_recovery=1; sysctl -q net.ipv4.tcp_early_retrans=3`
-
-// Establish a connection, rtt = 10ms
-   +0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
-   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
-   +0 bind(3, ..., ...) = 0
-   +0 listen(3, 1) = 0
-
-  +.1 < S 0:0(0) win 32792 <mss 1000,sackOK,nop,nop,nop,wscale 7>
-   +0 > S. 0:0(0) ack 1 <...>
- +.01 < . 1:1(0) ack 1 win 320
-   +0 accept(3, ..., ...) = 4
-
-// send 10 data segments
-   +0 write(4, ..., 10000) = 10000
-   +0 > P. 1:10001(10000) ack 1
-
-// send TLP
- +.02 > P. 9001:10001(1000) ack 1
-
-// enter recovery and retransmit 1:1001, now undo_marker = 1
-+.015 < . 1:1(0) ack 1 win 320 <sack 9001:10001, nop, nop>
-   +0 > . 1:1001(1000) ack 1
-
-// ack 1:1001 and retransmit 1001:3001
- +.01 < . 1:1001(1000) ack 1001 win 320 <sack 9001:10001, nop, nop>
-   +0 > . 1001:3001(2000) ack 1
-
-// sack 2001:3001, now 2001:3001 has R|S
- +.01 < . 1001:1001(0) ack 1001 win 320 <sack 2001:3001 9001:10001, nop, nop>
-
-+0 %{ assert tcpi_reordering == 3, tcpi_reordering }%
-
-// d-sack 1:1001, satisfies: undo_marker(1) <= start_seq < end_seq <= prior_snd_una(1001) // BUG: 2001:3001 is treated as D-SACK then reordering is modified in tcp_sacktag_one()
-   +0 < . 1001:1001(0) ack 1001 win 320 <sack 1:1001 2001:3001 9001:10001, nop, nop>
-
-// reordering was modified to 8
-+0 %{ assert tcpi_reordering == 3, tcpi_reordering }%
-
-
-
-
------邮件原件-----
-发件人: Eric Dumazet <edumazet@google.com>
-发送时间: 2019年12月30日 21:41
-收件人: Pengcheng Yang <yangpc@wangsu.com>
-抄送: David Miller <davem@davemloft.net>; Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>; Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>; Alexei Starovoitov <ast@kernel.org>; Daniel Borkmann <daniel@iogearbox.net>; Martin KaFai Lau <kafai@fb.com>; Song Liu <songliubraving@fb.com>; Yonghong Song <yhs@fb.com>; andriin@fb.com; netdev <netdev@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>
-主题: Re: [PATCH] tcp: fix "old stuff" D-SACK causing SACK to be treated as D-SACK
-
-On Mon, Dec 30, 2019 at 1:55 AM Pengcheng Yang <yangpc@wangsu.com> wrote:
->
-> When we receive a D-SACK, where the sequence number satisfies:
->         undo_marker <= start_seq < end_seq <= prior_snd_una we 
-> consider this is a valid D-SACK and tcp_is_sackblock_valid() returns 
-> true, then this D-SACK is discarded as "old stuff", but the variable 
-> first_sack_index is not marked as negative in 
-> tcp_sacktag_write_queue().
->
-> If this D-SACK also carries a SACK that needs to be processed (for 
-> example, the previous SACK segment was lost),
-
-What do you mean by ' previous sack segment was lost'  ?
-
- this SACK
-> will be treated as a D-SACK in the following processing of 
-> tcp_sacktag_write_queue(), which will eventually lead to incorrect 
-> updates of undo_retrans and reordering.
->
-> Fixes: fd6dad616d4f ("[TCP]: Earlier SACK block verification & 
-> simplify access to them")
-> Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
-> ---
->  net/ipv4/tcp_input.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c index 
-> 88b987c..0238b55 100644
-> --- a/net/ipv4/tcp_input.c
-> +++ b/net/ipv4/tcp_input.c
-> @@ -1727,8 +1727,11 @@ static int tcp_sack_cache_ok(const struct tcp_sock *tp, const struct tcp_sack_bl
->                 }
->
->                 /* Ignore very old stuff early */
-> -               if (!after(sp[used_sacks].end_seq, prior_snd_una))
-> +               if (!after(sp[used_sacks].end_seq, prior_snd_una)) {
-> +                       if (i == 0)
-> +                               first_sack_index = -1;
->                         continue;
-> +               }
->
->                 used_sacks++;
->         }
-
-
-Hi Pengcheng Yang
-
-This corner case deserves a packetdrill test so that we understand the issue, can you provide one ?
-
-Thanks.
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index fbbf18ac1d5d..9848c94a7eb4 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -479,18 +479,16 @@ static void virtblk_update_capacity(struct virtio_blk *vblk, bool resize)
+ 		   cap_str_10,
+ 		   cap_str_2);
+ 
+-	set_capacity(vblk->disk, capacity);
++	disk_set_capacity(vblk->disk, capacity);
+ }
+ 
+ static void virtblk_config_changed_work(struct work_struct *work)
+ {
+ 	struct virtio_blk *vblk =
+ 		container_of(work, struct virtio_blk, config_work);
+-	char *envp[] = { "RESIZE=1", NULL };
+ 
+ 	virtblk_update_capacity(vblk, true);
+ 	revalidate_disk(vblk->disk);
+-	kobject_uevent_env(&disk_to_dev(vblk->disk)->kobj, KOBJ_CHANGE, envp);
+ }
+ 
+ static void virtblk_config_changed(struct virtio_device *vdev)
+-- 
+2.16.5
 
