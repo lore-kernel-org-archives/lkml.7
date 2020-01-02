@@ -2,52 +2,53 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C24C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BF7C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C8D320866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC06F20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005647;
-	bh=VOUT318r59RAxhuHzAdS0CGGtsryt1VTz1lPfrvr2xY=;
+	s=default; t=1578005652;
+	bh=d8OYjwglSwSZ+zYIi3BgcyA/ugNN0+pst0NzjE764HM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oFtBu5Dick4bx/c2UxNtWDo0rm8PSn2jQUIfQhp/X308PkIX1Sx9bil+wrkVw6o9o
-	 YedGgG+1CZBpAmGXWhw7uHevlqHHTd04nvocAzkvu6itE3wF2pRSXaM6RuhzSOnc6L
-	 pbN+iPGinC1UZ20SUbi1LsNLFZng+VjMvjOiD8Is=
+	b=UhjVV4Zmf/m2pB3OVPxAwzU7FxR55BR2jVebLWnVQtU+OIgM1vO3LobykkBIK5lLr
+	 lmmo/C2KWTZJtBZTKBxq/VgnsnHMi3HygMhifnUkRjiQt1ULlnwJISsGSB2MxCdKJV
+	 aqETlzGf1sijkbsoHs9lAWcP/Iqr/zQEjwVv4gTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbgABWWJ (ORCPT
+        id S1728932AbgABWVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:22:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42068 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:21:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729086AbgABWWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:22:04 -0500
+        id S1728048AbgABWU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:20:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B695B222C3;
-        Thu,  2 Jan 2020 22:22:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3199021582;
+        Thu,  2 Jan 2020 22:20:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003723;
-        bh=VOUT318r59RAxhuHzAdS0CGGtsryt1VTz1lPfrvr2xY=;
+        s=default; t=1578003658;
+        bh=d8OYjwglSwSZ+zYIi3BgcyA/ugNN0+pst0NzjE764HM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KP4YzfLC0EsiAI1PoeXEk/Az1uTEOZrVfaVBht04qQLQ3yVLGjIcoCVg/ORTudAjk
-         iDStDJiBepGjQMfBgwtgJ2eSp7Q6A7Zl6KFWTSS5WWuRm2lqGGPA/AAAJfLki/KRvJ
-         AwrlicvyzFsDUU5A+Zq/gssq2OuDCF/hjcDxcrAI=
+        b=Ps1dkUPy8v3AZAvxVQH/sWXAGGq9VCWookRVWGToP6evkSE07wKag1oRiJvtpuHrc
+         XtoXX1Zb8vFKTIsNMfKAst8QNRyXUL+HR7EbHDjmolo0CyvZwykAEPkwfpjRqxxPN8
+         GXtLgiZT3HmCWsh0CDFJTIkmCo5ycetlOkpxXPr8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 088/114] net: icmp: fix data-race in cmp_global_allow()
-Date:   Thu,  2 Jan 2020 23:07:40 +0100
-Message-Id: <20200102220038.083133999@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Axtens <dja@axtens.net>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 061/114] powerpc: Dont add -mabi= flags when building with Clang
+Date:   Thu,  2 Jan 2020 23:07:13 +0100
+Message-Id: <20200102220035.195017102@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -60,116 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit bbab7ef235031f6733b5429ae7877bfa22339712 upstream.
+[ Upstream commit 465bfd9c44dea6b55962b5788a23ac87a467c923 ]
 
-This code reads two global variables without protection
-of a lock. We need READ_ONCE()/WRITE_ONCE() pairs to
-avoid load/store-tearing and better document the intent.
+When building pseries_defconfig, building vdso32 errors out:
 
-KCSAN reported :
-BUG: KCSAN: data-race in icmp_global_allow / icmp_global_allow
+  error: unknown target ABI 'elfv1'
 
-read to 0xffffffff861a8014 of 4 bytes by task 11201 on cpu 0:
- icmp_global_allow+0x36/0x1b0 net/ipv4/icmp.c:254
- icmpv6_global_allow net/ipv6/icmp.c:184 [inline]
- icmpv6_global_allow net/ipv6/icmp.c:179 [inline]
- icmp6_send+0x493/0x1140 net/ipv6/icmp.c:514
- icmpv6_send+0x71/0xb0 net/ipv6/ip6_icmp.c:43
- ip6_link_failure+0x43/0x180 net/ipv6/route.c:2640
- dst_link_failure include/net/dst.h:419 [inline]
- vti_xmit net/ipv4/ip_vti.c:243 [inline]
- vti_tunnel_xmit+0x27f/0xa50 net/ipv4/ip_vti.c:279
- __netdev_start_xmit include/linux/netdevice.h:4420 [inline]
- netdev_start_xmit include/linux/netdevice.h:4434 [inline]
- xmit_one net/core/dev.c:3280 [inline]
- dev_hard_start_xmit+0xef/0x430 net/core/dev.c:3296
- __dev_queue_xmit+0x14c9/0x1b60 net/core/dev.c:3873
- dev_queue_xmit+0x21/0x30 net/core/dev.c:3906
- neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
- neigh_output include/net/neighbour.h:511 [inline]
- ip6_finish_output2+0x7a6/0xec0 net/ipv6/ip6_output.c:116
- __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
- __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
- ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
- dst_output include/net/dst.h:436 [inline]
- ip6_local_out+0x74/0x90 net/ipv6/output_core.c:179
+This happens because -m32 in clang changes the target to 32-bit,
+which does not allow the ABI to be changed.
 
-write to 0xffffffff861a8014 of 4 bytes by task 11183 on cpu 1:
- icmp_global_allow+0x174/0x1b0 net/ipv4/icmp.c:272
- icmpv6_global_allow net/ipv6/icmp.c:184 [inline]
- icmpv6_global_allow net/ipv6/icmp.c:179 [inline]
- icmp6_send+0x493/0x1140 net/ipv6/icmp.c:514
- icmpv6_send+0x71/0xb0 net/ipv6/ip6_icmp.c:43
- ip6_link_failure+0x43/0x180 net/ipv6/route.c:2640
- dst_link_failure include/net/dst.h:419 [inline]
- vti_xmit net/ipv4/ip_vti.c:243 [inline]
- vti_tunnel_xmit+0x27f/0xa50 net/ipv4/ip_vti.c:279
- __netdev_start_xmit include/linux/netdevice.h:4420 [inline]
- netdev_start_xmit include/linux/netdevice.h:4434 [inline]
- xmit_one net/core/dev.c:3280 [inline]
- dev_hard_start_xmit+0xef/0x430 net/core/dev.c:3296
- __dev_queue_xmit+0x14c9/0x1b60 net/core/dev.c:3873
- dev_queue_xmit+0x21/0x30 net/core/dev.c:3906
- neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
- neigh_output include/net/neighbour.h:511 [inline]
- ip6_finish_output2+0x7a6/0xec0 net/ipv6/ip6_output.c:116
- __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
- __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
- ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
+Commit 4dc831aa8813 ("powerpc: Fix compiling a BE kernel with a
+powerpc64le toolchain") added these flags to fix building big endian
+kernels with a little endian GCC.
 
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 11183 Comm: syz-executor.2 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Clang doesn't need -mabi because the target triple controls the
+default value. -mlittle-endian and -mbig-endian manipulate the triple
+into either powerpc64-* or powerpc64le-*, which properly sets the
+default ABI.
 
-Fixes: 4cdf507d5452 ("icmp: add a global rate limitation")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Adding a debug print out in the PPC64TargetInfo constructor after line
+383 above shows this:
 
+  $ echo | ./clang -E --target=powerpc64-linux -mbig-endian -o /dev/null -
+  Default ABI: elfv1
+
+  $ echo | ./clang -E --target=powerpc64-linux -mlittle-endian -o /dev/null -
+  Default ABI: elfv2
+
+  $ echo | ./clang -E --target=powerpc64le-linux -mbig-endian -o /dev/null -
+  Default ABI: elfv1
+
+  $ echo | ./clang -E --target=powerpc64le-linux -mlittle-endian -o /dev/null -
+  Default ABI: elfv2
+
+Don't specify -mabi when building with clang to avoid the build error
+with -m32 and not change any code generation.
+
+-mcall-aixdesc is not an implemented flag in clang so it can be safely
+excluded as well, see commit 238abecde8ad ("powerpc: Don't use gcc
+specific options on clang").
+
+pseries_defconfig successfully builds after this patch and
+powernv_defconfig and ppc44x_defconfig don't regress.
+
+Reviewed-by: Daniel Axtens <dja@axtens.net>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+[mpe: Trim clang links in change log]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191119045712.39633-2-natechancellor@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/icmp.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/powerpc/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/net/ipv4/icmp.c
-+++ b/net/ipv4/icmp.c
-@@ -254,10 +254,11 @@ bool icmp_global_allow(void)
- 	bool rc = false;
+diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
+index dfcb698ec8f3..e43321f46a3b 100644
+--- a/arch/powerpc/Makefile
++++ b/arch/powerpc/Makefile
+@@ -90,11 +90,13 @@ MULTIPLEWORD	:= -mmultiple
+ endif
  
- 	/* Check if token bucket is empty and cannot be refilled
--	 * without taking the spinlock.
-+	 * without taking the spinlock. The READ_ONCE() are paired
-+	 * with the following WRITE_ONCE() in this same function.
- 	 */
--	if (!icmp_global.credit) {
--		delta = min_t(u32, now - icmp_global.stamp, HZ);
-+	if (!READ_ONCE(icmp_global.credit)) {
-+		delta = min_t(u32, now - READ_ONCE(icmp_global.stamp), HZ);
- 		if (delta < HZ / 50)
- 			return false;
- 	}
-@@ -267,14 +268,14 @@ bool icmp_global_allow(void)
- 	if (delta >= HZ / 50) {
- 		incr = sysctl_icmp_msgs_per_sec * delta / HZ ;
- 		if (incr)
--			icmp_global.stamp = now;
-+			WRITE_ONCE(icmp_global.stamp, now);
- 	}
- 	credit = min_t(u32, icmp_global.credit + incr, sysctl_icmp_msgs_burst);
- 	if (credit) {
- 		credit--;
- 		rc = true;
- 	}
--	icmp_global.credit = credit;
-+	WRITE_ONCE(icmp_global.credit, credit);
- 	spin_unlock(&icmp_global.lock);
- 	return rc;
- }
+ ifdef CONFIG_PPC64
++ifndef CONFIG_CC_IS_CLANG
+ cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mabi=elfv1)
+ cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mcall-aixdesc)
+ aflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mabi=elfv1)
+ aflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mabi=elfv2
+ endif
++endif
+ 
+ ifneq ($(cc-name),clang)
+   cflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mno-strict-align
+@@ -134,6 +136,7 @@ endif
+ endif
+ 
+ CFLAGS-$(CONFIG_PPC64)	:= $(call cc-option,-mtraceback=no)
++ifndef CONFIG_CC_IS_CLANG
+ ifdef CONFIG_CPU_LITTLE_ENDIAN
+ CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2,$(call cc-option,-mcall-aixdesc))
+ AFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2)
+@@ -142,6 +145,7 @@ CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
+ CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcall-aixdesc)
+ AFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
+ endif
++endif
+ CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcmodel=medium,$(call cc-option,-mminimal-toc))
+ CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mno-pointers-to-nested-functions)
+ 
+-- 
+2.20.1
+
 
 
