@@ -7,55 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6745C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEFAC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC71221835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C637F20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004951;
-	bh=xPyoKREL88dZ0KX450JGuDPqnP9nnuh89cMFe65bG78=;
+	s=default; t=1578004954;
+	bh=kI714KhdZOV86NSLDIwxv61nxxSXvDcFcQ6Rb3avn6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZcwysF5bOEuoCnohWI27YSaeuPdCCWsoOmWb7ousNpubk2yjDxYkFSiEBFDga0BFQ
-	 287I9a7uFJWPofk7iE6HrlxqQ2gmfLFRmohSRZEz1nnR0dW6MhysGNnNPSMBZ14eo4
-	 IAIDcZsFbJGppCLsOVx7weN2O+JZmz4qIOZYCUbY=
+	b=c/4KtcpHLtJWZunB0Tcjymb2TWjXzEWpVoMRk/VwdVNyjZkQBgFHREkcqe/vBRP9d
+	 69eZl0W4IA88ONAAOnaks3kRZYLczd9fyhZ/iisNTsbDtjt/8PrdK+pTz+JbcL9IDZ
+	 zcIwMtRCm6l32YnqMwF1UUCzEf8+cJVr+jSrWWbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730633AbgABWfv (ORCPT
+        id S1731328AbgABWme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:35:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45766 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:42:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730870AbgABWfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:35:46 -0500
+        id S1730597AbgABWfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:35:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A01CB22B48;
-        Thu,  2 Jan 2020 22:35:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77B2F20863;
+        Thu,  2 Jan 2020 22:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004545;
-        bh=xPyoKREL88dZ0KX450JGuDPqnP9nnuh89cMFe65bG78=;
+        s=default; t=1578004549;
+        bh=kI714KhdZOV86NSLDIwxv61nxxSXvDcFcQ6Rb3avn6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cp+TZiLc8rdFcD2EqitJ5svvzF7lWQOzQLqZD9n5rbdQ5ZoH1bFt/dpIuQbkkPfqU
-         KISm88HOUuZZprxQbOqdQpmbQlg2N5JK2/sayM5XEih0iEBhAPLaFx9rJqv19OvcLb
-         65Oe+fxNOvGxht8898dsPp8wHm7mGa53cqLLFAIY=
+        b=TYJQDMN6kdbaj/jtF1pxTD6qGZz8EozPR/BEV0m/8jgp2QnLzenrv/HHIFijHpHqQ
+         KlIUARVHtujL2Nfm76zYlo9F00GYMCxJikuk9NXcSX/XIVhTBQ41bWtCN2yhKZSMnM
+         yspolCxPHxVXP+K0Gh8HtPKUnjTpxzjTHUkFC4eA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 026/137] x86/mm: Use the correct function type for native_set_fixmap()
-Date:   Thu,  2 Jan 2020 23:06:39 +0100
-Message-Id: <20200102220550.106586526@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 028/137] iio: adc: max1027: Reset the device at probe time
+Date:   Thu,  2 Jan 2020 23:06:41 +0100
+Message-Id: <20200102220550.401050486@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -68,63 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-[ Upstream commit f53e2cd0b8ab7d9e390414470bdbd830f660133f ]
+[ Upstream commit db033831b4f5589f9fcbadb837614a7c4eac0308 ]
 
-We call native_set_fixmap indirectly through the function pointer
-struct pv_mmu_ops::set_fixmap, which expects the first parameter to be
-'unsigned' instead of 'enum fixed_addresses'. This patch changes the
-function type for native_set_fixmap to match the pointer, which fixes
-indirect call mismatches with Control-Flow Integrity (CFI) checking.
+All the registers are configured by the driver, let's reset the chip
+at probe time, avoiding any conflict with a possible earlier
+configuration.
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H . Peter Anvin <hpa@zytor.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190913211402.193018-1-samitolvanen@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/fixmap.h | 2 +-
- arch/x86/mm/pgtable.c         | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/iio/adc/max1027.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/x86/include/asm/fixmap.h b/arch/x86/include/asm/fixmap.h
-index f80d70009ff8..d0e39f54feee 100644
---- a/arch/x86/include/asm/fixmap.h
-+++ b/arch/x86/include/asm/fixmap.h
-@@ -147,7 +147,7 @@ extern pgprot_t kmap_prot;
- extern pte_t *pkmap_page_table;
+diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
+index 41d495c6035e..7d5e4114e7a8 100644
+--- a/drivers/iio/adc/max1027.c
++++ b/drivers/iio/adc/max1027.c
+@@ -470,6 +470,14 @@ static int max1027_probe(struct spi_device *spi)
+ 		goto fail_dev_register;
+ 	}
  
- void __native_set_fixmap(enum fixed_addresses idx, pte_t pte);
--void native_set_fixmap(enum fixed_addresses idx,
-+void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
- 		       phys_addr_t phys, pgprot_t flags);
- 
- #ifndef CONFIG_PARAVIRT
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index 50f75768aadd..3ed4753280aa 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -567,8 +567,8 @@ void __native_set_fixmap(enum fixed_addresses idx, pte_t pte)
- 	fixmaps_set++;
- }
- 
--void native_set_fixmap(enum fixed_addresses idx, phys_addr_t phys,
--		       pgprot_t flags)
-+void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
-+		       phys_addr_t phys, pgprot_t flags)
- {
- 	__native_set_fixmap(idx, pfn_pte(phys >> PAGE_SHIFT, flags));
- }
++	/* Internal reset */
++	st->reg = MAX1027_RST_REG;
++	ret = spi_write(st->spi, &st->reg, 1);
++	if (ret < 0) {
++		dev_err(&indio_dev->dev, "Failed to reset the ADC\n");
++		return ret;
++	}
++
+ 	/* Disable averaging */
+ 	st->reg = MAX1027_AVG_REG;
+ 	ret = spi_write(st->spi, &st->reg, 1);
 -- 
 2.20.1
 
