@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03024C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA04C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA471217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F26C21835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004758;
-	bh=0Uf6/eakuHv0RxJRP5QLczbHPxCFOinkZd+1IggRG1o=;
+	s=default; t=1578004761;
+	bh=Z6uOq0PO3HCgfXMAtRf+qJM8bg/nar9HCljMC2v2tHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CfyKpdrHc1JyUvYwrQNtoqb5EbwcTsWIWuhIb3sCnLhQnENqcAsGHQtooawRbiHQh
-	 2XRxcRQObvCs70O6GBvYNZvKkTIsCmBuTgSAne10+hSe3/erHhGNeFxOxuHR6OxczB
-	 4znqdMlWOcI87uFB4Yt0Ty0LU5YxOY39zhYGlWIQ=
+	b=kPojvKC2Ux4qkC5oBOPJmVaLkcyQdpNSieyenM0L/oQ4K32G/i8wbPv15kPnNOWgN
+	 6HmFMeug2wH1EwFfhiA/8OVHjNI3p/dDzeGQhcQZsjuBLJ+XdnN8Y+fPdunyWnGlOz
+	 LL8xZSuNsv49bUkciOhp/LqDdMWLT6AgqHXMWFyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731444AbgABWjR (ORCPT
+        id S1731452AbgABWjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:39:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54930 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:39:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731075AbgABWjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:39:16 -0500
+        id S1731177AbgABWjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:39:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6421217F4;
-        Thu,  2 Jan 2020 22:39:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 546A120866;
+        Thu,  2 Jan 2020 22:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004755;
-        bh=0Uf6/eakuHv0RxJRP5QLczbHPxCFOinkZd+1IggRG1o=;
+        s=default; t=1578004757;
+        bh=Z6uOq0PO3HCgfXMAtRf+qJM8bg/nar9HCljMC2v2tHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q3I7NqlDUHxrhGBGt/YFutU/QVfipgzKlOnbr+yzkpvE4Z/2FIKGPsZrmWl22WK6E
-         tHSXRzsxtDslY1vnR+w5+GaQP3yoIqhs6qC+vzzM1auU2BgQqBN0m990uCuXEOLhwB
-         LsANSmVDhghmVnsUMtcAVZmm5hsGbifLEhWGBSZs=
+        b=2RtHH6TRcpoU9IPAZYvBrCJLsVUV+VLcEy+rVchGfR/Sm/Vo3/DwLnCi0vOQ4SgRl
+         8cyn+fneoLLRzYgWMXMQ8lVHrIqEoBB5Y1ydqIr3s0qMdAI279P3XqPZpLiUELFrL+
+         eLq2CJQIN8KGelYEq1wEX7eMIYw8sm6JLvheN/FY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 114/137] bcache: at least try to shrink 1 node in bch_mca_scan()
-Date:   Thu,  2 Jan 2020 23:08:07 +0100
-Message-Id: <20200102220602.500489232@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 115/137] HID: Improve Windows Precision Touchpad detection.
+Date:   Thu,  2 Jan 2020 23:08:08 +0100
+Message-Id: <20200102220602.621156753@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -59,50 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Blaž Hrastnik <blaz@mxxn.io>
 
-[ Upstream commit 9fcc34b1a6dd4b8e5337e2b6ef45e428897eca6b ]
+[ Upstream commit 2dbc6f113acd74c66b04bf49fb027efd830b1c5a ]
 
-In bch_mca_scan(), the number of shrinking btree node is calculated
-by code like this,
-	unsigned long nr = sc->nr_to_scan;
+Per Microsoft spec, usage 0xC5 (page 0xFF) returns a blob containing
+data used to verify the touchpad as a Windows Precision Touchpad.
 
-        nr /= c->btree_pages;
-        nr = min_t(unsigned long, nr, mca_can_free(c));
-variable sc->nr_to_scan is number of objects (here is bcache B+tree
-nodes' number) to shrink, and pointer variable sc is sent from memory
-management code as parametr of a callback.
+   0x85, REPORTID_PTPHQA,    //    REPORT_ID (PTPHQA)
+    0x09, 0xC5,              //    USAGE (Vendor Usage 0xC5)
+    0x15, 0x00,              //    LOGICAL_MINIMUM (0)
+    0x26, 0xff, 0x00,        //    LOGICAL_MAXIMUM (0xff)
+    0x75, 0x08,              //    REPORT_SIZE (8)
+    0x96, 0x00, 0x01,        //    REPORT_COUNT (0x100 (256))
+    0xb1, 0x02,              //    FEATURE (Data,Var,Abs)
 
-If sc->nr_to_scan is smaller than c->btree_pages, after the above
-calculation, variable 'nr' will be 0 and nothing will be shrunk. It is
-frequeently observed that only 1 or 2 is set to sc->nr_to_scan and make
-nr to be zero. Then bch_mca_scan() will do nothing more then acquiring
-and releasing mutex c->bucket_lock.
+However, some devices, namely Microsoft's Surface line of products
+instead implement a "segmented device certification report" (usage 0xC6)
+which returns the same report, but in smaller chunks.
 
-This patch checkes whether nr is 0 after the above calculation, if 0
-is the result then set 1 to variable 'n'. Then at least bch_mca_scan()
-will try to shrink a single B+tree node.
+    0x06, 0x00, 0xff,        //     USAGE_PAGE (Vendor Defined)
+    0x85, REPORTID_PTPHQA,   //     REPORT_ID (PTPHQA)
+    0x09, 0xC6,              //     USAGE (Vendor usage for segment #)
+    0x25, 0x08,              //     LOGICAL_MAXIMUM (8)
+    0x75, 0x08,              //     REPORT_SIZE (8)
+    0x95, 0x01,              //     REPORT_COUNT (1)
+    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
+    0x09, 0xC7,              //     USAGE (Vendor Usage)
+    0x26, 0xff, 0x00,        //     LOGICAL_MAXIMUM (0xff)
+    0x95, 0x20,              //     REPORT_COUNT (32)
+    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
 
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+By expanding Win8 touchpad detection to also look for the segmented
+report, all Surface touchpads are now properly recognized by
+hid-multitouch.
+
+Signed-off-by: Blaž Hrastnik <blaz@mxxn.io>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/btree.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/hid/hid-core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
-index 05aa3ac1381b..5c93582c71cc 100644
---- a/drivers/md/bcache/btree.c
-+++ b/drivers/md/bcache/btree.c
-@@ -686,6 +686,8 @@ static unsigned long bch_mca_scan(struct shrinker *shrink,
- 	 * IO can always make forward progress:
- 	 */
- 	nr /= c->btree_pages;
-+	if (nr == 0)
-+		nr = 1;
- 	nr = min_t(unsigned long, nr, mca_can_free(c));
+diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+index c60bb6f8eceb..7cd945575463 100644
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -761,6 +761,10 @@ static void hid_scan_feature_usage(struct hid_parser *parser, u32 usage)
+ 	if (usage == 0xff0000c5 && parser->global.report_count == 256 &&
+ 	    parser->global.report_size == 8)
+ 		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
++
++	if (usage == 0xff0000c6 && parser->global.report_count == 1 &&
++	    parser->global.report_size == 8)
++		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
+ }
  
- 	i = 0;
+ static void hid_scan_collection(struct hid_parser *parser, unsigned type)
 -- 
 2.20.1
 
