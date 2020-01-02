@@ -6,81 +6,85 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A33C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC27C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBB521835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02F4E21D7D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:32:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577957447;
-	bh=elsGuMFot+33Av4FGSNOajGfxnc8N4DN5vUSx+tOYSU=;
+	s=default; t=1577957521;
+	bh=z7XbupEIA871TaOOa9+yiI0sdqgjfYz8rikslwugDPc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mZHbN9ArobBAj9RAiT6kko5eunLhw6Eg+Zb1gU0FhifjNJPJYbUbirFWoHdkT6M+f
-	 co1cCCIY7wnhuJClMw4hF11Z/8sEG0Wv+DOh5a/BAyK0BhbBHYpCxzrgcbJ47lUHO7
-	 R5vH6uoAebMEg4Yh4AcK3cBkoiImqI1hGcCsWfSY=
+	b=GYSbsYBJ57BkfpxHsGl9INVYjv5+TJ3Xz6PT3420yhh2ioPVLEKpyjmu7k7UGyzOx
+	 xvc6nbdfkfAXFhhvphvkfvi2TWcPSe0kcO3YzdfMjlgqBcph5ox0DcLeIFkaN1VVOy
+	 R5ZQmxrS2mOoewZXR+0sO0d8nSrDh+Wfhv9Ky4kI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbgABJaq (ORCPT
+        id S1727966AbgABJcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 04:30:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56096 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 04:32:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727801AbgABJaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 04:30:46 -0500
+        id S1727924AbgABJb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 04:31:59 -0500
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 433F7217F4;
-        Thu,  2 Jan 2020 09:30:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADE36217F4;
+        Thu,  2 Jan 2020 09:31:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577957445;
-        bh=elsGuMFot+33Av4FGSNOajGfxnc8N4DN5vUSx+tOYSU=;
+        s=default; t=1577957519;
+        bh=z7XbupEIA871TaOOa9+yiI0sdqgjfYz8rikslwugDPc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jwVoClvRVKseM3M0tfQSJuj82PWp7sxKT4AvgdaYkdQven5XJQHeeArupeJvjrs+e
-         v1yzZEqg13F4KrmLs10PK4PEgy/VlNavLoQPR71yIy9nho4xnZzIxuOPyTYWU9Zyh1
-         PonelYCTAQe+imirBrqBo0fSRyWc9Ehlg/l+JTR0=
-Date:   Thu, 2 Jan 2020 10:30:43 +0100
+        b=ubsJsZ17xJUrhg1PKhxQTkfB5sALfgzZl8fOri0JDQjveIQDoWt3nI2j5l7jMjldx
+         v47TqhJihiPYqmgocaKNrG/HqR4EFN5/N6Fwbh6oGjztirkdCNJAOT/dIfsvo+zCSi
+         Bi1bjxYxiwUsa2sSd3AMa6fzz57A8Ct77ack0AcI=
+Date:   Thu, 2 Jan 2020 10:31:56 +0100
 From:   Maxime Ripard <mripard@kernel.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Subject: Re: [PATCH] arm64: defconfig: Enable DRM_SUN6I_DSI
-Message-ID: <20200102093043.v3apgtbex3xo76cu@gilmour.lan>
-References: <20191231065508.12649-1-jagan@amarulasolutions.com>
+        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH 1/3] ARM: dts: sun8i: R40: Upgrade GICC reg size to 8K
+Message-ID: <20200102093156.wrcuqxwbfs2vmwof@gilmour.lan>
+References: <20200102012657.9278-1-andre.przywara@arm.com>
+ <20200102012657.9278-2-andre.przywara@arm.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="apso4hjgcko6pumn"
+        protocol="application/pgp-signature"; boundary="2mnyeiclhklvtj5r"
 Content-Disposition: inline
-In-Reply-To: <20191231065508.12649-1-jagan@amarulasolutions.com>
+In-Reply-To: <20200102012657.9278-2-andre.przywara@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---apso4hjgcko6pumn
+--2mnyeiclhklvtj5r
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Dec 31, 2019 at 12:25:08PM +0530, Jagan Teki wrote:
-> Now, Allwiner MIPI-DSI support is available for ARM64
-> Allwinner SoC like A64. So, let's build it as a module.
+On Thu, Jan 02, 2020 at 01:26:55AM +0000, Andre Przywara wrote:
+> The GIC used in the R40 SoC is an ARM GIC-400 with virtualization support,
+> so let's advertise the full 8K region of the GICC MMIO frame to enable
+> KVM's usage of the GIC (as we do already for all other SoCs).
 >
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> Tested by running KVM on a Bananapi M2 Berry.
+>
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 
 Applied, thanks!
 Maxime
 
---apso4hjgcko6pumn
+--2mnyeiclhklvtj5r
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXg24QwAKCRDj7w1vZxhR
-xQ78AQD5XsHB4uXdgbX0OqVKJf80XBy5yljIptaMn2mt0qeewAD/Vi5Nc2D2zYaZ
-xY+pPlx1L9e1Hr8cg7l2kkav57Ku3gs=
-=v0GZ
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXg24jAAKCRDj7w1vZxhR
+xUQbAQClk/beo71p82R7czCIU5RsEyXUGoVfxFTJLmi4mlFOtgD9EYpUhFz6weme
+ZRkbXJRgAgmcJQqGp60CsXc/CLTcrg8=
+=whv3
 -----END PGP SIGNATURE-----
 
---apso4hjgcko6pumn--
+--2mnyeiclhklvtj5r--
