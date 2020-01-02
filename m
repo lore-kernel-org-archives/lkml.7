@@ -2,54 +2,50 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B77C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 249F9C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F00B12253D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE42422314
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:34:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004479;
-	bh=+5YuairaGG6kMU68ZaqLdhb0LRh4UtKhlg1Rwc//BzY=;
+	s=default; t=1578004481;
+	bh=BJfAgA/szN1AYgs2fr/TD2yZN9lPFjDUIRPYNSfyyGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iRXeuRyLJI9VLTjMvOkEGWyRZ6qxu+i3Bt+E3J8LfgBojXRrPmmDp5/V2LFyrMdH9
-	 nNKtyFoEL+HFyzP8yKJpmLLhKXVmJ3ZsGaldbZxw+8FLxCq3SdpkdSfwROyxSWcKx9
-	 qltB9HiVS8F/Rtg/YuJDZaehn9oq/hNab+OICn4A=
+	b=Zyc1hGOMjbGS8CgHVTAKh8rArqkpLrmGw33ZCwm/L6Pd+QvTw3m1qQev04doJNNeP
+	 vQpwi8YjP/VWnRzkaPF5EtmlDu2ptuLjevMA6GD1Zd5DaRHbSKf9dUUov8esH7SKF5
+	 G86wl//4SLS9mlIgiVXSYOeCZzx8GjD5ztqdF5AE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730605AbgABWei (ORCPT
+        id S1730693AbgABWej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:34:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43366 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:34:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730247AbgABWef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:34:35 -0500
+        id S1730247AbgABWei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:34:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20FA422525;
-        Thu,  2 Jan 2020 22:34:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86606222C3;
+        Thu,  2 Jan 2020 22:34:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004475;
-        bh=+5YuairaGG6kMU68ZaqLdhb0LRh4UtKhlg1Rwc//BzY=;
+        s=default; t=1578004478;
+        bh=BJfAgA/szN1AYgs2fr/TD2yZN9lPFjDUIRPYNSfyyGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OwCv7xg1STwuM8FUnLJfh1wJB5XSrZmancgL/ipsLUI8+LLNlyzRj02hSTp3Tk49F
-         5uXyb+dEZk+FQKjCSN9gwr0ncu2rUiQo3TOb75uD2H0J3bKCG8vvT6/4fsiVR3Qz7b
-         aQLp0+B/sg37Zb6Uf4fqLtm7fsc4MM/5ejqF6Zb8=
+        b=cjRWJMOKCzwu7Q8p4WWTNWV7F5uAsJr30Dsqt9QLdG1oG+Tu4I47cKR6/hfMZLGgZ
+         T5B+yz6E5gUe7yByVslFkQtPVTRljr2LXYoVhmykDky8dW2eyAbb22xhlqurSyMDrp
+         HcnwVCQQjHMZ4XROxNsqJFfJ2l7ctDMyY7I1not0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 022/137] media: ti-vpe: vpe: fix a v4l2-compliance warning about invalid pixel format
-Date:   Thu,  2 Jan 2020 23:06:35 +0100
-Message-Id: <20200102220549.639128370@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 003/137] ALSA: hda/ca0132 - Keep power on during processing DSP response
+Date:   Thu,  2 Jan 2020 23:06:16 +0100
+Message-Id: <20200102220547.060516972@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -62,81 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 06bec72b250b2cb3ba96fa45c2b8e0fb83745517 ]
+commit 377bc0cfabce0244632dada19060839ced4e6949 upstream.
 
-v4l2-compliance warns with this message:
+We need to keep power on while processing the DSP response via unsol
+event.  Each snd_hda_codec_read() call does the power management, so
+it should work normally, but still it's safer to keep the power up for
+the whole function.
 
-   warn: v4l2-test-formats.cpp(717): \
- 	TRY_FMT cannot handle an invalid pixelformat.
-   warn: v4l2-test-formats.cpp(718): \
- 	This may or may not be a problem. For more information see:
-   warn: v4l2-test-formats.cpp(719): \
- 	http://www.mail-archive.com/linux-media@vger.kernel.org/msg56550.html
-	...
-   test VIDIOC_TRY_FMT: FAIL
+Fixes: a73d511c4867 ("ALSA: hda/ca0132: Add unsol handler for DSP and jack detection")
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191213085111.22855-2-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-We need to make sure that the returns a valid pixel format in all
-instance. Based on the v4l2 framework convention drivers must return a
-valid pixel format when the requested pixel format is either invalid or
-not supported.
-
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ sound/pci/hda/patch_ca0132.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index de24effd984f..ca6629ccf82d 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -330,20 +330,25 @@ enum {
- };
+--- a/sound/pci/hda/patch_ca0132.c
++++ b/sound/pci/hda/patch_ca0132.c
+@@ -4424,12 +4424,14 @@ static void ca0132_process_dsp_response(
+ 	struct ca0132_spec *spec = codec->spec;
  
- /* find our format description corresponding to the passed v4l2_format */
--static struct vpe_fmt *find_format(struct v4l2_format *f)
-+static struct vpe_fmt *__find_format(u32 fourcc)
- {
- 	struct vpe_fmt *fmt;
- 	unsigned int k;
- 
- 	for (k = 0; k < ARRAY_SIZE(vpe_formats); k++) {
- 		fmt = &vpe_formats[k];
--		if (fmt->fourcc == f->fmt.pix.pixelformat)
-+		if (fmt->fourcc == fourcc)
- 			return fmt;
+ 	codec_dbg(codec, "ca0132_process_dsp_response\n");
++	snd_hda_power_up_pm(codec);
+ 	if (spec->wait_scp) {
+ 		if (dspio_get_response_data(codec) >= 0)
+ 			spec->wait_scp = 0;
  	}
  
- 	return NULL;
+ 	dspio_clear_response_queue(codec);
++	snd_hda_power_down_pm(codec);
  }
  
-+static struct vpe_fmt *find_format(struct v4l2_format *f)
-+{
-+	return __find_format(f->fmt.pix.pixelformat);
-+}
-+
- /*
-  * there is one vpe_dev structure in the driver, it is shared by
-  * all instances.
-@@ -1434,9 +1439,9 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
- 	int i, depth, depth_bytes;
- 
- 	if (!fmt || !(fmt->types & type)) {
--		vpe_err(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
-+		vpe_dbg(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
- 			pix->pixelformat);
--		return -EINVAL;
-+		fmt = __find_format(V4L2_PIX_FMT_YUYV);
- 	}
- 
- 	if (pix->field != V4L2_FIELD_NONE && pix->field != V4L2_FIELD_ALTERNATE)
--- 
-2.20.1
-
+ static void hp_callback(struct hda_codec *codec, struct hda_jack_callback *cb)
 
 
