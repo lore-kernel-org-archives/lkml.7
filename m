@@ -2,153 +2,144 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49ADBC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0034C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DF2D20863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:36:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Pic/0Amy"
+	by mail.kernel.org (Postfix) with ESMTP id 8F34D20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725972AbgABVgZ (ORCPT
+        id S1726089AbgABVhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 16:36:25 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:41366 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgABVgZ (ORCPT
+        Thu, 2 Jan 2020 16:37:08 -0500
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:54424 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725851AbgABVhI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 16:36:25 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 002LYO4A092326;
-        Thu, 2 Jan 2020 21:36:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=WdbEvlXPNO8UciqSpYhraRuue7z62HSL2d4h0PKjj0M=;
- b=Pic/0AmyVOQqpaJP47OGOE+N+YaQDgPmPN3c1FN3MrPAtdgvL2Zx9zq+KsgjSNS0XU7/
- mQXD4+g7v1Fwm4ircbhTWiMnox+0G1TSz1v/rBhtX2Va3fH8/kCGCdUDtmRfsDuGvihQ
- X23FUNrMdSKX42iBqugsOGJ/pLr+M2cWBjv3XIGT+FW6D6wuOd5OaYbrODgA/sZE22aO
- IBCCzBcmxRJIfHLMoIOLLNjLdu6XCGXHFtrIYbp5dRldN+fIhh6ThDL8/KjoCiTqohCI
- 7uvvbjqUiyeg8KPUHixyffgQqHkaRmtkOzQxs4pcRkCiOy1+/dLVmCqOp19sN4Kxl5xj xw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2x5xftsprx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Jan 2020 21:36:18 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 002LXoXD033160;
-        Thu, 2 Jan 2020 21:36:18 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2x8gut8g6q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Jan 2020 21:36:17 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 002LaE0S011410;
-        Thu, 2 Jan 2020 21:36:14 GMT
-Received: from localhost (/10.145.178.64)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 02 Jan 2020 13:36:14 -0800
-Date:   Thu, 2 Jan 2020 13:36:12 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Naohiro Aota <Naohiro.Aota@wdc.com>,
-        Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH v3 1/2] fs: New zonefs file system
-Message-ID: <20200102213612.GD1508633@magnolia>
-References: <20191224020615.134668-1-damien.lemoal@wdc.com>
- <20191224020615.134668-2-damien.lemoal@wdc.com>
- <20191224044001.GA2982727@magnolia>
- <BYAPR04MB5816B3322FD95BD987A982C1E7280@BYAPR04MB5816.namprd04.prod.outlook.com>
- <BYAPR04MB58167AD3E7519632746CDE72E7280@BYAPR04MB5816.namprd04.prod.outlook.com>
- <BYAPR04MB58160982BF645C23505BA085E7280@BYAPR04MB5816.namprd04.prod.outlook.com>
+        Thu, 2 Jan 2020 16:37:08 -0500
+X-IronPort-AV: E=Sophos;i="5.69,388,1571695200"; 
+   d="scan'208";a="429721732"
+Received: from vir91-18_migr-88-121-247-124.fbx.proxad.net (HELO [192.168.0.4]) ([88.121.247.124])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/AES128-SHA; 02 Jan 2020 22:37:05 +0100
+Subject: Re: [PATCH V6 0/7] ACPI: Support Generic Initiator proximity domains
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     linux-mm@kvack.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        x86@kernel.org, Keith Busch <kbusch@kernel.org>,
+        jglisse@redhat.com, "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        linuxarm@huawei.com, Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tao Xu <tao3.xu@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+References: <20191216153809.105463-1-Jonathan.Cameron@huawei.com>
+ <dc5f5502-09c6-d476-db0e-0af3412bb031@gmail.com>
+ <20191218145041.00005a11@Huawei.com>
+ <1867024e-b0c4-c291-7190-262cc4b297a8@gmail.com>
+ <20200102152604.000039f1@Huawei.com>
+From:   Brice Goglin <brice.goglin@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=brice.goglin@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <b428d231-4879-4462-ac42-900b5d094eee@gmail.com>
+Date:   Thu, 2 Jan 2020 22:37:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BYAPR04MB58160982BF645C23505BA085E7280@BYAPR04MB5816.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001020174
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001020174
+In-Reply-To: <20200102152604.000039f1@Huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 25, 2019 at 08:21:58AM +0000, Damien Le Moal wrote:
-> On 2019/12/25 16:20, Damien Le Moal wrote:
-> > On 2019/12/25 15:05, Damien Le Moal wrote:
-> >>>> +		inode->i_mode = S_IFREG;
-> >>>
-> >>> i_mode &= ~S_IRWXUGO; ?
-> >>
-> >> Yes, indeed that is better. checkpatch.pl does spit out a warning if one
-> >> uses the S_Ixxx macros though. See below.
-> > 
-> > Please disregard this comment. checkpatch is fine. For some reasons I
-> > had warnings in the past but they are now gone. So using the macros
-> > instead of the harder to read hard-coded values.
-> 
-> Retracting this... My apologies for the noise.
-> 
-> Checkpatch does complain about the use of symbolic permissions:
-> 
-> WARNING: Symbolic permissions 'S_IRWXUGO' are not preferred. Consider
-> using octal permissions '0777'.
-> #657: FILE: fs/zonefs/super.c:400:
-> +               inode->i_mode &= ~S_IRWXUGO;
-> 
-> I do not understand why this would be a problem. I still went ahead and
-> used the macros as I find the code more readable using them. Please let
-> me know if that is not recommended (checking the code, not surprisingly,
-> many FS use these macros).
+Le 02/01/2020 à 16:27, Jonathan Cameron a écrit :
+>
+>> However the HMAT table gets ignored because find_mem_target() fails in
+>> hmat_parse_proximity_domain(). The target should have been allocated in
+>> alloc_memory_target() which is called in srat_parse_mem_affinity(), but
+>> it seems to me that this function isn't called for GI nodes. Or should
+>> SRAT also contain a normal Memory node with same PM as the GI?
+>>
+> Hi Brice,
+>
+> Yes you should see a node with 0kB memory.  Same as you get for a processor
+> only node I believe.
+>
+> srat_parse_mem_affinity shouldn't call alloc_memory_target for the GI nodes
+> as they don't have any memory.   The hmat table should only refer to
+> GI domains as initiators.  Just to check, do you have them listed as
+> a target node?  Or perhaps in some hmat proximity entry as memory_PD?
+>
 
-/me shrugs, I guess we're not supposed to use S_* in code.  Sorry about
-the unnecessary churn. :/
+Thanks, I finally got things to work. I am on x86. It's a dual-socket
+machine with SubNUMA clusters (2 nodes per socket) and NVDIMMs (one
+dax-kmem node per socket). Before adding a GI, initiators look like this:
 
---D
+node0 -> node0 and node4
 
-> > 
-> >>
-> >>>
-> >>> Note that clearing the mode flags won't prevent programs with an
-> >>> existing writable fd from being able to call write().  I'd imagine that
-> >>> they'd hit EIO pretty fast though, so that might not matter.
-> >>>
-> >>>> +		zone->wp = zone->start;
-> >>>> +	} else if (zone->cond == BLK_ZONE_COND_READONLY) {
-> >>>> +		inode->i_flags |= S_IMMUTABLE;
-> >>>> +		inode->i_mode &= ~(0222); /* S_IWUGO */
-> >>>
-> >>> Might as well just use S_IWUGO directly here?
-> > 
-> > Yes, I did in v4.
-> > 
-> >> Because checkpatch spits out a warning if I do. I would prefer using the
-> >> macro as I find it much easier to read. Should I just ignore checkpatch
-> >> warning ?
-> > 
-> > My mistake. No warnings :)
-> > 
-> > 
-> 
-> 
-> -- 
-> Damien Le Moal
-> Western Digital Research
+node1 -> node1 and node5
+
+node2 -> node2 and node4
+
+node3 -> node3 and node5
+
+I added a GI with faster access to node0, node2, node4 (first socket).
+
+The GI node becomes an access0 initiator for node4, and node0 and node2
+remain access1 initiators.
+
+The GI node doesn't become access0 initiator for node0 and node2, likely
+because of this test :
+
+        /*
+         * If the Address Range Structure provides a local processor pxm, link
+         * only that one. Otherwise, find the best performance attributes and
+         * register all initiators that match.
+         */
+        if (target->processor_pxm != PXM_INVAL) {
+
+I guess I should split node0-3 into separate CPU nodes and memory nodes
+in SRAT?
+
+Brice
+
+
+
+
