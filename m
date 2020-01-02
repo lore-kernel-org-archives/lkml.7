@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C87C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F274AC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D841221835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C85C621835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004675;
-	bh=eWf9WbLF7nulpcJC+82Dx0PCDNXNjLHUHyQVz1FSm/I=;
+	s=default; t=1578004677;
+	bh=paQpmdQsdw6LFgUXfXbP6a8cEOW5xD5LLnSEsbHO1Ms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qoxpTKzZsGe0fdNMmFPYZi13yF997SoD3SIfmpKQPcWx2YfebJ+m68ltHDXSNTrWF
-	 qRCNGkoSWxNjFwaJTTXI1Io1hk9XVRtXtR7Kw0FZUlUPgzGkRSdPrg7kCK+WHF6JGZ
-	 jOnn6J61c6sXLi/2g09VL9XCJBIY7QZmJUbzFnl0=
+	b=Lrey2O6jSEhV5bYXRj30L/oihFacHJJpRgjaG/75WgRDAPYB8DdqNq0N8hwXreLxQ
+	 VhERBluAgy+tlRV6XLRbh7M0dhzjrFnp2XLwg9f3AQhPPhDizkc/YFQTEp9q0kl6lO
+	 +BNqHOFYZYmHSaJNAg5ltbhHOVuNdE3S1lxxhdFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731018AbgABWhy (ORCPT
+        id S1731164AbgABWh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:37:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50884 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:37:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731142AbgABWhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:37:50 -0500
+        id S1731148AbgABWhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:37:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D72A20863;
-        Thu,  2 Jan 2020 22:37:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4BF220866;
+        Thu,  2 Jan 2020 22:37:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004669;
-        bh=eWf9WbLF7nulpcJC+82Dx0PCDNXNjLHUHyQVz1FSm/I=;
+        s=default; t=1578004672;
+        bh=paQpmdQsdw6LFgUXfXbP6a8cEOW5xD5LLnSEsbHO1Ms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wrZeueB+58vykrqnrJZZMe18teVH8wREIahqLQ/KYLvwXbts9J3ECOBYg5vUhMTHO
-         NFM1KpxibxSmRp/VlXZlkoPO5PTTMyLARwgepnwTkkwO6MFTGNqVsStSqQGtQ6jYuj
-         kwuQXXipfX+rhF322+dR5/SYVStg62jnYSkpsNqE=
+        b=gtH7Q9RdVM5Hs/xk9M/ka9S1p4kw/26YP8IpHX3BEzQdseehevqRmTk0PichKCNvX
+         MSfN7NqqRYFdGIXREFfFeQKUt2rMpW8y1Nmsf7GDI3hjD8Fn/JrekxSAjnq97l5+26
+         GgtesThF5flKDFFa97yGIJhIg8E06SzYvlY6z6V8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 103/137] scsi: lpfc: Fix duplicate unreg_rpi error in port offline flow
-Date:   Thu,  2 Jan 2020 23:07:56 +0100
-Message-Id: <20200102220600.928909168@linuxfoundation.org>
+Subject: [PATCH 4.4 104/137] clk: qcom: Allow constant ratio freq tables for rcg
+Date:   Thu,  2 Jan 2020 23:07:57 +0100
+Message-Id: <20200102220601.078765262@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -61,52 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit 7cfd5639d99bec0d27af089d0c8c114330e43a72 ]
+[ Upstream commit efd164b5520afd6fb2883b68e0d408a7de29c491 ]
 
-If the driver receives a login that is later then LOGO'd by the remote port
-(aka ndlp), the driver, upon the completion of the LOGO ACC transmission,
-will logout the node and unregister the rpi that is being used for the
-node.  As part of the unreg, the node's rpi value is replaced by the
-LPFC_RPI_ALLOC_ERROR value.  If the port is subsequently offlined, the
-offline walks the nodes and ensures they are logged out, which possibly
-entails unreg'ing their rpi values.  This path does not validate the node's
-rpi value, thus doesn't detect that it has been unreg'd already.  The
-replaced rpi value is then used when accessing the rpi bitmask array which
-tracks active rpi values.  As the LPFC_RPI_ALLOC_ERROR value is not a valid
-index for the bitmask, it may fault the system.
+Some RCGs (the gfx_3d_src_clk in msm8998 for example) are basically just
+some constant ratio from the input across the entire frequency range.  It
+would be great if we could specify the frequency table as a single entry
+constant ratio instead of a long list, ie:
 
-Revise the rpi release code to detect when the rpi value is the replaced
-RPI_ALLOC_ERROR value and ignore further release steps.
+	{ .src = P_GPUPLL0_OUT_EVEN, .pre_div = 3 },
+        { }
 
-Link: https://lore.kernel.org/r/20191105005708.7399-2-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+So, lets support that.
+
+We need to fix a corner case in qcom_find_freq() where if the freq table
+is non-null, but has no frequencies, we end up returning an "entry" before
+the table array, which is bad.  Then, we need ignore the freq from the
+table, and instead base everything on the requested freq.
+
+Suggested-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Link: https://lkml.kernel.org/r/20191031185715.15504-1-jeffrey.l.hugo@gmail.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/clk/qcom/clk-rcg2.c | 2 ++
+ drivers/clk/qcom/common.c   | 3 +++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 9b8867c023b9..065fdc17bbfb 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -15792,6 +15792,13 @@ lpfc_sli4_alloc_rpi(struct lpfc_hba *phba)
- static void
- __lpfc_sli4_free_rpi(struct lpfc_hba *phba, int rpi)
- {
-+	/*
-+	 * if the rpi value indicates a prior unreg has already
-+	 * been done, skip the unreg.
-+	 */
-+	if (rpi == LPFC_RPI_ALLOC_ERROR)
-+		return;
+diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
+index b544bb302f79..350a01f74870 100644
+--- a/drivers/clk/qcom/clk-rcg2.c
++++ b/drivers/clk/qcom/clk-rcg2.c
+@@ -196,6 +196,8 @@ static int _freq_tbl_determine_rate(struct clk_hw *hw,
+ 	p = clk_hw_get_parent_by_index(hw, index);
+ 	if (clk_flags & CLK_SET_RATE_PARENT) {
+ 		if (f->pre_div) {
++			if (!rate)
++				rate = req->rate;
+ 			rate /= 2;
+ 			rate *= f->pre_div + 1;
+ 		}
+diff --git a/drivers/clk/qcom/common.c b/drivers/clk/qcom/common.c
+index 8fa477293ae0..d2f26577f5c0 100644
+--- a/drivers/clk/qcom/common.c
++++ b/drivers/clk/qcom/common.c
+@@ -36,6 +36,9 @@ struct freq_tbl *qcom_find_freq(const struct freq_tbl *f, unsigned long rate)
+ 	if (!f)
+ 		return NULL;
+ 
++	if (!f->freq)
++		return f;
 +
- 	if (test_and_clear_bit(rpi, phba->sli4_hba.rpi_bmask)) {
- 		phba->sli4_hba.rpi_count--;
- 		phba->sli4_hba.max_cfg_param.rpi_used--;
+ 	for (; f->freq; f++)
+ 		if (rate <= f->freq)
+ 			return f;
 -- 
 2.20.1
 
