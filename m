@@ -2,106 +2,86 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 048ADC3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F57C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D89E4206DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 527F524125
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:06:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgABJEu (ORCPT
+        id S1727922AbgABJGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 04:04:50 -0500
-Received: from mga06.intel.com ([134.134.136.31]:6078 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727842AbgABJEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 04:04:49 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 01:04:49 -0800
-X-IronPort-AV: E=Sophos;i="5.69,386,1571727600"; 
-   d="scan'208";a="214098037"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 01:04:45 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list\:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list\:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v2 1/5] pinctrl: Allow modules to use pinctrl_[un]register_mappings
-In-Reply-To: <CACRpkdaXFSJVkWJGzsVcvbUA9gpgP0Vbkwf1H-HWw8s35R9XYQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20191216205122.1850923-1-hdegoede@redhat.com> <20191216205122.1850923-2-hdegoede@redhat.com> <CACRpkdaXFSJVkWJGzsVcvbUA9gpgP0Vbkwf1H-HWw8s35R9XYQ@mail.gmail.com>
-Date:   Thu, 02 Jan 2020 11:04:43 +0200
-Message-ID: <875zhuut3o.fsf@intel.com>
+        Thu, 2 Jan 2020 04:06:01 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:36022 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727842AbgABJGA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 04:06:00 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id C7E8A20027;
+        Thu,  2 Jan 2020 10:05:55 +0100 (CET)
+Date:   Thu, 2 Jan 2020 10:05:54 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>, lee.jones@linaro.org
+Cc:     boris.brezillon@bootlin.com, airlied@linux.ie,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        lee.jones@linaro.org, peda@axentia.se,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] fixes for atmel-hlcdc
+Message-ID: <20200102090554.GB29446@ravnborg.org>
+References: <1576672109-22707-1-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576672109-22707-1-git-send-email-claudiu.beznea@microchip.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=MpWoGPNM3uDNEO5XxNkA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Dec 2019, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Mon, Dec 16, 2019 at 9:51 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
->> Currently only the drivers/pinctrl/devicetree.c code allows registering
->> pinctrl-mappings which may later be unregistered, all other mappings
->> are assumed to be permanent.
->>
->> Non-dt platforms may also want to register pinctrl mappings from code which
->> is build as a module, which requires being able to unregister the mapping
->> when the module is unloaded to avoid dangling pointers.
->>
->> To allow unregistering the mappings the devicetree code uses 2 internal
->> functions: pinctrl_register_map and pinctrl_unregister_map.
->>
->> pinctrl_register_map allows the devicetree code to tell the core to
->> not memdup the mappings as it retains ownership of them and
->> pinctrl_unregister_map does the unregistering, note this only works
->> when the mappings where not memdupped.
->>
->> The only code relying on the memdup/shallow-copy done by
->> pinctrl_register_mappings is arch/arm/mach-u300/core.c this commit
->> replaces the __initdata with const, so that the shallow-copy is no
->> longer necessary.
->>
->> After that we can get rid of the internal pinctrl_unregister_map function
->> and just use pinctrl_register_mappings directly everywhere.
->>
->> This commit also renames pinctrl_unregister_map to
->> pinctrl_unregister_mappings so that its naming matches its
->> pinctrl_register_mappings counter-part and exports it.
->>
->> Together these 2 changes will allow non-dt platform code to
->> register pinctrl-mappings from modules without breaking things on
->> module unload (as they can now unregister the mapping on unload).
->>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->
-> This v2 works fine for me, I applied it to this immutable branch in the
-> pinctrl tree:
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=ib-pinctrl-unreg-mappings
->
-> And pulled that into the pinctrl "devel" branch for v5.6.
->
-> Please pull this immutable branch into the Intel DRM tree and apply
-> the rest of the stuff on top!
+Hi Lee.
 
-Thanks, pulled to drm-intel-next-queued.
+How do de handle the two mfd related patches?
 
-BR,
-Jani.
+> I have few fixes for atmel-hlcdc driver in this series as well
+> as two reverts.
+> Revert "drm: atmel-hlcdc: enable sys_clk during initalization." is
+> due to the fix in in patch 2/5.
+> 
+> Thank you,
+> Claudiu Beznea
+> 
+> Changes in v3:
+> - changes dev_err() message in patch 4/6
+> - collect Acked-by tags
+> 
+> Changes in v2:
+> - introduce patch 3/6
+> - use dev_err() inpatch 4/6
+> - introduce patch 5/6 instead of reverting commit f6f7ad323461
+>   ("drm/atmel-hlcdc: allow selecting a higher pixel-clock than requested")
+> 
+> Claudiu Beznea (5):
+>   drm: atmel-hlcdc: use double rate for pixel clock only if supported
+>   drm: atmel-hlcdc: enable clock before configuring timing engine
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+>   mfd: atmel-hlcdc: add struct device member to struct
+>     atmel_hlcdc_regmap
+>   mfd: atmel-hlcdc: return in case of error
+
+Would it be OK to apply the to drm-misc-next, or shal they go in via
+your mfd tree?
+
+	Sam
