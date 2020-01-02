@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC881C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C87C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9672E20863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D841221835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004673;
-	bh=7okkSXIfIf9KjaBim2ENH6q5FnVJlRWFF/g9iz6puYw=;
+	s=default; t=1578004675;
+	bh=eWf9WbLF7nulpcJC+82Dx0PCDNXNjLHUHyQVz1FSm/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EPuxJLuE5Olzjw4kgL07clvzDFQFRtydzon6ljyo8tI2E3dhcfrdVNFuio9Ax1fES
-	 jc9e1B+/HPipCl448/7qsLTSLSk1lpnyPRLKqM08CEu3WzjyB3quRkQSM/KZ4oJLoE
-	 jfgp6dLC+5weaOljktVHNDOdmbSewWB4KnJxAZug=
+	b=qoxpTKzZsGe0fdNMmFPYZi13yF997SoD3SIfmpKQPcWx2YfebJ+m68ltHDXSNTrWF
+	 qRCNGkoSWxNjFwaJTTXI1Io1hk9XVRtXtR7Kw0FZUlUPgzGkRSdPrg7kCK+WHF6JGZ
+	 jOnn6J61c6sXLi/2g09VL9XCJBIY7QZmJUbzFnl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731150AbgABWhw (ORCPT
+        id S1731018AbgABWhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:37:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50758 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:37:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731132AbgABWhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:37:47 -0500
+        id S1731142AbgABWhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:37:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3DF721835;
-        Thu,  2 Jan 2020 22:37:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D72A20863;
+        Thu,  2 Jan 2020 22:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004667;
-        bh=7okkSXIfIf9KjaBim2ENH6q5FnVJlRWFF/g9iz6puYw=;
+        s=default; t=1578004669;
+        bh=eWf9WbLF7nulpcJC+82Dx0PCDNXNjLHUHyQVz1FSm/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wAeYzDJvT0hIFQVReBzuYzabSZP6eJVJL0HX97Qgmv2psxXhsVxEtbLpohLAI7A1K
-         K1B9s1DYjYmIGbGhT29D0T24GsiogNoLnRpSKsPlVzEtf2qk0O4cWTkD2aOfTyOj5P
-         p+9Ar5x/Q1q0wZ/uMsWD4rvsil3AZ+mLpHidVykA=
+        b=wrZeueB+58vykrqnrJZZMe18teVH8wREIahqLQ/KYLvwXbts9J3ECOBYg5vUhMTHO
+         NFM1KpxibxSmRp/VlXZlkoPO5PTTMyLARwgepnwTkkwO6MFTGNqVsStSqQGtQ6jYuj
+         kwuQXXipfX+rhF322+dR5/SYVStg62jnYSkpsNqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Hannes Reinecke <hare@suse.com>,
-        Douglas Gilbert <dgilbert@interlog.com>,
-        Bart Van Assche <bvanassche@acm.org>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 102/137] scsi: tracing: Fix handling of TRANSFER LENGTH == 0 for READ(6) and WRITE(6)
-Date:   Thu,  2 Jan 2020 23:07:55 +0100
-Message-Id: <20200102220600.735565732@linuxfoundation.org>
+Subject: [PATCH 4.4 103/137] scsi: lpfc: Fix duplicate unreg_rpi error in port offline flow
+Date:   Thu,  2 Jan 2020 23:07:56 +0100
+Message-Id: <20200102220600.928909168@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -63,52 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit f6b8540f40201bff91062dd64db8e29e4ddaaa9d ]
+[ Upstream commit 7cfd5639d99bec0d27af089d0c8c114330e43a72 ]
 
-According to SBC-2 a TRANSFER LENGTH field of zero means that 256 logical
-blocks must be transferred. Make the SCSI tracing code follow SBC-2.
+If the driver receives a login that is later then LOGO'd by the remote port
+(aka ndlp), the driver, upon the completion of the LOGO ACC transmission,
+will logout the node and unregister the rpi that is being used for the
+node.  As part of the unreg, the node's rpi value is replaced by the
+LPFC_RPI_ALLOC_ERROR value.  If the port is subsequently offlined, the
+offline walks the nodes and ensures they are logged out, which possibly
+entails unreg'ing their rpi values.  This path does not validate the node's
+rpi value, thus doesn't detect that it has been unreg'd already.  The
+replaced rpi value is then used when accessing the rpi bitmask array which
+tracks active rpi values.  As the LPFC_RPI_ALLOC_ERROR value is not a valid
+index for the bitmask, it may fault the system.
 
-Fixes: bf8162354233 ("[SCSI] add scsi trace core functions and put trace points")
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Douglas Gilbert <dgilbert@interlog.com>
-Link: https://lore.kernel.org/r/20191105215553.185018-1-bvanassche@acm.org
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Revise the rpi release code to detect when the rpi value is the replaced
+RPI_ALLOC_ERROR value and ignore further release steps.
+
+Link: https://lore.kernel.org/r/20191105005708.7399-2-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_trace.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/scsi/lpfc/lpfc_sli.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/scsi/scsi_trace.c b/drivers/scsi/scsi_trace.c
-index 08bb47b53bc3..551fd0329bca 100644
---- a/drivers/scsi/scsi_trace.c
-+++ b/drivers/scsi/scsi_trace.c
-@@ -29,15 +29,18 @@ static const char *
- scsi_trace_rw6(struct trace_seq *p, unsigned char *cdb, int len)
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index 9b8867c023b9..065fdc17bbfb 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -15792,6 +15792,13 @@ lpfc_sli4_alloc_rpi(struct lpfc_hba *phba)
+ static void
+ __lpfc_sli4_free_rpi(struct lpfc_hba *phba, int rpi)
  {
- 	const char *ret = trace_seq_buffer_ptr(p);
--	sector_t lba = 0, txlen = 0;
-+	u32 lba = 0, txlen;
- 
- 	lba |= ((cdb[1] & 0x1F) << 16);
- 	lba |=  (cdb[2] << 8);
- 	lba |=   cdb[3];
--	txlen = cdb[4];
 +	/*
-+	 * From SBC-2: a TRANSFER LENGTH field set to zero specifies that 256
-+	 * logical blocks shall be read (READ(6)) or written (WRITE(6)).
++	 * if the rpi value indicates a prior unreg has already
++	 * been done, skip the unreg.
 +	 */
-+	txlen = cdb[4] ? cdb[4] : 256;
- 
--	trace_seq_printf(p, "lba=%llu txlen=%llu",
--			 (unsigned long long)lba, (unsigned long long)txlen);
-+	trace_seq_printf(p, "lba=%u txlen=%u", lba, txlen);
- 	trace_seq_putc(p, 0);
- 
- 	return ret;
++	if (rpi == LPFC_RPI_ALLOC_ERROR)
++		return;
++
+ 	if (test_and_clear_bit(rpi, phba->sli4_hba.rpi_bmask)) {
+ 		phba->sli4_hba.rpi_count--;
+ 		phba->sli4_hba.max_cfg_param.rpi_used--;
 -- 
 2.20.1
 
