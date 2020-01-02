@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8DAC3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B19BC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C1E220866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2F9120866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:49:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005389;
-	bh=PaPRZjE3RkHrDJQtqnusFNMR3lGJLhG4F8Z9RlBquHE=;
+	s=default; t=1578005393;
+	bh=NUPF5Gpjm26pdH3c01yife+I/Qz3oOyID/puu7PriXo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tnwrUgOjOPjiy8ckQaXtk5kza1mMkUsej/1eSpuyhB1D0FPQV7tbPwW1/JbWN8Nn4
-	 Cp6Crg9sLo0ieLbNC5RH51uG0zlPbZmCmf2rVjxwcx10gsZedvXkmLqdzNEFf40aAI
-	 bExGfc7Oo5xH1uafWC3HU0iAbID0jgKQddjfFUW4=
+	b=cTfpk47q2nt8VJRrB+pbo1gkjg1itHLU1ndRnkC19bcVlXoZZ87ATgxm/l+keeHbw
+	 m4x6eHMAo40xTIFIHxLm1W+CRdsKJZYNOLGPkYeS6KBnGeQn/+XqzDL0bVKLD59XV6
+	 RyYkc4cv4XjtpWn0FwfqWPyvGH0TFaiWFSS4FJt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729634AbgABW0V (ORCPT
+        id S1731213AbgABWtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:26:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53184 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:49:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729617AbgABW0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:26:14 -0500
+        id S1729076AbgABW0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:26:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F17D822525;
-        Thu,  2 Jan 2020 22:26:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6590B21835;
+        Thu,  2 Jan 2020 22:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003973;
-        bh=PaPRZjE3RkHrDJQtqnusFNMR3lGJLhG4F8Z9RlBquHE=;
+        s=default; t=1578003975;
+        bh=NUPF5Gpjm26pdH3c01yife+I/Qz3oOyID/puu7PriXo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vDFz1AWLDtDPDkvTQsd/sj17cEiquaHv5geGzvG8i1N435y18zSu4bW7p8d9fSk1G
-         K1UgUvHEX0tP1BRTsnjcwhAO5UGQMu7+0ZR+3lU8VmeUAtfulIi6OI3j2pdl+mPm/U
-         kURCPwHcsAEj3nU+m5o6aGXgWfuiwzJl9J06N6rw=
+        b=CM9f43j6P4DlQbfnq/XgcOIy4X0qTl6b3CJbdctRQgfDC4lemiXOU5S2ePr31N5g/
+         GDFWbLRINEkv4IuR5oRRrsxT29uOAQLzYNQBVw+8FtHum+OwFpTIGAQ3PLtYemylbq
+         Z2bxfu6epzHQ0pwZe2NBRevtsnwKu6h7h8Iby9ow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladis Dronov <vdronov@redhat.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Stephen Johnston <sjohnsto@redhat.com>,
-        Vern Lovejoy <vlovejoy@redhat.com>
-Subject: [PATCH 4.14 76/91] ptp: fix the race between the release of ptp_clock and cdev
-Date:   Thu,  2 Jan 2020 23:07:58 +0100
-Message-Id: <20200102220448.132395082@linuxfoundation.org>
+        stable@vger.kernel.org, Antonio Messina <amessina@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 77/91] udp: fix integer overflow while computing available space in sk_rcvbuf
+Date:   Thu,  2 Jan 2020 23:07:59 +0100
+Message-Id: <20200102220448.435931821@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -62,317 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladis Dronov <vdronov@redhat.com>
+From: Antonio Messina <amessina@google.com>
 
-[ Upstream commit a33121e5487b424339636b25c35d3a180eaa5f5e ]
+[ Upstream commit feed8a4fc9d46c3126fb9fcae0e9248270c6321a ]
 
-In a case when a ptp chardev (like /dev/ptp0) is open but an underlying
-device is removed, closing this file leads to a race. This reproduces
-easily in a kvm virtual machine:
+When the size of the receive buffer for a socket is close to 2^31 when
+computing if we have enough space in the buffer to copy a packet from
+the queue to the buffer we might hit an integer overflow.
 
-ts# cat openptp0.c
-int main() { ... fp = fopen("/dev/ptp0", "r"); ... sleep(10); }
-ts# uname -r
-5.5.0-rc3-46cf053e
-ts# cat /proc/cmdline
-... slub_debug=FZP
-ts# modprobe ptp_kvm
-ts# ./openptp0 &
-[1] 670
-opened /dev/ptp0, sleeping 10s...
-ts# rmmod ptp_kvm
-ts# ls /dev/ptp*
-ls: cannot access '/dev/ptp*': No such file or directory
-ts# ...woken up
-[   48.010809] general protection fault: 0000 [#1] SMP
-[   48.012502] CPU: 6 PID: 658 Comm: openptp0 Not tainted 5.5.0-rc3-46cf053e #25
-[   48.014624] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), ...
-[   48.016270] RIP: 0010:module_put.part.0+0x7/0x80
-[   48.017939] RSP: 0018:ffffb3850073be00 EFLAGS: 00010202
-[   48.018339] RAX: 000000006b6b6b6b RBX: 6b6b6b6b6b6b6b6b RCX: ffff89a476c00ad0
-[   48.018936] RDX: fffff65a08d3ea08 RSI: 0000000000000247 RDI: 6b6b6b6b6b6b6b6b
-[   48.019470] ...                                              ^^^ a slub poison
-[   48.023854] Call Trace:
-[   48.024050]  __fput+0x21f/0x240
-[   48.024288]  task_work_run+0x79/0x90
-[   48.024555]  do_exit+0x2af/0xab0
-[   48.024799]  ? vfs_write+0x16a/0x190
-[   48.025082]  do_group_exit+0x35/0x90
-[   48.025387]  __x64_sys_exit_group+0xf/0x10
-[   48.025737]  do_syscall_64+0x3d/0x130
-[   48.026056]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[   48.026479] RIP: 0033:0x7f53b12082f6
-[   48.026792] ...
-[   48.030945] Modules linked in: ptp i6300esb watchdog [last unloaded: ptp_kvm]
-[   48.045001] Fixing recursive fault but reboot is needed!
+When an user set net.core.rmem_default to a value close to 2^31 UDP
+packets are dropped because of this overflow. This can be visible, for
+instance, with failure to resolve hostnames.
 
-This happens in:
+This can be fixed by casting sk_rcvbuf (which is an int) to unsigned
+int, similarly to how it is done in TCP.
 
-static void __fput(struct file *file)
-{   ...
-    if (file->f_op->release)
-        file->f_op->release(inode, file); <<< cdev is kfree'd here
-    if (unlikely(S_ISCHR(inode->i_mode) && inode->i_cdev != NULL &&
-             !(mode & FMODE_PATH))) {
-        cdev_put(inode->i_cdev); <<< cdev fields are accessed here
-
-Namely:
-
-__fput()
-  posix_clock_release()
-    kref_put(&clk->kref, delete_clock) <<< the last reference
-      delete_clock()
-        delete_ptp_clock()
-          kfree(ptp) <<< cdev is embedded in ptp
-  cdev_put
-    module_put(p->owner) <<< *p is kfree'd, bang!
-
-Here cdev is embedded in posix_clock which is embedded in ptp_clock.
-The race happens because ptp_clock's lifetime is controlled by two
-refcounts: kref and cdev.kobj in posix_clock. This is wrong.
-
-Make ptp_clock's sysfs device a parent of cdev with cdev_device_add()
-created especially for such cases. This way the parent device with its
-ptp_clock is not released until all references to the cdev are released.
-This adds a requirement that an initialized but not exposed struct
-device should be provided to posix_clock_register() by a caller instead
-of a simple dev_t.
-
-This approach was adopted from the commit 72139dfa2464 ("watchdog: Fix
-the race between the release of watchdog_core_data and cdev"). See
-details of the implementation in the commit 233ed09d7fda ("chardev: add
-helper function to register char devs with a struct device").
-
-Link: https://lore.kernel.org/linux-fsdevel/20191125125342.6189-1-vdronov@redhat.com/T/#u
-Analyzed-by: Stephen Johnston <sjohnsto@redhat.com>
-Analyzed-by: Vern Lovejoy <vlovejoy@redhat.com>
-Signed-off-by: Vladis Dronov <vdronov@redhat.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: Antonio Messina <amessina@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/ptp/ptp_clock.c     |   31 ++++++++++++++-----------------
- drivers/ptp/ptp_private.h   |    2 +-
- include/linux/posix-clock.h |   19 +++++++++++--------
- kernel/time/posix-clock.c   |   31 +++++++++++++------------------
- 4 files changed, 39 insertions(+), 44 deletions(-)
+ net/ipv4/udp.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/ptp/ptp_clock.c
-+++ b/drivers/ptp/ptp_clock.c
-@@ -175,9 +175,9 @@ static struct posix_clock_operations ptp
- 	.read		= ptp_read,
- };
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -1338,7 +1338,7 @@ int __udp_enqueue_schedule_skb(struct so
+ 	 * queue contains some other skb
+ 	 */
+ 	rmem = atomic_add_return(size, &sk->sk_rmem_alloc);
+-	if (rmem > (size + sk->sk_rcvbuf))
++	if (rmem > (size + (unsigned int)sk->sk_rcvbuf))
+ 		goto uncharge_drop;
  
--static void delete_ptp_clock(struct posix_clock *pc)
-+static void ptp_clock_release(struct device *dev)
- {
--	struct ptp_clock *ptp = container_of(pc, struct ptp_clock, clock);
-+	struct ptp_clock *ptp = container_of(dev, struct ptp_clock, dev);
- 
- 	mutex_destroy(&ptp->tsevq_mux);
- 	mutex_destroy(&ptp->pincfg_mux);
-@@ -222,7 +222,6 @@ struct ptp_clock *ptp_clock_register(str
- 	}
- 
- 	ptp->clock.ops = ptp_clock_ops;
--	ptp->clock.release = delete_ptp_clock;
- 	ptp->info = info;
- 	ptp->devid = MKDEV(major, index);
- 	ptp->index = index;
-@@ -249,15 +248,6 @@ struct ptp_clock *ptp_clock_register(str
- 	if (err)
- 		goto no_pin_groups;
- 
--	/* Create a new device in our class. */
--	ptp->dev = device_create_with_groups(ptp_class, parent, ptp->devid,
--					     ptp, ptp->pin_attr_groups,
--					     "ptp%d", ptp->index);
--	if (IS_ERR(ptp->dev)) {
--		err = PTR_ERR(ptp->dev);
--		goto no_device;
--	}
--
- 	/* Register a new PPS source. */
- 	if (info->pps) {
- 		struct pps_source_info pps;
-@@ -273,8 +263,18 @@ struct ptp_clock *ptp_clock_register(str
- 		}
- 	}
- 
--	/* Create a posix clock. */
--	err = posix_clock_register(&ptp->clock, ptp->devid);
-+	/* Initialize a new device of our class in our clock structure. */
-+	device_initialize(&ptp->dev);
-+	ptp->dev.devt = ptp->devid;
-+	ptp->dev.class = ptp_class;
-+	ptp->dev.parent = parent;
-+	ptp->dev.groups = ptp->pin_attr_groups;
-+	ptp->dev.release = ptp_clock_release;
-+	dev_set_drvdata(&ptp->dev, ptp);
-+	dev_set_name(&ptp->dev, "ptp%d", ptp->index);
-+
-+	/* Create a posix clock and link it to the device. */
-+	err = posix_clock_register(&ptp->clock, &ptp->dev);
- 	if (err) {
- 		pr_err("failed to create posix clock\n");
- 		goto no_clock;
-@@ -286,8 +286,6 @@ no_clock:
- 	if (ptp->pps_source)
- 		pps_unregister_source(ptp->pps_source);
- no_pps:
--	device_destroy(ptp_class, ptp->devid);
--no_device:
- 	ptp_cleanup_pin_groups(ptp);
- no_pin_groups:
- 	if (ptp->kworker)
-@@ -317,7 +315,6 @@ int ptp_clock_unregister(struct ptp_cloc
- 	if (ptp->pps_source)
- 		pps_unregister_source(ptp->pps_source);
- 
--	device_destroy(ptp_class, ptp->devid);
- 	ptp_cleanup_pin_groups(ptp);
- 
- 	posix_clock_unregister(&ptp->clock);
---- a/drivers/ptp/ptp_private.h
-+++ b/drivers/ptp/ptp_private.h
-@@ -41,7 +41,7 @@ struct timestamp_event_queue {
- 
- struct ptp_clock {
- 	struct posix_clock clock;
--	struct device *dev;
-+	struct device dev;
- 	struct ptp_clock_info *info;
- 	dev_t devid;
- 	int index; /* index into clocks.map */
---- a/include/linux/posix-clock.h
-+++ b/include/linux/posix-clock.h
-@@ -82,29 +82,32 @@ struct posix_clock_operations {
-  *
-  * @ops:     Functional interface to the clock
-  * @cdev:    Character device instance for this clock
-- * @kref:    Reference count.
-+ * @dev:     Pointer to the clock's device.
-  * @rwsem:   Protects the 'zombie' field from concurrent access.
-  * @zombie:  If 'zombie' is true, then the hardware has disappeared.
-- * @release: A function to free the structure when the reference count reaches
-- *           zero. May be NULL if structure is statically allocated.
-  *
-  * Drivers should embed their struct posix_clock within a private
-  * structure, obtaining a reference to it during callbacks using
-  * container_of().
-+ *
-+ * Drivers should supply an initialized but not exposed struct device
-+ * to posix_clock_register(). It is used to manage lifetime of the
-+ * driver's private structure. It's 'release' field should be set to
-+ * a release function for this private structure.
-  */
- struct posix_clock {
- 	struct posix_clock_operations ops;
- 	struct cdev cdev;
--	struct kref kref;
-+	struct device *dev;
- 	struct rw_semaphore rwsem;
- 	bool zombie;
--	void (*release)(struct posix_clock *clk);
- };
- 
- /**
-  * posix_clock_register() - register a new clock
-- * @clk:   Pointer to the clock. Caller must provide 'ops' and 'release'
-- * @devid: Allocated device id
-+ * @clk:   Pointer to the clock. Caller must provide 'ops' field
-+ * @dev:   Pointer to the initialized device. Caller must provide
-+ *         'release' field
-  *
-  * A clock driver calls this function to register itself with the
-  * clock device subsystem. If 'clk' points to dynamically allocated
-@@ -113,7 +116,7 @@ struct posix_clock {
-  *
-  * Returns zero on success, non-zero otherwise.
-  */
--int posix_clock_register(struct posix_clock *clk, dev_t devid);
-+int posix_clock_register(struct posix_clock *clk, struct device *dev);
- 
- /**
-  * posix_clock_unregister() - unregister a clock
---- a/kernel/time/posix-clock.c
-+++ b/kernel/time/posix-clock.c
-@@ -27,8 +27,6 @@
- 
- #include "posix-timers.h"
- 
--static void delete_clock(struct kref *kref);
--
- /*
-  * Returns NULL if the posix_clock instance attached to 'fp' is old and stale.
-  */
-@@ -138,7 +136,7 @@ static int posix_clock_open(struct inode
- 		err = 0;
- 
- 	if (!err) {
--		kref_get(&clk->kref);
-+		get_device(clk->dev);
- 		fp->private_data = clk;
- 	}
- out:
-@@ -154,7 +152,7 @@ static int posix_clock_release(struct in
- 	if (clk->ops.release)
- 		err = clk->ops.release(clk);
- 
--	kref_put(&clk->kref, delete_clock);
-+	put_device(clk->dev);
- 
- 	fp->private_data = NULL;
- 
-@@ -174,38 +172,35 @@ static const struct file_operations posi
- #endif
- };
- 
--int posix_clock_register(struct posix_clock *clk, dev_t devid)
-+int posix_clock_register(struct posix_clock *clk, struct device *dev)
- {
- 	int err;
- 
--	kref_init(&clk->kref);
- 	init_rwsem(&clk->rwsem);
- 
- 	cdev_init(&clk->cdev, &posix_clock_file_operations);
-+	err = cdev_device_add(&clk->cdev, dev);
-+	if (err) {
-+		pr_err("%s unable to add device %d:%d\n",
-+			dev_name(dev), MAJOR(dev->devt), MINOR(dev->devt));
-+		return err;
-+	}
- 	clk->cdev.owner = clk->ops.owner;
--	err = cdev_add(&clk->cdev, devid, 1);
-+	clk->dev = dev;
- 
--	return err;
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(posix_clock_register);
- 
--static void delete_clock(struct kref *kref)
--{
--	struct posix_clock *clk = container_of(kref, struct posix_clock, kref);
--
--	if (clk->release)
--		clk->release(clk);
--}
--
- void posix_clock_unregister(struct posix_clock *clk)
- {
--	cdev_del(&clk->cdev);
-+	cdev_device_del(&clk->cdev, clk->dev);
- 
- 	down_write(&clk->rwsem);
- 	clk->zombie = true;
- 	up_write(&clk->rwsem);
- 
--	kref_put(&clk->kref, delete_clock);
-+	put_device(clk->dev);
- }
- EXPORT_SYMBOL_GPL(posix_clock_unregister);
- 
+ 	spin_lock(&list->lock);
 
 
