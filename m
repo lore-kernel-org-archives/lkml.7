@@ -2,102 +2,126 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA6DC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 19:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F34E3C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 20:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F03A21655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 19:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C25AA21655
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 20:00:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="bh8Rm5/F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbgABT7U (ORCPT
+        id S1728587AbgABUAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 14:59:20 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:34537 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728297AbgABT7T (ORCPT
+        Thu, 2 Jan 2020 15:00:55 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35696 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728260AbgABUAz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 14:59:19 -0500
-Received: from mail-qt1-f170.google.com ([209.85.160.170]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MkEdF-1jTL8m3e4f-00kifh; Thu, 02 Jan 2020 20:59:18 +0100
-Received: by mail-qt1-f170.google.com with SMTP id w47so35440883qtk.4;
-        Thu, 02 Jan 2020 11:59:17 -0800 (PST)
-X-Gm-Message-State: APjAAAVsBkAL9t3XXzrBewL9njKi9g/4l3eoCPegtzBRQx6OTpGh8MCw
-        Z9kvLn96VbHIb/s66fsshFr97oRBaMdNmavfU68=
-X-Google-Smtp-Source: APXvYqyMexwubr905g8IFy5rPyKxmy5F8mo4h/FyF5+Eh+Q+KNUhRdx6WKOpGs5LIKlENSVsLmNfAAn4pjNodXYNVLY=
-X-Received: by 2002:ac8:47d3:: with SMTP id d19mr60247574qtr.142.1577995156713;
- Thu, 02 Jan 2020 11:59:16 -0800 (PST)
+        Thu, 2 Jan 2020 15:00:55 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so6747990wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 12:00:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=C/zqVBJss9FeKefd7C+16Ae2FlqoKun4UIZaiQyERGc=;
+        b=bh8Rm5/FVZosPDfz+Mw5ff9vf/2j572WpXz9+0Va/yBflPMsqI44Jg62X6+/AeFj3V
+         EQOKao/TAmkbp7yJsDnHSorYgfsmsL56FykZIR9KD9Auh8Fsw8QNNDLcYKCVg/9crTl2
+         LwAVJFQWG9hTjgUfWKh/qZiatAQDrsgMONkdM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=C/zqVBJss9FeKefd7C+16Ae2FlqoKun4UIZaiQyERGc=;
+        b=T/O7e0vn0Dk9V5r6aGwgdrDa6VPbUgcYYpWYgWmSHr0z1i5YOMxOwUS1Tihb69Rs3v
+         PQqTf173w0L4FCPjTomsFfdA+z6bCbTTq64O2ILzXcp1E+5QUdtCU64QJsgQBigm0W31
+         W9GZYzCEydx2uf0kFwwCFd51J4lh4uxHbEZeUUHoUVkKPyeLhu5TqTTP82pXeu45ELeu
+         mPZLc8MCXCSak/bp5plsWxP447KXk+LVeykioV3RoVMzR3FcB1aBMYq+I2w08ZR4E9PI
+         fJyxkuebaCelIegvHvOAb0jmmiyYg7dotpy/fcIGB8FPABwYok/rG7DjwGSjqvdV2Bxu
+         KzQw==
+X-Gm-Message-State: APjAAAXEWCiFsjoY+1VgMnoQVepLQ0wpn9bAuJjKITtXu6n8ORj88tub
+        89lPXrtEaqEOR2swpP6iLBRIgw==
+X-Google-Smtp-Source: APXvYqzbBWegsQESMIUakWIouetdLTOWbJmmDhnF1qFIOEZFCKKaMuyr8vQCuBQy7j9XFt+KfkRr9A==
+X-Received: by 2002:a7b:c183:: with SMTP id y3mr15283378wmi.45.1577995253252;
+        Thu, 02 Jan 2020 12:00:53 -0800 (PST)
+Received: from localhost ([2620:10d:c092:200::1:3256])
+        by smtp.gmail.com with ESMTPSA id n10sm56618651wrt.14.2020.01.02.12.00.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 12:00:52 -0800 (PST)
+Date:   Thu, 2 Jan 2020 20:00:52 +0000
+From:   Chris Down <chris@chrisdown.name>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com
+Subject: Re: [PATCH v2 1/2] tmpfs: Add per-superblock i_ino support
+Message-ID: <20200102200052.GA1181932@chrisdown.name>
+References: <cover.1577990599.git.chris@chrisdown.name>
+ <738b3d565fe7c65f41c38e439fe3cbfa14f87465.1577990599.git.chris@chrisdown.name>
+ <CAOQ4uxi0v4WL30gpedUbex-TD5wN8p8kCop_3VDYV0UBJGB21w@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200102172413.654385-1-amanieu@gmail.com> <20200102172413.654385-2-amanieu@gmail.com>
- <20200102175011.q7afo45nc2togtfh@wittgenstein> <CAK8P3a3a88e=hkzYG5mj=NuVQWMtyougkKzBznnn2y9ZoZfEGg@mail.gmail.com>
- <CA+y5pbTwsN6dUWQ+hAWpuo4c7418GV1RdpmKFiJW+cEu+ibGJw@mail.gmail.com>
-In-Reply-To: <CA+y5pbTwsN6dUWQ+hAWpuo4c7418GV1RdpmKFiJW+cEu+ibGJw@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 2 Jan 2020 20:59:00 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2nqRkEnkLD8she+d34UhP=FNWSZXf_47dM4+g-eZMJNw@mail.gmail.com>
-Message-ID: <CAK8P3a2nqRkEnkLD8she+d34UhP=FNWSZXf_47dM4+g-eZMJNw@mail.gmail.com>
-Subject: Re: [PATCH 1/7] arm64: Move __ARCH_WANT_SYS_CLONE3 definition to uapi headers
-To:     "Amanieu d'Antras" <amanieu@gmail.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:NAAa5NIq97OLTmzk7+wkiIlV6ntMsnPKSy62Uh3QFCN6mYMVhEc
- tiUyCwjtpDQ/7vNFvwwxZjo3QSbOSlq7KvOmx2M4FMbT489oKS41a1uFukF1HZUzD3EIa9D
- bUYgCFrqmdWKSJVOcD+7mG/GpFKlwdHz2vz/co9v17WpOVQV/BR6k3JvcS2uutbROPtlMFO
- mTzd2Ovb9jpxCkrid+mBw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VSMufNLHaao=:BSnmp30yY7PTpPxyySYwWw
- qx3y5ojoOmRKCGwNEwpNszm0yHjYCcc+g7MSr5p2Y0J0rMNVL+CFLhXCynKYSiRe+k2TkuenX
- TQkcvA3FHgQPE1CXOFKfG+OLSk5NPm2n4Gy0OTVztS3pvOgZuy5MkjMNVLsZpFUzQ0h1tlJY0
- BHE/0DHTMepOH062AjjWvC3+Gyju4hp5JlUb7xyAn6DEzvd6g80y/vQCPeCIimjgsbTRNky7h
- nSXM3RZxMuurWJTyU5XCEJYFgFkLgdCnjhbCYIC1bNTOCtjvJmfoRovfKz/lHvrwKiUQ6kYVR
- 4EAE12V5//qvQUH30D1gDcGdAV0ia7NpIXQiL+eCL5bG2v9sr506xUU9Y9S7kg9tjalhy+z7E
- o6keq+GkaIJZzNhPhTpdmFv4d9s6nHhGuBnJRt10a6IJ3eWEWCUtL/tNtFostrFAb8A8rBvn5
- 5N0gT0QosjbUSQ7/Ul40XEMr6tl/8EnaBETz3jq6bCXx/wgX2o/zHe/d96LtVCLi1IeI+qHue
- EcnG4d+KEkPvUD2PqE0Gus4rTmKsV56lnMfDp2autGqGlcw6SqYZEmX7GH5Uatc2OdSjPhLpv
- jdDBeox9gVbaBUDH7xqHz7AvIECGOWomyvbCEl/VzR4usBp+NPZezuzMIcHdv0nu6bIU3RlTB
- 8520lU6BhGIkjZovDHb0WMl0BqMJ7t8/EQS6adIsDkg62Zb8etZ1ig9vlCEtWecYeiT92ajqC
- 6MRVoGfgFSoCrfWU1mSmO343xJYkhUDn4xkK6baEEuLN5InlmCmF9u/V3jRFh/NbNYyBWJCCB
- kptQJK+o+x8jn0VSTr4B1VJvPVGfcaFnl1KsRoA17uPTosB3wT4MlDnwPqfpaj0FiSh967Zvg
- bW9NSgZaVDiGef75sDng==
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxi0v4WL30gpedUbex-TD5wN8p8kCop_3VDYV0UBJGB21w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 2, 2020 at 8:33 PM Amanieu d'Antras <amanieu@gmail.com> wrote:
->
-> On Thu, Jan 2, 2020 at 8:25 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Thu, Jan 2, 2020 at 6:50 PM Christian Brauner
-> > <christian.brauner@ubuntu.com> wrote:
-> > > On Thu, Jan 02, 2020 at 06:24:07PM +0100, Amanieu d'Antras wrote:
-> > > > Previously this was only defined in the internal headers which
-> > > > resulted in __NR_clone3 not being defined in the user headers.
-> > > >
-> > > > Signed-off-by: Amanieu d'Antras <amanieu@gmail.com>
-> > > > Cc: linux-arm-kernel@lists.infradead.org
-> > > > Cc: <stable@vger.kernel.org> # 5.3.x
-> > > > ---
-> > > >  arch/arm64/include/asm/unistd.h      | 1 -
-> > > >  arch/arm64/include/uapi/asm/unistd.h | 1 +
-> > > >  2 files changed, 1 insertion(+), 1 deletion(-)
-> >
-> > Good catch, this is clearly needed, but please make the patch change
-> > every copy of asm/unistd.h that defines this, not just the arm64 one.
->
-> Actually __ARCH_WANT_SYS_CLONE3 only needs to be in the uapi headers
-> for architectures that use the asm-generic/unistd.h header, which uses
-> it to guard the definition of __NR_clone3. Architectures not using the
-> asm-generic header don't need this define to export __NR_clone3. The
-> only other architecture with clone3 that uses the asm-generic header
-> is riscv, which already defines __ARCH_WANT_SYS_CLONE3 in the uapi
-> headers.
+Amir Goldstein writes:
+>Wouldn't it be easier to check max_inodes instead of passing this
+>use_sb_ino arg?
+>Is there any case where they *need* to differ?
 
-Ah, of course. The patch looks fine to me then.
+Hmm, I suppose probably not? In that case should I just check against 
+SB_KERNMOUNT, since max_inodes can only be 0 in that case?
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+>> @@ -3378,6 +3411,8 @@ enum shmem_param {
+>>         Opt_nr_inodes,
+>>         Opt_size,
+>>         Opt_uid,
+>> +       Opt_inode32,
+>> +       Opt_inode64,
+>
+>Does not belong to this patch..
+>
+>>  };
+>>
+>>  static const struct fs_parameter_spec shmem_param_specs[] = {
+>> @@ -3389,6 +3424,8 @@ static const struct fs_parameter_spec shmem_param_specs[] = {
+>>         fsparam_string("nr_inodes",     Opt_nr_inodes),
+>>         fsparam_string("size",          Opt_size),
+>>         fsparam_u32   ("uid",           Opt_uid),
+>> +       fsparam_flag  ("inode32",       Opt_inode32),
+>> +       fsparam_flag  ("inode64",       Opt_inode64),
+>
+>Ditto
+
+Bleh, I'll fix this and send v3.
+
+>>         {}
+>>  };
+>>
+>> @@ -3690,7 +3727,8 @@ static int shmem_fill_super(struct super_block *sb, struct fs_context *fc)
+>>  #endif
+>>         uuid_gen(&sb->s_uuid);
+>>
+>> -       inode = shmem_get_inode(sb, NULL, S_IFDIR | sbinfo->mode, 0, VM_NORESERVE);
+>> +       inode = shmem_get_inode(sb, NULL, S_IFDIR | sbinfo->mode, 0,
+>> +                               VM_NORESERVE, true);
+>
+>Should usb_sb_ino be true for the kern_mount??
+>In any case, it wouldn't matter if it was false, hence no need to pass
+>an argument
+>and can either check for sbinfo->max_inodes or the SB_KERNMOUNT flag in
+>shmem_get_inode().
+
+Ok, cool. I'll fix these up and send v3. Thanks!
