@@ -4,57 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 999B5C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 006BFC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E656222C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C760C227BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003716;
-	bh=U5GgqEyn+KoZCexv7j0LgkAynPcyqk8Rd4HfTxE53UA=;
+	s=default; t=1578003719;
+	bh=ZVCY2T+T7NCCSdH+vNpHz/vAj3mGlseXINxTYyOQWHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LxbAOa+UpuqdP4Mtz7U3+GV1IbrBn2zpqjVbHT6pMMCCJzDxCfTBsl0ARicSHKWOm
-	 XKf0DjFchAXUc8KXwrPxlukwjQIfobVtJ1wfgYcTBjAElQSAgpF3wtbmXfx/m5K+kZ
-	 zsjNrkpV5kx3I9HY3D/yGwjAJWkGCtp1ZjQLg6pU=
+	b=P1hrAQtp+inKIuXp8BJEydYyW3tg1BdydJZTkAFy+KXoAjn+gvxR+2RWawBGJAU8b
+	 HnBlX9Fyuhjd+/7Z0pQECKG08ZlfLLsIazShWFFOxC/I4/IeT+I/25BJ7Lcy7TnzYo
+	 zuPutr93AWQII2J3feRWJqai7IK7sfpf+pTPa+aY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbgABWVz (ORCPT
+        id S1727750AbgABWV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:21:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41386 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:21:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729047AbgABWVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:21:47 -0500
+        id S1729052AbgABWVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:21:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E58AF21835;
-        Thu,  2 Jan 2020 22:21:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5601224649;
+        Thu,  2 Jan 2020 22:21:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003706;
-        bh=U5GgqEyn+KoZCexv7j0LgkAynPcyqk8Rd4HfTxE53UA=;
+        s=default; t=1578003708;
+        bh=ZVCY2T+T7NCCSdH+vNpHz/vAj3mGlseXINxTYyOQWHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IIMQM9w+BoqzxYMrMUqhNCe8D+9Anzr5CglvIlJ2keV1Ek+coj3nibCBqRI/yBLWo
-         OdzAYreOjfIz3rGRT8viq/X0Y0ZpWEwuZfnksJ/U544DVTYK7LTEX2TQUsrA3hSIJS
-         35SeIpToutTwd3HEU+MVuOeid4mSXiVmrUUC60gk=
+        b=dZiU1iu1lY9pN0y/j1fqGz/1Jg4xMUuXI1cPPBr5Qn+wPKuNH9TyG5UdHoVa4aIC8
+         DdVb7jmhvtPjeqEcXmvBTbcbV5aQsS5fJeCo9ZOGVzTlbyKJYp+NZdt7VoDbkImoT6
+         NWdQt0TI2I+6Wifw5BR2tKf5YREM7k9hKUjUieZ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Parth Shah <parth@linux.ibm.com>,
-        Ihor Pasichnyk <Ihor.Pasichnyk@ibm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Phil Auld <pauld@redhat.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 073/114] Revert "powerpc/vcpu: Assume dedicated processors as non-preempt"
-Date:   Thu,  2 Jan 2020 23:07:25 +0100
-Message-Id: <20200102220036.470720283@linuxfoundation.org>
+        stable@vger.kernel.org, Doug Meyer <dmeyer@gigaio.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kelvin Cao <Kelvin.Cao@microchip.com>
+Subject: [PATCH 4.19 082/114] PCI/switchtec: Read all 64 bits of part_event_bitmap
+Date:   Thu,  2 Jan 2020 23:07:34 +0100
+Message-Id: <20200102220037.417938346@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -67,68 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-This reverts commit 4ba32bdbd8c66d9c7822aea8dcf4e51410df84a8 which is
-commit 14c73bd344da60abaf7da3ea2e7733ddda35bbac upstream.
+commit 6acdf7e19b37cb3a9258603d0eab315079c19c5e upstream.
 
-It breaks the build.
+The part_event_bitmap register is 64 bits wide, so read it with ioread64()
+instead of the 32-bit ioread32().
 
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Parth Shah <parth@linux.ibm.com>
-Cc: Ihor Pasichnyk <Ihor.Pasichnyk@ibm.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Cc: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc: Phil Auld <pauld@redhat.com>
-Cc: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-Cc: Parth Shah <parth@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: 52eabba5bcdb ("switchtec: Add IOCTLs to the Switchtec driver")
+Link: https://lore.kernel.org/r/20190910195833.3891-1-logang@deltatee.com
+Reported-by: Doug Meyer <dmeyer@gigaio.com>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: stable@vger.kernel.org	# v4.12+
+Cc: Kelvin Cao <Kelvin.Cao@microchip.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/powerpc/include/asm/spinlock.h    |    4 +---
- arch/powerpc/platforms/pseries/setup.c |    7 -------
- 2 files changed, 1 insertion(+), 10 deletions(-)
 
---- a/arch/powerpc/include/asm/spinlock.h
-+++ b/arch/powerpc/include/asm/spinlock.h
-@@ -53,12 +53,10 @@
- #endif
+
+---
+ drivers/pci/switch/switchtec.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -633,7 +633,7 @@ static int ioctl_event_summary(struct sw
+ 	u32 reg;
  
- #ifdef CONFIG_PPC_PSERIES
--DECLARE_STATIC_KEY_FALSE(shared_processor);
--
- #define vcpu_is_preempted vcpu_is_preempted
- static inline bool vcpu_is_preempted(int cpu)
- {
--	if (!static_branch_unlikely(&shared_processor))
-+	if (!firmware_has_feature(FW_FEATURE_SPLPAR))
- 		return false;
- 	return !!(be32_to_cpu(lppaca_of(cpu).yield_count) & 1);
- }
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -75,9 +75,6 @@
- #include "pseries.h"
- #include "../../../../drivers/pci/pci.h"
+ 	s.global = ioread32(&stdev->mmio_sw_event->global_summary);
+-	s.part_bitmap = ioread32(&stdev->mmio_sw_event->part_event_bitmap);
++	s.part_bitmap = readq(&stdev->mmio_sw_event->part_event_bitmap);
+ 	s.local_part = ioread32(&stdev->mmio_part_cfg->part_event_summary);
  
--DEFINE_STATIC_KEY_FALSE(shared_processor);
--EXPORT_SYMBOL_GPL(shared_processor);
--
- int CMO_PrPSP = -1;
- int CMO_SecPSP = -1;
- unsigned long CMO_PageSize = (ASM_CONST(1) << IOMMU_PAGE_SHIFT_4K);
-@@ -764,10 +761,6 @@ static void __init pSeries_setup_arch(vo
- 
- 	if (firmware_has_feature(FW_FEATURE_LPAR)) {
- 		vpa_init(boot_cpuid);
--
--		if (lppaca_shared_proc(get_lppaca()))
--			static_branch_enable(&shared_processor);
--
- 		ppc_md.power_save = pseries_lpar_idle;
- 		ppc_md.enable_pmcs = pseries_lpar_enable_pmcs;
- #ifdef CONFIG_PCI_IOV
+ 	for (i = 0; i < stdev->partition_count; i++) {
 
 
