@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C068C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 829DEC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24F2C20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54CAD20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:52:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005562;
-	bh=ZjUObq3nlAjR3r0rrLR5jrSnyaPlZhsIyeLxybNfWYA=;
+	s=default; t=1578005565;
+	bh=OgM9MrVpmk2MQlLVEKOHu21cL5Jv8U4SBPAvaoSO6Fc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xao2kBQs0cAkW/0Inw5CiY+TgDsybDfLEHgCj1AZ0YNYmdu+Or3q9PfCSNUKwMajg
-	 PDx1tb6FD1SgrSn8tRoSta61P8lymcaDQsaYCnOVDDSzN6Q917bLXg79xJkSWfTWfz
-	 TZnNT+aA7kFxoImHTPSAERxwrYCnN0PpDpuJJ82A=
+	b=lx9Ad2bPguusHhVLJLkusHhh9r5DcgmVT0rJ7FJRl23Ml9WSgBo9qEqX1OQUrYYaQ
+	 xsa09K89bvz0HOWylh/8WxFF/A1EXqAI261FmzIlRoGBktCmVvQrbFBPKnX4NqMSW3
+	 0XvD1c6BM6nhljJSUvNWDXj0ljjTyPNfi+p5AxaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729167AbgABWWk (ORCPT
+        id S1728569AbgABWWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:22:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43282 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:22:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729155AbgABWWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:22:35 -0500
+        id S1728798AbgABWWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:22:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F0B020866;
-        Thu,  2 Jan 2020 22:22:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56D3F227BF;
+        Thu,  2 Jan 2020 22:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003754;
-        bh=ZjUObq3nlAjR3r0rrLR5jrSnyaPlZhsIyeLxybNfWYA=;
+        s=default; t=1578003749;
+        bh=OgM9MrVpmk2MQlLVEKOHu21cL5Jv8U4SBPAvaoSO6Fc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ufmMvDQuCTF36tXFwgKcmB3loatzjX/YJi5T1rAfuUkKiL+oOEY3FFvBGDIRxML+x
-         uDO6J9I9Jjoq76egckBqpQ2IARCXU9iX0I8ZCeKRcSLvaDI7NQ3xpGQ7Wig4JF2OK/
-         LOaGZ6iglbkNGkhQhfB0I3FQcOTYDVP0b8gEHPL8=
+        b=xJuH2NOWH7CnASC7Ou0xzBgu8ao2ihg2E4O1HwJSnPkCpr5Hd9VJ52kDZo7CpO661
+         I6pnJGS6TgjyddlMOGBXVDdwxVo3bmM8MNpkR7zNF+5jGr5pusQcESkVDhm4jfLdIa
+         p6gGEE82ItPeDx/217R4Oj/yGoh4rXtnRTRhLz9Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
+        Guillaume Nault <gnault@redhat.com>,
         David Ahern <dsahern@gmail.com>,
         Hangbin Liu <liuhangbin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 100/114] net/dst: add new function skb_dst_update_pmtu_no_confirm
-Date:   Thu,  2 Jan 2020 23:07:52 +0100
-Message-Id: <20200102220039.284323737@linuxfoundation.org>
+Subject: [PATCH 4.19 098/114] ip6_gre: do not confirm neighbor when do pmtu update
+Date:   Thu,  2 Jan 2020 23:07:50 +0100
+Message-Id: <20200102220039.090563518@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -63,10 +64,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit 07dc35c6e3cc3c001915d05f5bf21f80a39a0970 ]
+[ Upstream commit 675d76ad0ad5bf41c9a129772ef0aba8f57ea9a7 ]
 
-Add a new function skb_dst_update_pmtu_no_confirm() for callers who need
-update pmtu but should not do neighbor confirm.
+When we do ipv6 gre pmtu update, we will also do neigh confirm currently.
+This will cause the neigh cache be refreshed and set to REACHABLE before
+xmit.
+
+But if the remote mac address changed, e.g. device is deleted and recreated,
+we will not able to notice this and still use the old mac address as the neigh
+cache is REACHABLE.
+
+Fix this by disable neigh confirm when do pmtu update
 
 v5: No change.
 v4: No change.
@@ -75,32 +83,26 @@ v3: Do not remove dst_confirm_neigh, but add a new bool parameter in
     Also split the big patch to small ones for each area.
 v2: Remove dst_confirm_neigh in __ip6_rt_update_pmtu.
 
+Reported-by: Jianlin Shi <jishi@redhat.com>
 Reviewed-by: Guillaume Nault <gnault@redhat.com>
 Acked-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/dst.h |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ net/ipv6/ip6_gre.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/net/dst.h
-+++ b/include/net/dst.h
-@@ -530,6 +530,15 @@ static inline void skb_dst_update_pmtu(s
- 		dst->ops->update_pmtu(dst, NULL, skb, mtu, true);
- }
+--- a/net/ipv6/ip6_gre.c
++++ b/net/ipv6/ip6_gre.c
+@@ -1060,7 +1060,7 @@ static netdev_tx_t ip6erspan_tunnel_xmit
  
-+/* update dst pmtu but not do neighbor confirm */
-+static inline void skb_dst_update_pmtu_no_confirm(struct sk_buff *skb, u32 mtu)
-+{
-+	struct dst_entry *dst = skb_dst(skb);
-+
-+	if (dst && dst->ops->update_pmtu)
-+		dst->ops->update_pmtu(dst, NULL, skb, mtu, false);
-+}
-+
- static inline void skb_tunnel_check_pmtu(struct sk_buff *skb,
- 					 struct dst_entry *encap_dst,
- 					 int headroom)
+ 	/* TooBig packet may have updated dst->dev's mtu */
+ 	if (!t->parms.collect_md && dst && dst_mtu(dst) > dst->dev->mtu)
+-		dst->ops->update_pmtu(dst, NULL, skb, dst->dev->mtu, true);
++		dst->ops->update_pmtu(dst, NULL, skb, dst->dev->mtu, false);
+ 
+ 	err = ip6_tnl_xmit(skb, dev, dsfield, &fl6, encap_limit, &mtu,
+ 			   NEXTHDR_GRE);
 
 
