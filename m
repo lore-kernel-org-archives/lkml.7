@@ -6,139 +6,117 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 070B0C32767
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 03:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1807AC32767
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 03:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6D7420848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 03:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2616215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 03:37:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="wOwJ001+"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="BNzJlPFk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbgABDcM (ORCPT
+        id S1727604AbgABDh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 22:32:12 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45039 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727525AbgABDcM (ORCPT
+        Wed, 1 Jan 2020 22:37:26 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37358 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727525AbgABDh0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 22:32:12 -0500
-Received: by mail-wr1-f65.google.com with SMTP id q10so38042739wrm.11
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 19:32:10 -0800 (PST)
+        Wed, 1 Jan 2020 22:37:26 -0500
+Received: by mail-wr1-f67.google.com with SMTP id w15so25442382wru.4
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 19:37:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0GhjVv4D/EbozgYYQebu9kHkFsX0cKA5Vsg+9qRPUH0=;
-        b=wOwJ001+o9V9w8eVNas2K19aARPSD6KN5kq0RrvUlCnhUch35ZsS4OMnKoGVx74jXm
-         xdtTrZckOz9uIuVAypq+w/7liuM8XpMg85ADYSLCiKqkbLgMhLeVk8/KYwDdRsxx+4rL
-         GpTv6i+005a9Nm6mJLxMpb6B/HOTfQQgIG5kI3pNP/NhiWxrdBJf6q0nlNRJS6i2jlHW
-         NlV+Y6jXHBTWNnKAJ93ncU0Hqi38zOSdvz/yFEvvde/EIMMkrqynAK8WIxXukz9BaX90
-         juGzyWuhWACStnUSct31QYt3PfiA2hQ+MnG3Y0kJ+watLKr+WJD2K2qbADqQGnWp49SX
-         ogkw==
+        bh=w0dEwC+ZPQDMRnW2xQ00qFNHx6JYWygNg84CanVuBP4=;
+        b=BNzJlPFkxZL8C3MkzPkV47XFCH4dSlnrY3A8/EowYF+Kw8g8lCGp7wBqI1ZuU/q/kp
+         9+3UKO8XE9uPErHckqLv3Z3mB80zryYNo0/CYE7VXHcdglhWhM3F5VAjuzjjPZVxUDPE
+         3QdcItiVds9wegvQHfe4GXJb2D28AnjN86MnF4vUOP3L3hPgbtsOCQkTIB3s89d5+q04
+         CdNH43gXrUiWgwJG3KtsPpmbt9GPa/T9RphOyotquC/WwgD4pqFOC+od8AdU0wjERts/
+         zPISwXgmnEqQeBR27T5/b1tMLPqtf9poK9W3KUnnw2wcbSKsybP9mffuIMj2G51pscUI
+         B26Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0GhjVv4D/EbozgYYQebu9kHkFsX0cKA5Vsg+9qRPUH0=;
-        b=VcxVlU4OfuWOt7pqGOD+ZugIIA50NkjOchJ0qIWBOwDpZlXhjxEsGJOH6i3+XNjrnd
-         t6HF9ermlaAoVlBC8Oi5QSiM4iNrkoOaY+LOM+m9aQLxjG05mOlIHlhm++24CCvAFAFC
-         7pCcUUrvWGFnwSl7Gz4HprGaF+qegHDWoPlYACpE9w/RkkbUBw2n1Wbg+6RbDbp2+cjj
-         eOJ7Sb4fZwLoxlG6jGM0mQnOdMD8jTfIbo9TOzCcEHXOexlFovKygln+FX2L+SbSpJC+
-         fxIkeuRRFw0tcxfCgTRMJnGwuq5I2FngQV43wBg01zvpUuPRV9uWMif12H+SMVuCQUIF
-         5g0A==
-X-Gm-Message-State: APjAAAWEu9KtiOzx2PrEbASYSzUsN+tCQcdyT/4bIqQQZlVb9+6m0Ftz
-        Y/7PbjFEsIpk4k9yfhL5hweO5p4YxKiaugOS54wWNYl5hEI=
-X-Google-Smtp-Source: APXvYqxy+4c0hpqCEiZkzu7f20ddEKWx0WKeOCcURH36ITCn6JSrJblYC8ofxwFKetGQKjjFYPh42GARTcmixm8UhZg=
-X-Received: by 2002:adf:d850:: with SMTP id k16mr76314967wrl.96.1577935929993;
- Wed, 01 Jan 2020 19:32:09 -0800 (PST)
+        bh=w0dEwC+ZPQDMRnW2xQ00qFNHx6JYWygNg84CanVuBP4=;
+        b=lHVxPLREPoJkBPHXlqpRsNqJbqr68xcMjAfLLRUy1eH6ICAA9GXhDPrcWk6u+AOUdd
+         eX+lEFGZRbKwg02oSOU3zGrQptrBqHCoHu9B8GGEQwhkN7jBIVkq2i564ghyslmWdGVk
+         9TgL2Eb2uMMde7oEDUgMa2vLguNRfiXEstmjqnU8RXom1LX6Qr2gha/rtAAfMQhA28DC
+         /e+tQT4GYlhHKT9t7d96JJuqqrp9wOx6RIDnRHAOTSdhxR2v9adRUFitu/3UUcWV1GJy
+         YYvs40XzFYCcHhNCnahu7DuHGDmy/8HKb9hdlWZIA3KVGfMVySDAl3Ca+GbehhMO5BAT
+         slnw==
+X-Gm-Message-State: APjAAAWennVb7LaxsOKvRhFjylxm5p4yAfCLg84kG95k5vtqYqZxLBiI
+        YRpuXfycd81+i8nSkNwsR73unYnJ6TOI3InfxduFUyBwink=
+X-Google-Smtp-Source: APXvYqxqXtucJKxBehfjEtkkhKenfyWuNgyRLckpMYSqYIf7pkoTptD0U4Di9HzBQVBysqPrJgw/nJ67sHWcB6ld+fE=
+X-Received: by 2002:adf:fa12:: with SMTP id m18mr76943743wrr.309.1577936244053;
+ Wed, 01 Jan 2020 19:37:24 -0800 (PST)
 MIME-Version: 1.0
-References: <20200102031240.44484-1-zong.li@sifive.com> <20200102031240.44484-3-zong.li@sifive.com>
-In-Reply-To: <20200102031240.44484-3-zong.li@sifive.com>
+References: <20200102030954.41225-1-zong.li@sifive.com>
+In-Reply-To: <20200102030954.41225-1-zong.li@sifive.com>
 From:   Anup Patel <anup@brainfault.org>
-Date:   Thu, 2 Jan 2020 09:01:58 +0530
-Message-ID: <CAAhSdy0sp_=nwAKxphA8of4UV_NfxHE-KXyTPekmHkieq_XyVw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] riscv: mm: use __pa_symbol for kernel symbols
+Date:   Thu, 2 Jan 2020 09:07:12 +0530
+Message-ID: <CAAhSdy0NW9OTGOGoyZ7QmAOVbR_iF2ZM7b9eKDW0U1L+as-oaA@mail.gmail.com>
+Subject: Re: [PATCH] riscv: gcov: enable gcov for RISC-V
 To:     Zong Li <zong.li@sifive.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Cc:     corbet@lwn.net, Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, linux-doc@vger.kernel.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 2, 2020 at 8:42 AM Zong Li <zong.li@sifive.com> wrote:
+On Thu, Jan 2, 2020 at 8:40 AM Zong Li <zong.li@sifive.com> wrote:
 >
-> __pa_symbol is the marcro that should be used for kernel symbols. It is
-> also a pre-requisite for DEBUG_VIRTUAL which will do bounds checking.
+> This patch enables GCOV code coverage measurement on RISC-V.
+> Lightly tested on QEMU and Hifive Unleashed board, seems to work as
+> expected.
 >
 > Signed-off-by: Zong Li <zong.li@sifive.com>
 > ---
->  arch/riscv/mm/init.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>  Documentation/features/debug/gcov-profile-all/arch-support.txt | 2 +-
+>  arch/riscv/Kconfig                                             | 1 +
+>  2 files changed, 2 insertions(+), 1 deletion(-)
 >
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index 69f6678db7f3..965a8cf4829c 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -99,13 +99,13 @@ static void __init setup_initrd(void)
->                 pr_info("initrd not found or empty");
->                 goto disable;
->         }
-> -       if (__pa(initrd_end) > PFN_PHYS(max_low_pfn)) {
-> +       if (__pa_symbol(initrd_end) > PFN_PHYS(max_low_pfn)) {
->                 pr_err("initrd extends beyond end of memory");
->                 goto disable;
->         }
+> diff --git a/Documentation/features/debug/gcov-profile-all/arch-support.txt b/Documentation/features/debug/gcov-profile-all/arch-support.txt
+> index 059d58a549c7..6fb2b0671994 100644
+> --- a/Documentation/features/debug/gcov-profile-all/arch-support.txt
+> +++ b/Documentation/features/debug/gcov-profile-all/arch-support.txt
+> @@ -23,7 +23,7 @@
+>      |    openrisc: | TODO |
+>      |      parisc: | TODO |
+>      |     powerpc: |  ok  |
+> -    |       riscv: | TODO |
+> +    |       riscv: |  ok  |
+>      |        s390: |  ok  |
+>      |          sh: |  ok  |
+>      |       sparc: | TODO |
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index d8efbaa78d67..a31169b02ec0 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -64,6 +64,7 @@ config RISCV
+>         select SPARSEMEM_STATIC if 32BIT
+>         select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
+>         select HAVE_ARCH_MMAP_RND_BITS if MMU
+> +       select ARCH_HAS_GCOV_PROFILE_ALL
 >
->         size = initrd_end - initrd_start;
-> -       memblock_reserve(__pa(initrd_start), size);
-> +       memblock_reserve(__pa_symbol(initrd_start), size);
->         initrd_below_start_ok = 1;
->
->         pr_info("Initial ramdisk at: 0x%p (%lu bytes)\n",
-> @@ -124,8 +124,8 @@ void __init setup_bootmem(void)
->  {
->         struct memblock_region *reg;
->         phys_addr_t mem_size = 0;
-> -       phys_addr_t vmlinux_end = __pa(&_end);
-> -       phys_addr_t vmlinux_start = __pa(&_start);
-> +       phys_addr_t vmlinux_end = __pa_symbol(&_end);
-> +       phys_addr_t vmlinux_start = __pa_symbol(&_start);
->
->         /* Find the memory region containing the kernel */
->         for_each_memblock(memory, reg) {
-> @@ -445,7 +445,7 @@ static void __init setup_vm_final(void)
->
->         /* Setup swapper PGD for fixmap */
->         create_pgd_mapping(swapper_pg_dir, FIXADDR_START,
-> -                          __pa(fixmap_pgd_next),
-> +                          __pa_symbol(fixmap_pgd_next),
->                            PGDIR_SIZE, PAGE_TABLE);
->
->         /* Map all memory banks */
-> @@ -474,7 +474,7 @@ static void __init setup_vm_final(void)
->         clear_fixmap(FIX_PMD);
->
->         /* Move to swapper page table */
-> -       csr_write(CSR_SATP, PFN_DOWN(__pa(swapper_pg_dir)) | SATP_MODE);
-> +       csr_write(CSR_SATP, PFN_DOWN(__pa_symbol(swapper_pg_dir)) | SATP_MODE);
->         local_flush_tlb_all();
->  }
->  #else
+>  config ARCH_MMAP_RND_BITS_MIN
+>         default 18 if 64BIT
 > --
 > 2.24.1
 >
 
-Overall looks good to me.
+Looks good to me.
 
 Reviewed-by: Anup Patel <anup@brainfault.org>
 
-I have not tried this patch but can you confirm that
-__pa_symbol() works fine even when DEBUG_VIRTUAL=n
+May be (not 100% sure) split this into two patches so that
+Documentation patch can be taken by Jonathan.
 
 Regards,
 Anup
