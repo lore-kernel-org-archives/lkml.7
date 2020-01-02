@@ -2,141 +2,114 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C0BC3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 137B5C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37AF5217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D89F321D7D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:36:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="rHrqP0Mq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727967AbgABJfL (ORCPT
+        id S1727961AbgABJgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 04:35:11 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:35567 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727926AbgABJfK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 04:35:10 -0500
-Received: by mail-il1-f198.google.com with SMTP id h18so20415426ilc.2
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 01:35:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=vccpKWCKoUf8l6AatqgQWk56oswB+uFCmRgqQNd92sk=;
-        b=t45AhqY9U/kv8MIYTTpp8uFWFQcC+WiyvmPBU9cU88+6YHINh5D0nP+r1kbcH3RjHG
-         u4Kee5x8dQFSaYa6L654Zb1ABNb5SA+Mn7f5Ner719fx+4J+hAIQwNyh5JAd+FlIDrOB
-         jTnH/LAEYVDcI987MPsGF40WabMlTuQjAi5R45xzVn2bqpJk3DI+KHd7+UKcMHgL5/JX
-         nkStcmUUtSRfj0Ob2Jh8CiM+BlrBSETM5EjkuNwF3hH/jbuOpA9nyIBbXWbVtqDwA7YY
-         36/OjSRx9wbmvZPLKv9di4XE0GWqbgAvJuRYrOsDh8jAjbcvyCaobb0vaExr8/Xgf7B0
-         JK0Q==
-X-Gm-Message-State: APjAAAUeKcKg258Oohjs0uCEp8yva3VaYKMStG5BFzkEMx45YbDfovOJ
-        1AO9/H3RUs4MOfNE/fMCQYHk3X4+miduYvTQozDg3Ii3jtBv
-X-Google-Smtp-Source: APXvYqwgXiuGJScM9HTvKT1JKowivfEyDa3R3JABkpcQ+SmXuDFJz37fAWalmuc38j0znHS1uZnnEWq11pqt6O3wAlk/6oj1hXLh
+        Thu, 2 Jan 2020 04:36:31 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:39756 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727926AbgABJga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 04:36:30 -0500
+Received: from zn.tnic (p200300EC2F00E700329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f00:e700:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4F0D71EC0985;
+        Thu,  2 Jan 2020 10:36:29 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1577957789;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=PKlSqyafL8AIli9grc9nmm6pWL3gqihT01Q5F/Gkd60=;
+        b=rHrqP0Mq1OZ8i1Psi4Qnc1aCeHYfhpBqzAKFINIA59LxPob+RM8kokTCO1iCXZL44wsdcX
+        LjCb1PJetGD8jJAnqjw/fh35xLLzrDJPXvy82v0yXr72P2b4tm2ujat19ygqE+qiqnANIX
+        TmgLHkxykI4CkaG086QHeAXXw47jTMs=
+Date:   Thu, 2 Jan 2020 10:36:27 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] x86/jump_label: Fix old-style declaration
+Message-ID: <20200102093627.GB8345@zn.tnic>
+References: <20191225114500.7712-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:fc0c:: with SMTP id r12mr51294497ioh.189.1577957709959;
- Thu, 02 Jan 2020 01:35:09 -0800 (PST)
-Date:   Thu, 02 Jan 2020 01:35:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c5d741059b24e89d@google.com>
-Subject: WARNING: locking bug in __inet6_bind
-From:   syzbot <syzbot+414dcdfe035bbcf35fc5@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, kafai@fb.com,
-        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com,
-        yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191225114500.7712-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Dec 25, 2019 at 07:45:00PM +0800, YueHaibing wrote:
+> Fix gcc warning:
+> 
+> arch/x86/kernel/jump_label.c:61:1: warning:
+>  inline is not at beginning of declaration [-Wold-style-declaration]
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  arch/x86/kernel/jump_label.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/jump_label.c b/arch/x86/kernel/jump_label.c
+> index 9c4498e..5ba8477 100644
+> --- a/arch/x86/kernel/jump_label.c
+> +++ b/arch/x86/kernel/jump_label.c
+> @@ -58,7 +58,7 @@ __jump_label_set_jump_code(struct jump_entry *entry, enum jump_label_type type,
+>  	return code;
+>  }
+>  
+> -static void inline __jump_label_transform(struct jump_entry *entry,
+> +static inline void __jump_label_transform(struct jump_entry *entry,
+>  					  enum jump_label_type type,
+>  					  int init)
+>  {
+> -- 
 
-syzbot found the following crash on:
+Looks not needed anymore:
 
-HEAD commit:    bf8d1cd4 Merge tag 'scsi-fixes' of git://git.kernel.org/pu..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=155ac9fee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ed9d672709340e35
-dashboard link: https://syzkaller.appspot.com/bug?extid=414dcdfe035bbcf35fc5
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1245bac6e00000
+$ test-apply.sh /tmp/yuehaibing.01
+checking file arch/x86/kernel/jump_label.c
+Hunk #1 FAILED at 58.
+1 out of 1 hunk FAILED
+Apply? (y/n) n
+--merge? (y/n) y
+patching file arch/x86/kernel/jump_label.c
+Hunk #1 NOT MERGED at 67-71.
+$ git diff
+diff --git a/arch/x86/kernel/jump_label.c b/arch/x86/kernel/jump_label.c
+index c1a8b9e71408..0a9e1dc65a3f 100644
+--- a/arch/x86/kernel/jump_label.c
++++ b/arch/x86/kernel/jump_label.c
+@@ -64,7 +64,11 @@ static void __jump_label_set_jump_code(struct jump_entry *entry,
+                memcpy(code, ideal_nop, JUMP_LABEL_NOP_SIZE);
+ }
+ 
++<<<<<<<
+ static void __ref __jump_label_transform(struct jump_entry *entry,
++=======
++static inline void __jump_label_transform(struct jump_entry *entry,
++>>>>>>>
+                                         enum jump_label_type type,
+                                         int init)
+ {
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+414dcdfe035bbcf35fc5@syzkaller.appspotmail.com
+-- 
+Regards/Gruss,
+    Boris.
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 32733 at kernel/locking/lockdep.c:840  
-look_up_lock_class kernel/locking/lockdep.c:840 [inline]
-WARNING: CPU: 0 PID: 32733 at kernel/locking/lockdep.c:840  
-register_lock_class+0x206/0x1850 kernel/locking/lockdep.c:1185
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 32733 Comm: syz-executor.0 Not tainted 5.5.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  panic+0x2e3/0x75c kernel/panic.c:221
-  __warn.cold+0x2f/0x3e kernel/panic.c:582
-  report_bug+0x289/0x300 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  fixup_bug arch/x86/kernel/traps.c:169 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:look_up_lock_class kernel/locking/lockdep.c:840 [inline]
-RIP: 0010:register_lock_class+0x206/0x1850 kernel/locking/lockdep.c:1185
-Code: fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 aa 10 00 00 4c 3b 7b  
-18 44 8b 35 85 9e 08 0a 74 0b 48 81 3b a0 79 bb 8a 74 02 <0f> 0b 45 85 ed  
-0f 84 71 03 00 00 f6 85 70 ff ff ff 01 0f 85 64 03
-RSP: 0018:ffffc90003d17a28 EFLAGS: 00010006
-RAX: dffffc0000000000 RBX: ffff88809a06d120 RCX: 0000000000000000
-RDX: 1ffff1101340da27 RSI: 0000000000000000 RDI: ffff88809a06d138
-RBP: ffffc90003d17af0 R08: 1ffff920007a2f4d R09: ffffffff8b63b560
-R10: ffffffff8b2c5ce8 R11: 0000000000000000 R12: ffffffff8b3089e0
-R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff88d4e000
-  __lock_acquire+0xf4/0x4a00 kernel/locking/lockdep.c:3837
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
-  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
-  _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
-  spin_lock_bh include/linux/spinlock.h:343 [inline]
-  lock_sock_nested+0x41/0x120 net/core/sock.c:2936
-  lock_sock include/net/sock.h:1531 [inline]
-  __inet6_bind+0x788/0x19b0 net/ipv6/af_inet6.c:300
-  inet6_bind+0xfa/0x155 net/ipv6/af_inet6.c:453
-  __sys_bind+0x239/0x290 net/socket.c:1649
-  __do_sys_bind net/socket.c:1660 [inline]
-  __se_sys_bind net/socket.c:1658 [inline]
-  __x64_sys_bind+0x73/0xb0 net/socket.c:1658
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45a919
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f66ae74ec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a919
-RDX: 000000000000001c RSI: 0000000020000000 RDI: 0000000000000004
-RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f66ae74f6d4
-R13: 00000000004c0ca5 R14: 00000000004d47d8 R15: 00000000ffffffff
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+https://people.kernel.org/tglx/notes-about-netiquette
