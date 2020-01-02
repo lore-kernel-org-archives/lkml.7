@@ -2,83 +2,189 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7822FC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D682C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EB59215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:37:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577965059;
-	bh=dVLZU28mf4rEeV3D9kqoKamX2gSw2vFcl/WB8a+iNKg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0DU9Km1mZjLI0LHF5/7A1r8/LpAnThE3+SZjw8ugCY696BGnBq/z6tdNtb27sgyGB
-	 jxknEvjjPTxj0cOKpE2CrNOC9q1jIzDOfe7Sy/yJBoLup5GVoGM7E56liro3G7t9Jt
-	 WOcY0EQpw7lSQIjNH8+J9Ah2eHwuJR0j+Vhd+0SQ=
+	by mail.kernel.org (Postfix) with ESMTP id DF4BF215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:40:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TJWGw7Gu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbgABLhi (ORCPT
+        id S1728235AbgABLki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 06:37:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47006 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726647AbgABLhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 06:37:38 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5F0B215A4;
-        Thu,  2 Jan 2020 11:37:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577965056;
-        bh=dVLZU28mf4rEeV3D9kqoKamX2gSw2vFcl/WB8a+iNKg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AjpVsgNA64z8Vt+dlQ8jB6BAvdFasxa7kU/hOlfwIu/lcqYVrlgFNPZS+w87StMV4
-         O1MGt0372QdKHtjdeXNwsanA4rmM77Vnn7nC5OidP4Zd4STOAkmg2w4AsqFPyUPdU6
-         ft65Ts5RqXj1zksypEYRBMkZPxxSwngRZeMUqzKQ=
-Date:   Thu, 2 Jan 2020 12:37:23 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] PHY: for 5.5 -rc
-Message-ID: <20200102113723.GA3987146@kroah.com>
-References: <20191231111541.29702-1-kishon@ti.com>
+        Thu, 2 Jan 2020 06:40:38 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54031 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgABLkh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 06:40:37 -0500
+Received: by mail-wm1-f66.google.com with SMTP id m24so5327590wmc.3;
+        Thu, 02 Jan 2020 03:40:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=RWu+gH3W2FAZzPLej4otzZ2FiR4SGwDwk7fqLb7ZrJo=;
+        b=TJWGw7GuH45CCygsnCC9lWkvRL9jW43HEU3F3JOL+K7bEiAt+l3XTGf5WdhPQSLR7o
+         +HiFMwiN7RQ4x02F7BD2kOd1OTEM+3pgVBoJGxXyf5F4bL3vSSgMMwbAQNOGDStwBPum
+         JZ6xgDWMYjANjFb7YzVOGWkPb37zZLAtOeZTpwhwH9GYdnXh2T4ACL1sj3qSpg1vELzV
+         O072Z1+USC8PCKWyecSVUtU93S62Q/cVe3Ff3CUgumQR2bZwPcWdl0owfUnjYmV3fXSG
+         QAAld+ZjCwcjwWW8qpDS01xSFr7E2lg1usfr9IId2Jhux3TCQ6oTV60/Lzk5M6qn3ryM
+         9P6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=RWu+gH3W2FAZzPLej4otzZ2FiR4SGwDwk7fqLb7ZrJo=;
+        b=gpHQMwaI2c7+g7p5LW6jkukIuDTK1qEf/iZVgKG+pW9Wwa3AcCXWlDY1ajmwpI9Tdz
+         R5cvc9GEx6uOqyQlzFs/8yg/wdBTm1t7C/rzJ6jpTWfsAusFSBnSzhE8LiKYdYvNvQU9
+         9brDISDSu7Sc7RaUEESyRsDBE2PAHXswnmaZ556lu/athkELAIWv+6DD+jEmYHg82xqB
+         JQ0g3uQvl/mrPlyWA1SMRau2fZteD1EC+8NqfQ+55bNmHx7OccNDC4/OkszdDMQxoNe8
+         iCxUwiUy9+4xjKhT/0DZ26Jn6GYJa2mEKcgw1ClA3RdOG8agzBHhU9X78Xt7/oO2P1b/
+         UYlQ==
+X-Gm-Message-State: APjAAAVbAgfSWJSljFk/80e6Boy+zMgFBrAtbXNGnefhR3wfyndyLJ4J
+        VuTS6VXg5KFsDtB6Uoc4BbIsilZCybM=
+X-Google-Smtp-Source: APXvYqyyk0dpfhp7UclsrPIXBTPWPVFlHMAeQ7FG7D5urplxcggNz8XUm561FgaP0LGQpngckmNc1A==
+X-Received: by 2002:a7b:cb91:: with SMTP id m17mr14154179wmi.146.1577965235477;
+        Thu, 02 Jan 2020 03:40:35 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id i16sm8358173wmb.36.2020.01.02.03.40.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 03:40:34 -0800 (PST)
+Date:   Thu, 2 Jan 2020 12:40:34 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Namjae Jeon <linkinjeon@gmail.com>
+Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com
+Subject: Re: [PATCH v9 09/13] exfat: add misc operations
+Message-ID: <20200102114034.bjezqs45xecz4atd@pali>
+References: <20200102082036.29643-1-namjae.jeon@samsung.com>
+ <CGME20200102082406epcas1p268f260d90213bdaabee25a7518f86625@epcas1p2.samsung.com>
+ <20200102082036.29643-10-namjae.jeon@samsung.com>
+ <20200102091902.tk374bxohvj33prz@pali>
+ <CAKYAXd_9XOWtcLYk-+gg636rFCYjLgHzrP5orR3XjXGMpTKWLA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191231111541.29702-1-kishon@ti.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKYAXd_9XOWtcLYk-+gg636rFCYjLgHzrP5orR3XjXGMpTKWLA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 31, 2019 at 04:45:41PM +0530, Kishon Vijay Abraham I wrote:
-> Hi Greg,
-> 
-> Please find the pull request for 5.5 -rc cycle.
-> 
-> It includes a bunch of bug fixes for cpcap-usb PHY driver which is used
-> for configuring USB PHY and debug UART used in certain Motorola droid4
-> phones. It also includes a minor fix in qcom-qmp PHY driver and
-> rockchip-inno-hdmi causing a display issue in RK3328.
-> 
-> Please see the tag message below for the complete list of changes and
-> let me know If I have to change something.
-> 
-> Thanks
-> Kishon
-> 
-> The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-> 
->   Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git tags/phy-for-5.5-rc
+On Thursday 02 January 2020 20:30:03 Namjae Jeon wrote:
+> 2020-01-02 18:19 GMT+09:00, Pali Rohár <pali.rohar@gmail.com>:
+> > On Thursday 02 January 2020 16:20:32 Namjae Jeon wrote:
+> >> This adds the implementation of misc operations for exfat.
+> >>
+> >> Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
+> >> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
+> >> ---
+> >>  fs/exfat/misc.c | 253 ++++++++++++++++++++++++++++++++++++++++++++++++
+> >>  1 file changed, 253 insertions(+)
+> >>  create mode 100644 fs/exfat/misc.c
+> >>
+> >> diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
+> >> new file mode 100644
+> >> index 000000000000..7f533bcb3b3f
+> >> --- /dev/null
+> >> +++ b/fs/exfat/misc.c
+> >
+> > ...
+> >
+> >> +/* <linux/time.h> externs sys_tz
+> >> + * extern struct timezone sys_tz;
+> >> + */
+> >> +#define UNIX_SECS_1980    315532800L
+> >> +
+> >> +#if BITS_PER_LONG == 64
+> >> +#define UNIX_SECS_2108    4354819200L
+> >> +#endif
+> >
+> > ...
+> >
+> >> +#define TIMEZONE_CUR_OFFSET()	((sys_tz.tz_minuteswest / (-15)) & 0x7F)
+> >> +/* Convert linear UNIX date to a FAT time/date pair. */
+> >> +void exfat_time_unix2fat(struct exfat_sb_info *sbi, struct timespec64
+> >> *ts,
+> >> +		struct exfat_date_time *tp)
+> >> +{
+> >> +	time_t second = ts->tv_sec;
+> >> +	time_t day, month, year;
+> >> +	time_t ld; /* leap day */
+> >
+> > Question for other maintainers: Has kernel code already time_t defined
+> > as 64bit? Or it is still just 32bit and 32bit systems and some time64_t
+> > needs to be used? I remember that there was discussion about these
+> > problems, but do not know if it was changed/fixed or not... Just a
+> > pointer for possible Y2038 problem. As "ts" is of type timespec64, but
+> > "second" of type time_t.
+> My bad, I will change it with time64_t.
 
-Pulled and pushed out, thanks.
+Now I have looked into sources and time_t is just typedef from
+__kernel_old_time_t type. So it looks like that time64_t is the type
+which should be used in new code.
 
-greg k-h
+But somebody else should confirm this information.
+
+> >
+> >> +
+> >> +	/* Treats as local time with proper time */
+> >> +	second -= sys_tz.tz_minuteswest * SECS_PER_MIN;
+> >> +	tp->timezone.valid = 1;
+> >> +	tp->timezone.off = TIMEZONE_CUR_OFFSET();
+> >> +
+> >> +	/* Jan 1 GMT 00:00:00 1980. But what about another time zone? */
+> >> +	if (second < UNIX_SECS_1980) {
+> >> +		tp->second  = 0;
+> >> +		tp->minute  = 0;
+> >> +		tp->hour = 0;
+> >> +		tp->day  = 1;
+> >> +		tp->month  = 1;
+> >> +		tp->year = 0;
+> >> +		return;
+> >> +	}
+> >> +
+> >> +	if (second >= UNIX_SECS_2108) {
+> >
+> > Hello, this code cause compile errors on 32bit systems as UNIX_SECS_2108
+> > macro is not defined when BITS_PER_LONG == 32.
+> >
+> > Value 4354819200 really cannot fit into 32bit signed integer, so you
+> > should use 64bit signed integer. I would suggest to define this macro
+> > value via LL not just L suffix (and it would work on both 32 and 64bit)
+> Okay.
+> >
+> >   #define UNIX_SECS_2108    4354819200LL
+> >
+> >> +		tp->second  = 59;
+> >> +		tp->minute  = 59;
+> >> +		tp->hour = 23;
+> >> +		tp->day  = 31;
+> >> +		tp->month  = 12;
+> >> +		tp->year = 127;
+> >> +		return;
+> >> +	}
+> Okay, I will check it.
+> Thanks for your review!
+> >
+> > --
+> > Pali Rohár
+> > pali.rohar@gmail.com
+> >
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
