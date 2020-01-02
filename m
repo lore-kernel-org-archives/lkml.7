@@ -2,117 +2,90 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D9FC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 20:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AC6C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 20:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 359F121655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 20:08:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577995700;
-	bh=u8TLozKgZTv2XCYHNNRwZ+d0hbnTh5rThslEK5lC0z8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=VS1c/3tcwPbjHaSdxP6s+fIFYIpOoIo1GImB/Vjd2pchun6aef8Dd/EuMz8pUjLOR
-	 hPJdHG+K3sYqZBagrwYZgvfmLevcCcsqTurKK1/dKNN3z2ejNwRrsXqp/Cs5vwCCfl
-	 hXcyXp2dCFfKF7kVjauzNgM1OV7nq9ueIH/kI8Xw=
+	by mail.kernel.org (Postfix) with ESMTP id D4E1B21582
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 20:08:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YHy6+D53"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725989AbgABUIT (ORCPT
+        id S1726078AbgABUIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 15:08:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53982 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbgABUIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 15:08:18 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0EFD21582;
-        Thu,  2 Jan 2020 20:08:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577995698;
-        bh=u8TLozKgZTv2XCYHNNRwZ+d0hbnTh5rThslEK5lC0z8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QUbZ2zXREjcwAaCpA6iyvMgik2HvMhSG9Bgh8SvTScxbgdZY/r4STNHI4xkvdJVKR
-         nBpwu55Dmrq7ACMZN5RQ4SOleCwwCDsXtTGtoker1TsmZzJbKo0t3i7WiJaJ5b40fO
-         enHGmoxR88SIB6JhX0Egbu7ye8GvqDYzR/itM6Ww=
-Date:   Thu, 2 Jan 2020 12:08:17 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] watchdog: Fix possible soft lockup warning at bootup
-Message-Id: <20200102120817.d1c289313747cfde7270076f@linux-foundation.org>
-In-Reply-To: <20200102154149.7564-1-longman@redhat.com>
-References: <20200102154149.7564-1-longman@redhat.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 2 Jan 2020 15:08:44 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:36614 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbgABUIo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 15:08:44 -0500
+Received: by mail-il1-f194.google.com with SMTP id b15so34992997iln.3;
+        Thu, 02 Jan 2020 12:08:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=j1hCTeEJqsz6sWXLkCqqNE2eKwc5EpIhnHr0o3azERM=;
+        b=YHy6+D53T4cPFvuwLUjZGVTKkquTiuGD6AitwjaBRiQ3DdYLaHec3ZV999kJ9qo4Za
+         har4bTLHRnY9mb71uY1zQynzPq7vkSzRU2KrBtnXvv7uZPMbAslAqrJN+Lvz9ALAdgtG
+         Kr3iilYtQiFX4jzTT0jXPQcCnQbfAymt8TpBDosZTgA5aNeQl9UjDr+K4t8g7dqK7hYs
+         XF3++apSF5WvAYRu0/bChLc+YDKi+6ay8omWZd0EUA9zw8AexAdSree9gki2b4kYQKhQ
+         FGtwc50eyjLeg74Bsp9qtdEatfdO5pGqTjR1W4cVD6lSdQK22A/P7+xdflx+lQDgsfeZ
+         tMbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j1hCTeEJqsz6sWXLkCqqNE2eKwc5EpIhnHr0o3azERM=;
+        b=VU7j5wuTqmrrw1HjbxxpaVTIgVZgYbMPZcy3l71wOM1fT0S7tpGMhReCRjcdaLdNNj
+         1Nj3CSoysS6JYLwhp5wQZ0suU9bBLzjiuLmjQUpYEPtyyNyNny+Ycijj+mkSdXhVisb/
+         F1vp4AI3hP1ViE4o8ykwXvwrsLL4i+6tn5q/6vX1eWT6pq2BsR134CK37i60qR4odxIb
+         Kp+KSt2YVgnBWH1wEx1o59x1ncTIoypTijyEZDpZZn+MLFJKg565S2cVRt5H74c5TMic
+         iLbj2z7pNqnuS02g6ay0hsVeYuW3fyVAD3c018/aq9O9ThaOCcToorCq2sjWe5giyhnM
+         RZtw==
+X-Gm-Message-State: APjAAAXGq5DRVj3EXArm0VuFRWR+ZwT7pYJK+jlGOUWL659nuWHU6XWB
+        PtnRq9eUd5m5ONEi4Zd/SqHKc4aLUgNu+1huoyd18KI7
+X-Google-Smtp-Source: APXvYqz3enXjzakAbF0V7JKTkSMXPmAAGWsbsoVkM7ASVQzbwdh9Zi3BRz/t2ThMi2QOVNHME0TuYtdt/e7QP3iRG4k=
+X-Received: by 2002:a92:1087:: with SMTP id 7mr41342954ilq.275.1577995723830;
+ Thu, 02 Jan 2020 12:08:43 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1577990599.git.chris@chrisdown.name> <738b3d565fe7c65f41c38e439fe3cbfa14f87465.1577990599.git.chris@chrisdown.name>
+ <CAOQ4uxi0v4WL30gpedUbex-TD5wN8p8kCop_3VDYV0UBJGB21w@mail.gmail.com> <20200102200052.GA1181932@chrisdown.name>
+In-Reply-To: <20200102200052.GA1181932@chrisdown.name>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Thu, 2 Jan 2020 22:08:32 +0200
+Message-ID: <CAOQ4uxg7a=U674CeT5=j7181=Y8EyMCQhFeL76B95_tGpQeJdA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] tmpfs: Add per-superblock i_ino support
+To:     Chris Down <chris@chrisdown.name>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  2 Jan 2020 10:41:49 -0500 Waiman Long <longman@redhat.com> wrote:
-
-> It was found that watchdog soft lockup warning was displayed on some
-> arm64 server systems at bootup time:
-> 
-> ...
+On Thu, Jan 2, 2020 at 10:00 PM Chris Down <chris@chrisdown.name> wrote:
 >
-> Further analysis of the situation revealed that the smp_init() call
-> itself took more than 20s for that 2-socket 56-core and 224-thread
-> server.
-> 
->  [    0.115632] CPU1: Booted secondary processor 0x0000000100 [0x431f0af1]
->    :
->  [   27.177282] CPU223: Booted secondary processor 0x0000011b03 [0x431f0af1]
-> 
-> By adding some instrumentation code, it was found that for cpu 14,
-> watchdog_enable() was called early with a timestamp of 1. The first
-> watchdog timer callback for that cpu, however, happened really late at
-> the above 25s timestamp mark causing the watchdog logic to treat the
-> delay as a soft lockup.
-> 
-> On another arm64 system that doesn't show the soft lockup warning, the
-> watchdog timer callback happened earlier at the 5s timestamp mark with
-> the watchdog thread invoked shortly after that.
-> 
-> The reason why there was such a delay in the first watchdog timer
-> callback for that particular system wasn't fully known yet.
-
-Mysteries are unwelcome.  Are you continuing to investigate this?
-
-> Given
-> the fact that smp_init() can run for a long time on some systems,
-> it is probably more appropriate to enable the watchdog function after
-> smp_init() instead of before it.
-> 
-> Another way is to leave watchdog_touch_ts at 0 in watchdog_enable()
-> while the system is at the booting stage. Either one of those should
-> be able to eliminate the soft lockup warning on bootup.
-> 
-> ...
+> Amir Goldstein writes:
+> >Wouldn't it be easier to check max_inodes instead of passing this
+> >use_sb_ino arg?
+> >Is there any case where they *need* to differ?
 >
-> --- a/kernel/watchdog.c
-> +++ b/kernel/watchdog.c
-> @@ -496,7 +496,9 @@ static void watchdog_enable(unsigned int cpu)
->  		      HRTIMER_MODE_REL_PINNED_HARD);
->  
->  	/* Initialize timestamp */
-> -	__touch_watchdog();
-> +	if (system_state != SYSTEM_BOOTING)
-> +		__touch_watchdog();
+> Hmm, I suppose probably not? In that case should I just check against
+> SB_KERNMOUNT, since max_inodes can only be 0 in that case?
+>
 
-A comment which explains the system_state test would be appropriate
-here.
+Yes, I think that would be best.
 
->  	/* Enable the perf event */
->  	if (watchdog_enabled & NMI_WATCHDOG_ENABLED)
->  		watchdog_nmi_enable(cpu);
-
+Thanks,
+Amir.
