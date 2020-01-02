@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D73DC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F38EC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE05E20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D704821835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005602;
-	bh=xp112zKb8v80psbV/puqDOGOBn1/rLffnVodRk8j5xw=;
+	s=default; t=1578005603;
+	bh=SnAi6VEACjZDWMUoyeTrwQIOw1723Hj6hxFM5ieZ0pY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mPIsHWp80DVQvJJ4upR+kiSH33tSNx51rlLlO2mFjA7kJF8y1bD20Bl883DNHVRnC
-	 pgcLZqsCxMRegdUs8UM0CdmWyv3fENv4/s1djNEO4QiG2cZqhmNO5Lol/xe8IjBN37
-	 bqXpkbkAZqpLBUlPT8fS0bwYya7ChihGORPem4w4=
+	b=r9xPcbHIJVRPpDRwziGfyGP+g7yGXml98tXUKyNTiA+VVXt7DGbz8BG3lB8A/CJ2q
+	 vHsGcsG7Z21X70s9CvzwO+6UrgQUIWTC+x/wXVjJL9R6i5Fz6aDK2hqU1ZTBWtDFDe
+	 w4GYhnzTa/JRUHe6G9kZMWt7+Z2uCaw/b1lebcP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbgABWxU (ORCPT
+        id S1729471AbgABWxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:53:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41886 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:53:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728643AbgABWV6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:21:58 -0500
+        id S1728900AbgABWWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:22:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA074222C3;
-        Thu,  2 Jan 2020 22:21:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55EDF21D7D;
+        Thu,  2 Jan 2020 22:22:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003718;
-        bh=xp112zKb8v80psbV/puqDOGOBn1/rLffnVodRk8j5xw=;
+        s=default; t=1578003720;
+        bh=SnAi6VEACjZDWMUoyeTrwQIOw1723Hj6hxFM5ieZ0pY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pHVmF0g5Mmagb81W1uCllsehk9OtXPlLFcwpGOzGimOsTYgI3SD/x4BYkKTbx+7xc
-         eayvIMtvfBykQmQMnKsxoEPAv1q7IpOQJvo4WiPawxkVVZfXUm4OW2EfTrBgu+Dw9K
-         wE5ss5FqjSOqj1FyDIWd/FhCcp2mej0pSOoZK2rk=
+        b=n0sm7HAQYHUbRTKgd429zW0giPM5tD7XYT0pHvakHDKob8+qN9eH12OaH/QxK4lFc
+         JTBuePUvX6U/V7ardP/nqDDt1QW+HycS3oN9iRyuKB9jrm6wIwh+6P6OuWK8qZ58P3
+         7ax+yMaNYgwyj0GBLImAa4sdjoCmDA5juNEllc6k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
         syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 086/114] inetpeer: fix data-race in inet_putpeer / inet_putpeer
-Date:   Thu,  2 Jan 2020 23:07:38 +0100
-Message-Id: <20200102220037.855963462@linuxfoundation.org>
+Subject: [PATCH 4.19 087/114] net: add a READ_ONCE() in skb_peek_tail()
+Date:   Thu,  2 Jan 2020 23:07:39 +0100
+Message-Id: <20200102220037.973859160@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -62,91 +62,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-commit 71685eb4ce80ae9c49eff82ca4dd15acab215de9 upstream.
+commit f8cc62ca3e660ae3fdaee533b1d554297cd2ae82 upstream.
 
-We need to explicitely forbid read/store tearing in inet_peer_gc()
-and inet_putpeer().
+skb_peek_tail() can be used without protection of a lock,
+as spotted by KCSAN [1]
 
-The following syzbot report reminds us about inet_putpeer()
-running without a lock held.
+In order to avoid load-stearing, add a READ_ONCE()
 
-BUG: KCSAN: data-race in inet_putpeer / inet_putpeer
+Note that the corresponding WRITE_ONCE() are already there.
 
-write to 0xffff888121fb2ed0 of 4 bytes by interrupt on cpu 0:
- inet_putpeer+0x37/0xa0 net/ipv4/inetpeer.c:240
- ip4_frag_free+0x3d/0x50 net/ipv4/ip_fragment.c:102
- inet_frag_destroy_rcu+0x58/0x80 net/ipv4/inet_fragment.c:228
- __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
- rcu_do_batch+0x256/0x5b0 kernel/rcu/tree.c:2157
- rcu_core+0x369/0x4d0 kernel/rcu/tree.c:2377
- rcu_core_si+0x12/0x20 kernel/rcu/tree.c:2386
- __do_softirq+0x115/0x33f kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0xbb/0xe0 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:536 [inline]
- smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
- native_safe_halt+0xe/0x10 arch/x86/kernel/paravirt.c:71
- arch_cpu_idle+0x1f/0x30 arch/x86/kernel/process.c:571
- default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
- cpuidle_idle_call kernel/sched/idle.c:154 [inline]
- do_idle+0x1af/0x280 kernel/sched/idle.c:263
+[1]
+BUG: KCSAN: data-race in sk_wait_data / skb_queue_tail
 
-write to 0xffff888121fb2ed0 of 4 bytes by interrupt on cpu 1:
- inet_putpeer+0x37/0xa0 net/ipv4/inetpeer.c:240
- ip4_frag_free+0x3d/0x50 net/ipv4/ip_fragment.c:102
- inet_frag_destroy_rcu+0x58/0x80 net/ipv4/inet_fragment.c:228
- __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
- rcu_do_batch+0x256/0x5b0 kernel/rcu/tree.c:2157
- rcu_core+0x369/0x4d0 kernel/rcu/tree.c:2377
- rcu_core_si+0x12/0x20 kernel/rcu/tree.c:2386
- __do_softirq+0x115/0x33f kernel/softirq.c:292
- run_ksoftirqd+0x46/0x60 kernel/softirq.c:603
- smpboot_thread_fn+0x37d/0x4a0 kernel/smpboot.c:165
+read to 0xffff8880b36a4118 of 8 bytes by task 20426 on cpu 1:
+ skb_peek_tail include/linux/skbuff.h:1784 [inline]
+ sk_wait_data+0x15b/0x250 net/core/sock.c:2477
+ kcm_wait_data+0x112/0x1f0 net/kcm/kcmsock.c:1103
+ kcm_recvmsg+0xac/0x320 net/kcm/kcmsock.c:1130
+ sock_recvmsg_nosec net/socket.c:871 [inline]
+ sock_recvmsg net/socket.c:889 [inline]
+ sock_recvmsg+0x92/0xb0 net/socket.c:885
+ ___sys_recvmsg+0x1a0/0x3e0 net/socket.c:2480
+ do_recvmmsg+0x19a/0x5c0 net/socket.c:2601
+ __sys_recvmmsg+0x1ef/0x200 net/socket.c:2680
+ __do_sys_recvmmsg net/socket.c:2703 [inline]
+ __se_sys_recvmmsg net/socket.c:2696 [inline]
+ __x64_sys_recvmmsg+0x89/0xb0 net/socket.c:2696
+ do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+write to 0xffff8880b36a4118 of 8 bytes by task 451 on cpu 0:
+ __skb_insert include/linux/skbuff.h:1852 [inline]
+ __skb_queue_before include/linux/skbuff.h:1958 [inline]
+ __skb_queue_tail include/linux/skbuff.h:1991 [inline]
+ skb_queue_tail+0x7e/0xc0 net/core/skbuff.c:3145
+ kcm_queue_rcv_skb+0x202/0x310 net/kcm/kcmsock.c:206
+ kcm_rcv_strparser+0x74/0x4b0 net/kcm/kcmsock.c:370
+ __strp_recv+0x348/0xf50 net/strparser/strparser.c:309
+ strp_recv+0x84/0xa0 net/strparser/strparser.c:343
+ tcp_read_sock+0x174/0x5c0 net/ipv4/tcp.c:1639
+ strp_read_sock+0xd4/0x140 net/strparser/strparser.c:366
+ do_strp_work net/strparser/strparser.c:414 [inline]
+ strp_work+0x9a/0xe0 net/strparser/strparser.c:423
+ process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
+ worker_thread+0xa0/0x800 kernel/workqueue.c:2415
  kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
 
 Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 16 Comm: ksoftirqd/1 Not tainted 5.4.0-rc3+ #0
+CPU: 0 PID: 451 Comm: kworker/u4:3 Not tainted 5.4.0-rc3+ #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: kstrp strp_work
 
-Fixes: 4b9d9be839fd ("inetpeer: remove unused list")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
 Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv4/inetpeer.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ include/linux/skbuff.h |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/net/ipv4/inetpeer.c
-+++ b/net/ipv4/inetpeer.c
-@@ -160,7 +160,12 @@ static void inet_peer_gc(struct inet_pee
- 					base->total / inet_peer_threshold * HZ;
- 	for (i = 0; i < gc_cnt; i++) {
- 		p = gc_stack[i];
--		delta = (__u32)jiffies - p->dtime;
-+
-+		/* The READ_ONCE() pairs with the WRITE_ONCE()
-+		 * in inet_putpeer()
-+		 */
-+		delta = (__u32)jiffies - READ_ONCE(p->dtime);
-+
- 		if (delta < ttl || !refcount_dec_if_one(&p->refcnt))
- 			gc_stack[i] = NULL;
- 	}
-@@ -237,7 +242,10 @@ EXPORT_SYMBOL_GPL(inet_getpeer);
- 
- void inet_putpeer(struct inet_peer *p)
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -1669,7 +1669,7 @@ static inline struct sk_buff *skb_peek_n
+  */
+ static inline struct sk_buff *skb_peek_tail(const struct sk_buff_head *list_)
  {
--	p->dtime = (__u32)jiffies;
-+	/* The WRITE_ONCE() pairs with itself (we run lockless)
-+	 * and the READ_ONCE() in inet_peer_gc()
-+	 */
-+	WRITE_ONCE(p->dtime, (__u32)jiffies);
+-	struct sk_buff *skb = list_->prev;
++	struct sk_buff *skb = READ_ONCE(list_->prev);
  
- 	if (refcount_dec_and_test(&p->refcnt))
- 		call_rcu(&p->rcu, inetpeer_free_rcu);
+ 	if (skb == (struct sk_buff *)list_)
+ 		skb = NULL;
+@@ -1737,7 +1737,9 @@ static inline void __skb_insert(struct s
+ 				struct sk_buff *prev, struct sk_buff *next,
+ 				struct sk_buff_head *list)
+ {
+-	/* see skb_queue_empty_lockless() for the opposite READ_ONCE() */
++	/* See skb_queue_empty_lockless() and skb_peek_tail()
++	 * for the opposite READ_ONCE()
++	 */
+ 	WRITE_ONCE(newsk->next, next);
+ 	WRITE_ONCE(newsk->prev, prev);
+ 	WRITE_ONCE(next->prev, newsk);
 
 
