@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01F0C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D7FC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCCF620866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D2320863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004609;
-	bh=z7fnNHlOtntI+6PPW3XY2967h6pBm3S2QYCo9C8eF6Y=;
+	s=default; t=1578004612;
+	bh=aWwajad3FFOd5MGX83mrg5evnt4kXJ3VwXi8MagwZ7E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1kPk/XwFfjnsf+g9BQ7BJLvkEmGME1tK694sfs+5k8WzraZs5d29sNzd/a+/gJP9Q
-	 86mGPDMXLz6gvsQk/0ejgk3VhCZ4aBw8JrmuyfPhOzb6JN/GYwdq5bXD58fXAeMJ4Z
-	 n64+TEKN0OrDPOPXcRf8ySGcEz7OmUDFZ61pAK24=
+	b=kSc8KJpthkFrEsZuNJChkAp/+MPWxHKfMqWcaylbl7UJjP1pbOKqTi4qK1XQ/s8DE
+	 z9PWaF+7RdGiRewxBLiV6/CYcNx7jaq7PoxjzAx4H5NCegXxjAqGCflCt+r9lut+Fk
+	 Wo0i3uCFEWegFhpXF/mhYuT9tn5YLaxCB+0FG2iE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730995AbgABWgt (ORCPT
+        id S1731003AbgABWgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:36:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48378 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:36:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730978AbgABWgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:36:46 -0500
+        id S1730991AbgABWgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:36:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9857D20866;
-        Thu,  2 Jan 2020 22:36:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03FBE20863;
+        Thu,  2 Jan 2020 22:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004605;
-        bh=z7fnNHlOtntI+6PPW3XY2967h6pBm3S2QYCo9C8eF6Y=;
+        s=default; t=1578004607;
+        bh=aWwajad3FFOd5MGX83mrg5evnt4kXJ3VwXi8MagwZ7E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2jpAc1n5UkehXqE5z2spksCJHCMLYcu9He36x4JGpt5V8GLQvJmT+ys34TzeZ09c5
-         761FetU7eOFtwCbEhxlArzONOmZN2XoFH/APHklR8CjRBBJt8j6bvCzV5xwFSUXE1U
-         GOVxSBiCYX7JUhNpQhiUncyiOsbofFFjpyIzI5Is=
+        b=bY+9jX+4TQRyLrFHUHYOcTgn/wxGyO7HpgouOHjzI6fnjfcwCAYnXfnw/dKIEPW8J
+         4qfd2rX42zqCNIaJHvB03NI5D35avANdjVl4XZofgBBISTpTjQEEplIfO1WFiZ+Syf
+         BHm6+y6OMfHvLHJYmpu8BYbZYgNWfDGT6W+Jx5k4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 076/137] net: hisilicon: Fix a BUG trigered by wrong bytes_compl
-Date:   Thu,  2 Jan 2020 23:07:29 +0100
-Message-Id: <20200102220556.899867820@linuxfoundation.org>
+Subject: [PATCH 4.4 077/137] net: nfc: nci: fix a possible sleep-in-atomic-context bug in nci_uart_tty_receive()
+Date:   Thu,  2 Jan 2020 23:07:30 +0100
+Message-Id: <20200102220557.086899682@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -59,90 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 90b3b339364c76baa2436445401ea9ade040c216 ]
+[ Upstream commit b7ac893652cafadcf669f78452329727e4e255cc ]
 
-When doing stress test, we get the following trace:
-kernel BUG at lib/dynamic_queue_limits.c:26!
-Internal error: Oops - BUG: 0 [#1] SMP ARM
-Modules linked in: hip04_eth
-CPU: 0 PID: 2003 Comm: tDblStackPcap0 Tainted: G           O L  4.4.197 #1
-Hardware name: Hisilicon A15
-task: c3637668 task.stack: de3bc000
-PC is at dql_completed+0x18/0x154
-LR is at hip04_tx_reclaim+0x110/0x174 [hip04_eth]
-pc : [<c041abfc>]    lr : [<bf0003a8>]    psr: 800f0313
-sp : de3bdc2c  ip : 00000000  fp : c020fb10
-r10: 00000000  r9 : c39b4224  r8 : 00000001
-r7 : 00000046  r6 : c39b4000  r5 : 0078f392  r4 : 0078f392
-r3 : 00000047  r2 : 00000000  r1 : 00000046  r0 : df5d5c80
-Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
-Control: 32c5387d  Table: 1e189b80  DAC: 55555555
-Process tDblStackPcap0 (pid: 2003, stack limit = 0xde3bc190)
-Stack: (0xde3bdc2c to 0xde3be000)
-[<c041abfc>] (dql_completed) from [<bf0003a8>] (hip04_tx_reclaim+0x110/0x174 [hip04_eth])
-[<bf0003a8>] (hip04_tx_reclaim [hip04_eth]) from [<bf0012c0>] (hip04_rx_poll+0x20/0x388 [hip04_eth])
-[<bf0012c0>] (hip04_rx_poll [hip04_eth]) from [<c04c8d9c>] (net_rx_action+0x120/0x374)
-[<c04c8d9c>] (net_rx_action) from [<c021eaf4>] (__do_softirq+0x218/0x318)
-[<c021eaf4>] (__do_softirq) from [<c021eea0>] (irq_exit+0x88/0xac)
-[<c021eea0>] (irq_exit) from [<c0240130>] (msa_irq_exit+0x11c/0x1d4)
-[<c0240130>] (msa_irq_exit) from [<c0267ba8>] (__handle_domain_irq+0x110/0x148)
-[<c0267ba8>] (__handle_domain_irq) from [<c0201588>] (gic_handle_irq+0xd4/0x118)
-[<c0201588>] (gic_handle_irq) from [<c0558360>] (__irq_svc+0x40/0x58)
-Exception stack(0xde3bdde0 to 0xde3bde28)
-dde0: 00000000 00008001 c3637668 00000000 00000000 a00f0213 dd3627a0 c0af6380
-de00: c086d380 a00f0213 c0a22a50 de3bde6c 00000002 de3bde30 c0558138 c055813c
-de20: 600f0213 ffffffff
-[<c0558360>] (__irq_svc) from [<c055813c>] (_raw_spin_unlock_irqrestore+0x44/0x54)
-Kernel panic - not syncing: Fatal exception in interrupt
+The kernel may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-Pre-modification code:
-int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-{
-[...]
-[1]	priv->tx_head = TX_NEXT(tx_head);
-[2]	count++;
-[3]	netdev_sent_queue(ndev, skb->len);
-[...]
-}
-An rx interrupt occurs if hip04_mac_start_xmit just executes to the line 2,
-tx_head has been updated, but corresponding 'skb->len' has not been
-added to dql_queue.
+net/nfc/nci/uart.c, 349:
+	nci_skb_alloc in nci_uart_default_recv_buf
+net/nfc/nci/uart.c, 255:
+	(FUNC_PTR)nci_uart_default_recv_buf in nci_uart_tty_receive
+net/nfc/nci/uart.c, 254:
+	spin_lock in nci_uart_tty_receive
 
-And then
-hip04_mac_interrupt->__napi_schedule->hip04_rx_poll->hip04_tx_reclaim
+nci_skb_alloc(GFP_KERNEL) can sleep at runtime.
+(FUNC_PTR) means a function pointer is called.
 
-In hip04_tx_reclaim, because tx_head has been updated,
-bytes_compl will plus an additional "skb-> len"
-which has not been added to dql_queue. And then
-trigger the BUG_ON(bytes_compl > num_queued - dql->num_completed).
+To fix this bug, GFP_KERNEL is replaced with GFP_ATOMIC for
+nci_skb_alloc().
 
-To solve the problem described above, we put
-"netdev_sent_queue(ndev, skb->len);"
-before
-"priv->tx_head = TX_NEXT(tx_head);"
+This bug is found by a static analysis tool STCheck written by myself.
 
-Fixes: a41ea46a9a12 ("net: hisilicon: new hip04 ethernet driver")
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c |    2 +-
+ net/nfc/nci/uart.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -455,9 +455,9 @@ static int hip04_mac_start_xmit(struct s
- 	skb_tx_timestamp(skb);
- 
- 	hip04_set_xmit_desc(priv, phys);
--	priv->tx_head = TX_NEXT(tx_head);
- 	count++;
- 	netdev_sent_queue(ndev, skb->len);
-+	priv->tx_head = TX_NEXT(tx_head);
- 
- 	stats->tx_bytes += skb->len;
- 	stats->tx_packets++;
+--- a/net/nfc/nci/uart.c
++++ b/net/nfc/nci/uart.c
+@@ -355,7 +355,7 @@ static int nci_uart_default_recv_buf(str
+ 			nu->rx_packet_len = -1;
+ 			nu->rx_skb = nci_skb_alloc(nu->ndev,
+ 						   NCI_MAX_PACKET_SIZE,
+-						   GFP_KERNEL);
++						   GFP_ATOMIC);
+ 			if (!nu->rx_skb)
+ 				return -ENOMEM;
+ 		}
 
 
