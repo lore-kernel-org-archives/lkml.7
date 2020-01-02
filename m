@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE17CC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97025C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84ED524649
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62FEE24125
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003626;
-	bh=BmOf4eX506gey7d/fY6qrWHZaCqMP9oFOn8fOgVOkiQ=;
+	s=default; t=1578003628;
+	bh=Ey+4mqV5as7tmiwq9ePBpI3MdmtvqTfueHdaI/JCZIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KBlhOMhsagUD0btORH7VdEjQUNjAZx3QxSCLmUjf34oCMQf6XUGtZMmpEYwYXIZpv
-	 k3r0LoI7b/KAp0e1SKgidj11lNSaxzY8Ob+R6bGTfu5jZYxs1UQn25hhCaFZmBsnpE
-	 CTEbm2YbdpsjEpsseWUXXFPYY/aB2zCGVHHIGQsw=
+	b=eYRGV7piSAMFj2X12S9RCFJRW+WnJIlTBWCo7G8oqKTdXKrOdAOE/q/Cnk18Jcyqf
+	 ljUdtS2z2YzoazpGdKESO3afH0fyiB/m4LWsmP3IRB1+8aed8+uRIK3+2U+CM4fXVd
+	 miNFEB9MhNYfzIWXPbti/CbDtiuTLz7sFD+xC5PE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728784AbgABWUZ (ORCPT
+        id S1728794AbgABWU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:20:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37316 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:20:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728053AbgABWUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:20:11 -0500
+        id S1728781AbgABWUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:20:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42AC621582;
-        Thu,  2 Jan 2020 22:20:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B80062253D;
+        Thu,  2 Jan 2020 22:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003610;
-        bh=BmOf4eX506gey7d/fY6qrWHZaCqMP9oFOn8fOgVOkiQ=;
+        s=default; t=1578003625;
+        bh=Ey+4mqV5as7tmiwq9ePBpI3MdmtvqTfueHdaI/JCZIg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H6J/FSYmlmnfmqUnhUOVmR+CFm5ElRIZSslti9VNotY3AWZa8vnCoeJL16uwEJsPh
-         onuLbmkoUGzXQRba95FGXNfbOvvqjUvF6JRuiiyNJ84nsP42/+vk/4E3NC4gSeBdAF
-         W92xNhXMYPfzG+CAAj3sKsCZtVeNyAjjoA/bX6mA=
+        b=YJYHSa+hE3VezLI+cgXHn3AOukyHZszZt3NMhYWt3HljDF+vY6ymA49+Ie6EGepXp
+         bttnRQc1ypQWHayM3E0cAuO9t7BVrCo24TQMxxKWH/77G2mk4Jm0mcixfPlpaNbHhT
+         A8wnRTixvZou9lBM61gj0eCABD24vP3U8uRUofdk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        stable@vger.kernel.org,
+        Anthony Steinhauser <asteinhauser@google.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 040/114] PCI: rpaphp: Correctly match ibm, my-drc-index to drc-name when using drc-info
-Date:   Thu,  2 Jan 2020 23:06:52 +0100
-Message-Id: <20200102220033.132193106@linuxfoundation.org>
+Subject: [PATCH 4.19 020/114] powerpc/security/book3s64: Report L1TF status in sysfs
+Date:   Thu,  2 Jan 2020 23:06:32 +0100
+Message-Id: <20200102220031.162084250@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -61,48 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyrel Datwyler <tyreld@linux.ibm.com>
+From: Anthony Steinhauser <asteinhauser@google.com>
 
-[ Upstream commit 4f9f2d3d7a434b7f882b72550194c9278f4a3925 ]
+[ Upstream commit 8e6b6da91ac9b9ec5a925b6cb13f287a54bd547d ]
 
-The newer ibm,drc-info property is a condensed description of the old
-ibm,drc-* properties (ie. names, types, indexes, and power-domains).
-When matching a drc-index to a drc-name we need to verify that the
-index is within the start and last drc-index range and map it to a
-drc-name using the drc-name-prefix and logical index.
+Some PowerPC CPUs are vulnerable to L1TF to the same extent as to
+Meltdown. It is also mitigated by flushing the L1D on privilege
+transition.
 
-Fix the mapping by checking that the index is within the range of the
-current drc-info entry, and build the name from the drc-name-prefix
-concatenated with the starting drc-name-suffix value and the sequential
-index obtained by subtracting ibm,my-drc-index from this entries
-drc-start-index.
+Currently the sysfs gives a false negative on L1TF on CPUs that I
+verified to be vulnerable, a Power9 Talos II Boston 004e 1202, PowerNV
+T2P9D01.
 
-Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Anthony Steinhauser <asteinhauser@google.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1573449697-5448-10-git-send-email-tyreld@linux.ibm.com
+[mpe: Just have cpu_show_l1tf() call cpu_show_meltdown() directly]
+Link: https://lore.kernel.org/r/20191029190759.84821-1-asteinhauser@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/hotplug/rpaphp_core.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/security.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-index 7d74fe875225..a306cad70470 100644
---- a/drivers/pci/hotplug/rpaphp_core.c
-+++ b/drivers/pci/hotplug/rpaphp_core.c
-@@ -248,9 +248,10 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
- 		/* Should now know end of current entry */
+diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
+index a5c5940d970a..a4354c4f6bc5 100644
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -160,6 +160,11 @@ ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, cha
  
- 		/* Found it */
--		if (my_index <= drc.last_drc_index) {
-+		if (my_index >= drc.drc_index_start && my_index <= drc.last_drc_index) {
-+			int index = my_index - drc.drc_index_start;
- 			sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
--				my_index);
-+				drc.drc_name_suffix_start + index);
- 			break;
- 		}
- 	}
+ 	return sprintf(buf, "Vulnerable\n");
+ }
++
++ssize_t cpu_show_l1tf(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	return cpu_show_meltdown(dev, attr, buf);
++}
+ #endif
+ 
+ ssize_t cpu_show_spectre_v1(struct device *dev, struct device_attribute *attr, char *buf)
 -- 
 2.20.1
 
