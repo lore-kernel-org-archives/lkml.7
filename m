@@ -2,52 +2,53 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC22C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EC1C3276E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 504FC20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14C9220866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004616;
-	bh=V/gy+YkzeOgdnynA/ZcHtlCiX4G0to+VmVLRwR3TjFE=;
+	s=default; t=1578004618;
+	bh=HfxmJov3jysFVXqwPS9/x0Kez02+vReiXBOF2m6UGz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L0t/+avBGActNOzX7rGk+ZYfFBzISY/ReMOzochC3/GwGYC958LRUrdlxECq/IJ44
-	 Pa3ULGTkEbAif8FL6XF/vSzKqtYIvmbNu1HfOVWJFgiYD6bRF2KKYmwUiZMJKjWj5Y
-	 JE2WeJbqyrRyeMmxY9sEoonUJerAqhTw7BBUluGc=
+	b=kCgdTlGXZTU3H/TY7l65Y8cM5500bXtKv6FKf9nEfUrEtRFQcXYuVI26IZwNf5lt/
+	 0TvWCtpHH5WkfbBaTNJnIzrAhaprVZ3G3sRKrvK/xWSPpVbIk/sgx76XgL/u6Jf1We
+	 7ld4Yw/kmNIyFvnewd+JDlmKBEJIzdms4v9ayraU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731017AbgABWgz (ORCPT
+        id S1731024AbgABWg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:36:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48556 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:36:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730833AbgABWgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:36:52 -0500
+        id S1730507AbgABWgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:36:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA45320866;
-        Thu,  2 Jan 2020 22:36:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2016F20866;
+        Thu,  2 Jan 2020 22:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004612;
-        bh=V/gy+YkzeOgdnynA/ZcHtlCiX4G0to+VmVLRwR3TjFE=;
+        s=default; t=1578004614;
+        bh=HfxmJov3jysFVXqwPS9/x0Kez02+vReiXBOF2m6UGz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S2PL7D5IzOpx3UFaijPYu692pUbf2tuj4A32frhvOZfWVylHBk1AleOK67n2UbE+K
-         cAHpa62tD5MTfRa95Dq/VPQfybrTYoFDjuybf7jegyw1F0SwWGlMP7WvPHYXZleXFy
-         VQO9W2c6O/mL2ZWDC50hzUZaVUbGNEWNHBC6y0ak=
+        b=ovkaDDFhXdiwJDiTpK7g94lsK9RJG4ArLytLxyKtpcPYDuyA2HG2m4CjMk4R3QXjg
+         XwlqVSW60AZi/w7Rwph9s7p8ipEisaQWhtH8d6lpK/mHwY3DM+HuQ8oSFbm/VoB3FE
+         bx6poTHj1ljN7TdeBc3AB08lBBi+YODUnkT5lvJ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Cristian Birsan <cristian.birsan@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 079/137] net: usb: lan78xx: Fix suspend/resume PHY register access error
-Date:   Thu,  2 Jan 2020 23:07:32 +0100
-Message-Id: <20200102220557.332025042@linuxfoundation.org>
+        stable@vger.kernel.org, Ben Zhang <benzh@chromium.org>,
+        Curtis Malainey <cujomalainey@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 054/137] ASoC: rt5677: Mark reg RT5677_PWR_ANLG2 as volatile
+Date:   Thu,  2 Jan 2020 23:07:07 +0100
+Message-Id: <20200102220553.765864082@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -60,34 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Birsan <cristian.birsan@microchip.com>
+From: Ben Zhang <benzh@chromium.org>
 
-[ Upstream commit 20032b63586ac6c28c936dff696981159913a13f ]
+[ Upstream commit eabf424f7b60246c76dcb0ea6f1e83ef9abbeaa6 ]
 
-Lan78xx driver accesses the PHY registers through MDIO bus over USB
-connection. When performing a suspend/resume, the PHY registers can be
-accessed before the USB connection is resumed. This will generate an
-error and will prevent the device to resume correctly.
-This patch adds the dependency between the MDIO bus and USB device to
-allow correct handling of suspend/resume.
+The codec dies when RT5677_PWR_ANLG2(MX-64h) is set to 0xACE1
+while it's streaming audio over SPI. The DSP firmware turns
+on PLL2 (MX-64 bit 8) when SPI streaming starts.  However regmap
+does not believe that register can change by itself. When
+BST1 (bit 15) is turned on with regmap_update_bits(), it doesn't
+read the register first before write, so PLL2 power bit is
+cleared by accident.
 
-Fixes: ce85e13ad6ef ("lan78xx: Update to use phylib instead of mii_if_info.")
-Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Marking MX-64h as volatile in regmap solved the issue.
+
+Signed-off-by: Ben Zhang <benzh@chromium.org>
+Signed-off-by: Curtis Malainey <cujomalainey@chromium.org>
+Link: https://lore.kernel.org/r/20191106011335.223061-6-cujomalainey@chromium.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/lan78xx.c |    1 +
+ sound/soc/codecs/rt5677.c | 1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -1448,6 +1448,7 @@ static int lan78xx_mdio_init(struct lan7
- 	dev->mdiobus->read = lan78xx_mdiobus_read;
- 	dev->mdiobus->write = lan78xx_mdiobus_write;
- 	dev->mdiobus->name = "lan78xx-mdiobus";
-+	dev->mdiobus->parent = &dev->udev->dev;
- 
- 	snprintf(dev->mdiobus->id, MII_BUS_ID_SIZE, "usb-%03d:%03d",
- 		 dev->udev->bus->busnum, dev->udev->devnum);
+diff --git a/sound/soc/codecs/rt5677.c b/sound/soc/codecs/rt5677.c
+index 69d987a9935c..90f8173123f6 100644
+--- a/sound/soc/codecs/rt5677.c
++++ b/sound/soc/codecs/rt5677.c
+@@ -295,6 +295,7 @@ static bool rt5677_volatile_register(struct device *dev, unsigned int reg)
+ 	case RT5677_I2C_MASTER_CTRL7:
+ 	case RT5677_I2C_MASTER_CTRL8:
+ 	case RT5677_HAP_GENE_CTRL2:
++	case RT5677_PWR_ANLG2: /* Modified by DSP firmware */
+ 	case RT5677_PWR_DSP_ST:
+ 	case RT5677_PRIV_DATA:
+ 	case RT5677_PLL1_CTRL2:
+-- 
+2.20.1
+
 
 
