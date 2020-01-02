@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 053F8C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E87DC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C168320866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA4C20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005780;
-	bh=GbbVOGT3ssLiWOJrq9q3+/pq8O/Q6xx45RyYpvxGwGQ=;
+	s=default; t=1578005782;
+	bh=JWb2HTxKjwt7c+2VWSuV6dZw+rY7dUeS0VEpkgAQJ6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qcfKoWafi5fLBjh05/8Fr3xMq6B4na/2lQothtDOEfrdVM7DZMZdwl9m93iBu72cH
-	 Am+iPAxOUaXk9JsCxBe0FtwFMxddHyC4QD/NbZaYibIp1waFNo9+fp9fP75zJw92zk
-	 BRumb6YEyMI1ObGyTA0dXfm3Y9dUsRn2a++C6Yjk=
+	b=u6O2RN+zmvMiwSkt2rwsAhPJgQh5jHAc2M9/297dubTxNyGrNd6YTngsrQMHiuh75
+	 qTi/oJy1Of2c29tpGanMI5r+WjIdeKbGmV1QxgLVkKas7o+F2gyxNs+0KPcZkAZbbd
+	 c5u0T/9375Pz5LB/gscA3QUeX9uF4fkXQngvebFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbgABWS1 (ORCPT
+        id S1728425AbgABWSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:18:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33416 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:18:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728295AbgABWSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:18:18 -0500
+        id S1728069AbgABWSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:18:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60E3221582;
-        Thu,  2 Jan 2020 22:18:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F171A21582;
+        Thu,  2 Jan 2020 22:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003497;
-        bh=GbbVOGT3ssLiWOJrq9q3+/pq8O/Q6xx45RyYpvxGwGQ=;
+        s=default; t=1578003495;
+        bh=JWb2HTxKjwt7c+2VWSuV6dZw+rY7dUeS0VEpkgAQJ6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PymgbRLdSLJvobd3cjZAVd9HX+Pyxwnn3r31+QiT5zETNEXDzJTa2vLx/fNwGWPk2
-         hoJjYHP0OeJPehkSCaeBb4tAlWVVY8fzeGCkkSvAh+9migX7rpd14e5/5+CfCNuI96
-         LloP5CKXBbmLVFC3aGdTa0vu/QFdF4Tn7jxB3G3A=
+        b=u4vAqq6TJnYgbwpqVfSQpaEK1t5nLpaaaycQ7EbJEkOHXtyWwEpojt6Oxd37foV9J
+         7My6iR8W1PzTdAE99fBAT1rf31SprZlxEY0gcc7uNQ3rPY0mALUlqXMNcHZfr5YOeE
+         yB9jHw9wevkqTyXND0vR9xgVw4io/orHeLKlQnhA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        David Ahern <dsahern@gmail.com>,
+        stable@vger.kernel.org, Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Michael Chan <michael.chan@broadcom.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 5.4 186/191] ipv6/addrconf: only check invalid header values when NETLINK_F_STRICT_CHK is set
-Date:   Thu,  2 Jan 2020 23:07:48 +0100
-Message-Id: <20200102215849.500783837@linuxfoundation.org>
+Subject: [PATCH 5.4 185/191] bnxt: apply computed clamp value for coalece parameter
+Date:   Thu,  2 Jan 2020 23:07:47 +0100
+Message-Id: <20200102215849.345722090@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,50 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Jonathan Lemon <jonathan.lemon@gmail.com>
 
-[ Upstream commit 2beb6d2901a3f73106485d560c49981144aeacb1 ]
+[ Upstream commit 6adc4601c2a1ac87b4ab8ed0cb55db6efd0264e8 ]
 
-In commit 4b1373de73a3 ("net: ipv6: addr: perform strict checks also for
-doit handlers") we add strict check for inet6_rtm_getaddr(). But we did
-the invalid header values check before checking if NETLINK_F_STRICT_CHK
-is set. This may break backwards compatibility if user already set the
-ifm->ifa_prefixlen, ifm->ifa_flags, ifm->ifa_scope in their netlink code.
+After executing "ethtool -C eth0 rx-usecs-irq 0", the box becomes
+unresponsive, likely due to interrupt livelock.  It appears that
+a minimum clamp value for the irq timer is computed, but is never
+applied.
 
-I didn't move the nlmsg_len check because I thought it's a valid check.
+Fix by applying the corrected clamp value.
 
-Reported-by: Jianlin Shi <jishi@redhat.com>
-Fixes: 4b1373de73a3 ("net: ipv6: addr: perform strict checks also for doit handlers")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
+Fixes: 74706afa712d ("bnxt_en: Update interrupt coalescing logic.")
+Signed-off-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/addrconf.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv6/addrconf.c
-+++ b/net/ipv6/addrconf.c
-@@ -5231,16 +5231,16 @@ static int inet6_rtm_valid_getaddr_req(s
- 		return -EINVAL;
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -6178,7 +6178,7 @@ static void bnxt_hwrm_set_coal_params(st
+ 		tmr = bnxt_usec_to_coal_tmr(bp, hw_coal->coal_ticks_irq);
+ 		val = clamp_t(u16, tmr, 1,
+ 			      coal_cap->cmpl_aggr_dma_tmr_during_int_max);
+-		req->cmpl_aggr_dma_tmr_during_int = cpu_to_le16(tmr);
++		req->cmpl_aggr_dma_tmr_during_int = cpu_to_le16(val);
+ 		req->enables |=
+ 			cpu_to_le16(BNXT_COAL_CMPL_AGGR_TMR_DURING_INT_ENABLE);
  	}
- 
-+	if (!netlink_strict_get_check(skb))
-+		return nlmsg_parse_deprecated(nlh, sizeof(*ifm), tb, IFA_MAX,
-+					      ifa_ipv6_policy, extack);
-+
- 	ifm = nlmsg_data(nlh);
- 	if (ifm->ifa_prefixlen || ifm->ifa_flags || ifm->ifa_scope) {
- 		NL_SET_ERR_MSG_MOD(extack, "Invalid values in header for get address request");
- 		return -EINVAL;
- 	}
- 
--	if (!netlink_strict_get_check(skb))
--		return nlmsg_parse_deprecated(nlh, sizeof(*ifm), tb, IFA_MAX,
--					      ifa_ipv6_policy, extack);
--
- 	err = nlmsg_parse_deprecated_strict(nlh, sizeof(*ifm), tb, IFA_MAX,
- 					    ifa_ipv6_policy, extack);
- 	if (err)
 
 
