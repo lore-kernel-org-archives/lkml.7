@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C266C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 356C7C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56D6620848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3DC120848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005346;
-	bh=eBj3zebOOUYoWjFTVIh6KdupIP+SGfAub9H2UCBOmD4=;
+	s=default; t=1578005351;
+	bh=k6bgISmFVXAejLhew9BLRgiogl5bQXZsj+xCKYwJyhg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x/rmDNpGa7Ec1gd5s8oDMrVaJBA83EcyFo25eucqK+vJF9ZAma4JbYB/S2UK7BWfq
-	 89rLb1NNEczJ0Yi6NtuGi0C7ou4F6fWcYjiqv3UEWVK820dBrTwB40g8QMcIL/mHXQ
-	 JifXgxLPrQwFkChasUnzbpE0Bc/PGGezyaoqQAUk=
+	b=Rgfxy96A3oniBfozPiTL+fb6RAQkCdcjCPHizQIYS7HEiQqoz5bCmuZijJ5XU3Xgt
+	 /iDG4bQn9/ponCs41riHmvWst8bh+uGxkMo9kDvt8nGlroskJTuKMKzNG+cbY/yldn
+	 YIPS6DwUKlXwu4nZ7JiKKmph1o2RvZCPjf04WhDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730217AbgABWtF (ORCPT
+        id S1730379AbgABWtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:49:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55566 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:49:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728936AbgABW1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:27:19 -0500
+        id S1729620AbgABW1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:27:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34D9B21835;
-        Thu,  2 Jan 2020 22:27:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B75820863;
+        Thu,  2 Jan 2020 22:27:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004038;
-        bh=eBj3zebOOUYoWjFTVIh6KdupIP+SGfAub9H2UCBOmD4=;
+        s=default; t=1578004028;
+        bh=k6bgISmFVXAejLhew9BLRgiogl5bQXZsj+xCKYwJyhg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vhaaypLDEiAJzsln0560BtK4ivnmUxUTyQZLSapnzc87dx1ecT0SE3Ov2wxSsJsi7
-         qZZXYXbZmdCOiCVIZ/1qerLkjLCPW0oiP+BOiXfhqutE+gUkK/9ZmssWAOGelFWm2T
-         9aDplqybHxlB+PvIX3i8YZMFxXCwcVT4Q9MhHaKo=
+        b=jIM2LRJILMmGa5+YAU4PfOw7emn6c8iRt+rAN/m1j2auR8KSdwK8pKPOBdrgptxky
+         y2Cq5d+9USzn4JYquG3J9CboTs4yz08Ud6iffG+2HHEeT7N7HnMAhrRMLD5DdbMg7g
+         +2lTUO0PGuqnhOfae7nav2Q/L5vPofyfcgqVDuzs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.9 003/171] btrfs: handle ENOENT in btrfs_uuid_tree_iterate
-Date:   Thu,  2 Jan 2020 23:05:34 +0100
-Message-Id: <20200102220547.376342956@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        David Ahern <dsahern@gmail.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 82/91] net/dst: add new function skb_dst_update_pmtu_no_confirm
+Date:   Thu,  2 Jan 2020 23:08:04 +0100
+Message-Id: <20200102220450.485033666@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
-References: <20200102220546.960200039@linuxfoundation.org>
+In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
+References: <20200102220356.856162165@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,37 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-commit 714cd3e8cba6841220dce9063a7388a81de03825 upstream.
+[ Upstream commit 07dc35c6e3cc3c001915d05f5bf21f80a39a0970 ]
 
-If we get an -ENOENT back from btrfs_uuid_iter_rem when iterating the
-uuid tree we'll just continue and do btrfs_next_item().  However we've
-done a btrfs_release_path() at this point and no longer have a valid
-path.  So increment the key and go back and do a normal search.
+Add a new function skb_dst_update_pmtu_no_confirm() for callers who need
+update pmtu but should not do neighbor confirm.
 
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+v5: No change.
+v4: No change.
+v3: Do not remove dst_confirm_neigh, but add a new bool parameter in
+    dst_ops.update_pmtu to control whether we should do neighbor confirm.
+    Also split the big patch to small ones for each area.
+v2: Remove dst_confirm_neigh in __ip6_rt_update_pmtu.
+
+Reviewed-by: Guillaume Nault <gnault@redhat.com>
+Acked-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/btrfs/uuid-tree.c |    2 ++
- 1 file changed, 2 insertions(+)
+ include/net/dst.h |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/fs/btrfs/uuid-tree.c
-+++ b/fs/btrfs/uuid-tree.c
-@@ -335,6 +335,8 @@ again_search_slot:
- 				}
- 				if (ret < 0 && ret != -ENOENT)
- 					goto out;
-+				key.offset++;
-+				goto again_search_slot;
- 			}
- 			item_size -= sizeof(subid_le);
- 			offset += sizeof(subid_le);
+--- a/include/net/dst.h
++++ b/include/net/dst.h
+@@ -531,4 +531,13 @@ static inline void skb_dst_update_pmtu(s
+ 		dst->ops->update_pmtu(dst, NULL, skb, mtu, true);
+ }
+ 
++/* update dst pmtu but not do neighbor confirm */
++static inline void skb_dst_update_pmtu_no_confirm(struct sk_buff *skb, u32 mtu)
++{
++	struct dst_entry *dst = skb_dst(skb);
++
++	if (dst && dst->ops->update_pmtu)
++		dst->ops->update_pmtu(dst, NULL, skb, mtu, false);
++}
++
+ #endif /* _NET_DST_H */
 
 
