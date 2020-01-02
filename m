@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0216C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5105EC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B29A20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 248C520866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005431;
-	bh=gYr/zNUZiO7HfENANZzCp2RXCcAamM1IeohEXgpihEY=;
+	s=default; t=1578005437;
+	bh=jBDoo+A/HTVXUC3Ugi9COLtzSfQPnNZY8ECqr33cvlY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lmbvFtw8/HfVE0ILJOq0tTuMdudbMNwQ1aY9UpCztyGxquP0P5Amv1qjhVkr4hgIj
-	 Aju918kQnm5yBOUq/aEBDyRliHKCF7aDsdetq5NkuvY8ITJlfeT0JvhJAPjzp/2c5W
-	 G16yyV4D/1C1FaqXmJ8jWdBB8B6g1CGXQ70XrKpE=
+	b=aq/nzutrYfzFvPZVmVIPf0Fywhq0aP31v3dJR2Ct1b7c9u9aIMxsrVeS7WyVs1o5C
+	 NcHMYrByh3vd7wsEVYzXTVCze4gpExtF3Qhj88x6Dkq+TpJa9bmZoqyo6zhjmUB6G9
+	 6NYDlAuU7wtCj5A/wXFGt+AblVEshzh045DCLrp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbgABWZ3 (ORCPT
+        id S1729384AbgABWug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:25:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50810 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:50:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729238AbgABWZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:25:25 -0500
+        id S1728356AbgABWZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:25:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D407522B48;
-        Thu,  2 Jan 2020 22:25:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F99721835;
+        Thu,  2 Jan 2020 22:25:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003925;
-        bh=gYr/zNUZiO7HfENANZzCp2RXCcAamM1IeohEXgpihEY=;
+        s=default; t=1578003918;
+        bh=jBDoo+A/HTVXUC3Ugi9COLtzSfQPnNZY8ECqr33cvlY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yz7GCguZE47rP1mxZkI08AJYJtdhz+vcIUtkudmY98rfQXQhyqwpq+ocxTv/keOxU
-         WFCZKyYf4JJIFAMuX+/Bx79Q1dMyNPyh9+F3Y8LlzHNm2OX6YyVeug5FT9ldQSeXoV
-         LT4o7vehy0tEq7p2fFPyFH1CC6JwO8Jemeai+aLY=
+        b=xkZgcR5DMcbF1gjNzUZRwNA6Y7BcMp358yVL7ISDDRw6RGSH3hAm5srHtULOM75cj
+         QhMoPF3ZAMIBqFG+mCnZCyQCzlo5a3i14If0WOtfChcuzfHTf43TSJxMI8G5Cx/2Gc
+         AXEYi8m2fWZQgR9tiMvVkpgdJh9XQ89SGRFCpUTY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Chris Down <chris@chrisdown.name>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 31/91] clk: pxa: fix one of the pxa RTC clocks
-Date:   Thu,  2 Jan 2020 23:07:13 +0100
-Message-Id: <20200102220430.873096830@linuxfoundation.org>
+Subject: [PATCH 4.14 53/91] kernel: sysctl: make drop_caches write-only
+Date:   Thu,  2 Jan 2020 23:07:35 +0100
+Message-Id: <20200102220437.874321828@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -60,37 +66,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Jarzmik <robert.jarzmik@free.fr>
+From: Johannes Weiner <hannes@cmpxchg.org>
 
-[ Upstream commit 46acbcb4849b2ca2e6e975e7c8130c1d61c8fd0c ]
+[ Upstream commit 204cb79ad42f015312a5bbd7012d09c93d9b46fb ]
 
-The pxa27x platforms have a single IP with 2 drivers, sa1100-rtc and
-rtc-pxa drivers.
+Currently, the drop_caches proc file and sysctl read back the last value
+written, suggesting this is somehow a stateful setting instead of a
+one-time command.  Make it write-only, like e.g.  compact_memory.
 
-A previous patch fixed the sa1100-rtc case, but the pxa-rtc wasn't
-fixed. This patch completes the previous one.
+While mitigating a VM problem at scale in our fleet, there was confusion
+about whether writing to this file will permanently switch the kernel into
+a non-caching mode.  This influences the decision making in a tense
+situation, where tens of people are trying to fix tens of thousands of
+affected machines: Do we need a rollback strategy?  What are the
+performance implications of operating in a non-caching state for several
+days?  It also caused confusion when the kernel team said we may need to
+write the file several times to make sure it's effective ("But it already
+reads back 3?").
 
-Fixes: 8b6d10345e16 ("clk: pxa: add missing pxa27x clocks for Irda and sa1100-rtc")
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
-Link: https://lkml.kernel.org/r/20191026194420.11918-1-robert.jarzmik@free.fr
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Link: http://lkml.kernel.org/r/20191031221602.9375-1-hannes@cmpxchg.org
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Acked-by: Chris Down <chris@chrisdown.name>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Alexey Dobriyan <adobriyan@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/pxa/clk-pxa27x.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/sysctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/pxa/clk-pxa27x.c b/drivers/clk/pxa/clk-pxa27x.c
-index 25a30194d27a..b67ea86ff156 100644
---- a/drivers/clk/pxa/clk-pxa27x.c
-+++ b/drivers/clk/pxa/clk-pxa27x.c
-@@ -462,6 +462,7 @@ struct dummy_clk {
- };
- static struct dummy_clk dummy_clks[] __initdata = {
- 	DUMMY_CLK(NULL, "pxa27x-gpio", "osc_32_768khz"),
-+	DUMMY_CLK(NULL, "pxa-rtc", "osc_32_768khz"),
- 	DUMMY_CLK(NULL, "sa1100-rtc", "osc_32_768khz"),
- 	DUMMY_CLK("UARTCLK", "pxa2xx-ir", "STUART"),
- };
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index cfc2c0d1369a..74fc3a9d1923 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -1397,7 +1397,7 @@ static struct ctl_table vm_table[] = {
+ 		.procname	= "drop_caches",
+ 		.data		= &sysctl_drop_caches,
+ 		.maxlen		= sizeof(int),
+-		.mode		= 0644,
++		.mode		= 0200,
+ 		.proc_handler	= drop_caches_sysctl_handler,
+ 		.extra1		= &one,
+ 		.extra2		= &four,
 -- 
 2.20.1
 
