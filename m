@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56286C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2FBC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C3AF21835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADC8F21582
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003660;
-	bh=UTEyKcIeo6ufvAwkvkVDtzwNGjdsk+EvlIbWR0QJSkI=;
+	s=default; t=1578003664;
+	bh=iprWCtLGEBo8BgYJE9kAck3R9X49tsn0AWg2uJ6REZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0NY/2NJSMYlxCBrymDepis47CdW30SMpyaboQnFkGt7Mym5sEzUDuU+XeMmhYfnts
-	 Md0/zISkt7IphEnClWu8x2FrCiK858y+au5cLOuZ8spuN5xWfYO/AT9e5jZV5agQJ2
-	 PbDwYBCcM0sN4QLPpXv6gyD8tujDWyZeJQBgReLI=
+	b=pCFt/m6zBZWufT8nwoPyL+wjqn/SZjiO3hz6beaNd0Zza9iSTm57TAe2reyFIskG3
+	 j8e88jSwquhnj9lR1GtkX17vcRSBTJdc82Z5UwU0moUDWgfphWZM5YvDYLL9Mj3RkH
+	 pjc9Jc9/TtOSNmE/wf/V2NCqKYIEOvwcSqMtTJyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgABWU7 (ORCPT
+        id S1727936AbgABWVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:20:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39084 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:21:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728895AbgABWUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:20:52 -0500
+        id S1728920AbgABWVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:21:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 141D520866;
-        Thu,  2 Jan 2020 22:20:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A68920866;
+        Thu,  2 Jan 2020 22:21:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003651;
-        bh=UTEyKcIeo6ufvAwkvkVDtzwNGjdsk+EvlIbWR0QJSkI=;
+        s=default; t=1578003661;
+        bh=iprWCtLGEBo8BgYJE9kAck3R9X49tsn0AWg2uJ6REZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kSW5Y2PzrT9wECELCDsoQnEEePerFt5X/el42K6p7nE0yy6bd3/D1pf23A3JkU3uP
-         SQ61zsW8DdAwCpLMMpHpxLDWgMhIJox0Q1w0IRmKrkUgxP7vgNX2ArFLzpuB7hh+bY
-         5wjgN6noAP0qJK4wNVrfIHzNAAKs94Vd0uJIcasA=
+        b=rDX2BFz2/A7osvKq9EZ0IFU2LQs2ovhoSsk8XsO5h8Dpvh3VzLreLPYeZfL9PD4xE
+         GG3FXUJ+GwlHYzxjGEMhAxjeYuDn6YweraIdb03yUxtPR+GaBm71zNOLYDjLCxgvRw
+         JQz1hnSfte86Abcccd/N8b+06NbygEKY6HA8sf3s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Michael Walle <michael@walle.cc>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 058/114] gpio: mpc8xxx: Dont overwrite default irq_set_type callback
-Date:   Thu,  2 Jan 2020 23:07:10 +0100
-Message-Id: <20200102220034.881471342@linuxfoundation.org>
+Subject: [PATCH 4.19 062/114] f2fs: choose hardlimit when softlimit is larger than hardlimit in f2fs_statfs_project()
+Date:   Thu,  2 Jan 2020 23:07:14 +0100
+Message-Id: <20200102220035.294585461@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -61,54 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+From: Chengguang Xu <cgxu519@mykernel.net>
 
-[ Upstream commit 4e50573f39229d5e9c985fa3b4923a8b29619ade ]
+[ Upstream commit 909110c060f22e65756659ec6fa957ae75777e00 ]
 
-The per-SoC devtype structures can contain their own callbacks that
-overwrite mpc8xxx_gpio_devtype_default.
+Setting softlimit larger than hardlimit seems meaningless
+for disk quota but currently it is allowed. In this case,
+there may be a bit of comfusion for users when they run
+df comamnd to directory which has project quota.
 
-The clear intention is that mpc8xxx_irq_set_type is used in case the SoC
-does not specify a more specific callback. But what happens is that if
-the SoC doesn't specify one, its .irq_set_type is de-facto NULL, and
-this overwrites mpc8xxx_irq_set_type to a no-op. This means that the
-following SoCs are affected:
+For example, we set 20M softlimit and 10M hardlimit of
+block usage limit for project quota of test_dir(project id 123).
 
-- fsl,mpc8572-gpio
-- fsl,ls1028a-gpio
-- fsl,ls1088a-gpio
+[root@hades f2fs]# repquota -P -a
+*** Report for project quotas on device /dev/nvme0n1p8
+Block grace time: 7days; Inode grace time: 7days
+Block limits File limits
+Project used soft hard grace used soft hard grace
+----------------------------------------------------------------------
+0 -- 4 0 0 1 0 0
+123 +- 10248 20480 10240 2 0 0
 
-On these boards, the irq_set_type does exactly nothing, and the GPIO
-controller keeps its GPICR register in the hardware-default state. On
-the LS1028A, that is ACTIVE_BOTH, which means 2 interrupts are raised
-even if the IRQ client requests LEVEL_HIGH. Another implication is that
-the IRQs are not checked (e.g. level-triggered interrupts are not
-rejected, although they are not supported).
+The result of df command as below:
 
-Fixes: 82e39b0d8566 ("gpio: mpc8xxx: handle differences between incarnations at a single place")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Link: https://lore.kernel.org/r/20191115125551.31061-1-olteanv@gmail.com
-Tested-by: Michael Walle <michael@walle.cc>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+[root@hades f2fs]# df -h /mnt/f2fs/test
+Filesystem Size Used Avail Use% Mounted on
+/dev/nvme0n1p8 20M 11M 10M 51% /mnt/f2fs
+
+Even though it looks like there is another 10M free space to use,
+if we write new data to diretory test(inherit project id),
+the write will fail with errno(-EDQUOT).
+
+After this patch, the df result looks like below.
+
+[root@hades f2fs]# df -h /mnt/f2fs/test
+Filesystem Size Used Avail Use% Mounted on
+/dev/nvme0n1p8 10M 10M 0 100% /mnt/f2fs
+
+Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-mpc8xxx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/f2fs/super.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index c8673a5d9412..3f10f9599f2c 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -348,7 +348,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	 * It's assumed that only a single type of gpio controller is available
- 	 * on the current machine, so overwriting global data is fine.
- 	 */
--	mpc8xxx_irq_chip.irq_set_type = devtype->irq_set_type;
-+	if (devtype->irq_set_type)
-+		mpc8xxx_irq_chip.irq_set_type = devtype->irq_set_type;
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 7a9cc64f5ca3..662c7de58b99 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1148,9 +1148,13 @@ static int f2fs_statfs_project(struct super_block *sb,
+ 		return PTR_ERR(dquot);
+ 	spin_lock(&dquot->dq_dqb_lock);
  
- 	if (devtype->gpio_dir_out)
- 		gc->direction_output = devtype->gpio_dir_out;
+-	limit = (dquot->dq_dqb.dqb_bsoftlimit ?
+-		 dquot->dq_dqb.dqb_bsoftlimit :
+-		 dquot->dq_dqb.dqb_bhardlimit) >> sb->s_blocksize_bits;
++	limit = 0;
++	if (dquot->dq_dqb.dqb_bsoftlimit)
++		limit = dquot->dq_dqb.dqb_bsoftlimit;
++	if (dquot->dq_dqb.dqb_bhardlimit &&
++			(!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
++		limit = dquot->dq_dqb.dqb_bhardlimit;
++
+ 	if (limit && buf->f_blocks > limit) {
+ 		curblock = dquot->dq_dqb.dqb_curspace >> sb->s_blocksize_bits;
+ 		buf->f_blocks = limit;
+@@ -1159,9 +1163,13 @@ static int f2fs_statfs_project(struct super_block *sb,
+ 			 (buf->f_blocks - curblock) : 0;
+ 	}
+ 
+-	limit = dquot->dq_dqb.dqb_isoftlimit ?
+-		dquot->dq_dqb.dqb_isoftlimit :
+-		dquot->dq_dqb.dqb_ihardlimit;
++	limit = 0;
++	if (dquot->dq_dqb.dqb_isoftlimit)
++		limit = dquot->dq_dqb.dqb_isoftlimit;
++	if (dquot->dq_dqb.dqb_ihardlimit &&
++			(!limit || dquot->dq_dqb.dqb_ihardlimit < limit))
++		limit = dquot->dq_dqb.dqb_ihardlimit;
++
+ 	if (limit && buf->f_files > limit) {
+ 		buf->f_files = limit;
+ 		buf->f_ffree =
 -- 
 2.20.1
 
