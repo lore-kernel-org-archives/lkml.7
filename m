@@ -2,136 +2,166 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF62C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A801FC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE0F621655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86B1C21734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:30:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgABL3c (ORCPT
+        id S1728230AbgABL37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 06:29:32 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:36751 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728135AbgABL3c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 06:29:32 -0500
-Received: from mail-qv1-f41.google.com ([209.85.219.41]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M8k65-1ir5Oi3qUL-004kBN; Thu, 02 Jan 2020 12:29:30 +0100
-Received: by mail-qv1-f41.google.com with SMTP id o18so14908036qvf.1;
-        Thu, 02 Jan 2020 03:29:29 -0800 (PST)
-X-Gm-Message-State: APjAAAV8BPCiPeSM5KLBV8looieXCZJ+AERsxfoByh6+uGLNrvTlX40e
-        +kxY54zq4crDG3UnOveQ51eqVxno9qnKf53g+K4=
-X-Google-Smtp-Source: APXvYqzptO5odenMl+S0N7s3GQhlwCDgPJBBw4XLujkDNgUOvvmeI6k+bBQkXgHWdkBmH6M+qYLFWJ1uMC5oWigZUtc=
-X-Received: by 2002:a0c:bd20:: with SMTP id m32mr63056221qvg.197.1577964568705;
- Thu, 02 Jan 2020 03:29:28 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1577111363.git.christophe.leroy@c-s.fr> <47701b5fb73cf536db074031db8e6e3fa3695168.1577111365.git.christophe.leroy@c-s.fr>
- <CAK8P3a0QGtjygLJUWX_1-s1vfCzE6UoOzrb+OZWwjaBdh=RpVQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a0QGtjygLJUWX_1-s1vfCzE6UoOzrb+OZWwjaBdh=RpVQ@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 2 Jan 2020 12:29:12 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1gHvW2XEMDSHCcdOQ8NSs3iHk9GpujwkWZnnZ0dnw96w@mail.gmail.com>
-Message-ID: <CAK8P3a1gHvW2XEMDSHCcdOQ8NSs3iHk9GpujwkWZnnZ0dnw96w@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 01/10] lib: vdso: ensure all arches have 32bit fallback
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
+        Thu, 2 Jan 2020 06:29:59 -0500
+Received: from foss.arm.com ([217.140.110.172]:46546 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728135AbgABL37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 06:29:59 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B90791FB;
+        Thu,  2 Jan 2020 03:29:58 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D3CAE3F703;
+        Thu,  2 Jan 2020 03:29:57 -0800 (PST)
+Date:   Thu, 2 Jan 2020 11:29:55 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     "Zengtao (B)" <prime.zeng@hisilicon.com>
+Cc:     Linuxarm <linuxarm@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:6xdXzRg9VpWyJjPDxnqKeILf/1Ib2ZdGGXZNLurLjP1YEaW9OWX
- MBiMEpDPhR0rFp3y+Qfy0qhY+rWB7mBAVqv9yjoypUyhUUebq/Ee2R9xbqIe9aC7sJxOZ9X
- FXabUM+WPC7UfbKyu6lS0M1ye8+6WCteZ/4RD28MC52NMdEbJ7cmiA0F4Yura0ipln20ceE
- AiITv0xUUHFzWnCanJKLQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/iddvcBU3ds=:geESGrCH9H7D8+t0Jy+RCb
- JqS2xbP93oTlRsxVSlcuv+KBl1MfH8lIYs/3ZbNXXxbjAn0K6O4GWvbToDuba7Pmw9KLVqGya
- w43Ogf9yMZZJoSxGFGS5enGKShS+uYNkzmreDQgOUyuGIlownURMOLD+DMrqNScOIK/bFMpxs
- Z+0omHEibdO696axuGji7OV1SxEswIr18PZgt/mFCF6UYnNzX9StuuzaYX+Qnq561DslNVxHT
- WiYNVHMZqiG42tmE7aqNebW5na+fT1lLFX1XLH6QMLdO+RQlUdCJuzX21CkQOpEmisypokgXb
- sruWQ5ZWqlJumxfiRqurYiXz00m+JTivdvDr9KkljXkppPQvZZKa6wTq/k5xcyiJ56/dM87ze
- A6hcpdYgf+7u5jE8hlqryV/2XGxJlicHR796F87buGuYqBBrTP7TZM6Rw+v3ufvQCMyN5Co3n
- VuZTcGcU/2I34NA2W+TM4TWZOmuo138AXFAzHaUzUnZpILM2sbjbAujh5dUpPH587cgZZibRD
- EP74gEOpUHyhjvNWKDFMeV3HLEks19KFwT0H7CnxsfIqCZkUFvc+MEWnUmSPRfwnEaAsfAw6r
- zxrwz+qIogRj1BYVSycbXtJChz1JSP1xoy3vwZC298Sn4hJTNOOde3maLPlHYWUCWTrjghKM2
- czEB32vXGz4qCxkvQW3+MQ5qU7s5evoc3P1Z2LoiC1mC9VKn8xiaUrKEVH108cVw9aFOuI7GY
- Fc6Pjn47kP1kUdke54vCQRGVVXqRTo/2kkVIxQinNCi5DSORVuRHOdNaGJnwUbcFIxp/BXsAU
- OMvngzLJd5v5w2rzOC9eSGUx30qoi190SdFnCbdPFJ7xgnEI0XGSRWqJsZ8b8OT5yGfuc9n3c
- WRZhzr+pDef76AKC8jvg==
+        Morten Rasmussen <morten.rasmussen@arm.com>
+Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations conflicts with
+ lower layer
+Message-ID: <20200102112955.GC4864@bogus>
+References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
+ <20191231164051.GA4864@bogus>
+ <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 1:27 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> On Mon, Dec 23, 2019 at 3:31 PM Christophe Leroy <christophe.leroy@c-s.fr> wrote:
-> > +static __always_inline
-> > +long clock_getres32_fallback(clockid_t _clkid, struct old_timespec32 *_ts)
-> > +{
-> > +       struct __kernel_timespec ts;
-> > +       int ret = clock_getres_fallback(clock, &ts);
-> > +
-> > +       if (likely(!ret && _ts)) {
-> > +               _ts->tv_sec = ts.tv_sec;
-> > +               _ts->tv_nsec = ts.tv_nsec;
-> > +       }
-> > +       return ret;
-> > +}
+On Thu, Jan 02, 2020 at 03:05:40AM +0000, Zengtao (B) wrote:
+> Hi Sudeep:
 >
-> Please change these to call __NR_clock_gettime and __NR_clock_getres_time
-> instead of __NR_clock_gettime64/__NR_clock_getres_time64 for multiple reasons.
+> Thanks for your reply.
 >
-> - When doing migration between containers, the vdso may get copied into
->   an application running on a kernel that does not support the time64
->   variants, and then the fallback fails.
+> > -----Original Message-----
+> > From: Sudeep Holla [mailto:sudeep.holla@arm.com]
+> > Sent: Wednesday, January 01, 2020 12:41 AM
+> > To: Zengtao (B)
+> > Cc: Linuxarm; Greg Kroah-Hartman; Rafael J. Wysocki;
+> > linux-kernel@vger.kernel.org; Sudeep Holla; Morten Rasmussen
+> > Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations conflicts
+> > with lower layer
+> >
+> > On Mon, Dec 23, 2019 at 04:16:19PM +0800, z00214469 wrote:
+> > > As we know, from sched domain's perspective, the DIE layer should be
+> > > larger than or at least equal to the MC layer, and in some cases, MC
+> > > is defined by the arch specified hardware, MPIDR for example, but
+> > NUMA
+> > > can be defined by users,
+> >
+> > Who are the users you are referring above ?
+> For example, when I use QEMU to start a guest linux, I can define the
+> NUMA topology of the guest linux whatever i want.
+
+OK and how is the information passed to the kernel ? DT or ACPI ?
+We need to fix the miss match if any during the initial parse of those
+information.
+
+> > > with the following system configrations:
+> >
+> > Do you mean ACPI tables or DT or some firmware tables ?
+> >
+> > > *************************************
+> > > NUMA:      	 0-2,  3-7
+> >
+> > Is the above simply wrong with respect to hardware and it actually match
+> > core_siblings ?
+> >
+> Actually, we can't simply say this is wrong, i just want to show an example.
+> And this example also can be:
+> NUMA:  0-23,  24-47
+> core_siblings:   0-15,  16-31, 32-47
 >
-> - When CONFIG_COMPAT_32BIT_TIME is disabled, the time32 syscalls
->   return -ENOSYS, and the vdso version should have the exact same behavior
->   to avoid surprises. In particular an application that checks clock_gettime()
->   to see if the time32 are in part of the kernel would get an incorrect result
->   here.
+
+Are you sure of the above ? Possible values w.r.t hardware config:
+core_siblings:   0-15,  16-23, 24-31, 32-47
+
+But what you have specified above is still wrong core_siblings IMO.
+
+
+[...]
+
+> > > diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+> > > index 1eb81f11..5fe44b3 100644
+> > > --- a/drivers/base/arch_topology.c
+> > > +++ b/drivers/base/arch_topology.c
+> > > @@ -439,10 +439,18 @@ const struct cpumask
+> > *cpu_coregroup_mask(int cpu)
+> > >  	if (cpumask_subset(&cpu_topology[cpu].core_sibling, core_mask)) {
+> > >  		/* not numa in package, lets use the package siblings */
+> > >  		core_mask = &cpu_topology[cpu].core_sibling;
+> > > -	}
+> > > +	} else
+> > > +		pr_warn_once("Warning: suspicous broken topology: cpu:[%d]'s
+> > core_sibling:[%*pbl] not a subset of numa node:[%*pbl]\n",
+> > > +			cpu, cpumask_pr_args(&cpu_topology[cpu].core_sibling),
+> > > +			cpumask_pr_args(core_mask));
+> > > +
+> >
+> > Won't this print warning on all systems that don't have numa within a
+> > package ? What are you trying to achieve here ?
 >
-> arch/arm64/include/asm/vdso/compat_gettimeofday.h already does this,
-> I think you can just copy the implementation or find a way to share it.
+> Since in my case, when this corner case happens, the linux kernel just fall into
+> dead loop with no prompt, here this is a helping message will help a lot.
+>
 
-There was a related discussion on this after a vdso regression on mips,
-and I suggested to drop the time32 functions completely from the
-vdso when CONFIG_COMPAT_32BIT_TIME is disabled, such as
+As I said, wrong configurations need to be detected when generating
+DT/ACPI if possible. The above will print warning on systems with NUMA
+within package.
 
-diff --git a/arch/powerpc/kernel/vdso32/vdso32.lds.S
-b/arch/powerpc/kernel/vdso32/vdso32.lds.S
-index 00c025ba4a92..605f259fa24c 100644
---- a/arch/powerpc/kernel/vdso32/vdso32.lds.S
-+++ b/arch/powerpc/kernel/vdso32/vdso32.lds.S
-@@ -145,10 +145,12 @@ VERSION
+NUMA:  0-7, 8-15
+core_siblings:   0-15
 
-                __kernel_get_syscall_map;
- #ifndef CONFIG_PPC_BOOK3S_601
-+#ifdef CONFIG_COMPAT_32BIT_TIME
-                __kernel_gettimeofday;
-                __kernel_clock_gettime;
-                __kernel_clock_getres;
-                __kernel_time;
-+#endif
-                __kernel_get_tbfreq;
- #endif
-                __kernel_sync_dicache;
+The above is the example where the die has 16 CPUs and 2 NUMA nodes
+within a package, your change throws error to the above config which is
+wrong.
 
-Any opinions on this? If everyone agrees with that approach, I can
-send a cross-architecture patch to do this everywhere. It's probably
-best though if Christophe adds that to his series as it touches a lot
-of the same files and I would prefer to avoid conflicting changes.
+> >
+> > >  	if (cpu_topology[cpu].llc_id != -1) {
+> > >  		if (cpumask_subset(&cpu_topology[cpu].llc_sibling, core_mask))
+> > >  			core_mask = &cpu_topology[cpu].llc_sibling;
+> > > +		else
+> > > +			pr_warn_once("Warning: suspicous broken topology:
+> > cpu:[%d]'s llc_sibling:[%*pbl] not a subset of numa node:[%*pbl]\n",
+> > > +				cpu,
+> > cpumask_pr_args(&cpu_topology[cpu].llc_sibling),
+> > > +				cpumask_pr_args(core_mask));
+> > >  	}
+> > >
+> >
+> > This will trigger warning on all systems that lack cacheinfo topology.
+> > I don't understand the intent of this patch at all. Can you explain
+> > all the steps you follow and the issue you face ?
+>
+> Can you show me an example, what I really want to warn is the case that
+> NUMA topology conflicts with lower level.
+>
 
-       Arnd
+I was wrong here, I mis-read this section. I still fail to understand
+why the above change is needed. I understood the QEMU example, but you
+haven't specified how cacheinfo looks like there.
+
+--
+Regards,
+Sudeep
