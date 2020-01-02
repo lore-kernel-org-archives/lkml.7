@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BDFC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B21C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C33C20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3632021835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:00:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578006037;
-	bh=/YUthY9vE9Z0PtWMgd0UlmOKUFE+2Y8/i6JHRz80FYA=;
+	s=default; t=1578006041;
+	bh=d0+e1t3bL9jC5hQtgr2E5q3bRMzppD1fLXlNQxZvUC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xi7EBGN9684BJ/vojztTe3cVTSaZOO5199v7nhRMLdfQ9lDNZzwB90JV4z5ltAPZh
-	 LDPztHTZqyqnZ6VKkzg33K2foTqfP3JzZPljPmOyZV1Rk9Ei6UbFV7np39MsV7yMPT
-	 Y1pS3otxGk3BfOl9CRlsF3YnYBDcDfrjKzRf2xLs=
+	b=vgC/HSUEyTsVom1rfMcfmR4duREsIkHzKP6sNGYM6RCSEvvlmdULDcDZF2avVvM7+
+	 drhNDOyfeMmIokskxGbJtF98X07lklEhTfPRKSntRaAEqrJrUMrWL2uUuzRSrI0Ijs
+	 knRTTLFZhRCQxCcQbv71w9124jOmSbulIzOHXq6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbgABWMr (ORCPT
+        id S1727513AbgABWMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:12:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51950 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:12:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727534AbgABWMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:12:41 -0500
+        id S1727482AbgABWM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:12:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F35421582;
-        Thu,  2 Jan 2020 22:12:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16D7021D7D;
+        Thu,  2 Jan 2020 22:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003160;
-        bh=/YUthY9vE9Z0PtWMgd0UlmOKUFE+2Y8/i6JHRz80FYA=;
+        s=default; t=1578003148;
+        bh=d0+e1t3bL9jC5hQtgr2E5q3bRMzppD1fLXlNQxZvUC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q+zSZisJlAPYeoQpR7KJ3jL58U5VKngrOd2DcKZ3VX0w2a/arm5gAEcpkFk0oI8gO
-         QpqzEJAtNsBJvybj5zZj+cjMfLxxiEacDnbR43jZAS/UfdNAe//56ifS6DJ4d1srOV
-         u7CrHkllDprGqfVx0HZgKkylKsmRl9xNAWt9A27E=
+        b=SwVDNAK8T1dC2Ta3ZCW5bqUEW8NmA9BAlW0lMYpYQ1T0JrXwMPYZh89uNCsyh3AhV
+         OtWiKV94LHuEa+NUOCudO6A8m36EAIsFGGwt7lYHmeNrTpykr0cb7rh/1eUnkowE9P
+         3FcpKW6lcWBvb0I6qK09ZYm0DBTpm2E8IMLWgXkk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Hannes Reinecke <hare@suse.com>,
-        Douglas Gilbert <dgilbert@interlog.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 045/191] scsi: tracing: Fix handling of TRANSFER LENGTH == 0 for READ(6) and WRITE(6)
-Date:   Thu,  2 Jan 2020 23:05:27 +0100
-Message-Id: <20200102215834.738714064@linuxfoundation.org>
+Subject: [PATCH 5.4 040/191] powerpc/security/book3s64: Report L1TF status in sysfs
+Date:   Thu,  2 Jan 2020 23:05:22 +0100
+Message-Id: <20200102215834.225837187@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -63,52 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Anthony Steinhauser <asteinhauser@google.com>
 
-[ Upstream commit f6b8540f40201bff91062dd64db8e29e4ddaaa9d ]
+[ Upstream commit 8e6b6da91ac9b9ec5a925b6cb13f287a54bd547d ]
 
-According to SBC-2 a TRANSFER LENGTH field of zero means that 256 logical
-blocks must be transferred. Make the SCSI tracing code follow SBC-2.
+Some PowerPC CPUs are vulnerable to L1TF to the same extent as to
+Meltdown. It is also mitigated by flushing the L1D on privilege
+transition.
 
-Fixes: bf8162354233 ("[SCSI] add scsi trace core functions and put trace points")
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Douglas Gilbert <dgilbert@interlog.com>
-Link: https://lore.kernel.org/r/20191105215553.185018-1-bvanassche@acm.org
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Currently the sysfs gives a false negative on L1TF on CPUs that I
+verified to be vulnerable, a Power9 Talos II Boston 004e 1202, PowerNV
+T2P9D01.
+
+Signed-off-by: Anthony Steinhauser <asteinhauser@google.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+[mpe: Just have cpu_show_l1tf() call cpu_show_meltdown() directly]
+Link: https://lore.kernel.org/r/20191029190759.84821-1-asteinhauser@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_trace.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ arch/powerpc/kernel/security.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/scsi/scsi_trace.c b/drivers/scsi/scsi_trace.c
-index 0f17e7dac1b0..07a2425ffa2c 100644
---- a/drivers/scsi/scsi_trace.c
-+++ b/drivers/scsi/scsi_trace.c
-@@ -18,15 +18,18 @@ static const char *
- scsi_trace_rw6(struct trace_seq *p, unsigned char *cdb, int len)
- {
- 	const char *ret = trace_seq_buffer_ptr(p);
--	sector_t lba = 0, txlen = 0;
-+	u32 lba = 0, txlen;
+diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
+index bd91dceb7010..298a2e3ad6f4 100644
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -168,6 +168,11 @@ ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, cha
  
- 	lba |= ((cdb[1] & 0x1F) << 16);
- 	lba |=  (cdb[2] << 8);
- 	lba |=   cdb[3];
--	txlen = cdb[4];
-+	/*
-+	 * From SBC-2: a TRANSFER LENGTH field set to zero specifies that 256
-+	 * logical blocks shall be read (READ(6)) or written (WRITE(6)).
-+	 */
-+	txlen = cdb[4] ? cdb[4] : 256;
+ 	return sprintf(buf, "Vulnerable\n");
+ }
++
++ssize_t cpu_show_l1tf(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	return cpu_show_meltdown(dev, attr, buf);
++}
+ #endif
  
--	trace_seq_printf(p, "lba=%llu txlen=%llu",
--			 (unsigned long long)lba, (unsigned long long)txlen);
-+	trace_seq_printf(p, "lba=%u txlen=%u", lba, txlen);
- 	trace_seq_putc(p, 0);
- 
- 	return ret;
+ ssize_t cpu_show_spectre_v1(struct device *dev, struct device_attribute *attr, char *buf)
 -- 
 2.20.1
 
