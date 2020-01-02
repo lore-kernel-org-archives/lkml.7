@@ -2,116 +2,115 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E53BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DE0C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6521921734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:24:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7AB421734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:24:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QuSqXTEX"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LVK/VFNl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgABRYT (ORCPT
+        id S1728101AbgABRYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 12:24:19 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36733 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbgABRYT (ORCPT
+        Thu, 2 Jan 2020 12:24:50 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:38392 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727854AbgABRYt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 12:24:19 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z3so39988152wru.3;
-        Thu, 02 Jan 2020 09:24:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oT3hhuKEy1N1K2d4A4PsoHJRo9+URBufhVuCLWM6bzw=;
-        b=QuSqXTEXIxeUMLl8R+laSW67tiLhNbeohp3pNJA75mf96ttImwA6EK8syRQn/+i3Ad
-         Ajw/QLQtYlDgxkCDwQ7+Dz7Zs/RYi7MrTd4mLwT7twNeLC9P4jIny42HKJSxj6AULbr1
-         G3aa0HXV6cV4fVQM2OjOZ/fypkhO+ij4bEEujivVh6ltuQA1ngzbC6wxKg0HJL3q3Bwj
-         N0j2e+r/zR65NeII2z+ECQ09gFsMJHVpQGxF9Mio4QjuhwyANw0sqvnSZzHMGizTv56I
-         hYckUJZxCC7yGPFpjvnLpgcFfPhqLCt5VsUnFEwG+vXbKevPtukC3j7l1ilJi4oc+sNt
-         OCTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oT3hhuKEy1N1K2d4A4PsoHJRo9+URBufhVuCLWM6bzw=;
-        b=NhQhYKCSc9ziGmIIDW0oHBPGKEeEOxzabSpcrnG0RRfw+QpD80UK/vIKO0MYqrY05P
-         FasVblX0vvnK3DHJ3hKtsuMB5AD3uIJ32RZ2oXV5HCFMnDZHlmR6FT1fvnU9tlqZWL/M
-         SS/K2jTmXWkKB6+YFBkyhbVlWpNdLBCFD9hfUx1XLlVcoOQA87kqZsWSDPnm6lUvG+O3
-         k1p7W51Dt+QnzF7nxriSQYaHiq9gmeQoZByL+fhNd8po9FuMaHbJTIFr5bWRiErWPzMK
-         yZ2eB9Og3R0J4u3y/buZQ5Cw78j86bk6xY02saiEfegXtVKDu0vdn2en40voqLSaSy5x
-         GeYw==
-X-Gm-Message-State: APjAAAWyZNPWCvQMuI3bGD+PpODJwKg0xhX/13xvn4VnQfFrJ8JcdZgE
-        6DrMvmcfOZUTaMJSZgHB4yvcHN33xmHZyA==
-X-Google-Smtp-Source: APXvYqxYc0JThE1koPwI21OmnUi0PS6X/0fzwxo7hEIxk9sQ65279fNq++1prhUC8qwnvJZ8+bpFjA==
-X-Received: by 2002:a5d:610a:: with SMTP id v10mr85459799wrt.267.1577985856338;
-        Thu, 02 Jan 2020 09:24:16 -0800 (PST)
-Received: from amanieu-laptop.home ([2a01:cb19:8051:6200:3fe7:84:7f3:e713])
-        by smtp.gmail.com with ESMTPSA id z21sm9480328wml.5.2020.01.02.09.24.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 09:24:15 -0800 (PST)
-From:   Amanieu d'Antras <amanieu@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Christian Brauner <christian@brauner.io>, stable@vger.kernel.org,
-        Amanieu d'Antras <amanieu@gmail.com>
-Subject: [PATCH 0/7] Fix CLONE_SETTLS with clone3
-Date:   Thu,  2 Jan 2020 18:24:06 +0100
-Message-Id: <20200102172413.654385-1-amanieu@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Thu, 2 Jan 2020 12:24:49 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 002HOjcV107718;
+        Thu, 2 Jan 2020 11:24:45 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1577985885;
+        bh=8R/7KD37mImOhVgbKAz0f8LBJAniQTDmWoNz9vkICO4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=LVK/VFNlHysZTiwj4MxJWX7GiaY/O/2/J7bF6bJ8WCgKBkjumOrc4RwxFk8y+50Xf
+         CLzvXJ8sLZItg0MoRrxJZf3zn7TO4AqLmdiid6SuTJcG4uSio7YX5jABLnPPUspb+Y
+         8PX98D9Ka2WvGBtXNsaozYjTv+eT4YofEdY63L78=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 002HOjVU021141
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 2 Jan 2020 11:24:45 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 2 Jan
+ 2020 11:24:45 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 2 Jan 2020 11:24:45 -0600
+Received: from [10.250.65.50] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 002HOieR098162;
+        Thu, 2 Jan 2020 11:24:44 -0600
+Subject: Re: [PATCH v3 2/4] ARM: OMAP2+: Introduce check for OP-TEE in
+ omap_secure_init()
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Lokesh Vutla <lokeshvutla@ti.com>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20191230185004.32279-1-afd@ti.com>
+ <20191230185004.32279-3-afd@ti.com>
+ <b4773b91-9893-830d-7b1b-b63eb4077cf7@ti.com>
+ <d7d6f381-be00-3072-0510-a18b736987e7@ti.com>
+ <20200102171403.GC16702@atomide.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <d9dddbe0-f5c3-1413-8b27-d19e8e07f755@ti.com>
+Date:   Thu, 2 Jan 2020 12:24:39 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200102171403.GC16702@atomide.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The clone3 syscall is currently broken when used with CLONE_SETTLS on all
-architectures that don't have an implementation of copy_thread_tls. The old
-copy_thread function handles CLONE_SETTLS by reading the new TLS value from
-pt_regs containing the clone syscall parameters. Since clone3 passes the TLS
-value in clone_args, this results in the TLS register being initialized to a
-garbage value.
+On 1/2/20 12:14 PM, Tony Lindgren wrote:
+> * Andrew F. Davis <afd@ti.com> [191231 14:16]:
+>> On 12/31/19 1:32 AM, Lokesh Vutla wrote:
+>>> This doesn't guarantee that optee driver is probed successfully or firmware
+>>> installed correctly. Isn't there a better way to detect? Doesn't tee core layer
+>>> exposes anything?
+>>
+>> We don't actually need the kernel-side OP-TEE driver at all here, we are
+>> making raw SMCCC calls which get handled by OP-TEE using platform
+>> specific code then emulates the function previously handled by ROM[0]
+>> and execution is returned. No driver involved for these types of calls.
+>>
+>> U-Boot will not add this node to the DT unless OP-TEE is installed
+>> correctly, but you are right that is no perfect guarantee. OP-TEE's
+>> kernel driver does do a handshake to verify it is working but this is
+>> not exposed outside of that driver and happens *way* too late for our
+>> uses here. Plus as above, we don't need the OP-TEE driver at all and we
+>> should boot the same without it even enabled.
+>>
+>> So my opinion is that if DT says OP-TEE is installed, but it is not,
+>> then that is a misconfiguration and we usually just have to trust DT for
+>> most things. If DT is wrong here then the only thing that happens is
+>> this call safely fails, a message is printed informing the user of the
+>> problem, and kernel keeps booting (although probably not stable given we
+>> need these calls for important system configuration).
+> 
+> OK, please add comments to omap_optee_init_check(), it's not obvious
+> to anybody not dealing with optee directly.
+> 
 
-This patch series implements copy_thread_tls on all architectures that currently
-define __ARCH_WANT_SYS_CLONE3 and adds a compile-time check to ensure that any
-architecture that enables clone3 in the future also implements copy_thread_tls.
 
-I have also included a minor fix for the arm64 uapi headers which caused
-__NR_clone3 to be missing from the exported user headers.
+Okay, will add this comment and the one suggested by Lokesh for v4.
 
-I have only tested this on arm64, but the copy_thread_tls implementations for
-the various architectures are fairly straightforward.
+Andrew
 
-Amanieu d'Antras (7):
-  arm64: Move __ARCH_WANT_SYS_CLONE3 definition to uapi headers
-  arm64: Implement copy_thread_tls
-  arm: Implement copy_thread_tls
-  parisc: Implement copy_thread_tls
-  riscv: Implement copy_thread_tls
-  xtensa: Implement copy_thread_tls
-  clone3: ensure copy_thread_tls is implemented
 
- arch/arm/Kconfig                     |  1 +
- arch/arm/kernel/process.c            |  6 +++---
- arch/arm64/Kconfig                   |  1 +
- arch/arm64/include/asm/unistd.h      |  1 -
- arch/arm64/include/uapi/asm/unistd.h |  1 +
- arch/arm64/kernel/process.c          | 10 +++++-----
- arch/parisc/Kconfig                  |  1 +
- arch/parisc/kernel/process.c         |  8 ++++----
- arch/riscv/Kconfig                   |  1 +
- arch/riscv/kernel/process.c          |  6 +++---
- arch/xtensa/Kconfig                  |  1 +
- arch/xtensa/kernel/process.c         |  8 ++++----
- kernel/fork.c                        | 10 ++++++++++
- 13 files changed, 35 insertions(+), 20 deletions(-)
-
--- 
-2.24.1
-
+> Regards,
+> 
+> Tony
+> 
