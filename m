@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F1CC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E27C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 053A420866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A700B217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004944;
-	bh=Cx/xZ2CdBultJ1QQYrebdLtgIDl5PklKrm8PpPvqR0s=;
+	s=default; t=1578004949;
+	bh=T0/+ZqOTw9AnzPSztclaLrzH/btdNRAbw5nslwC2+t0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N6iGVJSMvQ8oHqkRvrzOqEtT8t5ulOioO/OU/xvMq7SLNKf9iZ/oW1i0J3A5zI6Sn
-	 OuiL022MkUGMsuV7MMKKzHPS/tNLYzhEv7oHJsrI/A0i0lWBkDe3N6+4m/aFmA1Pdf
-	 +x9AF6WtmBV9aSCFbacb8WzbH93wrSGRQ3SXB6QI=
+	b=imivwEGb81qkqJKfwEpkIUp7G+dw2VqwJYkY4/VpC9WY0q5iIR9Eu5GIMQHcsWV8i
+	 l0DQQ5Cj1zsCDmfhLDmC/H6Iy+OFPJCXUj449L8IIG0bzOrjHYWpdxy1jBDs2keFHY
+	 ZvSVYM8bNujsH7uTrhOfjec8q1P3eDKY5ji8IzXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731315AbgABWmW (ORCPT
+        id S1731318AbgABWm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:42:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46558 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:42:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730472AbgABWgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:36:05 -0500
+        id S1730649AbgABWf5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:35:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA7E121835;
-        Thu,  2 Jan 2020 22:36:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF45F20863;
+        Thu,  2 Jan 2020 22:35:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004564;
-        bh=Cx/xZ2CdBultJ1QQYrebdLtgIDl5PklKrm8PpPvqR0s=;
+        s=default; t=1578004557;
+        bh=T0/+ZqOTw9AnzPSztclaLrzH/btdNRAbw5nslwC2+t0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s+N0ym+xhbEvBu3sz9EYWSDe4RK/CiSSrnVIKWphbjCEfItnglWaGyfO1NoWl1Z/j
-         Yyhhuq79PZDhznsU2gJEiXOh2Axp4wSAygRW2H79OrTZkJDS3Elmxxna69FR4CKmG5
-         EwZyE9b+6QyWnOJe8bSQmYJJmo+dvKBIlE8i5lfI=
+        b=H15ZXo3spmdfY6EbWPf/QJH6RDOiDUBpQGWYVNTInQWO+dB2/IZDuWRJUdLcx6E9d
+         Qa4JmuMo7e+sYCaRxvcbw7qdfgH9uoLLoCeh4QWl/ABmdRFIbeAQ9UEFWnRPQ31YHl
+         /0iITn8S0INeRDhUKnHBjxCYaaSazDU7MwI+IAOc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Borislav Petkov <bp@suse.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 052/137] EDAC/ghes: Fix grain calculation
-Date:   Thu,  2 Jan 2020 23:07:05 +0100
-Message-Id: <20200102220553.544836208@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 031/137] x86/ioapic: Prevent inconsistent state when moving an interrupt
+Date:   Thu,  2 Jan 2020 23:06:44 +0100
+Message-Id: <20200102220550.879518940@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -64,93 +63,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Richter <rrichter@marvell.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 7088e29e0423d3195e09079b4f849ec4837e5a75 ]
+[ Upstream commit df4393424af3fbdcd5c404077176082a8ce459c4 ]
 
-The current code to convert a physical address mask to a grain
-(defined as granularity in bytes) is:
+There is an issue with threaded interrupts which are marked ONESHOT
+and using the fasteoi handler:
 
-	e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
+  if (IS_ONESHOT())
+    mask_irq();
+  ....
+  cond_unmask_eoi_irq()
+    chip->irq_eoi();
+      if (setaffinity_pending) {
+         mask_ioapic();
+         ...
+	 move_affinity();
+	 unmask_ioapic();
+      }
 
-This is broken in several ways:
+So if setaffinity is pending the interrupt will be moved and then
+unconditionally unmasked at the ioapic level, which is wrong in two
+aspects:
 
-1) It calculates to wrong grain values. E.g., a physical address mask
-of ~0xfff should give a grain of 0x1000. Without considering
-PAGE_MASK, there is an off-by-one. Things are worse when also
-filtering it with ~PAGE_MASK. This will calculate to a grain with the
-upper bits set. In the example it even calculates to ~0.
+ 1) It should be kept masked up to the point where the threaded handler
+    finished.
 
-2) The grain does not depend on and is unrelated to the kernel's
-page-size. The page-size only matters when unmapping memory in
-memory_failure(). Smaller grains are wrongly rounded up to the
-page-size, on architectures with a configurable page-size (e.g. arm64)
-this could round up to the even bigger page-size of the hypervisor.
+ 2) The physical chip state and the software masked state are inconsistent
 
-Fix this with:
+Guard both the mask and the unmask with a check for the software masked
+state. If the line is marked masked then the ioapic line is also masked, so
+both mask_ioapic() and unmask_ioapic() can be skipped safely.
 
-	e->grain = ~mem_err->physical_addr_mask + 1;
-
-The grain_bits are defined as:
-
-	grain = 1 << grain_bits;
-
-Change also the grain_bits calculation accordingly, it is the same
-formula as in edac_mc.c now and the code can be unified.
-
-The value in ->physical_addr_mask coming from firmware is assumed to
-be contiguous, but this is not sanity-checked. However, in case the
-mask is non-contiguous, a conversion to grain_bits effectively
-converts the grain bit mask to a power of 2 by rounding it up.
-
-Suggested-by: James Morse <james.morse@arm.com>
-Signed-off-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20191106093239.25517-11-rrichter@marvell.com
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sebastian Siewior <bigeasy@linutronix.de>
+Fixes: 3aa551c9b4c4 ("genirq: add threaded interrupt handler support")
+Link: https://lkml.kernel.org/r/20191017101938.321393687@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/ghes_edac.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/x86/kernel/apic/io_apic.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-index e3fa4390f846..4ddbf6604e2a 100644
---- a/drivers/edac/ghes_edac.c
-+++ b/drivers/edac/ghes_edac.c
-@@ -189,6 +189,7 @@ void ghes_edac_report_mem_error(struct ghes *ghes, int sev,
- 	/* Cleans the error report buffer */
- 	memset(e, 0, sizeof (*e));
- 	e->error_count = 1;
-+	e->grain = 1;
- 	strcpy(e->label, "unknown label");
- 	e->msg = pvt->msg;
- 	e->other_detail = pvt->other_detail;
-@@ -284,7 +285,7 @@ void ghes_edac_report_mem_error(struct ghes *ghes, int sev,
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index 4d5e8ff3b5e5..5e8fc9809da3 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -1710,9 +1710,10 @@ static bool io_apic_level_ack_pending(struct mp_chip_data *data)
  
- 	/* Error grain */
- 	if (mem_err->validation_bits & CPER_MEM_VALID_PA_MASK)
--		e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
-+		e->grain = ~mem_err->physical_addr_mask + 1;
- 
- 	/* Memory error location, mapped on e->location */
- 	p = e->location;
-@@ -391,8 +392,13 @@ void ghes_edac_report_mem_error(struct ghes *ghes, int sev,
- 	if (p > pvt->other_detail)
- 		*(p - 1) = '\0';
- 
-+	/* Sanity-check driver-supplied grain value. */
-+	if (WARN_ON_ONCE(!e->grain))
-+		e->grain = 1;
-+
-+	grain_bits = fls_long(e->grain - 1);
-+
- 	/* Generate the trace event */
--	grain_bits = fls_long(e->grain);
- 	snprintf(pvt->detail_location, sizeof(pvt->detail_location),
- 		 "APEI location: %s %s", e->location, e->other_detail);
- 	trace_mc_event(type, e->msg, e->label, e->error_count,
+ static inline bool ioapic_irqd_mask(struct irq_data *data)
+ {
+-	/* If we are moving the irq we need to mask it */
++	/* If we are moving the IRQ we need to mask it */
+ 	if (unlikely(irqd_is_setaffinity_pending(data))) {
+-		mask_ioapic_irq(data);
++		if (!irqd_irq_masked(data))
++			mask_ioapic_irq(data);
+ 		return true;
+ 	}
+ 	return false;
+@@ -1749,7 +1750,9 @@ static inline void ioapic_irqd_unmask(struct irq_data *data, bool masked)
+ 		 */
+ 		if (!io_apic_level_ack_pending(data->chip_data))
+ 			irq_move_masked_irq(data);
+-		unmask_ioapic_irq(data);
++		/* If the IRQ is masked in the core, leave it: */
++		if (!irqd_irq_masked(data))
++			unmask_ioapic_irq(data);
+ 	}
+ }
+ #else
 -- 
 2.20.1
 
