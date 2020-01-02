@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D27A1C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7E5C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5B3521582
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5F98222C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003122;
-	bh=/+Z1rY2uHzFKiy1RITFdLrA1sEw2jtbce0wauhrJJPI=;
+	s=default; t=1578003124;
+	bh=dMcV83CY2sqhLoex5DJnJluwMpbZ7vzTK2T0DgtjQIQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VS/dP6daAJx427eP3pV9+VwkqAdKdYIHLLU2r9L7qSWztF5/J0NTSZj0zsvs5J3jT
-	 utRGlsprP9gAuYC5WEcuYPtNyKO0H+f9CPrnjTFt0iJPwBeOWQ1hq5Bz0qDzy0b/OO
-	 3fC+IGOKD2HtBiATVXIz4pUGGZGI2OVJBxKWm1KU=
+	b=ZOfg5KTNMxJmky/GHn9Tggcey/q1etYBILXLFrceD9GhgaoWxzJZ0lXQKLR+b8PIw
+	 ldS6ftcRu5BUkfemUaXXybZ70oxKwdQLap/j5qF3TAFSR60xZe9n8VdGYWZjwTQ5cW
+	 vvyBpnOmV28ZlzayeTnXQjlk+DrmFMURRLvD3y/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727356AbgABWMB (ORCPT
+        id S1727368AbgABWME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:12:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50526 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:12:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727304AbgABWLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:11:52 -0500
+        id S1727323AbgABWL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:11:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D149F21D7D;
-        Thu,  2 Jan 2020 22:11:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9915F22525;
+        Thu,  2 Jan 2020 22:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003112;
-        bh=/+Z1rY2uHzFKiy1RITFdLrA1sEw2jtbce0wauhrJJPI=;
+        s=default; t=1578003117;
+        bh=dMcV83CY2sqhLoex5DJnJluwMpbZ7vzTK2T0DgtjQIQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sh0S7Ar2VtH7cTFlkVuDk6wZ6kFBy/xwcExfl5Yw5sdy3zeYCDwC3Qm8rdps5HeKo
-         +Bea2JejGiQVt9e2u/5S8pZTkg5d/tVrbqhBihDoT4cKXbEIIB3nMqqOg5QPQPG0ZN
-         uQgeXCPJXF9BfEJUuWTZhrfAtf9x1kmeNwzI8bgw=
+        b=yyr6xzfApAVAAo2dym1HhQ0Zl/L6DdT7SMEVa9mQrJAg3F5mdjhZuNhBHrFk6jKWF
+         z/Jo9y8Jo6EzOYY9F3idvubshZZojBKAqYEUrOp3L9+nT29v17D6CCfH6Iger0zu3y
+         4v02J5LdHvdyJqPdBDS7BHl/Tjw2LFTF+ufQE/Nk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org,
+        Matthias Fend <Matthias.Fend@wolfvision.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 024/191] powerpc/pseries: Mark accumulate_stolen_time() as notrace
-Date:   Thu,  2 Jan 2020 23:05:06 +0100
-Message-Id: <20200102215832.532953721@linuxfoundation.org>
+Subject: [PATCH 5.4 026/191] Input: st1232 - do not reset the chip too early
+Date:   Thu,  2 Jan 2020 23:05:08 +0100
+Message-Id: <20200102215832.776121397@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -59,50 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-[ Upstream commit eb8e20f89093b64f48975c74ccb114e6775cee22 ]
+[ Upstream commit efd7bb08a762d4f6322054c6824bd942971ac563 ]
 
-accumulate_stolen_time() is called prior to interrupt state being
-reconciled, which can trip the warning in arch_local_irq_restore():
+We should not be putting the chip into reset while interrupts are enabled
+and ISR may be running. Fix this by installing a custom devm action and
+powering off the device/resetting GPIO line from there. This ensures proper
+ordering.
 
-  WARNING: CPU: 5 PID: 1017 at arch/powerpc/kernel/irq.c:258 .arch_local_irq_restore+0x9c/0x130
-  ...
-  NIP .arch_local_irq_restore+0x9c/0x130
-  LR  .rb_start_commit+0x38/0x80
-  Call Trace:
-    .ring_buffer_lock_reserve+0xe4/0x620
-    .trace_function+0x44/0x210
-    .function_trace_call+0x148/0x170
-    .ftrace_ops_no_ops+0x180/0x1d0
-    ftrace_call+0x4/0x8
-    .accumulate_stolen_time+0x1c/0xb0
-    decrementer_common+0x124/0x160
-
-For now just mark it as notrace. We may change the ordering to call it
-after interrupt state has been reconciled, but that is a larger
-change.
-
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191024055932.27940-1-mpe@ellerman.id.au
+Tested-by: Matthias Fend <Matthias.Fend@wolfvision.net>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/time.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/touchscreen/st1232.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
-index 619447b1b797..11301a1187f3 100644
---- a/arch/powerpc/kernel/time.c
-+++ b/arch/powerpc/kernel/time.c
-@@ -232,7 +232,7 @@ static u64 scan_dispatch_log(u64 stop_tb)
-  * Accumulate stolen time by scanning the dispatch trace log.
-  * Called on entry from user mode.
-  */
--void accumulate_stolen_time(void)
-+void notrace accumulate_stolen_time(void)
+diff --git a/drivers/input/touchscreen/st1232.c b/drivers/input/touchscreen/st1232.c
+index 1139714e72e2..1c5f8875cb79 100644
+--- a/drivers/input/touchscreen/st1232.c
++++ b/drivers/input/touchscreen/st1232.c
+@@ -149,6 +149,11 @@ static void st1232_ts_power(struct st1232_ts_data *ts, bool poweron)
+ 		gpiod_set_value_cansleep(ts->reset_gpio, !poweron);
+ }
+ 
++static void st1232_ts_power_off(void *data)
++{
++	st1232_ts_power(data, false);
++}
++
+ static const struct st_chip_info st1232_chip_info = {
+ 	.have_z		= true,
+ 	.max_x		= 0x31f, /* 800 - 1 */
+@@ -229,6 +234,13 @@ static int st1232_ts_probe(struct i2c_client *client,
+ 
+ 	st1232_ts_power(ts, true);
+ 
++	error = devm_add_action_or_reset(&client->dev, st1232_ts_power_off, ts);
++	if (error) {
++		dev_err(&client->dev,
++			"Failed to install power off action: %d\n", error);
++		return error;
++	}
++
+ 	input_dev->name = "st1232-touchscreen";
+ 	input_dev->id.bustype = BUS_I2C;
+ 	input_dev->dev.parent = &client->dev;
+@@ -271,15 +283,6 @@ static int st1232_ts_probe(struct i2c_client *client,
+ 	return 0;
+ }
+ 
+-static int st1232_ts_remove(struct i2c_client *client)
+-{
+-	struct st1232_ts_data *ts = i2c_get_clientdata(client);
+-
+-	st1232_ts_power(ts, false);
+-
+-	return 0;
+-}
+-
+ static int __maybe_unused st1232_ts_suspend(struct device *dev)
  {
- 	u64 sst, ust;
- 	unsigned long save_irq_soft_mask = irq_soft_mask_return();
+ 	struct i2c_client *client = to_i2c_client(dev);
+@@ -329,7 +332,6 @@ MODULE_DEVICE_TABLE(of, st1232_ts_dt_ids);
+ 
+ static struct i2c_driver st1232_ts_driver = {
+ 	.probe		= st1232_ts_probe,
+-	.remove		= st1232_ts_remove,
+ 	.id_table	= st1232_ts_id,
+ 	.driver = {
+ 		.name	= ST1232_TS_NAME,
 -- 
 2.20.1
 
