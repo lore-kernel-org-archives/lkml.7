@@ -2,78 +2,83 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77906C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D61C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF62215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CA1020848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:21:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="KMqWoFye"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728704AbgABPUi (ORCPT
+        id S1728756AbgABPVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 10:20:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43926 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 10:21:47 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:45446 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728561AbgABPUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 10:20:38 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C82F7206E6;
-        Thu,  2 Jan 2020 15:20:36 +0000 (UTC)
-Date:   Thu, 2 Jan 2020 10:20:35 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Junyong Sun <sunjy516@gmail.com>
-Cc:     mingo@redhat.com, akpm@linux-foundation.org,
-        joel@joelfernandes.org, changbin.du@intel.com,
-        timmurray@google.com, sunjunyong@xiaomi.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm, tracing: Print symbol name for kmem_alloc_node
- call_site events
-Message-ID: <20200102102035.15441507@gandalf.local.home>
-In-Reply-To: <1577949568-4518-1-git-send-email-sunjunyong@xiaomi.com>
-References: <1577949568-4518-1-git-send-email-sunjunyong@xiaomi.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1728561AbgABPVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 10:21:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=IdYA3gvWlF+j5uZXez7KuYc1OVhRo4qko1KG34K9Acw=; b=KMqWoFyek+invBAycpz5c8nKt+
+        RJyDFaB7TQ3rR838gMTmqtWLs7oKZOPPrvOc/yKmHCLgtDB20L+EmV41bpjr6H6SC/dT/dDS6u7zh
+        WqhaKSoneqGg781l9GR+CNr4Oi4ovWXU2LquDFWq6d6KpaH/iwwUUzUsbwEuutf4igGI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1in2IB-0007nb-M2; Thu, 02 Jan 2020 16:21:43 +0100
+Date:   Thu, 2 Jan 2020 16:21:43 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Kai Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Linux Netdev List <netdev@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Jason Yen <jason.yen@canonical.com>
+Subject: Re: SFP+ support for 8168fp/8117
+Message-ID: <20200102152143.GB1397@lunn.ch>
+References: <2D8F5FFE-3EC3-480B-9D15-23CACE5556DF@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2D8F5FFE-3EC3-480B-9D15-23CACE5556DF@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  2 Jan 2020 15:19:28 +0800
-Junyong Sun <sunjy516@gmail.com> wrote:
-
-> print the call_site ip of kmem_alloc_node using '%pS' to improve
-> the readability of raw slab trace points.
+On Thu, Jan 02, 2020 at 02:59:42PM +0800, Kai Heng Feng wrote:
+> Hi Heiner,
 > 
-> Signed-off-by: Junyong Sun <sunjunyong@xiaomi.com>
-
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
--- Steve
-
-> ---
->  include/trace/events/kmem.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> There's an 8168fp/8117 chip has SFP+ port instead of RJ45, the phy device ID matches "Generic FE-GE Realtek PHY" nevertheless.
+> The problems is that, since it uses SFP+, both BMCR and BMSR read are always zero, so Realtek phylib never knows if the link is up.
 > 
-> diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
-> index ad7e642b..f65b1f6 100644
-> --- a/include/trace/events/kmem.h
-> +++ b/include/trace/events/kmem.h
-> @@ -88,8 +88,8 @@ DECLARE_EVENT_CLASS(kmem_alloc_node,
->  		__entry->node		= node;
->  	),
->  
-> -	TP_printk("call_site=%lx ptr=%p bytes_req=%zu bytes_alloc=%zu gfp_flags=%s node=%d",
-> -		__entry->call_site,
-> +	TP_printk("call_site=%pS ptr=%p bytes_req=%zu bytes_alloc=%zu gfp_flags=%s node=%d",
-> +		(void *)__entry->call_site,
->  		__entry->ptr,
->  		__entry->bytes_req,
->  		__entry->bytes_alloc,
+> However, the old method to read through MMIO correctly shows the link is up:
+> static unsigned int rtl8169_xmii_link_ok(struct rtl8169_private *tp)
+> {
+>        return RTL_R8(tp, PHYstatus) & LinkStatus;
+> }
+> 
+> Few ideas here:
+> - Add a link state callback for phylib like phylink's phylink_fixed_state_cb(). However there's no guarantee that other parts of this chip works.
+> - Add SFP+ support for this chip. However the phy device matches to "Generic FE-GE Realtek PHY" which may complicate things.
+> 
+> Any advice will be welcome.
 
+Hi Kai
+
+Is the i2c bus accessible? Is there any documentation or example code?
+
+In order to correctly support SFP+ cages, we need access to the i2c
+bus to determine what sort of module has been inserted. It would also
+be good to have access to LOS, transmitter disable, etc, from the SFP
+cage.
+
+   Andrew
