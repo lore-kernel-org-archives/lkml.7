@@ -2,94 +2,141 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA92C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C0BC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8433721D7D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:32:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577957535;
-	bh=EfkiR40ecIKtIaHQGSgzrVNTtjwUChSeOvmRTEf0NeM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=liuABghB4jlCnOjctSuid2/CgmZ5uCIHITyAJWKOuMe69mpvxaRI3FJoe5g847a+d
-	 8R0T1hMVmXSWeeVZtTAho/GF2EDL5y6NypoL6deG602tzzXEFCUUUmeRP9+AmaTmTm
-	 Mscj+06JZQuc59a7cqsN+qteX/tOSzvqDSFWt4+Q=
+	by mail.kernel.org (Postfix) with ESMTP id 37AF5217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 09:35:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgABJcO (ORCPT
+        id S1727967AbgABJfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 04:32:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58182 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727924AbgABJcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 04:32:14 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A110217F4;
-        Thu,  2 Jan 2020 09:32:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577957533;
-        bh=EfkiR40ecIKtIaHQGSgzrVNTtjwUChSeOvmRTEf0NeM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HY9ns/JRiSI20ujcRIjz049nfsi+nGX20z/SLvMYK98tBMEh+6dKrYBV8/sdCexJv
-         QRB7WT9E35kPwPZv3Ar+bzFJoys0dNyha0HF0uFNgi/CtWaz0gjHOwJMsxnnA6g4xn
-         zrs+DZzAbg8pWKePnvTqX5uE9phS80yW1SHsNmhU=
-Date:   Thu, 2 Jan 2020 10:32:11 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [PATCH 2/3] ARM: dts: sun8i: R40: Add PMU node
-Message-ID: <20200102093211.a5hl7hxfqpkvdg6g@gilmour.lan>
-References: <20200102012657.9278-1-andre.przywara@arm.com>
- <20200102012657.9278-3-andre.przywara@arm.com>
+        Thu, 2 Jan 2020 04:35:11 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:35567 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727926AbgABJfK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 04:35:10 -0500
+Received: by mail-il1-f198.google.com with SMTP id h18so20415426ilc.2
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 01:35:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=vccpKWCKoUf8l6AatqgQWk56oswB+uFCmRgqQNd92sk=;
+        b=t45AhqY9U/kv8MIYTTpp8uFWFQcC+WiyvmPBU9cU88+6YHINh5D0nP+r1kbcH3RjHG
+         u4Kee5x8dQFSaYa6L654Zb1ABNb5SA+Mn7f5Ner719fx+4J+hAIQwNyh5JAd+FlIDrOB
+         jTnH/LAEYVDcI987MPsGF40WabMlTuQjAi5R45xzVn2bqpJk3DI+KHd7+UKcMHgL5/JX
+         nkStcmUUtSRfj0Ob2Jh8CiM+BlrBSETM5EjkuNwF3hH/jbuOpA9nyIBbXWbVtqDwA7YY
+         36/OjSRx9wbmvZPLKv9di4XE0GWqbgAvJuRYrOsDh8jAjbcvyCaobb0vaExr8/Xgf7B0
+         JK0Q==
+X-Gm-Message-State: APjAAAUeKcKg258Oohjs0uCEp8yva3VaYKMStG5BFzkEMx45YbDfovOJ
+        1AO9/H3RUs4MOfNE/fMCQYHk3X4+miduYvTQozDg3Ii3jtBv
+X-Google-Smtp-Source: APXvYqwgXiuGJScM9HTvKT1JKowivfEyDa3R3JABkpcQ+SmXuDFJz37fAWalmuc38j0znHS1uZnnEWq11pqt6O3wAlk/6oj1hXLh
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="khktdkfc5ltuwnt7"
-Content-Disposition: inline
-In-Reply-To: <20200102012657.9278-3-andre.przywara@arm.com>
+X-Received: by 2002:a6b:fc0c:: with SMTP id r12mr51294497ioh.189.1577957709959;
+ Thu, 02 Jan 2020 01:35:09 -0800 (PST)
+Date:   Thu, 02 Jan 2020 01:35:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c5d741059b24e89d@google.com>
+Subject: WARNING: locking bug in __inet6_bind
+From:   syzbot <syzbot+414dcdfe035bbcf35fc5@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, kafai@fb.com,
+        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com,
+        yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
---khktdkfc5ltuwnt7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+syzbot found the following crash on:
 
-On Thu, Jan 02, 2020 at 01:26:56AM +0000, Andre Przywara wrote:
-> The ARM Cortex-A7 cores used in the Allwinner R40 SoC have their usual
-> Performance Monitoring Unit (PMU), which allows perf to use hardware
-> events.
-> The SoC integrator just needs to connect each per-core interrupt line
-> to the GIC. The R40 manual does not really mention those IRQ lines, but
-> experimentation in U-Boot shows that interrupts 152-155 are connected to
-> the four cores (similar to the A20).
->
-> Tested on a Bananapi M2 Berry, with perf and taskset to confirm the
-> association between cores and interrupts.
->
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+HEAD commit:    bf8d1cd4 Merge tag 'scsi-fixes' of git://git.kernel.org/pu..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=155ac9fee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ed9d672709340e35
+dashboard link: https://syzkaller.appspot.com/bug?extid=414dcdfe035bbcf35fc5
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1245bac6e00000
 
-Applied, thanks!
-Maxime
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+414dcdfe035bbcf35fc5@syzkaller.appspotmail.com
 
---khktdkfc5ltuwnt7
-Content-Type: application/pgp-signature; name="signature.asc"
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 32733 at kernel/locking/lockdep.c:840  
+look_up_lock_class kernel/locking/lockdep.c:840 [inline]
+WARNING: CPU: 0 PID: 32733 at kernel/locking/lockdep.c:840  
+register_lock_class+0x206/0x1850 kernel/locking/lockdep.c:1185
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 32733 Comm: syz-executor.0 Not tainted 5.5.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  panic+0x2e3/0x75c kernel/panic.c:221
+  __warn.cold+0x2f/0x3e kernel/panic.c:582
+  report_bug+0x289/0x300 lib/bug.c:195
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  fixup_bug arch/x86/kernel/traps.c:169 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:look_up_lock_class kernel/locking/lockdep.c:840 [inline]
+RIP: 0010:register_lock_class+0x206/0x1850 kernel/locking/lockdep.c:1185
+Code: fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 aa 10 00 00 4c 3b 7b  
+18 44 8b 35 85 9e 08 0a 74 0b 48 81 3b a0 79 bb 8a 74 02 <0f> 0b 45 85 ed  
+0f 84 71 03 00 00 f6 85 70 ff ff ff 01 0f 85 64 03
+RSP: 0018:ffffc90003d17a28 EFLAGS: 00010006
+RAX: dffffc0000000000 RBX: ffff88809a06d120 RCX: 0000000000000000
+RDX: 1ffff1101340da27 RSI: 0000000000000000 RDI: ffff88809a06d138
+RBP: ffffc90003d17af0 R08: 1ffff920007a2f4d R09: ffffffff8b63b560
+R10: ffffffff8b2c5ce8 R11: 0000000000000000 R12: ffffffff8b3089e0
+R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff88d4e000
+  __lock_acquire+0xf4/0x4a00 kernel/locking/lockdep.c:3837
+  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
+  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
+  _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
+  spin_lock_bh include/linux/spinlock.h:343 [inline]
+  lock_sock_nested+0x41/0x120 net/core/sock.c:2936
+  lock_sock include/net/sock.h:1531 [inline]
+  __inet6_bind+0x788/0x19b0 net/ipv6/af_inet6.c:300
+  inet6_bind+0xfa/0x155 net/ipv6/af_inet6.c:453
+  __sys_bind+0x239/0x290 net/socket.c:1649
+  __do_sys_bind net/socket.c:1660 [inline]
+  __se_sys_bind net/socket.c:1658 [inline]
+  __x64_sys_bind+0x73/0xb0 net/socket.c:1658
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45a919
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f66ae74ec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a919
+RDX: 000000000000001c RSI: 0000000020000000 RDI: 0000000000000004
+RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f66ae74f6d4
+R13: 00000000004c0ca5 R14: 00000000004d47d8 R15: 00000000ffffffff
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
------BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXg24mwAKCRDj7w1vZxhR
-xRyVAQDskdeVCrnBIz+PwfM7pnDyrbP6Vfz5kuMGp2f0HtsgTAEAhwv93dTAojGe
-94XhPjpzKTIrq1CbJAo0V+RhqKohFQg=
-=Fa3V
------END PGP SIGNATURE-----
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
---khktdkfc5ltuwnt7--
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
