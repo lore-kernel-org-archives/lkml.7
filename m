@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86122C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A956CC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D63721835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C41021D7D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:36:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004568;
-	bh=jHELNlAoIK3IcWq4LEou555MQCUFgaJta1CBtkCFYs4=;
+	s=default; t=1578004574;
+	bh=lhoQuyIkfheikLtVGHSgIcS2VxeCYOxZooRUI3X0+M8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TftJdUfg4nptKp/Nge4XoRmfQ/y7jWvTlvMTJ/JbiDnePCUT9GYethJx3kan6PBAn
-	 dQHiBbJsuyBl9Q/qLdaaMlI7fs4OJKwNGRH6oH9lzIVbtiuiTC4TGLGkTQyRog+X0B
-	 GgAk26xC3ma+GldR+7iyHs9PEN6/ur+qYFWuCEJA=
+	b=1bLUBZ3Y8nvonsy9WEqJlWkZQgg0K36O63DsKFrhSlnmL4X5bLR1Vj2xVqdOR5k2i
+	 zVJJuGH5gSesW2wUzRQKR2PKYNHdjLEOrEUs1hZyNvtGXyMsIU1wKffxnmQ+eeqx80
+	 XbMIUO/mIuIoZF9GurjrK8Q3I2YQafOZ8fg6XTBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730903AbgABWgH (ORCPT
+        id S1730921AbgABWgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:36:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46434 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:36:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729117AbgABWgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:36:02 -0500
+        id S1730362AbgABWgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:36:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7742221D7D;
-        Thu,  2 Jan 2020 22:36:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F04F20866;
+        Thu,  2 Jan 2020 22:36:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004561;
-        bh=jHELNlAoIK3IcWq4LEou555MQCUFgaJta1CBtkCFYs4=;
+        s=default; t=1578004569;
+        bh=lhoQuyIkfheikLtVGHSgIcS2VxeCYOxZooRUI3X0+M8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XNL4b1ZjLgwdrVS9teKQutqVKQSiBzYa9S+6zm0BPK1nRjrpxvT9tz1VVW9rJvGj1
-         G/1KNwXVZZl9D3T1DlyaeQKqizZPk1EV3UdYfPtNH/oKN8IpAgaqR59c5/iClmzAyP
-         ciUnZMwNZW+HY5ZQh3T6RLqcVDo5Ne5/c1F+U/Ac=
+        b=Wy2qyjWmZ0t1C09qyby3GhFnmBTffgiZ3itjkKf/gRHVpqBejQdoonW/8OyZdg41I
+         aCWjebkMzjTyrM8bLPER9n9Ahkw4QSq/AvNqfub2myqIlnxOYK5bw0yPUiRNXtnzEM
+         qCKaAwgi1lPF/aZYQarUVBYzcJqhew9LWGhdPqZ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 023/137] media: ti-vpe: vpe: fix a v4l2-compliance failure about frame sequence number
-Date:   Thu,  2 Jan 2020 23:06:36 +0100
-Message-Id: <20200102220549.755281449@linuxfoundation.org>
+Subject: [PATCH 4.4 062/137] crypto: sun4i-ss - Fix 64-bit size_t warnings on sun4i-ss-hash.c
+Date:   Thu,  2 Jan 2020 23:07:15 +0100
+Message-Id: <20200102220554.834811726@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -62,48 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
 
-[ Upstream commit 2444846c0dbfa4ead21b621e4300ec32c90fbf38 ]
+[ Upstream commit a7126603d46fe8f01aeedf589e071c6aaa6c6c39 ]
 
-v4l2-compliance fails with this message:
+If you try to compile this driver on a 64-bit platform then you
+will get warnings because it mixes size_t with unsigned int which
+only works on 32-bit.
 
-   fail: v4l2-test-buffers.cpp(294): \
-	(int)g_sequence() < seq.last_seq + 1
-   fail: v4l2-test-buffers.cpp(740): \
-	buf.check(m2m_q, last_m2m_seq)
-   fail: v4l2-test-buffers.cpp(974): \
-	captureBufs(node, q, m2m_q, frame_count, true)
-   test MMAP: FAIL
-
-The driver is failing to update the source frame sequence number in the
-vb2 buffer object. Only the destination frame sequence was being
-updated.
-
-This is only a reporting issue if the user space app actually cares
-about the frame sequence number. But it is fixed nonetheless.
-
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+This patch fixes all of the warnings on sun4i-ss-hash.c.
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/crypto/sunxi-ss/sun4i-ss-hash.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index ca6629ccf82d..aa2870e864f9 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -1299,6 +1299,7 @@ static irqreturn_t vpe_irq(int irq_vpe, void *data)
- 		d_vb->timecode = s_vb->timecode;
- 
- 	d_vb->sequence = ctx->sequence;
-+	s_vb->sequence = ctx->sequence;
- 
- 	d_q_data = &ctx->q_data[Q_DATA_DST];
- 	if (d_q_data->flags & Q_DATA_INTERLACED) {
+diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
+index ff8031498809..bff3cbd05c0a 100644
+--- a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
++++ b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
+@@ -245,8 +245,8 @@ int sun4i_hash_update(struct ahash_request *areq)
+ 			 */
+ 			while (op->len < 64 && i < end) {
+ 				/* how many bytes we can read from current SG */
+-				in_r = min3(mi.length - in_i, end - i,
+-					    64 - op->len);
++				in_r = min(end - i, 64 - op->len);
++				in_r = min_t(size_t, mi.length - in_i, in_r);
+ 				memcpy(op->buf + op->len, mi.addr + in_i, in_r);
+ 				op->len += in_r;
+ 				i += in_r;
+@@ -266,8 +266,8 @@ int sun4i_hash_update(struct ahash_request *areq)
+ 		}
+ 		if (mi.length - in_i > 3 && i < end) {
+ 			/* how many bytes we can read from current SG */
+-			in_r = min3(mi.length - in_i, areq->nbytes - i,
+-				    ((mi.length - in_i) / 4) * 4);
++			in_r = min_t(size_t, mi.length - in_i, areq->nbytes - i);
++			in_r = min_t(size_t, ((mi.length - in_i) / 4) * 4, in_r);
+ 			/* how many bytes we can write in the device*/
+ 			todo = min3((u32)(end - i) / 4, rx_cnt, (u32)in_r / 4);
+ 			writesl(ss->base + SS_RXFIFO, mi.addr + in_i, todo);
+@@ -289,8 +289,8 @@ int sun4i_hash_update(struct ahash_request *areq)
+ 	if ((areq->nbytes - i) < 64) {
+ 		while (i < areq->nbytes && in_i < mi.length && op->len < 64) {
+ 			/* how many bytes we can read from current SG */
+-			in_r = min3(mi.length - in_i, areq->nbytes - i,
+-				    64 - op->len);
++			in_r = min(areq->nbytes - i, 64 - op->len);
++			in_r = min_t(size_t, mi.length - in_i, in_r);
+ 			memcpy(op->buf + op->len, mi.addr + in_i, in_r);
+ 			op->len += in_r;
+ 			i += in_r;
 -- 
 2.20.1
 
