@@ -2,57 +2,53 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAD_ENC_HEADER,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B3BC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C352C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E00C21D7D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01F9120863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003737;
-	bh=SMEJehBrbJjrA45F280FcI6aUeAE4KdjaoDeYzWp3+0=;
+	s=default; t=1578003740;
+	bh=9N5Do3eHMPg3N2LbGNZ8XxcUabmcnKwWjINHbtRGIks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qdyq6NZZLACd8PT/iNqw70ZlkQOUW/baHsgxAalugYVTyPSW3KBzzNBlP/SmCErri
-	 ykQp4HRujngjoEhvS43VEkuJVWpdBkDZsRAQAqOmIJgXeuqNKJ7w042TF7rCvVee8A
-	 ubIHXLN9lVkXymPzQ60D2bOMYzsJf6dlnfEmPC54=
+	b=BdmFK0F2r/2kDRBL9krer9mVWnZnxorhtoy3ZrxvYj8MIKAoQ0a84xnaSIlDDehRf
+	 YNOTo9M63fSPBKpCXUmIPlYLS9xfOTYb5SlnDdryDhlKdZqDmqEeNC6Ona6+nqaGQB
+	 2MIxP+5vdMN35DowyN2ZF+go9dOrQTe6057v408Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbgABWWQ (ORCPT
+        id S1729127AbgABWWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:22:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42404 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:22:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729102AbgABWWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:22:13 -0500
+        id S1727532AbgABWWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:22:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 501D3227BF;
-        Thu,  2 Jan 2020 22:22:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE48C21D7D;
+        Thu,  2 Jan 2020 22:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003732;
-        bh=SMEJehBrbJjrA45F280FcI6aUeAE4KdjaoDeYzWp3+0=;
+        s=default; t=1578003735;
+        bh=9N5Do3eHMPg3N2LbGNZ8XxcUabmcnKwWjINHbtRGIks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YumHkAEo0smUq3IAGrV2tITj/44sV/lRKNnJaRCYG50mJ3QRYI1J/80fEhYQMLef1
-         C5NL6E5r7OSPz4sM15HedZbz4hVlXK1S9Sd9SVYpnpesBXH0s7pNAPA0qb6PF3oe++
-         iu5EEisWVcVOxLEtgjqN5BLW2M8wXi9b4kbjlkbA=
+        b=losBAUmAa45ehbKG0PGIm2M501Yfm+a4Cnu9XHkaMZ935ZVEmojbw2fbqqw9Y5Hvm
+         dB1DoklQ+ulgqewouNbFcPJWdHZWv+9scdbJmlldv7yy+4ECdQ8WXnIJN9ljmvCu6d
+         4oU2qVAdaUS4c+E01Z5qE8iecGLCLKD/4MTvT0P8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "=?UTF-8?q?Jan=20H . =20Sch=C3=B6nherr?=" <jschoenh@amazon.de>,
-        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Yazen Ghannam <Yazen.Ghannam@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 074/114] x86/mce: Fix possibly incorrect severity calculation on AMD
-Date:   Thu,  2 Jan 2020 23:07:26 +0100
-Message-Id: <20200102220036.554952288@linuxfoundation.org>
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 092/114] net: stmmac: dwmac-meson8b: Fix the RGMII TX delay on Meson8b/8m2 SoCs
+Date:   Thu,  2 Jan 2020 23:07:44 +0100
+Message-Id: <20200102220038.435278242@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -65,48 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan H. Schönherr <jschoenh@amazon.de>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit a3a57ddad061acc90bef39635caf2b2330ce8f21 ]
+[ Upstream commit bd6f48546b9cb7a785344fc78058c420923d7ed8 ]
 
-The function mce_severity_amd_smca() requires m->bank to be initialized
-for correct operation. Fix the one case, where mce_severity() is called
-without doing so.
+GXBB and newer SoCs use the fixed FCLK_DIV2 (1GHz) clock as input for
+the m250_sel clock. Meson8b and Meson8m2 use MPLL2 instead, whose rate
+can be adjusted at runtime.
 
-Fixes: 6bda529ec42e ("x86/mce: Grade uncorrected errors for SMCA-enabled systems")
-Fixes: d28af26faa0b ("x86/MCE: Initialize mce.bank in the case of a fatal error in mce_no_way_out()")
-Signed-off-by: Jan H. Schönherr <jschoenh@amazon.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: <stable@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Cc: Yazen Ghannam <Yazen.Ghannam@amd.com>
-Link: https://lkml.kernel.org/r/20191210000733.17979-4-jschoenh@amazon.de
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+So far we have been running MPLL2 with ~250MHz (and the internal
+m250_div with value 1), which worked enough that we could transfer data
+with an TX delay of 4ns. Unfortunately there is high packet loss with
+an RGMII PHY when transferring data (receiving data works fine though).
+Odroid-C1's u-boot is running with a TX delay of only 2ns as well as
+the internal m250_div set to 2 - no lost (TX) packets can be observed
+with that setting in u-boot.
+
+Manual testing has shown that the TX packet loss goes away when using
+the following settings in Linux (the vendor kernel uses the same
+settings):
+- MPLL2 clock set to ~500MHz
+- m250_div set to 2
+- TX delay set to 2ns on the MAC side
+
+Update the m250_div divider settings to only accept dividers greater or
+equal 2 to fix the TX delay generated by the MAC.
+
+iperf3 results before the change:
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec   182 MBytes   153 Mbits/sec  514      sender
+[  5]   0.00-10.00  sec   182 MBytes   152 Mbits/sec           receiver
+
+iperf3 results after the change (including an updated TX delay of 2ns):
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-10.00  sec   927 MBytes   778 Mbits/sec    0      sender
+[  5]   0.00-10.01  sec   927 MBytes   777 Mbits/sec           receiver
+
+Fixes: 4f6a71b84e1afd ("net: stmmac: dwmac-meson8b: fix internal RGMII clock configuration")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/cpu/mcheck/mce.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
-index 87ed8462a5c7..1f69b12d5bb8 100644
---- a/arch/x86/kernel/cpu/mcheck/mce.c
-+++ b/arch/x86/kernel/cpu/mcheck/mce.c
-@@ -812,8 +812,8 @@ static int mce_no_way_out(struct mce *m, char **msg, unsigned long *validp,
- 		if (quirk_no_way_out)
- 			quirk_no_way_out(i, m, regs);
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
+@@ -118,6 +118,14 @@ static int meson8b_init_rgmii_tx_clk(str
+ 	struct device *dev = dwmac->dev;
+ 	const char *parent_name, *mux_parent_names[MUX_CLK_NUM_PARENTS];
+ 	struct meson8b_dwmac_clk_configs *clk_configs;
++	static const struct clk_div_table div_table[] = {
++		{ .div = 2, .val = 2, },
++		{ .div = 3, .val = 3, },
++		{ .div = 4, .val = 4, },
++		{ .div = 5, .val = 5, },
++		{ .div = 6, .val = 6, },
++		{ .div = 7, .val = 7, },
++	};
  
-+		m->bank = i;
- 		if (mce_severity(m, mca_cfg.tolerant, &tmp, true) >= MCE_PANIC_SEVERITY) {
--			m->bank = i;
- 			mce_read_aux(m, i);
- 			*msg = tmp;
- 			return 1;
--- 
-2.20.1
-
+ 	clk_configs = devm_kzalloc(dev, sizeof(*clk_configs), GFP_KERNEL);
+ 	if (!clk_configs)
+@@ -152,9 +160,9 @@ static int meson8b_init_rgmii_tx_clk(str
+ 	clk_configs->m250_div.reg = dwmac->regs + PRG_ETH0;
+ 	clk_configs->m250_div.shift = PRG_ETH0_CLK_M250_DIV_SHIFT;
+ 	clk_configs->m250_div.width = PRG_ETH0_CLK_M250_DIV_WIDTH;
+-	clk_configs->m250_div.flags = CLK_DIVIDER_ONE_BASED |
+-				CLK_DIVIDER_ALLOW_ZERO |
+-				CLK_DIVIDER_ROUND_CLOSEST;
++	clk_configs->m250_div.table = div_table;
++	clk_configs->m250_div.flags = CLK_DIVIDER_ALLOW_ZERO |
++				      CLK_DIVIDER_ROUND_CLOSEST;
+ 	clk = meson8b_dwmac_register_clk(dwmac, "m250_div", &parent_name, 1,
+ 					 &clk_divider_ops,
+ 					 &clk_configs->m250_div.hw);
 
 
