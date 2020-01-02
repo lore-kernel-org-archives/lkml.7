@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A62C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0B2C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7C3322314
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D4A522314
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003163;
-	bh=fqZruyXarBHH1x9rF6kKDbJK5w2LbZ8EyRy8jEHQrps=;
+	s=default; t=1578003169;
+	bh=zbbxOC3U+xaCh2dQifsmwgKsgtAVBpm/EUuz1h7kG/M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DZRlI6/+PEiXYPRG00s4GxoPnof/d5OrcBb9RPhAnpy8W+LHuYWR4bLR27oi2NExm
-	 3q6uN73YunISHWUFcKbqXXnQtwvKmq/ld5Ao2X+UaiC8R1nI03+amlsse0HAJgSDD9
-	 P683bHygB9TBi1dZMoAVcfNjKG5kOQZAuZn/7hL0=
+	b=meB4KDc8eGvjllcFSSLK9FXiiWDrepgOJHwcAYIWwguUwoUfcSlcdT31HUNCSBJQ7
+	 Ehhqd8BTNMsaxFawathELnlS4NFWnm+Rr+/QfentVGo6hMdTVv6SlC/S4jXCQ75jBV
+	 Hu5swhkmXu+LNIrCgChluBGmEMEkFuWMamh5okU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbgABWMj (ORCPT
+        id S1727553AbgABWMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:12:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51848 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:12:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727506AbgABWMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:12:36 -0500
+        id S1726667AbgABWMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:12:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CBB222314;
-        Thu,  2 Jan 2020 22:12:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86F9521D7D;
+        Thu,  2 Jan 2020 22:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003155;
-        bh=fqZruyXarBHH1x9rF6kKDbJK5w2LbZ8EyRy8jEHQrps=;
+        s=default; t=1578003163;
+        bh=zbbxOC3U+xaCh2dQifsmwgKsgtAVBpm/EUuz1h7kG/M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uFxL10Wq+OOOk9O8F9cjyqEph84+T+Ym9JGC4WX2Y4KXoBT0o8Eev/3iioVsur7yM
-         hszhPzprnW4AIwJEyVHfm1/0VQdj6ql3fcpFKXfAfJv6egWIFyUYN/sQHXHSLOEPWs
-         7VqUnYJ51SGj9S1tIFjQEt0UkVBbolnMJ4FbrFB4=
+        b=WhfVoDBcJ8QTLyRo2Pe0LFz01554CEEuPPW/DHoCx2aXB3T3nU7qlgvPOVXQLnpzC
+         Nr8y/Np7QTcvGSI/q9jqI8n9qGd3Z2RDigbr7jfMg57JF0jt+jE7T11ggBhNjRsksj
+         RmfP/zr82qq8YEyewISbyCbHGru6A4zpYjRQEwtA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
-        Jan Kara <jack@suse.cz>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 043/191] ext4: iomap that extends beyond EOF should be marked dirty
-Date:   Thu,  2 Jan 2020 23:05:25 +0100
-Message-Id: <20200102215834.545756785@linuxfoundation.org>
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 046/191] scsi: lpfc: Fix unexpected error messages during RSCN handling
+Date:   Thu,  2 Jan 2020 23:05:28 +0100
+Message-Id: <20200102215834.851129628@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -62,59 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Bobrowski <mbobrowski@mbobrowski.org>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 2e9b51d78229d5145725a481bb5464ebc0a3f9b2 ]
+[ Upstream commit 2332e6e475b016e2026763f51333f84e2e6c57a3 ]
 
-This patch addresses what Dave Chinner had discovered and fixed within
-commit: 7684e2c4384d. This changes does not have any user visible
-impact for ext4 as none of the current users of ext4_iomap_begin()
-that extend files depend on IOMAP_F_DIRTY.
+During heavy RCN activity and log_verbose = 0 we see these messages:
 
-When doing a direct IO that spans the current EOF, and there are
-written blocks beyond EOF that extend beyond the current write, the
-only metadata update that needs to be done is a file size extension.
+  2754 PRLI failure DID:521245 Status:x9/xb2c00, data: x0
+  0231 RSCN timeout Data: x0 x3
+  0230 Unexpected timeout, hba link state x5
 
-However, we don't mark such iomaps as IOMAP_F_DIRTY to indicate that
-there is IO completion metadata updates required, and hence we may
-fail to correctly sync file size extensions made in IO completion when
-O_DSYNC writes are being used and the hardware supports FUA.
+This is due to delayed RSCN activity.
 
-Hence when setting IOMAP_F_DIRTY, we need to also take into account
-whether the iomap spans the current EOF. If it does, then we need to
-mark it dirty so that IO completion will call generic_write_sync() to
-flush the inode size update to stable storage correctly.
+Correct by avoiding the timeout thus the messages by restarting the
+discovery timeout whenever an rscn is received.
 
-Signed-off-by: Matthew Bobrowski <mbobrowski@mbobrowski.org>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Link: https://lore.kernel.org/r/8b43ee9ee94bee5328da56ba0909b7d2229ef150.1572949325.git.mbobrowski@mbobrowski.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Filter PRLI responses such that severity depends on whether expected for
+the configuration or not. For example, PRLI errors on a fabric will be
+informational (they are expected), but Point-to-Point errors are not
+necessarily expected so they are raised to an error level.
+
+Link: https://lore.kernel.org/r/20191105005708.7399-5-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/inode.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_els.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index b10aa115eade..8bba6cd5e870 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -3532,8 +3532,14 @@ retry:
- 			return ret;
- 	}
+diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+index f293b48616ae..4794a58deaf3 100644
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -2236,6 +2236,7 @@ lpfc_cmpl_els_prli(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
+ 	struct Scsi_Host  *shost = lpfc_shost_from_vport(vport);
+ 	IOCB_t *irsp;
+ 	struct lpfc_nodelist *ndlp;
++	char *mode;
  
-+	/*
-+	 * Writes that span EOF might trigger an I/O size update on completion,
-+	 * so consider them to be dirty for the purposes of O_DSYNC, even if
-+	 * there is no other metadata changes being made or are pending here.
-+	 */
- 	iomap->flags = 0;
--	if (ext4_inode_datasync_dirty(inode))
-+	if (ext4_inode_datasync_dirty(inode) ||
-+	    offset + length > i_size_read(inode))
- 		iomap->flags |= IOMAP_F_DIRTY;
- 	iomap->bdev = inode->i_sb->s_bdev;
- 	iomap->dax_dev = sbi->s_daxdev;
+ 	/* we pass cmdiocb to state machine which needs rspiocb as well */
+ 	cmdiocb->context_un.rsp_iocb = rspiocb;
+@@ -2273,8 +2274,17 @@ lpfc_cmpl_els_prli(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
+ 			goto out;
+ 		}
+ 
++		/* If we don't send GFT_ID to Fabric, a PRLI error
++		 * could be expected.
++		 */
++		if ((vport->fc_flag & FC_FABRIC) ||
++		    (vport->cfg_enable_fc4_type != LPFC_ENABLE_BOTH))
++			mode = KERN_ERR;
++		else
++			mode = KERN_INFO;
++
+ 		/* PRLI failed */
+-		lpfc_printf_vlog(vport, KERN_ERR, LOG_ELS,
++		lpfc_printf_vlog(vport, mode, LOG_ELS,
+ 				 "2754 PRLI failure DID:%06X Status:x%x/x%x, "
+ 				 "data: x%x\n",
+ 				 ndlp->nlp_DID, irsp->ulpStatus,
+@@ -6455,7 +6465,7 @@ lpfc_els_rcv_rscn(struct lpfc_vport *vport, struct lpfc_iocbq *cmdiocb,
+ 	uint32_t payload_len, length, nportid, *cmd;
+ 	int rscn_cnt;
+ 	int rscn_id = 0, hba_id = 0;
+-	int i;
++	int i, tmo;
+ 
+ 	pcmd = (struct lpfc_dmabuf *) cmdiocb->context2;
+ 	lp = (uint32_t *) pcmd->virt;
+@@ -6561,6 +6571,13 @@ lpfc_els_rcv_rscn(struct lpfc_vport *vport, struct lpfc_iocbq *cmdiocb,
+ 
+ 		spin_lock_irq(shost->host_lock);
+ 		vport->fc_flag |= FC_RSCN_DEFERRED;
++
++		/* Restart disctmo if its already running */
++		if (vport->fc_flag & FC_DISC_TMO) {
++			tmo = ((phba->fc_ratov * 3) + 3);
++			mod_timer(&vport->fc_disctmo,
++				  jiffies + msecs_to_jiffies(1000 * tmo));
++		}
+ 		if ((rscn_cnt < FC_MAX_HOLD_RSCN) &&
+ 		    !(vport->fc_flag & FC_RSCN_DISCOVERY)) {
+ 			vport->fc_flag |= FC_RSCN_MODE;
 -- 
 2.20.1
 
