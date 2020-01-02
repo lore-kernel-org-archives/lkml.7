@@ -2,120 +2,160 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEE2C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B581EC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 435CF20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD98206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:44:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="K14Npc1S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdiUCeOP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgABIoD (ORCPT
+        id S1727867AbgABIou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 03:44:03 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:16404 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727756AbgABIoD (ORCPT
+        Thu, 2 Jan 2020 03:44:50 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42070 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727756AbgABIot (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 03:44:03 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0028Z1nj022070;
-        Thu, 2 Jan 2020 09:43:42 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=OS+yDpqq7SyVkVspEB/RBh0yAJda6QqIhoTkhDJ6UBk=;
- b=K14Npc1SGCwL4TFz2snFFL7TQ9itMUDnjpjXZy6l8L2FA7qqeesT/oGwUz5v7nseBZRI
- fx7wsI++iFevb4UCN/gF4GGCIdSYlHKAzUs7QoR0J7YMd5iMQ6NrpORi9i09n6j7IfjL
- GDe6dfemNZmY652wtVyO0IPfDx/0+uW8qYW/G32NCVjLYXg6fkycaJSdWOpGfBoYNwH7
- XkrccgRpLoDH9YzjiKczOSA2hyHbppdqt2/Ko1jtmiMyJmG3m+BxWs955A5d9vrNkNZM
- FVzgGqYyF9hG0/nn9hUhK6DGsxVtCvOOH53u4yR2clZ41+rYCWruXZLzS05rv2pO+A1o Hw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2x5wd6a3g7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Jan 2020 09:43:42 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 52C3710002A;
-        Thu,  2 Jan 2020 09:43:41 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1C5F92A6E01;
-        Thu,  2 Jan 2020 09:43:41 +0100 (CET)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 Jan
- 2020 09:43:40 +0100
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Thu, 2 Jan 2020 09:43:40 +0100
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kgene@kernel.org" <kgene@kernel.org>,
-        "hminas@synopsys.com" <hminas@synopsys.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        Amelie DELAUNAY <amelie.delaunay@st.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: usb: Convert DWC2 bindings to
- json-schema
-Thread-Topic: [PATCH v2 1/2] dt-bindings: usb: Convert DWC2 bindings to
- json-schema
-Thread-Index: AQHVtlgPPJ7kqTKWikGryQVd+VmeDKfS0A0AgARD9IA=
-Date:   Thu, 2 Jan 2020 08:43:40 +0000
-Message-ID: <b9b1b18f-b331-de6a-1622-ad43143eb56f@st.com>
-References: <20191219103536.25485-1-benjamin.gaignard@st.com>
- <20191219103536.25485-2-benjamin.gaignard@st.com> <20191230153524.GA4918@pi3>
-In-Reply-To: <20191230153524.GA4918@pi3>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.50]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <37C7D06533EBC444B8B03560F4795446@st.com>
-Content-Transfer-Encoding: base64
+        Thu, 2 Jan 2020 03:44:49 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 66so56084251otd.9;
+        Thu, 02 Jan 2020 00:44:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RJXFVlyRwTqj9HkStatG/uviJjFGvZJlZBeqka9UDNY=;
+        b=gdiUCeOPqScjXzrbvIh+ShMJdMtOIFx3qiDxl8Rnx0tRID+ljoSEDWZXifZyy+UDoK
+         ZbP+uX2yH0Lua7XN3AMGacK2rVrdEAdaFX09Pn8/uzG3t01jvXUKjmInkQIVS+QHIezD
+         VXX6JM5ur/SC4XeH73Y6MZ2pf8t8dk3hLl6vy6PahZF9tKuqXwq53iy00PMcaIcImJvz
+         a0qOXjUw9jKbNkcQk34Ejg4DCSj/O8c7yFs5z0bZaMFOy6CrljgugPlFvg6n+X9/iQEw
+         F/xgEeo5JX2ZN4LVxKsTrzXDRQO8ty7llvBlWTz/fa7rkDg9PweY+jOm9fuFBl4kD2F5
+         0bPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RJXFVlyRwTqj9HkStatG/uviJjFGvZJlZBeqka9UDNY=;
+        b=RL2nRiSN6pm26gySagtnGSBdpJFox4fSSxM0bkFoFZhavUAvTp9lk1wV+v1BmsvU4y
+         789IjyZYuEBkldfyMvSe82ptq4Lcp0Wsg2j0oscyzeCrYS8hv4+hfVjdZnzMlIcBW03a
+         h5lCgvSY1Is6zfofSLM4K9HIq6mkmTUl8feVUM64lK0hdZUKfXqujfqRtc6UExvz14QJ
+         BfE6oQKFx+/piAnrLsyCrDo1atLPQioJzpHU1HFty4u66VHPjAHTVhU7JrblJDLITEV/
+         tqpyPEomO13AUAPaKlaAL5QNremkrs2coRdNVtfzkEOLGD5WUGDZASA8BwD2ZCs/r8Qy
+         B8CA==
+X-Gm-Message-State: APjAAAVOTxiJbxzCAeuNrYa9Mxeo9kOw8qLrwofBhvqOmJNZlIl3R6fR
+        q2Fe0897JKIDyKcwvobKAl+o5lNXp87uZ9B2bok=
+X-Google-Smtp-Source: APXvYqzOhzS82AptAf2MZPwDekJw6thW0D54iQ6Qt4TuLUMBcVXdHaCHrtJnYpVCXcsxnGiGCP9GyLgDg6gsrK4LUGE=
+X-Received: by 2002:a9d:5c02:: with SMTP id o2mr83617674otk.176.1577954688818;
+ Thu, 02 Jan 2020 00:44:48 -0800 (PST)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2020-01-02_02:2019-12-30,2020-01-02 signatures=0
+References: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20191213084748.11210-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAL_JsqLSYroDZGWksJJ=E+01X=3Tji4+GmK8s3i+d2BJphqiLQ@mail.gmail.com>
+ <CA+V-a8uKBuVUQvkoJ9pJYX97Qy3JazTyLCy-2T35gOX77AP8vg@mail.gmail.com> <20191219233129.GA5484@bogus>
+In-Reply-To: <20191219233129.GA5484@bogus>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 2 Jan 2020 08:44:23 +0000
+Message-ID: <CA+V-a8vjwqkH5rYsy_rsHF93d91izsaEwmFXNpYqk3_=_Asd2g@mail.gmail.com>
+Subject: Re: [v2 3/6] of: address: add support to parse PCI outbound-ranges
+To:     Rob Herring <robh@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiAxMi8zMC8xOSA0OjM1IFBNLCBLcnp5c3p0b2YgS296bG93c2tpIHdyb3RlOg0KPiBPbiBU
-aHUsIERlYyAxOSwgMjAxOSBhdCAxMTozNTozNUFNICswMTAwLCBCZW5qYW1pbiBHYWlnbmFyZCB3
-cm90ZToNCj4+IENvbnZlcnQgRFdDMiBiaW5kaW5ncyB0byBEVCBzY2hlbWEgZm9ybWF0IHVzaW5n
-IGpzb24tc2NoZW1hLg0KPj4gRFdDMiBpcyB3aWRlbHkgdXNlIGJ1dCBhIGNvdXBsZSBvZiBjb21w
-YXRpYmxlcyBhbmQgcHJvcGVydGllcw0KPj4gKHZ1c2JfZC1zdXBwbHksdnVzYl9hLXN1cHBseSkg
-d2VyZSBtaXNzaW5nIGluIGR3YzIudHh0LCB0aGUNCj4+IHBhdGNoIGFkZCB0aGVtLg0KPj4NCj4+
-IFNpZ25lZC1vZmYtYnk6IEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBzdC5j
-b20+DQo+PiAtLS0NCj4+IENDOiBNaW5hcyBIYXJ1dHl1bnlhbiA8aG1pbmFzQHN5bm9wc3lzLmNv
-bT4NCj4+DQo+PiBjaGFuZ2VzIGluIHZlcnNpb24gMjoNCj4+IC0gcHV0IE1pbmFzIEhhcnV0eXVu
-eWFuIDxobWluYXNAc3lub3BzeXMuY29tPiBhcyBtYWludGFpbmVyDQo+PiAtIHJlbW92ZSB0eXBl
-IGFuZCBkZXNjcmlwdGlvbiBmcm9tIHBoeSBwcm9wZXJ0eQ0KPj4gLSByZW1vdmUgZGVzY3JpcHRp
-b24gZnJvbSBjb21wYXRpYmxlIGl0ZW1zDQo+PiAtIHNpbXBsaWZ5IHNhbXN1bmcsczNjNjQwMC1o
-c290ZyBjb21wYXRpYmxlIGhhbmRsaW5nDQo+Pg0KPiAoLi4uKQ0KPg0KPj4gK3JlcXVpcmVkOg0K
-Pj4gKyAgLSBjb21wYXRpYmxlDQo+PiArICAtIHJlZw0KPj4gKyAgLSBpbnRlcnJ1cHRzDQo+PiAr
-ICAtIGNsb2Nrcw0KPj4gKyAgLSBjbG9jay1uYW1lcw0KPj4gKw0KPj4gK2FkZGl0aW9uYWxQcm9w
-ZXJ0aWVzOiBmYWxzZQ0KPj4gKw0KPj4gK2V4YW1wbGVzOg0KPj4gKyAgLSB8DQo+PiArICAgICAg
-dXNiQDEwMWMwMDAwIHsNCj4+ICsgICAgICAgIGNvbXBhdGlibGUgPSAicmFsaW5rLHJ0MzA1MC11
-c2IsIHNucHMsZHdjMiI7DQo+IERvZXMgaXQgcGFzcyBkdGJzX2NoZWNrPyBTaG91bGQgYmUgdHdv
-IHN0cmluZ3MuDQoNCkJhZCBjb3B5L3Bhc3QgZnJvbSB0aGUgb3JpZ2luYWwgdGV4dCBmaWxlLg0K
-DQpZb3UgYXJlIHJpZ2h0IGl0IHNob3VsZCB0d28gc3RyaW5ncyBhbmQgZHQgY2hlY2sgdG9vbHMg
-ZG9uJ3QgZGV0ZWN0IA0KYmVjYXVzZSB0aGV5IHNlZSBpdCBhcyBhIGRpZmZlcmVudCBjb21wYXRp
-YmxlLg0KDQpCZW5qYW1pbg0KDQo+DQo+IEJlc3QgcmVnYXJkcywNCj4gS3J6eXN6dG9mDQo+DQo+
+Hi Rob,
+
+On Thu, Dec 19, 2019 at 11:31 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Dec 16, 2019 at 08:49:23AM +0000, Lad, Prabhakar wrote:
+> > Hi Rob,
+> >
+> > Thank you for the review.
+> >
+> > On Fri, Dec 13, 2019 at 8:37 PM Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Fri, Dec 13, 2019 at 2:48 AM Lad Prabhakar
+> > > <prabhakar.csengg@gmail.com> wrote:
+> > > >
+> > > > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > >
+> > > > this patch adds support to parse PCI outbound-ranges, the
+> > > > outbound-regions are similar to pci ranges except it doesn't
+> > > > have pci address, below is the format for bar-ranges:
+> > > >
+> > > > outbound-ranges = <flags upper32_cpuaddr lower32_cpuaddr
+> > > >                    upper32_size lower32_size>;
+> > >
+> > > You can't just make up a new ranges property. Especially one that
+> > > doesn't follow how 'ranges' works. We already have 'dma-ranges' to
+> > > translate device to memory addresses.
+> > >
+> > > Explain the problem or feature you need, not the solution you came up
+> > > with. Why do you need this and other endpoint bindings haven't?
+> > >
+> > rcar SoC's supports multiple outbound region for mapping the PCI address
+> > locally to the system. This lead to discussion where there exist controllers
+> > which support regions for high/low priority transfer and similarly regions
+> > for large/small memory allocations, as a result a new ranges property was
+> > added, where we can specify the flags which would indicate how the outbound
+> > region can be used during requests.
+>
+> What are the flags?
+
+below are the flags which were discussed in first version of the
+series, but since the driver is
+currently using just PCI_EPC_WINDOW_FLAG_NON_MULTI_ALLOC flag I'll be
+dropping them in
+next version (suggested by Kishon) and rest will be added as and when
+required by the driver.
+
+ * @PCI_EPC_WINDOW_FLAG_MULTI_ALLOC: Indicates multiple chunks of memory can be
+ *                                  allocated from same window
+ * @PCI_EPC_WINDOW_FLAG_NON_MULTI_ALLOC: Indicates only single memory allocation
+ *                                      is possible on the window
+ * @PCI_EPC_WINDOW_FLAG_LARGE_ALLOC: Window is used for large memory allocation
+ * @PCI_EPC_WINDOW_FLAG_SMALL_ALLOC: Window is used for small memory allocation
+ * @PCI_EPC_WINDOW_FLAG_HIGH_PRI_ALLOC: Window is used for high priority data
+ *                                     transfers
+ * @PCI_EPC_WINDOW_FLAG_LOW_PRI_ALLOC: Window is used for low priority data
+ *                                    transfers
+
+Cheers,
+--Prabhakar
