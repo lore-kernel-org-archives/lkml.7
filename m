@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1195C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 20:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C83CC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 20:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87FE0217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 20:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D849221655
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 20:01:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UdXvDjVj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ETFtyUbG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728553AbgABUBM (ORCPT
+        id S1728705AbgABUBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 15:01:12 -0500
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:54864 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728296AbgABUBL (ORCPT
+        Thu, 2 Jan 2020 15:01:17 -0500
+Received: from mail-vs1-f74.google.com ([209.85.217.74]:38274 "EHLO
+        mail-vs1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728296AbgABUBQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 15:01:11 -0500
-Received: by mail-pg1-f202.google.com with SMTP id i21so79861pgm.21
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 12:01:11 -0800 (PST)
+        Thu, 2 Jan 2020 15:01:16 -0500
+Received: by mail-vs1-f74.google.com with SMTP id o185so3788911vsc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 12:01:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=kVgpbfrdFyyzSYGGFbgXSziUKzTWcn4XrnhMtwS4vPA=;
-        b=UdXvDjVjDE18h3ONKld18ZfOZW7pR3vFqqyTPrQKJToK5J6AEggZmqaRXy8sZ2CFA9
-         Q8hB54QeLPLclYtzAaai1ZfJ1InNNuRcXNSzEq94NIQk4I1eV7Yfb4ksENAjx5uiOAm/
-         lgxAzsq/u++mCnvzKcIrfqNnLhlKPlw2vR3m+DRLq2Y+aVoGusJZIHDSMKLPlmMjQuop
-         CmhDdAZvqSd11vo2jUTfvheqNUr067u9fXcPd2Hz9FUT1z2He6rGmBy0Cvyrf0+l9DIU
-         Jjv1ROxvJPq5vCPyj8KgwfoUAI/7nuxEo81qcSkj37JlWKgFDPo5p1/RLfSIQQOtfbJ4
-         x7ug==
+        bh=IWftFaF/7pwaE+hKN0rmHHTDccHnFs4MwoJXhQKr9TA=;
+        b=ETFtyUbGasImdWusI7+XxX+jtfzy6TbJUp8B/J87NDJKrN0tpvcu+AhRbowiMtcdgg
+         bgjYmyFMHeiZP1YyPkOJe2abYtU+18pqk98PIqIpdmXhiL+NCzGaUfwooMn7yIw2l2sK
+         XNt0kZnYXtKpSNWS81hh9vYloEblPeBm9UO7rjtiG9Mnbfl6BL6rQonfw28PD19VxaYB
+         AtHFPgoQq9kWjklvzY6rcLgQZVIhOxkgZQILADhE/vJ2AnmTJgZg/Nokpsq0P1dpwgGQ
+         hJ0Kkj0DAet+gYl0w8PbWpXOWeuJ4xr8D2GffvLt2+nHrPQgHnWpO70Z1VvVu5hp/FdP
+         hVzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=kVgpbfrdFyyzSYGGFbgXSziUKzTWcn4XrnhMtwS4vPA=;
-        b=nF/zszKxG7EExDEKIXI9wwDPHyUROmGQ36x+/YRBlEedY0nUSi67GPEoyb/CV8e2bu
-         hUpnJiM5XF+dAiGB5ooe8dUduBJDJqAmg2ydAl48k451tUZMI/DJXSatMmvSSRXW8Lxv
-         m4A4v2a3VPoYqhmI8DDOJWmpdD/DqYre4+pevdHeppemOinkd38eVce8zaLgnuictrR5
-         WjzI5winpR/t2yb1ECZtnhrKG/vsL5UTWiaauCZ4Itw/gv2M2NtbZFa92Pr8fxrlN79C
-         yYauNMKHBOFAD5fM4yV/bdXFd7yT4CDpcDFVH2EwaUwkAgCI/7jpmrBnAirNccJlvTbs
-         DS2w==
-X-Gm-Message-State: APjAAAU6A/t9+X/yuZrJtdgJl5cIF0KxMBIxMKfd3TUOUTPxGTh4o2oz
-        XfjaZ7gQn+22suffbK9tPllskOWIF4diuGc=
-X-Google-Smtp-Source: APXvYqyqK46UMKubGB6NN9jCbFyC4Y753avcxlOHWCVW9wiWyZZLzBYXk1SWlKSxxIqhOwpNyG78HGuDVgRHnLk=
-X-Received: by 2002:a63:1f0c:: with SMTP id f12mr94044751pgf.247.1577995270594;
- Thu, 02 Jan 2020 12:01:10 -0800 (PST)
-Date:   Thu,  2 Jan 2020 12:00:51 -0800
+        bh=IWftFaF/7pwaE+hKN0rmHHTDccHnFs4MwoJXhQKr9TA=;
+        b=AwOfjacVs1QfHbJYL8I5qo0jSIce8AAYkFpZlMA2xLeYofNdo9aKDqLf+RBMrUYhd8
+         LxApa9pB7JfIKcV8L4Mf4H8HNf8Mn1NDzNS9ce8SxXMNB7BAYkYWwkGYWFqJ3I3uVk4I
+         8UN2p3HFmLlTQ33FOgx/n6DzeKOD+Gku+TK8+YxjeaaApyDjjqFikqMoajbeWu+aiUwj
+         V1EZ7Wla+E9OdTQYYK6vyI8weuko0EQzMAbrTcvEwelcx9vZ/08ODixiBCEqAgg+eH7K
+         VzJefxSDGCJfNGvHd05YFTDouYj60QFlaQIaeS1uwus9K7hpEQqpjsoNXgYNJKN4FshX
+         OINQ==
+X-Gm-Message-State: APjAAAUz6dh3fl9BdpZb5r5NohRUVUAxmoeuKvIRSgg4ywVZZ8SbdQyR
+        AgVP5H7KhsFqEFNhNYKuPjdgUVl+yJaMMfo=
+X-Google-Smtp-Source: APXvYqwtC1Uvje2fbb36HVwCkmW0QcIlFAti3E9fgJHG6wwvnd7vXeyx2pz2lLd6Iz8RTxqnfNJndL5sU4NFASA=
+X-Received: by 2002:a1f:d904:: with SMTP id q4mr43772171vkg.13.1577995274922;
+ Thu, 02 Jan 2020 12:01:14 -0800 (PST)
+Date:   Thu,  2 Jan 2020 12:00:52 -0800
 In-Reply-To: <20200102200052.51182-1-semenzato@google.com>
-Message-Id: <20200102200052.51182-2-semenzato@google.com>
+Message-Id: <20200102200052.51182-3-semenzato@google.com>
 Mime-Version: 1.0
 References: <20200102200052.51182-1-semenzato@google.com>
 X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-Subject: [PATCH v2 1/2] Documentation: clarify limitations of hibernation
+Subject: [PATCH v2 2/2] pm: add more logging on hibernation failure
 From:   Luigi Semenzato <semenzato@google.com>
 To:     linux-pm@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
@@ -70,48 +70,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Entering hibernation (suspend-to-disk) will fail if the kernel
-cannot allocate enough memory to create a snapshot of all pages
-in use; i.e., if memory in use is over 1/2 of total RAM.  This
-patch makes this limitation clearer in the documentation.  Without
-it, users may assume that hibernation can replace suspend-to-RAM
-when in fact its functionality is more limited.
+Hibernation fails when the kernel cannot allocate enough memory
+to copy all pages in use.  This patch ensures that the failure
+reason is clearly logged.
 
 Signed-off-by: Luigi Semenzato <semenzato@google.com>
 ---
- Documentation/admin-guide/pm/sleep-states.rst | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ kernel/power/snapshot.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/admin-guide/pm/sleep-states.rst b/Documentation/admin-guide/pm/sleep-states.rst
-index cd3a28cb81f4..a2d5632b7856 100644
---- a/Documentation/admin-guide/pm/sleep-states.rst
-+++ b/Documentation/admin-guide/pm/sleep-states.rst
-@@ -112,7 +112,9 @@ Hibernation
- This state (also referred to as Suspend-to-Disk or STD) offers the greatest
- energy savings and can be used even in the absence of low-level platform support
- for system suspend.  However, it requires some low-level code for resuming the
--system to be present for the underlying CPU architecture.
-+system to be present for the underlying CPU architecture.  Additionally, the
-+current implementation can enter the hibernation state only when memory
-+usage is sufficiently low (see "Limitations" below).
+diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
+index 26b9168321e7..df498717a97e 100644
+--- a/kernel/power/snapshot.c
++++ b/kernel/power/snapshot.c
+@@ -1705,16 +1705,20 @@ int hibernate_preallocate_memory(void)
+ 	ktime_t start, stop;
+ 	int error;
  
- Hibernation is significantly different from any of the system suspend variants.
- It takes three system state changes to put it into hibernation and two system
-@@ -149,6 +151,14 @@ Hibernation is supported if the :c:macro:`CONFIG_HIBERNATION` kernel
- configuration option is set.  However, this option can only be set if support
- for the given CPU architecture includes the low-level code for system resume.
+-	pr_info("Preallocating image memory... ");
++	pr_info("Preallocating hibernation image memory\n");
+ 	start = ktime_get();
  
-+Limitations of Hibernation
-+==========================
-+
-+When entering hibernation, the kernel tries to allocate a chunk of memory large
-+enough to contain a copy of all pages in use, to use it for the system
-+snapshot.  If the allocation fails, the system cannot hibernate and the
-+operation fails with ENOMEM.  This will happen, for instance, when the total
-+amount of anonymous pages (process data) exceeds 1/2 of total RAM.
+ 	error = memory_bm_create(&orig_bm, GFP_IMAGE, PG_ANY);
+-	if (error)
++	if (error) {
++		pr_err("Cannot allocate original bitmap\n");
+ 		goto err_out;
++	}
  
- Basic ``sysfs`` Interfaces for System Suspend and Hibernation
- =============================================================
+ 	error = memory_bm_create(&copy_bm, GFP_IMAGE, PG_ANY);
+-	if (error)
++	if (error) {
++		pr_err("Cannot allocate copy bitmap\n");
+ 		goto err_out;
++	}
+ 
+ 	alloc_normal = 0;
+ 	alloc_highmem = 0;
+@@ -1804,8 +1808,11 @@ int hibernate_preallocate_memory(void)
+ 		alloc -= pages;
+ 		pages += pages_highmem;
+ 		pages_highmem = preallocate_image_highmem(alloc);
+-		if (pages_highmem < alloc)
++		if (pages_highmem < alloc) {
++			pr_err("Image allocation is %lu pages short\n",
++				alloc - pages_highmem);
+ 			goto err_out;
++		}
+ 		pages += pages_highmem;
+ 		/*
+ 		 * size is the desired number of saveable pages to leave in
+@@ -1836,13 +1843,12 @@ int hibernate_preallocate_memory(void)
+ 
+  out:
+ 	stop = ktime_get();
+-	pr_cont("done (allocated %lu pages)\n", pages);
++	pr_info("Allocated %lu pages for hibernation shapshot\n", pages);
+ 	swsusp_show_speed(start, stop, pages, "Allocated");
+ 
+ 	return 0;
+ 
+  err_out:
+-	pr_cont("\n");
+ 	swsusp_free();
+ 	return -ENOMEM;
+ }
 -- 
 2.24.1.735.g03f4e72817-goog
 
