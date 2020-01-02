@@ -2,113 +2,80 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F29C7C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56040C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C03F0215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F22E215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:18:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oIWuiAuy"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SN/J6557"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgABNRD (ORCPT
+        id S1728354AbgABNS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 08:17:03 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53913 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728165AbgABNRC (ORCPT
+        Thu, 2 Jan 2020 08:18:56 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59424 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728165AbgABNS4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 08:17:02 -0500
-Received: by mail-wm1-f68.google.com with SMTP id m24so5534867wmc.3;
-        Thu, 02 Jan 2020 05:17:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=5Ov6A1IS3Elx5Hi12ZOvyKLtjLuPVxWAlKpJ4puCzK8=;
-        b=oIWuiAuyw/f9RlecYNULUKz4agq5Url8OSp+Q9s7r7uSdU6EcjklavuCj2ctQU2Lbk
-         dwpuHKLTVZJD6OHbeBxuCIXeDxGTNv86ywJDuS3fv4BVU+LfA9HSOgx3n3EAdD0gsQzV
-         KXV99qUtbQLxVWmUus0ScQudRHpc0MGnOt2stmcEb6lVxUAZ1RxQt+wFeWOytg8BhHLK
-         Gmi8l68N8IW2UKFaGxtO80WLHfJKqSGg0mnBeSsppiQSbVwZhp4YjpuN0/poT1NDv9Dk
-         fo4gHO0RTuQcS8vYG2ory6Mrgi77Xurv5FwzC/tDCNPG2hWzUQLYN1bwpozHJVqGN2cQ
-         uKiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=5Ov6A1IS3Elx5Hi12ZOvyKLtjLuPVxWAlKpJ4puCzK8=;
-        b=q9cf4ZjaQHszswyjKwHpg5fP1eUxD/sSYEO9t/CamEq0EvYwLI2bHH3Y0DRdmn7cW0
-         Vt3nRPc2spxVTE5S81lRbjMiAEFIPVHd0EM0GbiGlV3c55YRoASIjYsF2/hsT+SarFi9
-         6RhS33FjExmj1tzrQcZIN39aXDjnhw5w9zmsj/oY5zrQas12ZDMeMfHSvefzD4a7DOMd
-         KLewKOijNBQS+hMV6C6LqI/rLQBRvoY7xBfOr9JP4DDljwERSzlOQdKIhYkXinEt1EdA
-         TMHRdxgYjxr3ppM57ZUtH38qQntJkh8UxMPz6LKhgmp3u62+mGUCCRBqxWrt9RnxZ7Um
-         nuNQ==
-X-Gm-Message-State: APjAAAXoQTu4VeW2zW2iN7/qd70s02WvrgUnH5y1lPw7cFIsYA0su5Aa
-        aDubygdSh7+KOuZEwT4ARKY=
-X-Google-Smtp-Source: APXvYqxnoJdkJCOq9DBUebKMHvLkefHGXut6vB/tz4bIjyglfltBP9QETSdHFrrQ/ZqBlDf2MLG1iA==
-X-Received: by 2002:a1c:a982:: with SMTP id s124mr14183647wme.132.1577971020707;
-        Thu, 02 Jan 2020 05:17:00 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id f1sm55616958wro.85.2020.01.02.05.16.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 05:16:59 -0800 (PST)
-Date:   Thu, 2 Jan 2020 14:16:59 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, linkinjeon@gmail.com
-Subject: Re: [PATCH v8 02/13] exfat: add super block operations
-Message-ID: <20200102131659.r2lxzcyhvtgxmz7m@pali>
-References: <20191220062419.23516-1-namjae.jeon@samsung.com>
- <CGME20191220062733epcas1p31665a3ae968ab8c70d91a3cddf529e73@epcas1p3.samsung.com>
- <20191220062419.23516-3-namjae.jeon@samsung.com>
- <20191229134025.qb3mmqatsn5c4gao@pali>
- <000701d5c132$bed73c80$3c85b580$@samsung.com>
- <20200102083029.uv2gtig3ski23dpe@pali>
+        Thu, 2 Jan 2020 08:18:56 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 002DIsE8035027;
+        Thu, 2 Jan 2020 07:18:54 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1577971134;
+        bh=J7KOfR4C/J8jTphSanRnb8gsLWtOAV6MaL5byMn8870=;
+        h=From:To:CC:Subject:Date;
+        b=SN/J6557b2yNBNWRX2ub0aj3chRDymMceJKpQJLk5dVj/m5j9f7KY4F0XxOX2srEy
+         e+yWMckcpAncOjEqAPKRE314vqW5PSLKLhOQj6xHsJrj3ru+1i3qifN5GXpKYfGfOw
+         kYoLlkklSsVWOVAQAD5QJoctqK5FYX+U1H/BayJc=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 002DIsK4073030;
+        Thu, 2 Jan 2020 07:18:54 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 2 Jan
+ 2020 07:18:53 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 2 Jan 2020 07:18:53 -0600
+Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 002DIp3R075354;
+        Thu, 2 Jan 2020 07:18:51 -0600
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <linux-omap@vger.kernel.org>, <s-anna@ti.com>
+Subject: [PATCHv4 00/14] remoteproc: updates for omap remoteproc support
+Date:   Thu, 2 Jan 2020 15:18:31 +0200
+Message-ID: <20200102131845.12992-1-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200102083029.uv2gtig3ski23dpe@pali>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 02 January 2020 09:30:29 Pali Rohár wrote:
-> On Thursday 02 January 2020 15:06:16 Namjae Jeon wrote:
-> > > > +static const struct fs_parameter_spec exfat_param_specs[] = {
-> > > > +	fsparam_u32("uid",			Opt_uid),
-> > > > +	fsparam_u32("gid",			Opt_gid),
-> > > > +	fsparam_u32oct("umask",			Opt_umask),
-> > > > +	fsparam_u32oct("dmask",			Opt_dmask),
-> > > > +	fsparam_u32oct("fmask",			Opt_fmask),
-> > > > +	fsparam_u32oct("allow_utime",		Opt_allow_utime),
-> > > > +	fsparam_string("iocharset",		Opt_charset),
-> > > > +	fsparam_flag("utf8",			Opt_utf8),
-> > > 
-> > > Hello! What is the purpose of having extra special "utf8" mount option?
-> > > Is not one "iocharset=utf8" option enough?
-> > utf8 nls_table supports utf8<->utf32 conversion and does not support
-> > surrogate character conversion.
-> 
-> So in other words, this is just subset of UTF-8 just to 3 byte long
-> sequences (for Unicode code points up to the U+FFFF).
+Hi,
 
-Anyway, this is limitation of kernel's NLS framework? Or limitation in
-current exfat driver implementation?
+This version addresses any review comments received for v3. Detailed
+change logs are added to individual patches, but the main changes are:
 
-Because if it is in kernel's NLS framework then all kernel drivers would
-be affected by this limitation, and not only exfat.
+- moved a few config options to DT
+- PM runtime sequencing cleanup up
+- device memory data moved under single structure for clarity
+- some error handling fixes / hardening
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
+-Tero
+
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
