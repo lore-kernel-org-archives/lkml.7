@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C22FDC3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB391C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9269A22B48
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C16552253D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003384;
-	bh=P9zYL2IjlJKQhbkr4O2SVoC2nzZza+pLAq77UjV2kn0=;
+	s=default; t=1578003387;
+	bh=k8aAuVRJ683WK/6R3uVaMaBtRvEM6na8sRTDflgRO4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ImMe1Zdol9uwuetDFcufgWLRfFBwgyoWsT4FUZf0RKEdWQ8wNEnMhEZgcyAD4uqO5
-	 BpS4y93bXKy1Og+csLMkgRltFsAW5HGc3rBxXPf+vkC1fYWfj9OYtwoEeRZ8iUMXpI
-	 zrHHwVUxOCcGtlFUYC3bhBncgbUh7tAiluinaBaQ=
+	b=TqxjgKo/SC+t1IINq9EXAB9MbGE+cHL2ovOHOI8GGx0cqOThxPxhE23ybGxqcwm3G
+	 eNNE9ojVIlFtUOfxddhjrZgupN9w6RcYM/XJq2+BgWQtw+y2zNJ/gQXetF7pgXznHv
+	 awacOj5PiBFh3AibirLGXcOf+MHv/GSFU8wfBUAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgABWQX (ORCPT
+        id S1728243AbgABWQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:16:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58172 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:16:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728231AbgABWQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:16:21 -0500
+        id S1727664AbgABWQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:16:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE8ED21582;
-        Thu,  2 Jan 2020 22:16:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B89222314;
+        Thu,  2 Jan 2020 22:16:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003380;
-        bh=P9zYL2IjlJKQhbkr4O2SVoC2nzZza+pLAq77UjV2kn0=;
+        s=default; t=1578003382;
+        bh=k8aAuVRJ683WK/6R3uVaMaBtRvEM6na8sRTDflgRO4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dm5vCe0nA05XBME4DOcLVOHwxB1aaJLKG6SZ3VPQlWMLVa9255wLbQFjJe/+JtK1Z
-         ilRZiIngD0wYE3e+JeF8VohF1YEhILSjfB8BeLf8n0GUqIqYszrJYatnTqFZmQP7ga
-         H5JuZ5bceoSYlih/6LZWNeLFFqUbUx9V/+Ba6NQo=
+        b=2tulz9kuJJYJ0fDGf+rcpLZ+5OFcTIQThvY1TxkLTlUyCEJMqHZF0iP2yj1wXW1FZ
+         kcN7PoN0yWV1rYJxOxM/HgaRvOZyKyD1l8jjZI+U1AUSSdmI1tIZL4aeg8mBoKTNpH
+         SgcsOaKi2kml0+CdgcFrz9ftEG8LilGhxNXfP5qY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+f25ecf4b2982d8c7a640@syzkaller-ppc64.appspotmail.com,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>
-Subject: [PATCH 5.4 136/191] powerpc: Fix __clear_user() with KUAP enabled
-Date:   Thu,  2 Jan 2020 23:06:58 +0100
-Message-Id: <20200102215844.202313478@linuxfoundation.org>
+        syzbot+96d3f9ff6a86d37e44c8@syzkaller.appspotmail.com,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 5.4 137/191] net/smc: add fallback check to connect()
+Date:   Thu,  2 Jan 2020 23:06:59 +0100
+Message-Id: <20200102215844.299599211@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -62,110 +62,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Donnellan <ajd@linux.ibm.com>
+From: Ursula Braun <ubraun@linux.ibm.com>
 
-commit 61e3acd8c693a14fc69b824cb5b08d02cb90a6e7 upstream.
+commit 86434744fedf0cfe07a9eee3f4632c0e25c1d136 upstream.
 
-The KUAP implementation adds calls in clear_user() to enable and
-disable access to userspace memory. However, it doesn't add these to
-__clear_user(), which is used in the ptrace regset code.
+FASTOPEN setsockopt() or sendmsg() may switch the SMC socket to fallback
+mode. Once fallback mode is active, the native TCP socket functions are
+called. Nevertheless there is a small race window, when FASTOPEN
+setsockopt/sendmsg runs in parallel to a connect(), and switch the
+socket into fallback mode before connect() takes the sock lock.
+Make sure the SMC-specific connect setup is omitted in this case.
 
-As there's only one direct user of __clear_user() (the regset code),
-and the time taken to set the AMR for KUAP purposes is going to
-dominate the cost of a quick access_ok(), there's not much point
-having a separate path.
+This way a syzbot-reported refcount problem is fixed, triggered by
+different threads running non-blocking connect() and FASTOPEN_KEY
+setsockopt.
 
-Rename __clear_user() to __arch_clear_user(), and make __clear_user()
-just call clear_user().
-
-Reported-by: syzbot+f25ecf4b2982d8c7a640@syzkaller-ppc64.appspotmail.com
-Reported-by: Daniel Axtens <dja@axtens.net>
-Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
-Fixes: de78a9c42a79 ("powerpc: Add a framework for Kernel Userspace Access Protection")
-Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
-[mpe: Use __arch_clear_user() for the asm version like arm64 & nds32]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191209132221.15328-1-ajd@linux.ibm.com
+Reported-by: syzbot+96d3f9ff6a86d37e44c8@syzkaller.appspotmail.com
+Fixes: 6d6dd528d5af ("net/smc: fix refcount non-blocking connect() -part 2")
+Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/uaccess.h |    9 +++++++--
- arch/powerpc/lib/string_32.S       |    4 ++--
- arch/powerpc/lib/string_64.S       |    6 +++---
- 3 files changed, 12 insertions(+), 7 deletions(-)
+ net/smc/af_smc.c |   14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
---- a/arch/powerpc/include/asm/uaccess.h
-+++ b/arch/powerpc/include/asm/uaccess.h
-@@ -401,7 +401,7 @@ copy_to_user_mcsafe(void __user *to, con
- 	return n;
- }
+--- a/net/smc/af_smc.c
++++ b/net/smc/af_smc.c
+@@ -854,6 +854,8 @@ static int smc_connect(struct socket *so
+ 		goto out;
  
--extern unsigned long __clear_user(void __user *addr, unsigned long size);
-+unsigned long __arch_clear_user(void __user *addr, unsigned long size);
- 
- static inline unsigned long clear_user(void __user *addr, unsigned long size)
- {
-@@ -409,12 +409,17 @@ static inline unsigned long clear_user(v
- 	might_fault();
- 	if (likely(access_ok(addr, size))) {
- 		allow_write_to_user(addr, size);
--		ret = __clear_user(addr, size);
-+		ret = __arch_clear_user(addr, size);
- 		prevent_write_to_user(addr, size);
+ 	sock_hold(&smc->sk); /* sock put in passive closing */
++	if (smc->use_fallback)
++		goto out;
+ 	if (flags & O_NONBLOCK) {
+ 		if (schedule_work(&smc->connect_work))
+ 			smc->connect_nonblock = 1;
+@@ -1716,8 +1718,6 @@ static int smc_setsockopt(struct socket
+ 		sk->sk_err = smc->clcsock->sk->sk_err;
+ 		sk->sk_error_report(sk);
  	}
- 	return ret;
- }
+-	if (rc)
+-		return rc;
  
-+static inline unsigned long __clear_user(void __user *addr, unsigned long size)
-+{
-+	return clear_user(addr, size);
-+}
-+
- extern long strncpy_from_user(char *dst, const char __user *src, long count);
- extern __must_check long strnlen_user(const char __user *str, long n);
+ 	if (optlen < sizeof(int))
+ 		return -EINVAL;
+@@ -1725,6 +1725,8 @@ static int smc_setsockopt(struct socket
+ 		return -EFAULT;
  
---- a/arch/powerpc/lib/string_32.S
-+++ b/arch/powerpc/lib/string_32.S
-@@ -17,7 +17,7 @@ CACHELINE_BYTES = L1_CACHE_BYTES
- LG_CACHELINE_BYTES = L1_CACHE_SHIFT
- CACHELINE_MASK = (L1_CACHE_BYTES-1)
+ 	lock_sock(sk);
++	if (rc || smc->use_fallback)
++		goto out;
+ 	switch (optname) {
+ 	case TCP_ULP:
+ 	case TCP_FASTOPEN:
+@@ -1736,15 +1738,14 @@ static int smc_setsockopt(struct socket
+ 			smc_switch_to_fallback(smc);
+ 			smc->fallback_rsn = SMC_CLC_DECL_OPTUNSUPP;
+ 		} else {
+-			if (!smc->use_fallback)
+-				rc = -EINVAL;
++			rc = -EINVAL;
+ 		}
+ 		break;
+ 	case TCP_NODELAY:
+ 		if (sk->sk_state != SMC_INIT &&
+ 		    sk->sk_state != SMC_LISTEN &&
+ 		    sk->sk_state != SMC_CLOSED) {
+-			if (val && !smc->use_fallback)
++			if (val)
+ 				mod_delayed_work(system_wq, &smc->conn.tx_work,
+ 						 0);
+ 		}
+@@ -1753,7 +1754,7 @@ static int smc_setsockopt(struct socket
+ 		if (sk->sk_state != SMC_INIT &&
+ 		    sk->sk_state != SMC_LISTEN &&
+ 		    sk->sk_state != SMC_CLOSED) {
+-			if (!val && !smc->use_fallback)
++			if (!val)
+ 				mod_delayed_work(system_wq, &smc->conn.tx_work,
+ 						 0);
+ 		}
+@@ -1764,6 +1765,7 @@ static int smc_setsockopt(struct socket
+ 	default:
+ 		break;
+ 	}
++out:
+ 	release_sock(sk);
  
--_GLOBAL(__clear_user)
-+_GLOBAL(__arch_clear_user)
- /*
-  * Use dcbz on the complete cache lines in the destination
-  * to set them to zero.  This requires that the destination
-@@ -87,4 +87,4 @@ _GLOBAL(__clear_user)
- 	EX_TABLE(8b, 91b)
- 	EX_TABLE(9b, 91b)
- 
--EXPORT_SYMBOL(__clear_user)
-+EXPORT_SYMBOL(__arch_clear_user)
---- a/arch/powerpc/lib/string_64.S
-+++ b/arch/powerpc/lib/string_64.S
-@@ -17,7 +17,7 @@ PPC64_CACHES:
- 	.section	".text"
- 
- /**
-- * __clear_user: - Zero a block of memory in user space, with less checking.
-+ * __arch_clear_user: - Zero a block of memory in user space, with less checking.
-  * @to:   Destination address, in user space.
-  * @n:    Number of bytes to zero.
-  *
-@@ -58,7 +58,7 @@ err3;	stb	r0,0(r3)
- 	mr	r3,r4
- 	blr
- 
--_GLOBAL_TOC(__clear_user)
-+_GLOBAL_TOC(__arch_clear_user)
- 	cmpdi	r4,32
- 	neg	r6,r3
- 	li	r0,0
-@@ -181,4 +181,4 @@ err1;	dcbz	0,r3
- 	cmpdi	r4,32
- 	blt	.Lshort_clear
- 	b	.Lmedium_clear
--EXPORT_SYMBOL(__clear_user)
-+EXPORT_SYMBOL(__arch_clear_user)
+ 	return rc;
 
 
