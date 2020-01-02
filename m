@@ -2,137 +2,97 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A51C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B67FC2D0DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D611E22314
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C00D20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:20:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="kw8wAxVg";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="l0ceP7AM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uSztRpVz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbgABHB5 (ORCPT
+        id S1726528AbgABHUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 02:01:57 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:46223 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727663AbgABHB5 (ORCPT
+        Thu, 2 Jan 2020 02:20:22 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33399 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbgABHUV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 02:01:57 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 379972224E;
-        Thu,  2 Jan 2020 02:01:56 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Thu, 02 Jan 2020 02:01:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm1; bh=p
-        HaGh/CRjB9dqX9pcqIa0Cf2JnihMC69wf/6ZnG2fa0=; b=kw8wAxVgtZ/uW2IJY
-        L22wbpCDSIcA10lPV9/f+QLyUk4OcfIA89FpmZ4SF8gGunF1447187op+dJHkeAE
-        FSCvpqO1VXm4ou3N3zsFZQeQWs3wXZRZEJ7VagT1iot18SUs62bdxorLofh6e02U
-        fI5VhPvlYigFrPP/v2JjMHSXaE1diyMmwZM+XsYtv1DBKG4NYL7KZfu7rc98Y9SE
-        +pRlDrpyHRmAjTIdmsizqwviw59RPXdmCqE/1ldAqZwFzMR3GmDa845QXHPtKbiZ
-        hp7pQvjeVzWxlPX5PQJ2JuIc+xPm00uKLhX68DFobMgUOi6SURgpvuUgAxy8W9r2
-        zlY9g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=pHaGh/CRjB9dqX9pcqIa0Cf2JnihMC69wf/6ZnG2f
-        a0=; b=l0ceP7AMaha/q40dZIfeAIE4RbNSN7DRF0hf3FMaeYzsD6Lw1+cNzD/YK
-        p92Fr6IADX70XaCUn9vocbPyp386LeDCLzM7DcG/WCBOYlIfK+jE0V1+165lKXlt
-        SbOAMz5InLra16wjjspXLEyYoUO2e6lusA0jpAovSVRS3IuUEQhBr+pOmiB+loU/
-        T+ef/0mWb/9KfV2QApWw/TTKr3SBtTUq6BcRF/aa7HMIWAJj/IYDGfeuNdh3JHqB
-        QWqAIml5YcXQ1SP4tfzkRC8fqzsDRBjtYsNVKJWFE6jOoFyApXKt/VUpvGstGz2x
-        cPHElPe9iJIE4xMJSbA/c7puG3+6Q==
-X-ME-Sender: <xms:Y5UNXvYPHrICMWAMK9jXRJN-lnJnt0KgZlM5ubFiNG3ShBPRVuZDNQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdegtddgleekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepuffvfhfhkffffgggjggtgfesthejredttdefjeenucfhrhhomhepufgrmhhu
-    vghlucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukf
-    hppeejtddrudefhedrudegkedrudehudenucfrrghrrghmpehmrghilhhfrhhomhepshgr
-    mhhuvghlsehshhholhhlrghnugdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:Y5UNXs7i733FLtMbyJNpTle4Jjo6E5aUR6YNB4kJrWd_DTu_BYXVEw>
-    <xmx:Y5UNXoobiiivz6aAZLzSaZomFlVzS14wT_87UCunfH8VeNQXYzw_SA>
-    <xmx:Y5UNXkyg-PJ6x175d2g3kmHRZatPKzWPgIvlPy3Gwj_lCFIom46snw>
-    <xmx:ZJUNXkOP8FCX6OzU0EFhlxx189decbFKrkuIYdcisFDoU4m35bL3lQ>
-Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 95E6080061;
-        Thu,  2 Jan 2020 02:01:55 -0500 (EST)
-Subject: Re: [PATCH 1/7] power: supply: axp20x_ac_power: Allow offlining
-To:     Chen-Yu Tsai <wens@csie.org>, Sebastian Reichel <sre@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-References: <20200102063633.65388-1-samuel@sholland.org>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <0118a2f5-bd7b-e719-06f9-8665912aa553@sholland.org>
-Date:   Thu, 2 Jan 2020 01:01:54 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20200102063633.65388-1-samuel@sholland.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 2 Jan 2020 02:20:21 -0500
+Received: by mail-pl1-f195.google.com with SMTP id c13so17513404pls.0
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 23:20:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=cml0t0YxNWYg8r++2sRcks91RdsbKE44NnA5x7kzm6c=;
+        b=uSztRpVzjvC5aOabIn3Spd6tDWwuuS93WV+yqGSbHeB264lTwkTUCXoCoxUJYlWrYR
+         gGVRqNiojlZY8tk3TNbSCZV0f4r2RWly6T0sD7YhBey1MiBKXoiZa4kkBJ2Y6iufhlhi
+         E7YiCit2Vu/7/6ne7eD7kPz33RtMl6zWiTZ22E2BhtMvcTBizJp+PrPKoGi1xQ9sUnGu
+         iyLLbzhDkhe0J3LBMlfs7y+F/NO945x/89TiAcKqq+tZAaplM3N+tLR1k3zaknCUJMDt
+         scZo6BbZ+aRPHznBOOSYoWhl4kcdhP2oTj56FHHRmfDrjbrQSMm278ncqDEWz3h4Liaq
+         wv9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=cml0t0YxNWYg8r++2sRcks91RdsbKE44NnA5x7kzm6c=;
+        b=kGEfL4g+PmZNjfPIuazc75gTHEeGEWzQJ2ang0OlCkf7eGw/xR7qpVIb4JzC3Hq96o
+         xLCUnXrbB1cqvDIWZ+B+cHIG8C8kqYXAaPbLi+3B+HxDrZtH9mNifn1XzPLlmCqnPOQs
+         H1Aet0109OscB0Y4QEumM6QX/OU+TbVntDQrXy+wVJ6hElukYTvxz8MhYNH59MM+4mu/
+         lOTkx0x+bFDIJwjoScHkr7qpH4UJ5XaVFNSaMD/JQwRkLwzBk3BLCLDDSHCVvAlOulY2
+         zArCUcyhIcDbXxCsaPWKlH7gydqWp21LlghX7+nTQ7fXktUD/9kfmJMBpNFhI6x3iDQv
+         9pfw==
+X-Gm-Message-State: APjAAAUoBrXnC5vT5TwrIuu3yX77mUotb7i3F3dKhzAc6i2xUhotZmVr
+        QMYLqxRWINGxEi11F8thMxQ=
+X-Google-Smtp-Source: APXvYqzYKl5dMWeu8PSI5P1FF0ESSw1IDdqOUFg5t4QsETD7lPP7YvZNO5y3XrX5fsWOR+dvNBgyJA==
+X-Received: by 2002:a17:90a:8c8c:: with SMTP id b12mr18163092pjo.119.1577949621334;
+        Wed, 01 Jan 2020 23:20:21 -0800 (PST)
+Received: from localhost ([43.224.245.179])
+        by smtp.gmail.com with ESMTPSA id m6sm9525644pjv.23.2020.01.01.23.20.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 Jan 2020 23:20:20 -0800 (PST)
+From:   Junyong Sun <sunjy516@gmail.com>
+X-Google-Original-From: Junyong Sun <sunjunyong@xiaomi.com>
+To:     rostedt@goodmis.org, mingo@redhat.com, akpm@linux-foundation.org,
+        joel@joelfernandes.org, changbin.du@intel.com,
+        timmurray@google.com, sunjunyong@xiaomi.com
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] mm, tracing: Print symbol name for kmem_alloc_node call_site events
+Date:   Thu,  2 Jan 2020 15:19:28 +0800
+Message-Id: <1577949568-4518-1-git-send-email-sunjunyong@xiaomi.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/2/20 12:36 AM, Samuel Holland wrote:
-> AXP803/AXP813 have a flag that enables/disables the AC power supply
-> input. Allow control of this flag via the ONLINE property on those
-> variants.
-> 
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> ---
->  drivers/power/supply/axp20x_ac_power.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/power/supply/axp20x_ac_power.c b/drivers/power/supply/axp20x_ac_power.c
-> index 0d34a932b6d5..4410e7b89383 100644
-> --- a/drivers/power/supply/axp20x_ac_power.c
-> +++ b/drivers/power/supply/axp20x_ac_power.c
-> @@ -23,6 +23,8 @@
->  #define AXP20X_PWR_STATUS_ACIN_PRESENT	BIT(7)
->  #define AXP20X_PWR_STATUS_ACIN_AVAIL	BIT(6)
->  
-> +#define AXP813_ACIN_PATH_SELECT		BIT(7)
-> +
->  #define AXP813_VHOLD_MASK		GENMASK(5, 3)
->  #define AXP813_VHOLD_UV_TO_BIT(x)	((((x) / 100000) - 40) << 3)
->  #define AXP813_VHOLD_REG_TO_UV(x)	\
-> @@ -143,6 +145,11 @@ static int axp813_ac_power_set_property(struct power_supply *psy,
->  	struct axp20x_ac_power *power = power_supply_get_drvdata(psy);
->  
->  	switch (psp) {
-> +	case POWER_SUPPLY_PROP_ONLINE:
-> +		return regmap_update_bits(power->regmap, AXP813_ACIN_PATH_CTRL,
-> +					  AXP813_ACIN_PATH_SELECT,
-> +					  !!val->intval);
-> +
+print the call_site ip of kmem_alloc_node using '%pS' to improve
+the readability of raw slab trace points.
 
-Sorry, I failed to use regmap_update_bits properly here and in
-patch 5. I'll send a v2 with the value shifted properly.
+Signed-off-by: Junyong Sun <sunjunyong@xiaomi.com>
+---
+ include/trace/events/kmem.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
->  	case POWER_SUPPLY_PROP_VOLTAGE_MIN:
->  		if (val->intval < 4000000 || val->intval > 4700000)
->  			return -EINVAL;
-> @@ -169,7 +176,8 @@ static int axp813_ac_power_set_property(struct power_supply *psy,
->  static int axp813_ac_power_prop_writeable(struct power_supply *psy,
->  					  enum power_supply_property psp)
->  {
-> -	return psp == POWER_SUPPLY_PROP_VOLTAGE_MIN ||
-> +	return psp == POWER_SUPPLY_PROP_ONLINE ||
-> +	       psp == POWER_SUPPLY_PROP_VOLTAGE_MIN ||
->  	       psp == POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT;
->  }
->  
-> 
+diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
+index ad7e642b..f65b1f6 100644
+--- a/include/trace/events/kmem.h
++++ b/include/trace/events/kmem.h
+@@ -88,8 +88,8 @@ DECLARE_EVENT_CLASS(kmem_alloc_node,
+ 		__entry->node		= node;
+ 	),
+ 
+-	TP_printk("call_site=%lx ptr=%p bytes_req=%zu bytes_alloc=%zu gfp_flags=%s node=%d",
+-		__entry->call_site,
++	TP_printk("call_site=%pS ptr=%p bytes_req=%zu bytes_alloc=%zu gfp_flags=%s node=%d",
++		(void *)__entry->call_site,
+ 		__entry->ptr,
+ 		__entry->bytes_req,
+ 		__entry->bytes_alloc,
+-- 
+2.7.4
 
