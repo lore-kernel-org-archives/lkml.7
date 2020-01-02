@@ -6,104 +6,113 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 762B8C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 03:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FA1C2D0DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 04:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA8320863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 03:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CEEB20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 04:00:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbgABD7k (ORCPT
+        id S1727628AbgABEA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 22:59:40 -0500
-Received: from mout-p-201.mailbox.org ([80.241.56.171]:16274 "EHLO
-        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727509AbgABD7k (ORCPT
+        Wed, 1 Jan 2020 23:00:28 -0500
+Received: from mailgw-01.dd24.net ([193.46.215.41]:34700 "EHLO
+        mailgw-01.dd24.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727509AbgABEA1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 22:59:40 -0500
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        Wed, 1 Jan 2020 23:00:27 -0500
+Received: from mailpolicy-01.live.igb.homer.key-systems.net (mailpolicy-01.live.igb.homer.key-systems.net [192.168.1.26])
+        by mailgw-01.dd24.net (Postfix) with ESMTP id CA0145FD57
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jan 2020 04:00:25 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at
+        mailpolicy-01.live.igb.homer.key-systems.net
+Received: from smtp.dd24.net ([192.168.1.35])
+        by mailpolicy-01.live.igb.homer.key-systems.net (mailpolicy-01.live.igb.homer.key-systems.net [192.168.1.25]) (amavisd-new, port 10235)
+        with ESMTP id UtgI8krSE1cV for <linux-kernel@vger.kernel.org>;
+        Thu,  2 Jan 2020 04:00:23 +0000 (UTC)
+Received: from heisenberg.fritz.box (ppp-88-217-46-247.dynamic.mnet-online.de [88.217.46.247])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 47pDnP4gX9zQlB7;
-        Thu,  2 Jan 2020 04:59:37 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id 86V7dup9i5m4; Thu,  2 Jan 2020 04:59:33 +0100 (CET)
-Date:   Thu, 2 Jan 2020 14:59:20 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        stable@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
- symlinks
-Message-ID: <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
-References: <20191230052036.8765-1-cyphar@cyphar.com>
- <20191230054413.GX4203@ZenIV.linux.org.uk>
- <20191230054913.c5avdjqbygtur2l7@yavin.dot.cyphar.com>
- <20191230072959.62kcojxpthhdwmfa@yavin.dot.cyphar.com>
- <20200101004324.GA11269@ZenIV.linux.org.uk>
- <20200101005446.GH4203@ZenIV.linux.org.uk>
- <20200101030815.GA17593@ZenIV.linux.org.uk>
- <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
- <20200101234009.GB8904@ZenIV.linux.org.uk>
+        by smtp.dd24.net (Postfix) with ESMTPSA
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jan 2020 04:00:23 +0000 (UTC)
+Message-ID: <43b7eef5560ede5ad2973964f68d9e6beba63a91.camel@scientia.net>
+Subject: Re: from 5.2->5.3 lets the system run at considerably higher
+ temperatures
+From:   Christoph Anton Mitterer <calestyo@scientia.net>
+To:     linux-kernel@vger.kernel.org
+Date:   Thu, 02 Jan 2020 05:00:22 +0100
+In-Reply-To: <d05aba2742ae42783788c954e2a380e7fcb10830.camel@scientia.net>
+References: <d05aba2742ae42783788c954e2a380e7fcb10830.camel@scientia.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2+b1 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tef6rv2ffqcfqgo6"
-Content-Disposition: inline
-In-Reply-To: <20200101234009.GB8904@ZenIV.linux.org.uk>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hey again.
 
---tef6rv2ffqcfqgo6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Just checked with 5.4.6 and the problem as described previously still
+exists.
 
-On 2020-01-01, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Thu, Jan 02, 2020 at 01:44:07AM +1100, Aleksa Sarai wrote:
->=20
-> > Thanks, this fixes the issue for me (and also fixes another reproducer I
-> > found -- mounting a symlink on top of itself then trying to umount it).
-> >=20
-> > Reported-by: Aleksa Sarai <cyphar@cyphar.com>
-> > Tested-by: Aleksa Sarai <cyphar@cyphar.com>
->=20
-> Pushed into #fixes.
+And effectively idle system runs at ~75 °C even when just typing some
+text or switching some windows.
+Only if doing really absolutely nothing for a long time it may (but not
+always) go down to ~65 °C, which is still 5-10°C more than having the
+very same system (same software running, etc.) with a 5.2 kernel.
 
-Thanks. One other thing I noticed is that umount applies to the
-underlying symlink rather than the mountpoint on top. So, for example
-(using the same scripts I posted in the thread):
+top still shows basically nothing.
 
-  # ln -s /tmp/foo link
-  # ./mount_to_symlink /etc/passwd link
-  # umount -l link # will attempt to unmount "/tmp/foo"
+I still suspect it could be somehow graphics related:
+- when I switch from the desktop environment to the kernel console,
+temperatures quickly go to ~60°C (which is more close to what's the
+case with 5.2)
 
-Is that intentional?
+- When doing some video playback, temperatures just explode (which
+they' don't with 5.2, of course they rise there as well).
+So when playing a video like mpv --vo=vaapi, CPU goes quickly to 90°C
+an more (and even when stopping playback, it stays at 80°C for
+minutes).
+Actually, sometimes (but not always) it was much better with --vo=xv.
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+The CPU is a Intel(R) Core(TM) i7-7600U CPU @ 2.80GHz, with HD Graphics
+620 (Kaby Lake GT2).
 
---tef6rv2ffqcfqgo6
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+Thanks,
+Chris.
 
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXg1qlQAKCRCdlLljIbnQ
-EjpjAP9+cSE8vOT4mUYl4IC31Io/0FRApXDAbaIGxDhJ1uYJQAD+IuziuN4KXZzb
-2vUrlYkc86XaKC4oX0suOlWHXbaUdgE=
-=iYvs
------END PGP SIGNATURE-----
 
---tef6rv2ffqcfqgo6--
+
+Any ideas on what to do or how to somehow debug this?
+
+Cheers,
+Chris.
+
+
+On Mon, 2019-12-16 at 16:15 +0100, Christoph Anton Mitterer wrote:
+> Hey.
+> 
+> Since I've upgraded from kernel 5.2 to 5.3 my system runs a
+> considerably higher temperatures (like 10°C or more).
+> This happens even when it's effectively idle (top shows basically
+> nothing).
+> Downgrading again to 5.2 and high temperatures go away.
+> 
+> I did some more detailed description here:
+> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=945055
+> but really have no clue where to start debugging.
+> 
+> It could be that it's somehow graphics related, as when I switch away
+> from X/Cinnamon to the virtual console, temperatures decrease
+> considerably.
+> 
+> 
+> Anyone else seeing something similar or having some idea how to track
+> this down?
+> 
+> 
+> Thanks,
+> Chris.
+
