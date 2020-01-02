@@ -2,117 +2,99 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B941C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D1AC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED88E215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:40:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AP5Xweqg"
+	by mail.kernel.org (Postfix) with ESMTP id F126E215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 14:47:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbgABOky (ORCPT
+        id S1728558AbgABOrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 09:40:54 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39573 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728425AbgABOkx (ORCPT
+        Thu, 2 Jan 2020 09:47:53 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:57631 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728528AbgABOrw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 09:40:53 -0500
-Received: by mail-lj1-f194.google.com with SMTP id l2so40907202lja.6;
-        Thu, 02 Jan 2020 06:40:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YTVCjk10X6IDkXlg3Lj964r6euM3rxVqLQ0GPKfUCcY=;
-        b=AP5XweqgaDQb81JEDXXKrNOcYIEC2i4tvtdZSUGy93+DHN8A7ffo9TybljSB9VJ4j3
-         oZiC3JWlslj+PMJ13KpRrBZjp0emO2GobVqk+FEpnz5lFn8yuNZ+jFhEbwIMK73UeZB1
-         P0WN+b7kW6c8faslew/p/cfGYho0JQNrarwEKGJFRRB9bBNHI9/9YGZXVqzP1gMLeQQC
-         uwtOqNfEhpzbW6cUHtOSJ+bIzsO+UIoGEBAAxhZSmD/mI0CykOjgaCZixZZlYtfdKQ4T
-         iFUw53maeqLsVUL3PHWSSunz0Dv4NC0WQxDaawkoHV6HvLHzG0qBidaxdKLFxkN+F3YC
-         IR2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YTVCjk10X6IDkXlg3Lj964r6euM3rxVqLQ0GPKfUCcY=;
-        b=LDuOcCxuIzJfZfPczf0dw4MAMxSmY8cy+2o79sBX1ERxzauk7Arga1GNQDMYqV8xJC
-         jHSFxqu8nhYMIeSpl1QKsUc/BypJtUQD0nc4gR3AuXjFjJBRbskhvSYU2kIumnSIa98R
-         jw6p9wcywLai6Vv4Bny0KS7zzJ37MIZDxBoJhl3V+A5KAr2FcGxVVODVugTBp9XKYs9Z
-         OQCl3CfhB/Kn5pJCzfVBaZJgOnTN2sh1Z/faJb0NTgtt9API0MPCco5Fm6TIphxcqY4M
-         nn8lg/jbhHiIyD/qYjqYzlRvguu5dvZcgsC8XknkUiToAKV74qN4bhi2yZoTJ7ohQ4Sj
-         fV8w==
-X-Gm-Message-State: APjAAAXQMfUwgsT+mXc7VcLE0VR6TczStRajVrtvWbBcelMdRiVfkcMy
-        N01fvBmjEyZcLgEuM+Id3UPxKcs1
-X-Google-Smtp-Source: APXvYqxW/kfrNuZymj/mH11dgfiJX4D4dMU5VfflYEafTsK943BzpUc401lim/Fq7EUQMnVZaeZkrg==
-X-Received: by 2002:a2e:88c5:: with SMTP id a5mr49355528ljk.201.1577976050485;
-        Thu, 02 Jan 2020 06:40:50 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id g15sm18239966ljl.10.2020.01.02.06.40.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jan 2020 06:40:49 -0800 (PST)
-Subject: Re: [PATCH v3 13/16] usb: phy: tegra: Keep CPU interrupts enabled
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191228203358.23490-1-digetx@gmail.com>
- <20191228203358.23490-14-digetx@gmail.com>
- <20191230203648.GA24135@qmqm.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ad1a2b09-12b0-112e-1556-6faf6a01c330@gmail.com>
-Date:   Thu, 2 Jan 2020 17:40:48 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 2 Jan 2020 09:47:52 -0500
+Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MCbMz-1ivaLt3XqV-009hUb; Thu, 02 Jan 2020 15:47:51 +0100
+Received: by mail-qk1-f179.google.com with SMTP id t129so31477974qke.10;
+        Thu, 02 Jan 2020 06:47:50 -0800 (PST)
+X-Gm-Message-State: APjAAAUHMa1hiInnykqbmQIFcZ75rckaWio/ax1U2ivxjF2pJZ12I11z
+        R7ff97mn1tbeApVzz4Ad3qUI1MhVyn3YZd20cWE=
+X-Google-Smtp-Source: APXvYqxeWv0VNRCh1wUYetvxg6PZuim7c/Ayq2VRzpge7C10vtnrAM7vxlck/j9kJBHTwFTiGgYF60rLdGcplLKhkRs=
+X-Received: by 2002:a05:620a:a5b:: with SMTP id j27mr67222709qka.286.1577976469644;
+ Thu, 02 Jan 2020 06:47:49 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191230203648.GA24135@qmqm.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191228162929.GA29269@duo.ucw.cz> <20191228193622.GA13047@duo.ucw.cz>
+ <20191230173507.GM35479@atomide.com> <20200102110025.GA29035@amd>
+ <CAK8P3a2Ya+GZRRA_THZBVDq7SWO8UYoUPwW5fEyorCVjPnd1qA@mail.gmail.com> <20200102140609.7vsfwcjyvbbrmcjx@ucw.cz>
+In-Reply-To: <20200102140609.7vsfwcjyvbbrmcjx@ucw.cz>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 2 Jan 2020 15:47:33 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1NU62zf8zJAMZq5KFNuvDdrf3dUcLU4HY83Q=oDC611w@mail.gmail.com>
+Message-ID: <CAK8P3a1NU62zf8zJAMZq5KFNuvDdrf3dUcLU4HY83Q=oDC611w@mail.gmail.com>
+Subject: Re: Droid 4 regression in 5.5-rc1, armsoc-soc tree
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Tony Lindgren <tony@atomide.com>, Olof Johansson <olof@lixom.net>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Sebastian Reichel <sre@kernel.org>, nekit1000@gmail.com,
+        Marcel Partap <mpartap@gmx.net>, merlijn@wizzup.org,
+        martin_rysavy@centrum.cz
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:0qWBjttHnqqLGjkwWYG6PQlerA6J7OVh7Aeu9Rn+7ydgPShvdp9
+ pqY4Oo/E1qGhFmPKzjUP/z00tF7BglaoWKHEvCUDKmHvNY/f8t/HkrfFTYCxanj+NO1hjuk
+ CKMfQI08hTLd3oLI/t69J0qTkPxGR+sBzCaLgK56SHg/YmczncAs0CIbL44B2wRJocTLhNI
+ umIJk1f6k0aLHBekrQIwg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:TizTvzP/iK0=:e3VZuD0flIEudXtLseKtLK
+ gvNLwXIGAjaNJy7/2i9ID4+DpM87Bwz1euT0hjMi8+h3apURUxpzXpOxn8L9DOt8J08dprho6
+ Owfo2ovw4CyWeoUt+iTMtAH4SZp5L9uKMO3hZVI7X5f+d9EDP5zoTP3roFqD5RL8/L4vpjGS3
+ qSZiOCjwk0jmg8oCUaWRy8yd3P0R4vpl8jwXBB+T7PeGhNtyHN8t+IkwYnAo4z+LPBPaka8b7
+ jOGGQJivrA2VQMkw5yM39XQcJ8mW77rEYvdFv1mJXomrGY/4OAiHT9+xG2BvDPYXPBm+YWSMZ
+ HEDN8mhZZgK1k3U6nztqY5rWH9q4vtv0HaVLLznmI+E5JzQkbAZAjvqx+08ZsTSPS1AhMTva5
+ J2n+BAWiWrMhOzcCb3WN53ezA6h33WcPBqjPVvDT5fdKnEb9J5QjB8/ZN/kNeMywPEdB2/+8C
+ RMWErQoqW88AYlLIeW5JOEjoTIbyolm/BdDLwqa+iTX/MHdwe+CfF+8pLMMA8yKr1RQUBx7KF
+ hd9ifSEk8RJKzHTC9EhY84t/9fyYLizLMDPe9Y7D3PVlpk21C1gnsc9787HG7dQ17xAGrSySR
+ LhFZ/9hQuN7HPgKb1OxK6Itzp3kqzrkf+GuQnnfjG4pOFwLRXMdLFnb/KFSjYLmZrXjJS9xYZ
+ zXadaOy+KgWgywm1eGwe+b8bF3nOuBSAUsrOOoAwdzsC3OQk5VEgCJw/TS8+PnteYrGa/xuez
+ 3Jfs9A3CpqZEZG5qalM8TE4rOgtNQvVWHtcoq9/X9+6tb/rojXyEGBBFqL2iaAeVjLVoVDe/j
+ LXj/7gSZfRD0JGcuMv7+BeDZ43tNHgxHDJSyAkztHjWLJG6NeaFbyvGPeNTeKmJCy4LBqwkaz
+ DM/Cz3Nd/hJW+ulFve+g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.12.2019 23:36, Michał Mirosław пишет:
-> On Sat, Dec 28, 2019 at 11:33:55PM +0300, Dmitry Osipenko wrote:
->> There is no good reason for disabling of CPU interrupts in order to
->> protect the utmip_pad_count modification.
-> 
-> Since there are sleeping functions called outside of the locked sections,
-> this should be a mutex instead. OTOH if the spin_lock is to protect register
-> write against IRQ handler, then the patch is wrong.
-> 
-> [...]
->> -	spin_unlock_irqrestore(&utmip_pad_lock, flags);
->> +	spin_unlock(&utmip_pad_lock);
->>  
->>  	clk_disable_unprepare(phy->pad_clk);
+On Thu, Jan 2, 2020 at 3:06 PM Pavel Machek <pavel@ucw.cz> wrote:
 
-Hello Michał,
+> # good: [ab818f0999dc73af3f966194d087e9f6650f939f] Merge tag
+> # 'omap-for-v5.5/maintainers-signed' of
+> # git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap into
+> # arm/soc
+> git bisect good ab818f0999dc73af3f966194d087e9f6650f939f
+> # first bad commit: [38206c24ab09b4f4c2a57de5c1af0bb2e69cf5b6] Merge tag
+> # 'armsoc-soc' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+>
+> ...and am not sure how to interpret the result, or what to do next :(.
 
-This spinlock isn't for protecting from the IRQ handler, it's used
-solely to protect modification of the registers that are shared by all
-USB controllers.
+This means that either the bisection is unreliable (it might be 100%
+reproducible or you mixed up good/bad once), or that the arm-soc
+branch was indeed good by itself but had a conflict with some other
+change that torvalds merged earlier.
 
-It's possible to use mutex instead of spinlock here, but it doesn't
-bring any benefits because mutex is more useful when protected code
-could block for a long time due to sleep or whatever, while spinlock is
-much more efficient when protected code doesn't sleep and takes no more
-than dozens microseconds to execute (which is the case here).
+I would suggest to go back to the list I had extracted in my previous
+email and revert all the commits that I identify there, on top of
+linux-5.5-rc4. If some commit is not easily reverted, skip that one
+at first.
 
-In this particular case of the Tegra USB PHY driver, the chance of
-getting a block on taking the utmip_pad_lock is zero unless USB
-controller drivers will start to use asynchronous probing. So this patch
-does a very minor clean-up change and nothing more.
+Ideally this gets you a working kernel based on -rc4, and then
+you can bisect that to find which revert fixed it.
+
+        Arnd
