@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A5DC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 846E6C3276E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF4DA20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD6720866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005840;
-	bh=FEU+wb56kXY41/LbKxx41Q+u86Vh8kPfLw7+5HaC4Gw=;
+	s=default; t=1578005844;
+	bh=231M9ZcOHkbunKVp1/YyJEDypQXx8MuXr0Vb+2TFM1k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pmCvwvpCegDlkjEsqPoNdygUX1AMuWI8Bbj+GXReqlfuv+azH+7rPV28ZHJCo4eqE
-	 ujVohP7xqqZXbPTGynMNYVZ2bOG1wFhNcFQrYx3sT1PIZr9Jp8wP2crzD4qu7BECcC
-	 VvlJfRfEBkZCvAJJtEhp8s017YxJNoHKxrA9PWn0=
+	b=H4dsOcyEURCtoFo/d5M7+pnp0xcOHGRA7wFNAa6iNdmBVWO3QzQO0vp51/+OOnIiI
+	 p1l20Sjnuj9ELUZ5naKB7yCkeYzfXeOx/dnja1Ybe3xUuekm0XZbXQ2Gou8XYw+Hr1
+	 BqHtzqWrG70IZfKy3f5bDfI5UgDN61lyuVmU1zF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729029AbgABW5T (ORCPT
+        id S1728474AbgABW5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:57:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59530 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:57:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728335AbgABWRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:17:11 -0500
+        id S1728091AbgABWRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:17:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C39A22314;
-        Thu,  2 Jan 2020 22:17:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FE27227BF;
+        Thu,  2 Jan 2020 22:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003430;
-        bh=FEU+wb56kXY41/LbKxx41Q+u86Vh8kPfLw7+5HaC4Gw=;
+        s=default; t=1578003428;
+        bh=231M9ZcOHkbunKVp1/YyJEDypQXx8MuXr0Vb+2TFM1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=01GBSuv8yqSmg/qzIO62JyB+FM6o/x35COJ+1rAfDPplkqvLtr7+wW4ECzbDcV1q7
-         sypVXBA7y/n+eP/3KAei0XO/aXXPfH44XKpdTBMwQnMq3UthmduvRa6dSrkQAm+Nyx
-         fLPzJlBA2gDIkMmnv1pBbb9kVVGNCKKAJMiCe7nM=
+        b=e/okBfdPv0fRpo2xCJVLoJJuuvUgXuE9cWu9iJ2en6hRaaj1xKpOmafx1yvsvJhfL
+         sPQcGQcSQLG15efmqs5/3GtzOoDhaNYbgz1sGl3X7UjndRBJAf6envLLHQD9zkAng0
+         E60LO4TBBx7Ul/b8al/KRVikNMhxJ75Nmp9d3i+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
+        stable@vger.kernel.org, Antonio Messina <amessina@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 158/191] bnxt_en: Fix MSIX request logic for RDMA driver.
-Date:   Thu,  2 Jan 2020 23:07:20 +0100
-Message-Id: <20200102215846.336461084@linuxfoundation.org>
+Subject: [PATCH 5.4 157/191] udp: fix integer overflow while computing available space in sk_rcvbuf
+Date:   Thu,  2 Jan 2020 23:07:19 +0100
+Message-Id: <20200102215846.228365652@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -59,58 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Antonio Messina <amessina@google.com>
 
-[ Upstream commit 0c722ec0a289c7f6b53f89bad1cfb7c4db3f7a62 ]
+[ Upstream commit feed8a4fc9d46c3126fb9fcae0e9248270c6321a ]
 
-The logic needs to check both bp->total_irqs and the reserved IRQs in
-hw_resc->resv_irqs if applicable and see if both are enough to cover
-the L2 and RDMA requested vectors.  The current code is only checking
-bp->total_irqs and can fail in some code paths, such as the TX timeout
-code path with the RDMA driver requesting vectors after recovery.  In
-this code path, we have not reserved enough MSIX resources for the
-RDMA driver yet.
+When the size of the receive buffer for a socket is close to 2^31 when
+computing if we have enough space in the buffer to copy a packet from
+the queue to the buffer we might hit an integer overflow.
 
-Fixes: 75720e6323a1 ("bnxt_en: Keep track of reserved IRQs.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+When an user set net.core.rmem_default to a value close to 2^31 UDP
+packets are dropped because of this overflow. This can be visible, for
+instance, with failure to resolve hostnames.
+
+This can be fixed by casting sk_rcvbuf (which is an int) to unsigned
+int, similarly to how it is done in TCP.
+
+Signed-off-by: Antonio Messina <amessina@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ net/ipv4/udp.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
-@@ -113,8 +113,10 @@ static int bnxt_req_msix_vecs(struct bnx
- {
- 	struct net_device *dev = edev->net;
- 	struct bnxt *bp = netdev_priv(dev);
-+	struct bnxt_hw_resc *hw_resc;
- 	int max_idx, max_cp_rings;
- 	int avail_msix, idx;
-+	int total_vecs;
- 	int rc = 0;
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -1475,7 +1475,7 @@ int __udp_enqueue_schedule_skb(struct so
+ 	 * queue contains some other skb
+ 	 */
+ 	rmem = atomic_add_return(size, &sk->sk_rmem_alloc);
+-	if (rmem > (size + sk->sk_rcvbuf))
++	if (rmem > (size + (unsigned int)sk->sk_rcvbuf))
+ 		goto uncharge_drop;
  
- 	ASSERT_RTNL();
-@@ -142,7 +144,10 @@ static int bnxt_req_msix_vecs(struct bnx
- 	}
- 	edev->ulp_tbl[ulp_id].msix_base = idx;
- 	edev->ulp_tbl[ulp_id].msix_requested = avail_msix;
--	if (bp->total_irqs < (idx + avail_msix)) {
-+	hw_resc = &bp->hw_resc;
-+	total_vecs = idx + avail_msix;
-+	if (bp->total_irqs < total_vecs ||
-+	    (BNXT_NEW_RM(bp) && hw_resc->resv_irqs < total_vecs)) {
- 		if (netif_running(dev)) {
- 			bnxt_close_nic(bp, true, false);
- 			rc = bnxt_open_nic(bp, true, false);
-@@ -156,7 +161,6 @@ static int bnxt_req_msix_vecs(struct bnx
- 	}
- 
- 	if (BNXT_NEW_RM(bp)) {
--		struct bnxt_hw_resc *hw_resc = &bp->hw_resc;
- 		int resv_msix;
- 
- 		resv_msix = hw_resc->resv_irqs - bp->cp_nr_rings;
+ 	spin_lock(&list->lock);
 
 
