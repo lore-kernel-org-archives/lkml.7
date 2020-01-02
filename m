@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C72BC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F63BC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 181A52253D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DF3121835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003646;
-	bh=8VqzkoxjJLB3l5GP5JBQCAJeVpBqdl9yDEo2CnjKTCU=;
+	s=default; t=1578003649;
+	bh=ep9gLDaU4fQuW4s5VjCKlb/xQtq90DV88lZZIOURVh0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QJFM+qGcHnY0Ek56e5X96k1hJOqBoU8IbyWH2keblMZW51z6EnH6RB0aGyv2UOq2U
-	 TfQNN/OwsmOdgUW1JPL23TIzIhQLieRLoZeRgJrv1qav592EKFFJKS3uiEk030tLEM
-	 o2QvJyvpwI7rm8FLiNowVmoYyD+nJWABusbTObHM=
+	b=K0p6HrcioG7FsyqZX+YoAz66TlV0a1NAMz/EtM+ydMjG1DodWZoNWkurNo50fOlXz
+	 83VpSgTrKYt2uE5mQ0GhbxqJhy8uaSkuhmVCBBSBfQ+hVPzxvBaGEtw8lYX2k3M9jF
+	 1ecCa5XsHtvcsB5xr/1EScrVUJImQZfIbGTKVYGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbgABWUp (ORCPT
+        id S1728881AbgABWUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:20:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38646 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:20:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728852AbgABWUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:20:42 -0500
+        id S1728864AbgABWUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:20:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C92A2253D;
-        Thu,  2 Jan 2020 22:20:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D90F624650;
+        Thu,  2 Jan 2020 22:20:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003641;
-        bh=8VqzkoxjJLB3l5GP5JBQCAJeVpBqdl9yDEo2CnjKTCU=;
+        s=default; t=1578003644;
+        bh=ep9gLDaU4fQuW4s5VjCKlb/xQtq90DV88lZZIOURVh0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T0SgWwUP2QDCCq+VF9+XwvkOFAuLy6trnoTXmXm82OqAcSdZo/OF+cAP1wtE5SlRd
-         TH09pPgYGH6foHCs+HtsuzPWPlN/QUA7nnG81zDldfLHBDfTEpfTKNCThjPbutOY0S
-         XiAJBd9BUzSHfJEKrEKCDoNq2CecrYvMUAuzbc5A=
+        b=uTSPwpC6T12g8zgK1Qtb098eeyviwPbE0lIx4R6YeBt+4JpoJ9g9UHtffclnfg2ZD
+         cWCU5pfVUMI+ZsluNq8hsdV7uCab4NE9MdMn0qihjsaJvQaIvh9kQjNpzz8+IX5lJx
+         uaZ0R/kB7j0JodoogVyla4u5sg0mwQ3zp2VMC0a4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 017/114] leds: lm3692x: Handle failure to probe the regulator
-Date:   Thu,  2 Jan 2020 23:06:29 +0100
-Message-Id: <20200102220030.874892409@linuxfoundation.org>
+Subject: [PATCH 4.19 047/114] ARM: 8937/1: spectre-v2: remove Brahma-B53 from hardening
+Date:   Thu,  2 Jan 2020 23:06:59 +0100
+Message-Id: <20200102220033.831569340@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -61,47 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guido Günther <agx@sigxcpu.org>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit 396128d2ffcba6e1954cfdc9a89293ff79cbfd7c ]
+[ Upstream commit 4ae5061a19b550dfe25397843427ed2ebab16b16 ]
 
-Instead use devm_regulator_get_optional since the regulator
-is optional and check for errors.
+When the default processor handling was added to the function
+cpu_v7_spectre_init() it only excluded other ARM implemented processor
+cores. The Broadcom Brahma B53 core is not implemented by ARM so it
+ended up falling through into the set of processors that attempt to use
+the ARM_SMCCC_ARCH_WORKAROUND_1 service to harden the branch predictor.
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Reviewed-by: Dan Murphy <dmurphy@ti.com>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Since this workaround is not necessary for the Brahma-B53 this commit
+explicitly checks for it and prevents it from applying a branch
+predictor hardening workaround.
+
+Fixes: 10115105cb3a ("ARM: spectre-v2: add firmware based hardening")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/leds-lm3692x.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ arch/arm/mm/proc-v7-bugs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
-index 4f413a7c5f05..d79a66a73169 100644
---- a/drivers/leds/leds-lm3692x.c
-+++ b/drivers/leds/leds-lm3692x.c
-@@ -337,9 +337,18 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
- 		return ret;
- 	}
+diff --git a/arch/arm/mm/proc-v7-bugs.c b/arch/arm/mm/proc-v7-bugs.c
+index 9a07916af8dd..a6554fdb56c5 100644
+--- a/arch/arm/mm/proc-v7-bugs.c
++++ b/arch/arm/mm/proc-v7-bugs.c
+@@ -65,6 +65,9 @@ static void cpu_v7_spectre_init(void)
+ 		break;
  
--	led->regulator = devm_regulator_get(&led->client->dev, "vled");
--	if (IS_ERR(led->regulator))
-+	led->regulator = devm_regulator_get_optional(&led->client->dev, "vled");
-+	if (IS_ERR(led->regulator)) {
-+		ret = PTR_ERR(led->regulator);
-+		if (ret != -ENODEV) {
-+			if (ret != -EPROBE_DEFER)
-+				dev_err(&led->client->dev,
-+					"Failed to get vled regulator: %d\n",
-+					ret);
-+			return ret;
-+		}
- 		led->regulator = NULL;
-+	}
- 
- 	child = device_get_next_child_node(&led->client->dev, child);
- 	if (!child) {
+ #ifdef CONFIG_ARM_PSCI
++	case ARM_CPU_PART_BRAHMA_B53:
++		/* Requires no workaround */
++		break;
+ 	default:
+ 		/* Other ARM CPUs require no workaround */
+ 		if (read_cpuid_implementor() == ARM_CPU_IMP_ARM)
 -- 
 2.20.1
 
