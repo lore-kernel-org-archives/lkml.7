@@ -2,187 +2,107 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2D7C2D0DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BEFC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E8F20863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12D2520863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:38:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Fm34nlFr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgABVhL (ORCPT
+        id S1726103AbgABViS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 16:37:11 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:55358 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726099AbgABVhK (ORCPT
+        Thu, 2 Jan 2020 16:38:18 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:32921 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbgABViS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 16:37:10 -0500
-Received: (qmail 21999 invoked by uid 2102); 2 Jan 2020 16:37:09 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 2 Jan 2020 16:37:09 -0500
-Date:   Thu, 2 Jan 2020 16:37:09 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     AceLan Kao <acelan.kao@canonical.com>,
-        Mathias Nyman <mathias.nyman@intel.com>
-cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Harry Pan <harry.pan@intel.com>,
-        David Heinzelmann <heinzelmann.david@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Mathieu Malaterre <malat@debian.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb: hub: move resume delay at the head of all USB access
- functions
-In-Reply-To: <CAFv23Qmc82p3o=1vDvmX5jkfbcOzoQFX7grxrKGwf1KD_vebig@mail.gmail.com>
-Message-ID: <Pine.LNX.4.44L0.2001021605410.20954-100000@iolanthe.rowland.org>
+        Thu, 2 Jan 2020 16:38:18 -0500
+Received: by mail-oi1-f195.google.com with SMTP id v140so13611518oie.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 13:38:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=F50aQZ1kjKIMVuuxW4BK+VL0HEG+Osbrli2nWfW4mUY=;
+        b=Fm34nlFrcElD5allYd9B3SSLmEfkCgEK99XyUr+pWTwAbD1iYECWFTZfKFoppWXmYM
+         wmNTGdjEpYP4K9DPQ0EsuNRC1gyeFMZLHoFKppQfekEGVzzk/1VQMXHfhs0lDYPmVR6O
+         XUUcy1BY01BmlAZznJ/hxX8gUznMkX1JQyoKM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=F50aQZ1kjKIMVuuxW4BK+VL0HEG+Osbrli2nWfW4mUY=;
+        b=Mv22jDHjUQlk01p/5v6zYHtALfMkXOk2PB6xbQLavP/hlMi8USb4XRdBrH2kXRFgP4
+         mB8+g3HfxtPFfZ9ScmCKsJTLoVWeyYsZOtgKDvS2k/D9aVFjRsQe/bDtQGQtnrPo/Iu1
+         hR6GGiqfntuutGanw5Ll4HBygTMB4KldHnKLmn6wTh88YhDv5m5QXFIaRAWJ2HGQKmnw
+         PIGR4gMmYP9ouzZ3nFmCL6mOdQzkj4Sn76sDK6p/NFx6ZJyMzlqIU27DggIAWp/DJNgR
+         CNz/qMhdQwnS6LVkPF0PJlGF3YYRhlNiZCclN8tUjM8HXQgl4SxzIdMgwC48SIUca187
+         ocuA==
+X-Gm-Message-State: APjAAAVxgO8/EAg32+XdZEr4xKqYNCu9XaPCQBzkKoTfFy6+LYNQJZmp
+        iFbcUO9GVAHSHXZBfsX7tvai4D2KVPM=
+X-Google-Smtp-Source: APXvYqxpZHsIOop8Kpoyr20UMsXaCqgVLohjMM/hGnDVIaTqjh3+hlVEcVud35dGOs2ZMS5G342a5g==
+X-Received: by 2002:aca:2210:: with SMTP id b16mr2913978oic.32.1578001098099;
+        Thu, 02 Jan 2020 13:38:18 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w6sm14605980oih.19.2020.01.02.13.38.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 13:38:17 -0800 (PST)
+Date:   Thu, 2 Jan 2020 13:38:15 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: [GIT PULL] gcc-plugins fix for v5.5-rc5
+Message-ID: <202001021335.14622751ED@keescook>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Dec 2019, AceLan Kao wrote:
+Hi Linus,
 
-> Here[1] are the dmesg and the usbmon log from wireshark, and
-> /sys/kernel/debug/usb/usbmon/0u.
-> 
-> I verified this issue on Dell XPS 13 + Dell Salomon WD19 docking
-> station(plug-in 3 USB disk on it)
-> After s2idle 7 times, 2 usb disks lost. But from wireshark log, the
-> packets look normal, no error.
-> 
-> So, I re-do the test again and log the usbmon/0u output, but it's greek to me.
-> Hope you can help to find some clues in the logs.
-> Thanks.
-> 
-> 1. https://people.canonical.com/~acelan/bugs/usb_issue/
+Please pull this gcc-plugins fix for v5.5-rc5. This change will make
+some builder's lives easier again for build configuration testing
+with/without gcc-plugins. Masahiro asked that it go via my tree, so here
+it is! :)
 
-Maybe Mathias can help figure out what's going on.  It clearly is an 
-xHCI-related problem of some sort.
+Thanks!
 
-I can't get much out of these logs.  For one thing, the time period
-covered by the usbmon trace is different from the time period in your
-dmesg log.  When you collect two kinds of logs for a test, it's
-important that they should be collected at the _same_ time!  Otherwise 
-they record different events, which is no use.
+-Kees
 
-For another, your usbmon trace used the 0u file, but you should have
-used the 2u file instead.  All the errors you get involve devices on 
-bus 2; including other buses in the trace just makes it more confusing 
-and causes more entries to be dropped.
+The following changes since commit fd6988496e79a6a4bdb514a4655d2920209eb85d:
 
-Also, I don't understand why your Dell Dock devices show up the way
-they do.  The SuperSpeed dock is on bus 2, and the high speed dock is
-on bus 3, which is attached to a different xHCI controller!  A hub
-(which is what a dock is) should show up twice, and both instances
-should be attached to the same controller.
+  Linux 5.5-rc4 (2019-12-29 15:29:16 -0800)
 
-In any case, it's clear that you've got some problem involving the xHCI
-controller and the SuperSpeed Dell Dock (device 2-1).  Here's an
-excerpt from the dmesg log showing what goes wrong.  This occurs during
-a system resume; apparently the dock's connection drops while the
-system is suspended and there are errors when the system tries to
-re-activate it:
+are available in the Git repository at:
 
-[  721.507202] usb 2-1: USB disconnect, device number 32
-[  721.507206] usb 2-1.3: USB disconnect, device number 33
-[  721.507209] usb 2-1.3.1: USB disconnect, device number 35
-[  721.540214] usb 2-1.3.3: USB disconnect, device number 36
-[  721.584518] usb 2-1.4: USB disconnect, device number 34
-[  721.647466] xhci_hcd 0000:00:0d.0: WARN Set TR Deq Ptr cmd failed due to incorrect slot or ep state.
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/gcc-plugins-v5.5-rc5
 
-That's the first problem.
+for you to fetch changes up to a5b0dc5a46c221725c43bd9b01570239a4cd78b1:
 
-[  721.919433] usb 2-1: new SuperSpeedPlus Gen 2 USB device number 38 using xhci_hcd
-[  721.942597] usb 2-1: New USB device found, idVendor=0bda, idProduct=0487, bcdDevice= 1.47
-[  721.942600] usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=0
-[  721.942602] usb 2-1: Product: Dell dock
-[  721.942604] usb 2-1: Manufacturer: Dell Inc.
-[  721.944849] hub 2-1:1.0: USB hub found
-[  721.945232] hub 2-1:1.0: 4 ports detected
-[  722.178395] hub 2-1:1.0: hub_ext_port_status failed (err = -71)
-[  722.178570] usb 2-1-port3: attempt power cycle
-[  722.559212] usb 2-1: USB disconnect, device number 38
-[  722.559311] usb 2-1: Failed to suspend device, error -19
+  gcc-plugins: make it possible to disable CONFIG_GCC_PLUGINS again (2020-01-02 13:30:14 -0800)
 
-And that's a second error.  Then the system tries again:
+----------------------------------------------------------------
+gcc-plugins build flexibility fix
 
-[  722.831431] usb 2-1: new SuperSpeedPlus Gen 2 USB device number 43 using xhci_hcd
-[  722.854608] usb 2-1: New USB device found, idVendor=0bda, idProduct=0487, bcdDevice= 1.47
-[  722.854611] usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=0
-[  722.854614] usb 2-1: Product: Dell dock
-[  722.854616] usb 2-1: Manufacturer: Dell Inc.
-[  722.857034] hub 2-1:1.0: USB hub found
-[  722.857440] hub 2-1:1.0: 4 ports detected
-[  723.090106] hub 2-1:1.0: hub_ext_port_status failed (err = -71)
-[  723.090316] usb 2-1-port3: attempt power cycle
-[  723.471212] usb 2-1: USB disconnect, device number 43
-[  723.471274] usb 2-1: Failed to suspend device, error -19
+- Allow builds to disable plugins even when plugins available (Arnd Bergmann)
 
-And it fails in the same way.  A third try ends up succeeding:
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      gcc-plugins: make it possible to disable CONFIG_GCC_PLUGINS again
 
-[  723.743465] usb 2-1: new SuperSpeedPlus Gen 2 USB device number 48 using xhci_hcd
-...
+ scripts/gcc-plugins/Kconfig | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-I don't see why the device numbers jump around in such a crazy manner.  
-When device 38 disconnects, the next device is number 43.  And when 
-that fails, the next number is 48!  It looks like device numbers are 
-somehow being allocated for the four child devices even though the log 
-doesn't show them being detected.
-
-Here's a portion of the usbmon trace that apparently corresponds
-somewhat to part of the log above, although it's hard to be certain.  
-In this trace, device 77 on bus 2 is 2-1.  Unlike the log above, it
-only has a child attached to port 3, not to port 4:
-
-ffff9879b43ff840 291366827 S Ci:2:001:0 s a3 00 0000 0001 0004 4 <
-ffff9879b43ff840 291366846 C Ci:2:001:0 0 4 = 03020000
-ffff9879b2f54780 291469875 S Ci:2:077:0 s a3 00 0000 0001 0004 4 <
-ffff9879b2f54780 291470062 C Ci:2:077:0 0 4 = a0020000
-ffff9879b2f54780 291470069 S Ci:2:077:0 s a3 00 0000 0002 0004 4 <
-ffff9879b2f54780 291470208 C Ci:2:077:0 0 4 = a0020000
-ffff9879b2f54780 291470214 S Ci:2:077:0 s a3 00 0000 0003 0004 4 <
-ffff9879b2f54780 291470387 C Ci:2:077:0 0 4 = 03021000
-ffff9879b2f54780 291470392 S Co:2:077:0 s 23 01 0014 0003 0000 0
-ffff9879b2f54780 291470527 C Co:2:077:0 0 0
-ffff9879b2f54780 291470533 S Ci:2:077:0 s a3 00 0000 0004 0004 4 <
-ffff9879b2f54780 291470709 C Ci:2:077:0 0 4 = a0020000
-ffff9879b43ff480 291573804 S Ii:2:077:1 -115:128 2 <
-ffff9879b2f54780 291573839 S Ci:2:077:0 s a3 00 0000 0003 0004 4 <
-ffff9879b2f54780 291574068 C Ci:2:077:0 0 4 = 03020000
-ffff9879b2f54780 291574166 S Ci:2:077:0 s a3 00 0000 0003 0004 4 <
-ffff9879b2f54780 291574363 C Ci:2:077:0 0 4 = 03020000
-ffff9879b2f54780 291574383 S Co:2:077:0 s 23 03 0004 0003 0000 0
-ffff9879b2f54780 291574580 C Co:2:077:0 0 0
-ffff9879b2f54780 291593804 S Ci:2:077:0 s a3 00 0002 0003 0008 8 <
-ffff9879ae2969c0 291595804 C Ii:2:001:1 0:2048 1 = 02
-ffff9879ae2969c0 291595824 S Ii:2:001:1 -115:2048 4 <
-ffff9879ba3476c0 291595843 S Ci:2:001:0 s a3 00 0000 0001 0004 4 <
-ffff9879ba3476c0 291595857 C Ci:2:001:0 0 4 = c0024100
-
-As far as I can tell, the device was working fine until at this point
-it disconnected itself.
-
-ffff9879ba3476c0 291595863 S Co:2:001:0 s 23 01 0010 0001 0000 0
-ffff9879ba3476c0 291595867 C Co:2:001:0 0 0
-ffff9879ba3476c0 291595870 S Co:2:001:0 s 23 01 0019 0001 0000 0
-ffff9879ba3476c0 291595875 C Co:2:001:0 0 0
-ffff9879ba3476c0 291595879 S Co:2:001:0 s 23 03 001c 0001 0000 0
-ffff9879ba3476c0 291595884 C Co:2:001:0 0 0
-ffff9879b2f54780 291600949 C Ci:2:077:0 -71 0
-ffff9879b2f54780 291600997 S Co:2:077:0 s 23 03 0004 0003 0000 0
-ffff9879b2f54780 291601000 E Co:2:077:0 -19 0
-
-Mathias, any suggestions on how Acelan can track down the reasons for 
-these problems?
-
-Alan Stern
-
+-- 
+Kees Cook
