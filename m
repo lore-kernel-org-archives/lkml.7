@@ -2,156 +2,101 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C2CC3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F20C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE4C221655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3843C217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:03:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l27tJV/1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FSGhkyHM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgABV6N (ORCPT
+        id S1725972AbgABWDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 16:58:13 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:34258 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbgABV6I (ORCPT
+        Thu, 2 Jan 2020 17:03:07 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36875 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbgABWDG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 16:58:08 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 002LsRxn088500;
-        Thu, 2 Jan 2020 21:57:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2019-08-05;
- bh=c9CiFIyiVXzLlpT9+lnQQn3z7fPJn3E86zFXm4+hGo8=;
- b=l27tJV/1FLn856+Rp/OjZkzDW2jl7hotIb6XEilTNAo7KS7Rl39jaLx7IT3t5WgPzclf
- ZDGYMC/EgYCPjcwv1xhButdkXpUrfNMjVCX+99Kmg0aMg7pviO73tTWHYWxLqZFL16kV
- qxRYuaEwynUH+0BjB5fty3tIp/E4Ge6H2nsdSJWv28D5YVtPPtwIio8wHWudjFJyC8xz
- X+2Xl3m92k3NSGsQncZqrFDMttmje6oOGXnpjtj+bt4OXUwp+mEIm7aJW+Vkn9uj3EHB
- EWRA8bAlyfC4yIaFEPKoFSI6tFW/5spkqoPiUMqgIViXzZ/EhCZ31U1al+HsD89MLpqM Hw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2x5ypqsku0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Jan 2020 21:57:57 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 002LmiPw101439;
-        Thu, 2 Jan 2020 21:57:56 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2x9jm6n3tw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Jan 2020 21:57:56 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 002LvtAF000910;
-        Thu, 2 Jan 2020 21:57:55 GMT
-Received: from localhost (/10.145.178.64)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 02 Jan 2020 13:57:55 -0800
-Date:   Thu, 2 Jan 2020 13:57:54 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        David Sterba <dsterba@suse.com>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: FS_IOC_GETFSLABEL and FS_IOC_SETFSLABEL
-Message-ID: <20200102215754.GA1508646@magnolia>
-References: <20191228143651.bjb4sjirn2q3xup4@pali>
- <517472d1-c686-2f18-4e0b-000cda7e88c7@redhat.com>
- <20200101181054.GB191637@mit.edu>
- <20200101183920.imncit5sllj46c22@pali>
+        Thu, 2 Jan 2020 17:03:06 -0500
+Received: by mail-oi1-f195.google.com with SMTP id z64so7344093oia.4
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 14:03:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9Qm+6s5MAO8n13CG6+uytEx5y7oyEZvgzhXp8vcmVdw=;
+        b=FSGhkyHMKw5phVrORIUvJbWA+TZtwIAmw8b5i2QtckbwfTgeLU+HloQhQ7edZHSTtK
+         p+Bng3Frnsio6Vcg8kcEJoWKz0KVIpKUfG4C3EUbmRd0BKbkAp935sb10GlX2VdVQ2VE
+         +lbmxMYPYTR0EiPWTGumhbJralABOuYFno94I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9Qm+6s5MAO8n13CG6+uytEx5y7oyEZvgzhXp8vcmVdw=;
+        b=bR1rX/XpZNUr1ipJS152nY6OQhXCiDPSQ8Ww4nEraVnmUwcBGA5Y3sZeCzZbaWINH/
+         V4EAeuQ6Pa2XKiqcOshCp86MuCmo1MH4YrLe37O8LICj02YInqhQwGa58invWSjI3BP1
+         H6xphQIyVm3HDpelUu9rfmRaV1dYi8Jk465rqZjtdiVLmOzzbSj4eC+inqqaffSf+Nel
+         Hq7+/4qBIbUtJn2niiXL6cXuZD1JqtrE6f1YiHMzf8uwLpypxgdFbH55ZI/lMjL1DebJ
+         yBpRGrd6yTkGCgFKGy/QipEj+UfQopU57rsUjdDh1RkVC1Hj1gqw+AxjgxN8buTWpzcB
+         71RA==
+X-Gm-Message-State: APjAAAVxfgjmWcdxh9mVAYovYYjGCSGbS49Ziqp6dKtl1ChmLJ+2KNIP
+        KjMKJVEMIY0lOVJ9hPhYbskwPTfmOdM=
+X-Google-Smtp-Source: APXvYqyXpRK/YLaavwGgi+rWEbsdy9vO+zOvvNUPbNPch97AS+9BjtLc4Z2tRTmUs/DzRoDvxU7yHA==
+X-Received: by 2002:aca:ed57:: with SMTP id l84mr3198908oih.8.1578002585732;
+        Thu, 02 Jan 2020 14:03:05 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g19sm15499278otj.1.2020.01.02.14.03.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 14:03:04 -0800 (PST)
+Date:   Thu, 2 Jan 2020 14:03:03 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Alexander Popov <alex.popov@linux.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, notify@kernel.org
+Subject: Re: [PATCH v1 1/1] lkdtm/stackleak: Make the stack erasing test more
+ verbose
+Message-ID: <202001021402.EDBC5114D@keescook>
+References: <20191219145416.435508-1-alex.popov@linux.com>
+ <201912301034.5C04DC89@keescook>
+ <5bde4de0-875c-536b-67ec-eafebb8b9ab1@linux.com>
+ <201912301443.9B8F6CA6@keescook>
+ <aae20dfa-4a55-9aaf-d2f9-3c83ed905f2e@linux.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200101183920.imncit5sllj46c22@pali>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001020176
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001020177
+In-Reply-To: <aae20dfa-4a55-9aaf-d2f9-3c83ed905f2e@linux.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 01, 2020 at 07:39:20PM +0100, Pali Rohár wrote:
-> On Wednesday 01 January 2020 13:10:54 Theodore Y. Ts'o wrote:
-> > On Tue, Dec 31, 2019 at 04:54:18PM -0600, Eric Sandeen wrote:
-> > > > Because I was not able to find any documentation for it, what is format
-> > > > of passed buffer... null-term string? fixed-length? and in which
-> > > > encoding? utf-8? latin1? utf-16? or filesystem dependent?
-> > > 
-> > > It simply copies the bits from the memory location you pass in, it knows
-> > > nothing of encodings.
-> > > 
-> > > For the most part it's up to the filesystem's own utilities to do any
-> > > interpretation of the resulting bits on disk, null-terminating maximal-length
-> > > label strings, etc.
+On Thu, Jan 02, 2020 at 02:26:39AM +0300, Alexander Popov wrote:
+> On 31.12.2019 01:46, Kees Cook wrote:
+> > On Tue, Dec 31, 2019 at 01:20:24AM +0300, Alexander Popov wrote:
+> >> On 30.12.2019 21:37, Kees Cook wrote:
+> >>> Hi! I try to keep the "success" conditions for LKDTM tests to be a
+> >>> system exception, so doing "BUG" on a failure is actually against the
+> >>> design. So, really, a test harness needs to know to check dmesg for the
+> >>> results here. It almost looks like this check shouldn't live in LKDTM,
+> >>> but since it feels like other LKDTM tests, I'm happy to keep it there
+> >>> for now.
+> >>
+> >> Do you mean that you will apply this patch?
 > > 
-> > I'm not sure this is going to be the best API design choice.  The
-> > blkid library interprets the on disk format for each file syustem
-> > knowing what is the "native" format for that particular file system.
-> > This is mainly an issue only for the non-Linux file systems; for the
-> > Linux file system, the party line has historically been that we don't
-> > get involved with character encoding, but in practice, what that has
-> > evolved into is that userspace has standardized on UTF-8, and that's
-> > what we pass into the kernel from userspace by convention.
-> > 
-> > But the problem is that if the goal is to make FS_IOC_GETFSLABEL and
-> > FS_IOC_SETFSLABEL work without the calling program knowing what file
-> > system type a particular pathname happens to be, then it would be
-> > easist for the userspace program if it can expect that it can always
-> > pass in a null-terminated UTF-8 string, and get back a null-terminated
-> > UTF-8.  I bet that in practice, that is what most userspace programs
-> > are going to be do anyway, since it works that way for all other file
-> > system syscalls.
-
-"Null terminated sequence of bytes*" is more or less what xfsprogs do,
-and it looks like btrfs does that as well.
-
-(* with the idiotic exception that if the label is exactly 256 bytes long
-then the array is not required to have a null terminator, because btrfs
-encoded that quirk of their ondisk format into the API. <grumble>)
-
-So for VFAT, I think you can use the same code that does the name
-encoding transformations for iocharset= to handle labels, right?
-
-> > So for a file system which is a non-Linux-native file system, if it
-> > happens to store the its label using utf-16, or some other
-> > Windows-system-silliness, it would work a lot better if it assumed
-> > that it was passed in utf-8, and stored in the the Windows file system
-> > using whatever crazy encoding Windows wants to use.  Otherwise, why
-> > bother uplifting the ioctl to one which is file system independent, if
-> > the paramters are defined to be file system *dependent*?
+> > Sorry for my confusing reply! I meant that I don't want to apply the
+> > patch, but I'm find to leave the stackleak check in LKDTM.
 > 
-> Exactly. In another email I wrote that for those non-Linux-native
-> filesystem could be used encoding specified in iocharset= mount
-> parameter. I think it is better as usage of one fixing encoding (e.g.
-> UTF-8) if other filesystem strings are propagated to userspace in other
-> encoding (as specified by iocharset=).
-
-I'm confused by this statement... but I think we're saying the same
-thing?
-
---D
-
+> Kees, I think I see a solution.
 > 
-> -- 
-> Pali Rohár
-> pali.rohar@gmail.com
+> Would you agree if I use dump_stack() instead of BUG() in case of test failure?
+> That would provide enough info for debugging and would NOT break your design.
 
+I would be fine with that, yes! :)
 
+-- 
+Kees Cook
