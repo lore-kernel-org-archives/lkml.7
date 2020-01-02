@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D958BC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D10C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA4E220866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4250920866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:32:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004318;
-	bh=G4IQT9yQ3RYgtofCZxFhL1uzsyB48PGKX/G/oh9lTm8=;
+	s=default; t=1578004323;
+	bh=ZqH9QjOCHAhTEwl38Wj/iaO4Yw1aJbs3ttVWRw9aiX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hbZyFXcF7PcZoLlL5SMYNf+tmPcuDX+pYCxmxTFBZR5TuehvJYHO/61A9n4pWA0Ai
-	 xj2lj6/ufVISJXOuwU2h9c6gyQ0q/f0ju63sVLgBoS40cejKAh9F/d4S0BCUmbHbaw
-	 6Q0h/2aIC82pF6cbJAda9IAxCqQhSbNFNMQs/FXs=
+	b=vxUVKedI2zN0PrkR4nelZWIAhwDC3RXgIf1mwm0eRU8uG193NCLal2d0CIF5lgR06
+	 m9I6VjokCle9jHL8prh6YFafaXWpf+QdGEe0yRI+vyNBuu6JbrkC2rUTEGJ/VQ+ydx
+	 /njIlSzC2BVTNzHvgzAEt2FdqE/6/ZM6+LOYCBF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730347AbgABWb5 (ORCPT
+        id S1730229AbgABWcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:31:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37568 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:32:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730340AbgABWby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:31:54 -0500
+        id S1728579AbgABWb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:31:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36DF1222C3;
-        Thu,  2 Jan 2020 22:31:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97A1520866;
+        Thu,  2 Jan 2020 22:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004313;
-        bh=G4IQT9yQ3RYgtofCZxFhL1uzsyB48PGKX/G/oh9lTm8=;
+        s=default; t=1578004316;
+        bh=ZqH9QjOCHAhTEwl38Wj/iaO4Yw1aJbs3ttVWRw9aiX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G1WXg7Dgy52nXs8GThNQbo8/GGkK/YVwa/KX3+vCk0vzfGNJT66JS6f9ZZhb2nkX1
-         kf+UEJXbE889eSuahl200qgb5q6XyG9qMNhrMZXpkJwbNdRjSMiQidR/Syyp0HWXyu
-         X7xEQn9oUe6gOqtJd7jwI8c6bAHBq59bfwLDpUO4=
+        b=IqBnGd3uRCXjfqd/C8Xwuwosj25WaFpDAJrV41k0spNU3qFFE/+eX/3pqVeDqOm5R
+         D/ikwlSpg5m6txm6oUlGPr2i+YLnP0Q9aot8D7xfoBK+7xwsb1XKuzLeeIvrm6Axzx
+         vZ/7kdbdij4/0A31GuEgIuLYTNh+QVGvVKsfvyr0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 101/171] net: dst: Force 4-byte alignment of dst_metrics
-Date:   Thu,  2 Jan 2020 23:07:12 +0100
-Message-Id: <20200102220601.194131296@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>,
+        Suwan Kim <suwan.kim027@gmail.com>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH 4.9 102/171] usbip: Fix error path of vhci_recv_ret_submit()
+Date:   Thu,  2 Jan 2020 23:07:13 +0100
+Message-Id: <20200102220601.334855271@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -59,60 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+From: Suwan Kim <suwan.kim027@gmail.com>
 
-[ Upstream commit 258a980d1ec23e2c786e9536a7dd260bea74bae6 ]
+commit aabb5b833872524eaf28f52187e5987984982264 upstream.
 
-When storing a pointer to a dst_metrics structure in dst_entry._metrics,
-two flags are added in the least significant bits of the pointer value.
-Hence this assumes all pointers to dst_metrics structures have at least
-4-byte alignment.
+If a transaction error happens in vhci_recv_ret_submit(), event
+handler closes connection and changes port status to kick hub_event.
+Then hub tries to flush the endpoint URBs, but that causes infinite
+loop between usb_hub_flush_endpoint() and vhci_urb_dequeue() because
+"vhci_priv" in vhci_urb_dequeue() was already released by
+vhci_recv_ret_submit() before a transmission error occurred. Thus,
+vhci_urb_dequeue() terminates early and usb_hub_flush_endpoint()
+continuously calls vhci_urb_dequeue().
 
-However, on m68k, the minimum alignment of 32-bit values is 2 bytes, not
-4 bytes.  Hence in some kernel builds, dst_default_metrics may be only
-2-byte aligned, leading to obscure boot warnings like:
+The root cause of this issue is that vhci_recv_ret_submit()
+terminates early without giving back URB when transaction error
+occurs in vhci_recv_ret_submit(). That causes the error URB to still
+be linked at endpoint list without “vhci_priv".
 
-    WARNING: CPU: 0 PID: 7 at lib/refcount.c:28 refcount_warn_saturate+0x44/0x9a
-    refcount_t: underflow; use-after-free.
-    Modules linked in:
-    CPU: 0 PID: 7 Comm: ksoftirqd/0 Tainted: G        W         5.5.0-rc2-atari-01448-g114a1a1038af891d-dirty #261
-    Stack from 10835e6c:
-	    10835e6c 0038134f 00023fa6 00394b0f 0000001c 00000009 00321560 00023fea
-	    00394b0f 0000001c 001a70f8 00000009 00000000 10835eb4 00000001 00000000
-	    04208040 0000000a 00394b4a 10835ed4 00043aa8 001a70f8 00394b0f 0000001c
-	    00000009 00394b4a 0026aba8 003215a4 00000003 00000000 0026d5a8 00000001
-	    003215a4 003a4361 003238d6 000001f0 00000000 003215a4 10aa3b00 00025e84
-	    003ddb00 10834000 002416a8 10aa3b00 00000000 00000080 000aa038 0004854a
-    Call Trace: [<00023fa6>] __warn+0xb2/0xb4
-     [<00023fea>] warn_slowpath_fmt+0x42/0x64
-     [<001a70f8>] refcount_warn_saturate+0x44/0x9a
-     [<00043aa8>] printk+0x0/0x18
-     [<001a70f8>] refcount_warn_saturate+0x44/0x9a
-     [<0026aba8>] refcount_sub_and_test.constprop.73+0x38/0x3e
-     [<0026d5a8>] ipv4_dst_destroy+0x5e/0x7e
-     [<00025e84>] __local_bh_enable_ip+0x0/0x8e
-     [<002416a8>] dst_destroy+0x40/0xae
+So, in the case of transaction error in vhci_recv_ret_submit(),
+unlink URB from the endpoint, insert proper error code in
+urb->status and give back URB.
 
-Fix this by forcing 4-byte alignment of all dst_metrics structures.
-
-Fixes: e5fd387ad5b30ca3 ("ipv6: do not overwrite inetpeer metrics prematurely")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+Tested-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20191213023055.19933-3-suwan.kim027@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/dst.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/net/dst.h
-+++ b/include/net/dst.h
-@@ -110,7 +110,7 @@ struct dst_entry {
- struct dst_metrics {
- 	u32		metrics[RTAX_MAX];
- 	atomic_t	refcnt;
--};
-+} __aligned(4);		/* Low pointer bits contain DST_METRICS_FLAGS */
- extern const struct dst_metrics dst_default_metrics;
+---
+ drivers/usb/usbip/vhci_rx.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+--- a/drivers/usb/usbip/vhci_rx.c
++++ b/drivers/usb/usbip/vhci_rx.c
+@@ -90,16 +90,21 @@ static void vhci_recv_ret_submit(struct
+ 	usbip_pack_pdu(pdu, urb, USBIP_RET_SUBMIT, 0);
  
- u32 *dst_cow_metrics_generic(struct dst_entry *dst, unsigned long old);
+ 	/* recv transfer buffer */
+-	if (usbip_recv_xbuff(ud, urb) < 0)
+-		return;
++	if (usbip_recv_xbuff(ud, urb) < 0) {
++		urb->status = -EPROTO;
++		goto error;
++	}
+ 
+ 	/* recv iso_packet_descriptor */
+-	if (usbip_recv_iso(ud, urb) < 0)
+-		return;
++	if (usbip_recv_iso(ud, urb) < 0) {
++		urb->status = -EPROTO;
++		goto error;
++	}
+ 
+ 	/* restore the padding in iso packets */
+ 	usbip_pad_iso(ud, urb);
+ 
++error:
+ 	if (usbip_dbg_flag_vhci_rx)
+ 		usbip_dump_urb(urb);
+ 
 
 
