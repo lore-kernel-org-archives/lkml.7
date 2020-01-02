@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A9EC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EC5C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF5FB20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A21020848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:52:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005554;
-	bh=ibTZwRKS6VoVkzjX7po10SasPNuQ7+a9R/Nk96beczE=;
+	s=default; t=1578005558;
+	bh=Al7bzgi2unxPyfP1PZlhJR/3qZPvUNIjLvPGQBoa3nU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QztrM8PzHqeZK64R3uhei5WKoKUXAmaCoi2ltSpljTF0ppsIa3yc2BZH9DOmMOAt/
-	 urcG2yjyc2+ISiZYEkh/wHsMKzo2v3te+GzkZx3MPjUM3YcN0Np48xoodAyL8+OMuj
-	 RX64Gx0ev6xEIFEeZ8LxuUs8mAiN3kxxK9Nb+9WQ=
+	b=L6XCBqeKcuVgKJ7470huEEw7jrC95w/eV+/JvQvmqloyMxWXwflCfo0E5viSgqkGO
+	 TEaAs1eUaU5SkrXHiQzG4XESqTQEq6A83bbfQffom+Fd/oAoSuYIMeZzob60N5PFAX
+	 TVBpqr471muT7AEnI3d2N4Y/95TwAcBo7z4ZaIp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbgABWWp (ORCPT
+        id S1729475AbgABWwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:22:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43482 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:52:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729165AbgABWWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:22:39 -0500
+        id S1728655AbgABWWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:22:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04EE4222C3;
-        Thu,  2 Jan 2020 22:22:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4EB32253D;
+        Thu,  2 Jan 2020 22:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003759;
-        bh=ibTZwRKS6VoVkzjX7po10SasPNuQ7+a9R/Nk96beczE=;
+        s=default; t=1578003764;
+        bh=Al7bzgi2unxPyfP1PZlhJR/3qZPvUNIjLvPGQBoa3nU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=szDIJgyA2O6KAVWEG43/9EJGNtCCBYufGqAcu4BaDol0WWjk1kznZscTVMaJ4ULD+
-         k3PFEDZx9r9h96wf+9hHn++uw+FcBpDl/0dwM77URS8YgoFSqxQvzSG0UBvPcZKfco
-         6jCSgybZw1gPAVVEHz8U/sqMm8bXFaFyq/ipwLVo=
+        b=0Jj5Q4gvVOnRSTlgfYTnUBI9zak0fFca2gg1o/ZwQflAaHENE0ywhK3ptpPghe1Xb
+         Z5UmTv6znIEvC8YiSsoivWzV7TwPdhF7rce5i+695QHjnHYqwQvDReVA+QuCRBksLW
+         2RI5skx4DudpTtHjVMcfeRBsyBogdp/qWoID1Pcc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marco Oliverio <marco.oliverio@tanaza.com>,
-        Rocco Folino <rocco.folino@tanaza.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Jay Vosburgh <jay.vosburgh@canonical.com>,
+        Mahesh Bandewar <maheshb@google.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 076/114] netfilter: nf_queue: enqueue skbs with NULL dst
-Date:   Thu,  2 Jan 2020 23:07:28 +0100
-Message-Id: <20200102220036.754351976@linuxfoundation.org>
+Subject: [PATCH 4.19 078/114] bonding: fix active-backup transition after link failure
+Date:   Thu,  2 Jan 2020 23:07:30 +0100
+Message-Id: <20200102220036.958334339@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -62,42 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Oliverio <marco.oliverio@tanaza.com>
+From: Mahesh Bandewar <maheshb@google.com>
 
-[ Upstream commit 0b9173f4688dfa7c5d723426be1d979c24ce3d51 ]
+[ Upstream commit 5d485ed88d48f8101a2067348e267c0aaf4ed486 ]
 
-Bridge packets that are forwarded have skb->dst == NULL and get
-dropped by the check introduced by
-b60a77386b1d4868f72f6353d35dabe5fbe981f2 (net: make skb_dst_force
-return true when dst is refcounted).
+After the recent fix in commit 1899bb325149 ("bonding: fix state
+transition issue in link monitoring"), the active-backup mode with
+miimon initially come-up fine but after a link-failure, both members
+transition into backup state.
 
-To fix this we check skb_dst() before skb_dst_force(), so we don't
-drop skb packet with dst == NULL. This holds also for skb at the
-PRE_ROUTING hook so we remove the second check.
+Following steps to reproduce the scenario (eth1 and eth2 are the
+slaves of the bond):
 
-Fixes: b60a77386b1d ("net: make skb_dst_force return true when dst is refcounted")
-Signed-off-by: Marco Oliverio <marco.oliverio@tanaza.com>
-Signed-off-by: Rocco Folino <rocco.folino@tanaza.com>
-Acked-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+    ip link set eth1 up
+    ip link set eth2 down
+    sleep 1
+    ip link set eth2 up
+    ip link set eth1 down
+    cat /sys/class/net/eth1/bonding_slave/state
+    cat /sys/class/net/eth2/bonding_slave/state
+
+Fixes: 1899bb325149 ("bonding: fix state transition issue in link monitoring")
+CC: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: Mahesh Bandewar <maheshb@google.com>
+Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_queue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/bonding/bond_main.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/net/netfilter/nf_queue.c b/net/netfilter/nf_queue.c
-index a96a8c16baf9..ee6d98355081 100644
---- a/net/netfilter/nf_queue.c
-+++ b/net/netfilter/nf_queue.c
-@@ -174,7 +174,7 @@ static int __nf_queue(struct sk_buff *skb, const struct nf_hook_state *state,
- 		goto err;
- 	}
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 9b8143dca512..f57b86f1373d 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2223,9 +2223,6 @@ static void bond_miimon_commit(struct bonding *bond)
+ 			} else if (BOND_MODE(bond) != BOND_MODE_ACTIVEBACKUP) {
+ 				/* make it immediately active */
+ 				bond_set_active_slave(slave);
+-			} else if (slave != primary) {
+-				/* prevent it from being the active one */
+-				bond_set_backup_slave(slave);
+ 			}
  
--	if (!skb_dst_force(skb) && state->hook != NF_INET_PRE_ROUTING) {
-+	if (skb_dst(skb) && !skb_dst_force(skb)) {
- 		status = -ENETDOWN;
- 		goto err;
- 	}
+ 			netdev_info(bond->dev, "link status definitely up for interface %s, %u Mbps %s duplex\n",
 -- 
 2.20.1
 
