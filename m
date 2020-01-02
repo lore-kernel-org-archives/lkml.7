@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B528EC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D43BAC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA5B22B48
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B16021582
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003509;
-	bh=ZRzUaS7TbHRkip6Y5V7m23bnGrNRf3b6ulStmFnU4HQ=;
+	s=default; t=1578003511;
+	bh=cf7LqXwuK+XamHqx2K+hIzd74jk/0+2xFCWYwffAo54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HrFtIMd67wbkSdKPU/c8kkBp3ZAjXWdoV4KybhcNmIxra+Q59pGLGcBl0ymRm0HXX
-	 BSMxcqBaSV+VT6AGKJRmy5ZkcBgrqfjfsT7k+sLu4+c0ncKMU0Rifuo0ZK9N/hhPL/
-	 bwxz/ikRYXhkeiOXQEYK82IKJqv74LN8NnjfLHz8=
+	b=ZLMuYa2o0aCZD6RAsVK1sF0f33gpx85p8IgPU7wgGz2+9K8mS3G/tEsIR+ez1IzVT
+	 gZHie6FfTGyddOOMji1oA//zVaynLDw0eDWrrvf/uc+2awnqy5HhFutpXZz0W0H9Yr
+	 0RRGoT7uEHou0MC/SFYyfmCMdO5njx8xmCZ+BhCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbgABWS2 (ORCPT
+        id S1728463AbgABWSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:18:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33636 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:18:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728334AbgABWSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:18:25 -0500
+        id S1728447AbgABWS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:18:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91A8821582;
-        Thu,  2 Jan 2020 22:18:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED3AB21582;
+        Thu,  2 Jan 2020 22:18:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003505;
-        bh=ZRzUaS7TbHRkip6Y5V7m23bnGrNRf3b6ulStmFnU4HQ=;
+        s=default; t=1578003507;
+        bh=cf7LqXwuK+XamHqx2K+hIzd74jk/0+2xFCWYwffAo54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rRYfJjzoLxqB1fED8jOqOgjS49pK67+DX4Iihb1s1J5a05oF/X5u3EKo72Lg/WK2r
-         RVm3RxYFbsJtpUDGI1TYFIiZYYHmL7t5XOpQ+Z8WCp/NrbLXSJbMVIrojJaLkb979s
-         DD0a/LVTVlvm8pOTKVfv26goh5+hQwzgyi5Le73s=
+        b=eXtofYWZBsGNy2wIG+iagXggLkcLkRrPko8tQV+dBwskE2r42XclAmtnv+2aFLr3U
+         QxCzME2RBEKipru8gESL6k4oAou4p7rHyZ3mxMOGZb8MoqUZrVT84wfZboe2x+QWq4
+         9xVp9FFfaKJAE7pZ83Os3KC3Ki1QjJQdzRHmYARc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        David Ahern <dsahern@gmail.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 189/191] vhost/vsock: accept only packets with the right dst_cid
-Date:   Thu,  2 Jan 2020 23:07:51 +0100
-Message-Id: <20200102215849.847621468@linuxfoundation.org>
+Subject: [PATCH 5.4 172/191] vti: do not confirm neighbor when do pmtu update
+Date:   Thu,  2 Jan 2020 23:07:34 +0100
+Message-Id: <20200102215847.723595805@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -59,35 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit 8a3cc29c316c17de590e3ff8b59f3d6cbfd37b0a ]
+[ Upstream commit 8247a79efa2f28b44329f363272550c1738377de ]
 
-When we receive a new packet from the guest, we check if the
-src_cid is correct, but we forgot to check the dst_cid.
+When do IPv6 tunnel PMTU update and calls __ip6_rt_update_pmtu() in the end,
+we should not call dst_confirm_neigh() as there is no two-way communication.
 
-The host should accept only packets where dst_cid is
-equal to the host CID.
+Although vti and vti6 are immune to this problem because they are IFF_NOARP
+interfaces, as Guillaume pointed. There is still no sense to confirm neighbour
+here.
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+v5: Update commit description.
+v4: No change.
+v3: Do not remove dst_confirm_neigh, but add a new bool parameter in
+    dst_ops.update_pmtu to control whether we should do neighbor confirm.
+    Also split the big patch to small ones for each area.
+v2: Remove dst_confirm_neigh in __ip6_rt_update_pmtu.
+
+Reviewed-by: Guillaume Nault <gnault@redhat.com>
+Acked-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/vhost/vsock.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/ipv4/ip_vti.c  |    2 +-
+ net/ipv6/ip6_vti.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -437,7 +437,9 @@ static void vhost_vsock_handle_tx_kick(s
- 		virtio_transport_deliver_tap_pkt(pkt);
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -214,7 +214,7 @@ static netdev_tx_t vti_xmit(struct sk_bu
  
- 		/* Only accept correctly addressed packets */
--		if (le64_to_cpu(pkt->hdr.src_cid) == vsock->guest_cid)
-+		if (le64_to_cpu(pkt->hdr.src_cid) == vsock->guest_cid &&
-+		    le64_to_cpu(pkt->hdr.dst_cid) ==
-+		    vhost_transport_get_local_cid())
- 			virtio_transport_recv_pkt(pkt);
- 		else
- 			virtio_transport_free_pkt(pkt);
+ 	mtu = dst_mtu(dst);
+ 	if (skb->len > mtu) {
+-		skb_dst_update_pmtu(skb, mtu);
++		skb_dst_update_pmtu_no_confirm(skb, mtu);
+ 		if (skb->protocol == htons(ETH_P_IP)) {
+ 			icmp_send(skb, ICMP_DEST_UNREACH, ICMP_FRAG_NEEDED,
+ 				  htonl(mtu));
+--- a/net/ipv6/ip6_vti.c
++++ b/net/ipv6/ip6_vti.c
+@@ -479,7 +479,7 @@ vti6_xmit(struct sk_buff *skb, struct ne
+ 
+ 	mtu = dst_mtu(dst);
+ 	if (skb->len > mtu) {
+-		skb_dst_update_pmtu(skb, mtu);
++		skb_dst_update_pmtu_no_confirm(skb, mtu);
+ 
+ 		if (skb->protocol == htons(ETH_P_IPV6)) {
+ 			if (mtu < IPV6_MIN_MTU)
 
 
