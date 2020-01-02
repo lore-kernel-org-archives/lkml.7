@@ -2,87 +2,111 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4E4C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 03:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29111C2D0DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 03:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73FD2215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 03:50:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Oq9bx7v0"
+	by mail.kernel.org (Postfix) with ESMTP id 0025520863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 03:59:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbgABDue (ORCPT
+        id S1727587AbgABD5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 22:50:34 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35449 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727509AbgABDue (ORCPT
+        Wed, 1 Jan 2020 22:57:53 -0500
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:54505 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727509AbgABD5x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 22:50:34 -0500
-Received: by mail-ot1-f67.google.com with SMTP id k16so50735784otb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 19:50:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=cO6PVKznnSAM6d/hhV5xCs6Kkc34TVo3fVvX4Ug3jHg=;
-        b=Oq9bx7v0qeiZy3puiVm5NDqrFRfXBpqDtVJ615NJpgp3zKVheoOjCaeutuK5nlf9Wt
-         WD5Ga6Q7Gx9aidGArb4qAdxJp86jen0KO95ayCJlV9nR4TgiFVSH++vXWZtg659FvUYL
-         Z+lzUMmC/yO6oc8sQ+flCzgtAir6EA2O7Fu9hod3gavb0sNOHTu6oXoXfUjjj7cNqDFS
-         rxFSQcMfGn8Db1q+wUHvPxoMeYU+A88HQN/oOKt3UPjiPVFbHLch8GiXXU8T84H9Qmz5
-         E46VLLBtEjYx9iAkTHQwJt8mHUz3xgFPSRpFX54fUy/RsJLBS0YuTGQ63OexnyOpTdAT
-         ZODQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=cO6PVKznnSAM6d/hhV5xCs6Kkc34TVo3fVvX4Ug3jHg=;
-        b=Da+V7MEwtzucVKMNZoosKwt5XPBrbcZ/RbtRH2tusiwCuUXmUsOvPUDfpAFi7cPabE
-         M91tc/h3kz8HZyiVMWeofyPzd+8782W489Pq087YqbXW+55sN6wfjvBl8Ct4TA8ZJ1xz
-         cFsaxcPaBgiEDalGV0e0qgR8+3BMH/vnCiY+C2bfzWznB+GFdrraYeVpKHql1S0f0Yii
-         /C7XFpRdT0I5DPo9QHxGEYbfrUT/4nI1jxmy3yVuTFx+DrrZLwRsHDDllF80GmNpqTFm
-         +zXbXH1JP2e2QCBCbGoe7FeH0xtqxr+5Ul+Eko2dipvHcfF1ElRYr9YG0WpA1LLNDIIo
-         da7A==
-X-Gm-Message-State: APjAAAXZ93dDLGBqGqPtUCr3ED24Y7MfXNoaiBSGeLJAy1KqtfOWKbnj
-        GhOZkaYb2zbSA7z4xTxgD2LY9lzmdBJMqyZsIocprQ==
-X-Google-Smtp-Source: APXvYqwh7Ei4wPCDPdjD1UcGJHaq9HDgKEZVV+BaXlYcrf/qdBaIOE6CGfdXDD9qGGv/S+iaU+hosjg2fTlhulLr01c=
-X-Received: by 2002:a9d:784b:: with SMTP id c11mr85019992otm.246.1577937031888;
- Wed, 01 Jan 2020 19:50:31 -0800 (PST)
+        Wed, 1 Jan 2020 22:57:53 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TmXvN1X_1577937470;
+Received: from IT-C02W23QPG8WN.local(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TmXvN1X_1577937470)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 02 Jan 2020 11:57:51 +0800
+Subject: Re: [PATCH] mm/page-writeback.c: avoid potential division by zero
+To:     Qian Cai <cai@lca.pw>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        xlpang@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, julia.lawall@lip6.fr
+References: <20200101093204.3592-1-wenyang@linux.alibaba.com>
+ <230E8A87-2900-427B-9EA3-CC48B4DCA5FC@lca.pw>
+From:   Wen Yang <wenyang@linux.alibaba.com>
+Message-ID: <62482b58-81e1-0295-1e28-e11261404831@linux.alibaba.com>
+Date:   Thu, 2 Jan 2020 11:57:50 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20191223084614.67126-1-zong.li@sifive.com>
-In-Reply-To: <20191223084614.67126-1-zong.li@sifive.com>
-From:   Zong Li <zong.li@sifive.com>
-Date:   Thu, 2 Jan 2020 11:50:22 +0800
-Message-ID: <CANXhq0qTG-ezdrJpOEd9fhc-_iRL2syASO9KnQxbDfxoVXwfqQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] RISC-V: fixes issues of ftrace graph tracer
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>, rostedt@goodmis.org,
-        Anup Patel <anup@brainfault.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <230E8A87-2900-427B-9EA3-CC48B4DCA5FC@lca.pw>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 4:46 PM Zong Li <zong.li@sifive.com> wrote:
->
-> Ftrace graph tracer is broken now, these patches fix the problem of ftrace graph
-> tracer and tested on QEMU and HiFive Unleashed board.
->
-> Zong Li (2):
->   riscv: ftrace: correct the condition logic in function graph tracer
->   clocksource/drivers/riscv: add notrace to riscv_sched_clock
->
->  arch/riscv/kernel/ftrace.c        | 2 +-
->  drivers/clocksource/timer-riscv.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> --
-> 2.24.1
->
 
-ping
+
+On 2020/1/1 8:39 下午, Qian Cai wrote:
+> 
+> 
+>> On Jan 1, 2020, at 4:32 AM, Wen Yang <wenyang@linux.alibaba.com> wrote:
+>>
+>> The variables 'min', 'max' and 'bw' are unsigned long and
+>> do_div truncates them to 32 bits, which means it can test
+>> non-zero and be truncated to zero for division.
+>> Fix this issue by using div64_ul() instead.
+> 
+> How did you find out the issue? If it is caught by compilers, can you paste the original warnings? Also, can you figure out which commit introduced the issue in the first place, so it could be backported to stable if needed?
+> 
+
+Thanks for your comments.
+There are no compilation warnings here.
+
+We found this issue by following these steps:
+We were first inspired by commit b0ab99e7736a ("sched: Fix possible 
+divide by zero in avg_atom () calculation"), combined with our recently 
+analyzed mm code, we found this suspicious place.
+
+And we also disassembled and confirmed it:
+
+  201                 if (min) {
+  202                         min *= this_bw;
+  203                         do_div(min, tot_bw);
+  204                 }
+
+/usr/src/debug/kernel-4.9.168-016.ali3000/linux-4.9.168-016.ali3000.alios7.x86_64/mm/page-writeback.c: 
+201
+0xffffffff811c37da <__wb_calc_thresh+234>:      xor    %r10d,%r10d
+0xffffffff811c37dd <__wb_calc_thresh+237>:      test   %rax,%rax
+0xffffffff811c37e0 <__wb_calc_thresh+240>:      je 
+0xffffffff811c3800 <__wb_calc_thresh+272>
+/usr/src/debug/kernel-4.9.168-016.ali3000/linux-4.9.168-016.ali3000.alios7.x86_64/mm/page-writeback.c: 
+202
+0xffffffff811c37e2 <__wb_calc_thresh+242>:      imul   %r8,%rax
+/usr/src/debug/kernel-4.9.168-016.ali3000/linux-4.9.168-016.ali3000.alios7.x86_64/mm/page-writeback.c: 
+203
+0xffffffff811c37e6 <__wb_calc_thresh+246>:      mov    %r9d,%r10d 
+    ---> truncates it to 32 bits here
+
+0xffffffff811c37e9 <__wb_calc_thresh+249>:      xor    %edx,%edx
+0xffffffff811c37eb <__wb_calc_thresh+251>:      div    %r10
+0xffffffff811c37ee <__wb_calc_thresh+254>:      imul   %rbx,%rax
+0xffffffff811c37f2 <__wb_calc_thresh+258>:      shr    $0x2,%rax
+0xffffffff811c37f6 <__wb_calc_thresh+262>:      mul    %rcx
+0xffffffff811c37f9 <__wb_calc_thresh+265>:      shr    $0x2,%rdx
+0xffffffff811c37fd <__wb_calc_thresh+269>:      mov    %rdx,%r10
+
+This issue was introduced by commit 693108a8a667 (“writeback: make 
+bdi->min/max_ratio handling cgroup writeback aware”).
+
+Finally, we will summarize the above cases and plan to write a general 
+coccinelle rule to check for similar problems.
+
+
+>>
+>> For the two variables 'numerator' and 'denominator',
+>> though they are declared as long, they should actually be
+>> unsigned long (according to the implementation of
+>> the fprop_fraction_percpu() function).
