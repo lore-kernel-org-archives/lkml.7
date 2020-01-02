@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CABD3C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F56C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95FF324650
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED8A21D7D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:46:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005173;
-	bh=srK+AwUov53SvNhhGdeEi7tX841wok/s60+s1aXhuaE=;
+	s=default; t=1578005178;
+	bh=zCDTEKqulQ5WWoR3gp/l+LFyviaRUjMFPWj8HUFfsl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yjxJCocSZpzk6kS6E71zi6NTlYE/iNL5DvqWU4oHYKdlKET7Y1LUGsUj2c6FM7TYY
-	 uLHJkdRyalx4VPi4nf7Th5CEM4xvarqf56jnIcnB2QCr6HGoC65ly/b2XODFQokBgs
-	 Era3m9WJoQ7fDVhbuSD+abtmOj6/blFFr+c9GLfM=
+	b=NOAGS3uGS4vZJWuYI+hZJe2rzfoK06zqrc+nDMozlSvUr3aQQ+vjRyRtKm/D+vcTT
+	 56F/DzHF0Adq3XJLTyFA878w/pOsuuqq9yomoL47ioUxQaJPMg+5bZ7p5Bv8DQtuWf
+	 a+lHefJmdXKn223ksNNZQKjTDlXx8IAAJatUpKQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbgABWbP (ORCPT
+        id S1730767AbgABWqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:31:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35846 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:46:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730239AbgABWbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:31:05 -0500
+        id S1730246AbgABWbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:31:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E082D20866;
-        Thu,  2 Jan 2020 22:31:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4968C20863;
+        Thu,  2 Jan 2020 22:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004265;
-        bh=srK+AwUov53SvNhhGdeEi7tX841wok/s60+s1aXhuaE=;
+        s=default; t=1578004267;
+        bh=zCDTEKqulQ5WWoR3gp/l+LFyviaRUjMFPWj8HUFfsl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rKjhRzx1m3xQlN5dJwt73xlsor+Z9BEc961KKXZeUkAFsG+Tx8vl4GWpNqr0TfmSU
-         F+mlWkmSX9xH1ca83TlflyUKXrkZ6ntLJ00Rc4pUr6KzHT2v8zLMlaCeAzGJIc2mxE
-         rSfZQIiTr9376e7gq5tS0veeixHA2qYvxRbPG3Qw=
+        b=Lmjfm03A7ReXDLAjsauJIRTo+GOHrZ6v5zLQ0rWkIDAjWGb2EQSuKZFtaaweakme7
+         aC/XDkhfwJ4p1ldfiUAkgaw0/XaA/4hueXRyEwh5T5DvrFPgDxV9ZYD2qnvle0Xq8Q
+         UR85oWbT7mSyzKVBcKRFsdyKLvR4I1f3eywPbJOA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.9 107/171] ext4: check for directory entries too close to block end
-Date:   Thu,  2 Jan 2020 23:07:18 +0100
-Message-Id: <20200102220602.014456443@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.9 108/171] powerpc/irq: fix stack overflow verification
+Date:   Thu,  2 Jan 2020 23:07:19 +0100
+Message-Id: <20200102220602.146773569@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -59,39 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 109ba779d6cca2d519c5dd624a3276d03e21948e upstream.
+commit 099bc4812f09155da77eeb960a983470249c9ce1 upstream.
 
-ext4_check_dir_entry() currently does not catch a case when a directory
-entry ends so close to the block end that the header of the next
-directory entry would not fit in the remaining space. This can lead to
-directory iteration code trying to access address beyond end of current
-buffer head leading to oops.
+Before commit 0366a1c70b89 ("powerpc/irq: Run softirqs off the top of
+the irq stack"), check_stack_overflow() was called by do_IRQ(), before
+switching to the irq stack.
+In that commit, do_IRQ() was renamed __do_irq(), and is now executing
+on the irq stack, so check_stack_overflow() has just become almost
+useless.
 
-CC: stable@vger.kernel.org
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191202170213.4761-3-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Move check_stack_overflow() call in do_IRQ() to do the check while
+still on the current stack.
+
+Fixes: 0366a1c70b89 ("powerpc/irq: Run softirqs off the top of the irq stack")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/e033aa8116ab12b7ca9a9c75189ad0741e3b9b5f.1575872340.git.christophe.leroy@c-s.fr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/dir.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ arch/powerpc/kernel/irq.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/ext4/dir.c
-+++ b/fs/ext4/dir.c
-@@ -75,6 +75,11 @@ int __ext4_check_dir_entry(const char *f
- 		error_msg = "rec_len is too small for name_len";
- 	else if (unlikely(((char *) de - buf) + rlen > size))
- 		error_msg = "directory entry overrun";
-+	else if (unlikely(((char *) de - buf) + rlen >
-+			  size - EXT4_DIR_REC_LEN(1) &&
-+			  ((char *) de - buf) + rlen != size)) {
-+		error_msg = "directory entry too close to block end";
-+	}
- 	else if (unlikely(le32_to_cpu(de->inode) >
- 			le32_to_cpu(EXT4_SB(dir->i_sb)->s_es->s_inodes_count)))
- 		error_msg = "inode out of bounds";
+--- a/arch/powerpc/kernel/irq.c
++++ b/arch/powerpc/kernel/irq.c
+@@ -527,8 +527,6 @@ void __do_irq(struct pt_regs *regs)
+ 
+ 	trace_irq_entry(regs);
+ 
+-	check_stack_overflow();
+-
+ 	/*
+ 	 * Query the platform PIC for the interrupt & ack it.
+ 	 *
+@@ -560,6 +558,8 @@ void do_IRQ(struct pt_regs *regs)
+ 	irqtp = hardirq_ctx[raw_smp_processor_id()];
+ 	sirqtp = softirq_ctx[raw_smp_processor_id()];
+ 
++	check_stack_overflow();
++
+ 	/* Already there ? */
+ 	if (unlikely(curtp == irqtp || curtp == sirqtp)) {
+ 		__do_irq(regs);
 
 
