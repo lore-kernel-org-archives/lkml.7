@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D32C7C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADE0C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3DEB20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3342F20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:47:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005254;
-	bh=Om2MnQ8zQIdV9DmBe4vs/eAju66eTxW/580jpUClxsA=;
+	s=default; t=1578005261;
+	bh=mtzmqGg3QZ/YgGmPmq8BQn51XP27MECATe9X3l1cymk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MkDa8pAdJWMbG9N2UV7abXnV8G167HGjG1XJuhR397e4Jn+mTPjIDI5H5FFsYECq3
-	 X3iI+PGu4zf0WWrCVxdFL+eD1bDkimpT1DV7QIqoO+iumHyowlSZNhcannyvByllo9
-	 kGcmlatqrLz3BQDPdJqXgR5ILnVf0Bl3rxNc58qs=
+	b=yyjb7ch+ZvF3qE1+wtxv9twetIXVEcEUeBcVMOlQyNfg1E6/fykmawEmKxHL4Z8zB
+	 uAFeTjgL5GFQCVl1drYtjXSLO4SRZF8Q8uksCeWpgmtyTQRurDKtVfFvd+DcMUiLE+
+	 Px4JVq0IWAclZEoMQXCyZQfjfUjBDz00ir+KAGPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730313AbgABWrd (ORCPT
+        id S1730598AbgABWrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:47:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60738 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:47:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730059AbgABW3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:29:35 -0500
+        id S1725872AbgABW3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:29:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC6B1227BF;
-        Thu,  2 Jan 2020 22:29:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B16C20866;
+        Thu,  2 Jan 2020 22:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004174;
-        bh=Om2MnQ8zQIdV9DmBe4vs/eAju66eTxW/580jpUClxsA=;
+        s=default; t=1578004159;
+        bh=mtzmqGg3QZ/YgGmPmq8BQn51XP27MECATe9X3l1cymk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=01zwjWLwyqC10K4o708t6M/UX2vV2TwxN62uxirIOrkjhD6Nz9ceV044sVGetVYxb
-         oftUnrIw3xt5I2N9ZqreoI33veZzNrEHtuxaAXkfESspg2W5YvEOY6J2XkMbThbN8u
-         kmOY7EWM4KI6QGEcbQ+TUd3NrlqYRpAxZjp+LUFM=
+        b=x/iFHEDyoh712Vq2qS19TTEjRrwiBry+xbNcu/oEkJBg9lxwgRuQ/VbhjWyG9EuUk
+         NKmF/dpqf8+xUfdapvaRtoz4btdoyePxAJdU7PWofbm1DDh7ag0egrmGucRbDNIrOy
+         2U7mgUh4qbLYGWJPUb20s9RSKtCp0LdlJnBw0sI4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        stable@vger.kernel.org, Hou Bao Hou <houbao@codeaurora.org>,
+        Anilkumar Kolli <akolli@codeaurora.org>,
+        Miaoqing Pan <miaoqing@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 044/171] pinctrl: sh-pfc: sh7734: Fix duplicate TCLK1_B
-Date:   Thu,  2 Jan 2020 23:06:15 +0100
-Message-Id: <20200102220553.027746472@linuxfoundation.org>
+Subject: [PATCH 4.9 062/171] ath10k: fix get invalid tx rate for Mesh metric
+Date:   Thu,  2 Jan 2020 23:06:33 +0100
+Message-Id: <20200102220555.498918634@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -60,62 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Miaoqing Pan <miaoqing@codeaurora.org>
 
-[ Upstream commit 884caadad128efad8e00c1cdc3177bc8912ee8ec ]
+[ Upstream commit 05a11003a56507023f18d3249a4d4d119c0a3e9c ]
 
-The definitions for bit field [19:18] of the Peripheral Function Select
-Register 3 were accidentally copied from bit field [20], leading to
-duplicates for the TCLK1_B function, and missing TCLK0, CAN_CLK_B, and
-ET0_ETXD4 functions.
+ath10k does not provide transmit rate info per MSDU
+in tx completion, mark that as -1 so mac80211
+will ignore the rates. This fixes mac80211 update Mesh
+link metric with invalid transmit rate info.
 
-Fix this by adding the missing GPIO_FN_CAN_CLK_B and GPIO_FN_ET0_ETXD4
-enum values, and correcting the functions.
+Tested HW: QCA9984
+Tested FW: 10.4-3.9.0.2-00035
 
-Reported-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191024131308.16659-1-geert+renesas@glider.be
+Signed-off-by: Hou Bao Hou <houbao@codeaurora.org>
+Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
+Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sh/include/cpu-sh4/cpu/sh7734.h | 2 +-
- drivers/pinctrl/sh-pfc/pfc-sh7734.c  | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wireless/ath/ath10k/txrx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/sh/include/cpu-sh4/cpu/sh7734.h b/arch/sh/include/cpu-sh4/cpu/sh7734.h
-index 2fb9a7b71b41..a2667c9b5819 100644
---- a/arch/sh/include/cpu-sh4/cpu/sh7734.h
-+++ b/arch/sh/include/cpu-sh4/cpu/sh7734.h
-@@ -133,7 +133,7 @@ enum {
- 	GPIO_FN_EX_WAIT1, GPIO_FN_SD1_DAT0_A, GPIO_FN_DREQ2, GPIO_FN_CAN1_TX_C,
- 		GPIO_FN_ET0_LINK_C, GPIO_FN_ET0_ETXD5_A,
- 	GPIO_FN_EX_WAIT0, GPIO_FN_TCLK1_B,
--	GPIO_FN_RD_WR, GPIO_FN_TCLK0,
-+	GPIO_FN_RD_WR, GPIO_FN_TCLK0, GPIO_FN_CAN_CLK_B, GPIO_FN_ET0_ETXD4,
- 	GPIO_FN_EX_CS5, GPIO_FN_SD1_CMD_A, GPIO_FN_ATADIR, GPIO_FN_QSSL_B,
- 		GPIO_FN_ET0_ETXD3_A,
- 	GPIO_FN_EX_CS4, GPIO_FN_SD1_WP_A, GPIO_FN_ATAWR, GPIO_FN_QMI_QIO1_B,
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-index 33232041ee86..3eccc9b3ca84 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-@@ -1453,7 +1453,7 @@ static const struct pinmux_func pinmux_func_gpios[] = {
- 	GPIO_FN(ET0_ETXD2_A),
- 	GPIO_FN(EX_CS5), GPIO_FN(SD1_CMD_A), GPIO_FN(ATADIR), GPIO_FN(QSSL_B),
- 	GPIO_FN(ET0_ETXD3_A),
--	GPIO_FN(RD_WR), GPIO_FN(TCLK1_B),
-+	GPIO_FN(RD_WR), GPIO_FN(TCLK0), GPIO_FN(CAN_CLK_B), GPIO_FN(ET0_ETXD4),
- 	GPIO_FN(EX_WAIT0), GPIO_FN(TCLK1_B),
- 	GPIO_FN(EX_WAIT1), GPIO_FN(SD1_DAT0_A), GPIO_FN(DREQ2),
- 		GPIO_FN(CAN1_TX_C), GPIO_FN(ET0_LINK_C), GPIO_FN(ET0_ETXD5_A),
-@@ -1949,7 +1949,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 	    /* IP3_20 [1] */
- 		FN_EX_WAIT0, FN_TCLK1_B,
- 	    /* IP3_19_18 [2] */
--		FN_RD_WR, FN_TCLK1_B, 0, 0,
-+		FN_RD_WR, FN_TCLK0, FN_CAN_CLK_B, FN_ET0_ETXD4,
- 	    /* IP3_17_15 [3] */
- 		FN_EX_CS5, FN_SD1_CMD_A, FN_ATADIR, FN_QSSL_B,
- 		FN_ET0_ETXD3_A, 0, 0, 0,
+diff --git a/drivers/net/wireless/ath/ath10k/txrx.c b/drivers/net/wireless/ath/ath10k/txrx.c
+index 9852c5d51139..beeb6be06939 100644
+--- a/drivers/net/wireless/ath/ath10k/txrx.c
++++ b/drivers/net/wireless/ath/ath10k/txrx.c
+@@ -99,6 +99,8 @@ int ath10k_txrx_tx_unref(struct ath10k_htt *htt,
+ 
+ 	info = IEEE80211_SKB_CB(msdu);
+ 	memset(&info->status, 0, sizeof(info->status));
++	info->status.rates[0].idx = -1;
++
+ 	trace_ath10k_txrx_tx_unref(ar, tx_done->msdu_id);
+ 
+ 	if (tx_done->status == HTT_TX_COMPL_STATE_DISCARD) {
 -- 
 2.20.1
 
