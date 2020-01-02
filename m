@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD4EC3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DBDC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E883C21835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8739821835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:34:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004455;
-	bh=WuOTrhe1MT5gXBM21AyMAoDkO+ydPyhQwQulNz828aA=;
+	s=default; t=1578004458;
+	bh=XyKOjQslPdTHlWPxGpQ+P5WzATKnm4hOAEZiiYEXo9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pQhzYn1x8YV+e1jRtKFElGHZrdISaQm4r1TEge1VGUPcB4kWPNNqprpZJWZrThZVr
-	 9RdT7hb3YmZvJ8hmdt6w59dQUhAX/CEPNc9DA9Yr7aRDMgawyHf2d5r+1k1yLx7987
-	 1rKIDOFNe8ovR2tpZmZgOl5DAepc+6zalNS8qEFk=
+	b=DoKqIlOUSq7mjL2WIkJeuekm3QWdIwB9bWC1OU08zZeEEruQz3yz5ohUFujmmITD7
+	 VNf/DyKoZ1T3jidhe/u3dx3Vp+RGXdM0fDlCzls0vHsSafkwyhf8gqzFsg4hz2zkOe
+	 t9ejxKxNVXOoDNU8h5RvnT10mOi36LU/8YSq+hXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730687AbgABWeN (ORCPT
+        id S1730695AbgABWeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:34:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42340 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:34:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730676AbgABWeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:34:08 -0500
+        id S1730570AbgABWdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:33:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6716522525;
-        Thu,  2 Jan 2020 22:34:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 875D320866;
+        Thu,  2 Jan 2020 22:33:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004447;
-        bh=WuOTrhe1MT5gXBM21AyMAoDkO+ydPyhQwQulNz828aA=;
+        s=default; t=1578004395;
+        bh=XyKOjQslPdTHlWPxGpQ+P5WzATKnm4hOAEZiiYEXo9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oYO6DMnsrRZ17sYXYVydWbycEyPxQgQexROdr2PpMxW8RlaiOKbzoLP6AsI67Z7K/
-         unnMdYl4fRatVD8A4fBngamGjrOFnUfaoZ/hSEFE/7HxZ3K396uAQ4nqrhKqc0Zbho
-         W9HfbHJ5zX+Sa2SMF4v5f7iea6sDg5wzE5hQTJu8=
+        b=dZ9Q0/kKWjRwrI3JxSaBwrOXVr6guagX4sNRczXfqvlHZ77Tn4r/w0U5LZYDiEufy
+         NIBYrZX1dFWcPfOG5uzk+MsEb098DPMweiv9a351K1YectG5wWFicj4LcDfvOtRhRq
+         Kg/4YNvZoFdah9+1BkxAxqRx6fz/GYqJLQJm271U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 011/137] media: am437x-vpfe: Setting STD to current value is not an error
-Date:   Thu,  2 Jan 2020 23:06:24 +0100
-Message-Id: <20200102220548.272324246@linuxfoundation.org>
+Subject: [PATCH 4.9 153/171] net, sysctl: Fix compiler warning when only cBPF is present
+Date:   Thu,  2 Jan 2020 23:08:04 +0100
+Message-Id: <20200102220608.082896518@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
-References: <20200102220546.618583146@linuxfoundation.org>
+In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
+References: <20200102220546.960200039@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,38 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Alexander Lobakin <alobakin@dlink.ru>
 
-[ Upstream commit 13aa21cfe92ce9ebb51824029d89f19c33f81419 ]
+[ Upstream commit 1148f9adbe71415836a18a36c1b4ece999ab0973 ]
 
-VIDIOC_S_STD should not return an error if the value is identical
-to the current one.
-This error was highlighted by the v4l2-compliance test.
+proc_dointvec_minmax_bpf_restricted() has been firstly introduced
+in commit 2e4a30983b0f ("bpf: restrict access to core bpf sysctls")
+under CONFIG_HAVE_EBPF_JIT. Then, this ifdef has been removed in
+ede95a63b5e8 ("bpf: add bpf_jit_limit knob to restrict unpriv
+allocations"), because a new sysctl, bpf_jit_limit, made use of it.
+Finally, this parameter has become long instead of integer with
+fdadd04931c2 ("bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K")
+and thus, a new proc_dolongvec_minmax_bpf_restricted() has been
+added.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Acked-by: Lad Prabhakar <prabhakar.csengg@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+With this last change, we got back to that
+proc_dointvec_minmax_bpf_restricted() is used only under
+CONFIG_HAVE_EBPF_JIT, but the corresponding ifdef has not been
+brought back.
+
+So, in configurations like CONFIG_BPF_JIT=y && CONFIG_HAVE_EBPF_JIT=n
+since v4.20 we have:
+
+  CC      net/core/sysctl_net_core.o
+net/core/sysctl_net_core.c:292:1: warning: ‘proc_dointvec_minmax_bpf_restricted’ defined but not used [-Wunused-function]
+  292 | proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Suppress this by guarding it with CONFIG_HAVE_EBPF_JIT again.
+
+Fixes: fdadd04931c2 ("bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K")
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/20191218091821.7080-1-alobakin@dlink.ru
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/am437x/am437x-vpfe.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/core/sysctl_net_core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-index 572bc043b62d..36add3c463f7 100644
---- a/drivers/media/platform/am437x/am437x-vpfe.c
-+++ b/drivers/media/platform/am437x/am437x-vpfe.c
-@@ -1847,6 +1847,10 @@ static int vpfe_s_std(struct file *file, void *priv, v4l2_std_id std_id)
- 	if (!(sdinfo->inputs[0].capabilities & V4L2_IN_CAP_STD))
- 		return -ENODATA;
+diff --git a/net/core/sysctl_net_core.c b/net/core/sysctl_net_core.c
+index a6fc82704f0c..b4318c1b5b96 100644
+--- a/net/core/sysctl_net_core.c
++++ b/net/core/sysctl_net_core.c
+@@ -255,6 +255,7 @@ static int proc_dointvec_minmax_bpf_enable(struct ctl_table *table, int write,
+ 	return ret;
+ }
  
-+	/* if trying to set the same std then nothing to do */
-+	if (vpfe_standards[vpfe->std_index].std_id == std_id)
-+		return 0;
-+
- 	/* If streaming is started, return error */
- 	if (vb2_is_busy(&vpfe->buffer_queue)) {
- 		vpfe_err(vpfe, "%s device busy\n", __func__);
++# ifdef CONFIG_HAVE_EBPF_JIT
+ static int
+ proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
+ 				    void __user *buffer, size_t *lenp,
+@@ -265,6 +266,7 @@ proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
+ 
+ 	return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+ }
++# endif /* CONFIG_HAVE_EBPF_JIT */
+ 
+ static int
+ proc_dolongvec_minmax_bpf_restricted(struct ctl_table *table, int write,
 -- 
 2.20.1
 
