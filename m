@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E74C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC881C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDE721835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9672E20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004671;
-	bh=Ir3CjTrUBhOAZwRynVLwP0ISBra0900nmN41ULz1jV4=;
+	s=default; t=1578004673;
+	bh=7okkSXIfIf9KjaBim2ENH6q5FnVJlRWFF/g9iz6puYw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mWh3IZDUUUzQHSpZ4MpdIKTg/vFkahVwT46L4DG8Z+GVEaveyz1aMg1jzKTy5j9Et
-	 J7GA2h/yvMLTsLCotdLMxS0KAY+RIYMZSNlqcnfDerER9O7iuPk1CJQtcI46o2Nv8Q
-	 rz/5TW+PEW0eLIWBXfNyBWugUFetAXqcUtvuUwIQ=
+	b=EPuxJLuE5Olzjw4kgL07clvzDFQFRtydzon6ljyo8tI2E3dhcfrdVNFuio9Ax1fES
+	 jc9e1B+/HPipCl448/7qsLTSLSk1lpnyPRLKqM08CEu3WzjyB3quRkQSM/KZ4oJLoE
+	 jfgp6dLC+5weaOljktVHNDOdmbSewWB4KnJxAZug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731140AbgABWht (ORCPT
+        id S1731150AbgABWhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:37:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50660 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:37:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730608AbgABWhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:37:45 -0500
+        id S1731132AbgABWhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:37:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6576F20863;
-        Thu,  2 Jan 2020 22:37:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3DF721835;
+        Thu,  2 Jan 2020 22:37:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004664;
-        bh=Ir3CjTrUBhOAZwRynVLwP0ISBra0900nmN41ULz1jV4=;
+        s=default; t=1578004667;
+        bh=7okkSXIfIf9KjaBim2ENH6q5FnVJlRWFF/g9iz6puYw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YV6gAMyb5Q+6j69GFsFODJazN/i30HsmDhm5d2ogjMNLlytwRGbM3SEkC8S3Zru2o
-         WJiwQ/isv79umiWx2ANdI1NCModmyMumgO9pzGSDCey2sm5RdlVW0f1Y7/x7yoVhU6
-         FY3z/wTsg576UKJrIDCZSHH3Na4jc+vVh5HbxKdw=
+        b=wAeYzDJvT0hIFQVReBzuYzabSZP6eJVJL0HX97Qgmv2psxXhsVxEtbLpohLAI7A1K
+         K1B9s1DYjYmIGbGhT29D0T24GsiogNoLnRpSKsPlVzEtf2qk0O4cWTkD2aOfTyOj5P
+         p+9Ar5x/Q1q0wZ/uMsWD4rvsil3AZ+mLpHidVykA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
-        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 101/137] jbd2: Fix statistics for the number of logged blocks
-Date:   Thu,  2 Jan 2020 23:07:54 +0100
-Message-Id: <20200102220600.619788678@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Hannes Reinecke <hare@suse.com>,
+        Douglas Gilbert <dgilbert@interlog.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 102/137] scsi: tracing: Fix handling of TRANSFER LENGTH == 0 for READ(6) and WRITE(6)
+Date:   Thu,  2 Jan 2020 23:07:55 +0100
+Message-Id: <20200102220600.735565732@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -59,59 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 015c6033068208d6227612c878877919f3fcf6b6 ]
+[ Upstream commit f6b8540f40201bff91062dd64db8e29e4ddaaa9d ]
 
-jbd2 statistics counting number of blocks logged in a transaction was
-wrong. It didn't count the commit block and more importantly it didn't
-count revoke descriptor blocks. Make sure these get properly counted.
+According to SBC-2 a TRANSFER LENGTH field of zero means that 256 logical
+blocks must be transferred. Make the SCSI tracing code follow SBC-2.
 
-Reviewed-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191105164437.32602-13-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: bf8162354233 ("[SCSI] add scsi trace core functions and put trace points")
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Douglas Gilbert <dgilbert@interlog.com>
+Link: https://lore.kernel.org/r/20191105215553.185018-1-bvanassche@acm.org
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/commit.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/scsi/scsi_trace.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index 2d964ce45606..ebbd7d054cab 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -740,7 +740,6 @@ start_journal_io:
- 				submit_bh(WRITE_SYNC, bh);
- 			}
- 			cond_resched();
--			stats.run.rs_blocks_logged += bufs;
+diff --git a/drivers/scsi/scsi_trace.c b/drivers/scsi/scsi_trace.c
+index 08bb47b53bc3..551fd0329bca 100644
+--- a/drivers/scsi/scsi_trace.c
++++ b/drivers/scsi/scsi_trace.c
+@@ -29,15 +29,18 @@ static const char *
+ scsi_trace_rw6(struct trace_seq *p, unsigned char *cdb, int len)
+ {
+ 	const char *ret = trace_seq_buffer_ptr(p);
+-	sector_t lba = 0, txlen = 0;
++	u32 lba = 0, txlen;
  
- 			/* Force a new descriptor to be generated next
-                            time round the loop. */
-@@ -827,6 +826,7 @@ start_journal_io:
- 		if (unlikely(!buffer_uptodate(bh)))
- 			err = -EIO;
- 		jbd2_unfile_log_bh(bh);
-+		stats.run.rs_blocks_logged++;
+ 	lba |= ((cdb[1] & 0x1F) << 16);
+ 	lba |=  (cdb[2] << 8);
+ 	lba |=   cdb[3];
+-	txlen = cdb[4];
++	/*
++	 * From SBC-2: a TRANSFER LENGTH field set to zero specifies that 256
++	 * logical blocks shall be read (READ(6)) or written (WRITE(6)).
++	 */
++	txlen = cdb[4] ? cdb[4] : 256;
  
- 		/*
- 		 * The list contains temporary buffer heads created by
-@@ -872,6 +872,7 @@ start_journal_io:
- 		BUFFER_TRACE(bh, "ph5: control buffer writeout done: unfile");
- 		clear_buffer_jwrite(bh);
- 		jbd2_unfile_log_bh(bh);
-+		stats.run.rs_blocks_logged++;
- 		__brelse(bh);		/* One for getblk */
- 		/* AKPM: bforget here */
- 	}
-@@ -893,6 +894,7 @@ start_journal_io:
- 	}
- 	if (cbh)
- 		err = journal_wait_on_commit_record(journal, cbh);
-+	stats.run.rs_blocks_logged++;
- 	if (jbd2_has_feature_async_commit(journal) &&
- 	    journal->j_flags & JBD2_BARRIER) {
- 		blkdev_issue_flush(journal->j_dev, GFP_NOFS, NULL);
+-	trace_seq_printf(p, "lba=%llu txlen=%llu",
+-			 (unsigned long long)lba, (unsigned long long)txlen);
++	trace_seq_printf(p, "lba=%u txlen=%u", lba, txlen);
+ 	trace_seq_putc(p, 0);
+ 
+ 	return ret;
 -- 
 2.20.1
 
