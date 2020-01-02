@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AEFC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C8EC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA65227BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73B5422314
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:17:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003443;
-	bh=vGEiSPzPvuEHzZI+F9IqVYZ3YL+4aIjczUHdbVUGx8g=;
+	s=default; t=1578003447;
+	bh=Ac/b8JjHYpaB7AAxoLz8MCMO6ze4YNLhZJNc5ivWTcs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vRU69uoe57mr7+XjCqdMGzXxnGOJvcq1p93sI+t6hV2TKLJJLP2x62TgEpuMVdFQ2
-	 GVM+nXh9Jci6eXlsDbF/6UGaYFF7VRRu9eXqjTQsQNR/jCbBao7FhmWQBN+1DxXPOB
-	 3wM9e9fZ8LQpQPK8lLAOsuGqjBFTNqcw9y7RDrVo=
+	b=AL1vJhJ2whGNwgJJFWR5m/k+8/1fY4G9RnXVgm8CQTz2fB7GsuDrnxR5ToryieXcP
+	 RSvrP3IgsFWK7SNlZDw6fU7Zp7CftW7OLy/a/CDlo02Kwx3CZF4TK5AF2qf/ejKoiE
+	 EgVg8q98SyucspyHd8vUQ1M+Sg5tfGWdeVrcM/Yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbgABWRW (ORCPT
+        id S1727386AbgABWR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:17:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59700 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:17:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726781AbgABWRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:17:18 -0500
+        id S1726781AbgABWRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:17:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CBCF227BF;
-        Thu,  2 Jan 2020 22:17:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 226A821582;
+        Thu,  2 Jan 2020 22:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003437;
-        bh=vGEiSPzPvuEHzZI+F9IqVYZ3YL+4aIjczUHdbVUGx8g=;
+        s=default; t=1578003442;
+        bh=Ac/b8JjHYpaB7AAxoLz8MCMO6ze4YNLhZJNc5ivWTcs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gsxLaqif0RXDmT0zzCDGZbaLch1dkaPMDkrwAfZpcmpiuAcMznMoRlxhbnVltqDda
-         ALIRhQ9d7fM23GEKl5ltZtm6LI9CWESOl56aEaYUbwmfSbdIGmyxJyKd/MLBm3nrdQ
-         pYEB9dzQ5/o9g3CqrnA58CG4c8UNJP1a6o+YQjvc=
+        b=088qDKWLk5KuTJbufA4Qd+G6ePzhW0ivLM8tar4esGSqIOKKrt7+sakUEkIsngbp/
+         MmECyDgcH/JEk/9XKU2ziGPqOOJwV++YePXunYuuTToqgEAHIxVuJO/xh9JQTlQnK9
+         VWmYv1mWNd1WzzHDp00s/RKYo3PHJzZVbbPfFPE8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        syzbot <syzbot+0341f6a4d729d4e0acf1@syzkaller.appspotmail.com>,
-        James Morris <jmorris@namei.org>
-Subject: [PATCH 5.4 143/191] tomoyo: Dont use nifty names on sockets.
-Date:   Thu,  2 Jan 2020 23:07:05 +0100
-Message-Id: <20200102215844.863867281@linuxfoundation.org>
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 162/191] bnxt_en: Remove unnecessary NULL checks for fw_health
+Date:   Thu,  2 Jan 2020 23:07:24 +0100
+Message-Id: <20200102215846.738549087@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,80 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-commit 6f7c41374b62fd80bbd8aae3536c43688c54d95e upstream.
+[ Upstream commit 0797c10d2d1fa0d6f14612404781b348fc757c3e ]
 
-syzbot is reporting that use of SOCKET_I()->sk from open() can result in
-use after free problem [1], for socket's inode is still reachable via
-/proc/pid/fd/n despite destruction of SOCKET_I()->sk already completed.
+After fixing the allocation of bp->fw_health in the previous patch,
+the driver will not go through the fw reset and recovery code paths
+if bp->fw_health allocation fails.  So we can now remove the
+unnecessary NULL checks.
 
-At first I thought that this race condition applies to only open/getattr
-permission checks. But James Morris has pointed out that there are more
-permission checks where this race condition applies to. Thus, get rid of
-tomoyo_get_socket_name() instead of conditionally bypassing permission
-checks on sockets. As a side effect of this patch,
-"socket:[family=\$:type=\$:protocol=\$]" in the policy files has to be
-rewritten to "socket:[\$]".
-
-[1] https://syzkaller.appspot.com/bug?id=73d590010454403d55164cca23bd0565b1eb3b74
-
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Reported-by: syzbot <syzbot+0341f6a4d729d4e0acf1@syzkaller.appspotmail.com>
-Reported-by: James Morris <jmorris@namei.org>
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- security/tomoyo/realpath.c |   32 +-------------------------------
- 1 file changed, 1 insertion(+), 31 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c         |    6 ++----
+ drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c |    6 +-----
+ 2 files changed, 3 insertions(+), 9 deletions(-)
 
---- a/security/tomoyo/realpath.c
-+++ b/security/tomoyo/realpath.c
-@@ -218,31 +218,6 @@ out:
- }
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -9953,8 +9953,7 @@ static void bnxt_fw_health_check(struct
+ 	struct bnxt_fw_health *fw_health = bp->fw_health;
+ 	u32 val;
  
- /**
-- * tomoyo_get_socket_name - Get the name of a socket.
-- *
-- * @path:   Pointer to "struct path".
-- * @buffer: Pointer to buffer to return value in.
-- * @buflen: Sizeof @buffer.
-- *
-- * Returns the buffer.
-- */
--static char *tomoyo_get_socket_name(const struct path *path, char * const buffer,
--				    const int buflen)
--{
--	struct inode *inode = d_backing_inode(path->dentry);
--	struct socket *sock = inode ? SOCKET_I(inode) : NULL;
--	struct sock *sk = sock ? sock->sk : NULL;
+-	if (!fw_health || !fw_health->enabled ||
+-	    test_bit(BNXT_STATE_IN_FW_RESET, &bp->state))
++	if (!fw_health->enabled || test_bit(BNXT_STATE_IN_FW_RESET, &bp->state))
+ 		return;
+ 
+ 	if (fw_health->tmr_counter) {
+@@ -10697,8 +10696,7 @@ static void bnxt_fw_reset_task(struct wo
+ 		bnxt_queue_fw_reset_work(bp, bp->fw_reset_min_dsecs * HZ / 10);
+ 		return;
+ 	case BNXT_FW_RESET_STATE_ENABLE_DEV:
+-		if (test_bit(BNXT_STATE_FW_FATAL_COND, &bp->state) &&
+-		    bp->fw_health) {
++		if (test_bit(BNXT_STATE_FW_FATAL_COND, &bp->state)) {
+ 			u32 val;
+ 
+ 			val = bnxt_fw_health_readl(bp,
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
+@@ -19,11 +19,10 @@ static int bnxt_fw_reporter_diagnose(str
+ 				     struct devlink_fmsg *fmsg)
+ {
+ 	struct bnxt *bp = devlink_health_reporter_priv(reporter);
+-	struct bnxt_fw_health *health = bp->fw_health;
+ 	u32 val, health_status;
+ 	int rc;
+ 
+-	if (!health || test_bit(BNXT_STATE_IN_FW_RESET, &bp->state))
++	if (test_bit(BNXT_STATE_IN_FW_RESET, &bp->state))
+ 		return 0;
+ 
+ 	val = bnxt_fw_health_readl(bp, BNXT_FW_HEALTH_REG);
+@@ -162,9 +161,6 @@ void bnxt_devlink_health_report(struct b
+ 	struct bnxt_fw_health *fw_health = bp->fw_health;
+ 	struct bnxt_fw_reporter_ctx fw_reporter_ctx;
+ 
+-	if (!fw_health)
+-		return;
 -
--	if (sk) {
--		snprintf(buffer, buflen, "socket:[family=%u:type=%u:protocol=%u]",
--			 sk->sk_family, sk->sk_type, sk->sk_protocol);
--	} else {
--		snprintf(buffer, buflen, "socket:[unknown]");
--	}
--	return buffer;
--}
--
--/**
-  * tomoyo_realpath_from_path - Returns realpath(3) of the given pathname but ignores chroot'ed root.
-  *
-  * @path: Pointer to "struct path".
-@@ -279,12 +254,7 @@ char *tomoyo_realpath_from_path(const st
- 			break;
- 		/* To make sure that pos is '\0' terminated. */
- 		buf[buf_len - 1] = '\0';
--		/* Get better name for socket. */
--		if (sb->s_magic == SOCKFS_MAGIC) {
--			pos = tomoyo_get_socket_name(path, buf, buf_len - 1);
--			goto encode;
--		}
--		/* For "pipe:[\$]". */
-+		/* For "pipe:[\$]" and "socket:[\$]". */
- 		if (dentry->d_op && dentry->d_op->d_dname) {
- 			pos = dentry->d_op->d_dname(dentry, buf, buf_len - 1);
- 			goto encode;
+ 	fw_reporter_ctx.sp_event = event;
+ 	switch (event) {
+ 	case BNXT_FW_RESET_NOTIFY_SP_EVENT:
 
 
