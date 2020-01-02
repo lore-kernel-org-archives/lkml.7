@@ -2,163 +2,127 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 738A0C32764
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 02:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5A7C2D0DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 02:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A1FC21734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 02:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 838AC21734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 02:16:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="XwQN52HF"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="OdMZxjqe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbgABCGC (ORCPT
+        id S1727545AbgABCQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 21:06:02 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42529 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727569AbgABCGC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 21:06:02 -0500
-Received: by mail-io1-f66.google.com with SMTP id n11so30320554iom.9
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 18:06:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UHVPj5/UF7FmXw5E/6Coz8EOtDK8UfYd1n1yDId2PbU=;
-        b=XwQN52HFHiN4fB5kwYTv9zn1C76bI0Iz71wHNgvVewPn60QLGI/53rhJcn0f8qP7wG
-         sYdC1zIp6TQZ1YvNlqMDGXJ9S/iB8GP3sVWi03ibUV1M0gGPnF9lkzJYdq5Sihm1aCxD
-         JQsB5mHL8hEMMmYlnX96DExdAaIOIfSU1FKTs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UHVPj5/UF7FmXw5E/6Coz8EOtDK8UfYd1n1yDId2PbU=;
-        b=n3fanbWdA4Xs3oTxBeFtJp6wcBpe31HsUgmW3gBUkkdN9ovC3Ku/X7zUdIEzznAy4p
-         62lAJYZteswIRu6XR+/c3I+hzRrqIkX4IPqpGl/4c8g7jfb5WBA9j54yO43gFFPMlKSP
-         1uRGg9R3WNH+r35zym0V8iFNLWyF0GsSf46b+QaKKDv+EeGVE9nBWpMuLbQb0DlbNKE1
-         GhnyWR67qVwoJk9Vx7IVIBKzCALFNJVMUlw8KyoMn97Dzvp9joBLpm30GNiAmtSdcrqQ
-         A/1j7VTrKfcAAEHksRenN2IKiSN1O4sssL5UbUIiXfGqGnIuXwxh1NUi/9t44n3lijGH
-         giTg==
-X-Gm-Message-State: APjAAAWni/FlJ9SDC+/42JJmHFbCTw9LgoN4Wd/vOX6LPQxeXpf1Jogh
-        IgTL3PjNgMOiDc+joaQ+DtvnUWsYmrKuTdZvDwhTrg==
-X-Google-Smtp-Source: APXvYqwGWLjQw3gcajosmfzURd5ps+qyn12aquFWSg8sHauYhmdDjIpsc9fULZuWJKPuLIwEScJP+9CPNw9R1+t3PaY=
-X-Received: by 2002:a05:6638:72c:: with SMTP id j12mr64525970jad.136.1577930761321;
- Wed, 01 Jan 2020 18:06:01 -0800 (PST)
+        Wed, 1 Jan 2020 21:16:50 -0500
+Received: from mail-eopbgr30042.outbound.protection.outlook.com ([40.107.3.42]:42886
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727511AbgABCQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jan 2020 21:16:50 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IPlhPZcK8DkH8GbT/iFP1Vx1jfVEo4aP6HJLzs5DDWYZ2viwWJaoFTRIJ+90zkONKLiLYhLkqlkz6k8N5rb5odQaBz8an0gu5DA1nWYzXmOrs8/QB46K65KpBSf6ZgFAXVzk7q8xCJHAPhbKmVMzEQXZGI/xycMKfFCHe7wBPVNRL4342LTjudZP5S+dmCEx3AalROylPU7V+mqcWT5v13GGpRTD/adx/EovDnjNNKilH5mnB0djbpEUpMiUXdrU/V+8XMN9snjCwMRZFBmHmlnFodX7XjKKERI6Vum5hlux3myIIqCPlDLcqvCEooN8FCHYj7Y4F4crCArXS6MD5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B9LJ1ONiRUjizdKb4XSzL7fqWm10GzotmXyVmJIhHGo=;
+ b=oQLDJ4p/gMRwwECHcgjdRL5kABEgWMSZBt+9Nz607I52g9OXkN/9MYa16o9OaHXpnwz4vNoCVn6bsFIl98iaCEnHv5txuyuK0TRDn0qjFs5qFT34TqZVqhwIIKQZ+pww5uNxV0W4EGbQJLW3fHbSLMOfqDKbNlnnkUNjv3qVQcBaWPvpMlIif2s4Q5V98njThgCvESasj2kJDzNygLMZkQCKt9BuoYwwqrON6CBGhBmsB/qeUq1nMZMqr/KKaP2KsU8XYEzWBKptQULU4X5iFQ9ZODf6lK7CsG/YK7WAkvuGq/AuPbHKTBgG20RpzEPPcao3dAEVKJkO/aeGeJgOdw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B9LJ1ONiRUjizdKb4XSzL7fqWm10GzotmXyVmJIhHGo=;
+ b=OdMZxjqe8h7xzMN+MpzHRMJLst2LbSJyTZKgaxmFGZkZDTrSQWMfjlSfLHqGW0aFrhinM/usuokcbkn7fNx6V5J/Mr4CEM37EpTi3UP0g4zOOiOrdnRQtoO5clvxJUGG8nola4zPa5uChONZrcFBLcgY00YiPgUp5LdDVQ3oKgs=
+Received: from VE1PR04MB6496.eurprd04.prod.outlook.com (20.179.232.221) by
+ VE1PR04MB6590.eurprd04.prod.outlook.com (20.179.234.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2581.11; Thu, 2 Jan 2020 02:16:43 +0000
+Received: from VE1PR04MB6496.eurprd04.prod.outlook.com
+ ([fe80::b870:829f:748a:4bc]) by VE1PR04MB6496.eurprd04.prod.outlook.com
+ ([fe80::b870:829f:748a:4bc%3]) with mapi id 15.20.2581.013; Thu, 2 Jan 2020
+ 02:16:42 +0000
+From:   Po Liu <po.liu@nxp.com>
+To:     David Miller <davem@davemloft.net>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>,
+        "ivan.khoronzhuk@linaro.org" <ivan.khoronzhuk@linaro.org>
+Subject: RE: [EXT] Re: [v2,net-next] enetc: add support time specific
+ departure base on the qos etf
+Thread-Topic: [EXT] Re: [v2,net-next] enetc: add support time specific
+ departure base on the qos etf
+Thread-Index: AQHVvGNyrgSmwD+0RU+o/s0aZaT5DqfTrEYAgAMAKwA=
+Date:   Thu, 2 Jan 2020 02:16:42 +0000
+Message-ID: <VE1PR04MB6496E2419F471AF65339E7C892200@VE1PR04MB6496.eurprd04.prod.outlook.com>
+References: <20191223032618.18205-1-Po.Liu@nxp.com>
+        <20191227025547.4452-1-Po.Liu@nxp.com>
+ <20191230.202652.128958107020164612.davem@davemloft.net>
+In-Reply-To: <20191230.202652.128958107020164612.davem@davemloft.net>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is ) smtp.mailfrom=po.liu@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 95855fbc-5e69-48ba-d162-08d78f29cf3d
+x-ms-traffictypediagnostic: VE1PR04MB6590:|VE1PR04MB6590:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB6590DFCF532F896E3A0A0A1592200@VE1PR04MB6590.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2958;
+x-forefront-prvs: 0270ED2845
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(136003)(39850400004)(396003)(346002)(13464003)(199004)(189003)(66556008)(66476007)(66446008)(44832011)(66946007)(53546011)(4744005)(52536014)(316002)(7696005)(2906002)(76116006)(71200400001)(64756008)(33656002)(54906003)(4326008)(9686003)(81156014)(6506007)(186003)(55016002)(5660300002)(26005)(8936002)(8676002)(6916009)(478600001)(86362001)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6590;H:VE1PR04MB6496.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: EETZOtWcuBFEt5OpQw3qDdp3vOP/TkIrziL0U7tb6Gepl7RfCUXAvR7nr//7dUD4qm227NdRpfxX+LS2MCdg8MUsqerVAC1dmWI7MxOauQq011ZYAR03LpdgJTLpkMzTZGz7EsvL2kZNh3y1f3AxfpRot5by/O7TmRzFfGakXwdmonPCFybkvjTcNusSZP1HPLs+UEeGj0g9Yn3/bB35m319EGt+25bGmhQUML9BjLx6BF4th8bYLxIIv44SA+fbPHUk+0gnGS++yE25m5N4fa0h6HOBMGTcCw+Qo+LgUsdFWTkqU9XX1D80io3e3qSqBxPI6Q65uv3LX8asOt4tiIdsGhE6uhtnJa2P5OwcYswYxmLXVVNNd49o+MKzpnUeZQGwT4Cg+rlZ5eGVR5SKlHq9P1YIr+H45oDCm1qVW1wKDCEiPqLh8rAHQoKCxcHRr5Hc9xGXPG/nDdnIBAtzAQ9zhR9+bo2ebThmMBtAWbs7KBkP2iGOAwPy4s90/XPs
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191217102930.26102-1-mtwget@gmail.com>
-In-Reply-To: <20191217102930.26102-1-mtwget@gmail.com>
-From:   Matt Ranostay <matt.ranostay@konsulko.com>
-Date:   Thu, 2 Jan 2020 10:05:49 +0800
-Message-ID: <CAJCx=gnyF69PxHVh38nP1AYwi=Tt4J9bYYR-w00uGODUfCrKyg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: iio: chemical: Add bindings for
- Dynament Premier series single gas sensor
-To:     YuDong Zhang <mtwget@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 95855fbc-5e69-48ba-d162-08d78f29cf3d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jan 2020 02:16:42.8031
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qF3NqKmCrHOF4SnGusa4Ugrhexrqic0OA5l+sE6CGAlTvIHx4uYWx5gu3Z2MUgKr
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6590
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 6:29 PM YuDong Zhang <mtwget@gmail.com> wrote:
->
-> Dynament Premier series single gas sensor.
->
-> Signed-off-by: YuDong Zhang <mtwget@gmail.com>
-> ---
->  .../iio/chemical/dynament,premier.yaml        | 39 +++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
->  MAINTAINERS                                   |  1 +
->  3 files changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
->
-> diff --git a/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml b/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
-> new file mode 100644
-> index 000000000000..e2bbae4dd086
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
-> @@ -0,0 +1,39 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/chemical/dynament,premier.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Dynament Premier series single gas sensor
-> +
-> +maintainers:
-> +  - YuDong Zhang <mtwget@gmail.com>
-> +
-> +description: |
-> +  single gas sensor capable of measuring gas concentration of dust
-> +  particles, multi-gas sensor are not supported.
-> +
-> +  Specifications about the sensor can be found at:
-> +    https://www.dynament.com/_webedit/uploaded-files/All%20Files/SIL%20Data/tds0045_1.44.pdf, read chapter 1.5.2 Read live data simple
-
-Typo of sample?
-
-- Matt
-
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - dynament,premier
-> +
-> +  vcc-supply:
-> +    description: regulator that provides power to the sensor
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |
-> +    serial {
-> +      single-gas-sensor {
-> +        compatible = "dynament,premier";
-> +        vcc-supply = <&reg_vcc5v0>;
-> +      };
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index 6046f4555852..5afca0586c41 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -261,6 +261,8 @@ patternProperties:
->      description: Dragino Technology Co., Limited
->    "^dserve,.*":
->      description: dServe Technology B.V.
-> +  "^dynament,.*":
-> +    description: Dynament, Ltd.
->    "^ea,.*":
->      description: Embedded Artists AB
->    "^ebs-systart,.*":
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ae228ac7adc9..4842a0afe32b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5796,6 +5796,7 @@ DYNAMENT PREMIER SERIES SINGLE GAS SENSOR DRIVER
->  M:     YuDong Zhang <mtwget@gmail.com>
->  S:     Maintained
->  F:     drivers/iio/chemical/premier.c
-> +F:     Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
->
->  DYNAMIC DEBUG
->  M:     Jason Baron <jbaron@akamai.com>
-> --
-> 2.24.1
->
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IERhdmlkIE1pbGxlciA8ZGF2
+ZW1AZGF2ZW1sb2Z0Lm5ldD4NCj4gU2VudDogMjAxOcTqMTLUwjMxyNUgMTI6MjcNCj4gVG86IFBv
+IExpdSA8cG8ubGl1QG54cC5jb20+DQo+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3Jn
+OyBuZXRkZXZAdmdlci5rZXJuZWwub3JnOw0KPiB2aW5pY2l1cy5nb21lc0BpbnRlbC5jb207IENs
+YXVkaXUgTWFub2lsIDxjbGF1ZGl1Lm1hbm9pbEBueHAuY29tPjsNCj4gVmxhZGltaXIgT2x0ZWFu
+IDx2bGFkaW1pci5vbHRlYW5AbnhwLmNvbT47IEFsZXhhbmRydSBNYXJnaW5lYW4NCj4gPGFsZXhh
+bmRydS5tYXJnaW5lYW5AbnhwLmNvbT47IFhpYW9saWFuZyBZYW5nDQo+IDx4aWFvbGlhbmcueWFu
+Z18xQG54cC5jb20+OyBSb3kgWmFuZyA8cm95LnphbmdAbnhwLmNvbT47IE1pbmdrYWkgSHUNCj4g
+PG1pbmdrYWkuaHVAbnhwLmNvbT47IEplcnJ5IEh1YW5nIDxqZXJyeS5odWFuZ0BueHAuY29tPjsg
+TGVvIExpDQo+IDxsZW95YW5nLmxpQG54cC5jb20+OyBpdmFuLmtob3JvbnpodWtAbGluYXJvLm9y
+Zw0KPiBTdWJqZWN0OiBbRVhUXSBSZTogW3YyLG5ldC1uZXh0XSBlbmV0YzogYWRkIHN1cHBvcnQg
+dGltZSBzcGVjaWZpYyBkZXBhcnR1cmUgYmFzZQ0KPiBvbiB0aGUgcW9zIGV0Zg0KPiANCj4gQ2F1
+dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBGcm9tOiBQbyBMaXUgPHBvLmxpdUBueHAuY29tPg0KPiBE
+YXRlOiBGcmksIDI3IERlYyAyMDE5IDAzOjEyOjE4ICswMDAwDQo+IA0KPiA+IHYyOg0KPiA+IC0g
+Zml4IHRoZSBjc3VtIGFuZCB0aW1lIHNwZWNpZmljIGRlYXBydHVyZSByZXR1cm4gZGlyZWN0bHkg
+aWYgYm90aA0KPiA+IG9mZmxvYWRpbmcgZW5hYmxlZA0KPiANCj4gVGhlIHRlc3QgaXMgaW4gdGhl
+IHdyb25nIGxvY2F0aW9uLg0KPiANCj4gWW91IGFyZSB0ZXN0aW5nIGF0IHJ1biB0aW1lIHdoZW4g
+cGFja2V0cyBhcmUgYmVpbmcgdHJhbnNtaXR0ZWQuDQo+IA0KPiBJbnN0ZWFkLCB5b3Ugc2hvdWxk
+IHRlc3Qgd2hlbiB0aGUgY29uZmlndXJhdGlvbiBjaGFuZ2UgaXMgbWFkZSB3aGljaCBjcmVhdGVz
+DQo+IHRoZSBjb25mbGljdCwgYW5kIGRpc2FsbG93IHRoZSBjb25maWd1cmF0aW9uIGNoYW5nZSBp
+biBzdWNoIGEgY29uZmxpY3RpbmcgY2FzZS4NCg0KT2ssIHRoYW5rcyENCg0KQnIsDQpQbyBMaXUN
+Cg==
