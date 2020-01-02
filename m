@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21ECCC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE58C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB24D222C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DBAA20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004136;
-	bh=jZM6XJMeqo7saqhRTRc4VmRtoNuUJQ9hBG+NCriRYSo=;
+	s=default; t=1578004140;
+	bh=xEdV99HL74weC2dkvE+jyR15ksbp5q1+EmHzSBKLNFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fRjObId8fA1eTVmeSLC+cshhAmZO4xKx+wmi2v+wJJ83eU7JODliT83utP0cmJuEx
-	 XlMKj34mLNulzO0a85XpUKixWke5xRtbDTqygQO9oorwWESwueHRgEB/g68vqpJ6yO
-	 +nozSxOeTvHcaYicYZ6c1rUTeKMChUtr7+Zifgxw=
+	b=atu9bRvEDf8qBOJnwVrcQulErXnAYctxF4GAsSjjXU4hS5MKmiqMe81NB8vX3phQ1
+	 qswPM7pm7l5DF7HBdC0vr9irafGxm1GClP6Tl/v2pBPHP6jqp1gt6hyVzx/LvO+7Uj
+	 mLTVzuRtyRRN4SmsoOjYe6aaABWLyuT1zJHlsA04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729969AbgABW2y (ORCPT
+        id S1729802AbgABW27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:28:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59204 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:28:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729534AbgABW2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:28:51 -0500
+        id S1729967AbgABW2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:28:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A33D420866;
-        Thu,  2 Jan 2020 22:28:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A6F220863;
+        Thu,  2 Jan 2020 22:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004131;
-        bh=jZM6XJMeqo7saqhRTRc4VmRtoNuUJQ9hBG+NCriRYSo=;
+        s=default; t=1578004133;
+        bh=xEdV99HL74weC2dkvE+jyR15ksbp5q1+EmHzSBKLNFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c5annuJ5M5g6MKwS1ZS4UPAoFpYQ5hcjDVEONhy3+sAerDpFjICUkN9McI6ER0IPF
-         MmBHdwMYI2hOwtnSZU3R2ICw1hcAkaC6ku2G/dAbmNEMWDUbKuGE96zzwcEypIRrrI
-         W3rpoxUFSAvBZ/TB+d+D/Lpj4sZaAv23ufYcWLvY=
+        b=0mSrxl7g+WGGa5WT9eaMlpEAngI+ke1aIWTR/+MbqCiOiYlfo9HcjA0+4FoZK3LK2
+         b97S6rUSn9BNW2dN0satC97sH67/qexleobNs3jNAYXvOddSPdotEyJOK9XWXq+twh
+         ftx2CtHq27d6/fP2s/U1AR0ExzJsK72K7MtR0Kzc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 051/171] perf probe: Fix to list probe event with correct line number
-Date:   Thu,  2 Jan 2020 23:06:22 +0100
-Message-Id: <20200102220554.031050526@linuxfoundation.org>
+Subject: [PATCH 4.9 052/171] perf probe: Walk function lines in lexical blocks
+Date:   Thu,  2 Jan 2020 23:06:23 +0100
+Message-Id: <20200102220554.213918573@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -64,74 +64,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 3895534dd78f0fd4d3f9e05ee52b9cdd444a743e ]
+[ Upstream commit acb6a7047ac2146b723fef69ee1ab6b7143546bf ]
 
-Since debuginfo__find_probe_point() uses dwarf_entrypc() for finding the
-entry address of the function on which a probe is, it will fail when the
-function DIE has only ranges attribute.
+Since some inlined functions are in lexical blocks of given function, we
+have to recursively walk through the DIE tree.  Without this fix,
+perf-probe -L can miss the inlined functions which is in a lexical block
+(like if (..) { func() } case.)
 
-To fix this issue, use die_entrypc() instead of dwarf_entrypc().
+However, even though, to walk the lines in a given function, we don't
+need to follow the children DIE of inlined functions because those do
+not have any lines in the specified function.
 
-Without this fix, perf probe -l shows incorrect offset:
+We need to walk though whole trees only if we walk all lines in a given
+file, because an inlined function can include another inlined function
+in the same file.
 
-  # perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask+18446744071579263632@work/linux/linux/kernel/cpu.c)
-    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask+18446744071579263752@work/linux/linux/kernel/cpu.c)
-
-With this:
-
-  # perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@work/linux/linux/kernel/cpu.c)
-    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:21@work/linux/linux/kernel/cpu.c)
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask+18446744071579765152@kernel/cpu.c)
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
-  [root@quaco ~]#
-
-Fixes: 1d46ea2a6a40 ("perf probe: Fix listing incorrect line number with inline function")
+Fixes: b0e9cb2802d4 ("perf probe: Fix to search nested inlined functions in CU")
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199321227.8075.14655572419136993015.stgit@devnote2
+Link: http://lore.kernel.org/lkml/157190836514.1859.15996864849678136353.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-finder.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/dwarf-aux.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 0d9d6e0803b8..248d3ff7e345 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -1567,7 +1567,7 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, unsigned long addr,
- 		/* Get function entry information */
- 		func = basefunc = dwarf_diename(&spdie);
- 		if (!func ||
--		    dwarf_entrypc(&spdie, &baseaddr) != 0 ||
-+		    die_entrypc(&spdie, &baseaddr) != 0 ||
- 		    dwarf_decl_line(&spdie, &baseline) != 0) {
- 			lineno = 0;
- 			goto post;
-@@ -1584,7 +1584,7 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, unsigned long addr,
- 		while (die_find_top_inlinefunc(&spdie, (Dwarf_Addr)addr,
- 						&indie)) {
- 			/* There is an inline function */
--			if (dwarf_entrypc(&indie, &_addr) == 0 &&
-+			if (die_entrypc(&indie, &_addr) == 0 &&
- 			    _addr == addr) {
- 				/*
- 				 * addr is at an inline function entry.
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 3d0a9e09d00a..7e7e57208323 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -688,10 +688,9 @@ static int __die_walk_funclines_cb(Dwarf_Die *in_die, void *data)
+ 			if (lw->retval != 0)
+ 				return DIE_FIND_CB_END;
+ 		}
++		if (!lw->recursive)
++			return DIE_FIND_CB_SIBLING;
+ 	}
+-	if (!lw->recursive)
+-		/* Don't need to search recursively */
+-		return DIE_FIND_CB_SIBLING;
+ 
+ 	if (addr) {
+ 		fname = dwarf_decl_file(in_die);
+@@ -738,6 +737,10 @@ static int __die_walk_culines_cb(Dwarf_Die *sp_die, void *data)
+ {
+ 	struct __line_walk_param *lw = data;
+ 
++	/*
++	 * Since inlined function can include another inlined function in
++	 * the same file, we need to walk in it recursively.
++	 */
+ 	lw->retval = __die_walk_funclines(sp_die, true, lw->callback, lw->data);
+ 	if (lw->retval != 0)
+ 		return DWARF_CB_ABORT;
+@@ -827,8 +830,9 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
+ 	 */
+ 	if (rt_die != cu_die)
+ 		/*
+-		 * Don't need walk functions recursively, because nested
+-		 * inlined functions don't have lines of the specified DIE.
++		 * Don't need walk inlined functions recursively, because
++		 * inner inlined functions don't have the lines of the
++		 * specified function.
+ 		 */
+ 		ret = __die_walk_funclines(rt_die, false, callback, data);
+ 	else {
 -- 
 2.20.1
 
