@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89586C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7875C3276E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB3422525
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B2E421835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004098;
-	bh=Mn1stkTUadTf5t6OBvjLLCSukrrImTF7x1U8LI0v+4A=;
+	s=default; t=1578004102;
+	bh=mL1vVokoRK2OusLF3dXIGjDuok9LNKwcG8cxTvnCtDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m9DUXw4kLXnYKAYp+Npq54vGyc/jbt78cvCx1jpKI2trBZRV7T36KK0NV77nnqGQX
-	 Pr+xbXXi7FdqJTLXPSRJ1H3IwRlJEjNaBzpsRUp2EIrLZjMIrXt5NjtM7il7MWmldD
-	 k86MF+8hVtJ//vI5eeaf53vrLyIEqbHTBPF0qmys=
+	b=hXBQ8ALEO/mPvmwfw/KLXOYBVQguV99DtPGD3NoQ7WARhidL/bEvVaqiP9rPrz8zx
+	 m8nvVuKgAoywrx2bL8XoY1cV7jn1FoyB47hW5JVRJPIxsSvavr+cHAldzX8Sg7Nfar
+	 CWK0iWFSBjGK6xZE64u3ohW/6V7Gbzv3DjhWSpxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbgABW2R (ORCPT
+        id S1729930AbgABW2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:28:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57426 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:28:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729695AbgABW2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:28:07 -0500
+        id S1729881AbgABW2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:28:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 502FA20863;
-        Thu,  2 Jan 2020 22:28:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40C9420866;
+        Thu,  2 Jan 2020 22:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004086;
-        bh=Mn1stkTUadTf5t6OBvjLLCSukrrImTF7x1U8LI0v+4A=;
+        s=default; t=1578004093;
+        bh=mL1vVokoRK2OusLF3dXIGjDuok9LNKwcG8cxTvnCtDA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yaGNTJK1o59AvoG6Jw5ZvJhn0XhhXxfHhH8yReuYOAoIWVB4TEwXokRqbixk6LSmx
-         C2AcZt/PAGxxcOLwtNyltbP+UZKYHzai/SaSSepubq5WFX1qy3ob6qy4VwHU973j0e
-         AuZHB1g1ZDDB4KGbbbxTGyLf3SKBoqW5bTjE6ik4=
+        b=vybmR7kqf4fKoEgxdBa7QhjiQdXoFslDlPHyJAFvJXyVDs+TAIhI+1ukU5bWanv9C
+         3lgTNiv7+Y2U1w9/mUpp67LYZYrFytopMmtIy6g4PMnBSZtJnw/aj9FeLN6U3IipyW
+         kYAIqwHC7q0ssvIbRFpYrfIr5qVlHEC+pYwOYeew=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
+        stable@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 031/171] extcon: sm5502: Reset registers during initialization
-Date:   Thu,  2 Jan 2020 23:06:02 +0100
-Message-Id: <20200102220551.356605930@linuxfoundation.org>
+Subject: [PATCH 4.9 034/171] perf report: Add warning when libunwind not compiled in
+Date:   Thu,  2 Jan 2020 23:06:05 +0100
+Message-Id: <20200102220551.746426321@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -60,61 +64,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-[ Upstream commit 6942635032cfd3e003e980d2dfa4e6323a3ce145 ]
+[ Upstream commit 800d3f561659b5436f8c57e7c26dd1f6928b5615 ]
 
-On some devices (e.g. Samsung Galaxy A5 (2015)), the bootloader
-seems to keep interrupts enabled for SM5502 when booting Linux.
-Changing the cable state (i.e. plugging in a cable) - until the driver
-is loaded - will therefore produce an interrupt that is never read.
+We received a user report that call-graph DWARF mode was enabled in
+'perf record' but 'perf report' didn't unwind the callstack correctly.
+The reason was, libunwind was not compiled in.
 
-In this situation, the cable state will be stuck forever on the
-initial state because SM5502 stops sending interrupts.
-This can be avoided by clearing those pending interrupts after
-the driver has been loaded.
+We can use 'perf -vv' to check the compiled libraries but it would be
+valuable to report a warning to user directly (especially valuable for
+a perf newbie).
 
-One way to do this is to reset all registers to default state
-by writing to SM5502_REG_RESET. This ensures that we start from
-a clean state, with all interrupts disabled.
+The warning is:
 
-Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Warning:
+Please install libunwind development packages during the perf build.
+
+Both TUI and stdio are supported.
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20191011022122.26369-1-yao.jin@linux.intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/extcon/extcon-sm5502.c | 4 ++++
- drivers/extcon/extcon-sm5502.h | 2 ++
- 2 files changed, 6 insertions(+)
+ tools/perf/builtin-report.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/extcon/extcon-sm5502.c b/drivers/extcon/extcon-sm5502.c
-index b22325688503..9d2d8a6673c8 100644
---- a/drivers/extcon/extcon-sm5502.c
-+++ b/drivers/extcon/extcon-sm5502.c
-@@ -69,6 +69,10 @@ struct sm5502_muic_info {
- /* Default value of SM5502 register to bring up MUIC device. */
- static struct reg_data sm5502_reg_data[] = {
- 	{
-+		.reg = SM5502_REG_RESET,
-+		.val = SM5502_REG_RESET_MASK,
-+		.invert = true,
-+	}, {
- 		.reg = SM5502_REG_CONTROL,
- 		.val = SM5502_REG_CONTROL_MASK_INT_MASK,
- 		.invert = false,
-diff --git a/drivers/extcon/extcon-sm5502.h b/drivers/extcon/extcon-sm5502.h
-index 974b53222f56..12f8b01e5753 100644
---- a/drivers/extcon/extcon-sm5502.h
-+++ b/drivers/extcon/extcon-sm5502.h
-@@ -241,6 +241,8 @@ enum sm5502_reg {
- #define DM_DP_SWITCH_UART			((DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DP_SHIFT) \
- 						| (DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DM_SHIFT))
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 6e88460cd13d..33ff5c843346 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -292,6 +292,13 @@ static int report__setup_sample_type(struct report *rep)
+ 				PERF_SAMPLE_BRANCH_ANY))
+ 		rep->nonany_branch_mode = true;
  
-+#define SM5502_REG_RESET_MASK			(0x1)
++#ifndef HAVE_LIBUNWIND_SUPPORT
++	if (dwarf_callchain_users) {
++		ui__warning("Please install libunwind development packages "
++			    "during the perf build.\n");
++	}
++#endif
 +
- /* SM5502 Interrupts */
- enum sm5502_irq {
- 	/* INT1 */
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
