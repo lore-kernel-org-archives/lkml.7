@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD7AC3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0216C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BABB20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B29A20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005426;
-	bh=iQakv2HMdpUsEwfVpNwP9YWmVBHMaqzX4AKPcOY+4XQ=;
+	s=default; t=1578005431;
+	bh=gYr/zNUZiO7HfENANZzCp2RXCcAamM1IeohEXgpihEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OlMn9y1KbVG3l7L8YDu6mi1ie6h7WgtmDcrxfM8s8SNYBH/5+tGYvsOEOod5jWiHT
-	 xo+7U2yLgS2SCMJ5F3fueVfq7aqOFTxz0fSBduXvSM46pf3eI5/66ybVCcO7JkO+Rf
-	 ck67kh3C2mguLWZgVTI5JckJt+0NtcCMB8flbmOQ=
+	b=lmbvFtw8/HfVE0ILJOq0tTuMdudbMNwQ1aY9UpCztyGxquP0P5Amv1qjhVkr4hgIj
+	 Aju918kQnm5yBOUq/aEBDyRliHKCF7aDsdetq5NkuvY8ITJlfeT0JvhJAPjzp/2c5W
+	 G16yyV4D/1C1FaqXmJ8jWdBB8B6g1CGXQ70XrKpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729540AbgABWZf (ORCPT
+        id S1729509AbgABWZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:25:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51100 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:25:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728975AbgABWZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:25:33 -0500
+        id S1729238AbgABWZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:25:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CF6E222C3;
-        Thu,  2 Jan 2020 22:25:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D407522B48;
+        Thu,  2 Jan 2020 22:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003932;
-        bh=iQakv2HMdpUsEwfVpNwP9YWmVBHMaqzX4AKPcOY+4XQ=;
+        s=default; t=1578003925;
+        bh=gYr/zNUZiO7HfENANZzCp2RXCcAamM1IeohEXgpihEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AwHfQmZ7vqpWeyLUU944CCQyzfq/Pv0V6JGkwcTMwbsCMLf8W943+MpqZ6zPAbvtY
-         gfCHt96mmVm42225TjXHcWIgYNv1PT39iLPEU2dgKhxrLzsJm7fPfqYQNPvbo8/nMY
-         yEmb11LVgxk6D0+MrsXQK4menpyAMxmfAI+TB0L8=
+        b=yz7GCguZE47rP1mxZkI08AJYJtdhz+vcIUtkudmY98rfQXQhyqwpq+ocxTv/keOxU
+         WFCZKyYf4JJIFAMuX+/Bx79Q1dMyNPyh9+F3Y8LlzHNm2OX6YyVeug5FT9ldQSeXoV
+         LT4o7vehy0tEq7p2fFPyFH1CC6JwO8Jemeai+aLY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+        stable@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 34/91] libnvdimm/btt: fix variable rc set but not used
-Date:   Thu,  2 Jan 2020 23:07:16 +0100
-Message-Id: <20200102220431.958542621@linuxfoundation.org>
+Subject: [PATCH 4.14 31/91] clk: pxa: fix one of the pxa RTC clocks
+Date:   Thu,  2 Jan 2020 23:07:13 +0100
+Message-Id: <20200102220430.873096830@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -61,48 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
 
-[ Upstream commit 4e24e37d5313edca8b4ab86f240c046c731e28d6 ]
+[ Upstream commit 46acbcb4849b2ca2e6e975e7c8130c1d61c8fd0c ]
 
-drivers/nvdimm/btt.c: In function 'btt_read_pg':
-drivers/nvdimm/btt.c:1264:8: warning: variable 'rc' set but not used
-[-Wunused-but-set-variable]
-    int rc;
-        ^~
+The pxa27x platforms have a single IP with 2 drivers, sa1100-rtc and
+rtc-pxa drivers.
 
-Add a ratelimited message in case a storm of errors is encountered.
+A previous patch fixed the sa1100-rtc case, but the pxa-rtc wasn't
+fixed. This patch completes the previous one.
 
-Fixes: d9b83c756953 ("libnvdimm, btt: rework error clearing")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
-Link: https://lore.kernel.org/r/1572530719-32161-1-git-send-email-cai@lca.pw
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Fixes: 8b6d10345e16 ("clk: pxa: add missing pxa27x clocks for Irda and sa1100-rtc")
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Link: https://lkml.kernel.org/r/20191026194420.11918-1-robert.jarzmik@free.fr
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/btt.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/clk/pxa/clk-pxa27x.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
-index b2feda35966b..471498469d0a 100644
---- a/drivers/nvdimm/btt.c
-+++ b/drivers/nvdimm/btt.c
-@@ -1259,11 +1259,11 @@ static int btt_read_pg(struct btt *btt, struct bio_integrity_payload *bip,
- 
- 		ret = btt_data_read(arena, page, off, postmap, cur_len);
- 		if (ret) {
--			int rc;
--
- 			/* Media error - set the e_flag */
--			rc = btt_map_write(arena, premap, postmap, 0, 1,
--				NVDIMM_IO_ATOMIC);
-+			if (btt_map_write(arena, premap, postmap, 0, 1, NVDIMM_IO_ATOMIC))
-+				dev_warn_ratelimited(to_dev(arena),
-+					"Error persistently tracking bad blocks at %#x\n",
-+					premap);
- 			goto out_rtt;
- 		}
- 
+diff --git a/drivers/clk/pxa/clk-pxa27x.c b/drivers/clk/pxa/clk-pxa27x.c
+index 25a30194d27a..b67ea86ff156 100644
+--- a/drivers/clk/pxa/clk-pxa27x.c
++++ b/drivers/clk/pxa/clk-pxa27x.c
+@@ -462,6 +462,7 @@ struct dummy_clk {
+ };
+ static struct dummy_clk dummy_clks[] __initdata = {
+ 	DUMMY_CLK(NULL, "pxa27x-gpio", "osc_32_768khz"),
++	DUMMY_CLK(NULL, "pxa-rtc", "osc_32_768khz"),
+ 	DUMMY_CLK(NULL, "sa1100-rtc", "osc_32_768khz"),
+ 	DUMMY_CLK("UARTCLK", "pxa2xx-ir", "STUART"),
+ };
 -- 
 2.20.1
 
