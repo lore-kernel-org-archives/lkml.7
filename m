@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D06C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0257C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A07222314
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C381D24125
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003498;
-	bh=hn6SkEALJClizTIH2eCblKoETrLMCQSOAV0rawGf+38=;
+	s=default; t=1578003501;
+	bh=u7AJp6aY2wcMMaHCl2ODy/YgR0ISvMD223Ik7ShRyxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ofhXfsqMnzqBWKhZK4vulket37XuwvKM7j0j7M5V84Jn1Wy0w8TzWATy11rOOCQqt
-	 twybbad9q3doOVlb9LPhaIIT5vGZKdfnoSutcHIaLoFW+g+bKkosn6+0FiRHsCb4NJ
-	 8iC4KgpSaQrk1SpwSzo2mAxJeeSzHTQWA5vRhwtk=
+	b=QCoMPJCdWZpzhvcFLucF6zPeTHicnQwb0DNT144xz2JsKQ7JiWYgH4FIaB+qGmoSB
+	 Thj2+4o2juZLKZBK4ha9b3lKJx/DYd1F3dJ60Mgu4a0AJBT6f9uNEKlIbyBP+NrlhK
+	 bZxtNvl1YLekwyZ8cUXOckekZEcKdxERTCBcH6bc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbgABWSR (ORCPT
+        id S1728413AbgABWSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:18:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33122 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:18:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728276AbgABWSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:18:08 -0500
+        id S1728287AbgABWSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:18:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C43A522314;
-        Thu,  2 Jan 2020 22:18:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C27D21582;
+        Thu,  2 Jan 2020 22:18:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003488;
-        bh=hn6SkEALJClizTIH2eCblKoETrLMCQSOAV0rawGf+38=;
+        s=default; t=1578003490;
+        bh=u7AJp6aY2wcMMaHCl2ODy/YgR0ISvMD223Ik7ShRyxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZrJUWkpWoUMaCw7CstoGFO0QOYXuLGbwIIMpVuUn/deDLjBC4PtIf4C1ieiXcjVU1
-         eQVffI8XjDpBuKFuLPPfN6NWSHWZxmBghUB32xRqCsyDd+OWyYY6n8FcOU5cGLqymP
-         FhiAN30wn8qz0KdLlq6XKR+MQwl9SDFVA/jAvj8g=
+        b=O1uRyoSPM5pAW487ywZScAuHFYwOMaD7KfnWdghsaPtWGV68/h5CCn5ufPNQHAa3R
+         Gj/DGd1SG1QDT/Yx4NZwFDv4kB1sh1d4+Hy0rI8FhWhr5P6A6K6pxa/3dtKdD4lE0X
+         N5EqL7Z5Q2p9hfxdNJENg3drTVKn2eI84rVb7DVQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 5.4 182/191] hv_netvsc: Fix tx_table init in rndis_set_subchannel()
-Date:   Thu,  2 Jan 2020 23:07:44 +0100
-Message-Id: <20200102215848.858098357@linuxfoundation.org>
+Subject: [PATCH 5.4 183/191] gtp: fix an use-after-free in ipv4_pdp_find()
+Date:   Thu,  2 Jan 2020 23:07:45 +0100
+Message-Id: <20200102215848.996096028@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -59,47 +59,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit c39ea5cba5a2e97fc01b78c85208bf31383b399c ]
+[ Upstream commit 94dc550a5062030569d4aa76e10e50c8fc001930 ]
 
-Host can provide send indirection table messages anytime after RSS is
-enabled by calling rndis_filter_set_rss_param(). So the host provided
-table values may be overwritten by the initialization in
-rndis_set_subchannel().
+ipv4_pdp_find() is called in TX packet path of GTP.
+ipv4_pdp_find() internally uses gtp->tid_hash to lookup pdp context.
+In the current code, gtp->tid_hash and gtp->addr_hash are freed by
+->dellink(), which is gtp_dellink().
+But gtp_dellink() would be called while packets are processing.
+So, gtp_dellink() should not free gtp->tid_hash and gtp->addr_hash.
+Instead, dev->priv_destructor() would be used because this callback
+is called after all packet processing safely.
 
-To prevent this problem, move the tx_table initialization before calling
-rndis_filter_set_rss_param().
+Test commands:
+    ip link add veth1 type veth peer name veth2
+    ip a a 172.0.0.1/24 dev veth1
+    ip link set veth1 up
+    ip a a 172.99.0.1/32 dev lo
 
-Fixes: a6fb6aa3cfa9 ("hv_netvsc: Set tx_table to equal weight after subchannels open")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+    gtp-link add gtp1 &
+
+    gtp-tunnel add gtp1 v1 200 100 172.99.0.2 172.0.0.2
+    ip r a  172.99.0.2/32 dev gtp1
+    ip link set gtp1 mtu 1500
+
+    ip netns add ns2
+    ip link set veth2 netns ns2
+    ip netns exec ns2 ip a a 172.0.0.2/24 dev veth2
+    ip netns exec ns2 ip link set veth2 up
+    ip netns exec ns2 ip a a 172.99.0.2/32 dev lo
+    ip netns exec ns2 ip link set lo up
+
+    ip netns exec ns2 gtp-link add gtp2 &
+    ip netns exec ns2 gtp-tunnel add gtp2 v1 100 200 172.99.0.1 172.0.0.1
+    ip netns exec ns2 ip r a 172.99.0.1/32 dev gtp2
+    ip netns exec ns2 ip link set gtp2 mtu 1500
+
+    hping3 172.99.0.2 -2 --flood &
+    ip link del gtp1
+
+Splat looks like:
+[   72.568081][ T1195] BUG: KASAN: use-after-free in ipv4_pdp_find.isra.12+0x130/0x170 [gtp]
+[   72.568916][ T1195] Read of size 8 at addr ffff8880b9a35d28 by task hping3/1195
+[   72.569631][ T1195]
+[   72.569861][ T1195] CPU: 2 PID: 1195 Comm: hping3 Not tainted 5.5.0-rc1 #199
+[   72.570547][ T1195] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[   72.571438][ T1195] Call Trace:
+[   72.571764][ T1195]  dump_stack+0x96/0xdb
+[   72.572171][ T1195]  ? ipv4_pdp_find.isra.12+0x130/0x170 [gtp]
+[   72.572761][ T1195]  print_address_description.constprop.5+0x1be/0x360
+[   72.573400][ T1195]  ? ipv4_pdp_find.isra.12+0x130/0x170 [gtp]
+[   72.573971][ T1195]  ? ipv4_pdp_find.isra.12+0x130/0x170 [gtp]
+[   72.574544][ T1195]  __kasan_report+0x12a/0x16f
+[   72.575014][ T1195]  ? ipv4_pdp_find.isra.12+0x130/0x170 [gtp]
+[   72.575593][ T1195]  kasan_report+0xe/0x20
+[   72.576004][ T1195]  ipv4_pdp_find.isra.12+0x130/0x170 [gtp]
+[   72.576577][ T1195]  gtp_build_skb_ip4+0x199/0x1420 [gtp]
+[ ... ]
+[   72.647671][ T1195] BUG: unable to handle page fault for address: ffff8880b9a35d28
+[   72.648512][ T1195] #PF: supervisor read access in kernel mode
+[   72.649158][ T1195] #PF: error_code(0x0000) - not-present page
+[   72.649849][ T1195] PGD a6c01067 P4D a6c01067 PUD 11fb07067 PMD 11f939067 PTE 800fffff465ca060
+[   72.652958][ T1195] Oops: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+[   72.653834][ T1195] CPU: 2 PID: 1195 Comm: hping3 Tainted: G    B             5.5.0-rc1 #199
+[   72.668062][ T1195] RIP: 0010:ipv4_pdp_find.isra.12+0x86/0x170 [gtp]
+[ ... ]
+[   72.679168][ T1195] Call Trace:
+[   72.679603][ T1195]  gtp_build_skb_ip4+0x199/0x1420 [gtp]
+[   72.681915][ T1195]  ? ipv4_pdp_find.isra.12+0x170/0x170 [gtp]
+[   72.682513][ T1195]  ? lock_acquire+0x164/0x3b0
+[   72.682966][ T1195]  ? gtp_dev_xmit+0x35e/0x890 [gtp]
+[   72.683481][ T1195]  gtp_dev_xmit+0x3c2/0x890 [gtp]
+[ ... ]
+
+Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/hyperv/rndis_filter.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/gtp.c |   34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -1165,6 +1165,9 @@ int rndis_set_subchannel(struct net_devi
- 	wait_event(nvdev->subchan_open,
- 		   atomic_read(&nvdev->open_chn) == nvdev->num_chn);
- 
-+	for (i = 0; i < VRSS_SEND_TAB_SIZE; i++)
-+		ndev_ctx->tx_table[i] = i % nvdev->num_chn;
-+
- 	/* ignore failures from setting rss parameters, still have channels */
- 	if (dev_info)
- 		rndis_filter_set_rss_param(rdev, dev_info->rss_key);
-@@ -1174,9 +1177,6 @@ int rndis_set_subchannel(struct net_devi
- 	netif_set_real_num_tx_queues(ndev, nvdev->num_chn);
- 	netif_set_real_num_rx_queues(ndev, nvdev->num_chn);
- 
--	for (i = 0; i < VRSS_SEND_TAB_SIZE; i++)
--		ndev_ctx->tx_table[i] = i % nvdev->num_chn;
--
- 	return 0;
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -640,9 +640,16 @@ static void gtp_link_setup(struct net_de
  }
  
+ static int gtp_hashtable_new(struct gtp_dev *gtp, int hsize);
+-static void gtp_hashtable_free(struct gtp_dev *gtp);
+ static int gtp_encap_enable(struct gtp_dev *gtp, struct nlattr *data[]);
+ 
++static void gtp_destructor(struct net_device *dev)
++{
++	struct gtp_dev *gtp = netdev_priv(dev);
++
++	kfree(gtp->addr_hash);
++	kfree(gtp->tid_hash);
++}
++
+ static int gtp_newlink(struct net *src_net, struct net_device *dev,
+ 		       struct nlattr *tb[], struct nlattr *data[],
+ 		       struct netlink_ext_ack *extack)
+@@ -680,13 +687,15 @@ static int gtp_newlink(struct net *src_n
+ 
+ 	gn = net_generic(dev_net(dev), gtp_net_id);
+ 	list_add_rcu(&gtp->list, &gn->gtp_dev_list);
++	dev->priv_destructor = gtp_destructor;
+ 
+ 	netdev_dbg(dev, "registered new GTP interface\n");
+ 
+ 	return 0;
+ 
+ out_hashtable:
+-	gtp_hashtable_free(gtp);
++	kfree(gtp->addr_hash);
++	kfree(gtp->tid_hash);
+ out_encap:
+ 	gtp_encap_disable(gtp);
+ 	return err;
+@@ -695,8 +704,13 @@ out_encap:
+ static void gtp_dellink(struct net_device *dev, struct list_head *head)
+ {
+ 	struct gtp_dev *gtp = netdev_priv(dev);
++	struct pdp_ctx *pctx;
++	int i;
++
++	for (i = 0; i < gtp->hash_size; i++)
++		hlist_for_each_entry_rcu(pctx, &gtp->tid_hash[i], hlist_tid)
++			pdp_context_delete(pctx);
+ 
+-	gtp_hashtable_free(gtp);
+ 	list_del_rcu(&gtp->list);
+ 	unregister_netdevice_queue(dev, head);
+ }
+@@ -774,20 +788,6 @@ err1:
+ 	return -ENOMEM;
+ }
+ 
+-static void gtp_hashtable_free(struct gtp_dev *gtp)
+-{
+-	struct pdp_ctx *pctx;
+-	int i;
+-
+-	for (i = 0; i < gtp->hash_size; i++)
+-		hlist_for_each_entry_rcu(pctx, &gtp->tid_hash[i], hlist_tid)
+-			pdp_context_delete(pctx);
+-
+-	synchronize_rcu();
+-	kfree(gtp->addr_hash);
+-	kfree(gtp->tid_hash);
+-}
+-
+ static struct sock *gtp_encap_enable_socket(int fd, int type,
+ 					    struct gtp_dev *gtp)
+ {
 
 
