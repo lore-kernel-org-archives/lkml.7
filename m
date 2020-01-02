@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6D2C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA18CC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4C0A22314
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7349322314
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003408;
-	bh=s5hrIeR/stKztvZ6petLntQp/eDSvEeUVZssIHzRhHg=;
+	s=default; t=1578003412;
+	bh=xe3Z79I60jJdx7YuK/c1laM9GG6/6JpZJqjcyjGH+IQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xj41xCQu3vqEZnR1Vbvc2xsitQ8OkySKYGwLJNmChtqoktv9xegwKe6mNDmYlpm/N
-	 PjKI/Mj6Ufo5c8v5etadsocKsIoGuYkdAiG1iNhb3b9ujJurinqkY90+YMGGrabgw9
-	 na1TeEa/UpQRVxS3ac2w4j1ux4BYfJ4ydv4TZq7Q=
+	b=wQuwlJxJV45KzIxZIjt9p9mxYBTvISkPyI+64vEdHK9P3pWqQCUgpuqWOEmZ1aRmK
+	 2Ya/xMAu4C+3T69HHNAfZuegTNRsy6N7fP2Y4JSxYiaHHxUhIIjY/WPT3nfqcj12Pb
+	 BQDCFn4MU5JEhRTDnoCDHTXz+sGM6NM8gNcOnMHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbgABWQr (ORCPT
+        id S1727515AbgABWQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:16:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58788 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:16:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728040AbgABWQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:16:42 -0500
+        id S1727823AbgABWQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:16:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 306BC22314;
-        Thu,  2 Jan 2020 22:16:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F8AA21582;
+        Thu,  2 Jan 2020 22:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003401;
-        bh=s5hrIeR/stKztvZ6petLntQp/eDSvEeUVZssIHzRhHg=;
+        s=default; t=1578003404;
+        bh=xe3Z79I60jJdx7YuK/c1laM9GG6/6JpZJqjcyjGH+IQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LbNQlq4rhZF5+h49bwfCyKpn9U+U67YwvvXIbzUfT+JNdPGzMqNjlhxNeNnSXj9E0
-         zNhw2QZRRfGb4BK0NXznZjPql0RZvTcCDNW7evEKJdiSptePKNXsXrr0jtthnJRZeH
-         w7gOKokrW49jk5vdlIPVaXR+rFo35AWpOiqvPdpI=
+        b=i3PH4OTfxiIF/WCuBt/pmEsLHsgSL3nO5P9Lyvzy5NMEZFHWUVvX/m+hyF+hss036
+         1adPTU/LIKfLagmjbL4NH5Cv25BmmtX0MQZiNL2/qQjLkoD7iUXrv2Mmcb14Ma3PJ5
+         UNSC6K+FTFpRlWQ9fxdYUEnFzv5xMD0xIjkGnkzs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 120/191] libfdt: define INT32_MAX and UINT32_MAX in libfdt_env.h
-Date:   Thu,  2 Jan 2020 23:06:42 +0100
-Message-Id: <20200102215842.682677028@linuxfoundation.org>
+        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 121/191] s390/unwind: filter out unreliable bogus %r14
+Date:   Thu,  2 Jan 2020 23:06:43 +0100
+Message-Id: <20200102215842.770802524@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -60,82 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit a8de1304b7df30e3a14f2a8b9709bb4ff31a0385 ]
+[ Upstream commit bf018ee644897d7982e1b8dd8b15e97db6e1a4da ]
 
-The DTC v1.5.1 added references to (U)INT32_MAX.
+Currently unwinder unconditionally returns %r14 from the first frame
+pointed by %r15 from pt_regs. A task could be interrupted when a function
+already allocated this frame (if it needs it) for its callees or to
+store local variables. In that case this frame would contain random
+values from stack or values stored there by a callee. As we are only
+interested in %r14 to get potential return address, skip bogus return
+addresses which doesn't belong to kernel text.
 
-This is no problem for user-space programs since <stdint.h> defines
-(U)INT32_MAX along with (u)int32_t.
+This helps to avoid duplicating filtering logic in unwider users, most
+of which use unwind_get_return_address() and would choke on bogus 0
+address returned by it otherwise.
 
-For the kernel space, libfdt_env.h needs to be adjusted before we
-pull in the changes.
-
-In the kernel, we usually use s/u32 instead of (u)int32_t for the
-fixed-width types.
-
-Accordingly, we already have S/U32_MAX for their max values.
-So, we should not add (U)INT32_MAX to <linux/limits.h> any more.
-
-Instead, add them to the in-kernel libfdt_env.h to compile the
-latest libfdt.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/compressed/libfdt_env.h | 4 +++-
- arch/powerpc/boot/libfdt_env.h        | 2 ++
- include/linux/libfdt_env.h            | 3 +++
- 3 files changed, 8 insertions(+), 1 deletion(-)
+ arch/s390/kernel/unwind_bc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
-index b36c0289a308..6a0f1f524466 100644
---- a/arch/arm/boot/compressed/libfdt_env.h
-+++ b/arch/arm/boot/compressed/libfdt_env.h
-@@ -2,11 +2,13 @@
- #ifndef _ARM_LIBFDT_ENV_H
- #define _ARM_LIBFDT_ENV_H
- 
-+#include <linux/limits.h>
- #include <linux/types.h>
- #include <linux/string.h>
- #include <asm/byteorder.h>
- 
--#define INT_MAX			((int)(~0U>>1))
-+#define INT32_MAX	S32_MAX
-+#define UINT32_MAX	U32_MAX
- 
- typedef __be16 fdt16_t;
- typedef __be32 fdt32_t;
-diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
-index 2abc8e83b95e..9757d4f6331e 100644
---- a/arch/powerpc/boot/libfdt_env.h
-+++ b/arch/powerpc/boot/libfdt_env.h
-@@ -6,6 +6,8 @@
- #include <string.h>
- 
- #define INT_MAX			((int)(~0U>>1))
-+#define UINT32_MAX		((u32)~0U)
-+#define INT32_MAX		((s32)(UINT32_MAX >> 1))
- 
- #include "of.h"
- 
-diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
-index edb0f0c30904..1adf54aad2df 100644
---- a/include/linux/libfdt_env.h
-+++ b/include/linux/libfdt_env.h
-@@ -7,6 +7,9 @@
- 
- #include <asm/byteorder.h>
- 
-+#define INT32_MAX	S32_MAX
-+#define UINT32_MAX	U32_MAX
-+
- typedef __be16 fdt16_t;
- typedef __be32 fdt32_t;
- typedef __be64 fdt64_t;
+diff --git a/arch/s390/kernel/unwind_bc.c b/arch/s390/kernel/unwind_bc.c
+index a8204f952315..6e609b13c0ce 100644
+--- a/arch/s390/kernel/unwind_bc.c
++++ b/arch/s390/kernel/unwind_bc.c
+@@ -60,6 +60,11 @@ bool unwind_next_frame(struct unwind_state *state)
+ 		ip = READ_ONCE_NOCHECK(sf->gprs[8]);
+ 		reliable = false;
+ 		regs = NULL;
++		if (!__kernel_text_address(ip)) {
++			/* skip bogus %r14 */
++			state->regs = NULL;
++			return unwind_next_frame(state);
++		}
+ 	} else {
+ 		sf = (struct stack_frame *) state->sp;
+ 		sp = READ_ONCE_NOCHECK(sf->back_chain);
 -- 
 2.20.1
 
