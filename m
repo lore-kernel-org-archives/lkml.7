@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E5FC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BF3C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 890962465A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3F5B20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005108;
-	bh=+zrt2PfYOEuMTQxgmUYYfno+qL18+KOj8WYPPz4YJmk=;
+	s=default; t=1578005114;
+	bh=xNSEdAdZMhuEyPznqcBxej7cv6OZJtbEd/4xG0/VEDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0RwLHW7hvxlnJke41EM3efmz9YM7oB55K5kQgdM2HJzx2LruTjcQo0VZEshgYOc8Q
-	 NjDImL1bzME/1rNg5mXOO6dQLU70vdmaITS/jvhTex4DAw9WYiocHHwJBwLHR/7VNr
-	 wlHYN8ebT7X2023gzAgCGZK1wPfK1wS94Gn5C4rA=
+	b=MifF9FE0gHs6NGPxCrpPPZcNQh1Loam2rrqisjPXhkj8UnGh8oPflpSFm/GjyUzWU
+	 kkoHgk+LmKl35gmC9Wc8glfjz8i9yYzcwHh4ZEGTc9ticBxi77vmAyZGbzSXQbaTr3
+	 PYZkFsp/D+ZqFRVgcwayTSG8l2Pq7lV+iXYkTnu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730851AbgABWpH (ORCPT
+        id S1730410AbgABWc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:45:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38798 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:32:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730417AbgABWc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:32:27 -0500
+        id S1730381AbgABWcS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:32:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BADEC20866;
-        Thu,  2 Jan 2020 22:32:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2616E20863;
+        Thu,  2 Jan 2020 22:32:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004347;
-        bh=+zrt2PfYOEuMTQxgmUYYfno+qL18+KOj8WYPPz4YJmk=;
+        s=default; t=1578004337;
+        bh=xNSEdAdZMhuEyPznqcBxej7cv6OZJtbEd/4xG0/VEDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oblRzrpGsWHg6YakEeLYyAkQoSEK7yppO9DlPvQoOqajs02M19bDvaxTa8hzGkq1u
-         BsppBwi7WNOpn9SjXVP2utJjA1w9JmfYGZdGNT3TBvGqUQZCzPf5DaHyFDtFh7C+8R
-         Zqm1ArXsFNYh3OvCk80Fi0H4qpnjvOt6hcPvyYTk=
+        b=ZpKU3Zr8O5WnKdJ7PU9FqnTxOc9fCWXVi6oeJYo7IZ4LaWYb6MlZudED1it1+0Yir
+         SRcY8oEIFM84LAyuZR8zdqC52WlWCPviPAue0PzFGw8gbBjaqMLd787Xdg+te1zArs
+         IM/jFWxs1gwr+Zw+BrhnkrELX80BsijzruE8UXR0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jack Wang <jinpu.wang@cloud.ionos.com>,
-        peter chang <dpf@google.com>,
-        Deepak Ukey <deepak.ukey@microchip.com>,
-        Viswas G <Viswas.G@microchip.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 141/171] scsi: pm80xx: Fix for SATA device discovery
-Date:   Thu,  2 Jan 2020 23:07:52 +0100
-Message-Id: <20200102220606.740133097@linuxfoundation.org>
+Subject: [PATCH 4.9 137/171] clk: pxa: fix one of the pxa RTC clocks
+Date:   Thu,  2 Jan 2020 23:07:48 +0100
+Message-Id: <20200102220606.103780074@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -63,39 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: peter chang <dpf@google.com>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
 
-[ Upstream commit ce21c63ee995b7a8b7b81245f2cee521f8c3c220 ]
+[ Upstream commit 46acbcb4849b2ca2e6e975e7c8130c1d61c8fd0c ]
 
-Driver was missing complete() call in mpi_sata_completion which result in
-SATA abort error handling timing out. That causes the device to be left in
-the in_recovery state so subsequent commands sent to the device fail and
-the OS removes access to it.
+The pxa27x platforms have a single IP with 2 drivers, sa1100-rtc and
+rtc-pxa drivers.
 
-Link: https://lore.kernel.org/r/20191114100910.6153-2-deepak.ukey@microchip.com
-Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-Signed-off-by: peter chang <dpf@google.com>
-Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
-Signed-off-by: Viswas G <Viswas.G@microchip.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+A previous patch fixed the sa1100-rtc case, but the pxa-rtc wasn't
+fixed. This patch completes the previous one.
+
+Fixes: 8b6d10345e16 ("clk: pxa: add missing pxa27x clocks for Irda and sa1100-rtc")
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Link: https://lkml.kernel.org/r/20191026194420.11918-1-robert.jarzmik@free.fr
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/pm8001/pm80xx_hwi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clk/pxa/clk-pxa27x.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
-index 9edd61c063a1..df5f0bc29587 100644
---- a/drivers/scsi/pm8001/pm80xx_hwi.c
-+++ b/drivers/scsi/pm8001/pm80xx_hwi.c
-@@ -2368,6 +2368,8 @@ mpi_sata_completion(struct pm8001_hba_info *pm8001_ha, void *piomb)
- 			pm8001_printk("task 0x%p done with io_status 0x%x"
- 			" resp 0x%x stat 0x%x but aborted by upper layer!\n",
- 			t, status, ts->resp, ts->stat));
-+		if (t->slow_task)
-+			complete(&t->slow_task->completion);
- 		pm8001_ccb_task_free(pm8001_ha, t, ccb, tag);
- 	} else {
- 		spin_unlock_irqrestore(&t->task_state_lock, flags);
+diff --git a/drivers/clk/pxa/clk-pxa27x.c b/drivers/clk/pxa/clk-pxa27x.c
+index c40b1804f58c..bb556f9bbeda 100644
+--- a/drivers/clk/pxa/clk-pxa27x.c
++++ b/drivers/clk/pxa/clk-pxa27x.c
+@@ -362,6 +362,7 @@ struct dummy_clk {
+ };
+ static struct dummy_clk dummy_clks[] __initdata = {
+ 	DUMMY_CLK(NULL, "pxa27x-gpio", "osc_32_768khz"),
++	DUMMY_CLK(NULL, "pxa-rtc", "osc_32_768khz"),
+ 	DUMMY_CLK(NULL, "sa1100-rtc", "osc_32_768khz"),
+ 	DUMMY_CLK("UARTCLK", "pxa2xx-ir", "STUART"),
+ };
 -- 
 2.20.1
 
