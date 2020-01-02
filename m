@@ -2,101 +2,241 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A94FAC2D0DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB62C2D0DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7539521655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:48:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="OXFQiSuv"
+	by mail.kernel.org (Postfix) with ESMTP id 20FCE21655
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:48:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727708AbgABHrJ (ORCPT
+        id S1727758AbgABHsy convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 02:47:09 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44846 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbgABHrI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 02:47:08 -0500
-Received: by mail-lj1-f194.google.com with SMTP id u71so39853026lje.11
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 23:47:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UMsZF9sy1sW5J3kVgI/fUJy6gl0uFtVuKYIkDGAzFWk=;
-        b=OXFQiSuvcrGsBxZPaeQirPMFrClNc9rDGbdyE6WGJrLnluSMK/JxkV6wp3qL3rrGcg
-         0W9yJj/F/VsGBt1ubZQiz5WOVNVXq+K4JE9iUJHCTqRu2NPvcNHPkqF3HqMmEVTWLjdo
-         eOuQVuA14rxB2aatZqQHIOTFs7x3bg6wO5LBoaMjaG7OBpLxL+HE6xUQcbuZYOVMOZVi
-         tKCutxoMGHTdyMj7Bxfk9EZMInhx0rPic1cpynmCz0/B9rIU/S2YtffUNkjXm4t/UK5e
-         whbNjDIPkHBZ7wO37ouNQgaJ/UvxTA49ndlm3LDOEoOY4nYBbAd2ejQdXoLAntOuqeIM
-         Ergg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UMsZF9sy1sW5J3kVgI/fUJy6gl0uFtVuKYIkDGAzFWk=;
-        b=a0cXByHH5JXCTJpVhiGDcpIM2ihGeZRs8oF05czhdJBxPtFwZrsA74UjlGmL4UZYD8
-         O1C4qwqZLrtzHFNf+zSWxkaeUVs4/gHLmreSVcG60f7QCDu5IS3LrXzwTilHXObNxckR
-         f9gZjqrMMewnI70Be6pupiklsNDz/VMc3+WmWWbNmxQ52OvcmPKV7zg8kCHWyTQEP2xS
-         oDwbOA/a0Chy/9VRdxkQ7ZTkK7QuQ6NezCWS9HpTiPw6v/B10XxXQ/8LF5iEzHRCQ5Lb
-         14Lni1WTZxxazGi4SzbYK7++4Ikg1mfPe2L0BSqbKtVSKGk96/tNkXZprZ+s0ZOAzIO+
-         gjig==
-X-Gm-Message-State: APjAAAXsO008LpVsD/9NxxUM64hiF/Fq4czU/mWth0MzY0O7jiK7mCl/
-        HfhFXyV8dlgP91lNH+grLl4WVQ==
-X-Google-Smtp-Source: APXvYqzXvJvrB746bC+D5/vKo4dprhrPwEdoz38wU1naeszOJA2/HlfkUqvs1vOG8GuyNYSLVhd1MA==
-X-Received: by 2002:a2e:8651:: with SMTP id i17mr38826910ljj.121.1577951226498;
-        Wed, 01 Jan 2020 23:47:06 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id u16sm22081579ljo.22.2020.01.01.23.47.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jan 2020 23:47:05 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id D26CE100528; Thu,  2 Jan 2020 10:47:05 +0300 (+03)
-Date:   Thu, 2 Jan 2020 10:47:05 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Jann Horn <jannh@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH v7 1/4] x86/insn-eval: Add support for 64-bit kernel mode
-Message-ID: <20200102074705.n6cnvxrcojhlxqr5@box.shutemov.name>
-References: <20191218231150.12139-1-jannh@google.com>
+        Thu, 2 Jan 2020 02:48:54 -0500
+Received: from mail.wangsu.com ([123.103.51.198]:42910 "EHLO wangsu.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726145AbgABHsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 02:48:53 -0500
+Received: from XMCDN1207038 (unknown [59.61.78.137])
+        by app1 (Coremail) with SMTP id xjNnewDnab1DoA1eQc8WAA--.66S2;
+        Thu, 02 Jan 2020 15:48:20 +0800 (CST)
+From:   =?UTF-8?B?5p2o6bmP56iL?= <yangpc@wangsu.com>
+To:     "'Eric Dumazet'" <edumazet@google.com>
+Cc:     "'David Miller'" <davem@davemloft.net>,
+        "'Alexey Kuznetsov'" <kuznet@ms2.inr.ac.ru>,
+        "'Hideaki YOSHIFUJI'" <yoshfuji@linux-ipv6.org>,
+        "'Alexei Starovoitov'" <ast@kernel.org>,
+        "'Daniel Borkmann'" <daniel@iogearbox.net>,
+        "'Martin KaFai Lau'" <kafai@fb.com>,
+        "'Song Liu'" <songliubraving@fb.com>,
+        "'Yonghong Song'" <yhs@fb.com>, <andriin@fb.com>,
+        "'netdev'" <netdev@vger.kernel.org>,
+        "'LKML'" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tcp: fix "old stuff" D-SACK causing SACK to be treated as D-SACK
+Date:   Thu, 2 Jan 2020 15:48:01 +0800
+Message-ID: <000201d5c140$f5dd0cb0$e1972610$@wangsu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218231150.12139-1-jannh@google.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AdXAmTvGSt3UBdpWS06LqBel1jbauAAoqjMw
+Content-Language: zh-cn
+X-CM-TRANSID: xjNnewDnab1DoA1eQc8WAA--.66S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3Jw48WrW5Xw1ftrW3tF13Jwb_yoWxCr1xpa
+        15Kry7Krn5Ary8C3Wqgr18ua48Wan7Ca13GryIkrZF9w45Cw1ruF4FgF4Y9FW2gFWvgFW0
+        yryjg3yq9a98GaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkCb7Iv0xC_KF4lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
+        cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
+        v20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl6s0DM28EF7xvwVC2
+        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaVAv8VW8GwAv
+        7VCY1x0262k0Y48FwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+        8JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAFwVW8CwCF04k20xvY0x0EwIxGrwCF
+        04k20xvE74AGY7Cv6cx26r48MxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+        W8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8
+        JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU8qXdUU
+        UUU
+X-CM-SenderInfo: p1dqw1nf6zt0xjvxhudrp/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 12:11:47AM +0100, Jann Horn wrote:
-> To support evaluating 64-bit kernel mode instructions:
-> 
-> Replace existing checks for user_64bit_mode() with a new helper that
-> checks whether code is being executed in either 64-bit kernel mode or
-> 64-bit user mode.
-> 
-> Select the GS base depending on whether the instruction is being
-> evaluated in kernel mode.
-> 
-> Signed-off-by: Jann Horn <jannh@google.com>
+Hi Eric Dumazet,
 
-In most cases you have struct insn around (or can easily pass it down to
-the place). Why not use insn->x86_64?
+I'm sorry there was a slight error in the packetdrill test case of the previous email reply,
+the ACK segment should not carry data, although this does not affect the description of the situation.
+I fixed the packetdrill test and resent it as follows:
 
--- 
- Kirill A. Shutemov
+packetdrill test case:
+// Verify the "old stuff" D-SACK causing SACK to be treated as D-SACK
+--tolerance_usecs=10000
+
+// enable RACK and TLP
+    0 `sysctl -q net.ipv4.tcp_recovery=1; sysctl -q net.ipv4.tcp_early_retrans=3`
+
+// Establish a connection, rtt = 10ms
+   +0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
+   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+   +0 bind(3, ..., ...) = 0
+   +0 listen(3, 1) = 0
+
+  +.1 < S 0:0(0) win 32792 <mss 1000,sackOK,nop,nop,nop,wscale 7>
+   +0 > S. 0:0(0) ack 1 <...>
+ +.01 < . 1:1(0) ack 1 win 320
+   +0 accept(3, ..., ...) = 4
+
+// send 10 data segments
+   +0 write(4, ..., 10000) = 10000
+   +0 > P. 1:10001(10000) ack 1
+
+// send TLP
+ +.02 > P. 9001:10001(1000) ack 1
+
+// enter recovery and retransmit 1:1001, now undo_marker = 1
++.015 < . 1:1(0) ack 1 win 320 <sack 9001:10001, nop, nop>
+   +0 > . 1:1001(1000) ack 1
+
+// ack 1:1001 and retransmit 1001:3001
+ +.01 < . 1:1(0) ack 1001 win 320 <sack 9001:10001, nop, nop>
+   +0 > . 1001:3001(2000) ack 1
+
+// sack 2001:3001, now 2001:3001 has R|S
+ +.01 < . 1:1(0) ack 1001 win 320 <sack 2001:3001 9001:10001, nop, nop>
+
++0 %{ assert tcpi_reordering == 3, tcpi_reordering }%
+
+// d-sack 1:1001, satisfies: undo_marker(1) <= start_seq < end_seq <= prior_snd_una(1001)
+// BUG: 2001:3001 is treated as D-SACK then reordering is modified in tcp_sacktag_one()
+   +0 < . 1:1(0) ack 1001 win 320 <sack 1:1001 2001:3001 9001:10001, nop, nop>
+
+// reordering was modified to 8
++0 %{ assert tcpi_reordering == 3, tcpi_reordering }%
+
+
+
+-----邮件原件-----
+发件人: 杨鹏程 <yangpc@wangsu.com> 
+发送时间: 2020年1月1日 19:47
+收件人: 'Eric Dumazet' <edumazet@google.com>
+抄送: 'David Miller' <davem@davemloft.net>; 'Alexey Kuznetsov' <kuznet@ms2.inr.ac.ru>; 'Hideaki YOSHIFUJI' <yoshfuji@linux-ipv6.org>; 'Alexei Starovoitov' <ast@kernel.org>; 'Daniel Borkmann' <daniel@iogearbox.net>; 'Martin KaFai Lau' <kafai@fb.com>; 'Song Liu' <songliubraving@fb.com>; 'Yonghong Song' <yhs@fb.com>; 'andriin@fb.com' <andriin@fb.com>; 'netdev' <netdev@vger.kernel.org>; 'LKML' <linux-kernel@vger.kernel.org>
+主题: Re: [PATCH] tcp: fix "old stuff" D-SACK causing SACK to be treated as D-SACK
+
+Hi Eric Dumazet,
+
+Thanks for discussing this issue.
+
+'previous sack segment was lost' means that the SACK segment carried by D-SACK will be processed by tcp_sacktag_one () due to the previous SACK loss, but this is not necessary.
+
+Here is the packetdrill test, this example shows that the reordering was modified because the SACK segment was treated as D-SACK.
+
+//dsack-old-stuff-bug.pkt
+// Verify the "old stuff" D-SACK causing SACK to be treated as D-SACK
+--tolerance_usecs=10000
+
+// enable RACK and TLP
+    0 `sysctl -q net.ipv4.tcp_recovery=1; sysctl -q net.ipv4.tcp_early_retrans=3`
+
+// Establish a connection, rtt = 10ms
+   +0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
+   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+   +0 bind(3, ..., ...) = 0
+   +0 listen(3, 1) = 0
+
+  +.1 < S 0:0(0) win 32792 <mss 1000,sackOK,nop,nop,nop,wscale 7>
+   +0 > S. 0:0(0) ack 1 <...>
+ +.01 < . 1:1(0) ack 1 win 320
+   +0 accept(3, ..., ...) = 4
+
+// send 10 data segments
+   +0 write(4, ..., 10000) = 10000
+   +0 > P. 1:10001(10000) ack 1
+
+// send TLP
+ +.02 > P. 9001:10001(1000) ack 1
+
+// enter recovery and retransmit 1:1001, now undo_marker = 1
++.015 < . 1:1(0) ack 1 win 320 <sack 9001:10001, nop, nop>
+   +0 > . 1:1001(1000) ack 1
+
+// ack 1:1001 and retransmit 1001:3001
+ +.01 < . 1:1001(1000) ack 1001 win 320 <sack 9001:10001, nop, nop>
+   +0 > . 1001:3001(2000) ack 1
+
+// sack 2001:3001, now 2001:3001 has R|S
+ +.01 < . 1001:1001(0) ack 1001 win 320 <sack 2001:3001 9001:10001, nop, nop>
+
++0 %{ assert tcpi_reordering == 3, tcpi_reordering }%
+
+// d-sack 1:1001, satisfies: undo_marker(1) <= start_seq < end_seq <= prior_snd_una(1001) // BUG: 2001:3001 is treated as D-SACK then reordering is modified in tcp_sacktag_one()
+   +0 < . 1001:1001(0) ack 1001 win 320 <sack 1:1001 2001:3001 9001:10001, nop, nop>
+
+// reordering was modified to 8
++0 %{ assert tcpi_reordering == 3, tcpi_reordering }%
+
+
+
+
+-----邮件原件-----
+发件人: Eric Dumazet <edumazet@google.com>
+发送时间: 2019年12月30日 21:41
+收件人: Pengcheng Yang <yangpc@wangsu.com>
+抄送: David Miller <davem@davemloft.net>; Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>; Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>; Alexei Starovoitov <ast@kernel.org>; Daniel Borkmann <daniel@iogearbox.net>; Martin KaFai Lau <kafai@fb.com>; Song Liu <songliubraving@fb.com>; Yonghong Song <yhs@fb.com>; andriin@fb.com; netdev <netdev@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>
+主题: Re: [PATCH] tcp: fix "old stuff" D-SACK causing SACK to be treated as D-SACK
+
+On Mon, Dec 30, 2019 at 1:55 AM Pengcheng Yang <yangpc@wangsu.com> wrote:
+>
+> When we receive a D-SACK, where the sequence number satisfies:
+>         undo_marker <= start_seq < end_seq <= prior_snd_una we 
+> consider this is a valid D-SACK and tcp_is_sackblock_valid() returns 
+> true, then this D-SACK is discarded as "old stuff", but the variable 
+> first_sack_index is not marked as negative in 
+> tcp_sacktag_write_queue().
+>
+> If this D-SACK also carries a SACK that needs to be processed (for 
+> example, the previous SACK segment was lost),
+
+What do you mean by ' previous sack segment was lost'  ?
+
+ this SACK
+> will be treated as a D-SACK in the following processing of 
+> tcp_sacktag_write_queue(), which will eventually lead to incorrect 
+> updates of undo_retrans and reordering.
+>
+> Fixes: fd6dad616d4f ("[TCP]: Earlier SACK block verification & 
+> simplify access to them")
+> Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
+> ---
+>  net/ipv4/tcp_input.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c index 
+> 88b987c..0238b55 100644
+> --- a/net/ipv4/tcp_input.c
+> +++ b/net/ipv4/tcp_input.c
+> @@ -1727,8 +1727,11 @@ static int tcp_sack_cache_ok(const struct tcp_sock *tp, const struct tcp_sack_bl
+>                 }
+>
+>                 /* Ignore very old stuff early */
+> -               if (!after(sp[used_sacks].end_seq, prior_snd_una))
+> +               if (!after(sp[used_sacks].end_seq, prior_snd_una)) {
+> +                       if (i == 0)
+> +                               first_sack_index = -1;
+>                         continue;
+> +               }
+>
+>                 used_sacks++;
+>         }
+
+
+Hi Pengcheng Yang
+
+This corner case deserves a packetdrill test so that we understand the issue, can you provide one ?
+
+Thanks.
+
