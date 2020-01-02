@@ -2,52 +2,52 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C7EC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C517C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67F6D24125
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E7620863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:26:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003961;
-	bh=VOUT318r59RAxhuHzAdS0CGGtsryt1VTz1lPfrvr2xY=;
+	s=default; t=1578003964;
+	bh=h6PqeoWsgWTduLaWEa6OvsJbgryC9o03xw5OAJfzK10=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y9IHBNEST8U81i3OcWeJegWdJdUyiFONcLkV1edyBNOoHq6N2JarLcrpRyJM1wUcn
-	 e9k0vS46QJXnjYgp72Zmy9jUavsoS+AuxhWTUtrnI7yiqFGC6alAZdn6EQomzuR0dw
-	 KdGdgfrwGdh77SXt009DpOaDqGECV07I76mTU3+A=
+	b=NUN76rHobuBgfHBPX2XW6wSyIBIFjtKEWHBHZskHELlVvuQZIEXt6XAVrLVQjsFsx
+	 qCQ7K43dyTawiySavPlwDncjS1/TjuKEN5cNlEXKMxtG8YCEE56CNe5Fcsksfg7FLK
+	 XGqyZJb2sTvQaNZhQAJA0Mep0VvLEo1SMo+V+XoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbgABWZ7 (ORCPT
+        id S1729600AbgABW0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:25:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52224 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:26:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729581AbgABWZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:25:55 -0500
+        id S1729595AbgABW0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:26:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A46B920866;
-        Thu,  2 Jan 2020 22:25:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6926320866;
+        Thu,  2 Jan 2020 22:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003954;
-        bh=VOUT318r59RAxhuHzAdS0CGGtsryt1VTz1lPfrvr2xY=;
+        s=default; t=1578003958;
+        bh=h6PqeoWsgWTduLaWEa6OvsJbgryC9o03xw5OAJfzK10=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0ozl0NQVOFcvj4DbKCyUJzDwEdePLK05h7cY02w1BVGWF+RNDib3+9417BtsOrYN2
-         /WluXoFzsG5SoGCNTkrJ6B8Nhc/IjbNRiee2mLhJmrAeTcAcIFHhPqjiRj+kbyI1tS
-         vI0hZqHkfbC+2ZO21wReYAYxJIVo/jqm9FCmyaG4=
+        b=t+Gm0LpQWVK9k5mSLwC2QfWAYaimg4n0cFytQZHu8vzBOFqjyHWFsQPVxpQaZCc0d
+         lqwOCPrgHwIuQIpG0XvvqUvyVt4pTDrvaSIbec6OSCods6+iXzfJPTtkGckbUkwJkE
+         naNYwes0i9TlSkjTur4gQkx9Ummv+CnqGsIBGvho=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 69/91] net: icmp: fix data-race in cmp_global_allow()
-Date:   Thu,  2 Jan 2020 23:07:51 +0100
-Message-Id: <20200102220445.504899278@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 71/91] spi: fsl: dont map irq during probe
+Date:   Thu,  2 Jan 2020 23:07:53 +0100
+Message-Id: <20200102220446.230713434@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -60,116 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit bbab7ef235031f6733b5429ae7877bfa22339712 upstream.
+[ Upstream commit 3194d2533efffae8b815d84729ecc58b6a9000ab ]
 
-This code reads two global variables without protection
-of a lock. We need READ_ONCE()/WRITE_ONCE() pairs to
-avoid load/store-tearing and better document the intent.
+With lastest kernel, the following warning is observed at startup:
 
-KCSAN reported :
-BUG: KCSAN: data-race in icmp_global_allow / icmp_global_allow
+[    1.500609] ------------[ cut here ]------------
+[    1.505225] remove_proc_entry: removing non-empty directory 'irq/22', leaking at least 'fsl_spi'
+[    1.514234] WARNING: CPU: 0 PID: 1 at fs/proc/generic.c:682 remove_proc_entry+0x198/0x1c0
+[    1.522403] CPU: 0 PID: 1 Comm: swapper Not tainted 5.4.0-s3k-dev-02248-g93532430a4ff #2564
+[    1.530724] NIP:  c0197694 LR: c0197694 CTR: c0050d80
+[    1.535762] REGS: df4a5af0 TRAP: 0700   Not tainted  (5.4.0-02248-g93532430a4ff)
+[    1.543818] MSR:  00029032 <EE,ME,IR,DR,RI>  CR: 22028222  XER: 00000000
+[    1.550524]
+[    1.550524] GPR00: c0197694 df4a5ba8 df4a0000 00000054 00000000 00000000 00004a38 00000010
+[    1.550524] GPR08: c07c5a30 00000800 00000000 00001032 22000208 00000000 c0004b14 00000000
+[    1.550524] GPR16: 00000000 00000000 00000000 00000000 00000000 00000000 c0830000 c07fc078
+[    1.550524] GPR24: c08e8ca0 df665d10 df60ea98 c07c9db8 00000001 df5d5ae3 df5d5a80 df43f8e3
+[    1.585327] NIP [c0197694] remove_proc_entry+0x198/0x1c0
+[    1.590628] LR [c0197694] remove_proc_entry+0x198/0x1c0
+[    1.595829] Call Trace:
+[    1.598280] [df4a5ba8] [c0197694] remove_proc_entry+0x198/0x1c0 (unreliable)
+[    1.605321] [df4a5bd8] [c0067acc] unregister_irq_proc+0x5c/0x70
+[    1.611238] [df4a5bf8] [c005fbc4] free_desc+0x3c/0x80
+[    1.616286] [df4a5c18] [c005fe2c] irq_free_descs+0x70/0xa8
+[    1.621778] [df4a5c38] [c033d3fc] of_fsl_spi_probe+0xdc/0x3cc
+[    1.627525] [df4a5c88] [c02f0f64] platform_drv_probe+0x44/0xa4
+[    1.633350] [df4a5c98] [c02eee44] really_probe+0x1ac/0x418
+[    1.638829] [df4a5cc8] [c02ed3e8] bus_for_each_drv+0x64/0xb0
+[    1.644481] [df4a5cf8] [c02ef950] __device_attach+0xd4/0x128
+[    1.650132] [df4a5d28] [c02ed61c] bus_probe_device+0xa0/0xbc
+[    1.655783] [df4a5d48] [c02ebbe8] device_add+0x544/0x74c
+[    1.661096] [df4a5d88] [c0382b78] of_platform_device_create_pdata+0xa4/0x100
+[    1.668131] [df4a5da8] [c0382cf4] of_platform_bus_create+0x120/0x20c
+[    1.674474] [df4a5df8] [c0382d50] of_platform_bus_create+0x17c/0x20c
+[    1.680818] [df4a5e48] [c0382e88] of_platform_bus_probe+0x9c/0xf0
+[    1.686907] [df4a5e68] [c0751404] __machine_initcall_cmpcpro_cmpcpro_declare_of_platform_devices+0x74/0x1a4
+[    1.696629] [df4a5e98] [c072a4cc] do_one_initcall+0x8c/0x1d4
+[    1.702282] [df4a5ef8] [c072a768] kernel_init_freeable+0x154/0x204
+[    1.708455] [df4a5f28] [c0004b2c] kernel_init+0x18/0x110
+[    1.713769] [df4a5f38] [c00122ac] ret_from_kernel_thread+0x14/0x1c
+[    1.719926] Instruction dump:
+[    1.722889] 2c030000 4182004c 3863ffb0 3c80c05f 80e3005c 388436a0 3c60c06d 7fa6eb78
+[    1.730630] 7fe5fb78 38840280 38634178 4be8c611 <0fe00000> 4bffff6c 3c60c071 7fe4fb78
+[    1.738556] ---[ end trace 05d0720bf2e352e2 ]---
 
-read to 0xffffffff861a8014 of 4 bytes by task 11201 on cpu 0:
- icmp_global_allow+0x36/0x1b0 net/ipv4/icmp.c:254
- icmpv6_global_allow net/ipv6/icmp.c:184 [inline]
- icmpv6_global_allow net/ipv6/icmp.c:179 [inline]
- icmp6_send+0x493/0x1140 net/ipv6/icmp.c:514
- icmpv6_send+0x71/0xb0 net/ipv6/ip6_icmp.c:43
- ip6_link_failure+0x43/0x180 net/ipv6/route.c:2640
- dst_link_failure include/net/dst.h:419 [inline]
- vti_xmit net/ipv4/ip_vti.c:243 [inline]
- vti_tunnel_xmit+0x27f/0xa50 net/ipv4/ip_vti.c:279
- __netdev_start_xmit include/linux/netdevice.h:4420 [inline]
- netdev_start_xmit include/linux/netdevice.h:4434 [inline]
- xmit_one net/core/dev.c:3280 [inline]
- dev_hard_start_xmit+0xef/0x430 net/core/dev.c:3296
- __dev_queue_xmit+0x14c9/0x1b60 net/core/dev.c:3873
- dev_queue_xmit+0x21/0x30 net/core/dev.c:3906
- neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
- neigh_output include/net/neighbour.h:511 [inline]
- ip6_finish_output2+0x7a6/0xec0 net/ipv6/ip6_output.c:116
- __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
- __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
- ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
- dst_output include/net/dst.h:436 [inline]
- ip6_local_out+0x74/0x90 net/ipv6/output_core.c:179
+The problem comes from the error path which calls
+irq_dispose_mapping() while the IRQ has been requested with
+devm_request_irq().
 
-write to 0xffffffff861a8014 of 4 bytes by task 11183 on cpu 1:
- icmp_global_allow+0x174/0x1b0 net/ipv4/icmp.c:272
- icmpv6_global_allow net/ipv6/icmp.c:184 [inline]
- icmpv6_global_allow net/ipv6/icmp.c:179 [inline]
- icmp6_send+0x493/0x1140 net/ipv6/icmp.c:514
- icmpv6_send+0x71/0xb0 net/ipv6/ip6_icmp.c:43
- ip6_link_failure+0x43/0x180 net/ipv6/route.c:2640
- dst_link_failure include/net/dst.h:419 [inline]
- vti_xmit net/ipv4/ip_vti.c:243 [inline]
- vti_tunnel_xmit+0x27f/0xa50 net/ipv4/ip_vti.c:279
- __netdev_start_xmit include/linux/netdevice.h:4420 [inline]
- netdev_start_xmit include/linux/netdevice.h:4434 [inline]
- xmit_one net/core/dev.c:3280 [inline]
- dev_hard_start_xmit+0xef/0x430 net/core/dev.c:3296
- __dev_queue_xmit+0x14c9/0x1b60 net/core/dev.c:3873
- dev_queue_xmit+0x21/0x30 net/core/dev.c:3906
- neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
- neigh_output include/net/neighbour.h:511 [inline]
- ip6_finish_output2+0x7a6/0xec0 net/ipv6/ip6_output.c:116
- __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
- __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
- ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
+IRQ doesn't need to be mapped with irq_of_parse_and_map(). The only
+need is to get the IRQ virtual number. For that, use
+of_irq_to_resource() instead of the
+irq_of_parse_and_map()/irq_dispose_mapping() pair.
 
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 11183 Comm: syz-executor.2 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-
-Fixes: 4cdf507d5452 ("icmp: add a global rate limitation")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 500a32abaf81 ("spi: fsl: Call irq_dispose_mapping in err path")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Link: https://lore.kernel.org/r/518cfb83347d5372748e7fe72f94e2e9443d0d4a.1575905123.git.christophe.leroy@c-s.fr
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/icmp.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/spi/spi-fsl-spi.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/net/ipv4/icmp.c
-+++ b/net/ipv4/icmp.c
-@@ -254,10 +254,11 @@ bool icmp_global_allow(void)
- 	bool rc = false;
+diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
+index 8f2e97857e8b..fb34ba3f2b23 100644
+--- a/drivers/spi/spi-fsl-spi.c
++++ b/drivers/spi/spi-fsl-spi.c
+@@ -832,8 +832,8 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
+ 	if (ret)
+ 		goto err;
  
- 	/* Check if token bucket is empty and cannot be refilled
--	 * without taking the spinlock.
-+	 * without taking the spinlock. The READ_ONCE() are paired
-+	 * with the following WRITE_ONCE() in this same function.
- 	 */
--	if (!icmp_global.credit) {
--		delta = min_t(u32, now - icmp_global.stamp, HZ);
-+	if (!READ_ONCE(icmp_global.credit)) {
-+		delta = min_t(u32, now - READ_ONCE(icmp_global.stamp), HZ);
- 		if (delta < HZ / 50)
- 			return false;
+-	irq = irq_of_parse_and_map(np, 0);
+-	if (!irq) {
++	irq = of_irq_to_resource(np, 0, NULL);
++	if (irq <= 0) {
+ 		ret = -EINVAL;
+ 		goto err;
  	}
-@@ -267,14 +268,14 @@ bool icmp_global_allow(void)
- 	if (delta >= HZ / 50) {
- 		incr = sysctl_icmp_msgs_per_sec * delta / HZ ;
- 		if (incr)
--			icmp_global.stamp = now;
-+			WRITE_ONCE(icmp_global.stamp, now);
- 	}
- 	credit = min_t(u32, icmp_global.credit + incr, sysctl_icmp_msgs_burst);
- 	if (credit) {
- 		credit--;
- 		rc = true;
- 	}
--	icmp_global.credit = credit;
-+	WRITE_ONCE(icmp_global.credit, credit);
- 	spin_unlock(&icmp_global.lock);
- 	return rc;
- }
+@@ -847,7 +847,6 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
+ 	return 0;
+ 
+ err:
+-	irq_dispose_mapping(irq);
+ 	if (type == TYPE_FSL)
+ 		of_fsl_spi_free_chipselects(dev);
+ 	return ret;
+-- 
+2.20.1
+
 
 
