@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC37AC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE712C3276E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78DC420866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7DEC20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005505;
-	bh=SRw83uJ4+3JRA4I99HLao4ZorzfbTvQ0yCMarohdFR0=;
+	s=default; t=1578005507;
+	bh=xF54mOLpbSb1dQitUM6FwEUU1UUEJcNSOBzBfaDG8Ik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b36+6XLIPPa8iGtNWNU9I3yvlBFQ4rG3SNFqbACVqv7zbrzh1ULNP/HwRMDcZf5LF
-	 LO4JgsbxKZXUL03/8V5sX0xH8ADWTdCITBpGHM/9P4r35RTn4e+XuEqftvjz5VAbY0
-	 ktJ7AbYDYY8m9cbO4njJ7JlQjmzOqlEKZa5EcUmI=
+	b=WiziLAq+zBjv5J+Ot85sC4YcCrJCVLlQiRkEcxMjMYL6mUZmoMx93K27qkk7oM+xu
+	 ecx3AvUNJAxpJTPbYQ2JdjT/LKeobrxfw8Vm2ojkmFLDZzHl0eS8pRl1pQXD+LNi0t
+	 LdPBnScLdxyv7IyrgcvpVYeWWGCORtLr48Fdkqis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729984AbgABWvo (ORCPT
+        id S1728273AbgABWXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:51:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46792 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:23:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729074AbgABWXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:23:49 -0500
+        id S1727889AbgABWXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:23:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCCB0222C3;
-        Thu,  2 Jan 2020 22:23:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A5EE20863;
+        Thu,  2 Jan 2020 22:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003829;
-        bh=SRw83uJ4+3JRA4I99HLao4ZorzfbTvQ0yCMarohdFR0=;
+        s=default; t=1578003822;
+        bh=xF54mOLpbSb1dQitUM6FwEUU1UUEJcNSOBzBfaDG8Ik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E6Q8ecVaApPqY18R4urGfaNnfotpwAWk0Mw/gZerivFhMzK5tAV1/91NKP5+TCQo8
-         vDc1g47Kq5GsG2+vaV7dmKkCebQSh7Xjb1E93SfTpK4Jzy1m1JFD0F/8WYpUIIYGcH
-         BkwPvJBtrW/s0+J8ltt0snF78OTLCu97XVklpT2s=
+        b=Uy5FQm1tToudblxkrBb9TNVp+WmPKgmPb7GsYjHjWDQUZ93GspsU5kOckcnyEBGoF
+         BKfh1VoWdIYREG3zAipaW9MumWAiTEdBs2vLh6kdsnXJMwC9loApwYEqe9tQaGJ5h/
+         9OphQ0day25JgOp4kwiRZ7ojSwwNKs5LPyHnBIzw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
-        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 17/91] jbd2: Fix statistics for the number of logged blocks
-Date:   Thu,  2 Jan 2020 23:06:59 +0100
-Message-Id: <20200102220416.130348835@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 14/91] powerpc/security/book3s64: Report L1TF status in sysfs
+Date:   Thu,  2 Jan 2020 23:06:56 +0100
+Message-Id: <20200102220412.758106117@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -59,59 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Anthony Steinhauser <asteinhauser@google.com>
 
-[ Upstream commit 015c6033068208d6227612c878877919f3fcf6b6 ]
+[ Upstream commit 8e6b6da91ac9b9ec5a925b6cb13f287a54bd547d ]
 
-jbd2 statistics counting number of blocks logged in a transaction was
-wrong. It didn't count the commit block and more importantly it didn't
-count revoke descriptor blocks. Make sure these get properly counted.
+Some PowerPC CPUs are vulnerable to L1TF to the same extent as to
+Meltdown. It is also mitigated by flushing the L1D on privilege
+transition.
 
-Reviewed-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191105164437.32602-13-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Currently the sysfs gives a false negative on L1TF on CPUs that I
+verified to be vulnerable, a Power9 Talos II Boston 004e 1202, PowerNV
+T2P9D01.
+
+Signed-off-by: Anthony Steinhauser <asteinhauser@google.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+[mpe: Just have cpu_show_l1tf() call cpu_show_meltdown() directly]
+Link: https://lore.kernel.org/r/20191029190759.84821-1-asteinhauser@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/commit.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/security.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index 0567b17a970c..7dd613392592 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -726,7 +726,6 @@ start_journal_io:
- 				submit_bh(REQ_OP_WRITE, REQ_SYNC, bh);
- 			}
- 			cond_resched();
--			stats.run.rs_blocks_logged += bufs;
+diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
+index f5d6541bf8c2..fef3f09fc238 100644
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -160,6 +160,11 @@ ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, cha
  
- 			/* Force a new descriptor to be generated next
-                            time round the loop. */
-@@ -813,6 +812,7 @@ start_journal_io:
- 		if (unlikely(!buffer_uptodate(bh)))
- 			err = -EIO;
- 		jbd2_unfile_log_bh(bh);
-+		stats.run.rs_blocks_logged++;
+ 	return sprintf(buf, "Vulnerable\n");
+ }
++
++ssize_t cpu_show_l1tf(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	return cpu_show_meltdown(dev, attr, buf);
++}
+ #endif
  
- 		/*
- 		 * The list contains temporary buffer heads created by
-@@ -858,6 +858,7 @@ start_journal_io:
- 		BUFFER_TRACE(bh, "ph5: control buffer writeout done: unfile");
- 		clear_buffer_jwrite(bh);
- 		jbd2_unfile_log_bh(bh);
-+		stats.run.rs_blocks_logged++;
- 		__brelse(bh);		/* One for getblk */
- 		/* AKPM: bforget here */
- 	}
-@@ -879,6 +880,7 @@ start_journal_io:
- 	}
- 	if (cbh)
- 		err = journal_wait_on_commit_record(journal, cbh);
-+	stats.run.rs_blocks_logged++;
- 	if (jbd2_has_feature_async_commit(journal) &&
- 	    journal->j_flags & JBD2_BARRIER) {
- 		blkdev_issue_flush(journal->j_dev, GFP_NOFS, NULL);
+ ssize_t cpu_show_spectre_v1(struct device *dev, struct device_attribute *attr, char *buf)
 -- 
 2.20.1
 
