@@ -7,53 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68741C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12468C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3754A2253D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD89E20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004380;
-	bh=EDC6HNLqHPCnjOFjZoxgAGbhLmHBfVy9HFBenvThPWQ=;
+	s=default; t=1578004382;
+	bh=b7tHW2NgMvOXfFf/n69XBqciRQFVnxAxVAbvvoN6EXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2PcEJhy2ToUOyjqD1lp2K0FfDBImL+gEr6kiIKtw1oNlMVk+CWvFlT/W13BEYi3bZ
-	 HeqBZaFWmG+rKkUf8S1IQFx+bqaR31DIXpFm4Cg3THwKP2UDrURnqyYFUBwyzB/0L/
-	 r31gENNZ0Qp0inlVUx60yvSMl9lUA7LRY6fUf6Rk=
+	b=kJjQ6UTWx56LcGsc92kguHh6fVSmOPEV5qhLOM8F1J1qL8Lc2HQl29vxzOjWoY/Ex
+	 RM8O9lQeunRRQYw5cF+uRAm7OsW23BO1W1NTU4IC9tV0+6md8QbyeTuSn8r0RF/Rsu
+	 rN4atlbPBCv58rC6QV6k5YjD5h83U6bR8AdxDQ7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730064AbgABWc6 (ORCPT
+        id S1730484AbgABWdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:32:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39766 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:33:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730472AbgABWcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:32:54 -0500
+        id S1730271AbgABWc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:32:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEB0520863;
-        Thu,  2 Jan 2020 22:32:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0C8F20863;
+        Thu,  2 Jan 2020 22:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004373;
-        bh=EDC6HNLqHPCnjOFjZoxgAGbhLmHBfVy9HFBenvThPWQ=;
+        s=default; t=1578004378;
+        bh=b7tHW2NgMvOXfFf/n69XBqciRQFVnxAxVAbvvoN6EXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S43E+lwxdfm3EgD/owNYwdSnJyjNq4cB22XOZHbNG7VoZ+ieBn6gVPAYR+Z3OV9GR
-         QTyW233loCPwvpja9muXhw4AsHSF17F1yb4Q52qWqGu5oSMAyVQWV5/UZjWnY9fFUW
-         uZeFfdUxjiuKzRb+q0amqt6J5iyo29/8fwacgkXU=
+        b=oR1kY6UUFyYoMVrDDMSaBUAi3pC+YLnonX5/93SO8Wp70jpyZG16Yn4jMH5+8QeiV
+         sQ1MMbR0Bs5+bb0c3xQ+opF2vIm7dc1lSIPY4a4j5edcNtiFiR73379R4tH9I6n9rm
+         g6PXuK9Pkq7+dW0LJPGweMX934Bhylkdm483XEuI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Chris Down <chris@chrisdown.name>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 151/171] kernel: sysctl: make drop_caches write-only
-Date:   Thu,  2 Jan 2020 23:08:02 +0100
-Message-Id: <20200102220607.897153673@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 128/171] irqchip/irq-bcm7038-l1: Enable parent IRQ if necessary
+Date:   Thu,  2 Jan 2020 23:07:39 +0100
+Message-Id: <20200102220604.799769799@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -66,51 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Weiner <hannes@cmpxchg.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 204cb79ad42f015312a5bbd7012d09c93d9b46fb ]
+[ Upstream commit 27eebb60357ed5aa6659442f92907c0f7368d6ae ]
 
-Currently, the drop_caches proc file and sysctl read back the last value
-written, suggesting this is somehow a stateful setting instead of a
-one-time command.  Make it write-only, like e.g.  compact_memory.
+If the 'brcm,irq-can-wake' property is specified, make sure we also
+enable the corresponding parent interrupt we are attached to.
 
-While mitigating a VM problem at scale in our fleet, there was confusion
-about whether writing to this file will permanently switch the kernel into
-a non-caching mode.  This influences the decision making in a tense
-situation, where tens of people are trying to fix tens of thousands of
-affected machines: Do we need a rollback strategy?  What are the
-performance implications of operating in a non-caching state for several
-days?  It also caused confusion when the kernel team said we may need to
-write the file several times to make sure it's effective ("But it already
-reads back 3?").
-
-Link: http://lkml.kernel.org/r/20191031221602.9375-1-hannes@cmpxchg.org
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-Acked-by: Chris Down <chris@chrisdown.name>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: David Hildenbrand <david@redhat.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Alexey Dobriyan <adobriyan@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20191024201415.23454-4-f.fainelli@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sysctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/irqchip/irq-bcm7038-l1.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 6af1ac551ea3..34449ec0689d 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -1398,7 +1398,7 @@ static struct ctl_table vm_table[] = {
- 		.procname	= "drop_caches",
- 		.data		= &sysctl_drop_caches,
- 		.maxlen		= sizeof(int),
--		.mode		= 0644,
-+		.mode		= 0200,
- 		.proc_handler	= drop_caches_sysctl_handler,
- 		.extra1		= &one,
- 		.extra2		= &four,
+diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
+index 6e24facebb46..a571d9c6e42a 100644
+--- a/drivers/irqchip/irq-bcm7038-l1.c
++++ b/drivers/irqchip/irq-bcm7038-l1.c
+@@ -282,6 +282,10 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+ 		pr_err("failed to map parent interrupt %d\n", parent_irq);
+ 		return -EINVAL;
+ 	}
++
++	if (of_property_read_bool(dn, "brcm,irq-can-wake"))
++		enable_irq_wake(parent_irq);
++
+ 	irq_set_chained_handler_and_data(parent_irq, bcm7038_l1_irq_handle,
+ 					 intc);
+ 
 -- 
 2.20.1
 
