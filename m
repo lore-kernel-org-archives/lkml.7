@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C33C0C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D725C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA45222C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0645920863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004734;
-	bh=OtxbCXFjP2oaiM7NLaEynn8akiAk4XtBtfpzFMuzhDk=;
+	s=default; t=1578004738;
+	bh=/g65bUBkUZz6J1YbcMzmMsnYXMy3bnSpWKDlcEJBmV0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D233T0GrqnYHup4N4CR/sGBKwiwBhWM415eDZNfI/pSRyTbeAk3McagXulZHuu8hI
-	 kdUATP3o+HQ1oMpp7phswLp4vCzQEhdxb7kooX7KK9qk60CuCtO4MFtg7S1S8G2972
-	 5ubMfFb971mE/DRqh/DPCRYHdJ9rL1v5iUVau6H8=
+	b=HXOFPKipCv+45RLwrSNZ4lAjPcRViBg5TS3LCXBEJiW+RSmEMzoW1/OBAXt69Pt3R
+	 tho+YgZY82Hmp1PwWc0qYvesUmylPIQVjQL7k5rM0PvStz8dcHzd7lPIwAYaXl/X5O
+	 uJlqdGPw9u8yyDN9lxEuhF8l3bZ2OKNgmrfpwEQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731129AbgABWix (ORCPT
+        id S1731114AbgABWi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:38:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53578 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:38:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731360AbgABWit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:38:49 -0500
+        id S1731136AbgABWiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:38:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DEB524650;
-        Thu,  2 Jan 2020 22:38:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D1D620863;
+        Thu,  2 Jan 2020 22:38:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004729;
-        bh=OtxbCXFjP2oaiM7NLaEynn8akiAk4XtBtfpzFMuzhDk=;
+        s=default; t=1578004733;
+        bh=/g65bUBkUZz6J1YbcMzmMsnYXMy3bnSpWKDlcEJBmV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RvNF3X2E/YCdkLQx5fX3nnK7UxYMoiKL6ZqMb/aIe/4GuyDMncDxOQtTkK7Y/qV+o
-         A5C4kyvQo1/C4uKzQGli/H6IZW/N1u7Jpca35T2TQ3t+uvShnLOUIv9XaFfFW3ftUV
-         TAumWf4sLa3RTq2X/Wr5+jVNWnc0kdlcr+wEQLXY=
+        b=OPkY85Qf05aVWMFV6gAjw6ylcxXiXdrF11NwpLHY0PGKdX0qp9D5wuu/cg4oxt2C0
+         GZluzglvR9N99urCtTVHWgz0EzbE50bVigGcUlG09tiPdc/vafvVOYQcYRvCZAgib3
+         Cw3DB2Ua0k1hMPfzuKWw1/MKTyIqSmmQZKaIQhqI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+3031f712c7ad5dd4d926@syzkaller.appspotmail.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Siddharth Chandrasekaran <csiddharth@vmware.com>
-Subject: [PATCH 4.4 129/137] filldir[64]: remove WARN_ON_ONCE() for bad directory entries
-Date:   Thu,  2 Jan 2020 23:08:22 +0100
-Message-Id: <20200102220604.479039672@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Daniel Wagner <dwagner@suse.de>
+Subject: [PATCH 4.4 130/137] net: davinci_cpdma: use dma_addr_t for DMA address
+Date:   Thu,  2 Jan 2020 23:08:23 +0100
+Message-Id: <20200102220604.672480604@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -61,41 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit b9959c7a347d6adbb558fba7e36e9fef3cba3b07 upstream.
+commit 84092996673211f16ef3b942a191d7952e9dfea9 upstream.
 
-This was always meant to be a temporary thing, just for testing and to
-see if it actually ever triggered.
+The davinci_cpdma mixes up physical addresses as seen from the CPU
+and DMA addresses as seen from a DMA master, since it can operate
+on both normal memory or an on-chip buffer. If dma_addr_t is
+different from phys_addr_t, this means we get a compile-time warning
+about the type mismatch:
 
-The only thing that reported it was syzbot doing disk image fuzzing, and
-then that warning is expected.  So let's just remove it before -rc4,
-because the extra sanity testing should probably go to -stable, but we
-don't want the warning to do so.
+ethernet/ti/davinci_cpdma.c: In function 'cpdma_desc_pool_create':
+ethernet/ti/davinci_cpdma.c:182:48: error: passing argument 3 of 'dma_alloc_coherent' from incompatible pointer type [-Werror=incompatible-pointer-types]
+   pool->cpumap = dma_alloc_coherent(dev, size, &pool->phys,
+In file included from ethernet/ti/davinci_cpdma.c:21:0:
+dma-mapping.h:398:21: note: expected 'dma_addr_t * {aka long long unsigned int *}' but argument is of type 'phys_addr_t * {aka unsigned int *}'
+ static inline void *dma_alloc_coherent(struct device *dev, size_t size,
 
-Reported-by: syzbot+3031f712c7ad5dd4d926@syzkaller.appspotmail.com
-Fixes: 8a23eb804ca4 ("Make filldir[64]() verify the directory entry filename is valid")
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Siddharth Chandrasekaran <csiddharth@vmware.com>
+This slightly restructures the code so the address we use for
+mapping RAM into a DMA address is always a dma_addr_t, avoiding
+the warning. The code is correct even if both types are 32-bit
+because the DMA master in this device only supports 32-bit addressing
+anyway, independent of the types that are used.
+
+We still assign this value to pool->phys, and that is wrong if
+the driver is ever used with an IOMMU, but that value appears to
+be never used, so there is no problem really. I've added a couple
+of comments about where we do things that are slightly violating
+the API.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/readdir.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/ti/davinci_cpdma.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/fs/readdir.c
-+++ b/fs/readdir.c
-@@ -77,9 +77,9 @@ EXPORT_SYMBOL(iterate_dir);
+--- a/drivers/net/ethernet/ti/davinci_cpdma.c
++++ b/drivers/net/ethernet/ti/davinci_cpdma.c
+@@ -82,7 +82,7 @@ struct cpdma_desc {
+ 
+ struct cpdma_desc_pool {
+ 	phys_addr_t		phys;
+-	u32			hw_addr;
++	dma_addr_t		hw_addr;
+ 	void __iomem		*iomap;		/* ioremap map */
+ 	void			*cpumap;	/* dma_alloc map */
+ 	int			desc_size, mem_size;
+@@ -152,7 +152,7 @@ struct cpdma_chan {
+  * abstract out these details
   */
- static int verify_dirent_name(const char *name, int len)
+ static struct cpdma_desc_pool *
+-cpdma_desc_pool_create(struct device *dev, u32 phys, u32 hw_addr,
++cpdma_desc_pool_create(struct device *dev, u32 phys, dma_addr_t hw_addr,
+ 				int size, int align)
  {
--	if (WARN_ON_ONCE(!len))
-+	if (!len)
- 		return -EIO;
--	if (WARN_ON_ONCE(memchr(name, '/', len)))
-+	if (memchr(name, '/', len))
- 		return -EIO;
- 	return 0;
- }
+ 	int bitmap_size;
+@@ -176,13 +176,13 @@ cpdma_desc_pool_create(struct device *de
+ 
+ 	if (phys) {
+ 		pool->phys  = phys;
+-		pool->iomap = ioremap(phys, size);
++		pool->iomap = ioremap(phys, size); /* should be memremap? */
+ 		pool->hw_addr = hw_addr;
+ 	} else {
+-		pool->cpumap = dma_alloc_coherent(dev, size, &pool->phys,
++		pool->cpumap = dma_alloc_coherent(dev, size, &pool->hw_addr,
+ 						  GFP_KERNEL);
+-		pool->iomap = pool->cpumap;
+-		pool->hw_addr = pool->phys;
++		pool->iomap = (void __iomem __force *)pool->cpumap;
++		pool->phys = pool->hw_addr; /* assumes no IOMMU, don't use this value */
+ 	}
+ 
+ 	if (pool->iomap)
 
 
