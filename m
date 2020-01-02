@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03880C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE39DC47409
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C364322525
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0A0B20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:29:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004196;
-	bh=ESTFKnxqnJayKRPbkf5MnKNbClCkmYSzC5nq9DVBah0=;
+	s=default; t=1578004198;
+	bh=gFmiTIFanl6uDAvj8mEMHH0JSvxZewluyRxF6kMjtPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dcIEn0MbYpdFZ0BDUlXXprQtzCf7A3DtsDKIhPfHPkCAchpRzh1BXh/IW9R6g3Kud
-	 7AwzKEOPBjQE7zwsfLMrbOTAvIyIP0EAKabOWqT9lTtnf0c8elOYiS7gWnH2kSF6+x
-	 9OnxOgEe+yrdbvlg8Se915/khkwGEDeEwA2TkqPI=
+	b=xVD+A5m7knhMVCn0fDvJ51Qx5ylDny+AiZruIBFUqxJyOgLEEFooZS516ojaPf7rK
+	 ujT9pZCfb/PjujVYSc71Rwa0TLSUkVk9dsZTXAltc6NcAoBkd2UFfMTJ4Nx4xaIJEz
+	 ut2LzFicvQlHiURTtiojnI4RkRFwigUsiiLQKf/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730102AbgABW3z (ORCPT
+        id S1730109AbgABW36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:29:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32838 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:29:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729295AbgABW3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:29:49 -0500
+        id S1730094AbgABW3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:29:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 371C921835;
-        Thu,  2 Jan 2020 22:29:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 960AB20863;
+        Thu,  2 Jan 2020 22:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004188;
-        bh=ESTFKnxqnJayKRPbkf5MnKNbClCkmYSzC5nq9DVBah0=;
+        s=default; t=1578004191;
+        bh=gFmiTIFanl6uDAvj8mEMHH0JSvxZewluyRxF6kMjtPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZUPmFxmn83clSt3yL3luLBZcnqbqCdc2I1rEWMjDp8gukpS51gbIMuoxMbJl+bKT/
-         XH2IOtHGZG5+SFMlplz5FhXwUfI6sTifItfGjz9gZoTuWjsIrxcTOc4cSbsEUe68G2
-         uuw/xgwn+J7C6M/Phvzy0ZhCg9o3C3o1cHYaAJLM=
+        b=OZtYQPKl7iABZgkwVSmz/rhokJVmcRzdKvflbN1cf6/ryclnBxRzFZVZhSAsWCWJ1
+         7/pfBCXfhTCC6ORBTsZrz5/8k+6Zz9bZHREFUIREZD0gXDFgqQvCRY59ayC8CnaGaL
+         tz0q5E7njmHkRwZ8GBxGlZHEqLI7jbcXu6AdndHU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 050/171] perf probe: Fix to find range-only function instance
-Date:   Thu,  2 Jan 2020 23:06:21 +0100
-Message-Id: <20200102220553.918514376@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 041/171] x86/ioapic: Prevent inconsistent state when moving an interrupt
+Date:   Thu,  2 Jan 2020 23:06:12 +0100
+Message-Id: <20200102220552.675021311@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -62,48 +63,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit b77afa1f810f37bd8a36cb1318178dfe2d7af6b6 ]
+[ Upstream commit df4393424af3fbdcd5c404077176082a8ce459c4 ]
 
-Fix die_is_func_instance() to find range-only function instance.
+There is an issue with threaded interrupts which are marked ONESHOT
+and using the fasteoi handler:
 
-In some case, a function instance can be made without any low PC or
-entry PC, but only with address ranges by optimization.  (e.g. cold text
-partially in "text.unlikely" section) To find such function instance, we
-have to check the range attribute too.
+  if (IS_ONESHOT())
+    mask_irq();
+  ....
+  cond_unmask_eoi_irq()
+    chip->irq_eoi();
+      if (setaffinity_pending) {
+         mask_ioapic();
+         ...
+	 move_affinity();
+	 unmask_ioapic();
+      }
 
-Fixes: e1ecbbc3fa83 ("perf probe: Fix to handle optimized not-inlined functions")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157190835669.1859.8368628035930950596.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+So if setaffinity is pending the interrupt will be moved and then
+unconditionally unmasked at the ioapic level, which is wrong in two
+aspects:
+
+ 1) It should be kept masked up to the point where the threaded handler
+    finished.
+
+ 2) The physical chip state and the software masked state are inconsistent
+
+Guard both the mask and the unmask with a check for the software masked
+state. If the line is marked masked then the ioapic line is also masked, so
+both mask_ioapic() and unmask_ioapic() can be skipped safely.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sebastian Siewior <bigeasy@linutronix.de>
+Fixes: 3aa551c9b4c4 ("genirq: add threaded interrupt handler support")
+Link: https://lkml.kernel.org/r/20191017101938.321393687@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/x86/kernel/apic/io_apic.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 41e068e94349..3d0a9e09d00a 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -328,10 +328,14 @@ bool die_is_func_def(Dwarf_Die *dw_die)
- bool die_is_func_instance(Dwarf_Die *dw_die)
- {
- 	Dwarf_Addr tmp;
-+	Dwarf_Attribute attr_mem;
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index 09dd95cabfc2..3401b28f1312 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -1712,9 +1712,10 @@ static bool io_apic_level_ack_pending(struct mp_chip_data *data)
  
- 	/* Actually gcc optimizes non-inline as like as inlined */
--	return !dwarf_func_inline(dw_die) && dwarf_entrypc(dw_die, &tmp) == 0;
-+	return !dwarf_func_inline(dw_die) &&
-+	       (dwarf_entrypc(dw_die, &tmp) == 0 ||
-+		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL);
+ static inline bool ioapic_irqd_mask(struct irq_data *data)
+ {
+-	/* If we are moving the irq we need to mask it */
++	/* If we are moving the IRQ we need to mask it */
+ 	if (unlikely(irqd_is_setaffinity_pending(data))) {
+-		mask_ioapic_irq(data);
++		if (!irqd_irq_masked(data))
++			mask_ioapic_irq(data);
+ 		return true;
+ 	}
+ 	return false;
+@@ -1751,7 +1752,9 @@ static inline void ioapic_irqd_unmask(struct irq_data *data, bool masked)
+ 		 */
+ 		if (!io_apic_level_ack_pending(data->chip_data))
+ 			irq_move_masked_irq(data);
+-		unmask_ioapic_irq(data);
++		/* If the IRQ is masked in the core, leave it: */
++		if (!irqd_irq_masked(data))
++			unmask_ioapic_irq(data);
+ 	}
  }
-+
- /**
-  * die_get_data_member_location - Get the data-member offset
-  * @mb_die: a DIE of a member of a data structure
+ #else
 -- 
 2.20.1
 
