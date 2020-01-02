@@ -2,302 +2,123 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1BAC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E344C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 825D5222C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:03:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SgtyL/a4"
+	by mail.kernel.org (Postfix) with ESMTP id 4540A21835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:03:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577963032;
+	bh=lyuQwYk6duK7MRRoZwouWCgWYszfADDHUK+QRJ9MmW0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xMWmxZOTd6uDJnPQNlXwjuTokq+o5JS0xv7Vaee1mt55Ge4Bb2sMSi9d3b0pqRCWK
+	 rRrd/vCeAJnHJ3PDq+HMJkUXb3wHmp6lindJdtZZ2vVozLhJDjhcseaOMa8Vc7gGL7
+	 aY6lhVJKBWiRddE4G2P5KNsrIrVJ4gHsg3U0coV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbgABLDF (ORCPT
+        id S1728132AbgABLDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 06:03:05 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:51448 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728107AbgABLDF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 06:03:05 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577962984; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=Kh5To+EGbT//PbB0ZXQ0h0S3u/fbkwAeO+mv8pFr1t8=; b=SgtyL/a4glJo+wVjcXy7nGH4ZHCHFEucUvu3XVMkh/tC5+DwhopAAn26jFd/EZUlDcAs7JVk
- nRjWXvLakb5Oy5ESw7aCWLu9do9SREQio5BL2kepG5LyJSjU6HWx7zNj9t+6oQpA66+yASLZ
- hIJCQy9znyMNlvFQrTtt37AYidg=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e0dcde5.7f6e5297bfb8-smtp-out-n01;
- Thu, 02 Jan 2020 11:03:01 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 85726C447AC; Thu,  2 Jan 2020 11:03:01 +0000 (UTC)
-Received: from smasetty-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Thu, 2 Jan 2020 06:03:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728100AbgABLDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 06:03:51 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: smasetty)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 40A05C447A9;
-        Thu,  2 Jan 2020 11:02:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 40A05C447A9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
-From:   Sharat Masetty <smasetty@codeaurora.org>
-To:     freedreno@lists.freedesktop.org
-Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, will@kernel.org,
-        robin.murphy@arm.com, joro@8bytes.org,
-        iommu@lists.linux-foundation.org, jcrouse@codeaurora.org,
-        saiprakash.ranjan@codeaurora.org,
-        Sharat Masetty <smasetty@codeaurora.org>
-Subject: [PATCH v2 7/7] drm/msm/a6xx: Add support for using system cache(LLC)
-Date:   Thu,  2 Jan 2020 16:32:13 +0530
-Message-Id: <1577962933-13577-8-git-send-email-smasetty@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1577962933-13577-1-git-send-email-smasetty@codeaurora.org>
-References: <1577962933-13577-1-git-send-email-smasetty@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 140F2215A4;
+        Thu,  2 Jan 2020 11:03:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577963030;
+        bh=lyuQwYk6duK7MRRoZwouWCgWYszfADDHUK+QRJ9MmW0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=B9F7Onm8xocF2Q+5nqgcr+BNQIIsFDSMp1mLSNtnpHRUwDXcAn0vdgfxYhKm9z2aY
+         LENy+LulhaOZmhM+KRmCYsGpCyY12E6fxwnNKZ78vnSe7EktsiTP5xBhmAKaBztR42
+         hAgg9HmVyHQRWAAxwZJ7gJsuBzYGpjHKPq0m3JlI=
+Date:   Thu, 2 Jan 2020 12:03:47 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-amarula@amarulasolutions.com
+Subject: Re: [PATCH v3 6/9] dt-bindings: sun6i-dsi: Add R40 DPHY compatible
+ (w/ A31 fallback)
+Message-ID: <20200102110347.v7lsnmmsbp66r3ia@gilmour.lan>
+References: <20191231130528.20669-1-jagan@amarulasolutions.com>
+ <20191231130528.20669-7-jagan@amarulasolutions.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5qm5gfldbu2p5gzt"
+Content-Disposition: inline
+In-Reply-To: <20191231130528.20669-7-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The last level system cache can be partitioned to 32 different slices
-of which GPU has two slices preallocated. One slice is used for caching GPU
-buffers and the other slice is used for caching the GPU SMMU pagetables.
-This patch talks to the core system cache driver to acquire the slice handles,
-configure the SCID's to those slices and activates and deactivates the slices
-upon GPU power collapse and restore.
 
-Some support from the IOMMU driver is also needed to make use of the
-system cache. IOMMU_QCOM_SYS_CACHE is a buffer protection flag which enables
-caching GPU data buffers in the system cache with memory attributes such
-as outer cacheable, read-allocate, write-allocate for buffers. The GPU
-then has the ability to override a few cacheability parameters which it
-does to override write-allocate to write-no-allocate as the GPU hardware
-does not benefit much from it.
+--5qm5gfldbu2p5gzt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Similarly DOMAIN_ATTR_QCOM_SYS_CACHE is another domain level attribute
-used by the IOMMU driver to set the right attributes to cache the hardware
-pagetables into the system cache.
+On Tue, Dec 31, 2019 at 06:35:25PM +0530, Jagan Teki wrote:
+> The MIPI DSI PHY controller on Allwinner R40 is similar
+> on the one on A31.
+>
+> Add R40 compatible and append A31 compatible as fallback.
+>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+> Changes for v3:
+> - update the binding in new yaml format
+>
+>  .../devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml   | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
+> index 8841938050b2..0c283fe79402 100644
+> --- a/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
+> +++ b/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
+> @@ -18,6 +18,7 @@ properties:
+>      oneOf:
+>        - const: allwinner,sun6i-a31-mipi-dphy
+>        - items:
+> +          - const: allwinner,sun8i-r40-mipi-dphy
+>            - const: allwinner,sun50i-a64-mipi-dphy
+>            - const: allwinner,sun6i-a31-mipi-dphy
 
-Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
----
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 100 ++++++++++++++++++++++++++++++++++
- drivers/gpu/drm/msm/adreno/a6xx_gpu.h |   3 +
- drivers/gpu/drm/msm/msm_iommu.c       |   3 +
- drivers/gpu/drm/msm/msm_mmu.h         |   4 ++
- 4 files changed, 110 insertions(+)
+This isn't doing what you say it does.
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index ab562f6..d15eb99f 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -9,6 +9,8 @@
- #include "a6xx_gmu.xml.h"
+Here you're stating that there's two valid values, one that is a
+single element allwinner,sun6i-a31-mipi-dphy, and another which is a
+list of three elements allwinner,sun8i-r40-mipi-dphy,
+allwinner,sun50i-a64-mipi-dphy and allwinner,sun6i-a31-mipi-dphy, in
+that order.
 
- #include <linux/devfreq.h>
-+#include <linux/bitfield.h>
-+#include <linux/soc/qcom/llcc-qcom.h>
+Did you run make dtbs_check and dt_bindings_check?
 
- #define GPU_PAS_ID 13
+Maxime
 
-@@ -781,6 +783,81 @@ static void a6xx_bus_clear_pending_transactions(struct adreno_gpu *adreno_gpu)
- 	gpu_write(gpu, REG_A6XX_GBIF_HALT, 0x0);
- }
+--5qm5gfldbu2p5gzt
+Content-Type: application/pgp-signature; name="signature.asc"
 
-+static void a6xx_llc_rmw(struct a6xx_gpu *a6xx_gpu, u32 reg, u32 mask, u32 or)
-+{
-+	return msm_rmw(a6xx_gpu->llc_mmio + (reg << 2), mask, or);
-+}
-+
-+static void a6xx_llc_write(struct a6xx_gpu *a6xx_gpu, u32 reg, u32 value)
-+{
-+	return msm_writel(value, a6xx_gpu->llc_mmio + (reg << 2));
-+}
-+
-+static void a6xx_llc_deactivate(struct a6xx_gpu *a6xx_gpu)
-+{
-+	llcc_slice_deactivate(a6xx_gpu->llc_slice);
-+	llcc_slice_deactivate(a6xx_gpu->htw_llc_slice);
-+}
-+
-+static void a6xx_llc_activate(struct a6xx_gpu *a6xx_gpu)
-+{
-+	u32 cntl1_regval = 0;
-+
-+	if (IS_ERR(a6xx_gpu->llc_mmio))
-+		return;
-+
-+	if (!llcc_slice_activate(a6xx_gpu->llc_slice)) {
-+		u32 gpu_scid = llcc_get_slice_id(a6xx_gpu->llc_slice);
-+
-+		gpu_scid &= 0x1f;
-+		cntl1_regval = (gpu_scid << 0) | (gpu_scid << 5) |
-+			(gpu_scid << 10) | (gpu_scid << 15) | (gpu_scid << 20);
-+	}
-+
-+	if (!llcc_slice_activate(a6xx_gpu->htw_llc_slice)) {
-+		u32 gpuhtw_scid = llcc_get_slice_id(a6xx_gpu->htw_llc_slice);
-+
-+		gpuhtw_scid &= 0x1f;
-+		cntl1_regval |= FIELD_PREP(GENMASK(29, 25), gpuhtw_scid);
-+	}
-+
-+	if (cntl1_regval) {
-+		/*
-+		 * Program the slice IDs for the various GPU blocks and GPU MMU
-+		 * pagetables
-+		 */
-+		a6xx_llc_write(a6xx_gpu, REG_A6XX_CX_MISC_SYSTEM_CACHE_CNTL_1,
-+				cntl1_regval);
-+
-+		/*
-+		 * Program cacheability overrides to not allocate cache lines on
-+		 * a write miss
-+		 */
-+		a6xx_llc_rmw(a6xx_gpu, REG_A6XX_CX_MISC_SYSTEM_CACHE_CNTL_0,
-+				0xF, 0x03);
-+	}
-+}
-+
-+static void a6xx_llc_slices_destroy(struct a6xx_gpu *a6xx_gpu)
-+{
-+	llcc_slice_putd(a6xx_gpu->llc_slice);
-+	llcc_slice_putd(a6xx_gpu->htw_llc_slice);
-+}
-+
-+static void a6xx_llc_slices_init(struct platform_device *pdev,
-+		struct a6xx_gpu *a6xx_gpu)
-+{
-+	a6xx_gpu->llc_mmio = msm_ioremap(pdev, "cx_mem", "gpu_cx");
-+	if (IS_ERR(a6xx_gpu->llc_mmio))
-+		return;
-+
-+	a6xx_gpu->llc_slice = llcc_slice_getd(LLCC_GPU);
-+	a6xx_gpu->htw_llc_slice = llcc_slice_getd(LLCC_GPUHTW);
-+
-+	if (IS_ERR(a6xx_gpu->llc_slice) && IS_ERR(a6xx_gpu->htw_llc_slice))
-+		a6xx_gpu->llc_mmio = ERR_PTR(-EINVAL);
-+}
-+
- static int a6xx_pm_resume(struct msm_gpu *gpu)
- {
- 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-@@ -795,6 +872,8 @@ static int a6xx_pm_resume(struct msm_gpu *gpu)
+-----BEGIN PGP SIGNATURE-----
 
- 	msm_gpu_resume_devfreq(gpu);
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXg3OEwAKCRDj7w1vZxhR
+xYg8AQD+cQIazIyZ31zNcUjJMQLtkQ/R7hrnYDW+zDPmikoO1gEAjLRGNbqfmTOI
+GKoV946i+sXeig/aykX9B6o8FpF0cg0=
+=rFQC
+-----END PGP SIGNATURE-----
 
-+	a6xx_llc_activate(a6xx_gpu);
-+
- 	return 0;
- }
-
-@@ -803,6 +882,8 @@ static int a6xx_pm_suspend(struct msm_gpu *gpu)
- 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
- 	struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
-
-+	a6xx_llc_deactivate(a6xx_gpu);
-+
- 	devfreq_suspend_device(gpu->devfreq.devfreq);
-
- 	/*
-@@ -851,6 +932,7 @@ static void a6xx_destroy(struct msm_gpu *gpu)
- 		drm_gem_object_put_unlocked(a6xx_gpu->sqe_bo);
- 	}
-
-+	a6xx_llc_slices_destroy(a6xx_gpu);
- 	a6xx_gmu_remove(a6xx_gpu);
-
- 	adreno_gpu_cleanup(adreno_gpu);
-@@ -881,6 +963,8 @@ static unsigned long a6xx_gpu_busy(struct msm_gpu *gpu)
- static struct msm_gem_address_space *
- a6xx_create_address_space(struct msm_gpu *gpu, struct platform_device *pdev)
- {
-+	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-+	struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
- 	struct iommu_domain *iommu = iommu_domain_alloc(&platform_bus_type);
- 	struct msm_gem_address_space *aspace;
- 	struct msm_mmu *mmu;
-@@ -894,6 +978,20 @@ static unsigned long a6xx_gpu_busy(struct msm_gpu *gpu)
- 		return ERR_CAST(mmu);
- 	}
-
-+	if (!IS_ERR(a6xx_gpu->llc_slice))
-+		mmu->features |= MMU_FEATURE_USE_SYSTEM_CACHE;
-+
-+	/*
-+	 * This allows GPU to set the bus attributes required to use system
-+	 * cache on behalf of the iommu page table walker.
-+	 */
-+	if (!IS_ERR(a6xx_gpu->htw_llc_slice)) {
-+		int gpu_htw_llc = 1;
-+
-+		iommu_domain_set_attr(iommu, DOMAIN_ATTR_QCOM_SYS_CACHE,
-+				&gpu_htw_llc);
-+	}
-+
- 	aspace = msm_gem_address_space_create(mmu, "gpu", SZ_16M, 0xffffffff);
- 	if (IS_ERR(aspace))
- 		mmu->funcs->destroy(mmu);
-@@ -948,6 +1046,8 @@ struct msm_gpu *a6xx_gpu_init(struct drm_device *dev)
- 	adreno_gpu->registers = NULL;
- 	adreno_gpu->reg_offsets = a6xx_register_offsets;
-
-+	a6xx_llc_slices_init(pdev, a6xx_gpu);
-+
- 	ret = adreno_gpu_init(dev, pdev, adreno_gpu, &funcs, 1);
- 	if (ret) {
- 		a6xx_destroy(&(a6xx_gpu->base.base));
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
-index 7239b8b..9004344 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
-@@ -21,6 +21,9 @@ struct a6xx_gpu {
- 	struct msm_ringbuffer *cur_ring;
-
- 	struct a6xx_gmu gmu;
-+	void __iomem *llc_mmio;
-+	void *llc_slice;
-+	void *htw_llc_slice;
- };
-
- #define to_a6xx_gpu(x) container_of(x, struct a6xx_gpu, base)
-diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-index 2ec08daf..3c41c4a 100644
---- a/drivers/gpu/drm/msm/msm_iommu.c
-+++ b/drivers/gpu/drm/msm/msm_iommu.c
-@@ -37,6 +37,9 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
- 	struct msm_iommu *iommu = to_msm_iommu(mmu);
- 	size_t ret;
-
-+	if (mmu->features & MMU_FEATURE_USE_SYSTEM_CACHE)
-+		prot |= IOMMU_QCOM_SYS_CACHE;
-+
- 	ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
- 	WARN_ON(!ret);
-
-diff --git a/drivers/gpu/drm/msm/msm_mmu.h b/drivers/gpu/drm/msm/msm_mmu.h
-index e4029b0..753443c 100644
---- a/drivers/gpu/drm/msm/msm_mmu.h
-+++ b/drivers/gpu/drm/msm/msm_mmu.h
-@@ -17,11 +17,15 @@ struct msm_mmu_funcs {
- 	void (*destroy)(struct msm_mmu *mmu);
- };
-
-+/* MMU features */
-+#define MMU_FEATURE_USE_SYSTEM_CACHE (1 << 0)
-+
- struct msm_mmu {
- 	const struct msm_mmu_funcs *funcs;
- 	struct device *dev;
- 	int (*handler)(void *arg, unsigned long iova, int flags);
- 	void *arg;
-+	u32 features;
- };
-
- static inline void msm_mmu_init(struct msm_mmu *mmu, struct device *dev,
---
-1.9.1
+--5qm5gfldbu2p5gzt--
