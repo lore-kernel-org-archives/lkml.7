@@ -2,51 +2,52 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 846E6C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED25C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD6720866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 728E021835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005844;
-	bh=231M9ZcOHkbunKVp1/YyJEDypQXx8MuXr0Vb+2TFM1k=;
+	s=default; t=1578005847;
+	bh=MNcuXEyCbjztZ2qWkMTmKBA0rIqCPpkE3egEzRxg+qg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H4dsOcyEURCtoFo/d5M7+pnp0xcOHGRA7wFNAa6iNdmBVWO3QzQO0vp51/+OOnIiI
-	 p1l20Sjnuj9ELUZ5naKB7yCkeYzfXeOx/dnja1Ybe3xUuekm0XZbXQ2Gou8XYw+Hr1
-	 BqHtzqWrG70IZfKy3f5bDfI5UgDN61lyuVmU1zF0=
+	b=bqwU9oMi2FxHyEgzXIZ8lyC4pDSqi7sYxxmTLV01XFtVAoW++4HAPivZclXiLNeJM
+	 TvE6AxmOdEKcFgG4X9rhgimUMkVv+44j3f9vO49bNkpn3vBMnKWpEEUoGBCjfYmP7Q
+	 ThEJrep8my+bVIQk+kvA8avPoNjul12gVNyLGrJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbgABW5X (ORCPT
+        id S1728315AbgABWQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:57:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59448 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:16:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728091AbgABWRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:17:08 -0500
+        id S1727855AbgABWQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:16:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FE27227BF;
-        Thu,  2 Jan 2020 22:17:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6085121582;
+        Thu,  2 Jan 2020 22:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003428;
-        bh=231M9ZcOHkbunKVp1/YyJEDypQXx8MuXr0Vb+2TFM1k=;
+        s=default; t=1578003408;
+        bh=MNcuXEyCbjztZ2qWkMTmKBA0rIqCPpkE3egEzRxg+qg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e/okBfdPv0fRpo2xCJVLoJJuuvUgXuE9cWu9iJ2en6hRaaj1xKpOmafx1yvsvJhfL
-         sPQcGQcSQLG15efmqs5/3GtzOoDhaNYbgz1sGl3X7UjndRBJAf6envLLHQD9zkAng0
-         E60LO4TBBx7Ul/b8al/KRVikNMhxJ75Nmp9d3i+4=
+        b=y24eNYt/4z3e7EMpUGmLPWD8hOjw2L79tES5wyQcKjC8OEtey34qV1HTq1k2L4fqX
+         Cnk80PIwcblA6rtK9wKrzvxtXZNEDRVVRLBxx+xom9xoJPKkjvyVVU3FUPZVG09CWs
+         WE005wOib51XhKiIlqS23WlnoC1afWCdLkymP1Uc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Antonio Messina <amessina@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 157/191] udp: fix integer overflow while computing available space in sk_rcvbuf
-Date:   Thu,  2 Jan 2020 23:07:19 +0100
-Message-Id: <20200102215846.228365652@linuxfoundation.org>
+        stable@vger.kernel.org, linux-scsi@vger.kernel.org,
+        =?UTF-8?q?Diego=20Elio=20Petten=C3=B2?= <flameeyes@flameeyes.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 113/191] cdrom: respect device capabilities during opening action
+Date:   Thu,  2 Jan 2020 23:06:35 +0100
+Message-Id: <20200102215841.968726810@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -59,38 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antonio Messina <amessina@google.com>
+From: Diego Elio Pettenò <flameeyes@flameeyes.com>
 
-[ Upstream commit feed8a4fc9d46c3126fb9fcae0e9248270c6321a ]
+[ Upstream commit 366ba7c71ef77c08d06b18ad61b26e2df7352338 ]
 
-When the size of the receive buffer for a socket is close to 2^31 when
-computing if we have enough space in the buffer to copy a packet from
-the queue to the buffer we might hit an integer overflow.
+Reading the TOC only works if the device can play audio, otherwise
+these commands fail (and possibly bring the device to an unhealthy
+state.)
 
-When an user set net.core.rmem_default to a value close to 2^31 UDP
-packets are dropped because of this overflow. This can be visible, for
-instance, with failure to resolve hostnames.
+Similarly, cdrom_mmc3_profile() should only be called if the device
+supports generic packet commands.
 
-This can be fixed by casting sk_rcvbuf (which is an int) to unsigned
-int, similarly to how it is done in TCP.
-
-Signed-off-by: Antonio Messina <amessina@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-scsi@vger.kernel.org
+Signed-off-by: Diego Elio Pettenò <flameeyes@flameeyes.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/udp.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/cdrom/cdrom.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -1475,7 +1475,7 @@ int __udp_enqueue_schedule_skb(struct so
- 	 * queue contains some other skb
- 	 */
- 	rmem = atomic_add_return(size, &sk->sk_rmem_alloc);
--	if (rmem > (size + sk->sk_rcvbuf))
-+	if (rmem > (size + (unsigned int)sk->sk_rcvbuf))
- 		goto uncharge_drop;
- 
- 	spin_lock(&list->lock);
+diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+index ac42ae4651ce..eebdcbef0578 100644
+--- a/drivers/cdrom/cdrom.c
++++ b/drivers/cdrom/cdrom.c
+@@ -996,6 +996,12 @@ static void cdrom_count_tracks(struct cdrom_device_info *cdi, tracktype *tracks)
+ 	tracks->xa = 0;
+ 	tracks->error = 0;
+ 	cd_dbg(CD_COUNT_TRACKS, "entering cdrom_count_tracks\n");
++
++	if (!CDROM_CAN(CDC_PLAY_AUDIO)) {
++		tracks->error = CDS_NO_INFO;
++		return;
++	}
++
+ 	/* Grab the TOC header so we can see how many tracks there are */
+ 	ret = cdi->ops->audio_ioctl(cdi, CDROMREADTOCHDR, &header);
+ 	if (ret) {
+@@ -1162,7 +1168,8 @@ int cdrom_open(struct cdrom_device_info *cdi, struct block_device *bdev,
+ 		ret = open_for_data(cdi);
+ 		if (ret)
+ 			goto err;
+-		cdrom_mmc3_profile(cdi);
++		if (CDROM_CAN(CDC_GENERIC_PACKET))
++			cdrom_mmc3_profile(cdi);
+ 		if (mode & FMODE_WRITE) {
+ 			ret = -EROFS;
+ 			if (cdrom_open_write(cdi))
+@@ -2882,6 +2889,9 @@ int cdrom_get_last_written(struct cdrom_device_info *cdi, long *last_written)
+ 	   it doesn't give enough information or fails. then we return
+ 	   the toc contents. */
+ use_toc:
++	if (!CDROM_CAN(CDC_PLAY_AUDIO))
++		return -ENOSYS;
++
+ 	toc.cdte_format = CDROM_MSF;
+ 	toc.cdte_track = CDROM_LEADOUT;
+ 	if ((ret = cdi->ops->audio_ioctl(cdi, CDROMREADTOCENTRY, &toc)))
+-- 
+2.20.1
+
 
 
