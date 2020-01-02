@@ -2,56 +2,52 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F58DC3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 772CEC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 690CF222C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 449D22464E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004217;
-	bh=Blq+AMHt6HxK/xGxK6KR5EtA3cLwMX+jQ//LJF6rJwc=;
+	s=default; t=1578004222;
+	bh=gUN+kAnWfc1ZcNtrlOl182rF7UiZMNBamdOsPlYao0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HTrwksViwphYlS1W2YMcTmWuIvRodkzEG5ERH2c3lr0DnS+NAOqxcu9V1oZA59eNk
-	 jYlPNqHiLnZyC1RNTqygQ96lw1XRwU3LV3dibxAv0fz9+9jkmheD65QIHmX67C1S82
-	 w46JIPWhJrprsrNhO2ClYQ/DeaHNnEfkba1kDSSU=
+	b=1xARTcEx5HmYKo8JcwBsoIV2xsz3Pdt2AkUlz2vptI/iodztcm28hteo4fptIsJYL
+	 LXjFVYRt89jDbXVDfIc/1AT3Eo1aJ+6+CALADYL8eRLW9Jzi8Y6GYEta65GjiK3bR4
+	 NK1CNZOJcTiI91k9IcawJMdKxuoraoTyXpTkc+9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730156AbgABWaQ (ORCPT
+        id S1729871AbgABWaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:30:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57640 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:30:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729842AbgABW2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:28:11 -0500
+        id S1730152AbgABWaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:30:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F29B420863;
-        Thu,  2 Jan 2020 22:28:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BBB3222C3;
+        Thu,  2 Jan 2020 22:30:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004091;
-        bh=Blq+AMHt6HxK/xGxK6KR5EtA3cLwMX+jQ//LJF6rJwc=;
+        s=default; t=1578004214;
+        bh=gUN+kAnWfc1ZcNtrlOl182rF7UiZMNBamdOsPlYao0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vwoj0oldSebcL8K5n34Nsxmwo1ZV7gQIH44I6uOgipfu/Z8IyRju7JIG14v7zTPVc
-         ulvsZRIjmshN7wSZyp9i4eaCh2pE5SCWc7oCskFRir6vJWPG/grDMn9VSIcboPS5g4
-         2D2EJqJEKN6Upuu+BcJ6TWTewvXyRKqEFoUy+17c=
+        b=vlSSIgn1vnH1NxDsHCQ8Cz7NkK2N9bBshOL2r7jG2yTL0vXPc7/zRxgf+KSF59R9q
+         CnTgh/R6oTSYHu+rYQ9bsr1Vx39TC3QMqzA4JNGFH3yqObAJQb0d4+d1J+/EaWR9aK
+         XnIDrw6ayerSyVTeyqB18xZNlH6ceqISTIfzTxgE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 033/171] perf test: Report failure for mmap events
-Date:   Thu,  2 Jan 2020 23:06:04 +0100
-Message-Id: <20200102220551.587940572@linuxfoundation.org>
+        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.9 086/171] Revert "mmc: sdhci: Fix incorrect switch to HS mode"
+Date:   Thu,  2 Jan 2020 23:06:57 +0100
+Message-Id: <20200102220558.950964515@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -64,43 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Faiz Abbas <faiz_abbas@ti.com>
 
-[ Upstream commit 6add129c5d9210ada25217abc130df0b7096ee02 ]
+commit 07bcc411567cb96f9d1fc84fff8d387118a2920d upstream.
 
-When fail to mmap events in task exit case, it misses to set 'err' to
--1; thus the testing will not report failure for it.
+This reverts commit c894e33ddc1910e14d6f2a2016f60ab613fd8b37.
 
-This patch sets 'err' to -1 when fails to mmap events, thus Perf tool
-can report correct result.
+This commit aims to treat SD High speed and SDR25 as the same while
+setting UHS Timings in HOST_CONTROL2 which leads to failures with some
+SD cards in AM65x. Revert this commit.
 
-Fixes: d723a55096b8 ("perf test: Add test case for checking number of EXIT events")
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/20191011091942.29841-1-leo.yan@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The issue this commit was trying to fix can be implemented in a platform
+specific callback instead of common sdhci code.
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/20191128110422.25917-1-faiz_abbas@ti.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/perf/tests/task-exit.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mmc/host/sdhci.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
-index b0d005d295a9..de2ddfe0f7c3 100644
---- a/tools/perf/tests/task-exit.c
-+++ b/tools/perf/tests/task-exit.c
-@@ -98,6 +98,7 @@ int test__task_exit(int subtest __maybe_unused)
- 	if (perf_evlist__mmap(evlist, 128, true) < 0) {
- 		pr_debug("failed to mmap events: %d (%s)\n", errno,
- 			 str_error_r(errno, sbuf, sizeof(sbuf)));
-+		err = -1;
- 		goto out_delete_evlist;
- 	}
- 
--- 
-2.20.1
-
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -1557,9 +1557,7 @@ void sdhci_set_uhs_signaling(struct sdhc
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR104;
+ 	else if (timing == MMC_TIMING_UHS_SDR12)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR12;
+-	else if (timing == MMC_TIMING_SD_HS ||
+-		 timing == MMC_TIMING_MMC_HS ||
+-		 timing == MMC_TIMING_UHS_SDR25)
++	else if (timing == MMC_TIMING_UHS_SDR25)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR25;
+ 	else if (timing == MMC_TIMING_UHS_SDR50)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR50;
 
 
