@@ -2,129 +2,163 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F9FC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B11BC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04A4B217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 046E1215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:53:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hn/OvXHr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpAs5Ymn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbgABNlm (ORCPT
+        id S1728432AbgABNx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 08:41:42 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43020 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728353AbgABNlm (ORCPT
+        Thu, 2 Jan 2020 08:53:56 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34952 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728342AbgABNxz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 08:41:42 -0500
-Received: by mail-ot1-f67.google.com with SMTP id p8so20688032oth.10;
-        Thu, 02 Jan 2020 05:41:41 -0800 (PST)
+        Thu, 2 Jan 2020 08:53:55 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p17so5721278wmb.0;
+        Thu, 02 Jan 2020 05:53:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9F6arg+1GHkDfvfkGXNTjMEzkXmAh86YzkPy0mDsP2g=;
-        b=hn/OvXHr5zwXxonk1Y/MbRTLH/2tk4hCD5ykLHCwQu99jktnnB5kbrEcbk8Z4AlhtQ
-         x8vCt1rjrHKIIrCnZFl2kON4rj3MRdq985dtFLZksY1a+aV4TkJajAePF134Vf50t0MF
-         lAKaBKgu07zoHIOpRc9fxNshMpU0EEkb1IAy1KWTdxyTr+ifAzmwCKnZJ3k60u1mURak
-         mOjaVLZ/Lbl3JFL0RB9yB7+iks1As5qN33ZPSdE4pmnJtyYKmLqbjPf+0DmCXgQc5tHv
-         3C9Z3iNjZQoh6BnvZXs0Bf69xKM/mKvUJhqsIS9HCrzExBEEJN4zOIReNpHZetsu/9DR
-         p/6g==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UWP8T2dSY7on4bhuJvvJczYvJx5ExaoKE13WYmlRLaE=;
+        b=BpAs5Ymn625eA/7UDL2mngUe6FHCqNi1N5DPpTwF++MjAalqhYw13VZ121XTxdW3bc
+         k8XUmRiv8I/FedSc6Z4suNRUXX70I53CVZXDmBIbOaN3+WvwJfRqxu7CJTqxlJQOsX5w
+         oKyuAo9tHeP2XALMiOaRJIyKsgirGl96iFYh7ACCMujtTGqKdCQC48ImRJ7UsqB4u5EY
+         QxpwwRl5coiAMuozQqicMQxMsvRhOk5KPvqUUulgtNY3GOZoKevSI3F2UMdYeZs/y4u8
+         CvHPtK7IZk6u9KQbPqjOuZ5w6eiaHGTfIdy8WzjjtuOZ6viGLVL30rkCth30aDrWxMX2
+         QlAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9F6arg+1GHkDfvfkGXNTjMEzkXmAh86YzkPy0mDsP2g=;
-        b=BRYZwWYyoCLVwT79cpzXXags5f7SDHknmJv02nC1F1HghzB/JTXEWqiVYUoEN1t9Jd
-         7TNlXf4Q1RzpxVAWwguiFdWKqchb/fcZRJ5cd6z/dCEEVuwrmlUH7B0bj5Ds2+ZDKRGr
-         A0JBtQuVUC/4MYzTNMtuVjHB4F3CxCUqoznO9L3FAacM9zGeXdcxSY5zDlQnm1iwALGL
-         6n8P44xUl+AcybQPpkuWAdxRHD0UmITZQ4PG2LbN8InQcRszR83Gf4EfR4mRTjCqjaC3
-         O0n1xURubl2UD2Zq57ZYx32x7MFmxtSCm6IaIJKez1Cu56C8BthFEgxxiCCbelf18ECv
-         x3Sw==
-X-Gm-Message-State: APjAAAWOX0O6Lvl3Db39opOum0e8OocELdpTF7WaorqZtIGbMTS+VYly
-        zpBD6sf828DY6hCryQgOl0ZLi2fsTApBedEqcsA=
-X-Google-Smtp-Source: APXvYqwM9X7I5gCcvZRgL4MVkeskmW4NqZB2bmNnQeGiPkBh9S4+ecPP2Wi3PIL/T+hDtNZAJRIKUgC3Kwap/d9zdYA=
-X-Received: by 2002:a9d:6196:: with SMTP id g22mr95379977otk.204.1577972501544;
- Thu, 02 Jan 2020 05:41:41 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UWP8T2dSY7on4bhuJvvJczYvJx5ExaoKE13WYmlRLaE=;
+        b=dmh+oSGhA+dWujlajUY8HMRwoW+akNUJQ6VvdPPI0QUjSH9EKRPQbItGVlNdueMz2V
+         NCuxQoL13TA6LmAm2FjKrVyEYO+ImAW1Z1HR3NKhawGnwU2/AQDtloCNav7i8dlXnGyc
+         IByiLM7fIRBtaFMVXV8CQD/jkM+ynCEohwFyqN1Ap4al73ST+SJLrNozcbl2dI78LBKs
+         wXCEEOGkm3odDIIXYPn85ROUiRutGwMTIY5tIkw0u8XwH9pJnLVD+McGVDCtxkdrZU2W
+         I+hUCHsEwkcSeK3uyyzGmtsGRkLZP1hY0BaO/9y/JdcMAZXrD3GmQ+ZvVs8G/54UT4Zq
+         0YfQ==
+X-Gm-Message-State: APjAAAUMKEttCUSmxcW4V9uV74v2ZTV3WMVzqbfFOU2zJXdZwWr4zuLi
+        k/9TtMJEOd2feH2Sv4d+wD3OZFxXsog=
+X-Google-Smtp-Source: APXvYqxufgSY0u9Yp9j7987C/5ccAx6l5mQEkU9dAfV0VueShs93vukz+XU6wUh2h1CSSgsoa0ZKlw==
+X-Received: by 2002:a1c:4d18:: with SMTP id o24mr14415612wmh.35.1577973232941;
+        Thu, 02 Jan 2020 05:53:52 -0800 (PST)
+Received: from localhost.localdomain ([46.216.160.87])
+        by smtp.gmail.com with ESMTPSA id a184sm8755176wmf.29.2020.01.02.05.53.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 05:53:52 -0800 (PST)
+Received: from [127.0.0.1] (helo=jeknote.loshitsa1.net)
+        by localhost.localdomain with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <jekhor@gmail.com>)
+        id 1in0v8-00055Z-WC; Thu, 02 Jan 2020 16:53:51 +0300
+Date:   Thu, 2 Jan 2020 16:53:35 +0300
+From:   Yauhen Kharuzhy <jekhor@gmail.com>
+To:     linux-pm@vger.kernel.org
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] power: supply: bq25890_charger: Add support of
+ BQ25892 and BQ25896 chips
+Message-ID: <20200102135335.GA13218@jeknote.loshitsa1.net>
+References: <20200101224627.12093-1-jekhor@gmail.com>
 MIME-Version: 1.0
-Received: by 2002:a8a:87:0:0:0:0:0 with HTTP; Thu, 2 Jan 2020 05:41:40 -0800 (PST)
-In-Reply-To: <20200102131659.r2lxzcyhvtgxmz7m@pali>
-References: <20191220062419.23516-1-namjae.jeon@samsung.com>
- <CGME20191220062733epcas1p31665a3ae968ab8c70d91a3cddf529e73@epcas1p3.samsung.com>
- <20191220062419.23516-3-namjae.jeon@samsung.com> <20191229134025.qb3mmqatsn5c4gao@pali>
- <000701d5c132$bed73c80$3c85b580$@samsung.com> <20200102083029.uv2gtig3ski23dpe@pali>
- <20200102131659.r2lxzcyhvtgxmz7m@pali>
-From:   Namjae Jeon <linkinjeon@gmail.com>
-Date:   Thu, 2 Jan 2020 22:41:40 +0900
-Message-ID: <CAKYAXd_YHxRiFg=6m1eyXFmBWTXnEg4e-0VirNBS5q24Lz7jMg@mail.gmail.com>
-Subject: Re: [PATCH v8 02/13] exfat: add super block operations
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200101224627.12093-1-jekhor@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020-01-02 22:16 GMT+09:00, Pali Roh=C3=A1r <pali.rohar@gmail.com>:
-> On Thursday 02 January 2020 09:30:29 Pali Roh=C3=A1r wrote:
->> On Thursday 02 January 2020 15:06:16 Namjae Jeon wrote:
->> > > > +static const struct fs_parameter_spec exfat_param_specs[] =3D {
->> > > > +	fsparam_u32("uid",			Opt_uid),
->> > > > +	fsparam_u32("gid",			Opt_gid),
->> > > > +	fsparam_u32oct("umask",			Opt_umask),
->> > > > +	fsparam_u32oct("dmask",			Opt_dmask),
->> > > > +	fsparam_u32oct("fmask",			Opt_fmask),
->> > > > +	fsparam_u32oct("allow_utime",		Opt_allow_utime),
->> > > > +	fsparam_string("iocharset",		Opt_charset),
->> > > > +	fsparam_flag("utf8",			Opt_utf8),
->> > >
->> > > Hello! What is the purpose of having extra special "utf8" mount
->> > > option?
->> > > Is not one "iocharset=3Dutf8" option enough?
->> > utf8 nls_table supports utf8<->utf32 conversion and does not support
->> > surrogate character conversion.
->>
->> So in other words, this is just subset of UTF-8 just to 3 byte long
->> sequences (for Unicode code points up to the U+FFFF).
->
-> Anyway, this is limitation of kernel's NLS framework? Or limitation in
-> current exfat driver implementation?
-This is not exfat driver issue. Please check fatfs, cifs, etc..
->
-> Because if it is in kernel's NLS framework then all kernel drivers would
-> be affected by this limitation, and not only exfat.
-Yes, FATfs also has two options and There seems to be
-CONFIG_FAT_DEFAULT_UTF8 option to avoid the issue you said.
+On Thu, Jan 02, 2020 at 01:46:25AM +0300, Yauhen Kharuzhy wrote:
+> Support BQ25892 and BQ25896 chips by this driver. They shared one chip
+> ID 0, so distinquish them by device revisions (2 for 25896 and 1 for
+> 25892).
+> 
+> Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
+> ---
+>  drivers/power/supply/bq25890_charger.c | 97 ++++++++++++++++++++------
+>  1 file changed, 76 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
+> index 9d1ec8d677de..a3dcd4eb1287 100644
+> --- a/drivers/power/supply/bq25890_charger.c
+> +++ b/drivers/power/supply/bq25890_charger.c
+> @@ -25,12 +25,20 @@
+>  #define BQ25895_ID			7
+>  #define BQ25896_ID			0
+>  
+> +enum bq25890_chip_version {
+> +	BQ25890,
+> +	BQ25892,
+> +	BQ25895,
+> +	BQ25896,
+> +};
+> +
+...
+> +static int bq25890_get_chip_version(struct bq25890_device *bq)
+> +{
+> +	int id, rev;
+> +
+> +	id = bq25890_field_read(bq, F_PN);
+> +	if (id < 0) {
+> +		dev_err(bq->dev, "Cannot read chip ID.\n");
+> +		return id;
+> +	}
+> +
+> +	rev = bq25890_field_read(bq, F_DEV_REV);
+> +	if (rev < 0) {
+> +		dev_err(bq->dev, "Cannot read chip revision.\n");
+> +		return id;
+> +	}
+> +
+> +	switch (id) {
+> +	case BQ25890_ID:
+> +		bq->chip_version = BQ25890;
+> +		break;
+> +
+> +	/* BQ25892 and BQ25896 share same ID 0 */
+> +	case BQ25896_ID:
+> +		switch (rev) {
+> +		case 0:
+Sorry, typo here: should be 2 for 25896, I will fix this in v2.
 
-config FAT_DEFAULT_UTF8
-        bool "Enable FAT UTF-8 option by default"
-        depends on VFAT_FS
-        default n
-        help
-          Set this if you would like to have "utf8" mount option set
-          by default when mounting FAT filesystems.
+> +			bq->chip_version = BQ25896;
+> +			break;
+> +		case 1:
+> +			bq->chip_version = BQ25892;
+> +			break;
+> +		default:
+> +			dev_err(bq->dev,
+> +				"Unknown device revision %d, assume BQ25892\n",
+> +				rev);
+> +			bq->chip_version = BQ25892;
+> +		}
+> +		break;
+> +
+> +	case BQ25895_ID:
+> +		bq->chip_version = BQ25895;
+> +		break;
+> +
+> +	default:
+> +		dev_err(bq->dev, "Unknown chip ID %d\n", id);
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
+...
 
-          Even if you say Y here can always disable UTF-8 for
-          particular mount by adding "utf8=3D0" to mount options.
-
-          Say Y if you use UTF-8 encoding for file names, N otherwise.
-
-But the way you suggested looks better.
-
-Thanks!
->
-> --
-> Pali Roh=C3=A1r
-> pali.rohar@gmail.com
->
+-- 
+Yauhen Kharuzhy
