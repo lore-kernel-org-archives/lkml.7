@@ -7,465 +7,138 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33EDCC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 05:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34E5C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 05:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED4632084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 05:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9382E2253D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 05:45:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbgACFpv (ORCPT
+        id S1727319AbgACFpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 00:45:51 -0500
+        Fri, 3 Jan 2020 00:45:54 -0500
 Received: from mga14.intel.com ([192.55.52.115]:47443 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725916AbgACFpu (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 00:45:50 -0500
+        id S1725916AbgACFpv (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 00:45:51 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 21:45:49 -0800
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 21:45:51 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,389,1571727600"; 
-   d="scan'208";a="222072147"
+   d="scan'208";a="222072152"
 Received: from kbl.sh.intel.com ([10.239.159.163])
-  by orsmga003.jf.intel.com with ESMTP; 02 Jan 2020 21:45:47 -0800
+  by orsmga003.jf.intel.com with ESMTP; 02 Jan 2020 21:45:49 -0800
 From:   Jin Yao <yao.jin@linux.intel.com>
 To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
         mingo@redhat.com, alexander.shishkin@linux.intel.com
 Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
         kan.liang@intel.com, yao.jin@intel.com,
         Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH 1/2] perf util: Refactor block info to reduce tight coupling with report
-Date:   Fri,  3 Jan 2020 06:19:58 +0800
-Message-Id: <20200102221959.20283-1-yao.jin@linux.intel.com>
+Subject: [PATCH 2/2] perf util: Support color ops to print block percents in color
+Date:   Fri,  3 Jan 2020 06:19:59 +0800
+Message-Id: <20200102221959.20283-2-yao.jin@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200102221959.20283-1-yao.jin@linux.intel.com>
+References: <20200102221959.20283-1-yao.jin@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have already implemented some block-info functions.
-But these functions are tightly coupled with perf-report, it's
-not good for reusing by other builtins (i.e. perf-diff).
+It would be nice to print the block percents with colors.
 
-This patch refactors the functions, structures and definitions
-to make them to be more flexible for other builtins.
+This patch supports the 'Sampled Cycles%' and 'Avg Cycles%'
+printed in colors.
+
+For example,
+
+perf record -b ...
+perf report --total-cycles or perf report --total-cycles --stdio
+
+percent > 5%, colored in red
+percent > 0.5%, colored in green
+percent < 0.5%, default color
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
- tools/perf/builtin-diff.c    |  17 -----
- tools/perf/builtin-report.c  |  25 +++++--
- tools/perf/util/block-info.c | 128 +++++++++++++++++++++++++----------
- tools/perf/util/block-info.h |  28 +++++---
- 4 files changed, 129 insertions(+), 69 deletions(-)
+ tools/perf/util/block-info.c | 25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index f8b6ae557d8b..5ff1e21082cb 100644
---- a/tools/perf/builtin-diff.c
-+++ b/tools/perf/builtin-diff.c
-@@ -572,23 +572,6 @@ static void init_block_hist(struct block_hist *bh)
- 	bh->valid = true;
- }
- 
--static int block_pair_cmp(struct hist_entry *a, struct hist_entry *b)
--{
--	struct block_info *bi_a = a->block_info;
--	struct block_info *bi_b = b->block_info;
--	int cmp;
--
--	if (!bi_a->sym || !bi_b->sym)
--		return -1;
--
--	cmp = strcmp(bi_a->sym->name, bi_b->sym->name);
--
--	if ((!cmp) && (bi_a->start == bi_b->start) && (bi_a->end == bi_b->end))
--		return 0;
--
--	return -1;
--}
--
- static struct hist_entry *get_block_pair(struct hist_entry *he,
- 					 struct hists *hists_pair)
- {
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index de988589d99b..638229bf7a08 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -104,6 +104,7 @@ struct report {
- 	bool			symbol_ipc;
- 	bool			total_cycles_mode;
- 	struct block_report	*block_reports;
-+	int			nr_block_reports;
- };
- 
- static int report__config(const char *var, const char *value, void *cb)
-@@ -503,7 +504,7 @@ static int perf_evlist__tui_block_hists_browse(struct evlist *evlist,
- 		ret = report__browse_block_hists(&rep->block_reports[i++].hist,
- 						 rep->min_percent, pos,
- 						 &rep->session->header.env,
--						 &rep->annotation_opts);
-+						 &rep->annotation_opts, true);
- 		if (ret != 0)
- 			return ret;
- 	}
-@@ -536,7 +537,7 @@ static int perf_evlist__tty_browse_hists(struct evlist *evlist,
- 		if (rep->total_cycles_mode) {
- 			report__browse_block_hists(&rep->block_reports[i++].hist,
- 						   rep->min_percent, pos,
--						   NULL, NULL);
-+						   NULL, NULL, true);
- 			continue;
- 		}
- 
-@@ -966,8 +967,19 @@ static int __cmd_report(struct report *rep)
- 	report__output_resort(rep);
- 
- 	if (rep->total_cycles_mode) {
-+		int block_hpps[6] = {
-+			PERF_HPP__BLOCK_TOTAL_CYCLES_PCT,
-+			PERF_HPP__BLOCK_LBR_CYCLES,
-+			PERF_HPP__BLOCK_CYCLES_PCT,
-+			PERF_HPP__BLOCK_AVG_CYCLES,
-+			PERF_HPP__BLOCK_RANGE,
-+			PERF_HPP__BLOCK_DSO,
-+		};
-+
- 		rep->block_reports = block_info__create_report(session->evlist,
--							       rep->total_cycles);
-+							       rep->total_cycles,
-+							       block_hpps, 6,
-+							       &rep->nr_block_reports);
- 		if (!rep->block_reports)
- 			return -1;
- 	}
-@@ -1543,8 +1555,11 @@ int cmd_report(int argc, const char **argv)
- 		zfree(&report.ptime_range);
- 	}
- 
--	if (report.block_reports)
--		zfree(&report.block_reports);
-+	if (report.block_reports) {
-+		block_info__free_report(report.block_reports,
-+					report.nr_block_reports);
-+		report.block_reports = NULL;
-+	}
- 
- 	zstd_fini(&(session->zstd_data));
- 	perf_session__delete(session);
 diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
-index c4b030bf6ec2..55ccff2e0d5d 100644
+index 55ccff2e0d5d..6cc6d36a5d26 100644
 --- a/tools/perf/util/block-info.c
 +++ b/tools/perf/util/block-info.c
-@@ -12,35 +12,36 @@
- #include "evlist.h"
- #include "hist.h"
- #include "ui/browsers/hists.h"
-+#include "debug.h"
+@@ -186,6 +186,17 @@ static int block_column_width(struct perf_hpp_fmt *fmt,
+ 	return block_fmt->width;
+ }
  
- static struct block_header_column {
- 	const char *name;
- 	int width;
--} block_columns[PERF_HPP_REPORT__BLOCK_MAX_INDEX] = {
--	[PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT] = {
-+} block_columns[PERF_HPP__BLOCK_MAX_INDEX] = {
-+	[PERF_HPP__BLOCK_TOTAL_CYCLES_PCT] = {
- 		.name = "Sampled Cycles%",
- 		.width = 15,
- 	},
--	[PERF_HPP_REPORT__BLOCK_LBR_CYCLES] = {
-+	[PERF_HPP__BLOCK_LBR_CYCLES] = {
- 		.name = "Sampled Cycles",
- 		.width = 14,
- 	},
--	[PERF_HPP_REPORT__BLOCK_CYCLES_PCT] = {
-+	[PERF_HPP__BLOCK_CYCLES_PCT] = {
- 		.name = "Avg Cycles%",
- 		.width = 11,
- 	},
--	[PERF_HPP_REPORT__BLOCK_AVG_CYCLES] = {
-+	[PERF_HPP__BLOCK_AVG_CYCLES] = {
- 		.name = "Avg Cycles",
- 		.width = 10,
- 	},
--	[PERF_HPP_REPORT__BLOCK_RANGE] = {
-+	[PERF_HPP__BLOCK_RANGE] = {
- 		.name = "[Program Block Range]",
- 		.width = 70,
- 	},
--	[PERF_HPP_REPORT__BLOCK_DSO] = {
-+	[PERF_HPP__BLOCK_DSO] = {
- 		.name = "Shared Object",
- 		.width = 20,
--	}
-+	},
- };
++static int color_pct(struct perf_hpp *hpp, int width, double pct)
++{
++#ifdef HAVE_SLANG_SUPPORT
++	if (use_browser) {
++		return __hpp__slsmg_color_printf(hpp, "%*.2f%%",
++						 width - 1, pct);
++	}
++#endif
++	return hpp_color_scnprintf(hpp, "%*.2f%%", width - 1, pct);
++}
++
+ static int block_total_cycles_pct_entry(struct perf_hpp_fmt *fmt,
+ 					struct perf_hpp *hpp,
+ 					struct hist_entry *he)
+@@ -193,14 +204,11 @@ static int block_total_cycles_pct_entry(struct perf_hpp_fmt *fmt,
+ 	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
+ 	struct block_info *bi = he->block_info;
+ 	double ratio = 0.0;
+-	char buf[16];
  
- struct block_info *block_info__get(struct block_info *bi)
-@@ -328,7 +329,7 @@ static void init_block_header(struct block_fmt *block_fmt)
- {
- 	struct perf_hpp_fmt *fmt = &block_fmt->fmt;
+ 	if (block_fmt->total_cycles)
+ 		ratio = (double)bi->cycles / (double)block_fmt->total_cycles;
  
--	BUG_ON(block_fmt->idx >= PERF_HPP_REPORT__BLOCK_MAX_INDEX);
-+	BUG_ON(block_fmt->idx >= PERF_HPP__BLOCK_MAX_INDEX);
+-	sprintf(buf, "%.2f%%", 100.0 * ratio);
+-
+-	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
++	return color_pct(hpp, block_fmt->width, 100.0 * ratio);
+ }
  
- 	block_fmt->header = block_columns[block_fmt->idx].name;
- 	block_fmt->width = block_columns[block_fmt->idx].width;
-@@ -347,24 +348,24 @@ static void hpp_register(struct block_fmt *block_fmt, int idx,
- 	INIT_LIST_HEAD(&fmt->sort_list);
+ static int64_t block_total_cycles_pct_sort(struct perf_hpp_fmt *fmt,
+@@ -253,16 +261,13 @@ static int block_cycles_pct_entry(struct perf_hpp_fmt *fmt,
+ 	struct block_info *bi = he->block_info;
+ 	double ratio = 0.0;
+ 	u64 avg;
+-	char buf[16];
+ 
+ 	if (block_fmt->block_cycles && bi->num_aggr) {
+ 		avg = bi->cycles_aggr / bi->num_aggr;
+ 		ratio = (double)avg / (double)block_fmt->block_cycles;
+ 	}
+ 
+-	sprintf(buf, "%.2f%%", 100.0 * ratio);
+-
+-	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
++	return color_pct(hpp, block_fmt->width, 100.0 * ratio);
+ }
+ 
+ static int block_avg_cycles_entry(struct perf_hpp_fmt *fmt,
+@@ -349,7 +354,7 @@ static void hpp_register(struct block_fmt *block_fmt, int idx,
  
  	switch (idx) {
--	case PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT:
-+	case PERF_HPP__BLOCK_TOTAL_CYCLES_PCT:
- 		fmt->entry = block_total_cycles_pct_entry;
+ 	case PERF_HPP__BLOCK_TOTAL_CYCLES_PCT:
+-		fmt->entry = block_total_cycles_pct_entry;
++		fmt->color = block_total_cycles_pct_entry;
  		fmt->cmp = block_info__cmp;
  		fmt->sort = block_total_cycles_pct_sort;
  		break;
--	case PERF_HPP_REPORT__BLOCK_LBR_CYCLES:
-+	case PERF_HPP__BLOCK_LBR_CYCLES:
+@@ -357,7 +362,7 @@ static void hpp_register(struct block_fmt *block_fmt, int idx,
  		fmt->entry = block_cycles_lbr_entry;
  		break;
--	case PERF_HPP_REPORT__BLOCK_CYCLES_PCT:
-+	case PERF_HPP__BLOCK_CYCLES_PCT:
- 		fmt->entry = block_cycles_pct_entry;
+ 	case PERF_HPP__BLOCK_CYCLES_PCT:
+-		fmt->entry = block_cycles_pct_entry;
++		fmt->color = block_cycles_pct_entry;
  		break;
--	case PERF_HPP_REPORT__BLOCK_AVG_CYCLES:
-+	case PERF_HPP__BLOCK_AVG_CYCLES:
+ 	case PERF_HPP__BLOCK_AVG_CYCLES:
  		fmt->entry = block_avg_cycles_entry;
- 		break;
--	case PERF_HPP_REPORT__BLOCK_RANGE:
-+	case PERF_HPP__BLOCK_RANGE:
- 		fmt->entry = block_range_entry;
- 		break;
--	case PERF_HPP_REPORT__BLOCK_DSO:
-+	case PERF_HPP__BLOCK_DSO:
- 		fmt->entry = block_dso_entry;
- 		break;
- 	default:
-@@ -376,33 +377,42 @@ static void hpp_register(struct block_fmt *block_fmt, int idx,
- }
- 
- static void register_block_columns(struct perf_hpp_list *hpp_list,
--				   struct block_fmt *block_fmts)
-+				   struct block_fmt *block_fmts,
-+				   int *block_hpps, int nr_hpps)
- {
--	for (int i = 0; i < PERF_HPP_REPORT__BLOCK_MAX_INDEX; i++)
--		hpp_register(&block_fmts[i], i, hpp_list);
-+	for (int i = 0; i < nr_hpps; i++)
-+		hpp_register(&block_fmts[i], block_hpps[i], hpp_list);
- }
- 
--static void init_block_hist(struct block_hist *bh, struct block_fmt *block_fmts)
-+static void init_block_hist(struct block_hist *bh, struct block_fmt *block_fmts,
-+			    int *block_hpps, int nr_hpps)
- {
- 	__hists__init(&bh->block_hists, &bh->block_list);
- 	perf_hpp_list__init(&bh->block_list);
- 	bh->block_list.nr_header_lines = 1;
- 
--	register_block_columns(&bh->block_list, block_fmts);
-+	register_block_columns(&bh->block_list, block_fmts,
-+			       block_hpps, nr_hpps);
- 
--	perf_hpp_list__register_sort_field(&bh->block_list,
--		&block_fmts[PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT].fmt);
-+	/* Sort by the first fmt */
-+	perf_hpp_list__register_sort_field(&bh->block_list, &block_fmts[0].fmt);
- }
- 
--static void process_block_report(struct hists *hists,
--				 struct block_report *block_report,
--				 u64 total_cycles)
-+static int process_block_report(struct hists *hists,
-+				struct block_report *block_report,
-+				u64 total_cycles, int *block_hpps,
-+				int nr_hpps)
- {
- 	struct rb_node *next = rb_first_cached(&hists->entries);
- 	struct block_hist *bh = &block_report->hist;
- 	struct hist_entry *he;
- 
--	init_block_hist(bh, block_report->fmts);
-+	block_report->fmts = calloc(nr_hpps, sizeof(struct block_fmt));
-+	if (!block_report->fmts)
-+		return -1;
-+
-+	block_report->nr_fmts = nr_hpps;
-+	init_block_hist(bh, block_report->fmts, block_hpps, nr_hpps);
- 
- 	while (next) {
- 		he = rb_entry(next, struct hist_entry, rb_node);
-@@ -411,16 +421,19 @@ static void process_block_report(struct hists *hists,
- 		next = rb_next(&he->rb_node);
- 	}
- 
--	for (int i = 0; i < PERF_HPP_REPORT__BLOCK_MAX_INDEX; i++) {
-+	for (int i = 0; i < nr_hpps; i++) {
- 		block_report->fmts[i].total_cycles = total_cycles;
- 		block_report->fmts[i].block_cycles = block_report->cycles;
- 	}
- 
- 	hists__output_resort(&bh->block_hists, NULL);
-+	return 0;
- }
- 
- struct block_report *block_info__create_report(struct evlist *evlist,
--					       u64 total_cycles)
-+					       u64 total_cycles,
-+					       int *block_hpps, int nr_hpps,
-+					       int *nr_reps)
- {
- 	struct block_report *block_reports;
- 	int nr_hists = evlist->core.nr_entries, i = 0;
-@@ -433,16 +446,40 @@ struct block_report *block_info__create_report(struct evlist *evlist,
- 	evlist__for_each_entry(evlist, pos) {
- 		struct hists *hists = evsel__hists(pos);
- 
--		process_block_report(hists, &block_reports[i], total_cycles);
-+		process_block_report(hists, &block_reports[i], total_cycles,
-+				     block_hpps, nr_hpps);
- 		i++;
- 	}
- 
-+	*nr_reps = nr_hists;
- 	return block_reports;
- }
- 
-+float block_info__total_cycles_percent(struct hist_entry *he)
-+{
-+	struct block_info *bi = he->block_info;
-+
-+	if (bi->total_cycles)
-+		return bi->cycles * 100.0 / bi->total_cycles;
-+
-+	return 0.0;
-+}
-+
-+void block_info__free_report(struct block_report *reps, int nr_reps)
-+{
-+	for (int i = 0; i < nr_reps; i++) {
-+		hists__delete_entries(&reps[i].hist.block_hists);
-+		if (reps[i].fmts)
-+			free(reps[i].fmts);
-+	}
-+
-+	free(reps);
-+}
-+
- int report__browse_block_hists(struct block_hist *bh, float min_percent,
- 			       struct evsel *evsel, struct perf_env *env,
--			       struct annotation_options *annotation_opts)
-+			       struct annotation_options *annotation_opts,
-+			       bool release)
- {
- 	int ret;
- 
-@@ -451,13 +488,17 @@ int report__browse_block_hists(struct block_hist *bh, float min_percent,
- 		symbol_conf.report_individual_block = true;
- 		hists__fprintf(&bh->block_hists, true, 0, 0, min_percent,
- 			       stdout, true);
--		hists__delete_entries(&bh->block_hists);
-+		if (release)
-+			hists__delete_entries(&bh->block_hists);
-+
- 		return 0;
- 	case 1:
- 		symbol_conf.report_individual_block = true;
- 		ret = block_hists_tui_browse(bh, evsel, min_percent,
- 					     env, annotation_opts);
--		hists__delete_entries(&bh->block_hists);
-+		if (release)
-+			hists__delete_entries(&bh->block_hists);
-+
- 		return ret;
- 	default:
- 		return -1;
-@@ -466,12 +507,25 @@ int report__browse_block_hists(struct block_hist *bh, float min_percent,
- 	return 0;
- }
- 
--float block_info__total_cycles_percent(struct hist_entry *he)
-+int block_pair_cmp(struct hist_entry *pair, struct hist_entry *he)
- {
--	struct block_info *bi = he->block_info;
-+	struct block_info *bi_p = pair->block_info;
-+	struct block_info *bi_h = he->block_info;
-+	struct map_symbol *ms_p = &pair->ms;
-+	struct map_symbol *ms_h = &he->ms;
-+	int cmp;
- 
--	if (bi->total_cycles)
--		return bi->cycles * 100.0 / bi->total_cycles;
-+	if (!ms_p->map || !ms_p->map->dso || !ms_p->sym ||
-+	    !ms_h->map || !ms_h->map->dso || !ms_h->sym) {
-+		return -1;
-+	}
- 
--	return 0.0;
-+	cmp = strcmp(ms_p->sym->name, ms_h->sym->name);
-+	if (cmp)
-+		return -1;
-+
-+	if ((bi_p->start == bi_h->start) && (bi_p->end == bi_h->end))
-+		return 0;
-+
-+	return -1;
- }
-diff --git a/tools/perf/util/block-info.h b/tools/perf/util/block-info.h
-index bef0d75e9819..b59b778422f3 100644
---- a/tools/perf/util/block-info.h
-+++ b/tools/perf/util/block-info.h
-@@ -32,19 +32,20 @@ struct block_fmt {
- };
- 
- enum {
--	PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT,
--	PERF_HPP_REPORT__BLOCK_LBR_CYCLES,
--	PERF_HPP_REPORT__BLOCK_CYCLES_PCT,
--	PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
--	PERF_HPP_REPORT__BLOCK_RANGE,
--	PERF_HPP_REPORT__BLOCK_DSO,
--	PERF_HPP_REPORT__BLOCK_MAX_INDEX
-+	PERF_HPP__BLOCK_TOTAL_CYCLES_PCT,
-+	PERF_HPP__BLOCK_LBR_CYCLES,
-+	PERF_HPP__BLOCK_CYCLES_PCT,
-+	PERF_HPP__BLOCK_AVG_CYCLES,
-+	PERF_HPP__BLOCK_RANGE,
-+	PERF_HPP__BLOCK_DSO,
-+	PERF_HPP__BLOCK_MAX_INDEX
- };
- 
- struct block_report {
- 	struct block_hist	hist;
- 	u64			cycles;
--	struct block_fmt	fmts[PERF_HPP_REPORT__BLOCK_MAX_INDEX];
-+	struct block_fmt	*fmts;
-+	int			nr_fmts;
- };
- 
- struct block_hist;
-@@ -68,12 +69,19 @@ int block_info__process_sym(struct hist_entry *he, struct block_hist *bh,
- 			    u64 *block_cycles_aggr, u64 total_cycles);
- 
- struct block_report *block_info__create_report(struct evlist *evlist,
--					       u64 total_cycles);
-+					       u64 total_cycles,
-+					       int *block_hpps, int nr_hpps,
-+					       int *nr_reps);
-+
-+void block_info__free_report(struct block_report *reps, int nr_reps);
- 
- int report__browse_block_hists(struct block_hist *bh, float min_percent,
- 			       struct evsel *evsel, struct perf_env *env,
--			       struct annotation_options *annotation_opts);
-+			       struct annotation_options *annotation_opts,
-+			       bool release);
- 
- float block_info__total_cycles_percent(struct hist_entry *he);
- 
-+int block_pair_cmp(struct hist_entry *pair, struct hist_entry *he);
-+
- #endif /* __PERF_BLOCK_H */
 -- 
 2.17.1
 
