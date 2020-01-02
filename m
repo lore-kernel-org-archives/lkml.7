@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB874C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F54C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6C7320848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CDA020866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005491;
-	bh=Pc7uPvcuM7w2rBzOwHBf9lGobcUqEHEdyQ6mhiTC5U0=;
+	s=default; t=1578005498;
+	bh=YFr8sdVP8d6EmhH91mp17WQOB93TxcA8VDON1OElUv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RA41RGt0Fss3sMfGuHG/QY5U8wUeTyCNcWRPaDt0lFu/WR5SeroT+NDI4LjRCgyQ9
-	 9ls62om6IYNBYPpgZXqvzxkRHv+1FmuiTkOJl4a1kqRbykfVwk7WkN9rIXf7cT+e7O
-	 20f+NnIvOIBTEPQEsTCQhaa/zpyHfWD0qNKIfYuU=
+	b=yCNgrfBx9Tf/cfyUp5VTSWXtM17RCPrgxCRVJKWWB7431vZdstM0Z/IwVai++M18I
+	 5snof2BxVqfIuH6UJ4bEOtDuT927nUqYjDwA/UpWMlnZnc2qkHFbskOIlorMCeaSeb
+	 WltdJI8kVGSca/hmSxkP5dngFyMf038GG00GhZbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729921AbgABWvb (ORCPT
+        id S1729855AbgABWvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:51:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47664 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:51:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729364AbgABWYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:24:09 -0500
+        id S1729201AbgABWX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:23:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E31721D7D;
-        Thu,  2 Jan 2020 22:24:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8597120866;
+        Thu,  2 Jan 2020 22:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003848;
-        bh=Pc7uPvcuM7w2rBzOwHBf9lGobcUqEHEdyQ6mhiTC5U0=;
+        s=default; t=1578003839;
+        bh=YFr8sdVP8d6EmhH91mp17WQOB93TxcA8VDON1OElUv4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u2cj6BiedViZ6pqkXGcW3mTEN4juzXbD8Y7quUMwjX/69Vvcw5iN1Ej144VzNv4ZP
-         fW3TnGJrPBirT8tR2icF8IfXLBhBb3fDA8IiuIU6iSzurzQgfLpjEz830gwFhHVlkc
-         5KeM1HoGNy6slDDbUNRPllnnxMwH7U0jev2uvxck=
+        b=e/XxyXm1HJeukJv/IzWMg81VqkWCROVmm1mWQPkMLrsST9hfZTTt5PK/GLVD7fHMf
+         cBNOZX419k4JdsgVhwTFShLr1ikXr7OKNj5dpm6iEZrQFMirt/A9naUja03+bc+Bx/
+         Vs9FWWonRj5edf5/povYfRadYt1Ew/44CYj+DVIk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Barry Song <Baohua.Song@csr.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 24/91] mfd: mfd-core: Honour Device Trees request to disable a child-device
-Date:   Thu,  2 Jan 2020 23:07:06 +0100
-Message-Id: <20200102220424.847265838@linuxfoundation.org>
+Subject: [PATCH 4.14 20/91] f2fs: fix to update dirs i_pino during cross_rename
+Date:   Thu,  2 Jan 2020 23:07:02 +0100
+Message-Id: <20200102220420.759090138@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -63,47 +61,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lee Jones <lee.jones@linaro.org>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 6b5c350648b857047b47acf74a57087ad27d6183 ]
+[ Upstream commit 2a60637f06ac94869b2e630eaf837110d39bf291 ]
 
-Until now, MFD has assumed all child devices passed to it (via
-mfd_cells) are to be registered. It does not take into account
-requests from Device Tree and the like to disable child devices
-on a per-platform basis.
+As Eric reported:
 
-Well now it does.
+RENAME_EXCHANGE support was just added to fsstress in xfstests:
 
-Link: https://www.spinics.net/lists/arm-kernel/msg366309.html
-Link: https://lkml.org/lkml/2019/8/22/1350
+	commit 65dfd40a97b6bbbd2a22538977bab355c5bc0f06
+	Author: kaixuxia <xiakaixu1987@gmail.com>
+	Date:   Thu Oct 31 14:41:48 2019 +0800
 
-Reported-by: Barry Song <Baohua.Song@csr.com>
-Reported-by: Stephan Gerhold <stephan@gerhold.net>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Reviewed-by: Mark Brown <broonie@kernel.org>
-Tested-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+	    fsstress: add EXCHANGE renameat2 support
+
+This is causing xfstest generic/579 to fail due to fsck.f2fs reporting errors.
+I'm not sure what the problem is, but it still happens even with all the
+fs-verity stuff in the test commented out, so that the test just runs fsstress.
+
+generic/579 23s ... 	[10:02:25]
+[    7.745370] run fstests generic/579 at 2019-11-04 10:02:25
+_check_generic_filesystem: filesystem on /dev/vdc is inconsistent
+(see /results/f2fs/results-default/generic/579.full for details)
+ [10:02:47]
+Ran: generic/579
+Failures: generic/579
+Failed 1 of 1 tests
+Xunit report: /results/f2fs/results-default/result.xml
+
+Here's the contents of 579.full:
+
+_check_generic_filesystem: filesystem on /dev/vdc is inconsistent
+*** fsck.f2fs output ***
+[ASSERT] (__chk_dots_dentries:1378)  --> Bad inode number[0x24] for '..', parent parent ino is [0xd10]
+
+The root cause is that we forgot to update directory's i_pino during
+cross_rename, fix it.
+
+Fixes: 32f9bc25cbda0 ("f2fs: support ->rename2()")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Tested-by: Eric Biggers <ebiggers@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/mfd-core.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/f2fs/namei.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index 5c8ed2150c8b..fae7bfe7a21a 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -178,6 +178,11 @@ static int mfd_add_device(struct device *parent, int id,
- 	if (parent->of_node && cell->of_compatible) {
- 		for_each_child_of_node(parent->of_node, np) {
- 			if (of_device_is_compatible(np, cell->of_compatible)) {
-+				if (!of_device_is_available(np)) {
-+					/* Ignore disabled devices error free */
-+					ret = 0;
-+					goto fail_alias;
-+				}
- 				pdev->dev.of_node = np;
- 				pdev->dev.fwnode = &np->fwnode;
- 				break;
+diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
+index b80e7db3b55b..b13383948fca 100644
+--- a/fs/f2fs/namei.c
++++ b/fs/f2fs/namei.c
+@@ -862,7 +862,8 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 	if (!old_dir_entry || whiteout)
+ 		file_lost_pino(old_inode);
+ 	else
+-		F2FS_I(old_inode)->i_pino = new_dir->i_ino;
++		/* adjust dir's i_pino to pass fsck check */
++		f2fs_i_pino_write(old_inode, new_dir->i_ino);
+ 	up_write(&F2FS_I(old_inode)->i_sem);
+ 
+ 	old_inode->i_ctime = current_time(old_inode);
+@@ -1027,7 +1028,11 @@ static int f2fs_cross_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 	f2fs_set_link(old_dir, old_entry, old_page, new_inode);
+ 
+ 	down_write(&F2FS_I(old_inode)->i_sem);
+-	file_lost_pino(old_inode);
++	if (!old_dir_entry)
++		file_lost_pino(old_inode);
++	else
++		/* adjust dir's i_pino to pass fsck check */
++		f2fs_i_pino_write(old_inode, new_dir->i_ino);
+ 	up_write(&F2FS_I(old_inode)->i_sem);
+ 
+ 	old_dir->i_ctime = current_time(old_dir);
+@@ -1042,7 +1047,11 @@ static int f2fs_cross_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 	f2fs_set_link(new_dir, new_entry, new_page, old_inode);
+ 
+ 	down_write(&F2FS_I(new_inode)->i_sem);
+-	file_lost_pino(new_inode);
++	if (!new_dir_entry)
++		file_lost_pino(new_inode);
++	else
++		/* adjust dir's i_pino to pass fsck check */
++		f2fs_i_pino_write(new_inode, old_dir->i_ino);
+ 	up_write(&F2FS_I(new_inode)->i_sem);
+ 
+ 	new_dir->i_ctime = current_time(new_dir);
 -- 
 2.20.1
 
