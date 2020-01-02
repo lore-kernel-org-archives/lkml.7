@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE36C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B739EC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6E4C222C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87A1D22525
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:28:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004131;
-	bh=pNuyfZHzd3vJd3D5LJa8qilDNRQL2qZ8n+WF/3mK1ZI=;
+	s=default; t=1578004133;
+	bh=5h2VMuozqT83+Xvki4/sTYdyUzjxrDIHWWjHu3k4QyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AVkIHJeUrMBGEvaNNrpfJAWXAmmU1Uk6eT5FeR7kjJrQLnkP93likVGHob3ohWPI8
-	 wbA6UFE849IiolUY/SS9ghwe+vaXimahM1XqVtvmkLykkgzvhSnTKDAZhpKJpZnHbP
-	 nyaDB8dudAhMgHlk5NhJNm3pda25m3qlTX+EKOJg=
+	b=YbDAvc9GVxfmNVQJYhh7Dz5sz7L7eOaw5lRObd7WeQaVvDzjAZQBRecuzt06irLmq
+	 TgboTF67jvPZrtKRB5eCBSy2z1eQvKsgk6kkmgmr2Svd2zDPIn+M+HVu/YrKMiEpAt
+	 kupRr0XHTEqYthQJdzBOqyhw8ELpid8Jpb6lir5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729958AbgABW2u (ORCPT
+        id S1728557AbgABW2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:28:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59022 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:28:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729948AbgABW2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:28:46 -0500
+        id S1729954AbgABW2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:28:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5FD420863;
-        Thu,  2 Jan 2020 22:28:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45CDD20863;
+        Thu,  2 Jan 2020 22:28:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004126;
-        bh=pNuyfZHzd3vJd3D5LJa8qilDNRQL2qZ8n+WF/3mK1ZI=;
+        s=default; t=1578004128;
+        bh=5h2VMuozqT83+Xvki4/sTYdyUzjxrDIHWWjHu3k4QyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2RTP/QZT3hC3BhMPuqFpzik52rja5Y7hPg5SASXBKby4gtKUnAwILmXEe26Xdhu6v
-         taLm94Iu+rHtKekMERrBp7QE/HGCbFL94cENGRO7s51DJILI5JS7uWUZLkQ1/Ys0OY
-         W5LhkqfZ2uwGvJPfSWAcBSNhynU6yZ53xUnCkO00=
+        b=BxEK+ANMHBO31pNtiiesOhMZEJrMH9j6B9dNzGm6ZQlWAcFqEqd8uKQ5v0KuexYyW
+         gikg9MsKbZ6EXqlgqJKDkFDI1QxrKosXTHDeHmW3dcmuhEIft6dCi9TSOAqVtMDMmA
+         7eGZUmMUiVNLYD9vjp2ZXZP/JAw5ACLt9l2XYhu0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 011/171] staging: rtl8192u: fix multiple memory leaks on error path
-Date:   Thu,  2 Jan 2020 23:05:42 +0100
-Message-Id: <20200102220548.532326268@linuxfoundation.org>
+Subject: [PATCH 4.9 042/171] arm64: psci: Reduce the waiting time for cpu_psci_cpu_kill()
+Date:   Thu,  2 Jan 2020 23:06:13 +0100
+Message-Id: <20200102220552.809554624@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -60,70 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-[ Upstream commit ca312438cf176a16d4b89350cade8789ba8d7133 ]
+[ Upstream commit bfcef4ab1d7ee8921bc322109b1692036cc6cbe0 ]
 
-In rtl8192_tx on error handling path allocated urbs and also skb should
-be released.
+In cases like suspend-to-disk and suspend-to-ram, a large number of CPU
+cores need to be shut down. At present, the CPU hotplug operation is
+serialised, and the CPU cores can only be shut down one by one. In this
+process, if PSCI affinity_info() does not return LEVEL_OFF quickly,
+cpu_psci_cpu_kill() needs to wait for 10ms. If hundreds of CPU cores
+need to be shut down, it will take a long time.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Link: https://lore.kernel.org/r/20190920025137.29407-1-navid.emamdoost@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Normally, there is no need to wait 10ms in cpu_psci_cpu_kill(). So
+change the wait interval from 10 ms to max 1 ms and use usleep_range()
+instead of msleep() for more accurate timer.
+
+In addition, reducing the time interval will increase the messages
+output, so remove the "Retry ..." message, instead, track time and
+output to the the sucessful message.
+
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/rtl8192u/r8192U_core.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ arch/arm64/kernel/psci.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/staging/rtl8192u/r8192U_core.c b/drivers/staging/rtl8192u/r8192U_core.c
-index 5fe95937d811..6ec379056650 100644
---- a/drivers/staging/rtl8192u/r8192U_core.c
-+++ b/drivers/staging/rtl8192u/r8192U_core.c
-@@ -1509,7 +1509,7 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
- 		(tx_fwinfo_819x_usb *)(skb->data + USB_HWDESC_HEADER_LEN);
- 	struct usb_device *udev = priv->udev;
- 	int pend;
--	int status;
-+	int status, rt = -1;
- 	struct urb *tx_urb = NULL, *tx_urb_zero = NULL;
- 	unsigned int idx_pipe;
+diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+index 42816bebb1e0..e3713d6fb8e0 100644
+--- a/arch/arm64/kernel/psci.c
++++ b/arch/arm64/kernel/psci.c
+@@ -83,7 +83,8 @@ static void cpu_psci_cpu_die(unsigned int cpu)
  
-@@ -1653,8 +1653,10 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
- 		}
- 		if (bSend0Byte) {
- 			tx_urb_zero = usb_alloc_urb(0, GFP_ATOMIC);
--			if (!tx_urb_zero)
--				return -ENOMEM;
-+			if (!tx_urb_zero) {
-+				rt = -ENOMEM;
-+				goto error;
-+			}
- 			usb_fill_bulk_urb(tx_urb_zero, udev,
- 					  usb_sndbulkpipe(udev, idx_pipe),
- 					  &zero, 0, tx_zero_isr, dev);
-@@ -1664,7 +1666,7 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
- 					 "Error TX URB for zero byte %d, error %d",
- 					 atomic_read(&priv->tx_pending[tcb_desc->queue_index]),
- 					 status);
--				return -1;
-+				goto error;
- 			}
- 		}
- 		netif_trans_update(dev);
-@@ -1675,7 +1677,12 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
- 	RT_TRACE(COMP_ERR, "Error TX URB %d, error %d",
- 		 atomic_read(&priv->tx_pending[tcb_desc->queue_index]),
- 		 status);
--	return -1;
-+
-+error:
-+	dev_kfree_skb_any(skb);
-+	usb_free_urb(tx_urb);
-+	usb_free_urb(tx_urb_zero);
-+	return rt;
- }
+ static int cpu_psci_cpu_kill(unsigned int cpu)
+ {
+-	int err, i;
++	int err;
++	unsigned long start, end;
  
- static short rtl8192_usb_initendpoints(struct net_device *dev)
+ 	if (!psci_ops.affinity_info)
+ 		return 0;
+@@ -93,16 +94,18 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
+ 	 * while it is dying. So, try again a few times.
+ 	 */
+ 
+-	for (i = 0; i < 10; i++) {
++	start = jiffies;
++	end = start + msecs_to_jiffies(100);
++	do {
+ 		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
+ 		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
+-			pr_info("CPU%d killed.\n", cpu);
++			pr_info("CPU%d killed (polled %d ms)\n", cpu,
++				jiffies_to_msecs(jiffies - start));
+ 			return 0;
+ 		}
+ 
+-		msleep(10);
+-		pr_info("Retrying again to check for CPU kill\n");
+-	}
++		usleep_range(100, 1000);
++	} while (time_before(jiffies, end));
+ 
+ 	pr_warn("CPU%d may not have shut down cleanly (AFFINITY_INFO reports %d)\n",
+ 			cpu, err);
 -- 
 2.20.1
 
