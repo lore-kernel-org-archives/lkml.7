@@ -2,69 +2,74 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34A8C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1B0C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1E42085B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A253222C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 23:43:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b="LoYd6qXD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbgABXnH (ORCPT
+        id S1727376AbgABXnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 2 Jan 2020 18:43:11 -0500
+Received: from mail.toke.dk ([45.145.95.4]:47027 "EHLO mail.toke.dk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725872AbgABXnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Jan 2020 18:43:07 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:52460 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727166AbgABXnH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 18:43:07 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5555B15707A92;
-        Thu,  2 Jan 2020 15:43:06 -0800 (PST)
-Date:   Thu, 02 Jan 2020 15:43:05 -0800 (PST)
-Message-Id: <20200102.154305.639050830505824860.davem@davemloft.net>
-To:     yangpc@wangsu.com
-Cc:     edumazet@google.com, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tcp: fix "old stuff" D-SACK causing SACK to be treated
- as D-SACK
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1577699681-14748-1-git-send-email-yangpc@wangsu.com>
-References: <1577699681-14748-1-git-send-email-yangpc@wangsu.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 02 Jan 2020 15:43:06 -0800 (PST)
+X-Greylist: delayed 540 seconds by postgrey-1.27 at vger.kernel.org; Thu, 02 Jan 2020 18:43:06 EST
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=toke.dk; s=20161023;
+        t=1578008042; bh=n+/Z2y8RBVuqOI4GbqxFKUrx0mw1L0vQ5v5oMAmp7p4=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=LoYd6qXDE5xAkgF2bwCD0T2jgTeox5j6DXM1M6YwSyyiIgC4s339InEiSQ+Ii9jEw
+         E/03m4wW582/wfubbb5xghNEIY440TWkImjxPtKQrS6bPV43ssXEJz79HyoCtFA0WK
+         jlfLzgl6Z20tN8ZdeNSgcyZ1/x6xf7f3uIaaVXk3NEZusaBYY0md3LnksEl/c9zV70
+         i/XJP7w99sQRz/7o9Yh13kZtpl3ESq50+BRdyRlwZ71fN7M7Lk0O8hfCnNSWVjXgxm
+         47uMNKSNCrYZujafjMO1cDRwfakGV3N9FBOiYwzlyQDfk4vxrFT8wJb2goOueaRRPk
+         /3EEhSnY9xDCg==
+To:     Wen Yang <wenyang@linux.alibaba.com>
+Cc:     Wen Yang <wenyang@linux.alibaba.com>,
+        Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        cake@lists.bufferbloat.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sch_cake: avoid possible divide by zero in cake_enqueue()
+In-Reply-To: <20200102092143.8971-1-wenyang@linux.alibaba.com>
+References: <20200102092143.8971-1-wenyang@linux.alibaba.com>
+Date:   Fri, 03 Jan 2020 00:34:01 +0100
+X-Clacks-Overhead: GNU Terry Pratchett
+Message-ID: <87ftgxl9g6.fsf@toke.dk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pengcheng Yang <yangpc@wangsu.com>
-Date: Mon, 30 Dec 2019 17:54:41 +0800
+Wen Yang <wenyang@linux.alibaba.com> writes:
 
-> When we receive a D-SACK, where the sequence number satisfies:
-> 	undo_marker <= start_seq < end_seq <= prior_snd_una
-> we consider this is a valid D-SACK and tcp_is_sackblock_valid()
-> returns true, then this D-SACK is discarded as "old stuff",
-> but the variable first_sack_index is not marked as negative
-> in tcp_sacktag_write_queue().
-> 
-> If this D-SACK also carries a SACK that needs to be processed
-> (for example, the previous SACK segment was lost), this SACK
-> will be treated as a D-SACK in the following processing of
-> tcp_sacktag_write_queue(), which will eventually lead to
-> incorrect updates of undo_retrans and reordering.
-> 
-> Fixes: fd6dad616d4f ("[TCP]: Earlier SACK block verification & simplify access to them")
-> Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
+> The variables 'window_interval' is u64 and do_div()
+> truncates it to 32 bits, which means it can test
+> non-zero and be truncated to zero for division.
+> The unit of window_interval is nanoseconds,
+> so its lower 32-bit is relatively easy to exceed.
+> Fix this issue by using div64_u64() instead.
+>
+> Fixes: 7298de9cd725 ("sch_cake: Add ingress mode")
+> Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+> Cc: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+> Cc: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: Cong Wang <xiyou.wangcong@gmail.com>
+> Cc: cake@lists.bufferbloat.net
+> Cc: netdev@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
 
-Applied and queued up for -stable, thank you.
+Acked-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@toke.dk>
