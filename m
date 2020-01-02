@@ -2,93 +2,124 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA26C2D0DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 02:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 463E2C2D0DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 02:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E7521734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 02:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C93921734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 02:21:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cIcgexlf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbgABCTN (ORCPT
+        id S1727560AbgABCV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 21:19:13 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8657 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727511AbgABCTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 21:19:13 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4477357E9891A67129BA;
-        Thu,  2 Jan 2020 10:19:10 +0800 (CST)
-Received: from huawei.com (10.175.105.18) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 2 Jan 2020
- 10:19:03 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
-        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
-        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>
-CC:     <linmiaohe@huawei.com>, <liran.alon@oracle.com>,
-        <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <x86@kernel.org>
-Subject: [PATCH] KVM: SVM: Fix potential memory leak in svm_cpu_init()
-Date:   Thu, 2 Jan 2020 10:20:40 +0800
-Message-ID: <1577931640-29420-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 1 Jan 2020 21:21:26 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27225 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727509AbgABCVZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jan 2020 21:21:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577931684;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FlPAa7doWPEFbRqzPKyUG9DNrgIIpJkhHUoDFGrmf3E=;
+        b=cIcgexlfeLFo/8RSheRSk31obcyh8bU+DcGsDyqgJXss73CHW2Jsu2KqX2zPzv9aXyCDnV
+        zWX03aFV75ElDiiQVYekUg6OiwcBpsHn2zRgYxj7CWJ8uFqqvTREPkGTxu+Y/wYWsDGZjq
+        QyazUY9nW4yOgow/trSxEyPqVb7oLmw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-139-tbtTMYaMMX-nky7n9hoCAQ-1; Wed, 01 Jan 2020 21:21:20 -0500
+X-MC-Unique: tbtTMYaMMX-nky7n9hoCAQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E81278024E8;
+        Thu,  2 Jan 2020 02:21:18 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-88.pek2.redhat.com [10.72.12.88])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 699747BFB8;
+        Thu,  2 Jan 2020 02:21:14 +0000 (UTC)
+Date:   Thu, 2 Jan 2020 10:21:10 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Taku Izumi <izumi.taku@jp.fujitsu.com>,
+        Michael Weiser <michael@weiser.dinsnail.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>, kexec@lists.infradead.org,
+        X86 ML <x86@kernel.org>
+Subject: Re: [PATCH v2 4/4] efi: Fix handling of multiple efi_fake_mem=
+ entries
+Message-ID: <20200102022110.GA29876@dhcp-128-65.nay.redhat.com>
+References: <157782985777.367056.14741265874314204783.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <157782987865.367056.15199592105978588123.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20200101045141.GA15155@dhcp-128-65.nay.redhat.com>
+ <CAPcyv4hSB9B5tiKVwtNOgDS6KS2Pj6f962OPBZVZpPjrBt6Z8A@mail.gmail.com>
+ <20200101061505.GA15717@dhcp-128-65.nay.redhat.com>
+ <20200101062047.GA16393@dhcp-128-65.nay.redhat.com>
+ <CAPcyv4ivPw7Z8y0yBT4j41=cgLqGjKafHHB==h=cC8aXvHK7Kw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.18]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4ivPw7Z8y0yBT4j41=cgLqGjKafHHB==h=cC8aXvHK7Kw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+On 01/01/20 at 10:36am, Dan Williams wrote:
+> On Tue, Dec 31, 2019 at 10:21 PM Dave Young <dyoung@redhat.com> wrote:
+> >
+> > > > Does kexec preserve iomem? I.e. as long as the initial translation of
+> > > > efi entries to e820, and resulting resource tree, is preserved by
+> > > > successive kexec cycles then I think we're ok.
+> > >
+> > > It will not preserve them automatically, but that can be fixed if
+> > > needed.
+> > >
+> > > There are two places:
+> > > 1. the in kernel loader, we can do similar with below commit (for Soft
+> > > Reseved instead):
+> > > commit 980621daf368f2b9aa69c7ea01baa654edb7577b
+> > > Author: Lianbo Jiang <lijiang@redhat.com>
+> > > Date:   Tue Apr 23 09:30:07 2019 +0800
+> > >
+> > >     x86/crash: Add e820 reserved ranges to kdump kernel's e820 table
+> >
+> > Oops, that is for kdump only, for kexec, should update the kexec e820
+> > table.  But before doing that we need first to see if this is necessary.
+> 
+> We can cross that bridge later, but I expect it will eventually be
+> necessary. The soft-reservation facility will become more prevalent as
+> more platforms ship with DRAM differentiated memory ranges, like
+> high-bandwidth-memory, and the system needs to reserve it from general
+> kernel allocations. See commit 262b45ae3ab4 "x86/efi: EFI soft
+> reservation to E820 enumeration" and commit fe3e5e65c06e "efi:
+> Enumerate EFI_MEMORY_SP" for more details.
 
-When kmalloc memory for sd->sev_vmcbs failed, we forget to free the page
-held by sd->save_area.
+Ok, agreed the EFI_MEMORY_SP should be preserved across kexec reboot,
+I think those firmware provided EFI_MEMORY_SP should be persistent
+because the e820 table is just a copy.   But I have no such hardware
+to test,  could you do a test to confirm if possible?
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- arch/x86/kvm/svm.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+The test steps should be:
+# -s means to use kexec_file_load syscall
+kexec -s -l bzImage --initrd initramfs-file --reuse-cmdline 
+reboot
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 8f1b715dfde8..89eb382e8580 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -1012,7 +1012,7 @@ static int svm_cpu_init(int cpu)
- 	r = -ENOMEM;
- 	sd->save_area = alloc_page(GFP_KERNEL);
- 	if (!sd->save_area)
--		goto err_1;
-+		goto free_cpu_data;
- 
- 	if (svm_sev_enabled()) {
- 		r = -ENOMEM;
-@@ -1020,14 +1020,16 @@ static int svm_cpu_init(int cpu)
- 					      sizeof(void *),
- 					      GFP_KERNEL);
- 		if (!sd->sev_vmcbs)
--			goto err_1;
-+			goto free_save_area;
- 	}
- 
- 	per_cpu(svm_data, cpu) = sd;
- 
- 	return 0;
- 
--err_1:
-+free_save_area:
-+	__free_page(sd->save_area);
-+free_cpu_data:
- 	kfree(sd);
- 	return r;
- 
--- 
-2.19.1
+Maybe this should be fine for the time being.  And
+leave the faked mem only works once during the physical boot?
+
+Thanks
+Dave
 
