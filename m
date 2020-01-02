@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 574D6C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AF9C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21F802253D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0057F24653
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003362;
-	bh=XZ1U8JnRfsOdge9C/Nkv34u0lxhGTLvWnD34+oshmKE=;
+	s=default; t=1578003366;
+	bh=FStZvUidJVP7Ac9iFDia61wcqTXaw0GAPm9tS7Bq4d0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dbcPvmfJuxhQ16NrBMwuofrFJNSu6KA5MuUOpNubOtQtrfxVJXQQurmcXLAKubiuv
-	 7DUXryzaACLqGNe/E57Oylja8czkU0zu9LEuA+Oq//2Sof4zHFaTSvi7soFHFiPK4p
-	 617Rj36MDMB7X5ZSgl/82zIREjzJ/BSes+I27jss=
+	b=XpCw20/iTnJm4LFrZRkQTWC/Fjhz6Nrs372WrjuY8XT5OOi9x0p68/2kbE8n0/njV
+	 hWOerNMV7uOPX8ryPjQp1UhARiab8OlWzppkJF0qQzQeoXhG2HFJqV5BFeQnfmtlqR
+	 eXKVh29tGP1lpC0yG0+I6MPqmTcXsfXeBZdTWoPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbgABWQB (ORCPT
+        id S1727425AbgABWQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:16:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57464 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:16:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728167AbgABWP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:15:57 -0500
+        id S1728153AbgABWP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:15:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4015222314;
-        Thu,  2 Jan 2020 22:15:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 771EE2253D;
+        Thu,  2 Jan 2020 22:15:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003356;
-        bh=XZ1U8JnRfsOdge9C/Nkv34u0lxhGTLvWnD34+oshmKE=;
+        s=default; t=1578003358;
+        bh=FStZvUidJVP7Ac9iFDia61wcqTXaw0GAPm9tS7Bq4d0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TVk4Zdk9OylCB9BbYjLIMwFbgCkdH+5uz4lSC8Y/b/r1beS8WD9hG8uH5YpWMsiYI
-         pZwxsNnycnpAKEqO4Px79T7/RfSNCJjfRBE9OCyOav2+PDosnkY1fTZ9Fzjd271g4s
-         tz7ppgenYsV3B/hvXu8EyXpCLQY8NOu94NBo9mjo=
+        b=tGtoQBe7lmBw+C4zA4bS6nGQ3DtqKnaQ2elWCiz0sbMZe32mlyZsfPw504AD2XVws
+         7ogq7LEAlPIdW7U1QccZMKtaBoX+zDU4Zx0pi1Xz6Kvf5bXOjPjM7VTeeaKhLvLZ1N
+         rLYgChfVFicNDNG9LaqWzPbX27Mr59EDn+GrXHFQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
+        stable@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Chris Down <chris@chrisdown.name>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 127/191] mm/hugetlbfs: fix error handling when setting up mounts
-Date:   Thu,  2 Jan 2020 23:06:49 +0100
-Message-Id: <20200102215843.357330718@linuxfoundation.org>
+Subject: [PATCH 5.4 128/191] kernel: sysctl: make drop_caches write-only
+Date:   Thu,  2 Jan 2020 23:06:50 +0100
+Message-Id: <20200102215843.444023100@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -64,90 +66,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Kravetz <mike.kravetz@oracle.com>
+From: Johannes Weiner <hannes@cmpxchg.org>
 
-[ Upstream commit 8fc312b32b25c6b0a8b46fab4df8c68df5af1223 ]
+[ Upstream commit 204cb79ad42f015312a5bbd7012d09c93d9b46fb ]
 
-It is assumed that the hugetlbfs_vfsmount[] array will contain either a
-valid vfsmount pointer or NULL for each hstate after initialization.
-Changes made while converting to use fs_context broke this assumption.
+Currently, the drop_caches proc file and sysctl read back the last value
+written, suggesting this is somehow a stateful setting instead of a
+one-time command.  Make it write-only, like e.g.  compact_memory.
 
-While fixing the hugetlbfs_vfsmount issue, it was discovered that
-init_hugetlbfs_fs never did correctly clean up when encountering a vfs
-mount error.
+While mitigating a VM problem at scale in our fleet, there was confusion
+about whether writing to this file will permanently switch the kernel into
+a non-caching mode.  This influences the decision making in a tense
+situation, where tens of people are trying to fix tens of thousands of
+affected machines: Do we need a rollback strategy?  What are the
+performance implications of operating in a non-caching state for several
+days?  It also caused confusion when the kernel team said we may need to
+write the file several times to make sure it's effective ("But it already
+reads back 3?").
 
-It was found during code inspection.  A small memory allocation failure
-would be the most likely cause of taking a error path with the bug.
-This is unlikely to happen as this is early init code.
-
-Link: http://lkml.kernel.org/r/94b6244d-2c24-e269-b12c-e3ba694b242d@oracle.com
-Reported-by: Chengguang Xu <cgxu519@mykernel.net>
-Fixes: 32021982a324 ("hugetlbfs: Convert to fs_context")
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
+Link: http://lkml.kernel.org/r/20191031221602.9375-1-hannes@cmpxchg.org
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Acked-by: Chris Down <chris@chrisdown.name>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Alexey Dobriyan <adobriyan@gmail.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/hugetlbfs/inode.c | 31 ++++++++++++++++++++++---------
- 1 file changed, 22 insertions(+), 9 deletions(-)
+ kernel/sysctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index a478df035651..26e3906c18fe 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -1461,28 +1461,41 @@ static int __init init_hugetlbfs_fs(void)
- 					sizeof(struct hugetlbfs_inode_info),
- 					0, SLAB_ACCOUNT, init_once);
- 	if (hugetlbfs_inode_cachep == NULL)
--		goto out2;
-+		goto out;
- 
- 	error = register_filesystem(&hugetlbfs_fs_type);
- 	if (error)
--		goto out;
-+		goto out_free;
- 
-+	/* default hstate mount is required */
-+	mnt = mount_one_hugetlbfs(&hstates[default_hstate_idx]);
-+	if (IS_ERR(mnt)) {
-+		error = PTR_ERR(mnt);
-+		goto out_unreg;
-+	}
-+	hugetlbfs_vfsmount[default_hstate_idx] = mnt;
-+
-+	/* other hstates are optional */
- 	i = 0;
- 	for_each_hstate(h) {
-+		if (i == default_hstate_idx)
-+			continue;
-+
- 		mnt = mount_one_hugetlbfs(h);
--		if (IS_ERR(mnt) && i == 0) {
--			error = PTR_ERR(mnt);
--			goto out;
--		}
--		hugetlbfs_vfsmount[i] = mnt;
-+		if (IS_ERR(mnt))
-+			hugetlbfs_vfsmount[i] = NULL;
-+		else
-+			hugetlbfs_vfsmount[i] = mnt;
- 		i++;
- 	}
- 
- 	return 0;
- 
-- out:
-+ out_unreg:
-+	(void)unregister_filesystem(&hugetlbfs_fs_type);
-+ out_free:
- 	kmem_cache_destroy(hugetlbfs_inode_cachep);
-- out2:
-+ out:
- 	return error;
- }
- fs_initcall(init_hugetlbfs_fs)
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index b6f2f35d0bcf..70665934d53e 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -1466,7 +1466,7 @@ static struct ctl_table vm_table[] = {
+ 		.procname	= "drop_caches",
+ 		.data		= &sysctl_drop_caches,
+ 		.maxlen		= sizeof(int),
+-		.mode		= 0644,
++		.mode		= 0200,
+ 		.proc_handler	= drop_caches_sysctl_handler,
+ 		.extra1		= SYSCTL_ONE,
+ 		.extra2		= &four,
 -- 
 2.20.1
 
