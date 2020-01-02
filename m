@@ -2,108 +2,149 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C041C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0EBC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67EC02085B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CE30215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:11:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TDISb/K0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rdx9u2/0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbgABLI3 (ORCPT
+        id S1728148AbgABLLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 06:08:29 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57929 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728111AbgABLI3 (ORCPT
+        Thu, 2 Jan 2020 06:11:39 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39228 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728115AbgABLLj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 06:08:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577963307;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=GNvakkxQuOqMQUj1eGVGpZIiH2Cj2LW8lOBGntXxElo=;
-        b=TDISb/K0LNNTOL6rW4x2c6NiivfqGK7H5Ift+yOXzFaUaka96vWJzHyyBub89yxWXz7NxK
-        BW3amTQxOTadXyyqBBaBroeeTJF0PqjzF4i3h+5qUpOqFWfWEhReh7/6oZ7QND0N5Mp4Du
-        SRohnQXU4m7aunPOxdVGW7obakQ2CUQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-60-kZSTbWABO1GvDq5y6MrkwQ-1; Thu, 02 Jan 2020 06:08:22 -0500
-X-MC-Unique: kZSTbWABO1GvDq5y6MrkwQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 25F0B800D4C;
-        Thu,  2 Jan 2020 11:08:21 +0000 (UTC)
-Received: from 10.255.255.10 (ovpn-204-196.brq.redhat.com [10.40.204.196])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 123CB1A7E4;
-        Thu,  2 Jan 2020 11:08:19 +0000 (UTC)
-Date:   Thu, 2 Jan 2020 12:08:17 +0100
-From:   Karel Zak <kzak@redhat.com>
-To:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc:     util-linux@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: Re: [bugreport] "hwclock -w" reset time instead of setting the right
- time
-Message-ID: <20200102110817.ahqaqidw3ztw3kax@10.255.255.10>
-References: <CABXGCsODr3tMpQxJ_nhWQQg5WGakFt4Yu5B8ev6ErOkc+zv9kA@mail.gmail.com>
- <20200101141748.GA191637@mit.edu>
- <CABXGCsOv26W6aqB5WPMe-mEynmwy55DTfTeL5Dg9vRq6+Y6WvA@mail.gmail.com>
- <CABXGCsNkzPrjqMRaWpssorxzhMLWBvLeSw9BpKYr_DW4LJQECQ@mail.gmail.com>
+        Thu, 2 Jan 2020 06:11:39 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 77so56564032oty.6;
+        Thu, 02 Jan 2020 03:11:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=lJv/sGamCsPGIzZo8ylSMHSYu87RpYOKF5XXlTD11As=;
+        b=rdx9u2/0F8mDVBh8cLkBvEZu5bK10KX7ZJ/uhkZz3819AR84f7KeoMsDCacgHhQNBD
+         Z649Sim2THydSXNXpc5U+mZ9qJb3B30viRCLVcogQEuIdV4IotTmEiyAQ30ZyQOVHsW2
+         0Qdwpve43tb+jZQuYQUqv8cX82b8tmESY23IBm9fAaxKNg6LhDNfgftSsc6FcbFNF7FY
+         RqB5WmGikQDynkxvHM4Gx3vc2g3AMzAGFjl110uOetHuMtrEAwpi/DzPjpEyPXTPu4g2
+         tqDIs/fEer1+HdiM7oWQXrkZ3aQu6yRlHVon8v75I/UMLSkjHcmy4jrGbijfR4z1TjI1
+         9WrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=lJv/sGamCsPGIzZo8ylSMHSYu87RpYOKF5XXlTD11As=;
+        b=Vl+MhL7cFd1GLGoeUelYeqI0NM1Fcf5CeuoQV1DGdgbFpKCFVESio+xexxZ+wUn1kC
+         oBEspg1uyS+yfNc34VdzAlsYlCJEM/WcC/vj/+dhJ6J8EtvjoVQUDBuHgT+HN3NmeDkx
+         Jee1W6TgyekzB7YzymMmzI1sADgv1sBMn4gEjBH+GBkOJ4giVDwYih0RugBK2uETMtiW
+         IrOwUsEsEj75dDE4FgKw42VUqPYeKej0aCnffNQgREGEgNFVPRAPgfJT4L01lOIOd9fv
+         FdRxaOWZqqFjREAd3e1QoNqPc9101L1xXmXkIZkfQ1p8BLa3J+XQGdfdTuAoJpaqJFa7
+         Kgpg==
+X-Gm-Message-State: APjAAAWoDo68nxdiYIeuKVv2gG98vNVw0fuPfNINDNPBI1xT09P9pIBs
+        NTvlRje/c6bRB5ZjESqKGZrcHMTPnX056OaqUxU=
+X-Google-Smtp-Source: APXvYqwCbvnwXKd4CdiE90h+yoBsoKxLpJ0Xd8NGFXH1EC9//GJi45HpBQW8nxwCyJKpgJhkFkj3KfcdDoWnSu3i3Ag=
+X-Received: by 2002:a05:6830:1691:: with SMTP id k17mr94660414otr.282.1577963498118;
+ Thu, 02 Jan 2020 03:11:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABXGCsNkzPrjqMRaWpssorxzhMLWBvLeSw9BpKYr_DW4LJQECQ@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Received: by 2002:a8a:87:0:0:0:0:0 with HTTP; Thu, 2 Jan 2020 03:11:37 -0800 (PST)
+In-Reply-To: <20200102110604.acdilxek5w22q5bg@pali>
+References: <20191220062419.23516-1-namjae.jeon@samsung.com>
+ <CGME20191220062732epcas1p17f3b1066fb4d6496559f349f950e1751@epcas1p1.samsung.com>
+ <20191220062419.23516-2-namjae.jeon@samsung.com> <20191229141108.ufnu6lbu7qvl5oxj@pali>
+ <20200102110604.acdilxek5w22q5bg@pali>
+From:   Namjae Jeon <linkinjeon@gmail.com>
+Date:   Thu, 2 Jan 2020 20:11:37 +0900
+Message-ID: <CAKYAXd9HVGCGfX+6V_zi=BfFpYkLjN1zwB73Awvomd-NTNi8bQ@mail.gmail.com>
+Subject: Re: [PATCH v8 01/13] exfat: add in-memory and on-disk structures and headers
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 01:08:41PM +0500, Mikhail Gavrilov wrote:
-> "hwclock -w" reset time instead of setting the right time on M/B "ROG
-> Strix X570-I Gaming"
-> Demonstration: https://youtu.be/QRB7ZLiEfrc
-> Some DE like GNOME has automatic time synchronization option and there
-> is a feeling that hardware time reset after each Linux boot.
+2020-01-02 20:06 GMT+09:00, Pali Roh=C3=A1r <pali.rohar@gmail.com>:
+> Hello, just remainder for question below, so it would not be lost.
+>
+> I guess that if comment for structure says that it needs to have exact
+> size then structure should be marked as packed to prevent any unexpected
+> paddings added by compiler (as IIRC compiler is free to add any padding
+> between any structure members).
+Okay, I will fix it on next version.
 
- Can you try "hwclock -w -v" to get more details?
-
- For example on my workstation:
-
-        # ./hwclock -w -v
-        hwclock from util-linux 2.35-rc1-20-63f8
-        System Time: 1577963091.683987
-        Trying to open: /dev/rtc0
-        Using the rtc interface to the clock.
-        Last drift adjustment done at 1531914946 seconds after 1969
-        Last calibration done at 1531914946 seconds after 1969
-        Hardware clock is on UTC time
-        Assuming hardware clock is kept in UTC time.
-        RTC type: 'rtc_cmos'
-        Using delay: 0.500000 seconds
-        missed it - 1577963091.684767 is too far past 1577963091.500000 (0.184767 > 0.001000)
-        1577963092.500000 is close enough to 1577963092.500000 (0.000000 < 0.002000)
-        Set RTC to 1577963092 (1577963091 + 1; refsystime = 1577963091.000000)
-        Setting Hardware Clock to 11:04:52 = 1577963092 seconds since 1969
-        ioctl(RTC_SET_TIME) was successful.
-        Not adjusting drift factor because the --update-drift option was not used.
-        New /etc/adjtime data:
-        0.000000 1577963091 0.000000
-        1577963091
-        UTC
-
-
-    Karel
-
-
--- 
- Karel Zak  <kzak@redhat.com>
- http://karelzak.blogspot.com
-
+Thanks!
+>
+> On Sunday 29 December 2019 15:11:08 Pali Roh=C3=A1r wrote:
+>> On Friday 20 December 2019 01:24:07 Namjae Jeon wrote:
+>> > +
+>> > +#define JUMP_BOOT_LEN			3
+>> > +#define OEM_NAME_LEN			8
+>> > +#define MUST_BE_ZERO_LEN		53
+>> > +#define EXFAT_FILE_NAME_LEN		15
+>> > +
+>> > +/* EXFAT BIOS parameter block (64 bytes) */
+>> > +struct bpb64 {
+>> > +	__u8 jmp_boot[JUMP_BOOT_LEN];
+>> > +	__u8 oem_name[OEM_NAME_LEN];
+>> > +	__u8 res_zero[MUST_BE_ZERO_LEN];
+>> > +};
+>> > +
+>> > +/* EXFAT EXTEND BIOS parameter block (56 bytes) */
+>> > +struct bsx64 {
+>> > +	__le64 vol_offset;
+>> > +	__le64 vol_length;
+>> > +	__le32 fat_offset;
+>> > +	__le32 fat_length;
+>> > +	__le32 clu_offset;
+>> > +	__le32 clu_count;
+>> > +	__le32 root_cluster;
+>> > +	__le32 vol_serial;
+>> > +	__u8 fs_version[2];
+>> > +	__le16 vol_flags;
+>> > +	__u8 sect_size_bits;
+>> > +	__u8 sect_per_clus_bits;
+>> > +	__u8 num_fats;
+>> > +	__u8 phy_drv_no;
+>> > +	__u8 perc_in_use;
+>> > +	__u8 reserved2[7];
+>> > +};
+>>
+>> Should not be this structure marked as packed? Also those two below.
+>>
+>> > +/* EXFAT PBR[BPB+BSX] (120 bytes) */
+>> > +struct pbr64 {
+>> > +	struct bpb64 bpb;
+>> > +	struct bsx64 bsx;
+>> > +};
+>> > +
+>> > +/* Common PBR[Partition Boot Record] (512 bytes) */
+>> > +struct pbr {
+>> > +	union {
+>> > +		__u8 raw[64];
+>> > +		struct bpb64 f64;
+>> > +	} bpb;
+>> > +	union {
+>> > +		__u8 raw[56];
+>> > +		struct bsx64 f64;
+>> > +	} bsx;
+>> > +	__u8 boot_code[390];
+>> > +	__le16 signature;
+>> > +};
+>>
+>
+> --
+> Pali Roh=C3=A1r
+> pali.rohar@gmail.com
+>
