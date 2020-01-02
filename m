@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FD9C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B15EC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F03A420866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E345E20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:29:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004144;
-	bh=NtelcdEIdK+ar6S/bYmnjVZ2NGQS+MVd1fmP4SE3GDY=;
+	s=default; t=1578004147;
+	bh=TUW1YUbnK5ZSP11+qLepT2hjKbi/LiZ7AI04j4Z73qE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l+/Pl31AElHUKBWL4hzEtXL621nVz54n2zbX1rjq5Nwe1btmGAuYPkSmVFpwDjAMj
-	 1pY+eJ48ItnFoH19HrJUybsQbOQDNQqJch6WjwDUEvyqqMt4JoumMcEkgKMPSAE/0u
-	 RKasea90eFKtc9yuipvLAWS6af2CMAm26Xjv8xLo=
+	b=JVXKdtAs6dYEP0aF3Y2Wq/SbFf3wVnxFHKRcPue8Mm2wdYqNeo54Zh7CdFv/9cG/C
+	 /oxZ8fE0o+LARX2QiWgvXfCrJKafBYiQtHCVJkR2/z7i5hmDusk9l58EQ8bTzbgL2a
+	 QemQctv8EfTXrOCu3VeSg+9XEeG2zzymhGrjtfzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbgABW3C (ORCPT
+        id S1729992AbgABW3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:29:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59464 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:29:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729977AbgABW27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:28:59 -0500
+        id S1729974AbgABW3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:29:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D33052253D;
-        Thu,  2 Jan 2020 22:28:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B22020866;
+        Thu,  2 Jan 2020 22:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004138;
-        bh=NtelcdEIdK+ar6S/bYmnjVZ2NGQS+MVd1fmP4SE3GDY=;
+        s=default; t=1578004140;
+        bh=TUW1YUbnK5ZSP11+qLepT2hjKbi/LiZ7AI04j4Z73qE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MPEaASerXbIzbqeXVxxorxIsylfGRxjXLQxbUC8WkFXf/NLaDM4SI0DoUm1lHuxxY
-         ePDIKGxBkADR/RdSbFjAWixr9bqWllvov6a3ZkHLdr4N7Q7/6hUtsCoCL8mas9qTg4
-         zzTkeMFvODHdbrGXZHWi04c4PSBO9x/SBpvPt8zY=
+        b=zfCYZc/8msMk0WymClp9NY0npQFoPrhNbjZARENCEaW2DtBJMktSKshv5eFdTXyNx
+         IloDXJH2TqeoH6kmsnVPT0ginZNbFG8PPvr0H7WVpv/HpE/XPM+fHIJUKYj59UQXiz
+         O1md5ZXG+TnXamxP26CqoX8aiZHzVPqarsPHKu1A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 054/171] perf probe: Fix to show ranges of variables in functions without entry_pc
-Date:   Thu,  2 Jan 2020 23:06:25 +0100
-Message-Id: <20200102220554.462281303@linuxfoundation.org>
+Subject: [PATCH 4.9 055/171] perf probe: Fix to show inlined function callsite without entry_pc
+Date:   Thu,  2 Jan 2020 23:06:26 +0100
+Message-Id: <20200102220554.607955684@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -64,93 +64,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit af04dd2f8ebaa8fbd46f698714acbf43da14da45 ]
+[ Upstream commit 18e21eb671dc87a4f0546ba505a89ea93598a634 ]
 
-Fix to show ranges of variables (--range and --vars option) in functions
-which DIE has only ranges but no entry_pc attribute.
+Fix 'perf probe --line' option to show inlined function callsite lines
+even if the function DIE has only ranges.
 
-Without this fix:
+Without this:
 
-  # perf probe --range -V clear_tasks_mm_cpumask
-  Available variables at clear_tasks_mm_cpumask
-  	@<clear_tasks_mm_cpumask+0>
-  		(No matched variables)
+  # perf probe -L amd_put_event_constraints
+  ...
+      2  {
+      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
+                        __amd_put_nb_event_constraints(cpuc, event);
+      5  }
 
-With this fix:
+With this patch:
 
-  # perf probe --range -V clear_tasks_mm_cpumask
-  Available variables at clear_tasks_mm_cpumask
-	@<clear_tasks_mm_cpumask+0>
-		[VAL]	int	cpu	@<clear_tasks_mm_cpumask+[0-35,317-317,2052-2059]>
+  # perf probe -L amd_put_event_constraints
+  ...
+      2  {
+      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
+      4                 __amd_put_nb_event_constraints(cpuc, event);
+      5  }
 
 Committer testing:
 
 Before:
 
-  [root@quaco ~]# perf probe --range -V clear_tasks_mm_cpumask
-  Available variables at clear_tasks_mm_cpumask
-          @<clear_tasks_mm_cpumask+0>
-                  (No matched variables)
+  [root@quaco ~]# perf probe -L amd_put_event_constraints
+  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
+        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
+                                                struct perf_event *event)
+        2  {
+        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
+                          __amd_put_nb_event_constraints(cpuc, event);
+        5  }
+
+           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
+           PMU_FORMAT_ATTR(umask, "config:8-15"   );
+
   [root@quaco ~]#
 
 After:
 
-  [root@quaco ~]# perf probe --range -V clear_tasks_mm_cpumask
-  Available variables at clear_tasks_mm_cpumask
-          @<clear_tasks_mm_cpumask+0>
-                  [VAL]   int     cpu     @<clear_tasks_mm_cpumask+[0-23,23-105,105-106,106-106,1843-1850,1850-1862]>
+  [root@quaco ~]# perf probe -L amd_put_event_constraints
+  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
+        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
+                                                struct perf_event *event)
+        2  {
+        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
+        4                 __amd_put_nb_event_constraints(cpuc, event);
+        5  }
+
+           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
+           PMU_FORMAT_ATTR(umask, "config:8-15"   );
+
+  [root@quaco ~]# perf probe amd_put_event_constraints:4
+  Added new event:
+    probe:amd_put_event_constraints (on amd_put_event_constraints:4)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:amd_put_event_constraints -aR sleep 1
+
+  [root@quaco ~]#
+
+  [root@quaco ~]# perf probe -l
+    probe:amd_put_event_constraints (on amd_put_event_constraints:4@arch/x86/events/amd/core.c)
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
   [root@quaco ~]#
 
 Using it:
 
-  [root@quaco ~]# perf probe clear_tasks_mm_cpumask cpu
-  Added new event:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask with cpu)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
-
-  [root@quaco ~]# perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c with cpu)
-  [root@quaco ~]#
-  [root@quaco ~]# perf trace -e probe:*cpumask
+  [root@quaco ~]# perf trace -e probe:*
   ^C[root@quaco ~]#
 
-Fixes: 349e8d261131 ("perf probe: Add --range option to show a variable's location range")
+Ok, Intel system here... :-)
+
+Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199323018.8075.8179744380479673672.stgit@devnote2
+Link: http://lore.kernel.org/lkml/157199322107.8075.12659099000567865708.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/dwarf-aux.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 7e7e57208323..574ba3ac4fba 100644
+index 574ba3ac4fba..3aea343c7179 100644
 --- a/tools/perf/util/dwarf-aux.c
 +++ b/tools/perf/util/dwarf-aux.c
-@@ -1007,7 +1007,7 @@ static int die_get_var_innermost_scope(Dwarf_Die *sp_die, Dwarf_Die *vr_die,
- 	bool first = true;
- 	const char *name;
- 
--	ret = dwarf_entrypc(sp_die, &entry);
-+	ret = die_entrypc(sp_die, &entry);
- 	if (ret)
- 		return ret;
- 
-@@ -1070,7 +1070,7 @@ int die_get_var_range(Dwarf_Die *sp_die, Dwarf_Die *vr_die, struct strbuf *buf)
- 	bool first = true;
- 	const char *name;
- 
--	ret = dwarf_entrypc(sp_die, &entry);
-+	ret = die_entrypc(sp_die, &entry);
- 	if (ret)
- 		return ret;
- 
+@@ -683,7 +683,7 @@ static int __die_walk_funclines_cb(Dwarf_Die *in_die, void *data)
+ 	if (dwarf_tag(in_die) == DW_TAG_inlined_subroutine) {
+ 		fname = die_get_call_file(in_die);
+ 		lineno = die_get_call_lineno(in_die);
+-		if (fname && lineno > 0 && dwarf_entrypc(in_die, &addr) == 0) {
++		if (fname && lineno > 0 && die_entrypc(in_die, &addr) == 0) {
+ 			lw->retval = lw->callback(fname, lineno, addr, lw->data);
+ 			if (lw->retval != 0)
+ 				return DIE_FIND_CB_END;
 -- 
 2.20.1
 
