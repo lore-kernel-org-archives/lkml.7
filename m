@@ -2,118 +2,120 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C867EC2D0DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEE2C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96CF421655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 435CF20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:44:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VKHqU4TK"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="K14Npc1S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgABIad (ORCPT
+        id S1727847AbgABIoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 03:30:33 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51863 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727688AbgABIac (ORCPT
+        Thu, 2 Jan 2020 03:44:03 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:16404 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727756AbgABIoD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 03:30:32 -0500
-Received: by mail-wm1-f67.google.com with SMTP id d73so4916786wmd.1;
-        Thu, 02 Jan 2020 00:30:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=cRA5UVy21UN6dx2Qu5x3A9NVTLMX1jIGtdux3DRTZi0=;
-        b=VKHqU4TKviMD3V2ScKm0W9Lw0Sk9giP+++S/ooIPT/aqNYjT5nu96Nl8U+odxA7ZuM
-         RHOt6YPQx0YiRCgyylRY1P5b1mHvxwZRf+jmFFDvoiwLxNwixuEi1+aaKEWHGmrvn+KI
-         KtEQQzrkna0S7O0W9KzkKEv6566lVsQnC0rofLvbNk4x1occ509mXasZd0KS2N7K8h3n
-         C9BSccSSpSB1wtrbSS7aAHJP0xmbnMzd9CXfnQ2A2bNsEPNpbRBB1cUo2jLp7PjznENe
-         KNEBta4QcRgfJcTbv6j2NemQibn9eqJyohRX6htPPzgv1bxwtaWL9SQRHO6CEepXhPlm
-         z8Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=cRA5UVy21UN6dx2Qu5x3A9NVTLMX1jIGtdux3DRTZi0=;
-        b=csNlzMM7JGasLgbN68nGqInfg2gUJJxVK+RYeXpWVstES/hA0+jEQwUhiSitebt1YT
-         JvWfmN8jijv2PVz6FXpfq/4w5TYF6Eyh8mg09xc8eqYZCWEoTUMrdeMwCwAS05PjbqtQ
-         0BuTXhAz7s8j35QqmneZxkBh1z3JMI2iJkvNzkKFD5HxJumdQSCWSw17RhJfkr7LyRuL
-         us71MPEn1bMoF8UMo5QbmTl69hijbbzUzMLQl6LOiwF7LSO9Jwd+y+A7vZRndqkMiBbr
-         fiNSH8zu/FqbDYb2ZTgjzl2s60bDvNMqrTqHmJKyIt8mSFkKY77bBSRhJQQNiMVMAaf+
-         bRSw==
-X-Gm-Message-State: APjAAAVzC5QBMbmraFyLBtMIAxUwhKWKlBQrpj/BHXz3LxsfgwkoAD/O
-        QLrh+QyHefmeHAVuP0q9u5w=
-X-Google-Smtp-Source: APXvYqxdrkvInhhSWiKnZlCOsPojT6xfRgodoe5qmviVFC2wVVnHxGm2u2iYYTz7EQ/6e2CNDYVrhg==
-X-Received: by 2002:a1c:f008:: with SMTP id a8mr12944271wmb.81.1577953830730;
-        Thu, 02 Jan 2020 00:30:30 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id a9sm7633562wmm.15.2020.01.02.00.30.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 00:30:30 -0800 (PST)
-Date:   Thu, 2 Jan 2020 09:30:29 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, linkinjeon@gmail.com
-Subject: Re: [PATCH v8 02/13] exfat: add super block operations
-Message-ID: <20200102083029.uv2gtig3ski23dpe@pali>
-References: <20191220062419.23516-1-namjae.jeon@samsung.com>
- <CGME20191220062733epcas1p31665a3ae968ab8c70d91a3cddf529e73@epcas1p3.samsung.com>
- <20191220062419.23516-3-namjae.jeon@samsung.com>
- <20191229134025.qb3mmqatsn5c4gao@pali>
- <000701d5c132$bed73c80$3c85b580$@samsung.com>
+        Thu, 2 Jan 2020 03:44:03 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0028Z1nj022070;
+        Thu, 2 Jan 2020 09:43:42 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=OS+yDpqq7SyVkVspEB/RBh0yAJda6QqIhoTkhDJ6UBk=;
+ b=K14Npc1SGCwL4TFz2snFFL7TQ9itMUDnjpjXZy6l8L2FA7qqeesT/oGwUz5v7nseBZRI
+ fx7wsI++iFevb4UCN/gF4GGCIdSYlHKAzUs7QoR0J7YMd5iMQ6NrpORi9i09n6j7IfjL
+ GDe6dfemNZmY652wtVyO0IPfDx/0+uW8qYW/G32NCVjLYXg6fkycaJSdWOpGfBoYNwH7
+ XkrccgRpLoDH9YzjiKczOSA2hyHbppdqt2/Ko1jtmiMyJmG3m+BxWs955A5d9vrNkNZM
+ FVzgGqYyF9hG0/nn9hUhK6DGsxVtCvOOH53u4yR2clZ41+rYCWruXZLzS05rv2pO+A1o Hw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2x5wd6a3g7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jan 2020 09:43:42 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 52C3710002A;
+        Thu,  2 Jan 2020 09:43:41 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1C5F92A6E01;
+        Thu,  2 Jan 2020 09:43:41 +0100 (CET)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 Jan
+ 2020 09:43:40 +0100
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Thu, 2 Jan 2020 09:43:40 +0100
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "kgene@kernel.org" <kgene@kernel.org>,
+        "hminas@synopsys.com" <hminas@synopsys.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        Amelie DELAUNAY <amelie.delaunay@st.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: usb: Convert DWC2 bindings to
+ json-schema
+Thread-Topic: [PATCH v2 1/2] dt-bindings: usb: Convert DWC2 bindings to
+ json-schema
+Thread-Index: AQHVtlgPPJ7kqTKWikGryQVd+VmeDKfS0A0AgARD9IA=
+Date:   Thu, 2 Jan 2020 08:43:40 +0000
+Message-ID: <b9b1b18f-b331-de6a-1622-ad43143eb56f@st.com>
+References: <20191219103536.25485-1-benjamin.gaignard@st.com>
+ <20191219103536.25485-2-benjamin.gaignard@st.com> <20191230153524.GA4918@pi3>
+In-Reply-To: <20191230153524.GA4918@pi3>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.50]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <37C7D06533EBC444B8B03560F4795446@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <000701d5c132$bed73c80$3c85b580$@samsung.com>
-User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-02_02:2019-12-30,2020-01-02 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 02 January 2020 15:06:16 Namjae Jeon wrote:
-> > > +static const struct fs_parameter_spec exfat_param_specs[] = {
-> > > +	fsparam_u32("uid",			Opt_uid),
-> > > +	fsparam_u32("gid",			Opt_gid),
-> > > +	fsparam_u32oct("umask",			Opt_umask),
-> > > +	fsparam_u32oct("dmask",			Opt_dmask),
-> > > +	fsparam_u32oct("fmask",			Opt_fmask),
-> > > +	fsparam_u32oct("allow_utime",		Opt_allow_utime),
-> > > +	fsparam_string("iocharset",		Opt_charset),
-> > > +	fsparam_flag("utf8",			Opt_utf8),
-> > 
-> > Hello! What is the purpose of having extra special "utf8" mount option?
-> > Is not one "iocharset=utf8" option enough?
-> utf8 nls_table supports utf8<->utf32 conversion and does not support
-> surrogate character conversion.
-
-So in other words, this is just subset of UTF-8 just to 3 byte long
-sequences (for Unicode code points up to the U+FFFF).
-
-> The utf8 option can support the surrogate
-> character conversion of utf16 using utf16s_to_utf8s/utf8s_to_utf16s of
-> the nls base.
-
-So this is full UTF-8 support, right?
-
-And what is the point to have two options for UTF-8 support, when one is
-incomplete / broken? I see no benefit to have first option at all.
-Providing incomplete / broken support to userspace does not make much
-sense if we already have full and working support via different mount
-option. Maybe second option with full UTF-8 support should be used also
-by iocharset=utf8 and then we do not need utf8 option at all?
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+DQpPbiAxMi8zMC8xOSA0OjM1IFBNLCBLcnp5c3p0b2YgS296bG93c2tpIHdyb3RlOg0KPiBPbiBU
+aHUsIERlYyAxOSwgMjAxOSBhdCAxMTozNTozNUFNICswMTAwLCBCZW5qYW1pbiBHYWlnbmFyZCB3
+cm90ZToNCj4+IENvbnZlcnQgRFdDMiBiaW5kaW5ncyB0byBEVCBzY2hlbWEgZm9ybWF0IHVzaW5n
+IGpzb24tc2NoZW1hLg0KPj4gRFdDMiBpcyB3aWRlbHkgdXNlIGJ1dCBhIGNvdXBsZSBvZiBjb21w
+YXRpYmxlcyBhbmQgcHJvcGVydGllcw0KPj4gKHZ1c2JfZC1zdXBwbHksdnVzYl9hLXN1cHBseSkg
+d2VyZSBtaXNzaW5nIGluIGR3YzIudHh0LCB0aGUNCj4+IHBhdGNoIGFkZCB0aGVtLg0KPj4NCj4+
+IFNpZ25lZC1vZmYtYnk6IEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBzdC5j
+b20+DQo+PiAtLS0NCj4+IENDOiBNaW5hcyBIYXJ1dHl1bnlhbiA8aG1pbmFzQHN5bm9wc3lzLmNv
+bT4NCj4+DQo+PiBjaGFuZ2VzIGluIHZlcnNpb24gMjoNCj4+IC0gcHV0IE1pbmFzIEhhcnV0eXVu
+eWFuIDxobWluYXNAc3lub3BzeXMuY29tPiBhcyBtYWludGFpbmVyDQo+PiAtIHJlbW92ZSB0eXBl
+IGFuZCBkZXNjcmlwdGlvbiBmcm9tIHBoeSBwcm9wZXJ0eQ0KPj4gLSByZW1vdmUgZGVzY3JpcHRp
+b24gZnJvbSBjb21wYXRpYmxlIGl0ZW1zDQo+PiAtIHNpbXBsaWZ5IHNhbXN1bmcsczNjNjQwMC1o
+c290ZyBjb21wYXRpYmxlIGhhbmRsaW5nDQo+Pg0KPiAoLi4uKQ0KPg0KPj4gK3JlcXVpcmVkOg0K
+Pj4gKyAgLSBjb21wYXRpYmxlDQo+PiArICAtIHJlZw0KPj4gKyAgLSBpbnRlcnJ1cHRzDQo+PiAr
+ICAtIGNsb2Nrcw0KPj4gKyAgLSBjbG9jay1uYW1lcw0KPj4gKw0KPj4gK2FkZGl0aW9uYWxQcm9w
+ZXJ0aWVzOiBmYWxzZQ0KPj4gKw0KPj4gK2V4YW1wbGVzOg0KPj4gKyAgLSB8DQo+PiArICAgICAg
+dXNiQDEwMWMwMDAwIHsNCj4+ICsgICAgICAgIGNvbXBhdGlibGUgPSAicmFsaW5rLHJ0MzA1MC11
+c2IsIHNucHMsZHdjMiI7DQo+IERvZXMgaXQgcGFzcyBkdGJzX2NoZWNrPyBTaG91bGQgYmUgdHdv
+IHN0cmluZ3MuDQoNCkJhZCBjb3B5L3Bhc3QgZnJvbSB0aGUgb3JpZ2luYWwgdGV4dCBmaWxlLg0K
+DQpZb3UgYXJlIHJpZ2h0IGl0IHNob3VsZCB0d28gc3RyaW5ncyBhbmQgZHQgY2hlY2sgdG9vbHMg
+ZG9uJ3QgZGV0ZWN0IA0KYmVjYXVzZSB0aGV5IHNlZSBpdCBhcyBhIGRpZmZlcmVudCBjb21wYXRp
+YmxlLg0KDQpCZW5qYW1pbg0KDQo+DQo+IEJlc3QgcmVnYXJkcywNCj4gS3J6eXN6dG9mDQo+DQo+
