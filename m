@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A2AC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7299C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF3720848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D06020848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005819;
-	bh=DADd7VxCsHmE1ITmHPK5pCjtOI+okysdYWCx24Rx+T4=;
+	s=default; t=1578005826;
+	bh=slQbVtF+GXopB5WGJzRj5aJidD4gfzmVZdsJhf0mx5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zUZ8S4aPq5jU4G2OKbqFt+GK9X3HLPTKeapSxsuxBwjlAMn7YkMyXuCyvm5bmzEtO
-	 CUtmSggBTuUQ1rkNxjEfSA00A7Gp3Wwq9tEFyUZBb96iAYskE508oiqNh2j32x31I9
-	 hHWgUDbR386K6OsWxYk94jv32dvryeBYMy6+JCWQ=
+	b=XnLei4OOHVKnNYpIYpjWFuUZNUL5WcnVBi4NQOFbRlegKIF2jpA2Wv7MpmkuloxrG
+	 TBGAApOpQPJEgLuXMM/TLjhHtCpnSO1SrOQvYDX5nAddR2JHtbSnugk7UPlz6N9btA
+	 LN9Mp0T6+QoGifhDfHz5GRa34ghgAHVnLzp5wPXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728914AbgABW46 (ORCPT
+        id S1728929AbgABW5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:56:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60330 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:57:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727289AbgABWRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:17:39 -0500
+        id S1726781AbgABWR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:17:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD23621582;
-        Thu,  2 Jan 2020 22:17:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E83DD21582;
+        Thu,  2 Jan 2020 22:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003459;
-        bh=DADd7VxCsHmE1ITmHPK5pCjtOI+okysdYWCx24Rx+T4=;
+        s=default; t=1578003447;
+        bh=slQbVtF+GXopB5WGJzRj5aJidD4gfzmVZdsJhf0mx5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K4tLTuwy2sFGvPcteFPHhxTBNRQTQI9lAhfpYgi7q9V4N10HK5A5c0xOJDNONmXAz
-         A5juigEWRtXLY0qHyyB8E9FPtYXcG+o44TksEtHLytJOJ+Hm3crA9FOVOUok4N+2TI
-         lIJK5SY+zenIPaiGMbtaWWq7YxNFcyfy7y78oQtU=
+        b=P0ti6p/eT353ZMm6/p4QRDSL5ksY2pJu0xeZjQSorK4DbLd9Jj+F6sNZpVkXhgEh+
+         Fzo+DOSLJLGdZTHrkPP0ZHSVDKvmEAWiVg87EF5L0qLU9i94Fds4LmUYAL044bdZyP
+         OoanVHYYOzsSneupRos3yRFn/wt0/sV5gakHzwbM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        David Ahern <dsahern@gmail.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
+        stable@vger.kernel.org,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 169/191] gtp: do not confirm neighbor when do pmtu update
-Date:   Thu,  2 Jan 2020 23:07:31 +0100
-Message-Id: <20200102215847.401426421@linuxfoundation.org>
+Subject: [PATCH 5.4 164/191] bnxt_en: Add missing devlink health reporters for VFs.
+Date:   Thu,  2 Jan 2020 23:07:26 +0100
+Message-Id: <20200102215846.940065716@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,43 +61,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-[ Upstream commit 6e9105c73f8d2163d12d5dfd762fd75483ed30f5 ]
+[ Upstream commit 7e334fc8003c7a38372cc98e7be6082670a47d29 ]
 
-When do IPv6 tunnel PMTU update and calls __ip6_rt_update_pmtu() in the end,
-we should not call dst_confirm_neigh() as there is no two-way communication.
+The VF driver also needs to create the health reporters since
+VFs are also involved in firmware reset and recovery.  Modify
+bnxt_dl_register() and bnxt_dl_unregister() so that they can
+be called by the VFs to register/unregister devlink.  Only the PF
+will register the devlink parameters.  With devlink registered,
+we can now create the health reporters on the VFs.
 
-Although GTP only support ipv4 right now, and __ip_rt_update_pmtu() does not
-call dst_confirm_neigh(), we still set it to false to keep consistency with
-IPv6 code.
-
-v5: No change.
-v4: No change.
-v3: Do not remove dst_confirm_neigh, but add a new bool parameter in
-    dst_ops.update_pmtu to control whether we should do neighbor confirm.
-    Also split the big patch to small ones for each area.
-v2: Remove dst_confirm_neigh in __ip6_rt_update_pmtu.
-
-Reviewed-by: Guillaume Nault <gnault@redhat.com>
-Acked-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Fixes: 6763c779c2d8 ("bnxt_en: Add new FW devlink_health_reporter")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/gtp.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c         |   13 ++++--------
+ drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c |   23 ++++++++++++++++------
+ 2 files changed, 22 insertions(+), 14 deletions(-)
 
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -541,7 +541,7 @@ static int gtp_build_skb_ip4(struct sk_b
- 		mtu = dst_mtu(&rt->dst);
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -11343,12 +11343,11 @@ static void bnxt_remove_one(struct pci_d
+ 	struct net_device *dev = pci_get_drvdata(pdev);
+ 	struct bnxt *bp = netdev_priv(dev);
+ 
+-	if (BNXT_PF(bp)) {
++	if (BNXT_PF(bp))
+ 		bnxt_sriov_disable(bp);
+-		bnxt_dl_fw_reporters_destroy(bp, true);
+-		bnxt_dl_unregister(bp);
+-	}
+ 
++	bnxt_dl_fw_reporters_destroy(bp, true);
++	bnxt_dl_unregister(bp);
+ 	pci_disable_pcie_error_reporting(pdev);
+ 	unregister_netdev(dev);
+ 	bnxt_shutdown_tc(bp);
+@@ -11844,10 +11843,8 @@ static int bnxt_init_one(struct pci_dev
+ 	if (rc)
+ 		goto init_err_cleanup_tc;
+ 
+-	if (BNXT_PF(bp)) {
+-		bnxt_dl_register(bp);
+-		bnxt_dl_fw_reporters_create(bp);
+-	}
++	bnxt_dl_register(bp);
++	bnxt_dl_fw_reporters_create(bp);
+ 
+ 	netdev_info(dev, "%s found at mem %lx, node addr %pM\n",
+ 		    board_info[ent->driver_data].name,
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
+@@ -226,6 +226,8 @@ static const struct devlink_ops bnxt_dl_
+ #endif /* CONFIG_BNXT_SRIOV */
+ };
+ 
++static const struct devlink_ops bnxt_vf_dl_ops;
++
+ enum bnxt_dl_param_id {
+ 	BNXT_DEVLINK_PARAM_ID_BASE = DEVLINK_PARAM_GENERIC_ID_MAX,
+ 	BNXT_DEVLINK_PARAM_ID_GRE_VER_CHECK,
+@@ -439,7 +441,10 @@ int bnxt_dl_register(struct bnxt *bp)
+ 		return -ENOTSUPP;
  	}
  
--	rt->dst.ops->update_pmtu(&rt->dst, NULL, skb, mtu, true);
-+	rt->dst.ops->update_pmtu(&rt->dst, NULL, skb, mtu, false);
+-	dl = devlink_alloc(&bnxt_dl_ops, sizeof(struct bnxt_dl));
++	if (BNXT_PF(bp))
++		dl = devlink_alloc(&bnxt_dl_ops, sizeof(struct bnxt_dl));
++	else
++		dl = devlink_alloc(&bnxt_vf_dl_ops, sizeof(struct bnxt_dl));
+ 	if (!dl) {
+ 		netdev_warn(bp->dev, "devlink_alloc failed");
+ 		return -ENOMEM;
+@@ -458,6 +463,9 @@ int bnxt_dl_register(struct bnxt *bp)
+ 		goto err_dl_free;
+ 	}
  
- 	if (!skb_is_gso(skb) && (iph->frag_off & htons(IP_DF)) &&
- 	    mtu < ntohs(iph->tot_len)) {
++	if (!BNXT_PF(bp))
++		return 0;
++
+ 	rc = devlink_params_register(dl, bnxt_dl_params,
+ 				     ARRAY_SIZE(bnxt_dl_params));
+ 	if (rc) {
+@@ -507,11 +515,14 @@ void bnxt_dl_unregister(struct bnxt *bp)
+ 	if (!dl)
+ 		return;
+ 
+-	devlink_port_params_unregister(&bp->dl_port, bnxt_dl_port_params,
+-				       ARRAY_SIZE(bnxt_dl_port_params));
+-	devlink_port_unregister(&bp->dl_port);
+-	devlink_params_unregister(dl, bnxt_dl_params,
+-				  ARRAY_SIZE(bnxt_dl_params));
++	if (BNXT_PF(bp)) {
++		devlink_port_params_unregister(&bp->dl_port,
++					       bnxt_dl_port_params,
++					       ARRAY_SIZE(bnxt_dl_port_params));
++		devlink_port_unregister(&bp->dl_port);
++		devlink_params_unregister(dl, bnxt_dl_params,
++					  ARRAY_SIZE(bnxt_dl_params));
++	}
+ 	devlink_unregister(dl);
+ 	devlink_free(dl);
+ }
 
 
