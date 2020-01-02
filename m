@@ -2,131 +2,153 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A618C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC7CC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3672F215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5D14215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 07:36:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ptTe+t9w"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vgr7ojvK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbgABHcJ (ORCPT
+        id S1727693AbgABHgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 02:32:09 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:7233 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726078AbgABHcI (ORCPT
+        Thu, 2 Jan 2020 02:36:12 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37118 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbgABHgL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 02:32:08 -0500
-X-UUID: 61fee457429949338280c00d953cb770-20200102
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=PCH3d6ww20Xcb8eTPquPc5VeMWFXLY/lz4kI3WEDJSA=;
-        b=ptTe+t9wX5cT1eWh3tiaue7/s4w9FkX1JQb8KxZBigS6kJse9P2T4KR3L0eHGs5VUFHm/YaEfqd6GLqgDhgtbM+3zw1iCR7M/krCX5FSpcEpIqZzHgtKZKK/TnuGrDD+AZnbY6zSt42qEiYp5dIbckAD5WUpKeu2ODPR56bxrd4=;
-X-UUID: 61fee457429949338280c00d953cb770-20200102
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1369051708; Thu, 02 Jan 2020 15:32:00 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 2 Jan 2020 15:30:51 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 2 Jan 2020 15:32:24 +0800
-Message-ID: <1577950317.12633.3.camel@mtksdaap41>
-Subject: Re: [PATCH v6, 13/14] drm/mediatek: add fifo_size into rdma private
- data
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Thu, 2 Jan 2020 15:31:57 +0800
-In-Reply-To: <1577943764.15116.3.camel@mhfsdcap03>
-References: <1577937624-14313-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1577937624-14313-14-git-send-email-yongqiang.niu@mediatek.com>
-         <1577942440.24650.5.camel@mtksdaap41> <1577943764.15116.3.camel@mhfsdcap03>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 2 Jan 2020 02:36:11 -0500
+Received: by mail-pf1-f195.google.com with SMTP id p14so21673001pfn.4
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 23:36:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9BZFCWByeFBQFg4ZpwRS8Ep8P4RYSRYVRbf7sq8YUn4=;
+        b=vgr7ojvK1IpBjMrcuFNiAurp1izGXu8v7/Imtdb6mtTYZBlrX+xEzK0+/prqYuJvZi
+         WRAUeI84rPPjrl2b15KK4FTmNBRvGIoFq7s7exbiy9n+82PZXEBGveUnsFnRDm5zO6hA
+         m/k+R6DyPs3kaYeOBTQp0ONWpFmX2csttv42PjhTMqEsvXG/068gcqRMgpkesN9j/pcF
+         1jfxPU7M43Ki6z63KdCdIwfOayDLGG1u8tznmWzrm+RiMd3u4/HP8I00vU57HDdEcuVv
+         n3cHAT5JS5/c9DhWeKkQZmwoMzwgUG3A+TlX4fNehBy5O6r+60t/sAL1xOJypCiVYc3Z
+         AGeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9BZFCWByeFBQFg4ZpwRS8Ep8P4RYSRYVRbf7sq8YUn4=;
+        b=tb1GPFOTiqlBbIMT4M0TBluUBLsEbCxvnYHKKgQpd9p4HPjAvLA9CbIP7bPcyOKO21
+         lpJXxmcVPaEpXEe8/CruMF5xrFCGBN1F7HY/2Xfwl+1KHBXGotQ+h3gP2RLmZYvz4mFN
+         KCpr+I+qwAT1zVoTZnqSfa2YGi8KFt28giW7PBFxkKMBWZXJlHO1OobYo69x1ZAXYKst
+         e19dWxEuvwtXpdrVzAQSx/eoIEKOD0U0Z82b+w8SR3SszgAnG/JHPJ9yi78MtF6+zqEn
+         l0wI2te/rrIFh33SeKAacFbygEWxs9l4XXr0kIqww/4bkOa8hbwKkIzvyxdMe/0KMCsk
+         1+KA==
+X-Gm-Message-State: APjAAAWCw/QaomWcRM29JoHzUWdpsk8GEnJLF11uuqN+CqJ3LZIzRbhY
+        whV9FYqOFwV86/syQGPLQ5UlDg==
+X-Google-Smtp-Source: APXvYqwST97ivxeEeCej8Jd+8HddEhoVJprknV1/YugYLwdhyqMzNoOEOQmeu+khAFhJ/ze/6cRsvg==
+X-Received: by 2002:a62:a209:: with SMTP id m9mr77068574pff.16.1577950570999;
+        Wed, 01 Jan 2020 23:36:10 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 207sm64170807pfu.88.2020.01.01.23.36.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jan 2020 23:36:10 -0800 (PST)
+Date:   Wed, 1 Jan 2020 23:36:07 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] firmware: qcom: scm: add 32 bit iommu page table support
+Message-ID: <20200102073607.GS549437@yoga>
+References: <20200101033704.32264-1-masneyb@onstation.org>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 235C97CA29A4272D17AFBE5A53C10D0B4DF8A318DC6B8E23D5887A814BBD57882000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200101033704.32264-1-masneyb@onstation.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoNCg0KT24gVGh1LCAyMDIwLTAxLTAyIGF0IDEzOjQyICswODAwLCBZb25n
-cWlhbmcgTml1IHdyb3RlOg0KPiBPbiBUaHUsIDIwMjAtMDEtMDIgYXQgMTM6MjAgKzA4MDAsIENL
-IEh1IHdyb3RlOg0KPiA+IEhpLCBZb25ncWlhbmc6DQo+ID4gDQo+ID4gT24gVGh1LCAyMDIwLTAx
-LTAyIGF0IDEyOjAwICswODAwLCBZb25ncWlhbmcgTml1IHdyb3RlOg0KPiA+ID4gdGhlIGZpZm8g
-c2l6ZSBvZiByZG1hIGluIG10ODE4MyBpcyBkaWZmZXJlbnQuDQo+ID4gPiByZG1hMCBmaWZvIHNp
-emUgaXMgNWsNCj4gPiA+IHJkbWExIGZpZm8gc2l6ZSBpcyAyaw0KPiA+ID4gDQo+ID4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBZb25ncWlhbmcgTml1IDx5b25ncWlhbmcubml1QG1lZGlhdGVrLmNvbT4NCj4g
-PiA+IC0tLQ0KPiA+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9yZG1hLmMg
-fCAyMSArKysrKysrKysrKysrKysrKysrKy0NCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjAgaW5z
-ZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+ID4gDQo+ID4gPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX3JkbWEuYyBiL2RyaXZlcnMvZ3B1L2RybS9t
-ZWRpYXRlay9tdGtfZGlzcF9yZG1hLmMNCj4gPiA+IGluZGV4IDQwNWFmZWYuLjY5MTQ4MGIgMTAw
-NjQ0DQo+ID4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5j
-DQo+ID4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jDQo+
-ID4gPiBAQCAtNjIsNiArNjIsNyBAQCBzdHJ1Y3QgbXRrX2Rpc3BfcmRtYSB7DQo+ID4gPiAgCXN0
-cnVjdCBtdGtfZGRwX2NvbXAJCWRkcF9jb21wOw0KPiA+ID4gIAlzdHJ1Y3QgZHJtX2NydGMJCQkq
-Y3J0YzsNCj4gPiA+ICAJY29uc3Qgc3RydWN0IG10a19kaXNwX3JkbWFfZGF0YQkqZGF0YTsNCj4g
-PiA+ICsJdTMyCQkJCWZpZm9fc2l6ZTsNCj4gPiA+ICB9Ow0KPiA+ID4gIA0KPiA+ID4gIHN0YXRp
-YyBpbmxpbmUgc3RydWN0IG10a19kaXNwX3JkbWEgKmNvbXBfdG9fcmRtYShzdHJ1Y3QgbXRrX2Rk
-cF9jb21wICpjb21wKQ0KPiA+ID4gQEAgLTEzMCwxMCArMTMxLDE2IEBAIHN0YXRpYyB2b2lkIG10
-a19yZG1hX2NvbmZpZyhzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLCB1bnNpZ25lZCBpbnQgd2lk
-dGgsDQo+ID4gPiAgCXVuc2lnbmVkIGludCB0aHJlc2hvbGQ7DQo+ID4gPiAgCXVuc2lnbmVkIGlu
-dCByZWc7DQo+ID4gPiAgCXN0cnVjdCBtdGtfZGlzcF9yZG1hICpyZG1hID0gY29tcF90b19yZG1h
-KGNvbXApOw0KPiA+ID4gKwl1MzIgcmRtYV9maWZvX3NpemU7DQo+ID4gPiAgDQo+ID4gPiAgCXJk
-bWFfdXBkYXRlX2JpdHMoY29tcCwgRElTUF9SRUdfUkRNQV9TSVpFX0NPTl8wLCAweGZmZiwgd2lk
-dGgpOw0KPiA+ID4gIAlyZG1hX3VwZGF0ZV9iaXRzKGNvbXAsIERJU1BfUkVHX1JETUFfU0laRV9D
-T05fMSwgMHhmZmZmZiwgaGVpZ2h0KTsNCj4gPiA+ICANCj4gPiA+ICsJaWYgKHJkbWEtPmZpZm9f
-c2l6ZSkNCj4gPiA+ICsJCXJkbWFfZmlmb19zaXplID0gcmRtYS0+Zmlmb19zaXplOw0KPiA+ID4g
-KwllbHNlDQo+ID4gPiArCQlyZG1hX2ZpZm9fc2l6ZSA9IFJETUFfRklGT19TSVpFKHJkbWEpOw0K
-PiA+ID4gKw0KPiA+ID4gIAkvKg0KPiA+ID4gIAkgKiBFbmFibGUgRklGTyB1bmRlcmZsb3cgc2lu
-Y2UgRFNJIGFuZCBEUEkgY2FuJ3QgYmUgYmxvY2tlZC4NCj4gPiA+ICAJICogS2VlcCB0aGUgRklG
-TyBwc2V1ZG8gc2l6ZSByZXNldCBkZWZhdWx0IG9mIDggS2lCLiBTZXQgdGhlDQo+ID4gPiBAQCAt
-MTQyLDcgKzE0OSw3IEBAIHN0YXRpYyB2b2lkIG10a19yZG1hX2NvbmZpZyhzdHJ1Y3QgbXRrX2Rk
-cF9jb21wICpjb21wLCB1bnNpZ25lZCBpbnQgd2lkdGgsDQo+ID4gPiAgCSAqLw0KPiA+ID4gIAl0
-aHJlc2hvbGQgPSB3aWR0aCAqIGhlaWdodCAqIHZyZWZyZXNoICogNCAqIDcgLyAxMDAwMDAwOw0K
-PiA+ID4gIAlyZWcgPSBSRE1BX0ZJRk9fVU5ERVJGTE9XX0VOIHwNCj4gPiA+IC0JICAgICAgUkRN
-QV9GSUZPX1BTRVVET19TSVpFKFJETUFfRklGT19TSVpFKHJkbWEpKSB8DQo+ID4gPiArCSAgICAg
-IFJETUFfRklGT19QU0VVRE9fU0laRShyZG1hX2ZpZm9fc2l6ZSkgfA0KPiA+ID4gIAkgICAgICBS
-RE1BX09VVFBVVF9WQUxJRF9GSUZPX1RIUkVTSE9MRCh0aHJlc2hvbGQpOw0KPiA+ID4gIAl3cml0
-ZWwocmVnLCBjb21wLT5yZWdzICsgRElTUF9SRUdfUkRNQV9GSUZPX0NPTik7DQo+ID4gPiAgfQ0K
-PiA+ID4gQEAgLTI4NCw2ICsyOTEsMTggQEAgc3RhdGljIGludCBtdGtfZGlzcF9yZG1hX3Byb2Jl
-KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gPiAgCQlyZXR1cm4gY29tcF9pZDsN
-Cj4gPiA+ICAJfQ0KPiA+ID4gIA0KPiA+ID4gKwlpZiAob2ZfZmluZF9wcm9wZXJ0eShkZXYtPm9m
-X25vZGUsICJtZWRpYXRlayxyZG1hX2ZpZm9fc2l6ZSIsICZyZXQpKSB7DQo+ID4gDQo+ID4gIm1l
-ZGlhdGVrLHJkbWFfZmlmb19zaXplIiBkb2VzIG5vdCBleGlzdHMgaW4gYmluZGluZyBkb2N1bWVu
-dC4NCj4gPiANCj4gPiA+ICsJCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKGRldi0+b2Zfbm9k
-ZSwNCj4gPiA+ICsJCQkJCSAgICJtZWRpYXRlayxyZG1hX2ZpZm9fc2l6ZSIsDQo+ID4gPiArCQkJ
-CQkgICAmcHJpdi0+Zmlmb19zaXplKTsNCj4gPiA+ICsJCWlmIChyZXQpIHsNCj4gPiA+ICsJCQlk
-ZXZfZXJyKGRldiwgIkZhaWxlZCB0byBnZXQgcmRtYSBmaWZvIHNpemVcbiIpOw0KPiA+ID4gKwkJ
-CXJldHVybiByZXQ7DQo+ID4gPiArCQl9DQo+ID4gPiArDQo+ID4gPiArCQlwcml2LT5maWZvX3Np
-emUgKj0gU1pfMUs7DQo+ID4gDQo+ID4gV2h5IG5vdCBkZWZpbmUgZmlmb19zaXplIGluICdieXRl
-cycgPw0KPiA+IA0KPiA+IFJlZ2FyZHMsDQo+ID4gQ0sNCj4gDQo+IHRoaXMgaXMgYWxpZ24gdGhl
-IGRlZmluaXRpb24gb2YgZmlmb19zaXplIGluIG10a19kaXNwX3JkbWFfZGF0YSwgaXQgaXMNCj4g
-U1pfMUssIA0KPiBhbmQgdGhlIG1hY3JvIFJETUFfRklGT19QU0VVRE9fU0laRSBjYWxjdWxhdGVk
-IHdpdGggU1pfMUsNCg0KSSBtZWFuIHdoeSBub3Qgc2V0IHRoZSBmaWZvIHNpemUgaW4gYnl0ZXMg
-aW4gZGV2aWNlIHRyZWUuIFNvIHlvdSBuZWVkDQpub3QgdG8gZG8gJyo9IFNaXzFLJyBoZXJlLiBJ
-IHRoaW5rIHVuaXQgb2YgZmlmbyBzaXplIGluIGtlcm5lbCBpcyBieXRlLg0KDQpSZWdhcmRzLA0K
-Q0sNCg0KPiA+IA0KPiA+ID4gKwl9DQo+ID4gPiArDQo+ID4gPiAgCXJldCA9IG10a19kZHBfY29t
-cF9pbml0KGRldiwgZGV2LT5vZl9ub2RlLCAmcHJpdi0+ZGRwX2NvbXAsIGNvbXBfaWQsDQo+ID4g
-PiAgCQkJCSZtdGtfZGlzcF9yZG1hX2Z1bmNzKTsNCj4gPiA+ICAJaWYgKHJldCkgew0KPiA+IA0K
-PiA+IA0KPiANCj4gDQoNCg==
+On Tue 31 Dec 19:37 PST 2019, Brian Masney wrote:
 
+> Add 32 bit implmentations of the functions
+> __qcom_scm_iommu_secure_ptbl_size() and
+> __qcom_scm_iommu_secure_ptbl_init() that are required by the qcom_iommu
+> driver.
+> 
+
+Hi Brian,
+
+This looks good, but I was hoping to  hoping to reach a conclusion and
+merge [1] - which in patch 16 squashes the argument filling boiler plate
+code of the 32 and 64-bit version of scm and hence implements the same.
+
+If you have time to take a peek at this series I would greatly
+appreciate it (not a lot of people testing 32-bit these days...)
+
+[1] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=215943
+
+Regards,
+Bjorn
+
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+>  drivers/firmware/qcom_scm-32.c | 32 ++++++++++++++++++++++++++++++--
+>  1 file changed, 30 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
+> index 48e2ef794ea3..f149a85d36b0 100644
+> --- a/drivers/firmware/qcom_scm-32.c
+> +++ b/drivers/firmware/qcom_scm-32.c
+> @@ -638,13 +638,41 @@ int __qcom_scm_restore_sec_cfg(struct device *dev, u32 device_id,
+>  int __qcom_scm_iommu_secure_ptbl_size(struct device *dev, u32 spare,
+>  				      size_t *size)
+>  {
+> -	return -ENODEV;
+> +	int psize[2] = { 0, 0 };
+> +	int ret;
+> +
+> +	ret = qcom_scm_call(dev, QCOM_SCM_SVC_MP,
+> +			    QCOM_SCM_IOMMU_SECURE_PTBL_SIZE,
+> +			    &spare, sizeof(spare), &psize, sizeof(psize));
+> +	if (ret || psize[1])
+> +		return ret ? ret : -EINVAL;
+> +
+> +	*size = psize[0];
+> +
+> +	return 0;
+>  }
+>  
+>  int __qcom_scm_iommu_secure_ptbl_init(struct device *dev, u64 addr, u32 size,
+>  				      u32 spare)
+>  {
+> -	return -ENODEV;
+> +	struct msm_scm_ptbl_init {
+> +		__le32 paddr;
+> +		__le32 size;
+> +		__le32 spare;
+> +	} req;
+> +	int ret, scm_ret = 0;
+> +
+> +	req.paddr = addr;
+> +	req.size = size;
+> +	req.spare = spare;
+> +
+> +	ret = qcom_scm_call(dev, QCOM_SCM_SVC_MP,
+> +			    QCOM_SCM_IOMMU_SECURE_PTBL_INIT,
+> +			    &req, sizeof(req), &scm_ret, sizeof(scm_ret));
+> +	if (ret || scm_ret)
+> +		return ret ? ret : -EINVAL;
+> +
+> +	return 0;
+>  }
+>  
+>  int __qcom_scm_io_readl(struct device *dev, phys_addr_t addr,
+> -- 
+> 2.21.0
+> 
