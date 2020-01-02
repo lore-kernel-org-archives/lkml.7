@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 049FDC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2528EC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB6012253D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4D7422314
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003544;
-	bh=6v7SqYOffrsxvnPYUOOCvnJoyLw2eZJ622LJOKWVnSc=;
+	s=default; t=1578003547;
+	bh=NiX2E+uuYpM05Vh12ekbO1YgiJ2RdkCs0o05eOn7N4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e7QQQdkHPjGbGFD+9wtb0jn84rpukgFqqB+wfo1bw13yLs+zFycLqPQutU9huVnVi
-	 QKQdeBOKMZTchecJOKs0stZgvEi/UHX+ICqCp225o1zDxN3kEyLjEYEc/nLtid7waz
-	 S9G9IXiy0PgzLSPx7uvSl6b1kZBNy5KwJdqmDRcA=
+	b=pG0IauwjQ2YgRBcRcqThV5dQ1UwFy/R8Jy4p6HRUsNNKqtnLy3BkqOGRKnZsoO8lk
+	 8KZy9iePrRsdKvDL8viCJpNS7cICS2kyJBigulDlJ+6B/PKfqSvEAR3Z+9gsBUmge/
+	 6tAdtKJ2Eje/X4+gN44VrGFxdOydrP/1NOt39ZQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728526AbgABWTD (ORCPT
+        id S1728068AbgABWTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:19:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34796 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:19:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728497AbgABWTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:19:02 -0500
+        id S1728528AbgABWTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:19:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98F2821582;
-        Thu,  2 Jan 2020 22:19:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 002A422314;
+        Thu,  2 Jan 2020 22:19:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003541;
-        bh=6v7SqYOffrsxvnPYUOOCvnJoyLw2eZJ622LJOKWVnSc=;
+        s=default; t=1578003543;
+        bh=NiX2E+uuYpM05Vh12ekbO1YgiJ2RdkCs0o05eOn7N4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YrHNAEGljCxW9U5vAzVG7ppx6aaWsJzzgN4/oyqm8dhT5VdrUTDIVFzNC/zTGct1x
-         GPMWXnDI4fmsXalIVGDxPX4Oky7SaV9Hsm/EKeDSWQrTxEQVS9epSdzgZoh+cCqPeF
-         vnf7zfIjx4TwQ14P6DraacfvGHSJ90FWGwlxfz7k=
+        b=tc/y034uDxzMNzKUXNgwVDYlNKnUdgVbNpTvTTy3yY7yLKBiXiA9MDibG3BxyBdhF
+         bhhKqFSG4pnDZSuzWlrEaag3RyfDlxi3Jp2SEgt6Ki1G4dd1QiNzYcYiVngzOjBCLR
+         X6hfk3XjYLp1LLo8gcupkQKgMwijT5pZdvbDKiFw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 012/114] scsi: hisi_sas: Replace in_softirq() check in hisi_sas_task_exec()
-Date:   Thu,  2 Jan 2020 23:06:24 +0100
-Message-Id: <20200102220030.364541809@linuxfoundation.org>
+Subject: [PATCH 4.19 013/114] powerpc/pseries: Mark accumulate_stolen_time() as notrace
+Date:   Thu,  2 Jan 2020 23:06:25 +0100
+Message-Id: <20200102220030.448526596@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -61,83 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiang Chen <chenxiang66@hisilicon.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 550c0d89d52d3bec5c299f69b4ed5d2ee6b8a9a6 ]
+[ Upstream commit eb8e20f89093b64f48975c74ccb114e6775cee22 ]
 
-For IOs from upper layer, preemption may be disabled as it may be called by
-function __blk_mq_delay_run_hw_queue which will call get_cpu() (it disables
-preemption). So if flags HISI_SAS_REJECT_CMD_BIT is set in function
-hisi_sas_task_exec(), it may disable preempt twice after down() and up()
-which will cause following call trace:
+accumulate_stolen_time() is called prior to interrupt state being
+reconciled, which can trip the warning in arch_local_irq_restore():
 
-BUG: scheduling while atomic: fio/60373/0x00000002
-Call trace:
-dump_backtrace+0x0/0x150
-show_stack+0x24/0x30
-dump_stack+0xa0/0xc4
-__schedule_bug+0x68/0x88
-__schedule+0x4b8/0x548
-schedule+0x40/0xd0
-schedule_timeout+0x200/0x378
-__down+0x78/0xc8
-down+0x54/0x70
-hisi_sas_task_exec.isra.10+0x598/0x8d8 [hisi_sas_main]
-hisi_sas_queue_command+0x28/0x38 [hisi_sas_main]
-sas_queuecommand+0x168/0x1b0 [libsas]
-scsi_queue_rq+0x2ac/0x980
-blk_mq_dispatch_rq_list+0xb0/0x550
-blk_mq_do_dispatch_sched+0x6c/0x110
-blk_mq_sched_dispatch_requests+0x114/0x1d8
-__blk_mq_run_hw_queue+0xb8/0x130
-__blk_mq_delay_run_hw_queue+0x1c0/0x220
-blk_mq_run_hw_queue+0xb0/0x128
-blk_mq_sched_insert_requests+0xdc/0x208
-blk_mq_flush_plug_list+0x1b4/0x3a0
-blk_flush_plug_list+0xdc/0x110
-blk_finish_plug+0x3c/0x50
-blkdev_direct_IO+0x404/0x550
-generic_file_read_iter+0x9c/0x848
-blkdev_read_iter+0x50/0x78
-aio_read+0xc8/0x170
-io_submit_one+0x1fc/0x8d8
-__arm64_sys_io_submit+0xdc/0x280
-el0_svc_common.constprop.0+0xe0/0x1e0
-el0_svc_handler+0x34/0x90
-el0_svc+0x10/0x14
-...
+  WARNING: CPU: 5 PID: 1017 at arch/powerpc/kernel/irq.c:258 .arch_local_irq_restore+0x9c/0x130
+  ...
+  NIP .arch_local_irq_restore+0x9c/0x130
+  LR  .rb_start_commit+0x38/0x80
+  Call Trace:
+    .ring_buffer_lock_reserve+0xe4/0x620
+    .trace_function+0x44/0x210
+    .function_trace_call+0x148/0x170
+    .ftrace_ops_no_ops+0x180/0x1d0
+    ftrace_call+0x4/0x8
+    .accumulate_stolen_time+0x1c/0xb0
+    decrementer_common+0x124/0x160
 
-To solve the issue, check preemptible() to avoid disabling preempt multiple
-when flag HISI_SAS_REJECT_CMD_BIT is set.
+For now just mark it as notrace. We may change the ordering to call it
+after interrupt state has been reconciled, but that is a larger
+change.
 
-Link: https://lore.kernel.org/r/1571926105-74636-5-git-send-email-john.garry@huawei.com
-Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191024055932.27940-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/hisi_sas/hisi_sas_main.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/time.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index f35c56217694..33191673249c 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -485,7 +485,13 @@ static int hisi_sas_task_exec(struct sas_task *task, gfp_t gfp_flags,
- 	struct hisi_sas_dq *dq = NULL;
- 
- 	if (unlikely(test_bit(HISI_SAS_REJECT_CMD_BIT, &hisi_hba->flags))) {
--		if (in_softirq())
-+		/*
-+		 * For IOs from upper layer, it may already disable preempt
-+		 * in the IO path, if disable preempt again in down(),
-+		 * function schedule() will report schedule_bug(), so check
-+		 * preemptible() before goto down().
-+		 */
-+		if (!preemptible())
- 			return -EINVAL;
- 
- 		down(&hisi_hba->sem);
+diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
+index 8487ad686462..5449e76cf2df 100644
+--- a/arch/powerpc/kernel/time.c
++++ b/arch/powerpc/kernel/time.c
+@@ -235,7 +235,7 @@ static u64 scan_dispatch_log(u64 stop_tb)
+  * Accumulate stolen time by scanning the dispatch trace log.
+  * Called on entry from user mode.
+  */
+-void accumulate_stolen_time(void)
++void notrace accumulate_stolen_time(void)
+ {
+ 	u64 sst, ust;
+ 	unsigned long save_irq_soft_mask = irq_soft_mask_return();
 -- 
 2.20.1
 
