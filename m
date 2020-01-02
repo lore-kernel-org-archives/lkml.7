@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A83C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51022C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33BCE21835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24DA921D7D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:34:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004441;
-	bh=vUJzybXlkf4YX80NJ3kAZY1n6Hv4+W5e1YedIvgDxG4=;
+	s=default; t=1578004444;
+	bh=wHnw8R9D/vIZJMcB9KbBnwqbOybaDX89LuAdC0wee5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ConESSc8Tcpl/oHrzOQxngf4Qzl20sn1wQSx6gSOPvaMwsydWiyYYd+BzX7Fn/t/e
-	 YTMetkOwTsXK6huypCsH/OSApH/pep+LTfm7QKf+0yZsd2nQLiGDkLNkE3wCXHtFWo
-	 yjsrfJfSR1B3Zl6qMJsTv9orQIbEkRmLqLgRHYYQ=
+	b=FBhqLOM/iIQWxo/6/bspWT9hPAVd1G3NFc3CUdXBGnIaVjqmLYSn9l3xnyYJ2+Q4B
+	 VJtwndQJ19Ci7VhtqjiAryf+i+UmL80hQ4rY9mhKZMVUyItrbIAYrjEcW58X8Xb/z5
+	 OhzV669sGYspACu2VDzgYuc1VFxu4eLwPHB39dd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730662AbgABWd7 (ORCPT
+        id S1730666AbgABWeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:33:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41848 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:34:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730651AbgABWd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:33:57 -0500
+        id S1730656AbgABWd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:33:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7571F20863;
-        Thu,  2 Jan 2020 22:33:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1F4521835;
+        Thu,  2 Jan 2020 22:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004435;
-        bh=vUJzybXlkf4YX80NJ3kAZY1n6Hv4+W5e1YedIvgDxG4=;
+        s=default; t=1578004438;
+        bh=wHnw8R9D/vIZJMcB9KbBnwqbOybaDX89LuAdC0wee5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GF9Ql6d/ZMhUnlZ9mjM5ItCINNIB+423FfMRazRWsBc+csum/y2XS2Evt/HruEOoJ
-         7g6v3R0Sf2Dr6aFiYTOOrzJS1WmtB/46JKwFVwf+LWFCxkQrJ5t3r9vp5TEPn8lgCX
-         npdK8hZHtCXbaicK9FXtk4AiAIpKmbsQ9Y1OnZTk=
+        b=fbft+5xTA7F8L8z2Q6R2rJWY8qrXgCL5biSa6lJvHq4jAZlIYB0K9Q41k2aJkSe6R
+         73Y4gi6NWJmcnG59CsnJYFjdg64toAkajvkxaqCbq+dIi0ShhoLGv9UIR+YuADPm2x
+         t6vdyPCi4fufuGyzu3jZKJ2jAIlmQw/6zgh5VmCg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
         syzbot <syzkaller@googlegroups.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.9 160/171] netfilter: bridge: make sure to pull arp header in br_nf_forward_arp()
-Date:   Thu,  2 Jan 2020 23:08:11 +0100
-Message-Id: <20200102220609.037819974@linuxfoundation.org>
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 161/171] net: icmp: fix data-race in cmp_global_allow()
+Date:   Thu,  2 Jan 2020 23:08:12 +0100
+Message-Id: <20200102220609.205812496@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -63,108 +62,114 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-commit 5604285839aaedfb23ebe297799c6e558939334d upstream.
+commit bbab7ef235031f6733b5429ae7877bfa22339712 upstream.
 
-syzbot is kind enough to remind us we need to call skb_may_pull()
+This code reads two global variables without protection
+of a lock. We need READ_ONCE()/WRITE_ONCE() pairs to
+avoid load/store-tearing and better document the intent.
 
-BUG: KMSAN: uninit-value in br_nf_forward_arp+0xe61/0x1230 net/bridge/br_netfilter_hooks.c:665
-CPU: 1 PID: 11631 Comm: syz-executor.1 Not tainted 5.4.0-rc8-syzkaller #0
+KCSAN reported :
+BUG: KCSAN: data-race in icmp_global_allow / icmp_global_allow
+
+read to 0xffffffff861a8014 of 4 bytes by task 11201 on cpu 0:
+ icmp_global_allow+0x36/0x1b0 net/ipv4/icmp.c:254
+ icmpv6_global_allow net/ipv6/icmp.c:184 [inline]
+ icmpv6_global_allow net/ipv6/icmp.c:179 [inline]
+ icmp6_send+0x493/0x1140 net/ipv6/icmp.c:514
+ icmpv6_send+0x71/0xb0 net/ipv6/ip6_icmp.c:43
+ ip6_link_failure+0x43/0x180 net/ipv6/route.c:2640
+ dst_link_failure include/net/dst.h:419 [inline]
+ vti_xmit net/ipv4/ip_vti.c:243 [inline]
+ vti_tunnel_xmit+0x27f/0xa50 net/ipv4/ip_vti.c:279
+ __netdev_start_xmit include/linux/netdevice.h:4420 [inline]
+ netdev_start_xmit include/linux/netdevice.h:4434 [inline]
+ xmit_one net/core/dev.c:3280 [inline]
+ dev_hard_start_xmit+0xef/0x430 net/core/dev.c:3296
+ __dev_queue_xmit+0x14c9/0x1b60 net/core/dev.c:3873
+ dev_queue_xmit+0x21/0x30 net/core/dev.c:3906
+ neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
+ neigh_output include/net/neighbour.h:511 [inline]
+ ip6_finish_output2+0x7a6/0xec0 net/ipv6/ip6_output.c:116
+ __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
+ __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
+ ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
+ NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+ ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
+ dst_output include/net/dst.h:436 [inline]
+ ip6_local_out+0x74/0x90 net/ipv6/output_core.c:179
+
+write to 0xffffffff861a8014 of 4 bytes by task 11183 on cpu 1:
+ icmp_global_allow+0x174/0x1b0 net/ipv4/icmp.c:272
+ icmpv6_global_allow net/ipv6/icmp.c:184 [inline]
+ icmpv6_global_allow net/ipv6/icmp.c:179 [inline]
+ icmp6_send+0x493/0x1140 net/ipv6/icmp.c:514
+ icmpv6_send+0x71/0xb0 net/ipv6/ip6_icmp.c:43
+ ip6_link_failure+0x43/0x180 net/ipv6/route.c:2640
+ dst_link_failure include/net/dst.h:419 [inline]
+ vti_xmit net/ipv4/ip_vti.c:243 [inline]
+ vti_tunnel_xmit+0x27f/0xa50 net/ipv4/ip_vti.c:279
+ __netdev_start_xmit include/linux/netdevice.h:4420 [inline]
+ netdev_start_xmit include/linux/netdevice.h:4434 [inline]
+ xmit_one net/core/dev.c:3280 [inline]
+ dev_hard_start_xmit+0xef/0x430 net/core/dev.c:3296
+ __dev_queue_xmit+0x14c9/0x1b60 net/core/dev.c:3873
+ dev_queue_xmit+0x21/0x30 net/core/dev.c:3906
+ neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
+ neigh_output include/net/neighbour.h:511 [inline]
+ ip6_finish_output2+0x7a6/0xec0 net/ipv6/ip6_output.c:116
+ __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
+ __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
+ ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
+ NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+ ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 11183 Comm: syz-executor.2 Not tainted 5.4.0-rc3+ #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0x128/0x220 mm/kmsan/kmsan_report.c:108
- __msan_warning+0x64/0xc0 mm/kmsan/kmsan_instr.c:245
- br_nf_forward_arp+0xe61/0x1230 net/bridge/br_netfilter_hooks.c:665
- nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
- nf_hook_slow+0x18b/0x3f0 net/netfilter/core.c:512
- nf_hook include/linux/netfilter.h:260 [inline]
- NF_HOOK include/linux/netfilter.h:303 [inline]
- __br_forward+0x78f/0xe30 net/bridge/br_forward.c:109
- br_flood+0xef0/0xfe0 net/bridge/br_forward.c:234
- br_handle_frame_finish+0x1a77/0x1c20 net/bridge/br_input.c:162
- nf_hook_bridge_pre net/bridge/br_input.c:245 [inline]
- br_handle_frame+0xfb6/0x1eb0 net/bridge/br_input.c:348
- __netif_receive_skb_core+0x20b9/0x51a0 net/core/dev.c:4830
- __netif_receive_skb_one_core net/core/dev.c:4927 [inline]
- __netif_receive_skb net/core/dev.c:5043 [inline]
- process_backlog+0x610/0x13c0 net/core/dev.c:5874
- napi_poll net/core/dev.c:6311 [inline]
- net_rx_action+0x7a6/0x1aa0 net/core/dev.c:6379
- __do_softirq+0x4a1/0x83a kernel/softirq.c:293
- do_softirq_own_stack+0x49/0x80 arch/x86/entry/entry_64.S:1091
- </IRQ>
- do_softirq kernel/softirq.c:338 [inline]
- __local_bh_enable_ip+0x184/0x1d0 kernel/softirq.c:190
- local_bh_enable+0x36/0x40 include/linux/bottom_half.h:32
- rcu_read_unlock_bh include/linux/rcupdate.h:688 [inline]
- __dev_queue_xmit+0x38e8/0x4200 net/core/dev.c:3819
- dev_queue_xmit+0x4b/0x60 net/core/dev.c:3825
- packet_snd net/packet/af_packet.c:2959 [inline]
- packet_sendmsg+0x8234/0x9100 net/packet/af_packet.c:2984
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg net/socket.c:657 [inline]
- __sys_sendto+0xc44/0xc70 net/socket.c:1952
- __do_sys_sendto net/socket.c:1964 [inline]
- __se_sys_sendto+0x107/0x130 net/socket.c:1960
- __x64_sys_sendto+0x6e/0x90 net/socket.c:1960
- do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45a679
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f0a3c9e5c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-RAX: ffffffffffffffda RBX: 0000000000000006 RCX: 000000000045a679
-RDX: 000000000000000e RSI: 0000000020000200 RDI: 0000000000000003
-RBP: 000000000075bf20 R08: 00000000200000c0 R09: 0000000000000014
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f0a3c9e66d4
-R13: 00000000004c8ec1 R14: 00000000004dfe28 R15: 00000000ffffffff
 
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:149 [inline]
- kmsan_internal_poison_shadow+0x5c/0x110 mm/kmsan/kmsan.c:132
- kmsan_slab_alloc+0x97/0x100 mm/kmsan/kmsan_hooks.c:86
- slab_alloc_node mm/slub.c:2773 [inline]
- __kmalloc_node_track_caller+0xe27/0x11a0 mm/slub.c:4381
- __kmalloc_reserve net/core/skbuff.c:141 [inline]
- __alloc_skb+0x306/0xa10 net/core/skbuff.c:209
- alloc_skb include/linux/skbuff.h:1049 [inline]
- alloc_skb_with_frags+0x18c/0xa80 net/core/skbuff.c:5662
- sock_alloc_send_pskb+0xafd/0x10a0 net/core/sock.c:2244
- packet_alloc_skb net/packet/af_packet.c:2807 [inline]
- packet_snd net/packet/af_packet.c:2902 [inline]
- packet_sendmsg+0x63a6/0x9100 net/packet/af_packet.c:2984
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg net/socket.c:657 [inline]
- __sys_sendto+0xc44/0xc70 net/socket.c:1952
- __do_sys_sendto net/socket.c:1964 [inline]
- __se_sys_sendto+0x107/0x130 net/socket.c:1960
- __x64_sys_sendto+0x6e/0x90 net/socket.c:1960
- do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: c4e70a87d975 ("netfilter: bridge: rename br_netfilter.c to br_netfilter_hooks.c")
+Fixes: 4cdf507d5452 ("icmp: add a global rate limitation")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
 Reported-by: syzbot <syzkaller@googlegroups.com>
-Reviewed-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bridge/br_netfilter_hooks.c |    3 +++
- 1 file changed, 3 insertions(+)
+ net/ipv4/icmp.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
---- a/net/bridge/br_netfilter_hooks.c
-+++ b/net/bridge/br_netfilter_hooks.c
-@@ -643,6 +643,9 @@ static unsigned int br_nf_forward_arp(vo
- 		nf_bridge_pull_encap_header(skb);
- 	}
+--- a/net/ipv4/icmp.c
++++ b/net/ipv4/icmp.c
+@@ -256,10 +256,11 @@ bool icmp_global_allow(void)
+ 	bool rc = false;
  
-+	if (unlikely(!pskb_may_pull(skb, sizeof(struct arphdr))))
-+		return NF_DROP;
-+
- 	if (arp_hdr(skb)->ar_pln != 4) {
- 		if (IS_VLAN_ARP(skb))
- 			nf_bridge_push_encap_header(skb);
+ 	/* Check if token bucket is empty and cannot be refilled
+-	 * without taking the spinlock.
++	 * without taking the spinlock. The READ_ONCE() are paired
++	 * with the following WRITE_ONCE() in this same function.
+ 	 */
+-	if (!icmp_global.credit) {
+-		delta = min_t(u32, now - icmp_global.stamp, HZ);
++	if (!READ_ONCE(icmp_global.credit)) {
++		delta = min_t(u32, now - READ_ONCE(icmp_global.stamp), HZ);
+ 		if (delta < HZ / 50)
+ 			return false;
+ 	}
+@@ -269,14 +270,14 @@ bool icmp_global_allow(void)
+ 	if (delta >= HZ / 50) {
+ 		incr = sysctl_icmp_msgs_per_sec * delta / HZ ;
+ 		if (incr)
+-			icmp_global.stamp = now;
++			WRITE_ONCE(icmp_global.stamp, now);
+ 	}
+ 	credit = min_t(u32, icmp_global.credit + incr, sysctl_icmp_msgs_burst);
+ 	if (credit) {
+ 		credit--;
+ 		rc = true;
+ 	}
+-	icmp_global.credit = credit;
++	WRITE_ONCE(icmp_global.credit, credit);
+ 	spin_unlock(&icmp_global.lock);
+ 	return rc;
+ }
 
 
