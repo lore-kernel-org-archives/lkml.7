@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0D0C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89903C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 909092253D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 517EF2253D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003630;
-	bh=eXnTnmnhVCqMyRx8waH5bwhHQpaSIJzWg053aMxiaOQ=;
+	s=default; t=1578003633;
+	bh=pd/wt+YcBDprBLzmbtoE6qnAlsY3BlzyUlRVgKeZAZ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q0crTOHKYgWp4Wc/fAXSSu9+NclMJCQfA/rgUsKngu7Wm4UTx7PmRq3gzclaWmZ93
-	 CvlBf2JMC/Q2PuEFz5t+VchJozct2EJnAaq+p+jIEE7sbfBVY7cqQsqVQPl9ot7VJ0
-	 X35mAiHrTnZtd1oZgEX4SA8UWOMWuTA+Ckp1zCXI=
+	b=EBrq5uX02m48Ww+fAXjC68bRzZdczwN3m9thr8DXmlk7PwQ1x02Fnv6kKQsu/t/4q
+	 LRugDRxZBNZivSY7w7JMJXS/YMciHkYMsKQEMjDcbt0dCagI0pyevEIcqfv4QDzDsT
+	 P6Smtos7bdjZW/eT3zUEUo4VLIAQDOpSUOSucftg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbgABWU3 (ORCPT
+        id S1728813AbgABWUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:20:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37954 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:20:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728781AbgABWU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:20:28 -0500
+        id S1728609AbgABWUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:20:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 212832464E;
-        Thu,  2 Jan 2020 22:20:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DF4C24653;
+        Thu,  2 Jan 2020 22:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003627;
-        bh=eXnTnmnhVCqMyRx8waH5bwhHQpaSIJzWg053aMxiaOQ=;
+        s=default; t=1578003630;
+        bh=pd/wt+YcBDprBLzmbtoE6qnAlsY3BlzyUlRVgKeZAZ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aT8wR0Okd5e60NS2XVnAcvYBnPSZ6PpMKMAg+lpd8KSYmOh193aI+lGU383X+jla1
-         qnCpINCRZjcwyhPazMDyN54OVnaS55giUKQZTuCsxJkyrW8Du5qFN9d7rAY/enj60S
-         BCE9zqjHwSST6Fo0kE60zG8qw6aymptiacWegD88=
+        b=YrBFqGCrzXVnE9SUxMLFGVPuzL7bNS+izcJBWpe8C5EMuXo8S234ciThkAweXmKXW
+         MtnQbUH9RVFDm6L+UOgFLABEvilhnpQ8cTYZI9L+4WD1nDAc12pOGKUFC1xFAAqeUn
+         JflJd2PR1XQRx/S1cqOnGA8eZ5vO8XoRbquV6UZM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 021/114] powerpc/book3s64/hash: Add cond_resched to avoid soft lockup warning
-Date:   Thu,  2 Jan 2020 23:06:33 +0100
-Message-Id: <20200102220031.284196786@linuxfoundation.org>
+        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
+        Jan Kara <jack@suse.cz>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 022/114] ext4: update direct I/O read lock pattern for IOCB_NOWAIT
+Date:   Thu,  2 Jan 2020 23:06:34 +0100
+Message-Id: <20200102220031.395561173@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -61,75 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Matthew Bobrowski <mbobrowski@mbobrowski.org>
 
-[ Upstream commit 16f6b67cf03cb43db7104acb2ca877bdc2606c92 ]
+[ Upstream commit 548feebec7e93e58b647dba70b3303dcb569c914 ]
 
-With large memory (8TB and more) hotplug, we can get soft lockup
-warnings as below. These were caused by a long loop without any
-explicit cond_resched which is a problem for !PREEMPT kernels.
+This patch updates the lock pattern in ext4_direct_IO_read() to not
+block on inode lock in cases of IOCB_NOWAIT direct I/O reads. The
+locking condition implemented here is similar to that of 942491c9e6d6
+("xfs: fix AIM7 regression").
 
-Avoid this using cond_resched() while inserting hash page table
-entries. We already do similar cond_resched() in __add_pages(), see
-commit f64ac5e6e306 ("mm, memory_hotplug: add scheduling point to
-__add_pages").
-
-  rcu:     3-....: (24002 ticks this GP) idle=13e/1/0x4000000000000002 softirq=722/722 fqs=12001
-   (t=24003 jiffies g=4285 q=2002)
-  NMI backtrace for cpu 3
-  CPU: 3 PID: 3870 Comm: ndctl Not tainted 5.3.0-197.18-default+ #2
-  Call Trace:
-    dump_stack+0xb0/0xf4 (unreliable)
-    nmi_cpu_backtrace+0x124/0x130
-    nmi_trigger_cpumask_backtrace+0x1ac/0x1f0
-    arch_trigger_cpumask_backtrace+0x28/0x3c
-    rcu_dump_cpu_stacks+0xf8/0x154
-    rcu_sched_clock_irq+0x878/0xb40
-    update_process_times+0x48/0x90
-    tick_sched_handle.isra.16+0x4c/0x80
-    tick_sched_timer+0x68/0xe0
-    __hrtimer_run_queues+0x180/0x430
-    hrtimer_interrupt+0x110/0x300
-    timer_interrupt+0x108/0x2f0
-    decrementer_common+0x114/0x120
-  --- interrupt: 901 at arch_add_memory+0xc0/0x130
-      LR = arch_add_memory+0x74/0x130
-    memremap_pages+0x494/0x650
-    devm_memremap_pages+0x3c/0xa0
-    pmem_attach_disk+0x188/0x750
-    nvdimm_bus_probe+0xac/0x2c0
-    really_probe+0x148/0x570
-    driver_probe_device+0x19c/0x1d0
-    device_driver_attach+0xcc/0x100
-    bind_store+0x134/0x1c0
-    drv_attr_store+0x44/0x60
-    sysfs_kf_write+0x64/0x90
-    kernfs_fop_write+0x1a0/0x270
-    __vfs_write+0x3c/0x70
-    vfs_write+0xd0/0x260
-    ksys_write+0xdc/0x130
-    system_call+0x5c/0x68
-
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191001084656.31277-1-aneesh.kumar@linux.ibm.com
+Fixes: 16c54688592c ("ext4: Allow parallel DIO reads")
+Signed-off-by: Matthew Bobrowski <mbobrowski@mbobrowski.org>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
+Link: https://lore.kernel.org/r/c5d5e759f91747359fbd2c6f9a36240cf75ad79f.1572949325.git.mbobrowski@mbobrowski.org
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/hash_utils_64.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/ext4/inode.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
-index 11b41383e167..8894c8f300ea 100644
---- a/arch/powerpc/mm/hash_utils_64.c
-+++ b/arch/powerpc/mm/hash_utils_64.c
-@@ -307,6 +307,7 @@ int htab_bolt_mapping(unsigned long vstart, unsigned long vend,
- 		if (ret < 0)
- 			break;
- 
-+		cond_resched();
- #ifdef CONFIG_DEBUG_PAGEALLOC
- 		if (debug_pagealloc_enabled() &&
- 			(paddr >> PAGE_SHIFT) < linear_map_hash_count)
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 215802cbc42b..00d0c4b8fa30 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -3848,7 +3848,13 @@ static ssize_t ext4_direct_IO_read(struct kiocb *iocb, struct iov_iter *iter)
+ 	 * writes & truncates and since we take care of writing back page cache,
+ 	 * we are protected against page writeback as well.
+ 	 */
+-	inode_lock_shared(inode);
++	if (iocb->ki_flags & IOCB_NOWAIT) {
++		if (!inode_trylock_shared(inode))
++			return -EAGAIN;
++	} else {
++		inode_lock_shared(inode);
++	}
++
+ 	ret = filemap_write_and_wait_range(mapping, iocb->ki_pos,
+ 					   iocb->ki_pos + count - 1);
+ 	if (ret)
 -- 
 2.20.1
 
