@@ -2,52 +2,54 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05178C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4048C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3D7222314
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8CDB21835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004713;
-	bh=iiHkmAn0HtFSe8vyac2ZShkvyJ3Zx8AZ6ZfZB2ZrOSk=;
+	s=default; t=1578004717;
+	bh=FB4OyriQdA+Htga/NPJmTLlaQnnALLwAf2sj5wOz2Sg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h14uhvO1aPq8jZ+aIRSkQR3uPszf/OW7ASO5cWFVkd87fs0rxuouLFM8AXzJc1mhZ
-	 M0fENoZFz+kIYX2EfGBOGVyhYVg2JslE8zmuksQCNO2DFLJ4oXYyT2RFBOZi8qCssS
-	 IGpmeIU87ljC01GyIKi8qPKZJt8Cl1R/iuIjP0Ps=
+	b=HnfMKXUOWT4ATU30FdXFvvfJTyV55gnJRP7ZZi8bq+IXC/Gg2sGpV0rSziKLC7AXQ
+	 Zlw5obCN4dzyRhtB2dcYJKQVqic/ZW2kdozhkQUfkeVccPGb0GWRBfNRuSM59X8i6b
+	 8SP7pwJfT+1QRjyCpXMuLjz5g8+BrGalQdw8uOts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731081AbgABWic (ORCPT
+        id S1730966AbgABWih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:38:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52492 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:38:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731068AbgABWi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:38:28 -0500
+        id S1730753AbgABWid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:38:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FD5E21835;
-        Thu,  2 Jan 2020 22:38:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ED5721835;
+        Thu,  2 Jan 2020 22:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004707;
-        bh=iiHkmAn0HtFSe8vyac2ZShkvyJ3Zx8AZ6ZfZB2ZrOSk=;
+        s=default; t=1578004712;
+        bh=FB4OyriQdA+Htga/NPJmTLlaQnnALLwAf2sj5wOz2Sg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ODhYxHSYRffB8xSyYkKB06oz1qMqytRSbjW/TqZ26h7wOpLcQxlXiU1jdfpwPphz0
-         gXcK2coBsaVPnU4X0I2uykcq6OwOw024iSJc7shay6NVfV0MItrX1U2iG9MBCO/4Hh
-         6Bf4C51fxnJuSCU97Zb1idl0TbH5hJdRgSNfX9PI=
+        b=X4Pdss1twqRMYdM3R94NzVWaGOqH+cBQttVZcn83Ht9xhIu7LOnGCOBRqzveCydMJ
+         Q+22MuIqj6BP3gMRk4QMZXgnsra7znwjiIA5y+gk8b7CxSK54MOGInlzy/LuMSTHvm
+         DtRl0PY0HimimKdgDrhz3onNQ1zR4ISzR/x1DikA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 120/137] scripts/kallsyms: fix definitely-lost memory leak
-Date:   Thu,  2 Jan 2020 23:08:13 +0100
-Message-Id: <20200102220603.292723951@linuxfoundation.org>
+Subject: [PATCH 4.4 122/137] perf regs: Make perf_reg_name() return "unknown" instead of NULL
+Date:   Thu,  2 Jan 2020 23:08:15 +0100
+Message-Id: <20200102220603.576699762@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -60,46 +62,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 21915eca088dc271c970e8351290e83d938114ac ]
+[ Upstream commit 5b596e0ff0e1852197d4c82d3314db5e43126bf7 ]
 
-build_initial_tok_table() overwrites unused sym_entry to shrink the
-table size. Before the entry is overwritten, table[i].sym must be freed
-since it is malloc'ed data.
+To avoid breaking the build on arches where this is not wired up, at
+least all the other features should be made available and when using
+this specific routine, the "unknown" should point the user/developer to
+the need to wire this up on this particular hardware architecture.
 
-This fixes the 'definitely lost' report from valgrind. I ran valgrind
-against x86_64_defconfig of v5.4-rc8 kernel, and here is the summary:
+Detected in a container mipsel debian cross build environment, where it
+shows up as:
 
-[Before the fix]
+  In file included from /usr/mipsel-linux-gnu/include/stdio.h:867,
+                   from /git/linux/tools/perf/lib/include/perf/cpumap.h:6,
+                   from util/session.c:13:
+  In function 'printf',
+      inlined from 'regs_dump__printf' at util/session.c:1103:3,
+      inlined from 'regs__printf' at util/session.c:1131:2:
+  /usr/mipsel-linux-gnu/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
+    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
+        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  LEAK SUMMARY:
-     definitely lost: 53,184 bytes in 2,874 blocks
+cross compiler details:
 
-[After the fix]
+  mipsel-linux-gnu-gcc (Debian 9.2.1-8) 9.2.1 20190909
 
-  LEAK SUMMARY:
-     definitely lost: 0 bytes in 0 blocks
+Also on mips64:
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+  In file included from /usr/mips64-linux-gnuabi64/include/stdio.h:867,
+                   from /git/linux/tools/perf/lib/include/perf/cpumap.h:6,
+                   from util/session.c:13:
+  In function 'printf',
+      inlined from 'regs_dump__printf' at util/session.c:1103:3,
+      inlined from 'regs__printf' at util/session.c:1131:2,
+      inlined from 'regs_user__printf' at util/session.c:1139:3,
+      inlined from 'dump_sample' at util/session.c:1246:3,
+      inlined from 'machines__deliver_event' at util/session.c:1421:3:
+  /usr/mips64-linux-gnuabi64/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
+    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
+        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In function 'printf',
+      inlined from 'regs_dump__printf' at util/session.c:1103:3,
+      inlined from 'regs__printf' at util/session.c:1131:2,
+      inlined from 'regs_intr__printf' at util/session.c:1147:3,
+      inlined from 'dump_sample' at util/session.c:1249:3,
+      inlined from 'machines__deliver_event' at util/session.c:1421:3:
+  /usr/mips64-linux-gnuabi64/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
+    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
+        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+cross compiler details:
+
+  mips64-linux-gnuabi64-gcc (Debian 9.2.1-8) 9.2.1 20190909
+
+Fixes: 2bcd355b71da ("perf tools: Add interface to arch registers sets")
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-95wjyv4o65nuaeweq31t7l1s@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kallsyms.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/util/perf_regs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-index d117c68d1607..b92b704e7ace 100644
---- a/scripts/kallsyms.c
-+++ b/scripts/kallsyms.c
-@@ -455,6 +455,8 @@ static void build_initial_tok_table(void)
- 				table[pos] = table[i];
- 			learn_symbol(table[pos].sym, table[pos].len);
- 			pos++;
-+		} else {
-+			free(table[i].sym);
- 		}
- 	}
- 	table_cnt = pos;
+diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+index 679d6e493962..e6324397b295 100644
+--- a/tools/perf/util/perf_regs.h
++++ b/tools/perf/util/perf_regs.h
+@@ -26,7 +26,7 @@ int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
+ 
+ static inline const char *perf_reg_name(int id __maybe_unused)
+ {
+-	return NULL;
++	return "unknown";
+ }
+ 
+ static inline int perf_reg_value(u64 *valp __maybe_unused,
 -- 
 2.20.1
 
