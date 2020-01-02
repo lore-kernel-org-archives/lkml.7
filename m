@@ -2,53 +2,51 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C81C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C652C3276E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29F1224653
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C61F21835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:37:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004636;
-	bh=nAcI7t8OhKaTP++QeUcoAQ6fI7SyHY73WwVP837wTKE=;
+	s=default; t=1578004638;
+	bh=3KXfqnDbsG51PlcoFSd3VbYo/FOCQin5G57hns+ZABk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RqbidJgH359Mdcv1wQEW7c/xHfW0S5Zztm1hM6vGe2OT4FbwWhdABIS/fXrLNxuYn
-	 Fq29KS0/46j1aS1jqfanRzU+o5ow0WxkCrEybq4MHPn8Q6ieGbXQ9zr3MFJnrQE7FO
-	 2MyRYGiXeMGGt2HFWdNGoI6L95jipK0tNASe6Do0=
+	b=g86Os2tRAXFbpyegpYdzCFl7YQELIMtGrZeB9n0TAl3Qk2ykH+9J5tBOEX0h1I+3f
+	 ywAAX1hQGZgfak7Nv4gjvlw2GK8Sc30K5M/A8rAW9L+p1rXWHcXn3SflpOjusmbRhi
+	 WazvLPVt0i9EeckHPYzMz3svVTAQ8ErLfWd79+us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730804AbgABWhP (ORCPT
+        id S1730812AbgABWhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:37:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49376 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:37:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731056AbgABWhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:37:11 -0500
+        id S1730923AbgABWhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:37:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C635720866;
-        Thu,  2 Jan 2020 22:37:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FAB0217F4;
+        Thu,  2 Jan 2020 22:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004631;
-        bh=nAcI7t8OhKaTP++QeUcoAQ6fI7SyHY73WwVP837wTKE=;
+        s=default; t=1578004633;
+        bh=3KXfqnDbsG51PlcoFSd3VbYo/FOCQin5G57hns+ZABk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GQ1IFb0Q4MuNezOjzhXIFmsAV9h9XnoUfKNB9lJo9iWA0CyHrjZTJX8dGJ7fSyUZ4
-         3HYKhwWd5XdTWSsQJdLYuX2WbadQ3Q/ZVaPO1Zk5UGYJsbcqLE9UvS0nzII6E7YAo+
-         lfW0mvkGuWNhI8znaQ4PlZDtu5PXVteNgh4Rl+TI=
+        b=1lyFvONC1LMw8TB2u65wdcTwO5xv/E/5pEw42hdGobngpJ/N/cf/3UxNE3LAfOkv3
+         Gfil/+Z40mcc3F/s2uWuOG6IDJ9c6+kayHcKFBhPJeDsv0Dnw4TD/7jFXYObRJScCP
+         5mhjuOtMv31m4+7+bFnP+kcHYSeY5OtRaFgbaB0o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 051/137] media: si470x-i2c: add missed operations in remove
-Date:   Thu,  2 Jan 2020 23:07:04 +0100
-Message-Id: <20200102220553.434186982@linuxfoundation.org>
+        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 081/137] net: dst: Force 4-byte alignment of dst_metrics
+Date:   Thu,  2 Jan 2020 23:07:34 +0100
+Message-Id: <20200102220557.635291408@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -61,37 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-[ Upstream commit 2df200ab234a86836a8879a05a8007d6b884eb14 ]
+[ Upstream commit 258a980d1ec23e2c786e9536a7dd260bea74bae6 ]
 
-The driver misses calling v4l2_ctrl_handler_free and
-v4l2_device_unregister in remove like what is done in probe failure.
-Add the calls to fix it.
+When storing a pointer to a dst_metrics structure in dst_entry._metrics,
+two flags are added in the least significant bits of the pointer value.
+Hence this assumes all pointers to dst_metrics structures have at least
+4-byte alignment.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+However, on m68k, the minimum alignment of 32-bit values is 2 bytes, not
+4 bytes.  Hence in some kernel builds, dst_default_metrics may be only
+2-byte aligned, leading to obscure boot warnings like:
+
+    WARNING: CPU: 0 PID: 7 at lib/refcount.c:28 refcount_warn_saturate+0x44/0x9a
+    refcount_t: underflow; use-after-free.
+    Modules linked in:
+    CPU: 0 PID: 7 Comm: ksoftirqd/0 Tainted: G        W         5.5.0-rc2-atari-01448-g114a1a1038af891d-dirty #261
+    Stack from 10835e6c:
+	    10835e6c 0038134f 00023fa6 00394b0f 0000001c 00000009 00321560 00023fea
+	    00394b0f 0000001c 001a70f8 00000009 00000000 10835eb4 00000001 00000000
+	    04208040 0000000a 00394b4a 10835ed4 00043aa8 001a70f8 00394b0f 0000001c
+	    00000009 00394b4a 0026aba8 003215a4 00000003 00000000 0026d5a8 00000001
+	    003215a4 003a4361 003238d6 000001f0 00000000 003215a4 10aa3b00 00025e84
+	    003ddb00 10834000 002416a8 10aa3b00 00000000 00000080 000aa038 0004854a
+    Call Trace: [<00023fa6>] __warn+0xb2/0xb4
+     [<00023fea>] warn_slowpath_fmt+0x42/0x64
+     [<001a70f8>] refcount_warn_saturate+0x44/0x9a
+     [<00043aa8>] printk+0x0/0x18
+     [<001a70f8>] refcount_warn_saturate+0x44/0x9a
+     [<0026aba8>] refcount_sub_and_test.constprop.73+0x38/0x3e
+     [<0026d5a8>] ipv4_dst_destroy+0x5e/0x7e
+     [<00025e84>] __local_bh_enable_ip+0x0/0x8e
+     [<002416a8>] dst_destroy+0x40/0xae
+
+Fix this by forcing 4-byte alignment of all dst_metrics structures.
+
+Fixes: e5fd387ad5b30ca3 ("ipv6: do not overwrite inetpeer metrics prematurely")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/media/radio/si470x/radio-si470x-i2c.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/net/dst.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/radio/si470x/radio-si470x-i2c.c b/drivers/media/radio/si470x/radio-si470x-i2c.c
-index 9326439bc49c..f9e1768b8d31 100644
---- a/drivers/media/radio/si470x/radio-si470x-i2c.c
-+++ b/drivers/media/radio/si470x/radio-si470x-i2c.c
-@@ -460,6 +460,8 @@ static int si470x_i2c_remove(struct i2c_client *client)
- 	video_unregister_device(&radio->videodev);
- 	kfree(radio);
+--- a/include/net/dst.h
++++ b/include/net/dst.h
+@@ -113,7 +113,7 @@ struct dst_entry {
+ struct dst_metrics {
+ 	u32		metrics[RTAX_MAX];
+ 	atomic_t	refcnt;
+-};
++} __aligned(4);		/* Low pointer bits contain DST_METRICS_FLAGS */
+ extern const struct dst_metrics dst_default_metrics;
  
-+	v4l2_ctrl_handler_free(&radio->hdl);
-+	v4l2_device_unregister(&radio->v4l2_dev);
- 	return 0;
- }
- 
--- 
-2.20.1
-
+ u32 *dst_cow_metrics_generic(struct dst_entry *dst, unsigned long old);
 
 
