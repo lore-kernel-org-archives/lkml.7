@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74954C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4C9C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41EE220848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A412220848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005453;
-	bh=NitZFmkUU14PrjVIlTGxXu1q1LKT2NOe/iiTj0wOUEs=;
+	s=default; t=1578005460;
+	bh=BZe83UyN1JyLk4vRKk9MJN+aJTFpUkaZhhx6O28t/ug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u9hFdzCmtImg8vKdcyiysAHuR7lkpgzvs7zlJc1+bU0XFPoPpMHApwMdT5G8k+XA2
-	 WHyXLLCC4KOQ5yMZ34zx70sRXTx+R3B+px/SeTIHroY7xkBQMKiUrswaaoDxJwqwlH
-	 XPTjPfDSdnUHw2yOtEPK+Q20XwqIlqkQXCIM3d68=
+	b=bw1w0RTOqLnlNeW2DzHY8Ll8jtMfRoZO/UT7YKljac+O25L4h+JM4ekYjeK9LK0ft
+	 hdnHc2BnrUhRRAeJ99zDOOM13Y/Q2jtyfVIzhy83Q0Xg1gSK6AmgkhhwFOsnmUX3Ba
+	 T3i7zSQK0DIN3C+Pw6ZeB8ueKcKlmJmxtBkbI8lA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729435AbgABWY5 (ORCPT
+        id S1729694AbgABWvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:24:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49418 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:51:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729313AbgABWYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:24:52 -0500
+        id S1729402AbgABWYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:24:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B7B920866;
-        Thu,  2 Jan 2020 22:24:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F29D20863;
+        Thu,  2 Jan 2020 22:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003891;
-        bh=NitZFmkUU14PrjVIlTGxXu1q1LKT2NOe/iiTj0wOUEs=;
+        s=default; t=1578003884;
+        bh=BZe83UyN1JyLk4vRKk9MJN+aJTFpUkaZhhx6O28t/ug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=prtbVK3sLyNp2RdsvULJ8oJljQqlgACIJ9JLh4YndTt6REyDcyTP5PsWPdB+2KYA0
-         ZCu8Ai32HaeWJ3IMydW5cLzliI76pLjZ7QxQSxyLm0qQRJIHmGrHbwOE0XfxEP+Nil
-         XAZ3jBNKaxkUQ+D58MvrQDmecCIseSkN9iNfhy0M=
+        b=UEnKIYxcGUDVnkqw1/Gf5dPUhWKN+wVjygy7JFeesNlRIosls3pO9gRf/ox+bxj5B
+         fvkzTNyaYsfZ/FQBzY2wUMSKgm4w3y0Z/TxznSRhZxylRT0DML+/VWsgjKcCGSBQRq
+         u5eR6PvHxzbDgc9/uAKGG5w6S1YOg1mEjIuaDyZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        John Johansen <john.johansen@canonical.com>,
+        stable@vger.kernel.org, Anatol Pomazau <anatol@google.com>,
+        Frank Mayhar <fmayhar@google.com>,
+        Bharath Ravi <rbharath@google.com>,
+        Khazhimsel Kumykov <khazhy@google.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Lee Duncan <lduncan@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 43/91] apparmor: fix unsigned len comparison with less than zero
-Date:   Thu,  2 Jan 2020 23:07:25 +0100
-Message-Id: <20200102220434.364866728@linuxfoundation.org>
+Subject: [PATCH 4.14 40/91] scsi: iscsi: Dont send data to unbound connection
+Date:   Thu,  2 Jan 2020 23:07:22 +0100
+Message-Id: <20200102220433.752303244@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -60,57 +65,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Anatol Pomazau <anatol@google.com>
 
-[ Upstream commit 00e0590dbaec6f1bcaa36a85467d7e3497ced522 ]
+[ Upstream commit 238191d65d7217982d69e21c1d623616da34b281 ]
 
-The sanity check in macro update_for_len checks to see if len
-is less than zero, however, len is a size_t so it can never be
-less than zero, so this sanity check is a no-op.  Fix this by
-making len a ssize_t so the comparison will work and add ulen
-that is a size_t copy of len so that the min() macro won't
-throw warnings about comparing different types.
+If a faulty initiator fails to bind the socket to the iSCSI connection
+before emitting a command, for instance, a subsequent send_pdu, it will
+crash the kernel due to a null pointer dereference in sock_sendmsg(), as
+shown in the log below.  This patch makes sure the bind succeeded before
+trying to use the socket.
 
-Addresses-Coverity: ("Macro compares unsigned to 0")
-Fixes: f1bd904175e8 ("apparmor: add the base fns() for domain labels")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: John Johansen <john.johansen@canonical.com>
+BUG: kernel NULL pointer dereference, address: 0000000000000018
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+PGD 0 P4D 0
+Oops: 0000 [#1] SMP PTI
+CPU: 3 PID: 7 Comm: kworker/u8:0 Not tainted 5.4.0-rc2.iscsi+ #13
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+[   24.158246] Workqueue: iscsi_q_0 iscsi_xmitworker
+[   24.158883] RIP: 0010:apparmor_socket_sendmsg+0x5/0x20
+[...]
+[   24.161739] RSP: 0018:ffffab6440043ca0 EFLAGS: 00010282
+[   24.162400] RAX: ffffffff891c1c00 RBX: ffffffff89d53968 RCX: 0000000000000001
+[   24.163253] RDX: 0000000000000030 RSI: ffffab6440043d00 RDI: 0000000000000000
+[   24.164104] RBP: 0000000000000030 R08: 0000000000000030 R09: 0000000000000030
+[   24.165166] R10: ffffffff893e66a0 R11: 0000000000000018 R12: ffffab6440043d00
+[   24.166038] R13: 0000000000000000 R14: 0000000000000000 R15: ffff9d5575a62e90
+[   24.166919] FS:  0000000000000000(0000) GS:ffff9d557db80000(0000) knlGS:0000000000000000
+[   24.167890] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   24.168587] CR2: 0000000000000018 CR3: 000000007a838000 CR4: 00000000000006e0
+[   24.169451] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   24.170320] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   24.171214] Call Trace:
+[   24.171537]  security_socket_sendmsg+0x3a/0x50
+[   24.172079]  sock_sendmsg+0x16/0x60
+[   24.172506]  iscsi_sw_tcp_xmit_segment+0x77/0x120
+[   24.173076]  iscsi_sw_tcp_pdu_xmit+0x58/0x170
+[   24.173604]  ? iscsi_dbg_trace+0x63/0x80
+[   24.174087]  iscsi_tcp_task_xmit+0x101/0x280
+[   24.174666]  iscsi_xmit_task+0x83/0x110
+[   24.175206]  iscsi_xmitworker+0x57/0x380
+[   24.175757]  ? __schedule+0x2a2/0x700
+[   24.176273]  process_one_work+0x1b5/0x360
+[   24.176837]  worker_thread+0x50/0x3c0
+[   24.177353]  kthread+0xf9/0x130
+[   24.177799]  ? process_one_work+0x360/0x360
+[   24.178401]  ? kthread_park+0x90/0x90
+[   24.178915]  ret_from_fork+0x35/0x40
+[   24.179421] Modules linked in:
+[   24.179856] CR2: 0000000000000018
+[   24.180327] ---[ end trace b4b7674b6df5f480 ]---
+
+Signed-off-by: Anatol Pomazau <anatol@google.com>
+Co-developed-by: Frank Mayhar <fmayhar@google.com>
+Signed-off-by: Frank Mayhar <fmayhar@google.com>
+Co-developed-by: Bharath Ravi <rbharath@google.com>
+Signed-off-by: Bharath Ravi <rbharath@google.com>
+Co-developed-by: Khazhimsel Kumykov <khazhy@google.com>
+Signed-off-by: Khazhimsel Kumykov <khazhy@google.com>
+Co-developed-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/apparmor/label.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/scsi/iscsi_tcp.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/security/apparmor/label.c b/security/apparmor/label.c
-index c5b99b954580..ea63710442ae 100644
---- a/security/apparmor/label.c
-+++ b/security/apparmor/label.c
-@@ -1463,11 +1463,13 @@ static inline bool use_label_hname(struct aa_ns *ns, struct aa_label *label,
- /* helper macro for snprint routines */
- #define update_for_len(total, len, size, str)	\
- do {					\
-+	size_t ulen = len;		\
-+					\
- 	AA_BUG(len < 0);		\
--	total += len;			\
--	len = min(len, size);		\
--	size -= len;			\
--	str += len;			\
-+	total += ulen;			\
-+	ulen = min(ulen, size);		\
-+	size -= ulen;			\
-+	str += ulen;			\
- } while (0)
+diff --git a/drivers/scsi/iscsi_tcp.c b/drivers/scsi/iscsi_tcp.c
+index 045207b5560e..7e3a77d3c6f0 100644
+--- a/drivers/scsi/iscsi_tcp.c
++++ b/drivers/scsi/iscsi_tcp.c
+@@ -372,8 +372,16 @@ static int iscsi_sw_tcp_pdu_xmit(struct iscsi_task *task)
+ {
+ 	struct iscsi_conn *conn = task->conn;
+ 	unsigned int noreclaim_flag;
++	struct iscsi_tcp_conn *tcp_conn = conn->dd_data;
++	struct iscsi_sw_tcp_conn *tcp_sw_conn = tcp_conn->dd_data;
+ 	int rc = 0;
  
- /**
-@@ -1602,7 +1604,7 @@ int aa_label_snxprint(char *str, size_t size, struct aa_ns *ns,
- 	struct aa_ns *prev_ns = NULL;
- 	struct label_it i;
- 	int count = 0, total = 0;
--	size_t len;
-+	ssize_t len;
++	if (!tcp_sw_conn->sock) {
++		iscsi_conn_printk(KERN_ERR, conn,
++				  "Transport not bound to socket!\n");
++		return -EINVAL;
++	}
++
+ 	noreclaim_flag = memalloc_noreclaim_save();
  
- 	AA_BUG(!str && size != 0);
- 	AA_BUG(!label);
+ 	while (iscsi_sw_tcp_xmit_qlen(conn)) {
 -- 
 2.20.1
 
