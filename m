@@ -2,60 +2,56 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAD_ENC_HEADER,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75516C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AA2C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4674D21D7D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 436DD20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004447;
-	bh=fW9Gz4rN4vuGWaB4xKKJYFcn8j7Hz++IV5tpiplwfIU=;
+	s=default; t=1578004450;
+	bh=jfH5jut7Y5uh/L0kIHhdaYYX5EuPOXgpX5UJIMURcm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=We2E+94Mulv/QtClN5fDrgOOtCvaR8pUznL+m1zNFnqcMMGQrAL+Gh4Ez99PkD+Qy
-	 vQQnFXY0FFoGe2VENbP0Y3OVu4pHR6NwieQj2lkuz37zOUs5PeAY155YTj0LIraa5x
-	 TMXxrwuW/EONjKcZtalYneJQzx9SEaO48OuKsNEE=
+	b=U+PxItOy1rRAgloLe1sf/CCCJavjkS5UJWeQiHCvh3mSTCtBm7/NoJ1f4oi4h0c1A
+	 CtG0lBDyQ1f6+CjuUKiosEvfVG3ektNSRkH8BLqUGed1GNxSmgB8ggXZAhXhpT3yj7
+	 kv9HCFSsHS1ff/yxV0cjxoPLKySfMbaEipO45KkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730671AbgABWeF (ORCPT
+        id S1730678AbgABWeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:34:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42010 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:34:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730434AbgABWeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:34:01 -0500
+        id S1730668AbgABWeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:34:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3011E20863;
-        Thu,  2 Jan 2020 22:34:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07B3E20866;
+        Thu,  2 Jan 2020 22:34:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004440;
-        bh=fW9Gz4rN4vuGWaB4xKKJYFcn8j7Hz++IV5tpiplwfIU=;
+        s=default; t=1578004445;
+        bh=jfH5jut7Y5uh/L0kIHhdaYYX5EuPOXgpX5UJIMURcm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LNgvP6wwQjaNJ+4hf1vh+qrGgSLn2THms5pT8RDhNrj09GTwvX8m+n0H6anxfHw/7
-         7EbajV4egoaFNz2nJd5XSww4ndDt7mrpwdOMkPUNp/F9COb01gQG+f9u0TDTELItjJ
-         Gx5666Y+SJ89O1hcctf/0VAyDvJy1eg0StBA4Qt0=
+        b=sTP3VlkjtCK6AVrjxXT4erdukTGGKRGYrny2h5Fz5B9CsRgjdByS3u90kWBdf6v9z
+         YO+KeO0RbQaHbFFWPosZfHGalfKlVVctOtTFpcxggSOnlDqcnEPKEcGe7LMsC7rlzz
+         iyWgTmdDEADf4hTSJT6ALuULnoX1Y9VNSSNdw7ok=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "=?UTF-8?q?Jan=20H . =20Sch=C3=B6nherr?=" <jschoenh@amazon.de>,
-        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Yazen Ghannam <Yazen.Ghannam@amd.com>,
+        stable@vger.kernel.org, Max Gurtovoy <maxg@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 152/171] x86/mce: Fix possibly incorrect severity calculation on AMD
-Date:   Thu,  2 Jan 2020 23:08:03 +0100
-Message-Id: <20200102220607.986637001@linuxfoundation.org>
+Subject: [PATCH 4.4 010/137] IB/iser: bound protection_sg size by data_sg size
+Date:   Thu,  2 Jan 2020 23:06:23 +0100
+Message-Id: <20200102220548.109529308@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
-References: <20200102220546.960200039@linuxfoundation.org>
+In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
+References: <20200102220546.618583146@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -65,46 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan H. Schönherr <jschoenh@amazon.de>
+From: Max Gurtovoy <maxg@mellanox.com>
 
-[ Upstream commit a3a57ddad061acc90bef39635caf2b2330ce8f21 ]
+[ Upstream commit 7718cf03c3ce4b6ebd90107643ccd01c952a1fce ]
 
-The function mce_severity_amd_smca() requires m->bank to be initialized
-for correct operation. Fix the one case, where mce_severity() is called
-without doing so.
+In case we don't set the sg_prot_tablesize, the scsi layer assign the
+default size (65535 entries). We should limit this size since we should
+take into consideration the underlaying device capability. This cap is
+considered when calculating the sg_tablesize. Otherwise, for example,
+we can get that /sys/block/sdb/queue/max_segments is 128 and
+/sys/block/sdb/queue/max_integrity_segments is 65535.
 
-Fixes: 6bda529ec42e ("x86/mce: Grade uncorrected errors for SMCA-enabled systems")
-Fixes: d28af26faa0b ("x86/MCE: Initialize mce.bank in the case of a fatal error in mce_no_way_out()")
-Signed-off-by: Jan H. Schönherr <jschoenh@amazon.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: <stable@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Cc: Yazen Ghannam <Yazen.Ghannam@amd.com>
-Link: https://lkml.kernel.org/r/20191210000733.17979-4-jschoenh@amazon.de
+Link: https://lore.kernel.org/r/1569359027-10987-1-git-send-email-maxg@mellanox.com
+Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mcheck/mce.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/ulp/iser/iscsi_iser.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
-index d3b2c5b25c9c..07188a012492 100644
---- a/arch/x86/kernel/cpu/mcheck/mce.c
-+++ b/arch/x86/kernel/cpu/mcheck/mce.c
-@@ -782,8 +782,8 @@ static int mce_no_way_out(struct mce *m, char **msg, unsigned long *validp,
- 		if (quirk_no_way_out)
- 			quirk_no_way_out(i, m, regs);
+diff --git a/drivers/infiniband/ulp/iser/iscsi_iser.c b/drivers/infiniband/ulp/iser/iscsi_iser.c
+index 9080161e01af..edb064f9f0f1 100644
+--- a/drivers/infiniband/ulp/iser/iscsi_iser.c
++++ b/drivers/infiniband/ulp/iser/iscsi_iser.c
+@@ -646,6 +646,7 @@ iscsi_iser_session_create(struct iscsi_endpoint *ep,
+ 		if (ib_conn->pi_support) {
+ 			u32 sig_caps = ib_conn->device->dev_attr.sig_prot_cap;
  
-+		m->bank = i;
- 		if (mce_severity(m, mca_cfg.tolerant, &tmp, true) >= MCE_PANIC_SEVERITY) {
--			m->bank = i;
- 			mce_read_aux(m, i);
- 			*msg = tmp;
- 			return 1;
++			shost->sg_prot_tablesize = shost->sg_tablesize;
+ 			scsi_host_set_prot(shost, iser_dif_prot_caps(sig_caps));
+ 			scsi_host_set_guard(shost, SHOST_DIX_GUARD_IP |
+ 						   SHOST_DIX_GUARD_CRC);
 -- 
 2.20.1
 
