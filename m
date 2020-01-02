@@ -2,115 +2,127 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DE0C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98A4C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7AB421734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:24:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LVK/VFNl"
+	by mail.kernel.org (Postfix) with ESMTP id C7213206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:25:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgABRYu (ORCPT
+        id S1728138AbgABRZK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 12:24:50 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:38392 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727854AbgABRYt (ORCPT
+        Thu, 2 Jan 2020 12:25:10 -0500
+Received: from mailoutvs25.siol.net ([185.57.226.216]:38440 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728112AbgABRZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 12:24:49 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 002HOjcV107718;
-        Thu, 2 Jan 2020 11:24:45 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577985885;
-        bh=8R/7KD37mImOhVgbKAz0f8LBJAniQTDmWoNz9vkICO4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=LVK/VFNlHysZTiwj4MxJWX7GiaY/O/2/J7bF6bJ8WCgKBkjumOrc4RwxFk8y+50Xf
-         CLzvXJ8sLZItg0MoRrxJZf3zn7TO4AqLmdiid6SuTJcG4uSio7YX5jABLnPPUspb+Y
-         8PX98D9Ka2WvGBtXNsaozYjTv+eT4YofEdY63L78=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 002HOjVU021141
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 2 Jan 2020 11:24:45 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 2 Jan
- 2020 11:24:45 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 2 Jan 2020 11:24:45 -0600
-Received: from [10.250.65.50] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 002HOieR098162;
-        Thu, 2 Jan 2020 11:24:44 -0600
-Subject: Re: [PATCH v3 2/4] ARM: OMAP2+: Introduce check for OP-TEE in
- omap_secure_init()
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Lokesh Vutla <lokeshvutla@ti.com>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191230185004.32279-1-afd@ti.com>
- <20191230185004.32279-3-afd@ti.com>
- <b4773b91-9893-830d-7b1b-b63eb4077cf7@ti.com>
- <d7d6f381-be00-3072-0510-a18b736987e7@ti.com>
- <20200102171403.GC16702@atomide.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <d9dddbe0-f5c3-1413-8b27-d19e8e07f755@ti.com>
-Date:   Thu, 2 Jan 2020 12:24:39 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 2 Jan 2020 12:25:10 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 64B9C52123C;
+        Thu,  2 Jan 2020 18:25:06 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id lQrdYFwcwuWQ; Thu,  2 Jan 2020 18:25:06 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 00D1D520913;
+        Thu,  2 Jan 2020 18:25:05 +0100 (CET)
+Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 4EBCD52123C;
+        Thu,  2 Jan 2020 18:25:02 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Maxime Ripard <mripard@kernel.org>,
+        Roman Stratiienko <roman.stratiienko@globallogic.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] drm/sun4i: Use CRTC size instead of PRIMARY plane size as mixer frame.
+Date:   Thu, 02 Jan 2020 18:25:02 +0100
+Message-ID: <1837725.8hb0ThOEGa@jernej-laptop>
+In-Reply-To: <CAODwZ7uqf4v8XjOLCn=SoUQchst_b96VCNdaunzn9Q21zPcQ7w@mail.gmail.com>
+References: <20200101204750.50541-1-roman.stratiienko@globallogic.com> <20200102100832.c5fc4imjdmr7otam@gilmour.lan> <CAODwZ7uqf4v8XjOLCn=SoUQchst_b96VCNdaunzn9Q21zPcQ7w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200102171403.GC16702@atomide.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/2/20 12:14 PM, Tony Lindgren wrote:
-> * Andrew F. Davis <afd@ti.com> [191231 14:16]:
->> On 12/31/19 1:32 AM, Lokesh Vutla wrote:
->>> This doesn't guarantee that optee driver is probed successfully or firmware
->>> installed correctly. Isn't there a better way to detect? Doesn't tee core layer
->>> exposes anything?
->>
->> We don't actually need the kernel-side OP-TEE driver at all here, we are
->> making raw SMCCC calls which get handled by OP-TEE using platform
->> specific code then emulates the function previously handled by ROM[0]
->> and execution is returned. No driver involved for these types of calls.
->>
->> U-Boot will not add this node to the DT unless OP-TEE is installed
->> correctly, but you are right that is no perfect guarantee. OP-TEE's
->> kernel driver does do a handshake to verify it is working but this is
->> not exposed outside of that driver and happens *way* too late for our
->> uses here. Plus as above, we don't need the OP-TEE driver at all and we
->> should boot the same without it even enabled.
->>
->> So my opinion is that if DT says OP-TEE is installed, but it is not,
->> then that is a misconfiguration and we usually just have to trust DT for
->> most things. If DT is wrong here then the only thing that happens is
->> this call safely fails, a message is printed informing the user of the
->> problem, and kernel keeps booting (although probably not stable given we
->> need these calls for important system configuration).
+Hi!
+
+Dne četrtek, 02. januar 2020 ob 17:32:07 CET je Roman Stratiienko napisal(a):
+> чт, 2 янв. 2020 г., 12:08 Maxime Ripard <mripard@kernel.org>:
+> > Hi,
+> > 
+> > On Wed, Jan 01, 2020 at 10:47:50PM +0200, 
+roman.stratiienko@globallogic.com wrote:
+> > > From: Roman Stratiienko <roman.stratiienko@globallogic.com>
+> > > 
+> > > According to DRM documentation the only difference between PRIMARY
+> > > and OVERLAY plane is that each CRTC must have PRIMARY plane and
+> > > OVERLAY are optional.
+> > > 
+> > > Allow PRIMARY plane to have dimension different from full-screen.
+> > > 
+> > > Fixes: 5bb5f5dafa1a ("drm/sun4i: Reorganize UI layer code in DE2")
+> > > Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
+> > 
+> > So it applies to all the 4 patches you've sent, but this lacks some
+> > context.
+> > 
+> > There's a few questions that should be answered here:
+> >   - Which situation is it fixing?
 > 
-> OK, please add comments to omap_optee_init_check(), it's not obvious
-> to anybody not dealing with optee directly.
+> Setting primary plane size less than crtc breaks composition. Also
+> shifting top left corner also breaks it.
+
+True, HW doesn't have notion of primary plane. It's just one plane which is 
+marked as primary, but otherwise it has same capabilities as others, like x,y 
+coordinates, size, etc.
+
 > 
-
-
-Okay, will add this comment and the one suggested by Lokesh for v4.
-
-Andrew
-
-
-> Regards,
+> >   - What tool / userspace stack is it fixing?
 > 
-> Tony
+> I am using Android userspace and drm_hwcomposer HAL.
 > 
+> @Jernej, you've said that you observed similar issue. Could you share
+> what userspace have you used?
+
+I observed it with DE1, but it has exactly the same issue. I noticed this 
+problem on Kodi (gbm version). Kodi first searches for plane capable of 
+displaying NV12 format (for video) and after that a plane which is capable of 
+displaying RGB888 format (for GUI). In DE1 case, first plane is primary and 
+also capable of displaying NV12 format. So when video is displayed which 
+doesn't cover whole screen, display output is corrupted. However, with such 
+fix, video playback is correct. Luc Verhaegen make equivalent fix for DE1, where 
+he also claims primary plane doesn't have to be same size as CRTC output:
+https://github.com/libv/fosdem-video-linux/commit/
+ae3215d37ca2a55642bcae6c83c3612e26275711
+
+> 
+> >   - What happens with your fix? Do you set the plane at coordinates
+> >   
+> >     0,0 (meaning you'll crop the top-lef corner), do you center it? If
+> >     the plane is smaller than the CTRC size, what is set on the edges?
+> 
+> You can put primary plane to any part of the screen and make it as
+> small as 8x8 (according to the datasheet) . Background would be filled
+> with black color, that is default, but it also could be overridden by
+> setting corresponding registers.
+
+Correct, same logic as for overlay planes applies.
+
+Best regards,
+Jernej
+
+> 
+> > Thanks!
+> > Maxime
+
+
+
+
