@@ -2,54 +2,53 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4871DC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31EDC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1396D20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BBF120848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005336;
-	bh=LtoQL/EWMcRI+N8UsFtKtoltRqp9udZk7tULpAar5I8=;
+	s=default; t=1578005343;
+	bh=jSk5/jasQckc5yZW/yS4DCLccMrVYTQ69dLLK9V/XM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qe7MusoMHVtEqVvwpjxRJVq1ClaoStTyWvSWw7jYXao4kZmfBvHTkOjk1kzsaWkPK
-	 RWsRSfYr2dttMthMaCjrEyb3BsUKx3DZ6plTZdBtTaOqc6+c7BOEBwg+kfANGRe9je
-	 rGxiwsVCE0uM1x1jdV0stVRbqzkCdtHK3dFgIkjY=
+	b=jVV3puPejICMsz2vn22zKCeeyVFYftV5nDjK/MxBKTRPgd7nNy7uWmFu2XuB3WYKo
+	 HM1/YtUZQmbGjpoAtT2vpDxFM8wSWOlEWcYRCZ72QJzV8Zl69drnG2Ja6szY9H1xRm
+	 TBWqkBYWJyoGcpr7E8PGfsz1uZnXXC1rTvNoMUXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730134AbgABWsz (ORCPT
+        id S1729486AbgABW1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:48:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56200 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:27:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729739AbgABW1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:27:33 -0500
+        id S1729708AbgABW1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:27:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66AA62253D;
-        Thu,  2 Jan 2020 22:27:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C31A920863;
+        Thu,  2 Jan 2020 22:27:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004052;
-        bh=LtoQL/EWMcRI+N8UsFtKtoltRqp9udZk7tULpAar5I8=;
+        s=default; t=1578004036;
+        bh=jSk5/jasQckc5yZW/yS4DCLccMrVYTQ69dLLK9V/XM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TMM6/BdeqhUSeZm9SUo5es/eJ++J7XGx6bu122mGztIMhnikULcVOCfOlJh5wLL/S
-         BbSZgizYISXCNJ4AZVFrstMMtWgys7fFn4TEg/+a4LOxyOfyKMVw8INR98mP+zRI30
-         murK8/lFdXWuYDVYNeZNyRzvlB1AKMx+GmViA2jY=
+        b=gxvzjxzJUJTzB54zJslwwDLjbqA49rQgJVUxVixHf+HXXV6QJS4Wi40cOLmutiOfk
+         9j7x3L5EoykDGPPw+i7VUVWkvESORM0Sne98KM/4M5biC14e3Lp/6bsAxOJ8WoyBEr
+         nRdkbkfYls5Dc62tLv8PFIrzaAdDM0RRUqGMwYX4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Wilczynski <kw@linux.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 009/171] iio: light: bh1750: Resolve compiler warning and make code more readable
-Date:   Thu,  2 Jan 2020 23:05:40 +0100
-Message-Id: <20200102220548.211776990@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.9 002/171] btrfs: do not leak reloc root if we fail to read the fs root
+Date:   Thu,  2 Jan 2020 23:05:33 +0100
+Message-Id: <20200102220547.250215374@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -62,51 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Wilczynski <kw@linux.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit f552fde983d378e7339f9ea74a25f918563bf0d3 ]
+commit ca1aa2818a53875cfdd175fb5e9a2984e997cce9 upstream.
 
-Separate the declaration of struct bh1750_chip_info from definition
-of bh1750_chip_info_tbl[] in a single statement as it makes the code
-hard to read, and with the extra newline it makes it look as if the
-bh1750_chip_info_tbl[] had no explicit type.
+If we fail to read the fs root corresponding with a reloc root we'll
+just break out and free the reloc roots.  But we remove our current
+reloc_root from this list higher up, which means we'll leak this
+reloc_root.  Fix this by adding ourselves back to the reloc_roots list
+so we are properly cleaned up.
 
-This change also resolves the following compiler warning about the
-unusual position of the static keyword that can be seen when building
-with warnings enabled (W=1):
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-drivers/iio/light/bh1750.c:64:1: warning:
-  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
-
-Related to commit 3a11fbb037a1 ("iio: light: add support for ROHM
-BH1710/BH1715/BH1721/BH1750/BH1751 ambient light sensors").
-
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/light/bh1750.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/btrfs/relocation.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
-index b05946604f80..6d5bb11594dc 100644
---- a/drivers/iio/light/bh1750.c
-+++ b/drivers/iio/light/bh1750.c
-@@ -62,9 +62,9 @@ struct bh1750_chip_info {
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -4587,6 +4587,7 @@ int btrfs_recover_relocation(struct btrf
+ 				       reloc_root->root_key.offset);
+ 		if (IS_ERR(fs_root)) {
+ 			err = PTR_ERR(fs_root);
++			list_add_tail(&reloc_root->root_list, &reloc_roots);
+ 			goto out_free;
+ 		}
  
- 	u16 int_time_low_mask;
- 	u16 int_time_high_mask;
--}
-+};
- 
--static const bh1750_chip_info_tbl[] = {
-+static const struct bh1750_chip_info bh1750_chip_info_tbl[] = {
- 	[BH1710] = { 140, 1022, 300, 400,  250000000, 2, 0x001F, 0x03E0 },
- 	[BH1721] = { 140, 1020, 300, 400,  250000000, 2, 0x0010, 0x03E0 },
- 	[BH1750] = { 31,  254,  69,  1740, 57500000,  1, 0x001F, 0x00E0 },
--- 
-2.20.1
-
 
 
