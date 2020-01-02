@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47489C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE23C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A682222C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF6C20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003934;
-	bh=42svHtPePhZ3NPfCRd1BuRx+WDO2c67EMHgqhIkSdes=;
+	s=default; t=1578003938;
+	bh=vpuoefGg1Xy5fEhRufZ2FINshGoPu0XRM7tLKRrZLcY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V9hJZ3PQ8e3Lh1IEpVgcboMBgZOq43BxWqClTwLvLflELcpSjsXRTSkepUeLMPVx7
-	 tCNsKIj/PeJdxKFsXiXpu/JWgxiKz6pIi2OXfNNaBtstqhJoBmMsE7rKP1Ysp7SRa8
-	 9yQaS8MDMI0XkY7RgJ0EqczVKM9MlhHgHTlHEWr0=
+	b=QfG0DkAGzr6JsXLlhWHTl2m+qh8aDyR+yZKQ247u2ltxGW1f0c+oSDdS+Tfo5PBuX
+	 w3iyC2TR28oONOS5+u91HvHm07kExkVBcXpZ/U+v0g3uSM5pCCdp2uf9bCCBsI2j2p
+	 PvgSy7/HLYhqZYHFUR9NEH6/ZE+lg2QgQ4rzKSWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbgABWZd (ORCPT
+        id S1729356AbgABWZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:25:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50984 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:25:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729385AbgABWZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:25:30 -0500
+        id S1729306AbgABWZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:25:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98F3E21835;
-        Thu,  2 Jan 2020 22:25:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73D6C21835;
+        Thu,  2 Jan 2020 22:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003930;
-        bh=42svHtPePhZ3NPfCRd1BuRx+WDO2c67EMHgqhIkSdes=;
+        s=default; t=1578003934;
+        bh=vpuoefGg1Xy5fEhRufZ2FINshGoPu0XRM7tLKRrZLcY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dQ3jQ3wUJPonTepyQlCzrxnNG/uTfRQ2rpCj3PM2yen29CxageVGrHKqtmjHAMRhq
-         tZSA+l9VSSzzrEXk3OWD/VmQ3Mgzh2yIxQ42ZehQBgprbQlrqvGBnf1DMwBuR4fcsD
-         rtJSqtaET6xsavn8qWDrFNysdBWrw6JTLrFKwZjE=
+        b=Mm4KtzEwN0g6e0yTRWhdSgs18O28YTx0hMPaE1WUBXvr1e7Lz6Mb3mrCYgqGYgrwn
+         p/daSNyC/kO7GrVCzN2FTJjQo8ao27IhqeZGZD4d+Z298MHF+QNDK+UCM/+ma8v4ex
+         I1ZPBvFgCiJiGtHhY1erbcxvucAFfoHpvPEG5yjc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 33/91] HID: logitech-hidpp: Silence intermittent get_battery_capacity errors
-Date:   Thu,  2 Jan 2020 23:07:15 +0100
-Message-Id: <20200102220431.637952568@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 35/91] HID: Improve Windows Precision Touchpad detection.
+Date:   Thu,  2 Jan 2020 23:07:17 +0100
+Message-Id: <20200102220432.441172425@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -59,44 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Blaž Hrastnik <blaz@mxxn.io>
 
-[ Upstream commit 61005d65b6c7dcf61c19516e6ebe5acc02d2cdda ]
+[ Upstream commit 2dbc6f113acd74c66b04bf49fb027efd830b1c5a ]
 
-My Logitech M185 (PID:4038) 2.4 GHz wireless HID++ mouse is causing
-intermittent errors like these in the log:
+Per Microsoft spec, usage 0xC5 (page 0xFF) returns a blob containing
+data used to verify the touchpad as a Windows Precision Touchpad.
 
-[11091.034857] logitech-hidpp-device 0003:046D:4038.0006: hidpp20_batterylevel_get_battery_capacity: received protocol error 0x09
-[12388.031260] logitech-hidpp-device 0003:046D:4038.0006: hidpp20_batterylevel_get_battery_capacity: received protocol error 0x09
-[16613.718543] logitech-hidpp-device 0003:046D:4038.0006: hidpp20_batterylevel_get_battery_capacity: received protocol error 0x09
-[23529.938728] logitech-hidpp-device 0003:046D:4038.0006: hidpp20_batterylevel_get_battery_capacity: received protocol error 0x09
+   0x85, REPORTID_PTPHQA,    //    REPORT_ID (PTPHQA)
+    0x09, 0xC5,              //    USAGE (Vendor Usage 0xC5)
+    0x15, 0x00,              //    LOGICAL_MINIMUM (0)
+    0x26, 0xff, 0x00,        //    LOGICAL_MAXIMUM (0xff)
+    0x75, 0x08,              //    REPORT_SIZE (8)
+    0x96, 0x00, 0x01,        //    REPORT_COUNT (0x100 (256))
+    0xb1, 0x02,              //    FEATURE (Data,Var,Abs)
 
-We are already silencing error-code 0x09 (HIDPP_ERROR_RESOURCE_ERROR)
-errors in other places, lets do the same in
-hidpp20_batterylevel_get_battery_capacity to remove these harmless,
-but scary looking errors from the dmesg output.
+However, some devices, namely Microsoft's Surface line of products
+instead implement a "segmented device certification report" (usage 0xC6)
+which returns the same report, but in smaller chunks.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+    0x06, 0x00, 0xff,        //     USAGE_PAGE (Vendor Defined)
+    0x85, REPORTID_PTPHQA,   //     REPORT_ID (PTPHQA)
+    0x09, 0xC6,              //     USAGE (Vendor usage for segment #)
+    0x25, 0x08,              //     LOGICAL_MAXIMUM (8)
+    0x75, 0x08,              //     REPORT_SIZE (8)
+    0x95, 0x01,              //     REPORT_COUNT (1)
+    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
+    0x09, 0xC7,              //     USAGE (Vendor Usage)
+    0x26, 0xff, 0x00,        //     LOGICAL_MAXIMUM (0xff)
+    0x95, 0x20,              //     REPORT_COUNT (32)
+    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
+
+By expanding Win8 touchpad detection to also look for the segmented
+report, all Surface touchpads are now properly recognized by
+hid-multitouch.
+
+Signed-off-by: Blaž Hrastnik <blaz@mxxn.io>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-logitech-hidpp.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/hid/hid-core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index 4706fb852eaf..6ad776b4711b 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -978,6 +978,9 @@ static int hidpp20_batterylevel_get_battery_capacity(struct hidpp_device *hidpp,
- 	ret = hidpp_send_fap_command_sync(hidpp, feature_index,
- 					  CMD_BATTERY_LEVEL_STATUS_GET_BATTERY_LEVEL_STATUS,
- 					  NULL, 0, &response);
-+	/* Ignore these intermittent errors */
-+	if (ret == HIDPP_ERROR_RESOURCE_ERROR)
-+		return -EIO;
- 	if (ret > 0) {
- 		hid_err(hidpp->hid_dev, "%s: received protocol error 0x%02x\n",
- 			__func__, ret);
+diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+index 0c547bf841f4..6a04b56d161b 100644
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -760,6 +760,10 @@ static void hid_scan_feature_usage(struct hid_parser *parser, u32 usage)
+ 	if (usage == 0xff0000c5 && parser->global.report_count == 256 &&
+ 	    parser->global.report_size == 8)
+ 		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
++
++	if (usage == 0xff0000c6 && parser->global.report_count == 1 &&
++	    parser->global.report_size == 8)
++		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
+ }
+ 
+ static void hid_scan_collection(struct hid_parser *parser, unsigned type)
 -- 
 2.20.1
 
