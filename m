@@ -2,52 +2,53 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CB3C3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDA6C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D1D8222C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2202420863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:33:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004401;
-	bh=jpk4j6fdKCpUjexRmrjROz8iOGrRy2pUN7XNdmfpzhs=;
+	s=default; t=1578004404;
+	bh=XcWhwOkmvA3YKHSj/ealRGXy3OCvQ3hG9VJcTHtEt5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ejAkj4X63wexY2Ax9OBjmrt7sPbKRKliCDga2ym3Ee3dCHqT89x6F1/mwGDaEcydv
-	 T+UCKF9SrAAv05awPwBiWPFZCbQ8drpNRUSIB+Jq+fn5E+qRF1/488wV+coQ1L+JBB
-	 8pb7m+7yMFd3hMIXvz/M3PqwDIe2x6dAgb8MHlpY=
+	b=TugSOtyLGU9aCnj5wax3LEecWOSu3ESNn1KBru5ilc2We51FkAG3mLtB0hLEdbiDg
+	 y5oDp5sr+biMTQ6lEjt67kGm16P6sTsoLAwe3IAG5jypoTGpnaVB2M2tFDLEtYBjKX
+	 KD9kyNzm+AudSifj7p3pOscq4eB1mr5r+aAX85JY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729985AbgABWdU (ORCPT
+        id S1730621AbgABWdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:33:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40570 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:33:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730136AbgABWdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:33:18 -0500
+        id S1730610AbgABWdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:33:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9BE822314;
-        Thu,  2 Jan 2020 22:33:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55FD920863;
+        Thu,  2 Jan 2020 22:33:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004397;
-        bh=jpk4j6fdKCpUjexRmrjROz8iOGrRy2pUN7XNdmfpzhs=;
+        s=default; t=1578004399;
+        bh=XcWhwOkmvA3YKHSj/ealRGXy3OCvQ3hG9VJcTHtEt5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=10+ogoEePIiVrZqJqqANn+2Mc6RFRisv8kdyimnxUR7+ufgVw0CefJeWQdsESkfu8
-         oxMC1EWimJJsId/2iRTACeOvdnRcfLx6goLAqi9zfmJSrK9V/1HzhgroZhAQhoQT5U
-         6U7324zdWX7fm0sWdVFCuIPYrNE+0yxnLHHjAgiA=
+        b=BRCrKt5EgKBs5wBTVSoscRn371+wZ9usEPnP5/Gs+4evnbNxLyJ+lf3TWCqTPQ99N
+         gXTyoMk+Rgek/LXMte7OxjMRZP8VepZT41f9WtkFRf2qTZzNycyQYYoRGXvO8HUTWx
+         /J9iKkE7A4uUE/3Gu9FvP/Sd8UTGDdNipb7YdQbA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.9 162/171] hrtimer: Annotate lockless access to timer->state
-Date:   Thu,  2 Jan 2020 23:08:13 +0100
-Message-Id: <20200102220609.318991775@linuxfoundation.org>
+        stable@vger.kernel.org, David Engraf <david.engraf@sysgo.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Richard Genoud <richard.genoud@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 163/171] tty/serial: atmel: fix out of range clock divider handling
+Date:   Thu,  2 Jan 2020 23:08:14 +0100
+Message-Id: <20200102220609.417160494@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -60,160 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: David Engraf <david.engraf@sysgo.com>
 
-commit 56144737e67329c9aaed15f942d46a6302e2e3d8 upstream.
+[ Upstream commit cb47b9f8630ae3fa3f5fbd0c7003faba7abdf711 ]
 
-syzbot reported various data-race caused by hrtimer_is_queued() reading
-timer->state. A READ_ONCE() is required there to silence the warning.
+Use MCK_DIV8 when the clock divider is > 65535. Unfortunately the mode
+register was already written thus the clock selection is ignored.
 
-Also add the corresponding WRITE_ONCE() when timer->state is set.
+Fix by doing the baud rate calulation before setting the mode.
 
-In remove_hrtimer() the hrtimer_is_queued() helper is open coded to avoid
-loading timer->state twice.
-
-KCSAN reported these cases:
-
-BUG: KCSAN: data-race in __remove_hrtimer / tcp_pacing_check
-
-write to 0xffff8880b2a7d388 of 1 bytes by interrupt on cpu 0:
- __remove_hrtimer+0x52/0x130 kernel/time/hrtimer.c:991
- __run_hrtimer kernel/time/hrtimer.c:1496 [inline]
- __hrtimer_run_queues+0x250/0x600 kernel/time/hrtimer.c:1576
- hrtimer_run_softirq+0x10e/0x150 kernel/time/hrtimer.c:1593
- __do_softirq+0x115/0x33f kernel/softirq.c:292
- run_ksoftirqd+0x46/0x60 kernel/softirq.c:603
- smpboot_thread_fn+0x37d/0x4a0 kernel/smpboot.c:165
- kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-
-read to 0xffff8880b2a7d388 of 1 bytes by task 24652 on cpu 1:
- tcp_pacing_check net/ipv4/tcp_output.c:2235 [inline]
- tcp_pacing_check+0xba/0x130 net/ipv4/tcp_output.c:2225
- tcp_xmit_retransmit_queue+0x32c/0x5a0 net/ipv4/tcp_output.c:3044
- tcp_xmit_recovery+0x7c/0x120 net/ipv4/tcp_input.c:3558
- tcp_ack+0x17b6/0x3170 net/ipv4/tcp_input.c:3717
- tcp_rcv_established+0x37e/0xf50 net/ipv4/tcp_input.c:5696
- tcp_v4_do_rcv+0x381/0x4e0 net/ipv4/tcp_ipv4.c:1561
- sk_backlog_rcv include/net/sock.h:945 [inline]
- __release_sock+0x135/0x1e0 net/core/sock.c:2435
- release_sock+0x61/0x160 net/core/sock.c:2951
- sk_stream_wait_memory+0x3d7/0x7c0 net/core/stream.c:145
- tcp_sendmsg_locked+0xb47/0x1f30 net/ipv4/tcp.c:1393
- tcp_sendmsg+0x39/0x60 net/ipv4/tcp.c:1434
- inet_sendmsg+0x6d/0x90 net/ipv4/af_inet.c:807
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0x9f/0xc0 net/socket.c:657
-
-BUG: KCSAN: data-race in __remove_hrtimer / __tcp_ack_snd_check
-
-write to 0xffff8880a3a65588 of 1 bytes by interrupt on cpu 0:
- __remove_hrtimer+0x52/0x130 kernel/time/hrtimer.c:991
- __run_hrtimer kernel/time/hrtimer.c:1496 [inline]
- __hrtimer_run_queues+0x250/0x600 kernel/time/hrtimer.c:1576
- hrtimer_run_softirq+0x10e/0x150 kernel/time/hrtimer.c:1593
- __do_softirq+0x115/0x33f kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0xbb/0xe0 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:536 [inline]
- smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
-
-read to 0xffff8880a3a65588 of 1 bytes by task 22891 on cpu 1:
- __tcp_ack_snd_check+0x415/0x4f0 net/ipv4/tcp_input.c:5265
- tcp_ack_snd_check net/ipv4/tcp_input.c:5287 [inline]
- tcp_rcv_established+0x750/0xf50 net/ipv4/tcp_input.c:5708
- tcp_v4_do_rcv+0x381/0x4e0 net/ipv4/tcp_ipv4.c:1561
- sk_backlog_rcv include/net/sock.h:945 [inline]
- __release_sock+0x135/0x1e0 net/core/sock.c:2435
- release_sock+0x61/0x160 net/core/sock.c:2951
- sk_stream_wait_memory+0x3d7/0x7c0 net/core/stream.c:145
- tcp_sendmsg_locked+0xb47/0x1f30 net/ipv4/tcp.c:1393
- tcp_sendmsg+0x39/0x60 net/ipv4/tcp.c:1434
- inet_sendmsg+0x6d/0x90 net/ipv4/af_inet.c:807
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0x9f/0xc0 net/socket.c:657
- __sys_sendto+0x21f/0x320 net/socket.c:1952
- __do_sys_sendto net/socket.c:1964 [inline]
- __se_sys_sendto net/socket.c:1960 [inline]
- __x64_sys_sendto+0x89/0xb0 net/socket.c:1960
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 24652 Comm: syz-executor.3 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-
-[ tglx: Added comments ]
-
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191106174804.74723-1-edumazet@google.com
+Fixes: 5bf5635ac170 ("tty/serial: atmel: add fractional baud rate support")
+Signed-off-by: David Engraf <david.engraf@sysgo.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Acked-by: Richard Genoud <richard.genoud@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191216085403.17050-1-david.engraf@sysgo.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/hrtimer.h |   14 ++++++++++----
- kernel/time/hrtimer.c   |   11 +++++++----
- 2 files changed, 17 insertions(+), 8 deletions(-)
+ drivers/tty/serial/atmel_serial.c | 43 ++++++++++++++++---------------
+ 1 file changed, 22 insertions(+), 21 deletions(-)
 
---- a/include/linux/hrtimer.h
-+++ b/include/linux/hrtimer.h
-@@ -424,12 +424,18 @@ extern u64 hrtimer_get_next_event(void);
+diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+index 578242239daa..325f9db2da86 100644
+--- a/drivers/tty/serial/atmel_serial.c
++++ b/drivers/tty/serial/atmel_serial.c
+@@ -2200,27 +2200,6 @@ static void atmel_set_termios(struct uart_port *port, struct ktermios *termios,
+ 		mode |= ATMEL_US_USMODE_NORMAL;
+ 	}
  
- extern bool hrtimer_active(const struct hrtimer *timer);
+-	/* set the mode, clock divisor, parity, stop bits and data size */
+-	atmel_uart_writel(port, ATMEL_US_MR, mode);
+-
+-	/*
+-	 * when switching the mode, set the RTS line state according to the
+-	 * new mode, otherwise keep the former state
+-	 */
+-	if ((old_mode & ATMEL_US_USMODE) != (mode & ATMEL_US_USMODE)) {
+-		unsigned int rts_state;
+-
+-		if ((mode & ATMEL_US_USMODE) == ATMEL_US_USMODE_HWHS) {
+-			/* let the hardware control the RTS line */
+-			rts_state = ATMEL_US_RTSDIS;
+-		} else {
+-			/* force RTS line to low level */
+-			rts_state = ATMEL_US_RTSEN;
+-		}
+-
+-		atmel_uart_writel(port, ATMEL_US_CR, rts_state);
+-	}
+-
+ 	/*
+ 	 * Set the baud rate:
+ 	 * Fractional baudrate allows to setup output frequency more
+@@ -2247,6 +2226,28 @@ static void atmel_set_termios(struct uart_port *port, struct ktermios *termios,
+ 	quot = cd | fp << ATMEL_US_FP_OFFSET;
  
--/*
-- * Helper function to check, whether the timer is on one of the queues
-+/**
-+ * hrtimer_is_queued = check, whether the timer is on one of the queues
-+ * @timer:	Timer to check
-+ *
-+ * Returns: True if the timer is queued, false otherwise
-+ *
-+ * The function can be used lockless, but it gives only a current snapshot.
-  */
--static inline int hrtimer_is_queued(struct hrtimer *timer)
-+static inline bool hrtimer_is_queued(struct hrtimer *timer)
- {
--	return timer->state & HRTIMER_STATE_ENQUEUED;
-+	/* The READ_ONCE pairs with the update functions of timer->state */
-+	return !!(READ_ONCE(timer->state) & HRTIMER_STATE_ENQUEUED);
- }
- 
- /*
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -870,7 +870,8 @@ static int enqueue_hrtimer(struct hrtime
- 
- 	base->cpu_base->active_bases |= 1 << base->index;
- 
--	timer->state = HRTIMER_STATE_ENQUEUED;
-+	/* Pairs with the lockless read in hrtimer_is_queued() */
-+	WRITE_ONCE(timer->state, HRTIMER_STATE_ENQUEUED);
- 
- 	return timerqueue_add(&base->active, &timer->node);
- }
-@@ -892,7 +893,8 @@ static void __remove_hrtimer(struct hrti
- 	struct hrtimer_cpu_base *cpu_base = base->cpu_base;
- 	u8 state = timer->state;
- 
--	timer->state = newstate;
-+	/* Pairs with the lockless read in hrtimer_is_queued() */
-+	WRITE_ONCE(timer->state, newstate);
- 	if (!(state & HRTIMER_STATE_ENQUEUED))
- 		return;
- 
-@@ -919,8 +921,9 @@ static void __remove_hrtimer(struct hrti
- static inline int
- remove_hrtimer(struct hrtimer *timer, struct hrtimer_clock_base *base, bool restart)
- {
--	if (hrtimer_is_queued(timer)) {
--		u8 state = timer->state;
-+	u8 state = timer->state;
+ 	atmel_uart_writel(port, ATMEL_US_BRGR, quot);
 +
-+	if (state & HRTIMER_STATE_ENQUEUED) {
- 		int reprogram;
++	/* set the mode, clock divisor, parity, stop bits and data size */
++	atmel_uart_writel(port, ATMEL_US_MR, mode);
++
++	/*
++	 * when switching the mode, set the RTS line state according to the
++	 * new mode, otherwise keep the former state
++	 */
++	if ((old_mode & ATMEL_US_USMODE) != (mode & ATMEL_US_USMODE)) {
++		unsigned int rts_state;
++
++		if ((mode & ATMEL_US_USMODE) == ATMEL_US_USMODE_HWHS) {
++			/* let the hardware control the RTS line */
++			rts_state = ATMEL_US_RTSDIS;
++		} else {
++			/* force RTS line to low level */
++			rts_state = ATMEL_US_RTSEN;
++		}
++
++		atmel_uart_writel(port, ATMEL_US_CR, rts_state);
++	}
++
+ 	atmel_uart_writel(port, ATMEL_US_CR, ATMEL_US_RSTSTA | ATMEL_US_RSTRX);
+ 	atmel_uart_writel(port, ATMEL_US_CR, ATMEL_US_TXEN | ATMEL_US_RXEN);
  
- 		/*
+-- 
+2.20.1
+
 
 
