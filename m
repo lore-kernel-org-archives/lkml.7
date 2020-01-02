@@ -6,120 +6,129 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3245C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 20:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 419E4C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 20:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 929CC21835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 20:35:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C14A24125
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 20:39:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725890AbgABUfH (ORCPT
+        id S1725911AbgABUji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 15:35:07 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:33271 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgABUfH (ORCPT
+        Thu, 2 Jan 2020 15:39:38 -0500
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:17360 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725783AbgABUji (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 15:35:07 -0500
-Received: from mail-qt1-f176.google.com ([209.85.160.176]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mzyi6-1jgiL93ap4-00x5fJ; Thu, 02 Jan 2020 21:35:06 +0100
-Received: by mail-qt1-f176.google.com with SMTP id j5so35466548qtq.9;
-        Thu, 02 Jan 2020 12:35:05 -0800 (PST)
-X-Gm-Message-State: APjAAAWi2YEBn/3O66RVKGQs+oTyANGKsJ05S3USuqCxap/C5397A5UG
-        MOF8MBvVlNv2r5dV6Z8VNegCGwnQ1WemE1t+UZc=
-X-Google-Smtp-Source: APXvYqwzPm01oOZoHqsFGvAVmjyfZc/M+MP8OPR7YqbUBgpaMCiaqvYr++FdRQyTaxiPBovi16+WrkyX+FMNqNEaXL4=
-X-Received: by 2002:ac8:47d3:: with SMTP id d19mr60361134qtr.142.1577997304675;
- Thu, 02 Jan 2020 12:35:04 -0800 (PST)
+        Thu, 2 Jan 2020 15:39:38 -0500
+Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
+        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 002KcXD5032584;
+        Thu, 2 Jan 2020 20:39:30 GMT
+Received: from g2t2352.austin.hpe.com (g2t2352.austin.hpe.com [15.233.44.25])
+        by mx0a-002e3701.pphosted.com with ESMTP id 2x9q0m08ts-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jan 2020 20:39:30 +0000
+Received: from G1W8108.americas.hpqcorp.net (g1w8108.austin.hp.com [16.193.72.60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by g2t2352.austin.hpe.com (Postfix) with ESMTPS id C9AAC85;
+        Thu,  2 Jan 2020 20:39:29 +0000 (UTC)
+Received: from G4W9120.americas.hpqcorp.net (2002:10d2:150f::10d2:150f) by
+ G1W8108.americas.hpqcorp.net (2002:10c1:483c::10c1:483c) with Microsoft SMTP
+ Server (TLS) id 15.0.1367.3; Thu, 2 Jan 2020 20:39:29 +0000
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (15.241.52.12) by
+ G4W9120.americas.hpqcorp.net (16.210.21.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3 via Frontend Transport; Thu, 2 Jan 2020 20:39:29 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Rk5zq3gh9p82aU9XN1wV4Nfsyc7QfTjyav5TMRxohs0g+HPEJNazXw7CXjqnrPQyBesFSYBA1J3v8j2RrqpRMt1reGws3/duuhGNtEFZtZCyD2wlv79iGGcgfgrjwkCgdGC6Fq8hGo7AZJx4XlaVi63A4LVv1bmikyJ2HO4/m72Sb+Je9cCcyLyRRVggimzbK7a2oWgNg+d2czn/+Eew5/LFzTa5/iiXYwkdc5rX8M+s1ymTGG9+C9wLE/iNtpM4XchUJUB/rPxg/QOYx+VdrBBPOLR4osTPV2nahjqelI5fn8MBb0maItMJJaX2LCpUAcg3oWtfQAas5YGZfWKNpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cw6T8+vS5I97Cy7totuVy3TksQAGqr9S2CXE9fUlFAQ=;
+ b=n6GtJcMGa959CAg+7yGzvZQjH/7D4IS1sqnvMh6yX8FaAs7nIcCsYeDhaKhGrCWmdB23IMS5CBW1zYYXJe335X4jvqWF9oct8Aw/jtA8B6INUsvYpBwFy3Wu6QBio1MaheZt6USehLjyFCGutQKz9jSkngYossnLdh+ZC+6SZvEjglayO+kLGkOndMaa2X6QDqcdNEtuEZy1O9W+vfsVyekXh/Tr5svY8w0VrmeuVDksBoRF6nzFAQN6NqBuWgAvXBhUTDmuPVUzAMA/+Zf8fBah/48957be7mQkjQpMcrL+jrK8CTKnhTHlVwEzIUb9UsGK6twOWZHUoLPWkuoDLQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hpe.com; dmarc=pass action=none header.from=hpe.com; dkim=pass
+ header.d=hpe.com; arc=none
+Received: from TU4PR8401MB0927.NAMPRD84.PROD.OUTLOOK.COM (10.169.47.145) by
+ TU4PR8401MB0479.NAMPRD84.PROD.OUTLOOK.COM (10.169.43.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.12; Thu, 2 Jan 2020 20:39:27 +0000
+Received: from TU4PR8401MB0927.NAMPRD84.PROD.OUTLOOK.COM
+ ([fe80::98db:60af:be84:d1bf]) by TU4PR8401MB0927.NAMPRD84.PROD.OUTLOOK.COM
+ ([fe80::98db:60af:be84:d1bf%3]) with mapi id 15.20.2602.012; Thu, 2 Jan 2020
+ 20:39:27 +0000
+From:   "Elliott, Robert (Servers)" <elliott@hpe.com>
+To:     Luigi Semenzato <semenzato@google.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gpike@google.com" <gpike@google.com>
+Subject: RE: [PATCH v2 2/2] pm: add more logging on hibernation failure
+Thread-Topic: [PATCH v2 2/2] pm: add more logging on hibernation failure
+Thread-Index: AQHVwadzLuU7voWfk0GF79yTnSqIUafX1KzQ
+Date:   Thu, 2 Jan 2020 20:39:27 +0000
+Message-ID: <TU4PR8401MB0927CC96419009A3D0B0FDDDAB200@TU4PR8401MB0927.NAMPRD84.PROD.OUTLOOK.COM>
+References: <20200102200052.51182-1-semenzato@google.com>
+ <20200102200052.51182-3-semenzato@google.com>
+In-Reply-To: <20200102200052.51182-3-semenzato@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [15.211.195.7]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b23c70ff-d9dc-4d32-e71a-08d78fc3dc8a
+x-ms-traffictypediagnostic: TU4PR8401MB0479:
+x-microsoft-antispam-prvs: <TU4PR8401MB0479B2051F764B68C2742F88AB200@TU4PR8401MB0479.NAMPRD84.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 0270ED2845
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39860400002)(376002)(396003)(136003)(346002)(199004)(13464003)(189003)(33656002)(7696005)(8676002)(54906003)(8936002)(86362001)(81166006)(81156014)(9686003)(6506007)(110136005)(55016002)(186003)(66946007)(4326008)(76116006)(52536014)(2906002)(66446008)(4744005)(66556008)(316002)(478600001)(66476007)(53546011)(71200400001)(5660300002)(26005)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:TU4PR8401MB0479;H:TU4PR8401MB0927.NAMPRD84.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: hpe.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: DjQEJC5MmryFw+Pm7QdATy9BHfwOHt5+oXQa4+ZT+QbHeplL9G+8jVH5e30iBpwXJ9NLrVbQv+wOpe7llTd3dwNCQcZ1yr0N413YtlWiPUtfQHj/N5XgrKhc2P+olCOfuelFst+dvXAWpnyM5RlIW7qk1gJ0H71LxSBBIG1ulgzUEcIQmXS/TRFkW0sgiRAMmVGy+22pO7gcpGDsH9Bq3v4XgQs7GYta52Q2vHDrvoaw9YNBDX1wBmSQmSAk8s5G6+w2VdEZobsurLlEyamHAs5DoZNnuYom9WdAfw1RGQ+j3IaBKnM2OxxftnbtXbFEpU3SXEitJDBMF3l0/aMI0ACcPLJzPjWwT8S/5iTgGlq64Z/bsU7U50AqycddscbZ706rptud1SlPfgzEysmRB4zdX4EMp+O6mlwTQvb7ZD8sfpI9wl/twv+i2TU2Wgv/wECtmQHM8gG1XvXs+zK3nAToxG7iKso8e+1h5qGrKp2iPXv9o0Ax+ukBZU6w3lWj
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191218163954.296726-1-arnd@arndb.de> <20191218163954.296726-2-arnd@arndb.de>
- <20191224084514.GC1739@infradead.org> <CAK8P3a2ANKoV1DhJMUuAr0qKW7HgRvz9LM2yLkSVWP9Rn-LUhA@mail.gmail.com>
-In-Reply-To: <CAK8P3a2ANKoV1DhJMUuAr0qKW7HgRvz9LM2yLkSVWP9Rn-LUhA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 2 Jan 2020 21:34:48 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a30VpwVCSt0kTXZK7r5__80uBGbNOnDh1YhkAkcoBcQrg@mail.gmail.com>
-Message-ID: <CAK8P3a30VpwVCSt0kTXZK7r5__80uBGbNOnDh1YhkAkcoBcQrg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] xfs: disallow broken ioctls without compat-32-bit-time
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Jan Kara <jack@suse.cz>, Eric Sandeen <sandeen@sandeen.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:RdZKI/3QSNSIcKVGv40ROmeCrM8uOAiarrWQc4R5jcTLbnH+eiV
- oOxtV4NLkAyQ6Kb0mQZPDK2zKnWK+WJD0t01mA4jeZm+AVBZAm/myQIC+/qunQMQiW/Mxq0
- SlXSLmyh9kig/yi3nSOZ7DIndSWoLLOGsOC9RtBS3/AgwfEiRzQJEDoKVNWxpNBU7+3jFue
- PBHd9i4Y2mkSv8nE7P3cQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Ozi7y3Pe8lY=:aqJgDGtFNRJ/Kl0XS/x+pL
- Gx+1ofjguaWgaV3xrJE2F3Sg3koI44xUqJy/zqTXLL7HYK6Hz1MYyy3Wc3TrfS6MXjdcORtkm
- FMXpUCNfzNgLSLfkPjyqHAyI52mAKpg5f/OlsJg48tYU4KBQFNhdmzMokmd74ZNUCuhKpxhpD
- UkqqUTJwaItQf5kX8zIJ9RnhxXi5GsovYP2clWf5/EBLCFEjVWDwKgllXNQmf+AgwKVrt6Hum
- GY1P0yn+sIqKcny6VPG0/mTnLccpgIMPHeIxISY+5OkPLN1wMQCWB3c+MaT6lF/B7h4BuM558
- BrDufelnIWn85FPtIE9IO1b6iZXv6JBtg0OXWXVlTYRMDKS3gaCBL0S3sY5ZBP+DWJXhMK5Sm
- n6ER1M5vCp1p3jFEmbkjxNtx14bqfsI1sf75CXtxO/dL+gtvbsfpNWlKIx073qNvab4FWeEE6
- MDx2eF5wFq5/ZoS/mFO8TvtWTTnA9DvwFP6M0UcEr2m//j9ZPCLeQDByRrfxyUlvlY4zlMWzB
- GKSMGSe72S412weOJLSj9AC7oS8yn1Ceujx8zaDd23DCfD3z5pHhlqngylPjZhu6jUw3YfP5W
- WihFQpW6jS4H3MY3l/j9k9SsYKJ3YrVXsRF+B223SeoVlAgtRTcINdEilrSV5nBfwE/BS+jOi
- X8oLZa8a6w4BUgsDe60+qnUIlaQggmdRculoBdv46OWDuzCqd5dGU1mo0R+YDPYdl2mMgmOPl
- hujKYlUMOPZINH6BvknpVh+Gd179hyKka2cZ+ZX/NREaVUk4bjH3U1KPn0Ab5YsJU4f/BBPaP
- Ml1OHp9NmWK+fASbOuSWQNEebSYciPQuPJz9LstBSWVvd5Jb7LoUMipGEEyATTuVwzK0At0Wg
- f1XzSQjk5aLgbdVRi4nw==
+X-MS-Exchange-CrossTenant-Network-Message-Id: b23c70ff-d9dc-4d32-e71a-08d78fc3dc8a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jan 2020 20:39:27.5910
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 105b2061-b669-4b31-92ac-24d304d195dc
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: EsHczafdXk0obh0J1JoSGbi6jsp+0ym3/pw/HEFVTk/NzrBhh0aDimB27IXiVL+3
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TU4PR8401MB0479
+X-OriginatorOrg: hpe.com
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-02_06:2020-01-02,2020-01-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=744
+ lowpriorityscore=0 malwarescore=0 suspectscore=0 bulkscore=0
+ impostorscore=0 phishscore=0 priorityscore=1501 adultscore=0 spamscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001020165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 2, 2020 at 10:16 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tue, Dec 24, 2019 at 9:45 AM Christoph Hellwig <hch@infradead.org> wrote:
-> > On Wed, Dec 18, 2019 at 05:39:29PM +0100, Arnd Bergmann wrote:
-> > > +/* disallow y2038-unsafe ioctls with CONFIG_COMPAT_32BIT_TIME=n */
-> > > +static bool xfs_have_compat_bstat_time32(unsigned int cmd)
-> > > +{
-> > > +     if (IS_ENABLED(CONFIG_COMPAT_32BIT_TIME))
-> > > +             return true;
-> > > +
-> > > +     if (IS_ENABLED(CONFIG_64BIT) && !in_compat_syscall())
-> > > +             return true;
-> > > +
-> > > +     if (cmd == XFS_IOC_FSBULKSTAT_SINGLE ||
-> > > +         cmd == XFS_IOC_FSBULKSTAT ||
-> > > +         cmd == XFS_IOC_SWAPEXT)
-> > > +             return false;
-> > > +
-> > > +     return true;
-> >
-> > I think the check for the individual command belongs into the callers,
-> > which laves us with:
-> >
-> > static inline bool have_time32(void)
-> > {
-> >         return IS_ENABLED(CONFIG_COMPAT_32BIT_TIME) ||
-> >                 (IS_ENABLED(CONFIG_64BIT) && !in_compat_syscall());
-> > }
-> >
-> > and that looks like it should be in a generic helper somewhere.
->
-> Yes, makes sense.
->
-> I was going for something XFS specific here because XFS is unique in the
-> kernel in completely deprecating a set of ioctl commands (replacing
-> the old interface with a v5) rather than allowing the user space to be
-> compiled with 64-bit time_t.
-
-I tried adding the helper now but ran into a stupid problem: the best
-place to put it would be linux/time32.h, but then I have to include
-linux/compat.h from there, which in turn pulls in tons of other
-headers in any file using linux/time.h.
-
-I considered making it a macro instead, but that's also really ugly.
-
-I now think we should just defer this change until after v5.6, once I
-have separated linux/time.h from linux/time32.h.
-In the meantime I'll resend the other two patches that I know we
-need in v5.6 in order to get there, so Darrick can apply them to his
-tree.
-
-      Arnd
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgta2VybmVsLW93
+bmVyQHZnZXIua2VybmVsLm9yZyA8bGludXgta2VybmVsLQ0KPiBvd25lckB2Z2VyLmtlcm5lbC5v
+cmc+IE9uIEJlaGFsZiBPZiBMdWlnaSBTZW1lbnphdG8NCj4gU2VudDogVGh1cnNkYXksIEphbnVh
+cnkgMiwgMjAyMCAyOjAxIFBNDQo+IFRvOiBsaW51eC1wbUB2Z2VyLmtlcm5lbC5vcmcNCi4uLg0K
+PiAtCXByX2luZm8oIlByZWFsbG9jYXRpbmcgaW1hZ2UgbWVtb3J5Li4uICIpOw0KPiArCXByX2lu
+Zm8oIlByZWFsbG9jYXRpbmcgaGliZXJuYXRpb24gaW1hZ2UgbWVtb3J5XG4iKTsNCi4uLg0KPiAr
+CQlwcl9lcnIoIkNhbm5vdCBhbGxvY2F0ZSBvcmlnaW5hbCBiaXRtYXBcbiIpOw0KLi4uDQo+ICsJ
+CXByX2VycigiQ2Fubm90IGFsbG9jYXRlIGNvcHkgYml0bWFwXG4iKTsNCi4uLg0KPiArCQkJcHJf
+ZXJyKCJJbWFnZSBhbGxvY2F0aW9uIGlzICVsdSBwYWdlcyBzaG9ydFxuIiwNCj4gKwkJCQlhbGxv
+YyAtIHBhZ2VzX2hpZ2htZW0pOw0KLi4uDQo+IC0JcHJfY29udCgiZG9uZSAoYWxsb2NhdGVkICVs
+dSBwYWdlcylcbiIsIHBhZ2VzKTsNCj4gKwlwcl9pbmZvKCJBbGxvY2F0ZWQgJWx1IHBhZ2VzIGZv
+ciBoaWJlcm5hdGlvbiBzaGFwc2hvdFxuIiwgcGFnZXMpOw0KPiAgCXN3c3VzcF9zaG93X3NwZWVk
+KHN0YXJ0LCBzdG9wLCBwYWdlcywgIkFsbG9jYXRlZCIpOw0KDQpJbmNsdWRpbmcgdGhlIHdvcmQg
+ImhpYmVybmF0aW9uIiBvciB0aGUgcGhyYXNlICJoaWJlcm5hdGlvbiBpbWFnZSIgaW4NCmVhY2gg
+cHJpbnQgd291bGQgaGVscCBpbiBwYXJzaW5nIHRoZSBtZXNzYWdlcyAoZS5nLiwgd2l0aCBncmVw
+KS4NCg0KDQoNCg==
