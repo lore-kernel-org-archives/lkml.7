@@ -2,52 +2,55 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 772CEC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AE2C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 449D22464E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 083D922B48
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004222;
-	bh=gUN+kAnWfc1ZcNtrlOl182rF7UiZMNBamdOsPlYao0k=;
+	s=default; t=1578004224;
+	bh=Q0XfiEEF4+nFab0KeB9h3/YN2rBxXvvfp51xB1lxAsg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1xARTcEx5HmYKo8JcwBsoIV2xsz3Pdt2AkUlz2vptI/iodztcm28hteo4fptIsJYL
-	 LXjFVYRt89jDbXVDfIc/1AT3Eo1aJ+6+CALADYL8eRLW9Jzi8Y6GYEta65GjiK3bR4
-	 NK1CNZOJcTiI91k9IcawJMdKxuoraoTyXpTkc+9c=
+	b=MSzRjdMd410g+kLIBp7ziZGB7LOI6BIPzdMh5zHe0SkuDuZF3afMKjknweWNoFMeF
+	 Gn7mYct4VznubWi0rkyNhjZ9G3bxQYIpwMOa/TPd/41qHa5QM6J9Xkto9/r0aE3AXc
+	 yYfEkWeAr8GFP4ZuMW2QLbIdPudh7gSk8uFre5wY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729871AbgABWaV (ORCPT
+        id S1729742AbgABWaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:30:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33816 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:30:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730152AbgABWaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:30:15 -0500
+        id S1730012AbgABWaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:30:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BBB3222C3;
-        Thu,  2 Jan 2020 22:30:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 349A62253D;
+        Thu,  2 Jan 2020 22:30:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004214;
-        bh=gUN+kAnWfc1ZcNtrlOl182rF7UiZMNBamdOsPlYao0k=;
+        s=default; t=1578004219;
+        bh=Q0XfiEEF4+nFab0KeB9h3/YN2rBxXvvfp51xB1lxAsg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vlSSIgn1vnH1NxDsHCQ8Cz7NkK2N9bBshOL2r7jG2yTL0vXPc7/zRxgf+KSF59R9q
-         CnTgh/R6oTSYHu+rYQ9bsr1Vx39TC3QMqzA4JNGFH3yqObAJQb0d4+d1J+/EaWR9aK
-         XnIDrw6ayerSyVTeyqB18xZNlH6ceqISTIfzTxgE=
+        b=dDMdFxpeWlTSlScb6cJymbkSwv1YjJ1fPglyFhA7FiBZeAQX41MqX71IB5/DjZwAN
+         sjwywIKaz4HMFKcbJ5ZumKZuk0z7ATkLJR475fSP6MivM5X3tc45o2ySM2FRedE86A
+         8M4aMVFknmGO+s2h5jmK8x4VIorFBV9l0gGsY+3E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.9 086/171] Revert "mmc: sdhci: Fix incorrect switch to HS mode"
-Date:   Thu,  2 Jan 2020 23:06:57 +0100
-Message-Id: <20200102220558.950964515@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 070/171] cpufreq: Register drivers only after CPU devices have been registered
+Date:   Thu,  2 Jan 2020 23:06:41 +0100
+Message-Id: <20200102220556.622524885@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -60,42 +63,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Faiz Abbas <faiz_abbas@ti.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-commit 07bcc411567cb96f9d1fc84fff8d387118a2920d upstream.
+[ Upstream commit 46770be0cf94149ca48be87719bda1d951066644 ]
 
-This reverts commit c894e33ddc1910e14d6f2a2016f60ab613fd8b37.
+The cpufreq core heavily depends on the availability of the struct
+device for CPUs and if they aren't available at the time cpufreq driver
+is registered, we will never succeed in making cpufreq work.
 
-This commit aims to treat SD High speed and SDR25 as the same while
-setting UHS Timings in HOST_CONTROL2 which leads to failures with some
-SD cards in AM65x. Revert this commit.
+This happens due to following sequence of events:
 
-The issue this commit was trying to fix can be implemented in a platform
-specific callback instead of common sdhci code.
+- cpufreq_register_driver()
+  - subsys_interface_register()
+  - return 0; //successful registration of driver
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/20191128110422.25917-1-faiz_abbas@ti.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+... at a later point of time
 
+- register_cpu();
+  - device_register();
+    - bus_probe_device();
+      - sif->add_dev();
+	- cpufreq_add_dev();
+	  - get_cpu_device(); //FAILS
+  - per_cpu(cpu_sys_devices, num) = &cpu->dev; //used by get_cpu_device()
+  - return 0; //CPU registered successfully
+
+Because the per-cpu variable cpu_sys_devices is set only after the CPU
+device is regsitered, cpufreq will never be able to get it when
+cpufreq_add_dev() is called.
+
+This patch avoids this failure by making sure device structure of at
+least CPU0 is available when the cpufreq driver is registered, else
+return -EPROBE_DEFER.
+
+Reported-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Co-developed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/cpufreq/cpufreq.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1557,9 +1557,7 @@ void sdhci_set_uhs_signaling(struct sdhc
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR104;
- 	else if (timing == MMC_TIMING_UHS_SDR12)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR12;
--	else if (timing == MMC_TIMING_SD_HS ||
--		 timing == MMC_TIMING_MMC_HS ||
--		 timing == MMC_TIMING_UHS_SDR25)
-+	else if (timing == MMC_TIMING_UHS_SDR25)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR25;
- 	else if (timing == MMC_TIMING_UHS_SDR50)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR50;
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 063ce77df619..86d48f8c6a2e 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -2449,6 +2449,13 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
+ 	if (cpufreq_disabled())
+ 		return -ENODEV;
+ 
++	/*
++	 * The cpufreq core depends heavily on the availability of device
++	 * structure, make sure they are available before proceeding further.
++	 */
++	if (!get_cpu_device(0))
++		return -EPROBE_DEFER;
++
+ 	if (!driver_data || !driver_data->verify || !driver_data->init ||
+ 	    !(driver_data->setpolicy || driver_data->target_index ||
+ 		    driver_data->target) ||
+-- 
+2.20.1
+
 
 
