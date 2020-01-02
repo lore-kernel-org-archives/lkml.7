@@ -2,51 +2,53 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3F5C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A99A2C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B460B2253D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7597E21835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004292;
-	bh=vApgtmOsQVMPYg5aH4YmE1Ihj8QEHEKdTfmokdJklfs=;
+	s=default; t=1578004297;
+	bh=TqHm7quSf2RJ5UGZG10NxgwjJMkqLHbTaKd1rINAea4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zFI49eue2Y249Y7VyhdBmDaKd4tDg+U5l/cdNsnlr5nt8e99M/3kXvdb5/PXjt1Wz
-	 ekIi2S1VjVo4FaxmE4h7QC6+vYLepWs02xkA3rMYH53GFdPM2RYSONV8TxuFSx/uQK
-	 fEPtvxycTaOmFTWXvUwXYh/IDtC2IIwDuU2iSH30=
+	b=2nZUZItu4KO0WiRPIvQkrkiLIlSgLligYobKFgdVYnr334z/KS35E4hfftMkutdoN
+	 klTDOVWQH3rU8H48ikIpmimaZ+us0sfcTwLI77Qwpr68xujpdD+Tx7566uGciglj4c
+	 /CxqrrRFFset8yRxH5GkhV67ZFwHPLXW2Ztzzyw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730298AbgABWbb (ORCPT
+        id S1730172AbgABWbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:31:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36618 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:31:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730143AbgABWb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:31:27 -0500
+        id S1730294AbgABWba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:31:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD1EF2253D;
-        Thu,  2 Jan 2020 22:31:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CC82222C3;
+        Thu,  2 Jan 2020 22:31:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004287;
-        bh=vApgtmOsQVMPYg5aH4YmE1Ihj8QEHEKdTfmokdJklfs=;
+        s=default; t=1578004289;
+        bh=TqHm7quSf2RJ5UGZG10NxgwjJMkqLHbTaKd1rINAea4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mRP2sa5gnkLYwozfqeKqgFXFKkDlPcft7byUm0p31SF6XV6v7qNhtoYSc5QcyLIjP
-         Nphz0B4lE8vpQPA4+xjSIqEHyZh9XBhUP8731uEvUfSRZV61TK+TtoLW/+vDXtFJce
-         3GT97G2bLTJMVkSfaCfxstZ2yqiyaR1Zyda163GE=
+        b=Z/dJnpLoUaQeePsniUc7wxWUn7lXK88WX2GfRo8EaQqyxYe4Qvj5+DNohFtqYLvFG
+         HE1ZjJY00XmOLM8Zw0hKAZUZ31oXcEltEKsDiCfS2ygXHQTB7xkDBttkLxNvhyhmPO
+         hmOaED+Noe7vn4qtzvroDYCTeNNGeHs9FOD1nBGA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 098/171] net: qlogic: Fix error paths in ql_alloc_large_buffers()
-Date:   Thu,  2 Jan 2020 23:07:09 +0100
-Message-Id: <20200102220600.852789397@linuxfoundation.org>
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 116/171] scsi: lpfc: Fix SLI3 hba in loop mode not discovering devices
+Date:   Thu,  2 Jan 2020 23:07:27 +0100
+Message-Id: <20200102220603.196961929@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -59,76 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit cad46039e4c99812db067c8ac22a864960e7acc4 ]
+[ Upstream commit feff8b3d84d3d9570f893b4d83e5eab6693d6a52 ]
 
-ql_alloc_large_buffers() has the usual RX buffer allocation
-loop where it allocates skbs and maps them for DMA.  It also
-treats failure as a fatal error.
+When operating in private loop mode, PLOGI exchanges are racing and the
+driver tries to abort it's PLOGI. But the PLOGI abort ends up terminating
+the login with the other end causing the other end to abort its PLOGI as
+well. Discovery never fully completes.
 
-There are (at least) three bugs in the error paths:
+Fix by disabling the PLOGI abort when private loop and letting the state
+machine play out.
 
-1. ql_free_large_buffers() assumes that the lrg_buf[] entry for the
-first buffer that couldn't be allocated will have .skb == NULL.
-But the qla_buf[] array is not zero-initialised.
-
-2. ql_free_large_buffers() DMA-unmaps all skbs in lrg_buf[].  This is
-incorrect for the last allocated skb, if DMA mapping failed.
-
-3. Commit 1acb8f2a7a9f ("net: qlogic: Fix memory leak in
-ql_alloc_large_buffers") added a direct call to dev_kfree_skb_any()
-after the skb is recorded in lrg_buf[], so ql_free_large_buffers()
-will double-free it.
-
-The bugs are somewhat inter-twined, so fix them all at once:
-
-* Clear each entry in qla_buf[] before attempting to allocate
-  an skb for it.  This goes half-way to fixing bug 1.
-* Set the .skb field only after the skb is DMA-mapped.  This
-  fixes the rest.
-
-Fixes: 1357bfcf7106 ("qla3xxx: Dynamically size the rx buffer queue ...")
-Fixes: 0f8ab89e825f ("qla3xxx: Check return code from pci_map_single() ...")
-Fixes: 1acb8f2a7a9f ("net: qlogic: Fix memory leak in ql_alloc_large_buffers")
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20191018211832.7917-5-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qla3xxx.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/scsi/lpfc/lpfc_nportdisc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/qlogic/qla3xxx.c
-+++ b/drivers/net/ethernet/qlogic/qla3xxx.c
-@@ -2752,6 +2752,9 @@ static int ql_alloc_large_buffers(struct
- 	int err;
- 
- 	for (i = 0; i < qdev->num_large_buffers; i++) {
-+		lrg_buf_cb = &qdev->lrg_buf[i];
-+		memset(lrg_buf_cb, 0, sizeof(struct ql_rcv_buf_cb));
-+
- 		skb = netdev_alloc_skb(qdev->ndev,
- 				       qdev->lrg_buffer_len);
- 		if (unlikely(!skb)) {
-@@ -2762,11 +2765,7 @@ static int ql_alloc_large_buffers(struct
- 			ql_free_large_buffers(qdev);
- 			return -ENOMEM;
- 		} else {
--
--			lrg_buf_cb = &qdev->lrg_buf[i];
--			memset(lrg_buf_cb, 0, sizeof(struct ql_rcv_buf_cb));
- 			lrg_buf_cb->index = i;
--			lrg_buf_cb->skb = skb;
- 			/*
- 			 * We save some space to copy the ethhdr from first
- 			 * buffer
-@@ -2788,6 +2787,7 @@ static int ql_alloc_large_buffers(struct
- 				return -ENOMEM;
- 			}
- 
-+			lrg_buf_cb->skb = skb;
- 			dma_unmap_addr_set(lrg_buf_cb, mapaddr, map);
- 			dma_unmap_len_set(lrg_buf_cb, maplen,
- 					  qdev->lrg_buffer_len -
+diff --git a/drivers/scsi/lpfc/lpfc_nportdisc.c b/drivers/scsi/lpfc/lpfc_nportdisc.c
+index 21ec7b5b6c85..fefef2884d59 100644
+--- a/drivers/scsi/lpfc/lpfc_nportdisc.c
++++ b/drivers/scsi/lpfc/lpfc_nportdisc.c
+@@ -454,8 +454,10 @@ lpfc_rcv_plogi(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp,
+ 	 * single discovery thread, this will cause a huge delay in
+ 	 * discovery. Also this will cause multiple state machines
+ 	 * running in parallel for this node.
++	 * This only applies to a fabric environment.
+ 	 */
+-	if (ndlp->nlp_state == NLP_STE_PLOGI_ISSUE) {
++	if ((ndlp->nlp_state == NLP_STE_PLOGI_ISSUE) &&
++	    (vport->fc_flag & FC_FABRIC)) {
+ 		/* software abort outstanding PLOGI */
+ 		lpfc_els_abort(phba, ndlp);
+ 	}
+-- 
+2.20.1
+
 
 
