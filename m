@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA1CC32764
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 01:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46650C2D0DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 01:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3696208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 01:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BF2424653
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 01:58:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbgABBvk (ORCPT
+        id S1727594AbgABB6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 20:51:40 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:53984 "EHLO huawei.com"
+        Wed, 1 Jan 2020 20:58:32 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8208 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725895AbgABBvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 20:51:39 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 3D352BF1F07AC17C3AF6;
-        Thu,  2 Jan 2020 09:51:37 +0800 (CST)
+        id S1727544AbgABB6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jan 2020 20:58:31 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 33C092841182367BBE00;
+        Thu,  2 Jan 2020 09:58:29 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 2 Jan 2020 09:51:29 +0800
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 2 Jan 2020 09:58:20 +0800
 From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <martin.petersen@oracle.com>, <jejb@linux.ibm.com>
-CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+To:     <ysato@users.sourceforge.jp>, <dalias@libc.org>
+CC:     <linux-sh@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <chenzhou10@huawei.com>
-Subject: [PATCH next] scsi: pmcraid: replace dma_pool_alloc + memset with dma_pool_zalloc
-Date:   Thu, 2 Jan 2020 09:47:38 +0800
-Message-ID: <20200102014738.139575-1-chenzhou10@huawei.com>
+Subject: [PATCH next] sh: remove call to memset after dma_alloc_coherent
+Date:   Thu, 2 Jan 2020 09:54:30 +0800
+Message-ID: <20200102015430.140729-1-chenzhou10@huawei.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -43,35 +43,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use dma_pool_zalloc rather than dma_pool_alloc followed by memset with 0.
+Function dma_alloc_coherent use in buf already zeroes out memory,
+so memset is not needed.
 
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 ---
- drivers/scsi/pmcraid.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/sh/mm/consistent.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/scsi/pmcraid.c b/drivers/scsi/pmcraid.c
-index 7eb88fe..aa9ae2a 100644
---- a/drivers/scsi/pmcraid.c
-+++ b/drivers/scsi/pmcraid.c
-@@ -4652,7 +4652,7 @@ static int pmcraid_allocate_control_blocks(struct pmcraid_instance *pinstance)
- 
- 	for (i = 0; i < PMCRAID_MAX_CMD; i++) {
- 		pinstance->cmd_list[i]->ioa_cb =
--			dma_pool_alloc(
-+			dma_pool_zalloc(
- 				pinstance->control_pool,
- 				GFP_KERNEL,
- 				&(pinstance->cmd_list[i]->ioa_cb_bus_addr));
-@@ -4661,8 +4661,6 @@ static int pmcraid_allocate_control_blocks(struct pmcraid_instance *pinstance)
- 			pmcraid_release_control_blocks(pinstance, i);
- 			return -ENOMEM;
- 		}
--		memset(pinstance->cmd_list[i]->ioa_cb, 0,
--			sizeof(struct pmcraid_control_block));
+diff --git a/arch/sh/mm/consistent.c b/arch/sh/mm/consistent.c
+index 3169a34..0de206c 100644
+--- a/arch/sh/mm/consistent.c
++++ b/arch/sh/mm/consistent.c
+@@ -57,8 +57,6 @@ int __init platform_resource_setup_memory(struct platform_device *pdev,
+ 		return -ENOMEM;
  	}
- 	return 0;
- }
+ 
+-	memset(buf, 0, memsize);
+-
+ 	r->flags = IORESOURCE_MEM;
+ 	r->start = dma_handle;
+ 	r->end = r->start + memsize - 1;
 -- 
 2.7.4
 
