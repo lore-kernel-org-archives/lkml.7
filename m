@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6156FC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85ACEC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A3120848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5866C20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:52:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005526;
-	bh=Sa0Wq/spQZNysR2EdVjr6NZEGFYtDrLXYdngVGpyCps=;
+	s=default; t=1578005530;
+	bh=2UtYePbH9BvFGO0ZBIyEg1YlG7Ppbt5KXfY0NKANhfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nh7bYySmf4KtPJFsqDbs+37uK5GoqiIjjHAqdOkBCHIoFrJOyCm1lEY75qSz65Cg0
-	 4roiZn9whINlJUtzV8TM5An0bi39L8aCVPenMZS8OrGmZdnP4KsujKK+bplI6/lLMm
-	 CaeJ9IaKOvAjPu4D2yEcrcesnu9/SlV+LFRIDcjU=
+	b=cnbNAe5SIaL4ynt1lLsJXGuPcjmA/8/hliG7Oc9Gndexgj4GMcCOwGYNv43WaAvRq
+	 5s6Zawuoe2lhFFl5Ci2q3n+UPKIUyEzR+8nYnyPWMGGO1gHMEMyz+SFX71sFmV8UtD
+	 BF8K8zjQm/IvPSfx4athBxum3uHWuw8L2J3HFT3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbgABWXW (ORCPT
+        id S1729530AbgABWwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:23:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44682 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:52:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729215AbgABWXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:23:08 -0500
+        id S1728308AbgABWXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:23:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B860424679;
-        Thu,  2 Jan 2020 22:23:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C862520863;
+        Thu,  2 Jan 2020 22:23:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003788;
-        bh=Sa0Wq/spQZNysR2EdVjr6NZEGFYtDrLXYdngVGpyCps=;
+        s=default; t=1578003800;
+        bh=2UtYePbH9BvFGO0ZBIyEg1YlG7Ppbt5KXfY0NKANhfw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T/UyLCHCJNWZYEAb68ZIpvEDirUQN0D3Pm/AP8DWSwHUuE8VgWYl+UI30siKc/sQ9
-         +a24gRVuO1FpUKjFD6oW8UWKTQvwC6naeVDNFPrZEGCVpB3XqtV/RL7xmY0QnSSBBD
-         I62ZU0m4DL2DBjRgl3386ZY7+IViv1L4JXQwa7i4=
+        b=kxzkNpt1NYNhZ/upM/yWuoTfjf8vX/RD3Ziexh5X/Rxu3YvL+JmIrS/epxhBdeMyI
+         IyCn2WqlmrO6VYQO7Csdlkz3WFKORPZaLFyQH9pxFt6vcQSmniEekUhA6EdWDnaxRE
+         dwg10QFTPfoxylY6wRjGNInTBJMtGjXb94oyl0pw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        David Ahern <dsahern@gmail.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 103/114] sit: do not confirm neighbor when do pmtu update
-Date:   Thu,  2 Jan 2020 23:07:55 +0100
-Message-Id: <20200102220039.593132310@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Christoph Paasch <cpaasch@apple.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 4.19 108/114] tcp: do not send empty skb from tcp_write_xmit()
+Date:   Thu,  2 Jan 2020 23:08:00 +0100
+Message-Id: <20200102220040.041353549@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -61,39 +63,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 4d42df46d6372ece4cb4279870b46c2ea7304a47 ]
+[ Upstream commit 1f85e6267caca44b30c54711652b0726fadbb131 ]
 
-When do IPv6 tunnel PMTU update and calls __ip6_rt_update_pmtu() in the end,
-we should not call dst_confirm_neigh() as there is no two-way communication.
+Backport of commit fdfc5c8594c2 ("tcp: remove empty skb from
+write queue in error cases") in linux-4.14 stable triggered
+various bugs. One of them has been fixed in commit ba2ddb43f270
+("tcp: Don't dequeue SYN/FIN-segments from write-queue"), but
+we still have crashes in some occasions.
 
-v5: No change.
-v4: No change.
-v3: Do not remove dst_confirm_neigh, but add a new bool parameter in
-    dst_ops.update_pmtu to control whether we should do neighbor confirm.
-    Also split the big patch to small ones for each area.
-v2: Remove dst_confirm_neigh in __ip6_rt_update_pmtu.
+Root-cause is that when tcp_sendmsg() has allocated a fresh
+skb and could not append a fragment before being blocked
+in sk_stream_wait_memory(), tcp_write_xmit() might be called
+and decide to send this fresh and empty skb.
 
-Reviewed-by: Guillaume Nault <gnault@redhat.com>
-Acked-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Sending an empty packet is not only silly, it might have caused
+many issues we had in the past with tp->packets_out being
+out of sync.
+
+Fixes: c65f7f00c587 ("[TCP]: Simplify SKB data portion allocation with NETIF_F_SG.")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Christoph Paasch <cpaasch@apple.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Cc: Jason Baron <jbaron@akamai.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/sit.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/tcp_output.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/net/ipv6/sit.c
-+++ b/net/ipv6/sit.c
-@@ -943,7 +943,7 @@ static netdev_tx_t ipip6_tunnel_xmit(str
- 		}
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -2376,6 +2376,14 @@ static bool tcp_write_xmit(struct sock *
+ 		if (tcp_small_queue_check(sk, skb, 0))
+ 			break;
  
- 		if (tunnel->parms.iph.daddr)
--			skb_dst_update_pmtu(skb, mtu);
-+			skb_dst_update_pmtu_no_confirm(skb, mtu);
++		/* Argh, we hit an empty skb(), presumably a thread
++		 * is sleeping in sendmsg()/sk_stream_wait_memory().
++		 * We do not want to send a pure-ack packet and have
++		 * a strange looking rtx queue with empty packet(s).
++		 */
++		if (TCP_SKB_CB(skb)->end_seq == TCP_SKB_CB(skb)->seq)
++			break;
++
+ 		if (unlikely(tcp_transmit_skb(sk, skb, 1, gfp)))
+ 			break;
  
- 		if (skb->len > mtu && !skb_is_gso(skb)) {
- 			icmpv6_send(skb, ICMPV6_PKT_TOOBIG, 0, mtu);
 
 
