@@ -2,181 +2,78 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED0DC3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BD7C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3BFB21655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A7820866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 08:50:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XvrNbulz"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="qZiZ4j9L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgABIsO (ORCPT
+        id S1727869AbgABIuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 03:48:14 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37927 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727757AbgABIsO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 03:48:14 -0500
-Received: by mail-ot1-f66.google.com with SMTP id d7so51705596otf.5;
-        Thu, 02 Jan 2020 00:48:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lYK3JQAmW07FRU5GuNZTgBOd+vjFiils6tG0VLmuyGE=;
-        b=XvrNbulzxprjJqi8RpScnA140KqOgH0A3KIwDYeZHKhtNqXpKqoIH3DkDmMCVQ4mUL
-         UwesBRnFDTc16aXYRWU9fFLStptClVcntJFNz6OyMjwF05UXavP3leAtsROoVh410vm+
-         jUwytle5bVp/DrZEhUKPxt7VGX15m/li3nhKMCPQHhUUfTMLo4HrwFfUuHyhLRmPJosc
-         ZVN+FIUAGNI58UFohnNWgK+pW61uPy/3SkM8oE8zY+MwPijr+Ibg7angTkInKzlKJqfa
-         UB5p84iBYkGvBSTVKgL5bpv2MgeEExqeZUGno4Xaoq9OwJaoN+NtTQiaOofpO6zyJYpl
-         4DsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lYK3JQAmW07FRU5GuNZTgBOd+vjFiils6tG0VLmuyGE=;
-        b=ZQJ5XERqKOsE6PBlyf4fn+oUgSy18oD4/lCAZ7FkaLqy/4xf7DqL24c5KGhfLEPeEI
-         pYCVqpqndrHqQQ4Aja+Q6Su+voHcPL1Jpp+RJdnqUKGOXv0ECmRojDjWvmU/CdvFD8BS
-         jAqi1HuHGJ0aSqIsaNiF9gXJ+PD371Ue6xBmeMCEfKQqbJjeT+U0eM4TNEClUdeUMoh7
-         BMb+EWppXnvZU896LYdY6PCegsR/fnlPmM9hRFY5XahtHdRoHWnNLXDbBR8ovsbf+GGM
-         y9t74z1csZvLCMOTTVhu0zxptnEw2hLGwdXh4TO47RlgppCEEDNt7bhaIc/vPAJ6Ywnm
-         IeNg==
-X-Gm-Message-State: APjAAAU2uebq3i4Wcz6805ZKdpsDJJG8ZUJzM9lPpX4r/CfU0UBg1uCs
-        NIdb79qFbpEPQbOjsViEc4ToDt9FIWLoMeRZo0k=
-X-Google-Smtp-Source: APXvYqxeuKbXHxGtyzku07WE9C0N/ua7Tl5Z8JOlkhllIuUswqzYTzv/m5bf/QtdXNVE3v+FavUIVxFQjdB8xF8hNl8=
-X-Received: by 2002:a05:6830:1188:: with SMTP id u8mr91290992otq.274.1577954893533;
- Thu, 02 Jan 2020 00:48:13 -0800 (PST)
+        Thu, 2 Jan 2020 03:50:21 -0500
+Received: from onstation.org ([52.200.56.107]:55870 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727817AbgABIuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 03:50:21 -0500
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 7FA203E9DC;
+        Thu,  2 Jan 2020 08:50:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1577955020;
+        bh=Zg1Ytjh1mZrl/A2B9wds0R8NQEs0Mryuxu9+rk+Zo2s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qZiZ4j9LMO1n21GkAHVTENN41A/sRat6/qDvYtnPv6c1tR1FrKqkQOGmVlyJgBB4s
+         uMAj25A9y+cIRhu3KsIfwpsjmDYzAmhYYjJTMhXMquqGo+fFoI/+epsRodF6aMZ3CZ
+         RnAjlyiQcfKq2qfrGp67wdT7UCMCqta+ew3HBbUQ=
+Date:   Thu, 2 Jan 2020 03:50:20 -0500
+From:   Brian Masney <masneyb@onstation.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] firmware: qcom: scm: add 32 bit iommu page table support
+Message-ID: <20200102085020.GA14173@onstation.org>
+References: <20200101033704.32264-1-masneyb@onstation.org>
+ <20200102073607.GS549437@yoga>
 MIME-Version: 1.0
-References: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20191213084748.11210-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <20191219233525.GA9478@bogus>
-In-Reply-To: <20191219233525.GA9478@bogus>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 2 Jan 2020 08:47:47 +0000
-Message-ID: <CA+V-a8vO_3P3vDFVuKLJAK7v99E7qKVAei0Kmba8tKist7mAaw@mail.gmail.com>
-Subject: Re: [v2 4/6] dt-bindings: PCI: rcar: Add bindings for R-Car PCIe
- endpoint controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200102073607.GS549437@yoga>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Hi Bjorn,
 
-Thank you for the review.
+On Wed, Jan 01, 2020 at 11:36:07PM -0800, Bjorn Andersson wrote:
+> On Tue 31 Dec 19:37 PST 2019, Brian Masney wrote:
+> 
+> > Add 32 bit implmentations of the functions
+> > __qcom_scm_iommu_secure_ptbl_size() and
+> > __qcom_scm_iommu_secure_ptbl_init() that are required by the qcom_iommu
+> > driver.
+> > 
+> 
+> Hi Brian,
+> 
+> This looks good, but I was hoping to  hoping to reach a conclusion and
+> merge [1] - which in patch 16 squashes the argument filling boiler plate
+> code of the 32 and 64-bit version of scm and hence implements the same.
+> 
+> If you have time to take a peek at this series I would greatly
+> appreciate it (not a lot of people testing 32-bit these days...)
+> 
+> [1] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=215943
 
-On Thu, Dec 19, 2019 at 11:35 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, Dec 13, 2019 at 08:47:46AM +0000, Lad Prabhakar wrote:
-> > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > This patch adds the bindings for the R-Car PCIe endpoint driver.
-> >
-> > Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  .../devicetree/bindings/pci/rcar-pci-ep.txt        | 37 ++++++++++++++++++++++
-> >  1 file changed, 37 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
->
-> Please make this a DT schema.
->
-sure will do.
+I'll look at that series this weekend and test it on arm32.
 
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
-> > new file mode 100644
-> > index 0000000..7f0a97e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
-> > @@ -0,0 +1,37 @@
-> > +* Renesas R-Car PCIe Endpoint Controller DT description
-> > +
-> > +Required properties:
-> > +         "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
->
-> Normal ordering is: renesas,r8a774c0-pcie-ep
->
-> > +         "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
-> > +                                  RZ/G2 compatible device.
-> > +
-> > +         When compatible with the generic version, nodes must list the
-> > +         SoC-specific version corresponding to the platform first
-> > +         followed by the generic version.
-> > +
-> > +- reg: base address and length of the PCIe controller registers.
-> > +- outbound-ranges: outbound windows base address and length including the flags.
-> > +- resets: Must contain phandles to PCIe-related reset lines exposed by IP block
->
-> How many?
->
-should be one.
-
-> > +- clocks: from common clock binding: clock specifiers for the PCIe controller
-> > +      clock.
-> > +- clock-names: from common clock binding: should be "pcie".
-> > +
-> > +Optional Property:
-> > +- max-functions: Maximum number of functions that can be configured (default 1).
-> > +
-> > +Example:
-> > +
-> > +SoC-specific DT Entry:
-> > +
-> > +     pcie_ep: pcie_ep@fe000000 {
->
-> pcie-ep@
->
-will fix that.
-
-Cheers,
---Prabhakar
-
-> > +             compatible = "renesas,pcie-ep-r8a774c0", "renesas,pcie-rcar-gen2";
-> > +             reg = <0 0xfe000000 0 0x80000>;
-> > +             outbound-ranges = <0xa 0x0 0xfe100000 0 0x000100000
-> > +                                0xa 0x0 0xfe200000 0 0x000200000
-> > +                                0x6 0x0 0x30000000 0 0x008000000
-> > +                                0x6 0x0 0x38000000 0 0x008000000>;
-> > +             clocks = <&cpg CPG_MOD 319>;
-> > +             clock-names = "pcie";
-> > +             power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-> > +             resets = <&cpg 319>;
-> > +     };
-> > --
-> > 2.7.4
-> >
+Brian
