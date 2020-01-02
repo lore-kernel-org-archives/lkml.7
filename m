@@ -2,176 +2,85 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BCAC2D0DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 02:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEF4C2D0DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 02:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD27520866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 02:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8A8420866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 02:35:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="04ayTH0C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbgABCdQ (ORCPT
+        id S1727582AbgABCfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jan 2020 21:33:16 -0500
-Received: from mga01.intel.com ([192.55.52.88]:51762 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727509AbgABCdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jan 2020 21:33:16 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jan 2020 18:33:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,385,1571727600"; 
-   d="scan'208";a="244494271"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by fmsmga004.fm.intel.com with ESMTP; 01 Jan 2020 18:33:13 -0800
-Cc:     baolu.lu@linux.intel.com, "Raj, Ashok" <ashok.raj@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>, Peter Xu <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 0/9] Use 1st-level for IOVA translation
-To:     "Liu, Yi L" <yi.l.liu@intel.com>, Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-References: <20191224074502.5545-1-baolu.lu@linux.intel.com>
- <8b40dd00-3bec-1fd9-9ba7-0db9fd727e52@linux.intel.com>
- <A2975661238FB949B60364EF0F2C25743A16466C@SHSMSX104.ccr.corp.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <d04092c6-bc50-a320-0fdb-a734ec02f11c@linux.intel.com>
-Date:   Thu, 2 Jan 2020 10:32:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <A2975661238FB949B60364EF0F2C25743A16466C@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 1 Jan 2020 21:35:23 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45948 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727511AbgABCfX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jan 2020 21:35:23 -0500
+Received: by mail-pl1-f194.google.com with SMTP id b22so17265531pls.12
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jan 2020 18:35:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=jZH1Nd14C4y1v7M9e0zeyyhv8KS4mYmJ4ps3dkwUq6U=;
+        b=04ayTH0CAnzc5Ez1133zMZdevAYgMMM7WWWlbvODLlp8zszinnk7Pyum9j6uqkV6p5
+         DHqgZYtFq6L7zjdU6pTsbukU1Q2zSmA5xGFQAXbHiSRTEKlWD1ETc7qbDiOrGjwi+eHx
+         yzQpUgaeSGtmqRecllkSgYX2Z7OC36BykU5wAXcsIsHller+5thwzlZgW9m0wnGJQFFz
+         4s9bgKxfWM33Sx1A1xyrbTJnjWVvGILg/BH1SAQQbgpvdODGkiZw6FvtoePhVfdlj/RU
+         iCpfp/5xs4DgnfykW4no5cybXS+y4RYDB0iw52JKPe00LA+421GYP1lQLYHjkcSXwb3A
+         MD7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jZH1Nd14C4y1v7M9e0zeyyhv8KS4mYmJ4ps3dkwUq6U=;
+        b=YjHko+7z7lH5lcFlgBTNaLJaCBSXZxhZ7AtK9o45M8XGoSsG3b3GytlhkpzlPF7xxj
+         OL+Lt4OLestMOtc35K3/odpJS5sNF9KkZbdgKjGMnB5d1pj26MCRZIYT8Vzh8gqF5TDl
+         JUsliJs3yboSX0Ux+15LTK8AX72QAe5J5KzS7pQRwM2ZRoc3zLmnONXtW1weJYgWiGc4
+         CmAF+/UthRtHO5tG+AGBeuIC3P6Wi6BAoRrZNvVBlx+LAEJGL8sIcXRfD6/0GbGfw0BZ
+         IRluLiFX2tfVv+b1dOILk4PSZxxEL6TCSsHpV8H3WGigUAJP8LP/6hXNtPXZME9eUMnK
+         57UA==
+X-Gm-Message-State: APjAAAWxVMrz3hAYJmMJijrNZBUe+67ltDhVbMZzq0p4Wpwa0Drz98hH
+        1pic72YvIcSiKz+ma1mLiIv++w==
+X-Google-Smtp-Source: APXvYqyT3qG43+wGoOz0zi+FdvZcHKb2ZzuXDiM3Du0pSqmnoVlfUd9bx47Hn9ghCQS8k7/Or4nz2Q==
+X-Received: by 2002:a17:902:b711:: with SMTP id d17mr54308596pls.162.1577932522822;
+        Wed, 01 Jan 2020 18:35:22 -0800 (PST)
+Received: from libai.bytedance.net ([61.120.150.71])
+        by smtp.gmail.com with ESMTPSA id s18sm56572809pfh.179.2020.01.01.18.35.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 Jan 2020 18:35:22 -0800 (PST)
+From:   zhenwei pi <pizhenwei@bytedance.com>
+To:     gregkh@linuxfoundation.org, arnd@arndb.de
+Cc:     linux-kernel@vger.kernel.org, pizhenwei@bytedance.com
+Subject: [PATCH v2 0/2] misc: pvpanic: add crash loaded event
+Date:   Thu,  2 Jan 2020 10:35:11 +0800
+Message-Id: <20200102023513.318836-1-pizhenwei@bytedance.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yi,
+Add PVPANIC_CRASH_LOADED bit for pvpanic event, it means that guest
+kernel actually hit a kernel panic, but the guest kernel wants to
+handle by itself.
 
-On 1/2/20 10:31 AM, Liu, Yi L wrote:
->> From: Lu Baolu [mailto:baolu.lu@linux.intel.com]
->> Sent: Thursday, January 2, 2020 7:38 AM
->> To: Joerg Roedel <joro@8bytes.org>; David Woodhouse <dwmw2@infradead.org>;
->> Alex Williamson <alex.williamson@redhat.com>
->> Subject: Re: [PATCH v5 0/9] Use 1st-level for IOVA translation
->>
->> On 12/24/19 3:44 PM, Lu Baolu wrote:
->>> Intel VT-d in scalable mode supports two types of page tables for DMA
->>> translation: the first level page table and the second level page
->>> table. The first level page table uses the same format as the CPU page
->>> table, while the second level page table keeps compatible with
->>> previous formats. The software is able to choose any one of them for
->>> DMA remapping according to the use case.
->>>
->>> This patchset aims to move IOVA (I/O Virtual Address) translation to
->>> 1st-level page table in scalable mode. This will simplify vIOMMU
->>> (IOMMU simulated by VM hypervisor) design by using the two-stage
->>> translation, a.k.a. nested mode translation.
->>>
->>> As Intel VT-d architecture offers caching mode, guest IOVA (GIOVA)
->>> support is currently implemented in a shadow page manner. The device
->>> simulation software, like QEMU, has to figure out GIOVA->GPA mappings
->>> and write them to a shadowed page table, which will be used by the
->>> physical IOMMU. Each time when mappings are created or destroyed in
->>> vIOMMU, the simulation software has to intervene. Hence, the changes
->>> on GIOVA->GPA could be shadowed to host.
->>>
->>>
->>>        .-----------.
->>>        |  vIOMMU   |
->>>        |-----------|                 .--------------------.
->>>        |           |IOTLB flush trap |        QEMU        |
->>>        .-----------. (map/unmap)     |--------------------|
->>>        |GIOVA->GPA |---------------->|    .------------.  |
->>>        '-----------'                 |    | GIOVA->HPA |  |
->>>        |           |                 |    '------------'  |
->>>        '-----------'                 |                    |
->>>                                      |                    |
->>>                                      '--------------------'
->>>                                                   |
->>>               <------------------------------------
->>>               |
->>>               v VFIO/IOMMU API
->>>         .-----------.
->>>         |  pIOMMU   |
->>>         |-----------|
->>>         |           |
->>>         .-----------.
->>>         |GIOVA->HPA |
->>>         '-----------'
->>>         |           |
->>>         '-----------'
->>>
->>> In VT-d 3.0, scalable mode is introduced, which offers two-level
->>> translation page tables and nested translation mode. Regards to GIOVA
->>> support, it can be simplified by 1) moving the GIOVA support over
->>> 1st-level page table to store GIOVA->GPA mapping in vIOMMU,
->>> 2) binding vIOMMU 1st level page table to the pIOMMU, 3) using pIOMMU
->>> second level for GPA->HPA translation, and 4) enable nested (a.k.a.
->>> dual-stage) translation in host. Compared with current shadow GIOVA
->>> support, the new approach makes the vIOMMU design simpler and more
->>> efficient as we only need to flush the pIOMMU IOTLB and possible
->>> device-IOTLB when an IOVA mapping in vIOMMU is torn down.
->>>
->>>        .-----------.
->>>        |  vIOMMU   |
->>>        |-----------|                 .-----------.
->>>        |           |IOTLB flush trap |   QEMU    |
->>>        .-----------.    (unmap)      |-----------|
->>>        |GIOVA->GPA |---------------->|           |
->>>        '-----------'                 '-----------'
->>>        |           |                       |
->>>        '-----------'                       |
->>>              <------------------------------
->>>              |      VFIO/IOMMU
->>>              |  cache invalidation and
->>>              | guest gpd bind interfaces
->>>              v
->>>        .-----------.
->>>        |  pIOMMU   |
->>>        |-----------|
->>>        .-----------.
->>>        |GIOVA->GPA |<---First level
->>>        '-----------'
->>>        | GPA->HPA  |<---Scond level
->>>        '-----------'
->>>        '-----------'
->>>
->>> This patch applies the first level page table for IOVA translation
->>> unless the DOMAIN_ATTR_NESTING domain attribution has been set.
->>> Setting of this attribution means the second level will be used to map
->>> gPA (guest physical address) to hPA (host physical address), and the
->>> mappings between gVA (guest virtual address) and gPA will be
->>> maintained by the guest with the page table address binding to host's
->>> first level.
->>>
->>> Based-on-idea-by: Ashok Raj<ashok.raj@intel.com>
->>> Based-on-idea-by: Kevin Tian<kevin.tian@intel.com>
->>> Based-on-idea-by: Liu Yi L<yi.l.liu@intel.com>
->>> Based-on-idea-by: Jacob Pan<jacob.jun.pan@linux.intel.com>
->>> Based-on-idea-by: Sanjay Kumar<sanjay.k.kumar@intel.com>
->>> Based-on-idea-by: Lu Baolu<baolu.lu@linux.intel.com>
->>
->> Queued all patches for v5.6.
-> 
-> Reviewed-by: Liu Yi L <yi.l.liu@intel.com>
-> 
-> Aha, looks like I forgot to give my Reviewed-by after offline review..
-> Yeah, this patchset looks good to me.
+Suggested by Greg KH, move the bit definition to uapi header file
+for the programs outside of kernel.
 
-Thank you, Yi. Very appreciated for your time.
+zhenwei pi (2):
+  misc: pvpanic: move bit definition to uapi header file
+  misc: pvpanic: add crash loaded event
 
-Best regards,
--baolu
+ drivers/misc/pvpanic.c      | 12 +++++++++---
+ include/uapi/misc/pvpanic.h |  9 +++++++++
+ 2 files changed, 18 insertions(+), 3 deletions(-)
+ create mode 100644 include/uapi/misc/pvpanic.h
+
+-- 
+2.11.0
+
