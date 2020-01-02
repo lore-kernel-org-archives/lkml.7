@@ -4,160 +4,209 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C872EC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B325C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0EA72072C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26A702072C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 15:01:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbgABPBA (ORCPT
+        id S1728666AbgABPBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 10:01:00 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:37957 "EHLO
+        Thu, 2 Jan 2020 10:01:42 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:35147 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728571AbgABPBA (ORCPT
+        with ESMTP id S1728571AbgABPBl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 10:01:00 -0500
+        Thu, 2 Jan 2020 10:01:41 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MrhDg-1jYVqE2Tga-00ndiR; Thu, 02 Jan 2020 16:00:06 +0100
+ 1MrPyJ-1jYEoj3ART-00oSvc; Thu, 02 Jan 2020 16:00:38 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Hannes Reinecke <hare@suse.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 10/22] compat_ioctl: add scsi_compat_ioctl
-Date:   Thu,  2 Jan 2020 15:55:28 +0100
-Message-Id: <20200102145552.1853992-11-arnd@arndb.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jens Axboe <axboe@kernel.dk>, Hannes Reinecke <hare@suse.com>,
+        Martin Wilck <mwilck@suse.com>,
+        Amol Surati <suratiamol@gmail.com>, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 12/22] compat_ioctl: ide: floppy: add handler
+Date:   Thu,  2 Jan 2020 15:55:30 +0100
+Message-Id: <20200102145552.1853992-13-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20200102145552.1853992-1-arnd@arndb.de>
 References: <20200102145552.1853992-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:wWyOxkPxks6ZLGDfVWfB8jnnZ3eQfd6m6seDw5PYn1G0Q10JVRK
- 4AMdasffkBmhIydWEoH7T9ScuaYHbmIYzx+4jUOHHbNvU0cNDRrnxCczvfO3dh3CYAaFlpf
- jwSe4DfQdi8xyS9uL6lg+3WOkvoA5jYpK0um+F5NMWagaJ2WEXZCg6VHdqepgTb/JwoNpVz
- uoLzfpEW7Jnc5jcgB+T9g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:JasbQQ2pZHY=:C73jn5i5YVNLi2pVZJvlfn
- mJ55iUBUXDj6d45Xdi7PSUMvxbjyfoK2fjonVZ8uguYHWiZ8mDeKTOCtzQb+HQ4QMNjMFXKJE
- ziQHt3euqxU29a/3q0LitLy9Xw+yXySToZ/07WYR+jEC2teqYlc4SC7Wz0/jBfZCltDUAWAxO
- HG7OA1tvZDRXPaLNoiMLneiPOsGpJl9kSQIe4F4ww57owUJdVBoWJVDvAg74nPwF6WBL1RhoL
- BLAUPZ5v9yxADTkniNf9oL3NcPEqopVYLvV1gAd9PUEE/WXhPGPDClLJ/ISeNxc5UFyxwLlE4
- jJBq/Wz6Sk0OjairsgMwVGkePt3HuaPO+QXbtkTAzYTfWvg8oZck7j1FyHq2rp2qqVxKepeGK
- 16R550NWjA5MsW8kNregylyT5OhymP2aMJHiIlH87SXkRVmB1rmSHD0AcdPCZiCLL7DvxnVQz
- sj3UIP1976nDtaq4EsYIy8o7zN3oKyB2/SUMSRRLw0RuYZeBxWkdVW1CpvniLybGmvpKYbO7T
- O1OKsCIxrAg1/LXl8HFTTII4dBKJUyA6VLJsa/pF79eQm88PfIzUfPoSXTsO8UTgl4JdLZir2
- N88EjMm/iuHcjAIs9Sdo+wJW8lXwcGsjz9umB8dW4ZB+dXPUCULt7X9ecnCXIxM9QijyFsklx
- VzzAYDV1e449PTQFTWVxWZOBHvtpiO1keC47HZJucn+Ec3vzLPLgMMS3N99NmKsNeV2iKQ6w7
- EacpwBCCiboM8Sy7b0IVCW3gLrr1lv12xD0zkUxfE27z4luCSOJqN0lN12X6iabUGs6jTD/2R
- w18vc/UUpTfk3AES8Lf1FJzzbPkkxqpNPvZM8pN8cYWryKi4+jbEdamlKtwsmggOZHKiWdRWW
- YkGNaEthjv6Z041GvVRQ==
+X-Provags-ID: V03:K1:PpFBLdgmMhPS8ohTpLjgVgR48oR0XOCUBItZhe4AT+xbR/Z1a2P
+ tOr70kI+XNqVktlBmCJCRAC0t4kgNfRUShbGiTabC8AJY1kNDlrV9jR2dyprHVvETZyPu9o
+ ZJxX344gvTkx0ZlPzneHfYkA0Qlf4nsy8ysQUyX9BeSBXQ/qvKwUhpyjRGJJ6mgRBYep3q/
+ b5dmCICcpaPeigK/V3yKQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5RxWy8LIVGo=:GvElw8pEl/9N4GkxpgjMXj
+ IVnffGDzbcQjHuV1iuFtBO5yXoPah459tyQyTgXkdo9jqSTxhMMONNM7ZYrRiDr9+Sv+JROke
+ H3S5HtBLZc7rG/sYckHk5sCfJ64Uk0O5auhRcVNBHuPbQyuDDNRkG0GK25QHUYLeOcPb+wuPg
+ vjozaItY9XbRl2RCWnVKOHSZ8Voj5qecb2hQcIVTQecgdVQo004l9gSA70S80Fa+L+uosydyL
+ msnV7IqB0N5Xrq4tWMRjzb1qYw/6l1RSdAcPEmE4slbogWBd9+W9eiOiLC9+hXtZ3gd68O5g9
+ bM9gWyaa9LkiaeKrS704tDGSN3sE2GYEDoBXNDfwQ9ewruEkz/tVXRJx4O7mZjg6/CRCO1/q3
+ zqYtw2Sdb+zkMwAnrGi7o97qVLisxk6M+6PjPgzLg/USyrAO+7Ftzo6OBAxHCR44Wt5giofI8
+ ZHRFKPOM1Axh59370WMyZpGv+X2oBDTdrjx5/8zMfDUt2X99xbxa3zZq/S563bCC1Ivl3SD3V
+ zBuaZnnTwRhlMMfFxoCCymAI++IMFVWm5g691ANirPDKQSMCEQZLy+2LAtfzP2vdKODgBWDYx
+ t6lwdsBjwpjEmm7J4wbbWaBxv8w7LuALQ+pcDieNjEyv9pBx9MpLBjfAUrbd0zfTGU665O4pk
+ iWWniBlS7h2/oKVTIdlkZXm6uKeHt5m28RIHj9vJMD+AMjIUGcX7EwrFxwfgu39zfW/NmDMj3
+ xbQBuJhMsPOqGbm0ybegCQOGhNKYLQVLLFU6Su5LwckOvYXUITbHnBMzJLG9yM//2I0/KHa5v
+ LvBnEg7i4BKBlu6QpRNoOF5Kl9Fj5b/TBNoeg9PU+giDPRF8BONAGD9/LXhHJF2sHT/S3hPWL
+ x2D3qEaPKuFT16Ii06gA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to move the compat handling for SCSI ioctl commands out of
-fs/compat_ioctl.c into the individual drivers, we need a helper function
-first to match the native ioctl handler called by sd, sr, st, etc.
+Rather than relying on fs/compat_ioctl.c, this adds support
+for a compat_ioctl() callback in the ide-floppy driver directly,
+which lets it translate the scsi commands.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/scsi/scsi_ioctl.c | 54 +++++++++++++++++++++++++++++----------
- include/scsi/scsi_ioctl.h |  1 +
- 2 files changed, 41 insertions(+), 14 deletions(-)
+ drivers/ide/ide-floppy.c       |  4 ++++
+ drivers/ide/ide-floppy.h       |  2 ++
+ drivers/ide/ide-floppy_ioctl.c | 36 ++++++++++++++++++++++++++++++++++
+ drivers/ide/ide-gd.c           | 17 ++++++++++++++++
+ include/linux/ide.h            |  2 ++
+ 5 files changed, 61 insertions(+)
 
-diff --git a/drivers/scsi/scsi_ioctl.c b/drivers/scsi/scsi_ioctl.c
-index 57bcd05605bf..8f3af87b6bb0 100644
---- a/drivers/scsi/scsi_ioctl.c
-+++ b/drivers/scsi/scsi_ioctl.c
-@@ -189,17 +189,7 @@ static int scsi_ioctl_get_pci(struct scsi_device *sdev, void __user *arg)
+diff --git a/drivers/ide/ide-floppy.c b/drivers/ide/ide-floppy.c
+index 1ea2f9e82bf8..1fe1f9d37a51 100644
+--- a/drivers/ide/ide-floppy.c
++++ b/drivers/ide/ide-floppy.c
+@@ -19,6 +19,7 @@
+ #include <linux/types.h>
+ #include <linux/string.h>
+ #include <linux/kernel.h>
++#include <linux/compat.h>
+ #include <linux/delay.h>
+ #include <linux/timer.h>
+ #include <linux/mm.h>
+@@ -546,4 +547,7 @@ const struct ide_disk_ops ide_atapi_disk_ops = {
+ 	.set_doorlock	= ide_set_media_lock,
+ 	.do_request	= ide_floppy_do_request,
+ 	.ioctl		= ide_floppy_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl	= ide_floppy_compat_ioctl,
++#endif
+ };
+diff --git a/drivers/ide/ide-floppy.h b/drivers/ide/ide-floppy.h
+index 13c9b4b6d75e..8505a5f58f4e 100644
+--- a/drivers/ide/ide-floppy.h
++++ b/drivers/ide/ide-floppy.h
+@@ -26,6 +26,8 @@ void ide_floppy_create_read_capacity_cmd(struct ide_atapi_pc *);
+ /* ide-floppy_ioctl.c */
+ int ide_floppy_ioctl(ide_drive_t *, struct block_device *, fmode_t,
+ 		     unsigned int, unsigned long);
++int ide_floppy_compat_ioctl(ide_drive_t *, struct block_device *, fmode_t,
++			    unsigned int, unsigned long);
+ 
+ #ifdef CONFIG_IDE_PROC_FS
+ /* ide-floppy_proc.c */
+diff --git a/drivers/ide/ide-floppy_ioctl.c b/drivers/ide/ide-floppy_ioctl.c
+index 40a2ebe34e1d..4fd70f804d6f 100644
+--- a/drivers/ide/ide-floppy_ioctl.c
++++ b/drivers/ide/ide-floppy_ioctl.c
+@@ -5,6 +5,7 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/ide.h>
++#include <linux/compat.h>
+ #include <linux/cdrom.h>
+ #include <linux/mutex.h>
+ 
+@@ -302,3 +303,38 @@ int ide_floppy_ioctl(ide_drive_t *drive, struct block_device *bdev,
+ 	mutex_unlock(&ide_floppy_ioctl_mutex);
+ 	return err;
  }
- 
- 
--/**
-- * scsi_ioctl - Dispatch ioctl to scsi device
-- * @sdev: scsi device receiving ioctl
-- * @cmd: which ioctl is it
-- * @arg: data associated with ioctl
-- *
-- * Description: The scsi_ioctl() function differs from most ioctls in that it
-- * does not take a major/minor number as the dev field.  Rather, it takes
-- * a pointer to a &struct scsi_device.
-- */
--int scsi_ioctl(struct scsi_device *sdev, int cmd, void __user *arg)
-+static int scsi_ioctl_common(struct scsi_device *sdev, int cmd, void __user *arg)
- {
- 	char scsi_cmd[MAX_COMMAND_SIZE];
- 	struct scsi_sense_hdr sense_hdr;
-@@ -266,14 +256,50 @@ int scsi_ioctl(struct scsi_device *sdev, int cmd, void __user *arg)
-                 return scsi_ioctl_get_pci(sdev, arg);
- 	case SG_SCSI_RESET:
- 		return scsi_ioctl_reset(sdev, arg);
--	default:
--		if (sdev->host->hostt->ioctl)
--			return sdev->host->hostt->ioctl(sdev, cmd, arg);
- 	}
-+	return -ENOIOCTLCMD;
-+}
 +
-+/**
-+ * scsi_ioctl - Dispatch ioctl to scsi device
-+ * @sdev: scsi device receiving ioctl
-+ * @cmd: which ioctl is it
-+ * @arg: data associated with ioctl
-+ *
-+ * Description: The scsi_ioctl() function differs from most ioctls in that it
-+ * does not take a major/minor number as the dev field.  Rather, it takes
-+ * a pointer to a &struct scsi_device.
-+ */
-+int scsi_ioctl(struct scsi_device *sdev, int cmd, void __user *arg)
++#ifdef CONFIG_COMPAT
++int ide_floppy_compat_ioctl(ide_drive_t *drive, struct block_device *bdev,
++			    fmode_t mode, unsigned int cmd, unsigned long arg)
 +{
-+	int ret = scsi_ioctl_common(sdev, cmd, arg);
++	struct ide_atapi_pc pc;
++	void __user *argp = compat_ptr(arg);
++	int err;
 +
-+	if (ret != -ENOIOCTLCMD)
-+		return ret;
++	mutex_lock(&ide_floppy_ioctl_mutex);
++	if (cmd == CDROMEJECT || cmd == CDROM_LOCKDOOR) {
++		err = ide_floppy_lockdoor(drive, &pc, arg, cmd);
++		goto out;
++	}
 +
-+	if (sdev->host->hostt->ioctl)
-+		return sdev->host->hostt->ioctl(sdev, cmd, arg);
++	err = ide_floppy_format_ioctl(drive, &pc, mode, cmd, argp);
++	if (err != -ENOTTY)
++		goto out;
 +
- 	return -EINVAL;
++	/*
++	 * skip SCSI_IOCTL_SEND_COMMAND (deprecated)
++	 * and CDROM_SEND_PACKET (legacy) ioctls
++	 */
++	if (cmd != CDROM_SEND_PACKET && cmd != SCSI_IOCTL_SEND_COMMAND)
++		err = scsi_cmd_blk_ioctl(bdev, mode, cmd, argp);
++
++	/*
++	 * there is no generic_ide_compat_ioctl(), that is handled
++	 * through compat_blkdev_ioctl().
++	 */
++out:
++	mutex_unlock(&ide_floppy_ioctl_mutex);
++	return err;
++}
++#endif
+diff --git a/drivers/ide/ide-gd.c b/drivers/ide/ide-gd.c
+index dba9ad5c97b3..1bb99b556393 100644
+--- a/drivers/ide/ide-gd.c
++++ b/drivers/ide/ide-gd.c
+@@ -341,11 +341,28 @@ static int ide_gd_ioctl(struct block_device *bdev, fmode_t mode,
+ 	return drive->disk_ops->ioctl(drive, bdev, mode, cmd, arg);
  }
- EXPORT_SYMBOL(scsi_ioctl);
  
 +#ifdef CONFIG_COMPAT
-+int scsi_compat_ioctl(struct scsi_device *sdev, int cmd, void __user *arg)
++static int ide_gd_compat_ioctl(struct block_device *bdev, fmode_t mode,
++			       unsigned int cmd, unsigned long arg)
 +{
-+	int ret = scsi_ioctl_common(sdev, cmd, arg);
++	struct ide_disk_obj *idkp = ide_drv_g(bdev->bd_disk, ide_disk_obj);
++	ide_drive_t *drive = idkp->drive;
 +
-+	if (ret != -ENOIOCTLCMD)
-+		return ret;
++	if (!drive->disk_ops->compat_ioctl)
++		return -ENOIOCTLCMD;
 +
-+	if (sdev->host->hostt->compat_ioctl)
-+		return sdev->host->hostt->compat_ioctl(sdev, cmd, arg);
-+
-+	return ret;
++	return drive->disk_ops->compat_ioctl(drive, bdev, mode, cmd, arg);
 +}
-+EXPORT_SYMBOL(scsi_compat_ioctl);
 +#endif
 +
- /*
-  * We can process a reset even when a device isn't fully operable.
-  */
-diff --git a/include/scsi/scsi_ioctl.h b/include/scsi/scsi_ioctl.h
-index 5101e987c0ef..4fe69d863b5d 100644
---- a/include/scsi/scsi_ioctl.h
-+++ b/include/scsi/scsi_ioctl.h
-@@ -44,6 +44,7 @@ typedef struct scsi_fctargaddress {
- int scsi_ioctl_block_when_processing_errors(struct scsi_device *sdev,
- 		int cmd, bool ndelay);
- extern int scsi_ioctl(struct scsi_device *, int, void __user *);
-+extern int scsi_compat_ioctl(struct scsi_device *sdev, int cmd, void __user *arg);
+ static const struct block_device_operations ide_gd_ops = {
+ 	.owner			= THIS_MODULE,
+ 	.open			= ide_gd_unlocked_open,
+ 	.release		= ide_gd_release,
+ 	.ioctl			= ide_gd_ioctl,
++#ifdef CONFIG_COMPAT
++	.ioctl			= ide_gd_compat_ioctl,
++#endif
+ 	.getgeo			= ide_gd_getgeo,
+ 	.check_events		= ide_gd_check_events,
+ 	.unlock_native_capacity	= ide_gd_unlock_native_capacity,
+diff --git a/include/linux/ide.h b/include/linux/ide.h
+index 46b771d6999e..06dae6438557 100644
+--- a/include/linux/ide.h
++++ b/include/linux/ide.h
+@@ -413,6 +413,8 @@ struct ide_disk_ops {
+ 				      sector_t);
+ 	int		(*ioctl)(struct ide_drive_s *, struct block_device *,
+ 				 fmode_t, unsigned int, unsigned long);
++	int		(*compat_ioctl)(struct ide_drive_s *, struct block_device *,
++					fmode_t, unsigned int, unsigned long);
+ };
  
- #endif /* __KERNEL__ */
- #endif /* _SCSI_IOCTL_H */
+ /* ATAPI device flags */
 -- 
 2.20.0
 
