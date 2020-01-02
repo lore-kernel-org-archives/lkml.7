@@ -2,53 +2,53 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FCAC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A155C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C5220866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5054320866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:57:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005861;
-	bh=Xm07mB2Dsc0ytOIQKa0Wk2NIXYvBxnC+hk5c6Mj++e8=;
+	s=default; t=1578005866;
+	bh=PYvFAs/LwRcSGbUX8HfwaeFqGfzKvVQu4P/0YcvhXnQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Brt6voErEjlZo3X7j1/VaUsQ4pucmy1JFoz15t4xKHYAEh99+cLJm4xqoCgBVzrF3
-	 0aD+nj3IBLoiruNI4WCfMxFVFxk/gq91em8bLf0XZK/ngcfLnRrRh7B25DrhmJnR6J
-	 FJW0hsUZZhCXJ70LPStwKcJgP70guRbchkEjCT6o=
+	b=xK0AJ2jmiMmr5vMihwGzm4Oq8KjfM/J/zqr1cYtJqYryudWTNLbvo3bhZbl9YCS+q
+	 +M0uArp0G0tL6LSBn9cpqTqcojMY9K9au4xNnmDBKDuR+yd0fQn8RV/YOQXLNQKVpK
+	 TlEFhgyMZ2reYcwlpAXU/2dwj9dM7B9ma0MSnz4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgABWQj (ORCPT
+        id S1728254AbgABWQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:16:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58662 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:16:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728273AbgABWQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:16:37 -0500
+        id S1727788AbgABWQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:16:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FD17227BF;
-        Thu,  2 Jan 2020 22:16:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 844902253D;
+        Thu,  2 Jan 2020 22:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003396;
-        bh=Xm07mB2Dsc0ytOIQKa0Wk2NIXYvBxnC+hk5c6Mj++e8=;
+        s=default; t=1578003385;
+        bh=PYvFAs/LwRcSGbUX8HfwaeFqGfzKvVQu4P/0YcvhXnQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wTAy3ugb7mZ5js8ONWbIa2Bgj9DW0Ei6fC7MAFMnMqke666fLJ9xAuvPA/GQyPans
-         t5vjc3qkB/4atUzyIJzlP495VFmn/4AGv1CiFSQEexYJJ05sSDHpRjuuUgh/g+UBXi
-         8H8lB+2e5JN8EkKn9om4wgQD95SXMd3kX4/7jv9A=
+        b=WxehBlj6BKTF8SRFs8wnEdYNFWjgX/sXtfkyhw0Rc/gWpIp4cmNiu7wb7D/8P19bD
+         A9XJzW2WgvG5VwRVK1npJKScFWYkygVjvLdyBmR+YB360Xyr0lmFt+M4r7onM8P0I3
+         cHZDaLVIpqmQBJfwOl2wSLBmbzcR9Pt5tLGOo7ow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 118/191] s390/zcrypt: handle new reply code FILTERED_BY_HYPERVISOR
-Date:   Thu,  2 Jan 2020 23:06:40 +0100
-Message-Id: <20200102215842.483749743@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.4 138/191] netfilter: bridge: make sure to pull arp header in br_nf_forward_arp()
+Date:   Thu,  2 Jan 2020 23:07:00 +0100
+Message-Id: <20200102215844.392653871@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,51 +61,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harald Freudenberger <freude@linux.ibm.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 6733775a92eacd612ac88afa0fd922e4ffeb2bc7 ]
+commit 5604285839aaedfb23ebe297799c6e558939334d upstream.
 
-This patch introduces support for a new architectured reply
-code 0x8B indicating that a hypervisor layer (if any) has
-rejected an ap message.
+syzbot is kind enough to remind us we need to call skb_may_pull()
 
-Linux may run as a guest on top of a hypervisor like zVM
-or KVM. So the crypto hardware seen by the ap bus may be
-restricted by the hypervisor for example only a subset like
-only clear key crypto requests may be supported. Other
-requests will be filtered out - rejected by the hypervisor.
-The new reply code 0x8B will appear in such cases and needs
-to get recognized by the ap bus and zcrypt device driver zoo.
+BUG: KMSAN: uninit-value in br_nf_forward_arp+0xe61/0x1230 net/bridge/br_netfilter_hooks.c:665
+CPU: 1 PID: 11631 Comm: syz-executor.1 Not tainted 5.4.0-rc8-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0x128/0x220 mm/kmsan/kmsan_report.c:108
+ __msan_warning+0x64/0xc0 mm/kmsan/kmsan_instr.c:245
+ br_nf_forward_arp+0xe61/0x1230 net/bridge/br_netfilter_hooks.c:665
+ nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
+ nf_hook_slow+0x18b/0x3f0 net/netfilter/core.c:512
+ nf_hook include/linux/netfilter.h:260 [inline]
+ NF_HOOK include/linux/netfilter.h:303 [inline]
+ __br_forward+0x78f/0xe30 net/bridge/br_forward.c:109
+ br_flood+0xef0/0xfe0 net/bridge/br_forward.c:234
+ br_handle_frame_finish+0x1a77/0x1c20 net/bridge/br_input.c:162
+ nf_hook_bridge_pre net/bridge/br_input.c:245 [inline]
+ br_handle_frame+0xfb6/0x1eb0 net/bridge/br_input.c:348
+ __netif_receive_skb_core+0x20b9/0x51a0 net/core/dev.c:4830
+ __netif_receive_skb_one_core net/core/dev.c:4927 [inline]
+ __netif_receive_skb net/core/dev.c:5043 [inline]
+ process_backlog+0x610/0x13c0 net/core/dev.c:5874
+ napi_poll net/core/dev.c:6311 [inline]
+ net_rx_action+0x7a6/0x1aa0 net/core/dev.c:6379
+ __do_softirq+0x4a1/0x83a kernel/softirq.c:293
+ do_softirq_own_stack+0x49/0x80 arch/x86/entry/entry_64.S:1091
+ </IRQ>
+ do_softirq kernel/softirq.c:338 [inline]
+ __local_bh_enable_ip+0x184/0x1d0 kernel/softirq.c:190
+ local_bh_enable+0x36/0x40 include/linux/bottom_half.h:32
+ rcu_read_unlock_bh include/linux/rcupdate.h:688 [inline]
+ __dev_queue_xmit+0x38e8/0x4200 net/core/dev.c:3819
+ dev_queue_xmit+0x4b/0x60 net/core/dev.c:3825
+ packet_snd net/packet/af_packet.c:2959 [inline]
+ packet_sendmsg+0x8234/0x9100 net/packet/af_packet.c:2984
+ sock_sendmsg_nosec net/socket.c:637 [inline]
+ sock_sendmsg net/socket.c:657 [inline]
+ __sys_sendto+0xc44/0xc70 net/socket.c:1952
+ __do_sys_sendto net/socket.c:1964 [inline]
+ __se_sys_sendto+0x107/0x130 net/socket.c:1960
+ __x64_sys_sendto+0x6e/0x90 net/socket.c:1960
+ do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45a679
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f0a3c9e5c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
+RAX: ffffffffffffffda RBX: 0000000000000006 RCX: 000000000045a679
+RDX: 000000000000000e RSI: 0000000020000200 RDI: 0000000000000003
+RBP: 000000000075bf20 R08: 00000000200000c0 R09: 0000000000000014
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f0a3c9e66d4
+R13: 00000000004c8ec1 R14: 00000000004dfe28 R15: 00000000ffffffff
 
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Uninit was created at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:149 [inline]
+ kmsan_internal_poison_shadow+0x5c/0x110 mm/kmsan/kmsan.c:132
+ kmsan_slab_alloc+0x97/0x100 mm/kmsan/kmsan_hooks.c:86
+ slab_alloc_node mm/slub.c:2773 [inline]
+ __kmalloc_node_track_caller+0xe27/0x11a0 mm/slub.c:4381
+ __kmalloc_reserve net/core/skbuff.c:141 [inline]
+ __alloc_skb+0x306/0xa10 net/core/skbuff.c:209
+ alloc_skb include/linux/skbuff.h:1049 [inline]
+ alloc_skb_with_frags+0x18c/0xa80 net/core/skbuff.c:5662
+ sock_alloc_send_pskb+0xafd/0x10a0 net/core/sock.c:2244
+ packet_alloc_skb net/packet/af_packet.c:2807 [inline]
+ packet_snd net/packet/af_packet.c:2902 [inline]
+ packet_sendmsg+0x63a6/0x9100 net/packet/af_packet.c:2984
+ sock_sendmsg_nosec net/socket.c:637 [inline]
+ sock_sendmsg net/socket.c:657 [inline]
+ __sys_sendto+0xc44/0xc70 net/socket.c:1952
+ __do_sys_sendto net/socket.c:1964 [inline]
+ __se_sys_sendto+0x107/0x130 net/socket.c:1960
+ __x64_sys_sendto+0x6e/0x90 net/socket.c:1960
+ do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: c4e70a87d975 ("netfilter: bridge: rename br_netfilter.c to br_netfilter_hooks.c")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Reviewed-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/s390/crypto/zcrypt_error.h | 2 ++
- 1 file changed, 2 insertions(+)
+ net/bridge/br_netfilter_hooks.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/s390/crypto/zcrypt_error.h b/drivers/s390/crypto/zcrypt_error.h
-index f34ee41cbed8..4f4dd9d727c9 100644
---- a/drivers/s390/crypto/zcrypt_error.h
-+++ b/drivers/s390/crypto/zcrypt_error.h
-@@ -61,6 +61,7 @@ struct error_hdr {
- #define REP82_ERROR_EVEN_MOD_IN_OPND	    0x85
- #define REP82_ERROR_RESERVED_FIELD	    0x88
- #define REP82_ERROR_INVALID_DOMAIN_PENDING  0x8A
-+#define REP82_ERROR_FILTERED_BY_HYPERVISOR  0x8B
- #define REP82_ERROR_TRANSPORT_FAIL	    0x90
- #define REP82_ERROR_PACKET_TRUNCATED	    0xA0
- #define REP82_ERROR_ZERO_BUFFER_LEN	    0xB0
-@@ -91,6 +92,7 @@ static inline int convert_error(struct zcrypt_queue *zq,
- 	case REP82_ERROR_INVALID_DOMAIN_PRECHECK:
- 	case REP82_ERROR_INVALID_DOMAIN_PENDING:
- 	case REP82_ERROR_INVALID_SPECIAL_CMD:
-+	case REP82_ERROR_FILTERED_BY_HYPERVISOR:
- 	//   REP88_ERROR_INVALID_KEY		// '82' CEX2A
- 	//   REP88_ERROR_OPERAND		// '84' CEX2A
- 	//   REP88_ERROR_OPERAND_EVEN_MOD	// '85' CEX2A
--- 
-2.20.1
-
+--- a/net/bridge/br_netfilter_hooks.c
++++ b/net/bridge/br_netfilter_hooks.c
+@@ -662,6 +662,9 @@ static unsigned int br_nf_forward_arp(vo
+ 		nf_bridge_pull_encap_header(skb);
+ 	}
+ 
++	if (unlikely(!pskb_may_pull(skb, sizeof(struct arphdr))))
++		return NF_DROP;
++
+ 	if (arp_hdr(skb)->ar_pln != 4) {
+ 		if (is_vlan_arp(skb, state->net))
+ 			nf_bridge_push_encap_header(skb);
 
 
