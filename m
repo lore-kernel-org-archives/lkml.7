@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E75B7C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B437C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC40620866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 010AE20863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:35:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004526;
-	bh=7MUXrwa4XEpUG4lXFzMCG5RQXdlkiBQeHbd8vWYafjs=;
+	s=default; t=1578004530;
+	bh=7+JSJnLaWm9rB9v4jCs3lqAMZplg4udQOpIcjK9RwUE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IMlfKJtmBqVP6CnOnhLMCxuHyyL5DrhMnGxaPHAMFSJTldZ7wGiVI+avkBsuL2nUT
-	 nPGJjhjCpAmN9ENHv0JdiLMC48pwMAeHiCOKY17Ee+c/d2zmAdmxerYxM1FPswgKxq
-	 Ggw6gK+uTcDY/Wmqa97I+yhHJ6IFySpOdRO+Mn+4=
+	b=Fr6Ykqn4yIK2b6jG2Vi8+GaeFL7gU04ZBH0DOl6UeJoQXGJ6tnY0/nFsPQE19oZtz
+	 +x1LFFBiTrEOtFUJ3jDaQ8nEU8ULud4ChlNLS/aEM23McoV4hmF9MnDeHb0Oy3VmGM
+	 fp9F1hyzao3d47+uEvICLHwRB3XFA+gaOMkhW5f0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730821AbgABWfZ (ORCPT
+        id S1730825AbgABWf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:35:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44958 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:35:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730810AbgABWfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:35:19 -0500
+        id S1730697AbgABWfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:35:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A5E921835;
-        Thu,  2 Jan 2020 22:35:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 329C620866;
+        Thu,  2 Jan 2020 22:35:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004518;
-        bh=7MUXrwa4XEpUG4lXFzMCG5RQXdlkiBQeHbd8vWYafjs=;
+        s=default; t=1578004523;
+        bh=7+JSJnLaWm9rB9v4jCs3lqAMZplg4udQOpIcjK9RwUE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m511ySQStYkoB/ZBQxenJ+/dWXwi6pr61hOL06Q1Axo7lQdkO2gE3ypBquY8Ez4EY
-         if1HCAv0ugCKI3GrFuaQ9KL2R1KHGWAsYoVA7y+9pVf/OFgjzpDokTUVuqqCpgcM3D
-         xCiLJKwcQBs6wyMejDkNexJ1XDmuhytNEDGdQA78=
+        b=d3NdsKIo/2HPgS1cGYlHsJW2xVT3KcQonpg0E96C2YGa22H4U1SdCd4CHG/v4ry9y
+         iq42Rp2D85pQc/G3ya8tM0CovybnqwMQFulWY0F43uvcXIrFgoYviorjh5GPYzWsfT
+         3HiOIpSpBlQazgUNEiX2A0Om/ZnIqxCOTJsNT95U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        stable@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 041/137] perf probe: Fix to probe an inline function which has no entry pc
-Date:   Thu,  2 Jan 2020 23:06:54 +0100
-Message-Id: <20200102220552.148291357@linuxfoundation.org>
+Subject: [PATCH 4.4 025/137] extcon: sm5502: Reset registers during initialization
+Date:   Thu,  2 Jan 2020 23:06:38 +0100
+Message-Id: <20200102220549.980968649@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -62,70 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit eb6933b29d20bf2c3053883d409a53f462c1a3ac ]
+[ Upstream commit 6942635032cfd3e003e980d2dfa4e6323a3ce145 ]
 
-Fix perf probe to probe an inlne function which has no entry pc
-or low pc but only has ranges attribute.
+On some devices (e.g. Samsung Galaxy A5 (2015)), the bootloader
+seems to keep interrupts enabled for SM5502 when booting Linux.
+Changing the cable state (i.e. plugging in a cable) - until the driver
+is loaded - will therefore produce an interrupt that is never read.
 
-This seems very rare case, but I could find a few examples, as
-same as probe_point_search_cb(), use die_entrypc() to get the
-entry address in probe_point_inline_cb() too.
+In this situation, the cable state will be stuck forever on the
+initial state because SM5502 stops sending interrupts.
+This can be avoided by clearing those pending interrupts after
+the driver has been loaded.
 
-Without this patch:
+One way to do this is to reset all registers to default state
+by writing to SM5502_REG_RESET. This ensures that we start from
+a clean state, with all interrupts disabled.
 
-  # perf probe -D __amd_put_nb_event_constraints
-  Failed to get entry address of __amd_put_nb_event_constraints.
-  Probe point '__amd_put_nb_event_constraints' not found.
-    Error: Failed to add events.
-
-With this patch:
-
-  # perf probe -D __amd_put_nb_event_constraints
-  p:probe/__amd_put_nb_event_constraints amd_put_event_constraints+43
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
-  Failed to get entry address of __amd_put_nb_event_constraints.
-  Probe point '__amd_put_nb_event_constraints' not found.
-    Error: Failed to add events.
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
-  p:probe/__amd_put_nb_event_constraints _text+33789
-  [root@quaco ~]#
-
-Fixes: 4ea42b181434 ("perf: Add perf probe subcommand, a kprobe-event setup helper")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199320336.8075.16189530425277588587.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-finder.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/extcon/extcon-sm5502.c | 4 ++++
+ drivers/extcon/extcon-sm5502.h | 2 ++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index dce40710b5de..28a0f37b05c0 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -900,7 +900,7 @@ static int probe_point_inline_cb(Dwarf_Die *in_die, void *data)
- 		ret = find_probe_point_lazy(in_die, pf);
- 	else {
- 		/* Get probe address */
--		if (dwarf_entrypc(in_die, &addr) != 0) {
-+		if (die_entrypc(in_die, &addr) != 0) {
- 			pr_warning("Failed to get entry address of %s.\n",
- 				   dwarf_diename(in_die));
- 			return -ENOENT;
+diff --git a/drivers/extcon/extcon-sm5502.c b/drivers/extcon/extcon-sm5502.c
+index 7aac3cc7efd7..f63f9961ac12 100644
+--- a/drivers/extcon/extcon-sm5502.c
++++ b/drivers/extcon/extcon-sm5502.c
+@@ -69,6 +69,10 @@ struct sm5502_muic_info {
+ /* Default value of SM5502 register to bring up MUIC device. */
+ static struct reg_data sm5502_reg_data[] = {
+ 	{
++		.reg = SM5502_REG_RESET,
++		.val = SM5502_REG_RESET_MASK,
++		.invert = true,
++	}, {
+ 		.reg = SM5502_REG_CONTROL,
+ 		.val = SM5502_REG_CONTROL_MASK_INT_MASK,
+ 		.invert = false,
+diff --git a/drivers/extcon/extcon-sm5502.h b/drivers/extcon/extcon-sm5502.h
+index 974b53222f56..12f8b01e5753 100644
+--- a/drivers/extcon/extcon-sm5502.h
++++ b/drivers/extcon/extcon-sm5502.h
+@@ -241,6 +241,8 @@ enum sm5502_reg {
+ #define DM_DP_SWITCH_UART			((DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DP_SHIFT) \
+ 						| (DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DM_SHIFT))
+ 
++#define SM5502_REG_RESET_MASK			(0x1)
++
+ /* SM5502 Interrupts */
+ enum sm5502_irq {
+ 	/* INT1 */
 -- 
 2.20.1
 
