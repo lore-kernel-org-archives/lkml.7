@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E7EC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B35C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0EE322B48
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 734E621582
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003549;
-	bh=dyDUn9B9Bca4O9azJBCRLDGWzqsKF0eIBKTh0se1o2c=;
+	s=default; t=1578003553;
+	bh=8IWJOi6KRoy257bmHLGoFSeIOMVROHSJj/ROJ37nNPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fekUi48/vkOmHyJ+hlbQNu0LNA9IJrYm73IWcJ6uFAOqAwY+KnLYdUv1blha8YfNa
-	 n00TGcuL3l3WaAeK7jEtj4aNBdfMilu76pmE68EqBs4hmlHhys0PJvFpOc/92MwWyb
-	 RJfz5/nhaRKtbETpinji/th80fMBu9zyTit2RkUs=
+	b=eKt6L1RAG13+AXFo4T8BnftLJwVPHPO/guybNWeigI89zubjGItuUKjs7+wOEIMQT
+	 VeKs0NUmj4EbMlEzc0F/jBzI6lseIKlysimqlwTNbxCn2RunxmXK5TBtRGZ6LEYlbo
+	 G2F24Z0+YLqfLqfK9a/S3u/1JxB3UBQhEirVeVr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbgABWTI (ORCPT
+        id S1728551AbgABWTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:19:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34942 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:19:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728534AbgABWTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:19:06 -0500
+        id S1728547AbgABWTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:19:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E38221582;
-        Thu,  2 Jan 2020 22:19:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C385321582;
+        Thu,  2 Jan 2020 22:19:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003545;
-        bh=dyDUn9B9Bca4O9azJBCRLDGWzqsKF0eIBKTh0se1o2c=;
+        s=default; t=1578003548;
+        bh=8IWJOi6KRoy257bmHLGoFSeIOMVROHSJj/ROJ37nNPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RhC2TxdwUpeNPunYZTTOP8hoOBq7CkPMKNGKZXy1G1HBNlXWBs4H7a2SsSHi5g5sd
-         5GqPIuplqPK0XuostYyNHODuaTrdKeYJ9Ep5J7qdmPpzj8TH0yu2j8dx4evb+tVOX9
-         gef2Vkv5yCws8KIorfnJMZgP1H1pdZBxI/9Dka20=
+        b=tpz0HgDZwiQjSd5kcqVkj1thYnlQpvMU1sIouC0l8fKcy+WS+Zu6YvO2/f5RxLlW+
+         YXAU5EaLOlOSmwdTYIRX+hQYhwwfRjXbUakKz7O9B4S8TTnosGKUVr/eJni+nLHwy1
+         UWcEn9A5b7Q4l3/i9o1rJkwvTBy0KZthKafRtFwA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 014/114] powerpc/pseries: Dont fail hash page table insert for bolted mapping
-Date:   Thu,  2 Jan 2020 23:06:26 +0100
-Message-Id: <20200102220030.553775859@linuxfoundation.org>
+Subject: [PATCH 4.19 015/114] powerpc/tools: Dont quote $objdump in scripts
+Date:   Thu,  2 Jan 2020 23:06:27 +0100
+Message-Id: <20200102220030.654375518@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -61,65 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 75838a3290cd4ebbd1f567f310ba04b6ef017ce4 ]
+[ Upstream commit e44ff9ea8f4c8a90c82f7b85bd4f5e497c841960 ]
 
-If the hypervisor returned H_PTEG_FULL for H_ENTER hcall, retry a hash page table
-insert by removing a random entry from the group.
+Some of our scripts are passed $objdump and then call it as
+"$objdump". This doesn't work if it contains spaces because we're
+using ccache, for example you get errors such as:
 
-After some runtime, it is very well possible to find all the 8 hash page table
-entry slot in the hpte group used for mapping. Don't fail a bolted entry insert
-in that case. With Storage class memory a user can find this error easily since
-a namespace enable/disable is equivalent to memory add/remove.
+  ./arch/powerpc/tools/relocs_check.sh: line 48: ccache ppc64le-objdump: No such file or directory
+  ./arch/powerpc/tools/unrel_branch_check.sh: line 26: ccache ppc64le-objdump: No such file or directory
 
-This results in failures as reported below:
+Fix it by not quoting the string when we expand it, allowing the shell
+to do the right thing for us.
 
-$ ndctl create-namespace -r region1 -t pmem -m devdax -a 65536 -s 100M
-libndctl: ndctl_dax_enable: dax1.3: failed to enable
-  Error: namespace1.2: failed to enable
-
-failed to create namespace: No such device or address
-
-In kernel log we find the details as below:
-
-Unable to create mapping for hot added memory 0xc000042006000000..0xc00004200d000000: -1
-dax_pmem: probe of dax1.3 failed with error -14
-
-This indicates that we failed to create a bolted hash table entry for direct-map
-address backing the namespace.
-
-We also observe failures such that not all namespaces will be enabled with
-ndctl enable-namespace all command.
-
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Fixes: a71aa05e1416 ("powerpc: Convert relocs_check to a shell script using grep")
+Fixes: 4ea80652dc75 ("powerpc/64s: Tool to flag direct branches from unrelocated interrupt vectors")
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191024093542.29777-2-aneesh.kumar@linux.ibm.com
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191024004730.32135-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/hash_utils_64.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/powerpc/tools/relocs_check.sh       | 2 +-
+ arch/powerpc/tools/unrel_branch_check.sh | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
-index b1007e9a31ba..11b41383e167 100644
---- a/arch/powerpc/mm/hash_utils_64.c
-+++ b/arch/powerpc/mm/hash_utils_64.c
-@@ -296,7 +296,14 @@ int htab_bolt_mapping(unsigned long vstart, unsigned long vend,
- 		ret = mmu_hash_ops.hpte_insert(hpteg, vpn, paddr, tprot,
- 					       HPTE_V_BOLTED, psize, psize,
- 					       ssize);
--
-+		if (ret == -1) {
-+			/* Try to remove a non bolted entry */
-+			ret = mmu_hash_ops.hpte_remove(hpteg);
-+			if (ret != -1)
-+				ret = mmu_hash_ops.hpte_insert(hpteg, vpn, paddr, tprot,
-+							       HPTE_V_BOLTED, psize, psize,
-+							       ssize);
-+		}
- 		if (ret < 0)
- 			break;
+diff --git a/arch/powerpc/tools/relocs_check.sh b/arch/powerpc/tools/relocs_check.sh
+index ec2d5c835170..d6c16e7faa38 100755
+--- a/arch/powerpc/tools/relocs_check.sh
++++ b/arch/powerpc/tools/relocs_check.sh
+@@ -23,7 +23,7 @@ objdump="$1"
+ vmlinux="$2"
  
+ bad_relocs=$(
+-"$objdump" -R "$vmlinux" |
++$objdump -R "$vmlinux" |
+ 	# Only look at relocation lines.
+ 	grep -E '\<R_' |
+ 	# These relocations are okay
+diff --git a/arch/powerpc/tools/unrel_branch_check.sh b/arch/powerpc/tools/unrel_branch_check.sh
+index 1e972df3107e..77114755dc6f 100755
+--- a/arch/powerpc/tools/unrel_branch_check.sh
++++ b/arch/powerpc/tools/unrel_branch_check.sh
+@@ -18,14 +18,14 @@ vmlinux="$2"
+ #__end_interrupts should be located within the first 64K
+ 
+ end_intr=0x$(
+-"$objdump" -R "$vmlinux" -d --start-address=0xc000000000000000		\
++$objdump -R "$vmlinux" -d --start-address=0xc000000000000000           \
+ 		 --stop-address=0xc000000000010000 |
+ grep '\<__end_interrupts>:' |
+ awk '{print $1}'
+ )
+ 
+ BRANCHES=$(
+-"$objdump" -R "$vmlinux" -D --start-address=0xc000000000000000		\
++$objdump -R "$vmlinux" -D --start-address=0xc000000000000000           \
+ 		--stop-address=${end_intr} |
+ grep -e "^c[0-9a-f]*:[[:space:]]*\([0-9a-f][0-9a-f][[:space:]]\)\{4\}[[:space:]]*b" |
+ grep -v '\<__start_initialization_multiplatform>' |
 -- 
 2.20.1
 
