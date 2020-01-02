@@ -2,53 +2,51 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A9EC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D958BC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1335021835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA4E220866
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:31:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004313;
-	bh=GPaWdBquP7lqPDeAbE7TakV5GZ9kyvRxN5I/6f0ImS8=;
+	s=default; t=1578004318;
+	bh=G4IQT9yQ3RYgtofCZxFhL1uzsyB48PGKX/G/oh9lTm8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xTKAHdsrprTkkMcIdlgBLOpb6J8xd0Lp9u0kRimTTDu+OrnzKHBMdzXIEgfndExPd
-	 dRPTzR3tjdK7OhtZJSrFTU1d5OVvGwWyRlYAWui4vaH7AkgNo6t0k05ZY2erkOMmDy
-	 PQ3OWQrd4/g57ykI6/mYMhYqtV27/gsujWh9TGtY=
+	b=hbZyFXcF7PcZoLlL5SMYNf+tmPcuDX+pYCxmxTFBZR5TuehvJYHO/61A9n4pWA0Ai
+	 xj2lj6/ufVISJXOuwU2h9c6gyQ0q/f0ju63sVLgBoS40cejKAh9F/d4S0BCUmbHbaw
+	 6Q0h/2aIC82pF6cbJAda9IAxCqQhSbNFNMQs/FXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730330AbgABWbv (ORCPT
+        id S1730347AbgABWb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:31:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37316 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:31:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730325AbgABWbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:31:47 -0500
+        id S1730340AbgABWby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:31:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F226D21D7D;
-        Thu,  2 Jan 2020 22:31:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36DF1222C3;
+        Thu,  2 Jan 2020 22:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004306;
-        bh=GPaWdBquP7lqPDeAbE7TakV5GZ9kyvRxN5I/6f0ImS8=;
+        s=default; t=1578004313;
+        bh=G4IQT9yQ3RYgtofCZxFhL1uzsyB48PGKX/G/oh9lTm8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=niGdwKBfzlt2v90xozIvv4dY9TpBdK9jYshtUeN00KAk0mAbnJiE2kSE4ltcOeJhS
-         a5xHHVbIoHt8TPvYQQcFnhmFsSG+5035sMIHg3j0FVvsh3sq0Mj44Ia2BmYJvIJrk0
-         yK85sUhRNEZSHj/nRSt7ijEEJNzsqtpsFkvSfGeE=
+        b=G1WXg7Dgy52nXs8GThNQbo8/GGkK/YVwa/KX3+vCk0vzfGNJT66JS6f9ZZhb2nkX1
+         kf+UEJXbE889eSuahl200qgb5q6XyG9qMNhrMZXpkJwbNdRjSMiQidR/Syyp0HWXyu
+         X7xEQn9oUe6gOqtJd7jwI8c6bAHBq59bfwLDpUO4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 123/171] powerpc/book3s64/hash: Add cond_resched to avoid soft lockup warning
-Date:   Thu,  2 Jan 2020 23:07:34 +0100
-Message-Id: <20200102220604.101673134@linuxfoundation.org>
+        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 101/171] net: dst: Force 4-byte alignment of dst_metrics
+Date:   Thu,  2 Jan 2020 23:07:12 +0100
+Message-Id: <20200102220601.194131296@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -61,77 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-[ Upstream commit 16f6b67cf03cb43db7104acb2ca877bdc2606c92 ]
+[ Upstream commit 258a980d1ec23e2c786e9536a7dd260bea74bae6 ]
 
-With large memory (8TB and more) hotplug, we can get soft lockup
-warnings as below. These were caused by a long loop without any
-explicit cond_resched which is a problem for !PREEMPT kernels.
+When storing a pointer to a dst_metrics structure in dst_entry._metrics,
+two flags are added in the least significant bits of the pointer value.
+Hence this assumes all pointers to dst_metrics structures have at least
+4-byte alignment.
 
-Avoid this using cond_resched() while inserting hash page table
-entries. We already do similar cond_resched() in __add_pages(), see
-commit f64ac5e6e306 ("mm, memory_hotplug: add scheduling point to
-__add_pages").
+However, on m68k, the minimum alignment of 32-bit values is 2 bytes, not
+4 bytes.  Hence in some kernel builds, dst_default_metrics may be only
+2-byte aligned, leading to obscure boot warnings like:
 
-  rcu:     3-....: (24002 ticks this GP) idle=13e/1/0x4000000000000002 softirq=722/722 fqs=12001
-   (t=24003 jiffies g=4285 q=2002)
-  NMI backtrace for cpu 3
-  CPU: 3 PID: 3870 Comm: ndctl Not tainted 5.3.0-197.18-default+ #2
-  Call Trace:
-    dump_stack+0xb0/0xf4 (unreliable)
-    nmi_cpu_backtrace+0x124/0x130
-    nmi_trigger_cpumask_backtrace+0x1ac/0x1f0
-    arch_trigger_cpumask_backtrace+0x28/0x3c
-    rcu_dump_cpu_stacks+0xf8/0x154
-    rcu_sched_clock_irq+0x878/0xb40
-    update_process_times+0x48/0x90
-    tick_sched_handle.isra.16+0x4c/0x80
-    tick_sched_timer+0x68/0xe0
-    __hrtimer_run_queues+0x180/0x430
-    hrtimer_interrupt+0x110/0x300
-    timer_interrupt+0x108/0x2f0
-    decrementer_common+0x114/0x120
-  --- interrupt: 901 at arch_add_memory+0xc0/0x130
-      LR = arch_add_memory+0x74/0x130
-    memremap_pages+0x494/0x650
-    devm_memremap_pages+0x3c/0xa0
-    pmem_attach_disk+0x188/0x750
-    nvdimm_bus_probe+0xac/0x2c0
-    really_probe+0x148/0x570
-    driver_probe_device+0x19c/0x1d0
-    device_driver_attach+0xcc/0x100
-    bind_store+0x134/0x1c0
-    drv_attr_store+0x44/0x60
-    sysfs_kf_write+0x64/0x90
-    kernfs_fop_write+0x1a0/0x270
-    __vfs_write+0x3c/0x70
-    vfs_write+0xd0/0x260
-    ksys_write+0xdc/0x130
-    system_call+0x5c/0x68
+    WARNING: CPU: 0 PID: 7 at lib/refcount.c:28 refcount_warn_saturate+0x44/0x9a
+    refcount_t: underflow; use-after-free.
+    Modules linked in:
+    CPU: 0 PID: 7 Comm: ksoftirqd/0 Tainted: G        W         5.5.0-rc2-atari-01448-g114a1a1038af891d-dirty #261
+    Stack from 10835e6c:
+	    10835e6c 0038134f 00023fa6 00394b0f 0000001c 00000009 00321560 00023fea
+	    00394b0f 0000001c 001a70f8 00000009 00000000 10835eb4 00000001 00000000
+	    04208040 0000000a 00394b4a 10835ed4 00043aa8 001a70f8 00394b0f 0000001c
+	    00000009 00394b4a 0026aba8 003215a4 00000003 00000000 0026d5a8 00000001
+	    003215a4 003a4361 003238d6 000001f0 00000000 003215a4 10aa3b00 00025e84
+	    003ddb00 10834000 002416a8 10aa3b00 00000000 00000080 000aa038 0004854a
+    Call Trace: [<00023fa6>] __warn+0xb2/0xb4
+     [<00023fea>] warn_slowpath_fmt+0x42/0x64
+     [<001a70f8>] refcount_warn_saturate+0x44/0x9a
+     [<00043aa8>] printk+0x0/0x18
+     [<001a70f8>] refcount_warn_saturate+0x44/0x9a
+     [<0026aba8>] refcount_sub_and_test.constprop.73+0x38/0x3e
+     [<0026d5a8>] ipv4_dst_destroy+0x5e/0x7e
+     [<00025e84>] __local_bh_enable_ip+0x0/0x8e
+     [<002416a8>] dst_destroy+0x40/0xae
 
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191001084656.31277-1-aneesh.kumar@linux.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix this by forcing 4-byte alignment of all dst_metrics structures.
+
+Fixes: e5fd387ad5b30ca3 ("ipv6: do not overwrite inetpeer metrics prematurely")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/mm/hash_utils_64.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/net/dst.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
-index de1d8cdd2991..2dc1fc445f35 100644
---- a/arch/powerpc/mm/hash_utils_64.c
-+++ b/arch/powerpc/mm/hash_utils_64.c
-@@ -300,6 +300,7 @@ int htab_bolt_mapping(unsigned long vstart, unsigned long vend,
- 		if (ret < 0)
- 			break;
+--- a/include/net/dst.h
++++ b/include/net/dst.h
+@@ -110,7 +110,7 @@ struct dst_entry {
+ struct dst_metrics {
+ 	u32		metrics[RTAX_MAX];
+ 	atomic_t	refcnt;
+-};
++} __aligned(4);		/* Low pointer bits contain DST_METRICS_FLAGS */
+ extern const struct dst_metrics dst_default_metrics;
  
-+		cond_resched();
- #ifdef CONFIG_DEBUG_PAGEALLOC
- 		if (debug_pagealloc_enabled() &&
- 			(paddr >> PAGE_SHIFT) < linear_map_hash_count)
--- 
-2.20.1
-
+ u32 *dst_cow_metrics_generic(struct dst_entry *dst, unsigned long old);
 
 
