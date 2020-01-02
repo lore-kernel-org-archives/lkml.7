@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAC9C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C236C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE8121835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F344021835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003698;
-	bh=k9ANDWWcKQhN4QBCwWmXacEzGCW6Ikef5g5oTgKZehQ=;
+	s=default; t=1578003701;
+	bh=8hnfwAge4CXRgad8fJNs6mBzSH+LB7Z0uK9OB6+f7JY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yScM3YrkNTyNNSsCL6NKmITNruuFerZAoQybTcl3GOzOzz6YjEKXWErJY2GPqoDMl
-	 Ry8+abnbwnI6xwauq0QBZA2oKX0KQodUtFq8KW8Eu5xWOmXw8Kqk0IyPkUgT35cOAs
-	 NWF8KdS6Ns1x6G95Z1IWS+Q+bYQcEjUdQHyjfjyU=
+	b=ihTcmgZWJQqMHEo1fH61ieKNq23T+6M1QDJLVC9YY0FILzKHZ1yUmsRCgi/QB0no8
+	 xYAcQhDOkP9aJzi7fF4he2Y+TA+MI4dWJIXwOXr6A4XcV2AFmkPwEcd2NKXXQcUx8q
+	 77IJSk4Y2WsaJ4957fnwmqSUI2ihdSJ1DbbpUuic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbgABWVi (ORCPT
+        id S1729033AbgABWVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:21:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40750 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:21:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728797AbgABWVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:21:32 -0500
+        id S1729007AbgABWVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:21:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93B9621D7D;
-        Thu,  2 Jan 2020 22:21:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1023624649;
+        Thu,  2 Jan 2020 22:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003692;
-        bh=k9ANDWWcKQhN4QBCwWmXacEzGCW6Ikef5g5oTgKZehQ=;
+        s=default; t=1578003694;
+        bh=8hnfwAge4CXRgad8fJNs6mBzSH+LB7Z0uK9OB6+f7JY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tUz8I74gVXAeZMcoXc/+5bIoQQu3puo22jNgT2PH9LFGfcpMet30dweoxsCSW2uTs
-         ezMi6fHi59E4Qct3YpaBCapI438B/NfNNXdSKs7zRZKSBhHWD139dDmG+DJn5nsHbR
-         EY2WlQXmA5SkESdU+QOMx3n4K/WeayatwueJGxu4=
+        b=xLI8sBI2rLBKIiDJ2ako7MPJ8bhGHfuDoHAfN4AG7uWLpk+Sth0Q7MxF5qE6MUZNX
+         43BEqgLvbDis+Fb8k4Goya6f7+TN2nH1z7m12cEbXXYj5ws85AAFpSOIzrNLyVcaBq
+         V6WJjDyJvb+tYhbvH8uUdZDA+p5RLKbg0rekfK8w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        stable@vger.kernel.org, Jack Wang <jinpu.wang@cloud.ionos.com>,
+        peter chang <dpf@google.com>,
+        Deepak Ukey <deepak.ukey@microchip.com>,
+        Viswas G <Viswas.G@microchip.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 051/114] watchdog: Fix the race between the release of watchdog_core_data and cdev
-Date:   Thu,  2 Jan 2020 23:07:03 +0100
-Message-Id: <20200102220034.214797454@linuxfoundation.org>
+Subject: [PATCH 4.19 052/114] scsi: pm80xx: Fix for SATA device discovery
+Date:   Thu,  2 Jan 2020 23:07:04 +0100
+Message-Id: <20200102220034.309965324@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -61,286 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Hao <haokexin@gmail.com>
+From: peter chang <dpf@google.com>
 
-[ Upstream commit 72139dfa2464e43957d330266994740bb7be2535 ]
+[ Upstream commit ce21c63ee995b7a8b7b81245f2cee521f8c3c220 ]
 
-The struct cdev is embedded in the struct watchdog_core_data. In the
-current code, we manage the watchdog_core_data with a kref, but the
-cdev is manged by a kobject. There is no any relationship between
-this kref and kobject. So it is possible that the watchdog_core_data is
-freed before the cdev is entirely released. We can easily get the
-following call trace with CONFIG_DEBUG_KOBJECT_RELEASE and
-CONFIG_DEBUG_OBJECTS_TIMERS enabled.
-  ODEBUG: free active (active state 0) object type: timer_list hint: delayed_work_timer_fn+0x0/0x38
-  WARNING: CPU: 23 PID: 1028 at lib/debugobjects.c:481 debug_print_object+0xb0/0xf0
-  Modules linked in: softdog(-) deflate ctr twofish_generic twofish_common camellia_generic serpent_generic blowfish_generic blowfish_common cast5_generic cast_common cmac xcbc af_key sch_fq_codel openvswitch nsh nf_conncount nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4
-  CPU: 23 PID: 1028 Comm: modprobe Not tainted 5.3.0-next-20190924-yoctodev-standard+ #180
-  Hardware name: Marvell OcteonTX CN96XX board (DT)
-  pstate: 00400009 (nzcv daif +PAN -UAO)
-  pc : debug_print_object+0xb0/0xf0
-  lr : debug_print_object+0xb0/0xf0
-  sp : ffff80001cbcfc70
-  x29: ffff80001cbcfc70 x28: ffff800010ea2128
-  x27: ffff800010bad000 x26: 0000000000000000
-  x25: ffff80001103c640 x24: ffff80001107b268
-  x23: ffff800010bad9e8 x22: ffff800010ea2128
-  x21: ffff000bc2c62af8 x20: ffff80001103c600
-  x19: ffff800010e867d8 x18: 0000000000000060
-  x17: 0000000000000000 x16: 0000000000000000
-  x15: ffff000bd7240470 x14: 6e6968207473696c
-  x13: 5f72656d6974203a x12: 6570797420746365
-  x11: 6a626f2029302065 x10: 7461747320657669
-  x9 : 7463612820657669 x8 : 3378302f3078302b
-  x7 : 0000000000001d7a x6 : ffff800010fd5889
-  x5 : 0000000000000000 x4 : 0000000000000000
-  x3 : 0000000000000000 x2 : ffff000bff948548
-  x1 : 276a1c9e1edc2300 x0 : 0000000000000000
-  Call trace:
-   debug_print_object+0xb0/0xf0
-   debug_check_no_obj_freed+0x1e8/0x210
-   kfree+0x1b8/0x368
-   watchdog_cdev_unregister+0x88/0xc8
-   watchdog_dev_unregister+0x38/0x48
-   watchdog_unregister_device+0xa8/0x100
-   softdog_exit+0x18/0xfec4 [softdog]
-   __arm64_sys_delete_module+0x174/0x200
-   el0_svc_handler+0xd0/0x1c8
-   el0_svc+0x8/0xc
+Driver was missing complete() call in mpi_sata_completion which result in
+SATA abort error handling timing out. That causes the device to be left in
+the in_recovery state so subsequent commands sent to the device fail and
+the OS removes access to it.
 
-This is a common issue when using cdev embedded in a struct.
-Fortunately, we already have a mechanism to solve this kind of issue.
-Please see commit 233ed09d7fda ("chardev: add helper function to
-register char devs with a struct device") for more detail.
-
-In this patch, we choose to embed the struct device into the
-watchdog_core_data, and use the API provided by the commit 233ed09d7fda
-to make sure that the release of watchdog_core_data and cdev are
-in sequence.
-
-Signed-off-by: Kevin Hao <haokexin@gmail.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20191008112934.29669-1-haokexin@gmail.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Link: https://lore.kernel.org/r/20191114100910.6153-2-deepak.ukey@microchip.com
+Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+Signed-off-by: peter chang <dpf@google.com>
+Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
+Signed-off-by: Viswas G <Viswas.G@microchip.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/watchdog_dev.c | 70 +++++++++++++++------------------
- 1 file changed, 32 insertions(+), 38 deletions(-)
+ drivers/scsi/pm8001/pm80xx_hwi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-index f6c24b22b37c..4b89333e8eb4 100644
---- a/drivers/watchdog/watchdog_dev.c
-+++ b/drivers/watchdog/watchdog_dev.c
-@@ -38,7 +38,6 @@
- #include <linux/init.h>		/* For __init/__exit/... */
- #include <linux/hrtimer.h>	/* For hrtimers */
- #include <linux/kernel.h>	/* For printk/panic/... */
--#include <linux/kref.h>		/* For data references */
- #include <linux/kthread.h>	/* For kthread_work */
- #include <linux/miscdevice.h>	/* For handling misc devices */
- #include <linux/module.h>	/* For module stuff/... */
-@@ -56,14 +55,14 @@
- 
- /*
-  * struct watchdog_core_data - watchdog core internal data
-- * @kref:	Reference count.
-+ * @dev:	The watchdog's internal device
-  * @cdev:	The watchdog's Character device.
-  * @wdd:	Pointer to watchdog device.
-  * @lock:	Lock for watchdog core.
-  * @status:	Watchdog core internal status bits.
-  */
- struct watchdog_core_data {
--	struct kref kref;
-+	struct device dev;
- 	struct cdev cdev;
- 	struct watchdog_device *wdd;
- 	struct mutex lock;
-@@ -822,7 +821,7 @@ static int watchdog_open(struct inode *inode, struct file *file)
- 	file->private_data = wd_data;
- 
- 	if (!hw_running)
--		kref_get(&wd_data->kref);
-+		get_device(&wd_data->dev);
- 
- 	/* dev/watchdog is a virtual (and thus non-seekable) filesystem */
- 	return nonseekable_open(inode, file);
-@@ -834,11 +833,11 @@ out_clear:
- 	return err;
- }
- 
--static void watchdog_core_data_release(struct kref *kref)
-+static void watchdog_core_data_release(struct device *dev)
- {
- 	struct watchdog_core_data *wd_data;
- 
--	wd_data = container_of(kref, struct watchdog_core_data, kref);
-+	wd_data = container_of(dev, struct watchdog_core_data, dev);
- 
- 	kfree(wd_data);
- }
-@@ -898,7 +897,7 @@ done:
- 	 */
- 	if (!running) {
- 		module_put(wd_data->cdev.owner);
--		kref_put(&wd_data->kref, watchdog_core_data_release);
-+		put_device(&wd_data->dev);
- 	}
- 	return 0;
- }
-@@ -917,17 +916,22 @@ static struct miscdevice watchdog_miscdev = {
- 	.fops		= &watchdog_fops,
- };
- 
-+static struct class watchdog_class = {
-+	.name =		"watchdog",
-+	.owner =	THIS_MODULE,
-+	.dev_groups =	wdt_groups,
-+};
-+
- /*
-  *	watchdog_cdev_register: register watchdog character device
-  *	@wdd: watchdog device
-- *	@devno: character device number
-  *
-  *	Register a watchdog character device including handling the legacy
-  *	/dev/watchdog node. /dev/watchdog is actually a miscdevice and
-  *	thus we set it up like that.
-  */
- 
--static int watchdog_cdev_register(struct watchdog_device *wdd, dev_t devno)
-+static int watchdog_cdev_register(struct watchdog_device *wdd)
- {
- 	struct watchdog_core_data *wd_data;
- 	int err;
-@@ -935,7 +939,6 @@ static int watchdog_cdev_register(struct watchdog_device *wdd, dev_t devno)
- 	wd_data = kzalloc(sizeof(struct watchdog_core_data), GFP_KERNEL);
- 	if (!wd_data)
- 		return -ENOMEM;
--	kref_init(&wd_data->kref);
- 	mutex_init(&wd_data->lock);
- 
- 	wd_data->wdd = wdd;
-@@ -964,23 +967,33 @@ static int watchdog_cdev_register(struct watchdog_device *wdd, dev_t devno)
- 		}
- 	}
- 
-+	device_initialize(&wd_data->dev);
-+	wd_data->dev.devt = MKDEV(MAJOR(watchdog_devt), wdd->id);
-+	wd_data->dev.class = &watchdog_class;
-+	wd_data->dev.parent = wdd->parent;
-+	wd_data->dev.groups = wdd->groups;
-+	wd_data->dev.release = watchdog_core_data_release;
-+	dev_set_drvdata(&wd_data->dev, wdd);
-+	dev_set_name(&wd_data->dev, "watchdog%d", wdd->id);
-+
- 	/* Fill in the data structures */
- 	cdev_init(&wd_data->cdev, &watchdog_fops);
--	wd_data->cdev.owner = wdd->ops->owner;
- 
- 	/* Add the device */
--	err = cdev_add(&wd_data->cdev, devno, 1);
-+	err = cdev_device_add(&wd_data->cdev, &wd_data->dev);
- 	if (err) {
- 		pr_err("watchdog%d unable to add device %d:%d\n",
- 			wdd->id,  MAJOR(watchdog_devt), wdd->id);
- 		if (wdd->id == 0) {
- 			misc_deregister(&watchdog_miscdev);
- 			old_wd_data = NULL;
--			kref_put(&wd_data->kref, watchdog_core_data_release);
-+			put_device(&wd_data->dev);
- 		}
- 		return err;
- 	}
- 
-+	wd_data->cdev.owner = wdd->ops->owner;
-+
- 	/* Record time of most recent heartbeat as 'just before now'. */
- 	wd_data->last_hw_keepalive = ktime_sub(ktime_get(), 1);
- 
-@@ -990,7 +1003,7 @@ static int watchdog_cdev_register(struct watchdog_device *wdd, dev_t devno)
- 	 */
- 	if (watchdog_hw_running(wdd)) {
- 		__module_get(wdd->ops->owner);
--		kref_get(&wd_data->kref);
-+		get_device(&wd_data->dev);
- 		if (handle_boot_enabled)
- 			hrtimer_start(&wd_data->timer, 0, HRTIMER_MODE_REL);
- 		else
-@@ -1013,7 +1026,7 @@ static void watchdog_cdev_unregister(struct watchdog_device *wdd)
- {
- 	struct watchdog_core_data *wd_data = wdd->wd_data;
- 
--	cdev_del(&wd_data->cdev);
-+	cdev_device_del(&wd_data->cdev, &wd_data->dev);
- 	if (wdd->id == 0) {
- 		misc_deregister(&watchdog_miscdev);
- 		old_wd_data = NULL;
-@@ -1032,15 +1045,9 @@ static void watchdog_cdev_unregister(struct watchdog_device *wdd)
- 	hrtimer_cancel(&wd_data->timer);
- 	kthread_cancel_work_sync(&wd_data->work);
- 
--	kref_put(&wd_data->kref, watchdog_core_data_release);
-+	put_device(&wd_data->dev);
- }
- 
--static struct class watchdog_class = {
--	.name =		"watchdog",
--	.owner =	THIS_MODULE,
--	.dev_groups =	wdt_groups,
--};
--
- static int watchdog_reboot_notifier(struct notifier_block *nb,
- 				    unsigned long code, void *data)
- {
-@@ -1071,27 +1078,14 @@ static int watchdog_reboot_notifier(struct notifier_block *nb,
- 
- int watchdog_dev_register(struct watchdog_device *wdd)
- {
--	struct device *dev;
--	dev_t devno;
- 	int ret;
- 
--	devno = MKDEV(MAJOR(watchdog_devt), wdd->id);
--
--	ret = watchdog_cdev_register(wdd, devno);
-+	ret = watchdog_cdev_register(wdd);
- 	if (ret)
- 		return ret;
- 
--	dev = device_create_with_groups(&watchdog_class, wdd->parent,
--					devno, wdd, wdd->groups,
--					"watchdog%d", wdd->id);
--	if (IS_ERR(dev)) {
--		watchdog_cdev_unregister(wdd);
--		return PTR_ERR(dev);
--	}
--
- 	ret = watchdog_register_pretimeout(wdd);
- 	if (ret) {
--		device_destroy(&watchdog_class, devno);
- 		watchdog_cdev_unregister(wdd);
- 		return ret;
- 	}
-@@ -1099,7 +1093,8 @@ int watchdog_dev_register(struct watchdog_device *wdd)
- 	if (test_bit(WDOG_STOP_ON_REBOOT, &wdd->status)) {
- 		wdd->reboot_nb.notifier_call = watchdog_reboot_notifier;
- 
--		ret = devm_register_reboot_notifier(dev, &wdd->reboot_nb);
-+		ret = devm_register_reboot_notifier(&wdd->wd_data->dev,
-+						    &wdd->reboot_nb);
- 		if (ret) {
- 			pr_err("watchdog%d: Cannot register reboot notifier (%d)\n",
- 			       wdd->id, ret);
-@@ -1121,7 +1116,6 @@ int watchdog_dev_register(struct watchdog_device *wdd)
- void watchdog_dev_unregister(struct watchdog_device *wdd)
- {
- 	watchdog_unregister_pretimeout(wdd);
--	device_destroy(&watchdog_class, wdd->wd_data->cdev.dev);
- 	watchdog_cdev_unregister(wdd);
- }
- 
+diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
+index 5021aed87f33..8627feb80261 100644
+--- a/drivers/scsi/pm8001/pm80xx_hwi.c
++++ b/drivers/scsi/pm8001/pm80xx_hwi.c
+@@ -2382,6 +2382,8 @@ mpi_sata_completion(struct pm8001_hba_info *pm8001_ha, void *piomb)
+ 			pm8001_printk("task 0x%p done with io_status 0x%x"
+ 			" resp 0x%x stat 0x%x but aborted by upper layer!\n",
+ 			t, status, ts->resp, ts->stat));
++		if (t->slow_task)
++			complete(&t->slow_task->completion);
+ 		pm8001_ccb_task_free(pm8001_ha, t, ccb, tag);
+ 	} else {
+ 		spin_unlock_irqrestore(&t->task_state_lock, flags);
 -- 
 2.20.1
 
