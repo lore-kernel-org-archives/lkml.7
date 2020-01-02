@@ -2,81 +2,113 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E75DDC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F891C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C944D21582
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1B14206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 17:24:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P3gsS/ZA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgABRVA (ORCPT
+        id S1727858AbgABRYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 12:21:00 -0500
-Received: from mga12.intel.com ([192.55.52.136]:20085 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726125AbgABRU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 12:20:59 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 09:20:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,387,1571727600"; 
-   d="scan'208";a="216043280"
-Received: from krominsx-mobl.ger.corp.intel.com (HELO localhost) ([10.252.21.64])
-  by fmsmga007.fm.intel.com with ESMTP; 02 Jan 2020 09:20:55 -0800
-Date:   Thu, 2 Jan 2020 19:20:53 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Christian Bundy <christianbundy@fraction.io>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable-commits@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Patch "tpm_tis: reserve chip for duration of tpm_tis_core_init"
- has been added to the 5.4-stable tree
-Message-ID: <20200102171922.GA20989@linux.intel.com>
-References: <CAPcyv4jfpOX85GWgNTyugWksU=e-j=RhU_fcrcHBo4GMZ8_bhw@mail.gmail.com>
- <c6ce34b130210d2d1330fc4079d6d82bd74dcef1.camel@linux.intel.com>
- <50217a688ffa56cf5f150ffd358daba2a88cad48.camel@linux.intel.com>
- <20191228151526.GA6971@linux.intel.com>
- <CAPcyv4i_frm8jZeknniPexp8AAmGsaq0_DHegmL4XZHQi1ThxA@mail.gmail.com>
- <CAPcyv4iyQeXBWvp8V_UPBsOk29cfmTVZGYrrDgyYYqzsQvTjNA@mail.gmail.com>
- <2c4a80e0d30bf1dfe89c6e3469d1dbfb008275fa.camel@linux.intel.com>
- <20191231010256.kymv4shwmx5jcmey@cantor>
- <20191231155944.GA4790@linux.intel.com>
- <be07a1e4-c290-4185-8c23-d97050279564@www.fastmail.com>
+        Thu, 2 Jan 2020 12:24:20 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:32855 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727422AbgABRYT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 12:24:19 -0500
+Received: by mail-wm1-f66.google.com with SMTP id d139so5362821wmd.0;
+        Thu, 02 Jan 2020 09:24:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=U9wjKYaQcIlsbYXPy/YsIaQFJ4xpalfLis5wZruxKtw=;
+        b=P3gsS/ZAFO4rR24+Almp/rb4kOrZetEaJ7F3U+iU/txuqOLkvrKTmX3vXQOyetQ2sN
+         ytCC6zluK1xDIIaQ4NaCeZLVVjXngHX47ubcjDBzEyAU0VHX48lBXTHyVpBXfrcCQPhT
+         wYcuc34lFvhjidePvkcjZ1eErTyb+hZI9Wv6/r0OefF0+LQ8JNEZsk6ZG1WY7l98WMfD
+         aULsc0wZ375rCRHWpvTS0w724g597YIeyaO1i02bo+n7KBUj4FG8GpIeV10hXByouG6G
+         OWPrOdrk+PAzkXQwaFIBpCZMMkbkW0IS1S/ArHY+lcK5T4nUaUFrWJF28YzmhzqWjnr5
+         VUmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=U9wjKYaQcIlsbYXPy/YsIaQFJ4xpalfLis5wZruxKtw=;
+        b=Af4x3TkbjkgT9Tf4Yt66dlaNC5vP9DHdeRmQNN5M48ianW98ZEZBWGA9+JRQ5Xcm9G
+         UBHGde18Tf/nJ/tzGqwVsRrdvI+vESM2z9rHUKt/vSLXhSq/hyf6KDKJIiZ3ooqXqfl9
+         76RySMfIBY1/NQwR2fnS2aUqsGTlDWQ02/rMkEDseNr4FPoBoR7DEKncADhzbflBnnC3
+         cZVhOpZqGRRnW0tOrDj11x7YNkxFI8jRjZf9NMAuQZygFHARSoPgCCHwTKRHcgYpDz1z
+         QNNE/y7BHVYBnRrD3iKemf1F0k9sJputoPWWtAWFFJAAPxvX4+8q3Oa3IbjaiNlQXCaf
+         AS+Q==
+X-Gm-Message-State: APjAAAX69+lWDtzXnquht43N4Y4qEKz3Tla/JTQZGO6A4gq4GDAswDkU
+        oPjTszqEsFKvfR9KF83O7CCRlKYi66dRjTGS
+X-Google-Smtp-Source: APXvYqxMmMOtyKlgTiqfTvjBJc9+1aotTufCtLN2iSJ+lkIsQeXmdCm7NZR/v45FI2J6XlEBoj6ZDQ==
+X-Received: by 2002:a1c:4907:: with SMTP id w7mr14872299wma.106.1577985857314;
+        Thu, 02 Jan 2020 09:24:17 -0800 (PST)
+Received: from amanieu-laptop.home ([2a01:cb19:8051:6200:3fe7:84:7f3:e713])
+        by smtp.gmail.com with ESMTPSA id z21sm9480328wml.5.2020.01.02.09.24.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 09:24:16 -0800 (PST)
+From:   Amanieu d'Antras <amanieu@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Christian Brauner <christian@brauner.io>, stable@vger.kernel.org,
+        Amanieu d'Antras <amanieu@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/7] arm64: Move __ARCH_WANT_SYS_CLONE3 definition to uapi headers
+Date:   Thu,  2 Jan 2020 18:24:07 +0100
+Message-Id: <20200102172413.654385-2-amanieu@gmail.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200102172413.654385-1-amanieu@gmail.com>
+References: <20200102172413.654385-1-amanieu@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <be07a1e4-c290-4185-8c23-d97050279564@www.fastmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 31, 2019 at 11:47:37AM -0800, Christian Bundy wrote:
-> > Christian, were you having any issues with interrupts? You system was going
-> > into this code as well.
-> 
-> Unfortunately I'm now unable to test, sorry for the trouble. I replaced my BIOS
-> with UEFI firmware and the problem has disappeared. Please let me know if there
-> is anything else I can do to help.
-> 
-> Christian
+Previously this was only defined in the internal headers which
+resulted in __NR_clone3 not being defined in the user headers.
 
-Takashi wrote yesterday [*]:
+Signed-off-by: Amanieu d'Antras <amanieu@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: <stable@vger.kernel.org> # 5.3.x
+---
+ arch/arm64/include/asm/unistd.h      | 1 -
+ arch/arm64/include/uapi/asm/unistd.h | 1 +
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-"I'm building a test kernel package based on 5.5-rc4 with Jarkko's revert
-patches"
+diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
+index 2629a68b8724..5af82587909e 100644
+--- a/arch/arm64/include/asm/unistd.h
++++ b/arch/arm64/include/asm/unistd.h
+@@ -42,7 +42,6 @@
+ #endif
+ 
+ #define __ARCH_WANT_SYS_CLONE
+-#define __ARCH_WANT_SYS_CLONE3
+ 
+ #ifndef __COMPAT_SYSCALL_NR
+ #include <uapi/asm/unistd.h>
+diff --git a/arch/arm64/include/uapi/asm/unistd.h b/arch/arm64/include/uapi/asm/unistd.h
+index 4703d218663a..f83a70e07df8 100644
+--- a/arch/arm64/include/uapi/asm/unistd.h
++++ b/arch/arm64/include/uapi/asm/unistd.h
+@@ -19,5 +19,6 @@
+ #define __ARCH_WANT_NEW_STAT
+ #define __ARCH_WANT_SET_GET_RLIMIT
+ #define __ARCH_WANT_TIME32_SYSCALLS
++#define __ARCH_WANT_SYS_CLONE3
+ 
+ #include <asm-generic/unistd.h>
+-- 
+2.24.1
 
-[*] https://bugzilla.kernel.org/show_bug.cgi?id=205935
-
-/Jarkko
