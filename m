@@ -2,343 +2,105 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05ECFC3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 650A1C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD08321734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:32:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FfoReYX4"
+	by mail.kernel.org (Postfix) with ESMTP id 404E5215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 12:35:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728308AbgABMcC (ORCPT
+        id S1728316AbgABMfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 07:32:02 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:55409 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728278AbgABMcC (ORCPT
+        Thu, 2 Jan 2020 07:35:11 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:51026 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728274AbgABMfL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 07:32:02 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577968321; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=/E8TT9+0U3inh8FEr3+mV0x6CJy/08wdLhWGuFRpWjs=; b=FfoReYX42bpdP69nWl9Qou+fL4StmXYs8XEx1K/jJQXLZrHu7Q0+berSQDYC6Rj9k7KYcXsr
- nxy56wy9tzy4gNt98XmgoNOdw9+VqgoKvi7ziAHTbqGaN+U6HmmciC8hmYY13BJamadsX1bt
- GclcB854sS+1w6U7461G66uUG1k=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e0de2c0.7fee5968c768-smtp-out-n01;
- Thu, 02 Jan 2020 12:32:00 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3C61CC447A4; Thu,  2 Jan 2020 12:31:59 +0000 (UTC)
-Received: from [10.206.25.108] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E5625C43383;
-        Thu,  2 Jan 2020 12:31:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E5625C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH V2] arm64: dts: qcom: sc7180: Add nodes for eMMC and SD
- card
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, asutoshd@codeaurora.org,
-        stummala@codeaurora.org, sayalil@codeaurora.org,
-        cang@codeaurora.org, rampraka@codeaurora.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <1576288475-7606-1-git-send-email-vbadigan@codeaurora.org>
- <20191217222119.GW228856@google.com>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <0dbc37f0-41dc-77fd-9bd4-0e4d81cbf6f7@codeaurora.org>
-Date:   Thu, 2 Jan 2020 18:01:50 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 2 Jan 2020 07:35:11 -0500
+Received: by mail-il1-f198.google.com with SMTP id z12so34782809ilh.17
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 04:35:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=y0iE5KleJVXXmUFvao8OvB4WDNhb1+wejlM/yNViWB0=;
+        b=kPcNMhqGlBX0Dac7yS9GJ1YfgK6HVg35E5nZAenC2y41fyFYIbBgsh3MDhtJkDngQq
+         XTCfJecIyh61E43BnwFJB+mGi5HF8u1A2w1/6vUnYjPWLwuDOHJwrndz+I88CXKJ0oRg
+         AQJ9fWukHEbYswcyUprx/CT7bgekV3prgy0oPWRzSrDYTVWn4Bfa/HZTDxdI0Q8HG5LD
+         CEzLGKX4BVxPkl1hrxcJugJ4tTt1kXKfgo02gpL3tKbrfnJjin8A5TJXVfS6XJYqJfoK
+         3aRrCwueJNqP+FOkeHI1oiE44kuspdPIL+aKqV/hlER7sUP2JX28TXbrgp4gbt0rncgG
+         9K1A==
+X-Gm-Message-State: APjAAAViksVOIJmpe4+m+qsKfPd/PCEdzmwLsF2nDM8cUAnccZmjmX/5
+        aQS3u/5qw4fu688j6VZqr9SoI2OByeXNWVQ0grVYL92EyTa2
+X-Google-Smtp-Source: APXvYqxFR/nfC87By5t8MAevHYJSM4hc9KgEMxwcIzCAhJzxWn8oF64cx9dgEtwx2oDUqZyG7pTghhJ6gs+7Doo5hyjT/2qCnXoB
 MIME-Version: 1.0
-In-Reply-To: <20191217222119.GW228856@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-Received: by 2002:a92:d2:: with SMTP id 201mr72802259ila.22.1577968509084;
+ Thu, 02 Jan 2020 04:35:09 -0800 (PST)
+Date:   Thu, 02 Jan 2020 04:35:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000736cbb059b276cd4@google.com>
+Subject: memory leak in path_openat
+From:   syzbot <syzbot+9c064b9ab4dbb724c806@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-On 12/18/2019 3:51 AM, Matthias Kaehlcke wrote:
-> On Sat, Dec 14, 2019 at 07:24:34AM +0530, Veerabhadrarao Badiganti wrote:
->> Add sdhc instances for supporting eMMC and SD-card on sc7180.
->> The regulators should be in HPM state for proper functionality of
->> eMMC and SD-card. Updating corresponding regulators accordingly.
->>
->> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> The patch doesn't apply against qcom/for-next, looks like you need to
-> rebase it.
->
->> ---
->>
->> This depends on the patch series (dt support for sc7180):
->> https://lkml.org/lkml/2019/11/8/149
->> Also depends on documentation commit 2078158 (Present on mmc-next)
->>
->> Changes since V1:
->> 	- Updated the regulator min, max voltages as per
->> 	  eMMC/SD-card voltage requirements
->> 	- Enabled IOMMU for eMMC and SD-card.
->> 	- Added pull and drive strength to SD-card cd-gpio.
->> 	- Incorporated review comments by Matthias Kaehlcke.
->> ---
->>   arch/arm64/boot/dts/qcom/sc7180-idp.dts |  47 +++++++---
->>   arch/arm64/boot/dts/qcom/sc7180.dtsi    | 148 ++++++++++++++++++++++++++++++++
->>   2 files changed, 183 insertions(+), 12 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> index 189254f..b6d4dc1 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> @@ -7,6 +7,7 @@
->>   
->>   /dts-v1/;
->>   
->> +#include <dt-bindings/gpio/gpio.h>
->>   #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
->>   #include "sc7180.dtsi"
->>   #include "pm6150.dtsi"
->> @@ -101,9 +102,9 @@
->>   		};
->>   
->>   		vreg_l12a_1p8: ldo12 {
->> -			regulator-min-microvolt = <1696000>;
->> -			regulator-max-microvolt = <1952000>;
->> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
->> +			regulator-min-microvolt = <1800000>;
->> +			regulator-max-microvolt = <1800000>;
->> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->>   		};
->>   
->>   		vreg_l13a_1p8: ldo13 {
->> @@ -143,9 +144,9 @@
->>   		};
->>   
->>   		vreg_l19a_2p9: ldo19 {
->> -			regulator-min-microvolt = <2696000>;
->> -			regulator-max-microvolt = <3304000>;
->> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
->> +			regulator-min-microvolt = <2960000>;
->> +			regulator-max-microvolt = <2960000>;
->> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->>   		};
->>   	};
->>   
->> @@ -189,9 +190,9 @@
->>   		};
->>   
->>   		vreg_l6c_2p9: ldo6 {
->> -			regulator-min-microvolt = <2696000>;
->> -			regulator-max-microvolt = <3304000>;
->> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
->> +			regulator-min-microvolt = <1800000>;
->> +			regulator-max-microvolt = <2950000>;
->> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->>   		};
->>   
->>   		vreg_l7c_3p0: ldo7 {
->> @@ -207,9 +208,9 @@
->>   		};
->>   
->>   		vreg_l9c_2p9: ldo9 {
->> -			regulator-min-microvolt = <2952000>;
->> -			regulator-max-microvolt = <3304000>;
->> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
->> +			regulator-min-microvolt = <2960000>;
->> +			regulator-max-microvolt = <2960000>;
->> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->>   		};
->>   
->>   		vreg_l10c_3p3: ldo10 {
->> @@ -400,3 +401,25 @@
->>   			bias-pull-up;
->>   		};
->>   };
->> +
->> +&sdhc_1 {
->> +	status = "ok";
->> +
->> +	pinctrl-names = "default", "sleep";
->> +	pinctrl-0 = <&sdc1_on>;
->> +	pinctrl-1 = <&sdc1_off>;
->> +	vmmc-supply = <&vreg_l19a_2p9>;
->> +	vqmmc-supply = <&vreg_l12a_1p8>;
->> +};
->> +
->> +&sdhc_2 {
->> +	status = "ok";
->> +
->> +	pinctrl-names = "default","sleep";
->> +	pinctrl-0 = <&sdc2_on>;
->> +	pinctrl-1 = <&sdc2_off>;
->> +	vmmc-supply  = <&vreg_l9c_2p9>;
->> +	vqmmc-supply = <&vreg_l6c_2p9>;
->> +
->> +	cd-gpios = <&tlmm 69 GPIO_ACTIVE_LOW>;
->> +};
-> You are adding these entries to the pinctrl section, they belong
-> above the "/* PINCTRL - additions to nodes defined in sc7180.dtsi */"
-> comment.
->
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> index 666e9b9..16de9b8 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> @@ -182,6 +182,32 @@
->>   			#power-domain-cells = <1>;
->>   		};
->>   
->> +		sdhc_1: sdhci@7c4000 {
->> +			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
->> +			reg = <0 0x7c4000 0 0x1000>;
->> +			reg-names = "hc_mem";
->> +
->> +			interrupts = <GIC_SPI 641 IRQ_TYPE_LEVEL_HIGH>,
->> +					<GIC_SPI 644 IRQ_TYPE_LEVEL_HIGH>;
->> +			interrupt-names = "hc_irq", "pwr_irq";
->> +
->> +			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
->> +					<&gcc GCC_SDCC1_AHB_CLK>;
->> +			clock-names = "core", "iface";
->> +
->> +			iommus = <&apps_smmu 0x60 0x0>;
->> +
->> +			bus-width = <8>;
->> +			non-removable;
->> +
->> +			mmc-ddr-1_8v;
->> +			mmc-hs200-1_8v;
->> +			mmc-hs400-1_8v;
->> +			mmc-hs400-enhanced-strobe;
->> +
->> +			status = "disabled";
->> +		};
->> +
->>   		qupv3_id_0: geniqup@8c0000 {
->>   			compatible = "qcom,geni-se-qup";
->>   			reg = <0 0x008c0000 0 0x6000>;
->> @@ -897,6 +923,128 @@
->>   					function = "qup15";
->>   				};
->>   			};
->> +
->> +			sdc1_on: sdc1-on {
->> +				clk {
-> judging from some other nodes the convention seems to be to call the
-> nodes 'pinconf-<name>'.
->
->> +					pins = "sdc1_clk";
->> +					bias-disable;
->> +					drive-strength = <16>;
->> +				};
->> +
->> +				cmd {
->> +					pins = "sdc1_cmd";
->> +					bias-pull-up;
->> +					drive-strength = <10>;
->> +				};
->> +
->> +				data {
->> +					pins = "sdc1_data";
->> +					bias-pull-up;
->> +					drive-strength = <10>;
->> +				};
-> cmd and data have the same configuration, in theory you could combine
-> them in a single node. Not sure if it's strictly required, in this case
-> with just two pins it doesn't make a big difference.
+syzbot found the following crash on:
 
-Though both have same configuration, each corresponds to different bit 
-fields in register
+HEAD commit:    bf8d1cd4 Merge tag 'scsi-fixes' of git://git.kernel.org/pu..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16386971e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=328af7338803d39a
+dashboard link: https://syzkaller.appspot.com/bug?extid=9c064b9ab4dbb724c806
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17f4ce15e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=153c8971e00000
 
-for updating drive-strengths and pull.  It configures the right bit 
-field based on pin name.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+9c064b9ab4dbb724c806@syzkaller.appspotmail.com
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pinctrl/qcom/pinctrl-sc7180.c?h=v5.5-rc4#n1093
+BUG: memory leak
+unreferenced object 0xffff88811f95b400 (size 256):
+   comm "syz-executor609", pid 6975, jiffies 4294945087 (age 7.980s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+     a0 2b ab 1b 82 88 ff ff c0 3c 80 2b 81 88 ff ff  .+.......<.+....
+   backtrace:
+     [<00000000aa112990>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000aa112990>] slab_post_alloc_hook mm/slab.h:586 [inline]
+     [<00000000aa112990>] slab_alloc mm/slab.c:3320 [inline]
+     [<00000000aa112990>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3484
+     [<00000000a62a216f>] kmem_cache_zalloc include/linux/slab.h:660 [inline]
+     [<00000000a62a216f>] __alloc_file+0x28/0x130 fs/file_table.c:101
+     [<00000000db4f5560>] alloc_empty_file+0x50/0xd0 fs/file_table.c:151
+     [<00000000178121b2>] path_openat+0x52/0x1dd0 fs/namei.c:3526
+     [<00000000b9f51901>] do_filp_open+0xaa/0x130 fs/namei.c:3567
+     [<000000008b6c278b>] do_sys_open+0x253/0x330 fs/open.c:1097
+     [<00000000de529158>] __do_sys_openat fs/open.c:1124 [inline]
+     [<00000000de529158>] __se_sys_openat fs/open.c:1118 [inline]
+     [<00000000de529158>] __x64_sys_openat+0x24/0x30 fs/open.c:1118
+     [<000000002f0aeb7b>] do_syscall_64+0x73/0x220  
+arch/x86/entry/common.c:294
+     [<00000000720f3b5c>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-So separate pins needed for cmd and data here.
 
->> +
->> +				rclk {
->> +					pins = "sdc1_rclk";
->> +					bias-pull-down;
->> +				};
->> +			};
->> +
->> +			sdc1_off: sdc1-off {
->> +				clk {
->> +					pins = "sdc1_clk";
->> +					bias-disable;
->> +					drive-strength = <2>;
->> +				};
->> +
->> +				cmd {
->> +					pins = "sdc1_cmd";
->> +					bias-pull-up;
->> +					drive-strength = <2>;
->> +				};
->> +
->> +				data {
->> +					pins = "sdc1_data";
->> +					bias-pull-up;
->> +					drive-strength = <2>;
->> +				};
->> +
->> +				rclk {
->> +					pins = "sdc1_rclk";
->> +					bias-pull-down;
->> +				};
->> +			};
->> +
->> +			sdc2_on: sdc2_on {
-> nit: sdc2_on: sdc2-on
->
->> +				clk {
->> +					pins = "sdc2_clk";
->> +					bias-disable;
->> +					drive-strength = <16>;
->> +				};
->> +
->> +				cmd {
->> +					pins = "sdc2_cmd";
->> +					bias-pull-up;
->> +					drive-strength = <10>;
->> +				};
->> +
->> +				data {
->> +					pins = "sdc2_data";
->> +					bias-pull-up;
->> +					drive-strength = <10>;
->> +				};
->> +
->> +				sd-cd {
->> +					pins = "gpio69";
->> +					bias-pull-up;
->> +					drive-strength = <2>;
->> +				};
->> +			};
->> +
->> +			sdc2_off: sdc2_off {
-> nit: sdc2_off: sdc2-off
 
-Will incorporate the rest of the changes that you commented.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Thanks,
-
-Veera
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
