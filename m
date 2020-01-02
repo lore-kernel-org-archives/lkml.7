@@ -7,47 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E02C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C769C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9A5022B48
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7196B21835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003917;
-	bh=+qYdNDC6yv5hcOe39M+A7S5YXBC2jbd7sawSI5KsQmM=;
+	s=default; t=1578003921;
+	bh=d18jTLWfApfwUh6KARUD1FZQRxSZd5VOJTbozrBOtrQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rk7wX1w8cXQbf6zjkbY/pqadZ68Y281qRJH3O6Uu172Q+HSC4ycLZYhhf/m1ormd8
-	 3mv9aTYG+IkPraAAC6MEsu4G4eSX1gVytziKpn5kXydr0Uq//H039U8b+jiKgSZvNT
-	 Je8I4NVteUNxk83Xbwf/JzIZC3EwhdTcP8iRCdCw=
+	b=qVrh6TPvi/2FATF+yxGmLT/OHRN6KUcDVA2aQw2C1hHBbHcPNiwJjtpb8WB6ThJbR
+	 voCazYVxMWkje0tnI3tIAm5pwYV8OvmGtYhtZgWBdcuP+8yBzlyAH0Ng0sN9rW+6g2
+	 lZhok7WEt5UlibKkNkpaAIumr7krFrmQP6dqp4rc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729494AbgABWZQ (ORCPT
+        id S1729500AbgABWZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:25:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50316 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:25:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729482AbgABWZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:25:14 -0500
+        id S1729489AbgABWZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:25:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E96C21835;
-        Thu,  2 Jan 2020 22:25:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6285324649;
+        Thu,  2 Jan 2020 22:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003913;
-        bh=+qYdNDC6yv5hcOe39M+A7S5YXBC2jbd7sawSI5KsQmM=;
+        s=default; t=1578003915;
+        bh=d18jTLWfApfwUh6KARUD1FZQRxSZd5VOJTbozrBOtrQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=goeFjwmGQy3J4h56FvMwjNjEQbknDUgFp97pThz7otvKL/1BVgwkCuus/KHSTw76y
-         ILM20iaxIMnEZ/Dl76HJw9OgzSMODfryGzWggObjJiaVSvRzf9sEIiNzkb7lA+2F4A
-         h0ki1wculS/YA/XfrRh3t2/UanS7KrMif00sa+gM=
+        b=Q/KmEpYZvl5dJu2T+NsVWushmZlK3dNvgF1OLNQDyungBCk5p0UDZEvDKArqItahw
+         5c1tRdOGB6D6O2u20HHoD8J5rndSeeV3ruublqemW6ey8vE8n3Vs3P72Tg/Og6nQrc
+         XtqEHft9ybUgr3caCTVe20f0H/Io22aetmrh0pHQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org,
+        Ding Xiang <dingxiang@cmss.chinamobile.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 51/91] s390/cpum_sf: Check for SDBT and SDB consistency
-Date:   Thu,  2 Jan 2020 23:07:33 +0100
-Message-Id: <20200102220437.178733015@linuxfoundation.org>
+Subject: [PATCH 4.14 52/91] ocfs2: fix passing zero to PTR_ERR warning
+Date:   Thu,  2 Jan 2020 23:07:34 +0100
+Message-Id: <20200102220437.528488057@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
 References: <20200102220356.856162165@linuxfoundation.org>
@@ -60,105 +68,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Ding Xiang <dingxiang@cmss.chinamobile.com>
 
-[ Upstream commit 247f265fa502e7b17a0cb0cc330e055a36aafce4 ]
+[ Upstream commit 188c523e1c271d537f3c9f55b6b65bf4476de32f ]
 
-Each SBDT is located at a 4KB page and contains 512 entries.
-Each entry of a SDBT points to a SDB, a 4KB page containing
-sampled data. The last entry is a link to another SDBT page.
+Fix a static code checker warning:
+fs/ocfs2/acl.c:331
+	ocfs2_acl_chmod() warn: passing zero to 'PTR_ERR'
 
-When an event is created the function sequence executed is:
-
-  __hw_perf_event_init()
-  +--> allocate_buffers()
-       +--> realloc_sampling_buffers()
-	    +---> alloc_sample_data_block()
-
-Both functions realloc_sampling_buffers() and
-alloc_sample_data_block() allocate pages and the allocation
-can fail. This is handled correctly and all allocated
-pages are freed and error -ENOMEM is returned to the
-top calling function. Finally the event is not created.
-
-Once the event has been created, the amount of initially
-allocated SDBT and SDB can be too low. This is detected
-during measurement interrupt handling, where the amount
-of lost samples is calculated. If the number of lost samples
-is too high considering sampling frequency and already allocated
-SBDs, the number of SDBs is enlarged during the next execution
-of cpumsf_pmu_enable().
-
-If more SBDs need to be allocated, functions
-
-       realloc_sampling_buffers()
-       +---> alloc-sample_data_block()
-
-are called to allocate more pages. Page allocation may fail
-and the returned error is ignored. A SDBT and SDB setup
-already exists.
-
-However the modified SDBTs and SDBs might end up in a situation
-where the first entry of an SDBT does not point to an SDB,
-but another SDBT, basicly an SBDT without payload.
-This can not be handled by the interrupt handler, where an SDBT
-must have at least one entry pointing to an SBD.
-
-Add a check to avoid SDBTs with out payload (SDBs) when enlarging
-the buffer setup.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Link: http://lkml.kernel.org/r/1dee278b-6c96-eec2-ce76-fe6e07c6e20f@linux.alibaba.com
+Fixes: 5ee0fbd50fd ("ocfs2: revert using ocfs2_acl_chmod to avoid inode cluster lock hang")
+Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/perf_cpum_sf.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ fs/ocfs2/acl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index 2e2fd9535f86..45304085b6ee 100644
---- a/arch/s390/kernel/perf_cpum_sf.c
-+++ b/arch/s390/kernel/perf_cpum_sf.c
-@@ -185,7 +185,7 @@ static int realloc_sampling_buffer(struct sf_buffer *sfb,
- 				   unsigned long num_sdb, gfp_t gfp_flags)
- {
- 	int i, rc;
--	unsigned long *new, *tail;
-+	unsigned long *new, *tail, *tail_prev = NULL;
- 
- 	if (!sfb->sdbt || !sfb->tail)
- 		return -EINVAL;
-@@ -224,6 +224,7 @@ static int realloc_sampling_buffer(struct sf_buffer *sfb,
- 			sfb->num_sdbt++;
- 			/* Link current page to tail of chain */
- 			*tail = (unsigned long)(void *) new + 1;
-+			tail_prev = tail;
- 			tail = new;
- 		}
- 
-@@ -233,10 +234,22 @@ static int realloc_sampling_buffer(struct sf_buffer *sfb,
- 		 * issue, a new realloc call (if required) might succeed.
- 		 */
- 		rc = alloc_sample_data_block(tail, gfp_flags);
--		if (rc)
-+		if (rc) {
-+			/* Undo last SDBT. An SDBT with no SDB at its first
-+			 * entry but with an SDBT entry instead can not be
-+			 * handled by the interrupt handler code.
-+			 * Avoid this situation.
-+			 */
-+			if (tail_prev) {
-+				sfb->num_sdbt--;
-+				free_page((unsigned long) new);
-+				tail = tail_prev;
-+			}
- 			break;
-+		}
- 		sfb->num_sdb++;
- 		tail++;
-+		tail_prev = new = NULL;	/* Allocated at least one SBD */
- 	}
- 
- 	/* Link sampling buffer to its origin */
+diff --git a/fs/ocfs2/acl.c b/fs/ocfs2/acl.c
+index 917fadca8a7b..b73b78771915 100644
+--- a/fs/ocfs2/acl.c
++++ b/fs/ocfs2/acl.c
+@@ -335,8 +335,8 @@ int ocfs2_acl_chmod(struct inode *inode, struct buffer_head *bh)
+ 	down_read(&OCFS2_I(inode)->ip_xattr_sem);
+ 	acl = ocfs2_get_acl_nolock(inode, ACL_TYPE_ACCESS, bh);
+ 	up_read(&OCFS2_I(inode)->ip_xattr_sem);
+-	if (IS_ERR(acl) || !acl)
+-		return PTR_ERR(acl);
++	if (IS_ERR_OR_NULL(acl))
++		return PTR_ERR_OR_ZERO(acl);
+ 	ret = __posix_acl_chmod(&acl, GFP_KERNEL, inode->i_mode);
+ 	if (ret)
+ 		return ret;
 -- 
 2.20.1
 
