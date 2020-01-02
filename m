@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719D4C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CE0C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4763120863
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 115B320863
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004045;
-	bh=wQT4xWXNIzsEabQI1mSrwFFkt4xowQeeU7x6mRr+IQY=;
+	s=default; t=1578004047;
+	bh=BJfAgA/szN1AYgs2fr/TD2yZN9lPFjDUIRPYNSfyyGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Aupz1tzN5SVah9CcoExHcgK3lIvJs+9xUgJkL5ZG/AeO/CsRd2rM6A6apSpYsAkcG
-	 FQNMiaYVYxCTr4gfPG46DwxGJOEWdfwzvbS0w91LITGMi7ospi1RiKlhMwkWetIRW/
-	 pHDuDDjxozD4Jik/yegUT34tYYHesDtaM1uPNQ6s=
+	b=sJyteWkWS3hk8chgVzoXejtYQ3nYdWcEVMZyQBC/sCWWwbEKv8vizBavlwTD3e/Bb
+	 alOW5hCEQ2nu59bjnYpMNON6eG8owIsjVn80K0KDMXKgNdUXGQS23XnQIs19RUsUWY
+	 AzPbHyQSMnCsv0448/Vrp5bf5YYBWhA/ovCxGVxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgABW1Y (ORCPT
+        id S1729448AbgABW10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:27:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55650 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:27:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729291AbgABW1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:27:21 -0500
+        id S1726005AbgABW1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:27:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F91E20863;
-        Thu,  2 Jan 2020 22:27:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 077E320863;
+        Thu,  2 Jan 2020 22:27:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004041;
-        bh=wQT4xWXNIzsEabQI1mSrwFFkt4xowQeeU7x6mRr+IQY=;
+        s=default; t=1578004043;
+        bh=BJfAgA/szN1AYgs2fr/TD2yZN9lPFjDUIRPYNSfyyGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zYzUHfOhb3qRe6z+avFrsVJvUe+s8Vgee1eTxOuwW1+1MXrcdef8HoKHiGC+B3V48
-         awP8niVAcVL8ypFv6F1USw7dEQX2j5rEfrWk0VcSQ32QEwSi69njbi1xwh2OoVECkG
-         R/JL0JL2J4EqYOeKS5JVlvUjy98B0PCYRT8PVX5E=
+        b=uldbmkdI63w214O1eXCTcaT40/YvwyMYu7ZMfDIYp6VQILg7FJA61PtKq4wtwFCYq
+         3LdqIwwLgPIM1ju/jFuYPcKQCqg8UUoA7s96Cgbv6sCVvwUWflKUzUuIr/6E0IjpYu
+         McOO/nl5CpewjUh/Mle85FYHeMk5kQn8pttu1cnA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lionel Koenig <lionel.koenig@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 004/171] ALSA: pcm: Avoid possible info leaks from PCM stream buffers
-Date:   Thu,  2 Jan 2020 23:05:35 +0100
-Message-Id: <20200102220547.519128833@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 005/171] ALSA: hda/ca0132 - Keep power on during processing DSP response
+Date:   Thu,  2 Jan 2020 23:05:36 +0100
+Message-Id: <20200102220547.664543007@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
 References: <20200102220546.960200039@linuxfoundation.org>
@@ -61,41 +60,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-commit add9d56d7b3781532208afbff5509d7382fb6efe upstream.
+commit 377bc0cfabce0244632dada19060839ced4e6949 upstream.
 
-The current PCM code doesn't initialize explicitly the buffers
-allocated for PCM streams, hence it might leak some uninitialized
-kernel data or previous stream contents by mmapping or reading the
-buffer before actually starting the stream.
+We need to keep power on while processing the DSP response via unsol
+event.  Each snd_hda_codec_read() call does the power management, so
+it should work normally, but still it's safer to keep the power up for
+the whole function.
 
-Since this is a common problem, this patch simply adds the clearance
-of the buffer data at hw_params callback.  Although this does only
-zero-clear no matter which format is used, which doesn't mean the
-silence for some formats, but it should be OK because the intention is
-just to clear the previous data on the buffer.
-
-Reported-by: Lionel Koenig <lionel.koenig@gmail.com>
+Fixes: a73d511c4867 ("ALSA: hda/ca0132: Add unsol handler for DSP and jack detection")
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191211155742.3213-1-tiwai@suse.de
+Link: https://lore.kernel.org/r/20191213085111.22855-2-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/pcm_native.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ sound/pci/hda/patch_ca0132.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -587,6 +587,10 @@ static int snd_pcm_hw_params(struct snd_
- 	while (runtime->boundary * 2 <= LONG_MAX - runtime->buffer_size)
- 		runtime->boundary *= 2;
+--- a/sound/pci/hda/patch_ca0132.c
++++ b/sound/pci/hda/patch_ca0132.c
+@@ -4424,12 +4424,14 @@ static void ca0132_process_dsp_response(
+ 	struct ca0132_spec *spec = codec->spec;
  
-+	/* clear the buffer for avoiding possible kernel info leaks */
-+	if (runtime->dma_area)
-+		memset(runtime->dma_area, 0, runtime->dma_bytes);
-+
- 	snd_pcm_timer_resolution_change(substream);
- 	snd_pcm_set_state(substream, SNDRV_PCM_STATE_SETUP);
+ 	codec_dbg(codec, "ca0132_process_dsp_response\n");
++	snd_hda_power_up_pm(codec);
+ 	if (spec->wait_scp) {
+ 		if (dspio_get_response_data(codec) >= 0)
+ 			spec->wait_scp = 0;
+ 	}
  
+ 	dspio_clear_response_queue(codec);
++	snd_hda_power_down_pm(codec);
+ }
+ 
+ static void hp_callback(struct hda_codec *codec, struct hda_jack_callback *cb)
 
 
