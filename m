@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B42C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3F0C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3946F20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 914CB20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005906;
-	bh=Grg0PjgHxAQQmYLCt//jN7JuUDhZh26GwsjENSsfhbE=;
+	s=default; t=1578005911;
+	bh=cugt3nrPnzCLUq7Te4RVjmhxVogJnL4KQ6oRYI5BSZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cWvETRJDoI+BZPc0JS1Q+3w78DNmptcEyLfyxZyh5bgt9+7dNxbTZYDp/LNqEi46d
-	 6XSaXZY8lpNxi2EW7i4YQ6T89qsoipAVpKNWbikbVyYZqjOY9XTRTha+XpkLEWPk06
-	 GRea8Kdu8DjriXptNG5HfQ+WIiU3f5+8kztnW3xo=
+	b=K5CvFv5bVLXb4CXLGdk4J8RvcE5g3/rHh42QATuiv9e+ch+2H2V1arEJhb3xpe/Q7
+	 dreWEmMdUtX+Hyb6n5npTda/bk3FqvIXXgdiHbWnxCQ5AWiI4jA/nwYWw3/Fxu9iKn
+	 Vft4EytBw5lCZVFFs2Kwt+EQdzDgD7semmvqzwYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgABWPo (ORCPT
+        id S1728708AbgABW6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:15:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56850 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:58:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727233AbgABWPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:15:41 -0500
+        id S1728079AbgABWPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:15:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68F9E22314;
-        Thu,  2 Jan 2020 22:15:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EB9522314;
+        Thu,  2 Jan 2020 22:15:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003339;
-        bh=Grg0PjgHxAQQmYLCt//jN7JuUDhZh26GwsjENSsfhbE=;
+        s=default; t=1578003335;
+        bh=cugt3nrPnzCLUq7Te4RVjmhxVogJnL4KQ6oRYI5BSZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fKENWhZB1tA6942AclBNQ2fk+1N9Jke/kUMp6IQnZHq8cVYq175wAEjLV2iT0A8uL
-         sE/cXQ4JYHPHal14/KZFuIbU3QYT92kcbHjTbQqvjluJ1bfP+TtxQs7PnyZ/IOjeBi
-         hiZg/yjUBiIZOQ/1mVHQrjFr0j+ycIx1Ckz9ZOO4=
+        b=s8WSi/rlX2BtIdgx6kSJOUnujx0aATnUFMnTe7zQb5BTNE3tUSnZ25faKm4giflwd
+         vYrLJenJ82iX+d9PpwZkRAxuF8DLSslIO9zdX8WTBW4vLeqEqud1m54spVzhcmDD7m
+         o0rJV4kZHhuScgqT3nL8pQpJTk5Ay+G+VtxuhQsw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Christie <mchristi@redhat.com>,
-        Roman Bolshakov <r.bolshakov@yadro.com>,
-        Bart Van Assche <bvanassche@acm.org>,
+        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
+        Can Guo <cang@codeaurora.org>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 094/191] scsi: target: iscsi: Wait for all commands to finish before freeing a session
-Date:   Thu,  2 Jan 2020 23:06:16 +0100
-Message-Id: <20200102215839.998688827@linuxfoundation.org>
+Subject: [PATCH 5.4 092/191] scsi: ufs: Fix up auto hibern8 enablement
+Date:   Thu,  2 Jan 2020 23:06:14 +0100
+Message-Id: <20200102215839.783129982@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -62,141 +61,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Can Guo <cang@codeaurora.org>
 
-[ Upstream commit e9d3009cb936bd0faf0719f68d98ad8afb1e613b ]
+[ Upstream commit 71d848b8d97ec0f8e993d63cf9de6ac8b3f7c43d ]
 
-The iSCSI target driver is the only target driver that does not wait for
-ongoing commands to finish before freeing a session. Make the iSCSI target
-driver wait for ongoing commands to finish before freeing a session. This
-patch fixes the following KASAN complaint:
+Fix up possible unclocked register access to auto hibern8 register in
+resume path and through sysfs entry. Meanwhile, enable auto hibern8 only
+after device is fully initialized in probe path.
 
-BUG: KASAN: use-after-free in __lock_acquire+0xb1a/0x2710
-Read of size 8 at addr ffff8881154eca70 by task kworker/0:2/247
-
-CPU: 0 PID: 247 Comm: kworker/0:2 Not tainted 5.4.0-rc1-dbg+ #6
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-Workqueue: target_completion target_complete_ok_work [target_core_mod]
-Call Trace:
- dump_stack+0x8a/0xd6
- print_address_description.constprop.0+0x40/0x60
- __kasan_report.cold+0x1b/0x33
- kasan_report+0x16/0x20
- __asan_load8+0x58/0x90
- __lock_acquire+0xb1a/0x2710
- lock_acquire+0xd3/0x200
- _raw_spin_lock_irqsave+0x43/0x60
- target_release_cmd_kref+0x162/0x7f0 [target_core_mod]
- target_put_sess_cmd+0x2e/0x40 [target_core_mod]
- lio_check_stop_free+0x12/0x20 [iscsi_target_mod]
- transport_cmd_check_stop_to_fabric+0xd8/0xe0 [target_core_mod]
- target_complete_ok_work+0x1b0/0x790 [target_core_mod]
- process_one_work+0x549/0xa40
- worker_thread+0x7a/0x5d0
- kthread+0x1bc/0x210
- ret_from_fork+0x24/0x30
-
-Allocated by task 889:
- save_stack+0x23/0x90
- __kasan_kmalloc.constprop.0+0xcf/0xe0
- kasan_slab_alloc+0x12/0x20
- kmem_cache_alloc+0xf6/0x360
- transport_alloc_session+0x29/0x80 [target_core_mod]
- iscsi_target_login_thread+0xcd6/0x18f0 [iscsi_target_mod]
- kthread+0x1bc/0x210
- ret_from_fork+0x24/0x30
-
-Freed by task 1025:
- save_stack+0x23/0x90
- __kasan_slab_free+0x13a/0x190
- kasan_slab_free+0x12/0x20
- kmem_cache_free+0x146/0x400
- transport_free_session+0x179/0x2f0 [target_core_mod]
- transport_deregister_session+0x130/0x180 [target_core_mod]
- iscsit_close_session+0x12c/0x350 [iscsi_target_mod]
- iscsit_logout_post_handler+0x136/0x380 [iscsi_target_mod]
- iscsit_response_queue+0x8de/0xbe0 [iscsi_target_mod]
- iscsi_target_tx_thread+0x27f/0x370 [iscsi_target_mod]
- kthread+0x1bc/0x210
- ret_from_fork+0x24/0x30
-
-The buggy address belongs to the object at ffff8881154ec9c0
- which belongs to the cache se_sess_cache of size 352
-The buggy address is located 176 bytes inside of
- 352-byte region [ffff8881154ec9c0, ffff8881154ecb20)
-The buggy address belongs to the page:
-page:ffffea0004553b00 refcount:1 mapcount:0 mapping:ffff888101755400 index:0x0 compound_mapcount: 0
-flags: 0x2fff000000010200(slab|head)
-raw: 2fff000000010200 dead000000000100 dead000000000122 ffff888101755400
-raw: 0000000000000000 0000000080130013 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881154ec900: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff8881154ec980: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
->ffff8881154eca00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                             ^
- ffff8881154eca80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8881154ecb00: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
-
-Cc: Mike Christie <mchristi@redhat.com>
-Link: https://lore.kernel.org/r/20191113220508.198257-3-bvanassche@acm.org
-Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Link: https://lore.kernel.org/r/1573798172-20534-4-git-send-email-cang@codeaurora.org
+Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Can Guo <cang@codeaurora.org>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/iscsi/iscsi_target.c | 10 ++++++++--
- include/scsi/iscsi_proto.h          |  1 +
- 2 files changed, 9 insertions(+), 2 deletions(-)
+ drivers/scsi/ufs/ufs-sysfs.c | 15 +++++++++------
+ drivers/scsi/ufs/ufshcd.c    | 14 +++++++-------
+ drivers/scsi/ufs/ufshcd.h    |  2 ++
+ 3 files changed, 18 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
-index d19e051f2bc2..f194ffc4699e 100644
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -1165,7 +1165,9 @@ int iscsit_setup_scsi_cmd(struct iscsi_conn *conn, struct iscsi_cmd *cmd,
- 		hdr->cmdsn, be32_to_cpu(hdr->data_length), payload_length,
- 		conn->cid);
+diff --git a/drivers/scsi/ufs/ufs-sysfs.c b/drivers/scsi/ufs/ufs-sysfs.c
+index 969a36b15897..ad2abc96c0f1 100644
+--- a/drivers/scsi/ufs/ufs-sysfs.c
++++ b/drivers/scsi/ufs/ufs-sysfs.c
+@@ -126,13 +126,16 @@ static void ufshcd_auto_hibern8_update(struct ufs_hba *hba, u32 ahit)
+ 		return;
  
--	target_get_sess_cmd(&cmd->se_cmd, true);
-+	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
-+		return iscsit_add_reject_cmd(cmd,
-+				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
+ 	spin_lock_irqsave(hba->host->host_lock, flags);
+-	if (hba->ahit == ahit)
+-		goto out_unlock;
+-	hba->ahit = ahit;
+-	if (!pm_runtime_suspended(hba->dev))
+-		ufshcd_writel(hba, hba->ahit, REG_AUTO_HIBERNATE_IDLE_TIMER);
+-out_unlock:
++	if (hba->ahit != ahit)
++		hba->ahit = ahit;
+ 	spin_unlock_irqrestore(hba->host->host_lock, flags);
++	if (!pm_runtime_suspended(hba->dev)) {
++		pm_runtime_get_sync(hba->dev);
++		ufshcd_hold(hba, false);
++		ufshcd_auto_hibern8_enable(hba);
++		ufshcd_release(hba);
++		pm_runtime_put(hba->dev);
++	}
+ }
  
- 	cmd->sense_reason = transport_lookup_cmd_lun(&cmd->se_cmd,
- 						     scsilun_to_int(&hdr->lun));
-@@ -2002,7 +2004,9 @@ iscsit_handle_task_mgt_cmd(struct iscsi_conn *conn, struct iscsi_cmd *cmd,
- 			      conn->sess->se_sess, 0, DMA_NONE,
- 			      TCM_SIMPLE_TAG, cmd->sense_buffer + 2);
+ /* Convert Auto-Hibernate Idle Timer register value to microseconds */
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 0036dcffc4a9..25a6a25b17a2 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -3950,7 +3950,7 @@ static int ufshcd_uic_hibern8_exit(struct ufs_hba *hba)
+ 	return ret;
+ }
  
--	target_get_sess_cmd(&cmd->se_cmd, true);
-+	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
-+		return iscsit_add_reject_cmd(cmd,
-+				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
+-static void ufshcd_auto_hibern8_enable(struct ufs_hba *hba)
++void ufshcd_auto_hibern8_enable(struct ufs_hba *hba)
+ {
+ 	unsigned long flags;
  
+@@ -6890,9 +6890,6 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
+ 	/* UniPro link is active now */
+ 	ufshcd_set_link_active(hba);
+ 
+-	/* Enable Auto-Hibernate if configured */
+-	ufshcd_auto_hibern8_enable(hba);
+-
+ 	ret = ufshcd_verify_dev_init(hba);
+ 	if (ret)
+ 		goto out;
+@@ -6943,6 +6940,9 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
+ 	/* set the state as operational after switching to desired gear */
+ 	hba->ufshcd_state = UFSHCD_STATE_OPERATIONAL;
+ 
++	/* Enable Auto-Hibernate if configured */
++	ufshcd_auto_hibern8_enable(hba);
++
  	/*
- 	 * TASK_REASSIGN for ERL=2 / connection stays inside of
-@@ -4232,6 +4236,8 @@ int iscsit_close_connection(
- 	 * must wait until they have completed.
- 	 */
- 	iscsit_check_conn_usage_count(conn);
-+	target_sess_cmd_list_set_waiting(sess->se_sess);
-+	target_wait_for_sess_cmds(sess->se_sess);
+ 	 * If we are in error handling context or in power management callbacks
+ 	 * context, no need to scan the host
+@@ -7959,12 +7959,12 @@ static int ufshcd_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ 	if (hba->clk_scaling.is_allowed)
+ 		ufshcd_resume_clkscaling(hba);
  
- 	ahash_request_free(conn->conn_tx_hash);
- 	if (conn->conn_rx_hash) {
-diff --git a/include/scsi/iscsi_proto.h b/include/scsi/iscsi_proto.h
-index b71b5c4f418c..533f56733ba8 100644
---- a/include/scsi/iscsi_proto.h
-+++ b/include/scsi/iscsi_proto.h
-@@ -627,6 +627,7 @@ struct iscsi_reject {
- #define ISCSI_REASON_BOOKMARK_INVALID	9
- #define ISCSI_REASON_BOOKMARK_NO_RESOURCES	10
- #define ISCSI_REASON_NEGOTIATION_RESET	11
-+#define ISCSI_REASON_WAITING_FOR_LOGOUT	12
+-	/* Schedule clock gating in case of no access to UFS device yet */
+-	ufshcd_release(hba);
+-
+ 	/* Enable Auto-Hibernate if configured */
+ 	ufshcd_auto_hibern8_enable(hba);
  
- /* Max. number of Key=Value pairs in a text message */
- #define MAX_KEY_VALUE_PAIRS	8192
++	/* Schedule clock gating in case of no access to UFS device yet */
++	ufshcd_release(hba);
++
+ 	goto out;
+ 
+ set_old_link_state:
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index c94cfda52829..52c9676a1242 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -916,6 +916,8 @@ int ufshcd_query_attr(struct ufs_hba *hba, enum query_opcode opcode,
+ int ufshcd_query_flag(struct ufs_hba *hba, enum query_opcode opcode,
+ 	enum flag_idn idn, bool *flag_res);
+ 
++void ufshcd_auto_hibern8_enable(struct ufs_hba *hba);
++
+ #define SD_ASCII_STD true
+ #define SD_RAW false
+ int ufshcd_read_string_desc(struct ufs_hba *hba, u8 desc_index,
 -- 
 2.20.1
 
