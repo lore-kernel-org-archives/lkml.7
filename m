@@ -7,53 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A336BC3276D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC0DC3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 770AF21582
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3734C22314
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003599;
-	bh=7nozndicwzu6wWckXf4Hecr8ErNysisPu4jA4safFwM=;
+	s=default; t=1578003603;
+	bh=TWVBE6ZH+zWuFWama4+85rMhPVw+P4FoSC8lH2pdYuU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=whQOd9eNFuM5Rd1qIBQA49mpEJyco/oR1NfgcJWQXRgiwjQndqTUbvSabtnO0K/Mt
-	 /Ud/L3q1MJ+2mJiSBe/jvnp+uwjSdDHwryox7ytH/naE+Fp4Oin4X1/b7NPcuRUsIn
-	 NQKI1jL4yFOagaZ8rOh2LKn8MfSZllvpewrZCQCE=
+	b=1hqAUcKNJ21zz0y0KmGFUKCAt1CmWOR6HGs3bMPflRsTKvpT7BlhDGFsztD3ZCgeP
+	 a9zZlc0+18wv+70uccLCqL5K55YyCytRqovsYwRTISn2WuEdWUahT9FO1yEqUvuVkV
+	 KPIOCIylg2QLkjT7vPeZcqT7gbEsgk69VdS6NcGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728706AbgABWT6 (ORCPT
+        id S1728734AbgABWUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:19:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36570 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:20:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728382AbgABWTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:19:55 -0500
+        id S1728718AbgABWUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:20:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EC6A21D7D;
-        Thu,  2 Jan 2020 22:19:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9253E22525;
+        Thu,  2 Jan 2020 22:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003593;
-        bh=7nozndicwzu6wWckXf4Hecr8ErNysisPu4jA4safFwM=;
+        s=default; t=1578003601;
+        bh=TWVBE6ZH+zWuFWama4+85rMhPVw+P4FoSC8lH2pdYuU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QKjcKFIse87VUHJlKSXr/ZtmjSgDWxEIMADCuCWHDPXi4e4ae5cFmeG5H/0BSoZv8
-         mJv6aYJnXTVH3XBEikE6ymTYl/br2jgyz4sxfFchoh7SrTOP9kw4CV9jv2CHtgh0fh
-         arNulqLm3iK9arBBPrRBxx2gefFh3kM4K1oUvLio=
+        b=dZEDuSIWJBSRQlw+rIDif06twFOCUZpUSqPhy3oLtA3gi88F8q1NEciRglhPFLtBi
+         qlkw3jM9E071dYOdcD57lgljfttcsKG2JpI36rnefQCraGdWMQTAO/UjQ6xzut75Z4
+         ypk1aaUwC0xbkA226Xe/NQe4K0Vy0jsKKkpDo4L4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        coverity-bot <keescook+coverity-bot@chromium.org>,
-        James Bottomley <James.Bottomley@SteelEye.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-next@vger.kernel.org, "Ewan D . Milne" <emilne@redhat.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 034/114] scsi: lpfc: fix: Coverity: lpfc_cmpl_els_rsp(): Null pointer dereferences
-Date:   Thu,  2 Jan 2020 23:06:46 +0100
-Message-Id: <20200102220032.519539423@linuxfoundation.org>
+Subject: [PATCH 4.19 019/114] clocksource/drivers/timer-of: Use unique device name instead of timer
+Date:   Thu,  2 Jan 2020 23:06:31 +0100
+Message-Id: <20200102220031.064182128@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -66,64 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 6c6d59e0fe5b86cf273d6d744a6a9768c4ecc756 ]
+[ Upstream commit 4411464d6f8b5e5759637235a6f2b2a85c2be0f1 ]
 
-Coverity reported the following:
+If a hardware-specific driver does not provide a name, the timer-of core
+falls back to device_node.name.  Due to generic DT node naming policies,
+that name is almost always "timer", and thus doesn't identify the actual
+timer used.
 
-*** CID 101747:  Null pointer dereferences  (FORWARD_NULL)
-/drivers/scsi/lpfc/lpfc_els.c: 4439 in lpfc_cmpl_els_rsp()
-4433     			kfree(mp);
-4434     		}
-4435     		mempool_free(mbox, phba->mbox_mem_pool);
-4436     	}
-4437     out:
-4438     	if (ndlp && NLP_CHK_NODE_ACT(ndlp)) {
-vvv     CID 101747:  Null pointer dereferences  (FORWARD_NULL)
-vvv     Dereferencing null pointer "shost".
-4439     		spin_lock_irq(shost->host_lock);
-4440     		ndlp->nlp_flag &= ~(NLP_ACC_REGLOGIN | NLP_RM_DFLT_RPI);
-4441     		spin_unlock_irq(shost->host_lock);
-4442
-4443     		/* If the node is not being used by another discovery thread,
-4444     		 * and we are sending a reject, we are done with it.
+Fix this by using device_node.full_name instead, which includes the unit
+addrees.
 
-Fix by adding a check for non-null shost in line 4438.
-The scenario when shost is set to null is when ndlp is null.
-As such, the ndlp check present was sufficient. But better safe
-than sorry so add the shost check.
+Example impact on /proc/timer_list:
 
-Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 101747 ("Null pointer dereferences")
-Fixes: 2e0fef85e098 ("[SCSI] lpfc: NPIV: split ports")
+    -Clock Event Device: timer
+    +Clock Event Device: timer@fcfec400
 
-CC: James Bottomley <James.Bottomley@SteelEye.com>
-CC: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-CC: linux-next@vger.kernel.org
-Link: https://lore.kernel.org/r/20191111230401.12958-3-jsmart2021@gmail.com
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20191016144747.29538-3-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_els.c | 2 +-
+ drivers/clocksource/timer-of.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
-index 4f4d1b3b3bbc..7398350b08b4 100644
---- a/drivers/scsi/lpfc/lpfc_els.c
-+++ b/drivers/scsi/lpfc/lpfc_els.c
-@@ -4110,7 +4110,7 @@ lpfc_cmpl_els_rsp(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
- 		mempool_free(mbox, phba->mbox_mem_pool);
+diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
+index 06ed88a2a8a0..6e2cb3693ed8 100644
+--- a/drivers/clocksource/timer-of.c
++++ b/drivers/clocksource/timer-of.c
+@@ -199,7 +199,7 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
  	}
- out:
--	if (ndlp && NLP_CHK_NODE_ACT(ndlp)) {
-+	if (ndlp && NLP_CHK_NODE_ACT(ndlp) && shost) {
- 		spin_lock_irq(shost->host_lock);
- 		ndlp->nlp_flag &= ~(NLP_ACC_REGLOGIN | NLP_RM_DFLT_RPI);
- 		spin_unlock_irq(shost->host_lock);
+ 
+ 	if (!to->clkevt.name)
+-		to->clkevt.name = np->name;
++		to->clkevt.name = np->full_name;
+ 
+ 	to->np = np;
+ 
 -- 
 2.20.1
 
