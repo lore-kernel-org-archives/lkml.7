@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AEDC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6F8C3276D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0666C20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BA5F21835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578004505;
-	bh=UFVz64uh2lUuB3uEQ3v7ZEdeVfbYQUHHdz7SF4UbtXU=;
+	s=default; t=1578004507;
+	bh=2iWmW1hzHKD0gc0gao0EepPNrbladOW2UOGqPPs3S00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aWEVMOBOq9Tl0N3ACIJG/j+1siOG4/kiQcgJrxe4iW3NKcDCxYTbL4KrE0AXCHy0d
-	 nTnzzplwAlCdgGGVINUJDiebxZyZKgGZAF16ezQQxYWq7fGVCOkfis6liiWLZjyyxT
-	 WdzSbK24sPWPJWfDjpaEJLXp+D6F64tWYjdzatsM=
+	b=RDUR46GUQKCj8wSnCnMcMh1jIZWFbaRhIBgxY+KJYWRRgu9kg48nYRnI8V41f4thO
+	 CIsJ2DJXR190CwUqCR3CzyYGrl6UrQtdIo7BS+Nk985u9V1Y5diNsW+eLvd9IOV7Z4
+	 LIXLmA+n0Oqr3bg2IL373RH8coyaip286TAfLZOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730769AbgABWfD (ORCPT
+        id S1730777AbgABWfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:35:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44264 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:35:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730314AbgABWfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:35:00 -0500
+        id S1730762AbgABWfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:35:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB44421835;
-        Thu,  2 Jan 2020 22:34:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6286F21D7D;
+        Thu,  2 Jan 2020 22:35:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578004499;
-        bh=UFVz64uh2lUuB3uEQ3v7ZEdeVfbYQUHHdz7SF4UbtXU=;
+        s=default; t=1578004501;
+        bh=2iWmW1hzHKD0gc0gao0EepPNrbladOW2UOGqPPs3S00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uTE9jaKJJqZmIGz6WwZCzLlGpyIHKPq7xb7KvntA0dImQRqemk3CpKTzjNRSqEozU
-         bjRXatt1ixSP2nvjhhRfLz5Ju/9Y++q1DVawux44idruzZNlQkfsJ8TfYnDfcz//Qe
-         g6yIhd9IS4GZua3z7S1s6apDGFH1+b6Bp2bjf0UE=
+        b=ZjVyo75vMuD+VZY1el4bCPFYOPNKeBe2phKEA+hTKL6vxZpqwEksSLLoPtfNvi9Bb
+         sRmwgeY9mftxLrO5afjSVPRui8s3tesp3hDhSx5uQnmJm8BjhYD3VIxQ0MrzYdb0kv
+         3TsLL5H+KUM5H1+UGebK80AI7cHmEvlPqp2Jlu8M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 033/137] libata: Ensure ata_port probe has completed before detach
-Date:   Thu,  2 Jan 2020 23:06:46 +0100
-Message-Id: <20200102220551.115986332@linuxfoundation.org>
+        stable@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 034/137] pinctrl: sh-pfc: sh7734: Fix duplicate TCLK1_B
+Date:   Thu,  2 Jan 2020 23:06:47 +0100
+Message-Id: <20200102220551.253685519@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220546.618583146@linuxfoundation.org>
 References: <20200102220546.618583146@linuxfoundation.org>
@@ -59,93 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 130f4caf145c3562108b245a576db30b916199d2 ]
+[ Upstream commit 884caadad128efad8e00c1cdc3177bc8912ee8ec ]
 
-With CONFIG_DEBUG_TEST_DRIVER_REMOVE set, we may find the following WARN:
+The definitions for bit field [19:18] of the Peripheral Function Select
+Register 3 were accidentally copied from bit field [20], leading to
+duplicates for the TCLK1_B function, and missing TCLK0, CAN_CLK_B, and
+ET0_ETXD4 functions.
 
-[   23.452574] ------------[ cut here ]------------
-[   23.457190] WARNING: CPU: 59 PID: 1 at drivers/ata/libata-core.c:6676 ata_host_detach+0x15c/0x168
-[   23.466047] Modules linked in:
-[   23.469092] CPU: 59 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc1-00010-g5b83fd27752b-dirty #296
-[   23.477776] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 - V1.16.01 03/15/2019
-[   23.486286] pstate: a0c00009 (NzCv daif +PAN +UAO)
-[   23.491065] pc : ata_host_detach+0x15c/0x168
-[   23.495322] lr : ata_host_detach+0x88/0x168
-[   23.499491] sp : ffff800011cabb50
-[   23.502792] x29: ffff800011cabb50 x28: 0000000000000007
-[   23.508091] x27: ffff80001137f068 x26: ffff8000112c0c28
-[   23.513390] x25: 0000000000003848 x24: ffff0023ea185300
-[   23.518689] x23: 0000000000000001 x22: 00000000000014c0
-[   23.523987] x21: 0000000000013740 x20: ffff0023bdc20000
-[   23.529286] x19: 0000000000000000 x18: 0000000000000004
-[   23.534584] x17: 0000000000000001 x16: 00000000000000f0
-[   23.539883] x15: ffff0023eac13790 x14: ffff0023eb76c408
-[   23.545181] x13: 0000000000000000 x12: ffff0023eac13790
-[   23.550480] x11: ffff0023eb76c228 x10: 0000000000000000
-[   23.555779] x9 : ffff0023eac13798 x8 : 0000000040000000
-[   23.561077] x7 : 0000000000000002 x6 : 0000000000000001
-[   23.566376] x5 : 0000000000000002 x4 : 0000000000000000
-[   23.571674] x3 : ffff0023bf08a0bc x2 : 0000000000000000
-[   23.576972] x1 : 3099674201f72700 x0 : 0000000000400284
-[   23.582272] Call trace:
-[   23.584706]  ata_host_detach+0x15c/0x168
-[   23.588616]  ata_pci_remove_one+0x10/0x18
-[   23.592615]  ahci_remove_one+0x20/0x40
-[   23.596356]  pci_device_remove+0x3c/0xe0
-[   23.600267]  really_probe+0xdc/0x3e0
-[   23.603830]  driver_probe_device+0x58/0x100
-[   23.608000]  device_driver_attach+0x6c/0x90
-[   23.612169]  __driver_attach+0x84/0xc8
-[   23.615908]  bus_for_each_dev+0x74/0xc8
-[   23.619730]  driver_attach+0x20/0x28
-[   23.623292]  bus_add_driver+0x148/0x1f0
-[   23.627115]  driver_register+0x60/0x110
-[   23.630938]  __pci_register_driver+0x40/0x48
-[   23.635199]  ahci_pci_driver_init+0x20/0x28
-[   23.639372]  do_one_initcall+0x5c/0x1b0
-[   23.643199]  kernel_init_freeable+0x1a4/0x24c
-[   23.647546]  kernel_init+0x10/0x108
-[   23.651023]  ret_from_fork+0x10/0x18
-[   23.654590] ---[ end trace 634a14b675b71c13 ]---
+Fix this by adding the missing GPIO_FN_CAN_CLK_B and GPIO_FN_ET0_ETXD4
+enum values, and correcting the functions.
 
-With KASAN also enabled, we may also get many use-after-free reports.
-
-The issue is that when CONFIG_DEBUG_TEST_DRIVER_REMOVE is set, we may
-attempt to detach the ata_port before it has been probed.
-
-This is because the ata_ports are async probed, meaning that there is no
-guarantee that the ata_port has probed prior to detach. When the ata_port
-does probe in this scenario, we get all sorts of issues as the detach may
-have already happened.
-
-Fix by ensuring synchronisation with async_synchronize_full(). We could
-alternatively use the cookie returned from the ata_port probe
-async_schedule() call, but that means managing the cookie, so more
-complicated.
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reported-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191024131308.16659-1-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-core.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/sh/include/cpu-sh4/cpu/sh7734.h | 2 +-
+ drivers/pinctrl/sh-pfc/pfc-sh7734.c  | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index a352f09baef6..fc4bf8ff40ea 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -6355,6 +6355,9 @@ void ata_host_detach(struct ata_host *host)
- {
- 	int i;
- 
-+	/* Ensure ata_port probe has completed */
-+	async_synchronize_full();
-+
- 	for (i = 0; i < host->n_ports; i++)
- 		ata_port_detach(host->ports[i]);
- 
+diff --git a/arch/sh/include/cpu-sh4/cpu/sh7734.h b/arch/sh/include/cpu-sh4/cpu/sh7734.h
+index 2fb9a7b71b41..a2667c9b5819 100644
+--- a/arch/sh/include/cpu-sh4/cpu/sh7734.h
++++ b/arch/sh/include/cpu-sh4/cpu/sh7734.h
+@@ -133,7 +133,7 @@ enum {
+ 	GPIO_FN_EX_WAIT1, GPIO_FN_SD1_DAT0_A, GPIO_FN_DREQ2, GPIO_FN_CAN1_TX_C,
+ 		GPIO_FN_ET0_LINK_C, GPIO_FN_ET0_ETXD5_A,
+ 	GPIO_FN_EX_WAIT0, GPIO_FN_TCLK1_B,
+-	GPIO_FN_RD_WR, GPIO_FN_TCLK0,
++	GPIO_FN_RD_WR, GPIO_FN_TCLK0, GPIO_FN_CAN_CLK_B, GPIO_FN_ET0_ETXD4,
+ 	GPIO_FN_EX_CS5, GPIO_FN_SD1_CMD_A, GPIO_FN_ATADIR, GPIO_FN_QSSL_B,
+ 		GPIO_FN_ET0_ETXD3_A,
+ 	GPIO_FN_EX_CS4, GPIO_FN_SD1_WP_A, GPIO_FN_ATAWR, GPIO_FN_QMI_QIO1_B,
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
+index c691b2e34374..ab09d385f95d 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
+@@ -1458,7 +1458,7 @@ static const struct pinmux_func pinmux_func_gpios[] = {
+ 	GPIO_FN(ET0_ETXD2_A),
+ 	GPIO_FN(EX_CS5), GPIO_FN(SD1_CMD_A), GPIO_FN(ATADIR), GPIO_FN(QSSL_B),
+ 	GPIO_FN(ET0_ETXD3_A),
+-	GPIO_FN(RD_WR), GPIO_FN(TCLK1_B),
++	GPIO_FN(RD_WR), GPIO_FN(TCLK0), GPIO_FN(CAN_CLK_B), GPIO_FN(ET0_ETXD4),
+ 	GPIO_FN(EX_WAIT0), GPIO_FN(TCLK1_B),
+ 	GPIO_FN(EX_WAIT1), GPIO_FN(SD1_DAT0_A), GPIO_FN(DREQ2),
+ 		GPIO_FN(CAN1_TX_C), GPIO_FN(ET0_LINK_C), GPIO_FN(ET0_ETXD5_A),
+@@ -1954,7 +1954,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 	    /* IP3_20 [1] */
+ 		FN_EX_WAIT0, FN_TCLK1_B,
+ 	    /* IP3_19_18 [2] */
+-		FN_RD_WR, FN_TCLK1_B, 0, 0,
++		FN_RD_WR, FN_TCLK0, FN_CAN_CLK_B, FN_ET0_ETXD4,
+ 	    /* IP3_17_15 [3] */
+ 		FN_EX_CS5, FN_SD1_CMD_A, FN_ATADIR, FN_QSSL_B,
+ 		FN_ET0_ETXD3_A, 0, 0, 0,
 -- 
 2.20.1
 
