@@ -2,43 +2,43 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF68C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5ADC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B208D24650
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F4AE22B48
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:14:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003291;
-	bh=hFGAAADOKfUFLTcMxlao9aIWaJpRQCa+ViRCfXaxJG8=;
+	s=default; t=1578003295;
+	bh=Lwxj6nsXgB+xnSnB19iKOKaidKnAPgH1P00CIo2IHUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IHuQxJQdBgJysgm8JTgMnayLDXd5XXQ+eOQb9CL77Wc6mFXlWf3vXTYmunYqnEL5Y
-	 neZkrmHS0fCZyclkQOIISJY4zsLc3hd+k3IIv98JxunW27EW3BqKVEVr+GGBK9ykL4
-	 zZMnUiI0ADbT8mJ+uUFpHLP62HRf72nPnX4qwP0E=
+	b=oL/rZiEk/AqNuXQ9Jjff81qF/h9P/31zKnUKJPbPiBH3QVAyhGUNh3dmeOEOE5u3p
+	 SbE8BvBFV7/ENaigvGZ6ROJx0zARsKst0kAVB7SKNalkiMtKk6F/XOeDyFB0RPL6St
+	 QyqP/jY31qyu/nCg/NdcH1xnIdUGgnrB3zTDASvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgABWOu (ORCPT
+        id S1727987AbgABWOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:14:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55204 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:14:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727964AbgABWOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:14:48 -0500
+        id S1727308AbgABWOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:14:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7B7121D7D;
-        Thu,  2 Jan 2020 22:14:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 312D822314;
+        Thu,  2 Jan 2020 22:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003287;
-        bh=hFGAAADOKfUFLTcMxlao9aIWaJpRQCa+ViRCfXaxJG8=;
+        s=default; t=1578003289;
+        bh=Lwxj6nsXgB+xnSnB19iKOKaidKnAPgH1P00CIo2IHUY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i7JAIa4Kb8Fd5cMxKPH3neemOclfYhlWAHJnf9RlLNX7pD0zjFXLtLDDLOWrsGKZR
-         aVUu5gfT3sr8Qgk8A4D4N72LuG197wd3guVcTdRu2t4oe4VGHv/UYR1uIGE+2D7FSo
-         rCqEDdunf3pNF0KVsKi/H43nQhWRbzBqsIvEhTyY=
+        b=ivEA7iGkT/OTrxndzrdkBT8UfntQnlckw7qeW89JQQqKcaW+IJl+AeNf5e+N8tX9s
+         EA4QcNNs3GrcOFhzQ+aZTJKCRGvkJB/Kvr8wsHySTxEKUiangkYtag/I4y4FhYG5qM
+         cJW5sdX02MnQmJFFUIluYAekGT3Njfxci3XcSy1U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -53,9 +53,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Tony Luck <tony.luck@intel.com>,
         Gayatri Kammela <gayatri.kammela@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 098/191] platform/x86: intel_pmc_core: Fix the SoC naming inconsistency
-Date:   Thu,  2 Jan 2020 23:06:20 +0100
-Message-Id: <20200102215840.443552481@linuxfoundation.org>
+Subject: [PATCH 5.4 099/191] platform/x86: intel_pmc_core: Add Comet Lake (CML) platform support to intel_pmc_core driver
+Date:   Thu,  2 Jan 2020 23:06:21 +0100
+Message-Id: <20200102215840.565389592@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -70,16 +70,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Gayatri Kammela <gayatri.kammela@intel.com>
 
-[ Upstream commit 43e82d8aa92503d264309fb648b251b2d85caf1a ]
+[ Upstream commit 5406327d43edd9a171bd260f49c752d148727eaf ]
 
-Intel's SoCs follow a naming convention which spells out the SoC name as
-two words instead of one word (E.g: Cannon Lake vs Cannonlake). Thus fix
-the naming inconsistency across the intel_pmc_core driver, so future
-SoCs can follow the naming consistency as below.
+Add Comet Lake to the list of the platforms that intel_pmc_core driver
+supports for pmc_core device.
 
-Cometlake -> Comet Lake
-Tigerlake -> Tiger Lake
-Elkhartlake -> Elkhart Lake
+Just like Ice Lake, Comet Lake can also reuse all the Cannon Lake PCH
+IPs. No additional effort is needed to enable but to simply reuse them.
 
 Cc: Mario Limonciello <mario.limonciello@dell.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
@@ -89,71 +86,52 @@ Cc: Kan Liang <kan.liang@intel.com>
 Cc: David E. Box <david.e.box@intel.com>
 Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
 Cc: Tony Luck <tony.luck@intel.com>
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel_pmc_core.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/platform/x86/intel_pmc_core.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 94a008efb09b..6b6edc30f835 100644
+index 6b6edc30f835..571b4754477c 100644
 --- a/drivers/platform/x86/intel_pmc_core.c
 +++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -158,7 +158,7 @@ static const struct pmc_reg_map spt_reg_map = {
- 	.pm_vric1_offset = SPT_PMC_VRIC1_OFFSET,
- };
+@@ -160,6 +160,7 @@ static const struct pmc_reg_map spt_reg_map = {
  
--/* Cannonlake: PGD PFET Enable Ack Status Register(s) bitmap */
-+/* Cannon Lake: PGD PFET Enable Ack Status Register(s) bitmap */
+ /* Cannon Lake: PGD PFET Enable Ack Status Register(s) bitmap */
  static const struct pmc_bit_map cnp_pfear_map[] = {
++	/* Reserved for Cannon Lake but valid for Comet Lake */
  	{"PMC",                 BIT(0)},
  	{"OPI-DMI",             BIT(1)},
-@@ -185,7 +185,7 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
+ 	{"SPI/eSPI",            BIT(2)},
+@@ -185,7 +186,7 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
  	{"SDX",                 BIT(4)},
  	{"SPE",                 BIT(5)},
  	{"Fuse",                BIT(6)},
--	/* Reserved for Cannonlake but valid for Icelake */
-+	/* Reserved for Cannon Lake but valid for Ice Lake */
+-	/* Reserved for Cannon Lake but valid for Ice Lake */
++	/* Reserved for Cannon Lake but valid for Ice Lake and Comet Lake */
  	{"SBR8",		BIT(7)},
  
  	{"CSME_FSC",            BIT(0)},
-@@ -229,12 +229,12 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
+@@ -229,7 +230,7 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
  	{"HDA_PGD4",            BIT(2)},
  	{"HDA_PGD5",            BIT(3)},
  	{"HDA_PGD6",            BIT(4)},
--	/* Reserved for Cannonlake but valid for Icelake */
-+	/* Reserved for Cannon Lake but valid for Ice Lake */
+-	/* Reserved for Cannon Lake but valid for Ice Lake */
++	/* Reserved for Cannon Lake but valid for Ice Lake and Comet Lake */
  	{"PSF6",		BIT(5)},
  	{"PSF7",		BIT(6)},
  	{"PSF8",		BIT(7)},
+@@ -813,6 +814,8 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+ 	INTEL_CPU_FAM6(CANNONLAKE_L, cnp_reg_map),
+ 	INTEL_CPU_FAM6(ICELAKE_L, icl_reg_map),
+ 	INTEL_CPU_FAM6(ICELAKE_NNPI, icl_reg_map),
++	INTEL_CPU_FAM6(COMETLAKE, cnp_reg_map),
++	INTEL_CPU_FAM6(COMETLAKE_L, cnp_reg_map),
+ 	{}
+ };
  
--	/* Icelake generation onwards only */
-+	/* Ice Lake generation onwards only */
- 	{"RES_65",		BIT(0)},
- 	{"RES_66",		BIT(1)},
- 	{"RES_67",		BIT(2)},
-@@ -324,7 +324,7 @@ static const struct pmc_bit_map cnp_ltr_show_map[] = {
- 	{"ISH",			CNP_PMC_LTR_ISH},
- 	{"UFSX2",		CNP_PMC_LTR_UFSX2},
- 	{"EMMC",		CNP_PMC_LTR_EMMC},
--	/* Reserved for Cannonlake but valid for Icelake */
-+	/* Reserved for Cannon Lake but valid for Ice Lake */
- 	{"WIGIG",		ICL_PMC_LTR_WIGIG},
- 	/* Below two cannot be used for LTR_IGNORE */
- 	{"CURRENT_PLATFORM",	CNP_PMC_LTR_CUR_PLT},
-@@ -871,8 +871,8 @@ static int pmc_core_probe(struct platform_device *pdev)
- 	pmcdev->map = (struct pmc_reg_map *)cpu_id->driver_data;
- 
- 	/*
--	 * Coffeelake has CPU ID of Kabylake and Cannonlake PCH. So here
--	 * Sunrisepoint PCH regmap can't be used. Use Cannonlake PCH regmap
-+	 * Coffee Lake has CPU ID of Kaby Lake and Cannon Lake PCH. So here
-+	 * Sunrisepoint PCH regmap can't be used. Use Cannon Lake PCH regmap
- 	 * in this case.
- 	 */
- 	if (pmcdev->map == &spt_reg_map && !pci_dev_present(pmc_pci_ids))
 -- 
 2.20.1
 
