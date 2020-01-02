@@ -2,52 +2,51 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F38EC3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B52FFC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D704821835
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C2E621835
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:53:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578005603;
-	bh=SnAi6VEACjZDWMUoyeTrwQIOw1723Hj6hxFM5ieZ0pY=;
+	s=default; t=1578005608;
+	bh=IMnRsSSckyMOsSAOuTqewPq4T1YIvHzAbfUt8u6pdeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r9xPcbHIJVRPpDRwziGfyGP+g7yGXml98tXUKyNTiA+VVXt7DGbz8BG3lB8A/CJ2q
-	 vHsGcsG7Z21X70s9CvzwO+6UrgQUIWTC+x/wXVjJL9R6i5Fz6aDK2hqU1ZTBWtDFDe
-	 w4GYhnzTa/JRUHe6G9kZMWt7+Z2uCaw/b1lebcP0=
+	b=YfOz4/noc7ZakMOqwh6+dQD3wtsECm+HDAgJjYxW2Eknkqph7MVxhMD6uFNya44OG
+	 ZzrEEBX7O6FYR7jNXkB8suW1ZBZv3Q39F6IAk2TnyZALVgbmBICzmXDrJk34bO3kFx
+	 aqUG5PFrPGEPcToB+3SNP+ODJLptZDrQaxeyAl/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729471AbgABWxT (ORCPT
+        id S1729055AbgABWVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:53:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42000 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:21:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728900AbgABWWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:22:01 -0500
+        id S1728549AbgABWVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:21:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55EDF21D7D;
-        Thu,  2 Jan 2020 22:22:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA5E520863;
+        Thu,  2 Jan 2020 22:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003720;
-        bh=SnAi6VEACjZDWMUoyeTrwQIOw1723Hj6hxFM5ieZ0pY=;
+        s=default; t=1578003704;
+        bh=IMnRsSSckyMOsSAOuTqewPq4T1YIvHzAbfUt8u6pdeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n0sm7HAQYHUbRTKgd429zW0giPM5tD7XYT0pHvakHDKob8+qN9eH12OaH/QxK4lFc
-         JTBuePUvX6U/V7ardP/nqDDt1QW+HycS3oN9iRyuKB9jrm6wIwh+6P6OuWK8qZ58P3
-         7ax+yMaNYgwyj0GBLImAa4sdjoCmDA5juNEllc6k=
+        b=KwXloE12DRKMzD4hDy+CSzS2w1lcbs7h7QcLaHqhdsqvmkjYde0Yc7cgjSb5hNIHP
+         groPbA9YZAb2k/865zWKQASXH1NVyO8zMXuo0lXN1D5jq5WT1+MWue4Ac9BI9XxC+P
+         wtzpbZ2eyVAMzJ5N0s+GPjnR4rKn3LGD4SurC1jA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 087/114] net: add a READ_ONCE() in skb_peek_tail()
-Date:   Thu,  2 Jan 2020 23:07:39 +0100
-Message-Id: <20200102220037.973859160@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 046/114] HID: logitech-hidpp: Silence intermittent get_battery_capacity errors
+Date:   Thu,  2 Jan 2020 23:06:58 +0100
+Message-Id: <20200102220033.733967047@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -60,90 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit f8cc62ca3e660ae3fdaee533b1d554297cd2ae82 upstream.
+[ Upstream commit 61005d65b6c7dcf61c19516e6ebe5acc02d2cdda ]
 
-skb_peek_tail() can be used without protection of a lock,
-as spotted by KCSAN [1]
+My Logitech M185 (PID:4038) 2.4 GHz wireless HID++ mouse is causing
+intermittent errors like these in the log:
 
-In order to avoid load-stearing, add a READ_ONCE()
+[11091.034857] logitech-hidpp-device 0003:046D:4038.0006: hidpp20_batterylevel_get_battery_capacity: received protocol error 0x09
+[12388.031260] logitech-hidpp-device 0003:046D:4038.0006: hidpp20_batterylevel_get_battery_capacity: received protocol error 0x09
+[16613.718543] logitech-hidpp-device 0003:046D:4038.0006: hidpp20_batterylevel_get_battery_capacity: received protocol error 0x09
+[23529.938728] logitech-hidpp-device 0003:046D:4038.0006: hidpp20_batterylevel_get_battery_capacity: received protocol error 0x09
 
-Note that the corresponding WRITE_ONCE() are already there.
+We are already silencing error-code 0x09 (HIDPP_ERROR_RESOURCE_ERROR)
+errors in other places, lets do the same in
+hidpp20_batterylevel_get_battery_capacity to remove these harmless,
+but scary looking errors from the dmesg output.
 
-[1]
-BUG: KCSAN: data-race in sk_wait_data / skb_queue_tail
-
-read to 0xffff8880b36a4118 of 8 bytes by task 20426 on cpu 1:
- skb_peek_tail include/linux/skbuff.h:1784 [inline]
- sk_wait_data+0x15b/0x250 net/core/sock.c:2477
- kcm_wait_data+0x112/0x1f0 net/kcm/kcmsock.c:1103
- kcm_recvmsg+0xac/0x320 net/kcm/kcmsock.c:1130
- sock_recvmsg_nosec net/socket.c:871 [inline]
- sock_recvmsg net/socket.c:889 [inline]
- sock_recvmsg+0x92/0xb0 net/socket.c:885
- ___sys_recvmsg+0x1a0/0x3e0 net/socket.c:2480
- do_recvmmsg+0x19a/0x5c0 net/socket.c:2601
- __sys_recvmmsg+0x1ef/0x200 net/socket.c:2680
- __do_sys_recvmmsg net/socket.c:2703 [inline]
- __se_sys_recvmmsg net/socket.c:2696 [inline]
- __x64_sys_recvmmsg+0x89/0xb0 net/socket.c:2696
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-write to 0xffff8880b36a4118 of 8 bytes by task 451 on cpu 0:
- __skb_insert include/linux/skbuff.h:1852 [inline]
- __skb_queue_before include/linux/skbuff.h:1958 [inline]
- __skb_queue_tail include/linux/skbuff.h:1991 [inline]
- skb_queue_tail+0x7e/0xc0 net/core/skbuff.c:3145
- kcm_queue_rcv_skb+0x202/0x310 net/kcm/kcmsock.c:206
- kcm_rcv_strparser+0x74/0x4b0 net/kcm/kcmsock.c:370
- __strp_recv+0x348/0xf50 net/strparser/strparser.c:309
- strp_recv+0x84/0xa0 net/strparser/strparser.c:343
- tcp_read_sock+0x174/0x5c0 net/ipv4/tcp.c:1639
- strp_read_sock+0xd4/0x140 net/strparser/strparser.c:366
- do_strp_work net/strparser/strparser.c:414 [inline]
- strp_work+0x9a/0xe0 net/strparser/strparser.c:423
- process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
- worker_thread+0xa0/0x800 kernel/workqueue.c:2415
- kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 451 Comm: kworker/u4:3 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: kstrp strp_work
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/skbuff.h |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/hid/hid-logitech-hidpp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -1669,7 +1669,7 @@ static inline struct sk_buff *skb_peek_n
-  */
- static inline struct sk_buff *skb_peek_tail(const struct sk_buff_head *list_)
- {
--	struct sk_buff *skb = list_->prev;
-+	struct sk_buff *skb = READ_ONCE(list_->prev);
- 
- 	if (skb == (struct sk_buff *)list_)
- 		skb = NULL;
-@@ -1737,7 +1737,9 @@ static inline void __skb_insert(struct s
- 				struct sk_buff *prev, struct sk_buff *next,
- 				struct sk_buff_head *list)
- {
--	/* see skb_queue_empty_lockless() for the opposite READ_ONCE() */
-+	/* See skb_queue_empty_lockless() and skb_peek_tail()
-+	 * for the opposite READ_ONCE()
-+	 */
- 	WRITE_ONCE(newsk->next, next);
- 	WRITE_ONCE(newsk->prev, prev);
- 	WRITE_ONCE(next->prev, newsk);
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index 034c883e57fa..504e8917b06f 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -978,6 +978,9 @@ static int hidpp20_batterylevel_get_battery_capacity(struct hidpp_device *hidpp,
+ 	ret = hidpp_send_fap_command_sync(hidpp, feature_index,
+ 					  CMD_BATTERY_LEVEL_STATUS_GET_BATTERY_LEVEL_STATUS,
+ 					  NULL, 0, &response);
++	/* Ignore these intermittent errors */
++	if (ret == HIDPP_ERROR_RESOURCE_ERROR)
++		return -EIO;
+ 	if (ret > 0) {
+ 		hid_err(hidpp->hid_dev, "%s: received protocol error 0x%02x\n",
+ 			__func__, ret);
+-- 
+2.20.1
+
 
 
