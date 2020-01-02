@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC5BC3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70525C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71AED21D7D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34944227BF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003281;
-	bh=so39Ko76CscwU0RY7P3cb4mHUdASxpwyjcuzILbe+Rs=;
+	s=default; t=1578003289;
+	bh=eFSrbM0YLx7ixvZ4o7BDvCfWiEf9hFG1YCjCboxeDWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dSMyDq8E9H2/Kngh1wkMq/xdlG60S5yVKTXP5fbl7c+rHOILgJNdqLzsk6tEvBGgT
-	 T4FssyS2V4zL05ZexkhoGlbvelOUoQTS41xi35HB8Qvm+ayhH9kDkKzmq+OiToUcO3
-	 QtHuGS4cM858cYuzl6dmuoBwCyO5/fDlCuYcGZuA=
+	b=cIGKDDgtPfWWtajLB7SNvvjEuWU89pMb8+FLWl5/zE1Yvylx3TrkYS6SdATY/+OaL
+	 IEB+FLxhfyl+wXmTjIlBsB4cp1xxZx0uvapSkFnl3H0qGHUD3VRttGHMR7FwuOiEp6
+	 gvMu6O2f9Gaf1h9+XjaQNW0BgV3u+PuChy0SwyFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727624AbgABWOk (ORCPT
+        id S1727967AbgABWOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:14:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54928 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:14:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727931AbgABWOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:14:36 -0500
+        id S1727955AbgABWOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:14:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDD9721D7D;
-        Thu,  2 Jan 2020 22:14:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B4A722314;
+        Thu,  2 Jan 2020 22:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003275;
-        bh=so39Ko76CscwU0RY7P3cb4mHUdASxpwyjcuzILbe+Rs=;
+        s=default; t=1578003285;
+        bh=eFSrbM0YLx7ixvZ4o7BDvCfWiEf9hFG1YCjCboxeDWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h9rB8JOBJFRusT+6HZcPrUSndMhDBwzri2rJggm/fiyeeGAeaZPXx8b5eNlJKmQJ2
-         T/PKzqUwn2v7u1Hr4eJjwXBobfkmihbLA5PRcU4zP6+DrNcdirmLvMqKm3vC7w5xgG
-         JA4Be+oDdt+em7sFNcNqlJnrGy8iBpwKZGzsBtms=
+        b=xJTSd7pam8Gjs6SNl3qIVs6kh7eS13xEdDagSX2P0la7RcLmVsfiL3k9VRly3pO9Y
+         7K0UTaVN/F0Kheq494JyndbyFIqqlTQAmuQakT0WtVQ8BE2PBDR3Ls3kUWGKXO0ZB0
+         HQ1ehDcui9/IgMN/Z8tDQqvHTGrkFmYYamWd/lTg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Will Deacon <will@kernel.org>, Joerg Roedel <jroedel@suse.de>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 057/191] iommu/arm-smmu-v3: Dont display an error when IRQ lines are missing
-Date:   Thu,  2 Jan 2020 23:05:39 +0100
-Message-Id: <20200102215836.018899179@linuxfoundation.org>
+Subject: [PATCH 5.4 097/191] gpio/mpc8xxx: fix qoriq GPIO reading
+Date:   Thu,  2 Jan 2020 23:06:19 +0100
+Message-Id: <20200102215840.304056588@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -61,62 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit f7aff1a93f52047739af31072de0ad8d149641f3 ]
+[ Upstream commit 787b64a43f7acacf8099329ea08872e663f1e74f ]
 
-Since commit 7723f4c5ecdb ("driver core: platform: Add an error message
-to platform_get_irq*()"), platform_get_irq_byname() displays an error
-when the IRQ isn't found. Since the SMMUv3 driver uses that function to
-query which interrupt method is available, the message is now displayed
-during boot for any SMMUv3 that doesn't implement the combined
-interrupt, or that implements MSIs.
+Qoriq requires the IBE register to be set to enable GPIO inputs to be
+read.  Set it.
 
-[   20.700337] arm-smmu-v3 arm-smmu-v3.7.auto: IRQ combined not found
-[   20.706508] arm-smmu-v3 arm-smmu-v3.7.auto: IRQ eventq not found
-[   20.712503] arm-smmu-v3 arm-smmu-v3.7.auto: IRQ priq not found
-[   20.718325] arm-smmu-v3 arm-smmu-v3.7.auto: IRQ gerror not found
-
-Use platform_get_irq_byname_optional() to avoid displaying a spurious
-error.
-
-Fixes: 7723f4c5ecdb ("driver core: platform: Add an error message to platform_get_irq*()")
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Acked-by: Will Deacon <will@kernel.org>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Link: https://lore.kernel.org/r/E1iX3HC-00069N-0T@rmk-PC.armlinux.org.uk
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpio/gpio-mpc8xxx.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 8da93e730d6f..ed90361b84dc 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -3611,19 +3611,19 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 16a47de29c94..b863421ae730 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -386,6 +386,9 @@ static int mpc8xxx_probe(struct platform_device *pdev)
  
- 	/* Interrupt lines */
+ 	gc->to_irq = mpc8xxx_gpio_to_irq;
  
--	irq = platform_get_irq_byname(pdev, "combined");
-+	irq = platform_get_irq_byname_optional(pdev, "combined");
- 	if (irq > 0)
- 		smmu->combined_irq = irq;
- 	else {
--		irq = platform_get_irq_byname(pdev, "eventq");
-+		irq = platform_get_irq_byname_optional(pdev, "eventq");
- 		if (irq > 0)
- 			smmu->evtq.q.irq = irq;
- 
--		irq = platform_get_irq_byname(pdev, "priq");
-+		irq = platform_get_irq_byname_optional(pdev, "priq");
- 		if (irq > 0)
- 			smmu->priq.q.irq = irq;
- 
--		irq = platform_get_irq_byname(pdev, "gerror");
-+		irq = platform_get_irq_byname_optional(pdev, "gerror");
- 		if (irq > 0)
- 			smmu->gerr_irq = irq;
- 	}
++	if (of_device_is_compatible(np, "fsl,qoriq-gpio"))
++		gc->write_reg(mpc8xxx_gc->regs + GPIO_IBE, 0xffffffff);
++
+ 	ret = gpiochip_add_data(gc, mpc8xxx_gc);
+ 	if (ret) {
+ 		pr_err("%pOF: GPIO chip registration failed with status %d\n",
 -- 
 2.20.1
 
