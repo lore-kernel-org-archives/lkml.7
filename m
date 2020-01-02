@@ -2,96 +2,240 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0784C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597ABC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AED2F21582
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A53721582
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 21:19:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ppGZNFVa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbgABVSh (ORCPT
+        id S1726232AbgABVTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 16:18:37 -0500
-Received: from mga03.intel.com ([134.134.136.65]:28012 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbgABVSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 16:18:36 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 13:18:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,388,1571727600"; 
-   d="scan'208";a="224819862"
-Received: from ybabin-mobl1.amr.corp.intel.com (HELO [10.252.139.105]) ([10.252.139.105])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Jan 2020 13:18:34 -0800
-Subject: Re: [alsa-devel] [PATCH] ASoC: Intel: boards: Fix compile-testing
- RT1011/RT5682
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Naveen Manohar <naveen.m@intel.com>,
-        Sathya Prakash M R <sathya.prakash.m.r@intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20200102135322.1841053-1-arnd@arndb.de>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <96bf1ce8-0f96-0c81-130b-970427b82fab@linux.intel.com>
-Date:   Thu, 2 Jan 2020 12:50:29 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 2 Jan 2020 16:19:01 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38685 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgABVTB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 16:19:01 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y17so40639096wrh.5;
+        Thu, 02 Jan 2020 13:18:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Q7ILQ6vE+vwpRyA2bKiM3+nO07Ltd687WzjuuO8GNN0=;
+        b=ppGZNFVayH2pDy0fY9yk4nY8GKytJUuZIp3fKFfCVW1xRiYW60rKO1ulce/XD+XFcF
+         vKPUNYdoIB3qp2EZBgnWdW9ZOCAM2yMoGR4KpX7E8NgR9FhKlhQJl3NioHJ4nqqRpakc
+         52kynZvAMUTX2gqxzc/ZqVxflW5YURkiSA3nuPIe0NP81QWDQwyca/wH6Bt3HlzW9iJE
+         rp440YEzd77UYFRDcBybosTAFlTCQDdLcOGbrkKyzJssjn67/VIY7W5eHBwY3v7MjA3x
+         bU9mVfz8xZ8pYJNGY2zN+e3946p1aM3r6VFDgGB6M9rD+yWo0lcFTDOWtcxZcAXJlgNK
+         Cnyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Q7ILQ6vE+vwpRyA2bKiM3+nO07Ltd687WzjuuO8GNN0=;
+        b=FiwPIIrSAxUaMDBHwzyDAikeyAokqjIXMVB98iJ19PcGeH1HHKDWWRbFS8bYzrNR+/
+         Ndj5LlXCmN2/relTYGqZ6oc/7mwY5DYFda9AqGDhRQJ9VwwrV2MfScb35QR9WvBSDCDL
+         QN5pFq4oXXPYwkHNNQuSkovAESDW3NUgk96s/sMfd28zhU/JPapW8TwdeOCBHDv4aW2+
+         sYMuTgAOvRrXJOlozUxeldeH8pMP993y0sCNgQc2D4fYNnubHSJ2uhvogZmfhxC9OQMl
+         u0WqcexRp8085C0vXwnPNEN1ycFgWu15KBa+3E7YEbxrtDItHt+zNSk5UR+0YWBUOcj8
+         WX4A==
+X-Gm-Message-State: APjAAAX//4CXow3Nhp59wYhZO66uA0ANh3yjaO62jR8ZdfI8NTuaHOnY
+        K8Ko7QtuVARTy7oFRbjPhxZC9OqpwD4=
+X-Google-Smtp-Source: APXvYqwEUdeL8z2rIw9tFIjYESsxWr3A8E/lAIAoIkXSadr8DwfuLip02FMQem52XKT8Y4GoK4ATvg==
+X-Received: by 2002:a05:6000:367:: with SMTP id f7mr81873888wrf.174.1577999937679;
+        Thu, 02 Jan 2020 13:18:57 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id p15sm9618677wma.40.2020.01.02.13.18.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 13:18:56 -0800 (PST)
+Date:   Thu, 2 Jan 2020 22:18:55 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-ntfs-dev@lists.sourceforge.net, linux-cifs@vger.kernel.org
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis de Bethencourt <luisbg@kernel.org>,
+        Salah Triki <salah.triki@gmail.com>,
+        Steve French <sfrench@samba.org>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Sterba <dsterba@suse.com>,
+        Dave Kleikamp <shaggy@kernel.org>,
+        Anton Altaparmakov <anton@tuxera.com>,
+        Jan Kara <jack@suse.com>, "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Namjae Jeon <linkinjeon@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Unification of filesystem encoding options
+Message-ID: <20200102211855.gg62r7jshp742d6i@pali>
 MIME-Version: 1.0
-In-Reply-To: <20200102135322.1841053-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="yemvk4r42345xvlb"
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--yemvk4r42345xvlb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 1/2/20 7:52 AM, Arnd Bergmann wrote:
-> On non-x86, the new driver results in a build failure:
-> 
-> sound/soc/intel/boards/cml_rt1011_rt5682.c:14:10: fatal error: asm/cpu_device_id.h: No such file or directory
-> 
-> The asm/cpu_device_id.h header is not actually needed here,
-> so don't include it.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Hello!
 
-Indeed it's not needed, thanks for spotting this.
+While I was reading a new patch series for exfat filesystem driver I
+saw how is proposed implementation for converting exfat's UTF-16LE
+filenames to userspace and so I decided to investigate what filesystems
+which are already part of Linux kernel are doing.
 
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+I looked at filesystems supported by Linux kernel which do not store
+filenames as sequence of octets, but rather expect that on-disk format
+of filenames is according to some encoding.
 
-> ---
-> I found this last week, but the patch still seems to be needed
-> as I could not find a fix in mainline or -next.
-> 
-> Please ignore if there is already a fix in some other tree.
-> 
-> 
->   sound/soc/intel/boards/cml_rt1011_rt5682.c | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/sound/soc/intel/boards/cml_rt1011_rt5682.c b/sound/soc/intel/boards/cml_rt1011_rt5682.c
-> index a22f97234201..5f1bf6d3800c 100644
-> --- a/sound/soc/intel/boards/cml_rt1011_rt5682.c
-> +++ b/sound/soc/intel/boards/cml_rt1011_rt5682.c
-> @@ -11,7 +11,6 @@
->   #include <linux/clk.h>
->   #include <linux/dmi.h>
->   #include <linux/slab.h>
-> -#include <asm/cpu_device_id.h>
->   #include <linux/acpi.h>
->   #include <sound/core.h>
->   #include <sound/jack.h>
-> 
+Below is list of these filesystems with its native encoding:
+
+befs     UTF-8
+cifs     UTF-16LE
+msdos    unspecified OEM codepage
+vfat     unspecified OEM codepage or UTF-16LE
+hfs      octets
+hfsplus  UTF-16BE-NFD-Apple
+isofs    octets or UTF-16BE
+jfs      UTF-16LE
+ntfs     UTF-16LE
+udf      Latin1 or UTF-16BE
+
+Filesystems msdos, vfat, hfs and isofs are bogus as their filesystem
+structure does not say in which encoding is filename stored. For vfat
+and isofs there is information if it is UTF-16LE or some unspecified
+encoding. User who access such filesystem must know under which encoding
+he stored data on it. For this purpose there is for vfat and hfs mount
+option codepage=3D<codepage>.
+
+All other filesystems stores in their structures encoding of filenames.
+Either implicitly (hfsplus is always in UTF-16BE with modified Apple's
+NFD normalization) or explicitly (in UDF is byte which says if filename
+is in Latin1 or in UTF-16BE).
+
+
+As passing UTF-16(LE|BE) buffers is not possible via null term strings
+for any VFS sycall, Linux kernel translates these Unicode filenames to
+some charset. It is done by various mount options. I looked which mount
+options are understood by our Linux filesystems implementations. In all
+next paragraphs by filesystem I would mean Linux driver implementation
+(and not structure on disk), so do not be confused.
+
+Below is table:
+
+befs     iocharset=3D<charset>
+cifs     iocharset=3D<charset>
+msdos    (unsupported)
+vfat     utf8=3D0|no|false|1|yes|true OR utf8 OR iocharset=3D<charset>
+hfs      iocharset=3D<charset>
+hfsplus  nls=3D<charset>
+isofs    iocharset=3D<charset> OR utf8
+jfs      iocharset=3D<charset>
+ntfs     nls=3D<charset> OR iochrset=3D<charset> OR utf8
+udf      utf8 OR iocharset=3D<charset>
+
+Filesystem msdos does not support specifying OEM codepage encoding. It
+passthrough 8bit buffer to userspace and expects that userspace
+understand correct OEM codepage. There is no support for reencoding it
+to UTF-8 (or any other charset). Same applies for isofs when Joliet
+structure is not stored on filesystem.
+
+Filesystem vfat has the most obscure way how to specifying charset.
+Details are in mount(8) manual page. What is important: option
+iocharset=3Dutf8 is buggy and may break filesystem consistency (it allows
+to create two directory entries which would differ only in case
+sensitivity which is not allowed by FAT specification). Due to this
+problem there is a fix, mount option utf8=3D1 (or utf8=3Dyes or utf8=3Dtrue=
+ or
+just utf8) which do what you have would expect from iocharset=3Dutf8 if it
+was not buggy.
+
+Filesystem ntfs has option iocharset=3D<charset> which is just alias for
+nls=3D<charset> and says that iocharset=3D is deprecated. Same applies for
+option utf8 which is just alias for nls=3Dutf8.
+
+Filesystems isofs and udf have two ways how to specify UTF-8 encoding.
+First way is via utf8 mount option and second one via iocharset=3Dutf8
+option. Looks like that difference is only one, iocharset=3Dutf8 supports
+only Uncicode code points up to the U+FFFF (limited to 3 byte long UTF-8
+sequences, like utf8/utf8mb3 encoding in MySQL/MariaDB) and utf8 option
+supports also code points above U+FFFF, so full Unicode and not just
+limited subset.
+
+Filesystem cifs in UTF-8 mode (via iocharset=3Dutf8) always supports code
+points above U+FFFF. But remaining filesystems befs, hfs, hfsplus, jfs
+and ntfs seems to supports only Unicode code points up to the U+FFFF. So
+effectively they do not support UTF-16, but effectively just UCS-2. This
+limitation comes from Kernel NLS table framework/API which is limited to
+16bit integers and therefore maximal Unicode code point is U+FFFF.
+Filesystems cifs, isofs, udf and vfat has own special code to work with
+surrogate pairs and do not use limited NLS table functions. There are
+also functions utf8s_to_utf16s() and utf16s_to_utf8s() for this purpose.
+
+
+And here I see these improvements for all above filesystems:
+
+
+1) Unify mount options for specifying charset.
+
+Currently all filesystems except msdos and hfsplus have mount option
+iocharset=3D<charset>. hfsplus has nls=3D<charset> and msdos does not
+implement re-encoding support. Plus vfat, udf and isofs have broken
+iocharset=3Dutf8 option (but working utf8 option) And ntfs has deprecated
+iocharset=3D<charset> option.
+
+I would suggest following changes for unification:
+
+* Add a new alias iocharset=3D for hfsplus which would do same as nls=3D
+* Make iocharset=3Dutf8 option for vfat, udf and isofs to do same as utf8
+* Un-deprecate iocharset=3D<charset> option for ntfs
+
+This would cause that all filesystems would have iocharset=3D<charset>
+option which would work for any charset, including iocharset=3Dutf8.
+And it would fix also broken iocharset=3Dutf8 for vfat, udf and isofs.
+
+
+2) Add support for Unicode code points above U+FFFF for filesystems
+befs, hfs, hfsplus, jfs and ntfs, so iocharset=3Dutf8 option would work
+also with filenames in userspace which would be 4 bytes long UTF-8.
+
+
+3) Add support for iocharset=3D and codepage=3D options for msdos
+filesystem. It shares lot of pars of code with vfat driver.
+
+
+What do you think about these improvements? First improvement should be
+relatively simple and if we agree that this unification of mount option
+iocharset=3D make sense, I could do it.
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--yemvk4r42345xvlb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXg5eNQAKCRCL8Mk9A+RD
+UiLNAJoDSF9XHS0h4NVhiAJxSkMkLyvosQCcCOV2ieT4teXX72Iv7nd4IsdCVuU=
+=e0M9
+-----END PGP SIGNATURE-----
+
+--yemvk4r42345xvlb--
