@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF71C3276E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D06C3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF5E722B48
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A07222314
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:18:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003493;
-	bh=M6PJ3k+tZowRhOd3D2yK5DtX5doruQc/zWvHLm05xA4=;
+	s=default; t=1578003498;
+	bh=hn6SkEALJClizTIH2eCblKoETrLMCQSOAV0rawGf+38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VyovaPzwSkajECnGK4N62BciXUi0a3BLpHV2QoIrfaGkr+zNNbpou2UMVRDUdYDGl
-	 mhTLpMEJEt9XK8l/vTY3wzLswebtPrWPjVf9pApYwBCTtsMv+ttehRHn4ouzYSp10/
-	 vZne1DxAx2e/El4hdjziYPv7E9RTf1b5gJtkWXsI=
+	b=ofhXfsqMnzqBWKhZK4vulket37XuwvKM7j0j7M5V84Jn1Wy0w8TzWATy11rOOCQqt
+	 twybbad9q3doOVlb9LPhaIIT5vGZKdfnoSutcHIaLoFW+g+bKkosn6+0FiRHsCb4NJ
+	 8iC4KgpSaQrk1SpwSzo2mAxJeeSzHTQWA5vRhwtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbgABWSL (ORCPT
+        id S1728325AbgABWSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:18:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32948 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:18:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728004AbgABWSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:18:04 -0500
+        id S1728276AbgABWSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:18:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFE5722B48;
-        Thu,  2 Jan 2020 22:18:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C43A522314;
+        Thu,  2 Jan 2020 22:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003483;
-        bh=M6PJ3k+tZowRhOd3D2yK5DtX5doruQc/zWvHLm05xA4=;
+        s=default; t=1578003488;
+        bh=hn6SkEALJClizTIH2eCblKoETrLMCQSOAV0rawGf+38=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zwQtK510mD95APAXvn6v8EmtOOq3UNoMgGAIkOQHRs8qGjSPeeD5YtNSPa2k7qHXw
-         SZjyd5brufdHDcLwxUeJm8tlbpAxq6mcjztxEthternT7OY1V/4t2VxTTjy7u8AuBu
-         gD4FyFIrGz73Ic6v0iBA8g2GKdSPYX6uYuW2jkF8=
+        b=ZrJUWkpWoUMaCw7CstoGFO0QOYXuLGbwIIMpVuUn/deDLjBC4PtIf4C1ieiXcjVU1
+         eQVffI8XjDpBuKFuLPPfN6NWSHWZxmBghUB32xRqCsyDd+OWyYY6n8FcOU5cGLqymP
+         FhiAN30wn8qz0KdLlq6XKR+MQwl9SDFVA/jAvj8g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Christoph Paasch <cpaasch@apple.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
+        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 5.4 180/191] tcp: do not send empty skb from tcp_write_xmit()
-Date:   Thu,  2 Jan 2020 23:07:42 +0100
-Message-Id: <20200102215848.567294632@linuxfoundation.org>
+Subject: [PATCH 5.4 182/191] hv_netvsc: Fix tx_table init in rndis_set_subchannel()
+Date:   Thu,  2 Jan 2020 23:07:44 +0100
+Message-Id: <20200102215848.858098357@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
 References: <20200102215829.911231638@linuxfoundation.org>
@@ -63,53 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Haiyang Zhang <haiyangz@microsoft.com>
 
-[ Upstream commit 1f85e6267caca44b30c54711652b0726fadbb131 ]
+[ Upstream commit c39ea5cba5a2e97fc01b78c85208bf31383b399c ]
 
-Backport of commit fdfc5c8594c2 ("tcp: remove empty skb from
-write queue in error cases") in linux-4.14 stable triggered
-various bugs. One of them has been fixed in commit ba2ddb43f270
-("tcp: Don't dequeue SYN/FIN-segments from write-queue"), but
-we still have crashes in some occasions.
+Host can provide send indirection table messages anytime after RSS is
+enabled by calling rndis_filter_set_rss_param(). So the host provided
+table values may be overwritten by the initialization in
+rndis_set_subchannel().
 
-Root-cause is that when tcp_sendmsg() has allocated a fresh
-skb and could not append a fragment before being blocked
-in sk_stream_wait_memory(), tcp_write_xmit() might be called
-and decide to send this fresh and empty skb.
+To prevent this problem, move the tx_table initialization before calling
+rndis_filter_set_rss_param().
 
-Sending an empty packet is not only silly, it might have caused
-many issues we had in the past with tp->packets_out being
-out of sync.
-
-Fixes: c65f7f00c587 ("[TCP]: Simplify SKB data portion allocation with NETIF_F_SG.")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Christoph Paasch <cpaasch@apple.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Cc: Jason Baron <jbaron@akamai.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Fixes: a6fb6aa3cfa9 ("hv_netvsc: Set tx_table to equal weight after subchannels open")
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp_output.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/hyperv/rndis_filter.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -2441,6 +2441,14 @@ static bool tcp_write_xmit(struct sock *
- 		if (tcp_small_queue_check(sk, skb, 0))
- 			break;
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -1165,6 +1165,9 @@ int rndis_set_subchannel(struct net_devi
+ 	wait_event(nvdev->subchan_open,
+ 		   atomic_read(&nvdev->open_chn) == nvdev->num_chn);
  
-+		/* Argh, we hit an empty skb(), presumably a thread
-+		 * is sleeping in sendmsg()/sk_stream_wait_memory().
-+		 * We do not want to send a pure-ack packet and have
-+		 * a strange looking rtx queue with empty packet(s).
-+		 */
-+		if (TCP_SKB_CB(skb)->end_seq == TCP_SKB_CB(skb)->seq)
-+			break;
++	for (i = 0; i < VRSS_SEND_TAB_SIZE; i++)
++		ndev_ctx->tx_table[i] = i % nvdev->num_chn;
 +
- 		if (unlikely(tcp_transmit_skb(sk, skb, 1, gfp)))
- 			break;
+ 	/* ignore failures from setting rss parameters, still have channels */
+ 	if (dev_info)
+ 		rndis_filter_set_rss_param(rdev, dev_info->rss_key);
+@@ -1174,9 +1177,6 @@ int rndis_set_subchannel(struct net_devi
+ 	netif_set_real_num_tx_queues(ndev, nvdev->num_chn);
+ 	netif_set_real_num_rx_queues(ndev, nvdev->num_chn);
+ 
+-	for (i = 0; i < VRSS_SEND_TAB_SIZE; i++)
+-		ndev_ctx->tx_table[i] = i % nvdev->num_chn;
+-
+ 	return 0;
+ }
  
 
 
