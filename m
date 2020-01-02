@@ -2,166 +2,167 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A801FC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B87AC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86B1C21734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BB2D217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 11:30:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DI7nFGHO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbgABL37 (ORCPT
+        id S1728244AbgABLaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 06:29:59 -0500
-Received: from foss.arm.com ([217.140.110.172]:46546 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728135AbgABL37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 06:29:59 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B90791FB;
-        Thu,  2 Jan 2020 03:29:58 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D3CAE3F703;
-        Thu,  2 Jan 2020 03:29:57 -0800 (PST)
-Date:   Thu, 2 Jan 2020 11:29:55 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     "Zengtao (B)" <prime.zeng@hisilicon.com>
-Cc:     Linuxarm <linuxarm@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Morten Rasmussen <morten.rasmussen@arm.com>
-Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations conflicts with
- lower layer
-Message-ID: <20200102112955.GC4864@bogus>
-References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
- <20191231164051.GA4864@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
+        Thu, 2 Jan 2020 06:30:05 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37954 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728135AbgABLaE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 06:30:04 -0500
+Received: by mail-ot1-f68.google.com with SMTP id d7so52245302otf.5;
+        Thu, 02 Jan 2020 03:30:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=zsUL2C0WaaJc/RKLuim/CUrfNo1Iw2tHL4HfNNGKlGQ=;
+        b=DI7nFGHOQf6wsy/Ujxwg6jXNd66N92P1l1ay1EWZ94nVNSjECeIyLwYQNIXYdkY89M
+         plyTW9zXm+f2WPmwzN6KUAA12p+gE/HlMPEprAEBHpJOsGCGWq6ntnjEZnyK4C/6bfaG
+         fl/sjOVHJ+xEp0o4CT0+Frs67gBY9HcZp26dhjexvxnnCTfGtaDkpXj4wOmSvo64Q7J6
+         9m053YlV9MpzdJDaC107jepOpSYCa28GcJuG+tbiMpfdC2By/a75ieQKKL9/BLTHiVn7
+         emjN7zuXQuOnNEgY4p5LTbIUWb1PpHjgV7DuxtOee7o9EgPWe6DSregQUHPIb+X9N5RB
+         VC+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zsUL2C0WaaJc/RKLuim/CUrfNo1Iw2tHL4HfNNGKlGQ=;
+        b=fIfExfR3Yyq7Iofp5VVRXBGafuJrvieoCSGHqs+Yvh29jKxuN2nLuPEZu1KnyuDrfm
+         mQ2SyqU5QPbdxNoSJ+HCoPoL8q5v71Hhtc3s7Rek2QYb9JSMopfrnZVXp/Ar1kpsUztS
+         OpAH+HGa/3HohLIa9kpPANIdi3DjzWAalQ2e3X8L7l4OZQ/DGkoYVwczjvLv/J0ULi4n
+         tLY311fR30wFVpLgE2F3hep5HYwLppC2BgV3drFw3XANHlF7c1ViVQlOVVuUcGeVQE+R
+         ZleDYYmkX4kwsMor8333uIvnINGd4Iz5LNIz0mD3ZjlySSwRpDJ/se2SFLKdEQY/wkMP
+         6kUg==
+X-Gm-Message-State: APjAAAUx/nkPJ69v6iyLssJM3wgYr2Kag/X9cAjacsv9D5sZXRCw6Vy8
+        5zzkDDLyvEmwXUcbSSoAsm7Nhd9NT1nWrulF9FU=
+X-Google-Smtp-Source: APXvYqx8NQX+ydY+eeNDp28dUg9R1svX91x1kJ14OwQoZoSrATITd1jR8fbXt5whBGr7Ll3uhqkiyuU/GUqUX5oZEKM=
+X-Received: by 2002:a05:6830:1141:: with SMTP id x1mr17726618otq.120.1577964603627;
+ Thu, 02 Jan 2020 03:30:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Received: by 2002:a8a:87:0:0:0:0:0 with HTTP; Thu, 2 Jan 2020 03:30:03 -0800 (PST)
+In-Reply-To: <20200102091902.tk374bxohvj33prz@pali>
+References: <20200102082036.29643-1-namjae.jeon@samsung.com>
+ <CGME20200102082406epcas1p268f260d90213bdaabee25a7518f86625@epcas1p2.samsung.com>
+ <20200102082036.29643-10-namjae.jeon@samsung.com> <20200102091902.tk374bxohvj33prz@pali>
+From:   Namjae Jeon <linkinjeon@gmail.com>
+Date:   Thu, 2 Jan 2020 20:30:03 +0900
+Message-ID: <CAKYAXd_9XOWtcLYk-+gg636rFCYjLgHzrP5orR3XjXGMpTKWLA@mail.gmail.com>
+Subject: Re: [PATCH v9 09/13] exfat: add misc operations
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 03:05:40AM +0000, Zengtao (B) wrote:
-> Hi Sudeep:
+2020-01-02 18:19 GMT+09:00, Pali Roh=C3=A1r <pali.rohar@gmail.com>:
+> On Thursday 02 January 2020 16:20:32 Namjae Jeon wrote:
+>> This adds the implementation of misc operations for exfat.
+>>
+>> Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
+>> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
+>> ---
+>>  fs/exfat/misc.c | 253 ++++++++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 253 insertions(+)
+>>  create mode 100644 fs/exfat/misc.c
+>>
+>> diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
+>> new file mode 100644
+>> index 000000000000..7f533bcb3b3f
+>> --- /dev/null
+>> +++ b/fs/exfat/misc.c
 >
-> Thanks for your reply.
+> ...
 >
-> > -----Original Message-----
-> > From: Sudeep Holla [mailto:sudeep.holla@arm.com]
-> > Sent: Wednesday, January 01, 2020 12:41 AM
-> > To: Zengtao (B)
-> > Cc: Linuxarm; Greg Kroah-Hartman; Rafael J. Wysocki;
-> > linux-kernel@vger.kernel.org; Sudeep Holla; Morten Rasmussen
-> > Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations conflicts
-> > with lower layer
-> >
-> > On Mon, Dec 23, 2019 at 04:16:19PM +0800, z00214469 wrote:
-> > > As we know, from sched domain's perspective, the DIE layer should be
-> > > larger than or at least equal to the MC layer, and in some cases, MC
-> > > is defined by the arch specified hardware, MPIDR for example, but
-> > NUMA
-> > > can be defined by users,
-> >
-> > Who are the users you are referring above ?
-> For example, when I use QEMU to start a guest linux, I can define the
-> NUMA topology of the guest linux whatever i want.
-
-OK and how is the information passed to the kernel ? DT or ACPI ?
-We need to fix the miss match if any during the initial parse of those
-information.
-
-> > > with the following system configrations:
-> >
-> > Do you mean ACPI tables or DT or some firmware tables ?
-> >
-> > > *************************************
-> > > NUMA:      	 0-2,  3-7
-> >
-> > Is the above simply wrong with respect to hardware and it actually match
-> > core_siblings ?
-> >
-> Actually, we can't simply say this is wrong, i just want to show an example.
-> And this example also can be:
-> NUMA:  0-23,  24-47
-> core_siblings:   0-15,  16-31, 32-47
+>> +/* <linux/time.h> externs sys_tz
+>> + * extern struct timezone sys_tz;
+>> + */
+>> +#define UNIX_SECS_1980    315532800L
+>> +
+>> +#if BITS_PER_LONG =3D=3D 64
+>> +#define UNIX_SECS_2108    4354819200L
+>> +#endif
 >
-
-Are you sure of the above ? Possible values w.r.t hardware config:
-core_siblings:   0-15,  16-23, 24-31, 32-47
-
-But what you have specified above is still wrong core_siblings IMO.
-
-
-[...]
-
-> > > diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-> > > index 1eb81f11..5fe44b3 100644
-> > > --- a/drivers/base/arch_topology.c
-> > > +++ b/drivers/base/arch_topology.c
-> > > @@ -439,10 +439,18 @@ const struct cpumask
-> > *cpu_coregroup_mask(int cpu)
-> > >  	if (cpumask_subset(&cpu_topology[cpu].core_sibling, core_mask)) {
-> > >  		/* not numa in package, lets use the package siblings */
-> > >  		core_mask = &cpu_topology[cpu].core_sibling;
-> > > -	}
-> > > +	} else
-> > > +		pr_warn_once("Warning: suspicous broken topology: cpu:[%d]'s
-> > core_sibling:[%*pbl] not a subset of numa node:[%*pbl]\n",
-> > > +			cpu, cpumask_pr_args(&cpu_topology[cpu].core_sibling),
-> > > +			cpumask_pr_args(core_mask));
-> > > +
-> >
-> > Won't this print warning on all systems that don't have numa within a
-> > package ? What are you trying to achieve here ?
+> ...
 >
-> Since in my case, when this corner case happens, the linux kernel just fall into
-> dead loop with no prompt, here this is a helping message will help a lot.
+>> +#define TIMEZONE_CUR_OFFSET()	((sys_tz.tz_minuteswest / (-15)) & 0x7F)
+>> +/* Convert linear UNIX date to a FAT time/date pair. */
+>> +void exfat_time_unix2fat(struct exfat_sb_info *sbi, struct timespec64
+>> *ts,
+>> +		struct exfat_date_time *tp)
+>> +{
+>> +	time_t second =3D ts->tv_sec;
+>> +	time_t day, month, year;
+>> +	time_t ld; /* leap day */
 >
-
-As I said, wrong configurations need to be detected when generating
-DT/ACPI if possible. The above will print warning on systems with NUMA
-within package.
-
-NUMA:  0-7, 8-15
-core_siblings:   0-15
-
-The above is the example where the die has 16 CPUs and 2 NUMA nodes
-within a package, your change throws error to the above config which is
-wrong.
-
-> >
-> > >  	if (cpu_topology[cpu].llc_id != -1) {
-> > >  		if (cpumask_subset(&cpu_topology[cpu].llc_sibling, core_mask))
-> > >  			core_mask = &cpu_topology[cpu].llc_sibling;
-> > > +		else
-> > > +			pr_warn_once("Warning: suspicous broken topology:
-> > cpu:[%d]'s llc_sibling:[%*pbl] not a subset of numa node:[%*pbl]\n",
-> > > +				cpu,
-> > cpumask_pr_args(&cpu_topology[cpu].llc_sibling),
-> > > +				cpumask_pr_args(core_mask));
-> > >  	}
-> > >
-> >
-> > This will trigger warning on all systems that lack cacheinfo topology.
-> > I don't understand the intent of this patch at all. Can you explain
-> > all the steps you follow and the issue you face ?
+> Question for other maintainers: Has kernel code already time_t defined
+> as 64bit? Or it is still just 32bit and 32bit systems and some time64_t
+> needs to be used? I remember that there was discussion about these
+> problems, but do not know if it was changed/fixed or not... Just a
+> pointer for possible Y2038 problem. As "ts" is of type timespec64, but
+> "second" of type time_t.
+My bad, I will change it with time64_t.
 >
-> Can you show me an example, what I really want to warn is the case that
-> NUMA topology conflicts with lower level.
+>> +
+>> +	/* Treats as local time with proper time */
+>> +	second -=3D sys_tz.tz_minuteswest * SECS_PER_MIN;
+>> +	tp->timezone.valid =3D 1;
+>> +	tp->timezone.off =3D TIMEZONE_CUR_OFFSET();
+>> +
+>> +	/* Jan 1 GMT 00:00:00 1980. But what about another time zone? */
+>> +	if (second < UNIX_SECS_1980) {
+>> +		tp->second  =3D 0;
+>> +		tp->minute  =3D 0;
+>> +		tp->hour =3D 0;
+>> +		tp->day  =3D 1;
+>> +		tp->month  =3D 1;
+>> +		tp->year =3D 0;
+>> +		return;
+>> +	}
+>> +
+>> +	if (second >=3D UNIX_SECS_2108) {
 >
-
-I was wrong here, I mis-read this section. I still fail to understand
-why the above change is needed. I understood the QEMU example, but you
-haven't specified how cacheinfo looks like there.
-
---
-Regards,
-Sudeep
+> Hello, this code cause compile errors on 32bit systems as UNIX_SECS_2108
+> macro is not defined when BITS_PER_LONG =3D=3D 32.
+>
+> Value 4354819200 really cannot fit into 32bit signed integer, so you
+> should use 64bit signed integer. I would suggest to define this macro
+> value via LL not just L suffix (and it would work on both 32 and 64bit)
+Okay.
+>
+>   #define UNIX_SECS_2108    4354819200LL
+>
+>> +		tp->second  =3D 59;
+>> +		tp->minute  =3D 59;
+>> +		tp->hour =3D 23;
+>> +		tp->day  =3D 31;
+>> +		tp->month  =3D 12;
+>> +		tp->year =3D 127;
+>> +		return;
+>> +	}
+Okay, I will check it.
+Thanks for your review!
+>
+> --
+> Pali Roh=C3=A1r
+> pali.rohar@gmail.com
+>
