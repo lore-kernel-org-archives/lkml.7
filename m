@@ -2,97 +2,56 @@ Return-Path: <SRS0=WmnE=2X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441C3C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D1DC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13F0E215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:07:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MA9MDfK4"
+	by mail.kernel.org (Postfix) with ESMTP id 61F9C215A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 13:08:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728315AbgABNHS (ORCPT
+        id S1728332AbgABNIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 08:07:18 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37807 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728176AbgABNHS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 08:07:18 -0500
-Received: by mail-ot1-f65.google.com with SMTP id k14so57017227otn.4;
-        Thu, 02 Jan 2020 05:07:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qGzIj2hEHN6oUhF09deNE0mRdC/2mJvGlzqpU/pgTzc=;
-        b=MA9MDfK4j+giCLMBFtV5LXU3X/dFRKK96EzQvldNXaq2a0/7Cv65d1OtEletP8Yr9/
-         Gji9z0ORxK/xkqwrO5xcpE9I14uemIwqRhR8bMidxreukupIXK/kPuzgDojz1DN8xzu0
-         +783oj2RHFziDPtLC5je0de+mVEy7U9ld6L6L5AS1tTvHse1lskx5AqiCrZnWNqVCuDR
-         gAYqmWuvOF40FSU6Ljyp/WP0cg5p8jV9J5bpsduYDL+5dSRKO2vtgcXP4ul4TVbhyPbm
-         vFHlvtAv0Ff7NvQA9afnO70n+U4SmY8kn0sZtvDlkB8Fz7adgA7UlA5B3RrnaLSbX/jG
-         4v2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qGzIj2hEHN6oUhF09deNE0mRdC/2mJvGlzqpU/pgTzc=;
-        b=Ep99agNPwhfcIID8UCwbJkYo5alVFuujranwQy+PH+KebUCprqu++DL11Y9fXFdI67
-         gP1SupJdypm/r+Y1WAXrlsZifx26XOKSZ4jode06PYtab8dzovsk6qvrFnz/1kawtZHC
-         815AhTqhfcCuRdH9vn+7Ay143EnIX+pL9YWorZVePeUDUBHydsfxwoN5bU1CTNL0y/PV
-         64OThuFzzkg/Q7Kb8r/YWzQbG3R6cEf2897TD5waT0cXREeLrzwU2kmylgm5/8gv6sHA
-         tPxYjd9+jJml/Ga1E9JIukI0PqHfaZl8LBlFelw9b6LOMuSjIWYeuYA9ru4+YxFTPP0k
-         6+uw==
-X-Gm-Message-State: APjAAAXLrEwXvrGieDrqevS/Fl6+Q28RwKjuHlpi5/pV02JZhTU4vRlS
-        h6RSVBcD2F+S9vqI7JvCkymiVdj5yZ/0y5V1vgY=
-X-Google-Smtp-Source: APXvYqylOUvEdSWBW2l4DxzkLNI6zzyEGisPZ0pUpKpF7VMWrTzGQ0N22m/qX0E9fbp9LRz14CE0U1vJAi6XyRqumlo=
-X-Received: by 2002:a05:6830:1141:: with SMTP id x1mr18134133otq.120.1577970437302;
- Thu, 02 Jan 2020 05:07:17 -0800 (PST)
+        Thu, 2 Jan 2020 08:08:54 -0500
+Received: from mx2.suse.de ([195.135.220.15]:51188 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728176AbgABNIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 08:08:54 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id EBDE7AD49;
+        Thu,  2 Jan 2020 13:08:52 +0000 (UTC)
+Date:   Thu, 2 Jan 2020 14:08:46 +0100
+From:   Cyril Hrubis <chrubis@suse.cz>
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Jens Axboe <axboe@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>, ltp@lists.linux.it,
+        lkp@lists.01.org
+Subject: Re: [LTP] [iomap] 3af5053534:
+ WARNING:at_fs/iomap/buffered-io.c:#iomap_readpages
+Message-ID: <20200102130846.GF32710@rei.lan>
+References: <20191219134725.GE2760@shao2-debian>
 MIME-Version: 1.0
-Received: by 2002:a8a:87:0:0:0:0:0 with HTTP; Thu, 2 Jan 2020 05:07:16 -0800 (PST)
-In-Reply-To: <20200102125830.z2uz673dlsdttjvo@pali>
-References: <20200102082036.29643-1-namjae.jeon@samsung.com>
- <CGME20200102082408epcas1p194621a6aa6729011703f0c5a076a7396@epcas1p1.samsung.com>
- <20200102082036.29643-13-namjae.jeon@samsung.com> <20200102125830.z2uz673dlsdttjvo@pali>
-From:   Namjae Jeon <linkinjeon@gmail.com>
-Date:   Thu, 2 Jan 2020 22:07:16 +0900
-Message-ID: <CAKYAXd9Y6o+a7q_yismLP8nNXOUqrudC3KW8N6Z05OghYLt1jg@mail.gmail.com>
-Subject: Re: [PATCH v9 12/13] exfat: add exfat in fs/Kconfig and fs/Makefile
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191219134725.GE2760@shao2-debian>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> index 98be354fdb61..2c7ea7e0a95b 100644
->> --- a/fs/Makefile
->> +++ b/fs/Makefile
->> @@ -83,6 +83,7 @@ obj-$(CONFIG_HUGETLBFS)		+=3D hugetlbfs/
->>  obj-$(CONFIG_CODA_FS)		+=3D coda/
->>  obj-$(CONFIG_MINIX_FS)		+=3D minix/
->>  obj-$(CONFIG_FAT_FS)		+=3D fat/
->> +obj-$(CONFIG_EXFAT)		+=3D exfat/
->>  obj-$(CONFIG_BFS_FS)		+=3D bfs/
->>  obj-$(CONFIG_ISO9660_FS)	+=3D isofs/
->>  obj-$(CONFIG_HFSPLUS_FS)	+=3D hfsplus/ # Before hfs to find wrapped HFS=
-+
->
-> Seems that all filesystems have _FS suffix in their config names. So
-> should not have exfat config also same convention? CONFIG_EXFAT_FS?
-Yeah, I know, However, That name conflicts with staging/exfat.
-So I subtracted _FS suffix.
->
-> --
-> Pali Roh=C3=A1r
-> pali.rohar@gmail.com
->
+Hi!
+Looks like FALLOC_FL_ZERO_RANGE fails, at least that's where the test
+reports wrong bytes in the file.
+
+The source code of the test:
+
+https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/syscalls/fallocate/fallocate04.c#L157
+
+
+-- 
+Cyril Hrubis
+chrubis@suse.cz
