@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53525C3276C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C72BC3276C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23B5A22B48
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 181A52253D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jan 2020 22:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578003643;
-	bh=gvAaG+d7XPXErCZz0EtzFyx+y9qm2zos3QZhL5yM2yY=;
+	s=default; t=1578003646;
+	bh=8VqzkoxjJLB3l5GP5JBQCAJeVpBqdl9yDEo2CnjKTCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k7skwpdYJk/o6wZJzyTVqql6o8EARl+/wj7pBom4NSvSU6rmzosU2osC0IO7ql2lN
-	 oE0p7iHpg+kenFiB/sQXKyr7qfk92eKpNcYIz2eHBpAPQkLRbRa7OvI421Vpd0ZroU
-	 RnbDqk6boBCdPNMwn5lVEJrFMe03y11o7W6+SnJ0=
+	b=QJFM+qGcHnY0Ek56e5X96k1hJOqBoU8IbyWH2keblMZW51z6EnH6RB0aGyv2UOq2U
+	 TfQNN/OwsmOdgUW1JPL23TIzIhQLieRLoZeRgJrv1qav592EKFFJKS3uiEk030tLEM
+	 o2QvJyvpwI7rm8FLiNowVmoYyD+nJWABusbTObHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbgABWUm (ORCPT
+        id S1728868AbgABWUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 17:20:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38554 "EHLO mail.kernel.org"
+        Thu, 2 Jan 2020 17:20:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726099AbgABWUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 17:20:40 -0500
+        id S1728852AbgABWUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:20:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 103312253D;
-        Thu,  2 Jan 2020 22:20:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C92A2253D;
+        Thu,  2 Jan 2020 22:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578003639;
-        bh=gvAaG+d7XPXErCZz0EtzFyx+y9qm2zos3QZhL5yM2yY=;
+        s=default; t=1578003641;
+        bh=8VqzkoxjJLB3l5GP5JBQCAJeVpBqdl9yDEo2CnjKTCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lqJqLnmJL02z96cpdJc72/BdCJQg/f4sYd05IWWSEzEsP8hKiNxLv7NIVEO9ojC/g
-         wYQS7BQl1a0jUOu6aSXcfwxGzU7ZIVa9J4QFTHr+skIEcazFHpyELDPMWwlcrxAA4T
-         XX2F1j82pJHFHlW77hZ2x+qGgfliHFPxY/FkrFac=
+        b=T0SgWwUP2QDCCq+VF9+XwvkOFAuLy6trnoTXmXm82OqAcSdZo/OF+cAP1wtE5SlRd
+         TH09pPgYGH6foHCs+HtsuzPWPlN/QUA7nnG81zDldfLHBDfTEpfTKNCThjPbutOY0S
+         XiAJBd9BUzSHfJEKrEKCDoNq2CecrYvMUAuzbc5A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 026/114] scsi: lpfc: Fix duplicate unreg_rpi error in port offline flow
-Date:   Thu,  2 Jan 2020 23:06:38 +0100
-Message-Id: <20200102220031.755670668@linuxfoundation.org>
+Subject: [PATCH 4.19 017/114] leds: lm3692x: Handle failure to probe the regulator
+Date:   Thu,  2 Jan 2020 23:06:29 +0100
+Message-Id: <20200102220030.874892409@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200102220029.183913184@linuxfoundation.org>
 References: <20200102220029.183913184@linuxfoundation.org>
@@ -61,52 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Guido Günther <agx@sigxcpu.org>
 
-[ Upstream commit 7cfd5639d99bec0d27af089d0c8c114330e43a72 ]
+[ Upstream commit 396128d2ffcba6e1954cfdc9a89293ff79cbfd7c ]
 
-If the driver receives a login that is later then LOGO'd by the remote port
-(aka ndlp), the driver, upon the completion of the LOGO ACC transmission,
-will logout the node and unregister the rpi that is being used for the
-node.  As part of the unreg, the node's rpi value is replaced by the
-LPFC_RPI_ALLOC_ERROR value.  If the port is subsequently offlined, the
-offline walks the nodes and ensures they are logged out, which possibly
-entails unreg'ing their rpi values.  This path does not validate the node's
-rpi value, thus doesn't detect that it has been unreg'd already.  The
-replaced rpi value is then used when accessing the rpi bitmask array which
-tracks active rpi values.  As the LPFC_RPI_ALLOC_ERROR value is not a valid
-index for the bitmask, it may fault the system.
+Instead use devm_regulator_get_optional since the regulator
+is optional and check for errors.
 
-Revise the rpi release code to detect when the rpi value is the replaced
-RPI_ALLOC_ERROR value and ignore further release steps.
-
-Link: https://lore.kernel.org/r/20191105005708.7399-2-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Reviewed-by: Dan Murphy <dmurphy@ti.com>
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/leds/leds-lm3692x.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index bd555f886d27..a801917d3c19 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -17867,6 +17867,13 @@ lpfc_sli4_alloc_rpi(struct lpfc_hba *phba)
- static void
- __lpfc_sli4_free_rpi(struct lpfc_hba *phba, int rpi)
- {
-+	/*
-+	 * if the rpi value indicates a prior unreg has already
-+	 * been done, skip the unreg.
-+	 */
-+	if (rpi == LPFC_RPI_ALLOC_ERROR)
-+		return;
-+
- 	if (test_and_clear_bit(rpi, phba->sli4_hba.rpi_bmask)) {
- 		phba->sli4_hba.rpi_count--;
- 		phba->sli4_hba.max_cfg_param.rpi_used--;
+diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
+index 4f413a7c5f05..d79a66a73169 100644
+--- a/drivers/leds/leds-lm3692x.c
++++ b/drivers/leds/leds-lm3692x.c
+@@ -337,9 +337,18 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
+ 		return ret;
+ 	}
+ 
+-	led->regulator = devm_regulator_get(&led->client->dev, "vled");
+-	if (IS_ERR(led->regulator))
++	led->regulator = devm_regulator_get_optional(&led->client->dev, "vled");
++	if (IS_ERR(led->regulator)) {
++		ret = PTR_ERR(led->regulator);
++		if (ret != -ENODEV) {
++			if (ret != -EPROBE_DEFER)
++				dev_err(&led->client->dev,
++					"Failed to get vled regulator: %d\n",
++					ret);
++			return ret;
++		}
+ 		led->regulator = NULL;
++	}
+ 
+ 	child = device_get_next_child_node(&led->client->dev, child);
+ 	if (!child) {
 -- 
 2.20.1
 
