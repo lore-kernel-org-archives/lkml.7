@@ -2,91 +2,166 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1B4C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5DCC32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3123522B48
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73D60227BF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:49:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="NwEdZrfC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbgACJs6 (ORCPT
+        id S1727500AbgACJtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 04:48:58 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57340 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725972AbgACJs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 04:48:58 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 062F2AE87;
-        Fri,  3 Jan 2020 09:48:55 +0000 (UTC)
-Date:   Fri, 3 Jan 2020 10:48:54 +0100
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     teawater <teawaterz@linux.alibaba.com>
-Cc:     Chris Down <chris@chrisdown.name>, Hui Zhu <teawater@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC] memcg: Add swappiness to cgroup2
-Message-ID: <20200103094853.GM22847@blackbody.suse.cz>
-References: <1577252208-32419-1-git-send-email-teawater@gmail.com>
- <20191225140546.GA311630@chrisdown.name>
- <6E9887B9-EEF7-406E-90D4-3FAEFE0A505E@linux.alibaba.com>
+        Fri, 3 Jan 2020 04:49:11 -0500
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:46936 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgACJtK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 04:49:10 -0500
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="Codrin.Ciubotariu@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: lt1iGyig/hzavnR2EK27QnIpAGY4nevCHUp1wkPyz7h8hBlQvGYx4Jz0+bmNKn78B/BwrLPQQC
+ +7LTF/XLFEjalYlrLfpjogcT58ctyCubK3TI1QeCz3e2JbEaEga6qRauV/S5RpPxlPEGnfOK8u
+ Hyv8rQf3v6gq/nxNBOuJVtRSJp/dcDwcJpNNpQNTahMnHEfo9cEJEoh4Wfg4YoQWk5T9VGBhgE
+ hVddm0DS2jyYQQ9rV5dpJJFZY9fcp1CMVwR4cbaCvBDXi+EWVvZl7U2UDW3uOCWL5bUo9LPcgd
+ mOM=
+X-IronPort-AV: E=Sophos;i="5.69,390,1571727600"; 
+   d="scan'208";a="62108718"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Jan 2020 02:49:09 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 3 Jan 2020 02:49:09 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Fri, 3 Jan 2020 02:49:08 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VSAzN+aJsjopcTYfmc6OieQt205m9FnDfGKH+ODM3meKd3fpiKwqvhaud5ZDUWH1zHBZ5fwKMKTtBoZbB6pV/Zi2s6RLuTTfp3GgvSNRCsoWxrE4wdSUbZRCKohr9tuq/JgQ6UNZ44gR78U0fvoVtSAGsdwP3FHBU/ei84ri2DZTTbf2qyJv9yGzDRIRtci2OxKc7cQ0iJ6SR9am6S27anu4nxQveQIVJidGHu60O73F5HB8+2PN81xppgaZ/2SrmiiKGhkThcaYlifPvmZbcfI9pJFKzZRcDrCYQxRT0SGLzgvJ7mZvh+i6ISrhjXEWZgPijMhF3t1LHW40Yyqdxw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tSoxW5u6A/VO0Yp3B5/E7fMNKvUBbbFfgkOXZYFAi/A=;
+ b=RbG2OkUUjck6Uhh5/HggHTsDuVVCQSJQVgvW4OZeCSWTrBpv+uneYTD6yAvqZRtr9Q4hcq3DFdDhpukJStzRi5DrN8dlX5Iq4N7KfkNZhIO8RG+47AlTHWaV2efOyHx8uqQwYyeCIkn2AuFLf2IWSDeu2AqIU0uSHAhWyDRAnWLfI1gR5bKa12zEW5S3DH3zNmzdtwu4VQkSjLSB9PZjoPPKgfz658+xkd8Vy4m/iY0tf+ogF4BYSWrLpm8+WrUytTxeNI8FNA8sGg4ug9Iu+bvEd6ctvhGs0MNx19bQmHedAlKfZDAPIZqclAVuyOetaYJHLSsLzWgQQLBt2utzVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tSoxW5u6A/VO0Yp3B5/E7fMNKvUBbbFfgkOXZYFAi/A=;
+ b=NwEdZrfCKDyX/X93qfz0HGCg7OL2OTGap4fgBI+FFdfB+yNK2s//AHdsDBx+x3S3141OQ8qalFye3d3T149lVe/2j/g1X/RkUuBUgfJcV20pMiPyGOZR+8aQ5Q1pdSDb5MRl+MunzAtlLm/q2YNti6moFE0py97/WGW8F2Onfjo=
+Received: from BY5PR11MB4497.namprd11.prod.outlook.com (52.132.255.220) by
+ BY5PR11MB4322.namprd11.prod.outlook.com (10.255.89.90) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.10; Fri, 3 Jan 2020 09:49:06 +0000
+Received: from BY5PR11MB4497.namprd11.prod.outlook.com
+ ([fe80::6189:c32:b55b:b3fd]) by BY5PR11MB4497.namprd11.prod.outlook.com
+ ([fe80::6189:c32:b55b:b3fd%5]) with mapi id 15.20.2602.012; Fri, 3 Jan 2020
+ 09:49:06 +0000
+From:   <Codrin.Ciubotariu@microchip.com>
+To:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <kamel.bouhara@bootlin.com>, <wsa@the-dreams.de>,
+        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <Ludovic.Desroches@microchip.com>, <robh@kernel.org>,
+        <Codrin.Ciubotariu@microchip.com>
+Subject: [PATCH v2 0/6] i2c bus recovery for Microchip SoCs
+Thread-Topic: [PATCH v2 0/6] i2c bus recovery for Microchip SoCs
+Thread-Index: AQHVwhsJN8+B8BrAj0ahyw6tlDm+jg==
+Date:   Fri, 3 Jan 2020 09:49:06 +0000
+Message-ID: <20200103094821.13185-1-codrin.ciubotariu@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [188.25.143.200]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: dfbb639c-0e07-459c-94a6-08d790322c5b
+x-ms-traffictypediagnostic: BY5PR11MB4322:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR11MB4322091B9189AC94058D6000E7230@BY5PR11MB4322.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0271483E06
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(366004)(376002)(136003)(39860400002)(396003)(346002)(189003)(199004)(36756003)(478600001)(4326008)(6512007)(6486002)(110136005)(54906003)(316002)(5660300002)(107886003)(186003)(66946007)(66446008)(64756008)(66476007)(66556008)(8676002)(86362001)(6506007)(1076003)(8936002)(76116006)(26005)(81166006)(2906002)(91956017)(71200400001)(81156014)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR11MB4322;H:BY5PR11MB4497.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Az6ffLFFZinIRtC8Xae2ZvfoGwcoqEU3mU+1MkkA9+MkmwipojhvxBb5KLx8Fc8hO3xTgkpkTlOEu6Mt7qkTpBXR1TbsitqjxpWt0i2YT2R/7Z1AZtwFjBltDefMLTTCU2pUNA/jKxUF7RgMQgEhxm4hx1eTF+MkIbTIo6kXOVplIVIHsKTJLHdZab4ffN27OhRu6cEOudJk/HWt7fE8+wZ6QUJ+V+Oi4m6Hsyq5pAhbcUuMDHcsdseYilhM6vDkmlrFC80H/VedZKOCkbZZr/V6jyBc4e32I3KRqxSTmMx/lPtzausffoOmeCr2xgfjpNNNVZ6EnT3GPNQDmBXncLymzc8W6roF0sCoksysvq/jQS2J4yi/soLE+LXKB+wuzTDovG9Km8eJ2pZ7OM5XFpYuxQk5vtYNUIQHlGluta6JgSptsZtRk15rrV3K/Zxh
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="dzI2QqkSBOAresgT"
-Content-Disposition: inline
-In-Reply-To: <6E9887B9-EEF7-406E-90D4-3FAEFE0A505E@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: dfbb639c-0e07-459c-94a6-08d790322c5b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jan 2020 09:49:06.1829
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eBEaXFFTSSX3RFMt67Xm90CoNaxSCdDnBAa2QnXD3n1oZW6IlZHEpEN0RjgNh8hd0HgouJwfb67M1JnzlfUxVXUT7GkwGVZBeBynJRw0FOU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4322
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch series introduce the i2c bus recovery mechanism
+for the Microchip SoCs. Some SoCs have hardware support for
+recovery, while for those who don't the i2c-gpio bus recovery
+mechanism is used. Updated the corresponding dts to add i2c
+gpio pinctrl. The bus recovery is configured for the sama5d2/3/4
+xplained and sama5d27 som1 EK boards in dts.
 
---dzI2QqkSBOAresgT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Changes in v2:
+ - integrated the HW CLEAR command patch;
+ - call i2c_recover_bus() after an error occurs, if SDA is down;
+ - added i2c gpio pinctrl in sama5d2 xplained and sama5d27 som1 EK
+   boards;
 
-On Thu, Dec 26, 2019 at 02:56:40PM +0800, teawater <teawaterz@linux.alibaba.com> wrote:
-> For example, an application does a lot of file access work in a
-> memory-constrained environment.
-> [...]
-> Both of them are extreme examples.
-The examples are quite generic. Do cgroup v2 controls really prevent
-handling such workloads appropriately?
 
-Besides that, note that per-cgroup swappiness as used in v1 cannot be
-simply transferred into v2 because, it's a concept that doesn't take
-into account cgroup hierarchies (how would parent's swappiness affect
-children? what would swappiness on inner nodes mean?).
+Codrin Ciubotariu (1):
+  i2c: at91: Send bus clear command if SCL is down
 
-HTH,
-Michal
+Kamel Bouhara (5):
+  dt-bindings: i2c: at91: document optional bus recovery properties
+  i2c: at91: implement i2c bus recovery
+  ARM: at91/dt: sama5d3: add i2c gpio pinctrl
+  ARM: at91/dt: sama5d4: add i2c gpio pinctrl
+  ARM: at91/dt: sama5d2: add i2c gpio pinctrl
 
---dzI2QqkSBOAresgT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+ .../devicetree/bindings/i2c/i2c-at91.txt      |  10 ++
+ arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts     |  33 +++++-
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts   |  33 +++++-
+ arch/arm/boot/dts/sama5d3.dtsi                |  33 +++++-
+ arch/arm/boot/dts/sama5d4.dtsi                |  33 +++++-
+ drivers/i2c/busses/i2c-at91-core.c            |   9 ++
+ drivers/i2c/busses/i2c-at91-master.c          | 101 ++++++++++++++++++
+ drivers/i2c/busses/i2c-at91.h                 |  15 ++-
+ 8 files changed, 254 insertions(+), 13 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl4PDgAACgkQia1+riC5
-qSgXQQ//fdhyA8EegA3X3Xot5ZkyaIG2xgwbk8ZiiOuhPr2xEmrpBrEf3eC+IBPH
-/4Iq/kuHKAZEJcOtfJZepJoF9LDQjoAdpqVd21ohGgxxXsCTFnT/et+Z8t/dpaXB
-gpp6VahkMZxdJ0vBCPhHu46nkpBACbjMzCklzpAaVa1Rz95L8Ob4Eel1e76R7S6n
-KxLyLxkgdRVV8GeABMS7wf5NljfqAQ/SUCKfjoJYyC58PA3LVsYYke7bXSlMwLay
-jt1Pb635+2ajdT3LahtR2r9xGFxpL+Rf2WPbJ3MPUl7MQ4HwV0zw4fpqSKtXBeRJ
-x7oTfUNZfOGXR2Nnm8Tdb2rumnznwhtuFAn3wvwxKOIiT9iS0Ye21KvMQ3hqyeIB
-ZVDYMT0eUmxpjbZgwMcH9UpCpwT4HyKDLFH57mleTIrBeRjCua6tf4nf4S+RHSc7
-VxyH4VEkQgD6M9z/ySQDfRMKU/SBy6UQkxCQ4avrx4igbQL+MENQ/6ntD0Kp4XFJ
-suj2i9UdOmGzBt5kkJMkGjFN/NuOF/WEf1ZCr3/Sg6g5RzJna/Oh0dEKhhsb8/vp
-0ENgmveAUNbtijTby+6xo+6UBoE9HEcnNMu++evdBZRzvXcbnwhVZr84Qyjg15Mq
-T7S51fMo9A+I+lC0KFOud0hSUTaaPPesnIGs6v2jqlbh/8rKids=
-=QzSj
------END PGP SIGNATURE-----
-
---dzI2QqkSBOAresgT--
+--=20
+2.20.1
