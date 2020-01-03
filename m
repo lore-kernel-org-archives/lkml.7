@@ -2,71 +2,119 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CBDC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70ADC32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E884217F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856A1222C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:56:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbgACPzj (ORCPT
+        id S1727956AbgACP4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 10:55:39 -0500
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:55347 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727539AbgACPzi (ORCPT
+        Fri, 3 Jan 2020 10:56:51 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:52479 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727539AbgACP4v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 10:55:38 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TmkQCWM_1578066930;
-Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TmkQCWM_1578066930)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 03 Jan 2020 23:55:35 +0800
-From:   Wen Yang <wenyang@linux.alibaba.com>
-To:     John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Wen Yang <wenyang@linux.alibaba.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] timekeeping: improve arithmetic divisions
-Date:   Fri,  3 Jan 2020 23:55:17 +0800
-Message-Id: <20200103155517.21754-1-wenyang@linux.alibaba.com>
-X-Mailer: git-send-email 2.23.0
+        Fri, 3 Jan 2020 10:56:51 -0500
+Received: from mail-qv1-f45.google.com ([209.85.219.45]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MC3L9-1isbSW2jtt-00CVW5; Fri, 03 Jan 2020 16:56:49 +0100
+Received: by mail-qv1-f45.google.com with SMTP id y8so16385056qvk.6;
+        Fri, 03 Jan 2020 07:56:49 -0800 (PST)
+X-Gm-Message-State: APjAAAXpWAAcWsL0c11bt7l/seQLaP6iUtt3BJBKllxxroWXw8vFI1FI
+        MXwtILgMrPa9gpor774GFPVcADV2rIwAd6R5hCM=
+X-Google-Smtp-Source: APXvYqwAZtlDU9yS/thCGFJhNrhvQGPNxuoWiizEZDxJ5nrJCe1L3kDS/UikuNsEdYJa8Y3FeqWFHQmLu8XM2ZS7NUQ=
+X-Received: by 2002:a0c:e7c7:: with SMTP id c7mr68933990qvo.222.1578067008436;
+ Fri, 03 Jan 2020 07:56:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200102215829.911231638@linuxfoundation.org> <CA+G9fYuPkOGKbeQ0FKKx4H0Bs-nRHALsFtwyRw0Rt5DoOCvRHg@mail.gmail.com>
+ <CAK8P3a1+Srey_7cUd0xfaO8HdMv5tkUcs6DeDXzcUKkUD-DnGQ@mail.gmail.com>
+ <CAK8P3a24EkUXTu-K2c-5B3w-LZwY7zNcX0dZixb3gd59vRw_Kw@mail.gmail.com> <20200103154518.GB1064304@kroah.com>
+In-Reply-To: <20200103154518.GB1064304@kroah.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 3 Jan 2020 16:56:32 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a00SpVfSE5oL8_F_8jHdg_8A5fyEKH_DWNyPToxack=zA@mail.gmail.com>
+Message-ID: <CAK8P3a00SpVfSE5oL8_F_8jHdg_8A5fyEKH_DWNyPToxack=zA@mail.gmail.com>
+Subject: Re: [PATCH 5.4 000/191] 5.4.8-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Chengguang Xu <cgxu519@mykernel.net>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>, LTP List <ltp@lists.linux.it>,
+        Jan Stancek <jstancek@redhat.com>,
+        John Stultz <john.stultz@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:4fMLrImlcdsyOYIxBRFPO2dG0gOCSP3VpN+YNO478EJfix+DVzo
+ jL7J692OmqUzwCCaueFEkzm6A0x+awbG6L3JulFk1emi2R5M/rKOMn40wsbZ8EgpXC2PQQ9
+ gT1rlP09DGAp2X4gtusFT/6ZBOudRKGGkpwaXVVLSYVOzNpGIp4GJi4DRgorWMdDWkW8NI9
+ ASnbqgLhV9hz5N12Y1Rhg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:62Aiqo52ap0=:tLFUxBUYtAlTl7pbpokuIX
+ 2eMQ+rf4ItCgtV8LuCDSHX4zEgaRvWZl4SOn51tO7lyUPsk1/eX4t8xt4zmuSLAQ7CYG1x+T9
+ WP7W5mTkU5Bao8wn1f9/OfqKyjrlUNp8CFoXFnHTdvpSPyUkQSM8C5dW636GEuQcH9cUWcp0N
+ feXWN4YjX4ocz5LKBY5S8daPsLjlWk/tto2id1a1tIoJNhsUTtrH57vI8D2x61cdiFEXszA1S
+ GAmenkjP+H1IQdfGpYfZ2KIwVKQE+s3VI12AmjUIt2PhgFA1HOL5Bys6qFAmYj7Kzln1Ac6wz
+ pIlNZWuIMKywCNtG++9RlWlXNASMaZUlLTdItXwJwcUq0Nf7ut6OlbICv8+oivXcFOijNF4sP
+ FjMSts+ek1TXqJN6kdjV8W5Vr3Igc/6eNa5+CswTrAxsu4obWE0FgXiuU1LNnPwGvVTE7CabS
+ j0cUko7yyq7QddXWcTaObwWKOlFcMd8nUt3KjoNIpfX0Vy9yinlWa0aolQtNERSnX4X3xHS2w
+ YkeYgK0+TGLX13aa1Qu7WKzFooLm7DQIjsiPnMp8VE7hs7CbODkNVNoB4uwu84S0Og0yQ6XaD
+ jwnCRhUJxT95xwirdkJmSfKhbwWfXFqvRKp8GBsfjOtmpmBMmSepqmiycw9NasvyAnTvXk4SF
+ dW8z2HEoa2nkO9VkasgSmqFjYjK2VPeEWWc5CpC9CyB98X4jTF46tlV3Ej7G+oeKv3LTu8YHW
+ XTr1Fwby7ugZ9Qk4I+pk6yfln1L9/IAB9MCGLomNGzdGsMyVN/u9WOUveac8GHTIcsX5sPxMp
+ lkT77snXX59v3oHMBQGRYibXL/0zESofyk9WcqY0NdGtBplv9B4j2cmi73okB1gdFpawNbHdS
+ 8T8DhNTl+8ui6qfIg8iA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-do_div() does a 64-by-32 division. Use div64_u64()
-instead of do_div() if the divisor is u64,
-to avoid truncation to 32-bit.
+On Fri, Jan 3, 2020 at 4:45 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> On Fri, Jan 03, 2020 at 04:29:56PM +0100, Arnd Bergmann wrote:
+> > On Fri, Jan 3, 2020 at 4:25 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > >
+> > > On Fri, Jan 3, 2020 at 4:03 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> > > >
+> > > > On Fri, 3 Jan 2020 at 03:42, Greg Kroah-Hartman
+> > > > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > -ENOENT is what you get when hugetlbfs is not mounted, so this hints to
+> > >
+> > > 8fc312b32b2  mm/hugetlbfs: fix error handling when setting up mounts
+> > >
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-5.4.y&id=3f549fb42a39bea3b29c0fc12afee53c4a01bec9
+> >
+> > I see that Mike Kravetz suggested not putting this patch into stable in
+> >
+> > https://lore.kernel.org/lkml/befca227-cb8a-8f47-617d-e3bf9972bfec@oracle.com/
+> >
+> > but it was picked through the autosel mechanism later.
+>
+> So does that mean that Linus's tree shows this LTP failure as well?
 
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-kernel@vger.kernel.org
----
- kernel/time/timekeeping.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes, according to
+https://qa-reports.linaro.org/lkft/linux-mainline-oe/tests/ltp-syscalls-tests/memfd_create04
+mainline has the same testcase failure, it started happening between
+v5.4-10135-gc3bfc5dd73c6 and v5.4-10271-g596cf45cbf6e, when the patch
+was originally merged into 5.5-rc1.
 
-diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-index ca69290..bad76c1 100644
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -1007,7 +1007,7 @@ static int scale64_check_overflow(u64 mult, u64 div, u64 *base)
- 	tmp *= mult;
- 	rem *= mult;
- 
--	do_div(rem, div);
-+	rem = div64_u64(rem, div);
- 	*base = tmp + rem;
- 	return 0;
- }
--- 
-1.8.3.1
+> This does seem to fix a real issue, as shown by the LTP test noticing
+> it, so should the error code value be fixed in Linus's tree?
 
+No idea what to conclude from the testcase failure, let's see if Mike has
+any suggestions.
+
+      Arnd
