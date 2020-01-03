@@ -2,161 +2,122 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9BFC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 13:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E25F9C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 13:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 353E72085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 13:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B38072085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 13:26:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YNEqNTyn"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BhiVQH4g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727654AbgACNZQ (ORCPT
+        id S1727730AbgACN0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 08:25:16 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46252 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727494AbgACNZQ (ORCPT
+        Fri, 3 Jan 2020 08:26:20 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:55906 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727494AbgACN0T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 08:25:16 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 003DOuKN013702;
-        Fri, 3 Jan 2020 07:24:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578057896;
-        bh=DAzV+ImI7hky/CIYwYe7UmdqdeGgThZdrw1X+n2XCXA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=YNEqNTynYRvvZS/UrmYllG5D0Swbv1QpWcw4xvk19T8FZFJpKyUdkPTPmcvlpGLeZ
-         /PNucDJOVjwV+JIMDkuFG1mRmtQFpcbXIqbptdPfQ7L8BS3jB52mcCgCRZFXFi9p98
-         /4R4OPH8wZZUdZZIXRNn5xH2EdMhCHwf0kNOdoXU=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 003DOuTD006872
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 3 Jan 2020 07:24:56 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 3 Jan
- 2020 07:24:56 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 3 Jan 2020 07:24:56 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 003DOtSP004610;
-        Fri, 3 Jan 2020 07:24:55 -0600
-Subject: Re: [PATCH 1/2] dt-binding: iio: dac8771: Add TI DAC8771 binding
-To:     Jonathan Cameron <jic23@kernel.org>
-CC:     <linux-iio@vger.kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
-        <pmeerw@pmeerw.net>, <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-References: <20191217140731.30504-1-dmurphy@ti.com>
- <20191217140731.30504-2-dmurphy@ti.com> <20191223144442.3171e641@archlinux>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <736cb479-cda3-caff-5f48-fe9a5b13c33f@ti.com>
-Date:   Fri, 3 Jan 2020 07:22:11 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 3 Jan 2020 08:26:19 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 003D9WTL115180;
+        Fri, 3 Jan 2020 13:26:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=faABLOu71+lODjbDQ6nSu1CaZn+sv8YumvLotaVUVnA=;
+ b=BhiVQH4g84d24jC3klev0mn4m73nwgF8LFrOYh+pTsj2mUEut/jdp/u32znkTuXzCn2o
+ RbV8g23Hw1Exi/UNTIen2TjLfVqMTQTauC2NpnAGrllhyhMzaosJrMr85TA9kttY/uVo
+ a9K/5KHSYJPu/NKCqCP/eiPN3oe3U0qZ0f3cziClWBjJGuTRyHHKEtcDZQjMoeW6D5us
+ kd78GWrKK+Opz6KhnzUNlbi1a0M82f0y7m7++G86Y1qym6jq+QwwsTxeGO+rii6WUVZ2
+ +NwpYJuqhkd1rVMtUQD53JUCIS7Skr2wb0Ivf2Dl/3CC3QSj4u+mGl6eZT/ZrcFegtNi AQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2x5y0pv988-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Jan 2020 13:26:13 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 003DE650163778;
+        Fri, 3 Jan 2020 13:26:13 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2xa5fga7m8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Jan 2020 13:26:12 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 003DQBYs004754;
+        Fri, 3 Jan 2020 13:26:11 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 Jan 2020 05:26:10 -0800
+Date:   Fri, 3 Jan 2020 16:25:49 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Amrita Patole <longlivelinux@yahoo.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org,
+        GR-Linux-NIC-Dev@marvell.com, manishc@marvell.com,
+        Amrita Patole <amritapatole@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Fixing coding style. Signed-off-by:
+ amritapatole@gmail.com
+Message-ID: <20200103132506.GK3911@kadam>
+References: <20200102072929.21636-1-longlivelinux.ref@yahoo.com>
+ <20200102072929.21636-1-longlivelinux@yahoo.com>
+ <20200102111653.GB3961630@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20191223144442.3171e641@archlinux>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200102111653.GB3961630@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=825
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001030126
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=886 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001030126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jonathan
-
-Thanks for the review.  I was on holiday
-
-On 12/23/19 8:44 AM, Jonathan Cameron wrote:
-> On Tue, 17 Dec 2019 08:07:30 -0600
-> Dan Murphy <dmurphy@ti.com> wrote:
->
->> Add the TI DAC8771 DT binding.
->>
->> Datasheet:
->> http://www.ti.com/lit/ds/symlink/dac8771.pdf
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> CC: Rob Herring <robh+dt@kernel.org>
->> ---
->>   .../bindings/iio/dac/ti,dac8771.yaml          | 89 +++++++++++++++++++
->>   1 file changed, 89 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/iio/dac/ti,dac8771.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/iio/dac/ti,dac8771.yaml b/Documentation/devicetree/bindings/iio/dac/ti,dac8771.yaml
->> new file mode 100644
->> index 000000000000..6aba6789d36c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/dac/ti,dac8771.yaml
->> @@ -0,0 +1,89 @@
->> +# SPDX-License-Identifier: GPL-2.0
-> If possible, it is preferred for new bindings to be dual licensed as
->
-> (GPL-2.0-only OR BSD-2-Clause)
->
-Ack
+On Thu, Jan 02, 2020 at 12:16:53PM +0100, Greg KH wrote:
+> On Thu, Jan 02, 2020 at 12:59:29PM +0530, Amrita Patole wrote:
+> > From: Amrita Patole <amritapatole@gmail.com>
+> > 
+> > ---
+> >  drivers/staging/qlge/qlge_mpi.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/staging/qlge/qlge_mpi.c b/drivers/staging/qlge/qlge_mpi.c
+> > index 9e422bbbb6ab..f63db2c79fac 100644
+> > --- a/drivers/staging/qlge/qlge_mpi.c
+> > +++ b/drivers/staging/qlge/qlge_mpi.c
+> > @@ -136,7 +136,8 @@ static int ql_get_mb_sts(struct ql_adapter *qdev, struct mbox_params *mbcp)
+> >  		    ql_read_mpi_reg(qdev, qdev->mailbox_out + i,
+> >  				     &mbcp->mbox_out[i]);
+> >  		if (status) {
+> > -			netif_err(qdev, drv, qdev->ndev, "Failed mailbox read.\n");
+> > +			netif_err(qdev, drv, qdev->ndev,
+> > +                                  "Failed mailbox read. \n");
 
 
->> +# Copyright (C) 2019 Texas Instruments Incorporated
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/bindings/iio/dac/ti,dac8771.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Texas Instruments DAC8771
->> +
->> +maintainers:
->> +  - Dan Murphy <dmurphy@ti.com>
->> +
->> +description: |
->> +  The DAC8771 is a single channel, precision, fully integrated 16-bit digital
->> +  to analog converter (DAC) with adaptive power management, and is designed to
->> +  meet the requirements of industrial control applications.
->> +
->> +  Specifications can be found at:
->> +    http://www.ti.com/lit/ds/symlink/dac8771.pdf
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - ti,dac8771
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  reset-gpios:
->> +    description: |
->> +       GPIO used for hardware reset.
->> +
->> +  loaddacs-gpios:
->> +    description: |
->> +       GPIO used to shift the data from the SPI FIFO to the processing engine.
->> +
->> +  spi-max-frequency:
->> +    maximum: 25000000
->> +
->> +  vref-supply:
->> +    description: Phandle to the external reference voltage supply.
->> +
->> +  ti,output-range:
->> +    description: Output range of the DAC
->> +       0 - Voltage output 0 to +5 V (default)
-> Hmm. I'm never keen on opaque bindings, but sometimes things
-> are just too complex to break out as individual fields.
->
-> So I guess this is the best we can do.
+			netif_err(qdev, drv, qdev->ndev,
+                                  "Failed mailbox read. \n");
+				  "Failed mailbox read. \n");
 
-Yes that is true.  These values are the same as the ones in the data sheet.
 
-It would have been a simpler binding if the current values were not 
-nested with the voltage values.
+I'm pretty sure this will introduce a couplee new checkpatch warnings...
+It should be indented:
+[tab][tab][tab][tab][space][space]"Failed mailbox read.\n");
 
-Dan
+No space after the period, please.
+
+regards,
+dan carpenter
+
