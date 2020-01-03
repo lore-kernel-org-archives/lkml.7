@@ -2,103 +2,146 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9B9C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 10:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 313B3C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 10:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4DBB222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 10:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4E320672
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 10:39:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fhl9YzW8"
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="XpPwYDWg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbgACKhO (ORCPT
+        id S1727575AbgACKjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 05:37:14 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43057 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727220AbgACKhO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 05:37:14 -0500
-Received: by mail-lf1-f67.google.com with SMTP id 9so31622606lfq.10
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 02:37:13 -0800 (PST)
+        Fri, 3 Jan 2020 05:39:20 -0500
+Received: from mail-dm6nam12on2062.outbound.protection.outlook.com ([40.107.243.62]:64225
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727350AbgACKjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 05:39:19 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Vo+1S9Lh99AJH9eP2Z0/vQ3DbkKpZ9NRuli0hJReuxpOMJmDCuf0PtNwDKbyEFJe142bYn5yOzRYKKU97WHYXgbX9G+hfhhepqMM6UcGvyjF5dmJuATS9ai4Yh6doGBc5xuu2+Fsg0inxnyaeP0Nl2yF5DMH5AoCLoySzcaOG8nEf9bhxiYLb/gWBvKrL6ShT2CPpYt8lYp4SD1GAP1+yvQFtJ3ioTx1aY5hjUegaBWxiBHWtdSL5Co88l6+cFM4FzM/sY5x9lqJWEmflrDBoXG5HSjL7i6dWc9s2WzgVDBquN/0/+f5c/sl7IGNmUbfuRJstBMdIzWnjFSIGj0Elg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1qEWolf3bLpqauwpvas6kP0B4J1efodT+hvqLk1m58k=;
+ b=h6jm7ujKqXI5sBR4e64BXDmmvaHeX1jeBDzTv45MBdc7LKS/lTmAu8TLDPiNTDPQEtXLY13hfDGEvA7T/jbiHaAkFZInkiOVXRuHt+Lm8pVbPdWXrD7SBFCahhEa0NmgnjRKAuJWY5E0zohHZ2s3cwVDyTfg91mlkuxkjiScDnxmMKow+6P9QG1w+QvOTKB34PFtJ/yo3cxG+2AYw6SjMv32+rkWFC1CoNSu9p7wmkWHPc8/4cXhTu9Kbr9U5RaeTrXpZC7NWCRS9KsEKmnvhFP4yMO6KRj5Ympu0zyjAF1wdigPZoEIvafSAvByqyKv81rh/aiYkvo0IONU7dNLNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=e1VONZKN47Aw6juCyL/A73XM5IVvw0+2i1dyfWe9MK0=;
-        b=Fhl9YzW8WppJUvDeZdTMGR1XJqmcB6TalG0n7A8zpD55tcqk3ML1vD6zvcmuxMEiQS
-         aT5bysK5rQU40UUINDSUm9VXpexB7r1N/CBSFppsXxncAFIyO0y2rkiWeb95HnpwU3IN
-         0OyoAH/9qybXFmig7BIO5hERgIp6aWsfDUveXBk1xf5e3kmMhvOtRrwJwpl/IEoEHiJa
-         d2HaGR9FrrRj3OKs6DFpK0iYP8fizuP7vdWE0hveGhMePxt+yPI2xRhylVrBmYq5qkRk
-         GTHPLMbmpnmvSWkgTOXesoO4IbicDCKbkhCuBYXkOXwcVaspOhnAevfABvK7W6xCICJc
-         xsng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=e1VONZKN47Aw6juCyL/A73XM5IVvw0+2i1dyfWe9MK0=;
-        b=CKlF+BxFQJK5e4YXZQuc6teuF1qgvDDb9Imkt5D9NrZYQVKnK8Q+r5DqTtuk5y29wH
-         Mmmd9xseNLDjhkifoAQKAxIom0iQ7fbvzHdD8wwpgvkKx0lQtuOTFaPgp5/KJg0Crr1Y
-         l4IOVPFut00Nx1JT3F8JjFDBsutVnh2NZNBYG/eVjTNN6Uc3U3CulzDrYmDXHtB+lV2l
-         4FfRHRQtXXRv5N1pFhTDdEfTXTv4l3KXZdr0kLXNxjI21oWNmUuSAGfPy8VIboeP6fHU
-         zCvmhq+DSBmccLOwMCd4EkbgN0bULheX27gB+DmlbSP0JffudfxaHzjUkwxcFvnIOnLB
-         AFSw==
-X-Gm-Message-State: APjAAAVUa4tLw9huyhmVv+MtLR/DiecjEemvb9USVyaMQPNlUNCD+Gp/
-        8oURwp5kf8ODxmngN1838fcyuQ==
-X-Google-Smtp-Source: APXvYqzeu11NzT4u0LYNO6/ynfbsLDH+8fwoOKEZ4tO/YtRCEUnX2yjqO7toLdDd2ZT8V37uMiM2aQ==
-X-Received: by 2002:ac2:508e:: with SMTP id f14mr46097583lfm.72.1578047832449;
-        Fri, 03 Jan 2020 02:37:12 -0800 (PST)
-Received: from jax (h-249-223.A175.priv.bahnhof.se. [98.128.249.223])
-        by smtp.gmail.com with ESMTPSA id b22sm15891942lji.99.2020.01.03.02.37.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 Jan 2020 02:37:11 -0800 (PST)
-Date:   Fri, 3 Jan 2020 11:37:10 +0100
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-To:     arm@kernel.org, soc@kernel.org
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        tee-dev@lists.linaro.org
-Subject: [GIT PULL] optee driver fix for v5.5
-Message-ID: <20200103103710.GA3469@jax>
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1qEWolf3bLpqauwpvas6kP0B4J1efodT+hvqLk1m58k=;
+ b=XpPwYDWgIAfQ6jUcP2vGRqWNQRjxxcqLSCdsVdModZcK/igmm3Prn8Tgzb2qyHnGfd4xDPsUcIWLwNwmEOHDCeHa3aF2odFZCfhnSqoFQlnQsyv6U/+oYgSYyxmK7hggLdHYH8IDy7SuG22+km3Q4X4+sq0aOCDW0UZBvTCrZiM=
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
+ MN2PR11MB3838.namprd11.prod.outlook.com (20.178.252.202) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.12; Fri, 3 Jan 2020 10:39:16 +0000
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::f46c:e5b4:2a85:f0bf]) by MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::f46c:e5b4:2a85:f0bf%4]) with mapi id 15.20.2602.012; Fri, 3 Jan 2020
+ 10:39:16 +0000
+From:   =?iso-8859-1?Q?J=E9r=F4me_Pouiller?= <Jerome.Pouiller@silabs.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: [PATCH 13/55] staging: wfx: avoid double warning when no more tx
+ policy are available
+Thread-Topic: [PATCH 13/55] staging: wfx: avoid double warning when no more tx
+ policy are available
+Thread-Index: AQHVtDLD8xTkZNX3aEu0AqQlv1La16fYxecAgAAVyYA=
+Date:   Fri, 3 Jan 2020 10:39:16 +0000
+Message-ID: <2726644.RsKqsKUrSp@pc-42>
+References: <20191216170302.29543-1-Jerome.Pouiller@silabs.com>
+ <20191216170302.29543-14-Jerome.Pouiller@silabs.com>
+ <20200103092116.GB3911@kadam>
+In-Reply-To: <20200103092116.GB3911@kadam>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jerome.Pouiller@silabs.com; 
+x-originating-ip: [37.71.187.125]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f8b3bc84-07fe-400c-78ba-08d790392e87
+x-ms-traffictypediagnostic: MN2PR11MB3838:
+x-microsoft-antispam-prvs: <MN2PR11MB38387CC6E175EC692841599493230@MN2PR11MB3838.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1923;
+x-forefront-prvs: 0271483E06
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(366004)(396003)(346002)(136003)(376002)(39850400004)(199004)(189003)(33716001)(66476007)(6916009)(66446008)(186003)(64756008)(8676002)(478600001)(66556008)(8936002)(54906003)(81166006)(6486002)(71200400001)(6506007)(9686003)(2906002)(6512007)(91956017)(66946007)(76116006)(4326008)(26005)(66574012)(86362001)(81156014)(316002)(5660300002)(29513003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3838;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fr4s130kFyupY7ALfR84zkYNNTizUsgY0FH09OFvBic6NCX1Q568927//HVoFc+uzaGk8ZITabKRTlGe90XWHwGW+YgZiZG/GaMRkBSTd8qfaBAk9jSnbst5wfwgYT9tPxvssiEvf4OWVfVwFqp5zAGgxY+fijtpRl25P6nN5TtvZajMsjQoToZ23SkfZnL0y3Kgx8fv9KdfpRYGKIwmmicf0vcxyp7ZVfvPzOVWAq743Cdka4BnlIPDMMFfBDgPwwvO2cKBVb3Jg9ywjuvh7/dPgH1qcp31XAbUABn1X2QHWHJ+GJCy7qE5gcajiW3eFpdczDq4xngtyVuCHAujxH8Qv7KhrBLdND4Nwl2+UcBZYRcfRnfGwROVOZl2NdUtvMXTyUPH+Dc6EQKmIx/YI9bxiEt2RaCmOfoqRSNaumQeOPQR6S5ATltkk+zDW8VjvbX8NNgvie1PJsi07oTiAf0F6mANVJ2DJGwndKegzAlbXfFUCwY6mKEL72BYIC0t
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <229EAFC715B6E54EBEBFD888D1EA8753@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f8b3bc84-07fe-400c-78ba-08d790392e87
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jan 2020 10:39:16.2621
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: C4j0qcksboSv+FL2P22lSB0qoFoKUjMS+w5/yDXtZXCzlGyUnUjm8/1LJqwO+mzpminoIWFbUnMBEkIPOmvFhw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3838
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello arm-soc maintainers,
+On Friday 3 January 2020 10:21:16 CET Dan Carpenter wrote:
+> On Mon, Dec 16, 2019 at 05:03:40PM +0000, J=E9r=F4me Pouiller wrote:
+> > From: J=E9r=F4me Pouiller <jerome.pouiller@silabs.com>
+> >
+> > Currently, number of available tx retry policies is checked two times.
+> > Only one is sufficient.
+> >
+> > Signed-off-by: J=E9r=F4me Pouiller <jerome.pouiller@silabs.com>
+> > ---
+> >  drivers/staging/wfx/data_tx.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/staging/wfx/data_tx.c b/drivers/staging/wfx/data_t=
+x.c
+> > index 32e269becd75..c9dea627661f 100644
+> > --- a/drivers/staging/wfx/data_tx.c
+> > +++ b/drivers/staging/wfx/data_tx.c
+> > @@ -169,7 +169,8 @@ static int wfx_tx_policy_get(struct wfx_vif *wvif,
+> >       wfx_tx_policy_build(wvif, &wanted, rates);
+> >
+> >       spin_lock_bh(&cache->lock);
+> > -     if (WARN_ON(list_empty(&cache->free))) {
+> > +     if (list_empty(&cache->free)) {
+> > +             WARN(1, "unable to get a valid Tx policy");
+> >               spin_unlock_bh(&cache->lock);
+> >               return WFX_INVALID_RATE_ID;
+>=20
+> This warning is more clear than the original which is good, but that's
+> not what the commit message says.  How does this fix a double warning?
 
-Please pull this OP-TEE driver fix for kernel allocated dynamic shared
-memory.
+Err... Indeed, it don't. From wfx_tx_get_rate_id():
 
-Thanks,
-Jens
+       rate_id =3D wfx_tx_policy_get(wvif, ...);
+       if (rate_id =3D=3D WFX_INVALID_RATE_ID)
+               dev_warn(wvif->wdev->dev, "unable to get a valid Tx policy")=
+;
 
-The following changes since commit d1eef1c619749b2a57e514a3fa67d9a516ffa919:
+I will fix that in my next PR.
 
-  Linux 5.5-rc2 (2019-12-15 15:16:08 -0800)
+--=20
+J=E9r=F4me Pouiller
 
-are available in the Git repository at:
-
-  git://git.linaro.org:/people/jens.wiklander/linux-tee.git tags/tee-optee-fix-for-5.5
-
-for you to fetch changes up to 5a769f6ff439cedc547395a6dc78faa26108f741:
-
-  optee: Fix multi page dynamic shm pool alloc (2020-01-03 11:21:12 +0100)
-
-----------------------------------------------------------------
-Fix OP-TEE multi page dynamic shm pool alloc
-
-----------------------------------------------------------------
-Sumit Garg (1):
-      optee: Fix multi page dynamic shm pool alloc
-
- drivers/tee/optee/shm_pool.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
