@@ -2,90 +2,99 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 768CFC32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1430BC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CE55222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:37:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578044249;
-	bh=t1n4osX8UFyfzagbobo+KoZCptgIJ8gvbeKetytczeM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gqwxkbjXgtzFhtTNfg0bhXu6ptprt1zs4HDC1krBfMQ4tLlFYwbykkwNFfdrDTRrB
-	 VkP/WkqEGQWlJiGXtc9lenG4Be+0i74c9BjNrrhTQOPhFnYVyOQtWPgIbRXVcNs2Mz
-	 HrBS2rnM62XsYQlr8I1gwxvq2aLsu73lf34AxdZQ=
+	by mail.kernel.org (Postfix) with ESMTP id DF18221734
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:37:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="bXFfRsWx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbgACJh2 (ORCPT
+        id S1727460AbgACJhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 04:37:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56948 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725972AbgACJh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 04:37:28 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 121A821734;
-        Fri,  3 Jan 2020 09:37:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578044247;
-        bh=t1n4osX8UFyfzagbobo+KoZCptgIJ8gvbeKetytczeM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H6+N5bPGQlNhV1gyvOOg2A1ukTS7rQlhfNWi+c/GaXeqQYGYgRzbiDrVw9GctGa3P
-         BDAjdvQDi8XqZV/vhzmGC8cCssXQwvcTd1Lv0QDXWUzKaoTfKCCeGhCebE7SY6VmSy
-         mM3QibPSZ/Z5n5vQSCNzCYvjKYD01jayq8lpO9co=
-Date:   Fri, 3 Jan 2020 10:37:24 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clk: sunxi-ng: r40: Export MBUS clock
-Message-ID: <20200103093724.qo2enqqpr5dzcvfc@gilmour.lan>
-References: <20200103071848.3977-1-wens@kernel.org>
+        Fri, 3 Jan 2020 04:37:38 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:36980 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725972AbgACJhi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 04:37:38 -0500
+X-UUID: 3804e35a6dd749e6a1d639b7d58d7ed0-20200103
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=aylJ44w3RnTZ4WfVk5V4D/nP65Vc+4LNLwxEH2TCevk=;
+        b=bXFfRsWxUF2ifN7RFio4pbJcW9ZEisoKmG8ER4OEl9r6COwUYrqP95NEVvoRKhT5C45nf8+pPQzytLZytAKgPoKdXYAPlJLEbjJaBDxlUre5DajuXF2PkxLnaP1DiZXVh+waV0H15ogPuABzChnBXczoZpksoCrGrbWMkuJfelQ=;
+X-UUID: 3804e35a6dd749e6a1d639b7d58d7ed0-20200103
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <jiaxin.yu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 187937677; Fri, 03 Jan 2020 17:37:32 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 3 Jan 2020 17:37:01 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 3 Jan 2020 17:37:29 +0800
+From:   Jiaxin Yu <jiaxin.yu@mediatek.com>
+To:     <yong.liang@mediatek.com>, <wim@linux-watchdog.org>,
+        <linux@roeck-us.net>, <p.zabel@pengutronix.de>,
+        <matthias.bgg@gmail.com>, <linux-watchdog@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <chang-an.chen@mediatek.com>, <freddy.hsin@mediatek.com>
+CC:     <yingjoe.chen@mediatek.com>, <sboyd@kernel.org>,
+        Jiaxin Yu <jiaxin.yu@mediatek.com>
+Subject: [PATCH v8 0/2] ASoC: mt8183: fix audio playback slowly after playback
+Date:   Fri, 3 Jan 2020 17:37:23 +0800
+Message-ID: <1578044245-26939-1-git-send-email-jiaxin.yu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6ydtg2u437jgrsyi"
-Content-Disposition: inline
-In-Reply-To: <20200103071848.3977-1-wens@kernel.org>
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+VGhpcyBzZXJpZXMgcGF0Y2hlcyBhZGQgcmVzZXQgY29udHJvbGxlciBmb3IgTVQ4MTgzLCBhbmQg
+YXVkaW8gd2lsbCB1c2UgaXQgaW4gDQptYWNoaW5lIGRyaXZlciBkdXJpbmcgYm9vdHVwLCB0aGV5
+IGRlcGVuZCBvbiB0aGUgZm9yLW5leHQuDQoNClY4IGNoYW5nZXM6DQoJMS4gRGVsZXRlIGNhc3Q6
+IChzdHJ1Y3QgbXRrX3dkdF9kYXRhICopDQoNClY3IGNoYW5nZXM6DQoJMS4gRGVsZXRlIG5vIHVz
+ZSBjb2RlLg0KDQp2NiBjaGFuZ2VzOg0KCTEuIFNpbXBsaWZ5IHRvcHJ1Z19yZXNldF9hc3NlcnQo
+KSAmIHRvcHJ1Z19yZXNldF9kZWFzc2VydCgpLg0KCTIuIEFkZCBtZW1iZXJzIGZvciBtdDI3MTJf
+ZGF0YSAmIG10ODE4M19kYXRhLg0KDQp2NSBjaGFuZ2VzOg0KCTEuIEFkZCBTaWduZWQtb2ZmLWJ5
+IHRhZyBhbmQgUmV2aWV3ZWQtYnkgdGFnLg0KDQp2NCBjaGFuZ2VzOg0KCTEuIEZpeGVkIHdyb25n
+IHNpZ25lZC1vZmYgYXMgY29ycmVjdCBtYWlsIHN1ZmZpeC4NCgkyLiBGaXhlZCBwYXRjaCBzdWJq
+ZWN0IHRoYXQgYWRkIHBhdGNoIHZlcnNpb24uDQoNCnYzIGNoYW5nZXM6DQoJMS4gaHR0cHM6Ly9w
+YXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTE2NDI4My8gYW5kIA0KCSAgIGh0dHBzOi8vcGF0
+Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQzMDUvIGhhcyBiZWVuIG1lcmdlZC4NCgkyLiBD
+aGFuZ2UgdGhlIG5hbWUgb2YgbXRrX3dkdF9jb21wYXRpYmxlIHRvIG10a193ZHRfZGF0YS4NCgkz
+LiBSZW1vdmUgdG9wcmd1X3Jlc2V0IHN0cnVjdCBhbmQgdXNlIG10a193ZHRfZGV2IGluc3RlYWQu
+DQoJNC4gR2V0IHRoZSB2YWx1ZSBvZiBzd19yc3RfbnVtIGZyb20gLmggZmlsZS4NCgk1LiBBZGRk
+ZCBtdDI3MTItcmVzZXRzLmggZm9yIG10MjcxMi4NCgk2LiBJbXByb3ZlIGNvbW1pdCBtZXNzYWdl
+Lg0KDQp2MiBjaGFuZ2VzOg0KCTEuIHJlbW92ZSAiV0lQIiB0aGF0IGluIHRoZSB0aXRsZSBvZiBw
+YXRjaGVzDQoJMi4gYWRkIGh5cGVyIGxpbmsgZm9yIHRoZSBwYXRjaCB0aGF0IGRlcGVuZHMgb24N
+CgkzLiBwYXRjaHdvcmsgbGlzdDoNCgkJaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9jb3Zl
+ci8xMTE2NDI4NS8NCgkJaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTE2NDI5
+NS8NCgkJaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTE2NDI5OS8NCgkJaHR0
+cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTE2NDI4My8NCgkJaHR0cHM6Ly9wYXRj
+aHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTE2NDMwNS8NCg0KdjEgY2hhbmdlczoNCgkxLiBwYXRj
+aHdvcmsgbGlzdDoNCgkJaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9jb3Zlci8xMTE2NDE3
+My8NCgkJaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTE2NDE4MS8NCgkJaHR0
+cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTE2NDE4NS8NCgkJaHR0cHM6Ly9wYXRj
+aHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTE2NDE4Ny8NCgkJaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
+bmVsLm9yZy9wYXRjaC8xMTE2NDE3NS8NCg0KSmlheGluIFl1ICgyKToNCiAgZHQtYmluZGluZ3M6
+IG1lZGlhdGVrOiBtdDgxODM6IEFkZCAjcmVzZXQtY2VsbHMNCiAgd2F0Y2hkb2c6IG10a193ZHQ6
+IG10ODE4MzogQWRkIHJlc2V0IGNvbnRyb2xsZXINCg0KIGRyaXZlcnMvd2F0Y2hkb2cvbXRrX3dk
+dC5jICAgICAgICAgICAgICAgICAgICB8IDEwNSArKysrKysrKysrKysrKysrKy0NCiAuLi4vcmVz
+ZXQtY29udHJvbGxlci9tdDI3MTItcmVzZXRzLmggICAgICAgICAgfCAgMjIgKysrKw0KIC4uLi9y
+ZXNldC1jb250cm9sbGVyL210ODE4My1yZXNldHMuaCAgICAgICAgICB8ICAxNyArKysNCiAzIGZp
+bGVzIGNoYW5nZWQsIDE0MyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQtY29udHJvbGxlci9tdDI3MTItcmVz
+ZXRzLmgNCg0KLS0gDQoyLjE4LjANCg==
 
---6ydtg2u437jgrsyi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Jan 03, 2020 at 03:18:48PM +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
->
-> The MBUS clock needs to be referenced in the MBUS device node.
-> Export it.
->
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-
-Applied, thanks
-Maxime
-
---6ydtg2u437jgrsyi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXg8LVAAKCRDj7w1vZxhR
-xTXyAPwOmHJ3brL7yUfKmR5he70BqWy5MhxZQ3ik2vpHkUxeEwD9F58DhQY/DVl+
-PPeLEWk09d1ZxePABfHlBOoPLFXWXAQ=
-=vkyJ
------END PGP SIGNATURE-----
-
---6ydtg2u437jgrsyi--
