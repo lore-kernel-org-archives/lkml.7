@@ -2,119 +2,87 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE45C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDE3C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1295721734
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F2FC217F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:52:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pa8jbl7N"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LIDKrcAJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgACPsx (ORCPT
+        id S1727855AbgACPwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 10:48:53 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46671 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727539AbgACPsx (ORCPT
+        Fri, 3 Jan 2020 10:52:05 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:39592 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727539AbgACPwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 10:48:53 -0500
-Received: by mail-pg1-f193.google.com with SMTP id z124so23577048pgb.13;
-        Fri, 03 Jan 2020 07:48:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4841VwPNpkn9wbZnO4BJL9lu8LuOyQW8ecW89W7VNVc=;
-        b=Pa8jbl7NgH9la/TweVO32qWWwqzMuJNgzm8nH7knLfbRtYW9QE6qaXLJ2/1dCij4nW
-         Ux8yY1QF/sDJIAih9Ef5Hhi799FQtwTcYELpqRcb1hX1ave09efKfCyUFTB1/S7SmMX5
-         PMa0Axr1Dzu+JxBEgMPZiVDvskx4a3XBW6c7lfxGJnSyWloTCTijtHizbakiD35zFiZK
-         v+P8WEnSE6cAxvu+3qoG8SnvmrnlSXzhd8FwOipZjt5le5YDgJ6LB1177ZRktCSCbOys
-         osFZKTpD8GkzDsv7Q/vJSqDXC4BFGVAD1OjwGd6/ZaiUGH9TdgAleWzq/LezF4F1xvjo
-         9J2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4841VwPNpkn9wbZnO4BJL9lu8LuOyQW8ecW89W7VNVc=;
-        b=lDjzK9Ufr5MLWXgtP52XBidVD2Jpxdtr4sgcAzbdIPpNFhaeUfpOim4FbA4949C/4w
-         Gnvcu1N0SiwBHjGTfZ0st0D6R534QwTH32lDEgY7FGxbB4JIIDB/NzfFRbsGVcHAmvuq
-         Q0TBwr0AMa+cXUqbBZaFUQNzR3qg2lBmxH6Btzcmxwj+sGU0XVL7aGaKCcQ8f2udCBtj
-         ocau/5vEXBjtY2RNtWIibGpPFEGX8YykTxBXGqtmUQDtGIfbeCCv4i2u94Eo69GtH/6E
-         mGtF5prQq7QIMyM9/uvJEwGLf0RSaumPGROGx6NG+/4R0i6px/sDzvcrZw3gcVG42Bny
-         Z4jQ==
-X-Gm-Message-State: APjAAAUAro3NLIea1x9x9hpnEIwR1C6+XxSED+KKcVVFaYuyJGymMbY3
-        EuBMi/3oD2EG2/efA0SK7+4=
-X-Google-Smtp-Source: APXvYqyfy6Tr7QCeoOvv+AXrziEDm9uVlHL+x6axpvgqGKFvrxVuIPtwM1hrAiXqYJWCcCLRyDTVDA==
-X-Received: by 2002:a63:2ac2:: with SMTP id q185mr97770833pgq.417.1578066532263;
-        Fri, 03 Jan 2020 07:48:52 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k5sm14922486pju.5.2020.01.03.07.48.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jan 2020 07:48:51 -0800 (PST)
-Subject: Re: [PATCH 5.4 000/191] 5.4.8-stable review
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Chengguang Xu <cgxu519@mykernel.net>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Sasha Levin <sashal@kernel.org>, LTP List <ltp@lists.linux.it>,
-        Jan Stancek <jstancek@redhat.com>,
-        John Stultz <john.stultz@linaro.org>
-References: <20200102215829.911231638@linuxfoundation.org>
- <CA+G9fYuPkOGKbeQ0FKKx4H0Bs-nRHALsFtwyRw0Rt5DoOCvRHg@mail.gmail.com>
- <CAK8P3a1+Srey_7cUd0xfaO8HdMv5tkUcs6DeDXzcUKkUD-DnGQ@mail.gmail.com>
- <CAK8P3a24EkUXTu-K2c-5B3w-LZwY7zNcX0dZixb3gd59vRw_Kw@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <180c36d7-336b-f7a9-66d4-49703eca2aa9@roeck-us.net>
-Date:   Fri, 3 Jan 2020 07:48:49 -0800
+        Fri, 3 Jan 2020 10:52:04 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 003Fq1Ci031568;
+        Fri, 3 Jan 2020 09:52:01 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578066721;
+        bh=SfsqMeXpaHIQy5T0+ikFgHjVBWCZNjzMtW2w57vNK/Y=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=LIDKrcAJs0/Qxa7IgPBiXyXxCl0iEPuqp1RWvfwRPFamMF5WCenLf8ZLDTxJlIJyq
+         21DcNgC2wx8/44kE8qQ0XtceIGwQCtQa7hnJUCBu1db8b+R1BBzgQF1xZRG0yXxf3b
+         mw2uucl7+3moYW8aztWLkKhJmFwh3iqok+8DvDyU=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 003Fq1tt040611
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 3 Jan 2020 09:52:01 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 3 Jan
+ 2020 09:52:01 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 3 Jan 2020 09:52:01 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 003Fq14T010470;
+        Fri, 3 Jan 2020 09:52:01 -0600
+Subject: Re: leds: lm3642: remove warnings for bad strtol, cleanup gotos
+To:     Pavel Machek <pavel@ucw.cz>, <jacek.anaszewski@gmail.com>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200102214547.GA3616@amd>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <384b876c-2043-1a48-28fc-ac7d2a1facb0@ti.com>
+Date:   Fri, 3 Jan 2020 09:49:16 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a24EkUXTu-K2c-5B3w-LZwY7zNcX0dZixb3gd59vRw_Kw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20200102214547.GA3616@amd>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/3/20 7:29 AM, Arnd Bergmann wrote:
-> On Fri, Jan 3, 2020 at 4:25 PM Arnd Bergmann <arnd@arndb.de> wrote:
->>
->> On Fri, Jan 3, 2020 at 4:03 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->>>
->>> On Fri, 3 Jan 2020 at 03:42, Greg Kroah-Hartman
->>> <gregkh@linuxfoundation.org> wrote:
->>
->> -ENOENT is what you get when hugetlbfs is not mounted, so this hints to
->>
->> 8fc312b32b2  mm/hugetlbfs: fix error handling when setting up mounts
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-5.4.y&id=3f549fb42a39bea3b29c0fc12afee53c4a01bec9
-> 
-> I see that Mike Kravetz suggested not putting this patch into stable in
-> 
-> https://lore.kernel.org/lkml/befca227-cb8a-8f47-617d-e3bf9972bfec@oracle.com/
-> 
-> but it was picked through the autosel mechanism later.
-> 
+Pavel
 
-I think autosel is way too aggressive. This is an excellent example.
+On 1/2/20 3:45 PM, Pavel Machek wrote:
+> Hi!
+>
+> I've applied this to for-next tree. If you see something very wrong,
+> let me know.
 
-Guenter
+Nothing wrong with this patch but in reviewing I did notice in the 
+lm3642_control in the switch case that we set the opmode regardless of 
+regmap_update_bits passing or failing.
+
+FWIW
+
+Reviewed-by: Dan Murphy <dmurphy@ti.com>
+
+Dan
+
