@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFD5C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 21:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 229A3C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 21:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1860A22314
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 21:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F417A22314
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 21:20:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728775AbgACVUg (ORCPT
+        id S1728730AbgACVUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 16:20:36 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:53062 "EHLO ale.deltatee.com"
+        Fri, 3 Jan 2020 16:20:32 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:53044 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728707AbgACVUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 16:20:31 -0500
+        id S1728648AbgACVU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 16:20:27 -0500
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1inUMq-00053I-OW; Fri, 03 Jan 2020 14:20:30 -0700
+        id 1inUMq-00053F-OV; Fri, 03 Jan 2020 14:20:26 -0700
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1inUMp-0000lN-56; Fri, 03 Jan 2020 14:20:23 -0700
+        id 1inUMo-0000lH-SU; Fri, 03 Jan 2020 14:20:22 -0700
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
         Vinod Koul <vkoul@kernel.org>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
         Jiasen Lin <linjiasen@hygon.cn>, Kit Chow <kchow@gigaio.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Fri,  3 Jan 2020 14:20:21 -0700
-Message-Id: <20200103212021.2881-4-logang@deltatee.com>
+Date:   Fri,  3 Jan 2020 14:20:19 -0700
+Message-Id: <20200103212021.2881-2-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200103212021.2881-1-logang@deltatee.com>
 References: <20200103212021.2881-1-logang@deltatee.com>
@@ -43,7 +43,7 @@ Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
 X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org, dan.j.williams@intel.com, linjiasen@hygon.cn, kchow@gigaio.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v3 3/3] dmaengine: plx-dma: Implement descriptor submission
+Subject: [PATCH v3 1/3] dmaengine: plx-dma: Introduce PLX DMA engine PCI driver skeleton
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,182 +51,225 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On prep, a spin lock is taken and the next entry in the circular buffer
-is filled. On submit, the valid bit is set in the hardware descriptor
-and the lock is released.
+Some PLX Switches can expose DMA engines via extra PCI functions
+on the upstream port. Each function will have one DMA channel.
 
-The DMA engine is started (if it's not already running) when the client
-calls dma_async_issue_pending().
+This patch is just the core PCI driver skeleton and dma
+engine registration.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- drivers/dma/plx_dma.c | 119 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 119 insertions(+)
+ MAINTAINERS           |   5 ++
+ drivers/dma/Kconfig   |   9 +++
+ drivers/dma/Makefile  |   1 +
+ drivers/dma/plx_dma.c | 150 ++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 165 insertions(+)
+ create mode 100644 drivers/dma/plx_dma.c
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bd5847e802de..76713226f256 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13139,6 +13139,11 @@ S:	Maintained
+ F:	drivers/iio/chemical/pms7003.c
+ F:	Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml
+ 
++PLX DMA DRIVER
++M:	Logan Gunthorpe <logang@deltatee.com>
++S:	Maintained
++F:	drivers/dma/plx_dma.c
++
+ PMBUS HARDWARE MONITORING DRIVERS
+ M:	Guenter Roeck <linux@roeck-us.net>
+ L:	linux-hwmon@vger.kernel.org
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 6fa1eba9d477..312a6cc36c78 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -497,6 +497,15 @@ config PXA_DMA
+ 	  16 to 32 channels for peripheral to memory or memory to memory
+ 	  transfers.
+ 
++config PLX_DMA
++	tristate "PLX ExpressLane PEX Switch DMA Engine Support"
++	depends on PCI
++	select DMA_ENGINE
++	help
++	  Some PLX ExpressLane PCI Switches support additional DMA engines.
++	  These are exposed via extra functions on the switch's
++	  upstream port. Each function exposes one DMA channel.
++
+ config SIRF_DMA
+ 	tristate "CSR SiRFprimaII/SiRFmarco DMA support"
+ 	depends on ARCH_SIRF
+diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+index 42d7e2fc64fa..a150d1d792fd 100644
+--- a/drivers/dma/Makefile
++++ b/drivers/dma/Makefile
+@@ -59,6 +59,7 @@ obj-$(CONFIG_NBPFAXI_DMA) += nbpfaxi.o
+ obj-$(CONFIG_OWL_DMA) += owl-dma.o
+ obj-$(CONFIG_PCH_DMA) += pch_dma.o
+ obj-$(CONFIG_PL330_DMA) += pl330.o
++obj-$(CONFIG_PLX_DMA) += plx_dma.o
+ obj-$(CONFIG_PPC_BESTCOMM) += bestcomm/
+ obj-$(CONFIG_PXA_DMA) += pxa_dma.o
+ obj-$(CONFIG_RENESAS_DMA) += sh/
 diff --git a/drivers/dma/plx_dma.c b/drivers/dma/plx_dma.c
-index f3a5c9e47658..db4c5fd453a9 100644
---- a/drivers/dma/plx_dma.c
+new file mode 100644
+index 000000000000..e002cbb7d2b6
+--- /dev/null
 +++ b/drivers/dma/plx_dma.c
-@@ -7,6 +7,7 @@
- 
- #include "dmaengine.h"
- 
-+#include <linux/circ_buf.h>
- #include <linux/dmaengine.h>
- #include <linux/kref.h>
- #include <linux/list.h>
-@@ -120,6 +121,11 @@ static struct plx_dma_dev *chan_to_plx_dma_dev(struct dma_chan *c)
- 	return container_of(c, struct plx_dma_dev, dma_chan);
- }
- 
-+static struct plx_dma_desc *to_plx_desc(struct dma_async_tx_descriptor *txd)
+@@ -0,0 +1,150 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Microsemi Switchtec(tm) PCIe Management Driver
++ * Copyright (c) 2019, Logan Gunthorpe <logang@deltatee.com>
++ * Copyright (c) 2019, GigaIO Networks, Inc
++ */
++
++#include "dmaengine.h"
++
++#include <linux/dmaengine.h>
++#include <linux/kref.h>
++#include <linux/list.h>
++#include <linux/module.h>
++#include <linux/pci.h>
++
++MODULE_DESCRIPTION("PLX ExpressLane PEX PCI Switch DMA Engine");
++MODULE_VERSION("0.1");
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Logan Gunthorpe");
++
++struct plx_dma_dev {
++	struct dma_device dma_dev;
++	struct dma_chan dma_chan;
++	void __iomem *bar;
++};
++
++static void plx_dma_release(struct dma_device *dma_dev)
 +{
-+	return container_of(txd, struct plx_dma_desc, txd);
++	struct plx_dma_dev *plxdev =
++		container_of(dma_dev, struct plx_dma_dev, dma_dev);
++
++	put_device(dma_dev->dev);
++	kfree(plxdev);
 +}
 +
- static struct plx_dma_desc *plx_dma_get_desc(struct plx_dma_dev *plxdev, int i)
- {
- 	return plxdev->desc_ring[i & (PLX_DMA_RING_COUNT - 1)];
-@@ -242,6 +248,113 @@ static void plx_dma_desc_task(unsigned long data)
- 	plx_dma_process_desc(plxdev);
- }
- 
-+static struct dma_async_tx_descriptor *plx_dma_prep_memcpy(struct dma_chan *c,
-+		dma_addr_t dma_dst, dma_addr_t dma_src, size_t len,
-+		unsigned long flags)
-+	__acquires(plxdev->ring_lock)
++static int plx_dma_create(struct pci_dev *pdev)
 +{
-+	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(c);
-+	struct plx_dma_desc *plxdesc;
++	struct plx_dma_dev *plxdev;
++	struct dma_device *dma;
++	struct dma_chan *chan;
++	int rc;
 +
-+	spin_lock_bh(&plxdev->ring_lock);
-+	if (!plxdev->ring_active)
-+		goto err_unlock;
++	plxdev = kzalloc(sizeof(*plxdev), GFP_KERNEL);
++	if (!plxdev)
++		return -ENOMEM;
 +
-+	if (!CIRC_SPACE(plxdev->head, plxdev->tail, PLX_DMA_RING_COUNT))
-+		goto err_unlock;
++	plxdev->bar = pcim_iomap_table(pdev)[0];
 +
-+	if (len > PLX_DESC_SIZE_MASK)
-+		goto err_unlock;
++	dma = &plxdev->dma_dev;
++	dma->chancnt = 1;
++	INIT_LIST_HEAD(&dma->channels);
++	dma->copy_align = DMAENGINE_ALIGN_1_BYTE;
++	dma->dev = get_device(&pdev->dev);
 +
-+	plxdesc = plx_dma_get_desc(plxdev, plxdev->head);
-+	plxdev->head++;
++	dma->device_release = plx_dma_release;
 +
-+	plxdesc->hw->dst_addr_lo = cpu_to_le32(lower_32_bits(dma_dst));
-+	plxdesc->hw->dst_addr_hi = cpu_to_le16(upper_32_bits(dma_dst));
-+	plxdesc->hw->src_addr_lo = cpu_to_le32(lower_32_bits(dma_src));
-+	plxdesc->hw->src_addr_hi = cpu_to_le16(upper_32_bits(dma_src));
++	chan = &plxdev->dma_chan;
++	chan->device = dma;
++	dma_cookie_init(chan);
++	list_add_tail(&chan->device_node, &dma->channels);
 +
-+	plxdesc->orig_size = len;
-+
-+	if (flags & DMA_PREP_INTERRUPT)
-+		len |= PLX_DESC_FLAG_INT_WHEN_DONE;
-+
-+	plxdesc->hw->flags_and_size = cpu_to_le32(len);
-+	plxdesc->txd.flags = flags;
-+
-+	/* return with the lock held, it will be released in tx_submit */
-+
-+	return &plxdesc->txd;
-+
-+err_unlock:
-+	/*
-+	 * Keep sparse happy by restoring an even lock count on
-+	 * this lock.
-+	 */
-+	__acquire(plxdev->ring_lock);
-+
-+	spin_unlock_bh(&plxdev->ring_lock);
-+	return NULL;
-+}
-+
-+static dma_cookie_t plx_dma_tx_submit(struct dma_async_tx_descriptor *desc)
-+	__releases(plxdev->ring_lock)
-+{
-+	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(desc->chan);
-+	struct plx_dma_desc *plxdesc = to_plx_desc(desc);
-+	dma_cookie_t cookie;
-+
-+	cookie = dma_cookie_assign(desc);
-+
-+	/*
-+	 * Ensure the descriptor updates are visible to the dma device
-+	 * before setting the valid bit.
-+	 */
-+	wmb();
-+
-+	plxdesc->hw->flags_and_size |= cpu_to_le32(PLX_DESC_FLAG_VALID);
-+
-+	spin_unlock_bh(&plxdev->ring_lock);
-+
-+	return cookie;
-+}
-+
-+static enum dma_status plx_dma_tx_status(struct dma_chan *chan,
-+		dma_cookie_t cookie, struct dma_tx_state *txstate)
-+{
-+	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(chan);
-+	enum dma_status ret;
-+
-+	ret = dma_cookie_status(chan, cookie, txstate);
-+	if (ret == DMA_COMPLETE)
-+		return ret;
-+
-+	plx_dma_process_desc(plxdev);
-+
-+	return dma_cookie_status(chan, cookie, txstate);
-+}
-+
-+static void plx_dma_issue_pending(struct dma_chan *chan)
-+{
-+	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(chan);
-+
-+	rcu_read_lock();
-+	if (!rcu_dereference(plxdev->pdev)) {
-+		rcu_read_unlock();
-+		return;
++	rc = dma_async_device_register(dma);
++	if (rc) {
++		pci_err(pdev, "Failed to register dma device: %d\n", rc);
++		free_irq(pci_irq_vector(pdev, 0),  plxdev);
++		kfree(plxdev);
++		return rc;
 +	}
 +
-+	/*
-+	 * Ensure the valid bits are visible before starting the
-+	 * DMA engine.
-+	 */
-+	wmb();
++	pci_set_drvdata(pdev, plxdev);
 +
-+	writew(PLX_REG_CTRL_START_VAL, plxdev->bar + PLX_REG_CTRL);
-+
-+	rcu_read_unlock();
++	return 0;
 +}
 +
- static irqreturn_t plx_dma_isr(int irq, void *devid)
- {
- 	struct plx_dma_dev *plxdev = devid;
-@@ -276,7 +389,9 @@ static int plx_dma_alloc_desc(struct plx_dma_dev *plxdev)
- 			goto free_and_exit;
- 
- 		dma_async_tx_descriptor_init(&desc->txd, &plxdev->dma_chan);
-+		desc->txd.tx_submit = plx_dma_tx_submit;
- 		desc->hw = &plxdev->hw_ring[i];
++static int plx_dma_probe(struct pci_dev *pdev,
++			 const struct pci_device_id *id)
++{
++	int rc;
 +
- 		plxdev->desc_ring[i] = desc;
- 	}
- 
-@@ -407,11 +522,15 @@ static int plx_dma_create(struct pci_dev *pdev)
- 	dma = &plxdev->dma_dev;
- 	dma->chancnt = 1;
- 	INIT_LIST_HEAD(&dma->channels);
-+	dma_cap_set(DMA_MEMCPY, dma->cap_mask);
- 	dma->copy_align = DMAENGINE_ALIGN_1_BYTE;
- 	dma->dev = get_device(&pdev->dev);
- 
- 	dma->device_alloc_chan_resources = plx_dma_alloc_chan_resources;
- 	dma->device_free_chan_resources = plx_dma_free_chan_resources;
-+	dma->device_prep_dma_memcpy = plx_dma_prep_memcpy;
-+	dma->device_issue_pending = plx_dma_issue_pending;
-+	dma->device_tx_status = plx_dma_tx_status;
- 	dma->device_release = plx_dma_release;
- 
- 	chan = &plxdev->dma_chan;
++	rc = pcim_enable_device(pdev);
++	if (rc)
++		return rc;
++
++	rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(48));
++	if (rc)
++		rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
++	if (rc)
++		return rc;
++
++	rc = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(48));
++	if (rc)
++		rc = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32));
++	if (rc)
++		return rc;
++
++	rc = pcim_iomap_regions(pdev, 1, KBUILD_MODNAME);
++	if (rc)
++		return rc;
++
++	rc = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_ALL_TYPES);
++	if (rc <= 0)
++		return rc;
++
++	pci_set_master(pdev);
++
++	rc = plx_dma_create(pdev);
++	if (rc)
++		goto err_free_irq_vectors;
++
++	pci_info(pdev, "PLX DMA Channel Registered\n");
++
++	return 0;
++
++err_free_irq_vectors:
++	pci_free_irq_vectors(pdev);
++	return rc;
++}
++
++static void plx_dma_remove(struct pci_dev *pdev)
++{
++	struct plx_dma_dev *plxdev = pci_get_drvdata(pdev);
++
++	free_irq(pci_irq_vector(pdev, 0),  plxdev);
++
++	plxdev->bar = NULL;
++	dma_async_device_unregister(&plxdev->dma_dev);
++
++	pci_free_irq_vectors(pdev);
++}
++
++static const struct pci_device_id plx_dma_pci_tbl[] = {
++	{
++		.vendor		= PCI_VENDOR_ID_PLX,
++		.device		= 0x87D0,
++		.subvendor	= PCI_ANY_ID,
++		.subdevice	= PCI_ANY_ID,
++		.class		= PCI_CLASS_SYSTEM_OTHER << 8,
++		.class_mask	= 0xFFFFFFFF,
++	},
++	{0}
++};
++MODULE_DEVICE_TABLE(pci, plx_dma_pci_tbl);
++
++static struct pci_driver plx_dma_pci_driver = {
++	.name           = KBUILD_MODNAME,
++	.id_table       = plx_dma_pci_tbl,
++	.probe          = plx_dma_probe,
++	.remove		= plx_dma_remove,
++};
++module_pci_driver(plx_dma_pci_driver);
 -- 
 2.20.1
 
