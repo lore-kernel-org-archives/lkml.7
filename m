@@ -2,149 +2,195 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6938FC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 06:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2E3C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 06:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 465A0222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 06:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39C9A22B48
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 06:31:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GaDGzwVN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgACGbW (ORCPT
+        id S1727256AbgACGbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 01:31:22 -0500
-Received: from s3.sipsolutions.net ([144.76.43.62]:55664 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbgACGbW (ORCPT
+        Fri, 3 Jan 2020 01:31:51 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:63140 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726739AbgACGbu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 01:31:22 -0500
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.92.3)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1inGUM-007Xa9-Ba; Fri, 03 Jan 2020 07:31:14 +0100
-Message-ID: <4abacaad51ce3c7d0b867472605a366dc9ae7994.camel@sipsolutions.net>
-Subject: Re: PROBLEM: Wireless networking goes down on Acer C720P Chromebook
- (bisected)
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Stephen Oberholtzer <stevie@qrpff.net>
-Cc:     toke@redhat.com, "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 03 Jan 2020 07:31:13 +0100
-In-Reply-To: <CAD_xR9eh=CAYeQZ3Vp9Yj9h3ifMu2exy0ihaXyE+736tJrPVLA@mail.gmail.com>
-References: <CAD_xR9eDL+9jzjYxPXJjS7U58ypCPWHYzrk0C3_vt-w26FZeAQ@mail.gmail.com>
-         <1762437703fd150bb535ee488c78c830f107a531.camel@sipsolutions.net>
-         <CAD_xR9eh=CAYeQZ3Vp9Yj9h3ifMu2exy0ihaXyE+736tJrPVLA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+        Fri, 3 Jan 2020 01:31:50 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578033109; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=AV/d+5XHUKKmFsA8S70fdNu6jhq8PhxMezHm1nRwV+U=;
+ b=GaDGzwVNQSko6eK9SIwEuv/g+VuTWAtlzAx8mYaRBZQc6LwwTEdV8qVt35AVgmAJ3FJjEcZF
+ UeAYtJAcfLqLi+4ui0AMpiFmmJK4IME12/WyijbpN4Dcc9+OD/nCkMh5TxIWbTmXwJE+HwtA
+ T9m62rYWNUQMVndT9QgqkW/zFWg=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e0edfd3.7f6fc4442ca8-smtp-out-n02;
+ Fri, 03 Jan 2020 06:31:47 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D982BC4479C; Fri,  3 Jan 2020 06:31:46 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: rjliao)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 31C9CC43383;
+        Fri,  3 Jan 2020 06:31:46 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Fri, 03 Jan 2020 14:31:46 +0800
+From:   rjliao@codeaurora.org
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-bluetooth-owner@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] Bluetooth: hci_qca: Retry btsoc initialize when it
+ fails
+In-Reply-To: <20200102184116.GA89495@google.com>
+References: <20191225060317.5258-1-rjliao@codeaurora.org>
+ <20191227072130.29431-1-rjliao@codeaurora.org>
+ <20191227072130.29431-2-rjliao@codeaurora.org>
+ <20200102184116.GA89495@google.com>
+Message-ID: <bfba08a185c81f82d3e05ec03b5ddd65@codeaurora.org>
+X-Sender: rjliao@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+在 2020-01-03 02:41，Matthias Kaehlcke 写道：
 
-
-> To answer your immediate question, no, I don't get any dmesg output at
-> all. Nothing about underruns.
-
-OK.
-
-> However, while pursuing other avenues -- specifically, enabling
-> mac80211 debugfs and log messages -- I realized that my 'master' was
-> out-of-date from linux-stable and did a git pull.  Imagine my surprise
-> when the resulting kernel did not exhibit the problem!
+> Hi Rocky,
 > 
-> Apparently, I had been a bit too pessimistic; since the problem
-> existed in 5.5-rc1 release, I'd assumed that the problem wouldn't get
-> rectified before 5.5.
+> On Fri, Dec 27, 2019 at 03:21:28PM +0800, Rocky Liao wrote:
 > 
-> However, I decided to bisect the fix, and ended up with: 911bde0f
-> ("mac80211: Turn AQL into an NL80211_EXT_FEATURE"), which appears to
-> have "solved" the problem by just disabling the feature (this is
-> ath9k, by the way.)
-
-Oh. I didn't pay attention and thought you actually had ath10k, not
-ath9k!
-
-> This AQL stuff sounds pretty nifty, and I'd love to try my hand at
-> making it work for ath9k (also, since I put so much effort into an
-> automated build-and-test framework, it'd be a shame to just abandon
-> it.)
-
-:-)
-
-> However, the ath9k code is rather lacking for comments, so I
-> don't even know where I should start, except for (I suspect) a call to
-> `wiphy_ext_feature_set(whatever, NL80211_EXT_FEATURE_AQL);` from
-> inside ath9k_set_hw_capab()?
-
-Honestly, I don't know, you'd probably have to wait for Toke to be back
-from vacations to get a pointer on what could be done here.
-
-> In the meantime, I went back to e548f749b096 -- the commit prior to
-> the one making AQL support opt-in -- and cranked up the debugging.
+>> This patch adds the retry of btsoc initialization when it fails. There 
+>> are
+>> reports that the btsoc initialization may fail on some platforms but 
+>> the
+>> repro ratio is very low. The failure may be caused by UART, platform 
+>> HW or
+>> the btsoc itself but it's very difficlut to root cause, given the 
+>> repro
+>> ratio is very low. Add a retry for the btsoc initialization will 
+>> resolve
+>> most of the failures and make Bluetooth finally works.
 > 
-> I'm not sure how to interpret any of this, but  here's what I got:
+> Is this problem specific to a certain chipset?
 > 
-> dmesg output:
+> What are the symptoms?
+
+It's reported on Rome so far but I think the patch is potentially 
+helpful for
+wcn399x as well.
+
+The symptoms is the firmware downloading failed due to the UART write 
+timed out.
+
+>> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+>> ---
+>> 
+>> Changes in v2: None
+>> Changes in v3: None
+>> 
+>> drivers/bluetooth/hci_qca.c | 26 ++++++++++++++++++++++++++
+>> 1 file changed, 26 insertions(+)
+>> 
+>> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+>> index 43fd84028786..45042aa27fa4 100644
+>> --- a/drivers/bluetooth/hci_qca.c
+>> +++ b/drivers/bluetooth/hci_qca.c
+>> @@ -53,6 +53,9 @@
+>> /* Controller debug log header */
+>> #define QCA_DEBUG_HANDLE    0x2EDC
+>> 
+>> +/* max retry count when init fails */
+>> +#define QCA_MAX_INIT_RETRY_COUNT 3
 > 
-> Last relevant mention is "moving STA <my AP's MAC> to state 4" which
-> happened during startup, before everything shut down.
-
-That just means the STA was set to authorized (state 4) due to the 4-
-way-handshake completing, nothing more.
-
-> /sys/kernel/debug/ieee80211/phy0
+> nit: MAX_RETRIES or MAX_INIT_RETRIES?
 > 
-> airtime_flags = 7
+> The QCA prefix just adds noise here IMO, there's no need to 
+> disambiguate
+> the constant from other retries since it is defined in hci_qca.c.
 > 
-> stations/<my AP's MAC>/airtime =
+>> +
+>> enum qca_flags {
+>> QCA_IBS_ENABLED,
+>> QCA_DROP_VENDOR_EVENT,
+>> @@ -1257,7 +1260,9 @@ static int qca_setup(struct hci_uart *hu)
+>> {
+>> struct hci_dev *hdev = hu->hdev;
+>> struct qca_data *qca = hu->priv;
+>> +    struct qca_serdev *qcadev;
+>> unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
+>> +    unsigned int init_retry_count = 0;
 > 
-> RX: 6583578 us
-> TX: 32719 us
-> Weight: 256
-> Deficit: VO: -1128 us VI: 11 us BE: -5098636 us BK: 256 us
-> Q depth: VO: 3868 us VI: 3636 us BE: 12284 us BK: 0 us
-> Q limit[low/high]: VO: 5000/12000 VI: 5000/12000 BE: 5000/12000 BK: 5000/12000
+> nit: the name is a bit clunky, how about 'retries'?
 > 
-> (I have no idea how to interpret this, but that '32719 us' seems odd,
-> I thought the airtime usage was in 4us units?)
-
-Me neither, off the top of my head, let's wait for Toke.
-
-> Doing an 'echo 3 | tee airtime_flags' to clear the (old) AQL-enabled
-> bit seemed to *immediately* restore network connectivity.
-
-Hmm. That probably means it was blocked on AQL and not some kind of soft
-"didn't know I had to transmit" type scenario that the comment in the
-commit log you quoted would have implied (if it was actually wrong).
-
-> I ran a ping, and saw this:
+>> enum qca_btsoc_type soc_type = qca_soc_type(hu);
+>> const char *firmware_name = qca_get_firmware_name(hu);
+>> int ret;
+>> @@ -1275,6 +1280,7 @@ static int qca_setup(struct hci_uart *hu)
+>> */
+>> set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
+>> 
+>> +retry:
+>> if (qca_is_wcn399x(soc_type)) {
+>> bt_dev_info(hdev, "setting up wcn3990");
+>> 
+>> @@ -1293,6 +1299,12 @@ static int qca_setup(struct hci_uart *hu)
+>> return ret;
+>> } else {
+>> bt_dev_info(hdev, "ROME setup");
+>> +        if (hu->serdev) {
+>> +            qcadev = serdev_device_get_drvdata(hu->serdev);
+>> +            gpiod_set_value_cansleep(qcadev->bt_en, 1);
+>> +            /* Controller needs time to bootup. */
+>> +            msleep(150);
 > 
-> - pings coming back in <5ms
-> - re-enable AQL (echo 7 | tee airtime_flags)
-> - pings stop coming back immediately
-> - some seconds later, disable AQL again (echo 3 | tee airtime_flags)
-> - immediate *flood* of ping replies registered, with times 16000ms,
-> 15000ms, 14000ms, .. down to 1000ms, 15ms, then stabilizing sub-5ms
-> - According to the icmp_seq values, all 28 requests were replied to,
-> and their replies were delivered in-order
+> Shouldn't this be in qca_power_on(), analogous to the power off code 
+> from
+> "[1/4]Bluetooth: hci_qca: Add QCA Rome power off support to the
+> qca_power_off()"?
 > 
-> This certainly looks like a missing TX queue restart to me?
+> qca_power_on() should then also be called for ROME. If you opt for this 
+> it
+> should be done in a separate patch, or possibly merged into the one
+> mentioned above.
+> 
 
-I don't think it does. If it was just a missing TX queue restart then
-changing the AQL bit shouldn't have had any effect, since changing the
-flags via debugfs doesn't trigger a TX queue restart.
+There is no qca_power_on() func and wcn399x is calling 
+qca_wcn3990_init() to
+do power on, I prefer to not do this change this time. If it's needed it 
+should
+be a new patch to add qca_power_on() which supports both Rome and 
+wcn399x.
 
-Rather, it seems to me that this implies some accounting went wrong, and
-doing this clears/recovers that?
-
-But I guess Toke will have a much better idea from the debug data above.
-
-johannes
-
+>> +        }
+>> qca_set_speed(hu, QCA_INIT_SPEED);
+>> }
+>> 
+>> @@ -1329,6 +1341,20 @@ static int qca_setup(struct hci_uart *hu)
+>> * patch/nvm-config is found, so run with original fw/config.
+>> */
+>> ret = 0;
+>> +    } else {
+>> +        if (init_retry_count < QCA_MAX_INIT_RETRY_COUNT) {
+>> +            qca_power_off(hdev);
+>> +            if (hu->serdev) {
+>> +                serdev_device_close(hu->serdev);
+>> +                ret = serdev_device_open(hu->serdev);
+>> +                if (ret) {
+>> +                    bt_dev_err(hu->hdev, "open port fail");
+> 
+> nit: "failed to open port"
