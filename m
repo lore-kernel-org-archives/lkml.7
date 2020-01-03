@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 077C7C32771
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 05:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CEDC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 05:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D18C221734
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 05:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADE4A21734
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 05:56:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TeNUS5+P"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="A4R6JmxT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgACF4O (ORCPT
+        id S1727358AbgACF4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 00:56:14 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:43346 "EHLO
+        Fri, 3 Jan 2020 00:56:23 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:43318 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbgACF4N (ORCPT
+        with ESMTP id S1725928AbgACF4O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 00:56:13 -0500
+        Fri, 3 Jan 2020 00:56:14 -0500
 Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 5A24120B479A;
+        by linux.microsoft.com (Postfix) with ESMTPSA id 09E5D2010C33;
         Thu,  2 Jan 2020 21:56:13 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5A24120B479A
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 09E5D2010C33
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1578030973;
-        bh=DgcJLJA5f1FBKdY65igr7wiVw7vong0RIViMMtrBXoQ=;
+        bh=9uLF2XVVkhvefoka1wfW3xsgfz7pEhNReOdjQQXf7jE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TeNUS5+PPUofo5ySh0vgYQKylSYvbhuM9cnOR2S+qvTy/WpX2iqB6mU2pgNxpho3O
-         je2dWN12HbK2E4FNyOL2pztyF8xLi63Twy81Mlw27n4+XgfS5e2vgoN9uSIiRJ7Mz7
-         PI0b38Re9PRzcYgcagoNs127nirnXsgA2hDLp2OU=
+        b=A4R6JmxTyVME4HUc36czcHQF8hHrmA9hyRUOwR9i2v/03vQtElA1xqEdNfFaOx4ZA
+         CRJk0qrRF4+dcrgJWhyI7k7g15+X3lYEjBRt4QZ3RpJSUoaSLSHHiQorDZzLvaTWZo
+         jyJJyzqhzr85fCCie18qC7je9vyxXIrfKBsiDb9w=
 From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 To:     zohar@linux.ibm.com, James.Bottomley@HansenPartnership.com,
         linux-integrity@vger.kernel.org
@@ -41,9 +41,9 @@ Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
         mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
         sashal@kernel.org, jamorris@linux.microsoft.com,
         linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Subject: [PATCH v6 3/3] IMA: Defined timer to free queued keys
-Date:   Thu,  2 Jan 2020 21:56:08 -0800
-Message-Id: <20200103055608.22491-4-nramas@linux.microsoft.com>
+Subject: [PATCH v6 1/3] IMA: Define workqueue for early boot key measurements
+Date:   Thu,  2 Jan 2020 21:56:06 -0800
+Message-Id: <20200103055608.22491-2-nramas@linux.microsoft.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200103055608.22491-1-nramas@linux.microsoft.com>
 References: <20200103055608.22491-1-nramas@linux.microsoft.com>
@@ -52,126 +52,177 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-keys queued for measurement should be freed if a custom IMA policy
-was not loaded. Otherwise, the keys will remain queued forever
-consuming kernel memory.
+Measuring keys requires a custom IMA policy to be loaded.
+Keys created or updated before a custom IMA policy is loaded should
+be queued and the keys should be processed after a custom policy
+is loaded.
 
-This patch defines a timer to handle the above scenario. The timer
-is setup to expire 5 minutes after IMA initialization is completed.
+This patch defines workqueue for queuing keys when a custom IMA policy
+has not yet been loaded.
 
-If a custom IMA policy is loaded before the timer expires, the timer
-is removed and any queued keys are processed for measurement.
-But if a custom policy was not loaded, on timer expiration
-queued keys are just freed.
+A flag namely ima_process_keys is used to check if the key should be
+queued or should be processed immediately.
 
 Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 Reported-by: kernel test robot <rong.a.chen@intel.com>
+Reported-by: kbuild test robot <lkp@intel.com>
 ---
- security/integrity/ima/ima.h                 |  2 +
- security/integrity/ima/ima_asymmetric_keys.c | 42 ++++++++++++++++++--
- security/integrity/ima/ima_init.c            |  8 +++-
- 3 files changed, 48 insertions(+), 4 deletions(-)
+ security/integrity/ima/ima.h                 |  15 +++
+ security/integrity/ima/ima_asymmetric_keys.c | 115 +++++++++++++++++++
+ 2 files changed, 130 insertions(+)
 
 diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 97f8a4078483..c483215a9ee5 100644
+index f06238e41a7c..97f8a4078483 100644
 --- a/security/integrity/ima/ima.h
 +++ b/security/integrity/ima/ima.h
-@@ -216,8 +216,10 @@ struct ima_key_entry {
- 	char *keyring_name;
- };
- void ima_process_queued_keys(void);
-+void ima_init_key_queue(void);
- #else
- static inline void ima_process_queued_keys(void) {}
-+static inline void ima_init_key_queue(void) {}
- #endif /* CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE */
+@@ -205,6 +205,21 @@ extern const char *const func_tokens[];
  
+ struct modsig;
+ 
++#ifdef CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE
++/*
++ * To track keys that need to be measured.
++ */
++struct ima_key_entry {
++	struct list_head list;
++	void *payload;
++	size_t payload_len;
++	char *keyring_name;
++};
++void ima_process_queued_keys(void);
++#else
++static inline void ima_process_queued_keys(void) {}
++#endif /* CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE */
++
  /* LIM API function definitions */
+ int ima_get_action(struct inode *inode, const struct cred *cred, u32 secid,
+ 		   int mask, enum ima_hooks func, int *pcr,
 diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
-index eb71cbf224c1..d1fa1706e03f 100644
+index fea2e7dd3b09..1d56f003f1a7 100644
 --- a/security/integrity/ima/ima_asymmetric_keys.c
 +++ b/security/integrity/ima/ima_asymmetric_keys.c
-@@ -11,6 +11,7 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
-+#include <linux/timer.h>
+@@ -14,6 +14,121 @@
  #include <keys/asymmetric-type.h>
  #include "ima.h"
  
-@@ -26,6 +27,36 @@ static bool ima_process_keys;
- static DEFINE_SPINLOCK(ima_keys_lock);
- static LIST_HEAD(ima_keys);
- 
 +/*
-+ * If custom IMA policy is not loaded then keys queued up
-+ * for measurement should be freed. This timer is used
-+ * for handling this scenario.
++ * Flag to indicate whether a key can be processed
++ * right away or should be queued for processing later.
 + */
-+static long ima_key_queue_timeout = 300000; /* 5 Minutes */
-+static struct timer_list ima_key_queue_timer;
-+static bool timer_expired;
++static bool ima_process_keys;
 +
 +/*
-+ * This timer callback function frees keys that may still be
-+ * queued up in case custom IMA policy was not loaded.
++ * To synchronize access to the list of keys that need to be measured
 + */
-+static void ima_timer_handler(struct timer_list *timer)
++static DEFINE_SPINLOCK(ima_keys_lock);
++static LIST_HEAD(ima_keys);
++
++static void ima_free_key_entry(struct ima_key_entry *entry)
 +{
-+	timer_expired = true;
-+	ima_process_queued_keys();
++	if (entry) {
++		kfree(entry->payload);
++		kfree(entry->keyring_name);
++		kfree(entry);
++	}
++}
++
++static struct ima_key_entry *ima_alloc_key_entry(
++	struct key *keyring,
++	const void *payload, size_t payload_len)
++{
++	int rc = 0;
++	struct ima_key_entry *entry;
++
++	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
++	if (entry) {
++		entry->payload = kmemdup(payload, payload_len, GFP_KERNEL);
++		entry->keyring_name = kstrdup(keyring->description,
++					      GFP_KERNEL);
++		entry->payload_len = payload_len;
++	}
++
++	if ((entry == NULL) || (entry->payload == NULL) ||
++	    (entry->keyring_name == NULL)) {
++		rc = -ENOMEM;
++		goto out;
++	}
++
++	INIT_LIST_HEAD(&entry->list);
++
++out:
++	if (rc) {
++		ima_free_key_entry(entry);
++		entry = NULL;
++	}
++
++	return entry;
++}
++
++static bool ima_queue_key(struct key *keyring, const void *payload,
++			  size_t payload_len)
++{
++	bool queued = false;
++	struct ima_key_entry *entry;
++
++	entry = ima_alloc_key_entry(keyring, payload, payload_len);
++	if (!entry)
++		return false;
++
++	spin_lock(&ima_keys_lock);
++	if (!ima_process_keys) {
++		list_add_tail(&entry->list, &ima_keys);
++		queued = true;
++	}
++	spin_unlock(&ima_keys_lock);
++
++	if (!queued)
++		ima_free_key_entry(entry);
++
++	return queued;
 +}
 +
 +/*
-+ * This function sets up a timer to free queued keys in case
-+ * custom IMA policy was never loaded.
++ * ima_process_queued_keys() - process keys queued for measurement
++ *
++ * This function sets ima_process_keys to true and processes queued keys.
++ * From here on keys will be processed right away (not queued).
 + */
-+void ima_init_key_queue(void)
++void ima_process_queued_keys(void)
 +{
-+	timer_setup(&ima_key_queue_timer, ima_timer_handler, 0);
-+	mod_timer(&ima_key_queue_timer,
-+		  jiffies + msecs_to_jiffies(ima_key_queue_timeout));
++	struct ima_key_entry *entry, *tmp;
++	bool process = false;
++
++	if (ima_process_keys)
++		return;
++
++	/*
++	 * Since ima_process_keys is set to true, any new key will be
++	 * processed immediately and not be queued to ima_keys list.
++	 * First one setting the ima_process_keys flag to true will
++	 * process the queued keys.
++	 */
++	spin_lock(&ima_keys_lock);
++	if (!ima_process_keys) {
++		ima_process_keys = true;
++		process = true;
++	}
++	spin_unlock(&ima_keys_lock);
++
++	if (!process)
++		return;
++
++	list_for_each_entry_safe(entry, tmp, &ima_keys, list) {
++		process_buffer_measurement(entry->payload, entry->payload_len,
++					   entry->keyring_name, KEY_CHECK, 0,
++					   entry->keyring_name);
++		list_del(&entry->list);
++		ima_free_key_entry(entry);
++	}
 +}
 +
- static void ima_free_key_entry(struct ima_key_entry *entry)
- {
- 	if (entry) {
-@@ -120,10 +151,15 @@ void ima_process_queued_keys(void)
- 	if (!process)
- 		return;
- 
-+	del_timer(&ima_key_queue_timer);
-+
- 	list_for_each_entry_safe(entry, tmp, &ima_keys, list) {
--		process_buffer_measurement(entry->payload, entry->payload_len,
--					   entry->keyring_name, KEY_CHECK, 0,
--					   entry->keyring_name);
-+		if (!timer_expired)
-+			process_buffer_measurement(entry->payload,
-+						   entry->payload_len,
-+						   entry->keyring_name,
-+						   KEY_CHECK, 0,
-+						   entry->keyring_name);
- 		list_del(&entry->list);
- 		ima_free_key_entry(entry);
- 	}
-diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
-index 5d55ade5f3b9..195cb4079b2b 100644
---- a/security/integrity/ima/ima_init.c
-+++ b/security/integrity/ima/ima_init.c
-@@ -131,5 +131,11 @@ int __init ima_init(void)
- 
- 	ima_init_policy();
- 
--	return ima_fs_init();
-+	rc = ima_fs_init();
-+	if (rc != 0)
-+		return rc;
-+
-+	ima_init_key_queue();
-+
-+	return rc;
- }
+ /**
+  * ima_post_key_create_or_update - measure asymmetric keys
+  * @keyring: keyring to which the key is linked to
 -- 
 2.17.1
 
