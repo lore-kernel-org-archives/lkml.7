@@ -2,395 +2,210 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABFEC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9056FC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A1521D7D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:23:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="npFi5Pf1"
+	by mail.kernel.org (Postfix) with ESMTP id 6C96D217F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:27:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbgACJX4 (ORCPT
+        id S1727442AbgACJ13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 04:23:56 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:26264 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725972AbgACJXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 04:23:55 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47pzx352xQz9d;
-        Fri,  3 Jan 2020 10:23:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1578043432; bh=hAcHx2yMK1FsKNOtlGAhlHhl3AGXKLU2bOKPIXuXgTw=;
-        h=Date:From:Subject:To:Cc:From;
-        b=npFi5Pf1nAYA+JBslUFXciCtd2mLLGZK+Q2Rz5tHJnPtvuBgTXLCtXqVW42Oju9fd
-         xNu9nkU9PzGgyjNonc6jwFiKkuuiwcdofA3vmFRQblDhJYVzOKjbCQNLu0SWhiSID6
-         R4ssF4chWB74X+q0nyDWN8vuZMsGPjLASk5I2y8cbIueDxQH8iK5MRzkRiL+LS4gXL
-         WtYWcmtoP/QmEymrusEJLO/nU1PSIH3Drw7fdng0deAWU8vL9yFpfjllX8aVfyPHO2
-         Bqd1/UsA63QRgf2+4ipPcBmPYY3PMQl9H2XD8UKdNkZEQvJqzTWCmgFsXEoq72solM
-         d6e8plYqzPPmg==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Fri, 03 Jan 2020 10:23:48 +0100
-Message-Id: <5150c94101c9534f4c8e987324f6912c16d459f6.1578043216.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH] ALSA: hda - constify and cleanup static NodeID tables
+        Fri, 3 Jan 2020 04:27:29 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41971 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgACJ13 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 04:27:29 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1inJEt-0000N6-Co; Fri, 03 Jan 2020 10:27:27 +0100
+Message-ID: <a121d715fbed1f8ab935d465a4f0cbb8071790d5.camel@pengutronix.de>
+Subject: Re: [PATCH v2 2/2] reset: Add Broadcom STB RESCAL reset controller
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Jim Quinlan <jim2101024@gmail.com>,
+        Jim Quinlan <im2101024@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Fri, 03 Jan 2020 10:27:26 +0100
+In-Reply-To: <20200102231435.21703-3-f.fainelli@gmail.com>
+References: <20200102231435.21703-1-f.fainelli@gmail.com>
+         <20200102231435.21703-3-f.fainelli@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make hda_nid_t tables static const, as they are not intended to be
-modified by callees.
+Hi Florian,
 
----
-* patch against tiwai/sound/topic/constification branch
+just a few small nitpicks:
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
- sound/pci/hda/hda_generic.c    |  4 +--
- sound/pci/hda/patch_analog.c   |  6 ++--
- sound/pci/hda/patch_ca0132.c   | 12 +++----
- sound/pci/hda/patch_conexant.c |  6 ++--
- sound/pci/hda/patch_realtek.c  | 62 +++++++++++++++++-----------------
- sound/pci/hda/patch_sigmatel.c |  4 +--
- sound/pci/hda/patch_via.c      |  4 +--
- 7 files changed, 49 insertions(+), 49 deletions(-)
+On Thu, 2020-01-02 at 15:14 -0800, Florian Fainelli wrote:
+> From: Jim Quinlan <jim2101024@gmail.com>
+> 
+> On BCM7216 there is a special purpose reset controller named RESCAL
+> (reset calibration) which is necessary for SATA and PCIe0/1 to operate
+> correctly. This commit adds support for such a reset controller to be
+> available.
+> 
+> Signed-off-by: Jim Quinlan <im2101024@gmail.com>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  drivers/reset/Kconfig                |   7 ++
+>  drivers/reset/Makefile               |   1 +
+>  drivers/reset/reset-brcmstb-rescal.c | 110 +++++++++++++++++++++++++++
+>  3 files changed, 118 insertions(+)
+>  create mode 100644 drivers/reset/reset-brcmstb-rescal.c
+> 
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index 12f5c897788d..b7cc0a2049d9 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -49,6 +49,13 @@ config RESET_BRCMSTB
+>  	  This enables the reset controller driver for Broadcom STB SoCs using
+>  	  a SUN_TOP_CTRL_SW_INIT style controller.
+>  
+> +config RESET_BRCMSTB_RESCAL
+> +	bool "Broadcom STB RESCAL reset controller"
+> +	default ARCH_BRCMSTB || COMPILE_TEST
+> +	help
+> +	  This enables the RESCAL reset controller for SATA, PCIe0, or PCIe1 on
+> +	  BCM7216.
+> +
+>  config RESET_HSDK
+>  	bool "Synopsys HSDK Reset Driver"
+>  	depends on HAS_IOMEM
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index 00767c03f5f2..1e4291185c52 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -8,6 +8,7 @@ obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
+>  obj-$(CONFIG_RESET_AXS10X) += reset-axs10x.o
+>  obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
+>  obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
+> +obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
+>  obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
+>  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
+>  obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
+> diff --git a/drivers/reset/reset-brcmstb-rescal.c b/drivers/reset/reset-brcmstb-rescal.c
+> new file mode 100644
+> index 000000000000..e1c038e62855
+> --- /dev/null
+> +++ b/drivers/reset/reset-brcmstb-rescal.c
+> @@ -0,0 +1,110 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (C) 2018-2020 Broadcom */
+> +
+> +#include <linux/device.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset-controller.h>
+> +
+> +#define BRCM_RESCAL_START	0x0
+> +#define  BRCM_RESCAL_START_BIT	BIT(0)
+> +#define BRCM_RESCAL_CTRL	0x4
+> +#define BRCM_RESCAL_STATUS	0x8
+> +#define  BRCM_RESCAL_STATUS_BIT	BIT(0)
+> +
+> +struct brcm_rescal_reset {
+> +	void __iomem	*base;
 
-diff --git a/sound/pci/hda/hda_generic.c b/sound/pci/hda/hda_generic.c
-index 10d502328b76..fc001c64ef20 100644
---- a/sound/pci/hda/hda_generic.c
-+++ b/sound/pci/hda/hda_generic.c
-@@ -4401,7 +4401,7 @@ EXPORT_SYMBOL_GPL(snd_hda_gen_fix_pin_power);
-  */
- 
- /* check each pin in the given array; returns true if any of them is plugged */
--static bool detect_jacks(struct hda_codec *codec, int num_pins, hda_nid_t *pins)
-+static bool detect_jacks(struct hda_codec *codec, int num_pins, const hda_nid_t *pins)
- {
- 	int i;
- 	bool present = false;
-@@ -4420,7 +4420,7 @@ static bool detect_jacks(struct hda_codec *codec, int num_pins, hda_nid_t *pins)
- }
- 
- /* standard HP/line-out auto-mute helper */
--static void do_automute(struct hda_codec *codec, int num_pins, hda_nid_t *pins,
-+static void do_automute(struct hda_codec *codec, int num_pins, const hda_nid_t *pins,
- 			int *paths, bool mute)
- {
- 	struct hda_gen_spec *spec = codec->spec;
-diff --git a/sound/pci/hda/patch_analog.c b/sound/pci/hda/patch_analog.c
-index bc9dd8e6fd86..c64895f99299 100644
---- a/sound/pci/hda/patch_analog.c
-+++ b/sound/pci/hda/patch_analog.c
-@@ -389,7 +389,7 @@ static int patch_ad1986a(struct hda_codec *codec)
- {
- 	int err;
- 	struct ad198x_spec *spec;
--	static hda_nid_t preferred_pairs[] = {
-+	static const hda_nid_t preferred_pairs[] = {
- 		0x1a, 0x03,
- 		0x1b, 0x03,
- 		0x1c, 0x04,
-@@ -519,9 +519,9 @@ static int ad1983_add_spdif_mux_ctl(struct hda_codec *codec)
- 
- static int patch_ad1983(struct hda_codec *codec)
- {
-+	static const hda_nid_t conn_0c[] = { 0x08 };
-+	static const hda_nid_t conn_0d[] = { 0x09 };
- 	struct ad198x_spec *spec;
--	static hda_nid_t conn_0c[] = { 0x08 };
--	static hda_nid_t conn_0d[] = { 0x09 };
- 	int err;
- 
- 	err = alloc_ad_spec(codec);
-diff --git a/sound/pci/hda/patch_ca0132.c b/sound/pci/hda/patch_ca0132.c
-index 32ed46464af7..250534f90ce0 100644
---- a/sound/pci/hda/patch_ca0132.c
-+++ b/sound/pci/hda/patch_ca0132.c
-@@ -7802,23 +7802,23 @@ static void sbz_region2_exit(struct hda_codec *codec)
- 
- static void sbz_set_pin_ctl_default(struct hda_codec *codec)
- {
--	hda_nid_t pins[5] = {0x0B, 0x0C, 0x0E, 0x12, 0x13};
-+	static const hda_nid_t pins[] = {0x0B, 0x0C, 0x0E, 0x12, 0x13};
- 	unsigned int i;
- 
- 	snd_hda_codec_write(codec, 0x11, 0,
- 			AC_VERB_SET_PIN_WIDGET_CONTROL, 0x40);
- 
--	for (i = 0; i < 5; i++)
-+	for (i = 0; i < ARRAY_SIZE(pins); i++)
- 		snd_hda_codec_write(codec, pins[i], 0,
- 				AC_VERB_SET_PIN_WIDGET_CONTROL, 0x00);
- }
- 
- static void ca0132_clear_unsolicited(struct hda_codec *codec)
- {
--	hda_nid_t pins[7] = {0x0B, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13};
-+	static const hda_nid_t pins[] = {0x0B, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13};
- 	unsigned int i;
- 
--	for (i = 0; i < 7; i++) {
-+	for (i = 0; i < ARRAY_SIZE(pins); i++) {
- 		snd_hda_codec_write(codec, pins[i], 0,
- 				AC_VERB_SET_UNSOLICITED_ENABLE, 0x00);
- 	}
-@@ -7842,10 +7842,10 @@ static void sbz_gpio_shutdown_commands(struct hda_codec *codec, int dir,
- 
- static void zxr_dbpro_power_state_shutdown(struct hda_codec *codec)
- {
--	hda_nid_t pins[7] = {0x05, 0x0c, 0x09, 0x0e, 0x08, 0x11, 0x01};
-+	static const hda_nid_t pins[] = {0x05, 0x0c, 0x09, 0x0e, 0x08, 0x11, 0x01};
- 	unsigned int i;
- 
--	for (i = 0; i < 7; i++)
-+	for (i = 0; i < ARRAY_SIZE(pins); i++)
- 		snd_hda_codec_write(codec, pins[i], 0,
- 				AC_VERB_SET_POWER_STATE, 0x03);
- }
-diff --git a/sound/pci/hda/patch_conexant.c b/sound/pci/hda/patch_conexant.c
-index 90aa0f400a57..9853e00a0816 100644
---- a/sound/pci/hda/patch_conexant.c
-+++ b/sound/pci/hda/patch_conexant.c
-@@ -116,7 +116,7 @@ static void cx_auto_parse_eapd(struct hda_codec *codec)
- }
- 
- static void cx_auto_turn_eapd(struct hda_codec *codec, int num_pins,
--			      hda_nid_t *pins, bool on)
-+			      const hda_nid_t *pins, bool on)
- {
- 	int i;
- 	for (i = 0; i < num_pins; i++) {
-@@ -959,10 +959,10 @@ static const struct hda_model_fixup cxt5066_fixup_models[] = {
- static void add_cx5051_fake_mutes(struct hda_codec *codec)
- {
- 	struct conexant_spec *spec = codec->spec;
--	static hda_nid_t out_nids[] = {
-+	static const hda_nid_t out_nids[] = {
- 		0x10, 0x11, 0
- 	};
--	hda_nid_t *p;
-+	const hda_nid_t *p;
- 
- 	for (p = out_nids; *p; p++)
- 		snd_hda_override_amp_caps(codec, *p, HDA_OUTPUT,
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index dbfafee97931..5bb1959dae0f 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -464,10 +464,10 @@ static void set_eapd(struct hda_codec *codec, hda_nid_t nid, int on)
- static void alc_auto_setup_eapd(struct hda_codec *codec, bool on)
- {
- 	/* We currently only handle front, HP */
--	static hda_nid_t pins[] = {
-+	static const hda_nid_t pins[] = {
- 		0x0f, 0x10, 0x14, 0x15, 0x17, 0
- 	};
--	hda_nid_t *p;
-+	const hda_nid_t *p;
- 	for (p = pins; *p; p++)
- 		set_eapd(codec, *p, on);
- }
-@@ -1935,19 +1935,19 @@ static void alc889_fixup_dac_route(struct hda_codec *codec,
- {
- 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
- 		/* fake the connections during parsing the tree */
--		hda_nid_t conn1[2] = { 0x0c, 0x0d };
--		hda_nid_t conn2[2] = { 0x0e, 0x0f };
--		snd_hda_override_conn_list(codec, 0x14, 2, conn1);
--		snd_hda_override_conn_list(codec, 0x15, 2, conn1);
--		snd_hda_override_conn_list(codec, 0x18, 2, conn2);
--		snd_hda_override_conn_list(codec, 0x1a, 2, conn2);
-+		static const hda_nid_t conn1[] = { 0x0c, 0x0d };
-+		static const hda_nid_t conn2[] = { 0x0e, 0x0f };
-+		snd_hda_override_conn_list(codec, 0x14, ARRAY_SIZE(conn1), conn1);
-+		snd_hda_override_conn_list(codec, 0x15, ARRAY_SIZE(conn1), conn1);
-+		snd_hda_override_conn_list(codec, 0x18, ARRAY_SIZE(conn2), conn2);
-+		snd_hda_override_conn_list(codec, 0x1a, ARRAY_SIZE(conn2), conn2);
- 	} else if (action == HDA_FIXUP_ACT_PROBE) {
- 		/* restore the connections */
--		hda_nid_t conn[5] = { 0x0c, 0x0d, 0x0e, 0x0f, 0x26 };
--		snd_hda_override_conn_list(codec, 0x14, 5, conn);
--		snd_hda_override_conn_list(codec, 0x15, 5, conn);
--		snd_hda_override_conn_list(codec, 0x18, 5, conn);
--		snd_hda_override_conn_list(codec, 0x1a, 5, conn);
-+		static const hda_nid_t conn[] = { 0x0c, 0x0d, 0x0e, 0x0f, 0x26 };
-+		snd_hda_override_conn_list(codec, 0x14, ARRAY_SIZE(conn), conn);
-+		snd_hda_override_conn_list(codec, 0x15, ARRAY_SIZE(conn), conn);
-+		snd_hda_override_conn_list(codec, 0x18, ARRAY_SIZE(conn), conn);
-+		snd_hda_override_conn_list(codec, 0x1a, ARRAY_SIZE(conn), conn);
- 	}
- }
- 
-@@ -1955,8 +1955,8 @@ static void alc889_fixup_dac_route(struct hda_codec *codec,
- static void alc889_fixup_mbp_vref(struct hda_codec *codec,
- 				  const struct hda_fixup *fix, int action)
- {
-+	static const hda_nid_t nids[] = { 0x14, 0x15, 0x19 };
- 	struct alc_spec *spec = codec->spec;
--	static hda_nid_t nids[3] = { 0x14, 0x15, 0x19 };
- 	int i;
- 
- 	if (action != HDA_FIXUP_ACT_INIT)
-@@ -1992,7 +1992,7 @@ static void alc889_fixup_mac_pins(struct hda_codec *codec,
- static void alc889_fixup_imac91_vref(struct hda_codec *codec,
- 				     const struct hda_fixup *fix, int action)
- {
--	static hda_nid_t nids[2] = { 0x18, 0x1a };
-+	static const hda_nid_t nids[] = { 0x18, 0x1a };
- 
- 	if (action == HDA_FIXUP_ACT_INIT)
- 		alc889_fixup_mac_pins(codec, nids, ARRAY_SIZE(nids));
-@@ -2002,7 +2002,7 @@ static void alc889_fixup_imac91_vref(struct hda_codec *codec,
- static void alc889_fixup_mba11_vref(struct hda_codec *codec,
- 				    const struct hda_fixup *fix, int action)
- {
--	static hda_nid_t nids[1] = { 0x18 };
-+	static const hda_nid_t nids[] = { 0x18 };
- 
- 	if (action == HDA_FIXUP_ACT_INIT)
- 		alc889_fixup_mac_pins(codec, nids, ARRAY_SIZE(nids));
-@@ -2012,7 +2012,7 @@ static void alc889_fixup_mba11_vref(struct hda_codec *codec,
- static void alc889_fixup_mba21_vref(struct hda_codec *codec,
- 				    const struct hda_fixup *fix, int action)
- {
--	static hda_nid_t nids[2] = { 0x18, 0x19 };
-+	static const hda_nid_t nids[] = { 0x18, 0x19 };
- 
- 	if (action == HDA_FIXUP_ACT_INIT)
- 		alc889_fixup_mac_pins(codec, nids, ARRAY_SIZE(nids));
-@@ -2094,7 +2094,7 @@ static void alc1220_fixup_clevo_p950(struct hda_codec *codec,
- 				     const struct hda_fixup *fix,
- 				     int action)
- {
--	hda_nid_t conn1[1] = { 0x0c };
-+	static const hda_nid_t conn1[] = { 0x0c };
- 
- 	if (action != HDA_FIXUP_ACT_PRE_PROBE)
- 		return;
-@@ -2103,8 +2103,8 @@ static void alc1220_fixup_clevo_p950(struct hda_codec *codec,
- 	/* We therefore want to make sure 0x14 (front headphone) and
- 	 * 0x1b (speakers) use the stereo DAC 0x02
- 	 */
--	snd_hda_override_conn_list(codec, 0x14, 1, conn1);
--	snd_hda_override_conn_list(codec, 0x1b, 1, conn1);
-+	snd_hda_override_conn_list(codec, 0x14, ARRAY_SIZE(conn1), conn1);
-+	snd_hda_override_conn_list(codec, 0x1b, ARRAY_SIZE(conn1), conn1);
- }
- 
- static void alc_fixup_headset_mode_no_hp_mic(struct hda_codec *codec,
-@@ -5243,7 +5243,7 @@ static void alc_fixup_tpt470_dock(struct hda_codec *codec,
- 	 * the speaker output becomes too low by some reason on Thinkpads with
- 	 * ALC298 codec
- 	 */
--	static hda_nid_t preferred_pairs[] = {
-+	static const hda_nid_t preferred_pairs[] = {
- 		0x14, 0x03, 0x17, 0x02, 0x21, 0x02,
- 		0
- 	};
-@@ -5515,9 +5515,9 @@ static void alc290_fixup_mono_speakers(struct hda_codec *codec,
- 		/* DAC node 0x03 is giving mono output. We therefore want to
- 		   make sure 0x14 (front speaker) and 0x15 (headphones) use the
- 		   stereo DAC, while leaving 0x17 (bass speaker) for node 0x03. */
--		hda_nid_t conn1[2] = { 0x0c };
--		snd_hda_override_conn_list(codec, 0x14, 1, conn1);
--		snd_hda_override_conn_list(codec, 0x15, 1, conn1);
-+		static const hda_nid_t conn1[] = { 0x0c };
-+		snd_hda_override_conn_list(codec, 0x14, ARRAY_SIZE(conn1), conn1);
-+		snd_hda_override_conn_list(codec, 0x15, ARRAY_SIZE(conn1), conn1);
- 	}
- }
- 
-@@ -5532,8 +5532,8 @@ static void alc298_fixup_speaker_volume(struct hda_codec *codec,
- 		   Pin Complex), since Node 0x02 has Amp-out caps, we can adjust
- 		   speaker's volume now. */
- 
--		hda_nid_t conn1[1] = { 0x0c };
--		snd_hda_override_conn_list(codec, 0x17, 1, conn1);
-+		static const hda_nid_t conn1[] = { 0x0c };
-+		snd_hda_override_conn_list(codec, 0x17, ARRAY_SIZE(conn1), conn1);
- 	}
- }
- 
-@@ -5542,8 +5542,8 @@ static void alc295_fixup_disable_dac3(struct hda_codec *codec,
- 				      const struct hda_fixup *fix, int action)
- {
- 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
--		hda_nid_t conn[2] = { 0x02, 0x03 };
--		snd_hda_override_conn_list(codec, 0x17, 2, conn);
-+		static const hda_nid_t conn[] = { 0x02, 0x03 };
-+		snd_hda_override_conn_list(codec, 0x17, ARRAY_SIZE(conn), conn);
- 	}
- }
- 
-@@ -5552,8 +5552,8 @@ static void alc285_fixup_speaker2_to_dac1(struct hda_codec *codec,
- 					  const struct hda_fixup *fix, int action)
- {
- 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
--		hda_nid_t conn[1] = { 0x02 };
--		snd_hda_override_conn_list(codec, 0x17, 1, conn);
-+		static const hda_nid_t conn[] = { 0x02 };
-+		snd_hda_override_conn_list(codec, 0x17, ARRAY_SIZE(conn), conn);
- 	}
- }
- 
-@@ -5631,7 +5631,7 @@ static void alc274_fixup_bind_dacs(struct hda_codec *codec,
- 				    const struct hda_fixup *fix, int action)
- {
- 	struct alc_spec *spec = codec->spec;
--	static hda_nid_t preferred_pairs[] = {
-+	static const hda_nid_t preferred_pairs[] = {
- 		0x21, 0x03, 0x1b, 0x03, 0x16, 0x02,
- 		0
- 	};
-diff --git a/sound/pci/hda/patch_sigmatel.c b/sound/pci/hda/patch_sigmatel.c
-index 9b816b377547..a608d0486ae4 100644
---- a/sound/pci/hda/patch_sigmatel.c
-+++ b/sound/pci/hda/patch_sigmatel.c
-@@ -795,7 +795,7 @@ static int find_mute_led_cfg(struct hda_codec *codec, int default_polarity)
- static bool has_builtin_speaker(struct hda_codec *codec)
- {
- 	struct sigmatel_spec *spec = codec->spec;
--	hda_nid_t *nid_pin;
-+	const hda_nid_t *nid_pin;
- 	int nids, i;
- 
- 	if (spec->gen.autocfg.line_out_type == AUTO_PIN_SPEAKER_OUT) {
-@@ -2182,7 +2182,7 @@ static void hp_envy_ts_fixup_dac_bind(struct hda_codec *codec,
- 					    int action)
- {
- 	struct sigmatel_spec *spec = codec->spec;
--	static hda_nid_t preferred_pairs[] = {
-+	static const hda_nid_t preferred_pairs[] = {
- 		0xd, 0x13,
- 		0
- 	};
-diff --git a/sound/pci/hda/patch_via.c b/sound/pci/hda/patch_via.c
-index 29dcdb8b36db..b40d01e01832 100644
---- a/sound/pci/hda/patch_via.c
-+++ b/sound/pci/hda/patch_via.c
-@@ -1038,8 +1038,8 @@ static const struct snd_pci_quirk vt2002p_fixups[] = {
-  */
- static void fix_vt1802_connections(struct hda_codec *codec)
- {
--	static hda_nid_t conn_24[] = { 0x14, 0x1c };
--	static hda_nid_t conn_33[] = { 0x1c };
-+	static const hda_nid_t conn_24[] = { 0x14, 0x1c };
-+	static const hda_nid_t conn_33[] = { 0x1c };
- 
- 	snd_hda_override_conn_list(codec, 0x24, ARRAY_SIZE(conn_24), conn_24);
- 	snd_hda_override_conn_list(codec, 0x33, ARRAY_SIZE(conn_33), conn_33);
--- 
-2.20.1
+You could replace the tab before *base with a space for consistency.
+
+> +	struct device *dev;
+> +	struct reset_controller_dev rcdev;
+> +};
+> +
+> +static int brcm_rescal_reset_set(struct reset_controller_dev *rcdev,
+> +				 unsigned long id)
+> +{
+> +	struct brcm_rescal_reset *data =
+> +		container_of(rcdev, struct brcm_rescal_reset, rcdev);
+> +	void __iomem *base = data->base;
+> +	u32 reg;
+> +	int ret;
+> +
+> +	reg = readl(base + BRCM_RESCAL_START);
+> +	writel(reg | BRCM_RESCAL_START_BIT, base + BRCM_RESCAL_START);
+> +	reg = readl(base + BRCM_RESCAL_START);
+> +	if (!(reg & BRCM_RESCAL_START_BIT)) {
+> +		dev_err(data->dev, "failed to start SATA/PCIe rescal\n");
+> +		return -EIO;
+> +	}
+> +
+> +	ret = readl_poll_timeout(base + BRCM_RESCAL_STATUS, reg,
+> +				 !(reg & BRCM_RESCAL_STATUS_BIT), 100, 1000);
+> +	if (ret) {
+> +		dev_err(data->dev, "time out on SATA/PCIe rescal\n");
+> +		return -ETIMEDOUT;
+
+Just return ret here, readl_poll_timeout() already returns -ETIMEDOUT.
+
+> +	}
+> +
+> +	reg = readl(base + BRCM_RESCAL_START);
+> +	writel(reg & ~BRCM_RESCAL_START_BIT, base + BRCM_RESCAL_START);
+> +	(void)readl(base + BRCM_RESCAL_START);
+
+Is this final read actually necessary (if so, why)?
+
+> +
+> +	dev_dbg(data->dev, "SATA/PCIe rescal success\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static int brcm_rescal_reset_xlate(struct reset_controller_dev *rcdev,
+> +				   const struct of_phandle_args *reset_spec)
+> +{
+> +	/* This is needed if #reset-cells == 0. */
+> +	return 0;
+> +}
+> +
+> +static const struct reset_control_ops brcm_rescal_reset_ops = {
+> +	.reset = brcm_rescal_reset_set,
+> +};
+> +
+> +static int brcm_rescal_reset_probe(struct platform_device *pdev)
+> +{
+> +	struct brcm_rescal_reset *data;
+> +	struct resource *res;
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	data->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(data->base))
+> +		return PTR_ERR(data->base);
+> +
+> +	platform_set_drvdata(pdev, data);
+
+This can be dropped.
+
+regards
+Philipp
 
