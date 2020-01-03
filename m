@@ -2,147 +2,146 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F26BDC3276E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 00:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B6BC3276E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 00:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C816C21D56
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 00:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E436222C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 00:21:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Be1Z4lKr"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KzOw1b7W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbgACAUM (ORCPT
+        id S1726351AbgACAVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 19:20:12 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37055 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgACAUL (ORCPT
+        Thu, 2 Jan 2020 19:21:06 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54172 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbgACAVG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 19:20:11 -0500
-Received: by mail-ed1-f67.google.com with SMTP id cy15so40459123edb.4;
-        Thu, 02 Jan 2020 16:20:10 -0800 (PST)
+        Thu, 2 Jan 2020 19:21:06 -0500
+Received: by mail-wm1-f68.google.com with SMTP id m24so7057087wmc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 16:21:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FV5X7fA+rrUeDnXZ5UiKMokLx1xAJtoG3k2CK746+60=;
-        b=Be1Z4lKrrI8RtYjq/BzQfrsrCUA2UJPv3VAYzJae/rKQQP4Mi+149d9Yfc4ozDEFnb
-         Zk8lQf019qLG1AXIqKFCL0h84IaKBpxEFDMdoLOB+KtZC8hcNg27wvwd6H4boJJUuVwJ
-         p06otaRRzArTVUjHQB80gpgk9NqfS8sn9WrJAqlGRZfRnzhgjHXsl7WH3TgmsjC/loS1
-         WRQE2gex7s4Z0hTVMOgYJMHsXVl8HfZzqMX1Q2JPYaM7L2pP6Y2M6SBICtxchYmXn7v0
-         NkvIFR+5N8zDAC+NT1XtLku0AXonKX+rgIRYheh7gNXyQhAamyBQvq1W0yyYgo68zdd6
-         nSwQ==
+        bh=PRPBkou+uS1zWNSOaxrecr/7LWg1sY/IJLNmSa72PP0=;
+        b=KzOw1b7W+dgKGAThSM9EsvLpjbfAF32G6nByR78jmSLIj8CsDCnVA+3qESaq9lo/Mz
+         tlp9GPLePItxsfN3nNTGPHtReAGQMwMxGwKDT8ZOpX1rOSgrWQte8t5TFTPm7CjZRVld
+         MghGWqE/AP95QTb63M2Vc9Uh0tOBGjV4KG2So=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FV5X7fA+rrUeDnXZ5UiKMokLx1xAJtoG3k2CK746+60=;
-        b=TfOcssMA7nXXKQkVtvQ6C4Ckrc5XJPv/dOHlMV+VNrjjSs+wrBUNSys1CqzY7ttVBK
-         3jioYOHb9MgGogW5QiJC9SBMI8zdfKfXAYAD04pNTRDARzJSa1Nr6rd5CkYb8vBQNT2O
-         NMcHeBFUEOBei54fF4uhkaB6rg5UNu2oPRXifXc01Enk1MoaGhT+uaw4/C5r5JSPwcfP
-         7RVUO86uuZ2jqkdInRhbeyCtVKtWbcoi/yINFm0y5Faeu1ntE0o0n+sKV2n6IWATtezD
-         6YeWRt7QoNL1VA5YoyUj/yXBYzy//Ku3vFPA3Sexpjh+TLVrifvbyAPMVE53q1PS+zii
-         Tf5A==
-X-Gm-Message-State: APjAAAV9qKNs83tqezNHijJsIBXrcKnR8bkDZA9FxoPDfKhMkiVQh7dp
-        6AGjCHpjqlTDSRfj+RWYBfmO3cWyDjlLxrgnm4U=
-X-Google-Smtp-Source: APXvYqyneY6vp7MndZY2IHVlAnYW2Ny5AcY4pl2xKrupts1lB1ozOUhHi1uWOz20Rt6s9+dkTrmWhTv4viThJydhKuA=
-X-Received: by 2002:aa7:d34d:: with SMTP id m13mr89428224edr.140.1578010809821;
- Thu, 02 Jan 2020 16:20:09 -0800 (PST)
+        bh=PRPBkou+uS1zWNSOaxrecr/7LWg1sY/IJLNmSa72PP0=;
+        b=svhVi7kRJ6njD7MfIGjQeYzj/SUBpHi6e+E+tF+ZpiFEX0eY/k7bW8lSCxlUZiPNQr
+         wZ4wd7Lo8fc07ozreOqNaPabXPbE5CfiAHR52A0EpEY6pKkS5Yc6pofYS2HUOE1Q9tsh
+         E8qXf+uzjVPK1yYwwEK4nrZlRjhaPQXShNPpJ5Vo8EHxNBKRS81biiL/nNav5qxhWdQJ
+         8NP8g7mOUCdRDgAKWTfbPfna+TtDF0QQ3dJPL2x8+gF2GUzJf89Q9LE68PDUnb3MZ0f/
+         B4L+yaF/b20vucU8UkYNUv7hr3/ZvoH3zP9QtLpZtyR9HRkwDiXsW2vTZpENX96mk3Qx
+         7xDg==
+X-Gm-Message-State: APjAAAU4NJkUlI0mIl0u6vrrcRn2MUopNzLTCLpIYtnGIsAvpMYy+HQV
+        o0sPxfS9hvB/dMmuBceesFEweppintvQck/gqTap8A==
+X-Google-Smtp-Source: APXvYqx/ci/jx8coSHWX+oaIRR3IFz+Cjzk8IQk58kJAwAjteJC9NLM2626yzxODf7N/9szk6OapKxvCqzDrMEwxIGc=
+X-Received: by 2002:a1c:7715:: with SMTP id t21mr15944147wmi.149.1578010864658;
+ Thu, 02 Jan 2020 16:21:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20200102233657.12933-1-f.fainelli@gmail.com>
-In-Reply-To: <20200102233657.12933-1-f.fainelli@gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Fri, 3 Jan 2020 02:19:58 +0200
-Message-ID: <CA+h21hrLO2Nfryu74Joj-T3-ithgoSFOQZsw4Z5QWOnhttvGiA@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: dsa: Remove indirect function call for flow dissection
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Paul Blakey <paulb@mellanox.com>,
-        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
+References: <20200102112558.1.Ib87c4a7fbb3fc818ea12198e291b87dc2d5bc8c2@changeid>
+ <a7ab606a-1e35-29aa-ea60-7c31374eb7b4@linux.intel.com>
+In-Reply-To: <a7ab606a-1e35-29aa-ea60-7c31374eb7b4@linux.intel.com>
+From:   Sam McNally <sammc@chromium.org>
+Date:   Fri, 3 Jan 2020 11:20:27 +1100
+Message-ID: <CAJqEsoDxuKs7EufU-FwZzkipgw7dXpP1=7nSDqOy2oNB4hq6fg@mail.gmail.com>
+Subject: Re: [alsa-devel] [PATCH] ASoC: Intel: sof_rt5682: Ignore the speaker
+ amp when there isn't one.
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        alsa-devel@alsa-project.org,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Sathya Prakash M R <sathya.prakash.m.r@intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jairaj Arava <jairaj.arava@intel.com>,
+        Xun Zhang <xun2.zhang@intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Florian,
-
-On Fri, 3 Jan 2020 at 01:39, Florian Fainelli <f.fainelli@gmail.com> wrote:
+On Fri, 3 Jan 2020 at 08:18, Pierre-Louis Bossart
+<pierre-louis.bossart@linux.intel.com> wrote:
 >
-> We only need "static" information to be given for DSA flow dissection,
-> so replace the expensive call to .flow_dissect() with an integer giving
-> us the offset into the packet array of bytes that we must de-reference
-
-packet array? packed array?
-
-> to obtain the protocol number. The overhead was alreayd available from
-
-already
-
-> the dsa_device_ops structure so use that directly.
 >
-> The presence of a flow_dissect callback used to indicate that the DSA
-> tagger supported returning that information,we now encode this with a
-> proto_off value of DSA_PROTO_OFF_UNPSEC if the tagger does not support
-
-UNSPEC
-
-> providing that information yet.
 >
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
+> On 1/1/20 6:28 PM, Sam McNally wrote:
+> > Some members of the Google_Hatch family include a rt5682, but not a
+> > speaker amp. When a speaker amp is also present, it matches MX98357A
+> > as well, resulting in the quirk_data field in the snd_soc_acpi_mach
+> > being non-null. When only the rt5682 is present, quirk_data is left
+> > null.
+>
+> Sorry, I don't get this last sentence.
+>
+> There is a single entry for 10EC5682 in sound-acpi-intel-glk-match.c and
+> quirk_data is assigned - thus can never be NULL.
+>
+> I wonder if your Chrome kernel has an extra entry in
+> snd_soc_acpi_intel_glk_machines[] ? What I am missing?
+>
 
-Unfortunately I don't really understand the DSA implementations of flow_dissect.
-Is proto_off supposed to mean "the __be16 pointer difference A - B
-between A. the position of the real EtherType and B. the current
-skb->data (aka ETH_HLEN bytes into the frame, aka 2 bytes after the
-normal EtherType was supposed to be)"?
-Otherwise said, the offset in bytes between the real EtherType
-position and skb->data is 2 * (proto_off + 1).
-Furthermore, the offset in bytes is exactly equal to the tagger
-overhead in bytes, unless it's a tag that doesn't push the EtherType
-to the right, such as the trailer tag.
+I was referring to the duplicate 10EC5682 entries in
+snd_soc_acpi_intel_cml_machines[]. Sorry for the confusion. I'll send
+a new version with those details in the description.
 
-If the above is indeed correct, can you just skip DSA_PROTO_OFF_UNSPEC
-and add proper proto_off values "in blind" for all taggers? I think
-it's rather safe to assume that they all push the EtherType to the
-right with the exception of the trailer tag, which will have an offset
-of -1 in terms of __be16 pointers, by the way (so your -1 encoding of
-DSA_PROTO_OFF_UNSPEC won't work for it anyway).
-
-Also, documenting the unit of measurement for proto_off would really
-go a long way.
-
-What is a good test that the flow_dissector does what it's supposed to
-do with DSA?
-
-Regards,
--Vladimir
+> >
+> > The sof_rt5682 driver's DMI data matching identifies that a speaker amp
+> > is present for all Google_Hatch family devices. Detect cases where there
+> > is no speaker amp by checking for a null quirk_data in the
+> > snd_soc_acpi_mach and remove the speaker amp bit in that case.
+> >
+> > Signed-off-by: Sam McNally <sammc@chromium.org>
+> > ---
+> >
+> >   sound/soc/intel/boards/sof_rt5682.c | 9 ++++++++-
+> >   1 file changed, 8 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/sound/soc/intel/boards/sof_rt5682.c b/sound/soc/intel/boards/sof_rt5682.c
+> > index ad8a2b4bc709..8a13231dee15 100644
+> > --- a/sound/soc/intel/boards/sof_rt5682.c
+> > +++ b/sound/soc/intel/boards/sof_rt5682.c
+> > @@ -603,6 +603,14 @@ static int sof_audio_probe(struct platform_device *pdev)
+> >
+> >       dmi_check_system(sof_rt5682_quirk_table);
+> >
+> > +     mach = (&pdev->dev)->platform_data;
+> > +
+> > +     /* A speaker amp might not be present when the quirk claims one is.
+> > +      * Detect this via whether the machine driver match includes quirk_data.
+> > +      */
+> > +     if ((sof_rt5682_quirk & SOF_SPEAKER_AMP_PRESENT) && !mach->quirk_data)
+> > +             sof_rt5682_quirk &= ~SOF_SPEAKER_AMP_PRESENT;
+> > +
+> >       if (soc_intel_is_byt() || soc_intel_is_cht()) {
+> >               is_legacy_cpu = 1;
+> >               dmic_be_num = 0;
+> > @@ -663,7 +671,6 @@ static int sof_audio_probe(struct platform_device *pdev)
+> >       INIT_LIST_HEAD(&ctx->hdmi_pcm_list);
+> >
+> >       sof_audio_card_rt5682.dev = &pdev->dev;
+> > -     mach = (&pdev->dev)->platform_data;
+> >
+> >       /* set platform name for each dailink */
+> >       ret = snd_soc_fixup_dai_links_platform_name(&sof_audio_card_rt5682,
+> >
