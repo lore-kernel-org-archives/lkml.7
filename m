@@ -2,87 +2,112 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B84EC32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A527CC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61B5821835
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74DD221835
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:13:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KLoelPZ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgACTLp (ORCPT
+        id S1728501AbgACTNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 14:11:45 -0500
-Received: from mx2.yrkesakademin.fi ([85.134.45.195]:35203 "EHLO
-        mx2.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728373AbgACTLp (ORCPT
+        Fri, 3 Jan 2020 14:13:20 -0500
+Received: from mail-ed1-f43.google.com ([209.85.208.43]:32778 "EHLO
+        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728373AbgACTNU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 14:11:45 -0500
-Subject: Re: [PATCH 5.4 000/191] 5.4.8-stable review
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, <patches@kernelci.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        <lkft-triage@lists.linaro.org>,
-        linux- stable <stable@vger.kernel.org>,
-        Chengguang Xu <cgxu519@mykernel.net>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Sasha Levin <sashal@kernel.org>, LTP List <ltp@lists.linux.it>,
-        Jan Stancek <jstancek@redhat.com>,
-        John Stultz <john.stultz@linaro.org>
-References: <20200102215829.911231638@linuxfoundation.org>
- <CA+G9fYuPkOGKbeQ0FKKx4H0Bs-nRHALsFtwyRw0Rt5DoOCvRHg@mail.gmail.com>
- <CAK8P3a1+Srey_7cUd0xfaO8HdMv5tkUcs6DeDXzcUKkUD-DnGQ@mail.gmail.com>
- <CAK8P3a24EkUXTu-K2c-5B3w-LZwY7zNcX0dZixb3gd59vRw_Kw@mail.gmail.com>
- <20200103154518.GB1064304@kroah.com>
- <CAK8P3a00SpVfSE5oL8_F_8jHdg_8A5fyEKH_DWNyPToxack=zA@mail.gmail.com>
- <a2fc8b36-c512-b6dd-7349-dfb551e348b6@oracle.com>
- <8283b231-f6e8-876f-7094-d3265096ab9a@oracle.com>
- <CAHk-=wjvWTFn=C3mT5wA=mtOwXw44U+OHLVxk5DCe4v+7nOvKg@mail.gmail.com>
-From:   Thomas Backlund <tmb@mageia.org>
-Message-ID: <c5c3b8c8-1dfe-2433-630c-06dbfb3d318b@mageia.org>
-Date:   Fri, 3 Jan 2020 21:11:41 +0200
+        Fri, 3 Jan 2020 14:13:20 -0500
+Received: by mail-ed1-f43.google.com with SMTP id r21so42398549edq.0;
+        Fri, 03 Jan 2020 11:13:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mJgZ6foC5X2L3PU1OYn3aOckELw2Hq9GWYF/0Ih/oEA=;
+        b=KLoelPZ3P4+qC9Qv/UPorq+aZdYVDP4Pk4HjgFD6T4/V/1mlZjvdN+jZeDbn1H/sU0
+         KXSq3AwEWxoePWhFULGURiZnud5VzyugNavbvhRFDS5ihJk9aKUR55gRKp8Z4HbGubH8
+         0smQ9z7qQ8q7SaGbpr7tbnPH9r5KQnyWDaDVC3S7oUcMk2iHmXru1y+ZmRpCXodepOHz
+         N+UamyOGwzLMY6WZ+jcy444ea8d1DFa4JhH/nntYecLuJux5Yuvt/ayiPu7h/I6o32C2
+         Lp1Qg0+XpDcp96X8FhbXteCHFZoecPBDuN2RmcRz4NZosGpC/zbOzm/YkHK6TdSetR76
+         Lfsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mJgZ6foC5X2L3PU1OYn3aOckELw2Hq9GWYF/0Ih/oEA=;
+        b=tknkzfuTTmcA8af0j85iF9uymAHT+jS2GgO/lhX+xlO8R00VMz7Iat3CMbYcyoPYjW
+         LTQO/+T7aA1ghyI817D0lmyt8LUg/YK3sbV2ymFi2K2I3MOnEHL/WheZ7GR0ss0n5T4M
+         V+iafpO/7JXlprsKWKzo7d3NGgYcXr/FZUj//vdKM+LZCZgL+gjWRfLTgvY02TO6oaG0
+         KTjlmhaBg12KVFAVTFoR5+wxR/6Dst7ymZlkTZUc3KXi2Vdc3F037sjjqQ5ELoUFINMU
+         xJcS1V8nJqT2p4Ojmw1FbglRCxV4059IYItKrRFwewIpfuMknYcwKVqMxMLPoII8jFfL
+         C60Q==
+X-Gm-Message-State: APjAAAXVMXoLNohT4gNIF4olknGIcy87LulN0GTtBmmvTz4Qx+7BFbrT
+        qyIxH8WELFfWp/MRokVEzhJHreBGAE742xhTATM=
+X-Google-Smtp-Source: APXvYqxiPemLnCmmxKwarmQGLHxcAXw5mT3JE7BUYpP0KXIrUq21gnizFMzi9b0QLGGayzTh+PBYv0FmG7wXASaMfcw=
+X-Received: by 2002:a17:906:c35a:: with SMTP id ci26mr96583374ejb.133.1578078798402;
+ Fri, 03 Jan 2020 11:13:18 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wjvWTFn=C3mT5wA=mtOwXw44U+OHLVxk5DCe4v+7nOvKg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-WatchGuard-Spam-ID: str=0001.0A0C0209.5E0F91F1.000E,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
-X-WatchGuard-Mail-Client-IP: 85.134.45.195
-X-WatchGuard-Mail-From: tmb@mageia.org
+References: <20200103121907.5769-1-yukuai3@huawei.com> <20200103144623.GI6788@bombadil.infradead.org>
+ <20200103175318.GN1397@lunn.ch>
+In-Reply-To: <20200103175318.GN1397@lunn.ch>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Fri, 3 Jan 2020 21:13:07 +0200
+Message-ID: <CA+h21hqcz=QF8bq285JjdOn+gsOGvGSnDiWzDOS5-XGAGGGr9w@mail.gmail.com>
+Subject: Re: [PATCH] net: 3com: 3c59x: remove set but not used variable 'mii_reg1'
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Matthew Wilcox <willy@infradead.org>, yu kuai <yukuai3@huawei.com>,
+        klassert@kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        hslester96@gmail.com, mst@redhat.com, yang.wei9@zte.com.cn,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, yi.zhang@huawei.com,
+        zhengbin13@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Den 03-01-2020 kl. 20:40, skrev Linus Torvalds:
-> On Fri, Jan 3, 2020 at 9:59 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->>
->> Before I started investigating, Jan Stancek found and fixed the issue.
->>
->> http://lkml.kernel.org/r/a14b944b6e5e207d2f84f43227c98ed1f68290a2.1578072927.git.jstancek@redhat.com
-> 
-> Applied upstream as commit 15f0ec941f4f ("mm/hugetlbfs: fix
-> for_each_hstate() loop in init_hugetlbfs_fs()").
-> 
-> I didn't add a cc: stable, because the original didn't have one, and
-> the "Fixes:" tag should make it happen.
-> 
->                 Linus
-> 
+Hi Andrew,
 
-Does not seem to exist in public git yet, maybe you forgot to push ?
+On Fri, 3 Jan 2020 at 19:54, Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> I fully agree about the general case. However, reading the MII_BMSR
+> should not have any side affects. It would be an odd Ethernet PHY if
+> it did.
 
---
-Thomas
+This is not really correct. As far as I know the clause 22 spec
+requires the link status bit in BMSR to be latching low, so that
+momentary losses of link can be caught post-facto.
+In fact, even genphy_update_link treats this case:
 
+    /* The link state is latched low so that momentary link
+     * drops can be detected. Do not double-read the status
+     * in polling mode to detect such short link drops.
+     */
+    if (!phy_polling_mode(phydev)) {
+        status = phy_read(phydev, MII_BMSR);
+        if (status < 0)
+            return status;
+        else if (status & BMSR_LSTATUS)
+            goto done;
+    }
+
+So no, reading BMSR generally is not without side effects, and that
+does not make the PHY odd.
+
+Whether clearing the latching-low status bits is of any relevance to
+the 3com 3c59x driver bookkeeping, that I have not clue.
+
+>
+>    Andrew
+
+Regards,
+-Vladimir
