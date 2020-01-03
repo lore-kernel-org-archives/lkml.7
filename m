@@ -2,172 +2,91 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE776C00523
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B347C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F90522B48
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:15:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FS57Po99"
+	by mail.kernel.org (Postfix) with ESMTP id 1145F2253D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:15:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbgACWPH (ORCPT
+        id S1728839AbgACWPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 17:15:07 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46648 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728698AbgACWPH (ORCPT
+        Fri, 3 Jan 2020 17:15:16 -0500
+Received: from mx1.yrkesakademin.fi ([85.134.45.194]:42712 "EHLO
+        mx1.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728698AbgACWPQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 17:15:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578089705;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZPZhm/vIH+Q7uLs6GXhd/00uE+wGFl4irig6QN7h72k=;
-        b=FS57Po99cy6AsSUUfpATjD35bypbrGEvXzPYNkgA1TiYTEvJMkYA8oZ79TM5OhfWJlrLq4
-        1R4nyF9YJHqonWEaAwRLwvQayx5RbqtMZt9O34bFh//azD1hNcxaAJvBNdQzq1/tFHgkfx
-        1b/aLxi4XHejxOONfRWByuAAYK5il2w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-134-s8l_3ktoP7i4XmtoQVfOvg-1; Fri, 03 Jan 2020 17:15:01 -0500
-X-MC-Unique: s8l_3ktoP7i4XmtoQVfOvg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 322CD1801266;
-        Fri,  3 Jan 2020 22:14:59 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-122-142.rdu2.redhat.com [10.10.122.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 43F1F84673;
-        Fri,  3 Jan 2020 22:14:56 +0000 (UTC)
-Subject: Re: [PATCH v8 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-To:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com
-Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com
-References: <20191230194042.67789-1-alex.kogan@oracle.com>
- <20191230194042.67789-4-alex.kogan@oracle.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <fcba7eee-b98f-5381-ea33-6fd94a9e66a6@redhat.com>
-Date:   Fri, 3 Jan 2020 17:14:55 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 3 Jan 2020 17:15:16 -0500
+Subject: Re: [PATCH 5.4 000/191] 5.4.8-stable review
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Backlund <tmb@mageia.org>
+CC:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, <patches@kernelci.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        <lkft-triage@lists.linaro.org>,
+        linux- stable <stable@vger.kernel.org>,
+        Chengguang Xu <cgxu519@mykernel.net>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>, LTP List <ltp@lists.linux.it>,
+        Jan Stancek <jstancek@redhat.com>,
+        John Stultz <john.stultz@linaro.org>
+References: <20200102215829.911231638@linuxfoundation.org>
+ <CA+G9fYuPkOGKbeQ0FKKx4H0Bs-nRHALsFtwyRw0Rt5DoOCvRHg@mail.gmail.com>
+ <CAK8P3a1+Srey_7cUd0xfaO8HdMv5tkUcs6DeDXzcUKkUD-DnGQ@mail.gmail.com>
+ <CAK8P3a24EkUXTu-K2c-5B3w-LZwY7zNcX0dZixb3gd59vRw_Kw@mail.gmail.com>
+ <20200103154518.GB1064304@kroah.com>
+ <CAK8P3a00SpVfSE5oL8_F_8jHdg_8A5fyEKH_DWNyPToxack=zA@mail.gmail.com>
+ <a2fc8b36-c512-b6dd-7349-dfb551e348b6@oracle.com>
+ <8283b231-f6e8-876f-7094-d3265096ab9a@oracle.com>
+ <CAHk-=wjvWTFn=C3mT5wA=mtOwXw44U+OHLVxk5DCe4v+7nOvKg@mail.gmail.com>
+ <c5c3b8c8-1dfe-2433-630c-06dbfb3d318b@mageia.org>
+ <CAHk-=wgV_YN9az2XBX=xr_DGQiUEqwjtMXkmj-w12j58NQxneQ@mail.gmail.com>
+From:   Thomas Backlund <tmb@mageia.org>
+Message-ID: <9bc30fda-2c6d-d66e-018e-95bdd77a4df2@mageia.org>
+Date:   Sat, 4 Jan 2020 00:15:12 +0200
 MIME-Version: 1.0
-In-Reply-To: <20191230194042.67789-4-alex.kogan@oracle.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAHk-=wgV_YN9az2XBX=xr_DGQiUEqwjtMXkmj-w12j58NQxneQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-WatchGuard-Spam-ID: str=0001.0A0C020D.5E0FBCF3.003C,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
+X-WatchGuard-Mail-Client-IP: 85.134.45.194
+X-WatchGuard-Mail-From: tmb@mageia.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/30/19 2:40 PM, Alex Kogan wrote:
-> +/*
-> + * cna_scan_main_queue - scan the main waiting queue looking for the first
-> + * thread running on the same NUMA node as the lock holder. If found (call it
-> + * thread T), move all threads in the main queue between the lock holder and
-> + * T to the end of the secondary queue and return 0
-> + * (=SUCCESSOR_FROM_SAME_NUMA_NODE_FOUND); otherwise, return the encoded
-Are you talking about LOCAL_WAITER_FOUND?
-> + * pointer of the last scanned node in the primary queue (so a subsequent scan
-> + * can be resumed from that node).
-> + *
-> + * Schematically, this may look like the following (nn stands for numa_node and
-> + * et stands for encoded_tail).
-> + *
-> + *   when cna_scan_main_queue() is called (the secondary queue is empty):
-> + *
-> + *  A+------------+   B+--------+   C+--------+   T+--------+
-> + *   |mcs:next    | -> |mcs:next| -> |mcs:next| -> |mcs:next| -> NULL
-> + *   |mcs:locked=1|    |cna:nn=0|    |cna:nn=2|    |cna:nn=1|
-> + *   |cna:nn=1    |    +--------+    +--------+    +--------+
-> + *   +----------- +
-> + *
-> + *   when cna_scan_main_queue() returns (the secondary queue contains B and C):
-> + *
-> + *  A+----------------+    T+--------+
-> + *   |mcs:next        | ->  |mcs:next| -> NULL
-> + *   |mcs:locked=C.et | -+  |cna:nn=1|
-> + *   |cna:nn=1        |  |  +--------+
-> + *   +--------------- +  +-----+
-> + *                             \/
-> + *          B+--------+   C+--------+
-> + *           |mcs:next| -> |mcs:next| -+
-> + *           |cna:nn=0|    |cna:nn=2|  |
-> + *           +--------+    +--------+  |
-> + *               ^                     |
-> + *               +---------------------+
-> + *
-> + * The worst case complexity of the scan is O(n), where n is the number
-> + * of current waiters. However, the amortized complexity is close to O(1),
-> + * as the immediate successor is likely to be running on the same node once
-> + * threads from other nodes are moved to the secondary queue.
-> + *
-> + * @node      : Pointer to the MCS node of the lock holder
-> + * @pred_start: Pointer to the MCS node of the waiter whose successor should be
-> + *              the first node in the scan
-> + * Return     : LOCAL_WAITER_FOUND or encoded tail of the last scanned waiter
-> + */
-> +static u32 cna_scan_main_queue(struct mcs_spinlock *node,
-> +			       struct mcs_spinlock *pred_start)
-> +{
-> +	struct cna_node *cn = (struct cna_node *)node;
-> +	struct cna_node *cni = (struct cna_node *)READ_ONCE(pred_start->next);
-> +	struct cna_node *last;
-> +	int my_numa_node = cn->numa_node;
-> +
-> +	/* find any next waiter on 'our' NUMA node */
-> +	for (last = cn;
-> +	     cni && cni->numa_node != my_numa_node;
-> +	     last = cni, cni = (struct cna_node *)READ_ONCE(cni->mcs.next))
-> +		;
-> +
-> +	/* if found, splice any skipped waiters onto the secondary queue */
-> +	if (cni) {
-> +		if (last != cn)	/* did we skip any waiters? */
-> +			cna_splice_tail(node, node->next,
-> +					(struct mcs_spinlock *)last);
-> +		return LOCAL_WAITER_FOUND;
-> +	}
-> +
-> +	return last->encoded_tail;
-> +}
-> +
+Den 03-01-2020 kl. 21:23, skrev Linus Torvalds:
+> On Fri, Jan 3, 2020 at 11:11 AM Thomas Backlund <tmb@mageia.org> wrote:
+>> Does not seem to exist in public git yet, maybe you forgot to push ?
+> Not "forgot", but I've pulled a couple of other things, and done my
+> usual build tests etc. I tend batch up the pulls and pushes a bit,
+> sorry for not making that clear.
+
+
+Ok.
+
+> But I've pushed it all out now.
 >
-> +/*
-> + * Switch to the NUMA-friendly slow path for spinlocks when we have
-> + * multiple NUMA nodes in native environment, unless the user has
-> + * overridden this default behavior by setting the numa_spinlock flag.
-> + */
-> +void cna_configure_spin_lock_slowpath(void)
-Nit: There should be a __init.
-> +{
-> +	if ((numa_spinlock_flag == 1) ||
-> +	    (numa_spinlock_flag == 0 && nr_node_ids > 1 &&
-> +		    pv_ops.lock.queued_spin_lock_slowpath ==
-> +			native_queued_spin_lock_slowpath)) {
-> +		pv_ops.lock.queued_spin_lock_slowpath =
-> +		    __cna_queued_spin_lock_slowpath;
-> +
-> +		pr_info("Enabling CNA spinlock\n");
-> +	}
-> +}
+>             Linus
 
-Other than these two minor nits, the rests looks good to me.
 
-Cheers,
-Longman
+I got it, thanks
+
+--
+
+Thomas
+
 
