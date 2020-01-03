@@ -2,132 +2,124 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22977C3276C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 00:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA80C3276E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 00:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA2AB21734
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 00:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578012163;
-	bh=MCm4ryg6Vj10wx1GbzuQ+iCW7Z9FvdtsoL7urly7/GM=;
-	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
-	 From;
-	b=NMIF5wYZJQwO8NvRVhROxaNDCOUmNZabNIP4YbayP9LEsubMiQlpx97lDawwNsU7I
-	 B4zgevcnKbsSq4FyAFOLmp6RoFEDEiLbxd6oyja0I3is1oX8sE/ke/UEGPctiqBqEk
-	 aeuYAZobGkgh606oQ4kf+kjwEoiYRNaWbT1gcohg=
+	by mail.kernel.org (Postfix) with ESMTP id 1FEAF21734
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 00:44:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgACAmm (ORCPT
+        id S1726422AbgACAoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 19:42:42 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45198 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgACAmk (ORCPT
+        Thu, 2 Jan 2020 19:44:04 -0500
+Received: from lucky1.263xmail.com ([211.157.147.132]:43348 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgACAoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 19:42:40 -0500
-Received: by mail-pg1-f194.google.com with SMTP id b9so22658581pgk.12;
-        Thu, 02 Jan 2020 16:42:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
-         :references:in-reply-to;
-        bh=HyioXBGMqcLyFY2JDZv6ThS3RXGTigbfy51ANMut3ps=;
-        b=Sc3CyVcU6/AGm54p0XXNxboyeI6gizD/2cRP+H0OctZ/NtP17WDNxbVqFG4tl45MNk
-         C9rPUP81qBw1t3zhuXE9HjE8W9EBZGHvqQJtthdYxoBdUZ91CYE8krJDmXRsbjOy0omK
-         btZq3HLPFK6MLzhvWqOFP8UnjCHCE+8H7y4khnx8Cn+MRdnd2ayfmFAyjPU+tPFChkp6
-         ZgyQIUvevUn9tDMKPtI3KlHsBVl9r8yHXcZ8SwucGD6w9tR6USmGseakzToYwk0e7PDR
-         /h/eiV/ZEPqqVMuDtM8o6eggrVRvz7eqVDUx01Mtvj9v1nGZ1/Tahjr9q404qPVmPIHP
-         BsDQ==
-X-Gm-Message-State: APjAAAU6cN+hhad1hytKACqFsEYEI91/+oe3E8pqbkHND4khySAxwg4p
-        rdfw259IEelYGG86LJnbA6Q=
-X-Google-Smtp-Source: APXvYqyQ01PVHaEoHE1LVHKgmLKjo0PVf9o02f/5W8ZOiX0AXapPjCsNxxSOPSv2GtC8UFVjo0n2zg==
-X-Received: by 2002:a65:56c9:: with SMTP id w9mr89389023pgs.296.1578012159672;
-        Thu, 02 Jan 2020 16:42:39 -0800 (PST)
-Received: from localhost ([73.93.152.206])
-        by smtp.gmail.com with ESMTPSA id o7sm68110625pfg.138.2020.01.02.16.42.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 16:42:39 -0800 (PST)
-Message-ID: <5e0e8dff.1c69fb81.86508.5dbe@mx.google.com>
-Date:   Thu, 02 Jan 2020 16:42:38 -0800
-From:   Paul Burton <paulburton@kernel.org>
-To:     Paul Burton <paulburton@kernel.org>
-CC:     linux-mips@vger.kernel.org
-CC:     linux-kernel@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@canonical.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        stable@vger.kernel.org
-CC:     linux-mips@vger.kernel.org
-Subject: Re: [PATCH v2] MIPS: Avoid VDSO ABI breakage due to global register  variable
-References:  <20200102045038.102772-1-paulburton@kernel.org>
-In-Reply-To:  <20200102045038.102772-1-paulburton@kernel.org>
+        Thu, 2 Jan 2020 19:44:04 -0500
+X-Greylist: delayed 422 seconds by postgrey-1.27 at vger.kernel.org; Thu, 02 Jan 2020 19:44:02 EST
+Received: from localhost (unknown [192.168.167.209])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 47AD286504;
+        Fri,  3 Jan 2020 08:36:56 +0800 (CST)
+X-MAIL-GRAY: 1
+X-MAIL-DELIVERY: 0
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [172.16.12.37] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P24155T140478920242944S1578011815672162_;
+        Fri, 03 Jan 2020 08:36:56 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <4c9a2c64a65767a833e6315775956551>
+X-RL-SENDER: shawn.lin@rock-chips.com
+X-SENDER: lintao@rock-chips.com
+X-LOGIN-NAME: shawn.lin@rock-chips.com
+X-FST-TO: adrian.hunter@intel.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+Cc:     shawn.lin@rock-chips.com, ulf.hansson@linaro.org,
+        adrian.hunter@intel.com
+Subject: Re: [RFT PATCH 3/3] mmc: sdhci-of-arasan: Fix Command Queuing enable
+ handling
+To:     Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+References: <20191230092343.30692-1-faiz_abbas@ti.com>
+ <20191230092343.30692-4-faiz_abbas@ti.com>
+From:   Shawn Lin <shawn.lin@rock-chips.com>
+Message-ID: <5a7f96e5-58f0-083e-612f-7f5867d8eb66@rock-chips.com>
+Date:   Fri, 3 Jan 2020 08:36:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <20191230092343.30692-4-faiz_abbas@ti.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-Paul Burton wrote:
-> Declaring __current_thread_info as a global register variable has the
-> effect of preventing GCC from saving & restoring its value in cases
-> where the ABI would typically do so.
+On 2019/12/30 17:23, Faiz Abbas wrote:
+> There is a need to dump data from the buffer before enabling command
+> queuing because of leftover data from tuning. Reset the data lines to
+> fix this at the source.
 > 
-> To quote GCC documentation:
-> 
-> > If the register is a call-saved register, call ABI is affected: the
-> > register will not be restored in function epilogue sequences after the
-> > variable has been assigned. Therefore, functions cannot safely return
-> > to callers that assume standard ABI.
-> 
-> When our position independent VDSO is built for the n32 or n64 ABIs all
-> functions it exposes should be preserving the value of $gp/$28 for their
-> caller, but in the presence of the __current_thread_info global register
-> variable GCC stops doing so & simply clobbers $gp/$28 when calculating
-> the address of the GOT.
-> 
-> In cases where the VDSO returns success this problem will typically be
-> masked by the caller in libc returning & restoring $gp/$28 itself, but
-> that is by no means guaranteed. In cases where the VDSO returns an error
-> libc will typically contain a fallback path which will now fail
-> (typically with a bad memory access) if it attempts anything which
-> relies upon the value of $gp/$28 - eg. accessing anything via the GOT.
-> 
-> One fix for this would be to move the declaration of
-> __current_thread_info inside the current_thread_info() function,
-> demoting it from global register variable to local register variable &
-> avoiding inadvertently creating a non-standard calling ABI for the VDSO.
-> Unfortunately this causes issues for clang, which doesn't support local
-> register variables as pointed out by commit fe92da0f355e ("MIPS: Changed
-> current_thread_info() to an equivalent supported by both clang and GCC")
-> which introduced the global register variable before we had a VDSO to
-> worry about.
-> 
-> Instead, fix this by continuing to use the global register variable for
-> the kernel proper but declare __current_thread_info as a simple extern
-> variable when building the VDSO. It should never be referenced, and will
-> cause a link error if it is. This resolves the calling convention issue
-> for the VDSO without having any impact upon the build of the kernel
-> itself for either clang or gcc.
 
-Applied to mips-fixes.
+It seems to work for my platform by porting it to 4.19 LTS.
 
-> commit bbcc5672b006
-> https://git.kernel.org/mips/c/bbcc5672b006
+Tested-by: Shawn Lin <shawn.lin@rock-chips.com>
+
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> ---
+>   drivers/mmc/host/sdhci-of-arasan.c | 21 ++++-----------------
+>   1 file changed, 4 insertions(+), 17 deletions(-)
 > 
-> Signed-off-by: Paul Burton <paulburton@kernel.org>
-> Fixes: ebb5e78cc634 ("MIPS: Initial implementation of a VDSO")
-> Reported-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> Reviewed-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> Tested-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+> index e49b44b4d82e..1495ae72b902 100644
+> --- a/drivers/mmc/host/sdhci-of-arasan.c
+> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+> @@ -376,22 +376,8 @@ static void sdhci_arasan_dumpregs(struct mmc_host *mmc)
+>   	sdhci_dumpregs(mmc_priv(mmc));
+>   }
+>   
+> -static void sdhci_arasan_cqe_enable(struct mmc_host *mmc)
+> -{
+> -	struct sdhci_host *host = mmc_priv(mmc);
+> -	u32 reg;
+> -
+> -	reg = sdhci_readl(host, SDHCI_PRESENT_STATE);
+> -	while (reg & SDHCI_DATA_AVAILABLE) {
+> -		sdhci_readl(host, SDHCI_BUFFER);
+> -		reg = sdhci_readl(host, SDHCI_PRESENT_STATE);
+> -	}
+> -
+> -	sdhci_cqe_enable(mmc);
+> -}
+> -
+>   static const struct cqhci_host_ops sdhci_arasan_cqhci_ops = {
+> -	.enable         = sdhci_arasan_cqe_enable,
+> +	.enable         = sdhci_cqe_enable,
+>   	.disable        = sdhci_cqe_disable,
+>   	.dumpregs       = sdhci_arasan_dumpregs,
+>   };
+> @@ -410,8 +396,9 @@ static const struct sdhci_ops sdhci_arasan_cqe_ops = {
+>   static const struct sdhci_pltfm_data sdhci_arasan_cqe_pdata = {
+>   	.ops = &sdhci_arasan_cqe_ops,
+>   	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
+> -	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+> -			SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN,
+> +	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN	|
+> +		   SDHCI_QUIRK2_RESET_DATA_POST_TUNING	|
+> +		   SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN,
+>   };
+>   
+>   static struct sdhci_arasan_of_data sdhci_arasan_rk3399_data = {
+> 
 
-Thanks,
-    Paul
 
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paulburton@kernel.org to report it. ]
