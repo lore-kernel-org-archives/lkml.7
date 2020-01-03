@@ -2,127 +2,242 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B753FC00523
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 915A1C00523
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5D121734
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57C0221734
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:02:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="HVHMul+0"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="K6MZtvYi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbgACJAe (ORCPT
+        id S1727440AbgACJCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 04:00:34 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:49319 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgACJAb (ORCPT
+        Fri, 3 Jan 2020 04:02:21 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:60244 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726050AbgACJCU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 04:00:31 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 3 Jan 2020 04:02:20 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578042139; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=cOuStBIW64t8rbbT+AdioiTO1Ufaf24eO4l1n6XmGvE=;
+ b=K6MZtvYigYuYYC3iKy0hkcS9RV6slK1tDXcbSGRjl4He59mg0Via38sfMCvscDxjaTOU8DPo
+ TVnAY1TEvSCYgZFMuS73tSIMv74ks9dkMZ25RrpHmjId480EaaS+Lkx86d4I+X0dUm8fhLW+
+ Bzm7A08k7Lciz66amtGwqRBe9HE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e0f031a.7f77d9557b90-smtp-out-n02;
+ Fri, 03 Jan 2020 09:02:18 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 560FCC4479F; Fri,  3 Jan 2020 09:02:18 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id C6944230E1;
-        Fri,  3 Jan 2020 10:00:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1578042029;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cxest8tMtRZIdMS9+HLvWHLoP9WwYOR1xCl5Hh5xNZQ=;
-        b=HVHMul+06/ZqJth5tKFXAnG5dpRCq4qhYeW3NtIHl/pcOfI7lniaAEVLNvdgIL4ZRV/eMq
-        9pHtaXe2W30cM+5iMTQ3BfdBfegn/YY2xoQlPYHJQPRSOMvWYZOuIsf63p8cyeDFz5Hra6
-        pPajyaQkEQJ0mLNgU90PDN65qrDSUZI=
+        (Authenticated sender: rjliao)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9270BC433CB;
+        Fri,  3 Jan 2020 09:02:17 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
+Content-Type: text/plain; charset=UTF-8;
  format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 03 Jan 2020 10:00:27 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 2/2] clk: fsl-sai: new driver
-In-Reply-To: <20200102080929.0EE2C215A4@mail.kernel.org>
-References: <20191209233305.18619-1-michael@walle.cc>
- <20191209233305.18619-2-michael@walle.cc>
- <20191224080536.B0C99206CB@mail.kernel.org>
- <91275d33d6a7c9978a2c70545fde38cd@walle.cc>
- <20200102080929.0EE2C215A4@mail.kernel.org>
-Message-ID: <6b092a602b3b8cf09160b1dcb4a282e6@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.8
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: C6944230E1
-X-Spamd-Result: default: False [1.40 / 15.00];
-         ARC_NA(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[7];
-         NEURAL_HAM(-0.00)[-0.273];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Transfer-Encoding: 8bit
+Date:   Fri, 03 Jan 2020 17:02:17 +0800
+From:   Rocky Liao <rjliao@codeaurora.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-bluetooth-owner@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] Bluetooth: hci_qca: Add HCI command timeout
+ handling
+In-Reply-To: <fe752fb28dbefd87f103a4986df55e20@codeaurora.org>
+References: <20191225060317.5258-1-rjliao@codeaurora.org>
+ <20191227072130.29431-1-rjliao@codeaurora.org>
+ <20191227072130.29431-4-rjliao@codeaurora.org>
+ <20200102190727.GB89495@google.com>
+ <fe752fb28dbefd87f103a4986df55e20@codeaurora.org>
+Message-ID: <beb3178477c790e1a5b98e67471286c7@codeaurora.org>
+X-Sender: rjliao@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
-
->> >> +       parent_name = of_clk_get_parent_name(node, 0);
->> >
->> > Could this use the new way of specifying clk parents so that we don't
->> > have to query DT for parent names and just let the core framework do it
->> > whenever it needs to?
+在 2020-01-03 14:33，rjliao@codeaurora.org 写道：
+> 在 2020-01-03 03:07，Matthias Kaehlcke 写道：
+>> Hi Rocky,
 >> 
->> you mean specifying parent_data with .index = 0? Seems like
->> clk_composite
->> does not support this. The parent can only be specified by supplying 
->> the
->> clock names.
+>> On Fri, Dec 27, 2019 at 03:21:30PM +0800, Rocky Liao wrote:
+>>> This patch adds the HCI command timeout handling, it will trigger 
+>>> btsoc
+>>> to report its memory dump via vendor specific events when hit the 
+>>> defined
+>>> max HCI command timeout count. After all the memory dump VSE are 
+>>> sent, the
+>>> btsoc will also send a HCI_HW_ERROR event to host and this will cause 
+>>> a new
+>>> hci down/up process and the btsoc will be re-initialized.
+>>> 
+>>> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+>>> ---
+>>> 
+>>> Changes in v2:
+>>> - Fix build error
+>>> Changes in v3:
+>>> - Remove the function declaration
+>>> - Move the cmd_timeout() callback register to probe()
+>>> - Remove the redundant empty line
+>>> 
+>>>  drivers/bluetooth/hci_qca.c | 45 
+>>> +++++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 45 insertions(+)
+>>> 
+>>> diff --git a/drivers/bluetooth/hci_qca.c 
+>>> b/drivers/bluetooth/hci_qca.c
+>>> index ca0b38f065e5..026e2e2cdd30 100644
+>>> --- a/drivers/bluetooth/hci_qca.c
+>>> +++ b/drivers/bluetooth/hci_qca.c
+>>> @@ -47,6 +47,8 @@
+>>>  #define IBS_HOST_TX_IDLE_TIMEOUT_MS	2000
+>>>  #define CMD_TRANS_TIMEOUT_MS		100
+>>> 
+>>> +#define QCA_BTSOC_DUMP_CMD	0xFB
+>>> +
+>>>  /* susclk rate */
+>>>  #define SUSCLK_RATE_32KHZ	32768
+>>> 
+>>> @@ -56,6 +58,9 @@
+>>>  /* max retry count when init fails */
+>>>  #define QCA_MAX_INIT_RETRY_COUNT 3
+>>> 
+>>> +/* when hit the max cmd time out count, trigger btsoc dump */
+>>> +#define QCA_MAX_CMD_TIMEOUT_COUNT 3
 >> 
->> I could add that in a separate patch. What do you think about the
->> following new functions, where a driver can use parent_data instead
->> of parent_names.
+>> nit: MAX_CMD_TIMEOUTS?
+>> 
+>> Similar to QCA_MAX_INIT_RETRY_COUNT on which I commented earlier I 
+>> don't
+>> think the 'QCA' prefix adds value here. The constant is defined in the 
+>> driver
+>> itself and isn't related to hardware.
+>> 
 > 
-> I started doing this in
-> https://lkml.kernel.org/r/20190830150923.259497-1-sboyd@kernel.org but 
-> I
-> never got around to the composite clks. Sounds fine to add this new API
-> for your use case.
-
-Yeah took me a while to figure out what you've meant by the "new way" ;)
-Anyway, I've posted a v3 of this series with the new composite clock 
-API.
-
+> OK
 > 
+>>> +
+>>>  enum qca_flags {
+>>>  	QCA_IBS_ENABLED,
+>>>  	QCA_DROP_VENDOR_EVENT,
+>>> @@ -123,6 +128,8 @@ struct qca_data {
+>>>  	u64 rx_votes_off;
+>>>  	u64 votes_on;
+>>>  	u64 votes_off;
+>>> +
+>>> +	u32 cmd_timeout_cnt;
 >> 
->> +struct clk *clk_register_composite_pdata(struct device *dev, const 
->> char
->> *name,
->> +               const struct clk_parent_data *parent_data,
->> +               struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
->> +               struct clk_hw *rate_hw, const struct clk_ops 
->> *rate_ops,
->> +               struct clk_hw *gate_hw, const struct clk_ops 
->> *gate_ops,
->> +               unsigned long flags);
+>> nit: cmd_timeouts?
+>> 
 
-num_parents was missing here. added that in the v3.
+btusb is also using cmd_timeout_cnt, prefer to align with that
 
--michael
+>>>  };
+>>> 
+>>>  enum qca_speed_type {
+>>> @@ -1332,6 +1339,11 @@ static int qca_setup(struct hci_uart *hu)
+>>>  	if (!ret) {
+>>>  		set_bit(QCA_IBS_ENABLED, &qca->flags);
+>>>  		qca_debugfs_init(hdev);
+>>> +
+>>> +		/* clear the command time out count every time after
+>>> +		 * initializaiton done
+>>> +		 */
+>>> +		qca->cmd_timeout_cnt = 0;
+>>>  	} else if (ret == -ENOENT) {
+>>>  		/* No patch/nvm-config found, run with original fw/config */
+>>>  		ret = 0;
+>>> @@ -1462,6 +1474,38 @@ static int qca_power_off(struct hci_dev *hdev)
+>>>  	return 0;
+>>>  }
+>>> 
+>>> +static int qca_send_btsoc_dump_cmd(struct hci_uart *hu)
+>>> +{
+>>> +	int err = 0;
+>> 
+>> The variable is pointless, just return 0 at the end of the function.
+>> 
+> OK
+> 
+>>> +	struct sk_buff *skb = NULL;
+>>> +	struct qca_data *qca = hu->priv;
+>>> +
+>>> +	BT_DBG("hu %p sending btsoc dump command", hu);
+>>> +
+>>> +	skb = bt_skb_alloc(1, GFP_ATOMIC);
+>>> +	if (!skb) {
+>>> +		BT_ERR("Failed to allocate memory for qca dump command");
+>> 
+>> "These generic allocation functions all emit a stack dump on failure 
+>> when used
+>> without __GFP_NOWARN so there is no use in emitting an additional 
+>> failure
+>> message when NULL is returned."
+>> 
+>> Documentation/process/coding-style.rst
+>> 
+>> hence the logging is redundant, drop it.
+>> 
+> 
+> OK
+> 
+>>> +		return -ENOMEM;
+>>> +	}
+>>> +
+>>> +	skb_put_u8(skb, QCA_BTSOC_DUMP_CMD);
+>>> +
+>>> +	skb_queue_tail(&qca->txq, skb);
+>>> +
+>>> +	return err;
+>>> +}
+>>> +
+>>> +static void qca_cmd_timeout(struct hci_dev *hdev)
+>>> +{
+>>> +	struct hci_uart *hu = hci_get_drvdata(hdev);
+>>> +	struct qca_data *qca = hu->priv;
+>>> +
+>>> +	BT_ERR("hu %p hci cmd timeout count=0x%x", hu, 
+>>> ++qca->cmd_timeout_cnt);
+>> 
+>> Is there any particular reason to print the counter in hex instead of
+>> decimal?
+>> 
+>> Should this use bt_dev_err() since we have a hdev in this context?
+>> 
+> 
+> OK
+> 
+>>> +
+>>> +	if (qca->cmd_timeout_cnt >= QCA_MAX_CMD_TIMEOUT_COUNT)
+>>> +		qca_send_btsoc_dump_cmd(hu);
+>>> +}
+>>> +
+>>>  static int qca_regulator_enable(struct qca_serdev *qcadev)
+>>>  {
+>>>  	struct qca_power *power = qcadev->bt_power;
+>>> @@ -1605,6 +1649,7 @@ static int qca_serdev_probe(struct 
+>>> serdev_device *serdev)
+>>>  		hdev = qcadev->serdev_hu.hdev;
+>>>  		set_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks);
+>>>  		hdev->shutdown = qca_power_off;
+>>> +		hdev->cmd_timeout = qca_cmd_timeout;
+>>>  	}
+>>> 
+>>>  out:	return err;
+>>> --
+>>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>>> Forum, a Linux Foundation Collaborative Project
