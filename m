@@ -2,114 +2,128 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDBC6C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C486C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A021621734
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA4221734
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578063826;
-	bh=svn2F59Zv1RNQIY0XGuQrWuMfOrohVDPaoe/NOQgEqM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xi0HiruqS3qiRsJEGe1417zneZWvYwgS6eZZ6A4Ue+1sZs4fNZ55I7XtktoE3/jAq
-	 6+bLiAR4klKqTIo/3joFgTXyAa9PAD0s5s0wtzTMfqQpx8mqPU00htXxIS7tTN8oiP
-	 QEA5F7mmaEUJLjO9RILV5h41cef2mn6FD4YAm/cA=
+	s=default; t=1578063928;
+	bh=X5+ayP/0hzBeWDiiokaoXUV3s80MSoMhBga4b9S7sks=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=b+mHNEr4jFodk5cUrlw78S3qJyGnK1elMwkHgbFYQ6R36uP7fYz5BeA8tS7PnCbBw
+	 qkjv/qy8HErwkN/3i87XAYpTjY5EKQSp6nPPStujUbxdr4yAbFBBICVru+ZGC7xMr3
+	 +1KmU6YfyPlAnlRzCxgD9tPdU4jnsNVVxtUTfx+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgACPDq (ORCPT
+        id S1727866AbgACPF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 10:03:46 -0500
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:24433 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727686AbgACPDp (ORCPT
+        Fri, 3 Jan 2020 10:05:28 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37745 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgACPF1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 10:03:45 -0500
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 003F3dFi015419;
-        Sat, 4 Jan 2020 00:03:40 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 003F3dFi015419
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578063820;
-        bh=IhDXEO07k6n70uEE3QtqxuHGBeItquntGAry9r1k5rA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0KZ/seAv8LHTRu9ILzAYefyYQqH1Ym/5QwjUFB/cat47biwQsWvbyQbakgu/uTiF9
-         stu9Gd8XP2Ipvg2+1Dtsx7Y0NNqAJpxh6a0NSftHg1y0tFD0CAlCwOk6iCcPOIbSlA
-         7Ds0nrhYk7U882wbvdBeQ7yw5+k7QQbVhlsxoSqSU5LOv3/Um3/vDm9/BR2E6TqVOW
-         C5LUR9onLyyaljNEGhZZ9dFtXj6s/KcRdwkuKQyc78NSrg7bwcF67ttRoFKfnkIa15
-         Txt/oe105pAGiyXLrah53FgOQyWR4f/x479q6WC7NcS536kIdvD35KMfVB2xOjtejt
-         9VZhQLcS6Hqyg==
-X-Nifty-SrcIP: [209.85.222.45]
-Received: by mail-ua1-f45.google.com with SMTP id c14so13565844uaq.11;
-        Fri, 03 Jan 2020 07:03:40 -0800 (PST)
-X-Gm-Message-State: APjAAAUeGsKbzU9IvD1iJXHscZ1dfYmx2jBYlCDGm4JgLEqMF2W/fwuc
-        /s7QAk2V2LVtNDMGkuKluRxdDcGfKBo/S3PwyX8=
-X-Google-Smtp-Source: APXvYqySISfnCbUOlz7G2gjwAobqS5qjcexrFKOkKqFS2+6u8hudCn7xoGu/DvK6iqxIfyiIpv6d6DnoXseZm6jZjk8=
-X-Received: by 2002:ab0:6509:: with SMTP id w9mr51611068uam.121.1578063819075;
- Fri, 03 Jan 2020 07:03:39 -0800 (PST)
+        Fri, 3 Jan 2020 10:05:27 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w15so30110526wru.4;
+        Fri, 03 Jan 2020 07:05:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=X5+ayP/0hzBeWDiiokaoXUV3s80MSoMhBga4b9S7sks=;
+        b=OphOn0vxqlZHvxhxkC7gFavcg8KUzD6thbTzOhjFjaBwVoRmNB8VfO1KaKsg0+uWh+
+         eCTB8bn6Y+npzS6wYCGaH7avGMzRL6Z8oSNpa8+37wBkL1Ki8L6Vri+iwi2WOyo/akMv
+         yoxr9xRKDbeTnRvAXnejWI8qMajzpZnBwCZqk2qdxB1uIBuBf446N7e3ndG0BiWbekMj
+         GOp75VenYqte4WaHktOF38ySpwt8xWbaZ8butvV6BZisrj68WoDAzp1mwphj+rwUgwmi
+         iwm1zXUKYlE6W9BLg4YYhHGRFbC7RBy6r91fLogs9yP7sPwUf6ll13c9R+G8KyDZwhbt
+         2DpA==
+X-Gm-Message-State: APjAAAUi358JJHZqDOJgLAkj6I8kY6Zn6/RWpVESWfpzWgI70nlVDxkn
+        dWVyKre7jEh1W/kBJjBv5aM=
+X-Google-Smtp-Source: APXvYqygr/6TniLTdugF+WqW3lwlKrSR9oQWEVDaSy91cNcI3WRlF+4XJBcs5clvoogcu5G/pibIzg==
+X-Received: by 2002:adf:9144:: with SMTP id j62mr84290643wrj.168.1578063925002;
+        Fri, 03 Jan 2020 07:05:25 -0800 (PST)
+Received: from Johanness-MBP.fritz.box (ppp-46-244-218-95.dynamic.mnet-online.de. [46.244.218.95])
+        by smtp.gmail.com with ESMTPSA id e8sm60583844wrt.7.2020.01.03.07.05.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jan 2020 07:05:24 -0800 (PST)
+Subject: Re: [PATCH v5 2/2] zonefs: Add documentation
+To:     Damien Le Moal <damien.lemoal@wdc.com>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Naohiro Aota <naohiro.aota@wdc.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Hannes Reinecke <hare@suse.de>
+References: <20200103023445.1352524-1-damien.lemoal@wdc.com>
+ <20200103023445.1352524-3-damien.lemoal@wdc.com>
+From:   Johannes Thumshirn <jth@kernel.org>
+Message-ID: <e9df8ffe-96b2-f9c6-7f42-30f3b33097fb@kernel.org>
+Date:   Fri, 3 Jan 2020 16:05:23 +0100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.1
 MIME-Version: 1.0
-References: <20191230140747.50415-1-ardb@kernel.org>
-In-Reply-To: <20191230140747.50415-1-ardb@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 4 Jan 2020 00:03:03 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASVcLMPVECckdeGKgtgNy=48ONUDyKcbEF6wtvzaQ+jEQ@mail.gmail.com>
-Message-ID: <CAK7LNASVcLMPVECckdeGKgtgNy=48ONUDyKcbEF6wtvzaQ+jEQ@mail.gmail.com>
-Subject: Re: [PATCH] kbuild/deb-pkg: annotate libelf-dev dependency as :native
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Riku Voipio <riku.voipio@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200103023445.1352524-3-damien.lemoal@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 11:07 PM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> Cross compiling the x86 kernel on a non-x86 build machine produces
-> the following error when CONFIG_UNWINDER_ORC is enabled, regardless
-> of whether libelf-dev is installed or not.
->
->   dpkg-checkbuilddeps: error: Unmet build dependencies: libelf-dev
->   dpkg-buildpackage: warning: build dependencies/conflicts unsatisfied; aborting
->   dpkg-buildpackage: warning: (Use -d flag to override.)
->
-> Since this is a build time dependency for a build tool, we need to
-> depend on the native version of libelf-dev so add the appropriate
-> annotation.
->
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 
-Applied to linux-kbuild/fixes.
-Thanks.
+Am 03.01.20 um 03:34 schrieb Damien Le Moal:
+[...]
+> +
+> +Overview
+> +========
+> +
+> +zonefs is a very simple file system exposing each zone of a zoned block device
+> +as a file. Unlike a regular file system with zoned block device support (e.g.
+> +f2fs), zonefs does not hide the sequential write constraint of zoned block
+> +devices to the user. Files representing sequential write zones of the device
+> +must be written sequentially starting from the end of the file (append only
+> +writes).
+> +
+> +As such, zonefs is in essence closer to a raw block device access interface
+> +than to a full featured POSIX file system. The goal of zonefs is to simplify
+> +the implementation of zoned block device support in applications by replacing
+> +raw block device file accesses with a richer file API, avoiding relying on
+> +direct block device file ioctls which may be more obscure to developers. One
+> +example of this approach is the implementation of LSM (log-structured merge)
+> +tree structures (such as used in RocksDB and LevelDB) on zoned block devices
+> +by allowing SSTables to be stored in a zone file similarly to a regular file
+> +system rather than as a range of sectors of the entire disk. The introduction
+> +of the higher level construct "one file is one zone" can help reducing the
+> +amount of changes needed in the application as well as introducing support for
+> +different application programming languages.
 
+Maybe add a small subsection on what zoned block devices are? Given that
+we had at least one person looking at this series while it was on the
+list, who didn't really know what zoned block devices are and what the
+constraints of them are.
 
-> ---
->  scripts/package/mkdebian | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
-> index 7c230016b08d..357dc56bcf30 100755
-> --- a/scripts/package/mkdebian
-> +++ b/scripts/package/mkdebian
-> @@ -136,7 +136,7 @@ mkdir -p debian/source/
->  echo "1.0" > debian/source/format
->
->  echo $debarch > debian/arch
-> -extra_build_depends=", $(if_enabled_echo CONFIG_UNWINDER_ORC libelf-dev)"
-> +extra_build_depends=", $(if_enabled_echo CONFIG_UNWINDER_ORC libelf-dev:native)"
->  extra_build_depends="$extra_build_depends, $(if_enabled_echo CONFIG_SYSTEM_TRUSTED_KEYRING libssl-dev:native)"
->
->  # Generate a simple changelog template
-> --
-> 2.20.1
->
+[...]
+> +Zone files
+> +----------
+> +
+> +Zone files are named using the number of the zone they represent within the set
+> +of zones of a particular type. That is, both the "cnv" and "seq" directories
+> +contain files named "0", "1", "2", ... The file numbers also represent
+> +increasing zone start sector on the device.
+> +
+> +All read and write operations to zone files are not allowed beyond the file
+> +maximum size, that is, beyond the zone size. Any access exceeding the zone
+> +size is failed with the -EFBIG error.
+> +
+> +Creating, deleting, renaming or modifying any attribute of files and
+> +sub-directories is not allowed.
 
+Nit: Above you explicitly say it's failed with -EFBIG, maybe document
+the error here as well?
 
--- 
-Best Regards
-Masahiro Yamada
+Other than that,
+Reviewed-by: Johannes Thumshirn <jth@kernel.org>
+
