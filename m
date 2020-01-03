@@ -2,125 +2,234 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 848DAC32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 14:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C99C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 14:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5873D24650
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 14:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BDF92085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 14:12:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="Cei77W7y"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NwyTpLUa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgACOJq (ORCPT
+        id S1727825AbgACOMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 09:09:46 -0500
-Received: from mail-eopbgr20117.outbound.protection.outlook.com ([40.107.2.117]:49125
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727523AbgACOJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 09:09:46 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hDVNu0jAvGZtgqvtBMPHyssmUzt8teKYJVp9EogUGixCQrnudS/t+0+pyI7PfngXq5tUtlX9TCKxlbbJbIkrh1EnELJpxZ5YEEL3jzrjcbPoR3Lo1zqCMUZeYJIqk/MpdroiaBtUYWpJ+j6JEOboanttgFNYdkZScNmeeVS2mOYP2N0L6W6swTDfKDJ4oezy3kSKWts/+phMoTXxzSGLkc2Ob+DKtSiemIO30uW/iK/p6yZ4WbFU8LYFnWqaX4BwFZ6R05QkXIHx3BibOepG8eiEdVbcz7QoWhWRrt8TxeSIKYRgtL2m+SknL8xLPdS7V70LMr9DbQpEd2fxQby+jQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cShSEfCVVMryirvGQoXMoi9ICBV4ncbKW0T5GKBLZus=;
- b=dElmaKIiQvEGBUK+VDZRneQK+ccX/L9zZh5NvDWpfmSktdhMOoXLCANWt5LLi8MTls601n5ogvG3qA1LU/18sAR4KfTxjj7CmdUMU6aE9HmQeczsKmKS+gJkkW2vk7/Bii75tOdP94oIKYNaEqEXts4c1CFZVu0nmJC29fEZ5hZmgf7MECIYz5SvXjOUY03+F/lmVEpdTWl/nNexifltHY2nxGNIBk2hICNQKwS9EaVv56FJpeDGZuN9GeHPlA/gQzr0387I8tdEuXqI8No3sMKuklXWQdxM8LL+kiMS8VPD0CQlfAI4PNLz0aIIGlDZp5QMBV0MTSaw5SEiiOosJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cShSEfCVVMryirvGQoXMoi9ICBV4ncbKW0T5GKBLZus=;
- b=Cei77W7yw4M15hwooHm/dgMVLUoc9C7Ux2bJw3BzxkKj7B8frWzgVrjFOWkvWuumWd0mVVraj3L1VxDjyEQVD9uty0A+mo8/PktIs7g+/HCq89jEbbF6HE+O2ftOqIlIButsx+Ste4rNBox8P9nNik4x6Mi547/zqjMCN6SBzRg=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3339.eurprd02.prod.outlook.com (52.134.71.32) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2581.11; Fri, 3 Jan 2020 14:09:41 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::cd85:a8a5:da14:db13]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::cd85:a8a5:da14:db13%7]) with mapi id 15.20.2581.013; Fri, 3 Jan 2020
- 14:09:41 +0000
-Received: from [192.168.13.3] (213.112.138.4) by HE1PR0301CA0009.eurprd03.prod.outlook.com (2603:10a6:3:76::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.12 via Frontend Transport; Fri, 3 Jan 2020 14:09:40 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Biwen Li <biwen.li@nxp.com>,
-        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [RESEND v6,3/3] arm64: dts: fsl-ls208xa-rdb: fix an errata
- E-00013
-Thread-Topic: [RESEND v6,3/3] arm64: dts: fsl-ls208xa-rdb: fix an errata
- E-00013
-Thread-Index: AQHVuw9Ujcuz4BtLx0O84aN221u8IqfZCL8A
-Date:   Fri, 3 Jan 2020 14:09:41 +0000
-Message-ID: <d91b3dfa-e0dc-9697-b69b-463ee7a92945@axentia.se>
-References: <20191225103624.48342-1-biwen.li@nxp.com>
- <20191225103624.48342-3-biwen.li@nxp.com>
-In-Reply-To: <20191225103624.48342-3-biwen.li@nxp.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-x-originating-ip: [213.112.138.4]
-x-clientproxiedby: HE1PR0301CA0009.eurprd03.prod.outlook.com
- (2603:10a6:3:76::19) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 67fbf095-bcfb-4623-c957-08d790569384
-x-ms-traffictypediagnostic: DB3PR0202MB3339:
-x-microsoft-antispam-prvs: <DB3PR0202MB33398336D02189BCBE551728BC230@DB3PR0202MB3339.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0271483E06
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(346002)(376002)(366004)(39830400003)(199004)(189003)(66946007)(81166006)(2906002)(8676002)(4001150100001)(31696002)(31686004)(86362001)(8936002)(36756003)(81156014)(4326008)(66446008)(64756008)(66556008)(66476007)(6486002)(16576012)(316002)(956004)(2616005)(16526019)(186003)(508600001)(53546011)(4744005)(71200400001)(5660300002)(52116002)(110136005)(54906003)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3339;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: i53TtIKP7BRTfZoEB6SdimBIu/OYXiZRPG5SE04Aqy64RFZALU8ajFp5jpoQKEYiVkGqb/44Z8L91jTWhJPodarLrqrpR2UVfvcTi+9qMJVLcZ8ZjDeHTvnSfIox4KLvNkgRS4f428WnRAttYfk5k9U+pNtOtYxa9jmSc7AHpH2eFsbBQCPaGI8c7b/HCCYObL7CnuhnsO4nGZKf0lRxRmON12HrQg38uwHf/7/k8l8o8PoZUXN8GgFwQe0OfNrfwgkPuvB5q4pX51SMampluE+OEkJm+TngsF690gRmx1Nz7oFFBlTpJH+MYGOpyeHdwN4m8nNVzr8niUGSqBZfWSst6kwutNyDPX+izIPC2lNERWiDSM6v7Od1PRXTUscihhqfORW1tVjKNLXeEHVoMwwTqzG4EzC7yxYuHRNMrufh9DjF7enHQTBigwZOqu8B
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0182C24504F98C44BE63F353BF72716F@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 3 Jan 2020 09:12:48 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45249 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727523AbgACOMs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 09:12:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578060766;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CGMg0pHtt4SVc4uhGk+7pIjVLdzZuIJr8uS5jcpc3MY=;
+        b=NwyTpLUaQhy4aQcSi0ZCPkgtNMs80Ye0HTR1rp9p9oDeBngMFPadajBLTPZgz2un4KS4ha
+        x6/9ywk5L6ymgZ4epnsqc9K5wbDc4kaso+TSHWrv4QQVGymFz8MvFHZYPaTFFg9zIil/vy
+        EIfsM2YkyzyxLcEMn+m0q059Z1E0Heo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-385--FlagLmkMOm7LZJqTa9NNQ-1; Fri, 03 Jan 2020 09:12:43 -0500
+X-MC-Unique: -FlagLmkMOm7LZJqTa9NNQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 29D92801A0D;
+        Fri,  3 Jan 2020 14:12:42 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 11FFE386;
+        Fri,  3 Jan 2020 14:12:36 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 9A02E2202E9; Fri,  3 Jan 2020 09:12:35 -0500 (EST)
+Date:   Fri, 3 Jan 2020 09:12:35 -0500
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
+        stefanha@redhat.com, dgilbert@redhat.com,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH 02/19] dax: Pass dax_dev to dax_writeback_mapping_range()
+Message-ID: <20200103141235.GA13350@redhat.com>
+References: <20190821175720.25901-1-vgoyal@redhat.com>
+ <20190821175720.25901-3-vgoyal@redhat.com>
+ <20190826115316.GB21051@infradead.org>
+ <20190826203326.GB13860@redhat.com>
+ <20190826205829.GC13860@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 67fbf095-bcfb-4623-c957-08d790569384
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jan 2020 14:09:41.4563
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4VvNziGgr53XnubFZ7BZRx+NvnF+jpN6bgDU7CmU0HEFBYrokHQRHNSoc4G1N2sP
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3339
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190826205829.GC13860@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0xMi0yNSAxMTozNiwgQml3ZW4gTGkgd3JvdGU6DQo+IFNwZWNpZnkgYSBjaGFubmVs
-IHplcm8gaW4gaWRsZSBzdGF0ZSB0bw0KPiBhdm9pZCBlbnRlcnJpbmcgdHJpLXN0YXRlZCBzdGF0
-ZSBmb3IgUENBOTU0Ny4NCj4gQWJvdXQgRS0wMDAxMzoNCj4gCS0gRGVzY3JpcHRpb246IEkyQzEg
-YW5kIEkyQzMgYnVzZXMNCj4gCSAgYXJlIG1pc3NpbmcgcHVsbC11cC4NCj4gCS0gSW1wYWN0OiBX
-aGVuIHRoZSBQQ0E5NTR4IGRldmljZSBpcyB0cmktc3RhdGVkLCB0aGUgSTJDIGJ1cw0KPiAJICB3
-aWxsIGZsb2F0LiBUaGlzIG1ha2VzIHRoZSBJMkMgYnVzIGFuZCBpdHMgYXNzb2NpYXRlZA0KPiAJ
-ICBkb3duc3RyZWFtIGRldmljZXMgaW5hY2Nlc3NpYmxlLg0KPiAJLSBIYXJkd2FyZSBmaXg6IFBv
-cHVsYXRlIHJlc2lzdG9ycyBSMTg5IGFuZCBSMTkwIGZvciBJMkMxDQo+IAkgIGFuZCByZXNpc3Rv
-cnMgUjIyOCBhbmQgUjIyOSBmb3IgSTJDMy4NCj4gCS0gU29mdHdhcmUgZml4OiBSZW1vdmUgdGhl
-IHRyaS1zdGF0ZSBvcHRpb24gZnJvbSB0aGUgUENBOTU0eA0KPiAJICBkcml2ZXIoUENBOTU0eCBh
-bHdheXMgb24gZW5hYmxlIHN0YXR1cywgc3BlY2lmeSBhDQo+IAkgIGNoYW5uZWwgemVybyBpbiBk
-dHMgdG8gZml4IHRoZSBlcnJhdGEgRS0wMDAxMykuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBCaXdl
-biBMaSA8Yml3ZW4ubGlAbnhwLmNvbT4NCg0KRm9yIHRoaXMgcGF0Y2gsIGdldF9tYWludGFpbmVy
-LnBsIHN1Z2dlc3RzIGEgZmV3IG1vcmUgcmVjaXBpZW50cyB0aGF0DQp5b3UgbmVlZCB0byBzZWVr
-IHJldmlld3MvYWNrcyBmcm9tLg0KDQpDaGVlcnMsDQpQZXRlcg0K
+On Mon, Aug 26, 2019 at 04:58:29PM -0400, Vivek Goyal wrote:
+> On Mon, Aug 26, 2019 at 04:33:26PM -0400, Vivek Goyal wrote:
+> > On Mon, Aug 26, 2019 at 04:53:16AM -0700, Christoph Hellwig wrote:
+> > > On Wed, Aug 21, 2019 at 01:57:03PM -0400, Vivek Goyal wrote:
+> > > > Right now dax_writeback_mapping_range() is passed a bdev and dax_dev
+> > > > is searched from that bdev name.
+> > > > 
+> > > > virtio-fs does not have a bdev. So pass in dax_dev also to
+> > > > dax_writeback_mapping_range(). If dax_dev is passed in, bdev is not
+> > > > used otherwise dax_dev is searched using bdev.
+> > > 
+> > > Please just pass in only the dax_device and get rid of the block device.
+> > > The callers should have one at hand easily, e.g. for XFS just call
+> > > xfs_find_daxdev_for_inode instead of xfs_find_bdev_for_inode.
+> > 
+> > Sure. Here is the updated patch.
+> > 
+> > This patch can probably go upstream independently. If you are fine with
+> > the patch, I can post it separately for inclusion.
+> 
+> Forgot to update function declaration in case of !CONFIG_FS_DAX. Here is
+> the updated patch.
+> 
+> Subject: dax: Pass dax_dev instead of bdev to dax_writeback_mapping_range()
+> 
+> As of now dax_writeback_mapping_range() takes "struct block_device" as a
+> parameter and dax_dev is searched from bdev name. This also involves taking
+> a fresh reference on dax_dev and putting that reference at the end of
+> function.
+> 
+> We are developing a new filesystem virtio-fs and using dax to access host
+> page cache directly. But there is no block device. IOW, we want to make
+> use of dax but want to get rid of this assumption that there is always
+> a block device associated with dax_dev.
+> 
+> So pass in "struct dax_device" as parameter instead of bdev.
+> 
+> ext2/ext4/xfs are current users and they already have a reference on
+> dax_device. So there is no need to take reference and drop reference to
+> dax_device on each call of this function.
+> 
+> Suggested-by: Christoph Hellwig <hch@infradead.org>
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+
+Hi Dan,
+
+Ping for this patch. I see christoph and Jan acked it. Can we take it. Not
+sure how to get ack from ext4 developers.
+
+Thanks
+Vivek
+
+> ---
+>  fs/dax.c            |    8 +-------
+>  fs/ext2/inode.c     |    5 +++--
+>  fs/ext4/inode.c     |    2 +-
+>  fs/xfs/xfs_aops.c   |    2 +-
+>  include/linux/dax.h |    4 ++--
+>  5 files changed, 8 insertions(+), 13 deletions(-)
+> 
+> Index: rhvgoyal-linux-fuse/fs/dax.c
+> ===================================================================
+> --- rhvgoyal-linux-fuse.orig/fs/dax.c	2019-08-26 16:45:26.093710196 -0400
+> +++ rhvgoyal-linux-fuse/fs/dax.c	2019-08-26 16:45:29.462710196 -0400
+> @@ -936,12 +936,11 @@ static int dax_writeback_one(struct xa_s
+>   * on persistent storage prior to completion of the operation.
+>   */
+>  int dax_writeback_mapping_range(struct address_space *mapping,
+> -		struct block_device *bdev, struct writeback_control *wbc)
+> +		struct dax_device *dax_dev, struct writeback_control *wbc)
+>  {
+>  	XA_STATE(xas, &mapping->i_pages, wbc->range_start >> PAGE_SHIFT);
+>  	struct inode *inode = mapping->host;
+>  	pgoff_t end_index = wbc->range_end >> PAGE_SHIFT;
+> -	struct dax_device *dax_dev;
+>  	void *entry;
+>  	int ret = 0;
+>  	unsigned int scanned = 0;
+> @@ -952,10 +951,6 @@ int dax_writeback_mapping_range(struct a
+>  	if (!mapping->nrexceptional || wbc->sync_mode != WB_SYNC_ALL)
+>  		return 0;
+>  
+> -	dax_dev = dax_get_by_host(bdev->bd_disk->disk_name);
+> -	if (!dax_dev)
+> -		return -EIO;
+> -
+>  	trace_dax_writeback_range(inode, xas.xa_index, end_index);
+>  
+>  	tag_pages_for_writeback(mapping, xas.xa_index, end_index);
+> @@ -976,7 +971,6 @@ int dax_writeback_mapping_range(struct a
+>  		xas_lock_irq(&xas);
+>  	}
+>  	xas_unlock_irq(&xas);
+> -	put_dax(dax_dev);
+>  	trace_dax_writeback_range_done(inode, xas.xa_index, end_index);
+>  	return ret;
+>  }
+> Index: rhvgoyal-linux-fuse/include/linux/dax.h
+> ===================================================================
+> --- rhvgoyal-linux-fuse.orig/include/linux/dax.h	2019-08-26 16:45:26.094710196 -0400
+> +++ rhvgoyal-linux-fuse/include/linux/dax.h	2019-08-26 16:46:08.101710196 -0400
+> @@ -141,7 +141,7 @@ static inline void fs_put_dax(struct dax
+>  
+>  struct dax_device *fs_dax_get_by_bdev(struct block_device *bdev);
+>  int dax_writeback_mapping_range(struct address_space *mapping,
+> -		struct block_device *bdev, struct writeback_control *wbc);
+> +		struct dax_device *dax_dev, struct writeback_control *wbc);
+>  
+>  struct page *dax_layout_busy_page(struct address_space *mapping);
+>  dax_entry_t dax_lock_page(struct page *page);
+> @@ -180,7 +180,7 @@ static inline struct page *dax_layout_bu
+>  }
+>  
+>  static inline int dax_writeback_mapping_range(struct address_space *mapping,
+> -		struct block_device *bdev, struct writeback_control *wbc)
+> +		struct dax_device *dax_dev, struct writeback_control *wbc)
+>  {
+>  	return -EOPNOTSUPP;
+>  }
+> Index: rhvgoyal-linux-fuse/fs/xfs/xfs_aops.c
+> ===================================================================
+> --- rhvgoyal-linux-fuse.orig/fs/xfs/xfs_aops.c	2019-08-26 16:45:26.094710196 -0400
+> +++ rhvgoyal-linux-fuse/fs/xfs/xfs_aops.c	2019-08-26 16:45:29.471710196 -0400
+> @@ -1120,7 +1120,7 @@ xfs_dax_writepages(
+>  {
+>  	xfs_iflags_clear(XFS_I(mapping->host), XFS_ITRUNCATED);
+>  	return dax_writeback_mapping_range(mapping,
+> -			xfs_find_bdev_for_inode(mapping->host), wbc);
+> +			xfs_find_daxdev_for_inode(mapping->host), wbc);
+>  }
+>  
+>  STATIC int
+> Index: rhvgoyal-linux-fuse/fs/ext4/inode.c
+> ===================================================================
+> --- rhvgoyal-linux-fuse.orig/fs/ext4/inode.c	2019-08-26 16:45:26.093710196 -0400
+> +++ rhvgoyal-linux-fuse/fs/ext4/inode.c	2019-08-26 16:45:29.475710196 -0400
+> @@ -2992,7 +2992,7 @@ static int ext4_dax_writepages(struct ad
+>  	percpu_down_read(&sbi->s_journal_flag_rwsem);
+>  	trace_ext4_writepages(inode, wbc);
+>  
+> -	ret = dax_writeback_mapping_range(mapping, inode->i_sb->s_bdev, wbc);
+> +	ret = dax_writeback_mapping_range(mapping, sbi->s_daxdev, wbc);
+>  	trace_ext4_writepages_result(inode, wbc, ret,
+>  				     nr_to_write - wbc->nr_to_write);
+>  	percpu_up_read(&sbi->s_journal_flag_rwsem);
+> Index: rhvgoyal-linux-fuse/fs/ext2/inode.c
+> ===================================================================
+> --- rhvgoyal-linux-fuse.orig/fs/ext2/inode.c	2019-08-26 16:45:26.093710196 -0400
+> +++ rhvgoyal-linux-fuse/fs/ext2/inode.c	2019-08-26 16:45:29.477710196 -0400
+> @@ -957,8 +957,9 @@ ext2_writepages(struct address_space *ma
+>  static int
+>  ext2_dax_writepages(struct address_space *mapping, struct writeback_control *wbc)
+>  {
+> -	return dax_writeback_mapping_range(mapping,
+> -			mapping->host->i_sb->s_bdev, wbc);
+> +	struct ext2_sb_info *sbi = EXT2_SB(mapping->host->i_sb);
+> +
+> +	return dax_writeback_mapping_range(mapping, sbi->s_daxdev, wbc);
+>  }
+>  
+>  const struct address_space_operations ext2_aops = {
+
