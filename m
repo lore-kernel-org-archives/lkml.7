@@ -8,142 +8,158 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF8BC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 03:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2C1C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 03:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88BBF2051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 03:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AC0D206DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 03:46:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AC+bR15Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SyToewWL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbgACDkf (ORCPT
+        id S1727133AbgACDqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 22:40:35 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41702 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgACDkf (ORCPT
+        Thu, 2 Jan 2020 22:46:01 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45664 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbgACDqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 22:40:35 -0500
-Received: by mail-pl1-f194.google.com with SMTP id bd4so18572872plb.8
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 19:40:34 -0800 (PST)
+        Thu, 2 Jan 2020 22:46:01 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b9so22824508pgk.12
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 19:46:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bB4+hfTmQh6Iiur+hCsUFwSITbgu+0W5H6DxFGQr26k=;
-        b=AC+bR15QgXhIl4207I2am+yh3LmmjfutQT4oa1Gpl1lVdPM9G66tO7DynPod4h+uwI
-         YYaCxHnh6PBx7kJf6ttKl2k0UaPNtNrDCawfxDe+w5T67ug7m8PUf7B3DkRqQbC9URFU
-         zvEc1kuj6rzL1YeCy97rJ/bBjviWddttnLnpoUHDMaIHZYybyGk25ca/QJVW4u+lt1AB
-         IeBHL0QMMClL/omq031ZcdEUFztyxkiXR3D/+ip/zHvRmiOpiNlu+YbiBPSv997+x0li
-         KgFT2dAGW5hEPwFpk+J6M04VJ/Wz0iYxkyD2SO/1nUpkiplWT5YT45Yy4wt04DM/Jcdm
-         XRYg==
+        h=from:to:cc:subject:date:message-id;
+        bh=XGzDwEKryl/njIEsg+eGczbmkTamUbnwIpvGpsNWo24=;
+        b=SyToewWLwMb/Q8NsXcEypx9gH0lNVlm+4vKTWg9+WdHhDut2aZCy+rBvmk1/+7Emtl
+         42SUQsmu3vIPZpeMpGSpwo/u/h8fEmG/CzX75+HKjbJ04gM7t+SKqbbOvosnIpPojyuL
+         JKeETirGcMXcYlbPF+jcmTcjisIthyXBpwgUFHs2WZtk5wpalI5R6bzvi0OngEci64LQ
+         lwqDFWpuT7P08dpUirumpmdegy13c/qwHQ9BOb3pBH42ZhDW/ffGmKVBMkfhT1W7qCyk
+         03RfJZiOzuWzDPhN76Jrrk2QrEth63NLic15qDXKCR32x83kqeidsXN6GNxYn5o9Mqgg
+         iIqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bB4+hfTmQh6Iiur+hCsUFwSITbgu+0W5H6DxFGQr26k=;
-        b=Qpf4TdymP74FYJQjBYcNvETrgtQ4Bgx44DwgM8hPrDBrUt6SWU8DXJ/gYGTKFjll7j
-         TxG71K5niwddIewwRuTDfKlQJmNVVDNeUNppbSnFvVoEa19NZL2JQ6ksllSt7goTns/I
-         kRIC5P+zUoew64UlLldm5D1nqEspcqpqR+sEBEb7VnJvCK2RSEmZN69rOc8fasvZPcOC
-         BCiggCmOKGH1KtRltPCPd1bfgmqph9j6g8c3MZGYRTAWIj1vuMEc1Q1b1ZuzqTVRoDBY
-         OjFPYuql+VqWGZYbfxgjBqiihXB5PZux5v4a6Vg/o5VDF2bP2UQlu0JD91bxLyoHc95y
-         mHwA==
-X-Gm-Message-State: APjAAAW71CcGehag8cL+uhKNtK8Zw8NAbLaF3CTLAINzxTgNQ+Z8KMdH
-        9kX/HBZn9Me2PiycGBvK0e8REfc9qaokbA==
-X-Google-Smtp-Source: APXvYqwwdV1BZ9d5XfBCTqZReBZ4cECc7BXTQQigXOelwL/cbwDEBXY9qLRtm+jmWdqOMNDGzATgPA==
-X-Received: by 2002:a17:902:a706:: with SMTP id w6mr86415065plq.79.1578022834100;
-        Thu, 02 Jan 2020 19:40:34 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=XGzDwEKryl/njIEsg+eGczbmkTamUbnwIpvGpsNWo24=;
+        b=OyECOrm3ZLai+h8GKs3ZXAmHKd7HA4cyadwYu8f4sLqt0Oxt47BUWPjFdPGBVuUTnX
+         ZCD7CzPbOp18UAiQvKB1U7eDlG86Ci8VFXWcYwyYjR1ujcb2uqLQ9SghLMHiHcPhr2bS
+         36rbtdF+62ZehSMCx3X3EP6k/iMNspeZ7X6oC8IOZcXv3r2df5gW5Ice3dhlT/YIBBXF
+         uQvFtLP66zCYLY2VyoYtHW9P7jmkmFnly3Jb5qQwqU90b9TY3baSEslfgJ7R/A3vwhXe
+         LDl3/vM1s7GUPheIARAoyJnA6asG7+LTB/NluGg659caFbAsgK3bmIV4EkJgu3+oArcr
+         /WQQ==
+X-Gm-Message-State: APjAAAUwqfuxLypykYcvAZ+9TnVgq7TUueB9UM1hyyJz+dU409mSw3tK
+        6ikpKCe0+WYnd3YKJAOPKy6+a6Cg/kR/hQ==
+X-Google-Smtp-Source: APXvYqwuzgCuL9MdQUcSAqoCuGCNWz7idXlWIdQauSLL3yrSUda3WTyXiy/9JPi3R6PKYu3yxE2Esg==
+X-Received: by 2002:a63:5243:: with SMTP id s3mr90794069pgl.449.1578023159961;
+        Thu, 02 Jan 2020 19:45:59 -0800 (PST)
 Received: from ZB-PF114XEA.360buyad.local ([103.90.76.242])
-        by smtp.gmail.com with ESMTPSA id g26sm56881618pfo.130.2020.01.02.19.40.30
+        by smtp.gmail.com with ESMTPSA id z4sm12561907pjn.29.2020.01.02.19.45.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 19:40:33 -0800 (PST)
+        Thu, 02 Jan 2020 19:45:59 -0800 (PST)
 From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     x86@kernel.org, Zhenzhong Duan <zhenzhong.duan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v2] x86/boot/KASLR: Fix unused variable warning
-Date:   Fri,  3 Jan 2020 11:39:29 +0800
-Message-Id: <20200103033929.4956-1-zhenzhong.duan@gmail.com>
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH RESEND] ttyprintk: fix a potential sleeping in interrupt context issue
+Date:   Fri,  3 Jan 2020 11:45:41 +0800
+Message-Id: <20200103034541.5302-1-zhenzhong.duan@gmail.com>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Local variable 'i' is referenced only when CONFIG_MEMORY_HOTREMOVE and
-CONFIG_ACPI are defined, but definition of variable 'i' is out of guard.
-If any of the two macros is undefined, below warning triggers during
-build, fix it by moving 'i' in the guard.
+Google syzbot reports:
+BUG: sleeping function called from invalid context at
+kernel/locking/mutex.c:938
+in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 0, name: swapper/1
+1 lock held by swapper/1/0:
+...
+Call Trace:
+  <IRQ>
+  dump_stack+0x197/0x210
+  ___might_sleep.cold+0x1fb/0x23e
+  __might_sleep+0x95/0x190
+  __mutex_lock+0xc5/0x13c0
+  mutex_lock_nested+0x16/0x20
+  tpk_write+0x5d/0x340
+  resync_tnc+0x1b6/0x320
+  call_timer_fn+0x1ac/0x780
+  run_timer_softirq+0x6c3/0x1790
+  __do_softirq+0x262/0x98c
+  irq_exit+0x19b/0x1e0
+  smp_apic_timer_interrupt+0x1a3/0x610
+  apic_timer_interrupt+0xf/0x20
+  </IRQ>
 
-arch/x86/boot/compressed/kaslr.c:698:6: warning: unused variable ‘i’ [-Wunused-variable]
+Fix it by using spinlock in process context instead of mutex and having
+interrupt disabled in critical section.
 
-Also use true/false instead of 1/0 for boolean return.
-
-Fixes: 690eaa532057 ("x86/boot/KASLR: Limit KASLR to extract the kernel in immovable memory only")
 Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
-v2: update description per Boris.
+ drivers/char/ttyprintk.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
- arch/x86/boot/compressed/kaslr.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index d7408af55738..fff24a55bfd5 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -695,7 +695,6 @@ static bool process_mem_region(struct mem_vector *region,
- 			       unsigned long long minimum,
- 			       unsigned long long image_size)
+diff --git a/drivers/char/ttyprintk.c b/drivers/char/ttyprintk.c
+index 4f24e46ebe7c..56db949a7b70 100644
+--- a/drivers/char/ttyprintk.c
++++ b/drivers/char/ttyprintk.c
+@@ -15,10 +15,11 @@
+ #include <linux/serial.h>
+ #include <linux/tty.h>
+ #include <linux/module.h>
++#include <linux/spinlock.h>
+ 
+ struct ttyprintk_port {
+ 	struct tty_port port;
+-	struct mutex port_write_mutex;
++	spinlock_t spinlock;
+ };
+ 
+ static struct ttyprintk_port tpk_port;
+@@ -99,11 +100,12 @@ static int tpk_open(struct tty_struct *tty, struct file *filp)
+ static void tpk_close(struct tty_struct *tty, struct file *filp)
  {
--	int i;
- 	/*
- 	 * If no immovable memory found, or MEMORY_HOTREMOVE disabled,
- 	 * use @region directly.
-@@ -705,12 +704,13 @@ static bool process_mem_region(struct mem_vector *region,
+ 	struct ttyprintk_port *tpkp = tty->driver_data;
++	unsigned long flags;
  
- 		if (slot_area_index == MAX_SLOT_AREA) {
- 			debug_putstr("Aborted e820/efi memmap scan (slot_areas full)!\n");
--			return 1;
-+			return true;
- 		}
--		return 0;
-+		return false;
- 	}
+-	mutex_lock(&tpkp->port_write_mutex);
++	spin_lock_irqsave(&tpkp->spinlock, flags);
+ 	/* flush tpk_printk buffer */
+ 	tpk_printk(NULL, 0);
+-	mutex_unlock(&tpkp->port_write_mutex);
++	spin_unlock_irqrestore(&tpkp->spinlock, flags);
  
- #if defined(CONFIG_MEMORY_HOTREMOVE) && defined(CONFIG_ACPI)
-+	int i;
- 	/*
- 	 * If immovable memory found, filter the intersection between
- 	 * immovable memory and @region.
-@@ -734,11 +734,11 @@ static bool process_mem_region(struct mem_vector *region,
- 
- 		if (slot_area_index == MAX_SLOT_AREA) {
- 			debug_putstr("Aborted e820/efi memmap scan when walking immovable regions(slot_areas full)!\n");
--			return 1;
-+			return true;
- 		}
- 	}
- #endif
--	return 0;
-+	return false;
+ 	tty_port_close(&tpkp->port, tty, filp);
  }
+@@ -115,13 +117,14 @@ static int tpk_write(struct tty_struct *tty,
+ 		const unsigned char *buf, int count)
+ {
+ 	struct ttyprintk_port *tpkp = tty->driver_data;
++	unsigned long flags;
+ 	int ret;
  
- #ifdef CONFIG_EFI
+ 
+ 	/* exclusive use of tpk_printk within this tty */
+-	mutex_lock(&tpkp->port_write_mutex);
++	spin_lock_irqsave(&tpkp->spinlock, flags);
+ 	ret = tpk_printk(buf, count);
+-	mutex_unlock(&tpkp->port_write_mutex);
++	spin_unlock_irqrestore(&tpkp->spinlock, flags);
+ 
+ 	return ret;
+ }
+@@ -171,7 +174,7 @@ static int __init ttyprintk_init(void)
+ {
+ 	int ret = -ENOMEM;
+ 
+-	mutex_init(&tpk_port.port_write_mutex);
++	spin_lock_init(&tpk_port.spinlock);
+ 
+ 	ttyprintk_driver = tty_alloc_driver(1,
+ 			TTY_DRIVER_RESET_TERMIOS |
 -- 
 2.17.1
 
