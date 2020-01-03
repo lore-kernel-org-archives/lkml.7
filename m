@@ -2,87 +2,92 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB43AC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 270E3C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE8BF222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:01:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578088917;
-	bh=9+eJqxZTWrHj1YKwG+bK9Q1jlHHSSYrl5YzXYFmRmq4=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=dujjP09yvxtl6zkhMcLtHXGuKUW/TSdOg2pKjdFfPy+Q1W5L35AbD7FZBFGIJ7kPU
-	 RnKrYK6Txb0y3F3wL7PlCSYtHhA11xRmwzIb2Xbf6fH/GdBjJO36rVR4trOzaObQCH
-	 9bMZDJFZn4gG3yOyL3iwjpXFwb9y4/1AjV7s0e94=
+	by mail.kernel.org (Postfix) with ESMTP id F14DF206DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:03:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="NZiv/ZNo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgACWB4 (ORCPT
+        id S1728807AbgACWDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 17:01:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58586 "EHLO mail.kernel.org"
+        Fri, 3 Jan 2020 17:03:38 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:55506 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728657AbgACWB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 17:01:56 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728657AbgACWDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 17:03:37 -0500
+Received: from zn.tnic (p200300EC2F00E700329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f00:e700:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38144206DB;
-        Fri,  3 Jan 2020 22:01:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578088915;
-        bh=9+eJqxZTWrHj1YKwG+bK9Q1jlHHSSYrl5YzXYFmRmq4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=kplFe31bkeWISEZVPbwzxZk3RGoIWxhrGWuu1DLXh+bEbwAY5Utl2mkKt6cjpAZVt
-         8LjnT0Oe6nvpzLeXuL/+ZxZjAD8/VOSaVoGYFpIPVOcS0PmyoAK4XKP5wWeGQrkbKc
-         s8J/vJvAN7l8W8hETSkwswUa3Su6m1zs0RhjbU9c=
-Subject: Re: [PATCH 4.14 00/91] 4.14.162-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200102220356.856162165@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <20b4f395-56e1-dba6-7a2f-5bf91f18b149@kernel.org>
-Date:   Fri, 3 Jan 2020 15:01:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7E2A71EC0A0E;
+        Fri,  3 Jan 2020 23:03:35 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1578089015;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZPtBabqcLpHUTGg04+kMuWfsg7YS1k6qADzdYM5fMXk=;
+        b=NZiv/ZNoDXRqTzjbEFde8fnUF2p1Vn55pp/Oaol93N07geQXRysUTF0ie0QHKBnXsWxiGe
+        fV0eYC4W7khjYVKpMKeT8CRdeVb6PvARplduZpD5GLsbKxWbWzAwBTmEgOVd7ke84KYxK2
+        QzBLNlIsfgiSCXy4sM9tW+JA4Mh4SDE=
+Date:   Fri, 3 Jan 2020 23:03:28 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jan =?utf-8?Q?H=2E_Sch=C3=B6nherr?= <jschoenh@amazon.de>
+Cc:     Yazen Ghannam <yazen.ghannam@amd.com>,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: Re: [PATCH v2 6/6] x86/mce: Dynamically register default MCE handler
+Message-ID: <20200103220328.GF5099@zn.tnic>
+References: <20200103150722.20313-1-jschoenh@amazon.de>
+ <20200103150722.20313-7-jschoenh@amazon.de>
 MIME-Version: 1.0
-In-Reply-To: <20200102220356.856162165@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200103150722.20313-7-jschoenh@amazon.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/2/20 3:06 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.162 release.
-> There are 91 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 04 Jan 2020 22:01:54 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.162-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+On Fri, Jan 03, 2020 at 04:07:22PM +0100, Jan H. Schönherr wrote:
+> On the other hand, I'm starting to question the whole logic to "only print
+> the MCE if nothing else in the kernel has a handler registered". Is that
+> really how it should be?
 
-Compiled and booted on my test system. No dmesg regressions.
+Yes, it should be this way: if there are no consumers, all error
+information should go to dmesg so that it gets printed at least.
 
-thanks,
--- Shuah
+> For example, there are handlers that filter for a specific subset of
+> MCEs. If one of those is registered, we're losing all information for
+> MCEs that don't match.
+
+Probably but I don't think there's an example of an actual system where
+there are no other MCE consumers registered. Not if its users care about
+RAS. This default fallback was added for the hypothetical case anyway.
+
+> A possible solution to the latter would be to have a "handled" or "printed"
+> flag within "struct mce" and print the MCE based on that in the default
+> handler. What do you think?
+
+Before we go and fix whatever, we need to define what exactly we're
+fixing. Is there an actual system you're seeing this on or is this
+something that would never happen in reality? Because if the latter, I
+don't really care TBH. As in, there's more important stuff to take care
+of first.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
