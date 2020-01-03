@@ -2,179 +2,269 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D4D1C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B759DC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB6E6222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C2832085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:31:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ufh+Haet"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VcRSqbgY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbgACM00 (ORCPT
+        id S1727616AbgACMbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 07:26:26 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:58057 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727350AbgACM00 (ORCPT
+        Fri, 3 Jan 2020 07:31:19 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46079 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727457AbgACMbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 07:26:26 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200103122624euoutp02330eb29cc21b96a98bd1148c30080153~mYBohGaHl2721927219euoutp02G
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jan 2020 12:26:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200103122624euoutp02330eb29cc21b96a98bd1148c30080153~mYBohGaHl2721927219euoutp02G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1578054384;
-        bh=+aCWclvV0rZhCCMyxhCs/miKoxo1AiEONhSNOqnKW3Y=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=ufh+HaetG8cs6xZc6zKailLfF/azjvScuRKvVD78/cc7hpGoxsm5JRgLu+vyxxx1W
-         e+HCquA4SSxRnBr2AJ85Dtt2I0j0AbYwBpeS5uarHzgXD7vZQvCyTNzbhxWZQv0CQP
-         N5JZ2tuQExaIJxwburfWz2o9gZ9nlmzyHOLdAlLE=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200103122624eucas1p14bbc0d86fcf9074ffec58297f47327c1~mYBn9KEVv2385723857eucas1p1G;
-        Fri,  3 Jan 2020 12:26:24 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 20.67.60679.0F23F0E5; Fri,  3
-        Jan 2020 12:26:24 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200103122623eucas1p234b0f5ab28dd95a5cdd1e508e3542e4d~mYBniTinB1703917039eucas1p24;
-        Fri,  3 Jan 2020 12:26:23 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200103122623eusmtrp25a2ad23ba86f7ad47bce1a860f74eafc~mYBnhsR740071200712eusmtrp2f;
-        Fri,  3 Jan 2020 12:26:23 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-a3-5e0f32f018f8
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 7C.C4.08375.FE23F0E5; Fri,  3
-        Jan 2020 12:26:23 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200103122623eusmtip23b61d1584b98ff40c75942da64c2fed8~mYBnMMbFl0940109401eusmtip2F;
-        Fri,  3 Jan 2020 12:26:23 +0000 (GMT)
-Subject: Re: [PATCH] video: fbdev: fsl-diu-fb: mark expected switch
- fall-throughs
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Timur Tabi <timur@kernel.org>, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <3cc20993-1f45-ba6d-78b8-32be92b4853d@samsung.com>
-Date:   Fri, 3 Jan 2020 13:26:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Fri, 3 Jan 2020 07:31:19 -0500
+Received: by mail-wr1-f66.google.com with SMTP id j42so42242246wrj.12;
+        Fri, 03 Jan 2020 04:31:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=gaDoAhZd9EnaspVB4eu0gwSjufuz8gDsIlWz8yJvXtw=;
+        b=VcRSqbgYZo3yVNNTLQdNTjczb8TSz9OxqCgbbSA9u77KVFJkc8bGA1ixOK/DDwqLCz
+         XyZhM+tubMWWju2gVJGndu68rjJzx8OVqp52oIs/NMvAGdV/Tx4R5JuvkRJ6495F8elv
+         bpuXLSu+Fq/RRb08Ri+or9H6dMjRzaPPmAsVbbpKN/1YOmD7ZN5ACFqlTesqQwc9EmBE
+         /c7FdatTDALlXl5IRi/VmkpdUTRax57bgIPzvqrbjg9yCxV+yoxW7sO8F/PP0FA7Ppbk
+         Nhh5nkl5oZosjZzTX9huhmfFKtATdDMOBL499WgfX5kyxmoGKoTRt5iBoAD5W40/wRWz
+         wbZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=gaDoAhZd9EnaspVB4eu0gwSjufuz8gDsIlWz8yJvXtw=;
+        b=FcFBMZmpFLm91NHWqwj0su+OLHWW5/OX58hBRdnthiqlikKUFH94efPoFfyW1FIhNd
+         Bns7Yv2WuPd7BOCL09cG7P/c9g98mHY4XYy4JsJfp/LHOoELRbE+F9GnmKsXAENhbbrO
+         274W1dLDUqs4d/Pq86SP+yEJ/wx7BfJLtGewSEpnrPoc1bWZRif9kSUgZfiEPrz8NFoK
+         JQH0h6TaAXHptSLW6PhApsluxJYsZjuY/Tnxhbks1/IS8vECQDmnPnHz2zEXJwbMFMa1
+         V/uk63i07ejZfdM0JPXDDGDXPDiz7Mw0kW1cZPGfVhvejf3o1OqzvWvdrZKN5F2AipKH
+         ersQ==
+X-Gm-Message-State: APjAAAWSC7875K5+sZWJLWNKuopZcY6POGTUb0U9mwfdBskCKaDP1xkW
+        zgKFpQgNGQvwVdeljeKBAIs=
+X-Google-Smtp-Source: APXvYqxi3dX6vftLY+XF/wFxY2bTL8Q353b1cvgiRi64Bv5qa7kenkIw1qh4+D8MoP3iMsP/yEJiCQ==
+X-Received: by 2002:adf:ea88:: with SMTP id s8mr88071919wrm.293.1578054676319;
+        Fri, 03 Jan 2020 04:31:16 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id q11sm59035802wrp.24.2020.01.03.04.31.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2020 04:31:15 -0800 (PST)
+Date:   Fri, 3 Jan 2020 13:31:14 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Namjae Jeon <namjae.jeon@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, linkinjeon@gmail.com
+Subject: Re: [PATCH v9 10/13] exfat: add nls operations
+Message-ID: <20200103123114.vm23vqag5dbry2mu@pali>
+References: <20200102082036.29643-1-namjae.jeon@samsung.com>
+ <CGME20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05@epcas1p4.samsung.com>
+ <20200102082036.29643-11-namjae.jeon@samsung.com>
+ <20200103094030.zg4p5bqos32gc4hy@pali>
 MIME-Version: 1.0
-In-Reply-To: <20190911113604.GA31512@embeddedor>
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBKsWRmVeSWpSXmKPExsWy7djP87ofjPjjDBZ+ZLa48vU9m8XWPaoW
-        J/o+sFpc3jWHzeLEb3UHVo91B1U9Nq3qZPO4332cyePzJrkAligum5TUnMyy1CJ9uwSujMvv
-        +tgLDotULFj3g72B8aZAFyMnh4SAicTBo2fZuhi5OIQEVjBKXDxxngXC+cIo0b77AxtIlZDA
-        Z0aJxXOtYDruzrnBBFG0nFGi90kjM4TzllHi2aNGRpAqYYFgidZfy5lBbBEBI4nZM7pZQWxm
-        gXqJD3t6wWrYBKwkJravArN5BewkFt7tB6rh4GARUJE4/0wYJCwqECHx6cFhVogSQYmTM5+w
-        gNicAgYSG1YvgRopLnHryXwmCFteonnrbLB7JAQms0s82L2NCeJqF4ln35cyQtjCEq+Ob2GH
-        sGUk/u+czwTRsI5R4m/HC6ju7YwSyyf/Y4Oospa4c+4XG8h1zAKaEut36UOEHSXeNrcygYQl
-        BPgkbrwVhDiCT2LStunMEGFeiY42IYhqNYkNyzawwazt2rmSeQKj0iwkr81C8s4sJO/MQti7
-        gJFlFaN4amlxbnpqsVFearlecWJucWleul5yfu4mRmB6Of3v+JcdjLv+JB1iFOBgVOLhTVDm
-        jxNiTSwrrsw9xCjBwawkwlseyBsnxJuSWFmVWpQfX1Sak1p8iFGag0VJnNd40ctYIYH0xJLU
-        7NTUgtQimCwTB6dUA6N9mtH0WfZzZ9888tvrdoa4UEj8u+INy3bJBnSJ3vR44F1V2XnhudzJ
-        ezUG5m79/46f8P5olfXbfZHCuWjRPofDdzo50/Yu4Jw+U9WZf/aSmtCAJTX//afLGguIX951
-        T7Fmirr2Tvevc7+Z3Ws9VanFEiN+qWDrhLimpi9HxDmnbk8S4unJX6PEUpyRaKjFXFScCACl
-        Hwq8KwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFIsWRmVeSWpSXmKPExsVy+t/xe7rvjfjjDKbfUre48vU9m8XWPaoW
-        J/o+sFpc3jWHzeLEb3UHVo91B1U9Nq3qZPO4332cyePzJrkAlig9m6L80pJUhYz84hJbpWhD
-        CyM9Q0sLPSMTSz1DY/NYKyNTJX07m5TUnMyy1CJ9uwS9jMvv+tgLDotULFj3g72B8aZAFyMn
-        h4SAicTdOTeYuhi5OIQEljJKLDzVCeRwACVkJI6vL4OoEZb4c62LDaLmNaPEj+YTbCAJYYFg
-        idZfy5lBbBEBI4nZM7pZQWxmgXqJ2Rv3Qw1tZpQ4cqWFESTBJmAlMbF9FZjNK2AnsfBuPyvI
-        MhYBFYnzz4RBwqICERKHd8yCKhGUODnzCQuIzSlgILFh9RKo+eoSf+ZdYoawxSVuPZnPBGHL
-        SzRvnc08gVFoFpL2WUhaZiFpmYWkZQEjyypGkdTS4tz03GJDveLE3OLSvHS95PzcTYzAeNp2
-        7OfmHYyXNgYfYhTgYFTi4U1Q5o8TYk0sK67MPcQowcGsJMJbHsgbJ8SbklhZlVqUH19UmpNa
-        fIjRFOi3icxSosn5wFjPK4k3NDU0t7A0NDc2NzazUBLn7RA4GCMkkJ5YkpqdmlqQWgTTx8TB
-        KdXA6NWm7qfLoWk188IW7y9NK9Is9X6Kzfs4Q9GaOzzPNlPdXDXgkndiypb9k1fEFKzi/Hxw
-        1udLbK+cTDvnHHlx6OgD/UvPL7RJzHmhHKE7X90727SgxuPMlJ0+9j23FzY+k1navjXhxNLX
-        O30/xztPqLKOKtmwzz5z9Ryt1t+9XBO/V/Evurh4mRJLcUaioRZzUXEiAMHvSr69AgAA
-X-CMS-MailID: 20200103122623eucas1p234b0f5ab28dd95a5cdd1e508e3542e4d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190911053645epcas3p36e689569e847f94ea42f1692c7aba22b
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190911053645epcas3p36e689569e847f94ea42f1692c7aba22b
-References: <CGME20190911053645epcas3p36e689569e847f94ea42f1692c7aba22b@epcas3p3.samsung.com>
-        <20190911113604.GA31512@embeddedor>
+In-Reply-To: <20200103094030.zg4p5bqos32gc4hy@pali>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Friday 03 January 2020 10:40:30 Pali Rohár wrote:
+> On Thursday 02 January 2020 16:20:33 Namjae Jeon wrote:
+> > This adds the implementation of nls operations for exfat.
+> > 
+> > Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
+> > Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
+> > ---
+> >  fs/exfat/nls.c | 809 +++++++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 809 insertions(+)
+> >  create mode 100644 fs/exfat/nls.c
+> > 
+> > diff --git a/fs/exfat/nls.c b/fs/exfat/nls.c
+> > new file mode 100644
+> > index 000000000000..af52328e28ff
+> > --- /dev/null
+> > +++ b/fs/exfat/nls.c
+> 
+> ...
+> 
+> > +static int exfat_convert_uni_to_ch(struct nls_table *nls, unsigned short uni,
+> > +		unsigned char *ch, int *lossy)
+> > +{
+> > +	int len;
+> > +
+> > +	ch[0] = 0x0;
+> > +
+> > +	if (uni < 0x0080) {
+> > +		ch[0] = uni;
+> > +		return 1;
+> > +	}
+> > +
+> > +	len = nls->uni2char(uni, ch, MAX_CHARSET_SIZE);
+> > +	if (len < 0) {
+> > +		/* conversion failed */
+> > +		if (lossy != NULL)
+> > +			*lossy |= NLS_NAME_LOSSY;
+> > +		ch[0] = '_';
+> > +		return 1;
+> > +	}
+> > +	return len;
+> > +}
+> 
+> Hello! This function takes one UCS-2 character in host endianity and
+> converts it to one byte (via specified 8bit encoding).
+> 
+> > +static int __exfat_nls_uni16s_to_vfsname(struct super_block *sb,
+> > +		struct exfat_uni_name *p_uniname, unsigned char *p_cstring,
+> > +		int buflen)
+> > +{
+> > +	int i, j, len, out_len = 0;
+> > +	unsigned char buf[MAX_CHARSET_SIZE];
+> > +	const unsigned short *uniname = p_uniname->name;
+> > +	struct nls_table *nls = EXFAT_SB(sb)->nls_io;
+> > +
+> > +	i = 0;
+> > +	while (i < MAX_NAME_LENGTH && out_len < (buflen - 1)) {
+> > +		if (*uniname == '\0')
+> > +			break;
+> > +
+> > +		len = exfat_convert_uni_to_ch(nls, *uniname, buf, NULL);
+> > +		if (out_len + len >= buflen)
+> > +			len = buflen - 1 - out_len;
+> > +		out_len += len;
+> > +
+> > +		if (len > 1) {
+> > +			for (j = 0; j < len; j++)
+> > +				*p_cstring++ = buf[j];
+> > +		} else { /* len == 1 */
+> > +			*p_cstring++ = *buf;
+> > +		}
+> > +
+> > +		uniname++;
+> > +		i++;
+> > +	}
+> > +
+> > +	*p_cstring = '\0';
+> > +	return out_len;
+> > +}
+> > +
+> 
+> This function takes UCS-2 buffer in host endianity and converts it to
+> string in specified 8bit encoding.
+> 
+> > +
+> > +int exfat_nls_uni16s_to_vfsname(struct super_block *sb,
+> > +		struct exfat_uni_name *uniname, unsigned char *p_cstring,
+> > +		int buflen)
+> > +{
+> 
+> Looking at the code and this function is called from dir.c to translate
+> exfat filename buffer stored in filesystem to format expected by VFS
+> layer.
+> 
+> On exfat filesystem file names are always stored in UTF-16LE...
+> 
+> > +	if (EXFAT_SB(sb)->options.utf8)
+> > +		return __exfat_nls_utf16s_to_vfsname(sb, uniname, p_cstring,
+> > +				buflen);
+> > +	return __exfat_nls_uni16s_to_vfsname(sb, uniname, p_cstring, buflen);
+> 
+> ... and therefore above "__exfat_nls_uni16s_to_vfsname" function must
+> expect UTF-16LE buffer and not just UCS-2 buffer in host endianity.
+> 
+> So two other things needs to be done: Convert character from little
+> endian to host endianity and then process UTF-16 buffer and not only
+> UCS-2.
+> 
+> I see that in kernel NLS module is missing a function for converting
+> UTF-16 string to UTF-32 (encoding in which every code point is
+> represented just by one u32 variable). Kernel has only utf16s_to_utf8s()
+> and utf8_to_utf32().
 
-On 9/11/19 1:36 PM, Gustavo A. R. Silva wrote:
-> Mark switch cases where we are expecting to fall through.
-> 
-> Fix the following warnings (Building: mpc512x_defconfig powerpc):
-> 
-> drivers/video/fbdev/fsl-diu-fb.c: In function ‘fsl_diu_ioctl’:
-> ./include/linux/device.h:1750:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   _dev_warn(dev, dev_fmt(fmt), ##__VA_ARGS__)
->   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/video/fbdev/fsl-diu-fb.c:1287:3: note: in expansion of macro ‘dev_warn’
->    dev_warn(info->dev,
->    ^~~~~~~~
-> drivers/video/fbdev/fsl-diu-fb.c:1290:2: note: here
->   case MFB_SET_PIXFMT:
->   ^~~~
-> In file included from ./include/linux/acpi.h:15:0,
->                  from ./include/linux/i2c.h:13,
->                  from ./include/uapi/linux/fb.h:6,
->                  from ./include/linux/fb.h:6,
->                  from drivers/video/fbdev/fsl-diu-fb.c:20:
-> ./include/linux/device.h:1750:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   _dev_warn(dev, dev_fmt(fmt), ##__VA_ARGS__)
->   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/video/fbdev/fsl-diu-fb.c:1296:3: note: in expansion of macro ‘dev_warn’
->    dev_warn(info->dev,
->    ^~~~~~~~
-> drivers/video/fbdev/fsl-diu-fb.c:1299:2: note: here
->   case MFB_GET_PIXFMT:
->   ^~~~
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+What about just filtering two u16 (one surrogate pair)? Existing NLS
+modules do not support code points above U+FFFF so two u16 (one
+surrogate pair) just needs to be converted to one replacement character.
 
-Thanks, patch queued for v5.6 (also sorry for the delay).
+diff --git a/fs/exfat/nls.c b/fs/exfat/nls.c
+index 81d75aed9..f626a0a89 100644
+--- a/fs/exfat/nls.c
++++ b/fs/exfat/nls.c
+@@ -545,7 +545,10 @@ static int __exfat_nls_vfsname_to_utf16s(struct super_block *sb,
+ 	return unilen;
+ }
+ 
+-static int __exfat_nls_uni16s_to_vfsname(struct super_block *sb,
++#define SURROGATE_PAIR		0x0000d800
++#define SURROGATE_LOW		0x00000400
++
++static int __exfat_nls_utf16s_to_vfsname(struct super_block *sb,
+ 		struct exfat_uni_name *p_uniname, unsigned char *p_cstring,
+ 		int buflen)
+ {
+@@ -559,7 +562,23 @@ static int __exfat_nls_uni16s_to_vfsname(struct super_block *sb,
+ 		if (*uniname == '\0')
+ 			break;
+ 
+-		len = exfat_convert_uni_to_ch(nls, *uniname, buf, NULL);
++		if ((*uniname & SURROGATE_MASK) != SURROGATE_PAIR) {
++			len = exfat_convert_uni_to_ch(nls, *uniname, buf, NULL);
++		} else {
++			/* Process UTF-16 surrogate pair as one character */
++			if (!(*uniname & SURROGATE_LOW) && i+1 < MAX_NAME_LENGTH &&
++			    (*(uniname+1) & SURROGATE_MASK) == SURROGATE_PAIR &&
++			    (*(uniname+1) & SURROGATE_LOW)) {
++				uniname++;
++				i++;
++			}
++			/* UTF-16 surrogate pair encodes code points above Ux+FFFF.
++			 * Code points above U+FFFF are not supported by kernel NLS
++			 * framework therefore use replacement character */
++			len = 1;
++			buf[0] = '_';
++		}
++
+ 		if (out_len + len >= buflen)
+ 			len = buflen - 1 - out_len;
+ 		out_len += len;
+@@ -623,7 +642,7 @@ int exfat_nls_uni16s_to_vfsname(struct super_block *sb,
+ 	if (EXFAT_SB(sb)->options.utf8)
+ 		return __exfat_nls_utf16s_to_vfsname(sb, uniname, p_cstring,
+ 				buflen);
+-	return __exfat_nls_uni16s_to_vfsname(sb, uniname, p_cstring, buflen);
++	return __exfat_nls_utf16s_to_vfsname(sb, uniname, p_cstring, buflen);
+ }
+ 
+ int exfat_nls_vfsname_to_uni16s(struct super_block *sb,
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+I have not tested this code, it is just an idea how to quick & dirty
+solve this problem that NLS framework works with UCS-2 encoding and
+UCS-4/UTF-32 or UTF-16.
 
-> ---
->  drivers/video/fbdev/fsl-diu-fb.c | 2 ++
->  1 file changed, 2 insertions(+)
+> > +}
 > 
-> diff --git a/drivers/video/fbdev/fsl-diu-fb.c b/drivers/video/fbdev/fsl-diu-fb.c
-> index d19f58263b4e..3e410b9eb272 100644
-> --- a/drivers/video/fbdev/fsl-diu-fb.c
-> +++ b/drivers/video/fbdev/fsl-diu-fb.c
-> @@ -1287,6 +1287,7 @@ static int fsl_diu_ioctl(struct fb_info *info, unsigned int cmd,
->  		dev_warn(info->dev,
->  			 "MFB_SET_PIXFMT value of 0x%08x is deprecated.\n",
->  			 MFB_SET_PIXFMT_OLD);
-> +		/* fall through */
->  	case MFB_SET_PIXFMT:
->  		if (copy_from_user(&pix_fmt, buf, sizeof(pix_fmt)))
->  			return -EFAULT;
-> @@ -1296,6 +1297,7 @@ static int fsl_diu_ioctl(struct fb_info *info, unsigned int cmd,
->  		dev_warn(info->dev,
->  			 "MFB_GET_PIXFMT value of 0x%08x is deprecated.\n",
->  			 MFB_GET_PIXFMT_OLD);
-> +		/* fall through */
->  	case MFB_GET_PIXFMT:
->  		pix_fmt = ad->pix_fmt;
->  		if (copy_to_user(buf, &pix_fmt, sizeof(pix_fmt)))
-> 
+> Btw, have you tested this exfat implementation on some big endian
+> system? I think it cannot work because of missing conversion from
+> UTF-16LE to UTF-16 in host endianity (therefore UTF-16BE).
+
+Now I figured out that conversion from UTF-16LE to UTF-16 host endianity
+is already done in exfat_extract_uni_name() function, called from
+exfat_get_uniname_from_ext_entry() function. exfat_nls_uni16s_to_vfsname
+is then called on result from exfat_get_uniname_from_ext_entry(), so
+UTF-16LE processing on big endian systems should work. Sorry for that.
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
