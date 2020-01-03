@@ -2,202 +2,286 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6240EC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E839C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB7621734
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20AED222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:40:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SrA6nUwm"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="W2h5t6fr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727404AbgACJke (ORCPT
+        id S1727476AbgACJki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 04:40:34 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33723 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbgACJkd (ORCPT
+        Fri, 3 Jan 2020 04:40:38 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1392 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726181AbgACJkg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 04:40:33 -0500
-Received: by mail-wm1-f68.google.com with SMTP id d139so6592325wmd.0;
-        Fri, 03 Jan 2020 01:40:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=z1sUFXN33eMwyXE2eTCARUGnX+8et5EQa8hCrvn/5Sc=;
-        b=SrA6nUwm62irmPRBtrIwVIEjOkRsJCbFyPHjC5DjnhhK6GTxXc6gsycA3ujsIMsxg4
-         i45307YPC1MyEMM1skVyx952bf6FlRSt+9eGR6HQDHxzLtpG1i+rlrdI5TDeFR0lFhNt
-         FQuE8WXIjy55PLxksj/zeFD6Hge9uwq3bREYpM71T+719ltp3HCOnklcTdUNqCFRePoN
-         lgOIeKzNhoL26aEHgAX2x+cIoF36QBLdkOnXCgLVgq/6Mo50nxzAsNkQZBHfsrVrd6qt
-         vBDFi/aK6mebP0Tz2CiaIyd0rindW0GCwXlHEcCd/JvpN71E9DaWbi9mR4MkgiOpH1Vl
-         f2aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=z1sUFXN33eMwyXE2eTCARUGnX+8et5EQa8hCrvn/5Sc=;
-        b=OD0873O05KrLOiWMT2+yEWzdYV5xuximdArr+6Ureizhf0bMdEIwT/XBThoLiSTfpS
-         vINZGK9cPkYpzzqK5PW9qT3mMA54N8Gn4gW4NJtGPUzxNH2RzM4yWjb/WV1lZtINnMhS
-         Y3rx10/shpDCrUypBFJ2WIUH3kiYCysQk+Rfz4KC4Ad8v6jM4O5YXxRG5eCgK0n85TK3
-         xpIhCvELQnzTkoR6HgXiUCtY2UHnxSWvXLgxNMhiYW9dgDitSqOxJXB/Ul3l/MYbxQbx
-         lF9vTGe33jJYkaN/GGQ2Xqj/3eZwiifxQR/yyINf0+dcxZ22vFwld60OHyljqKSr056B
-         9Jcw==
-X-Gm-Message-State: APjAAAVU3BeyUWe7MvbFXnv7ymyT6ydActxvTtCkbw4+14oJfDD+/hZN
-        ipy1P3RpBHJwgEWJvJusu6M=
-X-Google-Smtp-Source: APXvYqxyPaimcB9/3A8rmvZKsr/6QcbOuGvkDnZCyg40dhJrBadxWjEwJtWrw0vXqxqv0WQIMu5uUA==
-X-Received: by 2002:a1c:6707:: with SMTP id b7mr19436777wmc.54.1578044431951;
-        Fri, 03 Jan 2020 01:40:31 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id b17sm57646598wrp.49.2020.01.03.01.40.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 01:40:31 -0800 (PST)
-Date:   Fri, 3 Jan 2020 10:40:30 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, linkinjeon@gmail.com
-Subject: Re: [PATCH v9 10/13] exfat: add nls operations
-Message-ID: <20200103094030.zg4p5bqos32gc4hy@pali>
-References: <20200102082036.29643-1-namjae.jeon@samsung.com>
- <CGME20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05@epcas1p4.samsung.com>
- <20200102082036.29643-11-namjae.jeon@samsung.com>
+        Fri, 3 Jan 2020 04:40:36 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e0f0be70000>; Fri, 03 Jan 2020 01:39:51 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 03 Jan 2020 01:40:35 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 03 Jan 2020 01:40:35 -0800
+Received: from [10.25.72.211] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 3 Jan
+ 2020 09:40:30 +0000
+Subject: Re: [PATCH 1/4] PCI: dwc: Add new feature to skip core initialization
+To:     Kishon Vijay Abraham I <kishon@ti.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
+        <andrew.murray@arm.com>, <bhelgaas@google.com>,
+        <thierry.reding@gmail.com>
+CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20191113090851.26345-1-vidyas@nvidia.com>
+ <20191113090851.26345-2-vidyas@nvidia.com>
+ <47c801ab-ddec-d436-1f0d-1dd0c4980869@ti.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <0ecb49ba-e40a-f384-2c14-153e4f3ba9bb@nvidia.com>
+Date:   Fri, 3 Jan 2020 15:10:27 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200102082036.29643-11-namjae.jeon@samsung.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <47c801ab-ddec-d436-1f0d-1dd0c4980869@ti.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578044391; bh=OxagPO2Jgwq13WrPn4kUXTtKpWEMPFp8ZpiTyzeZtlU=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=W2h5t6fryBvkjjpoHqgqhLRhwOeiQu/DuintFtFEkNH+U1hAczaXrTbkXPHud7rKq
+         6ChelU19203iWIJXqWVYDGlVAiNzAHtGabO73zi04XRDvVCYCAuObi7bi/Js4dqVt7
+         1DE1VTE8qq8CkcKmZr7H/ba1/hoLbgwAsAi12lId7Xd2K7asYiN3tNgKRiwFj1wvm2
+         5udEsu6Nt49uNeShqmcK0uEuZmDZnuEkrzPuzqgpplvhRZkJPfuTELpbKUrN2gywrL
+         w/GG9yoWq1hI1JHyBeAU7HhPeD8t/OgcY8OVoGT3N8G1BfmrQ+ZAqemyxjCGzp86uO
+         MG0dOeXyRtzOQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 02 January 2020 16:20:33 Namjae Jeon wrote:
-> This adds the implementation of nls operations for exfat.
-> 
-> Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
-> ---
->  fs/exfat/nls.c | 809 +++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 809 insertions(+)
->  create mode 100644 fs/exfat/nls.c
-> 
-> diff --git a/fs/exfat/nls.c b/fs/exfat/nls.c
-> new file mode 100644
-> index 000000000000..af52328e28ff
-> --- /dev/null
-> +++ b/fs/exfat/nls.c
+On 12/5/2019 3:34 PM, Kishon Vijay Abraham I wrote:
+>=20
+>=20
+> On 13/11/19 2:38 pm, Vidya Sagar wrote:
+>> Add a new feature 'skip_core_init' that can be set by platform drivers
+>> of devices that do not have their core registers available until referen=
+ce
+>> clock from host is available (Ex:- Tegra194) to indicate DesignWare
+>> endpoint mode sub-system to not perform core registers initialization.
+>> Existing dw_pcie_ep_init() is refactored and all the code that touches
+>> registers is extracted to form a new API dw_pcie_ep_init_complete() that
+>> can be called later by platform drivers setting 'skip_core_init' to '1'.
+>=20
+> No. pci_epc_features should only use constant values. This is used by fun=
+ction drivers to know the controller capabilities.
+Yes. I'm going to set EPC features as constant values in pcie-tegra194.c dr=
+iver.
+I'm going to rewrite this commit message in the next patch.
+ =20
+>=20
+> Thanks
+> Kishon
+>=20
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>> =C2=A0 .../pci/controller/dwc/pcie-designware-ep.c=C2=A0=C2=A0 | 72 ++++=
++++++++--------
+>> =C2=A0 drivers/pci/controller/dwc/pcie-designware.h=C2=A0 |=C2=A0 6 ++
+>> =C2=A0 include/linux/pci-epc.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0 1 +
+>> =C2=A0 3 files changed, 51 insertions(+), 28 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/p=
+ci/controller/dwc/pcie-designware-ep.c
+>> index 3dd2e2697294..06f4379be8a3 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> @@ -492,19 +492,53 @@ static unsigned int dw_pcie_ep_find_ext_capability=
+(struct dw_pcie *pci, int cap)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>> =C2=A0 }
+>> -int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>> +int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+>> =C2=A0 {
+>> +=C2=A0=C2=A0=C2=A0 struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+>> +=C2=A0=C2=A0=C2=A0 unsigned int offset;
+>> +=C2=A0=C2=A0=C2=A0 unsigned int nbars;
+>> +=C2=A0=C2=A0=C2=A0 u8 hdr_type;
+>> +=C2=A0=C2=A0=C2=A0 u32 reg;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int i;
+>> +
+>> +=C2=A0=C2=A0=C2=A0 hdr_type =3D dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE)=
+;
+>> +=C2=A0=C2=A0=C2=A0 if (hdr_type !=3D PCI_HEADER_TYPE_NORMAL) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(pci->dev,
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "PCI=
+e controller is not set to EP mode (hdr_type:0x%x)!\n",
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 hdr_=
+type);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EIO;
+>> +=C2=A0=C2=A0=C2=A0 }
+>> +
+>> +=C2=A0=C2=A0=C2=A0 ep->msi_cap =3D dw_pcie_find_capability(pci, PCI_CAP=
+_ID_MSI);
+>> +
+>> +=C2=A0=C2=A0=C2=A0 ep->msix_cap =3D dw_pcie_find_capability(pci, PCI_CA=
+P_ID_MSIX);
+>> +
+>> +=C2=A0=C2=A0=C2=A0 offset =3D dw_pcie_ep_find_ext_capability(pci, PCI_E=
+XT_CAP_ID_REBAR);
+>> +=C2=A0=C2=A0=C2=A0 if (offset) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D dw_pcie_readl_dbi(pc=
+i, offset + PCI_REBAR_CTRL);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nbars =3D (reg & PCI_REBAR_C=
+TRL_NBAR_MASK) >>
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PCI_=
+REBAR_CTRL_NBAR_SHIFT;
+>> +
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dw_pcie_dbi_ro_wr_en(pci);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < nbars; i++=
+, offset +=3D PCI_REBAR_CTRL)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dw_p=
+cie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dw_pcie_dbi_ro_wr_dis(pci);
+>> +=C2=A0=C2=A0=C2=A0 }
+>> +
+>> +=C2=A0=C2=A0=C2=A0 dw_pcie_setup(pci);
+>> +
+>> +=C2=A0=C2=A0=C2=A0 return 0;
+>> +}
+>> +
+>> +int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>> +{
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret;
+>> -=C2=A0=C2=A0=C2=A0 u32 reg;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 void *addr;
+>> -=C2=A0=C2=A0=C2=A0 u8 hdr_type;
+>> -=C2=A0=C2=A0=C2=A0 unsigned int nbars;
+>> -=C2=A0=C2=A0=C2=A0 unsigned int offset;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pci_epc *epc;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct dw_pcie *pci =3D to_dw_pcie_from_e=
+p(ep);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device *dev =3D pci->dev;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device_node *np =3D dev->of_node;
+>> +=C2=A0=C2=A0=C2=A0 const struct pci_epc_features *epc_features;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!pci->dbi_base || !pci->dbi_base2) {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(dev, "dbi=
+_base/dbi_base2 is not populated\n");
+>> @@ -563,13 +597,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ep->ops->ep_init)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ep->ops->ep_init(=
+ep);
+>> -=C2=A0=C2=A0=C2=A0 hdr_type =3D dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE)=
+;
+>> -=C2=A0=C2=A0=C2=A0 if (hdr_type !=3D PCI_HEADER_TYPE_NORMAL) {
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(pci->dev, "PCIe cont=
+roller is not set to EP mode (hdr_type:0x%x)!\n",
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 hdr_=
+type);
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EIO;
+>> -=C2=A0=C2=A0=C2=A0 }
+>> -
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D of_property_read_u8(np, "max-func=
+tions", &epc->max_functions);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 epc->max_function=
+s =3D 1;
+>> @@ -587,23 +614,12 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(dev, "Fai=
+led to reserve memory for MSI/MSI-X\n");
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOMEM;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>> -=C2=A0=C2=A0=C2=A0 ep->msi_cap =3D dw_pcie_find_capability(pci, PCI_CAP=
+_ID_MSI);
+>> -=C2=A0=C2=A0=C2=A0 ep->msix_cap =3D dw_pcie_find_capability(pci, PCI_CA=
+P_ID_MSIX);
+>> -
+>> -=C2=A0=C2=A0=C2=A0 offset =3D dw_pcie_ep_find_ext_capability(pci, PCI_E=
+XT_CAP_ID_REBAR);
+>> -=C2=A0=C2=A0=C2=A0 if (offset) {
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D dw_pcie_readl_dbi(pc=
+i, offset + PCI_REBAR_CTRL);
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nbars =3D (reg & PCI_REBAR_C=
+TRL_NBAR_MASK) >>
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PCI_=
+REBAR_CTRL_NBAR_SHIFT;
+>> -
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dw_pcie_dbi_ro_wr_en(pci);
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < nbars; i++=
+, offset +=3D PCI_REBAR_CTRL)
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dw_p=
+cie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dw_pcie_dbi_ro_wr_dis(pci);
+>> +=C2=A0=C2=A0=C2=A0 if (ep->ops->get_features) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 epc_features =3D ep->ops->ge=
+t_features(ep);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (epc_features->skip_core_=
+init)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 retu=
+rn 0;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>> -=C2=A0=C2=A0=C2=A0 dw_pcie_setup(pci);
+>> -
+>> -=C2=A0=C2=A0=C2=A0 return 0;
+>> +=C2=A0=C2=A0=C2=A0 return dw_pcie_ep_init_complete(ep);
+>> =C2=A0 }
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/=
+controller/dwc/pcie-designware.h
+>> index 5accdd6bc388..340783e9032e 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>> @@ -399,6 +399,7 @@ static inline int dw_pcie_allocate_domains(struct pc=
+ie_port *pp)
+>> =C2=A0 #ifdef CONFIG_PCIE_DW_EP
+>> =C2=A0 void dw_pcie_ep_linkup(struct dw_pcie_ep *ep);
+>> =C2=A0 int dw_pcie_ep_init(struct dw_pcie_ep *ep);
+>> +int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep);
+>> =C2=A0 void dw_pcie_ep_exit(struct dw_pcie_ep *ep);
+>> =C2=A0 int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u8 func_no=
+);
+>> =C2=A0 int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>> @@ -416,6 +417,11 @@ static inline int dw_pcie_ep_init(struct dw_pcie_ep=
+ *ep)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>> =C2=A0 }
+>> +static inline int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+>> +{
+>> +=C2=A0=C2=A0=C2=A0 return 0;
+>> +}
+>> +
+>> =C2=A0 static inline void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
+>> =C2=A0 {
+>> =C2=A0 }
+>> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+>> index 36644ccd32ac..241e6a6f39fb 100644
+>> --- a/include/linux/pci-epc.h
+>> +++ b/include/linux/pci-epc.h
+>> @@ -121,6 +121,7 @@ struct pci_epc_features {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u8=C2=A0=C2=A0=C2=A0 bar_fixed_64bit;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u64=C2=A0=C2=A0=C2=A0 bar_fixed_size[PCI_=
+STD_NUM_BARS];
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 size_t=C2=A0=C2=A0=C2=A0 align;
+>> +=C2=A0=C2=A0=C2=A0 bool=C2=A0=C2=A0=C2=A0 skip_core_init;
+>> =C2=A0 };
+>> =C2=A0 #define to_pci_epc(device) container_of((device), struct pci_epc,=
+ dev)
+>>
 
-...
-
-> +static int exfat_convert_uni_to_ch(struct nls_table *nls, unsigned short uni,
-> +		unsigned char *ch, int *lossy)
-> +{
-> +	int len;
-> +
-> +	ch[0] = 0x0;
-> +
-> +	if (uni < 0x0080) {
-> +		ch[0] = uni;
-> +		return 1;
-> +	}
-> +
-> +	len = nls->uni2char(uni, ch, MAX_CHARSET_SIZE);
-> +	if (len < 0) {
-> +		/* conversion failed */
-> +		if (lossy != NULL)
-> +			*lossy |= NLS_NAME_LOSSY;
-> +		ch[0] = '_';
-> +		return 1;
-> +	}
-> +	return len;
-> +}
-
-Hello! This function takes one UCS-2 character in host endianity and
-converts it to one byte (via specified 8bit encoding).
-
-> +static int __exfat_nls_uni16s_to_vfsname(struct super_block *sb,
-> +		struct exfat_uni_name *p_uniname, unsigned char *p_cstring,
-> +		int buflen)
-> +{
-> +	int i, j, len, out_len = 0;
-> +	unsigned char buf[MAX_CHARSET_SIZE];
-> +	const unsigned short *uniname = p_uniname->name;
-> +	struct nls_table *nls = EXFAT_SB(sb)->nls_io;
-> +
-> +	i = 0;
-> +	while (i < MAX_NAME_LENGTH && out_len < (buflen - 1)) {
-> +		if (*uniname == '\0')
-> +			break;
-> +
-> +		len = exfat_convert_uni_to_ch(nls, *uniname, buf, NULL);
-> +		if (out_len + len >= buflen)
-> +			len = buflen - 1 - out_len;
-> +		out_len += len;
-> +
-> +		if (len > 1) {
-> +			for (j = 0; j < len; j++)
-> +				*p_cstring++ = buf[j];
-> +		} else { /* len == 1 */
-> +			*p_cstring++ = *buf;
-> +		}
-> +
-> +		uniname++;
-> +		i++;
-> +	}
-> +
-> +	*p_cstring = '\0';
-> +	return out_len;
-> +}
-> +
-
-This function takes UCS-2 buffer in host endianity and converts it to
-string in specified 8bit encoding.
-
-> +
-> +int exfat_nls_uni16s_to_vfsname(struct super_block *sb,
-> +		struct exfat_uni_name *uniname, unsigned char *p_cstring,
-> +		int buflen)
-> +{
-
-Looking at the code and this function is called from dir.c to translate
-exfat filename buffer stored in filesystem to format expected by VFS
-layer.
-
-On exfat filesystem file names are always stored in UTF-16LE...
-
-> +	if (EXFAT_SB(sb)->options.utf8)
-> +		return __exfat_nls_utf16s_to_vfsname(sb, uniname, p_cstring,
-> +				buflen);
-> +	return __exfat_nls_uni16s_to_vfsname(sb, uniname, p_cstring, buflen);
-
-... and therefore above "__exfat_nls_uni16s_to_vfsname" function must
-expect UTF-16LE buffer and not just UCS-2 buffer in host endianity.
-
-So two other things needs to be done: Convert character from little
-endian to host endianity and then process UTF-16 buffer and not only
-UCS-2.
-
-I see that in kernel NLS module is missing a function for converting
-UTF-16 string to UTF-32 (encoding in which every code point is
-represented just by one u32 variable). Kernel has only utf16s_to_utf8s()
-and utf8_to_utf32().
-
-> +}
-
-Btw, have you tested this exfat implementation on some big endian
-system? I think it cannot work because of missing conversion from
-UTF-16LE to UTF-16 in host endianity (therefore UTF-16BE).
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
