@@ -2,166 +2,183 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A27F2C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 20:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1AD1C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 20:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6502B222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 20:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5439222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 20:19:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rbjfqvhu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LwK28shT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbgACUOO (ORCPT
+        id S1727820AbgACUTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 15:14:14 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43966 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgACUOO (ORCPT
+        Fri, 3 Jan 2020 15:19:05 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:33875 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbgACUTF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 15:14:14 -0500
-Received: by mail-io1-f66.google.com with SMTP id n21so40873429ioo.10;
-        Fri, 03 Jan 2020 12:14:13 -0800 (PST)
+        Fri, 3 Jan 2020 15:19:05 -0500
+Received: by mail-ed1-f67.google.com with SMTP id l8so42576518edw.1;
+        Fri, 03 Jan 2020 12:19:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=rV3hLJ1PYGvGESjNlIumRkdp9DivEV3BkcOThoD4wIQ=;
-        b=Rbjfqvhuozr4fZ8UvcV394OYIjbGu/5fWOFttaqTNj0GmxH8clPNH1uZPjRvpAdC9i
-         7krA6DG0zKw+973kEo3YnUq1H4QL8h54DWADBFClz7mRCIfHgZhBNU9vZhhte0cdNeb1
-         piA2Tzzz67Oi3eywLwTPCKoLvt/Rrj+GgrVCNm/YlBpNj3MlmxTwkBQQr/WUOY+OyTIq
-         DmHR9HK8XKyKlleS/opO4qWdl+eiIbnNzRQUDdaEm44dQJWB7+cznpmPDlnE1lqsqnrA
-         RzPRdRgF0Wdspz8/4XC23LKiS1e0er2qdcY4UxR2DDyENAB7Y8frj6W8e2Gq8LezCPdX
-         rY8w==
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HdfDfUKYf42nnu7teUY8K9Ikwjdmb1k2cSEnm44/CGg=;
+        b=LwK28shTGqgkRmQM2FbFdAVPLkqQ2uarFQgdXiQzUBCj90SQLh70ejzbY+FFdnjTUb
+         PsnQV9oB993VpI6/GM2NkLwhCb2kfEBW86he3dyUUqsMCKs42ONeKO4aUTaajQ/GDhjI
+         LdD75hQpDdZ42M4HWV9tOYWwTirDXrnmUs8842G8Wa/6iJxXp6/qT+bvXWQnenkfzIse
+         OQiT7h4i16wHoFvLU4uGSgxNspHqj637t/KWXNj8deCCLtaRPNJGweM5haze4/POPeP5
+         1jWi2W2Ze+tqiAmIF4sM5hZ1nFCpXTKPhWENLofsmrLeLlHjFVLKhKwBfju3Wbn5dVVu
+         pgog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=rV3hLJ1PYGvGESjNlIumRkdp9DivEV3BkcOThoD4wIQ=;
-        b=jQjmM/+wEmpAAcyOmYk1sIkIIXHzQb9nQK0FsNcMaMMxZGvbwl8X52jsrfTqPid/3c
-         h1LQkW9LnDqttjf+dVAO1IHguIoPGaFysUe7KJTV1utblCemDiQeXQkvkXYeu4f6pSDx
-         er/eg6Xkv+qCFWrx8oIurXhKSZ7Ml/7VEzdQQphzafQR8NrKwXPb4GF96XLfy4UPyTwS
-         NR1bo5UipZntYNIda9MhFNNpCxvrK+FPJn+IVepAuJl/IB9O+7tMQ7KliKujarLHpAnQ
-         /U8iC2CAY8IC47PNEX5FYXJ8TP0i+HxHRT/1H4xSZz8HCeGogZzff1v329emBfei+LlC
-         Ds4g==
-X-Gm-Message-State: APjAAAXm4rXFbjZV54n+mk+eOwh8mqUC5S+q5xkv7P8mbQmr7XssUeOe
-        2SdOTnnauekvz5AXhaGlxnJGzF7RExHpj8vENw5G2qMmXpF0tg==
-X-Google-Smtp-Source: APXvYqxYD5xt5uosDGM15eDbeGo7npu7qR8B1fpV18MjDSjrXfQMiLdLWb7RNTH8xrK53/eu9JDIC0z4izMEmjojM8M=
-X-Received: by 2002:a6b:8e51:: with SMTP id q78mr56753106iod.179.1578082452839;
- Fri, 03 Jan 2020 12:14:12 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=HdfDfUKYf42nnu7teUY8K9Ikwjdmb1k2cSEnm44/CGg=;
+        b=i1sXJJuxsT3joF0tdxdZY/2EWCQCsXuzlb/bFetFh6Jtn/NpA3HOQcH/iPw2LgGx2q
+         2xXlTfZIE4EFm21grNmR09BDEQix9Ek8mlps9rZM68J0uVzqBk5icOAxgqQCxJmp6nu1
+         R9J+3B0oIaIltXy5FBS86E8IaBMC/G5btRjYLobw8W3yjo5GNyL7/F9lpgkJ1DoV+5R8
+         XwENGxBPuAzgXScRBqcjYJUOE72p2W7F6Ei29Nrzyzccab3npWHki8lWx6Pr/Dj5jmmA
+         0VX7ZPTdosAfK651tk3W0JyYnPht4NUcEdrJFZFwKcXsVH/H/QbncfpJ7HS7/9AiVate
+         EE2A==
+X-Gm-Message-State: APjAAAUF+/kMLYXmA/3IDTQ/5o98gfSBZ0TN/IxyqsPRin5gH+wcbB2E
+        t5MzADS77RD9tAIgnaFaluvI2Lo+
+X-Google-Smtp-Source: APXvYqzLgnWJCoNBUxporEDD7ACI5Ld3v7fpK/xgNKD6aM9d3ztpCxl+steUyhmdIwZ5OSvf6kTyNQ==
+X-Received: by 2002:a17:907:43c1:: with SMTP id i1mr93581619ejs.138.1578082249899;
+        Fri, 03 Jan 2020 12:10:49 -0800 (PST)
+Received: from [10.67.50.49] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id b15sm7634087eje.82.2020.01.03.12.10.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jan 2020 12:10:49 -0800 (PST)
+Subject: Re: [PATCH net-next 0/2] Improvements to the DSA deferred xmit
+To:     Vladimir Oltean <olteanv@gmail.com>,
+        David Miller <davem@davemloft.net>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <20191227014208.7189-1-olteanv@gmail.com>
+ <20200102.134952.739616655559887645.davem@davemloft.net>
+ <CA+h21horyGwqBTyBSVDRSSOSAPr_3i1dvz40=qKQMD_Nddtk3Q@mail.gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
+ xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
+ X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
+ AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
+ ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
+ SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
+ nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
+ qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz80nRmxvcmlhbiBG
+ YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+wmYEExECACYCGyMGCwkIBwMCBBUCCAME
+ FgIDAQIeAQIXgAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2DvCVAJ4u4/bPF4P3jxb4qEY8I2gS
+ 6hG0gACffNWlqJ2T4wSSn+3o7CCZNd7SLSDOwU0EVxvH8AEQAOqv6agYuT4x3DgFIJNv9i0e
+ S443rCudGwmg+CbjXGA4RUe1bNdPHYgbbIaN8PFkXfb4jqg64SyU66FXJJJO+DmPK/t7dRNA
+ 3eMB1h0GbAHlLzsAzD0DKk1ARbjIusnc02aRQNsAUfceqH5fAMfs2hgXBa0ZUJ4bLly5zNbr
+ r0t/fqZsyI2rGQT9h1D5OYn4oF3KXpSpo+orJD93PEDeseho1EpmMfsVH7PxjVUlNVzmZ+tc
+ IDw24CDSXf0xxnaojoicQi7kzKpUrJodfhNXUnX2JAm/d0f9GR7zClpQMezJ2hYAX7BvBajb
+ Wbtzwi34s8lWGI121VjtQNt64mSqsK0iQAE6OYk0uuQbmMaxbBTT63+04rTPBO+gRAWZNDmQ
+ b2cTLjrOmdaiPGClSlKx1RhatzW7j1gnUbpfUl91Xzrp6/Rr9BgAZydBE/iu57KWsdMaqu84
+ JzO9UBGomh9eyBWBkrBt+Fe1qN78kM7JO6i3/QI56NA4SflV+N4PPgI8TjDVaxgrfUTV0gVa
+ cr9gDE5VgnSeSiOleChM1jOByZu0JTShOkT6AcSVW0kCz3fUrd4e5sS3J3uJezSvXjYDZ53k
+ +0GS/Hy//7PSvDbNVretLkDWL24Sgxu/v8i3JiYIxe+F5Br8QpkwNa1tm7FK4jOd95xvYADl
+ BUI1EZMCPI7zABEBAAHCwagEGBECAAkFAlcbx/ACGwICKQkQYVeZFbVjdg7BXSAEGQECAAYF
+ Alcbx/AACgkQh9CWnEQHBwSJBw//Z5n6IO19mVzMy/ZLU/vu8flv0Aa0kwk5qvDyvuvfiDTd
+ WQzq2PLs+obX0y1ffntluhvP+8yLzg7h5O6/skOfOV26ZYD9FeV3PIgR3QYF26p2Ocwa3B/k
+ P6ENkk2pRL2hh6jaA1Bsi0P34iqC2UzzLq+exctXPa07ioknTIJ09BT31lQ36Udg7NIKalnj
+ 5UbkRjqApZ+Rp0RAP9jFtq1n/gjvZGyEfuuo/G+EVCaiCt3Vp/cWxDYf2qsX6JxkwmUNswuL
+ C3duQ0AOMNYrT6Pn+Vf0kMboZ5UJEzgnSe2/5m8v6TUc9ZbC5I517niyC4+4DY8E2m2V2LS9
+ es9uKpA0yNcd4PfEf8bp29/30MEfBWOf80b1yaubrP5y7yLzplcGRZMF3PgBfi0iGo6kM/V2
+ 13iD/wQ45QTV0WTXaHVbklOdRDXDHIpT69hFJ6hAKnnM7AhqZ70Qi31UHkma9i/TeLLzYYXz
+ zhLHGIYaR04dFT8sSKTwTSqvm8rmDzMpN54/NeDSoSJitDuIE8givW/oGQFb0HGAF70qLgp0
+ 2XiUazRyRU4E4LuhNHGsUxoHOc80B3l+u3jM6xqJht2ZyMZndbAG4LyVA2g9hq2JbpX8BlsF
+ skzW1kbzIoIVXT5EhelxYEGqLFsZFdDhCy8tjePOWK069lKuuFSssaZ3C4edHtkZ8gCfWWtA
+ 8dMsqeOIg9Trx7ZBCDOZGNAAnjYQmSb2eYOAti3PX3Ex7vI8ZhJCzsNNBEjPuBIQEAC/6NPW
+ 6EfQ91ZNU7e/oKWK91kOoYGFTjfdOatp3RKANidHUMSTUcN7J2mxww80AQHKjr3Yu2InXwVX
+ SotMMR4UrkQX7jqabqXV5G+88bj0Lkr3gi6qmVkUPgnNkIBe0gaoM523ujYKLreal2OQ3GoJ
+ PS6hTRoSUM1BhwLCLIWqdX9AdT6FMlDXhCJ1ffA/F3f3nTN5oTvZ0aVF0SvQb7eIhGVFxrlb
+ WS0+dpyulr9hGdU4kzoqmZX9T/r8WCwcfXipmmz3Zt8o2pYWPMq9Utby9IEgPwultaP06MHY
+ nhda1jfzGB5ZKco/XEaXNvNYADtAD91dRtNGMwRHWMotIGiWwhEJ6vFc9bw1xcR88oYBs+7p
+ gbFSpmMGYAPA66wdDKGj9+cLhkd0SXGht9AJyaRA5AWB85yNmqcXXLkzzh2chIpSEawRsw8B
+ rQIZXc5QaAcBN2dzGN9UzqQArtWaTTjMrGesYhN+aVpMHNCmJuISQORhX5lkjeg54oplt6Zn
+ QyIsOCH3MfG95ha0TgWwyFtdxOdY/UY2zv5wGivZ3WeS0TtQf/BcGre2y85rAohFziWOzTaS
+ BKZKDaBFHwnGcJi61Pnjkz82hena8OmsnsBIucsz4N0wE+hVd6AbDYN8ZcFNIDyt7+oGD1+c
+ PfqLz2df6qjXzq27BBUboklbGUObNwADBQ//V45Z51Q4fRl/6/+oY5q+FPbRLDPlUF2lV6mb
+ hymkpqIzi1Aj/2FUKOyImGjbLAkuBQj3uMqy+BSSXyQLG3sg8pDDe8AJwXDpG2fQTyTzQm6l
+ OnaMCzosvALk2EOPJryMkOCI52+hk67cSFA0HjgTbkAv4Mssd52y/5VZR28a+LW+mJIZDurI
+ Y14UIe50G99xYxjuD1lNdTa/Yv6qFfEAqNdjEBKNuOEUQOlTLndOsvxOOPa1mRUk8Bqm9BUt
+ LHk3GDb8bfDwdos1/h2QPEi+eI+O/bm8YX7qE7uZ13bRWBY+S4+cd+Cyj8ezKYAJo9B+0g4a
+ RVhdhc3AtW44lvZo1h2iml9twMLfewKkGV3oG35CcF9mOd7n6vDad3teeNpYd/5qYhkopQrG
+ k2oRBqxyvpSLrJepsyaIpfrt5NNaH7yTCtGXcxlGf2jzGdei6H4xQPjDcVq2Ra5GJohnb/ix
+ uOc0pWciL80ohtpSspLlWoPiIowiKJu/D/Y0bQdatUOZcGadkywCZc/dg5hcAYNYchc8AwA4
+ 2dp6w8SlIsm1yIGafWlNnfvqbRBglSTnxFuKqVggiz2zk+1wa/oP+B96lm7N4/3Aw6uy7lWC
+ HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
+ TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <4866462c-9e2b-ed7c-03a9-a2e81decf0c7@gmail.com>
+Date:   Fri, 3 Jan 2020 12:10:44 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date:   Sat, 4 Jan 2020 01:14:02 +0500
-Message-ID: <CABXGCsODygM_F4JCesQOH_i+QA9XLWXvcT2o_K=dW6R8ZeJ6rQ@mail.gmail.com>
-Subject: BUG: kernel NULL pointer dereference, address: 0000000000000070
-To:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-wireless@vger.kernel.org>
-Cc:     =?UTF-8?B?0KDQuNGI0LDRgiDQoNC40LzQvtCy0LjRhyDQotC10YDQtdCz0YPQu9C+0LI=?= 
-        <rtereguloff@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CA+h21horyGwqBTyBSVDRSSOSAPr_3i1dvz40=qKQMD_Nddtk3Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks.
-My friend today launched stress-ng multiple times and he could twice
-time reproduce the odd bug, which looks like a bug in the wifi driver.
+On 1/2/20 2:47 PM, Vladimir Oltean wrote:
+> Hi David,
+> 
+> On Thu, 2 Jan 2020 at 23:49, David Miller <davem@davemloft.net> wrote:
+>>
+>> Two comments about this patch series, I think it needs more work:
+>>
+> 
+> Thanks for looking at this series.
+> 
+>> 1) This adds the thread and the xmit queue but not code that actually
+>>    uses it.  You really have to provide the support code in the driver
+>>    at the same time you add the new facitlity so we can actually see
+>>    how it'll be used.
+>>
+> 
+> There is no API change here. There was, and still is, a single caller
+> of dsa_defer_xmit in the kernel, from net/dsa/tag_sja1105.c:
+> 
+>     if (unlikely(sja1105_is_link_local(skb)))
+>         return dsa_defer_xmit(skb, netdev);
+> 
+> The whole difference is that what used to be a schedule_work() in that
+> function is now a kthread_queue_work() call.
+> 
+>> 2) Patch #1 talks about a tradeoff.  Replacing the CB initialization of
+>>    the field skb_get().  But this skb_get() is an atomic operation and
+>>    thus much more expensive for users of the deferred xmit scheme.
+>>
+> 
+> Ok, I'll admit I hadn't considered the exact penalty introduced by
+> skb_get, but I think it is a matter of proportions.
+> Worst case I expect no more than 64 packets per second to be
+> transmitted using the deferred xmit mechanism: there are 4 switch
+> ports, PTP runs with a sync interval of 1/8 seconds, and the STP hello
+> timer is 2 seconds. So, not a lot of traffic.
+> On the other hand, clearing the deferred_xmit bool from the skb->cb is
+> something that everybody else (including this driver for "normal"
+> traffic) needs to do at line rate, just for the above 64 packets per
+> second (in the worst case) to be possible.
 
-lspci detects this device as:
-Network controller: Realtek Semiconductor Co., Ltd. RTL8822BE
-802.11a/b/g/n/ac WiFi adapter
-
-I decided to report here because every time after this bug happens the
-system became fully unresponsive. Which is really very annoying.
-
-stress-ng-iomix (147381): drop_caches: 3
-stress-ng-iomix (147417): drop_caches: 3
-stress-ng-iomix (147415): drop_caches: 3
-rtw_pci 0000:04:00.0: stop vif ea:01:4e:ce:99:c5 on port 0
-rtw_pci 0000:04:00.0: start vif 06:72:1e:97:fc:83 on port 0
-BUG: kernel NULL pointer dereference, address: 0000000000000070
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 0 P4D 0
-Oops: 0000 [#1] SMP NOPTI
-CPU: 1 PID: 819 Comm: irq/76-rtwpci Not tainted
-5.5.0-0.rc4.git0.1.fc32.x86_64 #1
-Hardware name: System manufacturer System Product Name/ROG STRIX
-X470-I GAMING, BIOS 3004 12/16/2019
-RIP: 0010:rtw_pci_tx_isr+0x96/0x230 [rtwpci]
-Code: 0e 01 00 00 48 8b 44 24 08 44 0f b6 64 24 13 48 c1 e0 06 49 83
-c4 01 48 89 04 24 49 c1 e4 06 49 01 dc 4c 89 e7 e8 8a d1 96 ce <8b> 50
-70 48 8b 70 48 49 89 c6 48 8b 03 48 8d b8 b0 00 00 00 48 8b
-RSP: 0018:ffffad9f00d6fe08 EFLAGS: 00010086
-RAX: 0000000000000000 RBX: ffff9b66766e5d68 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: 0000000000000086 RDI: 0000000000000086
-RBP: 000000000000006a R08: 0000000000000000 R09: 0000000000000059
-R10: 0000000000000000 R11: ffff9b667da6ae38 R12: ffff9b66766e5ee8
-R13: ffff9b66766e1e80 R14: 0000000000000005 R15: ffff9b66766e07c0
-FS:  0000000000000000(0000) GS:ffff9b667da40000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000070 CR3: 0000000333690000 CR4: 00000000003406e0
-Call Trace:
- rtw_pci_interrupt_threadfn+0x15b/0x210 [rtwpci]
- ? irq_finalize_oneshot.part.0+0xf0/0xf0
- irq_thread_fn+0x20/0x60
- irq_thread+0xdc/0x170
- ? irq_forced_thread_fn+0x80/0x80
- kthread+0xf9/0x130
- ? irq_thread_check_affinity+0xf0/0xf0
- ? kthread_park+0x90/0x90
- ret_from_fork+0x22/0x40
-Modules linked in: salsa20_generic camellia_generic
-camellia_aesni_avx2 camellia_aesni_avx_x86_64 camellia_x86_64
-cast6_avx_x86_64 cast6_generic cast_common serpent_avx2
-serpent_avx_x86_64 serpent_sse2_x86_64 serpent_generic twofish_generic
-twofish_avx_x86_64 twofish_x86_64_3way twofish_x86_64 twofish_common
-ofb tgr192 wp512 rmd320 rmd256 rmd160 rmd128 md4 uinput rfcomm
-xt_CHECKSUM xt_MASQUERADE xt_conntrack ipt_REJECT nf_nat_tftp
-nf_conntrack_tftp tun bridge stp llc nft_objref
-nf_conntrack_netbios_ns nf_conntrack_broadcast nft_fib_inet
-nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4
-nf_reject_ipv6 nft_reject nft_ct nf_tables_set nft_chain_nat nf_tables
-ebtable_nat ebtable_broute ip6table_nat ip6table_mangle ip6table_raw
-ip6table_security iptable_nat nf_nat nf_conntrack nf_defrag_ipv6
-nf_defrag_ipv4 libcrc32c iptable_mangle iptable_raw iptable_security
-ip_set nfnetlink ebtable_filter ebtables ip6table_filter ip6_tables
-iptable_filter cmac bnep sunrpc
- snd_hda_codec_realtek snd_hda_codec_generic ledtrig_audio rtwpci
-snd_hda_codec_hdmi rtw88 snd_hda_intel snd_intel_dspcfg edac_mce_amd
-snd_usb_audio uvcvideo videobuf2_vmalloc videobuf2_memops
-snd_hda_codec snd_usbmidi_lib videobuf2_v4l2 snd_hda_core
-videobuf2_common mac80211 btusb snd_rawmidi kvm snd_hwdep btrtl
-videodev snd_seq btbcm btintel snd_seq_device irqbypass bluetooth
-cfg80211 snd_pcm eeepc_wmi mc joydev crct10dif_pclmul snd_timer
-crc32_pclmul asus_wmi ecdh_generic snd sparse_keymap rfkill sp5100_tco
-ccp ecc video soundcore libarc4 wmi_bmof pcspkr i2c_piix4
-ghash_clmulni_intel k10temp gpio_amdpt gpio_generic acpi_cpufreq
-binfmt_misc ip_tables amdgpu amd_iommu_v2 gpu_sched ttm drm_kms_helper
-drm igb crc32c_intel uas dca i2c_algo_bit usb_storage wmi pinctrl_amd
-fuse
-CR2: 0000000000000070
----[ end trace 5e058b15ff4e55d6 ]---
-
-
-# /usr/src/kernels/`uname -r`/scripts/faddr2line
-/lib/debug/lib/modules/`uname
--r`/kernel/drivers/net/wireless/realtek/rtw88/rtwpci.ko.debug
-rtw_pci_tx_isr+0x96
-rtw_pci_tx_isr+0x96/0x230:
-rtw_pci_tx_isr at
-/usr/src/debug/kernel-5.4.fc32/linux-5.5.0-0.rc4.git0.1.fc32.x86_64/drivers/net/wireless/realtek/rtw88/pci.c:836
-
-# eu-addr2line -e /lib/debug/lib/modules/`uname
--r`/kernel/drivers/net/wireless/realtek/rtw88/rtwpci.ko.debug
-rtw_pci_tx_isr+0x96
-drivers/net/wireless/realtek/rtw88/pci.c:836:3
-
-$ uname -r
-5.5.0-0.rc4.git0.1.fc32.x86_64
-
---
-Best Regards,
-Mike Gavrilov.
+I sincerely think your transmit path is so radically different that your
+sja1105 driver should simply be absorbing all of this logic and the core
+DSA framework should be free of any deferred transmit logic. Can you
+consider doing that before the merge window ends?
+-- 
+Florian
