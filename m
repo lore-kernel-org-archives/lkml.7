@@ -2,158 +2,91 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E74C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9493EC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 064BD20866
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:47:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i3r00vQH"
+	by mail.kernel.org (Postfix) with ESMTP id 6429421835
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:52:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbgACTrv (ORCPT
+        id S1728626AbgACTwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 14:47:51 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44843 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728546AbgACTrv (ORCPT
+        Fri, 3 Jan 2020 14:52:09 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:60212 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728546AbgACTwI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 14:47:51 -0500
-Received: by mail-ed1-f67.google.com with SMTP id bx28so42447862edb.11;
-        Fri, 03 Jan 2020 11:47:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LZOZVHTb+3h6BOMb+3kqKp315cgiSfb0pLuDtSxBQBM=;
-        b=i3r00vQHBL2sDAI4dtuZ/zsg+OhlwmfLKu1EbtUfmBblRf30KdraxcjZ5+9veNm9+r
-         VXPC3GqUBlyAZ2xaezE8Z6qR+NXMthbazKJgnZFCBVaJXKn6Pc8UUk9iMLC+RLcPevva
-         xISwU6UG214McmTcnRcRYScHJo4U/JMBIVddPkryu6S2q/4RLbaaux28wruieZHpq8Ds
-         NlkXomCh4PiKX71W4UzU2WEFksc1CG6x+oS3eAUGn6nDdGR9WdrwKWNmcEFrAaayXduY
-         UGlw7GHvFnPbPYChG2Uld3vGf47M7GMTPvcZ79CQ+uSkYaRr2L1tMZ/X4l282KKuzGBG
-         Wspw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LZOZVHTb+3h6BOMb+3kqKp315cgiSfb0pLuDtSxBQBM=;
-        b=k7iMmWZw3puEPbIiRlV8MwM1mbZ5CUa4aTnYS671KtSoVkuhTRJsATB8DOu56shKMR
-         VO58W3fM7lCxtJg7udax7BdjsyRrR/ayuhtR+oBx8fq2ab4feyAFi0umaxwMrS5RpJec
-         xQoscm/Ex5hR5apTN1eQsWQ1uI5wKh2FY3qUoFqfD3joehN+8iwov/NFpZE8BTQOHWg6
-         zIiUQO7J/hn4/93liZ8tmI04xw0ROANnMXa3l6ePMvJrUcnuNeZpYvJxHt7qtSxe9AGO
-         QnNSTjtZX7EbUBflV91wZpWle3XpKVJhtDmyM7HEkqG4YfyP2ZEznZIKqEEKiPoo+Gfy
-         oFXQ==
-X-Gm-Message-State: APjAAAXZQR2s8L1b3JFOxoH+5UQ8WNFtQ+TdVp2Db1l1wfLpMMnSX9XE
-        OWbLnIeHVjgdLZ6Hk6um6VcHD/vi+cWJgDylBSc=
-X-Google-Smtp-Source: APXvYqzm/Ay3X26OiUyZcxYr2sA8q0KNwmLg0kGhYCUvD0jASZvMzylVMe6yq9epmuFVENGUaj3upvLcAFe5N1iieeg=
-X-Received: by 2002:a17:906:34d7:: with SMTP id h23mr17921481ejb.90.1578080869160;
- Fri, 03 Jan 2020 11:47:49 -0800 (PST)
+        Fri, 3 Jan 2020 14:52:08 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id C48DF20026;
+        Fri,  3 Jan 2020 20:52:06 +0100 (CET)
+Date:   Fri, 3 Jan 2020 20:52:05 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Thelen <gthelen@google.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/12] initramfs: refactor the initramfs build rules
+Message-ID: <20200103195205.GC21515@ravnborg.org>
+References: <20200103175915.26663-1-masahiroy@kernel.org>
+ <20200103175915.26663-12-masahiroy@kernel.org>
 MIME-Version: 1.0
-References: <20200103183025.569201-1-robdclark@gmail.com> <20200103183025.569201-2-robdclark@gmail.com>
- <20200103193135.GA21515@ravnborg.org>
-In-Reply-To: <20200103193135.GA21515@ravnborg.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Fri, 3 Jan 2020 11:47:38 -0800
-Message-ID: <CAF6AEGtdFA7XzSq3w3N6_TRLWQY+zumU2mahbsPY=pc0r_x6fw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drm/panel: Add support for AUO B116XAK01 panel
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200103175915.26663-12-masahiroy@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=WVVD8NIdMxo9nYlgdXoA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 3, 2020 at 11:31 AM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Rob.
->
-> On Fri, Jan 03, 2020 at 10:30:24AM -0800, Rob Clark wrote:
-> > From: Rob Clark <robdclark@chromium.org>
-> >
-> > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > ---
-> >  drivers/gpu/drm/panel/panel-simple.c | 32 ++++++++++++++++++++++++++++
-> >  1 file changed, 32 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> > index 5d487686d25c..895a25cfc54f 100644
-> > --- a/drivers/gpu/drm/panel/panel-simple.c
-> > +++ b/drivers/gpu/drm/panel/panel-simple.c
-> > @@ -680,6 +680,35 @@ static const struct panel_desc auo_b116xw03 = {
-> >       },
-> >  };
-> >
-> > +static const struct drm_display_mode auo_b116xak01_mode = {
-> > +     .clock = 69300,
-> > +     .hdisplay = 1366,
-> > +     .hsync_start = 1366 + 48,
-> > +     .hsync_end = 1366 + 48 + 32,
-> > +     .htotal = 1366 + 48 + 32 + 10,
-> > +     .vdisplay = 768,
-> > +     .vsync_start = 768 + 4,
-> > +     .vsync_end = 768 + 4 + 6,
-> > +     .vtotal = 768 + 4 + 6 + 15,
-> > +     .vrefresh = 60,
-> > +     .flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
-> > +};
-> > +
-> > +static const struct panel_desc auo_b116xak01 = {
-> > +     .modes = &auo_b116xak01_mode,
-> > +     .num_modes = 1,
-> > +     .bpc = 6,
-> > +     .size = {
-> > +             .width = 256,
-> > +             .height = 144,
-> > +     },
-> > +     .delay = {
-> > +             .hpd_absent_delay = 200,
-> > +     },
-> > +     .bus_format = MEDIA_BUS_FMT_RGB666_1X18,
-> > +     .connector_type = DRM_MODE_CONNECTOR_eDP,
-> > +};
-> Entries in alphabetical order - check.
-> .connector_type specified - check.
-> .flags and .bus_format specified - check.
-> .bus_flags not specified but optional - OK.
->
-> > +
-> >  static const struct drm_display_mode auo_b133xtn01_mode = {
-> >       .clock = 69500,
-> >       .hdisplay = 1366,
-> > @@ -3125,6 +3154,9 @@ static const struct of_device_id platform_of_match[] = {
-> >       }, {
-> >               .compatible = "auo,b133htn01",
-> >               .data = &auo_b133htn01,
-> > +     }, {
-> > +             .compatible = "auo,b116xa01",
-> > +             .data = &auo_b116xak01,
-> This entry most also be in alphabetical order.
->
-> >       }, {
-> >               .compatible = "auo,b133xtn01",
-> >               .data = &auo_b133xtn01,
->
-> Please fix and resend.
->
-> I am in general holding back on patches to panel-simple.
-> I hope we can reach a decision for the way forward with the bindings
-> files sometimes next week.
+Hi Mashahiro.
 
-I've fixed the sort-order and the couple things you've pointed out in
-the bindings.  Not sure if you want me to resend immediately or
-hang-tight until the bindings discussion is resolved?
+I just browsed this fine patchset and noticed...
+>  
+> -#####
+> -# Generate the initramfs cpio archive
+> +ramfs-input := $(shell echo $(CONFIG_INITRAMFS_SOURCE))
+> +cpio-data :=
+> +
+> +ifeq ($(words $(ramfs-input)),0)
+> +
+> +# If CONFIG_INITRAMFS_SOURCE is empty, generate a small initramfs with the
+> +# default contents.
+> +ramfs-input := $(srctree)/$(src)/default_cpio_list
+> +
+> +else ifeq ($(words $(ramfs-input)),1)
+> +# If CONFIG_INITRAMFS_SOURCE specifies a single file, and it is suffixed with
+> +# .cpio or .cpio.*, use it directly as an initramfs.
+> +ifneq ($(filter %.cpio,$(ramfs-input)),)
+> +cpio-data := $(ramfs-input)
+> +endif
 
-BR,
--R
+This part will now work if the file is named foo.cpio.bar.
+$(findstring .cpio, should be used and not $(filter %.cpio
+At least if the comment describes the intended behaviour.
+
+> +
+> +ifeq ($(words $(subst .cpio.,$(space),$(ramfs-input))),2)
+> +cpio-data := $(ramfs-input)
+> +# If the specified archive is suffixed with .cpio.* (i.e. already compressed),
+> +# we do not double-compress it.
+> +compress-y := shipped
+> +endif
+> +
+> +endif
+
+
+	Sam
