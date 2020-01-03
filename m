@@ -2,91 +2,172 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A81A8C3276F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 03:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C2DC3276F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 03:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE6B21D7D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 03:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A722C21D56
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 03:25:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PZzR+KJA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QdzNEcdX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgACDTl (ORCPT
+        id S1727152AbgACDZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 22:19:41 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:15604 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726136AbgACDTl (ORCPT
+        Thu, 2 Jan 2020 22:25:10 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47614 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726136AbgACDZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 22:19:41 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578021581; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=vjy5dIMVDT1Phjpq4ZShDs2av01qUSIKCZ/bB67Qb0g=; b=PZzR+KJA96+j6bo6JCh0tEsnrRXTWW74OPjowsqr034sj2Sbe4AnL7VonKH7Pf58bsjq+LkW
- 4Ja4/u57TrWG6aqI+uYILB15Gs1MgJSeJX5Y/pMQ7YWuCbm2dsLAYHTCkHQrncQ7OclbFiZS
- 6BoOrQbFQvR9j08Wa1E6M6DnCEM=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e0eb2cb.7fd22c807d18-smtp-out-n03;
- Fri, 03 Jan 2020 03:19:39 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 685DFC4479D; Fri,  3 Jan 2020 03:19:39 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Thu, 2 Jan 2020 22:25:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578021907;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5F0aOfir2KWwuaj3odF4OjIUjbycL5B7KWrBRc4wz5I=;
+        b=QdzNEcdXT2ajuOnfvQEMe3l1qluhPJ+inQkFi1Pbqy2iZc/HwWBxA2iSB6xYm3zS2tXwOn
+        nQ/RBNNXT9+jAMz+mM/8Noaw5yDWwBQAo66kQ6v9MwuUOyXgG/NPy1P+xnl6dYkBnGbN9y
+        o/EH++a18J2GIeK+Fp8g9D/KtYUCDsc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-426-cjez0EyxOBGgMt5PJLXKoQ-1; Thu, 02 Jan 2020 22:25:05 -0500
+X-MC-Unique: cjez0EyxOBGgMt5PJLXKoQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: stummala)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1050AC433CB;
-        Fri,  3 Jan 2020 03:19:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1050AC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97ECA800D48;
+        Fri,  3 Jan 2020 03:25:03 +0000 (UTC)
+Received: from [10.72.12.42] (ovpn-12-42.pek2.redhat.com [10.72.12.42])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7ADC075750;
+        Fri,  3 Jan 2020 03:24:55 +0000 (UTC)
+Subject: Re: [virtio-dev] Re: [PATCH v1 2/2] virtio-mmio: add features for
+ virtio-mmio specification version 3
+To:     "Liu, Jing2" <jing2.liu@linux.intel.com>,
+        Zha Bin <zhabin@linux.alibaba.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] f2fs: show the CP_PAUSE reason in checkpoint traces
-Date:   Fri,  3 Jan 2020 08:49:28 +0530
-Message-Id: <1578021568-21552-1-git-send-email-stummala@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+Cc:     mst@redhat.com, slp@redhat.com, virtio-dev@lists.oasis-open.org,
+        gerry@linux.alibaba.com, jing2.liu@intel.com, chao.p.peng@intel.com
+References: <cover.1577240905.git.zhabin@linux.alibaba.com>
+ <a11d4c616158c9fb1ca4575ca0530b2e17b952fa.1577240905.git.zhabin@linux.alibaba.com>
+ <85eeab19-1f53-6c45-95a2-44c1cfd39184@redhat.com>
+ <28da67db-73ab-f772-fb00-5a471b746fc5@linux.intel.com>
+ <683cac51-853d-c8c8-24c6-b01886978ca4@redhat.com>
+ <42346d41-b758-967a-30b7-95aa0d383beb@linux.intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <0c3d33de-3940-7895-2fe2-81de8714139c@redhat.com>
+Date:   Fri, 3 Jan 2020 11:24:48 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <42346d41-b758-967a-30b7-95aa0d383beb@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the duplicate CP_UMOUNT enum and add the new CP_PAUSE
-enum to show the checkpoint reason in the trace prints.
 
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
----
- include/trace/events/f2fs.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On 2020/1/2 =E4=B8=8B=E5=8D=885:13, Liu, Jing2 wrote:
+> [...]
+>
+>>>>
+>>>>> +
+>>>>> +/* RO: MSI feature enabled mask */
+>>>>> +#define VIRTIO_MMIO_MSI_ENABLE_MASK=C2=A0=C2=A0=C2=A0 0x8000
+>>>>> +/* RO: Maximum queue size available */
+>>>>> +#define VIRTIO_MMIO_MSI_STATUS_QMASK=C2=A0=C2=A0=C2=A0 0x07ff
+>>>>> +/* Reserved */
+>>>>> +#define VIRTIO_MMIO_MSI_STATUS_RESERVED=C2=A0=C2=A0=C2=A0 0x7800
+>>>>> +
+>>>>> +#define VIRTIO_MMIO_MSI_CMD_UPDATE=C2=A0=C2=A0=C2=A0 0x1
+>>>>
+>>>>
+>>>> I believe we need a command to read the number of vectors supported=20
+>>>> by the device, or 2048 is assumed to be a fixed size here?
+>>>
+>>> For not bringing much complexity, we proposed vector per queue and=20
+>>> fixed relationship between events and vectors.
+>>
+>>
+>> It's a about the number of MSIs not the mapping between queues to=20
+>> MSIs.And it looks to me it won't bring obvious complexity, just need=20
+>> a register to read the #MSIs. Device implementation may stick to a=20
+>> fixed size.
+>
+> Based on that assumption, the device supports #MSIs =3D #queues +=20
+> #config. Then driver need not read the register.
+>
+> We're trying to make such kind of agreement on spec level.
 
-diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
-index 1796ff9..3a17252 100644
---- a/include/trace/events/f2fs.h
-+++ b/include/trace/events/f2fs.h
-@@ -49,6 +49,7 @@
- TRACE_DEFINE_ENUM(CP_RECOVERY);
- TRACE_DEFINE_ENUM(CP_DISCARD);
- TRACE_DEFINE_ENUM(CP_TRIMMED);
-+TRACE_DEFINE_ENUM(CP_PAUSE);
- 
- #define show_block_type(type)						\
- 	__print_symbolic(type,						\
-@@ -124,7 +125,7 @@
- 		{ CP_SYNC,	"Sync" },				\
- 		{ CP_RECOVERY,	"Recovery" },				\
- 		{ CP_DISCARD,	"Discard" },				\
--		{ CP_UMOUNT,	"Umount" },				\
-+		{ CP_PAUSE,	"Pause" },				\
- 		{ CP_TRIMMED,	"Trimmed" })
- 
- #define show_fsync_cpreason(type)					\
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+
+Ok, I get you now.
+
+But still, having fixed number of MSIs is less flexible. E.g:
+
+- for x86, processor can only deal with about 250 interrupt vectors.
+- driver may choose to share MSI vectors [1] (which is not merged but we=20
+will for sure need it)
+
+[1] https://lkml.org/lkml/2014/12/25/169
+
+
+>
+>>
+>> Having few pages for a device that only have one queue is kind of a=20
+>> waste.
+>
+> Could I ask what's the meaning of few pages here? BTW, we didn't=20
+> define MSIx-like tables for virtio-mmio.
+
+
+I thought you're using a fixed size (2048) for each device. But looks not=
+ :)
+
+Thanks
+
+
+>
+> Thanks,
+>
+> Jing
+>
+>>
+>> Thanks
+>>
+>>
+>>>
+>>>
+>>> So the number of vectors supported by device is equal to the total=20
+>>> number of vqs and config.
+>>>
+>>> We will try to explicitly highlight this point in spec for later=20
+>>> version.
+>>>
+>>>
+>>> Thanks!
+>>>
+>>> Jing
+>>>
+>>>>
+>>>> --------------------------------------------------------------------=
+-
+>>>> To unsubscribe, e-mail: virtio-dev-unsubscribe@lists.oasis-open.org
+>>>> For additional commands, e-mail: virtio-dev-help@lists.oasis-open.or=
+g
+>>>>
+>>>
+>>
+>
+> ---------------------------------------------------------------------
+> To unsubscribe, e-mail: virtio-dev-unsubscribe@lists.oasis-open.org
+> For additional commands, e-mail: virtio-dev-help@lists.oasis-open.org
+>
+
