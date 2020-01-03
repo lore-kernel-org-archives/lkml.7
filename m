@@ -2,110 +2,104 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7394C3276C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B8AC3276C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E03217F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:03:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="evcK4Zux"
+	by mail.kernel.org (Postfix) with ESMTP id 3815C21D56
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:03:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbgACBDo (ORCPT
+        id S1727188AbgACBDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 20:03:44 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:36297 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726677AbgACBDZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 20:03:25 -0500
-Received: by mail-pj1-f68.google.com with SMTP id n59so4070227pjb.1;
-        Thu, 02 Jan 2020 17:03:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=K3e2pmpdtRSb5w927ol9J3ozYI0WGUYA6/KUGnZGZ6w=;
-        b=evcK4Zux9t/ZEnAQZs9Wk8UWEDzoPxaYxPf4jDOU917ig6c7toT3M9IainOD482M/x
-         aqBQwo2oQ/8j0azqFZIxr3OPR7rXaXAJu4Wr+XaCUIP/GFQ7yeQ7c3QCgU7iYLFvhhk6
-         9jt0PtxIrLxHhwOdSMiGgD33c3uWfaqzP+0idgLWql5S2f7ft0Zx53YSNh9ghSA3h+gZ
-         5nwRtXY83M4rl4Dux0gOhobtf+LILiUFgzkD2iPqBg0WZCKQX2GBWvWHOI+VW5OULGVu
-         Ru1aMC3q4hDZ//7CelHjQo/EmzNf4ugjR96A0YUk7vmH1lhx1X5sqP/dTm43iNil//Pq
-         NQCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=K3e2pmpdtRSb5w927ol9J3ozYI0WGUYA6/KUGnZGZ6w=;
-        b=FAS9MH4Ghue3RUEw189hplxPpXVZ9eOQBR+u2GTee/gLmIm0zcZZ2/7MMW9S8VV+uv
-         GXGnpEauwj6Va8V1j4cz8Qg5qJPMlDWo/kgctRrkq6zmUI7h1RibnYcKs2zY4UF6KAEH
-         KWXKfNC8giKzKPP802OV/opgaJXQpYYrsv3eeZEe2uWwVphwGv/hfuvotg7iFonTbbFk
-         pyfyEEZ71z7txZJcp1LmNRNZJpQFZ1hEchXTdNkeqMpEqb0NiaS4pgqwmbjldgg2O1Mt
-         JI1+9Bo6zeR/rp0BdpxzAZyVRw3BEQZ+rCckdLV4p7mGvfIfgCBboBeXwjF7Huh8sKiE
-         NNrQ==
-X-Gm-Message-State: APjAAAWYfqPqUMSeqyh4j3Eb2EOBW27YJyB1h9LhsV64MVx4O3ikkURh
-        YSUuxfeqroE4RqW+o4T48eg=
-X-Google-Smtp-Source: APXvYqyrApHb/dgDqwvcYOpc6KpzMuWfkABXmM1ZzQO3FgBBCXHS8OnpajiSSlyaHBHE+iXzz1nSiQ==
-X-Received: by 2002:a17:902:d694:: with SMTP id v20mr48567049ply.127.1578013404436;
-        Thu, 02 Jan 2020 17:03:24 -0800 (PST)
-Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id 5sm12780784pjt.28.2020.01.02.17.03.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 17:03:24 -0800 (PST)
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "David S . Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>
-Subject: [PATCH v3 1/3] net: phylink: switch to using fwnode_gpiod_get_index()
-Date:   Thu,  2 Jan 2020 17:03:18 -0800
-Message-Id: <20200103010320.245675-2-dmitry.torokhov@gmail.com>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-In-Reply-To: <20200103010320.245675-1-dmitry.torokhov@gmail.com>
-References: <20200103010320.245675-1-dmitry.torokhov@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 2 Jan 2020 20:03:22 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:47460 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727134AbgACBDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 20:03:19 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6107A1A1B0C;
+        Fri,  3 Jan 2020 02:03:12 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 543001A1B0B;
+        Fri,  3 Jan 2020 02:03:12 +0100 (CET)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 0416B205C2;
+        Fri,  3 Jan 2020 02:03:11 +0100 (CET)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>
+Subject: [PATCH v2 00/10] crypto: caam - backlogging support
+Date:   Fri,  3 Jan 2020 03:02:43 +0200
+Message-Id: <1578013373-1956-1-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of fwnode_get_named_gpiod() that I plan to hide away, let's use
-the new fwnode_gpiod_get_index() that mimics gpiod_get_index(), but
-works with arbitrary firmware node.
+Integrate crypto_engine framework into CAAM, to make use of
+the engine queue.
+Added support for SKCIPHER, HASH, RSA and AEAD algorithms.
+This is intended to be used for CAAM backlogging support.
+The requests, with backlog flag (e.g. from dm-crypt) will be
+listed into crypto-engine queue and processed by CAAM when free.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+While here, I've also made some refactorization.
+Patches #1 - #4 include some refactorizations on caamalg, caamhash
+and caampkc.
+Patches #5, #6 change the return code of caam_jr_enqueue function
+to -EINPROGRESS, in case of success, -ENOSPC in case the CAAM is
+busy, -EIO if it cannot map the caller's descriptor.
+Also, to keep each request information, like backlog flag, a new
+struct is passed as argument to enqueue function.
+Patches #7 - #10 integrate crypto_engine into CAAM, for
+SKCIPHER/AEAD/RSA/HASH algorithms.
+
+---
+Changes since V1:
+	- remove helper function - akcipher_request_cast;
+	- remove any references to crypto_async_request,
+	  use specific request type;
+	- remove bypass crypto-engine queue, in case is empty;
+	- update some commit messages;
+	- remove unrelated changes, like whitespaces;
+	- squash some changes from patch #9 to patch #6;
+	- added Reviewed-by.
 ---
 
- drivers/net/phy/phylink.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Iuliana Prodan (10):
+  crypto: caam - refactor skcipher/aead/gcm/chachapoly {en,de}crypt
+    functions
+  crypto: caam - refactor ahash_done callbacks
+  crypto: caam - refactor ahash_edesc_alloc
+  crypto: caam - refactor RSA private key _done callbacks
+  crypto: caam - change return code in caam_jr_enqueue function
+  crypto: caam - refactor caam_jr_enqueue
+  crypto: caam - support crypto_engine framework for SKCIPHER algorithms
+  crypto: caam - add crypto_engine support for AEAD algorithms
+  crypto: caam - add crypto_engine support for RSA algorithms
+  crypto: caam - add crypto_engine support for HASH algorithms
 
-diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-index ba9468cc8e134..3f7fa634134a1 100644
---- a/drivers/net/phy/phylink.c
-+++ b/drivers/net/phy/phylink.c
-@@ -186,8 +186,8 @@ static int phylink_parse_fixedlink(struct phylink *pl,
- 			pl->link_config.pause |= MLO_PAUSE_ASYM;
- 
- 		if (ret == 0) {
--			desc = fwnode_get_named_gpiod(fixed_node, "link-gpios",
--						      0, GPIOD_IN, "?");
-+			desc = fwnode_gpiod_get_index(fixed_node, "link", 0,
-+						      GPIOD_IN, "?");
- 
- 			if (!IS_ERR(desc))
- 				pl->link_gpio = desc;
+ drivers/crypto/caam/Kconfig    |   1 +
+ drivers/crypto/caam/caamalg.c  | 450 +++++++++++++++++++----------------------
+ drivers/crypto/caam/caamhash.c | 357 +++++++++++++++++---------------
+ drivers/crypto/caam/caampkc.c  | 205 ++++++++++++-------
+ drivers/crypto/caam/caampkc.h  |  22 ++
+ drivers/crypto/caam/caamrng.c  |   4 +-
+ drivers/crypto/caam/intern.h   |   3 +
+ drivers/crypto/caam/jr.c       |  37 +++-
+ drivers/crypto/caam/key_gen.c  |   2 +-
+ 9 files changed, 597 insertions(+), 484 deletions(-)
+
 -- 
-2.24.1.735.g03f4e72817-goog
+2.1.0
 
