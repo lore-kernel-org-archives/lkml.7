@@ -2,112 +2,119 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC81C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE45C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B72D21734
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1295721734
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:48:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pa8jbl7N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgACPsF (ORCPT
+        id S1727927AbgACPsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 10:48:05 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51680 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727539AbgACPsF (ORCPT
+        Fri, 3 Jan 2020 10:48:53 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46671 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727539AbgACPsx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 10:48:05 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 003FjGlX048060
-        for <linux-kernel@vger.kernel.org>; Fri, 3 Jan 2020 10:48:03 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xa0qumhgq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 10:48:03 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 3 Jan 2020 15:48:02 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 3 Jan 2020 15:47:57 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 003FlAcs48955870
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 Jan 2020 15:47:10 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D9739AE045;
-        Fri,  3 Jan 2020 15:47:56 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5FA89AE053;
-        Fri,  3 Jan 2020 15:47:55 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.213.69])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  3 Jan 2020 15:47:55 +0000 (GMT)
-Subject: Re: [PATCH v6 0/3] IMA: Deferred measurement of keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        James.Bottomley@HansenPartnership.com,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Date:   Fri, 03 Jan 2020 10:47:54 -0500
-In-Reply-To: <1578064099.5874.170.camel@linux.ibm.com>
-References: <20200103055608.22491-1-nramas@linux.microsoft.com>
-         <1578064099.5874.170.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20010315-0016-0000-0000-000002DA3A69
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20010315-0017-0000-0000-0000333CA818
-Message-Id: <1578066474.5874.174.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2020-01-03_05:2020-01-02,2020-01-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 phishscore=0 impostorscore=0 mlxscore=0 suspectscore=0
- bulkscore=0 mlxlogscore=999 adultscore=0 priorityscore=1501 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001030144
+        Fri, 3 Jan 2020 10:48:53 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z124so23577048pgb.13;
+        Fri, 03 Jan 2020 07:48:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4841VwPNpkn9wbZnO4BJL9lu8LuOyQW8ecW89W7VNVc=;
+        b=Pa8jbl7NgH9la/TweVO32qWWwqzMuJNgzm8nH7knLfbRtYW9QE6qaXLJ2/1dCij4nW
+         Ux8yY1QF/sDJIAih9Ef5Hhi799FQtwTcYELpqRcb1hX1ave09efKfCyUFTB1/S7SmMX5
+         PMa0Axr1Dzu+JxBEgMPZiVDvskx4a3XBW6c7lfxGJnSyWloTCTijtHizbakiD35zFiZK
+         v+P8WEnSE6cAxvu+3qoG8SnvmrnlSXzhd8FwOipZjt5le5YDgJ6LB1177ZRktCSCbOys
+         osFZKTpD8GkzDsv7Q/vJSqDXC4BFGVAD1OjwGd6/ZaiUGH9TdgAleWzq/LezF4F1xvjo
+         9J2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4841VwPNpkn9wbZnO4BJL9lu8LuOyQW8ecW89W7VNVc=;
+        b=lDjzK9Ufr5MLWXgtP52XBidVD2Jpxdtr4sgcAzbdIPpNFhaeUfpOim4FbA4949C/4w
+         Gnvcu1N0SiwBHjGTfZ0st0D6R534QwTH32lDEgY7FGxbB4JIIDB/NzfFRbsGVcHAmvuq
+         Q0TBwr0AMa+cXUqbBZaFUQNzR3qg2lBmxH6Btzcmxwj+sGU0XVL7aGaKCcQ8f2udCBtj
+         ocau/5vEXBjtY2RNtWIibGpPFEGX8YykTxBXGqtmUQDtGIfbeCCv4i2u94Eo69GtH/6E
+         mGtF5prQq7QIMyM9/uvJEwGLf0RSaumPGROGx6NG+/4R0i6px/sDzvcrZw3gcVG42Bny
+         Z4jQ==
+X-Gm-Message-State: APjAAAUAro3NLIea1x9x9hpnEIwR1C6+XxSED+KKcVVFaYuyJGymMbY3
+        EuBMi/3oD2EG2/efA0SK7+4=
+X-Google-Smtp-Source: APXvYqyfy6Tr7QCeoOvv+AXrziEDm9uVlHL+x6axpvgqGKFvrxVuIPtwM1hrAiXqYJWCcCLRyDTVDA==
+X-Received: by 2002:a63:2ac2:: with SMTP id q185mr97770833pgq.417.1578066532263;
+        Fri, 03 Jan 2020 07:48:52 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k5sm14922486pju.5.2020.01.03.07.48.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jan 2020 07:48:51 -0800 (PST)
+Subject: Re: [PATCH 5.4 000/191] 5.4.8-stable review
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Chengguang Xu <cgxu519@mykernel.net>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>, LTP List <ltp@lists.linux.it>,
+        Jan Stancek <jstancek@redhat.com>,
+        John Stultz <john.stultz@linaro.org>
+References: <20200102215829.911231638@linuxfoundation.org>
+ <CA+G9fYuPkOGKbeQ0FKKx4H0Bs-nRHALsFtwyRw0Rt5DoOCvRHg@mail.gmail.com>
+ <CAK8P3a1+Srey_7cUd0xfaO8HdMv5tkUcs6DeDXzcUKkUD-DnGQ@mail.gmail.com>
+ <CAK8P3a24EkUXTu-K2c-5B3w-LZwY7zNcX0dZixb3gd59vRw_Kw@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <180c36d7-336b-f7a9-66d4-49703eca2aa9@roeck-us.net>
+Date:   Fri, 3 Jan 2020 07:48:49 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <CAK8P3a24EkUXTu-K2c-5B3w-LZwY7zNcX0dZixb3gd59vRw_Kw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-01-03 at 10:08 -0500, Mimi Zohar wrote:
-> > This change adds support for queuing keys created or updated before
-> > a custom IMA policy is loaded. The queued keys are processed when
-> > a custom policy is loaded. Keys created or updated after a custom policy
-> > is loaded are measured immediately (not queued).
-> > 
-> > If the kernel is built with both CONFIG_IMA and
-> > CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE enabled then the IMA policy
-> > must be applied as a custom policy for the keys to be measured.
-> > If a custom IMA policy is not provided within 5 minutes after
-> > IMA is initialized, any queued keys will be freed.
+On 1/3/20 7:29 AM, Arnd Bergmann wrote:
+> On Fri, Jan 3, 2020 at 4:25 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>>
+>> On Fri, Jan 3, 2020 at 4:03 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>>>
+>>> On Fri, 3 Jan 2020 at 03:42, Greg Kroah-Hartman
+>>> <gregkh@linuxfoundation.org> wrote:
+>>
+>> -ENOENT is what you get when hugetlbfs is not mounted, so this hints to
+>>
+>> 8fc312b32b2  mm/hugetlbfs: fix error handling when setting up mounts
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-5.4.y&id=3f549fb42a39bea3b29c0fc12afee53c4a01bec9
 > 
-> As the merge message, this is too much information.  I would extend
-> the previous paragraph and drop this one, like:
-> "... (not queued).  In the case when a custom policy is not loaded
-> within 5 minutes of IMA initialization, the queued keys are freed."
+> I see that Mike Kravetz suggested not putting this patch into stable in
 > 
-> > This is by design.
+> https://lore.kernel.org/lkml/befca227-cb8a-8f47-617d-e3bf9972bfec@oracle.com/
 > 
-> It's unclear what "is by design" refers to.  Perhaps expand this
-> sentence like: "Measuring the early boot keys, by design, requires
-> loading a custom policy.
+> but it was picked through the autosel mechanism later.
+> 
 
-Instead of including this comment as the last sentence of the cover
-letter, it would make a good opening sentence for the second
-paragraph.
+I think autosel is way too aggressive. This is an excellent example.
 
-Mimi
-
+Guenter
