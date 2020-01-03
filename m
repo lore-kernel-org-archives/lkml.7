@@ -2,174 +2,181 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020A6C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D39EFC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC08E21734
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0A6421734
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:29:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="OHSZ65bR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qqjelQ0+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgACQ3q (ORCPT
+        id S1728045AbgACQ3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 11:29:46 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34440 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727928AbgACQ3n (ORCPT
+        Fri, 3 Jan 2020 11:29:50 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45933 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727969AbgACQ3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 11:29:43 -0500
-Received: by mail-pl1-f193.google.com with SMTP id x17so19229064pln.1
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 08:29:43 -0800 (PST)
+        Fri, 3 Jan 2020 11:29:45 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 59so61796322otp.12;
+        Fri, 03 Jan 2020 08:29:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AjtYs0UBINRJ4+zsLLVMr6kENETZfvFZvXMDxajufTI=;
-        b=OHSZ65bRDGA3pSlea/mIUMh4/x/eUVHnSjYPqjrSWQe1HIHWnrT90Ez8p9Yhwz/857
-         uAmmm/wDVZ6zgRlBObJhm2qRWglCHL8cr68F/wOiQ58rRY6S33Ip6pfb5bubDMm5Ut9D
-         0ffkmMneo7XM01oGFghkFS2/Bv3O7MjYbg6nk=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TP17Q6SBM8RfPS7JEf89IxBEEl+82WJKOot5C8K9N98=;
+        b=qqjelQ0+Kba+Pvu7W6JzOzsWlxmU4Ap+PUQ1JAnf1w4z9lOX0l2NhJIYieVbWYkq+i
+         tZnhI+JcVeUs9DSAbecaKFqKLjENQC/bJXsXocYpxG/SaqscK8CFG6Q3VMOkAPlGS+vG
+         NXTkv9j3ucpnFzf2QRu0uiA74wdEuNrJJ6QSBTmxAcPD9TmNe9mnDfArKRMUVuVuQ3Ou
+         fgGlmjc677XGKTIEGhvglgnnFTTlb2s+aE66EfKRY8Pqg2Hop+iVfDEArN2O7oDnkG69
+         whfs/9FCtOBgZogqFllOd00fE8JMvYZwHR0GoFtWLyKVfcYf2bfe+Iok4a+DPiocc2+J
+         udBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AjtYs0UBINRJ4+zsLLVMr6kENETZfvFZvXMDxajufTI=;
-        b=UhxEqpEuoSZV2Hh8ytK0bvWFFWpYpJvg7+bZHoHOh92zi31rGwgtP/aATzfXralg0n
-         XdxxRi+8mWVo+TB4abgrabjfT/8ReCA03mOBA0PEKaeK79PQfAwlH+FwpU8HgRhLH74f
-         ZXLf0cODdPUZaIxk6UvqNUO+wb0MH37JWi3v8m0t4UA0J3Cb+QYlB/QDgpHE573r9pck
-         NtsgetU4Xxxgh0xJaIgPHV4qB6t4/Q2/890g42f0XaL2ET4zdNhkG8536sujLcg0zjl9
-         je1IEiOVHSzfhvcFmbz545uQlAov25nxuFZYaXGVYZKQx4zkUizoaHCauUe9CHJk4Eov
-         /ZuA==
-X-Gm-Message-State: APjAAAVegvES9tXqV1OFV+8iebpk/VG556mcj5IHjltgY8OWyvs9LYl+
-        cdtpX0+wc9JH4RGXgvT+atksDCIXGhBh14dg
-X-Google-Smtp-Source: APXvYqxgDqGdS6beRqsWT3wx3IkYkSpOQVLFgAnGl1qpFlaigdh9WdUHvgEazdhdeNpP7mAVwFmyiQ==
-X-Received: by 2002:a17:902:7d94:: with SMTP id a20mr87107883plm.26.1578068982189;
-        Fri, 03 Jan 2020 08:29:42 -0800 (PST)
-Received: from ubuntu.netflix.com (203.20.25.136.in-addr.arpa. [136.25.20.203])
-        by smtp.gmail.com with ESMTPSA id m22sm67373970pgn.8.2020.01.03.08.29.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 08:29:41 -0800 (PST)
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     Sargun Dhillon <sargun@sargun.me>, tycho@tycho.ws,
-        jannh@google.com, cyphar@cyphar.com, christian.brauner@ubuntu.com,
-        oleg@redhat.com, luto@amacapital.net, viro@zeniv.linux.org.uk,
-        gpascutto@mozilla.com, ealvarez@mozilla.com, fweimer@redhat.com,
-        jld@mozilla.com, arnd@arndb.de
-Subject: [PATCH v8 0/3] Add pidfd_getfd syscall
-Date:   Fri,  3 Jan 2020 08:29:25 -0800
-Message-Id: <20200103162928.5271-1-sargun@sargun.me>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TP17Q6SBM8RfPS7JEf89IxBEEl+82WJKOot5C8K9N98=;
+        b=n67tly/MuUa+QJzx6r6wRj3UjMjFGYsqhcaOF4/Jv0FdZRlWx2msUs+TU1ov+iVI09
+         6WmvFUYa30E/27cV/iNJWbfSYJcwEEDu+kCjRfWGDi69zy1+mskFUuJy5g426Vgtw4op
+         BZCuPUkxsG5j4Jt5/fvK72ppgrO8Q42zW6H+M8457ip7vrEavXDylZq+qwBtLkBsZL5C
+         LIZLXDn8KwbYUyJXe7WYP8a8LlKxI8g6bGr72LyQoC6X5QFwbsMFCoXS8qkD32jLOPtZ
+         mC+B/DH89buEEpOlWnlzY1nv3STrw/8SFvQVznHNsh5yGiRbbvKzCYuDAVUZQ5zu2pq+
+         dwrw==
+X-Gm-Message-State: APjAAAUYnGrofmNCPsXeS//AZLximddfqiySLWnLERM7JuK2/oVVkFv7
+        Xcvs4oA51ZVoVKIS885+WI+ptCp+LrK43z1wXeM=
+X-Google-Smtp-Source: APXvYqyx0qfOGlCgf+mbqVx1RA3NJa/iWXu/notHG2jRzI1XyQlklOpJtiW2znnOyK1gz/QnIOAs/YVhOvNs6/K2WcU=
+X-Received: by 2002:a9d:5c02:: with SMTP id o2mr92142289otk.176.1578068984784;
+ Fri, 03 Jan 2020 08:29:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20191213084748.11210-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20191213084748.11210-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 3 Jan 2020 16:29:18 +0000
+Message-ID: <CA+V-a8uZqwfbYNec7bPWf5RuZP-zVkAyAz8SMueJic5wU0zyBw@mail.gmail.com>
+Subject: Re: [v2 4/6] dt-bindings: PCI: rcar: Add bindings for R-Car PCIe
+ endpoint controller
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset introduces a mechanism (pidfd_getfd syscall) to get file
-descriptors from other processes via pidfd. Although this can be achieved
-using SCM_RIGHTS, and parasitic code injection, this offers a more
-straightforward mechanism, with less overhead and complexity. The process
-under manipulation's fd still remains valid, and unmodified by the
-copy operation.
+Hi Kishon/Rob,
 
-It introduces a flags field. The flags field is reserved a the moment,
-but the intent is to extend it with the following capabilities:
- * Close the remote FD when copying it
- * Drop the cgroup data if it's a fd pointing a socket when copying it
+On Fri, Dec 13, 2019 at 8:48 AM Lad Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+>
+> From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> This patch adds the bindings for the R-Car PCIe endpoint driver.
+>
+> Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  .../devicetree/bindings/pci/rcar-pci-ep.txt        | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+>
+> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+> new file mode 100644
+> index 0000000..7f0a97e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+> @@ -0,0 +1,37 @@
+> +* Renesas R-Car PCIe Endpoint Controller DT description
+> +
+> +Required properties:
+> +           "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
+> +           "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
+> +                                    RZ/G2 compatible device.
+> +
+> +           When compatible with the generic version, nodes must list the
+> +           SoC-specific version corresponding to the platform first
+> +           followed by the generic version.
+> +
+> +- reg: base address and length of the PCIe controller registers.
+> +- outbound-ranges: outbound windows base address and length including the flags.
+> +- resets: Must contain phandles to PCIe-related reset lines exposed by IP block
+> +- clocks: from common clock binding: clock specifiers for the PCIe controller
+> +        clock.
+> +- clock-names: from common clock binding: should be "pcie".
+> +
+> +Optional Property:
+> +- max-functions: Maximum number of functions that can be configured (default 1).
+> +
+> +Example:
+> +
+> +SoC-specific DT Entry:
+> +
+> +       pcie_ep: pcie_ep@fe000000 {
+> +               compatible = "renesas,pcie-ep-r8a774c0", "renesas,pcie-rcar-gen2";
+> +               reg = <0 0xfe000000 0 0x80000>;
+> +               outbound-ranges = <0xa 0x0 0xfe100000 0 0x000100000
+> +                                  0xa 0x0 0xfe200000 0 0x000200000
+> +                                  0x6 0x0 0x30000000 0 0x008000000
+> +                                  0x6 0x0 0x38000000 0 0x008000000>;
+> +               clocks = <&cpg CPG_MOD 319>;
+> +               clock-names = "pcie";
+> +               power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
+> +               resets = <&cpg 319>;
+> +       };
 
-The syscall numbers were chosen to be one greater than openat2.
+Now that I have dropped "outbound-ranges", do the below bindings look good ?
 
-Summary of history:
-This initially started as a ptrace command. It did not require the process
-to be stopped, and felt like kind of an awkward fit for ptrace. After that,
-it moved to an ioctl on the pidfd. Given functionality, it made sense to
-make it a syscall which did not require the process to be stopped.
+- reg-names: Must include the following names
+ - "apb-base" - Controller base
+ - "memory0" - memory window 0 used by the host to map the pci address locally
+ - "memory1" - memory window 1 used by the host to map the pci address locally
+- "memory2" - memory window 2 used by the host to map the pci address locally
+- "memory3" - memory window 3 used by the host to map the pci address locally
 
-Previous versions:
- V7: https://lore.kernel.org/lkml/20191226180227.GA29389@ircssh-2.c.rugged-nimbus-611.internal/
- V6: https://lore.kernel.org/lkml/20191223210823.GA25083@ircssh-2.c.rugged-nimbus-611.internal/
- V5: https://lore.kernel.org/lkml/20191220232746.GA20215@ircssh-2.c.rugged-nimbus-611.internal/
- V4: https://lore.kernel.org/lkml/20191218235310.GA17259@ircssh-2.c.rugged-nimbus-611.internal/
- V3: https://lore.kernel.org/lkml/20191217005842.GA14379@ircssh-2.c.rugged-nimbus-611.internal/
- V2: https://lore.kernel.org/lkml/20191209070446.GA32336@ircssh-2.c.rugged-nimbus-611.internal/
- RFC V1: https://lore.kernel.org/lkml/20191205234450.GA26369@ircssh-2.c.rugged-nimbus-611.internal/
+    pcie-ep: pcie_ep@fe000000 {
+        compatible = "renesas,pcie-r8a774c0", "renesas,pcie-rcar-gen2";
+        reg = <0 0xfe000000 0 0x80000>,
+            <0x0 0xfe100000 0 0x100000>,
+            <0x0 0xfe200000 0 0x200000>,
+            <0x0 0x30000000 0 0x8000000>,
+            <0x0 0x38000000 0 0x8000000>;
+        reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
+        clocks = <&cpg CPG_MOD 319>;
+        clock-names = "pcie";
+        power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
+        resets = <&cpg 319>;
+    };
 
-Changes since v7:
- * No longer put security_file_recv at the end, and align with other
-   usages of putting it at the end of the file_recv.
- * Rewrite self-tests in kselftest harness.
- * Minor refactoring
-
-Changes since v6:
- * Proper attribution of get_task_file helper
- * Move all types for syscall to int to represent fd
-
-Changes since v5:
- * Drop pidfd_getfd_options struct and replace with a flags field
-
-Changes since v4:
- * Turn into a syscall
- * Move to PTRACE_MODE_ATTACH_REALCREDS from PTRACE_MODE_READ_REALCREDS
- * Remove the sample code. This will come in another patchset, as the
-   new self-tests cover all the functionality.
-
-Changes since v3:
- * Add self-test
- * Move to ioctl passing fd directly, versus args struct
- * Shuffle around include files
-
-Changes since v2:
- * Move to ioctl on pidfd instead of ptrace function
- * Add security check before moving file descriptor
-
-Changes since the RFC v1:
- * Introduce a new helper to fs/file.c to fetch a file descriptor from
-   any process. It largely uses the code suggested by Oleg, with a few
-   changes to fix locking
- * It uses an extensible options struct to supply the FD, and option.
- * I added a sample, using the code from the user-ptrace sample
-
-Sargun Dhillon (3):
-  vfs, fdtable: Add get_task_file helper
-  pid: Introduce pidfd_getfd syscall
-  test: Add test for pidfd getfd
-
- arch/alpha/kernel/syscalls/syscall.tbl        |   1 +
- arch/arm/tools/syscall.tbl                    |   1 +
- arch/arm64/include/asm/unistd.h               |   2 +-
- arch/arm64/include/asm/unistd32.h             |   2 +
- arch/ia64/kernel/syscalls/syscall.tbl         |   1 +
- arch/m68k/kernel/syscalls/syscall.tbl         |   1 +
- arch/microblaze/kernel/syscalls/syscall.tbl   |   1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl     |   1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl     |   1 +
- arch/mips/kernel/syscalls/syscall_o32.tbl     |   1 +
- arch/parisc/kernel/syscalls/syscall.tbl       |   1 +
- arch/powerpc/kernel/syscalls/syscall.tbl      |   1 +
- arch/s390/kernel/syscalls/syscall.tbl         |   1 +
- arch/sh/kernel/syscalls/syscall.tbl           |   1 +
- arch/sparc/kernel/syscalls/syscall.tbl        |   1 +
- arch/x86/entry/syscalls/syscall_32.tbl        |   1 +
- arch/x86/entry/syscalls/syscall_64.tbl        |   1 +
- arch/xtensa/kernel/syscalls/syscall.tbl       |   1 +
- fs/file.c                                     |  22 +-
- include/linux/file.h                          |   2 +
- include/linux/syscalls.h                      |   1 +
- include/uapi/asm-generic/unistd.h             |   4 +-
- kernel/pid.c                                  |  90 +++++++
- tools/testing/selftests/pidfd/.gitignore      |   1 +
- tools/testing/selftests/pidfd/Makefile        |   4 +-
- .../selftests/pidfd/pidfd_getfd_test.c        | 227 ++++++++++++++++++
- 26 files changed, 365 insertions(+), 6 deletions(-)
- create mode 100644 tools/testing/selftests/pidfd/pidfd_getfd_test.c
-
--- 
-2.20.1
-
+Cheers,
+--Prabhakar
