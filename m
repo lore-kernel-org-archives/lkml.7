@@ -2,137 +2,161 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DB3C00523
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DB0C00523
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE36422B48
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:43:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578041023;
-	bh=Hp7q2TTE4pvo/bziqGh+GKRop6IHs7H6cervwPFzkuY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1fr2JQllWJn7V4+PiLWmPZntbfK6R/42wOMT0iA7f1aALMl0b6XRHPhA5VrlUbOmD
-	 P+KjGkY+fz0c8NpP4jC5MGb0TndfKwX78QkvSaDbhoUEzi8TPhR/UqUhHBJEhYfDKE
-	 T4jd1Zz10jeIwQq8y6bSYj97oZwz13bG/yZGqMxI=
+	by mail.kernel.org (Postfix) with ESMTP id EE93621D7D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:44:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mlZpNNff"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbgACInm (ORCPT
+        id S1727455AbgACIoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 03:43:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55196 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725972AbgACInm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 03:43:42 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A21521D7D;
-        Fri,  3 Jan 2020 08:43:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578041021;
-        bh=Hp7q2TTE4pvo/bziqGh+GKRop6IHs7H6cervwPFzkuY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PtkbFfUrPBMQXP7+xp+mnWGYj/IoYh1ECZ6Km+/UVIBv/1zE3bPF0b7SE6iHKMmMu
-         8uQ6F+AMFhsEh/kkK/RgUW4+fwPnR0Nne64F4G7rFAsV/RJJNWt4NE93WQM/M/r4yg
-         4zlqGEMUmNKr9e145NVxfSSpjdp06rEKmY7TW/dI=
-Date:   Fri, 3 Jan 2020 09:43:39 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH RESEND] ttyprintk: fix a potential sleeping in interrupt
- context issue
-Message-ID: <20200103084339.GA855576@kroah.com>
-References: <20200103034541.5302-1-zhenzhong.duan@gmail.com>
+        Fri, 3 Jan 2020 03:44:09 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33964 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgACIoJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 03:44:09 -0500
+Received: by mail-wr1-f66.google.com with SMTP id t2so41679962wrr.1;
+        Fri, 03 Jan 2020 00:44:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=wpD/6DTuwbigjHCA/o7EMJw93xJaBjyDyEiLPgWqJJc=;
+        b=mlZpNNff/qedkvnBWrceuPOTF2vKYZ9zhE+EBwz3qU+C1EuM+3v4WeJ9FtpV39rY1s
+         eVAUOi9RBj5dP/i+BnBeQ+bdVMRNHclB0vgjDGvzePLRvZ8cqitV8M0ZCZYZQvlyZ3OZ
+         P2BZ84hBgBFc7c84Z/amjquJ/kghUToD1vbsME/Wev8dcJuuY8Ln53LZM7ZBqeXILs7X
+         k4IE2lY1NQZ2r+LP/OY41M6ErUMeqScoYJLNg6oC+WlLbSxBLj9UCou6l5oZ2AZvNdFV
+         h/tJwCFg21vHvmBtXrGmgvu+n1qGKFfTbNIySXyd7ity/LThB91szujBEoDWn+pNB/l0
+         tPVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=wpD/6DTuwbigjHCA/o7EMJw93xJaBjyDyEiLPgWqJJc=;
+        b=Lq7B2sWC3MyS8r+EchTu0dP5O6inFsuqjG/KOHTDZJdUu1sR2O5iynQrAVrFQcpE+K
+         aCOkcDKvDjtLk0zUeSFp75rX1TVYHfGQ1NrkU6jW1OHe05cEjgDW6sgSmhlFT1F8ttvl
+         TMocWfxeZlApLSSyPrrUf6EroS0i+YQUUgKeYTo9XAAfHDZgTgENZlqT1DczjLxeb7EP
+         LpaU6yWfLsYzsZPN8nwU2GqlK+XDyJIH4M++kkutb3Ui2GUocK7jX5CMtNaz3AMifgJo
+         0hTC+sUFGv20KS7vMSg0E/7pxT5Pw70BKUG6isPeOFykItAmcWT5K1qtRS1tifbN2jxl
+         ffiA==
+X-Gm-Message-State: APjAAAWBcUZQ9CtCT6avD0G9Fz9VGa7dlzNzPHYZVXGdCWnjwyqivjfT
+        R9SM2OWv8T2CnIyvKGmo0ng=
+X-Google-Smtp-Source: APXvYqwnTSmXYD7phPs5A9se1DbEYruQ+lnYzvLFX3B+NPj5gayWwnvL2tM+oQ3M808O6qy2Htl5og==
+X-Received: by 2002:adf:f28c:: with SMTP id k12mr85152511wro.360.1578041046918;
+        Fri, 03 Jan 2020 00:44:06 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id b68sm11257968wme.6.2020.01.03.00.44.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2020 00:44:06 -0800 (PST)
+Date:   Fri, 3 Jan 2020 09:44:04 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Namjae Jeon <namjae.jeon@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, linkinjeon@gmail.com
+Subject: Re: [PATCH v9 10/13] exfat: add nls operations
+Message-ID: <20200103084404.tv3fchjmw3ltmwrr@pali>
+References: <20200102082036.29643-1-namjae.jeon@samsung.com>
+ <CGME20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05@epcas1p4.samsung.com>
+ <20200102082036.29643-11-namjae.jeon@samsung.com>
+ <20200102135502.hkey7z45gnprinpp@pali>
+ <003101d5c204$5046e9a0$f0d4bce0$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200103034541.5302-1-zhenzhong.duan@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <003101d5c204$5046e9a0$f0d4bce0$@samsung.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 11:45:41AM +0800, Zhenzhong Duan wrote:
-> Google syzbot reports:
-> BUG: sleeping function called from invalid context at
-> kernel/locking/mutex.c:938
-> in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 0, name: swapper/1
-> 1 lock held by swapper/1/0:
-> ...
-> Call Trace:
->   <IRQ>
->   dump_stack+0x197/0x210
->   ___might_sleep.cold+0x1fb/0x23e
->   __might_sleep+0x95/0x190
->   __mutex_lock+0xc5/0x13c0
->   mutex_lock_nested+0x16/0x20
->   tpk_write+0x5d/0x340
->   resync_tnc+0x1b6/0x320
->   call_timer_fn+0x1ac/0x780
->   run_timer_softirq+0x6c3/0x1790
->   __do_softirq+0x262/0x98c
->   irq_exit+0x19b/0x1e0
->   smp_apic_timer_interrupt+0x1a3/0x610
->   apic_timer_interrupt+0xf/0x20
->   </IRQ>
+On Friday 03 January 2020 16:06:25 Namjae Jeon wrote:
+> > On Thursday 02 January 2020 16:20:33 Namjae Jeon wrote:
+> > > This adds the implementation of nls operations for exfat.
+> > >
+> > > Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
+> > > Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
+> > > ---
+> > >  fs/exfat/nls.c | 809
+> > > +++++++++++++++++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 809 insertions(+)
+> > >  create mode 100644 fs/exfat/nls.c
+> > >
+> > > diff --git a/fs/exfat/nls.c b/fs/exfat/nls.c new file mode 100644
+> > > index 000000000000..af52328e28ff
+> > > --- /dev/null
+> > > +++ b/fs/exfat/nls.c
+> > 
+> > ...
+> > 
+> > > +int exfat_nls_uni16s_to_vfsname(struct super_block *sb,
+> > > +		struct exfat_uni_name *uniname, unsigned char *p_cstring,
+> > > +		int buflen)
+> > > +{
+> > > +	if (EXFAT_SB(sb)->options.utf8)
+> > > +		return __exfat_nls_utf16s_to_vfsname(sb, uniname, p_cstring,
+> > > +				buflen);
+> > > +	return __exfat_nls_uni16s_to_vfsname(sb, uniname, p_cstring,
+> > buflen);
+> > > +}
+> > 
+> > Hello, I'm looking at this function and basically it do nothing.
+> > Or was it supposed that this function should do something more for UTF-8
+> > encoding?
+> > 
+> > There is one if- statement, but in both branches is executed exactly
+> > same code.
+> > 
+> > And executed function just pass same arguments as current callee
+> > function.
+> > 
+> > So calls to exfat_nls_uni16s_to_vfsname() can be replaced by direct
+> > calls to __exfat_nls_uni16s_to_vfsname().
+> Ah, The function names are similar, but not same. see utf16s/uni16s.
 > 
-> Fix it by using spinlock in process context instead of mutex and having
-> interrupt disabled in critical section.
+> Thanks!
+
+Ou, sorry for that :-(
+
+I will look again and more deeply at this encoding code as I think there
+can be some problem with processing utf-16 buffers...
+
+> > 
+> > Or maybe better, rename __exfat_nls_uni16s_to_vfsname() function to
+> > exfat_nls_uni16s_to_vfsname().
+> > 
+> > > +int exfat_nls_vfsname_to_uni16s(struct super_block *sb,
+> > > +		const unsigned char *p_cstring, const int len,
+> > > +		struct exfat_uni_name *uniname, int *p_lossy)
+> > > +{
+> > > +	if (EXFAT_SB(sb)->options.utf8)
+> > > +		return __exfat_nls_vfsname_to_utf16s(sb, p_cstring, len,
+> > > +				uniname, p_lossy);
+> > > +	return __exfat_nls_vfsname_to_uni16s(sb, p_cstring, len, uniname,
+> > > +			p_lossy);
+> > > +}
+> > 
+> > And same for this function.
+> > 
+> > --
+> > Pali Rohár
+> > pali.rohar@gmail.com
 > 
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/char/ttyprintk.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
-
-Why was this resent?  What differs from the first version that required
-it to be resent?
-
-Always give us a clue here please :)
-
-
 > 
-> diff --git a/drivers/char/ttyprintk.c b/drivers/char/ttyprintk.c
-> index 4f24e46ebe7c..56db949a7b70 100644
-> --- a/drivers/char/ttyprintk.c
-> +++ b/drivers/char/ttyprintk.c
-> @@ -15,10 +15,11 @@
->  #include <linux/serial.h>
->  #include <linux/tty.h>
->  #include <linux/module.h>
-> +#include <linux/spinlock.h>
->  
->  struct ttyprintk_port {
->  	struct tty_port port;
-> -	struct mutex port_write_mutex;
-> +	spinlock_t spinlock;
->  };
->  
->  static struct ttyprintk_port tpk_port;
-> @@ -99,11 +100,12 @@ static int tpk_open(struct tty_struct *tty, struct file *filp)
->  static void tpk_close(struct tty_struct *tty, struct file *filp)
->  {
->  	struct ttyprintk_port *tpkp = tty->driver_data;
-> +	unsigned long flags;
->  
-> -	mutex_lock(&tpkp->port_write_mutex);
-> +	spin_lock_irqsave(&tpkp->spinlock, flags);
->  	/* flush tpk_printk buffer */
->  	tpk_printk(NULL, 0);
 
-Are you sure you can call this with a spinlock held?
-
-Doesn't your trace above show the opposite?
-
-What is wrong with sleeping during the mutex you currently have?  How is
-syzbot reporting this error, is there a reproducer somewhere?
-
-thanks,
-
-greg k-h
+-- 
+Pali Rohár
+pali.rohar@gmail.com
