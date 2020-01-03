@@ -2,103 +2,127 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554C7C00523
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B753FC00523
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2828721734
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F5D121734
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:00:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YLgzDTAf"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="HVHMul+0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbgACJAb (ORCPT
+        id S1727465AbgACJAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 04:00:31 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34713 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgACJAa (ORCPT
+        Fri, 3 Jan 2020 04:00:34 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:49319 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbgACJAb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 04:00:30 -0500
-Received: by mail-lf1-f65.google.com with SMTP id l18so23295899lfc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 01:00:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=+bJCZLqGGAfEAm4pWyHBrj/nn/5vuksWt0O0tN8ngok=;
-        b=YLgzDTAfGrKOJy7kTl06OexdF/WJipSdmj32S2vZup/GXoPX62/iaHXdQmh2cv3WUU
-         wZfiTgkX5vq9QQ8U38lKU5l3CqNhR8/oQdSvd1L7Uf5T/AzAfa8ipCk9wBE/jZ0i4yGx
-         p14hyjWijfNc1QD0AHvGO6tDp+fc8fv4ijf07ifPpNVIlRuFrzBdN5yI3I+Y5sYx7UAQ
-         Qo+wj1hwSKcBJLdc2ixO1RPwv7QByTEdfR1rnqgc81XXWCuH0WkOFeooLxES6vOXyjLt
-         2iI8Gbo+vBlsKYyzHkHYJsSTKNF9X3wOp5O9/3Lm2eiO9Ah+A4XxSKQUMKYqu/MUVrcA
-         fGKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=+bJCZLqGGAfEAm4pWyHBrj/nn/5vuksWt0O0tN8ngok=;
-        b=F/KXTTV/TSGwR0hwz8gklpHotG0m5XL9zrrSDXjznXOIYhTqu6vTLWTBAhWXIWSQu3
-         IOos34I9emZ8Gb5WeGkPcVFeG0aux7NYs4nOoSbt9p3M4NOAbUZdcSqoalB6VI32x2Bg
-         yrkT3z60cSKiOLaaK1IaX/w+iWFePVtndWloS81YLRlcylr2KPLlQj+P7GQo+OGd96t3
-         IwrQ6oAit+Jc6+oLspmZR2j7dGzgABBmxB4eKMKiRfJbE4pyFknRAGDlgx9eG3ld+xcw
-         n6m8yl7DpieyyaBjDhlDReJo7CYIZHoZTMQLrNnkZbVpLJdIdhBPIcx1IYuZ5P9EdkiI
-         vs6g==
-X-Gm-Message-State: APjAAAWT1Oi5QOvUm541jsxi9sAto6RShrchvgE/qjpR3D1qJBme1201
-        Q+Z/jMB3G7g2cSZtsk6H+aYEVA==
-X-Google-Smtp-Source: APXvYqxHz6YOYwivJoSxhqlSJg3HugBnTerrXFQsJwx2kcoUtyy25+ZVE9A88tuIdBzfxaI9c9ocxw==
-X-Received: by 2002:a19:5201:: with SMTP id m1mr51956951lfb.114.1578042028505;
-        Fri, 03 Jan 2020 01:00:28 -0800 (PST)
-Received: from jax (h-249-223.A175.priv.bahnhof.se. [98.128.249.223])
-        by smtp.gmail.com with ESMTPSA id k25sm23877975lji.42.2020.01.03.01.00.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 Jan 2020 01:00:27 -0800 (PST)
-Date:   Fri, 3 Jan 2020 10:00:26 +0100
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-To:     arm@kernel.org, soc@kernel.org
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        tee-dev@lists.linaro.org
-Subject: [GIT PULL] optee platform driver for v5.6
-Message-ID: <20200103090025.GA11243@jax>
+        Fri, 3 Jan 2020 04:00:31 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id C6944230E1;
+        Fri,  3 Jan 2020 10:00:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1578042029;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cxest8tMtRZIdMS9+HLvWHLoP9WwYOR1xCl5Hh5xNZQ=;
+        b=HVHMul+06/ZqJth5tKFXAnG5dpRCq4qhYeW3NtIHl/pcOfI7lniaAEVLNvdgIL4ZRV/eMq
+        9pHtaXe2W30cM+5iMTQ3BfdBfegn/YY2xoQlPYHJQPRSOMvWYZOuIsf63p8cyeDFz5Hra6
+        pPajyaQkEQJ0mLNgU90PDN65qrDSUZI=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 03 Jan 2020 10:00:27 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 2/2] clk: fsl-sai: new driver
+In-Reply-To: <20200102080929.0EE2C215A4@mail.kernel.org>
+References: <20191209233305.18619-1-michael@walle.cc>
+ <20191209233305.18619-2-michael@walle.cc>
+ <20191224080536.B0C99206CB@mail.kernel.org>
+ <91275d33d6a7c9978a2c70545fde38cd@walle.cc>
+ <20200102080929.0EE2C215A4@mail.kernel.org>
+Message-ID: <6b092a602b3b8cf09160b1dcb4a282e6@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.8
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: C6944230E1
+X-Spamd-Result: default: False [1.40 / 15.00];
+         ARC_NA(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[7];
+         NEURAL_HAM(-0.00)[-0.273];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello arm-soc maintainers,
+Hi Stephen,
 
-Please pull this OP-TEE driver update where the driver is modeled as a
-platform driver instead.
+>> >> +       parent_name = of_clk_get_parent_name(node, 0);
+>> >
+>> > Could this use the new way of specifying clk parents so that we don't
+>> > have to query DT for parent names and just let the core framework do it
+>> > whenever it needs to?
+>> 
+>> you mean specifying parent_data with .index = 0? Seems like
+>> clk_composite
+>> does not support this. The parent can only be specified by supplying 
+>> the
+>> clock names.
+>> 
+>> I could add that in a separate patch. What do you think about the
+>> following new functions, where a driver can use parent_data instead
+>> of parent_names.
+> 
+> I started doing this in
+> https://lkml.kernel.org/r/20190830150923.259497-1-sboyd@kernel.org but 
+> I
+> never got around to the composite clks. Sounds fine to add this new API
+> for your use case.
 
-Thanks,
-Jens
+Yeah took me a while to figure out what you've meant by the "new way" ;)
+Anyway, I've posted a v3 of this series with the new composite clock 
+API.
 
-The following changes since commit d1eef1c619749b2a57e514a3fa67d9a516ffa919:
+> 
+>> 
+>> +struct clk *clk_register_composite_pdata(struct device *dev, const 
+>> char
+>> *name,
+>> +               const struct clk_parent_data *parent_data,
+>> +               struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
+>> +               struct clk_hw *rate_hw, const struct clk_ops 
+>> *rate_ops,
+>> +               struct clk_hw *gate_hw, const struct clk_ops 
+>> *gate_ops,
+>> +               unsigned long flags);
 
-  Linux 5.5-rc2 (2019-12-15 15:16:08 -0800)
+num_parents was missing here. added that in the v3.
 
-are available in the Git repository at:
-
-  git://git.linaro.org:/people/jens.wiklander/linux-tee.git tags/tee-optee-pldrv-for-5.6
-
-for you to fetch changes up to f349710e413ad29132373e170c87dd35f2b62069:
-
-  optee: model OP-TEE as a platform device/driver (2020-01-03 09:26:40 +0100)
-
-----------------------------------------------------------------
-Model OP-TEE as a platform device/driver
-
-----------------------------------------------------------------
-Ard Biesheuvel (1):
-      optee: model OP-TEE as a platform device/driver
-
- drivers/tee/optee/core.c | 153 ++++++++++++++++++++---------------------------
- 1 file changed, 64 insertions(+), 89 deletions(-)
+-michael
