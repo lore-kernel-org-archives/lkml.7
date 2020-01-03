@@ -2,111 +2,111 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1C0C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE72C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF35206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:36:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578069367;
-	bh=6tmWngJho+6nvSioNSpEVxS7yF/xEHxBUuDKi0b0X9A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FoQV4LSCORrWTvq8r75HbScWm0y6JoIFdDiXkFdHpF14O3nK3Hgsobyxn+3HSLnl8
-	 uXjgRAPAiHqth6Nyzn3EtRThZ0a7O6oWA07O5AmU6reL2WJh8ggrpE9SJjSCvqNqgV
-	 KabBtp3Kzf9jxLQMj7+8vU2+/KBT9Ve0yZ6jTng4=
+	by mail.kernel.org (Postfix) with ESMTP id F2A5A206DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:39:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbgACQgG (ORCPT
+        id S1728023AbgACQjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 11:36:06 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37003 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728040AbgACQff (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 11:35:35 -0500
-Received: by mail-lj1-f196.google.com with SMTP id o13so33001084ljg.4;
-        Fri, 03 Jan 2020 08:35:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+tlqOZeymQPSzMRwJcWO6YbRSpeG6g0qeksDnmBdU10=;
-        b=BazQZLFwOzVOPB0VwBVnhNRyeWeWGjqREEXs3llMKwYOeEXpkM3tVqZyT0/uoRPAXZ
-         AMKQAoSCJaN5P7pF+VaGE5PA/tWv4ANx04bkrQpYbF1c6aTzKZlsLxrgzJEfQKOg/F0H
-         eavjvabmBdBXR9fltugjvoGyBbeMLFcsbTxcxQJaTvot5eVWGlrme8gjLbUNfOqTGBCl
-         adtFem8UAThZY+omHYBSNzO8PIYYegf16Ql35sHIRKoGU7oUHIP2rYskl0y2zgKJO5Wu
-         THVkyagqzSeeeu2b9vXJMKK3D9RMigj61CUMNgh3X9gtryIFQXwb7rTnxvafTVMjgWWJ
-         PyJw==
-X-Gm-Message-State: APjAAAVI9PuztnpjnsrbfR24A4Y3/oJIVvAps4dxNRKoAuU0yy4Lszqu
-        Q+oVPYti98UzCGkzfwD6HWg=
-X-Google-Smtp-Source: APXvYqwYSsLJyZGoPLjR6puxlsXnmFozkkoUW6uBboL+dGzIHZp3/IWNSbX0v5RXpEQ36TA9fZ4bOg==
-X-Received: by 2002:a2e:8603:: with SMTP id a3mr43840365lji.210.1578069333597;
-        Fri, 03 Jan 2020 08:35:33 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id l5sm23959515lje.1.2020.01.03.08.35.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 08:35:32 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@xi.terra>)
-        id 1inPvB-0000L3-FV; Fri, 03 Jan 2020 17:35:33 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Sean Young <sean@mess.org>, Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: [PATCH 5/6] media: dib0700: fix rc endpoint lookup
-Date:   Fri,  3 Jan 2020 17:35:12 +0100
-Message-Id: <20200103163513.1229-6-johan@kernel.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200103163513.1229-1-johan@kernel.org>
-References: <20200103163513.1229-1-johan@kernel.org>
+        Fri, 3 Jan 2020 11:39:12 -0500
+Received: from foss.arm.com ([217.140.110.172]:56784 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727859AbgACQjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 11:39:11 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4E77328;
+        Fri,  3 Jan 2020 08:39:10 -0800 (PST)
+Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 421583F703;
+        Fri,  3 Jan 2020 08:39:09 -0800 (PST)
+Subject: Re: [PATCH v4 00/10] sched/fair: rework the CFS load balance
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org
+Cc:     pauld@redhat.com, srikar@linux.vnet.ibm.com,
+        quentin.perret@arm.com, dietmar.eggemann@arm.com,
+        Morten.Rasmussen@arm.com, hdanton@sina.com, parth@linux.ibm.com,
+        riel@surriel.com
+References: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
+ <e33e1896-01e1-665d-862a-e73384b0fbe6@arm.com>
+Message-ID: <48636730-f8fb-6c65-fc30-068345923bc1@arm.com>
+Date:   Fri, 3 Jan 2020 16:39:08 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <e33e1896-01e1-665d-862a-e73384b0fbe6@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure to use the current alternate setting when verifying the
-interface descriptors to avoid submitting an URB to an invalid endpoint.
+On 25/11/2019 12:48, Valentin Schneider wrote:
+> I've been busy trying to get some perf numbers on arm64 server~ish systems,
+> I finally managed to get some specjbb numbers on TX2 (the 2 nodes, 224
+> CPUs version which I suspect is the same as you used in the above). I only
+> have a limited number of iterations (5, although each runs for about 2h)
+> because I wanted to get some (usable) results by today, I'll spin some more
+> during the week.
+> 
+> 
+> This is based on the "critical-jOPs" metric which AFAIU higher is better:
+> 
+> Baseline, SMTOFF:
+>   mean     12156.400000
+>   std        660.640068
+>   min      11016.000000
+>   25%      12158.000000
+>   50%      12464.000000
+>   75%      12521.000000
+>   max      12623.000000
+> 
+> Patches (+ find_idlest_group() fixup), SMTOFF:
+>   mean     12487.250000
+>   std        184.404221
+>   min      12326.000000
+>   25%      12349.250000
+>   50%      12449.500000
+>   75%      12587.500000
+>   max      12724.000000	
+> 
+> 
+> It looks slightly better overall (mean, stddev), but I'm annoyed by that
+> low iteration count. I also had some issues with my SMTON run and I only
+> got numbers for 2 iterations, so I'll respin that before complaining.
+> 
+> FWIW the branch I've been using is:
+> 
+>   http://www.linux-arm.org/git?p=linux-vs.git;a=shortlog;h=refs/heads/mainline/load-balance/vincent_rework/tip
+> 
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+Forgot about that; I got some more results in the meantime, still specjbb
+and still ThunderX2):
 
-Fixes: c4018fa2e4c0 ("[media] dib0700: fix RC support on Hauppauge Nova-TD")
-Cc: stable <stable@vger.kernel.org>     # 3.16
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/media/usb/dvb-usb/dib0700_core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+| kernel          | count |         mean |        std |     min |     50% |      75% |      99% |     max |
+|-----------------+-------+--------------+------------+---------+---------+----------+----------+---------|
+| -REWORK SMT-ON  |    15 | 19961.133333 | 613.406515 | 19058.0 | 20006.0 | 20427.50 | 20903.42 | 20924.0 |
+| +REWORK SMT-ON  |    12 | 19265.666667 | 563.959917 | 18380.0 | 19133.5 | 19699.25 | 20024.90 | 20026.0 |
+| -REWORK SMT-OFF |    25 | 12397.000000 | 425.763628 | 11016.0 | 12377.0 | 12623.00 | 13137.20 | 13154.0 |
+| +REWORK SMT-OFF |    20 | 12436.700000 | 414.130554 | 11313.0 | 12505.0 | 12687.00 | 12981.44 | 12986.0 |
 
-diff --git a/drivers/media/usb/dvb-usb/dib0700_core.c b/drivers/media/usb/dvb-usb/dib0700_core.c
-index e53c58ab6488..ef62dd6c5ae4 100644
---- a/drivers/media/usb/dvb-usb/dib0700_core.c
-+++ b/drivers/media/usb/dvb-usb/dib0700_core.c
-@@ -818,7 +818,7 @@ int dib0700_rc_setup(struct dvb_usb_device *d, struct usb_interface *intf)
- 
- 	/* Starting in firmware 1.20, the RC info is provided on a bulk pipe */
- 
--	if (intf->altsetting[0].desc.bNumEndpoints < rc_ep + 1)
-+	if (intf->cur_altsetting->desc.bNumEndpoints < rc_ep + 1)
- 		return -ENODEV;
- 
- 	purb = usb_alloc_urb(0, GFP_KERNEL);
-@@ -838,7 +838,7 @@ int dib0700_rc_setup(struct dvb_usb_device *d, struct usb_interface *intf)
- 	 * Some devices like the Hauppauge NovaTD model 52009 use an interrupt
- 	 * endpoint, while others use a bulk one.
- 	 */
--	e = &intf->altsetting[0].endpoint[rc_ep].desc;
-+	e = &intf->cur_altsetting->endpoint[rc_ep].desc;
- 	if (usb_endpoint_dir_in(e)) {
- 		if (usb_endpoint_xfer_bulk(e)) {
- 			pipe = usb_rcvbulkpipe(d->udev, rc_ep);
--- 
-2.24.1
+SMT-ON  delta: -3.48%
+SMT-OFF delta: +0.32%
 
+
+This is consistent with some earlier runs (where I had a few issues
+getting enough iterations): SMT-OFF performs a tad better, and SMT-ON
+performs slightly worse.
+
+Looking at the 99th percentile, it seems we're a bit worse compared to
+the previous best cases, but looking at the slightly reduced stddev it also
+seems that we are somewhat more consistent.
