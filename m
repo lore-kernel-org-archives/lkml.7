@@ -2,516 +2,126 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA25CC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 10:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D14D7C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 10:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A73B9222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 10:41:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578048081;
-	bh=t4j6u6+QnamvQmpNUF7kOmnVf+xgyN47NLHlYA6onK8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w4WyR+f3FRxvYmQ4R22zpJugVZNl/hXDyNRLZwSNWBLoVunbUe3+xySPI2mdcssH9
-	 hPDCDhepr1YVsm0R/h+6ku7WsAdWv+DrEbAhIohsTlq1akoumEOCpFf8i4iXqxswhC
-	 QDgkazDvibK+apiYyT8J6gLEphsbdn5eFX7ccKp8=
+	by mail.kernel.org (Postfix) with ESMTP id ADB4A217F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 10:41:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbgACKlU (ORCPT
+        id S1727569AbgACKlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 05:41:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52304 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727350AbgACKlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 05:41:20 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB6C6217F4;
-        Fri,  3 Jan 2020 10:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578048077;
-        bh=t4j6u6+QnamvQmpNUF7kOmnVf+xgyN47NLHlYA6onK8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZsGCNdd2mwjJ3Vx/uveOc/5bxqHkRbgK0LDHYdDvo7sOQEGNJnm8VmT0pTx+CHPzP
-         uZ0MRx9cTlt26Kl/5h/3hVFwXtiIWGk8DxtPwPFnlakyFhXKatGCpLAsGPut8N4vHr
-         TW8Mtki4w1JtycEGWJ/op954f8FqAnE+QbmlY+ns=
-Date:   Fri, 3 Jan 2020 11:41:15 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        devel@driverdev.osuosl.org,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] staging: exfat: add STAGING prefix to config names
-Message-ID: <20200103104115.GA914416@kroah.com>
-References: <CGME20200103011708epcas1p3be094a9c7cf7b633f7b5d9c404d16ea5@epcas1p3.samsung.com>
- <20200103011345.25245-1-namjae.jeon@samsung.com>
- <CAOQ4uxgJjq2i7Qvbg2X3UVz5yEHeXwwF8+ZghZ=KrrcaZGjJPA@mail.gmail.com>
+        Fri, 3 Jan 2020 05:41:52 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2223 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727220AbgACKlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 05:41:52 -0500
+Received: from lhreml705-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 0A298D0611181D171E88;
+        Fri,  3 Jan 2020 10:41:50 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml705-cah.china.huawei.com (10.201.108.46) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 3 Jan 2020 10:41:49 +0000
+Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 3 Jan 2020
+ 10:41:49 +0000
+Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity
+ for managed interrupt
+To:     Ming Lei <ming.lei@redhat.com>
+CC:     Marc Zyngier <maz@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "chenxiang (M)" <chenxiang66@hisilicon.com>,
+        "bigeasy@linutronix.de" <bigeasy@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "hare@suse.com" <hare@suse.com>, "hch@lst.de" <hch@lst.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        Zhang Yi <yi.zhang@redhat.com>
+References: <0fd543f8ffd90f90deb691aea1c275b4@www.loen.fr>
+ <a5154365-59c5-429b-559e-94ad6dffcdb0@huawei.com>
+ <20191220233138.GB12403@ming.t460p>
+ <fffcd23dd8286615b6e2c99620836cb1@www.loen.fr>
+ <d5774e2f-bb60-c27c-bf00-267b88400a12@huawei.com>
+ <e815b5451ea86e99d42045f7067f455a@www.loen.fr>
+ <20191224015926.GC13083@ming.t460p>
+ <7a961950624c414bb9d0c11c914d5c62@www.loen.fr>
+ <20191225004822.GA12280@ming.t460p>
+ <72a6a738-f04b-3792-627a-fbfcb7b297e1@huawei.com>
+ <20200103004625.GA5219@ming.t460p>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <2b070d25-ee35-aa1f-3254-d086c6b872b1@huawei.com>
+Date:   Fri, 3 Jan 2020 10:41:48 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxgJjq2i7Qvbg2X3UVz5yEHeXwwF8+ZghZ=KrrcaZGjJPA@mail.gmail.com>
+In-Reply-To: <20200103004625.GA5219@ming.t460p>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.43]
+X-ClientProxiedBy: lhreml710-chm.china.huawei.com (10.201.108.61) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 12:08:10PM +0200, Amir Goldstein wrote:
-> On Fri, Jan 3, 2020 at 3:17 AM Namjae Jeon <namjae.jeon@samsung.com> wrote:
-> >
-> > Add STAGING prefix to config names to avoid collsion with fs/exfat config.
-> >
-> > Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-> > ---
-> >  drivers/staging/Makefile             |  2 +-
-> >  drivers/staging/exfat/Kconfig        | 26 +++++++--------
-> >  drivers/staging/exfat/Makefile       |  2 +-
-> >  drivers/staging/exfat/exfat.h        | 14 ++++----
-> >  drivers/staging/exfat/exfat_blkdev.c | 12 +++----
-> >  drivers/staging/exfat/exfat_core.c   |  8 ++---
-> >  drivers/staging/exfat/exfat_super.c  | 50 ++++++++++++++--------------
-> >  7 files changed, 57 insertions(+), 57 deletions(-)
-> >
-> > diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
-> > index 463aef6a18ef..fdd03fd6e704 100644
-> > --- a/drivers/staging/Makefile
-> > +++ b/drivers/staging/Makefile
-> > @@ -48,7 +48,7 @@ obj-$(CONFIG_FIELDBUS_DEV)     += fieldbus/
-> >  obj-$(CONFIG_KPC2000)          += kpc2000/
-> >  obj-$(CONFIG_UWB)              += uwb/
-> >  obj-$(CONFIG_USB_WUSB)         += wusbcore/
-> > -obj-$(CONFIG_EXFAT_FS)         += exfat/
-> > +obj-$(CONFIG_STAGING_EXFAT_FS) += exfat/
-> >  obj-$(CONFIG_QLGE)             += qlge/
-> >  obj-$(CONFIG_NET_VENDOR_HP)    += hp/
-> >  obj-$(CONFIG_WFX)              += wfx/
-> > diff --git a/drivers/staging/exfat/Kconfig b/drivers/staging/exfat/Kconfig
-> > index 0130019cbec2..292a19dfcaf5 100644
-> > --- a/drivers/staging/exfat/Kconfig
-> > +++ b/drivers/staging/exfat/Kconfig
-> > @@ -1,41 +1,41 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> > -config EXFAT_FS
-> > +config STAGING_EXFAT_FS
-> >         tristate "exFAT fs support"
-> >         depends on BLOCK
-> >         select NLS
-> >         help
-> >           This adds support for the exFAT file system.
-> >
-> > -config EXFAT_DISCARD
-> > +config STAGING_EXFAT_DISCARD
-> >         bool "enable discard support"
-> > -       depends on EXFAT_FS
-> > +       depends on STAGING_EXFAT_FS
-> >         default y
-> >
-> > -config EXFAT_DELAYED_SYNC
-> > +config STAGING_EXFAT_DELAYED_SYNC
-> >         bool "enable delayed sync"
-> > -       depends on EXFAT_FS
-> > +       depends on STAGING_EXFAT_FS
-> >         default n
-> >
-> > -config EXFAT_KERNEL_DEBUG
-> > +config STAGING_EXFAT_KERNEL_DEBUG
-> >         bool "enable kernel debug features via ioctl"
-> > -       depends on EXFAT_FS
-> > +       depends on STAGING_EXFAT_FS
-> >         default n
-> >
-> > -config EXFAT_DEBUG_MSG
-> > +config STAGING_EXFAT_DEBUG_MSG
-> >         bool "print debug messages"
-> > -       depends on EXFAT_FS
-> > +       depends on STAGING_EXFAT_FS
-> >         default n
-> >
-> > -config EXFAT_DEFAULT_CODEPAGE
-> > +config STAGING_EXFAT_DEFAULT_CODEPAGE
-> >         int "Default codepage for exFAT"
-> >         default 437
-> > -       depends on EXFAT_FS
-> > +       depends on STAGING_EXFAT_FS
-> >         help
-> >           This option should be set to the codepage of your exFAT filesystems.
-> >
-> > -config EXFAT_DEFAULT_IOCHARSET
-> > +config STAGING_EXFAT_DEFAULT_IOCHARSET
-> >         string "Default iocharset for exFAT"
-> >         default "utf8"
-> > -       depends on EXFAT_FS
-> > +       depends on STAGING_EXFAT_FS
-> >         help
-> >           Set this to the default input/output character set you'd like exFAT to use.
-> > diff --git a/drivers/staging/exfat/Makefile b/drivers/staging/exfat/Makefile
-> > index 6c90aec83feb..057556eeca0c 100644
-> > --- a/drivers/staging/exfat/Makefile
-> > +++ b/drivers/staging/exfat/Makefile
-> > @@ -1,6 +1,6 @@
-> >  # SPDX-License-Identifier: GPL-2.0-or-later
-> >
-> > -obj-$(CONFIG_EXFAT_FS) += exfat.o
-> > +obj-$(CONFIG_STAGING_EXFAT_FS) += exfat.o
-> >
-> >  exfat-y :=     exfat_core.o    \
-> >                 exfat_super.o   \
-> > diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
-> > index 51c665a924b7..3865c17027ce 100644
-> > --- a/drivers/staging/exfat/exfat.h
-> > +++ b/drivers/staging/exfat/exfat.h
-> > @@ -9,7 +9,7 @@
-> >  #include <linux/types.h>
-> >  #include <linux/buffer_head.h>
-> >
-> > -#ifdef CONFIG_EXFAT_KERNEL_DEBUG
-> > +#ifdef CONFIG_STAGING_EXFAT_KERNEL_DEBUG
-> >    /* For Debugging Purpose */
-> >         /* IOCTL code 'f' used by
-> >          *   - file systems typically #0~0x1F
-> > @@ -22,9 +22,9 @@
-> >
-> >  #define EXFAT_DEBUGFLAGS_INVALID_UMOUNT        0x01
-> >  #define EXFAT_DEBUGFLAGS_ERROR_RW      0x02
-> > -#endif /* CONFIG_EXFAT_KERNEL_DEBUG */
-> > +#endif /* CONFIG_STAGING_EXFAT_KERNEL_DEBUG */
-> >
-> > -#ifdef CONFIG_EXFAT_DEBUG_MSG
-> > +#ifdef CONFIG_STAGING_EXFAT_DEBUG_MSG
-> >  #define DEBUG  1
-> >  #else
-> >  #undef DEBUG
-> > @@ -661,10 +661,10 @@ struct exfat_mount_options {
-> >
-> >         /* on error: continue, panic, remount-ro */
-> >         unsigned char errors;
-> > -#ifdef CONFIG_EXFAT_DISCARD
-> > +#ifdef CONFIG_STAGING_EXFAT_DISCARD
-> >         /* flag on if -o dicard specified and device support discard() */
-> >         unsigned char discard;
-> > -#endif /* CONFIG_EXFAT_DISCARD */
-> > +#endif /* CONFIG_STAGING_EXFAT_DISCARD */
-> >  };
-> >
-> >  #define EXFAT_HASH_BITS                8
-> > @@ -700,9 +700,9 @@ struct exfat_sb_info {
-> >
-> >         spinlock_t inode_hash_lock;
-> >         struct hlist_head inode_hashtable[EXFAT_HASH_SIZE];
-> > -#ifdef CONFIG_EXFAT_KERNEL_DEBUG
-> > +#ifdef CONFIG_STAGING_EXFAT_KERNEL_DEBUG
-> >         long debug_flags;
-> > -#endif /* CONFIG_EXFAT_KERNEL_DEBUG */
-> > +#endif /* CONFIG_STAGING_EXFAT_KERNEL_DEBUG */
-> >  };
-> >
-> >  /*
-> > diff --git a/drivers/staging/exfat/exfat_blkdev.c b/drivers/staging/exfat/exfat_blkdev.c
-> > index 7bcd98b13109..8791a5f2bb08 100644
-> > --- a/drivers/staging/exfat/exfat_blkdev.c
-> > +++ b/drivers/staging/exfat/exfat_blkdev.c
-> > @@ -35,13 +35,13 @@ int exfat_bdev_read(struct super_block *sb, sector_t secno, struct buffer_head *
-> >  {
-> >         struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
-> >         struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
-> > -#ifdef CONFIG_EXFAT_KERNEL_DEBUG
-> > +#ifdef CONFIG_STAGING_EXFAT_KERNEL_DEBUG
-> >         struct exfat_sb_info *sbi = EXFAT_SB(sb);
-> >         long flags = sbi->debug_flags;
-> >
-> >         if (flags & EXFAT_DEBUGFLAGS_ERROR_RW)
-> >                 return -EIO;
-> > -#endif /* CONFIG_EXFAT_KERNEL_DEBUG */
-> > +#endif /* CONFIG_STAGING_EXFAT_KERNEL_DEBUG */
-> >
-> >         if (!p_bd->opened)
-> >                 return -ENODEV;
-> > @@ -72,13 +72,13 @@ int exfat_bdev_write(struct super_block *sb, sector_t secno, struct buffer_head
-> >         struct buffer_head *bh2;
-> >         struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
-> >         struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
-> > -#ifdef CONFIG_EXFAT_KERNEL_DEBUG
-> > +#ifdef CONFIG_STAGING_EXFAT_KERNEL_DEBUG
-> >         struct exfat_sb_info *sbi = EXFAT_SB(sb);
-> >         long flags = sbi->debug_flags;
-> >
-> >         if (flags & EXFAT_DEBUGFLAGS_ERROR_RW)
-> >                 return -EIO;
-> > -#endif /* CONFIG_EXFAT_KERNEL_DEBUG */
-> > +#endif /* CONFIG_STAGING_EXFAT_KERNEL_DEBUG */
-> >
-> >         if (!p_bd->opened)
-> >                 return -ENODEV;
-> > @@ -121,13 +121,13 @@ int exfat_bdev_write(struct super_block *sb, sector_t secno, struct buffer_head
-> >  int exfat_bdev_sync(struct super_block *sb)
-> >  {
-> >         struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
-> > -#ifdef CONFIG_EXFAT_KERNEL_DEBUG
-> > +#ifdef CONFIG_STAGING_EXFAT_KERNEL_DEBUG
-> >         struct exfat_sb_info *sbi = EXFAT_SB(sb);
-> >         long flags = sbi->debug_flags;
-> >
-> >         if (flags & EXFAT_DEBUGFLAGS_ERROR_RW)
-> >                 return -EIO;
-> > -#endif /* CONFIG_EXFAT_KERNEL_DEBUG */
-> > +#endif /* CONFIG_STAGING_EXFAT_KERNEL_DEBUG */
-> >
-> >         if (!p_bd->opened)
-> >                 return -ENODEV;
-> > diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
-> > index 794000e7bc6f..5e7645fe8c45 100644
-> > --- a/drivers/staging/exfat/exfat_core.c
-> > +++ b/drivers/staging/exfat/exfat_core.c
-> > @@ -177,11 +177,11 @@ static s32 clr_alloc_bitmap(struct super_block *sb, u32 clu)
-> >  {
-> >         int i, b;
-> >         sector_t sector;
-> > -#ifdef CONFIG_EXFAT_DISCARD
-> > +#ifdef CONFIG_STAGING_EXFAT_DISCARD
-> >         struct exfat_sb_info *sbi = EXFAT_SB(sb);
-> >         struct exfat_mount_options *opts = &sbi->options;
-> >         int ret;
-> > -#endif /* CONFIG_EXFAT_DISCARD */
-> > +#endif /* CONFIG_STAGING_EXFAT_DISCARD */
-> >         struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
-> >         struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
-> >
-> > @@ -192,7 +192,7 @@ static s32 clr_alloc_bitmap(struct super_block *sb, u32 clu)
-> >
-> >         exfat_bitmap_clear((u8 *)p_fs->vol_amap[i]->b_data, b);
-> >
-> > -#ifdef CONFIG_EXFAT_DISCARD
-> > +#ifdef CONFIG_STAGING_EXFAT_DISCARD
-> >         if (opts->discard) {
-> >                 ret = sb_issue_discard(sb, START_SECTOR(clu),
-> >                                        (1 << p_fs->sectors_per_clu_bits),
-> > @@ -204,7 +204,7 @@ static s32 clr_alloc_bitmap(struct super_block *sb, u32 clu)
-> >                         return ret;
-> >                 }
-> >         }
-> > -#endif /* CONFIG_EXFAT_DISCARD */
-> > +#endif /* CONFIG_STAGING_EXFAT_DISCARD */
-> >
-> >         return sector_write(sb, sector, p_fs->vol_amap[i], 0);
-> >  }
-> > diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-> > index 744344a2521c..9fa2ad3627c5 100644
-> > --- a/drivers/staging/exfat/exfat_super.c
-> > +++ b/drivers/staging/exfat/exfat_super.c
-> > @@ -38,8 +38,8 @@
-> >
-> >  static struct kmem_cache *exfat_inode_cachep;
-> >
-> > -static int exfat_default_codepage = CONFIG_EXFAT_DEFAULT_CODEPAGE;
-> > -static char exfat_default_iocharset[] = CONFIG_EXFAT_DEFAULT_IOCHARSET;
-> > +static int exfat_default_codepage = CONFIG_STAGING_EXFAT_DEFAULT_CODEPAGE;
-> > +static char exfat_default_iocharset[] = CONFIG_STAGING_EXFAT_DEFAULT_IOCHARSET;
-> >
-> >  #define INC_IVERSION(x) (inode_inc_iversion(x))
-> >  #define GET_IVERSION(x) (inode_peek_iversion_raw(x))
-> > @@ -647,7 +647,7 @@ static int ffsCreateFile(struct inode *inode, char *path, u8 mode,
-> >         /* create a new file */
-> >         ret = create_file(inode, &dir, &uni_name, mode, fid);
-> >
-> > -#ifndef CONFIG_EXFAT_DELAYED_SYNC
-> > +#ifndef CONFIG_STAGING_EXFAT_DELAYED_SYNC
-> >         fs_sync(sb, true);
-> >         fs_set_vol_flags(sb, VOL_CLEAN);
-> >  #endif
-> > @@ -1008,7 +1008,7 @@ static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
-> >         update_dir_checksum_with_entry_set(sb, es);
-> >         release_entry_set(es);
-> >
-> > -#ifndef CONFIG_EXFAT_DELAYED_SYNC
-> > +#ifndef CONFIG_STAGING_EXFAT_DELAYED_SYNC
-> >         fs_sync(sb, true);
-> >         fs_set_vol_flags(sb, VOL_CLEAN);
-> >  #endif
-> > @@ -1134,7 +1134,7 @@ static int ffsTruncateFile(struct inode *inode, u64 old_size, u64 new_size)
-> >         if (fid->rwoffset > fid->size)
-> >                 fid->rwoffset = fid->size;
-> >
-> > -#ifndef CONFIG_EXFAT_DELAYED_SYNC
-> > +#ifndef CONFIG_STAGING_EXFAT_DELAYED_SYNC
-> >         fs_sync(sb, true);
-> >         fs_set_vol_flags(sb, VOL_CLEAN);
-> >  #endif
-> > @@ -1282,7 +1282,7 @@ static int ffsMoveFile(struct inode *old_parent_inode, struct file_id_t *fid,
-> >                                                 num_entries + 1);
-> >         }
-> >  out:
-> > -#ifndef CONFIG_EXFAT_DELAYED_SYNC
-> > +#ifndef CONFIG_STAGING_EXFAT_DELAYED_SYNC
-> >         fs_sync(sb, true);
-> >         fs_set_vol_flags(sb, VOL_CLEAN);
-> >  #endif
-> > @@ -1344,7 +1344,7 @@ static int ffsRemoveFile(struct inode *inode, struct file_id_t *fid)
-> >         fid->start_clu = CLUSTER_32(~0);
-> >         fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
-> >
-> > -#ifndef CONFIG_EXFAT_DELAYED_SYNC
-> > +#ifndef CONFIG_STAGING_EXFAT_DELAYED_SYNC
-> >         fs_sync(sb, true);
-> >         fs_set_vol_flags(sb, VOL_CLEAN);
-> >  #endif
-> > @@ -1420,7 +1420,7 @@ static int ffsSetAttr(struct inode *inode, u32 attr)
-> >         update_dir_checksum_with_entry_set(sb, es);
-> >         release_entry_set(es);
-> >
-> > -#ifndef CONFIG_EXFAT_DELAYED_SYNC
-> > +#ifndef CONFIG_STAGING_EXFAT_DELAYED_SYNC
-> >         fs_sync(sb, true);
-> >         fs_set_vol_flags(sb, VOL_CLEAN);
-> >  #endif
-> > @@ -1804,7 +1804,7 @@ static int ffsCreateDir(struct inode *inode, char *path, struct file_id_t *fid)
-> >
-> >         ret = create_dir(inode, &dir, &uni_name, fid);
-> >
-> > -#ifndef CONFIG_EXFAT_DELAYED_SYNC
-> > +#ifndef CONFIG_STAGING_EXFAT_DELAYED_SYNC
-> >         fs_sync(sb, true);
-> >         fs_set_vol_flags(sb, VOL_CLEAN);
-> >  #endif
-> > @@ -2053,7 +2053,7 @@ static int ffsRemoveDir(struct inode *inode, struct file_id_t *fid)
-> >         fid->start_clu = CLUSTER_32(~0);
-> >         fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
-> >
-> > -#ifndef CONFIG_EXFAT_DELAYED_SYNC
-> > +#ifndef CONFIG_STAGING_EXFAT_DELAYED_SYNC
-> >         fs_sync(sb, true);
-> >         fs_set_vol_flags(sb, VOL_CLEAN);
-> >  #endif
-> > @@ -2176,14 +2176,14 @@ static long exfat_generic_ioctl(struct file *filp, unsigned int cmd,
-> >                                 unsigned long arg)
-> >  {
-> >         struct inode *inode = filp->f_path.dentry->d_inode;
-> > -#ifdef CONFIG_EXFAT_KERNEL_DEBUG
-> > +#ifdef CONFIG_STAGING_EXFAT_KERNEL_DEBUG
-> >         unsigned int flags;
-> > -#endif /* CONFIG_EXFAT_KERNEL_DEBUG */
-> > +#endif /* CONFIG_STAGING_EXFAT_KERNEL_DEBUG */
-> >
-> >         switch (cmd) {
-> >         case EXFAT_IOCTL_GET_VOLUME_ID:
-> >                 return exfat_ioctl_volume_id(inode);
-> > -#ifdef CONFIG_EXFAT_KERNEL_DEBUG
-> > +#ifdef CONFIG_STAGING_EXFAT_KERNEL_DEBUG
-> >         case EXFAT_IOC_GET_DEBUGFLAGS: {
-> >                 struct super_block *sb = inode->i_sb;
-> >                 struct exfat_sb_info *sbi = EXFAT_SB(sb);
-> > @@ -2207,7 +2207,7 @@ static long exfat_generic_ioctl(struct file *filp, unsigned int cmd,
-> >
-> >                 return 0;
-> >         }
-> > -#endif /* CONFIG_EXFAT_KERNEL_DEBUG */
-> > +#endif /* CONFIG_STAGING_EXFAT_KERNEL_DEBUG */
-> >         default:
-> >                 return -ENOTTY; /* Inappropriate ioctl for device */
-> >         }
-> > @@ -3400,7 +3400,7 @@ static int exfat_show_options(struct seq_file *m, struct dentry *root)
-> >                 seq_puts(m, ",errors=panic");
-> >         else
-> >                 seq_puts(m, ",errors=remount-ro");
-> > -#ifdef CONFIG_EXFAT_DISCARD
-> > +#ifdef CONFIG_STAGING_EXFAT_DISCARD
-> >         if (opts->discard)
-> >                 seq_puts(m, ",discard");
-> >  #endif
-> > @@ -3481,7 +3481,7 @@ enum {
-> >         Opt_err_ro,
-> >         Opt_utf8_hack,
-> >         Opt_err,
-> > -#ifdef CONFIG_EXFAT_DISCARD
-> > +#ifdef CONFIG_STAGING_EXFAT_DISCARD
-> >         Opt_discard,
-> >  #endif /* EXFAT_CONFIG_DISCARD */
-> >  };
-> > @@ -3501,9 +3501,9 @@ static const match_table_t exfat_tokens = {
-> >         {Opt_err_panic, "errors=panic"},
-> >         {Opt_err_ro, "errors=remount-ro"},
-> >         {Opt_utf8_hack, "utf8"},
-> > -#ifdef CONFIG_EXFAT_DISCARD
-> > +#ifdef CONFIG_STAGING_EXFAT_DISCARD
-> >         {Opt_discard, "discard"},
-> > -#endif /* CONFIG_EXFAT_DISCARD */
-> > +#endif /* CONFIG_STAGING_EXFAT_DISCARD */
-> >         {Opt_err, NULL}
-> >  };
-> >
-> > @@ -3524,7 +3524,7 @@ static int parse_options(char *options, int silent, int *debug,
-> >         opts->iocharset = exfat_default_iocharset;
-> >         opts->casesensitive = 0;
-> >         opts->errors = EXFAT_ERRORS_RO;
-> > -#ifdef CONFIG_EXFAT_DISCARD
-> > +#ifdef CONFIG_STAGING_EXFAT_DISCARD
-> >         opts->discard = 0;
-> >  #endif
-> >         *debug = 0;
-> > @@ -3595,11 +3595,11 @@ static int parse_options(char *options, int silent, int *debug,
-> >                 case Opt_debug:
-> >                         *debug = 1;
-> >                         break;
-> > -#ifdef CONFIG_EXFAT_DISCARD
-> > +#ifdef CONFIG_STAGING_EXFAT_DISCARD
-> >                 case Opt_discard:
-> >                         opts->discard = 1;
-> >                         break;
-> > -#endif /* CONFIG_EXFAT_DISCARD */
-> > +#endif /* CONFIG_STAGING_EXFAT_DISCARD */
-> >                 case Opt_utf8_hack:
-> >                         break;
-> >                 default:
-> > @@ -3803,7 +3803,7 @@ static void __exit exfat_destroy_inodecache(void)
-> >         kmem_cache_destroy(exfat_inode_cachep);
-> >  }
-> >
-> > -#ifdef CONFIG_EXFAT_KERNEL_DEBUG
-> > +#ifdef CONFIG_STAGING_EXFAT_KERNEL_DEBUG
-> >  static void exfat_debug_kill_sb(struct super_block *sb)
-> >  {
-> >         struct exfat_sb_info *sbi = EXFAT_SB(sb);
-> > @@ -3831,17 +3831,17 @@ static void exfat_debug_kill_sb(struct super_block *sb)
-> >
-> >         kill_block_super(sb);
-> >  }
-> > -#endif /* CONFIG_EXFAT_KERNEL_DEBUG */
-> > +#endif /* CONFIG_STAGING_EXFAT_KERNEL_DEBUG */
-> >
-> >  static struct file_system_type exfat_fs_type = {
-> >         .owner       = THIS_MODULE,
-> >         .name        = "exfat",
+On 03/01/2020 00:46, Ming Lei wrote:
+>>>> d the
+>>>> DMA API more than an architecture-specific problem.
+>>>>
+>>>> Given that we have so far very little data, I'd hold off any conclusion.
+>>> We can start to collect latency data of dma unmapping vs nvme_irq()
+>>> on both x86 and arm64.
+>>>
+>>> I will see if I can get a such box for collecting the latency data.
+>> To reiterate what I mentioned before about IOMMU DMA unmap on x86, a key
+>> difference is that by default it uses the non-strict (lazy) mode unmap, i.e.
+>> we unmap in batches. ARM64 uses general default, which is strict mode, i.e.
+>> every unmap results in an IOTLB fluch.
+>>
+>> In my setup, if I switch to lazy unmap (set iommu.strict=0 on cmdline), then
+>> no lockup.
+>>
+>> Are any special IOMMU setups being used for x86, like enabling strict mode?
+>> I don't know...
+> BTW, I have run the test on one 224-core ARM64 with one 32-hw_queue NVMe, the
+> softlock issue can be triggered in one minute.
 > 
-> And what about the module name collision?
+> nvme_irq() often takes ~5us to complete on this machine, then there is really
+> risk of cpu lockup when IOPS is > 200K.
 
-Rename the staging module :)
+Do you have a typical nvme_irq() completion time for a mid-range x86 server?
 
-> What is mount -t exfat expected to do?
+> 
+> The soft lockup can be triggered too if 'iommu.strict=0' is passed in,
+> just takes a bit longer by starting more IO jobs.
+> 
+> In above test, I submit IO to one single NVMe drive from 4 CPU cores via 8 or
+> 12 jobs(iommu.strict=0), meantime make the nvme interrupt handled just in one
+> dedicated CPU core.
 
-Pick one!
+Well a problem with so many CPUs is that it does not scale (well) with 
+MQ devices, like NVMe.
 
-> One way to tackle this is to have CONFIG_EXFAT_FS and
-> CONFIG_STAGING_EXFAT be mutually exclusive.
+As CPU count goes up, device queue count doesn't and we get more contention.
 
-I agree.
+> 
+> Is there lock contention among iommu dma map and unmap callback?
 
-> But that is just messy.
-> If you ask me, the first patch of the fs/exfat series should remove
-> the staging exfat driver.
-> It is going to be removed anyway, so why bother with this extra complexity
-> and letting them live together for a brief moment in history.
+There would be the IOVA management, but that would be common to x86. 
+Each CPU keeps an IOVA cache, and there is a central pool of cached 
+IOVAs, so that reduces any contention, unless the caches are exhausted.
 
-Normally we handle this by waiting for the "real" code to be merged into
-the kernel in some development tree that will end up getting to Linus
-for a -rc1 merge, then I will remove the staging code.
+I think most contention/bottleneck is at the SMMU HW interface, which 
+has a single queue interface.
 
-We do this all the time, nothing new here, just let me know when things
-are working good enough for me to drop the staging code.
-
-thanks,
-
-greg k-h
+Thanks,
+John
