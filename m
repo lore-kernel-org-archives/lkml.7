@@ -2,147 +2,167 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 055E7C3276C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A4DC3276E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8C01222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40DCD2084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:52:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YSfQMQ/7"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JFfvWO95"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbgACBud (ORCPT
+        id S1727270AbgACBwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 20:50:33 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43031 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbgACBud (ORCPT
+        Thu, 2 Jan 2020 20:52:08 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:58098 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726039AbgACBwI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 20:50:33 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k197so22727978pga.10
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 17:50:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oFTLxb+41MiC6n43bMNpqAO7uKgmJzv0ZXWHejH9m18=;
-        b=YSfQMQ/7HsvcZuI9w3YxL0DB09qW6t/OjZDQNJZIen6innJmL4MxOUs4PgU+ocq129
-         n4fW7DsI5CDnlPI2L0nmRVwm08tq/uxZM91HkVK6qySZ5HpUljW07ZAoQsrDgveAhT0I
-         Gt29Z9I9segAMg3662EoldgBLZxMqmtKXCk0s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oFTLxb+41MiC6n43bMNpqAO7uKgmJzv0ZXWHejH9m18=;
-        b=Urkc9/AWmeMTSvt7TuC9B8T4xgPuQ4m7arnt0ZQkDgOS4vFvWUNKTv+WITh8gJZ1t8
-         n00at5f+cezGn/ZUFdsnv13oCFgABgeGqNG9QXObjcOuowLEMjU3ITrl71Y7gITFw7SU
-         jcqhZwCYC2jZAJgF85xeb/tvVyqgRM0drp8O+aQLnN3Mi6CIH5gTKpKMHlOu+5ighOom
-         rHAUGvKRE+52bD/rIJlHGkwspmFf+Jy/HRTFI7p7aTNWg+UHQ7v+1JPBn07kexGTWbXz
-         DqGlev0VYqseGLoFyF3uChNxsPkJTx/YyyCCun5MYTW63XSE0ozSyZueU4z+hD0gVL4I
-         0U/w==
-X-Gm-Message-State: APjAAAWEl3q2qji3/ylZ2ludy6WmG2Fy2T2BZyoF2StnxzWjkbC4dogD
-        l3eq67C0foU6j4diak1v3aVuggZ9anM=
-X-Google-Smtp-Source: APXvYqzqhwYcattRFHjc9PGKGA3bAJNMmQMLDOfPym+ZWDgsx0Z+n70qiCu1VTKmC/+wwGjAlvGSgw==
-X-Received: by 2002:aa7:940e:: with SMTP id x14mr73933464pfo.42.1578016232045;
-        Thu, 02 Jan 2020 17:50:32 -0800 (PST)
-Received: from localhost ([2401:fa00:9:15:c479:b58e:61d1:15d5])
-        by smtp.gmail.com with ESMTPSA id z4sm12377658pjn.29.2020.01.02.17.50.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jan 2020 17:50:31 -0800 (PST)
-From:   Sam McNally <sammc@chromium.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Sam McNally <sammc@chromium.org>, Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        alsa-devel@alsa-project.org,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Sathya Prakash M R <sathya.prakash.m.r@intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Xun Zhang <xun2.zhang@intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>
-Subject: [PATCH v3] ASoC: Intel: sof_rt5682: Ignore the speaker amp when there isn't one.
-Date:   Fri,  3 Jan 2020 12:50:19 +1100
-Message-Id: <20200103124921.v3.1.Ib87c4a7fbb3fc818ea12198e291b87dc2d5bc8c2@changeid>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+        Thu, 2 Jan 2020 20:52:08 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578016327; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=iBGH70qouVE4uKPgzHJQRb9IHWifgoN13TEvuu1+Ybs=;
+ b=JFfvWO951Fz0nFRMALyCSkHmwLCJ4JX/SMKkgwSdYCvskwf6gLUoFUNbaIAXwRfQnet+J42w
+ IckjxvUuo+WasXXFkPrbr8Q6BFhomHkh187/aYRZg8UQ9ZyZsuTO9i/RAD0FcjF/wPrw5C9k
+ cDrAc/Sth3bYzwYC1Pvu7PC9cA4=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e0e9e43.7f9f6c76ec70-smtp-out-n03;
+ Fri, 03 Jan 2020 01:52:03 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0D6CAC447A5; Fri,  3 Jan 2020 01:52:00 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E401FC43383;
+        Fri,  3 Jan 2020 01:51:59 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 03 Jan 2020 09:51:59 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        andy.teng@mediatek.com, jejb@linux.ibm.com,
+        chun-hung.wu@mediatek.com, kuohong.wang@mediatek.com,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        asutoshd@codeaurora.org, avri.altman@wdc.com,
+        linux-mediatek@lists.infradead.org, peter.wang@mediatek.com,
+        linux-scsi-owner@vger.kernel.org, subhashj@codeaurora.org,
+        alim.akhtar@samsung.com, beanhuo@micron.com,
+        pedrom.sousa@synopsys.com, bvanassche@acm.org,
+        linux-arm-kernel@lists.infradead.org, matthias.bgg@gmail.com,
+        ron.hsu@mediatek.com, cc.chou@mediatek.com
+Subject: Re: [PATCH v1 1/2] scsi: ufs: set device as default active power mode
+ during initialization only
+In-Reply-To: <1577947124.13164.75.camel@mtkswgap22>
+References: <1577693546-7598-1-git-send-email-stanley.chu@mediatek.com>
+ <1577693546-7598-2-git-send-email-stanley.chu@mediatek.com>
+ <fd129b859c013852bd80f60a36425757@codeaurora.org>
+ <1577754469.13164.5.camel@mtkswgap22>
+ <836772092daffd8283a97d633e59fc34@codeaurora.org>
+ <1577766179.13164.24.camel@mtkswgap22>
+ <1577778290.13164.45.camel@mtkswgap22>
+ <44393ed9ff3ba9878bae838307e7eec0@codeaurora.org>
+ <1577947124.13164.75.camel@mtkswgap22>
+Message-ID: <4888afd46a9065b7f298a5de039426c9@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some members of the Google_Hatch family include a rt5682 jack codec, but
-no speaker amplifier. This uses the same driver (sof_rt5682) as a
-combination of rt5682 jack codec and max98357a speaker amplifier. Within
-the sof_rt5682 driver, these cases are not currently distinguishable,
-relying on a DMI quirk to decide the configuration. This causes an
-incorrect configuration when only the rt5682 is present on a
-Google_Hatch device.
+On 2020-01-02 14:38, Stanley Chu wrote:
+> Hi Can,
+> 
+> On Tue, 2019-12-31 at 16:35 +0800, Can Guo wrote:
+> 
+>> Hi Stanley,
+>> 
+>> I missed this mail before I hit send. In current code, as per my
+>> understanding,
+>> UFS device's power state should be Active after ufshcd_link_startup()
+>> returns.
+>> If I am wrong, please feel free to correct me.
+>> 
+> 
+> Yes, this assumption of ufshcd_probe_hba() is true so I will drop this
+> patch.
+> Thanks for remind.
+> 
+>> Due to you are almost trying to revert commit 7caf489b99a42a, I am 
+>> just
+>> wondering
+>> if you encounter failure/error caused by it.
+> 
+> Yes, we actually have some doubts from the commit message of "scsi: 
+> ufs:
+> issue link startup 2 times if device isn't active"
+> 
+> If we configured system suspend as device=PowerDown/Link=LinkDown mode,
+> during resume, the 1st link startup will be successful, and after that
+> device could be accessed normally so it shall be already in Active 
+> power
+> mode. We did not find devices which need twice linkup for normal work.
+> 
+> And because the 1st linkup is OK, the forced 2nd linkup by commit 
+> "scsi:
+> ufs: issue link startup 2 times if device isn't active" leads to link
+> lost and finally the 3rd linkup is made again by retry mechanism in
+> ufshcd_link_startup() and be successful. So a linkup performance issue
+> is introduced here: We actually need one-time linkup only but finally
+> got 3 linkup operations.
+> 
+> According to the UFS spec, all reset types (including POR and Host
+> UniPro Warm Reset which both may happen in above configurations) other
+> than LU reset, UFS device power mode shall return to Sleep mode or
+> Active mode depending on bInitPowerMode, by default, it's Active mode.
+> 
+> So we are curious that why enforcing twice linkup is necessary here?
+> Could you kindly help us clarify this?
+> 
+> If anything wrong in above description, please feel free to correct me.
+> 
 
-For CML, the jack codec is used as the primary key when matching,
-with a possible speaker amplifier described in quirk_data. The two cases
-of interest are the second and third 10EC5682 entries in
-snd_soc_acpi_intel_cml_machines[]. The second entry matches the
-combination of rt5682 and max98357a, resulting in the quirk_data field
-in the snd_soc_acpi_mach being non-null, pointing at
-max98357a_spk_codecs, the snd_soc_acpi_codecs for the matched speaker
-amplifier. The third entry matches just the rt5682, resulting in a null
-quirk_data.
+Hi Stanley,
 
-The sof_rt5682 driver's DMI data matching identifies that a speaker
-amplifier is present for all Google_Hatch family devices. Detect cases
-where there is no speaker amplifier by checking for a null quirk_data in
-the snd_soc_acpi_mach and remove the speaker amplifier bit in that case.
+Above description is correct. The reason why the UFS device becomes
+Active after the 1st link startup in your experiment is due to you
+set spm_lvl to 5, during system suspend, UFS device is powered down.
+When resume kicks start, the UFS device is power cycled once.
 
-Signed-off-by: Sam McNally <sammc@chromium.org>
----
+Moreover, if you set rpm_lvl to 5, during runtime suspend, if bkops is
+enabled, the UFS device will not be powered off, meaning when runtime
+resume kicks start, the UFS device is not power cycled, in this case,
+we need 3 times of link startup.
 
-Changes in v3:
-- Rewrote commit message to refer to correct
-  snd_soc_acpi_intel_cml_machines[] entries and better describe the
-  change
+Does above explain?
 
-Changes in v2:
-- Added details about the relevant ACPI matches to the description
+Thanks,
 
- sound/soc/intel/boards/sof_rt5682.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+Can Guo.
 
-diff --git a/sound/soc/intel/boards/sof_rt5682.c b/sound/soc/intel/boards/sof_rt5682.c
-index ad8a2b4bc709..8a13231dee15 100644
---- a/sound/soc/intel/boards/sof_rt5682.c
-+++ b/sound/soc/intel/boards/sof_rt5682.c
-@@ -603,6 +603,14 @@ static int sof_audio_probe(struct platform_device *pdev)
- 
- 	dmi_check_system(sof_rt5682_quirk_table);
- 
-+	mach = (&pdev->dev)->platform_data;
-+
-+	/* A speaker amp might not be present when the quirk claims one is.
-+	 * Detect this via whether the machine driver match includes quirk_data.
-+	 */
-+	if ((sof_rt5682_quirk & SOF_SPEAKER_AMP_PRESENT) && !mach->quirk_data)
-+		sof_rt5682_quirk &= ~SOF_SPEAKER_AMP_PRESENT;
-+
- 	if (soc_intel_is_byt() || soc_intel_is_cht()) {
- 		is_legacy_cpu = 1;
- 		dmic_be_num = 0;
-@@ -663,7 +671,6 @@ static int sof_audio_probe(struct platform_device *pdev)
- 	INIT_LIST_HEAD(&ctx->hdmi_pcm_list);
- 
- 	sof_audio_card_rt5682.dev = &pdev->dev;
--	mach = (&pdev->dev)->platform_data;
- 
- 	/* set platform name for each dailink */
- 	ret = snd_soc_fixup_dai_links_platform_name(&sof_audio_card_rt5682,
--- 
-2.24.1.735.g03f4e72817-goog
-
+>> 
+>> Happy new year to you too!
+>> 
+>> Thanks,
+>> 
+>> Can Guo
+> 
+> Thanks,
+> 
+> Stanley
+> 
+>> 
+>> _______________________________________________
+>> Linux-mediatek mailing list
+>> Linux-mediatek@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-mediatek
