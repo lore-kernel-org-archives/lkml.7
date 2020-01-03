@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B79AC32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C83E6C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60AFD215A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F9C722522
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578074382;
-	bh=xn1Q54HWkOB4uBFT5MNOts3FC211CUhekLUk48JFLB0=;
+	s=default; t=1578074387;
+	bh=3O2oQvSBk+7BR0ZGuvlpb/SpotQyclTbejUPgtbX2xU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WQ1oT6+oeC/6HZphgRo/D2GVy8vRAtt6Viu0GTXX2BTi8praM7/9l7wethmkrrWIb
-	 ExTEGLR24FxPPv1Gh2GbiLYYIFxQPLRKRmsgy/tuOxyqbQL/wXIHbvwHM7N7rbLLhv
-	 uengdQX3u+96gBg+LLLYRIO78QRP/37GEIUdKUSA=
+	b=YAr6foRJBKxuDe+y75Eplh10Z2uBDjYfY8jJUCFkL3GlInhYiO35pR+xlPqOxMtba
+	 79E63jTj4a+bQLCj4mBkVHfXTSzKr732NA21CVUE4IE5wdNdRoo2IK9Y2Gbyl0kwqj
+	 sixCnYcRz4FSP7Uh01RkASdZhGQdhTrBIWZpeKkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbgACR7l (ORCPT
+        id S1728327AbgACR7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 12:59:41 -0500
-Received: from conuserg-07.nifty.com ([210.131.2.74]:64713 "EHLO
+        Fri, 3 Jan 2020 12:59:46 -0500
+Received: from conuserg-07.nifty.com ([210.131.2.74]:64714 "EHLO
         conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728220AbgACR7j (ORCPT
+        with ESMTP id S1728183AbgACR7k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 12:59:39 -0500
+        Fri, 3 Jan 2020 12:59:40 -0500
 Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 003HxSJ6022724;
+        by conuserg-07.nifty.com with ESMTP id 003HxSJ5022724;
         Sat, 4 Jan 2020 02:59:31 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 003HxSJ6022724
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 003HxSJ5022724
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
         s=dec2015msa; t=1578074371;
-        bh=bJfY9P/JRKRZL7zus1oisBlsP9ihX0EmmC9HMpfIWSM=;
+        bh=bHwr5zrMPtwj0Xjsz5tjllHBAG13FvggunbN5z1QbKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PTu8eM5NHXVqrx5W1k/BibTYQ0P4tMRWzZvHSbFNWXpZ6kxxVnWK1xBvz7QzgdNkj
-         jDEC15QKl6bSHyX9S/qbDMKQ9ixMvaRO4yDrrLjWpATl2X3otG12gWzxnaVm13Lk5k
-         8wAb0w1g7417BhkzYSbCy5Asxp81gug3naTYzYd4ssC/fIDJVQArVqxGWOXdL9hqyW
-         +AT3N66EgAhgBLOgA1Hh61TVWhaULFXPwYsLg5mmktpEhjCN8WlMOKNzv8+Pv2SE17
-         RHn5RY/50mGN38cVNVDeaL6gjyH4lYrrmlyhMhHgGdWYJrzIJ29mBY3GWdICteylKk
-         sncjN4GY//lUw==
+        b=xd/MEXm8ioLojnsWB0ebtrQHArl9nr90m/Yi8CIVTgSI6GevZDIlVrzJ0YDnLFSXK
+         vzQPuSJo/9vZkt+AAWIfRmGTcWlrZ3/aUd4Lh00uYJ897EdcWtAOlCT/UJqHipc5kE
+         Cg1gxT5K+iQ1Hu3AFT6mCOPOJJ1IPl8p02wd4q48TL1ZfzDr/gbEz58nDBlO7i4m8b
+         AeDeycIgEaQFrHxMZZbaFs/k2kfhtpJ4wSh4oTQDakeTLZaodxGW8X8H/+Jj//QRxj
+         dvs4p6vRXeaF0b+M5TeT8O2ecxNcQ6Z6XzIjkM36QQL94nTi7F4J+4UdHXA5o50oum
+         tXYgy5GwD0ddA==
 X-Nifty-SrcIP: [126.93.102.113]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 05/12] initramfs: make compression options not depend on INITRAMFS_SOURCE
-Date:   Sat,  4 Jan 2020 02:59:08 +0900
-Message-Id: <20200103175915.26663-6-masahiroy@kernel.org>
+Subject: [PATCH 04/12] initramfs: remove redundant dependency on BLK_DEV_INITRD
+Date:   Sat,  4 Jan 2020 02:59:07 +0900
+Message-Id: <20200103175915.26663-5-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200103175915.26663-1-masahiroy@kernel.org>
 References: <20200103175915.26663-1-masahiroy@kernel.org>
@@ -59,38 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Even if INITRAMFS_SOURCE is empty, usr/gen_initramfs.sh generates a
-tiny default initramfs, which is embedded in vmlinux.
+init/Kconfig includes usr/Kconfig inside the "if BLK_DEV_INITRD" ...
+"endif" block:
 
-So, defining INITRAMFS_COMPRESSION* options should be valid irrespective
-of INITRAMFS_SOURCE.
+    if BLK_DEV_INITRD
+
+    source "usr/Kconfig"
+
+    endif
+
+Hence, all the defines in usr/Kconfig depend on BLK_DEV_INITRD.
+
+Remove the redundant "depends on BLK_DEV_INITRD".
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- usr/Kconfig | 2 --
- 1 file changed, 2 deletions(-)
+ usr/Kconfig | 6 ------
+ 1 file changed, 6 deletions(-)
 
 diff --git a/usr/Kconfig b/usr/Kconfig
-index 72f50a21c051..43934c128010 100644
+index a6b68503d177..72f50a21c051 100644
 --- a/usr/Kconfig
 +++ b/usr/Kconfig
-@@ -102,7 +102,6 @@ config RD_LZ4
+@@ -54,7 +54,6 @@ config INITRAMFS_ROOT_GID
  
- choice
- 	prompt "Built-in initramfs compression mode"
--	depends on INITRAMFS_SOURCE!=""
- 	optional
+ config RD_GZIP
+ 	bool "Support initial ramdisk/ramfs compressed using gzip"
+-	depends on BLK_DEV_INITRD
+ 	default y
+ 	select DECOMPRESS_GZIP
  	help
- 	  This option allows you to decide by which algorithm the builtin
-@@ -211,7 +210,6 @@ config INITRAMFS_COMPRESSION_LZ4
- endchoice
+@@ -64,7 +63,6 @@ config RD_GZIP
+ config RD_BZIP2
+ 	bool "Support initial ramdisk/ramfs compressed using bzip2"
+ 	default y
+-	depends on BLK_DEV_INITRD
+ 	select DECOMPRESS_BZIP2
+ 	help
+ 	  Support loading of a bzip2 encoded initial ramdisk or cpio buffer
+@@ -73,7 +71,6 @@ config RD_BZIP2
+ config RD_LZMA
+ 	bool "Support initial ramdisk/ramfs compressed using LZMA"
+ 	default y
+-	depends on BLK_DEV_INITRD
+ 	select DECOMPRESS_LZMA
+ 	help
+ 	  Support loading of a LZMA encoded initial ramdisk or cpio buffer
+@@ -81,7 +78,6 @@ config RD_LZMA
  
- config INITRAMFS_COMPRESSION
--	depends on INITRAMFS_SOURCE!=""
- 	string
- 	default ""      if INITRAMFS_COMPRESSION_NONE
- 	default ".gz"   if INITRAMFS_COMPRESSION_GZIP
+ config RD_XZ
+ 	bool "Support initial ramdisk/ramfs compressed using XZ"
+-	depends on BLK_DEV_INITRD
+ 	default y
+ 	select DECOMPRESS_XZ
+ 	help
+@@ -91,7 +87,6 @@ config RD_XZ
+ config RD_LZO
+ 	bool "Support initial ramdisk/ramfs compressed using LZO"
+ 	default y
+-	depends on BLK_DEV_INITRD
+ 	select DECOMPRESS_LZO
+ 	help
+ 	  Support loading of a LZO encoded initial ramdisk or cpio buffer
+@@ -100,7 +95,6 @@ config RD_LZO
+ config RD_LZ4
+ 	bool "Support initial ramdisk/ramfs compressed using LZ4"
+ 	default y
+-	depends on BLK_DEV_INITRD
+ 	select DECOMPRESS_LZ4
+ 	help
+ 	  Support loading of a LZ4 encoded initial ramdisk or cpio buffer
 -- 
 2.17.1
 
