@@ -2,117 +2,125 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A293C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96527C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4712E222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CF8721734
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:02:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578063765;
+	bh=daxwZAH3VSS8u6sSc8vKNLamffPzkCp3rHi48q0IeMY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YVi5IdkUimsEIUX6efdz1hkU9UBrscC65z0n6Ez4C+35ovLuvavPNTTt0ZVWANoUJ
+	 UWz9SC9ilkmWmij+NcLeLM+OYaWh4veG+LxSHC/yte2O8cmNMxfcf0Pwf6L6dk6fPq
+	 nPiYjeqML5m9dtEAavEMClev2HW4Cv2G+EdETyYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbgACPBd (ORCPT
+        id S1727954AbgACPCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 10:01:33 -0500
-Received: from foss.arm.com ([217.140.110.172]:56064 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgACPBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 10:01:33 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE544DA7;
-        Fri,  3 Jan 2020 07:01:32 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 22DE43F534;
-        Fri,  3 Jan 2020 07:01:31 -0800 (PST)
-Date:   Fri, 3 Jan 2020 15:01:30 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Thierry Reding <treding@nvidia.com>
-Cc:     Marcel Ziswiler <marcel@ziswiler.com>, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v1] pci: tegra: fix afi_pex2_ctrl reg offset for tegra30
-Message-ID: <20200103150129.GR42593@e119886-lin.cambridge.arm.com>
-References: <20191230005209.1546434-1-marcel@ziswiler.com>
- <20200102123822.GA1924669@ulmo>
+        Fri, 3 Jan 2020 10:02:44 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39895 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgACPCo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 10:02:44 -0500
+Received: by mail-lj1-f193.google.com with SMTP id l2so44145057lja.6;
+        Fri, 03 Jan 2020 07:02:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jYP3oiguXTu4ukRMGsTE94fcOoRU1pxMAUcZzbqTsoQ=;
+        b=kktXjEaeJoDj7MeJeceF+PZIAvZB1dFHWf2rIlpcI78QiDUIEXFx8aqrRtXrAcWClv
+         rFKVKpb5IeEkBo4sjlZ6Yh971Qrxp1ffTFcvLaZsRY5+FTkxX3bqXWaQUxPvjGKyPHc/
+         C5ir3vqVYaAdV+Q2C+xdKsh9ZsjuRtIJ3h6U1XPoaYjVSAsubhlyeSZA9I6gT63my9+O
+         bQVqw67foi7WGZrwovnhuK7QW6m6q2NUAB18JWvvvapZMhh1/Zh82z9ethsHN3V8k/eV
+         AJO/40nyT+zMsUUgXTZNVN4alPmqpgxlshU4y28PH0pID0iGr+0U5EIb/RL6r1UwZay9
+         80Eg==
+X-Gm-Message-State: APjAAAWzn3gWmRS1ySDtjsfw7AXqweyzbrbyGFjC3e197t1XEpYBsI7K
+        gsAP0kBmjriebs/BKUw9pOtMf+ef
+X-Google-Smtp-Source: APXvYqwKx1QwKtOPNraV0L9IHhbkT8H7iic6sFO29rqdvf4tU3k2+YpJg3mg8DbMbm7TyLBrosdkAg==
+X-Received: by 2002:a05:651c:118b:: with SMTP id w11mr53364810ljo.54.1578063762042;
+        Fri, 03 Jan 2020 07:02:42 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id t1sm24602951lji.98.2020.01.03.07.02.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2020 07:02:40 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1inOTK-0006si-Jb; Fri, 03 Jan 2020 16:02:42 +0100
+Date:   Fri, 3 Jan 2020 16:02:42 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.4 106/434] media: flexcop-usb: fix NULL-ptr deref in
+ flexcop_usb_transfer_init()
+Message-ID: <20200103150242.GC17614@localhost>
+References: <20191229172702.393141737@linuxfoundation.org>
+ <20191229172708.658173957@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200102123822.GA1924669@ulmo>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20191229172708.658173957@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 01:38:22PM +0100, Thierry Reding wrote:
-> On Mon, Dec 30, 2019 at 01:52:09AM +0100, Marcel Ziswiler wrote:
-> > Fix AFI_PEX2_CTRL reg offset for tegra30 by moving it from the tegra20
-> > SoC struct where it erroneously got added by commit adb2653b3d2e
-> > ("PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of SoC struct").
-> > This fixes the AFI_PEX2_CTRL reg offset being uninitialised
-> > subsequently failing to bring up the third PCIe port.
-> > 
-> > Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
-> > 
-> > ---
-> > 
-> >  drivers/pci/controller/pci-tegra.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+On Sun, Dec 29, 2019 at 06:22:39PM +0100, Greg Kroah-Hartman wrote:
+> From: Yang Yingliang <yangyingliang@huawei.com>
 > 
-> Hi Marcel,
+> [ Upstream commit 649cd16c438f51d4cd777e71ca1f47f6e0c5e65d ]
 > 
-> the recipient list looks somewhat odd. Mailing lists typically go into
-> the Cc: line and subsystem maintainers into the To: line. That way you
-> increase chances of people's filters catching important emails.
+> If usb_set_interface() failed, iface->cur_altsetting will
+> not be assigned and it will be used in flexcop_usb_transfer_init()
+> It may lead a NULL pointer dereference.
 > 
-> You may also want to fix up the subject line to use the more standard
-> "PCI: tegra: " prefix. Also, maybe capitalize "fix" -> "Fix" to match
-> standard formatting rules for commit messages. In the subject and the
-> commit message, also, please spell "tegra20" and "tegra30" as "Tegra20"
-> and "Tegra30", which can help when searching logs.
+> Check usb_set_interface() return value in flexcop_usb_init()
+> and return failed to avoid using this NULL pointer.
 > 
-> With the above fixed, this looks good, so:
+> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+> Signed-off-by: Sean Young <sean@mess.org>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+
+This commit is bogus and should be dropped from all stable queues.
+
+Contrary to what the commit message claims, iface->cur_altsetting will
+never be NULL so there's no risk for a NULL-pointer dereference here.
+
+Even though the change itself is benign, we shouldn't spread this
+confusion further.
+
+> ---
+>  drivers/media/usb/b2c2/flexcop-usb.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 > 
-> Acked-by: Thierry Reding <treding@nvidia.com>
+> diff --git a/drivers/media/usb/b2c2/flexcop-usb.c b/drivers/media/usb/b2c2/flexcop-usb.c
+> index 1a801dc286f8..d1331f828108 100644
+> --- a/drivers/media/usb/b2c2/flexcop-usb.c
+> +++ b/drivers/media/usb/b2c2/flexcop-usb.c
+> @@ -504,7 +504,13 @@ urb_error:
+>  static int flexcop_usb_init(struct flexcop_usb *fc_usb)
+>  {
+>  	/* use the alternate setting with the larges buffer */
+> -	usb_set_interface(fc_usb->udev,0,1);
+> +	int ret = usb_set_interface(fc_usb->udev, 0, 1);
+> +
+> +	if (ret) {
+> +		err("set interface failed.");
+> +		return ret;
+> +	}
+> +
+>  	switch (fc_usb->udev->speed) {
+>  	case USB_SPEED_LOW:
+>  		err("cannot handle USB speed because it is too slow.");
 
-Also can you please add the following tag:
-
-Fixes: adb2653b3d2e ("PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of SoC struct")
-
-Thanks,
-
-Andrew Murray
-
-> 
-> > 
-> > diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> > index 090b632965e2..ac93f5a0398e 100644
-> > --- a/drivers/pci/controller/pci-tegra.c
-> > +++ b/drivers/pci/controller/pci-tegra.c
-> > @@ -2499,7 +2499,6 @@ static const struct tegra_pcie_soc tegra20_pcie = {
-> >  	.num_ports = 2,
-> >  	.ports = tegra20_pcie_ports,
-> >  	.msi_base_shift = 0,
-> > -	.afi_pex2_ctrl = 0x128,
-> >  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA20,
-> >  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_DIV10,
-> >  	.pads_refclk_cfg0 = 0xfa5cfa5c,
-> > @@ -2528,6 +2527,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
-> >  	.num_ports = 3,
-> >  	.ports = tegra30_pcie_ports,
-> >  	.msi_base_shift = 8,
-> > +	.afi_pex2_ctrl = 0x128,
-> >  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
-> >  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
-> >  	.pads_refclk_cfg0 = 0xfa5cfa5c,
-> > -- 
-> > 2.24.1
-> > 
-
-
+Johan
