@@ -2,125 +2,103 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC88EC00523
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554C7C00523
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFD21222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:57:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578041868;
-	bh=UctUroM4nN96wkH2WxGx4Y08JnLKZp1J2MkJoCunL9w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kPUyX79A3wMqtchbvXcImxs5dgGdqO9Vr4FpKf9tts5wa6GooZeM5ob3POpjUZ3T2
-	 7MsjoYJxSSoIsBTrnLaORFf3uhgSTljtAGVMQvWjifsqR5RMOrZ1K696FKCK7e9JWC
-	 9VSD6KYHQ21Rej2cdbXlB9XdegSVp/ABpEWIrmUw=
+	by mail.kernel.org (Postfix) with ESMTP id 2828721734
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:00:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YLgzDTAf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbgACI5r (ORCPT
+        id S1727425AbgACJAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 03:57:47 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38676 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgACI5r (ORCPT
+        Fri, 3 Jan 2020 04:00:31 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34713 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgACJAa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 03:57:47 -0500
-Received: by mail-ed1-f65.google.com with SMTP id i16so41132722edr.5
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 00:57:46 -0800 (PST)
+        Fri, 3 Jan 2020 04:00:30 -0500
+Received: by mail-lf1-f65.google.com with SMTP id l18so23295899lfc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 01:00:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=+bJCZLqGGAfEAm4pWyHBrj/nn/5vuksWt0O0tN8ngok=;
+        b=YLgzDTAfGrKOJy7kTl06OexdF/WJipSdmj32S2vZup/GXoPX62/iaHXdQmh2cv3WUU
+         wZfiTgkX5vq9QQ8U38lKU5l3CqNhR8/oQdSvd1L7Uf5T/AzAfa8ipCk9wBE/jZ0i4yGx
+         p14hyjWijfNc1QD0AHvGO6tDp+fc8fv4ijf07ifPpNVIlRuFrzBdN5yI3I+Y5sYx7UAQ
+         Qo+wj1hwSKcBJLdc2ixO1RPwv7QByTEdfR1rnqgc81XXWCuH0WkOFeooLxES6vOXyjLt
+         2iI8Gbo+vBlsKYyzHkHYJsSTKNF9X3wOp5O9/3Lm2eiO9Ah+A4XxSKQUMKYqu/MUVrcA
+         fGKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=r6qIuR+7bvXSiJDqaws/93bA9gUxPMySdOOHdmUI+9c=;
-        b=Uas7W9I4m4qeQIjEB5GONGAgf/kMbyQ7cIpdqvYqrv5maqGulSwKmtGvffwl0KTQYf
-         yWbVSP/dzfsBwAgENB02o1l+umXUq7RyNHv03rXv903jTUNE1j/eOFeerH52fsMjRUsm
-         f29ttysfB+aG21Et3Ra/XMTbiOlibi8yMpadfkPkdvvmLQdDHZ2tcZoGXkZBajV8mO9x
-         aOMOQPksdUMBkPRG8fwu+jrgTICYFEfa2oS93kLwJgdTUm5OQSgz73UgwX7da7QTSEke
-         QtAUjI2HFO5SdPm5p+BUvkVI6si+o4Sq9+NQxrWKkrtzaEKiLnJhFXCzKwAbcpwwWmJ3
-         cnqA==
-X-Gm-Message-State: APjAAAWAncqo8ovmKYkmuf/EwsG/XdxFJMjQ7ho+3q5C/q66Y5qoKOvk
-        uRVq0SKQQ86BdNT1FSJiA/U=
-X-Google-Smtp-Source: APXvYqyTfPYeweyUs/D/35Bz3a7w+2H8lIK0gttyBHOE77/P2n2tGa1xOmAoP3pGN5h2t8468x1m2g==
-X-Received: by 2002:a50:93a2:: with SMTP id o31mr92253605eda.160.1578041865550;
-        Fri, 03 Jan 2020 00:57:45 -0800 (PST)
-Received: from pi3 ([194.230.155.149])
-        by smtp.googlemail.com with ESMTPSA id qc1sm5717229ejb.49.2020.01.03.00.57.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 00:57:44 -0800 (PST)
-Date:   Fri, 3 Jan 2020 09:57:42 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] iommu: Enable compile testing for some of drivers
-Message-ID: <20200103081201.GA1439@pi3>
-References: <20191230172619.17814-3-krzk@kernel.org>
- <201912311551.tBrb3BhH%lkp@intel.com>
- <20191231080722.GA6804@pi3>
- <923b1f2f-2b5c-8b6e-6083-243beae09777@ti.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=+bJCZLqGGAfEAm4pWyHBrj/nn/5vuksWt0O0tN8ngok=;
+        b=F/KXTTV/TSGwR0hwz8gklpHotG0m5XL9zrrSDXjznXOIYhTqu6vTLWTBAhWXIWSQu3
+         IOos34I9emZ8Gb5WeGkPcVFeG0aux7NYs4nOoSbt9p3M4NOAbUZdcSqoalB6VI32x2Bg
+         yrkT3z60cSKiOLaaK1IaX/w+iWFePVtndWloS81YLRlcylr2KPLlQj+P7GQo+OGd96t3
+         IwrQ6oAit+Jc6+oLspmZR2j7dGzgABBmxB4eKMKiRfJbE4pyFknRAGDlgx9eG3ld+xcw
+         n6m8yl7DpieyyaBjDhlDReJo7CYIZHoZTMQLrNnkZbVpLJdIdhBPIcx1IYuZ5P9EdkiI
+         vs6g==
+X-Gm-Message-State: APjAAAWT1Oi5QOvUm541jsxi9sAto6RShrchvgE/qjpR3D1qJBme1201
+        Q+Z/jMB3G7g2cSZtsk6H+aYEVA==
+X-Google-Smtp-Source: APXvYqxHz6YOYwivJoSxhqlSJg3HugBnTerrXFQsJwx2kcoUtyy25+ZVE9A88tuIdBzfxaI9c9ocxw==
+X-Received: by 2002:a19:5201:: with SMTP id m1mr51956951lfb.114.1578042028505;
+        Fri, 03 Jan 2020 01:00:28 -0800 (PST)
+Received: from jax (h-249-223.A175.priv.bahnhof.se. [98.128.249.223])
+        by smtp.gmail.com with ESMTPSA id k25sm23877975lji.42.2020.01.03.01.00.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 Jan 2020 01:00:27 -0800 (PST)
+Date:   Fri, 3 Jan 2020 10:00:26 +0100
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+To:     arm@kernel.org, soc@kernel.org
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        tee-dev@lists.linaro.org
+Subject: [GIT PULL] optee platform driver for v5.6
+Message-ID: <20200103090025.GA11243@jax>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <923b1f2f-2b5c-8b6e-6083-243beae09777@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 04:40:16PM -0600, Suman Anna wrote:
-> Hi Krzysztof,
-> 
-> On 12/31/19 2:07 AM, Krzysztof Kozlowski wrote:
-> > On Tue, Dec 31, 2019 at 03:43:39PM +0800, kbuild test robot wrote:
-> >> Hi Krzysztof,
-> >>
-> >> I love your patch! Perhaps something to improve:
-> >>
-> >> [auto build test WARNING on iommu/next]
-> >> [also build test WARNING on v5.5-rc4]
-> >> [if your patch is applied to the wrong git tree, please drop us a note to help
-> >> improve the system. BTW, we also suggest to use '--base' option to specify the
-> >> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> >>
-> >> url:    https://github.com/0day-ci/linux/commits/Krzysztof-Kozlowski/iommu-omap-Fix-pointer-cast-Wpointer-to-int-cast-warnings-on-64-bit/20191231-022212
-> >> base:   https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git next
-> >> config: ia64-allmodconfig (attached as .config)
-> >> compiler: ia64-linux-gcc (GCC) 7.5.0
-> >> reproduce:
-> >>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >>         chmod +x ~/bin/make.cross
-> >>         # save the attached .config to linux build tree
-> >>         GCC_VERSION=7.5.0 make.cross ARCH=ia64 
-> >>
-> >> If you fix the issue, kindly add following tag
-> >> Reported-by: kbuild test robot <lkp@intel.com>
-> > 
-> > I saw it already while compile testing my patch. I must admit that I
-> > could not find easy/fast fix for it.  Probably the
-> > omap_iommu_translate() helper should be made 64-bit friendly but this
-> > obfuscates the code. 
-> 
-> >The driver and hardware supports only 32-bit addresses.
-> 
-> Yeah, is there a reason why you are trying to enable the build for the
-> OMAP IOMMU driver on 64-bit platforms or other architectures - the IP
-> and driver is only ever used on ARMv7 platforms, and it should already
-> be available for COMPILE_TEST on those.
+Hello arm-soc maintainers,
 
-It's the same reason we enable compile testing on all other drivers
-which will never be used outside original platforms. There are many
-of such examples because we want to increase the build coverage to as
-many different configurations as possible. There could be also another
-benefit - easier code reusability - although it is purely theoretical in
-this case, I think.
+Please pull this OP-TEE driver update where the driver is modeled as a
+platform driver instead.
 
-Best regards,
-Krzysztof
+Thanks,
+Jens
+
+The following changes since commit d1eef1c619749b2a57e514a3fa67d9a516ffa919:
+
+  Linux 5.5-rc2 (2019-12-15 15:16:08 -0800)
+
+are available in the Git repository at:
+
+  git://git.linaro.org:/people/jens.wiklander/linux-tee.git tags/tee-optee-pldrv-for-5.6
+
+for you to fetch changes up to f349710e413ad29132373e170c87dd35f2b62069:
+
+  optee: model OP-TEE as a platform device/driver (2020-01-03 09:26:40 +0100)
+
+----------------------------------------------------------------
+Model OP-TEE as a platform device/driver
+
+----------------------------------------------------------------
+Ard Biesheuvel (1):
+      optee: model OP-TEE as a platform device/driver
+
+ drivers/tee/optee/core.c | 153 ++++++++++++++++++++---------------------------
+ 1 file changed, 64 insertions(+), 89 deletions(-)
