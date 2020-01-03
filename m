@@ -2,89 +2,91 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A4AC32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF99C00523
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0817B2253D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:38:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578040703;
-	bh=63q4wtYcTN4pYASfvrCQ7vgqOyOjRrhkYeZ0ec+82MY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AK9GRIDtEl+8hkGi5ngOi3ZtGI488rKribzDc5O5ITgWY9SmBeflBmIOrDg1WB7kW
-	 VrL1Q99EhU2SFd12ntSVFuglOvACn3drknE/qc8JBWuL85GHpSt/MP2hQh6JF9R4KS
-	 MlX4H6noqZ2vqxx+FPrrzPLAFgzlCbF7TIfkik8Q=
+	by mail.kernel.org (Postfix) with ESMTP id CD5FA2464E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:40:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbgACIiW (ORCPT
+        id S1727363AbgACIkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 03:38:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725972AbgACIiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 03:38:21 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFD8122314;
-        Fri,  3 Jan 2020 08:38:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578040701;
-        bh=63q4wtYcTN4pYASfvrCQ7vgqOyOjRrhkYeZ0ec+82MY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GRnyjTC7PY/95qEriIeCOWhR6+3IiIgzHquXfcNVb34I6+UB8ceugip+1GQ9yZGgc
-         6k9HozSBF3hbEvySlWXhAxF+51CimVPiPvViQRReJt0MfcqMXa33K3sL+DAfLpsdZX
-         7yhoO96Z4V2G29w7a/GW1QFs3bMdDvMrHL84FfBA=
-Date:   Fri, 3 Jan 2020 09:38:19 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.14 00/91] 4.14.162-stable review
-Message-ID: <20200103083819.GC831558@kroah.com>
-References: <20200102220356.856162165@linuxfoundation.org>
- <20200102230518.GA1087@roeck-us.net>
- <20200103001639.GK16372@sasha-vm>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200103001639.GK16372@sasha-vm>
+        Fri, 3 Jan 2020 03:40:19 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:58172 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726181AbgACIkT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 03:40:19 -0500
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1inIVC-0003Sp-4G; Fri, 03 Jan 2020 08:40:14 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     mathias.nyman@intel.com, gregkh@linuxfoundation.org,
+        stern@rowland.harvard.edu
+Cc:     acelan.kao@canonical.com, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH 1/3] xhci: Ensure link state is U3 after setting USB_SS_PORT_LS_U3
+Date:   Fri,  3 Jan 2020 16:40:06 +0800
+Message-Id: <20200103084008.3579-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 07:16:39PM -0500, Sasha Levin wrote:
-> On Thu, Jan 02, 2020 at 03:05:18PM -0800, Guenter Roeck wrote:
-> > On Thu, Jan 02, 2020 at 11:06:42PM +0100, Greg Kroah-Hartman wrote:
-> > > This is the start of the stable review cycle for the 4.14.162 release.
-> > > There are 91 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > > 
-> > > Responses should be made by Sat, 04 Jan 2020 22:01:54 +0000.
-> > > Anything received after that time might be too late.
-> > > 
-> > 
-> > drivers/pci/switch/switchtec.c: In function 'ioctl_event_summary':
-> > drivers/pci/switch/switchtec.c:901:18: error: implicit declaration of function 'readq'; did you mean 'readl'?
-> > 
-> > The problem also affects v4.19.y. Seen with various 32-bit builds,
-> > including i386:allmodconfig and arm:allmodconfig.
-> > 
-> > The backport replaces ioread64 with readq, which may not have been
-> > such a good idea.
-> 
-> Indeed. I'll drop it for now, thanks!
+The xHCI spec doesn't specify the upper bound of U3 transition time. For
+some devices 20ms is not enough, so we need to make sure the link state
+is in U3 before further actions.
 
-I've pushed out -rc2 versions with this patch removed now.
+I've tried to use U3 Entry Capability by setting U3 Entry Enable in
+config register, however the port change event for U3 transition
+interrupts the system suspend process.
 
-thanks,
+For now let's use the less ideal method by polling PLS.
 
-greg k-h
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/usb/host/xhci-hub.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+index 7a3a29e5e9d2..2b2e9d004dbf 100644
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -1228,6 +1228,7 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 			break;
+ 		case USB_PORT_FEAT_LINK_STATE:
+ 			temp = readl(ports[wIndex]->addr);
++			xhci_dbg(xhci, "before setting link state, actual port %d-%d status = 0x%0x\n", hcd->self.busnum, wIndex + 1, temp);
+ 			/* Disable port */
+ 			if (link_state == USB_SS_PORT_LS_SS_DISABLED) {
+ 				xhci_dbg(xhci, "Disable port %d\n", wIndex);
+@@ -1316,9 +1317,17 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 			msleep(20); /* wait device to enter */
+ 			spin_lock_irqsave(&xhci->lock, flags);
+ 
+-			temp = readl(ports[wIndex]->addr);
+-			if (link_state == USB_SS_PORT_LS_U3)
++			if (link_state == USB_SS_PORT_LS_U3) {
++				retval = xhci_handshake(ports[wIndex]->addr, PORT_PLS_MASK, XDEV_U3, 80 * 1000);
++				if (retval)
++					xhci_dbg(xhci, "polling XDEV_U3 on port %d-%d timeout\n", hcd->self.busnum, wIndex + 1);
++
+ 				bus_state->suspended_ports |= 1 << wIndex;
++			}
++
++			temp = readl(ports[wIndex]->addr);
++			xhci_dbg(xhci, "after setting link state, port %d-%d status = 0x%0x\n", hcd->self.busnum, wIndex + 1, temp);
++
+ 			break;
+ 		case USB_PORT_FEAT_POWER:
+ 			/*
+-- 
+2.17.1
+
