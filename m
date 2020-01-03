@@ -2,55 +2,69 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE4DC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D63C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11CCF21835
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:41:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578051699;
-	bh=YCnh2bjtvzMK85XmelAkUX2fnI8ywWKdYa01Y5hGEEA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=VtM2d9yVLP5yNqfkfLSOIbLJWCuhqlxlubYnee2OXWUMyeXJdwiyBNarWz2io/R8D
-	 /tj5F6KwSu1yajB8J5d9TU951mMYYlqNJpSK1GaBwNXosXdfiFqCwCjaJS0swq32xa
-	 tQQ4W+sBehKjQFwPG7i//ehHIYBwblgybAlEeoaA=
+	by mail.kernel.org (Postfix) with ESMTP id 6962121835
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:42:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="VoGDQ6Si"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbgACLkT (ORCPT
+        id S1727718AbgACLmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 06:40:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39300 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727457AbgACLkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 06:40:17 -0500
-Received: from localhost.localdomain (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46DC121835;
-        Fri,  3 Jan 2020 11:40:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578051616;
-        bh=YCnh2bjtvzMK85XmelAkUX2fnI8ywWKdYa01Y5hGEEA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ZZHjYvVgDKlrsQ5Dg3YaObOyT98JEx4nPrcu8A+xi4qeRtgwhRwoavCLU22BMW1OR
-         rkpJS/s4F6Mc3/dOhoXH4ZN68uzBSIvhGaXDPl9EeMJwos22JanQ08iymqyrYu6+80
-         mwyWClffeti/UjEARFyD5PP/KWl8wlXJLUhpoqFk=
-From:   Ard Biesheuvel <ardb@kernel.org>
-To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Matthew Garrett <mjg59@google.com>
-Subject: [GIT PULL 00/20] More EFI updates for v5.6
-Date:   Fri,  3 Jan 2020 12:39:33 +0100
-Message-Id: <20200103113953.9571-1-ardb@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Fri, 3 Jan 2020 06:42:07 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46860 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727560AbgACLmH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 06:42:07 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z7so42077719wrl.13
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 03:42:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DOp7/NK/kDQFb3w2KXAmvUYnxJH6vqk7p3b0dByfVmI=;
+        b=VoGDQ6SiKuFgnf2qlFKP1psc3/j9gZewO2B8sqI595AAXi7Ed2XsUavtezZcxzQ+1f
+         p/cidDY7cbnLVt3Cy0d72h8fWxNe0F4AjQKooGUwn2+Fjehbvvj5/zLvCOppTVknAd8Q
+         F1oBWoqfuLyFU6HITwt0uRO00SO36F/sQ1dUco3i/hpnv9Ft7eEbUpbGKtlv21tT6X2f
+         Q/SkDqhwGOTN3AreD0KKT+32vlSaPOmRpO7K9Si3WsIs8SQ/XM+NuIx5cEKxh67bH8ga
+         zzDyoo0zOaAdD7WAjSfnNu9rSIULBXph9Gj5tfhyH3WU12WVrjTeR8RlmJdS6/xb8CoS
+         6bUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DOp7/NK/kDQFb3w2KXAmvUYnxJH6vqk7p3b0dByfVmI=;
+        b=nXzKO29BDepRNN5HX1bM8RXCAbteb0CtPTZ582AakWQ5k7gp178iGvhN2FDvbqgPFQ
+         jkVWdtYNXNYyEEgngoJ2pFm4cgdbcXW8hCuwV/EvbNQ2xJ1IdSxDFPYb1LwkKHiJw2GF
+         Ow3gW7TzDOv1nYqjc16e/ceZlZRXRY3jyQA+TEd4os+C79cC8yeZbjM3vrETSRaXTBlL
+         /qaFrVIoU3+VlZk+7wj52dC1U7LrLwmguTp6dpL7NigDKXTbuj/btFaAxBnDSNp/2AZV
+         mjFAkWTwqfD1cDzdghD6lR9OCLvbLSdpRMegz/gUsD0+Whuh2629+iEWMJtKAwIia129
+         PPxQ==
+X-Gm-Message-State: APjAAAXKbk0lY956cLkm8X58ZV+VAtuinCCQxVXfMQCgQjx2/iQMHaRl
+        39Ebtpl6MktZobnUIvGAy/ZyPg==
+X-Google-Smtp-Source: APXvYqxTqq6ykFq8IR98BhEbv2Xpz7UddsNCByTuY68itBs2JcsLp/9mCi6/E/c6kWhLf0xrXdZEuA==
+X-Received: by 2002:adf:dc8d:: with SMTP id r13mr16048962wrj.357.1578051725088;
+        Fri, 03 Jan 2020 03:42:05 -0800 (PST)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id x18sm59934893wrr.75.2020.01.03.03.42.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2020 03:42:04 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Paul Gazzillo <paul@pgazz.com>
+Subject: [PATCH] mfd: max77650: Select REGMAP_IRQ in Kconfig
+Date:   Fri,  3 Jan 2020 12:41:56 +0100
+Message-Id: <20200103114156.20089-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,83 +72,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ingo, Thomas,
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This is the second batch of EFI updates for v5.6. Two things are still
-under discussion, so I'll probably have a few more changes for this
-cycle in a week or so.
+MAX77650 MFD driver uses regmap_irq API but doesn't select the required
+REGMAP_IRQ option in Kconfig. This can cause the following build error
+if regmap irq is not enabled implicitly by someone else:
 
-The following changes since commit 0679715e714345d273c0e1eb78078535ffc4b2a1:
+    ld: drivers/mfd/max77650.o: in function `max77650_i2c_probe':
+    max77650.c:(.text+0xcb): undefined reference to `devm_regmap_add_irq_chip'
+    ld: max77650.c:(.text+0xdb): undefined reference to `regmap_irq_get_domain'
+    make: *** [Makefile:1079: vmlinux] Error 1
 
-  efi/libstub/x86: Avoid globals to store context during mixed mode calls (2019-12-25 10:49:26 +0100)
+Fix it by adding the missing option.
 
-are available in the Git repository at:
+Fixes: d0f60334500b ("mfd: Add new driver for MAX77650 PMIC")
+Reported-by: Paul Gazzillo <paul@pgazz.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/mfd/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-next
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 420900852166..c366503c466d 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -758,6 +758,7 @@ config MFD_MAX77650
+ 	depends on OF || COMPILE_TEST
+ 	select MFD_CORE
+ 	select REGMAP_I2C
++	select REGMAP_IRQ
+ 	help
+ 	  Say Y here to add support for Maxim Semiconductor MAX77650 and
+ 	  MAX77651 Power Management ICs. This is the core multifunction
+-- 
+2.23.0
 
-for you to fetch changes up to d95e4feae5368a91775c4597a8f298ba84f31535:
-
-  efi/x86: avoid RWX mappings for all of DRAM (2020-01-03 11:46:15 +0100)
-
-----------------------------------------------------------------
-Second batch of EFI updates for v5.6:
-- Some followup fixes for the EFI stub changes that have been queued up
-  already.
-- Overhaul of the x86 EFI boot/runtime code, to peel off layers of pointer
-  casting and type mangling via variadic macros and asm wrappers that made
-  the code fragile and ugly.
-- Increase robustness for mixed mode code, by using argmaps to annotate and
-  translate function prototypes that are not mixed mode safe. (Arvind)
-- Add the ability to disable DMA at the root port level in the EFI stub, to
-  avoid booting into the kernel proper with IOMMUs in pass through and DMA
-  enabled (suggested by Matthew)
-- Get rid of RWX mappings in the EFI memory map, where possible.
-
-----------------------------------------------------------------
-Ard Biesheuvel (17):
-      efi/libstub: fix boot argument handling in mixed mode entry code
-      efi/libstub/x86: force 'hidden' visibility for extern declarations
-      efi/x86: re-disable RT services for 32-bit kernels running on 64-bit EFI
-      efi/x86: map the entire EFI vendor string before copying it
-      efi/x86: avoid redundant cast of EFI firmware service pointer
-      efi/x86: split off some old memmap handling into separate routines
-      efi/x86: split SetVirtualAddresMap() wrappers into 32 and 64 bit versions
-      efi/x86: simplify i386 efi_call_phys() firmware call wrapper
-      efi/x86: simplify 64-bit EFI firmware call wrapper
-      efi/x86: simplify mixed mode call wrapper
-      efi/x86: drop two near identical versions of efi_runtime_init()
-      efi/x86: clean up efi_systab_init() routine for legibility
-      efi/x86: don't panic or BUG() on non-critical error conditions
-      efi/x86: remove unreachable code in kexec_enter_virtual_mode()
-      x86/mm: fix NX bit clearing issue in kernel_map_pages_in_pgd
-      efi/x86: don't map the entire kernel text RW for mixed mode
-      efi/x86: avoid RWX mappings for all of DRAM
-
-Arvind Sankar (2):
-      efi/x86: Check number of arguments to variadic functions
-      efi/x86: Allow translating 64-bit arguments for mixed mode calls
-
-Matthew Garrett (1):
-      efi: Allow disabling PCI busmastering on bridges during boot
-
- Documentation/admin-guide/kernel-parameters.txt |   7 +-
- arch/x86/boot/compressed/eboot.c                |  18 +-
- arch/x86/boot/compressed/efi_thunk_64.S         |   4 +-
- arch/x86/boot/compressed/head_64.S              |  17 +-
- arch/x86/include/asm/efi.h                      | 169 ++++++++---
- arch/x86/mm/pageattr.c                          |   8 +-
- arch/x86/platform/efi/Makefile                  |   1 -
- arch/x86/platform/efi/efi.c                     | 354 ++++++++----------------
- arch/x86/platform/efi/efi_32.c                  |  22 +-
- arch/x86/platform/efi/efi_64.c                  | 157 +++++++----
- arch/x86/platform/efi/efi_stub_32.S             | 109 ++------
- arch/x86/platform/efi/efi_stub_64.S             |  43 +--
- arch/x86/platform/efi/efi_thunk_64.S            | 121 ++------
- arch/x86/platform/uv/bios_uv.c                  |   7 +-
- drivers/firmware/efi/Kconfig                    |  22 ++
- drivers/firmware/efi/libstub/Makefile           |   2 +-
- drivers/firmware/efi/libstub/efi-stub-helper.c  |  20 +-
- drivers/firmware/efi/libstub/pci.c              | 114 ++++++++
- include/linux/efi.h                             |  29 +-
- 19 files changed, 597 insertions(+), 627 deletions(-)
- create mode 100644 drivers/firmware/efi/libstub/pci.c
