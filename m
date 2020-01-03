@@ -2,210 +2,119 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9056FC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DBFC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C96D217F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00EB521D7D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:28:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NkL5319k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbgACJ13 (ORCPT
+        id S1727495AbgACJ2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 04:27:29 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41971 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgACJ13 (ORCPT
+        Fri, 3 Jan 2020 04:28:04 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:33874 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727059AbgACJ2E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 04:27:29 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1inJEt-0000N6-Co; Fri, 03 Jan 2020 10:27:27 +0100
-Message-ID: <a121d715fbed1f8ab935d465a4f0cbb8071790d5.camel@pengutronix.de>
-Subject: Re: [PATCH v2 2/2] reset: Add Broadcom STB RESCAL reset controller
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Jim Quinlan <jim2101024@gmail.com>,
-        Jim Quinlan <im2101024@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Fri, 03 Jan 2020 10:27:26 +0100
-In-Reply-To: <20200102231435.21703-3-f.fainelli@gmail.com>
-References: <20200102231435.21703-1-f.fainelli@gmail.com>
-         <20200102231435.21703-3-f.fainelli@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Fri, 3 Jan 2020 04:28:04 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0039OHtG168169;
+        Fri, 3 Jan 2020 09:27:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2019-08-05;
+ bh=55Sdflq6CCBRAEIAmvKQYMAyn61XPUnwtABoljVNW78=;
+ b=NkL5319kGrZJXDz1md0RsG7/t7Nmn1HzGWA9iHp2MwFynQqM0IIteKp8ZLJjPmUI5rcc
+ LBDMBtwo/+nA36BAD+u+aPeDJOrXpv+hJU/0k7GcS36+oBxr4znYMciaddCqeyzKX+Yg
+ 55JN46+eaArqhR/8m7hUMafbG5PxofcGJXfPP9zEkzWxEjaL/xwZiUMAJnxCHusHRNJ9
+ A0yCPlzfM/DSktZS1z77RS66ODJ3uBi2QlbLgxG2Bvzi+m/k5ywXN7njcIWYs3GiKoB7
+ VHtNtSvlqbiC7hpTgI4YxB8JgWJaTnpIxjrz2BU9k6hcWdo/A7pE/8hGk9ZNQ5n1+VGx 1Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2x5xftuh5x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Jan 2020 09:27:56 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0039ORRY177272;
+        Fri, 3 Jan 2020 09:27:55 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2x8guwd7a3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Jan 2020 09:27:55 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0039RsGe005579;
+        Fri, 3 Jan 2020 09:27:54 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 Jan 2020 01:27:53 -0800
+Date:   Fri, 3 Jan 2020 12:27:44 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     =?iso-8859-1?B?Suly9G1l?= Pouiller <Jerome.Pouiller@silabs.com>
+Cc:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: [PATCH 25/55] staging: wfx: fix name of struct
+ hif_req_start_scan_alt
+Message-ID: <20200103092744.GC3911@kadam>
+References: <20191216170302.29543-1-Jerome.Pouiller@silabs.com>
+ <20191216170302.29543-26-Jerome.Pouiller@silabs.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191216170302.29543-26-Jerome.Pouiller@silabs.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001030089
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001030089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Florian,
-
-just a few small nitpicks:
-
-On Thu, 2020-01-02 at 15:14 -0800, Florian Fainelli wrote:
-> From: Jim Quinlan <jim2101024@gmail.com>
+On Mon, Dec 16, 2019 at 05:03:46PM +0000, Jérôme Pouiller wrote:
+> From: Jérôme Pouiller <jerome.pouiller@silabs.com>
 > 
-> On BCM7216 there is a special purpose reset controller named RESCAL
-> (reset calibration) which is necessary for SATA and PCIe0/1 to operate
-> correctly. This commit adds support for such a reset controller to be
-> available.
+> The original name did not make any sense.
 > 
-> Signed-off-by: Jim Quinlan <im2101024@gmail.com>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
 > ---
->  drivers/reset/Kconfig                |   7 ++
->  drivers/reset/Makefile               |   1 +
->  drivers/reset/reset-brcmstb-rescal.c | 110 +++++++++++++++++++++++++++
->  3 files changed, 118 insertions(+)
->  create mode 100644 drivers/reset/reset-brcmstb-rescal.c
+>  drivers/staging/wfx/hif_api_cmd.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 12f5c897788d..b7cc0a2049d9 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -49,6 +49,13 @@ config RESET_BRCMSTB
->  	  This enables the reset controller driver for Broadcom STB SoCs using
->  	  a SUN_TOP_CTRL_SW_INIT style controller.
+> diff --git a/drivers/staging/wfx/hif_api_cmd.h b/drivers/staging/wfx/hif_api_cmd.h
+> index 3e77fbe3d5ff..4ce3bb51cf04 100644
+> --- a/drivers/staging/wfx/hif_api_cmd.h
+> +++ b/drivers/staging/wfx/hif_api_cmd.h
+> @@ -188,7 +188,7 @@ struct hif_req_start_scan {
+>  	u8    ssid_and_channel_lists[];
+>  } __packed;
 >  
-> +config RESET_BRCMSTB_RESCAL
-> +	bool "Broadcom STB RESCAL reset controller"
-> +	default ARCH_BRCMSTB || COMPILE_TEST
-> +	help
-> +	  This enables the RESCAL reset controller for SATA, PCIe0, or PCIe1 on
-> +	  BCM7216.
-> +
->  config RESET_HSDK
->  	bool "Synopsys HSDK Reset Driver"
->  	depends on HAS_IOMEM
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index 00767c03f5f2..1e4291185c52 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -8,6 +8,7 @@ obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
->  obj-$(CONFIG_RESET_AXS10X) += reset-axs10x.o
->  obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
->  obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
-> +obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
->  obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
->  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
->  obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
-> diff --git a/drivers/reset/reset-brcmstb-rescal.c b/drivers/reset/reset-brcmstb-rescal.c
-> new file mode 100644
-> index 000000000000..e1c038e62855
-> --- /dev/null
-> +++ b/drivers/reset/reset-brcmstb-rescal.c
-> @@ -0,0 +1,110 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (C) 2018-2020 Broadcom */
-> +
-> +#include <linux/device.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset-controller.h>
-> +
-> +#define BRCM_RESCAL_START	0x0
-> +#define  BRCM_RESCAL_START_BIT	BIT(0)
-> +#define BRCM_RESCAL_CTRL	0x4
-> +#define BRCM_RESCAL_STATUS	0x8
-> +#define  BRCM_RESCAL_STATUS_BIT	BIT(0)
-> +
-> +struct brcm_rescal_reset {
-> +	void __iomem	*base;
+> -struct hif_start_scan_req_cstnbssid_body {
+> +struct hif_req_start_scan_alt {
+>  	u8    band;
+>  	struct hif_scan_type scan_type;
+>  	struct hif_scan_flags scan_flags;
 
-You could replace the tab before *base with a space for consistency.
+Why not just delete this if it isn't used?
 
-> +	struct device *dev;
-> +	struct reset_controller_dev rcdev;
-> +};
-> +
-> +static int brcm_rescal_reset_set(struct reset_controller_dev *rcdev,
-> +				 unsigned long id)
-> +{
-> +	struct brcm_rescal_reset *data =
-> +		container_of(rcdev, struct brcm_rescal_reset, rcdev);
-> +	void __iomem *base = data->base;
-> +	u32 reg;
-> +	int ret;
-> +
-> +	reg = readl(base + BRCM_RESCAL_START);
-> +	writel(reg | BRCM_RESCAL_START_BIT, base + BRCM_RESCAL_START);
-> +	reg = readl(base + BRCM_RESCAL_START);
-> +	if (!(reg & BRCM_RESCAL_START_BIT)) {
-> +		dev_err(data->dev, "failed to start SATA/PCIe rescal\n");
-> +		return -EIO;
-> +	}
-> +
-> +	ret = readl_poll_timeout(base + BRCM_RESCAL_STATUS, reg,
-> +				 !(reg & BRCM_RESCAL_STATUS_BIT), 100, 1000);
-> +	if (ret) {
-> +		dev_err(data->dev, "time out on SATA/PCIe rescal\n");
-> +		return -ETIMEDOUT;
-
-Just return ret here, readl_poll_timeout() already returns -ETIMEDOUT.
-
-> +	}
-> +
-> +	reg = readl(base + BRCM_RESCAL_START);
-> +	writel(reg & ~BRCM_RESCAL_START_BIT, base + BRCM_RESCAL_START);
-> +	(void)readl(base + BRCM_RESCAL_START);
-
-Is this final read actually necessary (if so, why)?
-
-> +
-> +	dev_dbg(data->dev, "SATA/PCIe rescal success\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static int brcm_rescal_reset_xlate(struct reset_controller_dev *rcdev,
-> +				   const struct of_phandle_args *reset_spec)
-> +{
-> +	/* This is needed if #reset-cells == 0. */
-> +	return 0;
-> +}
-> +
-> +static const struct reset_control_ops brcm_rescal_reset_ops = {
-> +	.reset = brcm_rescal_reset_set,
-> +};
-> +
-> +static int brcm_rescal_reset_probe(struct platform_device *pdev)
-> +{
-> +	struct brcm_rescal_reset *data;
-> +	struct resource *res;
-> +
-> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	data->base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(data->base))
-> +		return PTR_ERR(data->base);
-> +
-> +	platform_set_drvdata(pdev, data);
-
-This can be dropped.
-
-regards
-Philipp
+regards,
+dan carpenter
 
