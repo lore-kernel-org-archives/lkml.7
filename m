@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C83E6C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A419C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9C722522
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73309215A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578074387;
-	bh=3O2oQvSBk+7BR0ZGuvlpb/SpotQyclTbejUPgtbX2xU=;
+	s=default; t=1578074389;
+	bh=9kwzpWOP+dbx21kVOlNozlOPHBOk6wAtzDv+U09dF7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YAr6foRJBKxuDe+y75Eplh10Z2uBDjYfY8jJUCFkL3GlInhYiO35pR+xlPqOxMtba
-	 79E63jTj4a+bQLCj4mBkVHfXTSzKr732NA21CVUE4IE5wdNdRoo2IK9Y2Gbyl0kwqj
-	 sixCnYcRz4FSP7Uh01RkASdZhGQdhTrBIWZpeKkU=
+	b=F8lLWpKDQI9y+u2Py2dwtNRM2prCixN0yCu2IOxCMBfFYOZyH2UxRNZTLP+CRIKZ8
+	 9J1PDP37rgOda082NF1ZiOfCt5phiHG48FpPUqf9Hd/OAguxxVycXxMwMjqfIau7CG
+	 230ENvpcvcE1iLTp9/tr4MT4//GwTAKQuV0tHKLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbgACR7q (ORCPT
+        id S1728308AbgACR7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 12:59:46 -0500
-Received: from conuserg-07.nifty.com ([210.131.2.74]:64714 "EHLO
+        Fri, 3 Jan 2020 12:59:45 -0500
+Received: from conuserg-07.nifty.com ([210.131.2.74]:64707 "EHLO
         conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728183AbgACR7k (ORCPT
+        with ESMTP id S1728223AbgACR7k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 3 Jan 2020 12:59:40 -0500
 Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 003HxSJ5022724;
-        Sat, 4 Jan 2020 02:59:31 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 003HxSJ5022724
+        by conuserg-07.nifty.com with ESMTP id 003HxSJB022724;
+        Sat, 4 Jan 2020 02:59:34 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 003HxSJB022724
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578074371;
-        bh=bHwr5zrMPtwj0Xjsz5tjllHBAG13FvggunbN5z1QbKY=;
+        s=dec2015msa; t=1578074374;
+        bh=IixOZfomVhBc53dTdWlB8Lij+8LbaLBdC9mPIGrpvkM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xd/MEXm8ioLojnsWB0ebtrQHArl9nr90m/Yi8CIVTgSI6GevZDIlVrzJ0YDnLFSXK
-         vzQPuSJo/9vZkt+AAWIfRmGTcWlrZ3/aUd4Lh00uYJ897EdcWtAOlCT/UJqHipc5kE
-         Cg1gxT5K+iQ1Hu3AFT6mCOPOJJ1IPl8p02wd4q48TL1ZfzDr/gbEz58nDBlO7i4m8b
-         AeDeycIgEaQFrHxMZZbaFs/k2kfhtpJ4wSh4oTQDakeTLZaodxGW8X8H/+Jj//QRxj
-         dvs4p6vRXeaF0b+M5TeT8O2ecxNcQ6Z6XzIjkM36QQL94nTi7F4J+4UdHXA5o50oum
-         tXYgy5GwD0ddA==
+        b=0gVEWqJ5DZXHLuErJd43XABaQ/TvJCjwjAmVRPl1WWoWODwGI/aZKM1hY7gQ/cNHv
+         NF+UGMjSn8IJRQFHpZp+PnRYC0wUvKOOGTmVlbubFZPs7RYqi0wzwgqmEXo8klzz1o
+         a3YO5J1cul0dONVb3IZEnjm7bLVI0YSYru0HBzTQWHNBfnvxUO22XtubxwWVLAiDKd
+         o76OnNQrfBTsQ199SJsrPBvT8h/kTxIgGe7sVqR95n3PO4pjVLQhRvf6X5jwcfn5ja
+         5G21J5gIDk/i8Kd0N4QiX5CVfGMfbVvx/DEi2ioXMGXNdC+QiCO6ZfQ71G4tOx5nPp
+         zwn/YhrTlNqFg==
 X-Nifty-SrcIP: [126.93.102.113]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 04/12] initramfs: remove redundant dependency on BLK_DEV_INITRD
-Date:   Sat,  4 Jan 2020 02:59:07 +0900
-Message-Id: <20200103175915.26663-5-masahiroy@kernel.org>
+Subject: [PATCH 10/12] gen_initramfs.sh: always output cpio even without -o option
+Date:   Sat,  4 Jan 2020 02:59:13 +0900
+Message-Id: <20200103175915.26663-11-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200103175915.26663-1-masahiroy@kernel.org>
 References: <20200103175915.26663-1-masahiroy@kernel.org>
@@ -59,77 +58,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-init/Kconfig includes usr/Kconfig inside the "if BLK_DEV_INITRD" ...
-"endif" block:
+Currently, this script outputs a cpio file when -o option is
+given, but otherwise a text file in the format recognized by
+gen_init_cpio.
 
-    if BLK_DEV_INITRD
-
-    source "usr/Kconfig"
-
-    endif
-
-Hence, all the defines in usr/Kconfig depend on BLK_DEV_INITRD.
-
-Remove the redundant "depends on BLK_DEV_INITRD".
+This behavior is unclear. Make it always output a cpio file.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- usr/Kconfig | 6 ------
- 1 file changed, 6 deletions(-)
+ usr/gen_initramfs.sh | 58 +++++++++++++++++++++-----------------------
+ 1 file changed, 27 insertions(+), 31 deletions(-)
 
-diff --git a/usr/Kconfig b/usr/Kconfig
-index a6b68503d177..72f50a21c051 100644
---- a/usr/Kconfig
-+++ b/usr/Kconfig
-@@ -54,7 +54,6 @@ config INITRAMFS_ROOT_GID
+diff --git a/usr/gen_initramfs.sh b/usr/gen_initramfs.sh
+index e6808a8c3b2b..1efb87bda545 100755
+--- a/usr/gen_initramfs.sh
++++ b/usr/gen_initramfs.sh
+@@ -6,7 +6,6 @@
+ #
+ # Generate a cpio packed initramfs. It uses gen_init_cpio to generate
+ # the cpio archive, and then compresses it.
+-# The script may also be used to generate the inputfile used for gen_init_cpio
+ # This script assumes that gen_init_cpio is located in usr/ directory
  
- config RD_GZIP
- 	bool "Support initial ramdisk/ramfs compressed using gzip"
--	depends on BLK_DEV_INITRD
- 	default y
- 	select DECOMPRESS_GZIP
- 	help
-@@ -64,7 +63,6 @@ config RD_GZIP
- config RD_BZIP2
- 	bool "Support initial ramdisk/ramfs compressed using bzip2"
- 	default y
--	depends on BLK_DEV_INITRD
- 	select DECOMPRESS_BZIP2
- 	help
- 	  Support loading of a bzip2 encoded initial ramdisk or cpio buffer
-@@ -73,7 +71,6 @@ config RD_BZIP2
- config RD_LZMA
- 	bool "Support initial ramdisk/ramfs compressed using LZMA"
- 	default y
--	depends on BLK_DEV_INITRD
- 	select DECOMPRESS_LZMA
- 	help
- 	  Support loading of a LZMA encoded initial ramdisk or cpio buffer
-@@ -81,7 +78,6 @@ config RD_LZMA
+ # error out on errors
+@@ -71,8 +70,8 @@ print_mtime() {
+ 		my_mtime=$(find "$1" -printf "%T@\n" | sort -r | head -n 1)
+ 	fi
  
- config RD_XZ
- 	bool "Support initial ramdisk/ramfs compressed using XZ"
--	depends on BLK_DEV_INITRD
- 	default y
- 	select DECOMPRESS_XZ
- 	help
-@@ -91,7 +87,6 @@ config RD_XZ
- config RD_LZO
- 	bool "Support initial ramdisk/ramfs compressed using LZO"
- 	default y
--	depends on BLK_DEV_INITRD
- 	select DECOMPRESS_LZO
- 	help
- 	  Support loading of a LZO encoded initial ramdisk or cpio buffer
-@@ -100,7 +95,6 @@ config RD_LZO
- config RD_LZ4
- 	bool "Support initial ramdisk/ramfs compressed using LZ4"
- 	default y
--	depends on BLK_DEV_INITRD
- 	select DECOMPRESS_LZ4
- 	help
- 	  Support loading of a LZ4 encoded initial ramdisk or cpio buffer
+-	echo "# Last modified: ${my_mtime}" >> ${output}
+-	echo "" >> ${output}
++	echo "# Last modified: ${my_mtime}" >> $cpio_list
++	echo "" >> $cpio_list
+ }
+ 
+ list_parse() {
+@@ -125,7 +124,7 @@ parse() {
+ 			;;
+ 	esac
+ 
+-	echo "${str}" >> ${output}
++	echo "${str}" >> $cpio_list
+ 
+ 	return 0
+ }
+@@ -141,7 +140,7 @@ unknown_option() {
+ }
+ 
+ header() {
+-	printf "\n#####################\n# $1\n" >> ${output}
++	printf "\n#####################\n# $1\n" >> $cpio_list
+ }
+ 
+ # process one directory (incl sub-directories)
+@@ -177,8 +176,8 @@ input_file() {
+ 			[ -n "$dep_list" ] && echo "$1" >> $dep_list
+ 			return 0
+ 		fi
+-		print_mtime "$1" >> ${output}
+-		cat "$1"         >> ${output}
++		print_mtime "$1" >> $cpio_list
++		cat "$1"         >> $cpio_list
+ 		if [ -n "$dep_list" ]; then
+ 		        echo "$1 \\"  >> $dep_list
+ 			cat "$1" | while read type dir file perm ; do
+@@ -200,9 +199,9 @@ root_uid=0
+ root_gid=0
+ dep_list=
+ cpio_file=
+-cpio_list=
++cpio_list=$(mktemp ${TMPDIR:-/tmp}/cpiolist.XXXXXX)
+ output="/dev/stdout"
+-output_file=""
++output_file="/dev/stdout"
+ is_cpio_compressed=
+ compr="gzip -n -9 -f"
+ 
+@@ -217,8 +216,7 @@ while [ $# -gt 0 ]; do
+ 			;;
+ 		"-o")	# generate compressed cpio image named $1
+ 			output_file="$1"
+-			cpio_list="$(mktemp ${TMPDIR:-/tmp}/cpiolist.XXXXXX)"
+-			output=${cpio_list}
++			output=$cpio_list
+ 			echo "$output_file" | grep -q "\.gz$" \
+ 			&& [ -x "`which gzip 2> /dev/null`" ] \
+ 			&& compr="gzip -n -9 -f"
+@@ -269,27 +267,25 @@ done
+ 
+ # If output_file is set we will generate cpio archive and compress it
+ # we are careful to delete tmp files
+-if [ ! -z ${output_file} ]; then
+-	if [ -z ${cpio_file} ]; then
+-		timestamp=
+-		if test -n "$KBUILD_BUILD_TIMESTAMP"; then
+-			timestamp="$(date -d"$KBUILD_BUILD_TIMESTAMP" +%s || :)"
+-			if test -n "$timestamp"; then
+-				timestamp="-t $timestamp"
+-			fi
++if [ -z ${cpio_file} ]; then
++	timestamp=
++	if test -n "$KBUILD_BUILD_TIMESTAMP"; then
++		timestamp="$(date -d"$KBUILD_BUILD_TIMESTAMP" +%s || :)"
++		if test -n "$timestamp"; then
++			timestamp="-t $timestamp"
+ 		fi
+-		cpio_tfile="$(mktemp ${TMPDIR:-/tmp}/cpiofile.XXXXXX)"
+-		usr/gen_init_cpio $timestamp ${cpio_list} > ${cpio_tfile}
+-	else
+-		cpio_tfile=${cpio_file}
+-	fi
+-	rm ${cpio_list}
+-	if [ "${is_cpio_compressed}" = "compressed" ]; then
+-		cat ${cpio_tfile} > ${output_file}
+-	else
+-		(cat ${cpio_tfile} | ${compr}  - > ${output_file}) \
+-		|| (rm -f ${output_file} ; false)
+ 	fi
+-	[ -z ${cpio_file} ] && rm ${cpio_tfile}
++	cpio_tfile="$(mktemp ${TMPDIR:-/tmp}/cpiofile.XXXXXX)"
++	usr/gen_init_cpio $timestamp ${cpio_list} > ${cpio_tfile}
++else
++	cpio_tfile=${cpio_file}
++fi
++rm ${cpio_list}
++if [ "${is_cpio_compressed}" = "compressed" ]; then
++	cat ${cpio_tfile} > ${output_file}
++else
++	(cat ${cpio_tfile} | ${compr}  - > ${output_file}) \
++	|| (rm -f ${output_file} ; false)
+ fi
++[ -z ${cpio_file} ] && rm ${cpio_tfile}
+ exit 0
 -- 
 2.17.1
 
