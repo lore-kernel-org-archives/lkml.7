@@ -2,109 +2,78 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E30C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 14:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF17C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 14:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA3C21835
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 14:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB8F21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 14:46:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OL7BdYVs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbgACOoE (ORCPT
+        id S1727904AbgACOqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 09:44:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:55976 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgACOoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 09:44:03 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1A6E328;
-        Fri,  3 Jan 2020 06:44:02 -0800 (PST)
-Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 64AB03F237;
-        Fri,  3 Jan 2020 06:44:01 -0800 (PST)
-Subject: Re: [PATCH] sched/fair: fix sgc->{min,max}_capacity miscalculate
-To:     Peng Liu <iwtbavbm@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        qais.yousef@arm.com, morten.rasmussen@arm.com
-References: <20191231035122.GA10020@iZj6chx1xj0e0buvshuecpZ>
- <ec390ddb-c015-a467-2f88-47c00f23e27b@arm.com>
- <20200101141329.GA12809@iZj6chx1xj0e0buvshuecpZ>
- <e41793bc-daaf-b224-1f3d-a3e468072592@arm.com>
- <20200103142152.GA4551@iZj6chx1xj0e0buvshuecpZ>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <7370a631-1e9a-90ba-dcbe-f714ecb0fb26@arm.com>
-Date:   Fri, 3 Jan 2020 14:44:00 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 3 Jan 2020 09:46:42 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:60574 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgACOqm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 09:46:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=dxGlP6E/0HnbmMgn1yCwGjBQHVH0nxVSC6z7ysmlKDs=; b=OL7BdYVsmhrEZ6PqewWXvrrH/b
+        EiWzXJN80gQf8xZL1AGC7lanLRcuhef2luI/P0Bp1QDWo4gTSMcnyQSnYTJ+lUGtaBpRvpAeGPWXs
+        Gue5FGGBUKoLkMAR1ShHf0hyKuREbHBeI5zr5WfMZWWVWXpq818HrvNWl3vjW75kcGrwW2Pix6emS
+        DGJRxyiDxDx09lAFEEO+9TRFUUMzGlWl14DDUI6eVLPYMttzrNHspsBmplwjzdwdnRl7Tz/nystz5
+        EMRDpQn/0LfqNFI6QbcABSG2tkdfI2OuOJG+9QemWA3sm1msZxij2u23XGtYpanGu6NRuj3Zn/aFt
+        zD/4hdjA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1inODX-0005ig-Sz; Fri, 03 Jan 2020 14:46:23 +0000
+Date:   Fri, 3 Jan 2020 06:46:23 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     yu kuai <yukuai3@huawei.com>
+Cc:     klassert@kernel.org, davem@davemloft.net, hkallweit1@gmail.com,
+        jakub.kicinski@netronome.com, hslester96@gmail.com, mst@redhat.com,
+        yang.wei9@zte.com.cn, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
+        zhengbin13@huawei.com
+Subject: Re: [PATCH] net: 3com: 3c59x: remove set but not used variable
+ 'mii_reg1'
+Message-ID: <20200103144623.GI6788@bombadil.infradead.org>
+References: <20200103121907.5769-1-yukuai3@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200103142152.GA4551@iZj6chx1xj0e0buvshuecpZ>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200103121907.5769-1-yukuai3@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/01/2020 14:21, Peng Liu wrote:
-> Thanks for your patient explanation, and the picture is intuitive
-> and clear. Indeed, the group in lowest domain only contains one CPU, and
-> the only CPU in the first group should be the rq's CPU. So, I wonder if
-> we can do like this?
+On Fri, Jan 03, 2020 at 08:19:07PM +0800, yu kuai wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
 > 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 2d170b5da0e3..c9d7613c74d2 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -7793,9 +7793,6 @@ void update_group_capacity(struct sched_domain *sd, int cpu)
->                  */
+> drivers/net/ethernet/3com/3c59x.c: In function ‘vortex_up’:
+> drivers/net/ethernet/3com/3c59x.c:1551:9: warning: variable
+> ‘mii_reg1’ set but not used [-Wunused-but-set-variable]
 > 
->                 for_each_cpu(cpu, sched_group_span(sdg)) {
-> -                       struct sched_group_capacity *sgc;
-> -                       struct rq *rq = cpu_rq(cpu);
-> -
->                         /*
->                          * build_sched_domains() -> init_sched_groups_capacity()
->                          * gets here before we've attached the domains to the
-> @@ -7807,15 +7804,11 @@ void update_group_capacity(struct sched_domain *sd, int cpu)
->                          * This avoids capacity from being 0 and
->                          * causing divide-by-zero issues on boot.
->                          */
-> -                       if (unlikely(!rq->sd)) {
-> -                               capacity += capacity_of(cpu);
-> -                       } else {
-> -                               sgc = rq->sd->groups->sgc;
-> -                               capacity += sgc->capacity;
-> -                       }
-> +                       unsigned long cpu_cap = capacity_of(cpu);
-> 
-> -                       min_capacity = min(capacity, min_capacity);
-> -                       max_capacity = max(capacity, max_capacity);
-> +                       min_capacity = min(cpu_cap, min_capacity);
-> +                       max_capacity = max(cpu_cap, max_capacity);
-> +                       capacity += cpu_cap;
->                 }
->         } else  {
->                 /*
-> 
+> It is never used, and so can be removed.
+...
+>  	if (dev->if_port == XCVR_MII || dev->if_port == XCVR_NWAY) {
+> -		mii_reg1 = mdio_read(dev, vp->phys[0], MII_BMSR);
+>  		mii_reg5 = mdio_read(dev, vp->phys[0], MII_LPA);
 
-Yep, if we refactor it to always use capacity_of() we'd end up with
-something like this. The comment block could be updated (or removed) as
-well.
-
-There must be (or have been) a reason to use the sched_group_capacity
-structure, but I'm not aware of it and I don't have time right now to dig
-through the git history to figure it out. I didn't see anyone suggesting
-or talking about this simplification in the discussion thread of
-
-  9abf24d46518 ("sched: Check sched_domain before computing group power")
-
-What you can try is sending that as the v2, and see if anyone screams. FWIW
-you can add this to it too:
-
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+I know nothing about the MII interface, but in general this is not
+a safe thing to do.  You're removing a read from a device register.
+Register reads can have side effects.  I'm actually quite surprised
+that GCC emits this warning, since there should be some kind of
+volatile cast in mdio_read() to let GCC know that something unusual
+is going on here.
