@@ -2,108 +2,131 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5729C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09337C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1BF222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEFBE222C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:32:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YPPTYENc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LWyzuVPk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728470AbgACSaA (ORCPT
+        id S1728346AbgACScn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 13:30:00 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39131 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728251AbgACSaA (ORCPT
+        Fri, 3 Jan 2020 13:32:43 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46018 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728251AbgACScm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 13:30:00 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 77so62130695oty.6;
-        Fri, 03 Jan 2020 10:29:59 -0800 (PST)
+        Fri, 3 Jan 2020 13:32:42 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b9so23759119pgk.12;
+        Fri, 03 Jan 2020 10:32:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hWRnOA5j7TseJvSe/ETtAVkvfSvMWabJgIKJTm5gz7k=;
-        b=YPPTYENcRdLkPJ9LO9WVZTX/KWRCyTUs5+hcs0GC99dpcKhX79Ihgoe+DvyJW2QcLX
-         58LTRYpZTadC8jj4xcDjIWzx4Tr5MnkKfcUlExf5xnwGmuv0Bu/8PRs7cQvD8bvrTbRg
-         79obVjx/KLSkMxsbrCbHp6N/FOQ+BYIrxyOscRxLaE2nc2rxJLrgD+/2XauwIh9Dbycr
-         U1p2iDlJW+tr9TLpFKAlyW4cGuMGK2Z2sQ3feK7aDgcpbyo6s07f6//8G0zAHGAHGdQ+
-         BMKw/UEfH/e4djxR1Yq9uvO2/XMU/UHyeYI/18xX0bEWoGj8qjmlp/JmHBgrPZZYvobX
-         bEXA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WICDo2yLVbawePfe3ygrB2v/7fHzbgU3dR2J9o17Eio=;
+        b=LWyzuVPk/Tl3xG5lk+yqRkzMQ3QrWvfrlb1/Why5YnYfiNnL3r+OPJMIitIrADl1QX
+         NAEGHGw6ZP8yedOCzBxqToLPFXAdxbUZr1lANZYjDpkcUY1T1i4mOe7BNXcmLgkhQXhn
+         861CsEjz/GiyBwISX8f9W4pZAY8r2p3Us6IP6n86nEZ6iqolQHKwTBbTTQz4x6iF1l+A
+         Jl9t1NFb7tBkwRi5a1nk3RnpqZbtBcUnwPCl8XRNYC/bENlQP5YAdH4r0VZjrLaRI16W
+         DKISds2yaZgPJtn/ZKCSsE0k6CVt+KLujxlOMwBm4Btsw2pk15T/kOgJ2IcDS9TpDzoz
+         P8+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hWRnOA5j7TseJvSe/ETtAVkvfSvMWabJgIKJTm5gz7k=;
-        b=U3qpymYpaPsoJ5U/beCmxlVRh4wowjSnmM84LvbimiuoMhtOpthZr2Swy84v1v1FvK
-         M/FMoDd1AWkBqEXQrmLApNuVyNxovz2w/UQBmRtglLElm4o8f9vcXDAj1YhUfepYOe5U
-         nr6VGqSlmNVXSjnMYZUgbTFyxumaAoLZ6XjuFoTd//l/vnUfT5wX34OL7E7QrI+XIbTF
-         ej8xkV72ujjnl69HVt4Qm1vTQlGYz2q4tkzEfyCDAYotnE3dcvtYlOYzrwlWwjbCtBci
-         AnbBnnJfDustZazSOwnsiDd07g8w73Tmc6O0faA2UN4/IuZ8Mzfkseb0JwmWd/gXIl8u
-         oepQ==
-X-Gm-Message-State: APjAAAXAsSaS+KP8IaJnjd/weejOD//kY2uGoDoA504aOzQe3SyvNrCB
-        JmAxQ6Tg7mQdBPq6JM0OXN2M2uBZ6BSSfDqfYkdLuTnU
-X-Google-Smtp-Source: APXvYqyfBRJaMpOt5wFUB98mnddWhdvb0BAS7MofWiaqwMMXNQ497wo1MzrJLJ+x6DZB4QCUsoECL1ufMuDJJE12N1I=
-X-Received: by 2002:a9d:3f61:: with SMTP id m88mr81555508otc.56.1578076199332;
- Fri, 03 Jan 2020 10:29:59 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WICDo2yLVbawePfe3ygrB2v/7fHzbgU3dR2J9o17Eio=;
+        b=N/MIM/jxB4Lk0fj/77eb96yvz16nsxlXKuPmqa1iCmAFhC3HWgE/Ge8taLMS7anGsl
+         J1JpYIA/NrmiCGlTbwNEm43GpZYaMX17UyDmzUoWIrd8udb3bjP/5oFkxzG7O2fPSQ/k
+         81RdOvrr+ZjhkzotRy33YiiPmf3sFPYpm6MRyzVB7Oz7GfL865KFKtLW8sgKrq2Pi/y3
+         mNLsGV2DxZhnOgj5W01M2eDyoPQma+ELgVCfmrATLwz5diEiFvEOwApSPJqF/QHxE7ty
+         cUzv9la6w8mbsz0uDRW+76xEq6jEhgvbsABrxpTsjuAxd3Cssj4XK5qarbKqyNQEqQP4
+         5IdQ==
+X-Gm-Message-State: APjAAAWfGLfOr8N+17Rkg+2erpHQoqbTE2nNaisHXJuy9BsnrMUXrxrr
+        ap0vHnHgwRGInmKIs3JGE04=
+X-Google-Smtp-Source: APXvYqyRZRtK5dOUg2fH7/BI27kEXbjxzAGcfihQbA6hlrebKhbLBvHLy1v4GvKfnsltfdXhyecewA==
+X-Received: by 2002:a65:578e:: with SMTP id b14mr97955738pgr.444.1578076361952;
+        Fri, 03 Jan 2020 10:32:41 -0800 (PST)
+Received: from localhost ([100.118.89.215])
+        by smtp.gmail.com with ESMTPSA id s130sm62693732pgc.82.2020.01.03.10.32.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2020 10:32:41 -0800 (PST)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     linux-arm-msm@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/2] dt-bindings: display: panel: Add AUO B116XAK01 panel bindings
+Date:   Fri,  3 Jan 2020 10:30:23 -0800
+Message-Id: <20200103183025.569201-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20200102122004.216c85da@gandalf.local.home> <20200102234950.GA14768@krava>
- <20200102185853.0ed433e4@gandalf.local.home> <20200103133640.GD9715@krava>
-In-Reply-To: <20200103133640.GD9715@krava>
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Date:   Fri, 3 Jan 2020 18:29:23 +0000
-Message-ID: <CADVatmO7xZL2ddQOKoB6OVLZ4SRevd=0Tr5rQ=go5J9qZvD9Rg@mail.gmail.com>
-Subject: Re: [RFC] tools lib traceevent: How to do library versioning being in
- the Linux kernel source?
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 3, 2020 at 1:36 PM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Thu, Jan 02, 2020 at 06:58:53PM -0500, Steven Rostedt wrote:
-> > On Fri, 3 Jan 2020 00:49:50 +0100
-> > Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > > > Should we move libtraceevent into a stand alone git repo (on
-> > > > kernel.org), that can have tags and branches specifically for it? We
-> > > > can keep a copy in the Linux source tree for perf to use till it
-> > >
-> > > so libbpf 'moved' for this reason to github repo,
-> > > but keeping the kernel as the true/first source,
-> > > and updating github repo when release is ready
-> > >
-> > > libbpf github repo is then source for fedora (and others)
-> > > package
-> >
-> > Ah, so perhaps I should follow this? I could keep it a kernel.org repo
-> > (as I rather have it there anyway).
->
-> sounds good, and if it works out, we'll follow you with libperf :-)
->
-> if you want to check on the libbpf:
->   https://github.com/libbpf/libbpf
+From: Rob Clark <robdclark@chromium.org>
 
-fwiw, I have opened a bug report in Debian requesting to package
-libbpf from the github repo.
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ .../bindings/display/panel/auo,b116xa01.yaml  | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/auo,b116xa01.yaml
 
+diff --git a/Documentation/devicetree/bindings/display/panel/auo,b116xa01.yaml b/Documentation/devicetree/bindings/display/panel/auo,b116xa01.yaml
+new file mode 100644
+index 000000000000..6cb8ed9b2c0a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/auo,b116xa01.yaml
+@@ -0,0 +1,32 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/auo,b116xa01.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: AUO B116XAK01 eDP TFT LCD Panel
++
++allOf:
++  - $ref: panel-common.yaml#
++
++properties:
++  compatible:
++    enum:
++      - auo,b116xa01
++  port: true
++
++required:
++  - compatible
++
++additionalProperties: false
++
++examples:
++  - |
++    panel {
++        compatible = "auo,b116xa01";
++        port {
++            panel_in: endpoint {
++                remote-endpoint = <&edp_out>;
++            };
++        };
++    };
 -- 
-Regards
-Sudip
+2.24.1
+
