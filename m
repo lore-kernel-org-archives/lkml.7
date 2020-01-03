@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A033C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA2FC32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FDEE22522
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25B16215A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578071571;
-	bh=/tnEtZ/TQAfcjo0cVjVkZvyHZiO0bR42EkUMFvapC2Y=;
+	s=default; t=1578071575;
+	bh=cwVHC9cbVgplkseh61brdp4+7/gA+lKOKfHqQ/RsvbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WgRmB+R4IqpzTUdeAzpMCngMegua6Cw0Qw/vVJLc5Wzuo1eXkfy4UCwHiaCS7FXoa
-	 6O4WGa//6zHXbIRZsgeLMoErxBNYykNhZ/9zmMG1b+FfbiO1cNxytn71bj8Yu4v5iH
-	 Qq2ON+HGVaeo+v5B9JE6gKO5xQKFhxCJCqg7T29U=
+	b=bF9oRy5SY0ztbHEO7waeGMlKMWSMkNylpVaLAhx6wP7n3Bl77CjtHqhMwQZg3t8s5
+	 6O7VEsJUR2uiEwTu/Ms8lWRvVYSc0eoWLXbkj1FntzJqgZ/+BrlpYPJ6a5U7pbpQp1
+	 jpyJLc7lrKPOQzTA/MoIWdl/89RN1UsurZO9nk6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbgACRMu (ORCPT
+        id S1728351AbgACRMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 12:12:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47998 "EHLO mail.kernel.org"
+        Fri, 3 Jan 2020 12:12:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728320AbgACRMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 12:12:46 -0500
+        id S1728330AbgACRMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 12:12:50 -0500
 Received: from localhost.localdomain (unknown [194.230.155.149])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59D3B22522;
-        Fri,  3 Jan 2020 17:12:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 153B720866;
+        Fri,  3 Jan 2020 17:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578071566;
-        bh=/tnEtZ/TQAfcjo0cVjVkZvyHZiO0bR42EkUMFvapC2Y=;
+        s=default; t=1578071569;
+        bh=cwVHC9cbVgplkseh61brdp4+7/gA+lKOKfHqQ/RsvbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=th77NZk1JmSUU4wgbn/QlglppOJamM8QXam/SHCjt871c0DsOwBJisl3Qf8ZuqYiQ
-         FM1oGJ90M66QTi2wrZJN7VsuAwGf5htwMQlVem+qCdh7zsVlyBbZfQpyLBpVbYyqMg
-         QlkJwbXG9RkAppksJIElwhpk9kg494it4zFWNGms=
+        b=LDWUO1BeIbtHXfzfz80n/TMXUm1Sp+3S1rpv9hBpxZuFyXeRwqa255W8aJeEQwa3i
+         PsHKhgPVV/Xo74F8o5XMYc6+e+V92iuKYZAugFybIWNiG0xggxnWiNQgLO4/xobIWB
+         It8jxy/ZBKAMT99Q0iaUm9/rNCZqEXwoNV8C8Y1U=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
         Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Kukjin Kim <kgene@kernel.org>,
+        dri-devel@lists.freedesktop.org,
         linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org
-Subject: [PATCH 12/19] devfreq: exynos: Rename Exynos to lowercase
-Date:   Fri,  3 Jan 2020 18:11:24 +0100
-Message-Id: <20200103171131.9900-13-krzk@kernel.org>
+Subject: [PATCH 13/19] drm/exynos: Rename Exynos to lowercase
+Date:   Fri,  3 Jan 2020 18:11:25 +0100
+Message-Id: <20200103171131.9900-14-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200103171131.9900-1-krzk@kernel.org>
 References: <20200103171131.9900-1-krzk@kernel.org>
@@ -71,97 +74,52 @@ Electronics Co., Ltd., in advertisement materials and on website.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/devfreq/Kconfig             | 2 +-
- drivers/devfreq/event/Kconfig       | 4 ++--
- drivers/devfreq/event/exynos-nocp.c | 2 +-
- drivers/devfreq/event/exynos-nocp.h | 2 +-
- drivers/devfreq/event/exynos-ppmu.c | 2 +-
- drivers/devfreq/event/exynos-ppmu.h | 2 +-
- 6 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/exynos/Kconfig | 6 +++---
+ include/uapi/drm/exynos_drm.h  | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-index 1526f758daeb..0b1df12e0f21 100644
---- a/drivers/devfreq/Kconfig
-+++ b/drivers/devfreq/Kconfig
-@@ -77,7 +77,7 @@ config DEVFREQ_GOV_PASSIVE
- comment "DEVFREQ Drivers"
- 
- config ARM_EXYNOS_BUS_DEVFREQ
--	tristate "ARM EXYNOS Generic Memory Bus DEVFREQ Driver"
-+	tristate "ARM Exynos Generic Memory Bus DEVFREQ Driver"
- 	depends on ARCH_EXYNOS || COMPILE_TEST
- 	select DEVFREQ_GOV_SIMPLE_ONDEMAND
- 	select DEVFREQ_GOV_PASSIVE
-diff --git a/drivers/devfreq/event/Kconfig b/drivers/devfreq/event/Kconfig
-index a53e0a6ffdfe..878825372f6f 100644
---- a/drivers/devfreq/event/Kconfig
-+++ b/drivers/devfreq/event/Kconfig
-@@ -15,7 +15,7 @@ menuconfig PM_DEVFREQ_EVENT
- if PM_DEVFREQ_EVENT
- 
- config DEVFREQ_EVENT_EXYNOS_NOCP
--	tristate "EXYNOS NoC (Network On Chip) Probe DEVFREQ event Driver"
-+	tristate "Exynos NoC (Network On Chip) Probe DEVFREQ event Driver"
- 	depends on ARCH_EXYNOS || COMPILE_TEST
- 	select PM_OPP
- 	select REGMAP_MMIO
-@@ -24,7 +24,7 @@ config DEVFREQ_EVENT_EXYNOS_NOCP
- 	  (Network on Chip) Probe counters to measure the bandwidth of AXI bus.
- 
- config DEVFREQ_EVENT_EXYNOS_PPMU
--	tristate "EXYNOS PPMU (Platform Performance Monitoring Unit) DEVFREQ event Driver"
-+	tristate "Exynos PPMU (Platform Performance Monitoring Unit) DEVFREQ event Driver"
- 	depends on ARCH_EXYNOS || COMPILE_TEST
- 	select PM_OPP
+diff --git a/drivers/gpu/drm/exynos/Kconfig b/drivers/gpu/drm/exynos/Kconfig
+index 6f7d3b3b3628..6417f374b923 100644
+--- a/drivers/gpu/drm/exynos/Kconfig
++++ b/drivers/gpu/drm/exynos/Kconfig
+@@ -1,13 +1,13 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config DRM_EXYNOS
+-	tristate "DRM Support for Samsung SoC EXYNOS Series"
++	tristate "DRM Support for Samsung SoC Exynos Series"
+ 	depends on OF && DRM && (ARCH_S3C64XX || ARCH_S5PV210 || ARCH_EXYNOS || ARCH_MULTIPLATFORM || COMPILE_TEST)
+ 	depends on MMU
+ 	select DRM_KMS_HELPER
+ 	select VIDEOMODE_HELPERS
+ 	select SND_SOC_HDMI_CODEC if SND_SOC
  	help
-diff --git a/drivers/devfreq/event/exynos-nocp.c b/drivers/devfreq/event/exynos-nocp.c
-index 1c565926db9f..ccc531ee6938 100644
---- a/drivers/devfreq/event/exynos-nocp.c
-+++ b/drivers/devfreq/event/exynos-nocp.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * exynos-nocp.c - EXYNOS NoC (Network On Chip) Probe support
-+ * exynos-nocp.c - Exynos NoC (Network On Chip) Probe support
-  *
-  * Copyright (c) 2016 Samsung Electronics Co., Ltd.
-  * Author : Chanwoo Choi <cw00.choi@samsung.com>
-diff --git a/drivers/devfreq/event/exynos-nocp.h b/drivers/devfreq/event/exynos-nocp.h
-index 55cc96284a36..2d6f08cfd0c5 100644
---- a/drivers/devfreq/event/exynos-nocp.h
-+++ b/drivers/devfreq/event/exynos-nocp.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-- * exynos-nocp.h - EXYNOS NoC (Network on Chip) Probe header file
-+ * exynos-nocp.h - Exynos NoC (Network on Chip) Probe header file
-  *
-  * Copyright (c) 2016 Samsung Electronics Co., Ltd.
-  * Author : Chanwoo Choi <cw00.choi@samsung.com>
-diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
-index 055deea42c37..17ed980d9099 100644
---- a/drivers/devfreq/event/exynos-ppmu.c
-+++ b/drivers/devfreq/event/exynos-ppmu.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * exynos_ppmu.c - EXYNOS PPMU (Platform Performance Monitoring Unit) support
-+ * exynos_ppmu.c - Exynos PPMU (Platform Performance Monitoring Unit) support
-  *
-  * Copyright (c) 2014-2015 Samsung Electronics Co., Ltd.
-  * Author : Chanwoo Choi <cw00.choi@samsung.com>
-diff --git a/drivers/devfreq/event/exynos-ppmu.h b/drivers/devfreq/event/exynos-ppmu.h
-index 284420047455..97f667d0cbdd 100644
---- a/drivers/devfreq/event/exynos-ppmu.h
-+++ b/drivers/devfreq/event/exynos-ppmu.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-- * exynos_ppmu.h - EXYNOS PPMU header file
-+ * exynos_ppmu.h - Exynos PPMU header file
-  *
-  * Copyright (c) 2015 Samsung Electronics Co., Ltd.
-  * Author : Chanwoo Choi <cw00.choi@samsung.com>
+-	  Choose this option if you have a Samsung SoC EXYNOS chipset.
++	  Choose this option if you have a Samsung SoC Exynos chipset.
+ 	  If M is selected the module will be called exynosdrm.
+ 
+ if DRM_EXYNOS
+@@ -62,7 +62,7 @@ config DRM_EXYNOS_DSI
+ 	  This enables support for Exynos MIPI-DSI device.
+ 
+ config DRM_EXYNOS_DP
+-	bool "EXYNOS specific extensions for Analogix DP driver"
++	bool "Exynos specific extensions for Analogix DP driver"
+ 	depends on DRM_EXYNOS_FIMD || DRM_EXYNOS7_DECON
+ 	select DRM_ANALOGIX_DP
+ 	default DRM_EXYNOS
+diff --git a/include/uapi/drm/exynos_drm.h b/include/uapi/drm/exynos_drm.h
+index 45c6582b3df3..a51aa1c618c1 100644
+--- a/include/uapi/drm/exynos_drm.h
++++ b/include/uapi/drm/exynos_drm.h
+@@ -394,7 +394,7 @@ struct drm_exynos_ioctl_ipp_commit {
+ #define DRM_IOCTL_EXYNOS_IPP_COMMIT		DRM_IOWR(DRM_COMMAND_BASE + \
+ 		DRM_EXYNOS_IPP_COMMIT, struct drm_exynos_ioctl_ipp_commit)
+ 
+-/* EXYNOS specific events */
++/* Exynos specific events */
+ #define DRM_EXYNOS_G2D_EVENT		0x80000000
+ #define DRM_EXYNOS_IPP_EVENT		0x80000002
+ 
 -- 
 2.17.1
 
