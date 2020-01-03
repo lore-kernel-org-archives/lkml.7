@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30703C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A522C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0665A215A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:00:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E906D22B48
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578074452;
-	bh=6wRmEExRarJkLmBrIOi8mE+v+7mDbntHaGXjK7T8WRg=;
+	s=default; t=1578074455;
+	bh=i8WArktP0tpXooYzxRJlDmVKKgB23oje8R2LPTwin5s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0WuWcDVYU+kK1FCy28tmj6L9vIi7UGG2Ti4LCg6KNhLLy/oPEdf0kV16N+NjrtiCQ
-	 zhZCaMY+VQWk+5yqHZ4ib7i+tq2iigEsAoYZL2G8dTiSPPGUVwWv0Kl3uxNjGhkAJE
-	 AaoC+pDnBzOjm4QrnM2idJRd4ka8ccMePjVjsi8g=
+	b=DY12PFdXTNbEBz+p2EeI25+WomXM3EyUTML8B8uHWlUm4mhgCyeYuHBBvRtjWLzF0
+	 0iG13mTksI/8wRyElsX5nK/duUPmOte5KG1kTbSd/yJw5HK6JtaN137r05RW+oAGvi
+	 10SYwLiwXlYybqrfA4tcCPKsAF0WIL6NdJ+/LMjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbgACSAi (ORCPT
+        id S1728278AbgACSAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 13:00:38 -0500
-Received: from conuserg-07.nifty.com ([210.131.2.74]:16476 "EHLO
+        Fri, 3 Jan 2020 13:00:53 -0500
+Received: from conuserg-07.nifty.com ([210.131.2.74]:16481 "EHLO
         conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728196AbgACSAh (ORCPT
+        with ESMTP id S1728268AbgACSAi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 13:00:37 -0500
+        Fri, 3 Jan 2020 13:00:38 -0500
 Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 003HxSJ8022724;
-        Sat, 4 Jan 2020 02:59:32 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 003HxSJ8022724
+        by conuserg-07.nifty.com with ESMTP id 003HxSJA022724;
+        Sat, 4 Jan 2020 02:59:34 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 003HxSJA022724
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578074373;
-        bh=aVtB2Rv+NyX9qUbly4Qthna7cERKkW7+WHgodTXdBR8=;
+        s=dec2015msa; t=1578074374;
+        bh=flhc+DXSbGVbPkljWVMNT8R6yI5s96NQRo/2c6fDjQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uGR92y+s2WkTTOI5sPh83az0Pv8eNaKr3/FY3MzlnUHM3GyWhLGVymfumcmWHutEb
-         DIIQmQ42KKDIChA0Q3BJU9W9BTBs4j+WQa0MpVbVSpjNGvv7zOEJzZzBWAy8guYuWa
-         12N3j0iEnj1EyVA67fxsdJaQtO/EfaBoAks3rRk/6c++E7Gko+3Bbht6rn2JZJlU5l
-         arU/fslYNYGotbQdTKO4DPdSsfcz+w3tf/COA/uItVbA/GjaNOKEPPE6LiJr1YgJI6
-         +GBMf0V2bbd3BylEPA+BnBT+8OmYRKvupGHUD1hp9rz5rizcKdPy2NGRfUFBExyaEz
-         MI5W0U4ZwjMmw==
+        b=nCJ1ZnVklvR8HI7xSyBYN2JrInwTEMaZbdLUEIELQatENREBUm/PHgNtRHuTbTbUa
+         fW7jdb3T+kUganCSAbaV7cQsYxaz114BF6v5LRabpeQgq+FHa+N+2TQZU4+D8HNMrL
+         /WOXkKfBiBILEVSS4hkUim9bMVxjKQ8y1j4Gv1D1HDP2MwSI3jqgzU2waGu4wa79vP
+         4WZ+rrJmWc/pBBymDe4e28ElKJEGuCJlcYuJJJ/9Klix/xsO9KkezlMYSKsMdmcQ1n
+         w0DaBSdGolww/2MKWv3yy8InaB740hko2WxwKq1RTnIamR1Iet+pFqc36ZZa+aV8RE
+         35zBYJaTHvUAg==
 X-Nifty-SrcIP: [126.93.102.113]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
@@ -49,9 +49,9 @@ Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Greg Thelen <gthelen@google.com>,
         Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 07/12] initramfs: specify $(src)/gen_initramfs.sh as a prerequisite in Makefile
-Date:   Sat,  4 Jan 2020 02:59:10 +0900
-Message-Id: <20200103175915.26663-8-masahiroy@kernel.org>
+Subject: [PATCH 09/12] initramfs: add default_cpio_list, and delete -d option support
+Date:   Sat,  4 Jan 2020 02:59:12 +0900
+Message-Id: <20200103175915.26663-10-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200103175915.26663-1-masahiroy@kernel.org>
 References: <20200103175915.26663-1-masahiroy@kernel.org>
@@ -60,60 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Specify the dependency directly in the Makefile.
+When CONFIG_INITRAMFS_SOURCE is empty, the Makefile passes the -d
+option to gen_initramfs.sh to create the default initramfs, which
+contains /dev, /dev/console, and /root.
+
+This simplify the default behavior; remove the -d option, and
+add the default cpio list.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- usr/Makefile         | 7 +++----
- usr/gen_initramfs.sh | 2 +-
- 2 files changed, 4 insertions(+), 5 deletions(-)
+ usr/Makefile          |  2 +-
+ usr/default_cpio_list |  6 ++++++
+ usr/gen_initramfs.sh  | 16 ----------------
+ 3 files changed, 7 insertions(+), 17 deletions(-)
+ create mode 100644 usr/default_cpio_list
 
 diff --git a/usr/Makefile b/usr/Makefile
-index e44a66b8c051..7df6559f0f30 100644
+index 3ae8b45bfc61..9256a5b189ee 100644
 --- a/usr/Makefile
 +++ b/usr/Makefile
-@@ -24,7 +24,6 @@ $(obj)/initramfs_data.o: $(obj)/$(datafile_y) FORCE
- # Generate the initramfs cpio archive
+@@ -25,7 +25,7 @@ $(obj)/initramfs_data.o: $(obj)/$(datafile_y) FORCE
  
  hostprogs-y := gen_init_cpio
--initramfs   := $(CONFIG_SHELL) $(srctree)/$(src)/gen_initramfs.sh
  ramfs-input := $(if $(filter-out "",$(CONFIG_INITRAMFS_SOURCE)), \
- 			$(shell echo $(CONFIG_INITRAMFS_SOURCE)),-d)
+-			$(shell echo $(CONFIG_INITRAMFS_SOURCE)),-d)
++			$(shell echo $(CONFIG_INITRAMFS_SOURCE)),$(srctree)/$(src)/default_cpio_list)
  ramfs-args  := \
-@@ -40,7 +39,7 @@ ifneq ($(wildcard $(obj)/$(datafile_d_y)),)
- endif
- 
- quiet_cmd_initfs = GEN     $@
--      cmd_initfs = $(initramfs) -o $@ $(ramfs-args) $(ramfs-input)
-+      cmd_initfs = $< -o $@ $(ramfs-args) $(ramfs-input)
- 
- targets := $(datafile_y)
- 
-@@ -52,8 +51,8 @@ $(deps_initramfs): ;
- # 2) There are changes in which files are included (added or deleted)
- # 3) If gen_init_cpio are newer than initramfs_data.cpio
- # 4) Arguments to gen_initramfs.sh changes
--$(obj)/$(datafile_y): $(obj)/gen_init_cpio $(deps_initramfs) FORCE
--	$(Q)$(initramfs) -l $(ramfs-input) > $(obj)/$(datafile_d_y)
-+$(obj)/$(datafile_y): $(src)/gen_initramfs.sh $(obj)/gen_init_cpio $(deps_initramfs) FORCE
-+	$(Q)$< -l $(ramfs-input) > $(obj)/$(datafile_d_y)
- 	$(call if_changed,initfs)
- 
- subdir-$(CONFIG_UAPI_HEADER_TEST) += include
+         $(if $(CONFIG_INITRAMFS_ROOT_UID), -u $(CONFIG_INITRAMFS_ROOT_UID)) \
+         $(if $(CONFIG_INITRAMFS_ROOT_GID), -g $(CONFIG_INITRAMFS_ROOT_GID))
+diff --git a/usr/default_cpio_list b/usr/default_cpio_list
+new file mode 100644
+index 000000000000..37b3864066e8
+--- /dev/null
++++ b/usr/default_cpio_list
+@@ -0,0 +1,6 @@
++# SPDX-License-Identifier: GPL-2.0-only
++# This is a very simple, default initramfs
++
++dir /dev 0755 0 0
++nod /dev/console 0600 0 0 c 5 1
++dir /root 0700 0 0
 diff --git a/usr/gen_initramfs.sh b/usr/gen_initramfs.sh
-index 1fd93414fb37..68b6ddfd5f96 100755
+index 49a4e22147b5..e6808a8c3b2b 100755
 --- a/usr/gen_initramfs.sh
 +++ b/usr/gen_initramfs.sh
-@@ -235,7 +235,7 @@ arg="$1"
- case "$arg" in
- 	"-l")	# files included in initramfs - used by kbuild
- 		dep_list="list_"
--		echo "deps_initramfs := $0 \\"
-+		echo "deps_initramfs := \\"
- 		shift
- 		;;
- 	"-o")	# generate compressed cpio image named $1
+@@ -28,7 +28,6 @@ $0 [-o <file>] [-l <dep_list>] [-u <uid>] [-g <gid>] {-d | <cpio_source>} ...
+ 	<cpio_source>  File list or directory for cpio archive.
+ 		       If <cpio_source> is a .cpio file it will be used
+ 		       as direct input to initramfs.
+-	-d             Output the default cpio list.
+ 
+ All options except -o and -l may be repeated and are interpreted
+ sequentially and immediately.  -u and -g states are preserved across
+@@ -43,18 +42,6 @@ field() {
+ 	shift $1 ; echo $1
+ }
+ 
+-default_initramfs() {
+-	cat <<-EOF >> ${output}
+-		# This is a very simple, default initramfs
+-
+-		dir /dev 0755 0 0
+-		nod /dev/console 0600 0 0 c 5 1
+-		dir /root 0700 0 0
+-		# file /kinit usr/kinit/kinit 0755 0 0
+-		# slink /init kinit 0755 0 0
+-	EOF
+-}
+-
+ filetype() {
+ 	local argv1="$1"
+ 
+@@ -263,9 +250,6 @@ while [ $# -gt 0 ]; do
+ 			[ "$root_gid" = "-1" ] && root_gid=$(id -g || echo 0)
+ 			shift
+ 			;;
+-		"-d")	# display default initramfs list
+-			default_initramfs
+-			;;
+ 		"-h")
+ 			usage
+ 			exit 0
 -- 
 2.17.1
 
