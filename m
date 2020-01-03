@@ -2,78 +2,85 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 065B0C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C698C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D965F206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD49F215A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:25:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578072357;
+	bh=ChkpGRRjn42d8p4wrTVkJcWgbfIfZtCxaUk700S4WsM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=RWoMlyFsi34csi1EaRvo2uSU2ndUhSbx/Y3oNhloY9oDzWXLqRARewIL0/IbUgdyp
+	 FajRlZhkEvb1Jsv0hb0wdjimVsnrIIbgNumD7C44ZoDZLYcMtwNhkgRmWnjlMIOreg
+	 2hn0hv0hh3CxFVRDOhEdHPFu9B2XFc71MpBaUIoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbgACRXa (ORCPT
+        id S1728171AbgACRZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 12:23:30 -0500
-Received: from fgw20-4.mail.saunalahti.fi ([62.142.5.107]:63847 "EHLO
-        fgw20-4.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727952AbgACRXa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 12:23:30 -0500
-Received: from darkstar.musicnaut.iki.fi (85-76-105-219-nat.elisa-mobile.fi [85.76.105.219])
-        by fgw20.mail.saunalahti.fi (Halon) with ESMTP
-        id c0dd2f8e-2e4d-11ea-826b-005056bd6ce9;
-        Fri, 03 Jan 2020 19:23:27 +0200 (EET)
-Date:   Fri, 3 Jan 2020 19:23:27 +0200
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Subject: Re: [BISECTED, REGRESSION] OMAP3 onenand/DMA broken
-Message-ID: <20200103172326.GF15023@darkstar.musicnaut.iki.fi>
-References: <20200103081726.GD15023@darkstar.musicnaut.iki.fi>
- <6D46CA13-2E50-4144-86F1-CE4988BD654D@goldelico.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6D46CA13-2E50-4144-86F1-CE4988BD654D@goldelico.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Fri, 3 Jan 2020 12:25:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41284 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728065AbgACRZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 12:25:55 -0500
+Received: from localhost.localdomain (unknown [194.230.155.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A26DE20848;
+        Fri,  3 Jan 2020 17:25:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578072354;
+        bh=ChkpGRRjn42d8p4wrTVkJcWgbfIfZtCxaUk700S4WsM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kTL/tUKXrshG8T2udErByvxPNcrz3L+1Ft475GNgQvEsxFkzkra7J/vMD8nfT4ZlL
+         BE/RjN8JMSiNxpc35zAx51V1uIQKxqbFp0umcxcGfQ23bj5yBEtBodFNP2j9ahXzZX
+         w9bWMuJYVVAPHSJS6Usylr4BbxjY3d1uzTatseDA=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Byungho An <bh74.an@samsung.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] MAINTAINERS: Drop obsolete entries from Samsung sxgbe ethernet driver
+Date:   Fri,  3 Jan 2020 18:25:49 +0100
+Message-Id: <20200103172549.11048-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The emails to ks.giri@samsung.com and vipul.pandya@samsung.com bounce
+with 550 error code:
 
-On Fri, Jan 03, 2020 at 09:46:58AM +0100, H. Nikolaus Schaller wrote:
-> > Am 03.01.2020 um 09:17 schrieb Aaro Koskinen <aaro.koskinen@iki.fi>:
-> > When booting v5.4 (or v5.5-rc4) on N900, the console gets flooded with:
-> > 
-> > [    8.335754] omap2-onenand 1000000.onenand: timeout waiting for DMA
-> > [    8.365753] omap2-onenand 1000000.onenand: timeout waiting for DMA
-> > [    8.395751] omap2-onenand 1000000.onenand: timeout waiting for DMA
-> > [    8.425750] omap2-onenand 1000000.onenand: timeout waiting for DMA
-> > [    8.455749] omap2-onenand 1000000.onenand: timeout waiting for DMA
-> > [    8.485748] omap2-onenand 1000000.onenand: timeout waiting for DMA
-> > [    8.515777] omap2-onenand 1000000.onenand: timeout waiting for DMA
-> > [    8.545776] omap2-onenand 1000000.onenand: timeout waiting for DMA
-> > [    8.575775] omap2-onenand 1000000.onenand: timeout waiting for DMA
-> > 
-> > making the system unusable.
-> 
-> I can confirm that this issue exists but so far we failed to bisect
-> and make a proper report.
-> 
-> Sometimes the system boots fine and sometimes it fails.
-> 
-> It happens on omap3-gta04a5one.dts only, but not with omap3-gta04a4.dts
-> (both dm3730 but different NAND).
+    host mailin.samsung.com[203.254.224.12] said: 550
+    5.1.1 Recipient address rejected: User unknown (in reply to RCPT TO
+    command)"
 
-I tried three different boards (N810, N900 and N950) and it always
-fails reliably.
+Drop Girish K S and Vipul Pandya from sxgbe maintainers entry.
 
-A.
+Cc: Byungho An <bh74.an@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ MAINTAINERS | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7b626563fb3c..9ea7e6e5b3d9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14584,8 +14584,6 @@ F:	include/linux/platform_data/spi-s3c64xx.h
+ 
+ SAMSUNG SXGBE DRIVERS
+ M:	Byungho An <bh74.an@samsung.com>
+-M:	Girish K S <ks.giri@samsung.com>
+-M:	Vipul Pandya <vipul.pandya@samsung.com>
+ S:	Supported
+ L:	netdev@vger.kernel.org
+ F:	drivers/net/ethernet/samsung/sxgbe/
+-- 
+2.17.1
+
