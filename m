@@ -2,128 +2,193 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C486C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1249FC32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDA4221734
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:05:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578063928;
-	bh=X5+ayP/0hzBeWDiiokaoXUV3s80MSoMhBga4b9S7sks=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=b+mHNEr4jFodk5cUrlw78S3qJyGnK1elMwkHgbFYQ6R36uP7fYz5BeA8tS7PnCbBw
-	 qkjv/qy8HErwkN/3i87XAYpTjY5EKQSp6nPPStujUbxdr4yAbFBBICVru+ZGC7xMr3
-	 +1KmU6YfyPlAnlRzCxgD9tPdU4jnsNVVxtUTfx+k=
+	by mail.kernel.org (Postfix) with ESMTP id DEA8322314
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:07:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="g/bqTZWT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgACPF2 (ORCPT
+        id S1727887AbgACPHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 10:05:28 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37745 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbgACPF1 (ORCPT
+        Fri, 3 Jan 2020 10:07:43 -0500
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:20597 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727701AbgACPHn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 10:05:27 -0500
-Received: by mail-wr1-f65.google.com with SMTP id w15so30110526wru.4;
-        Fri, 03 Jan 2020 07:05:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=X5+ayP/0hzBeWDiiokaoXUV3s80MSoMhBga4b9S7sks=;
-        b=OphOn0vxqlZHvxhxkC7gFavcg8KUzD6thbTzOhjFjaBwVoRmNB8VfO1KaKsg0+uWh+
-         eCTB8bn6Y+npzS6wYCGaH7avGMzRL6Z8oSNpa8+37wBkL1Ki8L6Vri+iwi2WOyo/akMv
-         yoxr9xRKDbeTnRvAXnejWI8qMajzpZnBwCZqk2qdxB1uIBuBf446N7e3ndG0BiWbekMj
-         GOp75VenYqte4WaHktOF38ySpwt8xWbaZ8butvV6BZisrj68WoDAzp1mwphj+rwUgwmi
-         iwm1zXUKYlE6W9BLg4YYhHGRFbC7RBy6r91fLogs9yP7sPwUf6ll13c9R+G8KyDZwhbt
-         2DpA==
-X-Gm-Message-State: APjAAAUi358JJHZqDOJgLAkj6I8kY6Zn6/RWpVESWfpzWgI70nlVDxkn
-        dWVyKre7jEh1W/kBJjBv5aM=
-X-Google-Smtp-Source: APXvYqygr/6TniLTdugF+WqW3lwlKrSR9oQWEVDaSy91cNcI3WRlF+4XJBcs5clvoogcu5G/pibIzg==
-X-Received: by 2002:adf:9144:: with SMTP id j62mr84290643wrj.168.1578063925002;
-        Fri, 03 Jan 2020 07:05:25 -0800 (PST)
-Received: from Johanness-MBP.fritz.box (ppp-46-244-218-95.dynamic.mnet-online.de. [46.244.218.95])
-        by smtp.gmail.com with ESMTPSA id e8sm60583844wrt.7.2020.01.03.07.05.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jan 2020 07:05:24 -0800 (PST)
-Subject: Re: [PATCH v5 2/2] zonefs: Add documentation
-To:     Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Naohiro Aota <naohiro.aota@wdc.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Hannes Reinecke <hare@suse.de>
-References: <20200103023445.1352524-1-damien.lemoal@wdc.com>
- <20200103023445.1352524-3-damien.lemoal@wdc.com>
-From:   Johannes Thumshirn <jth@kernel.org>
-Message-ID: <e9df8ffe-96b2-f9c6-7f42-30f3b33097fb@kernel.org>
-Date:   Fri, 3 Jan 2020 16:05:23 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.1
+        Fri, 3 Jan 2020 10:07:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1578064063; x=1609600063;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=TInWHT1nyTPvbMS5z8zVcpKZsV2aYQwc/ahyoW7Tc+8=;
+  b=g/bqTZWTnyFqcxFNxZ/WAaymmgnD+GtXtuhDOcXq6Dh99n3TsZuWOI2R
+   aUy5d5PS0liRSfkC0nnwCOlHN3BpjjxUZHWGnPQ0HPa5cFXuANvJFxuYn
+   25EC9Qu0XQI7+WIN8HmIEoLeFFiLA3fNAjvNJKVzd5y+jy1Wy+7hMx1RT
+   c=;
+IronPort-SDR: falGAzFI29AzgGAlTF6HJ8cdlr8CGF9r3fVDeGzcWyZcigigBzOOwnCcgoqK0nG/hMVSKii53Z
+ +XFDLuKDNR7w==
+X-IronPort-AV: E=Sophos;i="5.69,391,1571702400"; 
+   d="scan'208";a="9979313"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-87a10be6.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 03 Jan 2020 15:07:40 +0000
+Received: from u7588a65da6b65f.ant.amazon.com (pdx2-ws-svc-lb17-vlan3.amazon.com [10.247.140.70])
+        by email-inbound-relay-2c-87a10be6.us-west-2.amazon.com (Postfix) with ESMTPS id 79E2EA1D03;
+        Fri,  3 Jan 2020 15:07:39 +0000 (UTC)
+Received: from u7588a65da6b65f.ant.amazon.com (localhost [127.0.0.1])
+        by u7588a65da6b65f.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTPS id 003F7bZo020445
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 3 Jan 2020 16:07:37 +0100
+Received: (from jschoenh@localhost)
+        by u7588a65da6b65f.ant.amazon.com (8.15.2/8.15.2/Submit) id 003F7bT0020444;
+        Fri, 3 Jan 2020 16:07:37 +0100
+From:   =?UTF-8?q?Jan=20H=2E=20Sch=C3=B6nherr?= <jschoenh@amazon.de>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     =?UTF-8?q?Jan=20H=2E=20Sch=C3=B6nherr?= <jschoenh@amazon.de>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: [PATCH v2 1/6] x86/mce: Take action on UCNA/Deferred errors again
+Date:   Fri,  3 Jan 2020 16:07:17 +0100
+Message-Id: <20200103150722.20313-2-jschoenh@amazon.de>
+X-Mailer: git-send-email 2.22.0.3.gb49bb57c8208.dirty
+In-Reply-To: <20200103150722.20313-1-jschoenh@amazon.de>
+References: <20200103150722.20313-1-jschoenh@amazon.de>
 MIME-Version: 1.0
-In-Reply-To: <20200103023445.1352524-3-damien.lemoal@wdc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit fa92c5869426 ("x86, mce: Support memory error recovery for both
+UCNA and Deferred error in machine_check_poll") added handling of UCNA
+and Deferred errors by adding them to the ring for SRAO errors.
 
-Am 03.01.20 um 03:34 schrieb Damien Le Moal:
-[...]
-> +
-> +Overview
-> +========
-> +
-> +zonefs is a very simple file system exposing each zone of a zoned block device
-> +as a file. Unlike a regular file system with zoned block device support (e.g.
-> +f2fs), zonefs does not hide the sequential write constraint of zoned block
-> +devices to the user. Files representing sequential write zones of the device
-> +must be written sequentially starting from the end of the file (append only
-> +writes).
-> +
-> +As such, zonefs is in essence closer to a raw block device access interface
-> +than to a full featured POSIX file system. The goal of zonefs is to simplify
-> +the implementation of zoned block device support in applications by replacing
-> +raw block device file accesses with a richer file API, avoiding relying on
-> +direct block device file ioctls which may be more obscure to developers. One
-> +example of this approach is the implementation of LSM (log-structured merge)
-> +tree structures (such as used in RocksDB and LevelDB) on zoned block devices
-> +by allowing SSTables to be stored in a zone file similarly to a regular file
-> +system rather than as a range of sectors of the entire disk. The introduction
-> +of the higher level construct "one file is one zone" can help reducing the
-> +amount of changes needed in the application as well as introducing support for
-> +different application programming languages.
+Later, commit fd4cf79fcc4b ("x86/mce: Remove the MCE ring for Action
+Optional errors") switched storage from the SRAO ring to the unified
+pool that is still in use today. In order to only act on the intended
+errors, a filter for MCE_AO_SEVERITY is used -- effectively removing
+handling of UCNA/Deferred errors again.
 
-Maybe add a small subsection on what zoned block devices are? Given that
-we had at least one person looking at this series while it was on the
-list, who didn't really know what zoned block devices are and what the
-constraints of them are.
+Extend the severity filter to include UCNA/Deferred errors again.
+Also, generalize the naming of the notifier from SRAO to UC to capture
+the extended scope.
 
-[...]
-> +Zone files
-> +----------
-> +
-> +Zone files are named using the number of the zone they represent within the set
-> +of zones of a particular type. That is, both the "cnv" and "seq" directories
-> +contain files named "0", "1", "2", ... The file numbers also represent
-> +increasing zone start sector on the device.
-> +
-> +All read and write operations to zone files are not allowed beyond the file
-> +maximum size, that is, beyond the zone size. Any access exceeding the zone
-> +size is failed with the -EFBIG error.
-> +
-> +Creating, deleting, renaming or modifying any attribute of files and
-> +sub-directories is not allowed.
+Note, that this change may cause a message like the following to appear,
+as the same address may be reported as SRAO and as UCNA:
 
-Nit: Above you explicitly say it's failed with -EFBIG, maybe document
-the error here as well?
+ Memory failure: 0x5fe3284: already hardware poisoned
 
-Other than that,
-Reviewed-by: Johannes Thumshirn <jth@kernel.org>
+Technically, this is a return to previous behavior.
+
+Fixes: fd4cf79fcc4b ("x86/mce: Remove the MCE ring for Action Optional errors")
+Signed-off-by: Jan H. Schönherr <jschoenh@amazon.de>
+---
+Changes v1->v2:
+- rename notifier from SRAO to UC (as requested by Tony)
+- extend commit message (per remark from Tony)
+- don't mention Linux versions (per remark from Boris)
+
+There was some discussion on v1, whether the SRAO/UC notifier does
+the right thing or not. While it seems to be correct as is for Intel
+(per Tony), there were some concerns for AMD (per Yazen). Hence, there
+is a new patch 5 in this series, which disables the notifier on AMD.
+---
+ arch/x86/include/asm/mce.h     |  2 +-
+ arch/x86/kernel/cpu/mce/core.c | 31 ++++++++++++++++---------------
+ 2 files changed, 17 insertions(+), 16 deletions(-)
+
+diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
+index dc2d4b206ab7..c8ff6f6750ef 100644
+--- a/arch/x86/include/asm/mce.h
++++ b/arch/x86/include/asm/mce.h
+@@ -144,7 +144,7 @@ struct mce_log_buffer {
+ 
+ enum mce_notifier_prios {
+ 	MCE_PRIO_FIRST		= INT_MAX,
+-	MCE_PRIO_SRAO		= INT_MAX - 1,
++	MCE_PRIO_UC		= INT_MAX - 1,
+ 	MCE_PRIO_EXTLOG		= INT_MAX - 2,
+ 	MCE_PRIO_NFIT		= INT_MAX - 3,
+ 	MCE_PRIO_EDAC		= INT_MAX - 4,
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 8994fe7751a4..16134ce587fd 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -156,10 +156,8 @@ void mce_log(struct mce *m)
+ }
+ EXPORT_SYMBOL_GPL(mce_log);
+ 
+-static struct notifier_block mce_srao_nb;
+-
+ /*
+- * We run the default notifier if we have only the SRAO, the first and the
++ * We run the default notifier if we have only the UC, the first and the
+  * default notifier registered. I.e., the mandatory NUM_DEFAULT_NOTIFIERS
+  * notifiers registered on the chain.
+  */
+@@ -580,26 +578,29 @@ static struct notifier_block first_nb = {
+ 	.priority	= MCE_PRIO_FIRST,
+ };
+ 
+-static int srao_decode_notifier(struct notifier_block *nb, unsigned long val,
+-				void *data)
++static int uc_decode_notifier(struct notifier_block *nb, unsigned long val,
++			      void *data)
+ {
+ 	struct mce *mce = (struct mce *)data;
+ 	unsigned long pfn;
+ 
+-	if (!mce)
++	if (!mce || !mce_usable_address(mce))
+ 		return NOTIFY_DONE;
+ 
+-	if (mce_usable_address(mce) && (mce->severity == MCE_AO_SEVERITY)) {
+-		pfn = mce->addr >> PAGE_SHIFT;
+-		if (!memory_failure(pfn, 0))
+-			set_mce_nospec(pfn);
+-	}
++	if (mce->severity != MCE_AO_SEVERITY &&
++	    mce->severity != MCE_DEFERRED_SEVERITY)
++		return NOTIFY_DONE;
++
++	pfn = mce->addr >> PAGE_SHIFT;
++	if (!memory_failure(pfn, 0))
++		set_mce_nospec(pfn);
+ 
+ 	return NOTIFY_OK;
+ }
+-static struct notifier_block mce_srao_nb = {
+-	.notifier_call	= srao_decode_notifier,
+-	.priority	= MCE_PRIO_SRAO,
++
++static struct notifier_block mce_uc_nb = {
++	.notifier_call	= uc_decode_notifier,
++	.priority	= MCE_PRIO_UC,
+ };
+ 
+ static int mce_default_notifier(struct notifier_block *nb, unsigned long val,
+@@ -1970,7 +1971,7 @@ int __init mcheck_init(void)
+ {
+ 	mcheck_intel_therm_init();
+ 	mce_register_decode_chain(&first_nb);
+-	mce_register_decode_chain(&mce_srao_nb);
++	mce_register_decode_chain(&mce_uc_nb);
+ 	mce_register_decode_chain(&mce_default_nb);
+ 	mcheck_vendor_init_severity();
+ 
+-- 
+2.22.0.3.gb49bb57c8208.dirty
 
