@@ -2,80 +2,136 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3214AC3276C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C87B1C3276C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3A84206F0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:37:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="G6XZ9Ojs"
+	by mail.kernel.org (Postfix) with ESMTP id 9D4FC222C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:44:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbgACBh3 (ORCPT
+        id S1726358AbgACBmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 20:37:29 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:24157 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725943AbgACBh2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 20:37:28 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578015447; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=BIkC8TGDTtb25luxTx2OTLtc+r/j75Se8xqph41KguU=;
- b=G6XZ9Ojs3LunjVOWzAJH+6prGyyHA6j69Xhw2TIqbZrhMmMOUXGEbb4OaRLHEsBU3JgHGGIN
- qFYESWpwwBB4D1gEp5a3kbK+G6z5xHY6UGOW5hzhIaYOwfL0549sZIAcgDUeNdxWyWVvlTjn
- cxvV65pQfnRVbYFeezQzRKIQuvw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e0e9ad7.7f61c7275ed8-smtp-out-n01;
- Fri, 03 Jan 2020 01:37:27 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1D9F7C433A2; Fri,  3 Jan 2020 01:37:27 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: wgong)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CBD83C433CB;
-        Fri,  3 Jan 2020 01:37:26 +0000 (UTC)
+        Thu, 2 Jan 2020 20:42:54 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52154 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725943AbgACBmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 20:42:54 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 666E1C68E69381AA17F5;
+        Fri,  3 Jan 2020 09:42:52 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 3 Jan 2020 09:42:43 +0800
+From:   Tian Tao <tiantao6@hisilicon.com>
+To:     <puck.chen@hisilicon.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <tzimmermann@suse.de>, <kraxel@redhat.com>,
+        <alexander.deucher@amd.com>, <tglx@linutronix.de>,
+        <dri-devel@lists.freedesktop.org>, <xinliang.liu@linaro.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <linuxarm@huawei.com>
+Subject: [PATCH] drm/hisilicon: Enforce 128-byte stride alignment to fix the display problem
+Date:   Fri, 3 Jan 2020 09:42:50 +0800
+Message-ID: <1578015770-36470-1-git-send-email-tiantao6@hisilicon.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 03 Jan 2020 09:37:26 +0800
-From:   Wen Gong <wgong@codeaurora.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ath11k@lists.infradead.org
-Subject: Re: [PATCH] net: qrtr: fix len of skb_put_padto in qrtr_node_enqueue
-In-Reply-To: <20200102.162249.948673283541180133.davem@davemloft.net>
-References: <20191231093242.6320-1-wgong@codeaurora.org>
- <20200102.162249.948673283541180133.davem@davemloft.net>
-Message-ID: <297b94fe2eb5a20c75c2095e9640a495@codeaurora.org>
-X-Sender: wgong@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-03 08:22, David Miller wrote:
+because the hardware limitation,The initial color depth must set to 32bpp
+and must set the FB Offset of the display hardware to 128Byte alignment,
+which is used to solve the display problem at 800x600 and 1440x900
+resolution under 16bpp.
 
-> I don't think this is correct.
-> 
-> The 'hdr' was already "pushed" earlier in this file.
-> 
-> Here we are padding the area after the header, which is being "put".
-> 
-> I'm not applying this.  If you still think it is correct, you must 
-> explain
-> in detail why it is and add that description to the commit log message.
-> 
-> Thank you.
+Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+Signed-off-by: Gong junjie <gongjunjie2@huawei.com>
+---
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c    | 13 ++++++-------
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_fbdev.c |  4 ++--
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c       |  2 +-
+ 3 files changed, 9 insertions(+), 10 deletions(-)
 
-Thanks David.
-I will add more description and send patch v2.
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
+index 12b38ac..843d784 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
+@@ -83,9 +83,6 @@ static int hibmc_plane_atomic_check(struct drm_plane *plane,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (!crtc_state->enable)
+-		return 0;
+-
+ 	if (state->crtc_x + state->crtc_w >
+ 	    crtc_state->adjusted_mode.hdisplay ||
+ 	    state->crtc_y + state->crtc_h >
+@@ -94,6 +91,11 @@ static int hibmc_plane_atomic_check(struct drm_plane *plane,
+ 		return -EINVAL;
+ 	}
+ 
++	if (state->fb->pitches[0] % 128 != 0) {
++		DRM_DEBUG_ATOMIC("wrong stride with 128-byte aligned\n");
++		return -EINVAL;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -119,11 +121,8 @@ static void hibmc_plane_atomic_update(struct drm_plane *plane,
+ 	writel(gpu_addr, priv->mmio + HIBMC_CRT_FB_ADDRESS);
+ 
+ 	reg = state->fb->width * (state->fb->format->cpp[0]);
+-	/* now line_pad is 16 */
+-	reg = PADDING(16, reg);
+ 
+-	line_l = state->fb->width * state->fb->format->cpp[0];
+-	line_l = PADDING(16, line_l);
++	line_l = state->fb->pitches[0];
+ 	writel(HIBMC_FIELD(HIBMC_CRT_FB_WIDTH_WIDTH, reg) |
+ 	       HIBMC_FIELD(HIBMC_CRT_FB_WIDTH_OFFS, line_l),
+ 	       priv->mmio + HIBMC_CRT_FB_WIDTH);
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_fbdev.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_fbdev.c
+index 1d15560..ca42dd7 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_fbdev.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_fbdev.c
+@@ -73,7 +73,7 @@ static int hibmc_drm_fb_create(struct drm_fb_helper *helper,
+ 
+ 	mode_cmd.width = sizes->surface_width;
+ 	mode_cmd.height = sizes->surface_height;
+-	mode_cmd.pitches[0] = mode_cmd.width * bytes_per_pixel;
++	mode_cmd.pitches[0] = ALIGN(mode_cmd.width * bytes_per_pixel, 128);
+ 	mode_cmd.pixel_format = drm_mode_legacy_fb_format(sizes->surface_bpp,
+ 							  sizes->surface_depth);
+ 
+@@ -186,7 +186,7 @@ int hibmc_fbdev_init(struct hibmc_drm_private *priv)
+ 		goto fini;
+ 	}
+ 
+-	ret = drm_fb_helper_initial_config(&hifbdev->helper, 16);
++	ret = drm_fb_helper_initial_config(&hifbdev->helper, 32);
+ 	if (ret) {
+ 		DRM_ERROR("failed to setup initial conn config: %d\n", ret);
+ 		goto fini;
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c
+index 19dc525..1cc702f 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c
+@@ -76,7 +76,7 @@ int hibmc_dumb_create(struct drm_file *file, struct drm_device *dev,
+ 	u32 handle;
+ 	int ret;
+ 
+-	args->pitch = ALIGN(args->width * DIV_ROUND_UP(args->bpp, 8), 16);
++	args->pitch = ALIGN(args->width * DIV_ROUND_UP(args->bpp, 8), 128);
+ 	args->size = args->pitch * args->height;
+ 
+ 	ret = hibmc_gem_create(dev, args->size, false,
+-- 
+2.7.4
+
