@@ -2,105 +2,120 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACD7C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2AEC32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 134F624653
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DE1D22314
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:34:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="XlUMUXkV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbgACLb7 (ORCPT
+        id S1727604AbgACLeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 06:31:59 -0500
-Received: from foss.arm.com ([217.140.110.172]:54830 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727453AbgACLb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 06:31:58 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E5001FB;
-        Fri,  3 Jan 2020 03:31:58 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 847E83F703;
-        Fri,  3 Jan 2020 03:31:56 -0800 (PST)
-Date:   Fri, 3 Jan 2020 11:31:51 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Jolly Shah <JOLLYS@xilinx.com>
-Cc:     "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        Michal Simek <michals@xilinx.com>,
-        Rajan Vaja <RAJANV@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 0/5] firmware: xilinx: Add xilinx specific sysfs interface
-Message-ID: <20200103113151.GA19390@bogus>
-References: <1575502159-11327-1-git-send-email-jolly.shah@xilinx.com>
- <20191218144555.GA12525@bogus>
- <BYAPR02MB5992099D8B87745DB7661C13B8200@BYAPR02MB5992.namprd02.prod.outlook.com>
+        Fri, 3 Jan 2020 06:34:06 -0500
+Received: from mail-bn7nam10on2052.outbound.protection.outlook.com ([40.107.92.52]:31072
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727462AbgACLeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 06:34:05 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EVzUanb7dAam24pacZxZsTGLd48ktOFKFGYUU+8eeGHbIAdqmBH0u33ZjkgWlWZo1wbyUdKrF3m3GoSSFHOk5VrRN7PTjLS+2iLFWiqC7ZWDB5A+hI51Ksalv4rstLAPl3AD61Cp9EGxkaGDz7RQ/RdNwDG+oNzoiwczArr1YtCar7WKiHQnb3Va9zpkojUhZcQApWzQ4MbR/I4a6XVqqo6zDkoStSgRaQ2pctpjhysAxX/BqXMLkhbIho0dQ7Qr483t1B52ElGIqtjimkQZHaTSOIwHfqyEPtsXV8HAkHl+DHAtw1CQ4FsVInIjJs/uQvfOW1H4a0jAMDpr+4wevw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=28rDXYRYpvcpZTvZMfbXBdg6OBxlIdjAuZce/I8aeVE=;
+ b=oRXRW71Kh7Vtqnk+DLRcCgOlESpPdQyRozLGFpuQHgT08AHQjr/foWrTlgQtzftR5GVmnUP6hEcyT7rmjJi4Q747hb0gXWDV1fO9dLrFbJToNaG3pPLL1ZwTNcvGd9Vmh/PghC6+Ym07mSZnJliiEUdltJGDMcor9XHSGqshwE5GE7jxV+XQtdYfDj+RhfzdgvptdkUnH0qlm56BDIv0+HUkYFmless2JjqvM6sr/zcUnzNrdRhLwfp7/Bv0lpNiNCKmzSg8y0sbQKZcGCjvdHoTKJLnFBH2IDwjXCDXb5thGO5EToBjZm16k5/1A71pMU7yZqy7C25aUWTzhSf+BA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=28rDXYRYpvcpZTvZMfbXBdg6OBxlIdjAuZce/I8aeVE=;
+ b=XlUMUXkV2pyMFjYFKaXuGnRBygnNX7+O+XXiOehUCMbN5g+i7R3tYqYqIW5USDu036komHMZg+A7CG+Zj47J2SsyzeWEVaUzjizOUt5ndBk0FzIeYzbhP5mCcl6+CG3fAXoL2orc2JrvQgv8R2fn46KZDZWGkQiVx/5wzZCtQuU=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Sanju.Mehta@amd.com; 
+Received: from MN2PR12MB3455.namprd12.prod.outlook.com (20.178.244.22) by
+ MN2PR12MB3343.namprd12.prod.outlook.com (20.178.240.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2581.12; Fri, 3 Jan 2020 11:34:03 +0000
+Received: from MN2PR12MB3455.namprd12.prod.outlook.com
+ ([fe80::1900:6cb7:12ff:11c]) by MN2PR12MB3455.namprd12.prod.outlook.com
+ ([fe80::1900:6cb7:12ff:11c%4]) with mapi id 15.20.2602.012; Fri, 3 Jan 2020
+ 11:34:03 +0000
+Subject: Re: [PATCH v2 1/3] dmaengine: ptdma: Initial driver for the AMD
+ PassThru DMA engine
+To:     Vinod Koul <vkoul@kernel.org>, Sanjay R Mehta <Sanju.Mehta@amd.com>
+Cc:     kbuild-all@lists.01.org, kbuild test robot <lkp@intel.com>,
+        dan.j.williams@intel.com, gregkh@linuxfoundation.org,
+        Gary.Hook@amd.com, Nehal-bakulchandra.Shah@amd.com,
+        Shyam-sundar.S-k@amd.com, davem@davemloft.net,
+        mchehab+samsung@kernel.org, robh@kernel.org,
+        Jonathan.Cameron@huawei.com, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org
+References: <1577458047-109654-1-git-send-email-Sanju.Mehta@amd.com>
+ <201912280738.zotyIgEi%lkp@intel.com> <20200103062630.GD2818@vkoul-mobl>
+From:   Sanjay R Mehta <sanmehta@amd.com>
+Message-ID: <4f821b57-9b45-6aa3-99a2-abe3539eb15e@amd.com>
+Date:   Fri, 3 Jan 2020 17:03:49 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+In-Reply-To: <20200103062630.GD2818@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: MAXPR01CA0100.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:5d::18) To MN2PR12MB3455.namprd12.prod.outlook.com
+ (2603:10b6:208:d0::22)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BYAPR02MB5992099D8B87745DB7661C13B8200@BYAPR02MB5992.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Received: from [10.136.17.186] (165.204.157.251) by MAXPR01CA0100.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:5d::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.12 via Frontend Transport; Fri, 3 Jan 2020 11:33:58 +0000
+X-Originating-IP: [165.204.157.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: dbe21c11-f14f-46a4-6c15-08d79040d516
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3343:|MN2PR12MB3343:|MN2PR12MB3343:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MN2PR12MB3343E9530491345440B96F23E5230@MN2PR12MB3343.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3044;
+X-Forefront-PRVS: 0271483E06
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(396003)(376002)(39860400002)(366004)(189003)(199004)(66556008)(6636002)(2906002)(66946007)(5660300002)(4326008)(31686004)(81156014)(7416002)(4744005)(52116002)(186003)(36756003)(53546011)(16526019)(66476007)(26005)(956004)(2616005)(316002)(8936002)(8676002)(6486002)(31696002)(478600001)(6666004)(110136005)(81166006)(16576012);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3343;H:MN2PR12MB3455.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: VpDlppeyMfk7XcYbl6b7hR+OUFF/OuZX068hf8Mwth9r1hXDVnFyXsUE1fW6i3axC6Ox2wv1oSwdPDgMefyqE276sxjC02ktW37BLTCmq9Yfs/IUhH1LXSv+9cnhHnlxc9d8gmhNCtOPX0ugE6muhMmKXp0AyrkI8Jsw/4bRAubF4r38vOQIkV2dDAiPb4kN8G9+nNLLaOQEWBsMczxDCy3GEhwyxoag+XVlxg8iwpKLeU75BkJFQTUppdG+fLL6il3VFbr7ACupacCgsZ2QCZuQOsi4MjV9E5cwslechGkIUHmnTcyvNlR0syC11d+9dvsHQxFwhK/UDcRFf1yDsPVIFGOsvvLr7gWpnEC/9FPO4Dh7eE1wxao/pjnlQXdlMc5s9c09S0p8DqkDIwfKaSX69Vv2egEvUNshatHQBmDcBoq4IoJtkHh3yGX81XAs
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dbe21c11-f14f-46a4-6c15-08d79040d516
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jan 2020 11:34:02.9144
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OE1D7DJYl8wFTb4BLBdwtom4TlFbPJD9245UvTmKGrbZtJQbXKtbgNKECGYOLzRUR5Xc2KPipUrbZATJmDuGAg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3343
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 09:01:58PM +0000, Jolly Shah wrote:
-> Hi Sudeep,
->
-> Thanks for the review.
->
-> > -----Original Message-----
-> > From: Sudeep Holla <sudeep.holla@arm.com>
-> > Sent: Wednesday, December 18, 2019 6:46 AM
-> > To: Jolly Shah <JOLLYS@xilinx.com>
-> > Cc: ard.biesheuvel@linaro.org; mingo@kernel.org;
-> > gregkh@linuxfoundation.org; matt@codeblueprint.co.uk;
-> > hkallweit1@gmail.com; keescook@chromium.org;
-> > dmitry.torokhov@gmail.com; Michal Simek <michals@xilinx.com>; Rajan Vaja
-> > <RAJANV@xilinx.com>; linux-arm-kernel@lists.infradead.org; linux-
-> > kernel@vger.kernel.org; Sudeep Holla <sudeep.holla@arm.com>
-> > Subject: Re: [PATCH 0/5] firmware: xilinx: Add xilinx specific sysfs interface
-> >
-> > On Wed, Dec 04, 2019 at 03:29:14PM -0800, Jolly Shah wrote:
-> > > This patch series adds xilinx specific sysfs interface for below
-> > > purposes:
-> > > - Register access
-> > > - Set shutdown scope
-> > > - Set boot health status bit
-> >
-> > This series defeats the whole abstraction EEMI provides. By providing
-> > direct register accesses, you are allowing user-space to do whatever it
-> > wants. I had NACKed this idea before. Has anything changed ?
-> >
->
-> Firmware checks for allowed accesses only and rejects rest.
->
 
-If that is always the case, why not abstract them and remove this direct
-register access completely. It must go or we must remove EEMI abstraction
-and just provide direct register access to the entire space. I really
-don't like this mix-n-match approach here.
+On 1/3/2020 11:56 AM, Vinod Koul wrote:
+> On 28-12-19, 07:56, kbuild test robot wrote:
+>> Hi Sanjay,
+>>
+>> I love your patch! Perhaps something to improve:
+> Please fix the issues reported and also make sure the patches sent are
+> threaded, right now they are not and the series is all over my inbox :(
 
-> > If you need it for testing firmware, better put them in debugfs which is
-> > off on production builds.
+Sure Vinod, will address those fixes.
+
+will check about threading. Just simply git send to the list obtained from get_maintainer.pl? 
+
 >
-> Sure. Will reanalyze use cases and move to debugfs only if that suffices.
->
-
-Thanks.
-
---
-Regards,
-Sudeep
+> --
+> ~Vinod
