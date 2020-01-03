@@ -2,269 +2,97 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B759DC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B13C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C2832085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10B292085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:31:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VcRSqbgY"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="L6k+3As/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbgACMbT (ORCPT
+        id S1727709AbgACMbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 07:31:19 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46079 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727457AbgACMbT (ORCPT
+        Fri, 3 Jan 2020 07:31:37 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:41406 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727350AbgACMbg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 07:31:19 -0500
-Received: by mail-wr1-f66.google.com with SMTP id j42so42242246wrj.12;
-        Fri, 03 Jan 2020 04:31:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=gaDoAhZd9EnaspVB4eu0gwSjufuz8gDsIlWz8yJvXtw=;
-        b=VcRSqbgYZo3yVNNTLQdNTjczb8TSz9OxqCgbbSA9u77KVFJkc8bGA1ixOK/DDwqLCz
-         XyZhM+tubMWWju2gVJGndu68rjJzx8OVqp52oIs/NMvAGdV/Tx4R5JuvkRJ6495F8elv
-         bpuXLSu+Fq/RRb08Ri+or9H6dMjRzaPPmAsVbbpKN/1YOmD7ZN5ACFqlTesqQwc9EmBE
-         /c7FdatTDALlXl5IRi/VmkpdUTRax57bgIPzvqrbjg9yCxV+yoxW7sO8F/PP0FA7Ppbk
-         Nhh5nkl5oZosjZzTX9huhmfFKtATdDMOBL499WgfX5kyxmoGKoTRt5iBoAD5W40/wRWz
-         wbZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=gaDoAhZd9EnaspVB4eu0gwSjufuz8gDsIlWz8yJvXtw=;
-        b=FcFBMZmpFLm91NHWqwj0su+OLHWW5/OX58hBRdnthiqlikKUFH94efPoFfyW1FIhNd
-         Bns7Yv2WuPd7BOCL09cG7P/c9g98mHY4XYy4JsJfp/LHOoELRbE+F9GnmKsXAENhbbrO
-         274W1dLDUqs4d/Pq86SP+yEJ/wx7BfJLtGewSEpnrPoc1bWZRif9kSUgZfiEPrz8NFoK
-         JQH0h6TaAXHptSLW6PhApsluxJYsZjuY/Tnxhbks1/IS8vECQDmnPnHz2zEXJwbMFMa1
-         V/uk63i07ejZfdM0JPXDDGDXPDiz7Mw0kW1cZPGfVhvejf3o1OqzvWvdrZKN5F2AipKH
-         ersQ==
-X-Gm-Message-State: APjAAAWSC7875K5+sZWJLWNKuopZcY6POGTUb0U9mwfdBskCKaDP1xkW
-        zgKFpQgNGQvwVdeljeKBAIs=
-X-Google-Smtp-Source: APXvYqxi3dX6vftLY+XF/wFxY2bTL8Q353b1cvgiRi64Bv5qa7kenkIw1qh4+D8MoP3iMsP/yEJiCQ==
-X-Received: by 2002:adf:ea88:: with SMTP id s8mr88071919wrm.293.1578054676319;
-        Fri, 03 Jan 2020 04:31:16 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id q11sm59035802wrp.24.2020.01.03.04.31.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 04:31:15 -0800 (PST)
-Date:   Fri, 3 Jan 2020 13:31:14 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, linkinjeon@gmail.com
-Subject: Re: [PATCH v9 10/13] exfat: add nls operations
-Message-ID: <20200103123114.vm23vqag5dbry2mu@pali>
-References: <20200102082036.29643-1-namjae.jeon@samsung.com>
- <CGME20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05@epcas1p4.samsung.com>
- <20200102082036.29643-11-namjae.jeon@samsung.com>
- <20200103094030.zg4p5bqos32gc4hy@pali>
+        Fri, 3 Jan 2020 07:31:36 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 003CSxKW111446;
+        Fri, 3 Jan 2020 12:31:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=b3uRmQvNfEosDDjOkW8sRh5UcyCobfd0n7/rf6Tc50w=;
+ b=L6k+3As/gutJ1nFXFNf51TfYYr4/IWOK5zSdB/AtXuvzPsMXxeoUeZUwxuKC8APMBDav
+ XkNZMhBqMaeqiODQS0N6h19Lp+Y/bwD12NCwSREB3PLJgCS5iOndUcNJGMxC4itHIPHO
+ pqEIp1vAPFlDyx3cLAupwZ3OxkuPTR8GtCSSFp2lKcnyE7l2sK8T2823+1e7WSupgIkD
+ ExSJOHcwC3FxuqUwhcggphRSRu7JRhxTJd/jm4N8qe5OQ2+2FkQiltqAj+kE8A2gMtmG
+ 6Oi48LSuDov6CCqf/MX5cOkDd/I8fNHEKKOMCZ61d8588vB0XPFmwjC7NjhPmobl7ofP pw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2x5xftv8k5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Jan 2020 12:31:13 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 003CS2BE076479;
+        Fri, 3 Jan 2020 12:31:13 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2xa5fg8es7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Jan 2020 12:31:13 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 003CV7mt008844;
+        Fri, 3 Jan 2020 12:31:08 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 Jan 2020 04:31:06 -0800
+Date:   Fri, 3 Jan 2020 15:31:00 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Julia Lawall <Julia.Lawall@inria.fr>
+Cc:     kvm@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        openrisc@lists.librecores.org
+Subject: Re: [PATCH 0/4] use mmgrab
+Message-ID: <20200103123059.GI3911@kadam>
+References: <1577634178-22530-1-git-send-email-Julia.Lawall@inria.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200103094030.zg4p5bqos32gc4hy@pali>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1577634178-22530-1-git-send-email-Julia.Lawall@inria.fr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=698
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001030119
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=761 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001030119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 03 January 2020 10:40:30 Pali Rohár wrote:
-> On Thursday 02 January 2020 16:20:33 Namjae Jeon wrote:
-> > This adds the implementation of nls operations for exfat.
-> > 
-> > Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-> > Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
-> > ---
-> >  fs/exfat/nls.c | 809 +++++++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 809 insertions(+)
-> >  create mode 100644 fs/exfat/nls.c
-> > 
-> > diff --git a/fs/exfat/nls.c b/fs/exfat/nls.c
-> > new file mode 100644
-> > index 000000000000..af52328e28ff
-> > --- /dev/null
-> > +++ b/fs/exfat/nls.c
-> 
-> ...
-> 
-> > +static int exfat_convert_uni_to_ch(struct nls_table *nls, unsigned short uni,
-> > +		unsigned char *ch, int *lossy)
-> > +{
-> > +	int len;
-> > +
-> > +	ch[0] = 0x0;
-> > +
-> > +	if (uni < 0x0080) {
-> > +		ch[0] = uni;
-> > +		return 1;
-> > +	}
-> > +
-> > +	len = nls->uni2char(uni, ch, MAX_CHARSET_SIZE);
-> > +	if (len < 0) {
-> > +		/* conversion failed */
-> > +		if (lossy != NULL)
-> > +			*lossy |= NLS_NAME_LOSSY;
-> > +		ch[0] = '_';
-> > +		return 1;
-> > +	}
-> > +	return len;
-> > +}
-> 
-> Hello! This function takes one UCS-2 character in host endianity and
-> converts it to one byte (via specified 8bit encoding).
-> 
-> > +static int __exfat_nls_uni16s_to_vfsname(struct super_block *sb,
-> > +		struct exfat_uni_name *p_uniname, unsigned char *p_cstring,
-> > +		int buflen)
-> > +{
-> > +	int i, j, len, out_len = 0;
-> > +	unsigned char buf[MAX_CHARSET_SIZE];
-> > +	const unsigned short *uniname = p_uniname->name;
-> > +	struct nls_table *nls = EXFAT_SB(sb)->nls_io;
-> > +
-> > +	i = 0;
-> > +	while (i < MAX_NAME_LENGTH && out_len < (buflen - 1)) {
-> > +		if (*uniname == '\0')
-> > +			break;
-> > +
-> > +		len = exfat_convert_uni_to_ch(nls, *uniname, buf, NULL);
-> > +		if (out_len + len >= buflen)
-> > +			len = buflen - 1 - out_len;
-> > +		out_len += len;
-> > +
-> > +		if (len > 1) {
-> > +			for (j = 0; j < len; j++)
-> > +				*p_cstring++ = buf[j];
-> > +		} else { /* len == 1 */
-> > +			*p_cstring++ = *buf;
-> > +		}
-> > +
-> > +		uniname++;
-> > +		i++;
-> > +	}
-> > +
-> > +	*p_cstring = '\0';
-> > +	return out_len;
-> > +}
-> > +
-> 
-> This function takes UCS-2 buffer in host endianity and converts it to
-> string in specified 8bit encoding.
-> 
-> > +
-> > +int exfat_nls_uni16s_to_vfsname(struct super_block *sb,
-> > +		struct exfat_uni_name *uniname, unsigned char *p_cstring,
-> > +		int buflen)
-> > +{
-> 
-> Looking at the code and this function is called from dir.c to translate
-> exfat filename buffer stored in filesystem to format expected by VFS
-> layer.
-> 
-> On exfat filesystem file names are always stored in UTF-16LE...
-> 
-> > +	if (EXFAT_SB(sb)->options.utf8)
-> > +		return __exfat_nls_utf16s_to_vfsname(sb, uniname, p_cstring,
-> > +				buflen);
-> > +	return __exfat_nls_uni16s_to_vfsname(sb, uniname, p_cstring, buflen);
-> 
-> ... and therefore above "__exfat_nls_uni16s_to_vfsname" function must
-> expect UTF-16LE buffer and not just UCS-2 buffer in host endianity.
-> 
-> So two other things needs to be done: Convert character from little
-> endian to host endianity and then process UTF-16 buffer and not only
-> UCS-2.
-> 
-> I see that in kernel NLS module is missing a function for converting
-> UTF-16 string to UTF-32 (encoding in which every code point is
-> represented just by one u32 variable). Kernel has only utf16s_to_utf8s()
-> and utf8_to_utf32().
+On Sun, Dec 29, 2019 at 04:42:54PM +0100, Julia Lawall wrote:
+> Mmgrab was introduced in commit f1f1007644ff ("mm: add new mmgrab()
+> helper") and most of the kernel was updated to use it. Update a few
+> remaining files.
 
-What about just filtering two u16 (one surrogate pair)? Existing NLS
-modules do not support code points above U+FFFF so two u16 (one
-surrogate pair) just needs to be converted to one replacement character.
+I wonder if there is an automatic way to generate these kind of
+Coccinelle scripts which use inlines instead of open coding.  Like maybe
+make a list of one line functions, and then auto generate a recipe.  Or
+the mmgrab() function could have multiple lines if the first few were
+just sanity checks for NULL or something...
 
-diff --git a/fs/exfat/nls.c b/fs/exfat/nls.c
-index 81d75aed9..f626a0a89 100644
---- a/fs/exfat/nls.c
-+++ b/fs/exfat/nls.c
-@@ -545,7 +545,10 @@ static int __exfat_nls_vfsname_to_utf16s(struct super_block *sb,
- 	return unilen;
- }
- 
--static int __exfat_nls_uni16s_to_vfsname(struct super_block *sb,
-+#define SURROGATE_PAIR		0x0000d800
-+#define SURROGATE_LOW		0x00000400
-+
-+static int __exfat_nls_utf16s_to_vfsname(struct super_block *sb,
- 		struct exfat_uni_name *p_uniname, unsigned char *p_cstring,
- 		int buflen)
- {
-@@ -559,7 +562,23 @@ static int __exfat_nls_uni16s_to_vfsname(struct super_block *sb,
- 		if (*uniname == '\0')
- 			break;
- 
--		len = exfat_convert_uni_to_ch(nls, *uniname, buf, NULL);
-+		if ((*uniname & SURROGATE_MASK) != SURROGATE_PAIR) {
-+			len = exfat_convert_uni_to_ch(nls, *uniname, buf, NULL);
-+		} else {
-+			/* Process UTF-16 surrogate pair as one character */
-+			if (!(*uniname & SURROGATE_LOW) && i+1 < MAX_NAME_LENGTH &&
-+			    (*(uniname+1) & SURROGATE_MASK) == SURROGATE_PAIR &&
-+			    (*(uniname+1) & SURROGATE_LOW)) {
-+				uniname++;
-+				i++;
-+			}
-+			/* UTF-16 surrogate pair encodes code points above Ux+FFFF.
-+			 * Code points above U+FFFF are not supported by kernel NLS
-+			 * framework therefore use replacement character */
-+			len = 1;
-+			buf[0] = '_';
-+		}
-+
- 		if (out_len + len >= buflen)
- 			len = buflen - 1 - out_len;
- 		out_len += len;
-@@ -623,7 +642,7 @@ int exfat_nls_uni16s_to_vfsname(struct super_block *sb,
- 	if (EXFAT_SB(sb)->options.utf8)
- 		return __exfat_nls_utf16s_to_vfsname(sb, uniname, p_cstring,
- 				buflen);
--	return __exfat_nls_uni16s_to_vfsname(sb, uniname, p_cstring, buflen);
-+	return __exfat_nls_utf16s_to_vfsname(sb, uniname, p_cstring, buflen);
- }
- 
- int exfat_nls_vfsname_to_uni16s(struct super_block *sb,
-
-I have not tested this code, it is just an idea how to quick & dirty
-solve this problem that NLS framework works with UCS-2 encoding and
-UCS-4/UTF-32 or UTF-16.
-
-> > +}
-> 
-> Btw, have you tested this exfat implementation on some big endian
-> system? I think it cannot work because of missing conversion from
-> UTF-16LE to UTF-16 in host endianity (therefore UTF-16BE).
-
-Now I figured out that conversion from UTF-16LE to UTF-16 host endianity
-is already done in exfat_extract_uni_name() function, called from
-exfat_get_uniname_from_ext_entry() function. exfat_nls_uni16s_to_vfsname
-is then called on result from exfat_get_uniname_from_ext_entry(), so
-UTF-16LE processing on big endian systems should work. Sorry for that.
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+regards,
+dan carpenter
