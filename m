@@ -2,86 +2,81 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFE9C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F11EC32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2321121734
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:42:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578066122;
-	bh=E6bkP2iLtXcpJMcX8Se1oy9jd3znrWQRpOblbHywcP4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XfAKT05uQzVm0d8j/bI4XaAt/NIZ5Yn2zoqRyqikwebpACNMAiat6fksbH5m3GuHI
-	 oqlLEJBK/V4pgq+6Dm7pJyXJFUD1AvfdmrrhEhLAMUgD7FujtqBBH+QeWE8zI9W/kE
-	 FJnTservQU1hubM4UWulk6xkBEnF1MdddhAoplb4=
+	by mail.kernel.org (Postfix) with ESMTP id 2156B21734
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:43:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgACPmB (ORCPT
+        id S1727890AbgACPnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 10:42:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60730 "EHLO mail.kernel.org"
+        Fri, 3 Jan 2020 10:43:10 -0500
+Received: from fieldses.org ([173.255.197.46]:50494 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727539AbgACPmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 10:42:00 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2F3B222C3;
-        Fri,  3 Jan 2020 15:41:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578066120;
-        bh=E6bkP2iLtXcpJMcX8Se1oy9jd3znrWQRpOblbHywcP4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XrC3JbJ2Ab1dRvJXkRDe2XDLuLr892OkN4/27W0uZs/3So2/oxxlXcQUoqZlOfndz
-         qRH6eO/P4AoBRkMacSg5D0cHtjkxgjgBAA1kznAIS1s95h6lXRh8xjKPTo0mQ43xii
-         MqWxHSPKRcLnHYLg+BCilQ47VuukIk6b+FVyOyjw=
-Date:   Fri, 3 Jan 2020 16:41:56 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 000/114] 4.19.93-stable review
-Message-ID: <20200103154156.GA1064304@kroah.com>
-References: <20200102220029.183913184@linuxfoundation.org>
- <72f41f89-bf68-d275-2f1e-d33a91b5e6cd@roeck-us.net>
+        id S1727817AbgACPnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 10:43:09 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 52A361CB4; Fri,  3 Jan 2020 10:43:09 -0500 (EST)
+Date:   Fri, 3 Jan 2020 10:43:09 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     kjlu@umn.edu, Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] nfsd: remove unnecessary assertion in
+ nfsd4_layout_setlease
+Message-ID: <20200103154309.GA23945@fieldses.org>
+References: <20191226203733.27808-1-pakki001@umn.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <72f41f89-bf68-d275-2f1e-d33a91b5e6cd@roeck-us.net>
+In-Reply-To: <20191226203733.27808-1-pakki001@umn.edu>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 06:27:53AM -0800, Guenter Roeck wrote:
-> On 1/2/20 2:06 PM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 4.19.93 release.
-> > There are 114 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sat, 04 Jan 2020 21:58:48 +0000.
-> > Anything received after that time might be too late.
-> > 
-> 
-> Build results:
-> 	total: 156 pass: 155 fail: 1
-> Failed builds:
-> 	sparc64:allmodconfig
-> Qemu test results:
-> 	total: 381 pass: 381 fail: 0
-> 
-> ERROR: "of_irq_to_resource" [drivers/spi/spi-fsl-spi.ko] undefined!
-> 
-> Caused by 3194d2533eff ("spi: fsl: don't map irq during probe")
-> which is missing its fix, 63aa6a692595 ("spi: fsl: use platform_get_irq()
-> instead of of_irq_to_resource()")
+It took me a minute to see how fl can even fail to be NULL, since we
+just accessed fields of fl.
 
-Now added to 4.14 and 4.19 queues, thanks!
+OK, I see, &fl is passed to vfs_setlease, so it can change the value of
+fl.
 
-greg k-h
+Looks like generic_addlease() clears flp on success, unless it finds an
+existing non-conflicting lease?  I'm not clear why nfsd4_layout_setlease
+knows it can't hit that case.
+
+In any case, I don't see why this assertion is redundant; leaving it
+there.
+
+--b.
+
+On Thu, Dec 26, 2019 at 02:37:33PM -0600, Aditya Pakki wrote:
+> In nfsd4_layout_setlease, checking for a valid file lock is
+> redundant and can be removed. This patch eliminates such a
+> BUG_ON check.
+> 
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> ---
+>  fs/nfsd/nfs4layouts.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
+> index 2681c70283ce..ef5f8e645f4f 100644
+> --- a/fs/nfsd/nfs4layouts.c
+> +++ b/fs/nfsd/nfs4layouts.c
+> @@ -204,7 +204,6 @@ nfsd4_layout_setlease(struct nfs4_layout_stateid *ls)
+>  		locks_free_lock(fl);
+>  		return status;
+>  	}
+> -	BUG_ON(fl != NULL);
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.20.1
