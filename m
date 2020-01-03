@@ -2,90 +2,112 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABE9C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 04:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AD6C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 04:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF4A222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 04:20:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LAoHZH9e"
+	by mail.kernel.org (Postfix) with ESMTP id 920BC21734
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 04:24:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbgACEU4 (ORCPT
+        id S1727215AbgACEYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 23:20:56 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38571 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726837AbgACEUz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 23:20:55 -0500
-Received: by mail-qk1-f195.google.com with SMTP id k6so32945310qki.5;
-        Thu, 02 Jan 2020 20:20:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Lv7PeBfUGXL6vtm90dmNt6FN76fZ70+66Xw8HFNdMxo=;
-        b=LAoHZH9eBKCd9UdPpMg+RbC+bqsNDeep0xr71Y0UgWOB8EgRFZcRnRzBYFba9ItOCN
-         GUyIgMDugE3SsZQJFZmEh5b2PDAz025s69uOc1eBsqiFsDzygaoKKGIj/jpiKwbPtZLO
-         s0AG5bvBL8Q2j3QtqSw6x0oRJKofQulfLcftd8iq12Pk/G0Q2yWtmg5b8v6a50jiPre3
-         ASyd+ZkbAm3BD/KcWTe42ZbCGrGY1BgT2nfxLs6kKQNWlQUKLgXe7i4LgWt/RntnYeSN
-         JSbRB4/AYP7sHmcbjyXRALA18fYwXRqAq0sw6jOFhU8WOysOV8axQ9/99XjMdY1b1ZFc
-         o8hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Lv7PeBfUGXL6vtm90dmNt6FN76fZ70+66Xw8HFNdMxo=;
-        b=Nwipfa/5z5EBorl9cH8x7O9mHkH3p4TLZOYC50+FmFUWgo5J2fTl1vbZNqGolq5IOK
-         n5OkXT6gRXSY3fponFjKUu7Hy+VQIQnouKVTCpULZwwc+lvcIKkHqyhvcnflpemGL1Kj
-         p6gMmfzjMfIcroQlv4Fx1R9+MSCCgbyy7eRV8XyWqpaNiVzL617BLATxDXlbQj+QOzPG
-         5qVWtGMTNcm+Gc7x73AbO86AOhXEYJASmkpfZGr7IbSG3/ExfIRfGH2w6wsAa1Q+JIxr
-         RmdUjs5d7BzNovnTSm53PzAMuN+k0McXmYkgb3CrNAfQT0oTaniqTQpRFFn3ntmIplJ7
-         7QvQ==
-X-Gm-Message-State: APjAAAXTVJz6R5Kct5XVTJ47aeBZeX+jXHpflRATxl9xVQVXf2xKt0+W
-        Ea/0Ow5DyHzE4dDmbAyB1Zk=
-X-Google-Smtp-Source: APXvYqy7fzp//OI9b3qRPWsxN5Q5aixZIjMW17IffbdAaoKVBtjoSrwNmTgTHr+XQFmVLIkwJedgUg==
-X-Received: by 2002:a37:6794:: with SMTP id b142mr70491596qkc.216.1578025254596;
-        Thu, 02 Jan 2020 20:20:54 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id b81sm15748908qkc.135.2020.01.02.20.20.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 20:20:54 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Thu, 2 Jan 2020 23:20:52 -0500
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Rob Landley <rob@landley.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] kconfig: restore prompt dependencies in help text
-Message-ID: <20200103042052.GA1113792@rani.riverdale.lan>
-References: <0ea3e528-4835-ff9c-f5a2-f711666ba75f@infradead.org>
- <20200102231402.1052657-1-nivedita@alum.mit.edu>
- <CAK7LNAQrD4wcjqFTendbBGA2TXkbmxccRbv31HBCXz+J82w47g@mail.gmail.com>
+        Thu, 2 Jan 2020 23:24:16 -0500
+Received: from szxga08-in.huawei.com ([45.249.212.255]:36344 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726112AbgACEYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 23:24:16 -0500
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 75B294AA65AA5774C757;
+        Fri,  3 Jan 2020 12:24:13 +0800 (CST)
+Received: from DGGEMM526-MBX.china.huawei.com ([169.254.8.143]) by
+ DGGEMM403-HUB.china.huawei.com ([10.3.20.211]) with mapi id 14.03.0439.000;
+ Fri, 3 Jan 2020 12:24:04 +0800
+From:   "Zengtao (B)" <prime.zeng@hisilicon.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+CC:     Linuxarm <linuxarm@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Morten Rasmussen" <morten.rasmussen@arm.com>
+Subject: RE: [PATCH] cpu-topology: warn if NUMA configurations conflicts
+ with lower layer
+Thread-Topic: [PATCH] cpu-topology: warn if NUMA configurations conflicts
+ with lower layer
+Thread-Index: AQHVuWnsK0zwK8RxTkqe/SNAoYeaUKfT+S+AgALBI6CAAAyngIAAlqWw//+IwoCAAXt3QA==
+Date:   Fri, 3 Jan 2020 04:24:04 +0000
+Message-ID: <678F3D1BB717D949B966B68EAEB446ED340AFCA0@dggemm526-mbx.china.huawei.com>
+References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
+ <20191231164051.GA4864@bogus>
+ <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
+ <20200102112955.GC4864@bogus>
+ <678F3D1BB717D949B966B68EAEB446ED340AEB67@dggemm526-mbx.china.huawei.com>
+ <c43342d0-7e4d-3be0-0fe1-8d802b0d7065@arm.com>
+In-Reply-To: <c43342d0-7e4d-3be0-0fe1-8d802b0d7065@arm.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.74.221.187]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAQrD4wcjqFTendbBGA2TXkbmxccRbv31HBCXz+J82w47g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 11:10:28AM +0900, Masahiro Yamada wrote:
-> 
-> I had already applied the following patch;
-> https://patchwork.kernel.org/patch/11298143/
-> 
-> It it available in linux-next.
-> 
-
-Oh cool
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBWYWxlbnRpbiBTY2huZWlkZXIg
+W21haWx0bzp2YWxlbnRpbi5zY2huZWlkZXJAYXJtLmNvbV0NCj4gU2VudDogVGh1cnNkYXksIEph
+bnVhcnkgMDIsIDIwMjAgOToyMiBQTQ0KPiBUbzogWmVuZ3RhbyAoQik7IFN1ZGVlcCBIb2xsYQ0K
+PiBDYzogTGludXhhcm07IEdyZWcgS3JvYWgtSGFydG1hbjsgUmFmYWVsIEouIFd5c29ja2k7DQo+
+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IE1vcnRlbiBSYXNtdXNzZW4NCj4gU3ViamVj
+dDogUmU6IFtQQVRDSF0gY3B1LXRvcG9sb2d5OiB3YXJuIGlmIE5VTUEgY29uZmlndXJhdGlvbnMg
+Y29uZmxpY3RzDQo+IHdpdGggbG93ZXIgbGF5ZXINCj4gDQo+IE9uIDAyLzAxLzIwMjAgMTI6NDcs
+IFplbmd0YW8gKEIpIHdyb3RlOg0KPiA+Pg0KPiA+PiBBcyBJIHNhaWQsIHdyb25nIGNvbmZpZ3Vy
+YXRpb25zIG5lZWQgdG8gYmUgZGV0ZWN0ZWQgd2hlbiBnZW5lcmF0aW5nDQo+ID4+IERUL0FDUEkg
+aWYgcG9zc2libGUuIFRoZSBhYm92ZSB3aWxsIHByaW50IHdhcm5pbmcgb24gc3lzdGVtcyB3aXRo
+DQo+IE5VTUENCj4gPj4gd2l0aGluIHBhY2thZ2UuDQo+ID4+DQo+ID4+IE5VTUE6ICAwLTcsIDgt
+MTUNCj4gPj4gY29yZV9zaWJsaW5nczogICAwLTE1DQo+ID4+DQo+ID4+IFRoZSBhYm92ZSBpcyB0
+aGUgZXhhbXBsZSB3aGVyZSB0aGUgZGllIGhhcyAxNiBDUFVzIGFuZCAyIE5VTUENCj4gbm9kZXMN
+Cj4gPj4gd2l0aGluIGEgcGFja2FnZSwgeW91ciBjaGFuZ2UgdGhyb3dzIGVycm9yIHRvIHRoZSBh
+Ym92ZSBjb25maWcgd2hpY2ggaXMNCj4gPj4gd3JvbmcuDQo+ID4+DQo+ID4gRnJvbSB5b3VyIGV4
+YW1wbGUsIHRoZSBjb3JlIDcgYW5kIGNvcmUgOCBoYXMgZ290IGRpZmZlcmVudCBMTEMgYnV0IHRo
+ZQ0KPiBzYW1lIExvdw0KPiA+IExldmVsIGNhY2hlPw0KPiANCj4gQUZBSUEgd2hhdCBtYXR0ZXJz
+IGhlcmUgaXMgbWVtb3J5IGNvbnRyb2xsZXJzLCBsZXNzIHNvIExMQ3MuIENvcmVzIHdpdGhpbg0K
+PiBhIHNpbmdsZSBkaWUgY291bGQgaGF2ZSBwcml2YXRlIExMQ3MgYW5kIHNlcGFyYXRlIG1lbW9y
+eSBjb250cm9sbGVycywgb3INCj4gc2hhcmVkIExMQyBhbmQgc2VwYXJhdGUgbWVtb3J5IGNvbnRy
+b2xsZXJzLg0KPiANCj4gPiBGcm9tIHNjaGVkdWxlIHZpZXcgb2YgcG9pbnQsIGxvd2VyIGxldmVs
+IHNjaGVkIGRvbWFpbiBzaG91bGQgYmUgYSBzdWJzZXQNCj4gb2YgaGlnaGVyDQo+ID4gTGV2ZWwg
+c2NoZWQgZG9tYWluLg0KPiA+DQo+IA0KPiBSaWdodCwgYW5kIHRoYXQgaXMgY2hlY2tlZCB3aGVu
+IHlvdSBoYXZlIHNjaGVkX2RlYnVnIG9uIHRoZSBjbWRsaW5lDQo+IChvciB3cml0ZSAxIHRvIC9z
+eXMva2VybmVsL2RlYnVnL3NjaGVkX2RlYnVnICYgcmVnZW5lcmF0ZSB0aGUgc2NoZWQNCj4gZG9t
+YWlucykNCj4gDQoNCk5vLCBoZXJlIEkgdGhpbmsgeW91IGRvbid0IGdldCBteSBpc3N1ZSwgcGxl
+YXNlIHRyeSB0byB1bmRlcnN0YW5kIG15IGV4YW1wbGUNCkZpcnN0Oi4NCg0KKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKg0KTlVNQTogICAgICAgICAwLTIsICAzLTcNCmNvcmVf
+c2libGluZ3M6ICAgIDAtMywgIDQtNw0KKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKg0KV2hlbiB3ZSBhcmUgYnVpbGRpbmcgdGhlIHNjaGVkIGRvbWFpbiwgcGVyIHRoZSBjdXJy
+ZW50IGNvZGU6DQooMSkgRm9yIGNvcmUgMw0KIE1DIHNjaGVkIGRvbWFpbiBmYWxsYmFja3MgdG8g
+M343DQogRElFIHNjaGVkIGRvbWFpbiBpcyAzfjcNCigyKSBGb3IgY29yZSA0Og0KIE1DIHNjaGVk
+IGRvbWFpbiBpcyA0fjcNCiBESUUgc2NoZWQgZG9tYWluIGlzIDN+Nw0KDQpXaGVuIHdlIGFyZSBi
+dWlsZCBzY2hlZCBncm91cHMgZm9yIHRoZSBNQyBsZXZlbDoNCigxKS4gY29yZTMncyBzY2hlZCBn
+cm91cHMgY2hhaW4gaXMgYnVpbHQgbGlrZSBhczogMy0+NC0+NS0+Ni0+Ny0+MyANCigyKS4gY29y
+ZTQncyBzY2hlZCBncm91cHMgY2hhaW4gaXMgYnVpbHQgbGlrZSBhczogNC0+NS0+Ni0+Ny0+NCAN
+CnNvIGFmdGVyICgyKSwgDQpjb3JlMydzIHNjaGVkIGdyb3VwcyBpcyBvdmVybGFwcGVkLCBhbmQg
+aXQncyBub3QgYSBjaGFpbiBhbnkgbW9yZS4NCkluIHRoZSBhZnRlcndhcmRzIHVzZWNhc2Ugb2Yg
+Y29yZTMncyBzY2hlZCBncm91cHMsIGRlYWRsb29wIGhhcHBlbnMuDQoNCkFuZCBpdCdzIGRpZmZp
+Y3VsdCBmb3IgdGhlIHNjaGVkdWxlciB0byBmaW5kIG91dCBzdWNoIGVycm9ycywNCnRoYXQgaXMg
+d2h5IEkgdGhpbmsgYSB3YXJuaW5nIGlzIG5lY2Vzc2FyeSBoZXJlLg0KDQo+IE5vdywgSSBkb24n
+dCBrbm93IGhvdyB0aGlzIHBsYXlzIG91dCBmb3IgdGhlIG51bWEtaW4tcGFja2FnZSB0b3BvbG9n
+aWVzDQo+IGxpa2UNCj4gdGhlIG9uZSBzdWdnZXN0ZWQgYnkgU3VkZWVwLiB4ODYgYW5kIEFNRCBo
+YWQgdG8gcGxheSBzb21lIGdhbWVzIHRvDQo+IGdldA0KPiBudW1hLWluLXBhY2thZ2UgdG9wb2xv
+Z2llcyB3b3JraW5nLCBzZWUgZS5nLg0KPiANCj4gICBjZWJmMTVlYjA5YTIgKCJ4ODYsIHNjaGVk
+OiBBZGQgbmV3IHRvcG9sb2d5IGZvciBtdWx0aS1OVU1BLW5vZGUNCj4gQ1BVcyIpDQo+IA0KPiBw
+ZXJoYXBzIHlvdSBuZWVkIHRvICJsaWUiIGhlcmUgYW5kIGVuc3VyZSBzdWItTlVNQSBzY2hlZCBk
+b21haW4gbGV2ZWxzDQo+IGFyZQ0KPiBhIHN1YnNldCBvZiB0aGUgTlVNQSBsZXZlbHMsIGkuZS4g
+bGllIGZvciBjb3JlX3NpYmxpbmdzLiBJIG1pZ2h0IGdvIGFuZA0KPiBwbGF5IHdpdGggdGhpcyB0
+byBzZWUgaG93IGl0IGJlaGF2ZXMuDQo=
