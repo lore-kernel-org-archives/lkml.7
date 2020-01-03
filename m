@@ -2,176 +2,149 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40221C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 06:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6938FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 06:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F963222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 06:26:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pX2BgkCo"
+	by mail.kernel.org (Postfix) with ESMTP id 465A0222C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 06:31:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727200AbgACG0x (ORCPT
+        id S1727091AbgACGbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 01:26:53 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39879 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbgACG0w (ORCPT
+        Fri, 3 Jan 2020 01:31:22 -0500
+Received: from s3.sipsolutions.net ([144.76.43.62]:55664 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgACGbW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 01:26:52 -0500
-Received: by mail-lf1-f65.google.com with SMTP id y1so31247086lfb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 22:26:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wOVOz9Gn7KckluVBWiiDt4GgfxybQGuD44AvfO6vHPs=;
-        b=pX2BgkCohlLQQgu5leAMkeALm5KjNCR3F+MpX+JTU6SjGH5ezaAlcC1uTuksZlrG38
-         ZW5tdbCD7gsqeDJbEuLsbO2nrInck7bQuvt7UvAvp5DhGp8QGwvj81ZU11wbbu4TbzCI
-         d9Ygr02C5Ts1pSzAQTRlRH8ko8j+4OKPS0tN9JZVLa4FSGdJWCWzAIQJb5WgNYFPIrE3
-         2FBwwPPcOh5MJpRM4L9EuxHCBT+swwyCr/idtlFT8OyQX5zcX5XexvONuphJzXt1eSMN
-         ZdPN0UqWQWUnYApS8ZwrkOJwKaye+Oxf48oP88qAKrj6tWdMqc5z4lhqlsmR5CtiexeF
-         kqPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wOVOz9Gn7KckluVBWiiDt4GgfxybQGuD44AvfO6vHPs=;
-        b=qZkc6mZI/wLmbIZvba0KQ7rsRRTmNkO+Ho1f+wpFzLii8nKkhDAEPNzjrxHWK8P0kY
-         FXLgLJwWC2WxY3zj2ekPJnmr9OTBXBcecMtAJr0eJ94dlou1BXazu/T9NDTWmeylnMff
-         LallWyoKetNZSqFyxM8eOWNaGOmnvijTQkvQ4SRW5Hqm0V3dS8Ckzpe6m3xp0VuOHTHk
-         GLvZd2eIIyNVSwN1rAhANVOZiTwWbzdvo0eHlAIir4y0yt+MfHHSSN8q5atwIejvtlS0
-         68kOuSfTytITkMm6iw9ss5PrnDlEEh8H+7Mm/Is47388OacgcqesLBA+HYSyepgsKabL
-         DJhg==
-X-Gm-Message-State: APjAAAWKBEOjJoKl/eYYVD9zJeJEqaHEzfvrSGYXHbedbkmwSe9dzvX4
-        jIQFvgyF2MKB7PWZbEdcC5L6CQaqQ7fD9EfwjbvZzQ==
-X-Google-Smtp-Source: APXvYqzbX2/87WU2jLhQhucIBj3UeYqsr9LagZnqGQqt+tk8FgiLzZyvAfmKTwT4etIm8ZeYLSV3KD/cCgPj9+ymLys=
-X-Received: by 2002:a19:8a06:: with SMTP id m6mr46200766lfd.99.1578032810731;
- Thu, 02 Jan 2020 22:26:50 -0800 (PST)
-MIME-Version: 1.0
-References: <20200102220546.960200039@linuxfoundation.org>
-In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 3 Jan 2020 11:56:39 +0530
-Message-ID: <CA+G9fYuVZuVqohqgvNyrXYt6__hesvNqp5Q9cuHX6_22opnRAw@mail.gmail.com>
-Subject: Re: [PATCH 4.9 000/171] 4.9.208-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
+        Fri, 3 Jan 2020 01:31:22 -0500
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.92.3)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1inGUM-007Xa9-Ba; Fri, 03 Jan 2020 07:31:14 +0100
+Message-ID: <4abacaad51ce3c7d0b867472605a366dc9ae7994.camel@sipsolutions.net>
+Subject: Re: PROBLEM: Wireless networking goes down on Acer C720P Chromebook
+ (bisected)
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Stephen Oberholtzer <stevie@qrpff.net>
+Cc:     toke@redhat.com, "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 03 Jan 2020 07:31:13 +0100
+In-Reply-To: <CAD_xR9eh=CAYeQZ3Vp9Yj9h3ifMu2exy0ihaXyE+736tJrPVLA@mail.gmail.com>
+References: <CAD_xR9eDL+9jzjYxPXJjS7U58ypCPWHYzrk0C3_vt-w26FZeAQ@mail.gmail.com>
+         <1762437703fd150bb535ee488c78c830f107a531.camel@sipsolutions.net>
+         <CAD_xR9eh=CAYeQZ3Vp9Yj9h3ifMu2exy0ihaXyE+736tJrPVLA@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Jan 2020 at 03:57, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.9.208 release.
-> There are 171 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 04 Jan 2020 22:02:15 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.9.208-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.9.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
-
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.9.208-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.9.y
-git commit: ea0b96c2917ea73aa7b141bc3b5be3b157aea5c7
-git describe: v4.9.207-172-gea0b96c2917e
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
-ld/v4.9.207-172-gea0b96c2917e
+Hi Stephen,
 
 
-No regressions (compared to build v4.9.207)
+> To answer your immediate question, no, I don't get any dmesg output at
+> all. Nothing about underruns.
 
-No fixes (compared to build v4.9.207)
+OK.
 
-Ran 21320 total tests in the following environments and test suites.
+> However, while pursuing other avenues -- specifically, enabling
+> mac80211 debugfs and log messages -- I realized that my 'master' was
+> out-of-date from linux-stable and did a git pull.  Imagine my surprise
+> when the resulting kernel did not exhibit the problem!
+> 
+> Apparently, I had been a bit too pessimistic; since the problem
+> existed in 5.5-rc1 release, I'd assumed that the problem wouldn't get
+> rectified before 5.5.
+> 
+> However, I decided to bisect the fix, and ended up with: 911bde0f
+> ("mac80211: Turn AQL into an NL80211_EXT_FEATURE"), which appears to
+> have "solved" the problem by just disabling the feature (this is
+> ath9k, by the way.)
 
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
+Oh. I didn't pay attention and thought you actually had ath10k, not
+ath9k!
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* perf
-* ltp-cve-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* prep-tmp-disk
+> This AQL stuff sounds pretty nifty, and I'd love to try my hand at
+> making it work for ath9k (also, since I put so much effort into an
+> automated build-and-test framework, it'd be a shame to just abandon
+> it.)
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+:-)
+
+> However, the ath9k code is rather lacking for comments, so I
+> don't even know where I should start, except for (I suspect) a call to
+> `wiphy_ext_feature_set(whatever, NL80211_EXT_FEATURE_AQL);` from
+> inside ath9k_set_hw_capab()?
+
+Honestly, I don't know, you'd probably have to wait for Toke to be back
+from vacations to get a pointer on what could be done here.
+
+> In the meantime, I went back to e548f749b096 -- the commit prior to
+> the one making AQL support opt-in -- and cranked up the debugging.
+> 
+> I'm not sure how to interpret any of this, but  here's what I got:
+> 
+> dmesg output:
+> 
+> Last relevant mention is "moving STA <my AP's MAC> to state 4" which
+> happened during startup, before everything shut down.
+
+That just means the STA was set to authorized (state 4) due to the 4-
+way-handshake completing, nothing more.
+
+> /sys/kernel/debug/ieee80211/phy0
+> 
+> airtime_flags = 7
+> 
+> stations/<my AP's MAC>/airtime =
+> 
+> RX: 6583578 us
+> TX: 32719 us
+> Weight: 256
+> Deficit: VO: -1128 us VI: 11 us BE: -5098636 us BK: 256 us
+> Q depth: VO: 3868 us VI: 3636 us BE: 12284 us BK: 0 us
+> Q limit[low/high]: VO: 5000/12000 VI: 5000/12000 BE: 5000/12000 BK: 5000/12000
+> 
+> (I have no idea how to interpret this, but that '32719 us' seems odd,
+> I thought the airtime usage was in 4us units?)
+
+Me neither, off the top of my head, let's wait for Toke.
+
+> Doing an 'echo 3 | tee airtime_flags' to clear the (old) AQL-enabled
+> bit seemed to *immediately* restore network connectivity.
+
+Hmm. That probably means it was blocked on AQL and not some kind of soft
+"didn't know I had to transmit" type scenario that the comment in the
+commit log you quoted would have implied (if it was actually wrong).
+
+> I ran a ping, and saw this:
+> 
+> - pings coming back in <5ms
+> - re-enable AQL (echo 7 | tee airtime_flags)
+> - pings stop coming back immediately
+> - some seconds later, disable AQL again (echo 3 | tee airtime_flags)
+> - immediate *flood* of ping replies registered, with times 16000ms,
+> 15000ms, 14000ms, .. down to 1000ms, 15ms, then stabilizing sub-5ms
+> - According to the icmp_seq values, all 28 requests were replied to,
+> and their replies were delivered in-order
+> 
+> This certainly looks like a missing TX queue restart to me?
+
+I don't think it does. If it was just a missing TX queue restart then
+changing the AQL bit shouldn't have had any effect, since changing the
+flags via debugfs doesn't trigger a TX queue restart.
+
+Rather, it seems to me that this implies some accounting went wrong, and
+doing this clears/recovers that?
+
+But I guess Toke will have a much better idea from the debug data above.
+
+johannes
+
