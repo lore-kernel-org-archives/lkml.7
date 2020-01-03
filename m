@@ -2,99 +2,94 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDD5C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 968B6C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 20:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 851C321835
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6505421835
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 20:01:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Coe0w+pa"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="eBdvlKXe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbgACT6V (ORCPT
+        id S1728651AbgACUBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 14:58:21 -0500
-Received: from mail-ed1-f54.google.com ([209.85.208.54]:35732 "EHLO
-        mail-ed1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728488AbgACT6U (ORCPT
+        Fri, 3 Jan 2020 15:01:07 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33691 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728606AbgACUBH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 14:58:20 -0500
-Received: by mail-ed1-f54.google.com with SMTP id f8so42536959edv.2;
-        Fri, 03 Jan 2020 11:58:19 -0800 (PST)
+        Fri, 3 Jan 2020 15:01:07 -0500
+Received: by mail-qk1-f196.google.com with SMTP id d71so26839226qkc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 12:01:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lElfBd/8jigO1KSCmDplgs5SeL89T17ANPHJDCQ3IOA=;
-        b=Coe0w+paNOOQSNE3/OF7/NyZkbuDuTiyGJaCeDoUv+GeyzNQPhIm58cgy9bk+qZHj1
-         oCnaRvLbS8kQ8y11xuOpVuaRY1+GBhFZ/cbtR3/VoLOh2Crv53tN7lc2yPjkWM3htBs4
-         3sf4oPhGAsdw37jeFw0b1YHfxilF8wK2I/0ZFqA7ZH3lz2VBVtYolZGnGJU3OoRmqP8o
-         4g5tpxdV5+amASC8oDIvLB8BPaIXsTEsUG0yZj2es4AUz5Xyo1qDHG+HUBFaeQPJoae5
-         9K83e5zWYJAbiWkX3DbbmmTWKiFznYDlfF6zx8MnrIBPXPeKM2j8Rx3PPX6SGihtBApN
-         E1XQ==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=A56UC0w5GLRc6XImLwZB7Svehfi5E2iCOac3oz+4egQ=;
+        b=eBdvlKXe8GaxBJQX/G4csG9ZdMY/64O11qqgYWNPuXh3wqho3raAuCgAh9kCCpq2g0
+         7j1XotvkfcxEohD0N3dqehlZ7GBmRa5J2WHyXuQPLd/7qbTYFOfRh49L55jzFOZwQAZy
+         u62PGHppFudekxHvPtLgod9F8bBDIdEYROW8v2Fz+m+L+1apm8mxHTFAtMNAlC0vviGq
+         7KFS3sLs4L4ecxsPnRWuSDXoKxWMrG+7KtPj/KTeZAfhuuFGPrvRSx+6Ni0Ysyu2AlEL
+         BxkTHeozSqVxc0BcN3QhTWWpX/t7SbKWWemF7EHdAXhLokexWY55HBeytvQPG3oTwOp5
+         xlKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lElfBd/8jigO1KSCmDplgs5SeL89T17ANPHJDCQ3IOA=;
-        b=DqWiMhyEIfK/rHIge+DcpJUG6Gdxo4ypnrwesio+4ZG+cmj2Lr4nWlAOvrKJBCmG7p
-         LtDQSenkcEGUeasujg63kL67I9n1Fok2Dux08W3szuL0NsmUBr3iiYWdI5ClkIqGZ9+Q
-         5q0ClU2v3Ji3WFknX2ZdRrnvQag14tf0+xpXdWZuc/TYWQnR/xIaqA2CEnfTtbn8T0az
-         RWbn/i8OeprCi3755duP7EFcbk6eDJxVKRmJToYZodICBAzuKhmm93tuZQ99d6aVAmiW
-         TMTph+f4i6i4K5QOa/Zmn40lV9uR1tV4A8nIIuxUA1+WEysu9s4qmieLQH91Fagb/MNf
-         9DCg==
-X-Gm-Message-State: APjAAAXPpLg9/9PXmRWGI9yq324Cgcr0iwR0aG0swCyh/O3nxT7wsGtw
-        minEIkCyghcCqdoiuaWeEKN9hPLK2AiKND1geUk=
-X-Google-Smtp-Source: APXvYqyugADp3hO7h03oK2DaaWliYETiOggFR6uHjCw4XYSOsGVANeWDg8mecDKvovZmnz2SYVwWs6I2LeUmZU+WXP0=
-X-Received: by 2002:aa7:da03:: with SMTP id r3mr94729576eds.163.1578081498516;
- Fri, 03 Jan 2020 11:58:18 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=A56UC0w5GLRc6XImLwZB7Svehfi5E2iCOac3oz+4egQ=;
+        b=f+qk45XVuqfk36ILM+jK0Bueeb3ucTBWqKo03YzAkIZl7fa4G3dmmLuAyyjMCWacgh
+         MIsVN9Pqlm1GtRqKSSMN9o++HBgZtoNKrhdj7+ueWm4HOdhdWI6B0HXabw4iKT2aUQvX
+         FMT6kPacmaTy8qwUFC+VmYjXmEZtAxJQYm7V+ed0rnq0tdB6nmB0XFsN8M7ZrvW5pZJ9
+         qZ/eptLEKrDnCPa2uwqkdzrbWG1HFQukG+R4WqpZA16OWVQUvmzDJZrDn/CzBy3lLK7G
+         GCtQ+/d22VygEkyhKiMm6LUaIizPt5Ivl/RTI9p/YC5pSkEHuECCBG8Lud9zQO3b+jT3
+         siyg==
+X-Gm-Message-State: APjAAAXxUJbvxiIhyb/s/gA8WIaJRE3M5S8nQs9D4bE6lebBry0OS602
+        hveAsRK3wn4Bwtan0x95O1YiLw==
+X-Google-Smtp-Source: APXvYqypm/JpMqcucNPfB12FjbVXHsbFsRwkB1xsS4u8ZlUIlgCQmEPJNMow8LKqUpKg1OdwMcnMmg==
+X-Received: by 2002:a37:6545:: with SMTP id z66mr75273804qkb.367.1578081666057;
+        Fri, 03 Jan 2020 12:01:06 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id p19sm19280745qte.81.2020.01.03.12.01.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 Jan 2020 12:01:05 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1inT85-0000kn-4l; Fri, 03 Jan 2020 16:01:05 -0400
+Date:   Fri, 3 Jan 2020 16:01:05 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Prabhath Sajeepa <psajeepa@purestorage.com>
+Cc:     leon@kernel.org, dledford@redhat.com, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, roland@purestorage.com
+Subject: Re: [PATCH] IB/mlx5: Fix outstanding_pi index for GSI qps
+Message-ID: <20200103200105.GA2761@ziepe.ca>
+References: <1576195889-23527-1-git-send-email-psajeepa@purestorage.com>
 MIME-Version: 1.0
-References: <20200103183025.569201-1-robdclark@gmail.com> <20200103183025.569201-2-robdclark@gmail.com>
- <20200103193135.GA21515@ravnborg.org> <CAF6AEGtdFA7XzSq3w3N6_TRLWQY+zumU2mahbsPY=pc0r_x6fw@mail.gmail.com>
- <20200103195406.GA22623@ravnborg.org>
-In-Reply-To: <20200103195406.GA22623@ravnborg.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Fri, 3 Jan 2020 11:58:07 -0800
-Message-ID: <CAF6AEGvCNK8fQW3JvXk63ecpTU7Q-ixf4yJsYQyxwiV-4SUf0Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drm/panel: Add support for AUO B116XAK01 panel
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576195889-23527-1-git-send-email-psajeepa@purestorage.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 3, 2020 at 11:54 AM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Rob.
->
-> > > Please fix and resend.
-> > >
-> > > I am in general holding back on patches to panel-simple.
-> > > I hope we can reach a decision for the way forward with the bindings
-> > > files sometimes next week.
-> >
-> > I've fixed the sort-order and the couple things you've pointed out in
-> > the bindings.  Not sure if you want me to resend immediately or
-> > hang-tight until the bindings discussion is resolved?
-> Could we give it until Wednesday - if we do not resolve the
-> binding discussion I will process panel patches in the weekend or maybe
-> a day before.
+On Thu, Dec 12, 2019 at 05:11:29PM -0700, Prabhath Sajeepa wrote:
+> b0ffeb537f3a changed the way how outstanding WRs are tracked for GSI QP. But the
+> fix did not cover the case when a call to ib_post_send fails and index
+> to track outstanding WRs need to be updated correctly.
+> 
+> Fixes: b0ffeb537f3a ('IB/mlx5: Fix iteration overrun in GSI qps ')
+> Signed-off-by: Prabhath Sajeepa <psajeepa@purestorage.com>
+> Acked-by: Leon Romanovsky <leonro@mellanox.com>
+> ---
+>  drivers/infiniband/hw/mlx5/gsi.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 
+Applied to for-next with an updated commit message.
 
-sounds good
-
-BR,
--R
+Thanks,
+Jason
