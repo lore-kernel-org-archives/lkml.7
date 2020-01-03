@@ -2,106 +2,140 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B81FC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8708C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5E30215A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:08:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="DQ3+qIP1"
+	by mail.kernel.org (Postfix) with ESMTP id B7F7524699
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:08:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgACPIK (ORCPT
+        id S1728030AbgACPIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 10:08:10 -0500
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:28273 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727701AbgACPIE (ORCPT
+        Fri, 3 Jan 2020 10:08:31 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41842 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727786AbgACPI3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 10:08:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1578064084; x=1609600084;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=4sqTgTN+u6x0cMWwPxL9+fdn8jhOiyRZfXoDVoHTe7Q=;
-  b=DQ3+qIP1M75gapuwNM3ThdLG0tng8bAt7LT1AhnFBlmyVo9XJsqeRMh+
-   pJaQ1P0hp87PVaW+F/GJPs8cpgjdtnMIa+3zPtRJeJjpr2daYungaqy90
-   WZZ+xY2HeJ3qrkgCWxfNcMkgCCBcX+QJ+q0ZC0NGSliMpMlNYi/UI1FBo
-   U=;
-IronPort-SDR: vKEXyCsVAAGBvB15UoH4WLyjHsp29/C13vcFVXRdggYw9zMoCecdzC/wyAVP6B2n+SHy8eF6v4
- gzHRlF1vWvkA==
-X-IronPort-AV: E=Sophos;i="5.69,390,1571702400"; 
-   d="scan'208";a="16652117"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 03 Jan 2020 15:07:41 +0000
-Received: from u7588a65da6b65f.ant.amazon.com (pdx2-ws-svc-lb17-vlan3.amazon.com [10.247.140.70])
-        by email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com (Postfix) with ESMTPS id E0760A18E5;
-        Fri,  3 Jan 2020 15:07:39 +0000 (UTC)
-Received: from u7588a65da6b65f.ant.amazon.com (localhost [127.0.0.1])
-        by u7588a65da6b65f.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTPS id 003F7cMf020481
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 3 Jan 2020 16:07:38 +0100
-Received: (from jschoenh@localhost)
-        by u7588a65da6b65f.ant.amazon.com (8.15.2/8.15.2/Submit) id 003F7ckP020480;
-        Fri, 3 Jan 2020 16:07:38 +0100
-From:   =?UTF-8?q?Jan=20H=2E=20Sch=C3=B6nherr?= <jschoenh@amazon.de>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     =?UTF-8?q?Jan=20H=2E=20Sch=C3=B6nherr?= <jschoenh@amazon.de>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Subject: [PATCH v2 5/6] x86/mce: Do not take action on SRAO/Deferred errors on AMD for now
-Date:   Fri,  3 Jan 2020 16:07:21 +0100
-Message-Id: <20200103150722.20313-6-jschoenh@amazon.de>
-X-Mailer: git-send-email 2.22.0.3.gb49bb57c8208.dirty
-In-Reply-To: <20200103150722.20313-1-jschoenh@amazon.de>
-References: <20200103150722.20313-1-jschoenh@amazon.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Fri, 3 Jan 2020 10:08:29 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 003F5IlY042234
+        for <linux-kernel@vger.kernel.org>; Fri, 3 Jan 2020 10:08:28 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2x9y3nx1sg-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 10:08:28 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 3 Jan 2020 15:08:26 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 3 Jan 2020 15:08:21 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 003F8LgI36700630
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Jan 2020 15:08:21 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EA203A4040;
+        Fri,  3 Jan 2020 15:08:20 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8DA9EA4053;
+        Fri,  3 Jan 2020 15:08:19 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.213.69])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  3 Jan 2020 15:08:19 +0000 (GMT)
+Subject: Re: [PATCH v6 0/3] IMA: Deferred measurement of keys
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        James.Bottomley@HansenPartnership.com,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Date:   Fri, 03 Jan 2020 10:08:19 -0500
+In-Reply-To: <20200103055608.22491-1-nramas@linux.microsoft.com>
+References: <20200103055608.22491-1-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20010315-0020-0000-0000-0000039D9086
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20010315-0021-0000-0000-000021F4E294
+Message-Id: <1578064099.5874.170.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-03_04:2020-01-02,2020-01-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ mlxlogscore=999 malwarescore=0 bulkscore=0 phishscore=0 impostorscore=0
+ suspectscore=0 spamscore=0 mlxscore=0 priorityscore=1501
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001030141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Per Yazen Ghannam we should not use the UC notifier for the time
-being on AMD.
+Hi Lakshmi,
 
-Reported-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Signed-off-by: Jan H. Schönherr <jschoenh@amazon.de>
----
-New in v2. This is due to a remark from Yazen on v1, that we shouldn't
-be handling neither SRAO nor Deferred errors in that handler.
+Instead of loosing the cover letter, Jonathan Corbet suggested
+including it as the merge comment.  I'd like to do that with this
+cover letter.
 
-An alternative implementation would do the architecture "if" directly
-within uc_decode_notifier(), in which case we could decide to not apply
-patch 4.
----
- arch/x86/kernel/cpu/mce/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Thu, 2020-01-02 at 21:56 -0800, Lakshmi Ramasubramanian wrote:
+> This patchset extends the previous version[1] by adding support for
+> deferred processing of keys.
+> 
+> With the patchset referenced above, the IMA subsystem supports
+> measuring asymmetric keys when the key is created or updated.
 
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index d48deb127071..d8fe5b048ee7 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -1970,7 +1970,8 @@ int __init mcheck_init(void)
- {
- 	mcheck_intel_therm_init();
- 	mce_register_decode_chain_internal(&first_nb);
--	mce_register_decode_chain_internal(&mce_uc_nb);
-+	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD)
-+		mce_register_decode_chain_internal(&mce_uc_nb);
- 	mce_register_decode_chain_internal(&mce_default_nb);
- 	mcheck_vendor_init_severity();
- 
--- 
-2.22.0.3.gb49bb57c8208.dirty
+The first sentence and the clause of the next sentence are
+unnecessary.  I would begin the cover letter with "The IMA subsystem
+supports" and add the reference afterwards.
+
+> But keys created or updated before a custom IMA policy is loaded
+> are currently not measured. This includes keys added to, for instance,
+> .builtin_trusted_keys which happens early in the boot process.
+
+Let's not limit the example to just the .builtin_trusted_keys keyring.
+ Please update it as:
+
+This includes keys added, for instance, to either the .ima or
+.builtin_trusted_keys keyrings, which happens early in the boot
+process.
+
+> 
+> This change adds support for queuing keys created or updated before
+> a custom IMA policy is loaded. The queued keys are processed when
+> a custom policy is loaded. Keys created or updated after a custom policy
+> is loaded are measured immediately (not queued).
+> 
+> If the kernel is built with both CONFIG_IMA and
+> CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE enabled then the IMA policy
+> must be applied as a custom policy for the keys to be measured.
+> If a custom IMA policy is not provided within 5 minutes after
+> IMA is initialized, any queued keys will be freed.
+
+As the merge message, this is too much information.  I would extend
+the previous paragraph and drop this one, like:
+"... (not queued).  In the case when a custom policy is not loaded
+within 5 minutes of IMA initialization, the queued keys are freed."
+
+> This is by design.
+
+It's unclear what "is by design" refers to.  Perhaps expand this
+sentence like: "Measuring the early boot keys, by design, requires
+loading a custom policy.
+
+> 
+> [1] https://lore.kernel.org/linux-integrity/20191211164707.4698-1-nramas@linux.microsoft.com/
+
+thanks,
+
+Mimi
 
