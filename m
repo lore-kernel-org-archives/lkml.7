@@ -2,76 +2,119 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 276F6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 10:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D19A5C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 10:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F130C21D7D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 10:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4DB7206DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 10:06:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b+NrfTvw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbgACKCf (ORCPT
+        id S1727479AbgACKGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 05:02:35 -0500
-Received: from relay12.mail.gandi.net ([217.70.178.232]:55947 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgACKCf (ORCPT
+        Fri, 3 Jan 2020 05:06:38 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42723 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725972AbgACKGi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 05:02:35 -0500
-Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 0AC84200004;
-        Fri,  3 Jan 2020 10:02:32 +0000 (UTC)
-Date:   Fri, 3 Jan 2020 11:02:32 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc:     J William Piggott <elseifthen@gmx.com>,
-        Karel Zak <kzak@redhat.com>, util-linux@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-rtc@vger.kernel.org
-Subject: Re: [bugreport] "hwclock -w" reset time instead of setting the right
- time
-Message-ID: <20200103100232.GH3040@piout.net>
-References: <CABXGCsODr3tMpQxJ_nhWQQg5WGakFt4Yu5B8ev6ErOkc+zv9kA@mail.gmail.com>
- <20200101141748.GA191637@mit.edu>
- <CABXGCsOv26W6aqB5WPMe-mEynmwy55DTfTeL5Dg9vRq6+Y6WvA@mail.gmail.com>
- <CABXGCsNkzPrjqMRaWpssorxzhMLWBvLeSw9BpKYr_DW4LJQECQ@mail.gmail.com>
- <20200102110817.ahqaqidw3ztw3kax@10.255.255.10>
- <CABXGCsNkm3VuzO60WBCi4VJmDnO=DmprQ1P=dd0FcW2-+dGc0w@mail.gmail.com>
- <20200102131434.tky2hquki23laqqo@10.255.255.10>
- <CABXGCsMV1GRiqrXCQGHqvpBiendU3mG36h0YoG=4nw6spZHq=w@mail.gmail.com>
- <nycvar.YAK.7.76.2001021153220.1385@zhn.tzk.pbz>
- <CABXGCsMLfarquWnzV=e3Ta_HPac+DALfKEOaD3rp5n9MPqgyFw@mail.gmail.com>
+        Fri, 3 Jan 2020 05:06:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578045997;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZgNCvHnH6fEsEKaBVmrvYkgbCQvWwHoRKudXkBxEyBQ=;
+        b=b+NrfTvwAWzv+hJ8CVUkVPAcq7k5y5LCQEfzvfMBe9Je9hw0kV+3Oj5deMhcOAoUW1TMV4
+        nfMQnR2uYvT3iAsBh4xPKZR1cQj++RXp8y5kvBa3Romqc4y6AhJ5L9bl5eh4tbTC4z3Nrx
+        2I2IsL5FX58sze/XpBmNGQLst96YLqE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-312-GF823iyCOMSqBMIrpUoZrg-1; Fri, 03 Jan 2020 05:06:34 -0500
+X-MC-Unique: GF823iyCOMSqBMIrpUoZrg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E4691800EB8;
+        Fri,  3 Jan 2020 10:06:32 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 2D89E60BF7;
+        Fri,  3 Jan 2020 10:06:31 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri,  3 Jan 2020 11:06:31 +0100 (CET)
+Date:   Fri, 3 Jan 2020 11:06:28 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     akpm@linux-foundation.org
+Cc:     arnd@arndb.de, christian.brauner@ubuntu.com,
+        deepa.kernel@gmail.com, ebiederm@xmission.com, guro@fb.com,
+        linux-kernel@vger.kernel.org, trix@redhat.com
+Subject: Re: + signal-move-print_dropped_signal.patch added to -mm tree
+Message-ID: <20200103100628.GA16577@redhat.com>
+References: <20200102215029.PWaCMXI_O%akpm@linux-foundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CABXGCsMLfarquWnzV=e3Ta_HPac+DALfKEOaD3rp5n9MPqgyFw@mail.gmail.com>
+In-Reply-To: <20200102215029.PWaCMXI_O%akpm@linux-foundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+> From: Tom Rix <trix@redhat.com>
+> Subject: kernel/signal.c: move print_dropped_signal
+>
+> If the allocation of 'q' fails, the signal will be dropped.
 
-On 02/01/2020 22:17:26+0500, Mikhail Gavrilov wrote:
-> On Thu, 2 Jan 2020 at 21:59, J William Piggott <elseifthen@gmx.com> wrote:
-> >
-> > You've demonstrated that 'hwclock -w' does not 'reset' the RTC.
-> >
-> > Does your new motherboard use a battery backup for the RTC?
-> > Is the battery good?
-> >
+Well, not necessarily... See the comment above TRACE_SIGNAL_LOSE_INFO
+in __send_signal().
+
+> To ensure
+> that this is reported, move print_dropped_signal to be inside the '(q ==
+> NULL)' if-check.
+
+OK, but print_dropped_signal() says "reached RLIMIT_SIGPENDING", this
+is misleading if kmem_cache_alloc() fails.
+
+> Link: http://lkml.kernel.org/r/20191203180221.7038-1-trix@redhat.com
+> Signed-off-by: Tom Rix <trix@redhat.com>
+> Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+> Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+> Cc: Christian Brauner <christian.brauner@ubuntu.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Roman Gushchin <guro@fb.com>
+> Cc: Deepa Dinamani <deepa.kernel@gmail.com>
+> Cc: Oleg Nesterov <oleg@redhat.com>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> ---
 > 
-> If you look carefully demonstration the RTC 'reset' happens after
-> reboot __only__ when 'hwclock -w' have been entered before reboot.
-> So if I reboot the computer without 'hwclock -w' the RTC will be not reset.
+>  kernel/signal.c |    3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> --- a/kernel/signal.c~signal-move-print_dropped_signal
+> +++ a/kernel/signal.c
+> @@ -427,11 +427,10 @@ __sigqueue_alloc(int sig, struct task_st
+>  	    atomic_read(&user->sigpending) <=
+>  			task_rlimit(t, RLIMIT_SIGPENDING)) {
+>  		q = kmem_cache_alloc(sigqueue_cachep, flags);
+> -	} else {
+> -		print_dropped_signal(sig);
+>  	}
+>  
+>  	if (unlikely(q == NULL)) {
+> +		print_dropped_signal(sig);
+>  		atomic_dec(&user->sigpending);
+>  		free_uid(user);
+>  	} else {
+> _
+> 
+> Patches currently in -mm which might be from trix@redhat.com are
+> 
+> signal-move-print_dropped_signal.patch
 > 
 
-What is your kernel version?
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
