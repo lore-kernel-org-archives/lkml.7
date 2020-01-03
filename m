@@ -2,150 +2,96 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F23C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 718BAC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C21121734
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:25:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41DC221734
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:26:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="AVBQvJs4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgACQZn convert rfc822-to-8bit (ORCPT
+        id S1727993AbgACQ0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 11:25:43 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:36105 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727912AbgACQZm (ORCPT
+        Fri, 3 Jan 2020 11:26:37 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38242 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727793AbgACQ0h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 11:25:42 -0500
-Received: from mail-pl1-f197.google.com ([209.85.214.197])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1inPlc-00021n-5f
-        for linux-kernel@vger.kernel.org; Fri, 03 Jan 2020 16:25:40 +0000
-Received: by mail-pl1-f197.google.com with SMTP id a2so10479544plm.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 08:25:40 -0800 (PST)
+        Fri, 3 Jan 2020 11:26:37 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y17so42978799wrh.5
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 08:26:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KuPXHvUieOmI5Quzb1wPB6cX8GScS9645pKcrDEMVR0=;
+        b=AVBQvJs49csGx2cdaeh5gmzw6Urii3kTtSyLmvLNi8gpVnaPQrbqs0ZY45KCIz6EC/
+         C7RTEpgo77kCamXGyms333DcRTTHK0t3d+FkSC7lRW6R2yAo1bU+VYVYQrh15JxLZjFJ
+         MuToaslvZw7Jtf2t/LLiH67L5GSUT2SzX2v4oFRtpk8hx4kmcAbZD1tjzOYwWDFbsl/U
+         gSzTD7KiTKWxXbY5zWGhMcZhVoTHrTagHR4uj58CrjbwmtXM5qH42ph2GDpaL1aGFo2A
+         8zXyJlNuNISbDnnP4yeBhSHj5p0ap31ktsXFF4udaFwBhIzhi9C+ydlsrhVJuMispf9J
+         iKCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Fy+eTIrLJtig9Xio3xZc26BukFgrnKTWNzBm9Oqoh28=;
-        b=iroHhN3U1f0VCvRVav98bPw1Q+d2oi14g9tAYCv3U5uptO+QdgwtLT0Xnz07H1SMa5
-         q6t5UVvx7MchLQaAR15Z9PcT4OwXJqAvwB23nHVxQ4VwEw1qBEi1S7U0VfWJ5LQRfeYk
-         t6Pqd4mW4YixjpEg1GlBGZrv8ZTTBLGSXLnxAhTrqM8jvK7+KE47+wa2dDjkO79Bd/YP
-         NqC/iUskAx1ueHA7x+Jdqum2xOuleO7qrZgFZRnxUNblc8Q7kW/ZIGtdDs54KDEZfMxs
-         2bof3i0Q5ohNLux3WccZ5UQICqj/x3onFGpaOB5T46133rg7BJv13+k6MwZ8sZGr2pdd
-         mnJA==
-X-Gm-Message-State: APjAAAVct3PXQ3lCgy8mbFtW4pjbq5aelfiYxnw+70u95fuJwfJETo9J
-        Sue/y7OLZj1fWR4o7gECQFvGnu9ytsGhjbi4baJEpsLSXox1BCoM1RM15dRm3pIugoqkKqFZNjF
-        zelwFtYrvdStKZeIyUXsqlWvKuiJPu4S7M0k8xBwOhw==
-X-Received: by 2002:a17:90a:1696:: with SMTP id o22mr27651529pja.78.1578068738235;
-        Fri, 03 Jan 2020 08:25:38 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwjdLrvwcdvl2Uij0GtL60kvT1W8Bh7k1xN83HTvNDc7yvwagNvoYL4y/Aob0pe2g9VAkM/CA==
-X-Received: by 2002:a17:90a:1696:: with SMTP id o22mr27651495pja.78.1578068737938;
-        Fri, 03 Jan 2020 08:25:37 -0800 (PST)
-Received: from 2001-b011-380f-35a3-58a8-ce0f-e12f-6096.dynamic-ip6.hinet.net (2001-b011-380f-35a3-58a8-ce0f-e12f-6096.dynamic-ip6.hinet.net. [2001:b011:380f:35a3:58a8:ce0f:e12f:6096])
-        by smtp.gmail.com with ESMTPSA id l8sm15254146pjy.24.2020.01.03.08.25.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 Jan 2020 08:25:37 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: [PATCH 3/3] USB: Disable LPM on WD19's Realtek Hub during setting
- its ports to U0
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <Pine.LNX.4.44L0.2001031018290.1560-100000@iolanthe.rowland.org>
-Date:   Sat, 4 Jan 2020 00:25:34 +0800
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        gregkh@linuxfoundation.org, acelan.kao@canonical.com,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <B3E0C8C0-3E45-42B3-86D9-E34D669E1F4A@canonical.com>
-References: <Pine.LNX.4.44L0.2001031018290.1560-100000@iolanthe.rowland.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KuPXHvUieOmI5Quzb1wPB6cX8GScS9645pKcrDEMVR0=;
+        b=aIjFMHYUy+GE0jojTekBWOrXVanJfgAE+VBzKM01gb1zfQ1LcJhX0+Jr95rHs0W4cm
+         GokfqKCYfJhJCr99moEKfqAcv9iMHmKBcwRGviI8chBOluzGFSejuWqGeXvxhJbLl0ot
+         RyQRdq740mGFc9R7jLGj1r2jYXrUI3jXtqHH6PDPtFAMMJWH72ZEshuYodwah7FEnOsA
+         HuqdtXYlYPN5JLPGT3Z6xnf4RgbMBpYiQwIohi7fKuGzpktRle/GKaoutTVQxzX9+RHn
+         ScnqhjDA7EQLZLPsItaumF5v4vjDBVkgB6dREsG54lEITaHHESJPDtU1TLzw4qlRRm0W
+         zyZA==
+X-Gm-Message-State: APjAAAWPtm7aPQcCtuuXx4DRxsXO2A+COjiNkyunoHtM8+wRTPgRiXlL
+        c8oA8LkCZvi3m62YgV2P1MFFnA==
+X-Google-Smtp-Source: APXvYqywRWOLXJTVexW1vEFrIxddF8NF9xPYtArFe6KifUVJASSItqf4NTiWw0Ldz6UjN1VmdQKlBQ==
+X-Received: by 2002:adf:ea8a:: with SMTP id s10mr86888598wrm.278.1578068795065;
+        Fri, 03 Jan 2020 08:26:35 -0800 (PST)
+Received: from radium.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id x14sm12564234wmj.42.2020.01.03.08.26.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2020 08:26:34 -0800 (PST)
+From:   Fabien Parent <fparent@baylibre.com>
+To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        matthias.bgg@gmail.com, Fabien Parent <fparent@baylibre.com>
+Subject: [PATCH 1/2] dt-bindings: iommu: Add binding for MediaTek MT8167 IOMMU
+Date:   Fri,  3 Jan 2020 17:26:31 +0100
+Message-Id: <20200103162632.109553-1-fparent@baylibre.com>
+X-Mailer: git-send-email 2.25.0.rc0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alan,
+This commit adds IOMMU binding documentation for the MT8167 SoC.
 
-> On Jan 3, 2020, at 23:21, Alan Stern <stern@rowland.harvard.edu> wrote:
-> 
-> On Fri, 3 Jan 2020, Kai-Heng Feng wrote:
-> 
->> Realtek Hub (0bda:0x0487) used in Dell Dock WD19 sometimes drops off the
->> bus when bringing underlying ports from U3 to U0.
->> 
->> After some expirements and guessworks, the hub itself needs to be U0
->> during setting its port's link state back to U0.
->> 
->> So add a new quirk to let the hub disables LPM on setting U0 for its
->> downstream facing ports.
->> 
->> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->> ---
->> drivers/usb/core/hub.c     | 12 ++++++++++--
->> drivers/usb/core/quirks.c  |  7 +++++++
->> include/linux/usb/quirks.h |  3 +++
->> 3 files changed, 20 insertions(+), 2 deletions(-)
->> 
->> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
->> index f229ad6952c0..35a035781c5a 100644
->> --- a/drivers/usb/core/hub.c
->> +++ b/drivers/usb/core/hub.c
->> @@ -3533,9 +3533,17 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
->> 	}
->> 
->> 	/* see 7.1.7.7; affects power usage, but not budgeting */
->> -	if (hub_is_superspeed(hub->hdev))
->> +	if (hub_is_superspeed(hub->hdev)) {
->> +		if (hub->hdev->quirks & USB_QUIRK_DISABLE_LPM_ON_U0) {
->> +			usb_lock_device(hub->hdev);
->> +			usb_unlocked_disable_lpm(hub->hdev);
->> +		}
->> 		status = hub_set_port_link_state(hub, port1, USB_SS_PORT_LS_U0);
->> -	else
->> +		if (hub->hdev->quirks & USB_QUIRK_DISABLE_LPM_ON_U0) {
->> +			usb_unlocked_enable_lpm(hub->hdev);
->> +			usb_unlock_device(hub->hdev);
-> 
-> The locking here seems questionable.  Doesn't this code sometimes get
-> called with the hub already locked?  Or with the child device locked
-> (in which case locking the hub would violate the normal locking order:  
-> parent first, child second)?
+Signed-off-by: Fabien Parent <fparent@baylibre.com>
+---
+ Documentation/devicetree/bindings/iommu/mediatek,iommu.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Maybe introduce a new lock? The lock however will only be used by this specific hub.
-But I still want the LPM can be enabled for this hub.
-
-> 
->> +		}
->> +	} else
->> 		status = usb_clear_port_feature(hub->hdev,
->> 				port1, USB_PORT_FEAT_SUSPEND);
->> 	if (status) {
->> diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
->> index 6b6413073584..69474d0d2b38 100644
->> --- a/drivers/usb/core/quirks.c
->> +++ b/drivers/usb/core/quirks.c
->> @@ -131,6 +131,9 @@ static int quirks_param_set(const char *val, const struct kernel_param *kp)
->> 			case 'o':
->> 				flags |= USB_QUIRK_HUB_SLOW_RESET;
->> 				break;
->> +			case 'p':
->> +				flags |= USB_QUIRK_DISABLE_LPM_ON_U0;
->> +				break;
-> 
-> The new 'p' flag needs to be documented.
-
-Yes I missed that, will add in v2.
-
-Kai-Heng
-
-> 
-> Alan Stern
+diff --git a/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt b/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+index ce59a505f5a4..eee9116cf9bb 100644
+--- a/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
++++ b/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+@@ -60,6 +60,7 @@ Required properties:
+ 	"mediatek,mt2712-m4u" for mt2712 which uses generation two m4u HW.
+ 	"mediatek,mt7623-m4u", "mediatek,mt2701-m4u" for mt7623 which uses
+ 						     generation one m4u HW.
++	"mediatek,mt8167-m4u" for mt8167 which uses generation two m4u HW.
+ 	"mediatek,mt8173-m4u" for mt8173 which uses generation two m4u HW.
+ 	"mediatek,mt8183-m4u" for mt8183 which uses generation two m4u HW.
+ - reg : m4u register base and size.
+-- 
+2.25.0.rc0
 
