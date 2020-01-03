@@ -2,104 +2,151 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D32C00523
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A289C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8977B227BF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5079227BF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:32:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578090571;
-	bh=cagGhZOxCV0Mw3q8og/AhdWgRjglOTxAWlraDkYvhTg=;
+	s=default; t=1578090750;
+	bh=N49noEXNds+w4WsW60C+fFauAE6eurYgQnBP4kyunw4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KZmqng6GjBUw9H1ug/QwHvzBgJmSPOIGPhgLqPZGvEAqlXiJu2oEsBawORh0vaMsK
-	 qUOYqVOUbcIhiZaC+9DslzSE7uqhHAfER25GH5mEua66C8f6RxPF7wULPs55r2A6AA
-	 ytqTAWE84hCza9zt6ICqCmzvfu8HnR1MjXUaX8kM=
+	b=BMwQyLE9pYegROAMBbW6Fh3gtjk224D6SarNsDHu24ozNeSPWNHECyqQJcivPs3A2
+	 jck6P0yOui+6FeLiaKkPD921pAUlKBSZPqRarsQSc3iX5iQeYB5tLD5JSHDObjaM3W
+	 oYWqJ2BjIjMNosXvQGDH0LzKAMgLCvwgkH1MLf18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbgACW3a (ORCPT
+        id S1728844AbgACWc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 17:29:30 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45190 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728844AbgACW3a (ORCPT
+        Fri, 3 Jan 2020 17:32:29 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:33408 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728730AbgACWc3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 17:29:30 -0500
-Received: by mail-io1-f68.google.com with SMTP id i11so42877456ioi.12
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 14:29:29 -0800 (PST)
+        Fri, 3 Jan 2020 17:32:29 -0500
+Received: by mail-il1-f196.google.com with SMTP id v15so37896446iln.0
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 14:32:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TFDz39ekdeb/43sN0oag/MOWFARZHq5KPLmY9cO79x8=;
-        b=PFoOgHFpfGir41QRr7Rm6vw3A1KVx9IimewxYWSgeO39dN2Wf5mS0V4jKy65kZN63U
-         Fx43otHA+fx0KL+KKylua1isPHabMY8YkE9cHdHWyd+4unVh4otfe1+bYFk/lHZzvDBh
-         ngGyJnWCLX02wOvp8dPGdH6lgeXupUF8F/8hDr2LzWEixVt+iwW4v6oGbXDjjitY4dMb
-         E1AFt/Q/1D2dcGOCaIfX2Ss4/6YdHp8WFHWWKyIiaU0yhJg+xbsWeMmnEo5gBRCpD7+K
-         chot+DwSC5Zw/tx7LYwsnC3Of+MnmOTCRtu/vL6vg+dokXdl+LN5uvtywuQqzOQYA2nc
-         F1TA==
-X-Gm-Message-State: APjAAAVu2NbYFYzNa+646WlkXCiAOdj6PtM5yxJjjEWmrbBvBKthe7rU
-        qZYOsRl6rZWMhM+FLpieL2A86dk=
-X-Google-Smtp-Source: APXvYqwBrOzybAw8Vpq4mKEAbY3YrJLKAxll/9SfsiaarG2u6jZcJtS7pRhC6YsJP1ZcDV2MeMdC8A==
-X-Received: by 2002:a6b:ab81:: with SMTP id u123mr58668489ioe.214.1578090569262;
-        Fri, 03 Jan 2020 14:29:29 -0800 (PST)
+        bh=AwM+4lmsp4OwDXSOplbN0YrPFwHAVZ/Q655/TuvMXxw=;
+        b=PeigxaTeh9dB1v5/Zvrdte6ZuoulV5fSgFDKoXneX23cDQY7zaYaHxxUzf9NG2I+qe
+         L7tAwW5mLAl2vF7lF5+xIwl8XwGWL+UqShaYujTOzRiXChNt3MPbKSDZ/ciwbiF/d4ju
+         ukZgJvv5+Ebf6q8UoUR9C/wfi01WGEvRmA//+icdKrSkCR9SRyGK/IULJTezaDFNGi9q
+         gZGlrLitjByHVwbAdopPlT+v+xZrD8eSKEcNHxLMMxSO4dw3Qcd4AZc6pWcDClbE0AKj
+         Mtr+yrQD2VwcEKX7gQBy6akqUQW0O2om8jWOhSYOqlIX0/12Dy0hmaD2ngpFTpIUe9h6
+         4q9Q==
+X-Gm-Message-State: APjAAAWyGqBGMUoS/AIgSQxIcTSbP6WQFFyJAswFyhp+IKd9a1nDm6Yk
+        BZv67rnjMFeHdIofPsyJnjnzhvY=
+X-Google-Smtp-Source: APXvYqyNb5b7abfkctxN0rZ19zKfr1xJerGyDzG3AVQBVmZ7LvS3m40gblk9i5ZSuLlmdKwpLwTBnA==
+X-Received: by 2002:a92:503:: with SMTP id q3mr68683746ile.160.1578090747863;
+        Fri, 03 Jan 2020 14:32:27 -0800 (PST)
 Received: from rob-hp-laptop ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id e1sm21281129ill.47.2020.01.03.14.29.26
+        by smtp.gmail.com with ESMTPSA id m24sm15265943ioc.37.2020.01.03.14.32.26
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 14:29:28 -0800 (PST)
+        Fri, 03 Jan 2020 14:32:27 -0800 (PST)
 Received: from rob (uid 1000)
         (envelope-from rob@rob-hp-laptop)
         id 2219b7
         by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Fri, 03 Jan 2020 15:29:25 -0700
-Date:   Fri, 3 Jan 2020 15:29:25 -0700
+        Fri, 03 Jan 2020 15:32:25 -0700
+Date:   Fri, 3 Jan 2020 15:32:25 -0700
 From:   Rob Herring <robh@kernel.org>
-To:     Jian Hu <jian.hu@amlogic.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 1/5] dt-bindings: clock: meson: add A1 PLL clock
- controller bindings
-Message-ID: <20200103222925.GA654@bogus>
-References: <20191227094606.143637-1-jian.hu@amlogic.com>
- <20191227094606.143637-2-jian.hu@amlogic.com>
+To:     Robert Jones <rjones@gateworks.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 1/5] dt-bindings: arm: fsl: Add Gateworks Ventana
+ i.MX6DL/Q compatibles
+Message-ID: <20200103223225.GB654@bogus>
+References: <20191230231953.29646-1-rjones@gateworks.com>
+ <20191230231953.29646-2-rjones@gateworks.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191227094606.143637-2-jian.hu@amlogic.com>
+In-Reply-To: <20191230231953.29646-2-rjones@gateworks.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Dec 2019 17:46:02 +0800, Jian Hu wrote:
-> Add the documentation to support Amlogic A1 PLL clock driver,
-> and add A1 PLL clock controller bindings.
+On Mon, Dec 30, 2019 at 03:19:49PM -0800, Robert Jones wrote:
+> Add the compatible enum entries for Gateworks Ventana boards.
 > 
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+> Signed-off-by: Robert Jones <rjones@gateworks.com>
 > ---
->  .../bindings/clock/amlogic,a1-pll-clkc.yaml   | 54 +++++++++++++++++++
->  include/dt-bindings/clock/a1-pll-clkc.h       | 16 ++++++
->  2 files changed, 70 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
->  create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 31 ++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> index f79683a..8ed4c85 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> @@ -126,6 +126,22 @@ properties:
+>                - toradex,apalis_imx6q-ixora      # Apalis iMX6 Module on Ixora
+>                - toradex,apalis_imx6q-ixora-v1.1 # Apalis iMX6 Module on Ixora V1.1
+>                - variscite,dt6customboard
+> +              - gw,ventana                # Gateworks i.MX6DL or i.MX6Q Ventana
+> +              - gw,imx6q-gw51xx
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This doesn't match what you have in dts files. Please check with:
+
+make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/fsl.yaml
+
+You'll need a separate entry with 3 compatibles and 'gw,ventana' or drop 
+it.
+
+> +              - gw,imx6q-gw52xx
+> +              - gw,imx6q-gw53xx
+> +              - gw,imx6q-gw5400-a
+> +              - gw,imx6q-gw54xx
+> +              - gw,imx6q-gw551x
+> +              - gw,imx6q-gw552x
+> +              - gw,imx6q-gw553x
+> +              - gw,imx6q-gw560x
+> +              - gw,imx6q-gw5903
+> +              - gw,imx6q-gw5904
+> +              - gw,imx6q-gw5907
+> +              - gw,imx6q-gw5910
+> +              - gw,imx6q-gw5912
+> +              - gw,imx6q-gw5913
+>            - const: fsl,imx6q
+>  
+>        - description: i.MX6QP based Boards
+> @@ -152,6 +168,21 @@ properties:
+>                - ysoft,imx6dl-yapp4-draco  # i.MX6 DualLite Y Soft IOTA Draco board
+>                - ysoft,imx6dl-yapp4-hydra  # i.MX6 DualLite Y Soft IOTA Hydra board
+>                - ysoft,imx6dl-yapp4-ursa   # i.MX6 Solo Y Soft IOTA Ursa board
+> +              - gw,ventana                # Gateworks i.MX6DL or i.MX6Q Ventana
+> +              - gw,imx6dl-gw51xx
+> +              - gw,imx6dl-gw52xx
+> +              - gw,imx6dl-gw53xx
+> +              - gw,imx6dl-gw54xx
+> +              - gw,imx6dl-gw551x
+> +              - gw,imx6dl-gw552x
+> +              - gw,imx6dl-gw553x
+> +              - gw,imx6dl-gw560x
+> +              - gw,imx6dl-gw5903
+> +              - gw,imx6dl-gw5904
+> +              - gw,imx6dl-gw5907
+> +              - gw,imx6dl-gw5910
+> +              - gw,imx6dl-gw5912
+> +              - gw,imx6dl-gw5913
+>            - const: fsl,imx6dl
+>  
+>        - description: i.MX6SL based Boards
+> -- 
+> 2.9.2
+> 
