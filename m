@@ -2,332 +2,402 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4935EC32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8246C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 142D0222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:40:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HrEuUPil"
+	by mail.kernel.org (Postfix) with ESMTP id A5CAD21734
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:42:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbgACJkt (ORCPT
+        id S1727463AbgACJmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 04:40:49 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1404 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbgACJks (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 04:40:48 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e0f0bf30000>; Fri, 03 Jan 2020 01:40:03 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 03 Jan 2020 01:40:46 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 03 Jan 2020 01:40:46 -0800
-Received: from [10.25.72.211] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 3 Jan
- 2020 09:40:42 +0000
-Subject: Re: [PATCH 4/4] PCI: pci-epf-test: Add support to defer core
- initialization
-To:     Kishon Vijay Abraham I <kishon@ti.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <lorenzo.pieralisi@arm.com>,
-        <andrew.murray@arm.com>, <bhelgaas@google.com>,
-        <thierry.reding@gmail.com>
-CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20191113090851.26345-1-vidyas@nvidia.com>
- <20191113090851.26345-5-vidyas@nvidia.com>
- <e8e3b8b6-d115-b4d4-19c5-1eae1d8abd0f@ti.com>
- <958fcc14-6794-0328-5c31-0dcc845ee646@nvidia.com>
- <c7877f72-97e0-ac48-06c3-8e3ecec87cd5@ti.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <d3c88451-4bf5-61f6-1a13-7176d587e36a@nvidia.com>
-Date:   Fri, 3 Jan 2020 15:10:39 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <c7877f72-97e0-ac48-06c3-8e3ecec87cd5@ti.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578044403; bh=lxSlJ41iIbh4uJmeFdkz6lZkjWHAJbs7nZBmnCeGiys=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=HrEuUPilcCFPqsx+GXKKQufqJ4ICbkKRgH5SKrGjsMub0f3k1h+b21ft/C7ikvWZh
-         dvYDmYhe5U8coA60KzGEm3J+95L9dRuBvLXxm1wMCagURebpi81YGHzg9Z5MNdFnLi
-         KTJ00JKIHzt2lGBIWIzwRVhjR6vYQvBDBGCW+bLJz8Nhd+yYvDQbEdubp/Fg0g6izJ
-         J8OMY3hi88MPn0MT/nxx+jFIpSa/IV23qE4X8MYbjUTvPuAUNSO6Y/keeN8Bm/0Xst
-         xhbqXZ0kz/DH1OqY+/Y+QZPz1jOHJf/ygLWw9X9oTqaCZyRVf/tMDy0kNOXny7JHXq
-         TxGOVk0DlsDGQ==
+        Fri, 3 Jan 2020 04:42:16 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55342 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725972AbgACJmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 04:42:16 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B5B2BAF00;
+        Fri,  3 Jan 2020 09:42:12 +0000 (UTC)
+Date:   Fri, 03 Jan 2020 10:42:12 +0100
+Message-ID: <s5h8smooozv.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ALSA: hda - constify and cleanup static NodeID tables
+In-Reply-To: <5150c94101c9534f4c8e987324f6912c16d459f6.1578043216.git.mirq-linux@rere.qmqm.pl>
+References: <5150c94101c9534f4c8e987324f6912c16d459f6.1578043216.git.mirq-linux@rere.qmqm.pl>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/5/2019 4:52 PM, Kishon Vijay Abraham I wrote:
-> Hi,
->=20
-> On 01/12/19 7:59 pm, Vidya Sagar wrote:
->> On 11/27/2019 2:50 PM, Kishon Vijay Abraham I wrote:
->>> Hi,
->>>
->>> On 13/11/19 2:38 PM, Vidya Sagar wrote:
->>>> Add support to defer core initialization and to receive a notifier
->>>> when core is ready to accommodate platforms where core is not for
->>>> initialization untile reference clock from host is available.
->>>>
->>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>>> ---
->>>> =C2=A0 drivers/pci/endpoint/functions/pci-epf-test.c | 114 +++++++++++=
-+------
->>>> =C2=A0 1 file changed, 77 insertions(+), 37 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/p=
-ci/endpoint/functions/pci-epf-test.c
->>>> index bddff15052cc..068024fab544 100644
->>>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
->>>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
->>>> @@ -360,18 +360,6 @@ static void pci_epf_test_cmd_handler(struct work_=
-struct *work)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 msecs_to_jiffies(1));
->>>> =C2=A0 }
->>>> -static int pci_epf_test_notifier(struct notifier_block *nb, unsigned =
-long val,
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 void *data)
->>>> -{
->>>> -=C2=A0=C2=A0=C2=A0 struct pci_epf *epf =3D container_of(nb, struct pc=
-i_epf, nb);
->>>> -=C2=A0=C2=A0=C2=A0 struct pci_epf_test *epf_test =3D epf_get_drvdata(=
-epf);
->>>> -
->>>> -=C2=A0=C2=A0=C2=A0 queue_delayed_work(kpcitest_workqueue, &epf_test->=
-cmd_handler,
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 msecs_to_jiffies(1));
->>>> -
->>>> -=C2=A0=C2=A0=C2=A0 return NOTIFY_OK;
->>>> -}
->>>> -
->>>> =C2=A0 static void pci_epf_test_unbind(struct pci_epf *epf)
->>>> =C2=A0 {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pci_epf_test *epf_test =3D epf_g=
-et_drvdata(epf);
->>>> @@ -428,6 +416,78 @@ static int pci_epf_test_set_bar(struct pci_epf *e=
-pf)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>> =C2=A0 }
->>>> +static int pci_epf_test_core_init(struct pci_epf *epf)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 struct pci_epf_header *header =3D epf->header;
->>>> +=C2=A0=C2=A0=C2=A0 const struct pci_epc_features *epc_features;
->>>> +=C2=A0=C2=A0=C2=A0 struct pci_epc *epc =3D epf->epc;
->>>> +=C2=A0=C2=A0=C2=A0 struct device *dev =3D &epf->dev;
->>>> +=C2=A0=C2=A0=C2=A0 bool msix_capable =3D false;
->>>> +=C2=A0=C2=A0=C2=A0 bool msi_capable =3D true;
->>>> +=C2=A0=C2=A0=C2=A0 int ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 epc_features =3D pci_epc_get_features(epc, epf->fu=
-nc_no);
->>>> +=C2=A0=C2=A0=C2=A0 if (epc_features) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 msix_capable =3D epc_featu=
-res->msix_capable;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 msi_capable =3D epc_featur=
-es->msi_capable;
->>>> +=C2=A0=C2=A0=C2=A0 }
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 ret =3D pci_epc_write_header(epc, epf->func_no, he=
-ader);
->>>> +=C2=A0=C2=A0=C2=A0 if (ret) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(dev, "Configuratio=
-n header write failed\n");
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> +=C2=A0=C2=A0=C2=A0 }
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 ret =3D pci_epf_test_set_bar(epf);
->>>> +=C2=A0=C2=A0=C2=A0 if (ret)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 if (msi_capable) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D pci_epc_set_msi(ep=
-c, epf->func_no, epf->msi_interrupts);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 de=
-v_err(dev, "MSI configuration failed\n");
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
-turn ret;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>> +=C2=A0=C2=A0=C2=A0 }
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 if (msix_capable) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D pci_epc_set_msix(e=
-pc, epf->func_no, epf->msix_interrupts);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 de=
-v_err(dev, "MSI-X configuration failed\n");
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
-turn ret;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>> +=C2=A0=C2=A0=C2=A0 }
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>> +}
->>>> +
->>>> +static int pci_epf_test_notifier(struct notifier_block *nb, unsigned =
-long val,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 void *data)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 struct pci_epf *epf =3D container_of(nb, struct pc=
-i_epf, nb);
->>>> +=C2=A0=C2=A0=C2=A0 struct pci_epf_test *epf_test =3D epf_get_drvdata(=
-epf);
->>>> +=C2=A0=C2=A0=C2=A0 int ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 switch (val) {
->>>> +=C2=A0=C2=A0=C2=A0 case CORE_INIT:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D pci_epf_test_core_=
-init(epf);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
-turn NOTIFY_BAD;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 case LINK_UP:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 queue_delayed_work(kpcites=
-t_workqueue, &epf_test->cmd_handler,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 msecs_to_jiffies(1));
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 default:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(&epf->dev, "Invali=
-d EPF test notifier event\n");
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return NOTIFY_BAD;
->>>> +=C2=A0=C2=A0=C2=A0 }
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 return NOTIFY_OK;
->>>> +}
->>>> +
->>>> =C2=A0 static int pci_epf_test_alloc_space(struct pci_epf *epf)
->>>> =C2=A0 {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pci_epf_test *epf_test =3D epf_g=
-et_drvdata(epf);
->>>> @@ -496,12 +556,11 @@ static int pci_epf_test_bind(struct pci_epf *epf=
-)
->>>> =C2=A0 {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pci_epf_test *epf_test =3D epf_g=
-et_drvdata(epf);
->>>> -=C2=A0=C2=A0=C2=A0 struct pci_epf_header *header =3D epf->header;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct pci_epc_features *epc_feat=
-ures;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum pci_barno test_reg_bar =3D BAR_0;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pci_epc *epc =3D epf->epc;
->>>> -=C2=A0=C2=A0=C2=A0 struct device *dev =3D &epf->dev;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool linkup_notifier =3D false;
->>>> +=C2=A0=C2=A0=C2=A0 bool skip_core_init =3D false;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool msix_capable =3D false;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool msi_capable =3D true;
->>>> @@ -511,6 +570,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 epc_features =3D pci_epc_get_features(e=
-pc, epf->func_no);
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (epc_features) {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 linkup_notifier=
- =3D epc_features->linkup_notifier;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 skip_core_init =3D epc_fea=
-tures->skip_core_init;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 msix_capable =
-=3D epc_features->msix_capable;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 msi_capable =3D=
- epc_features->msi_capable;
->>>
->>> Are these used anywhere in this function?
->> Nope. I'll remove them.
->>
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 test_reg_bar =
-=3D pci_epc_get_first_free_bar(epc_features);
->>>> @@ -520,34 +580,14 @@ static int pci_epf_test_bind(struct pci_epf *epf=
-)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 epf_test->test_reg_bar =3D test_reg_bar=
-;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 epf_test->epc_features =3D epc_features=
-;
->>>> -=C2=A0=C2=A0=C2=A0 ret =3D pci_epc_write_header(epc, epf->func_no, he=
-ader);
->>>> -=C2=A0=C2=A0=C2=A0 if (ret) {
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(dev, "Configuratio=
-n header write failed\n");
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> -=C2=A0=C2=A0=C2=A0 }
->>>> -
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D pci_epf_test_alloc_space(epf);
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> -=C2=A0=C2=A0=C2=A0 ret =3D pci_epf_test_set_bar(epf);
->>>> -=C2=A0=C2=A0=C2=A0 if (ret)
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> -
->>>> -=C2=A0=C2=A0=C2=A0 if (msi_capable) {
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D pci_epc_set_msi(ep=
-c, epf->func_no, epf->msi_interrupts);
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret) {
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 de=
-v_err(dev, "MSI configuration failed\n");
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
-turn ret;
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>> -=C2=A0=C2=A0=C2=A0 }
->>>> -
->>>> -=C2=A0=C2=A0=C2=A0 if (msix_capable) {
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D pci_epc_set_msix(e=
-pc, epf->func_no, epf->msix_interrupts);
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret) {
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 de=
-v_err(dev, "MSI-X configuration failed\n");
->>>> +=C2=A0=C2=A0=C2=A0 if (!skip_core_init) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D pci_epf_test_core_=
-init(epf);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 return ret;
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (linkup_notifier) {
->>>
->>> This could as well be moved to pci_epf_test_core_init().
->> Yes, but I would like to keep only the code that touches hardware in pci=
-_epf_test_core_init()
->> to minimize the time it takes to execute it. Is there any strong reason =
-to move it? if not,
->> I would prefer to leave it here in this function itself.
->=20
-> There is no point in scheduling a work to check for commands from host wh=
-en the EP itself is not initialized.
-True. But, since this is more of preparatory work, I thought we should just=
- have it done here itself.
-Main reason being, once PERST is perceived, endpoint can't take too much in=
-itializing its core. So, I want to
-keep that part as minimalistic as possible.
+On Fri, 03 Jan 2020 10:23:48 +0100,
+Michał Mirosław wrote:
+> 
+> Make hda_nid_t tables static const, as they are not intended to be
+> modified by callees.
+> 
+> ---
+> * patch against tiwai/sound/topic/constification branch
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-- Vidya Sagar
+Nice catch, I queued to topic/constification branch.
 
->=20
-> Thanks
-> Kishon
+I've looked at only static struct, so this wasn't covered by my
+series.  There must be more such remaining things.
 
+
+thanks,
+
+Takashi
+
+> ---
+>  sound/pci/hda/hda_generic.c    |  4 +--
+>  sound/pci/hda/patch_analog.c   |  6 ++--
+>  sound/pci/hda/patch_ca0132.c   | 12 +++----
+>  sound/pci/hda/patch_conexant.c |  6 ++--
+>  sound/pci/hda/patch_realtek.c  | 62 +++++++++++++++++-----------------
+>  sound/pci/hda/patch_sigmatel.c |  4 +--
+>  sound/pci/hda/patch_via.c      |  4 +--
+>  7 files changed, 49 insertions(+), 49 deletions(-)
+> 
+> diff --git a/sound/pci/hda/hda_generic.c b/sound/pci/hda/hda_generic.c
+> index 10d502328b76..fc001c64ef20 100644
+> --- a/sound/pci/hda/hda_generic.c
+> +++ b/sound/pci/hda/hda_generic.c
+> @@ -4401,7 +4401,7 @@ EXPORT_SYMBOL_GPL(snd_hda_gen_fix_pin_power);
+>   */
+>  
+>  /* check each pin in the given array; returns true if any of them is plugged */
+> -static bool detect_jacks(struct hda_codec *codec, int num_pins, hda_nid_t *pins)
+> +static bool detect_jacks(struct hda_codec *codec, int num_pins, const hda_nid_t *pins)
+>  {
+>  	int i;
+>  	bool present = false;
+> @@ -4420,7 +4420,7 @@ static bool detect_jacks(struct hda_codec *codec, int num_pins, hda_nid_t *pins)
+>  }
+>  
+>  /* standard HP/line-out auto-mute helper */
+> -static void do_automute(struct hda_codec *codec, int num_pins, hda_nid_t *pins,
+> +static void do_automute(struct hda_codec *codec, int num_pins, const hda_nid_t *pins,
+>  			int *paths, bool mute)
+>  {
+>  	struct hda_gen_spec *spec = codec->spec;
+> diff --git a/sound/pci/hda/patch_analog.c b/sound/pci/hda/patch_analog.c
+> index bc9dd8e6fd86..c64895f99299 100644
+> --- a/sound/pci/hda/patch_analog.c
+> +++ b/sound/pci/hda/patch_analog.c
+> @@ -389,7 +389,7 @@ static int patch_ad1986a(struct hda_codec *codec)
+>  {
+>  	int err;
+>  	struct ad198x_spec *spec;
+> -	static hda_nid_t preferred_pairs[] = {
+> +	static const hda_nid_t preferred_pairs[] = {
+>  		0x1a, 0x03,
+>  		0x1b, 0x03,
+>  		0x1c, 0x04,
+> @@ -519,9 +519,9 @@ static int ad1983_add_spdif_mux_ctl(struct hda_codec *codec)
+>  
+>  static int patch_ad1983(struct hda_codec *codec)
+>  {
+> +	static const hda_nid_t conn_0c[] = { 0x08 };
+> +	static const hda_nid_t conn_0d[] = { 0x09 };
+>  	struct ad198x_spec *spec;
+> -	static hda_nid_t conn_0c[] = { 0x08 };
+> -	static hda_nid_t conn_0d[] = { 0x09 };
+>  	int err;
+>  
+>  	err = alloc_ad_spec(codec);
+> diff --git a/sound/pci/hda/patch_ca0132.c b/sound/pci/hda/patch_ca0132.c
+> index 32ed46464af7..250534f90ce0 100644
+> --- a/sound/pci/hda/patch_ca0132.c
+> +++ b/sound/pci/hda/patch_ca0132.c
+> @@ -7802,23 +7802,23 @@ static void sbz_region2_exit(struct hda_codec *codec)
+>  
+>  static void sbz_set_pin_ctl_default(struct hda_codec *codec)
+>  {
+> -	hda_nid_t pins[5] = {0x0B, 0x0C, 0x0E, 0x12, 0x13};
+> +	static const hda_nid_t pins[] = {0x0B, 0x0C, 0x0E, 0x12, 0x13};
+>  	unsigned int i;
+>  
+>  	snd_hda_codec_write(codec, 0x11, 0,
+>  			AC_VERB_SET_PIN_WIDGET_CONTROL, 0x40);
+>  
+> -	for (i = 0; i < 5; i++)
+> +	for (i = 0; i < ARRAY_SIZE(pins); i++)
+>  		snd_hda_codec_write(codec, pins[i], 0,
+>  				AC_VERB_SET_PIN_WIDGET_CONTROL, 0x00);
+>  }
+>  
+>  static void ca0132_clear_unsolicited(struct hda_codec *codec)
+>  {
+> -	hda_nid_t pins[7] = {0x0B, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13};
+> +	static const hda_nid_t pins[] = {0x0B, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13};
+>  	unsigned int i;
+>  
+> -	for (i = 0; i < 7; i++) {
+> +	for (i = 0; i < ARRAY_SIZE(pins); i++) {
+>  		snd_hda_codec_write(codec, pins[i], 0,
+>  				AC_VERB_SET_UNSOLICITED_ENABLE, 0x00);
+>  	}
+> @@ -7842,10 +7842,10 @@ static void sbz_gpio_shutdown_commands(struct hda_codec *codec, int dir,
+>  
+>  static void zxr_dbpro_power_state_shutdown(struct hda_codec *codec)
+>  {
+> -	hda_nid_t pins[7] = {0x05, 0x0c, 0x09, 0x0e, 0x08, 0x11, 0x01};
+> +	static const hda_nid_t pins[] = {0x05, 0x0c, 0x09, 0x0e, 0x08, 0x11, 0x01};
+>  	unsigned int i;
+>  
+> -	for (i = 0; i < 7; i++)
+> +	for (i = 0; i < ARRAY_SIZE(pins); i++)
+>  		snd_hda_codec_write(codec, pins[i], 0,
+>  				AC_VERB_SET_POWER_STATE, 0x03);
+>  }
+> diff --git a/sound/pci/hda/patch_conexant.c b/sound/pci/hda/patch_conexant.c
+> index 90aa0f400a57..9853e00a0816 100644
+> --- a/sound/pci/hda/patch_conexant.c
+> +++ b/sound/pci/hda/patch_conexant.c
+> @@ -116,7 +116,7 @@ static void cx_auto_parse_eapd(struct hda_codec *codec)
+>  }
+>  
+>  static void cx_auto_turn_eapd(struct hda_codec *codec, int num_pins,
+> -			      hda_nid_t *pins, bool on)
+> +			      const hda_nid_t *pins, bool on)
+>  {
+>  	int i;
+>  	for (i = 0; i < num_pins; i++) {
+> @@ -959,10 +959,10 @@ static const struct hda_model_fixup cxt5066_fixup_models[] = {
+>  static void add_cx5051_fake_mutes(struct hda_codec *codec)
+>  {
+>  	struct conexant_spec *spec = codec->spec;
+> -	static hda_nid_t out_nids[] = {
+> +	static const hda_nid_t out_nids[] = {
+>  		0x10, 0x11, 0
+>  	};
+> -	hda_nid_t *p;
+> +	const hda_nid_t *p;
+>  
+>  	for (p = out_nids; *p; p++)
+>  		snd_hda_override_amp_caps(codec, *p, HDA_OUTPUT,
+> diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+> index dbfafee97931..5bb1959dae0f 100644
+> --- a/sound/pci/hda/patch_realtek.c
+> +++ b/sound/pci/hda/patch_realtek.c
+> @@ -464,10 +464,10 @@ static void set_eapd(struct hda_codec *codec, hda_nid_t nid, int on)
+>  static void alc_auto_setup_eapd(struct hda_codec *codec, bool on)
+>  {
+>  	/* We currently only handle front, HP */
+> -	static hda_nid_t pins[] = {
+> +	static const hda_nid_t pins[] = {
+>  		0x0f, 0x10, 0x14, 0x15, 0x17, 0
+>  	};
+> -	hda_nid_t *p;
+> +	const hda_nid_t *p;
+>  	for (p = pins; *p; p++)
+>  		set_eapd(codec, *p, on);
+>  }
+> @@ -1935,19 +1935,19 @@ static void alc889_fixup_dac_route(struct hda_codec *codec,
+>  {
+>  	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
+>  		/* fake the connections during parsing the tree */
+> -		hda_nid_t conn1[2] = { 0x0c, 0x0d };
+> -		hda_nid_t conn2[2] = { 0x0e, 0x0f };
+> -		snd_hda_override_conn_list(codec, 0x14, 2, conn1);
+> -		snd_hda_override_conn_list(codec, 0x15, 2, conn1);
+> -		snd_hda_override_conn_list(codec, 0x18, 2, conn2);
+> -		snd_hda_override_conn_list(codec, 0x1a, 2, conn2);
+> +		static const hda_nid_t conn1[] = { 0x0c, 0x0d };
+> +		static const hda_nid_t conn2[] = { 0x0e, 0x0f };
+> +		snd_hda_override_conn_list(codec, 0x14, ARRAY_SIZE(conn1), conn1);
+> +		snd_hda_override_conn_list(codec, 0x15, ARRAY_SIZE(conn1), conn1);
+> +		snd_hda_override_conn_list(codec, 0x18, ARRAY_SIZE(conn2), conn2);
+> +		snd_hda_override_conn_list(codec, 0x1a, ARRAY_SIZE(conn2), conn2);
+>  	} else if (action == HDA_FIXUP_ACT_PROBE) {
+>  		/* restore the connections */
+> -		hda_nid_t conn[5] = { 0x0c, 0x0d, 0x0e, 0x0f, 0x26 };
+> -		snd_hda_override_conn_list(codec, 0x14, 5, conn);
+> -		snd_hda_override_conn_list(codec, 0x15, 5, conn);
+> -		snd_hda_override_conn_list(codec, 0x18, 5, conn);
+> -		snd_hda_override_conn_list(codec, 0x1a, 5, conn);
+> +		static const hda_nid_t conn[] = { 0x0c, 0x0d, 0x0e, 0x0f, 0x26 };
+> +		snd_hda_override_conn_list(codec, 0x14, ARRAY_SIZE(conn), conn);
+> +		snd_hda_override_conn_list(codec, 0x15, ARRAY_SIZE(conn), conn);
+> +		snd_hda_override_conn_list(codec, 0x18, ARRAY_SIZE(conn), conn);
+> +		snd_hda_override_conn_list(codec, 0x1a, ARRAY_SIZE(conn), conn);
+>  	}
+>  }
+>  
+> @@ -1955,8 +1955,8 @@ static void alc889_fixup_dac_route(struct hda_codec *codec,
+>  static void alc889_fixup_mbp_vref(struct hda_codec *codec,
+>  				  const struct hda_fixup *fix, int action)
+>  {
+> +	static const hda_nid_t nids[] = { 0x14, 0x15, 0x19 };
+>  	struct alc_spec *spec = codec->spec;
+> -	static hda_nid_t nids[3] = { 0x14, 0x15, 0x19 };
+>  	int i;
+>  
+>  	if (action != HDA_FIXUP_ACT_INIT)
+> @@ -1992,7 +1992,7 @@ static void alc889_fixup_mac_pins(struct hda_codec *codec,
+>  static void alc889_fixup_imac91_vref(struct hda_codec *codec,
+>  				     const struct hda_fixup *fix, int action)
+>  {
+> -	static hda_nid_t nids[2] = { 0x18, 0x1a };
+> +	static const hda_nid_t nids[] = { 0x18, 0x1a };
+>  
+>  	if (action == HDA_FIXUP_ACT_INIT)
+>  		alc889_fixup_mac_pins(codec, nids, ARRAY_SIZE(nids));
+> @@ -2002,7 +2002,7 @@ static void alc889_fixup_imac91_vref(struct hda_codec *codec,
+>  static void alc889_fixup_mba11_vref(struct hda_codec *codec,
+>  				    const struct hda_fixup *fix, int action)
+>  {
+> -	static hda_nid_t nids[1] = { 0x18 };
+> +	static const hda_nid_t nids[] = { 0x18 };
+>  
+>  	if (action == HDA_FIXUP_ACT_INIT)
+>  		alc889_fixup_mac_pins(codec, nids, ARRAY_SIZE(nids));
+> @@ -2012,7 +2012,7 @@ static void alc889_fixup_mba11_vref(struct hda_codec *codec,
+>  static void alc889_fixup_mba21_vref(struct hda_codec *codec,
+>  				    const struct hda_fixup *fix, int action)
+>  {
+> -	static hda_nid_t nids[2] = { 0x18, 0x19 };
+> +	static const hda_nid_t nids[] = { 0x18, 0x19 };
+>  
+>  	if (action == HDA_FIXUP_ACT_INIT)
+>  		alc889_fixup_mac_pins(codec, nids, ARRAY_SIZE(nids));
+> @@ -2094,7 +2094,7 @@ static void alc1220_fixup_clevo_p950(struct hda_codec *codec,
+>  				     const struct hda_fixup *fix,
+>  				     int action)
+>  {
+> -	hda_nid_t conn1[1] = { 0x0c };
+> +	static const hda_nid_t conn1[] = { 0x0c };
+>  
+>  	if (action != HDA_FIXUP_ACT_PRE_PROBE)
+>  		return;
+> @@ -2103,8 +2103,8 @@ static void alc1220_fixup_clevo_p950(struct hda_codec *codec,
+>  	/* We therefore want to make sure 0x14 (front headphone) and
+>  	 * 0x1b (speakers) use the stereo DAC 0x02
+>  	 */
+> -	snd_hda_override_conn_list(codec, 0x14, 1, conn1);
+> -	snd_hda_override_conn_list(codec, 0x1b, 1, conn1);
+> +	snd_hda_override_conn_list(codec, 0x14, ARRAY_SIZE(conn1), conn1);
+> +	snd_hda_override_conn_list(codec, 0x1b, ARRAY_SIZE(conn1), conn1);
+>  }
+>  
+>  static void alc_fixup_headset_mode_no_hp_mic(struct hda_codec *codec,
+> @@ -5243,7 +5243,7 @@ static void alc_fixup_tpt470_dock(struct hda_codec *codec,
+>  	 * the speaker output becomes too low by some reason on Thinkpads with
+>  	 * ALC298 codec
+>  	 */
+> -	static hda_nid_t preferred_pairs[] = {
+> +	static const hda_nid_t preferred_pairs[] = {
+>  		0x14, 0x03, 0x17, 0x02, 0x21, 0x02,
+>  		0
+>  	};
+> @@ -5515,9 +5515,9 @@ static void alc290_fixup_mono_speakers(struct hda_codec *codec,
+>  		/* DAC node 0x03 is giving mono output. We therefore want to
+>  		   make sure 0x14 (front speaker) and 0x15 (headphones) use the
+>  		   stereo DAC, while leaving 0x17 (bass speaker) for node 0x03. */
+> -		hda_nid_t conn1[2] = { 0x0c };
+> -		snd_hda_override_conn_list(codec, 0x14, 1, conn1);
+> -		snd_hda_override_conn_list(codec, 0x15, 1, conn1);
+> +		static const hda_nid_t conn1[] = { 0x0c };
+> +		snd_hda_override_conn_list(codec, 0x14, ARRAY_SIZE(conn1), conn1);
+> +		snd_hda_override_conn_list(codec, 0x15, ARRAY_SIZE(conn1), conn1);
+>  	}
+>  }
+>  
+> @@ -5532,8 +5532,8 @@ static void alc298_fixup_speaker_volume(struct hda_codec *codec,
+>  		   Pin Complex), since Node 0x02 has Amp-out caps, we can adjust
+>  		   speaker's volume now. */
+>  
+> -		hda_nid_t conn1[1] = { 0x0c };
+> -		snd_hda_override_conn_list(codec, 0x17, 1, conn1);
+> +		static const hda_nid_t conn1[] = { 0x0c };
+> +		snd_hda_override_conn_list(codec, 0x17, ARRAY_SIZE(conn1), conn1);
+>  	}
+>  }
+>  
+> @@ -5542,8 +5542,8 @@ static void alc295_fixup_disable_dac3(struct hda_codec *codec,
+>  				      const struct hda_fixup *fix, int action)
+>  {
+>  	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
+> -		hda_nid_t conn[2] = { 0x02, 0x03 };
+> -		snd_hda_override_conn_list(codec, 0x17, 2, conn);
+> +		static const hda_nid_t conn[] = { 0x02, 0x03 };
+> +		snd_hda_override_conn_list(codec, 0x17, ARRAY_SIZE(conn), conn);
+>  	}
+>  }
+>  
+> @@ -5552,8 +5552,8 @@ static void alc285_fixup_speaker2_to_dac1(struct hda_codec *codec,
+>  					  const struct hda_fixup *fix, int action)
+>  {
+>  	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
+> -		hda_nid_t conn[1] = { 0x02 };
+> -		snd_hda_override_conn_list(codec, 0x17, 1, conn);
+> +		static const hda_nid_t conn[] = { 0x02 };
+> +		snd_hda_override_conn_list(codec, 0x17, ARRAY_SIZE(conn), conn);
+>  	}
+>  }
+>  
+> @@ -5631,7 +5631,7 @@ static void alc274_fixup_bind_dacs(struct hda_codec *codec,
+>  				    const struct hda_fixup *fix, int action)
+>  {
+>  	struct alc_spec *spec = codec->spec;
+> -	static hda_nid_t preferred_pairs[] = {
+> +	static const hda_nid_t preferred_pairs[] = {
+>  		0x21, 0x03, 0x1b, 0x03, 0x16, 0x02,
+>  		0
+>  	};
+> diff --git a/sound/pci/hda/patch_sigmatel.c b/sound/pci/hda/patch_sigmatel.c
+> index 9b816b377547..a608d0486ae4 100644
+> --- a/sound/pci/hda/patch_sigmatel.c
+> +++ b/sound/pci/hda/patch_sigmatel.c
+> @@ -795,7 +795,7 @@ static int find_mute_led_cfg(struct hda_codec *codec, int default_polarity)
+>  static bool has_builtin_speaker(struct hda_codec *codec)
+>  {
+>  	struct sigmatel_spec *spec = codec->spec;
+> -	hda_nid_t *nid_pin;
+> +	const hda_nid_t *nid_pin;
+>  	int nids, i;
+>  
+>  	if (spec->gen.autocfg.line_out_type == AUTO_PIN_SPEAKER_OUT) {
+> @@ -2182,7 +2182,7 @@ static void hp_envy_ts_fixup_dac_bind(struct hda_codec *codec,
+>  					    int action)
+>  {
+>  	struct sigmatel_spec *spec = codec->spec;
+> -	static hda_nid_t preferred_pairs[] = {
+> +	static const hda_nid_t preferred_pairs[] = {
+>  		0xd, 0x13,
+>  		0
+>  	};
+> diff --git a/sound/pci/hda/patch_via.c b/sound/pci/hda/patch_via.c
+> index 29dcdb8b36db..b40d01e01832 100644
+> --- a/sound/pci/hda/patch_via.c
+> +++ b/sound/pci/hda/patch_via.c
+> @@ -1038,8 +1038,8 @@ static const struct snd_pci_quirk vt2002p_fixups[] = {
+>   */
+>  static void fix_vt1802_connections(struct hda_codec *codec)
+>  {
+> -	static hda_nid_t conn_24[] = { 0x14, 0x1c };
+> -	static hda_nid_t conn_33[] = { 0x1c };
+> +	static const hda_nid_t conn_24[] = { 0x14, 0x1c };
+> +	static const hda_nid_t conn_33[] = { 0x1c };
+>  
+>  	snd_hda_override_conn_list(codec, 0x24, ARRAY_SIZE(conn_24), conn_24);
+>  	snd_hda_override_conn_list(codec, 0x33, ARRAY_SIZE(conn_33), conn_33);
+> -- 
+> 2.20.1
+> 
