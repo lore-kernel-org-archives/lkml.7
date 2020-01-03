@@ -2,108 +2,130 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CE4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E24C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E927D222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:30:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="QcqFB30M"
+	by mail.kernel.org (Postfix) with ESMTP id AD99E222C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:31:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbgACTar (ORCPT
+        id S1728589AbgACTbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 14:30:47 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40050 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728488AbgACTaq (ORCPT
+        Fri, 3 Jan 2020 14:31:42 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:59110 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728488AbgACTbl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 14:30:46 -0500
-Received: by mail-oi1-f195.google.com with SMTP id c77so14403126oib.7
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 11:30:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+A1yNa9EKEJAvf7mT00hIXluvZccqZJ7nsuzns/AIw8=;
-        b=QcqFB30MvhWgAdAzPCflfRmMETbH1hoaJBG7MjYnvbJcTSSYFCqw7gCztL7VDsBjEQ
-         bft3HLIHqI3AG32tRCL397/3D+LE5eZUjbGrWZoUGjgrKYA3BuQJ7UwTUoalWAZm+esn
-         8VdrudiYMzMuJ2ZlhI0/GyrZnfkMedu++29oggEnKOE7bVGp9DPbnOW7whKKa8O3My1v
-         HoCi+cbEXmbmUDIWSPp3CDf36DG9rMFaaQTalTxHrlD/PJvxiwpEn0B+nR3yasZOwDky
-         JzxMuv+w316sqBBqiR96737ifpKGaWFGzriRnlgq4zDPQgbOkNVzn1ruNr2LzpuIl1yv
-         O9tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+A1yNa9EKEJAvf7mT00hIXluvZccqZJ7nsuzns/AIw8=;
-        b=aaBI4utQ7CzEwWCtGoTxrGzQl8jhE1tyGVev8rMwgvu+BZy59+VISV7D7/9nx7KMr2
-         sOnXa3J+i90jHMElItd0195yEc4KIJAHh2aUATlCrX5J+/Clq9aJRFUGirvZEqEOHKWe
-         lb6HT1TZFbma1ZZ5+GDD43rwL3UIAek5Vp85LgtSS9qN3+H+RUkE1I1eUsP3cJCoyhyj
-         bmMm6VCNTLyMCIvExVSA0lid8sAvB1J4dwZvl9M3fB3EdWKfUKttVavuPFfQ4twsnsk+
-         RWfme/PWgwMMkbR5HYJpKsgobkkWBm0ipH0aPipJbspeipwp4P9LYoMEzkFJSlbeBUlR
-         1UpQ==
-X-Gm-Message-State: APjAAAU3j+nkWMtCpFYNF9FDM7K5aQkfb51crnvSWtDJ0Sjqf28Y9ZXV
-        TlNei+SjcdsZSj95BB2qTeg5DqU0x7f0y47IJIXv7g==
-X-Google-Smtp-Source: APXvYqyU0RUmJHbu8sFP1etbSHj6m5ri0lKObr59npnVW1CLsV3/SdCgQXzjKK3OOe298BMpuBxbd4JwwIlerJ4Wg8c=
-X-Received: by 2002:aca:3f54:: with SMTP id m81mr4434705oia.73.1578079845934;
- Fri, 03 Jan 2020 11:30:45 -0800 (PST)
+        Fri, 3 Jan 2020 14:31:41 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 770C720028;
+        Fri,  3 Jan 2020 20:31:36 +0100 (CET)
+Date:   Fri, 3 Jan 2020 20:31:35 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] drm/panel: Add support for AUO B116XAK01 panel
+Message-ID: <20200103193135.GA21515@ravnborg.org>
+References: <20200103183025.569201-1-robdclark@gmail.com>
+ <20200103183025.569201-2-robdclark@gmail.com>
 MIME-Version: 1.0
-References: <20190821175720.25901-1-vgoyal@redhat.com> <20190821175720.25901-3-vgoyal@redhat.com>
- <20190826115316.GB21051@infradead.org> <20190826203326.GB13860@redhat.com>
- <20190826205829.GC13860@redhat.com> <20200103141235.GA13350@redhat.com>
- <CAPcyv4hr-KXUAT_tVy-GuTOq1GvVGHKsHwAPih60wcW3DGmqRg@mail.gmail.com>
- <CAPcyv4jM8s8T5ifv0c2eyqaBu3f2bd_j+fQHmJttZAajZ-we=g@mail.gmail.com> <20200103183307.GB13350@redhat.com>
-In-Reply-To: <20200103183307.GB13350@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 3 Jan 2020 11:30:35 -0800
-Message-ID: <CAPcyv4geobjz_FZpfow7CKYDHHPe=65=tYV65E0901OzPszpww@mail.gmail.com>
-Subject: Re: [PATCH 02/19] dax: Pass dax_dev to dax_writeback_mapping_range()
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>, virtio-fs@redhat.com,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200103183025.569201-2-robdclark@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=cm27Pg_UAAAA:8
+        a=Z6NHpIEtjzRDsLnzokIA:9 a=CjuIK1q_8ugA:10 a=xmb-EsYY8bH0VWELuYED:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 3, 2020 at 10:33 AM Vivek Goyal <vgoyal@redhat.com> wrote:
->
-> On Fri, Jan 03, 2020 at 10:18:22AM -0800, Dan Williams wrote:
-> > On Fri, Jan 3, 2020 at 10:12 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > On Fri, Jan 3, 2020 at 6:12 AM Vivek Goyal <vgoyal@redhat.com> wrote:
-> > [..]
-> > > > Hi Dan,
-> > > >
-> > > > Ping for this patch. I see christoph and Jan acked it. Can we take it. Not
-> > > > sure how to get ack from ext4 developers.
-> > >
-> > > Jan counts for ext4, I just missed this. Now merged.
-> >
-> > Oh, this now collides with:
-> >
-> >    30fa529e3b2e xfs: add a xfs_inode_buftarg helper
-> >
-> > Care to rebase? I'll also circle back to your question about
-> > partitions on patch1.
->
-> Hi Dan,
->
-> Here is the updated patch.
->
-> Thanks
-> Vivek
->
-> Subject: dax: Pass dax_dev instead of bdev to dax_writeback_mapping_range()
+Hi Rob.
 
-Looks good, applied.
+On Fri, Jan 03, 2020 at 10:30:24AM -0800, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  drivers/gpu/drm/panel/panel-simple.c | 32 ++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index 5d487686d25c..895a25cfc54f 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -680,6 +680,35 @@ static const struct panel_desc auo_b116xw03 = {
+>  	},
+>  };
+>  
+> +static const struct drm_display_mode auo_b116xak01_mode = {
+> +	.clock = 69300,
+> +	.hdisplay = 1366,
+> +	.hsync_start = 1366 + 48,
+> +	.hsync_end = 1366 + 48 + 32,
+> +	.htotal = 1366 + 48 + 32 + 10,
+> +	.vdisplay = 768,
+> +	.vsync_start = 768 + 4,
+> +	.vsync_end = 768 + 4 + 6,
+> +	.vtotal = 768 + 4 + 6 + 15,
+> +	.vrefresh = 60,
+> +	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
+> +};
+> +
+> +static const struct panel_desc auo_b116xak01 = {
+> +	.modes = &auo_b116xak01_mode,
+> +	.num_modes = 1,
+> +	.bpc = 6,
+> +	.size = {
+> +		.width = 256,
+> +		.height = 144,
+> +	},
+> +	.delay = {
+> +		.hpd_absent_delay = 200,
+> +	},
+> +	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+> +	.connector_type = DRM_MODE_CONNECTOR_eDP,
+> +};
+Entries in alphabetical order - check.
+.connector_type specified - check.
+.flags and .bus_format specified - check.
+.bus_flags not specified but optional - OK.
+
+> +
+>  static const struct drm_display_mode auo_b133xtn01_mode = {
+>  	.clock = 69500,
+>  	.hdisplay = 1366,
+> @@ -3125,6 +3154,9 @@ static const struct of_device_id platform_of_match[] = {
+>  	}, {
+>  		.compatible = "auo,b133htn01",
+>  		.data = &auo_b133htn01,
+> +	}, {
+> +		.compatible = "auo,b116xa01",
+> +		.data = &auo_b116xak01,
+This entry most also be in alphabetical order.
+
+>  	}, {
+>  		.compatible = "auo,b133xtn01",
+>  		.data = &auo_b133xtn01,
+
+Please fix and resend.
+
+I am in general holding back on patches to panel-simple.
+I hope we can reach a decision for the way forward with the bindings
+files sometimes next week.
+
+	Sam
