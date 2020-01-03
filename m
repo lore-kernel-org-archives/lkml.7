@@ -2,119 +2,73 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70ADC32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC801C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 856A1222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 966D02084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:08:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgACP4v (ORCPT
+        id S1727942AbgACQIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 10:56:51 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:52479 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727539AbgACP4v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 10:56:51 -0500
-Received: from mail-qv1-f45.google.com ([209.85.219.45]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MC3L9-1isbSW2jtt-00CVW5; Fri, 03 Jan 2020 16:56:49 +0100
-Received: by mail-qv1-f45.google.com with SMTP id y8so16385056qvk.6;
-        Fri, 03 Jan 2020 07:56:49 -0800 (PST)
-X-Gm-Message-State: APjAAAXpWAAcWsL0c11bt7l/seQLaP6iUtt3BJBKllxxroWXw8vFI1FI
-        MXwtILgMrPa9gpor774GFPVcADV2rIwAd6R5hCM=
-X-Google-Smtp-Source: APXvYqwAZtlDU9yS/thCGFJhNrhvQGPNxuoWiizEZDxJ5nrJCe1L3kDS/UikuNsEdYJa8Y3FeqWFHQmLu8XM2ZS7NUQ=
-X-Received: by 2002:a0c:e7c7:: with SMTP id c7mr68933990qvo.222.1578067008436;
- Fri, 03 Jan 2020 07:56:48 -0800 (PST)
+        Fri, 3 Jan 2020 11:08:25 -0500
+Received: from foss.arm.com ([217.140.110.172]:56500 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727851AbgACQIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 11:08:24 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C3695328;
+        Fri,  3 Jan 2020 08:08:23 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C3F23F703;
+        Fri,  3 Jan 2020 08:08:23 -0800 (PST)
+Date:   Fri, 3 Jan 2020 16:08:21 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Will Deacon <will@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: Kconfig: Remove CONFIG_ prefix from
+ ARM64_PSEUDO_NMI section
+Message-ID: <20200103160820.GF10107@arrakis.emea.arm.com>
+References: <78317df96ccb67b462878e07b3f87348c9d898cc.camel@perches.com>
 MIME-Version: 1.0
-References: <20200102215829.911231638@linuxfoundation.org> <CA+G9fYuPkOGKbeQ0FKKx4H0Bs-nRHALsFtwyRw0Rt5DoOCvRHg@mail.gmail.com>
- <CAK8P3a1+Srey_7cUd0xfaO8HdMv5tkUcs6DeDXzcUKkUD-DnGQ@mail.gmail.com>
- <CAK8P3a24EkUXTu-K2c-5B3w-LZwY7zNcX0dZixb3gd59vRw_Kw@mail.gmail.com> <20200103154518.GB1064304@kroah.com>
-In-Reply-To: <20200103154518.GB1064304@kroah.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 3 Jan 2020 16:56:32 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a00SpVfSE5oL8_F_8jHdg_8A5fyEKH_DWNyPToxack=zA@mail.gmail.com>
-Message-ID: <CAK8P3a00SpVfSE5oL8_F_8jHdg_8A5fyEKH_DWNyPToxack=zA@mail.gmail.com>
-Subject: Re: [PATCH 5.4 000/191] 5.4.8-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Chengguang Xu <cgxu519@mykernel.net>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Sasha Levin <sashal@kernel.org>, LTP List <ltp@lists.linux.it>,
-        Jan Stancek <jstancek@redhat.com>,
-        John Stultz <john.stultz@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:4fMLrImlcdsyOYIxBRFPO2dG0gOCSP3VpN+YNO478EJfix+DVzo
- jL7J692OmqUzwCCaueFEkzm6A0x+awbG6L3JulFk1emi2R5M/rKOMn40wsbZ8EgpXC2PQQ9
- gT1rlP09DGAp2X4gtusFT/6ZBOudRKGGkpwaXVVLSYVOzNpGIp4GJi4DRgorWMdDWkW8NI9
- ASnbqgLhV9hz5N12Y1Rhg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:62Aiqo52ap0=:tLFUxBUYtAlTl7pbpokuIX
- 2eMQ+rf4ItCgtV8LuCDSHX4zEgaRvWZl4SOn51tO7lyUPsk1/eX4t8xt4zmuSLAQ7CYG1x+T9
- WP7W5mTkU5Bao8wn1f9/OfqKyjrlUNp8CFoXFnHTdvpSPyUkQSM8C5dW636GEuQcH9cUWcp0N
- feXWN4YjX4ocz5LKBY5S8daPsLjlWk/tto2id1a1tIoJNhsUTtrH57vI8D2x61cdiFEXszA1S
- GAmenkjP+H1IQdfGpYfZ2KIwVKQE+s3VI12AmjUIt2PhgFA1HOL5Bys6qFAmYj7Kzln1Ac6wz
- pIlNZWuIMKywCNtG++9RlWlXNASMaZUlLTdItXwJwcUq0Nf7ut6OlbICv8+oivXcFOijNF4sP
- FjMSts+ek1TXqJN6kdjV8W5Vr3Igc/6eNa5+CswTrAxsu4obWE0FgXiuU1LNnPwGvVTE7CabS
- j0cUko7yyq7QddXWcTaObwWKOlFcMd8nUt3KjoNIpfX0Vy9yinlWa0aolQtNERSnX4X3xHS2w
- YkeYgK0+TGLX13aa1Qu7WKzFooLm7DQIjsiPnMp8VE7hs7CbODkNVNoB4uwu84S0Og0yQ6XaD
- jwnCRhUJxT95xwirdkJmSfKhbwWfXFqvRKp8GBsfjOtmpmBMmSepqmiycw9NasvyAnTvXk4SF
- dW8z2HEoa2nkO9VkasgSmqFjYjK2VPeEWWc5CpC9CyB98X4jTF46tlV3Ej7G+oeKv3LTu8YHW
- XTr1Fwby7ugZ9Qk4I+pk6yfln1L9/IAB9MCGLomNGzdGsMyVN/u9WOUveac8GHTIcsX5sPxMp
- lkT77snXX59v3oHMBQGRYibXL/0zESofyk9WcqY0NdGtBplv9B4j2cmi73okB1gdFpawNbHdS
- 8T8DhNTl+8ui6qfIg8iA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <78317df96ccb67b462878e07b3f87348c9d898cc.camel@perches.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 3, 2020 at 4:45 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> On Fri, Jan 03, 2020 at 04:29:56PM +0100, Arnd Bergmann wrote:
-> > On Fri, Jan 3, 2020 at 4:25 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > >
-> > > On Fri, Jan 3, 2020 at 4:03 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> > > >
-> > > > On Fri, 3 Jan 2020 at 03:42, Greg Kroah-Hartman
-> > > > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > -ENOENT is what you get when hugetlbfs is not mounted, so this hints to
-> > >
-> > > 8fc312b32b2  mm/hugetlbfs: fix error handling when setting up mounts
-> > >
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-5.4.y&id=3f549fb42a39bea3b29c0fc12afee53c4a01bec9
-> >
-> > I see that Mike Kravetz suggested not putting this patch into stable in
-> >
-> > https://lore.kernel.org/lkml/befca227-cb8a-8f47-617d-e3bf9972bfec@oracle.com/
-> >
-> > but it was picked through the autosel mechanism later.
->
-> So does that mean that Linus's tree shows this LTP failure as well?
+On Tue, Dec 31, 2019 at 01:54:57AM -0800, Joe Perches wrote:
+> Remove the CONFIG_ prefix from the select statement for ARM_GIC_V3.
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  arch/arm64/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index b1b447..e9b1fc 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1544,7 +1544,7 @@ config ARM64_MODULE_PLTS
+>  
+>  config ARM64_PSEUDO_NMI
+>  	bool "Support for NMI-like interrupts"
+> -	select CONFIG_ARM_GIC_V3
+> +	select ARM_GIC_V3
+>  	help
+>  	  Adds support for mimicking Non-Maskable Interrupts through the use of
+>  	  GIC interrupt priority. This support requires version 3 or later of
 
-Yes, according to
-https://qa-reports.linaro.org/lkft/linux-mainline-oe/tests/ltp-syscalls-tests/memfd_create04
-mainline has the same testcase failure, it started happening between
-v5.4-10135-gc3bfc5dd73c6 and v5.4-10271-g596cf45cbf6e, when the patch
-was originally merged into 5.5-rc1.
+Ah, kbuild doesn't warn about this. Anyway, it's not urgent since we
+already select ARM_GIC_V3 in the main ARM64 config, so Will can pick it
+up for 5.6. Thanks.
 
-> This does seem to fix a real issue, as shown by the LTP test noticing
-> it, so should the error code value be fixed in Linus's tree?
-
-No idea what to conclude from the testcase failure, let's see if Mike has
-any suggestions.
-
-      Arnd
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
