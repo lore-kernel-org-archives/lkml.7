@@ -2,282 +2,247 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554BCC00523
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 23:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FBEC00523
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 23:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9F624649
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 23:20:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578093619;
-	bh=vROKDr8ou9KC9ShWiJhEJm1fxvNK1FpW7pX42/uvUGA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cy1gtJrFOQ88ihRvCi002gj29Qb/WMBzD9Xn5p7Ao7mV9M+OTsg7q+Ihn2UdLf60n
-	 iDJsAQUwuOhhf0goFcQWPP8hC1zHkLmE5kFiELTwSVQT0WNjHu/WiIvAebFUI3OLVY
-	 RCgDRtGlYV6K0m8cS9Q0UJsrYLGyGNQRXE9YZioY=
+	by mail.kernel.org (Postfix) with ESMTP id 44D8222B48
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 23:25:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbgACXUS (ORCPT
+        id S1726368AbgACXZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 18:20:18 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:41912 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbgACXUR (ORCPT
+        Fri, 3 Jan 2020 18:25:10 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35186 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726118AbgACXZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 18:20:17 -0500
-Received: by mail-il1-f195.google.com with SMTP id f10so37909466ils.8
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 15:20:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YCaxbEJ1CW2jND/UvSNmsdGdR3TnCMQc7c+abO1Ak4E=;
-        b=Z5RriGCp3HuE3oD2lPykgNoniGatMs398pftH2xNswDpd8+2sCPToFYfSmRw1ajEiL
-         Guc+G8hqi+WYFbq2Fz6KIOo2JJDXfUSXkxuqTg25TriDeoXrC03pp4QyQg1+oHHZaTK0
-         uja7iR+O+dN7bRBvXt2u/VGVwra1kNAOliBL25rfueZ0bDZ3fbCDE+TNELEQ4Q9BbwgI
-         tgjahoTo40/+iJEP7yLrujJ/c2qUMjMTEJnMK4/otD5z5/yaQdykrU0FxrzEBLSNJAUm
-         choA0FgYmeiO2PClRs2GRNEy08+CXOq/2SRNCF4FqlroDIygbKFNI2hgiNFppIdhuTWU
-         Bwww==
-X-Gm-Message-State: APjAAAXos1TwI8qDIGPct/TNxUdLFkFdcTfxjq2Z/+Lau96iJd14oVzn
-        LXtJgLT8oH4ivS+9UqtTAlCJJUA=
-X-Google-Smtp-Source: APXvYqy9LJdSSMjrUzot5blVQMQW9Xq0/Au6yF56Hr6kz7zAfocKY6tFjndaV1K3JbJIJ5jmx0yELQ==
-X-Received: by 2002:a92:481d:: with SMTP id v29mr78290878ila.271.1578093616766;
-        Fri, 03 Jan 2020 15:20:16 -0800 (PST)
-Received: from rob-hp-laptop ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id f125sm11583850ilh.88.2020.01.03.15.20.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 15:20:16 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 2219a5
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Fri, 03 Jan 2020 16:18:42 -0700
-Date:   Fri, 3 Jan 2020 16:18:42 -0700
-From:   Rob Herring <robh@kernel.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, mark.rutland@arm.com,
-        mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
-        sam@ravnborg.org, icenowy@aosc.io,
-        laurent.pinchart@ideasonboard.com, gregkh@linuxfoundation.org,
-        Jonathan.Cameron@huawei.com, davem@davemloft.net,
-        mchehab+samsung@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/4] dt-bindings: regulator: add document bindings for
- mpq7920
-Message-ID: <20200103231842.GA25920@bogus>
-References: <20191226222930.8882-1-sravanhome@gmail.com>
- <20191226222930.8882-3-sravanhome@gmail.com>
+        Fri, 3 Jan 2020 18:25:10 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 003NMNm5140940
+        for <linux-kernel@vger.kernel.org>; Fri, 3 Jan 2020 18:25:09 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xa48mh207-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 18:25:08 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
+        Fri, 3 Jan 2020 23:25:07 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 3 Jan 2020 23:25:05 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 003NP2xF40501492
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Jan 2020 23:25:02 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E433242041;
+        Fri,  3 Jan 2020 23:25:01 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED72042049;
+        Fri,  3 Jan 2020 23:24:59 +0000 (GMT)
+Received: from oc0525413822.ibm.com (unknown [9.80.213.131])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri,  3 Jan 2020 23:24:59 +0000 (GMT)
+Date:   Fri, 3 Jan 2020 15:24:57 -0800
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     Pratik Rajesh Sampat <psampat@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
+        mpe@ellerman.id.au, svaidy@linux.ibm.com, ego@linux.vnet.ibm.com,
+        pratik.sampat@in.ibm.com
+Subject: Re: [RFC 1/3] powerpc/powernv: Interface to define support and
+ preference for a SPR
+Reply-To: Ram Pai <linuxram@us.ibm.com>
+References: <20191204093255.11849-1-psampat@linux.ibm.com>
+ <20191204093255.11849-2-psampat@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191226222930.8882-3-sravanhome@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191204093255.11849-2-psampat@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 20010323-0016-0000-0000-000002DA4B81
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20010323-0017-0000-0000-0000333CBA1A
+Message-Id: <20200103232457.GH5556@oc0525413822.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-03_06:2020-01-02,2020-01-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 spamscore=0 mlxscore=0 suspectscore=0 clxscore=1015
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 phishscore=0
+ bulkscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-2001030211
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 11:29:28PM +0100, Saravanan Sekar wrote:
-> Add device tree binding information for mpq7920 regulator driver.
-> Example bindings for mpq7920 are added.
+On Wed, Dec 04, 2019 at 03:02:53PM +0530, Pratik Rajesh Sampat wrote:
+> Define a bitmask interface to determine support for the Self Restore,
+> Self Save or both.
 > 
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> Also define an interface to determine the preference of that SPR to
+> be strictly saved or restored or encapsulated with an order of preference.
+> 
+> The preference bitmask is shown as below:
+> ----------------------------
+> |... | 2nd pref | 1st pref |
+> ----------------------------
+> MSB			  LSB
+> 
+> The preference from higher to lower is from LSB to MSB with a shift of 8
+> bits.
+> Example:
+> Prefer self save first, if not available then prefer self
+> restore
+> The preference mask for this scenario will be seen as below.
+> ((SELF_RESTORE_STRICT << PREFERENCE_SHIFT) | SELF_SAVE_STRICT)
+> ---------------------------------
+> |... | Self restore | Self save |
+> ---------------------------------
+> MSB			        LSB
+> 
+> Finally, declare a list of preferred SPRs which encapsulate the bitmaks
+> for preferred and supported with defaults of both being set to support
+> legacy firmware.
+> 
+> This commit also implements using the above interface and retains the
+> legacy functionality of self restore.
+> 
+> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
 > ---
->  .../bindings/regulator/mpq7920.yaml           | 143 ++++++++++++++++++
-
-Convention is use the compatible string: mps,mpq7920.yaml
-
->  1 file changed, 143 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/mpq7920.yaml
+>  arch/powerpc/platforms/powernv/idle.c | 325 +++++++++++++++++++++-----
+>  1 file changed, 269 insertions(+), 56 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/regulator/mpq7920.yaml b/Documentation/devicetree/bindings/regulator/mpq7920.yaml
-> new file mode 100644
-> index 000000000000..54e9177dfd1b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/mpq7920.yaml
-> @@ -0,0 +1,143 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-Dual license new bindings:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/regulator/mpq7920.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Monolithic Power System MPQ7920 PMIC
-> +
-> +maintainers:
-> +  - Saravanan Sekar <sravanhome@gmail.com>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "pmic@[0-9a-f]{1,2}"
-> +  compatible:
-> +    enum:
-> +      - mps,mpq7920
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  mps,time-slot:
-> +    description:
-> +      each regulator output shall be delayed during power on/off sequence which
-> +      based on configurable time slot value, must be one of following corresponding
-> +      value 0.5ms, 2ms, 8ms, 16ms
-
-These values map to 0-3?
-
-This value is how long each time slot is?
-
-> +    allOf:
-> +      - $ref: "/schemas/types.yaml#/definitions/uint8"
-> +      - enum: [ 0, 1, 2, 3 ]
-> +      - default: 0
-
-Only $ref needs to be under the allOf, so move enum and default to same 
-level as allOf.
-
-> +
-> +  mps,fixed-on-time:
-> +     description:
-> +       select power on sequence with fixed time output delay mentioned in
-> +       time-slot reg for all the regulators.
-> +     type: boolean
-> +
-> +  mps,fixed-off-time:
-> +     description:
-> +        select power off sequence with fixed time output delay mentioned in
-> +        time-slot reg for all the regulators.
-> +     type: boolean
-> +
-> +  mps,inc-off-time:
-> +     description: |
-> +        mutually exclusive to mps,fixed-off-time an array of 8, linearly increase
-> +        output delay during power off sequence based on factor of time slot/interval
-> +        for each regulator.
-> +     allOf:
-> +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
-> +       - minimum: 0
-> +       - maximum: 15
-> +       - default: [ 0, 6, 0, 6, 7, 7, 7, 9 ]
-
-Each value corresponds to a regulator? Why not a per regulator property?
-
-> +
-> +  mps,inc-on-time:
-> +     description: |
-> +        mutually exclusive to mps,fixed-on-time an array of 8, linearly increase
-> +        output delay during power on sequence based on factor of time slot/interval
-> +        for each regulator.
-> +     allOf:
-> +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
-> +       - minimum: 0
-> +       - maximum: 15
-> +       - default: [ 0, 6, 0, 6, 7, 7, 7, 9 ]
-> +
-> +  mps,switch-freq:
-> +     description: |
-> +        switching frequency must be one of following corresponding value
-> +        1.1MHz, 1.65MHz, 2.2MHz, 2.75MHz
-
-Seems like this should be a common property.
-
-> +     allOf:
-> +       - $ref: "/schemas/types.yaml#/definitions/uint8"
-> +       - enum: [ 0, 1, 2, 3 ]
-> +       - default: 2
-> +
-> +  mps,buck-softstart:
-> +     description: |
-> +        An array of 4 contains soft start time of each buck, must be one of
-> +        following corresponding values 150us, 300us, 610us, 920us
-> +     allOf:
-> +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
-> +       - enum: [ 0, 1, 2, 3 ]
-
-As this is an array, should be:
-
-items:
-  enum: ...
-
-Constraints on the size of the array?
-
-Though again, why not a per regulator property? Also, a fairly common 
-thing for buck regulators?
-
-> +       - default: [ 1, 1, 1, 1 ]
-> +
-> +  mps,buck-ovp:
-> +     description: |
-> +        An array of 4 contains over voltage protection of each buck, must be
-> +        one of above values
-> +     allOf:
-> +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
-> +       - enum: [ 0, 1 ]
-> +       - default: [ 1, 1, 1, 1 ]
-> +
-> +  mps,buck-phase-delay:
-> +     description: |
-> +        An array of 4 contains phase delay of each buck must be one of above values
-> +        corresponding to 0deg, 90deg, 180deg, 270deg
-> +     allOf:
-> +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
-> +       - enum: [ 0, 1, 2, 3 ]
-> +       - default: [ 0, 0, 1, 1 ]
-> +
-> +  regulators:
-> +    type: object
-> +    description:
-> +      list of regulators provided by this controller, must be named
-> +      after their hardware counterparts BUCK[1-4], one LDORTC, and LDO[2-5]
-> +      The valid names for regulators are
-> +      buck1, buck2, buck3, buck4, ldortc, ldo2, ldo3, ldo4, ldo5
-
-You need buck[1-4] and ldo(rtc|[2-5]) child nodes defined here which 
-reference regulators.yaml.
-
-> +
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        pmic@69 {
-> +          compatible = "mps,mpq7920";
-> +          reg = <0x69>;
-> +
-> +          mps,switch-freq = <1>;
-> +          mps,buck-softstart = /bits/ 8 <1 2 1 3>;
-> +          mps,buck-ovp = /bits/ 8 <1 0 1 1>;
-> +
-> +          regulators {
-> +            buck1 {
-> +             regulator-name = "buck1";
-> +             regulator-min-microvolt = <400000>;
-> +             regulator-max-microvolt = <3587500>;
-> +             regulator-min-microamp  = <460000>;
-> +             regulator-max-microamp  = <7600000>;
-> +             regulator-boot-on;
-> +            };
-> +
-> +            ldo2 {
-> +             regulator-name = "ldo2";
-> +             regulator-min-microvolt = <650000>;
-> +             regulator-max-microvolt = <3587500>;
-> +            };
-> +         };
-> +       };
-> +     };
-> +...
-> -- 
-> 2.17.1
+> diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+> index 78599bca66c2..d38b8b6dcbce 100644
+> --- a/arch/powerpc/platforms/powernv/idle.c
+> +++ b/arch/powerpc/platforms/powernv/idle.c
+> @@ -32,9 +32,106 @@
+>  #define P9_STOP_SPR_MSR 2000
+>  #define P9_STOP_SPR_PSSCR      855
 > 
+> +/* Interface for the stop state supported and preference */
+> +#define SELF_RESTORE_TYPE    0
+> +#define SELF_SAVE_TYPE       1
+> +
+> +#define NR_PREFERENCES    2
+> +#define PREFERENCE_SHIFT  8
+> +#define PREFERENCE_MASK   0xff
+> +
+> +#define UNSUPPORTED         0x0
+> +#define SELF_RESTORE_STRICT 0x01
+> +#define SELF_SAVE_STRICT    0x10
+> +
+> +/*
+> + * Bitmask defining the kind of preferences available.
+> + * Note : The higher to lower preference is from LSB to MSB, with a shift of
+> + * 8 bits.
+
+A minor comment.
+
+Is there a reason why shift is 8?  Shift of 4 must be sufficient,
+and a mask of '0xf' should do. And SELF_SAVE_STRICT can be 0x2.
+
+
+
+> + * ----------------------------
+> + * |    | 2nd pref | 1st pref |
+> + * ----------------------------
+> + * MSB			      LSB
+> + */
+> +/* Prefer Restore if available, otherwise unsupported */
+> +#define PREFER_SELF_RESTORE_ONLY	SELF_RESTORE_STRICT
+> +/* Prefer Save if available, otherwise unsupported */
+> +#define PREFER_SELF_SAVE_ONLY		SELF_SAVE_STRICT
+> +/* Prefer Restore when available, otherwise prefer Save */
+> +#define PREFER_RESTORE_SAVE		((SELF_SAVE_STRICT << \
+> +					  PREFERENCE_SHIFT)\
+> +					  | SELF_RESTORE_STRICT)
+> +/* Prefer Save when available, otherwise prefer Restore*/
+> +#define PREFER_SAVE_RESTORE		((SELF_RESTORE_STRICT <<\
+> +					  PREFERENCE_SHIFT)\
+> +					  | SELF_SAVE_STRICT)
+>  static u32 supported_cpuidle_states;
+>  struct pnv_idle_states_t *pnv_idle_states;
+>  int nr_pnv_idle_states;
+> +/* Caching the lpcr & ptcr support to use later */
+> +static bool is_lpcr_self_save;
+> +static bool is_ptcr_self_save;
+
+I understand why you need to track the status of PTCR register.
+But its not clear, why LPCR register's save status need to be tracked?
+
+
+> +
+> +struct preferred_sprs {
+> +	u64 spr;
+> +	u32 preferred_mode;
+> +	u32 supported_mode;
+> +};
+> +
+> +struct preferred_sprs preferred_sprs[] = {
+> +	{
+> +		.spr = SPRN_HSPRG0,
+> +		.preferred_mode = PREFER_RESTORE_SAVE,
+> +		.supported_mode = SELF_RESTORE_STRICT,
+> +	},
+> +	{
+> +		.spr = SPRN_LPCR,
+> +		.preferred_mode = PREFER_RESTORE_SAVE,
+> +		.supported_mode = SELF_RESTORE_STRICT,
+> +	},
+> +	{
+> +		.spr = SPRN_PTCR,
+> +		.preferred_mode = PREFER_SAVE_RESTORE,
+> +		.supported_mode = SELF_RESTORE_STRICT,
+> +	},
+> +	{
+> +		.spr = SPRN_HMEER,
+> +		.preferred_mode = PREFER_RESTORE_SAVE,
+> +		.supported_mode = SELF_RESTORE_STRICT,
+> +	},
+> +	{
+> +		.spr = SPRN_HID0,
+> +		.preferred_mode = PREFER_RESTORE_SAVE,
+> +		.supported_mode = SELF_RESTORE_STRICT,
+> +	},
+> +	{
+> +		.spr = P9_STOP_SPR_MSR,
+> +		.preferred_mode = PREFER_RESTORE_SAVE,
+> +		.supported_mode = SELF_RESTORE_STRICT,
+> +	},
+> +	{
+> +		.spr = P9_STOP_SPR_PSSCR,
+> +		.preferred_mode = PREFER_SAVE_RESTORE,
+> +		.supported_mode = SELF_RESTORE_STRICT,
+> +	},
+> +	{
+> +		.spr = SPRN_HID1,
+> +		.preferred_mode = PREFER_RESTORE_SAVE,
+> +		.supported_mode = SELF_RESTORE_STRICT,
+> +	},
+> +	{
+> +		.spr = SPRN_HID4,
+> +		.preferred_mode = PREFER_RESTORE_SAVE,
+> +		.supported_mode = SELF_RESTORE_STRICT,
+> +	},
+> +	{
+> +		.spr = SPRN_HID5,
+> +		.preferred_mode = PREFER_RESTORE_SAVE,
+> +		.supported_mode = SELF_RESTORE_STRICT,
+> +	}
+> +};
+
+What determines the list of registers tracked in this table?
+
+
+.snip..
+
+-- 
+Ram Pai
+
