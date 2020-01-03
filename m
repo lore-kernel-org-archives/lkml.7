@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B97C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B295C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8007322314
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D32227BF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:08:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="Fk6TLzpd"
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="lmzDQfpR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgACPHr (ORCPT
+        id S1727970AbgACPID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 10:07:47 -0500
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:2000 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727701AbgACPHp (ORCPT
+        Fri, 3 Jan 2020 10:08:03 -0500
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:64088 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727701AbgACPID (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 10:07:45 -0500
+        Fri, 3 Jan 2020 10:08:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1578064064; x=1609600064;
+  t=1578064082; x=1609600082;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=iHsaaNSb6QuBd5deQsg49o2tayu5boXDGXFCOP8fQzk=;
-  b=Fk6TLzpdu7D3QWekW6/8JbQ6qiy+I3Y6wm0Z5KU9X3bJN7+e5Bvmpzd4
-   gvv5igoUd90w7nxGRwyacv26BSllz8JX2AjHwqJ0DEc/y9g7tVWmbyD5Z
-   LFpdKN/GMUSxnKnQS/kzBNSEOxovQBzH29rqGT2mqzaVKb6gHcC3hF5qe
-   A=;
-IronPort-SDR: dzSxum0Eg4ym7IdAnqI5ApmAWoDS4hbW1dA4MiC2R/lbhYUFwc/P4ZlINqPgjvjg++vg67PfRM
- Hl3Us7UKpoPg==
-X-IronPort-AV: E=Sophos;i="5.69,390,1571702400"; 
-   d="scan'208";a="10829622"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-27fb8269.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 03 Jan 2020 15:07:44 +0000
+  bh=ilxhrqiz2sA0xCthbk4rbmbS2FVPt/6iJofX5fmxfxs=;
+  b=lmzDQfpRvRrdUhojVEjvWcTJUKrDmhwiXVzihyVNvH4ai1QPD+mI4yNU
+   nn3ZPyDR4i0EAXDJkEKJtvWoZqOF6wt8Cz2Nmbpjbizo9rKt619zkVMkZ
+   naSDiElI+S1WkYHOOxna8apGlbNlqYQyDh3u7bVHso7u+UJYhPARRW0CB
+   s=;
+IronPort-SDR: Oa/ojuSblhpUdRZMEVQrq0/DmPhELYjRcS+BsILcI1wiMfgpmZPicI7pxuGVx0EHyidjvUARu4
+ tDS7RvKJ+U9w==
+X-IronPort-AV: E=Sophos;i="5.69,391,1571702400"; 
+   d="scan'208";a="10900535"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 03 Jan 2020 15:07:44 +0000
 Received: from u7588a65da6b65f.ant.amazon.com (iad7-ws-svc-lb50-vlan3.amazon.com [10.0.93.214])
-        by email-inbound-relay-1e-27fb8269.us-east-1.amazon.com (Postfix) with ESMTPS id A32F0A1C46;
-        Fri,  3 Jan 2020 15:07:40 +0000 (UTC)
+        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id 737AFA1D0E;
+        Fri,  3 Jan 2020 15:07:39 +0000 (UTC)
 Received: from u7588a65da6b65f.ant.amazon.com (localhost [127.0.0.1])
-        by u7588a65da6b65f.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTPS id 003F7coI020473
+        by u7588a65da6b65f.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTPS id 003F7bDS020457
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 3 Jan 2020 16:07:38 +0100
+        Fri, 3 Jan 2020 16:07:37 +0100
 Received: (from jschoenh@localhost)
-        by u7588a65da6b65f.ant.amazon.com (8.15.2/8.15.2/Submit) id 003F7cqx020472;
-        Fri, 3 Jan 2020 16:07:38 +0100
+        by u7588a65da6b65f.ant.amazon.com (8.15.2/8.15.2/Submit) id 003F7bQ5020456;
+        Fri, 3 Jan 2020 16:07:37 +0100
 From:   =?UTF-8?q?Jan=20H=2E=20Sch=C3=B6nherr?= <jschoenh@amazon.de>
 To:     Borislav Petkov <bp@alien8.de>
 Cc:     =?UTF-8?q?Jan=20H=2E=20Sch=C3=B6nherr?= <jschoenh@amazon.de>,
@@ -58,9 +58,9 @@ Cc:     =?UTF-8?q?Jan=20H=2E=20Sch=C3=B6nherr?= <jschoenh@amazon.de>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Subject: [PATCH v2 4/6] x86/mce: Allow a variable number of internal MCE decode notifiers
-Date:   Fri,  3 Jan 2020 16:07:20 +0100
-Message-Id: <20200103150722.20313-5-jschoenh@amazon.de>
+Subject: [PATCH v2 2/6] x86/mce: Make mce=nobootlog work again
+Date:   Fri,  3 Jan 2020 16:07:18 +0100
+Message-Id: <20200103150722.20313-3-jschoenh@amazon.de>
 X-Mailer: git-send-email 2.22.0.3.gb49bb57c8208.dirty
 In-Reply-To: <20200103150722.20313-1-jschoenh@amazon.de>
 References: <20200103150722.20313-1-jschoenh@amazon.de>
@@ -72,74 +72,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Get rid of the compile time constant of internal (or mandatory)
-MCE decode notifiers in preparation for future changes. Instead,
-distinguish explicitly between internal and external MCE decode
-notifiers.
+Since commit 8b38937b7ab5 ("x86/mce: Do not enter deferred errors into
+the generic pool twice") the mce=nobootlog option has become mostly
+ineffective (after being only slightly ineffective before), as the
+code is taking actions on MCEs left over from boot when they have a
+usable address.
+
+Move the check for MCP_DONTLOG a bit outward to make it effective again.
+
+Also, since commit 011d82611172 ("RAS: Add a Corrected Errors Collector")
+the two branches of the remaining "if" the bottom of machine_check_poll()
+do same. Unify them.
 
 Signed-off-by: Jan H. Schönherr <jschoenh@amazon.de>
 ---
-New in v2, preparation for patches 5 and 6.
+Changes v1->v2:
+- remove an indentation level in favor of a goto (requested by Boris)
+- don't mention Linux version (per remark from Boris)
 ---
- arch/x86/kernel/cpu/mce/core.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ arch/x86/kernel/cpu/mce/core.c | 22 +++++++++-------------
+ 1 file changed, 9 insertions(+), 13 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index 1d91ce956772..d48deb127071 100644
+index 16134ce587fd..0ccd6cf3402d 100644
 --- a/arch/x86/kernel/cpu/mce/core.c
 +++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -157,21 +157,24 @@ void mce_log(struct mce *m)
- EXPORT_SYMBOL_GPL(mce_log);
+@@ -750,26 +750,22 @@ bool machine_check_poll(enum mcp_flags flags, mce_banks_t *b)
+ log_it:
+ 		error_seen = true;
  
- /*
-- * We run the default notifier if we have only the UC, the first and the
-- * default notifier registered. I.e., the mandatory NUM_DEFAULT_NOTIFIERS
-+ * We run the default notifier as long as we have no external
-  * notifiers registered on the chain.
-  */
--#define NUM_DEFAULT_NOTIFIERS	3
- static atomic_t num_notifiers;
+-		mce_read_aux(&m, i);
++		if (flags & MCP_DONTLOG)
++			goto clear_it;
  
--void mce_register_decode_chain(struct notifier_block *nb)
-+static void mce_register_decode_chain_internal(struct notifier_block *nb)
- {
- 	if (WARN_ON(nb->priority > MCE_PRIO_MCELOG && nb->priority < MCE_PRIO_EDAC))
- 		return;
++		mce_read_aux(&m, i);
+ 		m.severity = mce_severity(&m, mca_cfg.tolerant, NULL, false);
+-
+ 		/*
+ 		 * Don't get the IP here because it's unlikely to
+ 		 * have anything to do with the actual error location.
+ 		 */
+-		if (!(flags & MCP_DONTLOG) && !mca_cfg.dont_log_ce)
+-			mce_log(&m);
+-		else if (mce_usable_address(&m)) {
+-			/*
+-			 * Although we skipped logging this, we still want
+-			 * to take action. Add to the pool so the registered
+-			 * notifiers will see it.
+-			 */
+-			if (!mce_gen_pool_add(&m))
+-				mce_schedule_work();
+-		}
  
-+	blocking_notifier_chain_register(&x86_mce_decoder_chain, nb);
-+}
++		if (mca_cfg.dont_log_ce && !mce_usable_address(&m))
++			goto clear_it;
 +
-+void mce_register_decode_chain(struct notifier_block *nb)
-+{
- 	atomic_inc(&num_notifiers);
- 
--	blocking_notifier_chain_register(&x86_mce_decoder_chain, nb);
-+	mce_register_decode_chain_internal(nb);
- }
- EXPORT_SYMBOL_GPL(mce_register_decode_chain);
- 
-@@ -611,7 +614,7 @@ static int mce_default_notifier(struct notifier_block *nb, unsigned long val,
- 	if (!m)
- 		return NOTIFY_DONE;
- 
--	if (atomic_read(&num_notifiers) > NUM_DEFAULT_NOTIFIERS)
-+	if (atomic_read(&num_notifiers))
- 		return NOTIFY_DONE;
- 
- 	__print_mce(m);
-@@ -1966,9 +1969,9 @@ __setup("mce", mcheck_enable);
- int __init mcheck_init(void)
- {
- 	mcheck_intel_therm_init();
--	mce_register_decode_chain(&first_nb);
--	mce_register_decode_chain(&mce_uc_nb);
--	mce_register_decode_chain(&mce_default_nb);
-+	mce_register_decode_chain_internal(&first_nb);
-+	mce_register_decode_chain_internal(&mce_uc_nb);
-+	mce_register_decode_chain_internal(&mce_default_nb);
- 	mcheck_vendor_init_severity();
- 
- 	INIT_WORK(&mce_work, mce_gen_pool_process);
++		mce_log(&m);
++
++clear_it:
+ 		/*
+ 		 * Clear state for this bank.
+ 		 */
 -- 
 2.22.0.3.gb49bb57c8208.dirty
 
