@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCEDDC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABEFC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A332E24653
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E7FB215A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:00:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578074404;
-	bh=ozrucs3hXuheQjEorq11WIXtn1trwo+RaflQS7bqMmQ=;
+	s=default; t=1578074439;
+	bh=vRXpqGjbCzUYmYIDpduowAJZHbZP9laXLZYm9bHfsZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AyCTn4xI7qNDOj7Yz3AKBu1xQQvDNPDn163o1T+7669tTVKAlENR6jpkUo9KxK6P9
-	 8AgWH2ktdZjgtpUH858lNhnfL9PtVLy53AItFxu2/VIucfPDWU3sk/1sgjvr0EgPxV
-	 4eiidxGozvWe/kyRkGzw0dyq9JbUPzEDnTAelGzE=
+	b=kfQP8qCr5HAE/tTTJnrjCoAwwqEYyVA8vivZAjMzpUQhKua6Sm8Uy9+F0ldToxA4y
+	 CHk1oXkGoqmOypPGxumVlYCCyAXxDmtH/nqsAbnnSt/gPIUcwaIS5mIp7JR85E7vt9
+	 Zu/fIP6RaLEB2utjxzm0gRrqSID4KYkai4lYQoJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbgACSAA (ORCPT
+        id S1728420AbgACSAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 13:00:00 -0500
-Received: from conuserg-07.nifty.com ([210.131.2.74]:64711 "EHLO
+        Fri, 3 Jan 2020 13:00:38 -0500
+Received: from conuserg-07.nifty.com ([210.131.2.74]:16472 "EHLO
         conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728110AbgACR7j (ORCPT
+        with ESMTP id S1728204AbgACSAh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 12:59:39 -0500
+        Fri, 3 Jan 2020 13:00:37 -0500
 Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 003HxSJ2022724;
-        Sat, 4 Jan 2020 02:59:29 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 003HxSJ2022724
+        by conuserg-07.nifty.com with ESMTP id 003HxSJ4022724;
+        Sat, 4 Jan 2020 02:59:30 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 003HxSJ4022724
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578074369;
-        bh=zoAmWBfqVWksao6CrQDMXgz0tVFyw9MhTptiTkdSm+Y=;
+        s=dec2015msa; t=1578074370;
+        bh=zbfOeyYJKpEXpX8cm6nJcngXr1YLvlt8Dm3gdwkJxjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wcAhjkbI3zZJMz8+G6QH/1O3pTb1EfIxNiVR/4arYaJ4K6iKS1I6uymllQj2Dfh5w
-         9PahHjR6X4DFFMuep4BpFHvc/nLvUqS2yDYKLfGO/qQ9lhLyNQLcpl2Df24wPw+w1q
-         BY92IjDSRHY4tdUnfWHvBL295m822KdBG9nsC+MXMoMJuuEcQDx+FPum+cPlNzv/Do
-         VIdI6LEKaNDlKCaQzu3JcP8S5Ah1gnIXn/5h9OUjok6mRFctgPO/Qj2kuxgQVmdnJQ
-         t9/ntZH1E03wVqrXeZeSRP46KcoYxyAVVR9bn7LWuNGWWsbJlkjlyBhixORJWSRk33
-         wvI//duEbgMOA==
+        b=cyOIXMs5QY7UNGYM9+hl9EdBtQ2Mu2ctgb1TQjB1Qf5AA1oJVpn1n5p/q/bGnpjNb
+         2u49ODiQ1plKqizMEiQZCTCYkFbpF23wKGVHAgVcVxvAphgeTZzFIqi0VXW1La2EGM
+         WUtwsgxOhLohbzxk7BGo5ZQT34SRwxRZEnC4YpDDioCdu+ksPE58Asdvw7qTBbpo/Q
+         YQC2B2h3+Ql4pVcRiM/pjWLTOE7WwSsZUMaOt+ugYTDKFbbc2nVqcLkiuh3rQ47Glc
+         OslUPsDVscyGKLuTTx2Z6LFHyj/Az0MUjL7tt8neM6yaK2s2yBTFxouO8a01LR4gqV
+         nwNRbPIxxEQsw==
 X-Nifty-SrcIP: [126.93.102.113]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 01/12] gen_initramfs_list.sh: remove unused variable 'default_list'
-Date:   Sat,  4 Jan 2020 02:59:04 +0900
-Message-Id: <20200103175915.26663-2-masahiroy@kernel.org>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Thelen <gthelen@google.com>,
+        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH 03/12] initramfs: rename gen_initramfs_list.sh to gen_initramfs.sh
+Date:   Sat,  4 Jan 2020 02:59:06 +0900
+Message-Id: <20200103175915.26663-4-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200103175915.26663-1-masahiroy@kernel.org>
 References: <20200103175915.26663-1-masahiroy@kernel.org>
@@ -58,26 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is assigned, but not referenced.
+The comments in usr/Makefile wrongly refer to the script name (twice).
+
+Line 37:
+    # The dependency list is generated by gen_initramfs.sh -l
+
+Line 54:
+    # 4) Arguments to gen_initramfs.sh changes
+
+There does not exist such a script.
+
+I was going to fix the comments, but after some consideration, I thought
+"gen_initramfs.sh" would be more suitable than "gen_initramfs_list.sh"
+because it generates an initramfs image in the common usage.
+
+The script generates a list that can be fed to gen_init_cpio only when
+it is directly run without -o or -l option.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- usr/gen_initramfs_list.sh | 1 -
- 1 file changed, 1 deletion(-)
+ usr/Makefile                                    | 2 +-
+ usr/{gen_initramfs_list.sh => gen_initramfs.sh} | 0
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename usr/{gen_initramfs_list.sh => gen_initramfs.sh} (100%)
 
-diff --git a/usr/gen_initramfs_list.sh b/usr/gen_initramfs_list.sh
-index 2bbac73e6477..909a7b865aa7 100755
---- a/usr/gen_initramfs_list.sh
-+++ b/usr/gen_initramfs_list.sh
-@@ -280,7 +280,6 @@ while [ $# -gt 0 ]; do
- 			shift
- 			;;
- 		"-d")	# display default initramfs list
--			default_list="$arg"
- 			${dep_list}default_initramfs
- 			;;
- 		"-h")
+diff --git a/usr/Makefile b/usr/Makefile
+index 55c942da01cd..e44a66b8c051 100644
+--- a/usr/Makefile
++++ b/usr/Makefile
+@@ -24,7 +24,7 @@ $(obj)/initramfs_data.o: $(obj)/$(datafile_y) FORCE
+ # Generate the initramfs cpio archive
+ 
+ hostprogs-y := gen_init_cpio
+-initramfs   := $(CONFIG_SHELL) $(srctree)/$(src)/gen_initramfs_list.sh
++initramfs   := $(CONFIG_SHELL) $(srctree)/$(src)/gen_initramfs.sh
+ ramfs-input := $(if $(filter-out "",$(CONFIG_INITRAMFS_SOURCE)), \
+ 			$(shell echo $(CONFIG_INITRAMFS_SOURCE)),-d)
+ ramfs-args  := \
+diff --git a/usr/gen_initramfs_list.sh b/usr/gen_initramfs.sh
+similarity index 100%
+rename from usr/gen_initramfs_list.sh
+rename to usr/gen_initramfs.sh
 -- 
 2.17.1
 
