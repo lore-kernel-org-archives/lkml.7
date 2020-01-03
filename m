@@ -2,107 +2,125 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B24C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC88EC00523
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C38D02253D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFD21222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:57:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578041868;
+	bh=UctUroM4nN96wkH2WxGx4Y08JnLKZp1J2MkJoCunL9w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kPUyX79A3wMqtchbvXcImxs5dgGdqO9Vr4FpKf9tts5wa6GooZeM5ob3POpjUZ3T2
+	 7MsjoYJxSSoIsBTrnLaORFf3uhgSTljtAGVMQvWjifsqR5RMOrZ1K696FKCK7e9JWC
+	 9VSD6KYHQ21Rej2cdbXlB9XdegSVp/ABpEWIrmUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbgACI5S (ORCPT
+        id S1727473AbgACI5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 03:57:18 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:43873 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgACI5R (ORCPT
+        Fri, 3 Jan 2020 03:57:47 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38676 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbgACI5r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 03:57:17 -0500
-Received: from mail-qv1-f49.google.com ([209.85.219.49]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MXXdn-1jE6oX3zhv-00Z0Or; Fri, 03 Jan 2020 09:57:15 +0100
-Received: by mail-qv1-f49.google.com with SMTP id n8so15948781qvg.11;
-        Fri, 03 Jan 2020 00:57:14 -0800 (PST)
-X-Gm-Message-State: APjAAAVzLmqwU93oflz90OayHaRkEtlgScMlOuLS/3OTCZ8ZWWg0eGOl
-        mflxRaKgKsis3TorOKBNsDywfOcYAuSaQxGCies=
-X-Google-Smtp-Source: APXvYqzTMjLfB/djZfKHN6GJc8U6SPp+bLcFseejCOHPAhzRIWhN2S9BjSwrezU2LR8WsFgGtj/vSg4385pE/8QPXy8=
-X-Received: by 2002:a0c:e7c7:: with SMTP id c7mr67496854qvo.222.1578041833501;
- Fri, 03 Jan 2020 00:57:13 -0800 (PST)
+        Fri, 3 Jan 2020 03:57:47 -0500
+Received: by mail-ed1-f65.google.com with SMTP id i16so41132722edr.5
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 00:57:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=r6qIuR+7bvXSiJDqaws/93bA9gUxPMySdOOHdmUI+9c=;
+        b=Uas7W9I4m4qeQIjEB5GONGAgf/kMbyQ7cIpdqvYqrv5maqGulSwKmtGvffwl0KTQYf
+         yWbVSP/dzfsBwAgENB02o1l+umXUq7RyNHv03rXv903jTUNE1j/eOFeerH52fsMjRUsm
+         f29ttysfB+aG21Et3Ra/XMTbiOlibi8yMpadfkPkdvvmLQdDHZ2tcZoGXkZBajV8mO9x
+         aOMOQPksdUMBkPRG8fwu+jrgTICYFEfa2oS93kLwJgdTUm5OQSgz73UgwX7da7QTSEke
+         QtAUjI2HFO5SdPm5p+BUvkVI6si+o4Sq9+NQxrWKkrtzaEKiLnJhFXCzKwAbcpwwWmJ3
+         cnqA==
+X-Gm-Message-State: APjAAAWAncqo8ovmKYkmuf/EwsG/XdxFJMjQ7ho+3q5C/q66Y5qoKOvk
+        uRVq0SKQQ86BdNT1FSJiA/U=
+X-Google-Smtp-Source: APXvYqyTfPYeweyUs/D/35Bz3a7w+2H8lIK0gttyBHOE77/P2n2tGa1xOmAoP3pGN5h2t8468x1m2g==
+X-Received: by 2002:a50:93a2:: with SMTP id o31mr92253605eda.160.1578041865550;
+        Fri, 03 Jan 2020 00:57:45 -0800 (PST)
+Received: from pi3 ([194.230.155.149])
+        by smtp.googlemail.com with ESMTPSA id qc1sm5717229ejb.49.2020.01.03.00.57.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2020 00:57:44 -0800 (PST)
+Date:   Fri, 3 Jan 2020 09:57:42 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] iommu: Enable compile testing for some of drivers
+Message-ID: <20200103081201.GA1439@pi3>
+References: <20191230172619.17814-3-krzk@kernel.org>
+ <201912311551.tBrb3BhH%lkp@intel.com>
+ <20191231080722.GA6804@pi3>
+ <923b1f2f-2b5c-8b6e-6083-243beae09777@ti.com>
 MIME-Version: 1.0
-References: <20200102145552.1853992-1-arnd@arndb.de> <dc17d939c813b004e0a50af2813a1eef1fbf9574.camel@codethink.co.uk>
-In-Reply-To: <dc17d939c813b004e0a50af2813a1eef1fbf9574.camel@codethink.co.uk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 3 Jan 2020 09:56:57 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1tTCk_qYQ+iLp_L50biemmz+vh8kHYHL7hRPgirhxxLA@mail.gmail.com>
-Message-ID: <CAK8P3a1tTCk_qYQ+iLp_L50biemmz+vh8kHYHL7hRPgirhxxLA@mail.gmail.com>
-Subject: Re: [GIT PULL v3 00/27] block, scsi: final compat_ioctl cleanup
-To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:I1cvh4okryzhKcNilmC8/jvbYZfVuC7Gu3zL5E1dw1nhWS1IsPm
- G5Ds416TnXhCHX4N3OqQef6+9rsjiCiGuKfWmAtK/kFOnOyvcSN/CM27gw3dr311C5NSxAG
- ZK+7kxKBQVfr2hmw+eOxuNVU4n+uzNKY6ER9uc6wUCq/po24V2cfsgPkO6+Glgb5QjnctA4
- 71SZQChXFWIiX0RFKbYmg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lmKs5T3XinI=:vpspqsdsexs7fkhPmpGBPe
- +oi0veEcyaz8JCYiR15ghmGkLyeZ6HJHk179W7e5mfPsKuxTRJXeQzjsCfg072D68yi9izXvO
- WsL1ZfDUZEtWNc0cq7jGaKe8rsGuFPzoT2kQ06jrb+pT4/i4CCNb1A7MK6VY/InoR/D7jGcag
- jp8ZCPVPU9vA0SryIbqhkPKjkGdJ0FZcDQCNJNf2cvEt065jp91OY5vYQ2fcZZ/otbszo31t6
- HCXDmRfd6/ZBQYpbQ0qpv5P9oL0TIGbj1pEQFPc9bku1ODtXZAaqKrhi/TkgXpi5DBv7km1Iu
- uvOQDQcbSm2CZNtJ7cPaybjnc0JADX/zTOU3JvsJvzke28q6A8bwYN1H0RcrEvaLS573+42uM
- 3GfIfenhzmZkbuxNUiqZbJ/UCe/9/+sCqXsZBZVu3tzP4KOOEz7AJLiRlhCgjVSPLYrcXbLt4
- bbp0QaNhxPMbX0fMM2UwBcsHbEXec9lf56bTcwVT9B+IhMOAndTZA7/wWYFBpPbUWJAY06ofO
- dIizah+LcSpUN3KoZVstllojgWETUEBuOkpq+zCR5JyTTxDjw/D197lBWdTCB5CvmAuvjkZKM
- 1EJ8zSPWzopPoQt4xncQLEm+dwXoK5Is8WMisZ2uXX3xAeYpHn7ORJPni9rGPQlUWq6wj+Wwe
- IjqE0m7ovG8fbl7sGAVbfy7KsiHjJHTHs/p5nrciWUGlITYfILc6dg5xH0psdXNS7jJH/j3hr
- nu/MleWWupSZPSFaS1USBZOKGgUa0uEt8rwzess6PcjplX8ebeRSK+Elfd9tGEtI4bfpSEbrJ
- +P+lnbheWzNL8jYl5oMMz7zZr7eKm9RV9eysM8hYhnU/kPr28qeHCTelYTPL3y1RD6vj7Q6F2
- bIu5/3/E/zoju4Tpu+3A==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <923b1f2f-2b5c-8b6e-6083-243beae09777@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 3, 2020 at 1:22 AM Ben Hutchings
-<ben.hutchings@codethink.co.uk> wrote:
->
-> On Thu, 2020-01-02 at 15:55 +0100, Arnd Bergmann wrote:
-> [...]
-> > Changes since v2:
-> > - Rebase to v5.5-rc4, which contains the earlier bugfixes
-> > - Fix sr_block_compat_ioctl() error handling bug found by
-> >   Ben Hutchings
-> [...]
->
-> Unfortunately that fix was squashed into "compat_ioctl: move
-> sys_compat_ioctl() to ioctl.c" whereas it belongs in "compat_ioctl:
-> scsi: move ioctl handling into drivers".
+On Thu, Jan 02, 2020 at 04:40:16PM -0600, Suman Anna wrote:
+> Hi Krzysztof,
+> 
+> On 12/31/19 2:07 AM, Krzysztof Kozlowski wrote:
+> > On Tue, Dec 31, 2019 at 03:43:39PM +0800, kbuild test robot wrote:
+> >> Hi Krzysztof,
+> >>
+> >> I love your patch! Perhaps something to improve:
+> >>
+> >> [auto build test WARNING on iommu/next]
+> >> [also build test WARNING on v5.5-rc4]
+> >> [if your patch is applied to the wrong git tree, please drop us a note to help
+> >> improve the system. BTW, we also suggest to use '--base' option to specify the
+> >> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> >>
+> >> url:    https://github.com/0day-ci/linux/commits/Krzysztof-Kozlowski/iommu-omap-Fix-pointer-cast-Wpointer-to-int-cast-warnings-on-64-bit/20191231-022212
+> >> base:   https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git next
+> >> config: ia64-allmodconfig (attached as .config)
+> >> compiler: ia64-linux-gcc (GCC) 7.5.0
+> >> reproduce:
+> >>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >>         chmod +x ~/bin/make.cross
+> >>         # save the attached .config to linux build tree
+> >>         GCC_VERSION=7.5.0 make.cross ARCH=ia64 
+> >>
+> >> If you fix the issue, kindly add following tag
+> >> Reported-by: kbuild test robot <lkp@intel.com>
+> > 
+> > I saw it already while compile testing my patch. I must admit that I
+> > could not find easy/fast fix for it.  Probably the
+> > omap_iommu_translate() helper should be made 64-bit friendly but this
+> > obfuscates the code. 
+> 
+> >The driver and hardware supports only 32-bit addresses.
+> 
+> Yeah, is there a reason why you are trying to enable the build for the
+> OMAP IOMMU driver on 64-bit platforms or other architectures - the IP
+> and driver is only ever used on ARMv7 platforms, and it should already
+> be available for COMPILE_TEST on those.
 
-Fixed now.
+It's the same reason we enable compile testing on all other drivers
+which will never be used outside original platforms. There are many
+of such examples because we want to increase the build coverage to as
+many different configurations as possible. There could be also another
+benefit - easier code reusability - although it is purely theoretical in
+this case, I think.
 
-> If you decide to rebase again, you can add my Reviewed-by to all
-> patches.
-
-Done, and pushed out to the same tag as before
-
-https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/
-block-ioctl-cleanup-5.6
-
-Thank you again for the careful review!
-
-Martin, please pull the URL above to get the latest version, the top commit
-is 8ce156deca718 ("Documentation: document ioctl interfaces better").
-
-       Arnd
+Best regards,
+Krzysztof
