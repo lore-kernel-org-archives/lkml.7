@@ -2,103 +2,193 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7ABC00523
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 07:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30252C00523
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 07:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CB23222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 07:19:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578035982;
-	bh=FV053rnnc3Ysq//ItKxgra7oEosNJ8yKfv9gjd3Akao=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=2enRnOdFxauSHDrfFsjtv7p1NnKBZPeIxGsUphX1Qkyvg0XdUM8F/6Vg3QJhuQP8b
-	 jnKNuNi7VUORBbDye7+9MzFe+Ppzv64h8XVx0FLacpjG0mcEUuPOHA7g9Fl/2RYDYD
-	 kY6w+OOKEgoZ+XRx7y5XSon9UnRzSo1Zi6/d/4nI=
+	by mail.kernel.org (Postfix) with ESMTP id 07DE82464E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 07:22:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kBHjrs1X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbgACHSv (ORCPT
+        id S1727306AbgACHWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 02:18:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34846 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgACHSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 02:18:51 -0500
-Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72899222C3;
-        Fri,  3 Jan 2020 07:18:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578035930;
-        bh=FV053rnnc3Ysq//ItKxgra7oEosNJ8yKfv9gjd3Akao=;
-        h=From:To:Cc:Subject:Date:From;
-        b=jzgTO2MqtxBwsNZQ8PN9KIeVu9nevlCM/egS/oKHH34BfyhH+O3qwNe/11pHQE+2c
-         qJJnU1488/tJXT56WynIKr0FXlxgcqMFhs6cEEkYZ2X/fd7MZ2aOhnQw6wSIb/Y8bK
-         QCxSt9n1aOpQLsKv6BcOS/lZhjk72rYAgLUsrZpY=
-Received: by wens.tw (Postfix, from userid 1000)
-        id BCD7E5FC7C; Fri,  3 Jan 2020 15:18:48 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Maxime Ripard <mripard@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] clk: sunxi-ng: r40: Export MBUS clock
-Date:   Fri,  3 Jan 2020 15:18:48 +0800
-Message-Id: <20200103071848.3977-1-wens@kernel.org>
-X-Mailer: git-send-email 2.24.1
+        Fri, 3 Jan 2020 02:22:09 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33852 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgACHWJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 02:22:09 -0500
+Received: by mail-ot1-f65.google.com with SMTP id a15so60048820otf.1;
+        Thu, 02 Jan 2020 23:22:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o43WK0aGQfxtR36Yk2dMmC8IKe8HC2vf043dM8fz/J0=;
+        b=kBHjrs1XnSyfWoGPfctBX/UaQV+2CNFQiPTPd/Y01UbdDbmQau1AHdLldzBtIEVBxW
+         Xlq+HQwZ3DkZRiYhm2WL8NVNftcQZMTsUBedt/BGOihOWTIHtGA8Jtd7MZ6IJrFlDyvY
+         Ieyrbn61qQoi8zCilr+LU+ZkmSDPahF/zMKxK2i0GTxL7RYJho2P7GD8I5ffiuRJP/rK
+         o03DXNJc8n0gZGxx/WExyayA3Ih4rfBgPRnBSBP2JQQtjp+g6NYLdee2A+tHY293TrdH
+         sSinmfuC25QZLd4Gjs3HmMSVVZlt2k0RN5IiV/CwR4D3Rkqh9nlFp5nz1sMdYbOf10uf
+         889Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o43WK0aGQfxtR36Yk2dMmC8IKe8HC2vf043dM8fz/J0=;
+        b=TBjhYPsYTpOGC6PlDgHbu0L7QoT7YwvlDexAS9h7mBy4U/v+eVKownSQ6OMBMqN5Oh
+         9Rq95O4rfbFslv+oahH0un2MLsKN2dJqUjP22n1v2O0ETs/ys3q7Kj3SUixqY+XE/mlr
+         YEvuGKhv1BJCG6A8S8MKrxR4N9t/ZDQC0BKolRXXpaFez/LmdnNQzo67jHboLSUbeOkb
+         DQc+vIA0NHFH+7CqHg5YIkOFH8S1UD4n45jWaZs1a7zz8S5/ZNa022eR4ALTuMWrC13k
+         aB6yTvaFmFmY9AGukeV4ihJjNC/Wap/U76D4F8B1g/LAIsgnh7hUWONU07IqxI48swBz
+         FAQA==
+X-Gm-Message-State: APjAAAVxexPxMcyHDQh8Hr/22RYqy7V8Y/VMY9P9A2bWs1ZShdOZse35
+        h+eKTuUIoUvc+jptdkc+eCM650LdoxKro8zBY9I=
+X-Google-Smtp-Source: APXvYqySDXOnLw7kJKhe72eMXvoQUtPXGwbXBK+RARSAlJHRXKujxFmp2PP49cECDcsrEE9JZ9Zu4JvoRjkzEU78Fns=
+X-Received: by 2002:a05:6830:2141:: with SMTP id r1mr97473012otd.39.1578036128160;
+ Thu, 02 Jan 2020 23:22:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAD_xR9eDL+9jzjYxPXJjS7U58ypCPWHYzrk0C3_vt-w26FZeAQ@mail.gmail.com>
+ <1762437703fd150bb535ee488c78c830f107a531.camel@sipsolutions.net> <CAD_xR9eh=CAYeQZ3Vp9Yj9h3ifMu2exy0ihaXyE+736tJrPVLA@mail.gmail.com>
+In-Reply-To: <CAD_xR9eh=CAYeQZ3Vp9Yj9h3ifMu2exy0ihaXyE+736tJrPVLA@mail.gmail.com>
+From:   Justin Capella <justincapella@gmail.com>
+Date:   Thu, 2 Jan 2020 23:21:56 -0800
+Message-ID: <CAMrEMU-QF8HCTMFhzHd0w2f132iA4GLUXHmBPGnuetPqkz=U7A@mail.gmail.com>
+Subject: Re: PROBLEM: Wireless networking goes down on Acer C720P Chromebook (bisected)
+To:     Stephen Oberholtzer <stevie@qrpff.net>
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+The rather large negative deficit stands out to me. See this patch,
+https://patchwork.kernel.org/patch/11246363/ specifically the comments
+by Kan Yan
 
-The MBUS clock needs to be referenced in the MBUS device node.
-Export it.
+On Thu, Jan 2, 2020, 3:14 PM Stephen Oberholtzer <stevie@qrpff.net> wrote:
+>
+>
+> /sys/kernel/debug/ieee80211/phy0
+>
+> airtime_flags = 7
+>
+> stations/<my AP's MAC>/airtime =
+>
+> RX: 6583578 us
+> TX: 32719 us
+> Weight: 256
+> Deficit: VO: -1128 us VI: 11 us BE: -5098636 us BK: 256 us
+> Q depth: VO: 3868 us VI: 3636 us BE: 12284 us BK: 0 us
+> Q limit[low/high]: VO: 5000/12000 VI: 5000/12000 BE: 5000/12000 BK: 5000/1200
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- drivers/clk/sunxi-ng/ccu-sun8i-r40.h      | 4 ----
- include/dt-bindings/clock/sun8i-r40-ccu.h | 2 +-
- 2 files changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-r40.h b/drivers/clk/sunxi-ng/ccu-sun8i-r40.h
-index a69637b6b0c1..6f7071df8e1c 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-r40.h
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-r40.h
-@@ -55,10 +55,6 @@
- 
- /* Some more module clocks are exported */
- 
--#define CLK_MBUS		155
--
--/* Another bunch of module clocks are exported */
--
- #define CLK_NUMBER		(CLK_OUTB + 1)
- 
- #endif /* _CCU_SUN8I_R40_H_ */
-diff --git a/include/dt-bindings/clock/sun8i-r40-ccu.h b/include/dt-bindings/clock/sun8i-r40-ccu.h
-index f9e15a235626..d7337b55a4ef 100644
---- a/include/dt-bindings/clock/sun8i-r40-ccu.h
-+++ b/include/dt-bindings/clock/sun8i-r40-ccu.h
-@@ -176,7 +176,7 @@
- #define CLK_AVS			152
- #define CLK_HDMI		153
- #define CLK_HDMI_SLOW		154
--
-+#define CLK_MBUS		155
- #define CLK_DSI_DPHY		156
- #define CLK_TVE0		157
- #define CLK_TVE1		158
--- 
-2.24.1
-
+On Thu, Jan 2, 2020 at 3:14 PM Stephen Oberholtzer <stevie@qrpff.net> wrote:
+>
+> On Thu, Jan 2, 2020 at 8:28 AM Johannes Berg <johannes@sipsolutions.net> wrote:
+> >
+> > On Tue, 2019-12-31 at 19:49 -0500, Stephen Oberholtzer wrote:
+> > > Wireless networking goes down on Acer C720P Chromebook (bisected)
+> > >
+> > > Culprit: 7a89233a ("mac80211: Use Airtime-based Queue Limits (AQL) on
+> > > packet dequeue")
+> > >
+>
+> <snip>
+>
+> > I think I found at least one hole in this, but IIRC (it was before my
+> > vacation, sorry) it was pretty unlikely to actually happen. Perhaps
+> > there are more though.
+> >
+> > https://lore.kernel.org/r/b14519e81b6d2335bd0cb7dcf074f0d1a4eec707.camel@sipsolutions.net
+>
+> <snippety-snip>
+>
+> > Do you get any output at all? Like a WARN_ON() for an underflow, or
+> > something?
+> >
+> > johannes
+> >
+>
+> Johannes,
+>
+> To answer your immediate question, no, I don't get any dmesg output at
+> all. Nothing about underruns.
+> However, while pursuing other avenues -- specifically, enabling
+> mac80211 debugfs and log messages -- I realized that my 'master' was
+> out-of-date from linux-stable and did a git pull.  Imagine my surprise
+> when the resulting kernel did not exhibit the problem!
+>
+> Apparently, I had been a bit too pessimistic; since the problem
+> existed in 5.5-rc1 release, I'd assumed that the problem wouldn't get
+> rectified before 5.5.
+>
+> However, I decided to bisect the fix, and ended up with: 911bde0f
+> ("mac80211: Turn AQL into an NL80211_EXT_FEATURE"), which appears to
+> have "solved" the problem by just disabling the feature (this is
+> ath9k, by the way.)
+>
+> This AQL stuff sounds pretty nifty, and I'd love to try my hand at
+> making it work for ath9k (also, since I put so much effort into an
+> automated build-and-test framework, it'd be a shame to just abandon
+> it.)  However, the ath9k code is rather lacking for comments, so I
+> don't even know where I should start, except for (I suspect) a call to
+> `wiphy_ext_feature_set(whatever, NL80211_EXT_FEATURE_AQL);` from
+> inside ath9k_set_hw_capab()?
+>
+> In the meantime, I went back to e548f749b096 -- the commit prior to
+> the one making AQL support opt-in -- and cranked up the debugging.
+>
+> I'm not sure how to interpret any of this, but  here's what I got:
+>
+> dmesg output:
+>
+> Last relevant mention is "moving STA <my AP's MAC> to state 4" which
+> happened during startup, before everything shut down.
+>
+> /sys/kernel/debug/ieee80211/phy0
+>
+> airtime_flags = 7
+>
+> stations/<my AP's MAC>/airtime =
+>
+> RX: 6583578 us
+> TX: 32719 us
+> Weight: 256
+> Deficit: VO: -1128 us VI: 11 us BE: -5098636 us BK: 256 us
+> Q depth: VO: 3868 us VI: 3636 us BE: 12284 us BK: 0 us
+> Q limit[low/high]: VO: 5000/12000 VI: 5000/12000 BE: 5000/12000 BK: 5000/12000
+>
+> (I have no idea how to interpret this, but that '32719 us' seems odd,
+> I thought the airtime usage was in 4us units?)
+>
+>
+> Doing an 'echo 3 | tee airtime_flags' to clear the (old) AQL-enabled
+> bit seemed to *immediately* restore network connectivity.
+>
+> I ran a ping, and saw this:
+>
+> - pings coming back in <5ms
+> - re-enable AQL (echo 7 | tee airtime_flags)
+> - pings stop coming back immediately
+> - some seconds later, disable AQL again (echo 3 | tee airtime_flags)
+> - immediate *flood* of ping replies registered, with times 16000ms,
+> 15000ms, 14000ms, .. down to 1000ms, 15ms, then stabilizing sub-5ms
+> - According to the icmp_seq values, all 28 requests were replied to,
+> and their replies were delivered in-order
+>
+> This certainly looks like a missing TX queue restart to me?
+>
+>
+> --
+> -- Stevie-O
+> Real programmers use COPY CON PROGRAM.EXE
