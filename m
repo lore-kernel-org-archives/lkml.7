@@ -2,105 +2,102 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F2DC32770
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 03:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A8AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 03:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 786EE2085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 03:00:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="alPFXMvn"
+	by mail.kernel.org (Postfix) with ESMTP id 6AD9024649
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 03:03:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578020580;
+	bh=vt52eM4buQ1/nXw6xZpK+qP9tLkU2kjauxegIfxwUAU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=D1ZRefBxuCBbYcECtcEVflubGqHRewcTMGz8zt348+nhJjg0Yz/XEqAoy45hSPpex
+	 2e+aFgpJVre9NNRCbxJ922oNBOGmJgMTFF8zksYVli3MVyrE+SrZJTvjvltks6tkGp
+	 knGv5kvCrj74s94UTK/3xlyorK71YnacRN2FXSHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbgACDAN (ORCPT
+        id S1727352AbgACDC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 22:00:13 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:33678 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727408AbgACDAN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 22:00:13 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0032xQCD081913;
-        Fri, 3 Jan 2020 02:59:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=yQuBYj9lTweXO0mujRhwwsVZL/A5k0NPhbYSVXN9W/I=;
- b=alPFXMvnrCVxVoxo5gOpf3yv2rMI5ol1j5QkovRClw0xhZDZtHokpAXDv5TDG2XpED9B
- nWiN0gUW6+djWEJSWV3s9DiRyZ/ekPMg7BwNjLAKS93gDd1AwjF7qJ+HhqUHT5zgHAmE
- LL9kzjeqD5nPdtHgXaBIQCyiXO7j2XkIp1Gj+QWYCaLGIrMcLRQS+EzKfv5OVsQqJHdv
- UdUxJGZSGrwpjvFjwSqVuDeFFKD1jYuqch2Wc3sQFRv4fWaoVAVLP9n88e8zTlyaQuAf
- xOdlHArwJNTVtZYeuRXkgl9foJr0HqQDhC3JmssRSbXdmajYo6l5gBBZN6d1lpVYTlVW rg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2x5y0ptanx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Jan 2020 02:59:53 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0032xFib182529;
-        Fri, 3 Jan 2020 02:59:53 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2x8gjbbbt1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Jan 2020 02:59:53 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0032xpPt012906;
-        Fri, 3 Jan 2020 02:59:51 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 02 Jan 2020 18:59:50 -0800
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <pedrom.sousa@synopsys.com>, <jejb@linux.ibm.com>,
-        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
-        <f.fainelli@gmail.com>, <beanhuo@micron.com>,
-        <cang@codeaurora.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, <leon.chen@mediatek.com>
-Subject: Re: [PATCH v2 0/6] scsi: ufs: add MediaTek vendor implementations
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <1577683950-1702-1-git-send-email-stanley.chu@mediatek.com>
-Date:   Thu, 02 Jan 2020 21:59:46 -0500
-In-Reply-To: <1577683950-1702-1-git-send-email-stanley.chu@mediatek.com>
-        (Stanley Chu's message of "Mon, 30 Dec 2019 13:32:24 +0800")
-Message-ID: <yq11rsh5jod.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001030026
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001030027
+        Thu, 2 Jan 2020 22:02:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38120 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726481AbgACDC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 22:02:59 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6358621582;
+        Fri,  3 Jan 2020 03:02:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578020578;
+        bh=vt52eM4buQ1/nXw6xZpK+qP9tLkU2kjauxegIfxwUAU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QzNogAThJ0ghybp7xHd/VqAJWY9/rD85imeifM1yf/Sq0ibB2HUBHpUeRIO6UG2s5
+         J4dVyiglCc3gJpzLidkKvA494Lz1rJSu1YkDn9MgmcqdX9BkM0bXguhJx3VLthsiYL
+         tWj0rnl2jfRi7uoXJkRQfl0g/cGD9Syl89YYI0PQ=
+Date:   Thu, 2 Jan 2020 19:02:57 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH] mm, debug_pagealloc: don't rely on static keys too
+ early
+Message-Id: <20200102190257.bef74c21f31373612160b78f@linux-foundation.org>
+In-Reply-To: <20191219130612.23171-1-vbabka@suse.cz>
+References: <20191219130612.23171-1-vbabka@suse.cz>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 19 Dec 2019 14:06:12 +0100 Vlastimil Babka <vbabka@suse.cz> wrote:
 
-Stanley,
+> Commit 96a2b03f281d ("mm, debug_pagelloc: use static keys to enable debugging")
+> has introduced a static key to reduce overhead when debug_pagealloc is compiled
+> in but not enabled. It relied on the assumption that jump_label_init() is
+> called before parse_early_param() as in start_kernel(), so when the
+> "debug_pagealloc=on" option is parsed, it is safe to enable the static key.
+> 
+> However, it turns out multiple architectures call parse_early_param() earlier
+> from their setup_arch(). x86 also calls jump_label_init() even earlier, so no
+> issue was found while testing the commit, but same is not true for e.g. ppc64
+> and s390 where the kernel would not boot with debug_pagealloc=on as found by
+> our QA.
+> 
+> To fix this without tricky changes to init code of multiple architectures, this
+> patch partially reverts the static key conversion from 96a2b03f281d. Init-time
+> and non-fastpath calls (such as in arch code) of debug_pagealloc_enabled() will
+> again test a simple bool variable. Fastpath mm code is converted to a new
+> debug_pagealloc_enabled_static() variant that relies on the static key, which
+> is enabled in a well-defined point in mm_init() where it's guaranteed that
+> jump_label_init() has been called, regardless of architecture.
 
-> This series provides MediaTek vendor implementations as below,
->
->     - Device reset
->     - Reference clock control
->     - Auto-hibernate enabling with customized timer value
->     - Clk-gating enabling with customized delayed timer value
+I'm seeing this with x86_64 allmodconfig:
 
-Applied to 5.6/scsi-queue, thanks!
+ERROR: "_debug_pagealloc_enabled_early" [sound/drivers/pcsp/snd-pcsp.ko] undefined!
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Not sure why.  It's there:
+
+q:/usr/src/25> nm mm/page_alloc.o|grep _debug_pagealloc_enabled
+...
+00000000000028a0 B _debug_pagealloc_enabled
+...
+
+and exported:
+
+0000000000000072 r __kstrtab__debug_pagealloc_enabled
+
+Odd.  Does this happen to you as well?
