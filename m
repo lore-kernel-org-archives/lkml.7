@@ -2,122 +2,127 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4509AC00523
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87396C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1778E21734
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:51:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kPalE5uc"
+	by mail.kernel.org (Postfix) with ESMTP id 68594222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:56:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbgACIvE (ORCPT
+        id S1727399AbgACI4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 03:51:04 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:32788 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgACIvE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 03:51:04 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0038ht9v138539;
-        Fri, 3 Jan 2020 08:50:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=tzuXPE/Pks4hujfIYPzNgVGPbsKo4j/Ts3ZzA5B7ZZs=;
- b=kPalE5ucdFXLKZ/tpsrqgDQDYHOLQNdrC6ttTw+laxN2MOpmdp4wtGW3AnGnk4uQLHnS
- Z4t4Jzo/SvFmpkxNqE7gf1c8FRLwxYshO8Gw8uHdTg3kLX+7t/aRUoIWx2al3k33H2K9
- heO5i/qeEz+fyZzF2WMmxCx1yfHZGBLpMQ4t7sHWVjk+8BjJjaCwx3JRYSLl68unTgDv
- 59BCqr+Lb6ddVOzjF4KwmU6LZAbYjGn9l5FnIwbvRvxbbJQVF9Bxo5MwNt/bvMBkBoUJ
- 7NCDgRZ4sZfkP9PvagVyCutXdZj1+vSn61f/8NmtQo0YpEBdPxRTCDSLrUomkSouLKAH cA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2x5xftucc4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Jan 2020 08:50:13 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0038nF2L105835;
-        Fri, 3 Jan 2020 08:50:13 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2x8guw81xv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Jan 2020 08:50:12 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0038o94j018279;
-        Fri, 3 Jan 2020 08:50:09 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 03 Jan 2020 00:50:08 -0800
-Date:   Fri, 3 Jan 2020 11:49:59 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, Harsh Jain <harshjain32@gmail.com>,
-        Vandana BN <bnvandana@gmail.com>, kjlu@umn.edu,
-        linux-kernel@vger.kernel.org,
-        Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>
-Subject: Re: [PATCH] staging: kpc2000: replace assertion with recovery code
-Message-ID: <20200103084959.GA3911@kadam>
-References: <20191215181243.31519-1-pakki001@umn.edu>
- <20191215182814.GA859066@kroah.com>
+        Fri, 3 Jan 2020 03:56:42 -0500
+Received: from monster.unsafe.ru ([5.9.28.80]:41362 "EHLO mail.unsafe.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726050AbgACI4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 03:56:42 -0500
+Received: from comp-core-i7-2640m-0182e6 (nat-pool-brq-t.redhat.com [213.175.37.10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.unsafe.ru (Postfix) with ESMTPSA id 65FB8C61AF3;
+        Fri,  3 Jan 2020 08:56:36 +0000 (UTC)
+Date:   Fri, 3 Jan 2020 09:56:34 +0100
+From:   Alexey Gladkov <gladkov.alexey@gmail.com>
+To:     J Freyensee <why2jjj.linux@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Solar Designer <solar@openwall.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v6 07/10] proc: flush task dcache entries from all procfs
+ instances
+Message-ID: <20200103085634.6xkgb4aonivjhfnq@comp-core-i7-2640m-0182e6>
+Mail-Followup-To: J Freyensee <why2jjj.linux@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Solar Designer <solar@openwall.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+References: <20191225125151.1950142-1-gladkov.alexey@gmail.com>
+ <20191225125151.1950142-8-gladkov.alexey@gmail.com>
+ <8d85ba43-0759-358e-137d-246107bac747@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191215182814.GA859066@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001030083
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001030083
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8d85ba43-0759-358e-137d-246107bac747@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 15, 2019 at 07:28:14PM +0100, Greg Kroah-Hartman wrote:
-> On Sun, Dec 15, 2019 at 12:12:37PM -0600, Aditya Pakki wrote:
-> > In kpc_dma_transfer, if either priv or ldev is NULL, crashing the
-> > process is excessive and is not needed. Instead of asserting, by
-> > passing the error upstream, the error can be handled.
-> > 
-> > Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-> > ---
-> >  drivers/staging/kpc2000/kpc_dma/fileops.c | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
-> > index cb52bd9a6d2f..1c4633267cc1 100644
-> > --- a/drivers/staging/kpc2000/kpc_dma/fileops.c
-> > +++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
-> > @@ -49,9 +49,11 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
-> >  	u64 dma_addr;
-> >  	u64 user_ctl;
-> >  
-> > -	BUG_ON(priv == NULL);
-> > +	if (!priv)
-> > +		return -EINVAL;
-> 
-> How can prive ever be NULL here?  Can you track back to all callers to
-> verify this?  If so, just remove the check.
-> 
+On Mon, Dec 30, 2019 at 02:03:29PM -0800, J Freyensee wrote:
+> > +#ifdef CONFIG_PROC_FS
+> > +static inline void pidns_proc_lock(struct pid_namespace *pid_ns)
+> > +{
+> > +	down_write(&pid_ns->rw_proc_mounts);
+> > +}
+> > +
+> > +static inline void pidns_proc_unlock(struct pid_namespace *pid_ns)
+> > +{
+> > +	up_write(&pid_ns->rw_proc_mounts);
+> > +}
+> > +
+> > +static inline void pidns_proc_lock_shared(struct pid_namespace *pid_ns)
+> > +{
+> > +	down_read(&pid_ns->rw_proc_mounts);
+> > +}
+> > +
+> > +static inline void pidns_proc_unlock_shared(struct pid_namespace *pid_ns)
+> > +{
+> > +	up_read(&pid_ns->rw_proc_mounts);
+> > +}
+> > +#else /* !CONFIG_PROC_FS */
+> > +
+> Apologies for my newbie question. I couldn't help but notice all these
+> function calls are assuming that the parameter struct pid_namespace *pid_ns
+> will never be NULL.  Is that a good assumption?
 
-Smatch says that "priv" can't be NULL.
+These inline helpers are introduced to improve readability. They only make
+sense inside procfs. I don't think that defensive programming is useful
+here.
 
-Also if you have a NULL dereference the kernel prints a nice stack
-trace.  Normally just doing the NULL dereference and Oopsing is better
-than doing a BUG_ON().  The one exception would be when the Oops leads
-to filesystem corruption.
+-- 
+Rgrds, legion
 
-regards,
-dan carpenter
