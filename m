@@ -2,227 +2,85 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CEDC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 05:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E74B9C32771
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 06:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADE4A21734
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 05:56:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="A4R6JmxT"
+	by mail.kernel.org (Postfix) with ESMTP id C4A792084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 06:04:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727358AbgACF4X (ORCPT
+        id S1726448AbgACGEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 00:56:23 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:43318 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbgACF4O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 00:56:14 -0500
-Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 09E5D2010C33;
-        Thu,  2 Jan 2020 21:56:13 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 09E5D2010C33
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1578030973;
-        bh=9uLF2XVVkhvefoka1wfW3xsgfz7pEhNReOdjQQXf7jE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A4R6JmxTyVME4HUc36czcHQF8hHrmA9hyRUOwR9i2v/03vQtElA1xqEdNfFaOx4ZA
-         CRJk0qrRF4+dcrgJWhyI7k7g15+X3lYEjBRt4QZ3RpJSUoaSLSHHiQorDZzLvaTWZo
-         jyJJyzqhzr85fCCie18qC7je9vyxXIrfKBsiDb9w=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, James.Bottomley@HansenPartnership.com,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Subject: [PATCH v6 1/3] IMA: Define workqueue for early boot key measurements
-Date:   Thu,  2 Jan 2020 21:56:06 -0800
-Message-Id: <20200103055608.22491-2-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200103055608.22491-1-nramas@linux.microsoft.com>
-References: <20200103055608.22491-1-nramas@linux.microsoft.com>
+        Fri, 3 Jan 2020 01:04:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54096 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725916AbgACGEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 01:04:51 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B688BADD2;
+        Fri,  3 Jan 2020 06:04:49 +0000 (UTC)
+From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+To:     linux-realtek-soc@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        James Tai <james.tai@realtek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: [PATCH] arm64: dts: realtek: rtd16xx: Add memory reservations
+Date:   Fri,  3 Jan 2020 07:04:40 +0100
+Message-Id: <20200103060441.1109-1-afaerber@suse.de>
+X-Mailer: git-send-email 2.16.4
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Measuring keys requires a custom IMA policy to be loaded.
-Keys created or updated before a custom IMA policy is loaded should
-be queued and the keys should be processed after a custom policy
-is loaded.
+Reserve memory regions for RPC and TEE.
 
-This patch defines workqueue for queuing keys when a custom IMA policy
-has not yet been loaded.
-
-A flag namely ima_process_keys is used to check if the key should be
-queued or should be processed immediately.
-
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Reported-by: kbuild test robot <lkp@intel.com>
+Fixes: e5a9e237608d ("arm64: dts: realtek: Add RTD1619 SoC and Realtek Mjolnir EVB")
+Cc: James Tai <james.tai@realtek.com>
+Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- security/integrity/ima/ima.h                 |  15 +++
- security/integrity/ima/ima_asymmetric_keys.c | 115 +++++++++++++++++++
- 2 files changed, 130 insertions(+)
+ arch/arm64/boot/dts/realtek/rtd16xx.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index f06238e41a7c..97f8a4078483 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -205,6 +205,21 @@ extern const char *const func_tokens[];
+diff --git a/arch/arm64/boot/dts/realtek/rtd16xx.dtsi b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
+index 3c70a0da329e..4dc6c9f13c43 100644
+--- a/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
+@@ -14,6 +14,25 @@
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
  
- struct modsig;
- 
-+#ifdef CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE
-+/*
-+ * To track keys that need to be measured.
-+ */
-+struct ima_key_entry {
-+	struct list_head list;
-+	void *payload;
-+	size_t payload_len;
-+	char *keyring_name;
-+};
-+void ima_process_queued_keys(void);
-+#else
-+static inline void ima_process_queued_keys(void) {}
-+#endif /* CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE */
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
 +
- /* LIM API function definitions */
- int ima_get_action(struct inode *inode, const struct cred *cred, u32 secid,
- 		   int mask, enum ima_hooks func, int *pcr,
-diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
-index fea2e7dd3b09..1d56f003f1a7 100644
---- a/security/integrity/ima/ima_asymmetric_keys.c
-+++ b/security/integrity/ima/ima_asymmetric_keys.c
-@@ -14,6 +14,121 @@
- #include <keys/asymmetric-type.h>
- #include "ima.h"
- 
-+/*
-+ * Flag to indicate whether a key can be processed
-+ * right away or should be queued for processing later.
-+ */
-+static bool ima_process_keys;
++		rpc_comm: rpc@2f000 {
++			reg = <0x2f000 0x1000>;
++		};
 +
-+/*
-+ * To synchronize access to the list of keys that need to be measured
-+ */
-+static DEFINE_SPINLOCK(ima_keys_lock);
-+static LIST_HEAD(ima_keys);
++		rpc_ringbuf: rpc@1ffe000 {
++			reg = <0x1ffe000 0x4000>;
++		};
 +
-+static void ima_free_key_entry(struct ima_key_entry *entry)
-+{
-+	if (entry) {
-+		kfree(entry->payload);
-+		kfree(entry->keyring_name);
-+		kfree(entry);
-+	}
-+}
++		tee: tee@10100000 {
++			reg = <0x10100000 0xf00000>;
++			no-map;
++		};
++	};
 +
-+static struct ima_key_entry *ima_alloc_key_entry(
-+	struct key *keyring,
-+	const void *payload, size_t payload_len)
-+{
-+	int rc = 0;
-+	struct ima_key_entry *entry;
-+
-+	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
-+	if (entry) {
-+		entry->payload = kmemdup(payload, payload_len, GFP_KERNEL);
-+		entry->keyring_name = kstrdup(keyring->description,
-+					      GFP_KERNEL);
-+		entry->payload_len = payload_len;
-+	}
-+
-+	if ((entry == NULL) || (entry->payload == NULL) ||
-+	    (entry->keyring_name == NULL)) {
-+		rc = -ENOMEM;
-+		goto out;
-+	}
-+
-+	INIT_LIST_HEAD(&entry->list);
-+
-+out:
-+	if (rc) {
-+		ima_free_key_entry(entry);
-+		entry = NULL;
-+	}
-+
-+	return entry;
-+}
-+
-+static bool ima_queue_key(struct key *keyring, const void *payload,
-+			  size_t payload_len)
-+{
-+	bool queued = false;
-+	struct ima_key_entry *entry;
-+
-+	entry = ima_alloc_key_entry(keyring, payload, payload_len);
-+	if (!entry)
-+		return false;
-+
-+	spin_lock(&ima_keys_lock);
-+	if (!ima_process_keys) {
-+		list_add_tail(&entry->list, &ima_keys);
-+		queued = true;
-+	}
-+	spin_unlock(&ima_keys_lock);
-+
-+	if (!queued)
-+		ima_free_key_entry(entry);
-+
-+	return queued;
-+}
-+
-+/*
-+ * ima_process_queued_keys() - process keys queued for measurement
-+ *
-+ * This function sets ima_process_keys to true and processes queued keys.
-+ * From here on keys will be processed right away (not queued).
-+ */
-+void ima_process_queued_keys(void)
-+{
-+	struct ima_key_entry *entry, *tmp;
-+	bool process = false;
-+
-+	if (ima_process_keys)
-+		return;
-+
-+	/*
-+	 * Since ima_process_keys is set to true, any new key will be
-+	 * processed immediately and not be queued to ima_keys list.
-+	 * First one setting the ima_process_keys flag to true will
-+	 * process the queued keys.
-+	 */
-+	spin_lock(&ima_keys_lock);
-+	if (!ima_process_keys) {
-+		ima_process_keys = true;
-+		process = true;
-+	}
-+	spin_unlock(&ima_keys_lock);
-+
-+	if (!process)
-+		return;
-+
-+	list_for_each_entry_safe(entry, tmp, &ima_keys, list) {
-+		process_buffer_measurement(entry->payload, entry->payload_len,
-+					   entry->keyring_name, KEY_CHECK, 0,
-+					   entry->keyring_name);
-+		list_del(&entry->list);
-+		ima_free_key_entry(entry);
-+	}
-+}
-+
- /**
-  * ima_post_key_create_or_update - measure asymmetric keys
-  * @keyring: keyring to which the key is linked to
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
 -- 
-2.17.1
+2.16.4
 
