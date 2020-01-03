@@ -2,105 +2,131 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A94E8C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3747C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8772A2085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 754132085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:50:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ahXwc04y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbgACMsj (ORCPT
+        id S1727687AbgACMuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 07:48:39 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17758 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727494AbgACMsj (ORCPT
+        Fri, 3 Jan 2020 07:50:17 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18384 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727350AbgACMuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 07:48:39 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 003Clewq085489
-        for <linux-kernel@vger.kernel.org>; Fri, 3 Jan 2020 07:48:38 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2x88jfy4r3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 07:48:38 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
-        Fri, 3 Jan 2020 12:48:36 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 3 Jan 2020 12:48:34 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 003CmXvJ44892410
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 Jan 2020 12:48:33 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 10BCA52052;
-        Fri,  3 Jan 2020 12:48:33 +0000 (GMT)
-Received: from JAVRIS.in.ibm.com (unknown [9.199.47.17])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id F2C505204F;
-        Fri,  3 Jan 2020 12:48:31 +0000 (GMT)
-Subject: Re: [PATCH] objtool: use $(SRCARCH) to avoid compile error with
- ARCH=x86_64
-To:     Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <20191227022931.142690-1-shile.zhang@linux.alibaba.com>
-From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Date:   Fri, 3 Jan 2020 18:18:30 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Fri, 3 Jan 2020 07:50:17 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e0f38780000>; Fri, 03 Jan 2020 04:50:00 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 03 Jan 2020 04:50:15 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 03 Jan 2020 04:50:15 -0800
+Received: from [10.19.66.63] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 3 Jan
+ 2020 12:50:13 +0000
+Subject: Re: [PATCH V1] nvmem: core: fix memory abort in cleanup path
+To:     Thierry Reding <treding@nvidia.com>
+CC:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+References: <1577592162-14817-1-git-send-email-bbiswas@nvidia.com>
+ <20200102124445.GB1924669@ulmo>
+ <7abb79c6-b497-98b3-45ff-44d751f1c781@nvidia.com>
+ <20200103071152.GA1933715@ulmo>
+From:   Bitan Biswas <bbiswas@nvidia.com>
+Message-ID: <e56ff5c6-04b1-3b2b-8ff4-9e416e143dee@nvidia.com>
+Date:   Fri, 3 Jan 2020 04:50:10 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191227022931.142690-1-shile.zhang@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200103071152.GA1933715@ulmo>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20010312-0028-0000-0000-000003CDECA3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20010312-0029-0000-0000-00002491F4BB
-Message-Id: <3c752455-3fd3-b146-84c5-472574a3667e@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2020-01-03_03:2020-01-02,2020-01-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
- adultscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0 spamscore=0
- priorityscore=1501 suspectscore=0 phishscore=0 mlxlogscore=933
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001030122
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578055800; bh=4/mNdoW5Rf3TahSob4C8kQfsxPpZb4ld27pU9hnmESM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ahXwc04yl0X/aSixwhIURdDlmzrvaqFScTbuZO9t5Bh3QOZRfVRKtWUROu55tPP7I
+         dLy/zbPG25sLahfz1PUdwf9xF+84/UCAuAyCXJDS86SCsaiivDiOxkxQr+SofF+Im0
+         lr6L6QG7FrWBFrlPZ2+VTR2kzueZy2K5GT+8kPczBemtx0f0OomsVGrywthur5TCRx
+         OduBQkO7dKNEGnksy6HqFRPERzzpH0Q/A+qMg7Z0QIx6lr0LYVOx94POWqTp43h+kd
+         5vwy3VEx8mpV173bF7lNUP/Y4ROOxV2EslI32PpQSEbQv7gA2M2cUCC5cp8aH6fsh9
+         6q/Sz0BeO/kaQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/27/19 7:59 AM, Shile Zhang wrote:
-> To build objtool with ARCH=x86_64 will failed as:
-> 
->    $make ARCH=x86_64 -C tools/objtool
->    ...
->      CC       arch/x86/decode.o
->    arch/x86/decode.c:10:22: fatal error: asm/insn.h: No such file or directory
->     #include <asm/insn.h>
->                          ^
->    compilation terminated.
->    mv: cannot stat ‘arch/x86/.decode.o.tmp’: No such file or directory
->    make[2]: *** [arch/x86/decode.o] Error 1
->    ...
-> 
-> The root cause is the command-line variable 'ARCH' cannot be overridden.
-> It can be replaced by the one 'SRCARCH' defined in
-> 'tools/scripts/Makefile.arch'.
-> 
-> Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+Hi Thierry,
 
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+On 1/2/20 11:11 PM, Thierry Reding wrote:
+> On Thu, Jan 02, 2020 at 10:51:24AM -0800, Bitan Biswas wrote:
+>>
+>> Hi Thierry,
+>>
+>> On 1/2/20 4:44 AM, Thierry Reding wrote:
+>>> On Sat, Dec 28, 2019 at 08:02:42PM -0800, Bitan Biswas wrote:
+>>>> nvmem_cell_info_to_nvmem_cell implementation has static
+>>>> allocation of name. nvmem_add_cells_from_of() call may
+>>>> return error and kfree name results in memory abort. Use
+>>>> kasprintf() instead of assigning pointer and prevent kfree crash.
+>>>>
+>>>> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+>>>> index 9f1ee9c..0fc66e1 100644
+>>>> --- a/drivers/nvmem/core.c
+>>>> +++ b/drivers/nvmem/core.c
+>>>> @@ -110,7 +110,7 @@ static int nvmem_cell_info_to_nvmem_cell(struct nvmem_device *nvmem,
+>>>>    	cell->nvmem = nvmem;
+>>>>    	cell->offset = info->offset;
+>>>>    	cell->bytes = info->bytes;
+>>>> -	cell->name = info->name;
+>>>> +	cell->name = kasprintf(GFP_KERNEL, "%s", info->name);
+>>
+>>>
+>>> kstrdup() seems more appropriate here.
+>> Thanks. I shall update the patch as suggested.
+>>
+>>>
+>>> A slightly more efficient way to do this would be to use a combination
+>>> of kstrdup_const() and kfree_const(), which would allow read-only
+>>> strings to be replicated by simple assignment rather than duplication.
+>>> Note that in that case you'd need to carefully replace all kfree() calls
+>>> on cell->name by a kfree_const() to ensure they do the right thing.
+>> kfree(cell->name) is also called for allocations in function
+>> nvmem_add_cells_from_of() through below call
+>> kasprintf(GFP_KERNEL, "%pOFn", child);
+>>
+>> My understanding is kfree_const may not work for above allocation.
+> 
+> kfree_const() checks the location that the pointer passed to it points
+> to. If it points to the kernel's .rodata section, it returns and only
+> calls kfree() otherwise. Similarily, kstrdup_const() returns its
+> argument if it points to the .rodata section and duplicates the string
+> otherwise. On the other hand, pointers returned by kasprintf() will
+> never point to the .rodata section, so kfree_const() will result in
+> kfree() getting called.
+> 
+> That said, the savings here are fairly minimal, so I don't feel very
+> strongly about this. Feel free to go with the kstrdup() variant.
+Thanks for the explanation. I would test the implementation with the 
+_const functions you suggested and send updated patch.
 
-
--- 
-Kamalesh
+-regards,
+  Bitan
 
