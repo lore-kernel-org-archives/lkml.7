@@ -2,104 +2,239 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1CEC3276E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A35C3276C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E59F821D56
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:19:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JROiiOYC"
+	by mail.kernel.org (Postfix) with ESMTP id D9E4F2085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:19:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgACBTS (ORCPT
+        id S1727158AbgACBTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 20:19:18 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45908 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgACBTS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 20:19:18 -0500
-Received: by mail-pl1-f194.google.com with SMTP id b22so18457006pls.12;
-        Thu, 02 Jan 2020 17:19:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=Pj7NnDsV8DAl7XvANKt95DF4vhQ5j9tx+hWo3+M62uk=;
-        b=JROiiOYCr5lwF8FppQZTwu4slm8bZjMyBXPs8OobqBdx0c5DWs6MswUYTUQESgvDaq
-         H6vtD/TWrexXCVTwg8eu43CZn+NbuMgU2qJ0RFZ89n6EWsuRcssXVn6WRq1HWqiZlJ3E
-         SOdGHik6DEfwM1AzHc0gCvxxWL/tD2XZ5xYHwNKuuzW76IhNFNYiD71ogIRnTUqEPnnT
-         U9ZyvQky1e8EHdSrkTDrx9Ro2DArdlLNzxaBRh9WKijHc4UTAG8TVnllw7mfiTPqaihm
-         QjEsZJa1q1vMGe5uXCQF2kARXjqv+egyOuG4g+uSb6kKVKtyh5HHkSWgT3B0cU4MVx9+
-         C6rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Pj7NnDsV8DAl7XvANKt95DF4vhQ5j9tx+hWo3+M62uk=;
-        b=OATCEcTet0lOx08nKKIxHdCBGYHcBbIvRyOH6lWI/qYAs+QD/BUipeHoVKsuQt6Ldw
-         yYqTT4BM4wDbYgpnaoTwzTUH9V00tarLmaAqKTJyhDoRd5tNuFgpbp0MYiSsBT1Q2oHT
-         lQUhWxH0RUXi+TtuLfL9oYL1YAHX5FRY77rDHPk6d1EKxuDwgok+cSHao5BXfbcLT8Rv
-         cEHWp4VW42NPfzuyolMzsUbCltFEXcDtzULgKCIsQotEvI/xaMXwd1wnhYqRN28ubREe
-         s2ki0nVPqBnhlJ99yehw8UQNuLHIkbhkMENT/E89cydnwPKmJf9oMEvJyWrJdP7Rs9LX
-         Jc/g==
-X-Gm-Message-State: APjAAAWopnqvloX9U2VQWRZFM6y23ZuPVDt4+bqRIlvzyyH7px2dRH4h
-        S4qLb8GH5eVTtU6mOOzdzomjpgye
-X-Google-Smtp-Source: APXvYqziU4V5sowOrbh/FwOCan3iwRxFbK5Qh/qmFR88ULJJjYcBVFUjB+m2cKUQ2BrDXsi0ogFyTQ==
-X-Received: by 2002:a17:90a:6587:: with SMTP id k7mr22448878pjj.40.1578014357462;
-        Thu, 02 Jan 2020 17:19:17 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id l14sm59177498pgt.42.2020.01.02.17.19.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 17:19:17 -0800 (PST)
-Date:   Thu, 2 Jan 2020 17:19:15 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] leds: gpio: switch to using devm_fwnode_gpiod_get()
-Message-ID: <20200103011915.GA879@dtor-ws>
+        Thu, 2 Jan 2020 20:19:46 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:53462 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725872AbgACBTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 20:19:46 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3FF318C4CA7F7CD8310F;
+        Fri,  3 Jan 2020 09:19:44 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 3 Jan 2020
+ 09:19:43 +0800
+Subject: Re: [RFC PATCH v5] f2fs: support data compression
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20191216062806.112361-1-yuchao0@huawei.com>
+ <20191218214619.GA20072@jaegeuk-macbookpro.roam.corp.google.com>
+ <c7035795-73b3-d832-948f-deb36213ba07@huawei.com>
+ <20191231004633.GA85441@jaegeuk-macbookpro.roam.corp.google.com>
+ <7a579223-39d4-7e51-c361-4aa592b2500d@huawei.com>
+ <20200102181832.GA1953@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <fe34ebf1-5cfa-37bd-d290-0335c8ca3e27@huawei.com>
+Date:   Fri, 3 Jan 2020 09:19:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200102181832.GA1953@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-devm_fwnode_get_gpiod_from_child() is going away as the name is too
-unwieldy, let's switch to using the new devm_fwnode_gpiod_get().
+On 2020/1/3 2:18, Jaegeuk Kim wrote:
+> On 12/31, Chao Yu wrote:
+>> On 2019/12/31 8:46, Jaegeuk Kim wrote:
+>>> On 12/23, Chao Yu wrote:
+>>>> Hi Jaegeuk,
+>>>>
+>>>> Sorry for the delay.
+>>>>
+>>>> On 2019/12/19 5:46, Jaegeuk Kim wrote:
+>>>>> Hi Chao,
+>>>>>
+>>>>> I still see some diffs from my latest testing version, so please check anything
+>>>>> that you made additionally from here.
+>>>>>
+>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git/commit/?h=dev&id=25d18e19a91e60837d36368ee939db13fd16dc64
+>>>>
+>>>> I've checked the diff and picked up valid parts, could you please check and
+>>>> comment on it?
+>>>>
+>>>> ---
+>>>>  fs/f2fs/compress.c |  8 ++++----
+>>>>  fs/f2fs/data.c     | 18 +++++++++++++++---
+>>>>  fs/f2fs/f2fs.h     |  3 +++
+>>>>  fs/f2fs/file.c     |  1 -
+>>>>  4 files changed, 22 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+>>>> index af23ed6deffd..1bc86a54ad71 100644
+>>>> --- a/fs/f2fs/compress.c
+>>>> +++ b/fs/f2fs/compress.c
+>>>> @@ -593,7 +593,7 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
+>>>>  							fgp_flag, GFP_NOFS);
+>>>>  		if (!page) {
+>>>>  			ret = -ENOMEM;
+>>>> -			goto unlock_pages;
+>>>> +			goto release_pages;
+>>>>  		}
+>>>>
+>>>>  		if (PageUptodate(page))
+>>>> @@ -608,13 +608,13 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
+>>>>  		ret = f2fs_read_multi_pages(cc, &bio, cc->cluster_size,
+>>>>  						&last_block_in_bio, false);
+>>>>  		if (ret)
+>>>> -			goto release_pages;
+>>>> +			goto unlock_pages;
+>>>>  		if (bio)
+>>>>  			f2fs_submit_bio(sbi, bio, DATA);
+>>>>
+>>>>  		ret = f2fs_init_compress_ctx(cc);
+>>>>  		if (ret)
+>>>> -			goto release_pages;
+>>>> +			goto unlock_pages;
+>>>>  	}
+>>>>
+>>>>  	for (i = 0; i < cc->cluster_size; i++) {
+>>>> @@ -762,7 +762,7 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+>>>>  	if (err)
+>>>>  		goto out_unlock_op;
+>>>>
+>>>> -	psize = (cc->rpages[last_index]->index + 1) << PAGE_SHIFT;
+>>>> +	psize = (loff_t)(cc->rpages[last_index]->index + 1) << PAGE_SHIFT;
+>>>>
+>>>>  	err = f2fs_get_node_info(fio.sbi, dn.nid, &ni);
+>>>>  	if (err)
+>>>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>>>> index 19cd03450066..f1f5c701228d 100644
+>>>> --- a/fs/f2fs/data.c
+>>>> +++ b/fs/f2fs/data.c
+>>>> @@ -184,13 +184,18 @@ static void f2fs_decompress_work(struct bio_post_read_ctx *ctx)
+>>>>  }
+>>>>
+>>>>  #ifdef CONFIG_F2FS_FS_COMPRESSION
+>>>> +void f2fs_verify_pages(struct page **rpages, unsigned int cluster_size)
+>>>> +{
+>>>> +	f2fs_decompress_end_io(rpages, cluster_size, false, true);
+>>>> +}
+>>>> +
+>>>>  static void f2fs_verify_bio(struct bio *bio)
+>>>>  {
+>>>>  	struct page *page = bio_first_page_all(bio);
+>>>>  	struct decompress_io_ctx *dic =
+>>>>  			(struct decompress_io_ctx *)page_private(page);
+>>>>
+>>>> -	f2fs_decompress_end_io(dic->rpages, dic->cluster_size, false, true);
+>>>> +	f2fs_verify_pages(dic->rpages, dic->cluster_size);
+>>>>  	f2fs_free_dic(dic);
+>>>>  }
+>>>>  #endif
+>>>> @@ -507,10 +512,16 @@ static bool __has_merged_page(struct bio *bio, struct inode *inode,
+>>>>  	bio_for_each_segment_all(bvec, bio, iter_all) {
+>>>>  		struct page *target = bvec->bv_page;
+>>>>
+>>>> -		if (fscrypt_is_bounce_page(target))
+>>>> +		if (fscrypt_is_bounce_page(target)) {
+>>>>  			target = fscrypt_pagecache_page(target);
+>>>> -		if (f2fs_is_compressed_page(target))
+>>>> +			if (IS_ERR(target))
+>>>> +				continue;
+>>>> +		}
+>>>> +		if (f2fs_is_compressed_page(target)) {
+>>>>  			target = f2fs_compress_control_page(target);
+>>>> +			if (IS_ERR(target))
+>>>> +				continue;
+>>>> +		}
+>>>>
+>>>>  		if (inode && inode == target->mapping->host)
+>>>>  			return true;
+>>>> @@ -2039,6 +2050,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
+>>>>  	if (ret)
+>>>>  		goto out;
+>>>>
+>>>> +	/* cluster was overwritten as normal cluster */
+>>>>  	if (dn.data_blkaddr != COMPRESS_ADDR)
+>>>>  		goto out;
+>>>>
+>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>>> index 5d55cef66410..17d2af4eeafb 100644
+>>>> --- a/fs/f2fs/f2fs.h
+>>>> +++ b/fs/f2fs/f2fs.h
+>>>> @@ -2719,6 +2719,7 @@ static inline void set_compress_context(struct inode *inode)
+>>>>  			1 << F2FS_I(inode)->i_log_cluster_size;
+>>>>  	F2FS_I(inode)->i_flags |= F2FS_COMPR_FL;
+>>>>  	set_inode_flag(inode, FI_COMPRESSED_FILE);
+>>>> +	stat_inc_compr_inode(inode);
+>>>>  }
+>>>>
+>>>>  static inline unsigned int addrs_per_inode(struct inode *inode)
+>>>> @@ -3961,6 +3962,8 @@ static inline bool f2fs_force_buffered_io(struct inode *inode,
+>>>>  		return true;
+>>>>  	if (f2fs_is_multi_device(sbi))
+>>>>  		return true;
+>>>> +	if (f2fs_compressed_file(inode))
+>>>> +		return true;
+>>>>  	/*
+>>>>  	 * for blkzoned device, fallback direct IO to buffered IO, so
+>>>>  	 * all IOs can be serialized by log-structured write.
+>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>>>> index bde5612f37f5..9aeadf14413c 100644
+>>>> --- a/fs/f2fs/file.c
+>>>> +++ b/fs/f2fs/file.c
+>>>> @@ -1828,7 +1828,6 @@ static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
+>>>>  				return -EINVAL;
+>>>>
+>>>>  			set_compress_context(inode);
+>>>> -			stat_inc_compr_inode(inode);
+>>>
+>>> As this breaks the count, I'll keep as is.
+>>
+>> @@ -2719,6 +2719,7 @@ static inline void set_compress_context(struct inode *inode)
+>>  			1 << F2FS_I(inode)->i_log_cluster_size;
+>>  	F2FS_I(inode)->i_flags |= F2FS_COMPR_FL;
+>>  	set_inode_flag(inode, FI_COMPRESSED_FILE);
+>> +	stat_inc_compr_inode(inode);
+>>
+>> If I'm not missing anything, stat_inc_compr_inode() should be called inside
+>> set_compress_context() in where we convert normal inode to compress one,
+>> right?
+> 
+> I don't care much whether that's right or not. If we want to do that, I found
+> another line to remove in f2fs_create(). Let me give it a try.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/leds/leds-gpio.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Correct, I forgot to remove that line.
 
-diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
-index a5c73f3d5f797..f57f33008f4f3 100644
---- a/drivers/leds/leds-gpio.c
-+++ b/drivers/leds/leds-gpio.c
-@@ -151,9 +151,8 @@ static struct gpio_leds_priv *gpio_leds_create(struct platform_device *pdev)
- 		struct gpio_led led = {};
- 		const char *state = NULL;
- 
--		led.gpiod = devm_fwnode_get_gpiod_from_child(dev, NULL, child,
--							     GPIOD_ASIS,
--							     led.name);
-+		led.gpiod = devm_fwnode_gpiod_get(dev, child, NULL, GPIOD_ASIS,
-+						  led.name);
- 		if (IS_ERR(led.gpiod)) {
- 			fwnode_handle_put(child);
- 			return ERR_CAST(led.gpiod);
--- 
-2.24.1.735.g03f4e72817-goog
+Thanks,
 
-
--- 
-Dmitry
+> 
+> Thanks,
+> 
+>>
+>> Thanks,
+>>
+>>>
+>>> Thanks,
+>>>
+>>>>  		}
+>>>>  	}
+>>>>  	if ((iflags ^ fi->i_flags) & F2FS_NOCOMP_FL) {
+>>>> -- 
+>>>> 2.18.0.rc1
+>>>>
+>>>> Thanks,
+>>> .
+>>>
+> .
+> 
