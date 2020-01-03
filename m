@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4441DC32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CBDC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2002E222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E884217F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:55:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgACPzQ (ORCPT
+        id S1727945AbgACPzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 10:55:16 -0500
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:59624 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727539AbgACPzQ (ORCPT
+        Fri, 3 Jan 2020 10:55:39 -0500
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:55347 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727539AbgACPzi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 10:55:16 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TmkFDOs_1578066907;
-Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TmkFDOs_1578066907)
+        Fri, 3 Jan 2020 10:55:38 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TmkQCWM_1578066930;
+Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TmkQCWM_1578066930)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 03 Jan 2020 23:55:13 +0800
+          Fri, 03 Jan 2020 23:55:35 +0800
 From:   Wen Yang <wenyang@linux.alibaba.com>
-To:     rjw@rjwysocki.net, Len Brown <len.brown@intel.com>,
-        Pavel Machek <pavel@ucw.cz>
-Cc:     Wen Yang <wenyang@linux.alibaba.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kernel/power/snapshot.c: improve arithmetic divisions
-Date:   Fri,  3 Jan 2020 23:54:58 +0800
-Message-Id: <20200103155458.21707-1-wenyang@linux.alibaba.com>
+To:     John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Wen Yang <wenyang@linux.alibaba.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] timekeeping: improve arithmetic divisions
+Date:   Fri,  3 Jan 2020 23:55:17 +0800
+Message-Id: <20200103155517.21754-1-wenyang@linux.alibaba.com>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -41,35 +41,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-do_div() does a 64-by-32 division. Use div64_u64() instead of
-do_div() if the divisor is u64, to avoid truncation to 32-bit.
-This change also cleans up code a tad.
+do_div() does a 64-by-32 division. Use div64_u64()
+instead of do_div() if the divisor is u64,
+to avoid truncation to 32-bit.
 
 Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Len Brown <len.brown@intel.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: linux-pm@vger.kernel.org
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Stephen Boyd <sboyd@kernel.org>
 Cc: linux-kernel@vger.kernel.org
 ---
- kernel/power/snapshot.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ kernel/time/timekeeping.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
-index 26b9168..8a6eaf7 100644
---- a/kernel/power/snapshot.c
-+++ b/kernel/power/snapshot.c
-@@ -1566,9 +1566,7 @@ static unsigned long preallocate_image_highmem(unsigned long nr_pages)
-  */
- static unsigned long __fraction(u64 x, u64 multiplier, u64 base)
- {
--	x *= multiplier;
--	do_div(x, base);
--	return (unsigned long)x;
-+	return div64_u64(x * multiplier, base);
- }
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index ca69290..bad76c1 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -1007,7 +1007,7 @@ static int scale64_check_overflow(u64 mult, u64 div, u64 *base)
+ 	tmp *= mult;
+ 	rem *= mult;
  
- static unsigned long preallocate_highmem_fraction(unsigned long nr_pages,
+-	do_div(rem, div);
++	rem = div64_u64(rem, div);
+ 	*base = tmp + rem;
+ 	return 0;
+ }
 -- 
 1.8.3.1
 
