@@ -2,131 +2,116 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D951C3276C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 00:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6D6C3276E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 00:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D577D217F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 00:08:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578010111;
-	bh=SMUIa4SzEL/j8kNnhyrIRtcJ6DVLRt+dGDZa9AlrDKc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JdpXIZJVBVz6Mvt2FXXZdOR9/b4Wg6FKCjGXJ/P+FzByd1OIPCqJQN3opXWUb0C8I
-	 h2iijfa9TS0/vZ/MGf/auCbwBjxebLvCHR7zUtkCbom8p4pXT3EJRoBQnNK0RPF+AF
-	 Nsj11d6hzeTGKQFBoq7ZSwYDDFt8EmhrCjIJbDj4=
+	by mail.kernel.org (Postfix) with ESMTP id D7B2C222C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 00:10:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7HCR8OM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbgACAIa (ORCPT
+        id S1726702AbgACAKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 19:08:30 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37473 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgACAIa (ORCPT
+        Thu, 2 Jan 2020 19:10:20 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43520 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbgACAKU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 19:08:30 -0500
-Received: by mail-lf1-f67.google.com with SMTP id b15so30917654lfc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 16:08:29 -0800 (PST)
+        Thu, 2 Jan 2020 19:10:20 -0500
+Received: by mail-ot1-f68.google.com with SMTP id p8so22652894oth.10;
+        Thu, 02 Jan 2020 16:10:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=nXQQH9TITRlriLDkmnMSZfR2BNB1iw10HsF91le2H5M=;
-        b=NQ/D9k51K2Q5WjCrOcvwHMQ6Bkynk3X0IxmvWi1leEorgHVHUExOWHrJt0/8tKG5YT
-         p+ycspJpzQnogk3WSvbVxbCKtQqutbkohf/T8FeHpGiW8lXcerHNgQXBanB/ZyM4j+hr
-         9pJrx4bqh2BRKEW+Km3eRUdDwJRWz3k0UIwkI=
+        bh=bRZSWQpjcGsFr1nunRoPIXJIpIMdhiOb1sBFIf72vwo=;
+        b=N7HCR8OM7zTKC/Tlgu42uvwTRCU/25OFIZjdc/afojVtORETOFIz3/HFfGbYYCnkJX
+         EOgNX9/40QUyartjTjXhA735EuDZNatW7hMOAK/4VPO82lRiPd7Hjt8CXmDuDcYqxmdZ
+         cDNoGocpXsJL504iwcJ3DNIBrliF2o1MMu7zS0AMO2sn/GAXttbCCjFFJQ6Ztes2hTFD
+         Hu9V75q3O46hmy6bXJgpiPzDxYwZ9SAukDvKOa+nvSLhGRMWvYZphb6ILlziHEf/UI8J
+         h9KRoN592wKsr746n+9vOPFBAcaHha8D+3q3yqruv/cLRbuhQ4q2YFQT6ltIicTsG3mG
+         Yicw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nXQQH9TITRlriLDkmnMSZfR2BNB1iw10HsF91le2H5M=;
-        b=G9cDZDatSqLjTJ43Wa9ljuNidgNvcXHuTayEAceTZWCK/L1vvgIdsQGGsulTf4DK+U
-         UABmzkcCnj4NufEkCinmpoCOxhCGqewAcgSa2tkqVxhRe3Tvuuy7eZgq1a3YIVQkqS8o
-         Vh6tYwJ4bPiJ3gyUEkJr6bGxOWpNypvH1dip/IRXJhwcJ2zuZuPhs6+nm4urcVW+GkGz
-         So9PpKDUxjt2V1qwmYkn0mOGbBnKeXfhYiFcw5fh16Kp53A4nhivARryoeOGlQjbhlGK
-         TTBwWjudjjgw1qjS2cPgE83KovNcAOfQApqhgBSVAm2yVYSRzan9lGBgIplDJfMN/3ON
-         I8CA==
-X-Gm-Message-State: APjAAAVYIR50NyE7zpRn7omVH4xuuq9RY132qm2Wjwj56sBAG4RfhtyS
-        O2wYwC33NgM6pri8TuOPXpkf7x2YnOk=
-X-Google-Smtp-Source: APXvYqwXA6fqzr260lpceTElIhVfFr3V/OQPZJPEf0NGYJR2Q94eFN1/zqU2uj0P0NrnZsT7OplYZw==
-X-Received: by 2002:a19:c80a:: with SMTP id y10mr47072531lff.177.1578010107933;
-        Thu, 02 Jan 2020 16:08:27 -0800 (PST)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id r15sm10901010ljh.11.2020.01.02.16.08.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jan 2020 16:08:26 -0800 (PST)
-Received: by mail-lj1-f172.google.com with SMTP id m26so39878609ljc.13
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 16:08:26 -0800 (PST)
-X-Received: by 2002:a05:651c:239:: with SMTP id z25mr50911509ljn.48.1578010105946;
- Thu, 02 Jan 2020 16:08:25 -0800 (PST)
+        bh=bRZSWQpjcGsFr1nunRoPIXJIpIMdhiOb1sBFIf72vwo=;
+        b=AFgmbLMT+qTKPTZW4xyZkiPqCG49VdM1BjrfcEWhJQfF04N/76NSM1CsT3d9V+yJ4o
+         Ptgvp49GMNFBB0KRsYh32hs4q5902SP4mr14p5uZAjoAssZEJD0NexYv2p0eI7mpR7RE
+         eyBE7HORZNhKlDddXDJHJ9yeo3zl12Z7HX9nhd+hPg25OigylWvhimIbl2oFhUeBC6yy
+         cGNmPyWe3iv9AM6DY6ZOsH273us5wno5NEsy7wx5odKKwyEzpam0zcRPCHzlYYeoM9TX
+         RtOlow71nURAJd+zJVf7xgkfvDQpvWxWP2O8RqGqVhflwvVz68TuIeF2wNAmstmLGatm
+         Aq6Q==
+X-Gm-Message-State: APjAAAWOIRpmO4suaiVi4Olg0VYFWiQ4mYGA6Nk1PUH9Q1NZCFRbxzLx
+        Den1RuwSlplNM6FTMPq/geS/4moLZKnjntOrUgU=
+X-Google-Smtp-Source: APXvYqySIdSJfzbS49GVPnlGuIjAwyrJ3NyLR93vpuiGIY1QnfcaPJk7eDvlI2rMcrGYoWrWy/wcqm72Xxvzzebc6Og=
+X-Received: by 2002:a9d:6181:: with SMTP id g1mr97920833otk.104.1578010219697;
+ Thu, 02 Jan 2020 16:10:19 -0800 (PST)
 MIME-Version: 1.0
-References: <20191224020615.134668-1-damien.lemoal@wdc.com>
- <20191224020615.134668-2-damien.lemoal@wdc.com> <20191224044001.GA2982727@magnolia>
- <BYAPR04MB5816B3322FD95BD987A982C1E7280@BYAPR04MB5816.namprd04.prod.outlook.com>
- <BYAPR04MB58167AD3E7519632746CDE72E7280@BYAPR04MB5816.namprd04.prod.outlook.com>
- <BYAPR04MB58160982BF645C23505BA085E7280@BYAPR04MB5816.namprd04.prod.outlook.com>
- <20200102213612.GD1508633@magnolia>
-In-Reply-To: <20200102213612.GD1508633@magnolia>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 2 Jan 2020 16:08:09 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiaTKptXbcP9OXaj9KRzuU5pd+aiTEEzy+Q88mMKMrK2A@mail.gmail.com>
-Message-ID: <CAHk-=wiaTKptXbcP9OXaj9KRzuU5pd+aiTEEzy+Q88mMKMrK2A@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] fs: New zonefs file system
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Naohiro Aota <Naohiro.Aota@wdc.com>,
-        Hannes Reinecke <hare@suse.de>
+References: <20200102122004.216c85da@gandalf.local.home> <20200102234950.GA14768@krava>
+ <20200102185853.0ed433e4@gandalf.local.home>
+In-Reply-To: <20200102185853.0ed433e4@gandalf.local.home>
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Date:   Fri, 3 Jan 2020 00:09:43 +0000
+Message-ID: <CADVatmNg+G6Gr3tZaSCiSQPtGnqNqADeah45T4_UzoSQtuiBXQ@mail.gmail.com>
+Subject: Re: [RFC] tools lib traceevent: How to do library versioning being in
+ the Linux kernel source?
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ben Hutchings <ben@decadent.org.uk>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 2, 2020 at 1:36 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+On Thu, Jan 2, 2020 at 11:58 PM Steven Rostedt <rostedt@goodmis.org> wrote:
 >
-> /me shrugs, I guess we're not supposed to use S_* in code.  Sorry about
-> the unnecessary churn. :/
+> On Fri, 3 Jan 2020 00:49:50 +0100
+> Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> > > Should we move libtraceevent into a stand alone git repo (on
+> > > kernel.org), that can have tags and branches specifically for it? We
+> > > can keep a copy in the Linux source tree for perf to use till it
+> >
+> > so libbpf 'moved' for this reason to github repo,
+> > but keeping the kernel as the true/first source,
+> > and updating github repo when release is ready
+> >
+> > libbpf github repo is then source for fedora (and others)
+> > package
+>
+> Ah, so perhaps I should follow this? I could keep it a kernel.org repo
+> (as I rather have it there anyway).
 
-The S_* constants are useful for things like file types etc - so you
-very much _are_ supposed to use them for things like
+Debian is building libbpf from kernel tree.
 
-    switch (mode & S_IFMT) {
-    case S_IFREG: ...
+>
+> We can have the tools/lib/traceevent be the main source, but then just
+> copy it to the stand alone for releases.
+>
+> Sudip, would this work for you too? (and yes, I plan on acking that
+> patch for the -ldl change, after looking at it a little bit more).
 
-etc.
+If it moves to a separate repo then I guess we will need to move it
+out of the debian kernel and create a separate package. Might be
+better if we do for libbpf also.
 
-But no, the permission _names_ are complete and utter garbage. Whoever
-came up with them was just being silly and they are not to ever be
-used. Yes, POSIX specifies them, and yes, if you are outside of Unix
-environments maybe they can have some relevance, but in a Unixy
-environment, the octal codes are a *lot* more legible.
+(Adding Ben).
+Ben?
 
-So if you want "owner read-write, group/world read", you use 0644.
-That can actually be parsed. And 0777 matches that pattern, unlike the
-insane jumble of letters that is "S_IRWXUGO".
 
-Seriously, anybody who thinks "S_IRWXUGO" is easier to read than 0777
-is just wrong. It's just shorthand for S_IRWXU|S_IRWXG|S_IRWXO, which
-is _also_ a complete and utter mess and insane.
-
-Just say no to the permission names. They don't even cover all the
-cases anyway (unless you start or'ing in the individual bits and make
-them even less regible), and by the time you parse all the random
-letters (and know enough to parse them right), you inevitably find the
-octal representation a lot easier to parse anyway.
-
-And if you don't know how the unix permission bits work, then neither
-the symbolic names _nor_ the numbers make any sense, so just give up.
-
-So use the octal numbers for the three groups of three bits - aka the
-low 9 bits aka the "UGO" bits, and use the symbolic names for the
-other bits. Everybody will be much happier.
-
-                   Linus
+-- 
+Regards
+Sudip
