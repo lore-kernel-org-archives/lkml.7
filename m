@@ -2,114 +2,143 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB932C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0218FC32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 10:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7013020672
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:59:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="arU+bgeb";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aetN80Dt"
+	by mail.kernel.org (Postfix) with ESMTP id D4AD224649
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 10:00:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbgACJ7e (ORCPT
+        id S1727493AbgACKA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 04:59:34 -0500
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:60481 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725972AbgACJ7e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 04:59:34 -0500
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id CDD3022076;
-        Fri,  3 Jan 2020 04:59:32 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Fri, 03 Jan 2020 04:59:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=BNgr96S65iOJ9G2yDQbQ1c8xzGK
-        igz/QMDidnP3P37E=; b=arU+bgeb2BO8DYXXWCXl7/+4IrzAlARbshkM5Tw2s5+
-        6KVXNPwEA++wwmUx2oUOHG0nnGW90WsR/rKlF+nfCGA5zF8g3lXW8kO7HNNPE2hY
-        +rROFyj56oXiy+zgdjlIo8EX3+JqGU5PqTkI1zLuKvOTWwOGMfplIW/vzQclCL26
-        IDqpEiiRZqx6VciNyErfVmO530HQ8QUAXXyYqn09mLf7tIfHvc8vmsK5NgN4ZxTE
-        4mUAW5zVreXganmrFGd6bq0j81zILqaXkYw+oXgE947GcYjQXlSl/vbMPlZiLUPm
-        cABA+Ab3NB2ALBzFJCKHroiTG5tVNi2k5wDMfOi0Iiw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=BNgr96
-        S65iOJ9G2yDQbQ1c8xzGKigz/QMDidnP3P37E=; b=aetN80Dtu7bBjgoeFrCD0H
-        zliFRaeoQkJUJSgsu+1EAOI67h6pXLmP86eGoUOeLpE6D5k0NZD5h8TQfI53pV99
-        Nihb7JjqLhViqbVI3HGBeEKhdIzwHhSq7TGR3FGs8sEWTviRP0NXn86w02DYu0Vc
-        94aiIebNcrm30ItY8mafXh33g41Fqavr0UUVWYWtD6jAU265i5uAWXbboiksrtFc
-        tMXQ4st8aA0jPmaSJW17Iacxc7lhnlc0sZeexeAAYuo/WcThtZFWiUCLvEIFv/PM
-        /1qdJgh8Vxz8Hkoe8G7OVj3xa7XF4l52X5boB8ykZ+gKHs4UpT+OPNKPZArOoMLg
-        ==
-X-ME-Sender: <xms:hBAPXl77-qninetVJ-xycYGKY5SIB2kFEEwcd4fkmj9bRu_R0I_P4A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdegfedgudduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
-    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:hBAPXlsmHKjnWtRCBdcU0Ag76PvSifWbi1i6fYdtDsYVBqhT0DUFCA>
-    <xmx:hBAPXvMfyWWcqwV03SSjASDMNGNJ_pEcin4APwFPN75a9Lz5uiutoA>
-    <xmx:hBAPXhocIGUq4-w0kHcTR614Lh2yN30CxsQJ0KnaMDFkmL1wrpfXUw>
-    <xmx:hBAPXqnP1aKXli5-_KDbIF-dWbyPAeOgtX_zdd6xw4toLVjPvGV0og>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1D82C3060741;
-        Fri,  3 Jan 2020 04:59:32 -0500 (EST)
-Date:   Fri, 3 Jan 2020 10:59:30 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Matthew Hanzelik <mrhanzelik@gmail.com>
-Cc:     gregkh@linuxfoundation.com, christian.gromm@microchip.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Staging: most: core: Fix SPDX License Identifier
- style issue
-Message-ID: <20200103095930.GA882552@kroah.com>
-References: <20191227084155.xpmv2thwrrsij5kx@mandalore.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191227084155.xpmv2thwrrsij5kx@mandalore.localdomain>
+        Fri, 3 Jan 2020 05:00:26 -0500
+Received: from mga01.intel.com ([192.55.52.88]:2331 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725972AbgACKAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 05:00:25 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jan 2020 02:00:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,390,1571727600"; 
+   d="scan'208";a="394288544"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga005.jf.intel.com with ESMTP; 03 Jan 2020 02:00:22 -0800
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     p.zabel@pengutronix.de, robh@kernel.org,
+        martin.blumenstingl@googlemail.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        Dilip Kota <eswara.kota@linux.intel.com>
+Subject: [PATCH v6 1/2] dt-bindings: reset: Add YAML schemas for the Intel Reset controller
+Date:   Fri,  3 Jan 2020 18:00:17 +0800
+Message-Id: <ab84cc2ada92e4512ff18b11d6f1f752e5821b67.1578021776.git.eswara.kota@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 27, 2019 at 03:41:55AM -0500, Matthew Hanzelik wrote:
-> Fixed a style issue with the SPDX License Identifier style.
-> 
-> Signed-off-by: Matthew Hanzelik <mrhanzelik@gmail.com>
-> ---
-> Changes in v2:
->   - Fix trailing space in patch diff
-> 
->  drivers/staging/most/core.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/most/core.h b/drivers/staging/most/core.h
-> index 49859aef98df..1380e7586376 100644
-> --- a/drivers/staging/most/core.h
-> +++ b/drivers/staging/most/core.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * most.h - API for component and adapter drivers
->   *
-> --
-> 2.24.1
-> 
+Add YAML schemas for the reset controller on Intel
+Gateway SoC.
 
-This does not apply to linux-next, please rebase it if it is still
-needed and resend.
+Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes on v6:
+	No changes
 
-thanks,
+Changes on v5:
+	Add Reviewed-by: Rob Herring <robh@kernel.org>
+	Rebase patches on v5.5-rc1 kernel
 
-greg k-h
+Changes on v4:
+	Address Rob review comments
+	  Drop oneOf and items for 'compatible'
+	  Add maxItems for 'reg' and 'intel,global-reset'
+
+Changes on v3:
+	Fix DTC warnings
+	Add support to legacy xrx200 SoC
+	Change file name to intel,rcu-gw.yaml
+
+ .../devicetree/bindings/reset/intel,rcu-gw.yaml    | 63 ++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+
+diff --git a/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+new file mode 100644
+index 000000000000..246dea8a2ec9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/reset/intel,rcu-gw.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: System Reset Controller on Intel Gateway SoCs
++
++maintainers:
++  - Dilip Kota <eswara.kota@linux.intel.com>
++
++properties:
++  compatible:
++    enum:
++      - intel,rcu-lgm
++      - intel,rcu-xrx200
++
++  reg:
++    description: Reset controller registers.
++    maxItems: 1
++
++  intel,global-reset:
++    description: Global reset register offset and bit offset.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++      - maxItems: 2
++
++  "#reset-cells":
++    minimum: 2
++    maximum: 3
++    description: |
++      First cell is reset request register offset.
++      Second cell is bit offset in reset request register.
++      Third cell is bit offset in reset status register.
++      For LGM SoC, reset cell count is 2 as bit offset in
++      reset request and reset status registers is same. Whereas
++      3 for legacy SoCs as bit offset differs.
++
++required:
++  - compatible
++  - reg
++  - intel,global-reset
++  - "#reset-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    rcu0: reset-controller@e0000000 {
++        compatible = "intel,rcu-lgm";
++        reg = <0xe0000000 0x20000>;
++        intel,global-reset = <0x10 30>;
++        #reset-cells = <2>;
++    };
++
++    pwm: pwm@e0d00000 {
++        status = "disabled";
++        compatible = "intel,lgm-pwm";
++        reg = <0xe0d00000 0x30>;
++        clocks = <&cgu0 1>;
++        #pwm-cells = <2>;
++        resets = <&rcu0 0x30 21>;
++    };
+-- 
+2.11.0
+
