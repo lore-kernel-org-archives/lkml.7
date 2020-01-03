@@ -2,116 +2,147 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C10F4C3276E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 055E7C3276C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C33D222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8C01222C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:50:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YSfQMQ/7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbgACBtR (ORCPT
+        id S1727255AbgACBud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 20:49:17 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:48834 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgACBtR (ORCPT
+        Thu, 2 Jan 2020 20:50:33 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43031 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbgACBud (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 20:49:17 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1inC5F-000pFy-EG; Fri, 03 Jan 2020 01:49:01 +0000
-Date:   Fri, 3 Jan 2020 01:49:01 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        stable@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ian Kent <raven@themaw.net>
-Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
- symlinks
-Message-ID: <20200103014901.GC8904@ZenIV.linux.org.uk>
-References: <20191230052036.8765-1-cyphar@cyphar.com>
- <20191230054413.GX4203@ZenIV.linux.org.uk>
- <20191230054913.c5avdjqbygtur2l7@yavin.dot.cyphar.com>
- <20191230072959.62kcojxpthhdwmfa@yavin.dot.cyphar.com>
- <20200101004324.GA11269@ZenIV.linux.org.uk>
- <20200101005446.GH4203@ZenIV.linux.org.uk>
- <20200101030815.GA17593@ZenIV.linux.org.uk>
- <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
- <20200101234009.GB8904@ZenIV.linux.org.uk>
- <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
+        Thu, 2 Jan 2020 20:50:33 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k197so22727978pga.10
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 17:50:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oFTLxb+41MiC6n43bMNpqAO7uKgmJzv0ZXWHejH9m18=;
+        b=YSfQMQ/7HsvcZuI9w3YxL0DB09qW6t/OjZDQNJZIen6innJmL4MxOUs4PgU+ocq129
+         n4fW7DsI5CDnlPI2L0nmRVwm08tq/uxZM91HkVK6qySZ5HpUljW07ZAoQsrDgveAhT0I
+         Gt29Z9I9segAMg3662EoldgBLZxMqmtKXCk0s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oFTLxb+41MiC6n43bMNpqAO7uKgmJzv0ZXWHejH9m18=;
+        b=Urkc9/AWmeMTSvt7TuC9B8T4xgPuQ4m7arnt0ZQkDgOS4vFvWUNKTv+WITh8gJZ1t8
+         n00at5f+cezGn/ZUFdsnv13oCFgABgeGqNG9QXObjcOuowLEMjU3ITrl71Y7gITFw7SU
+         jcqhZwCYC2jZAJgF85xeb/tvVyqgRM0drp8O+aQLnN3Mi6CIH5gTKpKMHlOu+5ighOom
+         rHAUGvKRE+52bD/rIJlHGkwspmFf+Jy/HRTFI7p7aTNWg+UHQ7v+1JPBn07kexGTWbXz
+         DqGlev0VYqseGLoFyF3uChNxsPkJTx/YyyCCun5MYTW63XSE0ozSyZueU4z+hD0gVL4I
+         0U/w==
+X-Gm-Message-State: APjAAAWEl3q2qji3/ylZ2ludy6WmG2Fy2T2BZyoF2StnxzWjkbC4dogD
+        l3eq67C0foU6j4diak1v3aVuggZ9anM=
+X-Google-Smtp-Source: APXvYqzqhwYcattRFHjc9PGKGA3bAJNMmQMLDOfPym+ZWDgsx0Z+n70qiCu1VTKmC/+wwGjAlvGSgw==
+X-Received: by 2002:aa7:940e:: with SMTP id x14mr73933464pfo.42.1578016232045;
+        Thu, 02 Jan 2020 17:50:32 -0800 (PST)
+Received: from localhost ([2401:fa00:9:15:c479:b58e:61d1:15d5])
+        by smtp.gmail.com with ESMTPSA id z4sm12377658pjn.29.2020.01.02.17.50.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Jan 2020 17:50:31 -0800 (PST)
+From:   Sam McNally <sammc@chromium.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Sam McNally <sammc@chromium.org>, Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        alsa-devel@alsa-project.org,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Sathya Prakash M R <sathya.prakash.m.r@intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Xun Zhang <xun2.zhang@intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>
+Subject: [PATCH v3] ASoC: Intel: sof_rt5682: Ignore the speaker amp when there isn't one.
+Date:   Fri,  3 Jan 2020 12:50:19 +1100
+Message-Id: <20200103124921.v3.1.Ib87c4a7fbb3fc818ea12198e291b87dc2d5bc8c2@changeid>
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 02:59:20PM +1100, Aleksa Sarai wrote:
-> On 2020-01-01, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > On Thu, Jan 02, 2020 at 01:44:07AM +1100, Aleksa Sarai wrote:
-> > 
-> > > Thanks, this fixes the issue for me (and also fixes another reproducer I
-> > > found -- mounting a symlink on top of itself then trying to umount it).
-> > > 
-> > > Reported-by: Aleksa Sarai <cyphar@cyphar.com>
-> > > Tested-by: Aleksa Sarai <cyphar@cyphar.com>
-> > 
-> > Pushed into #fixes.
-> 
-> Thanks. One other thing I noticed is that umount applies to the
-> underlying symlink rather than the mountpoint on top. So, for example
-> (using the same scripts I posted in the thread):
-> 
->   # ln -s /tmp/foo link
->   # ./mount_to_symlink /etc/passwd link
->   # umount -l link # will attempt to unmount "/tmp/foo"
-> 
-> Is that intentional?
+Some members of the Google_Hatch family include a rt5682 jack codec, but
+no speaker amplifier. This uses the same driver (sof_rt5682) as a
+combination of rt5682 jack codec and max98357a speaker amplifier. Within
+the sof_rt5682 driver, these cases are not currently distinguishable,
+relying on a DMI quirk to decide the configuration. This causes an
+incorrect configuration when only the rt5682 is present on a
+Google_Hatch device.
 
-It's a mess, again in mountpoint_last().  FWIW, at some point I proposed
-to have nd_jump_link() to fail with -ELOOP if the target was a symlink;
-Linus asked for reasons deeper than my dislike of the semantics, I looked
-around and hadn't spotted anything.  And there hadn't been at the time,
-but when four months later umount_lookup_last() went in I failed to look
-for that source of potential problems in it ;-/
+For CML, the jack codec is used as the primary key when matching,
+with a possible speaker amplifier described in quirk_data. The two cases
+of interest are the second and third 10EC5682 entries in
+snd_soc_acpi_intel_cml_machines[]. The second entry matches the
+combination of rt5682 and max98357a, resulting in the quirk_data field
+in the snd_soc_acpi_mach being non-null, pointing at
+max98357a_spk_codecs, the snd_soc_acpi_codecs for the matched speaker
+amplifier. The third entry matches just the rt5682, resulting in a null
+quirk_data.
 
-I've looked at that area again now.  Aside of usual cursing at do_last()
-horrors (yes, its control flow is a horror; yes, it needs serious massage;
-no, it's not a good idea to get sidetracked into that right now), there
-are several fun questions:
-	* d_manage() and d_automount().  We almost certainly don't
-want those for autofs on the final component of pathname in umount,
-including the trailing symlinks.  But do we want those on usual access
-via /proc/*/fd/*?  I.e. suppose somebody does open() (O_PATH or not)
-in autofs; do we want ->d_manage()/->d_automount() called when
-resolving /proc/self/fd/<whatever>/foo/bar?  We do not; is that
-correct from autofs point of view?  I suspect that refusing to
-do ->d_automount() is correct, but I don't understand ->d_manage()
-purpose well enough to tell.
-	* I really hope that the weird "trailing / forces automount
-even in cases when we normally wouldn't trigger it" (stat /mnt/foo
-vs. stat /mnt/foo/) is not meant to extend to umount.  I'd like
-Ian's confirmation, though.
-	* do we want ->d_manage() on following .. into overmounted
-directory?  Again, autofs question...
+The sof_rt5682 driver's DMI data matching identifies that a speaker
+amplifier is present for all Google_Hatch family devices. Detect cases
+where there is no speaker amplifier by checking for a null quirk_data in
+the snd_soc_acpi_mach and remove the speaker amplifier bit in that case.
 
-	The minimal fix to mountpoint_last() would be to have
-follow_mount() done in LAST_NORM case.  However, I'd like to understand
-(and hopefully regularize) the rules for follow_mount()/follow_managed().
-Additional scary question is nfsd iterplay with automount.  For nfs4
-exports it's potentially interesting...
+Signed-off-by: Sam McNally <sammc@chromium.org>
+---
 
-	Ian, could you comment on the autofs questions above?
-I'd rather avoid doing changes in that area without your input -
-it's subtle and breakage in automount-related behaviour can be
-mysterious as hell.
+Changes in v3:
+- Rewrote commit message to refer to correct
+  snd_soc_acpi_intel_cml_machines[] entries and better describe the
+  change
+
+Changes in v2:
+- Added details about the relevant ACPI matches to the description
+
+ sound/soc/intel/boards/sof_rt5682.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/intel/boards/sof_rt5682.c b/sound/soc/intel/boards/sof_rt5682.c
+index ad8a2b4bc709..8a13231dee15 100644
+--- a/sound/soc/intel/boards/sof_rt5682.c
++++ b/sound/soc/intel/boards/sof_rt5682.c
+@@ -603,6 +603,14 @@ static int sof_audio_probe(struct platform_device *pdev)
+ 
+ 	dmi_check_system(sof_rt5682_quirk_table);
+ 
++	mach = (&pdev->dev)->platform_data;
++
++	/* A speaker amp might not be present when the quirk claims one is.
++	 * Detect this via whether the machine driver match includes quirk_data.
++	 */
++	if ((sof_rt5682_quirk & SOF_SPEAKER_AMP_PRESENT) && !mach->quirk_data)
++		sof_rt5682_quirk &= ~SOF_SPEAKER_AMP_PRESENT;
++
+ 	if (soc_intel_is_byt() || soc_intel_is_cht()) {
+ 		is_legacy_cpu = 1;
+ 		dmic_be_num = 0;
+@@ -663,7 +671,6 @@ static int sof_audio_probe(struct platform_device *pdev)
+ 	INIT_LIST_HEAD(&ctx->hdmi_pcm_list);
+ 
+ 	sof_audio_card_rt5682.dev = &pdev->dev;
+-	mach = (&pdev->dev)->platform_data;
+ 
+ 	/* set platform name for each dailink */
+ 	ret = snd_soc_fixup_dai_links_platform_name(&sof_audio_card_rt5682,
+-- 
+2.24.1.735.g03f4e72817-goog
+
