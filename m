@@ -2,121 +2,88 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96313C00523
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B11B0C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 737E8222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 836EA222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:12:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbgACJHS (ORCPT
+        id S1727417AbgACJMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 04:07:18 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:49341 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgACJHS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 04:07:18 -0500
-X-Originating-IP: 90.65.102.129
-Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 89633E000C;
-        Fri,  3 Jan 2020 09:07:04 +0000 (UTC)
-Date:   Fri, 3 Jan 2020 10:07:04 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        linux-mtd@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mtd: rawnand: atmel: switch to using
- devm_fwnode_gpiod_get()
-Message-ID: <20200103090704.GG3040@piout.net>
-References: <20200103012238.GA3648@dtor-ws>
+        Fri, 3 Jan 2020 04:12:20 -0500
+Received: from foss.arm.com ([217.140.110.172]:54020 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725972AbgACJMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 04:12:20 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 264C61FB;
+        Fri,  3 Jan 2020 01:12:19 -0800 (PST)
+Received: from [192.168.1.18] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 918673F703;
+        Fri,  3 Jan 2020 01:12:17 -0800 (PST)
+Subject: Re: [PATCH v2] MIPS: Avoid VDSO ABI breakage due to global register
+ variable
+To:     Paul Burton <paulburton@kernel.org>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@canonical.com>,
+        stable@vger.kernel.org
+References: <20200102005343.GA495913@rani.riverdale.lan>
+ <20200102045038.102772-1-paulburton@kernel.org>
+ <754c5d05-4455-5ce1-475d-55c2191a06cf@arm.com>
+ <20200103004229.lpbhocebuny6vxmf@lantea.localdomain>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <fce2be75-9a68-37eb-723a-99d010e77132@arm.com>
+Date:   Fri, 3 Jan 2020 09:15:10 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200103012238.GA3648@dtor-ws>
+In-Reply-To: <20200103004229.lpbhocebuny6vxmf@lantea.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Paul,
 
-On 02/01/2020 17:22:38-0800, Dmitry Torokhov wrote:
-> devm_fwnode_get_index_gpiod_from_child() is going away as the name is
-> too unwieldy, let's switch to using the new devm_fwnode_gpiod_get().
+On 1/3/20 12:42 AM, Paul Burton wrote:
+> Using -ffixed-gp wouldn't be correct for the VDSO - the VDSO itself is
+> position independent code, and will need to use $gp to access the GOT
+> which is part of how position-independence is achieved (technically you
+> could access the GOT using another register of course but you'd need
+> some way to persuade the compiler to break with convention & you'd gain
+> nothing meaningful since you'd need to use some other register anyway).
+> If we use -ffixed-gp then we're telling GCC not to use $gp, and that
+> doesn't make sense. If we consider -ffixed-gp as telling GCC not to use
+> $gp as a general purpose register then it's meaningless because $gp
+> already has a specific use & isn't used as a general purpose register.
+> If we consider -ffixed-gp as telling GCC not to use $gp at all then it
+> doesn't make sense because it needs to in order to access the GOT.
 > 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  drivers/mtd/nand/raw/atmel/nand-controller.c | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
+> In terms of GCC's flags we'd want to use -fcall-saved-gp, but that would
+> just be telling GCC information it already knows about the n32 & n64
+> ABIs & indeed it seems to have no effect at all on the way GCC handles
+> the global register variable - it doesn't cause gcc to save & restore
+> $gp with the global register variable present, so you gain nothing.
 > 
-> diff --git a/drivers/mtd/nand/raw/atmel/nand-controller.c b/drivers/mtd/nand/raw/atmel/nand-controller.c
-> index 8d6be90a6fe8a..849bd5f16492d 100644
-> --- a/drivers/mtd/nand/raw/atmel/nand-controller.c
-> +++ b/drivers/mtd/nand/raw/atmel/nand-controller.c
-> @@ -1578,9 +1578,8 @@ static struct atmel_nand *atmel_nand_create(struct atmel_nand_controller *nc,
->  
->  	nand->numcs = numcs;
->  
-> -	gpio = devm_fwnode_get_index_gpiod_from_child(nc->dev, "det", 0,
-> -						      &np->fwnode, GPIOD_IN,
-> -						      "nand-det");
-> +	gpio = devm_fwnode_gpiod_get(nc->dev, of_fwnode_hanlde(np),
+> We could use -ffixed-gp for the kernel proper (& not the VDSO), but:
+> 
+> 1) The kernel builds as non-PIC code with no $gp-based optimizations
+>    enabled, and since this has been fine forever it seems safe to expect
+>    the compiler not to start using $gp in new ways.
+> 
+> 2) It would be a separate issue to fixing the VDSO anyway.
 
-Shouldn't that be of_fwnode_handle(np)?
-
-> +				     "det", GPIOD_IN, "nand-det");
->  	if (IS_ERR(gpio) && PTR_ERR(gpio) != -ENOENT) {
->  		dev_err(nc->dev,
->  			"Failed to get detect gpio (err = %ld)\n",
-> @@ -1624,9 +1623,10 @@ static struct atmel_nand *atmel_nand_create(struct atmel_nand_controller *nc,
->  			nand->cs[i].rb.type = ATMEL_NAND_NATIVE_RB;
->  			nand->cs[i].rb.id = val;
->  		} else {
-> -			gpio = devm_fwnode_get_index_gpiod_from_child(nc->dev,
-> -							"rb", i, &np->fwnode,
-> -							GPIOD_IN, "nand-rb");
-> +			gpio = devm_fwnode_gpiod_get_index(nc->dev,
-> +							   of_fwnode_handle(np),
-> +							   "rb", i, GPIOD_IN,
-> +							   "nand-rb");
->  			if (IS_ERR(gpio) && PTR_ERR(gpio) != -ENOENT) {
->  				dev_err(nc->dev,
->  					"Failed to get R/B gpio (err = %ld)\n",
-> @@ -1640,10 +1640,10 @@ static struct atmel_nand *atmel_nand_create(struct atmel_nand_controller *nc,
->  			}
->  		}
->  
-> -		gpio = devm_fwnode_get_index_gpiod_from_child(nc->dev, "cs",
-> -							      i, &np->fwnode,
-> -							      GPIOD_OUT_HIGH,
-> -							      "nand-cs");
-> +		gpio = devm_fwnode_gpiod_get_index(nc->dev,
-> +						   of_fwnode_handle(np),
-> +						   "cs", i, GPIOD_OUT_HIGH,
-> +						   "nand-cs");
->  		if (IS_ERR(gpio) && PTR_ERR(gpio) != -ENOENT) {
->  			dev_err(nc->dev,
->  				"Failed to get CS gpio (err = %ld)\n",
-> -- 
-> 2.24.1.735.g03f4e72817-goog
-> 
-> 
-> -- 
-> Dmitry
+Makes totally sense. Thanks for the explanation.
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Regards,
+Vincenzo
