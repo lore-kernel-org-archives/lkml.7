@@ -2,98 +2,127 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6438FC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 20:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1268BC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 20:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 336DD20866
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 20:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2D520866
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 20:25:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="YTiWrOb5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O5E/1uud"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgACUX1 (ORCPT
+        id S1728481AbgACUZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 15:23:27 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45162 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727516AbgACUXZ (ORCPT
+        Fri, 3 Jan 2020 15:25:06 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46099 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727221AbgACUZG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 15:23:25 -0500
-Received: by mail-qt1-f194.google.com with SMTP id l12so37680816qtq.12
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 12:23:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2Eh1yQkvu28vzyYRDiVcQwSW+SUklb8lMZ4DpMKEnY4=;
-        b=YTiWrOb56a1ZHIaSf9O1wVNbS19lXhKtyLknLuzFJx77TN9chzR0h/NE0jPdefQVKN
-         YlDU+Z6Z1GO5iLxvZenhQO/P1FszjgWeD+IeraEzD38TNudMORVNtJDUz4eL+ILvOOZt
-         /sTzBavh0R4suV3EcHnPQAj0BTBZ6aKNK+A48gwqPlbK6X2PHv1qjQSYQnnX91TnF4jk
-         7B+Fo2XNfybeccmk9/U+j53rZjHC/ZTbes07YToLu+tHhLpG6roLycovloDH0klYvpvl
-         a96tuQL+sP3DDA/f0kwXdsqelAsLzsUYlkrcvGtBPtCn5gs/MKnRtzDSDN+eySr3sVu9
-         p3hQ==
+        Fri, 3 Jan 2020 15:25:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578083104;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:in-reply-to:in-reply-to:  references:references;
+        bh=vIYQkD20DtDkAZnR5HqwGi0y1CPUBys+0A8WZjYWNOA=;
+        b=O5E/1uud4/4Fxm39bgD9YtilghsRva7cNrwwG8QejxuBrCvL5nVX0VrhwUB0T5WY4op5jo
+        eQB2Uw3w4QPtNUYUy8CurtYh1nVwN2XuUob1/Rc9ExChDwVzf9LUxeuUgl+evfmQPXTF17
+        TDtz8bNFJ+jfYNpC1eZO4OJ/I0ahmGY=
+Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
+ [209.85.219.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-308-UCpZziE2MBaX4MRyiacbtw-1; Fri, 03 Jan 2020 15:25:01 -0500
+X-MC-Unique: UCpZziE2MBaX4MRyiacbtw-1
+Received: by mail-yb1-f197.google.com with SMTP id r14so13173742ybl.10
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 12:25:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2Eh1yQkvu28vzyYRDiVcQwSW+SUklb8lMZ4DpMKEnY4=;
-        b=jsYTrDO5o3iYrgz+280086pE9xfvfiqcQmN4JW7O0G32DMDfoTgoyLWq8HmlcqQlno
-         Cf3m13wSVgPQLDLtoL73Vz4O5q1CdgQESP5txCQPOLN9oElRn5gOyf3bM5+38HqDDnca
-         kMcNnHoFbgNz9IYUlXDWtuyIB6S930ykAC/eGDjxfQJJY/HBHOEiwPay2aVmq8Qm6lqP
-         mtdaOAaQCWMPE2v1gvOMAtVhBVlndLuUbJ7+deP6hLO6fGdAv+87Rw1F75uN+OLPnSlZ
-         E23LIaMv5R2r6NVf2xJS2VDKSU6QqH7Zoz5oc73vCoCI4Mg5FjsJm1xKj39J1X+1m7HL
-         V8Dw==
-X-Gm-Message-State: APjAAAXCr1asC/GSvQClOChs6it8kg6NMl9M99/Z3lTpNOujQHJ2xqAx
-        RRzzSAr9WrnqQTeELedgILoe4Q==
-X-Google-Smtp-Source: APXvYqxy1Faz1t5NblybFE11de0p8ag9hlUiNxnTiTsaHJhdsIDTGMwllYn8llwMRaRMp/npH4bmGw==
-X-Received: by 2002:ac8:1aeb:: with SMTP id h40mr66103001qtk.269.1578083004353;
-        Fri, 03 Jan 2020 12:23:24 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id d143sm16960386qke.123.2020.01.03.12.23.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 Jan 2020 12:23:23 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1inTTf-00043e-Dx; Fri, 03 Jan 2020 16:23:23 -0400
-Date:   Fri, 3 Jan 2020 16:23:23 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     kjlu@umn.edu, Bart Van Assche <bvanassche@acm.org>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] scsi: RDMA/srpt: remove unnecessary assertion in
- srpt_queue_response
-Message-ID: <20200103202323.GA15557@ziepe.ca>
-References: <20191217194437.25568-1-pakki001@umn.edu>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=vIYQkD20DtDkAZnR5HqwGi0y1CPUBys+0A8WZjYWNOA=;
+        b=CdqxhCyhKK6hs2zbq/fugDvOVATXrgJjwf1J4NTPG0n/swlttG9E4inqPKvq3zAK3E
+         cpevuW7LOxo66kVtAAvFFNxsW9R8xONh4/G6o1zPxTi9pKtvk5FyiFctbqlXCTBnwk38
+         pj8T5LTGsqEUcDoL5iNx5xR9F51V/AAYQzUgMqNTmaNaUvyvOtymZD6zy8295z1xYYEu
+         ImxrF+vKBj7143vjJckSsyJ6te4Pf2UswFf8UVagE/tlq+HqvVtANRYq+C819zsMW1WT
+         Bngz9THfuulejsQPmFm0376OFg5wBrmIg5+ZKcTDyeq18gHuCvXJAszw84xA1MY/6DAY
+         6dhQ==
+X-Gm-Message-State: APjAAAXgxnhHI9k8KhloYaAmibTWG2Nwy58+aXXdyv50ZeCfSqb88rRV
+        2IiV8W/PeSLiv2GJ5kSMjDadZbUv6+CrhArf5OnFh6sJy+3prv3ueApNzHwohJT5JK5hWNGy2hl
+        g74W+8gb6of7b2rseMgNIyd5n
+X-Received: by 2002:a25:9309:: with SMTP id f9mr70238566ybo.43.1578083101428;
+        Fri, 03 Jan 2020 12:25:01 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwZ8DLvTkRCvsFLSCltnpCvU/x9tELkKy1E6VFlp20keNhZqqn+vEyv92etdhVLppcchXVF5Q==
+X-Received: by 2002:a25:9309:: with SMTP id f9mr70238553ybo.43.1578083101116;
+        Fri, 03 Jan 2020 12:25:01 -0800 (PST)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id c84sm24230987ywa.1.2020.01.03.12.24.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2020 12:25:00 -0800 (PST)
+Date:   Fri, 3 Jan 2020 13:24:58 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Christian Bundy <christianbundy@fraction.io>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable-commits@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Patch "tpm_tis: reserve chip for duration of tpm_tis_core_init"
+ has been added to the 5.4-stable tree
+Message-ID: <20200103202458.lhd5qu2onl67kilb@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Christian Bundy <christianbundy@fraction.io>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Peter Huewe <peterhuewe@gmx.de>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable-commits@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <c6ce34b130210d2d1330fc4079d6d82bd74dcef1.camel@linux.intel.com>
+ <50217a688ffa56cf5f150ffd358daba2a88cad48.camel@linux.intel.com>
+ <20191228151526.GA6971@linux.intel.com>
+ <CAPcyv4i_frm8jZeknniPexp8AAmGsaq0_DHegmL4XZHQi1ThxA@mail.gmail.com>
+ <CAPcyv4iyQeXBWvp8V_UPBsOk29cfmTVZGYrrDgyYYqzsQvTjNA@mail.gmail.com>
+ <2c4a80e0d30bf1dfe89c6e3469d1dbfb008275fa.camel@linux.intel.com>
+ <20191231010256.kymv4shwmx5jcmey@cantor>
+ <20191231155944.GA4790@linux.intel.com>
+ <be07a1e4-c290-4185-8c23-d97050279564@www.fastmail.com>
+ <20200102171922.GA20989@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20191217194437.25568-1-pakki001@umn.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200102171922.GA20989@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 01:44:37PM -0600, Aditya Pakki wrote:
-> Currently, BUG_ON in srpt_queue_response, is used as an assertion for
-> empty rdma channel. However, if the channel is NULL, the call trace
-> on console is sufficient for diagnosis.
-> 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-> ---
-> v1: Avoid potential NULL pointer derefernce of ch. Current fix
-> suggested by Bart Van Assche
-> ---
->  drivers/infiniband/ulp/srpt/ib_srpt.c | 2 --
->  1 file changed, 2 deletions(-)
+On Thu Jan 02 20, Jarkko Sakkinen wrote:
+>On Tue, Dec 31, 2019 at 11:47:37AM -0800, Christian Bundy wrote:
+>> > Christian, were you having any issues with interrupts? You system was going
+>> > into this code as well.
+>>
+>> Unfortunately I'm now unable to test, sorry for the trouble. I replaced my BIOS
+>> with UEFI firmware and the problem has disappeared. Please let me know if there
+>> is anything else I can do to help.
+>>
+>> Christian
+>
+>Takashi wrote yesterday [*]:
+>
+>"I'm building a test kernel package based on 5.5-rc4 with Jarkko's revert
+>patches"
+>
+>[*] https://bugzilla.kernel.org/show_bug.cgi?id=205935
+>
+>/Jarkko
+>
 
-Applied to for-next with the reworked commit message Bart suggested
+You can add my ack to the reverts.
 
-Thanks,
-Jason
