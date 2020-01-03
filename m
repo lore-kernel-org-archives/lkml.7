@@ -2,123 +2,144 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDAAC3276C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B51D7C3276C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 02:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 441572084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85B052084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 02:11:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578017484;
+	bh=83alqWB8C6UBXsS1xBfV3QTQP9+8xJdZhRk2nORSmgA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fXytv4TP+s9GlmKNDwi75p8GtwPp14zbpDRRNQ/aHehCB6QXyDgaL2LqpF3IN/wNP
+	 8ttK5NHozwHfLTJdHXx3AmlfHz5IcfjPMEzWE4AYLsQtZdV7/CwrWDY+8zWFPL6NA2
+	 HAgYMASP/QzMj29IQhTsEH1If47zIWwaObEEV2q0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbgACBy5 (ORCPT
+        id S1727302AbgACCLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 20:54:57 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:36148 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725943AbgACBy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 20:54:56 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B2C9AD4C78F1B0342155;
-        Fri,  3 Jan 2020 09:54:54 +0800 (CST)
-Received: from [127.0.0.1] (10.173.221.196) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 3 Jan 2020
- 09:54:45 +0800
-Subject: Re: [PATCH] sched/debug: Reset watchdog on all CPUs while processing
- sysrq-t
-To:     Steven Rostedt <rostedt@goodmis.org>
-CC:     <mingo@redhat.com>, <peterz@infradead.org>,
-        <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
-        <dietmar.eggemann@arm.com>, <bsegall@google.com>,
-        <mgorman@suse.de>, <huawei.libin@huawei.com>,
-        <linux-kernel@vger.kernel.org>
-References: <20191226085224.48942-1-liwei391@huawei.com>
- <20200102144514.646df101@gandalf.local.home>
-From:   "liwei (GF)" <liwei391@huawei.com>
-Message-ID: <2a7a9e51-bb25-3ed1-2643-e293e3ce5188@huawei.com>
-Date:   Fri, 3 Jan 2020 09:54:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Thu, 2 Jan 2020 21:11:23 -0500
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:35986 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbgACCLX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 21:11:23 -0500
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 0032B5Qu012901;
+        Fri, 3 Jan 2020 11:11:06 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 0032B5Qu012901
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1578017466;
+        bh=upu24NLE1snKcWgRNKQYCdPnQQGwl7WkIqIrlHt44Eo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xvepVGvn3EkNyg3i+MPWM3c0zBKeSLQY9QKYjEQ193fg1bjip52IcR0FA53DQkIFR
+         GH+yzeFncw/NjlPj4B7sftoYfFbwXraETOBeG2Pbxb75l6wAjYWLm7O2nquIbcMQPB
+         +m8THHLIykWhsV6qEvAYpnBvCFR6fr9/3RYH6W0d9d9Z+TYS3g6uqJlidUuK/9Gom8
+         3PobKeufJ0CFnBwXK1srZ/BlB2aYW0C84TE9no4EYO/L1kfNFBqYXuPpYEPXg09v+R
+         gaeAhv6tmVLZJbYSQ0dLsQa51wewlMoCr2DTNnPYTECv7mdajCU4taXHG2nhSJRr4/
+         DL88I/FYmSIEQ==
+X-Nifty-SrcIP: [209.85.217.44]
+Received: by mail-vs1-f44.google.com with SMTP id b79so26536439vsd.9;
+        Thu, 02 Jan 2020 18:11:06 -0800 (PST)
+X-Gm-Message-State: APjAAAWj8GNtQqUxV/j3olNMFZzOQpcEWzgpX5B0AAtv1ZZj8nenwsF2
+        H5vHpogZysjTFpp6wLHoTFGzCEsv878gkKQziNs=
+X-Google-Smtp-Source: APXvYqxUXxzk2ylRi3uyucM5C8UkFT1XXDp2HaEIM2ygRSLfj3P7OCHnevb/H2qniViihW71ZaLLUfyKMjW6t0Zppsg=
+X-Received: by 2002:a67:f8ca:: with SMTP id c10mr37710313vsp.54.1578017464841;
+ Thu, 02 Jan 2020 18:11:04 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200102144514.646df101@gandalf.local.home>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.221.196]
-X-CFilter-Loop: Reflected
+References: <0ea3e528-4835-ff9c-f5a2-f711666ba75f@infradead.org> <20200102231402.1052657-1-nivedita@alum.mit.edu>
+In-Reply-To: <20200102231402.1052657-1-nivedita@alum.mit.edu>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 3 Jan 2020 11:10:28 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQrD4wcjqFTendbBGA2TXkbmxccRbv31HBCXz+J82w47g@mail.gmail.com>
+Message-ID: <CAK7LNAQrD4wcjqFTendbBGA2TXkbmxccRbv31HBCXz+J82w47g@mail.gmail.com>
+Subject: Re: [PATCH] kconfig: restore prompt dependencies in help text
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Rob Landley <rob@landley.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steven,
-Yes, it can be triggered on the Hi1620 system (128 cores) as follows:
-stress-ng -c 50 &
-stress-ng -m 50 &
-stress-ng -i 20 &
-echo 7 > /proc/sys/kernel/printk
-echo t > /proc/sysrq-trigger
+On Fri, Jan 3, 2020 at 8:14 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> Commit bcdedcc1afd6 ("menuconfig: print more info for symbol without
+> prompts") moved some code from get_prompt_str to get_symbol_str so that
+> dependency information for symbols without prompts could be shown.
+>
+> This code would be better copied rather than moved, as the change had
+> the side-effect of not showing any extra dependencies that the prompt
+> might have over the symbol.
+>
+> Put back a copy of the dependency printing code in get_prompt_str.
+>
+> The following is an example for NAMESPACES:
+>
+> Before:
+>         Symbol: NAMESPACES [=y]
+>         Type  : bool
+>         Prompt: Namespaces support
+>           Location:
+>         (2) -> General setup
+>           Defined at init/Kconfig:1064
+>           Depends on: MULTIUSER [=y]
+>
+> After:
+>         Symbol: NAMESPACES [=y]
+>         Type  : bool
+>         Prompt: Namespaces support
+>           Editable if: MULTIUSER [=y] && EXPERT [=y]
+>           Location:
+>         (2) -> General setup
+>           Defined at init/Kconfig:1064
+>           Depends on: MULTIUSER [=y]
+>
+> Fixes: bcdedcc1afd6 ("menuconfig: print more info for symbol without prompts")
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> ---
 
-Then a soft lockup will be reported at migration thread
-[39636.303531] watchdog: BUG: soft lockup - CPU#67 stuck for 23s! [migration/67:348]
-which is waiting for the CPU handling sysrq-t to process stop_two_cpus.
 
-Thanks,
-Wei
+I had already applied the following patch;
+https://patchwork.kernel.org/patch/11298143/
 
-On 2020/1/3 3:45, Steven Rostedt wrote:
-> On Thu, 26 Dec 2019 16:52:24 +0800
-> Wei Li <liwei391@huawei.com> wrote:
-> 
->> Lengthy output of sysrq-t may take a lot of time on slow serial console
->> with lots of processes and CPUs.
->>
->> So we need to reset NMI-watchdog to avoid spurious lockup messages, and
->> we also reset softlockup watchdogs on all other CPUs since another CPU
->> might be blocked waiting for us to process an IPI or stop_machine.
-> 
-> Have you had this triggered?
-> 
->>
->> Add to sysrq_sched_debug_show() as what we did in show_state_filter().
->>
->> Signed-off-by: Wei Li <liwei391@huawei.com>
->> ---
->>  kernel/sched/debug.c | 11 +++++++++--
->>  1 file changed, 9 insertions(+), 2 deletions(-)
->>
->> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
->> index f7e4579e746c..879d3ccf3806 100644
->> --- a/kernel/sched/debug.c
->> +++ b/kernel/sched/debug.c
->> @@ -751,9 +751,16 @@ void sysrq_sched_debug_show(void)
->>  	int cpu;
->>  
->>  	sched_debug_header(NULL);
->> -	for_each_online_cpu(cpu)
->> +	for_each_online_cpu(cpu) {
->> +		/*
->> +		 * Need to reset softlockup watchdogs on all CPUs, because
->> +		 * another CPU might be blocked waiting for us to process
->> +		 * an IPI or stop_machine.
->> +		 */
->> +		touch_nmi_watchdog();
->> +		touch_all_softlockup_watchdogs();
-> 
-> This doesn't seem to hurt to add, thus.
-> 
-> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> 
-> -- Steve
-> 
->>  		print_cpu(NULL, cpu);
->> -
->> +	}
->>  }
->>  
->>  /*
-> 
-> 
-> .
-> 
+It it available in linux-next.
 
+
+
+
+>  scripts/kconfig/menu.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/scripts/kconfig/menu.c b/scripts/kconfig/menu.c
+> index d9d16469859a..6fbbe41302dc 100644
+> --- a/scripts/kconfig/menu.c
+> +++ b/scripts/kconfig/menu.c
+> @@ -706,6 +706,12 @@ static void get_prompt_str(struct gstr *r, struct property *prop,
+>         struct jump_key *jump = NULL;
+>
+>         str_printf(r, "Prompt: %s\n", prop->text);
+> +       if (!expr_is_yes(prop->visible.expr)) {
+> +               str_append(r, "  Editable if: ");
+> +               expr_gstr_print(prop->visible.expr, r);
+> +               str_append(r, "\n");
+> +       }
+> +
+>         menu = prop->menu->parent;
+>         for (i = 0; menu != &rootmenu && i < 8; menu = menu->parent) {
+>                 bool accessible = menu_is_visible(menu);
+> --
+> 2.24.1
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
