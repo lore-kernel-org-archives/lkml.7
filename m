@@ -2,155 +2,73 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E75C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D2BC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8C2524655
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E2020866
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:38:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Ylp4VpqJ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="V23sxuuN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbgACTg0 (ORCPT
+        id S1728607AbgACTiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 14:36:26 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:14131 "EHLO rere.qmqm.pl"
+        Fri, 3 Jan 2020 14:38:14 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:46922 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728488AbgACTgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 14:36:23 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47qFWn074BzJf;
-        Fri,  3 Jan 2020 20:36:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1578080181; bh=WlFGQ9P8prWFa6CvEQ+uJYVkZQz0/FIh1Zkijr+EcIw=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=Ylp4VpqJCIcbkxk/NePZyFq9GAuIM/miWnraMy0CIBf3Gjobl56vY5VprhAAUmF3G
-         9cdWHtm6N3kf0M7Hvy/7q8sv1DeIj4/lc+6acXNlrDS3vosq27NdvD/rVlNOkRx20Z
-         WPj51r+d07qC1TV4634m0ILyi5aVS+SSX7Qfa8Mr5C9bSwJdPd1AQQ4DmbvYBDTzuc
-         Lk/FuqJjSMLXtRlHOu1w6ZHK0IYu1i18e7NfMFnugy5MuRQLcGBFMA6GKJeqP39fMD
-         Cjcl/nhZS2FMjPHArZE+AWBa65ETPJ+NRMRo7PBDUSWQo+eF9bnP7XDm3Ho1C9GiYK
-         Oy3+1LyKfguAA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Fri, 03 Jan 2020 20:36:20 +0100
-Message-Id: <5c2d6548aef35c690535fd8c985b980316745e91.1578077228.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <a8060fe5b23929e2e5c9bf5735e63b302124f66c.1578077228.git.mirq-linux@rere.qmqm.pl>
-References: <a8060fe5b23929e2e5c9bf5735e63b302124f66c.1578077228.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH 2/2] opp: quiet down WARN when no valid OPPs remain
+        id S1728488AbgACTiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 14:38:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=XIf32WVRgKWUO8SMfC0JjcU81vftzRzK1CmLURrg6/Y=; b=V23sxuuNIuebNcyNQsI/qqXSei
+        svb4FDGyd/iIjSfIolpU+iWqnA29z5wVMvO7uWEfMMzvWggT10nkqqugFmMBvisdutI7kaLrGfuJH
+        0ISyYAmpz855jM6r5/RwwtBlFkEdDeRCo32MtPaSS1u2fZPU/mcCv5DPIffdqYg08U6Y=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1inSli-0002FQ-HX; Fri, 03 Jan 2020 20:37:58 +0100
+Date:   Fri, 3 Jan 2020 20:37:58 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Vladimir Oltean <olteanv@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        yu kuai <yukuai3@huawei.com>, klassert@kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        hslester96@gmail.com, mst@redhat.com, yang.wei9@zte.com.cn,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, yi.zhang@huawei.com,
+        zhengbin13@huawei.com
+Subject: Re: [PATCH] net: 3com: 3c59x: remove set but not used variable
+ 'mii_reg1'
+Message-ID: <20200103193758.GO1397@lunn.ch>
+References: <20200103121907.5769-1-yukuai3@huawei.com>
+ <20200103144623.GI6788@bombadil.infradead.org>
+ <20200103175318.GN1397@lunn.ch>
+ <CA+h21hqcz=QF8bq285JjdOn+gsOGvGSnDiWzDOS5-XGAGGGr9w@mail.gmail.com>
+ <b4697457-51d2-c987-4138-b4b2b92e391d@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b4697457-51d2-c987-4138-b4b2b92e391d@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Per CPU screenful of backtraces is not really that useful. Replace
-WARN with a diagnostic discriminating common causes of empty OPP table.
+> And since more reviewers are on the same boat, the fix should probably
+> look to eliminate the warning by doing something like:
+> 
+> (void)mdio_read(dev, vp->phys[0], MII_BMSR);
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
- drivers/opp/of.c | 39 +++++++++++++++++++++++++--------------
- 1 file changed, 25 insertions(+), 14 deletions(-)
+Yes, this is the safe option.
 
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index fba515e432a4..59d7667b56f0 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -534,12 +534,13 @@ EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
-  * Return:
-  * Valid OPP pointer:
-  *		On success
-- * NULL:
-+ * ERR_PTR(-EBUSY):
-  *		Duplicate OPPs (both freq and volt are same) and opp->available
-- *		OR if the OPP is not supported by hardware.
-  * ERR_PTR(-EEXIST):
-  *		Freq are same and volt are different OR
-  *		Duplicate OPPs (both freq and volt are same) and !opp->available
-+ * ERR_PTR(-ENODEV):
-+ *		The OPP is not supported by hardware.
-  * ERR_PTR(-ENOMEM):
-  *		Memory allocation failure
-  * ERR_PTR(-EINVAL):
-@@ -583,6 +584,7 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
- 	/* Check if the OPP supports hardware's hierarchy of versions or not */
- 	if (!_opp_is_supported(dev, opp_table, np)) {
- 		dev_dbg(dev, "OPP not supported by hardware: %llu\n", rate);
-+		ret = -ENODEV;
- 		goto free_opp;
- 	}
- 
-@@ -607,12 +609,8 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
- 		new_opp->pstate = pm_genpd_opp_to_performance_state(dev, new_opp);
- 
- 	ret = _opp_add(dev, new_opp, opp_table, rate_not_available);
--	if (ret) {
--		/* Don't return error for duplicate OPPs */
--		if (ret == -EBUSY)
--			ret = 0;
-+	if (ret)
- 		goto free_required_opps;
--	}
- 
- 	/* OPP to select on device suspend */
- 	if (of_property_read_bool(np, "opp-suspend")) {
-@@ -658,7 +656,7 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
- static int _of_add_opp_table_v2(struct device *dev, struct opp_table *opp_table)
- {
- 	struct device_node *np;
--	int ret, count = 0, pstate_count = 0;
-+	int ret, count = 0, filtered = 0, pstate_count = 0;
- 	struct dev_pm_opp *opp;
- 
- 	/* OPP table is already initialized for the device */
-@@ -677,19 +675,32 @@ static int _of_add_opp_table_v2(struct device *dev, struct opp_table *opp_table)
- 	/* We have opp-table node now, iterate over it and add OPPs */
- 	for_each_available_child_of_node(opp_table->np, np) {
- 		opp = _opp_add_static_v2(opp_table, dev, np);
--		if (IS_ERR(opp)) {
--			ret = PTR_ERR(opp);
-+		ret = PTR_ERR_OR_ZERO(opp);
-+		if (!ret) {
-+			count++;
-+		} else if (ret == -ENODEV) {
-+			filtered++;
-+		} else if (ret != -EBUSY) {
- 			dev_err(dev, "%s: Failed to add OPP, %d\n", __func__,
- 				ret);
- 			return ret;
--		} else if (opp) {
--			count++;
- 		}
- 	}
- 
--	/* There should be one of more OPP defined */
--	if (WARN_ON(!count))
-+	/* There should be one or more OPPs defined */
-+	if (!count) {
-+		if (!filtered)
-+			/* all can't be duplicates, so there must be none */
-+			dev_err(dev, "%s: OPP table empty", __func__);
-+		else if (!opp_table->supported_hw)
-+			dev_err(dev,
-+				"%s: all OPPs match hw version, but platform did not provide it",
-+				__func__);
-+		else
-+			dev_err(dev, "%s: no supported OPPs", __func__);
-+
- 		return -ENOENT;
-+	}
- 
- 	list_for_each_entry(opp, &opp_table->opp_list, node)
- 		pstate_count += !!opp->pstate;
--- 
-2.20.1
-
+     Andrew
