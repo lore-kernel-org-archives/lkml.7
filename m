@@ -2,128 +2,107 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591AFC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5F8C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28007222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:19:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gqa1jDSZ"
+	by mail.kernel.org (Postfix) with ESMTP id 10D01222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:23:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578079388;
+	bh=OETV3MSDu0IY5uLGLF1Mhihqq+J1OyRRG47cp7B/oy8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LKPVkNchrRvHDeI7bm0CrBWvl+Ei70MUM74Ge3ak2kfnuffAaVaA8o+mskBGdlc3p
+	 e6ol32JI6D9iUkCCKJOhq+P/+ZMJW1pM8kG+f7RX1EzIbfDRV8e+S5x6bAr4c0i3lo
+	 i6K1dMmBRc5yLfqQM4AShL3GSmiXv/A6moSns9Y8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbgACTTC (ORCPT
+        id S1728525AbgACTXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 14:19:02 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41131 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728438AbgACTTB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 14:19:01 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c9so43385630wrw.8
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 11:19:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=5dSmFZluAq2raBNcYBXyZnuaNy9LKDAB9e+tRyUJHwo=;
-        b=gqa1jDSZE/L2osiIIKIHEf+8Onp0s7+Cl2aUOZUBp+CtkWBbOIKaeR6eus9Vzoj1Vv
-         6i+XsbG8uR26Xo7qKmLKHQYud4nDhF6fnAXleOx9b44hvqA93sQvv1ARppStS1+x5utU
-         Ric5b3G9qOEMjLILKGf3JERRqYvkuiIjbvGsEENkNX01RxeFU5i8gvuX50GRDK3QzFKX
-         T5Eub4OTbgzNRIfrPlHCa6tGC86MhsizMIpq1Xeq6WapTX8W6hYhjXr23OzZ6o0d+K/k
-         Sj3ncLy9Xy07e1Te1YGN+hj7oCcmZhKl+tiSNeU8wZ8TJRKoTHkwrPAbbX4+drs1YCfi
-         mBmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5dSmFZluAq2raBNcYBXyZnuaNy9LKDAB9e+tRyUJHwo=;
-        b=g4+i+QgkVzEX1nsmpvz3qK8bN42gy33mMDAWZBr/MfpRLFVQPK9gfkxPtyso/mVWlp
-         wi72DfNXV5qUc+0CZmkxnsW5+EQhL9IRHx34yfz2lD/qlfq/GGqo/U5nIR9Iibl4Xiwu
-         lCeK2oCNaP+SWukejz2Fncln0nu0xQAFCG7lU8MJsZJSR165L6bkV9SgMCFjOsX2UfTK
-         z/ukqBJbxaNbRTNTt2DYdw0/+5Nllh+w6PeKm8hqDP0ZKyWKR3GhgDG9j4P9eQrmlAsp
-         MKVyo7N1ET/x/Ka0gX9Tl/lRMCkun5iMsTShbJ50vEPwrZOfTD28yz6+5Rh/Rhpl2iVX
-         FQug==
-X-Gm-Message-State: APjAAAXmRwdOUTViGLVUJ1kwEjok6L29iuJGR7pkrdNj+sD70Usd93Yc
-        nV5zZtnf4mXthii85/8KVIsi00NHUe8=
-X-Google-Smtp-Source: APXvYqyAZ9YT29a+Bji26Yxf3C6hFa6tQzM7Yxyt9Q6hkpdzZ3R0E5g3lmpymrKxzVHacfySLQm2zQ==
-X-Received: by 2002:adf:a109:: with SMTP id o9mr95675914wro.189.1578079139609;
-        Fri, 03 Jan 2020 11:18:59 -0800 (PST)
-Received: from localhost.localdomain ([197.254.95.38])
-        by smtp.googlemail.com with ESMTPSA id w8sm13270262wmm.0.2020.01.03.11.18.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 11:18:58 -0800 (PST)
-From:   Wambui Karuga <wambui.karugax@gmail.com>
-To:     alexander.deucher@amd.com, christian.koenig@amd.com,
-        David1.Zhou@amd.com, airlied@linux.ie, daniel@ffwll.ch
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/amd: use list_for_each_entry for list iteration.
-Date:   Fri,  3 Jan 2020 22:18:52 +0300
-Message-Id: <20200103191852.15357-1-wambui.karugax@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 3 Jan 2020 14:23:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728438AbgACTXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 14:23:06 -0500
+Received: from earth.universe (unknown [185.216.33.116])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE59E215A4;
+        Fri,  3 Jan 2020 19:23:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578079385;
+        bh=OETV3MSDu0IY5uLGLF1Mhihqq+J1OyRRG47cp7B/oy8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LOdqQ7Ohk4ITaLUyoW2tOCZQuf25plZqriB42nlg2mpqDWxxrgHk/QwkKhLcPJ2gx
+         t8rbe2UQRqgY6dUcdkCEBrtzZpQ0FvznPK3kVxWWxdUYy87FJ+CbCaj+D9GKTFeXLp
+         kBE2+B9sOLckNEQQJyTf7K/uQxsBJksHmcB8ixhk=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 6C5203C0C7E; Fri,  3 Jan 2020 20:23:02 +0100 (CET)
+Date:   Fri, 3 Jan 2020 20:23:02 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: v5.5-rc4: OMAP build failure
+Message-ID: <20200103192302.bzbcqojhop2jwxpt@earth.universe>
+References: <20200103081807.GE15023@darkstar.musicnaut.iki.fi>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vmv3u76x5arek23d"
+Content-Disposition: inline
+In-Reply-To: <20200103081807.GE15023@darkstar.musicnaut.iki.fi>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-list_for_each() can be replaced by the more concise
-list_for_each_entry() here for iteration over the lists.
-This change was reported by coccinelle.
 
-Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
----
- .../drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c | 19 ++++---------------
- 1 file changed, 4 insertions(+), 15 deletions(-)
+--vmv3u76x5arek23d
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c
-index 64445c4cc4c2..cbcf504f73a5 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c
-@@ -111,17 +111,12 @@ static void init_handler_common_data(struct amdgpu_dm_irq_handler_data *hcd,
-  */
- static void dm_irq_work_func(struct work_struct *work)
- {
--	struct list_head *entry;
- 	struct irq_list_head *irq_list_head =
- 		container_of(work, struct irq_list_head, work);
- 	struct list_head *handler_list = &irq_list_head->head;
- 	struct amdgpu_dm_irq_handler_data *handler_data;
- 
--	list_for_each(entry, handler_list) {
--		handler_data = list_entry(entry,
--					  struct amdgpu_dm_irq_handler_data,
--					  list);
--
-+	list_for_each_entry(handler_data, handler_list, list) {
- 		DRM_DEBUG_KMS("DM_IRQ: work_func: for dal_src=%d\n",
- 				handler_data->irq_source);
- 
-@@ -528,19 +523,13 @@ static void amdgpu_dm_irq_immediate_work(struct amdgpu_device *adev,
- 					 enum dc_irq_source irq_source)
- {
- 	struct amdgpu_dm_irq_handler_data *handler_data;
--	struct list_head *entry;
- 	unsigned long irq_table_flags;
- 
- 	DM_IRQ_TABLE_LOCK(adev, irq_table_flags);
- 
--	list_for_each(
--		entry,
--		&adev->dm.irq_handler_list_high_tab[irq_source]) {
--
--		handler_data = list_entry(entry,
--					  struct amdgpu_dm_irq_handler_data,
--					  list);
--
-+	list_for_each_entry(handler_data,
-+			    &adev->dm.irq_handler_list_high_tab[irq_source],
-+			    list) {
- 		/* Call a subcomponent which registered for immediate
- 		 * interrupt notification */
- 		handler_data->handler(handler_data->handler_arg);
--- 
-2.17.1
+Hi,
 
+On Fri, Jan 03, 2020 at 10:18:07AM +0200, Aaro Koskinen wrote:
+> Hi,
+>=20
+> Build fails when CONFIG_RESET_CONTROLLER is not set:
+>=20
+>   LD      .tmp_vmlinux1
+> arm-linux-gnueabi-ld: drivers/soc/ti/omap_prm.o: in function `omap_prm_re=
+set_init':
+> /home/aakoskin/git/devel/linux/drivers/soc/ti/omap_prm.c:345: undefined r=
+eference to `devm_reset_controller_register'
+> make[5]: *** [/home/aakoskin/git/devel/linux/Makefile:1078: vmlinux] Erro=
+r 1
+>=20
+> Some missing dependency?
+
+https://patchwork.kernel.org/patch/11294205/
+
+-- Sebastian
+
+--vmv3u76x5arek23d
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl4PlJAACgkQ2O7X88g7
++ppafg/7B0co+4GDi8yKvtzTW7Rufju8kzQao2Y7+DxMrGb6Yy7tMkHlVIH2OYg+
+2kjAjOmKCMYPOmBpc45OvPU4NwgLfCJGBp6VPBeGWe0GUaqr1LRcgESd+lN8bQGw
+oKcsUgyNNuMPR2JDKGkyd8tuFhEULDFm442qz+loQgteIphiLJao9gWK/7KLZ4s5
+157CsFmpl3h+sAvmeQSHoAXJINEvRUP4r+qvwPONlwsOCYzN47E5SGD7f/kPAsGh
+eM6TTa4UcwlyJseL61BrQsIeLPSd8N214aXcYAgoT5Ct4i0CjAMFbASFQoPBvbG3
+Racm/AMXF3eOOTiFjGxvZOoETmCYp0LGKJq+97DsnCOA8cZxlSD+RS3EThJrql2O
+PmCf6WDoaSdJoVwHhBOztMBMj8NWpFVmA/cUiNxt5GtlQ6SxIaCpvB7eTChLYHY0
+jPi7cjllcNyeNksghklFKWCEJ+1HeEHvD8RwzaMB5KLWKJnwK0Wz5VGPbKkLJ/rT
+q1CJZQwiqovPYOanpI42Tk0fm4+JE5OOyWTQR/uDNndB+p0ctKavTg62LW/AOu94
+v0mkUwdzHXomWbuFakTE177hREKAC51kga58fdAmHdQgaWxk6vD/QezgtNqfI8vP
+xyHpisnHrRrVXr15AnBAdPZYWzhKXwZLjnlEO7N5leuc8avMjxU=
+=fpqB
+-----END PGP SIGNATURE-----
+
+--vmv3u76x5arek23d--
