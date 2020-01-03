@@ -2,153 +2,104 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0ABEC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 13:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10585C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 13:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 877ED222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 13:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8BF4215A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 13:43:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G967Z0wT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="OHayZeim"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbgACNnZ (ORCPT
+        id S1727833AbgACNnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 08:43:25 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35817 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727527AbgACNnZ (ORCPT
+        Fri, 3 Jan 2020 08:43:55 -0500
+Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.162]:30089 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727527AbgACNnz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 08:43:25 -0500
-Received: by mail-lj1-f196.google.com with SMTP id j1so36534954lja.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 05:43:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zMerWaeEb4CP775YC6/wAxbdCZHMzy1EkcII8sLrY0A=;
-        b=G967Z0wTZu5dz/vv0AWfZCV5mVfdDYg/F6RZPQCLE7djNuINhXXPQcsDpDSKj+P0LG
-         nVeW9Ab6Nr4SrlNdPNy/TSLkGjEH8T9ebmqlRS3EYDYgAuOGGNKMnWISB+oRuTsxLx20
-         4n6ZDrMah9lD/14jY+CczPuZHOhgKvoTjJr2gTI/lxz+iYqX1KFoacR/yodeWnHW7lZq
-         bb/vyjtMJtd9UOTSf1WrXKni4zt0IlhGGUdBa9upQEpVQ5IEJG8qh2XjdNuGHojRceMf
-         6YknA+ERjznlM25n7j+08p4skm1gYsI5oWmYZniZgPfEHfJyVQofspnJmrdtKLiFXAJm
-         hAkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zMerWaeEb4CP775YC6/wAxbdCZHMzy1EkcII8sLrY0A=;
-        b=M8J0b8NaGF1a+RrFFjC93CARfXntI96wZ2SzDj2niAHqdua30CdAv+EAngd/XiTeVR
-         BFNTA0xoP7dACGqo8tS89mJy08LH1d70LaAryUyl2WdeP+O6PcGqU3i6K9Cq7XLX65kq
-         oi6nVVoccDOpN9oIbc9nHK+W2NnF/r6mFBWuPDz9PxXUQJxjdbgESq0b+faKuXjDpVPg
-         Vk9s4fcAqZEbvQVihWn+oxoP8wE0GZZiCGk60yWJWO5FNlZWvgoC1PMyVWozTyCyI96z
-         n3INUnXmYa96tFgZqSvDEFWthNR4EuFeV0lcjrNhLI21puwmMxLhZfr8UsoNxtkukNIL
-         xZ/Q==
-X-Gm-Message-State: APjAAAVsNHFGsQQ9M1WYVgUlNCDkW2Bd+sXJTffSINqqF4i/jEiQLV96
-        W+YZV7E+jfpkxAWdX8eawc5auKYQszfOCovBVx5fQA==
-X-Google-Smtp-Source: APXvYqxDIZ6anbPeXlV6jrCtn2c9dGb/nyHg65sPM0A8dJyOwmsnf7+8UF77dIIWJ0ucZUC6Cl6BibRlZDxZz7mepJE=
-X-Received: by 2002:a2e:8316:: with SMTP id a22mr1375788ljh.141.1578059003263;
- Fri, 03 Jan 2020 05:43:23 -0800 (PST)
+        Fri, 3 Jan 2020 08:43:55 -0500
+X-Greylist: delayed 360 seconds by postgrey-1.27 at vger.kernel.org; Fri, 03 Jan 2020 08:43:54 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1578059033;
+        s=strato-dkim-0002; d=aepfle.de;
+        h=References:In-Reply-To:Message-ID:Subject:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=nLUaJbwi1ip35T9ouH4xnaMxz+OZ8pmUc8OdZQe4ZWI=;
+        b=OHayZeimyMlBnFjXmNC2zck4TYc/A+tk7PW8/qtfx3Xx4YiqCop64095vgLfwvV+jQ
+        8FpI42xBJAAHFZdciVXb0+Hq2iP1Bw6+96MA9D/87Y37XwAQ7YVc+es7gmTXvV81MtPy
+        Y6cv/WcjUFGpn59npV7ggc2/btjh8z7yLMJBul4bWfBn9bm1/bGy0AZ2HMPhG9q6b5JZ
+        Ef6rDBJ7MAnYHbb946dN+U4lmqfYvlE+HnnTb+njCCEeloENoiqoGKQ/W1AKHTkS/eYQ
+        1SBExzzDWn8QKvliHqqZuK2gRNeY9ZUWrSTCn90Woeoa/Wy+GTWweGPW8GHTb9uLaHtf
+        vceA==
+X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QED/SSGq+wjGiUC44eztn93Z9OGdNZkAhh"
+X-RZG-CLASS-ID: mo00
+Received: from sender
+        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
+        with ESMTPSA id D0b379w03DVmOY5
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 3 Jan 2020 14:31:48 +0100 (CET)
+Date:   Fri, 3 Jan 2020 14:31:33 +0100
+From:   Olaf Hering <olaf@aepfle.de>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org (open list:Hyper-V CORE AND DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: Re: [PATCH v2] tools/hv: async name resolution in kvp_daemon
+Message-ID: <20200103143133.7168cff4.olaf@aepfle.de>
+In-Reply-To: <20191113155400.25456-1-olaf@aepfle.de>
+References: <20191113155400.25456-1-olaf@aepfle.de>
+X-Mailer: Claws Mail 2019.12.16 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-References: <20200102220356.856162165@linuxfoundation.org> <20200102230518.GA1087@roeck-us.net>
- <20200103001639.GK16372@sasha-vm> <20200103083819.GC831558@kroah.com>
-In-Reply-To: <20200103083819.GC831558@kroah.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 3 Jan 2020 19:13:11 +0530
-Message-ID: <CA+G9fYu4doGffbPfdeemO9HHnxko860E_EeWBvmiyREb0zWgKA@mail.gmail.com>
-Subject: Re: [PATCH 4.14 00/91] 4.14.162-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/8KC0n9/zLPMhjeiBcAFvawH"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I've pushed out -rc2 versions with this patch removed now.
+--Sig_/8KC0n9/zLPMhjeiBcAFvawH
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Am Wed, 13 Nov 2019 16:54:00 +0100
+schrieb Olaf Hering <olaf@aepfle.de>:
 
-Summary
-------------------------------------------------------------------------
+> Adjust the code to resolve the current hostname in a separate thread.
 
-kernel: 4.14.162-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: 0e6f77cf689c028a3c0927237bac986deca2c3fd
-git describe: v4.14.161-91-g0e6f77cf689c
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.161-91-g0e6f77cf689c
+Are you now finally able to compile the patch?
+Did you find some documentation about the host-side API of the "FullyQualif=
+iedDomainName" request?
+Any further comments about the "aim for success" approach?
 
-No regressions (compared to build v4.14.161)
 
-No fixes (compared to build v4.14.161)
+Thanks,
+Olaf
 
-Ran 22654 total tests in the following environments and test suites.
+--Sig_/8KC0n9/zLPMhjeiBcAFvawH
+Content-Type: application/pgp-signature
+Content-Description: Digitale Signatur von OpenPGP
 
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
+-----BEGIN PGP SIGNATURE-----
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* linux-log-parser
-* ltp-containers-tests
-* ltp-fs-tests
-* ltp-cve-tests
-* spectre-meltdown-checker-test
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-cpuhotplug-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* v4l2-compliance
-* kvm-unit-tests
+iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAl4PQjUACgkQ86SN7mm1
+DoDHlRAAkio4iY0zZA/e2HYJdbpsT6hBLoldQeIEP8szqHJRnb7ctsZcEkWPShqd
+MO5Tgh3kECKjm8fqsXuU8oDWjMLU8Vwn5srgUauWcrQJpNF11dtOwX5DTmAyLE6v
+g8xF/MEYXkhzyqKHK9hdddMPqCTffnKNQSuS2nA1jRUh6MzvbVH2Bklh21xYfSdh
+Hbl1EXNpA/vnr6K4SFfVgf9aV49P21FPA+gq/AgRntVOSKFMTpqxsd8ox4gdgW7H
+v+Di8AfMHFVnCHWCsRpWzLbHqK0CEnwXyE21VpuzPrygHMAW3gG+ZiFu/55/f/6P
+mlKIDQe+QGYezGnL1+/inR186BMcA9CfiM8htCKTC/6Ea23AR+onuy/QjvAMqnKD
+l1c+gt41l/TdhMGBPWHx6UeDQsj4WCwBAaryv0ARLLHr72IcEpKvML98/q/xAkYs
+vce20VuI8yplYBck6EaLRQgf7s+GUHlsBTSAK6UKoFpvFKIUHmsLWkBKDOlwYfsR
+9JV6RTthF/umFjdLaFsnvZPgzcJgDM9cWbxMZZm2trR4ovLhI+Tl/Exzai2mm4xA
+6Y3rQfVchIaLEAQwHtXx124ioBmVm8p3BOZyvq0EE9V1CCJaMHC4a9+JR9eN7dWR
+uQE5ZYCzHGTx2P1oQwpGEboyL5yKikiJOUyw2sEeF6zNcn1Wkq4=
+=0Oyf
+-----END PGP SIGNATURE-----
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+--Sig_/8KC0n9/zLPMhjeiBcAFvawH--
