@@ -2,253 +2,180 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCB4C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60119C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7A1C21835
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E3721835
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:38:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZBaIyouJ"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mtsNyc5S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbgACLgT (ORCPT
+        id S1727611AbgACLiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 06:36:19 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38312 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727636AbgACLgS (ORCPT
+        Fri, 3 Jan 2020 06:38:20 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:45330 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727457AbgACLiT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 06:36:18 -0500
-Received: by mail-wm1-f66.google.com with SMTP id u2so8308786wmc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 03:36:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=W7DT90yNYzpotuhZbO7YzjctV3QDX926/xXbSOdOjQY=;
-        b=ZBaIyouJ0qA70SM7p5DyerQa2uQWgDtJhC4GbSx0hOsI/TDxuRvkxLeM/Gjh4+t5BD
-         8mLL88na5LlyM+Ru9ClkIF5V49bhZwiyL/B6iVR0HZkRuCVGXbUNp29rm56yXDXGXn1L
-         hsY2+qw9x8qVEtcjCKfRG7L2odRQTpMZ99hFiBshe/fli1jftchSUwVU5ao7NcjChP0g
-         QFYGSRUMT8eUf5VgN0lNextSA2ZWGhhUZ5g7aApgoes0q0yvjzWNeE1KhdkRM5Qcr3XQ
-         uxxCr8ik6WFbMku8P4ydKLZE9RHbiD+Od7OgjiflWZbAiaIfXkNNHX5W6M4PUjo1ZjYV
-         TF7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W7DT90yNYzpotuhZbO7YzjctV3QDX926/xXbSOdOjQY=;
-        b=lBVEoG+PN2wGTsxaHmTJuAZ+9a4xWMP0RgE07gQ3jBV1pE7ztI8u1cb5UAujLhMbdA
-         blj+B1ntpek63/tSc3f+84QlN6eJ4eweFE4MGeAAIOxUUJSbBWi35uJFOruwHRW60dLn
-         zYNJECoat7Tma8l5+gbpwUk4bIG6MUX8o+Zn2Tg6mQp4MJ9o1VORZXWv18EHbBsPboG6
-         XnZCoBKdnhMejhfEgNlmPdKnkMMZoNHIRFcsDy4mFaWOBh1uTmE+8KgauNvyJYE9qtfz
-         siGq8MLF7aEpneyuKSJJoZm44h7LmX+YEjNNsA2/sQ7lUbR1QcxEv9ubGmdY+Et+9ZJQ
-         o6LQ==
-X-Gm-Message-State: APjAAAV+dwR2+9+87L+MRZlJjJ9yhGgR8R2tUFJAv4cZz/w/q9+s7oTi
-        atkL/l0fSLA1/ymFByA8rjtPk+EWAZnkbKzISo8eNg==
-X-Google-Smtp-Source: APXvYqydiWnwY4UHWadUrF7IJW2FmFX3+OirWMWypHZ7Si7pbMd/pNtvurx2xKUHmEQ4etOr9y6r2vkU3Mpz1OxIG8Q=
-X-Received: by 2002:a1c:3dc3:: with SMTP id k186mr18546289wma.95.1578051375492;
- Fri, 03 Jan 2020 03:36:15 -0800 (PST)
+        Fri, 3 Jan 2020 06:38:19 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200103113817euoutp02548e749cb5e5e2e7ed9fefc4302ed03b~mXXnoVACP3129231292euoutp02_
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jan 2020 11:38:17 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200103113817euoutp02548e749cb5e5e2e7ed9fefc4302ed03b~mXXnoVACP3129231292euoutp02_
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578051497;
+        bh=3wVrJk58ujYcC0SWAZQq7JaJrJKFI/5RdfelRon5h8w=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=mtsNyc5St3E1zv1zj8VpXr7jwy7/z7RjD/9xOZrTBxTUNJ5OOUvI12Wn8WJv6XEJL
+         M/JBHajqLk1MhU0OJ7MSaWIMYEVqssQW9F9kHmSsGQNPDebfhjXB8RCzvpEiRcXA0i
+         gPVzaQ1QJFSI+HGT8owj8RZtiAt0dMokJaDmh9Rc=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200103113817eucas1p101992b02a77358fad7b87f37357d674b~mXXnYKx942509925099eucas1p1E;
+        Fri,  3 Jan 2020 11:38:17 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id A5.D6.61286.9A72F0E5; Fri,  3
+        Jan 2020 11:38:17 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200103113816eucas1p1e7b66948c1906507f40b8654d95c341d~mXXnBqWNW2503625036eucas1p1U;
+        Fri,  3 Jan 2020 11:38:16 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200103113816eusmtrp2e634830fa606e0348dbc7ec2e41b7a17~mXXnBGtbL0328203282eusmtrp2g;
+        Fri,  3 Jan 2020 11:38:16 +0000 (GMT)
+X-AuditID: cbfec7f2-f0bff7000001ef66-d5-5e0f27a9d2d2
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 5C.41.08375.8A72F0E5; Fri,  3
+        Jan 2020 11:38:16 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200103113816eusmtip1de5bf92e0be7914a8d511a28470a328f~mXXmsOvhe1193211932eusmtip1T;
+        Fri,  3 Jan 2020 11:38:16 +0000 (GMT)
+Subject: Re: [PATCH 1/3] video: fbdev: mmp: remove duplicated MMP_DISP
+ dependency
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <633e4795-b914-e5ff-7121-7339a936e8ba@samsung.com>
+Date:   Fri, 3 Jan 2020 12:38:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191210115117.303935-1-hdegoede@redhat.com> <66f45932-756d-0bb0-d7a8-330d61785663@redhat.com>
-In-Reply-To: <66f45932-756d-0bb0-d7a8-330d61785663@redhat.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 3 Jan 2020 12:36:04 +0100
-Message-ID: <CAKv+Gu_X+UM95MJJMjT69upL9zN3H9BnUkv8s9TjcpevANbYEw@mail.gmail.com>
-Subject: Re: [PATCH v10 00/10] efi/firmware/platform-x86: Add EFI embedded fw support
-To:     Hans de Goede <hdegoede@redhat.com>, Ingo Molnar <mingo@redhat.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-input@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0534f6bf-cd94-5416-2d4a-5fc9721aa7ed@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjleLIzCtJLcpLzFFi42LZduznOd2V6vxxBtdWC1ncWneO1eLK1/ds
+        Fif6PrBaXN41h82BxeN+93Emj74tqxg9Pm+SC2CO4rJJSc3JLEst0rdL4Mpoboko2Mdf8fXx
+        XpYGxmc8XYwcHBICJhKfn4d3MXJxCAmsYJTYd3UGM4TzhVFiwfN2VgjnM6PEtZMX2boYOcE6
+        Fs+Zzw6RWM4o8WDXVmaQhJDAW0aJ8z/qQcYKCwRLzHylDBIWEVCXmH3yDlgJs0CCxJebn8Fs
+        NgEriYntqxhBbF4BO4k103pZQGwWARWJy01TwOKiAhESnx4cZoWoEZQ4OfMJC8h4TgF7if3H
+        CiBGikvcejKfCcKWl2jeOhvsAQmBbnaJlxtnQN3sIjF9wwtWCFtY4tXxLewQtozE/50gzSAN
+        6xgl/na8gOreziixfPI/qG5riTvnfrGBbGYW0JRYv0sfIuwo0XD5HhMkGPkkbrwVhDiCT2LS
+        tunMEGFeiY42IYhqNYkNyzawwazt2rmSeQKj0iwkn81C8s4sJO/MQti7gJFlFaN4amlxbnpq
+        sWFearlecWJucWleul5yfu4mRmAqOf3v+KcdjF8vJR1iFOBgVOLhTVDmjxNiTSwrrsw9xCjB
+        wawkwlseyBsnxJuSWFmVWpQfX1Sak1p8iFGag0VJnNd40ctYIYH0xJLU7NTUgtQimCwTB6dU
+        A+N6znqGW6nfuBMcz/QdWLRJ5A53SdWBQ5FT1thqya7Ik0g31v+o++n02svF2U+Dny/N0TW8
+        2fVx0dsN0yM6X2t3tir4ZVisE/VdEOWiFF7B9v/B3ib1vL1nbM6/nRf1X+jP/fu9YW+mHOx4
+        ocyk8veApfB7m4tGTEUHvvY6cP1bZvz2ka7s1PNKLMUZiYZazEXFiQBPpBFfIQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAIsWRmVeSWpSXmKPExsVy+t/xu7or1PnjDFp+G1vcWneO1eLK1/ds
+        Fif6PrBaXN41h82BxeN+93Emj74tqxg9Pm+SC2CO0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAz
+        MrHUMzQ2j7UyMlXSt7NJSc3JLEst0rdL0Mtoboko2Mdf8fXxXpYGxmc8XYycHBICJhKL58xn
+        B7GFBJYySuy+zNLFyAEUl5E4vr4MokRY4s+1LrYuRi6gkteMEr/3L2YGqREWCJaY+UoZpEZE
+        QF1i9sk7zBA1xxkldp5+CzaTWSBBYtP9qWwgNpuAlcTE9lWMIDavgJ3Emmm9LCA2i4CKxOWm
+        KWBxUYEIicM7ZkHVCEqcnPkE7B5OAXuJ/ccKIEaqS/yZd4kZwhaXuPVkPhOELS/RvHU28wRG
+        oVlIumchaZmFpGUWkpYFjCyrGEVSS4tz03OLDfWKE3OLS/PS9ZLzczcxAmNn27Gfm3cwXtoY
+        fIhRgINRiYc3QZk/Tog1say4MvcQowQHs5IIb3kgb5wQb0piZVVqUX58UWlOavEhRlOg3yYy
+        S4km5wPjOq8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA2PVyk3n
+        DJh4L268K+YukNXiOqX6elShV5KCsfOKZ6rHmPfPLzzx++Wio/sU2DlzdzFP0Lusy5gi5CJs
+        s+/jJnvFCUcXJrld8RCqF/qwxWXz3NID0VKX+Ke5h+lVeexw67Zbts3l154HD464OZ5dZPtN
+        VPD41UeKzRdZCiW/arje/3H+iFb426dKLMUZiYZazEXFiQAy8NZyswIAAA==
+X-CMS-MailID: 20200103113816eucas1p1e7b66948c1906507f40b8654d95c341d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190627140704eucas1p10f9aca669beb24f5359a0e86f2b6d0ba
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190627140704eucas1p10f9aca669beb24f5359a0e86f2b6d0ba
+References: <CGME20190627140704eucas1p10f9aca669beb24f5359a0e86f2b6d0ba@eucas1p1.samsung.com>
+        <eb28587c-4f8f-f044-1b8b-317a8d7967aa@samsung.com>
+        <0534f6bf-cd94-5416-2d4a-5fc9721aa7ed@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Jan 2020 at 12:27, Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi All,
->
-> Since I send this out, efi-next has seen some changes causing the first
-> 2 patches to no longer cleanly apply. So it looks like we need to
-> merge this one bit at a time with immutable branches.
->
-> Ard, the first 2 patches in this series should be merged through your
-> efi tree. AFAIK everyone is happy with them in their current state
-> so they are ready for merging. Can you create an immutable branch
-> with these 2 patches and merge that into your efi-next branch?
->
-> Note if you do the immutable branch on 5.5-rc1 + just these 2 patches,
-> there will be a conflict when you merge this into efi-next, but it is
-> trivial to resolve.
->
 
-I will need to defer to Ingo here, as he usually applies the EFI
-changes piecemeal rather than merging my branches directly.
+On 8/20/19 11:55 AM, Andrzej Hajda wrote:
+> On 27.06.2019 16:07, Bartlomiej Zolnierkiewicz wrote:
+>> This dependency is already present in higher level Kconfig file
+>> (drivers/video/fbdev/mmp/Kconfig).
+>>
+>> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> 
+> 
+> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
 
-I'd be fine with just annotating the conflict in the pull request if
-it is trivial, though, but it is really up to Luis and Ingo to align
-here.
+Thanks, I've queued the patch for v5.6.
 
-Note that I was just about to send out a PR for the second batch of
-EFI changes, but there will be more this cycle in any case.
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
 
+>  --
+> Regards
+> Andrzej
+> 
+> 
+>> ---
+>>  drivers/video/fbdev/mmp/fb/Kconfig |    4 ----
+>>  drivers/video/fbdev/mmp/hw/Kconfig |    4 ----
+>>  2 files changed, 8 deletions(-)
+>>
+>> Index: b/drivers/video/fbdev/mmp/fb/Kconfig
+>> ===================================================================
+>> --- a/drivers/video/fbdev/mmp/fb/Kconfig
+>> +++ b/drivers/video/fbdev/mmp/fb/Kconfig
+>> @@ -1,6 +1,4 @@
+>>  # SPDX-License-Identifier: GPL-2.0-only
+>> -if MMP_DISP
+>> -
+>>  config MMP_FB
+>>  	tristate "fb driver for Marvell MMP Display Subsystem"
+>>  	depends on FB
+>> @@ -10,5 +8,3 @@ config MMP_FB
+>>  	default y
+>>  	help
+>>  		fb driver for Marvell MMP Display Subsystem
+>> -
+>> -endif
+>> Index: b/drivers/video/fbdev/mmp/hw/Kconfig
+>> ===================================================================
+>> --- a/drivers/video/fbdev/mmp/hw/Kconfig
+>> +++ b/drivers/video/fbdev/mmp/hw/Kconfig
+>> @@ -1,6 +1,4 @@
+>>  # SPDX-License-Identifier: GPL-2.0-only
+>> -if MMP_DISP
+>> -
+>>  config MMP_DISP_CONTROLLER
+>>  	bool "mmp display controller hw support"
+>>  	depends on CPU_PXA910 || CPU_MMP2
+>> @@ -16,5 +14,3 @@ config MMP_DISP_SPI
+>>  	help
+>>  		Marvell MMP display hw controller spi port support
+>>  		will register as a spi master for panel usage
+>> -
+>> -endif
+>> _______________________________________________
+>> dri-devel mailing list
+>> dri-devel@lists.freedesktop.org
+>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-
-> Luis, the rest of the series is almost ready for merging, it just needs
-> your review of the 2 new patches (patch 5 and 6) adding the selftests for
-> the new firmware_request_platform api, if you can review those that would
-> be great.
->
-> Regards,
->
-> Hans
->
->
->
-> On 10-12-2019 12:51, Hans de Goede wrote:
-> > Hi All,
-> >
-> > Here is v10 of my patch-set to add support for EFI embedded fw to the
-> > kernel. This version has been rebased on top 5.5-rc1 to fix 2 conflicts
-> > with the first 2 (efi) patches in the series. There are no changes
-> > versus v9 other then the rebase.
-> >
-> > Below is the cover-letter of v9:
-> >
-> > The main new feature in this version is the addition of some selftests for
-> > the new firmware_request_platform api (patch 5 and 6, both new). My plan
-> > was to send the patches adding the selftests out as a follow up series.
-> >
-> > But during unrelated testing of my personal tree I found a small but nasty
-> > bug in the "efi: Add embedded peripheral firmware support" patch, the minor
-> > refactoring done in v8 exposed a bug which causes a hard crash on boot for
-> > devices which have a DMI match in the touchscreen_dmi_table but do not use
-> > EFI-embedded fw, this is fixed in this new version.
-> >
-> > Assuming the 2 new patches adding the selftests are ok, I believe that
-> > this series is ready for merging now.  I believe it would be best to merge
-> > patches 1-8 through Greg's driver-core tree where firmware-loader changes go.
-> > The non firmware patches already have Acked-by-s from the maintainers of
-> > the EFI/input trees.
-> >
-> > Patches 9-10 touch a quirks file under drivers/platform/x86 which sees
-> > multipe updates each cycle. So my proposal is that once 1-8 has landed
-> > Greg creates an immutable branch with those changes and then
-> > Andy and/or Darren can merge in that branch and then apply 9 and 10.
-> >
-> > Regards,
-> >
-> > Hans
-> >
-> >
-> > Changes in v10:
-> > - Rebase on top of 5.5-rc1
-> >
-> > Changes in v9:
-> > - Add 2 new patches adding selftests
-> > - At least touchscreen_dmi.c uses the same dmi_table for its own private
-> >    data and the fw_desc structs, putting the fw_desc struct first in the
-> >    data driver_data points to so that the dmi_table can be shared with
-> >    efi_check_for_embedded_firmwares(). But not all entries there have
-> >    embedded-fw so in some cases the fw_desc is empty (zero-ed out).
-> >    This can lead to a possible crash because fw_desc->length now is
-> >    less then 8, so if the segment size is close enough to a multiple of the
-> >    page_size, then the memcmp to check the prefix my segfault. Crashing the
-> >    machine. v9 checks for and skips these empty fw_desc entries avoiding this.
-> > - Add static inline wrapper for firmware_request_platform() to firmware.h,
-> >    for when CONFIG_FW_LOADER is not set
-> >
-> > Changes in v8:
-> > - Add pr_warn if there are mode then EFI_DEBUGFS_MAX_BLOBS boot service segments
-> > - Document how the EFI debugfs boot_service_code? files can be used to check for
-> >    embedded firmware
-> > - Properly deal with the case of an EFI segment being smaller then the fw we
-> >    are looking for
-> > - Log a warning when efi_get_embedded_fw get called while we did not (yet)
-> >    check for embedded firmwares
-> > - Only build fallback_platform.c if CONFIG_EFI_EMBEDDED_FIRMWARE is defined,
-> >    otherwise make firmware_fallback_platform() a static inline stub
-> >
-> > Changes in v7:
-> > - Split drivers/firmware/efi and drivers/base/firmware_loader changes into
-> >    2 patches
-> > - Use new, standalone, lib/crypto/sha256.c code
-> > - Address kdoc comments from Randy Dunlap
-> > - Add new FW_OPT_FALLBACK_PLATFORM flag and firmware_request_platform()
-> >    _request_firmware() wrapper, as requested by Luis R. Rodriguez
-> > - Stop using "efi-embedded-firmware" device-property, now that drivers need to
-> >    use the new firmware_request_platform() to enable fallback to a device fw
-> >    copy embedded in the platform's main firmware, we no longer need a property
-> >    on the device to trigger this behavior
-> > - Use security_kernel_load_data instead of calling
-> >    security_kernel_read_file with a NULL file pointer argument
-> > - Move the docs to Documentation/driver-api/firmware/fallback-mechanisms.rst
-> > - Document the new firmware_request_platform() function in
-> >    Documentation/driver-api/firmware/request_firmware.rst
-> > - Add 2 new patches for the silead and chipone-icn8505 touchscreen drivers
-> >    to use the new firmware_request_platform() method
-> > - Rebased on top of 5.4-rc1
-> >
-> > Changes in v6:
-> > -Rework code to remove casts from if (prefix == mem) comparison
-> > -Use SHA256 hashes instead of crc32 sums
-> > -Add new READING_FIRMWARE_EFI_EMBEDDED read_file_id and use it
-> > -Call security_kernel_read_file(NULL, READING_FIRMWARE_EFI_EMBEDDED)
-> >   to check if this is allowed before looking at EFI embedded fw
-> > -Document why we are not using the PI Firmware Volume protocol
-> >
-> > Changes in v5:
-> > -Rename the EFI_BOOT_SERVICES flag to EFI_PRESERVE_BS_REGIONS
-> >
-> > Changes in v4:
-> > -Drop note in docs about EFI_FIRMWARE_VOLUME_PROTOCOL, it is not part of
-> >   UEFI proper, so the EFI maintainers don't want us referring people to it
-> > -Use new EFI_BOOT_SERVICES flag
-> > -Put the new fw_get_efi_embedded_fw() function in its own fallback_efi.c
-> >   file which only gets built when EFI_EMBEDDED_FIRMWARE is selected
-> > -Define an empty stub for fw_get_efi_embedded_fw() in fallback.h hwen
-> >   EFI_EMBEDDED_FIRMWARE is not selected, to avoid the need for #ifdefs
-> >   in firmware_loader/main.c
-> > -Properly call security_kernel_post_read_file() on the firmware returned
-> >   by efi_get_embedded_fw() to make sure that we are allowed to use it
-> >
-> > Changes in v2:
-> > -Rebased on driver-core/driver-core-next
-> > -Add documentation describing the EFI embedded firmware mechanism to:
-> >   Documentation/driver-api/firmware/request_firmware.rst
-> > -Add a new EFI_EMBEDDED_FIRMWARE Kconfig bool and only build the embedded
-> >   fw support if this is set. This is an invisible option which should be
-> >   selected by drivers which need this
-> > -Remove the efi_embedded_fw_desc and dmi_system_id-s for known devices
-> >   from the efi-embedded-fw code, instead drivers using this are expected to
-> >   export a dmi_system_id array, with each entries' driver_data pointing to a
-> >   efi_embedded_fw_desc struct and register this with the efi-embedded-fw code
-> > -Use kmemdup to make a copy instead of efi_mem_reserve()-ing the firmware,
-> >   this avoids us messing with the EFI memmap and avoids the need to make
-> >   changes to efi_mem_desc_lookup()
-> > -Make the firmware-loader code only fallback to efi_get_embedded_fw() if the
-> >   passed in device has the "efi-embedded-firmware" device-property bool set
-> > -Skip usermodehelper fallback when "efi-embedded-firmware" device-property
-> >   is set
-> >
-> >
->
