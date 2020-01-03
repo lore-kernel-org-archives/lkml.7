@@ -2,59 +2,67 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECC9C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 20:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD098C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 20:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17EDD222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 20:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E0DC22314
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 20:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578084009;
+	bh=jKRYsk8UKiOHI8sLwzjoUdnnNVWzuyHVZHGQI8Pje6s=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=CnrKXquv9v7AsjurnpqhMTVTndCHcqv6X+CqFlHBRkUFF27mPrdCOOk5XsSLhHsW2
+	 k4dmZSSeWCd1f0B6XviQRrxbN0bBBVbhb1a3ygzjwOghw+c31UBTk724rafd4EQKj5
+	 kp46lDjfeAiOVc1hwNpLR2evoPS94tVrP85p/fVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbgACUdQ (ORCPT
+        id S1728549AbgACUkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 15:33:16 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:47150 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727400AbgACUdP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 15:33:15 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3F8E41569D361;
-        Fri,  3 Jan 2020 12:33:14 -0800 (PST)
-Date:   Fri, 03 Jan 2020 12:33:13 -0800 (PST)
-Message-Id: <20200103.123313.205020922142036843.davem@davemloft.net>
-To:     yukuai3@huawei.com
-Cc:     netanel@amazon.com, saeedb@amazon.com, zorik@amazon.com,
-        ast@kernel.org, daniel@iogearbox.net, jakub.kicinski@netronome.com,
-        hawk@kernel.org, john.fastabend@gmail.com, sameehj@amazon.com,
-        akiyano@amazon.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        yi.zhang@huawei.com, zhengbin13@huawei.com
-Subject: Re: [PATCH] net: ena: remove set but not used variable 'rx_ring'
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200103120701.47681-1-yukuai3@huawei.com>
-References: <20200103120701.47681-1-yukuai3@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-7
-Content-Transfer-Encoding: base64
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 03 Jan 2020 12:33:14 -0800 (PST)
+        Fri, 3 Jan 2020 15:40:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727400AbgACUkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 15:40:07 -0500
+Subject: Re: [GIT PULL] Btrfs fixes for 5.5-rc5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578084007;
+        bh=jKRYsk8UKiOHI8sLwzjoUdnnNVWzuyHVZHGQI8Pje6s=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=G3S+rMtdnBBsCHdgt7GB/gxYfEhFjcrnVpzHlubIlKcZx1e2rDmAI9+Z/FLCGDikz
+         70RdDSH7FLHmy0us/PSDMTer98U/xM+28W9lqMSqZDivoMdFPQ2VEBdGGIpPsDWO7S
+         RcF0VPAzrQbmO/d+KBSbktDsIe4OkCdPEoDDYAAo=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <cover.1578072747.git.dsterba@suse.com>
+References: <cover.1578072747.git.dsterba@suse.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <cover.1578072747.git.dsterba@suse.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.5-rc4-tag
+X-PR-Tracked-Commit-Id: de7999afedff02c6631feab3ea726a0e8f8c3d40
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 3a562aee727a7bfbb3a37b1aa934118397dad701
+Message-Id: <157808400737.14632.3810685075146341152.pr-tracker-bot@kernel.org>
+Date:   Fri, 03 Jan 2020 20:40:07 +0000
+To:     David Sterba <dsterba@suse.com>
+Cc:     torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogeXUga3VhaSA8eXVrdWFpM0BodWF3ZWkuY29tPg0KRGF0ZTogRnJpLCAzIEphbiAyMDIw
-IDIwOjA3OjAxICswODAwDQoNCj4gRml4ZXMgZ2NjICctV3VudXNlZC1idXQtc2V0LXZhcmlhYmxl
-JyB3YXJuaW5nOg0KPiANCj4gZHJpdmVycy9uZXQvZXRoZXJuZXQvYW1hem9uL2VuYS9lbmFfbmV0
-ZGV2LmM6IEluIGZ1bmN0aW9uDQo+IKFlbmFfeGRwX3htaXRfYnVmZqI6DQo+IGRyaXZlcnMvbmV0
-L2V0aGVybmV0L2FtYXpvbi9lbmEvZW5hX25ldGRldi5jOjMxNjoxOTogd2FybmluZzoNCj4gdmFy
-aWFibGUgoXJ4X3JpbmeiIHNldCBidXQgbm90IHVzZWQgWy1XdW51c2VkLWJ1dC1zZXQtdmFyaWFi
-bGVdDQo+IA0KPiBJdCBpcyBuZXZlciB1c2VkLCBhbmQgc28gY2FuIGJlIHJlbW92ZWQuDQo+IA0K
-PiBTaWduZWQtb2ZmLWJ5OiB5dSBrdWFpIDx5dWt1YWkzQGh1YXdlaS5jb20+DQoNCkRvZXMgbm90
-IGFwcGx5IHRvIG5ldC1uZXh0Lg0K
+The pull request you sent on Fri,  3 Jan 2020 18:43:16 +0100:
+
+> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.5-rc4-tag
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/3a562aee727a7bfbb3a37b1aa934118397dad701
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
