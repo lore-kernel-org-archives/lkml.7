@@ -2,90 +2,96 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD041C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30604C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81E9D222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F04A222B48
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:35:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578069336;
+	bh=t4bgbJJbSS52nJcUUxdgLK3cBH7RVMsYoAXiO4lvpIU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=HRi92HbLX8WXEb/bv8I2Xk8UPYiEjQMd5ZqJSPOR76ZOux+dve4tGISaPjKfblMFb
+	 6mIQcV13HHGhR3FUtMFpo1xOY9K0aEF1dK+jdLtbWCwiOzYpA0zMm/ItiwmbVQgzto
+	 Md412Snp1I0bt50SO2TDJ0nYMY/Iwg2qAvKBv6AY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgACQfX (ORCPT
+        id S1728063AbgACQfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 11:35:23 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:34910 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727980AbgACQfX (ORCPT
+        Fri, 3 Jan 2020 11:35:34 -0500
+Received: from mail-lj1-f177.google.com ([209.85.208.177]:41824 "EHLO
+        mail-lj1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728035AbgACQfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 11:35:23 -0500
-Received: (qmail 5097 invoked by uid 2102); 3 Jan 2020 11:35:22 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 3 Jan 2020 11:35:22 -0500
-Date:   Fri, 3 Jan 2020 11:35:22 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+10e5f68920f13587ab12@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
-        <gustavo@embeddedor.com>, <ingrassia@epigenesys.com>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb (2)
-In-Reply-To: <00000000000043a9a3059ae3c8ef@google.com>
-Message-ID: <Pine.LNX.4.44L0.2001031133050.1560-100000@iolanthe.rowland.org>
+        Fri, 3 Jan 2020 11:35:34 -0500
+Received: by mail-lj1-f177.google.com with SMTP id h23so44436932ljc.8;
+        Fri, 03 Jan 2020 08:35:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fFX7uGIZ1X+s79thV3DjoWZzF0PRIpeDDbwCxzY7LwM=;
+        b=tB4oPF5Pt840/umBcBu0ZUXFfgP4G8j0ioHyS7wrRSnmcUiciLUY+hwLYnd3Y/AYw6
+         M93VdIaHjO2P/xu/dth1dR4zBw7iKOA+kvTyTjpQUa+JQjUxooFKl83thFOCnOZdyMAT
+         +vuotpWTyBEpkjRQcSHLisM1LgPBP4lke8u9qfmAfaE9439mpZgLLT89gWtSk/GOe+Lw
+         JDmCuREF5SthddWRGbxXuaVaLHHHyR/nyf78JN+wNrGdcyQtlJouTSttEd7IeE+HskkI
+         92JVEyzAsfwJETQio4zNn7BCpDOJIMuPNltApGvSfmAzYPz71sJuoVITmgEU3bHOSNTv
+         l0gw==
+X-Gm-Message-State: APjAAAW4D0j7fKNTEM9M6gOKc0reZTOsdcj6AJ5AY8+ylzAoziPiDGSO
+        S9JY5iFPjFSrRtYa53FSYTQ=
+X-Google-Smtp-Source: APXvYqwdsfT9Ue4rfa7wkDSMJ6nFrh+aKIp0gZyMBI5hCHZMJfPLm13CY0cMs1nbZoC3osiPdRFX/Q==
+X-Received: by 2002:a2e:9b9a:: with SMTP id z26mr52058439lji.181.1578069331694;
+        Fri, 03 Jan 2020 08:35:31 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id w6sm24854434lfq.95.2020.01.03.08.35.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2020 08:35:30 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@xi.terra>)
+        id 1inPvA-0000Kg-Vr; Fri, 03 Jan 2020 17:35:33 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Sean Young <sean@mess.org>, Hans Verkuil <hverkuil@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 0/6] media: fix USB descriptor issues
+Date:   Fri,  3 Jan 2020 17:35:07 +0100
+Message-Id: <20200103163513.1229-1-johan@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 29 Dec 2019, syzbot wrote:
+This series fixes a number of issues due to missing or incomplete sanity
+checks that could lead to NULL-pointer dereferences, memory corruption
+or driver misbehaviour when a device has unexpected descriptors.
 
-> syzbot has found a reproducer for the following crash on:
-> 
-> HEAD commit:    ecdf2214 usb: gadget: add raw-gadget interface
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17416885e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=b06a019075333661
-> dashboard link: https://syzkaller.appspot.com/bug?extid=10e5f68920f13587ab12
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13598885e00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+10e5f68920f13587ab12@syzkaller.appspotmail.com
-> 
-> ------------[ cut here ]------------
-> usb 1-1: BOGUS urb xfer, pipe 2 != type 2
-> WARNING: CPU: 0 PID: 2388 at drivers/usb/core/urb.c:478  
-> usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:478
+Johan
 
-That's a strange diagnostic.  Let's see what's really going on.
 
-Alan Stern
+Johan Hovold (6):
+  media: flexcop-usb: fix endpoint sanity check
+  media: ov519: add missing endpoint sanity checks
+  media: stv06xx: add missing descriptor sanity checks
+  media: xirlink_cit: add missing descriptor sanity checks
+  media: dib0700: fix rc endpoint lookup
+  media: iguanair: fix endpoint sanity check
 
-#syz test: https://github.com/google/kasan.git ecdf2214
+ drivers/media/rc/iguanair.c                   |  2 +-
+ drivers/media/usb/b2c2/flexcop-usb.c          |  6 +++---
+ drivers/media/usb/dvb-usb/dib0700_core.c      |  4 ++--
+ drivers/media/usb/gspca/ov519.c               | 10 ++++++++++
+ drivers/media/usb/gspca/stv06xx/stv06xx.c     | 19 ++++++++++++++++++-
+ .../media/usb/gspca/stv06xx/stv06xx_pb0100.c  |  4 ++++
+ drivers/media/usb/gspca/xirlink_cit.c         | 18 +++++++++++++++++-
+ 7 files changed, 55 insertions(+), 8 deletions(-)
 
-Index: usb-devel/drivers/usb/core/urb.c
-===================================================================
---- usb-devel.orig/drivers/usb/core/urb.c
-+++ usb-devel/drivers/usb/core/urb.c
-@@ -204,10 +204,14 @@ int usb_urb_ep_type_check(const struct u
- 	const struct usb_host_endpoint *ep;
- 
- 	ep = usb_pipe_endpoint(urb->dev, urb->pipe);
--	if (!ep)
-+	if (!ep) {
-+		dev_info(&urb->dev->dev, "Pipe 0x%x, no ep\n", urb->pipe);
- 		return -EINVAL;
--	if (usb_pipetype(urb->pipe) != pipetypes[usb_endpoint_type(&ep->desc)])
-+	}
-+	if (usb_pipetype(urb->pipe) != pipetypes[usb_endpoint_type(&ep->desc)]) {
-+		dev_info(&urb->dev->dev, "Pipe/ep type mismatch\n");
- 		return -EINVAL;
-+	}
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(usb_urb_ep_type_check);
+-- 
+2.24.1
 
