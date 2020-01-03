@@ -2,108 +2,113 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D63C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1E8C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6962121835
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F05521835
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:43:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="VoGDQ6Si"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="lyEsEuUT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727718AbgACLmH (ORCPT
+        id S1727615AbgACLnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 06:42:07 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46860 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727560AbgACLmH (ORCPT
+        Fri, 3 Jan 2020 06:43:42 -0500
+Received: from mail-io1-f50.google.com ([209.85.166.50]:38505 "EHLO
+        mail-io1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727220AbgACLnm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 06:42:07 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z7so42077719wrl.13
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 03:42:05 -0800 (PST)
+        Fri, 3 Jan 2020 06:43:42 -0500
+Received: by mail-io1-f50.google.com with SMTP id v3so41112343ioj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 03:43:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DOp7/NK/kDQFb3w2KXAmvUYnxJH6vqk7p3b0dByfVmI=;
-        b=VoGDQ6SiKuFgnf2qlFKP1psc3/j9gZewO2B8sqI595AAXi7Ed2XsUavtezZcxzQ+1f
-         p/cidDY7cbnLVt3Cy0d72h8fWxNe0F4AjQKooGUwn2+Fjehbvvj5/zLvCOppTVknAd8Q
-         F1oBWoqfuLyFU6HITwt0uRO00SO36F/sQ1dUco3i/hpnv9Ft7eEbUpbGKtlv21tT6X2f
-         Q/SkDqhwGOTN3AreD0KKT+32vlSaPOmRpO7K9Si3WsIs8SQ/XM+NuIx5cEKxh67bH8ga
-         zzDyoo0zOaAdD7WAjSfnNu9rSIULBXph9Gj5tfhyH3WU12WVrjTeR8RlmJdS6/xb8CoS
-         6bUg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=y0OONBs4gn3TAMG/9zfn43zRfQC5HcMFZ3670SZhyEk=;
+        b=lyEsEuUT5YH96fNGG8FKUiZEMSkMnma2gQJHAefDl7slKP/yWBZKpdDhPcu36/P8IP
+         4CeXAgEGNwc0KZ5Si8jDjCLfdqarzl2awc4O0cYJNmibCONhC9yC2EXvxSlRx97Fw0K2
+         IT+JGLuSUDwjq+z+BEkYbX2ApDxodRHX1LAYkuriIRC4P4gFBUlNEQjsajN8VM/+COOh
+         HY93hNXl46ZRUPGTC5lEFBcadUM++An9Jl56gPDehg5RN2eOPqRc8EDwnmZ84gDqLylq
+         +0mCbnMn9PiVhcF5kcBZ474KsmsISGb7tEEcWoqB+LJB0LYQouXBsXEPP8aCDSvONL2J
+         FygA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DOp7/NK/kDQFb3w2KXAmvUYnxJH6vqk7p3b0dByfVmI=;
-        b=nXzKO29BDepRNN5HX1bM8RXCAbteb0CtPTZ582AakWQ5k7gp178iGvhN2FDvbqgPFQ
-         jkVWdtYNXNYyEEgngoJ2pFm4cgdbcXW8hCuwV/EvbNQ2xJ1IdSxDFPYb1LwkKHiJw2GF
-         Ow3gW7TzDOv1nYqjc16e/ceZlZRXRY3jyQA+TEd4os+C79cC8yeZbjM3vrETSRaXTBlL
-         /qaFrVIoU3+VlZk+7wj52dC1U7LrLwmguTp6dpL7NigDKXTbuj/btFaAxBnDSNp/2AZV
-         mjFAkWTwqfD1cDzdghD6lR9OCLvbLSdpRMegz/gUsD0+Whuh2629+iEWMJtKAwIia129
-         PPxQ==
-X-Gm-Message-State: APjAAAXKbk0lY956cLkm8X58ZV+VAtuinCCQxVXfMQCgQjx2/iQMHaRl
-        39Ebtpl6MktZobnUIvGAy/ZyPg==
-X-Google-Smtp-Source: APXvYqxTqq6ykFq8IR98BhEbv2Xpz7UddsNCByTuY68itBs2JcsLp/9mCi6/E/c6kWhLf0xrXdZEuA==
-X-Received: by 2002:adf:dc8d:: with SMTP id r13mr16048962wrj.357.1578051725088;
-        Fri, 03 Jan 2020 03:42:05 -0800 (PST)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id x18sm59934893wrr.75.2020.01.03.03.42.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 03:42:04 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Paul Gazzillo <paul@pgazz.com>
-Subject: [PATCH] mfd: max77650: Select REGMAP_IRQ in Kconfig
-Date:   Fri,  3 Jan 2020 12:41:56 +0100
-Message-Id: <20200103114156.20089-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=y0OONBs4gn3TAMG/9zfn43zRfQC5HcMFZ3670SZhyEk=;
+        b=e1e9OYDv1RV2xMPrKWv7cTM3/CfZiMqw42+dM2zp0VxUmWA5HIV9cbpSJKOyy/A8nY
+         pXws3+ye5+w0dMJdb8Xa+B25dLHg95uaXfqzU4DYzieBVIk4Un0enXuqkVwSHf1Nbr0W
+         Sd1DVEJNQ1ymi1jrT9SIMsKJ98NNzT+IyXCYd2trQYuIiMhvofgRlls1BQIxLKcJ3xMh
+         pWwNn6sSnzDW1erL9oYj6cKWNXNZNXQeTeO+Im+H8Wkt5Wl0ZcpgD44LQoyHFfPsEOQg
+         yNWctIVj8xwyhIp/D56LKxaXltos6xH/9+raRwjpD9Uzox2vzqGjFGqKgnzMra7WrpHS
+         44rQ==
+X-Gm-Message-State: APjAAAXoMycyC2/itLIrgLo0Ju7RcwIB8vYIuSJnhFw3Cu9loip4jd+Y
+        KZF8OGpu2Us4w7LSMMUI5kKGtmCnNWgwUepWkb7YZJ5m
+X-Google-Smtp-Source: APXvYqxPm51Zv+ADJF+5SRuCmrI3yjDL3Mui4bBtSoq3U5Ub3vfVdYARcZiqlv22KOutyUcM0BagxlOrDf4/qnpXfeU=
+X-Received: by 2002:a6b:fc0c:: with SMTP id r12mr55441931ioh.189.1578051821416;
+ Fri, 03 Jan 2020 03:43:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200103053642.yr7ynaqmi67z5hmk@dev.opentheblackbox.net>
+In-Reply-To: <20200103053642.yr7ynaqmi67z5hmk@dev.opentheblackbox.net>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 3 Jan 2020 12:43:30 +0100
+Message-ID: <CAMRc=MdM+OknEhguq5SxkOqyp0M62TU3T1+iMwvooHsDXU8Fqg@mail.gmail.com>
+Subject: Re: Apparent Kconfig bug for Maxim 77650 driver
+To:     Paul Gazzillo <paul@pgazz.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+pt., 3 sty 2020 o 06:45 Paul Gazzillo <paul@pgazz.com> napisa=C5=82(a):
+>
+> It seems there is a Kconfig issue that causing a linking error for driver=
+s/mfd/max77650.c.  It happens when CONFIG_MFD_MAX77650 is set (which contro=
+ls drivers/mfd/max77650.c), but CONFIG_REGMAP_IRQ is not.  CONFIG_REMAP_IRQ=
+ controls drivers/base/regmap/regmap-irq.c, which has functions called by m=
+ax77650.c.
+>
+> In drivers/mfd/Kconfig, it looks like CONFIG_MFD_MAX77650 is meant to hav=
+e "select CONFIG_REGMAP_IRQ" like several other configuration options from =
+the same Kconfig file.
+>
+> Steps to reproduce the bug for next-20191220 (also happens on other versi=
+ons, e.g., v5.4.4):
+>
+>   1. make allnoconfig  # using x86
+>   2. make menuconfig
+>     a. Enable device drivers->i2c support
+>     b. Enable device drivers->device tree and open firmware support
+>     c. Enable device drivers->multifunction devices->maxim MAX77650
+>   3. make  # should have a build error when linking vmlinux
+>
+> This is the build error I get:
+>
+>     ld: drivers/mfd/max77650.o: in function `max77650_i2c_probe':
+>     max77650.c:(.text+0xcb): undefined reference to `devm_regmap_add_irq_=
+chip'
+>     ld: max77650.c:(.text+0xdb): undefined reference to `regmap_irq_get_d=
+omain'
+>     make: *** [Makefile:1079: vmlinux] Error 1
+>
+> Is this a real bug or am I doing something wrong?
+>
+> Best,
+> Paul
 
-MAX77650 MFD driver uses regmap_irq API but doesn't select the required
-REGMAP_IRQ option in Kconfig. This can cause the following build error
-if regmap irq is not enabled implicitly by someone else:
+It's a bug, thanks for reporting. I just sent out a fix.
 
-    ld: drivers/mfd/max77650.o: in function `max77650_i2c_probe':
-    max77650.c:(.text+0xcb): undefined reference to `devm_regmap_add_irq_chip'
-    ld: max77650.c:(.text+0xdb): undefined reference to `regmap_irq_get_domain'
-    make: *** [Makefile:1079: vmlinux] Error 1
+Best regards,
+Bartosz Golaszewski
 
-Fix it by adding the missing option.
-
-Fixes: d0f60334500b ("mfd: Add new driver for MAX77650 PMIC")
-Reported-by: Paul Gazzillo <paul@pgazz.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/mfd/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 420900852166..c366503c466d 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -758,6 +758,7 @@ config MFD_MAX77650
- 	depends on OF || COMPILE_TEST
- 	select MFD_CORE
- 	select REGMAP_I2C
-+	select REGMAP_IRQ
- 	help
- 	  Say Y here to add support for Maxim Semiconductor MAX77650 and
- 	  MAX77651 Power Management ICs. This is the core multifunction
--- 
-2.23.0
-
+PS please set your e-mail client to wrap lines around 80 characters
+when posting to LKML.
