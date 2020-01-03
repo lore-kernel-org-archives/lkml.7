@@ -2,125 +2,165 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96527C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB23C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF8721734
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:02:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578063765;
-	bh=daxwZAH3VSS8u6sSc8vKNLamffPzkCp3rHi48q0IeMY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YVi5IdkUimsEIUX6efdz1hkU9UBrscC65z0n6Ez4C+35ovLuvavPNTTt0ZVWANoUJ
-	 UWz9SC9ilkmWmij+NcLeLM+OYaWh4veG+LxSHC/yte2O8cmNMxfcf0Pwf6L6dk6fPq
-	 nPiYjeqML5m9dtEAavEMClev2HW4Cv2G+EdETyYo=
+	by mail.kernel.org (Postfix) with ESMTP id 00C6921734
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:03:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xvXL8Ajz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgACPCo (ORCPT
+        id S1727900AbgACPDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 10:02:44 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39895 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbgACPCo (ORCPT
+        Fri, 3 Jan 2020 10:03:36 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:33267 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727686AbgACPDf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 10:02:44 -0500
-Received: by mail-lj1-f193.google.com with SMTP id l2so44145057lja.6;
-        Fri, 03 Jan 2020 07:02:42 -0800 (PST)
+        Fri, 3 Jan 2020 10:03:35 -0500
+Received: by mail-lf1-f68.google.com with SMTP id n25so32064468lfl.0
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 07:03:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fXLuplpySrohqFP6kS7OpIEbP/zNERMePL4SR7+mMjs=;
+        b=xvXL8AjzcVepvA9glzXDHT0fioLRNmbgVkJ0/9FZHbw7TOvSZOhWG2oTR3lrLr4fFS
+         xvJvT3VjsTxoQlt2RRk8qYfOnwTXauUgzaMN6AZ8mmx6mawvrLaObvPuwQFI5cMsS52b
+         gdkmpDZoSvX7Oz/7rwqlScIm22M68k6KgpmMNjbBvP/IDpTWp5ontHVuvJsLjq2Q+vwa
+         yBmxqrzlpLByYN+vMlQtn+CadZ8L3SJZ97abkEr7kQnQxp3FTVycCcbP4yQcetMwuEoZ
+         cjJkGbcIlHNVJ9MWdhHO1pHd2ru6qzdVy2xYQsefeW+tmreZ4XW4bpOuanrf/supdelY
+         KmJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jYP3oiguXTu4ukRMGsTE94fcOoRU1pxMAUcZzbqTsoQ=;
-        b=kktXjEaeJoDj7MeJeceF+PZIAvZB1dFHWf2rIlpcI78QiDUIEXFx8aqrRtXrAcWClv
-         rFKVKpb5IeEkBo4sjlZ6Yh971Qrxp1ffTFcvLaZsRY5+FTkxX3bqXWaQUxPvjGKyPHc/
-         C5ir3vqVYaAdV+Q2C+xdKsh9ZsjuRtIJ3h6U1XPoaYjVSAsubhlyeSZA9I6gT63my9+O
-         bQVqw67foi7WGZrwovnhuK7QW6m6q2NUAB18JWvvvapZMhh1/Zh82z9ethsHN3V8k/eV
-         AJO/40nyT+zMsUUgXTZNVN4alPmqpgxlshU4y28PH0pID0iGr+0U5EIb/RL6r1UwZay9
-         80Eg==
-X-Gm-Message-State: APjAAAWzn3gWmRS1ySDtjsfw7AXqweyzbrbyGFjC3e197t1XEpYBsI7K
-        gsAP0kBmjriebs/BKUw9pOtMf+ef
-X-Google-Smtp-Source: APXvYqwKx1QwKtOPNraV0L9IHhbkT8H7iic6sFO29rqdvf4tU3k2+YpJg3mg8DbMbm7TyLBrosdkAg==
-X-Received: by 2002:a05:651c:118b:: with SMTP id w11mr53364810ljo.54.1578063762042;
-        Fri, 03 Jan 2020 07:02:42 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id t1sm24602951lji.98.2020.01.03.07.02.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 07:02:40 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1inOTK-0006si-Jb; Fri, 03 Jan 2020 16:02:42 +0100
-Date:   Fri, 3 Jan 2020 16:02:42 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.4 106/434] media: flexcop-usb: fix NULL-ptr deref in
- flexcop_usb_transfer_init()
-Message-ID: <20200103150242.GC17614@localhost>
-References: <20191229172702.393141737@linuxfoundation.org>
- <20191229172708.658173957@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fXLuplpySrohqFP6kS7OpIEbP/zNERMePL4SR7+mMjs=;
+        b=BwvCnuPP7twavwR9Voff/MNMejp2QCfGNr//g92FVyVjo6A6dJMcz/MCkIgYIfbQhc
+         w2arJ/iOcjXjsnSS3DJZ+winuhJHKGprdFR0HzRwEGjIsuHJjZiSkHH+WRecumrANYQY
+         3jcKUH+OxmjSHyoCDxcKe5Agt2N8MLK0R8B0fNCrAzBuHMRaoxnDf+enqxzl11/QoxHB
+         B4ME7Fo0BkgnwkVziyvcTgFlDwnH5Wta6b0UTDJouiLqrp533LdpfPqwdGabEw1f/aGA
+         cSxAuEZML8ucpw+cXsgXqDZHOxBtmVIH0Hs9hA8qibAvKyXzT69elPGDnlUHCgRAP0k1
+         xL4g==
+X-Gm-Message-State: APjAAAW6vexQDgYiYOMrdOdXxe/V+I0JUXLzA0oppgDIRSYha7loTBxY
+        ltfr+ng7I/0ayKg/E1PLStkVZrkDqHWiKcHjMGvIhg==
+X-Google-Smtp-Source: APXvYqw4vzT9NE5JBE4750Ibpsg4DfZbpJYeAmaoiYp8s1njp31bKNa9lXROJc+TkxaJZn7Eff6d3LMnkGO/OqxXMpU=
+X-Received: by 2002:a19:784:: with SMTP id 126mr49377262lfh.191.1578063813660;
+ Fri, 03 Jan 2020 07:03:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191229172708.658173957@linuxfoundation.org>
+References: <20200102215829.911231638@linuxfoundation.org>
+In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 3 Jan 2020 20:33:22 +0530
+Message-ID: <CA+G9fYuPkOGKbeQ0FKKx4H0Bs-nRHALsFtwyRw0Rt5DoOCvRHg@mail.gmail.com>
+Subject: Re: [PATCH 5.4 000/191] 5.4.8-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Chengguang Xu <cgxu519@mykernel.net>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>, LTP List <ltp@lists.linux.it>,
+        Jan Stancek <jstancek@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        John Stultz <john.stultz@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 29, 2019 at 06:22:39PM +0100, Greg Kroah-Hartman wrote:
-> From: Yang Yingliang <yangyingliang@huawei.com>
-> 
-> [ Upstream commit 649cd16c438f51d4cd777e71ca1f47f6e0c5e65d ]
-> 
-> If usb_set_interface() failed, iface->cur_altsetting will
-> not be assigned and it will be used in flexcop_usb_transfer_init()
-> It may lead a NULL pointer dereference.
-> 
-> Check usb_set_interface() return value in flexcop_usb_init()
-> and return failed to avoid using this NULL pointer.
-> 
-> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-> Signed-off-by: Sean Young <sean@mess.org>
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+On Fri, 3 Jan 2020 at 03:42, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.4.8 release.
+> There are 191 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 04 Jan 2020 21:55:35 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.8-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-This commit is bogus and should be dropped from all stable queues.
+LTP syscalls memfd_create04 failed on arm64 devices.
+Test PASS on arm, i386 and x86_64.
 
-Contrary to what the commit message claims, iface->cur_altsetting will
-never be NULL so there's no risk for a NULL-pointer dereference here.
+We are bisecting this failure on arm64.
 
-Even though the change itself is benign, we shouldn't spread this
-confusion further.
+Test case failed log,
+memfd_create04.c:68: INFO: Attempt to create file using 64kB huge page size
+memfd_create04.c:76: FAIL: memfd_create() failed unexpectedly: ENOENT (2)
 
-> ---
->  drivers/media/usb/b2c2/flexcop-usb.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/usb/b2c2/flexcop-usb.c b/drivers/media/usb/b2c2/flexcop-usb.c
-> index 1a801dc286f8..d1331f828108 100644
-> --- a/drivers/media/usb/b2c2/flexcop-usb.c
-> +++ b/drivers/media/usb/b2c2/flexcop-usb.c
-> @@ -504,7 +504,13 @@ urb_error:
->  static int flexcop_usb_init(struct flexcop_usb *fc_usb)
->  {
->  	/* use the alternate setting with the larges buffer */
-> -	usb_set_interface(fc_usb->udev,0,1);
-> +	int ret = usb_set_interface(fc_usb->udev, 0, 1);
-> +
-> +	if (ret) {
-> +		err("set interface failed.");
-> +		return ret;
-> +	}
-> +
->  	switch (fc_usb->udev->speed) {
->  	case USB_SPEED_LOW:
->  		err("cannot handle USB speed because it is too slow.");
+Strace output:
+memfd_create(\"tfile\", MFD_HUGETLB|0x40000000) = -1 ENOENT (No such
+file or directory)
 
-Johan
+Test case Description,
+
+/*
+* Test: Validating memfd_create() with MFD_HUGETLB and MFD_HUGE_x flags.
+*
+* Test cases: Attempt to create files in the hugetlbfs filesystem using
+* different huge page sizes.
+*
+* Test logic: memfd_create() should return non-negative value (fd)
+* if the system supports that particular huge page size.
+* On success, fd is returned.
+* On failure, -1 is returned with ENODEV error.
+*/
+
+Test code snippet:
+<>
+check_hugepage_support(&tflag);
+tst_res(TINFO,
+"Attempt to create file using %s huge page size",
+tflag.h_size);
+
+fd = sys_memfd_create("tfile", MFD_HUGETLB | tflag.flag);
+if (fd < 0) {
+if (errno == tflag.exp_err)
+tst_res(TPASS, "Test failed as expected\n");
+else
+tst_brk(TFAIL | TERRNO,
+"memfd_create() failed unexpectedly");
+return;
+}
+<>
+
+Steps to reproduce:
+          - cd /opt/ltp/testcases/bin/
+          - ./memfd_create04
+
+https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/syscalls/memfd_create/memfd_create04.c#L75
+
+Test output log,
+https://lkft.validation.linaro.org/scheduler/job/1081716
+
+Test results comparison,
+https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/tests/ltp-syscalls-tests/memfd_create04
+
+
+-- 
+Linaro LKFT
+https://lkft.linaro.org
