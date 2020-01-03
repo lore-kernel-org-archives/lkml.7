@@ -2,132 +2,102 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB2EC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 21:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FA1C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 21:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F1BE21835
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 21:29:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vRNZ8xR0"
+	by mail.kernel.org (Postfix) with ESMTP id 8634022314
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 21:42:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728707AbgACV3B (ORCPT
+        id S1728739AbgACVmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 16:29:01 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41118 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728549AbgACV27 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 16:28:59 -0500
-Received: by mail-ed1-f67.google.com with SMTP id c26so42699131eds.8;
-        Fri, 03 Jan 2020 13:28:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sY+5gBJ9KBN9CmCnj27mx4Jhd9hNgJKF8zYt9OnsI4Q=;
-        b=vRNZ8xR0cRi5hS92dxr96kspn6z+MidQ30Ls7zmJ3eyz4Xo26rNawGDzaAtNvsBXFw
-         9WnPYoPKyKmc9tJED3/GaF5K9lv/Y9Jf267LnqvgwTdnkoQLc0jE6kZb/yQNk5BjRy2q
-         WT0d/g5JIcy9BKL8g2nvmIQLNDBFT40TIT22cOSm73Nz15KO5forfXbMUujZKmurOAs/
-         hVK3NZ1kG1fYxuom5n+1EIetBuxP9iIZ8VrZph+ggGnNvr4axOlZgUcQjzVm5Osgr87t
-         cR1PzkkayFotuz84RqtglbEJfyDtSQzQRzB5YHM51busvhxUz8jFEheKMkoL4MTeCtcr
-         4IzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sY+5gBJ9KBN9CmCnj27mx4Jhd9hNgJKF8zYt9OnsI4Q=;
-        b=gLu1wypqBqU+I+LkI55h6AROGks4W0AhxT6kJX4bzJ6sN/J6gPEIU18iv54UYTJyR8
-         KVape/L3ZY4kQ5z0b0+1WWyKd1yO0v4owQIh0vQ6D651fdGUlDfJfKzZnEcR2qdx1m9v
-         umty4ti2USDRlwEWGBGvlJXO2/JwDUgnBYVV5ggp3SBEUulO1FGKevW7ExABOEL2IWC2
-         pbVzHHXvTnCxFJ6HcRw4vIjNkkV080HB3Srv4G8wII5XGnzbaZRmEp/m3AfZ/GcNWyxn
-         Iy+Pu3mYGILpV/ADrx0/UJ7yNk+wT/DLSYVaxg/iNdPBmtLiP1tCrLW6y87MqLAr7ROi
-         w7dw==
-X-Gm-Message-State: APjAAAX6tG4kWyFTzAxlZ0K+CPZhvs2OLkl3igdP5h9jVlhXINQeRPlu
-        0i1/ReSOWtatcLgEpZ/atiVazUCJTm+lO79cT84=
-X-Google-Smtp-Source: APXvYqz6C0gPA0BhTifMkDy7tGjqFdi13Pdnw86CYCjTgOWj/u5iR1rZ2K6vSRub8lpQ1YCZR9r0P0aJe4S60ETEH9c=
-X-Received: by 2002:aa7:cccf:: with SMTP id y15mr94922090edt.108.1578086938142;
- Fri, 03 Jan 2020 13:28:58 -0800 (PST)
+        Fri, 3 Jan 2020 16:42:32 -0500
+Received: from mga11.intel.com ([192.55.52.93]:35860 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728664AbgACVmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 16:42:31 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jan 2020 13:42:31 -0800
+X-IronPort-AV: E=Sophos;i="5.69,392,1571727600"; 
+   d="scan'208";a="421549597"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jan 2020 13:42:31 -0800
+Date:   Fri, 3 Jan 2020 13:42:29 -0800
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Jan =?iso-8859-1?Q?H=2E_Sch=F6nherr?= <jschoenh@amazon.de>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: Re: [PATCH v2 6/6] x86/mce: Dynamically register default MCE handler
+Message-ID: <20200103214229.GA10677@agluck-desk2.amr.corp.intel.com>
+References: <20200103150722.20313-1-jschoenh@amazon.de>
+ <20200103150722.20313-7-jschoenh@amazon.de>
 MIME-Version: 1.0
-References: <20200102233657.12933-1-f.fainelli@gmail.com> <CA+h21hrLO2Nfryu74Joj-T3-ithgoSFOQZsw4Z5QWOnhttvGiA@mail.gmail.com>
- <91eb2720-d933-f1fd-8d50-e9a81434545b@gmail.com>
-In-Reply-To: <91eb2720-d933-f1fd-8d50-e9a81434545b@gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Fri, 3 Jan 2020 23:28:47 +0200
-Message-ID: <CA+h21hqEnFjPHyK9ZanzwXdvkcdTA3uZzJMf0eo0FZWRTFzouw@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: dsa: Remove indirect function call for flow dissection
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Paul Blakey <paulb@mellanox.com>,
-        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200103150722.20313-7-jschoenh@amazon.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Jan 2020 at 22:50, Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> The call path is the following on TX (e.g.: when you run a DHCP client),
+On Fri, Jan 03, 2020 at 04:07:22PM +0100, Jan H. Schönherr wrote:
+> The default MCE handler takes action, when no external MCE handler is
+> registered. Instead of checking for external handlers within the default
+> MCE handler, only register the default MCE handler when there are no
+> external handlers in the first place.
+> 
+> Signed-off-by: Jan H. Schönherr <jschoenh@amazon.de>
+> ---
+> New in v2. This is something that became possible due to patch 4.
+> I'm not entirely happy with it.
+> 
+> One the one hand, I'm wondering whether there's a nicer way to handle
+> (de-)registration races.
+> 
 
-Oh, it gets called on TX too, ok.
-In that case, static proto_off information won't work for asymmetric
-taggers such as ocelot which may have an independently configurable
-prefix length on RX and TX.
-I want to get rid of the RX tag prefix in ocelot though, but just saying.
+Instead of unregistering/registering the default notifier depending
+on whether there are other notifiers, couldn't you just make the
+default notifier check to see if it should print. E.g.
 
-> I don't think your formula works for EDSA which has an EtherType, but
+static int mce_default_notifier(struct notifier_block *nb, unsigned long val,
+			void *data)
+{
+	struct mce *m = (struct mce *)data;
 
-Why doesn't it work with edsa?
+	if (m && !atomic_read(&num_notifiers))
+		__print_mce(m);
 
-> this would probably work for all tags we currently support except trailer.
->
-> proto = (__be16 *)(skb->data)[overhead / 2 - 1];
->
+	return NOTIFY_DONE;
+}
 
-I wasn't suggesting to do this exact calculation in flow_dissector.c,
-but rather to pre-populate proto_off with a value statically derived
-from it on a piece of paper, with the trailer exception where it would
-be -2 in bytes or -1 in shorts, but nonetheless a negative and valid
-value.
+> On the other hand, I'm starting to question the whole logic to "only print
+> the MCE if nothing else in the kernel has a handler registered". Is that
+> really how it should be? For example, there are handlers that filter for a
+> specific subset of MCEs. If one of those is registered, we're losing all
+> information for MCEs that don't match.
 
->
-> I don't think anyone except Alexander did serious investigation this.
-> For now, what I am interested in is reducing the amount of technical
-> debt and expensive function calls.
+Maybe put control of this into the hands of the notifiers ... if
+a notifier thinks that it does something useful with the log
+that makes the console log redundant, then it could call a function
+to bump the count to suppress the __print_mce(). Simple filter functions
+on the chain wouldn't do that.
 
-Does the change bring any measurable improvement?
+If we go this path the variable should be named something like
+"suppress_console_mce" rather than num_notifiers.
 
-> --
-> Florian
+Might also be useful to have some command line option or debugfs knob
+to force printing for those cases where bad stuff is happening and we
+don't see what was logged before a crash drops all the bits on the floor.
 
-Regards,
--Vladimir
+-Tony
