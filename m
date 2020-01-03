@@ -2,123 +2,297 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39522C00523
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 23:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A333EC00523
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 23:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFF5F21835
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 23:44:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578095070;
-	bh=Mg3TQ5nbJqbt3keDFCXdnTMad0SO85xjOLMwAZ4VpnU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dnxdWqCDjdRgnzsBGEjeIQGd9Br2SmpvFeClNqgfKTlNtLoAcmf0ogUCsfwiGTTGG
-	 Scd1146DQ3Y5y6AwqK5GJkRRquNMahder0k2E95aVtjNS1t2jUMjGRAXMOwgxDG6aQ
-	 9avIDEGb+t/TGwospycofVQU74h7e4VMhWeBAIAM=
+	by mail.kernel.org (Postfix) with ESMTP id 5C1EB21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 23:47:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SSe8Boj9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgACXo3 (ORCPT
+        id S1726478AbgACXrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 18:44:29 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:36420 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbgACXo2 (ORCPT
+        Fri, 3 Jan 2020 18:47:16 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53186 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbgACXrQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 18:44:28 -0500
-Received: by mail-il1-f194.google.com with SMTP id b15so37986019iln.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 15:44:28 -0800 (PST)
+        Fri, 3 Jan 2020 18:47:16 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p9so9689925wmc.2
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 15:47:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xqpA7+IQg8wmtI5+/njoQrdK03zJ9XpJ8M9GpWAhFPk=;
+        b=SSe8Boj9RRGI3BiJ+6SLOcjxHe8xsZyytqj19N8JTEqg14ts0P2ZcvhEl3Q0GrGUuq
+         XjfL0eFLqlalIt2vXNcK38SVfF7btM6Jx/SumoH3F87p0SQ+WQxMjeIvHW3bEwosjzPm
+         vOYFZR2wIUQKBHPhiHj5k5OvBfvYDDvvxCclo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oHVJcbfywZ2wbBBx9DgqhrtkzwrTvD4xChukN5BH1kY=;
-        b=aWa9DmXbrzJeX0JMNCjRNxi8NYUCuUttQRtX9qmIyA/lt+fqk/voar2ms2R6Dw/Lrl
-         V/UMV6dTa+6OcuIgU0bf8JLTFDNlYmxpW0TTHhclMLNmCUVMb+OD03UqAQQ0DSaGIvQR
-         wQ1xVK/V3jNszfeQHiJV5vKPQonv4Xvq8u1T82gw6iVylfskUjEsTdeq3tC5L8tgckkg
-         Bne/T8kJVcKMD5sOm7JIcPXBwC7VcyjCEv8YDQ4lJ5aCm44pKBbA6WvzSUxtGhy7Aiqg
-         Y8GB/pdyE09Y1bVyGl90pKG5RpUc+WuLk8nnK2ZAPQ04gVibIUFXQ4pbPXlHkRRIqdy5
-         umtA==
-X-Gm-Message-State: APjAAAUbgsZ5W7vsHOgmO5U0hpCWq1I8fcJD4Qj2vyg9nPy1mwqTQ1Rc
-        FQs1KERRNCGueZCxh0x91Vo5UD0=
-X-Google-Smtp-Source: APXvYqxmYZYOXaED5KAXKD+3FhJf7pjVRcWo9dCOJi2lUv5WJ2GR0B/tEG/59HUkFsu4MzmWH28yGA==
-X-Received: by 2002:a92:d241:: with SMTP id v1mr58830649ilg.177.1578095067621;
-        Fri, 03 Jan 2020 15:44:27 -0800 (PST)
-Received: from rob-hp-laptop ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id y9sm15218778ion.54.2020.01.03.15.44.26
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xqpA7+IQg8wmtI5+/njoQrdK03zJ9XpJ8M9GpWAhFPk=;
+        b=Zh5oHXnDqxJ1JA1CFMfjJjpzJVxkRPLKTaINXdu/xKN7v4s+6FBo+G6wKOC5MSAChE
+         qP3Sd9COBo3sYfN+r61Lc4eM8s98WR92sC/PkYmd5jzJT53Jqr3rDCkANpB7aXmt52e4
+         fvtVEOM+OfJqwvd6ir1sFMeHeVZ6GPtxB75eo4x1B6ipg74nlSQ8caURk3+rzc9bmKI4
+         bJ9UiI1t9xdBTnR7jUzx2SvMyn5SFUp66JYKw5Pk6GVzBrgGh/26IXr5j/aOopsPK6zV
+         cMMcC9WNdXjTPLiKq/yvyzS2fNEquEIllzJSmEzJaW7FFY/BsgguVyjp2MPZ06ksoKkE
+         Fd5A==
+X-Gm-Message-State: APjAAAW3lzZQELVwzMDrgDZn5Kx8gAOQwnBZBZGuVJsYjHkuwUqNsdEF
+        5ZHoLyCzd35jrXySx7iZzkofvPpx9BA=
+X-Google-Smtp-Source: APXvYqzkNDyb/rDTQKYodOxdQ512QxV69RgOez8G9MWHHZYmK+E4QDmvkgWYS+9U87Ln7IsNteH+EQ==
+X-Received: by 2002:a05:600c:2c53:: with SMTP id r19mr21764423wmg.39.1578095233571;
+        Fri, 03 Jan 2020 15:47:13 -0800 (PST)
+Received: from kpsingh-kernel.localdomain (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id e6sm60931506wru.44.2020.01.03.15.47.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 15:44:26 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 2219b7
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Fri, 03 Jan 2020 16:44:25 -0700
-Date:   Fri, 3 Jan 2020 16:44:25 -0700
-From:   Rob Herring <robh@kernel.org>
-To:     Khouloud Touil <ktouil@baylibre.com>
-Cc:     bgolaszewski@baylibre.com, mark.rutland@arm.com,
-        srinivas.kandagatla@linaro.org, baylibre-upstreaming@groups.io,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linus.walleij@linaro.org
-Subject: Re: [PATCH v3 3/4] dt-bindings: at24: remove the optional property
- write-protect-gpios
-Message-ID: <20200103234425.GA17746@bogus>
-References: <20191219115141.24653-1-ktouil@baylibre.com>
- <20191219115141.24653-4-ktouil@baylibre.com>
+        Fri, 03 Jan 2020 15:47:13 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Michael Halcrow <mhalcrow@google.com>
+Subject: [PATCH bpf-next] bpf: Make trampolines W^X
+Date:   Sat,  4 Jan 2020 00:47:25 +0100
+Message-Id: <20200103234725.22846-1-kpsingh@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219115141.24653-4-ktouil@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 12:51:40PM +0100, Khouloud Touil wrote:
-> NVMEM framework is an interface for the at24 EEPROMs as well as for
-> other drivers, instead of passing the wp-gpios over the different
-> drivers each time, it would be better to pass it over the NVMEM
-> subsystem once and for all.
-> 
-> Removing the optional property form the device tree binding document.
-> 
-> Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  Documentation/devicetree/bindings/eeprom/at24.yaml | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
-> index e8778560d966..75de83708146 100644
-> --- a/Documentation/devicetree/bindings/eeprom/at24.yaml
-> +++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
-> @@ -145,10 +145,7 @@ properties:
->        over reads to the next slave address. Please consult the manual of
->        your device.
->  
-> -  wp-gpios:
-> -    description:
-> -      GPIO to which the write-protect pin of the chip is connected.
-> -    maxItems: 1
-> +  wp-gpios: true
->  
->    address-width:
->      allOf:
-> @@ -181,7 +178,6 @@ examples:
->            compatible = "microchip,24c32", "atmel,24c32";
->            reg = <0x52>;
->            pagesize = <32>;
-> -          wp-gpios = <&gpio1 3 0>;
+From: KP Singh <kpsingh@google.com>
 
-This is still valid, why is it being removed?
+The image for the BPF trampolines is allocated with
+bpf_jit_alloc_exe_page which marks this allocated page executable. This
+means that the allocated memory is W and X at the same time making it
+susceptible to WX based attacks.
 
->            num-addresses = <8>;
->        };
->      };
-> -- 
-> 2.17.1
-> 
+Since the allocated memory is shared between two trampolines (the
+current and the next), 2 pages must be allocated to adhere to W^X and
+the following sequence is obeyed where trampolines are modified:
+
+- Mark memory as non executable (set_memory_nx). While module_alloc for
+  x86 allocates the memory as PAGE_KERNEL and not PAGE_KERNEL_EXEC, not
+  all implementations of module_alloc do so
+- Mark the memory as read/write (set_memory_rw)
+- Modify the trampoline
+- Mark the memory as read-only (set_memory_ro)
+- Mark the memory as executable (set_memory_x)
+
+There's a window between the modification of the trampoline and setting
+the trampoline as read-only where an attacker and ~could~ change the
+contents of the memory. This can be further improved by adding more
+verification after the memory is marked as read-only.
+
+Reported-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: KP Singh <kpsingh@google.com>
+---
+ arch/x86/net/bpf_jit_comp.c |  2 +-
+ include/linux/bpf.h         |  1 -
+ kernel/bpf/dispatcher.c     | 30 +++++++++++++++++++++++----
+ kernel/bpf/trampoline.c     | 41 +++++++++++++++++++------------------
+ 4 files changed, 48 insertions(+), 26 deletions(-)
+
+diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+index 4c8a2d1f8470..a510f8260322 100644
+--- a/arch/x86/net/bpf_jit_comp.c
++++ b/arch/x86/net/bpf_jit_comp.c
+@@ -1527,7 +1527,7 @@ int arch_prepare_bpf_trampoline(void *image, struct btf_func_model *m, u32 flags
+ 	 * Another half is an area for next trampoline.
+ 	 * Make sure the trampoline generation logic doesn't overflow.
+ 	 */
+-	if (WARN_ON_ONCE(prog - (u8 *)image > PAGE_SIZE / 2 - BPF_INSN_SAFETY))
++	if (WARN_ON_ONCE(prog - (u8 *)image > PAGE_SIZE - BPF_INSN_SAFETY))
+ 		return -EFAULT;
+ 	return 0;
+ }
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index b14e51d56a82..3be8b1b0166d 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -502,7 +502,6 @@ struct bpf_trampoline *bpf_trampoline_lookup(u64 key);
+ int bpf_trampoline_link_prog(struct bpf_prog *prog);
+ int bpf_trampoline_unlink_prog(struct bpf_prog *prog);
+ void bpf_trampoline_put(struct bpf_trampoline *tr);
+-void *bpf_jit_alloc_exec_page(void);
+ #define BPF_DISPATCHER_INIT(name) {			\
+ 	.mutex = __MUTEX_INITIALIZER(name.mutex),	\
+ 	.func = &name##func,				\
+diff --git a/kernel/bpf/dispatcher.c b/kernel/bpf/dispatcher.c
+index 204ee61a3904..f4589da3bb34 100644
+--- a/kernel/bpf/dispatcher.c
++++ b/kernel/bpf/dispatcher.c
+@@ -93,13 +93,34 @@ int __weak arch_prepare_bpf_dispatcher(void *image, s64 *funcs, int num_funcs)
+ static int bpf_dispatcher_prepare(struct bpf_dispatcher *d, void *image)
+ {
+ 	s64 ips[BPF_DISPATCHER_MAX] = {}, *ipsp = &ips[0];
+-	int i;
++	int i, ret;
+ 
+ 	for (i = 0; i < BPF_DISPATCHER_MAX; i++) {
+ 		if (d->progs[i].prog)
+ 			*ipsp++ = (s64)(uintptr_t)d->progs[i].prog->bpf_func;
+ 	}
+-	return arch_prepare_bpf_dispatcher(image, &ips[0], d->num_progs);
++
++	/* First make the page non-executable and then make it RW to avoid it
++	 * from being W+X. While x86's implementation of module_alloc
++	 * allocates memory as non-executable, not all implementations do so.
++	 * Till these are fixed, explicitly mark the memory as NX.
++	 */
++	set_memory_nx((unsigned long)image, 1);
++	set_memory_rw((unsigned long)image, 1);
++
++	ret = arch_prepare_bpf_dispatcher(image, &ips[0], d->num_progs);
++	if (ret)
++		return ret;
++
++	/* First make the page read-only, and only then make it executable to
++	 * prevent it from being W+X in between.
++	 */
++	set_memory_ro((unsigned long)image, 1);
++	/* More checks can be done here to ensure that nothing was changed
++	 * between arch_prepare_bpf_dispatcher and set_memory_ro.
++	 */
++	set_memory_x((unsigned long)image, 1);
++	return 0;
+ }
+ 
+ static void bpf_dispatcher_update(struct bpf_dispatcher *d, int prev_num_progs)
+@@ -113,7 +134,7 @@ static void bpf_dispatcher_update(struct bpf_dispatcher *d, int prev_num_progs)
+ 		noff = 0;
+ 	} else {
+ 		old = d->image + d->image_off;
+-		noff = d->image_off ^ (PAGE_SIZE / 2);
++		noff = d->image_off ^ PAGE_SIZE;
+ 	}
+ 
+ 	new = d->num_progs ? d->image + noff : NULL;
+@@ -140,10 +161,11 @@ void bpf_dispatcher_change_prog(struct bpf_dispatcher *d, struct bpf_prog *from,
+ 
+ 	mutex_lock(&d->mutex);
+ 	if (!d->image) {
+-		d->image = bpf_jit_alloc_exec_page();
++		d->image = bpf_jit_alloc_exec(2 * PAGE_SIZE);
+ 		if (!d->image)
+ 			goto out;
+ 	}
++	set_vm_flush_reset_perms(d->image);
+ 
+ 	prev_num_progs = d->num_progs;
+ 	changed |= bpf_dispatcher_remove_prog(d, from);
+diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+index 505f4e4b31d2..ff6a92ef8945 100644
+--- a/kernel/bpf/trampoline.c
++++ b/kernel/bpf/trampoline.c
+@@ -14,22 +14,6 @@ static struct hlist_head trampoline_table[TRAMPOLINE_TABLE_SIZE];
+ /* serializes access to trampoline_table */
+ static DEFINE_MUTEX(trampoline_mutex);
+ 
+-void *bpf_jit_alloc_exec_page(void)
+-{
+-	void *image;
+-
+-	image = bpf_jit_alloc_exec(PAGE_SIZE);
+-	if (!image)
+-		return NULL;
+-
+-	set_vm_flush_reset_perms(image);
+-	/* Keep image as writeable. The alternative is to keep flipping ro/rw
+-	 * everytime new program is attached or detached.
+-	 */
+-	set_memory_x((long)image, 1);
+-	return image;
+-}
+-
+ struct bpf_trampoline *bpf_trampoline_lookup(u64 key)
+ {
+ 	struct bpf_trampoline *tr;
+@@ -50,12 +34,13 @@ struct bpf_trampoline *bpf_trampoline_lookup(u64 key)
+ 		goto out;
+ 
+ 	/* is_root was checked earlier. No need for bpf_jit_charge_modmem() */
+-	image = bpf_jit_alloc_exec_page();
++	image = bpf_jit_alloc_exec(2 * PAGE_SIZE);
+ 	if (!image) {
+ 		kfree(tr);
+ 		tr = NULL;
+ 		goto out;
+ 	}
++	set_vm_flush_reset_perms(image);
+ 
+ 	tr->key = key;
+ 	INIT_HLIST_NODE(&tr->hlist);
+@@ -125,14 +110,14 @@ static int register_fentry(struct bpf_trampoline *tr, void *new_addr)
+ }
+ 
+ /* Each call __bpf_prog_enter + call bpf_func + call __bpf_prog_exit is ~50
+- * bytes on x86.  Pick a number to fit into PAGE_SIZE / 2
++ * bytes on x86.  Pick a number to fit into PAGE_SIZE.
+  */
+ #define BPF_MAX_TRAMP_PROGS 40
+ 
+ static int bpf_trampoline_update(struct bpf_trampoline *tr)
+ {
+-	void *old_image = tr->image + ((tr->selector + 1) & 1) * PAGE_SIZE/2;
+-	void *new_image = tr->image + (tr->selector & 1) * PAGE_SIZE/2;
++	void *old_image = tr->image + ((tr->selector + 1) & 1) * PAGE_SIZE;
++	void *new_image = tr->image + (tr->selector & 1) * PAGE_SIZE;
+ 	struct bpf_prog *progs_to_run[BPF_MAX_TRAMP_PROGS];
+ 	int fentry_cnt = tr->progs_cnt[BPF_TRAMP_FENTRY];
+ 	int fexit_cnt = tr->progs_cnt[BPF_TRAMP_FEXIT];
+@@ -160,6 +145,13 @@ static int bpf_trampoline_update(struct bpf_trampoline *tr)
+ 	if (fexit_cnt)
+ 		flags = BPF_TRAMP_F_CALL_ORIG | BPF_TRAMP_F_SKIP_FRAME;
+ 
++
++	/* First make the page non-executable and then make it RW to avoid it
++	 * from being being W+X.
++	 */
++	set_memory_nx((unsigned long)new_image, 1);
++	set_memory_rw((unsigned long)new_image, 1);
++
+ 	err = arch_prepare_bpf_trampoline(new_image, &tr->func.model, flags,
+ 					  fentry, fentry_cnt,
+ 					  fexit, fexit_cnt,
+@@ -167,6 +159,15 @@ static int bpf_trampoline_update(struct bpf_trampoline *tr)
+ 	if (err)
+ 		goto out;
+ 
++	/* First make the page read-only, and only then make it executable to
++	 * prevent it from being W+X in between.
++	 */
++	set_memory_ro((unsigned long)new_image, 1);
++	/* More checks can be done here to ensure that nothing was changed
++	 * between arch_prepare_bpf_trampoline and set_memory_ro.
++	 */
++	set_memory_x((unsigned long)new_image, 1);
++
+ 	if (tr->selector)
+ 		/* progs already running at this address */
+ 		err = modify_fentry(tr, old_image, new_image);
+-- 
+2.20.1
+
