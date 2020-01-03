@@ -2,329 +2,202 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8CEC3276D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 02:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C9AC3276E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 02:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC42521D56
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 02:34:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E4DE217F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 02:41:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Lju653+H"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="iGnRspGm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727369AbgACCe6 (ORCPT
+        id S1727349AbgACClT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 21:34:58 -0500
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:40683 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727318AbgACCew (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 21:34:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1578018891; x=1609554891;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vxyKPc8sVUtM/DENYuNPcNhOmR3qq7Jx0ITL6S40+vc=;
-  b=Lju653+HH22wONmoGJoM68rdAyIB65FLtce+9RORlJphwqG1mfrS3G0C
-   9jCrYOOxble/UIqBSVIzMTWi/Zwn5qBt1gkVNN6B9y6aH4CcG3CCHoLYV
-   3Cx6EeEewePA03slOUNaMmjOZmaKdZ1yeKg1YbDCVJbuDmuo3v8g3lQXw
-   UAN2JpiO+DW4y3pdiXTFFeK8idfC8dLkjwXziMI7/S7E/D9a++l/zahye
-   3zuhyE44emydOXj4MnlXGpCJcJX3Ls6Y7P2dxkHP2bweSOswLKFajEBG/
-   OWNkOkDRmd+BQdvmAkC8iIEGL7MqlCWRykDpAvLOAip3d0QnAvVPU6Cxd
-   w==;
-IronPort-SDR: +saqlpB9+kdthrIqTqn/BN3ylXgo5nGeRG6KDDb/M0mCNzxkiyHd16ZC/v+VQEuMd4sQZg0Usm
- 4gqqK8Fj3uYSuVySqdw0ANwdULOdGQk3OoKuy281NUj2IJkCakIQQL6Jv7IX/hDx1z1hdlFylQ
- 2VVflKxvlgn48rz6TN6kYhFtuo/GIlkgZjZpPl13Q9VMA6HTAHf7fONSNPscdb/DLRdgygBouI
- kXGV8fQeFK/Qn867hoLAaaEnyr4no95aaNQNqHMIQkOzbAOGSND0ccuGhBM5gmRAOAV4zLEbjf
- Kug=
-X-IronPort-AV: E=Sophos;i="5.69,389,1571673600"; 
-   d="scan'208";a="131113646"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 03 Jan 2020 10:34:51 +0800
-IronPort-SDR: MFCjXP1qGehaqjHcA6QkOvDF5TOBhIUoSfC1t7lefLl9VV3aUXwaE+jOGkBnSFT2okdccadTSI
- VuxxnBSDr16aMpdoWm2VETn/btZNfzoNZAVFp5R3BwG+KbVt4YopLhE3gOTPdRDJzNud8SpoLt
- LK/iixWdE7/aD+bGwa/Sg83qdSgBGDeiTngghancXP++2Lf2TnmMZPtGbNwHjrYUo3sNF1YZbH
- Bb+11rdSilxz+ATz0bNTn3mdhypuT1i2ra7UMrXjcjXiU9shS8WGcwL8KwB0NQJDX87LpshA0Q
- zPp6tpygkAzvmnB8XgX8nlKq
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 18:28:48 -0800
-IronPort-SDR: RSc/FOYzVQaTSP/ZMoLyHgvGQ8ISpqyujDefvg2agqwWYTNliZFcaVkQKY7t5FqTOYUI86WSy+
- u2jEABFNB5eA88oF/AwDaXUECKsAkuRLA2qmcAz7F/fEDF1xIlcQlozQfgdBkVWsenR6FT653/
- jZDoswR5j3E06yiwiPwm5MYSR6u8CJNHVPpYkIv/9Omo6rUHArqthdBtomgE47b1o7qvfzDRrL
- Rh2y2AcZWmofezi+DhlbX5Ywc3NoQMvtIOiTOaTC3GRVwBn+PDgtbnom8n2yUlsc1Lm0dd9bKe
- 8/M=
-WDCIronportException: Internal
-Received: from washi.fujisawa.hgst.com ([10.149.53.254])
-  by uls-op-cesaip01.wdc.com with ESMTP; 02 Jan 2020 18:34:49 -0800
-From:   Damien Le Moal <damien.lemoal@wdc.com>
-To:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Johannes Thumshirn <jth@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Hannes Reinecke <hare@suse.de>
-Subject: [PATCH v5 2/2] zonefs: Add documentation
-Date:   Fri,  3 Jan 2020 11:34:45 +0900
-Message-Id: <20200103023445.1352524-3-damien.lemoal@wdc.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200103023445.1352524-1-damien.lemoal@wdc.com>
-References: <20200103023445.1352524-1-damien.lemoal@wdc.com>
+        Thu, 2 Jan 2020 21:41:19 -0500
+Received: from mail-mw2nam12on2111.outbound.protection.outlook.com ([40.107.244.111]:6208
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726089AbgACClS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 21:41:18 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iq1Kil9TjaYrRAfdlpG05bmfrd5gmI8JogSgCfdQ3XLqIelWHbIhyoXAyMUi6vYyU3T5+ZkQMtvrAhUNvIhEBJu3mCZrDvleOFNUrJrrJsHjnA05raQurZzbr4ENfbWnEkKEKXBuPkZeRm1IjJdvZLmBkmIP6ETi1/TDrOqg5UCXSu+5P2XxbCaJEaTKMja0fI0n/XldDcI+UQ+zA+pAnPoasUyItVGwnfwdepVYzcBOz8JWp+pvpNk0xj6VC/CDnU7ckwPahwCAEoNMwVWeYmY9B1Q9KqUCyrCpzl5W5o9ErdLD9/Wf4qBmLaU/Di0AkH2LAgiC7RuQrKWU8aCZAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KtRQ+woOgSKSpq1Y/GPn5WSWeBpsUYFNTrJCt1MuBrA=;
+ b=Yv3Jcx4oaqW82MVjc83pZnr3oGEswFZXlFDyIzF6RHOPGPKlb2lywqk9TTJXB/bEGy33hKfQPWC+rLXMdG0+rH9rkYa8UaHzv8tReeTFtFoDaZCgQQ2yipiUm+TxH517J0syDhbsv5PZKNXWXrlF1HVD99GixaYJtMG/kuICJhX9x3KM3X1ff8305FFNCeZeE7lxJaYKWX4aJcjzbLi9nRalbB3pvOlcF826RolDg5iIThI+isK24PSzP0ePIpYi+KaBHhidmO9CwvPhIHjsDb4rry53dLERorVRU0+VmLO/atXWbbaT1g2cfKDzLM9nc/IosW+aVdyT8jaAHQOe+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KtRQ+woOgSKSpq1Y/GPn5WSWeBpsUYFNTrJCt1MuBrA=;
+ b=iGnRspGmUN+hfFHHeCFoCCVoQG1Hxxlv6IBdzNgmzeaaL9xwWMVuSDbUFnOvTgYd4rIdlXqJh3OjPh885ei9q37XVkqsxek7fR1qFF8CHYF7FDDgCCjYdFaRFFugCdhuCuIeEcOS6Gn7gHMHgiJfvVd+Uu1MCN6HmHmZZhyOmCs=
+Received: from MN2PR21MB1375.namprd21.prod.outlook.com (20.179.23.160) by
+ MN2PR21MB1406.namprd21.prod.outlook.com (20.180.26.202) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.1; Fri, 3 Jan 2020 02:41:12 +0000
+Received: from MN2PR21MB1375.namprd21.prod.outlook.com
+ ([fe80::6de3:c062:9e55:ffc4]) by MN2PR21MB1375.namprd21.prod.outlook.com
+ ([fe80::6de3:c062:9e55:ffc4%5]) with mapi id 15.20.2623.002; Fri, 3 Jan 2020
+ 02:41:12 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     David Miller <davem@davemloft.net>
+CC:     "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH V3,net-next, 0/3] Add vmbus dev_num and allow netvsc probe
+ options
+Thread-Topic: [PATCH V3,net-next, 0/3] Add vmbus dev_num and allow netvsc
+ probe options
+Thread-Index: AQHVwCepyoALlUMkVESHJGSoiaYPr6fYGXeAgAAZPMA=
+Date:   Fri, 3 Jan 2020 02:41:12 +0000
+Message-ID: <MN2PR21MB1375E1485B7A09D87A7EED0DCA230@MN2PR21MB1375.namprd21.prod.outlook.com>
+References: <1577830414-119508-1-git-send-email-haiyangz@microsoft.com>
+ <20200102.162941.1933071871521624803.davem@davemloft.net>
+In-Reply-To: <20200102.162941.1933071871521624803.davem@davemloft.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-03T02:41:10.6426679Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d4522d5c-019b-4149-8b3a-6cc1a691747c;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=haiyangz@microsoft.com; 
+x-originating-ip: [96.61.92.94]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: dd2d02b1-2087-43ed-7a93-08d78ff66595
+x-ms-traffictypediagnostic: MN2PR21MB1406:|MN2PR21MB1406:|MN2PR21MB1406:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MN2PR21MB1406EE5C486E3BE579685427CA230@MN2PR21MB1406.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0271483E06
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(396003)(376002)(366004)(136003)(13464003)(189003)(199004)(55016002)(81156014)(81166006)(9686003)(8676002)(6916009)(186003)(26005)(54906003)(10290500003)(53546011)(66446008)(6506007)(478600001)(33656002)(316002)(4326008)(8990500004)(5660300002)(76116006)(52536014)(66556008)(66946007)(2906002)(86362001)(66476007)(8936002)(7696005)(64756008)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR21MB1406;H:MN2PR21MB1375.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IgXgeRyhjIHGgIz1Z7wrn+/A+Fo/67m8+VTat6yJT7K3MJHDgMsHsBLgdzNs2xBy03HFDd4krTKyiImHdsBhAqokyERf2U4tENsEH8ooAK885EoGVYWh/RPv86AikP8iYMyn9VZcuo6rx7VAYfYiuFuWFQr4RbLRvxFjj8WvgjW533qLisNGAk2ddUkxY+3ArrPsjItzLd4D0NGzbPAK3u2zLcGtZ7BglqnG82gCz9cST05nXIZE7Nhgu9qrtd0+LgWqqETohT7akdO/byKWSH09ZvAu0bwfWjMN2Gf6iv6TC0NFyLxSLX2Q5dUbIOQZT8FjBFvk8XHa+VG66nuwRUiqAdWJj4HI62uW6a5qGWVHL73A2zKTmwtJGZYfJUHTYky6TWamsDvchKodipL5I9L09xW3eFonRK+j5RNK/7p8czl8m4KrUPaH/TlEnU8UAIJuAq8XiCwM0CRQnl+DhI+XR/oIl0llpmEi2vcn9BwePLtEoi9Jl3+41dQRkH7b
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd2d02b1-2087-43ed-7a93-08d78ff66595
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jan 2020 02:41:12.3327
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QYMo0yCl2ogPqcHW9qHoOST0R/kPG9rq/8uzTq4oTJFY5u5eR/M8xUzD44TgM9f9cDhMoZYbaZXNrMm/GU+cIw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1406
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the new file Documentation/filesystems/zonefs.txt to document
-zonefs principles and user-space tool usage.
 
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- Documentation/filesystems/zonefs.txt | 215 +++++++++++++++++++++++++++
- MAINTAINERS                          |   1 +
- 2 files changed, 216 insertions(+)
- create mode 100644 Documentation/filesystems/zonefs.txt
 
-diff --git a/Documentation/filesystems/zonefs.txt b/Documentation/filesystems/zonefs.txt
-new file mode 100644
-index 000000000000..4623c659e5ee
---- /dev/null
-+++ b/Documentation/filesystems/zonefs.txt
-@@ -0,0 +1,215 @@
-+ZoneFS - Zone filesystem for Zoned block devices
-+
-+Overview
-+========
-+
-+zonefs is a very simple file system exposing each zone of a zoned block device
-+as a file. Unlike a regular file system with zoned block device support (e.g.
-+f2fs), zonefs does not hide the sequential write constraint of zoned block
-+devices to the user. Files representing sequential write zones of the device
-+must be written sequentially starting from the end of the file (append only
-+writes).
-+
-+As such, zonefs is in essence closer to a raw block device access interface
-+than to a full featured POSIX file system. The goal of zonefs is to simplify
-+the implementation of zoned block device support in applications by replacing
-+raw block device file accesses with a richer file API, avoiding relying on
-+direct block device file ioctls which may be more obscure to developers. One
-+example of this approach is the implementation of LSM (log-structured merge)
-+tree structures (such as used in RocksDB and LevelDB) on zoned block devices
-+by allowing SSTables to be stored in a zone file similarly to a regular file
-+system rather than as a range of sectors of the entire disk. The introduction
-+of the higher level construct "one file is one zone" can help reducing the
-+amount of changes needed in the application as well as introducing support for
-+different application programming languages.
-+
-+zonefs on-disk metadata
-+-----------------------
-+
-+zonefs on-disk metadata is reduced to an immutable super block which
-+persistently stores a magic number and optional feature flags and values. On
-+mount, zonefs uses blkdev_report_zones() to obtain the device zone configuration
-+and populates the mount point with a static file tree solely based on this
-+information. File sizes come from the device zone type and write pointer
-+position managed by the device itself.
-+
-+The super block is always written on disk at sector 0. The first zone of the
-+device storing the super block is never exposed as a zone file by zonefs. If
-+the zone containing the super block is a sequential zone, the mkzonefs format
-+tool always "finishes" the zone, that is, it transitions the zone to a full
-+state to make it read-only, preventing any data write.
-+
-+Zone type sub-directories
-+-------------------------
-+
-+Files representing zones of the same type are grouped together under the same
-+sub-directory automatically created on mount.
-+
-+For conventional zones, the sub-directory "cnv" is used. This directory is
-+however created if and only if the device has usable conventional zones. If
-+the device only has a single conventional zone at sector 0, the zone will not
-+be exposed as a file as it will be used to store the zonefs super block. For
-+such devices, the "cnv" sub-directory will not be created.
-+
-+For sequential write zones, the sub-directory "seq" is used.
-+
-+These two directories are the only directories that exist in zonefs. Users
-+cannot create other directories and cannot rename nor delete the "cnv" and
-+"seq" sub-directories.
-+
-+The size of the directories indicated by the st_size field of struct stat,
-+obtained with the stat() or fstat() system calls, indicates the number of files
-+existing under the directory.
-+
-+Zone files
-+----------
-+
-+Zone files are named using the number of the zone they represent within the set
-+of zones of a particular type. That is, both the "cnv" and "seq" directories
-+contain files named "0", "1", "2", ... The file numbers also represent
-+increasing zone start sector on the device.
-+
-+All read and write operations to zone files are not allowed beyond the file
-+maximum size, that is, beyond the zone size. Any access exceeding the zone
-+size is failed with the -EFBIG error.
-+
-+Creating, deleting, renaming or modifying any attribute of files and
-+sub-directories is not allowed.
-+
-+The number of blocks of a file as reported by stat() and fstat() indicates the
-+size of the file zone, or in other words, the maximum file size.
-+
-+Conventional zone files
-+-----------------------
-+
-+The size of conventional zone files is fixed to the size of the zone they
-+represent. Conventional zone files cannot be truncated.
-+
-+These files can be randomly read and written, using any form of IO operation:
-+buffered IOs, direct IOs, memory mapped IOs (mmap), etc. There are no IO
-+constraint for these files beyond the file size limit mentioned above.
-+
-+Sequential zone files
-+---------------------
-+
-+The size of sequential zone files present in the "seq" sub-directory represents
-+the file's zone write pointer position relative to the zone start sector.
-+
-+Sequential zone files can only be written sequentially, starting from the file
-+end, that is, write operations can only be append writes. Zonefs makes no
-+attempt at accepting random writes and will fail any write request that has a
-+start offset not corresponding to the end of the last issued write.
-+
-+In order to give guarantees regarding write ordering, zonefs also prevents
-+buffered writes and mmap writes for sequential files. Only direct IO writes are
-+accepted. There are no restrictions on read operations nor on the type of IO
-+used to request reads (buffered IOs, direct IOs and mmap reads are all
-+accepted).
-+
-+Truncating sequential zone files is allowed only down to 0, in which case, the
-+zone is reset to rewind the file zone write pointer position to the start of
-+the zone, or up to the zone size, in which case the file's zone is transitioned
-+to the FULL state (finish zone operation).
-+
-+zonefs format options
-+---------------------
-+
-+Several optional features of zonefs can be enabled at format time.
-+* Conventional zone aggregation: ranges of contiguous conventional zones can be
-+  aggregated into a single larger file instead of the default one file per zone.
-+* File ownership: The owner UID and GID of zone files is by default 0 (root)
-+  but can be changed to any valid UID/GID.
-+* File access permissions: the default 640 access permissions can be changed.
-+
-+User Space Tools
-+----------------
-+
-+The mkzonefs tool is used to format zoned block devices for use with zonefs.
-+This tool is available on Github at:
-+
-+https://github.com/damien-lemoal/zonefs-tools
-+
-+zonefs-tools also includes a test suite which can be run against any zoned
-+block device, including null_blk block device created with zoned mode.
-+
-+Examples
-+--------
-+
-+The following formats a 15TB host-managed SMR HDD with 256 MB zones
-+with the conventional zones aggregation feature enabled.
-+
-+# mkzonefs -o aggr_cnv /dev/sdX
-+# mount -t zonefs /dev/sdX /mnt
-+# ls -l /mnt/
-+total 0
-+dr-xr-xr-x 2 root root     1 Nov 25 13:23 cnv
-+dr-xr-xr-x 2 root root 55356 Nov 25 13:23 seq
-+
-+The size of the zone files sub-directories indicate the number of files
-+existing for each type of zones. In this example, there is only one
-+conventional zone file (all conventional zones are aggregated under a single
-+file).
-+
-+# ls -l /mnt/cnv
-+total 137101312
-+-rw-r----- 1 root root 140391743488 Nov 25 13:23 0
-+
-+This aggregated conventional zone file can be used as a regular file.
-+
-+# mkfs.ext4 /mnt/cnv/0
-+# mount -o loop /mnt/cnv/0 /data
-+
-+The "seq" sub-directory grouping files for sequential write zones has in this
-+example 55356 zones.
-+
-+# ls -lv /mnt/seq
-+total 14511243264
-+-rw-r----- 1 root root 0 Nov 25 13:23 0
-+-rw-r----- 1 root root 0 Nov 25 13:23 1
-+-rw-r----- 1 root root 0 Nov 25 13:23 2
-+...
-+-rw-r----- 1 root root 0 Nov 25 13:23 55354
-+-rw-r----- 1 root root 0 Nov 25 13:23 55355
-+
-+For sequential write zone files, the file size changes as data is appended at
-+the end of the file, similarly to any regular file system.
-+
-+# dd if=/dev/zero of=/mnt/seq/0 bs=4096 count=1 conv=notrunc oflag=direct
-+1+0 records in
-+1+0 records out
-+4096 bytes (4.1 kB, 4.0 KiB) copied, 1.05112 s, 3.9 kB/s
-+
-+# ls -l /mnt/seq/0
-+-rw-r----- 1 root root 4096 Nov 25 13:23 /mnt/seq/0
-+
-+The written file can be truncated to the zone size, preventing any further
-+write operation.
-+
-+# truncate -s 268435456 /mnt/seq/0
-+# ls -l /mnt/seq/0
-+-rw-r----- 1 root root 268435456 Nov 25 13:49 /mnt/seq/0
-+
-+Truncation to 0 size allows freeing the file zone storage space and restart
-+append-writes to the file.
-+
-+# truncate -s 0 /mnt/seq/0
-+# ls -l /mnt/seq/0
-+-rw-r----- 1 root root 0 Nov 25 13:49 /mnt/seq/0
-+
-+Since files are statically mapped to zones on the disk, the number of blocks of
-+a file as reported by stat() and fstat() indicates the size of the file zone.
-+
-+# stat /mnt/seq/0
-+  File: /mnt/seq/0
-+  Size: 0         	Blocks: 524288     IO Block: 4096   regular empty file
-+Device: 870h/2160d	Inode: 50431       Links: 1
-+Access: (0640/-rw-r-----)  Uid: (    0/    root)   Gid: (    0/    root)
-+Access: 2019-11-25 13:23:57.048971997 +0900
-+Modify: 2019-11-25 13:52:25.553805765 +0900
-+Change: 2019-11-25 13:52:25.553805765 +0900
-+ Birth: -
-+
-+The number of blocks of the file ("Blocks") in units of 512B blocks gives the
-+maximum file size of 524288 * 512 B = 256 MB, corresponding to the device zone
-+size in this example. Of note is that the "IO block" field always indicates the
-+minimum IO size for writes and corresponds to the device physical sector size.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8eb6f02a1efa..66f348fa90df 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18292,6 +18292,7 @@ L:	linux-fsdevel@vger.kernel.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/dlemoal/zonefs.git
- S:	Maintained
- F:	fs/zonefs/
-+F:	Documentation/filesystems/zonefs.txt
- 
- ZPOOL COMPRESSED PAGE STORAGE API
- M:	Dan Streetman <ddstreet@ieee.org>
--- 
-2.24.1
+> -----Original Message-----
+> From: David Miller <davem@davemloft.net>
+> Sent: Thursday, January 2, 2020 7:30 PM
+> To: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: sashal@kernel.org; linux-hyperv@vger.kernel.org; netdev@vger.kernel.o=
+rg;
+> KY Srinivasan <kys@microsoft.com>; Stephen Hemminger
+> <sthemmin@microsoft.com>; olaf@aepfle.de; vkuznets
+> <vkuznets@redhat.com>; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH V3,net-next, 0/3] Add vmbus dev_num and allow netvsc
+> probe options
+>=20
+> From: Haiyang Zhang <haiyangz@microsoft.com>
+> Date: Tue, 31 Dec 2019 14:13:31 -0800
+>=20
+> > Add dev_num for vmbus device based on channel offer sequence.
+> > User programs can use this number for nic naming.
+> > Async probing option is allowed for netvsc. Sync probing is still the
+> > default.
+>=20
+> I don't like this at all, sorry.
+>=20
+> If 4 devices get channels we will have IDs 1, 2, 3, 4.
+>=20
+> Then if channel 3 is taken down, the next one will get 3 which is not in =
+order
+> any more.
+>=20
+> It is not even clear what semantics these numbers have in any particular
+> sequence or probe situation.
+>=20
+> You have to use something more persistent across boots to number and stri=
+ctly
+> identify these virtual devices.
+>=20
+> I'm not applying this.
+
+The idea of this patch set is to make the naming of async probing same as t=
+hat
+in sync probing.
+
+So, the semantics of this dev_num is actually same as the default "eth%d" n=
+aming --
+	"Find the smallest number >=3D0, which is not in use."
+
+In cases:
+1) There is no hot add/remove devices in current boot, this scheme does pro=
+vide=20
+persistent dev_num across reboot, because Hyper-V hosts offer the primary c=
+hannels
+in order. So the results based on this number with async probing will be th=
+e same=20
+as existing Sync probing.
+
+2) If there is hot add/remove devices, this scheme generates the same resul=
+ts (when
+user program use dev_num)  as the default naming mode -- by using the small=
+est
+available number N in the format ethN.
+
+In case of hot add/remove of virtual NICs, the removed NIC are gone, and th=
+e newly=20
+added NIC is a completely new virtual device with new device instance UUID.=
+ So if we=20
+don't reuse the previous numbers, the device name ethN will grow unbounded.=
+ For=20
+example, hot add/remove a virtual NIC 100 times, you will have a name like =
+eth100. This=20
+not what the default naming scheme does, and we are not doing it for dev_nu=
+m here=20
+either.
+
+So the semantics is: "Find smallest number >=3D0, and not in use".
+
+But if any customer wants to have a 1:1 mapping between the UUID and device=
+ name, they
+can still implement that in user mode... And that's why this patch set does=
+n't change
+the kernel naming from driver -- it just provides a new variable, "dev_num"=
+, so user=20
+mode program has the option to use it in async mode with knowledge of the c=
+hannel
+offer sequence.
+
+Thanks,
+- Haiyang
 
