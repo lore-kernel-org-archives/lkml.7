@@ -2,118 +2,84 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E08C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDA2C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7742E206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B218B206E6
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:40:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578069640;
+	bh=TKY5B9he46GmvnJkwdmWtHvRFw0gy4YRKbRubwq1RA8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=SQmPkn7IH/kOWZaHX0VrwVk5/hZIDWjnAwWtXCGVZnK1Qq7j2xtglZTrgXWEUPCVh
+	 E5qF6MDkZPMEkKumtmbRgIAtXdYhmxevmBBXE47rRtxp9MNaQf+DABkb2jpI3eGUWI
+	 DeY/NqQRPIKl8dqkuRpOw72gnWXf2uYhFfE5zWQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbgACQkE (ORCPT
+        id S1728077AbgACQkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 11:40:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46176 "EHLO mail.kernel.org"
+        Fri, 3 Jan 2020 11:40:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727859AbgACQkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 11:40:03 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727817AbgACQkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 11:40:39 -0500
+Received: from localhost.localdomain (unknown [194.230.155.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2E07206DB;
-        Fri,  3 Jan 2020 16:40:02 +0000 (UTC)
-Date:   Fri, 3 Jan 2020 11:40:01 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        joel@joelfernandes.org, saiprakash.ranjan@codeaurora.org,
-        nachukannan@gmail.com
-Subject: Re: [PATCH] tracing: Resets the trace buffer after a snapshot
-Message-ID: <20200103114001.2c118ab1@gandalf.local.home>
-In-Reply-To: <20191231085822.yxhph6wcguejb7al@frank-laptop>
-References: <20191231085822.yxhph6wcguejb7al@frank-laptop>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mail.kernel.org (Postfix) with ESMTPSA id 899F7206E6;
+        Fri,  3 Jan 2020 16:40:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578069638;
+        bh=TKY5B9he46GmvnJkwdmWtHvRFw0gy4YRKbRubwq1RA8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Em97YJUgy6L/J6qOkZ0wcXXcvgQ/C7FOEeXnwiJpPmr965ilT7u13CyoUSNfUVCyu
+         UqhslCV7HveGSB/AK7Lo9297ReXVPlt854Q5lFNM9zw3U8EyAQEzd62x90baVVyOpg
+         kivksL5aalawykbk6/M0NTpvcvRPBi5d1kuivKP8=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] usb: ehci-mv: Fix missing iomem in cast
+Date:   Fri,  3 Jan 2020 17:40:31 +0100
+Message-Id: <20200103164031.4089-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 31 Dec 2019 03:58:22 -0500
-"Frank A. Cancio Bello" <frank@generalsoftwareinc.com> wrote:
+Fix missing __iomem in cast to struct ehci_caps.  This fixes the Sparse
+warning visible on x86_64 compile test:
 
-> Currently, when a snapshot is taken the trace_buffer and the
-> max_buffer are swapped. After this swap, the "new" trace_buffer is
-> not reset. This produces an odd behavior: after a snapshot is taken
-> the previous snapshot entries become available to the next reader of
-> the trace_buffer as far as the reading occurs before the buffer is
-> refilled with new entries by a writer.
+   drivers/usb/host/ehci-mv.c:167:23: warning: cast removes address space '<asn:2>' of expression
+   drivers/usb/host/ehci-mv.c:167:20: warning: incorrect type in assignment (different address spaces)
+   drivers/usb/host/ehci-mv.c:167:20:    expected struct ehci_caps [noderef] <asn:2> *caps
+   drivers/usb/host/ehci-mv.c:167:20:    got struct ehci_caps *
 
-I consider this a feature not a bug ;-)
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/usb/host/ehci-mv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Anyway, this behavior should be determined by an option. Care to create
-one? (reset_on_snapshot?) I would keep the default behavior the same,
-but document this a bit better.
-
-Thanks!
-
--- Steve
-
-> 
-> This patch resets the trace buffer after a snapshot is taken.
-> 
-> Signed-off-by: Frank A. Cancio Bello <frank@generalsoftwareinc.com>
-> ---
-> 
-> The following commands illustrate this odd behavior:
-> 
-> # cd /sys/kernel/debug/tracing
-> # echo nop > current_tracer
-> # echo 1 > tracing_on
-> # echo m1 > trace_marker
-> # echo 1 > snapshot
-> # echo m2 > trace_marker
-> # echo 1 > snapshot
-> # cat trace
-> # tracer: nop
-> #
-> # entries-in-buffer/entries-written: 1/1   #P:2
-> #
-> #                              _-----=> irqs-off
-> #                             / _----=> need-resched
-> #                            | / _---=> hardirq/softirq
-> #                            || / _--=> preempt-depth
-> #                            ||| /     delay
-> #           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
-> #              | |       |   ||||       |         |
->             bash-550   [000] ....    50.479755: tracing_mark_write: m1
-> 
-> 
->  kernel/trace/trace.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index ddb7e7f5fe8d..58373b5ae0cf 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -6867,10 +6867,13 @@ tracing_snapshot_write(struct file *filp, const char __user *ubuf, size_t cnt,
->  			break;
->  		local_irq_disable();
->  		/* Now, we're going to swap */
-> -		if (iter->cpu_file == RING_BUFFER_ALL_CPUS)
-> +		if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
->  			update_max_tr(tr, current, smp_processor_id(), NULL);
-> -		else
-> +			tracing_reset_online_cpus(&tr->trace_buffer);
-> +		} else {
->  			update_max_tr_single(tr, current, iter->cpu_file);
-> +			tracing_reset_cpu(&tr->trace_buffer, iter->cpu_file);
-> +		}
->  		local_irq_enable();
->  		break;
->  	default:
+diff --git a/drivers/usb/host/ehci-mv.c b/drivers/usb/host/ehci-mv.c
+index 66ec1fdf9fe7..16df3cfbed26 100644
+--- a/drivers/usb/host/ehci-mv.c
++++ b/drivers/usb/host/ehci-mv.c
+@@ -164,7 +164,7 @@ static int mv_ehci_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	ehci = hcd_to_ehci(hcd);
+-	ehci->caps = (struct ehci_caps *) ehci_mv->cap_regs;
++	ehci->caps = (struct ehci_caps __iomem *) ehci_mv->cap_regs;
+ 
+ 	if (ehci_mv->mode == MV_USB_MODE_OTG) {
+ 		ehci_mv->otg = devm_usb_get_phy(&pdev->dev, USB_PHY_TYPE_USB2);
+-- 
+2.17.1
 
