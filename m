@@ -2,156 +2,202 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7106C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6240EC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1D9121734
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BB7621734
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:40:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="U4dCE59Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SrA6nUwm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbgACJhl (ORCPT
+        id S1727404AbgACJke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 04:37:41 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:26503 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726181AbgACJhk (ORCPT
+        Fri, 3 Jan 2020 04:40:34 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33723 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726181AbgACJkd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 04:37:40 -0500
-X-UUID: 16ff7660477847e9bbf9d948f12aaa8b-20200103
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=vpgaibXjOdFAqO+kX2Fv8LdJ4vqTcO7KTaF1GnXZ9kc=;
-        b=U4dCE59QaxeMEgVHdL5d3C9khVAxN9gI52Tw0wxci575+T0U7bvB/u9/yWuja3QmgeogubyKu0qixR3XcreYanxl7X3Ks67BwNHGQ016lbW/RDq4x511ARzlK/sa0T8kdQa+RB2s+kzJhOXdSvaN0gQeOlRr39gUK9dgx86xxx0=;
-X-UUID: 16ff7660477847e9bbf9d948f12aaa8b-20200103
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <jiaxin.yu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 84018256; Fri, 03 Jan 2020 17:37:35 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 3 Jan 2020 17:37:07 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 3 Jan 2020 17:37:31 +0800
-From:   Jiaxin Yu <jiaxin.yu@mediatek.com>
-To:     <yong.liang@mediatek.com>, <wim@linux-watchdog.org>,
-        <linux@roeck-us.net>, <p.zabel@pengutronix.de>,
-        <matthias.bgg@gmail.com>, <linux-watchdog@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <chang-an.chen@mediatek.com>, <freddy.hsin@mediatek.com>
-CC:     <yingjoe.chen@mediatek.com>, <sboyd@kernel.org>,
-        Jiaxin Yu <jiaxin.yu@mediatek.com>
-Subject: [PATCH 2/2] [PATCH v8 2/2] watchdog: mtk_wdt: mt8183: Add reset controller
-Date:   Fri, 3 Jan 2020 17:37:25 +0800
-Message-ID: <1578044245-26939-3-git-send-email-jiaxin.yu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1578044245-26939-1-git-send-email-jiaxin.yu@mediatek.com>
-References: <1578044245-26939-1-git-send-email-jiaxin.yu@mediatek.com>
+        Fri, 3 Jan 2020 04:40:33 -0500
+Received: by mail-wm1-f68.google.com with SMTP id d139so6592325wmd.0;
+        Fri, 03 Jan 2020 01:40:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=z1sUFXN33eMwyXE2eTCARUGnX+8et5EQa8hCrvn/5Sc=;
+        b=SrA6nUwm62irmPRBtrIwVIEjOkRsJCbFyPHjC5DjnhhK6GTxXc6gsycA3ujsIMsxg4
+         i45307YPC1MyEMM1skVyx952bf6FlRSt+9eGR6HQDHxzLtpG1i+rlrdI5TDeFR0lFhNt
+         FQuE8WXIjy55PLxksj/zeFD6Hge9uwq3bREYpM71T+719ltp3HCOnklcTdUNqCFRePoN
+         lgOIeKzNhoL26aEHgAX2x+cIoF36QBLdkOnXCgLVgq/6Mo50nxzAsNkQZBHfsrVrd6qt
+         vBDFi/aK6mebP0Tz2CiaIyd0rindW0GCwXlHEcCd/JvpN71E9DaWbi9mR4MkgiOpH1Vl
+         f2aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=z1sUFXN33eMwyXE2eTCARUGnX+8et5EQa8hCrvn/5Sc=;
+        b=OD0873O05KrLOiWMT2+yEWzdYV5xuximdArr+6Ureizhf0bMdEIwT/XBThoLiSTfpS
+         vINZGK9cPkYpzzqK5PW9qT3mMA54N8Gn4gW4NJtGPUzxNH2RzM4yWjb/WV1lZtINnMhS
+         Y3rx10/shpDCrUypBFJ2WIUH3kiYCysQk+Rfz4KC4Ad8v6jM4O5YXxRG5eCgK0n85TK3
+         xpIhCvELQnzTkoR6HgXiUCtY2UHnxSWvXLgxNMhiYW9dgDitSqOxJXB/Ul3l/MYbxQbx
+         lF9vTGe33jJYkaN/GGQ2Xqj/3eZwiifxQR/yyINf0+dcxZ22vFwld60OHyljqKSr056B
+         9Jcw==
+X-Gm-Message-State: APjAAAVU3BeyUWe7MvbFXnv7ymyT6ydActxvTtCkbw4+14oJfDD+/hZN
+        ipy1P3RpBHJwgEWJvJusu6M=
+X-Google-Smtp-Source: APXvYqxyPaimcB9/3A8rmvZKsr/6QcbOuGvkDnZCyg40dhJrBadxWjEwJtWrw0vXqxqv0WQIMu5uUA==
+X-Received: by 2002:a1c:6707:: with SMTP id b7mr19436777wmc.54.1578044431951;
+        Fri, 03 Jan 2020 01:40:31 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id b17sm57646598wrp.49.2020.01.03.01.40.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2020 01:40:31 -0800 (PST)
+Date:   Fri, 3 Jan 2020 10:40:30 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Namjae Jeon <namjae.jeon@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, linkinjeon@gmail.com
+Subject: Re: [PATCH v9 10/13] exfat: add nls operations
+Message-ID: <20200103094030.zg4p5bqos32gc4hy@pali>
+References: <20200102082036.29643-1-namjae.jeon@samsung.com>
+ <CGME20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05@epcas1p4.samsung.com>
+ <20200102082036.29643-11-namjae.jeon@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200102082036.29643-11-namjae.jeon@samsung.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIHJlc2V0IGNvbnRyb2xsZXIgQVBJIGluIHdhdGNoZG9nIGRyaXZlci4NCkJlc2lkZXMgd2F0
-Y2hkb2csIE1USyB0b3ByZ3UgbW9kdWxlIGFsc2EgcHJvdmlkZSBzdWItc3lzdGVtIChlZywgYXVk
-aW8sDQpjYW1lcmEsIGNvZGVjIGFuZCBjb25uZWN0aXZpdHkpIHNvZnR3YXJlIHJlc2V0IGZ1bmN0
-aW9uYWxpdHkuDQoNCkNoYW5nZS1JZDogSTE1MDRlM2E2ODNiM2Q5NjcyMmYwY2FiZTA1NzZkMGQy
-ZmQzNDUzZjENClNpZ25lZC1vZmYtYnk6IHlvbmcubGlhbmcgPHlvbmcubGlhbmdAbWVkaWF0ZWsu
-Y29tPg0KU2lnbmVkLW9mZi1ieTogSmlheGluIFl1IDxqaWF4aW4ueXVAbWVkaWF0ZWsuY29tPg0K
-UmV2aWV3ZWQtYnk6IFlpbmdqb2UgQ2hlbiA8eWluZ2pvZS5jaGVuQG1lZGlhdGVrLmNvbT4NClJl
-dmlld2VkLWJ5OiBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRlPg0KLS0tDQog
-ZHJpdmVycy93YXRjaGRvZy9tdGtfd2R0LmMgfCAxMDUgKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrLQ0KIDEgZmlsZSBjaGFuZ2VkLCAxMDQgaW5zZXJ0aW9ucygrKSwgMSBkZWxl
-dGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy93YXRjaGRvZy9tdGtfd2R0LmMgYi9kcml2
-ZXJzL3dhdGNoZG9nL210a193ZHQuYw0KaW5kZXggOWMzZDAwMzMyNjBkLi5kNmE2MzkzZjYwOWQg
-MTAwNjQ0DQotLS0gYS9kcml2ZXJzL3dhdGNoZG9nL210a193ZHQuYw0KKysrIGIvZHJpdmVycy93
-YXRjaGRvZy9tdGtfd2R0LmMNCkBAIC05LDYgKzksOSBAQA0KICAqIEJhc2VkIG9uIHN1bnhpX3dk
-dC5jDQogICovDQogDQorI2luY2x1ZGUgPGR0LWJpbmRpbmdzL3Jlc2V0LWNvbnRyb2xsZXIvbXQy
-NzEyLXJlc2V0cy5oPg0KKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210
-ODE4My1yZXNldHMuaD4NCisjaW5jbHVkZSA8bGludXgvZGVsYXkuaD4NCiAjaW5jbHVkZSA8bGlu
-dXgvZXJyLmg+DQogI2luY2x1ZGUgPGxpbnV4L2luaXQuaD4NCiAjaW5jbHVkZSA8bGludXgvaW8u
-aD4NCkBAIC0xNiwxMCArMTksMTEgQEANCiAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQogI2lu
-Y2x1ZGUgPGxpbnV4L21vZHVsZXBhcmFtLmg+DQogI2luY2x1ZGUgPGxpbnV4L29mLmg+DQorI2lu
-Y2x1ZGUgPGxpbnV4L29mX2RldmljZS5oPg0KICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZp
-Y2UuaD4NCisjaW5jbHVkZSA8bGludXgvcmVzZXQtY29udHJvbGxlci5oPg0KICNpbmNsdWRlIDxs
-aW51eC90eXBlcy5oPg0KICNpbmNsdWRlIDxsaW51eC93YXRjaGRvZy5oPg0KLSNpbmNsdWRlIDxs
-aW51eC9kZWxheS5oPg0KIA0KICNkZWZpbmUgV0RUX01BWF9USU1FT1VUCQkzMQ0KICNkZWZpbmUg
-V0RUX01JTl9USU1FT1VUCQkxDQpAQCAtNDQsNiArNDgsOSBAQA0KICNkZWZpbmUgV0RUX1NXUlNU
-CQkweDE0DQogI2RlZmluZSBXRFRfU1dSU1RfS0VZCQkweDEyMDkNCiANCisjZGVmaW5lIFdEVF9T
-V1NZU1JTVAkJMHgxOFUNCisjZGVmaW5lIFdEVF9TV1NZU19SU1RfS0VZCTB4ODgwMDAwMDANCisN
-CiAjZGVmaW5lIERSVl9OQU1FCQkibXRrLXdkdCINCiAjZGVmaW5lIERSVl9WRVJTSU9OCQkiMS4w
-Ig0KIA0KQEAgLTUzLDggKzYwLDk0IEBAIHN0YXRpYyB1bnNpZ25lZCBpbnQgdGltZW91dDsNCiBz
-dHJ1Y3QgbXRrX3dkdF9kZXYgew0KIAlzdHJ1Y3Qgd2F0Y2hkb2dfZGV2aWNlIHdkdF9kZXY7DQog
-CXZvaWQgX19pb21lbSAqd2R0X2Jhc2U7DQorCXNwaW5sb2NrX3QgbG9jazsgLyogcHJvdGVjdHMg
-V0RUX1NXU1lTUlNUIHJlZyAqLw0KKwlzdHJ1Y3QgcmVzZXRfY29udHJvbGxlcl9kZXYgcmNkZXY7
-DQorfTsNCisNCitzdHJ1Y3QgbXRrX3dkdF9kYXRhIHsNCisJaW50IHRvcHJndV9zd19yc3RfbnVt
-Ow0KIH07DQogDQorc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfd2R0X2RhdGEgbXQyNzEyX2RhdGEg
-PSB7DQorCS50b3ByZ3Vfc3dfcnN0X251bSA9IE1UMjcxMl9UT1BSR1VfU1dfUlNUX05VTSwNCit9
-Ow0KKw0KK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX3dkdF9kYXRhIG10ODE4M19kYXRhID0gew0K
-KwkudG9wcmd1X3N3X3JzdF9udW0gPSBNVDgxODNfVE9QUkdVX1NXX1JTVF9OVU0sDQorfTsNCisN
-CitzdGF0aWMgaW50IHRvcHJndV9yZXNldF91cGRhdGUoc3RydWN0IHJlc2V0X2NvbnRyb2xsZXJf
-ZGV2ICpyY2RldiwNCisJCQkgICAgICAgdW5zaWduZWQgbG9uZyBpZCwgYm9vbCBhc3NlcnQpDQor
-ew0KKwl1bnNpZ25lZCBpbnQgdG1wOw0KKwl1bnNpZ25lZCBsb25nIGZsYWdzOw0KKwlzdHJ1Y3Qg
-bXRrX3dkdF9kZXYgKmRhdGEgPQ0KKwkJIGNvbnRhaW5lcl9vZihyY2Rldiwgc3RydWN0IG10a193
-ZHRfZGV2LCByY2Rldik7DQorDQorCXNwaW5fbG9ja19pcnFzYXZlKCZkYXRhLT5sb2NrLCBmbGFn
-cyk7DQorDQorCXRtcCA9IHJlYWRsKGRhdGEtPndkdF9iYXNlICsgV0RUX1NXU1lTUlNUKTsNCisJ
-aWYgKGFzc2VydCkNCisJCXRtcCB8PSBCSVQoaWQpOw0KKwllbHNlDQorCQl0bXAgJj0gfkJJVChp
-ZCk7DQorCXRtcCB8PSBXRFRfU1dTWVNfUlNUX0tFWTsNCisJd3JpdGVsKHRtcCwgZGF0YS0+d2R0
-X2Jhc2UgKyBXRFRfU1dTWVNSU1QpOw0KKw0KKwlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZkYXRh
-LT5sb2NrLCBmbGFncyk7DQorDQorCXJldHVybiAwOw0KK30NCisNCitzdGF0aWMgaW50IHRvcHJn
-dV9yZXNldF9hc3NlcnQoc3RydWN0IHJlc2V0X2NvbnRyb2xsZXJfZGV2ICpyY2RldiwNCisJCQkg
-ICAgICAgdW5zaWduZWQgbG9uZyBpZCkNCit7DQorCXJldHVybiB0b3ByZ3VfcmVzZXRfdXBkYXRl
-KHJjZGV2LCBpZCwgdHJ1ZSk7DQorfQ0KKw0KK3N0YXRpYyBpbnQgdG9wcmd1X3Jlc2V0X2RlYXNz
-ZXJ0KHN0cnVjdCByZXNldF9jb250cm9sbGVyX2RldiAqcmNkZXYsDQorCQkJCSB1bnNpZ25lZCBs
-b25nIGlkKQ0KK3sNCisJcmV0dXJuIHRvcHJndV9yZXNldF91cGRhdGUocmNkZXYsIGlkLCBmYWxz
-ZSk7DQorfQ0KKw0KK3N0YXRpYyBpbnQgdG9wcmd1X3Jlc2V0KHN0cnVjdCByZXNldF9jb250cm9s
-bGVyX2RldiAqcmNkZXYsDQorCQkJdW5zaWduZWQgbG9uZyBpZCkNCit7DQorCWludCByZXQ7DQor
-DQorCXJldCA9IHRvcHJndV9yZXNldF9hc3NlcnQocmNkZXYsIGlkKTsNCisJaWYgKHJldCkNCisJ
-CXJldHVybiByZXQ7DQorDQorCXJldHVybiB0b3ByZ3VfcmVzZXRfZGVhc3NlcnQocmNkZXYsIGlk
-KTsNCit9DQorDQorc3RhdGljIGNvbnN0IHN0cnVjdCByZXNldF9jb250cm9sX29wcyB0b3ByZ3Vf
-cmVzZXRfb3BzID0gew0KKwkuYXNzZXJ0ID0gdG9wcmd1X3Jlc2V0X2Fzc2VydCwNCisJLmRlYXNz
-ZXJ0ID0gdG9wcmd1X3Jlc2V0X2RlYXNzZXJ0LA0KKwkucmVzZXQgPSB0b3ByZ3VfcmVzZXQsDQor
-fTsNCisNCitzdGF0aWMgaW50IHRvcHJndV9yZWdpc3Rlcl9yZXNldF9jb250cm9sbGVyKHN0cnVj
-dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsDQorCQkJCQkgICAgaW50IHJzdF9udW0pDQorew0KKwlp
-bnQgcmV0Ow0KKwlzdHJ1Y3QgbXRrX3dkdF9kZXYgKm10a193ZHQgPSBwbGF0Zm9ybV9nZXRfZHJ2
-ZGF0YShwZGV2KTsNCisNCisJc3Bpbl9sb2NrX2luaXQoJm10a193ZHQtPmxvY2spOw0KKw0KKwlt
-dGtfd2R0LT5yY2Rldi5vd25lciA9IFRISVNfTU9EVUxFOw0KKwltdGtfd2R0LT5yY2Rldi5ucl9y
-ZXNldHMgPSByc3RfbnVtOw0KKwltdGtfd2R0LT5yY2Rldi5vcHMgPSAmdG9wcmd1X3Jlc2V0X29w
-czsNCisJbXRrX3dkdC0+cmNkZXYub2Zfbm9kZSA9IHBkZXYtPmRldi5vZl9ub2RlOw0KKwlyZXQg
-PSBkZXZtX3Jlc2V0X2NvbnRyb2xsZXJfcmVnaXN0ZXIoJnBkZXYtPmRldiwgJm10a193ZHQtPnJj
-ZGV2KTsNCisJaWYgKHJldCAhPSAwKQ0KKwkJZGV2X2VycigmcGRldi0+ZGV2LA0KKwkJCSJjb3Vs
-ZG4ndCByZWdpc3RlciB3ZHQgcmVzZXQgY29udHJvbGxlcjogJWRcbiIsIHJldCk7DQorCXJldHVy
-biByZXQ7DQorfQ0KKw0KIHN0YXRpYyBpbnQgbXRrX3dkdF9yZXN0YXJ0KHN0cnVjdCB3YXRjaGRv
-Z19kZXZpY2UgKndkdF9kZXYsDQogCQkJICAgdW5zaWduZWQgbG9uZyBhY3Rpb24sIHZvaWQgKmRh
-dGEpDQogew0KQEAgLTE1NSw2ICsyNDgsNyBAQCBzdGF0aWMgaW50IG10a193ZHRfcHJvYmUoc3Ry
-dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiB7DQogCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZw
-ZGV2LT5kZXY7DQogCXN0cnVjdCBtdGtfd2R0X2RldiAqbXRrX3dkdDsNCisJY29uc3Qgc3RydWN0
-IG10a193ZHRfZGF0YSAqd2R0X2RhdGE7DQogCWludCBlcnI7DQogDQogCW10a193ZHQgPSBkZXZt
-X2t6YWxsb2MoZGV2LCBzaXplb2YoKm10a193ZHQpLCBHRlBfS0VSTkVMKTsNCkBAIC0xOTAsNiAr
-Mjg0LDEzIEBAIHN0YXRpYyBpbnQgbXRrX3dkdF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
-ICpwZGV2KQ0KIAlkZXZfaW5mbyhkZXYsICJXYXRjaGRvZyBlbmFibGVkICh0aW1lb3V0PSVkIHNl
-Yywgbm93YXlvdXQ9JWQpXG4iLA0KIAkJIG10a193ZHQtPndkdF9kZXYudGltZW91dCwgbm93YXlv
-dXQpOw0KIA0KKwl3ZHRfZGF0YSA9IG9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YShkZXYpOw0KKwlp
-ZiAod2R0X2RhdGEpIHsNCisJCWVyciA9IHRvcHJndV9yZWdpc3Rlcl9yZXNldF9jb250cm9sbGVy
-KHBkZXYsDQorCQkJCQkJICAgICAgIHdkdF9kYXRhLT50b3ByZ3Vfc3dfcnN0X251bSk7DQorCQlp
-ZiAoZXJyKQ0KKwkJCXJldHVybiBlcnI7DQorCX0NCiAJcmV0dXJuIDA7DQogfQ0KIA0KQEAgLTIx
-OCw3ICszMTksOSBAQCBzdGF0aWMgaW50IG10a193ZHRfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRl
-dikNCiAjZW5kaWYNCiANCiBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBtdGtfd2R0
-X2R0X2lkc1tdID0gew0KKwl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10MjcxMi13ZHQiLCAu
-ZGF0YSA9ICZtdDI3MTJfZGF0YSB9LA0KIAl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10NjU4
-OS13ZHQiIH0sDQorCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTgzLXdkdCIsIC5kYXRh
-ID0gJm10ODE4M19kYXRhIH0sDQogCXsgLyogc2VudGluZWwgKi8gfQ0KIH07DQogTU9EVUxFX0RF
-VklDRV9UQUJMRShvZiwgbXRrX3dkdF9kdF9pZHMpOw0KLS0gDQoyLjE4LjANCg==
+On Thursday 02 January 2020 16:20:33 Namjae Jeon wrote:
+> This adds the implementation of nls operations for exfat.
+> 
+> Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
+> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
+> ---
+>  fs/exfat/nls.c | 809 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 809 insertions(+)
+>  create mode 100644 fs/exfat/nls.c
+> 
+> diff --git a/fs/exfat/nls.c b/fs/exfat/nls.c
+> new file mode 100644
+> index 000000000000..af52328e28ff
+> --- /dev/null
+> +++ b/fs/exfat/nls.c
 
+...
+
+> +static int exfat_convert_uni_to_ch(struct nls_table *nls, unsigned short uni,
+> +		unsigned char *ch, int *lossy)
+> +{
+> +	int len;
+> +
+> +	ch[0] = 0x0;
+> +
+> +	if (uni < 0x0080) {
+> +		ch[0] = uni;
+> +		return 1;
+> +	}
+> +
+> +	len = nls->uni2char(uni, ch, MAX_CHARSET_SIZE);
+> +	if (len < 0) {
+> +		/* conversion failed */
+> +		if (lossy != NULL)
+> +			*lossy |= NLS_NAME_LOSSY;
+> +		ch[0] = '_';
+> +		return 1;
+> +	}
+> +	return len;
+> +}
+
+Hello! This function takes one UCS-2 character in host endianity and
+converts it to one byte (via specified 8bit encoding).
+
+> +static int __exfat_nls_uni16s_to_vfsname(struct super_block *sb,
+> +		struct exfat_uni_name *p_uniname, unsigned char *p_cstring,
+> +		int buflen)
+> +{
+> +	int i, j, len, out_len = 0;
+> +	unsigned char buf[MAX_CHARSET_SIZE];
+> +	const unsigned short *uniname = p_uniname->name;
+> +	struct nls_table *nls = EXFAT_SB(sb)->nls_io;
+> +
+> +	i = 0;
+> +	while (i < MAX_NAME_LENGTH && out_len < (buflen - 1)) {
+> +		if (*uniname == '\0')
+> +			break;
+> +
+> +		len = exfat_convert_uni_to_ch(nls, *uniname, buf, NULL);
+> +		if (out_len + len >= buflen)
+> +			len = buflen - 1 - out_len;
+> +		out_len += len;
+> +
+> +		if (len > 1) {
+> +			for (j = 0; j < len; j++)
+> +				*p_cstring++ = buf[j];
+> +		} else { /* len == 1 */
+> +			*p_cstring++ = *buf;
+> +		}
+> +
+> +		uniname++;
+> +		i++;
+> +	}
+> +
+> +	*p_cstring = '\0';
+> +	return out_len;
+> +}
+> +
+
+This function takes UCS-2 buffer in host endianity and converts it to
+string in specified 8bit encoding.
+
+> +
+> +int exfat_nls_uni16s_to_vfsname(struct super_block *sb,
+> +		struct exfat_uni_name *uniname, unsigned char *p_cstring,
+> +		int buflen)
+> +{
+
+Looking at the code and this function is called from dir.c to translate
+exfat filename buffer stored in filesystem to format expected by VFS
+layer.
+
+On exfat filesystem file names are always stored in UTF-16LE...
+
+> +	if (EXFAT_SB(sb)->options.utf8)
+> +		return __exfat_nls_utf16s_to_vfsname(sb, uniname, p_cstring,
+> +				buflen);
+> +	return __exfat_nls_uni16s_to_vfsname(sb, uniname, p_cstring, buflen);
+
+... and therefore above "__exfat_nls_uni16s_to_vfsname" function must
+expect UTF-16LE buffer and not just UCS-2 buffer in host endianity.
+
+So two other things needs to be done: Convert character from little
+endian to host endianity and then process UTF-16 buffer and not only
+UCS-2.
+
+I see that in kernel NLS module is missing a function for converting
+UTF-16 string to UTF-32 (encoding in which every code point is
+represented just by one u32 variable). Kernel has only utf16s_to_utf8s()
+and utf8_to_utf32().
+
+> +}
+
+Btw, have you tested this exfat implementation on some big endian
+system? I think it cannot work because of missing conversion from
+UTF-16LE to UTF-16 in host endianity (therefore UTF-16BE).
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
