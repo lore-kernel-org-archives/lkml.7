@@ -7,51 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC5FC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA302C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D0320866
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B92222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578071580;
-	bh=GFeQ4Ri8+GF3+VI6hu+nKsN9aRFo/bhLlTlTOvAwCUM=;
+	s=default; t=1578071585;
+	bh=JcKdUDqAnsO5QdZc7CTmxgabj62q2qR0lsbmqufRSD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pWcCaSG+KxHShA73RP0fg3nS1rlp7Aer9qI8xe7FOCr+oZ5nn/Za96+sFXGTZWn1I
-	 Zm8pkARyPgUJy91Pouk2O5Ytx5EtLIT5CZQHVxlLVd3o7WltMNcHbn099nMskR7pve
-	 2WWI5aI2iDp7lJCyPRFfV5uR+FVrdMBmPBFBJYDY=
+	b=TWfrO4M4hOdu5Pjse8grHUylvHDCa1L6P0xFOfAg4QJe9cAUv/K/m1Yj1hFZYkd2v
+	 3CzjJGLKPCx+5Rhlu4C5+oR1A00g86dyhlDCZCgGwayRKZxUtWOVgkTVPsE9PV2Bxo
+	 pPSomeEFtTXFbLWlcLxqrhFYqZRitAoP3taekSis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbgACRM7 (ORCPT
+        id S1728385AbgACRNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 12:12:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48434 "EHLO mail.kernel.org"
+        Fri, 3 Jan 2020 12:13:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728357AbgACRMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 12:12:54 -0500
+        id S1728371AbgACRM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 12:12:58 -0500
 Received: from localhost.localdomain (unknown [194.230.155.149])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EFF320866;
-        Fri,  3 Jan 2020 17:12:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B2D824653;
+        Fri,  3 Jan 2020 17:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578071574;
-        bh=GFeQ4Ri8+GF3+VI6hu+nKsN9aRFo/bhLlTlTOvAwCUM=;
+        s=default; t=1578071578;
+        bh=JcKdUDqAnsO5QdZc7CTmxgabj62q2qR0lsbmqufRSD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vSTh4L0R82Cu1vyMMGt+dnxoyvsufDU/7T1VKVPbNIR5Rg3G025nqsYJdtrfLp0n3
-         c4YHDqgKimRx/8grqhqNt5u1s1OeJDPA3sn9SqcXWWNv7t44XXqly8vT7EI4QFkJdN
-         a/zO7L7xYrTvWAi9QB6ZLCOy/RVPHvgOl1rTgV64=
+        b=rjTamj4pLZW8L8uWM94nyo/pz//BCuPO3VQ0hHGMxNSnqq2rziD3v1NVo6sqHPXWR
+         XaPt4xR/arignrpcqL55ZL/fpuATOgLDtt/7WMfw0wL/yA+qbKmXcnt11KHumWwKD1
+         GLcDRBzGR5DXqtWQLskOwO33vr3WdNt5wEkpNAKg=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH 15/19] pci: exynos: Rename Exynos to lowercase
-Date:   Fri,  3 Jan 2020 18:11:27 +0100
-Message-Id: <20200103171131.9900-16-krzk@kernel.org>
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 17/19] mfd: samsung: Rename Samsung to lowercase
+Date:   Fri,  3 Jan 2020 18:11:29 +0100
+Message-Id: <20200103171131.9900-18-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200103171131.9900-1-krzk@kernel.org>
 References: <20200103171131.9900-1-krzk@kernel.org>
@@ -60,33 +54,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix up inconsistent usage of upper and lowercase letters in "Exynos"
+Fix up inconsistent usage of upper and lowercase letters in "Samsung"
 name.
 
-"EXYNOS" is not an abbreviation but a regular trademarked name.
+"SAMSUNG" is not an abbreviation but a regular trademarked name.
 Therefore it should be written with lowercase letters starting with
 capital letter.
 
-The lowercase "Exynos" name is promoted by its manufacturer Samsung
-Electronics Co., Ltd., in advertisement materials and on website.
+Although advertisement materials usually use uppercase "SAMSUNG", the
+lowercase version is used in all legal aspects (e.g. on Wikipedia and in
+privacy/legal statements on
+https://www.samsung.com/semiconductor/privacy-global/).
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/pci/controller/dwc/pci-exynos.c | 2 +-
+ drivers/mfd/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-index 14a6ba4067fb..c5043d951e80 100644
---- a/drivers/pci/controller/dwc/pci-exynos.c
-+++ b/drivers/pci/controller/dwc/pci-exynos.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * PCIe host controller driver for Samsung EXYNOS SoCs
-+ * PCIe host controller driver for Samsung Exynos SoCs
-  *
-  * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-  *		http://www.samsung.com
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 420900852166..1ce6eced7983 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -1065,7 +1065,7 @@ config MFD_RN5T618
+ 	  functionality of the device.
+ 
+ config MFD_SEC_CORE
+-	tristate "SAMSUNG Electronics PMIC Series Support"
++	tristate "Samsung Electronics PMIC Series Support"
+ 	depends on I2C=y
+ 	select MFD_CORE
+ 	select REGMAP_I2C
 -- 
 2.17.1
 
