@@ -2,129 +2,81 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 033E8C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EDEC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE249222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:17:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578053870;
-	bh=RBTBqEBkgPVhoqWth2ahRIQwo5zhyOmpdw0lsjZXfbo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=w+CeMKl5ZxdGaij0ggu2BnDAUUlXSvVn4uMZliZGV3IS3gJvG8IjsE/8O5KJXpE+f
-	 1OQaCHnOY1HLMrjSaM0lur/g1iJiTBWm8vEM/jI6kBPukTX+mz0mQYfsysCjM0+XgL
-	 8/gJ5NcJzrOUG0VRIn9PZaVCXdBVHM2FFDi+GKFA=
+	by mail.kernel.org (Postfix) with ESMTP id 7DA6C222C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:17:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbgACMRt (ORCPT
+        id S1727671AbgACMR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 07:17:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59286 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727436AbgACMRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 07:17:49 -0500
-Received: from devnote2 (p3234244-ipngn201014osakachuo.osaka.ocn.ne.jp [220.106.126.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D774A21D7D;
-        Fri,  3 Jan 2020 12:17:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578053868;
-        bh=RBTBqEBkgPVhoqWth2ahRIQwo5zhyOmpdw0lsjZXfbo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bUkMvMx1AJaqo2auUZut1R6Pf2vwNLTu+Xo6VzCYBhWY3ONfWhVkeRS4H/AqzWbGr
-         oOniTKsZ3EjvAUOYbzL3ygAm7aahSWk0ANECUDRy4QxPtvJr3nQG4uLQXVUj/CoEDE
-         PYjPgGLnzazP/b67mZtCotM/nQLOpYu95b66SR/k=
-Date:   Fri, 3 Jan 2020 21:17:43 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC] tools lib traceevent: How to do library versioning being
- in the Linux kernel source?
-Message-Id: <20200103211743.b474f74d0a039624d37989bc@kernel.org>
-In-Reply-To: <20200102122004.216c85da@gandalf.local.home>
-References: <20200102122004.216c85da@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 3 Jan 2020 07:17:56 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8217 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727436AbgACMRz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 07:17:55 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id AFB2DA8D21AF44123234
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jan 2020 20:17:53 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Fri, 3 Jan 2020
+ 20:17:48 +0800
+From:   yu kuai <yukuai3@huawei.com>
+To:     <perex@perex.cz>, <rafael.j.wysocki@intel.com>
+CC:     <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
+        <yi.zhang@huawei.com>, <zhengbin13@huawei.com>
+Subject: [PATCH] PNP: isapnp: remove set but not used variable 'checksum'
+Date:   Fri, 3 Jan 2020 20:17:10 +0800
+Message-ID: <20200103121710.4761-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.17.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Jan 2020 12:20:04 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-> First, I hope everyone had a Happy New Year!
+drivers/pnp/isapnp/core.c: In function ‘isapnp_build_device_list’:
+drivers/pnp/isapnp/core.c:777:27: warning: variable ‘checksum’ set
+but not used [-Wunused-but-set-variable]
 
-Hope you to have a Happy New Year too!
+It is never used, and so can be removed.
 
-> 
-> Next, Sudip has been working to get the libtraceevent library into
-> Debian. As this has been happening, I've been working at how to get all
-> the projects that use this, to use the library installed on the system
-> if it does exist. I'm hoping that once it's in Debian, the other
-> distros will follow suit.
-> 
-> Currently, the home of libtraceevent lives in the Linux kernel source
-> tree under tools/lib/traceevent. This was because perf uses it to parse
-> the events, and it seemed logical (at the time) to use this location as
-> the main source tree for the distributions.
-> 
-> The problem I'm now having is that I'm looking at fixing and updating
-> some of the code in this library, and since library versioning is
-> critical for applications that depend on it, we need to have a way to
-> update the versions, and this does not correspond with the Linux
-> versions.
-> 
-> For example, we currently have:
-> 
->  libtraceevent.so.1.1.0
-> 
-> If I make some bug fixes, I probably want to change it to:
-> 
->  libtraceevent.so.1.1.1 or libtraceevent.so.1.2.0
-> 
-> But if I change the API, which I plan on doing soon, I would probably
-> need to update the major version.
-> 
->  libtraceevent.so.2.0.0
-> 
-> The thing is, we shouldn't be making these changes for every update
-> that we send to the main kernel. I would like to have a minimum of tags
-> to state what the version should be, and perhaps even branches for
-> working on a development version.
-> 
-> This is a problem with living in the Linux source tree as tags and
-> branches in Linus's tree are for only the Linux kernel source itself.
-> This may work fine for perf, as it's not a library and there's not
-> tools depending on the version of it. But it is a problem when it comes
-> to shared libraries.
-> 
-> Should we move libtraceevent into a stand alone git repo (on
-> kernel.org), that can have tags and branches specifically for it? We
-> can keep a copy in the Linux source tree for perf to use till it
-> becomes something that is reliably in all distributions. It's not like
-> perf doesn't depend on other libraries today anyway.
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+---
+ drivers/pnp/isapnp/core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-+1. It sounds reasonable to move the main part of libtraceevent out
-of kernel tree. BTW, the plugins seems depending on the kernel. Maybe
-we can provide it under
-/lib/modules/<kversion>/shared/libtraceevent/plugins/ ? :)
-
-Thank you,
-
+diff --git a/drivers/pnp/isapnp/core.c b/drivers/pnp/isapnp/core.c
+index 179b737280e1..e39d49bceae0 100644
+--- a/drivers/pnp/isapnp/core.c
++++ b/drivers/pnp/isapnp/core.c
+@@ -774,7 +774,7 @@ static unsigned char __init isapnp_checksum(unsigned char *data)
+ static int __init isapnp_build_device_list(void)
+ {
+ 	int csn;
+-	unsigned char header[9], checksum;
++	unsigned char header[9];
+ 	struct pnp_card *card;
+ 	u32 eisa_id;
+ 	char id[8];
+@@ -784,7 +784,6 @@ static int __init isapnp_build_device_list(void)
+ 	for (csn = 1; csn <= isapnp_csn_count; csn++) {
+ 		isapnp_wake(csn);
+ 		isapnp_peek(header, 9);
+-		checksum = isapnp_checksum(header);
+ 		eisa_id = header[0] | header[1] << 8 |
+ 			  header[2] << 16 | header[3] << 24;
+ 		pnp_eisa_id_to_string(eisa_id, id);
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.17.2
+
