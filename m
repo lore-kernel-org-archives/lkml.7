@@ -2,71 +2,158 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D972FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E74C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AECEC20866
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 064BD20866
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:47:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i3r00vQH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbgACTqc (ORCPT
+        id S1728629AbgACTrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 14:46:32 -0500
-Received: from mga02.intel.com ([134.134.136.20]:5446 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728564AbgACTqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 14:46:32 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jan 2020 11:46:31 -0800
-X-IronPort-AV: E=Sophos;i="5.69,391,1571727600"; 
-   d="scan'208";a="421526212"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jan 2020 11:46:31 -0800
-Date:   Fri, 3 Jan 2020 11:46:29 -0800
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Jan =?iso-8859-1?Q?H=2E_Sch=F6nherr?= <jschoenh@amazon.de>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Subject: Re: [PATCH v2 6/6] x86/mce: Dynamically register default MCE handler
-Message-ID: <20200103194629.GA9334@agluck-desk2.amr.corp.intel.com>
-References: <20200103150722.20313-1-jschoenh@amazon.de>
- <20200103150722.20313-7-jschoenh@amazon.de>
+        Fri, 3 Jan 2020 14:47:51 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44843 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728546AbgACTrv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 14:47:51 -0500
+Received: by mail-ed1-f67.google.com with SMTP id bx28so42447862edb.11;
+        Fri, 03 Jan 2020 11:47:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LZOZVHTb+3h6BOMb+3kqKp315cgiSfb0pLuDtSxBQBM=;
+        b=i3r00vQHBL2sDAI4dtuZ/zsg+OhlwmfLKu1EbtUfmBblRf30KdraxcjZ5+9veNm9+r
+         VXPC3GqUBlyAZ2xaezE8Z6qR+NXMthbazKJgnZFCBVaJXKn6Pc8UUk9iMLC+RLcPevva
+         xISwU6UG214McmTcnRcRYScHJo4U/JMBIVddPkryu6S2q/4RLbaaux28wruieZHpq8Ds
+         NlkXomCh4PiKX71W4UzU2WEFksc1CG6x+oS3eAUGn6nDdGR9WdrwKWNmcEFrAaayXduY
+         UGlw7GHvFnPbPYChG2Uld3vGf47M7GMTPvcZ79CQ+uSkYaRr2L1tMZ/X4l282KKuzGBG
+         Wspw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LZOZVHTb+3h6BOMb+3kqKp315cgiSfb0pLuDtSxBQBM=;
+        b=k7iMmWZw3puEPbIiRlV8MwM1mbZ5CUa4aTnYS671KtSoVkuhTRJsATB8DOu56shKMR
+         VO58W3fM7lCxtJg7udax7BdjsyRrR/ayuhtR+oBx8fq2ab4feyAFi0umaxwMrS5RpJec
+         xQoscm/Ex5hR5apTN1eQsWQ1uI5wKh2FY3qUoFqfD3joehN+8iwov/NFpZE8BTQOHWg6
+         zIiUQO7J/hn4/93liZ8tmI04xw0ROANnMXa3l6ePMvJrUcnuNeZpYvJxHt7qtSxe9AGO
+         QnNSTjtZX7EbUBflV91wZpWle3XpKVJhtDmyM7HEkqG4YfyP2ZEznZIKqEEKiPoo+Gfy
+         oFXQ==
+X-Gm-Message-State: APjAAAXZQR2s8L1b3JFOxoH+5UQ8WNFtQ+TdVp2Db1l1wfLpMMnSX9XE
+        OWbLnIeHVjgdLZ6Hk6um6VcHD/vi+cWJgDylBSc=
+X-Google-Smtp-Source: APXvYqzm/Ay3X26OiUyZcxYr2sA8q0KNwmLg0kGhYCUvD0jASZvMzylVMe6yq9epmuFVENGUaj3upvLcAFe5N1iieeg=
+X-Received: by 2002:a17:906:34d7:: with SMTP id h23mr17921481ejb.90.1578080869160;
+ Fri, 03 Jan 2020 11:47:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200103150722.20313-7-jschoenh@amazon.de>
+References: <20200103183025.569201-1-robdclark@gmail.com> <20200103183025.569201-2-robdclark@gmail.com>
+ <20200103193135.GA21515@ravnborg.org>
+In-Reply-To: <20200103193135.GA21515@ravnborg.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Fri, 3 Jan 2020 11:47:38 -0800
+Message-ID: <CAF6AEGtdFA7XzSq3w3N6_TRLWQY+zumU2mahbsPY=pc0r_x6fw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/panel: Add support for AUO B116XAK01 panel
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 04:07:22PM +0100, Jan H. Schönherr wrote:
-> +retry:
-> +	if (has_notifiers)
-> +		blocking_notifier_chain_unregister(&x86_mce_decoder_chain,
-> +						   &mce_default_nb);
-> +	else
-> +		blocking_notifier_chain_cond_register(&x86_mce_decoder_chain,
-> +						      &mce_default_nb);
+On Fri, Jan 3, 2020 at 11:31 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Rob.
+>
+> On Fri, Jan 03, 2020 at 10:30:24AM -0800, Rob Clark wrote:
+> > From: Rob Clark <robdclark@chromium.org>
+> >
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > ---
+> >  drivers/gpu/drm/panel/panel-simple.c | 32 ++++++++++++++++++++++++++++
+> >  1 file changed, 32 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> > index 5d487686d25c..895a25cfc54f 100644
+> > --- a/drivers/gpu/drm/panel/panel-simple.c
+> > +++ b/drivers/gpu/drm/panel/panel-simple.c
+> > @@ -680,6 +680,35 @@ static const struct panel_desc auo_b116xw03 = {
+> >       },
+> >  };
+> >
+> > +static const struct drm_display_mode auo_b116xak01_mode = {
+> > +     .clock = 69300,
+> > +     .hdisplay = 1366,
+> > +     .hsync_start = 1366 + 48,
+> > +     .hsync_end = 1366 + 48 + 32,
+> > +     .htotal = 1366 + 48 + 32 + 10,
+> > +     .vdisplay = 768,
+> > +     .vsync_start = 768 + 4,
+> > +     .vsync_end = 768 + 4 + 6,
+> > +     .vtotal = 768 + 4 + 6 + 15,
+> > +     .vrefresh = 60,
+> > +     .flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
+> > +};
+> > +
+> > +static const struct panel_desc auo_b116xak01 = {
+> > +     .modes = &auo_b116xak01_mode,
+> > +     .num_modes = 1,
+> > +     .bpc = 6,
+> > +     .size = {
+> > +             .width = 256,
+> > +             .height = 144,
+> > +     },
+> > +     .delay = {
+> > +             .hpd_absent_delay = 200,
+> > +     },
+> > +     .bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+> > +     .connector_type = DRM_MODE_CONNECTOR_eDP,
+> > +};
+> Entries in alphabetical order - check.
+> .connector_type specified - check.
+> .flags and .bus_format specified - check.
+> .bus_flags not specified but optional - OK.
+>
+> > +
+> >  static const struct drm_display_mode auo_b133xtn01_mode = {
+> >       .clock = 69500,
+> >       .hdisplay = 1366,
+> > @@ -3125,6 +3154,9 @@ static const struct of_device_id platform_of_match[] = {
+> >       }, {
+> >               .compatible = "auo,b133htn01",
+> >               .data = &auo_b133htn01,
+> > +     }, {
+> > +             .compatible = "auo,b116xa01",
+> > +             .data = &auo_b116xak01,
+> This entry most also be in alphabetical order.
+>
+> >       }, {
+> >               .compatible = "auo,b133xtn01",
+> >               .data = &auo_b133xtn01,
+>
+> Please fix and resend.
+>
+> I am in general holding back on patches to panel-simple.
+> I hope we can reach a decision for the way forward with the bindings
+> files sometimes next week.
 
-I get a compile error here:
+I've fixed the sort-order and the couple things you've pointed out in
+the bindings.  Not sure if you want me to resend immediately or
+hang-tight until the bindings discussion is resolved?
 
-  CC      arch/x86/kernel/cpu/mce/core.o
-arch/x86/kernel/cpu/mce/core.c: In function ‘update_default_notifier_registration’:
-arch/x86/kernel/cpu/mce/core.c:616:3: error: implicit declaration of function ‘blocking_notifier_chain_cond_register’; did you mean ‘blocking_notifier_chain_unregister’? [-Werror=implicit-function-declaration]
-   blocking_notifier_chain_cond_register(&x86_mce_decoder_chain,
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   blocking_notifier_chain_unregister
-
--Tony
+BR,
+-R
