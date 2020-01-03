@@ -2,146 +2,208 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBEAC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 06:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CEFC32771
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 06:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26D0D217F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 06:15:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 885112464E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 06:16:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="miQjNTlB";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="Dgm0KCAQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgACGPg convert rfc822-to-8bit (ORCPT
+        id S1726968AbgACGQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 01:15:36 -0500
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:44094 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725890AbgACGPg (ORCPT
+        Fri, 3 Jan 2020 01:16:44 -0500
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:56301 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgACGQo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 01:15:36 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=gerry@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TmiGTtC_1578032116;
-Received: from 127.0.0.1(mailfrom:gerry@linux.alibaba.com fp:SMTPD_---0TmiGTtC_1578032116)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 03 Jan 2020 14:15:20 +0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [virtio-dev] Re: [PATCH v1 2/2] virtio-mmio: add features for
- virtio-mmio specification version 3
-From:   "Liu, Jiang" <gerry@linux.alibaba.com>
-In-Reply-To: <0c3d33de-3940-7895-2fe2-81de8714139c@redhat.com>
-Date:   Fri, 3 Jan 2020 14:14:20 +0800
-Cc:     "Liu, Jing2" <jing2.liu@linux.intel.com>,
-        Zha Bin <zhabin@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org, mst@redhat.com, slp@redhat.com,
-        virtio-dev@lists.oasis-open.org, jing2.liu@intel.com,
-        chao.p.peng@intel.com
-Content-Transfer-Encoding: 8BIT
-Message-Id: <46806720-1D1C-40C3-BEE2-EDB0D4DA39BF@linux.alibaba.com>
-References: <cover.1577240905.git.zhabin@linux.alibaba.com>
- <a11d4c616158c9fb1ca4575ca0530b2e17b952fa.1577240905.git.zhabin@linux.alibaba.com>
- <85eeab19-1f53-6c45-95a2-44c1cfd39184@redhat.com>
- <28da67db-73ab-f772-fb00-5a471b746fc5@linux.intel.com>
- <683cac51-853d-c8c8-24c6-b01886978ca4@redhat.com>
- <42346d41-b758-967a-30b7-95aa0d383beb@linux.intel.com>
- <0c3d33de-3940-7895-2fe2-81de8714139c@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Fri, 3 Jan 2020 01:16:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1578032204; x=1609568204;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=3BykkbwY0/+hWZ1HCPfrTm7/hx4CMew5HKiNlOeHEQ4=;
+  b=miQjNTlBg56Aq9yQ7U5E5nz/LoUgSwiKps9RRBOksHVDCO90r9clomEq
+   jXn2Q2+q4TlO441W9nWcNVDTZ3qBhZbt10qS/ukfATyqgrDWpbhVWNayz
+   pQ92E2qEdoUI3ulMZV1KYtatO7kZA/UJvhN6u6be3iKSIVJdQplGbMRP5
+   aT8N3FhZfTDhQ0pXoA3+t9ZcwgrQT5IDKWRIwSHLQ8Y69gMbewcoLgMTR
+   9f9A/Cq/Wah4A23wTLAK4XCr297BNlfHDXCTLzZzrc1Ala8/DdOiSeQ0K
+   0vMIEsFzG9LBz6I+IHhPerggtsvO5LcyGnki0ftpuGNhDSGMf4F2oWuAg
+   A==;
+IronPort-SDR: BAQUOTBsbivz+hOSvQIkiE0F2giY4ePtjLtw5YXtoBL3uh7gaLv/4mzrQviGt6H5Qc09VMm7cP
+ xQ9RtbYa29K0U2CMdgCoNSjX+NRefWtwfNWVYMC6OeOH4CzcwfU9FUSi+HiLieMW7au4boFSyT
+ 2spNgk6m07S+kQbkaeNP0bZp/PnO+NzHXNS/a8hakvVkCO4A/lDkKKeRgv9c5Vu6wZi3e5v3Xg
+ rRIWZHNsv1KaXGsa4rNhCT6ICOi1nfDcsEgsFHXDocxesJevQ/GT2GclYts3XDzsK4FDzKRHxz
+ MyM=
+X-IronPort-AV: E=Sophos;i="5.69,389,1571673600"; 
+   d="scan'208";a="128216119"
+Received: from mail-mw2nam10lp2100.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.100])
+  by ob1.hgst.iphmx.com with ESMTP; 03 Jan 2020 14:16:41 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ctmKqQLU3VtWwWyfL+5J/UDY9BFVxWWJBYBZrSwiuiXK+L5mwiU29vqi7xpABp2vQPiaU4pE9VqvI8jKhgvpIpnq7vv2JDLfGbFJCItsa/4UN8ZWpYAkvkFwiYYfc+Ka0ONU78pe9W3xkqWUAcRx2cjRzACHqdQSj/89hd/IUEPg+2E+BHeNXfQgUvgLTmp0yOdOvvjD2G0rqQH4zh2ww4Md1BAnqUBv1tYh0R0XXaM/L04jE7wP/EqwVGY/nkb738qPgsFMApveeZruq3aun2r4Sx6U2BsmQxhhLAWq1Bod2GWsTi9rr1mD13hWDfrxphdpppSk0u7iCH/Cw124sA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lFTSLtxL+pKEKPF8QYG5iILAJFh5HqZfhjwpw7QV/IE=;
+ b=EuUNViihD96HPgeX5y+k1Q1V38Ztor9oNDfbekIGVpuWy+wur2jHESThfQr0BN2WB7R9eWWNVeLth8n+wiLoGje+KebAC9wZJUu60yeV0Pce8+7+NnfWz3f1UhtqvGZgKBDgte8bGWKq4FEG+Lxgm1y5WBKLxjvedGSxI7U3Sqav2/kB92gk8psNHK3l0gu3mS2am15jvu2gCI6sQ4jVWEBllGq5Ken2KAvVsmv8+lLQUs8E84DuSUkrdWtQku0CmgRN9DzsKEE4Lb+Ks2Jo8/hMA/gPcNVxCsHijHOVcCdwv2lykLCwhI2OWcEglp8CGe2zS3PQvi5KweM0jInjNQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lFTSLtxL+pKEKPF8QYG5iILAJFh5HqZfhjwpw7QV/IE=;
+ b=Dgm0KCAQwlKgFTZk+Z+F59q1B4IByuL8OOreCX1YuID9IEMGowUBXHHXVeAFC0uczTVAwyKXXwTPWkA0tZ921QFk+/De9cLo1r08OhauUwakqxAYaEC31b2nph9kexZHwX7RwjUzEGMjXU3LRpoVk02os1Z6SfiIY/PTJ4bN1wE=
+Received: from BYAPR04MB5749.namprd04.prod.outlook.com (20.179.57.21) by
+ BYAPR04MB6088.namprd04.prod.outlook.com (20.178.234.74) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.12; Fri, 3 Jan 2020 06:16:39 +0000
+Received: from BYAPR04MB5749.namprd04.prod.outlook.com
+ ([fe80::a8ea:4ba9:cb57:e90f]) by BYAPR04MB5749.namprd04.prod.outlook.com
+ ([fe80::a8ea:4ba9:cb57:e90f%5]) with mapi id 15.20.2602.010; Fri, 3 Jan 2020
+ 06:16:39 +0000
+From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+To:     Balbir Singh <sblbir@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+CC:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "ssomesh@amazon.com" <ssomesh@amazon.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "hch@lst.de" <hch@lst.de>, "mst@redhat.com" <mst@redhat.com>
+Subject: Re: [resend v1 1/5] block/genhd: Notify udev about capacity change
+Thread-Topic: [resend v1 1/5] block/genhd: Notify udev about capacity change
+Thread-Index: AQHVwUG9qzxAaxFzwka5YkVHh6Dxxg==
+Date:   Fri, 3 Jan 2020 06:16:39 +0000
+Message-ID: <BYAPR04MB5749EE1549B30FCECEC1154B86230@BYAPR04MB5749.namprd04.prod.outlook.com>
+References: <20200102075315.22652-1-sblbir@amazon.com>
+ <20200102075315.22652-2-sblbir@amazon.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
+x-originating-ip: [199.255.45.62]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 266f1800-e0c7-4fa3-7e22-08d790147ed5
+x-ms-traffictypediagnostic: BYAPR04MB6088:
+x-microsoft-antispam-prvs: <BYAPR04MB60882842113B8F114D2B325086230@BYAPR04MB6088.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0271483E06
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(39860400002)(366004)(396003)(136003)(376002)(189003)(199004)(55016002)(81156014)(81166006)(33656002)(4326008)(478600001)(9686003)(8936002)(8676002)(26005)(71200400001)(5660300002)(66946007)(186003)(66476007)(66556008)(64756008)(52536014)(66446008)(2906002)(7696005)(53546011)(6506007)(54906003)(76116006)(316002)(110136005)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB6088;H:BYAPR04MB5749.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: S02XEImNXratMrw4kJxuKj8f5tIwFjC/bDYtasryNxVaOFF4TS1l9EPs4OrqYOTQbQRdtDfgVDQ/FI46Lwtc4M9ls4kQXirSPmsFTpmef9OItTI3mBSwHy0M4ryZu9+P1aqHXvZWvnKmMWPufk99ZB7KCBtDP8tptwNSZkd6tzbDIbYm2rlORoXnSWV5kVkMWIlmBb7A4MKbj+JFFJg3Y7R2YYBW1YJJkZNFQ+aFvFLFGIqV1scLywqZyInJVtEaD9kswvGit49rFeLPyBADIREE/nxhvZyuaiMISHjM164ghdR9tQ4XjGQLDDEe+mbdpFA57pWmMC27WWQt6N6SrEfMZHCac9HoxU8DPhd4WdFzO651lmla2Gn4CqQIw+/hRajystC6DzkbGe3SRK0NoxJCpwGuKblgJzHaUedWByphZs8HFFvYw5E9htUFHWgr
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 266f1800-e0c7-4fa3-7e22-08d790147ed5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jan 2020 06:16:39.6961
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BJSzvi4TeV5gwBjkoTJ5icjd8Ssy+mEpIkXgYVmGpqol6hT0iVBy2MzOCtpXEf12EVRWfbQ8j0Xp6T1K3vIdFaLDfLsmrrmCjc+jXmknalw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB6088
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On Jan 3, 2020, at 11:24 AM, Jason Wang <jasowang@redhat.com> wrote:
-> 
-> 
-> On 2020/1/2 下午5:13, Liu, Jing2 wrote:
->> [...]
->> 
->>>>> 
->>>>>> +
->>>>>> +/* RO: MSI feature enabled mask */
->>>>>> +#define VIRTIO_MMIO_MSI_ENABLE_MASK    0x8000
->>>>>> +/* RO: Maximum queue size available */
->>>>>> +#define VIRTIO_MMIO_MSI_STATUS_QMASK    0x07ff
->>>>>> +/* Reserved */
->>>>>> +#define VIRTIO_MMIO_MSI_STATUS_RESERVED    0x7800
->>>>>> +
->>>>>> +#define VIRTIO_MMIO_MSI_CMD_UPDATE    0x1
->>>>> 
->>>>> 
->>>>> I believe we need a command to read the number of vectors supported by the device, or 2048 is assumed to be a fixed size here?
->>>> 
->>>> For not bringing much complexity, we proposed vector per queue and fixed relationship between events and vectors.
->>> 
->>> 
->>> It's a about the number of MSIs not the mapping between queues to MSIs.And it looks to me it won't bring obvious complexity, just need a register to read the #MSIs. Device implementation may stick to a fixed size.
->> 
->> Based on that assumption, the device supports #MSIs = #queues + #config. Then driver need not read the register.
->> 
->> We're trying to make such kind of agreement on spec level.
-> 
-> 
-> Ok, I get you now.
-> 
-> But still, having fixed number of MSIs is less flexible. E.g:
-> 
-> - for x86, processor can only deal with about 250 interrupt vectors.
-> - driver may choose to share MSI vectors [1] (which is not merged but we will for sure need it)
-Thanks for the info:)
-X86 systems roughly have NCPU * 200 vectors available for device interrupts.
-The proposed patch tries to map multiple event sources to an interrupt vector, to avoid running out of x86 CPU vectors.
-Many virtio mmio devices may have several or tens of event sources, and it’s rare to have hundreds of event sources.
-So could we treat the dynamic mapping between event sources and interrupt vectors as an advanced optional feature?
-
-> 
-> [1] https://lkml.org/lkml/2014/12/25/169
-> 
-> 
->> 
->>> 
->>> Having few pages for a device that only have one queue is kind of a waste.
->> 
->> Could I ask what's the meaning of few pages here? BTW, we didn't define MSIx-like tables for virtio-mmio.
-> 
-> 
-> I thought you're using a fixed size (2048) for each device. But looks not :)
-> 
-> Thanks
-> 
-> 
->> 
->> Thanks,
->> 
->> Jing
->> 
->>> 
->>> Thanks
->>> 
->>> 
->>>> 
->>>> 
->>>> So the number of vectors supported by device is equal to the total number of vqs and config.
->>>> 
->>>> We will try to explicitly highlight this point in spec for later version.
->>>> 
->>>> 
->>>> Thanks!
->>>> 
->>>> Jing
->>>> 
->>>>> 
->>>>> ---------------------------------------------------------------------
->>>>> To unsubscribe, e-mail: virtio-dev-unsubscribe@lists.oasis-open.org
->>>>> For additional commands, e-mail: virtio-dev-help@lists.oasis-open.org
->>>>> 
->>>> 
->>> 
->> 
->> ---------------------------------------------------------------------
->> To unsubscribe, e-mail: virtio-dev-unsubscribe@lists.oasis-open.org
->> For additional commands, e-mail: virtio-dev-help@lists.oasis-open.org
-
+On 01/01/2020 11:53 PM, Balbir Singh wrote:=0A=
+> Allow block/genhd to notify user space (via udev) about disk size changes=
+=0A=
+> using a new helper disk_set_capacity(), which is a wrapper on top=0A=
+> of set_capacity(). disk_set_capacity() will only notify via udev if=0A=
+> the current capacity or the target capacity is not zero.=0A=
+>=0A=
+> Suggested-by: Christoph Hellwig<hch@lst.de>=0A=
+> Signed-off-by: Someswarudu Sangaraju<ssomesh@amazon.com>=0A=
+> Signed-off-by: Balbir Singh<sblbir@amazon.com>=0A=
+> ---=0A=
+=0A=
+Since disk_set_capacity(() is on the same line as set_capacity()=0A=
+we should follow the same convention, which is :-=0A=
+=0A=
+1. Avoid exporting symbol.=0A=
+2. Mark new function in-line.=0A=
+=0A=
+Unless there is a very specific reason for breaking the pattern.=0A=
+=0A=
+Why not this (totally untested but easy convey above comment)=0A=
+on the top of this patch ?=0A=
+=0A=
+# git diff=0A=
+diff --git a/block/genhd.c b/block/genhd.c=0A=
+index 94faec98607b..ff6268970ddc 100644=0A=
+--- a/block/genhd.c=0A=
++++ b/block/genhd.c=0A=
+@@ -46,25 +46,6 @@ static void disk_add_events(struct gendisk *disk);=0A=
+  static void disk_del_events(struct gendisk *disk);=0A=
+  static void disk_release_events(struct gendisk *disk);=0A=
+=0A=
+-/*=0A=
+- * Set disk capacity and notify if the size is not currently=0A=
+- * zero and will not be set to zero=0A=
+- */=0A=
+-void disk_set_capacity(struct gendisk *disk, sector_t size)=0A=
+-{=0A=
+-       sector_t capacity =3D get_capacity(disk);=0A=
+-=0A=
+-       set_capacity(disk, size);=0A=
+-       if (capacity !=3D 0 && size !=3D 0) {=0A=
+-               char *envp[] =3D { "RESIZE=3D1", NULL };=0A=
+-=0A=
+-               kobject_uevent_env(&disk_to_dev(disk)->kobj, =0A=
+KOBJ_CHANGE, envp);=0A=
+-       }=0A=
+-}=0A=
+-=0A=
+-EXPORT_SYMBOL_GPL(disk_set_capacity);=0A=
+-=0A=
+-=0A=
+  void part_inc_in_flight(struct request_queue *q, struct hd_struct =0A=
+*part, int rw)=0A=
+  {=0A=
+         if (queue_is_mq(q))=0A=
+diff --git a/include/linux/genhd.h b/include/linux/genhd.h=0A=
+index d5e87d7cc357..5e595a28f893 100644=0A=
+--- a/include/linux/genhd.h=0A=
++++ b/include/linux/genhd.h=0A=
+@@ -469,6 +469,22 @@ static inline void set_capacity(struct gendisk =0A=
+*disk, sector_t size)=0A=
+         disk->part0.nr_sects =3D size;=0A=
+  }=0A=
+=0A=
++/*=0A=
++ * Set disk capacity and notify if the size is not currently=0A=
++ * zero and will not be set to zero=0A=
++ */=0A=
++static inline void disk_set_capacity(struct gendisk *disk, sector_t size)=
+=0A=
++{=0A=
++       sector_t capacity =3D get_capacity(disk);=0A=
++=0A=
++       set_capacity(disk, size);=0A=
++       if (capacity !=3D 0 && size !=3D 0) {=0A=
++               char *envp[] =3D { "RESIZE=3D1", NULL };=0A=
++=0A=
++               kobject_uevent_env(&disk_to_dev(disk)->kobj, =0A=
+KOBJ_CHANGE, envp);=0A=
++       }=0A=
++}=0A=
++=0A=
+  #ifdef CONFIG_SOLARIS_X86_PARTITION=0A=
+=0A=
+=0A=
