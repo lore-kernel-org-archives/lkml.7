@@ -2,131 +2,111 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8D5C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 14:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8A2C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 14:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE1AF222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 14:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C9F62464E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 14:05:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="Fp8+LQo3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgACOB3 (ORCPT
+        id S1727818AbgACOF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 09:01:29 -0500
-Received: from mga17.intel.com ([192.55.52.151]:35509 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727539AbgACOB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 09:01:28 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jan 2020 06:01:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,390,1571727600"; 
-   d="scan'208";a="252597773"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga002.fm.intel.com with ESMTP; 03 Jan 2020 06:01:26 -0800
-Date:   Fri, 3 Jan 2020 22:01:28 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com,
-        willy@infradead.org
-Subject: Re: [Patch v2] mm/rmap.c: split huge pmd when it really is
-Message-ID: <20200103140128.GA26268@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20191223222856.7189-1-richardw.yang@linux.intel.com>
- <20200103071846.GA16057@richard>
- <20200103130554.GA20078@richard>
- <20200103132650.jlyd37k6fcvycmy7@box>
+        Fri, 3 Jan 2020 09:05:27 -0500
+Received: from mail-eopbgr00123.outbound.protection.outlook.com ([40.107.0.123]:9536
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727523AbgACOF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 09:05:27 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZOk+pt1CgMNFBDt/TXw5Q7hq8PV+BZBofjSNudgBmbSwrpXY+4AAN8cZ/di8CNhOEBwhux2KqPxLzjti7uEge4ajuhhw1kgcTblpHLgeO60UGAfdoZL3e+RiTlctyOZ+K9dAYgL5q8TWE3Z8q0+o6/ER1o0mNJe+2TiMGIe7XKKZrHvrhpptryaX0+IQRxAf2xHbP7TGkW/fafK1IU+fnxL13gam0W3dvNUzIWqjuXPPCfhgNGvsrd13pFjrBbnOEbGZRzPsHfyyF0uOwePBfOLmQwirmrmZEb7fv9oYvZqq7Thf36qLftLJAOeRXHqAKusFKszWQQNglYaushZw2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fOHmy3lI7yQ7oANwracM9mVnnZP6mcW47IG7reiXjdg=;
+ b=Y9WtomckQSuF5/cmmJL3Nzb2tH61C07Rj5wq5XaForyb5l4eA0K+O3+6bpcpQK421Y/HwKbBPV6wz270S8lx5MB803vpyvjy6solMQQ8yqxHgZAMrFVqjEybCrEKuDWNypkAGaJ0C4hAdgZ0JN5cBKFCfQFgcOD7UZMBwIG1ALwahnkbYYDbgYDFgLA4G/SAUWjBuKHBPxifYidhuAGoFzcsnVVuVSi9AWPXDwzqaPenEcFLUZEDyAWoVRErybcRLpG3tSdM2bfRzx4CcbkTmv39vdMaQTU7fyCjqE+sSboURjEaWvp4zgu4V/e7PC/apyRuetbWPwOboyMehHUGjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fOHmy3lI7yQ7oANwracM9mVnnZP6mcW47IG7reiXjdg=;
+ b=Fp8+LQo3ZRi/f3HKqGM34rKIvVCpDFCmuHTmvkErLjBlZC8vcFdthrsPc1zp6GHixq0gN+nxfYcpvQkEkDLJ+a5HuyeJB8s+g5cRCd8z8RsAFseu9ObMhjdegu7vJP7tZpWtXhb8jfKNrXKGm/O1NuEUwnxX+Smt/U93+UTlfGs=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3561.eurprd02.prod.outlook.com (52.134.68.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.13; Fri, 3 Jan 2020 14:05:23 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::cd85:a8a5:da14:db13]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::cd85:a8a5:da14:db13%7]) with mapi id 15.20.2581.013; Fri, 3 Jan 2020
+ 14:05:23 +0000
+Received: from [192.168.13.3] (213.112.138.4) by HE1PR1001CA0015.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:3:f7::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.10 via Frontend Transport; Fri, 3 Jan 2020 14:05:23 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     Biwen Li <biwen.li@nxp.com>,
+        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [RESEND v6,1/3] dt-bindings: i2c: support property idle-state
+Thread-Topic: [RESEND v6,1/3] dt-bindings: i2c: support property idle-state
+Thread-Index: AQHVuw9TtcGAyqD9p0aoW4HpuyVYKafZB4QA
+Date:   Fri, 3 Jan 2020 14:05:23 +0000
+Message-ID: <63bc0f29-5214-022b-99af-d585e5800f39@axentia.se>
+References: <20191225103624.48342-1-biwen.li@nxp.com>
+In-Reply-To: <20191225103624.48342-1-biwen.li@nxp.com>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+x-originating-ip: [213.112.138.4]
+x-clientproxiedby: HE1PR1001CA0015.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:3:f7::25) To DB3PR0202MB3434.eurprd02.prod.outlook.com
+ (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f5ee2adb-55f1-4775-3bd5-08d79055f9f2
+x-ms-traffictypediagnostic: DB3PR0202MB3561:
+x-microsoft-antispam-prvs: <DB3PR0202MB3561C64E1765A891B100AC70BC230@DB3PR0202MB3561.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2331;
+x-forefront-prvs: 0271483E06
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(346002)(376002)(39830400003)(136003)(189003)(199004)(316002)(508600001)(16576012)(54906003)(8676002)(31686004)(110136005)(8936002)(81166006)(2906002)(81156014)(4326008)(53546011)(16526019)(71200400001)(186003)(26005)(52116002)(4001150100001)(956004)(36756003)(31696002)(86362001)(64756008)(6486002)(66556008)(66476007)(66446008)(2616005)(66946007)(558084003)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3561;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Mb/PAmrhlglG+vlC264ZjoP/9Lne/5LOlo1ckd3EJRw9r83BR56shVi1RPTTZ7JSLsCMArZK7YDvF81YL3l2eGfNKXXTMHNmyXJpJ5I+UbF4I6cWNwutNkRj/TyFIUKIuI+Mz8xobR8bdS50/IIl+R4AmfPLwc44hl0PHhlVqPh74XFguBACWpfSmW1jpDZiD1TvNi9M+KKKAtuuGMpg6ayap5f2brt7EYeciJhP/Sll8tCPRd89kTV9Couh342TvSXCqOW0j7fj3dNcjqyGTq72pmXSRQTz9oGU+5gZH65UlmVUecqAXGQGzc75qMGQOz4IZiKl/UQxxZgePJbMASNlSpBqYUGSmr1S9zcI3OTcqQhuuQ6UAytcNc+rLKaT8mQsi6d6smaMibjZ8CmBrveY50ZMmDTic4fZ/bhckTKyD3o/RduW+jECN/WETgCY
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2E99B8D1319CBA45A7B401B0C4209CF4@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200103132650.jlyd37k6fcvycmy7@box>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5ee2adb-55f1-4775-3bd5-08d79055f9f2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jan 2020 14:05:23.8255
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JmbTfiO8CABMBnb9j6SMCf5bZvcJxkPrYU0kOnxD6s+/cGyBgU17JHlsDK+GH9kU
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3561
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 04:26:50PM +0300, Kirill A. Shutemov wrote:
->On Fri, Jan 03, 2020 at 09:05:54PM +0800, Wei Yang wrote:
->> On Fri, Jan 03, 2020 at 03:18:46PM +0800, Wei Yang wrote:
->> >On Tue, Dec 24, 2019 at 06:28:56AM +0800, Wei Yang wrote:
->> >>When page is not NULL, function is called by try_to_unmap_one() with
->> >>TTU_SPLIT_HUGE_PMD set. There are two cases to call try_to_unmap_one()
->> >>with TTU_SPLIT_HUGE_PMD set:
->> >>
->> >>  * unmap_page()
->> >>  * shrink_page_list()
->> >>
->> >>In both case, the page passed to try_to_unmap_one() is PageHead() of the
->> >>THP. If this page's mapping address in process is not HPAGE_PMD_SIZE
->> >>aligned, this means the THP is not mapped as PMD THP in this process.
->> >>This could happen when we do mremap() a PMD size range to an un-aligned
->> >>address.
->> >>
->> >>Currently, this case is handled by following check in __split_huge_pmd()
->> >>luckily.
->> >>
->> >>  page != pmd_page(*pmd)
->> >>
->> >>This patch checks the address to skip some work.
->> >
->> >I am sorry to forget address Kirill's comment in 1st version.
->> >
->> >The first one is the performance difference after this change for a PTE
->> >mappged THP.
->> >
->> >Here is the result:(in cycle)
->> >
->> >        Before     Patched
->> >
->> >        963        195
->> >        988        40
->> >        895        78
->> >
->> >Average 948        104
->> >
->> >So the change reduced 90% time for function split_huge_pmd_address().
->
->Right.
->
->But do we have a scenario, where the performance of
->split_huge_pmd_address() matters? I mean, it it called as part of rmap
->walk, attempt to split huge PMD where we don't have huge PMD should be
->within noise.
-
-Sorry for my poor English.
-
-I don't catch the meaning of the last sentence. "within noise" here means
-non-huge PMD is an expected scenario and we could tolerate this? 
-
->
->> >For the 2nd comment, the vma check. Let me take a further look to analysis.
->> >
->> >Thanks for Kirill's suggestion.
->> >
->> 
->> For 2nd comment, check vma could hold huge page.
->> 
->> You mean do this check ?
->> 
->>   vma->vm_start <= address && vma->vm_end >= address + HPAGE_PMD_SIZE
->> 
->> This happens after munmap a partial of the THP range? After doing so, we can
->> skip split_pmd for this case.
->
->Okay, you are right. This kind of check would not be safe as we
->split_huge_pmd_address() after adjusting VMA with expectation of splitting
->PMD on boundary of the VMA.
->
->-- 
-> Kirill A. Shutemov
-
--- 
-Wei Yang
-Help you, Help me
+T24gMjAxOS0xMi0yNSAxMTozNiwgQml3ZW4gTGkgd3JvdGU6DQo+IFRoaXMgc3VwcG9ydHMgcHJv
+cGVydHkgaWRsZS1zdGF0ZQ0KPiANCj4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtl
+cm5lbC5vcmc+DQo+IFNpZ25lZC1vZmYtYnk6IEJpd2VuIExpIDxiaXdlbi5saUBueHAuY29tPg0K
+DQpQdXNoZWQgdG8gaTJjLW11eC9mb3ItbmV4dA0KDQpDaGVlcnMsDQpQZXRlcg0K
