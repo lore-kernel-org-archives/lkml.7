@@ -2,105 +2,145 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 993DDC3276D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF726C3276C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DAE5217F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:04:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578013463;
-	bh=7LWUflE7b+ikWrBUGhcCM8jmr1D75VilQjaClyL8GlE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KYL4r2iUsYl11pBHFPbCwXYJjjgBD1lXRFhE+i70GS1bNSQj8ax8EOn6yBbYzig10
-	 BoIgX6qZQzY023VPec1OX2azjystrqpo92nJ4fzAyJRdlEZUbia8yXZzO61yo19zLu
-	 A6nkI0MQEnaRR5m9nxs2V+K3d7QBJlEQRm76m+SY=
+	by mail.kernel.org (Postfix) with ESMTP id C5F2D217F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:05:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N2z2VnSs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbgACBEW (ORCPT
+        id S1727171AbgACBFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 20:04:22 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48846 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbgACBET (ORCPT
+        Thu, 2 Jan 2020 20:05:07 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:45840 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbgACBFH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 20:04:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ozic6TqYruSpEFOoFH0HYCbh75txsD2Py+nk3nYG6TY=; b=GUSzzbSipkopZxcOEAsxR1eXx
-        +naIE9vf2wwM0xnkUQ4Z2N4Bo6DVI2m2mNhzq0GmRjcyej8pOkgi5liUyMIjKQ3lDEElkLYINxpjV
-        TmUKS7jJtgGh3BkRKS20HozIzTdKDvJVL3FCRY+ajYYX0nsPVrYjh3K20F2RcIVsdLo2k=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1inBNq-0003Mk-Mz; Fri, 03 Jan 2020 01:04:10 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 14FA9D057C6; Fri,  3 Jan 2020 01:04:09 +0000 (GMT)
-Date:   Fri, 3 Jan 2020 01:04:09 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     kongxinwei <kong.kongxinwei@hisilicon.com>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com, fengsheng <fengsheng5@huawei.com>
-Subject: Re: [PATCH] spi: dw: use "smp_mb()" to avoid sending spi data error
-Message-ID: <20200103010409.GG3897@sirena.org.uk>
-References: <1577352088-35856-1-git-send-email-kong.kongxinwei@hisilicon.com>
- <20191227002239.GH27497@sirena.org.uk>
- <afad8a97-6159-bf7e-466a-fdbaf0a07d4a@hisilicon.com>
+        Thu, 2 Jan 2020 20:05:07 -0500
+Received: by mail-ua1-f68.google.com with SMTP id 59so14176414uap.12
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 17:05:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=5Sgvu+ftX8WosJ7WQ0e9tXOw3qR77NQu+UEd3hyiXD4=;
+        b=N2z2VnSsKbvyEdCtMIpQM6HpWs2GGuIW4auIa7X1g7wZBWW2kS6hIbjcOP8pPP48lV
+         o/ez+NK+dh98E9pOunDBAlTWM9lhlUzVzFqKVLy3IaPvf+0uKvVY5r5Fos3NZ51qd/7L
+         2to+TBxFg+m+sGUkfJdFgMh2pr/4JNB2KZ5O+Nz/h77JhmBbwT+8WX//r3Jm+VoqQd0D
+         CcZFKcsD3XF1yzMSSSdWYsT7/ia2IQj5XWDn8x+UFPHEowCQBO3qbxHmJafwZSW9ZkUb
+         1jK1Ta96QsRDH2ECrm/AbmvMlJPl3A3SeVLmJhOqPUdZxtY80rr8CsQdTGqICVqUdrqf
+         +qiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=5Sgvu+ftX8WosJ7WQ0e9tXOw3qR77NQu+UEd3hyiXD4=;
+        b=emE4DhxYeVKh9zK40UutfUrzes1SSJx7lb3S8u4zkzNJsanAairvI6AU80DzNAG7p4
+         O7i3eWG85qCBQxEd/uTGYCcNFrFzYm/lD4jLCORFc7Fxah1+KrnEs9o4zIFPaUMNQAEz
+         Fc3OjtIrbuMfvslqj0gV/cKcchjL3YZ6Es7DPadKvC0CamnPIx6L9+VqsUcMhjd3hw8m
+         18zeSo8BbnQFiQ4AWAW5kICf9nDG/ytrnjgnCx+IZw0iNKzdyyLFcfzdqCJTKL5d0wlK
+         8EDOtT5/SyC+ldLnDNb5ECwmNBMBx0/HgHDERkf8UcMJ3LC3540jDzZry6pKM0YsJKRM
+         Ky7w==
+X-Gm-Message-State: APjAAAW3zJ4i4bfOspjjGKuPOuFcamlo7Nm8u9NU7q8XPBVgEN2ORI4z
+        vSfUYHCyr008sjac80WIVKXbYg3MN6gjoCj2oNOiFgLo
+X-Google-Smtp-Source: APXvYqyRysXyaIBX+UDWjrrp1LxFLTBzfE52SoyzQ2oplFoUhEappvh7Q60WzlS74qCyiY36Y5rpaNEvOIjjyV2jTfA=
+X-Received: by 2002:ab0:5510:: with SMTP id t16mr53211184uaa.15.1578013505829;
+ Thu, 02 Jan 2020 17:05:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="1giRMj6yz/+FOIRq"
-Content-Disposition: inline
-In-Reply-To: <afad8a97-6159-bf7e-466a-fdbaf0a07d4a@hisilicon.com>
-X-Cookie: Programming is an unnatural act.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   Joseph Kogut <joseph.kogut@gmail.com>
+Date:   Thu, 2 Jan 2020 17:04:30 -0800
+Message-ID: <CAMWSM7ha5XcoknM1qrNTMM+A5Re2yQPNWvu_ZVKAWBUx-FmasA@mail.gmail.com>
+Subject: Orange Pi 4 (RK3399) fails to bring up ethernet on boot
+To:     robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
---1giRMj6yz/+FOIRq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I'm working on getting the newly released Orange Pi 4 up and running
+with the mainline kernel. Using the rk3399-orangepi device tree gets
+the device to start booting, but the kernel has an oops when starting
+networking, and the boot process fails to continue.
 
-On Sat, Dec 28, 2019 at 04:31:53PM +0800, kongxinwei wrote:
+[  153.325306] Internal error: Oops: 96000004 [#1] SMP
+[  153.325733] Modules linked in: rockchipdrm btsdio(+) brcmfmac
+analogix_dp rockchip_rga dw_mipi_dsi brcmutil dw_hdmi hci_uart cec
+videobuf2_dma_sg cfg80211 v4l2_mem2mem btqca rc_core videobuf2_memops
+btbcm videobuf2_v4l2 btintel videobuf2_common drm_kms_helper bluetooth
+dwmac_rk syscopyarea stmmac_platform videodev panfrost sysfillrect
+stmmac snd_soc_simple_card sysimgblt fb_sys_fops gpu_sched
+snd_soc_simple_card_utils ecdh_generic st_lsm6dsx_spi phylink mc
+st_lsm6dsx_i2c ecc inv_mpu6050_i2c drm rfkill st_lsm6dsx inv_mpu6050
+adc_keys rockchip_saradc gpio_keys ak8975 cm32181 dw_wdt
+rockchip_thermal rtc_rk808
+[  153.330457] CPU: 1 PID: 493 Comm: systemd-network Tainted: G
+     L    5.5.0-rc4-1-ARCH #1
+[  153.331230] Hardware name: Orange Pi RK3399 Board (DT)
+[  153.331681] pstate: 40000005 (nZcv daif -PAN -UAO)
+[  153.332108] pc : mdiobus_get_phy+0xc/0x28
+[  153.332487] lr : stmmac_open+0x288/0xa50 [stmmac]
+[  153.332899] sp : ffff800011f2b5e0
+[  153.333190] x29: ffff800011f2b5e0 x28: 0000000000000000
+[  153.333656] x27: ffff0000eb6448c0 x26: ffff0000eb7e7e10
+[  153.334122] x25: 0000000000000001 x24: 0000000000000000
+[  153.334587] x23: ffff800011829000 x22: ffff0000eb644000
+[  153.335053] x21: ffff800011f2bbd0 x20: ffff0000ea0e6280
+[  153.335519] x19: 00000000ffffffff x18: 0000000000000000
+[  153.335984] x17: 0000000000000000 x16: 0000000000000000
+[  153.336449] x15: 0000000000000000 x14: 0000000000000000
+[  153.336915] x13: 0000000000000000 x12: 0000000000000000
+[  153.337380] x11: 0000000000000003 x10: 0101010101010101
+[  153.337845] x9 : ffff8000090becb0 x8 : 7f7f7f7f7f7f7f7f
+[  153.338310] x7 : fefefeff646c606d x6 : 1e091448e4e5f6e9
+[  153.338776] x5 : 697665644814091e x4 : 8080808000000000
+[  153.339241] x3 : 8343c96b232bb348 x2 : ffff0000ea0b8880
+[  153.339707] x1 : 00000000ffffffff x0 : fffffffffffffff8
+[  153.340172] Call trace:
+[  153.340392]  mdiobus_get_phy+0xc/0x28
+[  153.340717]  __dev_open+0x104/0x198
+[  153.341025]  __dev_change_flags+0x1a0/0x208
+[  153.341393]  dev_change_flags+0x28/0x68
+[  153.341731]  do_setlink+0x2cc/0xcc0
+[  153.342040]  rtnl_setlink+0xf0/0x188
+[  153.342355]  rtnetlink_rcv_msg+0x2b0/0x358
+[  153.342719]  netlink_rcv_skb+0x60/0x120
+[  153.343056]  rtnetlink_rcv+0x1c/0x28
+[  153.343371]  netlink_unicast+0x1a0/0x248
+[  153.343716]  netlink_sendmsg+0x1c0/0x3c0
+[  153.344061]  sock_sendmsg+0x4c/0x58
+[  153.344368]  __sys_sendto+0xd4/0x138
+[  153.344683]  __arm64_sys_sendto+0x2c/0x38
+[  153.345039]  el0_svc_handler+0xa4/0x188
+[  153.345377]  el0_sync_handler+0x1c8/0x260
+[  153.345730]  el0_sync+0x140/0x180
+[  153.346025] Code: d65f03c0 aa1e03e9 d503201f 8b21cc00 (f941d000)
+[  153.346560] ---[ end trace 0d82e8dab5e0c74f ]---
 
-> > I'd be much more comfortable here if I understood what this was
-> > supposed to be syncing - what exactly gets flushed here and why
-> > is a memory barrier enough to ensure it's synced?  A comment in
-> > the code would be especially good so anyone modifying the code
-> > understands this in future.
+It's worth noting that the rk3399-orangepi device tree isn't
+necessarily compatible with this board, though after perusing the
+schematics for both the Orange Pi 4 and Orange Pi RK3399, I found no
+differences as far as the networking hardware goes. However, this is
+not an area in which I am well experienced.
 
-> Because of out-of-order execution about some CPU architecture,
-> In this debug stage we find Completing spi interrupt enable ->
-> prodrucing TXEI interrupt -> running "interrupt_transfer" function
-> will prior to set "dw->rx and dws->rx_end" data, so it will result
-> in SPI sending error
+I was able to work around this issue by reading a few other RK3399
+based device trees, and adding a phy-handle property to the gmac node,
+as well as an mdio child node. I have a patch [0] that works with my
+board, but I'm unsure if it's correct for both Orange Pis, and even if
+it is, I'm not sure what the original problem was, or how to word the
+commit message to actually send the patch.
 
-Could you update the commit message to say that, and ideally also
-add a comment saying something like "Ensure dw->rx and dw->rx_end
-are visible" please?
+Could you please advise on how I should proceed?
 
---1giRMj6yz/+FOIRq
-Content-Type: application/pgp-signature; name="signature.asc"
+Best,
+Joseph
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4OkwgACgkQJNaLcl1U
-h9AkFgf/fypiFJ4eRlJVOmkAYnGY01lAChSELOS/91cDAaOXJSQhz/hwB/cdeHjq
-2KYpCiICZDeG8FB6y6dvAWUMCkVxGH0WVGS9/OlnmI+aDoPjqyiyJ5R1a+bRBAcE
-YAaX12ARLr0uj9l9Fh6hhZxScRgit+ZKRB12T77pdyFFcoCh4kJLSD58D+78OmEO
-YUXkkBxX7cayLE5CKvl2UrQp8K18T4EKZ4YX7jDCUuY4wXkoScvm7G3ik25DhEJR
-jenBxAnbnw0De745jFhdI5VJygGUOF3caiWT3wc2tOIQwI1LJThI0cp4d3DRbphU
-XpWJcoIuRXqY+TfLjulA4WjTtGsDew==
-=Xa85
------END PGP SIGNATURE-----
-
---1giRMj6yz/+FOIRq--
+[0] https://gist.github.com/jakogut/bc21de0535b640f2374c1d07a710e8ab
