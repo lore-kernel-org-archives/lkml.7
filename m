@@ -2,80 +2,91 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FA9C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1B4C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC9A21734
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3123522B48
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 09:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727432AbgACJsC (ORCPT
+        id S1727477AbgACJs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 04:48:02 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:46304 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgACJsC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 04:48:02 -0500
-Received: by mail-il1-f200.google.com with SMTP id a2so22936962ill.13
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 01:48:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=zfhs8YRWlSgmuSFGXbqJyQsI/XchWtbdF57Va++zvNw=;
-        b=gDIktUt0iun5OPrk5MZTiv/u/jIkcHNBaSp/fSupftB6c0YHne9wxBSYMQmQYBp1O9
-         +gINaLlI6Q8YiuAcrAeZtf9trdwuBUy9a1T8u2Em9ZmSMTKjZYva5v57tPn5q45hWHtX
-         G0trq6X6/79Y4ay0ZpIqW6jl7FzB7K9ezs9eYsG8aS9FyQ66dbfZgOWKzRb4gg7BpiMF
-         dCg5L2nZHcPOjD/w/jKu2u3UXtTp0syBrUPwmMn78bxTnrTzjWuTPxlQzKjQuFXuVntS
-         B/LK9/c4NEw5A3O/cgXAvMAhKzR3a9ECJptLQX3FDNDh64GYeeQSpeGDmf78blqZWV1D
-         mzLQ==
-X-Gm-Message-State: APjAAAU+o/36JUUQ7Iq+vpGEQRDwCfShbyXNr/aRC8fa83xMImEU0s34
-        NzXNCvAVvBt206nhEcnZ3CWhLszI++AeDP44O6NFd64U80KA
-X-Google-Smtp-Source: APXvYqyAAJrBpm4Sbnrf8d6tOqPsb094c6EUG37fsf+Xtlfb67I+HkehfzTSOHCUxnbaSv6jsQKLF3DwUGl9KNDKrZRTYyxC+C5E
+        Fri, 3 Jan 2020 04:48:58 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57340 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725972AbgACJs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 04:48:58 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 062F2AE87;
+        Fri,  3 Jan 2020 09:48:55 +0000 (UTC)
+Date:   Fri, 3 Jan 2020 10:48:54 +0100
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     teawater <teawaterz@linux.alibaba.com>
+Cc:     Chris Down <chris@chrisdown.name>, Hui Zhu <teawater@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, vdavydov.dev@gmail.com,
+        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC] memcg: Add swappiness to cgroup2
+Message-ID: <20200103094853.GM22847@blackbody.suse.cz>
+References: <1577252208-32419-1-git-send-email-teawater@gmail.com>
+ <20191225140546.GA311630@chrisdown.name>
+ <6E9887B9-EEF7-406E-90D4-3FAEFE0A505E@linux.alibaba.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:4448:: with SMTP id a8mr75875825ilm.256.1578044881277;
- Fri, 03 Jan 2020 01:48:01 -0800 (PST)
-Date:   Fri, 03 Jan 2020 01:48:01 -0800
-In-Reply-To: <0000000000005f7f920598d25a5f@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000969b9d059b393473@google.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in vcs_scr_readw
-From:   syzbot <syzbot+7d027845265d531ba506@syzkaller.appspotmail.com>
-To:     daniel.vetter@ffwll.ch, dave@mielke.cc, ghalat@redhat.com,
-        gregkh@linuxfoundation.org, jslaby@suse.com, kilobyte@angband.pl,
-        linux-kernel@vger.kernel.org, nico@fluxnic.net, nico@linaro.org,
-        nicolas.pitre@linaro.org, npitre@baylibre.com, sam@ravnborg.org,
-        syzkaller-bugs@googlegroups.com, textshell@uchuujin.de,
-        tomli@tomli.me
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="dzI2QqkSBOAresgT"
+Content-Disposition: inline
+In-Reply-To: <6E9887B9-EEF7-406E-90D4-3FAEFE0A505E@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this bug was fixed by commit:
 
-commit 0c9acb1af77a3cb8707e43f45b72c95266903cee
-Author: Nicolas Pitre <nico@fluxnic.net>
-Date:   Tue Nov 5 09:33:16 2019 +0000
+--dzI2QqkSBOAresgT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-     vcs: prevent write access to vcsu devices
+On Thu, Dec 26, 2019 at 02:56:40PM +0800, teawater <teawaterz@linux.alibaba.com> wrote:
+> For example, an application does a lot of file access work in a
+> memory-constrained environment.
+> [...]
+> Both of them are extreme examples.
+The examples are quite generic. Do cgroup v2 controls really prevent
+handling such workloads appropriately?
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11602fb6e00000
-start commit:   76bb8b05 Merge tag 'kbuild-v5.5' of git://git.kernel.org/p..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=dd226651cb0f364b
-dashboard link: https://syzkaller.appspot.com/bug?extid=7d027845265d531ba506
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17c0459ce00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11d4477ae00000
+Besides that, note that per-cgroup swappiness as used in v1 cannot be
+simply transferred into v2 because, it's a concept that doesn't take
+into account cgroup hierarchies (how would parent's swappiness affect
+children? what would swappiness on inner nodes mean?).
 
-If the result looks correct, please mark the bug fixed by replying with:
+HTH,
+Michal
 
-#syz fix: vcs: prevent write access to vcsu devices
+--dzI2QqkSBOAresgT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl4PDgAACgkQia1+riC5
+qSgXQQ//fdhyA8EegA3X3Xot5ZkyaIG2xgwbk8ZiiOuhPr2xEmrpBrEf3eC+IBPH
+/4Iq/kuHKAZEJcOtfJZepJoF9LDQjoAdpqVd21ohGgxxXsCTFnT/et+Z8t/dpaXB
+gpp6VahkMZxdJ0vBCPhHu46nkpBACbjMzCklzpAaVa1Rz95L8Ob4Eel1e76R7S6n
+KxLyLxkgdRVV8GeABMS7wf5NljfqAQ/SUCKfjoJYyC58PA3LVsYYke7bXSlMwLay
+jt1Pb635+2ajdT3LahtR2r9xGFxpL+Rf2WPbJ3MPUl7MQ4HwV0zw4fpqSKtXBeRJ
+x7oTfUNZfOGXR2Nnm8Tdb2rumnznwhtuFAn3wvwxKOIiT9iS0Ye21KvMQ3hqyeIB
+ZVDYMT0eUmxpjbZgwMcH9UpCpwT4HyKDLFH57mleTIrBeRjCua6tf4nf4S+RHSc7
+VxyH4VEkQgD6M9z/ySQDfRMKU/SBy6UQkxCQ4avrx4igbQL+MENQ/6ntD0Kp4XFJ
+suj2i9UdOmGzBt5kkJMkGjFN/NuOF/WEf1ZCr3/Sg6g5RzJna/Oh0dEKhhsb8/vp
+0ENgmveAUNbtijTby+6xo+6UBoE9HEcnNMu++evdBZRzvXcbnwhVZr84Qyjg15Mq
+T7S51fMo9A+I+lC0KFOud0hSUTaaPPesnIGs6v2jqlbh/8rKids=
+=QzSj
+-----END PGP SIGNATURE-----
+
+--dzI2QqkSBOAresgT--
