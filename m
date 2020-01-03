@@ -8,57 +8,58 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBF7C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E5CC32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D6FC222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E9952253D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:25:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mkZOYG+o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oz9c6gKz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbgACSYj (ORCPT
+        id S1728413AbgACSZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 13:24:39 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44639 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728268AbgACSYi (ORCPT
+        Fri, 3 Jan 2020 13:25:07 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46837 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728303AbgACSZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 13:24:38 -0500
-Received: by mail-pg1-f195.google.com with SMTP id x7so23756477pgl.11;
-        Fri, 03 Jan 2020 10:24:38 -0800 (PST)
+        Fri, 3 Jan 2020 13:25:07 -0500
+Received: by mail-pg1-f196.google.com with SMTP id z124so23745671pgb.13;
+        Fri, 03 Jan 2020 10:25:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CmzCH2uWG7hZYGtP4pzK56E04nndebbSOdF2xVyGJzs=;
-        b=mkZOYG+oxf2wIN1sqdKDGqV6ICaaaRcBNSGk5jcIdwYuOMeE8eIM/LjUpCkib1Dc8T
-         pAAeUuPDZux3pqk0yUGr6fVApJyfzIdAs8SlUGlx5tCKtE0aUiXuE1vPqjfiD47WH09z
-         WziLiKRhdWk5OgvhO/NQLAMvmWEKi8kCzGy9lvdG4zElNGgZlICYEfasUCAnB1+nBYr9
-         2kx4ABFCSyMgphlRyLnWkSAgD9uF8iimR+ZOtYXClWWjjThUOI364HGXuhyhkw8gKdyz
-         U4nw5yx4y4eQZ/awNfVTT1kO5pD36jTsYH2Rdq8snzWOCStkOmu5qvnv0xITMCIbOpeE
-         gK4A==
+        bh=p8VA764gYevhnnAu+SzPmPPi0bKhyv5mqU193VydJNM=;
+        b=oz9c6gKzyuXb7TSdIsC8e79CRRIPQff4C3re8x0RF99lkOCg33wKc7MhRYb0KJUyne
+         Rlz4WKZx4Ko9XVYtGuJ7tkvZeeH2STF3yJffoV/EoO2tSBAPF/fmRl9c+KSLmpEt2sQj
+         eWQeISenCgT6LuNPLsfOjSck0hmNh+uDQucR37Rc3gQHi4ek9FiMi9qZbCxRxguX2bk6
+         HPHdKC43Hzvxxj1MF+12pmYgfOGoe+q1mwDTmspbcnscoALtguMrcYrIH6b9SOTbDNHQ
+         XZLIAccVKfzZ0+5xmE+vVvQ5jUXErjeA5LF70tNk/3Cm6kY+bfJCrUJJFKOW/BGJP5Kp
+         jpqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=CmzCH2uWG7hZYGtP4pzK56E04nndebbSOdF2xVyGJzs=;
-        b=q6l8u5AmXmVcl0boysob4ZhggxjtuWOAMGEaQHD8yx9l8zDQGmHxb05GC8Za7jifDU
-         HFr82iAXPpQ06UPhdL+L9/Svm6wl/ihZtzpnfqWOnA0IcEGwVz0E5xfcMOel0jHjO17o
-         q8Bv529g2dY7fsGnv2a0d8opigSZcVlHE6RlHjt7Cnw/YQh+IHrJpiPv3q1LeSp7pqJX
-         aU928aRF0rgQnUpjuzm585lFH+W5c8m0/J5XSbHJ00jzIVyd68x3gzhxbmiUdP0S8gDy
-         zKx71TVhHkr0K1L+Dti0OX8B1chUmhIa6oKCV+iYEf2gfcb1ZSgJ4rui3OhmYEw7r5yu
-         +uQg==
-X-Gm-Message-State: APjAAAXzjEwzDGkG+f400Kr5j22z9eejc3uj7erd5zpHYmjXoiV8F78I
-        95A+Ue/xnhiHaBK/My7vD3o=
-X-Google-Smtp-Source: APXvYqxhMHbD9WF1/Fdmn/LT2i8QlHDDRgYChoi9Zq+Ig23CJMeUTby9wBzMq1Lv9+uUTxLSIWblLg==
-X-Received: by 2002:aa7:9522:: with SMTP id c2mr95293845pfp.43.1578075878287;
-        Fri, 03 Jan 2020 10:24:38 -0800 (PST)
+        bh=p8VA764gYevhnnAu+SzPmPPi0bKhyv5mqU193VydJNM=;
+        b=qfRD6vKZfWj4Sr2kha6ex5PeiCwRqEQyKHM/PECMxU8r1NcsdZ25Qg/mT1tiIk7KN0
+         gO5jbHtmsqv1Q9J3QvYBuCrk4U8M0q0bteNarvqgjjrC7+2P1PLDRc15UbG9AzL88tmp
+         vNBUovMRzHMu4IOUFKNFEt6XT02588r7EbNTv4ZWrj94fTa9dFRUdoE7VT2vyxu3NK18
+         zfo4egS8ZsTsbRDeo7Rg/ujiOArIc/yvsSGmyW9PdUqYn0YkH55C+g7VSUfzh5JP1tFI
+         oZ7XqutOsQMw8/pOUPLWW9vw/rL5M9n24fSfcRwGXvtWOLu5GM62GZGb94ob0+g+VktK
+         EsrQ==
+X-Gm-Message-State: APjAAAXnYvP+CqZoGzK/TmBQOg6z04qBHEb/MtD8FoaawdcxhUtO69W4
+        6tEcBl8qnRm+Bv3Zfr4Q0nk=
+X-Google-Smtp-Source: APXvYqyHFHMXcvMBBFcZUzqiOmYPLviXW/oMJojrzsGtQF/eUdhEP5RXv/BY99Xv3mAT9vKGxz87Xw==
+X-Received: by 2002:a63:e0c:: with SMTP id d12mr93821789pgl.3.1578075906442;
+        Fri, 03 Jan 2020 10:25:06 -0800 (PST)
 Received: from [10.67.50.49] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id k23sm62015555pgg.7.2020.01.03.10.24.37
+        by smtp.googlemail.com with ESMTPSA id m6sm15446465pjv.23.2020.01.03.10.25.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jan 2020 10:24:37 -0800 (PST)
-Subject: Re: [PATCH v4 04/13] phy: usb: Add "wake on" functionality
+        Fri, 03 Jan 2020 10:25:05 -0800 (PST)
+Subject: Re: [PATCH v4 05/13] phy: usb: Restructure in preparation for adding
+ 7216 USB support
 To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
 Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -72,7 +73,7 @@ Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>
 References: <20200103181811.22939-1-alcooperx@gmail.com>
- <20200103181811.22939-5-alcooperx@gmail.com>
+ <20200103181811.22939-6-alcooperx@gmail.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -128,12 +129,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <81ddf86b-de17-81a2-0829-bea7258fd21e@gmail.com>
-Date:   Fri, 3 Jan 2020 10:24:36 -0800
+Message-ID: <098800a0-ee52-4120-a8ef-12df319f1d4a@gmail.com>
+Date:   Fri, 3 Jan 2020 10:25:04 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200103181811.22939-5-alcooperx@gmail.com>
+In-Reply-To: <20200103181811.22939-6-alcooperx@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -143,22 +144,16 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 1/3/20 10:18 AM, Al Cooper wrote:
-> Add the ability to handle USB wake events from USB devices when
-> in S2 mode. Typically there is some additional configuration
-> needed to tell the USB device to generate the wake event when
-> suspended but this varies with the different USB device classes.
-> For example, on USB Ethernet dongles, ethtool should be used to
-> enable the magic packet wake functionality in the dongle.
-> NOTE:  This requires that the "power/wakeup" sysfs entry for
-> the USB device generating the wakeup be set to "enabled".
+> The driver is being restructured in preparation for adding support
+> for the new Synopsys USB conroller on the 7216. Since all the bugs
+> and work-arounds in previous STB chips are supposed to be fixed,
+> most of the code in phy-brcm-usb-init.c is not needed. Instead of
+> adding more complexity to the already complicated phy-brcm-usb-init.c
+> module, the driver will be restructured to use a vector table to
+> dispatch into different C modules for the different controllers.
 > 
-> This functionality requires a special hardware sideband path that
-> will trigger the AON_PM_L2 interrupt needed to wake the system from
-> S2 even though the USB host controllers are in IDDQ (low power state)
-> and most USB related clocks are shut off. For the sideband signaling
-> to work we need to leave the usbx_freerun clock running, but this
-> clock consumes very little power by design. There's a bug in the
-> XHCI wake hardware so only EHCI/OHCI wake is currently supported.
+> There was also some general cleanup done including some ipp setup
+> code that was incorrect.
 > 
 > Signed-off-by: Al Cooper <alcooperx@gmail.com>
 
