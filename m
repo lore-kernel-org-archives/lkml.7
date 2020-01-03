@@ -2,104 +2,108 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 415F3C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5729C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 222952253D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1BF222C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:30:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YPPTYENc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbgACS3Q (ORCPT
+        id S1728470AbgACSaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 13:29:16 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:39346 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728251AbgACS3P (ORCPT
+        Fri, 3 Jan 2020 13:30:00 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39131 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728251AbgACSaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 13:29:15 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 205D51C210C; Fri,  3 Jan 2020 19:29:13 +0100 (CET)
-Date:   Fri, 3 Jan 2020 19:29:11 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Chris Down <chris@chrisdown.name>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 071/114] kernel: sysctl: make drop_caches write-only
-Message-ID: <20200103182911.GE14328@amd>
-References: <20200102220029.183913184@linuxfoundation.org>
- <20200102220036.228967185@linuxfoundation.org>
+        Fri, 3 Jan 2020 13:30:00 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 77so62130695oty.6;
+        Fri, 03 Jan 2020 10:29:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hWRnOA5j7TseJvSe/ETtAVkvfSvMWabJgIKJTm5gz7k=;
+        b=YPPTYENcRdLkPJ9LO9WVZTX/KWRCyTUs5+hcs0GC99dpcKhX79Ihgoe+DvyJW2QcLX
+         58LTRYpZTadC8jj4xcDjIWzx4Tr5MnkKfcUlExf5xnwGmuv0Bu/8PRs7cQvD8bvrTbRg
+         79obVjx/KLSkMxsbrCbHp6N/FOQ+BYIrxyOscRxLaE2nc2rxJLrgD+/2XauwIh9Dbycr
+         U1p2iDlJW+tr9TLpFKAlyW4cGuMGK2Z2sQ3feK7aDgcpbyo6s07f6//8G0zAHGAHGdQ+
+         BMKw/UEfH/e4djxR1Yq9uvO2/XMU/UHyeYI/18xX0bEWoGj8qjmlp/JmHBgrPZZYvobX
+         bEXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hWRnOA5j7TseJvSe/ETtAVkvfSvMWabJgIKJTm5gz7k=;
+        b=U3qpymYpaPsoJ5U/beCmxlVRh4wowjSnmM84LvbimiuoMhtOpthZr2Swy84v1v1FvK
+         M/FMoDd1AWkBqEXQrmLApNuVyNxovz2w/UQBmRtglLElm4o8f9vcXDAj1YhUfepYOe5U
+         nr6VGqSlmNVXSjnMYZUgbTFyxumaAoLZ6XjuFoTd//l/vnUfT5wX34OL7E7QrI+XIbTF
+         ej8xkV72ujjnl69HVt4Qm1vTQlGYz2q4tkzEfyCDAYotnE3dcvtYlOYzrwlWwjbCtBci
+         AnbBnnJfDustZazSOwnsiDd07g8w73Tmc6O0faA2UN4/IuZ8Mzfkseb0JwmWd/gXIl8u
+         oepQ==
+X-Gm-Message-State: APjAAAXAsSaS+KP8IaJnjd/weejOD//kY2uGoDoA504aOzQe3SyvNrCB
+        JmAxQ6Tg7mQdBPq6JM0OXN2M2uBZ6BSSfDqfYkdLuTnU
+X-Google-Smtp-Source: APXvYqyfBRJaMpOt5wFUB98mnddWhdvb0BAS7MofWiaqwMMXNQ497wo1MzrJLJ+x6DZB4QCUsoECL1ufMuDJJE12N1I=
+X-Received: by 2002:a9d:3f61:: with SMTP id m88mr81555508otc.56.1578076199332;
+ Fri, 03 Jan 2020 10:29:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="hwvH6HDNit2nSK4j"
-Content-Disposition: inline
-In-Reply-To: <20200102220036.228967185@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20200102122004.216c85da@gandalf.local.home> <20200102234950.GA14768@krava>
+ <20200102185853.0ed433e4@gandalf.local.home> <20200103133640.GD9715@krava>
+In-Reply-To: <20200103133640.GD9715@krava>
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Date:   Fri, 3 Jan 2020 18:29:23 +0000
+Message-ID: <CADVatmO7xZL2ddQOKoB6OVLZ4SRevd=0Tr5rQ=go5J9qZvD9Rg@mail.gmail.com>
+Subject: Re: [RFC] tools lib traceevent: How to do library versioning being in
+ the Linux kernel source?
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jan 3, 2020 at 1:36 PM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Thu, Jan 02, 2020 at 06:58:53PM -0500, Steven Rostedt wrote:
+> > On Fri, 3 Jan 2020 00:49:50 +0100
+> > Jiri Olsa <jolsa@redhat.com> wrote:
+> >
+> > > > Should we move libtraceevent into a stand alone git repo (on
+> > > > kernel.org), that can have tags and branches specifically for it? We
+> > > > can keep a copy in the Linux source tree for perf to use till it
+> > >
+> > > so libbpf 'moved' for this reason to github repo,
+> > > but keeping the kernel as the true/first source,
+> > > and updating github repo when release is ready
+> > >
+> > > libbpf github repo is then source for fedora (and others)
+> > > package
+> >
+> > Ah, so perhaps I should follow this? I could keep it a kernel.org repo
+> > (as I rather have it there anyway).
+>
+> sounds good, and if it works out, we'll follow you with libperf :-)
+>
+> if you want to check on the libbpf:
+>   https://github.com/libbpf/libbpf
 
---hwvH6HDNit2nSK4j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+fwiw, I have opened a bug report in Debian requesting to package
+libbpf from the github repo.
 
-Hi!
-
-> From: Johannes Weiner <hannes@cmpxchg.org>
->=20
-> [ Upstream commit 204cb79ad42f015312a5bbd7012d09c93d9b46fb ]
->=20
-> Currently, the drop_caches proc file and sysctl read back the last value
-> written, suggesting this is somehow a stateful setting instead of a
-> one-time command.  Make it write-only, like e.g.  compact_memory.
-
-I have no problem with that, but is it good idea for stable?
-
-Plus, I seem to recall that drop_caches was somehow dangerous,
-debugging-only stuff, one should not use on production system. Did
-that get fixed in the meantime?
-
-Best regards,
-								Pavel
-							=09
-> @@ -1411,7 +1411,7 @@ static struct ctl_table vm_table[] =3D {
->  		.procname	=3D "drop_caches",
->  		.data		=3D &sysctl_drop_caches,
->  		.maxlen		=3D sizeof(int),
-> -		.mode		=3D 0644,
-> +		.mode		=3D 0200,
->  		.proc_handler	=3D drop_caches_sysctl_handler,
->  		.extra1		=3D &one,
->  		.extra2		=3D &four,
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---hwvH6HDNit2nSK4j
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl4Ph/cACgkQMOfwapXb+vKyewCfYGsGaL15ikZRERDm/pxgfBWU
-vTQAn3NSUiTWplLsT2H6o0QHeo59SVpW
-=vtP8
------END PGP SIGNATURE-----
-
---hwvH6HDNit2nSK4j--
+-- 
+Regards
+Sudip
