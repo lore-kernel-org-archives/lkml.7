@@ -2,149 +2,104 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BD3C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 415F3C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A691622522
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:29:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="E//tiWU5"
+	by mail.kernel.org (Postfix) with ESMTP id 222952253D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:29:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbgACS3N (ORCPT
+        id S1728466AbgACS3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 13:29:13 -0500
-Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.20]:13056 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728251AbgACS3N (ORCPT
+        Fri, 3 Jan 2020 13:29:16 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:39346 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728251AbgACS3P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 13:29:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1578076150;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=fIiUAFaJKRCZDkohT1aGQDBd6CWmC0Y22jxPKakOrTo=;
-        b=E//tiWU5XeJpUC6pUZtEaBXmaEMrMUTMjnTFhiyaH7nHHt4QkC2yxTVSvODxc+8Pvb
-        fEtxtp3u7GEDFM3nWdY9lYYB/qyAEWmqd5dbtAwL8p16Py7KuDXWslJmUHO1gXKGt2Z0
-        o/RDi3/Euc3mBEEYYZbUaKqg5MPJPAX2DObSlD6iqL51m0it4B3nXQoZDTFEaV3A9/Pp
-        rGkGqUg8jX9xYlDsuWt0CQYYGOaP05SI+EwhbGAUvPpGz3C18eQgPMg0ey2qkq/TbQ08
-        +7WeDa1HQzggHJ//tKXNI/1ElE/zS75TY1N9/N0gzQ8pv8O4qCUMdigPANBVi1a0Lu4q
-        /RfA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmMkw43qEhA="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
-        with ESMTPSA id a09dafw03IT3O7y
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Fri, 3 Jan 2020 19:29:03 +0100 (CET)
-Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [BISECTED, REGRESSION] OMAP3 onenand/DMA broken
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200103172326.GF15023@darkstar.musicnaut.iki.fi>
-Date:   Fri, 3 Jan 2020 19:29:03 +0100
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <521CC383-1118-480F-BC3B-B0E12F9F4CFC@goldelico.com>
-References: <20200103081726.GD15023@darkstar.musicnaut.iki.fi> <6D46CA13-2E50-4144-86F1-CE4988BD654D@goldelico.com> <20200103172326.GF15023@darkstar.musicnaut.iki.fi>
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>
-X-Mailer: Apple Mail (2.3124)
+        Fri, 3 Jan 2020 13:29:15 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 205D51C210C; Fri,  3 Jan 2020 19:29:13 +0100 (CET)
+Date:   Fri, 3 Jan 2020 19:29:11 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Chris Down <chris@chrisdown.name>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 071/114] kernel: sysctl: make drop_caches write-only
+Message-ID: <20200103182911.GE14328@amd>
+References: <20200102220029.183913184@linuxfoundation.org>
+ <20200102220036.228967185@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="hwvH6HDNit2nSK4j"
+Content-Disposition: inline
+In-Reply-To: <20200102220036.228967185@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Aaro,
 
-> Am 03.01.2020 um 18:23 schrieb Aaro Koskinen <aaro.koskinen@iki.fi>:
+--hwvH6HDNit2nSK4j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> From: Johannes Weiner <hannes@cmpxchg.org>
 >=20
-> Hi,
+> [ Upstream commit 204cb79ad42f015312a5bbd7012d09c93d9b46fb ]
 >=20
-> On Fri, Jan 03, 2020 at 09:46:58AM +0100, H. Nikolaus Schaller wrote:
->>> Am 03.01.2020 um 09:17 schrieb Aaro Koskinen <aaro.koskinen@iki.fi>:
->>> When booting v5.4 (or v5.5-rc4) on N900, the console gets flooded =
-with:
->>>=20
->>> [    8.335754] omap2-onenand 1000000.onenand: timeout waiting for =
-DMA
->>> [    8.365753] omap2-onenand 1000000.onenand: timeout waiting for =
-DMA
->>> [    8.395751] omap2-onenand 1000000.onenand: timeout waiting for =
-DMA
->>> [    8.425750] omap2-onenand 1000000.onenand: timeout waiting for =
-DMA
->>> [    8.455749] omap2-onenand 1000000.onenand: timeout waiting for =
-DMA
->>> [    8.485748] omap2-onenand 1000000.onenand: timeout waiting for =
-DMA
->>> [    8.515777] omap2-onenand 1000000.onenand: timeout waiting for =
-DMA
->>> [    8.545776] omap2-onenand 1000000.onenand: timeout waiting for =
-DMA
->>> [    8.575775] omap2-onenand 1000000.onenand: timeout waiting for =
-DMA
->>>=20
->>> making the system unusable.
->>=20
->> I can confirm that this issue exists but so far we failed to bisect
->> and make a proper report.
->>=20
->> Sometimes the system boots fine and sometimes it fails.
+> Currently, the drop_caches proc file and sysctl read back the last value
+> written, suggesting this is somehow a stateful setting instead of a
+> one-time command.  Make it write-only, like e.g.  compact_memory.
 
-Well, we boot from =C2=B5SD and the number of the timeouts changes. So =
-it may
-be a race or depend on driver load sequence if we come to a login: or =
-not.
-But this is not the real bug.
+I have no problem with that, but is it good idea for stable?
 
->>=20
->> It happens on omap3-gta04a5one.dts only, but not with =
-omap3-gta04a4.dts
->> (both dm3730 but different NAND).
->=20
-> I tried three different boards (N810, N900 and N950) and it always
-> fails reliably.
+Plus, I seem to recall that drop_caches was somehow dangerous,
+debugging-only stuff, one should not use on production system. Did
+that get fixed in the meantime?
 
-The big question is why the patch is harmful.
+Best regards,
+								Pavel
+							=09
+> @@ -1411,7 +1411,7 @@ static struct ctl_table vm_table[] =3D {
+>  		.procname	=3D "drop_caches",
+>  		.data		=3D &sysctl_drop_caches,
+>  		.maxlen		=3D sizeof(int),
+> -		.mode		=3D 0644,
+> +		.mode		=3D 0200,
+>  		.proc_handler	=3D drop_caches_sysctl_handler,
+>  		.extra1		=3D &one,
+>  		.extra2		=3D &four,
 
-I tried to understand what the patch is doing (without any knowledge
-about the DMA hard- or software architecture).
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Basically it reorders error handling and some corner cases.
-Maybe it handles one differently that happens only for OneNAND.
+--hwvH6HDNit2nSK4j
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-What did jump to my mind is that before the patch there is an
-unconditional call to omap_dma_chan_read(c, CCR) if (!c->paused && =
-c->running)=20
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-And then DMA_COMPLETE is returned or ret if txstate =3D=3D 0
+iEYEARECAAYFAl4Ph/cACgkQMOfwapXb+vKyewCfYGsGaL15ikZRERDm/pxgfBWU
+vTQAn3NSUiTWplLsT2H6o0QHeo59SVpW
+=vtP8
+-----END PGP SIGNATURE-----
 
-With the new code the check for DMA_COMPLETE comes first and
-directly leads to a return. Independently of txstate.
-
-So if we have (!c->paused && c->running) and dma_cookie_status()
-returns DMA_COMPLETE, there is no longer a call to omap_dma_chan_read()
-
-Since I do not understand what omap_dma_chan_read() is doing,
-and if (!c->paused && c->running) is relevant here,
-I can not conclude if that is harmful.
-
-But I can imagine that reading a register may have a side-effect of
-resetting some bit like interrupt status registers.
-
-I hope that Peter or Tony can respond soon.
-
-BR and thanks,
-Nikolaus
-
-
-
+--hwvH6HDNit2nSK4j--
