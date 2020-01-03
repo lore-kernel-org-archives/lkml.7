@@ -2,53 +2,53 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 437A9C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78358C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19C7C227BF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 423BC22314
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:08:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="FTTDI0rC"
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="DMyYrFTZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgACPIG (ORCPT
+        id S1728000AbgACPIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 10:08:06 -0500
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:64874 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727762AbgACPID (ORCPT
+        Fri, 3 Jan 2020 10:08:07 -0500
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:28273 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727742AbgACPID (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 3 Jan 2020 10:08:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
   t=1578064083; x=1609600083;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=iScVvzy4kldAidXvB46y5RqTW5IdFH/pNIveRmCeq3Q=;
-  b=FTTDI0rCgGp+OrKxBHgUzBwNeOgX2d3me+ujoJNbodbZSgAtuqZe+s58
-   hPJiThkNWXGG14Zb1Pk2J0o+bSGaNKO5Hg/cj53RwnYG5qj73aNPEBrRM
-   UJACxdhnME44e0sE/suXQAeiMW4Ib7CKa7xx4IgTTw2cFtI2BmHK6riqW
-   c=;
-IronPort-SDR: F9CLz6y3IrEhyxpRN784UtvWMqWOfXnbUcR98YjCf+RgGtuAUdx/g2PjEgAKVmUDqflDaEAe56
- qDocL2B+R9DQ==
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Z3tkOD4FG1FNGsCTSm+doFuNCbFR2kiicI330Grt1Ls=;
+  b=DMyYrFTZ5N/znj46NzoqHqlQK+IVJ0E8Raq272GnZlp89a182pe1LFel
+   azIxYGzVQrwNF8FSlKGsk0DmkW3rHNQfBCMo4s0aegB/Fd3Fg/q2G8/SB
+   q1xBpF1ihrSGtMSkvU+6WVoMgpQ2yvF3a07ngUqk0RF3oI7T22kiccDGQ
+   0=;
+IronPort-SDR: j/1aZfZMIEify9CS7bxtKFpVmv3DbjadmiJ6p8Keovlx4Hcznlj640wtQ3rbdsm0sb1sgXa8tG
+ rdIoBRWwoGYQ==
 X-IronPort-AV: E=Sophos;i="5.69,390,1571702400"; 
-   d="scan'208";a="11421828"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-27fb8269.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 03 Jan 2020 15:07:44 +0000
-Received: from u7588a65da6b65f.ant.amazon.com (iad7-ws-svc-lb50-vlan3.amazon.com [10.0.93.214])
-        by email-inbound-relay-1e-27fb8269.us-east-1.amazon.com (Postfix) with ESMTPS id 41B93A05E2;
-        Fri,  3 Jan 2020 15:07:39 +0000 (UTC)
+   d="scan'208";a="16652123"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 03 Jan 2020 15:07:44 +0000
+Received: from u7588a65da6b65f.ant.amazon.com (iad7-ws-svc-lb50-vlan2.amazon.com [10.0.93.210])
+        by email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com (Postfix) with ESMTPS id B9D05A2861;
+        Fri,  3 Jan 2020 15:07:40 +0000 (UTC)
 Received: from u7588a65da6b65f.ant.amazon.com (localhost [127.0.0.1])
-        by u7588a65da6b65f.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTPS id 003F7b23020436
+        by u7588a65da6b65f.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTPS id 003F7cx3020489
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 3 Jan 2020 16:07:37 +0100
+        Fri, 3 Jan 2020 16:07:38 +0100
 Received: (from jschoenh@localhost)
-        by u7588a65da6b65f.ant.amazon.com (8.15.2/8.15.2/Submit) id 003F7ah5020431;
-        Fri, 3 Jan 2020 16:07:36 +0100
+        by u7588a65da6b65f.ant.amazon.com (8.15.2/8.15.2/Submit) id 003F7cHx020488;
+        Fri, 3 Jan 2020 16:07:38 +0100
 From:   =?UTF-8?q?Jan=20H=2E=20Sch=C3=B6nherr?= <jschoenh@amazon.de>
 To:     Borislav Petkov <bp@alien8.de>
 Cc:     =?UTF-8?q?Jan=20H=2E=20Sch=C3=B6nherr?= <jschoenh@amazon.de>,
@@ -58,10 +58,12 @@ Cc:     =?UTF-8?q?Jan=20H=2E=20Sch=C3=B6nherr?= <jschoenh@amazon.de>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Subject: [PATCH v2 0/6] x86/mce: Various fixes and cleanups for MCE handling
-Date:   Fri,  3 Jan 2020 16:07:16 +0100
-Message-Id: <20200103150722.20313-1-jschoenh@amazon.de>
+Subject: [PATCH v2 6/6] x86/mce: Dynamically register default MCE handler
+Date:   Fri,  3 Jan 2020 16:07:22 +0100
+Message-Id: <20200103150722.20313-7-jschoenh@amazon.de>
 X-Mailer: git-send-email 2.22.0.3.gb49bb57c8208.dirty
+In-Reply-To: <20200103150722.20313-1-jschoenh@amazon.de>
+References: <20200103150722.20313-1-jschoenh@amazon.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -70,45 +72,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris.
+The default MCE handler takes action, when no external MCE handler is
+registered. Instead of checking for external handlers within the default
+MCE handler, only register the default MCE handler when there are no
+external handlers in the first place.
 
-This is the 2nd iteration of a smallish series with some fixes/cleanups
-for the handling of MCEs. It should apply cleanly to your ras/core branch.
+Signed-off-by: Jan H. Schönherr <jschoenh@amazon.de>
+---
+New in v2. This is something that became possible due to patch 4.
+I'm not entirely happy with it.
 
-The first iteration can be found here:
-  https://lore.kernel.org/linux-edac/20191217073414.GB28788@zn.tnic/T/
+One the one hand, I'm wondering whether there's a nicer way to handle
+(de-)registration races.
 
-Changes v1 -> v2:
-- dropped patches 3, 5, 6  as you already cherry-picked them into
-  ras/core or ras/urgent (this renumbers patch 4 in v1 to patch 3 in v2);
-- addressed remaining comments on patches 1-3;
-- added patch 5 as per Yazen's comment that the SRAO notifier shall
-  not be used on AMD for now;
-- added patch 4 as a prerequisite for the given realization of patch 5;
-- added patch 6 as an example, what else can be done due to patch 4.
+On the other hand, I'm starting to question the whole logic to "only print
+the MCE if nothing else in the kernel has a handler registered". Is that
+really how it should be? For example, there are handlers that filter for a
+specific subset of MCEs. If one of those is registered, we're losing all
+information for MCEs that don't match.
 
-See individual patches 1-3 for more detailed comments on changes.
+A possible solution to the latter would be to have a "handled" or "printed"
+flag within "struct mce" and print the MCE based on that in the default
+handler. What do you think?
+---
+ arch/x86/kernel/cpu/mce/core.c | 90 ++++++++++++++++++++--------------
+ 1 file changed, 52 insertions(+), 38 deletions(-)
 
-I'm not yet convinced, that patch 6 is an entirely good idea. I've
-still included it for discussion. If we end up not doing something
-like it, we can as well rewrite patch 5 to be just another "if"
-within srao_decode_notifier()/uc_decode_notifier().
-
-Regards
-Jan
-
-Jan H. Schönherr (6):
-  x86/mce: Take action on UCNA/Deferred errors again
-  x86/mce: Make mce=nobootlog work again
-  x86/mce: Fix use of uninitialized MCE message string
-  x86/mce: Allow a variable number of internal MCE decode notifiers
-  x86/mce: Do not take action on SRAO/Deferred errors on AMD for now
-  x86/mce: Dynamically register default MCE handler
-
- arch/x86/include/asm/mce.h     |   2 +-
- arch/x86/kernel/cpu/mce/core.c | 145 ++++++++++++++++++---------------
- 2 files changed, 81 insertions(+), 66 deletions(-)
-
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index d8fe5b048ee7..3b6e37c5252f 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -156,36 +156,6 @@ void mce_log(struct mce *m)
+ }
+ EXPORT_SYMBOL_GPL(mce_log);
+ 
+-/*
+- * We run the default notifier as long as we have no external
+- * notifiers registered on the chain.
+- */
+-static atomic_t num_notifiers;
+-
+-static void mce_register_decode_chain_internal(struct notifier_block *nb)
+-{
+-	if (WARN_ON(nb->priority > MCE_PRIO_MCELOG && nb->priority < MCE_PRIO_EDAC))
+-		return;
+-
+-	blocking_notifier_chain_register(&x86_mce_decoder_chain, nb);
+-}
+-
+-void mce_register_decode_chain(struct notifier_block *nb)
+-{
+-	atomic_inc(&num_notifiers);
+-
+-	mce_register_decode_chain_internal(nb);
+-}
+-EXPORT_SYMBOL_GPL(mce_register_decode_chain);
+-
+-void mce_unregister_decode_chain(struct notifier_block *nb)
+-{
+-	atomic_dec(&num_notifiers);
+-
+-	blocking_notifier_chain_unregister(&x86_mce_decoder_chain, nb);
+-}
+-EXPORT_SYMBOL_GPL(mce_unregister_decode_chain);
+-
+ static inline u32 ctl_reg(int bank)
+ {
+ 	return MSR_IA32_MCx_CTL(bank);
+@@ -606,18 +576,19 @@ static struct notifier_block mce_uc_nb = {
+ 	.priority	= MCE_PRIO_UC,
+ };
+ 
++/*
++ * We run the default notifier as long as we have no external
++ * notifiers registered on the chain.
++ */
++static atomic_t num_notifiers;
++
+ static int mce_default_notifier(struct notifier_block *nb, unsigned long val,
+ 				void *data)
+ {
+ 	struct mce *m = (struct mce *)data;
+ 
+-	if (!m)
+-		return NOTIFY_DONE;
+-
+-	if (atomic_read(&num_notifiers))
+-		return NOTIFY_DONE;
+-
+-	__print_mce(m);
++	if (m)
++		__print_mce(m);
+ 
+ 	return NOTIFY_DONE;
+ }
+@@ -628,6 +599,49 @@ static struct notifier_block mce_default_nb = {
+ 	.priority	= MCE_PRIO_LOWEST,
+ };
+ 
++static void update_default_notifier_registration(void)
++{
++	bool has_notifiers = !!atomic_read(&num_notifiers);
++
++retry:
++	if (has_notifiers)
++		blocking_notifier_chain_unregister(&x86_mce_decoder_chain,
++						   &mce_default_nb);
++	else
++		blocking_notifier_chain_cond_register(&x86_mce_decoder_chain,
++						      &mce_default_nb);
++
++	if (has_notifiers != !!atomic_read(&num_notifiers)) {
++		has_notifiers = !has_notifiers;
++		goto retry;
++	}
++}
++
++static void mce_register_decode_chain_internal(struct notifier_block *nb)
++{
++	if (WARN_ON(nb->priority > MCE_PRIO_MCELOG &&
++		    nb->priority < MCE_PRIO_EDAC))
++		return;
++
++	blocking_notifier_chain_register(&x86_mce_decoder_chain, nb);
++}
++
++void mce_register_decode_chain(struct notifier_block *nb)
++{
++	atomic_inc(&num_notifiers);
++	mce_register_decode_chain_internal(nb);
++	update_default_notifier_registration();
++}
++EXPORT_SYMBOL_GPL(mce_register_decode_chain);
++
++void mce_unregister_decode_chain(struct notifier_block *nb)
++{
++	atomic_dec(&num_notifiers);
++	update_default_notifier_registration();
++	blocking_notifier_chain_unregister(&x86_mce_decoder_chain, nb);
++}
++EXPORT_SYMBOL_GPL(mce_unregister_decode_chain);
++
+ /*
+  * Read ADDR and MISC registers.
+  */
+@@ -1972,7 +1986,7 @@ int __init mcheck_init(void)
+ 	mce_register_decode_chain_internal(&first_nb);
+ 	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD)
+ 		mce_register_decode_chain_internal(&mce_uc_nb);
+-	mce_register_decode_chain_internal(&mce_default_nb);
++	update_default_notifier_registration();
+ 	mcheck_vendor_init_severity();
+ 
+ 	INIT_WORK(&mce_work, mce_gen_pool_process);
 -- 
 2.22.0.3.gb49bb57c8208.dirty
 
