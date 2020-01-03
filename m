@@ -2,84 +2,98 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3639AC3276F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 03:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE974C3276F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 03:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13D2821582
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 03:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2B1221582
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 03:03:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R/1jD1Nn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbgACDDK (ORCPT
+        id S1727423AbgACDDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 22:03:10 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:60049 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726481AbgACDDJ (ORCPT
+        Thu, 2 Jan 2020 22:03:32 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:60482 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbgACDDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 22:03:09 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R971e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TmhL4gb_1578020579;
-Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TmhL4gb_1578020579)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 03 Jan 2020 11:03:07 +0800
-From:   Wen Yang <wenyang@linux.alibaba.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     xlpang@linux.alibaba.com, Wen Yang <wenyang@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ftrace: avoid potential division by zero
-Date:   Fri,  3 Jan 2020 11:02:48 +0800
-Message-Id: <20200103030248.14516-1-wenyang@linux.alibaba.com>
-X-Mailer: git-send-email 2.23.0
+        Thu, 2 Jan 2020 22:03:32 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0032xkfC086712;
+        Fri, 3 Jan 2020 03:03:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=7Uzhms73a+KJbfSORtunBkSoE2Z7DP+Q+lxT3XVHdoA=;
+ b=R/1jD1NnKGX7/K3I27fBOLJWsRClXryip95BkQ+8YVeXm05fjOyQvTYaan/e64Qweoac
+ 9udVPmiijnZJip7nuPT9UYtOikEjK0dhCKfuF0falCYoXNVpaG92oppNY0xtkiz0wwUS
+ q8PGnsdBaFUpTvkUWKZ9H6Q4BgCdb2HWRnaZc4+eRkDlJXFQ+Gpn18gyBxxtssT4QjgP
+ Ufa+IN9kLk4waD2v2cGe877meQz5hE+5fXjT0BwjcWzM84bPT6ut9zA9yiAxcyPsnLig
+ YIdQOj80nD1q1w29iYyMNNlp0t4qcTnlRmgDe9pA/m9LWvtNxVKTNXribNcntMaMSG8C 6A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2x5ypqta06-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Jan 2020 03:03:07 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0032xHrY183017;
+        Fri, 3 Jan 2020 03:03:07 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2x8bsttj74-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Jan 2020 03:03:07 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00332pLK000715;
+        Fri, 3 Jan 2020 03:02:51 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 02 Jan 2020 19:02:51 -0800
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
+        y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux-doc@vger.kernel.org, corbet@lwn.net, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Subject: Re: [GIT PULL v3 00/27] block, scsi: final compat_ioctl cleanup
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20200102145552.1853992-1-arnd@arndb.de>
+Date:   Thu, 02 Jan 2020 22:02:47 -0500
+In-Reply-To: <20200102145552.1853992-1-arnd@arndb.de> (Arnd Bergmann's message
+        of "Thu, 2 Jan 2020 15:55:18 +0100")
+Message-ID: <yq1woa944yw.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=965
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001030026
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001030027
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ftrace_profile->counter is unsigned long and
-do_div truncates it to 32 bits, which means it can test
-non-zero and be truncated to zero for division.
-Fix this issue by using div64_ul() instead.
 
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-kernel@vger.kernel.org
----
-v2: get rid of the pre-assigning of avg.
+Arnd,
 
- kernel/trace/ftrace.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> If this version seems ok to everyone, please pull into the scsi tree.
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index ac99a35..9bf1f2c 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -526,8 +526,7 @@ static int function_stat_show(struct seq_file *m, void *v)
- 	}
- 
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
--	avg = rec->time;
--	do_div(avg, rec->counter);
-+	avg = div64_ul(rec->time, rec->counter);
- 	if (tracing_thresh && (avg < tracing_thresh))
- 		goto out;
- #endif
-@@ -553,7 +552,8 @@ static int function_stat_show(struct seq_file *m, void *v)
- 		 * Divide only 1000 for ns^2 -> us^2 conversion.
- 		 * trace_print_graph_duration will divide 1000 again.
- 		 */
--		do_div(stddev, rec->counter * (rec->counter - 1) * 1000);
-+		stddev = div64_ul(stddev,
-+				  rec->counter * (rec->counter - 1) * 1000);
- 	}
- 
- 	trace_seq_init(&s);
+Looks good to me. Please address Ben's comment and I'll pull it in.
+
 -- 
-1.8.3.1
-
+Martin K. Petersen	Oracle Linux Engineering
