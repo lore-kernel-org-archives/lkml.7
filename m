@@ -2,102 +2,83 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FA1C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 21:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19AA2C00523
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 21:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8634022314
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 21:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6EF2215A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 21:46:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgACVmc (ORCPT
+        id S1728741AbgACVq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 16:42:32 -0500
-Received: from mga11.intel.com ([192.55.52.93]:35860 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728664AbgACVmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 16:42:31 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jan 2020 13:42:31 -0800
-X-IronPort-AV: E=Sophos;i="5.69,392,1571727600"; 
-   d="scan'208";a="421549597"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jan 2020 13:42:31 -0800
-Date:   Fri, 3 Jan 2020 13:42:29 -0800
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Jan =?iso-8859-1?Q?H=2E_Sch=F6nherr?= <jschoenh@amazon.de>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        Fri, 3 Jan 2020 16:46:59 -0500
+Received: from smtprelay0098.hostedemail.com ([216.40.44.98]:38454 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728549AbgACVq6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 16:46:58 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id C64CE249C;
+        Fri,  3 Jan 2020 21:46:56 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: bulb70_249ac3912826
+X-Filterd-Recvd-Size: 2061
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Fri,  3 Jan 2020 21:46:55 +0000 (UTC)
+Message-ID: <e76bdf736141d5a390e57f2bc8f6f6f9fbe574c1.camel@perches.com>
+Subject: Re: [PATCH 3/3] lib/find_bit.c: uninline helper _find_next_bit()
+From:   Joe Perches <joe@perches.com>
+To:     Yury Norov <yury.norov@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Subject: Re: [PATCH v2 6/6] x86/mce: Dynamically register default MCE handler
-Message-ID: <20200103214229.GA10677@agluck-desk2.amr.corp.intel.com>
-References: <20200103150722.20313-1-jschoenh@amazon.de>
- <20200103150722.20313-7-jschoenh@amazon.de>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 03 Jan 2020 13:46:07 -0800
+In-Reply-To: <20200103202846.21616-3-yury.norov@gmail.com>
+References: <20200103202846.21616-1-yury.norov@gmail.com>
+         <20200103202846.21616-3-yury.norov@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200103150722.20313-7-jschoenh@amazon.de>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 04:07:22PM +0100, Jan H. Schönherr wrote:
-> The default MCE handler takes action, when no external MCE handler is
-> registered. Instead of checking for external handlers within the default
-> MCE handler, only register the default MCE handler when there are no
-> external handlers in the first place.
-> 
-> Signed-off-by: Jan H. Schönherr <jschoenh@amazon.de>
+On Fri, 2020-01-03 at 12:28 -0800, Yury Norov wrote:
+> It saves 25% of .text for arm64, and more for BE architectures.
+
+This seems a rather misleading code size reduction description.
+
+Please detail the specific code sizes using "size lib/find_bit.o"
+before and after this change.
+
+Also, _find_next_bit is used 3 times, perhaps any code size
+increase is appropriate given likely reduced run time.
+
+> Signed-off-by: Yury Norov <yury.norov@gmail.com>
 > ---
-> New in v2. This is something that became possible due to patch 4.
-> I'm not entirely happy with it.
+>  lib/find_bit.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> One the one hand, I'm wondering whether there's a nicer way to handle
-> (de-)registration races.
-> 
+> diff --git a/lib/find_bit.c b/lib/find_bit.c
+> index c03cbecb2b1f6..0e4b2b90c9c02 100644
+> --- a/lib/find_bit.c
+> +++ b/lib/find_bit.c
+> @@ -27,7 +27,7 @@
+>   *    searching it for one bits.
+>   *  - The optional "addr2", which is anded with "addr1" if present.
+>   */
+> -static inline unsigned long _find_next_bit(const unsigned long *addr1,
+> +static unsigned long _find_next_bit(const unsigned long *addr1,
+>  		const unsigned long *addr2, unsigned long nbits,
+>  		unsigned long start, unsigned long invert, unsigned long le)
+>  {
 
-Instead of unregistering/registering the default notifier depending
-on whether there are other notifiers, couldn't you just make the
-default notifier check to see if it should print. E.g.
-
-static int mce_default_notifier(struct notifier_block *nb, unsigned long val,
-			void *data)
-{
-	struct mce *m = (struct mce *)data;
-
-	if (m && !atomic_read(&num_notifiers))
-		__print_mce(m);
-
-	return NOTIFY_DONE;
-}
-
-> On the other hand, I'm starting to question the whole logic to "only print
-> the MCE if nothing else in the kernel has a handler registered". Is that
-> really how it should be? For example, there are handlers that filter for a
-> specific subset of MCEs. If one of those is registered, we're losing all
-> information for MCEs that don't match.
-
-Maybe put control of this into the hands of the notifiers ... if
-a notifier thinks that it does something useful with the log
-that makes the console log redundant, then it could call a function
-to bump the count to suppress the __print_mce(). Simple filter functions
-on the chain wouldn't do that.
-
-If we go this path the variable should be named something like
-"suppress_console_mce" rather than num_notifiers.
-
-Might also be useful to have some command line option or debugfs knob
-to force printing for those cases where bad stuff is happening and we
-don't see what was logged before a crash drops all the bits on the floor.
-
--Tony
