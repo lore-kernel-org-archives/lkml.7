@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7DFC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295F1C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58E0721D7D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3CCD21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578051660;
-	bh=f7ymohb97S6b58KJNRXy0ZTCMS6AMDRFCM6vKzcZbSc=;
+	s=default; t=1578051662;
+	bh=9JvlvhrYK9Wi6Gf4HX7L9oP4Ov8eQJKYU945ho6O46s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p9iUveTTUiPwJTzLloAW5+6zjOnwYFxx3vmAG0R5e3G+c7OCfdT2Oto2b8yD1og4I
-	 Rg/6eCIaYF9/gul+6PIqIgL6OrCqo93QJVTSAj3lvis0ZDJOSrNgUZg1PuLggFYXg4
-	 M9UgeMUvZZLtinkSDvI2xCjLlOcv1DYls5i7xDr0=
+	b=tTl5HRE81XNthzU9STX8HqrklSWoTQpjz9uxGF0Q5tWAizYM0m6Z/5+XKXMiFCeJE
+	 m8eC7DqXK2BC6SGh58tGTgMp0LH3idDYK0oAUm69vokDd5QbzaQDTKLnlv0w/YFF+G
+	 awiePjy5y75ZcC9SXV/eBQne5YS9O/PRDpwOSmKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgACLk6 (ORCPT
+        id S1727934AbgACLlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 06:40:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40902 "EHLO mail.kernel.org"
+        Fri, 3 Jan 2020 06:41:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727890AbgACLk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 06:40:56 -0500
+        id S1727911AbgACLk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 06:40:58 -0500
 Received: from localhost.localdomain (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF79824653;
-        Fri,  3 Jan 2020 11:40:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFFB12253D;
+        Fri,  3 Jan 2020 11:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578051655;
-        bh=f7ymohb97S6b58KJNRXy0ZTCMS6AMDRFCM6vKzcZbSc=;
+        s=default; t=1578051657;
+        bh=9JvlvhrYK9Wi6Gf4HX7L9oP4Ov8eQJKYU945ho6O46s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bn/D8MffaovgfJrEgBR2/9qNzhjo27d/6t/OQ9z/zdLOm7PGiphRgUkP6ofpL0ZVd
-         ZyL8zKpKiJnh0xix0u+tOhxRAtnrlPAPFiU4tyDIfEMacQZnJGcSIXyzMFMMCHU+dD
-         7TA9cBVdwd0ZyGgfaWcC8Zov07IJBQS2fq9Xf38A=
+        b=Rm2lVDV7hYQ9IlNzawwmUknp0H0x967nUlEoCK69j/1MXLn5h3AzPHfsdqs3bWz2Q
+         DA4uBLpfRSKwBxpyt7ToCc91MzDmfG+EgUFzYiwgIM2ua0N7TTyoNTImOpuLk6kjTS
+         LFUypxMhtNuGtr6yxPC/7RArXOr3/sUXy+R39MMs=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>,
         linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
         Arvind Sankar <nivedita@alum.mit.edu>,
         Matthew Garrett <mjg59@google.com>
-Subject: [PATCH 19/20] efi/x86: don't map the entire kernel text RW for mixed mode
-Date:   Fri,  3 Jan 2020 12:39:52 +0100
-Message-Id: <20200103113953.9571-20-ardb@kernel.org>
+Subject: [PATCH 20/20] efi/x86: avoid RWX mappings for all of DRAM
+Date:   Fri,  3 Jan 2020 12:39:53 +0100
+Message-Id: <20200103113953.9571-21-ardb@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200103113953.9571-1-ardb@kernel.org>
 References: <20200103113953.9571-1-ardb@kernel.org>
@@ -60,41 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mixed mode thunking routine requires a part of it to be
-mapped 1:1, and for this reason, we currently map the entire
-kernel .text read/write in the EFI page tables, which is bad.
+The EFI code creates RWX mappings for all memory regions that are
+occupied after the stub completes, and in the mixed mode case, it
+even creates RWX mappings for all of the remaining DRAM as well.
 
-In fact, the kernel_map_pages_in_pgd() invocation that installs
-this mapping is entirely redundant, since all of DRAM is already
-1:1 mapped read/write in the EFI page tables when we reach this
-point, which means that .rodata is mapped read-write as well.
-
-So let's remap both .text and .rodata read-only in the EFI
-page tables.
+Let's try to avoid this, by setting the NX bit for all memory
+regions except the ones that are marked as EFI runtime services
+code [which means text+rodata+data in practice, so we cannot mark
+them read-only right away]
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/platform/efi/efi_64.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/platform/efi/efi_64.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index c13fa2150976..6ec58ff60b56 100644
+index 6ec58ff60b56..a974f8a17f73 100644
 --- a/arch/x86/platform/efi/efi_64.c
 +++ b/arch/x86/platform/efi/efi_64.c
-@@ -391,11 +391,11 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
- 
- 	efi_scratch.phys_stack = page_to_phys(page + 1); /* stack grows down */
- 
--	npages = (_etext - _text) >> PAGE_SHIFT;
-+	npages = (__end_rodata_aligned - _text) >> PAGE_SHIFT;
- 	text = __pa(_text);
- 	pfn = text >> PAGE_SHIFT;
- 
--	pf = _PAGE_RW | _PAGE_ENC;
-+	pf = _PAGE_ENC;
- 	if (kernel_map_pages_in_pgd(pgd, pfn, text, npages, pf)) {
- 		pr_err("Failed to map kernel text 1:1\n");
+@@ -365,10 +365,6 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+ 	 * as trim_bios_range() will reserve the first page and isolate it away
+ 	 * from memory allocators anyway.
+ 	 */
+-	pf = _PAGE_RW;
+-	if (sev_active())
+-		pf |= _PAGE_ENC;
+-
+ 	if (kernel_map_pages_in_pgd(pgd, 0x0, 0x0, 1, pf)) {
+ 		pr_err("Failed to create 1:1 mapping for the first page!\n");
  		return 1;
+@@ -410,6 +406,19 @@ static void __init __map_region(efi_memory_desc_t *md, u64 va)
+ 	unsigned long pfn;
+ 	pgd_t *pgd = efi_mm.pgd;
+ 
++	/*
++	 * EFI_RUNTIME_SERVICES_CODE regions typically cover PE/COFF
++	 * executable images in memory that consist of both R-X and
++	 * RW- sections, so we cannot apply read-only or non-exec
++	 * permissions just yet. However, modern EFI systems provide
++	 * a memory attributes table that describes those sections
++	 * with the appropriate restricted permissions, which are
++	 * applied in efi_runtime_update_mappings() below. All other
++	 * regions can be mapped non-executable at this point.
++	 */
++	if (md->type != EFI_RUNTIME_SERVICES_CODE)
++		flags |= _PAGE_NX;
++
+ 	if (!(md->attribute & EFI_MEMORY_WB))
+ 		flags |= _PAGE_PCD;
+ 
 -- 
 2.20.1
 
