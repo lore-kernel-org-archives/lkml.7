@@ -2,503 +2,153 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA53C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EABAFC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB1262085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBF0220848
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:40:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="c+qHPohY"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pDDK85MH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbgACMgJ (ORCPT
+        id S1727726AbgACMka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 07:36:09 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:55520 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727350AbgACMgI (ORCPT
+        Fri, 3 Jan 2020 07:40:30 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:33767 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727628AbgACMka (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 07:36:08 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578054967; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=kiPKLl25CMkgbt1UJF6pIm0BUIao7Fhc3M9zQRP/hqI=;
- b=c+qHPohYIjuW0qlUPVlrGrAD9A9L4aKMgjqKTNO9R0Xvt9PJopJI5+20V5L8tpHHg0aCHSv4
- Njf3t678lnnBduho14Ph0Df3FoR+kEwmBljZBcuIoxvs5uTRLwuVrtltYcaZ7qMfFIj4LYXs
- eD/v4YuRbetCEtvVCK2vfTXgC04=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e0f3536.7f772b4abe30-smtp-out-n01;
- Fri, 03 Jan 2020 12:36:06 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5FECCC447A3; Fri,  3 Jan 2020 12:36:06 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E2310C4479C;
-        Fri,  3 Jan 2020 12:36:04 +0000 (UTC)
+        Fri, 3 Jan 2020 07:40:30 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200103124028euoutp02501d72f7d8b57e1cf0f6c221c11767ac~mYN6gsKL90382603826euoutp02-
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jan 2020 12:40:28 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200103124028euoutp02501d72f7d8b57e1cf0f6c221c11767ac~mYN6gsKL90382603826euoutp02-
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578055228;
+        bh=JffEi5qFJrJ/USIj6NvL05rSOuUg7Mn159feIZCBDbQ=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=pDDK85MHlsSnIBhwd08LA7MSuLbqMK0c3TO7qArQwGLGj9GbCbYWEWgwQGkXokchv
+         9npMi1LRkbKjusyHhpuY572USfzRzzgWRawBy8NcS9zJRAyWDVaR5g047pUwgOM0VQ
+         XbYK9z0GmrbrsBAlOKLd57fDfqbmUppTaMpMRsaw=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200103124028eucas1p11badec81973bbc58870fb933a5c7da8c~mYN6TVBZu2237022370eucas1p1b;
+        Fri,  3 Jan 2020 12:40:28 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id EF.FB.61286.C363F0E5; Fri,  3
+        Jan 2020 12:40:28 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200103124028eucas1p2a6b14c926bf0ea06e4e7b59cac2ed4d4~mYN59f1YZ0949509495eucas1p2U;
+        Fri,  3 Jan 2020 12:40:28 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200103124028eusmtrp1c38797ad7267552f42bf07c2604e6408~mYN586sB10989709897eusmtrp1u;
+        Fri,  3 Jan 2020 12:40:28 +0000 (GMT)
+X-AuditID: cbfec7f2-f0bff7000001ef66-5a-5e0f363c8bab
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 43.95.07950.C363F0E5; Fri,  3
+        Jan 2020 12:40:28 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200103124027eusmtip109bb11f9b69f0d3c27b9ecda4c5fa475~mYN5o_mAX1531215312eusmtip1Q;
+        Fri,  3 Jan 2020 12:40:27 +0000 (GMT)
+Subject: Re: [PATCH] omapfb/dss: remove unneeded conversions to bool
+To:     "Andrew F. Davis" <afd@ti.com>
+Cc:     Jiri Kosina <trivial@kernel.org>, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <5251890d-e12e-c78c-9790-fe8764501744@samsung.com>
+Date:   Fri, 3 Jan 2020 13:40:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20191016180424.23907-1-afd@ti.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 03 Jan 2020 18:06:04 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
-        tsoni@codeaurora.org, agross@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-remoteproc-owner@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] soc: qcom: Introduce Protection Domain Restart
- helpers
-In-Reply-To: <20200102204516.GG988120@minitux>
-References: <20191230050008.8143-1-sibis@codeaurora.org>
- <20191230050008.8143-2-sibis@codeaurora.org>
- <20200102204516.GG988120@minitux>
-Message-ID: <96e7283245821e67c543a02b3c3c0f3f@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMKsWRmVeSWpSXmKPExsWy7djP87o2ZvxxBvufilu8PzWR3eJE3wdW
+        i8u75rBZvN9/mcmBxWPTqk42j+M3tjN5fN4kF8AcxWWTkpqTWZZapG+XwJWxZ+JPtoJ73BUX
+        5yxlbmC8ydnFyMkhIWAiMffKFrYuRi4OIYEVjBKX9j5khXC+MEpM27mdEcL5zCixdvZ+NpiW
+        Jz+2MUEkljNKfDl6GKr/LaPE7LOb2UGqhAVcJM6dPMcEYosIKEk0nOxmBbGZBRIlbqx8DTaJ
+        TcBKYmL7KkYQm1fATuLFl//MIDaLgIpE0+GdLCC2qECExKcHh1khagQlTs58AhbnFDCQ6P76
+        jxFiprjErSfzmSBseYntb+cwgxwkIdDPLnF29052iLNdJJaufMIIYQtLvDq+BSouI3F6cg8L
+        RMM6Rom/HS+gurczSiyf/A/qaWuJO+d+AdkcQCs0Jdbv0ocIO0rMPjEPLCwhwCdx460gxBF8
+        EpO2TWeGCPNKdLQJQVSrSWxYtoENZm3XzpXMExiVZiF5bRaSd2YheWcWwt4FjCyrGMVTS4tz
+        01OLDfNSy/WKE3OLS/PS9ZLzczcxApPK6X/HP+1g/Hop6RCjAAejEg9vgjJ/nBBrYllxZe4h
+        RgkOZiUR3vJA3jgh3pTEyqrUovz4otKc1OJDjNIcLErivMaLXsYKCaQnlqRmp6YWpBbBZJk4
+        OKUaGNn/RmwNSd+Utd5KctHhw3zSG18zKsowss2bvTlqysHjkfx2WzNjvCVZRV7M/Ln+89xt
+        G+YWLly0qmQzf7hyWHVyv29KiO2TRzPvXw/S42+9wqAf3DyZY6Fi+NdIlR8VB553sd/wnZIx
+        UWB71LyWh4+9+Ju/WG+YH3vkIv+H/R/l1HjvBM5YY6PEUpyRaKjFXFScCAAfGTPMJgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsVy+t/xu7o2ZvxxBguWsFi8PzWR3eJE3wdW
+        i8u75rBZvN9/mcmBxWPTqk42j+M3tjN5fN4kF8AcpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFn
+        ZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJexZ+JPtoJ73BUX5yxlbmC8ydnFyMkhIWAi8eTH
+        NqYuRi4OIYGljBITLl1k7WLkAErISBxfXwZRIyzx51oXG4gtJPCaUeL+6woQW1jAReLcyXNM
+        ILaIgJJEw8luVhCbWSBR4nNbHyPEzGZGiVUzN4M1swlYSUxsX8UIYvMK2Em8+PKfGcRmEVCR
+        aDq8kwXEFhWIkDi8YxZUjaDEyZlPwOKcAgYS3V//MUIsUJf4M+8SM4QtLnHryXwmCFteYvvb
+        OcwTGIVmIWmfhaRlFpKWWUhaFjCyrGIUSS0tzk3PLTbSK07MLS7NS9dLzs/dxAiMoG3Hfm7Z
+        wdj1LvgQowAHoxIPL4cif5wQa2JZcWXuIUYJDmYlEd7yQN44Id6UxMqq1KL8+KLSnNTiQ4ym
+        QM9NZJYSTc4HRndeSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQZG
+        NUaFxsrwpOSfcfenvPmWvFBzltyvGrPXWovm3DBOsf+05ZHKJK/Lb27occ5i/1Xq1GlQ+KR7
+        isgWrufcBg38yzKn+7x/X62TGduedYRL4cT899szFGKuCnvtXa522mvL2Xd1V7cy1BVWCW/k
+        DWAsWC3MXTVvYYvobr6Coy/2bnRSFZ+WvvieEktxRqKhFnNRcSIALgskfbYCAAA=
+X-CMS-MailID: 20200103124028eucas1p2a6b14c926bf0ea06e4e7b59cac2ed4d4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191016180541epcas5p4d85d004250e99c95c876da3c03d4d46e
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191016180541epcas5p4d85d004250e99c95c876da3c03d4d46e
+References: <CGME20191016180541epcas5p4d85d004250e99c95c876da3c03d4d46e@epcas5p4.samsung.com>
+        <20191016180424.23907-1-afd@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Bjorn,
 
-Thanks for taking time to review
-the series.
-
-On 2020-01-03 02:15, Bjorn Andersson wrote:
-> On Sun 29 Dec 21:00 PST 2019, Sibi Sankar wrote:
-> [..]
->> diff --git a/drivers/soc/qcom/pdr_interface.c 
->> b/drivers/soc/qcom/pdr_interface.c
-> [..]
->> +static int servreg_locator_new_server(struct qmi_handle *qmi,
->> +				      struct qmi_service *svc)
->> +{
->> +	struct pdr_handle *pdr = container_of(qmi, struct pdr_handle,
->> +					      servloc_client);
->> +	struct pdr_service *pds, *tmp;
->> +
->> +	/* Create a Local client port for QMI communication */
->> +	pdr->servloc_addr.sq_family = AF_QIPCRTR;
->> +	pdr->servloc_addr.sq_node = svc->node;
->> +	pdr->servloc_addr.sq_port = svc->port;
->> +
->> +	mutex_lock(&pdr->locator_lock);
->> +	pdr->locator_available = true;
->> +	mutex_unlock(&pdr->locator_lock);
->> +
->> +	/* Service pending lookup requests */
->> +	mutex_lock(&pdr->list_lock);
->> +	list_for_each_entry_safe(pds, tmp, &pdr->lookups, node) {
+On 10/16/19 8:04 PM, Andrew F. Davis wrote:
+> Found with scripts/coccinelle/misc/boolconv.cocci.
 > 
-> No need to make this _safe, as you're not modifying the list in the
-> loop.
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
 
-sure I'll do that
+Thanks, patch queued for v5.6 (also sorry for the delay).
 
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
+> ---
+>  drivers/video/fbdev/omap2/omapfb/dss/dispc.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
->> +		if (pds->need_servreg_lookup)
->> +			schedule_work(&pdr->servloc_work);
->> +	}
->> +	mutex_unlock(&pdr->list_lock);
->> +
->> +	return 0;
->> +}
-> [..]
->> +static void pdr_servreg_link_create(struct pdr_handle *pdr,
->> +				    struct pdr_service *pds)
->> +{
->> +	struct pdr_service *pds_iter, *tmp;
->> +	bool link_exists = false;
->> +
->> +	/* Check if a QMI link to SERVREG instance already exists */
->> +	mutex_lock(&pdr->list_lock);
->> +	list_for_each_entry_safe(pds_iter, tmp, &pdr->lookups, node) {
->> +		if (pds_iter->instance == pds->instance &&
-> 
-> Flip this condition around and continue if it's not a match, to save
-> indentation and to split the two expressions into two distinct checks.
-
-sure I'll do that
-
-> 
->> +		    strcmp(pds_iter->service_path, pds->service_path)) {
-> 
-> Isn't this just saying:
-> 	if (pds_iter == pds)
-> 		continue;
-> 
-> With the purpose of link_exists to be !empty(set(lookups) - pds) ?
-
-More like:
-!empty(set(lookups_with_same_instance) - pds)
-
-servreg_link_create was added to re-use
-an existing qmi_lookup i.e deal with
-PDs running on the same remote processor.
-This can be identified by looking for
-a lookup with the same instance value
-but with a different service path. We
-still need to register the service_path
-with the servreg service once its up.
-
-> 
-> But if I read pdr_add_lookup() correctly it's possible that a client
-> could call pdr_add_lookup() more than once before pdr_servloc_work() is
-> scheduled, in which case "set(lookup) - pds" isn't empty and as such 
-> you
-> won't add the lookup?
-
-holding the lock over entire servloc_work
-should handle that scenario? That way we
-can ensure qmi_lookup is called atleast
-once.
-
-> 
->> +			link_exists = true;
->> +			pds->service_connected = pds_iter->service_connected;
->> +			if (pds_iter->service_connected)
->> +				pds->need_servreg_register = true;
->> +			else
->> +				pds->need_servreg_remove = true;
->> +			queue_work(pdr->servreg_wq, &pdr->servreg_work);
->> +			break;
->> +		}
->> +	}
-> [..]
->> +static void pdr_servloc_work(struct work_struct *work)
->> +{
->> +	struct pdr_handle *pdr = container_of(work, struct pdr_handle,
->> +					      servloc_work);
->> +	struct pdr_service *pds, *tmp;
->> +	int ret;
->> +
->> +	/* Bail out early if PD Mapper is not up */
->> +	mutex_lock(&pdr->locator_lock);
->> +	if (!pdr->locator_available) {
->> +		mutex_unlock(&pdr->locator_lock);
->> +		pr_warn("PDR: SERVICE LOCATOR service not available\n");
->> +		return;
->> +	}
->> +	mutex_unlock(&pdr->locator_lock);
->> +
->> +	mutex_lock(&pdr->list_lock);
->> +	list_for_each_entry_safe(pds, tmp, &pdr->lookups, node) {
-> 
-> As written right now you don't need _safe here, because in the only 
-> case
-> you're modifying the list you end up exiting the loop.
-
-sure
-
-> 
->> +		if (!pds->need_servreg_lookup)
->> +			continue;
->> +
->> +		pds->need_servreg_lookup = false;
->> +		mutex_unlock(&pdr->list_lock);
-> 
-> You should probably just hold on to list_lock over this entire loop.
-> 
->> +
->> +		ret = pdr_locate_service(pdr, pds);
->> +		if (ret < 0) {
->> +			if (ret == -ENXIO)
->> +				pds->state = SERVREG_LOCATOR_UNKNOWN_SERVICE;
->> +			else if (ret == -EAGAIN)
->> +				pds->state = SERVREG_LOCATOR_DB_UPDATED;
-> 
-> Isn't this something that we should recover from?
-
-yes its a case where the json
-referenced by pd-mapper has been
-updated mid lookup. Calling lookup
-again should ideally fix this but
-we'll have to decide on the max
-number of retries. I guess I can
-simulate such a scenario with
-a custom json file and pd-mapper
-changes.
-
-> 
->> +			else
->> +				pds->state = SERVREG_LOCATOR_ERR;
->> +
->> +			pr_err("PDR: service lookup for %s failed: %d\n",
->> +			       pds->service_name, ret);
->> +
->> +			/* Remove from lookup list */
->> +			mutex_lock(&pdr->list_lock);
->> +			list_del(&pds->node);
-> 
-> What should I do in my driver when this happens?
-
-db_updated -> retry should fix
-               this error
-
-unknown_service -> lookup not found.
-
-^^ With the way pd-mapper is implemented
-its not really recoverable until pd-mapper
-is restarted with different args.
-
-locator_err -> not really recoverable
-
-> 
->> +			mutex_unlock(&pdr->list_lock);
->> +
->> +			/* Notify Lookup failed */
->> +			mutex_lock(&pdr->status_lock);
->> +			pdr->status(pdr, pds);
->> +			mutex_unlock(&pdr->status_lock);
->> +			kfree(pds);
->> +		} else {
->> +			pdr_servreg_link_create(pdr, pds);
->> +		}
->> +
->> +		return;
-> 
-> There might be more pds entries with need_servreg_lookup in the list,
-> shouldn't we allow this to continue?
-
-but we've already scheduled a
-number of workers to deal with
-this.
-
-> 
-> This would though imply that you should hold onto the list_lock over 
-> the
-> entire loop, which I think looks fine.
-
-sure
-
-> 
->> +	}
->> +	mutex_unlock(&pdr->list_lock);
->> +}
->> +
->> +/**
->> + * pdr_add_lookup() - register a tracking request for a PD
->> + * @pdr:		PDR client handle
->> + * @service_name:	service name of the tracking request
->> + * @service_path:	service path of the tracking request
->> + *
->> + * Registering a pdr lookup allows for tracking the life cycle of the 
->> PD.
->> + *
->> + * Return: 0 on success, negative errno on failure.
->> + */
->> +int pdr_add_lookup(struct pdr_handle *pdr, const char *service_name,
->> +		   const char *service_path)
->> +{
->> +	struct pdr_service *pds, *pds_iter, *tmp;
->> +	int ret;
->> +
->> +	if (!service_name || strlen(service_name) > SERVREG_NAME_LENGTH ||
->> +	    !service_path || strlen(service_path) > SERVREG_NAME_LENGTH)
->> +		return -EINVAL;
->> +
->> +	pds = kzalloc(sizeof(*pds), GFP_KERNEL);
->> +	if (!pds)
->> +		return -ENOMEM;
->> +
->> +	pds->service = SERVREG_NOTIFIER_SERVICE;
->> +	strcpy(pds->service_name, service_name);
->> +	strcpy(pds->service_path, service_path);
->> +	pds->need_servreg_lookup = true;
->> +
->> +	mutex_lock(&pdr->list_lock);
->> +	list_for_each_entry_safe(pds_iter, tmp, &pdr->lookups, node) {
-> 
-> No _safe
-
-Thanks will update
-
-> 
->> +		if (!strcmp(pds_iter->service_path, service_path)) {
->> +			mutex_unlock(&pdr->list_lock);
->> +			ret = -EALREADY;
->> +			goto err;
->> +		}
->> +	}
->> +
->> +	list_add(&pds->node, &pdr->lookups);
->> +	mutex_unlock(&pdr->list_lock);
->> +
->> +	schedule_work(&pdr->servloc_work);
->> +
->> +	return 0;
->> +err:
->> +	kfree(pds);
->> +
->> +	return ret;
->> +}
->> +EXPORT_SYMBOL(pdr_add_lookup);
->> +
->> +/**
->> + * pdr_restart_pd() - restart PD
->> + * @pdr:		PDR client handle
->> + * @service_path:	service path of restart request
->> + *
->> + * Restarts the PD tracked by the PDR client handle for a given 
->> service path.
->> + *
->> + * Return: 0 on success, negative errno on failure.
->> + */
->> +int pdr_restart_pd(struct pdr_handle *pdr, const char *service_path)
->> +{
->> +	struct servreg_restart_pd_req req;
->> +	struct servreg_restart_pd_resp resp;
->> +	struct pdr_service *pds = NULL, *pds_iter, *tmp;
->> +	struct qmi_txn txn;
->> +	int ret;
->> +
->> +	if (!service_path || strlen(service_path) > SERVREG_NAME_LENGTH)
->> +		return -EINVAL;
->> +
->> +	mutex_lock(&pdr->list_lock);
->> +	list_for_each_entry_safe(pds_iter, tmp, &pdr->lookups, node) {
->> +		if (!pds_iter->service_connected)
->> +			continue;
->> +
->> +		if (!strcmp(pds_iter->service_path, service_path)) {
->> +			pds = pds_iter;
->> +			break;
->> +		}
->> +	}
->> +	mutex_unlock(&pdr->list_lock);
->> +
->> +	if (!pds)
-> 
-> Given that you may only call pdr_restart_pd() on something created by
-> first calling pdr_add_lookup(), how about returning the struct
-> pdr_service from pdr_add_lookup() instead and then have the client pass
-> that as an argument to this function.
-> 
-> Most clients doesn't care about pdr_restart_pd() so they would only 
-> have
-> to IS_ERR(pdr_add_lookup()) anyways, and the ones that care can carry
-> the returned pointer.
-> 
-> 
-> Note that the struct pdr_service doesn't have to be defined in a way
-> that it's possible to dereference by clients.
-
-sure will update the design in the
-next re-spin.
-
-> 
->> +		return -EINVAL;
->> +
->> +	/* Prepare req message */
->> +	strcpy(req.service_path, pds->service_path);
->> +
->> +	ret = qmi_txn_init(&pdr->servreg_client, &txn,
->> +			   servreg_restart_pd_resp_ei,
->> +			   &resp);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	ret = qmi_send_request(&pdr->servreg_client, &pdr->servreg_addr,
->> +			       &txn, SERVREG_RESTART_PD_REQ,
->> +			       SERVREG_RESTART_PD_REQ_MAX_LEN,
->> +			       servreg_restart_pd_req_ei, &req);
->> +	if (ret < 0) {
->> +		qmi_txn_cancel(&txn);
->> +		return ret;
->> +	}
->> +
->> +	ret = qmi_txn_wait(&txn, 5 * HZ);
->> +	if (ret < 0) {
->> +		pr_err("PDR: %s PD restart txn wait failed: %d\n",
->> +		       pds->service_path, ret);
->> +		return ret;
->> +	}
->> +
->> +	/* Check response if PDR is disabled */
->> +	if (resp.resp.result == QMI_RESULT_FAILURE_V01 &&
->> +	    resp.resp.error == QMI_ERR_DISABLED_V01) {
->> +		pr_err("PDR: %s PD restart is disabled: 0x%x\n",
->> +		       pds->service_path, resp.resp.error);
->> +		return -EOPNOTSUPP;
->> +	}
->> +
->> +	/* Check the response for other error case*/
->> +	if (resp.resp.result != QMI_RESULT_SUCCESS_V01) {
->> +		pr_err("PDR: %s request for PD restart failed: 0x%x\n",
->> +		       pds->service_path, resp.resp.error);
->> +		return -EREMOTEIO;
->> +	}
->> +
->> +	return ret;
->> +}
->> +EXPORT_SYMBOL(pdr_restart_pd);
-> [..]
->> +/**
->> + * struct pdr_service - context to track lookups/restarts
->> + * @service_name:		name of the service running on the PD
->> + * @service_path:		service path of the PD
->> + * @service_data_valid:		indicates if service_data field has valid 
->> data
->> + * @service_data:		service data provided by servreg_locator service
->> + * @need_servreg_lookup:	state flag for tracking servreg lookup 
->> requests
->> + * @need_servreg_register:	state flag for tracking pending servreg 
->> register
->> + * @need_servreg_remove:	state flag for tracking pending servreg 
->> remove
->> + * @service_connected:		current state of servreg_notifier qmi service
->> + * @state:			current state of PD
->> + * @service:			servreg_notifer service type
->> + * @instance:			instance id of the @service
->> + * @priv:			handle for client's use
->> + * @node:			list_head for house keeping
->> + */
->> +struct pdr_service {
-> 
-> This is primarily internal bookkeeping, how about not exposing it to 
-> the
-> clients? This would imply that status() would have to be called with
-> pdr_service->priv and pdr_service->state as arguments instead.
-
-sure will update the design in the
-next re-spin.
-
-> 
->> +	char service_name[SERVREG_NAME_LENGTH + 1];
->> +	char service_path[SERVREG_NAME_LENGTH + 1];
->> +
->> +	u8 service_data_valid;
->> +	u32 service_data;
->> +
->> +	bool need_servreg_lookup;
->> +	bool need_servreg_register;
->> +	bool need_servreg_remove;
->> +	bool service_connected;
->> +	int state;
->> +
->> +	unsigned int instance;
->> +	unsigned int service;
->> +
->> +	void *priv;
->> +	struct list_head node;
->> +};
->> +
-> [..]
->> +	void (*status)(struct pdr_handle *pdr, struct pdr_service *pds);
->> +};
-> 
-> Regards,
-> Bjorn
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
+> index 376ee5bc3ddc..ce37da85cc45 100644
+> --- a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
+> +++ b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
+> @@ -1635,7 +1635,7 @@ static void dispc_ovl_set_scaling_uv(enum omap_plane plane,
+>  {
+>  	int scale_x = out_width != orig_width;
+>  	int scale_y = out_height != orig_height;
+> -	bool chroma_upscale = plane != OMAP_DSS_WB ? true : false;
+> +	bool chroma_upscale = plane != OMAP_DSS_WB;
+>  
+>  	if (!dss_has_feature(FEAT_HANDLE_UV_SEPARATE))
+>  		return;
+> @@ -3100,9 +3100,9 @@ static bool _dispc_mgr_pclk_ok(enum omap_channel channel,
+>  		unsigned long pclk)
+>  {
+>  	if (dss_mgr_is_lcd(channel))
+> -		return pclk <= dispc.feat->max_lcd_pclk ? true : false;
+> +		return pclk <= dispc.feat->max_lcd_pclk;
+>  	else
+> -		return pclk <= dispc.feat->max_tv_pclk ? true : false;
+> +		return pclk <= dispc.feat->max_tv_pclk;
+>  }
+>  
+>  bool dispc_mgr_timings_ok(enum omap_channel channel,
