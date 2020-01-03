@@ -2,104 +2,159 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4169C00523
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 07:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5F3C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 07:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE0D721D7D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 07:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF8E2253D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 07:47:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="L8wPdO/2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XEFtpMy5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbgACHlg (ORCPT
+        id S1726739AbgACHrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 02:41:36 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:26211 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726077AbgACHlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 02:41:36 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47pxg13slBz7s;
-        Fri,  3 Jan 2020 08:41:33 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1578037293; bh=jJL9+zGNXcRs81d3ivI4BPhkQdaALU3ctyQK3i4Um/Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L8wPdO/2vvTaAoS0uO5cVkP8nXH43R2KrAZMpISMr4sWLAh+lNZ9C/JgDtmgio0yA
-         qdsOKZ6w3W/MVyIJ+2AwtXK/ELPJOedW0QC5/Hb57CK26txY5JaQ68nt8x5J4Zu/8x
-         Ja9fR40k8aLIKIAT+6ww8i/JXcVxw0Ul3j/vZ3ng0tgeUY6wcv5HdU6uSntao8tftZ
-         hoGcpwse0WRP6oo7wW0OZZA22Rsa7WdqtYM+bPPNlg1qAFsPGI/fNX8mmwBSaYOcHd
-         eXJ7lMvWQVpC/qmdGWq8ceALjnZoa+QoLZLJHFFRv7nyX2j139R2UxAbdl3PGuB6KC
-         tFRw5CYk7VggQ==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Fri, 3 Jan 2020 08:41:32 +0100
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 13/16] usb: phy: tegra: Keep CPU interrupts enabled
-Message-ID: <20200103074132.GB14228@qmqm.qmqm.pl>
-References: <20191228203358.23490-1-digetx@gmail.com>
- <20191228203358.23490-14-digetx@gmail.com>
- <20191230203648.GA24135@qmqm.qmqm.pl>
- <ad1a2b09-12b0-112e-1556-6faf6a01c330@gmail.com>
+        Fri, 3 Jan 2020 02:47:51 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44549 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgACHrv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 02:47:51 -0500
+Received: by mail-pl1-f193.google.com with SMTP id az3so18756593plb.11
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jan 2020 23:47:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TYmR7Su3TQRhxaGSs/Gmy519O0CuGnaDkzrvLms+94Q=;
+        b=XEFtpMy5dirtZBAqM+HlhZxWmFJs8HM7yAX4hIvs1uimxFANWi/fN275Yyz0CfOQZn
+         VKiiTqf2W6g4Eug26y3EBVgcQiGR4E1Lv28ZNhY3cNo7bcsThg2VG3jNwU4hX8LsKa7Y
+         +x9xhrdzgZPuLS7t/3yM4jrcK/t3npeui8yU9zzihZCfmNiXppGIIFxle1dS8JC0fVhw
+         Zs4sLyPsqJHT/fr1v2/7dO8AVfCUoLeb5OdPcNoMrD8BRFfJGra8meReEPPIkK0OXyLM
+         hD+vWP0pgKG/8VXUOQTVDq0FzW6a8Qa55dAXGTZW63b7HFulGhCwrMkJ3vuqwGCsaOOz
+         /SOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TYmR7Su3TQRhxaGSs/Gmy519O0CuGnaDkzrvLms+94Q=;
+        b=RMQXhn5Nj2KE8emmOSFEHhJFK/hLmcX9zCM6IRW+ipWzf0fZH7xNnYruHmilMZ4JCW
+         hUgelgjmv2r4BKfusSCS+O7VNmgjAPIpyPEzJhCJswnCOJsH+XMWrupzw8es9It/bQGZ
+         VhPaGnV0iDAJPvGTMy/EBqmxjt70HDSCykBYo86fzFJyTBTeHXdztW+4r+5s+A1ryBt3
+         wij9kOj8qfxMU11goJbiDquax0E0s8RmCbZBcE80ikDtXN0Foneeke0DzvgaBGMhv4XW
+         a6qj+vldzf/09Vgvc69PsGmhiJBgwKdwu9j0lHfsqADK+m+smYtfKefqgc7rKCST9t1Y
+         Ph0w==
+X-Gm-Message-State: APjAAAXd6stp1q9budZGiOt8AR23nO3GN2Ocsze2gPtaO61EE/FOfjxb
+        VmtIpwfCOK/TIoq9QKQkfzM/Vg==
+X-Google-Smtp-Source: APXvYqxz0tmqTG4nkUi/jqHamIprde+Yghm55ERkvI/ApLP+eEKBlyIgUlbqqmbMFNvps9rmIp6gCw==
+X-Received: by 2002:a17:90a:c388:: with SMTP id h8mr24798177pjt.83.1578037670646;
+        Thu, 02 Jan 2020 23:47:50 -0800 (PST)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id k16sm13727175pje.18.2020.01.02.23.47.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 23:47:49 -0800 (PST)
+Date:   Thu, 2 Jan 2020 23:47:47 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        amit.kucheria@linaro.org, sboyd@kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 7/7] clk: qcom: apcs-msm8916: use clk_parent_data to
+ specify the parent
+Message-ID: <20200103074747.GN988120@minitux>
+References: <20191125135910.679310-1-niklas.cassel@linaro.org>
+ <20191125135910.679310-8-niklas.cassel@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ad1a2b09-12b0-112e-1556-6faf6a01c330@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191125135910.679310-8-niklas.cassel@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 05:40:48PM +0300, Dmitry Osipenko wrote:
-> 30.12.2019 23:36, Michał Mirosław пишет:
-> > On Sat, Dec 28, 2019 at 11:33:55PM +0300, Dmitry Osipenko wrote:
-> >> There is no good reason for disabling of CPU interrupts in order to
-> >> protect the utmip_pad_count modification.
-> > 
-> > Since there are sleeping functions called outside of the locked sections,
-> > this should be a mutex instead. OTOH if the spin_lock is to protect register
-> > write against IRQ handler, then the patch is wrong.
-> > 
-> > [...]
-> >> -	spin_unlock_irqrestore(&utmip_pad_lock, flags);
-> >> +	spin_unlock(&utmip_pad_lock);
-> >>  
-> >>  	clk_disable_unprepare(phy->pad_clk);
-> 
-> Hello Michał,
-> 
-> This spinlock isn't for protecting from the IRQ handler, it's used
-> solely to protect modification of the registers that are shared by all
-> USB controllers.
-> 
-> It's possible to use mutex instead of spinlock here, but it doesn't
-> bring any benefits because mutex is more useful when protected code
-> could block for a long time due to sleep or whatever, while spinlock is
-> much more efficient when protected code doesn't sleep and takes no more
-> than dozens microseconds to execute (which is the case here).
-> 
-> In this particular case of the Tegra USB PHY driver, the chance of
-> getting a block on taking the utmip_pad_lock is zero unless USB
-> controller drivers will start to use asynchronous probing. So this patch
-> does a very minor clean-up change and nothing more.
+On Mon 25 Nov 05:59 PST 2019, Niklas Cassel wrote:
 
-I was concerned that this change allows the kernel to switch away to
-another task, but I can see now that spin_lock() does disable preemtion.
-So it looks OK after all. Would be nice to see the explanation in the
-commit message (that the spinlock is only used to serialize probe()s).
+> Allow accessing the parent clock names required for the driver
+> operation by using the device tree node, while falling back to
+> the previous method of using names in the global name space.
+> 
+> This permits extending the driver to other platforms without having to
+> modify its source code.
+> 
+> Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> ---
+> Changes since v2:
+> -Use clk_parent_data when specifying clock parents.
+> 
+>  drivers/clk/qcom/apcs-msm8916.c | 23 ++++++++++++++++++-----
+>  1 file changed, 18 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/clk/qcom/apcs-msm8916.c b/drivers/clk/qcom/apcs-msm8916.c
+> index 46061b3d230e..bb91644edc00 100644
+> --- a/drivers/clk/qcom/apcs-msm8916.c
+> +++ b/drivers/clk/qcom/apcs-msm8916.c
+> @@ -19,9 +19,9 @@
+>  
+>  static const u32 gpll0_a53cc_map[] = { 4, 5 };
+>  
+> -static const char * const gpll0_a53cc[] = {
+> -	"gpll0_vote",
+> -	"a53pll",
+> +static const struct clk_parent_data pdata[] = {
+> +	{ .fw_name = "aux", .name = "gpll0_vote", },
+> +	{ .fw_name = "pll", .name = "a53pll", },
+>  };
+>  
+>  /*
+> @@ -51,6 +51,19 @@ static int qcom_apcs_msm8916_clk_probe(struct platform_device *pdev)
+>  	struct clk_init_data init = { };
+>  	int ret = -ENODEV;
+>  
+> +	/*
+> +	 * This driver is defined by the devicetree binding
+> +	 * Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt,
+> +	 * however, this driver is registered as a platform device by
+> +	 * qcom-apcs-ipc-mailbox.c. Because of this, when this driver
+> +	 * uses dev_get_regmap() and devm_clk_get(), it has to send the parent
+> +	 * device as argument.
+> +	 * When registering with the clock framework, we cannot use this trick,
+> +	 * since the clock framework always looks at dev->of_node when it tries
+> +	 * to find parent clock names using clk_parent_data.
+> +	 */
+> +	dev->of_node = parent->of_node;
+> +
 
-Best Regards,
-Michał Mirosław
+With this hunk replaced by Stephen's patch for handling this in the
+clock core I did some basic tests and things seems to work as expected.
+
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+>  	regmap = dev_get_regmap(parent, NULL);
+>  	if (!regmap) {
+>  		dev_err(dev, "failed to get regmap: %d\n", ret);
+> @@ -62,8 +75,8 @@ static int qcom_apcs_msm8916_clk_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  
+>  	init.name = "a53mux";
+> -	init.parent_names = gpll0_a53cc;
+> -	init.num_parents = ARRAY_SIZE(gpll0_a53cc);
+> +	init.parent_data = pdata;
+> +	init.num_parents = ARRAY_SIZE(pdata);
+>  	init.ops = &clk_regmap_mux_div_ops;
+>  	init.flags = CLK_SET_RATE_PARENT;
+>  
+> -- 
+> 2.23.0
+> 
