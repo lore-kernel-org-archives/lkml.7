@@ -2,106 +2,87 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611D8C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B84EC32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 369CF222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B5821835
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:11:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbgACTHO (ORCPT
+        id S1728465AbgACTLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 14:07:14 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:45188 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728373AbgACTHO (ORCPT
+        Fri, 3 Jan 2020 14:11:45 -0500
+Received: from mx2.yrkesakademin.fi ([85.134.45.195]:35203 "EHLO
+        mx2.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728373AbgACTLp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 14:07:14 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 25F3B1C2228; Fri,  3 Jan 2020 20:07:12 +0100 (CET)
-Date:   Fri, 3 Jan 2020 20:07:11 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        syzbot <syzkaller@googlegroups.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 4.19 089/114] hrtimer: Annotate lockless access to
- timer->state
-Message-ID: <20200103190711.GF14328@amd>
-References: <20200102220029.183913184@linuxfoundation.org>
- <20200102220038.167049649@linuxfoundation.org>
+        Fri, 3 Jan 2020 14:11:45 -0500
+Subject: Re: [PATCH 5.4 000/191] 5.4.8-stable review
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+CC:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, <patches@kernelci.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        <lkft-triage@lists.linaro.org>,
+        linux- stable <stable@vger.kernel.org>,
+        Chengguang Xu <cgxu519@mykernel.net>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>, LTP List <ltp@lists.linux.it>,
+        Jan Stancek <jstancek@redhat.com>,
+        John Stultz <john.stultz@linaro.org>
+References: <20200102215829.911231638@linuxfoundation.org>
+ <CA+G9fYuPkOGKbeQ0FKKx4H0Bs-nRHALsFtwyRw0Rt5DoOCvRHg@mail.gmail.com>
+ <CAK8P3a1+Srey_7cUd0xfaO8HdMv5tkUcs6DeDXzcUKkUD-DnGQ@mail.gmail.com>
+ <CAK8P3a24EkUXTu-K2c-5B3w-LZwY7zNcX0dZixb3gd59vRw_Kw@mail.gmail.com>
+ <20200103154518.GB1064304@kroah.com>
+ <CAK8P3a00SpVfSE5oL8_F_8jHdg_8A5fyEKH_DWNyPToxack=zA@mail.gmail.com>
+ <a2fc8b36-c512-b6dd-7349-dfb551e348b6@oracle.com>
+ <8283b231-f6e8-876f-7094-d3265096ab9a@oracle.com>
+ <CAHk-=wjvWTFn=C3mT5wA=mtOwXw44U+OHLVxk5DCe4v+7nOvKg@mail.gmail.com>
+From:   Thomas Backlund <tmb@mageia.org>
+Message-ID: <c5c3b8c8-1dfe-2433-630c-06dbfb3d318b@mageia.org>
+Date:   Fri, 3 Jan 2020 21:11:41 +0200
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="FoLtEtfbNGMjfgrs"
-Content-Disposition: inline
-In-Reply-To: <20200102220038.167049649@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CAHk-=wjvWTFn=C3mT5wA=mtOwXw44U+OHLVxk5DCe4v+7nOvKg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-WatchGuard-Spam-ID: str=0001.0A0C0209.5E0F91F1.000E,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
+X-WatchGuard-Mail-Client-IP: 85.134.45.195
+X-WatchGuard-Mail-From: tmb@mageia.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Den 03-01-2020 kl. 20:40, skrev Linus Torvalds:
+> On Fri, Jan 3, 2020 at 9:59 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>>
+>> Before I started investigating, Jan Stancek found and fixed the issue.
+>>
+>> http://lkml.kernel.org/r/a14b944b6e5e207d2f84f43227c98ed1f68290a2.1578072927.git.jstancek@redhat.com
+> 
+> Applied upstream as commit 15f0ec941f4f ("mm/hugetlbfs: fix
+> for_each_hstate() loop in init_hugetlbfs_fs()").
+> 
+> I didn't add a cc: stable, because the original didn't have one, and
+> the "Fixes:" tag should make it happen.
+> 
+>                 Linus
+> 
 
---FoLtEtfbNGMjfgrs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Does not seem to exist in public git yet, maybe you forgot to push ?
 
-Hi!
+--
+Thomas
 
-> From: Eric Dumazet <edumazet@google.com>
->=20
-> commit 56144737e67329c9aaed15f942d46a6302e2e3d8 upstream.
->=20
-> syzbot reported various data-race caused by hrtimer_is_queued() reading
-> timer->state. A READ_ONCE() is required there to silence the warning.
->=20
-> Also add the corresponding WRITE_ONCE() when timer->state is set.
->=20
-> In remove_hrtimer() the hrtimer_is_queued() helper is open coded to avoid
-> loading timer->state twice.
-
-Is there a reason why READ_ONCE is not neccessary in remove_hrtimer?
-
-Should there be comment there explaining it?
-
-Best regards,
-								Pavel
-
-> @@ -1002,8 +1004,9 @@ static void __remove_hrtimer(struct hrti
->  static inline int
->  remove_hrtimer(struct hrtimer *timer, struct hrtimer_clock_base *base, b=
-ool restart)
->  {
-> -	if (hrtimer_is_queued(timer)) {
-> -		u8 state =3D timer->state;
-> +	u8 state =3D timer->state;
-> +
-> +	if (state & HRTIMER_STATE_ENQUEUED) {
->  		int reprogram;
-> =20
->  		/*
->=20
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---FoLtEtfbNGMjfgrs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl4PkN8ACgkQMOfwapXb+vIXSgCeLWRt9/Au7H2W6ury0qy8+LDc
-5WEAn140rt5mS/Pw4LJL/cm+8edXvfPz
-=8tqD
------END PGP SIGNATURE-----
-
---FoLtEtfbNGMjfgrs--
