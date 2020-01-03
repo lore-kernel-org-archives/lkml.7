@@ -2,347 +2,107 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D39BEC3276E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28725C3276C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAC9B21D56
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D96217F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:03:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KIBq/5Pz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbgACBDY (ORCPT
+        id S1727250AbgACBD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 2 Jan 2020 20:03:27 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38039 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727207AbgACBDY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Jan 2020 20:03:24 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:47410 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726677AbgACBDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 20:03:18 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 29AA21A1B15;
-        Fri,  3 Jan 2020 02:03:15 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1B1B91A1B11;
-        Fri,  3 Jan 2020 02:03:15 +0100 (CET)
-Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id C03D020567;
-        Fri,  3 Jan 2020 02:03:14 +0100 (CET)
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>
-Subject: [PATCH v2 07/10] crypto: caam - support crypto_engine framework for SKCIPHER algorithms
-Date:   Fri,  3 Jan 2020 03:02:50 +0200
-Message-Id: <1578013373-1956-8-git-send-email-iuliana.prodan@nxp.com>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1578013373-1956-1-git-send-email-iuliana.prodan@nxp.com>
-References: <1578013373-1956-1-git-send-email-iuliana.prodan@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+Received: by mail-pl1-f194.google.com with SMTP id f20so18462301plj.5;
+        Thu, 02 Jan 2020 17:03:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1nu9FEZg4ORTL1XQF/9kPZRKXedL+qzG6Ic/dJ2Vuww=;
+        b=KIBq/5PzM4BQ9wF31nwxIEASQY9KdGt1Q1UuBdPttFA13yCmU29BK+6cYG8kh4AJd8
+         45DRAF7Zi9Fz1CTZlOOp+acjzfma5bUatKPx4tjNK1/a1SSqCop362KsnKlw8frKJgQG
+         JKmu4JJFhonOdo4cPGdDCgtdjwMa9uV3dxyuZKs8Z3HUM5L8dpCDHeQPrdAsdokbl5Bt
+         wMd0HTzE/+NbM1SwJ1NLqFCPy62sS4qTD+wXcEWyL4qPUTf9HhFOJdhdTJw7hFKGAt/K
+         Rir1IGvbc9KmX6OpLQNZohdjoMEP+OlqkI2kiO/u9RxHrJJrMMS8MAzNa0W29oee7WNK
+         J/cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1nu9FEZg4ORTL1XQF/9kPZRKXedL+qzG6Ic/dJ2Vuww=;
+        b=Cgw+yRALcV5QnZs5/+3wS7ZQ4zPD1/as9s4YSSmLemRXrv31dcEwQgM6vUTfgzBJ8Z
+         SbPtxT5vH1qqUcPsm9bIF1+4THB6GFatK9ygi2cKH8IUINtfvBDfjVqj1iXhgRDvaD2N
+         P+FBWQS/iShDrV4ckvU53T9rnF0q01obyApn8es16MwgyBboDGdm1alxFCOnepIkv4Oe
+         V7/WDrhWFgNdvV26bDqVgFMwVIgEs9brDnaYMZzDussaFoARKGEHwzq8PKxktiSmNt5o
+         cGQe41IkyX0pk02air2O9v52guRdRNx+byGRiIYlgtUxHjx1P5xaJgqmplP2+3oWjHXI
+         WD5w==
+X-Gm-Message-State: APjAAAVboz30bZxR0Y5vJgJ1qux8PatBpFjGgYo+c95H9HAGvbtm6nGt
+        gDvcWDYH8in7LqcO0eXckK4=
+X-Google-Smtp-Source: APXvYqyPA0S2nhgdbv5AExMEflNvXfCrxHmY7hQsKbwgGnebEWPSq2XhfNReNkvHuGqWG9ov3Sbkeg==
+X-Received: by 2002:a17:90a:a597:: with SMTP id b23mr23915052pjq.42.1578013403609;
+        Thu, 02 Jan 2020 17:03:23 -0800 (PST)
+Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id 5sm12780784pjt.28.2020.01.02.17.03.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 17:03:23 -0800 (PST)
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     "David S . Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>
+Subject: [PATCH v3 0/3] net: phy: switch to using fwnode_gpiod_get_index
+Date:   Thu,  2 Jan 2020 17:03:17 -0800
+Message-Id: <20200103010320.245675-1-dmitry.torokhov@gmail.com>
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Integrate crypto_engine into CAAM, to make use of the engine queue.
-Add support for SKCIPHER algorithms.
+This series switches phy drivers form using fwnode_get_named_gpiod() and
+gpiod_get_from_of_node() that are scheduled to be removed in favor
+of fwnode_gpiod_get_index() that behaves more like standard
+gpiod_get_index() and will potentially handle secondary software
+nodes in cases we need to augment platform firmware.
 
-This is intended to be used for CAAM backlogging support.
-The requests, with backlog flag (e.g. from dm-crypt) will be listed
-into crypto-engine queue and processed by CAAM when free.
-This changes the return codes for caam_jr_enqueue:
--EINPROGRESS if OK, -EBUSY if request is backlogged,
--ENOSPC if the queue is full, -EIO if it cannot map the caller's
-descriptor.
+Now that the dependencies have been merged into networking tree the
+patches can be applied there as well.
 
-Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
----
- drivers/crypto/caam/Kconfig   |  1 +
- drivers/crypto/caam/caamalg.c | 86 +++++++++++++++++++++++++++++++++++++------
- drivers/crypto/caam/intern.h  |  2 +
- drivers/crypto/caam/jr.c      | 29 +++++++++++++++
- 4 files changed, 106 insertions(+), 12 deletions(-)
+Thanks!
 
-diff --git a/drivers/crypto/caam/Kconfig b/drivers/crypto/caam/Kconfig
-index fac5b2e..64f8226 100644
---- a/drivers/crypto/caam/Kconfig
-+++ b/drivers/crypto/caam/Kconfig
-@@ -33,6 +33,7 @@ config CRYPTO_DEV_FSL_CAAM_DEBUG
- 
- menuconfig CRYPTO_DEV_FSL_CAAM_JR
- 	tristate "Freescale CAAM Job Ring driver backend"
-+	select CRYPTO_ENGINE
- 	default y
- 	help
- 	  Enables the driver module for Job Rings which are part of
-diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
-index 34662b4..8911c04 100644
---- a/drivers/crypto/caam/caamalg.c
-+++ b/drivers/crypto/caam/caamalg.c
-@@ -56,6 +56,7 @@
- #include "sg_sw_sec4.h"
- #include "key_gen.h"
- #include "caamalg_desc.h"
-+#include <crypto/engine.h>
- 
- /*
-  * crypto alg
-@@ -101,6 +102,7 @@ struct caam_skcipher_alg {
-  * per-session context
-  */
- struct caam_ctx {
-+	struct crypto_engine_ctx enginectx;
- 	u32 sh_desc_enc[DESC_MAX_USED_LEN];
- 	u32 sh_desc_dec[DESC_MAX_USED_LEN];
- 	u8 key[CAAM_MAX_KEY_SIZE];
-@@ -114,6 +116,12 @@ struct caam_ctx {
- 	unsigned int authsize;
- };
- 
-+struct caam_skcipher_req_ctx {
-+	struct skcipher_edesc *edesc;
-+	void (*skcipher_op_done)(struct device *jrdev, u32 *desc, u32 err,
-+				 void *context);
-+};
-+
- static int aead_null_set_sh_desc(struct crypto_aead *aead)
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(aead);
-@@ -1014,13 +1022,15 @@ static void skcipher_crypt_done(struct device *jrdev, u32 *desc, u32 err,
- 	struct caam_skcipher_request_entry *jrentry = context;
- 	struct skcipher_request *req = jrentry->base;
- 	struct skcipher_edesc *edesc;
-+	struct caam_skcipher_req_ctx *rctx = skcipher_request_ctx(req);
- 	struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
-+	struct caam_drv_private_jr *jrp = dev_get_drvdata(jrdev);
- 	int ivsize = crypto_skcipher_ivsize(skcipher);
- 	int ecode = 0;
- 
- 	dev_dbg(jrdev, "%s %d: err 0x%x\n", __func__, __LINE__, err);
- 
--	edesc = container_of(desc, struct skcipher_edesc, hw_desc[0]);
-+	edesc = rctx->edesc;
- 	if (err)
- 		ecode = caam_jr_strstatus(jrdev, err);
- 
-@@ -1046,7 +1056,14 @@ static void skcipher_crypt_done(struct device *jrdev, u32 *desc, u32 err,
- 
- 	kfree(edesc);
- 
--	skcipher_request_complete(req, ecode);
-+	/*
-+	 * If no backlog flag, the completion of the request is done
-+	 * by CAAM, not crypto engine.
-+	 */
-+	if (!jrentry->bklog)
-+		skcipher_request_complete(req, ecode);
-+	else
-+		crypto_finalize_skcipher_request(jrp->engine, req, ecode);
- }
- 
- /*
-@@ -1569,6 +1586,7 @@ static struct skcipher_edesc *skcipher_edesc_alloc(struct skcipher_request *req,
- {
- 	struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
- 	struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
-+	struct caam_skcipher_req_ctx *rctx = skcipher_request_ctx(req);
- 	struct device *jrdev = ctx->jrdev;
- 	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
- 		       GFP_KERNEL : GFP_ATOMIC;
-@@ -1669,6 +1687,9 @@ static struct skcipher_edesc *skcipher_edesc_alloc(struct skcipher_request *req,
- 						  desc_bytes);
- 	edesc->jrentry.base = req;
- 
-+	rctx->edesc = edesc;
-+	rctx->skcipher_op_done = skcipher_crypt_done;
-+
- 	/* Make sure IV is located in a DMAable area */
- 	if (ivsize) {
- 		iv = (u8 *)edesc->sec4_sg + sec4_sg_bytes;
-@@ -1723,12 +1744,38 @@ static struct skcipher_edesc *skcipher_edesc_alloc(struct skcipher_request *req,
- 	return edesc;
- }
- 
-+static int skcipher_do_one_req(struct crypto_engine *engine, void *areq)
-+{
-+	struct skcipher_request *req = skcipher_request_cast(areq);
-+	struct caam_ctx *ctx = crypto_skcipher_ctx(crypto_skcipher_reqtfm(req));
-+	struct caam_skcipher_req_ctx *rctx = skcipher_request_ctx(req);
-+	struct caam_skcipher_request_entry *jrentry;
-+	u32 *desc = rctx->edesc->hw_desc;
-+	int ret;
-+
-+	jrentry = &rctx->edesc->jrentry;
-+	jrentry->bklog = true;
-+
-+	ret = caam_jr_enqueue(ctx->jrdev, desc, rctx->skcipher_op_done,
-+			      jrentry);
-+
-+	if (ret != -EINPROGRESS) {
-+		skcipher_unmap(ctx->jrdev, rctx->edesc, req);
-+		kfree(rctx->edesc);
-+	} else {
-+		ret = 0;
-+	}
-+
-+	return ret;
-+}
-+
- static inline int skcipher_crypt(struct skcipher_request *req, bool encrypt)
- {
- 	struct skcipher_edesc *edesc;
- 	struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
- 	struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
- 	struct device *jrdev = ctx->jrdev;
-+	struct caam_drv_private_jr *jrpriv = dev_get_drvdata(jrdev);
- 	u32 *desc;
- 	int ret = 0;
- 
-@@ -1742,15 +1789,18 @@ static inline int skcipher_crypt(struct skcipher_request *req, bool encrypt)
- 
- 	/* Create and submit job descriptor*/
- 	init_skcipher_job(req, edesc, encrypt);
-+	desc = edesc->hw_desc;
- 
- 	print_hex_dump_debug("skcipher jobdesc@" __stringify(__LINE__)": ",
--			     DUMP_PREFIX_ADDRESS, 16, 4, edesc->hw_desc,
--			     desc_bytes(edesc->hw_desc), 1);
-+			     DUMP_PREFIX_ADDRESS, 16, 4, desc,
-+			     desc_bytes(desc), 1);
- 
--	desc = edesc->hw_desc;
--
--	ret = caam_jr_enqueue(jrdev, desc, skcipher_crypt_done,
--			      &edesc->jrentry);
-+	if (req->base.flags & CRYPTO_TFM_REQ_MAY_BACKLOG)
-+		return crypto_transfer_skcipher_request_to_engine(jrpriv->engine,
-+								  req);
-+	else
-+		ret = caam_jr_enqueue(jrdev, desc, skcipher_crypt_done,
-+				      &edesc->jrentry);
- 	if (ret != -EINPROGRESS) {
- 		skcipher_unmap(jrdev, edesc, req);
- 		kfree(edesc);
-@@ -3287,7 +3337,9 @@ static int caam_init_common(struct caam_ctx *ctx, struct caam_alg_entry *caam,
- 
- 	dma_addr = dma_map_single_attrs(ctx->jrdev, ctx->sh_desc_enc,
- 					offsetof(struct caam_ctx,
--						 sh_desc_enc_dma),
-+						 sh_desc_enc_dma) -
-+					offsetof(struct caam_ctx,
-+						 sh_desc_enc),
- 					ctx->dir, DMA_ATTR_SKIP_CPU_SYNC);
- 	if (dma_mapping_error(ctx->jrdev, dma_addr)) {
- 		dev_err(ctx->jrdev, "unable to map key, shared descriptors\n");
-@@ -3297,8 +3349,12 @@ static int caam_init_common(struct caam_ctx *ctx, struct caam_alg_entry *caam,
- 
- 	ctx->sh_desc_enc_dma = dma_addr;
- 	ctx->sh_desc_dec_dma = dma_addr + offsetof(struct caam_ctx,
--						   sh_desc_dec);
--	ctx->key_dma = dma_addr + offsetof(struct caam_ctx, key);
-+						   sh_desc_dec) -
-+					offsetof(struct caam_ctx,
-+						 sh_desc_enc);
-+	ctx->key_dma = dma_addr + offsetof(struct caam_ctx, key) -
-+					offsetof(struct caam_ctx,
-+						 sh_desc_enc);
- 
- 	/* copy descriptor header template value */
- 	ctx->cdata.algtype = OP_TYPE_CLASS1_ALG | caam->class1_alg_type;
-@@ -3312,6 +3368,11 @@ static int caam_cra_init(struct crypto_skcipher *tfm)
- 	struct skcipher_alg *alg = crypto_skcipher_alg(tfm);
- 	struct caam_skcipher_alg *caam_alg =
- 		container_of(alg, typeof(*caam_alg), skcipher);
-+	struct caam_ctx *ctx = crypto_skcipher_ctx(tfm);
-+
-+	crypto_skcipher_set_reqsize(tfm, sizeof(struct caam_skcipher_req_ctx));
-+
-+	ctx->enginectx.op.do_one_request = skcipher_do_one_req;
- 
- 	return caam_init_common(crypto_skcipher_ctx(tfm), &caam_alg->caam,
- 				false);
-@@ -3330,7 +3391,8 @@ static int caam_aead_init(struct crypto_aead *tfm)
- static void caam_exit_common(struct caam_ctx *ctx)
- {
- 	dma_unmap_single_attrs(ctx->jrdev, ctx->sh_desc_enc_dma,
--			       offsetof(struct caam_ctx, sh_desc_enc_dma),
-+			       offsetof(struct caam_ctx, sh_desc_enc_dma) -
-+			       offsetof(struct caam_ctx, sh_desc_enc),
- 			       ctx->dir, DMA_ATTR_SKIP_CPU_SYNC);
- 	caam_jr_free(ctx->jrdev);
- }
-diff --git a/drivers/crypto/caam/intern.h b/drivers/crypto/caam/intern.h
-index 8ca884b..2f2330e 100644
---- a/drivers/crypto/caam/intern.h
-+++ b/drivers/crypto/caam/intern.h
-@@ -12,6 +12,7 @@
- 
- #include "ctrl.h"
- #include "regs.h"
-+#include <crypto/engine.h>
- 
- /* Currently comes from Kconfig param as a ^2 (driver-required) */
- #define JOBR_DEPTH (1 << CONFIG_CRYPTO_DEV_FSL_CAAM_RINGSIZE)
-@@ -61,6 +62,7 @@ struct caam_drv_private_jr {
- 	int out_ring_read_index;	/* Output index "tail" */
- 	int tail;			/* entinfo (s/w ring) tail index */
- 	void *outring;			/* Base of output ring, DMA-safe */
-+	struct crypto_engine *engine;
- };
- 
- /*
-diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c
-index df2a050..962e66d 100644
---- a/drivers/crypto/caam/jr.c
-+++ b/drivers/crypto/caam/jr.c
-@@ -62,6 +62,15 @@ static void unregister_algs(void)
- 	mutex_unlock(&algs_lock);
- }
- 
-+static void caam_jr_crypto_engine_exit(void *data)
-+{
-+	struct device *jrdev = data;
-+	struct caam_drv_private_jr *jrpriv = dev_get_drvdata(jrdev);
-+
-+	/* Free the resources of crypto-engine */
-+	crypto_engine_exit(jrpriv->engine);
-+}
-+
- static int caam_reset_hw_jr(struct device *dev)
- {
- 	struct caam_drv_private_jr *jrp = dev_get_drvdata(dev);
-@@ -538,6 +547,26 @@ static int caam_jr_probe(struct platform_device *pdev)
- 		return error;
- 	}
- 
-+	/* Initialize crypto engine */
-+	jrpriv->engine = crypto_engine_alloc_init(jrdev, false);
-+	if (!jrpriv->engine) {
-+		dev_err(jrdev, "Could not init crypto-engine\n");
-+		return -ENOMEM;
-+	}
-+
-+	/* Start crypto engine */
-+	error = crypto_engine_start(jrpriv->engine);
-+	if (error) {
-+		dev_err(jrdev, "Could not start crypto-engine\n");
-+		crypto_engine_exit(jrpriv->engine);
-+		return error;
-+	}
-+
-+	error = devm_add_action_or_reset(jrdev, caam_jr_crypto_engine_exit,
-+					 jrdev);
-+	if (error)
-+		return error;
-+
- 	/* Identify the interrupt */
- 	jrpriv->irq = irq_of_parse_and_map(nprop, 0);
- 	if (!jrpriv->irq) {
+v3:
+        - rebased on top of net-next
+
+v2:
+        - rebased on top of Linus' W devel branch
+        - added David's ACKs
+
+
+
+Dmitry Torokhov (3):
+  net: phylink: switch to using fwnode_gpiod_get_index()
+  net: phy: fixed_phy: fix use-after-free when checking link GPIO
+  net: phy: fixed_phy: switch to using fwnode_gpiod_get_index
+
+ drivers/net/phy/fixed_phy.c | 11 ++++-------
+ drivers/net/phy/phylink.c   |  4 ++--
+ 2 files changed, 6 insertions(+), 9 deletions(-)
+
 -- 
-2.1.0
+2.24.1.735.g03f4e72817-goog
 
