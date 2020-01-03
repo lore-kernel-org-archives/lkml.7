@@ -2,167 +2,119 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F21C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2B1C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AFEF206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:04:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578071098;
-	bh=m/EN5MLwJFCtJUWPR2Z3EwYPHIk+mvcgomL1P2CXfZI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1KgfRpuLiKoHTu8nd0cM/6a5q4eWbqB8z68TplgX11JsID+lR3Gj3eBbcue/h3snQ
-	 ie51VNbgm1rz1iZ3wPhgGHGzVTamLdPXrHpTunQM8/6nWpBGzE+TshxH8wET5FAY4A
-	 ud00C8xPbAPL4g6KSlYp+qkKVi9M2X/HuuF0we1I=
+	by mail.kernel.org (Postfix) with ESMTP id 8F557215A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:11:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbgACRE5 (ORCPT
+        id S1728095AbgACRLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 12:04:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33982 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727912AbgACRE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 12:04:56 -0500
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F1B0206DB;
-        Fri,  3 Jan 2020 17:04:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578071096;
-        bh=m/EN5MLwJFCtJUWPR2Z3EwYPHIk+mvcgomL1P2CXfZI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ro+HK4nG4yyPsOMDNcpscatDMXL1tDCqowctNrDPBSvGSCesA5yJO1XuJ1Ydq1RX/
-         UE15DkTdx2VGXxAibCndRh2A1ZerIM1EeYpzOkyoo8N1PTRYTwxQJxucIaoPh2roJv
-         zMyuZGda1fBZO7D03av4zgkmAjVY2wGjVfbJAu1A=
-Date:   Fri, 3 Jan 2020 09:04:54 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Chandan Rajendra <chandan@linux.vnet.ibm.com>,
-        linux-fscrypt@vger.kernel.org
-Subject: Re: [v4 PATCH] fscrypt: Allow modular crypto algorithms
-Message-ID: <20200103170454.GM19521@gmail.com>
-References: <20191221143020.hbgeixvlmzt7nh54@gondor.apana.org.au>
- <20191221234428.GA551@zzz.localdomain>
- <20191222084155.n4mbomsw6pl4c7kv@gondor.apana.org.au>
- <20191222164545.GA157733@zzz.localdomain>
- <20191223074623.you4ivf2yuxk4ad2@gondor.apana.org.au>
- <20191224223852.GA178036@zzz.localdomain>
- <20191227024700.7vrzuux32uyfdgum@gondor.apana.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191227024700.7vrzuux32uyfdgum@gondor.apana.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 3 Jan 2020 12:11:37 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43836 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727952AbgACRLf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 12:11:35 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 003H7Mrr065616
+        for <linux-kernel@vger.kernel.org>; Fri, 3 Jan 2020 12:11:34 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2x9wwvjw8b-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 12:11:34 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 3 Jan 2020 17:11:32 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 3 Jan 2020 17:11:29 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 003HBSWx35913866
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Jan 2020 17:11:28 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5E3C94C046;
+        Fri,  3 Jan 2020 17:11:28 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7C4694C040;
+        Fri,  3 Jan 2020 17:11:27 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.194.89])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  3 Jan 2020 17:11:27 +0000 (GMT)
+Subject: Re: [PATCH] ima: Add a space after printing a LSM rule for
+ readability
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     clayc@hpe.com, linux-kernel@vger.kernel.org
+Cc:     linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, dmitry.kasatkin@gmail.com,
+        jmorris@namei.org, serge@hallyn.com
+Date:   Fri, 03 Jan 2020 12:11:27 -0500
+In-Reply-To: <1578037863-7102-1-git-send-email-clayc@hpe.com>
+References: <1578037863-7102-1-git-send-email-clayc@hpe.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20010317-0012-0000-0000-0000037A4312
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20010317-0013-0000-0000-000021B65728
+Message-Id: <1578071487.5152.13.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-03_05:2020-01-02,2020-01-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ malwarescore=0 impostorscore=0 adultscore=0 priorityscore=1501
+ suspectscore=0 lowpriorityscore=0 spamscore=0 phishscore=0 bulkscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001030157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 27, 2019 at 10:47:00AM +0800, Herbert Xu wrote:
-> On Tue, Dec 24, 2019 at 04:38:52PM -0600, Eric Biggers wrote:
-> > 
-> > This needs to be under EXT4_FS, not EXT3_FS.  That should address the kbuild
-> > test robot error.
-> 
-> Yes indeed.
-> 
-> ---8<---
-> The commit 643fa9612bf1 ("fscrypt: remove filesystem specific
-> build config option") removed modular support for fs/crypto.  This
-> causes the Crypto API to be built-in whenever fscrypt is enabled.
-> This makes it very difficult for me to test modular builds of
-> the Crypto API without disabling fscrypt which is a pain.
-> 
-> As fscrypt is still evolving and it's developing new ties with the
-> fs layer, it's hard to build it as a module for now.
-> 
-> However, the actual algorithms are not required until a filesystem
-> is mounted.  Therefore we can allow them to be built as modules.
-> 
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-> 
-> diff --git a/fs/crypto/Kconfig b/fs/crypto/Kconfig
-> index ff5a1746cbae..02df95b44331 100644
-> --- a/fs/crypto/Kconfig
-> +++ b/fs/crypto/Kconfig
-> @@ -2,13 +2,8 @@
->  config FS_ENCRYPTION
->  	bool "FS Encryption (Per-file encryption)"
->  	select CRYPTO
-> -	select CRYPTO_AES
-> -	select CRYPTO_CBC
-> -	select CRYPTO_ECB
-> -	select CRYPTO_XTS
-> -	select CRYPTO_CTS
-> -	select CRYPTO_SHA512
-> -	select CRYPTO_HMAC
-> +	select CRYPTO_HASH
-> +	select CRYPTO_SKCIPHER
->  	select KEYS
->  	help
->  	  Enable encryption of files and directories.  This
-> @@ -16,3 +11,15 @@ config FS_ENCRYPTION
->  	  efficient since it avoids caching the encrypted and
->  	  decrypted pages in the page cache.  Currently Ext4,
->  	  F2FS and UBIFS make use of this feature.
-> +
-> +# Filesystems supporting encryption must select this if FS_ENCRYPTION.  This
-> +# allows the algorithms to be built as modules when all the filesystems are.
-> +config FS_ENCRYPTION_ALGS
-> +	tristate
-> +	select CRYPTO_AES
-> +	select CRYPTO_CBC
-> +	select CRYPTO_CTS
-> +	select CRYPTO_ECB
-> +	select CRYPTO_HMAC
-> +	select CRYPTO_SHA512
-> +	select CRYPTO_XTS
-> diff --git a/fs/ext4/Kconfig b/fs/ext4/Kconfig
-> index ef42ab040905..db9bfa08d3e0 100644
-> --- a/fs/ext4/Kconfig
-> +++ b/fs/ext4/Kconfig
-> @@ -39,6 +39,7 @@ config EXT4_FS
->  	select CRYPTO
->  	select CRYPTO_CRC32C
->  	select FS_IOMAP
-> +	select FS_ENCRYPTION_ALGS if FS_ENCRYPTION
->  	help
->  	  This is the next generation of the ext3 filesystem.
->  
-> diff --git a/fs/f2fs/Kconfig b/fs/f2fs/Kconfig
-> index 652fd2e2b23d..599fb9194c6a 100644
-> --- a/fs/f2fs/Kconfig
-> +++ b/fs/f2fs/Kconfig
-> @@ -6,6 +6,7 @@ config F2FS_FS
->  	select CRYPTO
->  	select CRYPTO_CRC32
->  	select F2FS_FS_XATTR if FS_ENCRYPTION
-> +	select FS_ENCRYPTION_ALGS if FS_ENCRYPTION
->  	help
->  	  F2FS is based on Log-structured File System (LFS), which supports
->  	  versatile "flash-friendly" features. The design has been focused on
-> diff --git a/fs/ubifs/Kconfig b/fs/ubifs/Kconfig
-> index 69932bcfa920..45d3d207fb99 100644
-> --- a/fs/ubifs/Kconfig
-> +++ b/fs/ubifs/Kconfig
-> @@ -12,6 +12,7 @@ config UBIFS_FS
->  	select CRYPTO_ZSTD if UBIFS_FS_ZSTD
->  	select CRYPTO_HASH_INFO
->  	select UBIFS_FS_XATTR if FS_ENCRYPTION
-> +	select FS_ENCRYPTION_ALGS if FS_ENCRYPTION
->  	depends on MTD_UBI
->  	help
->  	  UBIFS is a file system for flash devices which works on top of UBI.
-> 
+On Fri, 2020-01-03 at 15:51 +0800, clayc@hpe.com wrote:
+> From: Clay Chang <clayc@hpe.com>
 
-Applied to fscrypt.git#master for 5.6.
+Normally this "From" line is only seen when the sender isn't the patch
+author.  Any ideas what happened? 
 
-- Eric
+> 
+> When reading ima_policy from securityfs, there is a missing
+> space between output string of LSM rules.
+> 
+> Signed-off-by: Clay Chang <clayc@hpe.com>
+
+Good catch!  IMA policy rules based on LSM labels are used to
+constrain which files are in policy.  Normally a single LSM label is
+enough (e.g. dont_measure obj_type=auditd_log_t).  Could you include
+in this patch description a use case where multiple LSM labels are
+needed?
+
+thanks,
+
+Mimi
+
+> ---
+>  security/integrity/ima/ima_policy.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index ef8dfd47c7e3..1a266e4f99bc 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -1496,6 +1496,7 @@ int ima_policy_show(struct seq_file *m, void *v)
+>  					   (char *)entry->lsm[i].args_p);
+>  				break;
+>  			}
+> +			seq_puts(m, " ");
+>  		}
+>  	}
+>  	if (entry->template)
+
