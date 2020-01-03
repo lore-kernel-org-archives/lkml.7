@@ -2,148 +2,122 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CAEC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 622F3C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83AD72468E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3869F2468D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 15:12:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="WG3YwSHK"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="JeqC3hiI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgACPLr (ORCPT
+        id S1727931AbgACPMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 10:11:47 -0500
-Received: from mout.gmx.net ([212.227.17.21]:50351 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgACPLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 10:11:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1578064290;
-        bh=YISjgU0LkPsoxH02G0LFkI5q7bEgpyrZfIb0+h+ulUk=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=WG3YwSHKgjo0liW877dr3/99Pul/LL280aWbC6AOoh5Ya+g2dmWSaRqA9YBqudi2I
-         GD0EXNMEhOgLDHAOLPRGiKZHu0/pUzNt2wKAf6c3uJXwIZoYH0jd8kf8GLwFGaOjXs
-         EGGjE4c8qhueo0K6FVDFKgSFn2bczUfYAT9DRuC0=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.176] ([37.4.249.154]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M72oB-1ineOr3HOZ-008e9D; Fri, 03
- Jan 2020 16:11:30 +0100
-Subject: Re: Droid 4 regression in 5.5-rc1, armsoc-soc tree
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Marcel Partap <mpartap@gmx.net>,
-        Tony Lindgren <tony@atomide.com>, merlijn@wizzup.org,
-        martin_rysavy@centrum.cz,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Sebastian Reichel <sre@kernel.org>, nekit1000@gmail.com,
-        Olof Johansson <olof@lixom.net>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-References: <20191228162929.GA29269@duo.ucw.cz>
- <20191228193622.GA13047@duo.ucw.cz> <20191230173507.GM35479@atomide.com>
- <20200102110025.GA29035@amd>
- <CAK8P3a2Ya+GZRRA_THZBVDq7SWO8UYoUPwW5fEyorCVjPnd1qA@mail.gmail.com>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <4839ea34-ba1a-c127-46f9-c574d19f0c4f@gmx.net>
-Date:   Fri, 3 Jan 2020 16:11:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <CAK8P3a2Ya+GZRRA_THZBVDq7SWO8UYoUPwW5fEyorCVjPnd1qA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Fri, 3 Jan 2020 10:12:24 -0500
+Received: from mail-bn8nam12on2042.outbound.protection.outlook.com ([40.107.237.42]:43329
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725890AbgACPMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 10:12:23 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QATz2CdOoYHmRL3k/7HvtYzYgWmOwioVEzN/XkfdJaA5+KiA2S/et31HP/R/NOx9bTlOz57BBtP3AUX804Qgo2xod8Uc214KUPnnYbd3rGkNQBmA/O0vBY04BHFDHwhf1QVClcHTm4aZIYSb//6xkRu+2GYmVLbcbMwRE7T7BTVveSVxHlY7qm+isEih/6HMN0WRq3ZZo4BztEt7bY4kn4ArURc0rOsrwNVjpiUUABoFCUFeTsV34Lry7yk3uGOp0yHH5VUg7R5lvxwvXADs5FHEwEVcYYpRI+4Rugv2RvSQUJ4t1ssHa6ALpCIWjYjzBETdJfx0DtG+tJf49CERhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2PfIP4//meg0o6OdFvbQGlEv29a++do92w0Zw2MtbQg=;
+ b=Y1eXuzviorFItn1wHg02nt6pIcLklfin83S12JHW0SedtVQZn0e2+NjlFKw4CZ7O7gUpr9rvzfbHIUsGE5TZIrHSkQBWnl+sK0G8MtME7xdC12ykDagvc0c/8L80i4vUOWtqMiNmLazFyK2XkFuqrH8VJKVtVuDzTaQxKhfyOHB8W83zgYNLGXlFmJe7e1DxRYwTlaVIQWfn9evkLZw7idu8/yG+USPfsuxK8cQjRF8/lM22plWbRWPJNolrEY29Yyh+0tGJ9aMAj8b53YTr9Pj4iY7la3f/dPIl/DYEiboA28pauY8XgH8RwT6QxL1xdBSXklLdxZtcIVV8rCErfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2PfIP4//meg0o6OdFvbQGlEv29a++do92w0Zw2MtbQg=;
+ b=JeqC3hiIkbJ9kiQlyjBd0y1EgYXXUbFoGT2924wJF6zje1F//L6dsZwEIKTzwLGz34NhiyyJjgwllLzts3Lac+fGehkMPHnPVVzxJvFqgUh1hBter7uOHndLUb+WzJlcZvdAzJPM9EwS1Mrv84F7XsRyQn6DdSXc/H7IHesdc8c=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Gary.Hook@amd.com; 
+Received: from BN8PR12MB2916.namprd12.prod.outlook.com (20.179.66.155) by
+ BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.10; Fri, 3 Jan 2020 15:12:21 +0000
+Received: from BN8PR12MB2916.namprd12.prod.outlook.com
+ ([fe80::45d0:ec5c:7480:8029]) by BN8PR12MB2916.namprd12.prod.outlook.com
+ ([fe80::45d0:ec5c:7480:8029%5]) with mapi id 15.20.2581.014; Fri, 3 Jan 2020
+ 15:12:21 +0000
+Subject: Re: [PATCH v2 1/3] dmaengine: ptdma: Initial driver for the AMD
+ PassThru DMA engine
+To:     Vinod Koul <vkoul@kernel.org>, Sanjay R Mehta <Sanju.Mehta@amd.com>
+Cc:     kbuild test robot <lkp@intel.com>, dan.j.williams@intel.com,
+        gregkh@linuxfoundation.org, Nehal-bakulchandra.Shah@amd.com,
+        Shyam-sundar.S-k@amd.com, davem@davemloft.net,
+        mchehab+samsung@kernel.org, robh@kernel.org,
+        Jonathan.Cameron@huawei.com, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org
+References: <1577458047-109654-1-git-send-email-Sanju.Mehta@amd.com>
+ <201912280738.zotyIgEi%lkp@intel.com> <20200103062630.GD2818@vkoul-mobl>
+From:   Gary R Hook <gary.hook@amd.com>
+Message-ID: <de0bf6de-5c44-bb81-f3ac-2db1c1c4595d@amd.com>
+Date:   Fri, 3 Jan 2020 09:12:18 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+In-Reply-To: <20200103062630.GD2818@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-Provags-ID: V03:K1:kYG6Nb4oG+yRmH+rLW9ZUUc/J/8Z/6PHmEmxCf7e1Jsxya2J1VO
- DVQ7K2NBhm1i2LX1zuvk6mhR0O4xN4x4QwgJAerpaB2BOpNruC8ReRmxe3byj7MbVR/2Qjx
- mNX5cwBwPYRO+/og3RVZJX5RW94fj47xdNgvUrpDtpSCOIv8kNRPPg3YzQyeYCj0JkXhhRd
- DA5yFWIR5mLFTFbvBUl8A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:U90eUWHdTrM=:DL5xM7BSWsUGb2oQMbSvR6
- 1tH+V9uV/xlmNSjLLgGm3gNulXN5OkIXEiylMuVDBjyFG8+1KMfPRAYh9B14iduCiGMcav6yA
- D+E4lwUoV7XziEOsAw7QxeYHAjaZvRa83ahGt0kr7lm+iJXpvcGN2mDHk2Z6dwOxCJvxhN7Og
- GiAACjtG7GBVHM0/5KZZMn4+XQmUaPaIfUX0YkvveCA0WiEuKIrv/4x3jlYofukiJx7mGcHr7
- yQ56+FzRVLiZXC7WJ6d+rnAXZ2thXEeMmvBtjd6x7PTqkHBMN8sQuVe1ljPG0Nb1mNVmu9CLb
- 8CHVU9cksihaq1Amb5oF26djNH38OpJ2klE15pfdp/OIbRlJFqSv6BPYIPbGToBbLv91wnOce
- gxHguietSpYk1LN1JTaIuDQtvG1Ew+eCt1nVJjp0O1EEVgIM2yANeN9mq4NU1Q5F4JtClNaMz
- cVRAaz63FxnqjVI3stPaOhwetOWqJ5+dZOguM2NPYSvXvgMUsotoNBVL/bPDNTbgKT6LNyLOm
- EBYJiA5FwoO3QUvi6p7hviTXCTL+nXk5G4qYwJu44IIj5lv1987f2s4Yf+fVeTef6x1rPcSqf
- XuK3jKN28q/5tVJW8CLqFVWFfx7n5dyZJuVfQYhBj5cGJFvQStelyVB+kn9MXS5W9n5fCbM5n
- nKq+U6JyXOCnMtTSyBmXyWpg5jPkP7Q3Or1RkRK7GcI3vKE3Sn5SnAPMolHKJHHGJqnWtTCm6
- +RopbgMUSPbA+3IbWTZ7Fb2bkU16GbXW77H25Vx8kGypidEpZCJJoIGfI20nHwyCvN5WIU3EE
- PRDi+noMg3Qtu3xDGORRf+qt3JDyA9IlEoBHUbQz7HATR7wskQtbKoJLA+cMxrbHA4AXf2tOv
- XV8k28yq1QDnw51y535zOJgXIyDIT3XgmROTC/pWDjFE2BEWmsEKyRSS+v0QkR7eR2fra+RBY
- xvmprMNNBdw/0ZIIxLI/m4H5yB/NsHTBWOA7TEARlqbCLmjASXdBHPdQZIxqJsGxkb2Tarh7U
- nO6p8joqjTP18HDgXzat0p9/7P/1BkoACUJaFt3j3lSoSYePp1PppvCAfW/HR1bu+lqP7yXoS
- HMNGWTDdy0TYGfPHAjpfamHKPKkXvvKkq6HpEj0dsov75CGuXePa7Wa9NYnzLSaH5DFP+Mm5c
- ona1ZS73SjaHvglcQNtTXIfW5RxSpKUedKBIW9SFhXuo9Q51xDd8M93MiWFS6ZMIShHraQITN
- 9MxvrOnOlGw4SXnGsneSz1vbcla+mNxk75OG+8lfZEp3UYANUha5/0qxXqkE=
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN4PR0501CA0147.namprd05.prod.outlook.com
+ (2603:10b6:803:2c::25) To BN8PR12MB2916.namprd12.prod.outlook.com
+ (2603:10b6:408:6a::27)
+MIME-Version: 1.0
+Received: from [10.236.30.71] (165.204.77.1) by SN4PR0501CA0147.namprd05.prod.outlook.com (2603:10b6:803:2c::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.4 via Frontend Transport; Fri, 3 Jan 2020 15:12:19 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: c69273e5-3fe7-4234-d5bf-08d7905f5457
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3266:|BN8PR12MB3266:|BN8PR12MB3266:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN8PR12MB3266F96220E4160247933C40FD230@BN8PR12MB3266.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 0271483E06
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(396003)(366004)(376002)(199004)(189003)(16576012)(110136005)(86362001)(36756003)(2616005)(66556008)(53546011)(31696002)(2906002)(26005)(66946007)(956004)(66476007)(478600001)(6636002)(5660300002)(316002)(6486002)(52116002)(186003)(16526019)(81156014)(31686004)(81166006)(4326008)(4744005)(8676002)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR12MB3266;H:BN8PR12MB2916.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: MDnTSB7ybRQNHm4rQbFjEuZ9ELh6LWACJFU02YmE7nG7udXYPIgK829NxQ1DPedvkocgQGuN6zZqeNhrRuA+oNWyxnSXW9meSom/9dFkEiG0rd1wghmWbUIq8w6LXYzfGqc6lbWKy0NJry0iiKChsXLSFvNPw6KSImHy8etdgOUTpx8hDM17HUl9ehcjhLCwzzF6yQinHbmyx5emvc5tQHe/CmF3ZgnPMo2gIE5NjcRuZQucwRWlJpEpKequ1ZdQBAtWVya3rRsLyJ6lDX2krQofU9M47P4uZK4Ww7rrTTuWUnx6pfR35wGYFxMG8eRmTwaqKGcpunJ+Q/xzaxIF30HCct/2Y96Ab3J61pICv2RKqZ/87ajcg9QvZG2ficK3yXWYGbmAcy36Reb/Ih4HyNGXhmLqFBNuo+kYnWeUPwZB8qh4t732a4t0WhQpBQYa
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c69273e5-3fe7-4234-d5bf-08d7905f5457
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jan 2020 15:12:21.0378
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: G+69nq33nT2EHmlLVOWq844RH22kQJ9Q3nR6T11sdYqvvLIgKRrnboV4y6LwbN11
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3266
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
-
-Am 02.01.20 um 12:49 schrieb Arnd Bergmann:
-> On Thu, Jan 2, 2020 at 12:00 PM Pavel Machek <pavel@ucw.cz> wrote:
->> On Mon 2019-12-30 09:35:07, Tony Lindgren wrote:
->>> * Pavel Machek <pavel@ucw.cz> [191228 19:37]:
->>>> Hi!
->>>>
->>>>> 5.4-based kernel works ok on my droid 4.
->>>>>
->>>>> 5.5-rc3 based kernel has problems; it reboots when I try to kexec it.
->>>>>
->>>>> Vanilla 5.5-rc3 reboots, too.
->>>>>
->>>>> If you have any ideas, let me know.
->>>> I managed to get partial serial dump. This should be 5.5-rc3: And then
->>>> a bit better serial dump (below). But it is silent for few seconds,
->>>> and then it restarts...
->>> If spi or regulators have problems, nothing will really work..
->> arm-soc merge seems to be responsible:
+On 1/3/20 12:26 AM, Vinod Koul wrote:
+> On 28-12-19, 07:56, kbuild test robot wrote:
+>> Hi Sanjay,
 >>
->> bad 38206c24ab09b4f4c2a57de5c1af0bb2e69cf5b6 Merge tag 'armsoc-soc' of
->> good d9e48dc2a71a836f17d1febbedb31470f957edb4 Merge tag
->>
->>                                                                         Pavel
->>
->> # bad: [738d2902773e30939a982c8df7a7f94293659810] Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
->> # good: [219d54332a09e8d8741c1e1982f5eae56099de85] Linux 5.4
->> git bisect start '738d2902773e' '219d54332a09'
->> # bad: [46cf053efec6a3a5f343fead837777efe8252a46] Linux 5.5-rc3
->> git bisect bad 46cf053efec6a3a5f343fead837777efe8252a46
->> # bad: [e42617b825f8073569da76dc4510bfa019b1c35a] Linux 5.5-rc1
->> git bisect bad e42617b825f8073569da76dc4510bfa019b1c35a
->> # good: [9a3d7fd275be4559277667228902824165153c80] Merge tag 'driver-core-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
->> git bisect good 9a3d7fd275be4559277667228902824165153c80
->> # good: [0b4295b5e2b9b42f3f3096496fe4775b656c9ba6] io_uring: fix a typo in a comment
->> git bisect good 0b4295b5e2b9b42f3f3096496fe4775b656c9ba6
->> # good: [056df578c2dcac1e624254567f5df5ddaa223234] Merge tag 'arc-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/vgupta/arc
->> git bisect good 056df578c2dcac1e624254567f5df5ddaa223234
->> # bad: [25cfb0c7de3f14e283a43dcd6de903657f9f98c7] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu
->> git bisect bad 25cfb0c7de3f14e283a43dcd6de903657f9f98c7
->> # bad: [38206c24ab09b4f4c2a57de5c1af0bb2e69cf5b6] Merge tag 'armsoc-soc' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
->> git bisect bad 38206c24ab09b4f4c2a57de5c1af0bb2e69cf5b6
->> # good: [d9e48dc2a71a836f17d1febbedb31470f957edb4] Merge tag 'pwm/for-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm
->> git bisect good d9e48dc2a71a836f17d1febbedb31470f957edb4
-> In that branch, I see the following non-merge commits:
->
-> ...
-> 781fa0a95424 ARM: bcm: Add support for BCM2711 SoC
->
-unfortunately this patch breaks multiplatform support and might be
-affect you.
+>> I love your patch! Perhaps something to improve:
+> 
+> Please fix the issues reported and also make sure the patches sent are
+> threaded, right now they are not and the series is all over my inbox :(
+> 
 
-Please make sure this one is applied, while bisecting:
+What does this mean? The patches showed up in my inbox as a set of 3, 
+properly indexed, just like they should when sent with "git send-email".
 
-59034b9d6af8 ("ARM: bcm: Add missing sentinel to bcm2711_compat[]")
+We've not had any reports from other lists/maintainers of similar 
+problems. So you'll understand how we might be a bit confused.
 
-Sorry about this
+Would you please elaborate on the problem you are seeing?
 
-Stefan
-
+grh
