@@ -5,60 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B53AC32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 116E5C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2945122522
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3848222C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:27:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRlMlUJO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JR/MKPaZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbgACS12 (ORCPT
+        id S1728437AbgACS1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 13:27:28 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43724 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728251AbgACS11 (ORCPT
+        Fri, 3 Jan 2020 13:27:55 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36476 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728251AbgACS1z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 13:27:27 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k197so23760610pga.10;
-        Fri, 03 Jan 2020 10:27:27 -0800 (PST)
+        Fri, 3 Jan 2020 13:27:55 -0500
+Received: by mail-pl1-f196.google.com with SMTP id a6so18592265plm.3;
+        Fri, 03 Jan 2020 10:27:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=T7lVqkl6XyOM8h8DRS13DS5nL9zseaivDKbsCC9whkQ=;
-        b=lRlMlUJOsZbjKCUy2Z2HLm5qpcCZIex/pL/RmX685kRBVgYKwhzzBLz6F/9Vh2tFwx
-         bveXlA6UuXyYcUZSx+bhLytW4QfYaquk8de/tzD4PGJMkVXpbUEOmA4mq3MDvkg3lNwo
-         Z9y7TlIEK9Sqyrt41rrI3nwAQO4gSjr6JrYJ0evkJo/ZMvuX5BjO8I4RuLUnYTelA5Uh
-         8Fc6P9ent2rkKtu7cT47HTakkar304LV1P6fHs/osAH1rwrikp0+dTRpieg/9yqy1UlO
-         Qr+yT+t9rHwKP5bJ45+8CP/+z2n7OU2cpaOPqOmDoec+sdK5GRidfP7VCs4OL30LK7Js
-         TvEg==
+        bh=HyEDRB8R3jFbOv7746KfkZIzJ5tK5qsQa1YW2kLyCRM=;
+        b=JR/MKPaZ9ZdCb/wDnMCg7QaA5hEoA9K3pbghR2L4z5//ajZHB1TOuFq+Ya6SCNmYJK
+         sCqfSZPzmO3B6qvhBshAwh0cx9sG2SVCC+MSkIMyxEErpoXMEd2CPeWk5TX6qUe8l3oY
+         oyiymeTIxp2eUiT8OCsYsmADXhOSRzu0n50BOSdTMy95+V4wlibBbVBzoIE0LoI7T5T5
+         AeDcAWWNSxTj9UnIS/CWGnyGv7Jj1p5pXhcErItyoceNb/utOHJiW6tTRlqknlTyEpKE
+         P2r35BT0zY5v9qwmfngPGiNGOJTawSKd1MDBZck2+bGgl1sP+VTICYYyA3WCzNokwEY7
+         wIyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=T7lVqkl6XyOM8h8DRS13DS5nL9zseaivDKbsCC9whkQ=;
-        b=AyrfdGDPFgIWI0FPITe03j8Ov1w3fxdfGdYU3WAs+7k0Km1ain/ttPOxDE+thlLM0f
-         dpdSa5nCiIEJd1ULMQFSAnpaZ/ycfNhMK2hzxKwPVzCywRNcnCIMWcU/sc3FtQ5Z8ww0
-         SElyHtRjjNZvlGXpoaBUqVOMeEJoyoRdUcJKmN9knJiHUwP3TYrA6DJzbPDm5pRbEeyF
-         JDROE4gSgzpIuMLxAF9FvWY6kqFeqiUDA8L8xuVUlkS2fGS9dcxMiMrpdd9+NnEyvR56
-         NWgGFc/bXgg9eB0KKyiwZbKuzF8jmQ+bZFefvqAlAZtXuSKHsP/j6Z5CMQzDd0yMG0CE
-         K6dQ==
-X-Gm-Message-State: APjAAAUkzXvmA2Y5/uc6ldgzsDJCaazJHwkyd4KKjCs+PHgtdOpZF5+l
-        2AYPzlV9c/hU9uXnXOEHFAc=
-X-Google-Smtp-Source: APXvYqwCGCNrI/S63pdX0hT1E0M0AG+eR1GoNptMSntdd43+7WIsOTKf+pgs8XxhD9IEdRmo9azUYg==
-X-Received: by 2002:a63:465b:: with SMTP id v27mr99600493pgk.257.1578076047071;
-        Fri, 03 Jan 2020 10:27:27 -0800 (PST)
+        bh=HyEDRB8R3jFbOv7746KfkZIzJ5tK5qsQa1YW2kLyCRM=;
+        b=sxg26F+D+aqqzDxK0NxxlzVrJ7oLu1EsQBsnXg/ORVKseZl9OA9CrB0/Sex9QD7lEa
+         xfM/oCDy+SBTibC6Ny0LFskohXSuDkJmF7kRi8wsu/8v8wQLtlkKqqkqgoiiq29UekCd
+         FNBdeGmCydsmMf0YjuCVDWMw/SBN0BSOZdAjJqThh1V/YIV142duYPsC86brAMXal/n+
+         71krwCcVBmQzbKcMmH/U0dqIiyer5oP+PKzUn3aGDNkPMhFXszZ3cfZlzHMx37Zho0XR
+         qMYKveibvy3YgYBmIO/DatoU7ZxbDryrGJgEFpTQ1a5zaVi4Aw7ByiMW/Yv1TCcIswbC
+         7p6Q==
+X-Gm-Message-State: APjAAAV0NLJeh50BkskDRY4Whyt0QtvpNVDz7NAnhnGLdkfgXJlEoquc
+        8+tWkVrPe24pa5rNg6q02lU=
+X-Google-Smtp-Source: APXvYqy7r0kbOckNG/3m48wKMwDaYzjkDGwEcIVwIdZObDye4EoXgijUTME3sZeZq2YvW4tdIZCCpQ==
+X-Received: by 2002:a17:902:9a89:: with SMTP id w9mr92954762plp.19.1578076074384;
+        Fri, 03 Jan 2020 10:27:54 -0800 (PST)
 Received: from [10.67.50.49] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id f43sm15967634pje.23.2020.01.03.10.27.25
+        by smtp.googlemail.com with ESMTPSA id 64sm66498216pfd.48.2020.01.03.10.27.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jan 2020 10:27:26 -0800 (PST)
-Subject: Re: [PATCH v4 10/13] phy: usb: PHY's MDIO registers not accessible
- without device installed
+        Fri, 03 Jan 2020 10:27:53 -0800 (PST)
+Subject: Re: [PATCH v4 11/13] phy: usb: bdc: Fix occasional failure with BDC
+ on 7211
 To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
 Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -72,7 +73,7 @@ Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>
 References: <20200103181811.22939-1-alcooperx@gmail.com>
- <20200103181811.22939-11-alcooperx@gmail.com>
+ <20200103181811.22939-12-alcooperx@gmail.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -128,12 +129,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <6108ef5e-932b-fae6-01fe-4079da8fd84a@gmail.com>
-Date:   Fri, 3 Jan 2020 10:27:25 -0800
+Message-ID: <6bc9f220-24a2-3c3a-65be-45087fe84557@gmail.com>
+Date:   Fri, 3 Jan 2020 10:27:52 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200103181811.22939-11-alcooperx@gmail.com>
+In-Reply-To: <20200103181811.22939-12-alcooperx@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -143,11 +144,8 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 1/3/20 10:18 AM, Al Cooper wrote:
-> When there is no device connected and FSM is enabled, the XHCI puts
-> the PHY into suspend mode.  When the PHY is put into suspend mode
-> the USB LDO powers down the PHY. This causes the MDIO to be
-> inaccessible and its registers reset to default. The fix is to
-> disable FSM.
+> The BDC "Read Transaction Size" needs to be changed from 1024
+> bytes to 256 bytes to prevent occasional transaction failures.
 > 
 > Signed-off-by: Al Cooper <alcooperx@gmail.com>
 
