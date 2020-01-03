@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9B6C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA07C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D295F21835
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6BD621835
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578051677;
-	bh=Hc6UcQ9UpT/kVsHpfR+qryCfdpE3qLzn7SldrCucIX8=;
+	s=default; t=1578051685;
+	bh=P4/SvgcHgqZLvC1nEjpUC1Mz8hU30o1pck40SQUQvSE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e5ICTzdmThfBoU0xg7DNLMGGqNHaJhoPHikeokkXCRy7qrU/mW7yNgz2quc8E+ciN
-	 VC9SAFPufZnmMUl9Gu6eMbKB8E/xLq73/stUn2pdQ8nIvvQDtepOo5Eff+sk7bGzFA
-	 3ItGsKs5pcl0LOHoVRXVHr1fXJ9jyD5COiqLX3Jk=
+	b=yHNaqAn55qrUudYHse7n09clLzpgcvEb7oN34x3ZOXm6dnWQrtqMcZb7wTUkrQY6j
+	 Paxc/7/ACu/hdg9SmQ3cE6ACmwyHvGGUzc9TkhwBoWcwYUkWiSxGgTaYL6a1LP3+zA
+	 R8/pGC00igLKbcX98N9XlhFFYrrNoWJLghRSu52w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbgACLlR (ORCPT
+        id S1727647AbgACLkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 06:41:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40418 "EHLO mail.kernel.org"
+        Fri, 3 Jan 2020 06:40:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727841AbgACLkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 06:40:43 -0500
+        id S1727791AbgACLkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 06:40:33 -0500
 Received: from localhost.localdomain (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 269892464B;
-        Fri,  3 Jan 2020 11:40:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C967622522;
+        Fri,  3 Jan 2020 11:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578051642;
-        bh=Hc6UcQ9UpT/kVsHpfR+qryCfdpE3qLzn7SldrCucIX8=;
+        s=default; t=1578051632;
+        bh=P4/SvgcHgqZLvC1nEjpUC1Mz8hU30o1pck40SQUQvSE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ii790vAP0OPeIIlLjwcHHtH/Ks7PQ+Dtw3t1mC4olvTHfFIGuQk++kQWf5SDFCCfn
-         iWmGrQWDHkC+CTqCo8p9hJPSPKZBZz8vigTRj8T3JQu2mfMBy1aC5Y2veux74cl9j1
-         WGdwYSGVSxkfHU/1PMgBEPCF6kx7e+QknpY6Vahw=
+        b=rpWYqRHADnvrK8ur8OzYPq60L+5b61YX/r7bQ23z4G/gKGYviUKZS10EzRaj/huV0
+         JjR9t9rM2X4E3sttYEMwP8eDyiIDSUdFnJCSan5adsnysowkx4wSdYi4+qhDMt+V6n
+         LT2Pa8Zlm3/BUqvIFkCBoouTQ2wUyMywaFif+exI=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>,
         linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
         Arvind Sankar <nivedita@alum.mit.edu>,
         Matthew Garrett <mjg59@google.com>
-Subject: [PATCH 13/20] efi/x86: don't panic or BUG() on non-critical error conditions
-Date:   Fri,  3 Jan 2020 12:39:46 +0100
-Message-Id: <20200103113953.9571-14-ardb@kernel.org>
+Subject: [PATCH 08/20] efi/x86: simplify i386 efi_call_phys() firmware call wrapper
+Date:   Fri,  3 Jan 2020 12:39:41 +0100
+Message-Id: <20200103113953.9571-9-ardb@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200103113953.9571-1-ardb@kernel.org>
 References: <20200103113953.9571-1-ardb@kernel.org>
@@ -60,117 +60,204 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The logic in __efi_enter_virtual_mode() does a number of steps in
-sequence, all of which may fail in one way or the other. In most
-cases, we simply print an error and disable EFI runtime services
-support, but in some cases, we BUG() or panic() and bring down the
-system when encountering conditions that we could easily handle in
-the same way.
+The variadic efi_call_phys() wrapper that exists on i386 was
+originally created to call into any EFI firmware runtime service,
+but in practice, we only use it once, to call SetVirtualAddressMap()
+during early boot.
+The flexibility provided by the variadic nature also makes it
+type unsafe, and makes the assembler code more complicated than
+needed, since it has to deal with an unknown number of arguments
+living on the stack.
 
-While at it, replace a pointless page-to-virt-phys conversion with
-one that goes straight from struct page to physical.
+So clean this up, by renaming the helper to efi_call_svam(), and
+dropping the unneeded complexity. Let's also drop the reference
+to the efi_phys struct and grab the address from the EFI system
+table directly.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/platform/efi/efi.c    | 28 ++++++++++++++--------------
- arch/x86/platform/efi/efi_64.c |  9 +++++----
- 2 files changed, 19 insertions(+), 18 deletions(-)
+ arch/x86/include/asm/efi.h          |   3 -
+ arch/x86/platform/efi/efi_32.c      |   5 +-
+ arch/x86/platform/efi/efi_stub_32.S | 109 +++++-----------------------
+ 3 files changed, 20 insertions(+), 97 deletions(-)
 
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index 53ed0b123641..4f539bfdc051 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -889,16 +889,14 @@ static void __init __efi_enter_virtual_mode(void)
+diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
+index e29e5dc0b750..cb08035b89a0 100644
+--- a/arch/x86/include/asm/efi.h
++++ b/arch/x86/include/asm/efi.h
+@@ -35,9 +35,6 @@
+ #define ARCH_EFI_IRQ_FLAGS_MASK	X86_EFLAGS_IF
  
- 	if (efi_alloc_page_tables()) {
- 		pr_err("Failed to allocate EFI page tables\n");
--		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
--		return;
-+		goto err;
- 	}
+ #ifdef CONFIG_X86_32
+-
+-extern asmlinkage unsigned long efi_call_phys(void *, ...);
+-
+ #define arch_efi_call_virt_setup()					\
+ ({									\
+ 	kernel_fpu_begin();						\
+diff --git a/arch/x86/platform/efi/efi_32.c b/arch/x86/platform/efi/efi_32.c
+index 185950ade0e9..71dddd1620f9 100644
+--- a/arch/x86/platform/efi/efi_32.c
++++ b/arch/x86/platform/efi/efi_32.c
+@@ -66,7 +66,8 @@ void __init efi_map_region(efi_memory_desc_t *md)
+ void __init efi_map_region_fixed(efi_memory_desc_t *md) {}
+ void __init parse_efi_setup(u64 phys_addr, u32 data_len) {}
  
- 	efi_merge_regions();
- 	new_memmap = efi_map_regions(&count, &pg_shift);
- 	if (!new_memmap) {
- 		pr_err("Error reallocating memory, EFI runtime non-functional!\n");
--		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
--		return;
-+		goto err;
- 	}
+-extern struct efi efi_phys;
++efi_status_t efi_call_svam(efi_set_virtual_address_map_t *__efiapi *,
++			   u32, u32, u32, void *);
  
- 	pa = __pa(new_memmap);
-@@ -912,8 +910,7 @@ static void __init __efi_enter_virtual_mode(void)
+ efi_status_t __init efi_set_virtual_address_map(unsigned long memory_map_size,
+ 						unsigned long descriptor_size,
+@@ -89,7 +90,7 @@ efi_status_t __init efi_set_virtual_address_map(unsigned long memory_map_size,
  
- 	if (efi_memmap_init_late(pa, efi.memmap.desc_size * count)) {
- 		pr_err("Failed to remap late EFI memory map\n");
--		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
--		return;
-+		goto err;
- 	}
+ 	/* Disable interrupts around EFI calls: */
+ 	local_irq_save(flags);
+-	status = efi_call_phys(efi_phys.set_virtual_address_map,
++	status = efi_call_svam(&efi.systab->runtime->set_virtual_address_map,
+ 			       memory_map_size, descriptor_size,
+ 			       descriptor_version, virtual_map);
+ 	local_irq_restore(flags);
+diff --git a/arch/x86/platform/efi/efi_stub_32.S b/arch/x86/platform/efi/efi_stub_32.S
+index eed8b5b441f8..75c46e7a809f 100644
+--- a/arch/x86/platform/efi/efi_stub_32.S
++++ b/arch/x86/platform/efi/efi_stub_32.S
+@@ -7,118 +7,43 @@
+  */
  
- 	if (efi_enabled(EFI_DBG)) {
-@@ -921,12 +918,11 @@ static void __init __efi_enter_virtual_mode(void)
- 		efi_print_memmap();
- 	}
+ #include <linux/linkage.h>
++#include <linux/init.h>
+ #include <asm/page_types.h>
  
--	BUG_ON(!efi.systab);
-+	if (WARN_ON(!efi.systab))
-+		goto err;
+-/*
+- * efi_call_phys(void *, ...) is a function with variable parameters.
+- * All the callers of this function assure that all the parameters are 4-bytes.
+- */
+-
+-/*
+- * In gcc calling convention, EBX, ESP, EBP, ESI and EDI are all callee save.
+- * So we'd better save all of them at the beginning of this function and restore
+- * at the end no matter how many we use, because we can not assure EFI runtime
+- * service functions will comply with gcc calling convention, too.
+- */
++	__INIT
++SYM_FUNC_START(efi_call_svam)
++	push	8(%esp)
++	push	8(%esp)
++	push	%ecx
++	push	%edx
  
--	if (efi_setup_page_tables(pa, 1 << pg_shift)) {
--		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
--		return;
--	}
-+	if (efi_setup_page_tables(pa, 1 << pg_shift))
-+		goto err;
+-.text
+-SYM_FUNC_START(efi_call_phys)
+ 	/*
+-	 * 0. The function can only be called in Linux kernel. So CS has been
+-	 * set to 0x0010, DS and SS have been set to 0x0018. In EFI, I found
+-	 * the values of these registers are the same. And, the corresponding
+-	 * GDT entries are identical. So I will do nothing about segment reg
+-	 * and GDT, but change GDT base register in prolog and epilog.
+-	 */
+-
+-	/*
+-	 * 1. Now I am running with EIP = <physical address> + PAGE_OFFSET.
+-	 * But to make it smoothly switch from virtual mode to flat mode.
+-	 * The mapping of lower virtual memory has been created in prolog and
+-	 * epilog.
++	 * Switch to the flat mapped alias of this routine, by jumping to the
++	 * address of label '1' after subtracting PAGE_OFFSET from it.
+ 	 */
+ 	movl	$1f, %edx
+ 	subl	$__PAGE_OFFSET, %edx
+ 	jmp	*%edx
+ 1:
  
- 	efi_sync_low_kernel_mappings();
+-	/*
+-	 * 2. Now on the top of stack is the return
+-	 * address in the caller of efi_call_phys(), then parameter 1,
+-	 * parameter 2, ..., param n. To make things easy, we save the return
+-	 * address of efi_call_phys in a global variable.
+-	 */
+-	popl	%edx
+-	movl	%edx, saved_return_addr
+-	/* get the function pointer into ECX*/
+-	popl	%ecx
+-	movl	%ecx, efi_rt_function_ptr
+-	movl	$2f, %edx
+-	subl	$__PAGE_OFFSET, %edx
+-	pushl	%edx
+-
+-	/*
+-	 * 3. Clear PG bit in %CR0.
+-	 */
++	/* disable paging */
+ 	movl	%cr0, %edx
+ 	andl	$0x7fffffff, %edx
+ 	movl	%edx, %cr0
+-	jmp	1f
+-1:
  
-@@ -935,9 +931,9 @@ static void __init __efi_enter_virtual_mode(void)
- 					     efi.memmap.desc_version,
- 					     (efi_memory_desc_t *)pa);
- 	if (status != EFI_SUCCESS) {
--		pr_alert("Unable to switch EFI into virtual mode (status=%lx)!\n",
--			 status);
--		panic("EFI call to SetVirtualAddressMap() failed!");
-+		pr_err("Unable to switch EFI into virtual mode (status=%lx)!\n",
-+		       status);
-+		goto err;
- 	}
+-	/*
+-	 * 4. Adjust stack pointer.
+-	 */
++	/* convert the stack pointer to a flat mapped address */
+ 	subl	$__PAGE_OFFSET, %esp
  
- 	efi_free_boot_services();
-@@ -964,6 +960,10 @@ static void __init __efi_enter_virtual_mode(void)
+-	/*
+-	 * 5. Call the physical function.
+-	 */
+-	jmp	*%ecx
++	/* call the EFI routine */
++	call	*(%eax)
  
- 	/* clean DUMMY object */
- 	efi_delete_dummy_variable();
-+	return;
-+
-+err:
-+	clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
- }
+-2:
+-	/*
+-	 * 6. After EFI runtime service returns, control will return to
+-	 * following instruction. We'd better readjust stack pointer first.
+-	 */
+-	addl	$__PAGE_OFFSET, %esp
++	/* convert ESP back to a kernel VA, and pop the outgoing args */
++	addl	$__PAGE_OFFSET + 16, %esp
  
- void __init efi_enter_virtual_mode(void)
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index 910e9ec03b09..c13fa2150976 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -384,11 +384,12 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
- 		return 0;
+-	/*
+-	 * 7. Restore PG bit
+-	 */
++	/* re-enable paging */
+ 	movl	%cr0, %edx
+ 	orl	$0x80000000, %edx
+ 	movl	%edx, %cr0
+-	jmp	1f
+-1:
+-	/*
+-	 * 8. Now restore the virtual mode from flat mode by
+-	 * adding EIP with PAGE_OFFSET.
+-	 */
+-	movl	$1f, %edx
+-	jmp	*%edx
+-1:
+-
+-	/*
+-	 * 9. Balance the stack. And because EAX contain the return value,
+-	 * we'd better not clobber it.
+-	 */
+-	leal	efi_rt_function_ptr, %edx
+-	movl	(%edx), %ecx
+-	pushl	%ecx
  
- 	page = alloc_page(GFP_KERNEL|__GFP_DMA32);
--	if (!page)
--		panic("Unable to allocate EFI runtime stack < 4GB\n");
-+	if (!page) {
-+		pr_err("Unable to allocate EFI runtime stack < 4GB\n");
-+		return 1;
-+	}
- 
--	efi_scratch.phys_stack = virt_to_phys(page_address(page));
--	efi_scratch.phys_stack += PAGE_SIZE; /* stack grows down */
-+	efi_scratch.phys_stack = page_to_phys(page + 1); /* stack grows down */
- 
- 	npages = (_etext - _text) >> PAGE_SHIFT;
- 	text = __pa(_text);
+-	/*
+-	 * 10. Push the saved return address onto the stack and return.
+-	 */
+-	leal	saved_return_addr, %edx
+-	movl	(%edx), %ecx
+-	pushl	%ecx
+ 	ret
+-SYM_FUNC_END(efi_call_phys)
+-.previous
+-
+-.data
+-saved_return_addr:
+-	.long 0
+-efi_rt_function_ptr:
+-	.long 0
++SYM_FUNC_END(efi_call_svam)
 -- 
 2.20.1
 
