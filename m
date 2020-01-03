@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC48FC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186CDC32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAB3521835
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9BD7227BF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578051627;
-	bh=2ZDafcrOFKSF2ybRq49KajpWushIOtD+aMmrNSMAiQM=;
+	s=default; t=1578051631;
+	bh=Yy+0Y26bNsBKW5pM0oJe/s001o5+q6lON5VgSvebl0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wEjsJBom7aPJH0qRHhHzO31Vr/ShLLuFKRYf5S5Wo+T2kBTIzuT7Z0DX3ZXxcIzQg
-	 8sWfCReH5l+RJGz71mG6Ayq7UznjLLIjTNBL3ND8enF2WNkuX4tmua+qA9s0jPXuu9
-	 1nO20ITvS/Du0qgCiAuzoB/4QrLmMY//Z3fiusxM=
+	b=LYuoyoS5A+FesJTrRcaDIe2t4ohaPWPhGscgi8x290nRFsE3pdx/UW5MaLV7NiQl7
+	 j/vUmxBOqee5X+MSSp+tEfD1lEVtv4WALpDKg6dtv63rLe/YZTKXE6+QXfevXeeFh2
+	 VIqudkp/2Zijv3AR2AiSggH15JogUyOgUXK8eA/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbgACLk1 (ORCPT
+        id S1727770AbgACLka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 06:40:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39670 "EHLO mail.kernel.org"
+        Fri, 3 Jan 2020 06:40:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727726AbgACLkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 06:40:24 -0500
+        id S1727737AbgACLk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 06:40:27 -0500
 Received: from localhost.localdomain (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E3E524649;
-        Fri,  3 Jan 2020 11:40:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C66B22314;
+        Fri,  3 Jan 2020 11:40:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578051624;
-        bh=2ZDafcrOFKSF2ybRq49KajpWushIOtD+aMmrNSMAiQM=;
+        s=default; t=1578051626;
+        bh=Yy+0Y26bNsBKW5pM0oJe/s001o5+q6lON5VgSvebl0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z3XU3CX/9PcO9vjlhAP54CO0W7KCHeRLDWxVe7EmYZDGNEZYy0VzFjoF4p/HgVqZ0
-         EceYb2XWR0TSCUpTK++cE4gQny6i+NcoNcGpW/CzYeDxZjbi08BTKv4U+nIuLvZ3Pw
-         EnI7TEFmrSWeEw3vnneMEdOmph9URiSeDtNq/Zg0=
+        b=C2Eexyl5EQImX/YyREv+qTf2pRTcYk0EFNNc1DA+7PteX+s0KvoQH67gnjo1iHzg7
+         FW+BvYzccW/tnp8/QhqycRdjVam3n8H8op4qpNl8OLrMY4WxNfD79yBdoxP+LeucSg
+         q3ehJSBPeI1vZiSvpB0qOTooI+09HIJ8yGRUEx9U=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>,
         linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
         Arvind Sankar <nivedita@alum.mit.edu>,
         Matthew Garrett <mjg59@google.com>
-Subject: [PATCH 04/20] efi/x86: map the entire EFI vendor string before copying it
-Date:   Fri,  3 Jan 2020 12:39:37 +0100
-Message-Id: <20200103113953.9571-5-ardb@kernel.org>
+Subject: [PATCH 05/20] efi/x86: avoid redundant cast of EFI firmware service pointer
+Date:   Fri,  3 Jan 2020 12:39:38 +0100
+Message-Id: <20200103113953.9571-6-ardb@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200103113953.9571-1-ardb@kernel.org>
 References: <20200103113953.9571-1-ardb@kernel.org>
@@ -60,55 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix a couple of issues with the way we map and copy the vendor string:
-- we map only 2 bytes, which usually works since you get at least a
-  page, but if the vendor string happens to cross a page boundary,
-  a crash will result
-- only call early_memunmap() if early_memremap() succeeded, or we will
-  call it with a NULL address which it doesn't like,
-- while at it, switch to early_memremap_ro(), and array indexing rather
-  than pointer dereferencing to read the CHAR16 characters.
+All EFI firmware call prototypes have been annotated as __efiapi,
+permitting us to attach attributes regarding the calling convention
+by overriding __efiapi to an architecture specific value.
 
-Fixes: 5b83683f32b1 ("x86: EFI runtime service support")
+On 32-bit x86, EFI firmware calls use the plain calling convention
+where all arguments are passed via the stack, and cleaned up by the
+caller. Let's add this to the __efiapi definition so we no longer
+need to cast the function pointers before invoking them.
+
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/platform/efi/efi.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/efi.h | 8 +-------
+ include/linux/efi.h        | 4 +++-
+ 2 files changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index d96953d9d4e7..3ce32c31bb61 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -541,7 +541,6 @@ void __init efi_init(void)
- 	efi_char16_t *c16;
- 	char vendor[100] = "unknown";
- 	int i = 0;
--	void *tmp;
+diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
+index b35b5d423e9d..09c3fc468793 100644
+--- a/arch/x86/include/asm/efi.h
++++ b/arch/x86/include/asm/efi.h
+@@ -51,13 +51,7 @@ extern asmlinkage unsigned long efi_call_phys(void *, ...);
+ })
  
- #ifdef CONFIG_X86_32
- 	if (boot_params.efi_info.efi_systab_hi ||
-@@ -566,14 +565,16 @@ void __init efi_init(void)
- 	/*
- 	 * Show what we know for posterity
- 	 */
--	c16 = tmp = early_memremap(efi.systab->fw_vendor, 2);
-+	c16 = early_memremap_ro(efi.systab->fw_vendor,
-+				sizeof(vendor) * sizeof(efi_char16_t));
- 	if (c16) {
--		for (i = 0; i < sizeof(vendor) - 1 && *c16; ++i)
--			vendor[i] = *c16++;
-+		for (i = 0; i < sizeof(vendor) - 1 && c16[i]; ++i)
-+			vendor[i] = c16[i];
- 		vendor[i] = '\0';
--	} else
-+		early_memunmap(c16, sizeof(vendor) * sizeof(efi_char16_t));
-+	} else {
- 		pr_err("Could not map the firmware vendor!\n");
--	early_memunmap(tmp, 2);
-+	}
  
- 	pr_info("EFI v%u.%.02u by %s\n",
- 		efi.systab->hdr.revision >> 16,
+-/*
+- * Wrap all the virtual calls in a way that forces the parameters on the stack.
+- */
+-#define arch_efi_call_virt(p, f, args...)				\
+-({									\
+-	((efi_##f##_t __attribute__((regparm(0)))*) p->f)(args);	\
+-})
++#define arch_efi_call_virt(p, f, args...)	p->f(args)
+ 
+ #define efi_ioremap(addr, size, type, attr)	ioremap_cache(addr, size)
+ 
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 726673e98990..952c1659dfd9 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -48,8 +48,10 @@ typedef u16 efi_char16_t;		/* UNICODE character */
+ typedef u64 efi_physical_addr_t;
+ typedef void *efi_handle_t;
+ 
+-#ifdef CONFIG_X86_64
++#if defined(CONFIG_X86_64)
+ #define __efiapi __attribute__((ms_abi))
++#elif defined(CONFIG_X86_32)
++#define __efiapi __attribute__((regparm(0)))
+ #else
+ #define __efiapi
+ #endif
 -- 
 2.20.1
 
