@@ -2,87 +2,96 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE799C00523
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 21:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C8FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 21:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB3F2222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 21:52:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578088320;
-	bh=lkVZIrOcBIm2xz+5QypPOZ7AEtMcbg9KTsvtVzBMejI=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=dOc9+eTjyD1dNszhRGWPy9TQcA9txvEpWVqkZV7Ic+f+HsitaWBPPQ2RPYv0hOVgR
-	 jqUSxsa0rqaGrc+C5VStTiIIAOs+lgllKV0Z3K/XUOyOQ4oAkTszAg5aeR35Hx2c50
-	 vaQOnf9nwPjvXsO0V6K4kGaJHOVET7OkF/w4YiZA=
+	by mail.kernel.org (Postfix) with ESMTP id 491BB222C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 21:52:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbgACVv7 (ORCPT
+        id S1728794AbgACVwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 16:51:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35980 "EHLO mail.kernel.org"
+        Fri, 3 Jan 2020 16:52:12 -0500
+Received: from mga07.intel.com ([134.134.136.100]:46125 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728679AbgACVv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 16:51:58 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69DAE206DB;
-        Fri,  3 Jan 2020 21:51:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578088317;
-        bh=lkVZIrOcBIm2xz+5QypPOZ7AEtMcbg9KTsvtVzBMejI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Tdf45k3TI8PoEoopB2puxXk9u7GKq2tQ0Jw4XC8E4n2+pBUxNnOukHpylD68/1Rho
-         zWQsgoxZukTlzwh0dCn3bU2u3DUK1lYcRGDO4fFymurcexwmF/M9LAzs12fNsAsT5J
-         pZcE2fjbIx5D5ujHSERa+z3TQBFM1yznw7kEHjFw=
-Subject: Re: [PATCH 4.9 000/171] 4.9.208-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200102220546.960200039@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <81d2b642-589c-00e8-903f-f37f62df5413@kernel.org>
-Date:   Fri, 3 Jan 2020 14:51:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1728752AbgACVwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 16:52:11 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jan 2020 13:52:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,392,1571727600"; 
+   d="scan'208";a="421551310"
+Received: from hkarray-mobl.ger.corp.intel.com ([10.252.22.101])
+  by fmsmga006.fm.intel.com with ESMTP; 03 Jan 2020 13:51:59 -0800
+Message-ID: <0d1363c75d3c358817840003b8c6bb97db798990.camel@linux.intel.com>
+Subject: Re: Patch "tpm_tis: reserve chip for duration of tpm_tis_core_init"
+ has been added to the 5.4-stable tree
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Christian Bundy <christianbundy@fraction.io>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable-commits@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Fri, 03 Jan 2020 23:51:52 +0200
+In-Reply-To: <CAPcyv4hXwujZ-+8f-5q2UthNOSszeHfNQxxjNVPQjOWeT0KDQg@mail.gmail.com>
+References: <CAPcyv4jfpOX85GWgNTyugWksU=e-j=RhU_fcrcHBo4GMZ8_bhw@mail.gmail.com>
+         <c6ce34b130210d2d1330fc4079d6d82bd74dcef1.camel@linux.intel.com>
+         <50217a688ffa56cf5f150ffd358daba2a88cad48.camel@linux.intel.com>
+         <20191228151526.GA6971@linux.intel.com>
+         <CAPcyv4i_frm8jZeknniPexp8AAmGsaq0_DHegmL4XZHQi1ThxA@mail.gmail.com>
+         <CAPcyv4iyQeXBWvp8V_UPBsOk29cfmTVZGYrrDgyYYqzsQvTjNA@mail.gmail.com>
+         <2c4a80e0d30bf1dfe89c6e3469d1dbfb008275fa.camel@linux.intel.com>
+         <20191231010256.kymv4shwmx5jcmey@cantor>
+         <20191231155944.GA4790@linux.intel.com>
+         <be07a1e4-c290-4185-8c23-d97050279564@www.fastmail.com>
+         <20200102171922.GA20989@linux.intel.com>
+         <CAPcyv4hXwujZ-+8f-5q2UthNOSszeHfNQxxjNVPQjOWeT0KDQg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20200102220546.960200039@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/2/20 3:05 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.208 release.
-> There are 171 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Thu, 2020-01-02 at 11:20 -0800, Dan Williams wrote:
+> On Thu, Jan 2, 2020 at 9:21 AM Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
+> > On Tue, Dec 31, 2019 at 11:47:37AM -0800, Christian Bundy wrote:
+> > > > Christian, were you having any issues with interrupts? You system was going
+> > > > into this code as well.
+> > > 
+> > > Unfortunately I'm now unable to test, sorry for the trouble. I replaced my BIOS
+> > > with UEFI firmware and the problem has disappeared. Please let me know if there
+> > > is anything else I can do to help.
+> > > 
+> > > Christian
+> > 
+> > Takashi wrote yesterday [*]:
+> > 
+> > "I'm building a test kernel package based on 5.5-rc4 with Jarkko's revert
+> > patches"
 > 
-> Responses should be made by Sat, 04 Jan 2020 22:02:15 +0000.
-> Anything received after that time might be too late.
+> Nice, I also built one of those. Just waiting for access to the system
+> again to gather results.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.208-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> > [*] https://bugzilla.kernel.org/show_bug.cgi?id=205935
+> > 
+> > /Jarkko
 
-Compiled and booted on my test system. No dmesg regressions.
+Thanks, I'll check this also during weekend once (given the timezone
+differences) i.e. if you can provide me result, I can also compose a
+pull request during the weekend and send it.
 
-thanks,
--- Shuah
+/Jarkko
+
