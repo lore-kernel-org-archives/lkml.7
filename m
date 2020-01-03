@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECB5C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 812B4C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C4DB222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F891222C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:28:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j2bN8mkn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dmJnt5lC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgACS2S (ORCPT
+        id S1728448AbgACS2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 13:28:18 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43509 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728251AbgACS2R (ORCPT
+        Fri, 3 Jan 2020 13:28:52 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38588 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728286AbgACS2v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 13:28:17 -0500
-Received: by mail-pf1-f193.google.com with SMTP id x6so22782579pfo.10;
-        Fri, 03 Jan 2020 10:28:17 -0800 (PST)
+        Fri, 3 Jan 2020 13:28:51 -0500
+Received: by mail-pg1-f193.google.com with SMTP id a33so23770594pgm.5;
+        Fri, 03 Jan 2020 10:28:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=w2OUrY/p8/yNJEY/03mdBtGEmavAjaO9/m3mx/M/QBU=;
-        b=j2bN8mknc1cWLf8bfdU+to6l2YRvMEb2a5f6GD1+HwNafAEIKWiNQvG+EX2ZGyqL6d
-         Ym63zcYMXns6xQ8O/hjCGgw4Y0KrJ0o5XUxD+ksC3QdFQZDfrPpM7Ymvb1QbqQYutyOj
-         1YqmxuAN8h+m+oGGDXPXHPjdFYpVonIEExwzw5wfhgPp8gSJ4ANcA8P0BF9ZoIJYoBkM
-         hhElI2U3g6FXnuAK+wfoXtbkPwcDfZbZ52L5O6Xw7ZUCxHc4g3D1KjsycM9OkFMjMDFI
-         w4H2TKPhE4OVo1KEG10QXYsLaO1udlQ78ARzxTtGerVjSXI8p+U/zkm32vn8LbhTfbX5
-         uCPQ==
+        bh=5ayQVSqAdQ7vgPQs3/u8Hw76BllmVDWvUfEks6xoUc8=;
+        b=dmJnt5lCrL8ukvnoHgHyfV3ylRKouKMb+yUxW/bj8VRtdTKSMLMpcWEygkkP3rbDnH
+         uuSCGMaPia+rVu/bQnaI6l2VrLpAhgupw0jchEyXXj5MIf9h8mxUTY96JBC4HWtZmiOx
+         mVW9gF/s5Y/dLlMDFSA1Iftf8u1HY4Cbhj9qPNcGiAYYvspPHJs5Rglai3/u9eRPZZYy
+         NB4N7k/EIBn5zZeg6P0FjVKgN2+JBwnC+40Tddv4aR8PtsG5sNfmGHaXrqHN6Dq2PdQo
+         Q0JygVy8XJWIhuFaV7x95ed+0ZYPQIAaNiNxvKhD6XKeEV8GswR0YFTRTNnue/zpuF+I
+         xGiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=w2OUrY/p8/yNJEY/03mdBtGEmavAjaO9/m3mx/M/QBU=;
-        b=pEnvKC1SNl/B2Mp46W8iHYIsBLm79pMpNR07Yu+6QAvoV0c7VLO9HDYz3hFL+3M1De
-         qggr23DHawGvcFJyIIjRqLwnD/8LmfXdTdQv7Zp4/YwqwQGNMkm9R6ACzt4LeTEFhI7a
-         dn2nRf0PfiezclDU5uzgLYkcUxC85+PW7iSVp47wMN7iOtpd8UKLWDMLyVX81qj3TozO
-         Fb40MczAf+iurkkW7KOz3DQdrStKFvsBNAYmkhl4NiZia1VGTOBMMWS3X6KKyuQOk2dK
-         3Qrdr6bdVZLIIGPvbAscjQXIxDgc8ElxMGeR+FjyftdQnYT7U2/uUz86sD7wDgkYZXhW
-         eXoQ==
-X-Gm-Message-State: APjAAAV7M/lZ41v7sl6VVbVZICgPgBgtZqaPwnYo/0YbFEMxmFN3uvbJ
-        oNnwre/P92nGv0iEGkKH1Zg=
-X-Google-Smtp-Source: APXvYqwH+gdYvxZVqd91qQbgbwij6KQasZHAoliQDjaGcsgaHZyCkaNULVk7Ije37OrcyCZJe1QM8Q==
-X-Received: by 2002:a63:cc4a:: with SMTP id q10mr96776677pgi.241.1578076096892;
-        Fri, 03 Jan 2020 10:28:16 -0800 (PST)
+        bh=5ayQVSqAdQ7vgPQs3/u8Hw76BllmVDWvUfEks6xoUc8=;
+        b=VhwD8EKR03t83tbJDNMLjqQUnT330mYuYpcAjfo1L/M7nzQ+9L9uTdMH4JWWPGLxTx
+         RmTrESUbg1VKmQ9t+29mMtX5leaugdcCzH1T8WpjZYxbr9o3EFTxlBTMmo1NMTCv8+I3
+         q0tXlqrhxMEaVMQ5fFkeifJ6teioCZ9eoPudHZ5qmW5de+Wl0GGWS4vo5J8058RJVeey
+         9elWT/Kn16Dv5HrMw4J4AW12fd0YHp/kcN2wjO5iZt/rd4QZX/fwnx64LUcxkjYGHy69
+         0fN6FI2+NmOHJLwffQ56QQHGtauzmqOPHTm2T/h1Sdjw8couLP0p4LtlcUOagt3Q2VNz
+         I5xw==
+X-Gm-Message-State: APjAAAW+0HmS/SyO4AEc/nSz6dALxBGYwI9pE9c8jD16DM/cacVIBmi5
+        jMqqGaGxOXqQQYYkyO/zHVU=
+X-Google-Smtp-Source: APXvYqx7do/nq+uWhSiDiJz7Wv7b6n5nGojkAj+sj77pVwITvxYvg8qrX0xm/4Ohki1m99RJD3jK4A==
+X-Received: by 2002:a63:d94b:: with SMTP id e11mr97559167pgj.79.1578076130752;
+        Fri, 03 Jan 2020 10:28:50 -0800 (PST)
 Received: from [10.67.50.49] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id k9sm15345660pjo.19.2020.01.03.10.28.15
+        by smtp.googlemail.com with ESMTPSA id s11sm58265751pfd.157.2020.01.03.10.28.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jan 2020 10:28:16 -0800 (PST)
-Subject: Re: [PATCH v4 12/13] phy: usb: USB driver is crashing during S3
- resume on 7216
+        Fri, 03 Jan 2020 10:28:50 -0800 (PST)
+Subject: Re: [PATCH v4 13/13] phy: usb: Add support for wake and USB low power
+ mode for 7211 S2/S5
 To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
 Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -73,7 +73,7 @@ Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>
 References: <20200103181811.22939-1-alcooperx@gmail.com>
- <20200103181811.22939-13-alcooperx@gmail.com>
+ <20200103181811.22939-14-alcooperx@gmail.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -129,12 +129,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <c47c1a9e-1850-39fb-5a78-a13a3659067e@gmail.com>
-Date:   Fri, 3 Jan 2020 10:28:15 -0800
+Message-ID: <9d8e856f-659d-2d5a-b8c9-cf456343e782@gmail.com>
+Date:   Fri, 3 Jan 2020 10:28:49 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200103181811.22939-13-alcooperx@gmail.com>
+In-Reply-To: <20200103181811.22939-14-alcooperx@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -144,8 +144,14 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 1/3/20 10:18 AM, Al Cooper wrote:
-> This is a result of the USB 2.0 clocks not being disabled/enabled
-> during suspend/resume on XHCI only systems.
+> Add support for 7211 USB wake. Disable all possible 7211 USB logic
+> for S2/S5 if USB wake is not enabled.
+> 
+> On the 7211, the XHCI wake signal was not connected properly and
+> only goes to the USB1_USB1_CTRL_TP_DIAG1 diagonstic register.
+> The workaround is to have VPU code running that polls for the
+> proper bit in the DIAG register and to wake the system when
+> the bit is asserted.
 > 
 > Signed-off-by: Al Cooper <alcooperx@gmail.com>
 
