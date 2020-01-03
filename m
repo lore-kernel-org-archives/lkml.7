@@ -2,96 +2,164 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0C0C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 14:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B76C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 14:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E898D206DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 14:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88821206DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 14:21:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AwriWlME"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qoOf8IY9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgACOVQ (ORCPT
+        id S1727856AbgACOV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 09:21:16 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:52787 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727523AbgACOVP (ORCPT
+        Fri, 3 Jan 2020 09:21:58 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33474 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727523AbgACOV5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 09:21:15 -0500
-Received: by mail-pj1-f67.google.com with SMTP id a6so4665452pjh.2;
-        Fri, 03 Jan 2020 06:21:15 -0800 (PST)
+        Fri, 3 Jan 2020 09:21:57 -0500
+Received: by mail-pl1-f196.google.com with SMTP id c13so19125346pls.0
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 06:21:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=U8+hrz1yYNsqd7H6wypQtO4rY7xgJUJr6HYJI5HVygM=;
-        b=AwriWlMEwHGJQMZ3ctPoOPOAUejdeH5YRlKLAo/N5fWozY3eJ6ndyQKRqYWogORpmR
-         wUADWrLpEYnP076heeJs2jNMT+vofCezA2fTb105cfApvsKy1j7vuirhFj3z5FQr0DFe
-         Cpf8uvKGF93XNIMpFvpdoVooI+mzkknm+BrtOX8mWGFSC8dtbA0ircKsWHJ1EOKbIVZl
-         +w7ot0YOX++t7Yl4/LbjWKRrjY7WZMSvMOU3IBF+OvY7/D9NgRUc5zXjl7KDA0AMVwt6
-         kkY4PKqY91NmD0h5AX568t+4hNFzdM0JOrxf0JtAq1fNgtld7x56kZ8qcaorizXEDXJx
-         FKBQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=83VimcFINonpltcm7FrV9vKE3xBADj5tPikwygFhOYs=;
+        b=qoOf8IY9Iz4jDQ5nfk6vwHShRr8e7/f4DyPkBWMKOlwaAWj1ImlGohIEc86J2UzJ3s
+         4Il70upFjU4cESuMyi97T2v/1j2flTI5HFh5YC6gNGVIcintlTZzRZw6wshugQli7aQf
+         j1rru5eRDXu8FOHwDRpgdobVH3MbkVmC8JTMNZQLZK1rPET24UY7+rzdYZtXRKSJbisK
+         qXa+F/V/X6MpOWkDOaWXtoKucxSwGuhmqdOt7g0O0oR5URsDKzslNy8lwb2eeJiedow1
+         lzNuVBOdXphU41op0t8KOGfIziSZeFR645CzZ9daPSPOW5pqGjCkHOjvHUiAGxWwV0Ku
+         aEmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=U8+hrz1yYNsqd7H6wypQtO4rY7xgJUJr6HYJI5HVygM=;
-        b=CnXD3MWPZ7UN98IBrVqyWI5wTaPFWGVW2lKlXQrfDJ80l4H1jEJiobS/nSO0tpL5+8
-         oO7f8V0Al1MhWV0jQNe4I/Vhi6DD1lvreckZLJNuDGoccDRUSdIOeYunQPsb1to68G5c
-         3fWLQu55KU0QuRUzfdvdk3QCo9wLIjHRpYUhOJVs/CGUqbMeIF+wb9yU9YUPX5er9d0y
-         2YrMiAT+rHMb3QYzG8Z8GO/INwsUsxkH64b/pWKJ1iFeJwfKPlJvYTf+dU5117re8RGm
-         dh1ixIOH/xxH6KDJ2Qiuw1oW5is8FWpP4lXf3R/wpGzH63ncE5ZqmtbCgSBHJ/k7Sj5w
-         eZZg==
-X-Gm-Message-State: APjAAAXoqkyQPISDK872h5vFFWoQS4pSpgdmzS+cfxXq7Gl70F1Aa3mB
-        NLy35Ifr+9/bxbGPyZRbDgHGvG3+
-X-Google-Smtp-Source: APXvYqwJseT2ZP/Y8WcToVpoI/t1qlFlHo4fwRjzwZdZllD+09Wvrgy3/RVbkrMhI/0oVL5iskZecw==
-X-Received: by 2002:a17:902:a58b:: with SMTP id az11mr92010273plb.147.1578061274807;
-        Fri, 03 Jan 2020 06:21:14 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m71sm15101199pje.0.2020.01.03.06.21.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jan 2020 06:21:14 -0800 (PST)
-Subject: Re: [PATCH 5.4 000/191] 5.4.8-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=83VimcFINonpltcm7FrV9vKE3xBADj5tPikwygFhOYs=;
+        b=U0QXpKUwR5r4AWPuB3c50y9B+rdmqWNSx9NpEDiwb5mcw8vbAsESMXlWxEu4RacdAl
+         gNFyC67wrIWyhb8x3RgEtLOMAVoeSe1kTdZxEVCk+p6yzDo+Srb39RSPQMnEb4JVXv09
+         4d2Q1Z4pQO2T/e1f6cF+jUOdasaERsh/jakulZBDsaz3ThRqbV123cnbtnygh24XPLXR
+         pLJQo0dd6+lxuq4BcC81ls9PjRGo/wsJpmRaDAONfOwgJNeQazXidW32t1i9m/acrfKj
+         WcvYNJxYtEfForJlUxZ24ujPvFE0QKgYbSOG2v540wg3Nbt0/z3meGyUZYdSbuCRma+2
+         +rtQ==
+X-Gm-Message-State: APjAAAVQ/qWguJyXIDPkayKTObfEIi+3CDBU0nbxGMBninF8683Qo1og
+        OxwB63W+Ix+S9VlVEZ9FS5o=
+X-Google-Smtp-Source: APXvYqxUmpvctwsATNE2QczhxSqjJhljmsEuYLrUd+Cs9JoMxgpsX3IMwYwhs1u8TBXZCkhwKL5TiQ==
+X-Received: by 2002:a17:902:d70a:: with SMTP id w10mr68212774ply.125.1578061317162;
+        Fri, 03 Jan 2020 06:21:57 -0800 (PST)
+Received: from iZj6chx1xj0e0buvshuecpZ ([47.75.1.235])
+        by smtp.gmail.com with ESMTPSA id q9sm64871263pgc.5.2020.01.03.06.21.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 Jan 2020 06:21:56 -0800 (PST)
+Date:   Fri, 3 Jan 2020 22:21:52 +0800
+From:   Peng Liu <iwtbavbm@gmail.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>,
         linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200102215829.911231638@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <74cea7d2-7a95-76a1-bff8-94ed36151f13@roeck-us.net>
-Date:   Fri, 3 Jan 2020 06:21:12 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        qais.yousef@arm.com, morten.rasmussen@arm.com
+Subject: Re: [PATCH] sched/fair: fix sgc->{min,max}_capacity miscalculate
+Message-ID: <20200103142152.GA4551@iZj6chx1xj0e0buvshuecpZ>
+References: <20191231035122.GA10020@iZj6chx1xj0e0buvshuecpZ>
+ <ec390ddb-c015-a467-2f88-47c00f23e27b@arm.com>
+ <20200101141329.GA12809@iZj6chx1xj0e0buvshuecpZ>
+ <e41793bc-daaf-b224-1f3d-a3e468072592@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e41793bc-daaf-b224-1f3d-a3e468072592@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/2/20 2:04 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.8 release.
-> There are 191 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, Jan 01, 2020 at 06:55:48PM +0000, Valentin Schneider wrote:
+> On 01/01/2020 14:13, Peng Liu wrote:
+> >> ---
+> > --------------------------------------------------------------
+> >> +			else
+> >> +				cpu_cap = rq->sd->groups->sgc->capacity;
+> > 
+> > sgc->capacity is the *sum* of all CPU's capacity in that group, right?
 > 
-> Responses should be made by Sat, 04 Jan 2020 21:55:35 +0000.
-> Anything received after that time might be too late.
+> Right
 > 
+> > {min,max}_capacity are per CPU variables(*part* of a group). So we can't
+> > compare *part* to *sum*. Am I overlooking something? Thanks.
+> > 
+> 
+> AIUI rq->sd->groups->sgc->capacity should be the capacity of the rq's CPU
+> (IOW the groups here should be made of single CPUs).
+> 
+> This should be true regardless of overlapping domains, since they sit on top
+> of the regular domains. Let me paint an example with a simple 2-core SMT2
+> system:
+> 
+>   MC  [          ]
+>   SMT [    ][    ]
+>        0  1  2  3
+> 
+> cpu_rq(0)->sd will point to the sched_domain of CPU0 at SMT level (it is the
+> "base domain", IOW the lowest domain in the topology hierarchy). Its groups
+> will be:
+> 
+>   {0} ----> {1}
+>     ^       /
+>      `-----'
+> 
+> and sd->groups will point at the group spanning the "local" CPU, in our case
+> CPU0, and thus here will be a group containing only CPU0.
+> 
+> 
+> I do not know why sched_group_capacity is used here however. As I understand
+> things, we could use cpu_capacity() unconditionally.
 
-Build results:
-	total: 158 pass: 158 fail: 0
-Qemu test results:
-	total: 385 pass: 385 fail: 0
+Valentin, sorry for my tardy reply, but there are always so many things
+to do.
 
-Guenter
+Thanks for your patient explanation, and the picture is intuitive
+and clear. Indeed, the group in lowest domain only contains one CPU, and
+the only CPU in the first group should be the rq's CPU. So, I wonder if
+we can do like this?
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 2d170b5da0e3..c9d7613c74d2 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7793,9 +7793,6 @@ void update_group_capacity(struct sched_domain *sd, int cpu)
+                 */
+
+                for_each_cpu(cpu, sched_group_span(sdg)) {
+-                       struct sched_group_capacity *sgc;
+-                       struct rq *rq = cpu_rq(cpu);
+-
+                        /*
+                         * build_sched_domains() -> init_sched_groups_capacity()
+                         * gets here before we've attached the domains to the
+@@ -7807,15 +7804,11 @@ void update_group_capacity(struct sched_domain *sd, int cpu)
+                         * This avoids capacity from being 0 and
+                         * causing divide-by-zero issues on boot.
+                         */
+-                       if (unlikely(!rq->sd)) {
+-                               capacity += capacity_of(cpu);
+-                       } else {
+-                               sgc = rq->sd->groups->sgc;
+-                               capacity += sgc->capacity;
+-                       }
++                       unsigned long cpu_cap = capacity_of(cpu);
+
+-                       min_capacity = min(capacity, min_capacity);
+-                       max_capacity = max(capacity, max_capacity);
++                       min_capacity = min(cpu_cap, min_capacity);
++                       max_capacity = max(cpu_cap, max_capacity);
++                       capacity += cpu_cap;
+                }
+        } else  {
+                /*
