@@ -2,131 +2,211 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3747C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F25C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 754132085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D128B2085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 12:50:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ahXwc04y"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cXOpPzu5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727687AbgACMuR (ORCPT
+        id S1727764AbgACMup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 07:50:17 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18384 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727350AbgACMuR (ORCPT
+        Fri, 3 Jan 2020 07:50:45 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:40670 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727350AbgACMuo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 07:50:17 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e0f38780000>; Fri, 03 Jan 2020 04:50:00 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 03 Jan 2020 04:50:15 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 03 Jan 2020 04:50:15 -0800
-Received: from [10.19.66.63] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 3 Jan
- 2020 12:50:13 +0000
-Subject: Re: [PATCH V1] nvmem: core: fix memory abort in cleanup path
-To:     Thierry Reding <treding@nvidia.com>
-CC:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-References: <1577592162-14817-1-git-send-email-bbiswas@nvidia.com>
- <20200102124445.GB1924669@ulmo>
- <7abb79c6-b497-98b3-45ff-44d751f1c781@nvidia.com>
- <20200103071152.GA1933715@ulmo>
-From:   Bitan Biswas <bbiswas@nvidia.com>
-Message-ID: <e56ff5c6-04b1-3b2b-8ff4-9e416e143dee@nvidia.com>
-Date:   Fri, 3 Jan 2020 04:50:10 -0800
+        Fri, 3 Jan 2020 07:50:44 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200103125042euoutp01d117a0881d289f38c4851a9df67161d3~mYW2ezTSd0051000510euoutp01r
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jan 2020 12:50:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200103125042euoutp01d117a0881d289f38c4851a9df67161d3~mYW2ezTSd0051000510euoutp01r
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578055842;
+        bh=0ZeVM/KjBET1JFzYLjy5seckIDWrndtGfSryu8ihgKs=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=cXOpPzu5PFuwE5VlgesZx/LMQ+3nxaqzMw/RLtLvDQBlRmOs7WpWv+mqPs0DdXd6e
+         rh44rsDrcQd+zB5ZGStbfkoFVcOarnxojd56FVoZcXVc68ynkvbgMy5JmdnnM/O54b
+         rWXvpjqv47MGVBIcb26j+VpQSAtPBVs9wR3OS+dw=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200103125042eucas1p190d0d109ec05b856726b70e1e36f6719~mYW2SM93B1400814008eucas1p1r;
+        Fri,  3 Jan 2020 12:50:42 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id BB.79.60679.2A83F0E5; Fri,  3
+        Jan 2020 12:50:42 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200103125042eucas1p1bcd7c14d3bdf141992015c37db683b15~mYW1z_Phg1400814008eucas1p1q;
+        Fri,  3 Jan 2020 12:50:42 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200103125042eusmtrp282b436f048fa0636dfab60cc089be734~mYW1zUnIn1566015660eusmtrp2A;
+        Fri,  3 Jan 2020 12:50:42 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-a6-5e0f38a29d0d
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 50.D6.08375.2A83F0E5; Fri,  3
+        Jan 2020 12:50:42 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200103125040eusmtip21c99b86af833f345b01fa301fb31bdd5~mYW0q4G8v2676126761eusmtip2n;
+        Fri,  3 Jan 2020 12:50:40 +0000 (GMT)
+Subject: Re: [PATCH] omapfb: reduce stack usage
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Ladislav Michl <ladis@linux-mips.org>,
+        Joe Perches <joe@perches.com>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <f1c050c1-7ea8-e735-a552-e988ec3930ce@samsung.com>
+Date:   Fri, 3 Jan 2020 13:50:40 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200103071152.GA1933715@ulmo>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+In-Reply-To: <20191018163004.23498-1-sudipm.mukherjee@gmail.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578055800; bh=4/mNdoW5Rf3TahSob4C8kQfsxPpZb4ld27pU9hnmESM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ahXwc04yl0X/aSixwhIURdDlmzrvaqFScTbuZO9t5Bh3QOZRfVRKtWUROu55tPP7I
-         dLy/zbPG25sLahfz1PUdwf9xF+84/UCAuAyCXJDS86SCsaiivDiOxkxQr+SofF+Im0
-         lr6L6QG7FrWBFrlPZ2+VTR2kzueZy2K5GT+8kPczBemtx0f0OomsVGrywthur5TCRx
-         OduBQkO7dKNEGnksy6HqFRPERzzpH0Q/A+qMg7Z0QIx6lr0LYVOx94POWqTp43h+kd
-         5vwy3VEx8mpV173bF7lNUP/Y4ROOxV2EslI32PpQSEbQv7gA2M2cUCC5cp8aH6fsh9
-         6q/Sz0BeO/kaQ==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLKsWRmVeSWpSXmKPExsWy7djP87qLLPjjDJ68V7K48vU9m8Xs+49Z
+        LGavnMxkcaLvA6vF5V1zgGJL+lksDpyewuzA7rFz1l12j6Mr1zJ53O8+zuTxZdU1Zo/Pm+QC
+        WKO4bFJSczLLUov07RK4MhZO/Mde0CJT0b27mamBcYl4FyMnh4SAicT6870sXYxcHEICKxgl
+        Oi8cZ4ZwvjBK/Fx/gxXC+cwosfHVK0aYlo+7XkIlljNKLGxbAdXyllFi9fGtYFXCAvoSTU1r
+        WEBsEQEDibvrlrKDFDELHGGUeDd3MlgRm4CVxMT2VWA2r4CdxPH5k5hAbBYBFYnNEyeyg9ii
+        AhESnx4cZoWoEZQ4OfMJ2FBOAQeJty8ugsWZBcQlbj2ZzwRhy0tsfzsH7CIJgV3sEsumn2eD
+        uNtFYsGjf1C2sMSr41vYIWwZif87QZpBGtYxSvzteAHVvZ1RYvlkmA5riTvnfgHZHEArNCXW
+        79KHCDtKdH1qZQIJSwjwSdx4KwhxBJ/EpG3TmSHCvBIdbUIQ1WoSG5ZtYINZ27VzJfMERqVZ
+        SF6bheSdWUjemYWwdwEjyypG8dTS4tz01GKjvNRyveLE3OLSvHS95PzcTYzARHT63/EvOxh3
+        /Uk6xCjAwajEw5ugzB8nxJpYVlyZe4hRgoNZSYS3PJA3Tog3JbGyKrUoP76oNCe1+BCjNAeL
+        kjiv8aKXsUIC6YklqdmpqQWpRTBZJg5OqQZGnwcP2U9/3DuF1yL42ZRFkzJOP1I/EfVznXz3
+        46tMrRvFqt9mxdtKCW8Ju8h0r+ATNyNHqL7L5pxHy5b+Mt6h/FSnMET3rEpHmbljd/ly14M+
+        9wrvl0TzLjr32qHPXbL4XtsDp6lbwmd5B3b6Cy65GRhgEDTHlnV29/KgFz+ZTaOEds7n0tNW
+        YinOSDTUYi4qTgQAc5ndEkADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLIsWRmVeSWpSXmKPExsVy+t/xe7qLLPjjDGYeZbG48vU9m8Xs+49Z
+        LGavnMxkcaLvA6vF5V1zgGJL+lksDpyewuzA7rFz1l12j6Mr1zJ53O8+zuTxZdU1Zo/Pm+QC
+        WKP0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0MhZO
+        /Mde0CJT0b27mamBcYl4FyMnh4SAicTHXS9Zuxi5OIQEljJKPOl8wN7FyAGUkJE4vr4MokZY
+        4s+1LjYQW0jgNaNE3xxDEFtYQF+iqWkNC4gtImAgcXfdUnaQOcwCRxgllm5oYoQYOplR4vGp
+        h4wgVWwCVhIT21eB2bwCdhLH509iArFZBFQkNk+cyA5iiwpESBzeMQuqRlDi5MwnYBs4BRwk
+        3r64yApiMwuoS/yZd4kZwhaXuPVkPhOELS+x/e0c5gmMQrOQtM9C0jILScssJC0LGFlWMYqk
+        lhbnpucWG+oVJ+YWl+al6yXn525iBEbdtmM/N+9gvLQx+BCjAAejEg9vgjJ/nBBrYllxZe4h
+        RgkOZiUR3vJA3jgh3pTEyqrUovz4otKc1OJDjKZAz01klhJNzgcmhLySeENTQ3MLS0NzY3Nj
+        Mwslcd4OgYMxQgLpiSWp2ampBalFMH1MHJxSDYxzjBUnrq722C6dUnuiRWRT17v4Hat2s1k+
+        uls/zVv+8vnpQVqTrgeocHm+ji0692/zjSf7hPQ3LWA23e4duoBr/xyLt2I192VcnTkzF1f9
+        Vcz9dtv7waawpc80XrQbGjW/zVy02bL46dGVu68HPSw/FL7Q9tLthwdrV/3Q+XD865M5zr0l
+        6ypWKbEUZyQaajEXFScCAOw4Q4DQAgAA
+X-CMS-MailID: 20200103125042eucas1p1bcd7c14d3bdf141992015c37db683b15
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191018163010epcas4p1a11973fbca0b3248dae6b5e87cdbf1f3
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191018163010epcas4p1a11973fbca0b3248dae6b5e87cdbf1f3
+References: <CGME20191018163010epcas4p1a11973fbca0b3248dae6b5e87cdbf1f3@epcas4p1.samsung.com>
+        <20191018163004.23498-1-sudipm.mukherjee@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thierry,
 
-On 1/2/20 11:11 PM, Thierry Reding wrote:
-> On Thu, Jan 02, 2020 at 10:51:24AM -0800, Bitan Biswas wrote:
->>
->> Hi Thierry,
->>
->> On 1/2/20 4:44 AM, Thierry Reding wrote:
->>> On Sat, Dec 28, 2019 at 08:02:42PM -0800, Bitan Biswas wrote:
->>>> nvmem_cell_info_to_nvmem_cell implementation has static
->>>> allocation of name. nvmem_add_cells_from_of() call may
->>>> return error and kfree name results in memory abort. Use
->>>> kasprintf() instead of assigning pointer and prevent kfree crash.
->>>>
->>>> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
->>>> index 9f1ee9c..0fc66e1 100644
->>>> --- a/drivers/nvmem/core.c
->>>> +++ b/drivers/nvmem/core.c
->>>> @@ -110,7 +110,7 @@ static int nvmem_cell_info_to_nvmem_cell(struct nvmem_device *nvmem,
->>>>    	cell->nvmem = nvmem;
->>>>    	cell->offset = info->offset;
->>>>    	cell->bytes = info->bytes;
->>>> -	cell->name = info->name;
->>>> +	cell->name = kasprintf(GFP_KERNEL, "%s", info->name);
->>
->>>
->>> kstrdup() seems more appropriate here.
->> Thanks. I shall update the patch as suggested.
->>
->>>
->>> A slightly more efficient way to do this would be to use a combination
->>> of kstrdup_const() and kfree_const(), which would allow read-only
->>> strings to be replicated by simple assignment rather than duplication.
->>> Note that in that case you'd need to carefully replace all kfree() calls
->>> on cell->name by a kfree_const() to ensure they do the right thing.
->> kfree(cell->name) is also called for allocations in function
->> nvmem_add_cells_from_of() through below call
->> kasprintf(GFP_KERNEL, "%pOFn", child);
->>
->> My understanding is kfree_const may not work for above allocation.
+On 10/18/19 6:30 PM, Sudip Mukherjee wrote:
+> The build of xtensa allmodconfig is giving a warning of:
+> In function 'dsi_dump_dsidev_irqs':
+> warning: the frame size of 1120 bytes is larger than 1024 bytes
 > 
-> kfree_const() checks the location that the pointer passed to it points
-> to. If it points to the kernel's .rodata section, it returns and only
-> calls kfree() otherwise. Similarily, kstrdup_const() returns its
-> argument if it points to the .rodata section and duplicates the string
-> otherwise. On the other hand, pointers returned by kasprintf() will
-> never point to the .rodata section, so kfree_const() will result in
-> kfree() getting called.
+> Allocate the memory for 'struct dsi_irq_stats' dynamically instead
+> of assigning it in stack.
 > 
-> That said, the savings here are fairly minimal, so I don't feel very
-> strongly about this. Feel free to go with the kstrdup() variant.
-Thanks for the explanation. I would test the implementation with the 
-_const functions you suggested and send updated patch.
+> Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+> ---
+>  drivers/video/fbdev/omap2/omapfb/dss/dsi.c | 24 ++++++++++++++----------
+>  1 file changed, 14 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
+> index d620376216e1..43402467bf40 100644
+> --- a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
+> +++ b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
+> @@ -1536,22 +1536,25 @@ static void dsi_dump_dsidev_irqs(struct platform_device *dsidev,
+>  {
+>  	struct dsi_data *dsi = dsi_get_dsidrv_data(dsidev);
+>  	unsigned long flags;
+> -	struct dsi_irq_stats stats;
+> +	struct dsi_irq_stats *stats;
+>  
+> +	stats = kmalloc(sizeof(*stats), GFP_KERNEL);
+> +	if (!stats)
+> +		return;
+>  	spin_lock_irqsave(&dsi->irq_stats_lock, flags);
+>  
+> -	stats = dsi->irq_stats;
+> +	memcpy(stats, &dsi->irq_stats, sizeof(*stats));
 
--regards,
-  Bitan
+"stats" copy is only needed for generating debugfs information.
 
+We can probably reduce the stack usage and also simplify the driver
+by just accessing dsi->irq_stats directly before cleaning it
+(we would also need to extend coverage of spinlock but the code is
+debug only so this should not be a problem).
+
+Care to try this approach?
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
+>  	memset(&dsi->irq_stats, 0, sizeof(dsi->irq_stats));
+>  	dsi->irq_stats.last_reset = jiffies;
+>  
+>  	spin_unlock_irqrestore(&dsi->irq_stats_lock, flags);
+>  
+>  	seq_printf(s, "period %u ms\n",
+> -			jiffies_to_msecs(jiffies - stats.last_reset));
+> +			jiffies_to_msecs(jiffies - stats->last_reset));
+>  
+> -	seq_printf(s, "irqs %d\n", stats.irq_count);
+> +	seq_printf(s, "irqs %d\n", stats->irq_count);
+>  #define PIS(x) \
+> -	seq_printf(s, "%-20s %10d\n", #x, stats.dsi_irqs[ffs(DSI_IRQ_##x)-1]);
+> +	seq_printf(s, "%-20s %10d\n", #x, stats->dsi_irqs[ffs(DSI_IRQ_##x)-1]);
+>  
+>  	seq_printf(s, "-- DSI%d interrupts --\n", dsi->module_id + 1);
+>  	PIS(VC0);
+> @@ -1575,10 +1578,10 @@ static void dsi_dump_dsidev_irqs(struct platform_device *dsidev,
+>  
+>  #define PIS(x) \
+>  	seq_printf(s, "%-20s %10d %10d %10d %10d\n", #x, \
+> -			stats.vc_irqs[0][ffs(DSI_VC_IRQ_##x)-1], \
+> -			stats.vc_irqs[1][ffs(DSI_VC_IRQ_##x)-1], \
+> -			stats.vc_irqs[2][ffs(DSI_VC_IRQ_##x)-1], \
+> -			stats.vc_irqs[3][ffs(DSI_VC_IRQ_##x)-1]);
+> +			stats->vc_irqs[0][ffs(DSI_VC_IRQ_##x)-1], \
+> +			stats->vc_irqs[1][ffs(DSI_VC_IRQ_##x)-1], \
+> +			stats->vc_irqs[2][ffs(DSI_VC_IRQ_##x)-1], \
+> +			stats->vc_irqs[3][ffs(DSI_VC_IRQ_##x)-1]);
+>  
+>  	seq_printf(s, "-- VC interrupts --\n");
+>  	PIS(CS);
+> @@ -1594,7 +1597,7 @@ static void dsi_dump_dsidev_irqs(struct platform_device *dsidev,
+>  
+>  #define PIS(x) \
+>  	seq_printf(s, "%-20s %10d\n", #x, \
+> -			stats.cio_irqs[ffs(DSI_CIO_IRQ_##x)-1]);
+> +			stats->cio_irqs[ffs(DSI_CIO_IRQ_##x)-1]);
+>  
+>  	seq_printf(s, "-- CIO interrupts --\n");
+>  	PIS(ERRSYNCESC1);
+> @@ -1618,6 +1621,7 @@ static void dsi_dump_dsidev_irqs(struct platform_device *dsidev,
+>  	PIS(ULPSACTIVENOT_ALL0);
+>  	PIS(ULPSACTIVENOT_ALL1);
+>  #undef PIS
+> +	kfree(stats);
+>  }
+>  
+>  static void dsi1_dump_irqs(struct seq_file *s)
