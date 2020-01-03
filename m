@@ -2,146 +2,259 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A522C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF536C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E906D22B48
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:00:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578074455;
-	bh=i8WArktP0tpXooYzxRJlDmVKKgB23oje8R2LPTwin5s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DY12PFdXTNbEBz+p2EeI25+WomXM3EyUTML8B8uHWlUm4mhgCyeYuHBBvRtjWLzF0
-	 0iG13mTksI/8wRyElsX5nK/duUPmOte5KG1kTbSd/yJw5HK6JtaN137r05RW+oAGvi
-	 10SYwLiwXlYybqrfA4tcCPKsAF0WIL6NdJ+/LMjA=
+	by mail.kernel.org (Postfix) with ESMTP id 8F2CC215A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:04:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X5oOwWBP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbgACSAx (ORCPT
+        id S1728275AbgACSE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 13:00:53 -0500
-Received: from conuserg-07.nifty.com ([210.131.2.74]:16481 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728268AbgACSAi (ORCPT
+        Fri, 3 Jan 2020 13:04:58 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33485 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728218AbgACSE5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 13:00:38 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 003HxSJA022724;
-        Sat, 4 Jan 2020 02:59:34 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 003HxSJA022724
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578074374;
-        bh=flhc+DXSbGVbPkljWVMNT8R6yI5s96NQRo/2c6fDjQ8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nCJ1ZnVklvR8HI7xSyBYN2JrInwTEMaZbdLUEIELQatENREBUm/PHgNtRHuTbTbUa
-         fW7jdb3T+kUganCSAbaV7cQsYxaz114BF6v5LRabpeQgq+FHa+N+2TQZU4+D8HNMrL
-         /WOXkKfBiBILEVSS4hkUim9bMVxjKQ8y1j4Gv1D1HDP2MwSI3jqgzU2waGu4wa79vP
-         4WZ+rrJmWc/pBBymDe4e28ElKJEGuCJlcYuJJJ/9Klix/xsO9KkezlMYSKsMdmcQ1n
-         w0DaBSdGolww/2MKWv3yy8InaB740hko2WxwKq1RTnIamR1Iet+pFqc36ZZa+aV8RE
-         35zBYJaTHvUAg==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Thelen <gthelen@google.com>,
-        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 09/12] initramfs: add default_cpio_list, and delete -d option support
-Date:   Sat,  4 Jan 2020 02:59:12 +0900
-Message-Id: <20200103175915.26663-10-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200103175915.26663-1-masahiroy@kernel.org>
-References: <20200103175915.26663-1-masahiroy@kernel.org>
+        Fri, 3 Jan 2020 13:04:57 -0500
+Received: by mail-io1-f68.google.com with SMTP id z8so42091684ioh.0;
+        Fri, 03 Jan 2020 10:04:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=w/Rt0Evk9JktZfPPe+CjYHqmRZtIwzRmPZp+xZRDdqo=;
+        b=X5oOwWBPdMHuW+mqPwYLS0lKm+hYGz0/hdXQZgCW6rjpiTUgm6VO2JuTPlt/zpMhGz
+         Gh9ed68yAMTRWS0+1gTw0oZ1aSIuh+0YtQgVdbCcqABu4lbiA8hwDlXdItjoBu2sECYS
+         UtX8sSqn5tpFQlVzcy9fV2wb6Gt8HoQoTdK6DOTLK7uwhMQY6YZUTx8kuckw9pGd3CJh
+         R0nDNYD9aEbD74dsBNcyuv1oN0cvLzaEAXk3aw1tG4hHNEN8hzkJQ2wULlLioNvhzwpe
+         Mozn1EKGt30gRAFuXdkp5opj1HBE8hLLg88i2tw1N9bEHrzNpDKVcxTLswsY8Wh02FlG
+         xO7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=w/Rt0Evk9JktZfPPe+CjYHqmRZtIwzRmPZp+xZRDdqo=;
+        b=GmS9iR02Qn7RBeEe5YZHr80QOvlusCxFjDKhgFWyxkzvtrYtXLvOVrFVhqMfcopD9Q
+         qwsgrf80xYouoB1vN4q9N5tIYxfGVAqNVNG20u6EbhImspffmvLF1AxGX7KA3NDTYg3s
+         cOPytxWIko6NuSbwDH9g0tynAboMlEZw+6pXXNcsmd4+RVoJrBx89sNbm2GESACLsVps
+         534MK6SR6Km/zodCB/9KyYEaNdZfx+q8YWJytWYKnsQZSkOmf/pCEK3rSaqUxvGcKg7/
+         yKTyCw/dTXatTBUdSJXltlazOMlLmcaz268Yr2JBas+VN1I7BBG3scKlP26cdMbRAqyG
+         73gw==
+X-Gm-Message-State: APjAAAW0z/hLOjuOlyFvyxlB/i2YXqn/B9ZjDSbwXUlTlPNwmCTA09qF
+        jmOHjYgr/LuYEgnuXmvJPwK5zMoTq8ubrxwwP6wF1Kb8wg4=
+X-Google-Smtp-Source: APXvYqzeREcjx0+sbiJGm4VX7qx5pjIgl0/6SWtZ2CLBlDEvml7MJ4sPVdZzXwxj33pm/1TG8sF8PtwA0E6XtYzldwo=
+X-Received: by 2002:a5d:9285:: with SMTP id s5mr46380645iom.85.1578074696173;
+ Fri, 03 Jan 2020 10:04:56 -0800 (PST)
+MIME-Version: 1.0
+References: <20200103174935.5612-1-vidyas@nvidia.com>
+In-Reply-To: <20200103174935.5612-1-vidyas@nvidia.com>
+Reply-To: bjorn@helgaas.com
+From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
+Date:   Fri, 3 Jan 2020 12:04:44 -0600
+Message-ID: <CABhMZUUHGEEhsJ-+foSsodqtKXyX5ZNPkGgv_VzXz=Qv+NVcUA@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Add MCFG quirks for Tegra194 host controllers
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Andrew Murray <andrew.murray@arm.com>, treding@nvidia.com,
+        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_INITRAMFS_SOURCE is empty, the Makefile passes the -d
-option to gen_initramfs.sh to create the default initramfs, which
-contains /dev, /dev/console, and /root.
+On Fri, Jan 3, 2020 at 11:50 AM Vidya Sagar <vidyas@nvidia.com> wrote:
+>
+> The PCIe controller in Tegra194 SoC is not completely ECAM-compliant.
 
-This simplify the default behavior; remove the -d option, and
-add the default cpio list.
+What is the plan for making these SoCs ECAM-compliant?  When was
+Tegra194 designed?  Is it shipping to end customers, i.e., would I be
+able to buy one?
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+I do not want to add these quirks indefinitely, and the first quirks
+were added over three years ago.
 
- usr/Makefile          |  2 +-
- usr/default_cpio_list |  6 ++++++
- usr/gen_initramfs.sh  | 16 ----------------
- 3 files changed, 7 insertions(+), 17 deletions(-)
- create mode 100644 usr/default_cpio_list
-
-diff --git a/usr/Makefile b/usr/Makefile
-index 3ae8b45bfc61..9256a5b189ee 100644
---- a/usr/Makefile
-+++ b/usr/Makefile
-@@ -25,7 +25,7 @@ $(obj)/initramfs_data.o: $(obj)/$(datafile_y) FORCE
- 
- hostprogs-y := gen_init_cpio
- ramfs-input := $(if $(filter-out "",$(CONFIG_INITRAMFS_SOURCE)), \
--			$(shell echo $(CONFIG_INITRAMFS_SOURCE)),-d)
-+			$(shell echo $(CONFIG_INITRAMFS_SOURCE)),$(srctree)/$(src)/default_cpio_list)
- ramfs-args  := \
-         $(if $(CONFIG_INITRAMFS_ROOT_UID), -u $(CONFIG_INITRAMFS_ROOT_UID)) \
-         $(if $(CONFIG_INITRAMFS_ROOT_GID), -g $(CONFIG_INITRAMFS_ROOT_GID))
-diff --git a/usr/default_cpio_list b/usr/default_cpio_list
-new file mode 100644
-index 000000000000..37b3864066e8
---- /dev/null
-+++ b/usr/default_cpio_list
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+# This is a very simple, default initramfs
-+
-+dir /dev 0755 0 0
-+nod /dev/console 0600 0 0 c 5 1
-+dir /root 0700 0 0
-diff --git a/usr/gen_initramfs.sh b/usr/gen_initramfs.sh
-index 49a4e22147b5..e6808a8c3b2b 100755
---- a/usr/gen_initramfs.sh
-+++ b/usr/gen_initramfs.sh
-@@ -28,7 +28,6 @@ $0 [-o <file>] [-l <dep_list>] [-u <uid>] [-g <gid>] {-d | <cpio_source>} ...
- 	<cpio_source>  File list or directory for cpio archive.
- 		       If <cpio_source> is a .cpio file it will be used
- 		       as direct input to initramfs.
--	-d             Output the default cpio list.
- 
- All options except -o and -l may be repeated and are interpreted
- sequentially and immediately.  -u and -g states are preserved across
-@@ -43,18 +42,6 @@ field() {
- 	shift $1 ; echo $1
- }
- 
--default_initramfs() {
--	cat <<-EOF >> ${output}
--		# This is a very simple, default initramfs
--
--		dir /dev 0755 0 0
--		nod /dev/console 0600 0 0 c 5 1
--		dir /root 0700 0 0
--		# file /kinit usr/kinit/kinit 0755 0 0
--		# slink /init kinit 0755 0 0
--	EOF
--}
--
- filetype() {
- 	local argv1="$1"
- 
-@@ -263,9 +250,6 @@ while [ $# -gt 0 ]; do
- 			[ "$root_gid" = "-1" ] && root_gid=$(id -g || echo 0)
- 			shift
- 			;;
--		"-d")	# display default initramfs list
--			default_initramfs
--			;;
- 		"-h")
- 			usage
- 			exit 0
--- 
-2.17.1
-
+> With the current hardware design limitations in place, ECAM can be enabled
+> only for one controller (C5 controller to be precise) with bus numbers
+> starting from 160 instead of 0. A different approach is taken to avoid this
+> abnormal way of enabling ECAM  for just one controller and to also enable
+> configuration space access for all the other controllers. In this approach,
+> MCFG quirks are added for each controller with a 30MB PCIe aperture
+> resource for each controller in the disguise of ECAM region. But, this
+> region actually contains DesignWare core's internal Address Translation
+> Unit (iATU) using which the ECAM ops access configuration space in the
+> otherwise standard way of programming iATU registers in DesignWare core
+> based IPs for a respective B:D:F.
+>
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>  drivers/acpi/pci_mcfg.c                    | 13 +++
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 95 ++++++++++++++++++++++
+>  include/linux/pci-ecam.h                   |  1 +
+>  3 files changed, 109 insertions(+)
+>
+> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
+> index 6b347d9920cc..a42918ecc19a 100644
+> --- a/drivers/acpi/pci_mcfg.c
+> +++ b/drivers/acpi/pci_mcfg.c
+> @@ -116,6 +116,19 @@ static struct mcfg_fixup mcfg_quirks[] = {
+>         THUNDER_ECAM_QUIRK(2, 12),
+>         THUNDER_ECAM_QUIRK(2, 13),
+>
+> +       { "NVIDIA", "TEGRA194", 1, 0, MCFG_BUS_ANY, &tegra194_pcie_ops,
+> +         DEFINE_RES_MEM(0x38200000, (30 * SZ_1M))},
+> +       { "NVIDIA", "TEGRA194", 1, 1, MCFG_BUS_ANY, &tegra194_pcie_ops,
+> +         DEFINE_RES_MEM(0x30200000, (30 * SZ_1M))},
+> +       { "NVIDIA", "TEGRA194", 1, 2, MCFG_BUS_ANY, &tegra194_pcie_ops,
+> +         DEFINE_RES_MEM(0x32200000, (30 * SZ_1M))},
+> +       { "NVIDIA", "TEGRA194", 1, 3, MCFG_BUS_ANY, &tegra194_pcie_ops,
+> +         DEFINE_RES_MEM(0x34200000, (30 * SZ_1M))},
+> +       { "NVIDIA", "TEGRA194", 1, 4, MCFG_BUS_ANY, &tegra194_pcie_ops,
+> +         DEFINE_RES_MEM(0x36200000, (30 * SZ_1M))},
+> +       { "NVIDIA", "TEGRA194", 1, 5, MCFG_BUS_ANY, &tegra194_pcie_ops,
+> +         DEFINE_RES_MEM(0x3a200000, (30 * SZ_1M))},
+> +
+>  #define XGENE_V1_ECAM_MCFG(rev, seg) \
+>         {"APM   ", "XGENE   ", rev, seg, MCFG_BUS_ANY, \
+>                 &xgene_v1_pcie_ecam_ops }
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index cbe95f0ea0ca..91496978deb7 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -21,6 +21,8 @@
+>  #include <linux/of_irq.h>
+>  #include <linux/of_pci.h>
+>  #include <linux/pci.h>
+> +#include <linux/pci-acpi.h>
+> +#include <linux/pci-ecam.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/pinctrl/consumer.h>
+>  #include <linux/platform_device.h>
+> @@ -895,6 +897,99 @@ static struct dw_pcie_host_ops tegra_pcie_dw_host_ops = {
+>         .set_num_vectors = tegra_pcie_set_msi_vec_num,
+>  };
+>
+> +#if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
+> +struct tegra194_pcie_acpi  {
+> +       void __iomem *dbi_base;
+> +       void __iomem *iatu_base;
+> +};
+> +
+> +static int tegra194_acpi_init(struct pci_config_window *cfg)
+> +{
+> +       struct device *dev = cfg->parent;
+> +       struct tegra194_pcie_acpi *pcie;
+> +
+> +       pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+> +       if (!pcie)
+> +               return -ENOMEM;
+> +
+> +       pcie->dbi_base = cfg->win;
+> +       pcie->iatu_base = cfg->win + SZ_256K;
+> +       cfg->priv = pcie;
+> +
+> +       return 0;
+> +}
+> +
+> +static inline void atu_reg_write(struct tegra194_pcie_acpi *pcie, int index,
+> +                                u32 val, u32 reg)
+> +{
+> +       u32 offset = PCIE_GET_ATU_OUTB_UNR_REG_OFFSET(index);
+> +
+> +       writel(val, pcie->iatu_base + offset + reg);
+> +}
+> +
+> +static void program_outbound_atu(struct tegra194_pcie_acpi *pcie, int index,
+> +                                int type, u64 cpu_addr, u64 pci_addr, u64 size)
+> +{
+> +       atu_reg_write(pcie, index, lower_32_bits(cpu_addr),
+> +                     PCIE_ATU_LOWER_BASE);
+> +       atu_reg_write(pcie, index, upper_32_bits(cpu_addr),
+> +                     PCIE_ATU_UPPER_BASE);
+> +       atu_reg_write(pcie, index, lower_32_bits(pci_addr),
+> +                     PCIE_ATU_LOWER_TARGET);
+> +       atu_reg_write(pcie, index, lower_32_bits(cpu_addr + size - 1),
+> +                     PCIE_ATU_LIMIT);
+> +       atu_reg_write(pcie, index, upper_32_bits(pci_addr),
+> +                     PCIE_ATU_UPPER_TARGET);
+> +       atu_reg_write(pcie, index, type, PCIE_ATU_CR1);
+> +       atu_reg_write(pcie, index, PCIE_ATU_ENABLE, PCIE_ATU_CR2);
+> +}
+> +
+> +static void __iomem *tegra194_map_bus(struct pci_bus *bus,
+> +                                     unsigned int devfn, int where)
+> +{
+> +       struct pci_config_window *cfg = bus->sysdata;
+> +       struct tegra194_pcie_acpi *pcie = cfg->priv;
+> +       u32 busdev;
+> +       int type;
+> +
+> +       if (bus->number < cfg->busr.start || bus->number > cfg->busr.end)
+> +               return NULL;
+> +
+> +       if (bus->number == cfg->busr.start) {
+> +               if (PCI_SLOT(devfn) == 0)
+> +                       return pcie->dbi_base + where;
+> +               else
+> +                       return NULL;
+> +       }
+> +
+> +       busdev = PCIE_ATU_BUS(bus->number) | PCIE_ATU_DEV(PCI_SLOT(devfn)) |
+> +                PCIE_ATU_FUNC(PCI_FUNC(devfn));
+> +
+> +       if (bus->parent->number == cfg->busr.start) {
+> +               if (PCI_SLOT(devfn) == 0)
+> +                       type = PCIE_ATU_TYPE_CFG0;
+> +               else
+> +                       return NULL;
+> +       } else {
+> +               type = PCIE_ATU_TYPE_CFG1;
+> +       }
+> +
+> +       program_outbound_atu(pcie, PCIE_ATU_REGION_INDEX0, type,
+> +                            cfg->res.start + SZ_128K, busdev, SZ_128K);
+> +       return (void __iomem *)(pcie->dbi_base + SZ_128K + where);
+> +}
+> +
+> +struct pci_ecam_ops tegra194_pcie_ops = {
+> +       .bus_shift      = 20,
+> +       .init           = tegra194_acpi_init,
+> +       .pci_ops        = {
+> +               .map_bus        = tegra194_map_bus,
+> +               .read           = pci_generic_config_read,
+> +               .write          = pci_generic_config_write,
+> +       }
+> +};
+> +#endif /* defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS) */
+> +
+>  static void tegra_pcie_disable_phy(struct tegra_pcie_dw *pcie)
+>  {
+>         unsigned int phy_count = pcie->phy_count;
+> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+> index a73164c85e78..6156140dcbb6 100644
+> --- a/include/linux/pci-ecam.h
+> +++ b/include/linux/pci-ecam.h
+> @@ -57,6 +57,7 @@ extern struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium ThunderX 1.x */
+>  extern struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene PCIe v1 */
+>  extern struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene PCIe v2.x */
+>  extern struct pci_ecam_ops al_pcie_ops; /* Amazon Annapurna Labs PCIe */
+> +extern struct pci_ecam_ops tegra194_pcie_ops; /* Tegra194 PCIe */
+>  #endif
+>
+>  #ifdef CONFIG_PCI_HOST_COMMON
+> --
+> 2.17.1
+>
