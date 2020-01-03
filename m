@@ -2,274 +2,195 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 229A3C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 21:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83350C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 21:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F417A22314
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 21:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DDF622314
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 21:21:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aUnnZPoy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbgACVUc (ORCPT
+        id S1728807AbgACVVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 16:20:32 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:53044 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728648AbgACVU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 16:20:27 -0500
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1inUMq-00053F-OV; Fri, 03 Jan 2020 14:20:26 -0700
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1inUMo-0000lH-SU; Fri, 03 Jan 2020 14:20:22 -0700
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Jiasen Lin <linjiasen@hygon.cn>, Kit Chow <kchow@gigaio.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Fri,  3 Jan 2020 14:20:19 -0700
-Message-Id: <20200103212021.2881-2-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200103212021.2881-1-logang@deltatee.com>
-References: <20200103212021.2881-1-logang@deltatee.com>
+        Fri, 3 Jan 2020 16:21:11 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40968 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728549AbgACVVK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 16:21:10 -0500
+Received: by mail-pf1-f196.google.com with SMTP id w62so24036119pfw.8;
+        Fri, 03 Jan 2020 13:21:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=yOvpSx16yNanZpbvFfAUMxFv0SM7m3MFplEES/wscuI=;
+        b=aUnnZPoyzNSRZI+t0GKzb0TiRDWqBbMy6GlerfoXN1OAqft7NaJEzn11o9T/3DMq5m
+         D5lh3LBDCt0ZanoRzaNEMVxEkXPa0M9P1E220EWP2F59b00BA4OG79c6V2n3y9Eo545d
+         QD+tLlReeFsllG9KaJ1OekusQGVfJ7Zxdtv429ovUZUEnqUK+51gA6eOLfHUomr1Aet/
+         yfDu+Y5PiczTZwrNZ08YNf8D4DJfGSplZfhj7UDe8L2wCHMDBpqFijZfgOsn+VLS9Omz
+         GPxhdghSOZjPtQ7giiRMtP7rnfLzWPfAIykW/Fx50jiJapPwSY2jeAOSPwumC1Mn8U+A
+         qhvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=yOvpSx16yNanZpbvFfAUMxFv0SM7m3MFplEES/wscuI=;
+        b=OcdLZocLD6egBy0h+rZO5qteULckBqn2ghJFqSnnsiMor3RYLt20MyhHl27h1tjeog
+         H0WTEN2i4HhBE1/CtOCFPBEGDmnpvFWyTTGGHnHOV8k4BLnWxwZmfJVAPhAmQFPkxA70
+         VP1efGbu+yziE2kEiwmZ9ZzjAzpUPIq3T1tRLlgwqBNhs7bMkNd2EupUyl0UDzrxuWqw
+         tnZpB+VQf6KoNA0e+ZR3l4BroAWdUyEZKfiRf3piB1p+mp6x9dnoqwm1UcwSAC7LP6IB
+         d3UmmR2luwBSKNh6bp07iTgldMxBfmaYkaXLGgO0KG29lfMy9McFaJ2DZenUnsXbaNKb
+         D6Hg==
+X-Gm-Message-State: APjAAAUnyJB1C+IPgRAxBYOBvF+1yI05ED2Lxw+nzUSw/gDZ6CGlipvN
+        6ioeGnNuHUdsf5RXN/V3dRc=
+X-Google-Smtp-Source: APXvYqyl/OVK4piGSFsYxsF33xMxvHQ/DgomiEAziuxRDwCwRMxsSuZnqK2aGPyyvqltNieLPJI63Q==
+X-Received: by 2002:a63:3d8e:: with SMTP id k136mr97287157pga.4.1578086469815;
+        Fri, 03 Jan 2020 13:21:09 -0800 (PST)
+Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
+        by smtp.gmail.com with ESMTPSA id z22sm61861872pfr.83.2020.01.03.13.21.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 Jan 2020 13:21:09 -0800 (PST)
+Subject: [PATCH v16 QEMU 1/3] virtio-ballon: Implement support for page
+ poison tracking feature
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+To:     virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
+        mst@redhat.com, linux-kernel@vger.kernel.org, willy@infradead.org,
+        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, vbabka@suse.cz
+Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
+        david@redhat.com, pagupta@redhat.com, riel@surriel.com,
+        lcapitulino@redhat.com, dave.hansen@intel.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com,
+        osalvador@suse.de
+Date:   Fri, 03 Jan 2020 13:21:08 -0800
+Message-ID: <20200103212108.29681.99290.stgit@localhost.localdomain>
+In-Reply-To: <20200103210509.29237.18426.stgit@localhost.localdomain>
+References: <20200103210509.29237.18426.stgit@localhost.localdomain>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org, dan.j.williams@intel.com, linjiasen@hygon.cn, kchow@gigaio.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v3 1/3] dmaengine: plx-dma: Introduce PLX DMA engine PCI driver skeleton
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some PLX Switches can expose DMA engines via extra PCI functions
-on the upstream port. Each function will have one DMA channel.
+From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-This patch is just the core PCI driver skeleton and dma
-engine registration.
+We need to make certain to advertise support for page poison tracking if
+we want to actually get data on if the guest will be poisoning pages. So
+if free page hinting is active we should add page poisoning support and
+let the guest disable it if it isn't using it.
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Page poisoning will result in a page being dirtied on free. As such we
+cannot really avoid having to copy the page at least one more time since
+we will need to write the poison value to the destination. As such we can
+just ignore free page hinting if page poisoning is enabled as it will
+actually reduce the work we have to do.
+
+Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 ---
- MAINTAINERS           |   5 ++
- drivers/dma/Kconfig   |   9 +++
- drivers/dma/Makefile  |   1 +
- drivers/dma/plx_dma.c | 150 ++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 165 insertions(+)
- create mode 100644 drivers/dma/plx_dma.c
+ hw/virtio/virtio-balloon.c         |   25 +++++++++++++++++++++----
+ include/hw/virtio/virtio-balloon.h |    1 +
+ 2 files changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bd5847e802de..76713226f256 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13139,6 +13139,11 @@ S:	Maintained
- F:	drivers/iio/chemical/pms7003.c
- F:	Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml
+diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
+index 40b04f518028..6ecfec422309 100644
+--- a/hw/virtio/virtio-balloon.c
++++ b/hw/virtio/virtio-balloon.c
+@@ -531,6 +531,15 @@ static void virtio_balloon_free_page_start(VirtIOBalloon *s)
+         return;
+     }
  
-+PLX DMA DRIVER
-+M:	Logan Gunthorpe <logang@deltatee.com>
-+S:	Maintained
-+F:	drivers/dma/plx_dma.c
++    /*
++     * If page poisoning is enabled then we probably shouldn't bother with
++     * the hinting since the poisoning will dirty the page and invalidate
++     * the work we are doing anyway.
++     */
++    if (virtio_vdev_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON)) {
++        return;
++    }
 +
- PMBUS HARDWARE MONITORING DRIVERS
- M:	Guenter Roeck <linux@roeck-us.net>
- L:	linux-hwmon@vger.kernel.org
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 6fa1eba9d477..312a6cc36c78 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -497,6 +497,15 @@ config PXA_DMA
- 	  16 to 32 channels for peripheral to memory or memory to memory
- 	  transfers.
+     if (s->free_page_report_cmd_id == UINT_MAX) {
+         s->free_page_report_cmd_id =
+                        VIRTIO_BALLOON_FREE_PAGE_REPORT_CMD_ID_MIN;
+@@ -618,12 +627,10 @@ static size_t virtio_balloon_config_size(VirtIOBalloon *s)
+     if (s->qemu_4_0_config_size) {
+         return sizeof(struct virtio_balloon_config);
+     }
+-    if (virtio_has_feature(features, VIRTIO_BALLOON_F_PAGE_POISON)) {
++    if (virtio_has_feature(features, VIRTIO_BALLOON_F_PAGE_POISON) ||
++        virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
+         return sizeof(struct virtio_balloon_config);
+     }
+-    if (virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
+-        return offsetof(struct virtio_balloon_config, poison_val);
+-    }
+     return offsetof(struct virtio_balloon_config, free_page_report_cmd_id);
+ }
  
-+config PLX_DMA
-+	tristate "PLX ExpressLane PEX Switch DMA Engine Support"
-+	depends on PCI
-+	select DMA_ENGINE
-+	help
-+	  Some PLX ExpressLane PCI Switches support additional DMA engines.
-+	  These are exposed via extra functions on the switch's
-+	  upstream port. Each function exposes one DMA channel.
+@@ -634,6 +641,7 @@ static void virtio_balloon_get_config(VirtIODevice *vdev, uint8_t *config_data)
+ 
+     config.num_pages = cpu_to_le32(dev->num_pages);
+     config.actual = cpu_to_le32(dev->actual);
++    config.poison_val = cpu_to_le32(dev->poison_val);
+ 
+     if (dev->free_page_report_status == FREE_PAGE_REPORT_S_REQUESTED) {
+         config.free_page_report_cmd_id =
+@@ -697,6 +705,8 @@ static void virtio_balloon_set_config(VirtIODevice *vdev,
+         qapi_event_send_balloon_change(vm_ram_size -
+                         ((ram_addr_t) dev->actual << VIRTIO_BALLOON_PFN_SHIFT));
+     }
++    dev->poison_val = virtio_vdev_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON) ? 
++                      le32_to_cpu(config.poison_val) : 0;
+     trace_virtio_balloon_set_config(dev->actual, oldactual);
+ }
+ 
+@@ -706,6 +716,9 @@ static uint64_t virtio_balloon_get_features(VirtIODevice *vdev, uint64_t f,
+     VirtIOBalloon *dev = VIRTIO_BALLOON(vdev);
+     f |= dev->host_features;
+     virtio_add_feature(&f, VIRTIO_BALLOON_F_STATS_VQ);
++    if (virtio_has_feature(f, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
++        virtio_add_feature(&f, VIRTIO_BALLOON_F_PAGE_POISON);
++    }
+ 
+     return f;
+ }
+@@ -847,6 +860,8 @@ static void virtio_balloon_device_reset(VirtIODevice *vdev)
+         g_free(s->stats_vq_elem);
+         s->stats_vq_elem = NULL;
+     }
 +
- config SIRF_DMA
- 	tristate "CSR SiRFprimaII/SiRFmarco DMA support"
- 	depends on ARCH_SIRF
-diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index 42d7e2fc64fa..a150d1d792fd 100644
---- a/drivers/dma/Makefile
-+++ b/drivers/dma/Makefile
-@@ -59,6 +59,7 @@ obj-$(CONFIG_NBPFAXI_DMA) += nbpfaxi.o
- obj-$(CONFIG_OWL_DMA) += owl-dma.o
- obj-$(CONFIG_PCH_DMA) += pch_dma.o
- obj-$(CONFIG_PL330_DMA) += pl330.o
-+obj-$(CONFIG_PLX_DMA) += plx_dma.o
- obj-$(CONFIG_PPC_BESTCOMM) += bestcomm/
- obj-$(CONFIG_PXA_DMA) += pxa_dma.o
- obj-$(CONFIG_RENESAS_DMA) += sh/
-diff --git a/drivers/dma/plx_dma.c b/drivers/dma/plx_dma.c
-new file mode 100644
-index 000000000000..e002cbb7d2b6
---- /dev/null
-+++ b/drivers/dma/plx_dma.c
-@@ -0,0 +1,150 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Microsemi Switchtec(tm) PCIe Management Driver
-+ * Copyright (c) 2019, Logan Gunthorpe <logang@deltatee.com>
-+ * Copyright (c) 2019, GigaIO Networks, Inc
-+ */
-+
-+#include "dmaengine.h"
-+
-+#include <linux/dmaengine.h>
-+#include <linux/kref.h>
-+#include <linux/list.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+
-+MODULE_DESCRIPTION("PLX ExpressLane PEX PCI Switch DMA Engine");
-+MODULE_VERSION("0.1");
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Logan Gunthorpe");
-+
-+struct plx_dma_dev {
-+	struct dma_device dma_dev;
-+	struct dma_chan dma_chan;
-+	void __iomem *bar;
-+};
-+
-+static void plx_dma_release(struct dma_device *dma_dev)
-+{
-+	struct plx_dma_dev *plxdev =
-+		container_of(dma_dev, struct plx_dma_dev, dma_dev);
-+
-+	put_device(dma_dev->dev);
-+	kfree(plxdev);
-+}
-+
-+static int plx_dma_create(struct pci_dev *pdev)
-+{
-+	struct plx_dma_dev *plxdev;
-+	struct dma_device *dma;
-+	struct dma_chan *chan;
-+	int rc;
-+
-+	plxdev = kzalloc(sizeof(*plxdev), GFP_KERNEL);
-+	if (!plxdev)
-+		return -ENOMEM;
-+
-+	plxdev->bar = pcim_iomap_table(pdev)[0];
-+
-+	dma = &plxdev->dma_dev;
-+	dma->chancnt = 1;
-+	INIT_LIST_HEAD(&dma->channels);
-+	dma->copy_align = DMAENGINE_ALIGN_1_BYTE;
-+	dma->dev = get_device(&pdev->dev);
-+
-+	dma->device_release = plx_dma_release;
-+
-+	chan = &plxdev->dma_chan;
-+	chan->device = dma;
-+	dma_cookie_init(chan);
-+	list_add_tail(&chan->device_node, &dma->channels);
-+
-+	rc = dma_async_device_register(dma);
-+	if (rc) {
-+		pci_err(pdev, "Failed to register dma device: %d\n", rc);
-+		free_irq(pci_irq_vector(pdev, 0),  plxdev);
-+		kfree(plxdev);
-+		return rc;
-+	}
-+
-+	pci_set_drvdata(pdev, plxdev);
-+
-+	return 0;
-+}
-+
-+static int plx_dma_probe(struct pci_dev *pdev,
-+			 const struct pci_device_id *id)
-+{
-+	int rc;
-+
-+	rc = pcim_enable_device(pdev);
-+	if (rc)
-+		return rc;
-+
-+	rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(48));
-+	if (rc)
-+		rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
-+	if (rc)
-+		return rc;
-+
-+	rc = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(48));
-+	if (rc)
-+		rc = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32));
-+	if (rc)
-+		return rc;
-+
-+	rc = pcim_iomap_regions(pdev, 1, KBUILD_MODNAME);
-+	if (rc)
-+		return rc;
-+
-+	rc = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_ALL_TYPES);
-+	if (rc <= 0)
-+		return rc;
-+
-+	pci_set_master(pdev);
-+
-+	rc = plx_dma_create(pdev);
-+	if (rc)
-+		goto err_free_irq_vectors;
-+
-+	pci_info(pdev, "PLX DMA Channel Registered\n");
-+
-+	return 0;
-+
-+err_free_irq_vectors:
-+	pci_free_irq_vectors(pdev);
-+	return rc;
-+}
-+
-+static void plx_dma_remove(struct pci_dev *pdev)
-+{
-+	struct plx_dma_dev *plxdev = pci_get_drvdata(pdev);
-+
-+	free_irq(pci_irq_vector(pdev, 0),  plxdev);
-+
-+	plxdev->bar = NULL;
-+	dma_async_device_unregister(&plxdev->dma_dev);
-+
-+	pci_free_irq_vectors(pdev);
-+}
-+
-+static const struct pci_device_id plx_dma_pci_tbl[] = {
-+	{
-+		.vendor		= PCI_VENDOR_ID_PLX,
-+		.device		= 0x87D0,
-+		.subvendor	= PCI_ANY_ID,
-+		.subdevice	= PCI_ANY_ID,
-+		.class		= PCI_CLASS_SYSTEM_OTHER << 8,
-+		.class_mask	= 0xFFFFFFFF,
-+	},
-+	{0}
-+};
-+MODULE_DEVICE_TABLE(pci, plx_dma_pci_tbl);
-+
-+static struct pci_driver plx_dma_pci_driver = {
-+	.name           = KBUILD_MODNAME,
-+	.id_table       = plx_dma_pci_tbl,
-+	.probe          = plx_dma_probe,
-+	.remove		= plx_dma_remove,
-+};
-+module_pci_driver(plx_dma_pci_driver);
--- 
-2.20.1
++    s->poison_val = 0;
+ }
+ 
+ static void virtio_balloon_set_status(VirtIODevice *vdev, uint8_t status)
+@@ -909,6 +924,8 @@ static Property virtio_balloon_properties[] = {
+                     VIRTIO_BALLOON_F_DEFLATE_ON_OOM, false),
+     DEFINE_PROP_BIT("free-page-hint", VirtIOBalloon, host_features,
+                     VIRTIO_BALLOON_F_FREE_PAGE_HINT, false),
++    DEFINE_PROP_BIT("x-page-poison", VirtIOBalloon, host_features,
++                    VIRTIO_BALLOON_F_PAGE_POISON, false),
+     /* QEMU 4.0 accidentally changed the config size even when free-page-hint
+      * is disabled, resulting in QEMU 3.1 migration incompatibility.  This
+      * property retains this quirk for QEMU 4.1 machine types.
+diff --git a/include/hw/virtio/virtio-balloon.h b/include/hw/virtio/virtio-balloon.h
+index d1c968d2376e..7fe78e5c14d7 100644
+--- a/include/hw/virtio/virtio-balloon.h
++++ b/include/hw/virtio/virtio-balloon.h
+@@ -70,6 +70,7 @@ typedef struct VirtIOBalloon {
+     uint32_t host_features;
+ 
+     bool qemu_4_0_config_size;
++    uint32_t poison_val;
+ } VirtIOBalloon;
+ 
+ #endif
 
