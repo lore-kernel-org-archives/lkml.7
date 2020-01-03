@@ -2,90 +2,98 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFF3C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A41C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C0C20866
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:53:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="QUTR2W8s"
+	by mail.kernel.org (Postfix) with ESMTP id BA83A22522
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:59:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578074380;
+	bh=LcYp5NO69Jc/FcWqAZdjBFn7cck1DEbCrKPis24czsQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=11lk+/OUMujpAyXN9kk2vLpMxfXXOT9ZI2q/VkZ5rT36iOMByzkPRdKYSeTTXBSki
+	 rkF4l7QS6rgBBIWcCeDwx3hQCZ+AG2MC7TJVlTj/tVG18gxHjiPQjO/VyWlZZ0R998
+	 RR/HkuR8lWovlssxC8ZBZDSWsDyRwaZGYtUPnBKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgACRxe (ORCPT
+        id S1728271AbgACR7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 12:53:34 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:46780 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728110AbgACRxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 12:53:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Ik53vLhmD+EUsy1sL+CsKQR1KxqBKtMb4tA7fcFpO+w=; b=QUTR2W8shqqZiTDH2jgUPvAyHw
-        tZDvbAED4kSORlvuj56UaZa28Xq4KqVKnjVKFotuoyHj+QwgouApJqIQUfCTRAPXp3bFQkQFCHLM9
-        JkmGINPf/mEnk1l+HdspUGPlOJhPnZ5QGYlbT0mgfT7pfSKAoUPiqVuXwLDdPm9Lan0A=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1inR8Q-0000zy-9G; Fri, 03 Jan 2020 18:53:18 +0100
-Date:   Fri, 3 Jan 2020 18:53:18 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     yu kuai <yukuai3@huawei.com>, klassert@kernel.org,
-        davem@davemloft.net, hkallweit1@gmail.com,
-        jakub.kicinski@netronome.com, hslester96@gmail.com, mst@redhat.com,
-        yang.wei9@zte.com.cn, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
-        zhengbin13@huawei.com
-Subject: Re: [PATCH] net: 3com: 3c59x: remove set but not used variable
- 'mii_reg1'
-Message-ID: <20200103175318.GN1397@lunn.ch>
-References: <20200103121907.5769-1-yukuai3@huawei.com>
- <20200103144623.GI6788@bombadil.infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200103144623.GI6788@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 3 Jan 2020 12:59:39 -0500
+Received: from conuserg-07.nifty.com ([210.131.2.74]:64712 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728215AbgACR7j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 12:59:39 -0500
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id 003HxSJ7022724;
+        Sat, 4 Jan 2020 02:59:32 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 003HxSJ7022724
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1578074372;
+        bh=lCI2C0HKijtxw/L++AnPUMRqL4ioNQYvaRVeKU0+Ujc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OKs8HuJLubLRXqwBVJ+RXENL44jC8tBQJKPXnBMbawLw5KCofF4mUkwDEX6BOFaYE
+         Acy0/RygIoA8MKHLmuW/CVrLlmcpbEBFuz5t+wvwtiwQfRMe1kbN/0sgBwJWR0s7Ph
+         F8wVoOd/s6SlZs/kSXV1PTK60u/AUtf028PX9gJH/g5SU3B3RRyJiz1XUFQ3zrnjwH
+         t+WnN0mDnDInSEUwld+H8CUH0/i8UDNqlFsNzecP9djcJKS+MmAxnigNI+1kiSOWyB
+         yI8GxfdAW+sQ2zHk/YBXZLGgNLjxOkdUF1nupAVHF+mcoqGIAs/v4rKmocBQmmcPFR
+         jB1z16i6Jyv1Q==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 06/12] initramfs: make initramfs compression choice non-optional
+Date:   Sat,  4 Jan 2020 02:59:09 +0900
+Message-Id: <20200103175915.26663-7-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200103175915.26663-1-masahiroy@kernel.org>
+References: <20200103175915.26663-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 06:46:23AM -0800, Matthew Wilcox wrote:
-> On Fri, Jan 03, 2020 at 08:19:07PM +0800, yu kuai wrote:
-> > Fixes gcc '-Wunused-but-set-variable' warning:
-> > 
-> > drivers/net/ethernet/3com/3c59x.c: In function ‘vortex_up’:
-> > drivers/net/ethernet/3com/3c59x.c:1551:9: warning: variable
-> > ‘mii_reg1’ set but not used [-Wunused-but-set-variable]
-> > 
-> > It is never used, and so can be removed.
-> ...
-> >  	if (dev->if_port == XCVR_MII || dev->if_port == XCVR_NWAY) {
-> > -		mii_reg1 = mdio_read(dev, vp->phys[0], MII_BMSR);
-> >  		mii_reg5 = mdio_read(dev, vp->phys[0], MII_LPA);
-> 
-> I know nothing about the MII interface, but in general this is not
-> a safe thing to do.
+Currently, the choice of the initramfs compression mode is too complex
+because users are allowed to not specify the compression mode at all.
 
-Hi Matthew
+I think it makes more sense to require users to choose the compression
+explicitly, and delete the fallback defaults of INITRAMFS_COMPRESSION.
 
-I fully agree about the general case. However, reading the MII_BMSR
-should not have any side affects. It would be an odd Ethernet PHY if
-it did.
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-But I am curious why this read is here. There is a slim change the
-MDIO bus is broken, and this is a workaround. So it would be good if
-somebody dug into the history and found out when this read was added
-and if there are any comments about why it is there. Or if the usage
-of mii_reg1 as been removed at some point, and the read was not
-cleaned up.
+ usr/Kconfig | 8 --------
+ 1 file changed, 8 deletions(-)
 
-   Andrew
+diff --git a/usr/Kconfig b/usr/Kconfig
+index 43934c128010..ab61e81165e0 100644
+--- a/usr/Kconfig
++++ b/usr/Kconfig
+@@ -102,7 +102,6 @@ config RD_LZ4
+ 
+ choice
+ 	prompt "Built-in initramfs compression mode"
+-	optional
+ 	help
+ 	  This option allows you to decide by which algorithm the builtin
+ 	  initramfs will be compressed.  Several compression algorithms are
+@@ -218,10 +217,3 @@ config INITRAMFS_COMPRESSION
+ 	default ".xz"   if INITRAMFS_COMPRESSION_XZ
+ 	default ".lzo"  if INITRAMFS_COMPRESSION_LZO
+ 	default ".lz4"  if INITRAMFS_COMPRESSION_LZ4
+-	default ".gz"   if RD_GZIP
+-	default ".lz4"  if RD_LZ4
+-	default ".lzo"  if RD_LZO
+-	default ".xz"   if RD_XZ
+-	default ".lzma" if RD_LZMA
+-	default ".bz2"  if RD_BZIP2
+-	default ""
+-- 
+2.17.1
+
