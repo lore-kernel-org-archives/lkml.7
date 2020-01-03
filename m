@@ -2,111 +2,90 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3F0C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFF3C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9405720866
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C0C20866
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:53:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="V3gec+Gb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="QUTR2W8s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbgACRvi (ORCPT
+        id S1728261AbgACRxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 12:51:38 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:7581 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728141AbgACRvi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 12:51:38 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e0f7f190001>; Fri, 03 Jan 2020 09:51:21 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 03 Jan 2020 09:51:37 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 03 Jan 2020 09:51:37 -0800
-Received: from [10.26.11.112] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 3 Jan
- 2020 17:51:35 +0000
-Subject: Re: [PATCH 5.4 000/191] 5.4.8-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200102215829.911231638@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <f709c06a-ce46-a235-e0d1-5b7331c80c66@nvidia.com>
-Date:   Fri, 3 Jan 2020 17:51:33 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 3 Jan 2020 12:53:34 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:46780 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728110AbgACRxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 12:53:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Ik53vLhmD+EUsy1sL+CsKQR1KxqBKtMb4tA7fcFpO+w=; b=QUTR2W8shqqZiTDH2jgUPvAyHw
+        tZDvbAED4kSORlvuj56UaZa28Xq4KqVKnjVKFotuoyHj+QwgouApJqIQUfCTRAPXp3bFQkQFCHLM9
+        JkmGINPf/mEnk1l+HdspUGPlOJhPnZ5QGYlbT0mgfT7pfSKAoUPiqVuXwLDdPm9Lan0A=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1inR8Q-0000zy-9G; Fri, 03 Jan 2020 18:53:18 +0100
+Date:   Fri, 3 Jan 2020 18:53:18 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     yu kuai <yukuai3@huawei.com>, klassert@kernel.org,
+        davem@davemloft.net, hkallweit1@gmail.com,
+        jakub.kicinski@netronome.com, hslester96@gmail.com, mst@redhat.com,
+        yang.wei9@zte.com.cn, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
+        zhengbin13@huawei.com
+Subject: Re: [PATCH] net: 3com: 3c59x: remove set but not used variable
+ 'mii_reg1'
+Message-ID: <20200103175318.GN1397@lunn.ch>
+References: <20200103121907.5769-1-yukuai3@huawei.com>
+ <20200103144623.GI6788@bombadil.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200102215829.911231638@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578073881; bh=t+TDPbU2X4GNZgcq8rWoIrCweygU3B8/luC6azV+RBw=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=V3gec+Gbg3YD3Oz4aR93CKw+Z4U5tegU2PumgsfEAPjXWqXDX530cQZVqb8crIeJD
-         XDdIn/+6AZyyWFOnwvauKz1j0D8ogd28DmKuuqadDAuqky7JeOVfZOHVZMF08LDYtq
-         SpGXH8KpKlUceOsosxMsh09dCTWCxCkTlvMDLLx2QekCZmjzteWX3a0NE3g7js0CZK
-         kWGT/7euYmWMPlfiDx22Ve6SPt1vYiwLoBHDzP47mNEAkS3GAfVerjrtzRRx2HV+mn
-         Th9UUzBurz472VlLPsQy8ib6pMojx1qiB4X1qBxlNuOvOf5Mn4LbxN9e6nDIXTDb6M
-         CvdUmKdomtmWw==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200103144623.GI6788@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 02/01/2020 22:04, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.8 release.
-> There are 191 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Fri, Jan 03, 2020 at 06:46:23AM -0800, Matthew Wilcox wrote:
+> On Fri, Jan 03, 2020 at 08:19:07PM +0800, yu kuai wrote:
+> > Fixes gcc '-Wunused-but-set-variable' warning:
+> > 
+> > drivers/net/ethernet/3com/3c59x.c: In function ‘vortex_up’:
+> > drivers/net/ethernet/3com/3c59x.c:1551:9: warning: variable
+> > ‘mii_reg1’ set but not used [-Wunused-but-set-variable]
+> > 
+> > It is never used, and so can be removed.
+> ...
+> >  	if (dev->if_port == XCVR_MII || dev->if_port == XCVR_NWAY) {
+> > -		mii_reg1 = mdio_read(dev, vp->phys[0], MII_BMSR);
+> >  		mii_reg5 = mdio_read(dev, vp->phys[0], MII_LPA);
 > 
-> Responses should be made by Sat, 04 Jan 2020 21:55:35 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.8-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> -------------
+> I know nothing about the MII interface, but in general this is not
+> a safe thing to do.
 
-All tests are passing for Tegra ...
+Hi Matthew
 
-Test results for stable-v5.4:
-    13 builds:	13 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
+I fully agree about the general case. However, reading the MII_BMSR
+should not have any side affects. It would be an odd Ethernet PHY if
+it did.
 
-Linux version:	5.4.8-rc1-gb06e60adec89
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
+But I am curious why this read is here. There is a slim change the
+MDIO bus is broken, and this is a workaround. So it would be good if
+somebody dug into the history and found out when this read was added
+and if there are any comments about why it is there. Or if the usage
+of mii_reg1 as been removed at some point, and the read was not
+cleaned up.
 
-Cheers
-Jon
-
--- 
-nvpublic
+   Andrew
