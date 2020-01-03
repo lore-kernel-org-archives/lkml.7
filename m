@@ -2,122 +2,132 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DEBC3276C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 00:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22977C3276C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 00:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3913821734
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 00:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA2AB21734
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 00:42:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578012163;
+	bh=MCm4ryg6Vj10wx1GbzuQ+iCW7Z9FvdtsoL7urly7/GM=;
+	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=NMIF5wYZJQwO8NvRVhROxaNDCOUmNZabNIP4YbayP9LEsubMiQlpx97lDawwNsU7I
+	 B4zgevcnKbsSq4FyAFOLmp6RoFEDEiLbxd6oyja0I3is1oX8sE/ke/UEGPctiqBqEk
+	 aeuYAZobGkgh606oQ4kf+kjwEoiYRNaWbT1gcohg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgACAlt (ORCPT
+        id S1727082AbgACAmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 19:41:49 -0500
-Received: from mga03.intel.com ([134.134.136.65]:27624 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbgACAls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 19:41:48 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 16:41:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,388,1571727600"; 
-   d="scan'208";a="231960405"
-Received: from lavazque-mobl.amr.corp.intel.com (HELO [10.255.86.75]) ([10.255.86.75])
-  by orsmga002.jf.intel.com with ESMTP; 02 Jan 2020 16:41:46 -0800
-Subject: Re: [alsa-devel] [PATCH v2] ASoC: Intel: sof_rt5682: Ignore the
- speaker amp when there isn't one.
-To:     Sam McNally <sammc@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Xun Zhang <xun2.zhang@intel.com>, alsa-devel@alsa-project.org,
-        Jairaj Arava <jairaj.arava@intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>,
-        Sathya Prakash M R <sathya.prakash.m.r@intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>
-References: <20200103112158.v2.1.Ib87c4a7fbb3fc818ea12198e291b87dc2d5bc8c2@changeid>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <4fa9702a-f95c-6135-745b-5374eebb4880@linux.intel.com>
-Date:   Thu, 2 Jan 2020 18:41:46 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20200103112158.v2.1.Ib87c4a7fbb3fc818ea12198e291b87dc2d5bc8c2@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 2 Jan 2020 19:42:42 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45198 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgACAmk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 19:42:40 -0500
+Received: by mail-pg1-f194.google.com with SMTP id b9so22658581pgk.12;
+        Thu, 02 Jan 2020 16:42:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
+         :references:in-reply-to;
+        bh=HyioXBGMqcLyFY2JDZv6ThS3RXGTigbfy51ANMut3ps=;
+        b=Sc3CyVcU6/AGm54p0XXNxboyeI6gizD/2cRP+H0OctZ/NtP17WDNxbVqFG4tl45MNk
+         C9rPUP81qBw1t3zhuXE9HjE8W9EBZGHvqQJtthdYxoBdUZ91CYE8krJDmXRsbjOy0omK
+         btZq3HLPFK6MLzhvWqOFP8UnjCHCE+8H7y4khnx8Cn+MRdnd2ayfmFAyjPU+tPFChkp6
+         ZgyQIUvevUn9tDMKPtI3KlHsBVl9r8yHXcZ8SwucGD6w9tR6USmGseakzToYwk0e7PDR
+         /h/eiV/ZEPqqVMuDtM8o6eggrVRvz7eqVDUx01Mtvj9v1nGZ1/Tahjr9q404qPVmPIHP
+         BsDQ==
+X-Gm-Message-State: APjAAAU6cN+hhad1hytKACqFsEYEI91/+oe3E8pqbkHND4khySAxwg4p
+        rdfw259IEelYGG86LJnbA6Q=
+X-Google-Smtp-Source: APXvYqyQ01PVHaEoHE1LVHKgmLKjo0PVf9o02f/5W8ZOiX0AXapPjCsNxxSOPSv2GtC8UFVjo0n2zg==
+X-Received: by 2002:a65:56c9:: with SMTP id w9mr89389023pgs.296.1578012159672;
+        Thu, 02 Jan 2020 16:42:39 -0800 (PST)
+Received: from localhost ([73.93.152.206])
+        by smtp.gmail.com with ESMTPSA id o7sm68110625pfg.138.2020.01.02.16.42.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 16:42:39 -0800 (PST)
+Message-ID: <5e0e8dff.1c69fb81.86508.5dbe@mx.google.com>
+Date:   Thu, 02 Jan 2020 16:42:38 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     Paul Burton <paulburton@kernel.org>
+CC:     linux-mips@vger.kernel.org
+CC:     linux-kernel@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@canonical.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        stable@vger.kernel.org
+CC:     linux-mips@vger.kernel.org
+Subject: Re: [PATCH v2] MIPS: Avoid VDSO ABI breakage due to global register  variable
+References:  <20200102045038.102772-1-paulburton@kernel.org>
+In-Reply-To:  <20200102045038.102772-1-paulburton@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
+Paul Burton wrote:
+> Declaring __current_thread_info as a global register variable has the
+> effect of preventing GCC from saving & restoring its value in cases
+> where the ABI would typically do so.
+> 
+> To quote GCC documentation:
+> 
+> > If the register is a call-saved register, call ABI is affected: the
+> > register will not be restored in function epilogue sequences after the
+> > variable has been assigned. Therefore, functions cannot safely return
+> > to callers that assume standard ABI.
+> 
+> When our position independent VDSO is built for the n32 or n64 ABIs all
+> functions it exposes should be preserving the value of $gp/$28 for their
+> caller, but in the presence of the __current_thread_info global register
+> variable GCC stops doing so & simply clobbers $gp/$28 when calculating
+> the address of the GOT.
+> 
+> In cases where the VDSO returns success this problem will typically be
+> masked by the caller in libc returning & restoring $gp/$28 itself, but
+> that is by no means guaranteed. In cases where the VDSO returns an error
+> libc will typically contain a fallback path which will now fail
+> (typically with a bad memory access) if it attempts anything which
+> relies upon the value of $gp/$28 - eg. accessing anything via the GOT.
+> 
+> One fix for this would be to move the declaration of
+> __current_thread_info inside the current_thread_info() function,
+> demoting it from global register variable to local register variable &
+> avoiding inadvertently creating a non-standard calling ABI for the VDSO.
+> Unfortunately this causes issues for clang, which doesn't support local
+> register variables as pointed out by commit fe92da0f355e ("MIPS: Changed
+> current_thread_info() to an equivalent supported by both clang and GCC")
+> which introduced the global register variable before we had a VDSO to
+> worry about.
+> 
+> Instead, fix this by continuing to use the global register variable for
+> the kernel proper but declare __current_thread_info as a simple extern
+> variable when building the VDSO. It should never be referenced, and will
+> cause a link error if it is. This resolves the calling convention issue
+> for the VDSO without having any impact upon the build of the kernel
+> itself for either clang or gcc.
 
-On 1/2/20 6:22 PM, Sam McNally wrote:
-> Some members of the Google_Hatch family include a rt5682, but not a
-> speaker amp. When a speaker amp is also present, the first 10EC5682
-> entry in snd_soc_acpi_intel_cml_machines[] matches, finding the
-> MX98357A as well, resulting in the quirk_data field in the
-> snd_soc_acpi_mach being non-null. When only the rt5682 is present, the
-> second 10EC5682 entry is matched instead and quirk_data is left null.
+Applied to mips-fixes.
 
-Ah yes, I confused GLK and CML code names.
+> commit bbcc5672b006
+> https://git.kernel.org/mips/c/bbcc5672b006
+> 
+> Signed-off-by: Paul Burton <paulburton@kernel.org>
+> Fixes: ebb5e78cc634 ("MIPS: Initial implementation of a VDSO")
+> Reported-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> Reviewed-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> Tested-by: Jason A. Donenfeld <Jason@zx2c4.com>
 
-The code looks fine, but would you mind updating your commit message? 
-We've reshuffled the 10EC5682 entries to account for the variations with 
-RT1011, so it's technically the 3rd entry that does not have a speaker 
-amplifier. And we should also mention that for CML we use the jack codec 
-as the primary key, so the quirk data does really refer to the speaker 
-amplifier.
+Thanks,
+    Paul
 
-> 
-> The sof_rt5682 driver's DMI data matching identifies that a speaker amp
-> is present for all Google_Hatch family devices. Detect cases where there
-> is no speaker amp by checking for a null quirk_data in the
-> snd_soc_acpi_mach and remove the speaker amp bit in that case.
-> 
-> Signed-off-by: Sam McNally <sammc@chromium.org>
-> ---
-> 
-> Changes in v2:
-> - Added details about the relevant ACPI matches to the description
-> 
->   sound/soc/intel/boards/sof_rt5682.c | 9 ++++++++-
->   1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/sound/soc/intel/boards/sof_rt5682.c b/sound/soc/intel/boards/sof_rt5682.c
-> index ad8a2b4bc709..8a13231dee15 100644
-> --- a/sound/soc/intel/boards/sof_rt5682.c
-> +++ b/sound/soc/intel/boards/sof_rt5682.c
-> @@ -603,6 +603,14 @@ static int sof_audio_probe(struct platform_device *pdev)
->   
->   	dmi_check_system(sof_rt5682_quirk_table);
->   
-> +	mach = (&pdev->dev)->platform_data;
-> +
-> +	/* A speaker amp might not be present when the quirk claims one is.
-> +	 * Detect this via whether the machine driver match includes quirk_data.
-> +	 */
-> +	if ((sof_rt5682_quirk & SOF_SPEAKER_AMP_PRESENT) && !mach->quirk_data)
-> +		sof_rt5682_quirk &= ~SOF_SPEAKER_AMP_PRESENT;
-> +
->   	if (soc_intel_is_byt() || soc_intel_is_cht()) {
->   		is_legacy_cpu = 1;
->   		dmic_be_num = 0;
-> @@ -663,7 +671,6 @@ static int sof_audio_probe(struct platform_device *pdev)
->   	INIT_LIST_HEAD(&ctx->hdmi_pcm_list);
->   
->   	sof_audio_card_rt5682.dev = &pdev->dev;
-> -	mach = (&pdev->dev)->platform_data;
->   
->   	/* set platform name for each dailink */
->   	ret = snd_soc_fixup_dai_links_platform_name(&sof_audio_card_rt5682,
-> 
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paulburton@kernel.org to report it. ]
