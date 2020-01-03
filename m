@@ -2,161 +2,107 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DB0C00523
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F023C00523
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE93621D7D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC7DD22B48
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 08:47:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mlZpNNff"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="mkvfSnsg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727455AbgACIoJ (ORCPT
+        id S1727354AbgACIrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 03:44:09 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33964 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgACIoJ (ORCPT
+        Fri, 3 Jan 2020 03:47:13 -0500
+Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.21]:21596 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgACIrM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 03:44:09 -0500
-Received: by mail-wr1-f66.google.com with SMTP id t2so41679962wrr.1;
-        Fri, 03 Jan 2020 00:44:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=wpD/6DTuwbigjHCA/o7EMJw93xJaBjyDyEiLPgWqJJc=;
-        b=mlZpNNff/qedkvnBWrceuPOTF2vKYZ9zhE+EBwz3qU+C1EuM+3v4WeJ9FtpV39rY1s
-         eVAUOi9RBj5dP/i+BnBeQ+bdVMRNHclB0vgjDGvzePLRvZ8cqitV8M0ZCZYZQvlyZ3OZ
-         P2BZ84hBgBFc7c84Z/amjquJ/kghUToD1vbsME/Wev8dcJuuY8Ln53LZM7ZBqeXILs7X
-         k4IE2lY1NQZ2r+LP/OY41M6ErUMeqScoYJLNg6oC+WlLbSxBLj9UCou6l5oZ2AZvNdFV
-         h/tJwCFg21vHvmBtXrGmgvu+n1qGKFfTbNIySXyd7ity/LThB91szujBEoDWn+pNB/l0
-         tPVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=wpD/6DTuwbigjHCA/o7EMJw93xJaBjyDyEiLPgWqJJc=;
-        b=Lq7B2sWC3MyS8r+EchTu0dP5O6inFsuqjG/KOHTDZJdUu1sR2O5iynQrAVrFQcpE+K
-         aCOkcDKvDjtLk0zUeSFp75rX1TVYHfGQ1NrkU6jW1OHe05cEjgDW6sgSmhlFT1F8ttvl
-         TMocWfxeZlApLSSyPrrUf6EroS0i+YQUUgKeYTo9XAAfHDZgTgENZlqT1DczjLxeb7EP
-         LpaU6yWfLsYzsZPN8nwU2GqlK+XDyJIH4M++kkutb3Ui2GUocK7jX5CMtNaz3AMifgJo
-         0hTC+sUFGv20KS7vMSg0E/7pxT5Pw70BKUG6isPeOFykItAmcWT5K1qtRS1tifbN2jxl
-         ffiA==
-X-Gm-Message-State: APjAAAWBcUZQ9CtCT6avD0G9Fz9VGa7dlzNzPHYZVXGdCWnjwyqivjfT
-        R9SM2OWv8T2CnIyvKGmo0ng=
-X-Google-Smtp-Source: APXvYqwnTSmXYD7phPs5A9se1DbEYruQ+lnYzvLFX3B+NPj5gayWwnvL2tM+oQ3M808O6qy2Htl5og==
-X-Received: by 2002:adf:f28c:: with SMTP id k12mr85152511wro.360.1578041046918;
-        Fri, 03 Jan 2020 00:44:06 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id b68sm11257968wme.6.2020.01.03.00.44.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 00:44:06 -0800 (PST)
-Date:   Fri, 3 Jan 2020 09:44:04 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, linkinjeon@gmail.com
-Subject: Re: [PATCH v9 10/13] exfat: add nls operations
-Message-ID: <20200103084404.tv3fchjmw3ltmwrr@pali>
-References: <20200102082036.29643-1-namjae.jeon@samsung.com>
- <CGME20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05@epcas1p4.samsung.com>
- <20200102082036.29643-11-namjae.jeon@samsung.com>
- <20200102135502.hkey7z45gnprinpp@pali>
- <003101d5c204$5046e9a0$f0d4bce0$@samsung.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <003101d5c204$5046e9a0$f0d4bce0$@samsung.com>
-User-Agent: NeoMutt/20180716
+        Fri, 3 Jan 2020 03:47:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1578041227;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=wKdBgQpAaiqvssRP9nw70UdnpbTeHX3ycIW/36/WGMs=;
+        b=mkvfSnsgD3CVXYXaKSA4fC82Vsz5eEBj0Y4ipvbdesXQcjlda/6nnE3RLkpebYCM/d
+        Km2kvLNDZTZeK3Axif0oZIwHqpkxycLfGt1Y1BRow6PGxuOaalRvH1yWQ743vJPJ9CDm
+        KehHJOkdyvakR3Kn+J+/qqjX/82I/IyCByuH0RVKYChPRaf+aniXDYOQN7BuIh3psCM6
+        p8wdSB51zNKF1R0FdD8LWhoT2hbDYRFxLmMr4uGp6HB2iZAVFkF7BJrzK64T8jt5TkvZ
+        QE57XE0MHH4vLeCrdDYdbgRzPK3c/ZZPdk1AvkJySucH8eMRg6dzXvUmpN21pNJcalgq
+        j18A==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmMkw43qEhA="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
+        with ESMTPSA id a09dafw038kxMP7
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Fri, 3 Jan 2020 09:46:59 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [BISECTED, REGRESSION] OMAP3 onenand/DMA broken
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200103081726.GD15023@darkstar.musicnaut.iki.fi>
+Date:   Fri, 3 Jan 2020 09:46:58 +0100
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <6D46CA13-2E50-4144-86F1-CE4988BD654D@goldelico.com>
+References: <20200103081726.GD15023@darkstar.musicnaut.iki.fi>
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 03 January 2020 16:06:25 Namjae Jeon wrote:
-> > On Thursday 02 January 2020 16:20:33 Namjae Jeon wrote:
-> > > This adds the implementation of nls operations for exfat.
-> > >
-> > > Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-> > > Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
-> > > ---
-> > >  fs/exfat/nls.c | 809
-> > > +++++++++++++++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 809 insertions(+)
-> > >  create mode 100644 fs/exfat/nls.c
-> > >
-> > > diff --git a/fs/exfat/nls.c b/fs/exfat/nls.c new file mode 100644
-> > > index 000000000000..af52328e28ff
-> > > --- /dev/null
-> > > +++ b/fs/exfat/nls.c
-> > 
-> > ...
-> > 
-> > > +int exfat_nls_uni16s_to_vfsname(struct super_block *sb,
-> > > +		struct exfat_uni_name *uniname, unsigned char *p_cstring,
-> > > +		int buflen)
-> > > +{
-> > > +	if (EXFAT_SB(sb)->options.utf8)
-> > > +		return __exfat_nls_utf16s_to_vfsname(sb, uniname, p_cstring,
-> > > +				buflen);
-> > > +	return __exfat_nls_uni16s_to_vfsname(sb, uniname, p_cstring,
-> > buflen);
-> > > +}
-> > 
-> > Hello, I'm looking at this function and basically it do nothing.
-> > Or was it supposed that this function should do something more for UTF-8
-> > encoding?
-> > 
-> > There is one if- statement, but in both branches is executed exactly
-> > same code.
-> > 
-> > And executed function just pass same arguments as current callee
-> > function.
-> > 
-> > So calls to exfat_nls_uni16s_to_vfsname() can be replaced by direct
-> > calls to __exfat_nls_uni16s_to_vfsname().
-> Ah, The function names are similar, but not same. see utf16s/uni16s.
+Hi,
+
+> Am 03.01.2020 um 09:17 schrieb Aaro Koskinen <aaro.koskinen@iki.fi>:
 > 
-> Thanks!
-
-Ou, sorry for that :-(
-
-I will look again and more deeply at this encoding code as I think there
-can be some problem with processing utf-16 buffers...
-
-> > 
-> > Or maybe better, rename __exfat_nls_uni16s_to_vfsname() function to
-> > exfat_nls_uni16s_to_vfsname().
-> > 
-> > > +int exfat_nls_vfsname_to_uni16s(struct super_block *sb,
-> > > +		const unsigned char *p_cstring, const int len,
-> > > +		struct exfat_uni_name *uniname, int *p_lossy)
-> > > +{
-> > > +	if (EXFAT_SB(sb)->options.utf8)
-> > > +		return __exfat_nls_vfsname_to_utf16s(sb, p_cstring, len,
-> > > +				uniname, p_lossy);
-> > > +	return __exfat_nls_vfsname_to_uni16s(sb, p_cstring, len, uniname,
-> > > +			p_lossy);
-> > > +}
-> > 
-> > And same for this function.
-> > 
-> > --
-> > Pali Rohár
-> > pali.rohar@gmail.com
+> Hi,
 > 
+> When booting v5.4 (or v5.5-rc4) on N900, the console gets flooded with:
 > 
+> [    8.335754] omap2-onenand 1000000.onenand: timeout waiting for DMA
+> [    8.365753] omap2-onenand 1000000.onenand: timeout waiting for DMA
+> [    8.395751] omap2-onenand 1000000.onenand: timeout waiting for DMA
+> [    8.425750] omap2-onenand 1000000.onenand: timeout waiting for DMA
+> [    8.455749] omap2-onenand 1000000.onenand: timeout waiting for DMA
+> [    8.485748] omap2-onenand 1000000.onenand: timeout waiting for DMA
+> [    8.515777] omap2-onenand 1000000.onenand: timeout waiting for DMA
+> [    8.545776] omap2-onenand 1000000.onenand: timeout waiting for DMA
+> [    8.575775] omap2-onenand 1000000.onenand: timeout waiting for DMA
+> 
+> making the system unusable.
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
+I can confirm that this issue exists but so far we failed to bisect
+and make a proper report.
+
+Sometimes the system boots fine and sometimes it fails.
+
+It happens on omap3-gta04a5one.dts only, but not with omap3-gta04a4.dts
+(both dm3730 but different NAND).
+
+> 
+> Bisected to:
+> 
+> 4689d35c765c696bdf0535486a990038b242a26b is the first bad commit
+> commit 4689d35c765c696bdf0535486a990038b242a26b
+> Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Date:   Tue Jul 16 11:24:59 2019 +0300
+> 
+>    dmaengine: ti: omap-dma: Improved memcpy polling support
+> 
+> The commit does not revert cleanly anymore. Any ideas how to fix this?
+> 
+> A.
+
+BR, Nikolaus
