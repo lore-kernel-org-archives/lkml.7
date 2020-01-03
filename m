@@ -2,134 +2,103 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF356C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 07:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7ABC00523
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 07:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1CDC2464B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 07:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CB23222C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 07:19:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578035982;
+	bh=FV053rnnc3Ysq//ItKxgra7oEosNJ8yKfv9gjd3Akao=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=2enRnOdFxauSHDrfFsjtv7p1NnKBZPeIxGsUphX1Qkyvg0XdUM8F/6Vg3QJhuQP8b
+	 jnKNuNi7VUORBbDye7+9MzFe+Ppzv64h8XVx0FLacpjG0mcEUuPOHA7g9Fl/2RYDYD
+	 kY6w+OOKEgoZ+XRx7y5XSon9UnRzSo1Zi6/d/4nI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbgACHSr (ORCPT
+        id S1727234AbgACHSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 02:18:47 -0500
-Received: from mga01.intel.com ([192.55.52.88]:55587 "EHLO mga01.intel.com"
+        Fri, 3 Jan 2020 02:18:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgACHSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 02:18:46 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 23:18:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,389,1571727600"; 
-   d="scan'208";a="252507763"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga002.fm.intel.com with ESMTP; 02 Jan 2020 23:18:44 -0800
-Date:   Fri, 3 Jan 2020 15:18:46 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com,
-        willy@infradead.org
-Subject: Re: [Patch v2] mm/rmap.c: split huge pmd when it really is
-Message-ID: <20200103071846.GA16057@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20191223222856.7189-1-richardw.yang@linux.intel.com>
+        id S1725890AbgACHSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 02:18:51 -0500
+Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72899222C3;
+        Fri,  3 Jan 2020 07:18:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578035930;
+        bh=FV053rnnc3Ysq//ItKxgra7oEosNJ8yKfv9gjd3Akao=;
+        h=From:To:Cc:Subject:Date:From;
+        b=jzgTO2MqtxBwsNZQ8PN9KIeVu9nevlCM/egS/oKHH34BfyhH+O3qwNe/11pHQE+2c
+         qJJnU1488/tJXT56WynIKr0FXlxgcqMFhs6cEEkYZ2X/fd7MZ2aOhnQw6wSIb/Y8bK
+         QCxSt9n1aOpQLsKv6BcOS/lZhjk72rYAgLUsrZpY=
+Received: by wens.tw (Postfix, from userid 1000)
+        id BCD7E5FC7C; Fri,  3 Jan 2020 15:18:48 +0800 (CST)
+From:   Chen-Yu Tsai <wens@kernel.org>
+To:     Maxime Ripard <mripard@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] clk: sunxi-ng: r40: Export MBUS clock
+Date:   Fri,  3 Jan 2020 15:18:48 +0800
+Message-Id: <20200103071848.3977-1-wens@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191223222856.7189-1-richardw.yang@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 06:28:56AM +0800, Wei Yang wrote:
->When page is not NULL, function is called by try_to_unmap_one() with
->TTU_SPLIT_HUGE_PMD set. There are two cases to call try_to_unmap_one()
->with TTU_SPLIT_HUGE_PMD set:
->
->  * unmap_page()
->  * shrink_page_list()
->
->In both case, the page passed to try_to_unmap_one() is PageHead() of the
->THP. If this page's mapping address in process is not HPAGE_PMD_SIZE
->aligned, this means the THP is not mapped as PMD THP in this process.
->This could happen when we do mremap() a PMD size range to an un-aligned
->address.
->
->Currently, this case is handled by following check in __split_huge_pmd()
->luckily.
->
->  page != pmd_page(*pmd)
->
->This patch checks the address to skip some work.
+From: Chen-Yu Tsai <wens@csie.org>
 
-I am sorry to forget address Kirill's comment in 1st version.
+The MBUS clock needs to be referenced in the MBUS device node.
+Export it.
 
-The first one is the performance difference after this change for a PTE
-mappged THP.
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ drivers/clk/sunxi-ng/ccu-sun8i-r40.h      | 4 ----
+ include/dt-bindings/clock/sun8i-r40-ccu.h | 2 +-
+ 2 files changed, 1 insertion(+), 5 deletions(-)
 
-Here is the result:(in cycle)
-
-        Before     Patched
-
-        963        195
-        988        40
-        895        78
-
-Average 948        104
-
-So the change reduced 90% time for function split_huge_pmd_address().
-
-For the 2nd comment, the vma check. Let me take a further look to analysis.
-
-Thanks for Kirill's suggestion.
-
->
->Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->
->---
->v2: move the check into split_huge_pmd_address().
->---
-> mm/huge_memory.c | 16 ++++++++++++++++
-> 1 file changed, 16 insertions(+)
->
->diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->index 893fecd5daa4..2b9c2f412b32 100644
->--- a/mm/huge_memory.c
->+++ b/mm/huge_memory.c
->@@ -2342,6 +2342,22 @@ void split_huge_pmd_address(struct vm_area_struct *vma, unsigned long address,
-> 	pud_t *pud;
-> 	pmd_t *pmd;
-> 
->+	/*
->+	 * When page is not NULL, function is called by try_to_unmap_one()
->+	 * with TTU_SPLIT_HUGE_PMD set. There are two places set
->+	 * TTU_SPLIT_HUGE_PMD
->+	 *
->+	 *     unmap_page()
->+	 *     shrink_page_list()
->+	 *
->+	 * In both cases, the "page" here is the PageHead() of a THP.
->+	 *
->+	 * If the page is not a PMD mapped huge page, e.g. after mremap(), it
->+	 * is not necessary to split it.
->+	 */
->+	if (page && !IS_ALIGNED(address, HPAGE_PMD_SIZE))
->+		return;
->+
-> 	pgd = pgd_offset(vma->vm_mm, address);
-> 	if (!pgd_present(*pgd))
-> 		return;
->-- 
->2.17.1
-
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-r40.h b/drivers/clk/sunxi-ng/ccu-sun8i-r40.h
+index a69637b6b0c1..6f7071df8e1c 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-r40.h
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-r40.h
+@@ -55,10 +55,6 @@
+ 
+ /* Some more module clocks are exported */
+ 
+-#define CLK_MBUS		155
+-
+-/* Another bunch of module clocks are exported */
+-
+ #define CLK_NUMBER		(CLK_OUTB + 1)
+ 
+ #endif /* _CCU_SUN8I_R40_H_ */
+diff --git a/include/dt-bindings/clock/sun8i-r40-ccu.h b/include/dt-bindings/clock/sun8i-r40-ccu.h
+index f9e15a235626..d7337b55a4ef 100644
+--- a/include/dt-bindings/clock/sun8i-r40-ccu.h
++++ b/include/dt-bindings/clock/sun8i-r40-ccu.h
+@@ -176,7 +176,7 @@
+ #define CLK_AVS			152
+ #define CLK_HDMI		153
+ #define CLK_HDMI_SLOW		154
+-
++#define CLK_MBUS		155
+ #define CLK_DSI_DPHY		156
+ #define CLK_TVE0		157
+ #define CLK_TVE1		158
 -- 
-Wei Yang
-Help you, Help me
+2.24.1
+
