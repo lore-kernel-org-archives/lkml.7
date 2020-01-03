@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67910C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDD2C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F08621D7D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 375922464E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578051640;
-	bh=ZGdQNY/m9AfSk+pXTJniPsz4ZCTpoChydYzo6TM28KQ=;
+	s=default; t=1578051642;
+	bh=30LNcCXGrHbjed7nFrjq4dhg8qri5X+a1jEAPmmUuXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YbhBzDcBGXMvB8s/8A9Gi4x4sxUpEMA/r6THh5E0w3zIs8wkZ0lA7b05jbhaRDK9Y
-	 U4cZ/rlp7pXjNOY1Ngl54ze33jsr45ZpvgPts53y450Xj4rgLTm/JbNaSqiM3s1Ppn
-	 gJ6kFhaoKBdRM6Eh1U+FMkPyGUQFgL/QbtkTF/RY=
+	b=O79Evq25Y8MKPXsQmfWDq+gs2k3wyulcJvN1Y1JuPT9oQ7ASmX9OLsdWQ5yQ6LAMp
+	 N7nR0zWZs9rZkK4IEL4Ph8wzyduzXFxmOgZdqvfQQ/AQ3/zU9LFOh2KXRdVBaB5RJ2
+	 E7Uf5zLL2x8tD6eQm2ypmN233R41wmPlH0T6ZgV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgACLki (ORCPT
+        id S1727840AbgACLkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 06:40:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40102 "EHLO mail.kernel.org"
+        Fri, 3 Jan 2020 06:40:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727777AbgACLkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 06:40:36 -0500
+        id S1727824AbgACLkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 06:40:39 -0500
 Received: from localhost.localdomain (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC7D724655;
-        Fri,  3 Jan 2020 11:40:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0802722314;
+        Fri,  3 Jan 2020 11:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578051634;
-        bh=ZGdQNY/m9AfSk+pXTJniPsz4ZCTpoChydYzo6TM28KQ=;
+        s=default; t=1578051638;
+        bh=30LNcCXGrHbjed7nFrjq4dhg8qri5X+a1jEAPmmUuXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JqXIcsleGh1sbnbDc6Z4fIuKO8/sF2C2TAlz4pOeLhhAx7xe0YnY/z4OYY0RSPgKR
-         o9HpyPnt4tnC97qyji0nd35rpGxKuN9IMEAb4I8pgVcfc6Nh1LC3MJA2v+AEB0AOJk
-         DfY/pzxthR/v3enCi56nZsPuT2IaV1YCUTjrkGak=
+        b=MFyCZ4tAexrywQvB989HwzlZlynIG0kaQPjSIm2W+U4XQHnfALOo+lY6BSFoVukce
+         PojaAFcBXrODj+PX/Islw+JP74BCppTc1vN1W4URFRqEULOjE2yQ9zFni2ZvrkKfFU
+         Cau/GbfAD9b+YmlZEYVlBs/vt8xO6bFI76OdPXO8=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>,
         linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
         Arvind Sankar <nivedita@alum.mit.edu>,
         Matthew Garrett <mjg59@google.com>
-Subject: [PATCH 09/20] efi/x86: simplify 64-bit EFI firmware call wrapper
-Date:   Fri,  3 Jan 2020 12:39:42 +0100
-Message-Id: <20200103113953.9571-10-ardb@kernel.org>
+Subject: [PATCH 11/20] efi/x86: drop two near identical versions of efi_runtime_init()
+Date:   Fri,  3 Jan 2020 12:39:44 +0100
+Message-Id: <20200103113953.9571-12-ardb@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200103113953.9571-1-ardb@kernel.org>
 References: <20200103113953.9571-1-ardb@kernel.org>
@@ -60,143 +60,195 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The efi_call() wrapper used to invoke EFI runtime services serves
-a number of purposes:
-- realign the stack to 16 bytes
-- preserve FP and CR0 register state
-- translate from SysV to MS calling convention.
+The routines efi_runtime_init32() and efi_runtime_init64() are
+almost indistinguishable, and the only relevant difference is
+the offset in the runtime struct from where to obtain the physical
+address of the SetVirtualAddressMap() routine.
 
-Preserving CR0.TS is no longer necessary in Linux, and preserving the
-FP register state is also redundant in most cases, since efi_call() is
-almost always used from within the scope of a pair of kernel_fpu_begin()/
-kernel_fpu_end() calls, with the exception of the early call to
-SetVirtualAddressMap() and the SGI UV support code.
+However, this address is only used once, when installing the virtual
+address map that the OS will use to invoke EFI runtime services, and
+at the time of the call, we will necessarily be running with a 1:1
+mapping, and so there is no need to do the map/unmap dance here to
+retrieve the address. In fact, in the preceding changes to these users,
+we stopped using the address recorded here entirely.
 
-So let's add a pair of kernel_fpu_begin()/_end() calls there as well,
-and remove the unnecessary code from the assembly implementation of
-efi_call(), and only keep the pieces that deal with the stack
-alignment and the ABI translation.
+So let's just get rid of all this code since it no longer serves a
+purpose. While at it, tweak the logic so that we handle unsupported
+and disable EFI runtime services in the same way, and unmap the EFI
+memory map in both cases.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/platform/efi/Makefile      |  1 -
- arch/x86/platform/efi/efi_64.c      |  3 +++
- arch/x86/platform/efi/efi_stub_64.S | 39 +++--------------------------
- arch/x86/platform/uv/bios_uv.c      |  7 ++++--
- 4 files changed, 12 insertions(+), 38 deletions(-)
+ arch/x86/platform/efi/efi.c | 95 ++-----------------------------------
+ include/linux/efi.h         | 19 --------
+ 2 files changed, 5 insertions(+), 109 deletions(-)
 
-diff --git a/arch/x86/platform/efi/Makefile b/arch/x86/platform/efi/Makefile
-index fe29f3f5d384..7ec3a8b31f8b 100644
---- a/arch/x86/platform/efi/Makefile
-+++ b/arch/x86/platform/efi/Makefile
-@@ -1,6 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
- OBJECT_FILES_NON_STANDARD_efi_thunk_$(BITS).o := y
--OBJECT_FILES_NON_STANDARD_efi_stub_$(BITS).o := y
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index e4d3afac7be3..67cb0fd18777 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -429,87 +429,6 @@ static int __init efi_systab_init(void *phys)
+ 	return 0;
+ }
  
- obj-$(CONFIG_EFI) 		+= quirks.o efi.o efi_$(BITS).o efi_stub_$(BITS).o
- obj-$(CONFIG_EFI_MIXED)		+= efi_thunk_$(BITS).o
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index a7f11d1ff7c4..03565dad0c4b 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -1019,6 +1019,8 @@ efi_status_t __init efi_set_virtual_address_map(unsigned long memory_map_size,
- 		efi_switch_mm(&efi_mm);
+-static int __init efi_runtime_init32(void)
+-{
+-	efi_runtime_services_32_t *runtime;
+-
+-	runtime = early_memremap((unsigned long)efi.systab->runtime,
+-			sizeof(efi_runtime_services_32_t));
+-	if (!runtime) {
+-		pr_err("Could not map the runtime service table!\n");
+-		return -ENOMEM;
+-	}
+-
+-	/*
+-	 * We will only need *early* access to the SetVirtualAddressMap
+-	 * EFI runtime service. All other runtime services will be called
+-	 * via the virtual mapping.
+-	 */
+-	efi_phys.set_virtual_address_map =
+-			(efi_set_virtual_address_map_t *)
+-			(unsigned long)runtime->set_virtual_address_map;
+-	early_memunmap(runtime, sizeof(efi_runtime_services_32_t));
+-
+-	return 0;
+-}
+-
+-static int __init efi_runtime_init64(void)
+-{
+-	efi_runtime_services_64_t *runtime;
+-
+-	runtime = early_memremap((unsigned long)efi.systab->runtime,
+-			sizeof(efi_runtime_services_64_t));
+-	if (!runtime) {
+-		pr_err("Could not map the runtime service table!\n");
+-		return -ENOMEM;
+-	}
+-
+-	/*
+-	 * We will only need *early* access to the SetVirtualAddressMap
+-	 * EFI runtime service. All other runtime services will be called
+-	 * via the virtual mapping.
+-	 */
+-	efi_phys.set_virtual_address_map =
+-			(efi_set_virtual_address_map_t *)
+-			(unsigned long)runtime->set_virtual_address_map;
+-	early_memunmap(runtime, sizeof(efi_runtime_services_64_t));
+-
+-	return 0;
+-}
+-
+-static int __init efi_runtime_init(void)
+-{
+-	int rv;
+-
+-	/*
+-	 * Check out the runtime services table. We need to map
+-	 * the runtime services table so that we can grab the physical
+-	 * address of several of the EFI runtime functions, needed to
+-	 * set the firmware into virtual mode.
+-	 *
+-	 * When EFI_PARAVIRT is in force then we could not map runtime
+-	 * service memory region because we do not have direct access to it.
+-	 * However, runtime services are available through proxy functions
+-	 * (e.g. in case of Xen dom0 EFI implementation they call special
+-	 * hypercall which executes relevant EFI functions) and that is why
+-	 * they are always enabled.
+-	 */
+-
+-	if (!efi_enabled(EFI_PARAVIRT)) {
+-		if (efi_enabled(EFI_64BIT))
+-			rv = efi_runtime_init64();
+-		else
+-			rv = efi_runtime_init32();
+-
+-		if (rv)
+-			return rv;
+-	}
+-
+-	set_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-
+-	return 0;
+-}
+-
+ void __init efi_init(void)
+ {
+ 	efi_char16_t *c16;
+@@ -567,13 +486,13 @@ void __init efi_init(void)
+ 
+ 	if (!efi_runtime_supported())
+ 		pr_info("No EFI runtime due to 32/64-bit mismatch with kernel\n");
+-	else {
+-		if (efi_runtime_disabled() || efi_runtime_init()) {
+-			efi_memmap_unmap();
+-			return;
+-		}
++
++	if (!efi_runtime_supported() || efi_runtime_disabled()) {
++		efi_memmap_unmap();
++		return;
  	}
  
-+	kernel_fpu_begin();
-+
- 	/* Disable interrupts around EFI calls: */
- 	local_irq_save(flags);
- 	status = efi_call(efi.systab->runtime->set_virtual_address_map,
-@@ -1026,6 +1028,7 @@ efi_status_t __init efi_set_virtual_address_map(unsigned long memory_map_size,
- 			  descriptor_version, virtual_map);
- 	local_irq_restore(flags);
++	set_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+ 	efi_clean_memmap();
  
-+	kernel_fpu_end();
+ 	if (efi_enabled(EFI_DBG))
+@@ -934,8 +853,6 @@ static void __init kexec_enter_virtual_mode(void)
  
- 	if (save_pgd)
- 		efi_old_memmap_phys_epilog(save_pgd);
-diff --git a/arch/x86/platform/efi/efi_stub_64.S b/arch/x86/platform/efi/efi_stub_64.S
-index b1d2313fe3bf..e7e1020f4ccb 100644
---- a/arch/x86/platform/efi/efi_stub_64.S
-+++ b/arch/x86/platform/efi/efi_stub_64.S
-@@ -8,41 +8,12 @@
-  */
+ 	efi_native_runtime_setup();
  
- #include <linux/linkage.h>
--#include <asm/segment.h>
--#include <asm/msr.h>
--#include <asm/processor-flags.h>
--#include <asm/page_types.h>
+-	efi.set_virtual_address_map = NULL;
 -
--#define SAVE_XMM			\
--	mov %rsp, %rax;			\
--	subq $0x70, %rsp;		\
--	and $~0xf, %rsp;		\
--	mov %rax, (%rsp);		\
--	mov %cr0, %rax;			\
--	clts;				\
--	mov %rax, 0x8(%rsp);		\
--	movaps %xmm0, 0x60(%rsp);	\
--	movaps %xmm1, 0x50(%rsp);	\
--	movaps %xmm2, 0x40(%rsp);	\
--	movaps %xmm3, 0x30(%rsp);	\
--	movaps %xmm4, 0x20(%rsp);	\
--	movaps %xmm5, 0x10(%rsp)
+ 	if (efi_enabled(EFI_OLD_MEMMAP) && (__supported_pte_mask & _PAGE_NX))
+ 		runtime_code_page_mkexec();
+ #endif
+@@ -1040,8 +957,6 @@ static void __init __efi_enter_virtual_mode(void)
+ 	else
+ 		efi_thunk_runtime_setup();
+ 
+-	efi.set_virtual_address_map = NULL;
 -
--#define RESTORE_XMM			\
--	movaps 0x60(%rsp), %xmm0;	\
--	movaps 0x50(%rsp), %xmm1;	\
--	movaps 0x40(%rsp), %xmm2;	\
--	movaps 0x30(%rsp), %xmm3;	\
--	movaps 0x20(%rsp), %xmm4;	\
--	movaps 0x10(%rsp), %xmm5;	\
--	mov 0x8(%rsp), %rsi;		\
--	mov %rsi, %cr0;			\
--	mov (%rsp), %rsp
-+#include <asm/nospec-branch.h>
+ 	/*
+ 	 * Apply more restrictive page table mapping attributes now that
+ 	 * SVAM() has been called and the firmware has performed all
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 952c1659dfd9..ee68ea6f85ff 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -539,24 +539,6 @@ typedef struct {
+ 	u32 query_variable_info;
+ } efi_runtime_services_32_t;
  
- SYM_FUNC_START(efi_call)
- 	pushq %rbp
- 	movq %rsp, %rbp
--	SAVE_XMM
-+	and $~0xf, %rsp
- 	mov 16(%rbp), %rax
- 	subq $48, %rsp
- 	mov %r9, 32(%rsp)
-@@ -50,9 +21,7 @@ SYM_FUNC_START(efi_call)
- 	mov %r8, %r9
- 	mov %rcx, %r8
- 	mov %rsi, %rcx
--	call *%rdi
--	addq $48, %rsp
--	RESTORE_XMM
--	popq %rbp
-+	CALL_NOSPEC %rdi
-+	leave
- 	ret
- SYM_FUNC_END(efi_call)
-diff --git a/arch/x86/platform/uv/bios_uv.c b/arch/x86/platform/uv/bios_uv.c
-index ece9cb9c1189..5c0e2eb5d87c 100644
---- a/arch/x86/platform/uv/bios_uv.c
-+++ b/arch/x86/platform/uv/bios_uv.c
-@@ -34,10 +34,13 @@ static s64 __uv_bios_call(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3,
- 	 * If EFI_OLD_MEMMAP is set, we need to fall back to using our old EFI
- 	 * callback method, which uses efi_call() directly, with the kernel page tables:
- 	 */
--	if (unlikely(efi_enabled(EFI_OLD_MEMMAP)))
-+	if (unlikely(efi_enabled(EFI_OLD_MEMMAP))) {
-+		kernel_fpu_begin();
- 		ret = efi_call((void *)__va(tab->function), (u64)which, a1, a2, a3, a4, a5);
--	else
-+		kernel_fpu_end();
-+	} else {
- 		ret = efi_call_virt_pointer(tab, function, (u64)which, a1, a2, a3, a4, a5);
-+	}
- 
- 	return ret;
- }
+-typedef struct {
+-	efi_table_hdr_t hdr;
+-	u64 get_time;
+-	u64 set_time;
+-	u64 get_wakeup_time;
+-	u64 set_wakeup_time;
+-	u64 set_virtual_address_map;
+-	u64 convert_pointer;
+-	u64 get_variable;
+-	u64 get_next_variable;
+-	u64 set_variable;
+-	u64 get_next_high_mono_count;
+-	u64 reset_system;
+-	u64 update_capsule;
+-	u64 query_capsule_caps;
+-	u64 query_variable_info;
+-} efi_runtime_services_64_t;
+-
+ typedef efi_status_t efi_get_time_t (efi_time_t *tm, efi_time_cap_t *tc);
+ typedef efi_status_t efi_set_time_t (efi_time_t *tm);
+ typedef efi_status_t efi_get_wakeup_time_t (efi_bool_t *enabled, efi_bool_t *pending,
+@@ -946,7 +928,6 @@ extern struct efi {
+ 	efi_query_capsule_caps_t *query_capsule_caps;
+ 	efi_get_next_high_mono_count_t *get_next_high_mono_count;
+ 	efi_reset_system_t *reset_system;
+-	efi_set_virtual_address_map_t *set_virtual_address_map;
+ 	struct efi_memory_map memmap;
+ 	unsigned long flags;
+ } efi;
 -- 
 2.20.1
 
