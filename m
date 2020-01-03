@@ -2,140 +2,153 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF1BC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 13:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0ABEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 13:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55611215A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 13:42:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578058958;
-	bh=Re1udvoDYqpTNDw/7+6UZbyqLf58lYZ4L55nzA9tidA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ls5V69gARmspdJjkwp6saRsQMLWwIUBdRK3qgBgrW2BnMTjAKMwx4ZhWJcpCwehtV
-	 9iCoU6wuwAMdSyyTI8UyMJwQ2loP6XUUisouJD4wFj4NDWQUPA2HV/CtN71icqY45u
-	 JOkWLY/GP+1MWvsRr5FjLHoEjQceR8fQQJz+dYJ0=
+	by mail.kernel.org (Postfix) with ESMTP id 877ED222C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 13:43:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G967Z0wT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727715AbgACNmh (ORCPT
+        id S1727809AbgACNnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 08:42:37 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36148 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727494AbgACNmg (ORCPT
+        Fri, 3 Jan 2020 08:43:25 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35817 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727527AbgACNnZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 08:42:36 -0500
-Received: by mail-ed1-f66.google.com with SMTP id j17so41641105edp.3;
-        Fri, 03 Jan 2020 05:42:35 -0800 (PST)
+        Fri, 3 Jan 2020 08:43:25 -0500
+Received: by mail-lj1-f196.google.com with SMTP id j1so36534954lja.2
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 05:43:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=zMerWaeEb4CP775YC6/wAxbdCZHMzy1EkcII8sLrY0A=;
+        b=G967Z0wTZu5dz/vv0AWfZCV5mVfdDYg/F6RZPQCLE7djNuINhXXPQcsDpDSKj+P0LG
+         nVeW9Ab6Nr4SrlNdPNy/TSLkGjEH8T9ebmqlRS3EYDYgAuOGGNKMnWISB+oRuTsxLx20
+         4n6ZDrMah9lD/14jY+CczPuZHOhgKvoTjJr2gTI/lxz+iYqX1KFoacR/yodeWnHW7lZq
+         bb/vyjtMJtd9UOTSf1WrXKni4zt0IlhGGUdBa9upQEpVQ5IEJG8qh2XjdNuGHojRceMf
+         6YknA+ERjznlM25n7j+08p4skm1gYsI5oWmYZniZgPfEHfJyVQofspnJmrdtKLiFXAJm
+         hAkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6IGH/4NsfGNqzq/az3laNR9DmJ2S/QIcfX6JBOSE7W8=;
-        b=R6MWRbCtnIQcJa/204qS2yEk0UjPAOf2cCK9ilnC/qhxzubcJLDfdxmA9r7+rdEeks
-         qsrqpNK7hd8ZyIBU//rfQvXxoteXIr6P175ioFOVLiAuo8QvSWNdAF60YdJVXWOF258O
-         8AYjZjestLZOvvhU7A1ow2wgYWtw58lkGnlT+s3BBS5zMC8w4scptBVzxz9q0Gi49yho
-         txpruZCzSGEuefoE05nsvFYGCtWntE0bvs11Wa0ZaoG06PLo9DYkrbrgAeRVtkCzOQc5
-         xs2FrJksOiypizxP8xl/PFUyo2wa14ntE4m2so+hxbE8e9mLes4w6D2yHnc91Ef/GYHD
-         2gCQ==
-X-Gm-Message-State: APjAAAU/oi57eBybgmWTW9Z0KM1AZIa6V3AXdLmMibSw95O1tXpAueS8
-        +0mbivTtRc69F6CFHSJQKcw=
-X-Google-Smtp-Source: APXvYqz+iEmGUlqJ2ytifXahiNdcRR8fxZzTr5tUaDMie/rQytsdQJEzwg2+nqd+R4ZjXvdf3v9MvA==
-X-Received: by 2002:a17:907:20a8:: with SMTP id pw8mr92654258ejb.248.1578058954664;
-        Fri, 03 Jan 2020 05:42:34 -0800 (PST)
-Received: from pi3 ([194.230.155.149])
-        by smtp.googlemail.com with ESMTPSA id r20sm7751571eju.60.2020.01.03.05.42.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 05:42:33 -0800 (PST)
-Date:   Fri, 3 Jan 2020 14:42:31 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Jean Delvare <jdelvare@suse.de>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Max Staudt <max@enpas.org>,
-        Juergen Fitschen <jfi@ssv-embedded.de>,
-        Elie Morisse <syniurge@gmail.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 5/5] i2c: Enable compile testing for some of drivers
-Message-ID: <20200103134231.GA2095@pi3>
-References: <20191230172751.17985-1-krzk@kernel.org>
- <20191230172751.17985-5-krzk@kernel.org>
- <CAMuHMdUXJo3=x32xbfSUXs3O3JHaFpfxt0mHupEb+vzi=5+S4g@mail.gmail.com>
- <20191231090146.GA6872@pi3>
- <CAMuHMdWhz7x8MnGeGv2f-Gb7fBRTp=5qq_Mz55sY7tQNpRogjg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zMerWaeEb4CP775YC6/wAxbdCZHMzy1EkcII8sLrY0A=;
+        b=M8J0b8NaGF1a+RrFFjC93CARfXntI96wZ2SzDj2niAHqdua30CdAv+EAngd/XiTeVR
+         BFNTA0xoP7dACGqo8tS89mJy08LH1d70LaAryUyl2WdeP+O6PcGqU3i6K9Cq7XLX65kq
+         oi6nVVoccDOpN9oIbc9nHK+W2NnF/r6mFBWuPDz9PxXUQJxjdbgESq0b+faKuXjDpVPg
+         Vk9s4fcAqZEbvQVihWn+oxoP8wE0GZZiCGk60yWJWO5FNlZWvgoC1PMyVWozTyCyI96z
+         n3INUnXmYa96tFgZqSvDEFWthNR4EuFeV0lcjrNhLI21puwmMxLhZfr8UsoNxtkukNIL
+         xZ/Q==
+X-Gm-Message-State: APjAAAVsNHFGsQQ9M1WYVgUlNCDkW2Bd+sXJTffSINqqF4i/jEiQLV96
+        W+YZV7E+jfpkxAWdX8eawc5auKYQszfOCovBVx5fQA==
+X-Google-Smtp-Source: APXvYqxDIZ6anbPeXlV6jrCtn2c9dGb/nyHg65sPM0A8dJyOwmsnf7+8UF77dIIWJ0ucZUC6Cl6BibRlZDxZz7mepJE=
+X-Received: by 2002:a2e:8316:: with SMTP id a22mr1375788ljh.141.1578059003263;
+ Fri, 03 Jan 2020 05:43:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWhz7x8MnGeGv2f-Gb7fBRTp=5qq_Mz55sY7tQNpRogjg@mail.gmail.com>
+References: <20200102220356.856162165@linuxfoundation.org> <20200102230518.GA1087@roeck-us.net>
+ <20200103001639.GK16372@sasha-vm> <20200103083819.GC831558@kroah.com>
+In-Reply-To: <20200103083819.GC831558@kroah.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 3 Jan 2020 19:13:11 +0530
+Message-ID: <CA+G9fYu4doGffbPfdeemO9HHnxko860E_EeWBvmiyREb0zWgKA@mail.gmail.com>
+Subject: Re: [PATCH 4.14 00/91] 4.14.162-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 31, 2019 at 10:20:01AM +0100, Geert Uytterhoeven wrote:
-> Hi Krzysztof,
-> 
-> On Tue, Dec 31, 2019 at 10:01 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > On Mon, Dec 30, 2019 at 08:11:03PM +0100, Geert Uytterhoeven wrote:
-> > > On Mon, Dec 30, 2019 at 6:28 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > > > Some of the I2C bus drivers can be compile tested to increase build
-> > > > coverage.  This requires also:
-> > > > 1. Adding dependencies on COMMON_CLK for BCM2835 and Meson I2C
-> > > >    controllers,
-> > > > 2. Adding 'if' conditional to 'default y' so they will not get enabled
-> > > >    by default on all other architectures,
-> > > > 3. Limiting few compile test options to supported architectures (which
-> > > >    provide the readsX()/writesX() primitives).
-> > > >
-> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> > > > @@ -611,8 +612,8 @@ config I2C_EMEV2
-> > > >
-> > > >  config I2C_EXYNOS5
-> > > >         tristate "Exynos5 high-speed I2C driver"
-> > > > -       depends on ARCH_EXYNOS && OF
-> > > > -       default y
-> > > > +       depends on (ARCH_EXYNOS && OF) || COMPILE_TEST
-> > >
-> > > This means it is only useful on DT-based Exynos platforms, but compiles
-> > > everywhere?
-> >
-> > Yes. The driver will proble only from DT.
-> >
-> > >
-> > > Do you still have support for non-DT Exynos platforms?
-> > > ARCH_EXYNOS depends on ARCH_MULTI_V7?
-> >
-> > No, only DT. I think dependency here is a left over from board times and
-> > optional OF. Actually many drivers depend on OF and some OF-like ARCH so
-> > it could be removed.
-> >
-> > Since driver uses OF, it's rather the choice whether to explicitly
-> > mention OF.
-> 
-> So the !OF case is only for compile-testing.  Then it can be simplified to:
-> 
->     depends on ARCH_EXYNOS || COMPILE_TEST
-> 
+> I've pushed out -rc2 versions with this patch removed now.
 
-Many other drivers do exactly the same: depend on ARCH_xxx (which is
-already OF only) and on OF. Since OF now has all (or almost all) stubs
-for !OF case, such "depends on OF" is purely from logical point of view:
-the driver will not bind without OF. It will not be useful.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-I do not have strong opinion about this but is there a point to change
-only this one, while in all other places drivers depend on OF? It will
-just bring inconsistency.
+Summary
+------------------------------------------------------------------------
 
-Best regards,
-Krzysztof
+kernel: 4.14.162-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: 0e6f77cf689c028a3c0927237bac986deca2c3fd
+git describe: v4.14.161-91-g0e6f77cf689c
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.161-91-g0e6f77cf689c
 
+No regressions (compared to build v4.14.161)
 
+No fixes (compared to build v4.14.161)
+
+Ran 22654 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-containers-tests
+* ltp-fs-tests
+* ltp-cve-tests
+* spectre-meltdown-checker-test
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-cpuhotplug-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-open-posix-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* v4l2-compliance
+* kvm-unit-tests
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
