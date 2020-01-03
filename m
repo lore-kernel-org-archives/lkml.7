@@ -2,618 +2,179 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C4FC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 04:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85CDC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 04:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF17021D7D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 04:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E84622314
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 04:44:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CGpLkRlZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbgACEol convert rfc822-to-8bit (ORCPT
+        id S1727253AbgACEos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 23:44:41 -0500
-Received: from m4a0072g.houston.softwaregrp.com ([15.124.2.130]:49694 "EHLO
-        m4a0072g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725890AbgACEok (ORCPT
+        Thu, 2 Jan 2020 23:44:48 -0500
+Received: from mailout1.samsung.com ([203.254.224.24]:38543 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgACEor (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 23:44:40 -0500
-Received: FROM m4a0072g.houston.softwaregrp.com (15.120.17.146) BY m4a0072g.houston.softwaregrp.com WITH ESMTP;
- Fri,  3 Jan 2020 04:43:33 +0000
-Received: from M4W0334.microfocus.com (2002:f78:1192::f78:1192) by
- M4W0334.microfocus.com (2002:f78:1192::f78:1192) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Fri, 3 Jan 2020 04:40:14 +0000
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (15.124.8.14) by
- M4W0334.microfocus.com (15.120.17.146) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10 via Frontend Transport; Fri, 3 Jan 2020 04:40:14 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Mc0Hl0EKEdFodHPdkMyLOpeloCFH5Peyj9drHD+TcI057aDium337yUHzU//ue3jxfXm9or912AzplcSz09z3Lqwq5Nu75hf4HnvazvfV5G1PWZSIY9R+FhC4HtXhNWXwoXdoI7g+FgWCYVCY3yVZpq/Pa5SUzNs4vuIJkwsrC8bRKH5pJA+EfObL1K+MMOqLu6qog8WRqVxu1mOhPFBon9cAjn0AG7mzzCsJblOYGM81x7BF8frf05vq0EIGoTsELfYeWAu40nsgdXQavvYMtmoAj5EwzHYJHOJf1qF8QV+aZjQv4fEdk1UeKKSMvh4x0ThN3hqVBPh3b70q793rw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mlXfEF+o/d2k3VEM5d8gA6YhDBpQdvSzpf89c0OfH8Q=;
- b=bVSLVsN/mMsOAAoIufnSTxnDn7V0YGHzLIGXTpEKcEesuuPB+lf5vGqQ0SUM/TB+eGVqStLE9yQPA9YEDevD5aLx3srWasPZtLxnwy66TXETcc5NG2lpjzJtO7SHazwjtN+QKE7xR3iiyM+m7t6d2NWDCVzUbDTEydKHGuWZmtVEX5vdW+KDUKJotFrtEAQFL780xYLYlxUvGG1jVcoBPqIeBHDpYOBDi2Z6E+tfL8IMydrXiquBZrLAxig9bTBbaddc9oo7Ivq7Dkv5ud3bhaB3n1brloUWfghRXjxbR/5HB31zSjT3Qyz2uU306VXtyKeoKhMLQEWnSLTLQ3tJPw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Received: from SN1PR18MB2126.namprd18.prod.outlook.com (52.132.196.157) by
- SN1PR18MB2205.namprd18.prod.outlook.com (52.132.193.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.12; Fri, 3 Jan 2020 04:40:13 +0000
-Received: from SN1PR18MB2126.namprd18.prod.outlook.com
- ([fe80::68a8:34cd:7c1c:f49d]) by SN1PR18MB2126.namprd18.prod.outlook.com
- ([fe80::68a8:34cd:7c1c:f49d%3]) with mapi id 15.20.2602.012; Fri, 3 Jan 2020
- 04:40:13 +0000
-Received: from localhost.localdomain (60.251.47.115) by HK2P15301CA0007.APCP153.PROD.OUTLOOK.COM (2603:1096:202:1::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.1 via Frontend Transport; Fri, 3 Jan 2020 04:40:10 +0000
-From:   Chester Lin <clin@suse.com>
-To:     "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "robert.moore@intel.com" <robert.moore@intel.com>,
-        "erik.schmauss@intel.com" <erik.schmauss@intel.com>
-CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Joey Lee <JLee@suse.com>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        Chester Lin <clin@suse.com>
-Subject: [RFC PATCH v2 2/3] ACPI / hotplug: Eject status trace and auto-remove
- approach
-Thread-Topic: [RFC PATCH v2 2/3] ACPI / hotplug: Eject status trace and
- auto-remove approach
-Thread-Index: AQHVwe/j2uGyZDHk+EGXR1V2Svwbug==
-Date:   Fri, 3 Jan 2020 04:40:13 +0000
-Message-ID: <20200103043926.31507-3-clin@suse.com>
-References: <20200103043926.31507-1-clin@suse.com>
-In-Reply-To: <20200103043926.31507-1-clin@suse.com>
-Accept-Language: zh-TW, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK2P15301CA0007.APCP153.PROD.OUTLOOK.COM
- (2603:1096:202:1::17) To SN1PR18MB2126.namprd18.prod.outlook.com
- (2603:10b6:802:29::29)
-authentication-results: spf=none (sender IP is ) smtp.mailfrom=clin@suse.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.24.0
-x-originating-ip: [60.251.47.115]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1b6efd8e-344c-4f51-c5c1-08d7900705ce
-x-ms-traffictypediagnostic: SN1PR18MB2205:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN1PR18MB2205335633929F40A635C498AD230@SN1PR18MB2205.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1417;
-x-forefront-prvs: 0271483E06
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(396003)(346002)(136003)(376002)(199004)(189003)(66556008)(66446008)(16526019)(64756008)(2616005)(8676002)(956004)(186003)(30864003)(52116002)(66476007)(55236004)(36756003)(8936002)(478600001)(54906003)(81166006)(110136005)(6486002)(71200400001)(6506007)(69590400006)(107886003)(2906002)(1076003)(4326008)(5660300002)(66946007)(6512007)(26005)(316002)(86362001)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:SN1PR18MB2205;H:SN1PR18MB2126.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: suse.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: qaKTpigOQf400E+KJ5RKNnlOsabzeV61MOSlROk310laWJgi0s+/UdVv1JjI5FFx88woY6xWsfi4GViYwhyXtxjU/aRv3TfQ+Vex+s1HebCi6yxoST3gzwclMf5GwckQFsuddF05Cuh4HH4sQc8RrDNqOtcDAAF4fvNvH/Kxo+VFTkezYTDAOoSbHVLahql73hA4jXW6nohH5vzn8Z/QC/oSRqaLPgu2ugYI6PX77xZA2FqNfGRf6/YqZxvjAx3bDxExU6gxyh4bI1Dx67KDId6vBdx7ZEDHP2ofwaHl1RPFkO6vaWMSe3kwltbrwQ3UaSdbtN2iBM70o9N8i9nZfGea+Rj1cwjlOpRwVWaRjXMfBHucocZrFsoJBZ2hljVKaTfRfRLaDvA7GImgaZ1gZG/GclPAqydWXvB5RWzIRdmaZFyD9Eb7NZhs6KZDCKti4WEwXqO+fhdoiKej4U1mwfQ3Au2zPbg7ZZTZy1eHy3F6+gCJZZZmPoT/Yu6lHzdZ
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Thu, 2 Jan 2020 23:44:47 -0500
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200103044445epoutp010be4f2196c68a766516ec760fa82ab47~mRujV5S990586705867epoutp01N
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jan 2020 04:44:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200103044445epoutp010be4f2196c68a766516ec760fa82ab47~mRujV5S990586705867epoutp01N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578026685;
+        bh=75O1crx9PoInAEcmq7qeyy4qEeoh27i5ezfCPmh3QS0=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=CGpLkRlZC637fHfIxA1qO+hDY3IB80htmkPvWRTzz4D6JoY05wNh1jRDCp7F4EybK
+         perfoksCSiAweg73MyUORrO9sOuTEBvTJdM2IUdZ+dRZkCRRulGL4/ParRgYDyJCND
+         9eYLtU2N9Y8iviqeZ/LwN56uPpkK3OY6tctryN6E=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200103044444epcas1p302c57170b718d59bdb6d93e3ecd4a39c~mRuia8xU50196101961epcas1p3w;
+        Fri,  3 Jan 2020 04:44:44 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.162]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 47pskz2TFhzMqYkh; Fri,  3 Jan
+        2020 04:44:43 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        57.CD.48019.BB6CE0E5; Fri,  3 Jan 2020 13:44:43 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200103044442epcas1p219334c376ffea9a151f3f5390f7d205c~mRuhDoG-e2124721247epcas1p2Z;
+        Fri,  3 Jan 2020 04:44:42 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200103044442epsmtrp2fff97365cdd2ebfe349971e5bd392087~mRuhC95pm2213822138epsmtrp2R;
+        Fri,  3 Jan 2020 04:44:42 +0000 (GMT)
+X-AuditID: b6c32a38-23fff7000001bb93-44-5e0ec6bbc664
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D8.7A.06569.AB6CE0E5; Fri,  3 Jan 2020 13:44:42 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200103044442epsmtip18d906b74a0a6f924d702497289459fcc~mRug4b_oU2067520675epsmtip1B;
+        Fri,  3 Jan 2020 04:44:42 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     =?UTF-8?Q?'Pali_Roh=C3=A1r'?= <pali.rohar@gmail.com>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>, <valdis.kletnieks@vt.edu>,
+        <hch@lst.de>, <sj1557.seo@samsung.com>, <linkinjeon@gmail.com>
+In-Reply-To: <20200102142026.wb5glvnf5c7uweed@pali>
+Subject: RE: [PATCH v9 10/13] exfat: add nls operations
+Date:   Fri, 3 Jan 2020 13:44:42 +0900
+Message-ID: <002801d5c1f0$83ef7d80$8bce7880$@samsung.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b6efd8e-344c-4f51-c5c1-08d7900705ce
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jan 2020 04:40:13.5001
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 856b813c-16e5-49a5-85ec-6f081e13b527
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: R9ntVEliOm9Uj6avaJxnAlVjDu4XkEDHNaXLqEGYAafBK5a12aO1jL33tCbIRugn
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR18MB2205
-X-OriginatorOrg: suse.com
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: ko
+Thread-Index: AQJSGi/S1M7UFBjz5N3SW71o+eawLwHz+Lr1AtmMBwQCdCwXw6alnvnA
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTURTN60yng1J8FpBrjaZONMYFaS2FgYga16okYoy4RKljmUBjl0mn
+        4PZTYxSoBqmJGqpERSGxElGCCyKiuIsxURTjUsHEDSW4VECCMbYdjfyde94579z73qUJVQ2l
+        pi12F++0c1aGGkZeuDFZm9h4OyZH27Mnht15opZiT52+JWOfBV4Q7JWmeyTbdvkIxXpbB2Vs
+        /e+bcvbxl6/kHNrY4AsojM0VNQpj43M3ZSyt9yNjsG6cseViN5VFrbXOzOe5XN6p4e1mR67F
+        npfBLF1hmmcypGh1ibo0NpXR2Dkbn8HMz8xKXGixhhpiNIWctSBEZXGiyCTNmul0FLh4Tb5D
+        dGUwvJBrFXRaYbrI2cQCe950s8OWrtNqZxhCyg3W/MrWY0joGLHl7tWTpBv1RXtQFA04GXZ8
+        ekl60DBahS8h2NvlQ1LxHcHV29/lUtGHoMzfrvhn+XywRB7GKtyE4O7+dEnUFbKfq5GFDyic
+        CL9/NVMeRNNxmIWju/RhDYGvIXhz5lzEHIX1EDjQFtHH4lTorgpEAkg8Ae6//xHBSpwGg41u
+        UsIj4V752wgm8FSoPv6ZkBrSwMC7arnEx8Hhkt2ElLsQdj6VhXMBByk4v79fEeYBz4fyjm2S
+        NRY+3an/O5cagj1NlCTZDt+a/95ejOBjf4aE9fC89qw8LCHwZKi9nCTR46FhsAJJDcRAT+9e
+        uXSLEop3qyTJRCh9fEMm4THgKfqqKEOMb8hYviFj+YaM4vsfdgyRfjSKF0RbHi/qhOShP12H
+        Ips6hb2ErjzMbEGYRky0sqxdmaOSc4XiVlsLAppg4pSbl4coZS63dRvvdJicBVZebEGG0Kt7
+        CXW82RHae7vLpDPM0Ov1bHJKaopBzyQo6Z+P1qtwHufiN/G8wDv/+WR0lNqNFrmrd6V4YxNK
+        Ozuzr38Y3ds5sLohdlqrQKztyV78I6d7zcaSw5nO2cssXSM0ya3tdIfag194X7WJhQFddP++
+        J6/8xNxxj4oG0rK9CnOdNcm8clJweIchQfO6Nz5YTBxYtyBd/2vJKcuDdxVVO+Itk/xFi88L
+        3vIJfaayQ2MrV/kZUszndFMIp8j9AbVONYe/AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsWy7bCSnO6uY3xxBgtn6Fg0L17PZrFy9VEm
+        i+t3bzFb7Nl7ksXi8q45bBYTT/9mstjy7wirxaX3H1gcODx2zrrL7rF/7hp2j903G9g8+ras
+        YvT4vEnO49D2N2wBbFFcNimpOZllqUX6dglcGTMPPmYuWMxfsfDcRdYGxo08XYycHBICJhKv
+        p3WydjFycQgJ7GaUmPJsETNEQlri2IkzQDYHkC0scfhwMUTNc0aJS+tmMoLUsAnoSvz7s58N
+        pEZEwEJifqsxSA2zwAlGiTP9t1hBasAaJt52BrE5BYwl7k69zARiCwuYS7xZepcdxGYRUJE4
+        9ewLmM0rYCnxe3cDC4QtKHFy5hMwm1lAW6L3YSsjjL1s4WuoOxUkfj5dxgoRF5GY3dnGDHGP
+        m0TzVaYJjMKzkEyahWTSLCSTZiHpXsDIsopRMrWgODc9t9iwwCgvtVyvODG3uDQvXS85P3cT
+        Izi+tLR2MJ44EX+IUYCDUYmHd8I13jgh1sSy4srcQ4wSHMxKIrzlgUAh3pTEyqrUovz4otKc
+        1OJDjNIcLErivPL5xyKFBNITS1KzU1MLUotgskwcnFINjN5swkfCW9mPL+dRknaInCLO0Vwy
+        /1fU/Cde89Yw7IrefoDLpr3k029bBb63z1ZWL5xoHN/qPb/B+vmZhVHmaxRZtJdlFiXNOtz8
+        b7nq6mluybqyXDxKyj1NTAd2fhaU2BzLuGSVcuonTbNNOQ/2Lt7hpZZwwOX4ldIOdn3rAO7/
+        x6p9qm5XKbEUZyQaajEXFScCAKtxTRerAgAA
+X-CMS-MailID: 20200103044442epcas1p219334c376ffea9a151f3f5390f7d205c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05
+References: <20200102082036.29643-1-namjae.jeon@samsung.com>
+        <CGME20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05@epcas1p4.samsung.com>
+        <20200102082036.29643-11-namjae.jeon@samsung.com>
+        <20200102142026.wb5glvnf5c7uweed@pali>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an eject-status trace mechanism which helps to count current online
-devices under the ejection target, and it can automatically reschedules an
-eject event when all related devices are offline. The number of online
-nodes can be updated when any node has been put offline successfully.
-Any online event or offline failure within the whole device tree during
-ejection will stop the whole process and devices who have been put offline
-will need be online again as recovery.
-
-Signed-off-by: Chester Lin <clin@suse.com>
----
- drivers/acpi/glue.c     | 146 ++++++++++++++++++++++++++++++++++++++
- drivers/acpi/internal.h |  30 ++++++++
- drivers/acpi/scan.c     | 152 +++++++++++++++++++++++++++++++++++++++-
- drivers/base/core.c     |   4 ++
- include/acpi/acpi_bus.h |   1 +
- include/linux/acpi.h    |   6 ++
- 6 files changed, 336 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/acpi/glue.c b/drivers/acpi/glue.c
-index 36b24b0658cb..e1c419335128 100644
---- a/drivers/acpi/glue.c
-+++ b/drivers/acpi/glue.c
-@@ -360,6 +360,82 @@ static int acpi_device_notify_remove(struct device *dev)
- 	return 0;
- }
- 
-+static void acpi_device_eject_tracer(struct device *dev,
-+				enum kobject_action action)
-+{
-+	struct acpi_device *adev = ACPI_COMPANION(dev);
-+	struct acpi_device *adev_root = NULL;
-+	struct eject_data *eject_node = NULL;
-+	struct eject_data *eject_root = NULL;
-+
-+	if (!adev)
-+		return;
-+
-+	acpi_scan_lock_acquire();
-+
-+	eject_node = (struct eject_data *)adev->eject_stat;
-+
-+	if (!eject_node)
-+		goto tracer_end;
-+
-+	if (eject_node->base.root_handle)
-+		adev_root =
-+		    acpi_bus_get_acpi_device(eject_node->base.root_handle);
-+
-+	if (adev_root)
-+		eject_root = (struct eject_data *)adev_root->eject_stat;
-+
-+	if (action == KOBJ_OFFLINE) {
-+		eject_node->online_nodes--;
-+
-+		if (eject_node->online_nodes == 0)
-+			eject_node->status = ACPI_EJECT_STATUS_READY_REMOVE;
-+
-+		/*
-+		 * If the offline device is child, update its eject_root's
-+		 * number of online nodes.
-+		 */
-+		if (eject_root) {
-+			eject_root->online_nodes--;
-+
-+			goto tracer_end;
-+		}
-+		/*
-+		 * Adjust number of online nodes when any physical node under
-+		 * eject_root is offline. Trigger acpi_eject_try() once all
-+		 * nodes are offline.
-+		 */
-+		if (eject_node->online_nodes == 0)
-+			acpi_eject_retry(adev);
-+
-+	} else if (action == KOBJ_ONLINE) {
-+		/* !eject_root means now eject_node is root. */
-+		if (!eject_root)
-+			eject_root = eject_node;
-+
-+		if (eject_root->status == ACPI_EJECT_STATUS_GOING_OFFLINE ||
-+		    eject_root->status == ACPI_EJECT_STATUS_READY_REMOVE) {
-+			eject_root->status = ACPI_EJECT_STATUS_FAIL;
-+			acpi_eject_retry(adev_root);
-+		}
-+	}
-+tracer_end:
-+	if (adev_root)
-+		acpi_bus_put_acpi_device(adev_root);
-+
-+	acpi_scan_lock_release();
-+}
-+
-+static inline void acpi_device_check_eject_status(struct device *dev)
-+{
-+	acpi_device_eject_tracer(dev, KOBJ_OFFLINE);
-+}
-+
-+static inline void acpi_device_check_eject_recover(struct device *dev)
-+{
-+	acpi_device_eject_tracer(dev, KOBJ_ONLINE);
-+}
-+
- int acpi_platform_notify(struct device *dev, enum kobject_action action)
- {
- 	switch (action) {
-@@ -369,8 +445,78 @@ int acpi_platform_notify(struct device *dev, enum kobject_action action)
- 	case KOBJ_REMOVE:
- 		acpi_device_notify_remove(dev);
- 		break;
-+	case KOBJ_OFFLINE:
-+		acpi_device_check_eject_status(dev);
-+		break;
-+	case KOBJ_ONLINE:
-+		acpi_device_check_eject_recover(dev);
-+		break;
- 	default:
- 		break;
- 	}
- 	return 0;
- }
-+
-+static void acpi_device_check_offline_fail(struct device *dev)
-+{
-+	struct acpi_device *adev = ACPI_COMPANION(dev);
-+	struct acpi_device *adev_root = NULL;
-+	struct acpi_device *adev_child = NULL;
-+	struct eject_data *eject_node = NULL;
-+	bool has_online_child = false;
-+	char *envp[] = { "EVENT=offline", NULL };
-+
-+	if (!adev)
-+		return;
-+
-+	acpi_scan_lock_acquire();
-+
-+	eject_node = (struct eject_data *)adev->eject_stat;
-+
-+	if (!eject_node ||
-+	    eject_node->status != ACPI_EJECT_STATUS_GOING_OFFLINE)
-+		goto check_end;
-+
-+	if (!eject_node->retry) {
-+		/* Check if the device contains any online child. */
-+		list_for_each_entry(adev_child, &adev->children, node)
-+			if (!acpi_scan_is_offline(adev_child)) {
-+				has_online_child = true;
-+				break;
-+			}
-+
-+		if (!has_online_child)
-+			eject_node->retry = true;
-+
-+		/* Sent change event again. */
-+		kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
-+
-+	} else {
-+		/* Treat as failure if it still fails after retry. */
-+		if (eject_node->base.root_handle) {
-+			adev_root = acpi_bus_get_acpi_device(
-+				eject_node->base.root_handle);
-+
-+			if (!adev_root || !adev_root->eject_stat)
-+				goto check_end;
-+
-+			adev = adev_root;
-+			eject_node = (struct eject_data *)adev_root->eject_stat;
-+		}
-+
-+		eject_node->status = ACPI_EJECT_STATUS_FAIL;
-+		acpi_eject_retry(adev);
-+	}
-+
-+check_end:
-+	if (adev_root)
-+		acpi_bus_put_acpi_device(adev_root);
-+
-+	acpi_scan_lock_release();
-+}
-+
-+void acpi_action_fail_notify(struct device *dev, enum kobject_action action)
-+{
-+	if (action == KOBJ_OFFLINE)
-+		acpi_device_check_offline_fail(dev);
-+}
-diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
-index 656d237b073d..8154690b872b 100644
---- a/drivers/acpi/internal.h
-+++ b/drivers/acpi/internal.h
-@@ -257,4 +257,34 @@ void acpi_init_lpit(void);
- static inline void acpi_init_lpit(void) { }
- #endif
- 
-+/* --------------------------------------------------------------------------
-+ *				Eject Status
-+ * --------------------------------------------------------------------------
-+ */
-+enum acpi_eject_status {
-+	ACPI_EJECT_STATUS_NONE = 0,
-+	ACPI_EJECT_STATUS_GOING_OFFLINE,
-+	ACPI_EJECT_STATUS_READY_REMOVE,
-+	ACPI_EJECT_STATUS_FAIL
-+};
-+
-+enum acpi_eject_node_type {
-+	ACPI_EJECT_CHILD_NODE = 0,
-+	ACPI_EJECT_ROOT_NODE
-+};
-+
-+struct eject_data_base {
-+	enum acpi_eject_node_type type;
-+	acpi_handle root_handle;
-+};
-+
-+struct eject_data {
-+	struct eject_data_base base;
-+	enum acpi_eject_status status;
-+	u32 online_nodes;
-+	bool retry;
-+};
-+
-+void acpi_eject_retry(struct acpi_device *adev);
-+
- #endif /* _ACPI_INTERNAL_H_ */
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index d7628146eb5f..13f16b6ad7a2 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -134,11 +134,116 @@ bool acpi_scan_is_offline(struct acpi_device *adev)
- 	return offline;
- }
- 
-+void acpi_eject_retry(struct acpi_device *adev)
-+{
-+	acpi_status status;
-+
-+	get_device(&adev->dev);
-+
-+	status = acpi_hotplug_schedule(adev, ACPI_OST_EC_OSPM_EJECT);
-+	if (ACPI_FAILURE(status)) {
-+		pr_debug("Failed to reschedule an eject event\n");
-+		put_device(&adev->dev);
-+		acpi_evaluate_ost(adev->handle, ACPI_OST_EC_OSPM_EJECT,
-+				ACPI_OST_SC_NON_SPECIFIC_FAILURE, NULL);
-+		return;
-+	}
-+	pr_debug("Rescheduled an eject event\n");
-+}
-+
-+static acpi_status acpi_init_eject_stat(struct acpi_device *adev,
-+					enum acpi_eject_node_type type)
-+{
-+	struct eject_data *eject_node = (struct eject_data *) adev->eject_stat;
-+
-+	if (!eject_node) {
-+		eject_node = kzalloc(sizeof(*eject_node), GFP_KERNEL);
-+		if (!eject_node)
-+			return AE_NO_MEMORY;
-+		adev->eject_stat = eject_node;
-+	}
-+
-+	eject_node->base.type = type;
-+	eject_node->online_nodes = 0;
-+
-+	return AE_OK;
-+}
-+
-+static void acpi_enable_eject_stat(struct acpi_device *adev,
-+				struct acpi_device *root_adev, u32 online_nodes)
-+{
-+	struct eject_data *eject_node = NULL;
-+	struct eject_data *eject_root = NULL;
-+
-+	if (adev)
-+		eject_node = (struct eject_data *)adev->eject_stat;
-+	if (root_adev)
-+		eject_root = (struct eject_data *)root_adev->eject_stat;
-+
-+	if (!eject_node || !eject_root) {
-+		pr_debug("No eject data\n");
-+		return;
-+	}
-+
-+	if (eject_node != eject_root)
-+		eject_node->base.root_handle = root_adev->handle;
-+	else
-+		eject_node->base.root_handle = 0;
-+
-+	/* Update node status and online_nodes of root device */
-+	if (online_nodes) {
-+		eject_root->online_nodes += online_nodes;
-+
-+		if (eject_node->base.root_handle)
-+			eject_node->online_nodes = online_nodes;
-+
-+		pr_debug("Online nodes:%u, Total:%u\n",
-+			 eject_node->online_nodes, eject_root->online_nodes);
-+
-+		eject_node->status = ACPI_EJECT_STATUS_GOING_OFFLINE;
-+
-+	} else {
-+		eject_node->status = ACPI_EJECT_STATUS_READY_REMOVE;
-+	}
-+}
-+
-+static void acpi_free_eject_stat(struct acpi_device *adev)
-+{
-+	kfree(adev->eject_stat);
-+	adev->eject_stat = NULL;
-+}
-+
-+static acpi_status acpi_bus_offline_prepare(acpi_handle handle, u32 lvl,
-+					void *data, void **ret_p)
-+{
-+	struct acpi_device *device = NULL;
-+	struct eject_data_base *eject_obj = (struct eject_data_base *)data;
-+	acpi_status status = AE_OK;
-+
-+	if (acpi_bus_get_device(handle, &device))
-+		return AE_OK;
-+
-+	if (device->handler && !device->handler->hotplug.enabled) {
-+		*ret_p = &device->dev;
-+		return AE_SUPPORT;
-+	}
-+
-+	status = acpi_init_eject_stat(device, eject_obj->type);
-+	if (ACPI_FAILURE(status))
-+		*ret_p = &device->dev;
-+
-+	return status;
-+}
-+
-+
- static acpi_status acpi_bus_offline_notify(acpi_handle handle, u32 lvl,
- 					void *data, void **ret_p)
- {
- 	struct acpi_device *device = NULL;
-+	struct acpi_device *root_device = NULL;
- 	struct acpi_device_physical_node *pn;
-+	struct eject_data_base *eject_obj = (struct eject_data_base *)data;
-+	u32 online_nodes = 0;
- 	char *envp[] = { "EVENT=offline", NULL };
- 
- 	if (acpi_bus_get_device(handle, &device))
-@@ -149,13 +254,22 @@ static acpi_status acpi_bus_offline_notify(acpi_handle handle, u32 lvl,
- 		return AE_SUPPORT;
- 	}
- 
-+	if (eject_obj->root_handle == device->handle) {
-+		root_device = device;
-+	} else if (acpi_bus_get_device(eject_obj->root_handle, &root_device)) {
-+		*ret_p = &device->dev;
-+		return AE_NULL_OBJECT;
-+	}
-+
- 	mutex_lock(&device->physical_node_lock);
- 	list_for_each_entry(pn, &device->physical_node_list, node) {
- 		if (device_supports_offline(pn->dev) && !(pn->dev->offline)) {
- 			kobject_uevent_env(&pn->dev->kobj, KOBJ_CHANGE, envp);
-+			online_nodes++;
- 			pn->changed_offline = true;
- 		}
- 	}
-+	acpi_enable_eject_stat(device, root_device, online_nodes);
- 	mutex_unlock(&device->physical_node_lock);
- 
- 	return AE_OK;
-@@ -171,6 +285,8 @@ static acpi_status acpi_bus_online_notify(acpi_handle handle, u32 lvl,
- 	if (acpi_bus_get_device(handle, &device))
- 		return AE_OK;
- 
-+	acpi_free_eject_stat(device);
-+
- 	mutex_lock(&device->physical_node_lock);
- 
- 	list_for_each_entry(pn, &device->physical_node_list, node) {
-@@ -197,15 +313,23 @@ static int acpi_scan_notify_offline(struct acpi_device *device)
- {
- 	acpi_handle handle = device->handle;
- 	struct device *errdev = NULL;
-+	struct eject_data_base base_data = {ACPI_EJECT_ROOT_NODE, handle};
- 	acpi_status status;
- 
-+	status = acpi_bus_offline_prepare(handle, 0, (void *)&base_data,
-+					(void **)&errdev);
-+	if (errdev)
-+		goto notify_error;
-+
-+	base_data.type = ACPI_EJECT_CHILD_NODE;
- 	status = acpi_walk_namespace(ACPI_TYPE_ANY, handle, ACPI_UINT32_MAX,
--			NULL, acpi_bus_offline_notify,
--			NULL, (void **)&errdev);
-+			acpi_bus_offline_prepare, acpi_bus_offline_notify,
-+			(void *)&base_data, (void **)&errdev);
- 	if (errdev)
- 		goto notify_error;
- 
--	status = acpi_bus_offline_notify(handle, 0, NULL,
-+	base_data.type = ACPI_EJECT_ROOT_NODE;
-+	status = acpi_bus_offline_notify(handle, 0, (void *)&base_data,
- 				(void **)&errdev);
- 
- 	if (errdev)
-@@ -217,6 +341,10 @@ static int acpi_scan_notify_offline(struct acpi_device *device)
- 	acpi_scan_notify_online(device);
- 
- 	switch (status) {
-+	case AE_NO_MEMORY:
-+		return -ENOMEM;
-+	case AE_NULL_OBJECT:
-+		return -EINVAL;
- 	case AE_SUPPORT:
- 		dev_warn(errdev, "Offline disabled.\n");
- 		return -EPERM;
-@@ -229,6 +357,22 @@ static int acpi_scan_notify_offline(struct acpi_device *device)
- static int acpi_scan_offline_check(struct acpi_device *device)
- {
- 	int ret = 0;
-+	struct eject_data *eject_obj = (struct eject_data *) device->eject_stat;
-+
-+	/* Send recovery events to userland if any failure occur */
-+	if (eject_obj) {
-+		if (eject_obj->base.type != ACPI_EJECT_ROOT_NODE) {
-+			dev_warn(&device->dev, "The node is under ejection.\n");
-+			return -EBUSY;
-+		}
-+
-+		if (eject_obj->status == ACPI_EJECT_STATUS_FAIL) {
-+			dev_warn(&device->dev, "Eject failed. Recover all.\n");
-+			acpi_scan_notify_online(device);
-+			return -EAGAIN;
-+		}
-+	}
-+
- 	/* Send offline request to userland if the container is not offline */
- 	if (!acpi_scan_is_offline(device)) {
- 		ret = acpi_scan_notify_offline(device);
-@@ -2060,6 +2204,8 @@ void acpi_bus_trim(struct acpi_device *adev)
- 	list_for_each_entry_reverse(child, &adev->children, node)
- 		acpi_bus_trim(child);
- 
-+	acpi_free_eject_stat(adev);
-+
- 	adev->flags.match_driver = false;
- 	if (handler) {
- 		if (handler->detach)
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index b4c64528f13c..2a85fbf0c666 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -2570,6 +2570,9 @@ int device_offline(struct device *dev)
- 			if (!ret) {
- 				kobject_uevent(&dev->kobj, KOBJ_OFFLINE);
- 				dev->offline = true;
-+				device_platform_notify(dev, KOBJ_OFFLINE);
-+			} else {
-+				acpi_action_fail_notify(dev, KOBJ_OFFLINE);
- 			}
- 		}
- 	}
-@@ -2599,6 +2602,7 @@ int device_online(struct device *dev)
- 			if (!ret) {
- 				kobject_uevent(&dev->kobj, KOBJ_ONLINE);
- 				dev->offline = false;
-+				device_platform_notify(dev, KOBJ_ONLINE);
- 			}
- 		} else {
- 			ret = 1;
-diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-index 57e4ad0483ca..29004b3fad87 100644
---- a/include/acpi/acpi_bus.h
-+++ b/include/acpi/acpi_bus.h
-@@ -378,6 +378,7 @@ struct acpi_device {
- 	struct list_head physical_node_list;
- 	struct mutex physical_node_lock;
- 	void (*remove)(struct acpi_device *);
-+	void *eject_stat;
- };
- 
- /* Non-device subnode */
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index d315d86844e4..91ba75914ac7 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -1321,12 +1321,18 @@ static inline int find_acpi_cpu_cache_topology(unsigned int cpu, int level)
- 
- #ifdef CONFIG_ACPI
- extern int acpi_platform_notify(struct device *dev, enum kobject_action action);
-+extern void acpi_action_fail_notify(struct device *dev,
-+					enum kobject_action action);
- #else
- static inline int
- acpi_platform_notify(struct device *dev, enum kobject_action action)
- {
- 	return 0;
- }
-+static inline void
-+void acpi_action_fail_notify(struct device *dev, enum kobject_action action)
-+{
-+}
- #endif
- 
- #endif	/*_LINUX_ACPI_H*/
--- 
-2.20.1
-
+> On Thursday 02 January 2020 16:20:33 Namjae Jeon wrote:
+> > This adds the implementation of nls operations for exfat.
+> >
+> > Signed-off-by: Namjae Jeon <namjae.jeon=40samsung.com>
+> > Signed-off-by: Sungjong Seo <sj1557.seo=40samsung.com>
+> > ---
+> >  fs/exfat/nls.c =7C 809
+> > +++++++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 809 insertions(+)
+> >  create mode 100644 fs/exfat/nls.c
+> >
+> > diff --git a/fs/exfat/nls.c b/fs/exfat/nls.c new file mode 100644
+> > index 000000000000..af52328e28ff
+> > --- /dev/null
+> > +++ b/fs/exfat/nls.c
+> > =40=40 -0,0 +1,809 =40=40
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > +/*
+> > + * Copyright (C) 2012-2013 Samsung Electronics Co., Ltd.
+> > + */
+> > +
+> > +=23include <linux/string.h>
+> > +=23include <linux/nls.h>
+> > +=23include <linux/slab.h>
+> > +=23include <linux/buffer_head.h>
+> > +=23include <asm/unaligned.h>
+> > +
+> > +=23include =22exfat_raw.h=22
+> > +=23include =22exfat_fs.h=22
+> > +
+> > +/* Upcase tabel macro */
+> > +=23define EXFAT_NUM_UPCASE	(2918)
+> > +=23define UTBL_COUNT		(0x10000)
+> > +
+> > +/*
+> > + * Upcase table in compressed format (7.2.5.1 Recommended Up-case
+> > +Table
+> > + * in exfat specification, See:
+> > +https://protect2.fireeye.com/url?k=3D25cbd240-78ac9666-25ca590f-0cc47a=
+3
+> > +1384a-776465f5f2917059&u=3Dhttps://docs.microsoft.com/en-us/windows/
+> > + * win32/fileio/exfat-specification).
+>=20
+> Just a small suggestion: Do not wrap URLs as they are hard to copy-paste
+> into web browser. Also my email client is not able to detect URL continue
+> on next line...
+Okay, Will fix it on next version.
+Thanks for review=21
+>=20
+> > + */
+> > +static const unsigned short uni_def_upcase=5BEXFAT_NUM_UPCASE=5D =3D =
+=7B
+> > +	0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
+> > +	0x0008, 0x0009, 0x000a, 0x000b, 0x000c, 0x000d, 0x000e, 0x000f,
+>=20
+> ...
+>=20
+> --
+> Pali Roh=C3=A1r=0D=0A>=20pali.rohar=40gmail.com=0D=0A=0D=0A
