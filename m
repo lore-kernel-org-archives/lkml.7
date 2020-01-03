@@ -2,78 +2,122 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6C1C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1311C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8D0C21734
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9957E21734
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:53:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578070337;
-	bh=GNr6Irv4ZHYaD0lADq4BHgVbO6AWrFxItDdiA1EIOyQ=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=MiYT7jOeNQeF2zQkak5niIo6TwZMwrYI2HWuJDFvr+Vt70AubF0OZ6RIICVAwKGBr
-	 FsO1G/htNJxxv9SmJZtrZWWN8tdq2qXp5upWmYYc8koMhNHe2YT2O0FZKKPeHeyGxF
-	 LnzgBrJqHKSQ+gWmIAWND2guyAR5/mclJyse8fic=
+	s=default; t=1578070394;
+	bh=i+5ekY7CFRIAhiek8caeG/hKzz41yTfC84nLOqre8YQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZEYAsDSz5dHGZr+SzpsoFHdV6HGvqPpkFoIPNTV2c4zxPnfqw8VWi5m4TwPIViVSH
+	 Ms55ETiYD7dEL0qfPn2FUfZOAtCilOAXc6JNO4B8l0Bi9+WSdQe0h/exyVBofgcLZO
+	 SDrTN0hez81RlzuAdJOSJ2gSn5THM+0oROFxcwhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbgACQwQ (ORCPT
+        id S1728112AbgACQxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 11:52:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39852 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727912AbgACQwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 11:52:16 -0500
-Received: from localhost.localdomain (unknown [194.230.155.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2449921734;
-        Fri,  3 Jan 2020 16:52:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578070335;
-        bh=GNr6Irv4ZHYaD0lADq4BHgVbO6AWrFxItDdiA1EIOyQ=;
-        h=From:To:Subject:Date:From;
-        b=hIYXmzwQSe0GJcYL5eJfh7B+W5SoNxd3n78lFtGRppNmkQbh4juqaawFJCNwACN31
-         cqU8MaAIJvTtaEzbAvzIQ6RU+/dc0Z2tid7Fy0xzv5CsXtW5tU8uCD5Q9inVGV2MFc
-         5B5nFs7Ges1vAFv5GQmDBQp8OMxXy2Ohp8MHRZic=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: exynos: Correct the help text for platform Kconfig option
-Date:   Fri,  3 Jan 2020 17:52:08 +0100
-Message-Id: <20200103165208.8287-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 3 Jan 2020 11:53:14 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42238 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728103AbgACQxM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 11:53:12 -0500
+Received: by mail-lf1-f67.google.com with SMTP id y19so32221886lfl.9;
+        Fri, 03 Jan 2020 08:53:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5l8bRIwslteZjFrSKXmUOscElYLV/kyb4b/frJ+TeAQ=;
+        b=oIWPuCMjpBpkaKO6zr2Ejm5o4mrruy9knPNogC8T40qc51b2wKUneNtOWzHXd5Ju6u
+         8deC/yBFrnxG1KZLChQvIo1QbG9q6xPHislwgRzXoqVN1w5bxHgI5QM3zvvCaOIgEFbh
+         jQh+g+5m4msyVgGJmQqbRsBMctL5ho1xnDFFZV3p0vPFoChG/wyz/6eqNeniD3TZfP5q
+         yxD51WWpIXX2wgejjIl6+158BrF1SGhLkKVLQOMMtQvXzVtDfk9GJgZPiHDEV8mbpGEj
+         zn4hJtxIJNq5d065z7wQ7w0WiGn9FyJ5EvvmLCiRRCRrUa6GYCcfsVvYw1j6zkt0tPh2
+         u9FA==
+X-Gm-Message-State: APjAAAVsVYxX7mX1D2r5v2+bo04GqwscaaZevhEoURVEdV4gxFhl+ohj
+        yiKrb9HfNJwwo271u/R+8XsaAtcu
+X-Google-Smtp-Source: APXvYqwECgYe7GGDZW6oaGj+nlFttEJR4gE9B56WNRbDI4QdFrOaQQZSLe5+f+4Xc4bJ1I1xiR7cpQ==
+X-Received: by 2002:a19:4b87:: with SMTP id y129mr53516908lfa.32.1578070390717;
+        Fri, 03 Jan 2020 08:53:10 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id s22sm24854956ljm.41.2020.01.03.08.53.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2020 08:53:10 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1inQCG-0000Qd-6q; Fri, 03 Jan 2020 17:53:12 +0100
+Date:   Fri, 3 Jan 2020 17:53:12 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Sean Young <sean@mess.org>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.4 106/434] media: flexcop-usb: fix NULL-ptr deref in
+ flexcop_usb_transfer_init()
+Message-ID: <20200103165312.GD17614@localhost>
+References: <20191229172702.393141737@linuxfoundation.org>
+ <20191229172708.658173957@linuxfoundation.org>
+ <20200103150242.GC17614@localhost>
+ <20200103161207.GA3082@gofer.mess.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200103161207.GA3082@gofer.mess.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ARCH_EXYNOS option is used for entire ARMv7 Exynos family, including
-also Exynos3 SoCs.
+On Fri, Jan 03, 2020 at 04:12:07PM +0000, Sean Young wrote:
+> On Fri, Jan 03, 2020 at 04:02:42PM +0100, Johan Hovold wrote:
+> > On Sun, Dec 29, 2019 at 06:22:39PM +0100, Greg Kroah-Hartman wrote:
+> > > From: Yang Yingliang <yangyingliang@huawei.com>
+> > > 
+> > > [ Upstream commit 649cd16c438f51d4cd777e71ca1f47f6e0c5e65d ]
+> > > 
+> > > If usb_set_interface() failed, iface->cur_altsetting will
+> > > not be assigned and it will be used in flexcop_usb_transfer_init()
+> > > It may lead a NULL pointer dereference.
+> > > 
+> > > Check usb_set_interface() return value in flexcop_usb_init()
+> > > and return failed to avoid using this NULL pointer.
+> > > 
+> > > Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+> > > Signed-off-by: Sean Young <sean@mess.org>
+> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > 
+> > This commit is bogus and should be dropped from all stable queues.
+> > 
+> > Contrary to what the commit message claims, iface->cur_altsetting will
+> > never be NULL so there's no risk for a NULL-pointer dereference here.
+> 
+> Yes, you are right, I can't find any path through which cur_altsetting
+> will be set to NULL. The commit message is wrong. I am sorry for letting
+> this slip through.
+> 
+> Thank you for pointing this out.
+> 
+> > Even though the change itself is benign, we shouldn't spread this
+> > confusion further.
+> 
+> usb_set_interface() can fail for a number of reasons, and we should not
+> continue if it fails. So, the commit message is misleading but the
+> change itself is still valid.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/mach-exynos/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sure, the change itself is fine, but I wouldn't consider it stable
+material even with a correct commit message as it is not a critical fix.
 
-diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-index 4ef56571145b..9fb045ab80e4 100644
---- a/arch/arm/mach-exynos/Kconfig
-+++ b/arch/arm/mach-exynos/Kconfig
-@@ -41,7 +41,7 @@ menuconfig ARCH_EXYNOS
- 	select POWER_RESET_SYSCON
- 	select POWER_RESET_SYSCON_POWEROFF
- 	help
--	  Support for SAMSUNG EXYNOS SoCs (EXYNOS4/5)
-+	  Support for SAMSUNG EXYNOS SoCs
- 
- if ARCH_EXYNOS
- 
--- 
-2.17.1
+And the user would still see an error message in case changing
+altsetting fails.
 
+Johan
