@@ -2,143 +2,112 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B34E5C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 05:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3D2C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 05:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9382E2253D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 05:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A95012084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 05:56:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="G9//pkzy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbgACFpy (ORCPT
+        id S1727280AbgACF4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 00:45:54 -0500
-Received: from mga14.intel.com ([192.55.52.115]:47443 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725916AbgACFpv (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 00:45:51 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 21:45:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,389,1571727600"; 
-   d="scan'208";a="222072152"
-Received: from kbl.sh.intel.com ([10.239.159.163])
-  by orsmga003.jf.intel.com with ESMTP; 02 Jan 2020 21:45:49 -0800
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH 2/2] perf util: Support color ops to print block percents in color
-Date:   Fri,  3 Jan 2020 06:19:59 +0800
-Message-Id: <20200102221959.20283-2-yao.jin@linux.intel.com>
+        Fri, 3 Jan 2020 00:56:15 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:43330 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbgACF4O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 00:56:14 -0500
+Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 3263720B4798;
+        Thu,  2 Jan 2020 21:56:13 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3263720B4798
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1578030973;
+        bh=G7JsHkOv/dsWoA1W1YI9qCN8w3wlw2Y2hEWkl92HWFk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=G9//pkzygGSmj0quSbkGLoCfjpqtHJ/MRFZBFN/dRgX/UYZIRbF81FbwOsBbIeboq
+         aoRWquwyV8epvI5FuyWKKDevS0LNezkaCXzd3Kr+iKhjGRn2q5r7OgS9Ye5WRWh/JA
+         vGvKpir4nBabn1dqPSn2pngsohnyAwkWSMlqzq4k=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, James.Bottomley@HansenPartnership.com,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Subject: [PATCH v6 2/3] IMA: Call workqueue functions to measure queued keys
+Date:   Thu,  2 Jan 2020 21:56:07 -0800
+Message-Id: <20200103055608.22491-3-nramas@linux.microsoft.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200102221959.20283-1-yao.jin@linux.intel.com>
-References: <20200102221959.20283-1-yao.jin@linux.intel.com>
+In-Reply-To: <20200103055608.22491-1-nramas@linux.microsoft.com>
+References: <20200103055608.22491-1-nramas@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It would be nice to print the block percents with colors.
+Measuring keys requires a custom IMA policy to be loaded.
+Keys should be queued for measurement if a custom IMA policy
+is not yet loaded. Keys queued for measurement, if any, should be
+processed when a custom IMA policy is loaded.
 
-This patch supports the 'Sampled Cycles%' and 'Avg Cycles%'
-printed in colors.
+This patch updates the IMA hook function ima_post_key_create_or_update()
+to queue the key if a custom IMA policy has not yet been loaded.
+And, ima_update_policy() function, which is called when
+a custom IMA policy is loaded, is updated to process queued keys.
 
-For example,
-
-perf record -b ...
-perf report --total-cycles or perf report --total-cycles --stdio
-
-percent > 5%, colored in red
-percent > 0.5%, colored in green
-percent < 0.5%, default color
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 ---
- tools/perf/util/block-info.c | 25 +++++++++++++++----------
- 1 file changed, 15 insertions(+), 10 deletions(-)
+ security/integrity/ima/ima_asymmetric_keys.c | 8 ++++++++
+ security/integrity/ima/ima_policy.c          | 3 +++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
-index 55ccff2e0d5d..6cc6d36a5d26 100644
---- a/tools/perf/util/block-info.c
-+++ b/tools/perf/util/block-info.c
-@@ -186,6 +186,17 @@ static int block_column_width(struct perf_hpp_fmt *fmt,
- 	return block_fmt->width;
- }
- 
-+static int color_pct(struct perf_hpp *hpp, int width, double pct)
-+{
-+#ifdef HAVE_SLANG_SUPPORT
-+	if (use_browser) {
-+		return __hpp__slsmg_color_printf(hpp, "%*.2f%%",
-+						 width - 1, pct);
-+	}
-+#endif
-+	return hpp_color_scnprintf(hpp, "%*.2f%%", width - 1, pct);
-+}
+diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
+index 1d56f003f1a7..eb71cbf224c1 100644
+--- a/security/integrity/ima/ima_asymmetric_keys.c
++++ b/security/integrity/ima/ima_asymmetric_keys.c
+@@ -145,6 +145,8 @@ void ima_post_key_create_or_update(struct key *keyring, struct key *key,
+ 				   const void *payload, size_t payload_len,
+ 				   unsigned long flags, bool create)
+ {
++	bool queued = false;
 +
- static int block_total_cycles_pct_entry(struct perf_hpp_fmt *fmt,
- 					struct perf_hpp *hpp,
- 					struct hist_entry *he)
-@@ -193,14 +204,11 @@ static int block_total_cycles_pct_entry(struct perf_hpp_fmt *fmt,
- 	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
- 	struct block_info *bi = he->block_info;
- 	double ratio = 0.0;
--	char buf[16];
+ 	/* Only asymmetric keys are handled by this hook. */
+ 	if (key->type != &key_type_asymmetric)
+ 		return;
+@@ -152,6 +154,12 @@ void ima_post_key_create_or_update(struct key *keyring, struct key *key,
+ 	if (!payload || (payload_len == 0))
+ 		return;
  
- 	if (block_fmt->total_cycles)
- 		ratio = (double)bi->cycles / (double)block_fmt->total_cycles;
- 
--	sprintf(buf, "%.2f%%", 100.0 * ratio);
--
--	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
-+	return color_pct(hpp, block_fmt->width, 100.0 * ratio);
- }
- 
- static int64_t block_total_cycles_pct_sort(struct perf_hpp_fmt *fmt,
-@@ -253,16 +261,13 @@ static int block_cycles_pct_entry(struct perf_hpp_fmt *fmt,
- 	struct block_info *bi = he->block_info;
- 	double ratio = 0.0;
- 	u64 avg;
--	char buf[16];
- 
- 	if (block_fmt->block_cycles && bi->num_aggr) {
- 		avg = bi->cycles_aggr / bi->num_aggr;
- 		ratio = (double)avg / (double)block_fmt->block_cycles;
++	if (!ima_process_keys)
++		queued = ima_queue_key(keyring, payload, payload_len);
++
++	if (queued)
++		return;
++
+ 	/*
+ 	 * keyring->description points to the name of the keyring
+ 	 * (such as ".builtin_trusted_keys", ".ima", etc.) to
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index a4dde9d575b2..04b9c6c555de 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -807,6 +807,9 @@ void ima_update_policy(void)
+ 		kfree(arch_policy_entry);
  	}
- 
--	sprintf(buf, "%.2f%%", 100.0 * ratio);
--
--	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
-+	return color_pct(hpp, block_fmt->width, 100.0 * ratio);
+ 	ima_update_policy_flag();
++
++	/* Custom IMA policy has been loaded */
++	ima_process_queued_keys();
  }
  
- static int block_avg_cycles_entry(struct perf_hpp_fmt *fmt,
-@@ -349,7 +354,7 @@ static void hpp_register(struct block_fmt *block_fmt, int idx,
- 
- 	switch (idx) {
- 	case PERF_HPP__BLOCK_TOTAL_CYCLES_PCT:
--		fmt->entry = block_total_cycles_pct_entry;
-+		fmt->color = block_total_cycles_pct_entry;
- 		fmt->cmp = block_info__cmp;
- 		fmt->sort = block_total_cycles_pct_sort;
- 		break;
-@@ -357,7 +362,7 @@ static void hpp_register(struct block_fmt *block_fmt, int idx,
- 		fmt->entry = block_cycles_lbr_entry;
- 		break;
- 	case PERF_HPP__BLOCK_CYCLES_PCT:
--		fmt->entry = block_cycles_pct_entry;
-+		fmt->color = block_cycles_pct_entry;
- 		break;
- 	case PERF_HPP__BLOCK_AVG_CYCLES:
- 		fmt->entry = block_avg_cycles_entry;
+ /* Keep the enumeration in sync with the policy_tokens! */
 -- 
 2.17.1
 
