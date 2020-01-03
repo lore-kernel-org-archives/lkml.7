@@ -2,147 +2,136 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66484C00523
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9FFC00523
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2828421835
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:20:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="heJW3iDL"
+	by mail.kernel.org (Postfix) with ESMTP id 6DBF0227BF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:26:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578090410;
+	bh=HiU//N94Vl6wij2RpULeJtTyqG9XDs5TxrzybVZG+ds=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A+cz7oclOOP0O8+HIaiRs6+RREgOigATC+COmmMaVhrdg8Y0ylNopqJyQ+aOdN0ze
+	 fGztjKg6oqPaXMHjhQEcXGuig/Tk661JtZ7a7fAwW/a+4s4HIXc6ld3LnnaRBtBw40
+	 ZV2cDkNyzlwXXpSRtweF8unOm4acIxr7qm2pEJgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728813AbgACWUl (ORCPT
+        id S1728815AbgACW0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 17:20:41 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43172 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728730AbgACWUk (ORCPT
+        Fri, 3 Jan 2020 17:26:49 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:46849 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728711AbgACW0t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 17:20:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578090039;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=XnSUMV4CmdDFxrQqyXNTjbfD9ugmEdfmzjPTQuwTWZw=;
-        b=heJW3iDL24t2kZmfprJcvjdv5YkFcQDEsHt8SW8Jlu+Qwk6FGCfwazVeV5MNuSZ4wLLQ8C
-        qQ3EKua5pVDw0A9gyQm0aZwdx1rcV5vA3Ov2MGEU+O9lIOVG5nS6Yspm662Oi3pwY4MkUD
-        MaJrIwN1QygCpvSVlqVOkm4ph+0JJho=
-Received: from mail-yb1-f198.google.com (mail-yb1-f198.google.com
- [209.85.219.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-32-zJUx0uOvOZ6GWNuxyfqgmA-1; Fri, 03 Jan 2020 17:20:38 -0500
-X-MC-Unique: zJUx0uOvOZ6GWNuxyfqgmA-1
-Received: by mail-yb1-f198.google.com with SMTP id n5so1087178ybk.19
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 14:20:37 -0800 (PST)
+        Fri, 3 Jan 2020 17:26:49 -0500
+Received: by mail-il1-f194.google.com with SMTP id t17so37798530ilm.13
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 14:26:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=XnSUMV4CmdDFxrQqyXNTjbfD9ugmEdfmzjPTQuwTWZw=;
-        b=QdCqGnvuC4jT7PG9LMdHgCoT4AWGZa/cSqoENysp08d4fDkNeXe5R+auV49K4MzM+p
-         aJrOXCl7R1HtP2K9rTs0W4w4x/YpYi+Ifya3ZeTNr6D22B7DUId7Y2Tl8Ly2YF48K2wr
-         xDiMOZiDar0j6ziQ+bGV0VFoXlHi6eyMbXql4ZXf9SYYnSbCqTpVZtpJaY+Ie3tTAiXW
-         RQUgAt20PkDd5pNzzKGsHqnMhE8kOuIuks4KgXjeQZjnJ7E3Enq4spUzlwl4uiBMQj5l
-         MB8nbjOwK59rZ/vd+2ZF/ugu/9wixt2msVyc3QLOCJQs/oe9jg+Rkw1lLNe4oL5WCax7
-         3SXQ==
-X-Gm-Message-State: APjAAAV4vqpmzooV+8pGxfhDxwp8dYwz0BxHxettL/mX1cQC59KH8A71
-        loCjFEMD5dgiaLJ538ejw3MuD2bPmU35/kAN24bnsxreO+BXBSmY0TbhH9HXZr9+Eu+rqLhE6nz
-        /MGAthxhNlQUH8rwpKQT6hawO
-X-Received: by 2002:a81:a210:: with SMTP id w16mr67972712ywg.261.1578090037458;
-        Fri, 03 Jan 2020 14:20:37 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxoGwDBDRXk5ne5/FCFTtRS99NBmRrQ5TNa3jIfrp2nR32DquxsvWG+7uoumbjX2q0D+Hmbug==
-X-Received: by 2002:a81:a210:: with SMTP id w16mr67972701ywg.261.1578090037256;
-        Fri, 03 Jan 2020 14:20:37 -0800 (PST)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id d199sm24596866ywh.83.2020.01.03.14.20.36
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nH8EiEpsw3qEqxTu/vy8rZgCVIsth2Q4jMx+TyJClBo=;
+        b=K76b2eYnd1UgjO4gWlGoEmshz3XC5dSZ4ohlHB/v0NUZlAUa4D7L5uFS44Ky5ZPv3r
+         UWLw8aGwcr9oGwbUubOOoPWFmMpkrm9P5UE7TgpU0amILOF90CfEksVXzacakJ79t3Hx
+         XlRHX2dvyp9BOwiTViip4ihs/vqAIMKbgAJysyfR6m2Kt1NmXLCh50bh8MCST3Sm2UYg
+         VxAPBC/Lake7QCe3Gi84fyPbiarifp6hfTNfLZHo7HxuwyKSDo8OWWB/ihjZmVDTSvMd
+         /BRyXGNKuQCGY3h5fo+0DPam0u0NSrmH6y9crhkSkKMsMe7rqKAkOTnaMBliFqNc3ahV
+         IW/w==
+X-Gm-Message-State: APjAAAVG9HXd8FSkpT8b345OdBty7griS4j5XGT6bDqA6s3y6pJm4RY9
+        X4SS7Lfg1xYLAkBxgXVMNweLFNw=
+X-Google-Smtp-Source: APXvYqyhUz61MDzXhLtQQC3YolJS0HLp3NP5NVmr0Pc9jLR8x8yJvYcy1+P9FnP4H2PNrhu+eqBNWA==
+X-Received: by 2002:a92:4781:: with SMTP id e1mr74704476ilk.147.1578090407908;
+        Fri, 03 Jan 2020 14:26:47 -0800 (PST)
+Received: from rob-hp-laptop ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id 81sm21338761ilx.40.2020.01.03.14.26.46
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 14:20:36 -0800 (PST)
-Date:   Fri, 3 Jan 2020 15:20:35 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Christian Bundy <christianbundy@fraction.io>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable-commits@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Patch "tpm_tis: reserve chip for duration of tpm_tis_core_init"
- has been added to the 5.4-stable tree
-Message-ID: <20200103222035.uznrrc6ndarognva@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Dan Williams <dan.j.williams@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Christian Bundy <christianbundy@fraction.io>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Peter Huewe <peterhuewe@gmx.de>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable-commits@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191228151526.GA6971@linux.intel.com>
- <CAPcyv4i_frm8jZeknniPexp8AAmGsaq0_DHegmL4XZHQi1ThxA@mail.gmail.com>
- <CAPcyv4iyQeXBWvp8V_UPBsOk29cfmTVZGYrrDgyYYqzsQvTjNA@mail.gmail.com>
- <2c4a80e0d30bf1dfe89c6e3469d1dbfb008275fa.camel@linux.intel.com>
- <20191231010256.kymv4shwmx5jcmey@cantor>
- <20191231155944.GA4790@linux.intel.com>
- <be07a1e4-c290-4185-8c23-d97050279564@www.fastmail.com>
- <20200102171922.GA20989@linux.intel.com>
- <CAPcyv4hXwujZ-+8f-5q2UthNOSszeHfNQxxjNVPQjOWeT0KDQg@mail.gmail.com>
- <CAPcyv4gPEu+D+hRqG4HOU24+6xGpZsOb4Po8V+asvvFU-hk6ng@mail.gmail.com>
+        Fri, 03 Jan 2020 14:26:46 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 2219a5
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Fri, 03 Jan 2020 15:26:45 -0700
+Date:   Fri, 3 Jan 2020 15:26:45 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
+Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [RESEND PATCH v6 01/17] dt-bindings: mediatek: add
+ rdma_fifo_size description for mt8183 display
+Message-ID: <20200103222645.GA24430@bogus>
+References: <1578021148-32413-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1578021148-32413-2-git-send-email-yongqiang.niu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4gPEu+D+hRqG4HOU24+6xGpZsOb4Po8V+asvvFU-hk6ng@mail.gmail.com>
+In-Reply-To: <1578021148-32413-2-git-send-email-yongqiang.niu@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu Jan 02 20, Dan Williams wrote:
->On Thu, Jan 2, 2020 at 11:20 AM Dan Williams <dan.j.williams@intel.com> wrote:
->>
->> On Thu, Jan 2, 2020 at 9:21 AM Jarkko Sakkinen
->> <jarkko.sakkinen@linux.intel.com> wrote:
->> >
->> > On Tue, Dec 31, 2019 at 11:47:37AM -0800, Christian Bundy wrote:
->> > > > Christian, were you having any issues with interrupts? You system was going
->> > > > into this code as well.
->> > >
->> > > Unfortunately I'm now unable to test, sorry for the trouble. I replaced my BIOS
->> > > with UEFI firmware and the problem has disappeared. Please let me know if there
->> > > is anything else I can do to help.
->> > >
->> > > Christian
->> >
->> > Takashi wrote yesterday [*]:
->> >
->> > "I'm building a test kernel package based on 5.5-rc4 with Jarkko's revert
->> > patches"
->>
->> Nice, I also built one of those. Just waiting for access to the system
->> again to gather results.
->
->Ok, it looks good.
->
->Tested-by: Dan Williams <dan.j.williams@intel.com>
->Tested-by: Xiaoping Zhou <xiaoping.zhou@intel.com>
->
->It does report:
->
->[    2.546660] tpm_tis IFX0740:00: 2.0 TPM (device-id 0x1B, rev-id 16)
->[    2.546823] tpm tpm0: tpm_try_transmit: send(): error -5
+On Fri, Jan 03, 2020 at 11:12:12AM +0800, Yongqiang Niu wrote:
+> Update device tree binding documention for rdma_fifo_size
 
-That is the tpm2_get_tpm_pt call for testing the interrupts failing,
-and is expected with the reverts.
+Typo. And write complete sentences.
 
->[    2.546824] tpm tpm0: [Firmware Bug]: TPM interrupt not working,
->polling instead
->
->...at boot, but tpm2_nvlist works ok.
->
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  .../devicetree/bindings/display/mediatek/mediatek,disp.txt  | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> index 681502e..34bef44 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> @@ -70,6 +70,10 @@ Required properties (DMA function blocks):
+>    argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+>    for details.
+>  
+> +Required properties (DMA function blocks):
+> +- mediatek,rdma_fifo_size: rdma fifo size may be different even in same SOC, add this
+> +  property to the corresponding rdma
 
+s/_/-/
+
+Valid values? Max value?
+
+> +
+>  Examples:
+>  
+>  mmsys: clock-controller@14000000 {
+> @@ -211,3 +215,12 @@ od@14023000 {
+>  	power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+>  	clocks = <&mmsys CLK_MM_DISP_OD>;
+>  };
+> +
+> +rdma1: rdma@1400c000 {
+> +	compatible = "mediatek,mt8183-disp-rdma";
+> +	reg = <0 0x1400c000 0 0x1000>;
+> +	interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
+> +	power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+> +	clocks = <&mmsys CLK_MM_DISP_RDMA1>;
+> +	mediatek,rdma_fifo_size = <2048>;
+> +};
+
+A new property doesn't really warrant a whole new example.
+
+> \ No newline at end of file
+
+^^^
+
+> -- 
+> 1.8.1.1.dirty
