@@ -2,140 +2,111 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 998ABC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC7CC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66A0A215A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:29:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="otHt/I+p"
+	by mail.kernel.org (Postfix) with ESMTP id E13A0215A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 19:30:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578079815;
+	bh=wiLakP/FPmTkrU6E4UixqLxtXOH/FVOZJ+CziMsFK7o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=C5QPnpbZPsnY+J0bU47U8D+tegjpK81N5yp8p0SIRrkDrl1xf99qEFfqaEr4zL3o5
+	 wvFCJiyazYFUR0tvDqorLsr67TYKiO7lfOM85ztUsq/8xLKVmecHQf0gszZ6vhEiDy
+	 vs3e4sykFj4snh9O5Pka2QzGFS5eCqzxzOBxt/oQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728542AbgACT3I (ORCPT
+        id S1728561AbgACTaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 14:29:08 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:35051 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728503AbgACT3I (ORCPT
+        Fri, 3 Jan 2020 14:30:14 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40215 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728485AbgACTaN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 14:29:08 -0500
-Received: by mail-pj1-f68.google.com with SMTP id s7so5088275pjc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 11:29:08 -0800 (PST)
+        Fri, 3 Jan 2020 14:30:13 -0500
+Received: by mail-lj1-f196.google.com with SMTP id u1so44838738ljk.7
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 11:30:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=xiCyHmcnUXsbcQ7aHolyREhLRtQlcm0tNcQpv0xj54g=;
-        b=otHt/I+pw8YEKdneORJaQbqVOMxTvFzuxsTLLo7ZOfnkm7+sA/s/x+b5ZiwnwdyNsM
-         mfRl/YbfDdxHzR2Rfe0dAizN3JrCsQ76Os4SjYyo9S1ECVmqUOML8K8S/YBi5lHfUumH
-         I5sRO4W4LYYWzpp+g2tfXYM8x+1i2fRx+TVLGkGcDO7rAoq4BzN5giqoCdnq10C+hw+o
-         NVmD4trJFm7qSbm58YTvtBPmdSOVfFH9OlPvaUYGTkLBuR4W1QJa14C5GlU267SLGDIk
-         nJvj1z52hjwCB/qZkkakQbkJqE7ovBP/lPjUGrjm7HuF9J8UTNwBPO9jMGL9+KBvpBx7
-         97Og==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OFXcXk/rWc+vZDd2lXOSRdfqK7Rx+9AcujMvsOnCZcQ=;
+        b=H1MIzm6Oi4jSBscmLV49r9Nd5HT6nc6bvrco9VvwbKlzMSopWLEIAGe6hSQb7cvv9P
+         cip/Cxk8S5U7lhfpRoBFf8HeyyrOu6N9/Nrl1mnD3DgILx8h5/RFBbeGmAVeWDKR8rbY
+         hm/i7+uHQDHv5J8iclqo1WiLmqKxGLcnr6544=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=xiCyHmcnUXsbcQ7aHolyREhLRtQlcm0tNcQpv0xj54g=;
-        b=MWNzux7wlrk18UBmFnJmL8f0J+AuS27G9rux8MeHKu4omoQ6IOct7Z8AsNUtBjHevk
-         /9aJvD4wz+36mevgE6GFzWgAm+J9Nor1+eM84ZbQAwFj2vj1zxWitplyb7KLn+mE3uGa
-         9L6DpewpTXdzcQNTX8LrUxTnx40MMZvnw97s4SBGTl0BI44jU9jNu1wSe9SBRVa/h7Wu
-         3KttIU6VIQoES+ib2vXujRMJoiPaQUh+k7Wpma3pRnMpB1lTEk+dZp4NZCeKw37hZdrv
-         vpa4ioWFc7s8/+/F4twpnSCi9Ey5JFfM9ra0k1zlmoSUzsr6TKiCQ40QHBRPzA6f2omW
-         h1tQ==
-X-Gm-Message-State: APjAAAWRm4iMujlFvS0T6Dp6+ykarr6xm68SmcJQRMho2RB9vwUgh5PS
-        dXIlX2R7AE2upoUhre/4HA/Olg==
-X-Google-Smtp-Source: APXvYqwNpsVSpllqMOsBw0KVEfj6ixi9vpK94YoxKUCK8BvVN+K2rt+0zmH9iLuSgofxUQodtrJbFA==
-X-Received: by 2002:a17:902:9a42:: with SMTP id x2mr15707448plv.194.1578079747357;
-        Fri, 03 Jan 2020 11:29:07 -0800 (PST)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id u23sm68353574pfm.29.2020.01.03.11.29.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 11:29:06 -0800 (PST)
-Date:   Fri, 3 Jan 2020 11:29:06 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Wei Yang <richardw.yang@linux.intel.com>
-cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, yang.shi@linux.alibaba.com
-Subject: Re: [RFC PATCH] mm: thp: grab the lock before manipulation defer
- list
-In-Reply-To: <20200103143407.1089-1-richardw.yang@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.2001031128200.160920@chino.kir.corp.google.com>
-References: <20200103143407.1089-1-richardw.yang@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OFXcXk/rWc+vZDd2lXOSRdfqK7Rx+9AcujMvsOnCZcQ=;
+        b=FcSAb+3/TZb5uG/95GbHp+zmmGDwIIHf3l+UWiS9Q/i7IZ4skxAkn86WuF6Qt4j7Dc
+         3eAA4QXecAD2VZcpP1vIMAIjGgjb8O7fHib5Oq/YvX+WYKuwm4cFOwmy8ootbs4A/rLo
+         kwo1xaM+1hQ/WWiHaZIaE9yn7l5SEu3bMmI7WEAhI49BYu6+I77uRGgHaQGWsKXROLvW
+         dR6PIe8xImQYh7+yn129mDrw2+PHqgJ1Ujta/gJ4C0bIJX90ky3v886ET5MYix8tPL6m
+         wmsfG1TNC01M5V9qSj4HEUHiAcWESP2nw3Wl8w2u3CRNKi6wuVuYIRHJlJFNp3u0o8yS
+         l4jA==
+X-Gm-Message-State: APjAAAVDx9S33LwKZD1NEnkD+YeWmgQmfnnw4WAkxCjP0O2pf6ObnbiL
+        y1IwfucAyjMcsgfVJpLPoy5Qp8ZzmI0=
+X-Google-Smtp-Source: APXvYqyg8neA4gtgmFzZRSeorIE1zUzwIWYNPKZHSjMdYKx3xGKF+83ElSmmRZjQJ3yIfEGgGZLYBg==
+X-Received: by 2002:a2e:95c4:: with SMTP id y4mr53054806ljh.38.1578079811164;
+        Fri, 03 Jan 2020 11:30:11 -0800 (PST)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id b19sm20426433ljk.25.2020.01.03.11.30.10
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jan 2020 11:30:10 -0800 (PST)
+Received: by mail-lf1-f48.google.com with SMTP id i23so32532852lfo.7
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 11:30:10 -0800 (PST)
+X-Received: by 2002:ac2:465e:: with SMTP id s30mr51941142lfo.134.1578079440587;
+ Fri, 03 Jan 2020 11:24:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20200102215829.911231638@linuxfoundation.org> <CA+G9fYuPkOGKbeQ0FKKx4H0Bs-nRHALsFtwyRw0Rt5DoOCvRHg@mail.gmail.com>
+ <CAK8P3a1+Srey_7cUd0xfaO8HdMv5tkUcs6DeDXzcUKkUD-DnGQ@mail.gmail.com>
+ <CAK8P3a24EkUXTu-K2c-5B3w-LZwY7zNcX0dZixb3gd59vRw_Kw@mail.gmail.com>
+ <20200103154518.GB1064304@kroah.com> <CAK8P3a00SpVfSE5oL8_F_8jHdg_8A5fyEKH_DWNyPToxack=zA@mail.gmail.com>
+ <a2fc8b36-c512-b6dd-7349-dfb551e348b6@oracle.com> <8283b231-f6e8-876f-7094-d3265096ab9a@oracle.com>
+ <CAHk-=wjvWTFn=C3mT5wA=mtOwXw44U+OHLVxk5DCe4v+7nOvKg@mail.gmail.com> <c5c3b8c8-1dfe-2433-630c-06dbfb3d318b@mageia.org>
+In-Reply-To: <c5c3b8c8-1dfe-2433-630c-06dbfb3d318b@mageia.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 3 Jan 2020 11:23:44 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgV_YN9az2XBX=xr_DGQiUEqwjtMXkmj-w12j58NQxneQ@mail.gmail.com>
+Message-ID: <CAHk-=wgV_YN9az2XBX=xr_DGQiUEqwjtMXkmj-w12j58NQxneQ@mail.gmail.com>
+Subject: Re: [PATCH 5.4 000/191] 5.4.8-stable review
+To:     Thomas Backlund <tmb@mageia.org>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Chengguang Xu <cgxu519@mykernel.net>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>, LTP List <ltp@lists.linux.it>,
+        Jan Stancek <jstancek@redhat.com>,
+        John Stultz <john.stultz@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Jan 2020, Wei Yang wrote:
+On Fri, Jan 3, 2020 at 11:11 AM Thomas Backlund <tmb@mageia.org> wrote:
+>
+> Does not seem to exist in public git yet, maybe you forgot to push ?
 
-> As all the other places, we grab the lock before manipulate the defer list.
-> Current implementation may face a race condition.
-> 
-> Fixes: 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg aware")
-> 
-> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-> 
-> ---
-> I notice the difference during code reading and just confused about the
-> difference. No specific test is done since limited knowledge about cgroup.
-> 
-> Maybe I miss something important?
+Not "forgot", but I've pulled a couple of other things, and done my
+usual build tests etc. I tend batch up the pulls and pushes a bit,
+sorry for not making that clear.
 
-The check for !list_empty(page_deferred_list(page)) must certainly be 
-serialized with doing list_del_init(page_deferred_list(page)).
+But I've pushed it all out now.
 
-> ---
->  mm/memcontrol.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index bc01423277c5..62b7ec34ef1a 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -5368,12 +5368,12 @@ static int mem_cgroup_move_account(struct page *page,
->  	}
->  
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> +	spin_lock(&from->deferred_split_queue.split_queue_lock);
->  	if (compound && !list_empty(page_deferred_list(page))) {
-> -		spin_lock(&from->deferred_split_queue.split_queue_lock);
->  		list_del_init(page_deferred_list(page));
->  		from->deferred_split_queue.split_queue_len--;
-> -		spin_unlock(&from->deferred_split_queue.split_queue_lock);
->  	}
-> +	spin_unlock(&from->deferred_split_queue.split_queue_lock);
->  #endif
->  	/*
->  	 * It is safe to change page->mem_cgroup here because the page
-> @@ -5385,13 +5385,13 @@ static int mem_cgroup_move_account(struct page *page,
->  	page->mem_cgroup = to;
->  
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> +	spin_lock(&to->deferred_split_queue.split_queue_lock);
->  	if (compound && list_empty(page_deferred_list(page))) {
-> -		spin_lock(&to->deferred_split_queue.split_queue_lock);
->  		list_add_tail(page_deferred_list(page),
->  			      &to->deferred_split_queue.split_queue);
->  		to->deferred_split_queue.split_queue_len++;
-> -		spin_unlock(&to->deferred_split_queue.split_queue_lock);
->  	}
-> +	spin_unlock(&to->deferred_split_queue.split_queue_lock);
->  #endif
->  
->  	spin_unlock_irqrestore(&from->move_lock, flags);
-> -- 
-> 2.17.1
-> 
-> 
-> 
+           Linus
