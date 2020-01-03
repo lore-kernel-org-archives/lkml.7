@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E582C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C76C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C6EB2253D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9551E222C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:23:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pTps/yq5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVFHRSw8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgACSW6 (ORCPT
+        id S1728324AbgACSX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 13:22:58 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41257 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728251AbgACSW6 (ORCPT
+        Fri, 3 Jan 2020 13:23:29 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46567 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728186AbgACSX3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 13:22:58 -0500
-Received: by mail-pg1-f194.google.com with SMTP id x8so23758782pgk.8;
-        Fri, 03 Jan 2020 10:22:57 -0800 (PST)
+        Fri, 3 Jan 2020 13:23:29 -0500
+Received: by mail-pf1-f195.google.com with SMTP id n9so15998202pff.13;
+        Fri, 03 Jan 2020 10:23:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AX9MOoSBKU1FZCOU/Wkg5XOGCRgyYV/7nvE+KX7tI+g=;
-        b=pTps/yq58rE38D9X18/0BMuFCx6WQGrrwU28+0AslsqAPwDTSRH+Xm9wXRoqNQbSUY
-         l46959qkQK3xYsfrmbqzfgSO2LLWylBaEcZ1+4hX60DAhNqxaktGQ2Ke1pOuX9L0mgtq
-         eRAdY1zNg9xrCHj5wOACVgmSfOP6ZYI5pdxiDMXS+zCclPkUIt2XRg5nVb0UZT0ik0jh
-         0DaYtlVckwJDvw7xKMhv6jlCnJ+H8tKa98FO5Yvi4CIVI3IBSfajDXBCycNepC9k2HDd
-         Ooq+MvNvelrl9hU7eRP7D1kBILFHnVhKDe1xMJ6osy2GT5n7/r6+hasNqF2eKG8H0IF4
-         pvtQ==
+        bh=cP4O5HQxWBWdNHWUBu7fjBgX89WEj3h8sDc3dazrh6U=;
+        b=nVFHRSw8rqYv6sX4aY/506NYHDPHwqwXZvGZQym2cI6u02JgpgFiwWjnz+1OT9WFdL
+         ESUtc/XxldpQq9XOA9WX/NQuJfnZg7rKvEpG4B3UAzOCiaeUEl9EFi4tWR+QtMfKftxs
+         fhHJrDwqtQuXc6XFPRnd2muXFLeaCiFkj2Qgl/UObZ6mpqhB+bJO2u+xw6i7OTBfE2Ht
+         T0Kroi9TKS+E0r4u2yReKhDvpcBmUzrfitcDtHYepCvxrREaVcEvsbV+0EqhJvc+3hvI
+         FhRENoWK0cauYirBlP5zRXbTdlnXLYE4ibhGg3Ye4fev25HY635uYs9Whoa/ebpV1Pg1
+         5D6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=AX9MOoSBKU1FZCOU/Wkg5XOGCRgyYV/7nvE+KX7tI+g=;
-        b=Vlssv6TOQsZKAJx+SFwzcDP4Wb62lK+I3gh3HphnZQkYnrK77yvvT1JhUNdVKsXHyH
-         x9Iol3YCzEKiMipr8hWvP0VOJc7AB6ucLp91KYNfK+Mw++0K3SUV0FWRN7o9GnsI9LiL
-         kCA9ytV7cCYOSV9lB6xeEmGqnE2u9+9Y5weQNzjk38cxYjKuf5xeHNHElPPM1I5umj92
-         aUWiF94INWUngSXKwZOfLPcUxufXmEMYib9Peirec+VMxb/BSgbzJ1ClMFVlzJsTqYM+
-         8jlPwXUmIwHkPf58F2L7aiiAVIxxpEUp2q6RlLoaPNL6G/T/E75B3PdzaYNEtViOln0K
-         c89A==
-X-Gm-Message-State: APjAAAXKWB7++RyoMzjGOoCq+fSicNbz4n8EwnvcNTcB+LRqH2ELIKdg
-        6EJlXmw4stlwQXhSs6t2WUI=
-X-Google-Smtp-Source: APXvYqyeWmJG78UlP9AXvquy8RJszg0pm0RdMw/lX07cfMd7ZPCoE1CDJdWTkFPbwv1S+mLdqtTJSA==
-X-Received: by 2002:a63:d017:: with SMTP id z23mr97782942pgf.110.1578075776979;
-        Fri, 03 Jan 2020 10:22:56 -0800 (PST)
+        bh=cP4O5HQxWBWdNHWUBu7fjBgX89WEj3h8sDc3dazrh6U=;
+        b=aGxD9UAdajmCSSkeKXCnpjUuj+CfF6keRLqZHd97cW6WN7e3XhYbF+05uwvfj5Pyug
+         KC+5ILKMBQy2e5wumwJBb4ckKlZkWkBfIcbtuqHlHdZ3lWBlpyUR1kU390jQgrhkp84X
+         +HL0swgJNgmNgzwO3DpYC8e3ccriXCEJOso/n1v+U1k3upcF0uvEzVpfjUESgigun96a
+         j6LNDo1ppbVCja9NFDtVC+4Nhd3t+QoOknOcyJA68dK79O2xu41lOAmyMpO4+7kuVmFj
+         VgMOzEYFgpme7ZHRIXbH51L+aU8sBrf4Wue/Qqfan7NyokXazOvZEEUekdPysOjJdtey
+         AWug==
+X-Gm-Message-State: APjAAAUdJBzRbrdPs3e3ouNX8AMjCkYT/ydRDBpne0VmQZByhn441wZ8
+        b9klOquu3cx+LxKUQL4AzPQ=
+X-Google-Smtp-Source: APXvYqxN4UbSLP8zK9l/mCrwMMQKbN6VMrU895v9J1l+ZKogL4G5P6f8GiwgrhZEzwN7j5dzjLHDFQ==
+X-Received: by 2002:a63:554c:: with SMTP id f12mr99728330pgm.23.1578075808313;
+        Fri, 03 Jan 2020 10:23:28 -0800 (PST)
 Received: from [10.67.50.49] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id v8sm66838489pff.151.2020.01.03.10.22.55
+        by smtp.googlemail.com with ESMTPSA id o19sm16199737pjr.2.2020.01.03.10.23.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jan 2020 10:22:56 -0800 (PST)
-Subject: Re: [PATCH v4 01/13] phy: usb: EHCI DMA may lose a burst of DMA data
- for 7255xA0 family
+        Fri, 03 Jan 2020 10:23:27 -0800 (PST)
+Subject: Re: [PATCH v4 02/13] phy: usb: Get all drivers that use USB clks
+ using correct enable/disable
 To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
 Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -73,7 +73,7 @@ Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>
 References: <20200103181811.22939-1-alcooperx@gmail.com>
- <20200103181811.22939-2-alcooperx@gmail.com>
+ <20200103181811.22939-3-alcooperx@gmail.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -129,12 +129,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <7f52c9eb-7cd6-db19-f67e-1d8e95621c4c@gmail.com>
-Date:   Fri, 3 Jan 2020 10:22:54 -0800
+Message-ID: <4b6475e7-e6c5-4c22-935c-a8ee6e04a732@gmail.com>
+Date:   Fri, 3 Jan 2020 10:23:26 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200103181811.22939-2-alcooperx@gmail.com>
+In-Reply-To: <20200103181811.22939-3-alcooperx@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -143,18 +143,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/3/20 10:17 AM, Al Cooper wrote:
-> When the EHCI controller received a 512 byte USB packet that
-> had to be broken into 2 256 byte bursts across the SCB bus AND
-> there was a following 512 byte USB packet, the second burst of
-> data from the first packet was sometimes being lost. If the
-> burst size was changed to 128 bytes via the EBR_SCB_SIZE field
-> in the USB_CTRL_EBRIDGE register we'd see the 4th 128 byte burst
-> of the first packet being lost. This problem became much worse
-> if other threads were running that accessed memory, like a memcpy
-> test. Setting the EBR_SCB_SIZE to 512, which prevents breaking
-> the EHCI USB packet (max size of 512 bytes) into bursts, fixed
-> the problem.
+On 1/3/20 10:18 AM, Al Cooper wrote:
+> The BRCM USB Phy, ohci, ehci and xhci drivers all use the USB clocks
+> but not all drivers use the clk_prepare_enable/clk_disable_unprepare
+> versions to enable/disable the clocks. This change gets all drivers
+> using the prepare version.
 > 
 > Signed-off-by: Al Cooper <alcooperx@gmail.com>
 
