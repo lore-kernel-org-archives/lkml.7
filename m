@@ -2,92 +2,123 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C409C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4AAC32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1E222522
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 618262085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:19:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="uUTSYWl8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U3aWBB0e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728313AbgACSSe (ORCPT
+        id S1728321AbgACSTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 13:18:34 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33144 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728186AbgACSSe (ORCPT
+        Fri, 3 Jan 2020 13:19:23 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39552 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728186AbgACSTX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 13:18:34 -0500
-Received: by mail-oi1-f195.google.com with SMTP id v140so14771605oie.0
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 10:18:33 -0800 (PST)
+        Fri, 3 Jan 2020 13:19:23 -0500
+Received: by mail-pf1-f195.google.com with SMTP id q10so23861636pfs.6;
+        Fri, 03 Jan 2020 10:19:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8jfW1W8ZPOpcKWgvKCt6rdwp9cvHKeFm7M8ZtVMfoqE=;
-        b=uUTSYWl8nz82vjdvvs/xw9mCFGyNA1/jWIoEbWuoMKlH3HcUmcrmAqAMT/hIMBHdeM
-         Fuby+QAs66gLq4zerv1qQgWzxoVD8/r0SSdFiVPRB1KIlrgk+Ia/w09w2yIVb5UjPUKe
-         aPbAUa8sDKqS+Z4oOye+qJxT2xWQdMreVtrK0E0UvXvfqOeelWZW8PJqgrqw9dRkK6uk
-         n02sLzh2qbjLYtP6eE1hXlSk3R0Qtd222mErsWQ1QRt3DyYfq3l8wWs0f8OFXi4RxUqR
-         Miqm3MNSWzoZ2hZI/iAGOnFy0qTR/HSd977eHvvgAqYPyJXhnZLiJOZszpwfj8/ebisx
-         Q1SA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=/bkVpKLcARihH63b9lhuj6u+KHSXhqLrTec8GSi2HiQ=;
+        b=U3aWBB0eAPUe5/1UmDixtix7tccIYAwaS17+7kxEE/IPIq1dTHL4znhs+SfRfybZ+3
+         GV3s0wALIainuvKZqN6MlT0jug76jR1lo/R4e++MEmgSTJ7qhU3VcsDC3rsB7myoGjjb
+         kWiBDQxKsYtAQGHqscCgLdcTdbGv1GSrAELRwmzyj47s9WdqcL6qOZrEcweQL/k9SCiV
+         7Lrj/y/qIqJa4XIUx+7JpEnUOXK4Hx+Pwc0qbsktlPvrETHhpFmyROOE+6juFjchrJ98
+         07kWC6B/RR0Eu4BCizRJ+ET24shStGA4Jj2yMSJ0y5nL1jUyeaI5e5FJ21AVm0+wI1h6
+         ZRLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8jfW1W8ZPOpcKWgvKCt6rdwp9cvHKeFm7M8ZtVMfoqE=;
-        b=my+qkLc8NisyXLNdtfVVSgdyJ/cuEGUK5/qrBB6D5RvIHNaHVp9I57scgcxcHyJDof
-         PQmIrWrIpmMQDSKyrbymKWLJzJum+iATIYHhZKrywBfqDqbQI9Hi8kgadk8ln6ZoCBzj
-         cx/VAA516YV7uIUoNtFfMzGGk1kJxRriRwF4ofX9L87fyJFi0DJW7GTf9ieC1xqMSeGW
-         xQKHgfb86elrBzZ4OO0+YMSb0LsCR+m+MhiLdBF8pR4an7oG8mS/j+PZfxRDJxWQvElc
-         X11o/fWXgp8vo9T7Vt9eTDMhqML9/VvptDH1APrEdFpgtnjyKW6VKr8Ze3jVS9e/RB5G
-         QaJg==
-X-Gm-Message-State: APjAAAXU1+OH5bNqQ7ZGDXIDxmCwl+kkra8RqR/XAEzy8R/odIDtYa0P
-        CAzoD7nUZtkJf1HujDXBSLe6yuFZM7fBqDQ1o8BPpQ==
-X-Google-Smtp-Source: APXvYqy2IVKMiHQ+wQTZ+ASoUXECP3V0RjbOEIgTCxr3TvAGQIi/fJSFNpOGIKISyhHaPla/bwRt9Ai9ZKS192hUFSE=
-X-Received: by 2002:a05:6808:b37:: with SMTP id t23mr4590187oij.149.1578075513071;
- Fri, 03 Jan 2020 10:18:33 -0800 (PST)
-MIME-Version: 1.0
-References: <20190821175720.25901-1-vgoyal@redhat.com> <20190821175720.25901-3-vgoyal@redhat.com>
- <20190826115316.GB21051@infradead.org> <20190826203326.GB13860@redhat.com>
- <20190826205829.GC13860@redhat.com> <20200103141235.GA13350@redhat.com> <CAPcyv4hr-KXUAT_tVy-GuTOq1GvVGHKsHwAPih60wcW3DGmqRg@mail.gmail.com>
-In-Reply-To: <CAPcyv4hr-KXUAT_tVy-GuTOq1GvVGHKsHwAPih60wcW3DGmqRg@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 3 Jan 2020 10:18:22 -0800
-Message-ID: <CAPcyv4jM8s8T5ifv0c2eyqaBu3f2bd_j+fQHmJttZAajZ-we=g@mail.gmail.com>
-Subject: Re: [PATCH 02/19] dax: Pass dax_dev to dax_writeback_mapping_range()
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>, virtio-fs@redhat.com,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/bkVpKLcARihH63b9lhuj6u+KHSXhqLrTec8GSi2HiQ=;
+        b=KobQPiM0EIWfpVQaaunf99tfjTiGHYXASieCxgqEXX00+qWBZKHEsaS64/ADpTtiSs
+         yi8ok/jcirkwsEJF8u8X2Uj+XrvH55Ly6N3sB7iLja8EoOqmcszpmfVp0QCmrtCUc2Bs
+         LXzTbiUjlDIie1NQtsPK0wKtmm+NtLEki9vsya5Kwv3MGeS3PSo4vWML48sCgsmbVcTi
+         RCgkTlMVB+zZd34RHw3Ca4Jg/oeKrSfkK/yBj5uQ2h1MfKcUDvq9KYmbTHvnrwhmh/R6
+         FvnuoX8XanfUw1+eUdzddTONJ1UWdFWiQytv3cxGXHBr38xg8zpm+43fsh5NNWUg5Xci
+         6oWw==
+X-Gm-Message-State: APjAAAUL285XhJTUuUxiUldv+70jQU4NdBzxAMbbS+NW/xgTVVJJSbtB
+        cXuhRF6B/4CQeK0EvpdB8SP/1/HQ2sE=
+X-Google-Smtp-Source: APXvYqwAf9b3wmXwzbSi1jvr+9Q5jQiDl+xXarqGzrWNzpwlxn5PP+a7oVWcFRe1BR53uq/8uLsjJw==
+X-Received: by 2002:aa7:9829:: with SMTP id q9mr88211919pfl.231.1578075562347;
+        Fri, 03 Jan 2020 10:19:22 -0800 (PST)
+Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id j8sm41783602pfe.182.2020.01.03.10.19.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2020 10:19:21 -0800 (PST)
+From:   Al Cooper <alcooperx@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Al Cooper <alcooperx@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
+        ARCHITECTURE), Srinath Mannam <srinath.mannam@broadcom.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE)
+Subject: [PATCH v4 00/13] phy: usb: Updates to Broadcom STB USB PHY driver
+Date:   Fri,  3 Jan 2020 13:17:58 -0500
+Message-Id: <20200103181811.22939-1-alcooperx@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 3, 2020 at 10:12 AM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Fri, Jan 3, 2020 at 6:12 AM Vivek Goyal <vgoyal@redhat.com> wrote:
-[..]
-> > Hi Dan,
-> >
-> > Ping for this patch. I see christoph and Jan acked it. Can we take it. Not
-> > sure how to get ack from ext4 developers.
->
-> Jan counts for ext4, I just missed this. Now merged.
+This patchset contains various updates to the Broadcom STB USB Driver.
+The updates include:
+- Add support for 7216 and 7211 Broadcom SoCs which use the new
+  Synopsys USB Controller.
+- Add support for USB Wake
+- Add various bug fixes.
 
-Oh, this now collides with:
 
-   30fa529e3b2e xfs: add a xfs_inode_buftarg helper
+v4 - Fix mispelling, change Synopsis to Synopsys. Also add
+     "Reviewed-by: Rob Herring" to bindings patch. There are no
+     functional code changes in v4.
 
-Care to rebase? I'll also circle back to your question about
-partitions on patch1.
+v3 - Rebase to v5.5-rc1
+
+v2 - Changes based on review feedback
+   - Add vendor prefix to DT property "syscon-piarbctl"
+   - Use standard "wakeup" instead of "wake" for DT "interrupt-names"
+
+Al Cooper (13):
+  phy: usb: EHCI DMA may lose a burst of DMA data for 7255xA0 family
+  phy: usb: Get all drivers that use USB clks using correct
+    enable/disable
+  phy: usb: Put USB phys into IDDQ on suspend to save power in S2 mode
+  phy: usb: Add "wake on" functionality
+  phy: usb: Restructure in preparation for adding 7216 USB support
+  dt-bindings: Add Broadcom STB USB PHY binding document
+  phy: usb: Add support for new Synopsys USB controller on the 7216
+  phy: usb: Add support for new Synopsys USB controller on the 7211b0
+  phy: usb: fix driver to defer on clk_get defer
+  phy: usb: PHY's MDIO registers not accessible without device installed
+  phy: usb: bdc: Fix occasional failure with BDC on 7211
+  phy: usb: USB driver is crashing during S3 resume on 7216
+  phy: usb: Add support for wake and USB low power mode for 7211 S2/S5
+
+ .../bindings/phy/brcm,brcmstb-usb-phy.txt     |  69 ++-
+ drivers/phy/broadcom/Makefile                 |   2 +-
+ .../phy/broadcom/phy-brcm-usb-init-synopsys.c | 414 ++++++++++++++++++
+ drivers/phy/broadcom/phy-brcm-usb-init.c      | 226 +++++-----
+ drivers/phy/broadcom/phy-brcm-usb-init.h      | 148 ++++++-
+ drivers/phy/broadcom/phy-brcm-usb.c           | 269 ++++++++++--
+ 6 files changed, 943 insertions(+), 185 deletions(-)
+ create mode 100644 drivers/phy/broadcom/phy-brcm-usb-init-synopsys.c
+
+-- 
+2.17.1
+
