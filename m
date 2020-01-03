@@ -2,113 +2,98 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF53DC32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86170C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D053D222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B95321734
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 16:22:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="D/uyn74N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgACQMK (ORCPT
+        id S1727972AbgACQWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 11:12:10 -0500
-Received: from gofer.mess.org ([88.97.38.141]:37751 "EHLO gofer.mess.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727733AbgACQMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 11:12:09 -0500
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id 2EA1411A001; Fri,  3 Jan 2020 16:12:07 +0000 (GMT)
-Date:   Fri, 3 Jan 2020 16:12:07 +0000
-From:   Sean Young <sean@mess.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.4 106/434] media: flexcop-usb: fix NULL-ptr deref in
- flexcop_usb_transfer_init()
-Message-ID: <20200103161207.GA3082@gofer.mess.org>
-References: <20191229172702.393141737@linuxfoundation.org>
- <20191229172708.658173957@linuxfoundation.org>
- <20200103150242.GC17614@localhost>
+        Fri, 3 Jan 2020 11:22:21 -0500
+Received: from mail-wr1-f41.google.com ([209.85.221.41]:45632 "EHLO
+        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727930AbgACQWU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 11:22:20 -0500
+Received: by mail-wr1-f41.google.com with SMTP id j42so42895491wrj.12
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 08:22:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=evzD0JK8LSn0ZimlzI9kK570jZJqixSLv6BagHOwVBY=;
+        b=D/uyn74NsoOZZDLoIBT+vfDAvfmrTzLUJeeDoSF7hwDTrWW/WKVhaHDcSw4cZZ9dTJ
+         MVssK1EjiDi8P1W38Rij0dce0rgE9AgN0TQFUDTiqFUQLVrhhgCJaUToyh6RWk3kHFXl
+         bBXo/jWS7LgapOUmHOth+KmYm80IE9FpQ1j4E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=evzD0JK8LSn0ZimlzI9kK570jZJqixSLv6BagHOwVBY=;
+        b=E8CuUQH7MUD0LY9EfT2R9wk5W0Q8oRCeLyjAs1TO4QxsOIRoWLXtT0RoEZfDSuKpRY
+         KSK8fvuTuB2J8jdVpYUpFb+ynYjzXKslJAE+jAw0WkxPr+c4RCM51pQd3fgCFw5+9Fa+
+         syzgR7LX3+I+HyeTbvOq1kqZ+Xeil4J60y4CFS+U7UbynPrXNr/kJCP0VT+GcgiFvTps
+         OdTnnAJnV8yoAT45TPxZAye2FM29OnxlQlZCsLZ3U0U54sdPLbrt4152HtXmW3Me6LAI
+         Jh3yCnMdd98Z53sVMFVjAbSt20vy0gvoqq+uBAnaFGDxB4KZRugirl/iJxNxRNi7/yuP
+         p1Xw==
+X-Gm-Message-State: APjAAAXGznDCzcZxi4f3gypi65uFF+JgNOx7QPDWYfVkfXYiicylIQB9
+        wzU21twTadb1kaWREr0uhRnfNA==
+X-Google-Smtp-Source: APXvYqyc9zP0ci94atqGfdtju2skV9XC2T3/AMgZm82OCBtWLKbOikxqihCEIAiksFtod1JZ9VKNvQ==
+X-Received: by 2002:a5d:6144:: with SMTP id y4mr90610098wrt.367.1578068538425;
+        Fri, 03 Jan 2020 08:22:18 -0800 (PST)
+Received: from Ninja.ibn.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id n8sm61348706wrx.42.2020.01.03.08.22.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 03 Jan 2020 08:22:17 -0800 (PST)
+From:   Vikas Gupta <vikas.gupta@broadcom.com>
+To:     =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>,
+        netdev@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sumit Garg <sumit.garg@linaro.org>
+Cc:     vasundhara-v.volam@broadcom.com, vikram.prakash@broadcom.com,
+        Vikas Gupta <vikas.gupta@broadcom.com>
+Subject: [PATCH INTERNAL v2] firmware: tee_bnxt: Fix multiple call to tee_client_close_context
+Date:   Fri,  3 Jan 2020 21:50:03 +0530
+Message-Id: <1578068404-26195-1-git-send-email-vikas.gupta@broadcom.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200103150242.GC17614@localhost>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 04:02:42PM +0100, Johan Hovold wrote:
-> On Sun, Dec 29, 2019 at 06:22:39PM +0100, Greg Kroah-Hartman wrote:
-> > From: Yang Yingliang <yangyingliang@huawei.com>
-> > 
-> > [ Upstream commit 649cd16c438f51d4cd777e71ca1f47f6e0c5e65d ]
-> > 
-> > If usb_set_interface() failed, iface->cur_altsetting will
-> > not be assigned and it will be used in flexcop_usb_transfer_init()
-> > It may lead a NULL pointer dereference.
-> > 
-> > Check usb_set_interface() return value in flexcop_usb_init()
-> > and return failed to avoid using this NULL pointer.
-> > 
-> > Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-> > Signed-off-by: Sean Young <sean@mess.org>
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> 
-> This commit is bogus and should be dropped from all stable queues.
-> 
-> Contrary to what the commit message claims, iface->cur_altsetting will
-> never be NULL so there's no risk for a NULL-pointer dereference here.
+Fix calling multiple tee_client_close_context in case of shm allocation
+fails.
 
-Yes, you are right, I can't find any path through which cur_altsetting
-will be set to NULL. The commit message is wrong. I am sorry for letting
-this slip through.
+Fixes: 246880958ac9 (“firmware: broadcom: add OP-TEE based BNXT f/w manager”)
+Signed-off-by: Vikas Gupta <vikas.gupta@broadcom.com>
+---
+ drivers/firmware/broadcom/tee_bnxt_fw.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Thank you for pointing this out.
+diff --git a/drivers/firmware/broadcom/tee_bnxt_fw.c b/drivers/firmware/broadcom/tee_bnxt_fw.c
+index 5b7ef89..ed10da5 100644
+--- a/drivers/firmware/broadcom/tee_bnxt_fw.c
++++ b/drivers/firmware/broadcom/tee_bnxt_fw.c
+@@ -215,7 +215,6 @@ static int tee_bnxt_fw_probe(struct device *dev)
+ 	fw_shm_pool = tee_shm_alloc(pvt_data.ctx, MAX_SHM_MEM_SZ,
+ 				    TEE_SHM_MAPPED | TEE_SHM_DMA_BUF);
+ 	if (IS_ERR(fw_shm_pool)) {
+-		tee_client_close_context(pvt_data.ctx);
+ 		dev_err(pvt_data.dev, "tee_shm_alloc failed\n");
+ 		err = PTR_ERR(fw_shm_pool);
+ 		goto out_sess;
+-- 
+2.7.4
 
-> Even though the change itself is benign, we shouldn't spread this
-> confusion further.
-
-usb_set_interface() can fail for a number of reasons, and we should not
-continue if it fails. So, the commit message is misleading but the
-change itself is still valid.
-
-Not sure what the right procedure is now though.
-
-Thanks
-
-Sean
-
-> > ---
-> >  drivers/media/usb/b2c2/flexcop-usb.c | 8 +++++++-
-> >  1 file changed, 7 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/media/usb/b2c2/flexcop-usb.c b/drivers/media/usb/b2c2/flexcop-usb.c
-> > index 1a801dc286f8..d1331f828108 100644
-> > --- a/drivers/media/usb/b2c2/flexcop-usb.c
-> > +++ b/drivers/media/usb/b2c2/flexcop-usb.c
-> > @@ -504,7 +504,13 @@ urb_error:
-> >  static int flexcop_usb_init(struct flexcop_usb *fc_usb)
-> >  {
-> >  	/* use the alternate setting with the larges buffer */
-> > -	usb_set_interface(fc_usb->udev,0,1);
-> > +	int ret = usb_set_interface(fc_usb->udev, 0, 1);
-> > +
-> > +	if (ret) {
-> > +		err("set interface failed.");
-> > +		return ret;
-> > +	}
-> > +
-> >  	switch (fc_usb->udev->speed) {
-> >  	case USB_SPEED_LOW:
-> >  		err("cannot handle USB speed because it is too slow.");
-> 
-> Johan
