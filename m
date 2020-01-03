@@ -2,184 +2,151 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6ECCC00523
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 07:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 424DEC00523
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 07:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85DC02253D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 07:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BA0824649
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 07:11:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jQ5Ts5r+"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aWIqToNE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbgACHGa (ORCPT
+        id S1727225AbgACHL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 02:06:30 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:46897 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbgACHGa (ORCPT
+        Fri, 3 Jan 2020 02:11:57 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14551 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbgACHL4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 02:06:30 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200103070627epoutp04eba950ca61d76b13e51a6958ee701945~mTqR_lSuu1130711307epoutp04U
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jan 2020 07:06:27 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200103070627epoutp04eba950ca61d76b13e51a6958ee701945~mTqR_lSuu1130711307epoutp04U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1578035187;
-        bh=rfGGNQT8evgRVw+JTBLO+XI7I4bJD+fGwGykG+9qYHQ=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=jQ5Ts5r+9T/OdQO2FHk0G0dwD2j28nSGul2Rfocuf+W6hC4+HE2Surw6R9Mc5ndHr
-         EX2Aj8D2K+qrA47jWaU5JErm4B9YgPc7Bsn5myRVfNoiJsgkarPZprfvC7wy7/D1gY
-         Rs46eJpH8s3+6BwhmP870bC0PEQH9a9ymmVoUfzI=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200103070627epcas1p44761069aa188b7822dd095ce151f4cab~mTqRce6RQ1519215192epcas1p4Z;
-        Fri,  3 Jan 2020 07:06:27 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.166]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 47pwtV3jRVzMqYkg; Fri,  3 Jan
-        2020 07:06:26 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        39.A2.57028.2F7EE0E5; Fri,  3 Jan 2020 16:06:26 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200103070626epcas1p3a2dc24ac9d4ae26ad190f0d26edbd225~mTqQSI5wP2168721687epcas1p3t;
-        Fri,  3 Jan 2020 07:06:26 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200103070626epsmtrp14c57a6da2e8900fc1f20d683631eb339~mTqQRa1qo0737607376epsmtrp1o;
-        Fri,  3 Jan 2020 07:06:26 +0000 (GMT)
-X-AuditID: b6c32a35-50bff7000001dec4-68-5e0ee7f2861f
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5A.78.06569.1F7EE0E5; Fri,  3 Jan 2020 16:06:25 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200103070625epsmtip2ad2d3260bc48f6bd73e3613cf2be0e80~mTqQKMf2x2126821268epsmtip2P;
-        Fri,  3 Jan 2020 07:06:25 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     =?UTF-8?Q?'Pali_Roh=C3=A1r'?= <pali.rohar@gmail.com>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>, <valdis.kletnieks@vt.edu>,
-        <hch@lst.de>, <sj1557.seo@samsung.com>, <linkinjeon@gmail.com>
-In-Reply-To: <20200102135502.hkey7z45gnprinpp@pali>
-Subject: RE: [PATCH v9 10/13] exfat: add nls operations
-Date:   Fri, 3 Jan 2020 16:06:25 +0900
-Message-ID: <003101d5c204$5046e9a0$f0d4bce0$@samsung.com>
+        Fri, 3 Jan 2020 02:11:56 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e0ee90f0000>; Thu, 02 Jan 2020 23:11:11 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 02 Jan 2020 23:11:55 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 02 Jan 2020 23:11:55 -0800
+Received: from localhost (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 3 Jan
+ 2020 07:11:54 +0000
+Date:   Fri, 3 Jan 2020 08:11:52 +0100
+From:   Thierry Reding <treding@nvidia.com>
+To:     Bitan Biswas <bbiswas@nvidia.com>
+CC:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH V1] nvmem: core: fix memory abort in cleanup path
+Message-ID: <20200103071152.GA1933715@ulmo>
+References: <1577592162-14817-1-git-send-email-bbiswas@nvidia.com>
+ <20200102124445.GB1924669@ulmo>
+ <7abb79c6-b497-98b3-45ff-44d751f1c781@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: ko
-Thread-Index: AQJSGi/S1M7UFBjz5N3SW71o+eawLwHz+Lr1AtmMBwQCoo41BaakU3fg
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SaUwTQRiGM912uxBXh1r1s0ZTNx4BA7TUwmKo8U5FfmD45QVsYFOIvdIt
-        qKgJSkTBE2Oi1gISFSNyqRUFNQjVGDRBxAhC0qiJxqOiFbxFY9vFyL9n3nm/+b53ZihC0Uiq
-        qHyrk3dYOTNDRkpbvNGa2OHXEzM1+/0z2ZIzTSR74eJdCdvvGyTYm7e6pOzjNjfJVjz4JWE9
-        f+7I2N6PAekSytjq8smN7ZX1cuONgWLSeMhTh4wjl2cZO6+9J9PJ9eaUPJ7L5R1q3ppjy823
-        mgzMmoys5Vn6RI02VpvMJjFqK2fhDcyKtPTYVfnm4ECMupAzFwSldE4QmPjFKQ5bgZNX59kE
-        p4Hh7blmu1ZjjxM4i1BgNcXl2CyLtBpNgj7ozDbntXiOI/s3vPW2e5QsRh/pchRBAV4Inopa
-        IsQKfB1BR/2ychQZ5GEEu074CHHxFUHNvVH5v4rDJX6JuHELQXfDkFxcvEXwor9GFnKROBb+
-        jLaT5YiilJiF6j26kIfAt4OexkthTwTWwf3fx8M8GSfB+3O+cAcpngPeYn+YaZwMVX1nkchR
-        0HXypTTEBF4AtTV+QpxIDT9e1cpEXQmnykrDuhKvgj1PP4QjAB4hwXv1BRILVkD//foxngzv
-        7nnGoqng7eFSeWhowNvhU/vY+fsQvPlmEFkHA03NspCFwNHQ1BYvyrOh9VclEkeYCB++HJCJ
-        p9Cwr1QhWubCoV6vROQZUL43ID+CGNe4YK5xwVzjwrj+NzuNpHVoKm8XLCZe0Nq149/6Mgr/
-        1Rj9dXSsO60TYQoxE+gjfXSmQsYVCtssnQgoglHSW9YGJTqX21bEO2xZjgIzL3QiffDeKwjV
-        lBxb8OdbnVlafYJOp2MXJiYl6nXMNJr6/miTAps4J7+Z5+2841+dhIpQFSM6s6dh3cWV3o3z
-        bg5E779a7fI2NC5/SM2XlFy4ljOy4WhqYW9h4NjnlGd1B5607s62G/uLKstMwx3n9Z9tV1Ij
-        1W5XclTa94PzbrT5Er8OuicZenZlKKtWL9WcbZxyJeEMFXj+07+jcmiIO1c6YfrryGZ3TbZq
-        54AsdXFAXlY04wHFSIU8ThtDOATuL4XJFYPBAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsWy7bCSvO7H53xxBs3zbSyaF69ns1i5+iiT
-        xfW7t5gt9uw9yWJxedccNouJp38zWWz5d4TV4tL7DywOHB47Z91l99g/dw27x+6bDWwefVtW
-        MXp83iTncWj7G7YAtigum5TUnMyy1CJ9uwSujDNT2pgKbghU9K+dxdjAeJK3i5GTQ0LARKK/
-        +TVTFyMXh5DAbkaJJQf6mCES0hLHTpwBsjmAbGGJw4eLIWqeA9UsncUKUsMmoCvx789+NpAa
-        EQELifmtxiA1zAInGCXO9N9ihWu4tvQ8I0gDp4CxxKm/08GahQXMJd4svcsOYrMIqEgcbngN
-        ZvMKWErMu7aEEcIWlDg58wkLiM0soC3R+7CVEcZetvA11KEKEj+fLmOFiItIzO5sA4uLCLhJ
-        tN54xzyBUXgWklGzkIyahWTULCTtCxhZVjFKphYU56bnFhsWGOWllusVJ+YWl+al6yXn525i
-        BMeYltYOxhMn4g8xCnAwKvHwTrjGGyfEmlhWXJl7iFGCg1lJhLc8ECjEm5JYWZValB9fVJqT
-        WnyIUZqDRUmcVz7/WKSQQHpiSWp2ampBahFMlomDU6qBMdtWyWFSVm1Q5K8ct0bvxNUP92RI
-        uAVeVuSzcuc3eXlURyXWsEhGZN3Cx1tv+8k+O6zitGFFsjXjE85DCtXqyoJBh2rZMmbN2ZYe
-        6a9V9Pj4qfrVe25K//xlMu/kysnmIXNmOm2pyza1nsj8jvV+6qyf++Uq12U8fd4yb+rWZr+e
-        69sYVbTfKrEUZyQaajEXFScCAO9vDi6tAgAA
-X-CMS-MailID: 20200103070626epcas1p3a2dc24ac9d4ae26ad190f0d26edbd225
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05
-References: <20200102082036.29643-1-namjae.jeon@samsung.com>
-        <CGME20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05@epcas1p4.samsung.com>
-        <20200102082036.29643-11-namjae.jeon@samsung.com>
-        <20200102135502.hkey7z45gnprinpp@pali>
+In-Reply-To: <7abb79c6-b497-98b3-45ff-44d751f1c781@nvidia.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.13.1 (2019-12-14)
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
+Content-Disposition: inline
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578035472; bh=dDxqOCI5SXc94w0Nilsi3NhZw1Rq6p2dtR3kAStLlSo=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:In-Reply-To:X-NVConfidentiality:User-Agent:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:
+         Content-Disposition;
+        b=aWIqToNEWO2t3qBVz2zlddhONgka8mGN6N00fnpsmDrVTJokkHLgSDEms3IO+u21F
+         f6m+z0adCnIxlKwz8CoTKPY09bnQ67FMeCHL4w47qnuykjBJ/ZvG1ITRre1Ht4vY+S
+         9NnxjN9P4HzCHQCPliuUXDWDinvpWc+5B01HoJ0vwJW/TCCDi7Pn9muEcsprUqHmeX
+         ADv/3qXavEuH+yTyPlG8sBs+tiFYKRnZMhuQ+Qmwqg4SZebev53YHZrsmE7UbBL+IX
+         Y//JUQ9fBKKFXhuTko33GxJPL6UI9+qEIVj0EDKXX1FYJo+GHwTQcaYAlO9tamnvZn
+         VECvaIBaKJYZA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Thursday 02 January 2020 16:20:33 Namjae Jeon wrote:
-> > This adds the implementation of nls operations for exfat.
-> >
-> > Signed-off-by: Namjae Jeon <namjae.jeon=40samsung.com>
-> > Signed-off-by: Sungjong Seo <sj1557.seo=40samsung.com>
-> > ---
-> >  fs/exfat/nls.c =7C 809
-> > +++++++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 809 insertions(+)
-> >  create mode 100644 fs/exfat/nls.c
-> >
-> > diff --git a/fs/exfat/nls.c b/fs/exfat/nls.c new file mode 100644
-> > index 000000000000..af52328e28ff
-> > --- /dev/null
-> > +++ b/fs/exfat/nls.c
->=20
-> ...
->=20
-> > +int exfat_nls_uni16s_to_vfsname(struct super_block *sb,
-> > +		struct exfat_uni_name *uniname, unsigned char *p_cstring,
-> > +		int buflen)
-> > +=7B
-> > +	if (EXFAT_SB(sb)->options.utf8)
-> > +		return __exfat_nls_utf16s_to_vfsname(sb, uniname, p_cstring,
-> > +				buflen);
-> > +	return __exfat_nls_uni16s_to_vfsname(sb, uniname, p_cstring,
-> buflen);
-> > +=7D
->=20
-> Hello, I'm looking at this function and basically it do nothing.
-> Or was it supposed that this function should do something more for UTF-8
-> encoding?
->=20
-> There is one if- statement, but in both branches is executed exactly
-> same code.
->=20
-> And executed function just pass same arguments as current callee
-> function.
->=20
-> So calls to exfat_nls_uni16s_to_vfsname() can be replaced by direct
-> calls to __exfat_nls_uni16s_to_vfsname().
-Ah, The function names are similar, but not same. see utf16s/uni16s.
+--ZPt4rx8FFjLCG7dd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks=21
+On Thu, Jan 02, 2020 at 10:51:24AM -0800, Bitan Biswas wrote:
+>=20
+> Hi Thierry,
+>=20
+> On 1/2/20 4:44 AM, Thierry Reding wrote:
+> > On Sat, Dec 28, 2019 at 08:02:42PM -0800, Bitan Biswas wrote:
+> > > nvmem_cell_info_to_nvmem_cell implementation has static
+> > > allocation of name. nvmem_add_cells_from_of() call may
+> > > return error and kfree name results in memory abort. Use
+> > > kasprintf() instead of assigning pointer and prevent kfree crash.
+> > >=20
+> > > diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> > > index 9f1ee9c..0fc66e1 100644
+> > > --- a/drivers/nvmem/core.c
+> > > +++ b/drivers/nvmem/core.c
+> > > @@ -110,7 +110,7 @@ static int nvmem_cell_info_to_nvmem_cell(struct n=
+vmem_device *nvmem,
+> > >   	cell->nvmem =3D nvmem;
+> > >   	cell->offset =3D info->offset;
+> > >   	cell->bytes =3D info->bytes;
+> > > -	cell->name =3D info->name;
+> > > +	cell->name =3D kasprintf(GFP_KERNEL, "%s", info->name);
+>=20
+> >=20
+> > kstrdup() seems more appropriate here.
+> Thanks. I shall update the patch as suggested.
+>=20
+> >=20
+> > A slightly more efficient way to do this would be to use a combination
+> > of kstrdup_const() and kfree_const(), which would allow read-only
+> > strings to be replicated by simple assignment rather than duplication.
+> > Note that in that case you'd need to carefully replace all kfree() calls
+> > on cell->name by a kfree_const() to ensure they do the right thing.
+> kfree(cell->name) is also called for allocations in function
+> nvmem_add_cells_from_of() through below call
+> kasprintf(GFP_KERNEL, "%pOFn", child);
+>=20
+> My understanding is kfree_const may not work for above allocation.
 
->=20
-> Or maybe better, rename __exfat_nls_uni16s_to_vfsname() function to
-> exfat_nls_uni16s_to_vfsname().
->=20
-> > +int exfat_nls_vfsname_to_uni16s(struct super_block *sb,
-> > +		const unsigned char *p_cstring, const int len,
-> > +		struct exfat_uni_name *uniname, int *p_lossy)
-> > +=7B
-> > +	if (EXFAT_SB(sb)->options.utf8)
-> > +		return __exfat_nls_vfsname_to_utf16s(sb, p_cstring, len,
-> > +				uniname, p_lossy);
-> > +	return __exfat_nls_vfsname_to_uni16s(sb, p_cstring, len, uniname,
-> > +			p_lossy);
-> > +=7D
->=20
-> And same for this function.
->=20
-> --
-> Pali Roh=C3=A1r=0D=0A>=20pali.rohar=40gmail.com=0D=0A=0D=0A
+kfree_const() checks the location that the pointer passed to it points
+to. If it points to the kernel's .rodata section, it returns and only
+calls kfree() otherwise. Similarily, kstrdup_const() returns its
+argument if it points to the .rodata section and duplicates the string
+otherwise. On the other hand, pointers returned by kasprintf() will
+never point to the .rodata section, so kfree_const() will result in
+kfree() getting called.
+
+That said, the savings here are fairly minimal, so I don't feel very
+strongly about this. Feel free to go with the kstrdup() variant.
+
+Thierry
+
+--ZPt4rx8FFjLCG7dd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4O6TUACgkQ3SOs138+
+s6E0jw/8CoVoVoq1+1ebZgh9ZytThxOsUneAIhUDUL+Pgo/+PXpTcI5KmbrTmi7d
+DfIEQ4/j6xOs3+F/5YiVaAZFcrTr9jyXXaG3hujn4XTK37XjnhDhsujWsQGT7i/A
+HHTGC0OozN1rXLDFORUF/AhLWj6J1nps4pE2Yiukwu+0AZ8cdCj9+MFMXZbj40Y/
+zwi19vgzAzxcIzl4Ewj8lYDrEgaN7/Kh3zlFmpVQKRz1iWAauwTI2CLQqNuJyRM5
+SlVTebZHh5QovL+mK8y3+JwtDcC16wwKzJ2p+XiYIKD+qyj/nA/20sLxDvUkE8dE
+V3RdgV+9Jb9472y1Hrz+fgVduMEjP/XESsciQvMoXSSfyDVeKhBgAgfj+qyvpvKE
+wxigmBpS+hm3ZKxJTIvNcEFYB8/YVtY8tZA/Il73gcm8sg0vC69Zk5Pjjw+WCv6y
+UzxAxXj75sR9O5u04u5t0Rp2nnkgHGjzEvZfuQ9w1pCaBb8aufhWtX3vvaxxfCqz
+hTzxefGwNGPo4t5O+SHaPO9/MbZxecwz4YhwZOjML/UMY6jjGWhavZQ8Z0EVO6HX
+7+nTh9cwmzA1W8/P2IWgiIxGSrJzcYMfhkDh/NdPic2675WZNa7WfIgKobVmRQgd
+GtReHw/esIq8zY6a4kP2ddKUeM/2OZhOi/7zzZQqFPIHl3+LkQo=
+=l1Lr
+-----END PGP SIGNATURE-----
+
+--ZPt4rx8FFjLCG7dd--
