@@ -2,194 +2,155 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A419C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B1CC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73309215A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:59:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578074389;
-	bh=9kwzpWOP+dbx21kVOlNozlOPHBOk6wAtzDv+U09dF7M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F8lLWpKDQI9y+u2Py2dwtNRM2prCixN0yCu2IOxCMBfFYOZyH2UxRNZTLP+CRIKZ8
-	 9J1PDP37rgOda082NF1ZiOfCt5phiHG48FpPUqf9Hd/OAguxxVycXxMwMjqfIau7CG
-	 230ENvpcvcE1iLTp9/tr4MT4//GwTAKQuV0tHKLE=
+	by mail.kernel.org (Postfix) with ESMTP id 840B82253D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:59:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cQ7ts0+p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728308AbgACR7p (ORCPT
+        id S1728342AbgACR7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 12:59:45 -0500
-Received: from conuserg-07.nifty.com ([210.131.2.74]:64707 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728223AbgACR7k (ORCPT
+        Fri, 3 Jan 2020 12:59:52 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:55606 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728328AbgACR7u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 12:59:40 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 003HxSJB022724;
-        Sat, 4 Jan 2020 02:59:34 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 003HxSJB022724
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578074374;
-        bh=IixOZfomVhBc53dTdWlB8Lij+8LbaLBdC9mPIGrpvkM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0gVEWqJ5DZXHLuErJd43XABaQ/TvJCjwjAmVRPl1WWoWODwGI/aZKM1hY7gQ/cNHv
-         NF+UGMjSn8IJRQFHpZp+PnRYC0wUvKOOGTmVlbubFZPs7RYqi0wzwgqmEXo8klzz1o
-         a3YO5J1cul0dONVb3IZEnjm7bLVI0YSYru0HBzTQWHNBfnvxUO22XtubxwWVLAiDKd
-         o76OnNQrfBTsQ199SJsrPBvT8h/kTxIgGe7sVqR95n3PO4pjVLQhRvf6X5jwcfn5ja
-         5G21J5gIDk/i8Kd0N4QiX5CVfGMfbVvx/DEi2ioXMGXNdC+QiCO6ZfQ71G4tOx5nPp
-         zwn/YhrTlNqFg==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 10/12] gen_initramfs.sh: always output cpio even without -o option
-Date:   Sat,  4 Jan 2020 02:59:13 +0900
-Message-Id: <20200103175915.26663-11-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200103175915.26663-1-masahiroy@kernel.org>
-References: <20200103175915.26663-1-masahiroy@kernel.org>
+        Fri, 3 Jan 2020 12:59:50 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 003HsKBL140532;
+        Fri, 3 Jan 2020 17:59:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=/JwT8VnXv0DLdnc9vQddzFn7cLiMx0VDOrPpPrNsZMY=;
+ b=cQ7ts0+p2nTTbBMhfwqWcA9+bOKgdOlH80uuGDZW4s1Go3Rha1lOSI+xRXsgZe5Lu25b
+ AA3WkWHl+HkhgG1xxIWnHU2GFRKpxNfef1UXSPNIaVnMLkcF7FLsVVJ0RKEa/IeBR5q0
+ kTnyB5qqhUimT4mhAKtBhntrrZ7bTmP9jCX0AfqCTtcOMw1TNBkz/gsiBzGj6Huu0uey
+ JGxGHiT2OU5Y3eP0lwUw/IwgRm+T2WgfLLsILuKOluXFpq1+fLyUhtd11CbWhVk7LNp0
+ 9SPP78V1bLgtnmE61dnGgHPW3zZgx7KPvE11g3ifU5JkoE0oD0/IfP2G6VWjpG67hUDz Xw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2x5y0pwg0y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Jan 2020 17:59:02 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 003HrQt0092250;
+        Fri, 3 Jan 2020 17:57:01 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2x9jm7sdax-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Jan 2020 17:57:01 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 003HuskY026134;
+        Fri, 3 Jan 2020 17:56:55 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 Jan 2020 09:56:54 -0800
+Subject: Re: [PATCH 5.4 000/191] 5.4.8-stable review
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Chengguang Xu <cgxu519@mykernel.net>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>, LTP List <ltp@lists.linux.it>,
+        Jan Stancek <jstancek@redhat.com>,
+        John Stultz <john.stultz@linaro.org>
+References: <20200102215829.911231638@linuxfoundation.org>
+ <CA+G9fYuPkOGKbeQ0FKKx4H0Bs-nRHALsFtwyRw0Rt5DoOCvRHg@mail.gmail.com>
+ <CAK8P3a1+Srey_7cUd0xfaO8HdMv5tkUcs6DeDXzcUKkUD-DnGQ@mail.gmail.com>
+ <CAK8P3a24EkUXTu-K2c-5B3w-LZwY7zNcX0dZixb3gd59vRw_Kw@mail.gmail.com>
+ <20200103154518.GB1064304@kroah.com>
+ <CAK8P3a00SpVfSE5oL8_F_8jHdg_8A5fyEKH_DWNyPToxack=zA@mail.gmail.com>
+ <a2fc8b36-c512-b6dd-7349-dfb551e348b6@oracle.com>
+Message-ID: <8283b231-f6e8-876f-7094-d3265096ab9a@oracle.com>
+Date:   Fri, 3 Jan 2020 09:56:52 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <a2fc8b36-c512-b6dd-7349-dfb551e348b6@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9489 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001030164
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9489 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001030164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, this script outputs a cpio file when -o option is
-given, but otherwise a text file in the format recognized by
-gen_init_cpio.
+On 1/3/20 9:33 AM, Mike Kravetz wrote:
+> On 1/3/20 7:56 AM, Arnd Bergmann wrote:
+>> On Fri, Jan 3, 2020 at 4:45 PM Greg Kroah-Hartman
+>> <gregkh@linuxfoundation.org> wrote:
+>>> On Fri, Jan 03, 2020 at 04:29:56PM +0100, Arnd Bergmann wrote:
+>>>> On Fri, Jan 3, 2020 at 4:25 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>>>>>
+>>>>> On Fri, Jan 3, 2020 at 4:03 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>>>>>>
+>>>>>> On Fri, 3 Jan 2020 at 03:42, Greg Kroah-Hartman
+>>>>>> <gregkh@linuxfoundation.org> wrote:
+>>>>>
+>>>>> -ENOENT is what you get when hugetlbfs is not mounted, so this hints to
+>>>>>
+>>>>> 8fc312b32b2  mm/hugetlbfs: fix error handling when setting up mounts
+>>>>>
+>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-5.4.y&id=3f549fb42a39bea3b29c0fc12afee53c4a01bec9
+>>>>
+>>>> I see that Mike Kravetz suggested not putting this patch into stable in
+>>>>
+>>>> https://lore.kernel.org/lkml/befca227-cb8a-8f47-617d-e3bf9972bfec@oracle.com/
+>>>>
+>>>> but it was picked through the autosel mechanism later.
+>>>
+>>> So does that mean that Linus's tree shows this LTP failure as well?
+>>
+>> Yes, according to
+>> https://qa-reports.linaro.org/lkft/linux-mainline-oe/tests/ltp-syscalls-tests/memfd_create04
+>> mainline has the same testcase failure, it started happening between
+>> v5.4-10135-gc3bfc5dd73c6 and v5.4-10271-g596cf45cbf6e, when the patch
+>> was originally merged into 5.5-rc1.
+>>
+>>> This does seem to fix a real issue, as shown by the LTP test noticing
+>>> it, so should the error code value be fixed in Linus's tree?
+>>
+>> No idea what to conclude from the testcase failure, let's see if Mike has
+>> any suggestions.
+>>
+> 
+> Thanks for isolating to this patch!
+> 
+> There are dependencies between arch specific code and arch independent code
+> during the setup of hugetlb sizes/mounts.  Let me take a closer look at the
+> arm64 code and get access to a system for debug.
 
-This behavior is unclear. Make it always output a cpio file.
+Before I started investigating, Jan Stancek found and fixed the issue.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+http://lkml.kernel.org/r/a14b944b6e5e207d2f84f43227c98ed1f68290a2.1578072927.git.jstancek@redhat.com
 
- usr/gen_initramfs.sh | 58 +++++++++++++++++++++-----------------------
- 1 file changed, 27 insertions(+), 31 deletions(-)
-
-diff --git a/usr/gen_initramfs.sh b/usr/gen_initramfs.sh
-index e6808a8c3b2b..1efb87bda545 100755
---- a/usr/gen_initramfs.sh
-+++ b/usr/gen_initramfs.sh
-@@ -6,7 +6,6 @@
- #
- # Generate a cpio packed initramfs. It uses gen_init_cpio to generate
- # the cpio archive, and then compresses it.
--# The script may also be used to generate the inputfile used for gen_init_cpio
- # This script assumes that gen_init_cpio is located in usr/ directory
- 
- # error out on errors
-@@ -71,8 +70,8 @@ print_mtime() {
- 		my_mtime=$(find "$1" -printf "%T@\n" | sort -r | head -n 1)
- 	fi
- 
--	echo "# Last modified: ${my_mtime}" >> ${output}
--	echo "" >> ${output}
-+	echo "# Last modified: ${my_mtime}" >> $cpio_list
-+	echo "" >> $cpio_list
- }
- 
- list_parse() {
-@@ -125,7 +124,7 @@ parse() {
- 			;;
- 	esac
- 
--	echo "${str}" >> ${output}
-+	echo "${str}" >> $cpio_list
- 
- 	return 0
- }
-@@ -141,7 +140,7 @@ unknown_option() {
- }
- 
- header() {
--	printf "\n#####################\n# $1\n" >> ${output}
-+	printf "\n#####################\n# $1\n" >> $cpio_list
- }
- 
- # process one directory (incl sub-directories)
-@@ -177,8 +176,8 @@ input_file() {
- 			[ -n "$dep_list" ] && echo "$1" >> $dep_list
- 			return 0
- 		fi
--		print_mtime "$1" >> ${output}
--		cat "$1"         >> ${output}
-+		print_mtime "$1" >> $cpio_list
-+		cat "$1"         >> $cpio_list
- 		if [ -n "$dep_list" ]; then
- 		        echo "$1 \\"  >> $dep_list
- 			cat "$1" | while read type dir file perm ; do
-@@ -200,9 +199,9 @@ root_uid=0
- root_gid=0
- dep_list=
- cpio_file=
--cpio_list=
-+cpio_list=$(mktemp ${TMPDIR:-/tmp}/cpiolist.XXXXXX)
- output="/dev/stdout"
--output_file=""
-+output_file="/dev/stdout"
- is_cpio_compressed=
- compr="gzip -n -9 -f"
- 
-@@ -217,8 +216,7 @@ while [ $# -gt 0 ]; do
- 			;;
- 		"-o")	# generate compressed cpio image named $1
- 			output_file="$1"
--			cpio_list="$(mktemp ${TMPDIR:-/tmp}/cpiolist.XXXXXX)"
--			output=${cpio_list}
-+			output=$cpio_list
- 			echo "$output_file" | grep -q "\.gz$" \
- 			&& [ -x "`which gzip 2> /dev/null`" ] \
- 			&& compr="gzip -n -9 -f"
-@@ -269,27 +267,25 @@ done
- 
- # If output_file is set we will generate cpio archive and compress it
- # we are careful to delete tmp files
--if [ ! -z ${output_file} ]; then
--	if [ -z ${cpio_file} ]; then
--		timestamp=
--		if test -n "$KBUILD_BUILD_TIMESTAMP"; then
--			timestamp="$(date -d"$KBUILD_BUILD_TIMESTAMP" +%s || :)"
--			if test -n "$timestamp"; then
--				timestamp="-t $timestamp"
--			fi
-+if [ -z ${cpio_file} ]; then
-+	timestamp=
-+	if test -n "$KBUILD_BUILD_TIMESTAMP"; then
-+		timestamp="$(date -d"$KBUILD_BUILD_TIMESTAMP" +%s || :)"
-+		if test -n "$timestamp"; then
-+			timestamp="-t $timestamp"
- 		fi
--		cpio_tfile="$(mktemp ${TMPDIR:-/tmp}/cpiofile.XXXXXX)"
--		usr/gen_init_cpio $timestamp ${cpio_list} > ${cpio_tfile}
--	else
--		cpio_tfile=${cpio_file}
--	fi
--	rm ${cpio_list}
--	if [ "${is_cpio_compressed}" = "compressed" ]; then
--		cat ${cpio_tfile} > ${output_file}
--	else
--		(cat ${cpio_tfile} | ${compr}  - > ${output_file}) \
--		|| (rm -f ${output_file} ; false)
- 	fi
--	[ -z ${cpio_file} ] && rm ${cpio_tfile}
-+	cpio_tfile="$(mktemp ${TMPDIR:-/tmp}/cpiofile.XXXXXX)"
-+	usr/gen_init_cpio $timestamp ${cpio_list} > ${cpio_tfile}
-+else
-+	cpio_tfile=${cpio_file}
-+fi
-+rm ${cpio_list}
-+if [ "${is_cpio_compressed}" = "compressed" ]; then
-+	cat ${cpio_tfile} > ${output_file}
-+else
-+	(cat ${cpio_tfile} | ${compr}  - > ${output_file}) \
-+	|| (rm -f ${output_file} ; false)
- fi
-+[ -z ${cpio_file} ] && rm ${cpio_tfile}
- exit 0
 -- 
-2.17.1
-
+Mike Kravetz
