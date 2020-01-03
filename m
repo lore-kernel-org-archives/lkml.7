@@ -2,251 +2,299 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 860C6C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 318B4C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43EA2222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED7BB21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:29:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="enI2VYUG"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="p9jSuphV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727640AbgACL1i (ORCPT
+        id S1727593AbgACL3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 06:27:38 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43678 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727470AbgACL1h (ORCPT
+        Fri, 3 Jan 2020 06:29:10 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:47747 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727453AbgACL3K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 06:27:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578050856;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AKOOwHs2ZDIRxWjWlTFCn8p7FYAVgQaVXWf4ImCfYuo=;
-        b=enI2VYUGfJ7wpSqc/gAvmfK93kmJPjWqawxUo8N/uD/Sg0VFFLezEwsWBXtE+83k5HocSr
-        KSHiMKMySaUsoaeVQ19d11CPpjr25cdHsX9UPQdjg4/MtV7lPOfGZ+h4/YMcAPPjzwm/cj
-        V8VRbFkYq4KptT5h9zj/P4OlbTJQ77o=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-304-IlLxBu3bO7eKd3mamO285g-1; Fri, 03 Jan 2020 06:27:35 -0500
-X-MC-Unique: IlLxBu3bO7eKd3mamO285g-1
-Received: by mail-wm1-f72.google.com with SMTP id 18so1321937wmp.0
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 03:27:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AKOOwHs2ZDIRxWjWlTFCn8p7FYAVgQaVXWf4ImCfYuo=;
-        b=FxB1e1ntfLMuTvPkCmlgkeoEV1CdjBAAPGXAPy10xbbXnknK9w8oBfHswE+uSjo7fB
-         Wuji8Z5aR8VxrGWIrtNQNiZGvXx1pUoaFBf1L4M9JJstyZGyNIL/pMow7BbAIEiSZpA3
-         r63gjdcIFRWFNkg7/t9ftGm8VnwjCYR5f5g3/y8FbkNyh8okPaHVia2a7W3SRnSdo5iH
-         IiVlPUDy6xqpZ853JkRpORtYU2IuSoErs7iZaDB1jt2didh8bwaYYHC8+QUZiBgEEG0w
-         uVM7Mbz3dpNk4yi+Hd9wyF3YfaSqC9EbuZJvXAgEg8vzJ45lISFsJUPU5dK157gakmhc
-         cCQQ==
-X-Gm-Message-State: APjAAAUwcdZTiY/wN9/8b4ZE3ICFbBhPp1W0H3q+LRy3Dr/z/I3LvjTF
-        AJu/Qq9KfOri392vRJHjr5HeMp5vA9Vk4R0mUwOg65XDE/P/16RAidDxBBJfAX2aAJGC97ZRb5a
-        JhE3gZcqeuy4y2UlIs7UGq53q
-X-Received: by 2002:a1c:a406:: with SMTP id n6mr19221993wme.40.1578050854000;
-        Fri, 03 Jan 2020 03:27:34 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyZFNItZbvteC2IYwnmx0jlBP0nRcHjtSlcxUvpNI4Px9I2AyLJtHNp/+ME2brZ+/LsbjnDSw==
-X-Received: by 2002:a1c:a406:: with SMTP id n6mr19221951wme.40.1578050853665;
-        Fri, 03 Jan 2020 03:27:33 -0800 (PST)
-Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
-        by smtp.gmail.com with ESMTPSA id h8sm62312534wrx.63.2020.01.03.03.27.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jan 2020 03:27:32 -0800 (PST)
-Subject: Re: [PATCH v10 00/10] efi/firmware/platform-x86: Add EFI embedded fw
- support
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>,
-        x86@kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-input@vger.kernel.org
-References: <20191210115117.303935-1-hdegoede@redhat.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <66f45932-756d-0bb0-d7a8-330d61785663@redhat.com>
-Date:   Fri, 3 Jan 2020 12:27:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Fri, 3 Jan 2020 06:29:10 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200103112908euoutp0137a08b208e466c865706d060599ca069~mXPn7xOgs0109601096euoutp012
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jan 2020 11:29:08 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200103112908euoutp0137a08b208e466c865706d060599ca069~mXPn7xOgs0109601096euoutp012
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578050948;
+        bh=am8YhLIAmvCg+DCVx15rfPBNjQlNGbRxSRmJOWIfPqA=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=p9jSuphVLinln3fYTCsZuplo1gUL/0ZgkzDc23YTSS8hj6Triub4w1x5EKdZCkD5Q
+         Q5NalnkQpn/ECeEplVDnlnBRl9304a3NDRAooSWdKpGoHRYZU7gH+1gTrekkNgrr/T
+         qcHGaaNHNsml2l/IsBKxffUsnjGsBJ/HHtu/uzUM=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200103112908eucas1p12c154fecd493b8a09259e6bf983e8a2f~mXPn0nsqJ2519525195eucas1p1Z;
+        Fri,  3 Jan 2020 11:29:08 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id F9.C2.60679.3852F0E5; Fri,  3
+        Jan 2020 11:29:07 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200103112907eucas1p188fb06f73886f73aadc49d5411ab9269~mXPniM9Sz2395423954eucas1p1W;
+        Fri,  3 Jan 2020 11:29:07 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200103112907eusmtrp27883519da0894befd1f5f1c05c51a3e8~mXPnhAaJp2970329703eusmtrp2P;
+        Fri,  3 Jan 2020 11:29:07 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-73-5e0f25838d0f
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 5B.A0.08375.3852F0E5; Fri,  3
+        Jan 2020 11:29:07 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200103112907eusmtip1e2d8eb1389728a13df5b5ee81b77cae8~mXPnLbAr70358403584eusmtip1l;
+        Fri,  3 Jan 2020 11:29:07 +0000 (GMT)
+Subject: Re: [PATCH v6 47/57] video: Remove dev_err() usage after
+ platform_get_irq()
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <467ee450-e6de-e517-b8d9-7048c14a1931@samsung.com>
+Date:   Fri, 3 Jan 2020 12:29:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191210115117.303935-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190730181557.90391-48-swboyd@chromium.org>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLKsWRmVeSWpSXmKPExsWy7djPc7rNqvxxBt3HbSyufH3PZtG8eD2b
+        xYm+D6wWl3fNYbM4fucpkwOrx+yGiywe++euYfe4332cyePzJrkAligum5TUnMyy1CJ9uwSu
+        jD8LV7MUbNevuD3nI1sD4ya1LkZODgkBE4kd7YvZuhi5OIQEVjBKNBzewQrhfGGUOLZ0HZTz
+        mVGi6eY3dpiW/R/Xs0AkljNKzNp4Bcp5yyjR0fuFBaRKWCBM4uLaBWAdIgJqErM/HGcCKWIW
+        mMgosX7ZV1aQBJuAlcTE9lWMIDavgJ3EwZ4LbCA2i4CKxJpFa8FqRAUiJD49OMwKUSMocXLm
+        E7AFnEC9+yYfBOtlFhCXuPVkPhOELS+x/e0cZohTF7FLrNjvA2G7SKx6dowJwhaWeHV8C9Q7
+        MhL/d84HO05CYB2jxN+OF8wQznZGieWT/7FBVFlL3Dn3C8jmANqgKbF+lz5E2FFiWuMlsLCE
+        AJ/EjbeCEDfwSUzaNp0ZIswr0dEmBFGtJrFh2QY2mLVdO1cyT2BUmoXks1lIvpmF5JtZCHsX
+        MLKsYhRPLS3OTU8tNspLLdcrTswtLs1L10vOz93ECEw0p/8d/7KDcdefpEOMAhyMSjy8Ccr8
+        cUKsiWXFlbmHGCU4mJVEeMsDeeOEeFMSK6tSi/Lji0pzUosPMUpzsCiJ8xovehkrJJCeWJKa
+        nZpakFoEk2Xi4JRqYKwL63k25Yip+tSiLA6R6XtKQw/bT1RuvcgXV9wdat0VL7630sPj38xz
+        D0R832ud+9C14OGcT+/F3/Cwuh+98PSHslxW7vnd17+tN8l+wvuuvNPq5Q7LaVfuFfVYfNzx
+        LW/HtYcOHqlh1134lp62uM+i7/Kw7aFFi/vDKfpb3was5o/m7rPl+6DEUpyRaKjFXFScCABw
+        ouGEMAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsVy+t/xu7rNqvxxBrdWalhc+fqezaJ58Xo2
+        ixN9H1gtLu+aw2Zx/M5TJgdWj9kNF1k89s9dw+5xv/s4k8fnTXIBLFF6NkX5pSWpChn5xSW2
+        StGGFkZ6hpYWekYmlnqGxuaxVkamSvp2NimpOZllqUX6dgl6GX8WrmYp2K5fcXvOR7YGxk1q
+        XYycHBICJhL7P65n6WLk4hASWMoo8WT+EtYuRg6ghIzE8fVlEDXCEn+udbFB1LxmlPj1uZkR
+        JCEsECZxce0CdhBbREBNYvaH40wgRcwCExkl1nfsYITo2MMoceDxfbAONgEriYntq8BsXgE7
+        iYM9F9hAbBYBFYk1i9aygtiiAhESh3fMgqoRlDg58wkLiM0J1Ltv8kGwOLOAusSfeZeYIWxx
+        iVtP5jNB2PIS29/OYZ7AKDQLSfssJC2zkLTMQtKygJFlFaNIamlxbnpusaFecWJucWleul5y
+        fu4mRmBkbTv2c/MOxksbgw8xCnAwKvHwJijzxwmxJpYVV+YeYpTgYFYS4S0P5I0T4k1JrKxK
+        LcqPLyrNSS0+xGgK9NxEZinR5Hxg1OeVxBuaGppbWBqaG5sbm1koifN2CByMERJITyxJzU5N
+        LUgtgulj4uCUamBUMjNtvi3845uPV+PL35yltw8HSKarXexOYPV83nXE6HHhwWXzvS7eUkn5
+        ce6G1M3m6q9ZDJacnOmK8Y9S9vzvszhW0s7kybBH7emun0+kJDgfJc7TKnWYdD77Z1pq2E/W
+        XearTBjU/6cwF654GHTr1CbGXUd9925Vu+gnryyw4gnP5GOdN9qUWIozEg21mIuKEwHRgph3
+        wgIAAA==
+X-CMS-MailID: 20200103112907eucas1p188fb06f73886f73aadc49d5411ab9269
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190730181641epcas3p26b5bd99f64726e7d110e20f1b673efeb
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190730181641epcas3p26b5bd99f64726e7d110e20f1b673efeb
+References: <20190730181557.90391-1-swboyd@chromium.org>
+        <CGME20190730181641epcas3p26b5bd99f64726e7d110e20f1b673efeb@epcas3p2.samsung.com>
+        <20190730181557.90391-48-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
 
-Since I send this out, efi-next has seen some changes causing the first
-2 patches to no longer cleanly apply. So it looks like we need to
-merge this one bit at a time with immutable branches.
+Hi,
 
-Ard, the first 2 patches in this series should be merged through your
-efi tree. AFAIK everyone is happy with them in their current state
-so they are ready for merging. Can you create an immutable branch
-with these 2 patches and merge that into your efi-next branch?
+Sorry for the late reply.
 
-Note if you do the immutable branch on 5.5-rc1 + just these 2 patches,
-there will be a conflict when you merge this into efi-next, but it is
-trivial to resolve.
+On 7/30/19 8:15 PM, Stephen Boyd wrote:
+> We don't need dev_err() messages when platform_get_irq() fails now that
+> platform_get_irq() prints an error message itself when something goes
+> wrong. Let's remove these prints with a simple semantic patch.
 
-Luis, the rest of the series is almost ready for merging, it just needs
-your review of the 2 new patches (patch 5 and 6) adding the selftests for
-the new firmware_request_platform api, if you can review those that would
-be great.
+This patch changes handling of -EPROBE_DEFER in the modified drivers
+(most don't support it and error message will no longer be printed).
 
-Regards,
+I cannot apply it as it is (seems that -EPROBE_DEFER handling should
+be audited/fixed in the affected drivers first).
 
-Hans
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
 
-
-
-On 10-12-2019 12:51, Hans de Goede wrote:
-> Hi All,
+> // <smpl>
+> @@
+> expression ret;
+> struct platform_device *E;
+> @@
 > 
-> Here is v10 of my patch-set to add support for EFI embedded fw to the
-> kernel. This version has been rebased on top 5.5-rc1 to fix 2 conflicts
-> with the first 2 (efi) patches in the series. There are no changes
-> versus v9 other then the rebase.
+> ret =
+> (
+> platform_get_irq(E, ...)
+> |
+> platform_get_irq_byname(E, ...)
+> );
 > 
-> Below is the cover-letter of v9:
+> if ( \( ret < 0 \| ret <= 0 \) )
+> {
+> (
+> -if (ret != -EPROBE_DEFER)
+> -{ ...
+> -dev_err(...);
+> -... }
+> |
+> ...
+> -dev_err(...);
+> )
+> ...
+> }
+> // </smpl>
 > 
-> The main new feature in this version is the addition of some selftests for
-> the new firmware_request_platform api (patch 5 and 6, both new). My plan
-> was to send the patches adding the selftests out as a follow up series.
+> While we're here, remove braces on if statements that only have one
+> statement (manually).
 > 
-> But during unrelated testing of my personal tree I found a small but nasty
-> bug in the "efi: Add embedded peripheral firmware support" patch, the minor
-> refactoring done in v8 exposed a bug which causes a hard crash on boot for
-> devices which have a DMI match in the touchscreen_dmi_table but do not use
-> EFI-embedded fw, this is fixed in this new version.
+> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-fbdev@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
 > 
-> Assuming the 2 new patches adding the selftests are ok, I believe that
-> this series is ready for merging now.  I believe it would be best to merge
-> patches 1-8 through Greg's driver-core tree where firmware-loader changes go.
-> The non firmware patches already have Acked-by-s from the maintainers of
-> the EFI/input trees.
+> Please apply directly to subsystem trees
 > 
-> Patches 9-10 touch a quirks file under drivers/platform/x86 which sees
-> multipe updates each cycle. So my proposal is that once 1-8 has landed
-> Greg creates an immutable branch with those changes and then
-> Andy and/or Darren can merge in that branch and then apply 9 and 10.
+>  drivers/video/fbdev/atmel_lcdfb.c     | 1 -
+>  drivers/video/fbdev/mmp/hw/mmp_ctrl.c | 1 -
+>  drivers/video/fbdev/nuc900fb.c        | 4 +---
+>  drivers/video/fbdev/pxa168fb.c        | 4 +---
+>  drivers/video/fbdev/pxa3xx-gcu.c      | 4 +---
+>  drivers/video/fbdev/pxafb.c           | 1 -
+>  drivers/video/fbdev/s3c2410fb.c       | 4 +---
+>  drivers/video/fbdev/vt8500lcdfb.c     | 1 -
+>  8 files changed, 4 insertions(+), 16 deletions(-)
 > 
-> Regards,
-> 
-> Hans
-> 
-> 
-> Changes in v10:
-> - Rebase on top of 5.5-rc1
-> 
-> Changes in v9:
-> - Add 2 new patches adding selftests
-> - At least touchscreen_dmi.c uses the same dmi_table for its own private
->    data and the fw_desc structs, putting the fw_desc struct first in the
->    data driver_data points to so that the dmi_table can be shared with
->    efi_check_for_embedded_firmwares(). But not all entries there have
->    embedded-fw so in some cases the fw_desc is empty (zero-ed out).
->    This can lead to a possible crash because fw_desc->length now is
->    less then 8, so if the segment size is close enough to a multiple of the
->    page_size, then the memcmp to check the prefix my segfault. Crashing the
->    machine. v9 checks for and skips these empty fw_desc entries avoiding this.
-> - Add static inline wrapper for firmware_request_platform() to firmware.h,
->    for when CONFIG_FW_LOADER is not set
-> 
-> Changes in v8:
-> - Add pr_warn if there are mode then EFI_DEBUGFS_MAX_BLOBS boot service segments
-> - Document how the EFI debugfs boot_service_code? files can be used to check for
->    embedded firmware
-> - Properly deal with the case of an EFI segment being smaller then the fw we
->    are looking for
-> - Log a warning when efi_get_embedded_fw get called while we did not (yet)
->    check for embedded firmwares
-> - Only build fallback_platform.c if CONFIG_EFI_EMBEDDED_FIRMWARE is defined,
->    otherwise make firmware_fallback_platform() a static inline stub
-> 
-> Changes in v7:
-> - Split drivers/firmware/efi and drivers/base/firmware_loader changes into
->    2 patches
-> - Use new, standalone, lib/crypto/sha256.c code
-> - Address kdoc comments from Randy Dunlap
-> - Add new FW_OPT_FALLBACK_PLATFORM flag and firmware_request_platform()
->    _request_firmware() wrapper, as requested by Luis R. Rodriguez
-> - Stop using "efi-embedded-firmware" device-property, now that drivers need to
->    use the new firmware_request_platform() to enable fallback to a device fw
->    copy embedded in the platform's main firmware, we no longer need a property
->    on the device to trigger this behavior
-> - Use security_kernel_load_data instead of calling
->    security_kernel_read_file with a NULL file pointer argument
-> - Move the docs to Documentation/driver-api/firmware/fallback-mechanisms.rst
-> - Document the new firmware_request_platform() function in
->    Documentation/driver-api/firmware/request_firmware.rst
-> - Add 2 new patches for the silead and chipone-icn8505 touchscreen drivers
->    to use the new firmware_request_platform() method
-> - Rebased on top of 5.4-rc1
-> 
-> Changes in v6:
-> -Rework code to remove casts from if (prefix == mem) comparison
-> -Use SHA256 hashes instead of crc32 sums
-> -Add new READING_FIRMWARE_EFI_EMBEDDED read_file_id and use it
-> -Call security_kernel_read_file(NULL, READING_FIRMWARE_EFI_EMBEDDED)
->   to check if this is allowed before looking at EFI embedded fw
-> -Document why we are not using the PI Firmware Volume protocol
-> 
-> Changes in v5:
-> -Rename the EFI_BOOT_SERVICES flag to EFI_PRESERVE_BS_REGIONS
-> 
-> Changes in v4:
-> -Drop note in docs about EFI_FIRMWARE_VOLUME_PROTOCOL, it is not part of
->   UEFI proper, so the EFI maintainers don't want us referring people to it
-> -Use new EFI_BOOT_SERVICES flag
-> -Put the new fw_get_efi_embedded_fw() function in its own fallback_efi.c
->   file which only gets built when EFI_EMBEDDED_FIRMWARE is selected
-> -Define an empty stub for fw_get_efi_embedded_fw() in fallback.h hwen
->   EFI_EMBEDDED_FIRMWARE is not selected, to avoid the need for #ifdefs
->   in firmware_loader/main.c
-> -Properly call security_kernel_post_read_file() on the firmware returned
->   by efi_get_embedded_fw() to make sure that we are allowed to use it
-> 
-> Changes in v2:
-> -Rebased on driver-core/driver-core-next
-> -Add documentation describing the EFI embedded firmware mechanism to:
->   Documentation/driver-api/firmware/request_firmware.rst
-> -Add a new EFI_EMBEDDED_FIRMWARE Kconfig bool and only build the embedded
->   fw support if this is set. This is an invisible option which should be
->   selected by drivers which need this
-> -Remove the efi_embedded_fw_desc and dmi_system_id-s for known devices
->   from the efi-embedded-fw code, instead drivers using this are expected to
->   export a dmi_system_id array, with each entries' driver_data pointing to a
->   efi_embedded_fw_desc struct and register this with the efi-embedded-fw code
-> -Use kmemdup to make a copy instead of efi_mem_reserve()-ing the firmware,
->   this avoids us messing with the EFI memmap and avoids the need to make
->   changes to efi_mem_desc_lookup()
-> -Make the firmware-loader code only fallback to efi_get_embedded_fw() if the
->   passed in device has the "efi-embedded-firmware" device-property bool set
-> -Skip usermodehelper fallback when "efi-embedded-firmware" device-property
->   is set
-> 
-> 
-
+> diff --git a/drivers/video/fbdev/atmel_lcdfb.c b/drivers/video/fbdev/atmel_lcdfb.c
+> index 5ff8e0320d95..4a16354d65c8 100644
+> --- a/drivers/video/fbdev/atmel_lcdfb.c
+> +++ b/drivers/video/fbdev/atmel_lcdfb.c
+> @@ -1114,7 +1114,6 @@ static int __init atmel_lcdfb_probe(struct platform_device *pdev)
+>  
+>  	sinfo->irq_base = platform_get_irq(pdev, 0);
+>  	if (sinfo->irq_base < 0) {
+> -		dev_err(dev, "unable to get irq\n");
+>  		ret = sinfo->irq_base;
+>  		goto stop_clk;
+>  	}
+> diff --git a/drivers/video/fbdev/mmp/hw/mmp_ctrl.c b/drivers/video/fbdev/mmp/hw/mmp_ctrl.c
+> index 17174cd7a5bb..d6124976139b 100644
+> --- a/drivers/video/fbdev/mmp/hw/mmp_ctrl.c
+> +++ b/drivers/video/fbdev/mmp/hw/mmp_ctrl.c
+> @@ -447,7 +447,6 @@ static int mmphw_probe(struct platform_device *pdev)
+>  
+>  	irq = platform_get_irq(pdev, 0);
+>  	if (irq < 0) {
+> -		dev_err(&pdev->dev, "%s: no IRQ defined\n", __func__);
+>  		ret = -ENOENT;
+>  		goto failed;
+>  	}
+> diff --git a/drivers/video/fbdev/nuc900fb.c b/drivers/video/fbdev/nuc900fb.c
+> index 4fd851598584..c4606c734f44 100644
+> --- a/drivers/video/fbdev/nuc900fb.c
+> +++ b/drivers/video/fbdev/nuc900fb.c
+> @@ -526,10 +526,8 @@ static int nuc900fb_probe(struct platform_device *pdev)
+>  	display = mach_info->displays + mach_info->default_display;
+>  
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (irq < 0) {
+> -		dev_err(&pdev->dev, "no irq for device\n");
+> +	if (irq < 0)
+>  		return -ENOENT;
+> -	}
+>  
+>  	fbinfo = framebuffer_alloc(sizeof(struct nuc900fb_info), &pdev->dev);
+>  	if (!fbinfo)
+> diff --git a/drivers/video/fbdev/pxa168fb.c b/drivers/video/fbdev/pxa168fb.c
+> index 1410f476e135..d9e5258503f0 100644
+> --- a/drivers/video/fbdev/pxa168fb.c
+> +++ b/drivers/video/fbdev/pxa168fb.c
+> @@ -625,10 +625,8 @@ static int pxa168fb_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (irq < 0) {
+> -		dev_err(&pdev->dev, "no IRQ defined\n");
+> +	if (irq < 0)
+>  		return -ENOENT;
+> -	}
+>  
+>  	info = framebuffer_alloc(sizeof(struct pxa168fb_info), &pdev->dev);
+>  	if (info == NULL) {
+> diff --git a/drivers/video/fbdev/pxa3xx-gcu.c b/drivers/video/fbdev/pxa3xx-gcu.c
+> index 74ffb446e00c..07414d43cb3f 100644
+> --- a/drivers/video/fbdev/pxa3xx-gcu.c
+> +++ b/drivers/video/fbdev/pxa3xx-gcu.c
+> @@ -614,10 +614,8 @@ static int pxa3xx_gcu_probe(struct platform_device *pdev)
+>  
+>  	/* request the IRQ */
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (irq < 0) {
+> -		dev_err(dev, "no IRQ defined: %d\n", irq);
+> +	if (irq < 0)
+>  		return irq;
+> -	}
+>  
+>  	ret = devm_request_irq(dev, irq, pxa3xx_gcu_handle_irq,
+>  			       0, DRV_NAME, priv);
+> diff --git a/drivers/video/fbdev/pxafb.c b/drivers/video/fbdev/pxafb.c
+> index 4282cb117b92..b44f402ce552 100644
+> --- a/drivers/video/fbdev/pxafb.c
+> +++ b/drivers/video/fbdev/pxafb.c
+> @@ -2353,7 +2353,6 @@ static int pxafb_probe(struct platform_device *dev)
+>  
+>  	irq = platform_get_irq(dev, 0);
+>  	if (irq < 0) {
+> -		dev_err(&dev->dev, "no IRQ defined\n");
+>  		ret = -ENODEV;
+>  		goto failed_free_mem;
+>  	}
+> diff --git a/drivers/video/fbdev/s3c2410fb.c b/drivers/video/fbdev/s3c2410fb.c
+> index a702da89910b..2a846fd5da2a 100644
+> --- a/drivers/video/fbdev/s3c2410fb.c
+> +++ b/drivers/video/fbdev/s3c2410fb.c
+> @@ -849,10 +849,8 @@ static int s3c24xxfb_probe(struct platform_device *pdev,
+>  	display = mach_info->displays + mach_info->default_display;
+>  
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (irq < 0) {
+> -		dev_err(&pdev->dev, "no irq for device\n");
+> +	if (irq < 0)
+>  		return -ENOENT;
+> -	}
+>  
+>  	fbinfo = framebuffer_alloc(sizeof(struct s3c2410fb_info), &pdev->dev);
+>  	if (!fbinfo)
+> diff --git a/drivers/video/fbdev/vt8500lcdfb.c b/drivers/video/fbdev/vt8500lcdfb.c
+> index be8d9702cbb2..a10088e1cdb0 100644
+> --- a/drivers/video/fbdev/vt8500lcdfb.c
+> +++ b/drivers/video/fbdev/vt8500lcdfb.c
+> @@ -372,7 +372,6 @@ static int vt8500lcd_probe(struct platform_device *pdev)
+>  
+>  	irq = platform_get_irq(pdev, 0);
+>  	if (irq < 0) {
+> -		dev_err(&pdev->dev, "no IRQ defined\n");
+>  		ret = -ENODEV;
+>  		goto failed_free_palette;
+>  	}
