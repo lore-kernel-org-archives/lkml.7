@@ -2,561 +2,330 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC32C00523
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8A6C00523
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 833EE21835
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:09:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578089348;
-	bh=TOyIDYV7gDgyPy15o1GYCUub6s2L1wCSP5e7vSfqo/k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KKvlIMgmCcKHpY8lf7QLI7pmdcilEkizJDOsclMsrBc/Y1+fUDFURPusO4Fod6x3X
-	 5GiqBcc7gZSYEIlRJtmaLVLp4q1qpINShv83cJrLCmvDG65ckDGE8AHAO5679792y5
-	 awEjsIFLqYLZZ9qiaUs7dWm8kZ6wxVYti81KFuQo=
+	by mail.kernel.org (Postfix) with ESMTP id 448CF21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:12:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="p1wFuJQf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728815AbgACWJH (ORCPT
+        id S1728764AbgACWMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 17:09:07 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38596 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728549AbgACWJH (ORCPT
+        Fri, 3 Jan 2020 17:12:44 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:56713 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728549AbgACWMo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 17:09:07 -0500
-Received: by mail-io1-f65.google.com with SMTP id v3so42863928ioj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 14:09:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jaq5PZV0113fH8a1/ccNdlJ+K9H3T4ORM/dajcDMbeI=;
-        b=lyCzLgMCiJjS1pzu4iEiv87ibNFWnlL0N6uwVMJ/kCk2Ibv4D1VEUiFiVOwSzGHI+C
-         TT5EU8x/fxC6bD9XHDOQxZ+gMk4cE4klHDykGP/6OvO7Mzjaq2/GkRLYiYtHEmyv8MtH
-         PTJdKchixjAgxULJuLcvO7G0/4/pocw4a7Qo450n2nvjaADvizELg61lUG4c04bLFEDJ
-         ZCvGWV0QJ+4yaV9CBBldCuwSUqWOQapybJOyV3WV8hoYwv/cL1k0+8tCuB5TfcztDYdI
-         dCrEDnQ8j8ZW9jgDjeMlqEl+zZN0LrEdmBes/XIJ6Jc2jNws/vzHvgDoCNB58ryV3fsZ
-         PN3g==
-X-Gm-Message-State: APjAAAV/3xW/hVJCHoJFJiqu3UQFEurqhyVmJYVT3ZTlWGEPXeEVvvaS
-        gzzH6d17/SYVB40FSKuuEgLbSdA=
-X-Google-Smtp-Source: APXvYqzq9mGNmrvHAEqiZtok6mhIbDsdgkdRI/Y+QRJrYbhDqJcLO9kBkdu14pthPY0gVUGOiM5TCg==
-X-Received: by 2002:a6b:f913:: with SMTP id j19mr56242605iog.124.1578089346054;
-        Fri, 03 Jan 2020 14:09:06 -0800 (PST)
-Received: from rob-hp-laptop ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id r7sm15256759ioo.7.2020.01.03.14.09.04
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 14:09:05 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 2219a5
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Fri, 03 Jan 2020 15:09:03 -0700
-Date:   Fri, 3 Jan 2020 15:09:03 -0700
-From:   Rob Herring <robh@kernel.org>
-To:     Fabien Parent <fparent@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, matthias.bgg@gmail.com,
-        mark.rutland@arm.com
-Subject: Re: [PATCH v2 1/2] arm64: dts: mediatek: add dtsi for MT8516
-Message-ID: <20200103220903.GA14332@bogus>
-References: <20200103162234.103094-1-fparent@baylibre.com>
+        Fri, 3 Jan 2020 17:12:44 -0500
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 71CAC2327F;
+        Fri,  3 Jan 2020 23:12:36 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1578089560;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=pxc7LxMRggzlHkhDG41adMieU1U8xqZrMb5OXW+ieCw=;
+        b=p1wFuJQfrsj4WzxrA6up1UAW/emqypjJRdD578u3iWq2pAIdaIWlh9MiK478i0soquclVY
+        w+F5FOVFfC/5dVqE3Tutxn8bcaVdVbs6Sa+sSmsKpCs2Ja+2WJlxWy56UKFujFevxNBP2+
+        MdOy1M/GZbwVtc8pVvIucqfufQiw89g=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH v2] mtd: spi-nor: keep lock bits if they are non-volatile
+Date:   Fri,  3 Jan 2020 23:12:29 +0100
+Message-Id: <20200103221229.7287-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200103162234.103094-1-fparent@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 71CAC2327F
+X-Spamd-Result: default: False [4.90 / 15.00];
+         ARC_NA(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[8];
+         MID_CONTAINS_FROM(1.00)[];
+         NEURAL_HAM(-0.00)[-0.843];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c::/31, country:DE]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 05:22:33PM +0100, Fabien Parent wrote:
-> The MT8516 SoC provides the following peripherals: GPIO, UART, USB2,
-> SPI, eMMC, SDIO, NAND, Flash, ADC, I2C, PWM, Timers, IR, Ethernet, and
-> Audio (I2S, SPDIF, TDM).
-> 
-> This commit is adding the basic dtsi file with the support of the
-> following IPs: Clock, Pinctrl, WDT, GPIO, UART, SPI, eMMC, I2C, Timers,
-> MMC, RNG PWM.
-> 
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
-> ---
-> 
-> V2:
-> 	* Remove unused clock for CPU nodes
-> 	* Fix formatting / spacing
-> 	* Fix compatible for SPI node: s/mediatek,mt2701-spi/mediatek,mt2712-spi/
-> 	* Rename "sdio" node label into "mmc"
-> 	* Add "rng" and "pwm" nodes.
-> 
-> ---
->  arch/arm64/boot/dts/mediatek/mt8516-pinfunc.h | 663 ++++++++++++++++++
->  arch/arm64/boot/dts/mediatek/mt8516.dtsi      | 426 +++++++++++
->  2 files changed, 1089 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt8516-pinfunc.h
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt8516.dtsi
+Traditionally, linux unlocks the whole flash because there are legacy
+devices which has the write protections bits set by default at startup.
+If you actually want to use the flash protection bits, eg. because there
+is a read-only part for a bootloader, this automatic unlocking is
+harmful. If there is no hardware write protection in place (usually
+called WP#), a startup of the kernel just discards this protection.
 
+I've gone through the datasheets of all the flashes (except the Intel
+ones where I could not find any datasheet nor reference) which supports
+the unlocking feature and looked how the sector protection was
+implemented. The currently supported flashes can be divided into the
+following two categories:
+ (1) block protection bits are non-volatile. Thus they keep their values
+     at reset and power-cycle
+ (2) flashes where these bits are volatile. After reset or power-cycle,
+     the whole memory array is protected.
+     (a) some devices needs a special "Global Unprotect" command, eg.
+         the Atmel AT25DF041A.
+     (b) some devices require to clear the BPn bits in the status
+         register.
 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8516.dtsi b/arch/arm64/boot/dts/mediatek/mt8516.dtsi
-> new file mode 100644
-> index 000000000000..39ce244f1e40
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt8516.dtsi
-> @@ -0,0 +1,426 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019 MediaTek Inc.
-> + * Copyright (c) 2019 BayLibre, SAS.
-> + * Author: Fabien Parent <fparent@baylibre.com>
-> + */
-> +
-> +#include <dt-bindings/clock/mt8516-clk.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +#include "mt8516-pinfunc.h"
-> +
-> +/ {
-> +	compatible = "mediatek,mt8516";
-> +	interrupt-parent = <&sysirq>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	cluster0_opp: opp_table0 {
+Due to the reasons above, we do not want to clear the bits for flashes
+which belong to category (1). Fortunately for us, the flashes in (2a)
+and (2b) are compatible with each other in a sense that the "Global
+Unprotect" command will clear the block protection bits in all the (2b)
+flashes.
 
-opp-table-0
+This patch adds a new flag to indicate the case (2). Only if we have
+such a flash we perform a "Global Unprotect". Hopefully, this will clean
+up "unlock the entire flash for legacy devices" once and for all.
 
-> +		compatible = "operating-points-v2";
-> +		opp-shared;
-> +		opp-598000000 {
-> +			opp-hz = /bits/ 64 <598000000>;
-> +			opp-microvolt = <1150000>;
-> +		};
-> +		opp-747500000 {
-> +			opp-hz = /bits/ 64 <747500000>;
-> +			opp-microvolt = <1150000>;
-> +		};
-> +		opp-1040000000 {
-> +			opp-hz = /bits/ 64 <1040000000>;
-> +			opp-microvolt = <1200000>;
-> +		};
-> +		opp-1196000000 {
-> +			opp-hz = /bits/ 64 <1196000000>;
-> +			opp-microvolt = <1250000>;
-> +		};
-> +		opp-1300000000 {
-> +			opp-hz = /bits/ 64 <1300000000>;
-> +			opp-microvolt = <1300000>;
-> +		};
-> +	};
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a35";
-> +			reg = <0x0>;
-> +			enable-method = "psci";
-> +			cpu-idle-states = <&CLUSTER_SLEEP_0 &CLUSTER_SLEEP_0>,
-> +				<&CPU_SLEEP_0_0 &CPU_SLEEP_0_0 &CPU_SLEEP_0_0>;
-> +			clocks = <&infracfg CLK_IFR_MUX1_SEL>,
-> +				 <&topckgen CLK_TOP_MAINPLL_D2>;
-> +			clock-names = "cpu", "intermediate";
-> +			operating-points-v2 = <&cluster0_opp>;
-> +		};
-> +
-> +		cpu1: cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a35";
-> +			reg = <0x1>;
-> +			enable-method = "psci";
-> +			cpu-idle-states = <&CLUSTER_SLEEP_0 &CLUSTER_SLEEP_0>,
-> +				<&CPU_SLEEP_0_0 &CPU_SLEEP_0_0 &CPU_SLEEP_0_0>;
-> +			clocks = <&infracfg CLK_IFR_MUX1_SEL>,
-> +				 <&topckgen CLK_TOP_MAINPLL_D2>;
-> +			clock-names = "cpu", "intermediate";
-> +			operating-points-v2 = <&cluster0_opp>;
-> +		};
-> +
-> +		cpu2: cpu@2 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a35";
-> +			reg = <0x2>;
-> +			enable-method = "psci";
-> +			cpu-idle-states = <&CLUSTER_SLEEP_0 &CLUSTER_SLEEP_0>,
-> +				<&CPU_SLEEP_0_0 &CPU_SLEEP_0_0 &CPU_SLEEP_0_0>;
-> +			clocks = <&infracfg CLK_IFR_MUX1_SEL>,
-> +				 <&topckgen CLK_TOP_MAINPLL_D2>;
-> +			clock-names = "cpu", "intermediate";
-> +			operating-points-v2 = <&cluster0_opp>;
-> +		};
-> +
-> +		cpu3: cpu@3 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a35";
-> +			reg = <0x3>;
-> +			enable-method = "psci";
-> +			cpu-idle-states = <&CLUSTER_SLEEP_0 &CLUSTER_SLEEP_0>,
-> +				<&CPU_SLEEP_0_0 &CPU_SLEEP_0_0 &CPU_SLEEP_0_0>;
-> +			clocks = <&infracfg CLK_IFR_MUX1_SEL>,
-> +				 <&topckgen CLK_TOP_MAINPLL_D2>;
-> +			clock-names = "cpu", "intermediate", "armpll";
-> +			operating-points-v2 = <&cluster0_opp>;
-> +		};
-> +
-> +		idle-states {
-> +			entry-method = "psci";
-> +
-> +			CPU_SLEEP_0_0: cpu-sleep-0-0 {
-> +				compatible = "arm,idle-state";
-> +				entry-latency-us = <600>;
-> +				exit-latency-us = <600>;
-> +				min-residency-us = <1200>;
-> +				arm,psci-suspend-param = <0x0010000>;
-> +			};
-> +
-> +			CLUSTER_SLEEP_0: cluster-sleep-0 {
-> +				compatible = "arm,idle-state";
-> +				entry-latency-us = <800>;
-> +				exit-latency-us = <1000>;
-> +				min-residency-us = <2000>;
-> +				arm,psci-suspend-param = <0x2010000>;
-> +			};
-> +		};
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-1.0", "arm,psci-0.2", "arm,psci";
+For reference here are the actually commits which introduced the legacy
+behaviour (and extended the behaviour to other chip manufacturers):
 
-Not a valid combination of compatibles. Running 'make dtbs_check' will 
-tell you this.
+commit f80e521c916cb ("mtd: m25p80: add support for the Intel/Numonyx {16,32,64}0S33B SPI flash chips")
+commit ea60658a08f8f ("mtd: m25p80: disable SST software protection bits by default")
+commit 7228982442365 ("[MTD] m25p80: fix bug - ATmel spi flash fails to be copied to")
 
-> +		method = "smc";
-> +	};
-> +
-> +	clk26m: clk26m {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <26000000>;
-> +		clock-output-names = "clk26m";
-> +	};
-> +
-> +	clk32k: clk32k {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <32000>;
-> +		clock-output-names = "clk32k";
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		/* 128 KiB reserved for ARM Trusted Firmware (BL31) */
-> +		bl31_secmon_reserved: secmon@43000000 {
-> +			no-map;
-> +			reg = <0 0x43000000 0 0x20000>;
-> +		};
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_PPI 13
-> +			     (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14
-> +			     (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11
-> +			     (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10
-> +			     (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-> +	};
-> +
-> +	pmu {
-> +		compatible = "arm,armv8-pmuv3";
-> +		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 5 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 6 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 7 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-> +	};
-> +
-> +	soc {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		compatible = "simple-bus";
-> +		ranges;
-> +
-> +		topckgen: topckgen@10000000 {
-> +			compatible = "mediatek,mt8516-topckgen", "syscon";
-> +			reg = <0 0x10000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		infracfg: infracfg@10001000 {
-> +			compatible = "mediatek,mt8516-infracfg", "syscon";
-> +			reg = <0 0x10001000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		apmixedsys: apmixedsys@10018000 {
-> +			compatible = "mediatek,mt8516-apmixedsys", "syscon";
-> +			reg = <0 0x10018000 0 0x710>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		toprgu: toprgu@10007000 {
-> +			compatible = "mediatek,mt8516-wdt",
-> +				     "mediatek,mt6589-wdt";
-> +			reg = <0 0x10007000 0 0x1000>;
-> +			interrupts = <GIC_SPI 198 IRQ_TYPE_EDGE_FALLING>;
-> +			#reset-cells = <1>;
-> +		};
-> +
-> +		timer: timer@10008000 {
-> +			compatible = "mediatek,mt8516-timer",
-> +				     "mediatek,mt6577-timer";
-> +			reg = <0 0x10008000 0 0x1000>;
-> +			interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_CLK26M_D2>,
-> +				 <&clk32k>,
-> +				 <&topckgen CLK_TOP_APXGPT>;
-> +			clock-names = "clk13m", "clk32k", "bus";
-> +		};
-> +
-> +		syscfg_pctl_a: syscfg_pctl_a@10005000 {
+Actually, this might also fix handling of the Atmel AT25DF flashes,
+because the original commit 7228982442365 ("[MTD] m25p80: fix bug -
+ATmel spi flash fails to be copied to") was writing a 0 to the status
+register, which is a "Global Unprotect". This might not be the case in
+the current code which only handles the block protection bits BP2, BP1
+and BP0. Thus, it depends on the current contents of the status register
+if this unlock actually corresponds to a "Global Unprotect" command. In
+the worst case, the current code might leave the AT25DF flashes in a
+write protected state.
 
-Don't use '_' in node names.
+The commit 191f5c2ed4b6f ("mtd: spi-nor: use 16-bit WRR command when QE
+is set on spansion flashes") changed that behaviour by just clearing BP2
+to BP0 instead of writing a 0 to the status register.
 
-> +			compatible = "mediatek,mt8516-pctl-a-syscfg", "syscon";
-> +			reg = <0 0x10005000 0 0x1000>;
-> +		};
-> +
-> +		pio: pinctrl@10005000 {
-> +			compatible = "mediatek,mt8516-pinctrl";
-> +			reg = <0 0x1000b000 0 0x1000>;
-> +			mediatek,pctl-regmap = <&syscfg_pctl_a>;
-> +			pins-are-numbered;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			interrupts = <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		pwrap: pwrap@1000f000 {
-> +			compatible = "mediatek,mt8516-pwrap";
-> +			reg = <0 0x1000f000 0 0x1000>;
-> +			reg-names = "pwrap";
-> +			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_PMICWRAP_26M>,
-> +				 <&topckgen CLK_TOP_PMICWRAP_AP>;
-> +			clock-names = "spi", "wrap";
-> +		};
-> +
-> +		sysirq: intpol-controller@10200620 {
+Fixes: 191f5c2ed4b6f ("mtd: spi-nor: use 16-bit WRR command when QE is set on spansion flashes")
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ drivers/mtd/spi-nor/spi-nor.c | 95 ++++++++++++++++++++++-------------
+ include/linux/mtd/spi-nor.h   |  7 ++-
+ 2 files changed, 67 insertions(+), 35 deletions(-)
 
-interrupt-controller@...
+diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+index addb6319fcbb..66dfb4396146 100644
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -238,6 +238,11 @@ struct flash_info {
+ 					 * status register. Must be used with
+ 					 * SPI_NOR_HAS_TB.
+ 					 */
++#define SPI_NOR_UNPROTECT	BIT(17)	/*
++					 * Flash is write-protected after
++					 * power-up and needs a global
++					 * unprotect.
++					 */
+ 
+ 	/* Part specific fixup hooks. */
+ 	const struct spi_nor_fixups *fixups;
+@@ -2318,15 +2323,15 @@ static const struct flash_info spi_nor_ids[] = {
+ 	{ "at25fs010",  INFO(0x1f6601, 0, 32 * 1024,   4, SECT_4K) },
+ 	{ "at25fs040",  INFO(0x1f6604, 0, 64 * 1024,   8, SECT_4K) },
+ 
+-	{ "at25df041a", INFO(0x1f4401, 0, 64 * 1024,   8, SECT_4K) },
+-	{ "at25df321",  INFO(0x1f4700, 0, 64 * 1024,  64, SECT_4K) },
+-	{ "at25df321a", INFO(0x1f4701, 0, 64 * 1024,  64, SECT_4K) },
+-	{ "at25df641",  INFO(0x1f4800, 0, 64 * 1024, 128, SECT_4K) },
++	{ "at25df041a", INFO(0x1f4401, 0, 64 * 1024,   8, SECT_4K | SPI_NOR_UNPROTECT) },
++	{ "at25df321",  INFO(0x1f4700, 0, 64 * 1024,  64, SECT_4K | SPI_NOR_UNPROTECT) },
++	{ "at25df321a", INFO(0x1f4701, 0, 64 * 1024,  64, SECT_4K | SPI_NOR_UNPROTECT) },
++	{ "at25df641",  INFO(0x1f4800, 0, 64 * 1024, 128, SECT_4K | SPI_NOR_UNPROTECT) },
+ 
+-	{ "at26f004",   INFO(0x1f0400, 0, 64 * 1024,  8, SECT_4K) },
+-	{ "at26df081a", INFO(0x1f4501, 0, 64 * 1024, 16, SECT_4K) },
+-	{ "at26df161a", INFO(0x1f4601, 0, 64 * 1024, 32, SECT_4K) },
+-	{ "at26df321",  INFO(0x1f4700, 0, 64 * 1024, 64, SECT_4K) },
++	{ "at26f004",   INFO(0x1f0400, 0, 64 * 1024,  8, SECT_4K | SPI_NOR_UNPROTECT) },
++	{ "at26df081a", INFO(0x1f4501, 0, 64 * 1024, 16, SECT_4K | SPI_NOR_UNPROTECT) },
++	{ "at26df161a", INFO(0x1f4601, 0, 64 * 1024, 32, SECT_4K | SPI_NOR_UNPROTECT) },
++	{ "at26df321",  INFO(0x1f4700, 0, 64 * 1024, 64, SECT_4K | SPI_NOR_UNPROTECT) },
+ 
+ 	{ "at45db081d", INFO(0x1f2500, 0, 64 * 1024, 16, SECT_4K) },
+ 
+@@ -2348,9 +2353,9 @@ static const struct flash_info spi_nor_ids[] = {
+ 	{ "en25s64",	INFO(0x1c3817, 0, 64 * 1024,  128, SECT_4K) },
+ 
+ 	/* ESMT */
+-	{ "f25l32pa", INFO(0x8c2016, 0, 64 * 1024, 64, SECT_4K | SPI_NOR_HAS_LOCK) },
+-	{ "f25l32qa", INFO(0x8c4116, 0, 64 * 1024, 64, SECT_4K | SPI_NOR_HAS_LOCK) },
+-	{ "f25l64qa", INFO(0x8c4117, 0, 64 * 1024, 128, SECT_4K | SPI_NOR_HAS_LOCK) },
++	{ "f25l32pa", INFO(0x8c2016, 0, 64 * 1024, 64, SECT_4K | SPI_NOR_HAS_LOCK | SPI_NOR_UNPROTECT) },
++	{ "f25l32qa", INFO(0x8c4116, 0, 64 * 1024, 64, SECT_4K | SPI_NOR_HAS_LOCK | SPI_NOR_UNPROTECT) },
++	{ "f25l64qa", INFO(0x8c4117, 0, 64 * 1024, 128, SECT_4K | SPI_NOR_HAS_LOCK | SPI_NOR_UNPROTECT) },
+ 
+ 	/* Everspin */
+ 	{ "mr25h128", CAT25_INFO( 16 * 1024, 1, 256, 2, SPI_NOR_NO_ERASE | SPI_NOR_NO_FR) },
+@@ -2406,9 +2411,9 @@ static const struct flash_info spi_nor_ids[] = {
+ 	},
+ 
+ 	/* Intel/Numonyx -- xxxs33b */
+-	{ "160s33b",  INFO(0x898911, 0, 64 * 1024,  32, 0) },
+-	{ "320s33b",  INFO(0x898912, 0, 64 * 1024,  64, 0) },
+-	{ "640s33b",  INFO(0x898913, 0, 64 * 1024, 128, 0) },
++	{ "160s33b",  INFO(0x898911, 0, 64 * 1024,  32, SPI_NOR_UNPROTECT) },
++	{ "320s33b",  INFO(0x898912, 0, 64 * 1024,  64, SPI_NOR_UNPROTECT) },
++	{ "640s33b",  INFO(0x898913, 0, 64 * 1024, 128, SPI_NOR_UNPROTECT) },
+ 
+ 	/* ISSI */
+ 	{ "is25cd512",  INFO(0x7f9d20, 0, 32 * 1024,   2, SECT_4K) },
+@@ -2563,18 +2568,18 @@ static const struct flash_info spi_nor_ids[] = {
+ 	{ "s25fl256l",  INFO(0x016019,      0,  64 * 1024, 512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
+ 
+ 	/* SST -- large erase sizes are "overlays", "sectors" are 4K */
+-	{ "sst25vf040b", INFO(0xbf258d, 0, 64 * 1024,  8, SECT_4K | SST_WRITE) },
+-	{ "sst25vf080b", INFO(0xbf258e, 0, 64 * 1024, 16, SECT_4K | SST_WRITE) },
+-	{ "sst25vf016b", INFO(0xbf2541, 0, 64 * 1024, 32, SECT_4K | SST_WRITE) },
+-	{ "sst25vf032b", INFO(0xbf254a, 0, 64 * 1024, 64, SECT_4K | SST_WRITE) },
+-	{ "sst25vf064c", INFO(0xbf254b, 0, 64 * 1024, 128, SECT_4K) },
+-	{ "sst25wf512",  INFO(0xbf2501, 0, 64 * 1024,  1, SECT_4K | SST_WRITE) },
+-	{ "sst25wf010",  INFO(0xbf2502, 0, 64 * 1024,  2, SECT_4K | SST_WRITE) },
+-	{ "sst25wf020",  INFO(0xbf2503, 0, 64 * 1024,  4, SECT_4K | SST_WRITE) },
++	{ "sst25vf040b", INFO(0xbf258d, 0, 64 * 1024,  8, SECT_4K | SST_WRITE | SPI_NOR_UNPROTECT) },
++	{ "sst25vf080b", INFO(0xbf258e, 0, 64 * 1024, 16, SECT_4K | SST_WRITE | SPI_NOR_UNPROTECT) },
++	{ "sst25vf016b", INFO(0xbf2541, 0, 64 * 1024, 32, SECT_4K | SST_WRITE | SPI_NOR_UNPROTECT) },
++	{ "sst25vf032b", INFO(0xbf254a, 0, 64 * 1024, 64, SECT_4K | SST_WRITE | SPI_NOR_UNPROTECT) },
++	{ "sst25vf064c", INFO(0xbf254b, 0, 64 * 1024, 128, SECT_4K | SPI_NOR_UNPROTECT) },
++	{ "sst25wf512",  INFO(0xbf2501, 0, 64 * 1024,  1, SECT_4K | SST_WRITE | SPI_NOR_UNPROTECT) },
++	{ "sst25wf010",  INFO(0xbf2502, 0, 64 * 1024,  2, SECT_4K | SST_WRITE | SPI_NOR_UNPROTECT) },
++	{ "sst25wf020",  INFO(0xbf2503, 0, 64 * 1024,  4, SECT_4K | SST_WRITE | SPI_NOR_UNPROTECT) },
+ 	{ "sst25wf020a", INFO(0x621612, 0, 64 * 1024,  4, SECT_4K) },
+ 	{ "sst25wf040b", INFO(0x621613, 0, 64 * 1024,  8, SECT_4K) },
+-	{ "sst25wf040",  INFO(0xbf2504, 0, 64 * 1024,  8, SECT_4K | SST_WRITE) },
+-	{ "sst25wf080",  INFO(0xbf2505, 0, 64 * 1024, 16, SECT_4K | SST_WRITE) },
++	{ "sst25wf040",  INFO(0xbf2504, 0, 64 * 1024,  8, SECT_4K | SST_WRITE | SPI_NOR_UNPROTECT) },
++	{ "sst25wf080",  INFO(0xbf2505, 0, 64 * 1024, 16, SECT_4K | SST_WRITE | SPI_NOR_UNPROTECT) },
+ 	{ "sst26wf016b", INFO(0xbf2651, 0, 64 * 1024, 32, SECT_4K |
+ 			      SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+ 	{ "sst26vf064b", INFO(0xbf2643, 0, 64 * 1024, 128, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+@@ -4941,20 +4946,38 @@ static int spi_nor_quad_enable(struct spi_nor *nor)
+ }
+ 
+ /**
+- * spi_nor_unlock_all() - Unlocks the entire flash memory array.
++ * spi_nor_global_unprotect() - Perform a global unprotect of the memory area.
+  * @nor:	pointer to a 'struct spi_nor'.
+  *
+  * Some SPI NOR flashes are write protected by default after a power-on reset
+  * cycle, in order to avoid inadvertent writes during power-up. Backward
+  * compatibility imposes to unlock the entire flash memory array at power-up
+- * by default.
++ * by default. Do it only for flashes where the block protection bits
++ * are volatile, this is indicated by SNOR_F_NEED_UNPROTECT.
++ *
++ * We cannot use spi_nor_unlock(nor->params.size) here because there are
++ * legacy devices (eg. AT25DF041A) which need a "global unprotect" command.
++ * This is done by writing 0b0x0000xx to the status register. This will also
++ * work for all other flashes which have these bits mapped to BP0 to BP3.
++ * The top most bit is ususally some kind of lock bit for the block
++ * protection bits.
+  */
+-static int spi_nor_unlock_all(struct spi_nor *nor)
++static int spi_nor_global_unprotect(struct spi_nor *nor)
+ {
+-	if (nor->flags & SNOR_F_HAS_LOCK)
+-		return spi_nor_unlock(&nor->mtd, 0, nor->params.size);
++	int ret;
+ 
+-	return 0;
++	dev_dbg(nor->dev, "unprotecting entire flash\n");
++	ret = spi_nor_read_sr(nor, nor->bouncebuf);
++	if (ret)
++		return ret;
++
++	nor->bouncebuf[0] &= ~SR_GLOBAL_UNPROTECT_MASK;
++
++	/*
++	 * Don't use spi_nor_write_sr1_and_check() because writing the status
++	 * register might fail if the flash is hardware write protected.
++	 */
++	return spi_nor_write_sr(nor, nor->bouncebuf, 1);
+ }
+ 
+ static int spi_nor_init(struct spi_nor *nor)
+@@ -4967,10 +4990,12 @@ static int spi_nor_init(struct spi_nor *nor)
+ 		return err;
+ 	}
+ 
+-	err = spi_nor_unlock_all(nor);
+-	if (err) {
+-		dev_dbg(nor->dev, "Failed to unlock the entire flash memory array\n");
+-		return err;
++	if (nor->flags & SNOR_F_NEED_UNPROTECT) {
++		err = spi_nor_global_unprotect(nor);
++		if (err) {
++			dev_err(nor->dev, "global unprotect failed\n");
++			return err;
++		}
+ 	}
+ 
+ 	if (nor->addr_width == 4 && !(nor->flags & SNOR_F_4B_OPCODES)) {
+@@ -5193,6 +5218,8 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
+ 		nor->flags |= SNOR_F_NO_OP_CHIP_ERASE;
+ 	if (info->flags & USE_CLSR)
+ 		nor->flags |= SNOR_F_USE_CLSR;
++	if (info->flags & SPI_NOR_UNPROTECT)
++		nor->flags |= SNOR_F_NEED_UNPROTECT;
+ 
+ 	if (info->flags & SPI_NOR_NO_ERASE)
+ 		mtd->flags |= MTD_NO_ERASE;
+diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+index 7e32adce72f7..89c96c943172 100644
+--- a/include/linux/mtd/spi-nor.h
++++ b/include/linux/mtd/spi-nor.h
+@@ -137,6 +137,11 @@
+ 
+ #define SR1_QUAD_EN_BIT6	BIT(6)
+ 
++/* Global unprotect is performed by writing the 0b0x0000xx to the status
++ * register.
++ */
++#define SR_GLOBAL_UNPROTECT_MASK 0xbc
++
+ /* Enhanced Volatile Configuration Register bits */
+ #define EVCR_QUAD_EN_MICRON	BIT(7)	/* Micron Quad I/O */
+ 
+@@ -246,7 +251,7 @@ enum spi_nor_option_flags {
+ 	SNOR_F_HAS_16BIT_SR	= BIT(9),
+ 	SNOR_F_NO_READ_CR	= BIT(10),
+ 	SNOR_F_HAS_SR_TB_BIT6	= BIT(11),
+-
++	SNOR_F_NEED_UNPROTECT	= BIT(12),
+ };
+ 
+ /**
+-- 
+2.20.1
 
-> +			compatible = "mediatek,mt8516-sysirq",
-> +				     "mediatek,mt6577-sysirq";
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +			interrupt-parent = <&gic>;
-> +			reg = <0 0x10200620 0 0x20>;
-> +		};
-> +
-> +		gic: interrupt-controller@10310000 {
-> +			compatible = "arm,gic-400";
-> +			#interrupt-cells = <3>;
-> +			interrupt-parent = <&gic>;
-> +			interrupt-controller;
-> +			reg = <0 0x10310000 0 0x1000>,
-> +			      <0 0x10320000 0 0x1000>,
-> +			      <0 0x10340000 0 0x2000>,
-> +			      <0 0x10360000 0 0x2000>;
-> +			interrupts = <GIC_PPI 9
-> +				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> +		};
-> +
-> +		uart0: serial@11005000 {
-> +			compatible = "mediatek,mt8516-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11005000 0 0x1000>;
-> +			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_UART0_SEL>,
-> +				 <&topckgen CLK_TOP_UART0>;
-> +			clock-names = "baud","bus";
-
-space                                        ^
-
-> +			status = "disabled";
-> +		};
-> +
-> +		uart1: serial@11006000 {
-> +			compatible = "mediatek,mt8516-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11006000 0 0x1000>;
-> +			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_UART1_SEL>,
-> +				 <&topckgen CLK_TOP_UART1>;
-> +			clock-names = "baud","bus";
-
-space
-
-> +			status = "disabled";
-> +		};
-> +
-> +		uart2: serial@11007000 {
-> +			compatible = "mediatek,mt8516-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11007000 0 0x1000>;
-> +			interrupts = <GIC_SPI 211 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_UART2_SEL>,
-> +				 <&topckgen CLK_TOP_UART2>;
-> +			clock-names = "baud","bus";
-
-space
-
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c0: i2c@11009000 {
-> +			compatible = "mediatek,mt8516-i2c",
-> +				     "mediatek,mt2712-i2c";
-> +			reg = <0 0x11009000 0 0x90>,
-> +			      <0 0x11000180 0 0x80>;
-> +			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_AHB_INFRA_D2>,
-> +				 <&infracfg CLK_IFR_I2C0_SEL>,
-> +				 <&topckgen CLK_TOP_I2C0>,
-> +				 <&topckgen CLK_TOP_APDMA>;
-> +			clock-names = "main-source",
-> +				      "main-sel",
-> +				      "main",
-> +				      "dma";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c1: i2c@1100a000 {
-> +			compatible = "mediatek,mt8516-i2c",
-> +				     "mediatek,mt2712-i2c";
-> +			reg = <0 0x1100a000 0 0x90>,
-> +			      <0 0x11000200 0 0x80>;
-> +			interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_AHB_INFRA_D2>,
-> +				 <&infracfg CLK_IFR_I2C1_SEL>,
-> +				 <&topckgen CLK_TOP_I2C1>,
-> +				 <&topckgen CLK_TOP_APDMA>;
-> +			clock-names = "main-source",
-> +				      "main-sel",
-> +				      "main",
-> +				      "dma";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c2: i2c@1100b000 {
-> +			compatible = "mediatek,mt8516-i2c",
-> +				     "mediatek,mt2712-i2c";
-> +			reg = <0 0x1100b000 0 0x90>, <0 0x11000280 0 0x80>;
-> +			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_AHB_INFRA_D2>,
-> +				 <&infracfg CLK_IFR_I2C2_SEL>,
-> +				 <&topckgen CLK_TOP_I2C2>,
-> +				 <&topckgen CLK_TOP_APDMA>;
-> +			clock-names = "main-source",
-> +				      "main-sel",
-> +				      "main",
-> +				      "dma";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		spi: spi@1100c000 {
-> +			compatible = "mediatek,mt8516-spi",
-> +				     "mediatek,mt2712-spi";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0 0x1100c000 0 0x1000>;
-> +			interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_UNIVPLL_D12>,
-> +				 <&topckgen CLK_TOP_SPI_SEL>,
-> +				 <&topckgen CLK_TOP_SPI>;
-> +			clock-names = "parent-clk", "sel-clk", "spi-clk";
-> +			status = "disabled";
-> +		};
-> +
-> +		mmc0: mmc@11120000 {
-> +			compatible = "mediatek,mt8516-mmc";
-> +			reg = <0 0x11120000 0 0x1000>;
-> +			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_MSDC0>,
-> +				 <&topckgen CLK_TOP_AHB_INFRA_SEL>,
-> +				 <&topckgen CLK_TOP_MSDC0_INFRA>;
-> +			clock-names = "source", "hclk", "source_cg";
-> +			status = "disabled";
-> +		};
-> +
-> +		mmc1: mmc@11130000 {
-> +			compatible = "mediatek,mt8516-mmc";
-> +			reg = <0 0x11130000 0 0x1000>;
-> +			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_MSDC1>,
-> +				 <&topckgen CLK_TOP_AHB_INFRA_SEL>,
-> +				 <&topckgen CLK_TOP_MSDC1_INFRA>;
-> +			clock-names = "source", "hclk", "source_cg";
-> +			status = "disabled";
-> +		};
-> +
-> +		mmc2: mmc@11170000 {
-> +			compatible = "mediatek,mt8516-mmc";
-> +			reg = <0 0x11170000 0 0x1000>;
-> +			interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_MSDC2>,
-> +				 <&topckgen CLK_TOP_RG_MSDC2>,
-> +				 <&topckgen CLK_TOP_MSDC2_INFRA>;
-> +			clock-names = "source", "hclk", "source_cg";
-> +			status = "disabled";
-> +		};
-> +
-> +		rng: rng@1020c000 {
-> +			compatible = "mediatek,mt8516-rng",
-> +				     "mediatek,mt7623-rng";
-> +			reg = <0 0x1020c000 0 0x100>;
-> +			clocks = <&topckgen CLK_TOP_TRNG>;
-> +			clock-names = "rng";
-> +		};
-> +
-> +		pwm: pwm@11008000 {
-> +			compatible = "mediatek,mt8516-pwm";
-> +			reg = <0 0x11008000 0 0x1000>;
-> +			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_PWM>,
-> +				 <&topckgen CLK_TOP_PWM_B>,
-> +				 <&topckgen CLK_TOP_PWM1_FB>,
-> +				 <&topckgen CLK_TOP_PWM2_FB>,
-> +				 <&topckgen CLK_TOP_PWM3_FB>,
-> +				 <&topckgen CLK_TOP_PWM4_FB>,
-> +				 <&topckgen CLK_TOP_PWM5_FB>;
-> +			clock-names = "top", "main", "pwm1", "pwm2", "pwm3",
-> +				      "pwm4", "pwm5";
-> +		};
-> +	};
-> +};
-> -- 
-> 2.25.0.rc0
-> 
