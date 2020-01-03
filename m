@@ -2,171 +2,251 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E132C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 860C6C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D8FF222C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43EA2222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:27:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DfFgaLAa"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="enI2VYUG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgACL1A (ORCPT
+        id S1727640AbgACL1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 06:27:00 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:55390 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727470AbgACL07 (ORCPT
+        Fri, 3 Jan 2020 06:27:38 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43678 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727470AbgACL1h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 06:26:59 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 003BKKWm045431;
-        Fri, 3 Jan 2020 11:26:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=FmqANtUSeaOQWjkgeURWw7G38QnUhkhAohkw9ZJbr+I=;
- b=DfFgaLAadLQN1Ya6bjWGReBuhrMi62hhaBzjR3HnJ6Pr8jqj/FHHFt4D9AOehwGQMz2b
- 6EEzmfakFn0+7a8UmtmEv8JRfLgkJaX8hYJvXysiGJ/tQ0poW3shf0Gg/7nVLBZkgkkb
- 1NabjHpa6XrO5m7TbgiNRsYW1BZTbNzk1cqAvbg+7xPeSg3C0WRkcmEtte2NYh6v7+d5
- 29F0fnUpmADqIdKnXHKNr8MDo0gc/PvfYIhPys3HRntBBnRC4oSAfX3hDO2ei/1sSSAG
- dY2LjgarIWoTVBKsdwvPdkk4ckAgnKc5173kKAlSYKna4dpQLwig4ij8A8Lm3955G3kZ fQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2x5ypquvk0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Jan 2020 11:26:52 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 003BJUkR147494;
-        Fri, 3 Jan 2020 11:26:52 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2x8gjbtc7f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Jan 2020 11:26:52 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 003BQoh8010674;
-        Fri, 3 Jan 2020 11:26:50 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 03 Jan 2020 03:26:50 -0800
-Date:   Fri, 3 Jan 2020 14:26:41 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     =?iso-8859-1?B?Suly9G1l?= Pouiller <jerome.pouiller@silabs.com>,
+        Fri, 3 Jan 2020 06:27:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578050856;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AKOOwHs2ZDIRxWjWlTFCn8p7FYAVgQaVXWf4ImCfYuo=;
+        b=enI2VYUGfJ7wpSqc/gAvmfK93kmJPjWqawxUo8N/uD/Sg0VFFLezEwsWBXtE+83k5HocSr
+        KSHiMKMySaUsoaeVQ19d11CPpjr25cdHsX9UPQdjg4/MtV7lPOfGZ+h4/YMcAPPjzwm/cj
+        V8VRbFkYq4KptT5h9zj/P4OlbTJQ77o=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-304-IlLxBu3bO7eKd3mamO285g-1; Fri, 03 Jan 2020 06:27:35 -0500
+X-MC-Unique: IlLxBu3bO7eKd3mamO285g-1
+Received: by mail-wm1-f72.google.com with SMTP id 18so1321937wmp.0
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 03:27:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AKOOwHs2ZDIRxWjWlTFCn8p7FYAVgQaVXWf4ImCfYuo=;
+        b=FxB1e1ntfLMuTvPkCmlgkeoEV1CdjBAAPGXAPy10xbbXnknK9w8oBfHswE+uSjo7fB
+         Wuji8Z5aR8VxrGWIrtNQNiZGvXx1pUoaFBf1L4M9JJstyZGyNIL/pMow7BbAIEiSZpA3
+         r63gjdcIFRWFNkg7/t9ftGm8VnwjCYR5f5g3/y8FbkNyh8okPaHVia2a7W3SRnSdo5iH
+         IiVlPUDy6xqpZ853JkRpORtYU2IuSoErs7iZaDB1jt2didh8bwaYYHC8+QUZiBgEEG0w
+         uVM7Mbz3dpNk4yi+Hd9wyF3YfaSqC9EbuZJvXAgEg8vzJ45lISFsJUPU5dK157gakmhc
+         cCQQ==
+X-Gm-Message-State: APjAAAUwcdZTiY/wN9/8b4ZE3ICFbBhPp1W0H3q+LRy3Dr/z/I3LvjTF
+        AJu/Qq9KfOri392vRJHjr5HeMp5vA9Vk4R0mUwOg65XDE/P/16RAidDxBBJfAX2aAJGC97ZRb5a
+        JhE3gZcqeuy4y2UlIs7UGq53q
+X-Received: by 2002:a1c:a406:: with SMTP id n6mr19221993wme.40.1578050854000;
+        Fri, 03 Jan 2020 03:27:34 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyZFNItZbvteC2IYwnmx0jlBP0nRcHjtSlcxUvpNI4Px9I2AyLJtHNp/+ME2brZ+/LsbjnDSw==
+X-Received: by 2002:a1c:a406:: with SMTP id n6mr19221951wme.40.1578050853665;
+        Fri, 03 Jan 2020 03:27:33 -0800 (PST)
+Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
+        by smtp.gmail.com with ESMTPSA id h8sm62312534wrx.63.2020.01.03.03.27.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jan 2020 03:27:32 -0800 (PST)
+Subject: Re: [PATCH v10 00/10] efi/firmware/platform-x86: Add EFI embedded fw
+ support
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] staging: wfx: check for memory allocation failures
- from wfx_alloc_hif
-Message-ID: <20200103112641.GH3911@kadam>
-References: <20191221001543.15255-1-colin.king@canonical.com>
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>,
+        x86@kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-input@vger.kernel.org
+References: <20191210115117.303935-1-hdegoede@redhat.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <66f45932-756d-0bb0-d7a8-330d61785663@redhat.com>
+Date:   Fri, 3 Jan 2020 12:27:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191221001543.15255-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001030108
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9488 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001030108
+In-Reply-To: <20191210115117.303935-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 21, 2019 at 12:15:43AM +0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+Hi All,
+
+Since I send this out, efi-next has seen some changes causing the first
+2 patches to no longer cleanly apply. So it looks like we need to
+merge this one bit at a time with immutable branches.
+
+Ard, the first 2 patches in this series should be merged through your
+efi tree. AFAIK everyone is happy with them in their current state
+so they are ready for merging. Can you create an immutable branch
+with these 2 patches and merge that into your efi-next branch?
+
+Note if you do the immutable branch on 5.5-rc1 + just these 2 patches,
+there will be a conflict when you merge this into efi-next, but it is
+trivial to resolve.
+
+Luis, the rest of the series is almost ready for merging, it just needs
+your review of the 2 new patches (patch 5 and 6) adding the selftests for
+the new firmware_request_platform api, if you can review those that would
+be great.
+
+Regards,
+
+Hans
+
+
+
+On 10-12-2019 12:51, Hans de Goede wrote:
+> Hi All,
 > 
-> Currently calls to wfx_alloc_hif are not checking for a null return
-> when a memory allocation fails and this leads to null pointer
-> dereferencing issues.  Fix this by adding null pointer checks and
-> returning passing down -ENOMEM errors where necessary. The error
-> checking in the current driver is a bit sparse, so this may need
-> some extra attention later if required.
+> Here is v10 of my patch-set to add support for EFI embedded fw to the
+> kernel. This version has been rebased on top 5.5-rc1 to fix 2 conflicts
+> with the first 2 (efi) patches in the series. There are no changes
+> versus v9 other then the rebase.
 > 
-> Fixes: f95a29d40782 ("staging: wfx: add HIF commands helpers")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/staging/wfx/hif_tx.c |  6 ++++++
->  drivers/staging/wfx/sta.c    | 13 +++++++------
->  2 files changed, 13 insertions(+), 6 deletions(-)
+> Below is the cover-letter of v9:
 > 
-> diff --git a/drivers/staging/wfx/hif_tx.c b/drivers/staging/wfx/hif_tx.c
-> index 8a34a52dd5b9..d8e159670eae 100644
-> --- a/drivers/staging/wfx/hif_tx.c
-> +++ b/drivers/staging/wfx/hif_tx.c
-> @@ -366,6 +366,9 @@ int hif_set_edca_queue_params(struct wfx_vif *wvif, u16 queue,
->  	struct hif_req_edca_queue_params *body = wfx_alloc_hif(sizeof(*body),
->  							       &hif);
->  
+> The main new feature in this version is the addition of some selftests for
+> the new firmware_request_platform api (patch 5 and 6, both new). My plan
+> was to send the patches adding the selftests out as a follow up series.
+> 
+> But during unrelated testing of my personal tree I found a small but nasty
+> bug in the "efi: Add embedded peripheral firmware support" patch, the minor
+> refactoring done in v8 exposed a bug which causes a hard crash on boot for
+> devices which have a DMI match in the touchscreen_dmi_table but do not use
+> EFI-embedded fw, this is fixed in this new version.
+> 
+> Assuming the 2 new patches adding the selftests are ok, I believe that
+> this series is ready for merging now.  I believe it would be best to merge
+> patches 1-8 through Greg's driver-core tree where firmware-loader changes go.
+> The non firmware patches already have Acked-by-s from the maintainers of
+> the EFI/input trees.
+> 
+> Patches 9-10 touch a quirks file under drivers/platform/x86 which sees
+> multipe updates each cycle. So my proposal is that once 1-8 has landed
+> Greg creates an immutable branch with those changes and then
+> Andy and/or Darren can merge in that branch and then apply 9 and 10.
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> Changes in v10:
+> - Rebase on top of 5.5-rc1
+> 
+> Changes in v9:
+> - Add 2 new patches adding selftests
+> - At least touchscreen_dmi.c uses the same dmi_table for its own private
+>    data and the fw_desc structs, putting the fw_desc struct first in the
+>    data driver_data points to so that the dmi_table can be shared with
+>    efi_check_for_embedded_firmwares(). But not all entries there have
+>    embedded-fw so in some cases the fw_desc is empty (zero-ed out).
+>    This can lead to a possible crash because fw_desc->length now is
+>    less then 8, so if the segment size is close enough to a multiple of the
+>    page_size, then the memcmp to check the prefix my segfault. Crashing the
+>    machine. v9 checks for and skips these empty fw_desc entries avoiding this.
+> - Add static inline wrapper for firmware_request_platform() to firmware.h,
+>    for when CONFIG_FW_LOADER is not set
+> 
+> Changes in v8:
+> - Add pr_warn if there are mode then EFI_DEBUGFS_MAX_BLOBS boot service segments
+> - Document how the EFI debugfs boot_service_code? files can be used to check for
+>    embedded firmware
+> - Properly deal with the case of an EFI segment being smaller then the fw we
+>    are looking for
+> - Log a warning when efi_get_embedded_fw get called while we did not (yet)
+>    check for embedded firmwares
+> - Only build fallback_platform.c if CONFIG_EFI_EMBEDDED_FIRMWARE is defined,
+>    otherwise make firmware_fallback_platform() a static inline stub
+> 
+> Changes in v7:
+> - Split drivers/firmware/efi and drivers/base/firmware_loader changes into
+>    2 patches
+> - Use new, standalone, lib/crypto/sha256.c code
+> - Address kdoc comments from Randy Dunlap
+> - Add new FW_OPT_FALLBACK_PLATFORM flag and firmware_request_platform()
+>    _request_firmware() wrapper, as requested by Luis R. Rodriguez
+> - Stop using "efi-embedded-firmware" device-property, now that drivers need to
+>    use the new firmware_request_platform() to enable fallback to a device fw
+>    copy embedded in the platform's main firmware, we no longer need a property
+>    on the device to trigger this behavior
+> - Use security_kernel_load_data instead of calling
+>    security_kernel_read_file with a NULL file pointer argument
+> - Move the docs to Documentation/driver-api/firmware/fallback-mechanisms.rst
+> - Document the new firmware_request_platform() function in
+>    Documentation/driver-api/firmware/request_firmware.rst
+> - Add 2 new patches for the silead and chipone-icn8505 touchscreen drivers
+>    to use the new firmware_request_platform() method
+> - Rebased on top of 5.4-rc1
+> 
+> Changes in v6:
+> -Rework code to remove casts from if (prefix == mem) comparison
+> -Use SHA256 hashes instead of crc32 sums
+> -Add new READING_FIRMWARE_EFI_EMBEDDED read_file_id and use it
+> -Call security_kernel_read_file(NULL, READING_FIRMWARE_EFI_EMBEDDED)
+>   to check if this is allowed before looking at EFI embedded fw
+> -Document why we are not using the PI Firmware Volume protocol
+> 
+> Changes in v5:
+> -Rename the EFI_BOOT_SERVICES flag to EFI_PRESERVE_BS_REGIONS
+> 
+> Changes in v4:
+> -Drop note in docs about EFI_FIRMWARE_VOLUME_PROTOCOL, it is not part of
+>   UEFI proper, so the EFI maintainers don't want us referring people to it
+> -Use new EFI_BOOT_SERVICES flag
+> -Put the new fw_get_efi_embedded_fw() function in its own fallback_efi.c
+>   file which only gets built when EFI_EMBEDDED_FIRMWARE is selected
+> -Define an empty stub for fw_get_efi_embedded_fw() in fallback.h hwen
+>   EFI_EMBEDDED_FIRMWARE is not selected, to avoid the need for #ifdefs
+>   in firmware_loader/main.c
+> -Properly call security_kernel_post_read_file() on the firmware returned
+>   by efi_get_embedded_fw() to make sure that we are allowed to use it
+> 
+> Changes in v2:
+> -Rebased on driver-core/driver-core-next
+> -Add documentation describing the EFI embedded firmware mechanism to:
+>   Documentation/driver-api/firmware/request_firmware.rst
+> -Add a new EFI_EMBEDDED_FIRMWARE Kconfig bool and only build the embedded
+>   fw support if this is set. This is an invisible option which should be
+>   selected by drivers which need this
+> -Remove the efi_embedded_fw_desc and dmi_system_id-s for known devices
+>   from the efi-embedded-fw code, instead drivers using this are expected to
+>   export a dmi_system_id array, with each entries' driver_data pointing to a
+>   efi_embedded_fw_desc struct and register this with the efi-embedded-fw code
+> -Use kmemdup to make a copy instead of efi_mem_reserve()-ing the firmware,
+>   this avoids us messing with the EFI memmap and avoids the need to make
+>   changes to efi_mem_desc_lookup()
+> -Make the firmware-loader code only fallback to efi_get_embedded_fw() if the
+>   passed in device has the "efi-embedded-firmware" device-property bool set
+> -Skip usermodehelper fallback when "efi-embedded-firmware" device-property
+>   is set
+> 
+> 
 
-I hate allocations in declaration block.  It's way more likely to have
-a bug like this where it's missing the NULL check.
-
-> +	if (!body)
-> +		return -ENOMEM;
-> +
->  	WARN_ON(arg->aifs > 255);
->  	body->aifsn = arg->aifs;
->  	body->cw_min = cpu_to_le16(arg->cw_min);
-> @@ -390,6 +393,9 @@ int hif_set_pm(struct wfx_vif *wvif, bool ps, int dynamic_ps_timeout)
->  	struct hif_msg *hif;
->  	struct hif_req_set_pm_mode *body = wfx_alloc_hif(sizeof(*body), &hif);
->  
-> +	if (!body)
-> +		return -ENOMEM;
-> +
->  	if (ps) {
->  		body->pm_mode.enter_psm = 1;
->  		// Firmware does not support more than 128ms
-> diff --git a/drivers/staging/wfx/sta.c b/drivers/staging/wfx/sta.c
-> index 9a61478d98f8..c08d691fe870 100644
-> --- a/drivers/staging/wfx/sta.c
-> +++ b/drivers/staging/wfx/sta.c
-> @@ -316,6 +316,7 @@ int wfx_conf_tx(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
->  {
->  	struct wfx_dev *wdev = hw->priv;
->  	struct wfx_vif *wvif = (struct wfx_vif *) vif->drv_priv;
-> +	int ret = 0;
->  
->  	WARN_ON(queue >= hw->queues);
->  
-> @@ -326,10 +327,10 @@ int wfx_conf_tx(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
->  	if (wvif->vif->type == NL80211_IFTYPE_STATION) {
->  		hif_set_uapsd_info(wvif, wvif->uapsd_mask);
->  		if (wvif->setbssparams_done && wvif->state == WFX_STATE_STA)
-> -			wfx_update_pm(wvif);
-> +			ret = wfx_update_pm(wvif);
->  	}
->  	mutex_unlock(&wdev->conf_mutex);
-> -	return 0;
-> +	return ret;
->  }
->  
->  int wfx_set_rts_threshold(struct ieee80211_hw *hw, u32 value)
-> @@ -1322,7 +1323,7 @@ int wfx_config(struct ieee80211_hw *hw, u32 changed)
->  	if (changed & IEEE80211_CONF_CHANGE_PS) {
->  		wvif = NULL;
->  		while ((wvif = wvif_iterate(wdev, wvif)) != NULL)
-> -			wfx_update_pm(wvif);
-> +			ret = wfx_update_pm(wvif);
-
-We reset "ret" on every iteration through the loop and only use the
-last value.  Probably we should break out of the loop on failure.
-
->  		wvif = wdev_to_wvif(wdev, 0);
->  	}
->  
-
-regards,
-dan carpenter
