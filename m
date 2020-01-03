@@ -2,467 +2,194 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 470D2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 13:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59569C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 13:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B98F20866
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 13:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1586C222C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 13:07:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C0CdI635"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AuceKUmD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgACNGs (ORCPT
+        id S1727805AbgACNHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 08:06:48 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45284 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727350AbgACNGs (ORCPT
+        Fri, 3 Jan 2020 08:07:21 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:40301 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727621AbgACNHU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 08:06:48 -0500
-Received: by mail-io1-f66.google.com with SMTP id i11so41229722ioi.12;
-        Fri, 03 Jan 2020 05:06:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V+qdmDgxgEPMsz57xTHA6VdoazcNKQL6d/5Wwiwwim4=;
-        b=C0CdI635CL9rN1RHUdHKmFkGEuFls43eY9uyBINNf1ndYezCLV11uyKd2PtMyjlwip
-         9pVQ+U9ScF6kLgcZIfiL+GNNyBjEHRJRp9ss4DjD1mw9uevlIT2Hh1tjMX9U5Q4vW16Y
-         Lddf0ZJtZK7IT03DgoaisIx2RqYRDqOsitKeHZGZmH9e9dn7ijN3f0gj3E1+XYMZeEJT
-         sNMQvcD2tR8nQcbnWjOQgSjVb0bhjjB5phYEMuqqxCD9tY1/UN2Af8fEt+Uo0GI2D1Rp
-         IMnOUEt1NRPKZ5dVG0yuz2R9AwaKj6btAelX71VCV7LROyKqAwVrAhYHQNLkqW+Zf7Yo
-         c+NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V+qdmDgxgEPMsz57xTHA6VdoazcNKQL6d/5Wwiwwim4=;
-        b=lHYvACrJP2Pa/rVgUd1Xb5kSdUoyV3sw5CpB8IB3A2GsNTjbJPlG849eZBeUIu2w3H
-         BQzOhIJbLN+YsK6MrBxbwIUHnj/ljSHjSat5ivmbTutCB5MAzATsu47EmqagotIomYju
-         FzfJDDrXE6NAa9tSclq3XwgiYKrS1EDVt/ePaWjriSYPbxiXZj+wVLHRkDlo+n7cflgo
-         jUNhlUs0x0Ce/vDJh8meccSIXFcxee22AdthVvBNymhgcLWlBFereeRMHSfZXbe/FCwy
-         R3A+8ytN774YJtDdQqSPu1wl/i3hRgzXDH+hnPgzE+M1PK05Y50GgLPGHpvv2IRDD6VE
-         NIzA==
-X-Gm-Message-State: APjAAAXFF0RpNmF7t39wMJnTis6Pi20JjBg/RanwVsv4CKWhsdcNRZjl
-        bcEBBeyceMSZK6uXAR9mHWJmhENZegP21a2x0Is=
-X-Google-Smtp-Source: APXvYqxh8JwK1srBzrNja5n2/Ej2uZPNuUAwpGIYyQmX0UBrkmYUfW5G4LAJTJluAFRIlksh5fFBiPofW4dQ1ux5Mgo=
-X-Received: by 2002:a02:c611:: with SMTP id i17mr70920406jan.28.1578056806939;
- Fri, 03 Jan 2020 05:06:46 -0800 (PST)
+        Fri, 3 Jan 2020 08:07:20 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200103130718euoutp0256316ce3142f734f52e6af3d0dc6977e~mYlWAIQmf2102421024euoutp02V
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jan 2020 13:07:18 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200103130718euoutp0256316ce3142f734f52e6af3d0dc6977e~mYlWAIQmf2102421024euoutp02V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578056838;
+        bh=zDdH4NrkEQ5yIXja9XqlAOcAHDuIOVYWY5pN6f9uf1o=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=AuceKUmDHf97e4ESKeRAuy19z2IVSgtlq5pghCTR4tdXeecE0pm5D4Q35fAhlFrmJ
+         RrZqjnP0RocevFmmhM/dtw4cfGwxDFC2oytILgg5D6fLeVz7bKRMpv8vcRe7w1i5ke
+         IeJi6cP/WmSsEdUov+gsVbAE+Cay5ctoG3KVuQys=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200103130718eucas1p2cfef288ae36a773db4e0c9e9321dcbfd~mYlVcfDzl3117531175eucas1p2C;
+        Fri,  3 Jan 2020 13:07:18 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 24.CA.60679.68C3F0E5; Fri,  3
+        Jan 2020 13:07:18 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200103130717eucas1p1707a5a61c3ae7df3233649d7e9e0abe3~mYlVNOJcZ0209102091eucas1p1K;
+        Fri,  3 Jan 2020 13:07:17 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200103130717eusmtrp133ec518ebccb9c2cf93b921f1882290a~mYlVMdYl32758327583eusmtrp14;
+        Fri,  3 Jan 2020 13:07:17 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-52-5e0f3c869f26
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 2B.87.07950.58C3F0E5; Fri,  3
+        Jan 2020 13:07:17 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200103130717eusmtip1131e069ace366b89333b9139649af04d~mYlUZSZFU0169601696eusmtip1g;
+        Fri,  3 Jan 2020 13:07:17 +0000 (GMT)
+Subject: Re: [PATCH] fbdev: potential information leak in do_fb_ioctl()
+To:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Joe Perches <joe@perches.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrea Righi <righi.andrea@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Peter Rosin <peda@axentia.se>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        security@kernel.org, Kees Cook <keescook@chromium.org>,
+        Julia Lawall <Julia.Lawall@lip6.fr>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <fd4e6f01-074b-def7-7ffb-9a9197930c31@samsung.com>
+Date:   Fri, 3 Jan 2020 14:07:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191210132132.41509-1-alcooperx@gmail.com> <20191210132132.41509-8-alcooperx@gmail.com>
- <8576406d-2b90-684f-0c5e-44937c3b030a@ti.com>
-In-Reply-To: <8576406d-2b90-684f-0c5e-44937c3b030a@ti.com>
-From:   Alan Cooper <alcooperx@gmail.com>
-Date:   Fri, 3 Jan 2020 08:06:35 -0500
-Message-ID: <CAOGqxeVfaTxLGei2ZV+x_8ZbdQn7As96aqoCWXzh+E2-rhWV2w@mail.gmail.com>
-Subject: Re: [PATCH v3 07/13] phy: usb: Add support for new Synopsis USB
- controller on the 7216
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Srinath Mannam <srinath.mannam@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87zhhjjryk.fsf@x220.int.ebiederm.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sf0yMcRz27X3vvbfL1bcru48YdszG8quMF80w5jUz+kOskV56lx/d1e7t
+        B/0Vo3JupkJz1yjSj8NJVC6u2VlSmWZIjhRiRXH6Remi13tN/3z3fJ7P8+x5PtuXJlTHqCD6
+        gC6R1+u4OA2lICsfDTUtSA/zi1qc5VIwX0dzSabgfSvBvBj4TjF/Ko/LGXPbR5Ipam9EzJNT
+        WqbCOY357KwnmMenXTLmeXUexRT8qCAZu+MSYi4+fEUxJUMViHnpzkRrMHv+gVnOmtOekax9
+        MJ9kbaZWOVtuOUmxF+vDWfudg2zbqTov9scnJ8n2W5oJtvD8S4r9XjP29JXPYM86MshtvpGK
+        sBg+7kAyr1+0Olqx3+p8QyR0Bhy2Xe8g0tAvPwPypgEvhYbcbtKAFLQKlyA4mnFSLg39CGzZ
+        5yhp6ENQ0DQoG7cMu8weSzGC0pYSj6UHgcn8B4mqALwRTl8u+ocD8TYYqj0hE0UEdhNgbSsm
+        xQWFV0JWhuWfSIlXQ+lwn5eISTwHupvfUSKegndCb/tDmaTxh/oLHWNemvbGodCSvlykCawG
+        Z8clLwnPhKqePELMAnyDhuHGBkqqvR5qu6VygAPgS90duYSnQ2OOkZQMVgTuzE6PuwpBcc6o
+        x70K3j4dpsRkAs+Dm9WLJHotXLl7hhBpwL7Q0uMvlfCF7MpcD62EzHSVpJ4LZUVl1HiswVZK
+        nEEa04TLTBPOMU04x/Q/Nx+RFqTmkwRtLC+E6PiUhQKnFZJ0sQv3xWvL0djPbByt67+Lqkf2
+        OhCmkWayMnq2X5RKxiULR7QOBDShCVSmhCujVMoY7kgqr4/fo0+K4wUHmkaTGrUy9HLXbhWO
+        5RL5QzyfwOvHt160d1AaygYfY6hb19N5zYduzYrJ+blAMRL0zB4c0duZuoM95t8VuSyYaxbu
+        915dcb+pokE5YAxwb9jS9nPd0ggwRasTtqs3tu7aUmiPjSl8zf2+3f4icOqh4FTjra2bIi0z
+        glzJVa+sHww1po+6c49sEfkHayfl9c/SLgkxfNtszL9X05upIYX93JL5hF7g/gJwGHZMlQMA
+        AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEKsWRmVeSWpSXmKPExsVy+t/xu7qtNvxxBu3njS1e/5vOYrHw4V1m
+        iytf37NZ/N/Wwm4x+/5jFotlD04zWpzpzrXYekva4tmtk8wWJ/o+sFpc3jWHzWLhx60sFnsP
+        zWe0mHf4OpvFip9bGS2u/u1gdBDwmHZgNrvH7IaLLB57vy1g8dg56y67x6ZVnWwe804Geuzd
+        kuVxv/s4k8fHp7dYPL6susbssWTaVTaP9/uAxOdNch5TDrWzBPBF6dkU5ZeWpCpk5BeX2CpF
+        G1oY6RlaWugZmVjqGRqbx1oZmSrp29mkpOZklqUW6dsl6GWsu3WbueCFcMXONU+YGxh/8Hcx
+        cnJICJhI/Powm6WLkYtDSGApo0TLholADgdQQkbi+PoyiBphiT/Xutggal4zSlxZdoUZJCEs
+        4C7Rt2gZI4gtIuAncf7nYTCbWeA/s0Tz1nqIhhWMEl9Pv2IBSbAJWElMbF8FVsQrYCex8tdn
+        JhCbRUBF4s21e2wgtqhAhMThHbOgagQlTs58AnYQp4CxxI02c4j56hJ/5l1ihrDFJW49mc8E
+        YctLbH87h3kCo9AsJN2zkLTMQtIyC0nLAkaWVYwiqaXFuem5xUZ6xYm5xaV56XrJ+bmbGIHp
+        Yduxn1t2MHa9Cz7EKMDBqMTDy6HIHyfEmlhWXJl7iFGCg1lJhLc8kDdOiDclsbIqtSg/vqg0
+        J7X4EKMp0G8TmaVEk/OBqSuvJN7Q1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwf
+        EwenVAOjLtO0LZfzOzr3fXka2XiWr/ZR/61Ur6xjDZs+RNv9S4qo3n5gsf0mIWmZTWtd9lQU
+        FuQvsczKehojxf1o9cWKzQ9Zzz8+mbW4PfKA3EyZlIrnXK8iddKic89lKZy/dmA3Y2aBl92v
+        y7HpovuVQ9LXxKSsvLpY+oyJDNdi85OP539w1LXXFDJSYinOSDTUYi4qTgQAauMwRSUDAAA=
+X-CMS-MailID: 20200103130717eucas1p1707a5a61c3ae7df3233649d7e9e0abe3
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191029190229epcas3p4e9b24bd8cde962681ef3dc4644ed2c2e
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191029190229epcas3p4e9b24bd8cde962681ef3dc4644ed2c2e
+References: <20191029182320.GA17569@mwanda>
+        <CGME20191029190229epcas3p4e9b24bd8cde962681ef3dc4644ed2c2e@epcas3p4.samsung.com>
+        <87zhhjjryk.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 3, 2020 at 4:31 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
-> Hi,
->
-> On 10/12/19 6:51 PM, Al Cooper wrote:
-> > The 7216 has the new USB XHCI controller from Synopsis. While
-> > this new controller and the PHY are similar to the STB versions,
-> > the major differences are:
-> >
-> > - Many of the registers and fields in the CTRL block have been
-> >   removed or changed.
-> > - A new set of Synopsis control registers, BCHP_USB_XHCI_GBL, were
-> >   added.
->
-> Is it not Synopsys?
 
-Yes, I'll send a v4 of patches 7 and 8
+On 10/29/19 8:02 PM, Eric W. Biederman wrote:
+> Dan Carpenter <dan.carpenter@oracle.com> writes:
+> 
+>> The "fix" struct has a 2 byte hole after ->ywrapstep and the
+>> "fix = info->fix;" assignment doesn't necessarily clear it.  It depends
+>> on the compiler.
+>>
+>> Fixes: 1f5e31d7e55a ("fbmem: don't call copy_from/to_user() with mutex held")
+>> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+>> ---
+>> I have 13 more similar places to patch...  I'm not totally sure I
+>> understand all the issues involved.
+> 
+> What I have done in a similar situation with struct siginfo, is that
+> where the structure first appears I have initialized it with memset,
+> and then field by field.
+> 
+> Then when the structure is copied I copy the structure with memcpy.
+> 
+> That ensures all of the bytes in the original structure are initialized
+> and that all of the bytes are copied.
+> 
+> The goal is to avoid memory that has values of the previous users of
+> that memory region from leaking to userspace.  Which depending on who
+> the previous user of that memory region is could tell userspace
+> information about what the kernel is doing that it should not be allowed
+> to find out.
+> 
+> I tried to trace through where "info" and thus presumably "info->fix" is
+> coming from and only made it as far as  register_framebuffer.  Given
 
+"info" (and thus "info->fix") comes from framebuffer_alloc() (which is
+called by fbdev device drivers prior to registering "info" with
+register_framebuffer()). framebuffer_alloc() does kzalloc() on "info".
 
-On Fri, Jan 3, 2020 at 4:31 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
-> Hi,
->
-> On 10/12/19 6:51 PM, Al Cooper wrote:
-> > The 7216 has the new USB XHCI controller from Synopsis. While
-> > this new controller and the PHY are similar to the STB versions,
-> > the major differences are:
-> >
-> > - Many of the registers and fields in the CTRL block have been
-> >   removed or changed.
-> > - A new set of Synopsis control registers, BCHP_USB_XHCI_GBL, were
-> >   added.
->
-> Is it not Synopsys?
->
-> Thanks
-> Kishon
->
-> > - MDIO functionality has been replaced with direct access registers
-> >   in the BCHP_USB_XHCI_GBL block.
-> > - Power up PHY defaults that had to be changed by MDIO in previous
-> >   chips will now power up with the correct defaults.
-> >
-> > A new init module was created for this new Synopsis USB controller.
-> > A new compatible string was added and the driver will dispatch
-> > into one of two init modules based on it. A "reg-names" field was
-> > added so the driver can more easily get optional registers.
-> > A DT bindings document was also added for this driver.
-> >
-> > Signed-off-by: Al Cooper <alcooperx@gmail.com>
-> > ---
-> >  drivers/phy/broadcom/Makefile                 |   2 +-
-> >  .../phy/broadcom/phy-brcm-usb-init-synopsis.c | 171 ++++++++++++++++++
-> >  drivers/phy/broadcom/phy-brcm-usb-init.h      |   2 +
-> >  drivers/phy/broadcom/phy-brcm-usb.c           |  70 +++++--
-> >  4 files changed, 227 insertions(+), 18 deletions(-)
-> >  create mode 100644 drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
-> >
-> > diff --git a/drivers/phy/broadcom/Makefile b/drivers/phy/broadcom/Makefile
-> > index f453c7d3ffff..88523e2be861 100644
-> > --- a/drivers/phy/broadcom/Makefile
-> > +++ b/drivers/phy/broadcom/Makefile
-> > @@ -8,7 +8,7 @@ obj-$(CONFIG_PHY_NS2_USB_DRD)         += phy-bcm-ns2-usbdrd.o
-> >  obj-$(CONFIG_PHY_BRCM_SATA)          += phy-brcm-sata.o
-> >  obj-$(CONFIG_PHY_BRCM_USB)           += phy-brcm-usb-dvr.o
-> >
-> > -phy-brcm-usb-dvr-objs := phy-brcm-usb.o phy-brcm-usb-init.o
-> > +phy-brcm-usb-dvr-objs := phy-brcm-usb.o phy-brcm-usb-init.o phy-brcm-usb-init-synopsis.o
-> >
-> >  obj-$(CONFIG_PHY_BCM_SR_PCIE)                += phy-bcm-sr-pcie.o
-> >  obj-$(CONFIG_PHY_BCM_SR_USB)         += phy-bcm-sr-usb.o
-> > diff --git a/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c b/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
-> > new file mode 100644
-> > index 000000000000..57663492b228
-> > --- /dev/null
-> > +++ b/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
-> > @@ -0,0 +1,171 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/* Copyright (c) 2018, Broadcom */
-> > +
-> > +/*
-> > + * This module contains USB PHY initialization for power up and S3 resume
-> > + * for newer Synopsis based USB hardware first used on the bcm7216.
-> > + */
-> > +
-> > +#include <linux/delay.h>
-> > +#include <linux/io.h>
-> > +
-> > +#include <linux/soc/brcmstb/brcmstb.h>
-> > +#include "phy-brcm-usb-init.h"
-> > +
-> > +/* Register definitions for the USB CTRL block */
-> > +#define USB_CTRL_SETUP                       0x00
-> > +#define   USB_CTRL_SETUP_STRAP_IPP_SEL_MASK          0x02000000
-> > +#define   USB_CTRL_SETUP_SCB2_EN_MASK                        0x00008000
-> > +#define   USB_CTRL_SETUP_SCB1_EN_MASK                        0x00004000
-> > +#define   USB_CTRL_SETUP_SOFT_SHUTDOWN_MASK          0x00000200
-> > +#define   USB_CTRL_SETUP_IPP_MASK                    0x00000020
-> > +#define   USB_CTRL_SETUP_IOC_MASK                    0x00000010
-> > +#define USB_CTRL_USB_PM                      0x04
-> > +#define   USB_CTRL_USB_PM_USB_PWRDN_MASK             0x80000000
-> > +#define   USB_CTRL_USB_PM_SOFT_RESET_MASK            0x40000000
-> > +#define   USB_CTRL_USB_PM_BDC_SOFT_RESETB_MASK               0x00800000
-> > +#define   USB_CTRL_USB_PM_XHC_SOFT_RESETB_MASK               0x00400000
-> > +#define USB_CTRL_USB_PM_STATUS               0x08
-> > +#define USB_CTRL_USB_DEVICE_CTL1     0x10
-> > +#define   USB_CTRL_USB_DEVICE_CTL1_PORT_MODE_MASK    0x00000003
-> > +
-> > +
-> > +static void xhci_soft_reset(struct brcm_usb_init_params *params,
-> > +                     int on_off)
-> > +{
-> > +     void __iomem *ctrl = params->ctrl_regs;
-> > +
-> > +     /* Assert reset */
-> > +     if (on_off)
-> > +             USB_CTRL_UNSET(ctrl, USB_PM, XHC_SOFT_RESETB);
-> > +     /* De-assert reset */
-> > +     else
-> > +             USB_CTRL_SET(ctrl, USB_PM, XHC_SOFT_RESETB);
-> > +}
-> > +
-> > +static void usb_init_ipp(struct brcm_usb_init_params *params)
-> > +{
-> > +     void __iomem *ctrl = params->ctrl_regs;
-> > +     u32 reg;
-> > +     u32 orig_reg;
-> > +
-> > +     pr_debug("%s\n", __func__);
-> > +
-> > +     orig_reg = reg = brcm_usb_readl(USB_CTRL_REG(ctrl, SETUP));
-> > +     if (params->ipp != 2)
-> > +             /* override ipp strap pin (if it exits) */
-> > +             reg &= ~(USB_CTRL_MASK(SETUP, STRAP_IPP_SEL));
-> > +
-> > +     /* Override the default OC and PP polarity */
-> > +     reg &= ~(USB_CTRL_MASK(SETUP, IPP) | USB_CTRL_MASK(SETUP, IOC));
-> > +     if (params->ioc)
-> > +             reg |= USB_CTRL_MASK(SETUP, IOC);
-> > +     if (params->ipp == 1)
-> > +             reg |= USB_CTRL_MASK(SETUP, IPP);
-> > +     brcm_usb_writel(reg, USB_CTRL_REG(ctrl, SETUP));
-> > +
-> > +     /*
-> > +      * If we're changing IPP, make sure power is off long enough
-> > +      * to turn off any connected devices.
-> > +      */
-> > +     if ((reg ^ orig_reg) & USB_CTRL_MASK(SETUP, IPP))
-> > +             msleep(50);
-> > +}
-> > +
-> > +static void usb_init_common(struct brcm_usb_init_params *params)
-> > +{
-> > +     u32 reg;
-> > +     void __iomem *ctrl = params->ctrl_regs;
-> > +
-> > +     pr_debug("%s\n", __func__);
-> > +
-> > +     USB_CTRL_UNSET(ctrl, USB_PM, USB_PWRDN);
-> > +     /* 1 millisecond - for USB clocks to settle down */
-> > +     usleep_range(1000, 2000);
-> > +
-> > +     if (USB_CTRL_MASK(USB_DEVICE_CTL1, PORT_MODE)) {
-> > +             reg = brcm_usb_readl(USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
-> > +             reg &= ~USB_CTRL_MASK(USB_DEVICE_CTL1, PORT_MODE);
-> > +             reg |= params->mode;
-> > +             brcm_usb_writel(reg, USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
-> > +     }
-> > +     switch (params->mode) {
-> > +     case USB_CTLR_MODE_HOST:
-> > +             USB_CTRL_UNSET(ctrl, USB_PM, BDC_SOFT_RESETB);
-> > +             break;
-> > +     default:
-> > +             USB_CTRL_UNSET(ctrl, USB_PM, BDC_SOFT_RESETB);
-> > +             USB_CTRL_SET(ctrl, USB_PM, BDC_SOFT_RESETB);
-> > +             break;
-> > +     }
-> > +}
-> > +
-> > +static void usb_init_xhci(struct brcm_usb_init_params *params)
-> > +{
-> > +     pr_debug("%s\n", __func__);
-> > +
-> > +     xhci_soft_reset(params, 0);
-> > +}
-> > +
-> > +static void usb_uninit_common(struct brcm_usb_init_params *params)
-> > +{
-> > +     void __iomem *ctrl = params->ctrl_regs;
-> > +
-> > +     pr_debug("%s\n", __func__);
-> > +
-> > +     USB_CTRL_SET(ctrl, USB_PM, USB_PWRDN);
-> > +
-> > +}
-> > +
-> > +static void usb_uninit_xhci(struct brcm_usb_init_params *params)
-> > +{
-> > +
-> > +     pr_debug("%s\n", __func__);
-> > +
-> > +     xhci_soft_reset(params, 1);
-> > +}
-> > +
-> > +static int usb_get_dual_select(struct brcm_usb_init_params *params)
-> > +{
-> > +     void __iomem *ctrl = params->ctrl_regs;
-> > +     u32 reg = 0;
-> > +
-> > +     pr_debug("%s\n", __func__);
-> > +
-> > +     reg = brcm_usb_readl(USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
-> > +     reg &= USB_CTRL_MASK(USB_DEVICE_CTL1, PORT_MODE);
-> > +     return reg;
-> > +}
-> > +
-> > +static void usb_set_dual_select(struct brcm_usb_init_params *params, int mode)
-> > +{
-> > +     void __iomem *ctrl = params->ctrl_regs;
-> > +     u32 reg;
-> > +
-> > +     pr_debug("%s\n", __func__);
-> > +
-> > +     reg = brcm_usb_readl(USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
-> > +     reg &= ~USB_CTRL_MASK(USB_DEVICE_CTL1, PORT_MODE);
-> > +     reg |= mode;
-> > +     brcm_usb_writel(reg, USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
-> > +}
-> > +
-> > +
-> > +static const struct brcm_usb_init_ops bcm7216_ops = {
-> > +     .init_ipp = usb_init_ipp,
-> > +     .init_common = usb_init_common,
-> > +     .init_xhci = usb_init_xhci,
-> > +     .uninit_common = usb_uninit_common,
-> > +     .uninit_xhci = usb_uninit_xhci,
-> > +     .get_dual_select = usb_get_dual_select,
-> > +     .set_dual_select = usb_set_dual_select,
-> > +};
-> > +
-> > +void brcm_usb_dvr_init_7216(struct brcm_usb_init_params *params)
-> > +{
-> > +
-> > +     pr_debug("%s\n", __func__);
-> > +
-> > +     params->family_name = "7216";
-> > +     params->ops = &bcm7216_ops;
-> > +}
-> > diff --git a/drivers/phy/broadcom/phy-brcm-usb-init.h b/drivers/phy/broadcom/phy-brcm-usb-init.h
-> > index 7701872d1136..db6851c55335 100644
-> > --- a/drivers/phy/broadcom/phy-brcm-usb-init.h
-> > +++ b/drivers/phy/broadcom/phy-brcm-usb-init.h
-> > @@ -43,6 +43,7 @@ struct brcm_usb_init_ops {
-> >  struct  brcm_usb_init_params {
-> >       void __iomem *ctrl_regs;
-> >       void __iomem *xhci_ec_regs;
-> > +     void __iomem *xhci_gbl_regs;
-> >       int ioc;
-> >       int ipp;
-> >       int mode;
-> > @@ -55,6 +56,7 @@ struct  brcm_usb_init_params {
-> >  };
-> >
-> >  void brcm_usb_dvr_init_7445(struct brcm_usb_init_params *params);
-> > +void brcm_usb_dvr_init_7216(struct brcm_usb_init_params *params);
-> >
-> >  static inline u32 brcm_usb_readl(void __iomem *addr)
-> >  {
-> > diff --git a/drivers/phy/broadcom/phy-brcm-usb.c b/drivers/phy/broadcom/phy-brcm-usb.c
-> > index 9d93c5599511..64379ede480e 100644
-> > --- a/drivers/phy/broadcom/phy-brcm-usb.c
-> > +++ b/drivers/phy/broadcom/phy-brcm-usb.c
-> > @@ -241,6 +241,15 @@ static const struct attribute_group brcm_usb_phy_group = {
-> >       .attrs = brcm_usb_phy_attrs,
-> >  };
-> >
-> > +static const struct of_device_id brcm_usb_dt_ids[] = {
-> > +     {
-> > +             .compatible = "brcm,bcm7216-usb-phy",
-> > +             .data = &brcm_usb_dvr_init_7216,
-> > +     },
-> > +     { .compatible = "brcm,brcmstb-usb-phy" },
-> > +     { /* sentinel */ }
-> > +};
-> > +
-> >  static int brcm_usb_phy_dvr_init(struct platform_device *pdev,
-> >                                struct brcm_usb_phy_data *priv,
-> >                                struct device_node *dn)
-> > @@ -316,13 +325,16 @@ static int brcm_usb_phy_dvr_init(struct platform_device *pdev,
-> >
-> >  static int brcm_usb_phy_probe(struct platform_device *pdev)
-> >  {
-> > -     struct resource *res;
-> > +     struct resource *res_ctrl;
-> > +     struct resource *res_xhciec = NULL;
-> > +     struct resource *res_xhcigbl = NULL;
-> >       struct device *dev = &pdev->dev;
-> >       struct brcm_usb_phy_data *priv;
-> >       struct phy_provider *phy_provider;
-> >       struct device_node *dn = pdev->dev.of_node;
-> >       int err;
-> >       const char *mode;
-> > +     const struct of_device_id *match;
-> >
-> >       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> >       if (!priv)
-> > @@ -331,30 +343,59 @@ static int brcm_usb_phy_probe(struct platform_device *pdev)
-> >
-> >       priv->ini.family_id = brcmstb_get_family_id();
-> >       priv->ini.product_id = brcmstb_get_product_id();
-> > -     brcm_usb_dvr_init_7445(&priv->ini);
-> > +
-> > +     match = of_match_node(brcm_usb_dt_ids, dev->of_node);
-> > +     if (match && match->data) {
-> > +             void (*dvr_init)(struct brcm_usb_init_params *params);
-> > +
-> > +             dvr_init = match->data;
-> > +             (*dvr_init)(&priv->ini);
-> > +     } else {
-> > +             brcm_usb_dvr_init_7445(&priv->ini);
-> > +     }
-> > +
-> >       dev_dbg(dev, "Best mapping table is for %s\n",
-> >               priv->ini.family_name);
-> > -     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > -     if (!res) {
-> > -             dev_err(dev, "can't get USB_CTRL base address\n");
-> > -             return -EINVAL;
-> > +
-> > +     /* Newer DT node has reg-names. xhci_ec and xhci_gbl are optional. */
-> > +     res_ctrl = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ctrl");
-> > +     if (res_ctrl != NULL) {
-> > +             res_xhciec = platform_get_resource_byname(pdev,
-> > +                                                       IORESOURCE_MEM,
-> > +                                                       "xhci_ec");
-> > +             res_xhcigbl = platform_get_resource_byname(pdev,
-> > +                                                        IORESOURCE_MEM,
-> > +                                                        "xhci_gbl");
-> > +     } else {
-> > +             /* Older DT node without reg-names, use index */
-> > +             res_ctrl = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +             if (res_ctrl == NULL) {
-> > +                     dev_err(dev, "can't get CTRL base address\n");
-> > +                     return -EINVAL;
-> > +             }
-> > +             res_xhciec = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> >       }
-> > -     priv->ini.ctrl_regs = devm_ioremap_resource(dev, res);
-> > +     priv->ini.ctrl_regs = devm_ioremap_resource(dev, res_ctrl);
-> >       if (IS_ERR(priv->ini.ctrl_regs)) {
-> >               dev_err(dev, "can't map CTRL register space\n");
-> >               return -EINVAL;
-> >       }
-> > -
-> > -     /* The XHCI EC registers are optional */
-> > -     res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> > -     if (res) {
-> > +     if (res_xhciec) {
-> >               priv->ini.xhci_ec_regs =
-> > -                     devm_ioremap_resource(dev, res);
-> > +                     devm_ioremap_resource(dev, res_xhciec);
-> >               if (IS_ERR(priv->ini.xhci_ec_regs)) {
-> >                       dev_err(dev, "can't map XHCI EC register space\n");
-> >                       return -EINVAL;
-> >               }
-> >       }
-> > +     if (res_xhcigbl) {
-> > +             priv->ini.xhci_gbl_regs =
-> > +                     devm_ioremap_resource(dev, res_xhcigbl);
-> > +             if (IS_ERR(priv->ini.xhci_gbl_regs)) {
-> > +                     dev_err(dev, "can't map XHCI Global register space\n");
-> > +                     return -EINVAL;
-> > +             }
-> > +     }
-> >
-> >       of_property_read_u32(dn, "brcm,ipp", &priv->ini.ipp);
-> >       of_property_read_u32(dn, "brcm,ioc", &priv->ini.ioc);
-> > @@ -480,11 +521,6 @@ static const struct dev_pm_ops brcm_usb_phy_pm_ops = {
-> >       SET_LATE_SYSTEM_SLEEP_PM_OPS(brcm_usb_phy_suspend, brcm_usb_phy_resume)
-> >  };
-> >
-> > -static const struct of_device_id brcm_usb_dt_ids[] = {
-> > -     { .compatible = "brcm,brcmstb-usb-phy" },
-> > -     { /* sentinel */ }
-> > -};
-> > -
-> >  MODULE_DEVICE_TABLE(of, brcm_usb_dt_ids);
-> >
-> >  static struct platform_driver brcm_usb_driver = {
-> >
+Therefore shouldn't memcpy() (as suggested by Jeo Perches) be enough?
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
+> that I suspect a local memset, and then a field by field copy right
+> before copy_to_user might be a sound solution.  But ick.  That is a lot
+> of fields to copy.
+> 
+> 
+> Eric
+> 
+> 
+> 
+>>  drivers/video/fbdev/core/fbmem.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
+>> index 6f6fc785b545..b4ce6a28aed9 100644
+>> --- a/drivers/video/fbdev/core/fbmem.c
+>> +++ b/drivers/video/fbdev/core/fbmem.c
+>> @@ -1109,6 +1109,7 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
+>>  			ret = -EFAULT;
+>>  		break;
+>>  	case FBIOGET_FSCREENINFO:
+>> +		memset(&fix, 0, sizeof(fix));
+>>  		lock_fb_info(info);
+>>  		fix = info->fix;
+>>  		if (info->flags & FBINFO_HIDE_SMEM_START)
