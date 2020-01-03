@@ -5,61 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48398C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED36EC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16ED12253D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B88F922522
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:26:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mRv98STr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eh9yyoaV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgACSZg (ORCPT
+        id S1728356AbgACS0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 13:25:36 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45566 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728272AbgACSZf (ORCPT
+        Fri, 3 Jan 2020 13:26:18 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39903 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728255AbgACS0S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 13:25:35 -0500
-Received: by mail-pg1-f195.google.com with SMTP id b9so23751804pgk.12;
-        Fri, 03 Jan 2020 10:25:35 -0800 (PST)
+        Fri, 3 Jan 2020 13:26:18 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b137so23763117pga.6;
+        Fri, 03 Jan 2020 10:26:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OgjF/ZJLgLMtlGvLvKDvSVpSDP/EZIpvMDAwIoFZjyQ=;
-        b=mRv98STrbZ86Bcbjlk3Y2kkclAJq6Va/ggjOsaBaPFkLL+PfThkUg8eD7kqFFduH4y
-         ARpMzMCo4PxH09bBrgV4kAxMUPTWVBz979TbHwU+8u9u2iyQvL7glh7sWcKqB6AfKBaq
-         73sgsMmU8dDnnq14A9t6XJwInlhVg2HgiDzgTMijP9K3Co7KU/ySWyCgOdFuhz5+/Wo9
-         lOHUJYq9u6jlgevCVlGohuM2rOfXotb0R1pmDy0LzPdrOY83CTQjDMsbmXroNdPfkxSe
-         ybUK4j8vFhPo2kXz04rba590UeFarbni/91VA9xeGdjCN4x99so0xNx/kRh9uCE3RZ/i
-         xmpQ==
+        bh=41q7pqlk06uY5FoeX6LSYU8/rts2QLBKYZVZvKtngdo=;
+        b=eh9yyoaVNs0fIzkOyUeObyesXVImkJXiXHcT0B/47KsrPEZ95GtihYSlZ2w7iV7GzP
+         caW9eKFtOLrlvEXQW07cnGusuTrx2+fy91kWpExvw9j4MVjisaHvVrQYEId++Zbo5CjS
+         f5RSYVrpD2oip7yYP08eAOP1ol6Z1S1kk5i42QxNF3EXZGjmxoaONLB3ihSu/lAJK+EX
+         JCN/2k7TYdJpA+WT+C5r1ynkYA9hBk+H1qu4gn5S9F1b/r5gM5b+9/IvcftBlGLR3o6n
+         PW9yxyrUGCKVhW09y/Ih9whuVpzggg4Tl40MjnhWXzSL1fk+q8qZjKtUhADhlp6GlP5Q
+         nqQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=OgjF/ZJLgLMtlGvLvKDvSVpSDP/EZIpvMDAwIoFZjyQ=;
-        b=nh8bh26D4VZSJ+MlmIMXkVbBBeBTAfNhrftmBUgdYUI8lNBgPDyH+96/cQ8uKy/9iL
-         IX1HPu6HoDxMmSfGJ2KcjslP+lDHdKcKe8DMsnyGg/TbqotMBZTl3KhcZAHjZvWLlEy6
-         J6EPtnctytcsc4AuwwAXvJ89ujYOQN9TdDWJIIo6/nmJD5tRJCwZEtH3PUN5nCxHyyKh
-         6DMd3jziQf7T40b2yH0Y1tEqTZYtX3bTJWEOHTYZJfR//NyJV5knhjP0nmrQ5PQ9PD0S
-         +vYjd4veFEroXzkN43k41ufRJMtWFaF7+Dh0mOlbKpV0/mEtctsQ6LVrVgFkWU15dnjJ
-         rG1g==
-X-Gm-Message-State: APjAAAXxt1+w6r2kIfJ+Wwry95mge/MoHxk6Dr+WbUD7utnRyDIg39gh
-        +v4Y5zUuUvmLfBvbb4LgaQ3Atrex
-X-Google-Smtp-Source: APXvYqz75Y5kLxvU2knYYphHLE278A/hMH0Dt26vaI+ihj3sz1gyRyelUGJQ2Dme87ZbfOfuhEP4bg==
-X-Received: by 2002:a65:6916:: with SMTP id s22mr94992357pgq.244.1578075934854;
-        Fri, 03 Jan 2020 10:25:34 -0800 (PST)
+        bh=41q7pqlk06uY5FoeX6LSYU8/rts2QLBKYZVZvKtngdo=;
+        b=ZNQ1zq562U6yCU/4jlVeAIGZvkixuXh3SXrrbGoceGrQ6Sw9/wGS7PQVnHXH47eY+/
+         V5JmN1oq8zQRUH7FQfBA3tEZleDfTc26CmtSGN+S79mTTMTGBqXTzTpUSvCYGVTbPZ1Y
+         +2N69Al4H2GM//zPVJ36dup/h57f87l0shys5Zw3Ri148CIkdYIFwGpIz46Sy+WrmH1M
+         bwF42P4bF4wtlDsnOitarVmJWOjCq6PdbdVrWJ2aeC5BwY83PuSxOvjFwX58hp4vQg0S
+         kMsW/ItYZMIFXrq0WTqnykpFzYjjMlOSgJbiE7LGMVYNIjUnanBWqLMBwO79mrdIqsB3
+         z8Dg==
+X-Gm-Message-State: APjAAAXTk599l4TrwkLUsoQia1uw7bYj+of4WFA7elOrqm4OixeRWRpO
+        j2lC4oDLd4IwHiao3b6Ui30=
+X-Google-Smtp-Source: APXvYqwQZRawqrt9n0dYZafv3Z1DzWXGcB1G7BZKIQoLMToU3w03vcaz6Uw/q/nXu7YDzzy93ESCvA==
+X-Received: by 2002:a65:52ca:: with SMTP id z10mr91743099pgp.47.1578075977478;
+        Fri, 03 Jan 2020 10:26:17 -0800 (PST)
 Received: from [10.67.50.49] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id k21sm60220385pgt.22.2020.01.03.10.25.33
+        by smtp.googlemail.com with ESMTPSA id v13sm69736770pgc.54.2020.01.03.10.26.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jan 2020 10:25:34 -0800 (PST)
-Subject: Re: [PATCH v4 06/13] dt-bindings: Add Broadcom STB USB PHY binding
- document
+        Fri, 03 Jan 2020 10:26:16 -0800 (PST)
+Subject: Re: [PATCH v4 07/13] phy: usb: Add support for new Synopsys USB
+ controller on the 7216
 To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
 Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -73,7 +72,7 @@ Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>
 References: <20200103181811.22939-1-alcooperx@gmail.com>
- <20200103181811.22939-7-alcooperx@gmail.com>
+ <20200103181811.22939-8-alcooperx@gmail.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -129,12 +128,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <3215ec80-c28a-d80e-38b1-2c7a320721b8@gmail.com>
-Date:   Fri, 3 Jan 2020 10:25:33 -0800
+Message-ID: <3b013df8-8771-f021-5499-07faea632091@gmail.com>
+Date:   Fri, 3 Jan 2020 10:26:14 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200103181811.22939-7-alcooperx@gmail.com>
+In-Reply-To: <20200103181811.22939-8-alcooperx@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -144,10 +143,26 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 1/3/20 10:18 AM, Al Cooper wrote:
-> Add support for bcm7216 and bcm7211
+> The 7216 has the new USB XHCI controller from Synopsys. While
+> this new controller and the PHY are similar to the STB versions,
+> the major differences are:
+> 
+> - Many of the registers and fields in the CTRL block have been
+>   removed or changed.
+> - A new set of Synopsys control registers, BCHP_USB_XHCI_GBL, were
+>   added.
+> - MDIO functionality has been replaced with direct access registers
+>   in the BCHP_USB_XHCI_GBL block.
+> - Power up PHY defaults that had to be changed by MDIO in previous
+>   chips will now power up with the correct defaults.
+> 
+> A new init module was created for this new Synopsys USB controller.
+> A new compatible string was added and the driver will dispatch
+> into one of two init modules based on it. A "reg-names" field was
+> added so the driver can more easily get optional registers.
+> A DT bindings document was also added for this driver.
 > 
 > Signed-off-by: Al Cooper <alcooperx@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
 
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
