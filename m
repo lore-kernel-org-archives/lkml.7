@@ -2,121 +2,133 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00257C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 04:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12029C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 04:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98C0821D7D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 04:49:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578026967;
-	bh=8wHU1UlJJ0BvRT13oD1Kg2wxSEYUVZR89cjaox5vm8k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Wr/+lOD7I5TIMLZOIcqbOT5hTc0n34qjtTgNPe/RA6q6Pn+04gjExwjJC65afTp+n
-	 6PsNLdJqiiHMC4OlyEzBmJI2V7K4223Pr8oZP5UVU9xQNaxAu9D3J+uQKWYwbB6Z2T
-	 ow59M0P1g7x/19KX0h6ioNTEMAe2Ukaqc8uyqhdU=
+	by mail.kernel.org (Postfix) with ESMTP id D25CA21D7D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 04:50:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PmUa24L+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbgACEt0 (ORCPT
+        id S1727274AbgACEue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 23:49:26 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:54238 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgACEt0 (ORCPT
+        Thu, 2 Jan 2020 23:50:34 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:54958 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726219AbgACEud (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 23:49:26 -0500
-Received: by mail-pj1-f68.google.com with SMTP id n96so4125760pjc.3;
-        Thu, 02 Jan 2020 20:49:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=c7vB/owjAGocjJkQyceIEpdT371hvlmQPecB01G/CHI=;
-        b=sME+BpFtQRuc4tKfCnxfCV7aOcQLSy+O/5xanIJJPV5iof9iizE18sTL5CkzNhZoxC
-         w+0HkyVctxbJONtbb9hoXHtwqid6C6Yf7sTWnRV24tvMg4q6CwIl9lOlMlnZBS60FT/a
-         QM0VX/HXozO4gUN70cqzkM0ciYw/rwSEesegANe80mZkjAneyrRf+0AL30PQ5yIoVvYb
-         tbIHfS9gQCkpKLBtWfDrq1W7TUwn7MRZQySmzorU+QPwRn9hCbW3Xr+RK95RwJ5Clzjl
-         OwklaAN9ieWVp6X3/qI7MBvU/i/02MHf5yC49trq2RUkMX64DhNRZ1VTNig+NxOmiUBu
-         vsow==
-X-Gm-Message-State: APjAAAU0Eh7GggBn9Xrk5YV1eFgeioDtxISFT9l49RZv6bySqZTv8YeI
-        q4BF+NwEdId9lY3U32nXjoc=
-X-Google-Smtp-Source: APXvYqzRsftPC0MUnG1KprOXPr0Rm0qBCGlylIkz3RsUISL+i1SrgO62IeFC+LTOWbQ+GMdkNnK0cA==
-X-Received: by 2002:a17:90a:8584:: with SMTP id m4mr24523979pjn.123.1578026965718;
-        Thu, 02 Jan 2020 20:49:25 -0800 (PST)
-Received: from localhost ([2601:647:5b00:710:ffa7:88dc:9c39:76d9])
-        by smtp.gmail.com with ESMTPSA id z26sm34911250pfa.90.2020.01.02.20.49.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 20:49:24 -0800 (PST)
-Date:   Thu, 2 Jan 2020 20:49:24 -0800
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     Moritz Fischer <mdf@kernel.org>, yu kuai <yukuai3@huawei.com>,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yi.zhang@huawe.com, zhengbin13@huawei.com
-Subject: Re: [PATCH] fpga: dfl: fme: remove set but not used variable 'fme'
-Message-ID: <20200103044924.GB20838@epycbox.lan>
-References: <20191226121638.10507-1-yukuai3@huawei.com>
- <20191227225726.GA1643@archbook>
- <20191230015140.GA6839@hao-dev>
+        Thu, 2 Jan 2020 23:50:33 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578027032; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=3O3z8sSXJg5C8+VeHnJlGt4zQEiKjMdI7knVylfri4w=; b=PmUa24L+BnFNh9ACYitotp/L4tqvSKsm1NNSKehS167MlEIvlbDBleaBiP0k6s/qPk4L4WfN
+ cbHwiYqUhzoOah8tNCSqOMu8fcpXxR8cGy6EnkqGg7PkHlSBL9u0AFqJVJu4NMTGMqncK5Oz
+ U6meBxuvITqLmPVuJNNqyS6dAN0=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e0ec817.7fb374764a08-smtp-out-n03;
+ Fri, 03 Jan 2020 04:50:31 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BFD56C447A3; Fri,  3 Jan 2020 04:50:31 +0000 (UTC)
+Received: from wgong-HP-Z240-SFF-Workstation.qca.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wgong)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C188CC447A2;
+        Fri,  3 Jan 2020 04:50:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C188CC447A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wgong@codeaurora.org
+From:   Wen Gong <wgong@codeaurora.org>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ath11k@lists.infradead.org
+Subject: [PATCH v2] net: qrtr: fix len of skb_put_padto in qrtr_node_enqueue
+Date:   Fri,  3 Jan 2020 12:50:16 +0800
+Message-Id: <20200103045016.12459-1-wgong@codeaurora.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191230015140.GA6839@hao-dev>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 09:51:40AM +0800, Wu Hao wrote:
-> On Fri, Dec 27, 2019 at 02:57:26PM -0800, Moritz Fischer wrote:
-> > On Thu, Dec 26, 2019 at 08:16:38PM +0800, yu kuai wrote:
-> > > Fixes gcc '-Wunused-but-set-variable' warning:
-> > > 
-> > > drivers/fpga/dfl-fme-main.c: In function ‘fme_dev_destroy’:
-> > > drivers/fpga/dfl-fme-main.c:678:18: warning: variable ‘fme’ set but not
-> > > used [-Wunused-but-set-variable]
-> > > 
-> > > It is never used and so can be removed.
-> > > 
-> > > Signed-off-by: yu kuai <yukuai3@huawei.com>
-> > > ---
-> > >  drivers/fpga/dfl-fme-main.c | 2 --
-> > >  1 file changed, 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-> > > index 7c930e6b314d..1d4690c99268 100644
-> > > --- a/drivers/fpga/dfl-fme-main.c
-> > > +++ b/drivers/fpga/dfl-fme-main.c
-> > > @@ -675,10 +675,8 @@ static int fme_dev_init(struct platform_device *pdev)
-> > >  static void fme_dev_destroy(struct platform_device *pdev)
-> > >  {
-> > >  	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
-> > > -	struct dfl_fme *fme;
-> > >  
-> > >  	mutex_lock(&pdata->lock);
-> > > -	fme = dfl_fpga_pdata_get_private(pdata);
-> > >  	dfl_fpga_pdata_set_private(pdata, NULL);
-> > >  	mutex_unlock(&pdata->lock);
-> > >  }
-> > > -- 
-> > > 2.17.2
-> > > 
-> > Acked-by: Moritz Fischer <mdf@kernel.org>
-> 
-> Acked-by: Wu Hao <hao.wu@intel.com>
-> 
-> Thanks
-> Hao
-> 
-> > 
-> > Thanks,
-> > Moritz
+From: Carl Huang <cjhuang@codeaurora.org>
 
-Applied to for-next.
+The len used for skb_put_padto is wrong, it need to add len of hdr.
 
-Thanks,
-Moritz
+In qrtr_node_enqueue, local variable size_t len is assign with
+skb->len, then skb_push(skb, sizeof(*hdr)) will add skb->len with
+sizeof(*hdr), so local variable size_t len is not same with skb->len
+after skb_push(skb, sizeof(*hdr)).
+
+Then the purpose of skb_put_padto(skb, ALIGN(len, 4)) is to add add
+pad to the end of the skb's data if skb->len is not aligned to 4, but
+unfortunately it use len instead of skb->len, at this line, skb->len
+is 32 bytes(sizeof(*hdr)) more than len, for example, len is 3 bytes,
+then skb->len is 35 bytes(3 + 32), and ALIGN(len, 4) is 4 bytes, so
+__skb_put_padto will do nothing after check size(35) < len(4), the
+correct value should be 36(sizeof(*hdr) + ALIGN(len, 4) = 32 + 4),
+then __skb_put_padto will pass check size(35) < len(36) and add 1 byte
+to the end of skb's data, then logic is correct.
+
+function of skb_push:
+void *skb_push(struct sk_buff *skb, unsigned int len)
+{
+	skb->data -= len;
+	skb->len  += len;
+	if (unlikely(skb->data < skb->head))
+		skb_under_panic(skb, len, __builtin_return_address(0));
+	return skb->data;
+}
+
+function of skb_put_padto
+static inline int skb_put_padto(struct sk_buff *skb, unsigned int len)
+{
+	return __skb_put_padto(skb, len, true);
+}
+
+function of __skb_put_padto
+static inline int __skb_put_padto(struct sk_buff *skb, unsigned int len,
+				  bool free_on_error)
+{
+	unsigned int size = skb->len;
+
+	if (unlikely(size < len)) {
+		len -= size;
+		if (__skb_pad(skb, len, free_on_error))
+			return -ENOMEM;
+		__skb_put(skb, len);
+	}
+	return 0;
+}
+
+Signed-off-by: Carl Huang <cjhuang@codeaurora.org>
+Signed-off-by: Wen Gong <wgong@codeaurora.org>
+---
+v2: change description
+ net/qrtr/qrtr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
+index 88f98f27ad88..3d24d45be5f4 100644
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -196,7 +196,7 @@ static int qrtr_node_enqueue(struct qrtr_node *node, struct sk_buff *skb,
+ 	hdr->size = cpu_to_le32(len);
+ 	hdr->confirm_rx = 0;
+ 
+-	skb_put_padto(skb, ALIGN(len, 4));
++	skb_put_padto(skb, ALIGN(len, 4) + sizeof(*hdr));
+ 
+ 	mutex_lock(&node->ep_lock);
+ 	if (node->ep)
+-- 
+2.23.0
