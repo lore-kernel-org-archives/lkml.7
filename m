@@ -2,136 +2,116 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C87B1C3276C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C10F4C3276E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D4FC222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C33D222C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 01:49:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgACBmy (ORCPT
+        id S1727233AbgACBtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jan 2020 20:42:54 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:52154 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725943AbgACBmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jan 2020 20:42:54 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 666E1C68E69381AA17F5;
-        Fri,  3 Jan 2020 09:42:52 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 3 Jan 2020 09:42:43 +0800
-From:   Tian Tao <tiantao6@hisilicon.com>
-To:     <puck.chen@hisilicon.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <tzimmermann@suse.de>, <kraxel@redhat.com>,
-        <alexander.deucher@amd.com>, <tglx@linutronix.de>,
-        <dri-devel@lists.freedesktop.org>, <xinliang.liu@linaro.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <linuxarm@huawei.com>
-Subject: [PATCH] drm/hisilicon: Enforce 128-byte stride alignment to fix the display problem
-Date:   Fri, 3 Jan 2020 09:42:50 +0800
-Message-ID: <1578015770-36470-1-git-send-email-tiantao6@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 2 Jan 2020 20:49:17 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:48834 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbgACBtR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jan 2020 20:49:17 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1inC5F-000pFy-EG; Fri, 03 Jan 2020 01:49:01 +0000
+Date:   Fri, 3 Jan 2020 01:49:01 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ian Kent <raven@themaw.net>
+Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
+ symlinks
+Message-ID: <20200103014901.GC8904@ZenIV.linux.org.uk>
+References: <20191230052036.8765-1-cyphar@cyphar.com>
+ <20191230054413.GX4203@ZenIV.linux.org.uk>
+ <20191230054913.c5avdjqbygtur2l7@yavin.dot.cyphar.com>
+ <20191230072959.62kcojxpthhdwmfa@yavin.dot.cyphar.com>
+ <20200101004324.GA11269@ZenIV.linux.org.uk>
+ <20200101005446.GH4203@ZenIV.linux.org.uk>
+ <20200101030815.GA17593@ZenIV.linux.org.uk>
+ <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
+ <20200101234009.GB8904@ZenIV.linux.org.uk>
+ <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-because the hardware limitation,The initial color depth must set to 32bpp
-and must set the FB Offset of the display hardware to 128Byte alignment,
-which is used to solve the display problem at 800x600 and 1440x900
-resolution under 16bpp.
+On Thu, Jan 02, 2020 at 02:59:20PM +1100, Aleksa Sarai wrote:
+> On 2020-01-01, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > On Thu, Jan 02, 2020 at 01:44:07AM +1100, Aleksa Sarai wrote:
+> > 
+> > > Thanks, this fixes the issue for me (and also fixes another reproducer I
+> > > found -- mounting a symlink on top of itself then trying to umount it).
+> > > 
+> > > Reported-by: Aleksa Sarai <cyphar@cyphar.com>
+> > > Tested-by: Aleksa Sarai <cyphar@cyphar.com>
+> > 
+> > Pushed into #fixes.
+> 
+> Thanks. One other thing I noticed is that umount applies to the
+> underlying symlink rather than the mountpoint on top. So, for example
+> (using the same scripts I posted in the thread):
+> 
+>   # ln -s /tmp/foo link
+>   # ./mount_to_symlink /etc/passwd link
+>   # umount -l link # will attempt to unmount "/tmp/foo"
+> 
+> Is that intentional?
 
-Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
-Signed-off-by: Gong junjie <gongjunjie2@huawei.com>
----
- drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c    | 13 ++++++-------
- drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_fbdev.c |  4 ++--
- drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c       |  2 +-
- 3 files changed, 9 insertions(+), 10 deletions(-)
+It's a mess, again in mountpoint_last().  FWIW, at some point I proposed
+to have nd_jump_link() to fail with -ELOOP if the target was a symlink;
+Linus asked for reasons deeper than my dislike of the semantics, I looked
+around and hadn't spotted anything.  And there hadn't been at the time,
+but when four months later umount_lookup_last() went in I failed to look
+for that source of potential problems in it ;-/
 
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
-index 12b38ac..843d784 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
-@@ -83,9 +83,6 @@ static int hibmc_plane_atomic_check(struct drm_plane *plane,
- 		return -EINVAL;
- 	}
- 
--	if (!crtc_state->enable)
--		return 0;
--
- 	if (state->crtc_x + state->crtc_w >
- 	    crtc_state->adjusted_mode.hdisplay ||
- 	    state->crtc_y + state->crtc_h >
-@@ -94,6 +91,11 @@ static int hibmc_plane_atomic_check(struct drm_plane *plane,
- 		return -EINVAL;
- 	}
- 
-+	if (state->fb->pitches[0] % 128 != 0) {
-+		DRM_DEBUG_ATOMIC("wrong stride with 128-byte aligned\n");
-+		return -EINVAL;
-+	}
-+
- 	return 0;
- }
- 
-@@ -119,11 +121,8 @@ static void hibmc_plane_atomic_update(struct drm_plane *plane,
- 	writel(gpu_addr, priv->mmio + HIBMC_CRT_FB_ADDRESS);
- 
- 	reg = state->fb->width * (state->fb->format->cpp[0]);
--	/* now line_pad is 16 */
--	reg = PADDING(16, reg);
- 
--	line_l = state->fb->width * state->fb->format->cpp[0];
--	line_l = PADDING(16, line_l);
-+	line_l = state->fb->pitches[0];
- 	writel(HIBMC_FIELD(HIBMC_CRT_FB_WIDTH_WIDTH, reg) |
- 	       HIBMC_FIELD(HIBMC_CRT_FB_WIDTH_OFFS, line_l),
- 	       priv->mmio + HIBMC_CRT_FB_WIDTH);
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_fbdev.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_fbdev.c
-index 1d15560..ca42dd7 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_fbdev.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_fbdev.c
-@@ -73,7 +73,7 @@ static int hibmc_drm_fb_create(struct drm_fb_helper *helper,
- 
- 	mode_cmd.width = sizes->surface_width;
- 	mode_cmd.height = sizes->surface_height;
--	mode_cmd.pitches[0] = mode_cmd.width * bytes_per_pixel;
-+	mode_cmd.pitches[0] = ALIGN(mode_cmd.width * bytes_per_pixel, 128);
- 	mode_cmd.pixel_format = drm_mode_legacy_fb_format(sizes->surface_bpp,
- 							  sizes->surface_depth);
- 
-@@ -186,7 +186,7 @@ int hibmc_fbdev_init(struct hibmc_drm_private *priv)
- 		goto fini;
- 	}
- 
--	ret = drm_fb_helper_initial_config(&hifbdev->helper, 16);
-+	ret = drm_fb_helper_initial_config(&hifbdev->helper, 32);
- 	if (ret) {
- 		DRM_ERROR("failed to setup initial conn config: %d\n", ret);
- 		goto fini;
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c
-index 19dc525..1cc702f 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c
-@@ -76,7 +76,7 @@ int hibmc_dumb_create(struct drm_file *file, struct drm_device *dev,
- 	u32 handle;
- 	int ret;
- 
--	args->pitch = ALIGN(args->width * DIV_ROUND_UP(args->bpp, 8), 16);
-+	args->pitch = ALIGN(args->width * DIV_ROUND_UP(args->bpp, 8), 128);
- 	args->size = args->pitch * args->height;
- 
- 	ret = hibmc_gem_create(dev, args->size, false,
--- 
-2.7.4
+I've looked at that area again now.  Aside of usual cursing at do_last()
+horrors (yes, its control flow is a horror; yes, it needs serious massage;
+no, it's not a good idea to get sidetracked into that right now), there
+are several fun questions:
+	* d_manage() and d_automount().  We almost certainly don't
+want those for autofs on the final component of pathname in umount,
+including the trailing symlinks.  But do we want those on usual access
+via /proc/*/fd/*?  I.e. suppose somebody does open() (O_PATH or not)
+in autofs; do we want ->d_manage()/->d_automount() called when
+resolving /proc/self/fd/<whatever>/foo/bar?  We do not; is that
+correct from autofs point of view?  I suspect that refusing to
+do ->d_automount() is correct, but I don't understand ->d_manage()
+purpose well enough to tell.
+	* I really hope that the weird "trailing / forces automount
+even in cases when we normally wouldn't trigger it" (stat /mnt/foo
+vs. stat /mnt/foo/) is not meant to extend to umount.  I'd like
+Ian's confirmation, though.
+	* do we want ->d_manage() on following .. into overmounted
+directory?  Again, autofs question...
 
+	The minimal fix to mountpoint_last() would be to have
+follow_mount() done in LAST_NORM case.  However, I'd like to understand
+(and hopefully regularize) the rules for follow_mount()/follow_managed().
+Additional scary question is nfsd iterplay with automount.  For nfs4
+exports it's potentially interesting...
+
+	Ian, could you comment on the autofs questions above?
+I'd rather avoid doing changes in that area without your input -
+it's subtle and breakage in automount-related behaviour can be
+mysterious as hell.
