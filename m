@@ -2,78 +2,110 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8569C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9500C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92A4621D7D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CF5D21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 11:49:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KuwxZypd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbgACLpk (ORCPT
+        id S1727565AbgACLtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 06:45:40 -0500
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:33722 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727220AbgACLpk (ORCPT
+        Fri, 3 Jan 2020 06:49:50 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:32357 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727508AbgACLtu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 06:45:40 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=rocking@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TmjSZUt_1578051936;
-Received: from localhost(mailfrom:rocking@linux.alibaba.com fp:SMTPD_---0TmjSZUt_1578051936)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 03 Jan 2020 19:45:36 +0800
-From:   Peng Wang <rocking@linux.alibaba.com>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de
-Cc:     linux-kernel@vger.kernel.org, Peng Wang <rocking@linux.alibaba.com>
-Subject: [PATCH] sched/fair: calculate delta runnable load only when it's needed
-Date:   Fri,  3 Jan 2020 19:44:00 +0800
-Message-Id: <20200103114400.17668-1-rocking@linux.alibaba.com>
-X-Mailer: git-send-email 2.9.5
+        Fri, 3 Jan 2020 06:49:50 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578052190; h=Message-Id: Date: Subject: To: From: Sender;
+ bh=r2EZ+2xziX53OTfMONPxF+br2j1dHKKsLKUSUS0Dx10=; b=KuwxZypd1sgUbeA0hc1hMIDoDTvVEIja5LUV6qwnsJW4c8iXrtRiSpV3ikqYbK89gVtv3e7r
+ NxIw3FjWIno5A3oI7nBmk9K/7s/QU/Pm0UjUMfFD67Uap4MkjLP524QVF9f7Ezwnf/A39JQ8
+ APIDjeMhtEgs5N3ZnuUblk3Wc7g=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e0f2a5c.7f53337e1068-smtp-out-n01;
+ Fri, 03 Jan 2020 11:49:48 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0B9F0C433A2; Fri,  3 Jan 2020 11:49:47 +0000 (UTC)
+Received: from srichara-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A824DC433CB;
+        Fri,  3 Jan 2020 11:49:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A824DC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+From:   Sricharan R <sricharan@codeaurora.org>
+To:     sricharan@codeaurora.org, agross@kernel.org,
+        devicetree@vger.kernel.org, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-soc@vger.kernel.org, robh+dt@kernel.org, sboyd@kernel.org,
+        sivaprak@codeaurora.org
+Subject: [PATCH V3 0/5] Add minimal boot support for IPQ6018
+Date:   Fri,  3 Jan 2020 17:19:32 +0530
+Message-Id: <1578052177-6778-1-git-send-email-sricharan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the code of calculation for delta_sum/delta_avg to where
-it is really needed to be done.
+The IPQ6018 is Qualcomm\u2019s 802.11ax SoC for Routers,
+Gateways and Access Points.
 
-Signed-off-by: Peng Wang <rocking@linux.alibaba.com>
----
- kernel/sched/fair.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+This series adds minimal board boot support for ipq6018-cp01 board.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index ba749f579714..6b7e6b528e9b 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3366,16 +3366,17 @@ update_tg_cfs_runnable(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cf
- 
- 	runnable_load_sum = (s64)se_runnable(se) * runnable_sum;
- 	runnable_load_avg = div_s64(runnable_load_sum, LOAD_AVG_MAX);
--	delta_sum = runnable_load_sum - se_weight(se) * se->avg.runnable_load_sum;
--	delta_avg = runnable_load_avg - se->avg.runnable_load_avg;
--
--	se->avg.runnable_load_sum = runnable_sum;
--	se->avg.runnable_load_avg = runnable_load_avg;
- 
- 	if (se->on_rq) {
-+		delta_sum = runnable_load_sum -
-+				se_weight(se) * se->avg.runnable_load_sum;
-+		delta_avg = runnable_load_avg - se->avg.runnable_load_avg;
- 		add_positive(&cfs_rq->avg.runnable_load_avg, delta_avg);
- 		add_positive(&cfs_rq->avg.runnable_load_sum, delta_sum);
- 	}
-+
-+	se->avg.runnable_load_sum = runnable_sum;
-+	se->avg.runnable_load_avg = runnable_load_avg;
- }
- 
- static inline void add_tg_cfs_propagate(struct cfs_rq *cfs_rq, long runnable_sum)
+[V3]
+ * Removed clock driver and bindings from this patch series, and added them
+   as a different series.
+ * Removed qpic_padN from pinctrl driver.
+ * Addressed review comments in dts, and added the remaining fixed clocks their
+ * Fixed review comments in pinctrl bindings
+ * Patch 4 arm64: dts: Add ipq6018 SoC and CP01 board support has build
+   dependency with,
+	https://patchwork.ozlabs.org/patch/1217293/
+
+[v2]
+ * Splitted dt bindings  and driver into different patches. Added missing bindings
+   and some style changes.
+ * Added ipq6018 schema
+ * Addressed review comments for gcc clock bindings.
+ * Removed all clk critical flags, removed 1/1 factor clocks, moved to new
+   way of specifying clk parents, and addressed other review comments.
+ * Sorted nodes based on address, name, label. Removed unused clock nodes,
+   Addressed other review comments.
+
+Sricharan R (5):
+  dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl bindings
+  pinctrl: qcom: Add ipq6018 pinctrl driver
+  dt-bindings: qcom: Add ipq6018 bindings
+  arm64: dts: Add ipq6018 SoC and CP01 board support
+  arm64: defconfig: Enable qcom ipq6018 clock and pinctrl
+
+ Documentation/devicetree/bindings/arm/qcom.yaml    |    8 +
+ .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     |  174 +++
+ arch/arm64/boot/dts/qcom/Makefile                  |    1 +
+ arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts       |   30 +
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi              |  263 +++++
+ arch/arm64/configs/defconfig                       |    3 +
+ drivers/pinctrl/qcom/Kconfig                       |   10 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-ipq6018.c             | 1107 ++++++++++++++++++++
+ 9 files changed, 1597 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq6018.dtsi
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq6018.c
+
 -- 
-2.24.0
-
+1.9.1
