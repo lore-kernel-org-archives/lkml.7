@@ -2,329 +2,149 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE55C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EF6C32767
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14DE920848
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 611262085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 17:34:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="sN/RjX5s"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rcRsXDV1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbgACRaj (ORCPT
+        id S1728152AbgACRew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 12:30:39 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54865 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727974AbgACRai (ORCPT
+        Fri, 3 Jan 2020 12:34:52 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:50104 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728079AbgACRew (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 12:30:38 -0500
-Received: by mail-wm1-f67.google.com with SMTP id b19so8986419wmj.4
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 09:30:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jISoPkmGWWrMVg31zCVz3felJe4xdVet0qwlBEKmcM8=;
-        b=sN/RjX5sQt4NKyAY5+IWjqlpAGwa9lr+6He2CF+30bAoawMFWONxL2r/wszDopavi9
-         kKcqpAOPke2YjM+R2l5Ab7kFStwn5uXQOmVqrWa6w788PchSK0i7xVJGgxCRigptxlvx
-         beVF2vWHzQiY8M4GDL7B6huCWeJChMPMLhjWQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jISoPkmGWWrMVg31zCVz3felJe4xdVet0qwlBEKmcM8=;
-        b=sDvSFapZCHOLKWuq9WP+e5JYxZUAh9U/HrHQmCMfbfSGxYSnaJiSs6A1UmA1tIbrcY
-         WE2z+O+O60R13YVoNHwjr1jv3b9FhV2EkWqb3wfx4Uyi7rF8lZm4879lxY7gPoAPiJgJ
-         UIyvzFfDNyN/+zcu4JI6tCKXeaSCf+0mTi+CRApS5r93soefX+L2hZuToKUPtYTW+/+B
-         Pz9dHaYK+aDodQVBhhWcJHkibo+2UcImYvqQMFdUNdUQWkv9gw76CwhEx8Dg8vUpiSXT
-         dMXVXtmdhEeadEq2wCWwhjq+G2hdRkcvxXznhoE912NIxxi+mVE5oX8xeKmfdadwMDXY
-         Gcig==
-X-Gm-Message-State: APjAAAW6IBow8E+OK/RvGO+8+BXJcuz37gvGxtEGnEd9cQzW/HkRQuNs
-        wYpZgty0Chy1L7vJZe4T6rFkPQ==
-X-Google-Smtp-Source: APXvYqy/3cFjBPGSu0XFhxHUUL5fvQvXDK7YwG6L+bS/Pw1HVqS4aD2aiY7XfQhIsmFX5I0jAqp5fQ==
-X-Received: by 2002:a05:600c:2150:: with SMTP id v16mr19191993wml.156.1578072635282;
-        Fri, 03 Jan 2020 09:30:35 -0800 (PST)
-Received: from localhost ([2620:10d:c092:180::1:5238])
-        by smtp.gmail.com with ESMTPSA id t8sm59264637wrp.69.2020.01.03.09.30.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 09:30:34 -0800 (PST)
-Date:   Fri, 3 Jan 2020 17:30:34 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH v3 2/2] tmpfs: Support 64-bit inums per-sb
-Message-ID: <8b9002a73c33f19af09479fb350686a1b42b7d5b.1578072481.git.chris@chrisdown.name>
-References: <cover.1578072481.git.chris@chrisdown.name>
+        Fri, 3 Jan 2020 12:34:52 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 003HTk6G129188;
+        Fri, 3 Jan 2020 17:33:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=fYzuHY5/xmbEDIXl7hvjfaQELjdiy9iozp4oXzR/mwY=;
+ b=rcRsXDV1uMrn/vhtTvSHwP7qE/t1eYDgTWxaZ4fQTZ9jlnaO0cDTedjOcBOP98piLrWT
+ B9aS+CCmzgF9PKfpDXlwBKkvGdbKYJL+vrTayuxC1RqVu+svKncvLzbNS/5GoG5qkBze
+ 4gD5I/gbJTGd4GXE3X2kfQz9glWk8MsAiaCmuGQsoWl2ZdfyVWEzUHAPWKZmRox/trlw
+ qu6E71vRsUsvPBlB1maW/M+dBUXdTKoJmLM6tVAG3jihxaaGxihfNdGn4+2tpjLeDJzG
+ xYW9Te2pYVWo4/bwQTUCyKyQyJnytViJBZ9NB/zTdry7bf20NfVvz4xxx6rdJ+eWRBtV sA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2x5ypqwd46-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Jan 2020 17:33:54 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 003HXlmx196296;
+        Fri, 3 Jan 2020 17:33:53 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2xa7tyfhk6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Jan 2020 17:33:53 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 003HXLtQ014107;
+        Fri, 3 Jan 2020 17:33:24 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 Jan 2020 09:33:21 -0800
+Subject: Re: [PATCH 5.4 000/191] 5.4.8-stable review
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Chengguang Xu <cgxu519@mykernel.net>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>, LTP List <ltp@lists.linux.it>,
+        Jan Stancek <jstancek@redhat.com>,
+        John Stultz <john.stultz@linaro.org>
+References: <20200102215829.911231638@linuxfoundation.org>
+ <CA+G9fYuPkOGKbeQ0FKKx4H0Bs-nRHALsFtwyRw0Rt5DoOCvRHg@mail.gmail.com>
+ <CAK8P3a1+Srey_7cUd0xfaO8HdMv5tkUcs6DeDXzcUKkUD-DnGQ@mail.gmail.com>
+ <CAK8P3a24EkUXTu-K2c-5B3w-LZwY7zNcX0dZixb3gd59vRw_Kw@mail.gmail.com>
+ <20200103154518.GB1064304@kroah.com>
+ <CAK8P3a00SpVfSE5oL8_F_8jHdg_8A5fyEKH_DWNyPToxack=zA@mail.gmail.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <a2fc8b36-c512-b6dd-7349-dfb551e348b6@oracle.com>
+Date:   Fri, 3 Jan 2020 09:33:19 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1578072481.git.chris@chrisdown.name>
+In-Reply-To: <CAK8P3a00SpVfSE5oL8_F_8jHdg_8A5fyEKH_DWNyPToxack=zA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9489 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001030161
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9489 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001030160
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The default is still set to inode32 for backwards compatibility, but
-system administrators can opt in to the new 64-bit inode numbers by
-either:
+On 1/3/20 7:56 AM, Arnd Bergmann wrote:
+> On Fri, Jan 3, 2020 at 4:45 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+>> On Fri, Jan 03, 2020 at 04:29:56PM +0100, Arnd Bergmann wrote:
+>>> On Fri, Jan 3, 2020 at 4:25 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>>>>
+>>>> On Fri, Jan 3, 2020 at 4:03 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>>>>>
+>>>>> On Fri, 3 Jan 2020 at 03:42, Greg Kroah-Hartman
+>>>>> <gregkh@linuxfoundation.org> wrote:
+>>>>
+>>>> -ENOENT is what you get when hugetlbfs is not mounted, so this hints to
+>>>>
+>>>> 8fc312b32b2  mm/hugetlbfs: fix error handling when setting up mounts
+>>>>
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-5.4.y&id=3f549fb42a39bea3b29c0fc12afee53c4a01bec9
+>>>
+>>> I see that Mike Kravetz suggested not putting this patch into stable in
+>>>
+>>> https://lore.kernel.org/lkml/befca227-cb8a-8f47-617d-e3bf9972bfec@oracle.com/
+>>>
+>>> but it was picked through the autosel mechanism later.
+>>
+>> So does that mean that Linus's tree shows this LTP failure as well?
+> 
+> Yes, according to
+> https://qa-reports.linaro.org/lkft/linux-mainline-oe/tests/ltp-syscalls-tests/memfd_create04
+> mainline has the same testcase failure, it started happening between
+> v5.4-10135-gc3bfc5dd73c6 and v5.4-10271-g596cf45cbf6e, when the patch
+> was originally merged into 5.5-rc1.
+> 
+>> This does seem to fix a real issue, as shown by the LTP test noticing
+>> it, so should the error code value be fixed in Linus's tree?
+> 
+> No idea what to conclude from the testcase failure, let's see if Mike has
+> any suggestions.
+> 
 
-1. Passing inode64 on the command line when mounting, or
-2. Configuring the kernel with CONFIG_TMPFS_INODE64=y
+Thanks for isolating to this patch!
 
-Signed-off-by: Chris Down <chris@chrisdown.name>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Amir Goldstein <amir73il@gmail.com>
-Cc: Jeff Layton <jlayton@kernel.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: kernel-team@fb.com
----
- Documentation/filesystems/tmpfs.txt | 11 +++++
- fs/Kconfig                          | 15 +++++++
- include/linux/shmem_fs.h            |  1 +
- mm/shmem.c                          | 66 ++++++++++++++++++++++++++++-
- 4 files changed, 92 insertions(+), 1 deletion(-)
+There are dependencies between arch specific code and arch independent code
+during the setup of hugetlb sizes/mounts.  Let me take a closer look at the
+arm64 code and get access to a system for debug.
 
-diff --git a/Documentation/filesystems/tmpfs.txt b/Documentation/filesystems/tmpfs.txt
-index 5ecbc03e6b2f..203e12a684c9 100644
---- a/Documentation/filesystems/tmpfs.txt
-+++ b/Documentation/filesystems/tmpfs.txt
-@@ -136,6 +136,15 @@ These options do not have any effect on remount. You can change these
- parameters with chmod(1), chown(1) and chgrp(1) on a mounted filesystem.
- 
- 
-+tmpfs has a mount option to select whether it will wrap at 32- or 64-bit inode
-+numbers:
-+
-+inode64   Use 64-bit inode numbers
-+inode32   Use 32-bit inode numbers
-+
-+On 64-bit, the default is set by CONFIG_TMPFS_INODE64. On 32-bit, inode64 is
-+not legal and will produce an error at mount time.
-+
- So 'mount -t tmpfs -o size=10G,nr_inodes=10k,mode=700 tmpfs /mytmpfs'
- will give you tmpfs instance on /mytmpfs which can allocate 10GB
- RAM/SWAP in 10240 inodes and it is only accessible by root.
-@@ -147,3 +156,5 @@ Updated:
-    Hugh Dickins, 4 June 2007
- Updated:
-    KOSAKI Motohiro, 16 Mar 2010
-+Updated:
-+   Chris Down, 2 Jan 2020
-diff --git a/fs/Kconfig b/fs/Kconfig
-index 7b623e9fc1b0..e74f127df22a 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -199,6 +199,21 @@ config TMPFS_XATTR
- 
- 	  If unsure, say N.
- 
-+config TMPFS_INODE64
-+	bool "Use 64-bit ino_t by default in tmpfs"
-+	depends on TMPFS && 64BIT
-+	default n
-+	help
-+	  tmpfs has historically used only inode numbers as wide as an unsigned
-+	  int. In some cases this can cause wraparound, potentially resulting in
-+	  multiple files with the same inode number on a single device. This option
-+	  makes tmpfs use the full width of ino_t by default, similarly to the
-+	  inode64 mount option.
-+
-+	  To override this default, use the inode32 or inode64 mount options.
-+
-+	  If unsure, say N.
-+
- config HUGETLBFS
- 	bool "HugeTLB file system support"
- 	depends on X86 || IA64 || SPARC64 || (S390 && 64BIT) || \
-diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
-index 7fac91f490dc..8925eb774518 100644
---- a/include/linux/shmem_fs.h
-+++ b/include/linux/shmem_fs.h
-@@ -35,6 +35,7 @@ struct shmem_sb_info {
- 	unsigned char huge;	    /* Whether to try for hugepages */
- 	kuid_t uid;		    /* Mount uid for root directory */
- 	kgid_t gid;		    /* Mount gid for root directory */
-+	bool full_inums;	    /* If i_ino should be uint or ino_t */
- 	ino_t next_ino;		    /* The next per-sb inode number to use */
- 	struct mempolicy *mpol;     /* default memory policy for mappings */
- 	spinlock_t shrinklist_lock;   /* Protects shrinklist */
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 638b1e30625f..a6b43593e852 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -115,11 +115,13 @@ struct shmem_options {
- 	kuid_t uid;
- 	kgid_t gid;
- 	umode_t mode;
-+	bool full_inums;
- 	int huge;
- 	int seen;
- #define SHMEM_SEEN_BLOCKS 1
- #define SHMEM_SEEN_INODES 2
- #define SHMEM_SEEN_HUGE 4
-+#define SHMEM_SEEN_INUMS 8
- };
- 
- #ifdef CONFIG_TMPFS
-@@ -2264,15 +2266,24 @@ static struct inode *shmem_get_inode(struct super_block *sb, const struct inode
- 			 * since max_inodes is always 0, and is called from
- 			 * potentially unknown contexts. As such, use the global
- 			 * allocator which doesn't require the per-sb stat_lock.
-+			 *
-+			 * No special behaviour is needed for
-+			 * sbinfo->full_inums, because it's not possible to
-+			 * manually set on callers of this type, and
-+			 * CONFIG_TMPFS_INODE64 only applies to user-visible
-+			 * mounts.
- 			 */
- 			inode->i_ino = get_next_ino();
- 		} else {
- 			spin_lock(&sbinfo->stat_lock);
--			if (unlikely(sbinfo->next_ino > UINT_MAX)) {
-+			if (unlikely(!sbinfo->full_inums &&
-+				     sbinfo->next_ino > UINT_MAX)) {
- 				/*
- 				 * Emulate get_next_ino uint wraparound for
- 				 * compatibility
- 				 */
-+				pr_warn("%s: inode number overflow on device %d, consider using inode64 mount option\n",
-+					__func__, MINOR(sb->s_dev));
- 				sbinfo->next_ino = 1;
- 			}
- 			inode->i_ino = sbinfo->next_ino++;
-@@ -3409,6 +3420,8 @@ enum shmem_param {
- 	Opt_nr_inodes,
- 	Opt_size,
- 	Opt_uid,
-+	Opt_inode32,
-+	Opt_inode64,
- };
- 
- static const struct fs_parameter_spec shmem_param_specs[] = {
-@@ -3420,6 +3433,8 @@ static const struct fs_parameter_spec shmem_param_specs[] = {
- 	fsparam_string("nr_inodes",	Opt_nr_inodes),
- 	fsparam_string("size",		Opt_size),
- 	fsparam_u32   ("uid",		Opt_uid),
-+	fsparam_flag  ("inode32",	Opt_inode32),
-+	fsparam_flag  ("inode64",	Opt_inode64),
- 	{}
- };
- 
-@@ -3444,6 +3459,7 @@ static int shmem_parse_one(struct fs_context *fc, struct fs_parameter *param)
- 	unsigned long long size;
- 	char *rest;
- 	int opt;
-+	const char *err;
- 
- 	opt = fs_parse(fc, &shmem_fs_parameters, param, &result);
- 	if (opt < 0)
-@@ -3505,6 +3521,18 @@ static int shmem_parse_one(struct fs_context *fc, struct fs_parameter *param)
- 			break;
- 		}
- 		goto unsupported_parameter;
-+	case Opt_inode32:
-+		ctx->full_inums = false;
-+		ctx->seen |= SHMEM_SEEN_INUMS;
-+		break;
-+	case Opt_inode64:
-+		if (sizeof(ino_t) < 8) {
-+			err = "Cannot use inode64 with <64bit inums in kernel";
-+			goto err_msg;
-+		}
-+		ctx->full_inums = true;
-+		ctx->seen |= SHMEM_SEEN_INUMS;
-+		break;
- 	}
- 	return 0;
- 
-@@ -3512,6 +3540,8 @@ static int shmem_parse_one(struct fs_context *fc, struct fs_parameter *param)
- 	return invalf(fc, "tmpfs: Unsupported parameter '%s'", param->key);
- bad_value:
- 	return invalf(fc, "tmpfs: Bad value for '%s'", param->key);
-+err_msg:
-+	return invalf(fc, "tmpfs: %s", err);
- }
- 
- static int shmem_parse_options(struct fs_context *fc, void *data)
-@@ -3596,8 +3626,16 @@ static int shmem_reconfigure(struct fs_context *fc)
- 		}
- 	}
- 
-+	if ((ctx->seen & SHMEM_SEEN_INUMS) && !ctx->full_inums &&
-+	    sbinfo->next_ino > UINT_MAX) {
-+		err = "Current inum too high to switch to 32-bit inums";
-+		goto out;
-+	}
-+
- 	if (ctx->seen & SHMEM_SEEN_HUGE)
- 		sbinfo->huge = ctx->huge;
-+	if (ctx->seen & SHMEM_SEEN_INUMS)
-+		sbinfo->full_inums = ctx->full_inums;
- 	if (ctx->seen & SHMEM_SEEN_BLOCKS)
- 		sbinfo->max_blocks  = ctx->blocks;
- 	if (ctx->seen & SHMEM_SEEN_INODES) {
-@@ -3637,6 +3675,29 @@ static int shmem_show_options(struct seq_file *seq, struct dentry *root)
- 	if (!gid_eq(sbinfo->gid, GLOBAL_ROOT_GID))
- 		seq_printf(seq, ",gid=%u",
- 				from_kgid_munged(&init_user_ns, sbinfo->gid));
-+
-+	/*
-+	 * Showing inode{64,32} might be useful even if it's the system default,
-+	 * since then people don't have to resort to checking both here and
-+	 * /proc/config.gz to confirm 64-bit inums were successfully applied
-+	 * (which may not even exist if IKCONFIG_PROC isn't enabled).
-+	 *
-+	 * We hide it when inode64 isn't the default and we are using 32-bit
-+	 * inodes, since that probably just means the feature isn't even under
-+	 * consideration.
-+	 *
-+	 * As such:
-+	 *
-+	 *                     +-----------------+-----------------+
-+	 *                     | TMPFS_INODE64=y | TMPFS_INODE64=n |
-+	 *  +------------------+-----------------+-----------------+
-+	 *  | full_inums=true  | show            | show            |
-+	 *  | full_inums=false | show            | hide            |
-+	 *  +------------------+-----------------+-----------------+
-+	 *
-+	 */
-+	if (IS_ENABLED(CONFIG_TMPFS_INODE64) || sbinfo->full_inums)
-+		seq_printf(seq, ",inode%d", (sbinfo->full_inums ? 64 : 32));
- #ifdef CONFIG_TRANSPARENT_HUGE_PAGECACHE
- 	/* Rightly or wrongly, show huge mount option unmasked by shmem_huge */
- 	if (sbinfo->huge)
-@@ -3684,6 +3745,8 @@ static int shmem_fill_super(struct super_block *sb, struct fs_context *fc)
- 			ctx->blocks = shmem_default_max_blocks();
- 		if (!(ctx->seen & SHMEM_SEEN_INODES))
- 			ctx->inodes = shmem_default_max_inodes();
-+		if (!(ctx->seen & SHMEM_SEEN_INUMS))
-+			ctx->full_inums = IS_ENABLED(CONFIG_TMPFS_INODE64);
- 	} else {
- 		sb->s_flags |= SB_NOUSER;
- 	}
-@@ -3697,6 +3760,7 @@ static int shmem_fill_super(struct super_block *sb, struct fs_context *fc)
- 	sbinfo->free_inodes = sbinfo->max_inodes = ctx->inodes;
- 	sbinfo->uid = ctx->uid;
- 	sbinfo->gid = ctx->gid;
-+	sbinfo->full_inums = ctx->full_inums;
- 	sbinfo->mode = ctx->mode;
- 	sbinfo->huge = ctx->huge;
- 	sbinfo->mpol = ctx->mpol;
 -- 
-2.24.1
-
+Mike Kravetz
