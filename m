@@ -2,234 +2,113 @@ Return-Path: <SRS0=3Pgh=2Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C99C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 14:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8FBC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 14:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BDF92085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 14:12:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NwyTpLUa"
+	by mail.kernel.org (Postfix) with ESMTP id 4D2282064B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 14:15:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbgACOMs (ORCPT
+        id S1727835AbgACOPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 09:12:48 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45249 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727523AbgACOMs (ORCPT
+        Fri, 3 Jan 2020 09:15:47 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60250 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727523AbgACOPr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 09:12:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578060766;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CGMg0pHtt4SVc4uhGk+7pIjVLdzZuIJr8uS5jcpc3MY=;
-        b=NwyTpLUaQhy4aQcSi0ZCPkgtNMs80Ye0HTR1rp9p9oDeBngMFPadajBLTPZgz2un4KS4ha
-        x6/9ywk5L6ymgZ4epnsqc9K5wbDc4kaso+TSHWrv4QQVGymFz8MvFHZYPaTFFg9zIil/vy
-        EIfsM2YkyzyxLcEMn+m0q059Z1E0Heo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-385--FlagLmkMOm7LZJqTa9NNQ-1; Fri, 03 Jan 2020 09:12:43 -0500
-X-MC-Unique: -FlagLmkMOm7LZJqTa9NNQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 29D92801A0D;
-        Fri,  3 Jan 2020 14:12:42 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 11FFE386;
-        Fri,  3 Jan 2020 14:12:36 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 9A02E2202E9; Fri,  3 Jan 2020 09:12:35 -0500 (EST)
-Date:   Fri, 3 Jan 2020 09:12:35 -0500
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
-        stefanha@redhat.com, dgilbert@redhat.com,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH 02/19] dax: Pass dax_dev to dax_writeback_mapping_range()
-Message-ID: <20200103141235.GA13350@redhat.com>
-References: <20190821175720.25901-1-vgoyal@redhat.com>
- <20190821175720.25901-3-vgoyal@redhat.com>
- <20190826115316.GB21051@infradead.org>
- <20190826203326.GB13860@redhat.com>
- <20190826205829.GC13860@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190826205829.GC13860@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        Fri, 3 Jan 2020 09:15:47 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 003ECJHI110425
+        for <linux-kernel@vger.kernel.org>; Fri, 3 Jan 2020 09:15:45 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2x9wwve6rk-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 09:15:44 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 3 Jan 2020 14:15:43 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 3 Jan 2020 14:15:40 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 003EFd7031523070
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Jan 2020 14:15:39 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8976EA4040;
+        Fri,  3 Jan 2020 14:15:39 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E7FB3A404D;
+        Fri,  3 Jan 2020 14:15:37 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.213.69])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  3 Jan 2020 14:15:37 +0000 (GMT)
+Subject: Re: [PATCH v6 1/3] IMA: Define workqueue for early boot key
+ measurements
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        James.Bottomley@HansenPartnership.com,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Date:   Fri, 03 Jan 2020 09:15:37 -0500
+In-Reply-To: <20200103055608.22491-2-nramas@linux.microsoft.com>
+References: <20200103055608.22491-1-nramas@linux.microsoft.com>
+         <20200103055608.22491-2-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20010314-0008-0000-0000-000003463B2B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20010314-0009-0000-0000-00004A6674CA
+Message-Id: <1578060937.5874.140.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-03_04:2020-01-02,2020-01-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=800
+ malwarescore=0 impostorscore=0 adultscore=0 priorityscore=1501
+ suspectscore=0 lowpriorityscore=0 spamscore=0 phishscore=0 bulkscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001030133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 04:58:29PM -0400, Vivek Goyal wrote:
-> On Mon, Aug 26, 2019 at 04:33:26PM -0400, Vivek Goyal wrote:
-> > On Mon, Aug 26, 2019 at 04:53:16AM -0700, Christoph Hellwig wrote:
-> > > On Wed, Aug 21, 2019 at 01:57:03PM -0400, Vivek Goyal wrote:
-> > > > Right now dax_writeback_mapping_range() is passed a bdev and dax_dev
-> > > > is searched from that bdev name.
-> > > > 
-> > > > virtio-fs does not have a bdev. So pass in dax_dev also to
-> > > > dax_writeback_mapping_range(). If dax_dev is passed in, bdev is not
-> > > > used otherwise dax_dev is searched using bdev.
-> > > 
-> > > Please just pass in only the dax_device and get rid of the block device.
-> > > The callers should have one at hand easily, e.g. for XFS just call
-> > > xfs_find_daxdev_for_inode instead of xfs_find_bdev_for_inode.
-> > 
-> > Sure. Here is the updated patch.
-> > 
-> > This patch can probably go upstream independently. If you are fine with
-> > the patch, I can post it separately for inclusion.
-> 
-> Forgot to update function declaration in case of !CONFIG_FS_DAX. Here is
-> the updated patch.
-> 
-> Subject: dax: Pass dax_dev instead of bdev to dax_writeback_mapping_range()
-> 
-> As of now dax_writeback_mapping_range() takes "struct block_device" as a
-> parameter and dax_dev is searched from bdev name. This also involves taking
-> a fresh reference on dax_dev and putting that reference at the end of
-> function.
-> 
-> We are developing a new filesystem virtio-fs and using dax to access host
-> page cache directly. But there is no block device. IOW, we want to make
-> use of dax but want to get rid of this assumption that there is always
-> a block device associated with dax_dev.
-> 
-> So pass in "struct dax_device" as parameter instead of bdev.
-> 
-> ext2/ext4/xfs are current users and they already have a reference on
-> dax_device. So there is no need to take reference and drop reference to
-> dax_device on each call of this function.
-> 
-> Suggested-by: Christoph Hellwig <hch@infradead.org>
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+Hi Lakshmi,
 
-Hi Dan,
-
-Ping for this patch. I see christoph and Jan acked it. Can we take it. Not
-sure how to get ack from ext4 developers.
-
-Thanks
-Vivek
-
-> ---
->  fs/dax.c            |    8 +-------
->  fs/ext2/inode.c     |    5 +++--
->  fs/ext4/inode.c     |    2 +-
->  fs/xfs/xfs_aops.c   |    2 +-
->  include/linux/dax.h |    4 ++--
->  5 files changed, 8 insertions(+), 13 deletions(-)
+On Thu, 2020-01-02 at 21:56 -0800, Lakshmi Ramasubramanian wrote:
+> Measuring keys requires a custom IMA policy to be loaded.
+> Keys created or updated before a custom IMA policy is loaded should
+> be queued and the keys should be processed after a custom policy
+> is loaded.
 > 
-> Index: rhvgoyal-linux-fuse/fs/dax.c
-> ===================================================================
-> --- rhvgoyal-linux-fuse.orig/fs/dax.c	2019-08-26 16:45:26.093710196 -0400
-> +++ rhvgoyal-linux-fuse/fs/dax.c	2019-08-26 16:45:29.462710196 -0400
-> @@ -936,12 +936,11 @@ static int dax_writeback_one(struct xa_s
->   * on persistent storage prior to completion of the operation.
->   */
->  int dax_writeback_mapping_range(struct address_space *mapping,
-> -		struct block_device *bdev, struct writeback_control *wbc)
-> +		struct dax_device *dax_dev, struct writeback_control *wbc)
->  {
->  	XA_STATE(xas, &mapping->i_pages, wbc->range_start >> PAGE_SHIFT);
->  	struct inode *inode = mapping->host;
->  	pgoff_t end_index = wbc->range_end >> PAGE_SHIFT;
-> -	struct dax_device *dax_dev;
->  	void *entry;
->  	int ret = 0;
->  	unsigned int scanned = 0;
-> @@ -952,10 +951,6 @@ int dax_writeback_mapping_range(struct a
->  	if (!mapping->nrexceptional || wbc->sync_mode != WB_SYNC_ALL)
->  		return 0;
->  
-> -	dax_dev = dax_get_by_host(bdev->bd_disk->disk_name);
-> -	if (!dax_dev)
-> -		return -EIO;
-> -
->  	trace_dax_writeback_range(inode, xas.xa_index, end_index);
->  
->  	tag_pages_for_writeback(mapping, xas.xa_index, end_index);
-> @@ -976,7 +971,6 @@ int dax_writeback_mapping_range(struct a
->  		xas_lock_irq(&xas);
->  	}
->  	xas_unlock_irq(&xas);
-> -	put_dax(dax_dev);
->  	trace_dax_writeback_range_done(inode, xas.xa_index, end_index);
->  	return ret;
->  }
-> Index: rhvgoyal-linux-fuse/include/linux/dax.h
-> ===================================================================
-> --- rhvgoyal-linux-fuse.orig/include/linux/dax.h	2019-08-26 16:45:26.094710196 -0400
-> +++ rhvgoyal-linux-fuse/include/linux/dax.h	2019-08-26 16:46:08.101710196 -0400
-> @@ -141,7 +141,7 @@ static inline void fs_put_dax(struct dax
->  
->  struct dax_device *fs_dax_get_by_bdev(struct block_device *bdev);
->  int dax_writeback_mapping_range(struct address_space *mapping,
-> -		struct block_device *bdev, struct writeback_control *wbc);
-> +		struct dax_device *dax_dev, struct writeback_control *wbc);
->  
->  struct page *dax_layout_busy_page(struct address_space *mapping);
->  dax_entry_t dax_lock_page(struct page *page);
-> @@ -180,7 +180,7 @@ static inline struct page *dax_layout_bu
->  }
->  
->  static inline int dax_writeback_mapping_range(struct address_space *mapping,
-> -		struct block_device *bdev, struct writeback_control *wbc)
-> +		struct dax_device *dax_dev, struct writeback_control *wbc)
->  {
->  	return -EOPNOTSUPP;
->  }
-> Index: rhvgoyal-linux-fuse/fs/xfs/xfs_aops.c
-> ===================================================================
-> --- rhvgoyal-linux-fuse.orig/fs/xfs/xfs_aops.c	2019-08-26 16:45:26.094710196 -0400
-> +++ rhvgoyal-linux-fuse/fs/xfs/xfs_aops.c	2019-08-26 16:45:29.471710196 -0400
-> @@ -1120,7 +1120,7 @@ xfs_dax_writepages(
->  {
->  	xfs_iflags_clear(XFS_I(mapping->host), XFS_ITRUNCATED);
->  	return dax_writeback_mapping_range(mapping,
-> -			xfs_find_bdev_for_inode(mapping->host), wbc);
-> +			xfs_find_daxdev_for_inode(mapping->host), wbc);
->  }
->  
->  STATIC int
-> Index: rhvgoyal-linux-fuse/fs/ext4/inode.c
-> ===================================================================
-> --- rhvgoyal-linux-fuse.orig/fs/ext4/inode.c	2019-08-26 16:45:26.093710196 -0400
-> +++ rhvgoyal-linux-fuse/fs/ext4/inode.c	2019-08-26 16:45:29.475710196 -0400
-> @@ -2992,7 +2992,7 @@ static int ext4_dax_writepages(struct ad
->  	percpu_down_read(&sbi->s_journal_flag_rwsem);
->  	trace_ext4_writepages(inode, wbc);
->  
-> -	ret = dax_writeback_mapping_range(mapping, inode->i_sb->s_bdev, wbc);
-> +	ret = dax_writeback_mapping_range(mapping, sbi->s_daxdev, wbc);
->  	trace_ext4_writepages_result(inode, wbc, ret,
->  				     nr_to_write - wbc->nr_to_write);
->  	percpu_up_read(&sbi->s_journal_flag_rwsem);
-> Index: rhvgoyal-linux-fuse/fs/ext2/inode.c
-> ===================================================================
-> --- rhvgoyal-linux-fuse.orig/fs/ext2/inode.c	2019-08-26 16:45:26.093710196 -0400
-> +++ rhvgoyal-linux-fuse/fs/ext2/inode.c	2019-08-26 16:45:29.477710196 -0400
-> @@ -957,8 +957,9 @@ ext2_writepages(struct address_space *ma
->  static int
->  ext2_dax_writepages(struct address_space *mapping, struct writeback_control *wbc)
->  {
-> -	return dax_writeback_mapping_range(mapping,
-> -			mapping->host->i_sb->s_bdev, wbc);
-> +	struct ext2_sb_info *sbi = EXT2_SB(mapping->host->i_sb);
-> +
-> +	return dax_writeback_mapping_range(mapping, sbi->s_daxdev, wbc);
->  }
->  
->  const struct address_space_operations ext2_aops = {
+> This patch defines workqueue for queuing keys when a custom IMA policy
+> has not yet been loaded.
+> 
+> A flag namely ima_process_keys is used to check if the key should be
+> queued or should be processed immediately.
+> 
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> Reported-by: kbuild test robot <lkp@intel.com>
+
+The changes based on "kernel test robot" reports are properly folded
+into this patch, but unless the tag - "Acked-by", "Reported-by" - is
+qualified, it refers to the entire patch.  Let's limit it as:
+
+Reported-by: kernel test robot <rong.a.chen@intel.com> # sleeping
+function called from invalid context
+Reported-by: kbuild test robot <lkp@intel.com> # sparse symbol
+ima_queued_key() should be static
+
+Mimi
 
