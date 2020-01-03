@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA45C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3B2C00523
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80B98227BF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E64227BF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 22:33:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728920AbgACWdq (ORCPT
+        id S1728931AbgACWdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 17:33:46 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45628 "EHLO
+        Fri, 3 Jan 2020 17:33:47 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56928 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728730AbgACWdp (ORCPT
+        by vger.kernel.org with ESMTP id S1728885AbgACWdp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 3 Jan 2020 17:33:45 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 003MHMJ4030712
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 003MHNZd008674
         for <linux-kernel@vger.kernel.org>; Fri, 3 Jan 2020 17:33:44 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2x9x04hsay-1
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xa68ew7gx-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
         for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 17:33:44 -0500
 Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <zaslonko@linux.ibm.com>;
         Fri, 3 Jan 2020 22:33:42 -0000
 Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 3 Jan 2020 22:33:38 -0000
+        Fri, 3 Jan 2020 22:33:39 -0000
 Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 003MXbc051773598
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 003MXbPx59506866
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Fri, 3 Jan 2020 22:33:37 GMT
 Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 07AE752073;
+        by IMSVA (Postfix) with ESMTP id 6140452069;
         Fri,  3 Jan 2020 22:33:37 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id A338E52071;
-        Fri,  3 Jan 2020 22:33:36 +0000 (GMT)
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 08F0B52074;
+        Fri,  3 Jan 2020 22:33:37 +0000 (GMT)
 From:   Mikhail Zaslonko <zaslonko@linux.ibm.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
@@ -56,167 +56,288 @@ Cc:     Richard Purdie <rpurdie@rpsys.net>,
         Eduard Shishkin <edward6@linux.ibm.com>,
         Ilya Leoshkevich <iii@linux.ibm.com>,
         linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/6] lib/zlib: Add zlib_deflate_dfltcc_enabled() function
-Date:   Fri,  3 Jan 2020 23:33:33 +0100
+Subject: [PATCH v3 6/6] btrfs: Use larger zlib buffer for s390 hardware compression
+Date:   Fri,  3 Jan 2020 23:33:34 +0100
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200103223334.20669-1-zaslonko@linux.ibm.com>
 References: <20200103223334.20669-1-zaslonko@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 20010322-0016-0000-0000-000002DA49EE
+x-cbid: 20010322-4275-0000-0000-000003947D85
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20010322-0017-0000-0000-0000333CB867
-Message-Id: <20200103223334.20669-6-zaslonko@linux.ibm.com>
+x-cbparentid: 20010322-4276-0000-0000-000038A8632C
+Message-Id: <20200103223334.20669-7-zaslonko@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2020-01-03_06:2020-01-02,2020-01-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- mlxlogscore=999 clxscore=1015 adultscore=0 lowpriorityscore=0
- impostorscore=0 bulkscore=0 suspectscore=0 mlxscore=0 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 suspectscore=0 clxscore=1015
+ impostorscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0 adultscore=0
+ spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-1910280000 definitions=main-2001030203
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new function to zlib.h checking if s390 Deflate-Conversion facility
-is installed and enabled.
+In order to benefit from s390 zlib hardware compression support,
+increase the btrfs zlib workspace buffer size from 1 to 4 pages (if
+s390 zlib hardware support is enabled on the machine). This brings up
+to 60% better performance in hardware on s390 compared to the PAGE_SIZE
+buffer and much more compared to the software zlib processing in btrfs.
+In case of memory pressure fall back to a single page buffer during
+workspace allocation.
 
 Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
 ---
- include/linux/zlib.h            |  6 ++++++
- lib/zlib_deflate/deflate.c      |  6 ++++++
- lib/zlib_deflate/deflate_syms.c |  1 +
- lib/zlib_dfltcc/dfltcc.h        | 11 +++++++++++
- lib/zlib_dfltcc/dfltcc_util.h   |  9 ---------
- 5 files changed, 24 insertions(+), 9 deletions(-)
+ fs/btrfs/compression.c |   2 +-
+ fs/btrfs/zlib.c        | 128 ++++++++++++++++++++++++++++++-----------
+ 2 files changed, 94 insertions(+), 36 deletions(-)
 
-diff --git a/include/linux/zlib.h b/include/linux/zlib.h
-index 92dbbd3f6c75..c757d848a758 100644
---- a/include/linux/zlib.h
-+++ b/include/linux/zlib.h
-@@ -191,6 +191,12 @@ extern int zlib_deflate_workspacesize (int windowBits, int memLevel);
-    exceed those passed here.
- */
+diff --git a/fs/btrfs/compression.c b/fs/btrfs/compression.c
+index ee834ef7beb4..6bd0e75a822c 100644
+--- a/fs/btrfs/compression.c
++++ b/fs/btrfs/compression.c
+@@ -1285,7 +1285,7 @@ int btrfs_decompress_buf2page(const char *buf, unsigned long buf_start,
+ 	/* copy bytes from the working buffer into the pages */
+ 	while (working_bytes > 0) {
+ 		bytes = min_t(unsigned long, bvec.bv_len,
+-				PAGE_SIZE - buf_offset);
++				PAGE_SIZE - (buf_offset % PAGE_SIZE));
+ 		bytes = min(bytes, working_bytes);
  
-+extern int zlib_deflate_dfltcc_enabled (void);
-+/*
-+   Returns 1 if Deflate-Conversion facility is installed and enabled,
-+   otherwise 0.
-+*/
+ 		kaddr = kmap_atomic(bvec.bv_page);
+diff --git a/fs/btrfs/zlib.c b/fs/btrfs/zlib.c
+index a6c90a003c12..159486801631 100644
+--- a/fs/btrfs/zlib.c
++++ b/fs/btrfs/zlib.c
+@@ -20,9 +20,12 @@
+ #include <linux/refcount.h>
+ #include "compression.h"
+ 
++#define ZLIB_DFLTCC_BUF_SIZE    (4 * PAGE_SIZE)
 +
- /* 
- extern int deflateInit (z_streamp strm, int level);
+ struct workspace {
+ 	z_stream strm;
+ 	char *buf;
++	unsigned long buf_size;
+ 	struct list_head list;
+ 	int level;
+ };
+@@ -61,7 +64,17 @@ struct list_head *zlib_alloc_workspace(unsigned int level)
+ 			zlib_inflate_workspacesize());
+ 	workspace->strm.workspace = kvmalloc(workspacesize, GFP_KERNEL);
+ 	workspace->level = level;
+-	workspace->buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
++	workspace->buf = NULL;
++	if (zlib_deflate_dfltcc_enabled()) {
++		workspace->buf = kmalloc(ZLIB_DFLTCC_BUF_SIZE,
++					 __GFP_NOMEMALLOC | __GFP_NORETRY |
++					 __GFP_NOWARN | GFP_NOIO);
++		workspace->buf_size = ZLIB_DFLTCC_BUF_SIZE;
++	}
++	if (!workspace->buf) {
++		workspace->buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
++		workspace->buf_size = PAGE_SIZE;
++	}
+ 	if (!workspace->strm.workspace || !workspace->buf)
+ 		goto fail;
  
-diff --git a/lib/zlib_deflate/deflate.c b/lib/zlib_deflate/deflate.c
-index 0d60d81a2637..8a878d0d892c 100644
---- a/lib/zlib_deflate/deflate.c
-+++ b/lib/zlib_deflate/deflate.c
-@@ -59,6 +59,7 @@
- #define DEFLATE_RESET_HOOK(strm) do {} while (0)
- #define DEFLATE_HOOK(strm, flush, bstate) 0
- #define DEFLATE_NEED_CHECKSUM(strm) 1
-+#define DEFLATE_DFLTCC_ENABLED() 0
- #endif
+@@ -78,6 +91,7 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
+ 		unsigned long *total_in, unsigned long *total_out)
+ {
+ 	struct workspace *workspace = list_entry(ws, struct workspace, list);
++	int i;
+ 	int ret;
+ 	char *data_in;
+ 	char *cpage_out;
+@@ -85,6 +99,7 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
+ 	struct page *in_page = NULL;
+ 	struct page *out_page = NULL;
+ 	unsigned long bytes_left;
++	unsigned long in_buf_pages;
+ 	unsigned long len = *total_out;
+ 	unsigned long nr_dest_pages = *out_pages;
+ 	const unsigned long max_out = nr_dest_pages * PAGE_SIZE;
+@@ -102,9 +117,6 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
+ 	workspace->strm.total_in = 0;
+ 	workspace->strm.total_out = 0;
  
- /* ===========================================================================
-@@ -1138,3 +1139,8 @@ int zlib_deflate_workspacesize(int windowBits, int memLevel)
-         + zlib_deflate_head_memsize(memLevel)
-         + zlib_deflate_overlay_memsize(memLevel);
- }
-+
-+int zlib_deflate_dfltcc_enabled(void)
-+{
-+	return DEFLATE_DFLTCC_ENABLED();
-+}
-diff --git a/lib/zlib_deflate/deflate_syms.c b/lib/zlib_deflate/deflate_syms.c
-index 72fe4b73be53..24b740b99678 100644
---- a/lib/zlib_deflate/deflate_syms.c
-+++ b/lib/zlib_deflate/deflate_syms.c
-@@ -12,6 +12,7 @@
- #include <linux/zlib.h>
- 
- EXPORT_SYMBOL(zlib_deflate_workspacesize);
-+EXPORT_SYMBOL(zlib_deflate_dfltcc_enabled);
- EXPORT_SYMBOL(zlib_deflate);
- EXPORT_SYMBOL(zlib_deflateInit2);
- EXPORT_SYMBOL(zlib_deflateEnd);
-diff --git a/lib/zlib_dfltcc/dfltcc.h b/lib/zlib_dfltcc/dfltcc.h
-index be70c807b62f..2a2fac1d050a 100644
---- a/lib/zlib_dfltcc/dfltcc.h
-+++ b/lib/zlib_dfltcc/dfltcc.h
-@@ -3,6 +3,8 @@
- #define DFLTCC_H
- 
- #include "../zlib_deflate/defutil.h"
-+#include <asm/facility.h>
-+#include <asm/setup.h>
- 
- /*
-  * Tuning parameters.
-@@ -14,6 +16,8 @@
- #define DFLTCC_DHT_MIN_SAMPLE_SIZE 4096
- #define DFLTCC_RIBM 0
- 
-+#define DFLTCC_FACILITY 151
-+
- /*
-  * Parameter Block for Query Available Functions.
-  */
-@@ -113,6 +117,11 @@ typedef enum {
- } dfltcc_inflate_action;
- dfltcc_inflate_action dfltcc_inflate(z_streamp strm,
-                                      int flush, int *ret);
-+static inline int is_dfltcc_enabled(void)
-+{
-+return (zlib_dfltcc_support != ZLIB_DFLTCC_DISABLED &&
-+        test_facility(DFLTCC_FACILITY));
-+}
- 
- #define DEFLATE_RESET_HOOK(strm) \
-     dfltcc_reset((strm), sizeof(deflate_state))
-@@ -121,6 +130,8 @@ dfltcc_inflate_action dfltcc_inflate(z_streamp strm,
- 
- #define DEFLATE_NEED_CHECKSUM(strm) (!dfltcc_can_deflate((strm)))
- 
-+#define DEFLATE_DFLTCC_ENABLED() is_dfltcc_enabled()
-+
- #define INFLATE_RESET_HOOK(strm) \
-     dfltcc_reset((strm), sizeof(struct inflate_state))
- 
-diff --git a/lib/zlib_dfltcc/dfltcc_util.h b/lib/zlib_dfltcc/dfltcc_util.h
-index 7c0d3bdc50a9..4a46b5009f0d 100644
---- a/lib/zlib_dfltcc/dfltcc_util.h
-+++ b/lib/zlib_dfltcc/dfltcc_util.h
-@@ -3,8 +3,6 @@
- #define DFLTCC_UTIL_H
- 
- #include <linux/zutil.h>
--#include <asm/facility.h>
--#include <asm/setup.h>
- 
- /*
-  * C wrapper for the DEFLATE CONVERSION CALL instruction.
-@@ -24,7 +22,6 @@ typedef enum {
- #define HBT_CIRCULAR (1 << 7)
- #define HB_BITS 15
- #define HB_SIZE (1 << HB_BITS)
--#define DFLTCC_FACILITY 151
- 
- static inline dfltcc_cc dfltcc(
-     int fn,
-@@ -101,12 +98,6 @@ static inline int dfltcc_are_params_ok(
-         (strategy == Z_DEFAULT_STRATEGY);
- }
- 
--static inline int is_dfltcc_enabled(void)
--{
--    return (zlib_dfltcc_support != ZLIB_DFLTCC_DISABLED &&
--            test_facility(DFLTCC_FACILITY));
--}
+-	in_page = find_get_page(mapping, start >> PAGE_SHIFT);
+-	data_in = kmap(in_page);
 -
- char *oesc_msg(char *buf, int oesc);
+ 	out_page = alloc_page(GFP_NOFS | __GFP_HIGHMEM);
+ 	if (out_page == NULL) {
+ 		ret = -ENOMEM;
+@@ -114,12 +126,48 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
+ 	pages[0] = out_page;
+ 	nr_pages = 1;
  
- #endif /* DFLTCC_UTIL_H */
+-	workspace->strm.next_in = data_in;
++	workspace->strm.next_in = workspace->buf;
++	workspace->strm.avail_in = 0;
+ 	workspace->strm.next_out = cpage_out;
+ 	workspace->strm.avail_out = PAGE_SIZE;
+-	workspace->strm.avail_in = min(len, PAGE_SIZE);
+ 
+ 	while (workspace->strm.total_in < len) {
++		/* get next input pages and copy the contents to
++		 * the workspace buffer if required
++		 */
++		if (workspace->strm.avail_in == 0) {
++			bytes_left = len - workspace->strm.total_in;
++			in_buf_pages = min(DIV_ROUND_UP(bytes_left, PAGE_SIZE),
++					   workspace->buf_size / PAGE_SIZE);
++			if (in_buf_pages > 1) {
++				for (i = 0; i < in_buf_pages; i++) {
++					if (in_page) {
++						kunmap(in_page);
++						put_page(in_page);
++					}
++					in_page = find_get_page(mapping,
++								start >> PAGE_SHIFT);
++					data_in = kmap(in_page);
++					memcpy(workspace->buf + i*PAGE_SIZE,
++					       data_in, PAGE_SIZE);
++					start += PAGE_SIZE;
++				}
++				workspace->strm.next_in = workspace->buf;
++			} else {
++				if (in_page) {
++					kunmap(in_page);
++					put_page(in_page);
++				}
++				in_page = find_get_page(mapping,
++							start >> PAGE_SHIFT);
++				data_in = kmap(in_page);
++				start += PAGE_SIZE;
++				workspace->strm.next_in = data_in;
++			}
++			workspace->strm.avail_in = min(bytes_left,
++						       workspace->buf_size);
++		}
++
+ 		ret = zlib_deflate(&workspace->strm, Z_SYNC_FLUSH);
+ 		if (ret != Z_OK) {
+ 			pr_debug("BTRFS: deflate in loop returned %d\n",
+@@ -136,6 +184,7 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
+ 			ret = -E2BIG;
+ 			goto out;
+ 		}
++
+ 		/* we need another page for writing out.  Test this
+ 		 * before the total_in so we will pull in a new page for
+ 		 * the stream end if required
+@@ -161,33 +210,42 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
+ 		/* we're all done */
+ 		if (workspace->strm.total_in >= len)
+ 			break;
+-
+-		/* we've read in a full page, get a new one */
+-		if (workspace->strm.avail_in == 0) {
+-			if (workspace->strm.total_out > max_out)
+-				break;
+-
+-			bytes_left = len - workspace->strm.total_in;
+-			kunmap(in_page);
+-			put_page(in_page);
+-
+-			start += PAGE_SIZE;
+-			in_page = find_get_page(mapping,
+-						start >> PAGE_SHIFT);
+-			data_in = kmap(in_page);
+-			workspace->strm.avail_in = min(bytes_left,
+-							   PAGE_SIZE);
+-			workspace->strm.next_in = data_in;
+-		}
++		if (workspace->strm.total_out > max_out)
++			break;
+ 	}
+ 	workspace->strm.avail_in = 0;
+-	ret = zlib_deflate(&workspace->strm, Z_FINISH);
+-	zlib_deflateEnd(&workspace->strm);
+-
+-	if (ret != Z_STREAM_END) {
+-		ret = -EIO;
+-		goto out;
++	/* call deflate with Z_FINISH flush parameter providing more output
++	 * space but no more input data, until it returns with Z_STREAM_END
++	 */
++	while (ret != Z_STREAM_END) {
++		ret = zlib_deflate(&workspace->strm, Z_FINISH);
++		if (ret == Z_STREAM_END)
++			break;
++		if (ret != Z_OK && ret != Z_BUF_ERROR) {
++			zlib_deflateEnd(&workspace->strm);
++			ret = -EIO;
++			goto out;
++		} else if (workspace->strm.avail_out == 0) {
++			/* get another page for the stream end */
++			kunmap(out_page);
++			if (nr_pages == nr_dest_pages) {
++				out_page = NULL;
++				ret = -E2BIG;
++				goto out;
++			}
++			out_page = alloc_page(GFP_NOFS | __GFP_HIGHMEM);
++			if (out_page == NULL) {
++				ret = -ENOMEM;
++				goto out;
++			}
++			cpage_out = kmap(out_page);
++			pages[nr_pages] = out_page;
++			nr_pages++;
++			workspace->strm.avail_out = PAGE_SIZE;
++			workspace->strm.next_out = cpage_out;
++		}
+ 	}
++	zlib_deflateEnd(&workspace->strm);
+ 
+ 	if (workspace->strm.total_out >= workspace->strm.total_in) {
+ 		ret = -E2BIG;
+@@ -231,7 +289,7 @@ int zlib_decompress_bio(struct list_head *ws, struct compressed_bio *cb)
+ 
+ 	workspace->strm.total_out = 0;
+ 	workspace->strm.next_out = workspace->buf;
+-	workspace->strm.avail_out = PAGE_SIZE;
++	workspace->strm.avail_out = workspace->buf_size;
+ 
+ 	/* If it's deflate, and it's got no preset dictionary, then
+ 	   we can tell zlib to skip the adler32 check. */
+@@ -270,7 +328,7 @@ int zlib_decompress_bio(struct list_head *ws, struct compressed_bio *cb)
+ 		}
+ 
+ 		workspace->strm.next_out = workspace->buf;
+-		workspace->strm.avail_out = PAGE_SIZE;
++		workspace->strm.avail_out = workspace->buf_size;
+ 
+ 		if (workspace->strm.avail_in == 0) {
+ 			unsigned long tmp;
+@@ -320,7 +378,7 @@ int zlib_decompress(struct list_head *ws, unsigned char *data_in,
+ 	workspace->strm.total_in = 0;
+ 
+ 	workspace->strm.next_out = workspace->buf;
+-	workspace->strm.avail_out = PAGE_SIZE;
++	workspace->strm.avail_out = workspace->buf_size;
+ 	workspace->strm.total_out = 0;
+ 	/* If it's deflate, and it's got no preset dictionary, then
+ 	   we can tell zlib to skip the adler32 check. */
+@@ -364,7 +422,7 @@ int zlib_decompress(struct list_head *ws, unsigned char *data_in,
+ 			buf_offset = 0;
+ 
+ 		bytes = min(PAGE_SIZE - pg_offset,
+-			    PAGE_SIZE - buf_offset);
++			    PAGE_SIZE - (buf_offset % PAGE_SIZE));
+ 		bytes = min(bytes, bytes_left);
+ 
+ 		kaddr = kmap_atomic(dest_page);
+@@ -375,7 +433,7 @@ int zlib_decompress(struct list_head *ws, unsigned char *data_in,
+ 		bytes_left -= bytes;
+ next:
+ 		workspace->strm.next_out = workspace->buf;
+-		workspace->strm.avail_out = PAGE_SIZE;
++		workspace->strm.avail_out = workspace->buf_size;
+ 	}
+ 
+ 	if (ret != Z_STREAM_END && bytes_left != 0)
 -- 
 2.17.1
 
