@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B43C32767
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F49FC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35AB22253D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7600A2464E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jan 2020 18:19:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FzEwOlRM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rr2oD3VV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgACSTn (ORCPT
+        id S1728483AbgACSTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 13:19:43 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44320 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728435AbgACSTj (ORCPT
+        Fri, 3 Jan 2020 13:19:45 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39678 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728451AbgACSTl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 13:19:39 -0500
-Received: by mail-pg1-f194.google.com with SMTP id x7so23751448pgl.11;
-        Fri, 03 Jan 2020 10:19:38 -0800 (PST)
+        Fri, 3 Jan 2020 13:19:41 -0500
+Received: by mail-pl1-f194.google.com with SMTP id g6so16368013plp.6;
+        Fri, 03 Jan 2020 10:19:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=RT3uMjCTNXctwL3ki3eO315EjLjo+qSfc5PPzuNqLtA=;
-        b=FzEwOlRMFbNiAhqLfljSym93jTMUvS6k/dZXg/3L5CJaQ7moGCyNKhVKO0OCLqmXCa
-         NwaRYzWB63wbqKSDgQmEe0dMyasgcs9aqAzXNkxyFtfyJYajfzUA0qtDxQaxZn88oLWC
-         eLrKKiblk7vsDVeB9dm4H+ItRv7kzOWYSc13jF8uLuv+I/TjfYtVNTbDeqvuHpH4wLaI
-         Q6706UTsTyWC4ixkLU3kV6thFd332tt0MS3gtWIT3bMDegkoiw4mYCsucyNQdtyRqooK
-         UyVNN8fCYzEcHWJskkNSYvRG5RItugITX0NDErPPKcc/b81yrRcqixHEagD0NWtV0uu/
-         nxnA==
+        bh=hObdGfhJZd0SmP8SodLo/G+SfyA3edd8eSiGk2vdy/s=;
+        b=rr2oD3VVAcuSjaCyH+1w105sIq0VCXM5GrVe2oYbdEhaZj21pxjsHxinGTzvYpGtz3
+         yBAcQlOLvUdcc4PVExO2HHJsjd43SxfEO5JHcWckCmnzVpOUDM0pCU3QH4eEbozNI1wA
+         RJ+5wD00KMQATPlxf+tD51y4foy+E1kjAFbW5LohNoJdwNF2ssEudpeXuwf3HJWFCxcF
+         4Axn7q9ewa8/fyUiK08HQpwM2rptVr/c16gjPlwjj7UyzFVzuc2T/ADD2GTGG4HFrBnN
+         bZF2CFLt0MDLul1CPAedBFA8pNOIwgd2Box/OWh+B6FEdhZKtuMZrgrRzJMYZnGIgapF
+         wTbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=RT3uMjCTNXctwL3ki3eO315EjLjo+qSfc5PPzuNqLtA=;
-        b=PFj11qRCsBRG0tJfXMwsg+Z5OT4/HzXQPwRlESc4vZBCnwKBvR4eoqYtmeam7d2U5J
-         h6BPv9MwihC8CWgKa/oLOCEQYdIGuevYvLxmhzzD/t7V7VASXD59dgIwtOAu1z/fwNGH
-         3rcFIJmuuVAqdp98V7hhlF9V3MlvpSWhiphSStkFwNYJmQNFGp0ZxU1yr0LuHdIWWtAG
-         YDeiLsItstNvtd2Tu8rFhHHw9Owd7kHfRAi1GxgsDffWKaiwMGvvJLnn8QwylaCp2Jf3
-         TiySjcd6VOP1W2/H9Sr8APBdge2r+fN54per/jEPzbv8N/TXjjX199QVa3Tj/sUP6Kjj
-         Q5AQ==
-X-Gm-Message-State: APjAAAUUEu2Ysc4vGzZMYWkoctH1+poewNuCSchfMtHJvgcZnhQTimAQ
-        hQmHxwXkCm/m8N9IpYuc7rNzgYmj
-X-Google-Smtp-Source: APXvYqwk5XDkvs1zJukGqobBsjnTy+tRHSX4K/8jH+V2gZBNBh0xSYIuGwEy1nH9zh4f/xv40Rz/gw==
-X-Received: by 2002:aa7:8d8f:: with SMTP id i15mr66919232pfr.220.1578075578412;
-        Fri, 03 Jan 2020 10:19:38 -0800 (PST)
+        bh=hObdGfhJZd0SmP8SodLo/G+SfyA3edd8eSiGk2vdy/s=;
+        b=QyG/JUi5IOKAFsBRSAAz5n+iAvYoBgm1wyequ6/JNaF05dw9kPk1CtpJInBRcpDv+D
+         Q8kyYuoicj6xuYnivC5RERQQ5LbGFLrxvSC6DUQuArCsA6JU2rzd1KWkrKZZt8DHIZyI
+         dFZTWjJptSYwxI2WyoKhwgMYOwgimUHGphzGfdIKotQhZGhHvzgzr+m9hL+N/SOacJgp
+         Hgnd1gckffSLXOXe4jJhTeZhOkMi6x10LVErH0zPn7u+q0/q6X9em0XDeIrPT3YYYI4O
+         RjbFLmzbDu+GLZksGIpLiJ37caNrLls9hQZAg55PYkJJUmNz7zHw73+DTZCFXT3c+Q6c
+         co0A==
+X-Gm-Message-State: APjAAAVudzzpV7lQg3F2AdpcjeMAmrWJASb6uURYrvm1nZxMkTwB/i7S
+        /9WMt0MqkUgOMM0WWbnwEl/xa4tQ
+X-Google-Smtp-Source: APXvYqyxVbyVdmuEyNYCeZvfxH9A1WjQiJHvKs5vzKLwH12ImzSu2kcR/dCMUQBUYJlzV89Xo4lVCA==
+X-Received: by 2002:a17:902:aa48:: with SMTP id c8mr92033758plr.243.1578075580077;
+        Fri, 03 Jan 2020 10:19:40 -0800 (PST)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id j8sm41783602pfe.182.2020.01.03.10.19.36
+        by smtp.gmail.com with ESMTPSA id j8sm41783602pfe.182.2020.01.03.10.19.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 10:19:38 -0800 (PST)
+        Fri, 03 Jan 2020 10:19:39 -0800 (PST)
 From:   Al Cooper <alcooperx@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Al Cooper <alcooperx@gmail.com>,
@@ -69,9 +69,9 @@ Cc:     Al Cooper <alcooperx@gmail.com>,
         DEVICE TREE BINDINGS),
         linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
         ARM ARCHITECTURE)
-Subject: [PATCH v4 09/13] phy: usb: fix driver to defer on clk_get defer
-Date:   Fri,  3 Jan 2020 13:18:07 -0500
-Message-Id: <20200103181811.22939-10-alcooperx@gmail.com>
+Subject: [PATCH v4 10/13] phy: usb: PHY's MDIO registers not accessible without device installed
+Date:   Fri,  3 Jan 2020 13:18:08 -0500
+Message-Id: <20200103181811.22939-11-alcooperx@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200103181811.22939-1-alcooperx@gmail.com>
 References: <20200103181811.22939-1-alcooperx@gmail.com>
@@ -80,45 +80,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Handle defer on clk_get because the new SCMI clock driver comes
-up after this driver.
+When there is no device connected and FSM is enabled, the XHCI puts
+the PHY into suspend mode.  When the PHY is put into suspend mode
+the USB LDO powers down the PHY. This causes the MDIO to be
+inaccessible and its registers reset to default. The fix is to
+disable FSM.
 
 Signed-off-by: Al Cooper <alcooperx@gmail.com>
 ---
- drivers/phy/broadcom/phy-brcm-usb.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/phy/broadcom/phy-brcm-usb-init-synopsys.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/phy/broadcom/phy-brcm-usb.c b/drivers/phy/broadcom/phy-brcm-usb.c
-index 5f7bfa09494d..c82d7ec15334 100644
---- a/drivers/phy/broadcom/phy-brcm-usb.c
-+++ b/drivers/phy/broadcom/phy-brcm-usb.c
-@@ -341,6 +341,8 @@ static int brcm_usb_phy_dvr_init(struct platform_device *pdev,
+diff --git a/drivers/phy/broadcom/phy-brcm-usb-init-synopsys.c b/drivers/phy/broadcom/phy-brcm-usb-init-synopsys.c
+index ee49cbdb55bb..ce4226ac552e 100644
+--- a/drivers/phy/broadcom/phy-brcm-usb-init-synopsys.c
++++ b/drivers/phy/broadcom/phy-brcm-usb-init-synopsys.c
+@@ -56,6 +56,7 @@
+ #define USB_PHY_PLL_LDO_CTL		0x08
+ #define   USB_PHY_PLL_LDO_CTL_AFE_CORERDY_MASK		0x00000004
+ #define USB_PHY_UTMI_CTL_1		0x04
++#define   USB_PHY_UTMI_CTL_1_POWER_UP_FSM_EN_MASK	0x00000800
+ #define   USB_PHY_UTMI_CTL_1_PHY_MODE_MASK		0x0000000c
+ #define   USB_PHY_UTMI_CTL_1_PHY_MODE_SHIFT		2
+ #define USB_PHY_STATUS			0x20
+@@ -229,6 +230,14 @@ static void usb_init_common_7211b0(struct brcm_usb_init_params *params)
  
- 	priv->usb_20_clk = of_clk_get_by_name(dn, "sw_usb");
- 	if (IS_ERR(priv->usb_20_clk)) {
-+		if (PTR_ERR(priv->usb_20_clk) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
- 		dev_info(dev, "Clock not found in Device Tree\n");
- 		priv->usb_20_clk = NULL;
- 	}
-@@ -371,6 +373,8 @@ static int brcm_usb_phy_dvr_init(struct platform_device *pdev,
+ 	usb_init_common(params);
  
- 		priv->usb_30_clk = of_clk_get_by_name(dn, "sw_usb3");
- 		if (IS_ERR(priv->usb_30_clk)) {
-+			if (PTR_ERR(priv->usb_30_clk) == -EPROBE_DEFER)
-+				return -EPROBE_DEFER;
- 			dev_info(dev,
- 				 "USB3.0 clock not found in Device Tree\n");
- 			priv->usb_30_clk = NULL;
-@@ -382,6 +386,8 @@ static int brcm_usb_phy_dvr_init(struct platform_device *pdev,
++	/*
++	 * Disable FSM, otherwise the PHY will auto suspend when no
++	 * device is connected and will be reset on resume.
++	 */
++	reg = brcm_usb_readl(usb_phy + USB_PHY_UTMI_CTL_1);
++	reg &= ~USB_PHY_UTMI_CTL_1_POWER_UP_FSM_EN_MASK;
++	brcm_usb_writel(reg, usb_phy + USB_PHY_UTMI_CTL_1);
++
+ 	usb2_eye_fix_7211b0(params);
+ }
  
- 	priv->suspend_clk = clk_get(dev, "usb0_freerun");
- 	if (IS_ERR(priv->suspend_clk)) {
-+		if (PTR_ERR(priv->suspend_clk) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
- 		dev_err(dev, "Suspend Clock not found in Device Tree\n");
- 		priv->suspend_clk = NULL;
- 	}
 -- 
 2.17.1
 
