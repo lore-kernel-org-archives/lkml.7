@@ -2,78 +2,120 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0DEC32767
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70FCC32767
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C1A621D7D
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E62C21835
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:31:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="nvcVHR4E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g60RbmY9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbgADCYc (ORCPT
+        id S1727267AbgADCbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 21:24:32 -0500
-Received: from onstation.org ([52.200.56.107]:34482 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727074AbgADCYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 21:24:31 -0500
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id D70EC3E9DC;
-        Sat,  4 Jan 2020 02:24:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1578104670;
-        bh=vUL65dK+rI23ua4USwkr3fCkFuBR+pAumYuI8D0+iOs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nvcVHR4E8udj0m3pL3qVOL1fR70zZ7OD7OFDmD2pT+JSxoSSlcbNoOJ7VO7aHBrYH
-         gGZTnem6ao1/OexDmoKMQQFkWE43dRqZQTGBWT2JPdNDGvHhTm0lRqLZZc3vVbVNHQ
-         ne5kUhNtVkr9elrX2ai/8gD8GDqJMTPNOgK9si4w=
-Date:   Fri, 3 Jan 2020 21:24:30 -0500
-From:   Brian Masney <masneyb@onstation.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] firmware: qcom: scm: add 32 bit iommu page table support
-Message-ID: <20200104022430.GC30866@onstation.org>
-References: <20200101033704.32264-1-masneyb@onstation.org>
- <20200102073607.GS549437@yoga>
+        Fri, 3 Jan 2020 21:31:17 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46792 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbgADCbR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 21:31:17 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z124so24169555pgb.13;
+        Fri, 03 Jan 2020 18:31:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=blsSbEWGXgUJjQb/qSvAaZJESUCaEn4p3+MDGRU7nN0=;
+        b=g60RbmY9rCQX3TAchyPtY6+X0KJQ4VUWpnr9IoNoB2lLLOX9coJyBS3VTLbpdxhrP0
+         CiLCU9jqKEc6nmNYT1QTplN9kYk2+45l0pO0ymDZl0ORbVBpgMGnwJ4ebyPEGV+XO5zS
+         RdvdQEhTbEGsAmUs22u31eSUzAdNPAaNlzdLLG+808ZqiN2fBse1q3sKI51Vv+AM0UsS
+         lDcHstQA8NvXAGkzCshUBUUbr967vukeE6h42hiaGArSdWOgYNrQCArYDWxVYVQ8/80s
+         5Oc3Mp5Jx4toOlDpzhH4BfXgbHJAkfHDS52+1lAw8evKIuYOW7vS/s0we7afRJJADUGL
+         FfMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=blsSbEWGXgUJjQb/qSvAaZJESUCaEn4p3+MDGRU7nN0=;
+        b=Q9z8/nvulpqQ2N73tyhiPFuH+Ks9Sihh6CwbJmNnqVSJNgQ63t+HuUjx4ZU1ntycuC
+         VwyheI8aoXV2203oiM/l8WwOe3ByJvvNG0QOtyX93QrjygEq+v2rlcJ/csa3IaEI+W/w
+         yRUFB1FGmACCyoJCEI8hhOtWpUXa1RtmazNcO7+Ee9/uqs9s3g1FoEsCdp/XVe+sif9t
+         5HNp7S6jLLHlE3SyENBVm3DjHiCEtjOPubonEUhy8O1tm15K+/kBai4Yw51hCUQBurga
+         UqRxYJVDX2faCuO/TD9k7jQ9jIWhwkaKwALsQHHnsqeAWcbdrTOUwzXgdVO7EP0XsAXa
+         QnUA==
+X-Gm-Message-State: APjAAAX0to7VXA3qlkJtLZv4iAhSlZTmzRr2zjoMsPgNW5B/yLOl7/af
+        7uvIwIcHxyR9w1Fg52Wiakg=
+X-Google-Smtp-Source: APXvYqxI/Qs2haahOyLbbybZRJGb7uQx7j03FqVuyQdMVGDF1qGU0nKlps8LFZ8ORvjJXB34mSWzVw==
+X-Received: by 2002:a63:ca4d:: with SMTP id o13mr98415724pgi.360.1578105076338;
+        Fri, 03 Jan 2020 18:31:16 -0800 (PST)
+Received: from ast-mbp ([2620:10d:c090:200::3:4269])
+        by smtp.gmail.com with ESMTPSA id o184sm64463083pgo.62.2020.01.03.18.31.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 Jan 2020 18:31:15 -0800 (PST)
+Date:   Fri, 3 Jan 2020 18:31:14 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH bpf] bpf: cgroup: prevent out-of-order release of cgroup
+ bpf
+Message-ID: <20200104023112.6edfdvsff6cgsstn@ast-mbp>
+References: <20191227215034.3169624-1-guro@fb.com>
+ <20200104003523.rfte5rw6hbnncjes@ast-mbp>
+ <20200104011318.GA11376@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200102073607.GS549437@yoga>
+In-Reply-To: <20200104011318.GA11376@localhost.localdomain>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 01, 2020 at 11:36:07PM -0800, Bjorn Andersson wrote:
-> On Tue 31 Dec 19:37 PST 2019, Brian Masney wrote:
-> 
-> > Add 32 bit implmentations of the functions
-> > __qcom_scm_iommu_secure_ptbl_size() and
-> > __qcom_scm_iommu_secure_ptbl_init() that are required by the qcom_iommu
-> > driver.
+On Sat, Jan 04, 2020 at 01:13:24AM +0000, Roman Gushchin wrote:
+> On Fri, Jan 03, 2020 at 04:35:25PM -0800, Alexei Starovoitov wrote:
+> > On Fri, Dec 27, 2019 at 01:50:34PM -0800, Roman Gushchin wrote:
+> > > Before commit 4bfc0bb2c60e ("bpf: decouple the lifetime of cgroup_bpf
+> > > from cgroup itself") cgroup bpf structures were released with
+> > > corresponding cgroup structures. It guaranteed the hierarchical order
+> > > of destruction: children were always first. It preserved attached
+> > > programs from being released before their propagated copies.
+> > > 
+> > > But with cgroup auto-detachment there are no such guarantees anymore:
+> > > cgroup bpf is released as soon as the cgroup is offline and there are
+> > > no live associated sockets. It means that an attached program can be
+> > > detached and released, while its propagated copy is still living
+> > > in the cgroup subtree. This will obviously lead to an use-after-free
+> > > bug.
+> > ...
+> > > @@ -65,6 +65,9 @@ static void cgroup_bpf_release(struct work_struct *work)
+> > >  
+> > >  	mutex_unlock(&cgroup_mutex);
+> > >  
+> > > +	for (p = cgroup_parent(cgrp); p; p = cgroup_parent(p))
+> > > +		cgroup_bpf_put(p);
+> > > +
 > > 
+> > The fix makes sense, but is it really safe to walk cgroup hierarchy
+> > without holding cgroup_mutex?
 > 
-> Hi Brian,
-> 
-> This looks good, but I was hoping to  hoping to reach a conclusion and
-> merge [1] - which in patch 16 squashes the argument filling boiler plate
-> code of the 32 and 64-bit version of scm and hence implements the same.
-> 
-> If you have time to take a peek at this series I would greatly
-> appreciate it (not a lot of people testing 32-bit these days...)
-> 
-> [1] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=215943
+> It is, because we're holding a reference to the original cgroup and going
+> towards the root. On each level the cgroup is protected by a reference
+> from their child cgroup.
 
-I agree to drop what I proposed here and go with that series instead.
-It's a big improvement over what's upstream now. I left a Tested-by on
-that cover letter.
-
-Brian
+cgroup_bpf_put(p) can make bpf.refcnt zero which may call cgroup_bpf_release()
+on another cpu which will do cgroup_put() and this cpu p = cgroup_parent(p)
+would be use-after-free?
+May be not due to the way work_queues are implemented.
+But it feels dangerous to have such delicate release logic.
+Why not to move the loop under the mutex and make things obvious?
