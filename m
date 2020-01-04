@@ -2,138 +2,81 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E125CC32767
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 08:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9DCC32767
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 08:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3141222C4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 08:46:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="oXwq6jH1"
+	by mail.kernel.org (Postfix) with ESMTP id E6A5F24649
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 08:47:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578127623;
+	bh=5X3tciQat5bVeLfUv5zgi3ggJJ8ZS4+ZpZ10ftQnejs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QdHFs4dNRQBbFL4FOVcydlaLFLshdboORknijN46dDt9GO8JGjcCKldB+znLJXZTg
+	 oHO6AnMCB7v71nnzJk8alrF7tmT7HUyQujTcobMG9W5lA0XPpjCFnkLCCuI6cH0o33
+	 ++joCPZZh2Vu9VDnm0FFd9PxJedQLS+opwG+ZSxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbgADIqk (ORCPT
+        id S1726296AbgADIrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 03:46:40 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:13020 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbgADIqj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 03:46:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1578127595;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=UWVRejdunrkDKbpqDDbnRO05NzpDbjt3y5Cqwl1kzWw=;
-        b=oXwq6jH1MNyGBHHGF7wdwE3B9Irl1+ZU2X3pdv3v5KRh16HfBuS41vLnARHiobiuEM
-        xme76/UVDQjp6isy/fTSnFRljhGed7UAcyLJuY4McUk/F9h00sgbvQQjd+xzej9EP5HF
-        5De8e20RG8zERkGqiSFQOPIqFlBXsAvCOlvd8VFXn51wSjC+ajJ2gHuKOMBN43Py6xCI
-        C/1nP4oiIXISC595TyndysUZJ5H3EpyC05cWaBmUiIi8rAZUhks2w2wjC12cHTFRSSuh
-        R/4f7hhIYHSuDsPCCTrdrIsi6MxfnJiZp50S8t6uRWwpV8XU6Hfc7TpQJ1uiDxRCw44N
-        bPSA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDVCVXAYOHw=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
-        with ESMTPSA id a09dafw048kPPIu
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Sat, 4 Jan 2020 09:46:25 +0100 (CET)
+        Sat, 4 Jan 2020 03:47:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33804 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726036AbgADIq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jan 2020 03:46:59 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A277A222C4;
+        Sat,  4 Jan 2020 08:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578127619;
+        bh=5X3tciQat5bVeLfUv5zgi3ggJJ8ZS4+ZpZ10ftQnejs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gVeBZfszLtbL1SrGl0FqryXGdOc3YWzreiQVMv0fK0jvETNtyLAhukYpYQTl09C7n
+         a6qGEfuOQqblLEjoFLdDSLGJkX6HRcEvzxxYIG89uqCFFUxgrOEA1MsjSBYPS/kEbP
+         kZzwNNV7E34FKIrsOo9pp8UnhBtVKgEomq+MiD14=
+Date:   Sat, 4 Jan 2020 09:46:55 +0100
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     atmgnd <atmgnd@protonmail.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>
+Subject: Re: Fw: usbcore missing parentheses in USE_NEW_SCHEME
+Message-ID: <20200104084655.GA1248326@kroah.com>
+References: <Pine.LNX.4.44L0.2001021018330.1546-100000@iolanthe.rowland.org>
+ <SHQhnDsmKIpzyLJUY7lJlcdb9DLUPl8gGALB1h82ePlEPUQN9l5cHWxUWyqCcUaMRMGoq6dXRZA3e2gTvG4-HkJDxH994zTiHdeuaKJ6m-c=@protonmail.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH] mtd: onenand: omap2: Pass correct flags for prep_dma_memcpy
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200104073453.16077-1-peter.ujfalusi@ti.com>
-Date:   Sat, 4 Jan 2020 09:46:23 +0100
-Cc:     kyungmin.park@samsung.com,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        linux-mtd@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <9EB362B8-EA81-445C-9FD7-29ABB890100C@goldelico.com>
-References: <20200104073453.16077-1-peter.ujfalusi@ti.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-X-Mailer: Apple Mail (2.3124)
+Content-Disposition: inline
+In-Reply-To: <SHQhnDsmKIpzyLJUY7lJlcdb9DLUPl8gGALB1h82ePlEPUQN9l5cHWxUWyqCcUaMRMGoq6dXRZA3e2gTvG4-HkJDxH994zTiHdeuaKJ6m-c=@protonmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Jan 04, 2020 at 03:24:04AM +0000, atmgnd wrote:
+> Greg Kroah-Hartman:
+> here is the new patch:
+> 
+> 
+> >From 85f01b89d050a988f4d9fc78232de47e793c6a7c Mon Sep 17 00:00:00 2001
+> From: Qi.Zhou <atmgnd@outlook.com>
+> Date: Wed, 1 Jan 2020 21:27:13 +0800
+> Subject: [PATCH] usb: hub: missing parentheses in USE_NEW_SCHEME
 
-> Am 04.01.2020 um 08:34 schrieb Peter Ujfalusi <peter.ujfalusi@ti.com>:
->=20
-> The commit converting the driver to DMAengine was missing the flags =
-for
-> the memcpy prepare call.
-> It went unnoticed since the omap-dma drive was ignoring them.
+Please send this as a stand-alone patch, the header here should not be
+in the body of the email.
 
-s/drive/driver/
+Also, I doubt your name has a "." in it, right?  :)
 
->=20
-> Fixes: 3ed6a4d1de2c5 (" mtd: onenand: omap2: Convert to use dmaengine =
-for memcp")
-> Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
-> Hi,
->=20
-> Aaro reported [1] a failure on omap2-onenand pointing to
-> 4689d35c765c696bdf0535486a990038b242a26b. It looks like the root cause =
-is the
-> conversion of omap2-onenand to DMAengine which missed the flags.
->=20
-> Basically the client is waiting for a callback without asking for it. =
-This
-> certainly causes timeout.
->=20
-> I have not tested the patch, but it should fix the issue.
+See the many many examples of patches on the mailing list for examples
+of how this all should look, as well as read
+Documentation/SubmittingPatches.
 
-makes the gta04a5one.dts work again.
+thanks,
 
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-
-BR and thanks!
-Nikolaus
-
->=20
-> [1] =
-https://lore.kernel.org/lkml/20200103081726.GD15023@darkstar.musicnaut.iki=
-.fi/
->=20
-> drivers/mtd/nand/onenand/omap2.c | 3 ++-
-> 1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/mtd/nand/onenand/omap2.c =
-b/drivers/mtd/nand/onenand/omap2.c
-> index edf94ee54ec7..71a632b815aa 100644
-> --- a/drivers/mtd/nand/onenand/omap2.c
-> +++ b/drivers/mtd/nand/onenand/omap2.c
-> @@ -328,7 +328,8 @@ static inline int =
-omap2_onenand_dma_transfer(struct omap2_onenand *c,
-> 	struct dma_async_tx_descriptor *tx;
-> 	dma_cookie_t cookie;
->=20
-> -	tx =3D dmaengine_prep_dma_memcpy(c->dma_chan, dst, src, count, =
-0);
-> +	tx =3D dmaengine_prep_dma_memcpy(c->dma_chan, dst, src, count,
-> +				       DMA_CTRL_ACK | =
-DMA_PREP_INTERRUPT);
-> 	if (!tx) {
-> 		dev_err(&c->pdev->dev, "Failed to prepare DMA =
-memcpy\n");
-> 		return -EIO;
-> --=20
-> Peter
->=20
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->=20
-
+greg k-h
