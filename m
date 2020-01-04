@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0494BC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA56CC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CACEA24653
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 929722464E
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578151340;
-	bh=tikjmOkXzl67kgxwPdvLRaRJqpldgktGgrS2H4m1wPk=;
+	s=default; t=1578151344;
+	bh=cCjYxGd/KL0FWzSgniFPKokn3dk8mcXrfNpZVsyTpT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fGjd8tNIunMFPBHUxmFIfqykkPJTpFGp4qxCUjNdJMp9/UmFnp4zidlKBstSP74B+
-	 /E0iy2VYPyXxrDDy5VnHf559prAH+Jofh7POmXsaV2Kp4i8XJzIxMQomV5GOS853as
-	 AlXg9VOimfyxuhsSPiR3wBQfAke4fZXmgCbVOOiA=
+	b=02EqFtDs5ShsbTgqh6zLYtu71BvZJmih50atifO1AiPmGyMPGg38OyIxBRoZqIIXZ
+	 56PFkXGXLqcbu15TCB4xSrJuEJpar3ajPLLRBp5Yp29nGWHpWG6E80w8p53+c9x36c
+	 4IQSkxRkE9ZyeHZj6gI0GArXNNwCr0vdNOW86Ozw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgADPWU (ORCPT
+        id S1727142AbgADPWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 10:22:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60078 "EHLO mail.kernel.org"
+        Sat, 4 Jan 2020 10:22:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726005AbgADPWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 10:22:18 -0500
+        id S1727074AbgADPWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jan 2020 10:22:20 -0500
 Received: from localhost.localdomain (unknown [194.230.155.149])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD4112464E;
-        Sat,  4 Jan 2020 15:22:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0DA224654;
+        Sat,  4 Jan 2020 15:22:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578151338;
-        bh=tikjmOkXzl67kgxwPdvLRaRJqpldgktGgrS2H4m1wPk=;
+        s=default; t=1578151340;
+        bh=cCjYxGd/KL0FWzSgniFPKokn3dk8mcXrfNpZVsyTpT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pHilspwWEnO281JnujkfdogQ91Q+zQ10wWQ4FabbvKQDCdR2Iw86srrth6OFo+cei
-         OE0Ts5Vwo5rW34zLK/svMvzO8fS6N5j9oYdaCJHGIliAIDHEB7krBUaiZDNMy7Mw7J
-         K989ng+VUfN10+sMjTvDbEPD2CJsQWV2CENn6Pes=
+        b=D1J1kuop57Wb+ntVAfEzwMWj1PWTgRa4ppNYveV8D6Y8QO43O5/tgXgHWmZxm1zyS
+         G7COIBAKT2BPWI2GF1glTovDMcbPN5F3BdDYx6X5tyEqr7dD4uMfYmPISfdG6WgKc4
+         4om/fqQR1FlejAB6P1D9Ig4d4+y3gm5uo/mgbx04=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Kukjin Kim <kgene@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Arnd Bergmann <arnd@arndb.de>, Johan Hovold <johan@kernel.org>,
-        Ran Wang <ran.wang_1@nxp.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org
-Subject: [PATCH v2 08/20] usb: exynos: Rename Samsung and Exynos to lowercase
-Date:   Sat,  4 Jan 2020 16:20:55 +0100
-Message-Id: <20200104152107.11407-9-krzk@kernel.org>
+Subject: [PATCH v2 09/20] memory: samsung: Rename Exynos to lowercase
+Date:   Sat,  4 Jan 2020 16:20:56 +0100
+Message-Id: <20200104152107.11407-10-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200104152107.11407-1-krzk@kernel.org>
 References: <20200104152107.11407-1-krzk@kernel.org>
@@ -62,103 +56,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix up inconsistent usage of upper and lowercase letters in "Samsung"
-and "Exynos" names.
+Fix up inconsistent usage of upper and lowercase letters in "Exynos"
+name.
 
-"SAMSUNG" and "EXYNOS" are not abbreviations but regular trademarked
-names.  Therefore they should be written with lowercase letters starting
-with capital letter.
+"EXYNOS" is not an abbreviation but a regular trademarked name.
+Therefore it should be written with lowercase letters starting with
+capital letter.
 
 The lowercase "Exynos" name is promoted by its manufacturer Samsung
 Electronics Co., Ltd., in advertisement materials and on website.
 
-Although advertisement materials usually use uppercase "SAMSUNG", the
-lowercase version is used in all legal aspects (e.g. on Wikipedia and in
-privacy/legal statements on
-https://www.samsung.com/semiconductor/privacy-global/).
-
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/usb/dwc3/dwc3-exynos.c | 4 ++--
- drivers/usb/host/Kconfig       | 4 ++--
- drivers/usb/host/ehci-exynos.c | 4 ++--
- drivers/usb/host/ohci-exynos.c | 2 +-
- 4 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/memory/samsung/Kconfig       | 2 +-
+ drivers/memory/samsung/exynos-srom.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
-index c1e9ea621f41..90bb022737da 100644
---- a/drivers/usb/dwc3/dwc3-exynos.c
-+++ b/drivers/usb/dwc3/dwc3-exynos.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /**
-- * dwc3-exynos.c - Samsung EXYNOS DWC3 Specific Glue layer
-+ * dwc3-exynos.c - Samsung Exynos DWC3 Specific Glue layer
-  *
-  * Copyright (c) 2012 Samsung Electronics Co., Ltd.
-  *		http://www.samsung.com
-@@ -255,4 +255,4 @@ module_platform_driver(dwc3_exynos_driver);
+diff --git a/drivers/memory/samsung/Kconfig b/drivers/memory/samsung/Kconfig
+index e9c3ce92350c..20a8406ce786 100644
+--- a/drivers/memory/samsung/Kconfig
++++ b/drivers/memory/samsung/Kconfig
+@@ -8,7 +8,7 @@ config SAMSUNG_MC
+ if SAMSUNG_MC
  
- MODULE_AUTHOR("Anton Tikhomirov <av.tikhomirov@samsung.com>");
- MODULE_LICENSE("GPL v2");
--MODULE_DESCRIPTION("DesignWare USB3 EXYNOS Glue Layer");
-+MODULE_DESCRIPTION("DesignWare USB3 Exynos Glue Layer");
-diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-index 8d730180db06..ed49d08f2f9e 100644
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -269,7 +269,7 @@ config USB_EHCI_SH
- 	  If you use the PCI EHCI controller, this option is not necessary.
+ config EXYNOS5422_DMC
+-	tristate "EXYNOS5422 Dynamic Memory Controller driver"
++	tristate "Exynos5422 Dynamic Memory Controller driver"
+ 	depends on ARCH_EXYNOS || (COMPILE_TEST && HAS_IOMEM)
+ 	select DDR
+ 	depends on DEVFREQ_GOV_SIMPLE_ONDEMAND
+diff --git a/drivers/memory/samsung/exynos-srom.c b/drivers/memory/samsung/exynos-srom.c
+index c27c6105c66d..6510d7bab217 100644
+--- a/drivers/memory/samsung/exynos-srom.c
++++ b/drivers/memory/samsung/exynos-srom.c
+@@ -3,7 +3,7 @@
+ // Copyright (c) 2015 Samsung Electronics Co., Ltd.
+ //	      http://www.samsung.com/
+ //
+-// EXYNOS - SROM Controller support
++// Exynos - SROM Controller support
+ // Author: Pankaj Dubey <pankaj.dubey@samsung.com>
  
- config USB_EHCI_EXYNOS
--	tristate "EHCI support for Samsung S5P/EXYNOS SoC Series"
-+	tristate "EHCI support for Samsung S5P/Exynos SoC Series"
- 	depends on ARCH_S5PV210 || ARCH_EXYNOS
- 	help
- 	  Enable support for the Samsung Exynos SOC's on-chip EHCI controller.
-@@ -542,7 +542,7 @@ config USB_OHCI_SH
- 	  If you use the PCI OHCI controller, this option is not necessary.
- 
- config USB_OHCI_EXYNOS
--	tristate "OHCI support for Samsung S5P/EXYNOS SoC Series"
-+	tristate "OHCI support for Samsung S5P/Exynos SoC Series"
- 	depends on ARCH_S5PV210 || ARCH_EXYNOS
- 	help
- 	  Enable support for the Samsung Exynos SOC's on-chip OHCI controller.
-diff --git a/drivers/usb/host/ehci-exynos.c b/drivers/usb/host/ehci-exynos.c
-index 01debfd03d4a..a4e9abcbdc4f 100644
---- a/drivers/usb/host/ehci-exynos.c
-+++ b/drivers/usb/host/ehci-exynos.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * SAMSUNG EXYNOS USB HOST EHCI Controller
-+ * Samsung Exynos USB HOST EHCI Controller
-  *
-  * Copyright (C) 2011 Samsung Electronics Co.Ltd
-  * Author: Jingoo Han <jg1.han@samsung.com>
-@@ -21,7 +21,7 @@
- 
- #include "ehci.h"
- 
--#define DRIVER_DESC "EHCI EXYNOS driver"
-+#define DRIVER_DESC "EHCI Exynos driver"
- 
- #define EHCI_INSNREG00(base)			(base + 0x90)
- #define EHCI_INSNREG00_ENA_INCR16		(0x1 << 25)
-diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
-index d5ce98e205c7..bd40e597f256 100644
---- a/drivers/usb/host/ohci-exynos.c
-+++ b/drivers/usb/host/ohci-exynos.c
-@@ -19,7 +19,7 @@
- 
- #include "ohci.h"
- 
--#define DRIVER_DESC "OHCI EXYNOS driver"
-+#define DRIVER_DESC "OHCI Exynos driver"
- 
- static const char hcd_name[] = "ohci-exynos";
- static struct hc_driver __read_mostly exynos_ohci_hc_driver;
+ #include <linux/io.h>
 -- 
 2.17.1
 
