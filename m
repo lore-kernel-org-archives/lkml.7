@@ -6,120 +6,97 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF52C32771
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 21:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0635C32771
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 21:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7BD822B48
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 21:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76C1724654
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 21:52:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgADVsl (ORCPT
+        id S1726437AbgADVwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 16:48:41 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:49351 "EHLO
+        Sat, 4 Jan 2020 16:52:09 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:37265 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbgADVsl (ORCPT
+        with ESMTP id S1726170AbgADVwJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 16:48:41 -0500
+        Sat, 4 Jan 2020 16:52:09 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MPXpU-1j1hCa2l2g-00MYuj; Sat, 04 Jan 2020 22:48:34 +0100
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1M3UEW-1ioPZE0kDa-000dUZ; Sat, 04 Jan 2020 22:51:58 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        =?UTF-8?q?Florian=20B=C3=BCstgens?= <flbue@gmx.de>,
-        Michael Straube <straube.linux@gmail.com>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8188: avoid excessive stack usage
-Date:   Sat,  4 Jan 2020 22:48:21 +0100
-Message-Id: <20200104214832.558198-1-arnd@arndb.de>
+        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Shay Agroskin <shayag@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Aya Levin <ayal@mellanox.com>,
+        Moshe Shemesh <moshe@mellanox.com>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mlx5: work around high stack usage with gcc
+Date:   Sat,  4 Jan 2020 22:51:44 +0100
+Message-Id: <20200104215156.689245-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Dujd3H1Dqz4viqnqZotC9wqLY9PFh4J/b95mmgxVkfB3sMcRYTL
- q7izsObtY7055Yvf8dsNNxiJvn4uFL3Nrmmwx1ye1anAQz2x7/44bJ1Mc+eiUglE4er1IcD
- puwJ/YIzolREIlvsjnbpOMPEXm/z9xOMDFCcTvHnecqA90BE8/zMS7tYEMRZmUSUOps6SsM
- AqqmhyWG6biV9FJ9FSB4w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:f6UG+xlVb74=:6WIIsMIZJZcovNJxIjmvdH
- GDNJPFdaiV/8o1ynD1uSgDS7EIGf7YiOVLDqPFwxZuGYx7KQMkhssCEsN+aA0hL38485pvOXS
- gT4qUcSvQRjZaNMa0pjyC/iEz1AYCU9ZtwVnJ7ly3pPrLVDofQu1xP7rFiFtv8bm3jN/fRbtq
- dsKbWpfY0m6SaoivALVS7fBW/X4fa4ozX1Vqgagks+NwuQ5pNhLTO5J12W2A+4KSGs+tel3M2
- H4qMDJmWXWiw196IDkKw2XUJ5UCLOShbgOlF4KRf2N7DtybEjuv9o4a95AFLvTpY+Hb8/tam0
- uV+UIRqRRMf3rjFKIAWMZ+mYwxTXRby2DoOqUwpVZw5XXymde0Jl1BTPoYMPe93Bj2HiLA+Of
- bDlONlxwlIA1Isc95McdyhDi+U2beU6KIz/tqKngY2yO1Oa9qXaTWZTEGZ8bSwLoAAcN0+IZV
- gyJ4JuvHwzI1otxK5jBAcGfSHBLRl7XOQ1hAdCmqmr0N/2IWGXlWH0nOxTIdWLevwsAINYJgz
- rw8XXEbtdk/n/DHQSqwdyLrYauUprYx8/CwlOT7uOPmrerI74FyPgF7oPTWFwCo1YLp/ZclSp
- EFaAVdr7k46gP8elnogMvpUIZOKH50AkTajPODZooFbnWVbCaZctURLJMDdJ/o1tu980GOgux
- y7ejIHz+PzAeLOO2V63LIyaK8wR/kOFry7BHWJKWkLKwE7G0AQSlChyRz+Q27rffZyW5xcSIf
- UORRJQ5NT41SH0dKzt/eSU/VC2ghwxmF+mjbD+Xe+YrgSMc53PVIo8H5f9wX1d++xpm+iP+LL
- MJMNgpbLF7mUDit8saxvGE7StJvtwlVW0izvudxnEvrTYBoD4MrifLJDzZc7b6qYD7UCamJ0i
- bpRcKi7zN7AMuL3ecURA==
+X-Provags-ID: V03:K1:g72rzurjLl3a9U3yjh/EbwX9fa7SXEwNpbEDnrITAImdtZIfC7N
+ evlvGuMj0S9VcMfKOlipNf+RIBizk5jL/mKupNu9QMLUMfq8+dj6g0zi+RHMTfaeUCEnINu
+ uruwYWICaYjJ8WxZ6RJkoI+IXkKpHr9WKegoiTdG9DK+UP9Vk89jmGIO7a/LghtDHdq8GQQ
+ N3jNZ5qZGTm7hw8+xsFxw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:oaTz2g1s6cM=:TQvMn5LxbABK3px/0bp5mg
+ j7zGiJuuBm6sMzRmi/SAofqpVlUH23ublfdfvXBZLagx02K9DSO4v7d4znLbpaiUw2lUyKJd4
+ R37P9RTnvJJcBlGPk2Nk+Av6uVpnjOdyhaj0mWWZr29VrUdNDRosKQl7AkHsPShf06dVxivRN
+ JJ5e8vPfwP99nqktLJQCMp6e71eDx7WK7zRI+wQOFFA7kkKU4vtE+cBqmEHqmfJsAs6o++8mj
+ TFwDc38Nu5iAq7pqV2pYpdWIxCv2Ex3ZNGUfoFzwqnXV1gami9Pje1xNbU2vTdNSQfLxjs5x8
+ 6T3/KHZOUAnmzH1WFvxoYxbwS/YVZTrHIRH4B53Qh959E50qaXtxDGoEIKcGvvz0SV1/Mezbp
+ uBj6QPrOUG7PDeL5y7HhKuUSFtnrrL6RrnCSje0l1wKG99pzBBhvMkOoWwvveeSTgxWEM67XM
+ f+nzi/Axus1rzO+bZ6cH30avx6+uRjOws2THQwXNiM9hSPa9FFD9IFRji1/Bt5eZwAeaQzoln
+ DmoV2v+9AFIqoNqJwTrWViuCHPfoPnuTy6nUtMNBv8rAUwiqAv4CEEgIWJ5XdYw4Ctvu9xP9K
+ li4cAUbFgmJ4/8E222G8SSR/eSzbeS53lXSifSZj3zjb22IenHjqpef+rXpjTl7dFq7iSV497
+ d0Y5xv2uSfBXGqH5fu7BcYtbO9kL261P8xT+AVTThi7XcER1yrtBBOQQWL8n8/G/viG1PgtEl
+ tWtDYW8IG+WTOO9QL50xYhkIZx6Da5yRZq/IuYWfIkpeQpiHN8q7qW20GV2bBUdZmRr1HZqa6
+ OR573yzv1PHQcyaPYdzpTGlltRDKPbL/iLHn8jOh8GTZKoyQRKFrUNgDo0uGLCSCFpCbu8kqU
+ mxVOvqVihoBfAvmFq4bw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The rtl8188 copy of the os_dep support code causes a
-warning about a very significant stack usage in the translate_scan()
-function:
+In some configurations, gcc tries too hard to optimize this code:
 
-drivers/staging/rtl8188eu/os_dep/ioctl_linux.c: In function 'translate_scan':
-drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:306:1: error: the frame size of 1560 bytes is larger than 1400 bytes [-Werror=frame-larger-than=]
+drivers/net/ethernet/mellanox/mlx5/core/en_stats.c: In function 'mlx5e_grp_sw_update_stats':
+drivers/net/ethernet/mellanox/mlx5/core/en_stats.c:302:1: error: the frame size of 1336 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
 
-Use the same trick as in the rtl8723bs copy of the same function, and
-allocate it dynamically.
+As was stated in the bug report, the reason is that gcc runs into a corner
+case in the register allocator that is rather hard to fix in a good way.
 
+As there is an easy way to work around it, just add a comment and the
+barrier that stops gcc from trying to overoptimize the function.
+
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=92657
+Cc: Adhemerval Zanella <adhemerval.zanella@linaro.org>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/staging/rtl8188eu/os_dep/ioctl_linux.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_stats.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-index 710c33fd4965..47f4cc6a19a9 100644
---- a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-+++ b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-@@ -222,18 +222,21 @@ static char *translate_scan(struct adapter *padapter,
- 
- 	/* parsing WPA/WPA2 IE */
- 	{
--		u8 buf[MAX_WPA_IE_LEN];
-+		u8 *buf;
- 		u8 wpa_ie[255], rsn_ie[255];
- 		u16 wpa_len = 0, rsn_len = 0;
- 		u8 *p;
- 
-+		buf = kzalloc(MAX_WPA_IE_LEN, GFP_ATOMIC);
-+		if (!buf)
-+			return start;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
+index 9f09253f9f46..a05158472ed1 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
+@@ -297,6 +297,9 @@ static void mlx5e_grp_sw_update_stats(struct mlx5e_priv *priv)
+ 			s->tx_tls_drop_bypass_req   += sq_stats->tls_drop_bypass_req;
+ #endif
+ 			s->tx_cqes		+= sq_stats->cqes;
 +
- 		rtw_get_sec_ie(pnetwork->network.ies, pnetwork->network.ie_length, rsn_ie, &rsn_len, wpa_ie, &wpa_len);
- 		RT_TRACE(_module_rtl871x_mlme_c_, _drv_info_, ("rtw_wx_get_scan: ssid =%s\n", pnetwork->network.ssid.ssid));
- 		RT_TRACE(_module_rtl871x_mlme_c_, _drv_info_, ("rtw_wx_get_scan: wpa_len =%d rsn_len =%d\n", wpa_len, rsn_len));
- 
- 		if (wpa_len > 0) {
- 			p = buf;
--			memset(buf, 0, MAX_WPA_IE_LEN);
- 			p += sprintf(p, "wpa_ie=");
- 			for (i = 0; i < wpa_len; i++)
- 				p += sprintf(p, "%02x", wpa_ie[i]);
-@@ -250,7 +253,6 @@ static char *translate_scan(struct adapter *padapter,
++			/* https://gcc.gnu.org/bugzilla/show_bug.cgi?id=92657 */
++			barrier();
  		}
- 		if (rsn_len > 0) {
- 			p = buf;
--			memset(buf, 0, MAX_WPA_IE_LEN);
- 			p += sprintf(p, "rsn_ie=");
- 			for (i = 0; i < rsn_len; i++)
- 				p += sprintf(p, "%02x", rsn_ie[i]);
-@@ -264,6 +266,7 @@ static char *translate_scan(struct adapter *padapter,
- 			iwe.u.data.length = rsn_len;
- 			start = iwe_stream_add_point(info, start, stop, &iwe, rsn_ie);
- 		}
-+		kfree(buf);
  	}
- 
- 	{/* parsing WPS IE */
+ }
 -- 
 2.20.0
 
