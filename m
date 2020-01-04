@@ -4,89 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8587FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 21:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFC1C32771
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 21:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE5624650
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 21:07:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9C2C222C4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 21:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578172069;
-	bh=2h5Gk4Cdu7fOp5pgeULFy6v7L8F3qzxduHbSiIfta5E=;
+	s=default; t=1578172213;
+	bh=EhKs6shgXvKWdWXhYnBms3vCYMXf27Tn5d7tLg8l3Xo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ct1c8h+0gKezZVvwNkf1iPl3O35kCS69oVZihMEs7b3JuQTKwPKEqNK/0meHf2P2t
-	 ttYRuJDl6aA55JiWYDhswqetVpFjsyI0IvAIJ0dpl3740BuPA47PIR1BlZWmd1eitJ
-	 d5VpbrdmC2+LT40HCoACGR84aEOk1TLEM32yQgu0=
+	b=VOGeJotb/EXkn7yB1jz3DkW5dqtiZcnnUl/EmpOKcXYlui2W8SM76k2nJOFfYXjTx
+	 xtTiF8Ac3GtJUAnq7ugItMyeU+RGgZmGpIUl2yIxNi8p7nsWSg4I1VZ6GEO97DXvyM
+	 6h80FHZDLpTi0PkLQq68Uo8WEHBp0aiW2pl0WM6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbgADVHs (ORCPT
+        id S1726390AbgADVKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 16:07:48 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:46638 "EHLO
+        Sat, 4 Jan 2020 16:10:12 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:44228 "EHLO
         mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbgADVHs (ORCPT
+        with ESMTP id S1726167AbgADVKM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 16:07:48 -0500
-Received: by mail-il1-f193.google.com with SMTP id t17so39314405ilm.13
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jan 2020 13:07:47 -0800 (PST)
+        Sat, 4 Jan 2020 16:10:12 -0500
+Received: by mail-il1-f193.google.com with SMTP id z12so2898927iln.11
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jan 2020 13:10:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LPOl0x7Aub5aLxVDzb4tsAOVCc/ocGDdfg2ZVh/x324=;
-        b=VilaL6TqBOpTtf9YN62SYmP90D5HYUCjRKfHqEaoLVvJZlmL1cYu+Wc5y1IFJBHscL
-         nLgdcKa6D2bwtLkXrRANNy9RQTaxG+9tyj3kqA/MAkqVKPfZJBdukiC5pYz2RK4IUfQ8
-         j2I99tvRpT4x/0e314GAsttBKuklBZ/G/nKJrmT6/eKNI/Y0jApgPjSNeiGZR1PgzTb+
-         6ckKHchJkSwgJTr6v4vwACDVDJVn2f+PVuvwaf/mQAmfZCH7bXfaWkeHznwKVteLY1RT
-         ZkT4G1OfpTSa/aWouN5DPoJjurAk/IoYvkjhPfydHkCHnNH4Rv05KsHxfbqMjrE9IZ1G
-         SD4A==
-X-Gm-Message-State: APjAAAVvpFy4Hof6PZpBgRRAI+4BMdWkYMdlw1u59a1C8E4QajgpmvJe
-        Z2jrLJbEqfz/gZsVV6roCCccLuM=
-X-Google-Smtp-Source: APXvYqw8iE9Yu1MI8KuJFa7jTXFkSxOlCQnHn2X7/DjC2eq/wDU016F54zz8vI8GkJyf+shVe6tECg==
-X-Received: by 2002:a92:a103:: with SMTP id v3mr81737491ili.265.1578172066645;
-        Sat, 04 Jan 2020 13:07:46 -0800 (PST)
+        bh=cJWxvFKjFmedV29LeJwhs6R1fNWpIXjZCncfQO681ro=;
+        b=OyTF5aLgWf+o6GMjQyv4AornAnqm2I8D2q/ZmDBrYTRLmFiLJmCG2e9oJW0UIAeGYv
+         RbRTehKks9NauLUpcFHkVeKsSwd6C3poONcJX21xSGDoYlGTwl1wxTba5S5k+JN4VvjD
+         oYvJrH21wvPzxXlHth9zrBCS6B4FHgw0xFV7DPeItl63cjybSvNlZT3f/4jEc45TDm/1
+         pek07HSIdiRPAhYNttZrdK3ZUy442XNYQRH4jiaEjwjyekMoVPR7w1hdmAECKhD5plTh
+         kID+N5LnH5ovIG7pzaa1uDhc3tf3aqDujtdWAKEa+dAMyu8wyGjONRYMiYe7vZ1r6+a0
+         xMJQ==
+X-Gm-Message-State: APjAAAUYf1k37wHZiJyzy6OTqBXcsztLHWXfJ/JisMR4yxDXe9h1VWrn
+        +zG+/nHUS5CT8L1p8cQxzTMzr+o=
+X-Google-Smtp-Source: APXvYqw4g3JUFxZtQw5K10GDYaSavpupvnmpetikAvrk66W9dgoeYlqhEghnXpkii4fafXcsGhO41A==
+X-Received: by 2002:a92:db49:: with SMTP id w9mr76239592ilq.277.1578172211493;
+        Sat, 04 Jan 2020 13:10:11 -0800 (PST)
 Received: from rob-hp-laptop ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id y62sm22397513ilk.32.2020.01.04.13.07.45
+        by smtp.gmail.com with ESMTPSA id b145sm15842716iof.60.2020.01.04.13.10.10
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jan 2020 13:07:45 -0800 (PST)
+        Sat, 04 Jan 2020 13:10:10 -0800 (PST)
 Received: from rob (uid 1000)
         (envelope-from rob@rob-hp-laptop)
-        id 2219a3
+        id 2219b7
         by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Sat, 04 Jan 2020 14:07:43 -0700
-Date:   Sat, 4 Jan 2020 14:07:43 -0700
+        Sat, 04 Jan 2020 14:10:09 -0700
+Date:   Sat, 4 Jan 2020 14:10:09 -0700
 From:   Rob Herring <robh@kernel.org>
-To:     James Tai <james.tai@realtek.com>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: arm: realtek: Document RTD1319 and
- Realtek PymParticle EVB
-Message-ID: <20200104210743.GA12979@bogus>
-References: <20191228150553.6210-1-james.tai@realtek.com>
- <20191228150553.6210-2-james.tai@realtek.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Jim Quinlan <jim2101024@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: reset: Document BCM7216 RESCAL reset
+ controller
+Message-ID: <20200104211009.GA18324@bogus>
+References: <20200103190429.1847-1-f.fainelli@gmail.com>
+ <20200103190429.1847-2-f.fainelli@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191228150553.6210-2-james.tai@realtek.com>
+In-Reply-To: <20200103190429.1847-2-f.fainelli@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 28, 2019 at 11:05:52PM +0800, James Tai wrote:
-> Define compatible strings for Realtek RTD1319 SoC and Realtek PymParticle
-> EVB.
+On Fri,  3 Jan 2020 11:04:28 -0800, Florian Fainelli wrote:
+> From: Jim Quinlan <jim2101024@gmail.com>
 > 
-> Signed-off-by: James Tai <james.tai@realtek.com>
+> BCM7216 has a special purpose RESCAL reset controller for its SATA and
+> PCIe0/1 instances. This is a simple reset controller with #reset-cells
+> set to 0.
+> 
+> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> [florian: Convert to YAML binding]
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
->  Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  .../reset/brcm,bcm7216-pcie-sata-rescal.yaml  | 37 +++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm7216-pcie-sata-rescal.yaml
+> 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
