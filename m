@@ -2,108 +2,82 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 919ACC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB12DC3276F
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 667D424653
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:04:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578150256;
-	bh=ofvL6+NKRIHoxGD4O6WsEGd7L3xRLx2b33fpLfXq2q0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GugebnJDRtARMUmRutXLiMuBcNlRVi8lFbJbyArmwpluaWy2eRLg/E1B8eMKBCXM+
-	 x+//Cj33JYhfnXrMsWEvL5rYO2eA9LGRXD4XSxRokYCg5jnKFfSc1ybsbriTVuuXOK
-	 WPoOKqX7cCkCEAEXuOslpKxH2J87YLYqUVpRPnUs=
+	by mail.kernel.org (Postfix) with ESMTP id 8CD5A2464E
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbgADPEP (ORCPT
+        id S1726083AbgADPRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 10:04:15 -0500
-Received: from conuserg-10.nifty.com ([210.131.2.77]:54709 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbgADPDx (ORCPT
+        Sat, 4 Jan 2020 10:17:08 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:38612 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725924AbgADPRI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 10:03:53 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 004F2gcU018492;
-        Sun, 5 Jan 2020 00:02:45 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 004F2gcU018492
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578150165;
-        bh=27Oq2PPg5dWtrSRAhiLEszC3H3oMsZeBE21RU3EfIJc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hTotURN8Is++lA4h8hVX5P1CazlmH5sUJqqdXFuNk1nWsiwYLUohGDsgu1ggH5EjR
-         /FcKYhHiF7ktvCHHA6zT9koSFJfz3kfpBKeSReri912JpihQS6W0rnR7X3kJxCJ+zT
-         lxE5Ym4eyd0IJ0AcVOkwdkvO+2qirRO1u5SQd8xYpwuLr7w3mDsNhsmg376gam4Am8
-         nZaZcLLcMTVP1+w538ELMjCLZNDf/CuzM/SadKvNMw1Y/LioUEhdTdVp9MhbBfIbGZ
-         tOgw9G3Mb8bZk0lkjXTTfVQ7yTfvNnqrd92N6UvwePh7VT0adsmz+hexGUAQLXUjj6
-         wo7I5VsIOJuHA==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Thelen <gthelen@google.com>,
-        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 04/13] initramfs: rename gen_initramfs_list.sh to gen_initramfs.sh
-Date:   Sun,  5 Jan 2020 00:02:29 +0900
-Message-Id: <20200104150238.19834-5-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200104150238.19834-1-masahiroy@kernel.org>
-References: <20200104150238.19834-1-masahiroy@kernel.org>
+        Sat, 4 Jan 2020 10:17:08 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id A784A805F7;
+        Sat,  4 Jan 2020 16:17:03 +0100 (CET)
+Date:   Sat, 4 Jan 2020 16:17:02 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com
+Subject: Re: [PATCH 0/6] dt-bindings: display: Update few panel bindings with
+ YAML
+Message-ID: <20200104151702.GC17768@ravnborg.org>
+References: <20200101112444.16250-1-jagan@amarulasolutions.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200101112444.16250-1-jagan@amarulasolutions.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=TC1aGOGHLOKMx2fu2ooA:9 a=CjuIK1q_8ugA:10 a=pHzHmUro8NiASowvMSCR:22
+        a=6VlIyEUom7LUIeUMNQJH:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The comments in usr/Makefile wrongly refer to the script name (twice).
+Hi Jagan.
+On Wed, Jan 01, 2020 at 04:54:38PM +0530, Jagan Teki wrote:
+> These panel bindings are owned by me, so updated all of them into
+> YAML DT schema.
+> 
+> Any inputs?
+Thanks for doing the conversion.
 
-Line 37:
-    # The dependency list is generated by gen_initramfs.sh -l
+dt_binding_check was not happy:
+Documentation/devicetree/bindings/display/panel/rocktech,rk070er9427.example.dt.yaml: panel: 'backlight', 'port' do not match any of the regexes: 'pinctrl-[0-9]+'
+  DTC     Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.example.dt.yaml
+  CHECK   Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.example.dt.yaml
+Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.example.dt.yaml: panel: 'backlight', 'port' do not match any of the regexes: 'pinctrl-[0-9]+'
+Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.example.dt.yaml: panel: compatible: Additional items are not allowed ('simple-panel' was unexpected)
+Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.example.dt.yaml: panel: compatible: ['friendlyarm,hd702e', 'simple-panel'] is too long
+  DTC     Documentation/devicetree/bindings/display/panel/sitronix,st7701.example.dt.yaml
+Error: Documentation/devicetree/bindings/display/panel/sitronix,st7701.example.dts:22.42-43 syntax error
+FATAL ERROR: Unable to parse input tree
 
-Line 54:
-    # 4) Arguments to gen_initramfs.sh changes
+Please fix and check the bindings using dt_binding_check before
+resubmit.
 
-There does not exist such a script.
+I had to install libyaml-dev (as least I recall this was the name)
+before dt_binding_check worked OK for me.
 
-I was going to fix the comments, but after some consideration, I thought
-"gen_initramfs.sh" would be more suitable than "gen_initramfs_list.sh"
-because it generates an initramfs image in the common usage.
-
-The script generates a list that can be fed to gen_init_cpio only when
-it is directly run without -o or -l option.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
-Changes in v2: None
-
- usr/Makefile                                    | 2 +-
- usr/{gen_initramfs_list.sh => gen_initramfs.sh} | 0
- 2 files changed, 1 insertion(+), 1 deletion(-)
- rename usr/{gen_initramfs_list.sh => gen_initramfs.sh} (100%)
-
-diff --git a/usr/Makefile b/usr/Makefile
-index 55c942da01cd..e44a66b8c051 100644
---- a/usr/Makefile
-+++ b/usr/Makefile
-@@ -24,7 +24,7 @@ $(obj)/initramfs_data.o: $(obj)/$(datafile_y) FORCE
- # Generate the initramfs cpio archive
- 
- hostprogs-y := gen_init_cpio
--initramfs   := $(CONFIG_SHELL) $(srctree)/$(src)/gen_initramfs_list.sh
-+initramfs   := $(CONFIG_SHELL) $(srctree)/$(src)/gen_initramfs.sh
- ramfs-input := $(if $(filter-out "",$(CONFIG_INITRAMFS_SOURCE)), \
- 			$(shell echo $(CONFIG_INITRAMFS_SOURCE)),-d)
- ramfs-args  := \
-diff --git a/usr/gen_initramfs_list.sh b/usr/gen_initramfs.sh
-similarity index 100%
-rename from usr/gen_initramfs_list.sh
-rename to usr/gen_initramfs.sh
--- 
-2.17.1
-
+	Sam
