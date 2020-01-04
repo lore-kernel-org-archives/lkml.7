@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5A9C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 919ACC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B50C24653
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 667D424653
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:04:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578150252;
-	bh=4zfKRNXnfEPVA6H1LMW4jI3w6iJ8UU2hMV5fAt122CE=;
+	s=default; t=1578150256;
+	bh=ofvL6+NKRIHoxGD4O6WsEGd7L3xRLx2b33fpLfXq2q0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lsiHH/G44Rxj6Yw2S7YjoFi0vMGEhh9i5fzWuaup7VycneHkFzeVewfRhs7cEJrcX
-	 rbmR9vZjh8h8p3tspH/0ylCP5Fxa1qHhOaq8sHpsmkNMGtDmlK6VcsRaxz3WV8fvT8
-	 +V0438nMbwpcZbS2Fhg5zr3WI6UJS6GbtmTYE7SU=
+	b=GugebnJDRtARMUmRutXLiMuBcNlRVi8lFbJbyArmwpluaWy2eRLg/E1B8eMKBCXM+
+	 x+//Cj33JYhfnXrMsWEvL5rYO2eA9LGRXD4XSxRokYCg5jnKFfSc1ybsbriTVuuXOK
+	 WPoOKqX7cCkCEAEXuOslpKxH2J87YLYqUVpRPnUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbgADPEH (ORCPT
+        id S1727227AbgADPEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 10:04:07 -0500
-Received: from conuserg-10.nifty.com ([210.131.2.77]:54708 "EHLO
+        Sat, 4 Jan 2020 10:04:15 -0500
+Received: from conuserg-10.nifty.com ([210.131.2.77]:54709 "EHLO
         conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgADPDy (ORCPT
+        with ESMTP id S1726231AbgADPDx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 10:03:54 -0500
+        Sat, 4 Jan 2020 10:03:53 -0500
 Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 004F2gcZ018492;
-        Sun, 5 Jan 2020 00:02:48 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 004F2gcZ018492
+        by conuserg-10.nifty.com with ESMTP id 004F2gcU018492;
+        Sun, 5 Jan 2020 00:02:45 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 004F2gcU018492
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578150169;
-        bh=bOa47bohg8Nz4cicoYQfhtwIwjqDpidX8PJY4kAWYPc=;
+        s=dec2015msa; t=1578150165;
+        bh=27Oq2PPg5dWtrSRAhiLEszC3H3oMsZeBE21RU3EfIJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xMjTKv/byEln4A1QGC5lVuO7z7BVe1w+KDergkVSs035zPXJklcwyaIfnUX8j49/f
-         0NijIUsimZo3+32kZ2VjtictFXZUZdLZQ4xU/CCYxJU9zVdStqNhohsniKuHijehdy
-         Ruqqwe2PO3rSGEl0xMd/oSw+eHxNejn+jElJhhJyJeMYvAyeHL4MiHPcuTBzG5qXq2
-         nDThHdOzrqOVxMBopmAmbWPk6+msHvXgvjaVvSaFehCDtuPae+MkbTed4bM//jm2f8
-         F88GzPxdTT0A8iSMToEbTSHS5sUalqBnBzebPBbvG3QPINXeDca5CfjgNerAwAKwoC
-         Md2V8fQdzRXAQ==
+        b=hTotURN8Is++lA4h8hVX5P1CazlmH5sUJqqdXFuNk1nWsiwYLUohGDsgu1ggH5EjR
+         /FcKYhHiF7ktvCHHA6zT9koSFJfz3kfpBKeSReri912JpihQS6W0rnR7X3kJxCJ+zT
+         lxE5Ym4eyd0IJ0AcVOkwdkvO+2qirRO1u5SQd8xYpwuLr7w3mDsNhsmg376gam4Am8
+         nZaZcLLcMTVP1+w538ELMjCLZNDf/CuzM/SadKvNMw1Y/LioUEhdTdVp9MhbBfIbGZ
+         tOgw9G3Mb8bZk0lkjXTTfVQ7yTfvNnqrd92N6UvwePh7VT0adsmz+hexGUAQLXUjj6
+         wo7I5VsIOJuHA==
 X-Nifty-SrcIP: [126.93.102.113]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
@@ -49,9 +49,9 @@ Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Greg Thelen <gthelen@google.com>,
         Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 09/13] initramfs: generate dependency list and cpio at the same time
-Date:   Sun,  5 Jan 2020 00:02:34 +0900
-Message-Id: <20200104150238.19834-10-masahiroy@kernel.org>
+Subject: [PATCH v2 04/13] initramfs: rename gen_initramfs_list.sh to gen_initramfs.sh
+Date:   Sun,  5 Jan 2020 00:02:29 +0900
+Message-Id: <20200104150238.19834-5-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200104150238.19834-1-masahiroy@kernel.org>
 References: <20200104150238.19834-1-masahiroy@kernel.org>
@@ -60,244 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, this script is run twice, for the dependency list, and then
-for the cpio archive.
+The comments in usr/Makefile wrongly refer to the script name (twice).
 
-The first one is re-run every time although its build log is suppressed
-so nobody notices it.
+Line 37:
+    # The dependency list is generated by gen_initramfs.sh -l
 
-Make it work more efficiently by generating the cpio and the dependency
-list at the same time.
+Line 54:
+    # 4) Arguments to gen_initramfs.sh changes
+
+There does not exist such a script.
+
+I was going to fix the comments, but after some consideration, I thought
+"gen_initramfs.sh" would be more suitable than "gen_initramfs_list.sh"
+because it generates an initramfs image in the common usage.
+
+The script generates a list that can be fed to gen_init_cpio only when
+it is directly run without -o or -l option.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
 Changes in v2: None
 
- usr/Makefile         |   3 +-
- usr/gen_initramfs.sh | 108 ++++++++++++++++++-------------------------
- 2 files changed, 47 insertions(+), 64 deletions(-)
+ usr/Makefile                                    | 2 +-
+ usr/{gen_initramfs_list.sh => gen_initramfs.sh} | 0
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename usr/{gen_initramfs_list.sh => gen_initramfs.sh} (100%)
 
 diff --git a/usr/Makefile b/usr/Makefile
-index 7df6559f0f30..3ae8b45bfc61 100644
+index 55c942da01cd..e44a66b8c051 100644
 --- a/usr/Makefile
 +++ b/usr/Makefile
-@@ -39,7 +39,7 @@ ifneq ($(wildcard $(obj)/$(datafile_d_y)),)
- endif
+@@ -24,7 +24,7 @@ $(obj)/initramfs_data.o: $(obj)/$(datafile_y) FORCE
+ # Generate the initramfs cpio archive
  
- quiet_cmd_initfs = GEN     $@
--      cmd_initfs = $< -o $@ $(ramfs-args) $(ramfs-input)
-+      cmd_initfs = $< -o $@ -l $(obj)/$(datafile_d_y) $(ramfs-args) $(ramfs-input)
- 
- targets := $(datafile_y)
- 
-@@ -52,7 +52,6 @@ $(deps_initramfs): ;
- # 3) If gen_init_cpio are newer than initramfs_data.cpio
- # 4) Arguments to gen_initramfs.sh changes
- $(obj)/$(datafile_y): $(src)/gen_initramfs.sh $(obj)/gen_init_cpio $(deps_initramfs) FORCE
--	$(Q)$< -l $(ramfs-input) > $(obj)/$(datafile_d_y)
- 	$(call if_changed,initfs)
- 
- subdir-$(CONFIG_UAPI_HEADER_TEST) += include
-diff --git a/usr/gen_initramfs.sh b/usr/gen_initramfs.sh
-index 68b6ddfd5f96..49a4e22147b5 100755
---- a/usr/gen_initramfs.sh
-+++ b/usr/gen_initramfs.sh
-@@ -15,9 +15,10 @@ set -e
- usage() {
- cat << EOF
- Usage:
--$0 [-o <file>] [-u <uid>] [-g <gid>] {-d | <cpio_source>} ...
-+$0 [-o <file>] [-l <dep_list>] [-u <uid>] [-g <gid>] {-d | <cpio_source>} ...
- 	-o <file>      Create compressed initramfs file named <file> using
- 		       gen_init_cpio and compressor depending on the extension
-+	-l <dep_list>  Create dependency list named <dep_list>
- 	-u <uid>       User ID to map to user ID 0 (root).
- 		       <uid> is only meaningful if <cpio_source> is a
- 		       directory.  "squash" forces all files to uid 0.
-@@ -42,11 +43,6 @@ field() {
- 	shift $1 ; echo $1
- }
- 
--list_default_initramfs() {
--	# echo usr/kinit/kinit
--	:
--}
--
- default_initramfs() {
- 	cat <<-EOF >> ${output}
- 		# This is a very simple, default initramfs
-@@ -81,10 +77,6 @@ filetype() {
- 	return 0
- }
- 
--list_print_mtime() {
--	:
--}
--
- print_mtime() {
- 	local my_mtime="0"
- 
-@@ -97,10 +89,10 @@ print_mtime() {
- }
- 
- list_parse() {
--	if [ -L "$1" ]; then
-+	if [ -z "$dep_list" -o -L "$1" ]; then
- 		return
- 	fi
--	echo "$1" | sed 's/:/\\:/g; s/$/ \\/'
-+	echo "$1" | sed 's/:/\\:/g; s/$/ \\/' >> $dep_list
- }
- 
- # for each file print a line in following format
-@@ -161,28 +153,25 @@ unknown_option() {
- 	exit 1
- }
- 
--list_header() {
--	:
--}
--
- header() {
- 	printf "\n#####################\n# $1\n" >> ${output}
- }
- 
- # process one directory (incl sub-directories)
- dir_filelist() {
--	${dep_list}header "$1"
-+	header "$1"
- 
- 	srcdir=$(echo "$1" | sed -e 's://*:/:g')
- 	dirlist=$(find "${srcdir}" -printf "%p %m %U %G\n" | LANG=C sort)
- 
- 	# If $dirlist is only one line, then the directory is empty
- 	if [  "$(echo "${dirlist}" | wc -l)" -gt 1 ]; then
--		${dep_list}print_mtime "$1"
-+		print_mtime "$1"
- 
- 		echo "${dirlist}" | \
- 		while read x; do
--			${dep_list}parse ${x}
-+			list_parse $x
-+			parse $x
- 		done
- 	fi
- }
-@@ -193,22 +182,21 @@ dir_filelist() {
- input_file() {
- 	source="$1"
- 	if [ -f "$1" ]; then
--		${dep_list}header "$1"
-+		header "$1"
- 		is_cpio="$(echo "$1" | sed 's/^.*\.cpio\(\..*\)\{0,1\}/cpio/')"
- 		if [ $2 -eq 0 -a ${is_cpio} = "cpio" ]; then
- 			cpio_file=$1
- 			echo "$1" | grep -q '^.*\.cpio\..*' && is_cpio_compressed="compressed"
--			[ ! -z ${dep_list} ] && echo "$1"
-+			[ -n "$dep_list" ] && echo "$1" >> $dep_list
- 			return 0
- 		fi
--		if [ -z ${dep_list} ]; then
--			print_mtime "$1" >> ${output}
--			cat "$1"         >> ${output}
--		else
--		        echo "$1 \\"
-+		print_mtime "$1" >> ${output}
-+		cat "$1"         >> ${output}
-+		if [ -n "$dep_list" ]; then
-+		        echo "$1 \\"  >> $dep_list
- 			cat "$1" | while read type dir file perm ; do
- 				if [ "$type" = "file" ]; then
--					echo "$file \\";
-+					echo "$file \\" >> $dep_list
- 				fi
- 			done
- 		fi
-@@ -231,44 +219,40 @@ output_file=""
- is_cpio_compressed=
- compr="gzip -n -9 -f"
- 
--arg="$1"
--case "$arg" in
--	"-l")	# files included in initramfs - used by kbuild
--		dep_list="list_"
--		echo "deps_initramfs := \\"
--		shift
--		;;
--	"-o")	# generate compressed cpio image named $1
--		shift
--		output_file="$1"
--		cpio_list="$(mktemp ${TMPDIR:-/tmp}/cpiolist.XXXXXX)"
--		output=${cpio_list}
--		echo "$output_file" | grep -q "\.gz$" \
--                && [ -x "`which gzip 2> /dev/null`" ] \
--                && compr="gzip -n -9 -f"
--		echo "$output_file" | grep -q "\.bz2$" \
--                && [ -x "`which bzip2 2> /dev/null`" ] \
--                && compr="bzip2 -9 -f"
--		echo "$output_file" | grep -q "\.lzma$" \
--                && [ -x "`which lzma 2> /dev/null`" ] \
--                && compr="lzma -9 -f"
--		echo "$output_file" | grep -q "\.xz$" \
--                && [ -x "`which xz 2> /dev/null`" ] \
--                && compr="xz --check=crc32 --lzma2=dict=1MiB"
--		echo "$output_file" | grep -q "\.lzo$" \
--                && [ -x "`which lzop 2> /dev/null`" ] \
--                && compr="lzop -9 -f"
--		echo "$output_file" | grep -q "\.lz4$" \
--                && [ -x "`which lz4 2> /dev/null`" ] \
--                && compr="lz4 -l -9 -f"
--		echo "$output_file" | grep -q "\.cpio$" && compr="cat"
--		shift
--		;;
--esac
- while [ $# -gt 0 ]; do
- 	arg="$1"
- 	shift
- 	case "$arg" in
-+		"-l")	# files included in initramfs - used by kbuild
-+			dep_list="$1"
-+			echo "deps_initramfs := \\" > $dep_list
-+			shift
-+			;;
-+		"-o")	# generate compressed cpio image named $1
-+			output_file="$1"
-+			cpio_list="$(mktemp ${TMPDIR:-/tmp}/cpiolist.XXXXXX)"
-+			output=${cpio_list}
-+			echo "$output_file" | grep -q "\.gz$" \
-+			&& [ -x "`which gzip 2> /dev/null`" ] \
-+			&& compr="gzip -n -9 -f"
-+			echo "$output_file" | grep -q "\.bz2$" \
-+			&& [ -x "`which bzip2 2> /dev/null`" ] \
-+			&& compr="bzip2 -9 -f"
-+			echo "$output_file" | grep -q "\.lzma$" \
-+			&& [ -x "`which lzma 2> /dev/null`" ] \
-+			&& compr="lzma -9 -f"
-+			echo "$output_file" | grep -q "\.xz$" \
-+			&& [ -x "`which xz 2> /dev/null`" ] \
-+			&& compr="xz --check=crc32 --lzma2=dict=1MiB"
-+			echo "$output_file" | grep -q "\.lzo$" \
-+			&& [ -x "`which lzop 2> /dev/null`" ] \
-+			&& compr="lzop -9 -f"
-+			echo "$output_file" | grep -q "\.lz4$" \
-+			&& [ -x "`which lz4 2> /dev/null`" ] \
-+			&& compr="lz4 -l -9 -f"
-+			echo "$output_file" | grep -q "\.cpio$" && compr="cat"
-+			shift
-+			;;
- 		"-u")	# map $1 to uid=0 (root)
- 			root_uid="$1"
- 			[ "$root_uid" = "-1" ] && root_uid=$(id -u || echo 0)
-@@ -280,7 +264,7 @@ while [ $# -gt 0 ]; do
- 			shift
- 			;;
- 		"-d")	# display default initramfs list
--			${dep_list}default_initramfs
-+			default_initramfs
- 			;;
- 		"-h")
- 			usage
+ hostprogs-y := gen_init_cpio
+-initramfs   := $(CONFIG_SHELL) $(srctree)/$(src)/gen_initramfs_list.sh
++initramfs   := $(CONFIG_SHELL) $(srctree)/$(src)/gen_initramfs.sh
+ ramfs-input := $(if $(filter-out "",$(CONFIG_INITRAMFS_SOURCE)), \
+ 			$(shell echo $(CONFIG_INITRAMFS_SOURCE)),-d)
+ ramfs-args  := \
+diff --git a/usr/gen_initramfs_list.sh b/usr/gen_initramfs.sh
+similarity index 100%
+rename from usr/gen_initramfs_list.sh
+rename to usr/gen_initramfs.sh
 -- 
 2.17.1
 
