@@ -2,163 +2,130 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 150E2C32770
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 04:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05349C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 04:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5CA8215A4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 04:48:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mBTSi1z8"
+	by mail.kernel.org (Postfix) with ESMTP id DB3B824649
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 04:51:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725862AbgADEsG (ORCPT
+        id S1726078AbgADEvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 23:48:06 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:36126 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgADEsF (ORCPT
+        Fri, 3 Jan 2020 23:51:46 -0500
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:36249 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725790AbgADEvp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 23:48:05 -0500
-Received: by mail-pj1-f66.google.com with SMTP id n59so5486170pjb.1;
-        Fri, 03 Jan 2020 20:48:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IoTdl+/r/+1PDTOBmkAtOt/aNfrTYnx6/vTmYpcU8Bk=;
-        b=mBTSi1z8HQ5QN8ZL9wZwgjOBZcLjA6/1s/o81QkxPC3Gn1LJt7QS6MSGiI9NCCsJQI
-         xwlIpwfxl+81MT4OH+Ckc3va0uV+gymXyyRkywUt0qEDLxF58/3e0bZADpvWzRffBzIE
-         GcKkw5L+y2wKmxDXXvMBoASIBpbhEyI8xYgbuP4ry+pvA791SlDRFw1pYcK6NWSZ5q1q
-         LXogHhdlAPDW2pO92kNmXoZzMbA38eBex2xeF0DNY8C3Y3/tlP6CLmRBf+0C+WGo6JXe
-         uja8rjA9pbwrcxkn0rBxxp0IELwQsbYQtEOA5DqAN5DkVUr2CMlDifi9y9ZNiZuHjuj1
-         l0mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IoTdl+/r/+1PDTOBmkAtOt/aNfrTYnx6/vTmYpcU8Bk=;
-        b=Q1OYDWcObduqhxHTyFw1DdNf2RMTRH79MtzIXHrHVBf7i4gDTgWTa5joKXB438JlsS
-         SLYWXDjNDHmEnuWiPkN4TA/oBfwRSkY6VvkJphoLQrfNVqcNbdWp01CxpUDsWrPvvnvO
-         o3y8BLbgpCKxIlbfaSzQv5kXp0vVKMInQjcKqkJlx/QtWz2cBKmxsu8Sc55AC2/r8t7o
-         i1FyZCjqam+JhTfZsr1qlKFZwwocrW7t+8wiLNSr1uTOhngBopS2yo7o8bOfEEI+3O15
-         p/l6YS+tFtrE2ieE+F5OZ4gp7H684zWuaIO+pcSVICaZh6tQt0vFuuuq9VdIUqpNKlb0
-         4bEA==
-X-Gm-Message-State: APjAAAXlIkliRj6UQjzqTJH2mVVkxi+QESE6oTQ1p3J/SaPUoGrhVMX/
-        XfUQyyt7uRca/RwqliBv0VA=
-X-Google-Smtp-Source: APXvYqzeds3/bTBx5/Pdi8NGCNH+FlJbUxV+IYl0LmLIGJ2scfHO4JnsggAhidTbq2sCByFRUHkqMQ==
-X-Received: by 2002:a17:90a:3aaf:: with SMTP id b44mr31811177pjc.9.1578113285104;
-        Fri, 03 Jan 2020 20:48:05 -0800 (PST)
-Received: from localhost (199.168.140.36.16clouds.com. [199.168.140.36])
-        by smtp.gmail.com with ESMTPSA id h12sm53934136pfo.12.2020.01.03.20.48.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 Jan 2020 20:48:04 -0800 (PST)
-Date:   Sat, 4 Jan 2020 12:48:01 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Light Hsieh <light.hsieh@mediatek.com>
-Cc:     linus.walleij@linaro.org, linux-mediatek@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sean.wang@kernel.org, kuohong.wang@mediatek.com
-Subject: Re: [PATCH v7 2/6] Supporting driving setting without mapping
- current to register value
-Message-ID: <20200104044801.GA13072@nuc8i5>
-References: <1577799707-11855-1-git-send-email-light.hsieh@mediatek.com>
- <1577799707-11855-2-git-send-email-light.hsieh@mediatek.com>
+        Fri, 3 Jan 2020 23:51:45 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R691e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0TmmVgCV_1578113497;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TmmVgCV_1578113497)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 04 Jan 2020 12:51:38 +0800
+Subject: Re: [PATCH v6 1/2] sched/numa: introduce per-cgroup NUMA locality
+ info
+To:     =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
+ <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
+ <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
+ <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
+ <443641e7-f968-0954-5ff6-3b7e7fed0e83@linux.alibaba.com>
+ <d2c4cace-623a-9317-c957-807e3875aa4a@linux.alibaba.com>
+ <275a98ed-35b8-b65f-3600-64ab722dd836@linux.alibaba.com>
+ <20200103151449.GA25747@blackbody.suse.cz>
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Message-ID: <b32569f2-3f5c-06f3-dba7-67351a019c42@linux.alibaba.com>
+Date:   Sat, 4 Jan 2020 12:51:37 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1577799707-11855-2-git-send-email-light.hsieh@mediatek.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200103151449.GA25747@blackbody.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 31, 2019 at 09:41:43PM +0800, Light Hsieh wrote:
-> MediaTek's smarphone project actual usage does need to know current value
-> (in mA) in procedure of finding the best driving setting.
-> The steps in the procedure is like as follow:
-smartphone ?
+
+
+On 2020/1/3 下午11:14, Michal Koutný wrote:
+> Hi.
+> 
+> On Fri, Dec 13, 2019 at 09:47:36AM +0800, 王贇 <yun.wang@linux.alibaba.com> wrote:
+>> By monitoring the increments, we will be able to locate the per-cgroup
+>> workload which NUMA Balancing can't helpwith (usually caused by wrong
+>> CPU and memory node bindings), then we got chance to fix that in time.
+> I just wonder do the data based on increments match with those you
+> obtained previously?
+
+They have different meaning, since now it's just the accumulation of
+local/remote page access counter, we have to increasing the sample
+period into the maximum NUMA balancing scan period, to my system it's
+1 minute.
+
+We still get useful information from the increments, for example:
+  local 100 remote 1000 <-- bad locality in last period
+  local 0 remote 0 <-- no scan or NUMA PF happened in last period
+  local 100 remote 0 <-- good locality but not much PF happened
+
+So I won't say they are matched, they tell the story in different way :-P
 
 > 
-> 1. set driving setting field in setting register as 0, measure waveform,
->    perform test, and etc.
-> 2. set driving setting field in setting register as 1, measure waveform,
->    perform test, and etc.
-> ...
-> n. set driving setting field in setting register as n-1, measure
->    waveform, perform test, and etc.
-> Check the results of steps 1~n and adopt the setting that get best result.
+>> +static inline void
+>> +update_task_locality(struct task_struct *p, int pnid, int cnid, int pages)
+>> +{
+>> +	if (!static_branch_unlikely(&sched_numa_locality))
+>> +		return;
+>> +
+>> +	/*
+>> +	 * pnid != cnid --> remote idx 0
+>> +	 * pnid == cnid --> local idx 1
+>> +	 */
+>> +	p->numa_page_access[!!(pnid == cnid)] += pages;
+> If the per-task information isn't used anywhere, why not accumulate
+> directly into task's cfs_rq->{local,remote}_page_access?
 > 
-> This procedure does need to know the mapping between current to register
-> value.
-> Therefore, setting driving without mapping current is more practical for
-> MediaTek's smartphone usage.
+
+This is try to avoid hierarchy update in each PF, accumulate the counter
+and update together should cost less.
+
+Besides, as they won't be reset now, maybe we could expose them too.
+
+>> @@ -4298,6 +4359,7 @@ entity_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr, int queued)
+>>  	 */
+>>  	update_load_avg(cfs_rq, curr, UPDATE_TG);
+>>  	update_cfs_group(curr);
+>> +	update_group_locality(cfs_rq);
+> With the per-NUMA node time tracked separately, isn't it unnecessary
+> doing group updates inside entity_tick? 
+
+The hierarchy update can't be saved, and this is a good place where we
+already holding rq lock, iterate cfs_rq in hierarchy for current task.
+
+Regards,
+Michael Wang
+
 > 
-> Change-Id: I8bd6a2cecc0af650923704589b5b90097b0ff77e
-> ---
->  drivers/pinctrl/mediatek/pinctrl-mt6765.c        |  4 ++--
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 12 ++++++++++++
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h |  5 +++++
->  3 files changed, 19 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt6765.c b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
-> index 32451e8..1212264 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mt6765.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
-> @@ -1077,8 +1077,8 @@
->  	.bias_disable_get = mtk_pinconf_bias_disable_get,
->  	.bias_set = mtk_pinconf_bias_set,
->  	.bias_get = mtk_pinconf_bias_get,
-> -	.drive_set = mtk_pinconf_drive_set_rev1,
-> -	.drive_get = mtk_pinconf_drive_get_rev1,
-> +	.drive_set = mtk_pinconf_drive_set_raw,
-> +	.drive_get = mtk_pinconf_drive_get_raw,
->  	.adv_pull_get = mtk_pinconf_adv_pull_get,
->  	.adv_pull_set = mtk_pinconf_adv_pull_set,
->  };
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> index d63e05e..2247eae 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> @@ -608,6 +608,18 @@ int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
->  	return 0;
->  }
->  
-> +int mtk_pinconf_drive_set_raw(struct mtk_pinctrl *hw,
-> +			       const struct mtk_pin_desc *desc, u32 arg)
-> +{
-> +	return mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV, arg);
-> +}
-> +
-> +int mtk_pinconf_drive_get_raw(struct mtk_pinctrl *hw,
-> +			       const struct mtk_pin_desc *desc, int *val)
-> +{
-> +	return mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV, val);
-> +}
-> +
->  int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
->  			     const struct mtk_pin_desc *desc, bool pullup,
->  			     u32 arg)
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> index 1b7da42..75d0e07 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> @@ -288,6 +288,11 @@ int mtk_pinconf_drive_set_rev1(struct mtk_pinctrl *hw,
->  int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
->  			       const struct mtk_pin_desc *desc, int *val);
->  
-> +int mtk_pinconf_drive_set_raw(struct mtk_pinctrl *hw,
-> +			       const struct mtk_pin_desc *desc, u32 arg);
-> +int mtk_pinconf_drive_get_raw(struct mtk_pinctrl *hw,
-> +			       const struct mtk_pin_desc *desc, int *val);
-> +
->  int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
->  			     const struct mtk_pin_desc *desc, bool pullup,
->  			     u32 arg);
-> -- 
-> 1.8.1.1.dirty
+> Regards,
+> Michal
+> 
