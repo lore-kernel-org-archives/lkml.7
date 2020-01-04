@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A91C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 19:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C470EC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 19:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFFDE222C4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 19:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7C53222C4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 19:53:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbgADTxL (ORCPT
+        id S1727250AbgADTxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 14:53:11 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:48915 "EHLO
+        Sat, 4 Jan 2020 14:53:21 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:42201 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727156AbgADTxI (ORCPT
+        with ESMTP id S1727156AbgADTxT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 14:53:08 -0500
+        Sat, 4 Jan 2020 14:53:19 -0500
 Received: from orion.localdomain ([95.114.65.70]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M3UhQ-1ioNhJ42s6-000efh; Sat, 04 Jan 2020 20:52:12 +0100
+ 1MqJuP-1jS6EH3CRH-00nRo8; Sat, 04 Jan 2020 20:52:14 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     davem@davemloft.net, mareklindner@neomailbox.ch,
@@ -35,72 +35,78 @@ Cc:     davem@davemloft.net, mareklindner@neomailbox.ch,
         netdev@vger.kernel.org, linux-bluetooth@vger.kernel.org,
         tipc-discussion@lists.sourceforge.net,
         linux-hyperv@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH 4/8] net: ipv4: use netdev_info()/netdev_warn()
-Date:   Sat,  4 Jan 2020 20:51:27 +0100
-Message-Id: <20200104195131.16577-4-info@metux.net>
+Subject: [PATCH 7/8] net: vmw_vsock: remove unneeded MODULE_VERSION() usage
+Date:   Sat,  4 Jan 2020 20:51:30 +0100
+Message-Id: <20200104195131.16577-7-info@metux.net>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200104195131.16577-1-info@metux.net>
 References: <20200104195131.16577-1-info@metux.net>
-X-Provags-ID: V03:K1:J7BY2gj2YEin7trURLNk79uAJ/mq6WfmxNnbfWNnLmmWnq2y+sV
- KHgroWux6WNpZbNc/fWv5PGycTrlfApSPQ4WTHXUYNJ565CbHGDI6IeoVuoGwmpaixaXK1c
- tzHgOCkWXMbHsN3/qQn4sbWAif/ipKs1cvS8SCdX7QnnIGhq6nDdhzUI9FA6T+CVPEQZ2Cx
- 9TL2UDyHFWl1KngxIfagQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5A1PxoPB1WM=:7Ei2+AUzuUr2WWaZCTyYzu
- RLWvGazV5lzU+AQxlmQa6DPImh1XCvaR8hssdfQiLqwj3qVkzhf8sEHp9/gHd+0oMD2uKnC5S
- EhvxwonVGw/HzCapxz/2czZ9HaoC7W8g0FDAkCsLIwk5IlvY3svOCp0OfPzsUB2aiYOVVpcso
- JtgVG6UfeJvRKTkEGgnAU83zKeU9i47JquE88GXiz/vEj0HDGWjgJblqgaPydzT/RMmLj+E2J
- X84rkJSTXvgWiOOJRGKgfG9K4shD1QDVzSCwznaBmmH/P1m7qYIRkQojgySom5IJrMyuoh3Wf
- DdN+L22YyfOgiQlOvQJ91WBM5nEhDt12muoRW7FOY1sJCDNm8NdylzaW2vTmoRVuKHglw/sn/
- AwrPwclGJhAA5/aL71MPAmxXXd1y7cdGqxQifxXsrvoPRyc5QomSsZf/sGx/XjnAsvDCDLfsI
- L3dy8HWzZJHo93L84ht6lYylPLgVSHXHVIee9eEfr/X4c+4uPV5mByvVD0RBA/ANlulC6P+5t
- nLxsgCfUq57uFiUmBX+Xpr7VV4RQIrXNgxB843L8KgE5juB8IpxjeZyFPAg+LvU7/NIvvH0DL
- Y8S3BGdLyCNWLYCoCVHcbO6FYC14TpC6Y2M08B6MH+xC4KdRPMD2EfyWn7Q0/MBE8iUak8JbT
- MCgl8KXqhw+WWCLLMcq2d+BG37mo2P5O1IC3fseZKSbr3matwWESgUekP8InUH4+hwqALGBHZ
- Bq3uigXwZHZEIAWpI2c6RAeRxHdxijdMgJWbU1B4/IPPcpXdrhHjRpDzB6zwoNkfP08cnyFdh
- 9rpOdX1ngf/IoWgQsq3I/i3glnFF2ByEnri7Gh4PtAi2iWxZn6lKcj6nAwQK3uly1tv+9G8TR
- VAhXYWjkIMYYv0i9gDzQ==
+X-Provags-ID: V03:K1:UTysyOOxsiPdVPKeBa5m/lJjiLYWW/Mu033dbYm6NG/oMc+j+aM
+ o8+gaqw98Xrb+JaSKI3bjCkxM1a8CdUfW78TjAfonS5+h1ednSgOeJgFAoE2AI3RFulRNPq
+ 60Ytf3YA/QmCHPLG0ZgndpxN4mxEeO2kAH+XNtZLbSoY3FE20Cb5r20aYnT5yZkXAlnvBFB
+ EH78RusR1Y0ZKzHvpQ3xA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7gZ90otsdiY=:6ljOagr0u/5Ta8Q9AnGbia
+ eThvRWgPJZ0D5JTYJ08SAB6n/coUQ7XYfRWP9iSv/LuDM4bryBoAEiuIovCHxy2ABgw3hdW5l
+ Vhdb1MuV+Bvr0/DF3iGwHfP+eO93nPjfEj48rss0+aSf71hFHH3vnhAhNe3YikJ2TT8iVhQvv
+ HRzHxaxH+yrkNlcllp9I7qC6zehtvkVcAbgLaiBrNrQ0j8QPOCnq+hXrtISLrN9BHSjeP2mUz
+ so48KWiC8o6XUo10XNHqmLipTsCl68Tdj/TCzc2xzu7jR3K/66FByMs8g+41NXPUua6dSxkRF
+ jjkb9pbQsgoh+urZmo30pSagEpRnhc/dPYFa74iWxSiaTs/SNy4tvLpymN4Y/oPzJUa4tybbt
+ dDHr7dPvJr/GtR8Iu+zuz3PKP7YA6z2xYfjN1Sd0+j8EhiWYh0wIBqhVzjDQygDwW/IHVGXiI
+ Q9sktP3SGoJYL7sYYPcnL2ybJES/rw3NOBVZgg1bFn9yZSGoNNekcaMYVjV9OPtksQQNGsUlm
+ gB0N7HRREFLaXKbsQMsGXHRPCZ9qbgP12J/Ufqfe46tmjsIY+gCBXcfcFn/70+ZYrctadbaP3
+ SkugpysLsL55CuBUaQs4grj+ojw1N9fokUA579mGapdt6Z0nQk1pSjmWauMtvz2JHX3p2nYag
+ jto/acHgGWNLwbDIZcV973j1eu6cVrXbKHRvQ1LRzlbbttOHy4zuDpf1JKjrxPj/0XrBK1HiH
+ UWN9WL/0LYaN7jr7GtqUcLKxMX3uJTk/S+D6gKoQsSu1HecR2NNkSS4qVK+LdHqmE3k3dkARt
+ Fgtaxh6mYPNjUo2JcNJfkReu1Cg0q7nA1N5tHw0N36f0ELej5/yLuPS/P7yF3glaF+eFCqtjX
+ CMIMNYSTa2glsdoebTKw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use netdev_info() / netdev_warn() instead of pr_info() / pr_warn()
-for more consistent log output.
+Remove MODULE_VERSION(), as it isn't needed at all: the only version
+making sense is the kernel version.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- net/ipv4/tcp_cubic.c    | 1 -
- net/ipv4/tcp_illinois.c | 1 -
- net/ipv4/tcp_nv.c       | 1 -
+ net/vmw_vsock/af_vsock.c         | 1 -
+ net/vmw_vsock/hyperv_transport.c | 1 -
+ net/vmw_vsock/vmci_transport.c   | 1 -
  3 files changed, 3 deletions(-)
 
-diff --git a/net/ipv4/tcp_cubic.c b/net/ipv4/tcp_cubic.c
-index 1b3d032a4df2..83fda965186d 100644
---- a/net/ipv4/tcp_cubic.c
-+++ b/net/ipv4/tcp_cubic.c
-@@ -513,4 +513,3 @@ module_exit(cubictcp_unregister);
- MODULE_AUTHOR("Sangtae Ha, Stephen Hemminger");
+diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+index 74db4cd637a7..7e0cd3220d42 100644
+--- a/net/vmw_vsock/af_vsock.c
++++ b/net/vmw_vsock/af_vsock.c
+@@ -2203,5 +2203,4 @@ module_exit(vsock_exit);
+ 
+ MODULE_AUTHOR("VMware, Inc.");
+ MODULE_DESCRIPTION("VMware Virtual Socket Family");
+-MODULE_VERSION("1.0.2.0-k");
+ MODULE_LICENSE("GPL v2");
+diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
+index b3bdae74c243..f6cb66b62479 100644
+--- a/net/vmw_vsock/hyperv_transport.c
++++ b/net/vmw_vsock/hyperv_transport.c
+@@ -985,6 +985,5 @@ module_init(hvs_init);
+ module_exit(hvs_exit);
+ 
+ MODULE_DESCRIPTION("Hyper-V Sockets");
+-MODULE_VERSION("1.0.0");
  MODULE_LICENSE("GPL");
- MODULE_DESCRIPTION("CUBIC TCP");
--MODULE_VERSION("2.3");
-diff --git a/net/ipv4/tcp_illinois.c b/net/ipv4/tcp_illinois.c
-index 00e54873213e..8cc9967e82ef 100644
---- a/net/ipv4/tcp_illinois.c
-+++ b/net/ipv4/tcp_illinois.c
-@@ -355,4 +355,3 @@ module_exit(tcp_illinois_unregister);
- MODULE_AUTHOR("Stephen Hemminger, Shao Liu");
- MODULE_LICENSE("GPL");
- MODULE_DESCRIPTION("TCP Illinois");
--MODULE_VERSION("1.0");
-diff --git a/net/ipv4/tcp_nv.c b/net/ipv4/tcp_nv.c
-index 95db7a11ba2a..b3879fb24d33 100644
---- a/net/ipv4/tcp_nv.c
-+++ b/net/ipv4/tcp_nv.c
-@@ -499,4 +499,3 @@ module_exit(tcpnv_unregister);
- MODULE_AUTHOR("Lawrence Brakmo");
- MODULE_LICENSE("GPL");
- MODULE_DESCRIPTION("TCP NV");
--MODULE_VERSION("1.0");
+ MODULE_ALIAS_NETPROTO(PF_VSOCK);
+diff --git a/net/vmw_vsock/vmci_transport.c b/net/vmw_vsock/vmci_transport.c
+index 644d32e43d23..f2f689b7ca9a 100644
+--- a/net/vmw_vsock/vmci_transport.c
++++ b/net/vmw_vsock/vmci_transport.c
+@@ -2140,7 +2140,6 @@ module_exit(vmci_transport_exit);
+ 
+ MODULE_AUTHOR("VMware, Inc.");
+ MODULE_DESCRIPTION("VMCI transport for Virtual Sockets");
+-MODULE_VERSION("1.0.5.0-k");
+ MODULE_LICENSE("GPL v2");
+ MODULE_ALIAS("vmware_vsock");
+ MODULE_ALIAS_NETPROTO(PF_VSOCK);
 -- 
 2.11.0
 
