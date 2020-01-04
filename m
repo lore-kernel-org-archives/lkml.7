@@ -4,93 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D969CC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90255C00523
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 01:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1EF421835
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EE7221835
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 01:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578099559;
-	bh=3rm119YoJXHsUb64u8/2k3m9Yk3lcWkLTk/qqf9JGAM=;
+	s=default; t=1578099790;
+	bh=+XCGUnQ29N3hu5XPHx1L404e6WOg7wPmWK/ZjA1/ydA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rPwr+0LteWlOOVLqSrcU3G5Bu8u8rZAYG9gkt6gfw2qVmcBxbEjLVW3mVjHFOfaiA
-	 EYY1dEWqcFGz00h6EATaOe/JZxEy0k258NUj/M8CvARv3L/cnC8+ixuO66y8eqZZ5J
-	 V6yCltrcQnxw8Cq9oc8RrNlF+xT4puIfZYMDepAw=
+	b=ZD9woEDGEWeqQwRS6EBxqmQBfYwkXDvrPmg2uJ+nULmx5xHi5y+mfdW54hj0yY/AY
+	 VmTuAOtRScfE/8inECplwyzusFBtlzNeUznxT+jaF+2xySRZecjyMll7ZTVqMRF1ig
+	 ozKqZPvwblDrlOgPWX+NuCa+RasQYr0dBfm6Och0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbgADA7S (ORCPT
+        id S1727215AbgADBDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 19:59:18 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:41784 "EHLO
+        Fri, 3 Jan 2020 20:03:09 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:39918 "EHLO
         mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727173AbgADA7S (ORCPT
+        with ESMTP id S1726968AbgADBDJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 19:59:18 -0500
-Received: by mail-il1-f195.google.com with SMTP id f10so38023815ils.8
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 16:59:18 -0800 (PST)
+        Fri, 3 Jan 2020 20:03:09 -0500
+Received: by mail-il1-f195.google.com with SMTP id x5so38045435ila.6
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 17:03:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=he5w4xe5758mzPhyknWVdWn5blsV7hMVch+zol3itAA=;
-        b=N3vRtneHqyNRJpYJSq8d/mEHruSt6UjuhSntE5uV3cR8GW88NvJ0hXn5BSrchKkJuL
-         IttUK3QZSeXypCQnrMl9tBhvH3tRSIa39eahf8bus18EPNMaDfPISx+eKbDjZ5Av/2fy
-         rzX01tkqMFa55zMr0/AgJD9aIb/uhdxIGZb7XO6NO6sKCaORGomNwxSfIGw6L5JY9UH/
-         jmR7LSQ7UXSQRMUk3U3GilGxLGGP20+lkxqWyDhMLgPM5l13vYVZ5hxbsHOUEJ83E0MQ
-         qgzQcDEJxs1+ybu9e7vRmXaPJO98/+yIsbrFVOULIguPP65sQJhC+Ev431uc1Aeu9afe
-         5OZg==
-X-Gm-Message-State: APjAAAXdQWB7urJKs2rlrgF1bqlUzTJGotWvqUkey8qbWRcbZjPrmiiu
-        B/7bxEx7doPUk/jNXJhbqDIJH9U=
-X-Google-Smtp-Source: APXvYqy0/kG1xNG0PMdHhZRJB8OEcZukyUs9U8W1vJmSFBE6B4NG0vmiZkhNqgXc9GdQAa6Ja4F7Zg==
-X-Received: by 2002:a92:601:: with SMTP id x1mr71952568ilg.35.1578099557410;
-        Fri, 03 Jan 2020 16:59:17 -0800 (PST)
+        bh=x/iGc+RKtnsFuMU64/4qfZ200vWGywjrQ0igZLbD2L0=;
+        b=pIj1bcYJ9S0DuNDP/5hpSjgF6j5q+vWFB4kSFeioLFCO01hcNCABQbNvp7N0l7anRm
+         uSwuoYuLPeir9MT3+RfsuW9wTIMiZvzcB0ono/jgswch26Kr5SFXWu+wP2WGJdIvLbRD
+         F8hZcBiLA3x5UmtFPrkEJ2MkL55/dz38qeCQkBjfgfSIH6xHv2FzC/woEBHTIVdsXeFj
+         CsWKDb7JAxktiM0t5FfMfM1UYpjCe8Fschet4ycHSpQymiH3tFiE6CtevuEKTX2BRKLj
+         NoghTkO60+L7ygzxkafiF2u9zKxgWt/MAf7pXxIf1F+5MKbH4sR+xiqxhqxdP9N3Y3M1
+         4ptQ==
+X-Gm-Message-State: APjAAAU3BXCWPp0YKrqyaQlKb8FlLESBvJiZM0g9qlvdKali0+qU45r0
+        enuM/B/XEaqjocfIPg9oGXrjgRI=
+X-Google-Smtp-Source: APXvYqyOIN+EpGdrdT3UzhFyy/Yxq4YBabLZTVQhvr2s4vIemWmrK0rh95DBsy/gY0XNdXQXvs9v6A==
+X-Received: by 2002:a92:5805:: with SMTP id m5mr72823184ilb.59.1578099788029;
+        Fri, 03 Jan 2020 17:03:08 -0800 (PST)
 Received: from rob-hp-laptop ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id y75sm21412385ill.87.2020.01.03.16.59.16
+        by smtp.gmail.com with ESMTPSA id y75sm21415143ill.87.2020.01.03.17.03.06
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 16:59:16 -0800 (PST)
+        Fri, 03 Jan 2020 17:03:07 -0800 (PST)
 Received: from rob (uid 1000)
         (envelope-from rob@rob-hp-laptop)
         id 2219b7
         by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Fri, 03 Jan 2020 17:59:15 -0700
-Date:   Fri, 3 Jan 2020 17:59:15 -0700
+        Fri, 03 Jan 2020 18:03:05 -0700
+Date:   Fri, 3 Jan 2020 18:03:05 -0700
 From:   Rob Herring <robh@kernel.org>
-To:     Sricharan R <sricharan@codeaurora.org>
-Cc:     sricharan@codeaurora.org, agross@kernel.org,
-        devicetree@vger.kernel.org, linus.walleij@linaro.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-soc@vger.kernel.org, robh+dt@kernel.org, sboyd@kernel.org,
-        sivaprak@codeaurora.org
-Subject: Re: [PATCH V3 3/5] dt-bindings: qcom: Add ipq6018 bindings
-Message-ID: <20200104005915.GA14735@bogus>
-References: <1578052177-6778-1-git-send-email-sricharan@codeaurora.org>
- <1578052177-6778-4-git-send-email-sricharan@codeaurora.org>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     linux-hwmon@vger.kernel.org, Michael.Hennerich@analog.com,
+        linux-kernel@vger.kernel.org, jdelvare@suse.com,
+        linux@roeck-us.net, mark.rutland@arm.com, lgirdwood@gmail.com,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        biabeniamin@outlook.com, Beniamin Bia <beniamin.bia@analog.com>
+Subject: Re: [PATCH v2 2/3] dt-binding: hwmon: Add documentation for ADM1177
+Message-ID: <20200104010305.GA21152@bogus>
+References: <20191219114127.21905-1-beniamin.bia@analog.com>
+ <20191219114127.21905-2-beniamin.bia@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1578052177-6778-4-git-send-email-sricharan@codeaurora.org>
+In-Reply-To: <20191219114127.21905-2-beniamin.bia@analog.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  3 Jan 2020 17:19:35 +0530, Sricharan R wrote:
-> Document the new ipq6018 SOC/board device tree bindings.
+On Thu, 19 Dec 2019 13:41:26 +0200, Beniamin Bia wrote:
+> Documentation for ADM1177 was added.
 > 
-> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
 > ---
->  Documentation/devicetree/bindings/arm/qcom.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> Changes in v2:
+> -adi,r-sense-micro-ohms: replaced by shunt-resistor-micro-ohms 
+>  .../bindings/hwmon/adi,adm1177.yaml           | 66 +++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
