@@ -4,129 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B25C3276F
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 14:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BDDC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 14:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 912F422B48
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 14:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC7072464E
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 14:26:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mykernel.net header.i=cgxu519@mykernel.net header.b="e8i109+Q"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Z1lhBqcg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgADOVZ (ORCPT
+        id S1726135AbgADO0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 09:21:25 -0500
-Received: from sender2-of-o52.zoho.com.cn ([163.53.93.247]:21135 "EHLO
-        sender2-of-o52.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726005AbgADOVR (ORCPT
+        Sat, 4 Jan 2020 09:26:16 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:56511 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725943AbgADO0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 09:21:17 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1578147625; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=bgbpHZyY+MRw8YTJOM1WEOc7yXFt1MCmQ61SZGH2rCLHeEBVB4FX376zfIqrFHr+4TW1CmxdlgFkm71q6+heq6ihQRzsneaLjpR1TqfbZI4hxtQgahVRkRpZ/HgFO844kR/9YK4Nl6kpPECRmtWRxr345LyPkP7idrq2qrvV+eE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1578147625; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
-        bh=6RgICWXwhvwNHztqQtPT2dhQ/f21R4V1Nli9Z29zuMM=; 
-        b=B8LMXxqN+WYi2cB+C1WgsNs4MSabWqQN3AnbeGsdg0da3fF8Z2qJkwLk51zoErV3I1R5+bIPR69V7eR1j1vrvhNabBeQobn5ljVEYWfjYM/ETcU7veEbtogT8JhGfCoEU0lCOArv8hKlSxFb8Gx0UDz3PmSWL2H8DlLMob3UJm8=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=mykernel.net;
-        spf=pass  smtp.mailfrom=cgxu519@mykernel.net;
-        dmarc=pass header.from=<cgxu519@mykernel.net> header.from=<cgxu519@mykernel.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1578147625;
-        s=zohomail; d=mykernel.net; i=cgxu519@mykernel.net;
-        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=6RgICWXwhvwNHztqQtPT2dhQ/f21R4V1Nli9Z29zuMM=;
-        b=e8i109+QZvsd4wrqLK+Ybcy0JonbcvaCzWUFIG4Iwxz4G4U8UYlj1I/qUOqH64cF
-        qGOUrEQYCiykqYIU6t+eIUqA/roamSoT7ILbISdwEw6MSZvg6qeMelcXj5bANQIc7Oo
-        zJUYuSqTJ4leSILovkpfDaLNU+0aPpMCV9KLhQSk=
-Received: from localhost.localdomain.localdomain (113.116.49.111 [113.116.49.111]) by mx.zoho.com.cn
-        with SMTPS id 15781476236011.4213776319637645; Sat, 4 Jan 2020 22:20:23 +0800 (CST)
-From:   Chengguang Xu <cgxu519@mykernel.net>
-To:     jaegeuk@kernel.org, chao@kernel.org
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>
-Message-ID: <20200104142004.12883-1-cgxu519@mykernel.net>
-Subject: [f2fs-dev][PATCH 1/2] f2fs: fix miscounted block limit in f2fs_statfs_project()
-Date:   Sat,  4 Jan 2020 22:20:03 +0800
-X-Mailer: git-send-email 2.21.1
+        Sat, 4 Jan 2020 09:26:16 -0500
+X-UUID: dacf1503b5e746aa9c0433ffe543e4a1-20200104
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Lcy3+KlfMb7jLpiBkhLUoc+fZ0Xd/X066UNWWwKFUng=;
+        b=Z1lhBqcgEO/h+MWEeifc2Pkj+Ix4L8mD/gm333vaE/5EVABiB9qqN3HJQEE7vbZS8y+jpApuEOTdudiLUPpKwJDnD9Tlm8j8i37VNGNpyjzYH56A3TUY2xsrurpJa5DYr1GFmb/6I0kbWRpKbaG4xU+6J6zss7LgnJI4mfvqntY=;
+X-UUID: dacf1503b5e746aa9c0433ffe543e4a1-20200104
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1918082156; Sat, 04 Jan 2020 22:26:11 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 4 Jan 2020 22:25:38 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sat, 4 Jan 2020 22:26:40 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>
+CC:     <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
+        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
+        <bvanassche@acm.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v1 2/3] scsi: ufs: add device reset history for vendor implementations
+Date:   Sat, 4 Jan 2020 22:26:07 +0800
+Message-ID: <1578147968-30938-3-git-send-email-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1578147968-30938-1-git-send-email-stanley.chu@mediatek.com>
+References: <1578147968-30938-1-git-send-email-stanley.chu@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
-Content-Type: text/plain; charset=utf8
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-statfs calculates Total/Used/Avail disk space in block unit,
-so we should translate soft/hard prjquota limit to block unit
-as well.
-
-Below testing result shows the block/inode numbers of
-Total/Used/Avail from df command are all correct afer
-applying this patch.
-
-[root@localhost quota-tools]\# ./repquota -P /dev/sdb1
-*** Report for project quotas on device /dev/sdb1
-Block grace time: 7days; Inode grace time: 7days
-              Block limits                File limits
-Project   used soft    hard  grace  used  soft  hard  grace
------------------------------------------------------------
-\#0   --   4       0       0         1     0     0
-\#101 --   0       0       0         2     0     0
-\#102 --   0   10240       0         2    10     0
-\#103 --   0       0   20480         2     0    20
-\#104 --   0   10240   20480         2    10    20
-\#105 --   0   20480   10240         2    20    10
-
-[root@localhost sdb1]\# lsattr -p t{1,2,3,4,5}
-  101 ----------------N-- t1/a1
-  102 ----------------N-- t2/a2
-  103 ----------------N-- t3/a3
-  104 ----------------N-- t4/a4
-  105 ----------------N-- t5/a5
-
-[root@localhost sdb1]\# df -hi t{1,2,3,4,5}
-Filesystem     Inodes IUsed IFree IUse% Mounted on
-/dev/sdb1        2.4M    21  2.4M    1% /mnt/sdb1
-/dev/sdb1          10     2     8   20% /mnt/sdb1
-/dev/sdb1          20     2    18   10% /mnt/sdb1
-/dev/sdb1          10     2     8   20% /mnt/sdb1
-/dev/sdb1          10     2     8   20% /mnt/sdb1
-
-[root@localhost sdb1]\# df -h t{1,2,3,4,5}
-Filesystem      Size  Used Avail Use% Mounted on
-/dev/sdb1        10G  489M  9.6G   5% /mnt/sdb1
-/dev/sdb1        10M     0   10M   0% /mnt/sdb1
-/dev/sdb1        20M     0   20M   0% /mnt/sdb1
-/dev/sdb1        10M     0   10M   0% /mnt/sdb1
-/dev/sdb1        10M     0   10M   0% /mnt/sdb1
-
-Fixes: 909110c060f2 ("f2fs: choose hardlimit when softlimit is larger than =
-hardlimit in f2fs_statfs_project()")
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
----
- fs/f2fs/super.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 5111e1ffe58a..78efd0e76174 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1219,6 +1219,8 @@ static int f2fs_statfs_project(struct super_block *sb=
-,
- =09if (dquot->dq_dqb.dqb_bhardlimit &&
- =09=09=09(!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
- =09=09limit =3D dquot->dq_dqb.dqb_bhardlimit;
-+=09if (limit)
-+=09=09limit >>=3D sb->s_blocksize_bits;
-=20
- =09if (limit && buf->f_blocks > limit) {
- =09=09curblock =3D dquot->dq_dqb.dqb_curspace >> sb->s_blocksize_bits;
---=20
-2.21.1
-
-
+RGV2aWNlIHJlc2V0IGhpc3Rvcnkgc2hhbGwgYmUgYWxzbyBhZGRlZCBmb3IgdmVuZG9yJ3MgZGV2
+aWNlDQpyZXNldCB2YXJpYW50IG9wZXJhdGlvbiBpbXBsZW1lbnRhdGlvbi4NCg0KQ2M6IEFsaW0g
+QWtodGFyIDxhbGltLmFraHRhckBzYW1zdW5nLmNvbT4NCkNjOiBBc3V0b3NoIERhcyA8YXN1dG9z
+aGRAY29kZWF1cm9yYS5vcmc+DQpDYzogQXZyaSBBbHRtYW4gPGF2cmkuYWx0bWFuQHdkYy5jb20+
+DQpDYzogQmFydCBWYW4gQXNzY2hlIDxidmFuYXNzY2hlQGFjbS5vcmc+DQpDYzogQmVhbiBIdW8g
+PGJlYW5odW9AbWljcm9uLmNvbT4NCkNjOiBDYW4gR3VvIDxjYW5nQGNvZGVhdXJvcmEub3JnPg0K
+Q2M6IE1hdHRoaWFzIEJydWdnZXIgPG1hdHRoaWFzLmJnZ0BnbWFpbC5jb20+DQpTaWduZWQtb2Zm
+LWJ5OiBTdGFubGV5IENodSA8c3RhbmxleS5jaHVAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVy
+cy9zY3NpL3Vmcy91ZnNoY2QuYyB8IDUgKysrLS0NCiBkcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5o
+IHwgNiArKysrKy0NCiAyIGZpbGVzIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlv
+bnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMgYi9kcml2ZXJz
+L3Njc2kvdWZzL3Vmc2hjZC5jDQppbmRleCBiYWU0M2RhMDBiYjYuLjI5ZTNkNTBhYWJmYiAxMDA2
+NDQNCi0tLSBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMNCisrKyBiL2RyaXZlcnMvc2NzaS91
+ZnMvdWZzaGNkLmMNCkBAIC00MzQ2LDEzICs0MzQ2LDE0IEBAIHN0YXRpYyBpbmxpbmUgaW50IHVm
+c2hjZF9kaXNhYmxlX2RldmljZV90eF9sY2Moc3RydWN0IHVmc19oYmEgKmhiYSkNCiAJcmV0dXJu
+IHVmc2hjZF9kaXNhYmxlX3R4X2xjYyhoYmEsIHRydWUpOw0KIH0NCiANCi1zdGF0aWMgdm9pZCB1
+ZnNoY2RfdXBkYXRlX3JlZ19oaXN0KHN0cnVjdCB1ZnNfZXJyX3JlZ19oaXN0ICpyZWdfaGlzdCwN
+Ci0JCQkJICAgdTMyIHJlZykNCit2b2lkIHVmc2hjZF91cGRhdGVfcmVnX2hpc3Qoc3RydWN0IHVm
+c19lcnJfcmVnX2hpc3QgKnJlZ19oaXN0LA0KKwkJCSAgICB1MzIgcmVnKQ0KIHsNCiAJcmVnX2hp
+c3QtPnJlZ1tyZWdfaGlzdC0+cG9zXSA9IHJlZzsNCiAJcmVnX2hpc3QtPnRzdGFtcFtyZWdfaGlz
+dC0+cG9zXSA9IGt0aW1lX2dldCgpOw0KIAlyZWdfaGlzdC0+cG9zID0gKHJlZ19oaXN0LT5wb3Mg
+KyAxKSAlIFVGU19FUlJfUkVHX0hJU1RfTEVOR1RIOw0KIH0NCitFWFBPUlRfU1lNQk9MX0dQTCh1
+ZnNoY2RfdXBkYXRlX3JlZ19oaXN0KTsNCiANCiAvKioNCiAgKiB1ZnNoY2RfbGlua19zdGFydHVw
+IC0gSW5pdGlhbGl6ZSB1bmlwcm8gbGluayBzdGFydHVwDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9z
+Y3NpL3Vmcy91ZnNoY2QuaCBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmgNCmluZGV4IGUwNWNh
+ZmRkYzg3Yi4uZGUxYmU2YTg2MmIwIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9zY3NpL3Vmcy91ZnNo
+Y2QuaA0KKysrIGIvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuaA0KQEAgLTgwNSw2ICs4MDUsOCBA
+QCBpbnQgdWZzaGNkX3dhaXRfZm9yX3JlZ2lzdGVyKHN0cnVjdCB1ZnNfaGJhICpoYmEsIHUzMiBy
+ZWcsIHUzMiBtYXNrLA0KIAkJCQl1MzIgdmFsLCB1bnNpZ25lZCBsb25nIGludGVydmFsX3VzLA0K
+IAkJCQl1bnNpZ25lZCBsb25nIHRpbWVvdXRfbXMsIGJvb2wgY2FuX3NsZWVwKTsNCiB2b2lkIHVm
+c2hjZF9wYXJzZV9kZXZfcmVmX2Nsa19mcmVxKHN0cnVjdCB1ZnNfaGJhICpoYmEsIHN0cnVjdCBj
+bGsgKnJlZmNsayk7DQordm9pZCB1ZnNoY2RfdXBkYXRlX3JlZ19oaXN0KHN0cnVjdCB1ZnNfZXJy
+X3JlZ19oaXN0ICpyZWdfaGlzdCwNCisJCQkgICAgdTMyIHJlZyk7DQogDQogc3RhdGljIGlubGlu
+ZSB2b2lkIGNoZWNrX3VwaXVfc2l6ZSh2b2lkKQ0KIHsNCkBAIC0xMDgzLDggKzEwODUsMTAgQEAg
+c3RhdGljIGlubGluZSB2b2lkIHVmc2hjZF92b3BzX2RiZ19yZWdpc3Rlcl9kdW1wKHN0cnVjdCB1
+ZnNfaGJhICpoYmEpDQogDQogc3RhdGljIGlubGluZSB2b2lkIHVmc2hjZF92b3BzX2RldmljZV9y
+ZXNldChzdHJ1Y3QgdWZzX2hiYSAqaGJhKQ0KIHsNCi0JaWYgKGhiYS0+dm9wcyAmJiBoYmEtPnZv
+cHMtPmRldmljZV9yZXNldCkNCisJaWYgKGhiYS0+dm9wcyAmJiBoYmEtPnZvcHMtPmRldmljZV9y
+ZXNldCkgew0KIAkJaGJhLT52b3BzLT5kZXZpY2VfcmVzZXQoaGJhKTsNCisJCXVmc2hjZF91cGRh
+dGVfcmVnX2hpc3QoJmhiYS0+dWZzX3N0YXRzLmRldl9yZXNldCwgMCk7DQorCX0NCiB9DQogDQog
+ZXh0ZXJuIHN0cnVjdCB1ZnNfcG1fbHZsX3N0YXRlcyB1ZnNfcG1fbHZsX3N0YXRlc1tdOw0KLS0g
+DQoyLjE4LjANCg==
 
