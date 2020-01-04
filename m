@@ -7,97 +7,88 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFC1C32771
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 21:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 523D7C32771
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 21:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C2C222C4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 21:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AB84222C4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 21:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578172213;
-	bh=EhKs6shgXvKWdWXhYnBms3vCYMXf27Tn5d7tLg8l3Xo=;
+	s=default; t=1578172269;
+	bh=Ey9Bf2rpgsWriEz5luLeq+6EFn7bLo7uG30LAOFErJI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VOGeJotb/EXkn7yB1jz3DkW5dqtiZcnnUl/EmpOKcXYlui2W8SM76k2nJOFfYXjTx
-	 xtTiF8Ac3GtJUAnq7ugItMyeU+RGgZmGpIUl2yIxNi8p7nsWSg4I1VZ6GEO97DXvyM
-	 6h80FHZDLpTi0PkLQq68Uo8WEHBp0aiW2pl0WM6o=
+	b=pCcLZlcXkNWeb4h0gL9xPrjzaZuwIibhkq+rQnb6xxpuW95W42QnNBv3OUom90M/k
+	 nAvAcBk5Ytf3ZWTFWXwPMJSmMhCNhDxcF0R+ZVnUqrYpu86fmkvBfCx8j7IAU5yf/y
+	 ZSPuzfR9KwRKRky63ZOTQoWmfVvHb6t+eCmyYipc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbgADVKM (ORCPT
+        id S1726481AbgADVLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 16:10:12 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:44228 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgADVKM (ORCPT
+        Sat, 4 Jan 2020 16:11:08 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35389 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbgADVLH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 16:10:12 -0500
-Received: by mail-il1-f193.google.com with SMTP id z12so2898927iln.11
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jan 2020 13:10:12 -0800 (PST)
+        Sat, 4 Jan 2020 16:11:07 -0500
+Received: by mail-io1-f65.google.com with SMTP id v18so44763681iol.2
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jan 2020 13:11:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cJWxvFKjFmedV29LeJwhs6R1fNWpIXjZCncfQO681ro=;
-        b=OyTF5aLgWf+o6GMjQyv4AornAnqm2I8D2q/ZmDBrYTRLmFiLJmCG2e9oJW0UIAeGYv
-         RbRTehKks9NauLUpcFHkVeKsSwd6C3poONcJX21xSGDoYlGTwl1wxTba5S5k+JN4VvjD
-         oYvJrH21wvPzxXlHth9zrBCS6B4FHgw0xFV7DPeItl63cjybSvNlZT3f/4jEc45TDm/1
-         pek07HSIdiRPAhYNttZrdK3ZUy442XNYQRH4jiaEjwjyekMoVPR7w1hdmAECKhD5plTh
-         kID+N5LnH5ovIG7pzaa1uDhc3tf3aqDujtdWAKEa+dAMyu8wyGjONRYMiYe7vZ1r6+a0
-         xMJQ==
-X-Gm-Message-State: APjAAAUYf1k37wHZiJyzy6OTqBXcsztLHWXfJ/JisMR4yxDXe9h1VWrn
-        +zG+/nHUS5CT8L1p8cQxzTMzr+o=
-X-Google-Smtp-Source: APXvYqw4g3JUFxZtQw5K10GDYaSavpupvnmpetikAvrk66W9dgoeYlqhEghnXpkii4fafXcsGhO41A==
-X-Received: by 2002:a92:db49:: with SMTP id w9mr76239592ilq.277.1578172211493;
-        Sat, 04 Jan 2020 13:10:11 -0800 (PST)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=qyoQKQJfODTyZbS5URI1sv4NTniZDyCb+lWHf5D5y/M=;
+        b=GSDugfBnYdQIPv5oP+bTtu7yW49RMvgRybHSrgowIYtgVaZWAsGYNGOdK5WEWMut6i
+         t1nWtrVQqFsnLX73/mfF3R84WcZuXPHe2JO1XgLT+s4YqOIgRp15GjnMChuOukP411wo
+         S0utcaqIBwCXNrBqy3dbMN8INHRYqLfqtUiyEK7JoQgJUjTJ3/apLhE3aA59Cj/FkxRx
+         FbyF3YCLCqhxLEkJNnee1eD14m5dozZdVjP7PgcEsdb2fjmn2nQpyVbqNYCOdcmwRMDC
+         dFEUFnMBc50YR6Ub0bhVbEQWHDM6bYgqtkk/lKMwl0rzW9jLAMVNAL5+EEbSutXLowY0
+         wUYw==
+X-Gm-Message-State: APjAAAU29kp3ugBp2LmpPtb/Jj/Rw+CjGliaImwIc2oxnHp2ZjlGeO0R
+        GZ5xnbwVNSx8FnkNjEGmt/q/XtU=
+X-Google-Smtp-Source: APXvYqzJG7Nw5J/+qODE1zllcaHuiuehZTQ09XaSxWt07Fj1qPjst3UtRxqO2ru9/tmXYgLafAsVeg==
+X-Received: by 2002:a5e:df47:: with SMTP id g7mr51959375ioq.31.1578172266887;
+        Sat, 04 Jan 2020 13:11:06 -0800 (PST)
 Received: from rob-hp-laptop ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id b145sm15842716iof.60.2020.01.04.13.10.10
+        by smtp.gmail.com with ESMTPSA id n22sm15896645iog.14.2020.01.04.13.11.05
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jan 2020 13:10:10 -0800 (PST)
+        Sat, 04 Jan 2020 13:11:06 -0800 (PST)
 Received: from rob (uid 1000)
         (envelope-from rob@rob-hp-laptop)
         id 2219b7
         by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Sat, 04 Jan 2020 14:10:09 -0700
-Date:   Sat, 4 Jan 2020 14:10:09 -0700
+        Sat, 04 Jan 2020 14:11:04 -0700
+Date:   Sat, 4 Jan 2020 14:11:04 -0700
 From:   Rob Herring <robh@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Jim Quinlan <jim2101024@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: reset: Document BCM7216 RESCAL reset
- controller
-Message-ID: <20200104211009.GA18324@bogus>
-References: <20200103190429.1847-1-f.fainelli@gmail.com>
- <20200103190429.1847-2-f.fainelli@gmail.com>
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/9] dt: bindings: lm3692x: Add ti,ovp-microvolt
+ property
+Message-ID: <20200104211104.GA19869@bogus>
+References: <cover.1578134779.git.agx@sigxcpu.org>
+ <e6d0ef33f264c4ae679e586a1533fc7a97975db7.1578134779.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200103190429.1847-2-f.fainelli@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e6d0ef33f264c4ae679e586a1533fc7a97975db7.1578134779.git.agx@sigxcpu.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  3 Jan 2020 11:04:28 -0800, Florian Fainelli wrote:
-> From: Jim Quinlan <jim2101024@gmail.com>
+On Sat,  4 Jan 2020 11:54:17 +0100, =?UTF-8?q?Guido=20G=C3=BCnther?= wrote:
+> This allows to set the overvoltage protection to 17V, 21V, 25V or 29V.
 > 
-> BCM7216 has a special purpose RESCAL reset controller for its SATA and
-> PCIe0/1 instances. This is a simple reset controller with #reset-cells
-> set to 0.
-> 
-> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-> [florian: Convert to YAML binding]
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
 > ---
->  .../reset/brcm,bcm7216-pcie-sata-rescal.yaml  | 37 +++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm7216-pcie-sata-rescal.yaml
+>  Documentation/devicetree/bindings/leds/leds-lm3692x.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
