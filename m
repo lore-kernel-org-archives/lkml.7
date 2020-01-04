@@ -7,116 +7,104 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA4AC32770
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 16:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C82CC3276F
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 16:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C15CA21734
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 16:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BA4E24650
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 16:34:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="knC3R+Jz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AfR7J0go"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726219AbgADQaz (ORCPT
+        id S1726191AbgADQef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 11:30:55 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:33010 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbgADQaz (ORCPT
+        Sat, 4 Jan 2020 11:34:35 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34515 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbgADQef (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 11:30:55 -0500
-Received: by mail-pj1-f65.google.com with SMTP id u63so3469876pjb.0;
-        Sat, 04 Jan 2020 08:30:55 -0800 (PST)
+        Sat, 4 Jan 2020 11:34:35 -0500
+Received: by mail-pf1-f195.google.com with SMTP id i6so18066342pfc.1;
+        Sat, 04 Jan 2020 08:34:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SF6jQ6Us3Rm1ak3vLMeXdgaGr4D7O4/vI9dVN14WAWU=;
-        b=knC3R+JzRicRScYWvNV/GJT03sMkk14T/0w/QorA2Kf+KmidJJ/YxlUNA6fyjXj4b3
-         xmn4nUJhBUDBBaAMR5HIf8Udb17co8B7dmoE/35G8RRhnaPHpUYqu3i+Q5YvooOOx0N5
-         OnmBqeP8lbmWKGIY1L8ys3B1lljJLjz1cPUuc7Vz2Qn6CxtEXuzynRLUjL/3tfFVJG1X
-         uw7ehhIE849UzlniFvsToVnhVsHno6y2ekKwVbdahtRFFCK/XGWeJNGmVt1L6CwLhvPm
-         isy554OKMzQMMqdBSb+uHGeY5mpNu06+d6ebXHsorKuepWaSYKbYwQT1ojvLUYuTMOIZ
-         6URQ==
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MbFMvcyfRTSbApxaJ7kNdPBdJTnon+lDkMoB+BvWA4k=;
+        b=AfR7J0godkUXY4K+YuYxGPg4m4E+1UOYv5RAYUyN1Q0ySQ2jIu3Fr8eDJY1+GrJ/1q
+         YC91es8lWjTQM4zwXqquOY1C1RGLIvk6GZNaaK4K3tvPI5w3pqtcl3J3RKKVZ3qQ0Mqn
+         KGYRONVxlkUufEd9daj6CcNP3bbRwqEpNPWVmDSODJa9VkO/0ZXWKM4hCx0Qe7wiJCaU
+         MIqpLQY3Sw/KrGj/Z5hcfLiOBMV8RPIKMtoS0EGETsAYrafX9wCFugMAIVSa/Xip82wx
+         ox9sEB9c5xVhHyxR9/t1Afuhi3eeE5iumfaHLCm3RJXxSBg7MCdd+bG/rJC0Jhzdtshl
+         3xVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SF6jQ6Us3Rm1ak3vLMeXdgaGr4D7O4/vI9dVN14WAWU=;
-        b=GDFD5tBvqWE4HxhgSjk+iSuqpUSoDDnDp0lfyT/HRJ8RFLaWLzgeVIyLfnnYKrBitC
-         MtrfKq6MaAxZ7zluH9gyC7To/cQ8WwfWcBeO0FRGbPsU1755eNO49McY6YQvNwiptCh5
-         AX8Nq1ZdjsvFz0hUvQ2Gnnul7oAA7u5UZW0NE4HGE4QFqk53m3lmjyu6uNDsAAdx1peQ
-         T5rSTPzvY6xsayq72h9wCjJZMDpTeb+7Jc9nI9FCf4eM8kdrgHbmeriUC9N0Tl8FVLaH
-         f1pEmrMiDUZkaV419FEpT2r28R2TcDJzNYkJuOpQPzmlS8CUM4VDirw7CZH18edb7xWd
-         hfKA==
-X-Gm-Message-State: APjAAAUbOMWpMtZOxzUR0lffoecNi6x1uyTzzVxnALZ7ru5akKzc0HMJ
-        cTnOXxcgDuTpxNrYbciF/kM=
-X-Google-Smtp-Source: APXvYqxE2Qu80RJuBDvv94/ffMEz1m48VFn6ZRy8UdkbTXgNv2eYpFmBVzLVQ/TpBl+7BacWiq703Q==
-X-Received: by 2002:a17:902:6b8a:: with SMTP id p10mr82430814plk.47.1578155454710;
-        Sat, 04 Jan 2020 08:30:54 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y20sm7049393pfe.107.2020.01.04.08.30.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 04 Jan 2020 08:30:54 -0800 (PST)
-Date:   Sat, 4 Jan 2020 08:30:53 -0800
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MbFMvcyfRTSbApxaJ7kNdPBdJTnon+lDkMoB+BvWA4k=;
+        b=sf54mwBQ1kLikJBBjcldoqwIubrWe16e/jMMOnxN4yNlb3PqpBoW0usvox9eLXUJ/1
+         POUsYLxE8f7cr2s+XGeFXlqrg8KfcoZbUnLuE+LGPr0mwNiiiDbnnWHA6XLNKoRESQ2e
+         H8Ae0c5f/G+/Mq1kxuZF7CrIHZ1QKwJumNcf4k21u62MVuPgQlZJN3MYF9mzpg32T7Om
+         t6wtqtsKKvU3852enlzcM5Rsj++NJo38q1fsbyUF31rftZM1eKf/0Oeco8thPuwe3p90
+         6DzDgsw2FXymHvXhsGn5wRKhKuNJ+TJNT6Xl+P9ytN7wiel0QJDriHghTe3vak8uPOts
+         pyQw==
+X-Gm-Message-State: APjAAAWNzwtzAWF4bOr1+7DkKvmCSfwKQJR+SXwSdPux7g0IyaLpFgTo
+        EX56u859MZLFfB1wQezxLJZhbmLF
+X-Google-Smtp-Source: APXvYqz7yIBoySqYozTfFfz7Xi5SUtsBxPolE4yAqGHAhdPrf5a0qC9AJeLUgj6aXT7H86R55czxZw==
+X-Received: by 2002:a63:1344:: with SMTP id 4mr104733097pgt.0.1578155674818;
+        Sat, 04 Jan 2020 08:34:34 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p23sm67604015pgh.83.2020.01.04.08.34.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 04 Jan 2020 08:34:34 -0800 (PST)
+Subject: Re: [PATCH] watchdog: cadence: Skip printing pointer value
+To:     Srinivas Neeli <srinivas.neeli@xilinx.com>, shubhraj@xilinx.com,
+        sgoud@xilinx.com, michal.simek@xilinx.com
+Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org, git@xilinx.com
+References: <1576825096-26605-1-git-send-email-srinivas.neeli@xilinx.com>
 From:   Guenter Roeck <linux@roeck-us.net>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jdelvare@suse.com, bjwyman@gmail.com
-Subject: Re: [PATCH 3/3] hwmon: (pmbus/ibm-cffps) Fix the LED behavior when
- turned off
-Message-ID: <20200104163053.GA13266@roeck-us.net>
-References: <1576788607-13567-1-git-send-email-eajames@linux.ibm.com>
- <1576788607-13567-4-git-send-email-eajames@linux.ibm.com>
+Message-ID: <0d96e336-7280-edbd-7ce4-8307e7e0f1c1@roeck-us.net>
+Date:   Sat, 4 Jan 2020 08:34:33 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576788607-13567-4-git-send-email-eajames@linux.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1576825096-26605-1-git-send-email-srinivas.neeli@xilinx.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 02:50:07PM -0600, Eddie James wrote:
-> The driver should remain in control of the LED on the PSU, even while
-> off, not the PSU firmware as previously indicated.
+On 12/19/19 10:58 PM, Srinivas Neeli wrote:
+> "%p" is not printing the pointer value.
+> In driver, printing pointer value is not useful so avoiding print.
 > 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
 
-Applied to hwmon-next.
-
-Thanks,
-Guenter
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
 > ---
->  drivers/hwmon/pmbus/ibm-cffps.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
+>   drivers/watchdog/cadence_wdt.c | 5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/hwmon/pmbus/ibm-cffps.c b/drivers/hwmon/pmbus/ibm-cffps.c
-> index b37faf1..1c91ee1 100644
-> --- a/drivers/hwmon/pmbus/ibm-cffps.c
-> +++ b/drivers/hwmon/pmbus/ibm-cffps.c
-> @@ -47,13 +47,9 @@
->  #define CFFPS_MFR_VAUX_FAULT			BIT(6)
->  #define CFFPS_MFR_CURRENT_SHARE_WARNING		BIT(7)
->  
-> -/*
-> - * LED off state actually relinquishes LED control to PSU firmware, so it can
-> - * turn on the LED for faults.
-> - */
-> -#define CFFPS_LED_OFF				0
->  #define CFFPS_LED_BLINK				BIT(0)
->  #define CFFPS_LED_ON				BIT(1)
-> +#define CFFPS_LED_OFF				BIT(2)
->  #define CFFPS_BLINK_RATE_MS			250
->  
->  enum {
-> @@ -436,6 +432,9 @@ static void ibm_cffps_create_led_class(struct ibm_cffps *psu)
->  	rc = devm_led_classdev_register(dev, &psu->led);
->  	if (rc)
->  		dev_warn(dev, "failed to register led class: %d\n", rc);
-> +	else
-> +		i2c_smbus_write_byte_data(client, CFFPS_SYS_CONFIG_CMD,
-> +					  CFFPS_LED_OFF);
->  }
->  
->  static struct pmbus_driver_info ibm_cffps_info[] = {
+> diff --git a/drivers/watchdog/cadence_wdt.c b/drivers/watchdog/cadence_wdt.c
+> index 06bd4e1a5923..672b184da875 100644
+> --- a/drivers/watchdog/cadence_wdt.c
+> +++ b/drivers/watchdog/cadence_wdt.c
+> @@ -369,9 +369,8 @@ static int cdns_wdt_probe(struct platform_device *pdev)
+>   		return ret;
+>   	platform_set_drvdata(pdev, wdt);
+>   
+> -	dev_info(dev, "Xilinx Watchdog Timer at %p with timeout %ds%s\n",
+> -		 wdt->regs, cdns_wdt_device->timeout,
+> -		 nowayout ? ", nowayout" : "");
+> +	dev_info(dev, "Xilinx Watchdog Timer with timeout %ds%s\n",
+> +		 cdns_wdt_device->timeout, nowayout ? ", nowayout" : "");
+>   
+>   	return 0;
+>   }
+> 
+
