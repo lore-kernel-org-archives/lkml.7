@@ -2,351 +2,125 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F19D8C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 12:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A46BC32770
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 12:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBD022464E
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 12:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6C4215A4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 12:23:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AYpWAILn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vAB0O4s6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbgADMEP (ORCPT
+        id S1725924AbgADMXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 07:04:15 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35023 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725802AbgADMEP (ORCPT
+        Sat, 4 Jan 2020 07:23:21 -0500
+Received: from mail-il1-f177.google.com ([209.85.166.177]:44442 "EHLO
+        mail-il1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbgADMXU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 07:04:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578139453;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tdR3Vz6+ofuay9NZxSeucQOMq0Uj1CPcpO0WCc1v3G4=;
-        b=AYpWAILnUB3UYVXxvquExK8/qraWmxpaw7m5tWmjgWIGTnnj1TDJRkW6pMxqIXRROcjqAl
-        R/en58UfbytUhMHav5/H8kK9t/td76Lalqe8HpSDXYCCVjB75HAyhNcWZZI7wQfx9U+KSY
-        ccgUbGwITCOuW1jAjVblWKLEQ0VppfA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-161--E6dYDsFN1KEH2fVCROwoA-1; Sat, 04 Jan 2020 07:04:09 -0500
-X-MC-Unique: -E6dYDsFN1KEH2fVCROwoA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 82DAA800D41;
-        Sat,  4 Jan 2020 12:04:06 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-22.pek2.redhat.com [10.72.8.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 879C87DB25;
-        Sat,  4 Jan 2020 12:03:54 +0000 (UTC)
-Date:   Sat, 4 Jan 2020 20:03:49 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "chenxiang (M)" <chenxiang66@hisilicon.com>,
-        "bigeasy@linutronix.de" <bigeasy@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hare@suse.com" <hare@suse.com>, "hch@lst.de" <hch@lst.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        Zhang Yi <yi.zhang@redhat.com>
-Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity
- for managed interrupt
-Message-ID: <20200104120349.GA3810@ming.t460p>
-References: <d5774e2f-bb60-c27c-bf00-267b88400a12@huawei.com>
- <e815b5451ea86e99d42045f7067f455a@www.loen.fr>
- <20191224015926.GC13083@ming.t460p>
- <7a961950624c414bb9d0c11c914d5c62@www.loen.fr>
- <20191225004822.GA12280@ming.t460p>
- <72a6a738-f04b-3792-627a-fbfcb7b297e1@huawei.com>
- <20200103004625.GA5219@ming.t460p>
- <2b070d25-ee35-aa1f-3254-d086c6b872b1@huawei.com>
- <20200103112908.GA20353@ming.t460p>
- <e40ec76b-c9d7-2b2f-8257-d3ced0894260@huawei.com>
+        Sat, 4 Jan 2020 07:23:20 -0500
+Received: by mail-il1-f177.google.com with SMTP id z12so2292751iln.11;
+        Sat, 04 Jan 2020 04:23:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LKQLDuUQyKEp3PqqNw3i4af+LyZvLM7Wyx7d36N1/7g=;
+        b=vAB0O4s6yBazbpmIEiJWWx9AHn68/D7fHgaqYwW8qVN6GEYn3Jd5FTODWftDaqvoWb
+         o0aR4RUJuL8WgEYjmE59nhe1op+jIQ0w3FEU8F2Bi0d9e604m0gXTi4CX4zqkFy5ESIE
+         a2/qY0xyBIhm3xiuremTqrk83EOHEEEnchWuG7ptss2XGcjOjGay+2Sv+5wQLTbIx8yS
+         R2G7Z3Iwgsi2X50VkDj0E/nti4kMIRlzm1pGnx63us7gEwBE21oQhbjm0TqZ0z+erHs5
+         GLPxLYuLwVAzytAc5/aPAGggMgctbiurMUgkkfO2ZZmympTiR4XIrAf0sYhiPEX9gH79
+         usLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LKQLDuUQyKEp3PqqNw3i4af+LyZvLM7Wyx7d36N1/7g=;
+        b=B240iv7WmWACD5yryV5Zfdep0qAXt7CEZrqq/hN8zAIr2UD9YoKMwlnilsOilS2GDX
+         c2eByEyrIBuHZDVXDF2xtTIWPGTHT1rrsKalZKOfhKH4XCrUJmnbWLraDztComNXLrbu
+         uKX8CZONYj7PoQ5TMxJvJLnpiD33aLsiTWQyVCDPDiQz5IkNxPP28dt+P5sfUXjDj7Ho
+         anabQkZlLtiL7j4jcIZptaeaqWAm5nI9DPjk6Ar1AmgbthxaQjV6bVEfgq+8i97uwGcd
+         ukP0gj2eU8xjzNkjnK+VMZmkh7xtHbdSVs/D92Wg/WTih4YlsMyeAxj32jkiaNPHGVsh
+         pALA==
+X-Gm-Message-State: APjAAAV57W51veMPDzYYaISUebeXMP+QtJ2tayzUM8TaK618bGftDqHI
+        cElf1++QeGuWfHm3KMqX0NGsdbdXuLrhwdmbLzRVLH0/5g8aRP0w
+X-Google-Smtp-Source: APXvYqxRGib/GBLbSGJvISDQygameAmB0qxfxm7Vznd0dHfFks8EvS8cx3KiThhlephAoOkZaLJzrXSeJ044Qstyhy0=
+X-Received: by 2002:a92:cc42:: with SMTP id t2mr79004310ilq.111.1578140599825;
+ Sat, 04 Jan 2020 04:23:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="3V7upXqbjpZ4EhLz"
-Content-Disposition: inline
-In-Reply-To: <e40ec76b-c9d7-2b2f-8257-d3ced0894260@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <CABXGCsOv26W6aqB5WPMe-mEynmwy55DTfTeL5Dg9vRq6+Y6WvA@mail.gmail.com>
+ <CABXGCsNkzPrjqMRaWpssorxzhMLWBvLeSw9BpKYr_DW4LJQECQ@mail.gmail.com>
+ <20200102110817.ahqaqidw3ztw3kax@10.255.255.10> <CABXGCsNkm3VuzO60WBCi4VJmDnO=DmprQ1P=dd0FcW2-+dGc0w@mail.gmail.com>
+ <20200102131434.tky2hquki23laqqo@10.255.255.10> <CABXGCsMV1GRiqrXCQGHqvpBiendU3mG36h0YoG=4nw6spZHq=w@mail.gmail.com>
+ <nycvar.YAK.7.76.2001021153220.1385@zhn.tzk.pbz> <CABXGCsMLfarquWnzV=e3Ta_HPac+DALfKEOaD3rp5n9MPqgyFw@mail.gmail.com>
+ <20200103100232.GH3040@piout.net> <CABXGCsNv7G94TxaaKX8KXL5DEJiFgNcSu4+WShE_kQjVSa7zZA@mail.gmail.com>
+ <20200103101935.GI3040@piout.net> <CABXGCsMLob0DC25JS8wwAYydnDoHBSoMh2_YLPfqm3TTvDE-Zw@mail.gmail.com>
+ <7c015680-01b7-9c3e-c4c7-5d0b6e964781@hygon.cn> <CABXGCsNpS+nCMZ9C89UQVEu_u+hJVtdxCvdnj2QNqQf-j7+DrA@mail.gmail.com>
+ <6ac1d65c-33ac-e3a4-799f-24279b677f90@hygon.cn>
+In-Reply-To: <6ac1d65c-33ac-e3a4-799f-24279b677f90@hygon.cn>
+From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date:   Sat, 4 Jan 2020 17:23:09 +0500
+Message-ID: <CABXGCsO25iq2tZMis3E-DF2ADz2Je45YfL11cgjFhmr+bz-6jg@mail.gmail.com>
+Subject: Re: [bugreport] "hwclock -w" reset time instead of setting the right time
+To:     Jinke Fan <fanjinke@hygon.cn>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        J William Piggott <elseifthen@gmx.com>,
+        Karel Zak <kzak@redhat.com>,
+        "util-linux@vger.kernel.org" <util-linux@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 4 Jan 2020 at 16:37, Jinke Fan <fanjinke@hygon.cn> wrote:
+>
+> Hi Mike:
+> Yes, We do check the time in BIOS Menu after first reboot.
+>
+> We do some further tests in our X570 platform:
+> * "AMD Ryzen 7 3700X" with mainboard "ASUS ROG STRIX X570-E GAMING".
+> * OS is Fedora rawhide, with default Kernel version which is shown as
+> follows:
+> $uname -a
+> Linux bogon 5.5.0-0.rc4.git0.1.fc32.x86_64 #1 SMP Mon Dec 30 06:32:36
+> UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+>
+> And we upgrade/downgrade BIOS version from 1005/1201/1404/1405, and we
+> found out that :
+> * OLD BIOS version 1005/1201 does not reset the rtc time and keep the
+> setup rtc time after reboot.
+> * NEW BIOS version 1404/1405 DO reset the rtc time to 2019/01/01 after
+> reboot.
+>
+> Detailed pictures of the BIOS time after reboot is shown in [2],
+>
+> We suspect the BIOS 1201->1404 upgrade might cause this issue.
+>  From x570 BIOS changelog, we found that the big difference between
+> 1201/1404 is the AMD AM4 PI upgrade from AGESA 1.0.0.3ABBA to AM4 combo
+> PI 1.0.0.4 patch B,
 
---3V7upXqbjpZ4EhLz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The changelog for my BIOS are the same [1]. Unfortunately, I will not
+able downgrade to BIOS of 0404 ver for checking assumption because
+changelog description of ver 1404 contains warning "* You will not be
+able to downgrade your BIOS after updating to this BIOS version"
 
-On Fri, Jan 03, 2020 at 11:50:51AM +0000, John Garry wrote:
-> On 03/01/2020 11:29, Ming Lei wrote:
-> > On Fri, Jan 03, 2020 at 10:41:48AM +0000, John Garry wrote:
-> > > On 03/01/2020 00:46, Ming Lei wrote:
-> > > > > > > d the
-> > > > > > > DMA API more than an architecture-specific problem.
-> > > > > > > 
-> > > > > > > Given that we have so far very little data, I'd hold off any conclusion.
-> > > > > > We can start to collect latency data of dma unmapping vs nvme_irq()
-> > > > > > on both x86 and arm64.
-> > > > > > 
-> > > > > > I will see if I can get a such box for collecting the latency data.
-> > > > > To reiterate what I mentioned before about IOMMU DMA unmap on x86, a key
-> > > > > difference is that by default it uses the non-strict (lazy) mode unmap, i.e.
-> > > > > we unmap in batches. ARM64 uses general default, which is strict mode, i.e.
-> > > > > every unmap results in an IOTLB fluch.
-> > > > > 
-> > > > > In my setup, if I switch to lazy unmap (set iommu.strict=0 on cmdline), then
-> > > > > no lockup.
-> > > > > 
-> > > > > Are any special IOMMU setups being used for x86, like enabling strict mode?
-> > > > > I don't know...
-> > > > BTW, I have run the test on one 224-core ARM64 with one 32-hw_queue NVMe, the
-> > > > softlock issue can be triggered in one minute.
-> > > > 
-> > > > nvme_irq() often takes ~5us to complete on this machine, then there is really
-> > > > risk of cpu lockup when IOPS is > 200K.
-> > > 
-> > > Do you have a typical nvme_irq() completion time for a mid-range x86 server?
-> > 
-> > ~1us.
-> 
-> Eh, so ~ x5 faster on x86 machine?! Seems some real issue here.
-> 
-> > 
-> > It is done via bcc script, and ebpf itself may introduce some overhead.
-> > 
-> 
-> Can you share the script/instructions? I would like to test on my machine. I
-> assume you tested on an ThunderX2.
+> If possible, please tell us about the BIOS version and your hardware
+> platform, which can be get from BIOS UI or using "dmidecode"
+> in Linux env.
 
-It should have been done easier by bpftrace than bcc, however it has bug in case
-of too many cpu cores on arm64.
+The version of my BIOS is the latest. It is 1405 for my motherboard.
+Here is "dmidecode" paste: https://pastebin.com/akBPAvZJ
 
-So I uses a modified hardirqs.py to do that, you can collect the latency
-histogram via funclatency too.
+[1] https://www.asus.com/Motherboards/ROG-Strix-X570-I-Gaming/HelpDesk_BIOS/
 
-
-
-Thanks,
-Ming
-
---3V7upXqbjpZ4EhLz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="hardirqs.py"
-
-#!/usr/bin/python
-# @lint-avoid-python-3-compatibility-imports
-#
-# hardirqs  Summarize hard IRQ (interrupt) event time.
-#           For Linux, uses BCC, eBPF.
-#
-# USAGE: hardirqs [-h] [-T] [-N] [-C] [-d] [interval] [outputs]
-#
-# Thanks Amer Ather for help understanding irq behavior.
-#
-# Copyright (c) 2015 Brendan Gregg.
-# Licensed under the Apache License, Version 2.0 (the "License")
-#
-# 19-Oct-2015   Brendan Gregg   Created this.
-
-from __future__ import print_function
-from bcc import BPF
-from time import sleep, strftime
-import argparse
-
-# arguments
-examples = """examples:
-    ./hardirqs            # sum hard irq event time
-    ./hardirqs -d         # show hard irq event time as histograms
-    ./hardirqs 1 10       # print 1 second summaries, 10 times
-    ./hardirqs -NT 1      # 1s summaries, nanoseconds, and timestamps
-"""
-parser = argparse.ArgumentParser(
-    description="Summarize hard irq event time as histograms",
-    formatter_class=argparse.RawDescriptionHelpFormatter,
-    epilog=examples)
-parser.add_argument("-T", "--timestamp", action="store_true",
-    help="include timestamp on output")
-parser.add_argument("-N", "--nanoseconds", action="store_true",
-    help="output in nanoseconds")
-parser.add_argument("-C", "--count", action="store_true",
-    help="show event counts instead of timing")
-parser.add_argument("-d", "--dist", action="store_true",
-    help="show distributions as histograms")
-parser.add_argument("interval", nargs="?", default=99999999,
-    help="output interval, in seconds")
-parser.add_argument("outputs", nargs="?", default=99999999,
-    help="number of outputs")
-parser.add_argument("--ebpf", action="store_true",
-    help=argparse.SUPPRESS)
-args = parser.parse_args()
-countdown = int(args.outputs)
-if args.count and (args.dist or args.nanoseconds):
-    print("The --count option can't be used with time-based options")
-    exit()
-if args.count:
-    factor = 1
-    label = "count"
-elif args.nanoseconds:
-    factor = 1
-    label = "nsecs"
-else:
-    factor = 1000
-    label = "usecs"
-debug = 0
-
-# define BPF program
-bpf_text = """
-#include <uapi/linux/ptrace.h>
-#include <linux/irq.h>
-#include <linux/irqdesc.h>
-#include <linux/interrupt.h>
-
-struct irq_key {
-    u64 id;
-    u64 slot;
-};
-
-BPF_HISTOGRAM(irq_rqs, struct irq_key, 512);
-
-struct irq_info {
-    u32 irq;
-    u32 rqs;
-    u64 start;
-};
-
-//at most 256 CPUs
-//BPF_ARRAY(curr_irq, struct irq_info, 256);
-BPF_HASH(curr_irq, u32, struct irq_info);
-
-struct irq_sum_info {
-    u64 total;
-    u64 cnt;
-    u64 rq_cnt;
-};
-BPF_HASH(irq, u32, struct irq_sum_info);
-
-// time IRQ
-int trace_start(struct pt_regs *ctx, struct irq_desc *desc)
-{
-    struct irq_info __info = {};
-    struct irq_info *info = &__info;
-    u32 id = bpf_get_smp_processor_id();
-
-    info->irq = desc->irq_data.irq;
-    info->start = bpf_ktime_get_ns();
-    info->rqs = 0;
-
-    curr_irq.update(&id, &__info);
-
-    return 0;
-}
-
-int trace_completion(struct pt_regs *ctx)
-{
-    u32 irq_no;
-    struct irq_sum_info *sum;
-    struct irq_sum_info zero = {}; 
-    u64 delta;
-    struct irq_desc *desc = (struct irq_desc *)PT_REGS_PARM1(ctx);
-    u32 id = bpf_get_smp_processor_id();
-    struct irq_info *info = curr_irq.lookup(&id);
-
-    if (!info)
-        return 0;
-
-    irq_no = info->irq;
-    delta = bpf_ktime_get_ns() - info->start;
-
-    if (irq_no != desc->irq_data.irq)
-        bpf_trace_printk("irq not match: %d %d\\n", irq_no, desc->irq_data.irq);
-    
-    sum = irq.lookup_or_init(&irq_no, &zero);
-    if (sum) {
-        sum->total += delta;
-        sum->cnt++;
-        sum->rq_cnt += info->rqs;
-    }
-
-    struct irq_key ikey = {.id = irq_no, .slot = info->rqs};
-    irq_rqs.increment(ikey);
-    curr_irq.delete(&id);
-
-    return 0;
-}
-int trace_rq(struct pt_regs *ctx, struct request *rq)
-{
-    u32 id = bpf_get_smp_processor_id();
-    struct irq_info *info = curr_irq.lookup(&id);
-
-    if (!info)
-        return 0;
-
-    info->rqs++;
-
-    return 0;
-}
-"""
-
-# code substitutions
-if debug or args.ebpf:
-    print(bpf_text)
-    if args.ebpf:
-        exit()
-
-# load BPF program
-b = BPF(text=bpf_text)
-
-# these should really use irq:irq_handler_entry/exit tracepoints:
-b.attach_kprobe(event="handle_irq_event_percpu", fn_name="trace_start")
-b.attach_kretprobe(event="handle_irq_event_percpu", fn_name="trace_completion")
-b.attach_kprobe(event="blk_mq_complete_request", fn_name="trace_rq")
-print("Tracing hard irq event time... Hit Ctrl-C to end.")
-
-# output
-exiting = 0 if args.interval else 1
-dist = b.get_table("irq")
-irq_rqs = b.get_table("irq_rqs")
-
-if args.timestamp:
-    print("start time %-8s\n" % strftime("%H:%M:%S"), end="")
-while (1):
-    try:
-        sleep(int(args.interval))
-    except KeyboardInterrupt:
-        exiting = 1
-
-    print()
-    if args.timestamp:
-        print("end time %-8s\n" % strftime("%H:%M:%S"), end="")
-
-    if args.dist:
-        dist.print_log2_hist(label, "hardirq")
-    else:
-        print("%-10s %11s %11s %11s %11s %11s" % ("HARDIRQ", "TOTAL_TIME", "TOTAL_COUNT",
-            "AVG_TIME", "RQS", "AVG_RQS"))
-        for k, v in sorted(dist.items(), key=lambda dist: dist[1].total):
-            print("%-10d %11d %11d %11d %11d %11d" % (k.value, v.total / factor, v.cnt,
-                v.total / (factor * v.cnt),
-                v.rq_cnt,
-                v.rq_cnt / v.cnt))
-    dist.clear()
-
-    irq_rqs.print_linear_hist("rqs", "irq")
-    irq_rqs.clear()
-
-    countdown -= 1
-    if exiting or countdown == 0:
-        exit()
-
---3V7upXqbjpZ4EhLz--
-
+--
+Best Regards,
+Mike Gavrilov.
