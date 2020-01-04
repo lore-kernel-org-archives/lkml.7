@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 835CFC00523
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3182C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 494422464B
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB33A217F4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:37:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578109046;
-	bh=uiUJqvnoH3kWd91Qf2dU4e8nLonkXwfyfoGpF7cRoO4=;
+	s=default; t=1578109063;
+	bh=OMdL7w3tIP9+unUsVjrMVHBZVmASDJsoN3LWK+rdseI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t182/Yk57AyfEzGtZSJkPHExpwblQOhR3vOxGl1hha1y0vyh9FCISFIqr+IUeBhMw
-	 tYoI98uzc9jegE8QLTyR7DNbUXjs1l8RRLY+c7EPz4mogj3SN5Y+3hpdj9kwQAoDD5
-	 hTO65aaAXqYutzgrjXLhMH7PLQc2SA6+njkgIxt4=
+	b=wPQWea0OXGYuysbSO43Belp5ZXGx6hErGOvqkoyp0VVmPzJmX832NZX9DvL8ZXBwt
+	 B+7r/zcmzJRWETOvXo97ReR9ImMLoAoIdydObfnrtv2q2i8cwuTRMee+xr4iIefdnQ
+	 5N7maQt2i63x1uee768U2QwgPLrzmOwsFWPJnFbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbgADDhZ (ORCPT
+        id S1727955AbgADDhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 22:37:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38550 "EHLO mail.kernel.org"
+        Fri, 3 Jan 2020 22:37:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727805AbgADDhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 22:37:06 -0500
+        id S1727612AbgADDgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 22:36:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB24924655;
-        Sat,  4 Jan 2020 03:37:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D187B2464E;
+        Sat,  4 Jan 2020 03:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578109025;
-        bh=uiUJqvnoH3kWd91Qf2dU4e8nLonkXwfyfoGpF7cRoO4=;
+        s=default; t=1578109007;
+        bh=OMdL7w3tIP9+unUsVjrMVHBZVmASDJsoN3LWK+rdseI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WqIx2ePycV3Y2GLSSMv9O8x8Nc4EJtk3VCJUiY9sV9BW9Itd6GYS35CqGeZ3s8L8i
-         82xoQPY2eQ73sI/dac6XfosjzDszTOkPAKSI/+UZ7K+BtDG+6h7EeFXsZ/23FKktea
-         /91hSokroFnJdSBo/K0uHxZV90xjTdnme2MUZSC0=
+        b=KzX7Vxq856qw3ZV83w7xGWCS5WJgm3hOP0s55KUjKGj3DMaECCiDV1B9EJkdnnTrv
+         pXpxha2DMO8cw89T+nMbDvp3TzZfRsze2CDp40b6xAvF6iQ3OKqGwKSRQ0l8FyCe+w
+         ZQqMyN3xYBb/4gFIbP3ykeiawGYvckrXcPTV7Npg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 2/4] gpio: Fix error message on out-of-range GPIO in lookup table
-Date:   Fri,  3 Jan 2020 22:37:00 -0500
-Message-Id: <20200104033702.11304-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 2/5] gpio: Fix error message on out-of-range GPIO in lookup table
+Date:   Fri,  3 Jan 2020 22:36:41 -0500
+Message-Id: <20200104033644.11121-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200104033702.11304-1-sashal@kernel.org>
-References: <20200104033702.11304-1-sashal@kernel.org>
+In-Reply-To: <20200104033644.11121-1-sashal@kernel.org>
+References: <20200104033644.11121-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -86,10 +86,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 6008a30a17d0..29acee94a1f0 100644
+index b81a27c7f89c..5e2357fda934 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -3041,8 +3041,9 @@ static struct gpio_desc *gpiod_find(struct device *dev, const char *con_id,
+@@ -3749,8 +3749,9 @@ static struct gpio_desc *gpiod_find(struct device *dev, const char *con_id,
  
  		if (chip->ngpio <= p->chip_hwnum) {
  			dev_err(dev,
