@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAF5C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B3BC00523
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B52C621835
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC6221835
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:24:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578097316;
-	bh=5ckSlqosEWoVCoHBKmH8bs80ujWGzwAddQUBE/ZM/+w=;
+	s=default; t=1578097475;
+	bh=EGp+TvV6PwfbirwSPv1b1DDAEdNU47BRsj035pCBmZw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TxSNxGlNMG7Jzb6yULE2Dc51vVGr2ddi0iNCOlW0dnDDnxU1zcRFe2/8Pn92wimNN
-	 g06ZnQOxs3DYtZ0yXLr691CsZUUHCvUv1FasphtuOPziuf+Ipt77Zmb54Cd/EEH1wp
-	 0P2bxv4vcjsweaNt/esBfEPhMRiVuAIfiB33FatE=
+	b=BRAz/Q9mNfft49FZUjZzeAKr6uaL78Nv3ejKqy2hIzjYicU/4cDyVPMN+jfy6kRZH
+	 HxNQkdZ3UHoNiJ6dS9J1rUDVk4/3bXoR8rLNiaRHvKC0X2QqLnpMFYxXEPUEOH1DIJ
+	 /y11i7vJGh73qWrOThYYlWyPlS/NxJHaNc8dwa7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbgADAV4 (ORCPT
+        id S1727158AbgADAYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 19:21:56 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41749 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbgADAVz (ORCPT
+        Fri, 3 Jan 2020 19:24:35 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:33866 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbgADAYe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 19:21:55 -0500
-Received: by mail-io1-f65.google.com with SMTP id c16so39528357ioo.8
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 16:21:55 -0800 (PST)
+        Fri, 3 Jan 2020 19:24:34 -0500
+Received: by mail-il1-f195.google.com with SMTP id s15so38053214iln.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 16:24:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GRrMCIevFS+50QdWWWGaYeUVyp1OjoJAsbXHKCUBzfs=;
-        b=OGnFrei8QNSAKn4FULWbcecbNt0gWyxIdDhXMh8gGSr9TB7F3lmfjLE34sXTLnmC+G
-         XEA5WmUvrvXlEPHZDJVFdVjBQB+IZ7qsrcOMJpOOd9T2BtFU9w6auloRmwm+x2Y8wkvG
-         nGoPsVRKudGpqrxwZ2iEhxxuR+lnlRxIlNe68BlofsdBBCElXymdXLR7mqFOvleo8BAG
-         3Ot1KmKkxK4WEC12eR08DbHDRn/LdJYMQxY1S35tNSf9YADh/28arx/maGnwm1VFkcnv
-         GZ7Vb22H0k6WlTCDI+DCbgnG0whHbREymkIAWpWr5VvUJnnIa04hTZ4cLrchNwkW/RC5
-         NNKw==
-X-Gm-Message-State: APjAAAWktAdsdV4pR/p3Z6+IlItqIV7p34lxDbqxhwoTVA1QObhpdAfk
-        8mbE5xb1hvGQw95G+ayYYu4/d5I=
-X-Google-Smtp-Source: APXvYqzVapt801lNSGKL/7UHXl5UxdziOj9yV5ESXt+KzLlkvu5DH7WhjwfEAYv2gLpcJnoo0T11BA==
-X-Received: by 2002:a5e:c014:: with SMTP id u20mr57686242iol.43.1578097314238;
-        Fri, 03 Jan 2020 16:21:54 -0800 (PST)
+        bh=RHzS3lmjvqBu923Z3jA1u6CAnoZKf0aTLGdAiWMkzuM=;
+        b=sHbxVU0IMCR3Kayy+iHcqplEKSZmGNRmafhsWgDqEVu3wzERx090SM9yNS49vRaUTq
+         XxNSjWFqyYgXUynF8JgHY5h/NyU24l/3sQyaP7aEXAKBEDv4b2mQNxIbr94PnnwNtrlq
+         zyC9wyS+I9vhe8J22GZYBlkE6AEZz5YPWP7vdoJaKE1waB4besEWR4r0Fu5YxLb4YAyU
+         qrbPJa45N3QyzNpltBSm4+zhAaX+568wsuTdcydb4vn0mVYdEqcwDfjE/Uc4iRpYtmQf
+         cKWjU32LpYMZaNTmHzVvAJzg/HGmOLmwRffFsr4J/ucOoLDAnVAXvAz92yQr5kL4tYVG
+         7XvQ==
+X-Gm-Message-State: APjAAAVWy+1PL7K7WqDjVozTTRvWY6aRgOUh+tC4dlMZ4TTRQ2Ezb/OI
+        dr9ynXYGe9+uzRIwulFEWvGOcRQ=
+X-Google-Smtp-Source: APXvYqytabfNrgP2OC6g2XYgCeakE9mmE7gh7mLdAQa9dG9UFSgR1qcATAm4pXCY1Eq2VjdWuDcg+Q==
+X-Received: by 2002:a92:d451:: with SMTP id r17mr77089065ilm.201.1578097473014;
+        Fri, 03 Jan 2020 16:24:33 -0800 (PST)
 Received: from rob-hp-laptop ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id o10sm13764874iob.44.2020.01.03.16.21.52
+        by smtp.gmail.com with ESMTPSA id m18sm19526149ila.54.2020.01.03.16.24.31
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 16:21:53 -0800 (PST)
+        Fri, 03 Jan 2020 16:24:31 -0800 (PST)
 Received: from rob (uid 1000)
         (envelope-from rob@rob-hp-laptop)
-        id 2219a5
+        id 2219b7
         by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Fri, 03 Jan 2020 17:21:52 -0700
-Date:   Fri, 3 Jan 2020 17:21:52 -0700
+        Fri, 03 Jan 2020 17:24:29 -0700
+Date:   Fri, 3 Jan 2020 17:24:29 -0700
 From:   Rob Herring <robh@kernel.org>
 To:     Remi Pommarel <repk@triplefau.lt>
 Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
@@ -69,101 +69,92 @@ Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         Jerome Brunet <jbrunet@baylibre.com>,
         linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] dt-bindings: PCI: meson: Update PCIE bindings
- documentation
-Message-ID: <20200104002152.GA32487@bogus>
+Subject: Re: [PATCH v3 5/5] dt-bindings: Add AXG PCIE PHY bindings
+Message-ID: <20200104002429.GA18966@bogus>
 References: <20191224173942.18160-1-repk@triplefau.lt>
- <20191224173942.18160-5-repk@triplefau.lt>
+ <20191224173942.18160-6-repk@triplefau.lt>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191224173942.18160-5-repk@triplefau.lt>
+In-Reply-To: <20191224173942.18160-6-repk@triplefau.lt>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 06:39:41PM +0100, Remi Pommarel wrote:
-> Now that a new PHYs has been introduced for AXG SoC family, update
-> dt bindings documentation.
-
-This breaks compatibility. If that's okay, say so and why it is.
-
-If only someone had said putting the phy here in the first place was 
-wrong:
-
-https://lore.kernel.org/linux-amlogic/20180829004122.GA25928@bogus/
-
+On Tue, Dec 24, 2019 at 06:39:42PM +0100, Remi Pommarel wrote:
+> Add documentation for PCIE PHYs found in AXG SoCs.
 > 
 > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 > ---
->  .../bindings/pci/amlogic,meson-pcie.txt       | 22 ++++++++-----------
->  1 file changed, 9 insertions(+), 13 deletions(-)
+>  .../bindings/phy/amlogic,meson-axg-pcie.yaml  | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> index 84fdc422792e..b6acbe694ffb 100644
-> --- a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> @@ -18,7 +18,6 @@ Required properties:
->  - reg-names: Must be
->  	- "elbi"	External local bus interface registers
->  	- "cfg"		Meson specific registers
-> -	- "phy"		Meson PCIE PHY registers for AXG SoC Family
->  	- "config"	PCIe configuration space
->  - reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
->  - clocks: Must contain an entry for each entry in clock-names.
-> @@ -26,13 +25,13 @@ Required properties:
->  	- "pclk"       PCIe GEN 100M PLL clock
->  	- "port"       PCIe_x(A or B) RC clock gate
->  	- "general"    PCIe Phy clock
-> -	- "mipi"       PCIe_x(A or B) 100M ref clock gate for AXG SoC Family
->  - resets: phandle to the reset lines.
-> -- reset-names: must contain "phy" "port" and "apb"
-> -       - "phy"         Share PHY reset for AXG SoC Family
-> +- reset-names: must contain "port" and "apb"
->         - "port"        Port A or B reset
->         - "apb"         Share APB reset
-> -- phys: should contain a phandle to the shared phy for G12A SoC Family
-> +- phys: should contain a phandle to the PCIE phy
-> +- phy-names: must contain "pcie"
+> diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
+> new file mode 100644
+> index 000000000000..c622a1b38ffc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 BayLibre, SAS
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/amlogic,meson-axg-pcie.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
->  - device_type:
->  	should be "pci". As specified in designware-pcie.txt
->  
-> @@ -43,9 +42,8 @@ Example configuration:
->  			compatible = "amlogic,axg-pcie", "snps,dw-pcie";
->  			reg = <0x0 0xf9800000 0x0 0x400000
->  					0x0 0xff646000 0x0 0x2000
-> -					0x0 0xff644000 0x0 0x2000
->  					0x0 0xf9f00000 0x0 0x100000>;
-> -			reg-names = "elbi", "cfg", "phy", "config";
-> +			reg-names = "elbi", "cfg", "config";
->  			reset-gpios = <&gpio GPIOX_19 GPIO_ACTIVE_HIGH>;
->  			interrupts = <GIC_SPI 177 IRQ_TYPE_EDGE_RISING>;
->  			#interrupt-cells = <1>;
-> @@ -58,17 +56,15 @@ Example configuration:
->  			ranges = <0x82000000 0 0 0x0 0xf9c00000 0 0x00300000>;
->  
->  			clocks = <&clkc CLKID_USB
-> -					&clkc CLKID_MIPI_ENABLE
->  					&clkc CLKID_PCIE_A
->  					&clkc CLKID_PCIE_CML_EN0>;
->  			clock-names = "general",
-> -					"mipi",
->  					"pclk",
->  					"port";
-> -			resets = <&reset RESET_PCIE_PHY>,
-> -				<&reset RESET_PCIE_A>,
-> +			resets = <&reset RESET_PCIE_A>,
->  				<&reset RESET_PCIE_APB>;
-> -			reset-names = "phy",
-> -					"port",
-> +			reset-names = "port",
->  					"apb";
-> +			phys = <&pcie_phy>;
-> +			phy-names = "pcie";
->  	};
+> +title: Amlogic AXG PCIE PHY
+> +
+> +maintainers:
+> +  - Remi Pommarel <repk@triplefau.lt>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - amlogic,axg-pcie-phy
+
+Do you expect another compatible? If not, use 'const' instead.
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  aml,hhi-gpr:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  reset-names:
+> +    items:
+> +      - const: phy
+
+You don't need *-names when there's only one entry.
+
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - aml,hhi-gpr
+> +  - resets
+> +  - reset-names
+> +  - "#phy-cells"
+> +
+> +examples:
+> +  - |
+> +    pcie_phy: pcie-phy@ff644000 {
+> +          compatible = "amlogic,axg-pcie-phy";
+> +          reg = <0x0 0xff644000 0x0 0x2000>;
+> +          aml,hhi-gpr = <&sysctrl>;
+> +          resets = <&reset RESET_PCIE_PHY>;
+> +          reset-names = "phy";
+> +          #phy-cells = <0>;
+> +    };
 > -- 
 > 2.24.0
 > 
