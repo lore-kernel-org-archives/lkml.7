@@ -2,142 +2,146 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B40CC32767
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 06:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD29C32767
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 06:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 209A724649
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 06:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E57324649
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 06:45:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbgADGmB convert rfc822-to-8bit (ORCPT
+        id S1726081AbgADGpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 01:42:01 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:50458 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbgADGmA (ORCPT
+        Sat, 4 Jan 2020 01:45:06 -0500
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:39729 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725790AbgADGpF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 01:42:00 -0500
-Received: from mail-pf1-f198.google.com ([209.85.210.198])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1ind8J-000887-9I
-        for linux-kernel@vger.kernel.org; Sat, 04 Jan 2020 06:41:59 +0000
-Received: by mail-pf1-f198.google.com with SMTP id v14so4164985pfm.21
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 22:41:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=aw6Ol3KnPt3nI5GLfalvRNJwitFrTF7FtxRZ9wnMWcU=;
-        b=WxUqdu8XQTLZfmIH8D4E3w4wVZrzSvyUSg+v6NPHfTezw3HbWjkjcNmETfGOPdFXlL
-         Pj4y4kMsZZNV0BNWtnaZUcT8b0g98XULqlW3cyvp9sBhqnsIOtviYtnj003xQ4GvFp/m
-         vZaHo9WZeh0yYX8O9WeOj6o0FdFOZCEgCAHc0UUSTFZqIOLnW6tRnUigeF9qa4NBbdBh
-         U+btm9q+oKihR35qVaVysDwQM5eOhhLWIFxFpC02hzVgbRC0L0Rjl7NRIi9+Sg2+9mPU
-         ThdGhYoxsJyBV2rqQNN31eW7bgSZZ3fe4oHSr85qN8n9F/vK366YxbsaVNr/Bp80ZmR7
-         oYGw==
-X-Gm-Message-State: APjAAAXU5Ld29GejLwCWtc0Hj/k+OlmMp9STKmh5xtAZgcDiTDYc+cYz
-        f46NsXlNHl/CUUb+ca6+JHGmDjvtMWX7pq8P594XWO9VGeJ7MFqSUlFscRaysMNaCm49/Ii1vLR
-        HyH6IOz0RJ2CrjlIoK3o3cJMWlQh40/+b2gnFgGX/Xw==
-X-Received: by 2002:a17:90a:65ca:: with SMTP id i10mr32235834pjs.28.1578120117866;
-        Fri, 03 Jan 2020 22:41:57 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzgnspeYazvlTTZBJTMP0vq6Rip9jTd7u5/5DrFZE2XokVk+ln/TCA8f3iltl1i/IGgIVxVJQ==
-X-Received: by 2002:a17:90a:65ca:: with SMTP id i10mr32235818pjs.28.1578120117561;
-        Fri, 03 Jan 2020 22:41:57 -0800 (PST)
-Received: from 2001-b011-380f-35a3-b9ae-9bbf-bd71-ab73.dynamic-ip6.hinet.net (2001-b011-380f-35a3-b9ae-9bbf-bd71-ab73.dynamic-ip6.hinet.net. [2001:b011:380f:35a3:b9ae:9bbf:bd71:ab73])
-        by smtp.gmail.com with ESMTPSA id q9sm66601400pgc.5.2020.01.03.22.41.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 Jan 2020 22:41:57 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: [PATCH 3/3] USB: Disable LPM on WD19's Realtek Hub during setting
- its ports to U0
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <Pine.LNX.4.44L0.2001031137290.1560-100000@iolanthe.rowland.org>
-Date:   Sat, 4 Jan 2020 14:41:54 +0800
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        gregkh@linuxfoundation.org, acelan.kao@canonical.com,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <97F72C66-8D9B-4316-B096-1993FD18CF56@canonical.com>
-References: <Pine.LNX.4.44L0.2001031137290.1560-100000@iolanthe.rowland.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+        Sat, 4 Jan 2020 01:45:05 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0Tmn3PsD_1578120290;
+Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0Tmn3PsD_1578120290)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 04 Jan 2020 14:44:56 +0800
+From:   Wen Yang <wenyang@linux.alibaba.com>
+To:     Julia Lawall <Julia.Lawall@lip6.fr>
+Cc:     Wen Yang <wenyang@linux.alibaba.com>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Matthias Maennich <maennich@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thomas Gleixner <tglx@linutronix.de>, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] coccinelle: semantic patch to check for inappropriate do_div() calls
+Date:   Sat,  4 Jan 2020 14:44:48 +0800
+Message-Id: <20200104064448.24314-1-wenyang@linux.alibaba.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+do_div() does a 64-by-32 division.
+When the divisor is unsigned long, u64, or s64,
+do_div() truncates it to 32 bits, this means it
+can test non-zero and be truncated to zero for division.
+This semantic patch is inspired by Mateusz Guzik's patch:
+commit b0ab99e7736a ("sched: Fix possible divide by zero in avg_atom() calculation")
 
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Cc: Julia Lawall <Julia.Lawall@lip6.fr>
+Cc: Gilles Muller <Gilles.Muller@lip6.fr>
+Cc: Nicolas Palix <nicolas.palix@imag.fr>
+Cc: Michal Marek <michal.lkml@markovi.net>
+Cc: Matthias Maennich <maennich@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: cocci@systeme.lip6.fr
+Cc: linux-kernel@vger.kernel.org
+---
+ scripts/coccinelle/misc/do_div.cocci | 66 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 66 insertions(+)
+ create mode 100644 scripts/coccinelle/misc/do_div.cocci
 
-> On Jan 4, 2020, at 00:54, Alan Stern <stern@rowland.harvard.edu> wrote:
-> 
-> On Sat, 4 Jan 2020, Kai-Heng Feng wrote:
-> 
->> Hi Alan,
->> 
->>> On Jan 3, 2020, at 23:21, Alan Stern <stern@rowland.harvard.edu> wrote:
->>> 
->>> On Fri, 3 Jan 2020, Kai-Heng Feng wrote:
->>> 
->>>> Realtek Hub (0bda:0x0487) used in Dell Dock WD19 sometimes drops off the
->>>> bus when bringing underlying ports from U3 to U0.
->>>> 
->>>> After some expirements and guessworks, the hub itself needs to be U0
->>>> during setting its port's link state back to U0.
->>>> 
->>>> So add a new quirk to let the hub disables LPM on setting U0 for its
->>>> downstream facing ports.
->>>> 
->>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>>> ---
->>>> drivers/usb/core/hub.c     | 12 ++++++++++--
->>>> drivers/usb/core/quirks.c  |  7 +++++++
->>>> include/linux/usb/quirks.h |  3 +++
->>>> 3 files changed, 20 insertions(+), 2 deletions(-)
->>>> 
->>>> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
->>>> index f229ad6952c0..35a035781c5a 100644
->>>> --- a/drivers/usb/core/hub.c
->>>> +++ b/drivers/usb/core/hub.c
->>>> @@ -3533,9 +3533,17 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
->>>> 	}
->>>> 
->>>> 	/* see 7.1.7.7; affects power usage, but not budgeting */
->>>> -	if (hub_is_superspeed(hub->hdev))
->>>> +	if (hub_is_superspeed(hub->hdev)) {
->>>> +		if (hub->hdev->quirks & USB_QUIRK_DISABLE_LPM_ON_U0) {
->>>> +			usb_lock_device(hub->hdev);
->>>> +			usb_unlocked_disable_lpm(hub->hdev);
->>>> +		}
->>>> 		status = hub_set_port_link_state(hub, port1, USB_SS_PORT_LS_U0);
->>>> -	else
->>>> +		if (hub->hdev->quirks & USB_QUIRK_DISABLE_LPM_ON_U0) {
->>>> +			usb_unlocked_enable_lpm(hub->hdev);
->>>> +			usb_unlock_device(hub->hdev);
->>> 
->>> The locking here seems questionable.  Doesn't this code sometimes get
->>> called with the hub already locked?  Or with the child device locked
->>> (in which case locking the hub would violate the normal locking order:  
->>> parent first, child second)?
-> 
-> I did a little checking.  In many cases the child device _will_ be 
-> locked at this point.
-> 
->> Maybe introduce a new lock? The lock however will only be used by this specific hub.
->> But I still want the LPM can be enabled for this hub.
-> 
-> Do you really need to lock the hub at all?  What would the lock protect 
-> against?
-
-There can be multiple usb_port_resume() run at the same time for different ports, so this is to prevent LPM enable/disable race.
-
-Kai-Heng
-
-> 
-> Alan Stern
+diff --git a/scripts/coccinelle/misc/do_div.cocci b/scripts/coccinelle/misc/do_div.cocci
+new file mode 100644
+index 0000000..f1b72d1
+--- /dev/null
++++ b/scripts/coccinelle/misc/do_div.cocci
+@@ -0,0 +1,66 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/// do_div() does a 64-by-32 division.
++/// When the divisor is unsigned long, u64, or s64,
++/// do_div() truncates it to 32 bits, this means it
++/// can test non-zero and be truncated to zero for division.
++///
++//# This makes an effort to find those inappropriate do_div () calls.
++//
++// Confidence: Moderate
++// Copyright: (C) 2020 Wen Yang, Alibaba.
++// Comments:
++// Options: --no-includes --include-headers
++
++virtual context
++virtual org
++virtual report
++
++@depends on context@
++expression f;
++long l;
++unsigned long ul;
++u64 ul64;
++s64 sl64;
++
++@@
++(
++* do_div(f, l);
++|
++* do_div(f, ul);
++|
++* do_div(f, ul64);
++|
++* do_div(f, sl64);
++)
++
++@r depends on (org || report)@
++expression f;
++long l;
++unsigned long ul;
++position p;
++u64 ul64;
++s64 sl64;
++@@
++(
++do_div@p(f, l);
++|
++do_div@p(f, ul);
++|
++do_div@p(f, ul64);
++|
++do_div@p(f, sl64);
++)
++
++@script:python depends on org@
++p << r.p;
++@@
++
++msg="WARNING: WARNING: do_div() does a 64-by-32 division, which may truncation the divisor to 32-bit"
++coccilib.org.print_todo(p[0], msg)
++
++@script:python depends on report@
++p << r.p;
++@@
++
++msg="WARNING: WARNING: do_div() does a 64-by-32 division, which may truncation the divisor to 32-bit"
++coccilib.report.print_report(p[0], msg)
+-- 
+1.8.3.1
 
