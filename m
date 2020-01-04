@@ -2,155 +2,110 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFDDC00523
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF8DC00523
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E90DC21D7D
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7FDA217F4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578109070;
-	bh=u1ILnj81O0i4X/I1PrQJ8sd5hsT3/4944fdPuTRkgiw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IvDwVtvFxv22aMwat+KXyvNoS+S/hoRvhGVypMCs5MVs6XXT/yZ/fSjmM4wdkBnar
-	 NnzVbju+gV0jp17GyJgpr+qmv3r8uEkS2EfgvYLd1FVD1S7KJCCA99o3pBiaBKgIAp
-	 NB4t7w4cbh+hAo2k7YPPk6B3aXC1vk14qxfItu44=
+	s=default; t=1578109074;
+	bh=2slIPSeN0K9COdPi9pHFU+IzZRcSjCu1x7KhCyX6gMQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WR1urPbowtetPvkoZE6ltoGIcBKDiKCArfOZwCpKKQP4PriIw/4xr2DQIkgYcTFWb
+	 4FL3+qv11xyveLLMW/CPVbpUQzGhQvos3hwipjpOmDl5Mozna/cWlGEhwlvH+HoNgJ
+	 VWqvTo3CJk2cQRoTybrn8p1hXW+Hoi9LSnNIYZ8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbgADDg2 (ORCPT
+        id S1727595AbgADDhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 22:36:28 -0500
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:32061 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727274AbgADDg0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 22:36:26 -0500
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 0043aDh2023619;
-        Sat, 4 Jan 2020 12:36:14 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 0043aDh2023619
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578108974;
-        bh=E7v6OsSDfr6V815FU2MY7OtZnfPcFmRdIvSTyf6A5q8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=M2Yv2C4BCcLEiA+O/utwZa5WrRwTqIxLFxjRiKwkX7G+1GJVIp7G/T0t09moraU0O
-         8dBsLLVKwOLGoHuSfnJ7M6wO3+sbLlYb5k5qeEW0JfaZgR6KQWoiYcVkeqsCKt5dMF
-         D9KQGCWxmzXjHlDfIJPYpaYJSkg98zWhLFOzPKdYksMblnl/ZvwCyORqWR+eBzPZmO
-         wuN/jQIiKPAiiTjmRlDFiDfHBra9ftCky5hhIcHMUkRUvG4Z+VAK4vJzjflpfQUBpA
-         TiBaTxZLuJR8VaF/sVuMcGmk+QjmRhyRbO4ES7DFLpZF453IYxRCduPxe3RaM8Lqtr
-         /Q+p0xXDSDOqg==
-X-Nifty-SrcIP: [209.85.221.170]
-Received: by mail-vk1-f170.google.com with SMTP id c129so11222716vkh.7;
-        Fri, 03 Jan 2020 19:36:14 -0800 (PST)
-X-Gm-Message-State: APjAAAVUFwwOtfXLt7Fp93ZV5hWE/Qd3gSq8DbQbo+DFMbweK5KLamyu
-        5OVgDt1wSEH9BzTSeVgSMzj3j3l989yFTaT+mm8=
-X-Google-Smtp-Source: APXvYqwFrX0S6OIqke8PQUsgzrJ85FumVCcPzymZOA5sJCiSerQ6OnjY8DABR6LmjjZSqaQZJWGUxu05TfzGAAs3kTw=
-X-Received: by 2002:a1f:6344:: with SMTP id x65mr52196094vkb.26.1578108973033;
- Fri, 03 Jan 2020 19:36:13 -0800 (PST)
+        Fri, 3 Jan 2020 22:37:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727428AbgADDg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 22:36:27 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A48724654;
+        Sat,  4 Jan 2020 03:36:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578108987;
+        bh=2slIPSeN0K9COdPi9pHFU+IzZRcSjCu1x7KhCyX6gMQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1pBSI/1slPvSQpoMUlCS/zSmbrMysXbaylwHluKi6asggKFNoDJJGaZCI2tOmSTtb
+         u2zehEsUmIO9ghB9JWiUjxlVXidqo1aUnwhTYyq3pQzrSYAu8nBpdFeH1GejhdnnZn
+         QIxwczKX9nklA6IZsFwqVYG+uKviwsEPiei08Eec=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Israel Rukshin <israelr@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 05/10] scsi: target/iblock: Fix protection error with blocks greater than 512B
+Date:   Fri,  3 Jan 2020 22:36:14 -0500
+Message-Id: <20200104033620.10977-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200104033620.10977-1-sashal@kernel.org>
+References: <20200104033620.10977-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200103175915.26663-1-masahiroy@kernel.org> <20200103175915.26663-12-masahiroy@kernel.org>
- <20200103195205.GC21515@ravnborg.org>
-In-Reply-To: <20200103195205.GC21515@ravnborg.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 4 Jan 2020 12:35:37 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQXx0RGutdOe4JFLTbjm7=cx9aEKQ-823-irED4SyCmMA@mail.gmail.com>
-Message-ID: <CAK7LNAQXx0RGutdOe4JFLTbjm7=cx9aEKQ-823-irED4SyCmMA@mail.gmail.com>
-Subject: Re: [PATCH 11/12] initramfs: refactor the initramfs build rules
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Thelen <gthelen@google.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
+From: Israel Rukshin <israelr@mellanox.com>
 
-On Sat, Jan 4, 2020 at 4:52 AM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Mashahiro.
->
-> I just browsed this fine patchset and noticed...
-> >
-> > -#####
-> > -# Generate the initramfs cpio archive
-> > +ramfs-input := $(shell echo $(CONFIG_INITRAMFS_SOURCE))
-> > +cpio-data :=
-> > +
-> > +ifeq ($(words $(ramfs-input)),0)
-> > +
-> > +# If CONFIG_INITRAMFS_SOURCE is empty, generate a small initramfs with the
-> > +# default contents.
-> > +ramfs-input := $(srctree)/$(src)/default_cpio_list
-> > +
-> > +else ifeq ($(words $(ramfs-input)),1)
-> > +# If CONFIG_INITRAMFS_SOURCE specifies a single file, and it is suffixed with
-> > +# .cpio or .cpio.*, use it directly as an initramfs.
-> > +ifneq ($(filter %.cpio,$(ramfs-input)),)
-> > +cpio-data := $(ramfs-input)
-> > +endif
->
-> This part will now work if the file is named foo.cpio.bar.
-> $(findstring .cpio, should be used and not $(filter %.cpio
-> At least if the comment describes the intended behaviour.
+[ Upstream commit e4dc9a4c31fe10d1751c542702afc85be8a5c56a ]
 
+The sector size of the block layer is 512 bytes, but integrity interval
+size might be different (in case of 4K block size of the media). At the
+initiator side the virtual start sector is the one that was originally
+submitted by the block layer (512 bytes) for the Reftag usage. The
+initiator converts the Reftag to integrity interval units and sends it to
+the target. So the target virtual start sector should be calculated at
+integrity interval units. prepare_fn() and complete_fn() don't remap
+correctly the Reftag when using incorrect units of the virtual start
+sector, which leads to the following protection error at the device:
 
-The 'foo.cpio.bar' is taken care of
-by ifeq ($(words $(subst .cpio.,$(space),$(ramfs-input))),2)
+"blk_update_request: protection error, dev sdb, sector 2048 op 0x0:(READ)
+flags 0x10000 phys_seg 1 prio class 0"
 
-I admit the comment was confusing.
+To fix that, set the seed in integrity interval units.
 
+Link: https://lore.kernel.org/r/1576078562-15240-1-git-send-email-israelr@mellanox.com
+Signed-off-by: Israel Rukshin <israelr@mellanox.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/target/target_core_iblock.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-I will clarify the comments as follows:
+diff --git a/drivers/target/target_core_iblock.c b/drivers/target/target_core_iblock.c
+index 6949ea8bc387..51ffd5c002de 100644
+--- a/drivers/target/target_core_iblock.c
++++ b/drivers/target/target_core_iblock.c
+@@ -646,7 +646,9 @@ iblock_alloc_bip(struct se_cmd *cmd, struct bio *bio,
+ 	}
+ 
+ 	bip->bip_iter.bi_size = bio_integrity_bytes(bi, bio_sectors(bio));
+-	bip_set_seed(bip, bio->bi_iter.bi_sector);
++	/* virtual start sector must be in integrity interval units */
++	bip_set_seed(bip, bio->bi_iter.bi_sector >>
++				  (bi->interval_exp - SECTOR_SHIFT));
+ 
+ 	pr_debug("IBLOCK BIP Size: %u Sector: %llu\n", bip->bip_iter.bi_size,
+ 		 (unsigned long long)bip->bip_iter.bi_sector);
+-- 
+2.20.1
 
-
-
-# If CONFIG_INITRAMFS_SOURCE specifies a single file, and it is suffixed with
-# .cpio, use it directly as an initramfs.
-ifneq ($(filter %.cpio,$(ramfs-input)),)
-cpio-data := $(ramfs-input)
-endif
-
-# If CONFIG_INITRAMFS_SOURCE specifies a single file, and it is suffixed with
-# .cpio.*, use it directly as an initramfs, and avoid double compression.
-ifeq ($(words $(subst .cpio.,$(space),$(ramfs-input))),2)
-cpio-data := $(ramfs-input)
-compress-y := shipped
-endif
-
-
-
-
-
-
-> > +
-> > +ifeq ($(words $(subst .cpio.,$(space),$(ramfs-input))),2)
-> > +cpio-data := $(ramfs-input)
-> > +# If the specified archive is suffixed with .cpio.* (i.e. already compressed),
-> > +# we do not double-compress it.
-> > +compress-y := shipped
-> > +endif
-> > +
-> > +endif
->
->
->         Sam
-
-
-
-
-
-
-
-
-
-
---
-Best Regards
-Masahiro Yamada
