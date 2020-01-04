@@ -2,114 +2,84 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8572EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 10:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9575C32770
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 10:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A99824649
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 10:51:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="fagngUrp"
+	by mail.kernel.org (Postfix) with ESMTP id 812F424653
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 10:54:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725940AbgADKt2 (ORCPT
+        id S1726004AbgADKyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 05:49:28 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:37271 "EHLO rere.qmqm.pl"
+        Sat, 4 Jan 2020 05:54:32 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:40158 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbgADKt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 05:49:27 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47qdnK6m31zGW;
-        Sat,  4 Jan 2020 11:49:25 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1578134966; bh=f3Z6UsbjoOT1VhMg8QYIOZi2SQ2MnybBnCkCBDFBO68=;
-        h=Date:From:Subject:To:Cc:From;
-        b=fagngUrp6rzdFL/6im0RWAKjsT8EOE8ug3sl/Y65v4jGnG/7/5JNcnlwkjkPzDIst
-         /99HX0DcxkG842ympC7NHmF5jjcf3IV7WJpiWchz2hddVcGM4a3EJ6izW1Df/HCNWf
-         y/IYxGg3F2YSsqoThKkuKuB7yhdHDJPynybSr8gsMVCRHGOnD9UHzxXs2wfq2h6w1h
-         lXLzBHpWZ2XoxarHfkJQJDhm6VvKraIPqXUxEGV+Q9PqRsMvZRjDAZ5+w2jWJdpNCB
-         KAEn0FJpnqKk8xAnDw+FvyzNKigTtA0TU8UI3nZmLffatTERIzB4m/i5FOEIFWpH23
-         5+wPhVsbXfNuQ==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Sat, 04 Jan 2020 11:49:25 +0100
-Message-Id: <85e4141348db00ecf1f2bc5c2ff6ba3de75e8ff4.1578134920.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2] regmap-i2c: constify regmap_bus structures
+        id S1725796AbgADKyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jan 2020 05:54:32 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 6A658FB0C;
+        Sat,  4 Jan 2020 11:54:29 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 0mhCAGJE0po2; Sat,  4 Jan 2020 11:54:27 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 1171740157; Sat,  4 Jan 2020 11:54:26 +0100 (CET)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/9] dt: bindings: lm3692x: Add ti,ovp-microvolt property
+Date:   Sat,  4 Jan 2020 11:54:17 +0100
+Message-Id: <e6d0ef33f264c4ae679e586a1533fc7a97975db7.1578134779.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1578134779.git.agx@sigxcpu.org>
+References: <cover.1578134779.git.agx@sigxcpu.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To:     Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-regmap_bus structures are not changed anywhere. Mark them const.
+This allows to set the overvoltage protection to 17V, 21V, 25V or 29V.
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
 ---
- v2: add commit message content
----
- drivers/base/regmap/regmap-i2c.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/leds/leds-lm3692x.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/base/regmap/regmap-i2c.c b/drivers/base/regmap/regmap-i2c.c
-index ac9b31c57967..008f8da69d97 100644
---- a/drivers/base/regmap/regmap-i2c.c
-+++ b/drivers/base/regmap/regmap-i2c.c
-@@ -43,7 +43,7 @@ static int regmap_smbus_byte_reg_write(void *context, unsigned int reg,
- 	return i2c_smbus_write_byte_data(i2c, reg, val);
- }
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+index 4c2d923f8758..9b334695c410 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
++++ b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+@@ -18,6 +18,10 @@ Required properties:
+ Optional properties:
+ 	- enable-gpios : gpio pin to enable/disable the device.
+ 	- vled-supply : LED supply
++	- ti,ovp-microvolt: Overvoltage protection in
++	    micro-volt, can be 17000000, 21000000, 25000000 or
++	    29000000. If ti,ovp-microvolt is not specified it
++	    defaults to 29000000.
  
--static struct regmap_bus regmap_smbus_byte = {
-+static const struct regmap_bus regmap_smbus_byte = {
- 	.reg_write = regmap_smbus_byte_reg_write,
- 	.reg_read = regmap_smbus_byte_reg_read,
- };
-@@ -79,7 +79,7 @@ static int regmap_smbus_word_reg_write(void *context, unsigned int reg,
- 	return i2c_smbus_write_word_data(i2c, reg, val);
- }
+ Required child properties:
+ 	- reg : 0 - Will enable all LED sync paths
+@@ -44,6 +48,7 @@ led-controller@36 {
  
--static struct regmap_bus regmap_smbus_word = {
-+static const struct regmap_bus regmap_smbus_word = {
- 	.reg_write = regmap_smbus_word_reg_write,
- 	.reg_read = regmap_smbus_word_reg_read,
- };
-@@ -115,7 +115,7 @@ static int regmap_smbus_word_write_swapped(void *context, unsigned int reg,
- 	return i2c_smbus_write_word_swapped(i2c, reg, val);
- }
+ 	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+ 	vled-supply = <&vbatt>;
++	ti,ovp-microvolt = <29000000>;
  
--static struct regmap_bus regmap_smbus_word_swapped = {
-+static const struct regmap_bus regmap_smbus_word_swapped = {
- 	.reg_write = regmap_smbus_word_write_swapped,
- 	.reg_read = regmap_smbus_word_read_swapped,
- };
-@@ -197,7 +197,7 @@ static int regmap_i2c_read(void *context,
- 		return -EIO;
- }
- 
--static struct regmap_bus regmap_i2c = {
-+static const struct regmap_bus regmap_i2c = {
- 	.write = regmap_i2c_write,
- 	.gather_write = regmap_i2c_gather_write,
- 	.read = regmap_i2c_read,
-@@ -239,7 +239,7 @@ static int regmap_i2c_smbus_i2c_read(void *context, const void *reg,
- 		return -EIO;
- }
- 
--static struct regmap_bus regmap_i2c_smbus_i2c_block = {
-+static const struct regmap_bus regmap_i2c_smbus_i2c_block = {
- 	.write = regmap_i2c_smbus_i2c_write,
- 	.read = regmap_i2c_smbus_i2c_read,
- 	.max_raw_read = I2C_SMBUS_BLOCK_MAX,
+ 	led@0 {
+ 		reg = <0>;
 -- 
-2.20.1
+2.23.0
 
