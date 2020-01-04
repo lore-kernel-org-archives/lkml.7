@@ -4,63 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950CDC32770
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 09:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA48C32767
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 09:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B5B7217F4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 09:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21EF6217F4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 09:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578129655;
-	bh=TQ19fM74/phZQOTJgGbOJ80IHU9IfGxhTIOfjf5P+II=;
+	s=default; t=1578129684;
+	bh=t+7Mb394bXu9Sg7IaTe1iTOa0gvYL56M7fVIrBjE0Fc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hIOg+FZ6rfHujSRHku6NMq1RQS4MM10KYk/c01usRUHb/dhvMbcGNts+CV4UTSa1F
-	 WxWoyM9CX34zOMmGVxVFom5cik+fc079dTkuOwKHyPxG/M8c2jma63CYZbFmsDqWg9
-	 Q9G2TgnJ2B/MevUKXwF61mNRjyq8/bW8yx087Y7w=
+	b=aTX0oBdcevH5iPe82xGge7pXYqmxZsWlK96ySXv7ngcLYF28lZMjqTo4YGBW0BGCA
+	 7ke9p6BKNp2NtFqRlp18yXVeC9Fz6lyaQGujc9hRH9SGuo61HEl95P/jWLL77mou4C
+	 +OwOMpyh33nKFPXeUhy9QIZFNr35ed0Laqf7LyLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbgADJUy (ORCPT
+        id S1726487AbgADJVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 04:20:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55950 "EHLO mail.kernel.org"
+        Sat, 4 Jan 2020 04:21:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726094AbgADJUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 04:20:53 -0500
+        id S1726094AbgADJVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jan 2020 04:21:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B2F8215A4;
-        Sat,  4 Jan 2020 09:20:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6464F215A4;
+        Sat,  4 Jan 2020 09:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578129653;
-        bh=TQ19fM74/phZQOTJgGbOJ80IHU9IfGxhTIOfjf5P+II=;
+        s=default; t=1578129681;
+        bh=t+7Mb394bXu9Sg7IaTe1iTOa0gvYL56M7fVIrBjE0Fc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ncAvgUjbeHSuf7VlwktuVK+AeQliPYmgiURPRaDAHIoQ1Y2x5RfesGq68Vg3ay16t
-         KXjvoEH1VMknpU/7j3HDDQ0Yyv7pb34XPge6bg+nDLSzsuLR6NMRqE5JTfg/XT53N3
-         oXzaJg3v1grngFpWA+cGSH2kABzMAM0seFyB3FVk=
-Date:   Sat, 4 Jan 2020 10:20:50 +0100
+        b=BCiECLNxPucz/5OIg0AKlczTKyhILC4vusdpKUDv4xhp9PN/HjmbPQaX7+xyWm5fP
+         REN4q0aOltOkYm2dJbFcV3rVCQuz3yQUvaYoBVWDS5BmXeScgDRU43BottDhkfuRzi
+         ybW+hxT9yS8azwTosS5Ix8mGig2ycQ2tp5MAMZGw=
+Date:   Sat, 4 Jan 2020 10:21:19 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     shuah <shuah@kernel.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
 Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
         patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
 Subject: Re: [PATCH 5.4 000/191] 5.4.8-stable review
-Message-ID: <20200104092050.GB1249964@kroah.com>
+Message-ID: <20200104092119.GC1249964@kroah.com>
 References: <20200102215829.911231638@linuxfoundation.org>
- <59e0fada-0277-d5db-f550-f1ff9db01212@kernel.org>
+ <f709c06a-ce46-a235-e0d1-5b7331c80c66@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <59e0fada-0277-d5db-f550-f1ff9db01212@kernel.org>
+In-Reply-To: <f709c06a-ce46-a235-e0d1-5b7331c80c66@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 02:48:58PM -0700, shuah wrote:
-> On 1/2/20 3:04 PM, Greg Kroah-Hartman wrote:
+On Fri, Jan 03, 2020 at 05:51:33PM +0000, Jon Hunter wrote:
+> 
+> On 02/01/2020 22:04, Greg Kroah-Hartman wrote:
 > > This is the start of the stable review cycle for the 5.4.8 release.
 > > There are 191 patches in this series, all will be posted as a response
 > > to this one.  If anyone has any issues with these being applied, please
@@ -79,8 +81,20 @@ On Fri, Jan 03, 2020 at 02:48:58PM -0700, shuah wrote:
 > > 
 > > greg k-h
 > > 
+> > -------------
 > 
-> Compiled and booted on my test system. No dmesg regressions.
+> All tests are passing for Tegra ...
+> 
+> Test results for stable-v5.4:
+>     13 builds:	13 pass, 0 fail
+>     22 boots:	22 pass, 0 fail
+>     38 tests:	38 pass, 0 fail
+> 
+> Linux version:	5.4.8-rc1-gb06e60adec89
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra30-cardhu-a04
+> 
 
 Thanks for testing all of these and letting me know.
 
