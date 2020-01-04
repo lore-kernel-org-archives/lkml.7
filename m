@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B901BC32767
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9EBC32767
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 860F224650
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0CB124676
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578109021;
-	bh=RtDViwFbpD+zIa7NXhWNX8VfgaADNVrAScFsojEl+4I=;
+	s=default; t=1578109024;
+	bh=SZxaZFJ7NM5F+JBcsLK0Ldt06QMXpR+LSdlaT2v1Gc4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xKeOvhzymtMTjTnuNbaEUbu3UkEVtXuVUF/rcUL3tpzPXtADyHNH42LsPfn79HTkc
-	 vB1QZpsD7yFTvYECnvLdDM4m7CMzzPK9kRL25sy8MHa3Qy4qlFmW9XAYMxLQ3eZgqj
-	 lxgcgSEGAxLniGyvBvfJGlgFsAwqEXEl1ku/VPdk=
+	b=ETv39O/PKLRHnDCFuvd2HoZm6YrvJRVW4ILSesIGue/Qx8UDaS7S7pSEC47JWTksY
+	 Zlivkqrmp60c7KiLa4vZX3z+rAMS0Ez3CX8gUPCpOikVG15RwO7spaEBiRhLkFbAO/
+	 bUAeWVyxI8d9W0k2DWfmYzGcXB7l+8r6Q8fjE8P4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbgADDhA (ORCPT
+        id S1727783AbgADDhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 22:37:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38168 "EHLO mail.kernel.org"
+        Fri, 3 Jan 2020 22:37:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727728AbgADDg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 22:36:57 -0500
+        id S1727711AbgADDg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 22:36:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27F762465A;
-        Sat,  4 Jan 2020 03:36:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4074124670;
+        Sat,  4 Jan 2020 03:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578109016;
-        bh=RtDViwFbpD+zIa7NXhWNX8VfgaADNVrAScFsojEl+4I=;
+        s=default; t=1578109018;
+        bh=SZxaZFJ7NM5F+JBcsLK0Ldt06QMXpR+LSdlaT2v1Gc4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pbk3v+oxE6eQyIb8NwV4dOzrnSneyjuE9vIGuH3oMKnTguljwY0etnPOtsrf2k25g
-         t+YZ79zig6IRWZZM2UON7tw+e9OUzVl3GVjneEnC3jfA5HZ0NBdnzLRq75MwLgHbFL
-         n8w86TVB8LDAjwf/LZOEQtdWmd0nfJIQ+Iw08ekM=
+        b=RASIaYLKktTcnKfcIycY59CT3QSIestU4YshwLXixFwwDn9L5+d77huTmqXbVtOIl
+         Nr8k2xdp0wI9prdjY59aO0gfoEYqFqPrRX8LgNMLSbJU230fLlh1hs63e+Gr6seFto
+         JAVtUxo0FSpNYUx4X/fMrx16I/zNkdLJ8M7WqPxE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 2/4] gpio: Fix error message on out-of-range GPIO in lookup table
-Date:   Fri,  3 Jan 2020 22:36:51 -0500
-Message-Id: <20200104033653.11217-2-sashal@kernel.org>
+Cc:     Varun Prakash <varun@chelsio.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 3/4] scsi: libcxgbi: fix NULL pointer dereference in cxgbi_device_destroy()
+Date:   Fri,  3 Jan 2020 22:36:52 -0500
+Message-Id: <20200104033653.11217-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200104033653.11217-1-sashal@kernel.org>
 References: <20200104033653.11217-1-sashal@kernel.org>
@@ -59,48 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Varun Prakash <varun@chelsio.com>
 
-[ Upstream commit d935bd50dd14a7714cbdba9a76435dbb56edb1ae ]
+[ Upstream commit 71482fde704efdd8c3abe0faf34d922c61e8d76b ]
 
-When a GPIO offset in a lookup table is out-of-range, the printed error
-message (1) does not include the actual out-of-range value, and (2)
-contains an off-by-one error in the upper bound.
+If cxgb4i_ddp_init() fails then cdev->cdev2ppm will be NULL, so add a check
+for NULL pointer before dereferencing it.
 
-Avoid user confusion by also printing the actual GPIO offset, and
-correcting the upper bound of the range.
-While at it, use "%u" for unsigned int.
-
-Sample impact:
-
-    -requested GPIO 0 is out of range [0..32] for chip e6052000.gpio
-    +requested GPIO 0 (45) is out of range [0..31] for chip e6052000.gpio
-
-Fixes: 2a3cf6a3599e9015 ("gpiolib: return -ENOENT if no GPIO mapping exists")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191127095919.4214-1-geert+renesas@glider.be
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/1576676731-3068-1-git-send-email-varun@chelsio.com
+Signed-off-by: Varun Prakash <varun@chelsio.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/scsi/cxgbi/libcxgbi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index c7f5f0be2d74..8ce5133cccbd 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3159,8 +3159,9 @@ static struct gpio_desc *gpiod_find(struct device *dev, const char *con_id,
- 
- 		if (chip->ngpio <= p->chip_hwnum) {
- 			dev_err(dev,
--				"requested GPIO %d is out of range [0..%d] for chip %s\n",
--				idx, chip->ngpio, chip->label);
-+				"requested GPIO %u (%u) is out of range [0..%u] for chip %s\n",
-+				idx, p->chip_hwnum, chip->ngpio - 1,
-+				chip->label);
- 			return ERR_PTR(-EINVAL);
- 		}
- 
+diff --git a/drivers/scsi/cxgbi/libcxgbi.c b/drivers/scsi/cxgbi/libcxgbi.c
+index 902f5e03ec94..0d45658f163a 100644
+--- a/drivers/scsi/cxgbi/libcxgbi.c
++++ b/drivers/scsi/cxgbi/libcxgbi.c
+@@ -121,7 +121,8 @@ static inline void cxgbi_device_destroy(struct cxgbi_device *cdev)
+ 		"cdev 0x%p, p# %u.\n", cdev, cdev->nports);
+ 	cxgbi_hbas_remove(cdev);
+ 	cxgbi_device_portmap_cleanup(cdev);
+-	cxgbi_ppm_release(cdev->cdev2ppm(cdev));
++	if (cdev->cdev2ppm)
++		cxgbi_ppm_release(cdev->cdev2ppm(cdev));
+ 	if (cdev->pmap.max_connect)
+ 		cxgbi_free_big_mem(cdev->pmap.port_csk);
+ 	kfree(cdev);
 -- 
 2.20.1
 
