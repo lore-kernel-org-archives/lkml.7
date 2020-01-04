@@ -2,108 +2,109 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F19C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 07:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADADFC32767
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 08:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 284A92464E
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 07:54:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578124466;
-	bh=P8PtxQglxYWKXppOdGIM64WnzmqJ3ydfh7/u5gnFQSg=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=xGEbaWPfOkvyZ42HEkcczSbMOlHuajknIB9IddwLAxzw8x6lsxFyxUtVoaTUnwqPF
-	 cGSy91KEHQHbNeYjNnbkkroDjWFhX/UWzCh6ZbQCKxHBFlb6BnONejVtq3pMFlhpig
-	 9oH6RJOPEUFpYASEw0oAzVOoidhH40u10l86AlJg=
+	by mail.kernel.org (Postfix) with ESMTP id 80F30217F4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 08:25:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nawC8F4d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726094AbgADHyZ (ORCPT
+        id S1726135AbgADIZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 02:54:25 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:51638 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbgADHyZ (ORCPT
+        Sat, 4 Jan 2020 03:25:36 -0500
+Received: from mail-io1-f44.google.com ([209.85.166.44]:37051 "EHLO
+        mail-io1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbgADIZf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 02:54:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3G5V/Yt8+LHaKTB8iEhyRfbumFUZlmo8w3chEDC5pCY=; b=oXGRSO+mtvC28SIwMg1qv3G4b
-        K2PoVYv2PAqRrjvQ4MN0NTHwJwinvYyy39gATHfE+U0fXP+z1V3P9+veQIKWYqvJtb1U323d+aqIS
-        zyXoyx6XC/HQS4oe7/uODwwW4iTOzFglinyNCz+eYCjuyojxuBRlg8OcqsTO23H+HULElJ0wpVcht
-        gUMU6d2HNo3HbVd3kp1pAFYf6D+sEcGggD8e5FYgnX3nSzBWE3rrAtfrcLY8G8GcZUEdxdvYgNEcy
-        c/GKTMcB6zEow7zJF67i+xBYXFHhQWfbCthY/SWk7HpsZ9x/UQHPsvcmCpbbxCiufBX224cFGWiKV
-        cXKRhlJew==;
-Received: from [80.156.29.194] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ineGN-0003wg-Tr; Sat, 04 Jan 2020 07:54:24 +0000
-Date:   Sat, 4 Jan 2020 08:54:20 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL for v5.5-rc5] media fixes
-Message-ID: <20200104085420.5fe6a671@kernel.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Sat, 4 Jan 2020 03:25:35 -0500
+Received: by mail-io1-f44.google.com with SMTP id k24so13330430ioc.4;
+        Sat, 04 Jan 2020 00:25:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=IITNyuhRvFPFRzEQHBam4oqBhV4UL3sQSXHfLhzuc28=;
+        b=nawC8F4dkiL5w80TVV1YCRPySNjoCpsSggwJn3o6IQCNx5XzNk9Hpx/HVkJMEfo9pR
+         wQgDX1ye9j/J9KWmupq0RLHu1F+vjNswaELjonmCMqjRRkjOaQzI2JdNj+nqDFY5cBpY
+         nyoXMDX+yeGRSXp7yyMnIWH8iSYJSQ8g6Pi1LG/q5oS4vCWAPIudVcrnt1TWCQZGCfKg
+         iog1j4o8Lqtw2bGQBU+8oRPn+qfy1lmWAhvJIzhjpC4eemXEqzAMrspLSS5QvvoLiNKj
+         Avmk8S1K0/KngxOspnu0z6GbmiGZdrALd0y/S8o7HaddtmQWqtvp64JUOyljUKwp7OsA
+         St4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=IITNyuhRvFPFRzEQHBam4oqBhV4UL3sQSXHfLhzuc28=;
+        b=kpYxsU7wlQw2Ht97O7DW5pITs852ozNaABcofcEZBcyoa64Olh5MY+xdPzinmXB3zr
+         uWS7ix7jmmF4tYtPo3i/NThRchv4L7MYv/XWvmV76b4tWmwAfBav4zxwZWm1uYIOBKJd
+         p17Vmto5Gzk4Mq4XOh+495aQOh9V9e5ZXiN8Jn4lyWrrPBiUTLitE87IKPVIZsj8sOA+
+         PQU6tsRT+oYlO98eIxpoACV7diS9ZcYFhDGgvWfjiDW7BGgJ/sC+DHSVn+pvIbBUJ4B9
+         IqVoNsyEIRGvTCXMGxkE2DWabrStrBIcsVB6svteyPYTIf9zT3fsgDgSMXe/xJnykrX4
+         JKyg==
+X-Gm-Message-State: APjAAAWmyNnzVwMaOfSIqF9PlNw3nvn2wQfxbzzzjGR/72RCJn+4HAch
+        UI8yJZK+cQiMcNA2Irl2hWVMGoPzVKGjNQV4W6g=
+X-Google-Smtp-Source: APXvYqyZhRcybOoIECFq8vx6FikF6Uav7qGPvLsgyLwzmeRicOnTtBZ+gjA/YUWXbUpG63B8a5eqq/nhfNs2s0Ffnbg=
+X-Received: by 2002:a6b:8e51:: with SMTP id q78mr58267435iod.179.1578126334398;
+ Sat, 04 Jan 2020 00:25:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CABXGCsOv26W6aqB5WPMe-mEynmwy55DTfTeL5Dg9vRq6+Y6WvA@mail.gmail.com>
+ <CABXGCsNkzPrjqMRaWpssorxzhMLWBvLeSw9BpKYr_DW4LJQECQ@mail.gmail.com>
+ <20200102110817.ahqaqidw3ztw3kax@10.255.255.10> <CABXGCsNkm3VuzO60WBCi4VJmDnO=DmprQ1P=dd0FcW2-+dGc0w@mail.gmail.com>
+ <20200102131434.tky2hquki23laqqo@10.255.255.10> <CABXGCsMV1GRiqrXCQGHqvpBiendU3mG36h0YoG=4nw6spZHq=w@mail.gmail.com>
+ <nycvar.YAK.7.76.2001021153220.1385@zhn.tzk.pbz> <CABXGCsMLfarquWnzV=e3Ta_HPac+DALfKEOaD3rp5n9MPqgyFw@mail.gmail.com>
+ <20200103100232.GH3040@piout.net> <CABXGCsNv7G94TxaaKX8KXL5DEJiFgNcSu4+WShE_kQjVSa7zZA@mail.gmail.com>
+ <20200103101935.GI3040@piout.net> <CABXGCsMLob0DC25JS8wwAYydnDoHBSoMh2_YLPfqm3TTvDE-Zw@mail.gmail.com>
+ <7c015680-01b7-9c3e-c4c7-5d0b6e964781@hygon.cn>
+In-Reply-To: <7c015680-01b7-9c3e-c4c7-5d0b6e964781@hygon.cn>
+From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date:   Sat, 4 Jan 2020 13:25:23 +0500
+Message-ID: <CABXGCsNpS+nCMZ9C89UQVEu_u+hJVtdxCvdnj2QNqQf-j7+DrA@mail.gmail.com>
+Subject: Re: [bugreport] "hwclock -w" reset time instead of setting the right time
+To:     Jinke Fan <fanjinke@hygon.cn>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        J William Piggott <elseifthen@gmx.com>,
+        Karel Zak <kzak@redhat.com>,
+        "util-linux@vger.kernel.org" <util-linux@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Sat, 4 Jan 2020 at 10:46, Jinke Fan <fanjinke@hygon.cn> wrote:
+>
+> Hi Mike,
+> The root cause of the bug you encountered is unclear.
+>
 
-Please pull from:
-  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v5.5-3
+=3D=3D=3D cutted =3D=3D=3D
 
-For:
-  - some fixes at CEC core to comply with HDMI 2.0 specs and fix some border
-    cases;
-  - a fix at the transmission logic of the pulse8-cec driver.
-  - one alignment fix on a data struct at ipu3 when built with 32 bits;
+>
+> There is no date reset found in the bios after reboot.
+> The first time during OS startup get date from rtc_cmos is:
+> [    1.589157] rtc_cmos 00:03: setting system clock to
+> 2020-01-04T04:07:01 UTC (1578110821)
 
-Regards,
-Mauro
+> I watched the video on youtube. The date is reseted when startup into
+> bios at Mike's platform.
+> As we know that the bios will check the validity of rtc time, if not,
+> bios will reset the rtc time. RTC time reset may be done by the BIOS.
 
--
+Did you disable automatic time synchronization?
+By default Fedora GNOME doing automatic time synchronization.
+For this reason, it=E2=80=99s more correct to immediately go into the BIOS
+after a reboot and there check the time value or turn off automatic
+time synchronization
 
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v5.5-3
-
-for you to fetch changes up to ce644cf3fa06504c2c71ab1b794160d54aaccbc0:
-
-  media: intel-ipu3: Align struct ipu3_uapi_awb_fr_config_s to 32 bytes (2020-01-03 15:02:59 +0100)
-
-----------------------------------------------------------------
-media updates for v5.5-rc5
-
-----------------------------------------------------------------
-Hans Verkuil (4):
-      media: cec: CEC 2.0-only bcast messages were ignored
-      media: cec: avoid decrementing transmit_queue_sz if it is 0
-      media: cec: check 'transmit_in_progress', not 'transmitting'
-      media: pulse8-cec: fix lost cec_transmit_attempt_done() call
-
-Sakari Ailus (1):
-      media: intel-ipu3: Align struct ipu3_uapi_awb_fr_config_s to 32 bytes
-
- drivers/media/cec/cec-adap.c                    | 40 +++++++++++++++++--------
- drivers/media/usb/pulse8-cec/pulse8-cec.c       | 17 ++++++++---
- drivers/staging/media/ipu3/include/intel-ipu3.h |  2 +-
- 3 files changed, 41 insertions(+), 18 deletions(-)
-
+--
+Best Regards,
+Mike Gavrilov.
