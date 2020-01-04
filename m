@@ -2,91 +2,291 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9C5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91413C00523
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13F3224650
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:57:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Tbg87j3P"
+	by mail.kernel.org (Postfix) with ESMTP id 59CD821835
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:58:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578099518;
+	bh=pFvsoFOqBTYLDWBOWv5XRlYwGWovPU5nhbAgwIlNDH8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cN7GDGZGbfs/OghTcWyTs67lC8ea0sTuWUlR3zv1JXaRGKaPiaayi7g1jUPnYHPb7
+	 IOzd+zx4D8q7B3+OSj9AAOeFowX4f3U5WjyKL0uAVaCGhpFGsp1laYPlBR8B5SuFnj
+	 i5ZTWzPK82r906m224+y/EXEDYMunJXaE6BgxpB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbgADA5Y (ORCPT
+        id S1727233AbgADA6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 19:57:24 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38110 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbgADA5X (ORCPT
+        Fri, 3 Jan 2020 19:58:37 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43590 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbgADA6h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 19:57:23 -0500
-Received: by mail-io1-f68.google.com with SMTP id v3so43171390ioj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 16:57:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=b+wuHQ8PY87+3MWTpA3gpEZGOy/6vHnLCLuwEt2do7E=;
-        b=Tbg87j3PPOxRwH8JxWZAOHbZ7f4QtLAtll1DFSLqMkgtkejmVljEyaZAvUYGhd+4g6
-         zNJwD/wKPRtFOJIwq6Oy5+IdNFZE7zFUJ2QtI1zd28eXSHAMDryCVQz5J1bCTzZ9sGs0
-         FqjJgTYnvuFhY9CfAadApuFM4em8tVji3+AdPj/2PygzSbhGkLtlv9IcAPacjhO/l4m4
-         tmF1V94guhSb3MwEsU8ucXTsrzCWuKoXGykSExUKKf5XLKGJB3aDJL2H9Abfig6Mj003
-         gvSBb3KisEINE5XZjcHD+2K2xqgIyX9buiTs7ljvpXPrsQxq4CR7GcX7C11bK7WK+40D
-         FQMw==
+        Fri, 3 Jan 2020 19:58:37 -0500
+Received: by mail-io1-f66.google.com with SMTP id n21so41578998ioo.10
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 16:58:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=b+wuHQ8PY87+3MWTpA3gpEZGOy/6vHnLCLuwEt2do7E=;
-        b=ZlMs+r9wi03wuXuU7+qKf/buURiWZEZBM/7B9Zlk7REajCo8q7bqGsVZp8TyZQZ+VB
-         xOqOFQ/S+0OA4FaDEKBGlWNkwbcXQE2NaRTxEJ8v1EggG4atg+NcqhwHNz7XBA6D5W5b
-         gRNK2rfWwppcKgtuM6ec6DhCN/HMwYISiRbUYa0GPd4S541UZ1vT1tZ/Gycq+QhvFCTv
-         Vr6P+tAM1w6tfl6fbQQASLWwyd5EE1W0vZaZDssJl4NdnX5oI6BZcHbRomkjbMomiAqE
-         QCX5TpZOFtFS49MMy2x8OK2hj/ZhxVntFMGkAbk/9b1oOiOY/epWN9aNK+xUm9Q0siKG
-         FNOg==
-X-Gm-Message-State: APjAAAUSlvFzNfslx64ksk095XDBxumOSgMFlz6+qGQ1sQ8Q4VIMuMNi
-        p+MEQB27HEB5qy6PbAJbaeMZSQ==
-X-Google-Smtp-Source: APXvYqxoKvk5Vn7dmhmcyOPjvml/ezHr0AEAtcLVuPk5lZbITAeIHwlh1dJ9a+dwdwHhO3WBbhK4ig==
-X-Received: by 2002:a02:778d:: with SMTP id g135mr73473365jac.115.1578099443247;
-        Fri, 03 Jan 2020 16:57:23 -0800 (PST)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id f72sm21519402ilg.84.2020.01.03.16.57.22
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6s7suD5k8r1P5lVpjFiz2sSeu2tVOfFmrag2vYJ1rvY=;
+        b=MoVFxdXr3pBzJTF5+2PU3uwoVcJ7e+pL3VDuMGAN6G+uVPIG1jc/MvB6NQ645JugSQ
+         HAywzBtoAqVYdCnx583LtTi+wTJPI+m1Rp8YAEFNWTBICyvrf+MG8fDV7YMr9UWzx0zz
+         IOXSCPNWrI7m6Le04fGwWOktUcsv7+2SOlfTlehqLw1D4AMOQapUOKF8WBsBiTBo9sHF
+         Zjy5FDOwK9Lg1HDlWKIRSRKOi5ugRtS3/cDn7OUGUgtz1rkoKsJ36PjBiZ6BI3Pot37R
+         uXfI4b1gwNmPkJRSbSeN7M7Yv/HdsOnRm7X9789ipCYJrzeIrU2b4Y6g3UKEsPpoVwya
+         Wf3w==
+X-Gm-Message-State: APjAAAWNwIjVETBiV8DoKmp5Qo6ZuZD3FIISVrp8pbLDCMkPFjaFReHh
+        mPnw2DYLzZtThhAaaGsVcyCUIz8=
+X-Google-Smtp-Source: APXvYqyfSufuxarrZm5lMkVWoOKdjwFhUbZwBp8FiSo/3/sCu3z/V6sR9NANpeMMq+lnzfW3MVj3Ig==
+X-Received: by 2002:a05:6638:97c:: with SMTP id o28mr72687217jaj.8.1578099515598;
+        Fri, 03 Jan 2020 16:58:35 -0800 (PST)
+Received: from rob-hp-laptop ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id k22sm15189363ioj.24.2020.01.03.16.58.34
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 16:57:22 -0800 (PST)
-Date:   Fri, 3 Jan 2020 16:57:21 -0800 (PST)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Yash Shah <yash.shah@sifive.com>
-cc:     robh+dt@kernel.org, mark.rutland@arm.com, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, bmeng.cn@gmail.com, green.wan@sifive.com,
-        allison@lohutok.net, alexios.zavras@intel.com,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, bp@suse.de,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com
-Subject: Re: [PATCH v2 1/2] riscv: dts: Add DT support for SiFive L2 cache
- controller
-In-Reply-To: <1578024801-39039-2-git-send-email-yash.shah@sifive.com>
-Message-ID: <alpine.DEB.2.21.9999.2001031657090.283180@viisi.sifive.com>
-References: <1578024801-39039-1-git-send-email-yash.shah@sifive.com> <1578024801-39039-2-git-send-email-yash.shah@sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Fri, 03 Jan 2020 16:58:35 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 2219a5
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Fri, 03 Jan 2020 17:58:34 -0700
+Date:   Fri, 3 Jan 2020 17:58:34 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Sricharan R <sricharan@codeaurora.org>
+Cc:     agross@kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-soc@vger.kernel.org, sboyd@kernel.org,
+        sivaprak@codeaurora.org
+Subject: Re: [PATCH V3 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl
+ bindings
+Message-ID: <20200104005834.GA22707@bogus>
+References: <1578052177-6778-1-git-send-email-sricharan@codeaurora.org>
+ <1578052177-6778-2-git-send-email-sricharan@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578052177-6778-2-git-send-email-sricharan@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Jan 2020, Yash Shah wrote:
-
-> Add the L2 cache controller DT node in SiFive FU540 soc-specific DT file
+On Fri, Jan 03, 2020 at 05:19:33PM +0530, Sricharan R wrote:
+> Add device tree binding Documentation details for ipq6018
+> pinctrl driver.
 > 
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+> Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> ---
+>  [v3] Fixed the example dt node, inherited properties
+> 
+>  .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     | 166 +++++++++++++++++++++
+>  1 file changed, 166 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+> new file mode 100644
+> index 0000000..e959c5f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+> @@ -0,0 +1,166 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/qcom,ipq6018-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies, Inc. IPQ6018 TLMM block
+> +
+> +maintainers:
+> +  - Sricharan R <sricharan@codeaurora.org>
+> +
+> +description: |
+> +  This binding describes the Top Level Mode Multiplexer block found in the
+> +  IPQ6018 platform.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq6018-pinctrl
 
-Thanks, queued for v5.5-rc.
+A blank line after each property schema is preferred.
 
+> +  reg:
+> +    maxItems: 1
+> +  interrupts:
+> +    Description: Specifies the TLMM summary IRQ
+> +    maxItems: 1
+> +  interrupt-controller: true
+> +  '#interrupt-cells':
+> +    Description:
+> +      Specifies the PIN numbers and Flags, as defined in defined in
+> +      include/dt-bindings/interrupt-controller/irq.h
+> +    const: 2
+> +  gpio-controller: true
+> +  '#gpio-cells':
+> +    Description: Specifying the pin number and flags, as defined in
+> +      include/dt-bindings/gpio/gpio.h
+> +    const: 2
+> +  gpio-ranges:
+> +    Description: Documentation/devicetree/bindings/gpio/gpio.txt
+> +    maxItems: 1
+> +
+> +#PIN CONFIGURATION NODES
+> +patternProperties:
+> +  '-pins$':
+> +    type: object
+> +    Description:
+> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+> +      Client device subnodes use below standard properties.
+> +
+> +    Properties:
 
-- Paul
+Did you run 'make dt_binding_check' and is dt-schema up to date? This 
+isn't valid json-schema which is case sensitive.
+
+> +      pins:
+> +        allOf:
+> +          $ref: /schemas/types.yaml#/definitions/string
+
+Also not valid as allOf is a list.
+
+> +          enum:
+> +            gpio0-gpio80
+
+As is 'enum'...
+
+> +            sdc1_clk
+> +            sdc1_cmd
+> +            sdc1_data
+> +            sdc2_clk
+> +            sdc2_cmd
+> +            sdc2_data
+> +            qdsd_cmd
+> +            qdsd_data0
+> +            qdsd_data1
+> +            qdsd_data2
+> +            qdsd_data3
+> +        Description:
+> +          List of gpio pins affected by the properties specified in this
+> +          subnode.
+> +
+> +      function:
+> +        allOf:
+> +          $ref: /schemas/types.yaml#/definitions/string
+> +          enum:
+> +            adsp_ext, alsp_int, atest_bbrx0, atest_bbrx1, atest_char,
+> +            atest_char0, atest_char1, atest_char2, atest_char3, atest_combodac,
+> +            atest_gpsadc0, atest_gpsadc1, atest_tsens, atest_wlan0,
+> +            atest_wlan1, backlight_en, bimc_dte0, bimc_dte1, blsp_i2c1,
+> +            blsp_i2c2, blsp_i2c3, blsp_i2c4, blsp_i2c5, blsp_i2c6,  blsp_spi1,
+> +            blsp_spi1_cs1, blsp_spi1_cs2, blsp_spi1_cs3, blsp_spi2,
+> +            blsp_spi2_cs1, blsp_spi2_cs2, blsp_spi2_cs3, blsp_spi3,
+> +            blsp_spi3_cs1, blsp_spi3_cs2, blsp_spi3_cs3, blsp_spi4, blsp_spi5,
+> +            blsp_spi6, blsp_uart1, blsp_uart2, blsp_uim1, blsp_uim2, cam1_rst,
+> +            cam1_standby, cam_mclk0, cam_mclk1, cci_async, cci_i2c, cci_timer0,
+> +            cci_timer1, cci_timer2, cdc_pdm0, codec_mad, dbg_out, display_5v,
+> +            dmic0_clk, dmic0_data, dsi_rst, ebi0_wrcdc, euro_us, ext_lpass,
+> +            flash_strobe, gcc_gp1_clk_a, gcc_gp1_clk_b, gcc_gp2_clk_a,
+> +            gcc_gp2_clk_b, gcc_gp3_clk_a, gcc_gp3_clk_b, gpio, gsm0_tx0,
+> +            gsm0_tx1, gsm1_tx0, gsm1_tx1, gyro_accl, kpsns0, kpsns1, kpsns2,
+> +            ldo_en, ldo_update, mag_int, mdp_vsync, modem_tsync, m_voc,
+> +            nav_pps, nav_tsync, pa_indicator, pbs0, pbs1, pbs2, pri_mi2s,
+> +            pri_mi2s_ws, prng_rosc, pwr_crypto_enabled_a, pwr_crypto_enabled_b,
+> +            pwr_modem_enabled_a,  pwr_modem_enabled_b, pwr_nav_enabled_a,
+> +            pwr_nav_enabled_b, qdss_ctitrig_in_a0, qdss_ctitrig_in_a1,
+> +            qdss_ctitrig_in_b0, qdss_ctitrig_in_b1, qdss_ctitrig_out_a0,
+> +            qdss_ctitrig_out_a1, qdss_ctitrig_out_b0, qdss_ctitrig_out_b1,
+> +            qdss_traceclk_a, qdss_traceclk_b, qdss_tracectl_a, qdss_tracectl_b,
+> +            qdss_tracedata_a, qdss_tracedata_b, reset_n, sd_card, sd_write,
+> +            sec_mi2s, smb_int, ssbi_wtr0, ssbi_wtr1, uim1, uim2, uim3,
+> +            uim_batt, wcss_bt, wcss_fm, wcss_wlan, webcam1_rst
+> +        Description:
+> +          Specify the alternative function to be configured for the specified
+> +          pins.
+> +      bias-disable:
+> +        allOf:
+> +          $ref: /schemas/pinctrl/pincfg-node.yaml
+
+While you should have this reference, it is at the wrong level. The node 
+needs to reference this schema, not the properties.
+
+> +        Description:
+> +          The specified pins should be configured as no pull.
+> +      bias-pull-down:
+> +        allOf:
+> +          $ref: /schemas/pinctrl/pincfg-node.yaml
+> +        Description:
+> +          The specified pins should be configured as pull down.
+> +      bias-pull-up:
+> +        allOf:
+> +          $ref: /schemas/pinctrl/pincfg-node.yaml
+> +        Description:
+> +          The specified pins should be configured as pull up.
+> +      output-high:
+> +        allOf:
+> +          $ref: /schemas/pinctrl/pincfg-node.yaml
+> +        Description:
+> +          The specified pins are configured in output mode, driven high.
+> +          This option is not available for sdc pins.
+> +      output-low:
+> +        allOf:
+> +          $ref: /schemas/pinctrl/pincfg-node.yaml
+> +        Description:
+> +          The specified pins are configured in output mode, driven low.
+> +          This option is not available for sdc pins.
+> +      drive-strength:
+> +        allOf:
+> +          $ref: /schemas/types.yaml#/definitions/uint32
+> +          enum: [2, 4, 6, 8, 10, 12, 14, 16]
+> +        Description:
+> +          Selects the drive strength for the specified pins, in mA.
+> +
+> +    required:
+> +      - pins
+> +      - function
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - gpio-ranges
+> +
+> +example:
+> +        tlmm: pinctrl@1000000 {
+> +                compatible = "qcom,ipq6018-pinctrl";
+> +                reg = <0x01000000 0x300000>;
+> +                interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
+> +                gpio-ranges = <&tlmm 0 80>;
+> +                interrupt-controller;
+> +                #interrupt-cells = <2>;
+> +
+> +                serial_3_pins: serial3-pinmux {
+> +                        pins = "gpio44", "gpio45";
+> +                        function = "blsp2_uart";
+> +                        drive-strength = <8>;
+> +                        bias-pull-down;
+> +                };
+> +       };
+> -- 
+> 1.9.1
+> 
