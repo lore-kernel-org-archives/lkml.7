@@ -2,97 +2,132 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BADD1C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC797C00523
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F31D222C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FDAB217F4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:06:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ENw57qnU"
+	dkim=pass (1024-bit key) header.d=mykernel.net header.i=cgxu519@mykernel.net header.b="Kfewwbuh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbgADCEn (ORCPT
+        id S1727265AbgADCGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 21:04:43 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43093 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727189AbgADCEm (ORCPT
+        Fri, 3 Jan 2020 21:06:17 -0500
+Received: from sender2-pp-o92.zoho.com.cn ([163.53.93.251]:25379 "EHLO
+        sender2-pp-o92.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727074AbgADCGR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 21:04:42 -0500
-Received: by mail-lf1-f67.google.com with SMTP id 9so32996281lfq.10;
-        Fri, 03 Jan 2020 18:04:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DP1fYoznEacFSbgWsSDZL+rwUQxQG8vzPv53EveY774=;
-        b=ENw57qnUM0Ch8wLUwrLe0Lhf0ax96F+wK9PrLkOSXC9hQkS9xluescyFCdr7bG4Twq
-         U7KgCZ/+R28tGTo/Pe09DwKX9piauepr8pDeEdYeOhpt7AluAGpAhD8BWac9nCJDqvzp
-         +BW9G4twPl5CUD8+4LsHs5sI3waUDns3Kygx9LqNlTvIAbDSmzjSjYjH1C1wos8F6fl6
-         cBxfcD6bZTdztSDMu9vKRvbnNJELYatMk/3t9JDKYPZogages1aI6PxkbLLNyrI9xWe8
-         4rqeRsZ/6fuuQZp+PtAeMPBTyLDIDoRq6h1HFD5e+j9THOyK3BH4ZJq6lSHn0cosnPSX
-         3ZNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DP1fYoznEacFSbgWsSDZL+rwUQxQG8vzPv53EveY774=;
-        b=FcD5inX0Asg+UMn+GQV+e2bAbOiQVBA9F0IW/Ss+bqUfT+X0n1pSs+s2MCeU2TO1jH
-         Yho+EN8jotbLtDfWa5U9WIUI3TZmrftO/Zo+baVtThoYyS5AMmmgPHPbWyYkfuABjGcJ
-         qgMVYQ7S4WMRk+OwGjb3FqohuPvcwYduTIQqYYVC3LaKlH3FueH6SU1YERYnaOJorn+3
-         uyLDyPZsn2Bwadd8+9wVSyRELMn4ITUzicHMiGpRiN/+mw/CB+1cMWQwrR8++YkGL9AF
-         JXiQJvwTmIEsG+NPQ0c56EVq7Wn6+cMp5zIi7sz4tHh1DKfrGa/puMBJujh/+QPngeHN
-         80Hw==
-X-Gm-Message-State: APjAAAV3A0q/UC6l1EtZhV8F5pYJXv+QKxvEDywDCzTsV6iRsY9u8Jq0
-        SFnMOQTRNb16NoCMZo9MYUUZTRG9
-X-Google-Smtp-Source: APXvYqz/P3UeuIynbTD2ACZJlI96d20BxjSLSMXbG6FDOyMTE8bhGAkaJyn6xBZGCOqVbhw89Cl+EQ==
-X-Received: by 2002:ac2:46dc:: with SMTP id p28mr51678437lfo.23.1578103480073;
-        Fri, 03 Jan 2020 18:04:40 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id e8sm30021439ljb.45.2020.01.03.18.04.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jan 2020 18:04:39 -0800 (PST)
-Subject: Re: [PATCH v3 01/16] dt-binding: usb: ci-hdrc-usb2: Document NVIDIA
- Tegra support
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191228203358.23490-1-digetx@gmail.com>
- <20191228203358.23490-2-digetx@gmail.com> <20200104003341.GA5889@bogus>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b24a37f2-1515-9586-ae87-864272b87410@gmail.com>
-Date:   Sat, 4 Jan 2020 05:04:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 3 Jan 2020 21:06:17 -0500
+X-Greylist: delayed 905 seconds by postgrey-1.27 at vger.kernel.org; Fri, 03 Jan 2020 21:06:15 EST
+ARC-Seal: i=1; a=rsa-sha256; t=1578102645; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=qhvmzewoXEKEEwmc2ql0m9CKDVnIqxe2FazWILfFNdjRAUfx6fABgwygtskKww2Q9MVUBFlVnlYCDaRX6Mzgu54WG2kl827yH0PdYmpL/YtdtP3fw16PJtBW9NBhsIdI0gVeXabRARzzX9yAp4YIFJv2eNyVYPNWKdIcp/d1i4c=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1578102645; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
+        bh=sr52V3J6KDFLSvQhoxBBsFeM63u2k44ubK1tp32MvjQ=; 
+        b=BzgX/ZQp829nXJQBDGKhJqxTqRqvTcslfaThK8p2ymj7vRLXzgnzQgnXEnF5EAmN30pPzkpWAHXIvF2dyFhYBDDBzdPwXOry4Q3z4mjRmM+jZfgGFRKSSwKXe8c/toyqPJl9TsqJ/Chslmg/M/70t/SKntU5JeAy8L24k3T+SKY=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=mykernel.net;
+        spf=pass  smtp.mailfrom=cgxu519@mykernel.net;
+        dmarc=pass header.from=<cgxu519@mykernel.net> header.from=<cgxu519@mykernel.net>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1578102645;
+        s=zohomail; d=mykernel.net; i=cgxu519@mykernel.net;
+        h=Date:From:Reply-To:To:Cc:Message-ID:In-Reply-To:References:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=sr52V3J6KDFLSvQhoxBBsFeM63u2k44ubK1tp32MvjQ=;
+        b=KfewwbuhZcpRJQo7t3Ely+kmHrcKizp3Jr/E0BSTc+ZGst5z51zGcMsBjhWHB1mQ
+        pvc2s+wcL1XJBkXdbobMQ4yXCmamtpMmLOYjPxHIiTH1euesiNWB7FO8ihkspEmO8U+
+        MnLFjaxG1Gj/Gg7n7ltQC4Ps2rk+VqweVJ0Xiy7E=
+Received: from mail.baihui.com by mx.zoho.com.cn
+        with SMTP id 1578102643649653.3693286775876; Sat, 4 Jan 2020 09:50:43 +0800 (CST)
+Date:   Sat, 04 Jan 2020 09:50:43 +0800
+From:   Chengguang Xu <cgxu519@mykernel.net>
+Reply-To: cgxu519@mykernel.net
+To:     "Pavel Machek" <pavel@denx.de>
+Cc:     "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "stable" <stable@vger.kernel.org>, "Chao Yu" <yuchao0@huawei.com>,
+        "Jaegeuk Kim" <jaegeuk@kernel.org>,
+        "Sasha Levin" <sashal@kernel.org>
+Message-ID: <16f6e3f5bbe.d291a05d38838.5222280714928609391@mykernel.net>
+In-Reply-To: <20200103171213.GC14328@amd>
+References: <20200102220029.183913184@linuxfoundation.org>
+ <20200102220035.294585461@linuxfoundation.org> <20200103171213.GC14328@amd>
+Subject: Re: [PATCH 4.19 062/114] f2fs: choose hardlimit when softlimit is
+ larger than hardlimit in f2fs_statfs_project()
 MIME-Version: 1.0
-In-Reply-To: <20200104003341.GA5889@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Priority: Medium
+User-Agent: ZohoCN Mail
+X-Mailer: ZohoCN Mail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-04.01.2020 03:33, Rob Herring пишет:
-> On Sat, 28 Dec 2019 23:33:43 +0300, Dmitry Osipenko wrote:
->> NVIDIA Tegra SoCs use ChipIdea silicon IP for the USB controllers.
->>
->> Acked-by: Peter Chen <peter.chen@nxp.com>
->> Acked-by: Thierry Reding <treding@nvidia.com>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
+ ---- =E5=9C=A8 =E6=98=9F=E6=9C=9F=E5=85=AD, 2020-01-04 01:12:13 Pavel Mach=
+ek <pavel@denx.de> =E6=92=B0=E5=86=99 ----
+ > Hi!
+ >=20
+ > > From: Chengguang Xu <cgxu519@mykernel.net>
+ > >=20
+ > > [ Upstream commit 909110c060f22e65756659ec6fa957ae75777e00 ]
+ > >=20
+ > > Setting softlimit larger than hardlimit seems meaningless
+ > > for disk quota but currently it is allowed. In this case,
+ > > there may be a bit of comfusion for users when they run
+ > > df comamnd to directory which has project quota.
+ > >=20
+ > > For example, we set 20M softlimit and 10M hardlimit of
+ > > block usage limit for project quota of test_dir(project id 123).
+ >=20
+ > > Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
+ > > Reviewed-by: Chao Yu <yuchao0@huawei.com>
+ > > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+ > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+ > > ---
+ > >  fs/f2fs/super.c | 20 ++++++++++++++------
+ > >  1 file changed, 14 insertions(+), 6 deletions(-)
+ > >=20
+ > > diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+ > > index 7a9cc64f5ca3..662c7de58b99 100644
+ > > --- a/fs/f2fs/super.c
+ > > +++ b/fs/f2fs/super.c
+ > > @@ -1148,9 +1148,13 @@ static int f2fs_statfs_project(struct super_blo=
+ck *sb,
+ > >          return PTR_ERR(dquot);
+ > >      spin_lock(&dquot->dq_dqb_lock);
+ > > =20
+ > > -    limit =3D (dquot->dq_dqb.dqb_bsoftlimit ?
+ > > -         dquot->dq_dqb.dqb_bsoftlimit :
+ > > -         dquot->dq_dqb.dqb_bhardlimit) >> sb->s_blocksize_bits;
+ > > +    limit =3D 0;
+ > > +    if (dquot->dq_dqb.dqb_bsoftlimit)
+ > > +        limit =3D dquot->dq_dqb.dqb_bsoftlimit;
+ > > +    if (dquot->dq_dqb.dqb_bhardlimit &&
+ > > +            (!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
+ > > +        limit =3D dquot->dq_dqb.dqb_bhardlimit;
+ > > +
+ > >      if (limit && buf->f_blocks > limit) {
+ >=20
+ > >> blocksize disappeared here. That can't be right.
+ >=20
+ > Plus, is this just obfuscated way of saying
+ >=20
+ > limit =3D min_not_zero(dquot->dq_dqb.dqb_bsoftlimit, dquot->dq_dqb.dqb_b=
+hardlimit)?
+ >=20
 
-Thanks!
+Please  skip this patch from  stable list,  I'll send  a revised patch to u=
+pstream.
+
+Thanks.
+
+
+
+
