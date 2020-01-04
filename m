@@ -2,251 +2,105 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1531C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 13:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 497C4C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 14:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F4D6215A4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 13:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 139E722B48
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 14:16:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pTAE/TWG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbgADNye (ORCPT
+        id S1726050AbgADOOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 08:54:34 -0500
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:1907 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725862AbgADNye (ORCPT
+        Sat, 4 Jan 2020 09:14:44 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45419 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725924AbgADOOo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 08:54:34 -0500
-X-IronPort-AV: E=Sophos;i="5.69,394,1571695200"; 
-   d="scan'208";a="429877340"
-Received: from abo-154-110-68.mrs.modulonet.fr (HELO hadrien) ([85.68.110.154])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jan 2020 14:54:32 +0100
-Date:   Sat, 4 Jan 2020 14:54:32 +0100 (CET)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Wen Yang <wenyang@linux.alibaba.com>
-cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Matthias Maennich <maennich@google.com>,
+        Sat, 4 Jan 2020 09:14:44 -0500
+Received: by mail-pg1-f195.google.com with SMTP id b9so24705277pgk.12
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jan 2020 06:14:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=N1zAzNFuGiZZLxkXFIxcCFopAhIskKxqeAZ70oWHN78=;
+        b=pTAE/TWGL4KOmpshoapLVk4oal5VsWsqN1WERVXpTbb8CJqLFoY773wx3GEKbJSYp5
+         oiIYqn8PaoCJyi7gxGY4he4K3s9jQEjPSMIEjHIFkSqoJ0Rb5/tGkf/4MnJwgIqo8clL
+         EJLXW/eP2Ckycm0sQFudGQ47S/yXCa9wzc0lcTbl8//LDupJ7NV8ynqvmPk5qklZ0a0Y
+         /1C1cdDwtdgADigLLn6cfdtOnBGVGuH6O/tG5zP3pFEnRrNm2T+EEOqlEk6WxAolC+eR
+         NKMQIKVgdPVNexnTbpD0OVpP4NoJLXPWdFlPrRz7MJL0vEqB1dR9PPUows/WfmG3msuT
+         56IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=N1zAzNFuGiZZLxkXFIxcCFopAhIskKxqeAZ70oWHN78=;
+        b=kz1QIDQ/5E3vdN9blrNabphX533lc8qMVfNVPDzsSRiXD3LCT0ZnwATWiWOkCJ0FN4
+         p5MZKzPorN3F9JNxVi8kLTNZGZ1mbYYc0OjDuqZJBfIzFy9uQJFbX8N4iok1hvaUnrbq
+         tPE1JMYYYv8amt/wi8wYo6/C3g5fOGrRU8eDzvhBx51l5svm0UiPw8004BaNXyE2F7eI
+         IDAx+6glf54/LZw5dkizB+zwz/kAeuHkqAmIjrLiC0CDtqc0e5CR1fucQkdqh2S85ofx
+         6QCgSUOhWxGAUZDihKydMwoTLHUxs7s+UeFlRC0qW6Z+eRV5LHj0jJRYpw3eCKtzGX1Y
+         VwSg==
+X-Gm-Message-State: APjAAAUFCwmRUnEAYfAuFmh3Wuc1zRLsglcHN3PNwnDCTtiwPxbOZ4uP
+        FckvEeJeeJX+KNEsPVRixpc=
+X-Google-Smtp-Source: APXvYqxXOCrgGL6D/EiQqmJ8Z0X+5hRA7oPRVgi4k2IF91Zl4z7AINE3kaOaDElLnzGCqpXfSWuaKA==
+X-Received: by 2002:a63:ff5c:: with SMTP id s28mr99938380pgk.196.1578147283228;
+        Sat, 04 Jan 2020 06:14:43 -0800 (PST)
+Received: from nishad ([106.51.232.103])
+        by smtp.gmail.com with ESMTPSA id m6sm18310663pjn.21.2020.01.04.06.14.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 04 Jan 2020 06:14:42 -0800 (PST)
+Date:   Sat, 4 Jan 2020 19:44:36 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thomas Gleixner <tglx@linutronix.de>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] coccinelle: semantic patch to check for inappropriate
- do_div() calls
-In-Reply-To: <b98d1f9e-a32f-7c85-996c-2c604a014af2@linux.alibaba.com>
-Message-ID: <alpine.DEB.2.21.2001041454020.6944@hadrien>
-References: <20200104064448.24314-1-wenyang@linux.alibaba.com> <alpine.DEB.2.21.2001040759360.2636@hadrien> <7d9d8f10-7eb6-ffc3-5084-5ed1a08d4bcb@linux.alibaba.com> <alpine.DEB.2.21.2001040951450.2636@hadrien>
- <b98d1f9e-a32f-7c85-996c-2c604a014af2@linux.alibaba.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Joe Perches <joe@perches.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] slimbus: Use the correct style for SPDX License Identifier
+Message-ID: <20200104141433.GA3684@nishad>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1115077898-1578146072=:6944"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+This patch corrects the SPDX License Identifier style in
+header file related to SLIMbus driver.
+For C header files Documentation/process/license-rules.rst
+mandates C-like comments (opposed to C source files where
+C++ style should be used).
 
---8323329-1115077898-1578146072=:6944
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
 
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+ drivers/slimbus/slimbus.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/slimbus/slimbus.h b/drivers/slimbus/slimbus.h
+index b2f013bfe42e..c73035915f1d 100644
+--- a/drivers/slimbus/slimbus.h
++++ b/drivers/slimbus/slimbus.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2011-2017, The Linux Foundation
+  */
+-- 
+2.17.1
 
---- Please note the new email address ---
-
-
-On Sat, 4 Jan 2020, Wen Yang wrote:
-
->
->
-> On 2020/1/4 4:55 下午, Julia Lawall wrote:
-> > On Sat, 4 Jan 2020, Wen Yang wrote:
-> >
-> > >
-> > >
-> > > On 2020/1/4 3:00 下午, Julia Lawall wrote:
-> > > > On Sat, 4 Jan 2020, Wen Yang wrote:
-> > > >
-> > > > > do_div() does a 64-by-32 division.
-> > > > > When the divisor is unsigned long, u64, or s64,
-> > > > > do_div() truncates it to 32 bits, this means it
-> > > > > can test non-zero and be truncated to zero for division.
-> > > > > This semantic patch is inspired by Mateusz Guzik's patch:
-> > > > > commit b0ab99e7736a ("sched: Fix possible divide by zero in avg_atom()
-> > > > > calculation")
-> > > > >
-> > > > > Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-> > > > > Cc: Julia Lawall <Julia.Lawall@lip6.fr>
-> > > > > Cc: Gilles Muller <Gilles.Muller@lip6.fr>
-> > > > > Cc: Nicolas Palix <nicolas.palix@imag.fr>
-> > > > > Cc: Michal Marek <michal.lkml@markovi.net>
-> > > > > Cc: Matthias Maennich <maennich@google.com>
-> > > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > > > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > > > Cc: cocci@systeme.lip6.fr
-> > > > > Cc: linux-kernel@vger.kernel.org
-> > > > > ---
-> > > > >    scripts/coccinelle/misc/do_div.cocci | 66
-> > > > > ++++++++++++++++++++++++++++++++++++
-> > > > >    1 file changed, 66 insertions(+)
-> > > > >    create mode 100644 scripts/coccinelle/misc/do_div.cocci
-> > > > >
-> > > > > diff --git a/scripts/coccinelle/misc/do_div.cocci
-> > > > > b/scripts/coccinelle/misc/do_div.cocci
-> > > > > new file mode 100644
-> > > > > index 0000000..f1b72d1
-> > > > > --- /dev/null
-> > > > > +++ b/scripts/coccinelle/misc/do_div.cocci
-> > > > > @@ -0,0 +1,66 @@
-> > > > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > > > +/// do_div() does a 64-by-32 division.
-> > > > > +/// When the divisor is unsigned long, u64, or s64,
-> > > > > +/// do_div() truncates it to 32 bits, this means it
-> > > > > +/// can test non-zero and be truncated to zero for division.
-> > > > > +///
-> > > > > +//# This makes an effort to find those inappropriate do_div () calls.
-> > > > > +//
-> > > > > +// Confidence: Moderate
-> > > > > +// Copyright: (C) 2020 Wen Yang, Alibaba.
-> > > > > +// Comments:
-> > > > > +// Options: --no-includes --include-headers
-> > > > > +
-> > > > > +virtual context
-> > > > > +virtual org
-> > > > > +virtual report
-> > > > > +
-> > > > > +@depends on context@
-> > > > > +expression f;
-> > > > > +long l;
-> > > > > +unsigned long ul;
-> > > > > +u64 ul64;
-> > > > > +s64 sl64;
-> > > > > +
-> > > > > +@@
-> > > > > +(
-> > > > > +* do_div(f, l);
-> > > > > +|
-> > > > > +* do_div(f, ul);
-> > > > > +|
-> > > > > +* do_div(f, ul64);
-> > > > > +|
-> > > > > +* do_div(f, sl64);
-> > > > > +)
-> > > > > +
-> > > > > +@r depends on (org || report)@
-> > > > > +expression f;
-> > > > > +long l;
-> > > > > +unsigned long ul;
-> > > > > +position p;
-> > > > > +u64 ul64;
-> > > > > +s64 sl64;
-> > > > > +@@
-> > > > > +(
-> > > > > +do_div@p(f, l);
-> > > > > +|
-> > > > > +do_div@p(f, ul);
-> > > > > +|
-> > > > > +do_div@p(f, ul64);
-> > > > > +|
-> > > > > +do_div@p(f, sl64);
-> > > > > +)
-> > > > > +
-> > > > > +@script:python depends on org@
-> > > > > +p << r.p;
-> > > > > +@@
-> > > > > +
-> > > > > +msg="WARNING: WARNING: do_div() does a 64-by-32 division, which may
-> > > > > truncation the divisor to 32-bit"
-> > > > > +coccilib.org.print_todo(p[0], msg)
-> > > > > +
-> > > > > +@script:python depends on report@
-> > > > > +p << r.p;
-> > > > > +@@
-> > > > > +
-> > > > > +msg="WARNING: WARNING: do_div() does a 64-by-32 division, which may
-> > > > > truncation the divisor to 32-bit"
-> > > > > +coccilib.report.print_report(p[0], msg)
-> > > >
-> > > > A few small issues: You have WARNING: twice in each case, and truncation
-> > > > should be truncate.
-> > > >
-> > >
-> > > Thanks for your comments, we will fix it soon.
-> > >
-> > > > Is there any generic strategy for fixing these issues?
-> > > >
-> > >
-> > > We have done some experiments, such as:
-> > > https://lkml.org/lkml/2020/1/2/1354
-> >
-> > Thanks.  Actually, I would appreciate knowing about such experiments when
-> > the semantic patch is submitted, since eg in this case I am not really an
-> > expert in this issue.
-> >
-> > >
-> > > -	avg = rec->time;
-> > > -	do_div(avg, rec->counter);
-> > > +	avg = div64_ul(rec->time, rec->counter);
-> > >
-> > > --> Function replacement was performed here,
-> > >      and simple code cleanup was also performed.
-> > >
-> > >
-> > > -		do_div(stddev, rec->counter * (rec->counter - 1) * 1000);
-> > > +		stddev = div64_ul(stddev,
-> > > +				  rec->counter * (rec->counter - 1) * 1000);
-> > >
-> > > --> Only the function replacement is performed here (because the variable
-> > > ‘stddev’ corresponds to a more complicated equation, cleaning it will
-> > > reduce
-> > > readability).
-> >
-> > Would it be reasonable to extend the warning to say "consider using
-> > div64_ul instead"?  Or do you think it is obvious to everyone?
-> >
->
-> Thank you for your comments.
-> We plan to modify it as follows:
-> msg="WARNING: do_div() does a 64-by-32 division, please consider using
-> div64_ul, div64_long, div64_u64 or div64_s64 instead."
-
-This message seems helpful, thanks.
-
-julia
-
->
-> > > In addition, there are some codes that do not need to be modified:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/net/can/dev.c#n263
-> >
-> > Would it be worth having a special case for constants and checking whether
-> > the value is obviously safe and no warning is needed?
-> >
-> Thanks.
-> This is very valuable in reducing false positives, and we'll try to implement
-> it.
->
-> --
-> Best Wishes,
-> Wen
->
-> > > So we just print a warning.
-> > > As for how to fix it, we need to analyze the code carefully.
-> > >
-> > > --
-> > > Best Wishes,
-> > > Wen
-> > >
-> > >
-> > >
-> >
->
---8323329-1115077898-1578146072=:6944--
