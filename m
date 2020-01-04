@@ -2,164 +2,112 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB08EC32767
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 07:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC781C32767
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 07:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E103222C4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 07:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95CF7215A4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 07:33:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nx+lPbr/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726036AbgADHRB (ORCPT
+        id S1726078AbgADHds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 02:17:01 -0500
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:47665
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725870AbgADHRB (ORCPT
+        Sat, 4 Jan 2020 02:33:48 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:48696 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbgADHds (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 02:17:01 -0500
-X-IronPort-AV: E=Sophos;i="5.69,393,1571695200"; 
-   d="scan'208";a="334728961"
-Received: from abo-154-110-68.mrs.modulonet.fr (HELO hadrien) ([85.68.110.154])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jan 2020 08:16:58 +0100
-Date:   Sat, 4 Jan 2020 08:16:58 +0100 (CET)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Wen Yang <wenyang@linux.alibaba.com>
-cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Matthias Maennich <maennich@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thomas Gleixner <tglx@linutronix.de>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] coccinelle: semantic patch to check for inappropriate
- do_div() calls
-In-Reply-To: <20200104064448.24314-1-wenyang@linux.alibaba.com>
-Message-ID: <alpine.DEB.2.21.2001040815230.2636@hadrien>
-References: <20200104064448.24314-1-wenyang@linux.alibaba.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sat, 4 Jan 2020 02:33:48 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0047X61N032491;
+        Sat, 4 Jan 2020 01:33:06 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578123186;
+        bh=MPRf4J4LtJYGh1pD72Jrc6iAhCN4qcDvA6BPua2uosw=;
+        h=From:To:CC:Subject:Date;
+        b=nx+lPbr/SGmKBzP24thYYTPnB0vv38CdOWsuOTX0yXSWaQmH/DXPDhcq/rM/t0vYz
+         1UJpv46qa4X0OMk2IpG2meVvsibgPNCBOm9NPo30cjv+hhFoakk7JSi8Q27bPWg3VE
+         E5JTa4t0n4E/BVEB8pKoBuu3CgHi5uqFOoEjDWQw=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0047X61P020021
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 4 Jan 2020 01:33:06 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sat, 4 Jan
+ 2020 01:33:04 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Sat, 4 Jan 2020 01:33:04 -0600
+Received: from vberus.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0047X19D007851;
+        Sat, 4 Jan 2020 01:33:02 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <kyungmin.park@samsung.com>, <miquel.raynal@bootlin.com>,
+        <aaro.koskinen@iki.fi>, <vigneshr@ti.com>
+CC:     <hns@goldelico.com>, <tony@atomide.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>
+Subject: [PATCH] mtd: onenand: omap2: Pass correct flags for prep_dma_memcpy
+Date:   Sat, 4 Jan 2020 09:34:53 +0200
+Message-ID: <20200104073453.16077-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The commit converting the driver to DMAengine was missing the flags for
+the memcpy prepare call.
+It went unnoticed since the omap-dma drive was ignoring them.
 
+Fixes: 3ed6a4d1de2c5 (" mtd: onenand: omap2: Convert to use dmaengine for memcp")
+Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+Hi,
 
---- Please note the new email address ---
+Aaro reported [1] a failure on omap2-onenand pointing to
+4689d35c765c696bdf0535486a990038b242a26b. It looks like the root cause is the
+conversion of omap2-onenand to DMAengine which missed the flags.
 
+Basically the client is waiting for a callback without asking for it. This
+certainly causes timeout.
 
-On Sat, 4 Jan 2020, Wen Yang wrote:
+I have not tested the patch, but it should fix the issue.
 
-> do_div() does a 64-by-32 division.
-> When the divisor is unsigned long, u64, or s64,
-> do_div() truncates it to 32 bits, this means it
-> can test non-zero and be truncated to zero for division.
+[1] https://lore.kernel.org/lkml/20200103081726.GD15023@darkstar.musicnaut.iki.fi/
 
-Would it be worth having a specific warning message for the long/unsigned
-long case?  If the target architecture has 32 bit longs then the warning
-can be immediately ignored.
+ drivers/mtd/nand/onenand/omap2.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-julia
+diff --git a/drivers/mtd/nand/onenand/omap2.c b/drivers/mtd/nand/onenand/omap2.c
+index edf94ee54ec7..71a632b815aa 100644
+--- a/drivers/mtd/nand/onenand/omap2.c
++++ b/drivers/mtd/nand/onenand/omap2.c
+@@ -328,7 +328,8 @@ static inline int omap2_onenand_dma_transfer(struct omap2_onenand *c,
+ 	struct dma_async_tx_descriptor *tx;
+ 	dma_cookie_t cookie;
+ 
+-	tx = dmaengine_prep_dma_memcpy(c->dma_chan, dst, src, count, 0);
++	tx = dmaengine_prep_dma_memcpy(c->dma_chan, dst, src, count,
++				       DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
+ 	if (!tx) {
+ 		dev_err(&c->pdev->dev, "Failed to prepare DMA memcpy\n");
+ 		return -EIO;
+-- 
+Peter
 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
-> This semantic patch is inspired by Mateusz Guzik's patch:
-> commit b0ab99e7736a ("sched: Fix possible divide by zero in avg_atom() calculation")
->
-> Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-> Cc: Julia Lawall <Julia.Lawall@lip6.fr>
-> Cc: Gilles Muller <Gilles.Muller@lip6.fr>
-> Cc: Nicolas Palix <nicolas.palix@imag.fr>
-> Cc: Michal Marek <michal.lkml@markovi.net>
-> Cc: Matthias Maennich <maennich@google.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: cocci@systeme.lip6.fr
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  scripts/coccinelle/misc/do_div.cocci | 66 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 66 insertions(+)
->  create mode 100644 scripts/coccinelle/misc/do_div.cocci
->
-> diff --git a/scripts/coccinelle/misc/do_div.cocci b/scripts/coccinelle/misc/do_div.cocci
-> new file mode 100644
-> index 0000000..f1b72d1
-> --- /dev/null
-> +++ b/scripts/coccinelle/misc/do_div.cocci
-> @@ -0,0 +1,66 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/// do_div() does a 64-by-32 division.
-> +/// When the divisor is unsigned long, u64, or s64,
-> +/// do_div() truncates it to 32 bits, this means it
-> +/// can test non-zero and be truncated to zero for division.
-> +///
-> +//# This makes an effort to find those inappropriate do_div () calls.
-> +//
-> +// Confidence: Moderate
-> +// Copyright: (C) 2020 Wen Yang, Alibaba.
-> +// Comments:
-> +// Options: --no-includes --include-headers
-> +
-> +virtual context
-> +virtual org
-> +virtual report
-> +
-> +@depends on context@
-> +expression f;
-> +long l;
-> +unsigned long ul;
-> +u64 ul64;
-> +s64 sl64;
-> +
-> +@@
-> +(
-> +* do_div(f, l);
-> +|
-> +* do_div(f, ul);
-> +|
-> +* do_div(f, ul64);
-> +|
-> +* do_div(f, sl64);
-> +)
-> +
-> +@r depends on (org || report)@
-> +expression f;
-> +long l;
-> +unsigned long ul;
-> +position p;
-> +u64 ul64;
-> +s64 sl64;
-> +@@
-> +(
-> +do_div@p(f, l);
-> +|
-> +do_div@p(f, ul);
-> +|
-> +do_div@p(f, ul64);
-> +|
-> +do_div@p(f, sl64);
-> +)
-> +
-> +@script:python depends on org@
-> +p << r.p;
-> +@@
-> +
-> +msg="WARNING: WARNING: do_div() does a 64-by-32 division, which may truncation the divisor to 32-bit"
-> +coccilib.org.print_todo(p[0], msg)
-> +
-> +@script:python depends on report@
-> +p << r.p;
-> +@@
-> +
-> +msg="WARNING: WARNING: do_div() does a 64-by-32 division, which may truncation the divisor to 32-bit"
-> +coccilib.report.print_report(p[0], msg)
-> --
-> 1.8.3.1
->
->
