@@ -6,57 +6,66 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 671BDC32767
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 09:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7577C3276F
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 09:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 406FE222C4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 09:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C875424649
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 09:48:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgADJnW convert rfc822-to-8bit (ORCPT
+        id S1726484AbgADJsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 04:43:22 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:42864 "EHLO
+        Sat, 4 Jan 2020 04:48:01 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:36398 "EHLO
         mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgADJnW (ORCPT
+        with ESMTP id S1726191AbgADJsA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 04:43:22 -0500
+        Sat, 4 Jan 2020 04:48:00 -0500
 Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 03BDACED12;
-        Sat,  4 Jan 2020 10:52:35 +0100 (CET)
+        by mail.holtmann.org (Postfix) with ESMTPSA id 3FE45CED12;
+        Sat,  4 Jan 2020 10:57:14 +0100 (CET)
 Content-Type: text/plain;
-        charset=utf-8
+        charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: [PATCH] Bluetooth: hci_bcm: Drive RTS only for BCM43438
+Subject: Re: [RFC PATCH v1] Bluetooth: hci_qca: Collect controller memory dump
+ during SSR
 From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <1577887294-6089-1-git-send-email-wahrenst@gmx.net>
-Date:   Sat, 4 Jan 2020 10:43:19 +0100
+In-Reply-To: <20200102144911.8358-1-bgodavar@codeaurora.org>
+Date:   Sat, 4 Jan 2020 10:47:58 +0100
 Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        BlueZ devel list <linux-bluetooth@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
         lkml <linux-kernel@vger.kernel.org>,
-        =?utf-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <77E11D2B-B230-4AAA-99ED-35029A781028@holtmann.org>
-References: <1577887294-6089-1-git-send-email-wahrenst@gmx.net>
-To:     Stefan Wahren <wahrenst@gmx.net>
+        BlueZ devel list <linux-bluetooth@vger.kernel.org>,
+        Hemantg <hemantg@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Claire Chang <tientzu@chromium.org>, seanpaul@chromium.org,
+        Rocky Liao <rjliao@codeaurora.org>,
+        Yoni Shavit <yshavit@google.com>,
+        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1D304799-509F-4387-B7E5-4D415461C98F@holtmann.org>
+References: <20200102144911.8358-1-bgodavar@codeaurora.org>
+To:     Balakrishna Godavarthi <bgodavar@codeaurora.org>
 X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stefan,
+Hi Balakrishna,
 
-> The commit 3347a80965b3 ("Bluetooth: hci_bcm: Fix RTS handling during
-> startup") is causing at least a regression for AP6256 on Orange Pi 3.
-> So do the RTS line handing during startup only on the necessary platform.
+> We will collect the ramdump of BT controller when hardware error event
+> received before rebooting the HCI layer. Before restarting a subsystem
+> or a process running on a subsystem, it is often required to request
+> either a subsystem or a process to perform proper cache dump and
+> software failure reason into a memory buffer which application
+> processor can retrieve afterwards. SW developers can often provide
+> initial investigation by looking into that debugging information.
 > 
-> Fixes: 3347a80965b3 ("Bluetooth: hci_bcm: Fix RTS handling during startup")
-> Reported-by: Ondřej Jirman <megous@megous.com>
-> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+> Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
 > ---
-> drivers/bluetooth/hci_bcm.c | 21 +++++++++++++++++----
-> 1 file changed, 17 insertions(+), 4 deletions(-)
+> drivers/bluetooth/hci_qca.c | 296 +++++++++++++++++++++++++++++++++++-
+> 1 file changed, 291 insertions(+), 5 deletions(-)
 
 patch has been applied to bluetooth-next tree.
 
