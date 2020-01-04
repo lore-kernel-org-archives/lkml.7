@@ -2,81 +2,196 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9DCC32767
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 08:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E09C32767
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 08:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6A5F24649
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 08:47:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578127623;
-	bh=5X3tciQat5bVeLfUv5zgi3ggJJ8ZS4+ZpZ10ftQnejs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QdHFs4dNRQBbFL4FOVcydlaLFLshdboORknijN46dDt9GO8JGjcCKldB+znLJXZTg
-	 oHO6AnMCB7v71nnzJk8alrF7tmT7HUyQujTcobMG9W5lA0XPpjCFnkLCCuI6cH0o33
-	 ++joCPZZh2Vu9VDnm0FFd9PxJedQLS+opwG+ZSxo=
+	by mail.kernel.org (Postfix) with ESMTP id 33E7A222C4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 08:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbgADIrA (ORCPT
+        id S1726402AbgADIuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 03:47:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbgADIq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 03:46:59 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A277A222C4;
-        Sat,  4 Jan 2020 08:46:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578127619;
-        bh=5X3tciQat5bVeLfUv5zgi3ggJJ8ZS4+ZpZ10ftQnejs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gVeBZfszLtbL1SrGl0FqryXGdOc3YWzreiQVMv0fK0jvETNtyLAhukYpYQTl09C7n
-         a6qGEfuOQqblLEjoFLdDSLGJkX6HRcEvzxxYIG89uqCFFUxgrOEA1MsjSBYPS/kEbP
-         kZzwNNV7E34FKIrsOo9pp8UnhBtVKgEomq+MiD14=
-Date:   Sat, 4 Jan 2020 09:46:55 +0100
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     atmgnd <atmgnd@protonmail.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>
-Subject: Re: Fw: usbcore missing parentheses in USE_NEW_SCHEME
-Message-ID: <20200104084655.GA1248326@kroah.com>
-References: <Pine.LNX.4.44L0.2001021018330.1546-100000@iolanthe.rowland.org>
- <SHQhnDsmKIpzyLJUY7lJlcdb9DLUPl8gGALB1h82ePlEPUQN9l5cHWxUWyqCcUaMRMGoq6dXRZA3e2gTvG4-HkJDxH994zTiHdeuaKJ6m-c=@protonmail.com>
+        Sat, 4 Jan 2020 03:50:00 -0500
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:46227 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726036AbgADIuA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jan 2020 03:50:00 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R581e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0Tmn9rCl_1578127795;
+Received: from IT-C02W23QPG8WN.local(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0Tmn9rCl_1578127795)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 04 Jan 2020 16:49:56 +0800
+Subject: Re: [PATCH] coccinelle: semantic patch to check for inappropriate
+ do_div() calls
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     Julia Lawall <Julia.Lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Matthias Maennich <maennich@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thomas Gleixner <tglx@linutronix.de>, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org
+References: <20200104064448.24314-1-wenyang@linux.alibaba.com>
+ <alpine.DEB.2.21.2001040759360.2636@hadrien>
+From:   Wen Yang <wenyang@linux.alibaba.com>
+Message-ID: <7d9d8f10-7eb6-ffc3-5084-5ed1a08d4bcb@linux.alibaba.com>
+Date:   Sat, 4 Jan 2020 16:49:55 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SHQhnDsmKIpzyLJUY7lJlcdb9DLUPl8gGALB1h82ePlEPUQN9l5cHWxUWyqCcUaMRMGoq6dXRZA3e2gTvG4-HkJDxH994zTiHdeuaKJ6m-c=@protonmail.com>
+In-Reply-To: <alpine.DEB.2.21.2001040759360.2636@hadrien>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 04, 2020 at 03:24:04AM +0000, atmgnd wrote:
-> Greg Kroah-Hartman:
-> here is the new patch:
+
+
+On 2020/1/4 3:00 下午, Julia Lawall wrote:
+> On Sat, 4 Jan 2020, Wen Yang wrote:
 > 
+>> do_div() does a 64-by-32 division.
+>> When the divisor is unsigned long, u64, or s64,
+>> do_div() truncates it to 32 bits, this means it
+>> can test non-zero and be truncated to zero for division.
+>> This semantic patch is inspired by Mateusz Guzik's patch:
+>> commit b0ab99e7736a ("sched: Fix possible divide by zero in avg_atom() calculation")
+>>
+>> Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+>> Cc: Julia Lawall <Julia.Lawall@lip6.fr>
+>> Cc: Gilles Muller <Gilles.Muller@lip6.fr>
+>> Cc: Nicolas Palix <nicolas.palix@imag.fr>
+>> Cc: Michal Marek <michal.lkml@markovi.net>
+>> Cc: Matthias Maennich <maennich@google.com>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: cocci@systeme.lip6.fr
+>> Cc: linux-kernel@vger.kernel.org
+>> ---
+>>   scripts/coccinelle/misc/do_div.cocci | 66 ++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 66 insertions(+)
+>>   create mode 100644 scripts/coccinelle/misc/do_div.cocci
+>>
+>> diff --git a/scripts/coccinelle/misc/do_div.cocci b/scripts/coccinelle/misc/do_div.cocci
+>> new file mode 100644
+>> index 0000000..f1b72d1
+>> --- /dev/null
+>> +++ b/scripts/coccinelle/misc/do_div.cocci
+>> @@ -0,0 +1,66 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/// do_div() does a 64-by-32 division.
+>> +/// When the divisor is unsigned long, u64, or s64,
+>> +/// do_div() truncates it to 32 bits, this means it
+>> +/// can test non-zero and be truncated to zero for division.
+>> +///
+>> +//# This makes an effort to find those inappropriate do_div () calls.
+>> +//
+>> +// Confidence: Moderate
+>> +// Copyright: (C) 2020 Wen Yang, Alibaba.
+>> +// Comments:
+>> +// Options: --no-includes --include-headers
+>> +
+>> +virtual context
+>> +virtual org
+>> +virtual report
+>> +
+>> +@depends on context@
+>> +expression f;
+>> +long l;
+>> +unsigned long ul;
+>> +u64 ul64;
+>> +s64 sl64;
+>> +
+>> +@@
+>> +(
+>> +* do_div(f, l);
+>> +|
+>> +* do_div(f, ul);
+>> +|
+>> +* do_div(f, ul64);
+>> +|
+>> +* do_div(f, sl64);
+>> +)
+>> +
+>> +@r depends on (org || report)@
+>> +expression f;
+>> +long l;
+>> +unsigned long ul;
+>> +position p;
+>> +u64 ul64;
+>> +s64 sl64;
+>> +@@
+>> +(
+>> +do_div@p(f, l);
+>> +|
+>> +do_div@p(f, ul);
+>> +|
+>> +do_div@p(f, ul64);
+>> +|
+>> +do_div@p(f, sl64);
+>> +)
+>> +
+>> +@script:python depends on org@
+>> +p << r.p;
+>> +@@
+>> +
+>> +msg="WARNING: WARNING: do_div() does a 64-by-32 division, which may truncation the divisor to 32-bit"
+>> +coccilib.org.print_todo(p[0], msg)
+>> +
+>> +@script:python depends on report@
+>> +p << r.p;
+>> +@@
+>> +
+>> +msg="WARNING: WARNING: do_div() does a 64-by-32 division, which may truncation the divisor to 32-bit"
+>> +coccilib.report.print_report(p[0], msg)
 > 
-> >From 85f01b89d050a988f4d9fc78232de47e793c6a7c Mon Sep 17 00:00:00 2001
-> From: Qi.Zhou <atmgnd@outlook.com>
-> Date: Wed, 1 Jan 2020 21:27:13 +0800
-> Subject: [PATCH] usb: hub: missing parentheses in USE_NEW_SCHEME
+> A few small issues: You have WARNING: twice in each case, and truncation
+> should be truncate.
+> 
 
-Please send this as a stand-alone patch, the header here should not be
-in the body of the email.
+Thanks for your comments, we will fix it soon.
 
-Also, I doubt your name has a "." in it, right?  :)
+> Is there any generic strategy for fixing these issues?
+> 
 
-See the many many examples of patches on the mailing list for examples
-of how this all should look, as well as read
-Documentation/SubmittingPatches.
+We have done some experiments, such as:
+https://lkml.org/lkml/2020/1/2/1354
 
-thanks,
 
-greg k-h
+-	avg = rec->time;
+-	do_div(avg, rec->counter);
++	avg = div64_ul(rec->time, rec->counter);
+
+--> Function replacement was performed here,
+     and simple code cleanup was also performed.
+
+
+-		do_div(stddev, rec->counter * (rec->counter - 1) * 1000);
++		stddev = div64_ul(stddev,
++				  rec->counter * (rec->counter - 1) * 1000);
+
+--> Only the function replacement is performed here (because the 
+variable ‘stddev’ corresponds to a more complicated equation, cleaning 
+it will reduce readability).
+
+In addition, there are some codes that do not need to be modified:
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/net/can/dev.c#n263
+
+So we just print a warning.
+As for how to fix it, we need to analyze the code carefully.
+
+-- 
+Best Wishes,
+Wen
+
+
