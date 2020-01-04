@@ -2,105 +2,155 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3182C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFDDC00523
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB33A217F4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90DC21D7D
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578109063;
-	bh=OMdL7w3tIP9+unUsVjrMVHBZVmASDJsoN3LWK+rdseI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wPQWea0OXGYuysbSO43Belp5ZXGx6hErGOvqkoyp0VVmPzJmX832NZX9DvL8ZXBwt
-	 B+7r/zcmzJRWETOvXo97ReR9ImMLoAoIdydObfnrtv2q2i8cwuTRMee+xr4iIefdnQ
-	 5N7maQt2i63x1uee768U2QwgPLrzmOwsFWPJnFbk=
+	s=default; t=1578109070;
+	bh=u1ILnj81O0i4X/I1PrQJ8sd5hsT3/4944fdPuTRkgiw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IvDwVtvFxv22aMwat+KXyvNoS+S/hoRvhGVypMCs5MVs6XXT/yZ/fSjmM4wdkBnar
+	 NnzVbju+gV0jp17GyJgpr+qmv3r8uEkS2EfgvYLd1FVD1S7KJCCA99o3pBiaBKgIAp
+	 NB4t7w4cbh+hAo2k7YPPk6B3aXC1vk14qxfItu44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgADDhn (ORCPT
+        id S1727465AbgADDg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 22:37:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37852 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727612AbgADDgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 22:36:48 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D187B2464E;
-        Sat,  4 Jan 2020 03:36:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578109007;
-        bh=OMdL7w3tIP9+unUsVjrMVHBZVmASDJsoN3LWK+rdseI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KzX7Vxq856qw3ZV83w7xGWCS5WJgm3hOP0s55KUjKGj3DMaECCiDV1B9EJkdnnTrv
-         pXpxha2DMO8cw89T+nMbDvp3TzZfRsze2CDp40b6xAvF6iQ3OKqGwKSRQ0l8FyCe+w
-         ZQqMyN3xYBb/4gFIbP3ykeiawGYvckrXcPTV7Npg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 2/5] gpio: Fix error message on out-of-range GPIO in lookup table
-Date:   Fri,  3 Jan 2020 22:36:41 -0500
-Message-Id: <20200104033644.11121-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200104033644.11121-1-sashal@kernel.org>
-References: <20200104033644.11121-1-sashal@kernel.org>
+        Fri, 3 Jan 2020 22:36:28 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:32061 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727274AbgADDg0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 22:36:26 -0500
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 0043aDh2023619;
+        Sat, 4 Jan 2020 12:36:14 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 0043aDh2023619
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1578108974;
+        bh=E7v6OsSDfr6V815FU2MY7OtZnfPcFmRdIvSTyf6A5q8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=M2Yv2C4BCcLEiA+O/utwZa5WrRwTqIxLFxjRiKwkX7G+1GJVIp7G/T0t09moraU0O
+         8dBsLLVKwOLGoHuSfnJ7M6wO3+sbLlYb5k5qeEW0JfaZgR6KQWoiYcVkeqsCKt5dMF
+         D9KQGCWxmzXjHlDfIJPYpaYJSkg98zWhLFOzPKdYksMblnl/ZvwCyORqWR+eBzPZmO
+         wuN/jQIiKPAiiTjmRlDFiDfHBra9ftCky5hhIcHMUkRUvG4Z+VAK4vJzjflpfQUBpA
+         TiBaTxZLuJR8VaF/sVuMcGmk+QjmRhyRbO4ES7DFLpZF453IYxRCduPxe3RaM8Lqtr
+         /Q+p0xXDSDOqg==
+X-Nifty-SrcIP: [209.85.221.170]
+Received: by mail-vk1-f170.google.com with SMTP id c129so11222716vkh.7;
+        Fri, 03 Jan 2020 19:36:14 -0800 (PST)
+X-Gm-Message-State: APjAAAVUFwwOtfXLt7Fp93ZV5hWE/Qd3gSq8DbQbo+DFMbweK5KLamyu
+        5OVgDt1wSEH9BzTSeVgSMzj3j3l989yFTaT+mm8=
+X-Google-Smtp-Source: APXvYqwFrX0S6OIqke8PQUsgzrJ85FumVCcPzymZOA5sJCiSerQ6OnjY8DABR6LmjjZSqaQZJWGUxu05TfzGAAs3kTw=
+X-Received: by 2002:a1f:6344:: with SMTP id x65mr52196094vkb.26.1578108973033;
+ Fri, 03 Jan 2020 19:36:13 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200103175915.26663-1-masahiroy@kernel.org> <20200103175915.26663-12-masahiroy@kernel.org>
+ <20200103195205.GC21515@ravnborg.org>
+In-Reply-To: <20200103195205.GC21515@ravnborg.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sat, 4 Jan 2020 12:35:37 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQXx0RGutdOe4JFLTbjm7=cx9aEKQ-823-irED4SyCmMA@mail.gmail.com>
+Message-ID: <CAK7LNAQXx0RGutdOe4JFLTbjm7=cx9aEKQ-823-irED4SyCmMA@mail.gmail.com>
+Subject: Re: [PATCH 11/12] initramfs: refactor the initramfs build rules
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Thelen <gthelen@google.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+Hi Sam,
 
-[ Upstream commit d935bd50dd14a7714cbdba9a76435dbb56edb1ae ]
+On Sat, Jan 4, 2020 at 4:52 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Mashahiro.
+>
+> I just browsed this fine patchset and noticed...
+> >
+> > -#####
+> > -# Generate the initramfs cpio archive
+> > +ramfs-input := $(shell echo $(CONFIG_INITRAMFS_SOURCE))
+> > +cpio-data :=
+> > +
+> > +ifeq ($(words $(ramfs-input)),0)
+> > +
+> > +# If CONFIG_INITRAMFS_SOURCE is empty, generate a small initramfs with the
+> > +# default contents.
+> > +ramfs-input := $(srctree)/$(src)/default_cpio_list
+> > +
+> > +else ifeq ($(words $(ramfs-input)),1)
+> > +# If CONFIG_INITRAMFS_SOURCE specifies a single file, and it is suffixed with
+> > +# .cpio or .cpio.*, use it directly as an initramfs.
+> > +ifneq ($(filter %.cpio,$(ramfs-input)),)
+> > +cpio-data := $(ramfs-input)
+> > +endif
+>
+> This part will now work if the file is named foo.cpio.bar.
+> $(findstring .cpio, should be used and not $(filter %.cpio
+> At least if the comment describes the intended behaviour.
 
-When a GPIO offset in a lookup table is out-of-range, the printed error
-message (1) does not include the actual out-of-range value, and (2)
-contains an off-by-one error in the upper bound.
 
-Avoid user confusion by also printing the actual GPIO offset, and
-correcting the upper bound of the range.
-While at it, use "%u" for unsigned int.
+The 'foo.cpio.bar' is taken care of
+by ifeq ($(words $(subst .cpio.,$(space),$(ramfs-input))),2)
 
-Sample impact:
+I admit the comment was confusing.
 
-    -requested GPIO 0 is out of range [0..32] for chip e6052000.gpio
-    +requested GPIO 0 (45) is out of range [0..31] for chip e6052000.gpio
 
-Fixes: 2a3cf6a3599e9015 ("gpiolib: return -ENOENT if no GPIO mapping exists")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191127095919.4214-1-geert+renesas@glider.be
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpio/gpiolib.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+I will clarify the comments as follows:
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index b81a27c7f89c..5e2357fda934 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3749,8 +3749,9 @@ static struct gpio_desc *gpiod_find(struct device *dev, const char *con_id,
- 
- 		if (chip->ngpio <= p->chip_hwnum) {
- 			dev_err(dev,
--				"requested GPIO %d is out of range [0..%d] for chip %s\n",
--				idx, chip->ngpio, chip->label);
-+				"requested GPIO %u (%u) is out of range [0..%u] for chip %s\n",
-+				idx, p->chip_hwnum, chip->ngpio - 1,
-+				chip->label);
- 			return ERR_PTR(-EINVAL);
- 		}
- 
--- 
-2.20.1
 
+
+# If CONFIG_INITRAMFS_SOURCE specifies a single file, and it is suffixed with
+# .cpio, use it directly as an initramfs.
+ifneq ($(filter %.cpio,$(ramfs-input)),)
+cpio-data := $(ramfs-input)
+endif
+
+# If CONFIG_INITRAMFS_SOURCE specifies a single file, and it is suffixed with
+# .cpio.*, use it directly as an initramfs, and avoid double compression.
+ifeq ($(words $(subst .cpio.,$(space),$(ramfs-input))),2)
+cpio-data := $(ramfs-input)
+compress-y := shipped
+endif
+
+
+
+
+
+
+> > +
+> > +ifeq ($(words $(subst .cpio.,$(space),$(ramfs-input))),2)
+> > +cpio-data := $(ramfs-input)
+> > +# If the specified archive is suffixed with .cpio.* (i.e. already compressed),
+> > +# we do not double-compress it.
+> > +compress-y := shipped
+> > +endif
+> > +
+> > +endif
+>
+>
+>         Sam
+
+
+
+
+
+
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
