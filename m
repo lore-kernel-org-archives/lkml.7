@@ -2,160 +2,124 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D388EC32767
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 04:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BA6C3276F
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 04:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A51F2217F4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 04:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90C53217F4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 04:33:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CY+tECQK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YIbJwD7m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgADEcW (ORCPT
+        id S1726145AbgADEdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 23:32:22 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36639 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbgADEcW (ORCPT
+        Fri, 3 Jan 2020 23:33:08 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:58949 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725877AbgADEdI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 23:32:22 -0500
-Received: by mail-lf1-f66.google.com with SMTP id n12so33119142lfe.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 20:32:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4qpFDUneEzUOUl7vEL3+bTMu+7P48c2INu38tVs39oE=;
-        b=CY+tECQK3KrtQp0WnMCREsQ2RgUoGep6ltShRhscVJIsQhnIrnfr4eid6jhvA89sRe
-         4sOst9wl5oQBQtC3LktXTxXeTxq+Uh48bx/AzqXDcgNd28HvDIqKPub5cbTlzn9xTxy0
-         YDNi9ad9PauKcBfgyFKJ3k1cPwidoE2Jk3z/B2kTtUT7kUCtbOlKUQnFc4mj7NqZFxWy
-         5mdVCptyqgKtUbijxRdb0wAG1d5gT5zWw8bKoQd3pTczRvYgb72RsAuaO7Zk/cpWA+Lr
-         Pu5z7XxigzCET/0WqbqxQro/C8tzq0EV2KDVKLOcexudh5yV7NbdtQG/0P+irkm+kIPG
-         AN+Q==
+        Fri, 3 Jan 2020 23:33:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578112387;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:in-reply-to:in-reply-to:  references:references;
+        bh=EH4HIVfE1g94Oc74sF5uvgjnl7asPTcL1vJBmw2UA5M=;
+        b=YIbJwD7mcBsX6d4qY4gt9+Rr/38b8YT1eeOgcgjti5d3IfuZE+w2YYgJuw/qvH+J2P0WpL
+        kWfEvN6aUpLKFA/FLzzK9bOdcBeS+l6V7vmmcw0zBzR1D/gfPfwz7VE/h+FMe8zVHjjLQD
+        pSr9MSzeLeJPCKHlSFYggodMrs0Grc0=
+Received: from mail-yb1-f199.google.com (mail-yb1-f199.google.com
+ [209.85.219.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-129-3mc9jl6dOTOJjEWrhtMAeg-1; Fri, 03 Jan 2020 23:33:03 -0500
+X-MC-Unique: 3mc9jl6dOTOJjEWrhtMAeg-1
+Received: by mail-yb1-f199.google.com with SMTP id k190so2187789yba.15
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 20:33:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4qpFDUneEzUOUl7vEL3+bTMu+7P48c2INu38tVs39oE=;
-        b=d/m0gxQTUSTmkZzTcco5mo6aNx+1g7XvEFW+SuVSpx/jyECUOPvLKYEc8Tvb2ElFzI
-         M1dvjfd2IAdPgWJvruJm+dKTKKAaGc1x0Z0VubWZgsXsEq5bFdsNWeHuvcp1uP2PhkMQ
-         yPbIWkcE+xrzKTzat8LRGz5siswrxI1JR4VFhms8qzrg2/jfycfjygiTowtLBjR+mfV4
-         M3uaGGvhLP49dGd0q+ApSMDt3GhqhlDqC3MAm/OZnmPG2TqwQjM2u2rwlNlN6M+LuoFI
-         xEN6kH7kBf/+pHnYCMceIUPfpSDS+NtCgMszjQZaqzsyyipGWxC27FDGDRdbjwiwrsew
-         TohA==
-X-Gm-Message-State: APjAAAW7SJuresBkxyEaEnAmB+XKxt7zffSoyv0SrfYSncvvpXucdD4Q
-        zeO2P8uDkdc2iKmvshoOUsKkNxXDybRWjTh1E0QbqWIH61A=
-X-Google-Smtp-Source: APXvYqwsInCSpOoIg28BvtcZy6rk++6VfgPKPFA4EK1CHJtqDv811P8YsosYeSq8HuPxXMfjHxWD8USK2D8TtMzV674=
-X-Received: by 2002:a19:8a06:: with SMTP id m6mr48587188lfd.99.1578112340329;
- Fri, 03 Jan 2020 20:32:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20200102220029.183913184@linuxfoundation.org> <72f41f89-bf68-d275-2f1e-d33a91b5e6cd@roeck-us.net>
- <20200103154156.GA1064304@kroah.com>
-In-Reply-To: <20200103154156.GA1064304@kroah.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sat, 4 Jan 2020 10:02:09 +0530
-Message-ID: <CA+G9fYufgU0ZQC-+vVhHhX31wBq=O32jwq2zyqsZEZCvjeMG4w@mail.gmail.com>
-Subject: Re: [PATCH 4.19 000/114] 4.19.93-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=EH4HIVfE1g94Oc74sF5uvgjnl7asPTcL1vJBmw2UA5M=;
+        b=YXYApPle7KruHey41dSVKc+LlS433fTq4dOLSic9BrHk1j4CFMT95Hds5ViThp528e
+         q8PnXO640F7iArHdPeCJg2Ib3DvPqWGcrLtok6od0qTiRhHzpBr59BZRrBctVYW2yv70
+         ssLdhHPGXRJ2qXH8M8z+Mwf1IDuzZI6fEuzL6eaB+I5Zr1NhBskk6S5JztZctewLAHzr
+         s6c+yyDci3UbaJ5jmx9UenQ8ghdietGc5NaNfqGWs0erDe9OvRNH24tk9L+H6c9M8t6b
+         sF5c+Uz8J4F//S/IXeSsu6G5rwFvXeDe/kI9RDVueg2abtG0gxcC8ouD/sD33zXAnSCh
+         egtw==
+X-Gm-Message-State: APjAAAX+93zmUfBxQs5ImYDJUV+J9xSd908PUk3pzM7izwZnurpNkp/b
+        Sf6+bJe/inb8C1IbArCrdjUNZTeeohI7k+tIp08V2+D9xMivSloiTFe1fPMffRz7dHkhUFxCmEk
+        YWtiQU/phHFurH4/z5pVhWRQB
+X-Received: by 2002:a81:2f04:: with SMTP id v4mr64921588ywv.341.1578112382616;
+        Fri, 03 Jan 2020 20:33:02 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwYrucKBjExCaCtPyxX/ykitdGBb5WIYegTI6Se0XwSbgJhV2yWefwN68nViIpFEk+rJGnJmA==
+X-Received: by 2002:a81:2f04:: with SMTP id v4mr64921565ywv.341.1578112382327;
+        Fri, 03 Jan 2020 20:33:02 -0800 (PST)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id z12sm24661864ywl.27.2020.01.03.20.33.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2020 20:33:01 -0800 (PST)
+Date:   Fri, 3 Jan 2020 21:32:59 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-integrity@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
         open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Stefan Berger <stefanb@linux.ibm.com>
+Subject: Re: [PATCH for-linus-v5.5-rc6 0/3] TPM changes for v5.5-rc6
+Message-ID: <20200104043259.krg7uo6q7owg4fka@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        open list <linux-kernel@vger.kernel.org>,
+        Stefan Berger <stefanb@linux.ibm.com>
+References: <20200103232935.11314-1-jarkko.sakkinen@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200103232935.11314-1-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Jan 2020 at 21:12, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Sat Jan 04 20, Jarkko Sakkinen wrote:
+>There has been a bunch of reports (one from kernel bugzilla linked)
+>reporting that when this commit is applied it causes on some machines
+>boot freezes.
 >
-> Now added to 4.14 and 4.19 queues, thanks!
+>Unfortunately hardware where this commit causes a failure is not widely
+>available (only one I'm aware is Lenovo T490), which means we cannot
+>predict yet how long it will take to properly fix tpm_tis interrupt
+>probing.
+>
+>Thus, the least worst short term action is to revert the code to the
+>state before this commit. In long term we need fix the tpm_tis probing
+>code to work on machines that Stefan's code was supposed to fix.
+>
+>Link: https://bugzilla.kernel.org/show_bug.cgi?id=205935
+>Cc: Jerry Snitselaar <jsnitsel@redhat.com>
+>Cc: Dan Williams <dan.j.williams@intel.com>
+>
+>Jarkko Sakkinen (1):
+>  tpm: Revert "tpm_tis: reserve chip for duration of tpm_tis_core_init"
+>
+>Stefan Berger (2):
+>  tpm: Revert "tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for
+>    interrupts"
+>  tpm: Revert "tpm_tis_core: Turn on the TPM before probing IRQ's"
+>
+> drivers/char/tpm/tpm_tis_core.c | 34 +++++++++++++++------------------
+> 1 file changed, 15 insertions(+), 19 deletions(-)
+>
+>-- 
+>2.20.1
+>
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.19.93-rc3
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: 9ecb5b1714ae62e5f10cc711b473d902b465735d
-git describe: v4.19.92-115-g9ecb5b1714ae
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.92-115-g9ecb5b1714ae
-
-
-No regressions (compared to build v4.19.92)
-
-No fixes (compared to build v4.19.92)
-
-
-Ran 24071 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* libhugetlbfs
-* ltp-containers-tests
-* ltp-fs-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* ssuite
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
