@@ -2,31 +2,40 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DEAC32770
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 19:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EA4C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 19:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0E8424654
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 19:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 080DE222C4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 19:56:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="N1dTr9LK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbgADTxZ (ORCPT
+        id S1726313AbgADT4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 14:53:25 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:44817 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727227AbgADTxV (ORCPT
+        Sat, 4 Jan 2020 14:56:08 -0500
+Received: from dvalin.narfation.org ([213.160.73.56]:48612 "EHLO
+        dvalin.narfation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726135AbgADT4I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 14:53:21 -0500
-Received: from orion.localdomain ([95.114.65.70]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Mt6x5-1jgsza07NR-00tS78; Sat, 04 Jan 2020 20:52:11 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     davem@davemloft.net, mareklindner@neomailbox.ch,
-        sw@simonwunderlich.de, a@unstable.cc, sven@narfation.org,
+        Sat, 4 Jan 2020 14:56:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
+        s=20121; t=1578167764;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UqiZRCJx1oOd2eCd6cVZ2EAaLCuKduqQh59G4MIC1hI=;
+        b=N1dTr9LKpmbUm7jhHLkkAnSn4Uk0IqVABlm7QBukSZ6fiZ4vRyb1FBVnUMFlCclwuXXZBs
+        Qs/8lHhZ5okHVrmW+zHFlNga0CODN/5lEd+nPh2WpPavaDxm2l8AtpAymxY0O+OHx9Jeaq
+        96IXxU+T4mlDeBY0Zp8kN5wwL+CkiUg=
+From:   Sven Eckelmann <sven@narfation.org>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, davem@davemloft.net,
+        mareklindner@neomailbox.ch, sw@simonwunderlich.de, a@unstable.cc,
         marcel@holtmann.org, johan.hedberg@gmail.com,
         roopa@cumulusnetworks.com, nikolay@cumulusnetworks.com,
         edumazet@google.com, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
@@ -35,54 +44,92 @@ Cc:     davem@davemloft.net, mareklindner@neomailbox.ch,
         netdev@vger.kernel.org, linux-bluetooth@vger.kernel.org,
         tipc-discussion@lists.sourceforge.net,
         linux-hyperv@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH 3/8] net: batman-adv: remove unneeded MODULE_VERSION() usage
-Date:   Sat,  4 Jan 2020 20:51:26 +0100
-Message-Id: <20200104195131.16577-3-info@metux.net>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200104195131.16577-1-info@metux.net>
-References: <20200104195131.16577-1-info@metux.net>
-X-Provags-ID: V03:K1:Ci9PP5MICbNyKZYz/hOm3tbLcnhVGValijAAoQ6mFu/hIgdFR42
- OovCRWMFmdaKsPmQLoX3w1NfLCvwicLbrS9Z5JaAXiHuKAbGPpuW3P4RohAj4aSIL09hQfb
- TYS7Mny8thYiVeUZaUSDgi1GBTy3Vr5IdyUjQz4bNE2bGoQhSZJnUkOxRqbuS36vKCmNqwU
- xHutYcwZg3P7dc2M84wew==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:rjpsvxxoJPM=:hX5kfdTKwbLpbwAXjMQX3c
- UgcG2H12f29KLzs12xnWxcGB78lBx6XdBTOVpCx1XpyrDR3L6UPzlIhn4S1dO18LqU9pZYqZq
- Dron2+oLoEZ6UPHbpE40SXa504ZnjiyPH6eyBWak4/YWJ0rY9ATeR6dUJ2+Lky751Wp/f7c4X
- 7B/QDh4YJyyRxRKzyEEYimtHxg8ovcOVKju8CCv8a+suOxCLoss/ZYOLPXfSHOxNklcsv9XeF
- AJDHWzgAf+rI46m9R77Ppm7Uve4065Fgn7qd+Lpxi5HppTzwEKDS+Dk+xR5hYt+4Ixi4zdKXs
- W369pyPxbQovyrgkajw5O7u+5U45bhRSOgDrZXXGFocikFT2hVe6v3Jg2EFRr3Df8xkPIuaD7
- +IIHNSy9hBrhiZGelK5+vmnORx6iLaTJF93SmOIwWcT8+PGMI3joY1kNRBSGnTNbK4aw1hPsU
- zdcOIFzkSUHJzhz2rHrBzMX3zfsFzZbRKmz/SPmgARVzlkH5SQYskPwYfAQDAL83ifNiQEJ54
- dHI917U0PFfrytdO+39EHRZzwgendSFoSg4JGUhDgoGKFVncftzUP9bSxEiZzOmMKK766wbC+
- SAK27B3AjKWQFF6GiV0b/Ya4u7JUPnNdoYk/FqwTtlBSKqq+z0XXkwSzhIY9q9WLGa4kCoR1d
- Ocs7/66SM2G5vQwYbk+RjQCYa+vAX8kSsLXO/saYmFh+oN+1nVTdqDiagE5rU7q7ksQSW0AOI
- ACmApk+490waUmPxqB7mogDCQCrQZO8YPATvEOjBdZTpe0MlJhe+FoT5R/JMI6iFr4TwoFgpV
- Q/QtoE1WzmHEpS/AOyELlVd+GNKWwYtcGYcxNOsguH0k5n7JlctK7/ytOe4imxyhwrPUSFWF3
- 3hTDCAPJaee9k5ggLzMw==
+Subject: Re: [PATCH 4/8] net: ipv4: use netdev_info()/netdev_warn()
+Date:   Sat, 04 Jan 2020 20:55:56 +0100
+Message-ID: <1717918.JrPmCOKjZS@sven-edge>
+In-Reply-To: <20200104195131.16577-4-info@metux.net>
+References: <20200104195131.16577-1-info@metux.net> <20200104195131.16577-4-info@metux.net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart6903353.xe3xGztRYD"; micalg="pgp-sha512"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove MODULE_VERSION(), as it isn't needed at all: the only version
-making sense is the kernel version.
+--nextPart6903353.xe3xGztRYD
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- net/batman-adv/main.c | 1 -
- 1 file changed, 1 deletion(-)
+On Saturday, 4 January 2020 20:51:27 CET Enrico Weigelt, metux IT consult wrote:
+> Use netdev_info() / netdev_warn() instead of pr_info() / pr_warn()
+> for more consistent log output.
+> 
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+> ---
 
-diff --git a/net/batman-adv/main.c b/net/batman-adv/main.c
-index 4811ec65bc43..8ccca3734b7a 100644
---- a/net/batman-adv/main.c
-+++ b/net/batman-adv/main.c
-@@ -748,6 +748,5 @@ MODULE_LICENSE("GPL");
- MODULE_AUTHOR(BATADV_DRIVER_AUTHOR);
- MODULE_DESCRIPTION(BATADV_DRIVER_DESC);
- MODULE_SUPPORTED_DEVICE(BATADV_DRIVER_DEVICE);
--MODULE_VERSION(BATADV_SOURCE_VERSION);
- MODULE_ALIAS_RTNL_LINK("batadv");
- MODULE_ALIAS_GENL_FAMILY(BATADV_NL_NAME);
--- 
-2.11.0
+Patch description has nothing to do with the actual patch.
+
+Kind regards,
+	Sven
+
+>  net/ipv4/tcp_cubic.c    | 1 -
+>  net/ipv4/tcp_illinois.c | 1 -
+>  net/ipv4/tcp_nv.c       | 1 -
+>  3 files changed, 3 deletions(-)
+> 
+> diff --git a/net/ipv4/tcp_cubic.c b/net/ipv4/tcp_cubic.c
+> index 1b3d032a4df2..83fda965186d 100644
+> --- a/net/ipv4/tcp_cubic.c
+> +++ b/net/ipv4/tcp_cubic.c
+> @@ -513,4 +513,3 @@ module_exit(cubictcp_unregister);
+>  MODULE_AUTHOR("Sangtae Ha, Stephen Hemminger");
+>  MODULE_LICENSE("GPL");
+>  MODULE_DESCRIPTION("CUBIC TCP");
+> -MODULE_VERSION("2.3");
+> diff --git a/net/ipv4/tcp_illinois.c b/net/ipv4/tcp_illinois.c
+> index 00e54873213e..8cc9967e82ef 100644
+> --- a/net/ipv4/tcp_illinois.c
+> +++ b/net/ipv4/tcp_illinois.c
+> @@ -355,4 +355,3 @@ module_exit(tcp_illinois_unregister);
+>  MODULE_AUTHOR("Stephen Hemminger, Shao Liu");
+>  MODULE_LICENSE("GPL");
+>  MODULE_DESCRIPTION("TCP Illinois");
+> -MODULE_VERSION("1.0");
+> diff --git a/net/ipv4/tcp_nv.c b/net/ipv4/tcp_nv.c
+> index 95db7a11ba2a..b3879fb24d33 100644
+> --- a/net/ipv4/tcp_nv.c
+> +++ b/net/ipv4/tcp_nv.c
+> @@ -499,4 +499,3 @@ module_exit(tcpnv_unregister);
+>  MODULE_AUTHOR("Lawrence Brakmo");
+>  MODULE_LICENSE("GPL");
+>  MODULE_DESCRIPTION("TCP NV");
+> -MODULE_VERSION("1.0");
+> 
+
+
+--nextPart6903353.xe3xGztRYD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAl4Q7cwACgkQXYcKB8Em
+e0b7FxAApnNZqwnoUYpozOR6QRqjuLfnrOtYC07Y0PGVBxHQPzwQKI1qrHS5pnJY
+pRHVwNNnRqXnCj5Age/miVF5AZGtrHCJDHR/5lciyHudORjk3RXOizXUD2Jc6ksj
+ZNjSdQQqwyDGEsh4YYMPpGx6IsnXFSflYPulIOrAr1ekbrJr+4LUh2AtzzORwB7f
+nsGBypPneKIfOWl4kWQkPUtqIPQVyjZhCezTaZTcyDgvKPbltdJGZC6f93iC2W6/
+rwT86Fd7zJm7EvMlEC/3w6myVqyCgUJUID6bY9qEkn1X1qLESVYo+UTVkQlo22BG
+XRzletVGhxROCI45qZ8tSqUjQ2Nt9exO5hhIxa+Tbl6UrMqjKuPhqiRgu4JjqeVv
+Xks7x2aP/xPg74bzGQf0lhCUNSiAXQ99qw+P7J2ZMXR0AXLBL6ocyshKUwT+AVqE
+khwBENTIDO8/I9TaPm4dFCNr7gXJQiRCs/NiAZgCxZUgvPNMOBCDeQQh3oarvnLf
+IlyzO94Zbv57AYkM7zdLaLRLsqS8vdUSPFILSbFYXUU+tqH9F3loFgfic4e57h2l
+zEawSvYrME9uIOu5dfbpZ4uw7WHzC2CeHWLytnaxhwJYAntZaqHaTwU0l0N3v8sz
++epMGNYt+x8KRnthWBBYtK52trmTOXNT9pIUolp+LBDzeZre9Gc=
+=SIfr
+-----END PGP SIGNATURE-----
+
+--nextPart6903353.xe3xGztRYD--
+
+
 
