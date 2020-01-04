@@ -2,285 +2,117 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B91C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 16:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A73AC32770
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 16:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5BF22B48
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 16:19:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578154780;
-	bh=Fw0NvdW7287oB2BrjWobdQwsYg6taF1cc9PK7xdCqck=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=GQS4qrREM59hEqFe7VxQ4vlAI51tzawx2p+wUHn+jSj7Y1Zo1GFeRczPtVt/Euxo5
-	 +rKPYarCfr4kkOHFoqEmcYMT6l0YRbxDLmvvm6OPuOiFvnUPnlUSU//eZdzXlBNjjd
-	 UuzfzycOd6NE9NAmA+rVuyFfIqTvmOgZPnZX9r1g=
+	by mail.kernel.org (Postfix) with ESMTP id 6118B22B48
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 16:19:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fHyNKqPI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbgADQTi (ORCPT
+        id S1726252AbgADQTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 11:19:38 -0500
-Received: from conuserg-07.nifty.com ([210.131.2.74]:64249 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbgADQTi (ORCPT
+        Sat, 4 Jan 2020 11:19:49 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43057 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbgADQTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 11:19:38 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 004GJ8oP011517;
-        Sun, 5 Jan 2020 01:19:08 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 004GJ8oP011517
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578154749;
-        bh=zePdzdwBtHIGogzGwb31GcCJQDH95pGUnC9jUQxS7HM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=byknvfZDG0lGsRXOdRznn+EoyEpsq8f5gVmFqzCl9i/DWD1L/UtG2qOxmD7fV7J9o
-         ndlrsiPxxfLchakuSqHOJeSX61UoIJqfALKvUtTFrQMCKlnrheWjX/LFwUBsjyV/IW
-         5gDp9vJxXWF3EHbAhmGPSZ1PYbwgT70kYGy1fha4cDXAS14ml2FMJ1BEgDm1yiwAry
-         3E80VOhlMqw9Rt8M0Rf0YrW7ER28F0iGmuMAu5ahJmUYiGu+Yzse263s9oLdQTmw9C
-         nqtPPuf0v9MWbNuxPevueAtGujd2fy1ZRYy+71G4y5dcI/oJSxlXoS+DWJuVTu+vAs
-         yoHwlCl228B6Q==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: most: remove header include path to drivers/staging
-Date:   Sun,  5 Jan 2020 01:18:27 +0900
-Message-Id: <20200104161827.18960-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Sat, 4 Jan 2020 11:19:48 -0500
+Received: by mail-pl1-f195.google.com with SMTP id p27so20157322pli.10;
+        Sat, 04 Jan 2020 08:19:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Hr6gRku33sKOdBDlVVDjuwq72fwx5PUhef2D4L3tjhk=;
+        b=fHyNKqPId2hcNHM00cM3J/5Hw40VdqRg4zE09e2VypJvRMvD88lA5LCQGTcv21ap5L
+         F1fY2eHj6girziJI6+YWCHWbQgHcD4l4NZ18VsufHnFrk13F+aYyh4J8hxVWHml0aACC
+         bajiabLvqkRLpc6f99xuYRyemBFly+o2UwVN/N98r1JoYL2fZQlS3RjDvjgWXjV8vKqs
+         4PnyYwxECU8nhhVn0uYYudiVAcAzSmK/rRs6GXAOjVrLdCJn9U8GuV6KfMD2JutngGyX
+         8Svj9VjCibTPJ3pO5nFU2r2oNFvHFXKkFj554TcT6ANDpHGaAZkPF3XBTFyJImLVo7CQ
+         AoHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Hr6gRku33sKOdBDlVVDjuwq72fwx5PUhef2D4L3tjhk=;
+        b=kSk8KmwEW3futKxwAK4XUw8htyOZBjnAVsnVZPsdZSGeyOCRCtUDCBbZZ80d0kz2EH
+         HLL9dPP9iJgLwZlIREUKx4k13BLMbbOFF+vITfbRwMY/VbAA106D915b9R3HMxkcwRI7
+         I9x1qRul1KbNZnU0cZAM0Eske3G1bX6AryFnxD+yE6eL2EfMfMJ3TR0diNhtA1x62bKe
+         X4F3l2M/vJb8kEC7+H6ggUkCiIn0PrDx//qHiywW9Kgk4+fMyxi+u/YDhvwNiYOMvIek
+         0YSpCz3MssboDCfmEx4zO+B6xsGmmjHq2cfqHjz/n3ulDvtpDLVHUt0ipk0NQB7zYzYR
+         vnaA==
+X-Gm-Message-State: APjAAAX5DgzZmTPPepCZcgTlc58RSDLAXfyNJapfLLcKIlRDve/y+QIP
+        ee9NclLChom/8lejAxJHtJU=
+X-Google-Smtp-Source: APXvYqy0JK3Q1yiH23rq1SeMoTgC8TBAei5Hnplpb4RKxhXr+8F817ZikIeiJACCMAPjwmWXOyAp+Q==
+X-Received: by 2002:a17:902:6b8c:: with SMTP id p12mr81709530plk.290.1578154788174;
+        Sat, 04 Jan 2020 08:19:48 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id t65sm73026931pfd.178.2020.01.04.08.19.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 04 Jan 2020 08:19:47 -0800 (PST)
+Date:   Sat, 4 Jan 2020 08:19:46 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v2 10/11] hwmon: (scmi-hwmon) Match scmi device by both
+ name and protocol id
+Message-ID: <20200104161946.GA2974@roeck-us.net>
+References: <20191218111742.29731-1-sudeep.holla@arm.com>
+ <20191218111742.29731-11-sudeep.holla@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218111742.29731-11-sudeep.holla@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to add "ccflags-y += -I $(srctree)/drivers/staging"
-just for including <most/core.h>.
+On Wed, Dec 18, 2019 at 11:17:41AM +0000, Sudeep Holla wrote:
+> The scmi bus now has support to match the driver with devices not only
+> based on their protocol id but also based on their device name if one is
+> available. This was added to cater the need to support multiple devices
+> and drivers for the same protocol.
+> 
+> Let us add the name "hwmon" to scmi_device_id table in the driver so
+> that in matches only with device with the same name and protocol id
+> SCMI_PROTOCOL_SENSOR. This is just for sake of completion and must
+> not be used to add IIO support in parallel. Instead, if IIO support is
+> added ever in future, we need to drop this hwmon driver entirely and
+> use the iio->hwmon bridge to access the sensors as hwmon devices if
+> needed.
+> 
 
-Use the #include "..." directive with the correct relative path.
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+[ assuming the series will be pushed into the kernel together ]
 
- drivers/staging/most/Makefile       | 1 -
- drivers/staging/most/cdev/Makefile  | 1 -
- drivers/staging/most/cdev/cdev.c    | 3 ++-
- drivers/staging/most/configfs.c     | 3 ++-
- drivers/staging/most/core.c         | 3 ++-
- drivers/staging/most/dim2/Makefile  | 1 -
- drivers/staging/most/dim2/dim2.c    | 2 +-
- drivers/staging/most/i2c/Makefile   | 1 -
- drivers/staging/most/i2c/i2c.c      | 2 +-
- drivers/staging/most/net/Makefile   | 1 -
- drivers/staging/most/net/net.c      | 3 ++-
- drivers/staging/most/sound/Makefile | 1 -
- drivers/staging/most/sound/sound.c  | 3 ++-
- drivers/staging/most/usb/Makefile   | 1 -
- drivers/staging/most/usb/usb.c      | 3 ++-
- drivers/staging/most/video/Makefile | 1 -
- drivers/staging/most/video/video.c  | 2 +-
- 17 files changed, 15 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/staging/most/Makefile b/drivers/staging/most/Makefile
-index 85ea5a434ced..20a99ecb37c4 100644
---- a/drivers/staging/most/Makefile
-+++ b/drivers/staging/most/Makefile
-@@ -2,7 +2,6 @@
- obj-$(CONFIG_MOST) += most_core.o
- most_core-y := core.o
- most_core-y += configfs.o
--ccflags-y += -I $(srctree)/drivers/staging/
- 
- obj-$(CONFIG_MOST_CDEV)	+= cdev/
- obj-$(CONFIG_MOST_NET)	+= net/
-diff --git a/drivers/staging/most/cdev/Makefile b/drivers/staging/most/cdev/Makefile
-index 9f4a8b8c9c27..ef90cd71994a 100644
---- a/drivers/staging/most/cdev/Makefile
-+++ b/drivers/staging/most/cdev/Makefile
-@@ -2,4 +2,3 @@
- obj-$(CONFIG_MOST_CDEV) += most_cdev.o
- 
- most_cdev-objs := cdev.o
--ccflags-y += -I $(srctree)/drivers/staging/
-diff --git a/drivers/staging/most/cdev/cdev.c b/drivers/staging/most/cdev/cdev.c
-index f880147c82fd..e2ade8eff2d9 100644
---- a/drivers/staging/most/cdev/cdev.c
-+++ b/drivers/staging/most/cdev/cdev.c
-@@ -16,7 +16,8 @@
- #include <linux/kfifo.h>
- #include <linux/uaccess.h>
- #include <linux/idr.h>
--#include "most/core.h"
-+
-+#include "../core.h"
- 
- #define CHRDEV_REGION_SIZE 50
- 
-diff --git a/drivers/staging/most/configfs.c b/drivers/staging/most/configfs.c
-index 34a9fb53985c..76c9485cb470 100644
---- a/drivers/staging/most/configfs.c
-+++ b/drivers/staging/most/configfs.c
-@@ -10,7 +10,8 @@
- #include <linux/slab.h>
- #include <linux/init.h>
- #include <linux/configfs.h>
--#include <most/core.h>
-+
-+#include "core.h"
- 
- struct mdev_link {
- 	struct config_item item;
-diff --git a/drivers/staging/most/core.c b/drivers/staging/most/core.c
-index 51a6b41d5b82..7da0db64ffec 100644
---- a/drivers/staging/most/core.c
-+++ b/drivers/staging/most/core.c
-@@ -21,7 +21,8 @@
- #include <linux/kthread.h>
- #include <linux/dma-mapping.h>
- #include <linux/idr.h>
--#include <most/core.h>
-+
-+#include "core.h"
- 
- #define MAX_CHANNELS	64
- #define STRING_SIZE	80
-diff --git a/drivers/staging/most/dim2/Makefile b/drivers/staging/most/dim2/Makefile
-index 116f04d69244..861adacf6c72 100644
---- a/drivers/staging/most/dim2/Makefile
-+++ b/drivers/staging/most/dim2/Makefile
-@@ -2,4 +2,3 @@
- obj-$(CONFIG_MOST_DIM2) += most_dim2.o
- 
- most_dim2-objs := dim2.o hal.o sysfs.o
--ccflags-y += -I $(srctree)/drivers/staging/
-diff --git a/drivers/staging/most/dim2/dim2.c b/drivers/staging/most/dim2/dim2.c
-index 64c979155a49..b96faab08b38 100644
---- a/drivers/staging/most/dim2/dim2.c
-+++ b/drivers/staging/most/dim2/dim2.c
-@@ -21,7 +21,7 @@
- #include <linux/sched.h>
- #include <linux/kthread.h>
- 
--#include "most/core.h"
-+#include "../core.h"
- #include "hal.h"
- #include "errors.h"
- #include "sysfs.h"
-diff --git a/drivers/staging/most/i2c/Makefile b/drivers/staging/most/i2c/Makefile
-index 2b3769dc19e7..71099dd0f85b 100644
---- a/drivers/staging/most/i2c/Makefile
-+++ b/drivers/staging/most/i2c/Makefile
-@@ -2,4 +2,3 @@
- obj-$(CONFIG_MOST_I2C) += most_i2c.o
- 
- most_i2c-objs := i2c.o
--ccflags-y += -I $(srctree)/drivers/staging/
-diff --git a/drivers/staging/most/i2c/i2c.c b/drivers/staging/most/i2c/i2c.c
-index 4a4fc1005932..0418f77d4007 100644
---- a/drivers/staging/most/i2c/i2c.c
-+++ b/drivers/staging/most/i2c/i2c.c
-@@ -14,7 +14,7 @@
- #include <linux/interrupt.h>
- #include <linux/err.h>
- 
--#include "most/core.h"
-+#include "../core.h"
- 
- enum { CH_RX, CH_TX, NUM_CHANNELS };
- 
-diff --git a/drivers/staging/most/net/Makefile b/drivers/staging/most/net/Makefile
-index f0ac64dee71b..1582c97eb204 100644
---- a/drivers/staging/most/net/Makefile
-+++ b/drivers/staging/most/net/Makefile
-@@ -2,4 +2,3 @@
- obj-$(CONFIG_MOST_NET) += most_net.o
- 
- most_net-objs := net.o
--ccflags-y += -I $(srctree)/drivers/staging/
-diff --git a/drivers/staging/most/net/net.c b/drivers/staging/most/net/net.c
-index 6cab1bb8956e..f4c083c3d1f4 100644
---- a/drivers/staging/most/net/net.c
-+++ b/drivers/staging/most/net/net.c
-@@ -15,7 +15,8 @@
- #include <linux/list.h>
- #include <linux/wait.h>
- #include <linux/kobject.h>
--#include "most/core.h"
-+
-+#include "../core.h"
- 
- #define MEP_HDR_LEN 8
- #define MDP_HDR_LEN 16
-diff --git a/drivers/staging/most/sound/Makefile b/drivers/staging/most/sound/Makefile
-index a3d086c6ca70..f0cd9d8d213e 100644
---- a/drivers/staging/most/sound/Makefile
-+++ b/drivers/staging/most/sound/Makefile
-@@ -2,4 +2,3 @@
- obj-$(CONFIG_MOST_SOUND) += most_sound.o
- 
- most_sound-objs := sound.o
--ccflags-y += -I $(srctree)/drivers/staging/
-diff --git a/drivers/staging/most/sound/sound.c b/drivers/staging/most/sound/sound.c
-index 723d0bd1cc21..4f77ef6f459d 100644
---- a/drivers/staging/most/sound/sound.c
-+++ b/drivers/staging/most/sound/sound.c
-@@ -17,7 +17,8 @@
- #include <sound/pcm_params.h>
- #include <linux/sched.h>
- #include <linux/kthread.h>
--#include <most/core.h>
-+
-+#include "../core.h"
- 
- #define DRIVER_NAME "sound"
- #define STRING_SIZE	80
-diff --git a/drivers/staging/most/usb/Makefile b/drivers/staging/most/usb/Makefile
-index 83cf2ead7122..c2b207339aec 100644
---- a/drivers/staging/most/usb/Makefile
-+++ b/drivers/staging/most/usb/Makefile
-@@ -2,4 +2,3 @@
- obj-$(CONFIG_MOST_USB) += most_usb.o
- 
- most_usb-objs := usb.o
--ccflags-y += -I $(srctree)/drivers/staging/
-diff --git a/drivers/staging/most/usb/usb.c b/drivers/staging/most/usb/usb.c
-index 360cb5b7a10b..d471c675f423 100644
---- a/drivers/staging/most/usb/usb.c
-+++ b/drivers/staging/most/usb/usb.c
-@@ -23,7 +23,8 @@
- #include <linux/dma-mapping.h>
- #include <linux/etherdevice.h>
- #include <linux/uaccess.h>
--#include "most/core.h"
-+
-+#include "../core.h"
- 
- #define USB_MTU			512
- #define NO_ISOCHRONOUS_URB	0
-diff --git a/drivers/staging/most/video/Makefile b/drivers/staging/most/video/Makefile
-index 2d857d3cbcc8..856175fec8b6 100644
---- a/drivers/staging/most/video/Makefile
-+++ b/drivers/staging/most/video/Makefile
-@@ -2,4 +2,3 @@
- obj-$(CONFIG_MOST_VIDEO) += most_video.o
- 
- most_video-objs := video.o
--ccflags-y += -I $(srctree)/drivers/staging/
-diff --git a/drivers/staging/most/video/video.c b/drivers/staging/most/video/video.c
-index 10c1ef7e3a3e..f3d23cc8e19b 100644
---- a/drivers/staging/most/video/video.c
-+++ b/drivers/staging/most/video/video.c
-@@ -21,7 +21,7 @@
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-fh.h>
- 
--#include "most/core.h"
-+#include "../core.h"
- 
- #define V4L2_CMP_MAX_INPUT  1
- 
--- 
-2.17.1
-
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: linux-hwmon@vger.kernel.org
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  drivers/hwmon/scmi-hwmon.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwmon/scmi-hwmon.c b/drivers/hwmon/scmi-hwmon.c
+> index 8a7732c0bef3..286d3cfda7de 100644
+> --- a/drivers/hwmon/scmi-hwmon.c
+> +++ b/drivers/hwmon/scmi-hwmon.c
+> @@ -259,7 +259,7 @@ static int scmi_hwmon_probe(struct scmi_device *sdev)
+>  }
+>  
+>  static const struct scmi_device_id scmi_id_table[] = {
+> -	{ SCMI_PROTOCOL_SENSOR },
+> +	{ SCMI_PROTOCOL_SENSOR, "hwmon" },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(scmi, scmi_id_table);
