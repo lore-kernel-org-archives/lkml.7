@@ -2,111 +2,131 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A37C32767
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 08:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 650DDC32770
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 09:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45155215A4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 08:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 393052465B
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 09:06:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578128771;
+	bh=MHDULSZzfbYAw761SebMDzHsX+7nHNjvGFgET6+nwGc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BwG/as5PasI9trjKqYNI21USqpnZh9qeecMKS+c2zW14ISRoDA0JJHhNsJznFyYek
+	 cIZQ8Ngo2DpNEbsLpprO2JSsrg8kYrXqILiTytVTcNY96kcABp1zt6EQE/wcQAd1Q/
+	 +jSXOPZ5HbXtkxuKrQEYW2ZwWpFcfFkq+WmNaOng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbgADIz2 (ORCPT
+        id S1726290AbgADJGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 03:55:28 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8677 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726078AbgADIz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 03:55:27 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 69F646AE1C445E4BB968;
-        Sat,  4 Jan 2020 16:55:25 +0800 (CST)
-Received: from huawei.com (10.175.105.18) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Sat, 4 Jan 2020
- 16:55:14 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
-        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
-        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>
-CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
-        <liran.alon@oracle.com>
-Subject: [PATCH v2] KVM: SVM: Fix potential memory leak in svm_cpu_init()
-Date:   Sat, 4 Jan 2020 16:56:49 +0800
-Message-ID: <1578128209-12891-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Sat, 4 Jan 2020 04:06:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60496 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726103AbgADJGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jan 2020 04:06:10 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9876D2464E;
+        Sat,  4 Jan 2020 09:06:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578128769;
+        bh=MHDULSZzfbYAw761SebMDzHsX+7nHNjvGFgET6+nwGc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R6bJdEMmHaIUoKdghC/bYEEgRfD85nyPldA7HwhFLXraqYVd1QQ9XLJ4QsuRgzQtk
+         RnEKxtx8UeXxfx8IjsBCMK9HdIVGemqSb57rvh3nHV8LWI+IGayTSmM8jkMTqGYIfm
+         r3OLYM4+IvS2cspA6+yWsNuRwTl/zVhmXe/nYWf8=
+Date:   Sat, 4 Jan 2020 10:06:06 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Chengguang Xu <cgxu519@mykernel.net>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>, LTP List <ltp@lists.linux.it>,
+        Jan Stancek <jstancek@redhat.com>,
+        John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH 5.4 000/191] 5.4.8-stable review
+Message-ID: <20200104090606.GA1249964@kroah.com>
+References: <20200102215829.911231638@linuxfoundation.org>
+ <CA+G9fYuPkOGKbeQ0FKKx4H0Bs-nRHALsFtwyRw0Rt5DoOCvRHg@mail.gmail.com>
+ <CAK8P3a1+Srey_7cUd0xfaO8HdMv5tkUcs6DeDXzcUKkUD-DnGQ@mail.gmail.com>
+ <CAK8P3a24EkUXTu-K2c-5B3w-LZwY7zNcX0dZixb3gd59vRw_Kw@mail.gmail.com>
+ <20200103154518.GB1064304@kroah.com>
+ <CAK8P3a00SpVfSE5oL8_F_8jHdg_8A5fyEKH_DWNyPToxack=zA@mail.gmail.com>
+ <a2fc8b36-c512-b6dd-7349-dfb551e348b6@oracle.com>
+ <8283b231-f6e8-876f-7094-d3265096ab9a@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.18]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8283b231-f6e8-876f-7094-d3265096ab9a@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+On Fri, Jan 03, 2020 at 09:56:52AM -0800, Mike Kravetz wrote:
+> On 1/3/20 9:33 AM, Mike Kravetz wrote:
+> > On 1/3/20 7:56 AM, Arnd Bergmann wrote:
+> >> On Fri, Jan 3, 2020 at 4:45 PM Greg Kroah-Hartman
+> >> <gregkh@linuxfoundation.org> wrote:
+> >>> On Fri, Jan 03, 2020 at 04:29:56PM +0100, Arnd Bergmann wrote:
+> >>>> On Fri, Jan 3, 2020 at 4:25 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >>>>>
+> >>>>> On Fri, Jan 3, 2020 at 4:03 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >>>>>>
+> >>>>>> On Fri, 3 Jan 2020 at 03:42, Greg Kroah-Hartman
+> >>>>>> <gregkh@linuxfoundation.org> wrote:
+> >>>>>
+> >>>>> -ENOENT is what you get when hugetlbfs is not mounted, so this hints to
+> >>>>>
+> >>>>> 8fc312b32b2  mm/hugetlbfs: fix error handling when setting up mounts
+> >>>>>
+> >>>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-5.4.y&id=3f549fb42a39bea3b29c0fc12afee53c4a01bec9
+> >>>>
+> >>>> I see that Mike Kravetz suggested not putting this patch into stable in
+> >>>>
+> >>>> https://lore.kernel.org/lkml/befca227-cb8a-8f47-617d-e3bf9972bfec@oracle.com/
+> >>>>
+> >>>> but it was picked through the autosel mechanism later.
+> >>>
+> >>> So does that mean that Linus's tree shows this LTP failure as well?
+> >>
+> >> Yes, according to
+> >> https://qa-reports.linaro.org/lkft/linux-mainline-oe/tests/ltp-syscalls-tests/memfd_create04
+> >> mainline has the same testcase failure, it started happening between
+> >> v5.4-10135-gc3bfc5dd73c6 and v5.4-10271-g596cf45cbf6e, when the patch
+> >> was originally merged into 5.5-rc1.
+> >>
+> >>> This does seem to fix a real issue, as shown by the LTP test noticing
+> >>> it, so should the error code value be fixed in Linus's tree?
+> >>
+> >> No idea what to conclude from the testcase failure, let's see if Mike has
+> >> any suggestions.
+> >>
+> > 
+> > Thanks for isolating to this patch!
+> > 
+> > There are dependencies between arch specific code and arch independent code
+> > during the setup of hugetlb sizes/mounts.  Let me take a closer look at the
+> > arm64 code and get access to a system for debug.
+> 
+> Before I started investigating, Jan Stancek found and fixed the issue.
+> 
+> http://lkml.kernel.org/r/a14b944b6e5e207d2f84f43227c98ed1f68290a2.1578072927.git.jstancek@redhat.com
 
-When kmalloc memory for sd->sev_vmcbs failed, we forget to free the page
-held by sd->save_area. Also get rid of the var r as '-ENOMEM' is actually
-the only possible outcome here.
+Great, thanks for this, now queued up.
 
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
--v2:
-	drop var r as suggested by Vitaly
----
- arch/x86/kvm/svm.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 8f1b715dfde8..5f9d6547e0e7 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -1003,33 +1003,32 @@ static void svm_cpu_uninit(int cpu)
- static int svm_cpu_init(int cpu)
- {
- 	struct svm_cpu_data *sd;
--	int r;
- 
- 	sd = kzalloc(sizeof(struct svm_cpu_data), GFP_KERNEL);
- 	if (!sd)
- 		return -ENOMEM;
- 	sd->cpu = cpu;
--	r = -ENOMEM;
- 	sd->save_area = alloc_page(GFP_KERNEL);
- 	if (!sd->save_area)
--		goto err_1;
-+		goto free_cpu_data;
- 
- 	if (svm_sev_enabled()) {
--		r = -ENOMEM;
- 		sd->sev_vmcbs = kmalloc_array(max_sev_asid + 1,
- 					      sizeof(void *),
- 					      GFP_KERNEL);
- 		if (!sd->sev_vmcbs)
--			goto err_1;
-+			goto free_save_area;
- 	}
- 
- 	per_cpu(svm_data, cpu) = sd;
- 
- 	return 0;
- 
--err_1:
-+free_save_area:
-+	__free_page(sd->save_area);
-+free_cpu_data:
- 	kfree(sd);
--	return r;
-+	return -ENOMEM;
- 
- }
- 
--- 
-2.19.1
-
+greg k-h
