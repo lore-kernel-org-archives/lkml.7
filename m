@@ -2,129 +2,99 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0E4C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 13:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 583F8C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 13:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0056624649
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 13:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2337121734
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 13:27:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hn6Z9PCv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726080AbgADNXV (ORCPT
+        id S1726016AbgADN1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 08:23:21 -0500
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:10826 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725862AbgADNXV (ORCPT
+        Sat, 4 Jan 2020 08:27:53 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39070 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbgADN1w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 08:23:21 -0500
-X-IronPort-AV: E=Sophos;i="5.69,394,1571695200"; 
-   d="scan'208";a="429875740"
-Received: from abo-154-110-68.mrs.modulonet.fr (HELO hadrien) ([85.68.110.154])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jan 2020 14:23:14 +0100
-Date:   Sat, 4 Jan 2020 14:23:14 +0100 (CET)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Olga Kornievskaia <kolga@netapp.com>
-cc:     linux-kernel@vger.kernel.org, kbuild-all@lists.01.org
-Subject: fs/nfs/nfs4file.c:167:7-14: ERROR: reference preceded by free on
- line 167 (fwd)
-Message-ID: <alpine.DEB.2.21.2001041421570.6944@hadrien>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Sat, 4 Jan 2020 08:27:52 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q10so24789063pfs.6;
+        Sat, 04 Jan 2020 05:27:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=nayi2zwyuGuajOdSqQur7LRfUBI2pbtvn9hMLF8U2/A=;
+        b=hn6Z9PCv8qkHhhaCdQ6Qo9ChKK9LiQgBunNfUmXzesxAl8CLOZUfevoftvqtHYUt+F
+         sujKXgvxTkjFbLv9b036aBYQM0IEgpIXrhZpKRrQWkpdupYvOew0vvIfVktI3vr6SLDU
+         f/0X8bO3exUEbmuuJYuUT4MGYAozcFHA52H3Jbl65+tZmcgfNKv8FAtoB64hKqKpP3Lz
+         IUcR6CTrw+wCok0eLrUH0gTlotm+jDY+F9Kgwth4sHR8pHf2dKJGtIwndE5oD46ZDn7e
+         IBYxuAzkpp714cAJgVRDr/zBlDGQm+FV9m5jXKUqqmg8nkONPmVUs5EtSCfOVQ9fQW+5
+         mVfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=nayi2zwyuGuajOdSqQur7LRfUBI2pbtvn9hMLF8U2/A=;
+        b=aUrmo3yEjImzoF0eUQWXgBafMnqztHRCVmfPTIGoxLg+K+UgG7LUdTNcTlsRVvNW55
+         Zutv6/4T/WSc9XNVBp3ztnX6Q2w8mLzY+zKE2DrHJGrSuX+l+ZS1aV4b80mqp9kprjte
+         dCY2SqhFNXRCLX4bkFO4TvbVRk32skaZADcSD8qeWpNNltFOvHClSwjx9K/9lQjFBElV
+         Re9PKX/1NwV1JjHaykECs32B5w3i4uH1pGC2yNsGOcCW0Mz4wJIWsEHBsQ28C+nsE+9l
+         DkXYZkX8jS2NYOraSfvRoLWTl1j4aLgCeXJp2zJPIrgG2eCeEr+KCB+whTjb4lPqVJVe
+         WP+A==
+X-Gm-Message-State: APjAAAVR4gQeqtrgWEvBuvO86A9jqS5fQO0YHyQlqmq0CXnrtUi/cXu3
+        Xwkh0/Oal5ioBC9u1DK6orY=
+X-Google-Smtp-Source: APXvYqytyzuvGruYQeK2rj/n9YTvbIw6fvDWNN66VAwuB8ylmB7OCVlCJeJY0bUoUt78dRUiozl+xg==
+X-Received: by 2002:aa7:9f47:: with SMTP id h7mr96845272pfr.13.1578144472194;
+        Sat, 04 Jan 2020 05:27:52 -0800 (PST)
+Received: from localhost (199.168.140.36.16clouds.com. [199.168.140.36])
+        by smtp.gmail.com with ESMTPSA id z13sm18525146pjz.15.2020.01.04.05.27.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 04 Jan 2020 05:27:51 -0800 (PST)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     balbi@kernel.org, gregkh@linuxfoundation.org,
+        stern@rowland.harvard.edu, rogerq@ti.com
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH v2] usb: gadget: udc: core: Warn about failed to find udc
+Date:   Sat,  4 Jan 2020 21:27:40 +0800
+Message-Id: <20200104132740.29055-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+If we do not warn here, the user may not know failed to
+find udc device by a gadget driver with the same name
+because it silently fails. Let's print a warning in that
+case so developers find these problems faster.
 
-I don't know if the test on line 150 is guaranteed to be true on a retry.
-If that is not the case, the it may be useful to set cn_reso to NULL after
-the kfree.
-
-julia
-
----------- Forwarded message ----------
-Date: Sat, 4 Jan 2020 19:20:21 +0800
-From: kbuild test robot <lkp@intel.com>
-To: kbuild@lists.01.org
-Cc: Julia Lawall <julia.lawall@lip6.fr>
-Subject: fs/nfs/nfs4file.c:167:7-14: ERROR: reference preceded by free on line
-    167
-
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   3a562aee727a7bfbb3a37b1aa934118397dad701
-commit: 0e65a32c8a569db363048e17a708b1a0913adbef NFS: handle source server reboot
-date:   3 months ago
-:::::: branch date: 15 hours ago
-:::::: commit date: 3 months ago
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-
->> fs/nfs/nfs4file.c:167:7-14: ERROR: reference preceded by free on line 167
-
-# https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0e65a32c8a569db363048e17a708b1a0913adbef
-git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-git remote update linus
-git checkout 0e65a32c8a569db363048e17a708b1a0913adbef
-vim +167 fs/nfs/nfs4file.c
-
-5445b1fbd12342 Trond Myklebust   2015-09-05  131
-1c6dcbe5ceff81 Anna Schumaker    2014-09-26  132  #ifdef CONFIG_NFS_V4_2
-64bf5ff58dff75 Dave Chinner      2019-06-05  133  static ssize_t __nfs4_copy_file_range(struct file *file_in, loff_t pos_in,
-2e72448b07dc3f Anna Schumaker    2013-05-21  134  				      struct file *file_out, loff_t pos_out,
-2e72448b07dc3f Anna Schumaker    2013-05-21  135  				      size_t count, unsigned int flags)
-2e72448b07dc3f Anna Schumaker    2013-05-21  136  {
-0491567b51efec Olga Kornievskaia 2019-06-04  137  	struct nfs42_copy_notify_res *cn_resp = NULL;
-1d38f3f0d70008 Olga Kornievskaia 2019-06-04  138  	struct nl4_server *nss = NULL;
-1d38f3f0d70008 Olga Kornievskaia 2019-06-04  139  	nfs4_stateid *cnrs = NULL;
-0491567b51efec Olga Kornievskaia 2019-06-04  140  	ssize_t ret;
-0491567b51efec Olga Kornievskaia 2019-06-04  141
-5dae222a5ff0c2 Amir Goldstein    2019-06-05  142  	/* Only offload copy if superblock is the same */
-5dae222a5ff0c2 Amir Goldstein    2019-06-05  143  	if (file_inode(file_in)->i_sb != file_inode(file_out)->i_sb)
-5dae222a5ff0c2 Amir Goldstein    2019-06-05  144  		return -EXDEV;
-0769663b4f5805 Olga Kornievskaia 2019-04-11  145  	if (!nfs_server_capable(file_inode(file_out), NFS_CAP_COPY))
-0769663b4f5805 Olga Kornievskaia 2019-04-11  146  		return -EOPNOTSUPP;
-837bb1d752d92e Trond Myklebust   2016-06-25  147  	if (file_inode(file_in) == file_inode(file_out))
-0769663b4f5805 Olga Kornievskaia 2019-04-11  148  		return -EOPNOTSUPP;
-0e65a32c8a569d Olga Kornievskaia 2019-06-14  149  retry:
-0491567b51efec Olga Kornievskaia 2019-06-04  150  	if (!nfs42_files_from_same_server(file_in, file_out)) {
-0491567b51efec Olga Kornievskaia 2019-06-04  151  		cn_resp = kzalloc(sizeof(struct nfs42_copy_notify_res),
-0491567b51efec Olga Kornievskaia 2019-06-04  152  				GFP_NOFS);
-0491567b51efec Olga Kornievskaia 2019-06-04  153  		if (unlikely(cn_resp == NULL))
-0491567b51efec Olga Kornievskaia 2019-06-04  154  			return -ENOMEM;
-0491567b51efec Olga Kornievskaia 2019-06-04  155
-0491567b51efec Olga Kornievskaia 2019-06-04  156  		ret = nfs42_proc_copy_notify(file_in, file_out, cn_resp);
-0491567b51efec Olga Kornievskaia 2019-06-04  157  		if (ret) {
-0491567b51efec Olga Kornievskaia 2019-06-04  158  			ret = -EOPNOTSUPP;
-0491567b51efec Olga Kornievskaia 2019-06-04  159  			goto out;
-0491567b51efec Olga Kornievskaia 2019-06-04  160  		}
-1d38f3f0d70008 Olga Kornievskaia 2019-06-04  161  		nss = &cn_resp->cnr_src;
-1d38f3f0d70008 Olga Kornievskaia 2019-06-04  162  		cnrs = &cn_resp->cnr_stateid;
-0491567b51efec Olga Kornievskaia 2019-06-04  163  	}
-1d38f3f0d70008 Olga Kornievskaia 2019-06-04  164  	ret = nfs42_proc_copy(file_in, pos_in, file_out, pos_out, count,
-1d38f3f0d70008 Olga Kornievskaia 2019-06-04  165  				nss, cnrs);
-0491567b51efec Olga Kornievskaia 2019-06-04  166  out:
-0491567b51efec Olga Kornievskaia 2019-06-04 @167  	kfree(cn_resp);
-0e65a32c8a569d Olga Kornievskaia 2019-06-14  168  	if (ret == -EAGAIN)
-0e65a32c8a569d Olga Kornievskaia 2019-06-14  169  		goto retry;
-0491567b51efec Olga Kornievskaia 2019-06-04  170  	return ret;
-2e72448b07dc3f Anna Schumaker    2013-05-21  171  }
-2e72448b07dc3f Anna Schumaker    2013-05-21  172
-
-:::::: The code at line 167 was first introduced by commit
-:::::: 0491567b51efeca807da1125a1a0d5193875e286 NFS: add COPY_NOTIFY operation
-
-:::::: TO: Olga Kornievskaia <kolga@netapp.com>
-:::::: CC: Olga Kornievskaia <olga.kornievskaia@gmail.com>
-
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 ---
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+
+V2: fix some mistake in comments.
+
+ drivers/usb/gadget/udc/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/usb/gadget/udc/core.c b/drivers/usb/gadget/udc/core.c
+index 51fa614b4079..9b11046480fe 100644
+--- a/drivers/usb/gadget/udc/core.c
++++ b/drivers/usb/gadget/udc/core.c
+@@ -1414,6 +1414,8 @@ int usb_gadget_probe_driver(struct usb_gadget_driver *driver)
+ 	}
+ 
+ 	mutex_unlock(&udc_lock);
++	if (ret)
++		pr_warn("udc-core: couldn't find an available UDC or it's busy\n");
+ 	return ret;
+ found:
+ 	ret = udc_bind_to_driver(udc, driver);
+-- 
+2.17.1
+
