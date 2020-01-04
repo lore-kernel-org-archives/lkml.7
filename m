@@ -2,100 +2,77 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA48C32767
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 09:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A3AC32767
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 09:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21EF6217F4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 09:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53F1024649
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 09:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578129684;
-	bh=t+7Mb394bXu9Sg7IaTe1iTOa0gvYL56M7fVIrBjE0Fc=;
+	s=default; t=1578130955;
+	bh=fvPS1jOgtlGofazng3+BUa/0zzXE76N2DTLC2K2QeKo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aTX0oBdcevH5iPe82xGge7pXYqmxZsWlK96ySXv7ngcLYF28lZMjqTo4YGBW0BGCA
-	 7ke9p6BKNp2NtFqRlp18yXVeC9Fz6lyaQGujc9hRH9SGuo61HEl95P/jWLL77mou4C
-	 +OwOMpyh33nKFPXeUhy9QIZFNr35ed0Laqf7LyLw=
+	b=Ki0x43oTqMCc9EJP7XruNCp0EvGcppieSIRVO2IMJ1LlWqHpjLTtl+HDcD5acTkB/
+	 MXNIf87lZXz8agMcy51yuwKhBffeMQu1WJZUaq23AuOY2UGEZn1OwzSHWnt7DaQCx4
+	 zObTP8g7yBXKTPvViYx6faeRRpBfzR/Y9UCKns/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgADJVX (ORCPT
+        id S1726390AbgADJmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 04:21:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57036 "EHLO mail.kernel.org"
+        Sat, 4 Jan 2020 04:42:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726094AbgADJVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 04:21:22 -0500
+        id S1726103AbgADJmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jan 2020 04:42:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6464F215A4;
-        Sat,  4 Jan 2020 09:21:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F20A0222C4;
+        Sat,  4 Jan 2020 09:42:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578129681;
-        bh=t+7Mb394bXu9Sg7IaTe1iTOa0gvYL56M7fVIrBjE0Fc=;
+        s=default; t=1578130952;
+        bh=fvPS1jOgtlGofazng3+BUa/0zzXE76N2DTLC2K2QeKo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BCiECLNxPucz/5OIg0AKlczTKyhILC4vusdpKUDv4xhp9PN/HjmbPQaX7+xyWm5fP
-         REN4q0aOltOkYm2dJbFcV3rVCQuz3yQUvaYoBVWDS5BmXeScgDRU43BottDhkfuRzi
-         ybW+hxT9yS8azwTosS5Ix8mGig2ycQ2tp5MAMZGw=
-Date:   Sat, 4 Jan 2020 10:21:19 +0100
+        b=WK+jPOaPIFcy6c4cs0FiTvd6EtkUJIonagbvxsDOHicEAIKJK9WDIFNgBLvXKzcZi
+         4JGbbBN6IOqTBjbgNI6UkY573tP86yCY8oxgGz0ccYSc9xpdLfJ0s9p/qalhuA0l/M
+         Cmd5T53Z+KUQCMRVmaVVxoTor5/FcpOr9E+7aWFQ=
+Date:   Sat, 4 Jan 2020 10:42:29 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.4 000/191] 5.4.8-stable review
-Message-ID: <20200104092119.GC1249964@kroah.com>
-References: <20200102215829.911231638@linuxfoundation.org>
- <f709c06a-ce46-a235-e0d1-5b7331c80c66@nvidia.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/24] Consolidate dummy_con initialization
+Message-ID: <20200104094229.GA1279126@kroah.com>
+References: <20191218204002.30512-1-nivedita@alum.mit.edu>
+ <20200103171223.GA1308999@rani.riverdale.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f709c06a-ce46-a235-e0d1-5b7331c80c66@nvidia.com>
+In-Reply-To: <20200103171223.GA1308999@rani.riverdale.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 05:51:33PM +0000, Jon Hunter wrote:
-> 
-> On 02/01/2020 22:04, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.4.8 release.
-> > There are 191 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
+On Fri, Jan 03, 2020 at 12:12:24PM -0500, Arvind Sankar wrote:
+> On Wed, Dec 18, 2019 at 03:39:38PM -0500, Arvind Sankar wrote:
+> > This series moves initialization of conswitchp to dummy_con into vt.c,
+> > and configures DUMMY_CONSOLE unconditionally when CONFIG_VT is enabled.
 > > 
-> > Responses should be made by Sat, 04 Jan 2020 21:55:35 +0000.
-> > Anything received after that time might be too late.
+> > The patches after the second one remove conswitchp = &dummy_con; from
+> > the various architecture setup functions where it currently appears. If
+> > the first two look ok, I was thinking of sending the others
+> > individually.
 > > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.8-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> > 
-> > -------------
 > 
-> All tests are passing for Tegra ...
+> Hi Greg/Jiri, happy new year!
 > 
-> Test results for stable-v5.4:
->     13 builds:	13 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     38 tests:	38 pass, 0 fail
+> Are you able to look at this series?
 > 
-> Linux version:	5.4.8-rc1-gb06e60adec89
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra30-cardhu-a04
-> 
+> https://lore.kernel.org/lkml/20191218214506.49252-1-nivedita@alum.mit.edu/
 
-Thanks for testing all of these and letting me know.
+It's in my review queue which is really long at the moment, sorry.
+Please be patient.
 
 greg k-h
