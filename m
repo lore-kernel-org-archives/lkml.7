@@ -2,145 +2,142 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 482F9C32767
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 05:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B40CC32767
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 06:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2724217F4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 05:52:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="qxFotJ6x"
+	by mail.kernel.org (Postfix) with ESMTP id 209A724649
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 06:42:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726081AbgADFwL (ORCPT
+        id S1726072AbgADGmB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 00:52:11 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:33105 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbgADFwK (ORCPT
+        Sat, 4 Jan 2020 01:42:01 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:50458 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbgADGmA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 00:52:10 -0500
-Received: by mail-pj1-f66.google.com with SMTP id u63so3275821pjb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 21:52:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=lsjJu+EGZojghLrX4ddsw+K5AnhnZ8PjIQovTm/oOmU=;
-        b=qxFotJ6x1F4rGcRSERuDHRyqE7DBaXL3SH79DzRupTipxGDHuAXiqUnZhJq9ndjsu9
-         2bf7r2R/IgO9l9e7G72q2Db4fEbz/XVh/YTalI0uQCjXoipjAylw+h+0ZPuiWjagEzuz
-         EUskdvGdVLB6WhlB45xyrK9602eohnjyuetJBzYSCIiXsvhbYtIV3NTQSfVFwWCHSFRf
-         nDH2okBELCvx9PqSnyqueAuAJ23qXLenkOaj0H910xnShH7HH+oWrMjjzx2iM7tH5XqN
-         xI1N+y2W+f5rumgYi7HZJNFQqljQ+mEt0c1gGnGttu9R38uAzs2BN7xrluzwIFmDztQv
-         v6jA==
+        Sat, 4 Jan 2020 01:42:00 -0500
+Received: from mail-pf1-f198.google.com ([209.85.210.198])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1ind8J-000887-9I
+        for linux-kernel@vger.kernel.org; Sat, 04 Jan 2020 06:41:59 +0000
+Received: by mail-pf1-f198.google.com with SMTP id v14so4164985pfm.21
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 22:41:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=lsjJu+EGZojghLrX4ddsw+K5AnhnZ8PjIQovTm/oOmU=;
-        b=K9irWouNDDFQR1XD4iJ6XKVfn1OJFnYWDslLAtQycLWDREEPk6cdl78P7r4HxmhafI
-         A7uzHlQwjt/H8j/5winDaYVeiyN3okpy6k0UTg9VYba+feItdWo/RpxWPJm6lHPn1d9j
-         w66RtNbHxsVukQRQsFHn1OyfQTf9Jsxu4LALBMQym7pjNzVDa8io2daCI/a/12j+rpaZ
-         EH7toTeXCX5j5SzAjmBeQPBQUYDRSWfCNdDLfbT77Guj6GDT5F0nHQrsOllQ7N9N9kep
-         UcvrQi10MGoDqlg7mZumk7adX/vhTpctXm9HLwrmzYsI9pUu9bR1RJtTbgfRu3T2dEac
-         V2jw==
-X-Gm-Message-State: APjAAAXg3gWZKNkxf47RL3hHOWdV0IwwoEWfGqqddgGb7ry176J2z2UP
-        TmjYWHbxE4Nk/KLSiNzgkM7dzA==
-X-Google-Smtp-Source: APXvYqxDUza2vBLfx8WAKGyjzbrpILbRtIRJnsUK2U3N3tk5x+03IayI4U7f/qILlO+0FZ3sWtC5HQ==
-X-Received: by 2002:a17:902:a706:: with SMTP id w6mr92696786plq.79.1578117129583;
-        Fri, 03 Jan 2020 21:52:09 -0800 (PST)
-Received: from [25.171.60.22] ([172.58.27.167])
-        by smtp.gmail.com with ESMTPSA id b128sm65193420pga.43.2020.01.03.21.52.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jan 2020 21:52:08 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over symlinks
-Date:   Sat, 4 Jan 2020 14:52:03 +0900
-Message-Id: <52B30961-5933-46D4-87A7-4056892959E8@amacapital.net>
-References: <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        stable@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-X-Mailer: iPhone Mail (17C54)
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=aw6Ol3KnPt3nI5GLfalvRNJwitFrTF7FtxRZ9wnMWcU=;
+        b=WxUqdu8XQTLZfmIH8D4E3w4wVZrzSvyUSg+v6NPHfTezw3HbWjkjcNmETfGOPdFXlL
+         Pj4y4kMsZZNV0BNWtnaZUcT8b0g98XULqlW3cyvp9sBhqnsIOtviYtnj003xQ4GvFp/m
+         vZaHo9WZeh0yYX8O9WeOj6o0FdFOZCEgCAHc0UUSTFZqIOLnW6tRnUigeF9qa4NBbdBh
+         U+btm9q+oKihR35qVaVysDwQM5eOhhLWIFxFpC02hzVgbRC0L0Rjl7NRIi9+Sg2+9mPU
+         ThdGhYoxsJyBV2rqQNN31eW7bgSZZ3fe4oHSr85qN8n9F/vK366YxbsaVNr/Bp80ZmR7
+         oYGw==
+X-Gm-Message-State: APjAAAXU5Ld29GejLwCWtc0Hj/k+OlmMp9STKmh5xtAZgcDiTDYc+cYz
+        f46NsXlNHl/CUUb+ca6+JHGmDjvtMWX7pq8P594XWO9VGeJ7MFqSUlFscRaysMNaCm49/Ii1vLR
+        HyH6IOz0RJ2CrjlIoK3o3cJMWlQh40/+b2gnFgGX/Xw==
+X-Received: by 2002:a17:90a:65ca:: with SMTP id i10mr32235834pjs.28.1578120117866;
+        Fri, 03 Jan 2020 22:41:57 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzgnspeYazvlTTZBJTMP0vq6Rip9jTd7u5/5DrFZE2XokVk+ln/TCA8f3iltl1i/IGgIVxVJQ==
+X-Received: by 2002:a17:90a:65ca:: with SMTP id i10mr32235818pjs.28.1578120117561;
+        Fri, 03 Jan 2020 22:41:57 -0800 (PST)
+Received: from 2001-b011-380f-35a3-b9ae-9bbf-bd71-ab73.dynamic-ip6.hinet.net (2001-b011-380f-35a3-b9ae-9bbf-bd71-ab73.dynamic-ip6.hinet.net. [2001:b011:380f:35a3:b9ae:9bbf:bd71:ab73])
+        by smtp.gmail.com with ESMTPSA id q9sm66601400pgc.5.2020.01.03.22.41.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 Jan 2020 22:41:57 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: [PATCH 3/3] USB: Disable LPM on WD19's Realtek Hub during setting
+ its ports to U0
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <Pine.LNX.4.44L0.2001031137290.1560-100000@iolanthe.rowland.org>
+Date:   Sat, 4 Jan 2020 14:41:54 +0800
+Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        gregkh@linuxfoundation.org, acelan.kao@canonical.com,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <97F72C66-8D9B-4316-B096-1993FD18CF56@canonical.com>
+References: <Pine.LNX.4.44L0.2001031137290.1560-100000@iolanthe.rowland.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-> On Jan 1, 2020, at 11:44 PM, Aleksa Sarai <cyphar@cyphar.com> wrote:
->=20
-> =EF=BB=BFOn 2020-01-01, Al Viro <viro@zeniv.linux.org.uk> wrote:
->>> On Wed, Jan 01, 2020 at 12:54:46AM +0000, Al Viro wrote:
->>> Note, BTW, that lookup_last() (aka walk_component()) does just
->>> that - we only hit step_into() on LAST_NORM.  The same goes
->>> for do_last().  mountpoint_last() not doing the same is _not_
->>> intentional - it's definitely a bug.
->>>=20
->>> Consider your testcase; link points to . here.  So the only
->>> thing you could expect from trying to follow it would be
->>> the directory 'link' lives in.  And you don't have it
->>> when you reach the fscker via /proc/self/fd/3; what happens
->>> instead is nd->path set to ./link (by nd_jump_link()) *AND*
->>> step_into() called, pushing the same ./link onto stack.
->>> It violates all kinds of assumptions made by fs/namei.c -
->>> when pushing a symlink onto stack nd->path is expected to
->>> contain the base directory for resolving it.
->>>=20
->>> I'm fairly sure that this is the cause of at least some
->>> of the insanity you've caught; there always could be
->>> something else, of course, but this hole needs to be
->>> closed in any case.
->>=20
->> ... and with removal of now unused local variable, that's
->>=20
->> mountpoint_last(): fix the treatment of LAST_BIND
->>=20
->> step_into() should be attempted only in LAST_NORM
->> case, when we have the parent directory (in nd->path).
->> We get away with that for LAST_DOT and LOST_DOTDOT,
->> since those can't be symlinks, making step_init() and
->> equivalent of path_to_nameidata() - we do a bit of
->> useless work, but that's it.  For LAST_BIND (i.e.
->> the case when we'd just followed a procfs-style
->> symlink) we really can't go there - result might
->> be a symlink and we really can't attempt following
->> it.
->>=20
->> lookup_last() and do_last() do handle that properly;
->> mountpoint_last() should do the same.
->>=20
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
->=20
-> Thanks, this fixes the issue for me (and also fixes another reproducer I
-> found -- mounting a symlink on top of itself then trying to umount it).
->=20
-> Reported-by: Aleksa Sarai <cyphar@cyphar.com>
-> Tested-by: Aleksa Sarai <cyphar@cyphar.com>
->=20
-> As for the original topic of bind-mounting symlinks -- given this is a
-> supported feature, would you be okay with me sending an updated
-> O_EMPTYPATH series?
 
-FWIW, I have an actual use case for mounting over a symlink: replacing /etc/=
-resolv.conf.  My virtme tool is presented with somewhat arbitrary crud in /e=
-tc, where /etc/resolv.conf might be a plain file or a symlink, but, regardle=
-ss, has inappropriate contents. If it=E2=80=99s a file, I can mount a new fi=
-le over it. If it=E2=80=99s a symlink and the kernel properly supported it, I=
- could also mount over it.
+> On Jan 4, 2020, at 00:54, Alan Stern <stern@rowland.harvard.edu> wrote:
+> 
+> On Sat, 4 Jan 2020, Kai-Heng Feng wrote:
+> 
+>> Hi Alan,
+>> 
+>>> On Jan 3, 2020, at 23:21, Alan Stern <stern@rowland.harvard.edu> wrote:
+>>> 
+>>> On Fri, 3 Jan 2020, Kai-Heng Feng wrote:
+>>> 
+>>>> Realtek Hub (0bda:0x0487) used in Dell Dock WD19 sometimes drops off the
+>>>> bus when bringing underlying ports from U3 to U0.
+>>>> 
+>>>> After some expirements and guessworks, the hub itself needs to be U0
+>>>> during setting its port's link state back to U0.
+>>>> 
+>>>> So add a new quirk to let the hub disables LPM on setting U0 for its
+>>>> downstream facing ports.
+>>>> 
+>>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>>>> ---
+>>>> drivers/usb/core/hub.c     | 12 ++++++++++--
+>>>> drivers/usb/core/quirks.c  |  7 +++++++
+>>>> include/linux/usb/quirks.h |  3 +++
+>>>> 3 files changed, 20 insertions(+), 2 deletions(-)
+>>>> 
+>>>> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+>>>> index f229ad6952c0..35a035781c5a 100644
+>>>> --- a/drivers/usb/core/hub.c
+>>>> +++ b/drivers/usb/core/hub.c
+>>>> @@ -3533,9 +3533,17 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
+>>>> 	}
+>>>> 
+>>>> 	/* see 7.1.7.7; affects power usage, but not budgeting */
+>>>> -	if (hub_is_superspeed(hub->hdev))
+>>>> +	if (hub_is_superspeed(hub->hdev)) {
+>>>> +		if (hub->hdev->quirks & USB_QUIRK_DISABLE_LPM_ON_U0) {
+>>>> +			usb_lock_device(hub->hdev);
+>>>> +			usb_unlocked_disable_lpm(hub->hdev);
+>>>> +		}
+>>>> 		status = hub_set_port_link_state(hub, port1, USB_SS_PORT_LS_U0);
+>>>> -	else
+>>>> +		if (hub->hdev->quirks & USB_QUIRK_DISABLE_LPM_ON_U0) {
+>>>> +			usb_unlocked_enable_lpm(hub->hdev);
+>>>> +			usb_unlock_device(hub->hdev);
+>>> 
+>>> The locking here seems questionable.  Doesn't this code sometimes get
+>>> called with the hub already locked?  Or with the child device locked
+>>> (in which case locking the hub would violate the normal locking order:  
+>>> parent first, child second)?
+> 
+> I did a little checking.  In many cases the child device _will_ be 
+> locked at this point.
+> 
+>> Maybe introduce a new lock? The lock however will only be used by this specific hub.
+>> But I still want the LPM can be enabled for this hub.
+> 
+> Do you really need to lock the hub at all?  What would the lock protect 
+> against?
 
-Yes, I could also use overlayfs.  Maybe I should regardless.
+There can be multiple usb_port_resume() run at the same time for different ports, so this is to prevent LPM enable/disable race.
+
+Kai-Heng
+
+> 
+> Alan Stern
+
