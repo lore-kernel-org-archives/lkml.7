@@ -2,142 +2,122 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F9FC00523
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD59C00523
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9592C20866
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:38:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MuL59PMN"
+	by mail.kernel.org (Postfix) with ESMTP id 602BC222C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:39:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578098384;
+	bh=sZyP0e+mjnxwlVWNCOgdOMQRJvAWhS76NcGzrvEEwbs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RYesUR1G0AFZgUNjbJjEJA/0CSRUAgKZCGKEpNwlWysfp/+Jh1bFpCHgApDjkmrqY
+	 oq4UvHPa4Fydpw0bISy5M7y09V0GB/4eFPdxt4llVhNv0NB7QGocgyhPNom+y8orcB
+	 wi9fIZY2KW8IKXnCYc3sFS6/+ehtMESNdkRtj5KI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgADAiw (ORCPT
+        id S1727189AbgADAjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 19:38:52 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37395 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727074AbgADAiv (ORCPT
+        Fri, 3 Jan 2020 19:39:43 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:32867 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbgADAjm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 19:38:51 -0500
-Received: by mail-lf1-f68.google.com with SMTP id b15so32930991lfc.4
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 16:38:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7uC7JWFx9OYNnl310U+ygwv67SYyeHmDQsyNae/VGhA=;
-        b=MuL59PMNVVu75FiAbIkclAny8nz760/4Z2GfHF30DCsopTe93BZOBYrLPjR6gD61X2
-         Ia+4C7u+qJ4p2FyZtfAjId1AXzKlKxic1WMzqQg3NK3gBNXV+ez2toaBlaN1/drja0og
-         tIKURSFgHmO9j4DdW9Kg1qqGdU8X4KroveTVqF1A7gOlP2tT27bciMW13pYilBQg6pZn
-         a+2PY4wz/bporm9hUJNRMPypAoDIa3/U2adVPtQMJv9LEO7KBcF8N+TWsqrpBnJmw+aM
-         gkmDtXdZ7UfMFin1mBsGFfPqu0VvKDX866NlPztG0aOz3SZpNjkSJgcIgQz5IArawDNs
-         HyBg==
+        Fri, 3 Jan 2020 19:39:42 -0500
+Received: by mail-io1-f68.google.com with SMTP id z8so43116307ioh.0
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 16:39:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7uC7JWFx9OYNnl310U+ygwv67SYyeHmDQsyNae/VGhA=;
-        b=WtOlt1bIdyYkoVfbiCtxRtI4Mno1vQERIsz4I/6wq/ujy3X+lr1Dnj0/LinmKrLe+c
-         vq5Q0LkGA1GB0sWvJ8yhahPvMZbQXC/mfL0/5YMB2MJP1JWtxVR5XN+mrzjCIGvV4TRG
-         z4d64XzgVOW665gKzdDmvLjtmG9m3z2waK5GVl3e77w0GNA1Gh+H5MsIU5qCW8LpY4Bk
-         2/9Qp9pjIFNJlTPCHnJPKvYxqd2mNWilcxbd49PjIxmLvNS8a3tG330EdUXeOyIEz1Gp
-         KKVeZogt4n4Qck7P59IuGn/FFEFOqqQ32ZoaRyVvE3eBTMYiGnQwyWMo63C8lxtWCFR9
-         5lzw==
-X-Gm-Message-State: APjAAAW/PncY/GOtoWjvOgTsTIj9n47QrfLCExgdMhYB0L19P243xDxW
-        L5ohPJdOJ7jT80jbpRhTdJ7UElizoUl46drUMax/xA==
-X-Google-Smtp-Source: APXvYqx7qnNmzEGHh3l0ybIURRNlv3h+0jMWrPNsddLXYBAWaFoIfBU2PrBmBZ6fwZizOYviRGZkOY/zqCQGjuwVAnQ=
-X-Received: by 2002:a19:c0b:: with SMTP id 11mr52456055lfm.135.1578098329258;
- Fri, 03 Jan 2020 16:38:49 -0800 (PST)
-MIME-Version: 1.0
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-6-geert+renesas@glider.be> <CACRpkdaW7nmpE99FAvBDBTmkTZOTQ5WdM=JbMzBTLk7cbLRXPw@mail.gmail.com>
- <CAMuHMdVbk5S__8OK-zNXmiW66=WVA8Jzyc=hUvf_hJSU=u9TFg@mail.gmail.com>
-In-Reply-To: <CAMuHMdVbk5S__8OK-zNXmiW66=WVA8Jzyc=hUvf_hJSU=u9TFg@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 4 Jan 2020 01:38:38 +0100
-Message-ID: <CACRpkda8QD_tDA=YVDRNVnHd8QHs-yHBTzZuJHsnocgMdxv9cA@mail.gmail.com>
-Subject: Re: [PATCH v3 5/7] gpio: Add GPIO Aggregator/Repeater driver
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dKtl1NpRX8aOyUbBGch9yTP0h5jL9ht++jj3F8wRx1Y=;
+        b=kELmKdJmt6XxX+QIHGu6VnpNw8lxKh5StCG8yoNV5UaQIyRHxmVegdG927AtSnclKP
+         ltEJDLC5GGbjDjH2w0NyJVn6V1zjMy2cBR/kVHDiRuni1shn0fuG/DjUTZcckCNNp/wp
+         RgVI8baHWey31hkRFhD1xas6MUagMzkgGgRZtvNAauHAcL1HOKzSnn1JUJSLpAIpfFmX
+         DN3JDoVrSQO4H7NE1M5YSgE7IJYDnb8x441ECjt9rYMqpFFSYDBHS/NVATOEngJXR8zm
+         1Utdz2OxRprm6uAm5Hs3CxTHPHjtVxzKQIdVUbxWFaBhfNUvVx5PQKuxNuWGxvOAtP+l
+         7Mqg==
+X-Gm-Message-State: APjAAAWiJCHGZOpxU6vA36KjcfHqIilKKdMCVjEMO1PN8swcCnK/GK69
+        PL6jt4PyrNAHzIsvl/kf7LTB7Gs=
+X-Google-Smtp-Source: APXvYqyDMFdcEd8PrmOOX1eV9oxqAcdGMBZ5iAVt3AYNrzWs4/dUpVlL9MI3MsaZgUzRu1sTDF1+DA==
+X-Received: by 2002:a02:b00c:: with SMTP id p12mr71715421jah.112.1578098381708;
+        Fri, 03 Jan 2020 16:39:41 -0800 (PST)
+Received: from rob-hp-laptop ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id g62sm21473703ile.39.2020.01.03.16.39.40
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2020 16:39:41 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 2219b7
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Fri, 03 Jan 2020 17:39:39 -0700
+Date:   Fri, 3 Jan 2020 17:39:39 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Akash Gajjar <akash@openedev.com>
+Cc:     heiko@sntech.de, jagan@openedev.com, tom@radxa.com,
+        Akash Gajjar <akash@openedev.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+        Andy Yan <andy.yan@rock-chips.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Nick Xie <nick@khadas.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3, 1/1] arm64: dts: rockchip: add ROCK Pi S DTS support
+Message-ID: <20200104003939.GA15565@bogus>
+References: <20191230145008.5899-1-akash@openedev.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191230145008.5899-1-akash@openedev.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for slowness... christmas.
+On Mon, 30 Dec 2019 20:19:32 +0530, Akash Gajjar wrote:
+> ROCK Pi S is RK3308 based SBC from radxa.com. ROCK Pi S has a,
+> - 256MB/512MB DDR3 RAM
+> - SD, NAND flash (optional on board 1/2/4/8Gb)
+> - 100MB ethernet, PoE (optional)
+> - Onboard 802.11 b/g/n wifi + Bluetooth 4.0 Module
+> - USB2.0 Type-A HOST x1
+> - USB3.0 Type-C OTG x1
+> - 26-pin expansion header
+> - USB Type-C DC 5V Power Supply
+> 
+> This patch enables
+> - Console
+> - NAND Flash
+> - SD Card
+> 
+> Signed-off-by: Akash Gajjar <akash@openedev.com>
+> ---
+> Changes for v2
+> - Use pwm-supply for vdd_core node instead of vi-supply
+> - Add USB2.0 node support
+>  
+> Changes for v3
+> - Use small S on dts file name
+> - Add missing semicolon
+> - Remove USB2.0 node support
+> 
+>  .../devicetree/bindings/arm/rockchip.yaml     |   5 +
+>  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>  .../boot/dts/rockchip/rk3308-rock-pi-s.dts    | 221 ++++++++++++++++++
+>  3 files changed, 227 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3308-rock-pi-s.dts
+> 
 
-On Thu, Dec 12, 2019 at 4:24 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Thu, Dec 12, 2019 at 3:34 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-
-> > > +         This can serve the following purposes:
-> > > +           1. Assign a collection of GPIOs to a user, or export them to a
-> > > +              virtual machine,
-> >
-> > This is ambiguous. What is a "user"? A process calling from
-> > userspace? A device tree node?
->
-> A user is an entity with a UID, typically listed in /etc/passwd.
-> This is similar to letting some, not all, people on the machine access
-> the CD-ROM drive.
-
-Ah I get it. Maybe we can say "assign permissions for a collection
-of GPIOs to a user".
-
-> > I would write "assign a collection of GPIO lines from any lines on
-> > existing physical GPIO chips to form a new virtual GPIO chip"
-> >
-> > That should be to the point, right?
->
-> Yes, that's WHAT it does. The WHY is the granular access control.
-
-So I guess we can write both?
-
-> > > +           3. Provide a generic driver for a GPIO-operated device, to be
-> > > +               controlled from userspace using the GPIO chardev interface.
-> >
-> > I don't understand this, it needs to be elaborated. What is meant
-> > by a "GPIO-operated device" in this context? Example?
->
-> E.g. a motor. Or a door opener.
->
->         door-opener {
->                 compatible = "mydoor,opener";
->
->                 gpios = <&gpio2 19 GPIO_ACTIVE_HIGH>;
->         };
->
-> You don't need a full-featured kernel driver for that, so just bind the
-> gpio-aggregator to the door-opener, and control it through libgpiod.
-
-Yep it's a perfect industrial control example, I get it.
-
-Maybe we should blurb something about industrial control?
-
-The rest I think we cleared out else I will see it when I review again.
-
-Yours,
-Linus Walleij
+Reviewed-by: Rob Herring <robh@kernel.org>
