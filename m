@@ -2,72 +2,92 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MIME_QP_LONG_LINE,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4111C3276F
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B478C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D21AE22B48
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE3D02464E
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:51:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=jonmasters-org.20150623.gappssmtp.com header.i=@jonmasters-org.20150623.gappssmtp.com header.b="rsUdEEXP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbgADPtf (ORCPT
+        id S1726204AbgADPvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 10:49:35 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:40398 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbgADPtf (ORCPT
+        Sat, 4 Jan 2020 10:51:54 -0500
+Received: from mail-qv1-f42.google.com ([209.85.219.42]:39388 "EHLO
+        mail-qv1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbgADPvy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 10:49:35 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id CA39D8060A;
-        Sat,  4 Jan 2020 16:49:32 +0100 (CET)
-Date:   Sat, 4 Jan 2020 16:49:31 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     dri-devel@lists.freedesktop.org, thierry.reding@gmail.com,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com, linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com, maxime@cerno.tech,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: Re: [PATCH v4 3/3] drm/panel: add panel driver for Leadtek
- LTK500HD1829
-Message-ID: <20200104154931.GH17768@ravnborg.org>
-References: <20191224112641.30647-1-heiko@sntech.de>
- <20191224112641.30647-3-heiko@sntech.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191224112641.30647-3-heiko@sntech.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=NXpJzYs8AAAA:8
-        a=BbrnQlLR1J-O-DZvGPAA:9 a=CjuIK1q_8ugA:10 a=cwV61pgf2j4Cq8VD9hE_:22
-        a=pHzHmUro8NiASowvMSCR:22 a=6VlIyEUom7LUIeUMNQJH:22
+        Sat, 4 Jan 2020 10:51:54 -0500
+Received: by mail-qv1-f42.google.com with SMTP id y8so17419175qvk.6
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jan 2020 07:51:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jonmasters-org.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:date:subject:message-id
+         :to;
+        bh=kFvmKQqYa2fX4vcTqRj6WrzUk1mEFZ1omXDTHB1IJsI=;
+        b=rsUdEEXP/ry2Su+XInNONl9UxGHK66rXVF5FPuR7h882aYVfn2VS75R789t9/fLSip
+         Lc+NFlXigMBfVeiZBBsRMtfYn3Ki4ClUiwEbr8Yby2nOPPg8OiqZrusQzTgZWk45IfeV
+         8b+X7K180vKT0KgCIyPrPsbLcmfRJYJEKQ5G1/eyC+TALJu7zN6HMbHqDOlYvSqL6KgC
+         VcYjIjk83kxMpSKTflk7twU24KtcnpliPGGYmhrjOUmUPpM8jEV5+bNexSSuuLgAfxQ+
+         GEGXKVubclfBmVUNUjcELvyxQ07kTLu4tBRPITPcgOvDl2W8hiT+D0fSo5aUiIhi5Jvy
+         G/uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version:date
+         :subject:message-id:to;
+        bh=kFvmKQqYa2fX4vcTqRj6WrzUk1mEFZ1omXDTHB1IJsI=;
+        b=HRpbUtxhWNzbsrZh/J/P23JFjiJrMP9WA0E6/YoDFfmxb2hXnC0oFjunQ/EP05mRDC
+         BYKLVB9288DQ9ZpDEQK7+z46oBe8Psm45br2kGaGoA4+agEUbi1Rt/+fzbG9YLNkdowx
+         oOBHKGYRw+EpdDBjs/VWcKZtuhtevBKSP8AM5tBKCUPxhrKrPAcj/SQfQ5DB1LK+eQI6
+         hjmeqx7fI+ltfuABEhsDJKltbTu7cgafC7v5Z60GGYoh0ud3O/Fb2AJWZcpjrwECepG7
+         P8wJt1vkehE+V0MzdkmSv5U8NfoqGY0nFt5s+2Y6ZZAtHW74uyTacd6crbBd+cezML3t
+         LEMw==
+X-Gm-Message-State: APjAAAVNAB2UOEWZJe5Tp4ZoUUid+oTrhL/mQjB9lwy1svDElV4bWiuO
+        SOW5Th0zYbzu/vfHLdM5SSgyVwBOdPo=
+X-Google-Smtp-Source: APXvYqzO27OX9tk5oQHKlh8Vr62mw5ThQ9BtArNbHOdk1e8KyFmReR/YQ7AkDUwP15SFuloEwkyqSQ==
+X-Received: by 2002:a05:6214:94b:: with SMTP id dn11mr9983603qvb.12.1578153113379;
+        Sat, 04 Jan 2020 07:51:53 -0800 (PST)
+Received: from [192.168.1.120] (Boston.jonmasters.org. [50.195.43.97])
+        by smtp.gmail.com with ESMTPSA id f26sm20216042qtv.77.2020.01.04.07.51.53
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 04 Jan 2020 07:51:53 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Jon Masters <jcm@jonmasters.org>
+Mime-Version: 1.0 (1.0)
+Date:   Sat, 4 Jan 2020 10:51:52 -0500
+Subject: nf_nat not running in a netns
+Message-Id: <29555895-6D59-4415-B44C-5AD90C14C63F@jonmasters.org>
+To:     linux-kernel@vger.kernel.org
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 12:26:41PM +0100, Heiko Stuebner wrote:
-> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> 
-> The LTK500HD1829 is 5.5" DSI display.
-> 
-> changes in v4:
-> - drop error message if backlight not found, no other panel
->   does that and if needed it should live in drm_panel_of_backlight
-> changes in v3:
-> - drop one more overlooked panel->drm access
-> 
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Hi there,
 
-Applied to drm-misc-next.
-Updated to fix a few trivial checkpatch warnings when I applied.
+Can anyone offer any reasons why the nat table chains for a netns wouldn=E2=80=
+=99t be running?
 
-	Sam
+Longer detail:
+
+I=E2=80=99ve be playing with Kolla (containerized OpenStack) and the way the=
+y implement (virtual) routers for tenant networks is to create network names=
+paces with interfaces representing the ports plugged into the router. To tra=
+nslate addresses from internal to external networks, they apply D/SNAT rules=
+ within that netns. All of these are created and the interfaces are pingable=
+, but the nat rules aren=E2=80=99t being run and the untranslated addresses a=
+re ultimately seen on the physical network once packets traverse out of the c=
+ontainers and to the external neutron interface.
+
+Jon.
+
+--=20
+Computer Architect
+
