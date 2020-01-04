@@ -2,120 +2,256 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70FCC32767
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE99C00523
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E62C21835
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D236121D7D
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:34:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g60RbmY9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tAZK3OEK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbgADCbR (ORCPT
+        id S1727273AbgADCe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 21:31:17 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46792 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbgADCbR (ORCPT
+        Fri, 3 Jan 2020 21:34:29 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34614 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727237AbgADCe2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 21:31:17 -0500
-Received: by mail-pg1-f193.google.com with SMTP id z124so24169555pgb.13;
-        Fri, 03 Jan 2020 18:31:16 -0800 (PST)
+        Fri, 3 Jan 2020 21:34:28 -0500
+Received: by mail-lj1-f194.google.com with SMTP id z22so40757517ljg.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 18:34:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=blsSbEWGXgUJjQb/qSvAaZJESUCaEn4p3+MDGRU7nN0=;
-        b=g60RbmY9rCQX3TAchyPtY6+X0KJQ4VUWpnr9IoNoB2lLLOX9coJyBS3VTLbpdxhrP0
-         CiLCU9jqKEc6nmNYT1QTplN9kYk2+45l0pO0ymDZl0ORbVBpgMGnwJ4ebyPEGV+XO5zS
-         RdvdQEhTbEGsAmUs22u31eSUzAdNPAaNlzdLLG+808ZqiN2fBse1q3sKI51Vv+AM0UsS
-         lDcHstQA8NvXAGkzCshUBUUbr967vukeE6h42hiaGArSdWOgYNrQCArYDWxVYVQ8/80s
-         5Oc3Mp5Jx4toOlDpzhH4BfXgbHJAkfHDS52+1lAw8evKIuYOW7vS/s0we7afRJJADUGL
-         FfMA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BQvpmc6bTYtIoGI7mIebVuPQLrewKdFxgpvNfh1jXk8=;
+        b=tAZK3OEKd7k1M9evv8ECR6IT4KuCG9ELRfiOy7DNKz4dsEPusPe/W4hprN3ZoOOUz3
+         +ODcHgUFQ4f7YwPVWXfHrzvzWU3ldmbVznRqqa1zjiUkPu4LpoCrsAknU2pSs7MXrXIu
+         Y/xlv7+HrXX2kZSD/sFcN30bWts4SGSC4NXHj1vHv5ddjdk8O2FOHd/Rolgxf2cns+sm
+         JXsm1ZhUMMiY+ixrFoIcOP0aW8DHcgEfeK6MQn7dP0f2AzG/APBX9Bucp+PPpWqmxSQz
+         DHL2CocOXAEQcVBUweSFLywO+ba7qejLqqpJTYRMTjsrVcuRnFB62Lll2tPT7II4iznT
+         iGbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=blsSbEWGXgUJjQb/qSvAaZJESUCaEn4p3+MDGRU7nN0=;
-        b=Q9z8/nvulpqQ2N73tyhiPFuH+Ks9Sihh6CwbJmNnqVSJNgQ63t+HuUjx4ZU1ntycuC
-         VwyheI8aoXV2203oiM/l8WwOe3ByJvvNG0QOtyX93QrjygEq+v2rlcJ/csa3IaEI+W/w
-         yRUFB1FGmACCyoJCEI8hhOtWpUXa1RtmazNcO7+Ee9/uqs9s3g1FoEsCdp/XVe+sif9t
-         5HNp7S6jLLHlE3SyENBVm3DjHiCEtjOPubonEUhy8O1tm15K+/kBai4Yw51hCUQBurga
-         UqRxYJVDX2faCuO/TD9k7jQ9jIWhwkaKwALsQHHnsqeAWcbdrTOUwzXgdVO7EP0XsAXa
-         QnUA==
-X-Gm-Message-State: APjAAAX0to7VXA3qlkJtLZv4iAhSlZTmzRr2zjoMsPgNW5B/yLOl7/af
-        7uvIwIcHxyR9w1Fg52Wiakg=
-X-Google-Smtp-Source: APXvYqxI/Qs2haahOyLbbybZRJGb7uQx7j03FqVuyQdMVGDF1qGU0nKlps8LFZ8ORvjJXB34mSWzVw==
-X-Received: by 2002:a63:ca4d:: with SMTP id o13mr98415724pgi.360.1578105076338;
-        Fri, 03 Jan 2020 18:31:16 -0800 (PST)
-Received: from ast-mbp ([2620:10d:c090:200::3:4269])
-        by smtp.gmail.com with ESMTPSA id o184sm64463083pgo.62.2020.01.03.18.31.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 Jan 2020 18:31:15 -0800 (PST)
-Date:   Fri, 3 Jan 2020 18:31:14 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH bpf] bpf: cgroup: prevent out-of-order release of cgroup
- bpf
-Message-ID: <20200104023112.6edfdvsff6cgsstn@ast-mbp>
-References: <20191227215034.3169624-1-guro@fb.com>
- <20200104003523.rfte5rw6hbnncjes@ast-mbp>
- <20200104011318.GA11376@localhost.localdomain>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BQvpmc6bTYtIoGI7mIebVuPQLrewKdFxgpvNfh1jXk8=;
+        b=rcYlWBG44LKfWf05l1P7ZN8BGIix5eRoZ3wPn3qdL8leaPyg2XoI+RK8/Y2zJZpZ70
+         YS0hpFlvtMBaBfx5MyqFFvwVZmjWkFRV4tkSWTJyY8siaf7/lED9CLSjh+S6/y7xIlPw
+         o5gwRPnc+YrYZWZdHFFWpUQzi31vl6ME/fQV3Gq71omFnfrKU3R1MpHqM1k0aMJ3hudF
+         xXd9RxHu6aVLZFeCbf1b1U+d2CbhTMKcblR4OXuLDm5dBtleRoN3MFMGUxJnyie++6ac
+         KMJRpDo2JuB6epYOxHbGNulZuT7zebTA1HXEcDzFnsnoT6hIM3E9Gsk0U2kiNni3zmPl
+         rmKw==
+X-Gm-Message-State: APjAAAXO1yEFAKrDphgaKkQc7FNAdEGxah/3OSSVrC3suLXLH4NNpJX+
+        XeeCkgP2/hWvvujhqtftUHosikv0J0qDU1GSzlX2/w==
+X-Google-Smtp-Source: APXvYqyD9oMygC2d1JGl/rCxn+X/nhk+8OE08L9az0yTsFlrgLIFWrcAV9zmwbipEHAuXtJG1WtnbPXhiUtiQEvCzyo=
+X-Received: by 2002:a2e:9804:: with SMTP id a4mr27224065ljj.10.1578105265406;
+ Fri, 03 Jan 2020 18:34:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200104011318.GA11376@localhost.localdomain>
-User-Agent: NeoMutt/20180223
+References: <CAD_xR9eDL+9jzjYxPXJjS7U58ypCPWHYzrk0C3_vt-w26FZeAQ@mail.gmail.com>
+ <1762437703fd150bb535ee488c78c830f107a531.camel@sipsolutions.net>
+ <CAD_xR9eh=CAYeQZ3Vp9Yj9h3ifMu2exy0ihaXyE+736tJrPVLA@mail.gmail.com> <CAMrEMU-QF8HCTMFhzHd0w2f132iA4GLUXHmBPGnuetPqkz=U7A@mail.gmail.com>
+In-Reply-To: <CAMrEMU-QF8HCTMFhzHd0w2f132iA4GLUXHmBPGnuetPqkz=U7A@mail.gmail.com>
+From:   Kan Yan <kyan@google.com>
+Date:   Fri, 3 Jan 2020 18:34:14 -0800
+Message-ID: <CA+iem5uPaYmZr=+kdHopm1Yo9dgyL98k7KfV6uYx_yH22FSGag@mail.gmail.com>
+Subject: Re: PROBLEM: Wireless networking goes down on Acer C720P Chromebook (bisected)
+To:     Justin Capella <justincapella@gmail.com>
+Cc:     Stephen Oberholtzer <stevie@qrpff.net>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 04, 2020 at 01:13:24AM +0000, Roman Gushchin wrote:
-> On Fri, Jan 03, 2020 at 04:35:25PM -0800, Alexei Starovoitov wrote:
-> > On Fri, Dec 27, 2019 at 01:50:34PM -0800, Roman Gushchin wrote:
-> > > Before commit 4bfc0bb2c60e ("bpf: decouple the lifetime of cgroup_bpf
-> > > from cgroup itself") cgroup bpf structures were released with
-> > > corresponding cgroup structures. It guaranteed the hierarchical order
-> > > of destruction: children were always first. It preserved attached
-> > > programs from being released before their propagated copies.
-> > > 
-> > > But with cgroup auto-detachment there are no such guarantees anymore:
-> > > cgroup bpf is released as soon as the cgroup is offline and there are
-> > > no live associated sockets. It means that an attached program can be
-> > > detached and released, while its propagated copy is still living
-> > > in the cgroup subtree. This will obviously lead to an use-after-free
-> > > bug.
-> > ...
-> > > @@ -65,6 +65,9 @@ static void cgroup_bpf_release(struct work_struct *work)
-> > >  
-> > >  	mutex_unlock(&cgroup_mutex);
-> > >  
-> > > +	for (p = cgroup_parent(cgrp); p; p = cgroup_parent(p))
-> > > +		cgroup_bpf_put(p);
-> > > +
-> > 
-> > The fix makes sense, but is it really safe to walk cgroup hierarchy
-> > without holding cgroup_mutex?
-> 
-> It is, because we're holding a reference to the original cgroup and going
-> towards the root. On each level the cgroup is protected by a reference
-> from their child cgroup.
+> This AQL stuff sounds pretty nifty, and I'd love to try my hand at
+> making it work for ath9k (also, since I put so much effort into an
+> automated build-and-test framework, it'd be a shame to just abandon
+> it.)  However, the ath9k code is rather lacking for comments, so I
+> don't even know where I should start, except for (I suspect) a call to
+> `wiphy_ext_feature_set(whatever, NL80211_EXT_FEATURE_AQL);` from
+> inside ath9k_set_hw_capab()?
+> In the meantime, I went back to e548f749b096 -- the commit prior to
+> the one making AQL support opt-in -- and cranked up the debugging.
 
-cgroup_bpf_put(p) can make bpf.refcnt zero which may call cgroup_bpf_release()
-on another cpu which will do cgroup_put() and this cpu p = cgroup_parent(p)
-would be use-after-free?
-May be not due to the way work_queues are implemented.
-But it feels dangerous to have such delicate release logic.
-Why not to move the loop under the mutex and make things obvious?
+AQL is designed for wireless chipset that uses firmware/hardware
+offloading, to manage the firmware/hardware queue size. For ath9k, the
+TX queues are controlled by the host driver and chipsets that use
+ath9k have a much smaller hardware queue compared to ath10k, so AQL is
+probably not needed for ath9k. The airtime based TX scheduler alone
+should be sufficient.
+
+> > /sys/kernel/debug/ieee80211/phy0
+> >
+> > airtime_flags = 7
+> >
+> > stations/<my AP's MAC>/airtime =
+> >
+> > RX: 6583578 us
+> > TX: 32719 us
+> > Weight: 256
+> > Deficit: VO: -1128 us VI: 11 us BE: -5098636 us BK: 256 us
+> > Q depth: VO: 3868 us VI: 3636 us BE: 12284 us BK: 0 us
+> > Q limit[low/high]: VO: 5000/12000 VI: 5000/12000 BE: 5000/12000 BK: 5000/12000
+> >
+> > (I have no idea how to interpret this, but that '32719 us' seems odd,
+> > I thought the airtime usage was in 4us units?)
+> Me neither, off the top of my head, let's wait for Toke.
+
+"TX: 32719 us" is the airtime reported by firmware, which is not in 4us units.
+There are two airtime: the "consumed" airtime reported by firmware,
+which is used by the airtimed based TX scheduler to enforce fairness,
+and the "estimated" airtime used by AQL to control the queue length
+for frames pending in the firmware/hardware queue, which in 4us unit.
+
+> I ran a ping, and saw this:
+>
+> - pings coming back in <5ms
+> - re-enable AQL (echo 7 | tee airtime_flags)
+> - pings stop coming back immediately
+> - some seconds later, disable AQL again (echo 3 | tee airtime_flags)
+> - immediate *flood* of ping replies registered, with times 16000ms,
+> 15000ms, 14000ms, .. down to 1000ms, 15ms, then stabilizing sub-5ms
+> - According to the icmp_seq values, all 28 requests were replied to,
+> and their replies were delivered in-order
+>
+> This certainly looks like a missing TX queue restart to me?
+I don't think TX queue restart is "missing", the TX queue should get
+restarted when the pending frames is completed and returned to the
+host driver. However, It looks like there is some issue with the
+deficit refill logic in ath9k, and the TX queue got blocked due to the
+negative deficit.
+
+
+On Thu, Jan 2, 2020 at 11:22 PM Justin Capella <justincapella@gmail.com> wrote:
+>
+> The rather large negative deficit stands out to me. See this patch,
+> https://patchwork.kernel.org/patch/11246363/ specifically the comments
+> by Kan Yan
+>
+> On Thu, Jan 2, 2020, 3:14 PM Stephen Oberholtzer <stevie@qrpff.net> wrote:
+> >
+> >
+> > /sys/kernel/debug/ieee80211/phy0
+> >
+> > airtime_flags = 7
+> >
+> > stations/<my AP's MAC>/airtime =
+> >
+> > RX: 6583578 us
+> > TX: 32719 us
+> > Weight: 256
+> > Deficit: VO: -1128 us VI: 11 us BE: -5098636 us BK: 256 us
+> > Q depth: VO: 3868 us VI: 3636 us BE: 12284 us BK: 0 us
+> > Q limit[low/high]: VO: 5000/12000 VI: 5000/12000 BE: 5000/12000 BK: 5000/1200
+>
+> On Thu, Jan 2, 2020 at 3:14 PM Stephen Oberholtzer <stevie@qrpff.net> wrote:
+> >
+> > On Thu, Jan 2, 2020 at 8:28 AM Johannes Berg <johannes@sipsolutions.net> wrote:
+> > >
+> > > On Tue, 2019-12-31 at 19:49 -0500, Stephen Oberholtzer wrote:
+> > > > Wireless networking goes down on Acer C720P Chromebook (bisected)
+> > > >
+> > > > Culprit: 7a89233a ("mac80211: Use Airtime-based Queue Limits (AQL) on
+> > > > packet dequeue")
+> > > >
+> >
+> > <snip>
+> >
+> > > I think I found at least one hole in this, but IIRC (it was before my
+> > > vacation, sorry) it was pretty unlikely to actually happen. Perhaps
+> > > there are more though.
+> > >
+> > > https://lore.kernel.org/r/b14519e81b6d2335bd0cb7dcf074f0d1a4eec707.camel@sipsolutions.net
+> >
+> > <snippety-snip>
+> >
+> > > Do you get any output at all? Like a WARN_ON() for an underflow, or
+> > > something?
+> > >
+> > > johannes
+> > >
+> >
+> > Johannes,
+> >
+> > To answer your immediate question, no, I don't get any dmesg output at
+> > all. Nothing about underruns.
+> > However, while pursuing other avenues -- specifically, enabling
+> > mac80211 debugfs and log messages -- I realized that my 'master' was
+> > out-of-date from linux-stable and did a git pull.  Imagine my surprise
+> > when the resulting kernel did not exhibit the problem!
+> >
+> > Apparently, I had been a bit too pessimistic; since the problem
+> > existed in 5.5-rc1 release, I'd assumed that the problem wouldn't get
+> > rectified before 5.5.
+> >
+> > However, I decided to bisect the fix, and ended up with: 911bde0f
+> > ("mac80211: Turn AQL into an NL80211_EXT_FEATURE"), which appears to
+> > have "solved" the problem by just disabling the feature (this is
+> > ath9k, by the way.)
+> >
+> > This AQL stuff sounds pretty nifty, and I'd love to try my hand at
+> > making it work for ath9k (also, since I put so much effort into an
+> > automated build-and-test framework, it'd be a shame to just abandon
+> > it.)  However, the ath9k code is rather lacking for comments, so I
+> > don't even know where I should start, except for (I suspect) a call to
+> > `wiphy_ext_feature_set(whatever, NL80211_EXT_FEATURE_AQL);` from
+> > inside ath9k_set_hw_capab()?
+> >
+> > In the meantime, I went back to e548f749b096 -- the commit prior to
+> > the one making AQL support opt-in -- and cranked up the debugging.
+> >
+> > I'm not sure how to interpret any of this, but  here's what I got:
+> >
+> > dmesg output:
+> >
+> > Last relevant mention is "moving STA <my AP's MAC> to state 4" which
+> > happened during startup, before everything shut down.
+> >
+> > /sys/kernel/debug/ieee80211/phy0
+> >
+> > airtime_flags = 7
+> >
+> > stations/<my AP's MAC>/airtime =
+> >
+> > RX: 6583578 us
+> > TX: 32719 us
+> > Weight: 256
+> > Deficit: VO: -1128 us VI: 11 us BE: -5098636 us BK: 256 us
+> > Q depth: VO: 3868 us VI: 3636 us BE: 12284 us BK: 0 us
+> > Q limit[low/high]: VO: 5000/12000 VI: 5000/12000 BE: 5000/12000 BK: 5000/12000
+> >
+> > (I have no idea how to interpret this, but that '32719 us' seems odd,
+> > I thought the airtime usage was in 4us units?)
+> >
+> >
+> > Doing an 'echo 3 | tee airtime_flags' to clear the (old) AQL-enabled
+> > bit seemed to *immediately* restore network connectivity.
+> >
+> > I ran a ping, and saw this:
+> >
+> > - pings coming back in <5ms
+> > - re-enable AQL (echo 7 | tee airtime_flags)
+> > - pings stop coming back immediately
+> > - some seconds later, disable AQL again (echo 3 | tee airtime_flags)
+> > - immediate *flood* of ping replies registered, with times 16000ms,
+> > 15000ms, 14000ms, .. down to 1000ms, 15ms, then stabilizing sub-5ms
+> > - According to the icmp_seq values, all 28 requests were replied to,
+> > and their replies were delivered in-order
+> >
+> > This certainly looks like a missing TX queue restart to me?
+> >
+> >
+> > --
+> > -- Stevie-O
+> > Real programmers use COPY CON PROGRAM.EXE
