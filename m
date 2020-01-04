@@ -7,88 +7,90 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C180DC32771
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 21:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE269C32771
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 21:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 917F1222C4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 21:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA89C222C4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 21:14:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578172321;
-	bh=Kc8R8PG2XjwdyEZc6dNj6JgJPNj/Pco8HHi++eEHxk0=;
+	s=default; t=1578172496;
+	bh=aQkYv/od3M6ELDfON77dEIQpB8tvF3HasO5wg5XVGWE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lHEmXLG/oaNA0hmdrjWP5wTq1bfCIO7qVpUe2Qdxlg5Q94lGhFsTqckamh+YX2qYe
-	 Xd1FMpomdMIQvHKufvfh6eoGKat4XDtm3ZnGJsm8ecrZqoX+EYeGxHsdj0m91vUdbC
-	 zPUa6MmlNPiK/jovSnRRZpMrV0UEfheRjF9p3uXA=
+	b=0+/uFkdMPlPgAmybqsBkIX4q9apmEZ+tnRBovrNN/1dHrJPNZPigzP8pKNtLzWDJF
+	 p2OQnTXYqWvKoIxGMV9MheyRLtSkrtdlhPrSdUbyzspl0/JOmsi+LpZ249uQaSIHbD
+	 lhn1gXdvCBsK/BvzXeRYyRYGURUsc9gfT8tZKJQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbgADVMA (ORCPT
+        id S1726307AbgADVOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 16:12:00 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40661 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbgADVL7 (ORCPT
+        Sat, 4 Jan 2020 16:14:55 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33428 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbgADVOz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 16:11:59 -0500
-Received: by mail-io1-f66.google.com with SMTP id x1so44727987iop.7
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jan 2020 13:11:59 -0800 (PST)
+        Sat, 4 Jan 2020 16:14:55 -0500
+Received: by mail-io1-f67.google.com with SMTP id z8so44737090ioh.0
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jan 2020 13:14:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=B0Hpin+TA8PZ/UPU++QRg3TQKcelVhxJf7UGPi4P5JQ=;
-        b=nN0V+WZpJ5UlaT1O78jrptteqVlT4hAp+Ko0GrPl+RZosDaMnsodOP2u7fOQZEzp2Y
-         ZpPRgY1fZ41lvk5oa1bFd9NVorsJEa4GiwAa8rLGlb+LhY0Nf5cE33NkO+9bGwSTuKnD
-         cKAWLxore3b0v6HeSUieTdTLYqRn9NiPq7ouwWtKD8UDfAD2Tr5n3ZXRQ3ei3ZAdzS8z
-         njgtM/Y+htgYEzG3UQeO9z+6RHFYpqPihreNFWf9r44x7BAzVhaYOlgdr/hKiSanzVeN
-         vfETgXjWjZxhla6qJpOChdKTKpHTKfg3ikZgWA4JQhh61rPUR2moLCC8s73+R42nQ3p6
-         rjWw==
-X-Gm-Message-State: APjAAAVfaqX8PDFHkYBra6G7oPU/wyYbs1oQmvm8ZapAUFoL31NOUj0s
-        O59D4/HO9sLyjIheRVbmwHVSLJ0=
-X-Google-Smtp-Source: APXvYqyzY+6834ibtMPFhWZUostIJt5cws3qVg4M8Mksl9w5vRkkbOZcZmgcNnwCfFKf/ltIZgd3ug==
-X-Received: by 2002:a5e:8417:: with SMTP id h23mr61258716ioj.17.1578172318591;
-        Sat, 04 Jan 2020 13:11:58 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l6WjYhwErffAfIJqKX4almlPavimz+egXrq1mO0xKZc=;
+        b=GI6hBGqreb2CVM9Ef88/CFQ6212g5Y/sa3/uLOCY+JQ73ZPLnheEA4Rb6BsBeAZ2jm
+         1bpU+9KIu5DPcdFBf7heu4E84nJhfj3OO+nJMa+k86P6qCe1J42YCVNLRbjt1O0QQd6E
+         qWIJpyaqIa43fWHAdfgbuLozF2FESzmE/KpmzhfFCHaQ2R26y4kTXyNzq7DuSOLtXXSj
+         FIhxV9ISz1k+Bw89T7LBeGAeohuKH4TdGc/Tzgno0uYrY88U7hGK1h4SFBbm9uZrp2zG
+         COSY01SOsqOqZuytz2SgJO/2nOYZpVi25YmqsxIJj383eURXvNjNuh9acmiDHV6oUkE8
+         i9pg==
+X-Gm-Message-State: APjAAAVpIcIo/hXWWBoX/FZpirAJTp/MmWHX9xtLqy/YFJ/3eLjAUPSM
+        orB/ThWUQm22eLRJVmz/3XoUj7w=
+X-Google-Smtp-Source: APXvYqwnO1jlVtVNS6tXxallv6VPwco3HesrB+i1A/hcFV7VB3J0wNG0dyy12/XQAQ8bNHOUfDSzRg==
+X-Received: by 2002:a6b:7b41:: with SMTP id m1mr59034118iop.191.1578172494460;
+        Sat, 04 Jan 2020 13:14:54 -0800 (PST)
 Received: from rob-hp-laptop ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id v64sm22429235ila.36.2020.01.04.13.11.57
+        by smtp.gmail.com with ESMTPSA id j69sm22367891ilg.67.2020.01.04.13.14.53
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jan 2020 13:11:58 -0800 (PST)
+        Sat, 04 Jan 2020 13:14:53 -0800 (PST)
 Received: from rob (uid 1000)
         (envelope-from rob@rob-hp-laptop)
-        id 2219b7
+        id 2219a3
         by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Sat, 04 Jan 2020 14:11:57 -0700
-Date:   Sat, 4 Jan 2020 14:11:57 -0700
+        Sat, 04 Jan 2020 14:14:53 -0700
+Date:   Sat, 4 Jan 2020 14:14:53 -0700
 From:   Rob Herring <robh@kernel.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/9] dt: bindings: lm3692x: Add led-max-microamp
- property
-Message-ID: <20200104211157.GA21511@bogus>
-References: <cover.1578134779.git.agx@sigxcpu.org>
- <015c9818d17d81783614da2b89ec46283468765b.1578134779.git.agx@sigxcpu.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        rnayak@codeaurora.org, swboyd@chromium.org, agross@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
+        dianders@chromium.org, Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: power: rpmpd: Convert rpmpd bindings
+ to yaml
+Message-ID: <20200104211453.GA26611@bogus>
+References: <20191220064823.6115-1-sibis@codeaurora.org>
+ <20191220064823.6115-2-sibis@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <015c9818d17d81783614da2b89ec46283468765b.1578134779.git.agx@sigxcpu.org>
+In-Reply-To: <20191220064823.6115-2-sibis@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat,  4 Jan 2020 11:54:21 +0100, =?UTF-8?q?Guido=20G=C3=BCnther?= wrote:
-> This can be used to limit the current per LED strip.
+On Fri, 20 Dec 2019 12:18:22 +0530, Sibi Sankar wrote:
+> Convert RPM/RPMH power-domain bindings to yaml.
 > 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/leds/leds-lm3692x.txt | 3 +++
->  1 file changed, 3 insertions(+)
+>  .../devicetree/bindings/power/qcom,rpmpd.txt  | 150 ----------------
+>  .../devicetree/bindings/power/qcom,rpmpd.yaml | 170 ++++++++++++++++++
+>  2 files changed, 170 insertions(+), 150 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+>  create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
