@@ -7,53 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E399C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A53C3276F
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42A6921734
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0906424653
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:21:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578151306;
-	bh=CHtvmJmJTYA2XWUU5fS02RD4y82wxxLkb2gjothw9tA=;
+	s=default; t=1578151308;
+	bh=Y7L88PCTUdeR29N/KZb0qXw8Sim4EahW7H2Nh1Q54qk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xOp+QMiPI493y6YOJw0FkxT/H6lLLL3zaUi5n1UYB6xJmv3+vhDRPj4SVMDoYVQ7L
-	 62Oc7Hou0lY+7zUMO+7dmHyH36nTKUB7lAwBEHD8HVGKp2171AiOCAaYh/Zx+Pihhy
-	 6vuGpo44PfyhhFEFCZPtrIcZVCWIDC5iItHnYRNo=
+	b=QotP5uSxAYjICu9xs+t/Tn2Bd1K7INf1qtrgvdi2yilZdJ/Z1WGrZIdqXWrMvKph0
+	 K2U0c+QSTtj5O+XCAq8/C1V+gSCTMdO5FYHCj28cWM5jTO84jPjocor1Ou8KIWYYbg
+	 zZOSJ274+ShLjY7FlcXTaSR8p+i8KCisqhj6j66w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbgADPVp (ORCPT
+        id S1726234AbgADPVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 10:21:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58896 "EHLO mail.kernel.org"
+        Sat, 4 Jan 2020 10:21:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbgADPVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 10:21:44 -0500
+        id S1725943AbgADPVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jan 2020 10:21:46 -0500
 Received: from localhost.localdomain (unknown [194.230.155.149])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE35521734;
-        Sat,  4 Jan 2020 15:21:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEC8D2464E;
+        Sat,  4 Jan 2020 15:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578151302;
-        bh=CHtvmJmJTYA2XWUU5fS02RD4y82wxxLkb2gjothw9tA=;
+        s=default; t=1578151305;
+        bh=Y7L88PCTUdeR29N/KZb0qXw8Sim4EahW7H2Nh1Q54qk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RDzsuAq+nYsQO29qCBhBO9FjDxx618JMRr5D9o92vqiVferDfQLcLqEQ4DQLlo662
-         lOS1FuuNWrW746XfRQkDHYBm+qU74NPgWbr0sfR0D5d/LCUydagdMTpGK/ePGLoHSH
-         m8R1KB9m4f/U8yUJSFYwB611Byd98e61/IgMyJ3M=
+        b=df4GISARj1IPmd74Ka2Y0gJovuqv1YPjFUbPDMoGbRVrTZPESYqMSNUICPVE/5V4m
+         fYddVW0ZVE5imK6jc+V8RlJahRCRWbfwXV8twb1nm8zMr07AvFsJd4ICRSyzsR4XXq
+         3iRzwo49M9TdG+vf4VUhXPK3wmYTJGkUIdSoCk6c=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>, Kamil Debski <kamil@wypas.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org
-Subject: [PATCH v2 01/20] dt-bindings: Rename Exynos to lowercase
-Date:   Sat,  4 Jan 2020 16:20:48 +0100
-Message-Id: <20200104152107.11407-2-krzk@kernel.org>
+Subject: [PATCH v2 02/20] arm64: dts: exynos: Rename Samsung and Exynos to lowercase
+Date:   Sat,  4 Jan 2020 16:20:49 +0100
+Message-Id: <20200104152107.11407-3-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200104152107.11407-1-krzk@kernel.org>
 References: <20200104152107.11407-1-krzk@kernel.org>
@@ -62,100 +58,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix up inconsistent usage of upper and lowercase letters in "Exynos"
-name.
+Fix up inconsistent usage of upper and lowercase letters in "Samsung"
+and "Exynos" names.
 
-"EXYNOS" is not an abbreviation but a regular trademarked name.
-Therefore it should be written with lowercase letters starting with
-capital letter.
+"SAMSUNG" and "EXYNOS" are not abbreviations but regular trademarked
+names.  Therefore they should be written with lowercase letters starting
+with capital letter.
 
 The lowercase "Exynos" name is promoted by its manufacturer Samsung
 Electronics Co., Ltd., in advertisement materials and on website.
 
+Although advertisement materials usually use uppercase "SAMSUNG", the
+lowercase version is used in all legal aspects (e.g. on Wikipedia and in
+privacy/legal statements on
+https://www.samsung.com/semiconductor/privacy-global/).
+
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
 ---
+ arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 2 +-
+ arch/arm64/boot/dts/exynos/exynos5433-tm2.dts         | 2 +-
+ arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts        | 2 +-
+ arch/arm64/boot/dts/exynos/exynos7-espresso.dts       | 4 ++--
+ arch/arm64/boot/dts/exynos/exynos7.dtsi               | 2 +-
+ 5 files changed, 6 insertions(+), 6 deletions(-)
 
-Changes since v1:
-1. New patch
----
- .../devicetree/bindings/media/exynos-jpeg-codec.txt         | 2 +-
- Documentation/devicetree/bindings/media/exynos5-gsc.txt     | 2 +-
- Documentation/devicetree/bindings/media/samsung-fimc.txt    | 2 +-
- .../devicetree/bindings/media/samsung-mipi-csis.txt         | 2 +-
- Documentation/devicetree/bindings/phy/samsung-phy.txt       | 6 +++---
- 5 files changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt b/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
-index 38941db23dd2..ce9a22689e53 100644
---- a/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
-+++ b/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
-@@ -1,4 +1,4 @@
--Samsung S5P/EXYNOS SoC series JPEG codec
-+Samsung S5P/Exynos SoC series JPEG codec
- 
- Required properties:
- 
-diff --git a/Documentation/devicetree/bindings/media/exynos5-gsc.txt b/Documentation/devicetree/bindings/media/exynos5-gsc.txt
-index bc963a6d305a..1872688fa408 100644
---- a/Documentation/devicetree/bindings/media/exynos5-gsc.txt
-+++ b/Documentation/devicetree/bindings/media/exynos5-gsc.txt
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+index 6f90b0e62cba..250fc01de78d 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
 @@ -1,6 +1,6 @@
- * Samsung Exynos5 G-Scaler device
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * SAMSUNG Exynos5433 TM2 board device tree source
++ * Samsung Exynos5433 TM2 board device tree source
+  *
+  * Copyright (c) 2016 Samsung Electronics Co., Ltd.
+  *
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+index dda5d2746a74..fdd0796b29d4 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
++++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * SAMSUNG Exynos5433 TM2 board device tree source
++ * Samsung Exynos5433 TM2 board device tree source
+  *
+  * Copyright (c) 2016 Samsung Electronics Co., Ltd.
+  *
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
+index 1e207ce8b97b..089fc7a1af67 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
++++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * SAMSUNG Exynos5433 TM2E board device tree source
++ * Samsung Exynos5433 TM2E board device tree source
+  *
+  * Copyright (c) 2016 Samsung Electronics Co., Ltd.
+  *
+diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+index 080e0f56e108..7af288fa9475 100644
+--- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
++++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * SAMSUNG Exynos7 Espresso board device tree source
++ * Samsung Exynos7 Espresso board device tree source
+  *
+  * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+  *		http://www.samsung.com
+@@ -13,7 +13,7 @@
+ #include <dt-bindings/gpio/gpio.h>
  
--G-Scaler is used for scaling and color space conversion on EXYNOS5 SoCs.
-+G-Scaler is used for scaling and color space conversion on Exynos5 SoCs.
+ / {
+-	model = "Samsung Exynos7 Espresso board based on EXYNOS7";
++	model = "Samsung Exynos7 Espresso board based on Exynos7";
+ 	compatible = "samsung,exynos7-espresso", "samsung,exynos7";
  
- Required properties:
- - compatible: should be one of
-diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
-index 48c599dacbdf..f91b9dc80eb3 100644
---- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
-+++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
-@@ -1,4 +1,4 @@
--Samsung S5P/EXYNOS SoC Camera Subsystem (FIMC)
-+Samsung S5P/Exynos SoC Camera Subsystem (FIMC)
- ----------------------------------------------
- 
- The S5P/Exynos SoC Camera subsystem comprises of multiple sub-devices
-diff --git a/Documentation/devicetree/bindings/media/samsung-mipi-csis.txt b/Documentation/devicetree/bindings/media/samsung-mipi-csis.txt
-index be45f0b1a449..a4149c9434ea 100644
---- a/Documentation/devicetree/bindings/media/samsung-mipi-csis.txt
-+++ b/Documentation/devicetree/bindings/media/samsung-mipi-csis.txt
-@@ -1,4 +1,4 @@
--Samsung S5P/EXYNOS SoC series MIPI CSI-2 receiver (MIPI CSIS)
-+Samsung S5P/Exynos SoC series MIPI CSI-2 receiver (MIPI CSIS)
- -------------------------------------------------------------
- 
- Required properties:
-diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-index 1c40ccd40ce4..7510830a79bd 100644
---- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-@@ -1,4 +1,4 @@
--Samsung S5P/EXYNOS SoC series MIPI CSIS/DSIM DPHY
-+Samsung S5P/Exynos SoC series MIPI CSIS/DSIM DPHY
- -------------------------------------------------
- 
- Required properties:
-@@ -27,7 +27,7 @@ the PHY specifier identifies the PHY and its meaning is as follows:
- supports additional fifth PHY:
-   4 - MIPI CSIS 2.
- 
--Samsung EXYNOS SoC series Display Port PHY
-+Samsung Exynos SoC series Display Port PHY
- -------------------------------------------------
- 
- Required properties:
-@@ -38,7 +38,7 @@ Required properties:
- 		      control pmu registers for power isolation.
- - #phy-cells : from the generic PHY bindings, must be 0;
- 
--Samsung S5P/EXYNOS SoC series USB PHY
-+Samsung S5P/Exynos SoC series USB PHY
- -------------------------------------------------
- 
- Required properties:
+ 	aliases {
+diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+index 3a00ef0a17ff..5558045637ac 100644
+--- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * SAMSUNG EXYNOS7 SoC device tree source
++ * Samsung Exynos7 SoC device tree source
+  *
+  * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+  *		http://www.samsung.com
 -- 
 2.17.1
 
