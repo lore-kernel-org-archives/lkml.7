@@ -2,105 +2,104 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D1FC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 18:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2236DC32770
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 18:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E561222C4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 18:11:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578161486;
-	bh=Ptj9u9fQjF9EMK9Gro45UkvbIInUQxphp5m/v+6NImw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MSS6/c7lyKUorqsIQMzznnCpJSkJq1szaUsaE8R90LQcTRWLk4ndBLqxooi5gvlP1
-	 S7qp8t2F0LQkhvdz7laTrRf5rzIUwMaSIYmnVCwu9xAHA3bMoQfRvXIjCJqxfTqB6O
-	 /JmwGRI5zN+OKtys2rWEqjlI5ZPV7ok5D6/Zo7+0=
+	by mail.kernel.org (Postfix) with ESMTP id EFAA024653
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 18:19:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fz41azXV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbgADSLW (ORCPT
+        id S1726231AbgADST4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 13:11:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbgADSLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 13:11:22 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A9CE222C4;
-        Sat,  4 Jan 2020 18:11:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578161481;
-        bh=Ptj9u9fQjF9EMK9Gro45UkvbIInUQxphp5m/v+6NImw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g2B78S1hC6LXyJqfrO9ggU9Ty6ZwAGzxexn63SYAAVg6Szlwi5Y5F9XE4qlaHnucY
-         hc6fOadlD6vCx+TsjPj//yvDsmxRW6Sgx+nrelhg+cAW7tciBaCUf2pCvxh7Hcii1h
-         ExIZ/hN52IPdS+W2IWtyleYnNQk8rU8xilPTfzhM=
-Date:   Sat, 4 Jan 2020 19:11:17 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: most: remove header include path to
- drivers/staging
-Message-ID: <20200104181117.GA1479922@kroah.com>
-References: <20200104161827.18960-1-masahiroy@kernel.org>
+        Sat, 4 Jan 2020 13:19:56 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35468 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgADSTz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jan 2020 13:19:55 -0500
+Received: by mail-qk1-f193.google.com with SMTP id z76so36760692qka.2;
+        Sat, 04 Jan 2020 10:19:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QhyegyI0NkF5N69Gtsc0eHuClkM19ers8sxdq08wiaU=;
+        b=fz41azXVTutL8yWhRDakZXb8RpRAJDgWRLwmxcKmG6sDMx2Apak2y2qaodHQsGzZDm
+         3hUfJmiRYjEIl1LxssJrC7xtaEQSM0OLif9cKJ96ikyLcqVZnwmiwKbhbSW3eTTUJsTR
+         1nr8Ft5L0S7yAtRh/9RAy8oq8j1l6xnQHcNZvjEvDgqFUXGCEAhj8xydVzYaIgNbM7Ax
+         k4chErxTrWTMWUPYGStYBZKUmb7p5yPgeJR83lzBcNWAzBFRE8x3GQ/NOvwpZU/2pAih
+         dUSSfJ6J5r69Sk8Bl0fTzhM5fVxKRGrFJoPATaHIaVGLIvW5bpkp/PpbI4FkFumOACRl
+         63EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=QhyegyI0NkF5N69Gtsc0eHuClkM19ers8sxdq08wiaU=;
+        b=sn8N4AajTii08InUcoN7Dn8YvL6napTV58mUU9HlMK0BnbVRIojhCsjwce18Kmb4+o
+         AMmmOmvs6tqdJH869DPUbVJPj3G8Uel36Sgi9kRmOyvhVAarwQIGST/SDXx0C1kPjmgm
+         QFQVw64ORhZBhAjqXFdccdFBEptduSR3DxCgyLeo8+g020DsRuv0l81a0HuNchjp+l/O
+         BwxXHe/42G3N45IlhOxg1zUe0jtPc3nFHG+Pg5HRIz7ti6LZOLPW+IOaSxwcxIYF3mWM
+         zdvt74Aokqa3is+dUM2zEDSMKfV0y2iYcmMedzlKkAitKr9NnfGxRmkJBZZS5/YU19U0
+         khuQ==
+X-Gm-Message-State: APjAAAXBeldVaEkFaXCLhjUYjvYf4jnHHNNDXKeFJ1KWXUIxR51prNwR
+        88KvLj+a3kcyGF9ZUZx3flU=
+X-Google-Smtp-Source: APXvYqyvI5wVYVPCrglAM9bZR3yiDfm7t7jGPRCU40rm8PVA6VtVUQTkTtmN1tJpY1F/G6QKVmViPA==
+X-Received: by 2002:a05:620a:a5c:: with SMTP id j28mr66434037qka.218.1578161994824;
+        Sat, 04 Jan 2020 10:19:54 -0800 (PST)
+Received: from localhost.localdomain ([194.59.251.176])
+        by smtp.gmail.com with ESMTPSA id m68sm17910801qke.17.2020.01.04.10.19.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Jan 2020 10:19:54 -0800 (PST)
+From:   Kent Gustavsson <kent@minoris.se>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Shobhit Kukreti <shobhitkukreti@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Kent Gustavsson <kent@minoris.se>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] iio: humidity: dht11 remove TODO since it doesn't make sense
+Date:   Sat,  4 Jan 2020 19:19:29 +0100
+Message-Id: <20200104181929.1505510-1-kent@minoris.se>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200104161827.18960-1-masahiroy@kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 05, 2020 at 01:18:27AM +0900, Masahiro Yamada wrote:
-> There is no need to add "ccflags-y += -I $(srctree)/drivers/staging"
-> just for including <most/core.h>.
-> 
-> Use the #include "..." directive with the correct relative path.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-> 
->  drivers/staging/most/Makefile       | 1 -
->  drivers/staging/most/cdev/Makefile  | 1 -
->  drivers/staging/most/cdev/cdev.c    | 3 ++-
->  drivers/staging/most/configfs.c     | 3 ++-
->  drivers/staging/most/core.c         | 3 ++-
->  drivers/staging/most/dim2/Makefile  | 1 -
->  drivers/staging/most/dim2/dim2.c    | 2 +-
->  drivers/staging/most/i2c/Makefile   | 1 -
->  drivers/staging/most/i2c/i2c.c      | 2 +-
->  drivers/staging/most/net/Makefile   | 1 -
->  drivers/staging/most/net/net.c      | 3 ++-
->  drivers/staging/most/sound/Makefile | 1 -
->  drivers/staging/most/sound/sound.c  | 3 ++-
->  drivers/staging/most/usb/Makefile   | 1 -
->  drivers/staging/most/usb/usb.c      | 3 ++-
->  drivers/staging/most/video/Makefile | 1 -
->  drivers/staging/most/video/video.c  | 2 +-
->  17 files changed, 15 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/staging/most/Makefile b/drivers/staging/most/Makefile
-> index 85ea5a434ced..20a99ecb37c4 100644
-> --- a/drivers/staging/most/Makefile
-> +++ b/drivers/staging/most/Makefile
-> @@ -2,7 +2,6 @@
->  obj-$(CONFIG_MOST) += most_core.o
->  most_core-y := core.o
->  most_core-y += configfs.o
-> -ccflags-y += -I $(srctree)/drivers/staging/
->  
->  obj-$(CONFIG_MOST_CDEV)	+= cdev/
->  obj-$(CONFIG_MOST_NET)	+= net/
+DHT11 isn't addressable and will trigger temperature measurement on any
+data sent on the bus.
 
-This all was done on purpose to make a follow-on patch much simpler that
-I didn't end up taking as it still needed more work.
+Signed-off-by: Kent Gustavsson <kent@minoris.se>
+---
+ drivers/iio/humidity/dht11.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-But I do agree with it, we shouldn't be abusing ccflags here, I'll go
-queue this up in a day or so, thanks for this.
+diff --git a/drivers/iio/humidity/dht11.c b/drivers/iio/humidity/dht11.c
+index b459600e1a33..d05c6fdb758b 100644
+--- a/drivers/iio/humidity/dht11.c
++++ b/drivers/iio/humidity/dht11.c
+@@ -174,7 +174,6 @@ static irqreturn_t dht11_handle_irq(int irq, void *data)
+ 	struct iio_dev *iio = data;
+ 	struct dht11 *dht11 = iio_priv(iio);
+ 
+-	/* TODO: Consider making the handler safe for IRQ sharing */
+ 	if (dht11->num_edges < DHT11_EDGES_PER_READ && dht11->num_edges >= 0) {
+ 		dht11->edges[dht11->num_edges].ts = ktime_get_boottime_ns();
+ 		dht11->edges[dht11->num_edges++].value =
+-- 
+2.23.0
 
-greg k-h
