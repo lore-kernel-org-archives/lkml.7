@@ -2,132 +2,114 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC797C00523
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A50C32767
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FDAB217F4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F308421734
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:08:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mykernel.net header.i=cgxu519@mykernel.net header.b="Kfewwbuh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t6a8T5SU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbgADCGR (ORCPT
+        id S1727270AbgADCIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 21:06:17 -0500
-Received: from sender2-pp-o92.zoho.com.cn ([163.53.93.251]:25379 "EHLO
-        sender2-pp-o92.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727074AbgADCGR (ORCPT
+        Fri, 3 Jan 2020 21:08:53 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:39829 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727141AbgADCIw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 21:06:17 -0500
-X-Greylist: delayed 905 seconds by postgrey-1.27 at vger.kernel.org; Fri, 03 Jan 2020 21:06:15 EST
-ARC-Seal: i=1; a=rsa-sha256; t=1578102645; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=qhvmzewoXEKEEwmc2ql0m9CKDVnIqxe2FazWILfFNdjRAUfx6fABgwygtskKww2Q9MVUBFlVnlYCDaRX6Mzgu54WG2kl827yH0PdYmpL/YtdtP3fw16PJtBW9NBhsIdI0gVeXabRARzzX9yAp4YIFJv2eNyVYPNWKdIcp/d1i4c=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1578102645; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
-        bh=sr52V3J6KDFLSvQhoxBBsFeM63u2k44ubK1tp32MvjQ=; 
-        b=BzgX/ZQp829nXJQBDGKhJqxTqRqvTcslfaThK8p2ymj7vRLXzgnzQgnXEnF5EAmN30pPzkpWAHXIvF2dyFhYBDDBzdPwXOry4Q3z4mjRmM+jZfgGFRKSSwKXe8c/toyqPJl9TsqJ/Chslmg/M/70t/SKntU5JeAy8L24k3T+SKY=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=mykernel.net;
-        spf=pass  smtp.mailfrom=cgxu519@mykernel.net;
-        dmarc=pass header.from=<cgxu519@mykernel.net> header.from=<cgxu519@mykernel.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1578102645;
-        s=zohomail; d=mykernel.net; i=cgxu519@mykernel.net;
-        h=Date:From:Reply-To:To:Cc:Message-ID:In-Reply-To:References:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=sr52V3J6KDFLSvQhoxBBsFeM63u2k44ubK1tp32MvjQ=;
-        b=KfewwbuhZcpRJQo7t3Ely+kmHrcKizp3Jr/E0BSTc+ZGst5z51zGcMsBjhWHB1mQ
-        pvc2s+wcL1XJBkXdbobMQ4yXCmamtpMmLOYjPxHIiTH1euesiNWB7FO8ihkspEmO8U+
-        MnLFjaxG1Gj/Gg7n7ltQC4Ps2rk+VqweVJ0Xiy7E=
-Received: from mail.baihui.com by mx.zoho.com.cn
-        with SMTP id 1578102643649653.3693286775876; Sat, 4 Jan 2020 09:50:43 +0800 (CST)
-Date:   Sat, 04 Jan 2020 09:50:43 +0800
-From:   Chengguang Xu <cgxu519@mykernel.net>
-Reply-To: cgxu519@mykernel.net
-To:     "Pavel Machek" <pavel@denx.de>
-Cc:     "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "linux-kernel" <linux-kernel@vger.kernel.org>,
-        "stable" <stable@vger.kernel.org>, "Chao Yu" <yuchao0@huawei.com>,
-        "Jaegeuk Kim" <jaegeuk@kernel.org>,
-        "Sasha Levin" <sashal@kernel.org>
-Message-ID: <16f6e3f5bbe.d291a05d38838.5222280714928609391@mykernel.net>
-In-Reply-To: <20200103171213.GC14328@amd>
-References: <20200102220029.183913184@linuxfoundation.org>
- <20200102220035.294585461@linuxfoundation.org> <20200103171213.GC14328@amd>
-Subject: Re: [PATCH 4.19 062/114] f2fs: choose hardlimit when softlimit is
- larger than hardlimit in f2fs_statfs_project()
+        Fri, 3 Jan 2020 21:08:52 -0500
+Received: by mail-pj1-f67.google.com with SMTP id t101so5378565pjb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 18:08:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zXEe3WcWiJE+Ho4BlR/nUq6/fS0/xrpLIcfb3zFC9CE=;
+        b=t6a8T5SUz+8xdRkaPVEKxGbCytJ4SR2QQRtmSYQeBFymQdPkGQDPbCc+98EKmKZ/J2
+         n3SAdn7YPQgWoUplaKbuQybkR/pk/x6TJ5aJIUhQ83jBMsLjUGeX3wiDVmiardN5Xuf4
+         xt1LYQAjnRGYRv4wrkFGPI49Bbs5fZlST+lzAmz5O2CeiZ3f9AP4/e3HPMcd2mxycf9z
+         hmBMxGP254FElbLTsBLtpJWyt4OYGdaD7FZ9T4PlrF0MxORki7bKa2s+aXvAsZlswceJ
+         HM/KU6wAn0CAp1I65uEH4IuVtF76d0CVhm7/fay+iNHkdO2Hap2xWQrhAh95HaczsoKn
+         xW2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zXEe3WcWiJE+Ho4BlR/nUq6/fS0/xrpLIcfb3zFC9CE=;
+        b=CF/VXOigHm8v6GcCgD4PsKNpbOCH+j+0+8tKWdccD1GoD9vR3PomxP7TXZX+JOTQHN
+         Vu7JtTYBD/tDaOy79sOkzWPsnwR+pMaxTLOcWnRyhNWuIGxun3KvxUoEM/ZtoP8RJyZD
+         AHt8Lu4MaS7ClGUbKTcyPnb7h84xOYxaQSt0dNkjDwRRLxJZ7Ly4L4Eood833caSXB/V
+         7O3vEHBlMVZyLJ6mstGv2WXDDVgE2Pvih2QsJbfKQvxe092JtJYaP6I2fm57qbSA67OB
+         8Pwtz8nAIIWF1Jntzx2jWQcAwBM6d12CXEorikpVirUdmoqL0umQ5YYaBtk9J3o6EeQS
+         zfsQ==
+X-Gm-Message-State: APjAAAU9KcH0Ds5Llu2jmqwa8gt+tFP5pACzYAlMCLevR1Uue9+w5AGg
+        bTPoUZzb4Xl/UcSP47BVpR9Eiw==
+X-Google-Smtp-Source: APXvYqz409Hxwt/ZbE6ZIVbYQT2+dH39bMO/CornhKy6+4WLrmFYSYqsSa/snmKmI5dVehqlajfi8w==
+X-Received: by 2002:a17:902:5a83:: with SMTP id r3mr96772476pli.145.1578103731911;
+        Fri, 03 Jan 2020 18:08:51 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id y128sm67099181pfg.17.2020.01.03.18.08.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2020 18:08:51 -0800 (PST)
+Date:   Fri, 3 Jan 2020 18:08:49 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Elliot Berman <eberman@codeaurora.org>, agross@kernel.org,
+        swboyd@chromium.org, saiprakash.ranjan@codeaurora.org,
+        tsoni@codeaurora.org, sidgup@codeaurora.org,
+        psodagud@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/17] Restructure, improve target support for
+ qcom_scm driver
+Message-ID: <20200104020849.GR3755841@builder>
+References: <0101016efb7349c0-3c8f33b3-f7d2-46df-9bbb-c8f4401c5bf2-000000@us-west-2.amazonses.com>
+ <20200104015654.GA30866@onstation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Priority: Medium
-User-Agent: ZohoCN Mail
-X-Mailer: ZohoCN Mail
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200104015654.GA30866@onstation.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- ---- =E5=9C=A8 =E6=98=9F=E6=9C=9F=E5=85=AD, 2020-01-04 01:12:13 Pavel Mach=
-ek <pavel@denx.de> =E6=92=B0=E5=86=99 ----
- > Hi!
- >=20
- > > From: Chengguang Xu <cgxu519@mykernel.net>
- > >=20
- > > [ Upstream commit 909110c060f22e65756659ec6fa957ae75777e00 ]
- > >=20
- > > Setting softlimit larger than hardlimit seems meaningless
- > > for disk quota but currently it is allowed. In this case,
- > > there may be a bit of comfusion for users when they run
- > > df comamnd to directory which has project quota.
- > >=20
- > > For example, we set 20M softlimit and 10M hardlimit of
- > > block usage limit for project quota of test_dir(project id 123).
- >=20
- > > Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
- > > Reviewed-by: Chao Yu <yuchao0@huawei.com>
- > > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
- > > Signed-off-by: Sasha Levin <sashal@kernel.org>
- > > ---
- > >  fs/f2fs/super.c | 20 ++++++++++++++------
- > >  1 file changed, 14 insertions(+), 6 deletions(-)
- > >=20
- > > diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
- > > index 7a9cc64f5ca3..662c7de58b99 100644
- > > --- a/fs/f2fs/super.c
- > > +++ b/fs/f2fs/super.c
- > > @@ -1148,9 +1148,13 @@ static int f2fs_statfs_project(struct super_blo=
-ck *sb,
- > >          return PTR_ERR(dquot);
- > >      spin_lock(&dquot->dq_dqb_lock);
- > > =20
- > > -    limit =3D (dquot->dq_dqb.dqb_bsoftlimit ?
- > > -         dquot->dq_dqb.dqb_bsoftlimit :
- > > -         dquot->dq_dqb.dqb_bhardlimit) >> sb->s_blocksize_bits;
- > > +    limit =3D 0;
- > > +    if (dquot->dq_dqb.dqb_bsoftlimit)
- > > +        limit =3D dquot->dq_dqb.dqb_bsoftlimit;
- > > +    if (dquot->dq_dqb.dqb_bhardlimit &&
- > > +            (!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
- > > +        limit =3D dquot->dq_dqb.dqb_bhardlimit;
- > > +
- > >      if (limit && buf->f_blocks > limit) {
- >=20
- > >> blocksize disappeared here. That can't be right.
- >=20
- > Plus, is this just obfuscated way of saying
- >=20
- > limit =3D min_not_zero(dquot->dq_dqb.dqb_bsoftlimit, dquot->dq_dqb.dqb_b=
-hardlimit)?
- >=20
+On Fri 03 Jan 17:56 PST 2020, Brian Masney wrote:
 
-Please  skip this patch from  stable list,  I'll send  a revised patch to u=
-pstream.
+> On Thu, Dec 12, 2019 at 06:51:07PM +0000, Elliot Berman wrote:
+> > This series improves support for 32-bit Qualcomm targets on qcom_scm driver and cleans
+> > up the driver for 64-bit implementations.
+> > 
+> > Currently, the qcom_scm driver supports only 64-bit Qualcomm targets and very
+> > old 32-bit Qualcomm targets. Newer 32-bit targets use ARM's SMC Calling
+> > Convention to communicate with secure world. Older 32-bit targets use a
+> > "buffer-based" legacy approach for communicating with secure world (as
+> > implemented in qcom_scm-32.c). All arm64 Qualcomm targets use ARM SMCCC.
+> > Currently, SMCCC-based communication is enabled only on ARM64 config and
+> > buffer-based communication only on ARM config. This patch-series combines SMCCC
+> > and legacy conventions and selects the correct convention by querying the secure
+> > world [1].
+> > 
+> > We decided to take the opportunity as well to clean up the driver rather than
+> > try to patch together qcom_scm-32 and qcom_scm-64.
+> > 
+> > Patches 1-3 and 15 improve macro names, reorder macros/functions, and prune unused
+> >             macros/functions. No functional changes were introduced.
+> > Patches 4-8 clears up the SCM abstraction in qcom_scm-64.
+> > Patches 9-14 clears up the SCM abstraction in qcom_scm-32.
+> > Patches 16-17 enable dynamically using the different calling conventions.
+> 
+> I tested this whole series on arm32 (msm8974) and everything looks good
+> from my vantage point. Feel free to add my:
+> 
+> Tested-by: Brian Masney <masneyb@onstation.org> # arm32
+> 
 
-Thanks.
+Much appreciated Brian!
 
-
-
-
+Thanks,
+Bjorn
