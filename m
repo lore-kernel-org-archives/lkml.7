@@ -2,85 +2,74 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC294C32770
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 09:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C792C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 09:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1CFE217F4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 09:56:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="HaIJ1Jwy"
+	by mail.kernel.org (Postfix) with ESMTP id D3C7A217F4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 09:58:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgADJz7 (ORCPT
+        id S1726524AbgADJ64 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 04:55:59 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:17501 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726252AbgADJz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 04:55:59 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47qcbc3c0QzqH;
-        Sat,  4 Jan 2020 10:55:56 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1578131756; bh=rkH40E0INVXlvDKfacAUiba88ww3D5Wjqs50yFTBFh0=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=HaIJ1JwyGdZCD+RpHddHeEQww41T9ImFOWZfFLDjVohqGTderBEs/96v1Lq0sWbQo
-         icblhN1uTGppxrFfhULFauUpCCOo7+dze2uhRLHUKivfKxBKqht5ywyTatfAOvSXJ3
-         haaL5xMhyDVljiQTEgCjGmfRFurJIUoW7TNEJye1Rp8Xld07hjt2GAn5f1SY9xg3AW
-         Q07OMUPwVBqvm7bk65MQTANyTjP+pYsuEG23XZ4ddqqNIdp4muDuwbNN0mm7sTHFPt
-         Ruz7sWz8Or4qWP4RCcqzvgwZgOizMi4jaaDqlOGY5T/bAvr44ual83eLeV5xspn0pW
-         eCEPfYkguR5fg==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Sat, 04 Jan 2020 10:55:56 +0100
-Message-Id: <081640c81d3c89707fdbb8869ae5f54aaea5064e.1578131485.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <09f5b36d9c64b4e6d1d235f84a7333b7802b2866.1578131485.git.mirq-linux@rere.qmqm.pl>
-References: <09f5b36d9c64b4e6d1d235f84a7333b7802b2866.1578131485.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH 2/2] builddeb: make headers package thinner
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+        Sat, 4 Jan 2020 04:58:56 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:43834 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbgADJ6z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jan 2020 04:58:55 -0500
+Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id AB1DECED12;
+        Sat,  4 Jan 2020 11:08:09 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: [PATCH v4] bluetooth: hci_bcm: enable IRQ capability from node
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <08ae6108-0829-3bb4-f398-7e6a58719d29@baylibre.com>
+Date:   Sat, 4 Jan 2020 10:58:53 +0100
+Cc:     Johan Hovold <johan@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        BlueZ devel list <linux-bluetooth@vger.kernel.org>,
+        nsaenzjulienne@suse.de, linux-kernel@vger.kernel.org,
+        khilman@baylibre.com
+Content-Transfer-Encoding: 8BIT
+Message-Id: <8EBBCE1B-688D-4097-A2AF-6E099A0AD68B@holtmann.org>
+References: <20191213105521.4290-1-glaroque@baylibre.com>
+ <20191213111702.GX10631@localhost>
+ <162e5588-a702-6042-6934-dd41b64fa1dc@baylibre.com>
+ <20191213134404.GY10631@localhost>
+ <08ae6108-0829-3bb4-f398-7e6a58719d29@baylibre.com>
+To:     Guillaume La Roque <glaroque@baylibre.com>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove a bunch of files not used during external module builds:
- - foreign architecture headers
- - subtree Makefiles
- - Kconfig files
- - perl scripts
+Hi Guillaume,
 
-On amd64 system this looses a third of the resulting .deb size.
+>>>>> @@ -1421,6 +1422,7 @@ static int bcm_serdev_probe(struct serdev_device *serdev)
+>>>>> #endif
+>>>>> 	bcmdev->serdev_hu.serdev = serdev;
+>>>>> 	serdev_device_set_drvdata(serdev, bcmdev);
+>>>>> +	bcmdev->irq = of_irq_get(bcmdev->dev->of_node, 0);
+>>>> Shouldn't you be used using of_irq_get_byname()?
+>>> i can use it if you prefer but no other interrupt need to be defined
+>> Maybe not needed then. Was just thinking it may make it more clear that
+>> you now have two ways to specify the "host-wakeup" interrupt (and in
+>> your proposed implementation the interrupts-property happens to take
+>> priority). Perhaps that can be sorted out when you submit the binding
+>> update for review.
+> 
+> no problem i add a "host-wakeup" interrupt-name.
+> you are right it will be more clear with name and we know why this interrupt is needed.
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
- scripts/package/builddeb | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+have I missed the v5 or are still sending it?
 
-diff --git a/scripts/package/builddeb b/scripts/package/builddeb
-index d289c4ebc891..fb68916d5898 100755
---- a/scripts/package/builddeb
-+++ b/scripts/package/builddeb
-@@ -165,8 +165,8 @@ EOF
- done
- 
- # Build kernel header package
--(cd $srctree; find . -name Makefile\* -o -name Kconfig\* -o -name \*.pl) > "$objtree/debian/hdrsrcfiles"
--(cd $srctree; find arch/*/include include scripts -type f -o -type l) >> "$objtree/debian/hdrsrcfiles"
-+(cd $srctree; find . arch/$SRCARCH -maxdepth 1 -name Makefile\*) > "$objtree/debian/hdrsrcfiles"
-+(cd $srctree; find include scripts -type f -o -type l) >> "$objtree/debian/hdrsrcfiles"
- (cd $srctree; find arch/$SRCARCH -name module.lds -o -name Kbuild.platforms -o -name Platform) >> "$objtree/debian/hdrsrcfiles"
- (cd $srctree; find $(find arch/$SRCARCH -name include -o -name scripts -type d) -type f) >> "$objtree/debian/hdrsrcfiles"
- if is_enabled CONFIG_STACK_VALIDATION; then
--- 
-2.20.1
+Regards
+
+Marcel
 
