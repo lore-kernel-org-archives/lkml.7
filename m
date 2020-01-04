@@ -2,118 +2,107 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8F4C32770
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8145C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C71E21734
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E6F824655
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:37:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578152264;
+	bh=o+/0Liqx5roZKNEzALNx4Y8Gnwt20xW7qG+Rruz6WWs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=MnR0ERRFC5YrkRlORtbg9NK0vuZobv6JtTUUh5UDYC/ng3WmMgd/RUsSu1ZaPtjTZ
+	 tdm7uSbH8VyiwZ4QMLGwpOmMNKmIaPDTxbo8erxkmojpBnZ8piECRVq6BfSZsu3gzI
+	 rSVh1KpoeA4b37PMLbtY7LE0Y+ctDnXeWZr4nRv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgADPeT (ORCPT
+        id S1726170AbgADPho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 10:34:19 -0500
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:44994 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725975AbgADPeT (ORCPT
+        Sat, 4 Jan 2020 10:37:44 -0500
+Received: from conuserg-09.nifty.com ([210.131.2.76]:45754 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbgADPhn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 10:34:19 -0500
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1inlRQ-0002gZ-Ba; Sat, 04 Jan 2020 16:34:16 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from roc-pc (p508F384D.dip0.t-ipconnect.de [80.143.56.77])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id 004FYFYc009264
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Sat, 4 Jan 2020 16:34:15 +0100
-From:   Markus Reichl <m.reichl@fivetechno.de>
-To:     linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Markus Reichl <m.reichl@fivetechno.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Sat, 4 Jan 2020 10:37:43 -0500
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id 004Faw61022777;
+        Sun, 5 Jan 2020 00:36:59 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 004Faw61022777
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1578152219;
+        bh=tV/KSjNMmwmjEzyTu+uQ7dm3w/eBbGsBUx5SRxF+k+8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oubbIxWAEu95j2GDVXf1eMJHA0m5QzAW7Smau+6TPjB1EKpBkVMvEXoKpgfogGjem
+         rcprW5oVfaPtcSDLvvhzxiQk+0Mfk5LNmrar4fEqkNknrkzWhQX2sDeDX2d8pKJwqB
+         yv/VwEGN46tJU2bUFCcCPd8JMiwOPw+ssIF+65bT1Gh04uJxw0zNJXWXnfUgJy8HFL
+         b4g4i5EyoyaA9eSbEm5eORG80lqcfY/nYfln2buxqVaAUmk6bnOB4kRbTvf+Kc9xSs
+         kaElh4r5d32wNq6VP+aOa+f7LPBkaNu86VZAxIKKtjUiw1ZMEyM1m4a9kz/0JpicZ3
+         AxNqEFZN8cMSw==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        sparclinux@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Ben Colline <bcollins@debian.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] arm64: dts: rockchip: Enable mp8859 regulator on rk3399-roc-pc
-Date:   Sat,  4 Jan 2020 16:32:49 +0100
-Message-Id: <20200104153321.6584-6-m.reichl@fivetechno.de>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200104153321.6584-1-m.reichl@fivetechno.de>
-References: <20200104153321.6584-1-m.reichl@fivetechno.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1578152058;3e281e32;
-X-HE-SMSGID: 1inlRQ-0002gZ-Ba
+Subject: [PATCH] modpost: assume STT_SPARC_REGISTER is defined
+Date:   Sun,  5 Jan 2020 00:36:51 +0900
+Message-Id: <20200104153651.2258-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The rk3399-roc-pc uses a MP8859 DC/DC converter for 12V supply.
-This supplies 5V only in default state after booting.
-Now we can control the output voltage via I2C interface.
-Add a node for the driver to reach 12V.
+Commit 8d5290149ee1 ("[SPARC]: Deal with glibc changing macro names in
+modpost.c") was more than 14 years ago. STT_SPARC_REGISTER is hopefully
+defined in elf.h of recent C libraries.
 
-Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- .../boot/dts/rockchip/rk3399-roc-pc.dtsi      | 32 +++++++++++--------
- 1 file changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-index 8e01b04144b7..9f225e9c3d54 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-@@ -110,20 +110,6 @@ vcc_vbus_typec0: vcc-vbus-typec0 {
- 		regulator-max-microvolt = <5000000>;
- 	};
+ scripts/mod/modpost.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index 6e892c93d104..7edfdb2f4497 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -12,6 +12,7 @@
+  */
  
--	/*
--	 * should be placed inside mp8859, but not until mp8859 has
--	 * its own dt-binding.
--	 */
--	dc_12v: mp8859-dcdc1 {
--		compatible = "regulator-fixed";
--		regulator-name = "dc_12v";
--		regulator-always-on;
--		regulator-boot-on;
--		regulator-min-microvolt = <12000000>;
--		regulator-max-microvolt = <12000000>;
--		vin-supply = <&vcc_vbus_typec0>;
--	};
--
- 	/* switched by pmic_sleep */
- 	vcc1v8_s3: vcca1v8_s3: vcc1v8-s3 {
- 		compatible = "regulator-fixed";
-@@ -546,6 +532,24 @@ fusb0: usb-typec@22 {
- 		vbus-supply = <&vcc_vbus_typec0>;
- 		status = "okay";
- 	};
-+
-+	mp8859: regulator@66 {
-+		compatible = "mps,mp8859";
-+		reg = <0x66>;
-+		dc_12v: mp8859_dcdc {
-+			regulator-name = "dc_12v";
-+			regulator-min-microvolt = <12000000>;
-+			regulator-max-microvolt = <12000000>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+			vin-supply = <&vcc_vbus_typec0>;
-+
-+			regulator-state-mem {
-+				regulator-on-in-suspend;
-+				regulator-suspend-microvolt = <12000000>;
-+			};
-+		};
-+	};
- };
+ #define _GNU_SOURCE
++#include <elf.h>
+ #include <stdio.h>
+ #include <ctype.h>
+ #include <string.h>
+@@ -729,12 +730,6 @@ static void handle_symbol(struct module *mod, struct elf_info *info,
+ 			break;
+ 		if (ignore_undef_symbol(info, symname))
+ 			break;
+-/* cope with newer glibc (2.3.4 or higher) STT_ definition in elf.h */
+-#if defined(STT_REGISTER) || defined(STT_SPARC_REGISTER)
+-/* add compatibility with older glibc */
+-#ifndef STT_SPARC_REGISTER
+-#define STT_SPARC_REGISTER STT_REGISTER
+-#endif
+ 		if (info->hdr->e_machine == EM_SPARC ||
+ 		    info->hdr->e_machine == EM_SPARCV9) {
+ 			/* Ignore register directives. */
+@@ -747,7 +742,6 @@ static void handle_symbol(struct module *mod, struct elf_info *info,
+ 				symname = munged;
+ 			}
+ 		}
+-#endif
  
- &i2s0 {
+ 		mod->unres = alloc_symbol(symname,
+ 					  ELF_ST_BIND(sym->st_info) == STB_WEAK,
 -- 
-2.24.1
+2.17.1
 
