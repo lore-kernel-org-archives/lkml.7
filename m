@@ -2,120 +2,92 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC3EC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 11:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CACC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 11:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99FBD215A4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 11:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3266424649
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 11:46:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578138369;
+	bh=3yQtApWHrxtkiAUMD6R/mOeW0KEC9vC8PtzXH+HA9Lc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fOCI8ERre3lCf/CfTVfkDJsqlDCoSdS7DT/C+JKNKPgDwBNj6fQAJJ8GcVcVGXXOr
+	 +fksA5ZL1niS2jrMM04Za5qXTYDbXJ7O0Xa55gQ8w0Tdp0ZgEAblFyZtZ3UkWfRFtA
+	 xR+O950h7FHR3fct8pCUFSwdA6FrnlElaYXyZleU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725900AbgADLhp (ORCPT
+        id S1725924AbgADLpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 06:37:45 -0500
-Received: from spam01.hygon.cn ([110.188.70.11]:32510 "EHLO spam2.hygon.cn"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725796AbgADLhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 06:37:45 -0500
-Received: from MK-DB.hygon.cn ([172.23.18.60])
-        by spam2.hygon.cn with ESMTP id 004BZbW0030090;
-        Sat, 4 Jan 2020 19:35:37 +0800 (GMT-8)
-        (envelope-from fanjinke@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-DB.hygon.cn with ESMTP id 004BZSkj086529;
-        Sat, 4 Jan 2020 19:35:29 +0800 (GMT-8)
-        (envelope-from fanjinke@hygon.cn)
-Received: from cncheex01.Hygon.cn (172.23.18.10) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Sat, 4 Jan 2020
- 19:35:36 +0800
-Received: from cncheex01.Hygon.cn ([172.23.18.10]) by cncheex01.Hygon.cn
- ([172.23.18.10]) with mapi id 15.01.1466.003; Sat, 4 Jan 2020 19:35:36 +0800
-From:   Jinke Fan <fanjinke@hygon.cn>
-To:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        J William Piggott <elseifthen@gmx.com>,
-        Karel Zak <kzak@redhat.com>,
-        "util-linux@vger.kernel.org" <util-linux@vger.kernel.org>,
-        "Linux List Kernel Mailing" <linux-kernel@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
-Subject: Re: [bugreport] "hwclock -w" reset time instead of setting the right
- time
-Thread-Topic: [bugreport] "hwclock -w" reset time instead of setting the right
- time
-Thread-Index: AQHVwUPPCOndCXxy/kq06ofHR9RHFKfWsTqAgAANMwCAABYVAIAAHY0AgAAhJgCAAAUoAIABGNMAgAACcoCAAAJRgIAAQ/aAgAEBiwCAACzsgIAANSSA
-Date:   Sat, 4 Jan 2020 11:35:36 +0000
-Message-ID: <6ac1d65c-33ac-e3a4-799f-24279b677f90@hygon.cn>
-References: <CABXGCsOv26W6aqB5WPMe-mEynmwy55DTfTeL5Dg9vRq6+Y6WvA@mail.gmail.com>
- <CABXGCsNkzPrjqMRaWpssorxzhMLWBvLeSw9BpKYr_DW4LJQECQ@mail.gmail.com>
- <20200102110817.ahqaqidw3ztw3kax@10.255.255.10>
- <CABXGCsNkm3VuzO60WBCi4VJmDnO=DmprQ1P=dd0FcW2-+dGc0w@mail.gmail.com>
- <20200102131434.tky2hquki23laqqo@10.255.255.10>
- <CABXGCsMV1GRiqrXCQGHqvpBiendU3mG36h0YoG=4nw6spZHq=w@mail.gmail.com>
- <nycvar.YAK.7.76.2001021153220.1385@zhn.tzk.pbz>
- <CABXGCsMLfarquWnzV=e3Ta_HPac+DALfKEOaD3rp5n9MPqgyFw@mail.gmail.com>
- <20200103100232.GH3040@piout.net>
- <CABXGCsNv7G94TxaaKX8KXL5DEJiFgNcSu4+WShE_kQjVSa7zZA@mail.gmail.com>
- <20200103101935.GI3040@piout.net>
- <CABXGCsMLob0DC25JS8wwAYydnDoHBSoMh2_YLPfqm3TTvDE-Zw@mail.gmail.com>
- <7c015680-01b7-9c3e-c4c7-5d0b6e964781@hygon.cn>
- <CABXGCsNpS+nCMZ9C89UQVEu_u+hJVtdxCvdnj2QNqQf-j7+DrA@mail.gmail.com>
-In-Reply-To: <CABXGCsNpS+nCMZ9C89UQVEu_u+hJVtdxCvdnj2QNqQf-j7+DrA@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.23.18.44]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <92D765153CD03C42949B4AC8A36A7A7A@Hygon.cn>
-Content-Transfer-Encoding: base64
+        Sat, 4 Jan 2020 06:45:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37844 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725796AbgADLpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jan 2020 06:45:33 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE082215A4;
+        Sat,  4 Jan 2020 11:45:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578138333;
+        bh=3yQtApWHrxtkiAUMD6R/mOeW0KEC9vC8PtzXH+HA9Lc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Vs9xTaCkVezxEDGeWNYdZ7JlAs/Aq9gMn8yQtDCacoRHTu0atxqmjh/YS73qNMNmD
+         yzYkv3a5g9EIA8aHXAv3iJ9jJQh4LqE4AYdxW90TvIGx1W63iSBGL4vpMAfY2eiKq7
+         t/7xMJxRezumAe6g11AYrOx5hPH0dLAWMyLsl5As=
+Date:   Sat, 4 Jan 2020 12:45:30 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     balbi@kernel.org, stern@rowland.harvard.edu, rogerq@ti.com,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: gadget: udc: core: Warn about failed to find udc
+Message-ID: <20200104114530.GA1288021@kroah.com>
+References: <20200104112836.28036-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-X-MAIL: spam2.hygon.cn 004BZbW0030090
-X-DNSRBL: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200104112836.28036-1-zhengdejin5@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWlrZToNClllcywgV2UgZG8gY2hlY2sgdGhlIHRpbWUgaW4gQklPUyBNZW51IGFmdGVyIGZp
-cnN0IHJlYm9vdC4NCg0KV2UgZG8gc29tZSBmdXJ0aGVyIHRlc3RzIGluIG91ciBYNTcwIHBsYXRm
-b3JtOg0KKiAiQU1EIFJ5emVuIDcgMzcwMFgiIHdpdGggbWFpbmJvYXJkICJBU1VTIFJPRyBTVFJJ
-WCBYNTcwLUUgR0FNSU5HIi4NCiogT1MgaXMgRmVkb3JhIHJhd2hpZGUsIHdpdGggZGVmYXVsdCBL
-ZXJuZWwgdmVyc2lvbiB3aGljaCBpcyBzaG93biBhcyANCmZvbGxvd3M6DQokdW5hbWUgLWENCkxp
-bnV4IGJvZ29uIDUuNS4wLTAucmM0LmdpdDAuMS5mYzMyLng4Nl82NCAjMSBTTVAgTW9uIERlYyAz
-MCAwNjozMjozNiANClVUQyAyMDE5IHg4Nl82NCB4ODZfNjQgeDg2XzY0IEdOVS9MaW51eA0KDQpB
-bmQgd2UgdXBncmFkZS9kb3duZ3JhZGUgQklPUyB2ZXJzaW9uIGZyb20gMTAwNS8xMjAxLzE0MDQv
-MTQwNSwgYW5kIHdlIA0KZm91bmQgb3V0IHRoYXQgOg0KKiBPTEQgQklPUyB2ZXJzaW9uIDEwMDUv
-MTIwMSBkb2VzIG5vdCByZXNldCB0aGUgcnRjIHRpbWUgYW5kIGtlZXAgdGhlIA0Kc2V0dXAgcnRj
-IHRpbWUgYWZ0ZXIgcmVib290Lg0KKiBORVcgQklPUyB2ZXJzaW9uIDE0MDQvMTQwNSBETyByZXNl
-dCB0aGUgcnRjIHRpbWUgdG8gMjAxOS8wMS8wMSBhZnRlciANCnJlYm9vdC4NCg0KRGV0YWlsZWQg
-cGljdHVyZXMgb2YgdGhlIEJJT1MgdGltZSBhZnRlciByZWJvb3QgaXMgc2hvd24gaW4gWzJdLA0K
-DQpXZSBzdXNwZWN0IHRoZSBCSU9TIDEyMDEtPjE0MDQgdXBncmFkZSBtaWdodCBjYXVzZSB0aGlz
-IGlzc3VlLg0KIEZyb20geDU3MCBCSU9TIGNoYW5nZWxvZyBbMV0sIHdlIGZvdW5kIHRoYXQgdGhl
-IGJpZyBkaWZmZXJlbmNlIGJldHdlZW4gDQoxMjAxLzE0MDQgaXMgdGhlIEFNRCBBTTQgUEkgdXBn
-cmFkZSBmcm9tIEFHRVNBIDEuMC4wLjNBQkJBIHRvIEFNNCBjb21ibyANClBJIDEuMC4wLjQgcGF0
-Y2ggQiwNCg0KSWYgcG9zc2libGUsIHBsZWFzZSB0ZWxsIHVzIGFib3V0IHRoZSBCSU9TIHZlcnNp
-b24gYW5kIHlvdXIgaGFyZHdhcmUgDQpwbGF0Zm9ybSwNCndoaWNoIGNhbiBiZSBnZXQgZnJvbSBC
-SU9TIFVJIG9yIHVzaW5nICJkbWlkZWNvZGUiIGluIExpbnV4IGVudi4NCg0KUmVmZXJlbmNlOg0K
-WzFdOiANCmh0dHBzOi8vd3d3LmFzdXMuY29tL01vdGhlcmJvYXJkcy9ST0ctU3RyaXgtWDU3MC1F
-LUdhbWluZy9IZWxwRGVza19CSU9TLw0KWzJdOmh0dHBzOi8vZ2l0aHViLmNvbS9mamtiby9ydGMN
-Cmh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS9mamtiby9ydGMvbWFzdGVyLzEwMDUu
-anBnDQpodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vZmprYm8vcnRjL21hc3Rlci8x
-MjAxLmpwZw0KaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2Zqa2JvL3J0Yy9tYXN0
-ZXIvMTQwNC5qcGcNCmh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS9mamtiby9ydGMv
-bWFzdGVyLzE0MDUuanBnDQoNCi0tIA0KQmVzdCBSZWdhcmRzLA0KSmlua2UgRmFuLg0KDQpPbiAy
-MDIwLzEvNCAxNjoyNSwgTWlraGFpbCBHYXZyaWxvdiB3cm90ZToNCj4gT24gU2F0LCA0IEphbiAy
-MDIwIGF0IDEwOjQ2LCBKaW5rZSBGYW4gPGZhbmppbmtlQGh5Z29uLmNuPiB3cm90ZToNCj4+DQo+
-PiBJIHdhdGNoZWQgdGhlIHZpZGVvIG9uIHlvdXR1YmUuIFRoZSBkYXRlIGlzIHJlc2V0ZWQgd2hl
-biBzdGFydHVwIGludG8NCj4+IGJpb3MgYXQgTWlrZSdzIHBsYXRmb3JtLg0KPj4gQXMgd2Uga25v
-dyB0aGF0IHRoZSBiaW9zIHdpbGwgY2hlY2sgdGhlIHZhbGlkaXR5IG9mIHJ0YyB0aW1lLCBpZiBu
-b3QsDQo+PiBiaW9zIHdpbGwgcmVzZXQgdGhlIHJ0YyB0aW1lLiBSVEMgdGltZSByZXNldCBtYXkg
-YmUgZG9uZSBieSB0aGUgQklPUy4NCj4gDQo+IERpZCB5b3UgZGlzYWJsZSBhdXRvbWF0aWMgdGlt
-ZSBzeW5jaHJvbml6YXRpb24/DQo+IEJ5IGRlZmF1bHQgRmVkb3JhIEdOT01FIGRvaW5nIGF1dG9t
-YXRpYyB0aW1lIHN5bmNocm9uaXphdGlvbi4NCj4gRm9yIHRoaXMgcmVhc29uLCBpdOKAmXMgbW9y
-ZSBjb3JyZWN0IHRvIGltbWVkaWF0ZWx5IGdvIGludG8gdGhlIEJJT1MNCj4gYWZ0ZXIgYSByZWJv
-b3QgYW5kIHRoZXJlIGNoZWNrIHRoZSB0aW1lIHZhbHVlIG9yIHR1cm4gb2ZmIGF1dG9tYXRpYw0K
-PiB0aW1lIHN5bmNocm9uaXphdGlvbg0KPiANCj4gLS0NCj4gQmVzdCBSZWdhcmRzLA0KPiBNaWtl
-IEdhdnJpbG92Lg0KPiANCg==
+On Sat, Jan 04, 2020 at 07:28:36PM +0800, Dejin Zheng wrote:
+> If we do not warn here, the user may not know failed to
+> find udc class driver because it silently fails.
+> Let's print a warning in that case so developers find
+> these problems faster.
+> 
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> ---
+>  drivers/usb/gadget/udc/core.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/usb/gadget/udc/core.c b/drivers/usb/gadget/udc/core.c
+> index 51fa614b4079..9b11046480fe 100644
+> --- a/drivers/usb/gadget/udc/core.c
+> +++ b/drivers/usb/gadget/udc/core.c
+> @@ -1414,6 +1414,8 @@ int usb_gadget_probe_driver(struct usb_gadget_driver *driver)
+>  	}
+>  
+>  	mutex_unlock(&udc_lock);
+> +	if (ret)
+> +		pr_warn("udc-core: couldn't find an available UDC or it's busy\n");
+>  	return ret;
+>  found:
+>  	ret = udc_bind_to_driver(udc, driver);
+> -- 
+> 2.17.1
+> 
+
+Isn't this going to cause a lot more messages than is really needed?
+
+And as you have a device, shouldn't this be dev_warn()?
+
+thanks,
+
+greg k-h
