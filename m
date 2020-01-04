@@ -4,32 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD855C32770
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 07:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB08EC32767
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 07:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F20C24649
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 07:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E103222C4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 07:17:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726036AbgADHA7 (ORCPT
+        id S1726036AbgADHRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 02:00:59 -0500
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:15009
+        Sat, 4 Jan 2020 02:17:01 -0500
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:47665
         "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725790AbgADHA7 (ORCPT
+        by vger.kernel.org with ESMTP id S1725870AbgADHRB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 02:00:59 -0500
+        Sat, 4 Jan 2020 02:17:01 -0500
 X-IronPort-AV: E=Sophos;i="5.69,393,1571695200"; 
-   d="scan'208";a="334727571"
+   d="scan'208";a="334728961"
 Received: from abo-154-110-68.mrs.modulonet.fr (HELO hadrien) ([85.68.110.154])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jan 2020 08:00:56 +0100
-Date:   Sat, 4 Jan 2020 08:00:55 +0100 (CET)
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jan 2020 08:16:58 +0100
+Date:   Sat, 4 Jan 2020 08:16:58 +0100 (CET)
 From:   Julia Lawall <julia.lawall@inria.fr>
 X-X-Sender: jll@hadrien
 To:     Wen Yang <wenyang@linux.alibaba.com>
-cc:     Julia Lawall <Julia.Lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
+cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
         Nicolas Palix <nicolas.palix@imag.fr>,
         Michal Marek <michal.lkml@markovi.net>,
         Matthias Maennich <maennich@google.com>,
@@ -40,7 +39,7 @@ cc:     Julia Lawall <Julia.Lawall@lip6.fr>,
 Subject: Re: [PATCH] coccinelle: semantic patch to check for inappropriate
  do_div() calls
 In-Reply-To: <20200104064448.24314-1-wenyang@linux.alibaba.com>
-Message-ID: <alpine.DEB.2.21.2001040759360.2636@hadrien>
+Message-ID: <alpine.DEB.2.21.2001040815230.2636@hadrien>
 References: <20200104064448.24314-1-wenyang@linux.alibaba.com>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
@@ -50,12 +49,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+
+
+--- Please note the new email address ---
+
+
 On Sat, 4 Jan 2020, Wen Yang wrote:
 
 > do_div() does a 64-by-32 division.
 > When the divisor is unsigned long, u64, or s64,
 > do_div() truncates it to 32 bits, this means it
 > can test non-zero and be truncated to zero for division.
+
+Would it be worth having a specific warning message for the long/unsigned
+long case?  If the target architecture has 32 bit longs then the warning
+can be immediately ignored.
+
+julia
+
+
 > This semantic patch is inspired by Mateusz Guzik's patch:
 > commit b0ab99e7736a ("sched: Fix possible divide by zero in avg_atom() calculation")
 >
@@ -147,10 +159,7 @@ On Sat, 4 Jan 2020, Wen Yang wrote:
 > +
 > +msg="WARNING: WARNING: do_div() does a 64-by-32 division, which may truncation the divisor to 32-bit"
 > +coccilib.report.print_report(p[0], msg)
-
-A few small issues: You have WARNING: twice in each case, and truncation
-should be truncate.
-
-Is there any generic strategy for fixing these issues?
-
-julia
+> --
+> 1.8.3.1
+>
+>
