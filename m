@@ -2,155 +2,156 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7664C33C99
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 22:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F95C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 22:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF3124655
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 22:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8810F24653
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 22:27:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jef/4kLN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="eM773IWe";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="tOWtEZ5M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgADWR4 (ORCPT
+        id S1726358AbgADW1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 17:17:56 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:40282 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbgADWR4 (ORCPT
+        Sat, 4 Jan 2020 17:27:44 -0500
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:1587 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726135AbgADW1o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 17:17:56 -0500
-Received: by mail-pj1-f68.google.com with SMTP id bg7so6142885pjb.5
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jan 2020 14:17:56 -0800 (PST)
+        Sat, 4 Jan 2020 17:27:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1578176863; x=1609712863;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=gakPB6rTAngt8S1xhMDCIEtthQgCXm/tp/gUF1daSB0=;
+  b=eM773IWeQ9/HwIGTRs+xkC9irWA5npPbOqTYawnE4DJC+4oIh6Q+d9H1
+   GMJMIFOtNoV/UIyxnTju5+EPxEPQlCzG1fdNRlnYrceMUprnyVD2ed8ik
+   +U/iTBUyDDHM2qUmjLyTkesJbgNihyz3NYvHtnp5Q3FuZdzGy7dMsOTLR
+   uTwLF/0PW2UTuROSXPgKJ8DeQr3aF6s5E1uvCARYwnZ1lKVIjLUjAmALl
+   oinCR2xsj++ta1k+STCdlDWT27PvzJJQdo34IG4MPgVkRSfuP1zPM3kdS
+   eIzDeTlMtVqxvDR4MoEJgTGrlju6tt+B7syq1GF2uEk7N7cAoRq4KIO+N
+   A==;
+IronPort-SDR: +iLJQ4KnATKypVW/wfC3iSAgCTY01+LcENEAqn0Vsq0u642MOusIXsbdfo67PcJPvzjgyk63U3
+ e3690yuqvKmeDYf6L3Kpcd+JsvEYfVNhsEZYAcpHh8thgzVhM1B02AALeOd0gcYtdaaTe7gGAJ
+ YYzQ9z0VZUeQRsodk+6Ap6tzyxSS7kduo99QPjAm6+7o9cX5wY0Vq3b+/tytxkXfxxHLFp2A2w
+ hrGMYEEsRI8lIMomS3AWceQqeWDmcPYnfBsTX5mEIBBsSgn4Q0jNY8QWy4+bpPEvPhZFV9mar7
+ RiI=
+X-IronPort-AV: E=Sophos;i="5.69,396,1571673600"; 
+   d="scan'208";a="234468264"
+Received: from mail-dm6nam10lp2107.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.107])
+  by ob1.hgst.iphmx.com with ESMTP; 05 Jan 2020 06:27:42 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dKysshTGKG8Iz3Ah0eIrq1NZeyyo8mheOCLphJa67oJFobsrUTsnQowok44Q5bI28LfYYS7J7dR3+AVh2ayl/Jr/e1nmflRegbi2/ov1ecNHNsjgOz6Ztuzy/96uS5awP5esjkSBPQFqkRFSgzqxfZmNBPTIflM+tZ6TJUkizzMXLXA4moF8h0ufdWIJDfdVY7fVWinejxNpzkXZYGngq1sb1r11YuCkWQBWD39T89g090+4dEQgEVDDi9c+K3uDcad3upJLrhvET2CJBOJyZ7cH0SpuoBCxv/PTyLSszViPIdHPMMlZnRzFBTbDAtxdhfK7HicABYJ6zHDAt0JLaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=szmrbNYnS7HRYBEOsnAyzvwyhE+xJsGyvu0dKJtfA3c=;
+ b=HG/A+JZnQOA9KiPYc+HbmGDKJNwR2r2n7m8WydRBDGw2KEhbjsWt4g6dxfdCM+qrKKcribiVs+YkoWoO489p5vz62Wuwvob1UCS4zEhdbJ58YiqOqvaD+ffx5MRdooJs1/AEUapOBkJITPa0PF4ytpeRFMO+6c3REaOdKJ6Pi8rRgBQRyRsuqpQ5JUsAd8dSeqWsCu7/3K0HzFS/e90qSlMzVVZnlkTcFt2QifPfoOds9nimjDRsm9RQOozjpADNZGAEgjDnWxV8AzcsfmsJaTfNr49bVji1CoovKvdoLbfeAsKcOfOPcnjC/ffYDiz8w9dIODa4P+IMDpDGjP5/Vw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DEBz57acu79PpJzbHmINvmB6pHsGF9jsUkflqEc9cZc=;
-        b=jef/4kLN7gmjIG5y7cMPXd9sgV1gz82Ie34ZuGAXUNxnF3/5MRaUBghYM3dTb9UMhA
-         JkOp7O7x69t4tGI+Yvnzim3bFESetPXZ0w6Dtal+D66+qf2JBcqWFgQTm4Id7QD18ax2
-         qRbYPG54T8ffnhxvWsuApO5wLNVhDFvbz0GeC84ZXcNmiZ6W45VcBQCnAKS7Ew7lTFIn
-         snFQVmsNAChDqMfCO213Sj3XJpgPIE8Xh5SOa+73HniJVBBi7EUcZtmqzKSa1bgM53G0
-         YK76d0WxNa7DoGj693NwY9q9//aPc9vqsigQR882H6fw/kvyM1BxGfG9o3iswYZ3zBmx
-         Blvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DEBz57acu79PpJzbHmINvmB6pHsGF9jsUkflqEc9cZc=;
-        b=Bj+bCvhEyzd072qLQqEn3LVh/N9K38sbkIVmW/uxuUJVAXxGDDVaTKd6pJ8CxT71QO
-         CxQrdvd9G0M4yitOAEiFSa52FBTm9jUiUCyUoyfFVMcBrbS8ar0WJ9F/+cBAz34dhh40
-         YfB15ziuGB29LgUbXRDVm0kFJKUFIPgwu2Ni6HMWvCvOV1JLgc6Ed92iiJFPg4gF3YGa
-         hzXj7qHsqeblLuxlvuc55uQj7chNzQ+YTGWnzflKq5NI5mLfPVAREf84xjo2JnRgSXyd
-         gXLptJ63zb5tF9fjWu+PcTph9Iqmz4hgI+fnm4pchW8M1uvG5ehzJ7OExiCnLOlpGUEA
-         hrHQ==
-X-Gm-Message-State: APjAAAWAsMLoTBtuJMg2t9xnDvRW1hfv8JNynjvgqeTx04tbrNeXxA3v
-        xudBBd3UhvKBQ36Cpdzd9t5YYg==
-X-Google-Smtp-Source: APXvYqwTtxz5kIj0HbeC6t0/7lu8SzyAJBdBdyKP+GKTprLOZqA8q9/o4LeUShPs/bhyvPbJbocEKQ==
-X-Received: by 2002:a17:90a:d50:: with SMTP id 16mr34957577pju.117.1578176275568;
-        Sat, 04 Jan 2020 14:17:55 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id n1sm72740640pfd.47.2020.01.04.14.17.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jan 2020 14:17:54 -0800 (PST)
-Date:   Sat, 4 Jan 2020 14:17:52 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Subject: Re: [PATCH v2 1/8] dt-bindings: remoteproc: Add Qualcomm PIL info
- binding
-Message-ID: <20200104221752.GW549437@yoga>
-References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
- <20191227053215.423811-2-bjorn.andersson@linaro.org>
- <20200104213804.GA30385@bogus>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=szmrbNYnS7HRYBEOsnAyzvwyhE+xJsGyvu0dKJtfA3c=;
+ b=tOWtEZ5MXMbv//iVzh2TdNNAcV4KDSLuA0t71EOb8lFDlRzBoadqIXbmIiUxGHuV3Y8i5mv8sVVePIvK/ax+8r0zdE99qcBnSNuaiCCG0FwB7kRx476M7ztoRwmepZR7l6Ql6pMLXebFVfuYH7f932ywrltjltMf+RKNLZ/0Pis=
+Received: from BYAPR04MB5749.namprd04.prod.outlook.com (20.179.57.21) by
+ BYAPR04MB4904.namprd04.prod.outlook.com (52.135.233.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.15; Sat, 4 Jan 2020 22:27:40 +0000
+Received: from BYAPR04MB5749.namprd04.prod.outlook.com
+ ([fe80::a8ea:4ba9:cb57:e90f]) by BYAPR04MB5749.namprd04.prod.outlook.com
+ ([fe80::a8ea:4ba9:cb57:e90f%5]) with mapi id 15.20.2602.015; Sat, 4 Jan 2020
+ 22:27:39 +0000
+From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+To:     Balbir Singh <sblbir@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+CC:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "ssomesh@amazon.com" <ssomesh@amazon.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "hch@lst.de" <hch@lst.de>, "mst@redhat.com" <mst@redhat.com>
+Subject: Re: [resend v1 4/5] drivers/nvme/host/core.c: Convert to use
+ disk_set_capacity
+Thread-Topic: [resend v1 4/5] drivers/nvme/host/core.c: Convert to use
+ disk_set_capacity
+Thread-Index: AQHVwUHMcV4G7Nsdi0W8ganO7VoHBg==
+Date:   Sat, 4 Jan 2020 22:27:39 +0000
+Message-ID: <BYAPR04MB57490FFCC025A88F4D97D40A86220@BYAPR04MB5749.namprd04.prod.outlook.com>
+References: <20200102075315.22652-1-sblbir@amazon.com>
+ <20200102075315.22652-5-sblbir@amazon.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
+x-originating-ip: [199.255.45.62]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c6f5ad70-ca49-4468-f9db-08d791654f02
+x-ms-traffictypediagnostic: BYAPR04MB4904:
+x-microsoft-antispam-prvs: <BYAPR04MB4904FE471C69C2F2C9E505F986220@BYAPR04MB4904.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:530;
+x-forefront-prvs: 02723F29C4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(136003)(376002)(39860400002)(396003)(199004)(189003)(55016002)(478600001)(54906003)(110136005)(9686003)(52536014)(316002)(71200400001)(5660300002)(86362001)(4744005)(7696005)(8936002)(6506007)(26005)(53546011)(4326008)(2906002)(66556008)(66446008)(76116006)(186003)(81166006)(81156014)(33656002)(66946007)(8676002)(66476007)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB4904;H:BYAPR04MB5749.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: lEwSrVNtdbmA5ceEFoh6rRQQZBI6j/UKyUj2S/985Qncb8UAkC/Jst1TZEPUp/FVSmdaUMveTiW8vj4OPrS48WMXX2gJCw6k+p+S2YLkD/W9OsR2HbdlnGgkEbq3dEUnJV+Mn2UD/5xQo+LOVWk/XcM3yUKOtg6EVI6pOZ3JaqYKHLFmmp1/IAwPsQ2aIWQsVs1XiOzFD3WdKUplZXJL/hP6B0sbPheQDwnYpdZ9Z1z4pFWh3f0zB2eSqeNC4BPDeZb+0EbHCYBs5d3zmwfO6emFkcpNuleiiis6WyJrrH+xYAxUbkFmh7yPW2epLoiQoT/asB9dJW9WkIX+0mB43V+lBM4Dr6lnnCdwV/NdfrC7fNokscw5/+1qalnwsJkn2sfNmNwRnapeRp63IAzR9TMXIa0iPniZ7t1fidm47YvRLvSzWckeHLC/cW//5xAA
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200104213804.GA30385@bogus>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6f5ad70-ca49-4468-f9db-08d791654f02
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jan 2020 22:27:39.6905
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JXlLn7L45wsIed3TqlYX5yI9pf/FcuSJ3Y/S+9vfDiHyL3Gi5b2Al4niHugcFxudr0lGGbI33Sbez1m5938y/R6qOI+XOSKqcd2mGlqxBjA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4904
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 04 Jan 13:38 PST 2020, Rob Herring wrote:
-
-> On Thu, Dec 26, 2019 at 09:32:08PM -0800, Bjorn Andersson wrote:
-> > Add a devicetree binding for the Qualcomm periperal image loader
-> > relocation info region found in the IMEM.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> > 
-> > Changes since v1:
-> > - New patch
-> > 
-> >  .../bindings/remoteproc/qcom,pil-info.yaml    | 35 +++++++++++++++++++
-> >  1 file changed, 35 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml b/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
-> > new file mode 100644
-> > index 000000000000..715945c683ed
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
-> > @@ -0,0 +1,35 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: "http://devicetree.org/schemas/remoteproc/qcom,pil-info.yaml#"
-> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> > +
-> > +title: Qualcomm peripheral image loader relocation info binding
-> > +
-> > +description:
-> > +  This document defines the binding for describing the Qualcomm peripheral
-> > +  image loader relocation memory region, in IMEM, which is used for post mortem
-> > +  debugging of remoteprocs.
-> > +
-> > +maintainers:
-> > +  - Bjorn Andersson <bjorn.andersson@linaro.org>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: qcom,pil-reloc-info
-> > +
-> > +  offset:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: Offset in the register map for the memory region
-> 
-> Why not use 'reg' instead?
-> 
-
-Because we have one prior example of subdevice of "imem", which is
-compatible "syscon-reboot-mode" and that binding uses "offset".
-
-That said, if you insist, reg (and ranges) would allow us to express the
-size of the region...
-
-Regards,
-Bjorn
-
-> > +
-> > +examples:
-> > +  - |
-> > +    imem@146bf000 {
-> > +      compatible = "syscon", "simple-mfd";
-> > +      reg = <0 0x146bf000 0 0x1000>;
-> > +
-> > +      pil-reloc {
-> > +        compatible ="qcom,pil-reloc-info";
-> > +        offset = <0x94c>;
-> > +      };
-> > +    };
-> > -- 
-> > 2.24.0
-> > 
+Quick question here if user executes nvme ns-rescan /dev/nvme1=0A=
+will following code result in triggering uevent(s) for=0A=
+the namespace(s( for which there is no change in the size ?=0A=
+=0A=
+If so is that an expected behavior ?=0A=
+=0A=
+On 01/01/2020 11:54 PM, Balbir Singh wrote:=0A=
+> block/genhd provides disk_set_capacity() for sending=0A=
+> RESIZE notifications via uevents. This notification is=0A=
+> newly added to NVME devices=0A=
+>=0A=
+> Signed-off-by: Balbir Singh <sblbir@amazon.com>=0A=
+> ---=0A=
+>   drivers/nvme/host/core.c | 2 +-=0A=
+>   1 file changed, 1 insertion(+), 1 deletion(-)=0A=
+>=0A=
+> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c=0A=
+> index 667f18f465be..cb214e914fc2 100644=0A=
+> --- a/drivers/nvme/host/core.c=0A=
+> +++ b/drivers/nvme/host/core.c=0A=
+> @@ -1808,7 +1808,7 @@ static void nvme_update_disk_info(struct gendisk *d=
+isk,=0A=
+>   	    ns->lba_shift > PAGE_SHIFT)=0A=
+>   		capacity =3D 0;=0A=
+>=0A=
+> -	set_capacity(disk, capacity);=0A=
+> +	disk_set_capacity(disk, capacity);=0A=
+>=0A=
+>   	nvme_config_discard(disk, ns);=0A=
+>   	nvme_config_write_zeroes(disk, ns);=0A=
+>=0A=
+=0A=
