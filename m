@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F81BC32771
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9753DC00523
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D13D12464B
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68ACA2467A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578108988;
-	bh=GIBu8aN+NLGZjEDEJVl+vrMoHlDNqN/VUeTvSJEg2Ec=;
+	s=default; t=1578108993;
+	bh=b2eOfSgSncfP0ixbUgB0onIfccQpoxK4H/MyNkW/f1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZWL3WpzHvJnIuYHMJq2EVV+fQvNtDQI/yAK1bu1yL8kUp053Z8ViURkInM9ZquJ7h
-	 cmcX37NmW3dfjQ7urKLw8AGQHnnY+SvQcJ+5h8/k6Stv86eFNvvUErREeE3z8Zk8GT
-	 II7XjGi5nifwcDS/EC5+4/1w5oepWyIx2B6aPdWw=
+	b=KlBjDuDc2siSR7+CeB2Rm5THUqGa3iMwGwKTZ3n64SBQJUPXf9AE4TRctVoZP1uCQ
+	 4Pg07oUg59tdBdB/tFe0w1TBdaEiqxBMfuCGFDuQhgVwiJMPrYxz0wD2alE3YEflCH
+	 m365P4519D2eJQrUD2qlz0AfnAdJ1W3dtYLNxKxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbgADDg1 (ORCPT
+        id S1727518AbgADDgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 22:36:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37042 "EHLO mail.kernel.org"
+        Fri, 3 Jan 2020 22:36:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727374AbgADDg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 22:36:26 -0500
+        id S1727450AbgADDg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 22:36:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E95A824650;
-        Sat,  4 Jan 2020 03:36:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7439724649;
+        Sat,  4 Jan 2020 03:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578108985;
-        bh=GIBu8aN+NLGZjEDEJVl+vrMoHlDNqN/VUeTvSJEg2Ec=;
+        s=default; t=1578108988;
+        bh=b2eOfSgSncfP0ixbUgB0onIfccQpoxK4H/MyNkW/f1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mxo3I02np7KGT4IGXeTv8sgogrUObaUxWhZ3Lvpprs2mdflWcbOUq+d/p8FiCrO7m
-         YKNoE4oVy93VHxfwWT2rxNcFn/U0qNYoCy4dNbwyFsHTRdrVgSV00CUru81r0pCgrf
-         5SAnh12sOXGIFnBP4KkZKv40u5DxHtcy3eRIbmXU=
+        b=wCJOhuDaah9GZsup960QIhaZVOgliiJhr2LtQf2LubZumZ1Tdm998HjYwp1YizPG+
+         w6VmsLDPfOAmEP7dZx52d2jSQivLr+DoPjn5zAP0nsPps25R0bK7V3z3EAXM9eiul9
+         0aT1+H6BxXNd8HQeNjIAp/nb2BrkaaLP+Ui7z5g8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Varun Prakash <varun@chelsio.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 04/10] scsi: libcxgbi: fix NULL pointer dereference in cxgbi_device_destroy()
-Date:   Fri,  3 Jan 2020 22:36:13 -0500
-Message-Id: <20200104033620.10977-4-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Dmitry Osipenko <digetx@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 06/10] PM / devfreq: tegra: Add COMMON_CLK dependency
+Date:   Fri,  3 Jan 2020 22:36:15 -0500
+Message-Id: <20200104033620.10977-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200104033620.10977-1-sashal@kernel.org>
 References: <20200104033620.10977-1-sashal@kernel.org>
@@ -59,35 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Varun Prakash <varun@chelsio.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 71482fde704efdd8c3abe0faf34d922c61e8d76b ]
+[ Upstream commit 5fdb0684b5b0f41402161f068d3d84bf6ed1c3f4 ]
 
-If cxgb4i_ddp_init() fails then cdev->cdev2ppm will be NULL, so add a check
-for NULL pointer before dereferencing it.
+Compile-testing this driver fails if CONFIG_COMMON_CLK is not set:
 
-Link: https://lore.kernel.org/r/1576676731-3068-1-git-send-email-varun@chelsio.com
-Signed-off-by: Varun Prakash <varun@chelsio.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+drivers/devfreq/tegra30-devfreq.o: In function `tegra_devfreq_target':
+tegra30-devfreq.c:(.text+0x164): undefined reference to `clk_set_min_rate'
+
+Fixes: 35f8dbc72721 ("PM / devfreq: tegra: Enable COMPILE_TEST for the driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/cxgbi/libcxgbi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/devfreq/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/cxgbi/libcxgbi.c b/drivers/scsi/cxgbi/libcxgbi.c
-index 3e17af8aedeb..2cd2761bd249 100644
---- a/drivers/scsi/cxgbi/libcxgbi.c
-+++ b/drivers/scsi/cxgbi/libcxgbi.c
-@@ -121,7 +121,8 @@ static inline void cxgbi_device_destroy(struct cxgbi_device *cdev)
- 		"cdev 0x%p, p# %u.\n", cdev, cdev->nports);
- 	cxgbi_hbas_remove(cdev);
- 	cxgbi_device_portmap_cleanup(cdev);
--	cxgbi_ppm_release(cdev->cdev2ppm(cdev));
-+	if (cdev->cdev2ppm)
-+		cxgbi_ppm_release(cdev->cdev2ppm(cdev));
- 	if (cdev->pmap.max_connect)
- 		cxgbi_free_big_mem(cdev->pmap.port_csk);
- 	kfree(cdev);
+diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+index defe1d438710..af4a3ccb96b3 100644
+--- a/drivers/devfreq/Kconfig
++++ b/drivers/devfreq/Kconfig
+@@ -99,6 +99,7 @@ config ARM_TEGRA_DEVFREQ
+ 		ARCH_TEGRA_210_SOC || \
+ 		COMPILE_TEST
+ 	select PM_OPP
++	depends on COMMON_CLK
+ 	help
+ 	  This adds the DEVFREQ driver for the Tegra family of SoCs.
+ 	  It reads ACTMON counters of memory controllers and adjusts the
 -- 
 2.20.1
 
