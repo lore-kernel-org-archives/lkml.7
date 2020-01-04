@@ -4,60 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7787C32770
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4997BC3276F
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DCBD24653
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2173D24654
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578151329;
-	bh=Bq3wSGweNgUnUR2ScgkLGNaGTFe493jXCOPTmwaWkAQ=;
+	s=default; t=1578151336;
+	bh=jcT4GSBIn8e+Ebzgnoq/9qfcn1TpLAtbC6dlWOL1uUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N5iKshA5hRuw86sAHxIbRUz+iH2rHkAgCjykdnqn2SvaWGmf4PgkdNc5QVnQA06yJ
-	 BL9XQKmB8EMczpz40MNK6F5d0bKlWf8r8A5/7UW7XetP1J68KAMdiBytATwcXTkZ8w
-	 E13TCwyXvmDO1s9+qyANYvaebW901TyxGp++soCw=
+	b=ZTH6aJvhss3SzBX/CreTVt/3oTUjTsdNJjhSJmMNaViZVf/KBllTkwi+jy6Ugv66I
+	 O7pSCeoa16S4gFNt8wwD9bmCtyqabufVvg3WRVsjMPdSdFbJnL4NzLqcPote7vu56t
+	 xXKyoryWTWP4d8ONy5P0MZZ6naz4iw5RXyxN0h3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgADPWJ (ORCPT
+        id S1726772AbgADPWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 10:22:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59762 "EHLO mail.kernel.org"
+        Sat, 4 Jan 2020 10:22:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbgADPWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 10:22:08 -0500
+        id S1726080AbgADPWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jan 2020 10:22:13 -0500
 Received: from localhost.localdomain (unknown [194.230.155.149])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA90A2464E;
-        Sat,  4 Jan 2020 15:22:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0F1024653;
+        Sat,  4 Jan 2020 15:22:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578151326;
-        bh=Bq3wSGweNgUnUR2ScgkLGNaGTFe493jXCOPTmwaWkAQ=;
+        s=default; t=1578151332;
+        bh=jcT4GSBIn8e+Ebzgnoq/9qfcn1TpLAtbC6dlWOL1uUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KKhmPrZfrU1Y+AD2SvVoDbIiTf6U9ofMcOVSslLGy1lXv0B9aCVzy1xAjiKqlULG+
-         YsGpS+ZEyATCAaJ0gu3tQf/8JOFwg9qobOf+MlCfVzpdVQYqnt/qpN/PlhCcWKjYgY
-         Ea8jENCBIb79do/+/2IwniWPS4VUHhZ2GK8brqdI=
+        b=ZD5yZ8fNVPFpBjWdpdTnb38YwvSNT84/QcNJtBIJAGj+kxv8KX7wfS+N/N6F7gIzf
+         dLnRjSyxkoJzjCE/QWfF1Azr+H/CR7K8DnF3lA6geiq4YSOz50EfAkr2xq7TOJ5TRU
+         UK4XG8Vk/bw/b/F6KH+PfVvU971I81XooI9PvZ/0=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v2 06/20] thermal: exynos: Rename Samsung and Exynos to lowercase
-Date:   Sat,  4 Jan 2020 16:20:53 +0100
-Message-Id: <20200104152107.11407-7-krzk@kernel.org>
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH v2 07/20] media: samsung: Rename Samsung and Exynos to lowercase
+Date:   Sat,  4 Jan 2020 16:20:54 +0100
+Message-Id: <20200104152107.11407-8-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200104152107.11407-1-krzk@kernel.org>
 References: <20200104152107.11407-1-krzk@kernel.org>
@@ -82,90 +75,88 @@ privacy/legal statements on
 https://www.samsung.com/semiconductor/privacy-global/).
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- Documentation/driver-api/thermal/exynos_thermal.rst | 6 +++---
- drivers/thermal/samsung/Kconfig                     | 2 +-
- drivers/thermal/samsung/exynos_tmu.c                | 4 ++--
- include/dt-bindings/thermal/thermal_exynos.h        | 2 +-
- 4 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/driver-api/thermal/exynos_thermal.rst b/Documentation/driver-api/thermal/exynos_thermal.rst
-index d4e4a5b75805..764df4ab584d 100644
---- a/Documentation/driver-api/thermal/exynos_thermal.rst
-+++ b/Documentation/driver-api/thermal/exynos_thermal.rst
-@@ -4,7 +4,7 @@ Kernel driver exynos_tmu
+---
+
+Changes since v1:
+1. Move bindings change to separate patch.
+---
+ Documentation/media/v4l-drivers/fimc.rst      | 6 +++---
+ Documentation/media/v4l-drivers/tuners.rst    | 2 +-
+ drivers/media/platform/exynos4-is/media-dev.c | 2 +-
+ drivers/media/platform/s3c-camif/camif-core.c | 2 +-
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/media/v4l-drivers/fimc.rst b/Documentation/media/v4l-drivers/fimc.rst
+index 74585ba48b7f..2783aef65c01 100644
+--- a/Documentation/media/v4l-drivers/fimc.rst
++++ b/Documentation/media/v4l-drivers/fimc.rst
+@@ -2,7 +2,7 @@
  
- Supported chips:
+ .. include:: <isonum.txt>
  
--* ARM SAMSUNG EXYNOS4, EXYNOS5 series of SoC
-+* ARM Samsung Exynos4, Exynos5 series of SoC
+-The Samsung S5P/EXYNOS4 FIMC driver
++The Samsung S5P/Exynos4 FIMC driver
+ ===================================
  
-   Datasheet: Not publicly available
+ Copyright |copy| 2012 - 2013 Samsung Electronics Co., Ltd.
+@@ -19,7 +19,7 @@ drivers/media/platform/exynos4-is directory.
+ Supported SoCs
+ --------------
  
-@@ -14,7 +14,7 @@ Authors: Amit Daniel <amit.daniel@samsung.com>
- TMU controller Description:
- ---------------------------
+-S5PC100 (mem-to-mem only), S5PV210, EXYNOS4210
++S5PC100 (mem-to-mem only), S5PV210, Exynos4210
  
--This driver allows to read temperature inside SAMSUNG EXYNOS4/5 series of SoC.
-+This driver allows to read temperature inside Samsung Exynos4/5 series of SoC.
+ Supported features
+ ------------------
+@@ -65,7 +65,7 @@ Media device interface
+ ~~~~~~~~~~~~~~~~~~~~~~
  
- The chip only exposes the measured 8-bit temperature code value
- through a register.
-@@ -43,7 +43,7 @@ The three equations are:
-        Trimming info for 85 degree Celsius (stored at TRIMINFO register)
-        Temperature code measured at 85 degree Celsius which is unchanged
+ The driver supports Media Controller API as defined at :ref:`media_controller`.
+-The media device driver name is "SAMSUNG S5P FIMC".
++The media device driver name is "Samsung S5P FIMC".
  
--TMU(Thermal Management Unit) in EXYNOS4/5 generates interrupt
-+TMU(Thermal Management Unit) in Exynos4/5 generates interrupt
- when temperature exceeds pre-defined levels.
- The maximum number of configurable threshold is five.
- The threshold levels are defined as follows::
-diff --git a/drivers/thermal/samsung/Kconfig b/drivers/thermal/samsung/Kconfig
-index fe0d2ba51392..f4eff5a41a84 100644
---- a/drivers/thermal/samsung/Kconfig
-+++ b/drivers/thermal/samsung/Kconfig
-@@ -5,7 +5,7 @@ config EXYNOS_THERMAL
- 	depends on HAS_IOMEM
- 	help
- 	  If you say yes here you get support for the TMU (Thermal Management
--	  Unit) driver for SAMSUNG EXYNOS series of SoCs. This driver initialises
-+	  Unit) driver for Samsung Exynos series of SoCs. This driver initialises
- 	  the TMU, reports temperature and handles cooling action if defined.
- 	  This driver uses the Exynos core thermal APIs and TMU configuration
- 	  data from the supported SoCs.
-diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-index 8193b66a3f83..fd4a17812f33 100644
---- a/drivers/thermal/samsung/exynos_tmu.c
-+++ b/drivers/thermal/samsung/exynos_tmu.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- /*
-- * exynos_tmu.c - Samsung EXYNOS TMU (Thermal Management Unit)
-+ * exynos_tmu.c - Samsung Exynos TMU (Thermal Management Unit)
-  *
-  *  Copyright (C) 2014 Samsung Electronics
-  *  Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-@@ -1186,7 +1186,7 @@ static struct platform_driver exynos_tmu_driver = {
+ The purpose of this interface is to allow changing assignment of FIMC instances
+ to the SoC peripheral camera input at runtime and optionally to control internal
+diff --git a/Documentation/media/v4l-drivers/tuners.rst b/Documentation/media/v4l-drivers/tuners.rst
+index 7509be888909..d7924141c544 100644
+--- a/Documentation/media/v4l-drivers/tuners.rst
++++ b/Documentation/media/v4l-drivers/tuners.rst
+@@ -18,7 +18,7 @@ These differ mainly by the bandswitch byte.
+ Tuner Manufacturers
+ -------------------
  
- module_platform_driver(exynos_tmu_driver);
+-- SAMSUNG Tuner identification: (e.g. TCPM9091PD27)
++- Samsung Tuner identification: (e.g. TCPM9091PD27)
  
--MODULE_DESCRIPTION("EXYNOS TMU Driver");
-+MODULE_DESCRIPTION("Exynos TMU Driver");
- MODULE_AUTHOR("Donggeun Kim <dg77.kim@samsung.com>");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS("platform:exynos-tmu");
-diff --git a/include/dt-bindings/thermal/thermal_exynos.h b/include/dt-bindings/thermal/thermal_exynos.h
-index 642e4e7f4084..52fcb51dda3c 100644
---- a/include/dt-bindings/thermal/thermal_exynos.h
-+++ b/include/dt-bindings/thermal/thermal_exynos.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * thermal_exynos.h - Samsung EXYNOS TMU device tree definitions
-+ * thermal_exynos.h - Samsung Exynos TMU device tree definitions
-  *
-  *  Copyright (C) 2014 Samsung Electronics
-  *  Lukasz Majewski <l.majewski@samsung.com>
+ .. code-block:: none
+ 
+diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
+index 9aaf3b8060d5..96e336b19cc3 100644
+--- a/drivers/media/platform/exynos4-is/media-dev.c
++++ b/drivers/media/platform/exynos4-is/media-dev.c
+@@ -1439,7 +1439,7 @@ static int fimc_md_probe(struct platform_device *pdev)
+ 	INIT_LIST_HEAD(&fmd->pipelines);
+ 	fmd->pdev = pdev;
+ 
+-	strscpy(fmd->media_dev.model, "SAMSUNG S5P FIMC",
++	strscpy(fmd->media_dev.model, "Samsung S5P FIMC",
+ 		sizeof(fmd->media_dev.model));
+ 	fmd->media_dev.ops = &fimc_md_ops;
+ 	fmd->media_dev.dev = dev;
+diff --git a/drivers/media/platform/s3c-camif/camif-core.c b/drivers/media/platform/s3c-camif/camif-core.c
+index c6fbcd7036d6..92f43c0cbc0c 100644
+--- a/drivers/media/platform/s3c-camif/camif-core.c
++++ b/drivers/media/platform/s3c-camif/camif-core.c
+@@ -304,7 +304,7 @@ static int camif_media_dev_init(struct camif_dev *camif)
+ 	int ret;
+ 
+ 	memset(md, 0, sizeof(*md));
+-	snprintf(md->model, sizeof(md->model), "SAMSUNG S3C%s CAMIF",
++	snprintf(md->model, sizeof(md->model), "Samsung S3C%s CAMIF",
+ 		 ip_rev == S3C6410_CAMIF_IP_REV ? "6410" : "244X");
+ 	strscpy(md->bus_info, "platform", sizeof(md->bus_info));
+ 	md->hw_revision = ip_rev;
 -- 
 2.17.1
 
