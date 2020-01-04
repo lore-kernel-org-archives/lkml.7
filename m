@@ -6,34 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B92C00523
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F47C00523
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8861217F4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA74217F4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:50:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbgADCto (ORCPT
+        id S1727481AbgADCt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 21:49:44 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8671 "EHLO huawei.com"
+        Fri, 3 Jan 2020 21:49:56 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8672 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727320AbgADCtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727321AbgADCtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 3 Jan 2020 21:49:41 -0500
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 96085B51E72614567480;
+        by Forcepoint Email with ESMTP id 9AACFE375103C6703C0E;
         Sat,  4 Jan 2020 10:49:37 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 4 Jan 2020 10:49:28 +0800
+ 14.3.439.0; Sat, 4 Jan 2020 10:49:27 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
+        Yonglong Liu <liuyonglong@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 7/8] net: hns3: replace an unsuitable variable type in hclge_inform_reset_assert_to_vf()
-Date:   Sat, 4 Jan 2020 10:49:30 +0800
-Message-ID: <1578106171-17238-8-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 3/8] net: hns3: modify the IRQ name of TQP vector
+Date:   Sat, 4 Jan 2020 10:49:26 +0800
+Message-ID: <1578106171-17238-4-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1578106171-17238-1-git-send-email-tanhuazhong@huawei.com>
 References: <1578106171-17238-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,52 +47,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In hclge_inform_reset_assert_to_vf(), variable reset_type(enum type)
-will be copied into msg_data whose size is 2 bytes. Currently, hip08
-is a little-endian machine, so the lower two bytes of reset_type will
-be copied to msg_data. But when running on a big-endian machine,
-msg_data will have a wrong value(the higher two bytes of reset_type).
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-So this patch modifies the type of reset_type to u16, and adds a
-build check in case enum hnae3_reset_type has value larger than
-U16_MAX.
+When rename the net devices, the IRQ number can not be
+fetched by the net device name, because the driver request
+the IRQ resources only when the vector resource changed, and
+the rename operation did not change the vector resources,
+so the IRQ name keeps the previous net device name.
+So this patch modifies the name of the TQP IRQ as
+"pci driver name"-"pci name"-"TxRx"-"index".
 
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hnae3.h            | 1 +
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c | 4 +++-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index ed97bd6c..6b131ab 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -164,6 +164,7 @@ enum hnae3_reset_type {
- 	HNAE3_IMP_RESET,
- 	HNAE3_UNKNOWN_RESET,
- 	HNAE3_NONE_RESET,
-+	HNAE3_MAX_RESET,
- };
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 01bad67..e240d99f 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -133,18 +133,21 @@ static int hns3_nic_init_irq(struct hns3_nic_priv *priv)
+ 			continue;
  
- enum hnae3_flr_state {
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-index f905dd3..a3c0822 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-@@ -86,10 +86,12 @@ static int hclge_send_mbx_msg(struct hclge_vport *vport, u8 *msg, u16 msg_len,
- int hclge_inform_reset_assert_to_vf(struct hclge_vport *vport)
- {
- 	struct hclge_dev *hdev = vport->back;
--	enum hnae3_reset_type reset_type;
-+	u16 reset_type;
- 	u8 msg_data[2];
- 	u8 dest_vfid;
- 
-+	BUILD_BUG_ON(HNAE3_MAX_RESET > U16_MAX);
-+
- 	dest_vfid = (u8)vport->vport_id;
- 
- 	if (hdev->reset_type == HNAE3_FUNC_RESET)
+ 		if (tqp_vectors->tx_group.ring && tqp_vectors->rx_group.ring) {
+-			snprintf(tqp_vectors->name, HNAE3_INT_NAME_LEN - 1,
+-				 "%s-%s-%d", priv->netdev->name, "TxRx",
+-				 txrx_int_idx++);
++			snprintf(tqp_vectors->name, HNAE3_INT_NAME_LEN,
++				 "%s-%s-%s-%d", hns3_driver_name,
++				 pci_name(priv->ae_handle->pdev),
++				 "TxRx", txrx_int_idx++);
+ 			txrx_int_idx++;
+ 		} else if (tqp_vectors->rx_group.ring) {
+-			snprintf(tqp_vectors->name, HNAE3_INT_NAME_LEN - 1,
+-				 "%s-%s-%d", priv->netdev->name, "Rx",
+-				 rx_int_idx++);
++			snprintf(tqp_vectors->name, HNAE3_INT_NAME_LEN,
++				 "%s-%s-%s-%d", hns3_driver_name,
++				 pci_name(priv->ae_handle->pdev),
++				 "Rx", rx_int_idx++);
+ 		} else if (tqp_vectors->tx_group.ring) {
+-			snprintf(tqp_vectors->name, HNAE3_INT_NAME_LEN - 1,
+-				 "%s-%s-%d", priv->netdev->name, "Tx",
+-				 tx_int_idx++);
++			snprintf(tqp_vectors->name, HNAE3_INT_NAME_LEN,
++				 "%s-%s-%s-%d", hns3_driver_name,
++				 pci_name(priv->ae_handle->pdev),
++				 "Tx", tx_int_idx++);
+ 		} else {
+ 			/* Skip this unused q_vector */
+ 			continue;
 -- 
 2.7.4
 
