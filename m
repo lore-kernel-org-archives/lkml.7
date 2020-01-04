@@ -8,39 +8,40 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17626C00523
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD1DC00523
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 865C421734
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D4021734
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:24:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="yZy4GrPF"
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="mpDobPHW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbgADDVz (ORCPT
+        id S1727348AbgADDYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 22:21:55 -0500
-Received: from mail-40135.protonmail.ch ([185.70.40.135]:29638 "EHLO
+        Fri, 3 Jan 2020 22:24:14 -0500
+Received: from mail-40135.protonmail.ch ([185.70.40.135]:19923 "EHLO
         mail-40135.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727255AbgADDVz (ORCPT
+        with ESMTP id S1727274AbgADDYO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 22:21:55 -0500
-Date:   Sat, 04 Jan 2020 03:21:41 +0000
+        Fri, 3 Jan 2020 22:24:14 -0500
+Date:   Sat, 04 Jan 2020 03:24:04 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=default; t=1578108110;
+        s=default; t=1578108250;
         bh=VdseeMBzHGRC0ODSp5TYUOy1uhNPZvnSaTxlOa+pGws=;
         h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
          Feedback-ID:From;
-        b=yZy4GrPFBr0jHrElY9i0B+Q7DOUE0helyiA7bX1JQPd7Ws+nYuhItU3V1yyWngHnp
-         dXwbfguLzBDxP9UpbURVwpBi0bt3/A/pAmypwTjQeHMGf1rEeiUfgy200WY3VcdS/B
-         1BzYudnYNlrYJJzr6WCyrDVd1AwVd+pXo0OPkl6w=
+        b=mpDobPHWu5BOFhP/RA1e2bBpIrAPEAL8RWqLHNJCw1OaARVlxyFQz1RnOD+3bRCK0
+         RVpcbg4uk4WCET4ZxdK7LPZmWlw23k/q9TSw0Z8NUApaUyZNMIYyJ9GpiuuA6JtkY8
+         befq7qvwTZJQVa9wHv3fMbbzThY+VhOvtE70dBhM=
 To:     Alan Stern <stern@rowland.harvard.edu>
 From:   atmgnd <atmgnd@protonmail.com>
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>
+        USB list <linux-usb@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
 Reply-To: atmgnd <atmgnd@protonmail.com>
 Subject: Re: Fw: usbcore missing parentheses in USE_NEW_SCHEME
-Message-ID: <hvpNcWudqm2gGi4YyoDbARHTmDy9NjoUNlShE5RcE6WKeMKqipb6cHXs58sJvjyyR0f4NGNkYPc0WybcVRA2QiXzZFSmUlhg4zxctXyJ7Js=@protonmail.com>
+Message-ID: <SHQhnDsmKIpzyLJUY7lJlcdb9DLUPl8gGALB1h82ePlEPUQN9l5cHWxUWyqCcUaMRMGoq6dXRZA3e2gTvG4-HkJDxH994zTiHdeuaKJ6m-c=@protonmail.com>
 In-Reply-To: <Pine.LNX.4.44L0.2001021018330.1546-100000@iolanthe.rowland.org>
 References: <Pine.LNX.4.44L0.2001021018330.1546-100000@iolanthe.rowland.org>
 Feedback-ID: py-oVO8Vt0vS1FKaKugS2_MTpFC3lKhHMurhoXPAalWk9Eh40Mo1lZOn2CI1vswSSKJBwBLYgn_VKFu9qW3csg==:Ext:ProtonMail
