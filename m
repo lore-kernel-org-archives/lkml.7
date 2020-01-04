@@ -2,135 +2,90 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA697C32771
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 21:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EC7C33C99
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 21:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE819222C4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 21:16:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H0NUm63m"
+	by mail.kernel.org (Postfix) with ESMTP id 772C824650
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 21:19:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgADVQQ (ORCPT
+        id S1726307AbgADVTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 16:16:16 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44324 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbgADVQQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 16:16:16 -0500
-Received: by mail-io1-f65.google.com with SMTP id b10so44722867iof.11;
-        Sat, 04 Jan 2020 13:16:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=snCBX0j5ay9kgj6iZfPL2/aocexXLHXt8hsG7KfcQKY=;
-        b=H0NUm63m1Oa+7DyTVnNJc/PlM5/UteN16n7bvwASZASu8wmJEzHg97yJ9jNyu1JFys
-         UEzWGhX7D2cAUsw5lwf9q3KwM+AC1hFNyQDDuycsUAWzJJRQsE/aTrfnr43420ebgOoz
-         Tf5v9J6K/Lu2NiafplulCkrh42anLxLtoTjRkve4VnLzO/EBakjavSFufAfk9gDamY/f
-         TFMKQvcXqoU6ustmDPPDEsB9mgp+EzplBKZtpOUIL2emCqu4Lu6agAWcf6RG8uYMLQCh
-         MWI5+wZ1pA2/SHfxX/y/jyFugDX0duj0BoayGr6n8r/dulX03T5djGNYVJwmvFQBwKrx
-         m51Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=snCBX0j5ay9kgj6iZfPL2/aocexXLHXt8hsG7KfcQKY=;
-        b=WabzXcWpGb+QK6ymQqDSGjWXweD7RUfgWMoaUIIkMtbYbA8W8PGKgsDO0X6G48xZNT
-         h5n71rYe1/xCWAimMNW3zaWxoHgcADv+2lNQA/DbkmZvCRbaGuz5wiqzqXyfGk+ecinJ
-         uGcWD0NxMo6fyPGDlWo06ku0yoMaS7HbzI3iNpzYcAwpeRDLqd6+jbfdUnkN5s4htK35
-         vVAznoVH+XYdG1uAE2VOqTREAqMck9EZdFzxPLK+Wp57uc52rT2CxYO2W/OQci+Ub4Ox
-         zBXHx/krLo7bFabtR21oDio47M3QRbVUUIg7Uhw6oVvI5aRlh+8VSYEEjSmnBkpbvP37
-         pVcw==
-X-Gm-Message-State: APjAAAVvAugB9CZmLEzMDiZzf31+53AuGCaLk7JtCkM0gVhVF5R/6N6S
-        AEiF+19xXt86IBOtDaE2DbgPck4CO5yH4cHJnAw=
-X-Google-Smtp-Source: APXvYqwpNX0oJAGFb7plxGj+mrk/pVD85S5jglSWMAHsjkX180fee7do9kPBZ3lFzsuac3e1xHxfVdTrHJ0kodA7IoQ=
-X-Received: by 2002:a6b:5904:: with SMTP id n4mr65813651iob.9.1578172575756;
- Sat, 04 Jan 2020 13:16:15 -0800 (PST)
+        Sat, 4 Jan 2020 16:19:45 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:56008 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726167AbgADVTp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jan 2020 16:19:45 -0500
+Received: from p508fd2bb.dip0.t-ipconnect.de ([80.143.210.187] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1inqpb-00046u-FL; Sat, 04 Jan 2020 22:19:35 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Markus Reichl <m.reichl@fivetechno.de>
+Cc:     linux-rockchip@lists.infradead.org,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        devicetree@vger.kernel.org,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Stephan Gerhold <stephan@gerhold.net>
+Subject: Re: [PATCH 0/5] regulator: mp8859: add driver for DC/DC converter used on rk3399-roc-pc board
+Date:   Sat, 04 Jan 2020 22:19:34 +0100
+Message-ID: <9349117.str0dnau1D@phil>
+In-Reply-To: <20200104153321.6584-1-m.reichl@fivetechno.de>
+References: <20200104153321.6584-1-m.reichl@fivetechno.de>
 MIME-Version: 1.0
-References: <cover.1578072481.git.chris@chrisdown.name>
-In-Reply-To: <cover.1578072481.git.chris@chrisdown.name>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Sat, 4 Jan 2020 23:16:04 +0200
-Message-ID: <CAOQ4uxhC6L6whNyc6bs99ZcMRxMOt5xNR0HMKmJ8w1thXgO+zw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] fs: inode: shmem: Reduce risk of inum overflow
-To:     Chris Down <chris@chrisdown.name>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com,
-        Hugh Dickins <hughd@google.com>,
-        "zhengbin (A)" <zhengbin13@huawei.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 3, 2020 at 7:30 PM Chris Down <chris@chrisdown.name> wrote:
->
-> In Facebook production we are seeing heavy i_ino wraparounds on tmpfs.
-> On affected tiers, in excess of 10% of hosts show multiple files with
-> different content and the same inode number, with some servers even
-> having as many as 150 duplicated inode numbers with differing file
-> content.
->
-> This causes actual, tangible problems in production. For example, we
-> have complaints from those working on remote caches that their
-> application is reporting cache corruptions because it uses (device,
-> inodenum) to establish the identity of a particular cache object, but
-> because it's not unique any more, the application refuses to continue
-> and reports cache corruption. Even worse, sometimes applications may not
-> even detect the corruption but may continue anyway, causing phantom and
-> hard to debug behaviour.
->
-> In general, userspace applications expect that (device, inodenum) should
-> be enough to be uniquely point to one inode, which seems fair enough.
-> One might also need to check the generation, but in this case:
->
-> 1. That's not currently exposed to userspace
->    (ioctl(...FS_IOC_GETVERSION...) returns ENOTTY on tmpfs);
-> 2. Even with generation, there shouldn't be two live inodes with the
->    same inode number on one device.
->
-> In order to mitigate this, we take a two-pronged approach:
->
-> 1. Moving inum generation from being global to per-sb for tmpfs. This
->    itself allows some reduction in i_ino churn. This works on both 64-
->    and 32- bit machines.
-> 2. Adding inode{64,32} for tmpfs. This fix is supported on machines with
->    64-bit ino_t only: we allow users to mount tmpfs with a new inode64
->    option that uses the full width of ino_t, or CONFIG_TMPFS_INODE64.
->
-> Chris Down (2):
->   tmpfs: Add per-superblock i_ino support
->   tmpfs: Support 64-bit inums per-sb
->
->  Documentation/filesystems/tmpfs.txt | 11 ++++
->  fs/Kconfig                          | 15 +++++
->  include/linux/shmem_fs.h            |  2 +
->  mm/shmem.c                          | 97 ++++++++++++++++++++++++++++-
->  4 files changed, 124 insertions(+), 1 deletion(-)
->
+Hi Markus,
 
-CC tmpfs maintainer, linux-mm and Andrew Morton, who is the one sending
-most of the tmpfs patches to Linus.
+I've only gotten patches 3+5 of this series (vendor-prefix+dts patch), so
+maybe you could teach your git-send-email to include all patches to all
+recipients.
 
-Also worth mentioning these previous attempts by zhengbin, which was trying to
-address the same problem without the per-sb ino counter approach:
+Am Samstag, 4. Januar 2020, 16:32:44 CET schrieb Markus Reichl:
+> On rk3399-roc-pc board a voltage regulator MP8859 from Monolithic Power Systems
+> is used to supply the 12V power line. This delivers 5V as a default value after
+> boot. The voltage is controllable via I2C.
+> Add a basic driver to set and get the voltage of the MP8859 and add a matching
+> node with fixed 12V in the DT of the board. 
+> 
+> Markus Reichl (5):
+>   regulator: mp8859: add driver
+>   regulator: mp8859: add config option and build entry
 
-https://patchwork.kernel.org/patch/11254001/
-https://patchwork.kernel.org/patch/11023915/
+I think these two should only need one patch together.
 
-Thanks,
-Amir.
+Heiko
+
+>   dt-bindings: add vendor Monolithic Power Systems
+>   dt-bindings: regulator: add MPS mp8859 voltage regulator
+>   arm64: dts: rockchip: Enable mp8859 regulator on rk3399-roc-pc
+> 
+>  .../devicetree/bindings/regulator/mp8859.txt  |  22 +++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+>  .../boot/dts/rockchip/rk3399-roc-pc.dtsi      |  32 ++--
+>  drivers/regulator/Kconfig                     |  11 ++
+>  drivers/regulator/Makefile                    |   1 +
+>  drivers/regulator/mp8859.c                    | 156 ++++++++++++++++++
+>  6 files changed, 210 insertions(+), 14 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/mp8859.txt
+>  create mode 100644 drivers/regulator/mp8859.c
+> 
+> 
+
+
+
+
