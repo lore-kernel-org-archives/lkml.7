@@ -2,165 +2,215 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D29FC32767
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 01:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42973C00523
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 01:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3477621D7D
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 01:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 030BF21734
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 01:28:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="WmbHoarU";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="BN1YCtCz"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="DGylNAeG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbgADBNk (ORCPT
+        id S1727227AbgADB2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 20:13:40 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:63296 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726968AbgADBNk (ORCPT
+        Fri, 3 Jan 2020 20:28:48 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45432 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727189AbgADB2r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 20:13:40 -0500
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0041AwV0014159;
-        Fri, 3 Jan 2020 17:13:26 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=2B7sRZu/IXS5r/ddttMrVkIE1jGEo1pL5oaSs+e7Hro=;
- b=WmbHoarUcrAk5SQSacRdmrolNpMdf60+SPJBvhAPn+KYj+RX81EssOCAwPRisjYK7vEk
- PxE5Ciw5OLxVKpPE9F2Y7sHjpIh4+5UjPPF7VkgWMe2Wb8qy8hMI3JXuK4jEQaDb3AXC
- FI+1G9ZVmZ6oZjy9VjtivCb5ZR70twWdKG4= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2x9e34yp1d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 03 Jan 2020 17:13:26 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 3 Jan 2020 17:13:25 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=My23QtM1xR4cXFrwj/gLHqwqdKDvJ6LS+pDRU+OlMLqKVaVh6zk2c12nPxE6ydYIu52k24XEX87iNTMSP19vWgKrMxYXkWFx8FfijbIwY2HiEE8enNOpIUMgQ1eUdm+rb1PIIGu776KxM0OWeRG+VtB6cA/+Gak1xvO4MG5FihlLOYwiIJd9DOyowEJAtJiwltz8fNnylYhpEd++VUUYIpuOo8JzKx1x5MOOmpURQIPyzp9/wDIXLAFvvSZ9bhjtu6J247+aBRPNq007WzXwZZnagcX2E+elIpr8Oqqed6of9FrCiGVLLRbMOp6iVH91oenaqrp1H1u4yYoDXt8uYQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2B7sRZu/IXS5r/ddttMrVkIE1jGEo1pL5oaSs+e7Hro=;
- b=hA0P+C3yE7sz6Y8l8oimgFqJ5aPtiQC1EjGWuhBdam9DGmakcrUP+050uuU58IvM9+ZGkVY5Nsap95HRc/OI1VvqEwsL98MP+7y2hBlf6pir2rYARY1+U/+XqXUY1712CgKhYYeEs1Wh5d6Cp6YI+uPyWeeEY+pvtY+ICYmVc7qh6x0zfSwAnfT8kUn4hRdXChG5N17i2uCOb3L5siceyl/ktPdR/+V9KQR7kIcf5JKVYP5wfD1K3XSk21extNhvAsJ3aooWNzpVscnYgYCKQM60ILdUOU3CQ6LQDe0B6Yt4fc5TR0bQCIE7/qQFUm8+1d57MX9KFVQMH8AZHaypFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2B7sRZu/IXS5r/ddttMrVkIE1jGEo1pL5oaSs+e7Hro=;
- b=BN1YCtCzmt3rPi2LiscJmzStPZUJnbdoLZhisRLbJ62KteThwcTaJparW74t1v89uawgsoF3ZeQmPVgJQGHe7xDqTW43EzR/Z+rGmrOj+kLuwVz9XdQgR7s/ZYDAg7p3uQ3njLn4PrkjLdRRcqlfsxt862NYEtxRXxQdHqx9Fg0=
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.136.151) by
- BN8PR15MB3380.namprd15.prod.outlook.com (20.179.76.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.12; Sat, 4 Jan 2020 01:13:24 +0000
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::506c:fb1f:2e5a:4652]) by BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::506c:fb1f:2e5a:4652%6]) with mapi id 15.20.2602.010; Sat, 4 Jan 2020
- 01:13:24 +0000
-Received: from localhost.localdomain (2620:10d:c090:180::5d5) by MWHPR14CA0001.namprd14.prod.outlook.com (2603:10b6:300:ae::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.10 via Frontend Transport; Sat, 4 Jan 2020 01:13:22 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-CC:     "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH bpf] bpf: cgroup: prevent out-of-order release of cgroup
- bpf
-Thread-Topic: [PATCH bpf] bpf: cgroup: prevent out-of-order release of cgroup
- bpf
-Thread-Index: AQHVvP+26yjH3drshkGEPJ14gI885qfZs7aAgAAKlQA=
-Date:   Sat, 4 Jan 2020 01:13:24 +0000
-Message-ID: <20200104011318.GA11376@localhost.localdomain>
-References: <20191227215034.3169624-1-guro@fb.com>
- <20200104003523.rfte5rw6hbnncjes@ast-mbp>
-In-Reply-To: <20200104003523.rfte5rw6hbnncjes@ast-mbp>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR14CA0001.namprd14.prod.outlook.com
- (2603:10b6:300:ae::11) To BN8PR15MB2626.namprd15.prod.outlook.com
- (2603:10b6:408:c2::23)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:180::5d5]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1fd92055-1ac1-41bc-a566-08d790b34bc7
-x-ms-traffictypediagnostic: BN8PR15MB3380:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN8PR15MB3380D408A9FE72DBE6A85F9DBE220@BN8PR15MB3380.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1284;
-x-forefront-prvs: 02723F29C4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(39860400002)(366004)(136003)(346002)(199004)(189003)(52116002)(6916009)(2906002)(66446008)(4326008)(316002)(16526019)(186003)(86362001)(66556008)(6506007)(66946007)(64756008)(33656002)(54906003)(1076003)(478600001)(66476007)(7696005)(8676002)(8936002)(69590400006)(81156014)(81166006)(5660300002)(9686003)(71200400001)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB3380;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3Qrp22IHn2Y+tjv8EQnwk8IOFxm6Xtx1oFEwXTbZRxoEDlVTneECE2JNvo5lJqF4C5P64MvXMwlnveNDH6/ITKk+bYaerFFTL7I103+Z24ZzI36BsM0P0XZ/wyJPpewpub45mcOsADkNORl/kHTYWZ8mysIML+Np+LClXFLW6TMLrMSxNV9tZdUmqqXIDBHpboJgqTT1Z0nYWc3KdD5TeKMxfqNL8ou8vJi1SCJQrwec3CZ+fpw/XoeJmw4pmNfpreRCKsBUBQ+qDoHa7LlAsS+OqTKrDrLwmff+kbgYJYnHBsPTu7Z6drGjQ4QW+DvXLNkDwe578Fcbflq3j68cq6xNfmImAiVO3DufULBoIWRwFZakosUWXW/WdGk4IjkcNELbjvHHXmRoI5/gsvZCEcpBYGzTnV8nzUj5yhKabcAnH7hOxogG+toNyOsIzpEkM08NemncazroO7wlnT7uXt1Z8lFdWcVUiTIPDQ2SAmucGxx3HPsSGV0AMVlbKhzX
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2EC9F6EE2BBA334D8C4F001C4E795C81@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 3 Jan 2020 20:28:47 -0500
+Received: by mail-io1-f66.google.com with SMTP id i11so43145721ioi.12
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 17:28:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=bWg/c6iA97v6B47byrT70FImUW3Ul6QAIc+rwRJT/OQ=;
+        b=DGylNAeGolb940YItbiF0WjP6HQRAiy8Qt1AQFiOKqKP0rqj+fwofzVopfuuQhrX8t
+         nxFSxA83DvvvTUdqC/LkIipFAwUvOUFOn2xE0syIhQ79C4xyuMt48ilIt7iBTOHPIiZV
+         NtmbddY4rM6Dt3/Lf+BX7cpzvjjdpqxuXwQSa11ffMc3DgajPmfiJCnu0CbfQWfnYdiO
+         s9RpqFBoschdvt/7OPhAOlZFePmqsNINX4s4LUnvbs6bOZBdzp+jDk9AUg1LhQBV2q3o
+         DCZ2+yvgeZu9E99IuW6AfNDqXIN6nqcGv6Jh1w1jKQUdK+SbxwBLnnljrUWoc4QkiLPk
+         TZDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=bWg/c6iA97v6B47byrT70FImUW3Ul6QAIc+rwRJT/OQ=;
+        b=fjBMksUJWSeD7Uo2qoUmjpN8FhFJR/ULuc30PZaneOrYgFDNtwkXMrFiSONSNQKlEl
+         ER56gKHIYbs2RsNTGfIVPU1LLe7fCs7ayxBwTxvxmr/L8YSPsUquL4+16pk9uDEfgY00
+         08IVwOK5/HSexfZS/aND7XRaRzHpiv18Vld6hyk3BP/ipGw1DTT2BpTM37FY0LH4syZl
+         c/2R86HxX46b83oqMmLwCDTbDjZPWkwg0zD6ZonJpJTd8LU7iTIeoDQwbrUab7jEfb8a
+         c2TMeSeKfHZ1+kJP/l+d51c2OtT+u4VF2aaL9IdVwaXKpO65EGDgjTMjCn5HF/bP5JoS
+         6xnQ==
+X-Gm-Message-State: APjAAAUi9ovQD3eH5SosljUjRjH6Sv0/r6KbxQAxJtIr9q73iEEe9/Ce
+        QYuokG6mzcf1FF4vmrD/QPuQJQ==
+X-Google-Smtp-Source: APXvYqxuG1jD6XtqASTj/6Pokx6/krwRshKhNCR9F5TP012pZ92GX/I5bwp23IUXU+m2O50QOisbTw==
+X-Received: by 2002:a5e:8f41:: with SMTP id x1mr64046750iop.113.1578101326790;
+        Fri, 03 Jan 2020 17:28:46 -0800 (PST)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id p5sm21304395ilg.69.2020.01.03.17.28.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2020 17:28:46 -0800 (PST)
+Date:   Fri, 3 Jan 2020 17:28:44 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Olof Johansson <olof@lixom.net>
+cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jason@lakedaemon.net, maz@kernel.org, damien.lemoal@wdc.com,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] riscv: change CSR M/S defines to use "X" for prefix
+In-Reply-To: <20191218170603.58256-1-olof@lixom.net>
+Message-ID: <alpine.DEB.2.21.9999.2001031723310.283180@viisi.sifive.com>
+References: <20191218170603.58256-1-olof@lixom.net>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1fd92055-1ac1-41bc-a566-08d790b34bc7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jan 2020 01:13:24.2704
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zu/1pzShoXCeGnGU679XUN2c6dWYubz1487Mkd8AS06vP9eoU8KBONd+Vs0J3ncu
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB3380
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2020-01-03_06:2020-01-02,2020-01-03 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
- mlxscore=0 phishscore=0 clxscore=1011 bulkscore=0 mlxlogscore=948
- adultscore=0 malwarescore=0 impostorscore=0 spamscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001040009
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 04:35:25PM -0800, Alexei Starovoitov wrote:
-> On Fri, Dec 27, 2019 at 01:50:34PM -0800, Roman Gushchin wrote:
-> > Before commit 4bfc0bb2c60e ("bpf: decouple the lifetime of cgroup_bpf
-> > from cgroup itself") cgroup bpf structures were released with
-> > corresponding cgroup structures. It guaranteed the hierarchical order
-> > of destruction: children were always first. It preserved attached
-> > programs from being released before their propagated copies.
-> >=20
-> > But with cgroup auto-detachment there are no such guarantees anymore:
-> > cgroup bpf is released as soon as the cgroup is offline and there are
-> > no live associated sockets. It means that an attached program can be
-> > detached and released, while its propagated copy is still living
-> > in the cgroup subtree. This will obviously lead to an use-after-free
-> > bug.
-> ...
-> > @@ -65,6 +65,9 @@ static void cgroup_bpf_release(struct work_struct *wo=
-rk)
-> > =20
-> >  	mutex_unlock(&cgroup_mutex);
-> > =20
-> > +	for (p =3D cgroup_parent(cgrp); p; p =3D cgroup_parent(p))
-> > +		cgroup_bpf_put(p);
-> > +
->=20
-> The fix makes sense, but is it really safe to walk cgroup hierarchy
-> without holding cgroup_mutex?
+On Wed, 18 Dec 2019, Olof Johansson wrote:
 
-It is, because we're holding a reference to the original cgroup and going
-towards the root. On each level the cgroup is protected by a reference
-from their child cgroup.
+> Commit a4c3733d32a7 ("riscv: abstract out CSR names for supervisor vs
+> machine mode") introduced new non-S/M-specific defines for some of the
+> CSRs and fields that differ for when you run the kernel in machine or
+> supervisor mode.
+> 
+> One of those was "IRQ_TIMER" (instead of IRQ_S_TIMER/IRQ_M_MTIMER),
+> which was generic enough to cause conflicts with other defines in
+> drivers. Since it was in csr.h, it ended up getting pulled in through
+> fairly generic include files, etc.
+> 
+> I looked at just renaming those, but for consistency I chose to rename all
+> M/S symbols to using 'X' instead of 'S'/'M' in the identifiers instead,
+> which gives them all less generic names.
+> 
+> This is pretty churny, and I'm sure there'll be opinions on naming, but
+> I figured I'd do the busywork of fixing it up instead of just pointing
+> out the conflicts.
+> 
+> Fixes: a4c3733d32a7 ("riscv: abstract out CSR names for supervisor vs machine mode")
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Olof Johansson <olof@lixom.net>
 
-Thanks!
+Thanks for taking a stab at fixing the issue.  I queued the following 
+minimal fix has been queued for v5.5-rc, adding an RV_ prefix to the IRQ_* 
+macros.  It may be that we need to do the same thing to the rest of the 
+CSRs.  But, based on a quick look, I think we should be OK for the moment.  
+Let us know if you have a different point of view.
+
+
+- Paul
+
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Date: Fri, 20 Dec 2019 03:09:49 -0800
+Subject: [PATCH] riscv: prefix IRQ_ macro names with an RV_ namespace
+
+"IRQ_TIMER", used in the arch/riscv CSR header file, is a sufficiently
+generic macro name that it's used by several source files across the
+Linux code base.  Some of these other files ultimately include the
+arch/riscv CSR include file, causing collisions.  Fix by prefixing the
+RISC-V csr.h IRQ_ macro names with an RV_ prefix.
+
+Fixes: a4c3733d32a72 ("riscv: abstract out CSR names for supervisor vs machine mode")
+Reported-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+---
+ arch/riscv/include/asm/csr.h      | 18 +++++++++---------
+ arch/riscv/kernel/irq.c           |  6 +++---
+ drivers/irqchip/irq-sifive-plic.c |  2 +-
+ 3 files changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
+index 0a62d2d68455..435b65532e29 100644
+--- a/arch/riscv/include/asm/csr.h
++++ b/arch/riscv/include/asm/csr.h
+@@ -116,9 +116,9 @@
+ # define SR_PIE		SR_MPIE
+ # define SR_PP		SR_MPP
+ 
+-# define IRQ_SOFT	IRQ_M_SOFT
+-# define IRQ_TIMER	IRQ_M_TIMER
+-# define IRQ_EXT	IRQ_M_EXT
++# define RV_IRQ_SOFT		IRQ_M_SOFT
++# define RV_IRQ_TIMER	IRQ_M_TIMER
++# define RV_IRQ_EXT		IRQ_M_EXT
+ #else /* CONFIG_RISCV_M_MODE */
+ # define CSR_STATUS	CSR_SSTATUS
+ # define CSR_IE		CSR_SIE
+@@ -133,15 +133,15 @@
+ # define SR_PIE		SR_SPIE
+ # define SR_PP		SR_SPP
+ 
+-# define IRQ_SOFT	IRQ_S_SOFT
+-# define IRQ_TIMER	IRQ_S_TIMER
+-# define IRQ_EXT	IRQ_S_EXT
++# define RV_IRQ_SOFT		IRQ_S_SOFT
++# define RV_IRQ_TIMER	IRQ_S_TIMER
++# define RV_IRQ_EXT		IRQ_S_EXT
+ #endif /* CONFIG_RISCV_M_MODE */
+ 
+ /* IE/IP (Supervisor/Machine Interrupt Enable/Pending) flags */
+-#define IE_SIE		(_AC(0x1, UL) << IRQ_SOFT)
+-#define IE_TIE		(_AC(0x1, UL) << IRQ_TIMER)
+-#define IE_EIE		(_AC(0x1, UL) << IRQ_EXT)
++#define IE_SIE		(_AC(0x1, UL) << RV_IRQ_SOFT)
++#define IE_TIE		(_AC(0x1, UL) << RV_IRQ_TIMER)
++#define IE_EIE		(_AC(0x1, UL) << RV_IRQ_EXT)
+ 
+ #ifndef __ASSEMBLY__
+ 
+diff --git a/arch/riscv/kernel/irq.c b/arch/riscv/kernel/irq.c
+index 3f07a91d5afb..345c4f2eba13 100644
+--- a/arch/riscv/kernel/irq.c
++++ b/arch/riscv/kernel/irq.c
+@@ -23,11 +23,11 @@ asmlinkage __visible void __irq_entry do_IRQ(struct pt_regs *regs)
+ 
+ 	irq_enter();
+ 	switch (regs->cause & ~CAUSE_IRQ_FLAG) {
+-	case IRQ_TIMER:
++	case RV_IRQ_TIMER:
+ 		riscv_timer_interrupt();
+ 		break;
+ #ifdef CONFIG_SMP
+-	case IRQ_SOFT:
++	case RV_IRQ_SOFT:
+ 		/*
+ 		 * We only use software interrupts to pass IPIs, so if a non-SMP
+ 		 * system gets one, then we don't know what to do.
+@@ -35,7 +35,7 @@ asmlinkage __visible void __irq_entry do_IRQ(struct pt_regs *regs)
+ 		riscv_software_interrupt();
+ 		break;
+ #endif
+-	case IRQ_EXT:
++	case RV_IRQ_EXT:
+ 		handle_arch_irq(regs);
+ 		break;
+ 	default:
+diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+index 8df547d2d935..0aca5807a119 100644
+--- a/drivers/irqchip/irq-sifive-plic.c
++++ b/drivers/irqchip/irq-sifive-plic.c
+@@ -256,7 +256,7 @@ static int __init plic_init(struct device_node *node,
+ 		 * Skip contexts other than external interrupts for our
+ 		 * privilege level.
+ 		 */
+-		if (parent.args[0] != IRQ_EXT)
++		if (parent.args[0] != RV_IRQ_EXT)
+ 			continue;
+ 
+ 		hartid = plic_find_hart_id(parent.np);
+-- 
+2.24.0
+
