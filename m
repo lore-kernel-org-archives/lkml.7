@@ -2,153 +2,95 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB00C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 12:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52921C32770
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 12:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9070724649
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 12:32:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FP7fvQXK"
+	by mail.kernel.org (Postfix) with ESMTP id 249AC2464E
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 12:32:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578141163;
+	bh=Z6bSytfpsB+EqeQntAzhj+/tleTbh5duUoUtFDTLvho=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PIYiZvQ+uDMNqoU1zZF0ReMzqAbuATEjttIUTo7PDKYOVT77Jyn2acjJ8Oy6+rAZV
+	 7BNtTYjWsuMxU98XGh4j+HugEk/FN4GXAsZheho14zXoZkCX6b5CGbYYWM08hYG9DV
+	 nd+foBfrf2oTSwzXMuAsE9aw19ctVbtRDe+n18IU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbgADMcM (ORCPT
+        id S1726204AbgADMcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 07:32:12 -0500
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:33349 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbgADMcM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 07:32:12 -0500
-Received: by mail-vk1-f194.google.com with SMTP id i78so11380030vke.0;
-        Sat, 04 Jan 2020 04:32:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=WSvqo1sN33GzP5wIPgYV8TZNBgpjwNhN5VK+gDv7vRQ=;
-        b=FP7fvQXKmJboWbt4mL1mAewD1Dskgq4gSHkoVAcsDB7ecwwYNuHtCIUHQBjwBxtICF
-         aeEKbJZdTrYVZLoTHsXbKyBzKg1/rtojVJIIFBIxnPaq6Rp4cX0Qod3fB8Wt54fl4ity
-         AGa2lh2x60B5sHz0XGLVc9MWuHWfnPe//+MNQ976e8mU3KVB2h3K8g8zCxX0fLPUOP2O
-         QG3T3z9kTTqsE00U2MAFHaoPlqmIMcLJtC6MlaiE/BlJbFKDhJA6BW5U4LmO71N44Rr3
-         yGSqyAx1v2NoEZCcHtrUh/8Y0be2qX7gjDY+m7Z0f0vmKV09DLzQYEF+BbT5bnFlDEZf
-         Fv8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=WSvqo1sN33GzP5wIPgYV8TZNBgpjwNhN5VK+gDv7vRQ=;
-        b=lJcWhRZWUar1BJxfwxWvDiQ1pdPDcf+2Wt9Otlr3JCeAxVpXusu29e9uwlyOyv6iYS
-         X/HBDiRnxPS0dXY7gDYsSIb4MNlcSdxOhYvx+Jy3T1NGICiagCZv5yYvh4h3BdyR/vp+
-         08L7NeBX+CASgNPdBtCKs259r3cnhYzZaPuIWJVjiFUQh6IQ1QB0GN0To0IX8RIoKu04
-         J3kjeL2czFNMJxMvt9G6Hgv3Ib4dLtgHEoRjLA9quYfNImqw3wgSE8oGfl3U1runRic8
-         u/Hd+4yvJSDuqGvKDEnRViXbMwMpOeT1wBl0X6V89VkqubT/6JA0hjN0wtKq6CunTgDL
-         yLnQ==
-X-Gm-Message-State: APjAAAVD4AumXvaqLagWqOf/20N1q/JqfVoiSGqJc85OUs0BtNIGWfqG
-        2afDICK5GZCzfVZjHcajCzOdcD3nAoZUBcvvucmzgVe5
-X-Google-Smtp-Source: APXvYqztBxNYuP+3Ari9ZaUrI8QzP+5jrizjQJsdb3zC9YaDPt2vIAXqco2KGxGVnpaFT25xWkUhNNyb41GPByYZ/0s=
-X-Received: by 2002:a1f:8d57:: with SMTP id p84mr48556824vkd.65.1578141130870;
- Sat, 04 Jan 2020 04:32:10 -0800 (PST)
+        Sat, 4 Jan 2020 07:32:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725802AbgADMcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jan 2020 07:32:42 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CF87215A4;
+        Sat,  4 Jan 2020 12:32:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578141161;
+        bh=Z6bSytfpsB+EqeQntAzhj+/tleTbh5duUoUtFDTLvho=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xtwVRdPjTzIGJ0u4oRAcvrCv/0D/6eWFGSKaXyAFkwwcBbuJYbR2JpU0IAR/LKaEO
+         EZQFUU0m+SVC8uUAwo1/xjqXi+iRtJpNgbHp2C9H3/I3TwfFvn8MBJy86zUn0mLGx+
+         2K/AQ2Fq0XXTzcThRO+9DQzutXO+FtVNH4ufap6s=
+Date:   Sat, 4 Jan 2020 13:32:39 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 000/114] 4.19.93-stable review
+Message-ID: <20200104123239.GE1296856@kroah.com>
+References: <20200102220029.183913184@linuxfoundation.org>
+ <72f41f89-bf68-d275-2f1e-d33a91b5e6cd@roeck-us.net>
+ <20200103154156.GA1064304@kroah.com>
+ <20200103174624.GA27087@roeck-us.net>
 MIME-Version: 1.0
-References: <cover.1578072747.git.dsterba@suse.com>
-In-Reply-To: <cover.1578072747.git.dsterba@suse.com>
-Reply-To: fdmanana@gmail.com
-From:   Filipe Manana <fdmanana@gmail.com>
-Date:   Sat, 4 Jan 2020 12:32:00 +0000
-Message-ID: <CAL3q7H4ZVTdd093hiEnYUusEvgoiLPaCaF2=f-y8i6oZQ0hqhQ@mail.gmail.com>
-Subject: Re: [GIT PULL] Btrfs fixes for 5.5-rc5
-To:     David Sterba <dsterba@suse.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200103174624.GA27087@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 3, 2020 at 5:44 PM David Sterba <dsterba@suse.com> wrote:
->
-> Hi,
->
-> a few fixes for btrfs:
->
-> * blkcg accounting problem with compression that could stall writes
->
-> * setting up blkcg bio for compression crashes due to NULL bdev pointer
->
-> * fix possible infinite loop in writeback for nocow files (here possible
->   means almost impossible, 13 things that need to happen to trigger it)
+On Fri, Jan 03, 2020 at 09:46:24AM -0800, Guenter Roeck wrote:
+> On Fri, Jan 03, 2020 at 04:41:56PM +0100, Greg Kroah-Hartman wrote:
+> > On Fri, Jan 03, 2020 at 06:27:53AM -0800, Guenter Roeck wrote:
+> > > On 1/2/20 2:06 PM, Greg Kroah-Hartman wrote:
+> > > > This is the start of the stable review cycle for the 4.19.93 release.
+> > > > There are 114 patches in this series, all will be posted as a response
+> > > > to this one.  If anyone has any issues with these being applied, please
+> > > > let me know.
+> > > > 
+> > > > Responses should be made by Sat, 04 Jan 2020 21:58:48 +0000.
+> > > > Anything received after that time might be too late.
+> > > > 
+> > > 
+> > > Build results:
+> > > 	total: 156 pass: 155 fail: 1
+> > > Failed builds:
+> > > 	sparc64:allmodconfig
+> > > Qemu test results:
+> > > 	total: 381 pass: 381 fail: 0
+> > > 
+> > > ERROR: "of_irq_to_resource" [drivers/spi/spi-fsl-spi.ko] undefined!
+> > > 
+> > > Caused by 3194d2533eff ("spi: fsl: don't map irq during probe")
+> > > which is missing its fix, 63aa6a692595 ("spi: fsl: use platform_get_irq()
+> > > instead of of_irq_to_resource()")
+> > 
+> > Now added to 4.14 and 4.19 queues, thanks!
+> > 
+> sparc64:allmodconfig builds now pass in both v4.14.y and v4.19.y queues.
 
-Some corrections regarding this last bullet point.
+Wonderful, thanks for letting me know and running all of these
+builds/tests.
 
-The issue is not about nocow files. It's about writes into
-preallocated extents (allocated through plain fallocate() or
-fallocate's zero range),
-which triggers nocow writeback.
-
-Secondly, the "13 things that need to happen to trigger it" is confusing.
-The changelog has 13 bullet points that describe the race that
-triggers the problem, they are not steps that need to happen.
-The conditions necessary to trigger it are far less than 13.
-
-The first paragraph of the changelog summarizes when the problem can happen=
-:
-
-"When starting writeback for a range that covers part of a preallocated
-extent, due to a race with writeback for another range that also covers
-another part of the same preallocated extent, we can end up in an infinite
-loop."
-
-And the issue is far from almost impossible or theoretical.
-Long runs of fsx (1 million operations or more), such as the one from
-the test case generic/522 from fstests, can trigger it sporadically (I
-could trigger it a few times per week).
-
-Thanks.
-
-
->
-> Please pull, thanks.
->
-> ----------------------------------------------------------------
-> The following changes since commit fbd542971aa1e9ec33212afe1d9b4f1106cd85=
-a1:
->
->   btrfs: send: remove WARN_ON for readonly mount (2019-12-13 14:10:46 +01=
-00)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.5-r=
-c4-tag
->
-> for you to fetch changes up to de7999afedff02c6631feab3ea726a0e8f8c3d40:
->
->   Btrfs: fix infinite loop during nocow writeback due to race (2019-12-30=
- 16:13:20 +0100)
->
-> ----------------------------------------------------------------
-> Dennis Zhou (2):
->       btrfs: punt all bios created in btrfs_submit_compressed_write()
->       btrfs: fix compressed write bio blkcg attribution
->
-> Filipe Manana (1):
->       Btrfs: fix infinite loop during nocow writeback due to race
->
->  fs/btrfs/compression.c | 7 ++++++-
->  fs/btrfs/inode.c       | 6 +++---
->  2 files changed, 9 insertions(+), 4 deletions(-)
-
-
-
---=20
-Filipe David Manana,
-
-=E2=80=9CWhether you think you can, or you think you can't =E2=80=94 you're=
- right.=E2=80=9D
+greg k-h
