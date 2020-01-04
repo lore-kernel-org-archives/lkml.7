@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9753DC00523
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9E1C00523
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68ACA2467A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74608217F4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:36:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578108993;
-	bh=b2eOfSgSncfP0ixbUgB0onIfccQpoxK4H/MyNkW/f1o=;
+	s=default; t=1578108998;
+	bh=CasMzY3yE/z02l19UuHHZrfvowP4z2p5CrjSbNYM8L8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KlBjDuDc2siSR7+CeB2Rm5THUqGa3iMwGwKTZ3n64SBQJUPXf9AE4TRctVoZP1uCQ
-	 4Pg07oUg59tdBdB/tFe0w1TBdaEiqxBMfuCGFDuQhgVwiJMPrYxz0wD2alE3YEflCH
-	 m365P4519D2eJQrUD2qlz0AfnAdJ1W3dtYLNxKxI=
+	b=svunCzel7PQ5gA9TZv7D6HXAjACr1jdjXtAmsqZ5XzghInGnOxKWXctZAyaOvoHIK
+	 UtKIQVAOLOFLi7+o4vh1JScf7r4/C75FkrU+UAYu6Vw+8t1K0WeX3y+z9/wadSbA02
+	 ihUJ2r5dEKaBWFvblAVXsN4qfgJ0QRYAbcTT+KMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbgADDgb (ORCPT
+        id S1727563AbgADDgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 22:36:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37104 "EHLO mail.kernel.org"
+        Fri, 3 Jan 2020 22:36:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727450AbgADDg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 22:36:28 -0500
+        id S1727514AbgADDgb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 22:36:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7439724649;
-        Sat,  4 Jan 2020 03:36:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 138E821734;
+        Sat,  4 Jan 2020 03:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578108988;
-        bh=b2eOfSgSncfP0ixbUgB0onIfccQpoxK4H/MyNkW/f1o=;
+        s=default; t=1578108990;
+        bh=CasMzY3yE/z02l19UuHHZrfvowP4z2p5CrjSbNYM8L8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wCJOhuDaah9GZsup960QIhaZVOgliiJhr2LtQf2LubZumZ1Tdm998HjYwp1YizPG+
-         w6VmsLDPfOAmEP7dZx52d2jSQivLr+DoPjn5zAP0nsPps25R0bK7V3z3EAXM9eiul9
-         0aT1+H6BxXNd8HQeNjIAp/nb2BrkaaLP+Ui7z5g8=
+        b=SWL4IK58XeyujlNTgVLkEb/OfKoyGWJ7zaAaUTZXRJKK/iJcbHgSqSoYsgq4y652/
+         nkM99wIsQPtjyiZPme+U5C7IXjdC/guPImZHvTqrktDGhyMYLWErq56Fe75Ynl/Qls
+         so/0GxFNEb0SiLpBMQVC/9oIyDCYO072kJZ36RuM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Dmitry Osipenko <digetx@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 06/10] PM / devfreq: tegra: Add COMMON_CLK dependency
-Date:   Fri,  3 Jan 2020 22:36:15 -0500
-Message-Id: <20200104033620.10977-6-sashal@kernel.org>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 08/10] selftests: firmware: Fix it to do root uid check and skip
+Date:   Fri,  3 Jan 2020 22:36:17 -0500
+Message-Id: <20200104033620.10977-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200104033620.10977-1-sashal@kernel.org>
 References: <20200104033620.10977-1-sashal@kernel.org>
@@ -59,36 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Shuah Khan <skhan@linuxfoundation.org>
 
-[ Upstream commit 5fdb0684b5b0f41402161f068d3d84bf6ed1c3f4 ]
+[ Upstream commit c65e41538b04e0d64a673828745a00cb68a24371 ]
 
-Compile-testing this driver fails if CONFIG_COMMON_CLK is not set:
+firmware attempts to load test modules that require root access
+and fail. Fix it to check for root uid and exit with skip code
+instead.
 
-drivers/devfreq/tegra30-devfreq.o: In function `tegra_devfreq_target':
-tegra30-devfreq.c:(.text+0x164): undefined reference to `clk_set_min_rate'
+Before this fix:
 
-Fixes: 35f8dbc72721 ("PM / devfreq: tegra: Enable COMPILE_TEST for the driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+selftests: firmware: fw_run_tests.sh
+modprobe: ERROR: could not insert 'test_firmware': Operation not permitted
+You must have the following enabled in your kernel:
+CONFIG_TEST_FIRMWARE=y
+CONFIG_FW_LOADER=y
+CONFIG_FW_LOADER_USER_HELPER=y
+CONFIG_IKCONFIG=y
+CONFIG_IKCONFIG_PROC=y
+not ok 1 selftests: firmware: fw_run_tests.sh # SKIP
+
+With this fix:
+
+selftests: firmware: fw_run_tests.sh
+skip all tests: must be run as root
+not ok 1 selftests: firmware: fw_run_tests.sh # SKIP
+
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Reviwed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/firmware/fw_lib.sh | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-index defe1d438710..af4a3ccb96b3 100644
---- a/drivers/devfreq/Kconfig
-+++ b/drivers/devfreq/Kconfig
-@@ -99,6 +99,7 @@ config ARM_TEGRA_DEVFREQ
- 		ARCH_TEGRA_210_SOC || \
- 		COMPILE_TEST
- 	select PM_OPP
-+	depends on COMMON_CLK
- 	help
- 	  This adds the DEVFREQ driver for the Tegra family of SoCs.
- 	  It reads ACTMON counters of memory controllers and adjusts the
+diff --git a/tools/testing/selftests/firmware/fw_lib.sh b/tools/testing/selftests/firmware/fw_lib.sh
+index b879305a766d..5b8c0fedee76 100755
+--- a/tools/testing/selftests/firmware/fw_lib.sh
++++ b/tools/testing/selftests/firmware/fw_lib.sh
+@@ -34,6 +34,12 @@ test_modprobe()
+ 
+ check_mods()
+ {
++	local uid=$(id -u)
++	if [ $uid -ne 0 ]; then
++		echo "skip all tests: must be run as root" >&2
++		exit $ksft_skip
++	fi
++
+ 	trap "test_modprobe" EXIT
+ 	if [ ! -d $DIR ]; then
+ 		modprobe test_firmware
 -- 
 2.20.1
 
