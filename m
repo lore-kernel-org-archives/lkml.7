@@ -2,126 +2,103 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB864C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 855B5C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A34CD24649
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:34:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578098097;
-	bh=P592d/rNMY7Mi1PfCbmAq0WHzzd3CjVYhCxS5q2g+m0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=zBm5k7hgh00GoRYEmeXVsDb1wMI3tdBFgSK7nu+PV9drnBhL9W//9ivIS4yqlHTR0
-	 ojkBDlRkz5iO2c1csS/e1m2M/i6aQdaau8DD5huvZXl0S0AEIYY6uv4qDNeZwplkGy
-	 8mSZP1HD/mZBKQ7/6TT+ZwxAgIizbJ+pCCE4ALVI=
+	by mail.kernel.org (Postfix) with ESMTP id 5C60821835
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:35:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pe+JvrhB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgADAe4 (ORCPT
+        id S1727198AbgADAf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 19:34:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726703AbgADAe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 19:34:56 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9787221835;
-        Sat,  4 Jan 2020 00:34:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578098095;
-        bh=P592d/rNMY7Mi1PfCbmAq0WHzzd3CjVYhCxS5q2g+m0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=MJBUTR5BoDpLk4EMA7bTw1yqok6Q9XS0Ssy/qLX36TxfRi15d1HIZPHyfcTOBNAB+
-         /WrSA1lepLXKsXAExKYRynZvP9FnmuqDX4Th4hD41RgH4Pg3segZ8qbn2T3U5V9TQL
-         VbN3G4WhWSg1Xli+deLz4kJ+mf7isfBDZ7PYHASw=
-Date:   Fri, 3 Jan 2020 18:34:52 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v11 1/8] PCI/ERR: Update error status after reset_link()
-Message-ID: <20200104003452.GA63827@google.com>
+        Fri, 3 Jan 2020 19:35:28 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40297 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbgADAf2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 19:35:28 -0500
+Received: by mail-pf1-f194.google.com with SMTP id q8so24203657pfh.7;
+        Fri, 03 Jan 2020 16:35:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0FeJsQCW8mOlSS3IAGDGeSDz6EFOBAfSnpTVUbJ/CcA=;
+        b=Pe+JvrhBVcnH/QgurCh/bCtFgT69K3nPua37Yh0GkzuzUC3mGEnLv9PxU7Lbln9Bg8
+         OclxtQpvDZbg0iwxOzkQSDXn7V2gGJSJvbOJ5+K1c2/cDcDkvSBUQhuSEvotiACo03AG
+         EXAXZlCu3SMTamgvr3NATzz16GqDr93/qMW1AKF/L6b6VZ90QMOBJimjIGNtZODlP/9R
+         cSl/PxVWl2GcmVVE8nX39y2MEjKTtsx08k5JcXm+Dcvjmuw33YhN6jlvInp9mWifo4ai
+         f0pBJjhKaQNdvxo9vFLaqRmRJxFu391QA50Jo3LhM+26SqprKggKg4ytzfzEXlnHw+5l
+         zBvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0FeJsQCW8mOlSS3IAGDGeSDz6EFOBAfSnpTVUbJ/CcA=;
+        b=mFtkire9xpX2lyjFwUyj85/AVEgbUQJsyMRofJZavytQqOc7xuBm8ByakTUSzjoAyz
+         gb5Vcoi8EOt0ZgPLzNoayw1K5boMVBPGQMCCZ2V96wwQrefnLNbYBs4pr8ef+IikSB7f
+         B7WL3wDFIvW7amd9On9fQj6rJtok4Zutu5icwhNgy1CwnuTWyuOxL815qWz9I2Wt+pm5
+         MmtOU7V+0/3iz4sTyYMwOYhKMP3eSF//EkjKruWzdO35I+6jfHtrlCeId93T/7zCqtmz
+         Hrh+OsO0WKMZFB6NyIeRgIO2boLTgK/dBKdvHqvpiOO9cOAebi4+0VJucfUWde9kfVeC
+         t9Ug==
+X-Gm-Message-State: APjAAAXApXT7DBwP0vgY0qW3C/wWSPGTyE0+05E26XZs9aLnOp4VDiNq
+        Ryzjd3RmDmuq+60eDo1kLsg3ovE9
+X-Google-Smtp-Source: APXvYqygvWuLJRzXmYofvMGVP0Kzs5BW8aRNk2YICK61NMLb1BUG24l1C8Av1F4y6BbNEdpWgIeSqQ==
+X-Received: by 2002:aa7:9ec9:: with SMTP id r9mr97508349pfq.85.1578098127504;
+        Fri, 03 Jan 2020 16:35:27 -0800 (PST)
+Received: from ast-mbp ([2620:10d:c090:200::3:4269])
+        by smtp.gmail.com with ESMTPSA id o19sm16578944pjr.2.2020.01.03.16.35.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 Jan 2020 16:35:26 -0800 (PST)
+Date:   Fri, 3 Jan 2020 16:35:25 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        netdev@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH bpf] bpf: cgroup: prevent out-of-order release of cgroup
+ bpf
+Message-ID: <20200104003523.rfte5rw6hbnncjes@ast-mbp>
+References: <20191227215034.3169624-1-guro@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a2e57496135fcfc1dab8d201cb49f5717e7459a4.1577400653.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191227215034.3169624-1-guro@fb.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 04:39:07PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On Fri, Dec 27, 2019 at 01:50:34PM -0800, Roman Gushchin wrote:
+> Before commit 4bfc0bb2c60e ("bpf: decouple the lifetime of cgroup_bpf
+> from cgroup itself") cgroup bpf structures were released with
+> corresponding cgroup structures. It guaranteed the hierarchical order
+> of destruction: children were always first. It preserved attached
+> programs from being released before their propagated copies.
 > 
-> Commit bdb5ac85777d ("PCI/ERR: Handle fatal error recovery") uses
-> reset_link() to recover from fatal errors. But, if the reset is
-> successful there is no need to continue the rest of the error recovery
-> checks. Also, during fatal error recovery, if the initial value of error
-> status is PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_NO_AER_DRIVER then
-> even after successful recovery (using reset_link()) pcie_do_recovery()
-> will report the recovery result as failure. So update the status of
-> error after reset_link().
-
-I like the part about updating "status" with the result of
-reset_link(), and I split that into its own patch because it
-seems like a fix that *can* be separated.
-
-But I'm not convinced that we should skip the ->slot_reset()
-callbacks if the reset_link() was successful.  According to
-Documentation/PCI/pci-error-recovery.rst, we should call
-->slot_reset() after completion of the reset.
-
-For example, rsxx_err_handler implements ->slot_reset(), but
-not ->resume().  If we reset the device, we'll claim success and
-return, but we won't call rsxx_slot_reset(), which does a bunch
-of important-looking recovery stuff.
-
-If pci-error-recovery.rst is wrong, we should fix that (after
-auditing all the drivers to make sure they match).
-
-> Fixes: bdb5ac85777d ("PCI/ERR: Handle fatal error recovery")
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Acked-by: Keith Busch <keith.busch@intel.com>
-> ---
->  drivers/pci/pcie/err.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index b0e6048a9208..53cd9200ec2c 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -204,9 +204,12 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
->  	else
->  		pci_walk_bus(bus, report_normal_detected, &status);
+> But with cgroup auto-detachment there are no such guarantees anymore:
+> cgroup bpf is released as soon as the cgroup is offline and there are
+> no live associated sockets. It means that an attached program can be
+> detached and released, while its propagated copy is still living
+> in the cgroup subtree. This will obviously lead to an use-after-free
+> bug.
+...
+> @@ -65,6 +65,9 @@ static void cgroup_bpf_release(struct work_struct *work)
 >  
-> -	if (state == pci_channel_io_frozen &&
-> -	    reset_link(dev, service) != PCI_ERS_RESULT_RECOVERED)
-> -		goto failed;
-> +	if (state == pci_channel_io_frozen) {
-> +		status = reset_link(dev, service);
-> +		if (status != PCI_ERS_RESULT_RECOVERED)
-> +			goto failed;
-> +		goto done;
-> +	}
+>  	mutex_unlock(&cgroup_mutex);
 >  
->  	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
->  		status = PCI_ERS_RESULT_RECOVERED;
-> @@ -228,6 +231,7 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
->  	if (status != PCI_ERS_RESULT_RECOVERED)
->  		goto failed;
->  
-> +done:
->  	pci_dbg(dev, "broadcast resume message\n");
->  	pci_walk_bus(bus, report_resume, &status);
->  
-> -- 
-> 2.21.0
-> 
+> +	for (p = cgroup_parent(cgrp); p; p = cgroup_parent(p))
+> +		cgroup_bpf_put(p);
+> +
+
+The fix makes sense, but is it really safe to walk cgroup hierarchy
+without holding cgroup_mutex?
+
