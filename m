@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B41B8C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C070C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CF9C2465A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCD8F24654
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 15:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578151379;
-	bh=GFeQ4Ri8+GF3+VI6hu+nKsN9aRFo/bhLlTlTOvAwCUM=;
+	s=default; t=1578151381;
+	bh=dFWlPdvaj+HyEUx1AlXxNrrcbYfk6tTvTj6iCncs5hE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zUz1ggm5Uf+/t2v8yxtlMOevNyHlYyOAZ9pFo4l6M52iPfpmC/tFbQVsduXV04E3k
-	 vt0YNWMFBZx3iKwXEl8Ia7FkpnkXRL5aE2/bcaGODOLPBGsGVNII+ePi6pCziQN7w8
-	 IXO8qq7byNvRt2OtGWyJh0jd0ygqVRF2lrjv4WU0=
+	b=n1esVTEZuob3IHLov55yDt/msdhvP/KRRZEYlE/l+rWbMyU8pGL/+hMiAcXLrRyY1
+	 Rf2V11kEkuodekQDDRr/IrS4SACKlvwMWs+E+7jjtOm75N5JkQCG7vex62g6Wsr7LA
+	 b0iA3koFzKY1/UJ8+G2kOYvz4ZUibQYc+ffLnd30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbgADPW6 (ORCPT
+        id S1727295AbgADPXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 10:22:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32902 "EHLO mail.kernel.org"
+        Sat, 4 Jan 2020 10:23:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727253AbgADPWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 10:22:55 -0500
+        id S1727264AbgADPW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jan 2020 10:22:58 -0500
 Received: from localhost.localdomain (unknown [194.230.155.149])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A35424653;
-        Sat,  4 Jan 2020 15:22:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7CB624655;
+        Sat,  4 Jan 2020 15:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578151374;
-        bh=GFeQ4Ri8+GF3+VI6hu+nKsN9aRFo/bhLlTlTOvAwCUM=;
+        s=default; t=1578151377;
+        bh=dFWlPdvaj+HyEUx1AlXxNrrcbYfk6tTvTj6iCncs5hE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O2KqfkxzAe9CnfY9psQIo1bcMQp0YPR8sx8io/45shLhV6aoq3Q/ELpTpyn0SaGOB
-         oAffrA8+Z4hnON5+1AEuGmPiuhJBBVwYriHdQc54PQxQilsaEIX4BaB6xkefNuDeK2
-         UMxoJ4FDxTub9m1H1mPEElsHVnfzP93GPv42hFfQ=
+        b=TukjCOOKq4PkKRi8vkwrxL9bdxlHUVtF9N73U3DryerWdgdasynoTuytdBsZQDN17
+         EYNr/bBwzICmaYPXdAiN3vop/NO0ofN3+iVvQI5JnJAOmPB25t36y+jyes1c6feWe7
+         xJK6TeRjXA7YrZ44GqNyMFizNMibFTN3i0DksDdA=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-pci@vger.kernel.org,
+        Kukjin Kim <kgene@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
         linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH v2 16/20] pci: exynos: Rename Exynos to lowercase
-Date:   Sat,  4 Jan 2020 16:21:03 +0100
-Message-Id: <20200104152107.11407-17-krzk@kernel.org>
+        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: [PATCH v2 17/20] serial: samsung: Rename Exynos to lowercase
+Date:   Sat,  4 Jan 2020 16:21:04 +0100
+Message-Id: <20200104152107.11407-18-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200104152107.11407-1-krzk@kernel.org>
 References: <20200104152107.11407-1-krzk@kernel.org>
@@ -72,21 +70,22 @@ Electronics Co., Ltd., in advertisement materials and on website.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/pci/controller/dwc/pci-exynos.c | 2 +-
+ drivers/tty/serial/samsung_tty.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-index 14a6ba4067fb..c5043d951e80 100644
---- a/drivers/pci/controller/dwc/pci-exynos.c
-+++ b/drivers/pci/controller/dwc/pci-exynos.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * PCIe host controller driver for Samsung EXYNOS SoCs
-+ * PCIe host controller driver for Samsung Exynos SoCs
-  *
-  * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-  *		http://www.samsung.com
+diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+index 4762c74dbc35..73f951d65b93 100644
+--- a/drivers/tty/serial/samsung_tty.c
++++ b/drivers/tty/serial/samsung_tty.c
+@@ -2665,7 +2665,7 @@ OF_EARLYCON_DECLARE(s3c2440, "samsung,s3c2440-uart",
+ OF_EARLYCON_DECLARE(s3c6400, "samsung,s3c6400-uart",
+ 			s3c2440_early_console_setup);
+ 
+-/* S5PV210, EXYNOS */
++/* S5PV210, Exynos */
+ static struct samsung_early_console_data s5pv210_early_console_data = {
+ 	.txfull_mask = S5PV210_UFSTAT_TXFULL,
+ };
 -- 
 2.17.1
 
