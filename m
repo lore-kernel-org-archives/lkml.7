@@ -2,52 +2,52 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDA6C00523
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE92C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9DDF21D7D
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA717217F4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578109000;
-	bh=Iqlz+iKxY3zlUcIPQj4U95OV05qdZTm+7hovQRC5Z/4=;
+	s=default; t=1578109002;
+	bh=IBG7E2GJGbsNjViu333rtmT2J38bDQmsbxsfWNMJyGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wNMG1+faixCtCJJepYxaMTA+PuDgrfs7Qa3rKl7YusrKX1K50PZO8+Vx9TSHGrEBy
-	 dj0W011arb/qca6jk3geHCLdDuTArDWYLpJQTAKOIw8EanTtBJuTKObM1Hrbns9jJ8
-	 WK4Kx+UslaP++DU2VsHZngk88cqf/lGGM2TIlP1Y=
+	b=ormP0ON2F/YGY2nijxiUHzXxQddyaNZy+MCD49y0iNouUG0+zBTRrF6giUhjvcY26
+	 tE5Vc6hblzIY/7Bask5RJ73FCqcNT5ZOIXeqvUKfNY8HTvE6BOdcr6aq1w5jHvk0Db
+	 EWhMi1Oj5UOqWXyW6je65bfcnS8e01LzUORBV2Uk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbgADDgf (ORCPT
+        id S1727589AbgADDgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 22:36:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37138 "EHLO mail.kernel.org"
+        Fri, 3 Jan 2020 22:36:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727481AbgADDga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 22:36:30 -0500
+        id S1727533AbgADDge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 22:36:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B45E221D7D;
-        Sat,  4 Jan 2020 03:36:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01DAC24653;
+        Sat,  4 Jan 2020 03:36:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578108989;
-        bh=Iqlz+iKxY3zlUcIPQj4U95OV05qdZTm+7hovQRC5Z/4=;
+        s=default; t=1578108993;
+        bh=IBG7E2GJGbsNjViu333rtmT2J38bDQmsbxsfWNMJyGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bftARHLSRgkNOleN01R+iVEizRwLEWEMwdrXG8mBPijBb+9Rj2Z3Su7t0ZDlJqwS0
-         vwqoSzDXgTd/W+rEbHTq1TdiWMI6E+5Y3rZlxRLDXkWuyDdiJ+R0+TEiR0ZZYRN2Mp
-         XJR6jYfqWWn0aqTgJEN51rdifhZ6dW/4yWDXKY4g=
+        b=vhFWat4ziehRmr8odw2hF0ahqRy8BfBYig6Au7c3abyAUq+737zA558P9uhdRNE2i
+         JUtGL5jzJ5Kc/pZyn3PbZxOO2Et2Pc2dPvIwtNJgumJNQtFbGd8/SMNfJnqw3/Q0HN
+         eT4viA6OdLVvTCCzIUC9UEtQuznicH48qCWYCtvw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.4 07/10] cifs: Adjust indentation in smb2_open_file
-Date:   Fri,  3 Jan 2020 22:36:16 -0500
-Message-Id: <20200104033620.10977-7-sashal@kernel.org>
+Cc:     Olof Johansson <olof@lixom.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 10/10] riscv: export flush_icache_all to modules
+Date:   Fri,  3 Jan 2020 22:36:19 -0500
+Message-Id: <20200104033620.10977-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200104033620.10977-1-sashal@kernel.org>
 References: <20200104033620.10977-1-sashal@kernel.org>
@@ -60,47 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Olof Johansson <olof@lixom.net>
 
-[ Upstream commit 7935799e041ae10d380d04ea23868240f082bd11 ]
+[ Upstream commit 1833e327a5ea1d1f356fbf6ded0760c9ff4b0594 ]
 
-Clang warns:
+This is needed by LKDTM (crash dump test module), it calls
+flush_icache_range(), which on RISC-V turns into flush_icache_all(). On
+other architectures, the actual implementation is exported, so follow
+that precedence and export it here too.
 
-../fs/cifs/smb2file.c:70:3: warning: misleading indentation; statement
-is not part of the previous 'if' [-Wmisleading-indentation]
-         if (oparms->tcon->use_resilient) {
-         ^
-../fs/cifs/smb2file.c:66:2: note: previous statement is here
-        if (rc)
-        ^
-1 warning generated.
+Fixes build of CONFIG_LKDTM that fails with:
+ERROR: "flush_icache_all" [drivers/misc/lkdtm/lkdtm.ko] undefined!
 
-This warning occurs because there is a space after the tab on this line.
-Remove it so that the indentation is consistent with the Linux kernel
-coding style and clang no longer warns.
-
-Fixes: 592fafe644bf ("Add resilienthandles mount parm")
-Link: https://github.com/ClangBuiltLinux/linux/issues/826
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/mm/cacheflush.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/cifs/smb2file.c b/fs/cifs/smb2file.c
-index 8b0b512c5792..afe1f03aabe3 100644
---- a/fs/cifs/smb2file.c
-+++ b/fs/cifs/smb2file.c
-@@ -67,7 +67,7 @@ smb2_open_file(const unsigned int xid, struct cifs_open_parms *oparms,
- 		goto out;
+diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
+index 3f15938dec89..c54bd3c79955 100644
+--- a/arch/riscv/mm/cacheflush.c
++++ b/arch/riscv/mm/cacheflush.c
+@@ -14,6 +14,7 @@ void flush_icache_all(void)
+ {
+ 	sbi_remote_fence_i(NULL);
+ }
++EXPORT_SYMBOL(flush_icache_all);
  
- 
--	 if (oparms->tcon->use_resilient) {
-+	if (oparms->tcon->use_resilient) {
- 		/* default timeout is 0, servers pick default (120 seconds) */
- 		nr_ioctl_req.Timeout =
- 			cpu_to_le32(oparms->tcon->handle_timeout);
+ /*
+  * Performs an icache flush for the given MM context.  RISC-V has no direct
 -- 
 2.20.1
 
