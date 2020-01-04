@@ -2,109 +2,138 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADADFC32767
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 08:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E125CC32767
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 08:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80F30217F4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 08:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3141222C4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 08:46:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nawC8F4d"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="oXwq6jH1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726135AbgADIZg (ORCPT
+        id S1726164AbgADIqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 03:25:36 -0500
-Received: from mail-io1-f44.google.com ([209.85.166.44]:37051 "EHLO
-        mail-io1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgADIZf (ORCPT
+        Sat, 4 Jan 2020 03:46:40 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:13020 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbgADIqj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 03:25:35 -0500
-Received: by mail-io1-f44.google.com with SMTP id k24so13330430ioc.4;
-        Sat, 04 Jan 2020 00:25:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IITNyuhRvFPFRzEQHBam4oqBhV4UL3sQSXHfLhzuc28=;
-        b=nawC8F4dkiL5w80TVV1YCRPySNjoCpsSggwJn3o6IQCNx5XzNk9Hpx/HVkJMEfo9pR
-         wQgDX1ye9j/J9KWmupq0RLHu1F+vjNswaELjonmCMqjRRkjOaQzI2JdNj+nqDFY5cBpY
-         nyoXMDX+yeGRSXp7yyMnIWH8iSYJSQ8g6Pi1LG/q5oS4vCWAPIudVcrnt1TWCQZGCfKg
-         iog1j4o8Lqtw2bGQBU+8oRPn+qfy1lmWAhvJIzhjpC4eemXEqzAMrspLSS5QvvoLiNKj
-         Avmk8S1K0/KngxOspnu0z6GbmiGZdrALd0y/S8o7HaddtmQWqtvp64JUOyljUKwp7OsA
-         St4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IITNyuhRvFPFRzEQHBam4oqBhV4UL3sQSXHfLhzuc28=;
-        b=kpYxsU7wlQw2Ht97O7DW5pITs852ozNaABcofcEZBcyoa64Olh5MY+xdPzinmXB3zr
-         uWS7ix7jmmF4tYtPo3i/NThRchv4L7MYv/XWvmV76b4tWmwAfBav4zxwZWm1uYIOBKJd
-         p17Vmto5Gzk4Mq4XOh+495aQOh9V9e5ZXiN8Jn4lyWrrPBiUTLitE87IKPVIZsj8sOA+
-         PQU6tsRT+oYlO98eIxpoACV7diS9ZcYFhDGgvWfjiDW7BGgJ/sC+DHSVn+pvIbBUJ4B9
-         IqVoNsyEIRGvTCXMGxkE2DWabrStrBIcsVB6svteyPYTIf9zT3fsgDgSMXe/xJnykrX4
-         JKyg==
-X-Gm-Message-State: APjAAAWmyNnzVwMaOfSIqF9PlNw3nvn2wQfxbzzzjGR/72RCJn+4HAch
-        UI8yJZK+cQiMcNA2Irl2hWVMGoPzVKGjNQV4W6g=
-X-Google-Smtp-Source: APXvYqyZhRcybOoIECFq8vx6FikF6Uav7qGPvLsgyLwzmeRicOnTtBZ+gjA/YUWXbUpG63B8a5eqq/nhfNs2s0Ffnbg=
-X-Received: by 2002:a6b:8e51:: with SMTP id q78mr58267435iod.179.1578126334398;
- Sat, 04 Jan 2020 00:25:34 -0800 (PST)
-MIME-Version: 1.0
-References: <CABXGCsOv26W6aqB5WPMe-mEynmwy55DTfTeL5Dg9vRq6+Y6WvA@mail.gmail.com>
- <CABXGCsNkzPrjqMRaWpssorxzhMLWBvLeSw9BpKYr_DW4LJQECQ@mail.gmail.com>
- <20200102110817.ahqaqidw3ztw3kax@10.255.255.10> <CABXGCsNkm3VuzO60WBCi4VJmDnO=DmprQ1P=dd0FcW2-+dGc0w@mail.gmail.com>
- <20200102131434.tky2hquki23laqqo@10.255.255.10> <CABXGCsMV1GRiqrXCQGHqvpBiendU3mG36h0YoG=4nw6spZHq=w@mail.gmail.com>
- <nycvar.YAK.7.76.2001021153220.1385@zhn.tzk.pbz> <CABXGCsMLfarquWnzV=e3Ta_HPac+DALfKEOaD3rp5n9MPqgyFw@mail.gmail.com>
- <20200103100232.GH3040@piout.net> <CABXGCsNv7G94TxaaKX8KXL5DEJiFgNcSu4+WShE_kQjVSa7zZA@mail.gmail.com>
- <20200103101935.GI3040@piout.net> <CABXGCsMLob0DC25JS8wwAYydnDoHBSoMh2_YLPfqm3TTvDE-Zw@mail.gmail.com>
- <7c015680-01b7-9c3e-c4c7-5d0b6e964781@hygon.cn>
-In-Reply-To: <7c015680-01b7-9c3e-c4c7-5d0b6e964781@hygon.cn>
-From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date:   Sat, 4 Jan 2020 13:25:23 +0500
-Message-ID: <CABXGCsNpS+nCMZ9C89UQVEu_u+hJVtdxCvdnj2QNqQf-j7+DrA@mail.gmail.com>
-Subject: Re: [bugreport] "hwclock -w" reset time instead of setting the right time
-To:     Jinke Fan <fanjinke@hygon.cn>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        J William Piggott <elseifthen@gmx.com>,
-        Karel Zak <kzak@redhat.com>,
-        "util-linux@vger.kernel.org" <util-linux@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 4 Jan 2020 03:46:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1578127595;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=UWVRejdunrkDKbpqDDbnRO05NzpDbjt3y5Cqwl1kzWw=;
+        b=oXwq6jH1MNyGBHHGF7wdwE3B9Irl1+ZU2X3pdv3v5KRh16HfBuS41vLnARHiobiuEM
+        xme76/UVDQjp6isy/fTSnFRljhGed7UAcyLJuY4McUk/F9h00sgbvQQjd+xzej9EP5HF
+        5De8e20RG8zERkGqiSFQOPIqFlBXsAvCOlvd8VFXn51wSjC+ajJ2gHuKOMBN43Py6xCI
+        C/1nP4oiIXISC595TyndysUZJ5H3EpyC05cWaBmUiIi8rAZUhks2w2wjC12cHTFRSSuh
+        R/4f7hhIYHSuDsPCCTrdrIsi6MxfnJiZp50S8t6uRWwpV8XU6Hfc7TpQJ1uiDxRCw44N
+        bPSA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDVCVXAYOHw=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
+        with ESMTPSA id a09dafw048kPPIu
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Sat, 4 Jan 2020 09:46:25 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH] mtd: onenand: omap2: Pass correct flags for prep_dma_memcpy
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200104073453.16077-1-peter.ujfalusi@ti.com>
+Date:   Sat, 4 Jan 2020 09:46:23 +0100
+Cc:     kyungmin.park@samsung.com,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        linux-mtd@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <9EB362B8-EA81-445C-9FD7-29ABB890100C@goldelico.com>
+References: <20200104073453.16077-1-peter.ujfalusi@ti.com>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 4 Jan 2020 at 10:46, Jinke Fan <fanjinke@hygon.cn> wrote:
->
-> Hi Mike,
-> The root cause of the bug you encountered is unclear.
->
 
-=3D=3D=3D cutted =3D=3D=3D
+> Am 04.01.2020 um 08:34 schrieb Peter Ujfalusi <peter.ujfalusi@ti.com>:
+>=20
+> The commit converting the driver to DMAengine was missing the flags =
+for
+> the memcpy prepare call.
+> It went unnoticed since the omap-dma drive was ignoring them.
 
->
-> There is no date reset found in the bios after reboot.
-> The first time during OS startup get date from rtc_cmos is:
-> [    1.589157] rtc_cmos 00:03: setting system clock to
-> 2020-01-04T04:07:01 UTC (1578110821)
+s/drive/driver/
 
-> I watched the video on youtube. The date is reseted when startup into
-> bios at Mike's platform.
-> As we know that the bios will check the validity of rtc time, if not,
-> bios will reset the rtc time. RTC time reset may be done by the BIOS.
+>=20
+> Fixes: 3ed6a4d1de2c5 (" mtd: onenand: omap2: Convert to use dmaengine =
+for memcp")
+> Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+> Hi,
+>=20
+> Aaro reported [1] a failure on omap2-onenand pointing to
+> 4689d35c765c696bdf0535486a990038b242a26b. It looks like the root cause =
+is the
+> conversion of omap2-onenand to DMAengine which missed the flags.
+>=20
+> Basically the client is waiting for a callback without asking for it. =
+This
+> certainly causes timeout.
+>=20
+> I have not tested the patch, but it should fix the issue.
 
-Did you disable automatic time synchronization?
-By default Fedora GNOME doing automatic time synchronization.
-For this reason, it=E2=80=99s more correct to immediately go into the BIOS
-after a reboot and there check the time value or turn off automatic
-time synchronization
+makes the gta04a5one.dts work again.
 
---
-Best Regards,
-Mike Gavrilov.
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+
+BR and thanks!
+Nikolaus
+
+>=20
+> [1] =
+https://lore.kernel.org/lkml/20200103081726.GD15023@darkstar.musicnaut.iki=
+.fi/
+>=20
+> drivers/mtd/nand/onenand/omap2.c | 3 ++-
+> 1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/mtd/nand/onenand/omap2.c =
+b/drivers/mtd/nand/onenand/omap2.c
+> index edf94ee54ec7..71a632b815aa 100644
+> --- a/drivers/mtd/nand/onenand/omap2.c
+> +++ b/drivers/mtd/nand/onenand/omap2.c
+> @@ -328,7 +328,8 @@ static inline int =
+omap2_onenand_dma_transfer(struct omap2_onenand *c,
+> 	struct dma_async_tx_descriptor *tx;
+> 	dma_cookie_t cookie;
+>=20
+> -	tx =3D dmaengine_prep_dma_memcpy(c->dma_chan, dst, src, count, =
+0);
+> +	tx =3D dmaengine_prep_dma_memcpy(c->dma_chan, dst, src, count,
+> +				       DMA_CTRL_ACK | =
+DMA_PREP_INTERRUPT);
+> 	if (!tx) {
+> 		dev_err(&c->pdev->dev, "Failed to prepare DMA =
+memcpy\n");
+> 		return -EIO;
+> --=20
+> Peter
+>=20
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>=20
+
