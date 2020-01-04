@@ -2,159 +2,124 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AB2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 16:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F7EC32770
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 17:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7BAC2465B
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 16:56:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cfPnMBLK"
+	by mail.kernel.org (Postfix) with ESMTP id 048D021734
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 17:12:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgADQ4x (ORCPT
+        id S1726191AbgADRMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 11:56:53 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:37632 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbgADQ4w (ORCPT
+        Sat, 4 Jan 2020 12:12:13 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:49738 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbgADRMM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 11:56:52 -0500
-Received: by mail-pj1-f65.google.com with SMTP id m13so5963796pjb.2;
-        Sat, 04 Jan 2020 08:56:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9Y8nVeWGgj2uUKifSXncV7kkGBqBgYJeiJmGWBRSYbQ=;
-        b=cfPnMBLK1wOt5+DsZJASYMhu232nGiIYRrX75rh23EBpvzERRLn3ouMulKdjJmpot5
-         0H2a/saVe4VJ7vfWY80ApCYpAPAxpbmi4LqKRbUYtb71dvJxtRIHCNWLnFQzKvGNdF8l
-         7h9F7rN506+wtIBOOA8UtR78HufdklH7n3vMV7Vy2s++qFZlF9KJQHtu9TLMkKvOdpsW
-         6pvTFwQgHFHv0EfPKnUa/4O3sY7CRPmFVU3BGXtyChDgkLTZbwKvhCsF2hegr+H3lIez
-         yg9AnPQz0BL4DuyulOYIV5DBRXyKj3rdkkANCFO7IyBT0BQbXTMYYShc0hr3/o4+hhpf
-         2MHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9Y8nVeWGgj2uUKifSXncV7kkGBqBgYJeiJmGWBRSYbQ=;
-        b=V4TjDpdguy1caXThk3ycb4qiRdQZHDwkhA+IP4g+nPI30AZPaELJzflvP8A2EP20Vt
-         xiGr4CJOsLtNJLOOcZwD1xrLg1eBQh/XjP1nlAmfShdOPM91KI6pHW7CiGCmwVW6rChv
-         0UeBVCATJiGcXnqubXjVydmdpd7d3ir2Hwsx5yLz4urOy2hCXB1pe47Uon4uwvqitMoT
-         UTg4XF2VLLVB1lPDnc9XER8GQZWVafPJMygz1y4dx7cVg9MKrp+Y+q/xxbsa01V+c5eE
-         tYgf3+1bgVB6EEg+IVhGhFcxrlpu78OXsZuqBDXUacYlrlW/19oJzf50HWmHC1OSpmHj
-         o+8A==
-X-Gm-Message-State: APjAAAVqLxoyzFFyoxbuuWi35rT7SQWyUKeN2pyeRN4LSBLt34SUniUj
-        vzsUz/JQu7SWPQkQh84NKIw=
-X-Google-Smtp-Source: APXvYqypji4ySRrO2P1UJKiwiNe24+N7reVangsvdU/0ECpr7r7RQGeh7TYaOphnoWP5PiBsEp8cjQ==
-X-Received: by 2002:a17:90a:26ab:: with SMTP id m40mr34056119pje.42.1578157012007;
-        Sat, 04 Jan 2020 08:56:52 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g67sm70518134pfb.66.2020.01.04.08.56.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 04 Jan 2020 08:56:51 -0800 (PST)
-Subject: Re: [PATCH 1/2] [PATCH v8 1/2] dt-bindings: mediatek: mt8183: Add
- #reset-cells
-To:     Jiaxin Yu <jiaxin.yu@mediatek.com>, yong.liang@mediatek.com,
-        wim@linux-watchdog.org, p.zabel@pengutronix.de,
-        matthias.bgg@gmail.com, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        chang-an.chen@mediatek.com, freddy.hsin@mediatek.com
-Cc:     yingjoe.chen@mediatek.com, sboyd@kernel.org
-References: <1578044245-26939-1-git-send-email-jiaxin.yu@mediatek.com>
- <1578044245-26939-2-git-send-email-jiaxin.yu@mediatek.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <8bed8f3e-7a20-2d34-9a33-805c707ff410@roeck-us.net>
-Date:   Sat, 4 Jan 2020 08:56:49 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sat, 4 Jan 2020 12:12:12 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id C07202002C;
+        Sat,  4 Jan 2020 18:12:06 +0100 (CET)
+Date:   Sat, 4 Jan 2020 18:12:05 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     alexandre.belloni@bootlin.com, airlied@linux.ie,
+        nicolas.ferre@microchip.com, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, boris.brezillon@bootlin.com,
+        lee.jones@linaro.org, peda@axentia.se,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 5/6] drm: atmel-hlcdc: prefer a lower pixel-clock than
+ requested
+Message-ID: <20200104171205.GA8724@ravnborg.org>
+References: <1576672109-22707-1-git-send-email-claudiu.beznea@microchip.com>
+ <1576672109-22707-6-git-send-email-claudiu.beznea@microchip.com>
+ <20200102090848.GC29446@ravnborg.org>
 MIME-Version: 1.0
-In-Reply-To: <1578044245-26939-2-git-send-email-jiaxin.yu@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200102090848.GC29446@ravnborg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XYAwZIGsAAAA:8
+        a=e5mUnYsNAAAA:8 a=Qn5YEMP7ln1rRxY8a6QA:9 a=CjuIK1q_8ugA:10
+        a=E8ToXWR_bxluHZ7gmE-Z:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/3/20 1:37 AM, Jiaxin Yu wrote:
-> Add #reset-cells property and update example
+Hi Claudiu
+
+On Thu, Jan 02, 2020 at 10:08:48AM +0100, Sam Ravnborg wrote:
+> On Wed, Dec 18, 2019 at 02:28:28PM +0200, Claudiu Beznea wrote:
+> > From: Peter Rosin <peda@axentia.se>
+> > 
+> > The intention was to only select a higher pixel-clock rate than the
+> > requested, if a slight overclocking would result in a rate significantly
+> > closer to the requested rate than if the conservative lower pixel-clock
+> > rate is selected. The fixed patch has the logic the other way around and
+> > actually prefers the higher frequency. Fix that.
+> > 
+> > Fixes: f6f7ad323461 ("drm/atmel-hlcdc: allow selecting a higher pixel-clock than requested")
+> The id is wrong here - the right one is: 9946a3a9dbedaaacef8b7e94f6ac144f1daaf1de
+> The wrong id above was used before - so I think it is a copy'n'paste
+> thing.
 > 
-> Change-Id: If3f4f0170d417819facff1fd0a0e5e3c6cc9944d
-
-No Change-Id in upstream kernel code, please.
-
-Guenter
-
-> Signed-off-by: yong.liang <yong.liang@mediatek.com>
-> Signed-off-by: Jiaxin Yu <jiaxin.yu@mediatek.com>
-> Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
->   .../reset-controller/mt2712-resets.h          | 22 +++++++++++++++++++
->   .../reset-controller/mt8183-resets.h          | 17 ++++++++++++++
->   2 files changed, 39 insertions(+)
->   create mode 100644 include/dt-bindings/reset-controller/mt2712-resets.h
+> Hint: try "dim fixes 9946a3a9dbedaaacef8b7e94f6ac144f1daaf1de"
 > 
-> diff --git a/include/dt-bindings/reset-controller/mt2712-resets.h b/include/dt-bindings/reset-controller/mt2712-resets.h
-> new file mode 100644
-> index 000000000000..9e7ee762f076
-> --- /dev/null
-> +++ b/include/dt-bindings/reset-controller/mt2712-resets.h
-> @@ -0,0 +1,22 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2019 MediaTek Inc.
-> + * Author: Yong Liang <yong.liang@mediatek.com>
-> + */
-> +
-> +#ifndef _DT_BINDINGS_RESET_CONTROLLER_MT2712
-> +#define _DT_BINDINGS_RESET_CONTROLLER_MT2712
-> +
-> +#define MT2712_TOPRGU_INFRA_SW_RST				0
-> +#define MT2712_TOPRGU_MM_SW_RST					1
-> +#define MT2712_TOPRGU_MFG_SW_RST				2
-> +#define MT2712_TOPRGU_VENC_SW_RST				3
-> +#define MT2712_TOPRGU_VDEC_SW_RST				4
-> +#define MT2712_TOPRGU_IMG_SW_RST				5
-> +#define MT2712_TOPRGU_INFRA_AO_SW_RST				8
-> +#define MT2712_TOPRGU_USB_SW_RST				9
-> +#define MT2712_TOPRGU_APMIXED_SW_RST				10
-> +
-> +#define MT2712_TOPRGU_SW_RST_NUM				11
-> +
-> +#endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT2712 */
-> diff --git a/include/dt-bindings/reset-controller/mt8183-resets.h b/include/dt-bindings/reset-controller/mt8183-resets.h
-> index 8804e34ebdd4..a1bbd41e0d12 100644
-> --- a/include/dt-bindings/reset-controller/mt8183-resets.h
-> +++ b/include/dt-bindings/reset-controller/mt8183-resets.h
-> @@ -78,4 +78,21 @@
->   #define MT8183_INFRACFG_AO_I2C7_SW_RST				126
->   #define MT8183_INFRACFG_AO_I2C8_SW_RST				127
->   
-> +#define MT8183_INFRACFG_SW_RST_NUM				128
-> +
-> +#define MT8183_TOPRGU_MM_SW_RST					1
-> +#define MT8183_TOPRGU_MFG_SW_RST				2
-> +#define MT8183_TOPRGU_VENC_SW_RST				3
-> +#define MT8183_TOPRGU_VDEC_SW_RST				4
-> +#define MT8183_TOPRGU_IMG_SW_RST				5
-> +#define MT8183_TOPRGU_MD_SW_RST					7
-> +#define MT8183_TOPRGU_CONN_SW_RST				9
-> +#define MT8183_TOPRGU_CONN_MCU_SW_RST				12
-> +#define MT8183_TOPRGU_IPU0_SW_RST				14
-> +#define MT8183_TOPRGU_IPU1_SW_RST				15
-> +#define MT8183_TOPRGU_AUDIO_SW_RST				17
-> +#define MT8183_TOPRGU_CAMSYS_SW_RST				18
-> +
-> +#define MT8183_TOPRGU_SW_RST_NUM				19
-> +
->   #endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT8183 */
+> If I get a quick response from Lee I can fix it up while applying.
 > 
+> 	Sam
+> 
+> > Reported-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> > Tested-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> > Signed-off-by: Peter Rosin <peda@axentia.se>
 
+One other detail.
+The patch has passed through your hands, so you have to add your s-o-b
+to document this.
+The chain of s-o-b shall document the path the patch has taken towards
+the kernel.
+
+In this case:
+Peter => Claudiu => Sam => Applied.
+
+Please resend or reply where you say OK that I add your s-o-b.
+
+PS. And happy new year!
+
+	Sam
+
+
+> > ---
+> >  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+> > index 721fa88bf71d..10985134ce0b 100644
+> > --- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+> > +++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+> > @@ -121,8 +121,8 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
+> >  		int div_low = prate / mode_rate;
+> >  
+> >  		if (div_low >= 2 &&
+> > -		    ((prate / div_low - mode_rate) <
+> > -		     10 * (mode_rate - prate / div)))
+> > +		    (10 * (prate / div_low - mode_rate) <
+> > +		     (mode_rate - prate / div)))
+> >  			/*
+> >  			 * At least 10 times better when using a higher
+> >  			 * frequency than requested, instead of a lower.
+> > -- 
+> > 2.7.4
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
