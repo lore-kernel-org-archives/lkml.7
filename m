@@ -2,171 +2,125 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F67BC32770
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 20:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38344C32771
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 20:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1892724650
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 20:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1042124654
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 20:23:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bzBJeX1D"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzvNX5+d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbgADUHu (ORCPT
+        id S1726380AbgADUXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 15:07:50 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46307 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbgADUHt (ORCPT
+        Sat, 4 Jan 2020 15:23:18 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41792 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgADUXS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 15:07:49 -0500
-Received: by mail-pl1-f194.google.com with SMTP id y8so20268678pll.13;
-        Sat, 04 Jan 2020 12:07:49 -0800 (PST)
+        Sat, 4 Jan 2020 15:23:18 -0500
+Received: by mail-pg1-f194.google.com with SMTP id x8so24960058pgk.8;
+        Sat, 04 Jan 2020 12:23:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=b1kS8vLLxH+4vuJg2IabnHI/ekmjCC3BWGHgeYGsuEM=;
-        b=bzBJeX1D8MNFJgd0awEstuyFH5D6i8ny8uRt3JuVi8elyM2N546yMBRUnBKTOO1cTP
-         ylUw2uQkAbNeDlBjBGUedfHTSQ0+rg9IQ9wXh/0HqkOYkYRU6etBrlqYtSE+2AnocbFA
-         qSQ+FwakcnFxNDAmdxAVk2q7K/h35M4k2ND2JZaNs/u+9MF1GRWx1Y1kUdpUYYvoOWRB
-         xPQqgQRHAKosOYamVly+M7QO9cnv27b5lcK8zuZosS8KLkEgRH3c824DmVmqjezz0sS1
-         vv9DUuk+j5oKo7ozqM7NPSdw8xw1uz4iHcCkMkJUUIcozVeMsG6yTRCZ5a60WRRH2RSt
-         x18w==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Ak1ZP2tAeQ2Y7PwIriFfKv0Dvf8KKmq9+RENIFVGY1w=;
+        b=hzvNX5+d5/anUwiewELIOCTAcVqVIVLnxoSL1b8FFQviE+oxyRLxqHSR0FD0Y3ZewQ
+         MzY44YYmxLRErJ/0Is12RzfnjMSysRWnbGMVdk2Ea8rk/pFKwFNbHrtHd8+Iq/kDJkbc
+         BA/spVGI3YNI25ZTgKkCvLx6QBeTpjBJTTIDih2jzavSm+plyihMDSq1gVUXh6OqAH7Y
+         CB5hz1Gb42zXLrMKTy3ddpyI+/jc3Rd68pEvrHwpEEtj+mhzZXggHSOrYSNHu5szr4pj
+         Fug7rQtkhUXrlOqVambUZhr9N/MYr1X2Q8rLvTjnaASxIclHm7jvo4EB+9td724mAgw7
+         sXcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=b1kS8vLLxH+4vuJg2IabnHI/ekmjCC3BWGHgeYGsuEM=;
-        b=UOnPOcHJYWDPtMQsHC0iEIjPYS27JdpXG36f38c61KOM2TKEKbbEwQvMT7xK6TrTSn
-         FjGFvlWrarrxYoQzVN8+MNu3yXroyxXjZGtge63RHZVwHgUVDJquOlN6TLo+0UzH1AfR
-         gaSArFINLqVDG3wK+y2h8hBZmUmcLg2hAVUBdtafQLRG+iB2Gam3S8RHV3pH1kf8slk4
-         nXEFtFo0rIydmAUTLlXa9vDkCwCOoMNlgphxj0i4hmq5OKNizeaOCewX9xYx/pvSi470
-         FuMk+sx+5Ci13J1uKzZTMDKXCC6s44qJFlD3FThhUmpN5nvY37UECDUWGRiAUaUBLZcV
-         /QUg==
-X-Gm-Message-State: APjAAAVCBsVQKPogjouxUgdSGI592VCGxHXVQK2usDrnupA5YEYbq5fY
-        gYzFVA2scp1Sx/502FurPGs=
-X-Google-Smtp-Source: APXvYqwG9e1Fi0ErEe2MKf+tkoMuAZ96ttyrs4dZi6OTW4BKM5MuzUzmthYoAbzHA+PuclHk4LtVhw==
-X-Received: by 2002:a17:902:6bca:: with SMTP id m10mr99318980plt.212.1578168468597;
-        Sat, 04 Jan 2020 12:07:48 -0800 (PST)
-Received: from localhost ([2601:646:8a80:3eb0::9760])
-        by smtp.gmail.com with ESMTPSA id p12sm19055183pjo.5.2020.01.04.12.07.47
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Ak1ZP2tAeQ2Y7PwIriFfKv0Dvf8KKmq9+RENIFVGY1w=;
+        b=AgWlSoL16RnFxl7ZyKuISvjxx4F+03hDmYN5mmOfWbSnJjYPT+tP4YxrPMkkP7duA1
+         TLlAmPstv8Y/W1jtdIRZZR5R4ap5jvlSr1dAZ3/gnw9RB0DDU2mSUZ0XoEaiV3sJxVbu
+         3QSe9JY+7StAEOLsstiSPqCDff4EBsTw0IzixXbi9vYPV6ZqHxwjICJ6y4b4V5UIU2ZA
+         91pH4rnIL88yoXSu2yDhRI6ZLeL6rRTsBKlUTRPRv2hOjjAy7qj9DuvbNEwYSWNNCg51
+         GBX5opYIbGK/ulgwUf99GjyHdAloe5q7xWHGhNklsr7yRNj6M83WUOLziD5OA9vP3NY+
+         hO/Q==
+X-Gm-Message-State: APjAAAV07FozzVkH7z2q8FviZqFKfwtTCIgdb/PC1a7e/SbSXwX42BgZ
+        iqM+x1/Z1HI4Og948IKGkX0=
+X-Google-Smtp-Source: APXvYqzVkQYHU5NLlzN2zHDwMxx94FyQUPEadRQUR/l/4WEeZDDkirJIVM31SREzm8dxsp+Hc3SniQ==
+X-Received: by 2002:a63:dc0d:: with SMTP id s13mr99709717pgg.129.1578169397182;
+        Sat, 04 Jan 2020 12:23:17 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id h126sm48756038pfe.19.2020.01.04.12.23.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jan 2020 12:07:47 -0800 (PST)
-From:   Paul Burton <paulburton89@gmail.com>
-X-Google-Original-From: Paul Burton <paul.burton@mips.com>
-Date:   Sat, 4 Jan 2020 12:07:46 -0800
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: [GIT PULL] MIPS fixes
-Message-ID: <20200104200746.imnkglnarvkhzrtw@pburton-laptop>
+        Sat, 04 Jan 2020 12:23:16 -0800 (PST)
+Date:   Sat, 4 Jan 2020 12:23:14 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Patrice Chotard <patrice.chotard@st.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-arm-kernel@lists.infradead.org,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] tty: st-asc: switch to using devm_gpiod_get()
+Message-ID: <20200104202314.GA13591@dtor-ws>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2ai2goydcsnlwrgd"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The node pointer in question is not a child node, but the node assigned
+to the port device itself, so we should not be using
+devm_fwnode_get_gpiod_from_child() [that is going away], but standard
+devm_gpiod_get().
 
---2ai2goydcsnlwrgd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+To maintain the previous labeling we use gpiod_set_consumer_name() after
+we acquire the GPIO.
 
-Hi Linus,
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ drivers/tty/serial/st-asc.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-Here is a collection of MIPS fixes for the 5.5 cycle; please pull.
+diff --git a/drivers/tty/serial/st-asc.c b/drivers/tty/serial/st-asc.c
+index fb6bbb5e22344..e7048515a79ca 100644
+--- a/drivers/tty/serial/st-asc.c
++++ b/drivers/tty/serial/st-asc.c
+@@ -504,7 +504,6 @@ static void asc_set_termios(struct uart_port *port, struct ktermios *termios,
+ 			    struct ktermios *old)
+ {
+ 	struct asc_port *ascport = to_asc_port(port);
+-	struct device_node *np = port->dev->of_node;
+ 	struct gpio_desc *gpiod;
+ 	unsigned int baud;
+ 	u32 ctrl_val;
+@@ -566,13 +565,12 @@ static void asc_set_termios(struct uart_port *port, struct ktermios *termios,
+ 			pinctrl_select_state(ascport->pinctrl,
+ 					     ascport->states[NO_HW_FLOWCTRL]);
+ 
+-			gpiod = devm_fwnode_get_gpiod_from_child(port->dev,
+-								 "rts",
+-								 &np->fwnode,
+-								 GPIOD_OUT_LOW,
+-								 np->name);
+-			if (!IS_ERR(gpiod))
++			gpiod = devm_gpiod_get(port->dev, "rts", GPIOD_OUT_LOW);
++			if (!IS_ERR(gpiod)) {
++				gpiod_set_consumer_name(gpiod,
++						port->dev->of_node->name);
+ 				ascport->rts = gpiod;
++			}
+ 		}
+ 	}
+ 
+-- 
+2.24.1.735.g03f4e72817-goog
 
-Thanks,
-    Paul
 
-
-The following changes since commit a8d0f11ee50ddbd9f243c7a8b1a393a4f23ba093:
-
-  MIPS: SGI-IP27: Enable ethernet phy on second Origin 200 module (2019-11-23 14:20:30 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git tags/mips_fixes_5.5_1
-
-for you to fetch changes up to bbcc5672b0063b0e9d65dc8787a4f09c3b5bb5cc:
-
-  MIPS: Avoid VDSO ABI breakage due to global register variable (2020-01-02 16:41:16 -0800)
-
-----------------------------------------------------------------
-A collection of MIPS fixes:
-
-- Fill the struct cacheinfo shared_cpu_map field with sensible values,
-  notably avoiding issues with perf which was unhappy in the absence of
-  these values.
-
-- A boot fix for Loongson 2E & 2F machines which was fallout from some
-  refactoring performed this cycle.
-
-- A Kconfig dependency fix for the Loongson CPU HWMon driver.
-
-- A couple of VDSO fixes, ensuring gettimeofday() behaves appropriately
-  for kernel configurations that don't include support for a clocksource
-  the VDSO can use & fixing the calling convention for the n32 & n64
-  VDSOs which would previously clobber the $gp/$28 register.
-
-- A build fix for vmlinuz compressed images which were inappropriately
-  building with -fsanitize-coverage despite not being part of the kernel
-  proper, then failing to link due to the missing
-  __sanitizer_cov_trace_pc() function.
-
-- A couple of eBPF JIT fixes, including disabling it for MIPS32 due to a
-  large number of issues with the code generated there & reflecting ISA
-  dependencies in Kconfig to enforce that systems which don't support
-  the JIT must include the interpreter.
-
-----------------------------------------------------------------
-Alexander Lobakin (1):
-      MIPS: BPF: eBPF JIT: check for MIPS ISA compliance in Kconfig
-
-Guenter Roeck (1):
-      MIPS: Fix boot on Fuloong2 systems
-
-Joe Perches (1):
-      MIPS: Kconfig: Use correct form for 'depends on'
-
-Jouni Hogander (1):
-      MIPS: Prevent link failure with kcov instrumentation
-
-Paul Burton (2):
-      MIPS: BPF: Disable MIPS32 eBPF JIT
-      MIPS: Avoid VDSO ABI breakage due to global register variable
-
-Vincenzo Frascino (1):
-      mips: Fix gettimeofday() in the vdso library
-
-Vladimir Kondratiev (1):
-      mips: cacheinfo: report shared CPU map
-
- arch/mips/Kconfig                         |  2 +-
- arch/mips/boot/compressed/Makefile        |  3 +++
- arch/mips/include/asm/cpu-type.h          |  3 ++-
- arch/mips/include/asm/thread_info.h       | 20 +++++++++++++++++++-
- arch/mips/include/asm/vdso/gettimeofday.h | 13 -------------
- arch/mips/kernel/cacheinfo.c              | 27 ++++++++++++++++++++++++++-
- arch/mips/net/ebpf_jit.c                  |  2 +-
- arch/mips/vdso/vgettimeofday.c            | 20 ++++++++++++++++++++
- drivers/platform/mips/Kconfig             |  2 +-
- 9 files changed, 73 insertions(+), 19 deletions(-)
-
---2ai2goydcsnlwrgd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYIAB0WIQRgLjeFAZEXQzy86/s+p5+stXUA3QUCXhDwkgAKCRA+p5+stXUA
-3WA+AP4gipdFlYw9AY80dvui8y9ph7DmF+IWucVh8tR/JSloYwEAq536C46uZUVK
-2Um1a69eqD+VNQj7Q9svBs4j2n9xYgg=
-=e6VX
------END PGP SIGNATURE-----
-
---2ai2goydcsnlwrgd--
+-- 
+Dmitry
