@@ -2,150 +2,168 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D91C32767
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAF5C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01EBA2464B
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:21:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gRnVfA7F"
+	by mail.kernel.org (Postfix) with ESMTP id B52C621835
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:21:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578097316;
+	bh=5ckSlqosEWoVCoHBKmH8bs80ujWGzwAddQUBE/ZM/+w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TxSNxGlNMG7Jzb6yULE2Dc51vVGr2ddi0iNCOlW0dnDDnxU1zcRFe2/8Pn92wimNN
+	 g06ZnQOxs3DYtZ0yXLr691CsZUUHCvUv1FasphtuOPziuf+Ipt77Zmb54Cd/EEH1wp
+	 0P2bxv4vcjsweaNt/esBfEPhMRiVuAIfiB33FatE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbgADAVl (ORCPT
+        id S1727201AbgADAV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 19:21:41 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39668 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbgADAVk (ORCPT
+        Fri, 3 Jan 2020 19:21:56 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41749 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbgADAVz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 19:21:40 -0500
-Received: by mail-lj1-f196.google.com with SMTP id l2so45394192lja.6
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 16:21:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a25MTBnzC/TY/vt8zz8+qKKJTGhY6mCF1CmPfY1tykI=;
-        b=gRnVfA7FDAgs73jNy22XumTxemh0aYDjK9B1YAV7aDhmr0DazAVJiMp4WVw1bkv31/
-         bcATx1sRwYkcsu4O0LQVmlmjSHW5VtsN8kArTfZitHm7x//5M6K3YcSNLlNrU4k2nXBM
-         yt6DH6rszExsqnVul0yZCOGTl1phucIVvqvK/Gcklh4kjZC6VQ1xu9ZmRNx0Ik5oj39W
-         PUCHY1sxyw3q0Pr498xt9akwnDTU17FpPWdhZ0+b30zgWzvbnxDXRO1SyZ+eSC73LL7M
-         4bTSAi5L7Qao6/+sTppkChYPciZ16A05vGdttDOmIm7Rn2KAj85O40F9gtCbP1HMl69m
-         XGZg==
+        Fri, 3 Jan 2020 19:21:55 -0500
+Received: by mail-io1-f65.google.com with SMTP id c16so39528357ioo.8
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 16:21:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a25MTBnzC/TY/vt8zz8+qKKJTGhY6mCF1CmPfY1tykI=;
-        b=X/RxxpbG54Pzr8xmX2qmXQCulUlROMIh/90585+qrnxeMhMxE6Dgc86H1h6pmlKlaj
-         QecaYweWsjxQ8LSXDRvXLrVf1xtSOYaRIAiGv65vA99nsMD1V7xA0hNP8e39CDdu8Iru
-         dNAPrfyfCeUg9BePqQRQolSo1xqspdqhGSiHCVqxMDbAeXZhA46IeL3V2Daw+gPalidh
-         s9GazFm89MLVDP8ooGNfLdE5mLNqIhMpFN3t5kRZSieEZNmkqv54sGn6E48B/tLWZy4v
-         BUn4MjDKNHWTXisFyKcWPtCiUa5pLMPpOkZXhnjqWEZ3x/oSci5f0NOVqdBGgDZPKUIL
-         g+uw==
-X-Gm-Message-State: APjAAAWvWOaOZWJwTqwOiQtGxNxZrBCJtOWFVAKQdtd4aK/23dUt4sQE
-        c0PdLmuu7fx5RO46uRaUk43KQKYpTROLTC4vEs/pnA==
-X-Google-Smtp-Source: APXvYqxHT5NBcGXP7l31r/rUzGwxDXqF6xPcQ35bsC0BAshJRd7O7pJFod6OutyDNvKjGim9p9LsFYX1ulkLOKLmCGs=
-X-Received: by 2002:a2e:85cd:: with SMTP id h13mr51946653ljj.191.1578097298469;
- Fri, 03 Jan 2020 16:21:38 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GRrMCIevFS+50QdWWWGaYeUVyp1OjoJAsbXHKCUBzfs=;
+        b=OGnFrei8QNSAKn4FULWbcecbNt0gWyxIdDhXMh8gGSr9TB7F3lmfjLE34sXTLnmC+G
+         XEA5WmUvrvXlEPHZDJVFdVjBQB+IZ7qsrcOMJpOOd9T2BtFU9w6auloRmwm+x2Y8wkvG
+         nGoPsVRKudGpqrxwZ2iEhxxuR+lnlRxIlNe68BlofsdBBCElXymdXLR7mqFOvleo8BAG
+         3Ot1KmKkxK4WEC12eR08DbHDRn/LdJYMQxY1S35tNSf9YADh/28arx/maGnwm1VFkcnv
+         GZ7Vb22H0k6WlTCDI+DCbgnG0whHbREymkIAWpWr5VvUJnnIa04hTZ4cLrchNwkW/RC5
+         NNKw==
+X-Gm-Message-State: APjAAAWktAdsdV4pR/p3Z6+IlItqIV7p34lxDbqxhwoTVA1QObhpdAfk
+        8mbE5xb1hvGQw95G+ayYYu4/d5I=
+X-Google-Smtp-Source: APXvYqzVapt801lNSGKL/7UHXl5UxdziOj9yV5ESXt+KzLlkvu5DH7WhjwfEAYv2gLpcJnoo0T11BA==
+X-Received: by 2002:a5e:c014:: with SMTP id u20mr57686242iol.43.1578097314238;
+        Fri, 03 Jan 2020 16:21:54 -0800 (PST)
+Received: from rob-hp-laptop ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id o10sm13764874iob.44.2020.01.03.16.21.52
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2020 16:21:53 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 2219a5
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Fri, 03 Jan 2020 17:21:52 -0700
+Date:   Fri, 3 Jan 2020 17:21:52 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] dt-bindings: PCI: meson: Update PCIE bindings
+ documentation
+Message-ID: <20200104002152.GA32487@bogus>
+References: <20191224173942.18160-1-repk@triplefau.lt>
+ <20191224173942.18160-5-repk@triplefau.lt>
 MIME-Version: 1.0
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-7-geert+renesas@glider.be> <CACRpkdb1XZAeSThxWmJtnm80T4aPufXV2UvJdVdgnw-TJe3trg@mail.gmail.com>
- <CAMuHMdV+Ww5Y9G7+bS-SyHtm4dC89V37yuaYvrS3kYW=PRTkFA@mail.gmail.com>
-In-Reply-To: <CAMuHMdV+Ww5Y9G7+bS-SyHtm4dC89V37yuaYvrS3kYW=PRTkFA@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 4 Jan 2020 01:21:27 +0100
-Message-ID: <CACRpkdZwos9Dtt9E3OkxWf4rqMALNTge5NGduzGm-7MhQyLZuQ@mail.gmail.com>
-Subject: Re: [PATCH v3 6/7] docs: gpio: Add GPIO Aggregator/Repeater documentation
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191224173942.18160-5-repk@triplefau.lt>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 3:48 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Thu, Dec 12, 2019 at 3:42 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Wed, Nov 27, 2019 at 9:43 AM Geert Uytterhoeven
-> > <geert+renesas@glider.be> wrote:
-> > > +The GPIO Aggregator allows access control for individual GPIOs, by aggregating
-> > > +them into a new gpio_chip, which can be assigned to a group or user using
-> > > +standard UNIX file ownership and permissions.  Furthermore, this simplifies and
-> > > +hardens exporting GPIOs to a virtual machine, as the VM can just grab the full
-> > > +GPIO controller, and no longer needs to care about which GPIOs to grab and
-> > > +which not, reducing the attack surface.
-> > > +
-> > > +Aggregated GPIO controllers are instantiated and destroyed by writing to
-> > > +write-only attribute files in sysfs.
-> >
-> > I suppose virtual machines will have a lengthy config file where
-> > they specify which GPIO lines to pick and use for their GPIO
-> > aggregator, and that will all be fine, the VM starts and the aggregator
-> > is there and we can start executing.
-> >
-> > I would perhaps point out a weakness as with all sysfs and with the current
-> > gpio sysfs: if a process creates an aggregator device, and then that
-> > process crashes, what happens when you try to restart the process and
-> > run e.g. your VM again?
-> >
-> > Time for a hard reboot? Or should we add some design guidelines for
-> > these machines so that they can cleanly tear down aggregators
-> > previously created by the crashed VM?
->
-> No, the VM does not create the aggregator.
->
-> The idea is for the user to create one or more aggregators, set up
-> permissions on /dev/gpiochipX, and launch the VM, passing the aggregated
-> /dev/gpiochipX as parameters.
-> If the VM crashes, just launch it again.
->
-> Destroying the aggregators is a manual and independent process, after
-> the VM has exited.
+On Tue, Dec 24, 2019 at 06:39:41PM +0100, Remi Pommarel wrote:
+> Now that a new PHYs has been introduced for AXG SoC family, update
+> dt bindings documentation.
 
-I'm thinking about someone making some industrial application for some
-control of a machinery say a robotic arm.
+This breaks compatibility. If that's okay, say so and why it is.
 
-And do make sure this VM is only controlling these GPIOs related to
-this robotic arm, they create a GPIO aggregator. And we care about
-cases like that since we provide this security argument.
+If only someone had said putting the phy here in the first place was 
+wrong:
 
-Surely that machine will be rebooted.
+https://lore.kernel.org/linux-amlogic/20180829004122.GA25928@bogus/
 
-Surely they don't have a printed paper with all the commands lying
-at the console, and asking whoever powers it back on to manually
-type it all in again. That feels a bit 1981.
-
-So they will have a script for this I suppose. Possibly in some
-initscript so it is set up on boot. And this script echos stuff
-all over the place to set up the aggregator.
-
-Is this the use case you're thinking of?
-
-I just like to have the whole picture here.
-
-Yours,
-Linus Walleij
+> 
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> ---
+>  .../bindings/pci/amlogic,meson-pcie.txt       | 22 ++++++++-----------
+>  1 file changed, 9 insertions(+), 13 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> index 84fdc422792e..b6acbe694ffb 100644
+> --- a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> @@ -18,7 +18,6 @@ Required properties:
+>  - reg-names: Must be
+>  	- "elbi"	External local bus interface registers
+>  	- "cfg"		Meson specific registers
+> -	- "phy"		Meson PCIE PHY registers for AXG SoC Family
+>  	- "config"	PCIe configuration space
+>  - reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
+>  - clocks: Must contain an entry for each entry in clock-names.
+> @@ -26,13 +25,13 @@ Required properties:
+>  	- "pclk"       PCIe GEN 100M PLL clock
+>  	- "port"       PCIe_x(A or B) RC clock gate
+>  	- "general"    PCIe Phy clock
+> -	- "mipi"       PCIe_x(A or B) 100M ref clock gate for AXG SoC Family
+>  - resets: phandle to the reset lines.
+> -- reset-names: must contain "phy" "port" and "apb"
+> -       - "phy"         Share PHY reset for AXG SoC Family
+> +- reset-names: must contain "port" and "apb"
+>         - "port"        Port A or B reset
+>         - "apb"         Share APB reset
+> -- phys: should contain a phandle to the shared phy for G12A SoC Family
+> +- phys: should contain a phandle to the PCIE phy
+> +- phy-names: must contain "pcie"
+> +
+>  - device_type:
+>  	should be "pci". As specified in designware-pcie.txt
+>  
+> @@ -43,9 +42,8 @@ Example configuration:
+>  			compatible = "amlogic,axg-pcie", "snps,dw-pcie";
+>  			reg = <0x0 0xf9800000 0x0 0x400000
+>  					0x0 0xff646000 0x0 0x2000
+> -					0x0 0xff644000 0x0 0x2000
+>  					0x0 0xf9f00000 0x0 0x100000>;
+> -			reg-names = "elbi", "cfg", "phy", "config";
+> +			reg-names = "elbi", "cfg", "config";
+>  			reset-gpios = <&gpio GPIOX_19 GPIO_ACTIVE_HIGH>;
+>  			interrupts = <GIC_SPI 177 IRQ_TYPE_EDGE_RISING>;
+>  			#interrupt-cells = <1>;
+> @@ -58,17 +56,15 @@ Example configuration:
+>  			ranges = <0x82000000 0 0 0x0 0xf9c00000 0 0x00300000>;
+>  
+>  			clocks = <&clkc CLKID_USB
+> -					&clkc CLKID_MIPI_ENABLE
+>  					&clkc CLKID_PCIE_A
+>  					&clkc CLKID_PCIE_CML_EN0>;
+>  			clock-names = "general",
+> -					"mipi",
+>  					"pclk",
+>  					"port";
+> -			resets = <&reset RESET_PCIE_PHY>,
+> -				<&reset RESET_PCIE_A>,
+> +			resets = <&reset RESET_PCIE_A>,
+>  				<&reset RESET_PCIE_APB>;
+> -			reset-names = "phy",
+> -					"port",
+> +			reset-names = "port",
+>  					"apb";
+> +			phys = <&pcie_phy>;
+> +			phy-names = "pcie";
+>  	};
+> -- 
+> 2.24.0
+> 
