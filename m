@@ -2,90 +2,137 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1979FC3276F
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 17:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BFCC32770
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 17:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4ABD24654
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 17:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E0552464E
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 17:32:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578159166;
+	bh=mgrvlSBDUo99OlCWA23LLgyX9ga8hC+UzSWpQP8B+rA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=d523pD9Z8lQ4b16JenlR7kS4i7h/ls7RcJ0xGamhvDc3Zrgswqwul+GxHWls14onb
+	 5p1Dk/s1n0lM2bh3KH0cyZ0zrJMFrvyOfXF5v5Rm7Gos/Y/hEPAB00QFT2AZ/+GxBu
+	 0MGNZNRaH3OEStXqf3uFV3jzMuG9QbZ1zPhrezEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgADRNQ (ORCPT
+        id S1726191AbgADRcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 12:13:16 -0500
-Received: from mga06.intel.com ([134.134.136.31]:56865 "EHLO mga06.intel.com"
+        Sat, 4 Jan 2020 12:32:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbgADRNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 12:13:15 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jan 2020 09:13:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,395,1571727600"; 
-   d="scan'208";a="210378598"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 04 Jan 2020 09:13:13 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1inmzA-000APz-PJ; Sun, 05 Jan 2020 01:13:12 +0800
-Date:   Sun, 5 Jan 2020 01:13:04 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        linux-rtc@vger.kernel.org
-Subject: [PATCH] rtc: pcf8523: fix ptr_ret.cocci warnings
-Message-ID: <20200104171304.66olr2e5u26yrprp@f53c9c00458a>
-References: <202001050159.Bmn930KQ%lkp@intel.com>
+        id S1726054AbgADRcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jan 2020 12:32:45 -0500
+Received: from localhost (unknown [106.51.108.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2EA52464E;
+        Sat,  4 Jan 2020 17:32:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578159164;
+        bh=mgrvlSBDUo99OlCWA23LLgyX9ga8hC+UzSWpQP8B+rA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=UPXNtbHcWZ/JzEhPJCoxMZ22j3sm7n5Okuc22xVFl2JdF64Wydt8Jwel4o4lY/ksC
+         bYgwNqhIHbSKTUfI/S/rEtjAuyDMD6/oXSLHU3Yj3ClvHbi17PnKGNgRTxSe5ZDhJ6
+         2Fq69w+IqSvOppgvKhDVxwnOvKunyPAIymMASTQE=
+Date:   Sat, 4 Jan 2020 23:02:40 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL]: dmaengine fixes for v5.5-rc5
+Message-ID: <20200104173240.GH2818@vkoul-mobl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="YZ5djTAD1cGYuMQK"
 Content-Disposition: inline
-In-Reply-To: <202001050159.Bmn930KQ%lkp@intel.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kbuild test robot <lkp@intel.com>
 
-drivers/rtc/rtc-pcf8523.c:361:1-3: WARNING: PTR_ERR_OR_ZERO can be used
+--YZ5djTAD1cGYuMQK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Heya Linus,
 
- Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
+Happy new year and new pull request for you to consider for v5.5-rc5
+(nice version numbers!). Couple of core fixes and few driver fixes to be
+considered.
 
-Generated by: scripts/coccinelle/api/ptr_ret.cocci
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
 
-Fixes: 93966243cf90 ("rtc: pcf8523: Remove struct pcf8523")
-CC: Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   3a562aee727a7bfbb3a37b1aa934118397dad701
-commit: 93966243cf90c055d89b5ebfbb8dee0f9ac6b0a2 rtc: pcf8523: Remove struct pcf8523
+are available in the Git repository at:
 
- rtc-pcf8523.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+  git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.5-=
+rc5
 
---- a/drivers/rtc/rtc-pcf8523.c
-+++ b/drivers/rtc/rtc-pcf8523.c
-@@ -358,10 +358,7 @@ static int pcf8523_probe(struct i2c_clie
- 
- 	rtc = devm_rtc_device_register(&client->dev, DRIVER_NAME,
- 				       &pcf8523_rtc_ops, THIS_MODULE);
--	if (IS_ERR(rtc))
--		return PTR_ERR(rtc);
--
--	return 0;
-+	return PTR_ERR_OR_ZERO(rtc);
- }
- 
- static const struct i2c_device_id pcf8523_id[] = {
+for you to fetch changes up to b0b5ce1010ffc50015eaec72b0028aaae3f526bb:
+
+  ioat: ioat_alloc_ring() failure handling. (2019-12-27 12:06:06 +0530)
+
+----------------------------------------------------------------
+dmaengine fixes for v5.5-rc5
+
+Bunch of fixes for:
+ - uninitialized dma_slave_caps access
+ - virt-dma use after free in vchan_complete()
+ - driver fixes for ioat, k3dma and jz4780
+
+----------------------------------------------------------------
+Alexander.Barabash@dell.com (1):
+      ioat: ioat_alloc_ring() failure handling.
+
+John Stultz (1):
+      dmaengine: k3dma: Avoid null pointer traversal
+
+Lukas Wunner (1):
+      dmaengine: Fix access to uninitialized dma_slave_caps
+
+Paul Cercueil (1):
+      dmaengine: dma-jz4780: Also break descriptor chains on JZ4725B
+
+Peter Ujfalusi (1):
+      dmaengine: virt-dma: Fix access after free in vchan_complete()
+
+ drivers/dma/dma-jz4780.c  |  3 ++-
+ drivers/dma/ioat/dma.c    |  3 ++-
+ drivers/dma/k3dma.c       | 12 +++++++++---
+ drivers/dma/virt-dma.c    |  3 +--
+ include/linux/dmaengine.h |  5 ++++-
+ 5 files changed, 18 insertions(+), 8 deletions(-)
+
+Thanks
+--=20
+~Vinod
+
+--YZ5djTAD1cGYuMQK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIyBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAl4QzDgACgkQfBQHDyUj
+g0e2fQ/2I9343hEqKSxbQTGfVdxw1zJpM9d6MJuQwSnuyqn/Dvpi9AV7ixpnpFmq
+Jw966sIkXXQ8/xUwrVSxkQLCRgIQD1vLi+533/2PZKLTOcBp5svSORoDgvMHLtSr
+xi5LKM0DLVUSj1eKH/5vQPEoVGStAfQS8hBtFd+s8G3pCy16RS6DWoz/qDbB9zHT
+yhp6TPQ85uhUbbFANF7hF/brHi6Vg+LtTuey9XORQ5MmIvfYRqm/0ZnIvJhF+kQi
+qixgUqz+yVG2L5QYbCYPHPz3zvWbleC61VyDlthdG7GqD+DOoRiJD0xsGwZKta+a
+2ocADPlwTyp8y0mnbCXrArl34kbMivs3aIukGzMpxqmxN3k1Wr+FicsD2RjI6l2g
+3/W20V5L1qY4ddSc4Bs07yW9Y5tWFO2OSA9RsLMiFcD9lx1MllZsZAQRB4g6UWsQ
+5shjWbx/xmdgucf6smoX/RZ35n4wNZ7SFFuL3OE3G/Vf09VAMA8O3SKTuN1QJ2FH
+sVh5mwzJYi+bnszRTiLsaZEWuN25ro3ysSYLWa3u+2egsaMDZLgQW3mnzC7HNVa8
+SveicRYm096GgY9F4Bj+ZV7xZU+/APVuerEbkw46E9f1EctIVFisyqIiH6Iklije
+BhAg1sLAuL6PmD9ruoNtuwvSrHAcuG0KdUzuaNYSoEXNBN5SNw==
+=G97I
+-----END PGP SIGNATURE-----
+
+--YZ5djTAD1cGYuMQK--
