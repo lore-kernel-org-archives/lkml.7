@@ -2,186 +2,159 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EABDC32770
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 14:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EE7C32770
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 14:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA2C22B48
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 14:19:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Y7/wS0YX"
+	by mail.kernel.org (Postfix) with ESMTP id F157724676
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 14:20:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578147619;
+	bh=XsnHsHj53JhaNYFbo6CFsI3eeVhtmBQ3PCkV9VTU9Hs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QoOqVoF8sKqEIgHjnJ2ojGWyc7jumIXIKAmV88TFy/IBF4oGKRDjHPBMma3ixDiHz
+	 lOaSfu7q4PxfpvCyvLrPZYW4W5P3zYrmXMRGDLsSB19IhJmLjEMYVMcWSAxy4l2E96
+	 8OrQ1IFpbMm7VPzr+8gFse811DXHTzIshYk83Px8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgADOTB (ORCPT
+        id S1726099AbgADOUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 09:19:01 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:33178 "EHLO mail.skyhub.de"
+        Sat, 4 Jan 2020 09:20:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725924AbgADOTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 09:19:01 -0500
-Received: from zn.tnic (p200300EC2F18F800CC7EEF965DC10FDE.dip0.t-ipconnect.de [IPv6:2003:ec:2f18:f800:cc7e:ef96:5dc1:fde])
+        id S1725924AbgADOUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jan 2020 09:20:17 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8781A1EC0626;
-        Sat,  4 Jan 2020 15:18:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1578147539;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=grHGSZANPdRX4GYfQm3z7DlEzhiM+6VKLUd0nRV33tA=;
-        b=Y7/wS0YXsjQghvkU8yEZ40tZhEzBbsKiNBJ1HmgK5aYWcv9BkvQzjCnnOq9DqdlMvytTFd
-        sgmZJm+4JvQCu43OuEd3pjOrVI+sKdsWA46seByvy6aGs2d9BXTGeR9sWGEFCREPpM/Sk2
-        Q+yinBO2YOC2ZGxYyDClL8N7uGscesA=
-Date:   Sat, 4 Jan 2020 15:18:51 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkoul@kernel.org, dan.j.williams@intel.com, tony.luck@intel.com,
-        jing.lin@intel.com, ashok.raj@intel.com, sanjay.k.kumar@intel.com,
-        megha.dey@intel.com, jacob.jun.pan@intel.com, yi.l.liu@intel.com,
-        axboe@kernel.dk, akpm@linux-foundation.org, tglx@linutronix.de,
-        mingo@redhat.com, fenghua.yu@intel.com, hpa@zytor.com
-Subject: Re: [PATCH RFC v3 01/14] x86/asm: add iosubmit_cmds512() based on
- movdir64b CPU instruction
-Message-ID: <20200104141851.GA31856@zn.tnic>
-References: <157662541786.51652.7666763291600764054.stgit@djiang5-desk3.ch.intel.com>
- <157662558568.51652.16396789566261303659.stgit@djiang5-desk3.ch.intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8872922B48;
+        Sat,  4 Jan 2020 14:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578147617;
+        bh=XsnHsHj53JhaNYFbo6CFsI3eeVhtmBQ3PCkV9VTU9Hs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cuQWj+ghg2SnHa/Geq6Fb5zpTiTpIcRhG/BSO2FF5F/yFYZSkTuL+Apmr7vFf6BDm
+         rMmn4RFiatdKPi4Ag0vnuMCM1mM7EP6naB3Dv0Cpl3hnzhOUCQF2+VWph0ZvQ5mBEv
+         I9e2N5Iet/IQV+5fTulEYEb94y0ai+vY/g7U0P2k=
+Date:   Sat, 4 Jan 2020 15:20:14 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Subject: Re: [PATCH v3 2/9] drm/sun4i: tcon: Add TCON LCD support for R40
+Message-ID: <20200104142014.o6znmngwjw7o46dl@gilmour.lan>
+References: <20191231130528.20669-1-jagan@amarulasolutions.com>
+ <20191231130528.20669-3-jagan@amarulasolutions.com>
+ <20200102105424.kmte7aooh2gkrcnu@gilmour.lan>
+ <CAMty3ZA0e8eJZWvAh0x=KGAZVL3apdao3COvR6j3-ckv0cdvcg@mail.gmail.com>
+ <20200102154703.3prgwcjyo36g5g5u@gilmour.lan>
+ <CAMty3ZB_6GyK=hhJU-8yAQiom1Uq25ojFbKaGrK1fmW8SnDV_A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zomtrfc34zk3phes"
 Content-Disposition: inline
-In-Reply-To: <157662558568.51652.16396789566261303659.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMty3ZB_6GyK=hhJU-8yAQiom1Uq25ojFbKaGrK1fmW8SnDV_A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 04:33:05PM -0700, Dave Jiang wrote:
-> With the introduction of movdir64b instruction, there is now an instruction
 
-MOVDIR64B in caps like the SDM.
+--zomtrfc34zk3phes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> that can write 64 bytes of data atomicaly.
+Hi,
 
-"atomically"
+On Thu, Jan 02, 2020 at 10:04:40PM +0530, Jagan Teki wrote:
+> On Thu, Jan 2, 2020 at 9:17 PM Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > On Thu, Jan 02, 2020 at 09:10:31PM +0530, Jagan Teki wrote:
+> > > On Thu, Jan 2, 2020 at 4:24 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > > >
+> > > > On Tue, Dec 31, 2019 at 06:35:21PM +0530, Jagan Teki wrote:
+> > > > > TCON LCD0, LCD1 in allwinner R40, are used for managing
+> > > > > LCD interfaces like RGB, LVDS and DSI.
+> > > > >
+> > > > > Like TCON TV0, TV1 these LCD0, LCD1 are also managed via
+> > > > > tcon top.
+> > > > >
+> > > > > Add support for it, in tcon driver.
+> > > > >
+> > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > > ---
+> > > > > Changes for v3:
+> > > > > - none
+> > > > >
+> > > > >  drivers/gpu/drm/sun4i/sun4i_tcon.c | 8 ++++++++
+> > > > >  1 file changed, 8 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > > > index fad72799b8df..69611d38c844 100644
+> > > > > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > > > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > > > @@ -1470,6 +1470,13 @@ static const struct sun4i_tcon_quirks sun8i_a83t_tv_quirks = {
+> > > > >       .has_channel_1          = true,
+> > > > >  };
+> > > > >
+> > > > > +static const struct sun4i_tcon_quirks sun8i_r40_lcd_quirks = {
+> > > > > +     .supports_lvds          = true,
+> > > > > +     .has_channel_0          = true,
+> > > > > +     /* TODO Need to support TCON output muxing via GPIO pins */
+> > > > > +     .set_mux                = sun8i_r40_tcon_tv_set_mux,
+> > > >
+> > > > What is this muking about? And why is it a TODO?
+> > >
+> > > Muxing similar like how TCON TOP handle TV0, TV1 I have reused the
+> > > same so-that it would configure de port selection via
+> > > sun8i_tcon_top_de_config
+> > >
+> > > TCON output muxing have gpio with GPIOD and GPIOH bits, which select
+> > > which of LCD or TV TCON outputs to the LCD function pins. I have
+> > > marked these has TODO for further support as mentioned by Chen-Yu in
+> > > v1[1].
+> >
+> > It should be in the commit log.
+>
+> Make sense.
+>
+> > What's the plan to support that when needed? And that means that the
+> > LCD and TV outputs are mutually exclusive? We should at the very least
+> > check that both aren't enabled at the same time.
+>
+> Yes, LCD or TV within the outselect seems to be mutually exclusive.
+> Like LCD0 or TV0 can output to GPIOD incase of TV0_OUTSEL and LCD1 or
+> TV1 can output to GPIOH incase of TV1_OUTSEL. I think checking them
+> before configuring TCON_TOP_PORT_SEL_REG would make sense, let me know
+> if you have any suggestions?
 
-> Quoting from Intel SDM:
-> "There is no atomicity guarantee provided for the 64-byte load operation
-> from source address, and processor implementations may use multiple
-> load operations to read the 64-bytes. The 64-byte direct-store issued
-> by MOVDIR64B guarantees 64-byte write-completion atomicity. This means
-> that the data arrives at the destination in a single undivided 64-byte
-> write transaction."
-> 
-> We have identified at least 3 different use cases for this instruction in
-> the format of func(dst, src, count):
-> 1) Clear poison / Initialize MKTME memory
->    Destination is normal memory.
->    Source in normal memory. Does not increment. (Copy same line to all
->    targets)
->    Count (to clear/init multiple lines)
+Making sure in atomic_check that TV and LCD are not used at the same
+time, and then in encoders mode_set / enable mux the pins to our
+encoders would be my first guess.
 
-If you're going to refer to @dst, @src and @count as the arguments of
-"func", then use the same spelling here too pls.
+Maxime
 
-> 2) Submit command(s) to new devices
->    Destination is a special MMIO region for a device. Does not increment.
->    Source is normal memory. Increments.
->    Count usually is 1, but can be multiple.
-> 3) Copy to iomem in big chunks
->    Destination is iomem and increments
->    Source in normal memory and increments
->    Count is number of chunks to copy
+--zomtrfc34zk3phes
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I could use some blurb here explaining why is this needed. As in, device
-takes only 64byte writes as commands, we want it faster by shuffling
-more data in one go, etc, etc.
+-----BEGIN PGP SIGNATURE-----
 
-> This commit adds support for case #2 to support device that will accept
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXhCfHgAKCRDj7w1vZxhR
+xQw+AQC+UAAD2DuXR7nMr0l0A/3NybkZVTKykyr2HbVJa1arrgEAuPLgwEfGu61X
+lS7E6DoCPkU97rnULAbmAOLQBZyMjws=
+=D1UE
+-----END PGP SIGNATURE-----
 
-s/This commit//
-
-> commands via this instruction.
-
-This is hinting at the need for the atomic 64-bit writes but an explicit
-justification would be better.
-
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  arch/x86/include/asm/io.h |   42 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
-> index 9997521fc5cd..2d3c9dd39479 100644
-> --- a/arch/x86/include/asm/io.h
-> +++ b/arch/x86/include/asm/io.h
-> @@ -399,4 +399,46 @@ extern bool arch_memremap_can_ram_remap(resource_size_t offset,
->  extern bool phys_mem_access_encrypted(unsigned long phys_addr,
->  				      unsigned long size);
->  
-> +static inline void __iowrite512(void __iomem *__dst, const void *src)
-
-I don't see that function used anywhere except in iosubmit_cmds512(). If
-you're not going to use it elsewhere, pls fold it into iosubmit_cmds512().
-
-> +{
-> +	/*
-> +	 * Note that this isn't an "on-stack copy", just definition of "dst"
-> +	 * as a pointer to 64-bytes of stuff that is going to be overwritten.
-> +	 * In the movdir64b() case that may be needed as you can use the
-		  ^^^^^^^^^^^
-
-Is that a function?
-
-> +	 * MOVDIR64B instruction to copy arbitrary memory around. This trick
-> +	 * lets the compiler know how much gets clobbered.
-> +	 */
-> +	volatile struct { char _[64]; } *dst = __dst;
-> +
-> +	/* movdir64b [rdx], rax */
-
-MOVDIR64B - we usually spell instruction mnemonics in all caps.
-
-> +	asm volatile(".byte 0x66, 0x0f, 0x38, 0xf8, 0x02"
-> +			: "=m" (dst)
-> +			: "d" (src), "a" (dst));
-> +}
-> +
-> +/**
-> + * iosubmit_cmds512 - copy data to single MMIO location, in 512-bit units
-> + * @dst: destination, in MMIO space (must be 512-bit aligned)
-> + * @src: source
-> + * @count: number of 512 bits quantities to submit
-> + *
-> + * Submit data from kernel space to MMIO space, in units of 512 bits at a
-> + * time.  Order of access is not guaranteed, nor is a memory barrier
-> + * performed afterwards.
-> + *
-> + * Warning: Do not use this helper unless your driver has checked that the CPU
-> + * instruction is supported on the platform.
-> + */
-> +static inline void iosubmit_cmds512(void __iomem *dst, const void *src,
-> +				    size_t count)
-> +{
-> +	const u8 *from = src;
-> +	const u8 *end = from + count * 64;
-> +
-> +	while (from < end) {
-> +		__iowrite512(dst, from);
-> +		from += 64;
-> +	}
-> +}
-> +
->  #endif /* _ASM_X86_IO_H */
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--zomtrfc34zk3phes--
