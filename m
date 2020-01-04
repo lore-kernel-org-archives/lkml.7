@@ -2,121 +2,165 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 753F2C00523
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 01:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D29FC32767
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 01:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 458CD20656
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 01:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3477621D7D
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 01:13:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eul0uJlQ"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="WmbHoarU";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="BN1YCtCz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbgADBGB (ORCPT
+        id S1727222AbgADBNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 20:06:01 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34455 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726968AbgADBGA (ORCPT
+        Fri, 3 Jan 2020 20:13:40 -0500
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:63296 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726968AbgADBNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 20:06:00 -0500
-Received: by mail-qt1-f196.google.com with SMTP id 5so38137892qtz.1
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 17:06:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hh5F5krN3LWZxGpDu/50qQGTG2uQZAPCOnhR4ARYHnA=;
-        b=Eul0uJlQt6DICntdHemW6eGGFPZ/1VhFWlBwq3Uy3Rcnu9KsrS/Z1IDv0Hs2zXLJEo
-         qPG+giGqitGky3rjRIQAOE34qlCurmV4Z24AGg92ADc+yR1neckfy0gMpG16Nh+md9Bn
-         h2opUrSznOYgiNsaFhX9f6D6vtEi9TonRuuTTeVE1RrRmu6Swd3TPrxhdQHrOBUDDUCS
-         8agRVX6mZjKRGYN263vcMCxmrnBt3x9a1dwxVUQ3hhsi+XsIJghPJTujYN+geMzQ1jbt
-         NqqY496VxJ9xpH06FQWwziE1y96m0a0xCp24g4do4087que8eD4gZfbQO4IPGcAh1qHV
-         pq2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hh5F5krN3LWZxGpDu/50qQGTG2uQZAPCOnhR4ARYHnA=;
-        b=hXIAoB67Hy6aP7Hkvzx9kheuCYPTCcopTCLQBUZsntOL6a0qEdVQyc5fz+jhIId8dW
-         MnET1bwnA1O+vktB7vD/yC0+QZx+ed8544/va+3x3aG7kFRrvzyTpVLbjT3lFmrihTIh
-         xrXivV7u+dYv86y8AgO7WxjcxxtOWBfP/lurihI6DIiAdoc8bX9spGbTzbLuYh5uVu8q
-         kjUYizMr9L9AAl5VQHxun5uZX9Vqrc6uBiuRsubLbCOMmvP378jcHkf+f+8bMbviZM2g
-         DlQE9UTOYgA5jKUQrGGGk+K5rx6fVgjkP72CmnlVJHsKHhZpDn8wenqI34DdQEo4kKl3
-         HYSQ==
-X-Gm-Message-State: APjAAAWYW84IJ8HhZYm/4RiAiSgYJy9nyPZ9v/WDcJ8u5InuGCYEprPX
-        2n2J+KRLaR9vRQ36sXZf5W8=
-X-Google-Smtp-Source: APXvYqxFJfgqzwZLGeNy/ZJ7uwLIZYqpJ5ReT8WcytV/ZU1T8cjzuwVWVKVSzG41OObvyaMPzwD4fA==
-X-Received: by 2002:ac8:461a:: with SMTP id p26mr64146952qtn.317.1578099959734;
-        Fri, 03 Jan 2020 17:05:59 -0800 (PST)
-Received: from localhost ([2604:2000:4185:2300:b196:4884:e960:2cb8])
-        by smtp.gmail.com with ESMTPSA id v67sm14733627qkh.46.2020.01.03.17.05.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 17:05:59 -0800 (PST)
-Date:   Fri, 3 Jan 2020 17:05:58 -0800
-From:   Yury Norov <yury.norov@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Yury Norov <yury.norov@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] lib/find_bit.c: uninline helper _find_next_bit()
-Message-ID: <20200104010558.GA26661@yury-thinkpad>
-References: <20200103202846.21616-1-yury.norov@gmail.com>
- <20200103202846.21616-3-yury.norov@gmail.com>
- <e76bdf736141d5a390e57f2bc8f6f6f9fbe574c1.camel@perches.com>
- <20200104000843.GA23653@yury-thinkpad>
+        Fri, 3 Jan 2020 20:13:40 -0500
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0041AwV0014159;
+        Fri, 3 Jan 2020 17:13:26 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=2B7sRZu/IXS5r/ddttMrVkIE1jGEo1pL5oaSs+e7Hro=;
+ b=WmbHoarUcrAk5SQSacRdmrolNpMdf60+SPJBvhAPn+KYj+RX81EssOCAwPRisjYK7vEk
+ PxE5Ciw5OLxVKpPE9F2Y7sHjpIh4+5UjPPF7VkgWMe2Wb8qy8hMI3JXuK4jEQaDb3AXC
+ FI+1G9ZVmZ6oZjy9VjtivCb5ZR70twWdKG4= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2x9e34yp1d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 03 Jan 2020 17:13:26 -0800
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 3 Jan 2020 17:13:25 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=My23QtM1xR4cXFrwj/gLHqwqdKDvJ6LS+pDRU+OlMLqKVaVh6zk2c12nPxE6ydYIu52k24XEX87iNTMSP19vWgKrMxYXkWFx8FfijbIwY2HiEE8enNOpIUMgQ1eUdm+rb1PIIGu776KxM0OWeRG+VtB6cA/+Gak1xvO4MG5FihlLOYwiIJd9DOyowEJAtJiwltz8fNnylYhpEd++VUUYIpuOo8JzKx1x5MOOmpURQIPyzp9/wDIXLAFvvSZ9bhjtu6J247+aBRPNq007WzXwZZnagcX2E+elIpr8Oqqed6of9FrCiGVLLRbMOp6iVH91oenaqrp1H1u4yYoDXt8uYQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2B7sRZu/IXS5r/ddttMrVkIE1jGEo1pL5oaSs+e7Hro=;
+ b=hA0P+C3yE7sz6Y8l8oimgFqJ5aPtiQC1EjGWuhBdam9DGmakcrUP+050uuU58IvM9+ZGkVY5Nsap95HRc/OI1VvqEwsL98MP+7y2hBlf6pir2rYARY1+U/+XqXUY1712CgKhYYeEs1Wh5d6Cp6YI+uPyWeeEY+pvtY+ICYmVc7qh6x0zfSwAnfT8kUn4hRdXChG5N17i2uCOb3L5siceyl/ktPdR/+V9KQR7kIcf5JKVYP5wfD1K3XSk21extNhvAsJ3aooWNzpVscnYgYCKQM60ILdUOU3CQ6LQDe0B6Yt4fc5TR0bQCIE7/qQFUm8+1d57MX9KFVQMH8AZHaypFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2B7sRZu/IXS5r/ddttMrVkIE1jGEo1pL5oaSs+e7Hro=;
+ b=BN1YCtCzmt3rPi2LiscJmzStPZUJnbdoLZhisRLbJ62KteThwcTaJparW74t1v89uawgsoF3ZeQmPVgJQGHe7xDqTW43EzR/Z+rGmrOj+kLuwVz9XdQgR7s/ZYDAg7p3uQ3njLn4PrkjLdRRcqlfsxt862NYEtxRXxQdHqx9Fg0=
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.136.151) by
+ BN8PR15MB3380.namprd15.prod.outlook.com (20.179.76.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.12; Sat, 4 Jan 2020 01:13:24 +0000
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::506c:fb1f:2e5a:4652]) by BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::506c:fb1f:2e5a:4652%6]) with mapi id 15.20.2602.010; Sat, 4 Jan 2020
+ 01:13:24 +0000
+Received: from localhost.localdomain (2620:10d:c090:180::5d5) by MWHPR14CA0001.namprd14.prod.outlook.com (2603:10b6:300:ae::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.10 via Frontend Transport; Sat, 4 Jan 2020 01:13:22 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+CC:     "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH bpf] bpf: cgroup: prevent out-of-order release of cgroup
+ bpf
+Thread-Topic: [PATCH bpf] bpf: cgroup: prevent out-of-order release of cgroup
+ bpf
+Thread-Index: AQHVvP+26yjH3drshkGEPJ14gI885qfZs7aAgAAKlQA=
+Date:   Sat, 4 Jan 2020 01:13:24 +0000
+Message-ID: <20200104011318.GA11376@localhost.localdomain>
+References: <20191227215034.3169624-1-guro@fb.com>
+ <20200104003523.rfte5rw6hbnncjes@ast-mbp>
+In-Reply-To: <20200104003523.rfte5rw6hbnncjes@ast-mbp>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR14CA0001.namprd14.prod.outlook.com
+ (2603:10b6:300:ae::11) To BN8PR15MB2626.namprd15.prod.outlook.com
+ (2603:10b6:408:c2::23)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:180::5d5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1fd92055-1ac1-41bc-a566-08d790b34bc7
+x-ms-traffictypediagnostic: BN8PR15MB3380:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR15MB3380D408A9FE72DBE6A85F9DBE220@BN8PR15MB3380.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1284;
+x-forefront-prvs: 02723F29C4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(39860400002)(366004)(136003)(346002)(199004)(189003)(52116002)(6916009)(2906002)(66446008)(4326008)(316002)(16526019)(186003)(86362001)(66556008)(6506007)(66946007)(64756008)(33656002)(54906003)(1076003)(478600001)(66476007)(7696005)(8676002)(8936002)(69590400006)(81156014)(81166006)(5660300002)(9686003)(71200400001)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB3380;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3Qrp22IHn2Y+tjv8EQnwk8IOFxm6Xtx1oFEwXTbZRxoEDlVTneECE2JNvo5lJqF4C5P64MvXMwlnveNDH6/ITKk+bYaerFFTL7I103+Z24ZzI36BsM0P0XZ/wyJPpewpub45mcOsADkNORl/kHTYWZ8mysIML+Np+LClXFLW6TMLrMSxNV9tZdUmqqXIDBHpboJgqTT1Z0nYWc3KdD5TeKMxfqNL8ou8vJi1SCJQrwec3CZ+fpw/XoeJmw4pmNfpreRCKsBUBQ+qDoHa7LlAsS+OqTKrDrLwmff+kbgYJYnHBsPTu7Z6drGjQ4QW+DvXLNkDwe578Fcbflq3j68cq6xNfmImAiVO3DufULBoIWRwFZakosUWXW/WdGk4IjkcNELbjvHHXmRoI5/gsvZCEcpBYGzTnV8nzUj5yhKabcAnH7hOxogG+toNyOsIzpEkM08NemncazroO7wlnT7uXt1Z8lFdWcVUiTIPDQ2SAmucGxx3HPsSGV0AMVlbKhzX
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2EC9F6EE2BBA334D8C4F001C4E795C81@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200104000843.GA23653@yury-thinkpad>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1fd92055-1ac1-41bc-a566-08d790b34bc7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jan 2020 01:13:24.2704
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zu/1pzShoXCeGnGU679XUN2c6dWYubz1487Mkd8AS06vP9eoU8KBONd+Vs0J3ncu
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB3380
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-03_06:2020-01-02,2020-01-03 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ mlxscore=0 phishscore=0 clxscore=1011 bulkscore=0 mlxlogscore=948
+ adultscore=0 malwarescore=0 impostorscore=0 spamscore=0 suspectscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001040009
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 04:08:43PM -0800, Yury Norov wrote:
-> On Fri, Jan 03, 2020 at 01:46:07PM -0800, Joe Perches wrote:
-> > On Fri, 2020-01-03 at 12:28 -0800, Yury Norov wrote:
-> > > It saves 25% of .text for arm64, and more for BE architectures.
-> > 
-> > This seems a rather misleading code size reduction description.
-> > 
-> > Please detail the specific code sizes using "size lib/find_bit.o"
-> > before and after this change.
-> 
-> Before:
-> $ size lib/find_bit.o
->    text    data     bss     dec     hex filename
->    1012      56       0    1068     42c lib/find_bit.o
-> 
-> After:
-> $ size lib/find_bit.o
->    text    data     bss     dec     hex filename
->     776      56       0     832     340 lib/find_bit.o
-> 
-> > Also, _find_next_bit is used 3 times, perhaps any code size
-> > increase is appropriate given likely reduced run time.
-> 
-> Second patch of the series switches find_next_zero_bit_le()
-> and find_next_bit_le() to _find_next_bit(), so totally 5.
->  
-> Yury
+On Fri, Jan 03, 2020 at 04:35:25PM -0800, Alexei Starovoitov wrote:
+> On Fri, Dec 27, 2019 at 01:50:34PM -0800, Roman Gushchin wrote:
+> > Before commit 4bfc0bb2c60e ("bpf: decouple the lifetime of cgroup_bpf
+> > from cgroup itself") cgroup bpf structures were released with
+> > corresponding cgroup structures. It guaranteed the hierarchical order
+> > of destruction: children were always first. It preserved attached
+> > programs from being released before their propagated copies.
+> >=20
+> > But with cgroup auto-detachment there are no such guarantees anymore:
+> > cgroup bpf is released as soon as the cgroup is offline and there are
+> > no live associated sockets. It means that an attached program can be
+> > detached and released, while its propagated copy is still living
+> > in the cgroup subtree. This will obviously lead to an use-after-free
+> > bug.
+> ...
+> > @@ -65,6 +65,9 @@ static void cgroup_bpf_release(struct work_struct *wo=
+rk)
+> > =20
+> >  	mutex_unlock(&cgroup_mutex);
+> > =20
+> > +	for (p =3D cgroup_parent(cgrp); p; p =3D cgroup_parent(p))
+> > +		cgroup_bpf_put(p);
+> > +
+>=20
+> The fix makes sense, but is it really safe to walk cgroup hierarchy
+> without holding cgroup_mutex?
 
-> > perhaps any code size
-> > increase is appropriate given likely reduced run time.
+It is, because we're holding a reference to the original cgroup and going
+towards the root. On each level the cgroup is protected by a reference
+from their child cgroup.
 
-I have a benchmark for the find_bit functions upstream, however, it cannot
-measure the overall performance degradation related to increased probability
-of cache eviction.
-
-When I originally wrote _find_next_bit() in 2014, it was simpler and had 2
-users. Now there are 5 of them, and I think it's good time to stop inlining
-_find_next_bit().
-
-Yury
+Thanks!
