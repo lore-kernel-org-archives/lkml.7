@@ -4,98 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4C0C00523
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBC1C00523
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC5824649
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F07C2465B
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578109005;
-	bh=p9B0uT2oHpZTVWWgC2Fc08MdyScnRBmnaT96Qf13I7I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tGSPDr4bhaCBSpJgkEB3vetktLcFUC34EgnDhIF6Zo1VQw6uBngx6pqPxr6MRp6pR
-	 r/3yyKKOEMQzxu38qOPOqWwR32XGViXiKesAZgZZ4lp8W3jwByPA64fyIWX6UFVM1L
-	 QCUlddbPP/qhJrxv++vFKR3kkVWRHLsRfIyPsqzU=
+	s=default; t=1578109010;
+	bh=c0Ud1NVHItYJqJyXLCIvPtkmPShtxJmr7y4q6ARA49M=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=AW9Frw91y9M7Y2FtDYMF7yBg7PuLX0slMQd+LhnwCKNhUySkBHTUDZ9GHNgNta/sP
+	 hDdKl97ea2QhGtyZ6Ej4Cy0/B3YNrtl91n8dyewLWJ1RtiJ1uqghwtobxSyaGuw5Bl
+	 29ImcOOXUL/izJlnEI4DxpOs1FSTrTeBYDTaRI/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbgADDgo (ORCPT
+        id S1727637AbgADDgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 22:36:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37272 "EHLO mail.kernel.org"
+        Fri, 3 Jan 2020 22:36:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727530AbgADDgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 22:36:33 -0500
+        id S1727530AbgADDgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 22:36:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BEB224649;
-        Sat,  4 Jan 2020 03:36:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D0DE24649;
+        Sat,  4 Jan 2020 03:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578108992;
-        bh=p9B0uT2oHpZTVWWgC2Fc08MdyScnRBmnaT96Qf13I7I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n4N+1I5VpZJ5/yUdFVNChMYv3KcOWdxhGCmmXWvwd6rQczDTk2vNDhJyQj2GkRNB1
-         xPa8bbM14Rjn8u/SbcoPY26zM5oU2jTSqHYhfwv9Cdk6irbbyza45jQ6yKSCsHdB8v
-         qxExDv2wkk9JZmh5eXkQGDrZfzUSmhkIFL5YjnJw=
+        s=default; t=1578109006;
+        bh=c0Ud1NVHItYJqJyXLCIvPtkmPShtxJmr7y4q6ARA49M=;
+        h=From:To:Cc:Subject:Date:From;
+        b=q7/jnwuag/ITzngCKgoAUXvHf4FjqkNwJRnCkvcJ173r/KbDxm6SvBdUCjXYwbGkZ
+         YrF0okFNb+g6WypET7Bx1kNnzEKH2i9NHdezeywdYhh+wfiQ6tklhMsTvn7gBdCJy3
+         hilYbZGVe+oK3QdwP6XVuJNxCwFpCQRZLF3KLkPM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 09/10] rseq/selftests: Turn off timeout setting
-Date:   Fri,  3 Jan 2020 22:36:18 -0500
-Message-Id: <20200104033620.10977-9-sashal@kernel.org>
+Cc:     =?UTF-8?q?Johnson=20CH=20Chen=20=28=E9=99=B3=E6=98=AD=E5=8B=B3=29?= 
+        <JohnsonCH.Chen@moxa.com>, Johnson Chen <johnsonch.chen@moxa.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 1/5] gpio: mpc8xxx: Add platform device to gpiochip->parent
+Date:   Fri,  3 Jan 2020 22:36:40 -0500
+Message-Id: <20200104033644.11121-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200104033620.10977-1-sashal@kernel.org>
-References: <20200104033620.10977-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+From: Johnson CH Chen (陳昭勳) <JohnsonCH.Chen@moxa.com>
 
-[ Upstream commit af9cb29c5488381083b0b5ccdfb3cd931063384a ]
+[ Upstream commit 322f6a3182d42df18059a89c53b09d33919f755e ]
 
-As the rseq selftests can run for a long period of time, disable the
-timeout that the general selftests have.
+Dear Linus Walleij,
 
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: "H . Peter Anvin" <hpa@zytor.com>
-Cc: Paul Turner <pjt@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+In old kernels, some APIs still try to use parent->of_node from struct gpio_chip,
+and it could be resulted in kernel panic because parent is NULL. Adding platform
+device to gpiochip->parent can fix this problem.
+
+Signed-off-by: Johnson Chen <johnsonch.chen@moxa.com>
+Link: https://patchwork.kernel.org/patch/11234609
+Link: https://lore.kernel.org/r/HK0PR01MB3521489269F76467DFD7843FFA450@HK0PR01MB3521.apcprd01.prod.exchangelabs.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/rseq/settings | 1 +
+ drivers/gpio/gpio-mpc8xxx.c | 1 +
  1 file changed, 1 insertion(+)
- create mode 100644 tools/testing/selftests/rseq/settings
 
-diff --git a/tools/testing/selftests/rseq/settings b/tools/testing/selftests/rseq/settings
-new file mode 100644
-index 000000000000..e7b9417537fb
---- /dev/null
-+++ b/tools/testing/selftests/rseq/settings
-@@ -0,0 +1 @@
-+timeout=0
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index c8673a5d9412..ccae16a94a74 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -317,6 +317,7 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	gc = &mpc8xxx_gc->gc;
++	gc->parent = &pdev->dev;
+ 
+ 	if (of_property_read_bool(np, "little-endian")) {
+ 		ret = bgpio_init(gc, &pdev->dev, 4,
 -- 
 2.20.1
 
