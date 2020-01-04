@@ -2,119 +2,180 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A6EC00523
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17626C00523
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BADC21734
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 865C421734
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:21:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="GKihMbDO"
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="yZy4GrPF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbgADDFS (ORCPT
+        id S1727310AbgADDVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 22:05:18 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36959 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727255AbgADDFR (ORCPT
+        Fri, 3 Jan 2020 22:21:55 -0500
+Received: from mail-40135.protonmail.ch ([185.70.40.135]:29638 "EHLO
+        mail-40135.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727255AbgADDVz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 22:05:17 -0500
-Received: by mail-ed1-f65.google.com with SMTP id cy15so43158558edb.4
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 19:05:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BX71mgvvvVJh9j5iXPwViX8nZ94MAki9yZVDXDO37LU=;
-        b=GKihMbDOaV19EjeFPkZGhmjTZbw93ryUZdGEcLqWz6jSeSvH12zmcFnClKJ7lNe8wz
-         fTUBYyq76Z1DXbB4ADmyiusb9Nmqg96PcnNxI8BqcVOreHjJL0JR6XGKOOtsm62xszsf
-         CTF399PYOk/Qd4mv2dEgZOZbuGDWHz/2nQ9oUlfdRw2xzsiy5HGXC0JaXSFvRBtoBtx2
-         wEgjNBoBFTzXbv1eqCDTctJWsd5obGUemdv+NQduZ5biriMG2NRTU/B8Ka8T8ej614BA
-         SqnkTgevuhSBs9FhEFntlRPr9XUpO1+N4gK+UWQO22wkXdwiEpZerdXCwzz+uPTCHIji
-         +49w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BX71mgvvvVJh9j5iXPwViX8nZ94MAki9yZVDXDO37LU=;
-        b=Y9hBuIMqJ/JcvALpqsBI4GIhrsRJEeVLPhKXiHzIkM6zeiUtXRFsoxgZoZ0+s0xebv
-         /AXZzVEalO4xL3ubFJXnDbpEfj2FEyBo+r6HlL4lxNC5QUSWjlgM3ZDp678oMj6nblqp
-         hl3718g3LZvVdjhKSPk1+iD5/g719vZ1cecjyFBA1qkhuKAHRD0lz0ZOAhbnNstnvrT3
-         nuglplAxquz63Tq/4BJz66Scr/mFVzjVwAImxJTWdpdfX4AN979caoBM9CM8Lot0Ei+x
-         EyyYuDAGsYjIDLM5ayFjxArgglpO9P5AbjHj8tHfp8J0MTHLzAZzOPeGyejlUh8a6WI3
-         r3Iw==
-X-Gm-Message-State: APjAAAVM02TWiyAf05LhsJPjbsFKakKXHJx2L6qXfwhS/rkmxZODrxJg
-        wi+nYN6LkuOnyB7rmMdCxrl82dB/QX3o5FHTrXkifg==
-X-Google-Smtp-Source: APXvYqzZ0eubPcmwmULBhcmjqX4h6azQKzY92sBUMA+/NNA6rHzORNOjcdialMwlS8H7ALL/gObAMIdC0ceTZKJx1G8=
-X-Received: by 2002:aa7:c389:: with SMTP id k9mr95278721edq.63.1578107116352;
- Fri, 03 Jan 2020 19:05:16 -0800 (PST)
+        Fri, 3 Jan 2020 22:21:55 -0500
+Date:   Sat, 04 Jan 2020 03:21:41 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1578108110;
+        bh=VdseeMBzHGRC0ODSp5TYUOy1uhNPZvnSaTxlOa+pGws=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
+         Feedback-ID:From;
+        b=yZy4GrPFBr0jHrElY9i0B+Q7DOUE0helyiA7bX1JQPd7Ws+nYuhItU3V1yyWngHnp
+         dXwbfguLzBDxP9UpbURVwpBi0bt3/A/pAmypwTjQeHMGf1rEeiUfgy200WY3VcdS/B
+         1BzYudnYNlrYJJzr6WCyrDVd1AwVd+pXo0OPkl6w=
+To:     Alan Stern <stern@rowland.harvard.edu>
+From:   atmgnd <atmgnd@protonmail.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>
+Reply-To: atmgnd <atmgnd@protonmail.com>
+Subject: Re: Fw: usbcore missing parentheses in USE_NEW_SCHEME
+Message-ID: <hvpNcWudqm2gGi4YyoDbARHTmDy9NjoUNlShE5RcE6WKeMKqipb6cHXs58sJvjyyR0f4NGNkYPc0WybcVRA2QiXzZFSmUlhg4zxctXyJ7Js=@protonmail.com>
+In-Reply-To: <Pine.LNX.4.44L0.2001021018330.1546-100000@iolanthe.rowland.org>
+References: <Pine.LNX.4.44L0.2001021018330.1546-100000@iolanthe.rowland.org>
+Feedback-ID: py-oVO8Vt0vS1FKaKugS2_MTpFC3lKhHMurhoXPAalWk9Eh40Mo1lZOn2CI1vswSSKJBwBLYgn_VKFu9qW3csg==:Ext:ProtonMail
 MIME-Version: 1.0
-References: <20191218170603.58256-1-olof@lixom.net> <alpine.DEB.2.21.9999.2001031723310.283180@viisi.sifive.com>
-In-Reply-To: <alpine.DEB.2.21.9999.2001031723310.283180@viisi.sifive.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Fri, 3 Jan 2020 19:05:04 -0800
-Message-ID: <CAOesGMir810kVTDyoTFuhK-PdFe4J2u2VM+L8jOdO8DghAELQg@mail.gmail.com>
-Subject: Re: [PATCH] riscv: change CSR M/S defines to use "X" for prefix
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-riscv@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 3, 2020 at 5:28 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+Greg Kroah-Hartman:
+here is the new patch:
+
+
+From 85f01b89d050a988f4d9fc78232de47e793c6a7c Mon Sep 17 00:00:00 2001
+From: Qi.Zhou <atmgnd@outlook.com>
+Date: Wed, 1 Jan 2020 21:27:13 +0800
+Subject: [PATCH] usb: hub: missing parentheses in USE_NEW_SCHEME
+
+accroding to bd0e6c9#diff-28615d62e1250eadc353d804f49bc6d6, will try old en=
+umeration
+scheme first for high speed devices. for example, when a high speed device =
+pluged in,
+line 2720 should expand to 0 at the first time. USE_NEW_SCHEME(0, 0 || 0 ||=
+ 1) =3D=3D=3D 0.
+but it wrongly expand to 1(alway expand to 1 for high speed device), and ch=
+ange
+USE_NEW_SCHEME to USE_NEW_SCHEME((i) % 2 =3D=3D (int)(scheme)) may be bette=
+r ?
+
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Qi.Zhou <atmgnd@outlook.com>
+---
+ drivers/usb/core/hub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index f229ad6952c0..7d17deca7021 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -2692,7 +2692,7 @@ static unsigned hub_is_wusb(struct usb_hub *hub)
+ #define SET_ADDRESS_TRIES=092
+ #define GET_DESCRIPTOR_TRIES=092
+ #define SET_CONFIG_TRIES=09(2 * (use_both_schemes + 1))
+-#define USE_NEW_SCHEME(i, scheme)=09((i) / 2 =3D=3D (int)scheme)
++#define USE_NEW_SCHEME(i, scheme)=09((i) / 2 =3D=3D (int)(scheme))
+
+ #define HUB_ROOT_RESET_TIME=0960=09/* times are in msec */
+ #define HUB_SHORT_RESET_TIME=0910
+--
+2.17.1
+
+
+
+Sent with ProtonMail Secure Email.
+
+=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original Me=
+ssage =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
+On Thursday, January 2, 2020 11:22 PM, Alan Stern <stern@rowland.harvard.ed=
+u> wrote:
+
+> On Wed, 1 Jan 2020, Randy Dunlap wrote:
 >
-> On Wed, 18 Dec 2019, Olof Johansson wrote:
+> > [adding linux-usb mailing list]
+> > On 1/1/20 6:46 AM, atmgnd wrote:
+> >
+> > > I think there is missing parentheses in macro USE_NEW_SCHEME, it shou=
+ld be:
+> > > #define USE_NEW_SCHEME(i, scheme) ((i) / 2 =3D=3D (int)(scheme))
+> > > causes a fail wiht "device descriptor read/64, error -110" using my u=
+sb drive on vmware using usb 3.0 hub.
+> > > from https://github.com/torvalds/linux/commit/25244227158e15020620413=
+65a439a54cb8fe673#diff-28615d62e1250eadc353d804f49bc6d6
+> > > someone changed USE_NEW_SCHEME, but without parentheses for second pa=
+rameter. as result. in fuction use_new_scheme when old_scheme_first is 1, u=
+se_new_scheme will return 1 always(actullay is should return 0). it also ma=
+ke https://github.com/torvalds/linux/commit/bd0e6c9614b95352eb31d0207df16dc=
+156c527fa#diff-28615d62e1250eadc353d804f49bc6d6 fails.
+> > > I cannot use git send-mail, there some issue with my network provider=
+. patch below, :
+> > > From 85f01b89d050a988f4d9fc78232de47e793c6a7c Mon Sep 17 00:00:00 200=
+1
+> > > From: atmgnd atmgnd@outlook.com
+> > > Date: Wed, 1 Jan 2020 21:27:13 +0800
+> > > Subject: [PATCH] usb: hub: missing parentheses in USE_NEW_SCHEME
+> > > accroding to bd0e6c9#diff-28615d62e1250eadc353d804f49bc6d6, will try =
+old enumeration
+> > > scheme first for high speed devices. for example, when a high speed d=
+evice pluged in,
+> > > line 2720 should expand to 0 at the first time. USE_NEW_SCHEME(0, 0 |=
+| 0 || 1) =3D=3D=3D 0.
+> > > but it wrongly expand to 1(alway expand to 1 for high speed device), =
+and change
+> > > USE_NEW_SCHEME to USE_NEW_SCHEME((i) % 2 =3D=3D (int)(scheme)) may be=
+ better ?
+> > >
+> > > Signed-off-by: atmgnd atmgnd@outlook.com
+> > >
+> > > -----------------------------------------
+> > >
+> > > drivers/usb/core/hub.c | 2 +-
+> > > 1 file changed, 1 insertion(+), 1 deletion(-)
+> > > diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> > > index f229ad6952c0..7d17deca7021 100644
+> > > --- a/drivers/usb/core/hub.c
+> > > +++ b/drivers/usb/core/hub.c
+> > > @@ -2692,7 +2692,7 @@ static unsigned hub_is_wusb(struct usb_hub *hub=
+)
+> > > #define SET_ADDRESS_TRIES 2
+> > > #define GET_DESCRIPTOR_TRIES 2
+> > > #define SET_CONFIG_TRIES (2 * (use_both_schemes + 1))
+> > > -#define USE_NEW_SCHEME(i, scheme) ((i) / 2 =3D=3D (int)scheme)
+> > > +#define USE_NEW_SCHEME(i, scheme) ((i) / 2 =3D=3D (int)(scheme))
+> > >
+> > > #define HUB_ROOT_RESET_TIME 60 /* times are in msec */
+> > > #define HUB_SHORT_RESET_TIME 10
+> > >
+> > > ---------------------------------------------------------------------=
+------------------
+> > >
+> > > 2.17.1
 >
-> > Commit a4c3733d32a7 ("riscv: abstract out CSR names for supervisor vs
-> > machine mode") introduced new non-S/M-specific defines for some of the
-> > CSRs and fields that differ for when you run the kernel in machine or
-> > supervisor mode.
-> >
-> > One of those was "IRQ_TIMER" (instead of IRQ_S_TIMER/IRQ_M_MTIMER),
-> > which was generic enough to cause conflicts with other defines in
-> > drivers. Since it was in csr.h, it ended up getting pulled in through
-> > fairly generic include files, etc.
-> >
-> > I looked at just renaming those, but for consistency I chose to rename all
-> > M/S symbols to using 'X' instead of 'S'/'M' in the identifiers instead,
-> > which gives them all less generic names.
-> >
-> > This is pretty churny, and I'm sure there'll be opinions on naming, but
-> > I figured I'd do the busywork of fixing it up instead of just pointing
-> > out the conflicts.
-> >
-> > Fixes: a4c3733d32a7 ("riscv: abstract out CSR names for supervisor vs machine mode")
-> > Cc: Christoph Hellwig <hch@lst.de>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Signed-off-by: Olof Johansson <olof@lixom.net>
+> atmgnd:
 >
-> Thanks for taking a stab at fixing the issue.  I queued the following
-> minimal fix has been queued for v5.5-rc, adding an RV_ prefix to the IRQ_*
-> macros.  It may be that we need to do the same thing to the rest of the
-> CSRs.  But, based on a quick look, I think we should be OK for the moment.
-> Let us know if you have a different point of view.
-
-Sure, this does the job. I'd personally prefer consistent prefixes but
-that's just bikeshed color preferences -- this is fine.
-
-Acked-by: Olof Johansson <olof@lixom.net>
-
-(Builds are still failing for some configs, but will be fixed if/when
-you pick up https://lore.kernel.org/linux-riscv/20191217040631.91886-1-olof@lixom.net/)
+> Please resend this patch to Greg Kroah-Hartman
+> gregkh@linuxfoundation.org with the appropriate CC's. Also, your
+> Signed-off-by: line should contain a real name, not an email userid
+> (you probably don't use "atmgnd" as your signature on legal
+> documents!).
+>
+> When you resend the patch, you can include:
+>
+> Acked-by: Alan Stern stern@rowland.harvard.edu
+>
+> Alan Stern
 
 
--Olof
