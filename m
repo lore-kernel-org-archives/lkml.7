@@ -2,52 +2,52 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9E1C00523
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDA6C00523
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74608217F4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9DDF21D7D
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 03:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578108998;
-	bh=CasMzY3yE/z02l19UuHHZrfvowP4z2p5CrjSbNYM8L8=;
+	s=default; t=1578109000;
+	bh=Iqlz+iKxY3zlUcIPQj4U95OV05qdZTm+7hovQRC5Z/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=svunCzel7PQ5gA9TZv7D6HXAjACr1jdjXtAmsqZ5XzghInGnOxKWXctZAyaOvoHIK
-	 UtKIQVAOLOFLi7+o4vh1JScf7r4/C75FkrU+UAYu6Vw+8t1K0WeX3y+z9/wadSbA02
-	 ihUJ2r5dEKaBWFvblAVXsN4qfgJ0QRYAbcTT+KMA=
+	b=wNMG1+faixCtCJJepYxaMTA+PuDgrfs7Qa3rKl7YusrKX1K50PZO8+Vx9TSHGrEBy
+	 dj0W011arb/qca6jk3geHCLdDuTArDWYLpJQTAKOIw8EanTtBJuTKObM1Hrbns9jJ8
+	 WK4Kx+UslaP++DU2VsHZngk88cqf/lGGM2TIlP1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727563AbgADDgg (ORCPT
+        id S1727547AbgADDgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 22:36:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37164 "EHLO mail.kernel.org"
+        Fri, 3 Jan 2020 22:36:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727514AbgADDgb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 22:36:31 -0500
+        id S1727481AbgADDga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jan 2020 22:36:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 138E821734;
-        Sat,  4 Jan 2020 03:36:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B45E221D7D;
+        Sat,  4 Jan 2020 03:36:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578108990;
-        bh=CasMzY3yE/z02l19UuHHZrfvowP4z2p5CrjSbNYM8L8=;
+        s=default; t=1578108989;
+        bh=Iqlz+iKxY3zlUcIPQj4U95OV05qdZTm+7hovQRC5Z/4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SWL4IK58XeyujlNTgVLkEb/OfKoyGWJ7zaAaUTZXRJKK/iJcbHgSqSoYsgq4y652/
-         nkM99wIsQPtjyiZPme+U5C7IXjdC/guPImZHvTqrktDGhyMYLWErq56Fe75Ynl/Qls
-         so/0GxFNEb0SiLpBMQVC/9oIyDCYO072kJZ36RuM=
+        b=bftARHLSRgkNOleN01R+iVEizRwLEWEMwdrXG8mBPijBb+9Rj2Z3Su7t0ZDlJqwS0
+         vwqoSzDXgTd/W+rEbHTq1TdiWMI6E+5Y3rZlxRLDXkWuyDdiJ+R0+TEiR0ZZYRN2Mp
+         XJR6jYfqWWn0aqTgJEN51rdifhZ6dW/4yWDXKY4g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 08/10] selftests: firmware: Fix it to do root uid check and skip
-Date:   Fri,  3 Jan 2020 22:36:17 -0500
-Message-Id: <20200104033620.10977-8-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.4 07/10] cifs: Adjust indentation in smb2_open_file
+Date:   Fri,  3 Jan 2020 22:36:16 -0500
+Message-Id: <20200104033620.10977-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200104033620.10977-1-sashal@kernel.org>
 References: <20200104033620.10977-1-sashal@kernel.org>
@@ -60,57 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shuah Khan <skhan@linuxfoundation.org>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit c65e41538b04e0d64a673828745a00cb68a24371 ]
+[ Upstream commit 7935799e041ae10d380d04ea23868240f082bd11 ]
 
-firmware attempts to load test modules that require root access
-and fail. Fix it to check for root uid and exit with skip code
-instead.
+Clang warns:
 
-Before this fix:
+../fs/cifs/smb2file.c:70:3: warning: misleading indentation; statement
+is not part of the previous 'if' [-Wmisleading-indentation]
+         if (oparms->tcon->use_resilient) {
+         ^
+../fs/cifs/smb2file.c:66:2: note: previous statement is here
+        if (rc)
+        ^
+1 warning generated.
 
-selftests: firmware: fw_run_tests.sh
-modprobe: ERROR: could not insert 'test_firmware': Operation not permitted
-You must have the following enabled in your kernel:
-CONFIG_TEST_FIRMWARE=y
-CONFIG_FW_LOADER=y
-CONFIG_FW_LOADER_USER_HELPER=y
-CONFIG_IKCONFIG=y
-CONFIG_IKCONFIG_PROC=y
-not ok 1 selftests: firmware: fw_run_tests.sh # SKIP
+This warning occurs because there is a space after the tab on this line.
+Remove it so that the indentation is consistent with the Linux kernel
+coding style and clang no longer warns.
 
-With this fix:
-
-selftests: firmware: fw_run_tests.sh
-skip all tests: must be run as root
-not ok 1 selftests: firmware: fw_run_tests.sh # SKIP
-
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Reviwed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: 592fafe644bf ("Add resilienthandles mount parm")
+Link: https://github.com/ClangBuiltLinux/linux/issues/826
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/firmware/fw_lib.sh | 6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/cifs/smb2file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/firmware/fw_lib.sh b/tools/testing/selftests/firmware/fw_lib.sh
-index b879305a766d..5b8c0fedee76 100755
---- a/tools/testing/selftests/firmware/fw_lib.sh
-+++ b/tools/testing/selftests/firmware/fw_lib.sh
-@@ -34,6 +34,12 @@ test_modprobe()
+diff --git a/fs/cifs/smb2file.c b/fs/cifs/smb2file.c
+index 8b0b512c5792..afe1f03aabe3 100644
+--- a/fs/cifs/smb2file.c
++++ b/fs/cifs/smb2file.c
+@@ -67,7 +67,7 @@ smb2_open_file(const unsigned int xid, struct cifs_open_parms *oparms,
+ 		goto out;
  
- check_mods()
- {
-+	local uid=$(id -u)
-+	if [ $uid -ne 0 ]; then
-+		echo "skip all tests: must be run as root" >&2
-+		exit $ksft_skip
-+	fi
-+
- 	trap "test_modprobe" EXIT
- 	if [ ! -d $DIR ]; then
- 		modprobe test_firmware
+ 
+-	 if (oparms->tcon->use_resilient) {
++	if (oparms->tcon->use_resilient) {
+ 		/* default timeout is 0, servers pick default (120 seconds) */
+ 		nr_ioctl_req.Timeout =
+ 			cpu_to_le32(oparms->tcon->handle_timeout);
 -- 
 2.20.1
 
