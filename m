@@ -2,115 +2,108 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C53C32767
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 07:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F19C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 07:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEF9A24649
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 07:36:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NJlvJMli"
+	by mail.kernel.org (Postfix) with ESMTP id 284A92464E
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 07:54:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578124466;
+	bh=P8PtxQglxYWKXppOdGIM64WnzmqJ3ydfh7/u5gnFQSg=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=xGEbaWPfOkvyZ42HEkcczSbMOlHuajknIB9IddwLAxzw8x6lsxFyxUtVoaTUnwqPF
+	 cGSy91KEHQHbNeYjNnbkkroDjWFhX/UWzCh6ZbQCKxHBFlb6BnONejVtq3pMFlhpig
+	 9oH6RJOPEUFpYASEw0oAzVOoidhH40u10l86AlJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726135AbgADHg5 (ORCPT
+        id S1726094AbgADHyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 02:36:57 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:40008 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbgADHg5 (ORCPT
+        Sat, 4 Jan 2020 02:54:25 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:51638 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbgADHyZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 02:36:57 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0047afHt091640;
-        Sat, 4 Jan 2020 01:36:41 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578123401;
-        bh=xyTtGJBBV5DkwnqH7weJ56jokZyNTPmMYazq+z0R4do=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=NJlvJMliAwWcHzCfQ0pIAgBWjmKCERHobnEwo9y76RVzQmFw4YoAJiRWnRsHytBqD
-         s+xySIkthvzRuKFBVTITMCFRj02tHsh57ahCorMdCx822h0yCg0jXDcr7lzlScZ/wk
-         HXmW61/uMpUFJD8DUbaUR/3ShHQ55UX+fd6tyNUw=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0047af9m025066
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 4 Jan 2020 01:36:41 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sat, 4 Jan
- 2020 01:36:41 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Sat, 4 Jan 2020 01:36:41 -0600
-Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0047adX4077901;
-        Sat, 4 Jan 2020 01:36:40 -0600
-Subject: Re: [BISECTED, REGRESSION] OMAP3 onenand/DMA broken
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Tony Lindgren <tony@atomide.com>
-CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200103081726.GD15023@darkstar.musicnaut.iki.fi>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <7a8f4222-9815-9dd8-e13c-9d2e57cfb1ea@ti.com>
-Date:   Sat, 4 Jan 2020 09:38:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sat, 4 Jan 2020 02:54:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3G5V/Yt8+LHaKTB8iEhyRfbumFUZlmo8w3chEDC5pCY=; b=oXGRSO+mtvC28SIwMg1qv3G4b
+        K2PoVYv2PAqRrjvQ4MN0NTHwJwinvYyy39gATHfE+U0fXP+z1V3P9+veQIKWYqvJtb1U323d+aqIS
+        zyXoyx6XC/HQS4oe7/uODwwW4iTOzFglinyNCz+eYCjuyojxuBRlg8OcqsTO23H+HULElJ0wpVcht
+        gUMU6d2HNo3HbVd3kp1pAFYf6D+sEcGggD8e5FYgnX3nSzBWE3rrAtfrcLY8G8GcZUEdxdvYgNEcy
+        c/GKTMcB6zEow7zJF67i+xBYXFHhQWfbCthY/SWk7HpsZ9x/UQHPsvcmCpbbxCiufBX224cFGWiKV
+        cXKRhlJew==;
+Received: from [80.156.29.194] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ineGN-0003wg-Tr; Sat, 04 Jan 2020 07:54:24 +0000
+Date:   Sat, 4 Jan 2020 08:54:20 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL for v5.5-rc5] media fixes
+Message-ID: <20200104085420.5fe6a671@kernel.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200103081726.GD15023@darkstar.musicnaut.iki.fi>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Aaro,
+Hi Linus,
 
-On 1/3/20 10:17 AM, Aaro Koskinen wrote:
-> Hi,
-> 
-> When booting v5.4 (or v5.5-rc4) on N900, the console gets flooded with:
-> 
-> [    8.335754] omap2-onenand 1000000.onenand: timeout waiting for DMA
-> [    8.365753] omap2-onenand 1000000.onenand: timeout waiting for DMA
-> [    8.395751] omap2-onenand 1000000.onenand: timeout waiting for DMA
-> [    8.425750] omap2-onenand 1000000.onenand: timeout waiting for DMA
-> [    8.455749] omap2-onenand 1000000.onenand: timeout waiting for DMA
-> [    8.485748] omap2-onenand 1000000.onenand: timeout waiting for DMA
-> [    8.515777] omap2-onenand 1000000.onenand: timeout waiting for DMA
-> [    8.545776] omap2-onenand 1000000.onenand: timeout waiting for DMA
-> [    8.575775] omap2-onenand 1000000.onenand: timeout waiting for DMA
-> 
-> making the system unusable.
-> 
-> Bisected to:
-> 
-> 4689d35c765c696bdf0535486a990038b242a26b is the first bad commit
-> commit 4689d35c765c696bdf0535486a990038b242a26b
-> Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> Date:   Tue Jul 16 11:24:59 2019 +0300
-> 
->     dmaengine: ti: omap-dma: Improved memcpy polling support
-> 
-> The commit does not revert cleanly anymore. Any ideas how to fix this?
+Please pull from:
+  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v5.5-3
 
-I certainly tested the memcpy via dmatest in polled and non polled mode..
+For:
+  - some fixes at CEC core to comply with HDMI 2.0 specs and fix some border
+    cases;
+  - a fix at the transmission logic of the pulse8-cec driver.
+  - one alignment fix on a data struct at ipu3 when built with 32 bits;
 
-I can take a look on Tuesday earliest, but sent a patch (untested) which
-should fix the issue:
-https://lore.kernel.org/lkml/20200104073453.16077-1-peter.ujfalusi@ti.com/
+Regards,
+Mauro
 
+-
 
-> 
-> A.
-> 
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
 
-- Peter
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v5.5-3
+
+for you to fetch changes up to ce644cf3fa06504c2c71ab1b794160d54aaccbc0:
+
+  media: intel-ipu3: Align struct ipu3_uapi_awb_fr_config_s to 32 bytes (2020-01-03 15:02:59 +0100)
+
+----------------------------------------------------------------
+media updates for v5.5-rc5
+
+----------------------------------------------------------------
+Hans Verkuil (4):
+      media: cec: CEC 2.0-only bcast messages were ignored
+      media: cec: avoid decrementing transmit_queue_sz if it is 0
+      media: cec: check 'transmit_in_progress', not 'transmitting'
+      media: pulse8-cec: fix lost cec_transmit_attempt_done() call
+
+Sakari Ailus (1):
+      media: intel-ipu3: Align struct ipu3_uapi_awb_fr_config_s to 32 bytes
+
+ drivers/media/cec/cec-adap.c                    | 40 +++++++++++++++++--------
+ drivers/media/usb/pulse8-cec/pulse8-cec.c       | 17 ++++++++---
+ drivers/staging/media/ipu3/include/intel-ipu3.h |  2 +-
+ 3 files changed, 41 insertions(+), 18 deletions(-)
+
