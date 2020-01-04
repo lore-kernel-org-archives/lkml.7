@@ -2,256 +2,229 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE99C00523
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9D0C32767
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D236121D7D
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:34:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tAZK3OEK"
+	by mail.kernel.org (Postfix) with ESMTP id A58E5217F4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 02:37:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbgADCe3 (ORCPT
+        id S1727265AbgADChF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 21:34:29 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34614 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727237AbgADCe2 (ORCPT
+        Fri, 3 Jan 2020 21:37:05 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:42361 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727074AbgADChF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 21:34:28 -0500
-Received: by mail-lj1-f194.google.com with SMTP id z22so40757517ljg.1
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 18:34:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BQvpmc6bTYtIoGI7mIebVuPQLrewKdFxgpvNfh1jXk8=;
-        b=tAZK3OEKd7k1M9evv8ECR6IT4KuCG9ELRfiOy7DNKz4dsEPusPe/W4hprN3ZoOOUz3
-         +ODcHgUFQ4f7YwPVWXfHrzvzWU3ldmbVznRqqa1zjiUkPu4LpoCrsAknU2pSs7MXrXIu
-         Y/xlv7+HrXX2kZSD/sFcN30bWts4SGSC4NXHj1vHv5ddjdk8O2FOHd/Rolgxf2cns+sm
-         JXsm1ZhUMMiY+ixrFoIcOP0aW8DHcgEfeK6MQn7dP0f2AzG/APBX9Bucp+PPpWqmxSQz
-         DHL2CocOXAEQcVBUweSFLywO+ba7qejLqqpJTYRMTjsrVcuRnFB62Lll2tPT7II4iznT
-         iGbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BQvpmc6bTYtIoGI7mIebVuPQLrewKdFxgpvNfh1jXk8=;
-        b=rcYlWBG44LKfWf05l1P7ZN8BGIix5eRoZ3wPn3qdL8leaPyg2XoI+RK8/Y2zJZpZ70
-         YS0hpFlvtMBaBfx5MyqFFvwVZmjWkFRV4tkSWTJyY8siaf7/lED9CLSjh+S6/y7xIlPw
-         o5gwRPnc+YrYZWZdHFFWpUQzi31vl6ME/fQV3Gq71omFnfrKU3R1MpHqM1k0aMJ3hudF
-         xXd9RxHu6aVLZFeCbf1b1U+d2CbhTMKcblR4OXuLDm5dBtleRoN3MFMGUxJnyie++6ac
-         KMJRpDo2JuB6epYOxHbGNulZuT7zebTA1HXEcDzFnsnoT6hIM3E9Gsk0U2kiNni3zmPl
-         rmKw==
-X-Gm-Message-State: APjAAAXO1yEFAKrDphgaKkQc7FNAdEGxah/3OSSVrC3suLXLH4NNpJX+
-        XeeCkgP2/hWvvujhqtftUHosikv0J0qDU1GSzlX2/w==
-X-Google-Smtp-Source: APXvYqyD9oMygC2d1JGl/rCxn+X/nhk+8OE08L9az0yTsFlrgLIFWrcAV9zmwbipEHAuXtJG1WtnbPXhiUtiQEvCzyo=
-X-Received: by 2002:a2e:9804:: with SMTP id a4mr27224065ljj.10.1578105265406;
- Fri, 03 Jan 2020 18:34:25 -0800 (PST)
+        Fri, 3 Jan 2020 21:37:05 -0500
+Received: from dread.disaster.area (pa49-180-68-255.pa.nsw.optusnet.com.au [49.180.68.255])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id BA89C7EA31B;
+        Sat,  4 Jan 2020 13:36:59 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1inZJB-0007xP-34; Sat, 04 Jan 2020 13:36:57 +1100
+Date:   Sat, 4 Jan 2020 13:36:57 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>, Eric Sandeen <sandeen@redhat.com>
+Subject: Re: [PATCH] xfs: Fix false positive lockdep warning with sb_internal
+ & fs_reclaim
+Message-ID: <20200104023657.GA23128@dread.disaster.area>
+References: <20200102155208.8977-1-longman@redhat.com>
 MIME-Version: 1.0
-References: <CAD_xR9eDL+9jzjYxPXJjS7U58ypCPWHYzrk0C3_vt-w26FZeAQ@mail.gmail.com>
- <1762437703fd150bb535ee488c78c830f107a531.camel@sipsolutions.net>
- <CAD_xR9eh=CAYeQZ3Vp9Yj9h3ifMu2exy0ihaXyE+736tJrPVLA@mail.gmail.com> <CAMrEMU-QF8HCTMFhzHd0w2f132iA4GLUXHmBPGnuetPqkz=U7A@mail.gmail.com>
-In-Reply-To: <CAMrEMU-QF8HCTMFhzHd0w2f132iA4GLUXHmBPGnuetPqkz=U7A@mail.gmail.com>
-From:   Kan Yan <kyan@google.com>
-Date:   Fri, 3 Jan 2020 18:34:14 -0800
-Message-ID: <CA+iem5uPaYmZr=+kdHopm1Yo9dgyL98k7KfV6uYx_yH22FSGag@mail.gmail.com>
-Subject: Re: PROBLEM: Wireless networking goes down on Acer C720P Chromebook (bisected)
-To:     Justin Capella <justincapella@gmail.com>
-Cc:     Stephen Oberholtzer <stevie@qrpff.net>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200102155208.8977-1-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=sbdTpStuSq8iNQE8viVliQ==:117 a=sbdTpStuSq8iNQE8viVliQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
+        a=7-415B0cAAAA:8 a=dPlFEQSpBE27FshsoEkA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> This AQL stuff sounds pretty nifty, and I'd love to try my hand at
-> making it work for ath9k (also, since I put so much effort into an
-> automated build-and-test framework, it'd be a shame to just abandon
-> it.)  However, the ath9k code is rather lacking for comments, so I
-> don't even know where I should start, except for (I suspect) a call to
-> `wiphy_ext_feature_set(whatever, NL80211_EXT_FEATURE_AQL);` from
-> inside ath9k_set_hw_capab()?
-> In the meantime, I went back to e548f749b096 -- the commit prior to
-> the one making AQL support opt-in -- and cranked up the debugging.
+On Thu, Jan 02, 2020 at 10:52:08AM -0500, Waiman Long wrote:
+> Depending on the workloads, the following circular locking dependency
+> warning between sb_internal (a percpu rwsem) and fs_reclaim (a pseudo
+> lock) may show up:
+> 
+> ======================================================
+> WARNING: possible circular locking dependency detected
+> 5.0.0-rc1+ #60 Tainted: G        W
+> ------------------------------------------------------
+> fsfreeze/4346 is trying to acquire lock:
+> 0000000026f1d784 (fs_reclaim){+.+.}, at:
+> fs_reclaim_acquire.part.19+0x5/0x30
+> 
+> but task is already holding lock:
+> 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
+> 
+> which lock already depends on the new lock.
+>   :
+>  Possible unsafe locking scenario:
+> 
+>        CPU0                    CPU1
+>        ----                    ----
+>   lock(sb_internal);
+>                                lock(fs_reclaim);
+>                                lock(sb_internal);
+>   lock(fs_reclaim);
+> 
+>  *** DEADLOCK ***
+> 
+> 4 locks held by fsfreeze/4346:
+>  #0: 00000000b478ef56 (sb_writers#8){++++}, at: percpu_down_write+0xb4/0x650
+>  #1: 000000001ec487a9 (&type->s_umount_key#28){++++}, at: freeze_super+0xda/0x290
+>  #2: 000000003edbd5a0 (sb_pagefaults){++++}, at: percpu_down_write+0xb4/0x650
+>  #3: 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
+> 
+> stack backtrace:
+> Call Trace:
+>  dump_stack+0xe0/0x19a
+>  print_circular_bug.isra.10.cold.34+0x2f4/0x435
+>  check_prev_add.constprop.19+0xca1/0x15f0
+>  validate_chain.isra.14+0x11af/0x3b50
+>  __lock_acquire+0x728/0x1200
+>  lock_acquire+0x269/0x5a0
+>  fs_reclaim_acquire.part.19+0x29/0x30
+>  fs_reclaim_acquire+0x19/0x20
+>  kmem_cache_alloc+0x3e/0x3f0
+>  kmem_zone_alloc+0x79/0x150
+>  xfs_trans_alloc+0xfa/0x9d0
+>  xfs_sync_sb+0x86/0x170
+>  xfs_log_sbcount+0x10f/0x140
+>  xfs_quiesce_attr+0x134/0x270
+>  xfs_fs_freeze+0x4a/0x70
+>  freeze_super+0x1af/0x290
+>  do_vfs_ioctl+0xedc/0x16c0
+>  ksys_ioctl+0x41/0x80
+>  __x64_sys_ioctl+0x73/0xa9
+>  do_syscall_64+0x18f/0xd23
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> According to Dave Chinner:
+> 
+>   Freezing the filesystem, after all the data has been cleaned. IOWs
+>   memory reclaim will never run the above writeback path when
+>   the freeze process is trying to allocate a transaction here because
+>   there are no dirty data pages in the filesystem at this point.
+> 
+>   Indeed, this xfs_sync_sb() path sets XFS_TRANS_NO_WRITECOUNT so that
+>   it /doesn't deadlock/ by taking freeze references for the
+>   transaction. We've just drained all the transactions
+>   in progress and written back all the dirty metadata, too, and so the
+>   filesystem is completely clean and only needs the superblock to be
+>   updated to complete the freeze process. And to do that, it does not
+>   take a freeze reference because calling sb_start_intwrite() here
+>   would deadlock.
+> 
+>   IOWs, this is a false positive, caused by the fact that
+>   xfs_trans_alloc() is called from both above and below memory reclaim
+>   as well as within /every level/ of freeze processing. Lockdep is
+>   unable to describe the staged flush logic in the freeze process that
+>   prevents deadlocks from occurring, and hence we will pretty much
+>   always see false positives in the freeze path....
+> 
+> Perhaps breaking the fs_reclaim pseudo lock into a per filesystem lock
+> may fix the issue. However, that will greatly complicate the logic and
+> may not be worth it.
 
-AQL is designed for wireless chipset that uses firmware/hardware
-offloading, to manage the firmware/hardware queue size. For ath9k, the
-TX queues are controlled by the host driver and chipsets that use
-ath9k have a much smaller hardware queue compared to ath10k, so AQL is
-probably not needed for ath9k. The airtime based TX scheduler alone
-should be sufficient.
+ANd it won't work, because now we'll just get lockedp warnings on
+the per-fs reclaim lockdep context.
 
-> > /sys/kernel/debug/ieee80211/phy0
-> >
-> > airtime_flags = 7
-> >
-> > stations/<my AP's MAC>/airtime =
-> >
-> > RX: 6583578 us
-> > TX: 32719 us
-> > Weight: 256
-> > Deficit: VO: -1128 us VI: 11 us BE: -5098636 us BK: 256 us
-> > Q depth: VO: 3868 us VI: 3636 us BE: 12284 us BK: 0 us
-> > Q limit[low/high]: VO: 5000/12000 VI: 5000/12000 BE: 5000/12000 BK: 5000/12000
-> >
-> > (I have no idea how to interpret this, but that '32719 us' seems odd,
-> > I thought the airtime usage was in 4us units?)
-> Me neither, off the top of my head, let's wait for Toke.
+> Another way to fix it is to disable the taking of the fs_reclaim
+> pseudo lock when in the freezing code path as a reclaim on the freezed
+> filesystem is not possible as stated above. This patch takes this
+> approach by setting the __GFP_NOLOCKDEP flag in the slab memory
+> allocation calls when the filesystem has been freezed.
 
-"TX: 32719 us" is the airtime reported by firmware, which is not in 4us units.
-There are two airtime: the "consumed" airtime reported by firmware,
-which is used by the airtimed based TX scheduler to enforce fairness,
-and the "estimated" airtime used by AQL to control the queue length
-for frames pending in the firmware/hardware queue, which in 4us unit.
+IOWs, "fix" it by stating that "lockdep can't track freeze
+dependencies correctly"?
 
-> I ran a ping, and saw this:
->
-> - pings coming back in <5ms
-> - re-enable AQL (echo 7 | tee airtime_flags)
-> - pings stop coming back immediately
-> - some seconds later, disable AQL again (echo 3 | tee airtime_flags)
-> - immediate *flood* of ping replies registered, with times 16000ms,
-> 15000ms, 14000ms, .. down to 1000ms, 15ms, then stabilizing sub-5ms
-> - According to the icmp_seq values, all 28 requests were replied to,
-> and their replies were delivered in-order
->
-> This certainly looks like a missing TX queue restart to me?
-I don't think TX queue restart is "missing", the TX queue should get
-restarted when the pending frames is completed and returned to the
-host driver. However, It looks like there is some issue with the
-deficit refill logic in ath9k, and the TX queue got blocked due to the
-negative deficit.
+In the past we have just used KM_NOFS for that, because
+__GFP_NOLOCKDEP didn't exist. But that has just been a nasty hack
+because lockdep isn't capable of understanding allocation context
+constraints because allocation contexts are much more complex than a
+"lock"....
 
 
-On Thu, Jan 2, 2020 at 11:22 PM Justin Capella <justincapella@gmail.com> wrote:
->
-> The rather large negative deficit stands out to me. See this patch,
-> https://patchwork.kernel.org/patch/11246363/ specifically the comments
-> by Kan Yan
->
-> On Thu, Jan 2, 2020, 3:14 PM Stephen Oberholtzer <stevie@qrpff.net> wrote:
-> >
-> >
-> > /sys/kernel/debug/ieee80211/phy0
-> >
-> > airtime_flags = 7
-> >
-> > stations/<my AP's MAC>/airtime =
-> >
-> > RX: 6583578 us
-> > TX: 32719 us
-> > Weight: 256
-> > Deficit: VO: -1128 us VI: 11 us BE: -5098636 us BK: 256 us
-> > Q depth: VO: 3868 us VI: 3636 us BE: 12284 us BK: 0 us
-> > Q limit[low/high]: VO: 5000/12000 VI: 5000/12000 BE: 5000/12000 BK: 5000/1200
->
-> On Thu, Jan 2, 2020 at 3:14 PM Stephen Oberholtzer <stevie@qrpff.net> wrote:
-> >
-> > On Thu, Jan 2, 2020 at 8:28 AM Johannes Berg <johannes@sipsolutions.net> wrote:
-> > >
-> > > On Tue, 2019-12-31 at 19:49 -0500, Stephen Oberholtzer wrote:
-> > > > Wireless networking goes down on Acer C720P Chromebook (bisected)
-> > > >
-> > > > Culprit: 7a89233a ("mac80211: Use Airtime-based Queue Limits (AQL) on
-> > > > packet dequeue")
-> > > >
-> >
-> > <snip>
-> >
-> > > I think I found at least one hole in this, but IIRC (it was before my
-> > > vacation, sorry) it was pretty unlikely to actually happen. Perhaps
-> > > there are more though.
-> > >
-> > > https://lore.kernel.org/r/b14519e81b6d2335bd0cb7dcf074f0d1a4eec707.camel@sipsolutions.net
-> >
-> > <snippety-snip>
-> >
-> > > Do you get any output at all? Like a WARN_ON() for an underflow, or
-> > > something?
-> > >
-> > > johannes
-> > >
-> >
-> > Johannes,
-> >
-> > To answer your immediate question, no, I don't get any dmesg output at
-> > all. Nothing about underruns.
-> > However, while pursuing other avenues -- specifically, enabling
-> > mac80211 debugfs and log messages -- I realized that my 'master' was
-> > out-of-date from linux-stable and did a git pull.  Imagine my surprise
-> > when the resulting kernel did not exhibit the problem!
-> >
-> > Apparently, I had been a bit too pessimistic; since the problem
-> > existed in 5.5-rc1 release, I'd assumed that the problem wouldn't get
-> > rectified before 5.5.
-> >
-> > However, I decided to bisect the fix, and ended up with: 911bde0f
-> > ("mac80211: Turn AQL into an NL80211_EXT_FEATURE"), which appears to
-> > have "solved" the problem by just disabling the feature (this is
-> > ath9k, by the way.)
-> >
-> > This AQL stuff sounds pretty nifty, and I'd love to try my hand at
-> > making it work for ath9k (also, since I put so much effort into an
-> > automated build-and-test framework, it'd be a shame to just abandon
-> > it.)  However, the ath9k code is rather lacking for comments, so I
-> > don't even know where I should start, except for (I suspect) a call to
-> > `wiphy_ext_feature_set(whatever, NL80211_EXT_FEATURE_AQL);` from
-> > inside ath9k_set_hw_capab()?
-> >
-> > In the meantime, I went back to e548f749b096 -- the commit prior to
-> > the one making AQL support opt-in -- and cranked up the debugging.
-> >
-> > I'm not sure how to interpret any of this, but  here's what I got:
-> >
-> > dmesg output:
-> >
-> > Last relevant mention is "moving STA <my AP's MAC> to state 4" which
-> > happened during startup, before everything shut down.
-> >
-> > /sys/kernel/debug/ieee80211/phy0
-> >
-> > airtime_flags = 7
-> >
-> > stations/<my AP's MAC>/airtime =
-> >
-> > RX: 6583578 us
-> > TX: 32719 us
-> > Weight: 256
-> > Deficit: VO: -1128 us VI: 11 us BE: -5098636 us BK: 256 us
-> > Q depth: VO: 3868 us VI: 3636 us BE: 12284 us BK: 0 us
-> > Q limit[low/high]: VO: 5000/12000 VI: 5000/12000 BE: 5000/12000 BK: 5000/12000
-> >
-> > (I have no idea how to interpret this, but that '32719 us' seems odd,
-> > I thought the airtime usage was in 4us units?)
-> >
-> >
-> > Doing an 'echo 3 | tee airtime_flags' to clear the (old) AQL-enabled
-> > bit seemed to *immediately* restore network connectivity.
-> >
-> > I ran a ping, and saw this:
-> >
-> > - pings coming back in <5ms
-> > - re-enable AQL (echo 7 | tee airtime_flags)
-> > - pings stop coming back immediately
-> > - some seconds later, disable AQL again (echo 3 | tee airtime_flags)
-> > - immediate *flood* of ping replies registered, with times 16000ms,
-> > 15000ms, 14000ms, .. down to 1000ms, 15ms, then stabilizing sub-5ms
-> > - According to the icmp_seq values, all 28 requests were replied to,
-> > and their replies were delivered in-order
-> >
-> > This certainly looks like a missing TX queue restart to me?
-> >
-> >
-> > --
-> > -- Stevie-O
-> > Real programmers use COPY CON PROGRAM.EXE
+> --- a/fs/xfs/kmem.h
+> +++ b/fs/xfs/kmem.h
+> @@ -20,6 +20,12 @@ typedef unsigned __bitwise xfs_km_flags_t;
+>  #define KM_MAYFAIL	((__force xfs_km_flags_t)0x0008u)
+>  #define KM_ZERO		((__force xfs_km_flags_t)0x0010u)
+>  
+> +#ifdef CONFIG_LOCKDEP
+> +#define KM_NOLOCKDEP	((__force xfs_km_flags_t)0x0020u)
+> +#else
+> +#define KM_NOLOCKDEP	((__force xfs_km_flags_t)0)
+> +#endif
+
+Nope. We are getting rid of kmem_alloc wrappers and all the
+associated flags, not adding new ones. Part of that process is
+identifying all the places we currently use KM_NOFS to "shut up
+lockdep" and converting them to explicit __GFP_NOLOCKDEP flags.
+
+So right now, this change needs to be queued up behind the API
+changes that are currently in progress...
+
+> diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+> index f6006d94a581..b1997649ecd8 100644
+> --- a/fs/xfs/xfs_log.c
+> +++ b/fs/xfs/xfs_log.c
+> @@ -454,7 +454,8 @@ xfs_log_reserve(
+>  	XFS_STATS_INC(mp, xs_try_logspace);
+>  
+>  	ASSERT(*ticp == NULL);
+> -	tic = xlog_ticket_alloc(log, unit_bytes, cnt, client, permanent, 0);
+> +	tic = xlog_ticket_alloc(log, unit_bytes, cnt, client, permanent,
+> +			mp->m_super->s_writers.frozen ? KM_NOLOCKDEP : 0);
+
+This is pretty nasty. Having to spew conditional code like this
+across every allocation that could be done in freeze conditions is
+a non-starter.
+
+We already have a flag to tell us we are doing a transaction in a
+freeze state, so use that to turn off lockdep. That is:
+
+>  	*ticp = tic;
+>  
+>  	xlog_grant_push_ail(log, tic->t_cnt ? tic->t_unit_res * tic->t_cnt
+> diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+> index 3b208f9a865c..c0e42e4f5b77 100644
+> --- a/fs/xfs/xfs_trans.c
+> +++ b/fs/xfs/xfs_trans.c
+> @@ -262,8 +262,14 @@ xfs_trans_alloc(
+>  	 * Allocate the handle before we do our freeze accounting and setting up
+>  	 * GFP_NOFS allocation context so that we avoid lockdep false positives
+>  	 * by doing GFP_KERNEL allocations inside sb_start_intwrite().
+> +	 *
+> +	 * To prevent false positive lockdep warning of circular locking
+> +	 * dependency between sb_internal and fs_reclaim, disable the
+> +	 * acquisition of the fs_reclaim pseudo-lock when the superblock
+> +	 * has been frozen or in the process of being frozen.
+>  	 */
+> -	tp = kmem_zone_zalloc(xfs_trans_zone, 0);
+> +	tp = kmem_zone_zalloc(xfs_trans_zone,
+> +		mp->m_super->s_writers.frozen ? KM_NOLOCKDEP : 0);
+>  	if (!(flags & XFS_TRANS_NO_WRITECOUNT))
+>  		sb_start_intwrite(mp->m_super);
+
+This code here should be setting PF_GFP_NOLOCKDEP state to turn off
+lockdep for all allocations in this context, similar to the way we
+use memalloc_nofs_save/restore so that all nested allocations
+inherit GFP_NOFS state...
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
