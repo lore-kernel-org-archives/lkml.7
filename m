@@ -2,101 +2,142 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B89C32767
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F9FC00523
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A653620866
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:37:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578098245;
-	bh=w+DnMBG5f5m51ZCgawmyI1Mpraj+f/jr+3j7BeywOr0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CMBpv1kkzK3TH6mH7uV3OW7dA4M9jkNA5XDazzRCkxxF+3Q3MgE8IsL4i1CNGcZAv
-	 ip49gLPZt+3dO5Two2U60R8CXnshxiAO1UcJkSm4gUt3hoS5e+hT4I3yllsJYfBH3R
-	 OFMy7/QZzbOR0H7nsfQdx5wT/tPwUwcKH/1sf0Xo=
+	by mail.kernel.org (Postfix) with ESMTP id 9592C20866
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 00:38:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MuL59PMN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbgADAhZ (ORCPT
+        id S1727183AbgADAiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 19:37:25 -0500
-Received: from mail-io1-f52.google.com ([209.85.166.52]:45190 "EHLO
-        mail-io1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727227AbgADAhU (ORCPT
+        Fri, 3 Jan 2020 19:38:52 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37395 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbgADAiv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 19:37:20 -0500
-Received: by mail-io1-f52.google.com with SMTP id i11so43078924ioi.12
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 16:37:19 -0800 (PST)
+        Fri, 3 Jan 2020 19:38:51 -0500
+Received: by mail-lf1-f68.google.com with SMTP id b15so32930991lfc.4
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jan 2020 16:38:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7uC7JWFx9OYNnl310U+ygwv67SYyeHmDQsyNae/VGhA=;
+        b=MuL59PMNVVu75FiAbIkclAny8nz760/4Z2GfHF30DCsopTe93BZOBYrLPjR6gD61X2
+         Ia+4C7u+qJ4p2FyZtfAjId1AXzKlKxic1WMzqQg3NK3gBNXV+ez2toaBlaN1/drja0og
+         tIKURSFgHmO9j4DdW9Kg1qqGdU8X4KroveTVqF1A7gOlP2tT27bciMW13pYilBQg6pZn
+         a+2PY4wz/bporm9hUJNRMPypAoDIa3/U2adVPtQMJv9LEO7KBcF8N+TWsqrpBnJmw+aM
+         gkmDtXdZ7UfMFin1mBsGFfPqu0VvKDX866NlPztG0aOz3SZpNjkSJgcIgQz5IArawDNs
+         HyBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DyH66go0qsvcEZgmTI6bctw9NNe8CYLjRZjlFnsO2lI=;
-        b=S/q93rF8PnO5qfkUHTWEL9MBsom3yvGNfif/cRxUAuaqteR2/MjxA4EXa/Kr/2CIti
-         0kRZPi4WlB0xiJwlRnrDN3eiSTPWG86x/HT6f6f4k2Bcu9XOCBDLpem5e07tR8abhgPv
-         cjszZ/dM2FjKkU5XMEbCJldFU7VZoDEs5/B7xtSmCrHPC2xloH5SiNWmY2wteEnxMu9D
-         +w6Z5NmXFM5XW0NQ3lM2NLaxl+OW4kGdDOo3xryMOshG/fQeh5+PyPl3W0NUlXOZtzIO
-         YpUe7s6fZRRXE+/pi8kMYgYI25wj1yfpFAzPajswb/nZ2wjtkJuM/sBrf6GPE11R1Ik4
-         cKyw==
-X-Gm-Message-State: APjAAAXjDBUB9f1CTjYl+HvVu0npRPALj2PWhj4Rzo5+Ad10xg7/Yy2s
-        QTPW1Vta+pBSy9PfG61Pk0EQklw=
-X-Google-Smtp-Source: APXvYqylt2QPZqv5lC1FDT6j6TRsuaAT+xK0Xh92f5/EMuKO34no3b2d5udGrtXTxurrUUPbwUL9SA==
-X-Received: by 2002:a02:b703:: with SMTP id g3mr2751310jam.101.1578098238810;
-        Fri, 03 Jan 2020 16:37:18 -0800 (PST)
-Received: from rob-hp-laptop ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id t17sm21426892ilb.29.2020.01.03.16.37.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 16:37:18 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 2219a5
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Fri, 03 Jan 2020 17:37:17 -0700
-Date:   Fri, 3 Jan 2020 17:37:17 -0700
-From:   Rob Herring <robh@kernel.org>
-To:     Nagarjuna Kristam <nkristam@nvidia.com>
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: Re: [Patch V3 01/18] dt-bindings: phy: tegra-xusb: Add
- usb-role-switch
-Message-ID: <20200104003717.GA11747@bogus>
-References: <1577704195-2535-1-git-send-email-nkristam@nvidia.com>
- <1577704195-2535-2-git-send-email-nkristam@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7uC7JWFx9OYNnl310U+ygwv67SYyeHmDQsyNae/VGhA=;
+        b=WtOlt1bIdyYkoVfbiCtxRtI4Mno1vQERIsz4I/6wq/ujy3X+lr1Dnj0/LinmKrLe+c
+         vq5Q0LkGA1GB0sWvJ8yhahPvMZbQXC/mfL0/5YMB2MJP1JWtxVR5XN+mrzjCIGvV4TRG
+         z4d64XzgVOW665gKzdDmvLjtmG9m3z2waK5GVl3e77w0GNA1Gh+H5MsIU5qCW8LpY4Bk
+         2/9Qp9pjIFNJlTPCHnJPKvYxqd2mNWilcxbd49PjIxmLvNS8a3tG330EdUXeOyIEz1Gp
+         KKVeZogt4n4Qck7P59IuGn/FFEFOqqQ32ZoaRyVvE3eBTMYiGnQwyWMo63C8lxtWCFR9
+         5lzw==
+X-Gm-Message-State: APjAAAW/PncY/GOtoWjvOgTsTIj9n47QrfLCExgdMhYB0L19P243xDxW
+        L5ohPJdOJ7jT80jbpRhTdJ7UElizoUl46drUMax/xA==
+X-Google-Smtp-Source: APXvYqx7qnNmzEGHh3l0ybIURRNlv3h+0jMWrPNsddLXYBAWaFoIfBU2PrBmBZ6fwZizOYviRGZkOY/zqCQGjuwVAnQ=
+X-Received: by 2002:a19:c0b:: with SMTP id 11mr52456055lfm.135.1578098329258;
+ Fri, 03 Jan 2020 16:38:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1577704195-2535-2-git-send-email-nkristam@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191127084253.16356-1-geert+renesas@glider.be>
+ <20191127084253.16356-6-geert+renesas@glider.be> <CACRpkdaW7nmpE99FAvBDBTmkTZOTQ5WdM=JbMzBTLk7cbLRXPw@mail.gmail.com>
+ <CAMuHMdVbk5S__8OK-zNXmiW66=WVA8Jzyc=hUvf_hJSU=u9TFg@mail.gmail.com>
+In-Reply-To: <CAMuHMdVbk5S__8OK-zNXmiW66=WVA8Jzyc=hUvf_hJSU=u9TFg@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 4 Jan 2020 01:38:38 +0100
+Message-ID: <CACRpkda8QD_tDA=YVDRNVnHd8QHs-yHBTzZuJHsnocgMdxv9cA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/7] gpio: Add GPIO Aggregator/Repeater driver
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Dec 2019 16:39:38 +0530, Nagarjuna Kristam wrote:
-> Add usb-role-switch property for Tegra210 and Tegra186 platforms. This
-> entry is used by XUSB pad controller driver to register for role changes
-> for OTG/Peripheral capable USB 2 ports.
-> 
-> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> ---
-> V3:
->  - Added Acked-by updates to commit message.
-> ---
-> V2:
->  - Moved usb-role-switch to seperate Required section as suggested by Thierry.
->  - Added reference to usb/usb-conn-gpio.txt for connector subnode.
-> ---
->  .../devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt         | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
+Sorry for slowness... christmas.
 
-Acked-by: Rob Herring <robh@kernel.org>
+On Thu, Dec 12, 2019 at 4:24 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Thu, Dec 12, 2019 at 3:34 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+
+> > > +         This can serve the following purposes:
+> > > +           1. Assign a collection of GPIOs to a user, or export them to a
+> > > +              virtual machine,
+> >
+> > This is ambiguous. What is a "user"? A process calling from
+> > userspace? A device tree node?
+>
+> A user is an entity with a UID, typically listed in /etc/passwd.
+> This is similar to letting some, not all, people on the machine access
+> the CD-ROM drive.
+
+Ah I get it. Maybe we can say "assign permissions for a collection
+of GPIOs to a user".
+
+> > I would write "assign a collection of GPIO lines from any lines on
+> > existing physical GPIO chips to form a new virtual GPIO chip"
+> >
+> > That should be to the point, right?
+>
+> Yes, that's WHAT it does. The WHY is the granular access control.
+
+So I guess we can write both?
+
+> > > +           3. Provide a generic driver for a GPIO-operated device, to be
+> > > +               controlled from userspace using the GPIO chardev interface.
+> >
+> > I don't understand this, it needs to be elaborated. What is meant
+> > by a "GPIO-operated device" in this context? Example?
+>
+> E.g. a motor. Or a door opener.
+>
+>         door-opener {
+>                 compatible = "mydoor,opener";
+>
+>                 gpios = <&gpio2 19 GPIO_ACTIVE_HIGH>;
+>         };
+>
+> You don't need a full-featured kernel driver for that, so just bind the
+> gpio-aggregator to the door-opener, and control it through libgpiod.
+
+Yep it's a perfect industrial control example, I get it.
+
+Maybe we should blurb something about industrial control?
+
+The rest I think we cleared out else I will see it when I review again.
+
+Yours,
+Linus Walleij
