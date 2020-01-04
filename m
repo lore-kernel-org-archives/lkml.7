@@ -2,131 +2,76 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8B6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 18:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE55C32770
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 18:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA5B124653
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 18:21:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578162086;
-	bh=OffE6GW1fEHEsKz4lJ2UtasvfPdaubXshXY9rYrJGGw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kyGN1odCHkV+z8JSqNZ6TSZ0aE+6zLApNu/qxAJB28MAtsq08rOQkWQJwqxcoMJrK
-	 uAHUJaQyiKzD0PYHgIZOXaM9snKlE9M1cVTWC196bDOkZ+DpbDg89DtHk3oy59uVWs
-	 fat2EdwVR8nTHS+nVI9BPv40Dm7+5HRkOwqNgcdg=
+	by mail.kernel.org (Postfix) with ESMTP id C724921734
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 18:46:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="H239N8GT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbgADSV0 (ORCPT
+        id S1726234AbgADSqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 13:21:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbgADSVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 13:21:25 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B87E8222C4;
-        Sat,  4 Jan 2020 18:21:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578162085;
-        bh=OffE6GW1fEHEsKz4lJ2UtasvfPdaubXshXY9rYrJGGw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hFkVpF4CJX1T67ffFbREBgsanbynhohqOoCBZyn4eKk7wE3YQXY1LqUrOH1ZS85GO
-         qP0fXt6AlakACLEvz6FbVhYPVOEsUVf1OQDKgA0HBLBqE7Um/QEQiMkuEB/JwsETuJ
-         6fHnD1eXtpd3+0Xs3C948YuQhDcUXQfctb9GC80U=
-Date:   Sat, 4 Jan 2020 19:21:23 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PM-runtime: add tracepoints for usage_count changes
-Message-ID: <20200104182123.GA1485543@kroah.com>
-References: <cb199a03895f8a11d9039209e6ac1cd92b1d1fb9.1578155207.git.mirq-linux@rere.qmqm.pl>
+        Sat, 4 Jan 2020 13:46:06 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:45920 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgADSqF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Jan 2020 13:46:05 -0500
+Received: from [10.137.112.111] (unknown [131.107.147.111])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 25EFE2010C21;
+        Sat,  4 Jan 2020 10:46:04 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 25EFE2010C21
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1578163564;
+        bh=3HA3xT5CMr5nCDYBy43HSWYXviiXmUGxICVBHz0Vt6M=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=H239N8GTI1LBoEsRRyGNtwWseiS+bkIBqB+UvopVtO4yKlF4Ic9GQmwB8Mw8EuXN5
+         vxNTLFNXApgylG4xu/iCgl1dPT5fyJ9c84AssQsum2MtOue/nQQLYFdQmAR1jF79/C
+         hLLDr3HDzcrsEuS/KZqSzEFYQobCcvNZPYd6plQk=
+Subject: Re: [IMA] 11b771ffff:
+ BUG:sleeping_function_called_from_invalid_context_at_kernel/locking/mutex.c
+To:     "Chen, Rong A" <rong.a.chen@intel.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mimi Zohar <zohar@linux.vnet.ibm.com>,
+        linux-integrity@vger.kernel.org, lkp@lists.01.org
+References: <20191227142335.GE2760@shao2-debian>
+ <2a831fe9-30e5-63b4-af10-a69f327f7fb7@linux.microsoft.com>
+ <e30864ab-4867-fffa-bf0c-88a5a9bb6f6e@intel.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <a493e36a-694c-0c21-1b89-2dae5208c1a1@linux.microsoft.com>
+Date:   Sat, 4 Jan 2020 10:46:18 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cb199a03895f8a11d9039209e6ac1cd92b1d1fb9.1578155207.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <e30864ab-4867-fffa-bf0c-88a5a9bb6f6e@intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 04, 2020 at 05:27:57PM +0100, Michał Mirosław wrote:
-> Add tracepoints to remaining places where device's power.usage_count
-> is changed. This helps debugging where and why autosuspend is prevented.
+On 1/4/2020 3:49 AM, Chen, Rong A wrote:
+
+Hi Rong,
 > 
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> ---
->  drivers/base/power/runtime.c | 13 +++++++++++--
->  include/trace/events/rpm.h   |  6 ++++++
->  2 files changed, 17 insertions(+), 2 deletions(-)
+> Hi,
 > 
-> diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-> index 48616f358854..16134a69bf6f 100644
-> --- a/drivers/base/power/runtime.c
-> +++ b/drivers/base/power/runtime.c
-> @@ -1006,8 +1006,10 @@ int __pm_runtime_idle(struct device *dev, int rpmflags)
->  	int retval;
->  
->  	if (rpmflags & RPM_GET_PUT) {
-> -		if (!atomic_dec_and_test(&dev->power.usage_count))
-> +		if (!atomic_dec_and_test(&dev->power.usage_count)) {
-> +			trace_rpm_usage_rcuidle(dev, rpmflags);
+> Sorry for the delay, we updated the lkp-tests code and uploaded the 
+> missing cgz files for this case.
+> 
+> Best Regards,
+> Rong Chen
 
-Who and what is really going to use these tracepoints?
+Thanks - I was able to execute the test and validate the fix.
 
-And putting them in these if statements seems odd, are you sure that's
-the correct place?  What do these show to userspace?
+  -lakshmi
 
->  			return 0;
-> +		}
->  	}
->  
->  	might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe);
-> @@ -1038,8 +1040,10 @@ int __pm_runtime_suspend(struct device *dev, int rpmflags)
->  	int retval;
->  
->  	if (rpmflags & RPM_GET_PUT) {
-> -		if (!atomic_dec_and_test(&dev->power.usage_count))
-> +		if (!atomic_dec_and_test(&dev->power.usage_count)) {
-> +			trace_rpm_usage_rcuidle(dev, rpmflags);
->  			return 0;
-> +		}
->  	}
->  
->  	might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe);
-> @@ -1101,6 +1105,7 @@ int pm_runtime_get_if_in_use(struct device *dev)
->  	retval = dev->power.disable_depth > 0 ? -EINVAL :
->  		dev->power.runtime_status == RPM_ACTIVE
->  			&& atomic_inc_not_zero(&dev->power.usage_count);
-> +	trace_rpm_usage_rcuidle(dev, 0);
-
-Why this one?
-
-
->  	spin_unlock_irqrestore(&dev->power.lock, flags);
->  	return retval;
->  }
-> @@ -1434,6 +1439,8 @@ void pm_runtime_allow(struct device *dev)
->  	dev->power.runtime_auto = true;
->  	if (atomic_dec_and_test(&dev->power.usage_count))
->  		rpm_idle(dev, RPM_AUTO | RPM_ASYNC);
-> +	else
-> +		trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
-
-Are you sure this is correct?
-
-These feel odd...
-
-thanks,
-
-greg k-h
