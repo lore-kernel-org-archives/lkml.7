@@ -2,285 +2,163 @@ Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2D7C32770
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 04:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 150E2C32770
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 04:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4177724655
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 04:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5CA8215A4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 04:48:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="qG0FRyTk";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cSp5GVwm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mBTSi1z8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgADEqo (ORCPT
+        id S1725862AbgADEsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jan 2020 23:46:44 -0500
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:58353 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725883AbgADEqo (ORCPT
+        Fri, 3 Jan 2020 23:48:06 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:36126 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbgADEsF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jan 2020 23:46:44 -0500
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.nyi.internal (Postfix) with ESMTP id AC1635BA1;
-        Fri,  3 Jan 2020 23:46:42 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Fri, 03 Jan 2020 23:46:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
-        HCNaGSPcsG/VXR/ZGc4UfacOoXszeQnffkbWdr31kHI=; b=qG0FRyTkMaLQRw9m
-        g5bp6c86hPWSQj0W9bk3Wh4SxyqhqKAVZlDic8BqrgT2JPhf8zk2dAG1KZPCpMvX
-        /cttstJYWhJ7GQwqijTdXv1hyOHhdRyzATEYMnp7fgFIKIcxRpQ1IcoqFgpLqBQr
-        EcxXXkTGJjVfzRQ6+TgLsp93FLkf54okuGPAOJDY8pccxYQyDyRQvNw63F8Zyy75
-        xwUY0Q3VW6JH0X9s/60VNpBs0+mHRCE5EK9tjEp4jqrhq/WFUCkAMlOb27/pVD0s
-        1Mppr+ULCAZjPEEy9rRIWCbqVIhzFlx1P2r2AcT/h3yIB7tNJNivRLB9Di1AbaKU
-        zw7s+g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=HCNaGSPcsG/VXR/ZGc4UfacOoXszeQnffkbWdr31k
-        HI=; b=cSp5GVwmkkxYOdZn67C8+Bok80xWpoVxlaoJUQT5pW9/TpXZf+nf1GORx
-        mSjjRBBsTqTv0bWJKKKFI03YZ3Q5VrTey0DRB7W/fWhU040xzp8NaoU4AMzM92Ik
-        6bCTUVsQSvQvhrq0M/s4+RaSQ2KxVvVmuI9FmXoRglaiFh08+VKuF76FEX+kRyKm
-        GrocRTeX6MzMsGxEyTYNhaYnVoxB1gFuEoOiT6VQuBoMU1P9VNuwiNmY4e0DS4Xx
-        z7d8SNmvDsTSnlL4FD4eSNb3gC57Y7ndqjGIVpr2RjWuRlDyw/zYzDyZjgrnToJo
-        taAWeYE9X3MEuTXD+i+RPGLQt1DJg==
-X-ME-Sender: <xms:sRgQXqxanBeyWRrNr4letrywvC7ntosMK_o68vHd2WdZ7F_ptjT98A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdeggedgjeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
-    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucfkphepuddukedrvddtke
-    drudeijedrudelieenucfrrghrrghmpehmrghilhhfrhhomheprhgrvhgvnhesthhhvghm
-    rgifrdhnvghtnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:shgQXtBzXMhriyM9R3VNKCvVTFLebq6cLHz5K54G8kwDdCkETfzUtA>
-    <xmx:shgQXuEP3rVENrZWljP5nDPubZlWzsXQy5qM-F9vdabyrUhD37pFtQ>
-    <xmx:shgQXsO9Wjr94TOk_xMblTO3fclx4-SExABRp4w4GhZcRqavCvqSow>
-    <xmx:shgQXp-UvCH2_DMj9nw8aPXDPcRq7IgrsuRREvFv10iO_cWulS0L-g>
-Received: from mickey.themaw.net (unknown [118.208.167.196])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5D4A330600A8;
-        Fri,  3 Jan 2020 23:46:37 -0500 (EST)
-Message-ID: <fd0b0b12bcdafa0a40fc80f1fc55ed79ec9e6411.camel@themaw.net>
-Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
- symlinks
-From:   Ian Kent <raven@themaw.net>
-To:     Al Viro <viro@zeniv.linux.org.uk>, Aleksa Sarai <cyphar@cyphar.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        stable@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Sat, 04 Jan 2020 12:46:33 +0800
-In-Reply-To: <20200103014901.GC8904@ZenIV.linux.org.uk>
-References: <20191230052036.8765-1-cyphar@cyphar.com>
-         <20191230054413.GX4203@ZenIV.linux.org.uk>
-         <20191230054913.c5avdjqbygtur2l7@yavin.dot.cyphar.com>
-         <20191230072959.62kcojxpthhdwmfa@yavin.dot.cyphar.com>
-         <20200101004324.GA11269@ZenIV.linux.org.uk>
-         <20200101005446.GH4203@ZenIV.linux.org.uk>
-         <20200101030815.GA17593@ZenIV.linux.org.uk>
-         <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
-         <20200101234009.GB8904@ZenIV.linux.org.uk>
-         <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
-         <20200103014901.GC8904@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Fri, 3 Jan 2020 23:48:05 -0500
+Received: by mail-pj1-f66.google.com with SMTP id n59so5486170pjb.1;
+        Fri, 03 Jan 2020 20:48:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IoTdl+/r/+1PDTOBmkAtOt/aNfrTYnx6/vTmYpcU8Bk=;
+        b=mBTSi1z8HQ5QN8ZL9wZwgjOBZcLjA6/1s/o81QkxPC3Gn1LJt7QS6MSGiI9NCCsJQI
+         xwlIpwfxl+81MT4OH+Ckc3va0uV+gymXyyRkywUt0qEDLxF58/3e0bZADpvWzRffBzIE
+         GcKkw5L+y2wKmxDXXvMBoASIBpbhEyI8xYgbuP4ry+pvA791SlDRFw1pYcK6NWSZ5q1q
+         LXogHhdlAPDW2pO92kNmXoZzMbA38eBex2xeF0DNY8C3Y3/tlP6CLmRBf+0C+WGo6JXe
+         uja8rjA9pbwrcxkn0rBxxp0IELwQsbYQtEOA5DqAN5DkVUr2CMlDifi9y9ZNiZuHjuj1
+         l0mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IoTdl+/r/+1PDTOBmkAtOt/aNfrTYnx6/vTmYpcU8Bk=;
+        b=Q1OYDWcObduqhxHTyFw1DdNf2RMTRH79MtzIXHrHVBf7i4gDTgWTa5joKXB438JlsS
+         SLYWXDjNDHmEnuWiPkN4TA/oBfwRSkY6VvkJphoLQrfNVqcNbdWp01CxpUDsWrPvvnvO
+         o3y8BLbgpCKxIlbfaSzQv5kXp0vVKMInQjcKqkJlx/QtWz2cBKmxsu8Sc55AC2/r8t7o
+         i1FyZCjqam+JhTfZsr1qlKFZwwocrW7t+8wiLNSr1uTOhngBopS2yo7o8bOfEEI+3O15
+         p/l6YS+tFtrE2ieE+F5OZ4gp7H684zWuaIO+pcSVICaZh6tQt0vFuuuq9VdIUqpNKlb0
+         4bEA==
+X-Gm-Message-State: APjAAAXlIkliRj6UQjzqTJH2mVVkxi+QESE6oTQ1p3J/SaPUoGrhVMX/
+        XfUQyyt7uRca/RwqliBv0VA=
+X-Google-Smtp-Source: APXvYqzeds3/bTBx5/Pdi8NGCNH+FlJbUxV+IYl0LmLIGJ2scfHO4JnsggAhidTbq2sCByFRUHkqMQ==
+X-Received: by 2002:a17:90a:3aaf:: with SMTP id b44mr31811177pjc.9.1578113285104;
+        Fri, 03 Jan 2020 20:48:05 -0800 (PST)
+Received: from localhost (199.168.140.36.16clouds.com. [199.168.140.36])
+        by smtp.gmail.com with ESMTPSA id h12sm53934136pfo.12.2020.01.03.20.48.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 Jan 2020 20:48:04 -0800 (PST)
+Date:   Sat, 4 Jan 2020 12:48:01 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Light Hsieh <light.hsieh@mediatek.com>
+Cc:     linus.walleij@linaro.org, linux-mediatek@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sean.wang@kernel.org, kuohong.wang@mediatek.com
+Subject: Re: [PATCH v7 2/6] Supporting driving setting without mapping
+ current to register value
+Message-ID: <20200104044801.GA13072@nuc8i5>
+References: <1577799707-11855-1-git-send-email-light.hsieh@mediatek.com>
+ <1577799707-11855-2-git-send-email-light.hsieh@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1577799707-11855-2-git-send-email-light.hsieh@mediatek.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-It may be a bit off-topic here but, in autofs symlinks can be used
-in place of mounts. That mechanism can be used (mostly nowadays) with
-amd map format maps.
-
-If I'm using symlinks instead of mounts (where I can) I definitely
-don't want these to be over mounted by a mount.
-
-I haven't seen problems like that happening but if it did happen
-that would be a bug in automount or user mis-use of some sort.
-
-On Fri, 2020-01-03 at 01:49 +0000, Al Viro wrote:
-> On Thu, Jan 02, 2020 at 02:59:20PM +1100, Aleksa Sarai wrote:
-> > On 2020-01-01, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > > On Thu, Jan 02, 2020 at 01:44:07AM +1100, Aleksa Sarai wrote:
-> > > 
-> > > > Thanks, this fixes the issue for me (and also fixes another
-> > > > reproducer I
-> > > > found -- mounting a symlink on top of itself then trying to
-> > > > umount it).
-> > > > 
-> > > > Reported-by: Aleksa Sarai <cyphar@cyphar.com>
-> > > > Tested-by: Aleksa Sarai <cyphar@cyphar.com>
-> > > 
-> > > Pushed into #fixes.
-> > 
-> > Thanks. One other thing I noticed is that umount applies to the
-> > underlying symlink rather than the mountpoint on top. So, for
-> > example
-> > (using the same scripts I posted in the thread):
-> > 
-> >   # ln -s /tmp/foo link
-> >   # ./mount_to_symlink /etc/passwd link
-> >   # umount -l link # will attempt to unmount "/tmp/foo"
-> > 
-> > Is that intentional?
-> 
-> It's a mess, again in mountpoint_last().  FWIW, at some point I
-> proposed
-> to have nd_jump_link() to fail with -ELOOP if the target was a
-> symlink;
-> Linus asked for reasons deeper than my dislike of the semantics, I
-> looked
-> around and hadn't spotted anything.  And there hadn't been at the
-> time,
-> but when four months later umount_lookup_last() went in I failed to
-> look
-> for that source of potential problems in it ;-/
-> 
-> I've looked at that area again now.  Aside of usual cursing at
-> do_last()
-> horrors (yes, its control flow is a horror; yes, it needs serious
-> massage;
-> no, it's not a good idea to get sidetracked into that right now),
-> there
-> are several fun questions:
-> 	* d_manage() and d_automount().  We almost certainly don't
-> want those for autofs on the final component of pathname in umount,
-> including the trailing symlinks.  But do we want those on usual
-> access
-> via /proc/*/fd/*?  I.e. suppose somebody does open() (O_PATH or not)
-> in autofs; do we want ->d_manage()/->d_automount() called when
-> resolving /proc/self/fd/<whatever>/foo/bar?  We do not; is that
-> correct from autofs point of view?  I suspect that refusing to
-> do ->d_automount() is correct, but I don't understand ->d_manage()
-> purpose well enough to tell.
-
-Yes, we don't want those on the final component of the path in
-umount. The following of a symlink will give use a new path of
-some sort so the rules would change to the usual ones for the
-new path.
-
-The semantics of following a symlink, be the source a proc entry
-or not (I think) should always be the same. If the follow takes
-us to an autofs file system (be it a trigger mount or an indirect
-mount in an autofs file system) the behaviour should be that of
-the autofs file system when we arrive there, from an auto-mount
-POV.
-
-The original intent of ->d_manage() was to prevent walks into an
-under construction mount and that might not be as simple as mounting
-a source on a mount point.
-
-For example take the case of an automount indirect mount map entry
-like this:
-
-test    /some/path/one  server:/source/path1 \
-        /some/path/two  server2:/source/path2 \
-        /some/other/path server:/source/path3 \
-        /some/other/path/three server:/source/path4
-
-This entry has no mount at the root of the tree (so called root-less
-multi-mount) but walks need to block when it's under construction as
-the topology isn't known until the directory tree and any associated
-mounts (usually trigger mounts) have been completed.
-
-In this case it's needed to go to ref-walk mode and block until it's
-done.
-
-The other (perhaps not so obvious) use of ->d_manage() is to detect
-expire to mount races. When an automount is expiring at the same time
-a process (that would cause an automount) is traversing the path. The
-base (I'll not say root, since the root of the expire might not be the
-root of the tree) needs to block the walk until the expire is done.
-
-These multi-mounts are meant to provide a "mount as you go" mechanism
-so that only portions of the tree of mounts are mounted or expired at
-any one time.
-
-For example, the offsets in the above entry are /some/path/one,
-/some/path/two, /some/other/path and /some/other/path/three.
-
-On access to <autofs mount>/test automount is meant to mount trigger
-mounts for offsets /some/path/one, /some/path/two and /some/other/path
-and mount an offset trigger for /some/other/path/three into the mount
-for /some/other/path when it's accessed and that might not happen
-during the initial mount of the tree. The reverse being done on umount
-in sub-trees of mounts when a nesting point like /some/other/path is
-encountered.
-
-But that's something of an aside because in all cases below the root
-there will be an actual mount preventing walks into the tree under
-nesting point mounts being constructed or expired.
-
-Anyway, returning to the topic at hand, the answer to whether we want
-->d_manage()/->d_automount() after a symlink has been followed is
-yes, I think, because at that point we could be within a file system
-that has automounts of some sort.
-
-But perhaps I'm missing something about the description of the case
-above ...
-
-> 	* I really hope that the weird "trailing / forces automount
-> even in cases when we normally wouldn't trigger it" (stat /mnt/foo
-> vs. stat /mnt/foo/) is not meant to extend to umount.  I'd like
-> Ian's confirmation, though.
-
-I can't see any way that the trailing "/" can realte to umount.
-
-It has always been meant to be used to trigger a mount on something
-that would otherwise not be mounted and that's the only case I'm
-aware of.
-
-> 	* do we want ->d_manage() on following .. into overmounted
-> directory?  Again, autofs question...
-
-I think that amounts to asking "can the target of the ../ be in the
-process of being constructed or expired at this time" and that's
-probably yes. A root-less multi-mount would be one case where this
-could happen (although it's not strictly an over-mounted directory).
+On Tue, Dec 31, 2019 at 09:41:43PM +0800, Light Hsieh wrote:
+> MediaTek's smarphone project actual usage does need to know current value
+> (in mA) in procedure of finding the best driving setting.
+> The steps in the procedure is like as follow:
+smartphone ?
 
 > 
-> 	The minimal fix to mountpoint_last() would be to have
-> follow_mount() done in LAST_NORM case.  However, I'd like to
-> understand
-> (and hopefully regularize) the rules for
-> follow_mount()/follow_managed().
-> Additional scary question is nfsd iterplay with automount.  For nfs4
-> exports it's potentially interesting...
-
-I'm not sure about nfs (and other cross mounting file systems). The
-automounting in file systems other than autofs always have a real
-mount as the target (AFAIK) so there's an implied blocking that occurs
-on crossing the mount point. That's always made the nfs automounting
-case simpler to my thinking anyway.
-
-The real problem with nfs automount trees is when the topology of
-the exports tree changes while parts of it are in use. People that
-have any idea of how nfs cross mounting (and mount dependencies in
-general) work shouldn't do that but they do it and then wonder why
-things go wrong ...
-
+> 1. set driving setting field in setting register as 0, measure waveform,
+>    perform test, and etc.
+> 2. set driving setting field in setting register as 1, measure waveform,
+>    perform test, and etc.
+> ...
+> n. set driving setting field in setting register as n-1, measure
+>    waveform, perform test, and etc.
+> Check the results of steps 1~n and adopt the setting that get best result.
 > 
-> 	Ian, could you comment on the autofs questions above?
-> I'd rather avoid doing changes in that area without your input -
-> it's subtle and breakage in automount-related behaviour can be
-> mysterious as hell.
-
-Thanks for the heads up.
-
-As always I can run tests on changes you want to do.
-Fortunately that's generally worked out ok for us in the past.
-
-Ian
-
+> This procedure does need to know the mapping between current to register
+> value.
+> Therefore, setting driving without mapping current is more practical for
+> MediaTek's smartphone usage.
+> 
+> Change-Id: I8bd6a2cecc0af650923704589b5b90097b0ff77e
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-mt6765.c        |  4 ++--
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 12 ++++++++++++
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h |  5 +++++
+>  3 files changed, 19 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt6765.c b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+> index 32451e8..1212264 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+> @@ -1077,8 +1077,8 @@
+>  	.bias_disable_get = mtk_pinconf_bias_disable_get,
+>  	.bias_set = mtk_pinconf_bias_set,
+>  	.bias_get = mtk_pinconf_bias_get,
+> -	.drive_set = mtk_pinconf_drive_set_rev1,
+> -	.drive_get = mtk_pinconf_drive_get_rev1,
+> +	.drive_set = mtk_pinconf_drive_set_raw,
+> +	.drive_get = mtk_pinconf_drive_get_raw,
+>  	.adv_pull_get = mtk_pinconf_adv_pull_get,
+>  	.adv_pull_set = mtk_pinconf_adv_pull_set,
+>  };
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> index d63e05e..2247eae 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> @@ -608,6 +608,18 @@ int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
+>  	return 0;
+>  }
+>  
+> +int mtk_pinconf_drive_set_raw(struct mtk_pinctrl *hw,
+> +			       const struct mtk_pin_desc *desc, u32 arg)
+> +{
+> +	return mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV, arg);
+> +}
+> +
+> +int mtk_pinconf_drive_get_raw(struct mtk_pinctrl *hw,
+> +			       const struct mtk_pin_desc *desc, int *val)
+> +{
+> +	return mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV, val);
+> +}
+> +
+>  int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
+>  			     const struct mtk_pin_desc *desc, bool pullup,
+>  			     u32 arg)
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> index 1b7da42..75d0e07 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> @@ -288,6 +288,11 @@ int mtk_pinconf_drive_set_rev1(struct mtk_pinctrl *hw,
+>  int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
+>  			       const struct mtk_pin_desc *desc, int *val);
+>  
+> +int mtk_pinconf_drive_set_raw(struct mtk_pinctrl *hw,
+> +			       const struct mtk_pin_desc *desc, u32 arg);
+> +int mtk_pinconf_drive_get_raw(struct mtk_pinctrl *hw,
+> +			       const struct mtk_pin_desc *desc, int *val);
+> +
+>  int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
+>  			     const struct mtk_pin_desc *desc, bool pullup,
+>  			     u32 arg);
+> -- 
+> 1.8.1.1.dirty
