@@ -2,177 +2,190 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6595C00523
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 05:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46574C00523
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 05:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABAEF218AC
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 05:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D54C521775
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 05:51:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="BPVma7bz";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="vXHysYsl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgAEF0V (ORCPT
+        id S1725991AbgAEFvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 00:26:21 -0500
-Received: from pindarots.xs4all.nl ([82.161.210.87]:43478 "EHLO
-        pindarots.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgAEF0V (ORCPT
+        Sun, 5 Jan 2020 00:51:20 -0500
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:56260 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgAEFvT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 00:26:21 -0500
-Received: from surfplank2.hierzo (localhost.localdomain [127.0.0.1])
-        by pindarots.xs4all.nl (8.15.2/8.14.5) with ESMTPS id 0055QJ0K276716
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO)
-        for <linux-kernel@vger.kernel.org>; Sun, 5 Jan 2020 06:26:19 +0100
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Udo van den Heuvel <udovdh@xs4all.nl>
-Subject: 5.4.x: WARNING: CPU: 1 PID: 562 at
- drivers/gpu/drm/amd/amdgpu/../display/dc/calcs/dcn_calcs.c:1464
-Autocrypt: addr=udovdh@xs4all.nl; prefer-encrypt=mutual; keydata=
- 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
- JjyRAfO8kEkwCkTZ6/Mnrxsunx9VNLGDEw==
-Organization: hierzo
-Message-ID: <618356a9-7a63-f7c3-7a6a-5a14080d380c@xs4all.nl>
-Date:   Sun, 5 Jan 2020 06:26:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Sun, 5 Jan 2020 00:51:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1578203479; x=1609739479;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=sUi6wqPs0k5OylI8see6LJEBZgAlUFkPWvvnsOXUXCg=;
+  b=BPVma7bzPtSS+WxrOQ6gWSfGNXyzDVbsX7cyU91d2Zpdf1LeCSEx0mSD
+   VsMdY1fkIEqh3bLg0uG/eoI4ifVV4ktSI9BJOxx7eTFFP34Hqc2woD6+u
+   sa97nH85rOO/2CHUcVMhO9vVexSiPzpr+SkuUtP3ThHu0AE3MImNsLJzG
+   wogtkMjUEjZgwh8/25pbzcEUamD2VT3X9G9Sfu3hN4zBHpJT4KxCktzTK
+   EBxKL+vrndmHg9MlBQyb5uuFfbnKamlGLr/zBfsUzu9jMjNFdnxY7C0Iu
+   34DUGpBUkDTTYeYSY62Qizdpg69Ol6DJW2QAI3vTBr2F1Ac3X/Dt8HCWp
+   g==;
+IronPort-SDR: /13JGtN/SW/pw/adJNi177onl1MVcztl6kR2y/z/A/SwR/9w/v7a22Vz2aWPqhcmQvV1JmEzcu
+ iN/RCraTOsQVVs/xp+7O32NQBQKfQCzYIh+hdDgcL5n561INN16AHpbcggXMngDd09rmhSyEVL
+ 0KW8yHMwvbl2vX2LXKWXd4tVYo0K9ae8WgFhbKqTBdgAuULCo2tUZiWEYkZdQSKtWFm2PYwEdS
+ SUvu2EFhyh2G8eaFXxLvroDmspQoyY98yq3hKSRoKLuWxoxz/rEVAt2avXYPGuddyEiczgx2kv
+ sIQ=
+X-IronPort-AV: E=Sophos;i="5.69,397,1571673600"; 
+   d="scan'208";a="131203882"
+Received: from mail-bn8nam12lp2175.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.175])
+  by ob1.hgst.iphmx.com with ESMTP; 05 Jan 2020 13:51:17 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RZ/h5++j6Sfe+82LBbKrEd+w/RrHsAwxlz7OvE8UPj4bkDNYob2pR9P9tgtE7bp18Ad4qsVhG3u8rZNUo1mdIFeQwKz+5EocJzUyONSwNfmqQeFWsXa2LS4KPWi7pGWieD9Vr65kP6x17GHRr+UV3JLXhbaQd+nwDCRM7UmrXEvfMsxusbrKBkIxRBhlBvrLbN9YuJvK0A5/sbGDt2Vr6yx/6p/63874D2AfhDuAaJfoDANGh2zmEIfKfXmEBgzJs0ScPcj6pgXL0deau9tTueS6GiKvae/M4ubrJiF7B1Sj5R4ThBWUFYmaInl/PuxHI3aani/g/qioOJMh5Mn2gA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LDSICHiA4AGENjnEKDQBWkghDmxnzSI6AoxJ9CmWG38=;
+ b=X80A4i/GQ/4scB44S+yDoMmJyb9usaQDA0c2iEUXuVLL4+LuZI4xUAt17yZRLc+MAMWdo9QVza7F3N1OkIWhe5tnVtxiwm76cMFXEhrJWk6cP0e0VwhuZIZ1PAg/UCxAczdD+zGYCWOszMrtqS7sguqXah4wTzVSCpgi8UKL2WUR9Bzk91DL5nA9DX8ZrRqRNjVK/bsdFE6sLBu4jSGM1ovaFVFFf1QprcJ59vVEWUi37t16ayCtGpfj4UNIbTkA7cwgiKydAocwIVYKohiJMCckgBvntA4r1t5Ts720vCxwwSxkkLoJIcRbkryQRvmk5UTm3seeGU3nvgmRpG2VhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LDSICHiA4AGENjnEKDQBWkghDmxnzSI6AoxJ9CmWG38=;
+ b=vXHysYslCli3dd2oj1jq6DZqD1r7iQwrnXvar4ZMsHhpKnscdZrr/mJO8fUIZfdnLpr95QHxdkMRqzqPuf6m5vSVXeZ4zTtJqkfMj075yNPrG489jx/VTeN8bvGx2AVVNHMpE5w852w3dVhI/dzg6ue8M8TxM9Ya54Sfo+xJcb0=
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) by
+ MN2PR04MB5935.namprd04.prod.outlook.com (20.178.255.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.13; Sun, 5 Jan 2020 05:51:15 +0000
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::460:1c02:5953:6b45]) by MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::460:1c02:5953:6b45%4]) with mapi id 15.20.2602.015; Sun, 5 Jan 2020
+ 05:51:15 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Stanley Chu <stanley.chu@mediatek.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>
+CC:     "beanhuo@micron.com" <beanhuo@micron.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
+Subject: Re: [PATCH v1 0/3] scsi: ufs: pass device information to
+ apply_dev_quirks
+Thread-Topic: [PATCH v1 0/3] scsi: ufs: pass device information to
+ apply_dev_quirks
+Thread-Index: AQHVw4RnKOmg85o31Eufk/ca9N3SIafbkG15
+Date:   Sun, 5 Jan 2020 05:51:14 +0000
+Message-ID: <MN2PR04MB69913F0B671032A388747CF7FC3D0@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <1578200118-29547-1-git-send-email-stanley.chu@mediatek.com>
+In-Reply-To: <1578200118-29547-1-git-send-email-stanley.chu@mediatek.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [2a00:a040:19b:4327:8ce4:162b:4d1a:a5c4]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 74e89c91-07e5-47ef-08ce-08d791a346d4
+x-ms-traffictypediagnostic: MN2PR04MB5935:
+x-microsoft-antispam-prvs: <MN2PR04MB593536076E2F47BB7B3C27E3FC3D0@MN2PR04MB5935.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 027367F73D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(396003)(39850400004)(136003)(346002)(189003)(199004)(33656002)(86362001)(4326008)(5660300002)(9686003)(52536014)(55016002)(110136005)(54906003)(316002)(7416002)(186003)(478600001)(66946007)(53546011)(6506007)(7696005)(81156014)(76116006)(81166006)(91956017)(8676002)(8936002)(66476007)(71200400001)(66556008)(2906002)(66446008)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5935;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: OAxoApTYCf9zIMe5rRCaDTQDZ3z8VzjA01UxIne1th02OWsG1eBPznrT51AWfqgRuqTMoazeqdgDXVPC6NEZ/7/9tdX3OxeBNmOci3DwTwwC00MVGQmttax/mcgoe8mTFi7mKAByGXfVmRD4ewDZ9mSdKey5ElJtGLrYTBtIvwUqc5JKx0FB3YAofjYRhz4Wh3wCFRSlPQBEXynQqse8wvQ1uslPsHTpzglmrR+T0W/f/dYng+KAawGJE1Zv01EHtB2v/fita80CJEQtHpS+zqH07/1FXkEdmFlr2lMEdrN1nE1VDxmPD6mU6i+iscZF1B4qjCSr7AcvKUbOL3Bxsl0gfVnxF51bYptp2Kjh6RwdoiZEqat03VIZPPOHZ8BvojqZxE980hrJq81d5sanmBu0SoFqFupRosOHMkNvUAqwBYi7nKP/Udgmw84ygeVG
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 74e89c91-07e5-47ef-08ce-08d791a346d4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jan 2020 05:51:14.8908
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VDv9xT4o0CzRiZjH0fngfu4XF/bFBUDvh7T3fIXBqb08ToobuO5HZJ5sTEwaHfe1ZGtFxZWGDnuO3d0mXqLA6A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5935
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-The WARNING below has been present in the kernel for quiet a while.
-This WARNING happens every time a kernel is booted.
-What is causing the delay to fix this?
-
-
-
-[    2.567111] WARNING: CPU: 1 PID: 562 at
-drivers/gpu/drm/amd/amdgpu/../display/dc/calcs/dcn_calcs.c:1464
-dcn_bw_update_from_pplib+0xa5/0x2e0 [amdgpu]
-[    2.567115] Modules linked in: hid_generic sr_mod cdrom usbhid
-aesni_intel amdgpu(+) gpu_sched ttm i2c_dev autofs4
-[    2.567123] CPU: 1 PID: 562 Comm: systemd-udevd Not tainted 5.4.7 #9
-[    2.567126] Hardware name: Gigabyte Technology Co., Ltd. X570 AORUS
-PRO/X570 AORUS PRO, BIOS F11 12/06/2019
-[    2.567204] RIP: 0010:dcn_bw_update_from_pplib+0xa5/0x2e0 [amdgpu]
-[    2.567208] Code: 0c 24 85 c9 74 24 8d 71 ff 48 8d 44 24 04 48 8d 54
-f4 0c eb 0d 48 83 c0 08 48 39 d0 0f 84 2a 01 00 00 44 8b 00 45 85 c0 75
-eb <0f> 0b e8 04 c0 b2 e6 4c 89 e2 be 04 00 00 00 4c 89 ef e8 94 59 fe
-[    2.567213] RSP: 0018:ffff9df7804b36c0 EFLAGS: 00010246
-[    2.567216] RAX: ffff9df7804b36c4 RBX: ffff8ba4c7c70000 RCX:
-0000000000000004
-[    2.567218] RDX: ffff9df7804b36e4 RSI: 0000000000000003 RDI:
-ffffffffa7deab49
-[    2.567221] RBP: ffff9df7804b3800 R08: 0000000000000000 R09:
-00000000000003b8
-[    2.567223] R10: 0720072007200720 R11: 0720072007200720 R12:
-ffff9df7804b3750
-[    2.567226] R13: ffff8ba4c71b1b80 R14: 0000000000000001 R15:
-000000000000000a
-[    2.567229] FS:  00007fa073a28940(0000) GS:ffff8ba4df040000(0000)
-knlGS:0000000000000000
-[    2.567232] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    2.567234] CR2: 000055db7a7fae98 CR3: 00000004099a6000 CR4:
-00000000003406e0
-[    2.567236] Call Trace:
-[    2.567299]  ? amdgpu_atom_execute_table_locked+0x12c/0x210 [amdgpu]
-[    2.567376]  dcn10_create_resource_pool+0x82d/0xb30 [amdgpu]
-[    2.567382]  ? __kmalloc+0xeb/0xf0
-[    2.567454]  dc_create_resource_pool+0xbe/0x130 [amdgpu]
-[    2.567527]  dc_create+0x213/0x6b0 [amdgpu]
-[    2.567602]  amdgpu_dm_init+0x138/0x1c0 [amdgpu]
-[    2.567674]  ? phm_wait_for_register_unequal.part.0+0x4a/0x80 [amdgpu]
-[    2.567748]  dm_hw_init+0x9/0x20 [amdgpu]
-[    2.567820]  amdgpu_device_init.cold+0x119b/0x1344 [amdgpu]
-[    2.567880]  amdgpu_driver_load_kms+0x41/0xc0 [amdgpu]
-[    2.567886]  drm_dev_register+0x10c/0x150
-[    2.567945]  amdgpu_pci_probe+0xcd/0x130 [amdgpu]
-[    2.567950]  ? pci_match_device+0xd2/0x100
-[    2.567953]  pci_device_probe+0xc9/0x140
-[    2.567957]  really_probe+0x142/0x3b0
-[    2.567960]  device_driver_attach+0x4e/0x60
-[    2.567963]  __driver_attach+0x85/0x140
-[    2.567966]  ? device_driver_attach+0x60/0x60
-[    2.567969]  bus_for_each_dev+0x73/0xb0
-[    2.567971]  bus_add_driver+0x13f/0x1e0
-[    2.567974]  driver_register+0x67/0xb0
-[    2.567976]  ? 0xffffffffc07a6000
-[    2.567979]  do_one_initcall+0x47/0x16f
-[    2.567982]  ? ___cache_free+0x2c/0x1f0
-[    2.567986]  do_init_module+0x51/0x200
-[    2.567989]  load_module+0x24b6/0x26e0
-[    2.567993]  ? vfs_read+0xee/0x120
-[    2.567996]  ? __do_sys_finit_module+0xaa/0x110
-[    2.567999]  __do_sys_finit_module+0xaa/0x110
-[    2.568002]  do_syscall_64+0x63/0x410
-[    2.568005]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[    2.568008] RIP: 0033:0x7fa0749ce1ad
-[    2.568012] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa
-48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f
-05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ab 5c 0c 00 f7 d8 64 89 01 48
-[    2.568016] RSP: 002b:00007ffccbd4f658 EFLAGS: 00000246 ORIG_RAX:
-0000000000000139
-[    2.568020] RAX: ffffffffffffffda RBX: 000055db7a8092f0 RCX:
-00007fa0749ce1ad
-[    2.568022] RDX: 0000000000000000 RSI: 000055db7a812fa0 RDI:
-000000000000000f
-[    2.568025] RBP: 0000000000020000 R08: 0000000000000000 R09:
-0000000000000007
-[    2.568027] R10: 000000000000000f R11: 0000000000000246 R12:
-000055db7a812fa0
-[    2.568029] R13: 0000000000000000 R14: 000055db7a7fb160 R15:
-000055db7a8092f0
-[    2.568033] ---[ end trace 6f223c45fc8e7e98 ]---
+You have to squash patch 1 & 2, otherwise your patch 1 won't compile.
+Other than that: looks good to me.
+Thanks,
+Avri
 
 
 
-Kind regards,
-Udo
+________________________________________
+From: Stanley Chu <stanley.chu@mediatek.com>
+Sent: Sunday, January 5, 2020 6:55:15 AM
+To: linux-scsi@vger.kernel.org; martin.petersen@oracle.com; Avri Altman; al=
+im.akhtar@samsung.com; jejb@linux.ibm.com
+Cc: beanhuo@micron.com; asutoshd@codeaurora.org; cang@codeaurora.org; matth=
+ias.bgg@gmail.com; bvanassche@acm.org; linux-mediatek@lists.infradead.org; =
+linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; kuohong=
+.wang@mediatek.com; peter.wang@mediatek.com; chun-hung.wu@mediatek.com; and=
+y.teng@mediatek.com; Stanley Chu
+Subject: [PATCH v1 0/3] scsi: ufs: pass device information to apply_dev_qui=
+rks
+
+CAUTION: This email originated from outside of Western Digital. Do not clic=
+k on links or open attachments unless you recognize the sender and know tha=
+t the content is safe.
+
+
+Currently UFS driver has "global" device quirk scheme to allow driver apply=
+ing
+special handling for certain UFS devive models.
+
+However some special device handlings are required for specific UFS hosts o=
+nly
+so it is better to make it happen in vendor's callbacks only to not "pollut=
+e"
+common driver and common device quirks.
+
+We already have apply_dev_quirks variant callback for vendors but lack of d=
+evice
+information for handling specific UFS device models. This series provides s=
+uch
+information to apply_dev_quirks callbacks, and applies related modification=
+s.
+
+Stanley Chu (3):
+  scsi: ufs: pass device information to apply_dev_quirks
+  scsi: ufs-qcom: modify apply_dev_quirks interface
+  scsi: ufs-mediatek: add apply_dev_quirks variant operation
+
+ drivers/scsi/ufs/ufs-mediatek.c | 11 +++++++++++
+ drivers/scsi/ufs/ufs-qcom.c     |  3 ++-
+ drivers/scsi/ufs/ufshcd.c       |  5 +++--
+ drivers/scsi/ufs/ufshcd.h       |  7 ++++---
+ 4 files changed, 20 insertions(+), 6 deletions(-)
+
+--
+2.18.0
