@@ -2,139 +2,80 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 408A1C33C9A
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 15:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BEAC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 15:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A3B820866
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 15:24:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E18QoDhn"
+	by mail.kernel.org (Postfix) with ESMTP id 3B23E21734
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 15:30:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578238241;
+	bh=ZkiRfHZglT0lasFVG7b5RxLqwyxF3NGLHxSOFnCrxxQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZK0n9lp3/+gViRw0JdaNvfKhHVq5uwbphicqxjIw16bI+xHcpJrCwPd9TwVMBCeOg
+	 iHyzOXuc1Xj9zwMvnukOw9cJkKrobLRGEAXqOb7M8URifX1NC8xkRb/IEUjoBvAWeb
+	 BRA4plK9CAj/+PHtsYIzcJnzZKZTCbpfU4jvcFmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgAEPYw (ORCPT
+        id S1726446AbgAEPak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 10:24:52 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33039 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726212AbgAEPYv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 10:24:51 -0500
-Received: by mail-wr1-f68.google.com with SMTP id b6so47010085wrq.0;
-        Sun, 05 Jan 2020 07:24:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4F9+RY0yU9fqVfTSeicS1qBjnlshzGXW5AwJXhtTU9s=;
-        b=E18QoDhneNFDiyLfRMo2yBdct25MXHmDNVcq2fDINCHw6wdWiuCwG7Fv8YCu+z373m
-         zQ0FfWrp+Pc9Y1Pkrj7Z50QO9TsZbIuGTm9O3adSW70qeoX0YL42SCMioOeJW0XvdCOD
-         6oF7MIufHhxF7babum0iXZvAvBgRi+hJoo3X21mDv5ZhQU9LWbPDWu6vRRC/m39b7jMh
-         clQpzSaNQy7e1yZs8CPlaO5vkHlQMebiFfWEoWB4o46Vfh/FaqO/1XiWV0p6v+3+ckn5
-         a+7sIydrU7OmEsPMG7N3PWu556IRjBt6Hd+dMJR+7fdCYP4NylzAkjI5lpZ7bJYHNSco
-         cfAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4F9+RY0yU9fqVfTSeicS1qBjnlshzGXW5AwJXhtTU9s=;
-        b=FiYj31QT1J5ORY/F+lX7eJ5zOl8Q7KeWkFn9je/T5fpv4J7xLzNIJ+r55J90dzdAEY
-         EriFbWmIRu2PQeChv1kqG8I9YGoohHvorXwfhpvFGilJsRhUWVXq/cIGneP2cdS0wrpn
-         Xuje9NpNWAKafQW1yqDl0KLLIuDZeX19ejlTdufd1clk5lMQZR7D3ySmBtiAKt0/vYre
-         H3Art0Mu3Ze36va81QfYx+CBa8CHAl4KOxFK5NGvckP/hll/MXgfobuIYNJyNBQW9+mo
-         bPULZEorG+qGTiUlSQGGnCWoctGjxDnrjNDqQVjG3AhYP6RSES0fBWUG5zhUVBokLnoR
-         bHyQ==
-X-Gm-Message-State: APjAAAUCXRtc5TefkW41cyWl5DS/Y3mmQLmm6WJphlkK47c0Rqizrqju
-        Vo2pF+utkC/bQc331pUh7lQ=
-X-Google-Smtp-Source: APXvYqyPCZVCPY70gGbJCHHm6NLKtjwZr+Uvzi/p6xXC+Nn1md5VrLUxOH8Ai8YZjCCIOzJSC15Wtg==
-X-Received: by 2002:adf:f78e:: with SMTP id q14mr98169159wrp.186.1578237889014;
-        Sun, 05 Jan 2020 07:24:49 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id h66sm20616568wme.41.2020.01.05.07.24.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jan 2020 07:24:47 -0800 (PST)
-Date:   Sun, 5 Jan 2020 16:24:47 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, linkinjeon@gmail.com
-Subject: Re: [PATCH v9 10/13] exfat: add nls operations
-Message-ID: <20200105152447.jo27m7jgskyu2dos@pali>
-References: <20200102082036.29643-1-namjae.jeon@samsung.com>
- <CGME20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05@epcas1p4.samsung.com>
- <20200102082036.29643-11-namjae.jeon@samsung.com>
+        Sun, 5 Jan 2020 10:30:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726212AbgAEPak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 10:30:40 -0500
+Received: from localhost (unknown [73.61.17.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 118A020801;
+        Sun,  5 Jan 2020 15:30:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578238239;
+        bh=ZkiRfHZglT0lasFVG7b5RxLqwyxF3NGLHxSOFnCrxxQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=y/Boz9n+QZFqJvZXiDOTGT1J4y5Cku/sHK2PGokgmCnWvaWBOAGfqF4sun7a5m2XR
+         CUQC3OcssriFtWn5V2KNeeN7watuCxX7IAfLPd/hveaaJkkG0KguuQ51A5bgZ0PAxT
+         7IKDfIBo4LE0LQrM6bjCDbqrtLTGpKzsfQ5O7ZHo=
+Date:   Sun, 5 Jan 2020 10:30:38 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH AUTOSEL 5.4 006/187] ASoC: max98090: exit workaround
+ earlier if PLL is locked
+Message-ID: <20200105153038.GO16372@sasha-vm>
+References: <20191227174055.4923-1-sashal@kernel.org>
+ <20191227174055.4923-6-sashal@kernel.org>
+ <20191227224430.GO27497@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="f2e4tgqxncq2o4tg"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200102082036.29643-11-namjae.jeon@samsung.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191227224430.GO27497@sirena.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Dec 27, 2019 at 10:44:30PM +0000, Mark Brown wrote:
+>On Fri, Dec 27, 2019 at 12:37:54PM -0500, Sasha Levin wrote:
+>> From: Tzung-Bi Shih <tzungbi@google.com>
+>>
+>> [ Upstream commit 6f49919d11690a9b5614445ba30fde18083fdd63 ]
+>>
+>> According to the datasheet, PLL lock time typically takes 2 msec and
+>> at most takes 7 msec.
+>
+>Same here and for the other max98090 patch - once things are
+>fixed it'll be OK.
 
---f2e4tgqxncq2o4tg
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I've dropped both. Could you ping me when this is settled and I'll grab
+these and any follow up fixes?
 
-On Thursday 02 January 2020 16:20:33 Namjae Jeon wrote:
-> This adds the implementation of nls operations for exfat.
->=20
-> Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
-> ---
->  fs/exfat/nls.c | 809 +++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 809 insertions(+)
->  create mode 100644 fs/exfat/nls.c
->=20
-> diff --git a/fs/exfat/nls.c b/fs/exfat/nls.c
-> new file mode 100644
-> index 000000000000..af52328e28ff
-> --- /dev/null
-> +++ b/fs/exfat/nls.c
-
-=2E..
-
-> +int exfat_nls_cmp_uniname(struct super_block *sb, unsigned short *a,
-> +		unsigned short *b)
-> +{
-> +	int i;
-> +
-> +	for (i =3D 0; i < MAX_NAME_LENGTH; i++, a++, b++) {
-> +		if (exfat_nls_upper(sb, *a) !=3D exfat_nls_upper(sb, *b))
-> +			return 1;
-> +		if (*a =3D=3D 0x0)
-> +			return 0;
-> +	}
-> +	return 0;
-> +}
-
-Hello, this function returns wrong result when second string (b) is
-longer then first string (a).
-
-Also it is a best practise to first check for end-of-string and then
-access/work with i-th element of string.
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---f2e4tgqxncq2o4tg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXhH/vAAKCRCL8Mk9A+RD
-Uqv7AJwIkABv+Bpvw7Z2sHDERYMAUNrI1QCeO5I7iyE5/RVgyXEYwonl4aM0vDQ=
-=BcPO
------END PGP SIGNATURE-----
-
---f2e4tgqxncq2o4tg--
+-- 
+Thanks,
+Sasha
