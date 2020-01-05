@@ -2,83 +2,249 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B18C33C9A
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 11:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D39FCC33C9A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 11:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F67320848
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 11:28:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="owjzi9jp"
+	by mail.kernel.org (Postfix) with ESMTP id A8B0620848
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 11:31:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgAEL2z (ORCPT
+        id S1726351AbgAELbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 06:28:55 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39306 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgAEL2z (ORCPT
+        Sun, 5 Jan 2020 06:31:09 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:35236 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgAELbJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 06:28:55 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y11so46550723wrt.6
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jan 2020 03:28:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OC76sMbguhzAm38TnoRGsd+QDL7twM7w/98ijOWV3G4=;
-        b=owjzi9jpN6V1oUZYHv7xFf1jmqYW2uLRXZiTsRzF679hB9zwtmzQqBwsmGvGyLqA0B
-         EZVnxQyUO7qicPAwMpXUIWfDYl7xDbweBTBwgm7oMMTWfwWv+bQmUdDs8T3RWJ7/V0Za
-         bKf4jRSRy4mpQ2899mSc1Pf55gCa3M3b7cUhY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OC76sMbguhzAm38TnoRGsd+QDL7twM7w/98ijOWV3G4=;
-        b=TNQesToz8tspYx6oM5wRHB0Ms/uqUpNKIeevsz8SMm8EhFIRkgfUp4k9IDakPqKx08
-         UgdWCBYLTW0F9T2MBMJOyfG31nJj4GE38p8U9pF+MO+y7egW7ISRDT18k4Cvf1LHeYHD
-         5XFw1qOqzaqCCdDVLntV6okLG6CgTJJwTtYw2nwpNGwjn6FunXieC+bIBwBiLOSYv03z
-         ug9rqpe5qCB2u5onPOgICdf4kCQjXKnkuXh3HHnRvWmWTx7ONN5d2HjlUT90huaSQSlk
-         pueyvzxFvUuN1klQ6xDR5ZayiaqhNjy3H51CDB7k7CDPA+x2nB+mG93KX3zyrcPiq8sN
-         fr7w==
-X-Gm-Message-State: APjAAAV2UbOBIAduX9ClwczIz80BxO1V6ZDYEF3N4ogJv7xmaflG8yKm
-        umo6W3AFs3iZ05v5JlNThg5A+A==
-X-Google-Smtp-Source: APXvYqwhtxTzoDsxv3E8oBXVYqD13Oy6DAcFih1nI7/wS5FoVA+HpxLwDE5XGyv3M9MeEL89gLYecA==
-X-Received: by 2002:a5d:6408:: with SMTP id z8mr99081676wru.122.1578223732958;
-        Sun, 05 Jan 2020 03:28:52 -0800 (PST)
-Received: from localhost ([2620:10d:c092:180::1:e1d7])
-        by smtp.gmail.com with ESMTPSA id t25sm18846404wmj.19.2020.01.05.03.28.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jan 2020 03:28:52 -0800 (PST)
-Date:   Sun, 5 Jan 2020 11:28:51 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com
-Subject: Re: [PATCH v3 1/2] tmpfs: Add per-superblock i_ino support
-Message-ID: <20200105112851.GA243208@chrisdown.name>
-References: <cover.1578072481.git.chris@chrisdown.name>
- <19ff8eddfe9cbafc87e55949189704f31d123172.1578072481.git.chris@chrisdown.name>
- <CAOQ4uxjZUYNjBZKU85TMCjtBf9ear7s4yxYSZcBX6rTZoYK-Hg@mail.gmail.com>
+        Sun, 5 Jan 2020 06:31:09 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id EC42D20052;
+        Sun,  5 Jan 2020 12:31:04 +0100 (CET)
+Date:   Sun, 5 Jan 2020 12:31:03 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com, yingjoe.chen@mediatek.com,
+        eddie.huang@mediatek.com, cawa.cheng@mediatek.com,
+        bibby.hsieh@mediatek.com, linux-mediatek@lists.infradead.org,
+        ck.hu@mediatek.com, stonea168@163.com
+Subject: Re: [PATCH v7 4/8] drm/panel: support for auo,kd101n80-45na wuxga
+ dsi video mode panel
+Message-ID: <20200105113103.GA16043@ravnborg.org>
+References: <20191012030720.27127-1-jitao.shi@mediatek.com>
+ <20191012030720.27127-5-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOQ4uxjZUYNjBZKU85TMCjtBf9ear7s4yxYSZcBX6rTZoYK-Hg@mail.gmail.com>
+In-Reply-To: <20191012030720.27127-5-jitao.shi@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=mpaa-ttXAAAA:8
+        a=Hn34YwpbHf-pG3iUBb8A:9 a=CjuIK1q_8ugA:10 a=6heAxKwa5pAsJatQ0mat:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Amir Goldstein writes:
->Some nits. When fixed you may add:
->Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+Hi Jitao.
 
-Thanks! I'll fix these and comments on the other patches and send v4 here and 
-with linux-mm/tmpfs maintainer on cc. :-)
+A few comments in the following.
+
+	Sam
+
+On Sat, Oct 12, 2019 at 11:07:16AM +0800, Jitao Shi wrote:
+> Auo,kd101n80-45na's connector is same as boe,tv101wum-nl6.
+> The most codes can be reuse.
+> So auo,kd101n80-45na and boe,tv101wum-nl6 use one driver file.
+> Add the different parts in driver data.
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  drivers/gpu/drm/panel/Kconfig                 |  6 +-
+>  .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    | 86 ++++++++++++++++---
+>  2 files changed, 75 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> index afcadb3585fb..0e887c978796 100644
+> --- a/drivers/gpu/drm/panel/Kconfig
+> +++ b/drivers/gpu/drm/panel/Kconfig
+> @@ -19,13 +19,13 @@ config DRM_PANEL_ARM_VERSATILE
+>  	  in the Versatile family syscon registers.
+>  
+>  config DRM_PANEL_BOE_TV101WUM_NL6
+> -	tristate "BOE TV101WUM 1200x1920 panel"
+> +	tristate "BOE TV101WUM and AUO KD101N80 45NA 1200x1920 panel"
+>  	depends on OF
+>  	depends on DRM_MIPI_DSI
+>  	depends on BACKLIGHT_CLASS_DEVICE
+>  	help
+> -	  Say Y here if you want to support for BOE TV101WUM WUXGA PANEL
+> -	  DSI Video Mode panel
+> +	  Say Y here if you want to support for BOE TV101WUM and AUO KD101N80
+> +	  45NA WUXGA PANEL DSI Video Mode panel
+>  
+>  config DRM_PANEL_LVDS
+>  	tristate "Generic LVDS panel driver"
+> diff --git a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
+> index af68236ea0e8..e6457f87bc61 100644
+> --- a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
+> +++ b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
+> @@ -35,6 +35,7 @@ struct panel_desc {
+>  	enum mipi_dsi_pixel_format format;
+>  	const struct panel_init_cmd *init_cmds;
+>  	unsigned int lanes;
+> +	bool discharge_on_disable;
+>  };
+>  
+>  struct boe_panel {
+> @@ -372,6 +373,15 @@ static const struct panel_init_cmd boe_init_cmd[] = {
+>  	{},
+>  };
+>  
+> +static const struct panel_init_cmd auo_kd101n80_45na_init_cmd[] = {
+> +	_INIT_DELAY_CMD(24),
+> +	_INIT_DCS_CMD(0x11),
+> +	_INIT_DELAY_CMD(120),
+> +	_INIT_DCS_CMD(0x29),
+> +	_INIT_DELAY_CMD(120),
+> +	{},
+> +};
+> +
+>  static inline struct boe_panel *to_boe_panel(struct drm_panel *panel)
+>  {
+>  	return container_of(panel, struct boe_panel, base);
+> @@ -452,20 +462,30 @@ static int boe_panel_unprepare(struct drm_panel *panel)
+>  	if (!boe->prepared)
+>  		return 0;
+>  
+> -	ret = boe_panel_off(boe);
+> -	if (ret < 0) {
+> -		dev_err(panel->dev, "failed to set panel off: %d\n", ret);
+> -		return ret;
+> +	if (boe->desc->discharge_on_disable) {
+> +		msleep(150);
+> +		regulator_disable(boe->avee);
+> +		regulator_disable(boe->avdd);
+> +		usleep_range(5000, 7000);
+> +		gpiod_set_value(boe->enable_gpio, 0);
+> +		usleep_range(5000, 7000);
+> +		regulator_disable(boe->pp1800);
+
+The panel is not put into sleep mode in this case.
+(Done by boe_panel_off() - which is not the most descriptive name for
+that function).
+If this is on purpose then consider adding a comment.
+
+
+> +	} else {
+> +		ret = boe_panel_off(boe);
+> +		if (ret < 0) {
+> +			dev_err(panel->dev, "failed to set panel off: %d\n",
+> +				ret);
+> +			return ret;
+> +		}
+> +		msleep(150);
+> +		gpiod_set_value(boe->enable_gpio, 0);
+> +		usleep_range(500, 1000);
+> +		regulator_disable(boe->avee);
+> +		regulator_disable(boe->avdd);
+> +		usleep_range(5000, 7000);
+> +		regulator_disable(boe->pp1800);
+>  	}
+>  
+> -	msleep(150);
+> -	gpiod_set_value(boe->enable_gpio, 0);
+> -	usleep_range(500, 1000);
+> -	regulator_disable(boe->avee);
+> -	regulator_disable(boe->avdd);
+> -	usleep_range(5000, 7000);
+> -	regulator_disable(boe->pp1800);
+> -
+>  	boe->prepared = false;
+>  
+>  	return 0;
+> @@ -495,10 +515,14 @@ static int boe_panel_prepare(struct drm_panel *panel)
+>  	if (ret < 0)
+>  		goto poweroffavdd;
+>  
+> -	msleep(100);
+> +	usleep_range(5000, 10000);
+>  
+>  	gpiod_set_value(boe->enable_gpio, 1);
+> -	usleep_range(10000, 12000);
+> +	usleep_range(1000, 2000);
+> +	gpiod_set_value(boe->enable_gpio, 0);
+> +	usleep_range(1000, 2000);
+> +	gpiod_set_value(boe->enable_gpio, 1);
+> +	usleep_range(6000, 10000);
+
+This looks like a geneeral change.
+Consider pushing to the initial commit.
+>  
+>  	ret = boe_panel_init(boe);
+>  	if (ret < 0) {
+> @@ -530,6 +554,8 @@ static int boe_panel_enable(struct drm_panel *panel)
+>  	if (boe->enabled)
+>  		return 0;
+>  
+> +	msleep(130);
+> +
+>  	ret = backlight_enable(boe->backlight);
+>  	if (ret) {
+>  		dev_err(panel->dev, "Failed to enable backlight %d\n",
+> @@ -567,6 +593,35 @@ static const struct panel_desc boe_tv101wum_nl6_desc = {
+>  	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
+>  		      MIPI_DSI_MODE_LPM,
+>  	.init_cmds = boe_init_cmd,
+> +	.discharge_on_disable = false,
+> +};
+> +
+> +static const struct drm_display_mode auo_kd101n80_45na_default_mode = {
+> +	.clock = 157000,
+> +	.hdisplay = 1200,
+> +	.hsync_start = 1200 + 80,
+> +	.hsync_end = 1200 + 80 + 24,
+> +	.htotal = 1200 + 80 + 24 + 36,
+> +	.vdisplay = 1920,
+> +	.vsync_start = 1920 + 16,
+> +	.vsync_end = 1920 + 16 + 4,
+> +	.vtotal = 1920 + 16 + 4 + 16,
+> +	.vrefresh = 60,
+> +};
+> +
+> +static const struct panel_desc auo_kd101n80_45na_desc = {
+> +	.modes = &auo_kd101n80_45na_default_mode,
+> +	.bpc = 8,
+> +	.size = {
+> +		.width_mm = 135,
+> +		.height_mm = 216,
+> +	},
+> +	.lanes = 4,
+> +	.format = MIPI_DSI_FMT_RGB888,
+> +	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
+> +		      MIPI_DSI_MODE_LPM,
+> +	.init_cmds = auo_kd101n80_45na_init_cmd,
+> +	.discharge_on_disable = true,
+>  };
+>  
+>  static int boe_panel_get_modes(struct drm_panel *panel)
+> @@ -693,6 +748,9 @@ static const struct of_device_id boe_of_match[] = {
+>  	{ .compatible = "boe,tv101wum-nl6",
+>  	  .data = &boe_tv101wum_nl6_desc
+>  	},
+> +	{ .compatible = "auo,kd101n80-45na",
+> +	  .data = &auo_kd101n80_45na_desc
+> +	},
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, boe_of_match);
+> -- 
+> 2.21.0
