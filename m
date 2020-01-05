@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC81C32771
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 01:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A52C33C99
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 01:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7E224654
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 01:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E120215A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 01:24:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="myTbfkLw";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pOWEEMBo"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="cCm48MGn";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xvwRI77p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgAEBYe (ORCPT
+        id S1726643AbgAEBYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 20:24:34 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:56563 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726488AbgAEBYW (ORCPT
+        Sat, 4 Jan 2020 20:24:21 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:57263 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726281AbgAEBYS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 20:24:22 -0500
+        Sat, 4 Jan 2020 20:24:18 -0500
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 2671721E92;
-        Sat,  4 Jan 2020 20:24:22 -0500 (EST)
+        by mailnew.nyi.internal (Postfix) with ESMTP id A4FFF6BA3;
+        Sat,  4 Jan 2020 20:24:17 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Sat, 04 Jan 2020 20:24:22 -0500
+  by compute5.internal (MEProxy); Sat, 04 Jan 2020 20:24:17 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=Jm4NPFOs74xdA
-        A/X94Ro/cYVSaTnCwH5Zv4H2w/Sd+k=; b=myTbfkLwBhF9nDCF3lhUHSpTKDKQt
-        v3I2TM2h7PQT62fHiQQf6K94v5eSaCrx1pvfiYoMTY5CH+PCa0NLQP6ETdS+NBlu
-        UfhfGBAJognk8gcwiHpsl6c6Hy4NeF2ZmaHCQQ9j/7mF9t1X+yIZ9mWxzX98IJ8B
-        g+iUmNorCzOPvi49YNh1Dn0zp+2tTN9aVmlZp7ZFIbUuJAXC7ZM9Gmji8IBRS41N
-        ipHHCBvgcDq7EeWn98GoqxUCFlBklKnJ7yQ6hxH3MmxvZPvWEN2Z0hewpA4Hqmf/
-        NdhPpMV5PoxYU+eDrz00aKyMhf6fPXRvltcdgf7LJxWE9n2xTtup900xA==
+        :mime-version:content-transfer-encoding; s=fm1; bh=i9U9QABLYUJVc
+        RUEMaC1sX18u3bMrWhbzdwLPT/XxuQ=; b=cCm48MGnRDJGDgnBFe+6YfL49S2ES
+        PDNt4lS6MAUOAIkHj0H75nxOxqQUQnrK3l5g8WXjpJaQTlRXaRkt0LUnlmxrFNAI
+        EDsVCM64h7Ah859EE1uMaIvU4M7CSzME0gD26PI6ba0+ee5j0//eb9+LJgOwq3uR
+        KW+VPEygn4b8PTxYMnY65KkpbJKPe9H2q3ssAbx4QOLgUVei51/il9c3QQy/9We7
+        V63lDd03wtt9fQS/KAuwVCAt6ZBq1n+Z+svyrqgssFvMJ1p6mPRSWvs+p49oe+aM
+        VZh2kswgIjrXgsVm81lZs7hRwiMjftIy1QiJ1W0HxaKHixj8/6Ka7vYyA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=Jm4NPFOs74xdAA/X94Ro/cYVSaTnCwH5Zv4H2w/Sd+k=; b=pOWEEMBo
-        Fc/4T80lDtuVNJCevjvsdZm8YT5uJfa1ToMLy6ypyCkuRq/NDRw85RdpeNKl9qEK
-        yB7QkZt0gNy/ogiyY8lxC0G6SpWnrAjpIl2NTSA8+Rz7pSmdMf5J5MqttRC+D4uM
-        0LZe5DfmTJuScRZPZQ/LbxeuOwYsXWvH9E8OmUQFdgy6DecRV4TwR7hSeV7z4bd5
-        0WG7W5vu26gqp5ke1w2kqRbkRjXJHZz9TW0lfJjDtkLTt6z70fThgvaOpELyZEyT
-        Tq6UuCxSgqMUZjAIX0LI+UR3g2I/XKa1IXnCR/bHZMrrIO6KCa23WMCCuI0T3hUQ
-        agUctgpmFI2wOQ==
-X-ME-Sender: <xms:xjoRXkRYCZJIqtsqF6pUFM2gl_n0FLnYF_kw8l4vsOnFv_H-c9zB5Q>
+        fm1; bh=i9U9QABLYUJVcRUEMaC1sX18u3bMrWhbzdwLPT/XxuQ=; b=xvwRI77p
+        m0tSOjEby4PXvJOeAdnCPexlXOyxq3DqqKAHLAdprilfKfl/nwAYLhEAqWfu9TVK
+        FpYlTCY44aBSl4j6sMOWEEOdpidBecLPGryvxbCPOuyyrQbIIl9q43UoLa9AdEPM
+        yzZ6CTeqdi6CUJMOgpX66FBg18A8IQlrUIRAjAzN4wHrnJqYHI977bDjX/+0wCo1
+        KuoB1L75KCZzxJd4p2xqztNtU18YPXoEv47aoXAOtKHYFayziHeEhsL89yjmN2K2
+        PkYmoPIcU3Kq/6lL5SS69qvLi65vFLu2cD1GfpSOzj2zZSzI8Amteg4fi3W257Hb
+        oNLNIapANrLk3Q==
+X-ME-Sender: <xms:wToRXjCAq0SiFq3yYTVqOKtmKhMnF1_degg_UcviID60Bumkx4FtNw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdegiedgfeegucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
     lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
     epjedtrddufeehrddugeekrdduhedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghm
-    uhgvlhesshhhohhllhgrnhgurdhorhhgnecuvehluhhsthgvrhfuihiivgepvd
-X-ME-Proxy: <xmx:xjoRXpF9vctkvkFkMqDBHHoQ2tyxLLk7eJFQkcV_-S80FBGaLEKyeQ>
-    <xmx:xjoRXmh52lgznPKV3hKZz-wN5VAAxosSOrDKTPR51xMawlL9dGt6GA>
-    <xmx:xjoRXhAQmU-SD_ISoJfu8d0hfNc0PNKkWuI8UY2sTYgHBrw8EJy5RQ>
-    <xmx:xjoRXj5z7tF2GK98bOgikqg1EopS6lDVQ7F24fF35-SkbUH4K_JyQw>
+    uhgvlhesshhhohhllhgrnhgurdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:wToRXiepIgRSyjigoolgyclaVvXDSlhZ7lnmly2oRALn3CR1Ol8QYQ>
+    <xmx:wToRXnU1Kw9Mba0NoEvrtQMvp0HNN2JaHaNb-1uQ78I15XkHUUjq-w>
+    <xmx:wToRXo770i-vkqvWDSEM2kwAJsg4SFb3AlFLOmetFZi8CIAereM-Tg>
+    <xmx:wToRXlAh1OzjURRKZTEq-MYHnyMBQsboN3XWEsxVDN75RCrQUtOFdQ>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 70BF680059;
-        Sat,  4 Jan 2020 20:24:20 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id E9B778005A;
+        Sat,  4 Jan 2020 20:24:16 -0500 (EST)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Chen-Yu Tsai <wens@csie.org>, Sebastian Reichel <sre@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
@@ -71,10 +71,11 @@ To:     Chen-Yu Tsai <wens@csie.org>, Sebastian Reichel <sre@kernel.org>,
         Oskari Lemmela <oskari@lemmela.net>,
         Quentin Schulz <quentin.schulz@bootlin.com>
 Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v2 9/9] power: supply: axp20x_usb_power: Only poll while offline
-Date:   Sat,  4 Jan 2020 19:24:16 -0600
-Message-Id: <20200105012416.23296-10-samuel@sholland.org>
+        linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>,
+        stable@vger.kernel.org
+Subject: [PATCH v2 2/9] power: supply: axp20x_ac_power: Fix reporting online status
+Date:   Sat,  4 Jan 2020 19:24:09 -0600
+Message-Id: <20200105012416.23296-3-samuel@sholland.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20200105012416.23296-1-samuel@sholland.org>
 References: <20200105012416.23296-1-samuel@sholland.org>
@@ -85,97 +86,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Investigation on the AXP803 shows that VBUS_PLUGIN/VBUS_REMOVAL IRQs are
-triggered on the rising/falling edge of AXP20X_PWR_STATUS_VBUS_USED. The
-reason IRQs do not arrive while N_VBUSEN/DRIVEVBUS is high is because
-AXP20X_PWR_STATUS_VBUS_USED also never goes high.
+AXP803/AXP813 have a flag that enables/disables the AC power supply
+input. This flag does not affect the status bits in PWR_INPUT_STATUS.
+Its effect can be verified by checking the battery charge/discharge
+state (bit 2 of PWR_INPUT_STATUS), or by examining the current draw on
+the AC input.
 
-This also means that if VBUS is online, a VBUS_REMOVAL IRQ is received
-immediately on setting N_VBUSEN/DRIVEVBUS high (and VBUS_PLUGIN shortly
-after it is set back low). This was also verified to be the case when
-manually offlining VBUS through AXP20X_VBUS_PATH_SELECT.
+Take this flag into account when getting the ONLINE property of the AC
+input, on PMICs where this flag is present.
 
-As long as VBUS is online, a present->absent transition necessarily
-implies an online->offline transition. Since will cause an IRQ, there is
-no need to poll while VBUS is online.
-
-To ensure the driver's view of VBUS online status remains accurate,
-unconditionally poll once when receiving an IRQ and when resuming. If
-VBUS is still online at that time, polling will cease until the next
-VBUS_REMOVAL IRQ.
-
+Fixes: 7693b5643fd2 ("power: supply: add AC power supply driver for AXP813")
+Cc: stable@vger.kernel.org
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- drivers/power/supply/axp20x_usb_power.c | 30 +++++++++++++++++--------
- 1 file changed, 21 insertions(+), 9 deletions(-)
+ drivers/power/supply/axp20x_ac_power.c | 31 +++++++++++++++++++++-----
+ 1 file changed, 25 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
-index 0d033954c4dc..4bf119082e91 100644
---- a/drivers/power/supply/axp20x_usb_power.c
-+++ b/drivers/power/supply/axp20x_usb_power.c
-@@ -68,16 +68,32 @@ struct axp20x_usb_power {
- 	struct iio_channel *vbus_i;
- 	struct delayed_work vbus_detect;
- 	unsigned int old_status;
-+	unsigned int online;
- 	unsigned int num_irqs;
- 	unsigned int irqs[];
+diff --git a/drivers/power/supply/axp20x_ac_power.c b/drivers/power/supply/axp20x_ac_power.c
+index 0d34a932b6d5..ca0a28f72a27 100644
+--- a/drivers/power/supply/axp20x_ac_power.c
++++ b/drivers/power/supply/axp20x_ac_power.c
+@@ -23,6 +23,8 @@
+ #define AXP20X_PWR_STATUS_ACIN_PRESENT	BIT(7)
+ #define AXP20X_PWR_STATUS_ACIN_AVAIL	BIT(6)
+ 
++#define AXP813_ACIN_PATH_SEL		BIT(7)
++
+ #define AXP813_VHOLD_MASK		GENMASK(5, 3)
+ #define AXP813_VHOLD_UV_TO_BIT(x)	((((x) / 100000) - 40) << 3)
+ #define AXP813_VHOLD_REG_TO_UV(x)	\
+@@ -40,6 +42,7 @@ struct axp20x_ac_power {
+ 	struct power_supply *supply;
+ 	struct iio_channel *acin_v;
+ 	struct iio_channel *acin_i;
++	bool has_acin_path_sel;
  };
  
-+static bool axp20x_usb_vbus_needs_polling(struct axp20x_usb_power *power)
-+{
-+	/*
-+	 * Polling is only necessary while VBUS is offline. While online, a
-+	 * present->absent transition implies an online->offline transition
-+	 * and will triger the VBUS_REMOVAL IRQ.
-+	 */
-+	if (power->axp20x_id >= AXP221_ID && !power->online)
-+		return true;
+ static irqreturn_t axp20x_ac_power_irq(int irq, void *devid)
+@@ -86,6 +89,17 @@ static int axp20x_ac_power_get_property(struct power_supply *psy,
+ 			return ret;
+ 
+ 		val->intval = !!(reg & AXP20X_PWR_STATUS_ACIN_AVAIL);
 +
-+	return false;
-+}
++		/* ACIN_PATH_SEL disables ACIN even if ACIN_AVAIL is set. */
++		if (power->has_acin_path_sel) {
++			ret = regmap_read(power->regmap, AXP813_ACIN_PATH_CTRL,
++					  &reg);
++			if (ret)
++				return ret;
 +
- static irqreturn_t axp20x_usb_power_irq(int irq, void *devid)
- {
- 	struct axp20x_usb_power *power = devid;
- 
- 	power_supply_changed(power->supply);
- 
-+	mod_delayed_work(system_wq, &power->vbus_detect, DEBOUNCE_TIME);
++			val->intval &= !!(reg & AXP813_ACIN_PATH_SEL);
++		}
 +
- 	return IRQ_HANDLED;
- }
+ 		return 0;
  
-@@ -97,17 +113,11 @@ static void axp20x_usb_power_poll_vbus(struct work_struct *work)
- 		power_supply_changed(power->supply);
+ 	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
+@@ -224,21 +238,25 @@ static const struct power_supply_desc axp813_ac_power_desc = {
+ struct axp_data {
+ 	const struct power_supply_desc	*power_desc;
+ 	bool				acin_adc;
++	bool				acin_path_sel;
+ };
  
- 	power->old_status = val;
-+	power->online = val & AXP20X_PWR_STATUS_VBUS_USED;
+ static const struct axp_data axp20x_data = {
+-	.power_desc = &axp20x_ac_power_desc,
+-	.acin_adc = true,
++	.power_desc	= &axp20x_ac_power_desc,
++	.acin_adc	= true,
++	.acin_path_sel	= false,
+ };
  
- out:
--	mod_delayed_work(system_wq, &power->vbus_detect, DEBOUNCE_TIME);
--}
--
--static bool axp20x_usb_vbus_needs_polling(struct axp20x_usb_power *power)
--{
--	if (power->axp20x_id >= AXP221_ID)
--		return true;
--
--	return false;
-+	if (axp20x_usb_vbus_needs_polling(power))
-+		mod_delayed_work(system_wq, &power->vbus_detect, DEBOUNCE_TIME);
- }
+ static const struct axp_data axp22x_data = {
+-	.power_desc = &axp22x_ac_power_desc,
+-	.acin_adc = false,
++	.power_desc	= &axp22x_ac_power_desc,
++	.acin_adc	= false,
++	.acin_path_sel	= false,
+ };
  
- static int axp20x_get_current_max(struct axp20x_usb_power *power, int *val)
-@@ -512,6 +522,8 @@ static int axp20x_usb_power_resume(struct device *dev)
- 	while (i < power->num_irqs)
- 		enable_irq(power->irqs[i++]);
+ static const struct axp_data axp813_data = {
+-	.power_desc = &axp813_ac_power_desc,
+-	.acin_adc = false,
++	.power_desc	= &axp813_ac_power_desc,
++	.acin_adc	= false,
++	.acin_path_sel	= true,
+ };
  
-+	mod_delayed_work(system_wq, &power->vbus_detect, DEBOUNCE_TIME);
-+
- 	return 0;
- }
- #endif
+ static int axp20x_ac_power_probe(struct platform_device *pdev)
+@@ -282,6 +300,7 @@ static int axp20x_ac_power_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	power->regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	power->has_acin_path_sel = axp_data->acin_path_sel;
+ 
+ 	platform_set_drvdata(pdev, power);
+ 
 -- 
 2.23.0
 
