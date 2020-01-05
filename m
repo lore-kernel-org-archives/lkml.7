@@ -2,118 +2,85 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E59C33C9A
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 17:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B16CAC33C9A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 17:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0973520866
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 17:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81D8821582
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 17:40:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbgAERBN convert rfc822-to-8bit (ORCPT
+        id S1726448AbgAERgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 12:01:13 -0500
-Received: from mail-ot1-f49.google.com ([209.85.210.49]:35383 "EHLO
-        mail-ot1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbgAERBM (ORCPT
+        Sun, 5 Jan 2020 12:36:14 -0500
+Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:47242 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbgAERgO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 12:01:12 -0500
-Received: by mail-ot1-f49.google.com with SMTP id i15so613595oto.2;
-        Sun, 05 Jan 2020 09:01:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pImI0pMnPTGnff6kUft8PijJl8eQvtSKHYBARbvH43Q=;
-        b=NIfI4R7weyyCJ/x/0sVoBV/biORA4X+scJMm1FFj3+HJRr5TGdMJAaisYkpw0kTSZV
-         YknRUdMYXkwNg4/3k6i5GJAPnqx/gPFzijj5EJc3wYqXGjV7e1pQsCU84Qn2yE6gj8eO
-         dJoTARZV2R9cLITdEB2VjZQqnuuxwugeMQRHcY6ZNlYt7k2JOgRUbnGFJ22sJKQ9JreC
-         yjFTWSycV5W9cXZKBIr1pdggSFmCgCSgT/McaOhVjVnU23jGYml8b5NxZCRb63rNddYQ
-         gc36Qh4rmg/WzCi/YGFjzx4qekesjmOdaMkjLWHL4L4u0p20Jg56W2Yo0RQ6ERcZxRXv
-         sz1g==
-X-Gm-Message-State: APjAAAWu0Ip8TsVBrSMBDFJlb9FUUmkaWYAkqdipHgi3spYKfADxX8+o
-        tnAksb9kq0z1YkROH9ia4aQMgGOG47I=
-X-Google-Smtp-Source: APXvYqybrK1QpYTvw+QQIPHbG20EngK6S3l+gDPJoUNPHNKPNRhBNJavl6bhSyjJj7yTpomd5ONNIA==
-X-Received: by 2002:a9d:67c1:: with SMTP id c1mr76255422otn.161.1578243671683;
-        Sun, 05 Jan 2020 09:01:11 -0800 (PST)
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com. [209.85.210.46])
-        by smtp.googlemail.com with ESMTPSA id v25sm22958792otk.51.2020.01.05.09.01.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Jan 2020 09:01:11 -0800 (PST)
-Received: by mail-ot1-f46.google.com with SMTP id r27so68259940otc.8;
-        Sun, 05 Jan 2020 09:01:11 -0800 (PST)
-X-Received: by 2002:a9d:65cb:: with SMTP id z11mr87893641oth.348.1578243671217;
- Sun, 05 Jan 2020 09:01:11 -0800 (PST)
+        Sun, 5 Jan 2020 12:36:14 -0500
+Received: from localhost.localdomain ([92.140.214.230])
+        by mwinf5d49 with ME
+        id mhc8210054ypjRG03hc8a8; Sun, 05 Jan 2020 18:36:11 +0100
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 05 Jan 2020 18:36:11 +0100
+X-ME-IP: 92.140.214.230
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     pablo@netfilter.org, laforge@gnumonks.org, davem@davemloft.net
+Cc:     osmocom-net-gprs@lists.osmocom.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] gtp: simplify error handling code in 'gtp_encap_enable()'
+Date:   Sun,  5 Jan 2020 18:36:07 +0100
+Message-Id: <20200105173607.5456-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <CAMx4oe38RytiyqWfYb=So8iC6N=8nebqy3DsekiT7A5DGjpe+w@mail.gmail.com>
-In-Reply-To: <CAMx4oe38RytiyqWfYb=So8iC6N=8nebqy3DsekiT7A5DGjpe+w@mail.gmail.com>
-From:   Gordan Bobic <gordan@redsleeve.org>
-Date:   Sun, 5 Jan 2020 17:01:00 +0000
-X-Gmail-Original-Message-ID: <CAMx4oe2JKTsOKg3P324PYRH=0ajOVDaXTLa7p=16Fo9fGiQSpQ@mail.gmail.com>
-Message-ID: <CAMx4oe2JKTsOKg3P324PYRH=0ajOVDaXTLa7p=16Fo9fGiQSpQ@mail.gmail.com>
-Subject: Re: 4.9.208 regression in perf building
-To:     stable@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It looks like 4.9.208 introduces a build regression for perf:
+'gtp_encap_disable_sock(sk)' handles the case where sk is NULL, so there
+is no need to test it before calling the function.
 
-make -f /builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/build/Makefile.build
-dir=. obj=perf
-  gcc -Wp,-MD,./.builtin-report.o.d,-MT,builtin-report.o
--Wbad-function-cast -Wdeclaration-after-statement -Wformat-security
--Wformat-y2k -Winit-self -Wmissing-declarations -Wmissing-prototypes
--Wnested-externs -Wno-system-headers -Wold-style-definition -Wpacked
--Wredundant-decls -Wshadow -Wstrict-aliasing=3 -Wstrict-prototypes
--Wswitch-default -Wswitch-enum -Wundef -Wwrite-strings -Wformat
--DHAVE_ARCH_X86_64_SUPPORT -DHAVE_SYSCALL_TABLE
--Iarch/x86/include/generated -DHAVE_PERF_REGS_SUPPORT
--DHAVE_ARCH_REGS_QUERY_REGISTER_OFFSET -O6 -fno-omit-frame-pointer
--ggdb3 -funwind-tables -Wall -Wextra -std=gnu99 -fstack-protector-all
--D_FORTIFY_SOURCE=2
--I/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/perf/util/include
--I/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/perf/arch/x86/include
--I/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/include/uapi
--I/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/include/
--I/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/arch/x86/include/uapi
--I/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/arch/x86/include/
--I/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/arch/x86/
--I/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/perf/util
--I/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/perf
--I/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/lib/
--D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
--DHAVE_SYNC_COMPARE_AND_SWAP_SUPPORT
--DHAVE_PTHREAD_ATTR_SETAFFINITY_NP -DHAVE_DWARF_GETLOCATIONS
--DHAVE_LIBELF_SUPPORT -DHAVE_LIBELF_MMAP_SUPPORT
--DHAVE_ELF_GETPHDRNUM_SUPPORT -DHAVE_GELF_GETNOTE_SUPPORT
--DHAVE_ELF_GETSHDRSTRNDX_SUPPORT -DHAVE_DWARF_SUPPORT
--DHAVE_LIBBPF_SUPPORT -DHAVE_BPF_PROLOGUE -DHAVE_SDT_EVENT
--DHAVE_JITDUMP -DHAVE_DWARF_UNWIND_SUPPORT -DHAVE_LIBAUDIT_SUPPORT
--DHAVE_LIBCRYPTO_SUPPORT -I/usr/include/slang -DHAVE_SLANG_SUPPORT
--DHAVE_TIMERFD_SUPPORT -DHAVE_LIBBFD_SUPPORT -DHAVE_ZLIB_SUPPORT
--DHAVE_LZMA_SUPPORT -DHAVE_BACKTRACE_SUPPORT -DHAVE_LIBNUMA_SUPPORT
--DHAVE_KVM_STAT_SUPPORT -DHAVE_AUXTRACE_SUPPORT -D"BUILD_STR(s)=#s"
--DTIPDIR="BUILD_STR(share/doc/perf-tip)"
--DDOCDIR="BUILD_STR(/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/perf/Documentation)"
- -c -o builtin-report.o builtin-report.c
-builtin-report.c: In function ‘report__setup_sample_type’:
-builtin-report.c:296:6: error: ‘dwarf_callchain_users’ undeclared
-(first use in this function)
-  if (dwarf_callchain_users) {
-      ^
-builtin-report.c:296:6: note: each undeclared identifier is reported
-only once for each function it appears in
-mv: cannot stat ‘./.builtin-report.o.tmp’: No such file or directory
-make[3]: *** [builtin-report.o] Error 1
-make[2]: *** [perf-in.o] Error 2
-make[1]: *** [sub-make] Error 2
-make: *** [all] Error 2
+This saves a few line of code.
 
-4,9.207 works fine.
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/net/gtp.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+index ecfe26215935..1499b4a37758 100644
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -849,8 +849,7 @@ static int gtp_encap_enable(struct gtp_dev *gtp, struct nlattr *data[])
+ 
+ 		sk1u = gtp_encap_enable_socket(fd1, UDP_ENCAP_GTP1U, gtp);
+ 		if (IS_ERR(sk1u)) {
+-			if (sk0)
+-				gtp_encap_disable_sock(sk0);
++			gtp_encap_disable_sock(sk0);
+ 			return PTR_ERR(sk1u);
+ 		}
+ 	}
+@@ -858,10 +857,8 @@ static int gtp_encap_enable(struct gtp_dev *gtp, struct nlattr *data[])
+ 	if (data[IFLA_GTP_ROLE]) {
+ 		role = nla_get_u32(data[IFLA_GTP_ROLE]);
+ 		if (role > GTP_ROLE_SGSN) {
+-			if (sk0)
+-				gtp_encap_disable_sock(sk0);
+-			if (sk1u)
+-				gtp_encap_disable_sock(sk1u);
++			gtp_encap_disable_sock(sk0);
++			gtp_encap_disable_sock(sk1u);
+ 			return -EINVAL;
+ 		}
+ 	}
+-- 
+2.20.1
+
