@@ -2,92 +2,100 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F337C33C9A
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 15:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD582C33C99
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 16:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A59821582
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 15:47:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578239260;
-	bh=/dAZarcvxCsitg+Stew117r8KkhBn7Ok0MYDAr0QGSg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WxdWMFeW10ONPHmj9czf7FlmIVcsofwbeIfNKZqAYMtaA7aNl7b7l6mBqfFmvX9kG
-	 V/739aOMAve0T3QgQAbp5/zswLstr9NvMMWUgdiK0AX/qedGlwy7NYyHWU/KentSKK
-	 F1jOQXKddsGu4Dh1QV+cFpNH5GavKZFhj/98nXKY=
+	by mail.kernel.org (Postfix) with ESMTP id 8A59920866
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 16:22:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="EtntGBPK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgAEPrj (ORCPT
+        id S1726411AbgAEQV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 10:47:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35680 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726212AbgAEPri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 10:47:38 -0500
-Received: from localhost (unknown [73.61.17.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6E212077B;
-        Sun,  5 Jan 2020 15:47:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578239258;
-        bh=/dAZarcvxCsitg+Stew117r8KkhBn7Ok0MYDAr0QGSg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0BMiktE5AmVX1DuclgiX4Xh7K1fR7MvDPGCFJhyUVw4ugE64T2uLtMo2NkEODBDkd
-         bTKCOssnS2YLnsywJgnTCGX+qzbpYYcCJelya8GkKnGpFBIeBVF3iX85528SJFjdt4
-         V5k/md871fsY+d0r6coalr3guCQOsFWqDvzLxSfc=
-Date:   Sun, 5 Jan 2020 10:47:35 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Chris Down <chris@chrisdown.name>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 4.19 071/114] kernel: sysctl: make drop_caches write-only
-Message-ID: <20200105154735.GQ16372@sasha-vm>
-References: <20200102220029.183913184@linuxfoundation.org>
- <20200102220036.228967185@linuxfoundation.org>
- <20200103182911.GE14328@amd>
+        Sun, 5 Jan 2020 11:21:58 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:25312 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726260AbgAEQV5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 11:21:57 -0500
+X-UUID: d33768b93e4a4a14b11dd0a43b439f77-20200106
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=XD8Uu4BnHuTQ0SAQN7pYtOUZCXAex4eTN2QKMTQnF0E=;
+        b=EtntGBPKPZWdsMUun3mpEEKOeNz60Ds74oRphGnyFg6fY/czRggA5L6OzGq5i0Ys0BH5C7wfF2bDNxUR/LWhMrKz56r4pqNVrb3+lsX6IHQyGkmN88f90AyKkvXUMIZhruhA0BIoa78kEd2bI60Jb2V9lmNMyAFDLgql5Mi3rcY=;
+X-UUID: d33768b93e4a4a14b11dd0a43b439f77-20200106
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <jiaxin.yu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1540074764; Mon, 06 Jan 2020 00:21:49 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 6 Jan 2020 00:21:24 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 6 Jan 2020 00:20:50 +0800
+From:   Jiaxin Yu <jiaxin.yu@mediatek.com>
+To:     <yong.liang@mediatek.com>, <wim@linux-watchdog.org>,
+        <linux@roeck-us.net>, <p.zabel@pengutronix.de>,
+        <matthias.bgg@gmail.com>, <linux-watchdog@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <chang-an.chen@mediatek.com>, <freddy.hsin@mediatek.com>
+CC:     <yingjoe.chen@mediatek.com>, <sboyd@kernel.org>,
+        Jiaxin Yu <jiaxin.yu@mediatek.com>
+Subject: [PATCH v9 0/2] ASoC: mt8183: fix audio playback slowly after playback
+Date:   Mon, 6 Jan 2020 00:21:39 +0800
+Message-ID: <1578241301-14618-1-git-send-email-jiaxin.yu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200103182911.GE14328@amd>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 07:29:11PM +0100, Pavel Machek wrote:
->Hi!
->
->> From: Johannes Weiner <hannes@cmpxchg.org>
->>
->> [ Upstream commit 204cb79ad42f015312a5bbd7012d09c93d9b46fb ]
->>
->> Currently, the drop_caches proc file and sysctl read back the last value
->> written, suggesting this is somehow a stateful setting instead of a
->> one-time command.  Make it write-only, like e.g.  compact_memory.
->
->I have no problem with that, but is it good idea for stable?
+VGhpcyBzZXJpZXMgcGF0Y2hlcyBhZGQgcmVzZXQgY29udHJvbGxlciBmb3IgTVQ4MTgzLCBhbmQg
+YXVkaW8gd2lsbCB1c2UgaXQgaW4gDQptYWNoaW5lIGRyaXZlciBkdXJpbmcgYm9vdHVwLCB0aGV5
+IGRlcGVuZCBvbiB0aGUgZm9yLW5leHQuDQoNCnY5IGNoYW5nZXM6DQoJMS4gUmVtb3ZlIENoYW5n
+ZS1JZCBpbiBjb21tZW50Lg0KDQp2OCBjaGFuZ2VzOg0KCTEuIERlbGV0ZSBjYXN0OiAoc3RydWN0
+IG10a193ZHRfZGF0YSAqKQ0KDQp2NyBjaGFuZ2VzOg0KCTEuIERlbGV0ZSBubyB1c2UgY29kZS4N
+Cg0KdjYgY2hhbmdlczoNCgkxLiBTaW1wbGlmeSB0b3BydWdfcmVzZXRfYXNzZXJ0KCkgJiB0b3By
+dWdfcmVzZXRfZGVhc3NlcnQoKS4NCgkyLiBBZGQgbWVtYmVycyBmb3IgbXQyNzEyX2RhdGEgJiBt
+dDgxODNfZGF0YS4NCg0KdjUgY2hhbmdlczoNCgkxLiBBZGQgU2lnbmVkLW9mZi1ieSB0YWcgYW5k
+IFJldmlld2VkLWJ5IHRhZy4NCg0KdjQgY2hhbmdlczoNCgkxLiBGaXhlZCB3cm9uZyBzaWduZWQt
+b2ZmIGFzIGNvcnJlY3QgbWFpbCBzdWZmaXguDQoJMi4gRml4ZWQgcGF0Y2ggc3ViamVjdCB0aGF0
+IGFkZCBwYXRjaCB2ZXJzaW9uLg0KDQp2MyBjaGFuZ2VzOg0KCTEuIGh0dHBzOi8vcGF0Y2h3b3Jr
+Lmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQyODMvIGFuZCANCgkgICBodHRwczovL3BhdGNod29yay5r
+ZXJuZWwub3JnL3BhdGNoLzExMTY0MzA1LyBoYXMgYmVlbiBtZXJnZWQuDQoJMi4gQ2hhbmdlIHRo
+ZSBuYW1lIG9mIG10a193ZHRfY29tcGF0aWJsZSB0byBtdGtfd2R0X2RhdGEuDQoJMy4gUmVtb3Zl
+IHRvcHJndV9yZXNldCBzdHJ1Y3QgYW5kIHVzZSBtdGtfd2R0X2RldiBpbnN0ZWFkLg0KCTQuIEdl
+dCB0aGUgdmFsdWUgb2Ygc3dfcnN0X251bSBmcm9tIC5oIGZpbGUuDQoJNS4gQWRkZGQgbXQyNzEy
+LXJlc2V0cy5oIGZvciBtdDI3MTIuDQoJNi4gSW1wcm92ZSBjb21taXQgbWVzc2FnZS4NCg0KdjIg
+Y2hhbmdlczoNCgkxLiByZW1vdmUgIldJUCIgdGhhdCBpbiB0aGUgdGl0bGUgb2YgcGF0Y2hlcw0K
+CTIuIGFkZCBoeXBlciBsaW5rIGZvciB0aGUgcGF0Y2ggdGhhdCBkZXBlbmRzIG9uDQoJMy4gcGF0
+Y2h3b3JrIGxpc3Q6DQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvY292ZXIvMTExNjQy
+ODUvDQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQyOTUvDQoJCWh0
+dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQyOTkvDQoJCWh0dHBzOi8vcGF0
+Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQyODMvDQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtl
+cm5lbC5vcmcvcGF0Y2gvMTExNjQzMDUvDQoNCnYxIGNoYW5nZXM6DQoJMS4gcGF0Y2h3b3JrIGxp
+c3Q6DQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvY292ZXIvMTExNjQxNzMvDQoJCWh0
+dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQxODEvDQoJCWh0dHBzOi8vcGF0
+Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQxODUvDQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtl
+cm5lbC5vcmcvcGF0Y2gvMTExNjQxODcvDQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcv
+cGF0Y2gvMTExNjQxNzUvDQoNCkppYXhpbiBZdSAoMik6DQogIGR0LWJpbmRpbmdzOiBtZWRpYXRl
+azogbXQ4MTgzOiBBZGQgI3Jlc2V0LWNlbGxzDQogIHdhdGNoZG9nOiBtdGtfd2R0OiBtdDgxODM6
+IEFkZCByZXNldCBjb250cm9sbGVyDQoNCiBkcml2ZXJzL3dhdGNoZG9nL210a193ZHQuYyAgICAg
+ICAgICAgICAgICAgICAgfCAxMDUgKysrKysrKysrKysrKysrKystDQogLi4uL3Jlc2V0LWNvbnRy
+b2xsZXIvbXQyNzEyLXJlc2V0cy5oICAgICAgICAgIHwgIDIyICsrKysNCiAuLi4vcmVzZXQtY29u
+dHJvbGxlci9tdDgxODMtcmVzZXRzLmggICAgICAgICAgfCAgMTcgKysrDQogMyBmaWxlcyBjaGFu
+Z2VkLCAxNDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBpbmNsdWRlL2R0LWJpbmRpbmdzL3Jlc2V0LWNvbnRyb2xsZXIvbXQyNzEyLXJlc2V0cy5oDQoN
+Ci0tIA0KMi4xOC4wDQo=
 
-Usually I'd drop it, yes. In this case it seems like it made "real"
-users interact with the switch incorrectly, which I parse as a bug.
-
->Plus, I seem to recall that drop_caches was somehow dangerous,
->debugging-only stuff, one should not use on production system. Did
->that get fixed in the meantime?
-
-Sounds like it's being used in production, at scale, so I'd hope so :)
-
--- 
-Thanks,
-Sasha
