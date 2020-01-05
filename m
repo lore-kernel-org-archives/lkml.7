@@ -2,112 +2,358 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CE5C33C9A
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 14:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A7CC33C8C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 14:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F69B207FD
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 14:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B459C2077B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 14:20:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgAEOFk convert rfc822-to-8bit (ORCPT
+        id S1726402AbgAEOUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 09:05:40 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:37252 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726188AbgAEOFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 09:05:39 -0500
-Received: from p508fce23.dip0.t-ipconnect.de ([80.143.206.35] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1io6X0-0007kM-Qo; Sun, 05 Jan 2020 15:05:26 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Sandy Huang <hjc@rock-chips.com>,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 00/11] Add PX30 LVDS support
-Date:   Sun, 05 Jan 2020 15:05:26 +0100
-Message-ID: <1885398.klecWcqSHf@phil>
-In-Reply-To: <20191224143900.23567-1-miquel.raynal@bootlin.com>
-References: <20191224143900.23567-1-miquel.raynal@bootlin.com>
+        Sun, 5 Jan 2020 09:20:37 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:47783 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbgAEOUh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 09:20:37 -0500
+Received: from [172.58.27.182] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1io6lb-0001nF-EZ; Sun, 05 Jan 2020 14:20:32 +0000
+Date:   Sun, 5 Jan 2020 15:20:23 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, tycho@tycho.ws, jannh@google.com,
+        cyphar@cyphar.com, oleg@redhat.com, luto@amacapital.net,
+        viro@zeniv.linux.org.uk, gpascutto@mozilla.com,
+        ealvarez@mozilla.com, fweimer@redhat.com, jld@mozilla.com,
+        arnd@arndb.de
+Subject: Re: [PATCH v8 3/3] test: Add test for pidfd getfd
+Message-ID: <20200105142019.umls5ff4b5433u6k@wittgenstein>
+References: <20200103162928.5271-1-sargun@sargun.me>
+ <20200103162928.5271-4-sargun@sargun.me>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200103162928.5271-4-sargun@sargun.me>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, 24. Dezember 2019, 15:38:49 CET schrieb Miquel Raynal:
-> Hello,
+On Fri, Jan 03, 2020 at 08:29:28AM -0800, Sargun Dhillon wrote:
+> The following tests:
+>   * Fetch FD, and then compare via kcmp
+>   * Make sure getfd can be blocked by blocking ptrace_may_access
+>   * Making sure fetching bad FDs fails
+>   * Make sure trying to set flags to non-zero results in an EINVAL
 > 
-> This series aims at supporting LVDS on PX30.
+> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+> ---
+>  tools/testing/selftests/pidfd/.gitignore      |   1 +
+>  tools/testing/selftests/pidfd/Makefile        |   4 +-
+>  .../selftests/pidfd/pidfd_getfd_test.c        | 227 ++++++++++++++++++
+>  3 files changed, 230 insertions(+), 2 deletions(-)
+>  create mode 100644 tools/testing/selftests/pidfd/pidfd_getfd_test.c
 > 
-> A first couple of patches update the documentation with the new
-> compatible and the presence of a PHY. Then, the existing Rockchip
-> driver is cleaned and extended to support PX30 specificities. Finally,
-> the PX30 DTSI is updated with CRTC routes, the DSI DPHY and the LVDS
-> IP itself.
-> 
-> Cheers,
-> Miquèl
-> 
-> Changes since v1:
-> * Added Rob's Ack.
-> * Used "must" instead of "should" in the bindings.
-> * Precised that phy-names is an optional property in the case of
->   PX30.
-> * Renamed the WRITE_EN macro into HIWORD_UPDATE to be aligned with
->   other files.
-> * Removed extra configuration, not needed for generic panels (see
->   Sandy Huang answer).
-> * Dropped the display-subsystem routes (useless).
-> * Merged two patches to avoid phandle interdependencies in graphs and
->   intermediate build errors.
-> 
-> Miquel Raynal (11):
->   dt-bindings: display: rockchip-lvds: Declare PX30 compatible
->   dt-bindings: display: rockchip-lvds: Document PX30 PHY
->   drm/rockchip: lvds: Fix indentation of a #define
->   drm/rockchip: lvds: Harmonize function names
->   drm/rockchip: lvds: Change platform data
->   drm/rockchip: lvds: Create an RK3288 specific probe function
->   drm/rockchip: lvds: Helpers should return decent values
->   drm/rockchip: lvds: Pack functions together
+> diff --git a/tools/testing/selftests/pidfd/.gitignore b/tools/testing/selftests/pidfd/.gitignore
+> index 8d069490e17b..3a779c084d96 100644
+> --- a/tools/testing/selftests/pidfd/.gitignore
+> +++ b/tools/testing/selftests/pidfd/.gitignore
+> @@ -2,3 +2,4 @@ pidfd_open_test
+>  pidfd_poll_test
+>  pidfd_test
+>  pidfd_wait
+> +pidfd_getfd_test
+> diff --git a/tools/testing/selftests/pidfd/Makefile b/tools/testing/selftests/pidfd/Makefile
+> index 43db1b98e845..2071f7ab5dc9 100644
+> --- a/tools/testing/selftests/pidfd/Makefile
+> +++ b/tools/testing/selftests/pidfd/Makefile
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> -CFLAGS += -g -I../../../../usr/include/ -pthread
+> +CFLAGS += -g -I../../../../usr/include/ -pthread -Wall
+>  
+> -TEST_GEN_PROGS := pidfd_test pidfd_fdinfo_test pidfd_open_test pidfd_poll_test pidfd_wait
+> +TEST_GEN_PROGS := pidfd_test pidfd_fdinfo_test pidfd_open_test pidfd_poll_test pidfd_wait pidfd_getfd_test
+>  
+>  include ../lib.mk
+>  
+> diff --git a/tools/testing/selftests/pidfd/pidfd_getfd_test.c b/tools/testing/selftests/pidfd/pidfd_getfd_test.c
+> new file mode 100644
+> index 000000000000..26ca75597812
+> --- /dev/null
+> +++ b/tools/testing/selftests/pidfd/pidfd_getfd_test.c
+> @@ -0,0 +1,227 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#define _GNU_SOURCE
+> +#include <errno.h>
+> +#include <fcntl.h>
+> +#include <limits.h>
+> +#include <linux/types.h>
+> +#include <sched.h>
+> +#include <signal.h>
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <syscall.h>
+> +#include <sys/prctl.h>
+> +#include <sys/wait.h>
+> +#include <unistd.h>
+> +#include <sys/socket.h>
+> +#include <linux/kcmp.h>
+> +
+> +#include "pidfd.h"
+> +#include "../kselftest.h"
+> +#include "../kselftest_harness.h"
+> +
+> +/*
+> + * UNKNOWN_FD is an fd number that should never exist in the child, as it is
+> + * used to check the negative case.
+> + */
+> +#define UNKNOWN_FD 111
+> +
+> +static int sys_kcmp(pid_t pid1, pid_t pid2, int type, unsigned long idx1,
+> +		    unsigned long idx2)
+> +{
+> +	return syscall(__NR_kcmp, pid1, pid2, type, idx1, idx2);
+> +}
+> +
+> +static int sys_pidfd_getfd(int pidfd, int fd, int flags)
+> +{
+> +	return syscall(__NR_pidfd_getfd, pidfd, fd, flags);
+> +}
 
-applied patches 1-8 to drm-misc-next
+I think you can move this to the pidfd.h header as:
 
->   drm/rockchip: lvds: Add PX30 support
+static inline int sys_pidfd_getfd(int pidfd, int fd, int flags)
+{
+	return syscall(__NR_pidfd_getfd, pidfd, fd, flags);
+}
 
-drm-misc-next is currently still at 5.4-rc4, so I'll need to find out how
-to get newer kernel changes in there, as right now we're missing
-the PHY_MODE_LVDS constant.
+Note, this also needs an
 
+#ifndef __NR_pidfd_getfd
+__NR_pidfd_getfd -1
+#endif
+so that compilation doesn't fail.
 
-Heiko
+> +
+> +static int sys_memfd_create(const char *name, unsigned int flags)
+> +{
+> +	return syscall(__NR_memfd_create, name, flags);
+> +}
+> +
+> +static int __child(int sk, int memfd)
+> +{
+> +	int ret;
+> +	char buf;
+> +
+> +	/*
+> +	 * Ensure we don't leave around a bunch of orphaned children if our
+> +	 * tests fail.
+> +	 */
+> +	ret = prctl(PR_SET_PDEATHSIG, SIGKILL);
+> +	if (ret) {
+> +		fprintf(stderr, "%s: Child could not set DEATHSIG\n",
+> +			strerror(errno));
+> +		return EXIT_FAILURE;
 
->   arm64: dts: rockchip: Add PX30 DSI DPHY
->   arm64: dts: rockchip: Add PX30 LVDS
-> 
->  .../display/rockchip/rockchip-lvds.txt        |   4 +
->  arch/arm64/boot/dts/rockchip/px30.dtsi        |  48 ++
->  drivers/gpu/drm/rockchip/rockchip_lvds.c      | 486 ++++++++++++------
->  drivers/gpu/drm/rockchip/rockchip_lvds.h      |  19 +-
->  4 files changed, 401 insertions(+), 156 deletions(-)
-> 
-> 
+return -1
 
+> +	}
+> +
+> +	ret = send(sk, &memfd, sizeof(memfd), 0);
+> +	if (ret != sizeof(memfd)) {
+> +		fprintf(stderr, "%s: Child failed to send fd number\n",
+> +			strerror(errno));
+> +		return EXIT_FAILURE;
 
+return -1
 
+> +	}
+> +
+> +	while ((ret = recv(sk, &buf, sizeof(buf), 0)) > 0) {
+> +		if (buf == 'P') {
+> +			ret = prctl(PR_SET_DUMPABLE, 0);
+> +			if (ret < 0) {
+> +				fprintf(stderr,
+> +					"%s: Child failed to disable ptrace\n",
+> +					strerror(errno));
+> +				return EXIT_FAILURE;
 
+return -1
+
+> +			}
+> +		} else {
+> +			fprintf(stderr, "Child received unknown command %c\n",
+> +				buf);
+> +			return EXIT_FAILURE;
+
+return -1
+
+> +		}
+> +		ret = send(sk, &buf, sizeof(buf), 0);
+> +		if (ret != 1) {
+> +			fprintf(stderr, "%s: Child failed to ack\n",
+> +				strerror(errno));
+> +			return EXIT_FAILURE;
+
+return -1
+
+> +		}
+> +	}
+> +
+> +	if (ret < 0) {
+> +		fprintf(stderr, "%s: Child failed to read from socket\n",
+> +			strerror(errno));
+
+Is this intentional that this is no failure?
+
+> +	}
+> +
+> +	return EXIT_SUCCESS;
+
+return 0
+
+> +}
+> +
+> +static int child(int sk)
+> +{
+> +	int memfd, ret;
+> +
+> +	memfd = sys_memfd_create("test", 0);
+> +	if (memfd < 0) {
+> +		fprintf(stderr, "%s: Child could not create memfd\n",
+> +			strerror(errno));
+> +		ret = EXIT_FAILURE;
+
+ret = -1;
+
+> +	} else {
+> +		ret = __child(sk, memfd);
+> +		close(memfd);
+> +	}
+> +
+> +	close(sk);
+> +	return ret;
+> +}
+> +
+> +FIXTURE(child)
+> +{
+> +	pid_t pid;
+> +	int pidfd, sk, remote_fd;
+> +};
+> +
+> +FIXTURE_SETUP(child)
+> +{
+> +	int ret, sk_pair[2];
+> +
+> +	ASSERT_EQ(0, socketpair(PF_LOCAL, SOCK_SEQPACKET, 0, sk_pair))
+> +	{
+> +		TH_LOG("%s: failed to create socketpair", strerror(errno));
+> +	}
+> +	self->sk = sk_pair[0];
+> +
+> +	self->pid = fork();
+> +	ASSERT_GE(self->pid, 0);
+> +
+> +	if (self->pid == 0) {
+> +		close(sk_pair[0]);
+> +		exit(child(sk_pair[1]));
+
+if (child(sk_pair[1]))
+	_exit(EXIT_FAILURE);
+_exit(EXIT_SUCCESS);
+
+I would like to only use exit macros where one actually calls
+{_}exit()s. It makes the logic easier to follow and ensures that one
+doesn't accidently do an exit(-21345) or something (e.g. when adding new
+code).
+
+> +	}
+> +
+> +	close(sk_pair[1]);
+> +
+> +	self->pidfd = sys_pidfd_open(self->pid, 0);
+> +	ASSERT_GE(self->pidfd, 0);
+> +
+> +	/*
+> +	 * Wait for the child to complete setup. It'll send the remote memfd's
+> +	 * number when ready.
+> +	 */
+> +	ret = recv(sk_pair[0], &self->remote_fd, sizeof(self->remote_fd), 0);
+> +	ASSERT_EQ(sizeof(self->remote_fd), ret);
+> +}
+> +
+> +FIXTURE_TEARDOWN(child)
+> +{
+> +	int status;
+> +
+> +	EXPECT_EQ(0, close(self->pidfd));
+> +	EXPECT_EQ(0, close(self->sk));
+> +
+> +	EXPECT_EQ(waitpid(self->pid, &status, 0), self->pid);
+> +	EXPECT_EQ(true, WIFEXITED(status));
+> +	EXPECT_EQ(0, WEXITSTATUS(status));
+> +}
+> +
+> +TEST_F(child, disable_ptrace)
+> +{
+> +	int uid, fd;
+> +	char c;
+> +
+> +	/*
+> +	 * Turn into nobody if we're root, to avoid CAP_SYS_PTRACE
+> +	 *
+> +	 * The tests should run in their own process, so even this test fails,
+> +	 * it shouldn't result in subsequent tests failing.
+> +	 */
+> +	uid = getuid();
+> +	if (uid == 0)
+> +		ASSERT_EQ(0, seteuid(USHRT_MAX));
+
+Hm, isn't it safer to do 65535 explicitly? Since USHRT_MAX can
+technically be greater than 65535.
+
+> +
+> +	ASSERT_EQ(1, send(self->sk, "P", 1, 0));
+> +	ASSERT_EQ(1, recv(self->sk, &c, 1, 0));
+> +
+> +	fd = sys_pidfd_getfd(self->pidfd, self->remote_fd, 0);
+> +	EXPECT_EQ(-1, fd);
+> +	EXPECT_EQ(EPERM, errno);
+> +
+> +	if (uid == 0)
+> +		ASSERT_EQ(0, seteuid(0));
+> +}
+> +
+> +TEST_F(child, fetch_fd)
+> +{
+> +	int fd, ret;
+> +
+> +	fd = sys_pidfd_getfd(self->pidfd, self->remote_fd, 0);
+> +	ASSERT_GE(fd, 0);
+> +
+> +	EXPECT_EQ(0, sys_kcmp(getpid(), self->pid, KCMP_FILE, fd, self->remote_fd));
+
+So most of these tests seem to take place when the child has already
+called exit() - or at least it's very likely that the child has already
+called exit() - and remains a zombie. That's not ideal because
+that's not the common scenario/use-case. Usually the task of which we
+want to get an fd will be alive. Also, if the child has already called
+exit(), by the time it returns to userspace it should have already
+called exit_files() and so I wonder whether this test would fail if it's
+run after the child has exited. Maybe I'm missing something here... Is
+there some ordering enforced by TEST_F()?
+
+Also, what does self->pid point to? The fd of the already exited child?
