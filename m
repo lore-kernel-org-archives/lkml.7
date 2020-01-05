@@ -2,67 +2,101 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7A1C33C8C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 22:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A284C33C9A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 22:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFFA220848
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 22:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9BDA24650
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 22:32:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Ew8cGL6f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbgAEW1W (ORCPT
+        id S1727161AbgAEWcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 17:27:22 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:40670 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbgAEW1V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 17:27:21 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3EF1F1573FC16;
-        Sun,  5 Jan 2020 14:27:20 -0800 (PST)
-Date:   Sun, 05 Jan 2020 14:27:19 -0800 (PST)
-Message-Id: <20200105.142719.2267255724230212968.davem@davemloft.net>
-To:     dmitry.torokhov@gmail.com
-Cc:     netdev@vger.kernel.org, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, linux@armlinux.org.uk
-Subject: Re: [PATCH v3 0/3] net: phy: switch to using fwnode_gpiod_get_index
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200103010320.245675-1-dmitry.torokhov@gmail.com>
-References: <20200103010320.245675-1-dmitry.torokhov@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 05 Jan 2020 14:27:20 -0800 (PST)
+        Sun, 5 Jan 2020 17:32:52 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:46129 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726851AbgAEWcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 17:32:51 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47rYLQ6jDWz9sPJ;
+        Mon,  6 Jan 2020 09:32:46 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578263569;
+        bh=jCp7x7I30t4i9fpQqT1U+ewkjQ3N8KxA98Fl+ajb9gY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Ew8cGL6fxC+6aduM/s5DqYP7qOdGD9254LAFO1HFNiJVSGeQv6VKnuDLKS2SAkaSO
+         Hi4v49BKCMY3/cZOKfdxbSh1VbfCMNhBdP8Mizjc7Xk8Um8+bOeMYTojDVXS9B0foB
+         fxESGRvhetk79qLScO5xOE7xZfTv1oHaxN0isLlbxefWhL63UMJClVkB/SJt+RBOIj
+         uxDpXCY3NDaICvcKMGjZVsGj1FnX1bKQ7sugJudaIVS/iSAZ1NV8nLPFvRWorHxAZY
+         OMEj9JuJlQYOyyyO+oh8Kx9ERUYXZEwf5J17//rnFCnylS0L9eRwN2RA2EszoG4hPr
+         fr/l+vp4XeZkQ==
+Date:   Mon, 6 Jan 2020 09:32:46 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul@pwsan.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the risc-v tree with Linus' tree
+Message-ID: <20200106093246.6abbb7e9@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/2ywFS/t0S6j3w=iZbYIrd+8";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date: Thu,  2 Jan 2020 17:03:17 -0800
+--Sig_/2ywFS/t0S6j3w=iZbYIrd+8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> This series switches phy drivers form using fwnode_get_named_gpiod() and
-> gpiod_get_from_of_node() that are scheduled to be removed in favor
-> of fwnode_gpiod_get_index() that behaves more like standard
-> gpiod_get_index() and will potentially handle secondary software
-> nodes in cases we need to augment platform firmware.
-> 
-> Now that the dependencies have been merged into networking tree the
-> patches can be applied there as well.
-> 
-> v3:
->         - rebased on top of net-next
-> 
-> v2:
->         - rebased on top of Linus' W devel branch
->         - added David's ACKs
+Hi all,
 
-Series applied, thanks.
+Today's linux-next merge of the risc-v tree got a conflict in:
+
+  Documentation/riscv/patch-acceptance.rst
+
+between commit:
+
+  0e194d9da198 ("Documentation: riscv: add patch acceptance guidelines")
+
+from Linus' tree and commit:
+
+  d89a1a16d7dc ("Documentation: riscv: add patch acceptance guidelines")
+
+from the risc-v tree.
+
+I fixed it up (I used the version from Linus' tree as that was committed
+later) and can carry the fix as necessary. This is now fixed as far as
+linux-next is concerned, but any non trivial conflicts should be mentioned
+to your upstream maintainer when your tree is submitted for merging.
+You may also want to consider cooperating with the maintainer of the
+conflicting tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/2ywFS/t0S6j3w=iZbYIrd+8
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4SZA4ACgkQAVBC80lX
+0GzovQgAlDsPfmHcXwByPHIKH6zevu/q/QYmgw/mSYdbgqWuWzZVCaRYGf2t7sGh
+9DuHoIoTXpvSxvCwkzZ1ORvxkGaa3LzA6x+K/eHdBae+6N9tz0yNRMa28lqjoig/
+1LpAZeHQh3ftDj8UdRTjK5b4RYNDCeC73k4GPhlziblzVQblVbM8FfQNKdFJFd/A
+vDY3Q76Hz72M7nkp0i37nGV4ixVUIKSlBYzeSR8EsvQLg74IVwHca9V5wM3Bw1bN
+67bGzsGPpzvZl/ixApXiFZrN9Dgnk5ajV3Zmdm80fWoBPeipVnAmB4YOa0L6UWIp
+7jgSv1qgPDATIYOq4f/AhRIQUbTxOA==
+=63bB
+-----END PGP SIGNATURE-----
+
+--Sig_/2ywFS/t0S6j3w=iZbYIrd+8--
