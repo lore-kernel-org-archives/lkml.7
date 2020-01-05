@@ -1,135 +1,93 @@
-Return-Path: <SRS0=lTpO=2Z=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A135C32771
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 23:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCF4C32771
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 00:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C93D52465D
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Jan 2020 23:54:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OOd4Nfk9"
+	by mail.kernel.org (Postfix) with ESMTP id E3E9124654
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 00:10:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgADXyu (ORCPT
+        id S1726333AbgAEAKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 18:54:50 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46787 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbgADXyt (ORCPT
+        Sat, 4 Jan 2020 19:10:40 -0500
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:37699 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgAEAKj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 18:54:49 -0500
-Received: by mail-pl1-f194.google.com with SMTP id y8so20376422pll.13;
-        Sat, 04 Jan 2020 15:54:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
-         :references:in-reply-to:accept-language:content-language
-         :content-transfer-encoding:mime-version;
-        bh=ck5NSDuNtKf0n476SpJREQp0JJmh7bxHMkeur8ObqbQ=;
-        b=OOd4Nfk9AubWqdch0xXs7idSsl8TLsQ79l3l69zwacS4R4OP5eBKUKWG8/BhkXpEgt
-         Gg/imteAnQJA0y9HBLEpGslSBhRDH60mJe2lvxQ9cO36qFGm3PXcCxDy5ZP/fuERjhE1
-         HCg9vTvI/zFoX/onscV++n2DfmT90Jt3KefbaWF5KfJfjb4GdPv4coNJK2LougXkP0gV
-         3MDgnk7ZqVtbbORsU3F3928KF+yApMINEbO2xdqggyE4fTdn0yJ2tERbvdVe2/NMZzwF
-         98Ui+l7fIik8EO0u6FXqMcLQaOHylHWk/4fD/cWEHxTeauyoZJfYb8L5cp6ykNmgsPfq
-         ZpHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
-         :date:message-id:references:in-reply-to:accept-language
-         :content-language:content-transfer-encoding:mime-version;
-        bh=ck5NSDuNtKf0n476SpJREQp0JJmh7bxHMkeur8ObqbQ=;
-        b=V700LnPRXFQ+dTNxEB1acCDWr6bzHM214o+OXzoh7J8J6JOdFrOHk/hATTYoKE3ixC
-         tDpM9YAJnT6GEcFGDKwe1UBLYhSI72nvo9DyeIzwp6GS/rWPXacXbLy/3HED3H0KjlbU
-         iUcTwnoA0rWgyeCDcrun2q+sGbXuD8UwPuWGsVw+gwJYbUU6ocTcyMw8E7VM/npV1r1v
-         4fsIHaVdICis+kapqJlVaWp0btI8ypCsoA7dTxPNHMOd1H+rF1paufJWp5cJyLwRiU1K
-         m/59RQWo0kT0gjAn2qE7wsqhgjihJNNKvmY7JPw/76Le3YEfWBR6TlSnz+el+1AFQ+Ii
-         4EPA==
-X-Gm-Message-State: APjAAAUzSAZneJwapML3GbsNX0KleBv2Zb3ejdb3CuufVFAGmq6b6w0L
-        fQBLOA4Vu251c0O/KklzGDw=
-X-Google-Smtp-Source: APXvYqzA9f1bgiajXiWV8IQvWLOXbz5anxtKxoFXZXd0Lgp9xLv1iRU7s1lQ6PRHNjPC6wwtantXiA==
-X-Received: by 2002:a17:902:8503:: with SMTP id bj3mr96675534plb.180.1578182088862;
-        Sat, 04 Jan 2020 15:54:48 -0800 (PST)
-Received: from SL2P216MB0105.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:22::5])
-        by smtp.gmail.com with ESMTPSA id a17sm20053573pjv.6.2020.01.04.15.54.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 04 Jan 2020 15:54:47 -0800 (PST)
-From:   Jingoo Han <jingoohan1@gmail.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Han Jingoo <jingoohan1@gmail.com>
-Subject: Re: [PATCH v2 16/20] pci: exynos: Rename Exynos to lowercase
-Thread-Topic: [PATCH v2 16/20] pci: exynos: Rename Exynos to lowercase
-Thread-Index: AQHVwxLbTWsXPMkvXkqXN+ab27j8KqfbLoPn
-X-MS-Exchange-MessageSentRepresentingType: 1
-Date:   Sat, 4 Jan 2020 23:54:43 +0000
-Message-ID: <SL2P216MB0105B2C0657DC74FD40D5054AA220@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
-References: <20200104152107.11407-1-krzk@kernel.org>
- <20200104152107.11407-17-krzk@kernel.org>
-In-Reply-To: <20200104152107.11407-17-krzk@kernel.org>
-Accept-Language: ko-KR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-Exchange-Organization-SCL: -1
-X-MS-TNEF-Correlator: 
-X-MS-Exchange-Organization-RecordReviewCfmType: 0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 4 Jan 2020 19:10:39 -0500
+X-Originating-IP: 195.189.32.242
+Received: from pc.localdomain (unknown [195.189.32.242])
+        (Authenticated sender: contact@artur-rojek.eu)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 71EC31C0004;
+        Sun,  5 Jan 2020 00:10:35 +0000 (UTC)
+From:   Artur Rojek <contact@artur-rojek.eu>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Paul Cercueil <paul@crapouillou.net>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: [PATCH 1/5] IIO: Ingenic JZ47xx: Add xlate cb to retrieve correct channel idx
+Date:   Sun,  5 Jan 2020 01:16:35 +0100
+Message-Id: <20200105001639.142061-1-contact@artur-rojek.eu>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/4/20, 10:22 AM, Krzysztof Kozlowski wrote:
->=20
-> Fix up inconsistent usage of upper and lowercase letters in "Exynos"
-> name.
->
-> "EXYNOS" is not an abbreviation but a regular trademarked name.
-> Therefore it should be written with lowercase letters starting with
-> capital letter.
->
-> The lowercase "Exynos" name is promoted by its manufacturer Samsung
-> Electronics Co., Ltd., in advertisement materials and on website.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Provide an of_xlate callback in order to retrieve the correct channel
+specifier index from the IIO channels array.
 
-Acked-by Jingoo Han <jingoohan1@gmail.com>
+Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+Tested-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/iio/adc/ingenic-adc.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-Best regards,
-Jingoo Han
-
-> ---
->  drivers/pci/controller/dwc/pci-exynos.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/contro=
-ller/dwc/pci-exynos.c
-> index 14a6ba4067fb..c5043d951e80 100644
-> --- a/drivers/pci/controller/dwc/pci-exynos.c
-> +++ b/drivers/pci/controller/dwc/pci-exynos.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * PCIe host controller driver for Samsung EXYNOS SoCs
-> + * PCIe host controller driver for Samsung Exynos SoCs
->   *
->   * Copyright (C) 2013 Samsung Electronics Co., Ltd.
->   *		http://www.samsung.com
-> --=20
-> 2.17.1
+diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
+index 39c0a609fc94..7a24bc1dabe1 100644
+--- a/drivers/iio/adc/ingenic-adc.c
++++ b/drivers/iio/adc/ingenic-adc.c
+@@ -383,6 +383,21 @@ static int ingenic_adc_read_raw(struct iio_dev *iio_dev,
+ 	}
+ }
+ 
++static int ingenic_adc_of_xlate(struct iio_dev *iio_dev,
++				const struct of_phandle_args *iiospec)
++{
++	int i;
++
++	if (!iiospec->args_count)
++		return -EINVAL;
++
++	for (i = 0; i < iio_dev->num_channels; ++i)
++		if (iio_dev->channels[i].channel == iiospec->args[0])
++			return i;
++
++	return -EINVAL;
++}
++
+ static void ingenic_adc_clk_cleanup(void *data)
+ {
+ 	clk_unprepare(data);
+@@ -392,6 +407,7 @@ static const struct iio_info ingenic_adc_info = {
+ 	.write_raw = ingenic_adc_write_raw,
+ 	.read_raw = ingenic_adc_read_raw,
+ 	.read_avail = ingenic_adc_read_avail,
++	.of_xlate = ingenic_adc_of_xlate,
+ };
+ 
+ static const struct iio_chan_spec ingenic_channels[] = {
+-- 
+2.24.1
 
