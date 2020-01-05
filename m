@@ -2,144 +2,92 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C4FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 08:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A6AC33C9A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 08:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9DC021582
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 08:35:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578213335;
-	bh=ADADXtiRMJ8GY/BHNd1uS0UdQYNUUVQcEinoIdZJmYA=;
-	h=In-Reply-To:References:Cc:Subject:To:From:Date:List-ID:From;
-	b=gBhvzafkhfJ811+WEw2OOIUYqecJSLxqfAYcRd0PTrI27bnfNBnSy7EDZtXHvriB7
-	 vpx0ajwkDjqPLnCQT8jIejbmXlj9rOkAuNvsiee0UiXNwcCx+sur0QrlpS3sUJPQHJ
-	 zzhApmSUSokvpkOUmyMNTHxDzmemFdixOk68WexU=
+	by mail.kernel.org (Postfix) with ESMTP id DC1EB222C4
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 08:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbgAEIff (ORCPT
+        id S1726260AbgAEIjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 03:35:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbgAEIfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 03:35:34 -0500
-Received: from kernel.org (unknown [104.132.0.74])
+        Sun, 5 Jan 2020 03:39:32 -0500
+Received: from mail-out.m-online.net ([212.18.0.9]:34778 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbgAEIjb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 03:39:31 -0500
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 47rBrt2jPnz1qql3;
+        Sun,  5 Jan 2020 09:39:26 +0100 (CET)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 47rBrt1Dkgz1qrjv;
+        Sun,  5 Jan 2020 09:39:26 +0100 (CET)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id oMzHkyaTNvkK; Sun,  5 Jan 2020 09:39:24 +0100 (CET)
+X-Auth-Info: +JI14q7M2PNLVqZ/I6XWB6XjdmLUJ9plZ0uoorJ1IXaHYIJ3OSz+LF8MHwk9ZBXv
+Received: from hase.home (ppp-46-244-163-176.dynamic.mnet-online.de [46.244.163.176])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01EB12071A;
-        Sun,  5 Jan 2020 08:35:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578213334;
-        bh=ADADXtiRMJ8GY/BHNd1uS0UdQYNUUVQcEinoIdZJmYA=;
-        h=In-Reply-To:References:Cc:Subject:To:From:Date:From;
-        b=NNEg5KHjF6zAVzMLn6mv13ZVJzxC6EdeNGCm6nTv6mur+H8QltaU45h8qRKHg4I2Y
-         5CnhBSgCqgZgDqp3fG1sCLsGIvaRWm1fCFN4BA40OQZlM8QLAdaVM+f1rmbjrkjvff
-         LQ81wEA/lGHOy32ojqvGQ7lAkhKMyLkcIaXzISIE=
-Content-Type: text/plain; charset="utf-8"
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Sun,  5 Jan 2020 09:39:24 +0100 (CET)
+Received: by hase.home (Postfix, from userid 1000)
+        id AF7D810377F; Sun,  5 Jan 2020 09:39:23 +0100 (CET)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     guoren@kernel.org
+Cc:     paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, Anup.Patel@wdc.com, vincent.chen@sifive.com,
+        zong.li@sifive.com, greentime.hu@sifive.com, bmeng.cn@gmail.com,
+        atish.patra@wdc.com, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, arnd@arndb.de,
+        linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH 2/2] riscv: Add vector ISA support
+References: <20200105025215.2522-1-guoren@kernel.org>
+        <20200105025215.2522-2-guoren@kernel.org>
+X-Yow:  Yow!  I'm out of work...I could go into shock absorbers...or SCUBA
+ GEAR!!
+Date:   Sun, 05 Jan 2020 09:39:23 +0100
+In-Reply-To: <20200105025215.2522-2-guoren@kernel.org> (guoren@kernel.org's
+        message of "Sun, 5 Jan 2020 10:52:15 +0800")
+Message-ID: <87o8viwb44.fsf@hase.home>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191205002503.13088-5-masneyb@onstation.org>
-References: <20191205002503.13088-1-masneyb@onstation.org> <20191205002503.13088-5-masneyb@onstation.org>
-Cc:     mark.rutland@arm.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, mturquette@baylibre.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH 4/7] dt-bindings: Input: introduce new clock vibrator bindings
-To:     Brian Masney <masneyb@onstation.org>, dmitry.torokhov@gmail.com,
-        robh+dt@kernel.org
-From:   Stephen Boyd <sboyd@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Sun, 05 Jan 2020 00:35:33 -0800
-Message-Id: <20200105083534.01EB12071A@mail.kernel.org>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Brian Masney (2019-12-04 16:25:00)
-> diff --git a/Documentation/devicetree/bindings/input/clk-vibrator.yaml b/=
-Documentation/devicetree/bindings/input/clk-vibrator.yaml
-> new file mode 100644
-> index 000000000000..2103a5694fad
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/clk-vibrator.yaml
-> @@ -0,0 +1,60 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/input/clk-vibrator.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Clock vibrator
-> +
-> +maintainers:
-> +  - Brian Masney <masneyb@onstation.org>
-> +
-> +description: |
-> +  Support for clock-based vibrator devices where the speed can be contro=
-lled
-> +  by changing the duty cycle.
-> +
-> +properties:
-> +  compatible:
-> +    const: clk-vibrator
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    description: output clock that controls the speed
-> +    items:
-> +      - const: core
-> +
-> +  clock-frequency: true
+On Jan 05 2020, guoren@kernel.org wrote:
 
-Can you use assigned-clock-rates for this instead? Then the driver can
-call clk_get_rate() if it wants to know the rate that was actually set
-on the clk.
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index d8efbaa78d67..3d336f869ffe 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -286,6 +286,15 @@ config FPU
+>  
+>  	  If you don't know what to do here, say Y.
+>  
+> +config VECTOR
+> +	bool "VECTOR support"
+> +	default n
 
-> +
-> +  enable-gpios:
-> +    maxItems: 1
-> +
-> +  vcc-supply:
-> +    description: Regulator that provides power
-> +
-> +required:
-> +  - compatible
-> +  - clocks
-> +  - clock-names
-> +  - clock-frequency
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    vibrator {
-> +        compatible =3D "clk-vibrator";
-> +
-> +        vcc-supply =3D <&pm8941_l19>;
-> +
-> +        clocks =3D <&mmcc CAMSS_GP1_CLK>;
-> +        clock-names =3D "core";
-> +        clock-frequency =3D <24000>;
-> +
-> +        enable-gpios =3D <&msmgpio 60 GPIO_ACTIVE_HIGH>;
-> +
-> +        pinctrl-names =3D "default";
-> +        pinctrl-0 =3D <&vibrator_pin>;
+default n is the default.  Did you mean default y?
 
-I'm still trying to wrap my head around this. I think we can have a pwm
-provider in a clk controller node (so imagine &mmcc has #pwm-cells) and
-then this 'clk-vibrator' binding wouldn't exist? Instead we would have
-some sort of binding for a device that expects a pwm and whatever else
-is required, like the enable gpio and power supply. Is there an actual
-hardware block that is this way? Does it have a real product id and is
-made by some company? Right now this looks a little too generic to not
-just be a catch-all for something that buzzes.
+> +	help
+> +	  Say N here if you want to disable all vecotr related procedure
 
+s/vecotr/vector/
+
+Andreas.
+
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
