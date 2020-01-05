@@ -2,332 +2,170 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4827C33C99
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 00:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 942CFC33C99
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 00:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C503824654
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 00:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6366224655
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 00:42:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OXiya4/B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgAEAKv (ORCPT
+        id S1726368AbgAEAm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 19:10:51 -0500
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:42031 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgAEAKq (ORCPT
+        Sat, 4 Jan 2020 19:42:56 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39937 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbgAEAm4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 19:10:46 -0500
-X-Originating-IP: 195.189.32.242
-Received: from pc.localdomain (unknown [195.189.32.242])
-        (Authenticated sender: contact@artur-rojek.eu)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 664F31C000A;
-        Sun,  5 Jan 2020 00:10:43 +0000 (UTC)
-From:   Artur Rojek <contact@artur-rojek.eu>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Paul Cercueil <paul@crapouillou.net>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH 5/5] input: joystick: Add ADC attached joystick driver.
-Date:   Sun,  5 Jan 2020 01:16:39 +0100
-Message-Id: <20200105001639.142061-5-contact@artur-rojek.eu>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200105001639.142061-1-contact@artur-rojek.eu>
-References: <20200105001639.142061-1-contact@artur-rojek.eu>
+        Sat, 4 Jan 2020 19:42:56 -0500
+Received: by mail-lf1-f67.google.com with SMTP id i23so34177064lfo.7;
+        Sat, 04 Jan 2020 16:42:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MqPoqLvy4YfZM6m1dYTriP2Qs0sSNBcj+svV3TvqrKI=;
+        b=OXiya4/BQtMJtWatXec0gyqa8/lEccNU2JJqqB39VTLiISx2vDb9pAb4W+K/bCBIbp
+         pbdIxhqOmkY0Wsx4ZI7aTdCtLe6lxvx4EOpJNyIbzkFLOMaGxrEniZJ+fs4hgluZROS5
+         w53mTy/SN5B2GsMgxl/V9DyO9s1c/Pedryy34EoG2SRo0sp02Ma0wkvytgwgXYjtqykd
+         WiMrcaNc7iQAWhKCPDtCEebEgayCH8A6NbYFqqMNPs2z2Fo9AjvPzDOgE9Q9IUF3RBvi
+         FHZW67EKNWYtPmHguJu7I2KWHEi5I2G0r6NSHhT1vlp9p7h/5ReIOcMjYCWallMzi+tp
+         OvMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MqPoqLvy4YfZM6m1dYTriP2Qs0sSNBcj+svV3TvqrKI=;
+        b=UshK1SR8bUtBDQH3o3kzGha2ATGUn/bt9fszutlTA9O7TWrB8/RyICYtK4ky5QBpHl
+         aU4AC1MvLUc0w+WBxpYbzRiZ+Aaufx04Xv5pGuztnRtoep7cCC2f9DnePWtEg8CdSTLq
+         4mKmTGwW+o5wD1Lg3jsME/Yls1o9hs7E0JaUk3u9i/q/7sQM1NorpviEEawaxrdl+um8
+         SyYc7oFtJa9HQKW+4p2I95halEYOm9yXhDCadtwHX0on8HTqZUANfxe2yDIIAKm/tyH6
+         u67bPGruzf6DOpOFqB4NHgbTy4hQ4pZBaRH2QCRZxhgHpCG9RkxpgHauAfnKdr3GmJ6n
+         k1qA==
+X-Gm-Message-State: APjAAAVFm4x2VdNMCGyhXbzM1hLPvva9Dk3jgE4trnytf1CVS65WZh26
+        A/Qo44l4semTBfKdqOG7+M0xCO5Y
+X-Google-Smtp-Source: APXvYqxh4wXgUfN47yty3ECPBUkXEEBpg1+syHhA1/z5jqKJCD5X7BXB9bJmje9rwPQ80ZtVwGBXtQ==
+X-Received: by 2002:ac2:420e:: with SMTP id y14mr54216068lfh.145.1578184972471;
+        Sat, 04 Jan 2020 16:42:52 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id r21sm26975655ljn.64.2020.01.04.16.42.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 04 Jan 2020 16:42:51 -0800 (PST)
+Subject: Re: [PATCH v2 10/10] usb: chipidea: tegra: Add USB_TEGRA_PHY module
+ to driver's dependencies
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Peter Chen <peter.chen@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20191220015238.9228-1-digetx@gmail.com>
+ <20191220015238.9228-11-digetx@gmail.com>
+ <20191220035650.GC19921@b29397-desktop>
+ <fb7dee6e-e645-fe45-126c-c5f1e280bc26@gmail.com>
+ <20191223213234.GA28786@qmqm.qmqm.pl>
+ <7174833f-8325-7fb4-d190-78ba4bed0cbb@gmail.com>
+ <20191230210259.GD24135@qmqm.qmqm.pl>
+ <b34972e3-569e-d74a-4d30-d52c89032a08@gmail.com>
+ <20200103072536.GA14228@qmqm.qmqm.pl>
+ <51ecc509-e277-591d-3db5-fc9d46eee326@gmail.com>
+ <20200104110138.GA7849@qmqm.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <27363204-6a18-213e-f0bf-2fc02bd5f74c@gmail.com>
+Date:   Sun, 5 Jan 2020 03:42:50 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
+In-Reply-To: <20200104110138.GA7849@qmqm.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a driver for joystick devices connected to ADC controllers
-supporting the Industrial I/O subsystem.
+04.01.2020 14:01, Michał Mirosław пишет:
+> On Sat, Jan 04, 2020 at 02:19:01AM +0300, Dmitry Osipenko wrote:
+>> 03.01.2020 10:25, Michał Mirosław пишет:
+>>> On Thu, Jan 02, 2020 at 06:17:47PM +0300, Dmitry Osipenko wrote:
+>>>> 31.12.2019 00:02, Michał Mirosław пишет:
+>>>>> On Tue, Dec 24, 2019 at 07:21:05AM +0300, Dmitry Osipenko wrote:
+>>>>>> 24.12.2019 00:32, Michał Mirosław пишет:
+>>>>>>> On Fri, Dec 20, 2019 at 07:31:08AM +0300, Dmitry Osipenko wrote:
+>>>>>>>> 20.12.2019 06:56, Peter Chen пишет:
+>>>>>>>>> On 19-12-20 04:52:38, Dmitry Osipenko wrote:
+>>>>>>> [...]
+>>>>>>>>>> --- a/drivers/usb/chipidea/ci_hdrc_tegra.c
+>>>>>>>>>> +++ b/drivers/usb/chipidea/ci_hdrc_tegra.c
+>>>>>>>>>> @@ -53,6 +53,12 @@ static int tegra_udc_probe(struct platform_device *pdev)
+>>>>>>>>>>  	struct tegra_udc *udc;
+>>>>>>>>>>  	int err;
+>>>>>>>>>>  
+>>>>>>>>>> +	if (IS_MODULE(CONFIG_USB_TEGRA_PHY)) {
+>>>>>>>>>> +		err = request_module("phy_tegra_usb");
+>>>>>>>>>> +		if (err)
+>>>>>>>>>> +			return err;
+>>>>>>>>>> +	}
+>>>>>>>>>> +
+>>>>>>>>>
+>>>>>>>>> Why you do this dependency, if this controller driver can't
+>>>>>>>>> get USB PHY, it should return error. What's the return value
+>>>>>>>>> after calling below:
+>>>>>>>>>
+>>>>>>>>> 	udc->phy = devm_usb_get_phy_by_phandle(&pdev->dev, "nvidia,phy", 0);
+>>>>>>>>
+>>>>>>>> It returns -EPROBE_DEFER when phy_tegra_usb isn't loaded.
+>>>>>>>
+>>>>>>> How are other driver modules autoloaded? Isn't there an appropriate
+>>>>>>> MODALIAS or MODULE_DEVICE_TABLE in there?
+>>>>>>
+>>>>>> Hello Michał,
+>>>>>>
+>>>>>> The phy_tegra_usb module is fine by itself, it's getting autoloaded.
+>>>>>>
+>>>>>> The problem is that ci_hdrc_tegra module depends on the phy_tegra_usb
+>>>>>> module and thus the PHY module should be loaded before the CI module,
+>>>>>> otherwise CI driver fails with the EPROBE_DEFER.
+>>>>>
+>>>>> Why, then, is CI driver not being probed again after PHY driver loads?
+>>>>> EPROBE_DEFER is what should cause driver core to re-probe a device after
+>>>>> other devices appear (PHY in this case).
+>>>>
+>>>> CI driver is getting re-probed just fine if PHY's driver module is
+>>>> loaded manually after loading the CI's module. This patch removes this
+>>>> necessity to manually load PHY's module.
+>>>>
+>>>> This is just a minor convenience change that brings the CI's driver
+>>>> loading behaviour on par with the behaviour of loading Tegra's EHCI
+>>>> driver module.
+>>>
+>>> I fully understand the goal, but what I'm missing is that why this
+>>> doesn't work out of the box? If the PHY module is autoloaded, and so is
+>>> CI driver, and (as I understand) the driver's probe() correctly returns
+>>> EPROBE_DEFER when PHY is not probed yet, then I guess that means bug
+>>> somewhere else and the patch just covers it up.
+>>
+>> It works out of the box, but it also could work a bit better in a case
+>> of manually reloading modules. Perhaps it should be possible to derive
+>> module dependencies from the Kconfig dependencies, apparently kernel
+>> doesn't support it yet or maybe there is some reason why it can't be done.
+> 
+> Kconfig change I'm ok with as it simplifies kernel configuration.
+> The request_module() is something I would advise against, because if I
+> do manual module loading, I usually don't want modules loaded
+> automatically.
 
-Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-Tested-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/input/joystick/Kconfig        |  10 ++
- drivers/input/joystick/Makefile       |   1 +
- drivers/input/joystick/adc-joystick.c | 230 ++++++++++++++++++++++++++
- 3 files changed, 241 insertions(+)
- create mode 100644 drivers/input/joystick/adc-joystick.c
-
-diff --git a/drivers/input/joystick/Kconfig b/drivers/input/joystick/Kconfig
-index 940b744639c7..efbc20ec5099 100644
---- a/drivers/input/joystick/Kconfig
-+++ b/drivers/input/joystick/Kconfig
-@@ -42,6 +42,16 @@ config JOYSTICK_A3D
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called a3d.
- 
-+config JOYSTICK_ADC
-+	tristate "Simple joystick connected over ADC"
-+	depends on IIO
-+	select IIO_BUFFER_CB
-+	help
-+	  Say Y here if you have a simple joystick connected over ADC.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called adc-joystick.
-+
- config JOYSTICK_ADI
- 	tristate "Logitech ADI digital joysticks and gamepads"
- 	select GAMEPORT
-diff --git a/drivers/input/joystick/Makefile b/drivers/input/joystick/Makefile
-index 8656023f6ef5..58232b3057d3 100644
---- a/drivers/input/joystick/Makefile
-+++ b/drivers/input/joystick/Makefile
-@@ -6,6 +6,7 @@
- # Each configuration option enables a list of files.
- 
- obj-$(CONFIG_JOYSTICK_A3D)		+= a3d.o
-+obj-$(CONFIG_JOYSTICK_ADC)		+= adc-joystick.o
- obj-$(CONFIG_JOYSTICK_ADI)		+= adi.o
- obj-$(CONFIG_JOYSTICK_AMIGA)		+= amijoy.o
- obj-$(CONFIG_JOYSTICK_AS5011)		+= as5011.o
-diff --git a/drivers/input/joystick/adc-joystick.c b/drivers/input/joystick/adc-joystick.c
-new file mode 100644
-index 000000000000..0dfc4218dafa
---- /dev/null
-+++ b/drivers/input/joystick/adc-joystick.c
-@@ -0,0 +1,230 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Input driver for joysticks connected over ADC.
-+ * Copyright (c) 2019-2020 Artur Rojek <contact@artur-rojek.eu>
-+ */
-+#include <linux/ctype.h>
-+#include <linux/input.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/consumer.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+
-+struct adc_joystick_axis {
-+	u32 code;
-+	s32 range[2];
-+	s32 fuzz;
-+	s32 flat;
-+};
-+
-+struct adc_joystick {
-+	struct input_dev *input;
-+	struct iio_cb_buffer *buffer;
-+	struct adc_joystick_axis *axes;
-+	struct iio_channel *chans;
-+	int num_chans;
-+};
-+
-+static int adc_joystick_handle(const void *data, void *private)
-+{
-+	struct adc_joystick *joy = private;
-+	enum iio_endian endianness;
-+	int bytes, msb, val, i;
-+	bool sign;
-+
-+	/* Assume all channels have the same storage size. */
-+	bytes = joy->chans[0].channel->scan_type.storagebits >> 3;
-+
-+	for (i = 0; i < joy->num_chans; ++i) {
-+		endianness = joy->chans[i].channel->scan_type.endianness;
-+		msb = joy->chans[i].channel->scan_type.realbits - 1;
-+		sign = (tolower(joy->chans[i].channel->scan_type.sign) == 's');
-+
-+		switch (bytes) {
-+		case 1:
-+			val = ((const u8 *)data)[i];
-+			break;
-+		case 2:
-+			val = ((const u16 *)data)[i];
-+			if (endianness == IIO_BE)
-+				val = be16_to_cpu(val);
-+			else if (endianness == IIO_LE)
-+				val = le16_to_cpu(val);
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		val >>= joy->chans[i].channel->scan_type.shift;
-+		if (sign)
-+			val = sign_extend32(val, msb);
-+		else
-+			val &= GENMASK(msb, 0);
-+		input_report_abs(joy->input, joy->axes[i].code, val);
-+	}
-+
-+	input_sync(joy->input);
-+
-+	return 0;
-+}
-+
-+static int adc_joystick_open(struct input_dev *dev)
-+{
-+	struct adc_joystick *joy = input_get_drvdata(dev);
-+	int ret;
-+
-+	ret = iio_channel_start_all_cb(joy->buffer);
-+	if (ret)
-+		dev_err(dev->dev.parent, "Unable to start callback buffer");
-+
-+	return ret;
-+}
-+
-+static void adc_joystick_close(struct input_dev *dev)
-+{
-+	struct adc_joystick *joy = input_get_drvdata(dev);
-+
-+	iio_channel_stop_all_cb(joy->buffer);
-+}
-+
-+static void adc_joystick_disable(void *data)
-+{
-+	iio_channel_release_all_cb(data);
-+}
-+
-+static int adc_joystick_set_axes(struct device *dev, struct adc_joystick *joy)
-+{
-+	struct adc_joystick_axis *axes;
-+	struct fwnode_handle *child;
-+	int num_axes, i = 0;
-+
-+	num_axes = device_get_child_node_count(dev);
-+	if (!num_axes) {
-+		dev_err(dev, "Unable to find child nodes");
-+		return -EINVAL;
-+	}
-+
-+	if (num_axes != joy->num_chans) {
-+		dev_err(dev, "Got %d child nodes for %d channels",
-+			num_axes, joy->num_chans);
-+		return -EINVAL;
-+	}
-+
-+	axes = devm_kmalloc_array(dev, num_axes, sizeof(*axes), GFP_KERNEL);
-+	if (!axes)
-+		return -ENOMEM;
-+
-+	device_for_each_child_node(dev, child) {
-+		if (fwnode_property_read_u32(child, "linux,abs-code",
-+					     &axes[i].code)) {
-+			dev_err(dev, "linux,abs-code invalid or missing");
-+			goto err;
-+		}
-+
-+		if (fwnode_property_read_u32_array(child, "linux,abs-range",
-+						   axes[i].range, 2)) {
-+			dev_err(dev, "linux,abs-range invalid or missing");
-+			goto err;
-+		}
-+
-+		fwnode_property_read_u32(child, "linux,abs-fuzz",
-+					 &axes[i].fuzz);
-+		fwnode_property_read_u32(child, "linux,abs-flat",
-+					 &axes[i].flat);
-+
-+		input_set_abs_params(joy->input, axes[i].code, axes[i].range[0],
-+				     axes[i].range[1], axes[i].fuzz,
-+				     axes[i].flat);
-+		input_set_capability(joy->input, EV_ABS, axes[i].code);
-+
-+		++i;
-+	}
-+
-+	joy->axes = axes;
-+
-+	return 0;
-+
-+err:
-+	fwnode_handle_put(child);
-+	return -EINVAL;
-+}
-+
-+static int adc_joystick_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct adc_joystick *joy;
-+	struct input_dev *input;
-+	int ret;
-+
-+	joy = devm_kzalloc(dev, sizeof(*joy), GFP_KERNEL);
-+	if (!joy)
-+		return -ENOMEM;
-+
-+	joy->chans = devm_iio_channel_get_all(dev);
-+	if (IS_ERR(joy->chans)) {
-+		ret = PTR_ERR(joy->chans);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Unable to get IIO channels");
-+		return ret;
-+	}
-+
-+	/* Count how many channels we got. NULL terminated. */
-+	while (joy->chans[joy->num_chans].indio_dev)
-+		joy->num_chans++;
-+
-+	input = devm_input_allocate_device(dev);
-+	if (!input) {
-+		dev_err(dev, "Unable to allocate input device");
-+		return -ENOMEM;
-+	}
-+
-+	joy->input = input;
-+	input->name = pdev->name;
-+	input->id.bustype = BUS_HOST;
-+	input->open = adc_joystick_open;
-+	input->close = adc_joystick_close;
-+
-+	ret = adc_joystick_set_axes(dev, joy);
-+	if (ret)
-+		return ret;
-+
-+	input_set_drvdata(input, joy);
-+	ret = input_register_device(input);
-+	if (ret) {
-+		dev_err(dev, "Unable to register input device: %d", ret);
-+		return ret;
-+	}
-+
-+	joy->buffer = iio_channel_get_all_cb(dev, adc_joystick_handle, joy);
-+	if (IS_ERR(joy->buffer)) {
-+		dev_err(dev, "Unable to allocate callback buffer");
-+		return PTR_ERR(joy->buffer);
-+	}
-+
-+	ret = devm_add_action_or_reset(dev, adc_joystick_disable, joy->buffer);
-+	if (ret)
-+		dev_err(dev, "Unable to add action");
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id adc_joystick_of_match[] = {
-+	{ .compatible = "adc-joystick", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, adc_joystick_of_match);
-+
-+static struct platform_driver adc_joystick_driver = {
-+	.driver = {
-+		.name = "adc-joystick",
-+		.of_match_table = of_match_ptr(adc_joystick_of_match),
-+	},
-+	.probe = adc_joystick_probe,
-+};
-+module_platform_driver(adc_joystick_driver);
-+
-+MODULE_DESCRIPTION("Input driver for joysticks connected over ADC");
-+MODULE_AUTHOR("Artur Rojek <contact@artur-rojek.eu>");
-+MODULE_LICENSE("GPL");
--- 
-2.24.1
-
+Okay, I'll drop the request_module since it raises a bit too many
+questions and since it's an optional change that won't be needed once
+Tegra EHCI driver will be squashed into CI.
