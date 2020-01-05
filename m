@@ -2,170 +2,118 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0DEC33C8C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 16:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E59C33C9A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 17:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D7692077B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 16:51:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tjb48Gq5"
+	by mail.kernel.org (Postfix) with ESMTP id 0973520866
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 17:01:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgAEQvU (ORCPT
+        id S1726390AbgAERBN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 11:51:20 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42025 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbgAEQvT (ORCPT
+        Sun, 5 Jan 2020 12:01:13 -0500
+Received: from mail-ot1-f49.google.com ([209.85.210.49]:35383 "EHLO
+        mail-ot1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbgAERBM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 11:51:19 -0500
-Received: by mail-wr1-f67.google.com with SMTP id q6so46997644wro.9;
-        Sun, 05 Jan 2020 08:51:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NEc2ONIGqs4JDceykYjjlLRjytS3/UAT9WyX5gz4mJs=;
-        b=tjb48Gq5Eki3T2ytZKMg7AKkC/7++9EXYp2y7ugEXaapzinQ03174dOAreazI2pqyn
-         brOf1hasHLOWtg7T+fztXIh0ldiUhc+iWs/eBo5AlFjJt5dnyYa6tfYvEWebGFSevjus
-         jgORj/yZmVP6ui/i8j55SPV0SLlSLKv7EIfB6/tVUFayLhMX85woO2xFccnub2CCB9do
-         Z+VFaIs7Wx8eO3cY6IJz2h210opEi+DBoLTG5/TiDykaZU9MryyZ2bAjzrsFdFCV9oVH
-         68SjF4m5VpOdTDIIb5+61z5KObjiRsNKJao+FaQkvlBfQBjIkjyhSgMcqP6tPJS0SWxD
-         lsPQ==
+        Sun, 5 Jan 2020 12:01:12 -0500
+Received: by mail-ot1-f49.google.com with SMTP id i15so613595oto.2;
+        Sun, 05 Jan 2020 09:01:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NEc2ONIGqs4JDceykYjjlLRjytS3/UAT9WyX5gz4mJs=;
-        b=LHh82GCX+hgefYpPppsoTTqy/T+KniPMS1h/UK51FwKQi06F7pIjkvtkoHCxZ1Ks8w
-         xA801I2uMRhDxtWl6HR55VcmFxjZ1C7FM23ABCX88Zxw+hfzHNayG2q/l+I/sr+wKDqf
-         hQL1D2uzCqUe28cbCmL9QYTN9uzEtyeVYEM1XbZwuLn8JEWXTP+fET/4VDcT8Yx+nskN
-         yjQ1vlp/DuQkMyeWb0FxMyIWHVdcgXwPJ+RN874GhdHbPxD4pZ1uF6E1jMaog/Fd8Mq4
-         +DsaBX42j4jxXMowuDd7gcbAI94mtgl5rq3lrTV5Knn1mPjT1w7rUgSeAOzBiK1IMcQr
-         fCBA==
-X-Gm-Message-State: APjAAAVa8eYPJ7k6ZPAt6Au56z6mBkS5sopZ5ozvzHjo5uHfyGOeWYMY
-        0adUMotGI/g9XjZqIEnOpOQ=
-X-Google-Smtp-Source: APXvYqzuHuM6YOph/540pvgdV/vmpzihUqFdaNRgnA39GiwzXbHTNa7ZlQchPuODUDxriKqsR7XWUA==
-X-Received: by 2002:a5d:458d:: with SMTP id p13mr52668317wrq.314.1578243077695;
-        Sun, 05 Jan 2020 08:51:17 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id h2sm74392376wrt.45.2020.01.05.08.51.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jan 2020 08:51:16 -0800 (PST)
-Date:   Sun, 5 Jan 2020 17:51:15 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, linkinjeon@gmail.com, tytso@mit.edu,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: [PATCH v9 10/13] exfat: add nls operations
-Message-ID: <20200105165115.37dyrcwtgf6zgc6r@pali>
-References: <20200102082036.29643-1-namjae.jeon@samsung.com>
- <CGME20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05@epcas1p4.samsung.com>
- <20200102082036.29643-11-namjae.jeon@samsung.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pImI0pMnPTGnff6kUft8PijJl8eQvtSKHYBARbvH43Q=;
+        b=NIfI4R7weyyCJ/x/0sVoBV/biORA4X+scJMm1FFj3+HJRr5TGdMJAaisYkpw0kTSZV
+         YknRUdMYXkwNg4/3k6i5GJAPnqx/gPFzijj5EJc3wYqXGjV7e1pQsCU84Qn2yE6gj8eO
+         dJoTARZV2R9cLITdEB2VjZQqnuuxwugeMQRHcY6ZNlYt7k2JOgRUbnGFJ22sJKQ9JreC
+         yjFTWSycV5W9cXZKBIr1pdggSFmCgCSgT/McaOhVjVnU23jGYml8b5NxZCRb63rNddYQ
+         gc36Qh4rmg/WzCi/YGFjzx4qekesjmOdaMkjLWHL4L4u0p20Jg56W2Yo0RQ6ERcZxRXv
+         sz1g==
+X-Gm-Message-State: APjAAAWu0Ip8TsVBrSMBDFJlb9FUUmkaWYAkqdipHgi3spYKfADxX8+o
+        tnAksb9kq0z1YkROH9ia4aQMgGOG47I=
+X-Google-Smtp-Source: APXvYqybrK1QpYTvw+QQIPHbG20EngK6S3l+gDPJoUNPHNKPNRhBNJavl6bhSyjJj7yTpomd5ONNIA==
+X-Received: by 2002:a9d:67c1:: with SMTP id c1mr76255422otn.161.1578243671683;
+        Sun, 05 Jan 2020 09:01:11 -0800 (PST)
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com. [209.85.210.46])
+        by smtp.googlemail.com with ESMTPSA id v25sm22958792otk.51.2020.01.05.09.01.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Jan 2020 09:01:11 -0800 (PST)
+Received: by mail-ot1-f46.google.com with SMTP id r27so68259940otc.8;
+        Sun, 05 Jan 2020 09:01:11 -0800 (PST)
+X-Received: by 2002:a9d:65cb:: with SMTP id z11mr87893641oth.348.1578243671217;
+ Sun, 05 Jan 2020 09:01:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="b4fesfv3w7a3u7ah"
-Content-Disposition: inline
-In-Reply-To: <20200102082036.29643-11-namjae.jeon@samsung.com>
-User-Agent: NeoMutt/20180716
+References: <CAMx4oe38RytiyqWfYb=So8iC6N=8nebqy3DsekiT7A5DGjpe+w@mail.gmail.com>
+In-Reply-To: <CAMx4oe38RytiyqWfYb=So8iC6N=8nebqy3DsekiT7A5DGjpe+w@mail.gmail.com>
+From:   Gordan Bobic <gordan@redsleeve.org>
+Date:   Sun, 5 Jan 2020 17:01:00 +0000
+X-Gmail-Original-Message-ID: <CAMx4oe2JKTsOKg3P324PYRH=0ajOVDaXTLa7p=16Fo9fGiQSpQ@mail.gmail.com>
+Message-ID: <CAMx4oe2JKTsOKg3P324PYRH=0ajOVDaXTLa7p=16Fo9fGiQSpQ@mail.gmail.com>
+Subject: Re: 4.9.208 regression in perf building
+To:     stable@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It looks like 4.9.208 introduces a build regression for perf:
 
---b4fesfv3w7a3u7ah
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+make -f /builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/build/Makefile.build
+dir=. obj=perf
+  gcc -Wp,-MD,./.builtin-report.o.d,-MT,builtin-report.o
+-Wbad-function-cast -Wdeclaration-after-statement -Wformat-security
+-Wformat-y2k -Winit-self -Wmissing-declarations -Wmissing-prototypes
+-Wnested-externs -Wno-system-headers -Wold-style-definition -Wpacked
+-Wredundant-decls -Wshadow -Wstrict-aliasing=3 -Wstrict-prototypes
+-Wswitch-default -Wswitch-enum -Wundef -Wwrite-strings -Wformat
+-DHAVE_ARCH_X86_64_SUPPORT -DHAVE_SYSCALL_TABLE
+-Iarch/x86/include/generated -DHAVE_PERF_REGS_SUPPORT
+-DHAVE_ARCH_REGS_QUERY_REGISTER_OFFSET -O6 -fno-omit-frame-pointer
+-ggdb3 -funwind-tables -Wall -Wextra -std=gnu99 -fstack-protector-all
+-D_FORTIFY_SOURCE=2
+-I/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/perf/util/include
+-I/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/perf/arch/x86/include
+-I/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/include/uapi
+-I/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/include/
+-I/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/arch/x86/include/uapi
+-I/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/arch/x86/include/
+-I/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/arch/x86/
+-I/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/perf/util
+-I/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/perf
+-I/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/lib/
+-D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
+-DHAVE_SYNC_COMPARE_AND_SWAP_SUPPORT
+-DHAVE_PTHREAD_ATTR_SETAFFINITY_NP -DHAVE_DWARF_GETLOCATIONS
+-DHAVE_LIBELF_SUPPORT -DHAVE_LIBELF_MMAP_SUPPORT
+-DHAVE_ELF_GETPHDRNUM_SUPPORT -DHAVE_GELF_GETNOTE_SUPPORT
+-DHAVE_ELF_GETSHDRSTRNDX_SUPPORT -DHAVE_DWARF_SUPPORT
+-DHAVE_LIBBPF_SUPPORT -DHAVE_BPF_PROLOGUE -DHAVE_SDT_EVENT
+-DHAVE_JITDUMP -DHAVE_DWARF_UNWIND_SUPPORT -DHAVE_LIBAUDIT_SUPPORT
+-DHAVE_LIBCRYPTO_SUPPORT -I/usr/include/slang -DHAVE_SLANG_SUPPORT
+-DHAVE_TIMERFD_SUPPORT -DHAVE_LIBBFD_SUPPORT -DHAVE_ZLIB_SUPPORT
+-DHAVE_LZMA_SUPPORT -DHAVE_BACKTRACE_SUPPORT -DHAVE_LIBNUMA_SUPPORT
+-DHAVE_KVM_STAT_SUPPORT -DHAVE_AUXTRACE_SUPPORT -D"BUILD_STR(s)=#s"
+-DTIPDIR="BUILD_STR(share/doc/perf-tip)"
+-DDOCDIR="BUILD_STR(/builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/perf/Documentation)"
+ -c -o builtin-report.o builtin-report.c
+builtin-report.c: In function ‘report__setup_sample_type’:
+builtin-report.c:296:6: error: ‘dwarf_callchain_users’ undeclared
+(first use in this function)
+  if (dwarf_callchain_users) {
+      ^
+builtin-report.c:296:6: note: each undeclared identifier is reported
+only once for each function it appears in
+mv: cannot stat ‘./.builtin-report.o.tmp’: No such file or directory
+make[3]: *** [builtin-report.o] Error 1
+make[2]: *** [perf-in.o] Error 2
+make[1]: *** [sub-make] Error 2
+make: *** [all] Error 2
 
-On Thursday 02 January 2020 16:20:33 Namjae Jeon wrote:
-> This adds the implementation of nls operations for exfat.
-
-Hello! In whole patch series are different naming convention for
-nls/Unicode related terms. E.g. uni16s, utf16s, nls, vfsname, ...
-
-Could this be fixed, so it would be unambiguously named? "uni16s" name
-is misleading as Unicode does not fit into 16byte type.
-
-Based on what is in nls.h I would propose following names:
-
-* unicode_t *utf32s always for strings in UTF-32/UCS-4 encoding (host
-  endianity) (or "unicode_t *unis" as this is the fixed-width encoding
-  for all Unicode codepoints)
-
-* wchar_t *utf16s always for strings in UTF-16 encoding (host endianity)
-
-* u8 *utf8s always for strings in UTF-8 encoding
-
-* wchar_t *ucs2s always for strings in UCS-2 encoding (host endianity)
-
-Plus in the case you need to work with UTF-16 or UCS-2 in little endian,
-add appropriate naming suffixes.
-
-And use e.g. "vfsname" (char * OR unsigned char * OR u8 *) like you
-already have on some places for strings in iocharset=3D encoding.
-
-
-Looking at the whole code + exfat specification and usage is:
-
-Kernel NLS functions do conversion between UCS-2 and iocharset=3D.
-exfat upcase table has definitions only for UCS-2 characters.
-All exfat string structures are stored in UTF-16LE, except upcase table
-which is in UCS-2LE.
-
-It is great mess in specification, specially when it talks about Unicode
-upcase table for case insensitivity, which is limited only to code
-points up to the U+FFFF and does not say anything about Unicode
-Normalization and Normal Forms.
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
-And this opens a new question, what should kernel do if userspace asks
-to create these 4 files? (Assume that iocharset=3Duff8 for full Unicode
-support)
-
-1. U+00e9
-2. U+0065, U+0301
-3. U+00c9
-4. U+0045, U+0301
-
-According to Unicode uppercase algorithm, all 4 filenames results in
-same grapheme "LATIN CAPITAL LETTER E WITH ACUTE".
-
-But with current exfat implementation first and third are treated as
-same and then second and fourth are treated as same. Therefore first and
-fourth are treated as different filenames, even the fact that they
-represent same grapheme just only one is upper case and one lower case.
-
-To prevent such thing we need to use some kind of Unicode normalization
-form here.
-
-What do you think what should kernel's exfat driver do in this case?
-
-CCing Gabriel as he was implementing some Unicode normalization for ext4
-driver and maybe should bring some light to new exfat driver too.
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---b4fesfv3w7a3u7ah
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXhIT/QAKCRCL8Mk9A+RD
-UmiXAJ4wRXGodYjANGPhNEOOoeAKpG5kpACgwCk0fQfxkYOKmrxsPYI5PHtS2Kc=
-=DcG1
------END PGP SIGNATURE-----
-
---b4fesfv3w7a3u7ah--
+4,9.207 works fine.
