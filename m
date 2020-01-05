@@ -2,170 +2,255 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE83C33C8C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 10:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB84C33C99
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 10:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C17D20866
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 10:34:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="hGTPmHXO"
+	by mail.kernel.org (Postfix) with ESMTP id 21E8B20866
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 10:35:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgAEKeI (ORCPT
+        id S1726385AbgAEKfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 05:34:08 -0500
-Received: from mout.web.de ([212.227.15.3]:46759 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbgAEKeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 05:34:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1578220425;
-        bh=muH259ZrVBOfTqtFpN9JkhF6J+OpPXzBewzhweUeW7o=;
-        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
-        b=hGTPmHXOrB1Oaj+JRe0FltZtwkKviWQySJxtmiviiLpOV8FcJf+asVsKkfat5XLHB
-         WZ12/UcZodu/1MdZQWKpp/KPUA7ZcREcsYjKESMnhQNgE/aZDaaSwNc72aChwPjyx9
-         Y3V4mdrn3jJujc3ZL8DWMZqS9zyhID2Akkr1SJwU=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.187.152]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MgfTT-1j2g6Z3Rnb-00O1J2; Sun, 05
- Jan 2020 11:33:45 +0100
-To:     Wen Yang <wenyang@linux.alibaba.com>, cocci@systeme.lip6.fr,
-        kernel-janitors@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        =?UTF-8?Q?Matthias_M=c3=a4nnich?= <maennich@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20200104064448.24314-1-wenyang@linux.alibaba.com>
-Subject: Re: [PATCH] coccinelle: semantic patch to check for inappropriate
- do_div() calls
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <21e9861a-5afc-fd66-cfd1-a9b5b92b230b@web.de>
-Date:   Sun, 5 Jan 2020 11:33:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Sun, 5 Jan 2020 05:35:02 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40511 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgAEKfC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 05:35:02 -0500
+Received: by mail-ed1-f65.google.com with SMTP id b8so45144195edx.7;
+        Sun, 05 Jan 2020 02:35:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KYETpdZ2mRczL5SotBEID+XkiFWbeEdqRen+MEr3I8o=;
+        b=Wy11CIAL6lGCs7h2cAj7LYi1miElEyG11gL5iUKU+fc2/oDgv597bTE0J367sYY8G6
+         WURLFBXqC7pIwKi8jB093N1I2/14ZFnrmbq8+TrAMdqpkyeUHXmijkfb539r8cw5dnNt
+         AaK8wjUvYfa4gRaU7FKecBYV9bJGzKK2P7FUc4xOnIAKRQaORHQYSHOzLHZF1kp0AaPt
+         DiggrD+PkK0dRqey58/3J7CLrlwNZzbZuJ8DI+nFvlD0NVrd4n/DIeIVGOI3Ns70xb2x
+         auo8Fj4fFp3VxdFQR1otMtEWAI6/4VTq6QryRqo5l2Ed8J60mXbGWmd36njFq5KKu6je
+         gzVQ==
+X-Gm-Message-State: APjAAAVJoiNWL/XBFfCEv7rRq/5EpX7bEE0S3yLPHq7QOwBCxhpw50UW
+        cPTf88AU9cyY1dNZ4YC7NPigeJN7feE=
+X-Google-Smtp-Source: APXvYqzLk1JO6nw7Te+p5R3ACWDzB9HG+VU7PjaY85FHFt8NTAj8zKEZ6NbJqC6zVkd8dGby2S8LaQ==
+X-Received: by 2002:a17:906:a14:: with SMTP id w20mr103037573ejf.274.1578220499089;
+        Sun, 05 Jan 2020 02:34:59 -0800 (PST)
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com. [209.85.128.47])
+        by smtp.gmail.com with ESMTPSA id n14sm7990870ejx.11.2020.01.05.02.34.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Jan 2020 02:34:58 -0800 (PST)
+Received: by mail-wm1-f47.google.com with SMTP id u2so12375427wmc.3;
+        Sun, 05 Jan 2020 02:34:58 -0800 (PST)
+X-Received: by 2002:a1c:a50e:: with SMTP id o14mr28143754wme.2.1578220498338;
+ Sun, 05 Jan 2020 02:34:58 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200104064448.24314-1-wenyang@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:VIV8v8u9Q1RaSJVobU8xpVE6WoEQ0VEvvQRheL77vCrL2iKnRqU
- JhSd90SxsIEyA+Hd09OaiKJzdWUtNHDz2aLaD0vk0/7qOmEugdjujcunrNLC5W0ZCO516vm
- QHuSm0Gr9PIRqxg8rMCfU4UK6BOI6XFxc8y5zPJeTgVKwOViIgwazXndfkE9L5mkxT6ZbnH
- MWeopDbb9jL91KlvtX3nA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:cIerbdjllpU=:e6JwhzOyc/g8RQiUaFmMVj
- ziT+85bMJOrsFx2JCzZBbP9P21GhSTkmQieOkEhmiXIuxk3Vys59qxHdJFAOaVRw1Mf75Wvof
- vcLZph8AKp77wjvXKaSKerLdQgCrSPEpoPqPkOeGSVbpE+4wCGR2B/mhTdRxPcO0r5lykk4Nr
- sG4OpESVOm9kzS5xWqKG5MnDOj2iHE6cE1RR0GUI/tqNDlQEmO3HTByupBkEGrU2huTpzo12c
- wcYTBIM9hzYUO10ZZ59rcjShU00qkDw36DwrNN5YuamWhl057drv8FUVLCy1JxcECKfi9YgOr
- gcvhXzMaCY0WL/8h8jbpokAWWsNLJ5jHMi2kISsqP4Z4ukUFXEe1dytHCFrZO43bkUuCkoQcO
- nOn7hYFb+DuT8ksQl4rBVLPBglVITQsAkUyiy254u9FB1eRy2A+TuW6L9oUzIqF4A6jRNvXjR
- AbNCkIQu82nhq3RCKGcud49sJQ+8R9/9w12+cnr23lA0wQw40fdjxvXWmPVZxQXaDWn1beDn7
- AYpSEvDkcMJsXzkATNDxKR0yGQlfdMXZ0nHtDRPWMOEO8Njf7wcfL17Om21W1kZIlc2qvyUIK
- J9yqa3KRKVGsKxYV/XIfP592o3fJvfPiEsLyn6dpcavmcWgm5+LB73M7PboWj1j3wk2UNw6EY
- qmhTp3EU9WJNyA2ggUtBmqv0We97uzBKHfs7woOdpjFhwSiuOwh6zJq1eS+KhszjPcVRNL+ty
- DcJRJ6XaiG5Fs8WCn531y7OIwcTxp0nlBc0L6UrJ1Pu3UMoerBHXO9vW1yEWhFVvztDej47N5
- nWCkfieo2Pdq4zyy9zLeYjtKJ9slo9tX8bc1pYArp7ILIvkf8Ps/V7zYltfjN/9hppABe9xNt
- GkkwAj24jZWWflysT4SQvWd2YfC3SA6TNsdBb44S8FYNB0dZF/w3DD1NITrs4ZyvfWvDBdoBC
- Jte/3m5o8H6BortlrkccOvT+DacQFjkNgMWiZVJP0bL/2stp67On23sHBpvqQh1kXBDEN1Oq+
- 0GxQqUPRcVV0q64fZx0Yw/+MD0Txj+UgegBLP6TmU8GV6Rzsi4QMtznlHmKKRHdLfmd4SvbeB
- cSla4XmiHSU6Re4BOoj36htyIRdPD8dwJDjaGpNR1k5pPQSrck6t9WmguxZwryM15abjGtX34
- PIj1aE7I6eHXbYvJ+/aPCTIDY0G6WQXeYAmDyvuo5IuE1MC7baa2YSM7Y4slIOfzA4LQlLt5U
- 1fNna5KqoSB/ASzUAUwxccob5Zkh9b5dRvfr73ryhjZW5lcTJ2OT6jO3A9QU=
+References: <20200105012416.23296-1-samuel@sholland.org> <20200105012416.23296-7-samuel@sholland.org>
+In-Reply-To: <20200105012416.23296-7-samuel@sholland.org>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Sun, 5 Jan 2020 18:34:46 +0800
+X-Gmail-Original-Message-ID: <CAGb2v67rudw=3x9QBxeSqmMN-Qrt4+=3VD0u6H7JeS4KT8caqg@mail.gmail.com>
+Message-ID: <CAGb2v67rudw=3x9QBxeSqmMN-Qrt4+=3VD0u6H7JeS4KT8caqg@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v2 6/9] power: supply: axp20x_usb_power: Use
+ a match structure
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Oskari Lemmela <oskari@lemmela.net>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +virtual context
-> +virtual org
-> +virtual report
+On Sun, Jan 5, 2020 at 9:24 AM Samuel Holland <samuel@sholland.org> wrote:
+>
+> Instead of ad-hoc variant ID checks throughout the code, let's start
+> moving the variant-specific details to a match structure. This allows
+> for future flexibility, and it better matches the other axp20x power
+> supply drivers.
 
-The operation mode =E2=80=9Cpatch=E2=80=9D is not supported here.
-Should the term =E2=80=9Csemantic code search=E2=80=9D be used instead in =
-the subject again?
+You should probably mention that there are still parts of the code
+where ID matching is done.
 
-
-> +@@
-> +(
-> +* do_div(f, l);
-> +|
-> +* do_div(f, ul);
-> +|
-> +* do_div(f, ul64);
-> +|
-> +* do_div(f, sl64);
-> +)
-
-I suggest to avoid the specification of duplicate SmPL code.
-
-+@@
-+*do_div(f, \( l \| ul \| ul64 \| sl64 \) );
-
-
-Will any more case distinctions become helpful?
-
-
-> +@script:python depends on report@
-> +p << r.p;
-> +@@
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> ---
+>  drivers/power/supply/axp20x_usb_power.c | 91 ++++++++++++++++---------
+>  1 file changed, 60 insertions(+), 31 deletions(-)
+>
+> diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
+> index dd3f3f12e41d..2d7272e19a87 100644
+> --- a/drivers/power/supply/axp20x_usb_power.c
+> +++ b/drivers/power/supply/axp20x_usb_power.c
+> @@ -405,6 +405,50 @@ static const struct power_supply_desc axp22x_usb_power_desc = {
+>         .set_property = axp20x_usb_power_set_property,
+>  };
+>
+> +static const char * const axp20x_irq_names[] = {
+> +       "VBUS_PLUGIN",
+> +       "VBUS_REMOVAL",
+> +       "VBUS_VALID",
+> +       "VBUS_NOT_VALID",
+> +       NULL
+> +};
 > +
-> +msg=3D"WARNING: WARNING: do_div() does a 64-by-32 division, which may t=
-runcation the divisor to 32-bit"
-> +coccilib.report.print_report(p[0], msg)
+> +static const char * const axp22x_irq_names[] = {
+> +       "VBUS_PLUGIN",
+> +       "VBUS_REMOVAL",
+> +       NULL
+> +};
+> +
+> +struct axp_data {
+> +       const struct power_supply_desc  *power_desc;
+> +       const char * const              *irq_names;
+> +       enum axp20x_variants            axp20x_id;
+> +};
+> +
+> +static const struct axp_data axp202_data = {
+> +       .power_desc     = &axp20x_usb_power_desc,
+> +       .irq_names      = axp20x_irq_names,
+> +       .axp20x_id      = AXP202_ID,
+> +};
+> +
+> +static const struct axp_data axp221_data = {
+> +       .power_desc     = &axp22x_usb_power_desc,
+> +       .irq_names      = axp22x_irq_names,
+> +       .axp20x_id      = AXP221_ID,
+> +};
+> +
+> +static const struct axp_data axp223_data = {
+> +       .power_desc     = &axp22x_usb_power_desc,
+> +       .irq_names      = axp22x_irq_names,
+> +       .axp20x_id      = AXP223_ID,
+> +};
+> +
+> +static const struct axp_data axp813_data = {
+> +       .power_desc     = &axp22x_usb_power_desc,
+> +       .irq_names      = axp22x_irq_names,
+> +       .axp20x_id      = AXP813_ID,
+> +};
+> +
+>  static int configure_iio_channels(struct platform_device *pdev,
+>                                   struct axp20x_usb_power *power)
+>  {
+> @@ -440,12 +484,7 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
+>         struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
+>         struct power_supply_config psy_cfg = {};
+>         struct axp20x_usb_power *power;
+> -       static const char * const axp20x_irq_names[] = { "VBUS_PLUGIN",
+> -               "VBUS_REMOVAL", "VBUS_VALID", "VBUS_NOT_VALID", NULL };
+> -       static const char * const axp22x_irq_names[] = {
+> -               "VBUS_PLUGIN", "VBUS_REMOVAL", NULL };
+> -       const char * const *irq_names;
+> -       const struct power_supply_desc *usb_power_desc;
+> +       const struct axp_data *axp_data;
+>         int i, irq, ret;
+>
+>         if (!of_device_is_available(pdev->dev.of_node))
+> @@ -456,15 +495,16 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
+>                 return -EINVAL;
+>         }
+>
+> +       axp_data = of_device_get_match_data(&pdev->dev);
+> +
+>         power = devm_kzalloc(&pdev->dev, sizeof(*power), GFP_KERNEL);
+>         if (!power)
+>                 return -ENOMEM;
+>
+> -       platform_set_drvdata(pdev, power);
+> -       power->axp20x_id = (enum axp20x_variants)of_device_get_match_data(
+> -                                                               &pdev->dev);
+> -
+>         power->regmap = axp20x->regmap;
+> +       power->axp20x_id = axp_data->axp20x_id;
+> +
+> +       platform_set_drvdata(pdev, power);
 
-Please improve the message construction.
+Not sure why this needs to be reordered.
 
-Regards,
-Markus
+>         if (power->axp20x_id == AXP202_ID) {
+>                 /* Enable vbus valid checking */
+> @@ -481,18 +521,6 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
+>
+>                 if (ret)
+>                         return ret;
+> -
+> -               usb_power_desc = &axp20x_usb_power_desc;
+> -               irq_names = axp20x_irq_names;
+> -       } else if (power->axp20x_id == AXP221_ID ||
+> -                  power->axp20x_id == AXP223_ID ||
+> -                  power->axp20x_id == AXP813_ID) {
+> -               usb_power_desc = &axp22x_usb_power_desc;
+> -               irq_names = axp22x_irq_names;
+> -       } else {
+> -               dev_err(&pdev->dev, "Unsupported AXP variant: %ld\n",
+> -                       axp20x->variant);
+> -               return -EINVAL;
+>         }
+>
+>         if (power->axp20x_id == AXP813_ID) {
+> @@ -504,17 +532,18 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
+>         psy_cfg.of_node = pdev->dev.of_node;
+>         psy_cfg.drv_data = power;
+>
+> -       power->supply = devm_power_supply_register(&pdev->dev, usb_power_desc,
+> +       power->supply = devm_power_supply_register(&pdev->dev,
+> +                                                  axp_data->power_desc,
+>                                                    &psy_cfg);
+>         if (IS_ERR(power->supply))
+>                 return PTR_ERR(power->supply);
+>
+>         /* Request irqs after registering, as irqs may trigger immediately */
+> -       for (i = 0; irq_names[i]; i++) {
+> -               irq = platform_get_irq_byname(pdev, irq_names[i]);
+> +       for (i = 0; axp_data->irq_names[i]; i++) {
+> +               irq = platform_get_irq_byname(pdev, axp_data->irq_names[i]);
+>                 if (irq < 0) {
+>                         dev_warn(&pdev->dev, "No IRQ for %s: %d\n",
+> -                                irq_names[i], irq);
+> +                                axp_data->irq_names[i], irq);
+>                         continue;
+>                 }
+>                 irq = regmap_irq_get_virq(axp20x->regmap_irqc, irq);
+> @@ -522,7 +551,7 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
+>                                 axp20x_usb_power_irq, 0, DRVNAME, power);
+>                 if (ret < 0)
+>                         dev_warn(&pdev->dev, "Error requesting %s IRQ: %d\n",
+> -                                irq_names[i], ret);
+> +                                axp_data->irq_names[i], ret);
+>         }
+>
+>         INIT_DELAYED_WORK(&power->vbus_detect, axp20x_usb_power_poll_vbus);
+> @@ -544,16 +573,16 @@ static int axp20x_usb_power_remove(struct platform_device *pdev)
+>  static const struct of_device_id axp20x_usb_power_match[] = {
+>         {
+>                 .compatible = "x-powers,axp202-usb-power-supply",
+> -               .data = (void *)AXP202_ID,
+> +               .data = &axp202_data,
+>         }, {
+>                 .compatible = "x-powers,axp221-usb-power-supply",
+> -               .data = (void *)AXP221_ID,
+> +               .data = &axp221_data,
+>         }, {
+>                 .compatible = "x-powers,axp223-usb-power-supply",
+> -               .data = (void *)AXP223_ID,
+> +               .data = &axp223_data,
+>         }, {
+>                 .compatible = "x-powers,axp813-usb-power-supply",
+> -               .data = (void *)AXP813_ID,
+> +               .data = &axp813_data,
+>         }, { /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, axp20x_usb_power_match);
+> --
+> 2.23.0
+
+Otherwise,
+
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
