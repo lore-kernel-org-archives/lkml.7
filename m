@@ -2,149 +2,247 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90997C33C8C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 16:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3117BC33C9A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 16:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4375B2077B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 16:40:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="U/Iz8yMv";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="Z8MLGF/b"
+	by mail.kernel.org (Postfix) with ESMTP id 04B5F20866
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 16:41:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgAEQkH (ORCPT
+        id S1726481AbgAEQlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 11:40:07 -0500
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:19570 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbgAEQkG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 11:40:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1578242407; x=1609778407;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=o6v7kswxB+kQK3MbMK/j3XVKjA+EkM9m3g9GM7Rwpb8=;
-  b=U/Iz8yMvIs0W/99GgoAZyeY9lPMzMRC6bpdrMC/hL7BhXKs1FBznRy6i
-   iY7il2xBDEJTeRKu256x18Qp9gD5ysbTHPuWDboe1lOLrHn619MgbFYKd
-   6T4TjAIR1NqtmTfbe+wGLdIrdLV8IrD+AtCcy09sHWJUaaTQg+sIBEzEg
-   cBcuJU2X17Nd5qWrrUP3Su1ryKnKkPuO2/m65FzLQAsPo+M1DBgAzyXqw
-   ubcKH9DJsRVaxs5S4ApLJWIbp+YinMei74TXjdGVE+L3xULKCqhYo/q3S
-   0FBP6706X1lvAz8oP68iex4ThDbBVINb24KRJrFHYdIv8UiAt/UDGYrKk
-   Q==;
-IronPort-SDR: t18BIxUjT1leyurv/zBGXvMZCPOb6TrLa1Hjf81GSVZvH8XXSasZf8rTdk1gjINYa/TBCM5lRK
- +HrVm2107n7S1uPNWIiRTq0ugY0G9YnQFzwJy3gBKFYIc8nOtJ1nAix8pTegmKGSK3vFUNquJM
- 3yuWpuGgHpP0u5bGfXyMBTS9t1iKbo8sMLMov8T+SFH6sdTNMW6t8jxnWXxJhJG0ARslUSN9a6
- YX3rjecJBIwdzZqATI5doPtf/ISUO4a4qRaN2UHSR8bWCHWSCHoALak2D5kpACl2audYi0VUcX
- 4Yk=
-X-IronPort-AV: E=Sophos;i="5.69,399,1571673600"; 
-   d="scan'208";a="127475997"
-Received: from mail-bn8nam11lp2173.outbound.protection.outlook.com (HELO NAM11-BN8-obe.outbound.protection.outlook.com) ([104.47.58.173])
-  by ob1.hgst.iphmx.com with ESMTP; 06 Jan 2020 00:40:05 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OxAVKrEz2pSvHBbfhJGI9aBulwmIAqbOP7/KauaqWrX+EQI8WG7k8XE9cB/LjCcdNOpWLgJBjvoOySu4o5KwWZtXIaoFtTddbthvXTAvp1EieODZPljmIBz9VburGLAD3F1vZMU3WYOliVxTORVDtd3NH1+eXWBQP5DM2VnmU5dlINKwF8arPCZNzN+W4Rhixjmc1VM1tMoTyn/QF4vt/XuLq9hcxJqIAsRDyVG6WzZkqG9b9/WzoMeWEu/uVb7kx8Bd38opJSNzq8wx2TkdPBr7AJ/RtE3C6i8dhzmKqBica9EFJc14Za9zAjU43AthDBDyOZ63dXqi5P8VpClTng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o6v7kswxB+kQK3MbMK/j3XVKjA+EkM9m3g9GM7Rwpb8=;
- b=LZ2CY4pEOXXufJgJcMUpdx2MSw0TM3vkuI59qKX3BbSwnGyyBiBU2Kydtj/xZunPBd2IKmiP9wASJqrfzGI9+Vp9fFBQLfTgt49NSDFSMkgQ2LRM9o7JwXdLYwSfk5PJfAjpGO4bvFt+5pDQQJUyOOFwv5VLp0XbMCHuGWEzA82n0Nd51+dbVPzKhn51z+O8I2SLysNu46lDtkm0/ECg0KpFgXplGHuIfyqzq+IyXDRvebChF64rsi/5MABeNe8gkeEWlYs3dI/ftFWYT1AANWMIQhaUZ5k5qn3cyra+LNZH/I2V99sJLd9Wzh6RgpjRAzUyIHJ0HjPyGyEeMoZPfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o6v7kswxB+kQK3MbMK/j3XVKjA+EkM9m3g9GM7Rwpb8=;
- b=Z8MLGF/bfcKspBHGKPyaBBKm9xqH8Av8gqNGS9J+BGZ/5snkTuzBFSLq/vfcVJKHObsf50Hkx+Wx7bRpglRPuMVBym4dtuZdYHuDazeCCMtso8s8ZAx11Rzc44VodkNbvxvNKx+eFFPNb7BQhhpOyrCgjxL3cWga/YNU9H6Vqig=
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) by
- MN2PR04MB5631.namprd04.prod.outlook.com (20.179.23.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.12; Sun, 5 Jan 2020 16:40:01 +0000
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::460:1c02:5953:6b45]) by MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::460:1c02:5953:6b45%4]) with mapi id 15.20.2602.015; Sun, 5 Jan 2020
- 16:40:01 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
-Subject: RE: [PATCH v1 0/3] scsi: ufs: pass device information to
- apply_dev_quirks
-Thread-Topic: [PATCH v1 0/3] scsi: ufs: pass device information to
- apply_dev_quirks
-Thread-Index: AQHVw4RnKOmg85o31Eufk/ca9N3SIafbkG15gAB7awCAADp4MA==
-Date:   Sun, 5 Jan 2020 16:40:01 +0000
-Message-ID: <MN2PR04MB699151E6AEC7D15CBE1224A2FC3D0@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <1578200118-29547-1-git-send-email-stanley.chu@mediatek.com>
-         <MN2PR04MB69913F0B671032A388747CF7FC3D0@MN2PR04MB6991.namprd04.prod.outlook.com>
- <1578229802.17435.3.camel@mtkswgap22>
-In-Reply-To: <1578229802.17435.3.camel@mtkswgap22>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [77.137.86.228]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ea8ff0d8-1397-41a6-a1a8-08d791fde908
-x-ms-traffictypediagnostic: MN2PR04MB5631:
-x-microsoft-antispam-prvs: <MN2PR04MB5631C3F8D846BB866A11C46AFC3D0@MN2PR04MB5631.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:2803;
-x-forefront-prvs: 027367F73D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(136003)(39860400002)(396003)(376002)(366004)(199004)(189003)(55016002)(52536014)(71200400001)(4326008)(8936002)(81156014)(9686003)(81166006)(7416002)(8676002)(478600001)(6916009)(76116006)(66476007)(66556008)(64756008)(66946007)(66446008)(26005)(33656002)(6506007)(54906003)(2906002)(316002)(7696005)(186003)(86362001)(5660300002)(4744005);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5631;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: s0UKCPbaVIEYfrJoR64SFOIDbL45K3L9TpSx8tY2RYlAOCrOtD+PLtsmIaOZzEp+Mto4HwQ1X53l1QVp7s3Y7DfIqWfAqpAVZ50BbA7Cx/1DPSKvWka0AbqFkFOK5pXuwM2r0lS4XH5sKu5XlWlnZq6v7OdebOLi8hPKZ7tjvosSoheNG1xEQE4RBYynvLJyCKOCFFokxAJa7+sSCpnU9LEHLRYfKX08ktjp3pRDtFcWAnbDGiUwrTgGTXRT+jb+0GBCPo9tKh6q+mRRXfRk0dqEvWCj9ZjUBLOdvN/JnthbfYev8Ay2EDj9q5CWq4dvqBN5XxbjrZs2XD9amXq9QoCZQe88aPfkkuuT5GxbLvsSh5LmX3YXMEJ9fkX1F808RqW3MOFW+tnGZe3yTXo6bJIP04Ep5XPZvB/KJ1GBsuquB//HBCkOkiGQVLhq63fy
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 5 Jan 2020 11:41:10 -0500
+Received: from foss.arm.com ([217.140.110.172]:37902 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726260AbgAEQlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 11:41:09 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E12331B;
+        Sun,  5 Jan 2020 08:41:08 -0800 (PST)
+Received: from [192.168.3.111] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E2BD3F534;
+        Sun,  5 Jan 2020 08:41:07 -0800 (PST)
+Subject: Re: [PATCH 3/3] ARM: dts: sun8i: R40: Add SPI controllers nodes and
+ pinmuxes
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+References: <20200102012657.9278-1-andre.przywara@arm.com>
+ <20200102012657.9278-4-andre.przywara@arm.com>
+ <20200102095711.dkd2cnbyitz6mvyx@gilmour.lan>
+ <20200102104158.06d9baa0@donnerap.cambridge.arm.com>
+ <20200104100422.z7iz4jiyj7kdvbtw@gilmour.lan>
+From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Autocrypt: addr=andre.przywara@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ i4aIXCH3Wv6K
+Organization: ARM Ltd.
+Message-ID: <42aabc62-4885-38fc-a6e5-0f057843d364@arm.com>
+Date:   Sun, 5 Jan 2020 16:40:58 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea8ff0d8-1397-41a6-a1a8-08d791fde908
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jan 2020 16:40:01.6096
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OdKrKHwBDq0oyKqbvZooTj+iza5vcjwY7eezVZIRu/93CqMg8lQVb1zRH6Knz4GSHN0iF+WnxHgfp/QeTKtWEQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5631
+In-Reply-To: <20200104100422.z7iz4jiyj7kdvbtw@gilmour.lan>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IA0KPiBIaSBBdnJpLA0KPiANCj4gT24gU3VuLCAyMDIwLTAxLTA1IGF0IDA1OjUxICswMDAwLCBB
-dnJpIEFsdG1hbiB3cm90ZToNCj4gPiBZb3UgaGF2ZSB0byBzcXVhc2ggcGF0Y2ggMSAmIDIsIG90
-aGVyd2lzZSB5b3VyIHBhdGNoIDEgd29uJ3QgY29tcGlsZS4NCj4gPiBPdGhlciB0aGFuIHRoYXQ6
-IGxvb2tzIGdvb2QgdG8gbWUuDQo+ID4gVGhhbmtzLA0KPiA+IEF2cmkNCj4gDQo+IFNvcnJ5IGJl
-Y2F1c2UgSSBzZW50IDIgc2VyaWVzIGluIHRoZXNlIHR3byBkYXlzLg0KPiANCj4gV291bGQgeW91
-IG1lYW4gcGF0Y2ggMSBpcyBzZXJpZXM6ICJzY3NpOiB1ZnM6IGZpeCBlcnJvciBoaXN0b3J5IGFu
-ZCBjb21wbGV0ZQ0KPiBkZXZpY2UgcmVzZXQgaGlzdG9yeSIgYW5kIHBhdGNoIDIgaXMgc2VyaWVz
-ICJzY3NpOiB1ZnM6IHBhc3MgZGV2aWNlIGluZm9ybWF0aW9uIHRvDQo+IGFwcGx5X2Rldl9xdWly
-a3MiPw0KPiANCj4gT3IgcGF0Y2ggMSAmIDIgbWVhbiB0aGUgZmlyc3QgMiBjb21taXRzIGluIHRo
-aXMgc2VyaWVzOiAic2NzaTogdWZzOiBwYXNzIGRldmljZQ0KPiBpbmZvcm1hdGlvbiB0byBhcHBs
-eV9kZXZfcXVpcmtzIj8NClRoaXMgb25lLg0KDQo+IA0KPiBUaGFua3MgYSBsb3QuDQo+IFN0YW5s
-ZXkNCg==
+On 04/01/2020 10:04, Maxime Ripard wrote:
+
+Hi,
+
+> On Thu, Jan 02, 2020 at 10:41:58AM +0000, Andre Przywara wrote:
+>> On Thu, 2 Jan 2020 10:57:11 +0100
+>> Maxime Ripard <mripard@kernel.org> wrote:
+>>> On Thu, Jan 02, 2020 at 01:26:57AM +0000, Andre Przywara wrote:
+>>>> The Allwinner R40 SoC contains four SPI controllers, using the newer
+>>>> sun6i design (but at the legacy addresses).
+>>>> The controller seems to be fully compatible to the A64 one, so no driver
+>>>> changes are necessary.
+>>>> The first three controller can be used on two sets of pins, but SPI3 is
+>>>> only routed to one set on Port A.
+>>>>
+>>>> Tested by connecting a SPI flash to a Bananapi M2 Berry on the SPI0
+>>>> PortC header pins.
+>>>>
+>>>> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+>>>> ---
+>>>>  arch/arm/boot/dts/sun8i-r40.dtsi | 89 ++++++++++++++++++++++++++++++++++++++++
+>>>>  1 file changed, 89 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+>>>> index 8dcbc4465fbb..af437391dcf4 100644
+>>>> --- a/arch/arm/boot/dts/sun8i-r40.dtsi
+>>>> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+>>>> @@ -418,6 +418,41 @@
+>>>>  				bias-pull-up;
+>>>>  			};
+>>>>
+>>>> +			spi0_pc_pins: spi0-pc-pins {
+>>>> +				pins = "PC0", "PC1", "PC2", "PC23";
+>>>> +				function = "spi0";
+>>>> +			};
+>>>> +
+>>>> +			spi0_pi_pins: spi0-pi-pins {
+>>>> +				pins = "PI10", "PI11", "PI12", "PI13", "PI14";
+>>>> +				function = "spi0";
+>>>> +			};
+>>>
+>>> This split doesn't really work though :/
+>>>
+>>> The PC pins group has MOSI, MISO, CLK and CS0, while the PI pins group
+>>> has CS0, CLK, MOSI, MISO and CS1.
+>>>
+>>> Meaning that if a board uses a GPIO CS pin, we can't really express
+>>> that
+>>
+>> Does that actually work? I dimly remember checking our sunxi driver
+>> a while ago and I wasn't sure that would be functional there.
+> 
+> It's something generic that should be handled by the core iirc. We
+> might be missing the few things to enable it though, but that's
+> irrelevant to the DT itself.
+
+Agreed, I just remembered that I checked this a while ago and found that
+we always control the SS_LEVEL bit, but never anything else. But indeed
+irrelevant for this.
+
+> 
+>>> and any board using the PI pins for its SPI bus will try to
+>>> claim CS0 and CS1, no matter how many devices are connected on the bus
+>>> (and if there's one, there might be something else connected to PI14).
+>>
+>> True.
+>>
+>>> And you can't have a board using CS1 with the PC signals either.
+>>>
+>>> You should split away the CS pins into separate groups, like we're
+>>> doing with the A20 for example.
+>>
+>> Ah, yeah, makes sense, thanks for the pointer.
+>>
+>>> And please add /omit-if-no-ref/ to those groups.
+>>
+>> I was a bit reluctant to do this:
+>>
+>> First there does not seem to be any good documentation about it,
+>> neither in the official DT spec nor in dtc, even though I think I
+>> understand what it does ;-)
+> 
+> If a node doesn't have a phandle pointing to it, it will be ignored at
+> compilation time.
+
+That's what I figured ;-)
+
+>> Second it seems to break in U-Boot atm. Looks like applying your dtc
+>> patch fixes that, though. Do you know if U-Boot allows
+>> cherry-picking dtc patches? If yes, I could post your patch.
+> 
+> I know I did it for libfdt at some point, so I guess dtc would work
+> too, but I'm not really sure. Rockchip is also using it iirc, so
+> there's interest in supporting it in U-Boot anyway.
+
+OK, will post it.
+
+>> But more importantly: what are the guidelines for using this tag? I
+>> understand the desire to provide every possible pin description on
+>> one hand, but wanting to avoid having *all of them* in *each* .dtb
+>> on the other.
+> 
+> Pin groups will take a lot of space in the dtb, and the DT parsing
+> will take some measurable time,
+
+Really? Where is that? In Linux, or in U-Boot, possibly with the caches
+off? I am just curious. AFAIK there are some inefficient algorithms in
+libfdt (which trade performance for a smaller memory footprint), but I
+thought those would be called only very rarely.
+
+> so if we can get rid of the unused pin
+> groups, that's great :)
+
+I see it is preferable over creating a separate copy of the .dts file.
+
+>> But how does this play along with overlays? Shouldn't at least those
+>> interface pins that are exposed on headers stay in each .dtb? Can we
+>> actually make this decision in the SoC .dtsi file?
+> 
+> If the DT is compiled with overlays, that property is ignored iirc and
+> the node will be output in the compiled DT, because while if you don't
+> have overlays support you can tell if something points to that node,
+> you can't with overlays since those references might be stored
+> elsewhere.
+
+Yeah, Chen-Yu mentioned that already. Thanks for the info, I missed that.
+
+>> And should there be a dtc command line option to ignore those tags,
+>> or even to apply this tag (virtually) to every node?
+> 
+> Most of the nodes are (reference) leaves in a DT though. Pretty much
+> all the device nodes have no references pointing to them, just like
+> most of the buses, the CPU nodes, etc. And I'm pretty sure you want to
+> keep them :)
+
+Yeah, that was a New-Year's brain-fart of mine ;-)
+
+While I was changing the patch I figured that it gets quite lengthy.
+Also looking at the a20.dtsi, I see that *all* pin groups have this tag
+now. Wouldn't it be easier to introduce *one* tag that applies that to
+all children of a node?
+
+Another thing I was wondering about: Would we gain something by not
+compiling nodes which have status = "disabled"? This is mentioned as a
+generic property in the DT spec, although it says there that the exact
+meaning is device dependent. But it sound still worthwhile, especially
+since we would avoid more pin groups to be compiled in.
+
+Cheers,
+Andre.
