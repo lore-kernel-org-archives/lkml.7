@@ -2,110 +2,116 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F47C33C8C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 10:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EA4C33C99
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 10:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6744920715
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 10:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 835FF21775
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 10:42:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="AJetH91v";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VfqPxNww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgAEKlD (ORCPT
+        id S1726402AbgAEKmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 05:41:03 -0500
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:19651 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725930AbgAEKlC (ORCPT
+        Sun, 5 Jan 2020 05:42:24 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:48361 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725985AbgAEKmX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 05:41:02 -0500
-X-IronPort-AV: E=Sophos;i="5.69,398,1571695200"; 
-   d="scan'208";a="429930408"
-Received: from abo-154-110-68.mrs.modulonet.fr (HELO hadrien) ([85.68.110.154])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jan 2020 11:41:00 +0100
-Date:   Sun, 5 Jan 2020 11:41:00 +0100 (CET)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Wen Yang <wenyang@linux.alibaba.com>, cocci@systeme.lip6.fr,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        =?ISO-8859-15?Q?Matthias_M=E4nnich?= <maennich@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] coccinelle: semantic patch to check for inappropriate
- do_div() calls
-In-Reply-To: <21e9861a-5afc-fd66-cfd1-a9b5b92b230b@web.de>
-Message-ID: <alpine.DEB.2.21.2001051139010.2579@hadrien>
-References: <20200104064448.24314-1-wenyang@linux.alibaba.com> <21e9861a-5afc-fd66-cfd1-a9b5b92b230b@web.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 5 Jan 2020 05:42:23 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 7A3323FDE;
+        Sun,  5 Jan 2020 05:42:22 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Sun, 05 Jan 2020 05:42:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=Bg70TfGSOPAvhp+LYYPCxqiBNS2
+        gPRtQUG933et+lgI=; b=AJetH91vtZKhzoj2u3iripRVedByRfzvJr2EFhO4KVA
+        iJAHXiFLyQvNAFUhZJ82BKhTRhNvCkE0sWg2K4iHzQN7w05zW73zgPnfvW4nmJdR
+        CLoP1LOiJMa+JCVLg70uPcm/H2zLCyzXOgGqN4/1C/+wux/VIR/1qr48XpjLXfjb
+        YfRHOXHCA7fXnPBM9p+GCfALYZjQND0sF747M713tMjE5eQlIOjS9UivwPZS+tAE
+        VdQxQ3OoI6HNrJnu7RZFKUBMCeiEVQvp3+Ocv04ehS9DVS4MwisbkGcFle9qiZpq
+        hCD/pOCMMsMTuBwt8TH+lv9xWcLVWL0sTMuecUl0SvA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=Bg70Tf
+        GSOPAvhp+LYYPCxqiBNS2gPRtQUG933et+lgI=; b=VfqPxNwwpUYiqfxyxFEW2N
+        jDFREgf+OQmOwR6HcArC+SF4YjPIHtNSJs2pbdS/iaJP5Fd4W2EpemB5OEj/xOA5
+        ckeaHKqu0qW9owyk6w9h6gPm+iAk/pA80FuPZ9fZvhFjvR9xeCSRAHK7qcmMtkpn
+        SG1tlBtw1B/imKkYl5zoijKTE124KE/n08frvrYLtAA6AB3jPHYaUlGfUHZH1EdW
+        IAqnoE3LQUZ2d3Uq5N4Xtm9PxKkQ/kuUueHCxD5mKJ6zdcc5u5kPyfXgmg5eZKKw
+        Y7zxLsTflB7oHrajucxBQWP53ToOlwy/VVRfD9F4zeAhsbHngyp+h32Ljc0NfQlA
+        ==
+X-ME-Sender: <xms:i70RXuVqxQ_zXFMmKy3X0BWIQL-8lKCPui4HVlam_Fj4zkH9Oghv4w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdegkedgudekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:i70RXuEm9pwTWEvGq7QvCVWuZ2MOqXCCuZepAw1PuxDtVBah1QsBjw>
+    <xmx:i70RXq5aOrfgtxtk_klO_P-_rX6tcrYPVhFaieCAfzHVGoDbwaHYhg>
+    <xmx:i70RXoKMs7vv0lB9H6TMytOHNCH8sUOtKK_bHGlMAPFa-iKN_sS9KA>
+    <xmx:jr0RXsfDqkWFV76bHvqVh_Xgk6EIOvxzaZ6inZz_mHCETvipE0fDgw>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3D04E8005C;
+        Sun,  5 Jan 2020 05:42:19 -0500 (EST)
+Date:   Sun, 5 Jan 2020 11:42:16 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        mareklindner@neomailbox.ch, sw@simonwunderlich.de, a@unstable.cc,
+        sven@narfation.org, Johan Hedberg <johan.hedberg@gmail.com>,
+        roopa@cumulusnetworks.com, nikolay@cumulusnetworks.com,
+        edumazet@google.com, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        jon.maloy@ericsson.com, ying.xue@windriver.com, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        netdev <netdev@vger.kernel.org>,
+        BlueZ devel list <linux-bluetooth@vger.kernel.org>,
+        tipc-discussion@lists.sourceforge.net,
+        linux-hyperv@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 5/8] net: bluetooth: remove unneeded MODULE_VERSION()
+ usage
+Message-ID: <20200105104216.GA1679409@kroah.com>
+References: <20200104195131.16577-1-info@metux.net>
+ <20200104195131.16577-5-info@metux.net>
+ <22BD3D36-DE54-4062-B3A1-15D9E0E256A8@holtmann.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-2099431970-1578220860=:2579"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <22BD3D36-DE54-4062-B3A1-15D9E0E256A8@holtmann.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Sun, Jan 05, 2020 at 10:34:56AM +0100, Marcel Holtmann wrote:
+> Hi Enrico,
+> 
+> > Remove MODULE_VERSION(), as it isn't needed at all: the only version
+> > making sense is the kernel version.
+> 
+> I prefer to keep the MODULE_VERSION info since it provides this
+> information via modinfo.
 
---8323329-2099431970-1578220860=:2579
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Sure, but it's really pointless :)
 
-On Sun, 5 Jan 2020, Markus Elfring wrote:
+> Unless there is a kernel wide consent to remove MODULE_VERSION
+> altogether, the Bluetooth subsystem is keeping it.
 
-> > +virtual context
-> > +virtual org
-> > +virtual report
->
-> The operation mode “patch” is not supported here.
-> Should the term “semantic code search” be used instead in the subject again?
+I've deleted them from lots of drivers/subsystems already as they do not
+make any sense when you think about vendor kernels, stable kernels, and
+upstream kernel versions.
 
-Doesn't matter,
+thanks,
 
->
->
-> > +@@
-> > +(
-> > +* do_div(f, l);
-> > +|
-> > +* do_div(f, ul);
-> > +|
-> > +* do_div(f, ul64);
-> > +|
-> > +* do_div(f, sl64);
-> > +)
->
-> I suggest to avoid the specification of duplicate SmPL code.
->
-> +@@
-> +*do_div(f, \( l \| ul \| ul64 \| sl64 \) );
-
-I don't se any point to this.  The code matched will be the same in both
-cases.  The original code is quite readable, without the ugly \( etc.
-
->
-> Will any more case distinctions become helpful?
->
->
-> > +@script:python depends on report@
-> > +p << r.p;
-> > +@@
-> > +
-> > +msg="WARNING: WARNING: do_div() does a 64-by-32 division, which may truncation the divisor to 32-bit"
-> > +coccilib.report.print_report(p[0], msg)
->
-> Please improve the message construction.
-
-Please make more precise comments (I already made some suggestions, so it
-doesn't matter much here, but "please improve" does not provide any
-concrete guidance).
-
-julia
---8323329-2099431970-1578220860=:2579--
+greg k-h
