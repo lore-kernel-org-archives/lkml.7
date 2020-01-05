@@ -2,109 +2,118 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647CAC32767
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 01:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 404DCC33C99
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 01:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 419FF2064B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 01:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 150E52064B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 01:19:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hqpa6/nF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbgAEBSq (ORCPT
+        id S1726402AbgAEBT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 20:18:46 -0500
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:8826 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726240AbgAEBSp (ORCPT
+        Sat, 4 Jan 2020 20:19:28 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33483 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbgAEBT1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 20:18:45 -0500
-Received: from pps.filterd (m0148663.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0051IY29022683;
-        Sun, 5 Jan 2020 01:18:34 GMT
-Received: from g2t2352.austin.hpe.com (g2t2352.austin.hpe.com [15.233.44.25])
-        by mx0a-002e3701.pphosted.com with ESMTP id 2xb423rd00-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 05 Jan 2020 01:18:34 +0000
-Received: from g2t2360.austin.hpecorp.net (g2t2360.austin.hpecorp.net [16.196.225.135])
-        by g2t2352.austin.hpe.com (Postfix) with ESMTP id 926A4A7;
-        Sun,  5 Jan 2020 01:18:33 +0000 (UTC)
-Received: from blofly.tw.rdlabs.hpecorp.net (blofly.tw.rdlabs.hpecorp.net [15.119.208.30])
-        by g2t2360.austin.hpecorp.net (Postfix) with ESMTP id 6412736;
-        Sun,  5 Jan 2020 01:18:31 +0000 (UTC)
-Date:   Sun, 5 Jan 2020 09:12:46 +0800
-From:   Clay Chang <clayc@hpe.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, dmitry.kasatkin@gmail.com,
-        jmorris@namei.org, serge@hallyn.com
-Subject: Re: [PATCH] ima: Add a space after printing a LSM rule for
- readability
-Message-ID: <20200105011246.GA5936@blofly.tw.rdlabs.hpecorp.net>
-References: <1578037863-7102-1-git-send-email-clayc@hpe.com>
- <1578071487.5152.13.camel@linux.ibm.com>
+        Sat, 4 Jan 2020 20:19:27 -0500
+Received: by mail-ot1-f68.google.com with SMTP id b18so44681727otp.0;
+        Sat, 04 Jan 2020 17:19:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=rjpqbK93O/iu5o//OmgzmyGJYgPRsECTez5RhFbPj4o=;
+        b=Hqpa6/nFMt1k6Gacb/LNwp7rvTpRgL96QMH2uL2Mvi2jOAk1KerRRAvklfHVZvReYD
+         91VPWQLdhtrbwEw10Mg0bO3VH9jI7Sk9vhp4Qh8YKHQx+wU/rVwfrrzhekSIVl+GJ4MW
+         ET8Vv/SmK6dxspqTTZR8JPpr3Li1VFK8p54X3xa6ucd23uiJlW8TCvXE8h4EJMeplk7z
+         jQARTTMTedqp+AREiD/XcaUjKVk72yu90lWgxzUWoyt8c46jYSvvmZQBy7hizMz6/4rt
+         fuXdHhIkcAihhYErtRKj993KME6Ci+shJVKflL5hiAYDcJ0mTYCc3ev+GvbVkOlXerTW
+         v0cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rjpqbK93O/iu5o//OmgzmyGJYgPRsECTez5RhFbPj4o=;
+        b=rfV5sYzqAbE1a/jtkhRe4GScWpVqjIJcnpBa6gExZVb3xisD6P3HRXl/BV+e5FLVks
+         9HevBcV+8qsyFTFxGrm/eyhhC4mvQIOttdLQS3vG4qnixKdjsZYExq922uUMHvBINDTk
+         MX36mVeWL1bMJePGQpNEuIYd4XS2d529Ykv7W9QgILyNz9B9R3g5/KKu3XqSXCST2w7Z
+         WgrhV+yGg52OPveWMgs/wkTSfwuEGAAF+dpCUWYWbfFD+rtE+LUQTcX2tqYAJl8qm1fi
+         gCQ/LQIbaEjZArz+p0iD+F7l98RTT8riXJNZC0vQqS+mFVC3+/q8F50RhCprbUO7RxN9
+         6CbA==
+X-Gm-Message-State: APjAAAXZspQbUyst6OHgBluq/42CFYA1AYWR7BgCayYKjUH036+5v/yZ
+        0adEicJw8l5KZhh0W8fVVKOD1Oi8jqCtbKmStTE=
+X-Google-Smtp-Source: APXvYqwP+k+lkGBdLKIyu1Aozce9RaFYCdw7nnPyhgRnq8iNFacAvNb58GSAazI6o1ej8726b6Y9SX3w9f4jODeLw/M=
+X-Received: by 2002:a9d:6c92:: with SMTP id c18mr92355757otr.157.1578187166437;
+ Sat, 04 Jan 2020 17:19:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1578071487.5152.13.camel@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2020-01-04_06:2020-01-02,2020-01-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- impostorscore=0 adultscore=0 phishscore=0 suspectscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 spamscore=0
- bulkscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001050010
+References: <20200103234725.22846-1-kpsingh@chromium.org> <F25C9071-A7A7-4221-BC49-A769E1677EE1@amacapital.net>
+In-Reply-To: <F25C9071-A7A7-4221-BC49-A769E1677EE1@amacapital.net>
+From:   Justin Capella <justincapella@gmail.com>
+Date:   Sat, 4 Jan 2020 17:19:14 -0800
+Message-ID: <CAMrEMU-8KizWmgmYHzu8B++HOyfvC-2LF4KP7ibZki_q-_JrxA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: Make trampolines W^X
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, bpf@vger.kernel.org,
+        x86@kernel.org, linux-security-module@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Michael Halcrow <mhalcrow@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 12:11:27PM -0500, Mimi Zohar wrote:
-> On Fri, 2020-01-03 at 15:51 +0800, clayc@hpe.com wrote:
-> > From: Clay Chang <clayc@hpe.com>
-> 
-> Normally this "From" line is only seen when the sender isn't the patch
-> author.  Any ideas what happened? 
+I'm guessing 2 pages are used to allow for different protections? Does
+only the first page's protections need to be changed? Is that
+"old_image"?
+
++       set_memory_nx((unsigned long)image, 1);
++       set_memory_rw((unsigned long)image, 1);
+
++       set_memory_ro((unsigned long)new_image, 1);
++       set_memory_x((unsigned long)new_image, 1);
+
+Because
+
++       void *old_image =3D tr->image + ((tr->selector + 1) & 1) * PAGE_SIZ=
+E;
++       void *new_image =3D tr->image + (tr->selector & 1) * PAGE_SIZE
+
+
+> > - Mark the memory as read-only (set_memory_ro)
+> > - Mark the memory as executable (set_memory_x)
 >
+> No, thanks. There=E2=80=99s very little excuse for doing two IPI flushes =
+when one would suffice.
 
-Hi Mimi,
+If there were checks between these steps to verify the trampoline
+wasn't tampered with while the page was writable it would make sense
+to do so before enabling execution.
 
-Apparently I should not use "--from" in git-send-email command.
+Could some of these int's be unsigned to be extra cautious?
 
-> > 
-> > When reading ima_policy from securityfs, there is a missing
-> > space between output string of LSM rules.
-> > 
-> > Signed-off-by: Clay Chang <clayc@hpe.com>
-> 
-> Good catch!  IMA policy rules based on LSM labels are used to
-> constrain which files are in policy.  Normally a single LSM label is
-> enough (e.g. dont_measure obj_type=auditd_log_t).  Could you include
-> in this patch description a use case where multiple LSM labels are
-> needed?
-> 
-
-Apology for not expressed my intention clearly. The intention of this
-patch is to add a space after printing LSM rules (if any) and the
-remaining rules.
-
-Currently, if I have a policy, for example:
-appraise func=BPRM_CHECK obj_type=shell_exec_t appraise_type=imasig
-
-The read back result is:
-appraise func=BPRM_CHECK obj_type=shell_exec_tappraise_type=imasig
-
-which is not correct.
-
-I do not have a case for multiple LSM labels, but if there is one
-such case, this patch will also apply.
-
-I will post a v2 patch with tuned description.
-
-Thanks,
-Clay
+One last thought, if the extra checks are implemented, maybe comparing
+against the old image prior to setting rw would be worthwhile?
