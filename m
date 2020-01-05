@@ -2,56 +2,58 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E643AC33C8C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 12:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 911FCC33C8C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 12:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6DAA20866
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 12:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58E9720866
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 12:00:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="L5GcoTDq"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="NxfpWGy6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbgAEMA2 (ORCPT
+        id S1726391AbgAEMAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 07:00:28 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54662 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbgAEMA2 (ORCPT
+        Sun, 5 Jan 2020 07:00:35 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39257 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgAEMAe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 07:00:28 -0500
-Received: by mail-wm1-f66.google.com with SMTP id b19so12181760wmj.4
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jan 2020 04:00:26 -0800 (PST)
+        Sun, 5 Jan 2020 07:00:34 -0500
+Received: by mail-wr1-f65.google.com with SMTP id y11so46593541wrt.6
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jan 2020 04:00:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=H1hJLNQee379aq3/tU9tTxHeBbBKoIXcCyb5gddw+z0=;
-        b=L5GcoTDqP85Ra89Ye59ARpTSzZ7gnWy21JPPPuYzKAmIAQ4wHEeSQbNDVck2PAtAY7
-         EmzVCQNNqNWBnCiZZc003gcKlJqV2ioKUakubuUccupOE9u8OG6XsA2Eo3r4hLLTp+So
-         fP5BB0Vsc2VyZmTHpwRU+DrJI+J2yBuxSmqsY=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nNZENrPCfYoBaHBME6z04+ddX8BsgyHZGAwNwJzbfqU=;
+        b=NxfpWGy6labos7XDl84kHbgXxhCjfcLe0fdH3wyuztVZ7XE5olsY+HKAUauOtY75vR
+         slOjJNOcbkrhEIOzHZ+DFGvUWBBCWNA6aVvKiRmXYMOg4UVhioK9HNyGmf9AXREo3W3n
+         XZVk8O5n69hHZtuPKZy5adpZCHe3msF8YccsY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=H1hJLNQee379aq3/tU9tTxHeBbBKoIXcCyb5gddw+z0=;
-        b=a/CWidO/D2FNdlUFybbBMGGmyp1olsUOg5YcpuToNMVKgpBOrwltdFB0fx5z6eY5TK
-         tCbyBf9/W9VyLQ8J+wg/HUUiOgNZ4Y/u+aZOLEN//F3xXhHv4IuJw83OGOdjb2tTZS9i
-         aBiPALVUFoKmjN4VVXXqZZxHOGgAI02Hp9QQtJoXqZTz6cepxmvwDzHg63fU13heukjs
-         xoTxY3TR0HfH/gg50XK8SRAtu0t67ooF7GWv5cMPPco6ZKaws7hpwI5viV7tv4EviVBE
-         G8QAoNGmVLGEUe/trVXU3CPzK2Fxke7URolDcZ7hoIgkbgZW+lCaRGhIyq32wahbeGVZ
-         qlyA==
-X-Gm-Message-State: APjAAAU2VWnS+A9lqPBtizeh4shd776m0B6GDT3f6aBzhVsEWEX0/uup
-        SYbN6qJ5Ch/j3b6dgrkUaSaqpg==
-X-Google-Smtp-Source: APXvYqw/XcK394/KTqhYIMffQmGHz8RF+wDGNHUwQorEma1YeLD6ubCO1gZEETPUwZ/OyDMO01qA1A==
-X-Received: by 2002:a1c:67c3:: with SMTP id b186mr28504788wmc.36.1578225626039;
-        Sun, 05 Jan 2020 04:00:26 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nNZENrPCfYoBaHBME6z04+ddX8BsgyHZGAwNwJzbfqU=;
+        b=bkbmPZQHIEErXX9bja/L7mz4nfy4eL5pcITTIHr3I8qjI5OzGsLIL5Zb69rY4WcK55
+         V/dkXTLGu5L/RVlRI8WaNEqX8f6nnPYyZ3UGHE0p9eNCeY0CzlZAHY9z6H+z4PkDkPCj
+         UK5D5YhOGOGnpZ8BXYNgdz1ATlQAHhX9PHIlnx/qofgV/esUjfDXK34OGvvbMteHWUH8
+         ahyNlnbAuhGX8FLXK9laEJbZOl+LFX9YWk6uuHpAE7V7vviLBVeQkWRUbLGPOTvGu9uU
+         lkzj6ryuvKZid/8SanMi1IbEnvH6KK6O3CDXDRXN2OlLZi65AGJc+svOwp92N/10z1U+
+         WBwA==
+X-Gm-Message-State: APjAAAVpmPxWHmzwL+LwPnAmaHdNibUGAzL/+FERcUEgkvDmLXrcKt/7
+        205D1jFdZlhs1o9VfkG/pF+4xw==
+X-Google-Smtp-Source: APXvYqxRdwQv2HibsFgbFKstbyGPs2aCGM8BJZ/E5eDJGBbY7QIQQOvO9i5Mjak6XmoQ6m1+VvTWyQ==
+X-Received: by 2002:adf:fe43:: with SMTP id m3mr101122891wrs.213.1578225632521;
+        Sun, 05 Jan 2020 04:00:32 -0800 (PST)
 Received: from localhost ([2620:10d:c092:180::1:e1d7])
-        by smtp.gmail.com with ESMTPSA id a133sm19068415wme.29.2020.01.05.04.00.24
+        by smtp.gmail.com with ESMTPSA id 60sm71252134wrn.86.2020.01.05.04.00.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jan 2020 04:00:25 -0800 (PST)
-Date:   Sun, 5 Jan 2020 12:00:24 +0000
+        Sun, 05 Jan 2020 04:00:32 -0800 (PST)
+Date:   Sun, 5 Jan 2020 12:00:31 +0000
 From:   Chris Down <chris@chrisdown.name>
 To:     linux-mm@vger.kernel.org
 Cc:     Hugh Dickins <hughd@google.com>,
@@ -63,65 +65,118 @@ Cc:     Hugh Dickins <hughd@google.com>,
         Johannes Weiner <hannes@cmpxchg.org>,
         Tejun Heo <tj@kernel.org>, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: [PATCH v4 0/2] fs: inode: shmem: Reduce risk of inum overflow
-Message-ID: <cover.1578224757.git.chris@chrisdown.name>
+Subject: [PATCH v4 1/2] tmpfs: Add per-superblock i_ino support
+Message-ID: <91b4ed6727712cb6d426cf60c740fe2f473f7638.1578224757.git.chris@chrisdown.name>
+References: <cover.1578224757.git.chris@chrisdown.name>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <cover.1578224757.git.chris@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In Facebook production we are seeing heavy i_ino wraparounds on tmpfs.
-On affected tiers, in excess of 10% of hosts show multiple files with
-different content and the same inode number, with some servers even
-having as many as 150 duplicated inode numbers with differing file
-content.
+get_next_ino has a number of problems:
 
-This causes actual, tangible problems in production. For example, we
-have complaints from those working on remote caches that their
-application is reporting cache corruptions because it uses (device,
-inodenum) to establish the identity of a particular cache object, but
-because it's not unique any more, the application refuses to continue
-and reports cache corruption. Even worse, sometimes applications may not
-even detect the corruption but may continue anyway, causing phantom and
-hard to debug behaviour.
+- It uses and returns a uint, which is susceptible to become overflowed
+  if a lot of volatile inodes that use get_next_ino are created.
+- It's global, with no specificity per-sb or even per-filesystem. This
+  means it's not that difficult to cause inode number wraparounds on a
+  single device, which can result in having multiple distinct inodes
+  with the same inode number.
 
-In general, userspace applications expect that (device, inodenum) should
-be enough to be uniquely point to one inode, which seems fair enough.
-One might also need to check the generation, but in this case:
+This patch adds a per-superblock counter that mitigates the second case.
+This design also allows us to later have a specific i_ino size
+per-device, for example, allowing users to choose whether to use 32- or
+64-bit inodes for each tmpfs mount. This is implemented in the next
+commit.
 
-1. That's not currently exposed to userspace
-   (ioctl(...FS_IOC_GETVERSION...) returns ENOTTY on tmpfs);
-2. Even with generation, there shouldn't be two live inodes with the
-   same inode number on one device.
+Signed-off-by: Chris Down <chris@chrisdown.name>
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Jeff Layton <jlayton@kernel.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: linux-mm@kvack.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: kernel-team@fb.com
+---
+ include/linux/shmem_fs.h |  1 +
+ mm/shmem.c               | 30 +++++++++++++++++++++++++++++-
+ 2 files changed, 30 insertions(+), 1 deletion(-)
 
-In order to mitigate this, we take a two-pronged approach:
-
-1. Moving inum generation from being global to per-sb for tmpfs. This
-   itself allows some reduction in i_ino churn. This works on both 64-
-   and 32- bit machines.
-2. Adding inode{64,32} for tmpfs. This fix is supported on machines with
-   64-bit ino_t only: we allow users to mount tmpfs with a new inode64
-   option that uses the full width of ino_t, or CONFIG_TMPFS_INODE64.
-
-You can see how this compares to previous related patches which didn't
-implement this per-superblock:
-
-- https://patchwork.kernel.org/patch/11254001/
-- https://patchwork.kernel.org/patch/11023915/
-
-Chris Down (2):
-  tmpfs: Add per-superblock i_ino support
-  tmpfs: Support 64-bit inums per-sb
-
- Documentation/filesystems/tmpfs.txt | 11 ++++
- fs/Kconfig                          | 15 +++++
- include/linux/shmem_fs.h            |  2 +
- mm/shmem.c                          | 94 ++++++++++++++++++++++++++++-
- 4 files changed, 121 insertions(+), 1 deletion(-)
-
+diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
+index de8e4b71e3ba..7fac91f490dc 100644
+--- a/include/linux/shmem_fs.h
++++ b/include/linux/shmem_fs.h
+@@ -35,6 +35,7 @@ struct shmem_sb_info {
+ 	unsigned char huge;	    /* Whether to try for hugepages */
+ 	kuid_t uid;		    /* Mount uid for root directory */
+ 	kgid_t gid;		    /* Mount gid for root directory */
++	ino_t next_ino;		    /* The next per-sb inode number to use */
+ 	struct mempolicy *mpol;     /* default memory policy for mappings */
+ 	spinlock_t shrinklist_lock;   /* Protects shrinklist */
+ 	struct list_head shrinklist;  /* List of shinkable inodes */
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 8793e8cc1a48..9e97ba972225 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2236,6 +2236,12 @@ static int shmem_mmap(struct file *file, struct vm_area_struct *vma)
+ 	return 0;
+ }
+ 
++/*
++ * shmem_get_inode - reserve, allocate, and initialise a new inode
++ *
++ * If this tmpfs is from kern_mount we use get_next_ino, which is global, since
++ * inum churn there is low and this avoids taking locks.
++ */
+ static struct inode *shmem_get_inode(struct super_block *sb, const struct inode *dir,
+ 				     umode_t mode, dev_t dev, unsigned long flags)
+ {
+@@ -2248,7 +2254,28 @@ static struct inode *shmem_get_inode(struct super_block *sb, const struct inode
+ 
+ 	inode = new_inode(sb);
+ 	if (inode) {
+-		inode->i_ino = get_next_ino();
++		if (sb->s_flags & SB_KERNMOUNT) {
++			/*
++			 * __shmem_file_setup, one of our callers, is lock-free:
++			 * it doesn't hold stat_lock in shmem_reserve_inode
++			 * since max_inodes is always 0, and is called from
++			 * potentially unknown contexts. As such, use the global
++			 * allocator which doesn't require the per-sb stat_lock.
++			 */
++			inode->i_ino = get_next_ino();
++		} else {
++			spin_lock(&sbinfo->stat_lock);
++			if (unlikely(sbinfo->next_ino > UINT_MAX)) {
++				/*
++				 * Emulate get_next_ino uint wraparound for
++				 * compatibility
++				 */
++				sbinfo->next_ino = 1;
++			}
++			inode->i_ino = sbinfo->next_ino++;
++			spin_unlock(&sbinfo->stat_lock);
++		}
++
+ 		inode_init_owner(inode, dir, mode);
+ 		inode->i_blocks = 0;
+ 		inode->i_atime = inode->i_mtime = inode->i_ctime = current_time(inode);
+@@ -3662,6 +3689,7 @@ static int shmem_fill_super(struct super_block *sb, struct fs_context *fc)
+ #else
+ 	sb->s_flags |= SB_NOUSER;
+ #endif
++	sbinfo->next_ino = 1;
+ 	sbinfo->max_blocks = ctx->blocks;
+ 	sbinfo->free_inodes = sbinfo->max_inodes = ctx->inodes;
+ 	sbinfo->uid = ctx->uid;
 -- 
 2.24.1
 
