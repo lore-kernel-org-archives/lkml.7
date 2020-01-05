@@ -2,145 +2,88 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6FBC33C9A
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 13:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BB8C33C8C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 13:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9820620866
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 13:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B97DF207FD
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 13:10:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="meOv6Nbx"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="JMy7lr1A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgAENAq (ORCPT
+        id S1726360AbgAENKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 08:00:46 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46143 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbgAENAq (ORCPT
+        Sun, 5 Jan 2020 08:10:10 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:23514 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726029AbgAENKK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 08:00:46 -0500
-Received: by mail-lj1-f194.google.com with SMTP id m26so45769600ljc.13;
-        Sun, 05 Jan 2020 05:00:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wtj4ycfHH4tNcald6Hu3wfTW6bDI5OTHJjc7dzUfoq0=;
-        b=meOv6NbxWkh2QWiN19ICU9RrFOj8sUAIx0weTKNSjxrNhTKdZhtHhN4TVLEDBDqAs3
-         7KzeubXZ4ueV9A0YSa0gdaBYC7IlB6YgaiYbfwr9IUL3GobCmcnLZHBy8PTUHsDp4B3G
-         ELln8M4CfcVt70mY8YO+yYVtYVsgCDFxJOxSo3ljD15KNsjvdrnrQol7BtXVi8bDJ9F1
-         ub8M2R0ZQ82ESmbQWq+fw9lH1SL/dV1M1l0yU59c/xT2APU49eZnEru0hMqmxwuH2m2Y
-         23c25jZB3BiBuxHDk+u1R8ZQrz3ZK2FmEiM6aDsXYWDJTzBAa0Cut7J7bRVqY1HU3G2g
-         AokQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wtj4ycfHH4tNcald6Hu3wfTW6bDI5OTHJjc7dzUfoq0=;
-        b=HGRELdr1HqkM4zO5zCnstcj0VYAy0V2dkLXYgwFj95MWxD5kTeVUmjju62zPemIMBC
-         mjNlKPF2vnItVHl0Gd+NvIdribi13fFs0P8sulyO194dFbjXzwMYXEu+QiJcbZPLRv8t
-         xhQDEkFCVBXLA3YDaScuswaxLMNXw0vk0iaGzm2PscjWF7jIXIUO36zmibjKZBnTbNYu
-         hHETX6Dl+xHVr283kLW5Nr2GS+8NVjFJ6C6fam3LFGqzSv/Qh6LIc/Zj6tQZ97iMgORq
-         VWQ/dOYO59f+b0e7fvW8IOJRmIGgvAqYBYdUUD0NUeDvTNI67Z+pH5WiWciYhFMjNFmk
-         di9A==
-X-Gm-Message-State: APjAAAUfOi9/XUJjU34DAA5DTDRyrWhyab9tj0ZSLJ+oMwshmraPhqCm
-        aPpBBXTY2OQdkoJbEXhLss5pFOgnCWZ3xHqCu0g=
-X-Google-Smtp-Source: APXvYqxLzGCvQ7IBDoin+iaNIeacu1bK/X/6zdfCpgWpTUtPRqxu/mEv7lEFYRmG+unV4mfFAHxTXgC1OAZQvXNIC8Y=
-X-Received: by 2002:a2e:8544:: with SMTP id u4mr54341659ljj.70.1578229243841;
- Sun, 05 Jan 2020 05:00:43 -0800 (PST)
-MIME-Version: 1.0
-References: <20200105012416.23296-1-samuel@sholland.org> <20200105012416.23296-3-samuel@sholland.org>
-In-Reply-To: <20200105012416.23296-3-samuel@sholland.org>
-From:   Julian Calaby <julian.calaby@gmail.com>
-Date:   Mon, 6 Jan 2020 00:00:32 +1100
-Message-ID: <CAGRGNgXeenNYMNXY0dewQaeG2QecUPgE_MOofURg7HzcND782w@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v2 2/9] power: supply: axp20x_ac_power: Fix
- reporting online status
-To:     samuel@sholland.org
-Cc:     Chen-Yu Tsai <wens@csie.org>, Sebastian Reichel <sre@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Oskari Lemmela <oskari@lemmela.net>,
-        Quentin Schulz <quentin.schulz@bootlin.com>,
-        linux-pm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        stable@vger.kernel.org
+        Sun, 5 Jan 2020 08:10:10 -0500
+X-UUID: 2394d427c6804b14913ac7bb2bd70246-20200105
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=FILJcOCG2sGK9VzTixRtMJdMzeT4XRTUIkt6/bNT4+4=;
+        b=JMy7lr1A8KGvf71DVhfIAv9ELTKHAViKU7IGdjHKtUWqSGVWaaZ18T316oPaqaUGcA25TJ5+Fqh8OwQR8iIVW/qzkwUDr26B0ZRFo02S9BVBPXbM7y0JAdBeWbriogN9HRBzxCRx9uNKLB9jrm1kDdYQrYzISCYz5qAVZKvWHVU=;
+X-UUID: 2394d427c6804b14913ac7bb2bd70246-20200105
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 347406739; Sun, 05 Jan 2020 21:10:04 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sun, 5 Jan 2020 21:09:10 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sun, 5 Jan 2020 21:08:35 +0800
+Message-ID: <1578229802.17435.3.camel@mtkswgap22>
+Subject: Re: [PATCH v1 0/3] scsi: ufs: pass device information to
+ apply_dev_quirks
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Avri Altman <Avri.Altman@wdc.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
+Date:   Sun, 5 Jan 2020 21:10:02 +0800
+In-Reply-To: <MN2PR04MB69913F0B671032A388747CF7FC3D0@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <1578200118-29547-1-git-send-email-stanley.chu@mediatek.com>
+         <MN2PR04MB69913F0B671032A388747CF7FC3D0@MN2PR04MB6991.namprd04.prod.outlook.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Samuel,
+SGkgQXZyaSwNCg0KT24gU3VuLCAyMDIwLTAxLTA1IGF0IDA1OjUxICswMDAwLCBBdnJpIEFsdG1h
+biB3cm90ZToNCj4gWW91IGhhdmUgdG8gc3F1YXNoIHBhdGNoIDEgJiAyLCBvdGhlcndpc2UgeW91
+ciBwYXRjaCAxIHdvbid0IGNvbXBpbGUuDQo+IE90aGVyIHRoYW4gdGhhdDogbG9va3MgZ29vZCB0
+byBtZS4NCj4gVGhhbmtzLA0KPiBBdnJpDQoNClNvcnJ5IGJlY2F1c2UgSSBzZW50IDIgc2VyaWVz
+IGluIHRoZXNlIHR3byBkYXlzLg0KDQpXb3VsZCB5b3UgbWVhbiBwYXRjaCAxIGlzIHNlcmllczog
+InNjc2k6IHVmczogZml4IGVycm9yIGhpc3RvcnkgYW5kDQpjb21wbGV0ZSBkZXZpY2UgcmVzZXQg
+aGlzdG9yeSIgYW5kIHBhdGNoIDIgaXMgc2VyaWVzICJzY3NpOiB1ZnM6IHBhc3MNCmRldmljZSBp
+bmZvcm1hdGlvbiB0byBhcHBseV9kZXZfcXVpcmtzIj8NCg0KT3IgcGF0Y2ggMSAmIDIgbWVhbiB0
+aGUgZmlyc3QgMiBjb21taXRzIGluIHRoaXMgc2VyaWVzOiAic2NzaTogdWZzOiBwYXNzDQpkZXZp
+Y2UgaW5mb3JtYXRpb24gdG8gYXBwbHlfZGV2X3F1aXJrcyI/DQoNClRoYW5rcyBhIGxvdC4NClN0
+YW5sZXkNCg==
 
-On Sun, Jan 5, 2020 at 12:24 PM Samuel Holland <samuel@sholland.org> wrote:
->
-> AXP803/AXP813 have a flag that enables/disables the AC power supply
-> input. This flag does not affect the status bits in PWR_INPUT_STATUS.
-> Its effect can be verified by checking the battery charge/discharge
-> state (bit 2 of PWR_INPUT_STATUS), or by examining the current draw on
-> the AC input.
->
-> Take this flag into account when getting the ONLINE property of the AC
-> input, on PMICs where this flag is present.
->
-> Fixes: 7693b5643fd2 ("power: supply: add AC power supply driver for AXP813")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> ---
->  drivers/power/supply/axp20x_ac_power.c | 31 +++++++++++++++++++++-----
->  1 file changed, 25 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/power/supply/axp20x_ac_power.c b/drivers/power/supply/axp20x_ac_power.c
-> index 0d34a932b6d5..ca0a28f72a27 100644
-> --- a/drivers/power/supply/axp20x_ac_power.c
-> +++ b/drivers/power/supply/axp20x_ac_power.c
-> @@ -23,6 +23,8 @@
->  #define AXP20X_PWR_STATUS_ACIN_PRESENT BIT(7)
->  #define AXP20X_PWR_STATUS_ACIN_AVAIL   BIT(6)
->
-> +#define AXP813_ACIN_PATH_SEL           BIT(7)
-> +
->  #define AXP813_VHOLD_MASK              GENMASK(5, 3)
->  #define AXP813_VHOLD_UV_TO_BIT(x)      ((((x) / 100000) - 40) << 3)
->  #define AXP813_VHOLD_REG_TO_UV(x)      \
-> @@ -40,6 +42,7 @@ struct axp20x_ac_power {
->         struct power_supply *supply;
->         struct iio_channel *acin_v;
->         struct iio_channel *acin_i;
-> +       bool has_acin_path_sel;
->  };
->
->  static irqreturn_t axp20x_ac_power_irq(int irq, void *devid)
-> @@ -86,6 +89,17 @@ static int axp20x_ac_power_get_property(struct power_supply *psy,
->                         return ret;
->
->                 val->intval = !!(reg & AXP20X_PWR_STATUS_ACIN_AVAIL);
-> +
-> +               /* ACIN_PATH_SEL disables ACIN even if ACIN_AVAIL is set. */
-> +               if (power->has_acin_path_sel) {
-
-Do we need to check this bit if ACIN_AVAIL is not set?
-
-> +                       ret = regmap_read(power->regmap, AXP813_ACIN_PATH_CTRL,
-> +                                         &reg);
-> +                       if (ret)
-> +                               return ret;
-> +
-> +                       val->intval &= !!(reg & AXP813_ACIN_PATH_SEL);
-
-If we only check this bit if ACIN_AVAIL is set, then we don't need the
-"&" in the "&=". (I'm assuming that val->intval is an int, not a bool,
-otherwise this is the wrong operator)
-
-Thanks,
-
--- 
-Julian Calaby
-
-Email: julian.calaby@gmail.com
-Profile: http://www.google.com/profiles/julian.calaby/
