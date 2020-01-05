@@ -2,109 +2,103 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B64C33C99
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 20:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC78C33C8C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 20:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AFCF2077B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 20:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97FFA2077B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 20:10:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bljkmXfE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgAEUGU convert rfc822-to-8bit (ORCPT
+        id S1726707AbgAEUKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 15:06:20 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:33432 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbgAEUGT (ORCPT
+        Sun, 5 Jan 2020 15:10:25 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37970 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726092AbgAEUKZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 15:06:19 -0500
-Received: by mail-yw1-f65.google.com with SMTP id 192so21095128ywy.0;
-        Sun, 05 Jan 2020 12:06:19 -0800 (PST)
+        Sun, 5 Jan 2020 15:10:25 -0500
+Received: by mail-pg1-f196.google.com with SMTP id a33so25879833pgm.5
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jan 2020 12:10:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=PRpD2n4zlwukx97QwqwwL5Nrpn0KRR9wzNPg2ILLwjo=;
+        b=bljkmXfElHrTWVuiJgbvMqWlZ1RfzX4it52jygfqC75orInqRZE/hvh6fvU62MVutK
+         U6FfSlQeAffglaxcZAbsu2kWUFY5t7wxzliND+GYlar9eADluk6/KGmbLfxG6D3Sj1Zv
+         cQWFEMCsAurOb+EuELM7F2/vvDRz9GQjYbf0j6gFG7ti7eOyB8NsYcA+ctXWGEZdywRt
+         YxglpXobS65FtDE0iyiRaATLqWNsS0esy3jt///Qw+iW9Lf2/Q4mpsqcwhBeJS8n0+Jd
+         ktOxHQcijye/6jCckPKlIbuHTVC083OKbXcoIT5dvfBnVRB17T9b64XHaztP/+4VuhmG
+         b6Ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hfNkMg16ML0AjVnvsnzrmGTTV58CAeyk3QhuSCdBRME=;
-        b=IBceYQfpDJQZcIhsBMSb4WQUuZPLLE3F3uUxktjHOyPR2U4y2eid2IYCIS3TPyfPWW
-         GGJCFpnSvLsPa35UFZo+NiEhRCj6yR1z6EtC7/kpIlmpNqeNeoqfHHJBnnN9wx1BBs3R
-         F3x/9S9SwlP8Ls8WNbt+ahjtwMxyvxaS2Of02mdTOnpF3PLI0ZpBgsUCBx8V0FDDIXsl
-         VA3Pgh768JH2bEvrbGw5Im4rt2eX9qeu9g/pRASVG26MySaiHRZY8BSuIdvdE+v1i4+l
-         R4Gj9IxDRgqAta6f2e/RwtjFohOLDbM2rEm1AAsujT9ZwtfuRz6yHnuENwixeNfLM+ce
-         vlpw==
-X-Gm-Message-State: APjAAAVuXV3lHTf8NP/hFhlQN40l5sJZMjWJAWfIjTe2rq864JegxhI3
-        fLN5GhLIgauSk4CrCaUvc8DQpZlnpmowMT0QflA=
-X-Google-Smtp-Source: APXvYqz0pi9ReUkM7x43jc6QBlqnBX0vKtDDieWGeT43rG7ULUQsmA2oc7ygowDWvo/a/KdCNOFtF5LXxamfWiysd0k=
-X-Received: by 2002:a81:380b:: with SMTP id f11mr21733505ywa.145.1578254778630;
- Sun, 05 Jan 2020 12:06:18 -0800 (PST)
-MIME-Version: 1.0
-References: <CAMx4oe38RytiyqWfYb=So8iC6N=8nebqy3DsekiT7A5DGjpe+w@mail.gmail.com>
- <CAMx4oe2JKTsOKg3P324PYRH=0ajOVDaXTLa7p=16Fo9fGiQSpQ@mail.gmail.com>
- <CABA31DrtCwUj-wzPP+dwUP+=jTOHnt8eoS+d+N2yfAn22W19vA@mail.gmail.com> <20200105193550.GA177781@krava>
-In-Reply-To: <20200105193550.GA177781@krava>
-From:   Akemi Yagi <toracat@elrepo.org>
-Date:   Sun, 5 Jan 2020 12:06:07 -0800
-Message-ID: <CABA31DoxzzoOgQXfLmaF2+msqi9F_sFRBN2thxe7W6+1QmWWgA@mail.gmail.com>
-Subject: Re: 4.9.208 regression in perf building
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Gordan Bobic <gordan@redsleeve.org>, stable@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ElRepo <contact@elrepo.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PRpD2n4zlwukx97QwqwwL5Nrpn0KRR9wzNPg2ILLwjo=;
+        b=UPrzDsaqy8XS/cLRJjHxCv2whF6hh3TmOcsRU6BBRoccs7Ehnd7WJC4/UFvHNwteSa
+         u1xCVdOFTnBppxy1HdcBKGlEMoPZ2GpM30e4HUKMFAVE2h1ThejoJyHVdt0z0Cf3rq4B
+         B6t0djtgLD4V2a5zJ1vUqnd3cxmpzqqCa5L/NpNRaf9fEriIOqxYZibmGiARZF5l/KDF
+         Zl+QDg2r3CSEZbOFS1GXXWDLPrxb+9evnaE5dh2a6jLD3ExsdfgS1KvfDOF3YLCGGPnu
+         b6FNXUOOEZYvLCT86duB9fnIcaICDQhzjA/y78MOIAWR5C4O/eTUnpwFGa7r9u+wIpzk
+         M3RQ==
+X-Gm-Message-State: APjAAAUGxFJY4GIrom+vRXq3prVztMb28PE2+KOV/ABqcwzWEbXxUhTB
+        7HdYhoA7nfR+wvv9lOeBbXgn9ieM
+X-Google-Smtp-Source: APXvYqwrGVufAmyBiFk3tO+QS41C72PtEadvDDZBOGaSZMqbaN5UmG/IVLnbl0MmNhCbCrgJx2MpqQ==
+X-Received: by 2002:a63:181:: with SMTP id 123mr105423175pgb.36.1578255024335;
+        Sun, 05 Jan 2020 12:10:24 -0800 (PST)
+Received: from deepa-ubuntu.lan (c-98-234-52-230.hsd1.ca.comcast.net. [98.234.52.230])
+        by smtp.gmail.com with ESMTPSA id z29sm74205106pge.21.2020.01.05.12.10.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jan 2020 12:10:23 -0800 (PST)
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+To:     paul.walmsley@sifive.com, linux-kernel@vger.kernel.org
+Cc:     linux-riscv@lists.infradead.org
+Subject: [PATCH] riscv: Delete CONFIG_SYSFS_SYSCALL from defconfigs
+Date:   Sun,  5 Jan 2020 12:10:20 -0800
+Message-Id: <20200105201020.13111-1-deepa.kernel@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 5, 2020 at 11:36 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Sun, Jan 05, 2020 at 10:21:25AM -0800, Akemi Yagi wrote:
-> > Adding Arnaldo and Jiri to the CC list.
-> >
-> > On Sun, Jan 5, 2020 at 9:01 AM Gordan Bobic <gordan@redsleeve.org> wrote:
-> > >
-> > > It looks like 4.9.208 introduces a build regression for perf:
-> > >
-> > > make -f /builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/build/Makefile.build
-> > > dir=. obj=perf
-> >
-> > >  -c -o builtin-report.o builtin-report.c
-> > > builtin-report.c: In function ‘report__setup_sample_type’:
-> > > builtin-report.c:296:6: error: ‘dwarf_callchain_users’ undeclared
-> > > (first use in this function)
-> > >   if (dwarf_callchain_users) {
-> > >       ^
-> > > builtin-report.c:296:6: note: each undeclared identifier is reported
-> > > only once for each function it appears in
-> > > mv: cannot stat ‘./.builtin-report.o.tmp’: No such file or directory
-> > > make[3]: *** [builtin-report.o] Error 1
-> > > make[2]: *** [perf-in.o] Error 2
-> > > make[1]: *** [sub-make] Error 2
-> > > make: *** [all] Error 2
-> > >
-> > > 4,9.207 works fine.
-> >
-> > The regression was caused by the following patch:
-> >
-> > https://lore.kernel.org/lkml/20191021133834.25998-7-acme@kernel.org/
-> >
-> > To fix this, 'dwarf_callchain_users' needs to be declared.
->
-> hum, I see it's declared in callchain.h which is included in builtin-report.c
-> also I can't see that same stuff like you have on line 296.. what sources are you on?
->
-> could you please check with latest Arnaldo's perf/core?
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
->
-> thanks,
-> jirka
+According to init/Kconfig:
+"sys_sysfs is an obsolete system call no longer supported in libc.
+Note that disabling this option is more secure but might break
+compatibility with some systems."
 
-This is kernel 4.4.208 that was released today.
-'dwarf_callchain_users' is not declared in this kernel. I'm afraid it
-was missed when the aforementioned patch was backported.
+This syscall is not required for new architectures. Since the config
+defaults to 'y'. Set this to 'n' exlicitly.
 
-Akemi
+Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+---
+ arch/riscv/configs/defconfig      | 1 +
+ arch/riscv/configs/rv32_defconfig | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+index e2ff95cb3390..58f97b3cb24c 100644
+--- a/arch/riscv/configs/defconfig
++++ b/arch/riscv/configs/defconfig
+@@ -125,3 +125,4 @@ CONFIG_DEBUG_BLOCK_EXT_DEVT=y
+ # CONFIG_FTRACE is not set
+ # CONFIG_RUNTIME_TESTING_MENU is not set
+ CONFIG_MEMTEST=y
++# CONFIG_SYSFS_SYSCALL is not set
+diff --git a/arch/riscv/configs/rv32_defconfig b/arch/riscv/configs/rv32_defconfig
+index eb519407c841..f4076b6ac063 100644
+--- a/arch/riscv/configs/rv32_defconfig
++++ b/arch/riscv/configs/rv32_defconfig
+@@ -122,3 +122,4 @@ CONFIG_DEBUG_BLOCK_EXT_DEVT=y
+ # CONFIG_FTRACE is not set
+ # CONFIG_RUNTIME_TESTING_MENU is not set
+ CONFIG_MEMTEST=y
++# CONFIG_SYSFS_SYSCALL is not set
+-- 
+2.17.1
+
