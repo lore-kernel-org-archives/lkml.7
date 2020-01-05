@@ -1,74 +1,145 @@
 Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	PDS_TONAME_EQ_TOLOCAL_SHORT,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3378BC00523
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 08:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C4FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 08:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00DEB218AC
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 08:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9DC021582
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 08:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578212247;
-	bh=LqM9zIbStZx6zb0OXX8znhaKl/1ObykLsIUQMpp85M4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=v+IULdfVhIjJxBqMDQ1j43TLbKM1lmGrkMOlZrpIpfMmYfjCrmWI2Jns2OSGVMxXs
-	 G+8aDpi2QcLxs7A4jbllhcJ//kVOhRyJqffVoetkIGBDs+PqlMCC5h3onrqgqoXJRo
-	 3jdfo84wCmN33h6W4puxwMgPvzD89vizOiqanx+w=
+	s=default; t=1578213335;
+	bh=ADADXtiRMJ8GY/BHNd1uS0UdQYNUUVQcEinoIdZJmYA=;
+	h=In-Reply-To:References:Cc:Subject:To:From:Date:List-ID:From;
+	b=gBhvzafkhfJ811+WEw2OOIUYqecJSLxqfAYcRd0PTrI27bnfNBnSy7EDZtXHvriB7
+	 vpx0ajwkDjqPLnCQT8jIejbmXlj9rOkAuNvsiee0UiXNwcCx+sur0QrlpS3sUJPQHJ
+	 zzhApmSUSokvpkOUmyMNTHxDzmemFdixOk68WexU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726212AbgAEIRZ (ORCPT
+        id S1726188AbgAEIff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 03:17:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55816 "EHLO mail.kernel.org"
+        Sun, 5 Jan 2020 03:35:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbgAEIRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 03:17:25 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1725535AbgAEIfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 03:35:34 -0500
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42486217F4;
-        Sun,  5 Jan 2020 08:17:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01EB12071A;
+        Sun,  5 Jan 2020 08:35:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578212244;
-        bh=LqM9zIbStZx6zb0OXX8znhaKl/1ObykLsIUQMpp85M4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bmPavKNJljFGe7eXVmB1ZmJ/yHeeN6iV2xfGwO5+RdUoemXGYF1Q26rmR6iNeaa9d
-         PGI6EXAEWIQ9OCYEef4cB4H+44MaFftRWsimOxJnECQiBtDV/1V3GU+NNIZkLCGQb6
-         Fk0aK6JZOnJnUcdlm5QkrcctdPqS4ruA4zLB5E5o=
-Date:   Sun, 5 Jan 2020 09:17:21 +0100
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     atmgnd <atmgnd@protonmail.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH] usb: missing parentheses in USE_NEW_SCHEME
-Message-ID: <20200105081721.GC1667342@kroah.com>
-References: <ht4mtag8ZP-HKEhD0KkJhcFnVlOFV8N8eNjJVRD9pDkkLUNhmEo8_cL_sl7xy9mdajdH-T8J3TFQsjvoYQT61NFjQXy469Ed_BbBw_x4S1E=@protonmail.com>
- <20200104114603.GB1288021@kroah.com>
- <HdXgMrky4rCGyM4q7eTsrfOB4yGZRUNwV9YSXBPh98r2UZeFzREQj35K60r-8Lf9LYVgVuKCcmQ2l7ihAD9DoqAdluQrA3zbQrF03VtNC-0=@protonmail.com>
+        s=default; t=1578213334;
+        bh=ADADXtiRMJ8GY/BHNd1uS0UdQYNUUVQcEinoIdZJmYA=;
+        h=In-Reply-To:References:Cc:Subject:To:From:Date:From;
+        b=NNEg5KHjF6zAVzMLn6mv13ZVJzxC6EdeNGCm6nTv6mur+H8QltaU45h8qRKHg4I2Y
+         5CnhBSgCqgZgDqp3fG1sCLsGIvaRWm1fCFN4BA40OQZlM8QLAdaVM+f1rmbjrkjvff
+         LQ81wEA/lGHOy32ojqvGQ7lAkhKMyLkcIaXzISIE=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <HdXgMrky4rCGyM4q7eTsrfOB4yGZRUNwV9YSXBPh98r2UZeFzREQj35K60r-8Lf9LYVgVuKCcmQ2l7ihAD9DoqAdluQrA3zbQrF03VtNC-0=@protonmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191205002503.13088-5-masneyb@onstation.org>
+References: <20191205002503.13088-1-masneyb@onstation.org> <20191205002503.13088-5-masneyb@onstation.org>
+Cc:     mark.rutland@arm.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, mturquette@baylibre.com,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: Re: [PATCH 4/7] dt-bindings: Input: introduce new clock vibrator bindings
+To:     Brian Masney <masneyb@onstation.org>, dmitry.torokhov@gmail.com,
+        robh+dt@kernel.org
+From:   Stephen Boyd <sboyd@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Sun, 05 Jan 2020 00:35:33 -0800
+Message-Id: <20200105083534.01EB12071A@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 05, 2020 at 01:15:41AM +0000, atmgnd wrote:
-> Is that ok ? Ordinarily I dont use protonmail, only because outlook mail is blocked by kernel email system.
-> So I register this email to send plain/text emails.
-> I will resend it.
+Quoting Brian Masney (2019-12-04 16:25:00)
+> diff --git a/Documentation/devicetree/bindings/input/clk-vibrator.yaml b/=
+Documentation/devicetree/bindings/input/clk-vibrator.yaml
+> new file mode 100644
+> index 000000000000..2103a5694fad
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/clk-vibrator.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/input/clk-vibrator.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Clock vibrator
+> +
+> +maintainers:
+> +  - Brian Masney <masneyb@onstation.org>
+> +
+> +description: |
+> +  Support for clock-based vibrator devices where the speed can be contro=
+lled
+> +  by changing the duty cycle.
+> +
+> +properties:
+> +  compatible:
+> +    const: clk-vibrator
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    description: output clock that controls the speed
+> +    items:
+> +      - const: core
+> +
+> +  clock-frequency: true
 
-Just add a "From:" line in the first line of the changelog text to match
-up with your "real" email address.  The kernel and git documentation
-should show this.
+Can you use assigned-clock-rates for this instead? Then the driver can
+call clk_get_rate() if it wants to know the rate that was actually set
+on the clk.
 
-thanks,
+> +
+> +  enable-gpios:
+> +    maxItems: 1
+> +
+> +  vcc-supply:
+> +    description: Regulator that provides power
+> +
+> +required:
+> +  - compatible
+> +  - clocks
+> +  - clock-names
+> +  - clock-frequency
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    vibrator {
+> +        compatible =3D "clk-vibrator";
+> +
+> +        vcc-supply =3D <&pm8941_l19>;
+> +
+> +        clocks =3D <&mmcc CAMSS_GP1_CLK>;
+> +        clock-names =3D "core";
+> +        clock-frequency =3D <24000>;
+> +
+> +        enable-gpios =3D <&msmgpio 60 GPIO_ACTIVE_HIGH>;
+> +
+> +        pinctrl-names =3D "default";
+> +        pinctrl-0 =3D <&vibrator_pin>;
 
-greg k-h
+I'm still trying to wrap my head around this. I think we can have a pwm
+provider in a clk controller node (so imagine &mmcc has #pwm-cells) and
+then this 'clk-vibrator' binding wouldn't exist? Instead we would have
+some sort of binding for a device that expects a pwm and whatever else
+is required, like the enable gpio and power supply. Is there an actual
+hardware block that is this way? Does it have a real product id and is
+made by some company? Right now this looks a little too generic to not
+just be a catch-all for something that buzzes.
+
