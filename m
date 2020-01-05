@@ -2,358 +2,125 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A7CC33C8C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 14:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A906C33C8C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 15:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B459C2077B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 14:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9CE22085B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 15:17:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="v24SKuap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgAEOUh (ORCPT
+        id S1726383AbgAEPFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 09:20:37 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:47783 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbgAEOUh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 09:20:37 -0500
-Received: from [172.58.27.182] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1io6lb-0001nF-EZ; Sun, 05 Jan 2020 14:20:32 +0000
-Date:   Sun, 5 Jan 2020 15:20:23 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, tycho@tycho.ws, jannh@google.com,
-        cyphar@cyphar.com, oleg@redhat.com, luto@amacapital.net,
-        viro@zeniv.linux.org.uk, gpascutto@mozilla.com,
-        ealvarez@mozilla.com, fweimer@redhat.com, jld@mozilla.com,
-        arnd@arndb.de
-Subject: Re: [PATCH v8 3/3] test: Add test for pidfd getfd
-Message-ID: <20200105142019.umls5ff4b5433u6k@wittgenstein>
-References: <20200103162928.5271-1-sargun@sargun.me>
- <20200103162928.5271-4-sargun@sargun.me>
+        Sun, 5 Jan 2020 10:05:54 -0500
+Received: from mail-eopbgr50137.outbound.protection.outlook.com ([40.107.5.137]:45894
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726212AbgAEPFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 10:05:53 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IOJBP2R7upV0wq7Khv++5Q8GG0chDP5pTBeIj0ghj2bDWiMXXuqE85yM/cQPceO3CYhxa14lPzkrR+cLUOn/VFp+5nfdx1TOsBvbZQCXqVyxI4hPNAX4+RtuwU//tCcinhSjZ8zNugNCqsUySUdx1blj8CnBctpAP97Hva1kgbTx5vGIi8iPpsbN5oIqYsYn70X8UXQiZDOu/dUuanBO+3yrF0jZRL83o+sW7e8tUVabEdV4n+9MUKusaePKPio5ycn3H52+TPIFhUZUydr59RJbHZpEhrrXWkQAFUbMrsDEIm7/yZuXpcOMlLGyYACjcVSzIuNHfmHwKcS2VfAr0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IFfVea57HIuBXGAxrM6K05xlNIQjgO1br5BWZHQXnF0=;
+ b=YstszbZfrCb6byXylHW2mgj1z5+R6rC2ksFutsx2JGcRHNyK2AGFXLXmutyDCRKnUidKIOFj0Awk9WRxTU41XyGJICIZQzNSTpBzoIREgrRiNgFq2EWLNq7AsFmYtRcYa6upCtbUuSAkHX9ImF57dXyHrhCfS4xLHehFRSYQMSc55F7ga9zqFR/jJd/VykzGYz1fEa5TmvmnhZwGfz+eh0dyAd8stn0MrlHqZL0bgL5edPayi/b9WfBv+tUkCXoRdNvF8YtLYgKhokxnGbO6AcqxvQfxm5lOr9D9x6u1vvrKEYT3Cf+wR9fq249GrG638B6T77Ol8rjO5slaUnQ0dg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
+ dkim=pass header.d=habana.ai; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IFfVea57HIuBXGAxrM6K05xlNIQjgO1br5BWZHQXnF0=;
+ b=v24SKuapQJ5TgVgBjEGdRShfwen+tQZhMz7DzCZWFofK0RFWFQE7hSiLhz3hWeL5cyzimFA8Q+S7wL42OKnxBTlHs/83hZOEQhKY3rNg290ATakX1I8z6Ho4OYMajtzIyLP46RsdN+/EFttoELaNx25rWye8H1iw6T23F3/872s=
+Received: from HE1PR02MB3258.eurprd02.prod.outlook.com (10.170.242.32) by
+ HE1PR02MB3018.eurprd02.prod.outlook.com (10.170.241.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.15; Sun, 5 Jan 2020 15:05:47 +0000
+Received: from HE1PR02MB3258.eurprd02.prod.outlook.com
+ ([fe80::24fe:bc90:5c45:acbf]) by HE1PR02MB3258.eurprd02.prod.outlook.com
+ ([fe80::24fe:bc90:5c45:acbf%7]) with mapi id 15.20.2602.015; Sun, 5 Jan 2020
+ 15:05:47 +0000
+Received: from ttayar-VM.habana-labs.com (31.154.190.6) by FR2P281CA0002.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:a::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11 via Frontend Transport; Sun, 5 Jan 2020 15:05:46 +0000
+From:   Tomer Tayar <ttayar@habana.ai>
+To:     "oded.gabbay@gmail.com" <oded.gabbay@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] habanalabs: Modify CS jobs counter to u16
+Thread-Topic: [PATCH] habanalabs: Modify CS jobs counter to u16
+Thread-Index: AQHVw9mb1soBQfTZhEaR+xHuSqa3nw==
+Date:   Sun, 5 Jan 2020 15:05:46 +0000
+Message-ID: <20200105150539.7404-1-ttayar@habana.ai>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: FR2P281CA0002.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:a::12) To HE1PR02MB3258.eurprd02.prod.outlook.com
+ (2603:10a6:7:37::32)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ttayar@habana.ai; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [31.154.190.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 78b52f92-1be5-42df-2d4d-08d791f0be45
+x-ms-traffictypediagnostic: HE1PR02MB3018:
+x-microsoft-antispam-prvs: <HE1PR02MB3018AB0D51E3E615031947FCD23D0@HE1PR02MB3018.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 027367F73D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(39840400004)(366004)(376002)(346002)(199004)(189003)(6506007)(26005)(66556008)(2906002)(4744005)(66446008)(66946007)(66476007)(64756008)(36756003)(956004)(6486002)(5660300002)(6512007)(2616005)(4326008)(86362001)(8936002)(1076003)(71200400001)(316002)(52116002)(16526019)(478600001)(8676002)(186003)(81156014)(6916009)(81166006);DIR:OUT;SFP:1102;SCL:1;SRVR:HE1PR02MB3018;H:HE1PR02MB3258.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: habana.ai does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: R680GpSyJ1PRHhqqP7JRiTC8rSka8SzqumHq7CMruR3HeHMapZjTgsu8vZ/W1BP3Z/gDU3XUOhHqWD92GEeaaClboo8vD3kwBRK1HZeBEbBDGQSIrt73ABnwPTAD0hI9cLf1MVxyB9UMqXlvlL2vB5BcH/0DAk/L6oqBEbdGzYXtLn6DBta9K+wDmM3M19tj5WBsKO696fYodw3N2DNdudfBsx1QtDKjX40gRWX4Gn9qxlNdQiHhC4eUZ90dDhpfFQFQbrbnx9NrfIjn4D718kUuHgcHcWYVu9tx3pbYvqZSECbSTD1otgDOa6n5/0eioZViWEMTk5MlH99l4xiosUeG/PJkJiSktxOZrh2KdTHrw//Gz+FnAcPB654IydRqglmksk/OKpNe9jJ6XIGavJHC9vqQabVr0qCbNrgsNS5R4Rhg/XXe76UxwSTyxAgU
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200103162928.5271-4-sargun@sargun.me>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: habana.ai
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78b52f92-1be5-42df-2d4d-08d791f0be45
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jan 2020 15:05:46.8646
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: V6nWMcaHCWdYEgooDhKoRIP1ltjTOY63vSRY+o3RyRauZtiJoO3oaxQdBxdVTXHPwKYqNkPZLHTj/JB9wqmipQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR02MB3018
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 08:29:28AM -0800, Sargun Dhillon wrote:
-> The following tests:
->   * Fetch FD, and then compare via kcmp
->   * Make sure getfd can be blocked by blocking ptrace_may_access
->   * Making sure fetching bad FDs fails
->   * Make sure trying to set flags to non-zero results in an EINVAL
-> 
-> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-> ---
->  tools/testing/selftests/pidfd/.gitignore      |   1 +
->  tools/testing/selftests/pidfd/Makefile        |   4 +-
->  .../selftests/pidfd/pidfd_getfd_test.c        | 227 ++++++++++++++++++
->  3 files changed, 230 insertions(+), 2 deletions(-)
->  create mode 100644 tools/testing/selftests/pidfd/pidfd_getfd_test.c
-> 
-> diff --git a/tools/testing/selftests/pidfd/.gitignore b/tools/testing/selftests/pidfd/.gitignore
-> index 8d069490e17b..3a779c084d96 100644
-> --- a/tools/testing/selftests/pidfd/.gitignore
-> +++ b/tools/testing/selftests/pidfd/.gitignore
-> @@ -2,3 +2,4 @@ pidfd_open_test
->  pidfd_poll_test
->  pidfd_test
->  pidfd_wait
-> +pidfd_getfd_test
-> diff --git a/tools/testing/selftests/pidfd/Makefile b/tools/testing/selftests/pidfd/Makefile
-> index 43db1b98e845..2071f7ab5dc9 100644
-> --- a/tools/testing/selftests/pidfd/Makefile
-> +++ b/tools/testing/selftests/pidfd/Makefile
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -CFLAGS += -g -I../../../../usr/include/ -pthread
-> +CFLAGS += -g -I../../../../usr/include/ -pthread -Wall
->  
-> -TEST_GEN_PROGS := pidfd_test pidfd_fdinfo_test pidfd_open_test pidfd_poll_test pidfd_wait
-> +TEST_GEN_PROGS := pidfd_test pidfd_fdinfo_test pidfd_open_test pidfd_poll_test pidfd_wait pidfd_getfd_test
->  
->  include ../lib.mk
->  
-> diff --git a/tools/testing/selftests/pidfd/pidfd_getfd_test.c b/tools/testing/selftests/pidfd/pidfd_getfd_test.c
-> new file mode 100644
-> index 000000000000..26ca75597812
-> --- /dev/null
-> +++ b/tools/testing/selftests/pidfd/pidfd_getfd_test.c
-> @@ -0,0 +1,227 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#define _GNU_SOURCE
-> +#include <errno.h>
-> +#include <fcntl.h>
-> +#include <limits.h>
-> +#include <linux/types.h>
-> +#include <sched.h>
-> +#include <signal.h>
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <syscall.h>
-> +#include <sys/prctl.h>
-> +#include <sys/wait.h>
-> +#include <unistd.h>
-> +#include <sys/socket.h>
-> +#include <linux/kcmp.h>
-> +
-> +#include "pidfd.h"
-> +#include "../kselftest.h"
-> +#include "../kselftest_harness.h"
-> +
-> +/*
-> + * UNKNOWN_FD is an fd number that should never exist in the child, as it is
-> + * used to check the negative case.
-> + */
-> +#define UNKNOWN_FD 111
-> +
-> +static int sys_kcmp(pid_t pid1, pid_t pid2, int type, unsigned long idx1,
-> +		    unsigned long idx2)
-> +{
-> +	return syscall(__NR_kcmp, pid1, pid2, type, idx1, idx2);
-> +}
-> +
-> +static int sys_pidfd_getfd(int pidfd, int fd, int flags)
-> +{
-> +	return syscall(__NR_pidfd_getfd, pidfd, fd, flags);
-> +}
+As HL_MAX_JOBS_PER_CS is 512, it is possible that more than 255 CS jobs
+will be submitted for a certain queue. Hence, modify the
+"jobs_in_queue_cnt" parameter of the "hl_cs" structure to be u16 instead
+of u8.
 
-I think you can move this to the pidfd.h header as:
+Signed-off-by: Tomer Tayar <ttayar@habana.ai>
+---
+ drivers/misc/habanalabs/habanalabs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-static inline int sys_pidfd_getfd(int pidfd, int fd, int flags)
-{
-	return syscall(__NR_pidfd_getfd, pidfd, fd, flags);
-}
+diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs=
+/habanalabs.h
+index df34227dea31..77fe4315dbee 100644
+--- a/drivers/misc/habanalabs/habanalabs.h
++++ b/drivers/misc/habanalabs/habanalabs.h
+@@ -763,7 +763,7 @@ struct hl_userptr {
+  * @aborted: true if CS was aborted due to some device error.
+  */
+ struct hl_cs {
+-	u8			jobs_in_queue_cnt[HL_MAX_QUEUES];
++	u16			jobs_in_queue_cnt[HL_MAX_QUEUES];
+ 	struct hl_ctx		*ctx;
+ 	struct list_head	job_list;
+ 	spinlock_t		job_lock;
+--=20
+2.17.1
 
-Note, this also needs an
-
-#ifndef __NR_pidfd_getfd
-__NR_pidfd_getfd -1
-#endif
-so that compilation doesn't fail.
-
-> +
-> +static int sys_memfd_create(const char *name, unsigned int flags)
-> +{
-> +	return syscall(__NR_memfd_create, name, flags);
-> +}
-> +
-> +static int __child(int sk, int memfd)
-> +{
-> +	int ret;
-> +	char buf;
-> +
-> +	/*
-> +	 * Ensure we don't leave around a bunch of orphaned children if our
-> +	 * tests fail.
-> +	 */
-> +	ret = prctl(PR_SET_PDEATHSIG, SIGKILL);
-> +	if (ret) {
-> +		fprintf(stderr, "%s: Child could not set DEATHSIG\n",
-> +			strerror(errno));
-> +		return EXIT_FAILURE;
-
-return -1
-
-> +	}
-> +
-> +	ret = send(sk, &memfd, sizeof(memfd), 0);
-> +	if (ret != sizeof(memfd)) {
-> +		fprintf(stderr, "%s: Child failed to send fd number\n",
-> +			strerror(errno));
-> +		return EXIT_FAILURE;
-
-return -1
-
-> +	}
-> +
-> +	while ((ret = recv(sk, &buf, sizeof(buf), 0)) > 0) {
-> +		if (buf == 'P') {
-> +			ret = prctl(PR_SET_DUMPABLE, 0);
-> +			if (ret < 0) {
-> +				fprintf(stderr,
-> +					"%s: Child failed to disable ptrace\n",
-> +					strerror(errno));
-> +				return EXIT_FAILURE;
-
-return -1
-
-> +			}
-> +		} else {
-> +			fprintf(stderr, "Child received unknown command %c\n",
-> +				buf);
-> +			return EXIT_FAILURE;
-
-return -1
-
-> +		}
-> +		ret = send(sk, &buf, sizeof(buf), 0);
-> +		if (ret != 1) {
-> +			fprintf(stderr, "%s: Child failed to ack\n",
-> +				strerror(errno));
-> +			return EXIT_FAILURE;
-
-return -1
-
-> +		}
-> +	}
-> +
-> +	if (ret < 0) {
-> +		fprintf(stderr, "%s: Child failed to read from socket\n",
-> +			strerror(errno));
-
-Is this intentional that this is no failure?
-
-> +	}
-> +
-> +	return EXIT_SUCCESS;
-
-return 0
-
-> +}
-> +
-> +static int child(int sk)
-> +{
-> +	int memfd, ret;
-> +
-> +	memfd = sys_memfd_create("test", 0);
-> +	if (memfd < 0) {
-> +		fprintf(stderr, "%s: Child could not create memfd\n",
-> +			strerror(errno));
-> +		ret = EXIT_FAILURE;
-
-ret = -1;
-
-> +	} else {
-> +		ret = __child(sk, memfd);
-> +		close(memfd);
-> +	}
-> +
-> +	close(sk);
-> +	return ret;
-> +}
-> +
-> +FIXTURE(child)
-> +{
-> +	pid_t pid;
-> +	int pidfd, sk, remote_fd;
-> +};
-> +
-> +FIXTURE_SETUP(child)
-> +{
-> +	int ret, sk_pair[2];
-> +
-> +	ASSERT_EQ(0, socketpair(PF_LOCAL, SOCK_SEQPACKET, 0, sk_pair))
-> +	{
-> +		TH_LOG("%s: failed to create socketpair", strerror(errno));
-> +	}
-> +	self->sk = sk_pair[0];
-> +
-> +	self->pid = fork();
-> +	ASSERT_GE(self->pid, 0);
-> +
-> +	if (self->pid == 0) {
-> +		close(sk_pair[0]);
-> +		exit(child(sk_pair[1]));
-
-if (child(sk_pair[1]))
-	_exit(EXIT_FAILURE);
-_exit(EXIT_SUCCESS);
-
-I would like to only use exit macros where one actually calls
-{_}exit()s. It makes the logic easier to follow and ensures that one
-doesn't accidently do an exit(-21345) or something (e.g. when adding new
-code).
-
-> +	}
-> +
-> +	close(sk_pair[1]);
-> +
-> +	self->pidfd = sys_pidfd_open(self->pid, 0);
-> +	ASSERT_GE(self->pidfd, 0);
-> +
-> +	/*
-> +	 * Wait for the child to complete setup. It'll send the remote memfd's
-> +	 * number when ready.
-> +	 */
-> +	ret = recv(sk_pair[0], &self->remote_fd, sizeof(self->remote_fd), 0);
-> +	ASSERT_EQ(sizeof(self->remote_fd), ret);
-> +}
-> +
-> +FIXTURE_TEARDOWN(child)
-> +{
-> +	int status;
-> +
-> +	EXPECT_EQ(0, close(self->pidfd));
-> +	EXPECT_EQ(0, close(self->sk));
-> +
-> +	EXPECT_EQ(waitpid(self->pid, &status, 0), self->pid);
-> +	EXPECT_EQ(true, WIFEXITED(status));
-> +	EXPECT_EQ(0, WEXITSTATUS(status));
-> +}
-> +
-> +TEST_F(child, disable_ptrace)
-> +{
-> +	int uid, fd;
-> +	char c;
-> +
-> +	/*
-> +	 * Turn into nobody if we're root, to avoid CAP_SYS_PTRACE
-> +	 *
-> +	 * The tests should run in their own process, so even this test fails,
-> +	 * it shouldn't result in subsequent tests failing.
-> +	 */
-> +	uid = getuid();
-> +	if (uid == 0)
-> +		ASSERT_EQ(0, seteuid(USHRT_MAX));
-
-Hm, isn't it safer to do 65535 explicitly? Since USHRT_MAX can
-technically be greater than 65535.
-
-> +
-> +	ASSERT_EQ(1, send(self->sk, "P", 1, 0));
-> +	ASSERT_EQ(1, recv(self->sk, &c, 1, 0));
-> +
-> +	fd = sys_pidfd_getfd(self->pidfd, self->remote_fd, 0);
-> +	EXPECT_EQ(-1, fd);
-> +	EXPECT_EQ(EPERM, errno);
-> +
-> +	if (uid == 0)
-> +		ASSERT_EQ(0, seteuid(0));
-> +}
-> +
-> +TEST_F(child, fetch_fd)
-> +{
-> +	int fd, ret;
-> +
-> +	fd = sys_pidfd_getfd(self->pidfd, self->remote_fd, 0);
-> +	ASSERT_GE(fd, 0);
-> +
-> +	EXPECT_EQ(0, sys_kcmp(getpid(), self->pid, KCMP_FILE, fd, self->remote_fd));
-
-So most of these tests seem to take place when the child has already
-called exit() - or at least it's very likely that the child has already
-called exit() - and remains a zombie. That's not ideal because
-that's not the common scenario/use-case. Usually the task of which we
-want to get an fd will be alive. Also, if the child has already called
-exit(), by the time it returns to userspace it should have already
-called exit_files() and so I wonder whether this test would fail if it's
-run after the child has exited. Maybe I'm missing something here... Is
-there some ordering enforced by TEST_F()?
-
-Also, what does self->pid point to? The fd of the already exited child?
