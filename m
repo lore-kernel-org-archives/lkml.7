@@ -7,60 +7,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A906C33C8C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53176C33C9A
 	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 15:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9CE22085B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 15:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA8820866
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 15:17:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="v24SKuap"
+	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="pZMWJnVw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbgAEPFy (ORCPT
+        id S1726391AbgAEPL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 10:05:54 -0500
-Received: from mail-eopbgr50137.outbound.protection.outlook.com ([40.107.5.137]:45894
+        Sun, 5 Jan 2020 10:11:26 -0500
+Received: from mail-eopbgr50121.outbound.protection.outlook.com ([40.107.5.121]:58182
         "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726212AbgAEPFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 10:05:53 -0500
+        id S1726212AbgAEPL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 10:11:26 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IOJBP2R7upV0wq7Khv++5Q8GG0chDP5pTBeIj0ghj2bDWiMXXuqE85yM/cQPceO3CYhxa14lPzkrR+cLUOn/VFp+5nfdx1TOsBvbZQCXqVyxI4hPNAX4+RtuwU//tCcinhSjZ8zNugNCqsUySUdx1blj8CnBctpAP97Hva1kgbTx5vGIi8iPpsbN5oIqYsYn70X8UXQiZDOu/dUuanBO+3yrF0jZRL83o+sW7e8tUVabEdV4n+9MUKusaePKPio5ycn3H52+TPIFhUZUydr59RJbHZpEhrrXWkQAFUbMrsDEIm7/yZuXpcOMlLGyYACjcVSzIuNHfmHwKcS2VfAr0A==
+ b=AfkTrsy6rclEDEVNp5aDbaW8JhppS8jhWsDulgUG5PN/qIByhUBo3jYMvDj4j9e/111jDSmBL8vhKD0djRoULozT9t9mhRc3AIqW66+iakrfLpjasmVeQLFkf+TqITCS2iHF/nokK/RG4NREet0WEP4jmkBsfvZE9JY9Xsj+tpMFJSes6NBO1bevZ+gwHk0tzXnNn5x1oaZTXb2u8g9koQ52vc3OQCbWl5NydKHcoZQtNNP07fymtyyHw4n8aHGWRfn69X21nCRWNSPpmY5jIfPbWowbhFRTz2BOOpc/R5hRpheFgl5TOld2UJ+MEkANPx3/jlvDJGFxUWuTxYrMLQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IFfVea57HIuBXGAxrM6K05xlNIQjgO1br5BWZHQXnF0=;
- b=YstszbZfrCb6byXylHW2mgj1z5+R6rC2ksFutsx2JGcRHNyK2AGFXLXmutyDCRKnUidKIOFj0Awk9WRxTU41XyGJICIZQzNSTpBzoIREgrRiNgFq2EWLNq7AsFmYtRcYa6upCtbUuSAkHX9ImF57dXyHrhCfS4xLHehFRSYQMSc55F7ga9zqFR/jJd/VykzGYz1fEa5TmvmnhZwGfz+eh0dyAd8stn0MrlHqZL0bgL5edPayi/b9WfBv+tUkCXoRdNvF8YtLYgKhokxnGbO6AcqxvQfxm5lOr9D9x6u1vvrKEYT3Cf+wR9fq249GrG638B6T77Ol8rjO5slaUnQ0dg==
+ bh=VTk3g+o/VSm7pkuIm/+5Ib5pzdMYwpEBseCWEns+ntg=;
+ b=Y4K5QeA7ouAMsTtJC4OB0eHXAeIlO73Z+ACm01EcJLKgOtIuzNyymn+4SEB90pOrOBeqAVJb77Eu3ir2bRqn4vwbuWu+UJsuZFKyvpoW9uz7H9Aqipw3Vof3usrtUQoackFuCxmF6lD+Y/ndd9tljv2Pne2cq9CegaVa/hEflNhJK1P29QFipu1zlRLFTQ0nYrF6ItHSpe34XTLCtyRM2EvH32wpxYlpCY8Iksd+0o+W20uYtp6sCfg+gLn0+E6pboItiVF1GEb6vUd7zg/A2PqZGyOJcGXBJKOv8V7hAP+rpVCJfCyl0PpzlWwqvmwVqgxT1XHamWtlgv63j5pe/A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
  dkim=pass header.d=habana.ai; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IFfVea57HIuBXGAxrM6K05xlNIQjgO1br5BWZHQXnF0=;
- b=v24SKuapQJ5TgVgBjEGdRShfwen+tQZhMz7DzCZWFofK0RFWFQE7hSiLhz3hWeL5cyzimFA8Q+S7wL42OKnxBTlHs/83hZOEQhKY3rNg290ATakX1I8z6Ho4OYMajtzIyLP46RsdN+/EFttoELaNx25rWye8H1iw6T23F3/872s=
+ bh=VTk3g+o/VSm7pkuIm/+5Ib5pzdMYwpEBseCWEns+ntg=;
+ b=pZMWJnVwXJMrspbQpNrJ++Ow1b4QvzHbV2X0rHgheFeIDCFYQbdT+JmuJ/zVCQWpwYI8pFkpzax1kx03GWINoaSDMLc22JiAkIsgvJQ8YsIWrk/T9AktH0Iy4B2vzZmA8aaaQGJ6YtqHsDGOQ1QfcBQQrEUggeBtjOUdzC7eRBA=
 Received: from HE1PR02MB3258.eurprd02.prod.outlook.com (10.170.242.32) by
  HE1PR02MB3018.eurprd02.prod.outlook.com (10.170.241.19) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.15; Sun, 5 Jan 2020 15:05:47 +0000
+ 15.20.2602.15; Sun, 5 Jan 2020 15:11:22 +0000
 Received: from HE1PR02MB3258.eurprd02.prod.outlook.com
  ([fe80::24fe:bc90:5c45:acbf]) by HE1PR02MB3258.eurprd02.prod.outlook.com
  ([fe80::24fe:bc90:5c45:acbf%7]) with mapi id 15.20.2602.015; Sun, 5 Jan 2020
- 15:05:47 +0000
-Received: from ttayar-VM.habana-labs.com (31.154.190.6) by FR2P281CA0002.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:a::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11 via Frontend Transport; Sun, 5 Jan 2020 15:05:46 +0000
+ 15:11:22 +0000
+Received: from ttayar-VM.habana-labs.com (31.154.190.6) by ZRAP278CA0004.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:10::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11 via Frontend Transport; Sun, 5 Jan 2020 15:11:22 +0000
 From:   Tomer Tayar <ttayar@habana.ai>
 To:     "oded.gabbay@gmail.com" <oded.gabbay@gmail.com>
 CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] habanalabs: Modify CS jobs counter to u16
-Thread-Topic: [PATCH] habanalabs: Modify CS jobs counter to u16
-Thread-Index: AQHVw9mb1soBQfTZhEaR+xHuSqa3nw==
-Date:   Sun, 5 Jan 2020 15:05:46 +0000
-Message-ID: <20200105150539.7404-1-ttayar@habana.ai>
+Subject: [PATCH] habanalabs: Avoid running restore chunks if no execute chunks
+Thread-Topic: [PATCH] habanalabs: Avoid running restore chunks if no execute
+ chunks
+Thread-Index: AQHVw9pkWXEAOtUcY0WlkYTgRf4U1Q==
+Date:   Sun, 5 Jan 2020 15:11:22 +0000
+Message-ID: <20200105151115.15860-1-ttayar@habana.ai>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: FR2P281CA0002.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a::12) To HE1PR02MB3258.eurprd02.prod.outlook.com
+x-clientproxiedby: ZRAP278CA0004.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:10::14) To HE1PR02MB3258.eurprd02.prod.outlook.com
  (2603:10a6:7:37::32)
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=ttayar@habana.ai; 
@@ -68,59 +69,135 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.17.1
 x-originating-ip: [31.154.190.6]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 78b52f92-1be5-42df-2d4d-08d791f0be45
+x-ms-office365-filtering-correlation-id: 2f2c65ef-4650-4d56-15a3-08d791f18664
 x-ms-traffictypediagnostic: HE1PR02MB3018:
-x-microsoft-antispam-prvs: <HE1PR02MB3018AB0D51E3E615031947FCD23D0@HE1PR02MB3018.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-microsoft-antispam-prvs: <HE1PR02MB3018B6FC4275318D7B3DECCED23D0@HE1PR02MB3018.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
 x-forefront-prvs: 027367F73D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(39840400004)(366004)(376002)(346002)(199004)(189003)(6506007)(26005)(66556008)(2906002)(4744005)(66446008)(66946007)(66476007)(64756008)(36756003)(956004)(6486002)(5660300002)(6512007)(2616005)(4326008)(86362001)(8936002)(1076003)(71200400001)(316002)(52116002)(16526019)(478600001)(8676002)(186003)(81156014)(6916009)(81166006);DIR:OUT;SFP:1102;SCL:1;SRVR:HE1PR02MB3018;H:HE1PR02MB3258.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(376002)(136003)(39840400004)(396003)(189003)(199004)(316002)(52116002)(71200400001)(1076003)(86362001)(8936002)(6916009)(81156014)(81166006)(8676002)(16526019)(478600001)(186003)(2906002)(66446008)(26005)(66556008)(66476007)(64756008)(66946007)(6506007)(4326008)(36756003)(956004)(5660300002)(6512007)(2616005)(6486002);DIR:OUT;SFP:1102;SCL:1;SRVR:HE1PR02MB3018;H:HE1PR02MB3258.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: habana.ai does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: R680GpSyJ1PRHhqqP7JRiTC8rSka8SzqumHq7CMruR3HeHMapZjTgsu8vZ/W1BP3Z/gDU3XUOhHqWD92GEeaaClboo8vD3kwBRK1HZeBEbBDGQSIrt73ABnwPTAD0hI9cLf1MVxyB9UMqXlvlL2vB5BcH/0DAk/L6oqBEbdGzYXtLn6DBta9K+wDmM3M19tj5WBsKO696fYodw3N2DNdudfBsx1QtDKjX40gRWX4Gn9qxlNdQiHhC4eUZ90dDhpfFQFQbrbnx9NrfIjn4D718kUuHgcHcWYVu9tx3pbYvqZSECbSTD1otgDOa6n5/0eioZViWEMTk5MlH99l4xiosUeG/PJkJiSktxOZrh2KdTHrw//Gz+FnAcPB654IydRqglmksk/OKpNe9jJ6XIGavJHC9vqQabVr0qCbNrgsNS5R4Rhg/XXe76UxwSTyxAgU
+x-microsoft-antispam-message-info: fnGFOStVNWzvffc3QXNheBcL/hSZgWJkKbilb8mgrViLdO+6VgVOb9xSNqYBDf5Z2FOiQkCL+v6LOMPPvEC28H97c97Nn0VJeLWnLcJskFID9Toe+318lyTzZtwYn7K2O3s7gD4r7yewOh0AJVs2BYpLDtssMyKa6zCx/c2bll4WS4KE0NtXaUIOaUSZiCA/OwU8P+/qXlyBjMSPnZ3SJalTEPrBqv+Jk1wHGLV4ALQVxYIeHlmATquCPGNHIwbXg3actwMUCSy2dB6DqGzS1ViDejcYkbzF3GvJTLuinydLnK+d4IX2b99Fwl6+xJy+sLEeZImz9Rl9/yjWVLzqH1OUCz2Du/ezXKix1JDUvHaikEBmeeqYXAFZMVpUn0IalabQqBvoEJN/3dYYKi4bqjfuiQSNsZHBpxVAjw0SZ0bc1EiG3JWhESxgyqPCtq1D
 x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: habana.ai
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78b52f92-1be5-42df-2d4d-08d791f0be45
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jan 2020 15:05:46.8646
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2f2c65ef-4650-4d56-15a3-08d791f18664
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jan 2020 15:11:22.5905
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: V6nWMcaHCWdYEgooDhKoRIP1ltjTOY63vSRY+o3RyRauZtiJoO3oaxQdBxdVTXHPwKYqNkPZLHTj/JB9wqmipQ==
+X-MS-Exchange-CrossTenant-userprincipalname: 7+o4Vr/mzpikXgiHnYAYZ4My2lrxH3m5VGB7/9VdHak4Mkp399MSJiG/5RCNzdvO2hYrhRFwZnd/jPInGHBwtg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR02MB3018
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As HL_MAX_JOBS_PER_CS is 512, it is possible that more than 255 CS jobs
-will be submitted for a certain queue. Hence, modify the
-"jobs_in_queue_cnt" parameter of the "hl_cs" structure to be u16 instead
-of u8.
+CS with no chunks for execute phase is invalid, so its
+context_switch/restore phase should not be run.
+Hence, move the check of the execute chunks number to the beginning of
+hl_cs_ioctl().
 
 Signed-off-by: Tomer Tayar <ttayar@habana.ai>
 ---
- drivers/misc/habanalabs/habanalabs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/habanalabs/command_submission.c | 41 ++++++++++----------
+ 1 file changed, 21 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs=
-/habanalabs.h
-index df34227dea31..77fe4315dbee 100644
---- a/drivers/misc/habanalabs/habanalabs.h
-+++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -763,7 +763,7 @@ struct hl_userptr {
-  * @aborted: true if CS was aborted due to some device error.
-  */
- struct hl_cs {
--	u8			jobs_in_queue_cnt[HL_MAX_QUEUES];
-+	u16			jobs_in_queue_cnt[HL_MAX_QUEUES];
- 	struct hl_ctx		*ctx;
- 	struct list_head	job_list;
- 	spinlock_t		job_lock;
+diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/ha=
+banalabs/command_submission.c
+index 7cb6910378bf..73ef0f9d758a 100644
+--- a/drivers/misc/habanalabs/command_submission.c
++++ b/drivers/misc/habanalabs/command_submission.c
+@@ -657,8 +657,8 @@ int hl_cs_ioctl(struct hl_fpriv *hpriv, void *data)
+ 	struct hl_device *hdev =3D hpriv->hdev;
+ 	union hl_cs_args *args =3D data;
+ 	struct hl_ctx *ctx =3D hpriv->ctx;
+-	void __user *chunks;
+-	u32 num_chunks;
++	void __user *chunks_execute, *chunks_restore;
++	u32 num_chunks_execute, num_chunks_restore;
+ 	u64 cs_seq =3D ULONG_MAX;
+ 	int rc, do_ctx_switch;
+ 	bool need_soft_reset =3D false;
+@@ -671,13 +671,25 @@ int hl_cs_ioctl(struct hl_fpriv *hpriv, void *data)
+ 		goto out;
+ 	}
+=20
++	chunks_execute =3D (void __user *) (uintptr_t) args->in.chunks_execute;
++	num_chunks_execute =3D args->in.num_chunks_execute;
++
++	if (!num_chunks_execute) {
++		dev_err(hdev->dev,
++			"Got execute CS with 0 chunks, context %d\n",
++			ctx->asid);
++		rc =3D -EINVAL;
++		goto out;
++	}
++
+ 	do_ctx_switch =3D atomic_cmpxchg(&ctx->thread_ctx_switch_token, 1, 0);
+=20
+ 	if (do_ctx_switch || (args->in.cs_flags & HL_CS_FLAGS_FORCE_RESTORE)) {
+ 		long ret;
+=20
+-		chunks =3D (void __user *)(uintptr_t)args->in.chunks_restore;
+-		num_chunks =3D args->in.num_chunks_restore;
++		chunks_restore =3D
++			(void __user *) (uintptr_t) args->in.chunks_restore;
++		num_chunks_restore =3D args->in.num_chunks_restore;
+=20
+ 		mutex_lock(&hpriv->restore_phase_mutex);
+=20
+@@ -705,13 +717,13 @@ int hl_cs_ioctl(struct hl_fpriv *hpriv, void *data)
+=20
+ 		hdev->asic_funcs->restore_phase_topology(hdev);
+=20
+-		if (num_chunks =3D=3D 0) {
++		if (!num_chunks_restore) {
+ 			dev_dbg(hdev->dev,
+ 			"Need to run restore phase but restore CS is empty\n");
+ 			rc =3D 0;
+ 		} else {
+-			rc =3D _hl_cs_ioctl(hpriv, chunks, num_chunks,
+-						&cs_seq);
++			rc =3D _hl_cs_ioctl(hpriv, chunks_restore,
++						num_chunks_restore, &cs_seq);
+ 		}
+=20
+ 		mutex_unlock(&hpriv->restore_phase_mutex);
+@@ -724,7 +736,7 @@ int hl_cs_ioctl(struct hl_fpriv *hpriv, void *data)
+ 		}
+=20
+ 		/* Need to wait for restore completion before execution phase */
+-		if (num_chunks > 0) {
++		if (num_chunks_restore) {
+ 			ret =3D _hl_cs_wait_ioctl(hdev, ctx,
+ 					jiffies_to_usecs(hdev->timeout_jiffies),
+ 					cs_seq);
+@@ -752,18 +764,7 @@ int hl_cs_ioctl(struct hl_fpriv *hpriv, void *data)
+ 		}
+ 	}
+=20
+-	chunks =3D (void __user *)(uintptr_t)args->in.chunks_execute;
+-	num_chunks =3D args->in.num_chunks_execute;
+-
+-	if (num_chunks =3D=3D 0) {
+-		dev_err(hdev->dev,
+-			"Got execute CS with 0 chunks, context %d\n",
+-			ctx->asid);
+-		rc =3D -EINVAL;
+-		goto out;
+-	}
+-
+-	rc =3D _hl_cs_ioctl(hpriv, chunks, num_chunks, &cs_seq);
++	rc =3D _hl_cs_ioctl(hpriv, chunks_execute, num_chunks_execute, &cs_seq);
+=20
+ out:
+ 	if (rc !=3D -EAGAIN) {
 --=20
 2.17.1
 
