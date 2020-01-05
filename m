@@ -2,128 +2,85 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88018C33C8C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 13:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5461C33C8C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 13:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D22E2072C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 13:22:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JpLqyLlZ"
+	by mail.kernel.org (Postfix) with ESMTP id 55AB2215A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 13:30:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgAENWP (ORCPT
+        id S1726387AbgAENaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 08:22:15 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28161 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726240AbgAENWP (ORCPT
+        Sun, 5 Jan 2020 08:30:20 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:47146 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbgAENaU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 08:22:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578230533;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=In+0vCYCUg5srKg9dQl7QsQxw+2F0g+Q33KWDu01COk=;
-        b=JpLqyLlZt2ZUbUWT0ZXRavpoi60XmKSGxIpgDf/2KUx/xdl7Rd45wKWFfvm58cqi3n/ekj
-        d6OoGaGgarV2SHzUFxDXdT9oUsRKDzM6YDHIBL3umYXfJcsCboScd4MIGv6gHYqaTZo8lW
-        hGdEQPAVt0ZoBXurbhqB96vJokDgIBo=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-159-vucn-IfQMR2SiHv6Kxi4Zg-1; Sun, 05 Jan 2020 08:22:12 -0500
-X-MC-Unique: vucn-IfQMR2SiHv6Kxi4Zg-1
-Received: by mail-qt1-f198.google.com with SMTP id l1so32587310qtp.21
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jan 2020 05:22:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=In+0vCYCUg5srKg9dQl7QsQxw+2F0g+Q33KWDu01COk=;
-        b=JZdUE0roAXHDdLJktgLhoWKwcvKXiGkGtEjE1/DzzD4bSfqLPt/05XVx8f3QpnNzhR
-         0zxvGJmV7WMI79QPd3I3QVXDviCAWwh4VUfSioNlW4ZHJSsw6E5wAiL2JYp2qYPEDPfz
-         /0eKsHx2nuQ8WrqOOL6WyfX2/rpO+mpPAc35fnB4vlOjrMAPbWzlnH2AGs7AXcyIcAT3
-         gUzGVN10dkF2FGTyY0++lfpYFzNFMq40qitijuWW2XR+8NPFlch6C4h7K8WDLuoyP45r
-         PtReuHsN/1nT/9Bu3d5TEAEpM52C75UnJgZHX2Z+fkaTM9MO89PQje5fSirBBJj/ouu9
-         DY9w==
-X-Gm-Message-State: APjAAAUkU+n4FlQixHXdUuhfln49Aifb8yhqxqaQmCzUIiOs5lkzIs9F
-        Ud3Y3ubFaVkxWwwIm6DjYOSRrWTxyhCyI/7ouja2RvkS6s2FbgY+gzqTHqASo1cvS+3FEI5GNGI
-        cpi4/bFncn2D1GDNbawoNyhOw
-X-Received: by 2002:a0c:f24a:: with SMTP id z10mr76733958qvl.33.1578230531870;
-        Sun, 05 Jan 2020 05:22:11 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxyUWCiAw1lxoCGQUnGp+u8A3Lfb79bSc8yodanv1kN0I5K95cgXC7zaFq0VLZPOw2HTPs0EQ==
-X-Received: by 2002:a0c:f24a:: with SMTP id z10mr76733944qvl.33.1578230531679;
-        Sun, 05 Jan 2020 05:22:11 -0800 (PST)
-Received: from redhat.com (bzq-79-183-34-164.red.bezeqint.net. [79.183.34.164])
-        by smtp.gmail.com with ESMTPSA id g16sm19273900qkk.61.2020.01.05.05.22.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jan 2020 05:22:10 -0800 (PST)
-Date:   Sun, 5 Jan 2020 08:22:07 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Alistair Delva <adelva@google.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: [PATCH v2] virtio_net: CTRL_GUEST_OFFLOADS depends on CTRL_VQ
-Message-ID: <20200105132120.92370-1-mst@redhat.com>
+        Sun, 5 Jan 2020 08:30:20 -0500
+Received: from [172.58.27.182] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1io5yz-0005ef-8A; Sun, 05 Jan 2020 13:30:18 +0000
+Date:   Sun, 5 Jan 2020 14:30:07 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, tycho@tycho.ws, jannh@google.com,
+        cyphar@cyphar.com, oleg@redhat.com, luto@amacapital.net,
+        viro@zeniv.linux.org.uk, gpascutto@mozilla.com,
+        ealvarez@mozilla.com, fweimer@redhat.com, jld@mozilla.com,
+        arnd@arndb.de
+Subject: Re: [PATCH v8 2/3] pid: Introduce pidfd_getfd syscall
+Message-ID: <20200105133005.ezt4y4d4oat55u6h@wittgenstein>
+References: <20200103162928.5271-1-sargun@sargun.me>
+ <20200103162928.5271-3-sargun@sargun.me>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
-X-Mutt-Fcc: =sent
+In-Reply-To: <20200103162928.5271-3-sargun@sargun.me>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only way for guest to control offloads (as enabled by
-VIRTIO_NET_F_CTRL_GUEST_OFFLOADS) is by sending commands
-through CTRL_VQ. So it does not make sense to
-acknowledge VIRTIO_NET_F_CTRL_GUEST_OFFLOADS without
-VIRTIO_NET_F_CTRL_VQ.
+On Fri, Jan 03, 2020 at 08:29:27AM -0800, Sargun Dhillon wrote:
+> This syscall allows for the retrieval of file descriptors from other
+> processes, based on their pidfd. This is possible using ptrace, and
+> injection of parasitic code to inject code which leverages SCM_RIGHTS
+> to move file descriptors between a tracee and a tracer. Unfortunately,
+> ptrace comes with a high cost of requiring the process to be stopped,
+> and breaks debuggers. This does not require stopping the process under
+> manipulation.
+> 
+> One reason to use this is to allow sandboxers to take actions on file
+> descriptors on the behalf of another process. For example, this can be
+> combined with seccomp-bpf's user notification to do on-demand fd
+> extraction and take privileged actions. One such privileged action
+> is binding a socket to a privileged port.
+> 
+> This also adds the syscall to all architectures at the same time.
+> 
+> /* prototype */
+>   /* flags is currently reserved and should be set to 0 */
+>   int sys_pidfd_getfd(int pidfd, int fd, unsigned int flags);
+> 
+> /* testing */
+> Ran self-test suite on x86_64
+> 
+> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+> Cc: Christian Brauner <christian.brauner@ubuntu.com>
 
-The spec does not outlaw devices with such a configuration, so we have
-to support it. Simply clear VIRTIO_NET_F_CTRL_GUEST_OFFLOADS.
-Note that Linux is still crashing if it tries to
-change the offloads when there's no control vq.
-That needs to be fixed by another patch.
+The prefered way of adding a syscall is to keep the implementation
+separate from the wiring up into the syscall tables. So please split the
+patch into two:
+- [2/4] pidfd_getfd() implementation
+- [3/4] pidfd_getfd() wiring up 
+otherwise
 
-Reported-by: Alistair Delva <adelva@google.com>
-Reported-by: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Fixes: 3f93522ffab2 ("virtio-net: switch off offloads on demand if possible on XDP set")
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
-
-Same patch as v1 but update documentation so it's clear it's not
-enough to fix the crash.
-
- drivers/net/virtio_net.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-index 4d7d5434cc5d..7b8805b47f0d 100644
---- a/drivers/net/virtio_net.c
-+++ b/drivers/net/virtio_net.c
-@@ -2971,6 +2971,15 @@ static int virtnet_validate(struct virtio_device *vdev)
- 	if (!virtnet_validate_features(vdev))
- 		return -EINVAL;
- 
-+	/* VIRTIO_NET_F_CTRL_GUEST_OFFLOADS does not work without
-+	 * VIRTIO_NET_F_CTRL_VQ. Unfortunately spec forgot to
-+	 * specify that VIRTIO_NET_F_CTRL_GUEST_OFFLOADS depends
-+	 * on VIRTIO_NET_F_CTRL_VQ so devices can set the later but
-+	 * not the former.
-+	 */
-+	if (!virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
-+			__virtio_clear_bit(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS);
-+
- 	if (virtio_has_feature(vdev, VIRTIO_NET_F_MTU)) {
- 		int mtu = virtio_cread16(vdev,
- 					 offsetof(struct virtio_net_config,
--- 
-MST
-
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
