@@ -2,99 +2,89 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LOTS_OF_MONEY,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B84ACC33C8C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 21:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DEAC33C8C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 21:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1AA20866
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 21:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB23320801
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 21:28:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbgAEVRS (ORCPT
+        id S1726922AbgAEV2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 16:17:18 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50100 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727149AbgAEVRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 16:17:14 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 463D2B1AB;
-        Sun,  5 Jan 2020 21:17:12 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id EE930E048B; Sun,  5 Jan 2020 22:17:11 +0100 (CET)
-Message-Id: <146ace9856b8576eea83a1a5dc6329315831c44e.1578257976.git.mkubecek@suse.cz>
-In-Reply-To: <cover.1578257976.git.mkubecek@suse.cz>
-References: <cover.1578257976.git.mkubecek@suse.cz>
-From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next 3/3] epic100: allow nesting of ethtool_ops begin()
- and complete()
-To:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
-        Francois Romieu <romieu@fr.zoreil.com>,
-        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Date:   Sun,  5 Jan 2020 22:17:11 +0100 (CET)
+        Sun, 5 Jan 2020 16:28:35 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:38656 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726792AbgAEV2f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 16:28:35 -0500
+Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 005LSV87017267
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 5 Jan 2020 16:28:31 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 531144200AF; Sun,  5 Jan 2020 16:28:31 -0500 (EST)
+Date:   Sun, 5 Jan 2020 16:28:31 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Evan Rudford <zocker76@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: Is the Linux kernel underfunded? Lack of quality and security?
+Message-ID: <20200105212831.GD4253@mit.edu>
+References: <CAE90CG6SGWKXToVhY5VH-AzUjC6UEwRzoisUXM0OQe9XgcCHRA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAE90CG6SGWKXToVhY5VH-AzUjC6UEwRzoisUXM0OQe9XgcCHRA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unlike most networking drivers using begin() and complete() ethtool_ops
-callbacks to resume a device which is down and suspend it again when done,
-epic100 does not use standard refcounted infrastructure but sets device
-sleep state directly.
+On Sun, Jan 05, 2020 at 04:47:33AM +0100, Evan Rudford wrote:
+> The problem of underfunding plagues many open source projects.
+> I wonder whether the Linux kernel suffers from underfunding in
+> comparison to its global reach.
+> Although code reviews and technical discussions are working well, I
+> argue that the testing infrastructure of the kernel is lacking.
+> Severe bugs are discovered late, and they are discovered by developers
+> that should not be exposed to that amount of breakage.
+> Moreover, I feel that security issues do not receive enough resources.
 
-With the introduction of netlink ethtool interface, we may have nested
-begin-complete blocks so that inner complete() would put the device back to
-sleep for the rest of the outer block.
+It sounds like you are unaware of the Kernel Self Protection Project
+(KSPP), which is focused on proactively improving the kernel's
+security features, and the KernelCI project.  There is quite a lot of
+work happening already.
 
-To avoid rewriting an old and not very actively developed driver, just add
-a nesting counter and only perform resume and suspend on the outermost
-level.
+One of the challenges is that is an extremely large number of
+different ways a kernel can be configured, and that a *very* large
+number of the bugs tend to be hardware specific.  Running CI on all
+possible hardware that might run Linux is really not practical; but
+there is a very large number of tests being run on both VM's and on
+those hardware platforms that companies who are donating hardware to
+KernelCI care about.
 
-Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
----
- drivers/net/ethernet/smsc/epic100.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Keep in mind that there is *always* the opportunity to do more testing
+and QA work.  Companies which care about specific hardware and
+software configurations are contributing resources (both money and
+engineering headcount) to improve the quality for those specific
+configurations.  So there is *always* opportunities where more
+resources can improve any product.  This is true whether you are
+talking about, say, a $15,000 Ford Fiesta or a $115,000 Porsche 911.
 
-diff --git a/drivers/net/ethernet/smsc/epic100.c b/drivers/net/ethernet/smsc/epic100.c
-index 912760e8514c..b9915645412c 100644
---- a/drivers/net/ethernet/smsc/epic100.c
-+++ b/drivers/net/ethernet/smsc/epic100.c
-@@ -280,6 +280,7 @@ struct epic_private {
- 	signed char phys[4];				/* MII device addresses. */
- 	u16 advertising;					/* NWay media advertisement */
- 	int mii_phy_cnt;
-+	u32 ethtool_ops_nesting;
- 	struct mii_if_info mii;
- 	unsigned int tx_full:1;				/* The Tx queue is full. */
- 	unsigned int default_port:4;		/* Last dev->if_port value. */
-@@ -1435,8 +1436,10 @@ static int ethtool_begin(struct net_device *dev)
- 	struct epic_private *ep = netdev_priv(dev);
- 	void __iomem *ioaddr = ep->ioaddr;
- 
-+	if (ep->ethtool_ops_nesting == U32_MAX)
-+		return -EBUSY;
- 	/* power-up, if interface is down */
--	if (!netif_running(dev)) {
-+	if (ep->ethtool_ops_nesting++ && !netif_running(dev)) {
- 		ew32(GENCTL, 0x0200);
- 		ew32(NVCTL, (er32(NVCTL) & ~0x003c) | 0x4800);
- 	}
-@@ -1449,7 +1452,7 @@ static void ethtool_complete(struct net_device *dev)
- 	void __iomem *ioaddr = ep->ioaddr;
- 
- 	/* power-down, if interface is down */
--	if (!netif_running(dev)) {
-+	if (!--ep->ethtool_ops_nesting && !netif_running(dev)) {
- 		ew32(GENCTL, 0x0008);
- 		ew32(NVCTL, (er32(NVCTL) & ~0x483c) | 0x0000);
- 	}
--- 
-2.24.1
+If you have access to resources that you would like to contribute, and
+have some specific areas where you would like to see improvement, we
+can certainly put you in touch with the various organizations, such as
+the Linux Foundation, which are organizing efforts such as KernelCI.
+There are also a number of engineers from a goodly number of companies
+contributing to the Kernel Self Protection Project.  If you are
+interested in getting involved, please see:
 
+    https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project
+
+Cheers,
+
+					- Ted
