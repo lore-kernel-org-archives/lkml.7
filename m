@@ -2,169 +2,139 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 468ADC33C9A
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 15:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 408A1C33C9A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 15:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A7AD20866
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 15:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A3B820866
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 15:24:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E18QoDhn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgAEPTn (ORCPT
+        id S1726467AbgAEPYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 10:19:43 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:48434 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726212AbgAEPTm (ORCPT
+        Sun, 5 Jan 2020 10:24:52 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33039 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726212AbgAEPYv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 10:19:42 -0500
-Received: from [172.58.27.182] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1io7gm-0007Dg-Hn; Sun, 05 Jan 2020 15:19:37 +0000
-Date:   Sun, 5 Jan 2020 16:19:30 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Amanieu d'Antras <amanieu@gmail.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        linux-um@lists.infradead.org, stable@vger.kernel.org
-Subject: Re: [PATCH] um: Implement copy_thread_tls
-Message-ID: <20200105151928.qrmhnwer3r5ffc77@wittgenstein>
-References: <20200102172413.654385-1-amanieu@gmail.com>
- <20200104123928.1048822-1-amanieu@gmail.com>
+        Sun, 5 Jan 2020 10:24:51 -0500
+Received: by mail-wr1-f68.google.com with SMTP id b6so47010085wrq.0;
+        Sun, 05 Jan 2020 07:24:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4F9+RY0yU9fqVfTSeicS1qBjnlshzGXW5AwJXhtTU9s=;
+        b=E18QoDhneNFDiyLfRMo2yBdct25MXHmDNVcq2fDINCHw6wdWiuCwG7Fv8YCu+z373m
+         zQ0FfWrp+Pc9Y1Pkrj7Z50QO9TsZbIuGTm9O3adSW70qeoX0YL42SCMioOeJW0XvdCOD
+         6oF7MIufHhxF7babum0iXZvAvBgRi+hJoo3X21mDv5ZhQU9LWbPDWu6vRRC/m39b7jMh
+         clQpzSaNQy7e1yZs8CPlaO5vkHlQMebiFfWEoWB4o46Vfh/FaqO/1XiWV0p6v+3+ckn5
+         a+7sIydrU7OmEsPMG7N3PWu556IRjBt6Hd+dMJR+7fdCYP4NylzAkjI5lpZ7bJYHNSco
+         cfAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4F9+RY0yU9fqVfTSeicS1qBjnlshzGXW5AwJXhtTU9s=;
+        b=FiYj31QT1J5ORY/F+lX7eJ5zOl8Q7KeWkFn9je/T5fpv4J7xLzNIJ+r55J90dzdAEY
+         EriFbWmIRu2PQeChv1kqG8I9YGoohHvorXwfhpvFGilJsRhUWVXq/cIGneP2cdS0wrpn
+         Xuje9NpNWAKafQW1yqDl0KLLIuDZeX19ejlTdufd1clk5lMQZR7D3ySmBtiAKt0/vYre
+         H3Art0Mu3Ze36va81QfYx+CBa8CHAl4KOxFK5NGvckP/hll/MXgfobuIYNJyNBQW9+mo
+         bPULZEorG+qGTiUlSQGGnCWoctGjxDnrjNDqQVjG3AhYP6RSES0fBWUG5zhUVBokLnoR
+         bHyQ==
+X-Gm-Message-State: APjAAAUCXRtc5TefkW41cyWl5DS/Y3mmQLmm6WJphlkK47c0Rqizrqju
+        Vo2pF+utkC/bQc331pUh7lQ=
+X-Google-Smtp-Source: APXvYqyPCZVCPY70gGbJCHHm6NLKtjwZr+Uvzi/p6xXC+Nn1md5VrLUxOH8Ai8YZjCCIOzJSC15Wtg==
+X-Received: by 2002:adf:f78e:: with SMTP id q14mr98169159wrp.186.1578237889014;
+        Sun, 05 Jan 2020 07:24:49 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id h66sm20616568wme.41.2020.01.05.07.24.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jan 2020 07:24:47 -0800 (PST)
+Date:   Sun, 5 Jan 2020 16:24:47 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Namjae Jeon <namjae.jeon@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, linkinjeon@gmail.com
+Subject: Re: [PATCH v9 10/13] exfat: add nls operations
+Message-ID: <20200105152447.jo27m7jgskyu2dos@pali>
+References: <20200102082036.29643-1-namjae.jeon@samsung.com>
+ <CGME20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05@epcas1p4.samsung.com>
+ <20200102082036.29643-11-namjae.jeon@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="f2e4tgqxncq2o4tg"
 Content-Disposition: inline
-In-Reply-To: <20200104123928.1048822-1-amanieu@gmail.com>
+In-Reply-To: <20200102082036.29643-11-namjae.jeon@samsung.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 04, 2020 at 01:39:30PM +0100, Amanieu d'Antras wrote:
-> This is required for clone3 which passes the TLS value through a
-> struct rather than a register.
-> 
-> Signed-off-by: Amanieu d'Antras <amanieu@gmail.com>
-> Cc: linux-um@lists.infradead.org
-> Cc: <stable@vger.kernel.org> # 5.3.x
 
-Thanks. I'm picking this up as part of the copy_thread_tls() series.
-(Leaving the patch in tact so people can Ack right here if they want to.)
-If I could get an Ack from one of the maintainers that would be great;
-see
-https://lore.kernel.org/lkml/20200102172413.654385-1-amanieu@gmail.com
-for more context.
+--f2e4tgqxncq2o4tg
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-
+On Thursday 02 January 2020 16:20:33 Namjae Jeon wrote:
+> This adds the implementation of nls operations for exfat.
+>=20
+> Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
+> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
 > ---
->  arch/um/Kconfig                      | 1 +
->  arch/um/include/asm/ptrace-generic.h | 2 +-
->  arch/um/kernel/process.c             | 6 +++---
->  arch/x86/um/tls_32.c                 | 6 ++----
->  arch/x86/um/tls_64.c                 | 7 +++----
->  5 files changed, 10 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-> index 2a6d04fcb3e9..6f0edd0c0220 100644
-> --- a/arch/um/Kconfig
-> +++ b/arch/um/Kconfig
-> @@ -14,6 +14,7 @@ config UML
->  	select HAVE_FUTEX_CMPXCHG if FUTEX
->  	select HAVE_DEBUG_KMEMLEAK
->  	select HAVE_DEBUG_BUGVERBOSE
-> +	select HAVE_COPY_THREAD_TLS
->  	select GENERIC_IRQ_SHOW
->  	select GENERIC_CPU_DEVICES
->  	select GENERIC_CLOCKEVENTS
-> diff --git a/arch/um/include/asm/ptrace-generic.h b/arch/um/include/asm/ptrace-generic.h
-> index 81c647ef9c6c..adf91ef553ae 100644
-> --- a/arch/um/include/asm/ptrace-generic.h
-> +++ b/arch/um/include/asm/ptrace-generic.h
-> @@ -36,7 +36,7 @@ extern long subarch_ptrace(struct task_struct *child, long request,
->  extern unsigned long getreg(struct task_struct *child, int regno);
->  extern int putreg(struct task_struct *child, int regno, unsigned long value);
->  
-> -extern int arch_copy_tls(struct task_struct *new);
-> +extern int arch_set_tls(struct task_struct *new, unsigned long tls);
->  extern void clear_flushed_tls(struct task_struct *task);
->  extern int syscall_trace_enter(struct pt_regs *regs);
->  extern void syscall_trace_leave(struct pt_regs *regs);
-> diff --git a/arch/um/kernel/process.c b/arch/um/kernel/process.c
-> index 263a8f069133..17045e7211bf 100644
-> --- a/arch/um/kernel/process.c
-> +++ b/arch/um/kernel/process.c
-> @@ -153,8 +153,8 @@ void fork_handler(void)
->  	userspace(&current->thread.regs.regs, current_thread_info()->aux_fp_regs);
->  }
->  
-> -int copy_thread(unsigned long clone_flags, unsigned long sp,
-> -		unsigned long arg, struct task_struct * p)
-> +int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
-> +		unsigned long arg, struct task_struct * p, unsigned long tls)
->  {
->  	void (*handler)(void);
->  	int kthread = current->flags & PF_KTHREAD;
-> @@ -188,7 +188,7 @@ int copy_thread(unsigned long clone_flags, unsigned long sp,
->  		 * Set a new TLS for the child thread?
->  		 */
->  		if (clone_flags & CLONE_SETTLS)
-> -			ret = arch_copy_tls(p);
-> +			ret = arch_set_tls(p, tls);
->  	}
->  
->  	return ret;
-> diff --git a/arch/x86/um/tls_32.c b/arch/x86/um/tls_32.c
-> index 5bd949da7a4a..ac8eee093f9c 100644
-> --- a/arch/x86/um/tls_32.c
-> +++ b/arch/x86/um/tls_32.c
-> @@ -215,14 +215,12 @@ static int set_tls_entry(struct task_struct* task, struct user_desc *info,
->  	return 0;
->  }
->  
-> -int arch_copy_tls(struct task_struct *new)
-> +int arch_set_tls(struct task_struct *new, unsigned long tls)
->  {
->  	struct user_desc info;
->  	int idx, ret = -EFAULT;
->  
-> -	if (copy_from_user(&info,
-> -			   (void __user *) UPT_SI(&new->thread.regs.regs),
-> -			   sizeof(info)))
-> +	if (copy_from_user(&info, (void __user *) tls, sizeof(info)))
->  		goto out;
->  
->  	ret = -EINVAL;
-> diff --git a/arch/x86/um/tls_64.c b/arch/x86/um/tls_64.c
-> index 3a621e0d3925..ebd3855d9b13 100644
-> --- a/arch/x86/um/tls_64.c
-> +++ b/arch/x86/um/tls_64.c
-> @@ -6,14 +6,13 @@ void clear_flushed_tls(struct task_struct *task)
->  {
->  }
->  
-> -int arch_copy_tls(struct task_struct *t)
-> +int arch_set_tls(struct task_struct *t, unsigned long tls)
->  {
->  	/*
->  	 * If CLONE_SETTLS is set, we need to save the thread id
-> -	 * (which is argument 5, child_tid, of clone) so it can be set
-> -	 * during context switches.
-> +	 * so it can be set during context switches.
->  	 */
-> -	t->thread.arch.fs = t->thread.regs.regs.gp[R8 / sizeof(long)];
-> +	t->thread.arch.fs = tls;
->  
->  	return 0;
->  }
-> -- 
-> 2.24.1
-> 
+>  fs/exfat/nls.c | 809 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 809 insertions(+)
+>  create mode 100644 fs/exfat/nls.c
+>=20
+> diff --git a/fs/exfat/nls.c b/fs/exfat/nls.c
+> new file mode 100644
+> index 000000000000..af52328e28ff
+> --- /dev/null
+> +++ b/fs/exfat/nls.c
+
+=2E..
+
+> +int exfat_nls_cmp_uniname(struct super_block *sb, unsigned short *a,
+> +		unsigned short *b)
+> +{
+> +	int i;
+> +
+> +	for (i =3D 0; i < MAX_NAME_LENGTH; i++, a++, b++) {
+> +		if (exfat_nls_upper(sb, *a) !=3D exfat_nls_upper(sb, *b))
+> +			return 1;
+> +		if (*a =3D=3D 0x0)
+> +			return 0;
+> +	}
+> +	return 0;
+> +}
+
+Hello, this function returns wrong result when second string (b) is
+longer then first string (a).
+
+Also it is a best practise to first check for end-of-string and then
+access/work with i-th element of string.
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--f2e4tgqxncq2o4tg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXhH/vAAKCRCL8Mk9A+RD
+Uqv7AJwIkABv+Bpvw7Z2sHDERYMAUNrI1QCeO5I7iyE5/RVgyXEYwonl4aM0vDQ=
+=BcPO
+-----END PGP SIGNATURE-----
+
+--f2e4tgqxncq2o4tg--
