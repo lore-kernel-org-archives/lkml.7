@@ -2,152 +2,135 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DC3C33C8C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 21:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE69EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 22:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED23120848
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 21:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A28621734
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 22:06:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jBfOB9wk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n4jadz24"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgAEVrd (ORCPT
+        id S1727069AbgAEWG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 16:47:33 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45082 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbgAEVrd (ORCPT
+        Sun, 5 Jan 2020 17:06:57 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:44067 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726851AbgAEWG5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 16:47:33 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 2so26020977pfg.12
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jan 2020 13:47:32 -0800 (PST)
+        Sun, 5 Jan 2020 17:06:57 -0500
+Received: by mail-vs1-f65.google.com with SMTP id p6so30539820vsj.11
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jan 2020 14:06:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wCK2mfBgdPgp7bWgS7lFX75rfWvDu1w440/EZEjd1UQ=;
-        b=jBfOB9wksGwEXh8NfUv5beyrsnvK3zXThLQ7coNPfmAmQBC3DkxS53XQ7tjJi9iuDA
-         Q92ac1kYTXbMJ3KRnbJLuxOeg6khiz206bEghWgYYreR6FLIfY8OqMbQHf10uWawEymz
-         FYoADCtZeE2n2wwD/7nsGDM19qevNlkOwuyfsQ0+Whcs3YubcrfVP/jvIITgbGpbstNw
-         Q4GX+YSSnrx5uoHUXo0cH76+K1bevX52PUOiyyIoq8okqw8gg5gORfB/ek+lq0/62r1o
-         ZNHh3iXL3sJK06vCPzY9Q3tH3Xhd97d+4A0dyOJAi2ZtgcEFmo75mAOjrPdzM84ZL8/C
-         OqDw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Uw6b7W2hJ0QLRZ1xDtPnAWhipPvQAM3seWtHwc/JeWI=;
+        b=n4jadz24z7JBewNrViqatR++YynQbD5azEZKxjZxFfvD368syVdZM1Ub7qpNXso0kX
+         rhnOVjJ964h2axKqSfgW9ZGznWx5H37Wta9Zic+/tf5qtQ3Kw2Jls8ePPuwAIH1LEu9n
+         /ITeQn9WUJVapcMrLG2KqGvJlEZkHWC6J9Chv4sGuO13joIoxXIoAoYk7zPjHfgnkxyG
+         pC+oU2JPFCZTH5XDn5WF5GCI5f14EuYDHEsIWPn7tdx59Ebsi9LeB6pvCQsmpJ98ToEc
+         geFFpUkywXbDL6iGW5LiilUZSb4WgxoECXQMA9oHdFfJkBZb1wyCeHD/MqBNwxnnlp+k
+         9zzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=wCK2mfBgdPgp7bWgS7lFX75rfWvDu1w440/EZEjd1UQ=;
-        b=Wpbi5JIFkPl4AiLNrhemgZyCFl8UcEQzFAHq6oVN4koqhKWdUEb4MdgNTGPNvjzBMk
-         RezJBhwy9qzpU0HHWywZ/94Qd42Myxcb6HLe+3cg4SfYAM+fv2GclPSSV/kSqFM82Lsq
-         LRoPoUmuy9HpWjtFUmPsP1/FaLaNFtEUSIUFmP0X5AupqbmBi/dCcXyXsEJzB+buN3Xe
-         iFpxxmmGHT9lkUgK+Mg7nYwLlZY8N+iWnkMTjlGAEg2QZVu2zDwy5ER0amV8dUIjoqO6
-         utIKH4NNBC+E6h9ifqs9Uu4uyRUY9Uvwb7zA8MEAvriA6blhY+7xPZEZOxwadcFuK0TW
-         DPaQ==
-X-Gm-Message-State: APjAAAWGH2mrqSVU0/+FZbp6R8C1Yn4nMpd2Vo4hAhvmKsDvgpTCThrQ
-        DrulkwVHgFyIQrVjMJ1UohTcx65L
-X-Google-Smtp-Source: APXvYqzi/2DrW/kcboo1OowvMQWYO+vVoY4SAJtz/3PFe2lQagei+47aAwoQcgijZmgfV3oENPWhHg==
-X-Received: by 2002:a65:5281:: with SMTP id y1mr105394849pgp.327.1578260851967;
-        Sun, 05 Jan 2020 13:47:31 -0800 (PST)
-Received: from [10.230.28.123] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id m15sm69210781pgi.91.2020.01.05.13.47.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Jan 2020 13:47:30 -0800 (PST)
-Subject: Re: [PATCH 0/4] soc: bcm: brcmstb: biuctrl updates
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191210233043.15193-1-f.fainelli@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
-Message-ID: <01aa8200-23d1-2fb7-5e39-248863d4f182@gmail.com>
-Date:   Sun, 5 Jan 2020 13:47:30 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Uw6b7W2hJ0QLRZ1xDtPnAWhipPvQAM3seWtHwc/JeWI=;
+        b=JzQIFYp2//EEM2fqcdz8szORkwcJ5+zix93FoXJGIz8sltMyaImKjBSNSrbLCdxtOg
+         t9PkrEi99c6eiUhZ3twkmRTPrRndChxL+ESd/XLbmsmydkdlaOC1XMbjeYcQC/6ivx1x
+         xVe8ppBpbgMMXfE/otMj2uN4FQ/lLkvIwV58Nnl/pI99UeCponbR40VtShePxaiehNr9
+         567e5vq9Us6FFjHC56RbB0W7/E0K/bAO7dle0jEaAx54uFe+6PnJ320ww/FFPPHd+WJU
+         HKdCqDCpHcUtL364VY4puH1r02lVh8mYl1U7TLiEbkev53+rpjGgoJGezkLRRIHtRTHA
+         nxhA==
+X-Gm-Message-State: APjAAAUSp9NedlmUHh3QtVyVlrf5j33GnuL2R1tqvorgwnoPzwKUGNFS
+        +4O12/cIgwtzWpNr67x60gC1UenugVsQAOMKo2g=
+X-Google-Smtp-Source: APXvYqwbEJS1ZTfGghkXr5NcdUxqdwwl79ExOgPhvtn/LUVDP0xDOgcJaiiG+qAns3Cs0+AZewOfp016/f8BBavPXUI=
+X-Received: by 2002:a67:1447:: with SMTP id 68mr34488742vsu.76.1578262016414;
+ Sun, 05 Jan 2020 14:06:56 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191210233043.15193-1-f.fainelli@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191231205607.1005-1-wambui.karugax@gmail.com> <20200101184843.GA3856@dvetter-linux.ger.corp.intel.com>
+In-Reply-To: <20200101184843.GA3856@dvetter-linux.ger.corp.intel.com>
+From:   Ben Skeggs <skeggsb@gmail.com>
+Date:   Mon, 6 Jan 2020 08:06:45 +1000
+Message-ID: <CACAvsv5YEB0njcvFBhHWiCumuHroAqMm-T+fA8gJfsXijy+LVg@mail.gmail.com>
+Subject: Re: [Nouveau] [PATCH] drm/nouveau: remove set but unused variable.
+To:     Wambui Karuga <wambui.karugax@gmail.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Dave Airlie <airlied@linux.ie>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        ML nouveau <nouveau@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 2 Jan 2020 at 04:48, Daniel Vetter <daniel@ffwll.ch> wrote:
+>
+> On Tue, Dec 31, 2019 at 11:56:07PM +0300, Wambui Karuga wrote:
+> > The local variable `pclks` is defined and set but not used and can
+> > therefore be removed.
+> > Issue found by coccinelle.
+> >
+> > Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+> > ---
+> >  drivers/gpu/drm/nouveau/dispnv04/arb.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/nouveau/dispnv04/arb.c b/drivers/gpu/drm/nouveau/dispnv04/arb.c
+> > index 362495535e69..f607a04d262d 100644
+> > --- a/drivers/gpu/drm/nouveau/dispnv04/arb.c
+> > +++ b/drivers/gpu/drm/nouveau/dispnv04/arb.c
+> > @@ -54,7 +54,7 @@ static void
+> >  nv04_calc_arb(struct nv_fifo_info *fifo, struct nv_sim_state *arb)
+> >  {
+> >       int pagemiss, cas, width, bpp;
+> > -     int nvclks, mclks, pclks, crtpagemiss;
+> > +     int nvclks, mclks, crtpagemiss;
+>
+> Hm, reading the code (just from how stuff is named) I wonder whether the
+> original idea was that the calculation for us_p should us pclks, not
+> nvclks, but given that this code is as old as the initial nouveau merge
+> probably not a good idea to touch it. Plus I guess not many with a vintage
+> nv04 in working condition around to even test stuff ...
+>
+> Ben, what should we do here?
+I looked at the original code from xf86-video-nv, and pclks is
+similarly unused there also, so, I'd vote for just picking up this
+patch.  I don't believe anyone has the knowledge+hw anymore to mess
+with it in any other way.
 
+Ben.
 
-On 12/10/2019 3:30 PM, Florian Fainelli wrote:
-> Hi all,
-> 
-> This patch series updates the Broadcom STB BIUCTRL register code to
-> support the latest and greatest chips (7255, 7216, 7211) and also fixes
-> the 7260A0 and B0 chips to use the correct tuning parameters.
-> 
-> Florian Fainelli (4):
->   soc: bcm: brcmstb: biuctrl: Tune 7260 BIU interface
->   soc: bcm: brcmstb: biuctrl: Tune interface for 7255 and 7216
->   soc: bcm: brcmstb: biuctrl: Update layout for A72 on 7211
->   soc: bcm: brcmstb: biuctrl: Update programming for 7211
-
-Series applied to drivers/next.
--- 
-Florian
+> -Daniel
+>
+> >       int found, mclk_extra, mclk_loop, cbs, m1, p1;
+> >       int mclk_freq, pclk_freq, nvclk_freq;
+> >       int us_m, us_n, us_p, crtc_drain_rate;
+> > @@ -69,7 +69,6 @@ nv04_calc_arb(struct nv_fifo_info *fifo, struct nv_sim_state *arb)
+> >       bpp = arb->bpp;
+> >       cbs = 128;
+> >
+> > -     pclks = 2;
+> >       nvclks = 10;
+> >       mclks = 13 + cas;
+> >       mclk_extra = 3;
+> > --
+> > 2.17.1
+> >
+>
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
+> _______________________________________________
+> Nouveau mailing list
+> Nouveau@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/nouveau
