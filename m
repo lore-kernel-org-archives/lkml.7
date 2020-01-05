@@ -2,135 +2,140 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F248BC33C8C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 18:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A46C5C33C9A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 18:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B552021582
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 18:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 752A021734
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 18:50:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="W4PEXBlL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbgAEScF (ORCPT
+        id S1726484AbgAESuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 13:32:05 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:47248 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbgAEScF (ORCPT
+        Sun, 5 Jan 2020 13:50:10 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:60488 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726092AbgAESuK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 13:32:05 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id AE2F01C21EA; Sun,  5 Jan 2020 19:32:02 +0100 (CET)
-Date:   Sun, 5 Jan 2020 19:32:02 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, tony@atomide.com, sre@kernel.org,
-        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
-        martin_rysavy@centrum.cz, agx@sigxcpu.org, lee.jones@linaro.org,
-        daniel.thompson@linaro.org, jingoohan1@gmail.com,
-        dri-devel@lists.freedesktop.org
-Cc:     tomi.valkeinen@ti.com, jjhiblot@ti.com, daniel.thompson@linaro.org
-Subject: LED backlight on Droid 4 and others
-Message-ID: <20200105183202.GA17784@duo.ucw.cz>
+        Sun, 5 Jan 2020 13:50:10 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 005Io5De175297;
+        Sun, 5 Jan 2020 18:50:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2019-08-05; bh=gsncbubOefzMjpNxvtBbqDd4IlCJMaQw8LhlLqFhzcI=;
+ b=W4PEXBlLF5EqhZSLWgUcQxAW4CD98pPiwzxNwu6g2e/zOsZ4X5NVfB4uTAZYvQYqlvP3
+ c/m9llSbc1NfwVrEdlX3D+1sZDqmHVvDz7aaw73/+5JcMj+tbTgwxbuevvryMVX8x5ut
+ lJzG78VYSENTivkNooudU+jXTRQGOAYg75FhBvsQhyZgDdYtf/5e2hmEdBwJI0zaw1rQ
+ VZiLfS4BREJ6QotsDd0fLbAfGqWKW5ERo3KHNb6oRaiQEpyaRyGiuG9ERJN8gyLLHdRo
+ 92uwUr3q12DSPGRjMpum7xtbeCz9gZPcR6lijnM/86g5TGYvae3n7SnzOE9c9QXYJuUN tA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2xakbqbgsm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 05 Jan 2020 18:50:05 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 005InL23144648;
+        Sun, 5 Jan 2020 18:50:05 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2xb4uypsuf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 05 Jan 2020 18:50:04 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 005Io4Q3010320;
+        Sun, 5 Jan 2020 18:50:04 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 05 Jan 2020 10:50:03 -0800
+Date:   Sun, 5 Jan 2020 21:49:53 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     kbuild@lists.01.org,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc:     kbuild-all@lists.01.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bhelgaas@google.com,
+        rgummal@xilinx.com,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: Re: [PATCH 2/2] PCI: Versal CPM: Add support for Versal CPM Root
+ Port driver
+Message-ID: <20200105184953.GF3889@kadam>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1576842072-32027-3-git-send-email-bharat.kumar.gogada@xilinx.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9491 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001050173
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9491 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001050173
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Bharat,
 
---pf9I7BMVVzbSWLtt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you for the patch! Perhaps something to improve:
 
-Hi!
+url:    https://github.com/0day-ci/linux/commits/Bharat-Kumar-Gogada/Adding-support-for-versal-CPM-as-Root-Port-driver/20191223-193219
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
 
-It would be good to get LED backlight to work in clean way for 5.6
-kernel.
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-As far as I can see, these are neccessary (but not enough; it does not
-work for me): lm3532 changes to register LED with of node, plus device
-tree changes for droid 4, and these generic changes:
+New smatch warnings:
+drivers/pci/controller/pcie-xilinx-cpm.c:330 xilinx_cpm_pcie_init_irq_domain() warn: passing zero to 'PTR_ERR'
 
-commit d457d0c97d6d55fe3e62633791ac05d289a37d2e
-Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Date:   Thu Oct 3 10:28:12 2019 +0200
+Old smatch warnings:
+drivers/pci/controller/pcie-xilinx-cpm.c:338 xilinx_cpm_pcie_init_irq_domain() warn: passing zero to 'PTR_ERR'
 
-    backlight: add led-backlight driver
-   =20
-    This patch adds a led-backlight driver (led_bl), which is similar to
-    pwm_bl except the driver uses a LED class driver to adjust the
-    brightness in the HW. Multiple LEDs can be used for a single backlight.
-   =20
-    Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-    Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-    Acked-by: Pavel Machek <pavel@ucw.cz>
-    Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+# https://github.com/0day-ci/linux/commit/f107713acb796e598f16a23b33af74fa382921b2
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout f107713acb796e598f16a23b33af74fa382921b2
+vim +/PTR_ERR +330 drivers/pci/controller/pcie-xilinx-cpm.c
 
-commit 44b7adbf0b07904e4198ae1d0a763917d1c68a23
-Author: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Date:   Thu Oct 3 10:28:10 2019 +0200
+f107713acb796e Bharat Kumar Gogada 2019-12-20  320  static int xilinx_cpm_pcie_init_irq_domain(struct xilinx_cpm_pcie_port *port)
+f107713acb796e Bharat Kumar Gogada 2019-12-20  321  {
+f107713acb796e Bharat Kumar Gogada 2019-12-20  322  	struct device *dev = port->dev;
+f107713acb796e Bharat Kumar Gogada 2019-12-20  323  	struct device_node *node = dev->of_node;
+f107713acb796e Bharat Kumar Gogada 2019-12-20  324  	struct device_node *pcie_intc_node;
+f107713acb796e Bharat Kumar Gogada 2019-12-20  325  
+f107713acb796e Bharat Kumar Gogada 2019-12-20  326  	/* Setup INTx */
+f107713acb796e Bharat Kumar Gogada 2019-12-20  327  	pcie_intc_node = of_get_next_child(node, NULL);
+f107713acb796e Bharat Kumar Gogada 2019-12-20  328  	if (!pcie_intc_node) {
+                                                            ^^^^^^^^^^^^^^^
 
-    leds: Add managed API to get a LED from a device driver
-   =20
-    If the LED is acquired by a consumer device with devm_led_get(), it is
-    automatically released when the device is detached.
-   =20
-    Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-    Acked-by: Pavel Machek <pavel@ucw.cz>
-    Signed-off-by: Pavel <pavel@ucw.cz>
+f107713acb796e Bharat Kumar Gogada 2019-12-20  329  		dev_err(dev, "No PCIe Intc node found\n");
+f107713acb796e Bharat Kumar Gogada 2019-12-20 @330  		return PTR_ERR(pcie_intc_node);
+                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(This means success).
 
-commit 93b98c570d7f898063ab6204e1b3950a3335dd12
-Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Date:   Thu Oct 3 10:28:09 2019 +0200
+f107713acb796e Bharat Kumar Gogada 2019-12-20  331  	}
+f107713acb796e Bharat Kumar Gogada 2019-12-20  332  
+f107713acb796e Bharat Kumar Gogada 2019-12-20  333  	port->leg_domain = irq_domain_add_linear(pcie_intc_node, INTX_NUM,
+f107713acb796e Bharat Kumar Gogada 2019-12-20  334  						 &intx_domain_ops,
+f107713acb796e Bharat Kumar Gogada 2019-12-20  335  						 port);
+f107713acb796e Bharat Kumar Gogada 2019-12-20  336  	if (!port->leg_domain) {
+f107713acb796e Bharat Kumar Gogada 2019-12-20  337  		dev_err(dev, "Failed to get a INTx IRQ domain\n");
+f107713acb796e Bharat Kumar Gogada 2019-12-20  338  		return PTR_ERR(port->leg_domain);
+f107713acb796e Bharat Kumar Gogada 2019-12-20  339  	}
+f107713acb796e Bharat Kumar Gogada 2019-12-20  340  
+f107713acb796e Bharat Kumar Gogada 2019-12-20  341  	return 0;
+f107713acb796e Bharat Kumar Gogada 2019-12-20  342  }
 
-    leds: Add of_led_get() and led_put()
-   =20
-    This patch adds basic support for a kernel driver to get a LED device.
-    This will be used by the led-backlight driver.
-   =20
-    Only OF version is implemented for now, and the behavior is similar to
-    PWM's of_pwm_get() and pwm_put().
-   =20
-    Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-    Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-    Acked-by: Pavel Machek <pavel@ucw.cz>
-    Signed-off-by: Pavel <pavel@ucw.cz>
-
-[If you have an idea what else is needed, it would be welcome; it
-works for me in development tree but not in tree I'd like to
-upstream.]
-
-Lee, would you be willing to take "backlight: add led-backlight
-driver"? Would it help if I got "leds: Add managed API to get a LED
-=66rom a device driver" and "leds: Add of_led_get() and led_put()" into
-for_next tree of the LED subsystem?
-
-It is kind of important as, well, phone without screen looks pretty
-much dead, and same issue hits Droid 4 and Librem 5 phones at least...
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---pf9I7BMVVzbSWLtt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXhIroQAKCRAw5/Bqldv6
-8qprAJ90Q8brwIbYFi2ax/hmdk3CLdmWuwCfX3POM4PZoSAPnOvVbdh+jOO7cfI=
-=sBIE
------END PGP SIGNATURE-----
-
---pf9I7BMVVzbSWLtt--
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
