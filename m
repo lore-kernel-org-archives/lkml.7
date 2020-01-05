@@ -2,103 +2,135 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E77FC33C8C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 10:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8163C33C9A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 10:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30A47207FD
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 10:43:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C7df1BCt"
+	by mail.kernel.org (Postfix) with ESMTP id 877E3207FD
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 10:45:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgAEKnA (ORCPT
+        id S1726358AbgAEKpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 05:43:00 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51951 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725930AbgAEKnA (ORCPT
+        Sun, 5 Jan 2020 05:45:07 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35066 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgAEKpH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 05:43:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578220977;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BRbZ0RjIa8H/cOxd2x24HFOzfU7e/RH05WrdITWM4vc=;
-        b=C7df1BCtGqUInDjvodrgqMplmEJCuUR8w0GkNZlueClXKyUlKiK576HyQlvHFXzoVNzif4
-        DPUB23ePf0QZMvnAi1jtRNPXyolF53eDkAVKe29OJ5zASRIEV7+2xZ6dVSb6l2cdKd3Mph
-        630Y68RzH2awrMkNTkzHUmzeHXlSkvk=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-307-q9fdW6aaPeSh3lERlMIE-w-1; Sun, 05 Jan 2020 05:42:56 -0500
-X-MC-Unique: q9fdW6aaPeSh3lERlMIE-w-1
-Received: by mail-qt1-f200.google.com with SMTP id p12so32396036qtu.6
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jan 2020 02:42:56 -0800 (PST)
+        Sun, 5 Jan 2020 05:45:07 -0500
+Received: by mail-ed1-f68.google.com with SMTP id f8so1595615edv.2;
+        Sun, 05 Jan 2020 02:45:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=BRbZ0RjIa8H/cOxd2x24HFOzfU7e/RH05WrdITWM4vc=;
-        b=FWd00FnSpWqholdOxKJ3sq1Pr+scCopCu2wga5YsO9iCOxSik5/mIQhp7ZO+tYPgjy
-         MaF7NHjL8A7s4p9rzNUxs9n1xF5O2TD+wmiTEeDDYEs4F04mlUEj3yCuP8R4S0ioDbDP
-         gEGGE52qikoQYrdYkhHcktPyE8w094nJAUcIqlE/tekDmJAYGZyw9/QCDSjvx6Zs/wqo
-         MgqoHGKWo/yAFOtdQo4VNQk17u5DkdObaBObyTq7gnFF/rIcAljA8a59suOVadc7zfJ1
-         RyY50e/AGZvLgSOGF4t2gyn2naFXHzb9d6JLeOc+XDJsQvNlvQyn5tuNhDjJkoQven2M
-         4M8w==
-X-Gm-Message-State: APjAAAXPRpyqye8VlYRpVmYoNzF3YZjhFrMWd+0saHYJ/UiF6ipiLHT2
-        9W7CnuBbx60nl/eTPVRFGZ4PwtWOwPDSfmNYWO4A6FlcwKPQrhmymUNgxSxrgTCabGhjhud6J/S
-        Sra5of3nDRejsY5B485SZq/dU
-X-Received: by 2002:ac8:43d0:: with SMTP id w16mr72765883qtn.43.1578220975920;
-        Sun, 05 Jan 2020 02:42:55 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxj37eEGp0vK5+GAdvI9b+oNDJsVwzEDoaTsQeftbJEGASoWKbu6C/R5mfmWJzInC+HeiO7bA==
-X-Received: by 2002:ac8:43d0:: with SMTP id w16mr72765874qtn.43.1578220975732;
-        Sun, 05 Jan 2020 02:42:55 -0800 (PST)
-Received: from redhat.com (bzq-79-183-34-164.red.bezeqint.net. [79.183.34.164])
-        by smtp.gmail.com with ESMTPSA id u7sm18701159qtg.13.2020.01.05.02.42.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jan 2020 02:42:54 -0800 (PST)
-Date:   Sun, 5 Jan 2020 05:42:49 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     "Liu, Jiang" <gerry@linux.alibaba.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        Zha Bin <zhabin@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org, slp@redhat.com,
-        virtio-dev@lists.oasis-open.org, jing2.liu@intel.com,
-        chao.p.peng@intel.com
-Subject: Re: [PATCH v1 2/2] virtio-mmio: add features for virtio-mmio
- specification version 3
-Message-ID: <20200105054142-mutt-send-email-mst@kernel.org>
-References: <cover.1577240905.git.zhabin@linux.alibaba.com>
- <a11d4c616158c9fb1ca4575ca0530b2e17b952fa.1577240905.git.zhabin@linux.alibaba.com>
- <229e689d-10f1-2bfb-c393-14dfa9c78971@redhat.com>
- <0460F92A-3DF6-4F7A-903B-6434555577CC@linux.alibaba.com>
- <f8b46502-a5a5-c5c6-88df-101dbfd02fda@redhat.com>
- <56703BDA-B7AE-4656-8061-85FD1A130597@linux.alibaba.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8ax7Bi05vgrJmzngf+xtOFDsv5kALe+w7MknchjX4Js=;
+        b=jfjJ72gUCzGQSVsKpwC18tjNR0thm+bVi0vJ659Am1E3HZrD0MDg9H210eoloZHawg
+         Q2NBgN2+nLx2z58apQVVx38cZrSzgp6TBV5NiK4cu7LQ354nLkOXZmv+iHaEmWtutikc
+         SnmWE/pqnupASOymwQVnApJhibVOsUmrrKcV6bi4eBZhF47nkJKFTetbjlLQMKbEO6p0
+         U+42eRsdzgsureVOlYFWEal3Qn3USeqolGk9yLbF6HeUA3QUp9YPyTqscbTKY3EcKVSn
+         vHrUYKwPf/9D9C0StgNcSJ5H0puy4qdGek83fqXTiwgyqfjTy3lqDFY63PTmv9lLN7kO
+         WFaQ==
+X-Gm-Message-State: APjAAAWlGOBGkromih4SLnVj+FyGJgzmKK/pw/9J1ndqiVlFhb3Q02zn
+        Iy1nDUm6MitJwWd0lO7F1ITia2aqlZg=
+X-Google-Smtp-Source: APXvYqzJUsUV6CQ30dQsAN3uPqR7MLwvlIhoESVQMxtXze1aDmwPaBuVacFCKnyZ3mmsoR9wPywczw==
+X-Received: by 2002:a05:6402:2c3:: with SMTP id b3mr99882659edx.207.1578221105028;
+        Sun, 05 Jan 2020 02:45:05 -0800 (PST)
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com. [209.85.221.44])
+        by smtp.gmail.com with ESMTPSA id qc1sm5909075ejb.49.2020.01.05.02.45.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Jan 2020 02:45:04 -0800 (PST)
+Received: by mail-wr1-f44.google.com with SMTP id y11so46490698wrt.6;
+        Sun, 05 Jan 2020 02:45:04 -0800 (PST)
+X-Received: by 2002:a5d:6b88:: with SMTP id n8mr79214587wrx.288.1578221104126;
+ Sun, 05 Jan 2020 02:45:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <56703BDA-B7AE-4656-8061-85FD1A130597@linux.alibaba.com>
+References: <20200105012416.23296-1-samuel@sholland.org> <20200105012416.23296-5-samuel@sholland.org>
+ <CAGb2v67sphtqQiaFKNjOhRbWXmWpVestuSb89Wdjmp1Lc7dWMg@mail.gmail.com>
+In-Reply-To: <CAGb2v67sphtqQiaFKNjOhRbWXmWpVestuSb89Wdjmp1Lc7dWMg@mail.gmail.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Sun, 5 Jan 2020 18:44:52 +0800
+X-Gmail-Original-Message-ID: <CAGb2v648d2UFo81shetRfHENwW_f1O8stD_a6x6vu43TEpQ+2A@mail.gmail.com>
+Message-ID: <CAGb2v648d2UFo81shetRfHENwW_f1O8stD_a6x6vu43TEpQ+2A@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v2 4/9] power: supply: axp20x_ac_power: Add
+ wakeup control
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Oskari Lemmela <oskari@lemmela.net>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 09:16:19PM +0800, Liu, Jiang wrote:
-> > 2) The mask and unmask control is missed
-> > 
-> > 
-> >>  but the extension doesn’t support 3) because
-> >> we noticed that the Linux virtio subsystem doesn’t really make use of interrupt masking/unmasking.
+On Sun, Jan 5, 2020 at 6:24 PM Chen-Yu Tsai <wens@csie.org> wrote:
+>
+> On Sun, Jan 5, 2020 at 9:24 AM Samuel Holland <samuel@sholland.org> wrote:
+> >
+> > The AC power supply input can be used as a wakeup source. Hook up the
+> > ACIN_PLUGIN IRQ to trigger wakeup based on userspace configuration.
+> >
+> > To do this, we must remember the list of IRQs for the life of the
+> > device. To know how much space to allocate for the flexible array
+> > member, we switch from using a NULL sentinel to using an array length.
+> >
+> > Because we now depend on the specific order of the IRQs (we assume
+> > ACIN_PLUGIN is first and always present), failing to acquire an IRQ
+> > during probe must be a fatal error.
+> >
+> > To avoid spuriously waking up the system when the AC power supply is
+> > not configured as a wakeup source, we must explicitly disable all non-
+> > wake IRQs during system suspend. This is because the SoC's NMI input is
+> > shared among all IRQs on the AXP PMIC. Due to the use of regmap-irq, the
+> > individual IRQs within the PMIC are nested threaded interrupts, and are
+> > therefore not automatically disabled during system suspend.
+> >
+> > The upshot is that if any other device within the MFD (such as the power
+> > key) is an enabled wakeup source, all enabled IRQs within the PMIC will
+> > cause wakeup. We still need to call enable_irq_wake() when we *do* want
+> > wakeup, in case those other wakeup sources on the PMIC are all disabled.
+> >
+> > Signed-off-by: Samuel Holland <samuel@sholland.org>
+> > ---
+> >  drivers/power/supply/axp20x_ac_power.c | 91 +++++++++++++++++++++-----
+> >  1 file changed, 74 insertions(+), 17 deletions(-)
+> >
+> > diff --git a/drivers/power/supply/axp20x_ac_power.c b/drivers/power/supply/axp20x_ac_power.c
+> > index bc2663cd47fa..177b5c1eee8f 100644
+> > --- a/drivers/power/supply/axp20x_ac_power.c
+> > +++ b/drivers/power/supply/axp20x_ac_power.c
 
-Linux uses masking/unmasking in order to migrate interrupts between
-CPUs.
+[...]
 
--- 
-MST
+> > @@ -284,12 +335,14 @@ static int axp20x_ac_power_probe(struct platform_device *pdev)
+> >                 return -EINVAL;
+> >         }
+> >
+> > -       power = devm_kzalloc(&pdev->dev, sizeof(*power), GFP_KERNEL);
+> > +       axp_data = of_device_get_match_data(&pdev->dev);
+> > +
+> > +       power = devm_kzalloc(&pdev->dev,
+> > +                            struct_size(power, irqs, axp_data->num_irq_names),
+> > +                            GFP_KERNEL);
+> >         if (!power)
+> >                 return -ENOMEM;
+> >
+> > -       axp_data = of_device_get_match_data(&pdev->dev);
+> > -
+>
+> This change doesn't seem related, nor is it needed.
 
+Nevermind, I see it.
+
+> >         if (axp_data->acin_adc) {
+> >                 power->acin_v = devm_iio_channel_get(&pdev->dev, "acin_v");
+> >                 if (IS_ERR(power->acin_v)) {
+
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
