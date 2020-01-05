@@ -2,97 +2,91 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9377C33C9A
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 21:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0F0C33C8C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 21:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B62E820866
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 21:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E6DB20866
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 21:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgAEVEx (ORCPT
+        id S1726955AbgAEVRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 16:04:53 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:38621 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726703AbgAEVEx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 16:04:53 -0500
-Received: from dread.disaster.area (pa49-180-68-255.pa.nsw.optusnet.com.au [49.180.68.255])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 5647043FEDD;
-        Mon,  6 Jan 2020 08:04:49 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1ioD4q-0005m1-CC; Mon, 06 Jan 2020 08:04:48 +1100
-Date:   Mon, 6 Jan 2020 08:04:48 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     yu kuai <yukuai3@huawei.com>
-Cc:     darrick.wong@oracle.com, bfoster@redhat.com, dchinner@redhat.com,
-        sandeen@sandeen.net, cmaiolino@redhat.com, hch@lst.de,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        zhengbin13@huawei.com, yi.zhang@huawei.com, houtao1@huawei.com
-Subject: Re: [PATCH 1/2] xfs: introduce xfs_bmap_split_da_extent
-Message-ID: <20200105210448.GB23128@dread.disaster.area>
-References: <20191226134721.43797-1-yukuai3@huawei.com>
- <20191226134721.43797-2-yukuai3@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191226134721.43797-2-yukuai3@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=sbdTpStuSq8iNQE8viVliQ==:117 a=sbdTpStuSq8iNQE8viVliQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
-        a=i0EeH86SAAAA:8 a=7-415B0cAAAA:8 a=Vn3VGTz9AK5qLcwCOF4A:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        Sun, 5 Jan 2020 16:17:01 -0500
+Received: from mx2.suse.de ([195.135.220.15]:50002 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726792AbgAEVRB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 16:17:01 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 89988AE07;
+        Sun,  5 Jan 2020 21:16:58 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id DBDB4E048B; Sun,  5 Jan 2020 22:16:56 +0100 (CET)
+Message-Id: <cover.1578257976.git.mkubecek@suse.cz>
+From:   Michal Kubecek <mkubecek@suse.cz>
+Subject: [PATCH net-next 0/3] ethtool: allow nesting of begin() and complete()
+ callbacks
+To:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
+        Francois Romieu <romieu@fr.zoreil.com>,
+        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Date:   Sun,  5 Jan 2020 22:16:56 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 09:47:20PM +0800, yu kuai wrote:
-> Add a new function xfs_bmap_split_da_extent to split a delalloc extent
-> into two delalloc extents.
-> 
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
-> ---
->  fs/xfs/libxfs/xfs_bmap.c | 26 ++++++++++++++++++++++++--
->  fs/xfs/libxfs/xfs_bmap.h |  1 +
->  2 files changed, 25 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-> index 4c2e046fbfad..8247054c1e2b 100644
-> --- a/fs/xfs/libxfs/xfs_bmap.c
-> +++ b/fs/xfs/libxfs/xfs_bmap.c
-> @@ -6117,7 +6117,7 @@ xfs_bmap_split_extent_at(
->  	/*
->  	 * Convert to a btree if necessary.
->  	 */
-> -	if (xfs_bmap_needs_btree(ip, whichfork)) {
-> +	if (tp && xfs_bmap_needs_btree(ip, whichfork)) {
->  		int tmp_logflags; /* partial log flag return val */
->  
->  		ASSERT(cur == NULL);
+The ethtool ioctl interface used to guarantee that ethtool_ops callbacks
+were always called in a block between calls to ->begin() and ->complete()
+(if these are defined) and that this whole block was executed with RTNL
+lock held:
 
-You can't use xfs_bmap_split_extent_at() to split delalloc extents
-just by avoiding transactional context.
+	rtnl_lock();
+	ops->begin();
+	/* other ethtool_ops calls */
+	ops->complete();
+	rtnl_unlock();
 
-delalloc extents only exist in the in-core extent list, not in the
-on-disk BMBT extent list. xfs_bmap_split_extent_at() is for splitting
-on-disk BMBT extents and, as such, it modifies the BMBT directly. It
-may not be obvious that the bmbt cursor holds a pointer to the
-transaction context, but it does and that's how we log all the
-modifications to the BMBT done via the generic btree code.
+This prevented any nesting or crossing of the begin-complete blocks.
+However, this is no longer guaranteed even for ioctl interface as at least
+ethtool_phys_id() releases RTNL lock while waiting for a timer. With the
+introduction of netlink ethtool interface, the begin-complete pairs are
+naturally nested e.g. when a request triggers a netlink notification.
 
-IOWs, if the inode extent list is in btree format, this code will
-not work correctly.
+Fortunately, only minority of networking drivers implements begin() and
+complete() callbacks and most of those that do, fall into three groups:
 
-Cheers,
+  - wrappers for pm_runtime_get_sync() and pm_runtime_put()
+  - wrappers for clk_prepare_enable() and clk_disable_unprepare()
+  - begin() checks netif_running() (fails if false), no complete()
 
-Dave.
+First two have their own refcounting, third is safe w.r.t. nesting of the
+blocks.
+
+Only three in-tree networking drivers need an update to deal with nesting
+of begin() and complete() calls: via-velocity and epic100 perform resume
+and suspend on their own and wil6210 completely serializes the calls using
+its own mutex (which would lead to a deadlock if a request request
+triggered a netlink notification). The series addresses these problems.
+
+
+Michal Kubecek (3):
+  wil6210: get rid of begin() and complete() ethtool_ops
+  via-velocity: allow nesting of ethtool_ops begin() and complete()
+  epic100: allow nesting of ethtool_ops begin() and complete()
+
+ drivers/net/ethernet/smsc/epic100.c        |  7 +++-
+ drivers/net/ethernet/via/via-velocity.c    | 14 +++++--
+ drivers/net/ethernet/via/via-velocity.h    |  1 +
+ drivers/net/wireless/ath/wil6210/ethtool.c | 43 ++++++++--------------
+ 4 files changed, 32 insertions(+), 33 deletions(-)
+
 -- 
-Dave Chinner
-david@fromorbit.com
+2.24.1
+
