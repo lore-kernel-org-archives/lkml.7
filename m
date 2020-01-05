@@ -2,69 +2,72 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB732C00523
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 07:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B37C33C99
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 07:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8B8521775
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 07:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B871421775
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 07:26:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578209170;
+	bh=rPfglwdJqeEZXf5vWDd4ttjNMd8Ue3VnVSRMo5DzdRY=;
+	h=In-Reply-To:References:Cc:Subject:To:From:Date:List-ID:From;
+	b=JPnCSVtDRMYgNv3i9CC9cZNfdBpDcxl+N09wt4yAQlYm8UuD36K3LXLk60nJbIUO8
+	 rVq0pyKr1az+Ae1ho1RNFUsjFbvPBFdVQprgOczyComZoroKGwcjT+2Rs+pGFitT2v
+	 MYcrSY878f/j6Mv8ClmzHeG6ZPdJJ/PdoeQsa7zs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgAEHWS (ORCPT
+        id S1726188AbgAEH0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 02:22:18 -0500
-Received: from mga03.intel.com ([134.134.136.65]:54250 "EHLO mga03.intel.com"
+        Sun, 5 Jan 2020 02:26:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbgAEHWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 02:22:17 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jan 2020 23:22:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,397,1571727600"; 
-   d="scan'208";a="221987639"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 04 Jan 2020 23:22:05 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1io0Ef-000GI7-0f; Sun, 05 Jan 2020 15:22:05 +0800
-Date:   Sun, 5 Jan 2020 15:21:42 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Palmer Dabbelt <palmer@sifive.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Michal Simek <monstr@monstr.eu>
-Subject: drivers/pci/controller/dwc/pci-exynos.c:95:1-3: WARNING:
- PTR_ERR_OR_ZERO can be used
-Message-ID: <202001051538.1jMWp6L9%lkp@intel.com>
+        id S1725535AbgAEH0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 02:26:08 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE870206F0;
+        Sun,  5 Jan 2020 07:26:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578209168;
+        bh=rPfglwdJqeEZXf5vWDd4ttjNMd8Ue3VnVSRMo5DzdRY=;
+        h=In-Reply-To:References:Cc:Subject:To:From:Date:From;
+        b=ttgqc2m0Qz/o5uam9J+3rXFoKS8mjVr1eSbGrmzxfzgOYZgJW06bRTXB/C3o2cyOn
+         9WBYEoOOeCgEfBMinI6Po5t3rVP98WSB0uxS9cDH7YsRM15xqwamrgseiudF2oHHi9
+         ntYeMg660I7UQ1he4bnrJUI1AZvCEvM4VEvAjTh0=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1577428714-17766-2-git-send-email-tdas@codeaurora.org>
+References: <1577428714-17766-1-git-send-email-tdas@codeaurora.org> <1577428714-17766-2-git-send-email-tdas@codeaurora.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v3 1/6] dt-bindings: clock: Add YAML schemas for the QCOM GPUCC clock bindings
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Sat, 04 Jan 2020 23:26:07 -0800
+Message-Id: <20200105072607.EE870206F0@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   36487907f34131c7e3df5b1e6b30b4e3dfcdc0af
-commit: 191d6f91f283dfb007499bb8529d54c3ac434bd7 PCI: Remove PCI_MSI_IRQ_DOMAIN architecture whitelist
-date:   6 weeks ago
+Quoting Taniya Das (2019-12-26 22:38:29)
+> The GPUCC clock provider have a bunch of generic properties that
+> are needed in a device tree. Add a YAML schemas for those.
+>=20
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+Applied to clk-next
 
-
-coccinelle warnings: (new ones prefixed by >>)
-
->> drivers/pci/controller/dwc/pci-exynos.c:95:1-3: WARNING: PTR_ERR_OR_ZERO can be used
-
-Please review and possibly fold the followup patch.
-
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
