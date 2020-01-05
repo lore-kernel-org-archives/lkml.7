@@ -2,127 +2,89 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC6CC32767
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 01:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F164C33C99
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 01:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64087215A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 01:25:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="Yz/15x6b";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nhkAjP3W"
+	by mail.kernel.org (Postfix) with ESMTP id 66A8122B48
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 01:36:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbgAEBZB (ORCPT
+        id S1726391AbgAEBgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 20:25:01 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:38875 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726205AbgAEBYS (ORCPT
+        Sat, 4 Jan 2020 20:36:52 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:34574 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbgAEBgw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 20:24:18 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 4A79C21B6A;
-        Sat,  4 Jan 2020 20:24:17 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Sat, 04 Jan 2020 20:24:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=GKK6wqE4U1lTliVglqZDNGDO+1
-        0THmTKZg0GRYtue70=; b=Yz/15x6bvTrs+8MyRAf6WIx/31jwMPNCmSpJv+UFxI
-        O1VQsQW22vxWmN1dVGOPYf2cztd0iMQUqDYp2cMUldC7bys7IgDUb/pE5VZdpdAh
-        dOs11XzoLpL2ews0EuE4kMEF+cjZEsG22YJpeyUAS1Gx7w13u4jtotVOxJjPFyej
-        cKh5YV80Li8isHROhBxv5g0v5K105YYjS1fL4SyN8uiPV9Z+MipsPHXMqQMYGGaW
-        SiPk4JS7jpWztSqyploZBPDfraxQmDBUHDMkc0r3YQphGuhyUiiI5s4gaXi7LuCK
-        8O4GTg9gFz0vA15rV0G2AWFn0490N6VzSnN9LMsrin7w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=GKK6wqE4U1lTliVgl
-        qZDNGDO+10THmTKZg0GRYtue70=; b=nhkAjP3WTI3+wuu1os8CTZAxHbz9OqDDK
-        Igi9BZlfz/V5q43owWwXZPpYahvBfyopwkRry6vpC0MjTtYj1o086ScHoHHvLOsT
-        uJhLn5RRGHsLWkqJxW3b0aZ5bPRgqm+kXCHHfKmc7JoXNeoS2bUoJOnOPZeLgWuJ
-        EWTptDNTSYZkRu0PX72+AFp5EmeU9ntzKEzH1i0KuXBr+EsiBmh+AkGz7BEjHRS3
-        0qzbRy0KHGEOL8T3yzOyUQAJEKjESPhOPJP/qcEkLZKZyQOYIz3L+N/gEot9Olg6
-        55llBVraOll/ZTuN5MPxKwg5ChjpkyhbHWLKtD/Uxr+p6bGn455gA==
-X-ME-Sender: <xms:wDoRXv3MPrtKB6dgPteitwwoMHHxvvSmsNIEGaoZITAjjcLGIQcv-w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdegiedgfeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgvlhcu
-    jfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkphepje
-    dtrddufeehrddugeekrdduhedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghmuhgv
-    lhesshhhohhllhgrnhgurdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:wDoRXhAeDaGg_SDgRU--beqAwqvd0BZrLJBeQExgckxmzBmxh1loAQ>
-    <xmx:wDoRXmped2Wrg1Pzl_um9F5bhsBREE9f4DSW3HQgcnQ_Ic0zkaZ7Kg>
-    <xmx:wDoRXu_rOFhwIz1f8_hxs0orq7KM4u6xwEHbpDbsBBJB1VnKY8PTaQ>
-    <xmx:wToRXlvCI7zTeQTxhlv-uSfv2bESCx2gxbnFgIe1T94OTNe7-4KxNg>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id AE0438005C;
-        Sat,  4 Jan 2020 20:24:15 -0500 (EST)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Chen-Yu Tsai <wens@csie.org>, Sebastian Reichel <sre@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Oskari Lemmela <oskari@lemmela.net>,
-        Quentin Schulz <quentin.schulz@bootlin.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v2 0/9] X-Powers Power Supply Improvements
-Date:   Sat,  4 Jan 2020 19:24:07 -0600
-Message-Id: <20200105012416.23296-1-samuel@sholland.org>
-X-Mailer: git-send-email 2.23.0
+        Sat, 4 Jan 2020 20:36:52 -0500
+Received: from static-50-53-33-191.bvtn.or.frontiernet.net ([50.53.33.191] helo=[192.168.192.153])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <john.johansen@canonical.com>)
+        id 1inuqY-000172-Jo; Sun, 05 Jan 2020 01:36:50 +0000
+From:   John Johansen <john.johansen@canonical.com>
+Subject: [GIT PULL] apparmor bug fixes for v5.5-rc5
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKLM <linux-kernel@vger.kernel.org>,
+        "open list:SECURITY SUBSYSTEM" 
+        <linux-security-module@vger.kernel.org>
+Organization: Canonical
+Message-ID: <cbec7335-39b8-6b7d-402b-a6dd467b492b@canonical.com>
+Date:   Sat, 4 Jan 2020 17:36:48 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds some improvements to the axp20x* power supply drivers
-to better support suspend/resume and use on mobile devices.
+Hi Linus,
 
-The first two patches fix bugs I found while testing the ONLINE control
-added in later patches.
+Can you please pull the following bug fixes for apparmor
 
-Patches 3 and 7 allow userspace to take the power supplies offline.
-Patches 4 and 8 allow userspace to control the wakeup behavior.
+Thanks!
 
-Patch 9 avoids polling USB VBUS presence when possible. While working on
-the RSB driver, I was seeing ~50 transfers per second, while idle and
-tracked it down to this VBUS polling (20 reads/second). The polling
-often caused the CPU to clock up and back down, which triggered the
-remaining transfers (changes to the CPU voltage).
+- John
 
-Unfortunately, I don't see a way to avoid the polling when running on
-battery (where it matters most), other than to move the polling back to
-the USB PHY driver.
 
-Changes since v1:
- - Add patches 1-2
- - Shift value properly in calls to regmap_update_bits (3, 7)
- - Use #ifdef instead of #if to avoid -Wundef warnings (4, 8)
- - Poll once after an IRQ, instead of setting power->online in the IRQ (9)
- - Poll once on resume, in case the state changed during suspend (9)
+The following changes since commit fd6988496e79a6a4bdb514a4655d2920209eb85d:
 
-Samuel Holland (9):
-  mfd: axp20x: Mark AXP20X_VBUS_IPSOUT_MGMT as volatile
-  power: supply: axp20x_ac_power: Fix reporting online status
-  power: supply: axp20x_ac_power: Allow offlining
-  power: supply: axp20x_ac_power: Add wakeup control
-  power: supply: axp20x_usb_power: Remove unused device_node
-  power: supply: axp20x_usb_power: Use a match structure
-  power: supply: axp20x_usb_power: Allow offlining
-  power: supply: axp20x_usb_power: Add wakeup control
-  power: supply: axp20x_usb_power: Only poll while offline
+  Linux 5.5-rc4 (2019-12-29 15:29:16 -0800)
 
- drivers/mfd/axp20x.c                    |   2 +-
- drivers/power/supply/axp20x_ac_power.c  | 131 +++++++++++---
- drivers/power/supply/axp20x_usb_power.c | 220 ++++++++++++++++++------
- 3 files changed, 276 insertions(+), 77 deletions(-)
+are available in the Git repository at:
 
--- 
-2.23.0
+  git://git.kernel.org/pub/scm/linux/kernel/git/jj/linux-apparmor tags/apparmor-pr-2020-01-04
 
+for you to fetch changes up to 8c62ed27a12c00e3db1c9f04bc0f272bdbb06734:
+
+  apparmor: fix aa_xattrs_match() may sleep while holding a RCU lock (2020-01-04 15:56:44 -0800)
+
+----------------------------------------------------------------
++ Bug fixes
+  - performance regression: only get a label reference if the fast
+    path check fails
+  - fix aa_xattrs_match() may sleep while holding a RCU lock
+  - fix bind mounts aborting with -ENOMEM
+
+----------------------------------------------------------------
+John Johansen (2):
+      apparmor: only get a label reference if the fast path check fails
+      apparmor: fix aa_xattrs_match() may sleep while holding a RCU lock
+
+Patrick Steinhardt (1):
+      apparmor: fix bind mounts aborting with -ENOMEM
+
+ security/apparmor/apparmorfs.c |  2 +-
+ security/apparmor/domain.c     | 82 ++++++++++++++++++++++--------------------
+ security/apparmor/file.c       | 12 ++++---
+ security/apparmor/mount.c      |  2 +-
+ security/apparmor/policy.c     |  4 +--
+ 5 files changed, 55 insertions(+), 47 deletions(-)
