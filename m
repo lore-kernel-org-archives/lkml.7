@@ -2,92 +2,118 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFD0C33C9A
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 18:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A55CC33C8C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 18:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FDD320866
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 18:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D511321734
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 18:28:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578248912;
+	bh=4x9vC91olmd60ycX0+AK25GUmB4k/f+cxqTH4tCuww8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q1k1ShHw/yWQLtxbSmMjZoNAgRDNRDd/wtOIk02Yi7vyHo3gTCuIGzn8v/fbPQchc
+	 VCYN2Ure8v0HPNlmoCKYx8ZboKMJHGW/9URaJLgc+6xAUyzmAWYj8xjv7KNja4Q9Jf
+	 2kTJFosLQH/K4QIW0rkXQcxCiiwOnQTkCYgel7q4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgAESVh convert rfc822-to-8bit (ORCPT
+        id S1726478AbgAES2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 13:21:37 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:35127 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbgAESVh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 13:21:37 -0500
-Received: by mail-yw1-f67.google.com with SMTP id i190so21004086ywc.2;
-        Sun, 05 Jan 2020 10:21:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jNzJ3vYZFDDHXr/kiJxYUtm1zXNuNEkJhwKO6m42Q6s=;
-        b=YPlPhytVCs9Ft/5LaBV3aNAetAJSiiyZCbWPVuvdr+SueGolrf4XbcivcT13PpcrLO
-         DEgYEwkAmZ7oZkvGwShfhdz5Kohk02Yj4DAquIvu6/dt+tVrUPUtIWcAnWxkDkBIXOZk
-         z1RDG4NKpVl0KjEmgoB6RgiyxpBsk51AxPbeOCa0YeH8rjRYiv7s9i/XlTJopcH4xp9s
-         Y007i0YF6cEjfmZsTFLkr3Y9q65c5vP7y6m14Nw82bFznYrnTRapjg4tNVhj+cv0mHoX
-         mj02ycMpe1VcgWAYtv4/8e9HRRN3iVspKXVRs2FXXOOuAVNljf5DTcs7Vh9WitY6m3G3
-         1NOg==
-X-Gm-Message-State: APjAAAWt8wPguPRP0Ck6TGvRO5LXkBkE3v+CfQbNmRR+VMTzLSleA+ua
-        j5ZzlNiBaQfylOsmgsOhxBiiIqK6iAlLzjCgJoU=
-X-Google-Smtp-Source: APXvYqxH6E81jEUbngs/X8LErBL0R80Bko2OwV/g14TkQXsl6AskiJkCagXqI9aFnmfxjhV2K2rsGZj7zbN4V6dajdo=
-X-Received: by 2002:a81:bb41:: with SMTP id a1mr71418542ywl.253.1578248495867;
- Sun, 05 Jan 2020 10:21:35 -0800 (PST)
+        Sun, 5 Jan 2020 13:28:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726368AbgAES2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 13:28:30 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF62720866;
+        Sun,  5 Jan 2020 18:28:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578248909;
+        bh=4x9vC91olmd60ycX0+AK25GUmB4k/f+cxqTH4tCuww8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ExslCVI9aoGZEoasCewn+2z26EUJkgrLLXM4mFo8p8VKKO7R4I9kE/qBe2X93uG7+
+         0bJdwQHlBwBT4aWDlPxzeDFTmH9rYUI0dEUnKrqJpPnb7WMtNDTnVhzLw4bSjv80gp
+         bAcvqQfIGqLI7Rr/sj2DMWDyXkPLl41LK1Aghwio=
+Date:   Sun, 5 Jan 2020 19:28:26 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     =?utf-8?B?QW5kcsOp?= Przywara <andre.przywara@arm.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH 3/3] ARM: dts: sun8i: R40: Add SPI controllers nodes and
+ pinmuxes
+Message-ID: <20200105182826.rnscz5d5pbtb72g2@gilmour.lan>
+References: <20200102012657.9278-1-andre.przywara@arm.com>
+ <20200102012657.9278-4-andre.przywara@arm.com>
+ <20200102095711.dkd2cnbyitz6mvyx@gilmour.lan>
+ <20200102104158.06d9baa0@donnerap.cambridge.arm.com>
+ <20200104100422.z7iz4jiyj7kdvbtw@gilmour.lan>
+ <42aabc62-4885-38fc-a6e5-0f057843d364@arm.com>
 MIME-Version: 1.0
-References: <CAMx4oe38RytiyqWfYb=So8iC6N=8nebqy3DsekiT7A5DGjpe+w@mail.gmail.com>
- <CAMx4oe2JKTsOKg3P324PYRH=0ajOVDaXTLa7p=16Fo9fGiQSpQ@mail.gmail.com>
-In-Reply-To: <CAMx4oe2JKTsOKg3P324PYRH=0ajOVDaXTLa7p=16Fo9fGiQSpQ@mail.gmail.com>
-From:   Akemi Yagi <toracat@elrepo.org>
-Date:   Sun, 5 Jan 2020 10:21:25 -0800
-Message-ID: <CABA31DrtCwUj-wzPP+dwUP+=jTOHnt8eoS+d+N2yfAn22W19vA@mail.gmail.com>
-Subject: Re: 4.9.208 regression in perf building
-To:     Gordan Bobic <gordan@redsleeve.org>
-Cc:     stable@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ElRepo <contact@elrepo.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <42aabc62-4885-38fc-a6e5-0f057843d364@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding Arnaldo and Jiri to the CC list.
-
-On Sun, Jan 5, 2020 at 9:01 AM Gordan Bobic <gordan@redsleeve.org> wrote:
+On Sun, Jan 05, 2020 at 04:40:58PM +0000, Andr=E9 Przywara wrote:
+> On 04/01/2020 10:04, Maxime Ripard wrote:
+> >> But more importantly: what are the guidelines for using this tag? I
+> >> understand the desire to provide every possible pin description on
+> >> one hand, but wanting to avoid having *all of them* in *each* .dtb
+> >> on the other.
+> >
+> > Pin groups will take a lot of space in the dtb, and the DT parsing
+> > will take some measurable time,
 >
-> It looks like 4.9.208 introduces a build regression for perf:
+> Really? Where is that? In Linux, or in U-Boot, possibly with the caches
+> off? I am just curious. AFAIK there are some inefficient algorithms in
+> libfdt (which trade performance for a smaller memory footprint), but I
+> thought those would be called only very rarely.
+
+The last time I measured it was in U-Boot (and for the FIT image, not
+an actual DT), but the parsing time for a FIT image with a kernel and
+DTB was around 100ms.
+
+(and adding the PSCI and simplefb nodes was in the same order of
+magnitude).
+
+Boot time was very sensitive, and I had to remove both.
+
+> >> And should there be a dtc command line option to ignore those tags,
+> >> or even to apply this tag (virtually) to every node?
+> >
+> > Most of the nodes are (reference) leaves in a DT though. Pretty much
+> > all the device nodes have no references pointing to them, just like
+> > most of the buses, the CPU nodes, etc. And I'm pretty sure you want to
+> > keep them :)
 >
-> make -f /builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/build/Makefile.build
-> dir=. obj=perf
-
->  -c -o builtin-report.o builtin-report.c
-> builtin-report.c: In function ‘report__setup_sample_type’:
-> builtin-report.c:296:6: error: ‘dwarf_callchain_users’ undeclared
-> (first use in this function)
->   if (dwarf_callchain_users) {
->       ^
-> builtin-report.c:296:6: note: each undeclared identifier is reported
-> only once for each function it appears in
-> mv: cannot stat ‘./.builtin-report.o.tmp’: No such file or directory
-> make[3]: *** [builtin-report.o] Error 1
-> make[2]: *** [perf-in.o] Error 2
-> make[1]: *** [sub-make] Error 2
-> make: *** [all] Error 2
+> Yeah, that was a New-Year's brain-fart of mine ;-)
 >
-> 4,9.207 works fine.
+> While I was changing the patch I figured that it gets quite lengthy.
+> Also looking at the a20.dtsi, I see that *all* pin groups have this tag
+> now. Wouldn't it be easier to introduce *one* tag that applies that to
+> all children of a node?
 
-The regression was caused by the following patch:
+I don't really know, I'm not sure the proliferation of tags would be a
+good thing either, and I'm not the dtc maintainer, so I don't really
+have a say in this :)
 
-https://lore.kernel.org/lkml/20191021133834.25998-7-acme@kernel.org/
+> Another thing I was wondering about: Would we gain something by not
+> compiling nodes which have status =3D "disabled"? This is mentioned as a
+> generic property in the DT spec, although it says there that the exact
+> meaning is device dependent. But it sound still worthwhile, especially
+> since we would avoid more pin groups to be compiled in.
 
-To fix this, 'dwarf_callchain_users' needs to be declared.
+I guess that would be good too, but the semantics are a bit different
+so we'd need a different tag.
 
-Akemi
+Maxime
