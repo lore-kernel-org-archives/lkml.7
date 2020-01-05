@@ -2,90 +2,109 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C80C32767
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 01:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 647CAC32767
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 01:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 711882064B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 01:17:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="uV+MIHBp"
+	by mail.kernel.org (Postfix) with ESMTP id 419FF2064B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 01:18:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgAEBRv (ORCPT
+        id S1726494AbgAEBSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 20:17:51 -0500
-Received: from mail-40132.protonmail.ch ([185.70.40.132]:52232 "EHLO
-        mail-40132.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbgAEBRu (ORCPT
+        Sat, 4 Jan 2020 20:18:46 -0500
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:8826 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726240AbgAEBSp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 20:17:50 -0500
-Date:   Sun, 05 Jan 2020 01:17:37 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=default; t=1578187067;
-        bh=7fJ4/nZMCgGkt3iClr7P8F3vEiULPha8P9RtGXfYdBU=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
-         Feedback-ID:From;
-        b=uV+MIHBp/mI+EySO45jrHGKkvGKmmosSrGf+9YVlvjrHmEZbA9GTf2NL6hwn7FgXX
-         acKecDt8Z0DNpVUI+cBY26z/PT66g71izcEfEi2YF5wEK0LwtfMDeVdLvjfG/9xI2R
-         i5iA/UbItI2fKiX1E5Gi8ItM48v5js4gxRonCyhE=
-To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-From:   atmgnd <atmgnd@protonmail.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>
-Reply-To: atmgnd <atmgnd@protonmail.com>
-Subject: Re: [PATCH] usb: missing parentheses in USE_NEW_SCHEME
-Message-ID: <1sQHSwRkA-KeDp45Cjv26EwcAgaa6a8jR82DI_6snZ1sEbX-2O0MwfUJcfidMO-j46WK4D1wBafzsUyQslEuGOpNOHaILyRaHF8V1AMlyV0=@protonmail.com>
-In-Reply-To: <HdXgMrky4rCGyM4q7eTsrfOB4yGZRUNwV9YSXBPh98r2UZeFzREQj35K60r-8Lf9LYVgVuKCcmQ2l7ihAD9DoqAdluQrA3zbQrF03VtNC-0=@protonmail.com>
-References: <ht4mtag8ZP-HKEhD0KkJhcFnVlOFV8N8eNjJVRD9pDkkLUNhmEo8_cL_sl7xy9mdajdH-T8J3TFQsjvoYQT61NFjQXy469Ed_BbBw_x4S1E=@protonmail.com>
- <20200104114603.GB1288021@kroah.com>
- <HdXgMrky4rCGyM4q7eTsrfOB4yGZRUNwV9YSXBPh98r2UZeFzREQj35K60r-8Lf9LYVgVuKCcmQ2l7ihAD9DoqAdluQrA3zbQrF03VtNC-0=@protonmail.com>
-Feedback-ID: py-oVO8Vt0vS1FKaKugS2_MTpFC3lKhHMurhoXPAalWk9Eh40Mo1lZOn2CI1vswSSKJBwBLYgn_VKFu9qW3csg==:Ext:ProtonMail
+        Sat, 4 Jan 2020 20:18:45 -0500
+Received: from pps.filterd (m0148663.ppops.net [127.0.0.1])
+        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0051IY29022683;
+        Sun, 5 Jan 2020 01:18:34 GMT
+Received: from g2t2352.austin.hpe.com (g2t2352.austin.hpe.com [15.233.44.25])
+        by mx0a-002e3701.pphosted.com with ESMTP id 2xb423rd00-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 05 Jan 2020 01:18:34 +0000
+Received: from g2t2360.austin.hpecorp.net (g2t2360.austin.hpecorp.net [16.196.225.135])
+        by g2t2352.austin.hpe.com (Postfix) with ESMTP id 926A4A7;
+        Sun,  5 Jan 2020 01:18:33 +0000 (UTC)
+Received: from blofly.tw.rdlabs.hpecorp.net (blofly.tw.rdlabs.hpecorp.net [15.119.208.30])
+        by g2t2360.austin.hpecorp.net (Postfix) with ESMTP id 6412736;
+        Sun,  5 Jan 2020 01:18:31 +0000 (UTC)
+Date:   Sun, 5 Jan 2020 09:12:46 +0800
+From:   Clay Chang <clayc@hpe.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, dmitry.kasatkin@gmail.com,
+        jmorris@namei.org, serge@hallyn.com
+Subject: Re: [PATCH] ima: Add a space after printing a LSM rule for
+ readability
+Message-ID: <20200105011246.GA5936@blofly.tw.rdlabs.hpecorp.net>
+References: <1578037863-7102-1-git-send-email-clayc@hpe.com>
+ <1578071487.5152.13.camel@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1578071487.5152.13.camel@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-04_06:2020-01-02,2020-01-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ impostorscore=0 adultscore=0 phishscore=0 suspectscore=0
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 spamscore=0
+ bulkscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001050010
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-accroding to bd0e6c9#diff-28615d62e1250eadc353d804f49bc6d6, will try old en=
-umeration
-scheme first for high speed devices. for example, when a high speed device =
-pluged in,
-line 2720 should expand to 0 at the first time. USE_NEW_SCHEME(0, 0 || 0 ||=
- 1) =3D=3D=3D 0.
-but it wrongly expand to 1(alway expand to 1 for high speed device), and ch=
-ange
-USE_NEW_SCHEME to USE_NEW_SCHEME((i) % 2 =3D=3D (int)(scheme)) may be bette=
-r ?
+On Fri, Jan 03, 2020 at 12:11:27PM -0500, Mimi Zohar wrote:
+> On Fri, 2020-01-03 at 15:51 +0800, clayc@hpe.com wrote:
+> > From: Clay Chang <clayc@hpe.com>
+> 
+> Normally this "From" line is only seen when the sender isn't the patch
+> author.  Any ideas what happened? 
+>
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Qi Zhou <atmgnd@protonmail.com>
----
- drivers/usb/core/hub.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Mimi,
 
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index f229ad6952c0..7d17deca7021 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -2692,7 +2692,7 @@ static unsigned hub_is_wusb(struct usb_hub *hub)
- #define SET_ADDRESS_TRIES=092
- #define GET_DESCRIPTOR_TRIES=092
- #define SET_CONFIG_TRIES=09(2 * (use_both_schemes + 1))
--#define USE_NEW_SCHEME(i, scheme)=09((i) / 2 =3D=3D (int)scheme)
-+#define USE_NEW_SCHEME(i, scheme)=09((i) / 2 =3D=3D (int)(scheme))
+Apparently I should not use "--from" in git-send-email command.
 
- #define HUB_ROOT_RESET_TIME=0960=09/* times are in msec */
- #define HUB_SHORT_RESET_TIME=0910
---
-2.17.1
+> > 
+> > When reading ima_policy from securityfs, there is a missing
+> > space between output string of LSM rules.
+> > 
+> > Signed-off-by: Clay Chang <clayc@hpe.com>
+> 
+> Good catch!  IMA policy rules based on LSM labels are used to
+> constrain which files are in policy.  Normally a single LSM label is
+> enough (e.g. dont_measure obj_type=auditd_log_t).  Could you include
+> in this patch description a use case where multiple LSM labels are
+> needed?
+> 
 
+Apology for not expressed my intention clearly. The intention of this
+patch is to add a space after printing LSM rules (if any) and the
+remaining rules.
 
+Currently, if I have a policy, for example:
+appraise func=BPRM_CHECK obj_type=shell_exec_t appraise_type=imasig
+
+The read back result is:
+appraise func=BPRM_CHECK obj_type=shell_exec_tappraise_type=imasig
+
+which is not correct.
+
+I do not have a case for multiple LSM labels, but if there is one
+such case, this patch will also apply.
+
+I will post a v2 patch with tuned description.
+
+Thanks,
+Clay
