@@ -2,261 +2,81 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F6DC32767
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 01:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B7FC32767
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 01:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EEBD24654
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 01:24:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="c77H3IeU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qZ1Nbzxk"
+	by mail.kernel.org (Postfix) with ESMTP id AA34D215A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 01:24:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbgAEBYq (ORCPT
+        id S1727213AbgAEBYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 20:24:46 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:36831 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726487AbgAEBYU (ORCPT
+        Sat, 4 Jan 2020 20:24:52 -0500
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:52344 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727152AbgAEBYn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 20:24:20 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id A344521CDD;
-        Sat,  4 Jan 2020 20:24:19 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Sat, 04 Jan 2020 20:24:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=H82xRxh61bgTh
-        G+kaAbvv3z6nkx0cTMFo2BWr0/QYbw=; b=c77H3IeUZSF1kcVIXfRFWOYzUCA71
-        IXzRQ/4tRnzSA66hVCj6f4dBbJuYCIz+F50z4SjePtjunwfBidUYOta2hgtxEFyL
-        29GthbH01MF8OqY3AKaArKQH+B8VfIHvnfmXs+mL7bTOaix9ZTDbOXN+7yGEzkVw
-        YeiBmQZTpvmlFOfh54DVFZJXhv4LyX012mVTQBxkgIwYrA52gZnDUXspJZG5Ehsu
-        9ZPpa04OeWodSH1SqnAGNURqVoHToBvVbodvQ5WnxvL5gDgYnZrWXOF/5Cb6GBGP
-        C1cJIUhTWtug0g/kw+n56HMDngZWEWqvfxoH+rHHfWjXM8B3dIJAAa3Eg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=H82xRxh61bgThG+kaAbvv3z6nkx0cTMFo2BWr0/QYbw=; b=qZ1Nbzxk
-        25tCskdnJaT6zhKqgbVs8q5NiBhL+2CJCZJtn2ByRaEkUBCkWWs1WGK3tyfb9Jys
-        0KKU3NLEtUseej5PDgEoVCxKRjn3nageA/FwbJEcgNdwhassfls2j/tsTaqEKvvA
-        1Mt8QMLq0ptxENjadF11vh1LVZ6DRVw+4ezJOaRTzQsarwIm/Vd+WuAxLwBHdBYc
-        n+vNmXOCRZomjUse1IU7iHJ8P1hJPiu3jd5nlW8UH6TYZoIoWjBX2ikOVb+HNgOx
-        c3IS0poOsxlTmCX5N0lTRWLTjvk5MWlbzCp+6z0gNl/DAwstdG9cG3CtvM7U76LK
-        Z/FXJKldTv31Jg==
-X-ME-Sender: <xms:wzoRXtqMGurRYWZgUHzZ04P8csBZAcpC0B-ODiIsUKIK6xxdapZi-g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdegiedgfeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
-    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
-    epjedtrddufeehrddugeekrdduhedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghm
-    uhgvlhesshhhohhllhgrnhgurdhorhhgnecuvehluhhsthgvrhfuihiivgepvd
-X-ME-Proxy: <xmx:wzoRXmPed4J6ACG-AgFbbMmg7qS5fUg4xHOwuReYFbLvNgWTyacy3A>
-    <xmx:wzoRXr7__TAnf8cm5khe5vWKf9em5w_E-K0EZKaMcNNsrsaNQJ21fg>
-    <xmx:wzoRXiXqAUkUGGjqNesxqz94b-_78s_1JaRHhvFyeMtOcBF-BIewdg>
-    <xmx:wzoRXiN1ZgJAa6GPwCE1X-hCHw7pwh2xzeo6V1IZpbDpKbSznpdgkQ>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id F30F080061;
-        Sat,  4 Jan 2020 20:24:18 -0500 (EST)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Chen-Yu Tsai <wens@csie.org>, Sebastian Reichel <sre@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Oskari Lemmela <oskari@lemmela.net>,
-        Quentin Schulz <quentin.schulz@bootlin.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v2 6/9] power: supply: axp20x_usb_power: Use a match structure
-Date:   Sat,  4 Jan 2020 19:24:13 -0600
-Message-Id: <20200105012416.23296-7-samuel@sholland.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200105012416.23296-1-samuel@sholland.org>
-References: <20200105012416.23296-1-samuel@sholland.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 4 Jan 2020 20:24:43 -0500
+Received: from pps.filterd (m0148663.ppops.net [127.0.0.1])
+        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0051OFPK028216;
+        Sun, 5 Jan 2020 01:24:29 GMT
+Received: from g2t2354.austin.hpe.com (g2t2354.austin.hpe.com [15.233.44.27])
+        by mx0a-002e3701.pphosted.com with ESMTP id 2xb423rdgv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 05 Jan 2020 01:24:29 +0000
+Received: from g2t2360.austin.hpecorp.net (g2t2360.austin.hpecorp.net [16.196.225.135])
+        by g2t2354.austin.hpe.com (Postfix) with ESMTP id 7AC319D;
+        Sun,  5 Jan 2020 01:24:28 +0000 (UTC)
+Received: from blofly.tw.rdlabs.hpecorp.net (blofly.tw.rdlabs.hpecorp.net [15.119.208.30])
+        by g2t2360.austin.hpecorp.net (Postfix) with ESMTP id E05BE3B;
+        Sun,  5 Jan 2020 01:24:25 +0000 (UTC)
+From:   Clay Chang <clayc@hpe.com>
+To:     zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
+        serge@hallyn.com
+Cc:     linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, Clay Chang <clayc@hpe.com>
+Subject: [PATCH v2] ima: Add a space after printing LSM rules for readability
+Date:   Sun,  5 Jan 2020 09:18:13 +0800
+Message-Id: <20200105011813.13249-1-clayc@hpe.com>
+X-Mailer: git-send-email 2.16.6
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-04_06:2020-01-02,2020-01-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=590
+ impostorscore=0 adultscore=0 phishscore=0 suspectscore=0
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 spamscore=0
+ bulkscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001050012
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of ad-hoc variant ID checks throughout the code, let's start
-moving the variant-specific details to a match structure. This allows
-for future flexibility, and it better matches the other axp20x power
-supply drivers.
+When reading ima_policy from securityfs, there is a missing
+space between output string of LSM rules and the remaining
+rules.
 
-Signed-off-by: Samuel Holland <samuel@sholland.org>
+Signed-off-by: Clay Chang <clayc@hpe.com>
 ---
- drivers/power/supply/axp20x_usb_power.c | 91 ++++++++++++++++---------
- 1 file changed, 60 insertions(+), 31 deletions(-)
+ security/integrity/ima/ima_policy.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
-index dd3f3f12e41d..2d7272e19a87 100644
---- a/drivers/power/supply/axp20x_usb_power.c
-+++ b/drivers/power/supply/axp20x_usb_power.c
-@@ -405,6 +405,50 @@ static const struct power_supply_desc axp22x_usb_power_desc = {
- 	.set_property = axp20x_usb_power_set_property,
- };
- 
-+static const char * const axp20x_irq_names[] = {
-+	"VBUS_PLUGIN",
-+	"VBUS_REMOVAL",
-+	"VBUS_VALID",
-+	"VBUS_NOT_VALID",
-+	NULL
-+};
-+
-+static const char * const axp22x_irq_names[] = {
-+	"VBUS_PLUGIN",
-+	"VBUS_REMOVAL",
-+	NULL
-+};
-+
-+struct axp_data {
-+	const struct power_supply_desc	*power_desc;
-+	const char * const		*irq_names;
-+	enum axp20x_variants		axp20x_id;
-+};
-+
-+static const struct axp_data axp202_data = {
-+	.power_desc	= &axp20x_usb_power_desc,
-+	.irq_names	= axp20x_irq_names,
-+	.axp20x_id	= AXP202_ID,
-+};
-+
-+static const struct axp_data axp221_data = {
-+	.power_desc	= &axp22x_usb_power_desc,
-+	.irq_names	= axp22x_irq_names,
-+	.axp20x_id	= AXP221_ID,
-+};
-+
-+static const struct axp_data axp223_data = {
-+	.power_desc	= &axp22x_usb_power_desc,
-+	.irq_names	= axp22x_irq_names,
-+	.axp20x_id	= AXP223_ID,
-+};
-+
-+static const struct axp_data axp813_data = {
-+	.power_desc	= &axp22x_usb_power_desc,
-+	.irq_names	= axp22x_irq_names,
-+	.axp20x_id	= AXP813_ID,
-+};
-+
- static int configure_iio_channels(struct platform_device *pdev,
- 				  struct axp20x_usb_power *power)
- {
-@@ -440,12 +484,7 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
- 	struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
- 	struct power_supply_config psy_cfg = {};
- 	struct axp20x_usb_power *power;
--	static const char * const axp20x_irq_names[] = { "VBUS_PLUGIN",
--		"VBUS_REMOVAL", "VBUS_VALID", "VBUS_NOT_VALID", NULL };
--	static const char * const axp22x_irq_names[] = {
--		"VBUS_PLUGIN", "VBUS_REMOVAL", NULL };
--	const char * const *irq_names;
--	const struct power_supply_desc *usb_power_desc;
-+	const struct axp_data *axp_data;
- 	int i, irq, ret;
- 
- 	if (!of_device_is_available(pdev->dev.of_node))
-@@ -456,15 +495,16 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
-+	axp_data = of_device_get_match_data(&pdev->dev);
-+
- 	power = devm_kzalloc(&pdev->dev, sizeof(*power), GFP_KERNEL);
- 	if (!power)
- 		return -ENOMEM;
- 
--	platform_set_drvdata(pdev, power);
--	power->axp20x_id = (enum axp20x_variants)of_device_get_match_data(
--								&pdev->dev);
--
- 	power->regmap = axp20x->regmap;
-+	power->axp20x_id = axp_data->axp20x_id;
-+
-+	platform_set_drvdata(pdev, power);
- 
- 	if (power->axp20x_id == AXP202_ID) {
- 		/* Enable vbus valid checking */
-@@ -481,18 +521,6 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
- 
- 		if (ret)
- 			return ret;
--
--		usb_power_desc = &axp20x_usb_power_desc;
--		irq_names = axp20x_irq_names;
--	} else if (power->axp20x_id == AXP221_ID ||
--		   power->axp20x_id == AXP223_ID ||
--		   power->axp20x_id == AXP813_ID) {
--		usb_power_desc = &axp22x_usb_power_desc;
--		irq_names = axp22x_irq_names;
--	} else {
--		dev_err(&pdev->dev, "Unsupported AXP variant: %ld\n",
--			axp20x->variant);
--		return -EINVAL;
- 	}
- 
- 	if (power->axp20x_id == AXP813_ID) {
-@@ -504,17 +532,18 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
- 	psy_cfg.of_node = pdev->dev.of_node;
- 	psy_cfg.drv_data = power;
- 
--	power->supply = devm_power_supply_register(&pdev->dev, usb_power_desc,
-+	power->supply = devm_power_supply_register(&pdev->dev,
-+						   axp_data->power_desc,
- 						   &psy_cfg);
- 	if (IS_ERR(power->supply))
- 		return PTR_ERR(power->supply);
- 
- 	/* Request irqs after registering, as irqs may trigger immediately */
--	for (i = 0; irq_names[i]; i++) {
--		irq = platform_get_irq_byname(pdev, irq_names[i]);
-+	for (i = 0; axp_data->irq_names[i]; i++) {
-+		irq = platform_get_irq_byname(pdev, axp_data->irq_names[i]);
- 		if (irq < 0) {
- 			dev_warn(&pdev->dev, "No IRQ for %s: %d\n",
--				 irq_names[i], irq);
-+				 axp_data->irq_names[i], irq);
- 			continue;
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index ef8dfd47c7e3..1a266e4f99bc 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -1496,6 +1496,7 @@ int ima_policy_show(struct seq_file *m, void *v)
+ 					   (char *)entry->lsm[i].args_p);
+ 				break;
+ 			}
++			seq_puts(m, " ");
  		}
- 		irq = regmap_irq_get_virq(axp20x->regmap_irqc, irq);
-@@ -522,7 +551,7 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
- 				axp20x_usb_power_irq, 0, DRVNAME, power);
- 		if (ret < 0)
- 			dev_warn(&pdev->dev, "Error requesting %s IRQ: %d\n",
--				 irq_names[i], ret);
-+				 axp_data->irq_names[i], ret);
  	}
- 
- 	INIT_DELAYED_WORK(&power->vbus_detect, axp20x_usb_power_poll_vbus);
-@@ -544,16 +573,16 @@ static int axp20x_usb_power_remove(struct platform_device *pdev)
- static const struct of_device_id axp20x_usb_power_match[] = {
- 	{
- 		.compatible = "x-powers,axp202-usb-power-supply",
--		.data = (void *)AXP202_ID,
-+		.data = &axp202_data,
- 	}, {
- 		.compatible = "x-powers,axp221-usb-power-supply",
--		.data = (void *)AXP221_ID,
-+		.data = &axp221_data,
- 	}, {
- 		.compatible = "x-powers,axp223-usb-power-supply",
--		.data = (void *)AXP223_ID,
-+		.data = &axp223_data,
- 	}, {
- 		.compatible = "x-powers,axp813-usb-power-supply",
--		.data = (void *)AXP813_ID,
-+		.data = &axp813_data,
- 	}, { /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, axp20x_usb_power_match);
+ 	if (entry->template)
 -- 
-2.23.0
+2.16.6
 
