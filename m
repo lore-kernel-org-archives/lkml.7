@@ -2,79 +2,112 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8C9C33C8C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 13:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CE5C33C9A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 14:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD719207FD
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 13:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F69B207FD
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 14:05:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgAEN6F (ORCPT
+        id S1726391AbgAEOFk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 08:58:05 -0500
-Received: from mx60.baidu.com ([61.135.168.60]:17204 "EHLO
-        tc-sys-mailedm04.tc.baidu.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726192AbgAEN6F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 08:58:05 -0500
-Received: from localhost (cp01-cos-dev01.cp01.baidu.com [10.92.119.46])
-        by tc-sys-mailedm04.tc.baidu.com (Postfix) with ESMTP id 6A8A7236C003;
-        Sun,  5 Jan 2020 21:57:47 +0800 (CST)
-From:   jimyan <jimyan@baidu.com>
-To:     joro@8bytes.org, jsnitsel@redhat.com, baolu.lu@linux.intel.com,
-        roland@purestorage.com
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        jimyan@baidu.com
-Subject: [PATCH v2] iommu/vt-d: Don't reject nvme host due to scope mismatch
-Date:   Sun,  5 Jan 2020 21:57:48 +0800
-Message-Id: <1578232668-2696-1-git-send-email-jimyan@baidu.com>
-X-Mailer: git-send-email 1.7.1
+        Sun, 5 Jan 2020 09:05:40 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:37252 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726188AbgAEOFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 09:05:39 -0500
+Received: from p508fce23.dip0.t-ipconnect.de ([80.143.206.35] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1io6X0-0007kM-Qo; Sun, 05 Jan 2020 15:05:26 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Sandy Huang <hjc@rock-chips.com>,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 00/11] Add PX30 LVDS support
+Date:   Sun, 05 Jan 2020 15:05:26 +0100
+Message-ID: <1885398.klecWcqSHf@phil>
+In-Reply-To: <20191224143900.23567-1-miquel.raynal@bootlin.com>
+References: <20191224143900.23567-1-miquel.raynal@bootlin.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On a system with an Intel PCIe port configured as a nvme host device, iommu
-initialization fails with
+Am Dienstag, 24. Dezember 2019, 15:38:49 CET schrieb Miquel Raynal:
+> Hello,
+> 
+> This series aims at supporting LVDS on PX30.
+> 
+> A first couple of patches update the documentation with the new
+> compatible and the presence of a PHY. Then, the existing Rockchip
+> driver is cleaned and extended to support PX30 specificities. Finally,
+> the PX30 DTSI is updated with CRTC routes, the DSI DPHY and the LVDS
+> IP itself.
+> 
+> Cheers,
+> Miquèl
+> 
+> Changes since v1:
+> * Added Rob's Ack.
+> * Used "must" instead of "should" in the bindings.
+> * Precised that phy-names is an optional property in the case of
+>   PX30.
+> * Renamed the WRITE_EN macro into HIWORD_UPDATE to be aligned with
+>   other files.
+> * Removed extra configuration, not needed for generic panels (see
+>   Sandy Huang answer).
+> * Dropped the display-subsystem routes (useless).
+> * Merged two patches to avoid phandle interdependencies in graphs and
+>   intermediate build errors.
+> 
+> Miquel Raynal (11):
+>   dt-bindings: display: rockchip-lvds: Declare PX30 compatible
+>   dt-bindings: display: rockchip-lvds: Document PX30 PHY
+>   drm/rockchip: lvds: Fix indentation of a #define
+>   drm/rockchip: lvds: Harmonize function names
+>   drm/rockchip: lvds: Change platform data
+>   drm/rockchip: lvds: Create an RK3288 specific probe function
+>   drm/rockchip: lvds: Helpers should return decent values
+>   drm/rockchip: lvds: Pack functions together
 
-    DMAR: Device scope type does not match for 0000:80:00.0
+applied patches 1-8 to drm-misc-next
 
-This is because the DMAR table reports this device as having scope 2
-(ACPI_DMAR_SCOPE_TYPE_BRIDGE):
+>   drm/rockchip: lvds: Add PX30 support
 
-but the device has a type 0 PCI header:
-80:00.0 Class 0600: Device 8086:2020 (rev 06)
-00: 86 80 20 20 47 05 10 00 06 00 00 06 10 00 00 00
-10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-20: 00 00 00 00 00 00 00 00 00 00 00 00 86 80 00 00
-30: 00 00 00 00 90 00 00 00 00 00 00 00 00 01 00 00
+drm-misc-next is currently still at 5.4-rc4, so I'll need to find out how
+to get newer kernel changes in there, as right now we're missing
+the PHY_MODE_LVDS constant.
 
-VT-d works perfectly on this system, so there's no reason to bail out
-on initialization due to this apparent scope mismatch. Add the class
-0x06 ("PCI_BASE_CLASS_BRIDGE") as a heuristic for allowing DMAR
-initialization for non-bridge PCI devices listed with scope bridge.
 
-Signed-off-by: jimyan <jimyan@baidu.com>
----
- drivers/iommu/dmar.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Heiko
 
-diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-index eecd6a421667..50c92eb23ee4 100644
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -244,7 +244,7 @@ int dmar_insert_dev_scope(struct dmar_pci_notify_info *info,
- 		     info->dev->hdr_type != PCI_HEADER_TYPE_NORMAL) ||
- 		    (scope->entry_type == ACPI_DMAR_SCOPE_TYPE_BRIDGE &&
- 		     (info->dev->hdr_type == PCI_HEADER_TYPE_NORMAL &&
--		      info->dev->class >> 8 != PCI_CLASS_BRIDGE_OTHER))) {
-+		      info->dev->class >> 16 != PCI_BASE_CLASS_BRIDGE))) {
- 			pr_warn("Device scope type does not match for %s\n",
- 				pci_name(info->dev));
- 			return -EINVAL;
--- 
-2.11.0
+>   arm64: dts: rockchip: Add PX30 DSI DPHY
+>   arm64: dts: rockchip: Add PX30 LVDS
+> 
+>  .../display/rockchip/rockchip-lvds.txt        |   4 +
+>  arch/arm64/boot/dts/rockchip/px30.dtsi        |  48 ++
+>  drivers/gpu/drm/rockchip/rockchip_lvds.c      | 486 ++++++++++++------
+>  drivers/gpu/drm/rockchip/rockchip_lvds.h      |  19 +-
+>  4 files changed, 401 insertions(+), 156 deletions(-)
+> 
+> 
+
+
+
 
