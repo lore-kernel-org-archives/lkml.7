@@ -2,277 +2,122 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2978C33C99
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 11:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33343C33C8C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 11:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92A6E207FD
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 11:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00039207FD
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 11:26:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HgaObkLt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgAELXR (ORCPT
+        id S1726192AbgAEL0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 06:23:17 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:34822 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgAELXR (ORCPT
+        Sun, 5 Jan 2020 06:26:10 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31230 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725897AbgAEL0J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 06:23:17 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 5AF7220054;
-        Sun,  5 Jan 2020 12:23:12 +0100 (CET)
-Date:   Sun, 5 Jan 2020 12:23:10 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com, yingjoe.chen@mediatek.com,
-        eddie.huang@mediatek.com, cawa.cheng@mediatek.com,
-        bibby.hsieh@mediatek.com, linux-mediatek@lists.infradead.org,
-        ck.hu@mediatek.com, stonea168@163.com
-Subject: Re: [PATCH v7 2/8] drm/panel: support for BOE tv101wum-nl6 wuxga dsi
- video mode panel
-Message-ID: <20200105112310.GB3309@ravnborg.org>
-References: <20191012030720.27127-1-jitao.shi@mediatek.com>
- <20191012030720.27127-3-jitao.shi@mediatek.com>
+        Sun, 5 Jan 2020 06:26:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578223568;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hQIjgQihDEwHoAnpdzjkTor2gvcSRP7S37u8Euy9Qi0=;
+        b=HgaObkLtPCOosKqefQjfzo73drW1Qn72OVicL3mCzlTBYEtVuuoyAdbHwL/hv+nDcNUe0R
+        vTI8DDULhZW6FAHOPvzcBkze3lntYrcVyjN2rGM9DT1GN8IOjxyPneMKutfThuzD7KpZ+M
+        dM5j655x4SE/BGJ3Mp65asCMbZGdQZY=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-215-5Hc4hRGUN8SRE0_Vg6aXug-1; Sun, 05 Jan 2020 06:26:05 -0500
+X-MC-Unique: 5Hc4hRGUN8SRE0_Vg6aXug-1
+Received: by mail-qt1-f197.google.com with SMTP id c8so32480403qte.22
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jan 2020 03:26:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=hQIjgQihDEwHoAnpdzjkTor2gvcSRP7S37u8Euy9Qi0=;
+        b=bw8tRoq7xiOcQjt7ZJ0KDn7LYubvYyKpc9irnYRhV8vFjkTWpCtldpJNtCV6523mU8
+         MdSC0mPjWm3+nqZuwzVTKa0/viD8Kp5XatKuWONLZhu/BagA/YfY17jK79+MDJdSik+X
+         hjb5hajuIvLC+P0cTqrLC+c2okCawWE9ppj6ERfo4bDVBFpWqv9Bz0xkqevY9QEOilM8
+         m7TebKgYrxnn69OV61Dxy+hSSUoXJgjMHHBdoYpgCMokVSZfIG/z4KT5KmhixjIZ62m/
+         a7nhv7q1lWZszrBmEY2KSgzkFHoDC4/83T6qLZTTm3S/EtTE54TW50HmzPaTcFx6rDNb
+         FwfQ==
+X-Gm-Message-State: APjAAAWEBx7brR76xHzFeA8ZqFJqIDvhdewJIIm01zyctSq5AbcXO2V6
+        bsC+EoTTr5MnR4fKr7x3RusuJ3oXq9n6n+O9XvzWwn1jAAyrQE/O2T9+Zt45EDkThpoWm0E/lfJ
+        y4ZdbHr1j89G+bBgU0J8g+rGE
+X-Received: by 2002:a37:a70c:: with SMTP id q12mr65108289qke.484.1578223564594;
+        Sun, 05 Jan 2020 03:26:04 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxsb1Rq8qapXmNnmFjtPqA5IVovmngfDr1VhqP99yHJoF6zlFQia7pHWSTzJN2AHPaTc4CzPw==
+X-Received: by 2002:a37:a70c:: with SMTP id q12mr65108276qke.484.1578223564358;
+        Sun, 05 Jan 2020 03:26:04 -0800 (PST)
+Received: from redhat.com (bzq-79-183-34-164.red.bezeqint.net. [79.183.34.164])
+        by smtp.gmail.com with ESMTPSA id u57sm21651162qth.68.2020.01.05.03.26.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jan 2020 03:26:03 -0800 (PST)
+Date:   Sun, 5 Jan 2020 06:25:59 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     "Liu, Jiang" <gerry@linux.alibaba.com>,
+        "Liu, Jing2" <jing2.liu@linux.intel.com>,
+        Zha Bin <zhabin@linux.alibaba.com>,
+        linux-kernel@vger.kernel.org, slp@redhat.com,
+        virtio-dev@lists.oasis-open.org, jing2.liu@intel.com,
+        chao.p.peng@intel.com
+Subject: Re: [virtio-dev] Re: [PATCH v1 2/2] virtio-mmio: add features for
+ virtio-mmio specification version 3
+Message-ID: <20200105062023-mutt-send-email-mst@kernel.org>
+References: <cover.1577240905.git.zhabin@linux.alibaba.com>
+ <a11d4c616158c9fb1ca4575ca0530b2e17b952fa.1577240905.git.zhabin@linux.alibaba.com>
+ <85eeab19-1f53-6c45-95a2-44c1cfd39184@redhat.com>
+ <28da67db-73ab-f772-fb00-5a471b746fc5@linux.intel.com>
+ <683cac51-853d-c8c8-24c6-b01886978ca4@redhat.com>
+ <42346d41-b758-967a-30b7-95aa0d383beb@linux.intel.com>
+ <0c3d33de-3940-7895-2fe2-81de8714139c@redhat.com>
+ <46806720-1D1C-40C3-BEE2-EDB0D4DA39BF@linux.alibaba.com>
+ <7e151886-408e-2c1d-3958-77c26b8a4ac0@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191012030720.27127-3-jitao.shi@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=mpaa-ttXAAAA:8
-        a=7gkXJVJtAAAA:8 a=D-QbINtN15ueE4Of3rkA:9 a=CjuIK1q_8ugA:10
-        a=6heAxKwa5pAsJatQ0mat:22 a=E9Po1WZjFZOl8hwRPBS3:22
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7e151886-408e-2c1d-3958-77c26b8a4ac0@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jitao.
-
-On Sat, Oct 12, 2019 at 11:07:14AM +0800, Jitao Shi wrote:
-> Add driver for BOE tv101wum-nl6 panel is a 10.1" 1200x1920 panel.
+On Fri, Jan 03, 2020 at 05:12:38PM +0800, Jason Wang wrote:
 > 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> ---
+> On 2020/1/3 下午2:14, Liu, Jiang wrote:
+> > > Ok, I get you now.
+> > > 
+> > > But still, having fixed number of MSIs is less flexible. E.g:
+> > > 
+> > > - for x86, processor can only deal with about 250 interrupt vectors.
+> > > - driver may choose to share MSI vectors [1] (which is not merged but we will for sure need it)
+> > Thanks for the info:)
+> > X86 systems roughly have NCPU * 200 vectors available for device interrupts.
+> > The proposed patch tries to map multiple event sources to an interrupt vector, to avoid running out of x86 CPU vectors.
+> > Many virtio mmio devices may have several or tens of event sources, and it’s rare to have hundreds of event sources.
+> > So could we treat the dynamic mapping between event sources and interrupt vectors as an advanced optional feature?
+> > 
+> 
+> Maybe, but I still prefer to implement it if it is not too complex. Let's
+> see Michael's opinion on this.
+> 
+> Thanks
 
+I think a way for the device to limit # of vectors in use by driver is
+useful. But sharing of vectors doesn't really need any special
+registers, just program the same vector for multiple Qs/interrupts.
 
-> +
-> +struct boe_panel {
-> +	struct drm_panel base;
-> +	struct mipi_dsi_device *dsi;
-> +
-> +	const struct panel_desc *desc;
-> +
-> +	struct backlight_device *backlight;
+-- 
+MST
 
-drm_panel has gained backlight support in drm-misc-next.
-Please use this.
-
-> +	struct regulator *pp1800;
-> +	struct regulator *avee;
-> +	struct regulator *avdd;
-> +	struct gpio_desc *enable_gpio;
-> +
-> +	bool prepared;
-> +	bool enabled;
-This flag can be dropped when using drm_panel backlight support.
-
-> +
-> +	const struct drm_display_mode *mode;
-> +};
-
-> +
-> +static int boe_panel_disable(struct drm_panel *panel)
-> +{
-> +	struct boe_panel *boe = to_boe_panel(panel);
-> +
-> +	if (!boe->enabled)
-> +		return 0;
-> +
-> +	backlight_disable(boe->backlight);
-> +
-> +	boe->enabled = false;
-> +
-> +	return 0;
-> +}
-This function can be dropped when using the drm_panel backlight support.
-
-> +
-> +static int boe_panel_enable(struct drm_panel *panel)
-> +{
-> +	struct boe_panel *boe = to_boe_panel(panel);
-> +	int ret;
-> +
-> +	if (boe->enabled)
-> +		return 0;
-> +
-> +	ret = backlight_enable(boe->backlight);
-> +	if (ret) {
-> +		dev_err(panel->dev, "Failed to enable backlight %d\n",
-> +			ret);
-> +		return ret;
-> +	}
-> +
-> +	boe->enabled = true;
-> +
-> +	return 0;
-> +}
-This function can be dropped when using the drm_panel backlight support.
-
-> +
-> +static const struct drm_display_mode boe_tv101wum_nl6_default_mode = {
-> +	.clock = 159425,
-> +	.hdisplay = 1200,
-> +	.hsync_start = 1200 + 100,
-> +	.hsync_end = 1200 + 100 + 40,
-> +	.htotal = 1200 + 100 + 40 + 24,
-> +	.vdisplay = 1920,
-> +	.vsync_start = 1920 + 10,
-> +	.vsync_end = 1920 + 10 + 14,
-> +	.vtotal = 1920 + 10 + 14 + 4,
-> +	.vrefresh = 60,
-> +};
-> +
-> +static const struct panel_desc boe_tv101wum_nl6_desc = {
-> +	.modes = &boe_tv101wum_nl6_default_mode,
-> +	.bpc = 8,
-> +	.size = {
-> +		.width_mm = 135,
-> +		.height_mm = 216,
-> +	},
-> +	.lanes = 4,
-> +	.format = MIPI_DSI_FMT_RGB888,
-> +	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
-> +		      MIPI_DSI_MODE_LPM,
-> +	.init_cmds = boe_init_cmd,
-> +};
-> +
-> +static int boe_panel_get_modes(struct drm_panel *panel)
-This function now takes drm_connector as second argument.
-See drm-misc-next.
-> +{
-> +	struct boe_panel *boe = to_boe_panel(panel);
-> +	const struct drm_display_mode *m = boe->desc->modes;
-> +	struct drm_display_mode *mode;
-> +
-> +	mode = drm_mode_duplicate(panel->drm, m);
-Here you will need to use connector->dev to get the drm_device.
-
-> +	if (!mode) {
-> +		dev_err(panel->dev, "failed to add mode %ux%u@%u\n",
-> +			m->hdisplay, m->vdisplay, m->vrefresh);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
-> +	drm_mode_set_name(mode);
-> +	drm_mode_probed_add(panel->connector, mode);
-> +
-> +	panel->connector->display_info.width_mm = boe->desc->size.width_mm;
-> +	panel->connector->display_info.height_mm = boe->desc->size.height_mm;
-> +	panel->connector->display_info.bpc = boe->desc->bpc;
-There is no connector in drm_panel today.
-Use the connector in supplied as second argument.
-
-> +
-> +	return 1;
-> +}
-> +
-> +	gpiod_set_value(boe->enable_gpio, 0);
-> +
-> +	boe->backlight = devm_of_find_backlight(dev);
-> +	if (IS_ERR(boe->backlight))
-> +		return PTR_ERR(boe->backlight);
-Move this after drm_panel_init and use drm_panel_of_backlight()
-
-The binding say that backlight is mandatory. This is really not checked
-here. And I *think* backlight is optional.
-
-> +
-> +	drm_panel_init(&boe->base);
-Here you need to specify connector_type as second argument.
-
-> +
-> +	boe->base.funcs = &boe_panel_funcs;
-> +	boe->base.dev = &boe->dsi->dev;
-> +
-> +	return drm_panel_add(&boe->base);
-> +}
-> +
-> +}
-> +
-> +static int boe_panel_remove(struct mipi_dsi_device *dsi)
-> +{
-> +	struct boe_panel *boe = mipi_dsi_get_drvdata(dsi);
-> +	int ret;
-> +
-> +	ret = boe_panel_disable(&boe->base);
-> +	if (ret < 0)
-> +		dev_err(&dsi->dev, "failed to disable panel: %d\n", ret);
-> +
-> +	ret = mipi_dsi_detach(dsi);
-> +	if (ret < 0)
-> +		dev_err(&dsi->dev, "failed to detach from DSI host: %d\n", ret);
-> +
-> +	if (boe->base.dev)
-> +		drm_panel_remove(&boe->base);
-> +
-> +	return 0;
-> +}
-This should just be:
-
-	boe_panel_shutdown();
-	ret = mipi_dsi_detach();
-	if (ret < 0)
-		...
-	drm_panel_remove();
-
-
-> +
-> +static void boe_panel_shutdown(struct mipi_dsi_device *dsi)
-> +{
-> +	struct boe_panel *boe = mipi_dsi_get_drvdata(dsi);
-> +
-> +	boe_panel_disable(&boe->base);
-> +}
-Please use drm_panel variants here.
-And then I had expected to see:
-	drm_panel_disable();
-	drm_panel_unprepare();
-
-
-
-> +
-> +static const struct of_device_id boe_of_match[] = {
-> +	{ .compatible = "boe,tv101wum-nl6",
-> +	  .data = &boe_tv101wum_nl6_desc
-> +	},
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, boe_of_match);
-> +
-> +static struct mipi_dsi_driver boe_panel_driver = {
-> +	.driver = {
-> +		.name = "panel-boe-tv101wum-nl6",
-> +		.of_match_table = boe_of_match,
-> +	},
-> +	.probe = boe_panel_probe,
-> +	.remove = boe_panel_remove,
-> +	.shutdown = boe_panel_shutdown,
-> +};
-> +module_mipi_dsi_driver(boe_panel_driver);
-> +
-> +MODULE_AUTHOR("Jitao Shi <jitao.shi@mediatek.com>");
-> +MODULE_DESCRIPTION("BOE tv101wum-nl6 1200x1920 video mode panel driver");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.21.0
