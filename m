@@ -2,147 +2,293 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 975CCC00523
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 06:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 067F2C00523
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 06:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C346215A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 06:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE1EC207FD
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 06:55:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="fjETWpe1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EYYemt4g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbgAEGET (ORCPT
+        id S1725991AbgAEGzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 01:04:19 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37353 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbgAEGES (ORCPT
+        Sun, 5 Jan 2020 01:55:39 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38185 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgAEGzj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 01:04:18 -0500
-Received: by mail-io1-f67.google.com with SMTP id k24so15153141ioc.4
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Jan 2020 22:04:18 -0800 (PST)
+        Sun, 5 Jan 2020 01:55:39 -0500
+Received: by mail-pl1-f194.google.com with SMTP id f20so20608387plj.5
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Jan 2020 22:55:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=Vu/BIPQbyqubOJuLGv4uKPQrPxznt9X7LWYfO/wIAnA=;
-        b=fjETWpe1qX+g0/b1/eDWfsSD96vubX6xO/gqryKmT925eFdQ716DPguv35Tw96K8pT
-         nWa9ErHiDYq1+AEKdNiydKQAQ57L8wv5eticDWHBQOTPEVgEQSb/YhqiCpyjWHe4ACX8
-         kPE9MT5T+nimkRzrWrhkQ84eVguvTsNhkrQfQGNMjPj6s2uj7eEPpgSRCwAqmzmp1R/C
-         ic/3CdRNBZ5ASoGWtabWzAm95pGVMV5eOCc6VEc/Q6/Jdhm+PYkZPQoeczm+PYgLsfmw
-         eEPLE0KmXdMFYYzPhkVd0pBkTfzoRiJ/NuTpS5sDoGGPH8OZ2ZCU+rs/DDUwAP4j/1g8
-         +aVA==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:subject:to:from:user-agent:date;
+        bh=BO1WZysMmnkDiZyMpnrijand6L7VBnHht4X1wph901M=;
+        b=EYYemt4gC82sIRviMZwJ6bAWs/sPxzJmC6hKjL2s0IyeerRg/xnFHCApBt8noAvW2U
+         TD0QWn4eTp3tPdWN3QMKWGZ5VU4CF5OiIOb6u8ISrfTM5J4il0zL29k9tqzFwHHjGviB
+         DUuWEebX76f26QzWsjopJJS9O88HfBZbeZcfs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=Vu/BIPQbyqubOJuLGv4uKPQrPxznt9X7LWYfO/wIAnA=;
-        b=ikJXunSMNl67N31PLDCBdCMXit69sdyB+hwniF/MA31Gq5NP9Mkd4eEiKoQwAWIgQT
-         l5lV/nSTwpZLyxmIEzWXs0BXAKNTE4DjQF/xdl7VgdHEV5SwWVVvRwUMM0Hh25nn2E29
-         5Rcv6fGxfKluecvD9oAPdSUPnsbo9dA88MyTryx5tvQmPTAeY1FRcattJeKUlIBPwCOq
-         1U/Pn6YWj2NPKzTKKylpsMRCVEaMzqz3J/lbYorqVo99rJh9n1ByeswYCFsZWy/SiE0t
-         oLsDBRXkBpsi99SheQi9vjKJkpyVpcWSC90TnIWk/iJTeNa+sV4TB1A30rekmwfn2/Lz
-         EMVQ==
-X-Gm-Message-State: APjAAAWOQcgKoW/6a4OX2aUQ2Jc9bAfcPCJTizmvHPZLZKTPyz+1XZqE
-        JFLTeywrENQWR0BepMOBQ6tZFlc9rdA=
-X-Google-Smtp-Source: APXvYqxIBOGaSBg12yvBKwarm9Q3w9aL9cMpjLULTj3Hp4g+7r5n9gPa5UQgjwzWSMKfuLFmY0fV+g==
-X-Received: by 2002:a6b:6f01:: with SMTP id k1mr65149377ioc.28.1578204257948;
-        Sat, 04 Jan 2020 22:04:17 -0800 (PST)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id w16sm22830683ilq.5.2020.01.04.22.04.17
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
+         :user-agent:date;
+        bh=BO1WZysMmnkDiZyMpnrijand6L7VBnHht4X1wph901M=;
+        b=QsB7+x9cecicN3QMZHNSOD3ObvDO/KJdKKqqxEIyRb6HtoOShx5CyjaVHuD4R0WhVo
+         ap+0Hsxsi4dxdd7ywdBo8ifHhBCgH18g3YsaXZcc0/xJAk9WrN+tf9DL6J+oYA7COxK9
+         txvpvQqNd0BrwsdoTMizts1VF8cEe1+BYf5F8yxlnbsb11tKJc65GVRegegIxKsuX1MI
+         4CXk/8Q4LfXVNl3MAvVKM92oKT2iC3JOyoqR8G/stFdF2YwrbkcOzVHRoHYrTs5InDi6
+         XELFm46IJv7ov8gj30LciGaeASNa5F2NSXCO9AyJGztRrmed2e9Yaj7P5WKV06u/z3dA
+         ZscA==
+X-Gm-Message-State: APjAAAWrNmaVEhCkCWfH+XfkoFHMHTZFwQcWhBwPHBUP8nIRmJ9rO26C
+        RfEOjSa02fG30Gq8IoPYVx2pBw==
+X-Google-Smtp-Source: APXvYqw5dtRFwrji0lraFoWIcYPcyRwDIOD1NW1KT9D1onxeHicXKbQR/zeVI6PHcVRjLxy3lI34OA==
+X-Received: by 2002:a17:90a:c211:: with SMTP id e17mr37750675pjt.14.1578207338520;
+        Sat, 04 Jan 2020 22:55:38 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id u2sm67988487pgc.19.2020.01.04.22.55.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jan 2020 22:04:17 -0800 (PST)
-Date:   Sat, 4 Jan 2020 22:04:16 -0800 (PST)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     torvalds@linux-foundation.org
-cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] RISC-V updates for v5.5-rc5
-Message-ID: <alpine.DEB.2.21.9999.2001042202460.484919@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Sat, 04 Jan 2020 22:55:37 -0800 (PST)
+Message-ID: <5e118869.1c69fb81.c28bf.4564@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1577782737-32068-3-git-send-email-okukatla@codeaurora.org>
+References: <1577782737-32068-1-git-send-email-okukatla@codeaurora.org> <1577782737-32068-3-git-send-email-okukatla@codeaurora.org>
+Cc:     ilina@codeaurora.org, seansw@qti.qualcomm.com, elder@linaro.org,
+        linux-arm-msm-owner@vger.kernel.org,
+        Odelu Kukatla <okukatla@codeaurora.org>
+Subject: Re: [V2, 2/3] interconnect: qcom: Add SC7180 interconnect provider driver
+To:     Andy Gross <agross@kernel.org>,
+        Odelu Kukatla <okukatla@codeaurora.org>,
+        bjorn.andersson@linaro.org, daidavid1@codeaurora.org,
+        evgreen@google.com, georgi.djakov@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Sat, 04 Jan 2020 22:55:36 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+Quoting Odelu Kukatla (2019-12-31 00:58:56)
+> diff --git a/drivers/interconnect/qcom/sc7180.c b/drivers/interconnect/qc=
+om/sc7180.c
+> new file mode 100644
+> index 0000000..4a398e0
+> --- /dev/null
+> +++ b/drivers/interconnect/qcom/sc7180.c
+> @@ -0,0 +1,788 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + *
+> + */
+> +
+> +#include <dt-bindings/interconnect/qcom,sc7180.h>
 
-The following changes since commit fd6988496e79a6a4bdb514a4655d2920209eb85d:
+Can you include this after linux/ headers? That is the "preferred" way
+to include headers.
 
-  Linux 5.5-rc4 (2019-12-29 15:29:16 -0800)
+> +#include <linux/device.h>
+> +#include <linux/interconnect.h>
+> +#include <linux/interconnect-provider.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
 
-are available in the Git repository at:
+Hopefully this include isn't used and can be removed.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv/for-v5.5-rc5
+> +#include <linux/of_platform.h>
 
-for you to fetch changes up to 0e194d9da198936fe4fb4c1e031de0f7791c09b8:
+Is this include used?
 
-  Documentation: riscv: add patch acceptance guidelines (2020-01-04 21:49:01 -0800)
+> +#include <linux/platform_device.h>
+> +
+> +#include "icc-rpmh.h"
+> +#include "bcm-voter.h"
+> +
+[...]
+> +
+> +static struct qcom_icc_node *system_noc_nodes[] =3D {
+> +       [MASTER_SNOC_CFG] =3D &qhm_snoc_cfg,
+> +       [MASTER_A1NOC_SNOC] =3D &qnm_aggre1_noc,
+> +       [MASTER_A2NOC_SNOC] =3D &qnm_aggre2_noc,
+> +       [MASTER_GEM_NOC_SNOC] =3D &qnm_gemnoc,
+> +       [MASTER_PIMEM] =3D &qxm_pimem,
+> +       [SLAVE_APPSS] =3D &qhs_apss,
+> +       [SLAVE_SNOC_CNOC] =3D &qns_cnoc,
+> +       [SLAVE_SNOC_GEM_NOC_GC] =3D &qns_gemnoc_gc,
+> +       [SLAVE_SNOC_GEM_NOC_SF] =3D &qns_gemnoc_sf,
+> +       [SLAVE_IMEM] =3D &qxs_imem,
+> +       [SLAVE_PIMEM] =3D &qxs_pimem,
+> +       [SLAVE_SERVICE_SNOC] =3D &srvc_snoc,
+> +       [SLAVE_QDSS_STM] =3D &xs_qdss_stm,
+> +       [SLAVE_TCU] =3D &xs_sys_tcu_cfg,
+> +};
+> +
+> +static struct qcom_icc_desc sc7180_system_noc =3D {
 
-----------------------------------------------------------------
-RISC-V updates for v5.5-rc5
+Can this be const? And the other ones?
 
-Several fixes for RISC-V:
+> +       .nodes =3D system_noc_nodes,
+> +       .num_nodes =3D ARRAY_SIZE(system_noc_nodes),
+> +       .bcms =3D system_noc_bcms,
+> +       .num_bcms =3D ARRAY_SIZE(system_noc_bcms),
+> +};
+> +
+> +static int qnoc_probe(struct platform_device *pdev)
+> +{
+> +       const struct qcom_icc_desc *desc;
+> +       struct icc_onecell_data *data;
+> +       struct icc_provider *provider;
+> +       struct qcom_icc_node **qnodes;
+> +       struct qcom_icc_provider *qp;
+> +       struct icc_node *node;
+> +       size_t num_nodes, i;
+> +       int ret;
+> +
+> +       desc =3D of_device_get_match_data(&pdev->dev);
 
-- Fix function graph trace support
+Use device_get_match_data() instead?
 
-- Prefix the CSR IRQ_* macro names with "RV_", to avoid collisions
-  with macros elsewhere in the Linux kernel tree named "IRQ_TIMER"
+> +       if (!desc)
+> +               return -EINVAL;
+> +
+> +       qnodes =3D desc->nodes;
+> +       num_nodes =3D desc->num_nodes;
+> +
+> +       qp =3D devm_kzalloc(&pdev->dev, sizeof(*qp), GFP_KERNEL);
+> +       if (!qp)
+> +               return -ENOMEM;
+> +
+> +       data =3D devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), GFP_K=
+ERNEL);
+> +       if (!data)
+> +               return -ENOMEM;
+> +
+> +       provider =3D &qp->provider;
+> +       provider->dev =3D &pdev->dev;
+> +       provider->set =3D qcom_icc_set;
+> +       provider->pre_aggregate =3D qcom_icc_pre_aggregate;
+> +       provider->aggregate =3D qcom_icc_aggregate;
+> +       provider->xlate =3D of_icc_xlate_onecell;
+> +       INIT_LIST_HEAD(&provider->nodes);
+> +       provider->data =3D data;
+> +
+> +       qp->dev =3D &pdev->dev;
+> +       qp->bcms =3D desc->bcms;
+> +       qp->num_bcms =3D desc->num_bcms;
+> +
+> +       qp->voter =3D of_bcm_voter_get(qp->dev, NULL);
+> +       if (IS_ERR(qp->voter))
+> +               return PTR_ERR(qp->voter);
+> +
+> +       ret =3D icc_provider_add(provider);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "error adding interconnect provider\n=
+");
+> +               return ret;
+> +       }
+> +
+> +       for (i =3D 0; i < num_nodes; i++) {
+> +               size_t j;
+> +
+> +               if (!qnodes[i])
+> +                       continue;
+> +
+> +               node =3D icc_node_create(qnodes[i]->id);
+> +               if (IS_ERR(node)) {
+> +                       ret =3D PTR_ERR(node);
+> +                       goto err;
+> +               }
+> +
+> +               node->name =3D qnodes[i]->name;
+> +               node->data =3D qnodes[i];
+> +               icc_node_add(node, provider);
+> +
+> +               dev_dbg(&pdev->dev, "registered node %pK %s %d\n", node,
+> +                       qnodes[i]->name, node->id);
 
-- Use __pa_symbol() when computing the physical address of a kernel
-  symbol, rather than __pa()
+Is this more debug junk? Maybe if it is useful it can be part of the
+core framework instead of in this driver?
 
-- Mark the RISC-V port as supporting GCOV
+> +
+> +               /* populate links */
 
-One DT addition:
+Useless comment.
 
-- Describe the L2 cache controller in the FU540 DT file
+> +               for (j =3D 0; j < qnodes[i]->num_links; j++)
+> +                       icc_link_create(node, qnodes[i]->links[j]);
+> +
+> +               data->nodes[i] =3D node;
+> +       }
+> +       data->num_nodes =3D num_nodes;
+> +
+> +       for (i =3D 0; i < qp->num_bcms; i++)
+> +               qcom_icc_bcm_init(qp->bcms[i], &pdev->dev);
+> +
+> +       platform_set_drvdata(pdev, qp);
+> +
+> +       dev_dbg(&pdev->dev, "Registered SC7180 ICC\n");
 
-One documentation update:
+This driver debug message is pretty useless. Please remove it.
 
-- Add patch acceptance guideline documentation
+> +
+> +       return ret;
 
-----------------------------------------------------------------
-Paul Walmsley (2):
-      riscv: prefix IRQ_ macro names with an RV_ namespace
-      Documentation: riscv: add patch acceptance guidelines
+return 0?
 
-Yash Shah (1):
-      riscv: dts: Add DT support for SiFive L2 cache controller
+> +err:
+> +       icc_nodes_remove(provider);
+> +       icc_provider_del(provider);
+> +       return ret;
+> +}
+> +
+> +static int qnoc_remove(struct platform_device *pdev)
+> +{
+> +       struct qcom_icc_provider *qp =3D platform_get_drvdata(pdev);
+> +
+> +       icc_nodes_remove(&qp->provider);
+> +       return icc_provider_del(&qp->provider);
+> +}
+> +
+> +static const struct of_device_id qnoc_of_match[] =3D {
+> +       { .compatible =3D "qcom,sc7180-aggre1-noc",
+> +         .data =3D &sc7180_aggre1_noc},
+> +       { .compatible =3D "qcom,sc7180-aggre2-noc",
+> +         .data =3D &sc7180_aggre2_noc},
+> +       { .compatible =3D "qcom,sc7180-camnoc-virt",
+> +         .data =3D &sc7180_camnoc_virt},
+> +       { .compatible =3D "qcom,sc7180-compute-noc",
+> +         .data =3D &sc7180_compute_noc},
+> +       { .compatible =3D "qcom,sc7180-config-noc",
+> +         .data =3D &sc7180_config_noc},
+> +       { .compatible =3D "qcom,sc7180-dc-noc",
+> +         .data =3D &sc7180_dc_noc},
+> +       { .compatible =3D "qcom,sc7180-gem-noc",
+> +         .data =3D &sc7180_gem_noc},
+> +       { .compatible =3D "qcom,sc7180-ipa-virt",
+> +         .data =3D &sc7180_ipa_virt},
+> +       { .compatible =3D "qcom,sc7180-mc-virt",
+> +         .data =3D &sc7180_mc_virt},
+> +       { .compatible =3D "qcom,sc7180-mmss-noc",
+> +         .data =3D &sc7180_mmss_noc},
+> +       { .compatible =3D "qcom,sc7180-npu-noc",
+> +         .data =3D &sc7180_npu_noc},
+> +       { .compatible =3D "qcom,sc7180-qup-virt",
+> +         .data =3D &sc7180_qup_virt},
+> +       { .compatible =3D "qcom,sc7180-system-noc",
+> +         .data =3D &sc7180_system_noc},
+> +       { },
 
-Zong Li (4):
-      riscv: mm: use __pa_symbol for kernel symbols
-      riscv: gcov: enable gcov for RISC-V
-      riscv: ftrace: correct the condition logic in function graph tracer
-      clocksource: riscv: add notrace to riscv_sched_clock
+Nitpick: Drop the comma as it's the sentinel and nothing can come after.
 
- .../debug/gcov-profile-all/arch-support.txt        |  2 +-
- Documentation/process/index.rst                    |  1 +
- Documentation/riscv/index.rst                      |  1 +
- Documentation/riscv/patch-acceptance.rst           | 35 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- arch/riscv/Kconfig                                 |  1 +
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi         | 15 ++++++++++
- arch/riscv/include/asm/csr.h                       | 18 +++++------
- arch/riscv/kernel/ftrace.c                         |  2 +-
- arch/riscv/kernel/irq.c                            |  6 ++--
- arch/riscv/mm/init.c                               | 12 ++++----
- drivers/clocksource/timer-riscv.c                  |  2 +-
- drivers/irqchip/irq-sifive-plic.c                  |  2 +-
- 13 files changed, 76 insertions(+), 22 deletions(-)
- create mode 100644 Documentation/riscv/patch-acceptance.rst
-
-Kernel object size difference:
-   text	   data	    bss	    dec	    hex	filename
-6896189	2329828	 313920	9539937	 919161	vmlinux.rv64.orig
-6896191	2329892	 313920	9540003	 9191a3	vmlinux.rv64.patched
-6656496	1939040	 257576	8853112	 871678	vmlinux.rv32.orig
-6656498	1939040	 257576	8853114	 87167a	vmlinux.rv32.patched
-1171674	 353368	 130024	1655066	 19411a	vmlinux.nommu_virt.orig
-1171674	 353368	 130024	1655066	 19411a	vmlinux.nommu_virt.patched
-
+> +};
+> +MODULE_DEVICE_TABLE(of, qnoc_of_match);
