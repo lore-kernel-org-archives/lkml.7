@@ -2,172 +2,101 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7192BC33C99
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 15:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A82C33C9A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 15:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34D2B206F0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 15:36:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="Qxq6/1zu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hDIr/GEv"
+	by mail.kernel.org (Postfix) with ESMTP id 89281222C4
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 15:42:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578238943;
+	bh=kqa7E7pY27pjTz+f6e0ccECN9J2A3cYu1FhYrBZerzc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WzUMXBiMTIA9TvBZwG8UdBWC6B/k0WENKqkWWgtX/r67dTvxc1IvxuYqgMGlh33E9
+	 BlnwJOmpssYTqlUNk4EMj+bUR0JNaiOKyarI3KkOPmENc3K03pgVPVq6F+HvWoduor
+	 MlU7kcimxvFfVQi2UWTPUGgn5xjd068v7xUQkpN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgAEPgD (ORCPT
+        id S1726494AbgAEPmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 10:36:03 -0500
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:35147 "EHLO
-        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726212AbgAEPgD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 10:36:03 -0500
-X-Greylist: delayed 530 seconds by postgrey-1.27 at vger.kernel.org; Sun, 05 Jan 2020 10:36:02 EST
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.west.internal (Postfix) with ESMTP id 63D3C5FF;
-        Sun,  5 Jan 2020 10:27:11 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Sun, 05 Jan 2020 10:27:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm1; bh=s
-        rCX085Fcg6QJTzWvKbgSzWWkOVQY8YF3nspHYJ3mXw=; b=Qxq6/1zuezyfGDttK
-        nc1Vq/vhSPg4CkwsygWouH1ePqasr9TRJK6trM7L4myM5U9V5cTWiq4C+li1C6Qw
-        wY+/6AShZLzd+fgZWyTXWVrBG3TGFCsi2eNoIJAqVOV14Dni982Xfo3hM3PA2p5l
-        zFgg+/Hh+D49f1OtPT/Ng1eNNmnvuLgjNg9nqhxWKao/YxKlFWT/CqWxxkVus2u9
-        g+DkJTC2Zsq4mR3EIpwhvg+xHaWE7afbbOfT9BqBzfo80a6hfye/Q8czX+qw8TjB
-        +Z4kY/mramtceQE9TJ9z57s4/vHsjIZzaUjETvF2ZLjQY1S4yi0/gsMO1P/au2Y4
-        RKedQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=srCX085Fcg6QJTzWvKbgSzWWkOVQY8YF3nspHYJ3m
-        Xw=; b=hDIr/GEvNuapESIHqigtM6hwqUp2RUbAxrYzhTjDnsOpPwpugMyvaXQKi
-        y+/o6YHMq13fiQhzj3SXatTz5/OqSeXy8F6cicajp+idf4eTgv2GyBGiiHbCavVT
-        jSZ9LHWFSfVPMuspnEfIZWNO4m8zLCSIOwOXHu7isyMQi5QG6bz4/gF/6bkmW3K2
-        X85QbmCh7+NVTfTZnwmpROE1rVg+ZGjIYjekaY1y0CQHpTx46hkUQk0N6YP8Bvop
-        x6YoHvtFAQTYrwXQQvHbuQprUpZuk4ZuRXK+v68pwVG3VH27EuyU5L3k0bZG6mj5
-        Wvuhiufl9mKn2yyrILk4aI38kVb+Q==
-X-ME-Sender: <xms:TgASXmFgVFdIyq29-ziqQ8h2HizIwQbZYGSjm8s9QZsmnT2t9JzVRA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdegkedgjeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepuffvfhfhkffffgggjggtgfesthejredttdefjeenucfhrhhomhepufgrmhhu
-    vghlucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukf
-    hppeejtddrudefhedrudegkedrudehudenucfrrghrrghmpehmrghilhhfrhhomhepshgr
-    mhhuvghlsehshhholhhlrghnugdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:TgASXu7-gUu1DRRRgVIFZLrTjbFm0eN-GQPT0Ijo2WzKpI2Qdcr0Ig>
-    <xmx:TgASXvxpdnMllh4roMW0NVo2UlX8JP2FJsoGfaYyor9_bnFl--BRNg>
-    <xmx:TgASXs3npnzidKxoiEPlPzgR8irJH567GW5peUBTQydu75wyRCq__Q>
-    <xmx:TwASXlC_kvP64e2oXAp_bZyfIGHaKGmXmuU_O2WL6tOSMssT-58Eq9E-zFs>
-Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CE31B30602DB;
-        Sun,  5 Jan 2020 10:27:09 -0500 (EST)
-Subject: Re: [linux-sunxi] [PATCH v2 2/9] power: supply: axp20x_ac_power: Fix
- reporting online status
-To:     Julian Calaby <julian.calaby@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Sebastian Reichel <sre@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Oskari Lemmela <oskari@lemmela.net>,
-        Quentin Schulz <quentin.schulz@bootlin.com>,
-        linux-pm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        stable@vger.kernel.org
-References: <20200105012416.23296-1-samuel@sholland.org>
- <20200105012416.23296-3-samuel@sholland.org>
- <CAGRGNgXeenNYMNXY0dewQaeG2QecUPgE_MOofURg7HzcND782w@mail.gmail.com>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <6e299dd3-3d70-9306-8581-798927241779@sholland.org>
-Date:   Sun, 5 Jan 2020 09:27:07 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sun, 5 Jan 2020 10:42:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57586 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726212AbgAEPmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 10:42:22 -0500
+Received: from localhost (unknown [73.61.17.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67CC92077B;
+        Sun,  5 Jan 2020 15:42:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578238941;
+        bh=kqa7E7pY27pjTz+f6e0ccECN9J2A3cYu1FhYrBZerzc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ns+keplO9pEXxkWOQaPUzgi19poKeoyq3kSgJGOe0ITWRgN6k/+44J1jWsi0f76O5
+         siUTlW8OWdS2yQq3mSEaq0UspmFfiGoldNXHFdB2IXJtbh+Q3liaZpASWS85Ly8iMa
+         gwCTlf2xt5CW5I1TNQR00zSu4Okksn14H0b36GoM=
+Date:   Sun, 5 Jan 2020 10:42:18 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     Anders Kaseorg <andersk@mit.edu>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.4 056/187] Revert "iwlwifi: assign directly to
+ iwl_trans->cfg in QuZ detection"
+Message-ID: <20200105154218.GP16372@sasha-vm>
+References: <20191227174055.4923-1-sashal@kernel.org>
+ <20191227174055.4923-56-sashal@kernel.org>
+ <5dbea7a0-5c66-abe4-b1ef-bbfceccbb9bb@mit.edu>
 MIME-Version: 1.0
-In-Reply-To: <CAGRGNgXeenNYMNXY0dewQaeG2QecUPgE_MOofURg7HzcND782w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5dbea7a0-5c66-abe4-b1ef-bbfceccbb9bb@mit.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Julian,
-
-On 1/5/20 7:00 AM, Julian Calaby wrote:
-> On Sun, Jan 5, 2020 at 12:24 PM Samuel Holland <samuel@sholland.org> wrote:
+On Sun, Dec 29, 2019 at 09:48:53PM -0800, Anders Kaseorg wrote:
+>On 12/27/19 9:38 AM, Sasha Levin wrote:
+>> From: Anders Kaseorg <andersk@mit.edu>
 >>
->> AXP803/AXP813 have a flag that enables/disables the AC power supply
->> input. This flag does not affect the status bits in PWR_INPUT_STATUS.
->> Its effect can be verified by checking the battery charge/discharge
->> state (bit 2 of PWR_INPUT_STATUS), or by examining the current draw on
->> the AC input.
+>> [ Upstream commit db5cce1afc8d2475d2c1c37c2a8267dd0e151526 ]
 >>
->> Take this flag into account when getting the ONLINE property of the AC
->> input, on PMICs where this flag is present.
+>> This reverts commit 968dcfb4905245dc64d65312c0d17692fa087b99.
 >>
->> Fixes: 7693b5643fd2 ("power: supply: add AC power supply driver for AXP813")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Samuel Holland <samuel@sholland.org>
->> ---
->>  drivers/power/supply/axp20x_ac_power.c | 31 +++++++++++++++++++++-----
->>  1 file changed, 25 insertions(+), 6 deletions(-)
+>> Both that commit and commit 809805a820c6445f7a701ded24fdc6bbc841d1e4
+>> attempted to fix the same bug (dead assignments to the local variable
+>> cfg), but they did so in incompatible ways. When they were both merged,
+>> independently of each other, the combination actually caused the bug to
+>> reappear, leading to a firmware crash on boot for some cards.
 >>
->> diff --git a/drivers/power/supply/axp20x_ac_power.c b/drivers/power/supply/axp20x_ac_power.c
->> index 0d34a932b6d5..ca0a28f72a27 100644
->> --- a/drivers/power/supply/axp20x_ac_power.c
->> +++ b/drivers/power/supply/axp20x_ac_power.c
->> @@ -23,6 +23,8 @@
->>  #define AXP20X_PWR_STATUS_ACIN_PRESENT BIT(7)
->>  #define AXP20X_PWR_STATUS_ACIN_AVAIL   BIT(6)
+>> https://bugzilla.kernel.org/show_bug.cgi?id=205719
 >>
->> +#define AXP813_ACIN_PATH_SEL           BIT(7)
->> +
->>  #define AXP813_VHOLD_MASK              GENMASK(5, 3)
->>  #define AXP813_VHOLD_UV_TO_BIT(x)      ((((x) / 100000) - 40) << 3)
->>  #define AXP813_VHOLD_REG_TO_UV(x)      \
->> @@ -40,6 +42,7 @@ struct axp20x_ac_power {
->>         struct power_supply *supply;
->>         struct iio_channel *acin_v;
->>         struct iio_channel *acin_i;
->> +       bool has_acin_path_sel;
->>  };
->>
->>  static irqreturn_t axp20x_ac_power_irq(int irq, void *devid)
->> @@ -86,6 +89,17 @@ static int axp20x_ac_power_get_property(struct power_supply *psy,
->>                         return ret;
->>
->>                 val->intval = !!(reg & AXP20X_PWR_STATUS_ACIN_AVAIL);
->> +
->> +               /* ACIN_PATH_SEL disables ACIN even if ACIN_AVAIL is set. */
->> +               if (power->has_acin_path_sel) {
-> 
-> Do we need to check this bit if ACIN_AVAIL is not set?
+>> Signed-off-by: Anders Kaseorg <andersk@mit.edu>
+>> Acked-by: Luca Coelho <luciano.coelho@intel.com>
+>> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>
+>This commit’s child 0df36b90c47d93295b7e393da2d961b2f3b6cde4 (part of
+>the same bug 205719) is now enqueued for v5.4, but this one doesn’t seem
+>to have made it yet, perhaps because I forgot to Cc: stable@ in the
+>commit message.  Can someone make sure this goes to v5.4 as well?  Luca
+>previously nominated it for v5.4 here:
+>
+>https://patchwork.kernel.org/patch/11269985/#23032785
 
-No, we don't. However due to regcache this won't actually cause another read
-from the device. If I send a v3, I'll move the && to  the if statement.
+Great to hear from you again Anders!
 
->> +                       ret = regmap_read(power->regmap, AXP813_ACIN_PATH_CTRL,
->> +                                         &reg);
->> +                       if (ret)
->> +                               return ret;
->> +
->> +                       val->intval &= !!(reg & AXP813_ACIN_PATH_SEL);
-> 
-> If we only check this bit if ACIN_AVAIL is set, then we don't need the
-> "&" in the "&=". (I'm assuming that val->intval is an int, not a bool,
-> otherwise this is the wrong operator)
+Yes, AUTOSEL runs on a slower cycle than patches tagged for stable.
+Anyway, I've queued this patch up for the next release.
 
-val->intval is an int, but it only ever takes the values 0 or 1. The !!
-expression coerces an integer to the range of a boolean. So the two ways of
-deriving the value ("&=" here vs "&& val->intval" in the if statement) are
-equivalent.
-
-> Thanks,
-
-Thanks!
-Samuel
-
+-- 
+Thanks,
+Sasha
