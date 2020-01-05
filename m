@@ -2,66 +2,172 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE51C33C8C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 22:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE3DC33C9A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 22:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A931721775
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 22:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F7724650
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 22:20:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KCFzcTa2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgAEWSh (ORCPT
+        id S1727124AbgAEWUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 17:18:37 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:35900 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbgAEWSh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 17:18:37 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 92E991C2453; Sun,  5 Jan 2020 23:18:35 +0100 (CET)
-Date:   Sun, 5 Jan 2020 23:18:35 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
-        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz,
-        agx@sigxcpu.org, lee.jones@linaro.org, daniel.thompson@linaro.org,
-        jingoohan1@gmail.com, dri-devel@lists.freedesktop.org,
-        tomi.valkeinen@ti.com, jjhiblot@ti.com
-Subject: Re: LED backlight on Droid 4 and others
-Message-ID: <20200105221835.iwwv6byysbj74ead@ucw.cz>
-References: <20200105183202.GA17784@duo.ucw.cz>
- <20200105202449.GC5885@atomide.com>
+        Sun, 5 Jan 2020 17:20:52 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:60181 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726851AbgAEWUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 17:20:52 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47rY4c4ldBz9sPJ;
+        Mon,  6 Jan 2020 09:20:48 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578262849;
+        bh=E+q6k2ycXQHw60uj6CbYGiIlcHxFmrT3dVHqeFlccNA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=KCFzcTa2t36ibetYQPZXyOLVKxEN4ZNmaRjBvA9bt8oXEXq8KUl0nWNsIdC+n1Hj5
+         pedhOWb5wDWJ03ctJ0pk6nWr+8eAedZM3yZEnKM7fKz7dTFZqZW1TRI3fStKt23KrH
+         eDo4zZcoDGN7ZjFvvKBVQOoM6Q+GaTo+h/RqY+oLDP/8naR7GQoGAb5zVVe08dD7C6
+         ymvFKrw22itw98dbEv21OaQB8Ud0gXOdL4ib+Bf49AunWUEdLPQdy4HidVse2iZe56
+         +q84ckpgiFMslEnb0s7Bfl5xwe1pqZD1s4uL76TnqcP+Yv80usPhE9sDHKYFUTPvrb
+         LXZKfwGMZ9HVw==
+Date:   Mon, 6 Jan 2020 09:20:29 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Guo Ren <ren_guo@c-sky.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@suse.de>
+Subject: linux-next: manual merge of the csky tree with Linus' tree
+Message-ID: <20200106092029.00d365da@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200105202449.GC5885@atomide.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: multipart/signed; boundary="Sig_/fJam.fbauvI2BuJDaqF6+i0";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+--Sig_/fJam.fbauvI2BuJDaqF6+i0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> > It would be good to get LED backlight to work in clean way for 5.6
-> > kernel.
-> 
-> I agree, this is badly needed for many devices.
-> 
-> > [If you have an idea what else is needed, it would be welcome; it
-> > works for me in development tree but not in tree I'd like to
-> > upstream.]
-> 
-> I have some version of these patches working with modified dts in my
-> droid4-pending-v5.4 branch git branch, maybe try to diff against that.
+Hi all,
 
-Thanks a lot. I was missing 7dc08cb9ac7baff1601f65f66c4c611f841abc64.
+FIXME: Add owner of second tree to To:
+       Add author(s)/SOB of conflicting commits.
 
-Best regards,
-								Pavel
-> 
+Today's linux-next merge of the csky tree got a conflict in:
+
+  arch/csky/kernel/vmlinux.lds.S
+
+between commit:
+
+  eaf937075c9a ("vmlinux.lds.h: Move NOTES into RO_DATA")
+
+from Linus' tree and commit:
+
+  338ef1d06f0c ("csky: Tightly-Coupled Memory or Sram support")
+
+from the csky tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/csky/kernel/vmlinux.lds.S
+index 2ff37beaf2bf,02b35d916fe7..000000000000
+--- a/arch/csky/kernel/vmlinux.lds.S
++++ b/arch/csky/kernel/vmlinux.lds.S
+@@@ -49,10 -51,59 +51,58 @@@ SECTION
+ =20
+ =20
+  	_sdata =3D .;
+ -	RO_DATA_SECTION(PAGE_SIZE)
+ -	RW_DATA_SECTION(L1_CACHE_BYTES, PAGE_SIZE, THREAD_SIZE)
+ +	RO_DATA(PAGE_SIZE)
+ +	RW_DATA(L1_CACHE_BYTES, PAGE_SIZE, THREAD_SIZE)
+  	_edata =3D .;
+ =20
++ #ifdef CONFIG_HAVE_TCM
++ 	.tcm_start : {
++ 		. =3D ALIGN(PAGE_SIZE);
++ 		__tcm_start =3D .;
++ 	}
++=20
++ 	.text_data_tcm FIXADDR_TCM : AT(__tcm_start)
++ 	{
++ 		. =3D ALIGN(4);
++ 		__stcm_text_data =3D .;
++ 		*(.tcm.text)
++ 		*(.tcm.rodata)
++ #ifndef CONFIG_HAVE_DTCM
++ 		*(.tcm.data)
++ #endif
++ 		. =3D ALIGN(4);
++ 		__etcm_text_data =3D .;
++ 	}
++=20
++ 	. =3D ADDR(.tcm_start) + SIZEOF(.tcm_start) + SIZEOF(.text_data_tcm);
++=20
++ #ifdef CONFIG_HAVE_DTCM
++ 	#define ITCM_SIZE	CONFIG_ITCM_NR_PAGES * PAGE_SIZE
++=20
++ 	.dtcm_start : {
++ 		__dtcm_start =3D .;
++ 	}
++=20
++ 	.data_tcm FIXADDR_TCM + ITCM_SIZE : AT(__dtcm_start)
++ 	{
++ 		. =3D ALIGN(4);
++ 		__stcm_data =3D .;
++ 		*(.tcm.data)
++ 		. =3D ALIGN(4);
++ 		__etcm_data =3D .;
++ 	}
++=20
++ 	. =3D ADDR(.dtcm_start) + SIZEOF(.data_tcm);
++=20
++ 	.tcm_end : AT(ADDR(.dtcm_start) + SIZEOF(.data_tcm)) {
++ #else
++ 	.tcm_end : AT(ADDR(.tcm_start) + SIZEOF(.text_data_tcm)) {
++ #endif
++ 		. =3D ALIGN(PAGE_SIZE);
++ 		__tcm_end =3D .;
++ 	}
++ #endif
++=20
+ -	NOTES
+  	EXCEPTION_TABLE(L1_CACHE_BYTES)
+  	BSS_SECTION(L1_CACHE_BYTES, PAGE_SIZE, L1_CACHE_BYTES)
+  	VBR_BASE
+
+--Sig_/fJam.fbauvI2BuJDaqF6+i0
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4SYS0ACgkQAVBC80lX
+0GxAzQf/R6CFXdOq/qt5pWjnHV667FsRaxvmRgkXeuAfd7oSlsWPyjC9L8De3/eI
+cu7KK7K6B8Lky2UhB+nGeh0T2eplLvMEF7qWrvJuGw8tLNX25mXdd+rrPNDWws8r
+K0T/SrOJoAFyPMYVGwbQ38AfZWtKr7YMMRKECNmnE7yac73c96xpBwJ7YSGrIeRT
+kwxU7RMJi2tmmkxHgXaQoiX/A421AWWPv2czza8u9/o1SQ8UrVuToJnFhGT3aXy5
+E7VlQH6K/3QYfWc0wplhFRZDuSXXsauSRA0j2skiBWpgwelUyKOI11ba1EvonV99
+YZKoNL9NJC8L0RMhQ1Zb1rDcf3iXsw==
+=jEHF
+-----END PGP SIGNATURE-----
+
+--Sig_/fJam.fbauvI2BuJDaqF6+i0--
