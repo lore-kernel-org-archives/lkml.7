@@ -2,67 +2,145 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DE3C33C8C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 12:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6FBC33C9A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 13:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1DC9207FD
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 12:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9820620866
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 13:00:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="meOv6Nbx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbgAEMsB (ORCPT
+        id S1726368AbgAENAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 07:48:01 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:46669 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbgAEMsA (ORCPT
+        Sun, 5 Jan 2020 08:00:46 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46143 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbgAENAq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 07:48:00 -0500
-Received: from [172.58.27.182] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1io5K1-0002I0-8L; Sun, 05 Jan 2020 12:47:58 +0000
-Date:   Sun, 5 Jan 2020 13:47:49 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, tycho@tycho.ws, jannh@google.com,
-        cyphar@cyphar.com, oleg@redhat.com, luto@amacapital.net,
-        viro@zeniv.linux.org.uk, gpascutto@mozilla.com,
-        ealvarez@mozilla.com, fweimer@redhat.com, jld@mozilla.com,
-        arnd@arndb.de
-Subject: Re: [PATCH v8 1/3] vfs, fdtable: Add get_task_file helper
-Message-ID: <20200105124747.narl7otqr3d46ljp@wittgenstein>
-References: <20200103162928.5271-1-sargun@sargun.me>
- <20200103162928.5271-2-sargun@sargun.me>
+        Sun, 5 Jan 2020 08:00:46 -0500
+Received: by mail-lj1-f194.google.com with SMTP id m26so45769600ljc.13;
+        Sun, 05 Jan 2020 05:00:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wtj4ycfHH4tNcald6Hu3wfTW6bDI5OTHJjc7dzUfoq0=;
+        b=meOv6NbxWkh2QWiN19ICU9RrFOj8sUAIx0weTKNSjxrNhTKdZhtHhN4TVLEDBDqAs3
+         7KzeubXZ4ueV9A0YSa0gdaBYC7IlB6YgaiYbfwr9IUL3GobCmcnLZHBy8PTUHsDp4B3G
+         ELln8M4CfcVt70mY8YO+yYVtYVsgCDFxJOxSo3ljD15KNsjvdrnrQol7BtXVi8bDJ9F1
+         ub8M2R0ZQ82ESmbQWq+fw9lH1SL/dV1M1l0yU59c/xT2APU49eZnEru0hMqmxwuH2m2Y
+         23c25jZB3BiBuxHDk+u1R8ZQrz3ZK2FmEiM6aDsXYWDJTzBAa0Cut7J7bRVqY1HU3G2g
+         AokQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wtj4ycfHH4tNcald6Hu3wfTW6bDI5OTHJjc7dzUfoq0=;
+        b=HGRELdr1HqkM4zO5zCnstcj0VYAy0V2dkLXYgwFj95MWxD5kTeVUmjju62zPemIMBC
+         mjNlKPF2vnItVHl0Gd+NvIdribi13fFs0P8sulyO194dFbjXzwMYXEu+QiJcbZPLRv8t
+         xhQDEkFCVBXLA3YDaScuswaxLMNXw0vk0iaGzm2PscjWF7jIXIUO36zmibjKZBnTbNYu
+         hHETX6Dl+xHVr283kLW5Nr2GS+8NVjFJ6C6fam3LFGqzSv/Qh6LIc/Zj6tQZ97iMgORq
+         VWQ/dOYO59f+b0e7fvW8IOJRmIGgvAqYBYdUUD0NUeDvTNI67Z+pH5WiWciYhFMjNFmk
+         di9A==
+X-Gm-Message-State: APjAAAUfOi9/XUJjU34DAA5DTDRyrWhyab9tj0ZSLJ+oMwshmraPhqCm
+        aPpBBXTY2OQdkoJbEXhLss5pFOgnCWZ3xHqCu0g=
+X-Google-Smtp-Source: APXvYqxLzGCvQ7IBDoin+iaNIeacu1bK/X/6zdfCpgWpTUtPRqxu/mEv7lEFYRmG+unV4mfFAHxTXgC1OAZQvXNIC8Y=
+X-Received: by 2002:a2e:8544:: with SMTP id u4mr54341659ljj.70.1578229243841;
+ Sun, 05 Jan 2020 05:00:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200103162928.5271-2-sargun@sargun.me>
-User-Agent: NeoMutt/20180716
+References: <20200105012416.23296-1-samuel@sholland.org> <20200105012416.23296-3-samuel@sholland.org>
+In-Reply-To: <20200105012416.23296-3-samuel@sholland.org>
+From:   Julian Calaby <julian.calaby@gmail.com>
+Date:   Mon, 6 Jan 2020 00:00:32 +1100
+Message-ID: <CAGRGNgXeenNYMNXY0dewQaeG2QecUPgE_MOofURg7HzcND782w@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v2 2/9] power: supply: axp20x_ac_power: Fix
+ reporting online status
+To:     samuel@sholland.org
+Cc:     Chen-Yu Tsai <wens@csie.org>, Sebastian Reichel <sre@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Oskari Lemmela <oskari@lemmela.net>,
+        Quentin Schulz <quentin.schulz@bootlin.com>,
+        linux-pm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 08:29:26AM -0800, Sargun Dhillon wrote:
-> This introduces a function which can be used to fetch a file, given an
-> arbitrary task. As long as the user holds a reference (refcnt) to the
-> task_struct it is safe to call, and will either return NULL on failure,
-> or a pointer to the file, with a refcnt.
-> 
-> This patch is based on Oleg Nesterov's (cf. [1]) patch from September
-> 2018.
-> 
-> [1]: Link: https://lore.kernel.org/r/20180915160423.GA31461@redhat.com
-> 
-> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-> Suggested-by: Oleg Nesterov <oleg@redhat.com>
-> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Hi Samuel,
 
-Nit: the patch is titled "vfs, fdtable: Add get_task_file helper"
-but the actual helper is called fget_task()
+On Sun, Jan 5, 2020 at 12:24 PM Samuel Holland <samuel@sholland.org> wrote:
+>
+> AXP803/AXP813 have a flag that enables/disables the AC power supply
+> input. This flag does not affect the status bits in PWR_INPUT_STATUS.
+> Its effect can be verified by checking the battery charge/discharge
+> state (bit 2 of PWR_INPUT_STATUS), or by examining the current draw on
+> the AC input.
+>
+> Take this flag into account when getting the ONLINE property of the AC
+> input, on PMICs where this flag is present.
+>
+> Fixes: 7693b5643fd2 ("power: supply: add AC power supply driver for AXP813")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> ---
+>  drivers/power/supply/axp20x_ac_power.c | 31 +++++++++++++++++++++-----
+>  1 file changed, 25 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/power/supply/axp20x_ac_power.c b/drivers/power/supply/axp20x_ac_power.c
+> index 0d34a932b6d5..ca0a28f72a27 100644
+> --- a/drivers/power/supply/axp20x_ac_power.c
+> +++ b/drivers/power/supply/axp20x_ac_power.c
+> @@ -23,6 +23,8 @@
+>  #define AXP20X_PWR_STATUS_ACIN_PRESENT BIT(7)
+>  #define AXP20X_PWR_STATUS_ACIN_AVAIL   BIT(6)
+>
+> +#define AXP813_ACIN_PATH_SEL           BIT(7)
+> +
+>  #define AXP813_VHOLD_MASK              GENMASK(5, 3)
+>  #define AXP813_VHOLD_UV_TO_BIT(x)      ((((x) / 100000) - 40) << 3)
+>  #define AXP813_VHOLD_REG_TO_UV(x)      \
+> @@ -40,6 +42,7 @@ struct axp20x_ac_power {
+>         struct power_supply *supply;
+>         struct iio_channel *acin_v;
+>         struct iio_channel *acin_i;
+> +       bool has_acin_path_sel;
+>  };
+>
+>  static irqreturn_t axp20x_ac_power_irq(int irq, void *devid)
+> @@ -86,6 +89,17 @@ static int axp20x_ac_power_get_property(struct power_supply *psy,
+>                         return ret;
+>
+>                 val->intval = !!(reg & AXP20X_PWR_STATUS_ACIN_AVAIL);
+> +
+> +               /* ACIN_PATH_SEL disables ACIN even if ACIN_AVAIL is set. */
+> +               if (power->has_acin_path_sel) {
+
+Do we need to check this bit if ACIN_AVAIL is not set?
+
+> +                       ret = regmap_read(power->regmap, AXP813_ACIN_PATH_CTRL,
+> +                                         &reg);
+> +                       if (ret)
+> +                               return ret;
+> +
+> +                       val->intval &= !!(reg & AXP813_ACIN_PATH_SEL);
+
+If we only check this bit if ACIN_AVAIL is set, then we don't need the
+"&" in the "&=". (I'm assuming that val->intval is an int, not a bool,
+otherwise this is the wrong operator)
+
+Thanks,
+
+-- 
+Julian Calaby
+
+Email: julian.calaby@gmail.com
+Profile: http://www.google.com/profiles/julian.calaby/
