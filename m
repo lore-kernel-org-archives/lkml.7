@@ -2,116 +2,103 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EA4C33C99
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 10:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E77FC33C8C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 10:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 835FF21775
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 10:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30A47207FD
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 10:43:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="AJetH91v";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VfqPxNww"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C7df1BCt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgAEKmY (ORCPT
+        id S1726422AbgAEKnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 05:42:24 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:48361 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725985AbgAEKmX (ORCPT
+        Sun, 5 Jan 2020 05:43:00 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51951 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725930AbgAEKnA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 05:42:23 -0500
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 7A3323FDE;
-        Sun,  5 Jan 2020 05:42:22 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Sun, 05 Jan 2020 05:42:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=Bg70TfGSOPAvhp+LYYPCxqiBNS2
-        gPRtQUG933et+lgI=; b=AJetH91vtZKhzoj2u3iripRVedByRfzvJr2EFhO4KVA
-        iJAHXiFLyQvNAFUhZJ82BKhTRhNvCkE0sWg2K4iHzQN7w05zW73zgPnfvW4nmJdR
-        CLoP1LOiJMa+JCVLg70uPcm/H2zLCyzXOgGqN4/1C/+wux/VIR/1qr48XpjLXfjb
-        YfRHOXHCA7fXnPBM9p+GCfALYZjQND0sF747M713tMjE5eQlIOjS9UivwPZS+tAE
-        VdQxQ3OoI6HNrJnu7RZFKUBMCeiEVQvp3+Ocv04ehS9DVS4MwisbkGcFle9qiZpq
-        hCD/pOCMMsMTuBwt8TH+lv9xWcLVWL0sTMuecUl0SvA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=Bg70Tf
-        GSOPAvhp+LYYPCxqiBNS2gPRtQUG933et+lgI=; b=VfqPxNwwpUYiqfxyxFEW2N
-        jDFREgf+OQmOwR6HcArC+SF4YjPIHtNSJs2pbdS/iaJP5Fd4W2EpemB5OEj/xOA5
-        ckeaHKqu0qW9owyk6w9h6gPm+iAk/pA80FuPZ9fZvhFjvR9xeCSRAHK7qcmMtkpn
-        SG1tlBtw1B/imKkYl5zoijKTE124KE/n08frvrYLtAA6AB3jPHYaUlGfUHZH1EdW
-        IAqnoE3LQUZ2d3Uq5N4Xtm9PxKkQ/kuUueHCxD5mKJ6zdcc5u5kPyfXgmg5eZKKw
-        Y7zxLsTflB7oHrajucxBQWP53ToOlwy/VVRfD9F4zeAhsbHngyp+h32Ljc0NfQlA
-        ==
-X-ME-Sender: <xms:i70RXuVqxQ_zXFMmKy3X0BWIQL-8lKCPui4HVlam_Fj4zkH9Oghv4w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdegkedgudekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
-    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:i70RXuEm9pwTWEvGq7QvCVWuZ2MOqXCCuZepAw1PuxDtVBah1QsBjw>
-    <xmx:i70RXq5aOrfgtxtk_klO_P-_rX6tcrYPVhFaieCAfzHVGoDbwaHYhg>
-    <xmx:i70RXoKMs7vv0lB9H6TMytOHNCH8sUOtKK_bHGlMAPFa-iKN_sS9KA>
-    <xmx:jr0RXsfDqkWFV76bHvqVh_Xgk6EIOvxzaZ6inZz_mHCETvipE0fDgw>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3D04E8005C;
-        Sun,  5 Jan 2020 05:42:19 -0500 (EST)
-Date:   Sun, 5 Jan 2020 11:42:16 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        mareklindner@neomailbox.ch, sw@simonwunderlich.de, a@unstable.cc,
-        sven@narfation.org, Johan Hedberg <johan.hedberg@gmail.com>,
-        roopa@cumulusnetworks.com, nikolay@cumulusnetworks.com,
-        edumazet@google.com, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        jon.maloy@ericsson.com, ying.xue@windriver.com, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        netdev <netdev@vger.kernel.org>,
-        BlueZ devel list <linux-bluetooth@vger.kernel.org>,
-        tipc-discussion@lists.sourceforge.net,
-        linux-hyperv@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH 5/8] net: bluetooth: remove unneeded MODULE_VERSION()
- usage
-Message-ID: <20200105104216.GA1679409@kroah.com>
-References: <20200104195131.16577-1-info@metux.net>
- <20200104195131.16577-5-info@metux.net>
- <22BD3D36-DE54-4062-B3A1-15D9E0E256A8@holtmann.org>
+        Sun, 5 Jan 2020 05:43:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578220977;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BRbZ0RjIa8H/cOxd2x24HFOzfU7e/RH05WrdITWM4vc=;
+        b=C7df1BCtGqUInDjvodrgqMplmEJCuUR8w0GkNZlueClXKyUlKiK576HyQlvHFXzoVNzif4
+        DPUB23ePf0QZMvnAi1jtRNPXyolF53eDkAVKe29OJ5zASRIEV7+2xZ6dVSb6l2cdKd3Mph
+        630Y68RzH2awrMkNTkzHUmzeHXlSkvk=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-307-q9fdW6aaPeSh3lERlMIE-w-1; Sun, 05 Jan 2020 05:42:56 -0500
+X-MC-Unique: q9fdW6aaPeSh3lERlMIE-w-1
+Received: by mail-qt1-f200.google.com with SMTP id p12so32396036qtu.6
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jan 2020 02:42:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=BRbZ0RjIa8H/cOxd2x24HFOzfU7e/RH05WrdITWM4vc=;
+        b=FWd00FnSpWqholdOxKJ3sq1Pr+scCopCu2wga5YsO9iCOxSik5/mIQhp7ZO+tYPgjy
+         MaF7NHjL8A7s4p9rzNUxs9n1xF5O2TD+wmiTEeDDYEs4F04mlUEj3yCuP8R4S0ioDbDP
+         gEGGE52qikoQYrdYkhHcktPyE8w094nJAUcIqlE/tekDmJAYGZyw9/QCDSjvx6Zs/wqo
+         MgqoHGKWo/yAFOtdQo4VNQk17u5DkdObaBObyTq7gnFF/rIcAljA8a59suOVadc7zfJ1
+         RyY50e/AGZvLgSOGF4t2gyn2naFXHzb9d6JLeOc+XDJsQvNlvQyn5tuNhDjJkoQven2M
+         4M8w==
+X-Gm-Message-State: APjAAAXPRpyqye8VlYRpVmYoNzF3YZjhFrMWd+0saHYJ/UiF6ipiLHT2
+        9W7CnuBbx60nl/eTPVRFGZ4PwtWOwPDSfmNYWO4A6FlcwKPQrhmymUNgxSxrgTCabGhjhud6J/S
+        Sra5of3nDRejsY5B485SZq/dU
+X-Received: by 2002:ac8:43d0:: with SMTP id w16mr72765883qtn.43.1578220975920;
+        Sun, 05 Jan 2020 02:42:55 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxj37eEGp0vK5+GAdvI9b+oNDJsVwzEDoaTsQeftbJEGASoWKbu6C/R5mfmWJzInC+HeiO7bA==
+X-Received: by 2002:ac8:43d0:: with SMTP id w16mr72765874qtn.43.1578220975732;
+        Sun, 05 Jan 2020 02:42:55 -0800 (PST)
+Received: from redhat.com (bzq-79-183-34-164.red.bezeqint.net. [79.183.34.164])
+        by smtp.gmail.com with ESMTPSA id u7sm18701159qtg.13.2020.01.05.02.42.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jan 2020 02:42:54 -0800 (PST)
+Date:   Sun, 5 Jan 2020 05:42:49 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     "Liu, Jiang" <gerry@linux.alibaba.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        Zha Bin <zhabin@linux.alibaba.com>,
+        linux-kernel@vger.kernel.org, slp@redhat.com,
+        virtio-dev@lists.oasis-open.org, jing2.liu@intel.com,
+        chao.p.peng@intel.com
+Subject: Re: [PATCH v1 2/2] virtio-mmio: add features for virtio-mmio
+ specification version 3
+Message-ID: <20200105054142-mutt-send-email-mst@kernel.org>
+References: <cover.1577240905.git.zhabin@linux.alibaba.com>
+ <a11d4c616158c9fb1ca4575ca0530b2e17b952fa.1577240905.git.zhabin@linux.alibaba.com>
+ <229e689d-10f1-2bfb-c393-14dfa9c78971@redhat.com>
+ <0460F92A-3DF6-4F7A-903B-6434555577CC@linux.alibaba.com>
+ <f8b46502-a5a5-c5c6-88df-101dbfd02fda@redhat.com>
+ <56703BDA-B7AE-4656-8061-85FD1A130597@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <22BD3D36-DE54-4062-B3A1-15D9E0E256A8@holtmann.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <56703BDA-B7AE-4656-8061-85FD1A130597@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 05, 2020 at 10:34:56AM +0100, Marcel Holtmann wrote:
-> Hi Enrico,
-> 
-> > Remove MODULE_VERSION(), as it isn't needed at all: the only version
-> > making sense is the kernel version.
-> 
-> I prefer to keep the MODULE_VERSION info since it provides this
-> information via modinfo.
+On Thu, Dec 26, 2019 at 09:16:19PM +0800, Liu, Jiang wrote:
+> > 2) The mask and unmask control is missed
+> > 
+> > 
+> >>  but the extension doesn’t support 3) because
+> >> we noticed that the Linux virtio subsystem doesn’t really make use of interrupt masking/unmasking.
 
-Sure, but it's really pointless :)
+Linux uses masking/unmasking in order to migrate interrupts between
+CPUs.
 
-> Unless there is a kernel wide consent to remove MODULE_VERSION
-> altogether, the Bluetooth subsystem is keeping it.
+-- 
+MST
 
-I've deleted them from lots of drivers/subsystems already as they do not
-make any sense when you think about vendor kernels, stable kernels, and
-upstream kernel versions.
-
-thanks,
-
-greg k-h
