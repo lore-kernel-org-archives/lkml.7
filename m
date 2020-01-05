@@ -2,96 +2,116 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F37F2C33C8C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 22:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C361C33C8C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 22:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9CAA20848
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 22:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E41592072C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 22:43:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbgAEWfe (ORCPT
+        id S1727159AbgAEWnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 17:35:34 -0500
-Received: from mga14.intel.com ([192.55.52.115]:46887 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbgAEWfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 17:35:34 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jan 2020 14:35:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,400,1571727600"; 
-   d="scan'208";a="394850178"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 05 Jan 2020 14:35:32 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1ioEUd-000C6n-VL; Mon, 06 Jan 2020 06:35:31 +0800
-Date:   Mon, 6 Jan 2020 06:35:04 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     =?iso-8859-1?B?Suly9G1l?= Pouiller <jerome.pouiller@silabs.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: drivers/staging/wfx/main.c:47:14-21: ERROR: PTR_ERR applied after
- initialization to constant on line 42
-Message-ID: <202001060659.u13dpgMJ%lkp@intel.com>
+        Sun, 5 Jan 2020 17:43:15 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:48572 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726851AbgAEWnO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 17:43:14 -0500
+Received: from [81.174.41.21] (port=58572 helo=melee.fritz.box)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1ioEbs-00GPCc-B9; Sun, 05 Jan 2020 23:43:11 +0100
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Subject: [PATCH 00/26] docs: i2c: rework I2C documentation, part I
+Date:   Sun,  5 Jan 2020 23:39:40 +0100
+Message-Id: <20200105224006.10321-1-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   768fc661d12559b0dbd99d941b3bf28fe92fd365
-commit: 0096214a59a72b3c3c943e27bd03307324d3ce0f staging: wfx: add support for I/O access
-date:   3 months ago
+Hi,
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+this series is a list of improvements to the I2C documentation.
 
+It started as a simple reordering of index.rst from alphabetical order to a
+logical order. Then it grew to a mixture of various improvements to each
+section. I wanted to rework all the sections in a unique series, but after
+covering about one third of them the number of patches has already grown
+pretty long so I'm sending it in its current state.
 
-coccinelle warnings: (new ones prefixed by >>)
+Let's see how this series is received, I will continue to cover the rest of
+the sections later.
 
->> drivers/staging/wfx/main.c:47:14-21: ERROR: PTR_ERR applied after initialization to constant on line 42
+Each patch is quite self-standing, and most are trivial, so have a good
+reading.
 
-vim +47 drivers/staging/wfx/main.c
+Luca
 
-    30	
-    31	struct gpio_desc *wfx_get_gpio(struct device *dev, int override, const char *label)
-    32	{
-    33		struct gpio_desc *ret;
-    34		char label_buf[256];
-    35	
-    36		if (override >= 0) {
-    37			snprintf(label_buf, sizeof(label_buf), "wfx_%s", label);
-    38			ret = ERR_PTR(devm_gpio_request_one(dev, override, GPIOF_OUT_INIT_LOW, label_buf));
-    39			if (!ret)
-    40				ret = gpio_to_desc(override);
-    41		} else if (override == -1) {
-  > 42			ret = NULL;
-    43		} else {
-    44			ret = devm_gpiod_get(dev, label, GPIOD_OUT_LOW);
-    45		}
-    46		if (IS_ERR(ret) || !ret) {
-  > 47			if (!ret || PTR_ERR(ret) == -ENOENT)
-    48				dev_warn(dev, "gpio %s is not defined\n", label);
-    49			else
-    50				dev_warn(dev, "error while requesting gpio %s\n", label);
-    51			ret = NULL;
-    52		} else {
-    53			dev_dbg(dev, "using gpio %d for %s\n", desc_to_gpio(ret), label);
-    54		}
-    55		return ret;
-    56	}
-    57	
+Luca Ceresoli (26):
+  docs: i2c: sort index logically
+  docs: i2c: summary: extend introduction
+  docs: i2c: summary: rewrite the "terminology" section
+  docs: i2c: call it "I2C" consistently
+  docs: i2c: fix typo
+  docs: i2c: replace "I2C-transfer" -> "I2C transfer" consistently
+  docs: i2c: i2c-protocol: fix kernel-doc function syntax
+  docs: i2c: i2c-protocol: properly name start and stop conditions
+  docs: i2c: i2c-protocol: remove unneeded colons from table
+  docs: i2c: i2c-protocol: use proper names for ACK and NACK
+  docs: i2c: smbus: fix link syntax
+  docs: i2c: smbus-protocol: properly name start and stop conditions
+  docs: i2c: smbus-protocol: remove unneeded colons from table
+  docs: i2c: smbus-protocol: use proper names for ACK and NACK
+  docs: i2c: smbus-protocol: enable kernel-doc function syntax
+  docs: i2c: smbus-protocol: fix kernel-doc function syntax
+  docs: i2c: i2c-protocol: fix typo
+  docs: i2c: i2c-protocol: fix punctuation
+  docs: i2c: smbus-protocol: improve I2C Block transactions description
+  docs: i2c: instantiating-devices: fix internal hyperlink
+  docs: i2c: instantiating-devices: rearrange static instatiation
+  docs: i2c: instantiating-devices: use monospace for filenames
+  docs: i2c: old-module-parameters: fix internal hyperlink
+  docs: i2c: old-module-parameters: clarify this is for obsolete kernels
+  docs: i2c: old-module-parameters: use monospace for filenames
+  docs: i2c: rename sections so the overall picture is clearer
 
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+ Documentation/i2c/dev-interface.rst         |   24 +-
+ Documentation/i2c/dma-considerations.rst    |    2 +-
+ Documentation/i2c/i2c-protocol.rst          |   45 +-
+ Documentation/i2c/i2c-topology.rst          |   72 +-
+ Documentation/i2c/i2c.svg                   | 1341 +++++++++++++++++++
+ Documentation/i2c/index.rst                 |   21 +-
+ Documentation/i2c/instantiating-devices.rst |  116 +-
+ Documentation/i2c/old-module-parameters.rst |   30 +-
+ Documentation/i2c/slave-interface.rst       |    4 +-
+ Documentation/i2c/smbus-protocol.rst        |  107 +-
+ Documentation/i2c/summary.rst               |   61 +-
+ Documentation/i2c/writing-clients.rst       |   10 +-
+ 12 files changed, 1611 insertions(+), 222 deletions(-)
+ create mode 100644 Documentation/i2c/i2c.svg
+
+-- 
+2.24.1
+
