@@ -2,57 +2,88 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83600C00523
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 04:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 237EBC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 04:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55BFC2176D
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 04:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEB2F218AC
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 04:18:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgAEEJy (ORCPT
+        id S1726391AbgAEESf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Jan 2020 23:09:54 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:53718 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbgAEEJx (ORCPT
+        Sat, 4 Jan 2020 23:18:35 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:51262 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbgAEESe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Jan 2020 23:09:53 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1inxEH-0027yC-TE; Sun, 05 Jan 2020 04:09:37 +0000
-Date:   Sun, 5 Jan 2020 04:09:29 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Evan Rudford <zocker76@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: Is the Linux kernel underfunded? Lack of quality and security?
-Message-ID: <20200105040929.GD8904@ZenIV.linux.org.uk>
-References: <CAE90CG6SGWKXToVhY5VH-AzUjC6UEwRzoisUXM0OQe9XgcCHRA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAE90CG6SGWKXToVhY5VH-AzUjC6UEwRzoisUXM0OQe9XgcCHRA@mail.gmail.com>
+        Sat, 4 Jan 2020 23:18:34 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A2822159F0B0A;
+        Sat,  4 Jan 2020 20:18:33 -0800 (PST)
+Date:   Sat, 04 Jan 2020 20:18:33 -0800 (PST)
+Message-Id: <20200104.201833.91020607861340266.davem@davemloft.net>
+To:     jiping.ma2@windriver.com
+Cc:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, mcoquelin.stm32@gmail.com,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] stmmac: debugfs entry name is not be changed when udev
+ rename device name.
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200102013544.19271-1-jiping.ma2@windriver.com>
+References: <20200102013544.19271-1-jiping.ma2@windriver.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 04 Jan 2020 20:18:34 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 05, 2020 at 04:47:33AM +0100, Evan Rudford wrote:
+From: Jiping Ma <jiping.ma2@windriver.com>
+Date: Thu, 2 Jan 2020 09:35:44 +0800
 
-> - Although the kernel will always remain in C, make serious efforts to
-> introduce a safe language for kernel modules and perhaps for some
-> subsystems.
+> Add one notifier for udev changes net device name.
+> 
+> Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
+> ---
+>  .../net/ethernet/stmicro/stmmac/stmmac_main.c | 28 +++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> index b14f46a57154..3b05cb80eed7 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> @@ -4038,6 +4038,31 @@ static int stmmac_dma_cap_show(struct seq_file *seq, void *v)
+>  }
+>  DEFINE_SHOW_ATTRIBUTE(stmmac_dma_cap);
+>  
+> +/* Use network device events to rename debugfs file entries.
+> + */
+> +static int stmmac_device_event(struct notifier_block *unused,
+> +			       unsigned long event, void *ptr)
+> +{
+> +	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
+> +	struct stmmac_priv *priv = netdev_priv(dev);
+> +
+> +	switch (event) {
+> +	case NETDEV_CHANGENAME:
 
-Let me see if I've got it right - you suggest introducing an infrastructure
-that would provide the bindings between the core kernel and those "safe
-language modules" and maintaining its safety (from those languages' point
-of view) through the changes of said core kernel *and* through the changes
-of ABI of the languages in question?  That takes an impressive skillset
-from the poor sods in question - on the level of people actively working
-on the language implementation, _in_ _addition_ _to_ what's normally
-required for the kernel work.  And that happy group would have to keep
-track of the kernel changes.  That will certainly make everything more
-secure; I just wonder where have you found the funding to cover the costs
-of psychiatric care for the victims^Wproud members of that august group.
-You do have that funding lined up, right?
+This notifier gets called for every single netdevice in the entire
+system.
+
+You cannot just assume that the device that gets passed in here is
+an stmmac device.
+
+Look at how other drivers handle this to see how to do it correctly.
+
+Thank you.
