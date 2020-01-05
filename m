@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D88C33C99
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 23:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F491C00523
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 23:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25F572085B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 23:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 265992085B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 23:15:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbgAEXPI (ORCPT
+        id S1727323AbgAEXPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 18:15:08 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:36991 "EHLO
+        Sun, 5 Jan 2020 18:15:11 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:50374 "EHLO
         hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727256AbgAEXPH (ORCPT
+        by vger.kernel.org with ESMTP id S1727256AbgAEXPK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 18:15:07 -0500
+        Sun, 5 Jan 2020 18:15:10 -0500
 Received: from [37.160.42.38] (port=5507 helo=melee.fritz.box)
         by hostingweb31.netsons.net with esmtpa (Exim 4.92)
         (envelope-from <luca@lucaceresoli.net>)
-        id 1ioEkH-00GSqI-Mw; Sun, 05 Jan 2020 23:51:41 +0100
+        id 1ioEkF-00GSqI-M5; Sun, 05 Jan 2020 23:51:39 +0100
 From:   Luca Ceresoli <luca@lucaceresoli.net>
 To:     linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org
 Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
         Wolfram Sang <wsa@the-dreams.de>,
         Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Subject: [PATCH 23/26] docs: i2c: old-module-parameters: fix internal hyperlink
-Date:   Sun,  5 Jan 2020 23:50:09 +0100
-Message-Id: <20200105225012.11701-23-luca@lucaceresoli.net>
+Subject: [PATCH 21/26] docs: i2c: instantiating-devices: rearrange static instatiation
+Date:   Sun,  5 Jan 2020 23:50:07 +0100
+Message-Id: <20200105225012.11701-21-luca@lucaceresoli.net>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200105225012.11701-1-luca@lucaceresoli.net>
 References: <20200105224006.10321-1-luca@lucaceresoli.net>
@@ -53,26 +53,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use ReST syntax so that a proper hyperlink is generated.
+Among the "static" instantiation methods the "board file" method is
+described first. Move it as last, since it is being replaced by the other
+methods.
+
+Also fix subsubsection heading syntax and remove the "Method 1[abc]"
+prefix as the subsubsection structure clarifies the logical hierarchy.
 
 Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 ---
- Documentation/i2c/old-module-parameters.rst | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ Documentation/i2c/instantiating-devices.rst | 98 ++++++++++++---------
+ 1 file changed, 54 insertions(+), 44 deletions(-)
 
-diff --git a/Documentation/i2c/old-module-parameters.rst b/Documentation/i2c/old-module-parameters.rst
-index 78a6950e5763..0503d2f0b127 100644
---- a/Documentation/i2c/old-module-parameters.rst
-+++ b/Documentation/i2c/old-module-parameters.rst
-@@ -12,8 +12,7 @@ address), "force" (to forcibly attach the driver to a given device) and
- With the conversion of the I2C subsystem to the standard device driver
- binding model, it became clear that these per-module parameters were no
- longer needed, and that a centralized implementation was possible. The new,
--sysfs-based interface is described in the documentation file
--"instantiating-devices", section "Method 4: Instantiate from user-space".
-+sysfs-based interface is described in :doc:`instantiating-devices`.
+diff --git a/Documentation/i2c/instantiating-devices.rst b/Documentation/i2c/instantiating-devices.rst
+index 5debaafef64d..cbcafb36b417 100644
+--- a/Documentation/i2c/instantiating-devices.rst
++++ b/Documentation/i2c/instantiating-devices.rst
+@@ -9,54 +9,27 @@ reason, the kernel code must instantiate I2C devices explicitly. There are
+ several ways to achieve this, depending on the context and requirements.
  
- Below is a mapping from the old module parameters to the new interface.
+ 
+-Method 1a: Declare the I2C devices by bus number
+-------------------------------------------------
++Method 1: Declare the I2C devices statically
++--------------------------------------------
+ 
+ This method is appropriate when the I2C bus is a system bus as is the case
+-for many embedded systems. On such systems, each I2C bus has a number
+-which is known in advance. It is thus possible to pre-declare the I2C
+-devices which live on this bus. This is done with an array of struct
+-i2c_board_info which is registered by calling i2c_register_board_info().
++for many embedded systems. On such systems, each I2C bus has a number which
++is known in advance. It is thus possible to pre-declare the I2C devices
++which live on this bus.
+ 
+-Example (from omap2 h4)::
++This information is provided to the kernel in a different way on different
++architectures: device tree, ACPI or board files.
+ 
+-  static struct i2c_board_info h4_i2c_board_info[] __initdata = {
+-	{
+-		I2C_BOARD_INFO("isp1301_omap", 0x2d),
+-		.irq		= OMAP_GPIO_IRQ(125),
+-	},
+-	{	/* EEPROM on mainboard */
+-		I2C_BOARD_INFO("24c01", 0x52),
+-		.platform_data	= &m24c01,
+-	},
+-	{	/* EEPROM on cpu card */
+-		I2C_BOARD_INFO("24c01", 0x57),
+-		.platform_data	= &m24c01,
+-	},
+-  };
+-
+-  static void __init omap_h4_init(void)
+-  {
+-	(...)
+-	i2c_register_board_info(1, h4_i2c_board_info,
+-			ARRAY_SIZE(h4_i2c_board_info));
+-	(...)
+-  }
+-
+-The above code declares 3 devices on I2C bus 1, including their respective
+-addresses and custom data needed by their drivers. When the I2C bus in
+-question is registered, the I2C devices will be instantiated automatically
+-by i2c-core.
++When the I2C bus in question is registered, the I2C devices will be
++instantiated automatically by i2c-core. The devices will be automatically
++unbound and destroyed when the I2C bus they sit on goes away (if ever).
+ 
+-The devices will be automatically unbound and destroyed when the I2C bus
+-they sit on goes away (if ever.)
+ 
++Declare the I2C devices via devicetree
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+-Method 1b: Declare the I2C devices via devicetree
+--------------------------------------------------
+-
+-This method has the same implications as method 1a. The declaration of I2C
+-devices is here done via devicetree as subnodes of the master controller.
++On platforms using devicetree the declaration of I2C devices is done in
++subnodes of the master controller.
+ 
+ Example::
+ 
+@@ -81,14 +54,51 @@ Here, two devices are attached to the bus using a speed of 100kHz. For
+ additional properties which might be needed to set up the device, please refer
+ to its devicetree documentation in Documentation/devicetree/bindings/.
+ 
+-
+-Method 1c: Declare the I2C devices via ACPI
+--------------------------------------------
++Declare the I2C devices via ACPI
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+ ACPI can also describe I2C devices. There is special documentation for this
+ which is currently located at :doc:`../firmware-guide/acpi/enumeration` .
+ 
+ 
++Declare the I2C devices in board files
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++In many embedded architectures devicetree has replaced the old hardware
++description based on board files, but the latter are still used in old
++code. Instantiating I2C devices via board files is done with an array of
++struct i2c_board_info which is registered by calling
++i2c_register_board_info().
++
++Example (from omap2 h4)::
++
++  static struct i2c_board_info h4_i2c_board_info[] __initdata = {
++	{
++		I2C_BOARD_INFO("isp1301_omap", 0x2d),
++		.irq		= OMAP_GPIO_IRQ(125),
++	},
++	{	/* EEPROM on mainboard */
++		I2C_BOARD_INFO("24c01", 0x52),
++		.platform_data	= &m24c01,
++	},
++	{	/* EEPROM on cpu card */
++		I2C_BOARD_INFO("24c01", 0x57),
++		.platform_data	= &m24c01,
++	},
++  };
++
++  static void __init omap_h4_init(void)
++  {
++	(...)
++	i2c_register_board_info(1, h4_i2c_board_info,
++			ARRAY_SIZE(h4_i2c_board_info));
++	(...)
++  }
++
++The above code declares 3 devices on I2C bus 1, including their respective
++addresses and custom data needed by their drivers.
++
++
+ Method 2: Instantiate the devices explicitly
+ --------------------------------------------
  
 -- 
 2.24.1
