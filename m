@@ -2,94 +2,72 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3308AC33C9A
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 07:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0A9C00523
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 07:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AF26218AC
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 07:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0126D21775
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 07:22:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578208931;
+	bh=36YMIfds6bcjOeZrdHkRP5guH3R8Wyde9Xa7tDKb8pI=;
+	h=In-Reply-To:References:Cc:Subject:To:From:Date:List-ID:From;
+	b=1l5F9ChWHY/nGsb6iMvR7WEmvPlenu0Cw6jpb2k+3pkTR15z9o5gOMrj1WNCE71ig
+	 zVOW1Zp3JB0eIq3tZrTuAO6mKIAEcEIQ5Ok70BecjL/BPamTH1TKC7c9t/cWUATrq0
+	 /OhVgxtCBkTYhcNuUVZEzBEsIjIm+h4Rft25JeJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbgAEHWI (ORCPT
+        id S1726376AbgAEHWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 02:22:08 -0500
-Received: from mga17.intel.com ([192.55.52.151]:37491 "EHLO mga17.intel.com"
+        Sun, 5 Jan 2020 02:22:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbgAEHWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 02:22:07 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jan 2020 23:22:07 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,397,1571727600"; 
-   d="scan'208";a="225244880"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 04 Jan 2020 23:22:05 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1io0Ee-000GFG-Ty; Sun, 05 Jan 2020 15:22:04 +0800
-Date:   Sun, 5 Jan 2020 15:21:46 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Palmer Dabbelt <palmer@sifive.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] PCI: fix ptr_ret.cocci warnings
-Message-ID: <20200105072146.umt5eiq2qbbxrwus@f53c9c00458a>
-References: <202001051538.1jMWp6L9%lkp@intel.com>
+        id S1725535AbgAEHWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 02:22:08 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B5A4217F4;
+        Sun,  5 Jan 2020 07:22:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578208928;
+        bh=36YMIfds6bcjOeZrdHkRP5guH3R8Wyde9Xa7tDKb8pI=;
+        h=In-Reply-To:References:Cc:Subject:To:From:Date:From;
+        b=Y5pNq0reydLkdp82SHfKPQEDwJd7XZHJbQ4N8+70XSxR5RX0nrt+g1d7r2CQH5LSo
+         F9xVK8on6mx2cKZ8ys9ezNjDWKdtJZ0TjUIaAK9bmB2nsPAl/J1u9hsSuiJ5URoooC
+         9E4xYTSsfY6DWyMHj9u5D2js3Z2qHFmt6TTmrtmY=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202001051538.1jMWp6L9%lkp@intel.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200102005503.71923-1-sboyd@kernel.org>
+References: <20200102005503.71923-1-sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2] clk: Warn about critical clks that fail to enable
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Sat, 04 Jan 2020 23:22:07 -0800
+Message-Id: <20200105072208.0B5A4217F4@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kbuild test robot <lkp@intel.com>
+Quoting Stephen Boyd (2020-01-01 16:55:03)
+> If we don't warn here users of the CLK_IS_CRITICAL flag may not know
+> that their clk isn't actually enabled because it silently fails to
+> enable. Let's print a warning in that case so developers find these
+> problems faster.
+>=20
+> Suggested-by: Jerome Brunet <jbrunet@baylibre.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> ---
 
-drivers/pci/controller/dwc/pci-exynos.c:95:1-3: WARNING: PTR_ERR_OR_ZERO can be used
+Applied to clk-next
 
-
- Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
-
-Generated by: scripts/coccinelle/api/ptr_ret.cocci
-
-Fixes: 191d6f91f283 ("PCI: Remove PCI_MSI_IRQ_DOMAIN architecture whitelist")
-CC: Palmer Dabbelt <palmer@sifive.com>
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   36487907f34131c7e3df5b1e6b30b4e3dfcdc0af
-commit: 191d6f91f283dfb007499bb8529d54c3ac434bd7 PCI: Remove PCI_MSI_IRQ_DOMAIN architecture whitelist
-
- pci-exynos.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
---- a/drivers/pci/controller/dwc/pci-exynos.c
-+++ b/drivers/pci/controller/dwc/pci-exynos.c
-@@ -92,10 +92,7 @@ static int exynos5440_pcie_get_mem_resou
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	ep->mem_res->elbi_base = devm_ioremap_resource(dev, res);
--	if (IS_ERR(ep->mem_res->elbi_base))
--		return PTR_ERR(ep->mem_res->elbi_base);
--
--	return 0;
-+	return PTR_ERR_OR_ZERO(ep->mem_res->elbi_base);
- }
- 
- static int exynos5440_pcie_get_clk_resources(struct exynos_pcie *ep)
