@@ -2,101 +2,71 @@ Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C7DC33C9A
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 23:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 126D3C00523
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 23:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9A821734
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 23:07:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578265647;
-	bh=NIcC9yFq1/Q2UYS/x0ix+xDhGk3NlKlVY0V2e+tLt84=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jpMR8GDPQen51hUA2vBv6QbGss7/2Uo+Q4sVQRV5yzQb36l9fpC+35pKEJKsYW0YJ
-	 eTO6iP2/WxY6A5TYcEceHhzlG1osJdKNkVQKwphNHa1/KqnajAfGqi5WLx87bLuvER
-	 oHMTRTr8vjg0qFfdXS5wCecHGApJGO9lxzwXNQcw=
+	by mail.kernel.org (Postfix) with ESMTP id E05512085B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 23:11:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbgAEXH0 (ORCPT
+        id S1727237AbgAEXL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 18:07:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726494AbgAEXH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 18:07:26 -0500
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E0E024650;
-        Sun,  5 Jan 2020 23:07:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578265645;
-        bh=NIcC9yFq1/Q2UYS/x0ix+xDhGk3NlKlVY0V2e+tLt84=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mTuzOEG1v2XD5AOW+hjT5FuSDWWwZlUxoAVTusAUrGOF7s1qGcROgx9zS5N5h7+V9
-         RNX9M4Hxyr4pZdrnetQw3m5DS4M6YygWax278j5/2doAcjmPs57vZvumAqpv4Ht0mG
-         qmL5REZHAPGbWwpSAK0Wl9Au+ymmkEOnm0mLYV/c=
-Received: by mail-qt1-f171.google.com with SMTP id d18so38484298qtj.10;
-        Sun, 05 Jan 2020 15:07:25 -0800 (PST)
-X-Gm-Message-State: APjAAAV1AJLzQMpJTXAg4nLA0LUipj+W+kIF+pilK+evGMbVzZib922W
-        IkXg+A9dqBeSzia3z6vfgBaYGjiKzY3/ZBzyzg==
-X-Google-Smtp-Source: APXvYqzdbTAKT6nfHNwFQzuY7xtfF7ulpPWWAYYDIujT3O2LaFFOnWL38RxCqg7Xtw+EYlScp1qm1OFzBcyrooIJl1g=
-X-Received: by 2002:ac8:1415:: with SMTP id k21mr58902700qtj.300.1578265644230;
- Sun, 05 Jan 2020 15:07:24 -0800 (PST)
-MIME-Version: 1.0
-References: <1577782737-32068-1-git-send-email-okukatla@codeaurora.org>
- <1577782737-32068-2-git-send-email-okukatla@codeaurora.org>
- <20200104220142.GA28701@bogus> <20200104230830.GA27471@darkstar.musicnaut.iki.fi>
-In-Reply-To: <20200104230830.GA27471@darkstar.musicnaut.iki.fi>
-From:   Rob Herring <robh@kernel.org>
-Date:   Sun, 5 Jan 2020 16:07:13 -0700
-X-Gmail-Original-Message-ID: <CAL_JsqLExx1puQxWjT2CpiwttOZtaDay6yU=jwF1D2SGbzB4tg@mail.gmail.com>
-Message-ID: <CAL_JsqLExx1puQxWjT2CpiwttOZtaDay6yU=jwF1D2SGbzB4tg@mail.gmail.com>
-Subject: Re: [V2, 1/3] dt-bindings: interconnect: Add Qualcomm SC7180 DT bindings
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc:     Odelu Kukatla <okukatla@codeaurora.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        David Dai <daidavid1@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        evgreen@google.com, Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
-        Alex Elder <elder@linaro.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 5 Jan 2020 18:11:26 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:42566 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726494AbgAEXL0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 18:11:26 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id BD52C15714135;
+        Sun,  5 Jan 2020 15:11:25 -0800 (PST)
+Date:   Sun, 05 Jan 2020 15:11:25 -0800 (PST)
+Message-Id: <20200105.151125.1541050812175137787.davem@davemloft.net>
+To:     sboyd@kernel.org
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        nicolas.ferre@microchip.com, yash.shah@sifive.com,
+        linux@roeck-us.net
+Subject: Re: [PATCH] macb: Don't unregister clks unconditionally
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200104001921.225529-1-sboyd@kernel.org>
+References: <20200104001921.225529-1-sboyd@kernel.org>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 05 Jan 2020 15:11:26 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 4, 2020 at 4:09 PM Aaro Koskinen <aaro.koskinen@iki.fi> wrote:
->
-> Hi,
->
-> On Sat, Jan 04, 2020 at 03:01:42PM -0700, Rob Herring wrote:
-> > On Tue, Dec 31, 2019 at 02:28:55PM +0530, Odelu Kukatla wrote:
-> > > diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
-> > > new file mode 100644
-> > > index 0000000..487da5e
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
-> > > @@ -0,0 +1,155 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> >
-> > Dual license new bindings:
-> >
-> > (GPL-2.0-only OR BSD-2-Clause)
->
-> Just curious, is that mandatory for any new bindings?
+From: Stephen Boyd <sboyd@kernel.org>
+Date: Fri,  3 Jan 2020 16:19:21 -0800
 
-Yes.
+> The only clk init function in this driver that register a clk is
+> fu540_c000_clk_init(), and thus we need to unregister the clk when this
+> driver is removed on that platform. Other init functions, for example
+> macb_clk_init(), don't register clks and therefore we shouldn't
+> unregister the clks when this driver is removed. Convert this
+> registration path to devm so it gets auto-unregistered when this driver
+> is removed and drop the clk_unregister() calls in driver remove (and
+> error paths) so that we don't erroneously remove a clk from the system
+> that isn't registered by this driver.
+> 
+> Otherwise we get strange crashes with a use-after-free when the
+> devm_clk_get() call in macb_clk_init() calls clk_put() on a clk pointer
+> that has become invalid because it is freed in clk_unregister().
+> 
+> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+> Cc: Yash Shah <yash.shah@sifive.com>
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Fixes: c218ad559020 ("macb: Add support for SiFive FU540-C000")
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 
-Rob
+Applied and queued up for -stable, thanks.
