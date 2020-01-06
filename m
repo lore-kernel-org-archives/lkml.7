@@ -2,178 +2,160 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3820C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA96BC33C9B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 889F42075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0AB206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:26:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PPHmWu+c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lsqGs8Ee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgAFQZj (ORCPT
+        id S1726710AbgAFQ01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 11:25:39 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40100 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbgAFQZi (ORCPT
+        Mon, 6 Jan 2020 11:26:27 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33668 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgAFQ01 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 11:25:38 -0500
-Received: by mail-wm1-f65.google.com with SMTP id t14so15867010wmi.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 08:25:36 -0800 (PST)
+        Mon, 6 Jan 2020 11:26:27 -0500
+Received: by mail-qk1-f196.google.com with SMTP id d71so32070008qkc.0;
+        Mon, 06 Jan 2020 08:26:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rS5YFX7furb1E7YBMiNhB8siqUqQS9rjD7CX2ldMqVA=;
-        b=PPHmWu+c6yvDKp1Q9H/cO+GtgibJISU7h0fhA4woQEIgOMAXrGc5hXZoTx0RUR011d
-         IyCH12diQiVi6LilzAyHJFgNRFZtG2nhLbGQOuoJ5Q8CIxtqs8j0n5rTR+BV2MNfib/w
-         pLCmVFCMD2g6gV5jhOtekyvDHh4WLnvL6oLfA=
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JQtEouoO14ibFdu5R0ExtR9RU4wVGRzBfAmbFruyaUA=;
+        b=lsqGs8EeesC12VRJVQx6YbN9hunSXuCn1drlRK4CMOlEpjymNwTXoZPhVtdAu9W68a
+         g/6D0I0VDQbU0+0cBscdlRHLYxX1GiES5hDJl9A7NI4DuRjE5joFsdCh3kmBZJDLa6qv
+         eqmoz5OJEPgtMBXpWZxhpzMP3b/Pb6mHJ1Qeg4Drzpxs3kfddkhGXTJPYU637rkXcIHC
+         gMtiLP52kppQjBrGoQCXSWPZW2xxC5hYczQ+btKqZpdjzvdGCuJ3Ok/xtaQVa7xvCw03
+         +HCuY0b/rE0w5nA87S2l8EXtTIx25o3tCpge8IDI9DpdU4yyjZZYjvCb4QXEhe1M5c2/
+         V1QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rS5YFX7furb1E7YBMiNhB8siqUqQS9rjD7CX2ldMqVA=;
-        b=LVDLZMiQn1tmHmjgkOdYz1UOxV17gv35HPoCvC5ldw7JZnbCuF5Nw7Pnq6+jTQPGgt
-         4k7mzQpXhpzSpc7x4aCZE13aJ90kLxHLuM/zsaXnFvePm7bsLo3ZJr7KiPSxctVDRBhv
-         b5tMMxGdipHVdRlWaxyFOpK8Ui4sUHTw4C7wXm6Yp+NGTVgo4LWN5ofKQEN7vsdDzlUc
-         D4OP8DSqrUmuQpi7iAf45GyPYWG4JenIe1frxIh+DeXszXRZDlil3wLLnADUHcWHKXTi
-         GR9hu7L3BkUI4eOTGGCitWGrUTUblfrxmVgqdz9tg71dC+SZJk8llOOFcyUIKTF3hvoN
-         32+w==
-X-Gm-Message-State: APjAAAXzA9YQXmY3JxlZFNUXNf/4leHNNVdmFOx1/3xR6LrqewIM44T3
-        IL2nQeVR7CqHNNi34dpuWBc8fA==
-X-Google-Smtp-Source: APXvYqyeyBWZK+/gtY+xcC0LYjaXdpfGMsN3mTwHq4pttnlG5UJ/8hgPJKqwa0qLSwKKuax+D+zFYg==
-X-Received: by 2002:a7b:c416:: with SMTP id k22mr33163904wmi.10.1578327935932;
-        Mon, 06 Jan 2020 08:25:35 -0800 (PST)
-Received: from revest.zrh.corp.google.com ([2a00:79e0:42:204:51d1:d96e:f72e:c8c0])
-        by smtp.gmail.com with ESMTPSA id b10sm75393458wrt.90.2020.01.06.08.25.35
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JQtEouoO14ibFdu5R0ExtR9RU4wVGRzBfAmbFruyaUA=;
+        b=dTZ4zIrUg21sq/9AY3Vqo6sNELprk6mtiRH9/qk8FtxQLqt9CNh5kx4x//DGk829qz
+         HEL5QWeGDKbUKUJikvwPSUjtaXLfzN2vyzTvyYgyJrOMahv6vy63oIqwIfYwJPSozgOh
+         vJIqQJROUoLJwWelQ8qZotEJRmvbyCiVBYKyyI3WYegNMvVQtAYxX8qYvxXr2ERQ7XMQ
+         K7U/Auiqzm/GY8OHnGEe54yDDXwT/HefZKTj+nZxMKraTSdDmMRuNerD65HIeXMmlXwG
+         l9uGyxp6XxFYUuPpBuganJYz6oSm0qffOUu7k47NFfMDo/OGsZR4oXKi74RyacGopihq
+         Dodg==
+X-Gm-Message-State: APjAAAV8BRhwVI39Hwp69/9AY5DS0liBXkOjNIWa+eznZPspqDEwBYa1
+        BzKa6ZPVCay6ePC2JaVuSYM=
+X-Google-Smtp-Source: APXvYqwRYizllbxOp6iQxO2ykkiYb6oLHdpU3gYtOdzJqv+FHGnhZsdGq11wpHk/jKTPveEV4k1jug==
+X-Received: by 2002:a37:ad0e:: with SMTP id f14mr72323328qkm.213.1578327986104;
+        Mon, 06 Jan 2020 08:26:26 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id s26sm15805987qtc.43.2020.01.06.08.26.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 08:25:35 -0800 (PST)
-From:   Florent Revest <revest@chromium.org>
-To:     linux-integrity@vger.kernel.org
-Cc:     kpsingh@chromium.org, mjg59@google.com, zohar@linux.ibm.com,
-        nramas@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Florent Revest <revest@google.com>
-Subject: [PATCH v2] ima: add the ability to query the hash of a given file.
-Date:   Mon,  6 Jan 2020 17:25:24 +0100
-Message-Id: <20200106162524.164650-1-revest@chromium.org>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+        Mon, 06 Jan 2020 08:26:25 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 56B3F40DFD; Mon,  6 Jan 2020 13:26:23 -0300 (-03)
+Date:   Mon, 6 Jan 2020 13:26:23 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        users@linux.kernel.org
+Subject: Re: [RFC] tools lib traceevent: How to do library versioning being
+ in the Linux kernel source?
+Message-ID: <20200106162623.GA11285@kernel.org>
+References: <20200102122004.216c85da@gandalf.local.home>
+ <20200102234950.GA14768@krava>
+ <20200102185853.0ed433e4@gandalf.local.home>
+ <20200103133640.GD9715@krava>
+ <20200103181614.7aa37f6d@gandalf.local.home>
+ <20200106151902.GB236146@krava>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200106151902.GB236146@krava>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florent Revest <revest@google.com>
+Em Mon, Jan 06, 2020 at 04:19:02PM +0100, Jiri Olsa escreveu:
+> On Fri, Jan 03, 2020 at 06:16:14PM -0500, Steven Rostedt wrote:
+> > 
+> > [ Added Konstantin and kernel.org users mailing list ]
+> > 
+> > On Fri, 3 Jan 2020 14:36:40 +0100
+> > Jiri Olsa <jolsa@redhat.com> wrote:
+> > 
+> > > On Thu, Jan 02, 2020 at 06:58:53PM -0500, Steven Rostedt wrote:
+> > > > On Fri, 3 Jan 2020 00:49:50 +0100
+> > > > Jiri Olsa <jolsa@redhat.com> wrote:
+> > > >   
+> > > > > > Should we move libtraceevent into a stand alone git repo (on
+> > > > > > kernel.org), that can have tags and branches specifically for it? We
+> > > > > > can keep a copy in the Linux source tree for perf to use till it    
+> > > > > 
+> > > > > so libbpf 'moved' for this reason to github repo,
+> > > > > but keeping the kernel as the true/first source,
+> > > > > and updating github repo when release is ready
+> > > > > 
+> > > > > libbpf github repo is then source for fedora (and others)
+> > > > > package  
+> > > > 
+> > > > Ah, so perhaps I should follow this? I could keep it a kernel.org repo
+> > > > (as I rather have it there anyway).  
+> > > 
+> > > sounds good, and if it works out, we'll follow you with libperf :-)
+> > > 
+> > > if you want to check on the libbpf:
+> > >   https://github.com/libbpf/libbpf
+> > > 
+> > > there might be some syncs scripts worth checking
+> > 
+> > I wonder if there should be a:
+> > 
+> >   git://git.kernel.org/pub/scm/utils/lib/
+> > 
+> > directory to have:
+> > 
+> >   git://git.kernel.org/pub/scm/utils/lib/traceevent/
+> >   git://git.kernel.org/pub/scm/utils/lib/libbpf/
+> >   git://git.kernel.org/pub/scm/utils/lib/libperf/
+> 
+> we could loose the 'lib' and just have:
+> 
+>     git://git.kernel.org/pub/scm/utils/lib/perf/
 
-This allows other parts of the kernel (perhaps a stacked LSM allowing
-system monitoring, eg. the proposed KRSI LSM [1]) to retrieve the hash
-of a given file from IMA if it's present in the iint cache.
+So, we have:
 
-It's true that the existence of the hash means that it's also in the
-audit logs or in /sys/kernel/security/ima/ascii_runtime_measurements,
-but it can be difficult to pull that information out for every
-subsequent exec.  This is especially true if a given host has been up
-for a long time and the file was first measured a long time ago.
+https://www.kernel.org/pub/linux/kernel/tools/perf/
 
-This is based on Peter Moody's patch:
- https://sourceforge.net/p/linux-ima/mailman/message/33036180/
+trying to mimic the kernel sources tree structure, so perhaps we could
+have:
 
-[1] https://lkml.org/lkml/2019/9/10/393
+https://www.kernel.org/pub/linux/kernel/tools/lib/{perf,traceevent}/
 
-Signed-off-by: Florent Revest <revest@google.com>
----
- include/linux/ima.h               |  6 ++++
- security/integrity/ima/ima_main.c | 46 +++++++++++++++++++++++++++++++
- 2 files changed, 52 insertions(+)
+To continue that directory tree mirror?
 
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index 6d904754d858..d621c65ba9a5 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -23,6 +23,7 @@ extern int ima_read_file(struct file *file, enum kernel_read_file_id id);
- extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
- 			      enum kernel_read_file_id id);
- extern void ima_post_path_mknod(struct dentry *dentry);
-+extern int ima_file_hash(struct file *file, char *buf, size_t buf_size);
- extern void ima_kexec_cmdline(const void *buf, int size);
- 
- #ifdef CONFIG_IMA_KEXEC
-@@ -91,6 +92,11 @@ static inline void ima_post_path_mknod(struct dentry *dentry)
- 	return;
- }
- 
-+static inline int ima_file_hash(struct file *file, char *buf, size_t buf_size)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
- static inline void ima_kexec_cmdline(const void *buf, int size) {}
- #endif /* CONFIG_IMA */
- 
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index d7e987baf127..3799b6c6c3b8 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -445,6 +445,52 @@ int ima_file_check(struct file *file, int mask)
- }
- EXPORT_SYMBOL_GPL(ima_file_check);
- 
-+/**
-+ * ima_file_hash - return the stored measurement if a file has been hashed.
-+ * @file: pointer to the file
-+ * @buf: buffer in which to store the hash
-+ * @buf_size: length of the buffer
-+ *
-+ * On success, return the hash algorithm (as defined in the enum hash_algo).
-+ * If buf is not NULL, this function also outputs the hash into buf.
-+ * If the hash is larger than buf_size, then only buf_size bytes will be copied.
-+ * It generally just makes sense to pass a buffer capable of holding the largest
-+ * possible hash: IMA_MAX_DIGEST_SIZE
-+ *
-+ * If IMA is disabled or if no measurement is available, return -EOPNOTSUPP.
-+ * If the parameters are incorrect, return -EINVAL.
-+ */
-+int ima_file_hash(struct file *file, char *buf, size_t buf_size)
-+{
-+	struct inode *inode;
-+	struct integrity_iint_cache *iint;
-+	int hash_algo;
-+
-+	if (!file)
-+		return -EINVAL;
-+
-+	if (!ima_policy_flag)
-+		return -EOPNOTSUPP;
-+
-+	inode = file_inode(file);
-+	iint = integrity_iint_find(inode);
-+	if (!iint)
-+		return -EOPNOTSUPP;
-+
-+	mutex_lock(&iint->mutex);
-+	if (buf) {
-+		size_t copied_size;
-+
-+		copied_size = min_t(size_t, iint->ima_hash->length, buf_size);
-+		memcpy(buf, iint->ima_hash->digest, copied_size);
-+	}
-+	hash_algo = iint->ima_hash->algo;
-+	mutex_unlock(&iint->mutex);
-+
-+	return hash_algo;
-+}
-+EXPORT_SYMBOL_GPL(ima_file_hash);
-+
- /**
-  * ima_post_create_tmpfile - mark newly created tmpfile as new
-  * @file : newly created tmpfile
+> > That could hold the libraries that are tight to the kernel?
+
+> I don't think libbpf will change now after they are settled in github,
+> but we could consider this for libperf
+> 
+> jirka
+
 -- 
-2.24.1.735.g03f4e72817-goog
 
+- Arnaldo
