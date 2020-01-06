@@ -1,114 +1,120 @@
-Return-Path: <SRS0=Io4T=22=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDEE4C00523
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 23:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D445C00523
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 00:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAA4E24672
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Jan 2020 23:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F244121582
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 00:12:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbgAEXzy (ORCPT
+        id S1727215AbgAFAMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 18:55:54 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:40224 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbgAEXzy (ORCPT
+        Sun, 5 Jan 2020 19:12:08 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:41673 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726494AbgAFAMH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 18:55:54 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 4A0E11C2453; Mon,  6 Jan 2020 00:55:52 +0100 (CET)
-Date:   Mon, 6 Jan 2020 00:55:51 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Tony Lindgren <tony@atomide.com>, linux-leds@vger.kernel.org
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
-        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz,
-        agx@sigxcpu.org, lee.jones@linaro.org, daniel.thompson@linaro.org,
-        jingoohan1@gmail.com, dri-devel@lists.freedesktop.org,
-        tomi.valkeinen@ti.com, jjhiblot@ti.com
-Subject: Re: LED backlight on Droid 4 and others
-Message-ID: <20200105235551.GB7598@amd>
-References: <20200105183202.GA17784@duo.ucw.cz>
- <20200105202449.GC5885@atomide.com>
+        Sun, 5 Jan 2020 19:12:07 -0500
+X-Originating-IP: 90.65.92.102
+Received: from localhost (lfbn-lyo-1-1913-102.w90-65.abo.wanadoo.fr [90.65.92.102])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 5890DFF803;
+        Mon,  6 Jan 2020 00:12:04 +0000 (UTC)
+Date:   Mon, 6 Jan 2020 01:12:04 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] RTC fixes for 5.5
+Message-ID: <20200106001204.GA776560@piout.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="s2ZSL+KKDSLx8OML"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="VbJkn9YxBvnuCH5J"
 Content-Disposition: inline
-In-Reply-To: <20200105202449.GC5885@atomide.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---s2ZSL+KKDSLx8OML
+--VbJkn9YxBvnuCH5J
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
+Hello Linus,
 
-> > It would be good to get LED backlight to work in clean way for 5.6
-> > kernel.
->=20
-> I agree, this is badly needed for many devices.
->=20
-> > [If you have an idea what else is needed, it would be welcome; it
-> > works for me in development tree but not in tree I'd like to
-> > upstream.]
->=20
-> I have some version of these patches working with modified dts in my
-> droid4-pending-v5.4 branch git branch, maybe try to diff against that.
+A few fixes for this cycle. The CMOS AltCentury support broke a few
+platforms with a recent BIOS so I reverted it. The mt6397 fix is not
+that critical but good to have. And finally, the sun6i fix repairs WiFi
+and BT on a few platforms.
 
-So.. backlight now works for me, and I put the LED parts of the
-patches to
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
 
-gitolite.kernel.org:pub/scm/linux/kernel/git/pavel/linux-leds.git for-next
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
 
-tree. [I guess I could try to sneak them into 5.5 if that helps.]
+are available in the Git repository at:
 
-Could we somehow get this to the backlight tree?
+  git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc=
+-5.5-2
 
-commit d457d0c97d6d55fe3e62633791ac05d289a37d2e
-Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Date:   Thu Oct 3 10:28:12 2019 +0200
+for you to fetch changes up to f01f4ffdfb703694035870f94b10f6ef2523f8de:
 
-    backlight: add led-backlight driver
+  rtc: cmos: Revert "rtc: Fix the AltCentury value on AMD/Hygon platform" (=
+2020-01-04 05:31:50 +0100)
 
-    This patch adds a led-backlight driver (led_bl), which is similar
-    to pwm_bl except the driver uses a LED class driver to adjust the
-    brightness in the HW. Multiple LEDs can be used for a single
-    backlight.
+----------------------------------------------------------------
+RTC fixes for 5.5
 
- Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
- Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
- Acked-by: Pavel Machek <pavel@ucw.cz>
- Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+ - cmos: revert AltCentury support on AMD/Hygon
+ - mt6397: fix alarm register overwrite
+ - sun6i: ensure clock is working on R40
 
-Best regards,
-								Pavel
+----------------------------------------------------------------
+Alexandre Belloni (1):
+      rtc: cmos: Revert "rtc: Fix the AltCentury value on AMD/Hygon platfor=
+m"
+
+Chen-Yu Tsai (1):
+      rtc: sun6i: Add support for RTC clocks on R40
+
+Ran Bi (1):
+      rtc: mt6397: fix alarm register overwrite
+
+ drivers/rtc/rtc-mc146818-lib.c | 15 +--------------
+ drivers/rtc/rtc-mt6397.c       | 39 +++++++++++++++++++++++++--------------
+ drivers/rtc/rtc-sun6i.c        | 16 ++++++++++++++++
+ include/linux/mfd/mt6397/rtc.h |  8 ++++++++
+ 4 files changed, 50 insertions(+), 28 deletions(-)
+
 --=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
---s2ZSL+KKDSLx8OML
+--VbJkn9YxBvnuCH5J
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iEYEARECAAYFAl4Sd4cACgkQMOfwapXb+vKtigCcD7s9rcf8yUC1oR22yqA5RyON
-RW4AmgOniJ4uj2z21/PEdlR5LnqhdCB/
-=7Rz5
+iQIzBAEBCgAdFiEEycoQi/giopmpPgB12wIijOdRNOUFAl4Se0gACgkQ2wIijOdR
+NOUgtA//dDD+MymlwZbpnKcKDIN0CLfd8/lIqlhI9Tn9D+LBdob6S6HpY6apR9UC
+hjoh1jZORgtlvDaq8imw6z0pqI1E16l+JDjmIG/CxWDCQhYIJGSkUD2lvTHe5YZr
+WayszcaLdJqU/HYfBb1vOFCgcuw7MIuZaBMDPeMQ0U6wWY0y6tTc+rx77FArbeue
+rc7Rg+AZIuixxNjDce9a6NHFFpJzxBdy6jd7kws0jfhFIx7Ol/4BmPp4rKJgt7xb
+iUf78gkSKGUHPlO08wsQO9KOYsS6Km/EOu2pgoeJYK9ZYVi5H7ee84zdH/GSAk/8
+5yDLC4AMlnAMza6KKtcJ2pC74M5sZHk1GH+Sr6LqH1JQ+4obyZ9gcduojR7sA5fi
+GrVIIA2XQOeTtThXxdwpLQnqHZSbGF1w9fq46dP/sp/tS7i/B6cVx3ed6Cpso+Zi
+t7XrY+IC6FhaUf3ZL2ldc2cHS6a2Fh6LHwyFUXivdorR1Msbu9A+3QsTnSyeLDKI
+EKLGylK/vUCnX0RR5sCNLEACrXAZwjsoXlpu07gxDRks7rTL27xYYoUteGrHUQmH
+M7P76Vh2Qt5oHgRzyCf0cs2yQrUNRCOuE9GxvK4edAgntbf7AC0EGS0MpGyQDBZ8
+BtsF0O4RR/+fXqEq7H4SwtutecWMZ2zh6mQbZ0QcocpMO7fmADc=
+=sWEr
 -----END PGP SIGNATURE-----
 
---s2ZSL+KKDSLx8OML--
+--VbJkn9YxBvnuCH5J--
