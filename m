@@ -2,153 +2,111 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AD5C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F614C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E224420731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:48:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J10l0RgS"
+	by mail.kernel.org (Postfix) with ESMTP id 3FB4D20731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:49:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbgAFPsb (ORCPT
+        id S1726652AbgAFPtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 10:48:31 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53468 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726437AbgAFPsa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 10:48:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578325709;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0eu0mqm9VOScBHtEc/NIyPA5j+hZ0W1aSfm/aRuoupk=;
-        b=J10l0RgSI30d+77aHUizV48kU3i+cS0bw8H23Qt59D+9JLBpsy1exmua9JbyxkIVzD8BIj
-        YqNcp7ZzMBTxzrImMSXaaH2O4+hertjsxrFHpzcideSGOOpAucRU4gmajRv6wFP6BHWbUk
-        MpSUWOxzw9Gl+9w6btvwAwFzlyMClXw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-90-dDdDuHUTNfevb3mrvnBG4w-1; Mon, 06 Jan 2020 10:48:20 -0500
-X-MC-Unique: dDdDuHUTNfevb3mrvnBG4w-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A294E18B414A;
-        Mon,  6 Jan 2020 15:48:17 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E49687C00D;
-        Mon,  6 Jan 2020 15:48:15 +0000 (UTC)
-Subject: Re: [PATCH v8 0/5] Add NUMA-awareness to qspinlock
-To:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com
-Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com
-References: <20191230194042.67789-1-alex.kogan@oracle.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <13cde730-34c1-8b99-6990-1f64cc78670d@redhat.com>
-Date:   Mon, 6 Jan 2020 10:48:15 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 6 Jan 2020 10:49:03 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:41128 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726446AbgAFPtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 10:49:03 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id B8FD1FB09;
+        Mon,  6 Jan 2020 16:48:59 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 9ozlM3C6QP1l; Mon,  6 Jan 2020 16:48:57 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 0C76649D3F; Mon,  6 Jan 2020 16:48:55 +0100 (CET)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/6] leds: lm3692x: Allow to set ovp and brigthness mode
+Date:   Mon,  6 Jan 2020 16:48:49 +0100
+Message-Id: <cover.1578324703.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191230194042.67789-1-alex.kogan@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/30/19 2:40 PM, Alex Kogan wrote:
-> Minor changes from v7 based on feedback from Longman:
-> -----------------------------------------------------
->
-> - Move __init functions from alternative.c to qspinlock_cna.h
->
-> - Introduce enum for return values from cna_pre_scan(), for better
-> readability.
->
-> - Add/revise a few comments to improve readability.
->
->
-> Summary
-> -------
->
-> Lock throughput can be increased by handing a lock to a waiter on the
-> same NUMA node as the lock holder, provided care is taken to avoid
-> starvation of waiters on other NUMA nodes. This patch introduces CNA
-> (compact NUMA-aware lock) as the slow path for qspinlock. It is
-> enabled through a configuration option (NUMA_AWARE_SPINLOCKS).
->
-> CNA is a NUMA-aware version of the MCS lock. Spinning threads are
-> organized in two queues, a main queue for threads running on the same
-> node as the current lock holder, and a secondary queue for threads
-> running on other nodes. Threads store the ID of the node on which
-> they are running in their queue nodes. After acquiring the MCS lock and
-> before acquiring the spinlock, the lock holder scans the main queue
-> looking for a thread running on the same node (pre-scan). If found (call
-> it thread T), all threads in the main queue between the current lock
-> holder and T are moved to the end of the secondary queue.  If such T
-> is not found, we make another scan of the main queue after acquiring 
-> the spinlock when unlocking the MCS lock (post-scan), starting at the
-> node where pre-scan stopped. If both scans fail to find such T, the
-> MCS lock is passed to the first thread in the secondary queue. If the
-> secondary queue is empty, the MCS lock is passed to the next thread in the
-> main queue. To avoid starvation of threads in the secondary queue, those
-> threads are moved back to the head of the main queue after a certain
-> number of intra-node lock hand-offs.
->
-> More details are available at https://arxiv.org/abs/1810.05600.
->
-> The series applies on top of v5.5.0-rc2, commit ea200dec51.
-> Performance numbers are available in previous revisions
-> of the series.
->
-> Further comments are welcome and appreciated.
->
-> Alex Kogan (5):
->   locking/qspinlock: Rename mcs lock/unlock macros and make them more
->     generic
->   locking/qspinlock: Refactor the qspinlock slow path
->   locking/qspinlock: Introduce CNA into the slow path of qspinlock
->   locking/qspinlock: Introduce starvation avoidance into CNA
->   locking/qspinlock: Introduce the shuffle reduction optimization into
->     CNA
->
->  .../admin-guide/kernel-parameters.txt         |  18 +
->  arch/arm/include/asm/mcs_spinlock.h           |   6 +-
->  arch/x86/Kconfig                              |  20 +
->  arch/x86/include/asm/qspinlock.h              |   4 +
->  arch/x86/kernel/alternative.c                 |   4 +
->  include/asm-generic/mcs_spinlock.h            |   4 +-
->  kernel/locking/mcs_spinlock.h                 |  20 +-
->  kernel/locking/qspinlock.c                    |  82 +++-
->  kernel/locking/qspinlock_cna.h                | 400 ++++++++++++++++++
->  kernel/locking/qspinlock_paravirt.h           |   2 +-
->  10 files changed, 537 insertions(+), 23 deletions(-)
->  create mode 100644 kernel/locking/qspinlock_cna.h
->
-I have reviewed this patch series. Besides a few minor nits, the rests
-look solid to me. So you can put my review tag.
+Overvoltage protection and brightness mode are currently hardcoded
+as 29V and disabled in the driver. Make these configurable via DT.
 
-Reviewed-by: Waiman Long <longman@redhat.com>
+This v4 moves the exponential brightness mode to the back of the series
+as per Pavel's request:
 
-Peter and Will, would you mind taking a look to see if you have anything
-to add?
+  https://lore.kernel.org/linux-next/20200106103233.GA32426@amd/T/#m93270a9bf10b88e060f4e4cf5701c527476de985
 
-Thanks,
-Longman
+The end result is identical and i've tested everything still works when
+dropping the last to patches and checked compiltion via
+
+  git rebase -i ... -exec 'make ... Image dtbs'
+
+Patches are against linux-leds-next.
+
+Changes from v3
+- Move exponential mode patches to the back of the series
+  https://lore.kernel.org/linux-next/20200106103233.GA32426@amd/T/#m93270a9bf10b88e060f4e4cf5701c527476de985
+- Add Rob's Reviewed-by:, thanks!
+
+Changes from v2
+- As per review comment from Pavel Machek
+  https://lore.kernel.org/linux-leds/20191226100615.GA4033@amd/T/#u
+  - Use default value in DT example
+  https://lore.kernel.org/linux-leds/20191226100842.GC4033@amd/T/#u
+  - Use uppercase LED in commit message
+  https://lore.kernel.org/linux-leds/20191226101336.GD4033@amd/T/#u
+  - Fix typo in commit message
+  - Use correct return value when checking if property is present
+  - Fold in
+    https://lore.kernel.org/linux-leds/20191226101419.GE4033@amd/T/#t
+- Add Acked-By's from Pavel Machek, thanks!
+
+Changes from v1
+- As per review comments by Dan Murphy
+  https://lore.kernel.org/linux-leds/3d66b07d-b4c5-43e6-4378-d63cc84b8d43@ti.com/
+  - Split commits per propoerty
+  - Add new properties to DT example too
+  - Drop dev_dbg() statements
+  - ovp: fix 21V value parsing
+  - ovp: Set correct default value if DT parsing fails
+- As per review comments by Pavel Machek
+  https://lore.kernel.org/linux-leds/20191221191515.GF32732@amd/
+  - Fix defaults (which is 29V)
+  - Use uV as Unit for ovp property
+- Change property name to 'ti,ovp-microvolt' to make it shorter
+- Honor led-max-microamp to not exceed the maximum led current
+
+Guido Günther (6):
+  leds: lm3692x: Make sure we don't exceed the maximum led current
+  leds: lm3692x: Move lm3692x_init and rename to lm3692x_leds_enable
+  leds: lm3692x: Split out lm3692x_leds_disable
+  leds: lm3692x: Disable chip on brightness 0
+  dt: bindings: lm3692x: Add ti,brightness-mapping-exponential property
+  leds: lm3692x: Allow to configure brigthness mode
+
+ .../devicetree/bindings/leds/leds-lm3692x.txt |   3 +
+ drivers/leds/leds-lm3692x.c                   | 165 ++++++++++++------
+ 2 files changed, 113 insertions(+), 55 deletions(-)
+
+-- 
+2.23.0
 
