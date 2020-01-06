@@ -2,80 +2,175 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4A2C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE68AC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA7B92080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:32:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QpbBrEzy"
+	by mail.kernel.org (Postfix) with ESMTP id B0336214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgAFVcE (ORCPT
+        id S1727024AbgAFVdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 16:32:04 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44054 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726713AbgAFVcD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 16:32:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578346322;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XiXBOwIesFh04X7+/5jDrRr4txiFi4Mcnlwaam3kiKM=;
-        b=QpbBrEzy48dIFAYj8NfhmMUv76S3NM28p4WHsB30M1ZqriwTkIJ/bOeXbNef/yqKWIoniA
-        coQq7oeZBnb/nc0UB1ZxKIrgH999YP9QeGJGFqFMKI0xy0/FjilelihtDMU6m49o+VKAoV
-        RsW4Tx0Lh2mWCxfGlXk+oEzftRGyBmc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-265-ajXQLeimMPKpFY-Ki2s9uw-1; Mon, 06 Jan 2020 16:31:59 -0500
-X-MC-Unique: ajXQLeimMPKpFY-Ki2s9uw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4882D10054E3;
-        Mon,  6 Jan 2020 21:31:58 +0000 (UTC)
-Received: from localhost (ovpn-112-4.rdu2.redhat.com [10.10.112.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E9165D9CA;
-        Mon,  6 Jan 2020 21:31:56 +0000 (UTC)
-Date:   Mon, 06 Jan 2020 13:31:55 -0800 (PST)
-Message-Id: <20200106.133155.1221137250116950495.davem@redhat.com>
-To:     krzk@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] net: ethernet: 3c515: Fix cast from pointer to
- integer of different size
-From:   David Miller <davem@redhat.com>
-In-Reply-To: <20200104143306.21210-1-krzk@kernel.org>
-References: <20200104143306.21210-1-krzk@kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-7
-Content-Transfer-Encoding: base64
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Mon, 6 Jan 2020 16:33:39 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:54476 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726735AbgAFVdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 16:33:39 -0500
+Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ioa0A-00079U-GH; Mon, 06 Jan 2020 22:33:30 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Jonas Karlman <jonas@kwiboo.se>
+Cc:     Sandy Huang <hjc@rock-chips.com>,
+        Algea Cao <algea.cao@rock-chips.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Zheng Yang <zhengyang@rock-chips.com>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 15/15] phy/rockchip: inno-hdmi: Support more pre-pll configuration
+Date:   Mon, 06 Jan 2020 22:33:29 +0100
+Message-ID: <2769685.GCkjRackp1@diego>
+In-Reply-To: <HE1PR06MB4011666845128FD3C89F9DACAC3C0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+References: <HE1PR06MB4011254424EDB4485617513CAC3C0@HE1PR06MB4011.eurprd06.prod.outlook.com> <20200106204951.6060-1-jonas@kwiboo.se> <HE1PR06MB4011666845128FD3C89F9DACAC3C0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6a0BrZXJuZWwub3JnPg0KRGF0ZTogU2F0LCAg
-NCBKYW4gMjAyMCAxNTozMzowNSArMDEwMA0KDQo+IFBvaW50ZXIgcGFzc2VkIGFzIGludGVnZXIg
-c2hvdWxkIGJlIGNhc3QgdG8gdW5zaWduZWQgbG9uZyB0bw0KPiBhdm9pZCB3YXJuaW5nIChjb21w
-aWxlIHRlc3Rpbmcgb24gYWxwaGEgYXJjaGl0ZWN0dXJlKToNCj4gDQo+ICAgICBkcml2ZXJzL25l
-dC9ldGhlcm5ldC8zY29tLzNjNTE1LmM6IEluIGZ1bmN0aW9uIKFjb3Jrc2NyZXdfc3RhcnRfeG1p
-dKI6DQo+ICAgICBkcml2ZXJzL25ldC9ldGhlcm5ldC8zY29tLzNjNTE1LmM6MTA2Njo4OiB3YXJu
-aW5nOg0KPiAgICAgICAgIGNhc3QgZnJvbSBwb2ludGVyIHRvIGludGVnZXIgb2YgZGlmZmVyZW50
-IHNpemUgWy1XcG9pbnRlci10by1pbnQtY2FzdF0NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEtyenlz
-enRvZiBLb3psb3dza2kgPGtyemtAa2VybmVsLm9yZz4NCj4gDQo+IC0tLQ0KPiANCj4gT25seSBj
-b21waWxlIHRlc3RlZA0KDQpTb3JyeSwgSSdtIG5vdCBhcHBseWluZyB0aGVzZSB0d28uDQoNCkl0
-IGlzIGNsZWFyIHRoYXQgdGhlc2UgZHJpdmVycyBvbmx5IHdvcmsgcHJvcGVybHkgb24gMzItYml0
-IGFyY2hpdGVjdHVyZXMNCndoZXJlIHZpcnR1YWwgYWRkcmVzcyBlcXVhbHMgdGhlIERNQSBhZGRy
-ZXNzLg0KDQpNYWtpbmcgdGhpcyB3YXJuaW5nIGdvZXMgYXdheSBjcmVhdGVzIGEgZmFsc2Ugc2Vu
-c2UgdGhhdCB0aGV5IGFyZSBpbg0KZmFjdCA2NC1iaXQgY2xlYW4gYW5kIGNhcGFibGUsIHRoZXkg
-YXJlIG5vdC4NCg==
+Am Montag, 6. Januar 2020, 21:50:02 CET schrieb Jonas Karlman:
+> From: Algea Cao <algea.cao@rock-chips.com>
+> 
+> Adding the following freq cfg in 8-bit and 10-bit color depth:
+> 
+> {
+>   40000000,  65000000,  71000000,  83500000, 85750000,
+>   88750000, 108000000, 119000000, 162000000
+> }
+> 
+> New freq has been validated by quantumdata 980.
+> 
+> For some freq which can't be got by only using integer freq div,
+> frac freq div is needed, Such as 88.75Mhz 10-bit. But The actual
+> freq is different from the target freq, We must try to narrow
+> the gap between them. RK322X only support integer freq div.
+> 
+> The VCO of pre-PLL must be more than 2Ghz, otherwise PLL may be
+> unlocked.
+> 
+> Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+
+Acked-by: Heiko Stuebner <heiko@sntech.de>
+
+
+> ---
+>  drivers/phy/rockchip/phy-rockchip-inno-hdmi.c | 74 ++++++++++++-------
+>  1 file changed, 49 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
+> index 3719309ad0d0..bb8bdf5e3301 100644
+> --- a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
+> +++ b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
+> @@ -291,32 +291,56 @@ struct inno_hdmi_phy_drv_data {
+>  	const struct phy_config		*phy_cfg_table;
+>  };
+>  
+> +/*
+> + * If only using integer freq div can't get frequency we want, frac
+> + * freq div is needed. For example, pclk 88.75 Mhz and tmdsclk
+> + * 110.9375 Mhz must use frac div 0xF00000. The actual frequency is different
+> + * from the target frequency. Such as the tmds clock 110.9375 Mhz,
+> + * the actual tmds clock we get is 110.93719 Mhz. It is important
+> + * to note that RK322X platforms do not support frac div.
+> + */
+>  static const struct pre_pll_config pre_pll_cfg_table[] = {
+> -	{ 27000000,  27000000, 1,  90, 3, 2, 2, 10, 3, 3, 4, 0, 0},
+> -	{ 27000000,  33750000, 1,  90, 1, 3, 3, 10, 3, 3, 4, 0, 0},
+> -	{ 40000000,  40000000, 1,  80, 2, 2, 2, 12, 2, 2, 2, 0, 0},
+> -	{ 59341000,  59341000, 1,  98, 3, 1, 2,  1, 3, 3, 4, 0, 0xE6AE6B},
+> -	{ 59400000,  59400000, 1,  99, 3, 1, 1,  1, 3, 3, 4, 0, 0},
+> -	{ 59341000,  74176250, 1,  98, 0, 3, 3,  1, 3, 3, 4, 0, 0xE6AE6B},
+> -	{ 59400000,  74250000, 1,  99, 1, 2, 2,  1, 3, 3, 4, 0, 0},
+> -	{ 74176000,  74176000, 1,  98, 1, 2, 2,  1, 2, 3, 4, 0, 0xE6AE6B},
+> -	{ 74250000,  74250000, 1,  99, 1, 2, 2,  1, 2, 3, 4, 0, 0},
+> -	{ 74176000,  92720000, 4, 494, 1, 2, 2,  1, 3, 3, 4, 0, 0x816817},
+> -	{ 74250000,  92812500, 4, 495, 1, 2, 2,  1, 3, 3, 4, 0, 0},
+> -	{148352000, 148352000, 1,  98, 1, 1, 1,  1, 2, 2, 2, 0, 0xE6AE6B},
+> -	{148500000, 148500000, 1,  99, 1, 1, 1,  1, 2, 2, 2, 0, 0},
+> -	{148352000, 185440000, 4, 494, 0, 2, 2,  1, 3, 2, 2, 0, 0x816817},
+> -	{148500000, 185625000, 4, 495, 0, 2, 2,  1, 3, 2, 2, 0, 0},
+> -	{296703000, 296703000, 1,  98, 0, 1, 1,  1, 0, 2, 2, 0, 0xE6AE6B},
+> -	{297000000, 297000000, 1,  99, 0, 1, 1,  1, 0, 2, 2, 0, 0},
+> -	{296703000, 370878750, 4, 494, 1, 2, 0,  1, 3, 1, 1, 0, 0x816817},
+> -	{297000000, 371250000, 4, 495, 1, 2, 0,  1, 3, 1, 1, 0, 0},
+> -	{593407000, 296703500, 1,  98, 0, 1, 1,  1, 0, 2, 1, 0, 0xE6AE6B},
+> -	{594000000, 297000000, 1,  99, 0, 1, 1,  1, 0, 2, 1, 0, 0},
+> -	{593407000, 370879375, 4, 494, 1, 2, 0,  1, 3, 1, 1, 1, 0x816817},
+> -	{594000000, 371250000, 4, 495, 1, 2, 0,  1, 3, 1, 1, 1, 0},
+> -	{593407000, 593407000, 1,  98, 0, 2, 0,  1, 0, 1, 1, 0, 0xE6AE6B},
+> -	{594000000, 594000000, 1,  99, 0, 2, 0,  1, 0, 1, 1, 0, 0},
+> +	{ 27000000,  27000000, 1,  90, 3, 2, 2, 10, 3, 3,  4, 0, 0},
+> +	{ 27000000,  33750000, 1,  90, 1, 3, 3, 10, 3, 3,  4, 0, 0},
+> +	{ 40000000,  40000000, 1,  80, 2, 2, 2, 12, 2, 2,  2, 0, 0},
+> +	{ 40000000,  50000000, 1, 100, 2, 2, 2,  1, 0, 0, 15, 0, 0},
+> +	{ 59341000,  59341000, 1,  98, 3, 1, 2,  1, 3, 3,  4, 0, 0xE6AE6B},
+> +	{ 59400000,  59400000, 1,  99, 3, 1, 1,  1, 3, 3,  4, 0, 0},
+> +	{ 59341000,  74176250, 1,  98, 0, 3, 3,  1, 3, 3,  4, 0, 0xE6AE6B},
+> +	{ 59400000,  74250000, 1,  99, 1, 2, 2,  1, 3, 3,  4, 0, 0},
+> +	{ 65000000,  65000000, 1, 130, 2, 2, 2,  1, 0, 0, 12, 0, 0},
+> +	{ 65000000,  81250000, 3, 325, 0, 3, 3,  1, 0, 0, 10, 0, 0},
+> +	{ 71000000,  71000000, 3, 284, 0, 3, 3,  1, 0, 0,  8, 0, 0},
+> +	{ 71000000,  88750000, 3, 355, 0, 3, 3,  1, 0, 0, 10, 0, 0},
+> +	{ 74176000,  74176000, 1,  98, 1, 2, 2,  1, 2, 3,  4, 0, 0xE6AE6B},
+> +	{ 74250000,  74250000, 1,  99, 1, 2, 2,  1, 2, 3,  4, 0, 0},
+> +	{ 74176000,  92720000, 4, 494, 1, 2, 2,  1, 3, 3,  4, 0, 0x816817},
+> +	{ 74250000,  92812500, 4, 495, 1, 2, 2,  1, 3, 3,  4, 0, 0},
+> +	{ 83500000,  83500000, 2, 167, 2, 1, 1,  1, 0, 0,  6, 0, 0},
+> +	{ 83500000, 104375000, 1, 104, 2, 1, 1,  1, 1, 0,  5, 0, 0x600000},
+> +	{ 85750000,  85750000, 3, 343, 0, 3, 3,  1, 0, 0,  8, 0, 0},
+> +	{ 88750000,  88750000, 3, 355, 0, 3, 3,  1, 0, 0,  8, 0, 0},
+> +	{ 88750000, 110937500, 1, 110, 2, 1, 1,  1, 1, 0,  5, 0, 0xF00000},
+> +	{108000000, 108000000, 1,  90, 3, 0, 0,  1, 0, 0,  5, 0, 0},
+> +	{108000000, 135000000, 1,  90, 0, 2, 2,  1, 0, 0,  5, 0, 0},
+> +	{119000000, 119000000, 1, 119, 2, 1, 1,  1, 0, 0,  6, 0, 0},
+> +	{119000000, 148750000, 1,  99, 0, 2, 2,  1, 0, 0,  5, 0, 0x2AAAAA},
+> +	{148352000, 148352000, 1,  98, 1, 1, 1,  1, 2, 2,  2, 0, 0xE6AE6B},
+> +	{148500000, 148500000, 1,  99, 1, 1, 1,  1, 2, 2,  2, 0, 0},
+> +	{148352000, 185440000, 4, 494, 0, 2, 2,  1, 3, 2,  2, 0, 0x816817},
+> +	{148500000, 185625000, 4, 495, 0, 2, 2,  1, 3, 2,  2, 0, 0},
+> +	{162000000, 162000000, 1, 108, 0, 2, 2,  1, 0, 0,  4, 0, 0},
+> +	{162000000, 202500000, 1, 135, 0, 2, 2,  1, 0, 0,  5, 0, 0},
+> +	{296703000, 296703000, 1,  98, 0, 1, 1,  1, 0, 2,  2, 0, 0xE6AE6B},
+> +	{297000000, 297000000, 1,  99, 0, 1, 1,  1, 0, 2,  2, 0, 0},
+> +	{296703000, 370878750, 4, 494, 1, 2, 0,  1, 3, 1,  1, 0, 0x816817},
+> +	{297000000, 371250000, 4, 495, 1, 2, 0,  1, 3, 1,  1, 0, 0},
+> +	{593407000, 296703500, 1,  98, 0, 1, 1,  1, 0, 2,  1, 0, 0xE6AE6B},
+> +	{594000000, 297000000, 1,  99, 0, 1, 1,  1, 0, 2,  1, 0, 0},
+> +	{593407000, 370879375, 4, 494, 1, 2, 0,  1, 3, 1,  1, 1, 0x816817},
+> +	{594000000, 371250000, 4, 495, 1, 2, 0,  1, 3, 1,  1, 1, 0},
+> +	{593407000, 593407000, 1,  98, 0, 2, 0,  1, 0, 1,  1, 0, 0xE6AE6B},
+> +	{594000000, 594000000, 1,  99, 0, 2, 0,  1, 0, 1,  1, 0, 0},
+>  	{ /* sentinel */ }
+>  };
+>  
+> 
+
+
+
 
