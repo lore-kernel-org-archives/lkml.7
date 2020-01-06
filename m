@@ -2,120 +2,95 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B9EC33C9A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CA4C33C9B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3632520656
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:42:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="cOVWGtwb"
+	by mail.kernel.org (Postfix) with ESMTP id 4DA4124670
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:42:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578300165;
+	bh=skvqTBhyyO1FLCKZxItSUc6ySkZigVQbcigpeQ2las4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZqimF7cIXA+3vew/vCvU33ZAVIvwkUYjImdG/k4qtPcxl+RKb/k4sz6UUjShieiE6
+	 jJxv0b6u8EC0KVpyILP+HnVrs1LUsvPE6remutHoUwzwWPjy2PRaC7WYKPlbGUFFxm
+	 pmH5oprJkzqmZJYefb6RO/03iAfWLG3i5hRFVL/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgAFImB (ORCPT
+        id S1726382AbgAFImo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 03:42:01 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44378 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgAFImA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 03:42:00 -0500
-Received: by mail-wr1-f68.google.com with SMTP id q10so9749806wrm.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 00:41:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=M8EUuah2JQYFbZVRs4FZbIzhWD8SMtL+msO/T9weTJI=;
-        b=cOVWGtwbDXYSvf0c0GX5XlAiVh+TPkIgTWgHF6Tabz3GUbi9aAt+qWys5MuUOzY1OP
-         XovJm8QftmdmY7GzMtQhlpOmnoXiNnZuTOkQP6f3ogZi1KeQ0JpiKUYAHJyEA5zvCZvT
-         ytT+NqePYbZk0eGryXBzDhB/luNCVNDoitk8W+QNh8DpUWKt8FK306UKWgXV7OL4xT6N
-         3zjMC5v1tiFnKzH1qVP8um0np30HxiA+0xMnEfJWabnzitBa/Au5DtyU1tnQpMW4J5ZW
-         cAxNdMCoEkbfWH4BH3H4IwMIYLseffge0XbsYwaptB2KwkzEBwMTIZab8l4ukezP/IEq
-         5ffg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=M8EUuah2JQYFbZVRs4FZbIzhWD8SMtL+msO/T9weTJI=;
-        b=k6LbM/B7D6Bj2R6eD906TF/hOhnKbottdvozisYldm3z1WQ5YoiQKnqIMs01BDNwgk
-         f2ARod2m5Mv/qgzLL7iw6+Imq8PPB5f4/JnQrrnCTvfI46n973kr79MinR6kt76ODGSX
-         qKMNXBUVQqQYHYsDctHUHey9evFm2aiucPrlJR84tpsw4F1sXsr0s9Twm/QyI2Q71+Mt
-         1Ocg84AF1B2Rn+VFfXB+wCKVf3wi6hLojSEjvF37bzXN6R99X41IL7A/93u58JSlwNxC
-         ktF+QTryqcDABCT8Xe21e8fKLfQJ2ZiTAV4p2laZP3PVYjRSj0d+7wqZEfXRFMMwUrNP
-         0lvQ==
-X-Gm-Message-State: APjAAAW+3pfqVF7HGPMF2Qee2tmFAipYLAaxsUnaH2FvWFu9KniWEBRk
-        WPRrcEa9pzFldV9qiU9GlpkZBw==
-X-Google-Smtp-Source: APXvYqyXJ1E8kAivSw7L5PiTuqmj6FvNr+aT48bF+Uyd9IWHg2Ch1S32YoUtE1yw0rjXlM+ROZu6TA==
-X-Received: by 2002:a5d:4749:: with SMTP id o9mr53851412wrs.242.1578300118793;
-        Mon, 06 Jan 2020 00:41:58 -0800 (PST)
-Received: from netronome.com ([2001:982:756:703:d63d:7eff:fe99:ac9d])
-        by smtp.gmail.com with ESMTPSA id a1sm22350876wmj.40.2020.01.06.00.41.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 00:41:58 -0800 (PST)
-Date:   Mon, 6 Jan 2020 09:41:57 +0100
-From:   Simon Horman <simon.horman@netronome.com>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
-        Francois Romieu <romieu@fr.zoreil.com>,
-        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH net-next v2 0/3] ethtool: allow nesting of begin() and
- complete() callbacks
-Message-ID: <20200106084156.GA10460@netronome.com>
-References: <cover.1578292157.git.mkubecek@suse.cz>
+        Mon, 6 Jan 2020 03:42:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726264AbgAFImo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 03:42:44 -0500
+Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7242C218AC;
+        Mon,  6 Jan 2020 08:42:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578300163;
+        bh=skvqTBhyyO1FLCKZxItSUc6ySkZigVQbcigpeQ2las4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OHzik1a0IegjwU3lIugBdpBedMfxBLKx0R7iuzCFdziHpwCK7VMMFrqKp/jkyZpS/
+         fprm7uOyFh4Cq+RAYj0kOzvGE7I01f60GhKEH124Q5iMzx6fSpZySyYu0lwBhnT8BE
+         G+bHgc598+v8wlHs/+3Mosb+Jayt2KF4UFHwKl5s=
+Received: by wens.tw (Postfix, from userid 1000)
+        id 5BAB55FCEC; Mon,  6 Jan 2020 16:42:41 +0800 (CST)
+From:   Chen-Yu Tsai <wens@kernel.org>
+To:     Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 3/7] dt-bindings: bus: sunxi: Add R40 MBUS compatible
+Date:   Mon,  6 Jan 2020 16:42:36 +0800
+Message-Id: <20200106084240.1076-4-wens@kernel.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200106084240.1076-1-wens@kernel.org>
+References: <20200106084240.1076-1-wens@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1578292157.git.mkubecek@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 07:39:26AM +0100, Michal Kubecek wrote:
-> The ethtool ioctl interface used to guarantee that ethtool_ops callbacks
-> were always called in a block between calls to ->begin() and ->complete()
-> (if these are defined) and that this whole block was executed with RTNL
-> lock held:
-> 
-> 	rtnl_lock();
-> 	ops->begin();
-> 	/* other ethtool_ops calls */
-> 	ops->complete();
-> 	rtnl_unlock();
-> 
-> This prevented any nesting or crossing of the begin-complete blocks.
-> However, this is no longer guaranteed even for ioctl interface as at least
-> ethtool_phys_id() releases RTNL lock while waiting for a timer. With the
-> introduction of netlink ethtool interface, the begin-complete pairs are
-> naturally nested e.g. when a request triggers a netlink notification.
-> 
-> Fortunately, only minority of networking drivers implements begin() and
-> complete() callbacks and most of those that do, fall into three groups:
-> 
->   - wrappers for pm_runtime_get_sync() and pm_runtime_put()
->   - wrappers for clk_prepare_enable() and clk_disable_unprepare()
->   - begin() checks netif_running() (fails if false), no complete()
-> 
-> First two have their own refcounting, third is safe w.r.t. nesting of the
-> blocks.
-> 
-> Only three in-tree networking drivers need an update to deal with nesting
-> of begin() and complete() calls: via-velocity and epic100 perform resume
-> and suspend on their own and wil6210 completely serializes the calls using
-> its own mutex (which would lead to a deadlock if a request request
-> triggered a netlink notification). The series addresses these problems.
-> 
-> changes between v1 and v2:
->   - fix inverted condition in epic100 ethtool_begin() (thanks to Andrew
->     Lunn)
+From: Chen-Yu Tsai <wens@csie.org>
 
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Allwinner R40 SoC also contains MBUS controller.
+
+Add compatible for it.
+
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+Changes since v1:
+
+  - Reworked on top of "dt-bindings: interconnect: Convert Allwinner
+    MBUS controller to a schema"
+
+This particular patch should go through Rob's tree, instead of the
+sunxi tree.
+---
+ .../devicetree/bindings/arm/sunxi/allwinner,sun4i-a10-mbus.yaml  | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/sunxi/allwinner,sun4i-a10-mbus.yaml b/Documentation/devicetree/bindings/arm/sunxi/allwinner,sun4i-a10-mbus.yaml
+index 9370e64992dd..23cda7437dcb 100644
+--- a/Documentation/devicetree/bindings/arm/sunxi/allwinner,sun4i-a10-mbus.yaml
++++ b/Documentation/devicetree/bindings/arm/sunxi/allwinner,sun4i-a10-mbus.yaml
+@@ -30,6 +30,7 @@ properties:
+     enum:
+       - allwinner,sun5i-a13-mbus
+       - allwinner,sun8i-h3-mbus
++      - allwinner,sun8i-r40-mbus
+ 
+   reg:
+     maxItems: 1
+-- 
+2.24.1
 
