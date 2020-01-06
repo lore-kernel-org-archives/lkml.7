@@ -2,99 +2,177 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47938C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C3EC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9FC2072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E66A2072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:58:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a5X7Xgvn"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="PsC3/LNJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgAFQ5Q (ORCPT
+        id S1726647AbgAFQ6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 11:57:16 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:43152 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgAFQ5P (ORCPT
+        Mon, 6 Jan 2020 11:58:48 -0500
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:48224 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgAFQ6s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 11:57:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KtA6VhFyLFqi7kWb+PYao12HEhPZ8hVXP/AvLkDg57w=; b=a5X7Xgvn+fusWiITMXIBJxch6
-        EibH0GZfsBa2Tv9KJ+ZrJeS+EMTFUA37iCHDQ/323udgQbtuCpXVVvBd2Cb47R25VSxG2xSyKYPoH
-        Mg4HVzLO1jpMtvDH/YH0NMqO8phqEKdv8gwhGNdVwRb5rVIcSf0XB5xLWl1Wgd+Ifl16JA37EXwaS
-        aAJOJnW0/B1z9hvPB6HziekS9RhBQ/qb1DMlJIqpu1mONgo4IEaaiUsFfub1LuVbNUtWf/DolglDm
-        KaEVL1bzv8juBkJM4P1B8MhCoMUPZwSewjJRJLwdhjw8AtT9mr6JESczMhgynMp9FsMRptO6rtteP
-        gu+7D+CfA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ioVgY-00046W-7E; Mon, 06 Jan 2020 16:56:58 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CC2CF3012DC;
-        Mon,  6 Jan 2020 17:55:22 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E06D12B2844FC; Mon,  6 Jan 2020 17:56:54 +0100 (CET)
-Date:   Mon, 6 Jan 2020 17:56:54 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     bpf@vger.kernel.org, live-patching@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        KP Singh <kpsingh@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: BPF tracing trampoline synchronization between update/freeing
- and execution?
-Message-ID: <20200106165654.GP2844@hirez.programming.kicks-ass.net>
-References: <CAG48ez2gDDRtKaOcGdKLREd7RGtVzCypXiBMHBguOGSpxQFk3w@mail.gmail.com>
+        Mon, 6 Jan 2020 11:58:48 -0500
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="Codrin.Ciubotariu@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: azee5UyKdEK2ILetTgSIC6OO6pyUjMEwJezZOOKaHLNZd+A70LUkKWH64UbuuD5Rgp6l4HJhrh
+ 9UILhV5APyEIKIE1HFdP4gE1KuX23RzUd/v/S1qbUllUFAn0ReDK1nU3gM7mlSDaBL/GssHDZN
+ LD00gXbTItnyu02P4stB3IzJrSQsH+eZnaQMiqYgsFsitIzKjlTFlxotoqCj6l4xkaqmYrs4k0
+ Fn6s4K+zM4kaQapUtUFIXitx7pKBEa26cwmwdnohqYtT3C6bGDrW5o1fbJ5i6ezFxKaeihogdD
+ wwg=
+X-IronPort-AV: E=Sophos;i="5.69,403,1571727600"; 
+   d="scan'208";a="63769199"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Jan 2020 09:58:45 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 6 Jan 2020 09:58:43 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Mon, 6 Jan 2020 09:58:39 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MHBks47M+hTrQ1CVlZlY0bKY8VFB1pLgarvH+bIUt1uwBBH08aI+g85KM3dkMELY7joZ/P4Gc3DFBDWZZlgbZCCLy3HBK97B0GBKDsooPWhNLgzlDfUXxZOap7Vr5JSZjgX9uDQX32l8AxN8gDeTVd9lPJ11E3uPA/RDguga+m9xE6oQCQTVoKFquuOheJS3MLD0XA2eAYxF5N9NYv0IEjwmIlnm6u5U9mFtRI9IqP0ol0+CHtY8Ny+K4gDQkIpvxYmO1KAkfP5asrVLeDx28waWPfwcycysT2xK9UzEZBxw3oqD4ro8jcr+Q1sK1OGU5UnNBDZnLDLct6yoC8C2ig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jgnq/i1Hdrrizale9zkzOkgt4qn3+C35nAgN3CJSW6k=;
+ b=kjSLQkdJfrxsv91kiggJYOPpwCtO1HLUD/k4bV+CSRDI8D7QaJfjR/XU/jFXFbk0fBtHYtc1TymLeXVMjvRKo8ZotgiCf5i16j5bGhB0gGsBrZfZ/tUIGn1r4phU74to2yZdPmPav9Yz4ksPqp3TEu7Ws2Ex2jTMOL1V8q0CVOxbl6oS+jeU8INXmikmtK/dR3O47XexIv8rjKRIULNmyuDXWLjeGDCQp4zXGfeF/Cy6t3fxcmqixv3DdBLlgc2x8P0qTyQC8iyolctH6I1WUfOAz4XTy97Hg6r8QNYsOGSraT0PQ2EGmO4ZIeapjn4QRLW2JIz3GKy5VklsC2RBxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jgnq/i1Hdrrizale9zkzOkgt4qn3+C35nAgN3CJSW6k=;
+ b=PsC3/LNJ2MkQYzU+eGR0/50n0SGHWXUKXwXWXdXSO/ID7mrGVNliXG++e0fZ1CAtmbYmSo3NyJsH4j/ioeokiojSB0038qs1T5RHQd4Mep6A5zJDh8F4+ciPKRgZ/sKYHRfX/V9wj7JvyFq+ioQ6IiJbsHtcCUcE7dZJlLQ4gc8=
+Received: from BY5PR11MB4497.namprd11.prod.outlook.com (52.132.255.220) by
+ BY5PR11MB3944.namprd11.prod.outlook.com (10.255.162.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.12; Mon, 6 Jan 2020 16:58:40 +0000
+Received: from BY5PR11MB4497.namprd11.prod.outlook.com
+ ([fe80::6189:c32:b55b:b3fd]) by BY5PR11MB4497.namprd11.prod.outlook.com
+ ([fe80::6189:c32:b55b:b3fd%5]) with mapi id 15.20.2602.015; Mon, 6 Jan 2020
+ 16:58:40 +0000
+From:   <Codrin.Ciubotariu@microchip.com>
+To:     <peda@axentia.se>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <kamel.bouhara@bootlin.com>, <wsa@the-dreams.de>,
+        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <Ludovic.Desroches@microchip.com>, <robh@kernel.org>
+Subject: Re: [PATCH v2 4/6] ARM: at91/dt: sama5d3: add i2c gpio pinctrl
+Thread-Topic: [PATCH v2 4/6] ARM: at91/dt: sama5d3: add i2c gpio pinctrl
+Thread-Index: AQHVwhsLdxsZpEnI6UWudjXfEFHmN6fbG4OAgALFWoA=
+Date:   Mon, 6 Jan 2020 16:58:39 +0000
+Message-ID: <91f1362e-590d-4592-bc16-5d2393f73199@microchip.com>
+References: <20200103094821.13185-1-codrin.ciubotariu@microchip.com>
+ <20200103094821.13185-5-codrin.ciubotariu@microchip.com>
+ <e22772f8-9e6d-002d-98d7-414136a32439@axentia.se>
+In-Reply-To: <e22772f8-9e6d-002d-98d7-414136a32439@axentia.se>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bfebed43-aad4-411e-9baf-08d792c9aded
+x-ms-traffictypediagnostic: BY5PR11MB3944:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR11MB3944642680D73CD82EF6C8A0E73C0@BY5PR11MB3944.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0274272F87
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(396003)(39860400002)(346002)(376002)(199004)(189003)(52314003)(6512007)(2906002)(6486002)(8936002)(31686004)(71200400001)(478600001)(86362001)(81156014)(81166006)(2616005)(6506007)(8676002)(76116006)(91956017)(53546011)(31696002)(66946007)(186003)(36756003)(5660300002)(110136005)(4326008)(26005)(66556008)(66476007)(66446008)(64756008)(54906003)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR11MB3944;H:BY5PR11MB4497.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: w7iRiAWtIsamMT87zvbbtcEKFv8LPcwz8t/5wO4nT+OQFuWy6OYZtKPrhmY7IHxP8Whd8+JkpgTiRPcJoUX5jks2iIvKbwPrxDL8DivNcGJMT9J86+CirrfKpSS/ErVJlOexivT0ZRsq9dfhBLlQ6DQh8ClvN92dSArCm10ykS6eek1FNEVCi9qW/7GGz7zuxz+Kb/+5x03giNk/hDtMn3yVyz329yJWeQ/nxCgkBKiqvVdCLpfllcFICJG7GfDnbtkxHL2/FBbW5a04Awja4HXPUK1sI1h7pR2uCrrdWiGtc1cYfXOo5daQXR8Fv0Vw/bOIR9KiwRCZymM9ogUgFMK0aQTOQpYF3Uj7OUWNDF/ab+I5RSsrESDXKfE6gL2VI/k1wrEFL6tBi8zSCT45Igpx9taUZOd9z8/O/71OnEmARK6jZokaXc8aCBMDa/nUiYAEj7laU64y+7z3kkOHpHB3UXYUm0uTaQUXDuhj59jxQ2u9LMp5R11uWnYXqJTW
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <25D5C0D394FFCB4AB26D9D6D5890582B@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez2gDDRtKaOcGdKLREd7RGtVzCypXiBMHBguOGSpxQFk3w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bfebed43-aad4-411e-9baf-08d792c9aded
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2020 16:58:39.9437
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /Buq0qagEN8yNoOPRFNPc/ruIBR7ia0hL7Qijl3L5Qc9wXUmL+pvOEbsikFxpeoLp+Qe4xBW8q/j1SKX8MdS8x6BHu/uKhlmMaVZNBfXfCk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB3944
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 05:39:30PM +0100, Jann Horn wrote:
-> Hi!
-> 
-> I was chatting with kpsingh about BPF trampolines, and I noticed that
-> it looks like BPF trampolines (as of current bpf-next/master) seem to
-> be missing synchronization between trampoline code updates and
-> trampoline execution. Or maybe I'm missing something?
-> 
-> If I understand correctly, trampolines are executed directly from the
-> fentry placeholders at the start of arbitrary kernel functions, so
-> they can run without any locks held. So for example, if task A starts
-> executing a trampoline on entry to sys_open(), then gets preempted in
-> the middle of the trampoline, and then task B quickly calls
-> BPF_RAW_TRACEPOINT_OPEN twice, and then task A continues execution,
-> task A will end up executing the middle of newly-written machine code,
-> which can probably end up crashing the kernel somehow?
-> 
-> I think that at least to synchronize trampoline text freeing with
-> concurrent trampoline execution, it is necessary to do something
-> similar to what the livepatching code does with klp_check_stack(), and
-> then either use a callback from the scheduler to periodically re-check
-> tasks that were in the trampoline or let the trampoline tail-call into
-> a cleanup helper that is part of normal kernel text. And you'd
-> probably have to gate BPF trampolines on
-> CONFIG_HAVE_RELIABLE_STACKTRACE.
-
-ftrace uses synchronize_rcu_tasks() to flip between trampolines iirc.
+T24gMDUuMDEuMjAyMCAwMDozOSwgUGV0ZXIgUm9zaW4gd3JvdGU6DQo+IE9uIDIwMjAtMDEtMDMg
+MTA6NDksIENvZHJpbi5DaXVib3Rhcml1QG1pY3JvY2hpcC5jb20gd3JvdGU6DQo+PiBGcm9tOiBL
+YW1lbCBCb3VoYXJhIDxrYW1lbC5ib3VoYXJhQGJvb3RsaW4uY29tPg0KPj4NCj4+IEFkZCB0aGUg
+aTJjIGdwaW8gcGluY3RybHMgdG8gc3VwcG9ydCB0aGUgaTJjIGJ1cyByZWNvdmVyeQ0KPj4NCj4+
+IFNpZ25lZC1vZmYtYnk6IEthbWVsIEJvdWhhcmEgPGthbWVsLmJvdWhhcmFAYm9vdGxpbi5jb20+
+DQo+PiAtLS0NCj4+DQo+PiBDaGFuZ2VzIGluIHYyOg0KPj4gICAtIG5vbmU7DQo+Pg0KPj4gICBh
+cmNoL2FybS9ib290L2R0cy9zYW1hNWQzLmR0c2kgfCAzMyArKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKystLS0NCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDMwIGluc2VydGlvbnMoKyksIDMgZGVs
+ZXRpb25zKC0pDQo+Pg0KPiANCj4gKnNuaXAqDQo+IA0KPj4gQEAgLTYzOSw2ICs2NDgsMTIgQEAN
+Cj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICA8QVQ5MV9QSU9BIDMwIEFUOTFfUEVSSVBIX0EgQVQ5MV9QSU5DVFJMX05PTkUgICAvKiBQQTMw
+IHBlcmlwaCBBIFRXRDAgcGluLCBjb25mbGljdHMgd2l0aCBVUlhEMSwgSVNJX1ZTWU5DICovDQo+
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IEFUOTFfUElPQSAzMSBBVDkxX1BFUklQSF9BIEFUOTFfUElOQ1RSTF9OT05FPjsgLyogUEEzMSBw
+ZXJpcGggQSBUV0NLMCBwaW4sIGNvbmZsaWN0cyB3aXRoIFVUWEQxLCBJU0lfSFNZTkMgKi8NCj4+
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07DQo+PiArDQo+PiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBpbmN0cmxfaTJjMF9ncGlvOiBpMmMw
+LWdwaW8gew0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IGF0bWVsLHBpbnMgPQ0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgPEFUOTFfUElPQSAzMCBBVDkxX1BFUklQSF9HUElPIEFUOTFfUElOQ1RS
+TF9QVUxMX1VQDQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgQVQ5MV9QSU9BIDMxIEFUOTFfUEVSSVBIX0dQSU8gQVQ5MV9QSU5DVFJMX1BV
+TExfVVA+Ow0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPiAN
+Cj4gSSdtIGN1cmlvdXMsIGJ1dCB3aHkgYXJlIHB1bGwtdXBzIHN1ZGRlbmx5IG5lZWRlZCBqdXN0
+IGJlY2F1c2UgdGhlIHBpbnMgYXJlDQo+IHVzZWQgZm9yIEdQSU8gcmVjb3Zlcnk/IFdoeSBhcmUg
+cHVsbC11cHMgbm90IG5lZWRlZCB3aGVuIHRoZSBwaW5zIGFyZSB1c2VkDQo+IGJ5IHRoZSBJMkMg
+cGVyaXBoZXJhbCBkZXZpY2Uocyk/DQo+IA0KPiBHaXZlbiBmaWd1cmUgMjctMiAiSS9PIExpbmUg
+Q29udHJvbCBMb2dpYyIgaW4gbXkgU0FNQTVEMyBkYXRhc2hlZXQsIEkgc2VlDQo+IG5vIGRpZmZl
+cmVuY2UgYXMgdG8gaG93IGFuZCB3aHkgdGhlIHB1bGwtdXBzIGFyZSBhcHBsaWVkIGRlcGVuZGlu
+ZyBvbiB3aGF0DQo+IHRoZSBjdXJyZW50IGZ1bmN0aW9uIG9mIHRoZSBwaW4gaXMuIFNvLCBpZiB0
+aGUgSTJDIGJ1cyB3b3JrcyB3L28gcHVsbHMsIGJ1cw0KPiByZWNvdmVyeSB1c2luZyBHUElPIG11
+c3QgYWxzbyB3b3JrIHcvbyBwdWxscy4NCj4gDQo+IEkuZS4gdGhlIGRldmljZSB0cmVlIHJlcXVp
+cmVzIHlvdSB0byBoYXZlIGV4dGVybmFsIHB1bGwtdXBzIG9uIHRoZSBJMkMgYnVzDQo+IGFueXdh
+eSwgc28gd2h5IGJvdGhlciB3aXRoIGludGVybmFsIHB1bGwtdXBzIGZvciB0aGUgcmVjb3Zlcnkg
+Y2FzZT8NCj4gDQo+IENoYW5naW5nIHB1bGwtdXAgc2V0dGluZ3MganVzdCBmb3IgcmVjb3Zlcnkg
+ZmVlbHMgbGlrZSBzb21ldGhpbmcgdGhhdCB3aWxsDQo+IGluZXZpdGFibHkgY3JlYXRlIGhhcmQg
+dG8gZGVidWcgc3VycHJpc2VzIGF0IHRoZSBsZWFzdCBvcHBvcnR1bmUgdGltZS4uLg0KPiANCj4g
+T3IgYW0gSSBtaXNzaW5nIHNvbWV0aGluZz8NCj4gDQo+IChJJ20gZm9jdXNpbmcgb24gU0FNQTVE
+MyBzaW5jZSB0aGF0IGlzIHdoYXQgSSBoYXBwZW4gdG8gd29yayB3aXRoLA0KPiAgIGJ1dCB0aGUg
+c2FtZSBxdWVzdGlvbiBhcHBlYXJzIHRvIGFwcGx5IGZvciBTQU1BNUQyIGFuZCBTQU1BNUQ0Li4u
+KQ0KDQpJIGRvbid0IHRoaW5rIHdlIG5lZWQgdGhlIHB1bGwtdXBzLiBJIHdpbGwgcmVtb3ZlIHRo
+ZW0gaW4gdjMuDQoNClRoYW5rcyBhbmQgYmVzdCByZWdhcmRzLA0KQ29kcmluDQo=
