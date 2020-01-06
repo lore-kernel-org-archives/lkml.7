@@ -2,85 +2,86 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EE9C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC80C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC892467F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:41:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="IjaLXYIR"
+	by mail.kernel.org (Postfix) with ESMTP id D7D78208C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:42:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgAFSk7 (ORCPT
+        id S1726710AbgAFSmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 13:40:59 -0500
-Received: from vulcan.natalenko.name ([104.207.131.136]:50968 "EHLO
-        vulcan.natalenko.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbgAFSk5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 13:40:57 -0500
-Received: from mail.natalenko.name (vulcan.natalenko.name [IPv6:fe80::5400:ff:fe0c:dfa0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by vulcan.natalenko.name (Postfix) with ESMTPSA id 7F188683B63;
-        Mon,  6 Jan 2020 19:40:55 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-        s=dkim-20170712; t=1578336055;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rp8CUrnWGAoX8TC2iOuIG764rbPn2mqZv/jvq2or5Tk=;
-        b=IjaLXYIRwuSSDDoP3AEQkfXkT3M26EZ/9Lfh+wD7HcqyriyPvB5UuIPxmJ7a2JCitX5e1+
-        GFvUj6Xs95xNou34pU8rzc0T6QijPfQ/KyFAkdxDXlCrdtswZMRz8caBzjUWzGMO34qRMK
-        CZuYApNwruZvaodV0MuczD4YHq4f/t0=
+        Mon, 6 Jan 2020 13:42:10 -0500
+Received: from foss.arm.com ([217.140.110.172]:48002 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726612AbgAFSmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 13:42:09 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F9EA328;
+        Mon,  6 Jan 2020 10:42:09 -0800 (PST)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2161C3F534;
+        Mon,  6 Jan 2020 10:42:08 -0800 (PST)
+Subject: Re: [PATCH] cpu-topology: Skip the exist but not possible cpu nodes
+To:     Zeng Tao <prime.zeng@hisilicon.com>, sudeep.holla@arm.com
+Cc:     linuxarm@huawei.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <1577935489-25245-1-git-send-email-prime.zeng@hisilicon.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <14a39167-5704-f406-614d-4d25b8fe8c68@arm.com>
+Date:   Mon, 6 Jan 2020 19:42:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <1577935489-25245-1-git-send-email-prime.zeng@hisilicon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 06 Jan 2020 19:40:55 +0100
-From:   Oleksandr Natalenko <oleksandr@natalenko.name>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, Chao Yu <chao@kernel.org>
-Subject: Re: Multidevice f2fs mount after disk rearrangement
-In-Reply-To: <20200106183450.GC50058@jaegeuk-macbookpro.roam.corp.google.com>
-References: <4c6cf8418236145f7124ac61eb2908ad@natalenko.name>
- <2c4cafd35d1595a62134203669d7c244@natalenko.name>
- <20200106183450.GC50058@jaegeuk-macbookpro.roam.corp.google.com>
-User-Agent: Roundcube Webmail/1.4.1
-Message-ID: <ee2cb1d7a6c1b51e1c8277a8feaafe6d@natalenko.name>
-X-Sender: oleksandr@natalenko.name
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+On 02/01/2020 04:24, Zeng Tao wrote:
+> When CONFIG_NR_CPUS is smaller than the cpu nodes defined in the device
+> tree, the cpu node parsing will fail. And this is not reasonable for a
+> legal device tree configs.
+> In this patch, skip such cpu nodes rather than return an error.
 
-On 06.01.2020 19:34, Jaegeuk Kim wrote:
-> Thank you for investigating this ahead of me. :) Yes, the device list 
-> is stored
-> in superblock, so hacking it manually should work.
-> 
-> Let me think about a tool to tune that.
+Is this extra code really necessary?
 
-Thank you both for the replies.
+Currently you get warnings indicating that CONFIG_NR_CPUS is too small
+so you could correct the setup issue easily.
 
-IIUC, tune.f2fs is not there yet. I saw a submission, but I do not see 
-it as accepted, right?
+Example: Arm64 Juno board
 
-Having this in tune.f2fs would be fine (assuming the assertion is 
-replaced with some meaningful hint message), but wouldn't it be more 
-convenient for an ordinary user to have implemented something like:
+$ grep "cpu@" ./arch/arm64/boot/dts/arm/juno.dts
+		A57_0: cpu@0 {
+		A57_1: cpu@1 {
+		A53_0: cpu@100 {
+		A53_1: cpu@101 {
+		A53_2: cpu@102 {
+		A53_3: cpu@103 {
 
-# mount -t f2fs /dev/sdb -o nextdev=/dev/sdc /mnt/fs
+root@juno:~# uname -r
+5.5.0-rc5
 
-Hm?
+root@juno:~# zcat /proc/config.gz | grep CONFIG_NR_CPUS
+CONFIG_NR_CPUS=4
 
--- 
-   Oleksandr Natalenko (post-factum)
+root@juno:~# cat /proc/cpuinfo | grep ^proc
+processor       : 0
+processor       : 1
+processor       : 2
+processor       : 3
+
+root@juno:~# dmesg | grep "Unable\|Can't"
+[    0.085089] Unable to find CPU node for /cpus/cpu@102
+[    0.090179] /cpus/cpu-map/cluster1/core2: Can't get CPU for leaf core
+
+[...]
