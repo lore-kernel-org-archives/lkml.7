@@ -2,136 +2,175 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4FBC33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 216DEC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05CDC207FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:39:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="EtPDPVRA"
+	by mail.kernel.org (Postfix) with ESMTP id E0504207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:40:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578350427;
+	bh=lwNQ0i4gmPQNMhoyf+9mRJ7Ods5wpDX7td/DsTKsUw8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ti2WBOqT6jFBRu5fDa/hFiIGOrkVOFIbNrREyBCYgHqmL3nj6fiNyzoTuwlquu1TB
+	 eWCBtT+YtUazM4H1GNnqYHjwyxW0GhoLQYtRitYbP65bPHYaHQRJvJuHJvmhbf9Qto
+	 jLT0aWVBZcZVY8w99BpAbwbXB0tkUrYRywcXzFoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbgAFWjk (ORCPT
+        id S1727244AbgAFWk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 17:39:40 -0500
-Received: from mail-eopbgr750109.outbound.protection.outlook.com ([40.107.75.109]:26411
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726721AbgAFWjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 17:39:39 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lf6gLMhJshSwl8qSKfMZnoaQ8b8mTW88RjRspuczU314kpcjGVYyZ9hRb/d+N8Jvx6dSZKrxUKkdqS9hgM7XxIHV2b9p5QahXUM6EIhoE8Ivha0qoK6WNqN+Fb+Vj46YaVfLqgeWoYf95dOtEhuqe8Oc0aYo38mi+i5q9MBHx93rQQSOjzS0zc6HzQW/PguZQ/0qiMNDsOBGRlL0FVO1jt8+wdX9Lf5m/CYBiE/V5e7MWP7b5opockdXFIMAsmWNMYWB4TwVNOJ0KRVvLC35JPwlWA1q2DfuRVe0L5M8vR5xj4nsVxnSxjYJdS26jaa2CqdP9pci3CFbKGfhE7xnxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7uANN529b+8BSGabR1XCQGDktRdLyhuFdOC++g3rsLw=;
- b=eNVEp75EB1c6HNHile4q5Bizs1KLvXelJLCOytEY41JV15ZCJAi+kg+9D9MT+TAPzYtRv4oevw0IwMSoDHvdSz/7MTPwmV7n9kpH788hMXsRP8EcGtf8GCSzibCv3Ty2lwyoizIkm/PGxtPR2fCfIT1C5uI8fxkpEvNldVwXVwiFS6iQJf+l9yVuegJ4EClqWK2wXHLCStD839s/JPbxR6mGeO01M/8Jh0o/4kjGlfw26fW2OM9At5LKpJMHNEj5nWSII1dNBseqcdEJCD3bAFFDOKeBB0Q7S7tFE4aHS2b/VFB71zLXs9b4+jZGvnjcPa7nLhT3PlBIVHz4fVHC/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7uANN529b+8BSGabR1XCQGDktRdLyhuFdOC++g3rsLw=;
- b=EtPDPVRAeoC9KeZS99sDsCnpeCQdve5ClG6xExZozC0kwQ5p1yKsoItocKiR44qzHrE2cvNzcJ2T9Bm8VzrWgHQc99bNTnOUWrENv1q8KFYsG1NITWd5MAc8FYKvzkFVSnORTsUWaXc89za0zomZ8jVBE5msUOq2Iuhyx24lhUg=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-Received: from CY4PR21MB0775.namprd21.prod.outlook.com (10.173.192.21) by
- CY4PR21MB0471.namprd21.prod.outlook.com (10.172.121.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.3; Mon, 6 Jan 2020 22:39:36 +0000
-Received: from CY4PR21MB0775.namprd21.prod.outlook.com
- ([fe80::6155:bc1d:1d39:977b]) by CY4PR21MB0775.namprd21.prod.outlook.com
- ([fe80::6155:bc1d:1d39:977b%8]) with mapi id 15.20.2644.002; Mon, 6 Jan 2020
- 22:39:35 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        Alexander.Levin@microsoft.com
-Cc:     Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH] PCI: hv: Use kfree(hbus) in hv_pci_probe()'s error handling path
-Date:   Mon,  6 Jan 2020 14:39:11 -0800
-Message-Id: <1578350351-129783-1-git-send-email-decui@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Reply-To: decui@microsoft.com
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR2001CA0007.namprd20.prod.outlook.com
- (2603:10b6:301:15::17) To CY4PR21MB0775.namprd21.prod.outlook.com
- (2603:10b6:903:b8::21)
+        Mon, 6 Jan 2020 17:40:26 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:36615 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726742AbgAFWkZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 17:40:25 -0500
+Received: by mail-pj1-f66.google.com with SMTP id n59so8360559pjb.1;
+        Mon, 06 Jan 2020 14:40:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=J3SHa4E3cS4gmRhRrRRBbMGMmQ7Swg+W9fTvK+8fgbo=;
+        b=QghAxNwbOpNWeCKcrY4MMLZJDUQrnsxywtSSfQVR5bQV7M+M7rv++XgA1gpLo82bsC
+         u59y/+LWBBr9YFYFfA0mH9/w8rXC9HyccLw7jQp1J7tS35SiY0zVscJ0WDjuRV3leyD4
+         gL7MRC+3jEgMXXSKVfKqFERRppct64iAp9BqPkRDLllU/3i/SQVahZ8MyMZnOCe8gWpI
+         pwViZWkaAakjgW4Lj3ptsQwvM5CuqwpE6TNYNxu8TvOUMrN43V41cpBlf/3zhVQUrpav
+         kJ8xa9NBgUxpisaayWNgqQY/brAFzqZHpAiXaRRAxoPcS86fWZhQPq/IXG5TFMiHDUaQ
+         +dQg==
+X-Gm-Message-State: APjAAAUUxReqDbtdTWKNz8LmFT/p55tdw/2g+BT6Uew853S8b2jW/y6l
+        HCj1Ra1T5PvtDw6BNNbhl6k=
+X-Google-Smtp-Source: APXvYqzL/Or94L+UYrmZszgXQkyK1iniMt70cGilBDndaFa7eg0lzxl/eodRL6mwFRsCXTaDCoazNg==
+X-Received: by 2002:a17:902:8f85:: with SMTP id z5mr108553143plo.43.1578350424536;
+        Mon, 06 Jan 2020 14:40:24 -0800 (PST)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id s24sm81687763pfd.161.2020.01.06.14.40.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 14:40:23 -0800 (PST)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 9822040321; Mon,  6 Jan 2020 22:40:22 +0000 (UTC)
+Date:   Mon, 6 Jan 2020 22:40:22 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
+        arnd@arndb.de, keescook@chromium.org, skhan@linuxfoundation.org,
+        alan.maguire@oracle.com, yzaikin@google.com, davidgow@google.com,
+        akpm@linux-foundation.org, rppt@linux.ibm.com,
+        gregkh@linuxfoundation.org, sboyd@kernel.org, logang@deltatee.com,
+        knut.omang@oracle.com, linux-um@lists.infradead.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [RFC v1 0/6] kunit: create a centralized executor to dispatch
+ all KUnit tests
+Message-ID: <20200106224022.GX11244@42.do-not-panic.com>
+References: <20191216220555.245089-1-brendanhiggins@google.com>
 MIME-Version: 1.0
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR2001CA0007.namprd20.prod.outlook.com (2603:10b6:301:15::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.12 via Frontend Transport; Mon, 6 Jan 2020 22:39:34 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [13.77.154.182]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 49ed48a6-8ae2-4115-a9f4-08d792f94e28
-X-MS-TrafficTypeDiagnostic: CY4PR21MB0471:|CY4PR21MB0471:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CY4PR21MB0471E51DDBEA4C10A48569CEBF3C0@CY4PR21MB0471.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 0274272F87
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(136003)(396003)(376002)(346002)(39860400002)(366004)(199004)(189003)(6506007)(6486002)(2906002)(66946007)(66476007)(66556008)(26005)(3450700001)(2616005)(36756003)(6512007)(956004)(5660300002)(4326008)(86362001)(10290500003)(8936002)(52116002)(316002)(16526019)(107886003)(8676002)(81156014)(6666004)(186003)(478600001)(6636002)(81166006)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0471;H:CY4PR21MB0775.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xwQktqa9VqCBfX6qxcXfv39ocAzuVcNnMcwqaEYMOmbLybPxfeIN3mPkE2JmibJz9rzJUYj6cIZOqC9XEzPIA9Ci0CpK+xXNwIFHMKrxII3OLiOwyGmfd6BIW0sxEhI9VW+8LZFYtKtVNVoT98R9QwzuRd3zcBH5pAsYuUyL4ZhKG+Ndn6aECGEuZitLYFivndefWl9M98G7W68uePESKSjar5qDglEXVUrVpHm83CuuqIhoXmkoyGsPW6ESnnQ1htLlzPEqtCQ6F6pK2r2nGc6C6PVI9ytyIr0U88eGeSqmMFuwfacflMxffYOaH3LyA4C+VymTWCD/iVcXDq1pkg7WYuKtWqzheLi5hRGgxJL8tsgYGMYJwsppgdg08Tjk7UWyAiBnBPNutWsrRxh2KqdWfddpNomY7sr5StDeUCiSWvmkE6eTdGVoLDppf4FbM8N0Bsd2DY34Nds35AVKIIQNZbZooIBWSW9BCiL02LX4Zv7r8EDpgMSwus8e8W2p
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 49ed48a6-8ae2-4115-a9f4-08d792f94e28
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jan 2020 22:39:35.7471
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0xvEspa+pPzk0R1c+Vm62uWutXleUEOOKpCqoFUUtz2yv6s/uoUdEOWoRF6I7o96hhEECwvZYs9O8Uzdpb2jAw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0471
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191216220555.245089-1-brendanhiggins@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we use kzalloc() to allocate the hbus buffer, we should use
-kfree() in the error path as well.
+On Mon, Dec 16, 2019 at 02:05:49PM -0800, Brendan Higgins wrote:
+> ## TL;DR
+> 
+> This patchset adds a centralized executor to dispatch tests rather than
+> relying on late_initcall to schedule each test suite separately along
+> with a couple of new features that depend on it.
+> 
+> ## What am I trying to do?
+> 
+> Conceptually, I am trying to provide a mechanism by which test suites
+> can be grouped together so that they can be reasoned about collectively.
+> The last two patches in this series add features which depend on this:
+> 
+> RFC 5/6 Prints out a test plan right before KUnit tests are run[1]; this
+>         is valuable because it makes it possible for a test harness to
+>         detect whether the number of tests run matches the number of
+>         tests expected to be run, ensuring that no tests silently
+>         failed.
+> 
+> RFC 6/6 Add a new kernel command-line option which allows the user to
+>         specify that the kernel poweroff, halt, or reboot after
+>         completing all KUnit tests; this is very handy for running KUnit
+>         tests on UML or a VM so that the UML/VM process exits cleanly
+>         immediately after running all tests without needing a special
+>         initramfs.
 
-Also remove the type casting, since it's unnecessary in C.
+The approach seems sensible to me given that it separates from a
+semantics perspective kernel subsystem init work from *testing*, and
+so we are sure we'd run the *test* stuff *after* all subsystem init
+stuff.
 
-Fixes: 877b911a5ba0 ("PCI: hv: Avoid a kmemleak false positive caused by the hbus buffer")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
----
+Dispatching, however is still immediate, and with a bit of work, this
+dispatcher could be configurable to run at an arbirary time after boot.
+If there are not immediate use cases for that though, then I suppose
+this is not a requirement for the dispatcher. But since there exists
+another modular test framework with its own dispatcher and it seems the
+goal is to merge the work long term, this might preempt the requirement
+to define how and when we can dispatch tests post boot.
 
-Sorry for missing the error handling path.
+And, if we're going to do that, I can suggest that a data structure
+instead of just a function init call be used to describe tests to be
+placed into an ELF section. With my linker table work this would be
+easy, I define section ranges for code describing only executable
+routines, but it defines linker tables for when a component in the
+kernel would define a data structure, part of which can be a callback.
+Such data structure stuffed into an ELF section could allow dynamic
+configuration of the dipsatching, even post boot.
 
- drivers/pci/controller/pci-hyperv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I think this is a good stepping stone forward then, and to allow
+dynamic configuration of the dispatcher could mean eventual extensions
+to kunit's init stuff to stuff init calls into a data structure which
+can then allow configuration of the dispatching. One benefit that the
+linker table work *may* be able to help here with is that it allows
+an easy way to create kunit specific ordering, at linker time.
+There is also an example of addressing / generalizing dynamic / run time
+changes of ordering, by using the x86 IOMMU initialization as an
+example case. We don't have an easy way to do this today, but if kunit
+could benefit from such framework, it'd be another use case for
+the linker table work. That is, the ability to easilly allow
+dynamically modifying run time ordering of code through ELF sections.
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 9977abff92fc..15011a349520 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -2922,7 +2922,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	 * positive by using kmemleak_alloc() and kmemleak_free() to ask
- 	 * kmemleak to track and scan the hbus buffer.
- 	 */
--	hbus = (struct hv_pcibus_device *)kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
-+	hbus = kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
- 	if (!hbus)
- 		return -ENOMEM;
- 	hbus->state = hv_pcibus_init;
-@@ -3058,7 +3058,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- free_dom:
- 	hv_put_dom_num(hbus->sysdata.domain);
- free_bus:
--	free_page((unsigned long)hbus);
-+	kfree(hbus);
- 	return ret;
- }
- 
--- 
-2.19.1
+> In addition, by dispatching tests from a single location, we can
+> guarantee that all KUnit tests run after late_init is complete, which
+> was a concern during the initial KUnit patchset review (this has not
+> been a problem in practice, but resolving with certainty is nevertheless
+> desirable).
 
+Indeed, the concern is just a real semantics limitations. With the tests
+*always* running after all subsystem init stuff, we know we'd have a
+real full kernel ready.
+
+It does beg the question if this means kunit is happy to not be a tool
+to test pre basic setup stuff (terminology used in init.c, meaning prior
+to running all init levels). I suspect this is the case.
+
+> Other use cases for this exist, but the above features should provide an
+> idea of the value that this could provide.
+> 
+> ## What work remains to be done?
+> 
+> These patches were based on patches in our non-upstream branch[2], so we
+> have a pretty good idea that they are useable as presented;
+> nevertheless, some of the changes done in this patchset could
+> *definitely* use some review by subsystem experts (linker scripts, init,
+> etc), and will likely change a lot after getting feedback.
+> 
+> The biggest thing that I know will require additional attention is
+> integrating this patchset with the KUnit module support patchset[3]. I
+> have not even attempted to build these patches on top of the module
+> support patches as I would like to get people's initial thoughts first
+> (especially Alan's :-) ). I think that making these patches work with
+> module support should be fairly straight forward, nevertheless.
+
+Modules just have their own sections too. That's all. So it'd be a
+matter of extending the linker script for modules too. But a module's
+init is different than the core kernel's for vmlinux.
+
+  Luis
