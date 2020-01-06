@@ -2,154 +2,124 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 341B2C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CA3C33C9B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C6F3207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8773420731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:44:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UG33oSPB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbgAFUoK (ORCPT
+        id S1726916AbgAFUoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 15:44:10 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:51960 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbgAFUoK (ORCPT
+        Mon, 6 Jan 2020 15:44:17 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35613 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbgAFUoQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 15:44:10 -0500
-Received: by mail-io1-f71.google.com with SMTP id t18so31313251iob.18
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 12:44:09 -0800 (PST)
+        Mon, 6 Jan 2020 15:44:16 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 15so37285836lfr.2;
+        Mon, 06 Jan 2020 12:44:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D8SxFdt9jISzNetnnsH1lMAgv8lyKOQwHB2r8WTXUdM=;
+        b=UG33oSPB6PPiOotijCTFZ7W0UXPFTzPrDRpgxNLK5qxHuHUxk4D8B590P+S5cc/DEA
+         fun2TOQSmt4PlDc3gJOw6UzvLrWecqtS9YOVOavdRMRdhbOd5vAAbOG8vFXTuF0XXPjz
+         soFFZZUKbPBw69x7ADFNty/ji/GMbzdGlupR8OZk9TODmNgaqK7KzlE2hpPQumDM+2Mk
+         g1Ub6tfzsztc6WG5yDnxr7amOrRKcG8/ZGuLDOkhOrK565c3lwV3wG85CxC5pYqEmxu6
+         QdYLar7++FAW/mAO/IgqK+2YJBOBKvepNVfUbNfZWLDx/USMo4PL1d8mBsuxAlQjAtbL
+         KDrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=nUQh4ZT3khBGylzmoNcHUNv5lP3x4Ibw/P8aybZACnA=;
-        b=snFAQtj1fWd44SR0iu8nkTG8ygPfVCwJlWIFhH0TQTxg6rq1U1J5xnx3iU2laoG5e3
-         vnUDOnoXWUnwMsFP0AJWA8ejD3fYADNsXy+hKCa6jA2ZN5aqAVQMIGQeiZmRwR1TYX1W
-         ywd5LJJ1IiY5YO/GbFeef3/Y2s4R75yN2Hc6tXmR+jNMred3O2Oh3of00qqzS0xar6JT
-         ujFg8lWztGTMl+eFjBWKsJkCaK0tzgAIY0sO2ozJP0q59Zu2c6P/C9FM8PhARC8DKXgY
-         w9DZMWE5Ve9r/hk7mHndH7le3jEp53kjD2RU7b7JOudSGwKFSM6BhYWfaEz7jzWh1g4c
-         14Xg==
-X-Gm-Message-State: APjAAAXZRuCzkiJvcwwzbWsNJU/h5phQZtD75QRNKhYE8XQthNXsiKfM
-        VwyNU+yoY+MlwPdOoe+aiPp2Sdz/YZ4+tiokgfyY2wgM6QIH
-X-Google-Smtp-Source: APXvYqxVpO4G/iLgXyl1N6TUqGS8rrbpxq2N618JwYm16p7e+FIf6poohg1Gm26rgxXBvcLNeTA8zFJbyzY39HT2yFDCXwH/k3GA
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D8SxFdt9jISzNetnnsH1lMAgv8lyKOQwHB2r8WTXUdM=;
+        b=tumdtENro3CMNuMTBXv3Tkih6dkUviDHhwTjCg5SgFtouoy+Edv9Iu7Da1tdjaSao6
+         gccekoBK4qgmr3Vy7rYNozmXyTYXQ7vx9P2XZQ8wNfIEHgUdSjYvracRmMVDKTVNrb+d
+         V3Nos2dfFSqptnYPDlB3Wdyjftix/vnfeXRj+CEYY3wZOibbcsFUPLvYISKbxNWWNTvT
+         LKqshNxxCd9Wb2DDQ+UgmbMdRqo1eUHsu398TECJYrgfKdb76PkyM9lWCJhOKDNswdOY
+         7O9T+yGOEkhp1hxsjbmkinJLZEJgQd+T363DRZmSPoh/RbLCTGIwn/S3n0utdM0bzOxn
+         RNuA==
+X-Gm-Message-State: APjAAAUOuMyLw+wZuTlg5bAHf7fipTnmPNMiwHv8LXNGM8q85djfAlMP
+        RUQ+g7YiG2QFkBlOiE34YOaOPZhfon39rlcEeWw=
+X-Google-Smtp-Source: APXvYqwg0sCQRcS/njp48Fjz1lVkjVNxDGI5Rh0vPiTBI6wWiAw5TMfWBmf64k4JfLjpgpiyy7ybrDD3zpd5gqVC9wQ=
+X-Received: by 2002:ac2:44d9:: with SMTP id d25mr59989849lfm.15.1578343453433;
+ Mon, 06 Jan 2020 12:44:13 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:5503:: with SMTP id j3mr68369856iob.142.1578343449021;
- Mon, 06 Jan 2020 12:44:09 -0800 (PST)
-Date:   Mon, 06 Jan 2020 12:44:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009cd5e0059b7eb836@google.com>
-Subject: general protection fault in dccp_timeout_nlattr_to_obj
-From:   syzbot <syzbot+46a4ad33f345d1dd346e@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        kadlec@netfilter.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20200106130909.7697-1-matwey@sai.msu.ru>
+In-Reply-To: <20200106130909.7697-1-matwey@sai.msu.ru>
+From:   Robert Nelson <robertcnelson@gmail.com>
+Date:   Mon, 6 Jan 2020 14:43:46 -0600
+Message-ID: <CAOCHtYgyN+qXXX1YeEcO+nvRFrAL1HAVVMvjfeJ5nvxVjtFKtg@mail.gmail.com>
+Subject: Re: [PATCH] arm: dts: am335x-boneblack-common: fix memory size
+To:     "Matwey V. Kornilov" <matwey@sai.msu.ru>
+Cc:     =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OMAP DEVICE TREE SUPPORT" <linux-omap@vger.kernel.org>,
+        "open list:OMAP DEVICE TREE SUPPORT" <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "Matwey V. Kornilov" <matwey.kornilov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Jan 6, 2020 at 7:10 AM Matwey V. Kornilov <matwey@sai.msu.ru> wrote:
+>
+> BeagleBone Black series is equipped with 512MB RAM
+> whereas only 256MB is included from am335x-bone-common.dtsi
 
-syzbot found the following crash on:
+FYI: While all versions from the factory are 512MB, some 3rd parties
+offered 1GB reballing upgrades..
 
-HEAD commit:    d89091a4 macb: Don't unregister clks unconditionally
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=11b98466e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f2f3ef188b7e16cf
-dashboard link: https://syzkaller.appspot.com/bug?extid=46a4ad33f345d1dd346e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12ff2869e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16693751e00000
+and the SanCloud variant which uses this file, was built with 1GB:
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+46a4ad33f345d1dd346e@syzkaller.appspotmail.com
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/am335x-sancloud-bbe.dts
 
-netlink: 24 bytes leftover after parsing attributes in process  
-`syz-executor813'.
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 9522 Comm: syz-executor813 Not tainted 5.5.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:dccp_timeout_nlattr_to_obj+0x60/0x230  
-net/netfilter/nf_conntrack_proto_dccp.c:682
-Code: 89 d8 48 c1 e8 03 42 0f b6 14 30 48 89 d8 83 e0 07 83 c0 03 38 d0 7c  
-08 84 d2 0f 85 a1 01 00 00 4c 89 e0 44 8b 3b 48 c1 e8 03 <42> 0f b6 14 30  
-4c 89 e0 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85
-RSP: 0018:ffffc90001fd73d8 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: ffffffff8a4cd6fc RCX: ffffffff866323e9
-RDX: 0000000000000000 RSI: ffffffff866117d5 RDI: ffff888098c2cf00
-RBP: ffffc90001fd7418 R08: ffff88809f51c280 R09: ffff888098c2cf00
-R10: ffffed10131859e7 R11: ffff888098c2cf3f R12: 0000000000000000
-R13: 0000000000000000 R14: dffffc0000000000 R15: 0000000000005dc0
-FS:  00000000022f4880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000200 CR3: 00000000a6a68000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  ctnl_timeout_parse_policy+0x150/0x1d0  
-net/netfilter/nfnetlink_cttimeout.c:67
-  cttimeout_default_set+0x150/0x1c0 net/netfilter/nfnetlink_cttimeout.c:368
-  nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
-  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
-  nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:639 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:659
-  ____sys_sendmsg+0x753/0x880 net/socket.c:2330
-  ___sys_sendmsg+0x100/0x170 net/socket.c:2384
-  __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
-  __do_sys_sendmsg net/socket.c:2426 [inline]
-  __se_sys_sendmsg net/socket.c:2424 [inline]
-  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4401e9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffe699346c8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004401e9
-RDX: 0000000000000940 RSI: 0000000020000200 RDI: 0000000000000003
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a70
-R13: 0000000000401b00 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 0b60d1e6ef381959 ]---
-RIP: 0010:dccp_timeout_nlattr_to_obj+0x60/0x230  
-net/netfilter/nf_conntrack_proto_dccp.c:682
-Code: 89 d8 48 c1 e8 03 42 0f b6 14 30 48 89 d8 83 e0 07 83 c0 03 38 d0 7c  
-08 84 d2 0f 85 a1 01 00 00 4c 89 e0 44 8b 3b 48 c1 e8 03 <42> 0f b6 14 30  
-4c 89 e0 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85
-RSP: 0018:ffffc90001fd73d8 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: ffffffff8a4cd6fc RCX: ffffffff866323e9
-RDX: 0000000000000000 RSI: ffffffff866117d5 RDI: ffff888098c2cf00
-RBP: ffffc90001fd7418 R08: ffff88809f51c280 R09: ffff888098c2cf00
-R10: ffffed10131859e7 R11: ffff888098c2cf3f R12: 0000000000000000
-R13: 0000000000000000 R14: dffffc0000000000 R15: 0000000000005dc0
-FS:  00000000022f4880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffff600400 CR3: 00000000a6a68000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>
+> This leads to an issue with unusual setups when devicetree
+> is loaded by GRUB2 directly.
+
+It's a miracle, since when did GRUB2 gain this ability?
+
+>
+> Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
+> ---
+>  arch/arm/boot/dts/am335x-boneblack-common.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/am335x-boneblack-common.dtsi b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
+> index 7ad079861efd..91f93bc89716 100644
+> --- a/arch/arm/boot/dts/am335x-boneblack-common.dtsi
+> +++ b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
+> @@ -131,6 +131,11 @@
+>  };
+>
+>  / {
+> +       memory@80000000 {
+> +               device_type = "memory";
+> +               reg = <0x80000000 0x20000000>; /* 512 MB */
+> +       };
+> +
+>         clk_mcasp0_fixed: clk_mcasp0_fixed {
+>                 #clock-cells = <0>;
+>                 compatible = "fixed-clock";
+> --
+> 2.16.4
+>
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-- 
+Robert Nelson
+https://rcn-ee.com/
