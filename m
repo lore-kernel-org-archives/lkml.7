@@ -2,106 +2,125 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA665C33C9B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 07:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6C9C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9783D21734
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 07:59:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578297543;
-	bh=fsfR2IbX3Uzgstapmtoa2ruP0FZK/NNrd21+oHoghF0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ab9KZsYwR+BPEm/FztcWYwK0+9wthSZ7vVdG77vf1XhdgKI5GBy6f1JbSDB19Qe5f
-	 V0QR+bhxtPtOIiWA+15ywZo7aBLGO+YmZk7wmJUlm2Byzm0ewnJ9LJzzX4GYKgyXTS
-	 GJQvsZ4F3/KUMr7sOGwmqZoH6tpbGKGvk8Ev59/w=
+	by mail.kernel.org (Postfix) with ESMTP id 183CB218AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:01:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726212AbgAFH7C (ORCPT
+        id S1726275AbgAFIBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 02:59:02 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38784 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgAFH7C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 02:59:02 -0500
-Received: by mail-ed1-f67.google.com with SMTP id i16so46717066edr.5;
-        Sun, 05 Jan 2020 23:59:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=shX2EL3hEDUKUPyK9slyF9fPOfxblBV1rDmKHdnGIro=;
-        b=cf24onDgS/hE56kWcaUtSTavyFoiMUG0VVBb+0q4YEgTsvUn5+Hrr3443oN5u4XRxE
-         u5UVvKJvoYt1LfaPsQdeVMpzISpidcehneZnSaCsjqy/AS8vR9FGC7zVlSJK3xW7gjK8
-         FscuOj5+8UewxKzHzI+MptYHVe0RS8nnBeKM7DyoZ9l9CUbfrTwPJtgCONODHQwaW3AU
-         2iqKJo9YJGxpscqRz2G7CPzL8lGi+9hIUI/fuDPnQUBZiaMKjUyx426vYhB33ngBh8uU
-         XzyPVkmMoC7mh9yxo0exlfpQRDhV05jDAvOu6cwzY58EdH8uy0Ly3q6gdUQ/x3SsD4lC
-         2SMw==
-X-Gm-Message-State: APjAAAX1JCZWh7E9UKOG9zr+RPPniVh+5EU+tdewvpUXxe63f20O7DGA
-        SJ+yFjnZDl6+5RwzNj0ynZk=
-X-Google-Smtp-Source: APXvYqz6BzoBH5eS9cIT73CTasbNOaO7wb2JgFWK3mKQ8G90HFNewbThd8aAYjv20+JBO1pkDPP+LQ==
-X-Received: by 2002:a05:6402:1484:: with SMTP id e4mr59115716edv.286.1578297540599;
-        Sun, 05 Jan 2020 23:59:00 -0800 (PST)
-Received: from pi3 ([194.230.155.149])
-        by smtp.googlemail.com with ESMTPSA id p18sm7961240ejx.80.2020.01.05.23.58.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jan 2020 23:58:59 -0800 (PST)
-Date:   Mon, 6 Jan 2020 08:58:58 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Greg KH <greg@kroah.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>
-Subject: Re: linux-next: build warning after merge of the usb tree
-Message-ID: <20200106075858.GA13634@pi3>
-References: <20200106144122.01f51be9@canb.auug.org.au>
+        Mon, 6 Jan 2020 03:01:49 -0500
+Received: from mga03.intel.com ([134.134.136.65]:32659 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbgAFIBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 03:01:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jan 2020 00:01:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,401,1571727600"; 
+   d="scan'208";a="215128790"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 06 Jan 2020 00:01:48 -0800
+Received: from [10.226.38.20] (unknown [10.226.38.20])
+        by linux.intel.com (Postfix) with ESMTP id CD9CC5802C0;
+        Mon,  6 Jan 2020 00:01:46 -0800 (PST)
+Subject: Re: [PATCH v10 0/2] phy: intel-lgm-emmc: Add support for eMMC PHY
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, peter.harliman.liem@intel.com
+References: <20191217015658.23017-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <c5df1165-5b8d-f329-582f-15553eb5eb1a@ti.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <9917ebc0-656e-6539-504a-208ef375a989@linux.intel.com>
+Date:   Mon, 6 Jan 2020 16:01:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200106144122.01f51be9@canb.auug.org.au>
+In-Reply-To: <c5df1165-5b8d-f329-582f-15553eb5eb1a@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 02:41:22PM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the usb tree, today's linux-next build (x86_64 allmodconfig)
-> produced this warning:
-> 
-> WARNING: unmet direct dependencies detected for PHY_DA8XX_USB
->   Depends on [n]: ARCH_DAVINCI_DA8XX
->   Selected by [m]:
->   - USB_OHCI_HCD_DAVINCI [=m] && USB_SUPPORT [=y] && USB [=m] && (ARCH_DAVINCI_DA8XX || COMPILE_TEST [=y]) && USB_OHCI_HCD [=m]
-> 
-> WARNING: unmet direct dependencies detected for PHY_DA8XX_USB
->   Depends on [n]: ARCH_DAVINCI_DA8XX
->   Selected by [m]:
->   - USB_OHCI_HCD_DAVINCI [=m] && USB_SUPPORT [=y] && USB [=m] && (ARCH_DAVINCI_DA8XX || COMPILE_TEST [=y]) && USB_OHCI_HCD [=m]
-> 
-> WARNING: unmet direct dependencies detected for PHY_DA8XX_USB
->   Depends on [n]: ARCH_DAVINCI_DA8XX
->   Selected by [m]:
->   - USB_OHCI_HCD_DAVINCI [=m] && USB_SUPPORT [=y] && USB [=m] && (ARCH_DAVINCI_DA8XX || COMPILE_TEST [=y]) && USB_OHCI_HCD [=m]
-> 
-> Introduced by commit
-> 
->   88eaaecc4446 ("usb: host: Enable compile testing for some of drivers")
+Hi,
 
-+Cc,
+On 6/1/2020 3:24 PM, Kishon Vijay Abraham I wrote:
+>
+> On 17/12/19 7:26 AM, Ramuthevar,Vadivel MuruganX wrote:
+>> Add eMMC-PHY support for Intel LGM SoC
+> merged now, Thanks!
 
-Hi Stephen,
+Thanks a lot!!! Kishon for the quick rely and merge.
 
-Thanks for the report.  I already sent a patch for it for the phy:
-https://lore.kernel.org/lkml/20200103164710.4829-2-krzk@kernel.org/
-
-Best regards,
-Krzysztof
+---
+Regards
+Vadivel
+>
+> -Kishon
+>
+>> changes in v10:
+>>    - Rob's review comments update in YAML
+>>    - drop clock-names since it is single entry
+>>   
+>> changes in v9:
+>>    - Rob's review comments update in YAML
+>>
+>> changes in v8:
+>>   Remove the extra Signed-of-by
+>>
+>> changes in v7:
+>>   Rebased to maintainer kernel tree phy-tag-5.5
+>>
+>> changes in v6:
+>>     - cobined comaptible strings
+>>     - added as contiguous and can be a single entry for reg properties
+>> changes in v5:
+>>     - earlier Review-by tag given by Rob
+>>     - rework done with syscon parent node.
+>>
+>>   changes in v4:
+>>     - As per Rob's review: validate 5.2 and 5.3
+>>     - drop unrelated items.
+>>
+>>   changes in v3:
+>>     - resolve 'make dt_binding_check' warnings
+>>
+>>   changes in v2:
+>>     As per Rob Herring review comments, the following updates
+>>    - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
+>>    - filename is the compatible string plus .yaml
+>>    - LGM: Lightning Mountain
+>>    - update maintainer
+>>    - add intel,syscon under property list
+>>    - keep one example instead of two
+>>
+>>
+>>
+>> Ramuthevar Vadivel Murugan (2):
+>>    dt-bindings: phy: intel-emmc-phy: Add YAML schema for LGM eMMC PHY
+>>    phy: intel-lgm-emmc: Add support for eMMC PHY
+>>
+>>   .../bindings/phy/intel,lgm-emmc-phy.yaml           |  56 ++++
+>>   drivers/phy/Kconfig                                |   1 +
+>>   drivers/phy/Makefile                               |   1 +
+>>   drivers/phy/intel/Kconfig                          |   9 +
+>>   drivers/phy/intel/Makefile                         |   2 +
+>>   drivers/phy/intel/phy-intel-emmc.c                 | 283 +++++++++++++++++++++
+>>   6 files changed, 352 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+>>   create mode 100644 drivers/phy/intel/Kconfig
+>>   create mode 100644 drivers/phy/intel/Makefile
+>>   create mode 100644 drivers/phy/intel/phy-intel-emmc.c
+>>
