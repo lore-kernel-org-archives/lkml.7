@@ -2,110 +2,73 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC58C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0635C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1F1207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:31:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AZ0GQGKU"
+	by mail.kernel.org (Postfix) with ESMTP id B7A59207FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:31:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgAFTa7 (ORCPT
+        id S1726891AbgAFTbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 14:30:59 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54528 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbgAFTa7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 14:30:59 -0500
-Received: by mail-wm1-f66.google.com with SMTP id b19so16194245wmj.4;
-        Mon, 06 Jan 2020 11:30:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=h+Ho1Pj7J9GuDhhBZpvri/eVbdt/D+i9M0mADHfjbgE=;
-        b=AZ0GQGKU8r7d3GoITl6teTa4tNztNUC8EnLvD7dYehXxtRaqWMKEFCyc2QOK7b8OV/
-         JDCLA/e0YuLZj1zwJbtI3sUaZhgwrDH/zn+zI9W3WMGlU98PG5DfiA320CBsdOzpis+C
-         loP8Gzv4OwMAakU1l2GnbV1a8TStBfX7O2nzxLuOQRCkHutC3PRgjLsFUikxnqWoIxIb
-         WgPXZNX+Qrb8F5wM3i7bWwDJ1qnQJMPyACa2C/cop9kNq14Yof4QKwXhImCnKM+NRRo5
-         Zn7ELNpEDz+G/5k1Y3JWnzx8dWqXClr4QtdxSVxHf5q+ntbANetmJ86H+UfDDLxUDOJm
-         RtPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=h+Ho1Pj7J9GuDhhBZpvri/eVbdt/D+i9M0mADHfjbgE=;
-        b=pzOSUxwuzteBgt2xcgVU9hx+ybMb+Ae8N0FiiZzDN94WF54VRLKxKbr0kwO6WoSUGG
-         0I+lueX+pK+y8ASBJpvArJ2nawupX3hbpa3zk9gMCY2Tca4hP9sF44PLQvbLGCBfe0Qt
-         Z3rjuBfX/eeLiXAGzCcrnfEYuaQTVzp8bG253mcj8jQLBVWjWYTAM0QOVE+eAmNIKOyQ
-         Z9Ghc3nWKJffiKuigScsFaqq/ir2UNHG1UfK5SnxyThS7K7W+G6VEV8Rh45xjAZMb3lW
-         +o+TQxaMObVZZ5nTRtFiK030aoCf7Pwq2qn4/ubPT1TmS1npYaR4w7iVxhMnFl3o8Ewu
-         YLBA==
-X-Gm-Message-State: APjAAAW3lnTfwkO7Ui38u4GSnYynYfHgPHsbpeiBr4rACtHW86sl6MUC
-        k0J6yhgK3QsMboza+OQz0QI=
-X-Google-Smtp-Source: APXvYqyMpnlA1NKMCSBr0d99djCgQuz0ptyKFjmP+kFlJqkUVN0JiliK2oWB0YKkldrABpwGwhHX6g==
-X-Received: by 2002:a1c:6a13:: with SMTP id f19mr37837776wmc.20.1578339057153;
-        Mon, 06 Jan 2020 11:30:57 -0800 (PST)
-Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id z83sm24100123wmg.2.2020.01.06.11.30.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 11:30:56 -0800 (PST)
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mripard@kernel.org, wens@csie.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH] crypto: sun8i-ce: fix removal of module
-Date:   Mon,  6 Jan 2020 20:30:53 +0100
-Message-Id: <20200106193053.2884-1-clabbe.montjoie@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Mon, 6 Jan 2020 14:31:10 -0500
+Received: from albireo.enyo.de ([37.24.231.21]:50288 "EHLO albireo.enyo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726695AbgAFTbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 14:31:10 -0500
+Received: from [172.17.203.2] (helo=deneb.enyo.de)
+        by albireo.enyo.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1ioY5g-0003eK-3x; Mon, 06 Jan 2020 19:31:04 +0000
+Received: from fw by deneb.enyo.de with local (Exim 4.92)
+        (envelope-from <fw@deneb.enyo.de>)
+        id 1ioY4k-0004zc-C2; Mon, 06 Jan 2020 20:30:06 +0100
+From:   Florian Weimer <fw@deneb.enyo.de>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Neel Natu <neelnatu@google.com>
+Subject: Re: [PATCH for 5.5 1/2] rseq: Fix: Clarify rseq.h UAPI rseq_cs memory reclaim requirements
+References: <20191220201207.17389-1-mathieu.desnoyers@efficios.com>
+        <87imman36g.fsf@mid.deneb.enyo.de>
+        <173832695.14381.1576875253374.JavaMail.zimbra@efficios.com>
+        <875zian2a2.fsf@mid.deneb.enyo.de>
+        <669061171.14506.1576876500152.JavaMail.zimbra@efficios.com>
+        <1025393027.850.1578337717165.JavaMail.zimbra@efficios.com>
+Date:   Mon, 06 Jan 2020 20:30:06 +0100
+In-Reply-To: <1025393027.850.1578337717165.JavaMail.zimbra@efficios.com>
+        (Mathieu Desnoyers's message of "Mon, 6 Jan 2020 14:08:37 -0500
+        (EST)")
+Message-ID: <87a7709ydd.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Removing the driver cause an oops due to the fact we clean an extra
-channel.
-Let's give the right index to the cleaning function.
+* Mathieu Desnoyers:
 
-Fixes: 06f751b61329 ("crypto: allwinner - Add sun8i-ce Crypto Engine")
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
----
- drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> Just to clarify: should the discussion here prevent the UAPI
+> documentation change from being merged into the Linux kernel ? Our
+> discussion seems to be related to integration of rseq into glibc,
+> rather than the kernel UAPI per se.
 
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-index 53739507c8c2..f72346a44e69 100644
---- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-@@ -624,7 +624,7 @@ static int sun8i_ce_probe(struct platform_device *pdev)
- error_irq:
- 	sun8i_ce_pm_exit(ce);
- error_pm:
--	sun8i_ce_free_chanlist(ce, MAXFLOW);
-+	sun8i_ce_free_chanlist(ce, MAXFLOW - 1);
- 	return err;
- }
- 
-@@ -638,7 +638,7 @@ static int sun8i_ce_remove(struct platform_device *pdev)
- 	debugfs_remove_recursive(ce->dbgfs_dir);
- #endif
- 
--	sun8i_ce_free_chanlist(ce, MAXFLOW);
-+	sun8i_ce_free_chanlist(ce, MAXFLOW - 1);
- 
- 	sun8i_ce_pm_exit(ce);
- 	return 0;
--- 
-2.24.1
+I still think that clearing rseq_cs upon exit from the function that
+contains the sequence is good practice, and the UAPI header should
+mention that.
 
+For glibc, if I recall correctly, we decided against doing anything in
+dlclose to deal with this issue (remapping new code in an existing
+rseq area) because it would need updating all threads, not just the
+thread calling dlclose.  That's why we're punting this to
+applications and why I think the UAPI header should mention this.
