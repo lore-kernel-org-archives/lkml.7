@@ -2,163 +2,106 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8606C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24707C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA4F20731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBCAB20731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:20:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SF6lNuDU"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="jYk9DRTR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbgAFXTv (ORCPT
+        id S1727382AbgAFXUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 18:19:51 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58183 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726599AbgAFXTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 18:19:50 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47sBLC4TvJz9sR0;
-        Tue,  7 Jan 2020 10:19:47 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578352788;
-        bh=twYwekdnzLNpnUWdd/Q17/cXiGtuXMj4Jl1sdEh5On8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=SF6lNuDUotbHcN6u2tlPdNqfXci7fW2ld+Jq7+ODzG+ORJbKM5UnTLV3W6DyKWxZN
-         cEqX1ONEI/Qut+ob0MQppKDhHPyNImrOHgycunoSlaXmyame+R29xDMTkQUoTbZjor
-         h1X/Iv1HkhML3yD0ciPRg2PCxoIGP+XIw9ot700jeyrHtAHM/GjWrXwmiSSKTmSDte
-         wUyIIb/1pmGUpwCDr9ri0SmV3T1iO+iW8jbmhA6XJSjSi0EpZc3fbqwjiVmV2S7t5Q
-         x7XWRvv2LRUIVy2pDGGnUBe7HqP36tkzYprWV9rpKItej78VH9+H4jxiyds4KG+wyy
-         ZhZsfEaUeURlw==
-Date:   Tue, 7 Jan 2020 10:19:46 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: linux-next: manual merge of the iomap tree with the f2fs tree
-Message-ID: <20200107101946.0b505f6a@canb.auug.org.au>
+        Mon, 6 Jan 2020 18:20:34 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:50260 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbgAFXUd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 18:20:33 -0500
+Received: by mail-pj1-f65.google.com with SMTP id r67so8174427pjb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 15:20:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=srz94l2uXXDm8uhaL89NYYkGpBsk/DmmiKVKo8s3kgo=;
+        b=jYk9DRTRireyhjENtb52/RKEST50v32C96Gq260txWajZnQCgvUkbcTRp/HvgmsJaT
+         zio3OwSDqGdiXCpd48WpezHFzzepUlB+PVpMpQ2My7r9JRq2BJqjNCVI5afWqXSfJoOT
+         3g2Y2WuNNxSo1s1b2ffQ/j3mNeveIpYI1/8/ELdrC0kR1Ev2pn7AKndFKjqaBcP1cODK
+         imi5R+9ix0WXJOgNuP4sKKLEJZor44iihGN5WQMLFWq8BEIP5Dx2awjyHfD+llAMVE3Q
+         MNBFDf1/6nK7oq21s2djuQyxFWtVlh9QIQ4E4guLOcR6mJ1SRg6dMkA4cy1ovcoBpk7U
+         Xxsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=srz94l2uXXDm8uhaL89NYYkGpBsk/DmmiKVKo8s3kgo=;
+        b=hvP43sxG/HM5Ssj3mnVafNw9bV4i4PFjdo4OiWJi/+sAJTUI9RgmnRwlxhsel5ISMQ
+         zhWP2JT7gTinK7mFwvSMMeHXGYdEfxVB0fs1GzigWTgulnR2jtPTnfX/BVirY1t1gx8F
+         rg2BeMfBw+nqE2UierNTdYnYcF8jv5TRWvWpEc4JFJmsVrNKg06m//H5XtEoBS8EqW9G
+         Nrjpljnu+4St8feaDw7sTVG37Di/xtpGjytFUrXwVjwInScMl7FnxoUVCp7z9s/kpXYy
+         VVIQ+zoYhb2XBcD5Hf81Iv6ERymlO4CNTn317sJ0kW5JLFGMwzdXZFZOfMkdnt5GXOqc
+         qelA==
+X-Gm-Message-State: APjAAAUkuNmC/Zr1j0BDMTRcvxC735eJE38as0ZPh55VzbUIxMdpvQeJ
+        X4tnsSB2YTPglG+YAz4XwAd6ig==
+X-Google-Smtp-Source: APXvYqyXTzaS5RNfBUvI/u+g1zVhiot57BVfPvtWE5HmMqzI7VmtD21utgVOzkWZoI+sUgG8+/v17w==
+X-Received: by 2002:a17:902:b40a:: with SMTP id x10mr90682005plr.64.1578352833142;
+        Mon, 06 Jan 2020 15:20:33 -0800 (PST)
+Received: from rip.lixom.net (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
+        by smtp.gmail.com with ESMTPSA id u26sm76165686pfn.46.2020.01.06.15.20.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 15:20:32 -0800 (PST)
+From:   Olof Johansson <olof@lixom.net>
+To:     paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Olof Johansson <olof@lixom.net>
+Subject: [PATCH v2] riscv: keep 32-bit kernel to 32-bit phys_addr_t
+Date:   Mon,  6 Jan 2020 15:20:24 -0800
+Message-Id: <20200106232024.97137-1-olof@lixom.net>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200106231611.10169-1-olof@lixom.net>
+References: <20200106231611.10169-1-olof@lixom.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/88=2A+8hqq+KPYxXOFwO6yr";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/88=2A+8hqq+KPYxXOFwO6yr
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+While rv32 technically has 34-bit physical addresses, no current platforms
+use it and it's likely to shake out driver bugs.
 
-Hi all,
+Let's keep 64-bit phys_addr_t off on 32-bit builds until one shows up,
+since other work will be needed to make such a system useful anyway.
 
-Today's linux-next merge of the iomap tree got a conflict in:
+PHYS_ADDR_T_64BIT is def_bool 64BIT, so just remove the select.
 
-  fs/f2fs/file.c
+Signed-off-by: Olof Johansson <olof@lixom.net>
+---
 
-between commits:
+v2: Just remove the select, since it's set by default if CONFIG_64BIT
 
-  bdf032992489 ("f2fs: call f2fs_balance_fs outside of locked page")
-  df4d07124128 ("f2fs: support data compression")
+ arch/riscv/Kconfig | 2 --
+ 1 file changed, 2 deletions(-)
 
-from the f2fs tree and commit:
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index a31169b02ec06..569fc6deb94d6 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -12,8 +12,6 @@ config 32BIT
+ 
+ config RISCV
+ 	def_bool y
+-	# even on 32-bit, physical (and DMA) addresses are > 32-bits
+-	select PHYS_ADDR_T_64BIT
+ 	select OF
+ 	select OF_EARLY_FLATTREE
+ 	select OF_IRQ
+-- 
+2.20.1
 
-  4a58d8158f6d ("fs: Fix page_mkwrite off-by-one errors")
-
-from the iomap tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc fs/f2fs/file.c
-index bde5612f37f5,0e77b2e6f873..000000000000
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@@ -50,9 -50,8 +50,10 @@@ static vm_fault_t f2fs_vm_page_mkwrite(
-  	struct page *page =3D vmf->page;
-  	struct inode *inode =3D file_inode(vmf->vma->vm_file);
-  	struct f2fs_sb_info *sbi =3D F2FS_I_SB(inode);
- -	struct dnode_of_data dn =3D { .node_changed =3D false };
- -	int offset, err;
- +	struct dnode_of_data dn;
- +	bool need_alloc =3D true;
- +	int err =3D 0;
-++	int offset;
- =20
-  	if (unlikely(f2fs_cp_error(sbi))) {
-  		err =3D -EIO;
-@@@ -88,25 -70,24 +89,26 @@@
-  	file_update_time(vmf->vma->vm_file);
-  	down_read(&F2FS_I(inode)->i_mmap_sem);
-  	lock_page(page);
-- 	if (unlikely(page->mapping !=3D inode->i_mapping ||
-- 			page_offset(page) > i_size_read(inode) ||
-- 			!PageUptodate(page))) {
-+ 	err =3D -EFAULT;
-+ 	if (likely(PageUptodate(page)))
-+ 		err =3D page_mkwrite_check_truncate(page, inode);
-+ 	if (unlikely(err < 0)) {
-  		unlock_page(page);
-- 		err =3D -EFAULT;
-  		goto out_sem;
-  	}
-+ 	offset =3D err;
- =20
- -	/* block allocation */
- -	__do_map_lock(sbi, F2FS_GET_BLOCK_PRE_AIO, true);
- -	set_new_dnode(&dn, inode, NULL, NULL, 0);
- -	err =3D f2fs_get_block(&dn, page->index);
- -	f2fs_put_dnode(&dn);
- -	__do_map_lock(sbi, F2FS_GET_BLOCK_PRE_AIO, false);
- -	if (err) {
- -		unlock_page(page);
- -		goto out_sem;
- +	if (need_alloc) {
- +		/* block allocation */
- +		__do_map_lock(sbi, F2FS_GET_BLOCK_PRE_AIO, true);
- +		set_new_dnode(&dn, inode, NULL, NULL, 0);
- +		err =3D f2fs_get_block(&dn, page->index);
- +		f2fs_put_dnode(&dn);
- +		__do_map_lock(sbi, F2FS_GET_BLOCK_PRE_AIO, false);
- +		if (err) {
- +			unlock_page(page);
- +			goto out_sem;
- +		}
-  	}
- =20
-  	/* fill the page */
-
---Sig_/88=2A+8hqq+KPYxXOFwO6yr
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4TwJIACgkQAVBC80lX
-0GxcqQf+PtiMC//7S+3bLMapvJwsIA2MWxvCuTlZ7oKf/TYgNYtUctHd2mBGwRjR
-aBR34dAysLT8nfmcu8NEPar9ff106qigxZ2TkX3Xa3v4hh5pPa26mwEchbiKdCm2
-XfhetTR0ZOh4Mev+9SB/aVsyHcoYaQ3RC1dvUvHJKR8nJx5Ui9SYLOt+2MMdr2hY
-GE1sv4wvaevXsDqZNBv3WT0uZ8IsYRRMbyO3GhNjTIr7dkgctFF2XoyBSU7hz0n/
-5ZDolmHPGwiBdbSI7ydmVYZMag8loleVU5S/fZjZG1I+cro99s2c7HyyBcvSyqMM
-9jDbsHPWzykGKaZUulN0A7BETi1GLQ==
-=cK1e
------END PGP SIGNATURE-----
-
---Sig_/88=2A+8hqq+KPYxXOFwO6yr--
