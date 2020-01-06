@@ -2,80 +2,88 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92435C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 552DDC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61EBA208C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:16:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578334583;
-	bh=fH5EwCq6AaxG0YJmz1AOmBC/ME6Sk1bbhiEMQkJniao=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VzRYsIf+RBStIIvnNtfQwj62Sla+3EQU6c9TZsM3CCCJ+SKOPECgwLoajYo+Jy7zA
-	 bMflsMOkG1YPGGtIfV0ZR5ySz4pDdEd3RF8OdKfmsbXU2hMnGgp91mqMy5SOMaUAKs
-	 zL0R7rPNefQ3l3THRBZ0ntyLbwk1Ea64rXs+6yQw=
+	by mail.kernel.org (Postfix) with ESMTP id 265C42070E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:19:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgAFSQW (ORCPT
+        id S1726690AbgAFSTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 13:16:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56546 "EHLO mail.kernel.org"
+        Mon, 6 Jan 2020 13:19:37 -0500
+Received: from foss.arm.com ([217.140.110.172]:46932 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726657AbgAFSQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 13:16:21 -0500
-Received: from localhost (unknown [104.132.0.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4181D2072C;
-        Mon,  6 Jan 2020 18:16:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578334581;
-        bh=fH5EwCq6AaxG0YJmz1AOmBC/ME6Sk1bbhiEMQkJniao=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AtSs5ivBqHXdw6gdrjAdPCMS7A0vqxZp9kiT+HGjA5sUGpPt+F0jhro4LW0v235Vu
-         QwSknE6d/4zCpF+cNlO2CYv9fDFMHFwNj+NIMhyMWDe3P2c92O2TiWtTuYcw6RCeyI
-         AlkO+GqR0ktDZa75XjQi3xDU4yp6cY+GS8/xm1wM=
-Date:   Mon, 6 Jan 2020 10:16:20 -0800
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [RFC PATCH v5] f2fs: support data compression
-Message-ID: <20200106181620.GB50058@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20191216062806.112361-1-yuchao0@huawei.com>
- <20191218214619.GA20072@jaegeuk-macbookpro.roam.corp.google.com>
- <c7035795-73b3-d832-948f-deb36213ba07@huawei.com>
- <20191231004633.GA85441@jaegeuk-macbookpro.roam.corp.google.com>
- <7a579223-39d4-7e51-c361-4aa592b2500d@huawei.com>
- <20200102181832.GA1953@jaegeuk-macbookpro.roam.corp.google.com>
- <20200102190003.GA7597@jaegeuk-macbookpro.roam.corp.google.com>
- <d51f0325-6879-9aa6-f549-133b96e3eef5@huawei.com>
- <94786408-219d-c343-70f2-70a2cc68dd38@huawei.com>
+        id S1726569AbgAFSTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 13:19:36 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0FBE9328;
+        Mon,  6 Jan 2020 10:19:36 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D2B43F534;
+        Mon,  6 Jan 2020 10:19:35 -0800 (PST)
+Subject: Re: [PATCH] iommu/dma: fix variable 'cookie' set but not used
+To:     Qian Cai <cai@lca.pw>, jroedel@suse.de
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <20200106152727.1589-1-cai@lca.pw>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <418dcce0-f048-a4cc-3360-d4b9c7926a6d@arm.com>
+Date:   Mon, 6 Jan 2020 18:19:34 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <94786408-219d-c343-70f2-70a2cc68dd38@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+In-Reply-To: <20200106152727.1589-1-cai@lca.pw>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/06, Chao Yu wrote:
-> On 2020/1/3 14:50, Chao Yu wrote:
-> > This works to me. Could you run fsstress tests on compressed root directory?
-> > It seems still there are some bugs.
+On 06/01/2020 3:27 pm, Qian Cai wrote:
+> The commit c18647900ec8 ("iommu/dma: Relax locking in
+> iommu_dma_prepare_msi()") introduced a compliation warning,
 > 
-> Jaegeuk,
-> 
-> Did you mean running por_fsstress testcase?
-> 
-> Now, at least I didn't hit any problem for normal fsstress case.
+> drivers/iommu/dma-iommu.c: In function 'iommu_dma_prepare_msi':
+> drivers/iommu/dma-iommu.c:1206:27: warning: variable 'cookie' set but
+> not used [-Wunused-but-set-variable]
+>    struct iommu_dma_cookie *cookie;
+>                             ^~~~~~
 
-Yup. por_fsstress
+Fair enough... I guess this is a W=1 thing? Either way there's certainly 
+no harm in cleaning up.
 
+Acked-by: Robin Murphy <robin.murphy@arm.com>
+
+> Fixes: c18647900ec8 ("iommu/dma: Relax locking in iommu_dma_prepare_msi()")
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>   drivers/iommu/dma-iommu.c | 3 ---
+>   1 file changed, 3 deletions(-)
 > 
-> Thanks,
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index c363294b3bb9..a2e96a5fd9a7 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -1203,7 +1203,6 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
+>   {
+>   	struct device *dev = msi_desc_to_dev(desc);
+>   	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+> -	struct iommu_dma_cookie *cookie;
+>   	struct iommu_dma_msi_page *msi_page;
+>   	static DEFINE_MUTEX(msi_prepare_lock); /* see below */
+>   
+> @@ -1212,8 +1211,6 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
+>   		return 0;
+>   	}
+>   
+> -	cookie = domain->iova_cookie;
+> -
+>   	/*
+>   	 * In fact the whole prepare operation should already be serialised by
+>   	 * irq_domain_mutex further up the callchain, but that's pretty subtle
+> 
