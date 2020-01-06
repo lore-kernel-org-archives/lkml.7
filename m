@@ -2,98 +2,195 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 025EBC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B0EC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5DB620848
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1249D206DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:06:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Q5qXUAWv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgAFRDd (ORCPT
+        id S1726656AbgAFRGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 12:03:33 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:56923 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726526AbgAFRDd (ORCPT
+        Mon, 6 Jan 2020 12:06:03 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:43725 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgAFRGC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 12:03:33 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-132-nOSr783xMa-7DxD_ykfdFg-1; Mon, 06 Jan 2020 17:03:28 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 6 Jan 2020 17:03:26 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 6 Jan 2020 17:03:26 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Arnaldo Carvalho de Melo' <acme@kernel.org>,
+        Mon, 6 Jan 2020 12:06:02 -0500
+Received: by mail-qk1-f194.google.com with SMTP id t129so40032142qke.10
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 09:06:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=EwZ+SLXyd+u2b7lSTZL/WS+X23E/iu51rmn5Dj8RxnU=;
+        b=Q5qXUAWvBBsS0lE0zD06JyRJt1XslmfI2fUrY3Zp6Hi15hdFgGzbEb08oQ1NQSDMdX
+         xwbDoXhjO48Vwc+GB1UKy3VfEHx8ZPIIQSiqgOiVf6ZcwxFCVJIQ843zXAhkSi9Y1s5X
+         HAUj7LQK+6WsqGqD7nuCUN7cc20OOmh7zCFylmDfN69tEZzTEtF2E2CmfXgWo/BUAWo5
+         oVqChTiF+R4imFAc/YjlYyN7sh4egG0B+g2oHmE7eKOdNx4VaTbyDcMsW8cbE5RwyIXR
+         DCYcSTdUHV3C7EBjCfB2GyUuX/ESGUr9yqt9Z/f8B+5L+4csrTsyQfG6AlP9i2cvJrw5
+         Wevg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=EwZ+SLXyd+u2b7lSTZL/WS+X23E/iu51rmn5Dj8RxnU=;
+        b=mmQD6a9i5v8V47fhBerao4MnFQYnaoYqqTCmRuD/DFSoIXymEX4t243P64HFSNoMHn
+         XVGDgq+zfIG6t7jfnYvhsj2PJtRvHyCkxmMNZlpbg64N1NxuIJ0Hu7ZR/D3hXZN0QqsP
+         sBqN3GloVyGrAKkLIyd2g7Ky2e1B65Teaf3/GXPZFwQ+CHSIPVwBucFpxrg5RwrTdSjH
+         X6uypxSTJoLTnSlhxLzF3UGx3LRbGihqNCD/8/2AHGVjFsFXDOJR7Gquo5FYpTdZye8T
+         bxWezJ3Z9UV9Kz20L47p21CJXJwM+Sec4X+E49fcL81qrel+KiCMeuhgX2D6bEla3dd0
+         6KXw==
+X-Gm-Message-State: APjAAAUSkrAKwUhikEltLEeZcoYTuJ1vkN6PK+8Ir2/CU/m7SjDNKtcu
+        55wwDHANIUTVf/pNhctz/UPHTg==
+X-Google-Smtp-Source: APXvYqwJxhahEu6YInys2SPBQzG2qgwGLQ9TdDO43Oo052eW8PdglS1AO9SL6TIVmGaJT+LGtb0lyg==
+X-Received: by 2002:a05:620a:78f:: with SMTP id 15mr9230475qka.295.1578330361188;
+        Mon, 06 Jan 2020 09:06:01 -0800 (PST)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id w25sm17147166qts.91.2020.01.06.09.06.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 Jan 2020 09:06:00 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: "ftrace: Rework event_create_dir()" triggers boot error messages
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20191218233101.73044ce3@rorschach.local.home>
+Date:   Mon, 6 Jan 2020 12:05:58 -0500
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        clang-built-linux@googlegroups.com,
+        Alexei Starovoitov <ast@kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-CC:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        "Clark Williams" <williams@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        Vitaly Chikunov <vt@altlinux.org>,
-        Dmitry Levin <ldv@altlinux.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        kbuild test robot <lkp@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Vineet Gupta <vineet.gupta1@synopsys.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: RE: [PATCH 20/20] tools lib: Fix builds when glibc contains strlcpy()
-Thread-Topic: [PATCH 20/20] tools lib: Fix builds when glibc contains
- strlcpy()
-Thread-Index: AQHVxKuZWj/n7qG5rES0HVjQNYsqcqfd3KnQ
-Date:   Mon, 6 Jan 2020 17:03:26 +0000
-Message-ID: <bd755ddc840a485098f9e51d2692f39d@AcuMS.aculab.com>
-References: <20200106160705.10899-1-acme@kernel.org>
- <20200106160705.10899-21-acme@kernel.org>
-In-Reply-To: <20200106160705.10899-21-acme@kernel.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-X-MC-Unique: nOSr783xMa-7DxD_ykfdFg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <3F343134-63CB-4D99-97AD-F512B8760C94@lca.pw>
+References: <0FA8C6E3-D9F5-416D-A1B0-5E4CD583A101@lca.pw>
+ <20191218233101.73044ce3@rorschach.local.home>
+To:     Steven Rostedt <rostedt@goodmis.org>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQXJuYWxkbyBDYXJ2YWxobyBkZSBNZWxvDQo+IFNlbnQ6IDA2IEphbnVhcnkgMjAyMCAx
-NjowNw0KPiANCj4gRnJvbTogVml0YWx5IENoaWt1bm92IDx2dEBhbHRsaW51eC5vcmc+DQo+IA0K
-PiBEaXNhYmxlIGEgY291cGxlIG9mIGNvbXBpbGF0aW9uIHdhcm5pbmdzICh3aGljaCBhcmUgdHJl
-YXRlZCBhcyBlcnJvcnMpDQo+IG9uIHN0cmxjcHkoKSBkZWZpbml0aW9uIGFuZCBkZWNsYXJhdGlv
-biwgYWxsb3dpbmcgdXNlcnMgdG8gY29tcGlsZSBwZXJmDQo+IGFuZCBrZXJuZWwgKG9ianRvb2wp
-IHdoZW46DQo+IA0KPiAxLiBnbGliYyBoYXZlIHN0cmxjcHkoKSAoc3VjaCBhcyBpbiBBTFQgTGlu
-dXggc2luY2UgMjAwNCkgb2JqdG9vbCBhbmQNCj4gICAgcGVyZiBidWlsZCBmYWlscyB3aXRoIHRo
-aXMgKGluIGdjYyk6DQo+IA0KPiAgIEluIGZpbGUgaW5jbHVkZWQgZnJvbSBleGVjLWNtZC5jOjM6
-DQo+ICAgdG9vbHMvaW5jbHVkZS9saW51eC9zdHJpbmcuaDoyMDoxNTogZXJyb3I6IHJlZHVuZGFu
-dCByZWRlY2xhcmF0aW9uIG9mIOKAmHN0cmxjcHnigJkgWy1XZXJyb3I9cmVkdW5kYW50LWRlY2xz
-XQ0KPiAgICAgIDIwIHwgZXh0ZXJuIHNpemVfdCBzdHJsY3B5KGNoYXIgKmRlc3QsIGNvbnN0IGNo
-YXIgKnNyYywgc2l6ZV90IHNpemUpOw0KPiANCj4gMi4gY2xhbmcgaWdub3JlcyBgLVdyZWR1bmRh
-bnQtZGVjbHMnLCBidXQgcHJvZHVjZXMgYW5vdGhlciB3YXJuaW5nIHdoZW4NCj4gICAgYnVpbGRp
-bmcgcGVyZjoNCj4gDQo+ICAgICBDQyAgICAgICB1dGlsL3N0cmluZy5vDQo+ICAgLi4vbGliL3N0
-cmluZy5jOjk5Ojg6IGVycm9yOiBhdHRyaWJ1dGUgZGVjbGFyYXRpb24gbXVzdCBwcmVjZWRlIGRl
-ZmluaXRpb24gWy1XZXJyb3IsLVdpZ25vcmVkLWF0dHJpYnV0ZXNdDQo+ICAgc2l6ZV90IF9fd2Vh
-ayBzdHJsY3B5KGNoYXIgKmRlc3QsIGNvbnN0IGNoYXIgKnNyYywgc2l6ZV90IHNpemUpDQo+ICAg
-Li4vLi4vdG9vbHMvaW5jbHVkZS9saW51eC9jb21waWxlci5oOjY2OjM0OiBub3RlOiBleHBhbmRl
-ZCBmcm9tIG1hY3JvICdfX3dlYWsnDQo+ICAgIyBkZWZpbmUgX193ZWFrICAgICAgICAgICAgICAg
-ICBfX2F0dHJpYnV0ZV9fKCh3ZWFrKSkNCj4gICAvdXNyL2luY2x1ZGUvYml0cy9zdHJpbmdfZm9y
-dGlmaWVkLmg6MTUxOjg6IG5vdGU6IHByZXZpb3VzIGRlZmluaXRpb24gaXMgaGVyZQ0KPiAgIF9f
-TlRIIChzdHJsY3B5IChjaGFyICpfX3Jlc3RyaWN0IF9fZGVzdCwgY29uc3QgY2hhciAqX19yZXN0
-cmljdCBfX3NyYywNCg0KV2h5IG5vdCBqdXN0IGFsd2F5cyB1c2UgdGhlIGxvY2FsIHZlcnNpb24g
-YnkgcmVuYW1pbmcgaXQ/DQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNp
-ZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsN
-ClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+
+
+> On Dec 18, 2019, at 11:31 PM, Steven Rostedt <rostedt@goodmis.org> =
+wrote:
+>=20
+> On Wed, 18 Dec 2019 22:58:23 -0500
+> Qian Cai <cai@lca.pw> wrote:
+>=20
+>> The linux-next commit "ftrace: Rework event_create_dir()=E2=80=9D [1] =
+triggers boot warnings
+>> for Clang-build (Clang version 8.0.1) kernels (reproduced on both =
+arm64 and powerpc).
+>> Reverted it (with trivial conflict fixes) on the top of today=E2=80=99s=
+ linux-next fixed the issue.
+>>=20
+>> configs:
+>> https://raw.githubusercontent.com/cailca/linux-mm/master/arm64.config
+>> =
+https://raw.githubusercontent.com/cailca/linux-mm/master/powerpc.config
+>>=20
+>> [1] =
+https://lore.kernel.org/lkml/20191111132458.342979914@infradead.org/
+>>=20
+>> [  115.799327][    T1] Registered efivars operations
+>> [  115.849770][    T1] clocksource: Switched to clocksource =
+arch_sys_counter
+>> [  115.901145][    T1] Could not initialize trace point =
+events/sys_enter_rt_sigreturn
+>> [  115.908854][    T1] Could not create directory for event =
+sys_enter_rt_sigreturn
+>> [  115.998949][    T1] Could not initialize trace point =
+events/sys_enter_restart_syscall
+>> [  116.006802][    T1] Could not create directory for event =
+sys_enter_restart_syscall
+>> [  116.062702][    T1] Could not initialize trace point =
+events/sys_enter_getpid
+>> [  116.069828][    T1] Could not create directory for event =
+sys_enter_getpid
+>> [  116.078058][    T1] Could not initialize trace point =
+events/sys_enter_gettid
+>> [  116.085181][    T1] Could not create directory for event =
+sys_enter_gettid
+>> [  116.093405][    T1] Could not initialize trace point =
+events/sys_enter_getppid
+>> [  116.100612][    T1] Could not create directory for event =
+sys_enter_getppid
+>> [  116.108989][    T1] Could not initialize trace point =
+events/sys_enter_getuid
+>> [  116.116058][    T1] Could not create directory for event =
+sys_enter_getuid
+>> [  116.124250][    T1] Could not initialize trace point =
+events/sys_enter_geteuid
+>> [  116.131457][    T1] Could not create directory for event =
+sys_enter_geteuid
+>> [  116.139840][    T1] Could not initialize trace point =
+events/sys_enter_getgid
+>> [  116.146908][    T1] Could not create directory for event =
+sys_enter_getgid
+>> [  116.155163][    T1] Could not initialize trace point =
+events/sys_enter_getegid
+>> [  116.162370][    T1] Could not create directory for event =
+sys_enter_getegid
+>> [  116.178015][    T1] Could not initialize trace point =
+events/sys_enter_setsid
+>> [  116.185138][    T1] Could not create directory for event =
+sys_enter_setsid
+>> [  116.269307][    T1] Could not initialize trace point =
+events/sys_enter_sched_yield
+>> [  116.276811][    T1] Could not create directory for event =
+sys_enter_sched_yield
+>> [  116.527652][    T1] Could not initialize trace point =
+events/sys_enter_munlockall
+>> [  116.535126][    T1] Could not create directory for event =
+sys_enter_munlockall
+>> [  116.622096][    T1] Could not initialize trace point =
+events/sys_enter_vhangup
+>> [  116.629307][    T1] Could not create directory for event =
+sys_enter_vhangup
+>> [  116.783867][    T1] Could not initialize trace point =
+events/sys_enter_sync
+>> [  116.790819][    T1] Could not create directory for event =
+sys_enter_sync
+>> [  117.723402][    T1] pnp: PnP ACPI init
+>=20
+> I noticed that all of the above have zero parameters. Does the
+> following patch fix it?
+>=20
+> (note, I prefer "ret" and "i" on different lines anyway)
+>=20
+> -- Steve
+>=20
+> diff --git a/kernel/trace/trace_syscalls.c =
+b/kernel/trace/trace_syscalls.c
+> index 53935259f701..abb70c71fe60 100644
+> --- a/kernel/trace/trace_syscalls.c
+> +++ b/kernel/trace/trace_syscalls.c
+> @@ -269,7 +269,8 @@ static int __init =
+syscall_enter_define_fields(struct trace_event_call *call)
+> 	struct syscall_trace_enter trace;
+> 	struct syscall_metadata *meta =3D call->data;
+> 	int offset =3D offsetof(typeof(trace), args);
+> -	int ret, i;
+> +	int ret =3D 0;
+> +	int i;
+>=20
+> 	for (i =3D 0; i < meta->nb_args; i++) {
+> 		ret =3D trace_define_field(call, meta->types[i],
+
+Steve, those errors are still there in today=E2=80=99s linux-next. Is =
+this patch on the way to the linux-next?
 
