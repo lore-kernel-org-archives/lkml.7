@@ -2,120 +2,115 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA04C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E0AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 243C52072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:28:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578349691;
-	bh=rTHOxJUOIChFRf7dTkpIQvZPNS5PI3aBhK4tnTxHTso=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FZ87GbpQ2AiFYc1sMDYMOIq3CLxwgqM84cDyN1tEWaZRy7AyLnKHRNM5Yf9uknUJK
-	 lTMa70GkGZu51Yt4rCAaEOwUdDZp4i5oBFqRRe5pB5Oabywg3zU00BQA2B7LmYxEBl
-	 a/sdS39qfyOe9ytQmeLZHVjAimthIWV5JuEEOEb0=
+	by mail.kernel.org (Postfix) with ESMTP id CEBE52072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:29:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vWofFeX6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbgAFW2K (ORCPT
+        id S1727217AbgAFW3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 17:28:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbgAFW2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 17:28:10 -0500
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAE4A24679;
-        Mon,  6 Jan 2020 22:28:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578349688;
-        bh=rTHOxJUOIChFRf7dTkpIQvZPNS5PI3aBhK4tnTxHTso=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rbvUGtRkLEnm2FOVFDxL99P5oJz20WQa5tFLv9pzHTPe+VTTlH/BMydAKDogf3P6v
-         020hIch7atDLHRQMJFPZzdfn0gazAvFvDqJ+VzTAWs+Vr1pPrrFCIEtYs5qI/EhGtN
-         UQhh8l34D8hbUx2wwx3tNTfwVBD5oBP2frJy5vq8=
-Received: by mail-qt1-f172.google.com with SMTP id n15so43786149qtp.5;
-        Mon, 06 Jan 2020 14:28:08 -0800 (PST)
-X-Gm-Message-State: APjAAAXnEQaiaQrtiTK/RlRQvWxT4avDX71ZveckWjKtmSgEI0RDoyq3
-        aNnABtdRLmnM24tDcccA5AxHZtBu9ry5PYKHxA==
-X-Google-Smtp-Source: APXvYqwVixOr4A1a7oe+76qjMKIzU19osJwUbcFGBZCzSX/7V+QBSOFhX0//2c3Px8FWbPRIeaJstLXgvayduvlSds4=
-X-Received: by 2002:aed:2344:: with SMTP id i4mr79020804qtc.136.1578349687943;
- Mon, 06 Jan 2020 14:28:07 -0800 (PST)
+        Mon, 6 Jan 2020 17:29:14 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35165 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbgAFW3O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 17:29:14 -0500
+Received: by mail-pf1-f195.google.com with SMTP id i23so22168082pfo.2;
+        Mon, 06 Jan 2020 14:29:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=diZOMCp7+H8GRYEkNWog4Ps7I49ot4hzmdFa71cNqnE=;
+        b=vWofFeX6eERqgExDOv7aZeIVIZPneb5CrDskwtpnOmEaib83SGJppUSicXLLkiR0Sw
+         ECP7Zg1Yh9i9rxUtplbHEiDWmhyS30KZtpakfi9SRBHc244NYxeFdkN0il1ZM91B+c39
+         iDxqOXHSSZQp10Ds89Rjthh8Ql6hm+yus3sY8uqeOl4VO3c9gw5mbHYzdRvpRm1d16xh
+         9X29RgO9DsO7I5RjuaY+Uwg8mPpgcWb++H0AzhFb6lFBtLTgVRE7kyLCaw0ivEJLrE8w
+         TgA2dFh9SCNK4ZVmP/kVyoZ8ePNHJReTMqFhlSVBTrtAaWAba9ZRnC3oiheDQe/l7FHa
+         fb8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=diZOMCp7+H8GRYEkNWog4Ps7I49ot4hzmdFa71cNqnE=;
+        b=mjxk8rFmN4nlXCU1DzBjJQBfPdaNxzs7fj5oVMGum2mckb8G3IZii8W3KwHyJ+KDpM
+         QKkBF8rIv8XG2GuM0YuSYWxiAkIYC/1AdtynE/Ig5KDC8RuLA+XuNy5sBix9RqdNSt7a
+         nWabAYfJRyQ8uSbNd0BbHtdj/wHOghAoQa4/KSoPDrNjXvnuNcz9yZMxNk8Nt6PU5mQj
+         hGwspNAu3AqCUp4ROj97qLl+QpKgSCiSSdrq1jmNRq8Mt/jtPuKyyL4IOt3q3Pacsg/X
+         sOUxz8aTTFRgwBJXxqukP6jJnK0JhPsaOUQRL1wJaqUbVu5CJ6HoObgKWJD2CFYjHXLR
+         l9zw==
+X-Gm-Message-State: APjAAAU7Mb2yyPxqjtrFJiWpZ1uSnjpAnCPQKO/Cuf+wUY2hpx1yMqLt
+        ukebYyfFEthoSfryT30bsEI=
+X-Google-Smtp-Source: APXvYqzbKi4t9HEBGcGGPQoSxQoRLDW/LPWNuNpDDvVYbZHKciQZeFmF6o0uWqHVMF4bt/8tBRJb4Q==
+X-Received: by 2002:a63:1c64:: with SMTP id c36mr102033191pgm.302.1578349753644;
+        Mon, 06 Jan 2020 14:29:13 -0800 (PST)
+Received: from ast-mbp ([2620:10d:c090:200::1:2bf6])
+        by smtp.gmail.com with ESMTPSA id 136sm72399748pgg.74.2020.01.06.14.29.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 Jan 2020 14:29:12 -0800 (PST)
+Date:   Mon, 6 Jan 2020 14:29:08 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Jann Horn <jannh@google.com>, bpf@vger.kernel.org,
+        live-patching@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        KP Singh <kpsingh@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: BPF tracing trampoline synchronization between update/freeing
+ and execution?
+Message-ID: <20200106222907.yjoranutzjdersty@ast-mbp>
+References: <CAG48ez2gDDRtKaOcGdKLREd7RGtVzCypXiBMHBguOGSpxQFk3w@mail.gmail.com>
+ <20200106165654.GP2844@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20191227200116.2612137-1-helen.koike@collabora.com> <20191227200116.2612137-9-helen.koike@collabora.com>
-In-Reply-To: <20191227200116.2612137-9-helen.koike@collabora.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 6 Jan 2020 16:27:56 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL25gQZxdN+2ciSj7HLbOjN3OvjY-GrA57m9_y-CdYZLA@mail.gmail.com>
-Message-ID: <CAL_JsqL25gQZxdN+2ciSj7HLbOjN3OvjY-GrA57m9_y-CdYZLA@mail.gmail.com>
-Subject: Re: [PATCH v12 08/11] media: staging: dt-bindings: add Rockchip ISP1
- yaml bindings
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Eddie Cai <eddie.cai.linux@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrey Konovalov <andrey.konovalov@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        joacim.zetterling@gmail.com, kernel@collabora.com,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Jacob Chen <jacob-chen@iotwrt.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200106165654.GP2844@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 27, 2019 at 2:02 PM Helen Koike <helen.koike@collabora.com> wrote:
->
-> Add yaml DT bindings for Rockchip ISP1.
->
-> This was tested and verified with:
-> mv drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml Documentation/devicetree/bindings/media/
-> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
->
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
->
-> ---
->
-> Changes in v12:
-> - The commit replaces the following commit in previous series named
-> media: staging: dt-bindings: Document the Rockchip ISP1 bindings
-> This new patch adds yaml binding and was verified with
-> make dtbs_check and make dt_binding_check
->
-> Changes in v11:
-> - add clock-names values
->
-> Changes in v10:
-> - unsquash
->
-> Changes in v9:
-> - squash
-> - move to staging
->
-> Changes in v8:
-> - fix title division style
->
-> Changes in v7:
-> - update document with new design and tested example
->
->  .../bindings/media/rockchip-isp1.yaml         | 193 ++++++++++++++++++
->  1 file changed, 193 insertions(+)
->  create mode 100644 drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+On Mon, Jan 06, 2020 at 05:56:54PM +0100, Peter Zijlstra wrote:
+> On Mon, Jan 06, 2020 at 05:39:30PM +0100, Jann Horn wrote:
+> > Hi!
+> > 
+> > I was chatting with kpsingh about BPF trampolines, and I noticed that
+> > it looks like BPF trampolines (as of current bpf-next/master) seem to
+> > be missing synchronization between trampoline code updates and
+> > trampoline execution. Or maybe I'm missing something?
+> > 
+> > If I understand correctly, trampolines are executed directly from the
+> > fentry placeholders at the start of arbitrary kernel functions, so
+> > they can run without any locks held. So for example, if task A starts
+> > executing a trampoline on entry to sys_open(), then gets preempted in
+> > the middle of the trampoline, and then task B quickly calls
+> > BPF_RAW_TRACEPOINT_OPEN twice, and then task A continues execution,
+> > task A will end up executing the middle of newly-written machine code,
+> > which can probably end up crashing the kernel somehow?
+> > 
+> > I think that at least to synchronize trampoline text freeing with
+> > concurrent trampoline execution, it is necessary to do something
+> > similar to what the livepatching code does with klp_check_stack(), and
+> > then either use a callback from the scheduler to periodically re-check
+> > tasks that were in the trampoline or let the trampoline tail-call into
+> > a cleanup helper that is part of normal kernel text. And you'd
+> > probably have to gate BPF trampolines on
+> > CONFIG_HAVE_RELIABLE_STACKTRACE.
+> 
+> ftrace uses synchronize_rcu_tasks() to flip between trampolines iirc.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+good catch and good suggestion. synchronize_rcu_tasks() is needed here too.
