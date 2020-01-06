@@ -2,145 +2,95 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B4BC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F35E1C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5936E207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:05:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aUJR+4Gb"
+	by mail.kernel.org (Postfix) with ESMTP id BC56420731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:10:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578352237;
+	bh=BkZKUX/cpoo7IJJEV3bZ+RToEQBlRYbggq0crq/6d2k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o7t2rYf5S2zCU0HhhCs79NWCzlKmq9VlPTKVwblPfu1YKSHshuRiZz2tsoIE6w46i
+	 jJw8OMAzh4cE53RdfUfZdn5e+GyFs4tlkeyNBzxPNjKPDnJ8Nsb65P568Ca3TBEVDz
+	 Q0uWQPk6fwAG9k6YNKoOT4Ksbyq0Z0UfMl9bG88Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbgAFXFX (ORCPT
+        id S1727257AbgAFXKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 18:05:23 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38120 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727244AbgAFXFR (ORCPT
+        Mon, 6 Jan 2020 18:10:36 -0500
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:43438 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726858AbgAFXKg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 18:05:17 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y17so51809398wrh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 15:05:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YFPtgmu7am1f4EYBfi4KkzbAOi/FXMPKhu8S1KpGb/4=;
-        b=aUJR+4GbxeThYylY61qSlLQa/j+gyCDHOWZzYTVFfkL0RK++xm94Psbe64jO0Cm3ZY
-         MJbKj2jOr3eNOfv3KewqjyvRvtLA4H3Tr/n1d0pCI/Z3goBsKkLZfM+tLHQO7a6iXmy5
-         CMzw4bBchTzItKgZxoZmjvnfNubjGupSEospQES7nFYGosxM69MnuPxtl+fQWxAP5+X/
-         D8Ver0mwlHhyCya8SsAWss6btFwNRwUmY97Xzwq7ooasO6w0sJ2IT3Pf2XzdcfoRvaWF
-         /HostWtyE+6n9RSu7mCIMcemhqU2QJaFV7o2RlCOgfMN5IwVkWrQerOBcH74z4l/h7dw
-         GfqQ==
+        Mon, 6 Jan 2020 18:10:36 -0500
+Received: by mail-yb1-f194.google.com with SMTP id v24so22819995ybd.10
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 15:10:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YFPtgmu7am1f4EYBfi4KkzbAOi/FXMPKhu8S1KpGb/4=;
-        b=DgB8D/DAzU+k6U9p84qxuN/itkSF9iVew36ayF/ulFDz/4F+IicWMiAhKy7lJKNaRv
-         WKCQkeP/9xca924uLVEEoZDxr0wt4eYoR8mmG5w7RuiYippMoIfHTf1t8L5BIuUpID4Y
-         qgkLisuDbm4ZXvyV7PKYUM2C4QzIldVoShGN2Km53M5knaQuMOZSYC7jTjNwBM11T3Ze
-         wIhm6VyO30G/WZMy1lGKkgbMo2TLLCr5Tv4JPrk/iZ2I4o5CWfDM3WWIfGtfUyUMaA5g
-         Ktdt8byJ2+HmLlS7cPe7mppUzJEG003XVIWbGOn2dhrQCMxIvE9s8mlIWRSGkotUqtf5
-         +QIQ==
-X-Gm-Message-State: APjAAAUZ1dG3ZLlrPcn9iJhR88SQG9lG4teQBmPpm1p4fHdYxOCthuX3
-        A1f1B+Ue/5yNe3jn6uIJeRBVm+2eNxBYkfWhf+dSuQ==
-X-Google-Smtp-Source: APXvYqwATAYO1fo/4+rjXeWQuxn8GwzWJd2sBicOKRI8Nw8ohzmJbJdlRJizBiyOxLYpN0dNPXoC1OZ2ZvQDLTyP6yI=
-X-Received: by 2002:a5d:6a0f:: with SMTP id m15mr105033883wru.40.1578351915043;
- Mon, 06 Jan 2020 15:05:15 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=t+t1eROLK9g0HiqH07fHsSxCWd48TLqA6FF38j0G2gc=;
+        b=QvPvKfU9KCPWNFecyIg0Zgd2SRgCQNNM9322v8uNUiM4BSiGftwOWv2QoBduUWDbOo
+         g7ihoA9/LixlOfU6XBxwgfgWUPaumBGfjJCou3dqjLO+1MWHTpdiTJnM75UjODHUYBmu
+         2qr686oNqCMY4a0P9A94j5M7Mk1xHj0MjPgpGwyqtblNB3odNFzIrFRUnUn9EHcq6Ug7
+         yNmNxp52CEfzBv/xZ61RWyxdAhUBxEi3bJnxQvQUYsEqchAIqIzK3+QJEY6A22rVCjE5
+         Q2NuRG+R+gdy4qGx5imIe+Dqrwoid1Qr3DIj0drrrvDfIdQLIw+PhnVoI0AE8qty9+wc
+         BHvQ==
+X-Gm-Message-State: APjAAAXe6G4McTBl47JtXRCv1LnpAIXh/IHWwA3cV47K0OoiE8Yc2U32
+        GWl7pRXWJrwK50QnU2qLRRVdm0g=
+X-Google-Smtp-Source: APXvYqysxpj1g8iYldNlywPZQ9sD1f9Pt98LPWbsi6wr6Duo31W0HztGeumerKJ7DKCGgz6AbfRrUQ==
+X-Received: by 2002:a25:c42:: with SMTP id 63mr56039180ybm.375.1578352235164;
+        Mon, 06 Jan 2020 15:10:35 -0800 (PST)
+Received: from rob-hp-laptop ([172.58.110.146])
+        by smtp.gmail.com with ESMTPSA id i127sm28202574ywe.65.2020.01.06.15.10.24
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 15:10:35 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 2209ae
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Mon, 06 Jan 2020 17:03:01 -0600
+Date:   Mon, 6 Jan 2020 17:03:01 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Rajeshwari <rkambl@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sanm@codeaurora.org, sivaa@codeaurora.org, manaf@codeaurora.org,
+        Rajeshwari <rkambl@codeaurora.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: thermal: tsens: Add configuration in
+ yaml
+Message-ID: <20200106230301.GA12602@bogus>
+References: <1578317369-16045-1-git-send-email-rkambl@codeaurora.org>
+ <1578317369-16045-3-git-send-email-rkambl@codeaurora.org>
 MIME-Version: 1.0
-References: <20200103191852.15357-1-wambui.karugax@gmail.com>
-In-Reply-To: <20200103191852.15357-1-wambui.karugax@gmail.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 6 Jan 2020 18:05:03 -0500
-Message-ID: <CADnq5_MSd5YkfnmoJnv0ydYmW45U+Vwvtnrw5wmFpR59GtQRLQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd: use list_for_each_entry for list iteration.
-To:     Wambui Karuga <wambui.karugax@gmail.com>
-Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578317369-16045-3-git-send-email-rkambl@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 3, 2020 at 2:34 PM Wambui Karuga <wambui.karugax@gmail.com> wrote:
->
-> list_for_each() can be replaced by the more concise
-> list_for_each_entry() here for iteration over the lists.
-> This change was reported by coccinelle.
->
-> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
-
-Applied.  Thanks!
-
-Alex
-
+On Mon,  6 Jan 2020 18:59:29 +0530, Rajeshwari wrote:
+> Added configuration in dt-bindings for SC7180.
+> 
+> Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
 > ---
->  .../drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c | 19 ++++---------------
->  1 file changed, 4 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c
-> index 64445c4cc4c2..cbcf504f73a5 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c
-> @@ -111,17 +111,12 @@ static void init_handler_common_data(struct amdgpu_dm_irq_handler_data *hcd,
->   */
->  static void dm_irq_work_func(struct work_struct *work)
->  {
-> -       struct list_head *entry;
->         struct irq_list_head *irq_list_head =
->                 container_of(work, struct irq_list_head, work);
->         struct list_head *handler_list = &irq_list_head->head;
->         struct amdgpu_dm_irq_handler_data *handler_data;
->
-> -       list_for_each(entry, handler_list) {
-> -               handler_data = list_entry(entry,
-> -                                         struct amdgpu_dm_irq_handler_data,
-> -                                         list);
-> -
-> +       list_for_each_entry(handler_data, handler_list, list) {
->                 DRM_DEBUG_KMS("DM_IRQ: work_func: for dal_src=%d\n",
->                                 handler_data->irq_source);
->
-> @@ -528,19 +523,13 @@ static void amdgpu_dm_irq_immediate_work(struct amdgpu_device *adev,
->                                          enum dc_irq_source irq_source)
->  {
->         struct amdgpu_dm_irq_handler_data *handler_data;
-> -       struct list_head *entry;
->         unsigned long irq_table_flags;
->
->         DM_IRQ_TABLE_LOCK(adev, irq_table_flags);
->
-> -       list_for_each(
-> -               entry,
-> -               &adev->dm.irq_handler_list_high_tab[irq_source]) {
-> -
-> -               handler_data = list_entry(entry,
-> -                                         struct amdgpu_dm_irq_handler_data,
-> -                                         list);
-> -
-> +       list_for_each_entry(handler_data,
-> +                           &adev->dm.irq_handler_list_high_tab[irq_source],
-> +                           list) {
->                 /* Call a subcomponent which registered for immediate
->                  * interrupt notification */
->                 handler_data->handler(handler_data->handler_arg);
-> --
-> 2.17.1
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+>  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+
+Acked-by: Rob Herring <robh@kernel.org>
