@@ -2,102 +2,108 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EB8C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1ABC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C30207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9531120731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:29:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jzpuGAHB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J3cwtQO+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgAFR1r (ORCPT
+        id S1726687AbgAFR3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 12:27:47 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43908 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgAFR1q (ORCPT
+        Mon, 6 Jan 2020 12:29:14 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46372 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgAFR3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 12:27:46 -0500
-Received: by mail-wr1-f68.google.com with SMTP id d16so50542723wre.10
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 09:27:45 -0800 (PST)
+        Mon, 6 Jan 2020 12:29:13 -0500
+Received: by mail-qk1-f194.google.com with SMTP id r14so40082512qke.13;
+        Mon, 06 Jan 2020 09:29:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eA5OqXkB3++UqCw3nWhtcdXsiHuPwWe3zZsMrY+R6g0=;
-        b=jzpuGAHB6DfsAm0+WuzL4ucBxTHVpKeYsWix/3HqlDl/edJ/k1pa7eKLvJPg1I9b5x
-         /KRJ3qh4H/O+NGKjY/7bQM9LmELJTS3ZIIyxXp/lhVPeODk3JK5r3WQa91+3foXpUdLf
-         kI+io8ZjBwrS6qmYGu5Bqw/fNNCwnnDauNCl5moVv8JmjzLmt0lza/L/gKo6PH/vk/0n
-         FPpAwtDPxch0nChyvNUxMOR7KlcEcV6Y61WGG9mrzWa/Qib7Lm+OSwOGB+/atVUdA3F/
-         mmNtHZwldHU0b7JiBcme5V3ekCtC7hdEPmKxijaiYc5UheEkoqMMWgDLprFv0kjyHBpO
-         Za2A==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NxZmBvBguF1JcQOjsls5F30x6tlo9ctviEfiJvkYBfs=;
+        b=J3cwtQO+u6RU4bfiCikVMB7Fvel/CoINo9oGSTbye/Gz0zWBDvkBkc6C6gmykLkmM6
+         JolbSRBFZU94D5vJ3a5toJ/T7sHV+rsuSHvKkqRlFupT4yJ78XKiFP+5d5QfOTEzfH2Q
+         MkJInwxDkUjsPhFCEGjgwGZMjHISfUCmKtiQlu7RtgRHoU7eaCP8JANW92zT2HAu5jam
+         idoOXB+SzZwp9Kp7VAesfSmgtvlo9Aq1lpIStOwv8wTSiJLOLovH6gkMIXKoe21pGL/W
+         4xDNsapUPCoyQIbUDU4+4Hxr/o06UlgyyjD4B2dHK/1JuupEDhrbGrTM00ppNuc02WII
+         df/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eA5OqXkB3++UqCw3nWhtcdXsiHuPwWe3zZsMrY+R6g0=;
-        b=Mjn1sujIoOGdj3/2fdciW2UjsMbCsRfuvBpBSh2dxC0BrYIjaHtF4qCO8ohv6Q6LYB
-         BnFufZkv7U0sRplqztTGwFLIIiL5IUUfMa0FIK4nyYtqUTdGAVm/WlQnyT3kXhijsCoY
-         RnCY8ZD4inIQZDrrD5/h6Q1Tz3dB6lAvJ/O0zRB8vCHPi5VdTSQrRfrSAIdsAAhoeyuH
-         7zVTIyPObtVpiINHAGPdUOrJSuKHZ13ZX/T0jjUVYC68IV1zubpMpVF8CyKZ9O+S+Ti1
-         UIt+SWOwMw3gJwNfP6sMal8bvDosMsT3yjvItHLWWVGadNBe4RJg692dB8l2uLPJe2OD
-         FDHg==
-X-Gm-Message-State: APjAAAUiDf56jrpHZ+qE5n6ddPHZdCs6bXpnAtOUYsCrkQpztqWWZg0w
-        dTBpVmD0xsS6i4Rm0QvtmTvjYFBs86I=
-X-Google-Smtp-Source: APXvYqxvtLdAzA4Euyn71p/fPtmaNI3o9qzBh3vLsIJoUiDtgviZd1Out3FTo5PZH5A0cZazGSBx0g==
-X-Received: by 2002:a05:6000:f:: with SMTP id h15mr98382623wrx.90.1578331664634;
-        Mon, 06 Jan 2020 09:27:44 -0800 (PST)
-Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id z187sm23725757wme.16.2020.01.06.09.27.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 06 Jan 2020 09:27:44 -0800 (PST)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     linux-pm@vger.kernel.org
-Cc:     bjorn.andersson@linaro.org, evgreen@chromium.org,
-        daidavid1@codeaurora.org, okukatla@codeaurora.org,
-        jcrouse@codeaurora.org, georgi.djakov@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] interconnect: Check for valid path in icc_set_bw()
-Date:   Mon,  6 Jan 2020 19:27:46 +0200
-Message-Id: <20200106172746.19803-1-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.24.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NxZmBvBguF1JcQOjsls5F30x6tlo9ctviEfiJvkYBfs=;
+        b=M2UKvrANDFrlO9DRIEadjSs3dCTjhUADama8aMP0b5uhsZabHyEMFqjHeECFXr4ZRo
+         bs9ickA39IN9r8K9IDctx9b4Wyv8PSJCaGb+0oJB4jg1YisGDYsibbpXXnnoFVxzy4UF
+         WH/uOxOZWDlGwWsDoXhX1V6fsT2NrttPToE2SQWn0AScoGsQGA4mOiRGwADAh80snOK6
+         l3YtPsWC/E5dr55r4IbuR39d7nioWzRdDmiLTLxZbHqRYVBvdUNJsBUesm9TelrxjPs9
+         P7z7EbcbETaJX9L0+sgOMKmG/4D4U5TWwpHAEkoKFswNMH9sn8KDxS/BqZZbXd293CrH
+         g2Aw==
+X-Gm-Message-State: APjAAAUsve2vgayS2EDdkg+XADvaadphn2+4xFpj6x+zGR7xtgm7GcrV
+        SkgafU9iFnC6lSJLaOvkyILkPPbWO4ymNephF0U=
+X-Google-Smtp-Source: APXvYqzcdm+2thl8HHqrCf9rsaN4i4OXg2U/csojMViUWqozVnMmtx0KDP6ARuGZL/t+re1lAMRRufOeZ8f7BmmPlgs=
+X-Received: by 2002:a05:620a:918:: with SMTP id v24mr84077158qkv.22.1578331752458;
+ Mon, 06 Jan 2020 09:29:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200106172254.20271-1-tiny.windzz@gmail.com>
+In-Reply-To: <20200106172254.20271-1-tiny.windzz@gmail.com>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Mon, 6 Jan 2020 09:28:46 -0800
+Message-ID: <CA+E=qVciDPXrHCGsHR7mjFuaGrv_K21ZAdWW28_fnSV3CvEDCg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] thermal: sun8i: fix r40 ths number
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use IS_ERR() to ensure that the path passed to icc_set_bw() is valid.
+On Mon, Jan 6, 2020 at 9:23 AM Yangtao Li <tiny.windzz@gmail.com> wrote:
+>
+> According to the spec, r40 has 2 thermal sensors.
+> Sensor0 located in the CPU, another in the GPU.
+>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
-v2:
-- Use WARN_ON() instead of pr_err() (Bjorn)
+You should also add "Fixes" tag here.
 
- drivers/interconnect/core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-index 63c164264b73..d2ba5ae7d25b 100644
---- a/drivers/interconnect/core.c
-+++ b/drivers/interconnect/core.c
-@@ -495,9 +495,12 @@ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
- 	size_t i;
- 	int ret;
- 
--	if (!path || !path->num_nodes)
-+	if (!path)
- 		return 0;
- 
-+	if (WARN_ON(IS_ERR(path) || !path->num_nodes))
-+		return -EINVAL;
-+
- 	mutex_lock(&icc_lock);
- 
- 	old_avg = path->reqs[0].avg_bw;
+> Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> Tested-on: sun8i-r40-bananapi-m2-ultra
+> ---
+>  drivers/thermal/sun8i_thermal.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+> index 23a5f4aa4be4..c5661d7c3e20 100644
+> --- a/drivers/thermal/sun8i_thermal.c
+> +++ b/drivers/thermal/sun8i_thermal.c
+> @@ -565,7 +565,7 @@ static const struct ths_thermal_chip sun8i_h3_ths = {
+>  };
+>
+>  static const struct ths_thermal_chip sun8i_r40_ths = {
+> -       .sensor_num = 3,
+> +       .sensor_num = 2,
+>         .offset = 251086,
+>         .scale = 1130,
+>         .has_mod_clk = true,
+> --
+> 2.17.1
+>
