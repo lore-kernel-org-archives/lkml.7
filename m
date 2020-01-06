@@ -2,192 +2,145 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 747DEC32771
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA7DC32771
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DCB420848
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A3C8207FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:53:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="ObK9NWuO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgAFJrI (ORCPT
+        id S1726294AbgAFJx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 04:47:08 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51338 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725821AbgAFJrH (ORCPT
+        Mon, 6 Jan 2020 04:53:58 -0500
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:9996 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgAFJx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 04:47:07 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0069kwsK052474
-        for <linux-kernel@vger.kernel.org>; Mon, 6 Jan 2020 04:47:06 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xapd52hv2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 04:47:05 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
-        Mon, 6 Jan 2020 09:46:57 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 6 Jan 2020 09:46:55 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0069k6jC39387414
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Jan 2020 09:46:06 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 64549AE04D;
-        Mon,  6 Jan 2020 09:46:53 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 34B64AE045;
-        Mon,  6 Jan 2020 09:46:52 +0000 (GMT)
-Received: from [9.124.31.198] (unknown [9.124.31.198])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  6 Jan 2020 09:46:52 +0000 (GMT)
-Subject: Re: [RFC 1/3] powerpc/powernv: Interface to define support and
- preference for a SPR
-To:     Ram Pai <linuxram@us.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
-        mpe@ellerman.id.au, svaidy@linux.ibm.com, ego@linux.vnet.ibm.com,
-        pratik.sampat@in.ibm.com
-References: <20191204093255.11849-1-psampat@linux.ibm.com>
- <20191204093255.11849-2-psampat@linux.ibm.com>
- <20200103232457.GH5556@oc0525413822.ibm.com>
-From:   Pratik Sampat <psampat@linux.ibm.com>
-Date:   Mon, 6 Jan 2020 15:16:51 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <20200103232457.GH5556@oc0525413822.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Mon, 6 Jan 2020 04:53:57 -0500
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: zRYaw4MeO4BFWFLdqJXvUY4C8JTd6rsGJCwIJ8YlLTugfq0JmWZaPogmdcwBHuWUZ++ko7DEGD
+ BJJGNFA57Sl79e73vBQSMa6SCMiY4i9i91fTHYXugjtElNw5uB78HquFSr8yexIUHXrkYEksaY
+ YvegeIvKQ+aitDPClbUEfrYNlhUCrbKtKUrmTH155eMDQljBsWiXKOrNC3/Ri4FJfVnyTjtadA
+ KYRORygrteaJ/5RBN6OIwm3rcfgKZiqIdTgpy7okIqMBSSt1X2VAIhDb3/zWQobDcwsmUwkdp+
+ GYk=
+X-IronPort-AV: E=Sophos;i="5.69,402,1571727600"; 
+   d="scan'208";a="62304574"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Jan 2020 02:53:56 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 6 Jan 2020 02:53:55 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 6 Jan 2020 02:53:55 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M6+sOCUNgE+sv79pOH7kUbSG9qURMPA1dAm5fxhtIfOdllB7j8oOQUXuq4UVPDH3K6kyZ84lRz2s5YVfeQPPQR8QIQAY9l+Ux86ST8Ct7iVL2dLyLxKY1quJKVFTo6ttkmzgQqo8Rp6PMu7N3ufe+8TD6KoaKS5ZreGOxG9UjmMgx6DzVWKJyCzr77teNi69BbgzQ4/mno0VE+/lJinyVtU2IdF43ljxiOADQjJhBzRQnhSD3iQW5miSz5gXILRA4kehDRaXYzW72mH6WNSGuFpEk6wB3le/4EYQgiByvjr54XzOdeu/T8wDVRlgVZTKMjyzx/Ru0Pn2YoQfdbhfZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+gm1Br1CHUtUOfgm+A45dSW91JgI1NL3xTYIa8s1JGo=;
+ b=a0U49dyvkiMBMRgGGE00g5gvxs8k7jlVrAdhhlRinlVULsPnQTDXEguRKZkL1KONA7HTvyN9sn/J83CUm84GhGAwQqDWutNz3BkFQ/KixS3MWq7dN5sOZe3OFL4HllS4IkrpAF9PWZ0fDZ43P7KjqsAIF8g1wGNA3DOpWnesICVwV05CRTk9bHmguTgrVdu6T5Wu9l/k3NzEjYfH7GZvQblk1lME19wIAxCxMcnN8ggPNXUB4NBD/WciEaOfVoDvvwCgGZmv7kfVy6TkePwvynMC6j+dFeESgb9rPag5Wzi+Oi1QXVdcPdC5CCOkOPxGCy1biZatXK9+TOydK+Qfrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+gm1Br1CHUtUOfgm+A45dSW91JgI1NL3xTYIa8s1JGo=;
+ b=ObK9NWuOUA2Ra5xdx/mS3cPhEFFH1X0iYxOt9W+7P5FUopxHqJOk0L7ZjvI1nKqNtyOBL8UGJvMnC+AwMskDCxkQ+RH7pvnpXckbg+aKZomFbpBhTEyJ7weDynWu1hszOHfmSZZ5TjRssoZBKQDThbIM5FWS/nyb61QnU6pZjyU=
+Received: from DM6PR11MB3225.namprd11.prod.outlook.com (20.176.120.224) by
+ DM6PR11MB3868.namprd11.prod.outlook.com (10.255.61.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.10; Mon, 6 Jan 2020 09:53:53 +0000
+Received: from DM6PR11MB3225.namprd11.prod.outlook.com
+ ([fe80::106f:424f:ac54:1dbb]) by DM6PR11MB3225.namprd11.prod.outlook.com
+ ([fe80::106f:424f:ac54:1dbb%7]) with mapi id 15.20.2602.015; Mon, 6 Jan 2020
+ 09:53:53 +0000
+From:   <Claudiu.Beznea@microchip.com>
+To:     <krzk@kernel.org>, <thierry.reding@gmail.com>,
+        <u.kleine-koenig@pengutronix.de>, <linux-pwm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        <linux-rpi-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-riscv@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 2/2] pwm: Enable compile testing for some of drivers
+Thread-Topic: [PATCH 2/2] pwm: Enable compile testing for some of drivers
+Thread-Index: AQHVxHc0gN2UoP7Gc0Ocsx6/BxJUcA==
+Date:   Mon, 6 Jan 2020 09:53:53 +0000
+Message-ID: <145f61f5-941b-d0f4-7abd-33ce7f005fca@microchip.com>
+References: <20191230172113.17222-1-krzk@kernel.org>
+ <20191230172113.17222-2-krzk@kernel.org>
+In-Reply-To: <20191230172113.17222-2-krzk@kernel.org>
+Accept-Language: en-US
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 20010609-0012-0000-0000-0000037AD5C1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20010609-0013-0000-0000-000021B6EE1F
-Message-Id: <75611f4d-51f8-33ac-dcd5-0016bebee183@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2020-01-06_02:2020-01-06,2020-01-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 clxscore=1015 suspectscore=0 adultscore=0 phishscore=0
- priorityscore=1501 bulkscore=0 mlxlogscore=999 mlxscore=0 spamscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001060090
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cd98d837-f71d-4669-e076-08d7928e56fe
+x-ms-traffictypediagnostic: DM6PR11MB3868:
+x-microsoft-antispam-prvs: <DM6PR11MB386839E19F8AE22C56AED43D873C0@DM6PR11MB3868.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0274272F87
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(376002)(39860400002)(136003)(366004)(189003)(199004)(66476007)(478600001)(66556008)(64756008)(8676002)(2616005)(66446008)(31686004)(6506007)(66946007)(53546011)(91956017)(76116006)(26005)(186003)(71200400001)(7416002)(110136005)(316002)(6486002)(8936002)(2906002)(558084003)(86362001)(5660300002)(6512007)(31696002)(36756003)(81156014)(81166006)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR11MB3868;H:DM6PR11MB3225.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wOMKXiNGziR8dv9gol0oOsf6AU3jg0EgTcvPeER6oGWQ/VHSV6mZ4G35IavOvUWvfJowh6rCgEhlk8dQaHqqGFPgluMQ/mqNOqzZVUbtBXvd+M8DHE4Ih/QhaACanEKd2yY2+hKwmKfmIpxc1EDyNlGPemaiqh/eovfKhRtnMxavwU1Rh5GcI/Bfjng/YCxdkty/e8RkHg/iDVeRjL+c/LvR4hzUbhvVz3lKSJuB5ISxB3wNgEJGnvL8HRHkVq0weTLXARW5wg0/ogGuGqlsHjEi26ZJ9uuAZdKfXOph3zN5gzzRsREIrYqQtIndwiq3oYxJ7K+SEPHCJN1cZszNc3RUqF6sq9ENqwWlsZVSQaJswTwMjrUgUQEtDbwvv2LYq+67tv/sGjVbjPS4m9b4PUGsbsVMg053jU9TpUZuCpkkSbnD/5hZPBztOan2HJK8UmTIUVrmLulShBaKbP3pI4lxjuCXzYZMVtW9YYwU/x5yVUIMoaO/gPvVe18u5JSW
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C6A04D4974AB244693C3B9F0D1537D34@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd98d837-f71d-4669-e076-08d7928e56fe
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2020 09:53:53.6461
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3t7GXAiHVzcYWfgg7rs7BGYg4AhBXFOdWKJswiYpNOQZcRLxnjLB8thujRLTCNbSdB/NeinF2BmkaKx5I9MFDTEFmIV3xzqyWRswi5WXJcE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3868
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Ram,
-
-Thank you for your reviewing the patches.
-
->> +/* Interface for the stop state supported and preference */
->> +#define SELF_RESTORE_TYPE    0
->> +#define SELF_SAVE_TYPE       1
->> +
->> +#define NR_PREFERENCES    2
->> +#define PREFERENCE_SHIFT  8
->> +#define PREFERENCE_MASK   0xff
->> +
->> +#define UNSUPPORTED         0x0
->> +#define SELF_RESTORE_STRICT 0x01
->> +#define SELF_SAVE_STRICT    0x10
->> +
->> +/*
->> + * Bitmask defining the kind of preferences available.
->> + * Note : The higher to lower preference is from LSB to MSB, with a shift of
->> + * 8 bits.
-> A minor comment.
->
-> Is there a reason why shift is 8?  Shift of 4 must be sufficient,
-> and a mask of '0xf' should do. And SELF_SAVE_STRICT can be 0x2.
->
->
-Yes, you're right! We could do away with using fewer bits here.
-
->> +/* Caching the lpcr & ptcr support to use later */
->> +static bool is_lpcr_self_save;
->> +static bool is_ptcr_self_save;
-> I understand why you need to track the status of PTCR register.
-> But its not clear, why LPCR register's save status need to be tracked?
->
-Normally it does not but LPCR was previously unsupported in self-restore
-and the kernel saved and restored its value in context. Now that we have
-support for saving LPCR automatically I believe we leverage it and
-make sure the kernel does not do redundant work.
-
->> +
->> +struct preferred_sprs {
->> +	u64 spr;
->> +	u32 preferred_mode;
->> +	u32 supported_mode;
->> +};
->> +
->> +struct preferred_sprs preferred_sprs[] = {
->> +	{
->> +		.spr = SPRN_HSPRG0,
->> +		.preferred_mode = PREFER_RESTORE_SAVE,
->> +		.supported_mode = SELF_RESTORE_STRICT,
->> +	},
->> +	{
->> +		.spr = SPRN_LPCR,
->> +		.preferred_mode = PREFER_RESTORE_SAVE,
->> +		.supported_mode = SELF_RESTORE_STRICT,
->> +	},
->> +	{
->> +		.spr = SPRN_PTCR,
->> +		.preferred_mode = PREFER_SAVE_RESTORE,
->> +		.supported_mode = SELF_RESTORE_STRICT,
->> +	},
->> +	{
->> +		.spr = SPRN_HMEER,
->> +		.preferred_mode = PREFER_RESTORE_SAVE,
->> +		.supported_mode = SELF_RESTORE_STRICT,
->> +	},
->> +	{
->> +		.spr = SPRN_HID0,
->> +		.preferred_mode = PREFER_RESTORE_SAVE,
->> +		.supported_mode = SELF_RESTORE_STRICT,
->> +	},
->> +	{
->> +		.spr = P9_STOP_SPR_MSR,
->> +		.preferred_mode = PREFER_RESTORE_SAVE,
->> +		.supported_mode = SELF_RESTORE_STRICT,
->> +	},
->> +	{
->> +		.spr = P9_STOP_SPR_PSSCR,
->> +		.preferred_mode = PREFER_SAVE_RESTORE,
->> +		.supported_mode = SELF_RESTORE_STRICT,
->> +	},
->> +	{
->> +		.spr = SPRN_HID1,
->> +		.preferred_mode = PREFER_RESTORE_SAVE,
->> +		.supported_mode = SELF_RESTORE_STRICT,
->> +	},
->> +	{
->> +		.spr = SPRN_HID4,
->> +		.preferred_mode = PREFER_RESTORE_SAVE,
->> +		.supported_mode = SELF_RESTORE_STRICT,
->> +	},
->> +	{
->> +		.spr = SPRN_HID5,
->> +		.preferred_mode = PREFER_RESTORE_SAVE,
->> +		.supported_mode = SELF_RESTORE_STRICT,
->> +	}
->> +};
-> What determines the list of registers tracked in this table?
->
->
-> .snip..
->
-This list is of the SPRs of all the registers that the kernel is interested in
-at wakeup. It has been refactored out as a list from what the kernel used
-previously in the kernel.
-
-
+DQoNCk9uIDMwLjEyLjIwMTkgMTk6MjEsIEtyenlzenRvZiBLb3psb3dza2kgd3JvdGU6DQo+IFNv
+bWUgb2YgdGhlIFBXTSBkcml2ZXJzIGNhbiBiZSBjb21waWxlIHRlc3RlZCB0byBpbmNyZWFzZSBi
+dWlsZA0KPiBjb3ZlcmFnZS4NCj4gDQo+IFRoZSBNZXNvbiBQV00gZHJpdmVyIHJlcXVpcmVzIENP
+TU1PTl9DTEsgZGVwZW5kZW5jeS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEtyenlzenRvZiBLb3ps
+b3dza2kgPGtyemtAa2VybmVsLm9yZz4NCg0KZm9yIFBXTV9BVE1FTDoNCkFja2VkLWJ5OiBDbGF1
+ZGl1IEJlem5lYSA8Y2xhdWRpdS5iZXpuZWFAbWljcm9jaGlwLmNvbT4=
