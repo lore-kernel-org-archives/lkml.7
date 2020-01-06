@@ -2,97 +2,132 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 179B4C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6D1C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCED62075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:23:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="clEtWmbh"
+	by mail.kernel.org (Postfix) with ESMTP id AFFA1207FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:23:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578306230;
+	bh=l1nv7+iasDN8tGmSbWPuiclh0SKhjnM765w1GGZJntM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HZLnXYMNFIRDP/6hvD1iWshA9R8oMOfBRGtFI18zWnDNgVBhkfogr5D5DgRQb4I5w
+	 gdgK4hDz1cBAQqvuhOWpz4gWDl13Ur28IO6pxgzwKcLkt1H1t1yv5qy6sED89glTcI
+	 sl0e5pJWBFYdkGGXQBim/v/rOCJCJRC017ycU7Fk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgAFKXY (ORCPT
+        id S1726496AbgAFKXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 05:23:24 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41011 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgAFKXY (ORCPT
+        Mon, 6 Jan 2020 05:23:49 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36201 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbgAFKXt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 05:23:24 -0500
-Received: by mail-lj1-f194.google.com with SMTP id h23so50411459ljc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 02:23:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=B0/5oZmpyMpvoGdHibbnECdx+O3YaUpB8rzrVDmAk5M=;
-        b=clEtWmbh+qaBqe+He2QKgbhvUT/cLCZyyQvw1JRHZwX93MLJhhwpKITQs2A86cqhDK
-         R1FVH3Ul0Epai3TWrb4TBgeDApCtrRqtdL5z8uviLVawFn6h7LD1wEOhyhOIhlJoZWyG
-         buJC+IMocTB2ZqduPh8Ae++DtZq6endywr62f5VL1SbHV1XCSI2dyK8w4+9Yk9uG5WDb
-         1Obk37dnPqbEtjqDAQgg0HhbuiXjnk6PYm+xXNoz2bL+jcHaEC3T00YId8Qw8DL5WOMP
-         xsY5IV8vtZQBkiunVu9CGDBU3/AYduXDd5o+PUcvSUcIKORFetRxY32ZvJswqfqff3ns
-         sqvA==
+        Mon, 6 Jan 2020 05:23:49 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z3so49039737wru.3;
+        Mon, 06 Jan 2020 02:23:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=B0/5oZmpyMpvoGdHibbnECdx+O3YaUpB8rzrVDmAk5M=;
-        b=NIuc2OTell3ZXpwBWaNuYImHcvA7/Oq++w1DZZ0L5C/eOM5S7IM0Tad9dKF532pVGs
-         wPQ5Q9Fhs1K3XOxh/YzlEF0eIgvPrz/7KC/utXN0lZ0ZAwoKsfCK8LgJ5dk6YA1aJe5a
-         7E4vHHbNM7DMbeBZgKoXdZkHLTvveDZ6BLr3+UdUJKEyR3/wIRLW539PzKPQEvDb4qUG
-         7m29HQyhW8bDw793VQBMxq6jnKZuPghSlPcLEmPtj8bkZcS26Ej7Vqqzn/MThutV0QCd
-         FQxvrGN8fhZM7F2bNQTJaYIPsmrzspXocmkdw46VCZWPkeM110OMcaJhr+mTrZJPT2fY
-         hEyw==
-X-Gm-Message-State: APjAAAUdreMdShlczDX8ycukUUgtUe9JwT4rpIywOEVUJscsWotfrWDa
-        eWMocGel4xFbCl1/aWkwn9ICRw==
-X-Google-Smtp-Source: APXvYqylp5NiLHXERz7acxYKyV5J6DD2bC3iTYDcgMA9NVOGybslb4wcRBjNRaJF/9+lKu8tR223bA==
-X-Received: by 2002:a2e:8954:: with SMTP id b20mr44715875ljk.27.1578306202203;
-        Mon, 06 Jan 2020 02:23:22 -0800 (PST)
-Received: from localhost.localdomain ([37.157.136.193])
-        by smtp.gmail.com with ESMTPSA id u25sm28836745lfk.46.2020.01.06.02.23.20
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tgQqBIy5e4I6Hz0oQb/zzwQhBn/pQ2qSqWeoeZ4EV+A=;
+        b=OOTKCqhw1m5BZpT+BniTblllck8ZYoLhXSLPT9z7E529OUnpLbQzgHE61rHwabB5kK
+         Is9FnkWQV3JG/h+5vqJpK/pNYarHhF4q8skejgE7f947+HdblrU4Ev6IQmrDEYZ0tikq
+         28s+4sUXaYwzzQf8T9LHm0WQVZl8Z886sysfDOiqprlYjZocMsUKYrIg3GZ7dGcaue6s
+         3XLVdGmRw7ARtyYlZknUAFdq2WLx2TOaMrkTwfqAyZ/cOjsIiJVJOSbJ/7i/GQdhW8S4
+         6UgwcCEdOBjkOOSJzj/4ckAqya7yYxNCf+/nuLL9XGIcTzakHA54HmOmxYiGJ6Gd2OWW
+         XGzQ==
+X-Gm-Message-State: APjAAAVg378976ZNvO+x+dXtk4qNWSbFAZisPvgXI7kMiDz/hj7u0ESH
+        0HFNRv5JGsSPJtMrQxtaVUs=
+X-Google-Smtp-Source: APXvYqxIQDabJmEtH66y7KFu1WXendyZo1xIk9Vx2c9iiJQtk3BzNbZz+qSNwvvtCXbBwLWXMkNuPw==
+X-Received: by 2002:adf:82f3:: with SMTP id 106mr105334001wrc.69.1578306226841;
+        Mon, 06 Jan 2020 02:23:46 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id u1sm22257183wmc.5.2020.01.06.02.23.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 02:23:21 -0800 (PST)
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-To:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: msm8996: Fix venus iommu nodename error
-Date:   Mon,  6 Jan 2020 12:23:05 +0200
-Message-Id: <20200106102305.27059-1-stanimir.varbanov@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 06 Jan 2020 02:23:46 -0800 (PST)
+Date:   Mon, 6 Jan 2020 11:23:45 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     hannes@cmpxchg.org, vdavydov.dev@gmail.com,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, yang.shi@linux.alibaba.com
+Subject: Re: [RFC PATCH] mm: thp: grab the lock before manipulation defer list
+Message-ID: <20200106102345.GE12699@dhcp22.suse.cz>
+References: <20200103143407.1089-1-richardw.yang@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200103143407.1089-1-richardw.yang@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following error/warn seen with make dtbs_check
+On Fri 03-01-20 22:34:07, Wei Yang wrote:
+> As all the other places, we grab the lock before manipulate the defer list.
+> Current implementation may face a race condition.
 
-arm,smmu-venus@d40000: $nodename:0: 'arm,smmu-venus@d40000' does not match '^iommu@[0-9a-f]*'
-arm,smmu-venus@d40000: clock-names:0: 'bus' was expected
-arm,smmu-venus@d40000: clock-names:1: 'iface' was expected
+Please always make sure to describe the effect of the change. Why a racy
+list_empty check matters?
 
-by rename nodename to "iommu".
+> Fixes: 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg aware")
+> 
+> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+> 
+> ---
+> I notice the difference during code reading and just confused about the
+> difference. No specific test is done since limited knowledge about cgroup.
+> 
+> Maybe I miss something important?
+> ---
+>  mm/memcontrol.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index bc01423277c5..62b7ec34ef1a 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -5368,12 +5368,12 @@ static int mem_cgroup_move_account(struct page *page,
+>  	}
+>  
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> +	spin_lock(&from->deferred_split_queue.split_queue_lock);
+>  	if (compound && !list_empty(page_deferred_list(page))) {
+> -		spin_lock(&from->deferred_split_queue.split_queue_lock);
+>  		list_del_init(page_deferred_list(page));
+>  		from->deferred_split_queue.split_queue_len--;
+> -		spin_unlock(&from->deferred_split_queue.split_queue_lock);
+>  	}
+> +	spin_unlock(&from->deferred_split_queue.split_queue_lock);
+>  #endif
+>  	/*
+>  	 * It is safe to change page->mem_cgroup here because the page
+> @@ -5385,13 +5385,13 @@ static int mem_cgroup_move_account(struct page *page,
+>  	page->mem_cgroup = to;
+>  
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> +	spin_lock(&to->deferred_split_queue.split_queue_lock);
+>  	if (compound && list_empty(page_deferred_list(page))) {
+> -		spin_lock(&to->deferred_split_queue.split_queue_lock);
+>  		list_add_tail(page_deferred_list(page),
+>  			      &to->deferred_split_queue.split_queue);
+>  		to->deferred_split_queue.split_queue_len++;
+> -		spin_unlock(&to->deferred_split_queue.split_queue_lock);
+>  	}
+> +	spin_unlock(&to->deferred_split_queue.split_queue_lock);
+>  #endif
+>  
+>  	spin_unlock_irqrestore(&from->move_lock, flags);
+> -- 
+> 2.17.1
 
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 4ca2e7b44559..9bbcee31f28b 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -2267,7 +2267,7 @@
- 			};
- 		};
- 
--		venus_smmu: arm,smmu-venus@d40000 {
-+		venus_smmu: iommu@d40000 {
- 			compatible = "qcom,msm8996-smmu-v2", "qcom,smmu-v2";
- 			reg = <0xd40000 0x20000>;
- 			#global-interrupts = <1>;
 -- 
-2.17.1
-
+Michal Hocko
+SUSE Labs
