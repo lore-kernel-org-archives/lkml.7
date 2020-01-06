@@ -2,107 +2,150 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FC3C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE8BC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64F6C2072E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF72C207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:33:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BICInZD+"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Kq7Cs7IZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbgAFOb5 (ORCPT
+        id S1726640AbgAFOc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 09:31:57 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:42114 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgAFOb5 (ORCPT
+        Mon, 6 Jan 2020 09:32:59 -0500
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:37222 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbgAFOc6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 09:31:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=uumXoL+eYMvAU/Zhkw4q7M7e56seiyLsNiF+bQNF7sE=; b=BICInZD+JKwdDFrOYAuBrn8Cs
-        yxZBuD06qT5ZkcbPLGVRyV4H8q8S+E0mpqpxBeuWbRV1XdqVTsxa+uzzNy/AsQ31Mersxn7vPI2z1
-        szBg4Xgm1dzB5EK95/T538UMfksmWU4Yq49ng2gx8p5EF+gudK2fdielHviqK1NsrLrJciJDusf6j
-        F9ihZ13fbRgevOUMpANt5aXUOH1oERvnkpw8z+M9OgO/fKwkdWLkHrrldxiF6g/ukXAe0WQ6iq03L
-        ZFeGkcg6NSnTD1nI1cheNvcEaVEwX0zJg1V9dRmI+6FY0X+U9FPdXqD8CRRl5I7O1E+w1EEqxUKF6
-        VHYDjFO2A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ioTPx-0002qk-GX; Mon, 06 Jan 2020 14:31:41 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1B12A306CEE;
-        Mon,  6 Jan 2020 15:30:06 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 365EC2B283CC0; Mon,  6 Jan 2020 15:31:38 +0100 (CET)
-Date:   Mon, 6 Jan 2020 15:31:38 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     kan.liang@linux.intel.com, mingo@redhat.com, acme@kernel.org,
-        tglx@linutronix.de, bp@alien8.de, linux-kernel@vger.kernel.org,
-        eranian@google.com, alexey.budankov@linux.intel.com,
-        vitaly.slobodskoy@intel.com
-Subject: Re: [RFC PATCH V2 2/7] perf: Init/fini PMU specific data
-Message-ID: <20200106143138.GN2844@hirez.programming.kicks-ass.net>
-References: <1578080364-5928-1-git-send-email-kan.liang@linux.intel.com>
- <1578080364-5928-2-git-send-email-kan.liang@linux.intel.com>
- <20200106103832.GO2810@hirez.programming.kicks-ass.net>
- <20200106142343.GK15478@tassilo.jf.intel.com>
+        Mon, 6 Jan 2020 09:32:58 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 47ryfK3nkNz9vZ6C
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jan 2020 14:32:57 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id umicBlc0-EgD for <linux-kernel@vger.kernel.org>;
+        Mon,  6 Jan 2020 08:32:57 -0600 (CST)
+Received: from mail-yw1-f71.google.com (mail-yw1-f71.google.com [209.85.161.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 47ryfK2dzcz9vZ5p
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Jan 2020 08:32:57 -0600 (CST)
+Received: by mail-yw1-f71.google.com with SMTP id l12so21727097ywk.6
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 06:32:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5l0p/vFRPZk6guP1BnAdEk2ZYGrbFqodbRjZ+j59qOY=;
+        b=Kq7Cs7IZotx/82WeJdfwB9MXJggXXaHssfFQoQTrFQaJzvY7GPa/fMpe/4kUCTqmzc
+         gK/zkpKz5SLclirD9vhP4CpBEXiww7a1/Ic8JubeyQU/BL0zqPfVUXYZrgUz5XVQGYax
+         Dk/fwd/EGzATrxMizGpvFosb4bhr9w0iMVaUmOr0+eV54OLfeS9bpUfsyDYBbG4VITan
+         nLB9pRBiSgkcTJ/vwobgF/tWqU12sYsZLGaJui38RUlDEJ6VUPi6/orZ2S2dWvSF/NeV
+         fQ2npo/MLkGGwWx3lGGUNBcvdahsa70Ud+h2lFu9rXahpD1kFB3LGy3WR34HsYWX+rUY
+         Yh1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5l0p/vFRPZk6guP1BnAdEk2ZYGrbFqodbRjZ+j59qOY=;
+        b=FrpJv0IOYCC53OJnyjuv7chLn632F7yCJbB9rBnVFUa32Suwex1tGKAgG6wUj91dfG
+         P+iy0mWPlXFuNSeBjscjmbAJEyS/3EGatQtuvxoQFvErxPWeUUyj2UJodcq26ndLuZ61
+         2cDs3PisFnkvKmZr5KBLNBchhc7L6ryIYxQtNRewJO+G4+c28f8V+aCjXCu366DcdcY0
+         s1GfonClY5n1o1EMFefBlySHtxmjOHth+6rn+20tHw5nzHWuTBq5k5nKnaMSygsU+m2s
+         il4N+YcCvTvi5/1XEujftJCWrV/uLQHuhfEk5/c82ok4UbdvsK7UfH8NTRqmEe7OUYB8
+         5+Tw==
+X-Gm-Message-State: APjAAAUPc9iGvIIhxWGslGlKVVfNCndb+vpsFhDxHQObfiyxd8bAvR9x
+        jeObmX6xJHhBkpWHZj9Om1cdyOZXcYjAmVqjcTypnTsRjSV+cAmuexR6SCuUa52i3xIgTjddtfo
+        o6LfmoUINkLMrzZt0V4l9qcDAtCQH
+X-Received: by 2002:a81:6c55:: with SMTP id h82mr77451856ywc.311.1578321176357;
+        Mon, 06 Jan 2020 06:32:56 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzkV68WEDTQEyoyXmVebbHWiYnKmmEY9oPOGZeSJpiKfLcQmzj74d8oPwzY9h6TRNWXkKX1Xg==
+X-Received: by 2002:a81:6c55:: with SMTP id h82mr77451819ywc.311.1578321175824;
+        Mon, 06 Jan 2020 06:32:55 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id w74sm27845121ywa.71.2020.01.06.06.32.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 06:32:55 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] media: davinci/vpfe_capture.c: Avoid BUG_ON for register failure
+Date:   Mon,  6 Jan 2020 08:32:51 -0600
+Message-Id: <20200106143251.11684-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200106142343.GK15478@tassilo.jf.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 06:23:43AM -0800, Andi Kleen wrote:
-> > > +	rcu_read_lock();
-> > > +	for_each_process_thread(g, p) {
-> > > +		mutex_lock(&p->perf_event_mutex);
-> > > +		if (p->perf_ctx_data) {
-> > > +			/*
-> > > +			 * The perf_ctx_data for this thread may has been
-> > > +			 * allocated by per-task event.
-> > > +			 * Only update refcount for the case.
-> > > +			 */
-> > > +			refcount_inc(&p->perf_ctx_data->refcount);
-> > > +			mutex_unlock(&p->perf_event_mutex);
-> > > +			continue;
-> > > +		}
-> > > +
-> > > +		if (pos < num_thread) {
-> > > +			refcount_set(&data[pos]->refcount, 1);
-> > > +			rcu_assign_pointer(p->perf_ctx_data, data[pos++]);
-> > > +		} else {
-> > > +			/*
-> > > +			 * There may be some new threads created,
-> > > +			 * when we allocate space.
-> > > +			 * Track the number in nr_new_tasks.
-> > > +			 */
-> > > +			nr_new_tasks++;
-> > > +		}
-> > > +		mutex_unlock(&p->perf_event_mutex);
-> > > +	}
-> > > +	rcu_read_unlock();
-> > > +
-> > > +	raw_spin_unlock_irqrestore(&task_data_sys_wide_events_lock, flags);
-> > 
-> > Still NAK. That's some mightly broken code there.
-> 
-> Yes, Kan you cannot use a mutex (sleeping) inside rcu_read_lock().
-> Can perf_event_mutex be a spin lock?
+In vpfe_register_ccdc_device(), failure to allocate dev->hw_ops
+fields calls BUG_ON(). This patch returns the error to callers
+instead of crashing. The issue was identified by a static
+analysis tool, written by us.
 
-Or insize that raw_spin_lock. And last time I expressly said to not do
-what whole tasklist iteration under a spinlock.
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+v2: Fix alignment of checks within the condition, as suggested by
+Hans Verkuil
+
+v1: Fixed the type to a regular variable instead of a pointer,
+also added fixes suggested by Ezequiel Garcia.
+---
+ drivers/media/platform/davinci/vpfe_capture.c | 31 ++++++++++---------
+ 1 file changed, 16 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/media/platform/davinci/vpfe_capture.c b/drivers/media/platform/davinci/vpfe_capture.c
+index 916ed743d716..9b1d9643589b 100644
+--- a/drivers/media/platform/davinci/vpfe_capture.c
++++ b/drivers/media/platform/davinci/vpfe_capture.c
+@@ -168,21 +168,22 @@ int vpfe_register_ccdc_device(const struct ccdc_hw_device *dev)
+ 	int ret = 0;
+ 	printk(KERN_NOTICE "vpfe_register_ccdc_device: %s\n", dev->name);
+ 
+-	BUG_ON(!dev->hw_ops.open);
+-	BUG_ON(!dev->hw_ops.enable);
+-	BUG_ON(!dev->hw_ops.set_hw_if_params);
+-	BUG_ON(!dev->hw_ops.configure);
+-	BUG_ON(!dev->hw_ops.set_buftype);
+-	BUG_ON(!dev->hw_ops.get_buftype);
+-	BUG_ON(!dev->hw_ops.enum_pix);
+-	BUG_ON(!dev->hw_ops.set_frame_format);
+-	BUG_ON(!dev->hw_ops.get_frame_format);
+-	BUG_ON(!dev->hw_ops.get_pixel_format);
+-	BUG_ON(!dev->hw_ops.set_pixel_format);
+-	BUG_ON(!dev->hw_ops.set_image_window);
+-	BUG_ON(!dev->hw_ops.get_image_window);
+-	BUG_ON(!dev->hw_ops.get_line_length);
+-	BUG_ON(!dev->hw_ops.getfid);
++	if (!dev->hw_ops.open ||
++	    !dev->hw_ops.enable ||
++	    !dev->hw_ops.set_hw_if_params ||
++	    !dev->hw_ops.configure ||
++	    !dev->hw_ops.set_buftype ||
++	    !dev->hw_ops.get_buftype ||
++	    !dev->hw_ops.enum_pix ||
++	    !dev->hw_ops.set_frame_format ||
++	    !dev->hw_ops.get_frame_format ||
++	    !dev->hw_ops.get_pixel_format ||
++	    !dev->hw_ops.set_pixel_format ||
++	    !dev->hw_ops.set_image_window ||
++	    !dev->hw_ops.get_image_window ||
++	    !dev->hw_ops.get_line_length ||
++	    !dev->hw_ops.getfid)
++		return -EINVAL;
+ 
+ 	mutex_lock(&ccdc_lock);
+ 	if (!ccdc_cfg) {
+-- 
+2.20.1
+
