@@ -2,101 +2,172 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F806C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F1EC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2266920731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5442520731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:27:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578306429;
+	bh=ZoIVcu6xJXpboG2PWJK8jcaF4ig8GVv2FUyIC3KZTT4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=j2mF/VjHLEmOcEgEEFFz5oSQCBulHHvw/NK1EBxWWSX+r/JJTeq/GX2EvXicuOPSL
+	 bOklerPuhhAQfdQw7HLWdiWppZiCxdxzqNsJ82zteczqCr0WuLV8aaXYH6SsQSSG6t
+	 n0jVai1PHQ9Tnb6RhF1uV5SqMKNn1boWL74sI448=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgAFKZk (ORCPT
+        id S1726340AbgAFK1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 05:25:40 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50390 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726351AbgAFKZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 05:25:39 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id F2EFFAF8A;
-        Mon,  6 Jan 2020 10:25:37 +0000 (UTC)
-Date:   Mon, 6 Jan 2020 11:25:37 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2] printk: Fix preferred console selection with multiple
- matches
-Message-ID: <20200106102537.nirnfcauqdh4olgv@pathway.suse.cz>
-References: <2712d7e2fb68bca06a33e2e062fc8e65a2652410.camel@kernel.crashing.org>
- <20191219135053.xr67lybhycepcxkp@pathway.suse.cz>
- <32fde8cd451ea0eaff38108d9f2f2d4a97a43097.camel@kernel.crashing.org>
- <20191220091131.4uifcbudwppjspf4@pathway.suse.cz>
- <20200106051508.GA17351@google.com>
+        Mon, 6 Jan 2020 05:27:08 -0500
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:60795 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgAFK1I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 05:27:08 -0500
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 006AQxd8031185;
+        Mon, 6 Jan 2020 19:27:00 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 006AQxd8031185
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1578306420;
+        bh=8PkpWVUdySY51bUMOM4KhlKE4NHl+5/7vU1rEUIqJ74=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=t1xERg3M5OoLY8eI1HE1qeopn4zm+lDun8hAHIoNqc9Z/hSPLdU3iR75gK1mF0+/a
+         NTo0YC5YG+e5yOwbtfBuQpfjSiU1dQffQVJtRDsK6ZaPoKiJojI66MKR9lbEhGC3Cs
+         235PXWqYr2R+Z2ae8FTKbvArkKY6eaNRpvsTp0HrlTfd19t4KJkzzJ1JXSy+IWlXSi
+         MTkkP/p3d7lwPbCnHBqEY8Np0AS8QAQXyTgizJzjkLsXBouRsowZP6cxyoyW6BWBkP
+         /0HgC+zWk+5hfOwhwE6lutwpK1WZR/rWdTerM969zfjZ7AfMKCVAbsoHpKHU6svg1R
+         Z9C8bijSGb4pw==
+X-Nifty-SrcIP: [209.85.222.41]
+Received: by mail-ua1-f41.google.com with SMTP id c7so13949644uaf.5;
+        Mon, 06 Jan 2020 02:26:59 -0800 (PST)
+X-Gm-Message-State: APjAAAX5aOjrTGuJQ7FpEio/XLMRpwsuGqal5dL+FPud11tXhdXSglQB
+        QejvO11T7N/8eSxSbxOMK4G9G3tlfPCvSdjTyN0=
+X-Google-Smtp-Source: APXvYqxgU3jMDo9bKZjHgpqMc+GLjt6jxilfwf2oNo2fDwQPFlGVv3FnjZk4Uygr+k8RNOj2/thH79yiUnmAOA0MjvY=
+X-Received: by 2002:ab0:14ea:: with SMTP id f39mr49189518uae.40.1578306418628;
+ Mon, 06 Jan 2020 02:26:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200106051508.GA17351@google.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+References: <20200104150238.19834-1-masahiroy@kernel.org> <20200104150238.19834-5-masahiroy@kernel.org>
+ <xr93ftgt6ndv.fsf@gthelen.svl.corp.google.com>
+In-Reply-To: <xr93ftgt6ndv.fsf@gthelen.svl.corp.google.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 6 Jan 2020 19:26:22 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT2ai=-wbLmU2hqihbzVy7kKCGg=ipOK09XtSWiDYMW1Q@mail.gmail.com>
+Message-ID: <CAK7LNAT2ai=-wbLmU2hqihbzVy7kKCGg=ipOK09XtSWiDYMW1Q@mail.gmail.com>
+Subject: Re: [PATCH v2 04/13] initramfs: rename gen_initramfs_list.sh to gen_initramfs.sh
+To:     Greg Thelen <gthelen@google.com>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2020-01-06 14:15:08, Sergey Senozhatsky wrote:
-> On (19/12/20 10:11), Petr Mladek wrote:
-> [..]
-> > > > > +enum con_match {
-> > > > > +	con_matched,
-> > > > > +	con_matched_preferred,
-> > > > > +	con_braille,
-> > > > > +	con_failed,
-> > > > > +	con_no_match,
-> > > > > +};
-> > > > 
-> > > > Please, replace this with int, where:
-> > > > 
-> > > >    + con_matched -> 0
-> > > >    + con_matched_preferred -> 0 and make "has_preferred" global variable
-> > > >    + con_braile -> 0		later check for CON_BRL flag
-> > > >    + con_failed -> -EFAULT
-> > > >    + con_no_match -> -ENOENT
-> > > 
-> > > Not fan of using -EFAULT here, it's a detail since it's rather kernel
-> > > internal, but I'd rather use -ENXIO for no match and -EIO for failed
-> > > (or pass the original error code up if any). That said it's really bike
-> > > shed painting at this point :-)
-> > 
-> > Sigh, either variant is somehow confusing.
-> > 
-> > I think that -ENOENT is a bit better than -EIO. It is abbreviation of
-> > "No entry or No entity" which quite fits here. Also the device might
-> > exist but it is not used when not requested.
-> 
-> Can we please keep the enum? Enum is super self-descriptive, can't
-> get any better. Any other alternative - be it -EFAULT or -EIO or
-> -ENOENT - would force one to always look at what is actually going
-> on in try_match_new_console() and what particular errno means. None
-> of those errnos fit, they make things cryptic. IMHO.
+(+CC Ben Hutchings, H. Peter Anvin)
 
-I agree that the enums are more self-descriptive. My problem with it is
-that there are 5 values. I wanted to check how they were handled
-and neither 'con_matched' nor 'con_failed' were later used.
+In my understanding, the klibc build system is standalone.
+So, the change in Linux kernel does not affect klibc at all.
+Only the depending part is UAPI headers (make headers_install).
 
-I though how to improve it. And I ended with feeling that the enum
-did more harm then good. -E??? codes are a bit less descriptive
-but there are only two. The meaning can be explained easily by
-a comment above the function.
+So, this patch
+(https://lore.kernel.org/patchwork/patch/1175336/)
+should be OK.
 
-If you want to keep the enum then please handle the return values
-by switch(). Or make it clear that all possible return values
-are handled properly.
+Please correct me if I am wrong.
 
-Best Regards,
-Petr
+
+On Mon, Jan 6, 2020 at 4:43 PM Greg Thelen <gthelen@google.com> wrote:
+>
+> Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> > The comments in usr/Makefile wrongly refer to the script name (twice).
+> >
+> > Line 37:
+> >     # The dependency list is generated by gen_initramfs.sh -l
+> >
+> > Line 54:
+> >     # 4) Arguments to gen_initramfs.sh changes
+> >
+> > There does not exist such a script.
+> >
+> > I was going to fix the comments, but after some consideration, I thought
+> > "gen_initramfs.sh" would be more suitable than "gen_initramfs_list.sh"
+> > because it generates an initramfs image in the common usage.
+> >
+> > The script generates a list that can be fed to gen_init_cpio only when
+> > it is directly run without -o or -l option.
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > ---
+> >
+> > Changes in v2: None
+> >
+> >  usr/Makefile                                    | 2 +-
+> >  usr/{gen_initramfs_list.sh => gen_initramfs.sh} | 0
+> >  2 files changed, 1 insertion(+), 1 deletion(-)
+> >  rename usr/{gen_initramfs_list.sh => gen_initramfs.sh} (100%)
+>
+> Will this break klibc?  It might have a ref to the old name.
+> https://git.kernel.org/pub/scm/libs/klibc/klibc.git/tree/usr/Kbuild#n55
+
+I do not think so.
+
+As I stated above, the klibc build system is independent of
+any script in the Linux kernel.
+
+The klibc Makefile refers to
+scripts/gen_initramfs_list.sh, which does not exist.
+
+My path is renaming
+usr/gen_initramfs_list.sh to usr/gen_initramfs.sh
+
+
+If the renaming had been problematic for klibc,
+commit f6f57a46435d7253a52a1a07a58183678ad266a0
+("initramfs: move gen_initramfs_list.sh from scripts/ to usr/")
+would have already caused a problem.
+
+
+
+Ben, Hans,
+Is usr/Kbuild in klibc used?
+If it is not used, is it better to delete it to avoid confusion?
+
+
+Masahiro Yamada
+
+
+
+
+> > diff --git a/usr/Makefile b/usr/Makefile
+> > index 55c942da01cd..e44a66b8c051 100644
+> > --- a/usr/Makefile
+> > +++ b/usr/Makefile
+> > @@ -24,7 +24,7 @@ $(obj)/initramfs_data.o: $(obj)/$(datafile_y) FORCE
+> >  # Generate the initramfs cpio archive
+> >
+> >  hostprogs-y := gen_init_cpio
+> > -initramfs   := $(CONFIG_SHELL) $(srctree)/$(src)/gen_initramfs_list.sh
+> > +initramfs   := $(CONFIG_SHELL) $(srctree)/$(src)/gen_initramfs.sh
+> >  ramfs-input := $(if $(filter-out "",$(CONFIG_INITRAMFS_SOURCE)), \
+> >                       $(shell echo $(CONFIG_INITRAMFS_SOURCE)),-d)
+> >  ramfs-args  := \
+> > diff --git a/usr/gen_initramfs_list.sh b/usr/gen_initramfs.sh
+> > similarity index 100%
+> > rename from usr/gen_initramfs_list.sh
+> > rename to usr/gen_initramfs.sh
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
