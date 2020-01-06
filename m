@@ -2,94 +2,80 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C77C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F967C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10A3320848
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E02322072E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:52:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dep9kfbS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgAFQv4 (ORCPT
+        id S1726690AbgAFQwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 11:51:56 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:52638 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726448AbgAFQv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 11:51:56 -0500
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1ioVbd-0002qj-Sl; Mon, 06 Jan 2020 09:51:54 -0700
-To:     Deepa Dinamani <deepa.kernel@gmail.com>, bhelgaas@google.com
-Cc:     mika.westerberg@linux.intel.com, alex.williamson@redhat.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200104225149.27342-1-deepa.kernel@gmail.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <724d80ee-3a81-23bc-74b0-4b786b3ace53@deltatee.com>
-Date:   Mon, 6 Jan 2020 09:51:52 -0700
+        Mon, 6 Jan 2020 11:52:13 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41638 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726524AbgAFQwM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 11:52:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578329531;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=05g1/1UzKsFaPL970JRtOkGOtlRptq1yeCOiOVojPRc=;
+        b=Dep9kfbS31Vx3hp2lMFH2EZ2dGkmAZxM04RMZQ4/B44LTypjz4+kbGDh0YKSCOrU3O+qI1
+        qFQvQ+P3CpTgQRnH4EuN5BRWQLDBQygD59IVREnLaq6Lv2aQNb/1vnc5UAj6v85O1AuT9Q
+        iMfcZuhJH3nzZ57BUrGJ7ffua+R9phA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-414-up8nbOpUNGyz70glY3rg9w-1; Mon, 06 Jan 2020 11:52:10 -0500
+X-MC-Unique: up8nbOpUNGyz70glY3rg9w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3B01E2F62;
+        Mon,  6 Jan 2020 16:52:09 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A2BA760F82;
+        Mon,  6 Jan 2020 16:52:08 +0000 (UTC)
+Subject: Re: [PATCH v2 0/6] locking/lockdep: Reuse zapped chain_hlocks entries
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
+References: <20191216151517.7060-1-longman@redhat.com>
+ <dfcfc267-1a2f-8070-c08b-662e9fe4798c@redhat.com>
+ <20200106165001.GO2844@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <8a2f02c2-8e09-a898-5279-bf424acc545b@redhat.com>
+Date:   Mon, 6 Jan 2020 11:52:08 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20200104225149.27342-1-deepa.kernel@gmail.com>
+In-Reply-To: <20200106165001.GO2844@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, alex.williamson@redhat.com, mika.westerberg@linux.intel.com, bhelgaas@google.com, deepa.kernel@gmail.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH] drivers: pci: Clear ACS state at kexec
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-04 3:51 p.m., Deepa Dinamani wrote:
-> ACS bits remain sticky through kexec reset. This is not really a
-> problem for Linux because turning IOMMU on assumes ACS on. But,
-> this becomes a problem if we kexec into something other than
-> Linux and that does not turn ACS on always.
-> 
-> Reset the ACS bits to default before kexec or device remove.
+On 1/6/20 11:50 AM, Peter Zijlstra wrote:
+> On Mon, Jan 06, 2020 at 10:54:24AM -0500, Waiman Long wrote:
+>
+>> Ping! Any comments or suggestion for further improvement?
+> You got stuck in the xmas pile -- I haven't looked at email in 2 weeks.
+> I'll try and get to it soon-ish :-)
+>
+Thanks!
+Longman
 
-Hmm, I'm slightly hesitant about disabling ACS on a device's unbind...
-Not sure if that's going to open up a hole on us.
-
-> +
-> +/* Standard PCI ACS capailities
-> + * Source Validation | P2P Request Redirect | P2P Completion Redirect | Upstream Forwarding
-> + */
-> +#define PCI_STD_ACS_CAP (PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF)
-> +
->  /**
-> - * pci_std_enable_acs - enable ACS on devices using standard ACS capabilities
-> + * pci_std_enable_disable_acs - enable/disable ACS on devices using standard
-> + * ACS capabilities
->   * @dev: the PCI device
->   */
-> -static void pci_std_enable_acs(struct pci_dev *dev)
-> +static void pci_std_enable_disable_acs(struct pci_dev *dev, int enable)
->  {
->  	int pos;
->  	u16 cap;
->  	u16 ctrl;
-> +	u16 val = 0;
->  
->  	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
->  	if (!pos)
-> @@ -3278,19 +3286,26 @@ static void pci_std_enable_acs(struct pci_dev *dev)
->  	pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
->  	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
->  
-> -	/* Source Validation */
-> -	ctrl |= (cap & PCI_ACS_SV);
-> +	val = (cap & PCI_STD_ACS_CAP);
-
-Can we open code PCI_STD_ACS_CAP? I don't see any value in it being
-defined above the function, it just makes the code harder to read.
-
-Logan
