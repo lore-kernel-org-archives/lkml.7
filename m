@@ -2,157 +2,153 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 973CAC33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AD5C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D39920731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E224420731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:48:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J10l0RgS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgAFPsL convert rfc822-to-8bit (ORCPT
+        id S1726734AbgAFPsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 10:48:11 -0500
-Received: from mail-oln040092254014.outbound.protection.outlook.com ([40.92.254.14]:15344
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726636AbgAFPsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 10:48:10 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mppfyAuh0QtDTh+HMIGJYQ6R9Fp6mrv7iWjFaxvkoogtW+oRX+zgH3LYCKh6QKuXhmCo2TWLdQw1z4YuqzlNvd0Ap81GzV7UgHnESE4I/YVzaDRrtRIEIc5A1Pp5vDhOPpcHK9xQCBW0T3pJq6zhbYl8GBQ6uSU3BoQyl6ZaGByaPj9c/JzfR371RFf9VlRfUld2pQGYUjew0D7Hxzw1+uo3xyzb8gAqT6Rc7KH7EJ2fBxlSP6rOJXZBcjhdmMC312ku+5r8UQ8TdLcNcunWtec5ymL932JJ5WDvQshdw1F8sTqNBBsIHnaPhQoUiq/Pyik6FYcXvWqw5vRbbPP20w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oU0QJ+nQVpoWeffN3MeVHtTHRAdUp3onbfgKuUchiYA=;
- b=jtv4BoC/p+mw9YBrbmlbxFMSxbSWHiGEcM5QVr5NG5eyBVgG8SgBEM7SU+xibgZrMg5e4YnB5d0K9vKuInJuj3unYVUJOk2amPRr7ApRsvsI8JUeetmzHHYKEryuTEgGHFyz7tGKJHT064cms1SABgxJGsEERt+a+NELjD0rXJ24UY2UbWN9zOQJ7L+90AgZ2mhtHIjk5zP9DQot7rPPRBklQBLvEyTUETgtSNgnYaKjSyQObPltbjFTPhSz/gXjZezZmq4bDDP93SGEoPp0IkzSrfBPcdLl2xDDZAk61Llek2R3+LSO4KPx8IznhOuoGZwOEIfKM1KjZ4eDRQRqig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from PU1APC01FT027.eop-APC01.prod.protection.outlook.com
- (10.152.252.53) by PU1APC01HT146.eop-APC01.prod.protection.outlook.com
- (10.152.253.169) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11; Mon, 6 Jan
- 2020 15:48:06 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.252.59) by
- PU1APC01FT027.mail.protection.outlook.com (10.152.252.232) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.11 via Frontend Transport; Mon, 6 Jan 2020 15:48:06 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2602.016; Mon, 6 Jan 2020
- 15:48:06 +0000
-Received: from nicholas-dell-linux (49.196.2.242) by MEXPR01CA0135.ausprd01.prod.outlook.com (2603:10c6:200:2e::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.10 via Frontend Transport; Mon, 6 Jan 2020 15:48:03 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Subject: [PATCH v1 4/4] PCI: Allow extend_bridge_window() to shrink resource
- if necessary
-Thread-Topic: [PATCH v1 4/4] PCI: Allow extend_bridge_window() to shrink
- resource if necessary
-Thread-Index: AQHVxKivCsNYvp642Ua95PoPKOxpRw==
-Date:   Mon, 6 Jan 2020 15:48:06 +0000
-Message-ID: <PSXP216MB0438D3E2CFE64EBAA32AF691803C0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MEXPR01CA0135.ausprd01.prod.outlook.com
- (2603:10c6:200:2e::20) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:E117D3158B37EB762019E2F9F3BC2778D0A69B659A9CFF349BBD4C2781FE19C0;UpperCasedChecksum:76DF33309F7046977D84305125BDD685200E8294B1145247B3098C0E942C4811;SizeAsReceived:7789;Count:48
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [YumsE+2F3fePCaKAI0HGtJwIKlCshVHJ]
-x-microsoft-original-message-id: <20200106154758.GA2561@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 48
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: f95d2363-9788-46d3-d17b-08d792bfd222
-x-ms-exchange-slblob-mailprops: mBy7Mai7yE6pvqwJQ6Mx8ls6+U3+cSxqRl4Pv7axpQA1J9/IVsYCYZkN2PCFNMW5ukL0hJQ2gikaHRQ7T/cDFTX7DjS4gvof4bH/2EghGGk3T0SwyLokeTFZc41yB4ImgR1yjQ7+CUy3y9JeMrn/9MQCEhJb5n6swPieqBWJVn6xbWxCsyq8ZKqT88lAP+zN4Wmk2JyfYmj66QWQKASYWGuoMcp/zBAO55O15cYlGyLj+iPoMKKCME1NncgR0hE2Um9Fr3OLR+DhQ4T1M7mx5+OuWmuKaqwJ0bpGjnN+PYXwvUJ8S05UYpEMYFCy4p9fXPREYweLUJwUyB8wmokd+Co8cEciyPbBRCOH8bsXmgvh0j4VHfry/AsZEhe6/5T3WTuHho4YSkfYjxN8dtKv5ZGoWiWINNF7p93MCbzrji4Lz+2znMoShlI9SvMoe/R62xE6Jwcs2Cf/teQU/yXFwtyNOg9hU04PqAJT1mhAU1xXr6kNri0WK6MOx17Jv7H92eGzGyxVeCOdl8QpOU9E6P8cJ1pC3lqRa1uscNDgAL38dyOXykpNd88m9Zi6DBWXoOSUazATjsCT+dHgAYdqZmVfV4b72cZ2eGCDLb8WSqpTyXvp9708Z6MgxLcAVmxRgxxCtyuNTdHRMFouuK4AlAHzwAVBuy4YsF002UZKO2TMQ/q05DqHh8pwjz1KYvwPdKF51OhtyD7Nc8ZqhvQ7VnqTM/q18Axa
-x-ms-traffictypediagnostic: PU1APC01HT146:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: f0tKylp45PIrtMC77O3fvLZf5LJsdw5hyucdMBS+/uSRVMdAOSdaIoWdYPDhL9flerAWTwBkpgHO0zpVEQEHbMKkpeKebx929Gu/02W3PK4BScMiLCgjCseyuNkV0/rRQog4Dy8o5dgASxKbvkZfpHMUL+btBPbis0k3Br6dASu6dduaxZq4NCGv33sr6psI
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <D95F467736CEAB4E8530183F940E9AA8@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Mon, 6 Jan 2020 10:48:31 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53468 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726437AbgAFPsa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 10:48:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578325709;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0eu0mqm9VOScBHtEc/NIyPA5j+hZ0W1aSfm/aRuoupk=;
+        b=J10l0RgSI30d+77aHUizV48kU3i+cS0bw8H23Qt59D+9JLBpsy1exmua9JbyxkIVzD8BIj
+        YqNcp7ZzMBTxzrImMSXaaH2O4+hertjsxrFHpzcideSGOOpAucRU4gmajRv6wFP6BHWbUk
+        MpSUWOxzw9Gl+9w6btvwAwFzlyMClXw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-90-dDdDuHUTNfevb3mrvnBG4w-1; Mon, 06 Jan 2020 10:48:20 -0500
+X-MC-Unique: dDdDuHUTNfevb3mrvnBG4w-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A294E18B414A;
+        Mon,  6 Jan 2020 15:48:17 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E49687C00D;
+        Mon,  6 Jan 2020 15:48:15 +0000 (UTC)
+Subject: Re: [PATCH v8 0/5] Add NUMA-awareness to qspinlock
+To:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
+        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com
+Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com
+References: <20191230194042.67789-1-alex.kogan@oracle.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <13cde730-34c1-8b99-6990-1f64cc78670d@redhat.com>
+Date:   Mon, 6 Jan 2020 10:48:15 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: f95d2363-9788-46d3-d17b-08d792bfd222
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2020 15:48:06.1429
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT146
+In-Reply-To: <20191230194042.67789-1-alex.kogan@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove checks for resource size in extend_bridge_window(). This is
-necessary to allow the pci_bus_distribute_available_resources() to
-function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
-allocate resources. Because the kernel parameter sets the size of all
-hotplug bridges to be the same, there are problems when nested hotplug
-bridges are encountered. Fitting a downstream hotplug bridge with size X
-and normal bridges with non-zero size Y into parent hotplug bridge with
-size X is impossible, and hence the downstream hotplug bridge needs to
-shrink to fit into its parent.
+On 12/30/19 2:40 PM, Alex Kogan wrote:
+> Minor changes from v7 based on feedback from Longman:
+> -----------------------------------------------------
+>
+> - Move __init functions from alternative.c to qspinlock_cna.h
+>
+> - Introduce enum for return values from cna_pre_scan(), for better
+> readability.
+>
+> - Add/revise a few comments to improve readability.
+>
+>
+> Summary
+> -------
+>
+> Lock throughput can be increased by handing a lock to a waiter on the
+> same NUMA node as the lock holder, provided care is taken to avoid
+> starvation of waiters on other NUMA nodes. This patch introduces CNA
+> (compact NUMA-aware lock) as the slow path for qspinlock. It is
+> enabled through a configuration option (NUMA_AWARE_SPINLOCKS).
+>
+> CNA is a NUMA-aware version of the MCS lock. Spinning threads are
+> organized in two queues, a main queue for threads running on the same
+> node as the current lock holder, and a secondary queue for threads
+> running on other nodes. Threads store the ID of the node on which
+> they are running in their queue nodes. After acquiring the MCS lock and
+> before acquiring the spinlock, the lock holder scans the main queue
+> looking for a thread running on the same node (pre-scan). If found (call
+> it thread T), all threads in the main queue between the current lock
+> holder and T are moved to the end of the secondary queue.  If such T
+> is not found, we make another scan of the main queue after acquiring 
+> the spinlock when unlocking the MCS lock (post-scan), starting at the
+> node where pre-scan stopped. If both scans fail to find such T, the
+> MCS lock is passed to the first thread in the secondary queue. If the
+> secondary queue is empty, the MCS lock is passed to the next thread in the
+> main queue. To avoid starvation of threads in the secondary queue, those
+> threads are moved back to the head of the main queue after a certain
+> number of intra-node lock hand-offs.
+>
+> More details are available at https://arxiv.org/abs/1810.05600.
+>
+> The series applies on top of v5.5.0-rc2, commit ea200dec51.
+> Performance numbers are available in previous revisions
+> of the series.
+>
+> Further comments are welcome and appreciated.
+>
+> Alex Kogan (5):
+>   locking/qspinlock: Rename mcs lock/unlock macros and make them more
+>     generic
+>   locking/qspinlock: Refactor the qspinlock slow path
+>   locking/qspinlock: Introduce CNA into the slow path of qspinlock
+>   locking/qspinlock: Introduce starvation avoidance into CNA
+>   locking/qspinlock: Introduce the shuffle reduction optimization into
+>     CNA
+>
+>  .../admin-guide/kernel-parameters.txt         |  18 +
+>  arch/arm/include/asm/mcs_spinlock.h           |   6 +-
+>  arch/x86/Kconfig                              |  20 +
+>  arch/x86/include/asm/qspinlock.h              |   4 +
+>  arch/x86/kernel/alternative.c                 |   4 +
+>  include/asm-generic/mcs_spinlock.h            |   4 +-
+>  kernel/locking/mcs_spinlock.h                 |  20 +-
+>  kernel/locking/qspinlock.c                    |  82 +++-
+>  kernel/locking/qspinlock_cna.h                | 400 ++++++++++++++++++
+>  kernel/locking/qspinlock_paravirt.h           |   2 +-
+>  10 files changed, 537 insertions(+), 23 deletions(-)
+>  create mode 100644 kernel/locking/qspinlock_cna.h
+>
+I have reviewed this patch series. Besides a few minor nits, the rests
+look solid to me. So you can put my review tag.
 
-Add check for if bridge is extended or shrunken and reflect that in the
-call to pci_dbg().
+Reviewed-by: Waiman Long <longman@redhat.com>
 
-Reset the resource if its new size is zero (if we have run out of a
-bridge window resource) to prevent the PCI resource assignment code from
-attempting to assign a zero-sized resource.
+Peter and Will, would you mind taking a look to see if you have anything
+to add?
 
-Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
----
- drivers/pci/setup-bus.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 0c51f4937..e7e57bf72 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1836,18 +1836,25 @@ static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
- 				 struct list_head *add_list,
- 				 resource_size_t new_size)
- {
--	resource_size_t add_size;
-+	resource_size_t add_size, size = resource_size(res);
- 
- 	if (res->parent)
- 		return;
- 
--	if (resource_size(res) >= new_size)
--		return;
-+	if (new_size > size) {
-+		add_size = new_size - size;
-+		pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
-+			&add_size);
-+	} else if (new_size < size) {
-+		add_size = size - new_size;
-+		pci_dbg(bridge, "bridge window %pR shrunken by %pa\n", res,
-+			&add_size);
-+	}
- 
--	add_size = new_size - resource_size(res);
--	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res, &add_size);
- 	res->end = res->start + new_size - 1;
- 	remove_from_list(add_list, res);
-+	if (!new_size)
-+		reset_resource(res);
- }
- 
- static void pci_bus_distribute_available_resources(struct pci_bus *bus,
--- 
-2.24.1
+Thanks,
+Longman
 
