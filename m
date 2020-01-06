@@ -2,111 +2,264 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E25EC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08638C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDBF6207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:27:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="DsPu+SD2"
+	by mail.kernel.org (Postfix) with ESMTP id D358A207FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:33:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgAFP1j (ORCPT
+        id S1726504AbgAFPdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 10:27:39 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33437 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgAFP1j (ORCPT
+        Mon, 6 Jan 2020 10:33:07 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46098 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726437AbgAFPdH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 10:27:39 -0500
-Received: by mail-qk1-f193.google.com with SMTP id d71so31882376qkc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 07:27:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EFnpNY+6QaoLE3QL0daZSOcFms2OzGtmAouUn+Z/oVc=;
-        b=DsPu+SD2lOfczXptpS0IMN16HQIFVV9+QMxOZ2iDWyHPWcgFyZKhupGFKDnYdPvKb/
-         GI7aEfCS5r8YkNaHLaIKjfRsDE9rCssKskjnqtp3UnpFGqcFnIdYvLTWHs1vUkBTVjG6
-         yG8I9Kl9AjqqOyaf+IAS+EINi61EBVwEk6Xj8n3tT1XneH7pk2sQ5qFkvB73YFiVr3jO
-         +nLBfK/p4Fv12xb+MjV2H0c231T6yGyeowOVhN4Fg8kSHukx4iHJd6+wfxZPzscCXrtv
-         qoSSuWXOHxaare3odrncmLp1/Ub4QJ+qBLaMAg4e8ztbRfsuCGDDSDyg0lYJUqWhGxh5
-         xPmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EFnpNY+6QaoLE3QL0daZSOcFms2OzGtmAouUn+Z/oVc=;
-        b=p60yJNp3sZL4iDZHmMN6lVFoCoN0npM4NX6uPQw0YLJr3KBZP+MidkXb1zPHD/WXcE
-         nY9Q1EtqFv0MwoOi3hmI/4asXdXWoUUGv1GEmCCV76EsOiBVcA3yE7y3SDDkJNFgf3Qv
-         xo8VoqQ4TfiDmzxgnZhCCWBHv+MeZbBuAbfK7zcmfzTjrD9zbUZ5ODj6NGfCQIaqrEwa
-         WsPZmgbab3YqXzAgJU388qn90BiLO5RF6AByn61lkl5EA2IMhY8uM9jaSH7LZuXaGRE5
-         Prgc8wPpDvFbWMKR02MPzCvv3u8B/Ds9IjzN7ii0peFYu0VVRXln4Uvc8/Uxca8diJR+
-         +6cg==
-X-Gm-Message-State: APjAAAXInuKuk7mS8xkmwPe7buw83pisoXApsq5Kb/0lqgeLLlw9p3n+
-        Dus3/CLGPivuTuJw4N4Cl5euVA==
-X-Google-Smtp-Source: APXvYqzfojOxjHxLFLBXN8zM7+ZD66O2Wx2gD4w5lRbMNdGv7OEevDWI5WnfDzJwZBY8yMi2hNt69A==
-X-Received: by 2002:ae9:ea08:: with SMTP id f8mr77776178qkg.489.1578324458269;
-        Mon, 06 Jan 2020 07:27:38 -0800 (PST)
-Received: from ovpn-121-70.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id f23sm20757695qke.104.2020.01.06.07.27.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 Jan 2020 07:27:37 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     jroedel@suse.de
-Cc:     robin.murphy@arm.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] iommu/dma: fix variable 'cookie' set but not used
-Date:   Mon,  6 Jan 2020 10:27:27 -0500
-Message-Id: <20200106152727.1589-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Mon, 6 Jan 2020 10:33:07 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 006FN0bD025474;
+        Mon, 6 Jan 2020 10:32:45 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xb8wwxtf3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Jan 2020 10:32:44 -0500
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 006FPuWc033266;
+        Mon, 6 Jan 2020 10:32:44 -0500
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xb8wwxtex-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Jan 2020 10:32:44 -0500
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 006FUxQ5022027;
+        Mon, 6 Jan 2020 15:32:50 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma01wdc.us.ibm.com with ESMTP id 2xajb635m5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Jan 2020 15:32:49 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 006FWgwn46399814
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 Jan 2020 15:32:43 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E2B89BE051;
+        Mon,  6 Jan 2020 15:32:42 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9E249BE04F;
+        Mon,  6 Jan 2020 15:32:42 +0000 (GMT)
+Received: from [9.163.15.26] (unknown [9.163.15.26])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon,  6 Jan 2020 15:32:42 +0000 (GMT)
+Subject: Re: [PATCH 1/3] hwmon: (pmbus/ibm-cffps) Add new manufacturer debugfs
+ entries
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jdelvare@suse.com, bjwyman@gmail.com
+References: <1576788607-13567-1-git-send-email-eajames@linux.ibm.com>
+ <1576788607-13567-2-git-send-email-eajames@linux.ibm.com>
+ <20200104162608.GA8155@roeck-us.net>
+From:   Eddie James <eajames@linux.ibm.com>
+Message-ID: <26c91d06-0e6f-84e9-87f5-6df5778176ba@linux.ibm.com>
+Date:   Mon, 6 Jan 2020 09:32:42 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200104162608.GA8155@roeck-us.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-06_04:2020-01-06,2020-01-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ phishscore=0 adultscore=0 priorityscore=1501 impostorscore=0
+ mlxlogscore=999 lowpriorityscore=0 bulkscore=0 mlxscore=0 clxscore=1015
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001060139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit c18647900ec8 ("iommu/dma: Relax locking in
-iommu_dma_prepare_msi()") introduced a compliation warning,
 
-drivers/iommu/dma-iommu.c: In function 'iommu_dma_prepare_msi':
-drivers/iommu/dma-iommu.c:1206:27: warning: variable 'cookie' set but
-not used [-Wunused-but-set-variable]
-  struct iommu_dma_cookie *cookie;
-                           ^~~~~~
+On 1/4/20 10:26 AM, Guenter Roeck wrote:
+> On Thu, Dec 19, 2019 at 02:50:05PM -0600, Eddie James wrote:
+>> Add support for a number of manufacturer-specific registers in the
+>> debugfs entries, as well as support to read and write the
+>> PMBUS_ON_OFF_CONFIG register through debugfs.
+>>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> I assume you know what you are doing, letting the user write anything
+> into on_off_config. Applied to -next.
 
-Fixes: c18647900ec8 ("iommu/dma: Relax locking in iommu_dma_prepare_msi()")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/iommu/dma-iommu.c | 3 ---
- 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index c363294b3bb9..a2e96a5fd9a7 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -1203,7 +1203,6 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
- {
- 	struct device *dev = msi_desc_to_dev(desc);
- 	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
--	struct iommu_dma_cookie *cookie;
- 	struct iommu_dma_msi_page *msi_page;
- 	static DEFINE_MUTEX(msi_prepare_lock); /* see below */
- 
-@@ -1212,8 +1211,6 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
- 		return 0;
- 	}
- 
--	cookie = domain->iova_cookie;
--
- 	/*
- 	 * In fact the whole prepare operation should already be serialised by
- 	 * irq_domain_mutex further up the callchain, but that's pretty subtle
--- 
-2.21.0 (Apple Git-122.2)
+Thanks for merging the series! Yep, that's the requirement I was given...
 
+
+Cheers,
+
+Eddie
+
+
+>
+> Guenter
+>
+>> ---
+>>   drivers/hwmon/pmbus/ibm-cffps.c | 74 ++++++++++++++++++++++++++++++++++++++---
+>>   1 file changed, 70 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/hwmon/pmbus/ibm-cffps.c b/drivers/hwmon/pmbus/ibm-cffps.c
+>> index d359b76..a564be9 100644
+>> --- a/drivers/hwmon/pmbus/ibm-cffps.c
+>> +++ b/drivers/hwmon/pmbus/ibm-cffps.c
+>> @@ -20,7 +20,9 @@
+>>   
+>>   #define CFFPS_FRU_CMD				0x9A
+>>   #define CFFPS_PN_CMD				0x9B
+>> +#define CFFPS_HEADER_CMD			0x9C
+>>   #define CFFPS_SN_CMD				0x9E
+>> +#define CFFPS_MAX_POWER_OUT_CMD			0xA7
+>>   #define CFFPS_CCIN_CMD				0xBD
+>>   #define CFFPS_FW_CMD				0xFA
+>>   #define CFFPS1_FW_NUM_BYTES			4
+>> @@ -57,9 +59,12 @@ enum {
+>>   	CFFPS_DEBUGFS_INPUT_HISTORY = 0,
+>>   	CFFPS_DEBUGFS_FRU,
+>>   	CFFPS_DEBUGFS_PN,
+>> +	CFFPS_DEBUGFS_HEADER,
+>>   	CFFPS_DEBUGFS_SN,
+>> +	CFFPS_DEBUGFS_MAX_POWER_OUT,
+>>   	CFFPS_DEBUGFS_CCIN,
+>>   	CFFPS_DEBUGFS_FW,
+>> +	CFFPS_DEBUGFS_ON_OFF_CONFIG,
+>>   	CFFPS_DEBUGFS_NUM_ENTRIES
+>>   };
+>>   
+>> @@ -136,15 +141,15 @@ static ssize_t ibm_cffps_read_input_history(struct ibm_cffps *psu,
+>>   				       psu->input_history.byte_count);
+>>   }
+>>   
+>> -static ssize_t ibm_cffps_debugfs_op(struct file *file, char __user *buf,
+>> -				    size_t count, loff_t *ppos)
+>> +static ssize_t ibm_cffps_debugfs_read(struct file *file, char __user *buf,
+>> +				      size_t count, loff_t *ppos)
+>>   {
+>>   	u8 cmd;
+>>   	int i, rc;
+>>   	int *idxp = file->private_data;
+>>   	int idx = *idxp;
+>>   	struct ibm_cffps *psu = to_psu(idxp, idx);
+>> -	char data[I2C_SMBUS_BLOCK_MAX] = { 0 };
+>> +	char data[I2C_SMBUS_BLOCK_MAX + 2] = { 0 };
+>>   
+>>   	pmbus_set_page(psu->client, 0);
+>>   
+>> @@ -157,9 +162,20 @@ static ssize_t ibm_cffps_debugfs_op(struct file *file, char __user *buf,
+>>   	case CFFPS_DEBUGFS_PN:
+>>   		cmd = CFFPS_PN_CMD;
+>>   		break;
+>> +	case CFFPS_DEBUGFS_HEADER:
+>> +		cmd = CFFPS_HEADER_CMD;
+>> +		break;
+>>   	case CFFPS_DEBUGFS_SN:
+>>   		cmd = CFFPS_SN_CMD;
+>>   		break;
+>> +	case CFFPS_DEBUGFS_MAX_POWER_OUT:
+>> +		rc = i2c_smbus_read_word_swapped(psu->client,
+>> +						 CFFPS_MAX_POWER_OUT_CMD);
+>> +		if (rc < 0)
+>> +			return rc;
+>> +
+>> +		rc = snprintf(data, I2C_SMBUS_BLOCK_MAX, "%d", rc);
+>> +		goto done;
+>>   	case CFFPS_DEBUGFS_CCIN:
+>>   		rc = i2c_smbus_read_word_swapped(psu->client, CFFPS_CCIN_CMD);
+>>   		if (rc < 0)
+>> @@ -199,6 +215,14 @@ static ssize_t ibm_cffps_debugfs_op(struct file *file, char __user *buf,
+>>   			return -EOPNOTSUPP;
+>>   		}
+>>   		goto done;
+>> +	case CFFPS_DEBUGFS_ON_OFF_CONFIG:
+>> +		rc = i2c_smbus_read_byte_data(psu->client,
+>> +					      PMBUS_ON_OFF_CONFIG);
+>> +		if (rc < 0)
+>> +			return rc;
+>> +
+>> +		rc = snprintf(data, 3, "%02x", rc);
+>> +		goto done;
+>>   	default:
+>>   		return -EINVAL;
+>>   	}
+>> @@ -214,9 +238,42 @@ static ssize_t ibm_cffps_debugfs_op(struct file *file, char __user *buf,
+>>   	return simple_read_from_buffer(buf, count, ppos, data, rc);
+>>   }
+>>   
+>> +static ssize_t ibm_cffps_debugfs_write(struct file *file,
+>> +				       const char __user *buf, size_t count,
+>> +				       loff_t *ppos)
+>> +{
+>> +	u8 data;
+>> +	ssize_t rc;
+>> +	int *idxp = file->private_data;
+>> +	int idx = *idxp;
+>> +	struct ibm_cffps *psu = to_psu(idxp, idx);
+>> +
+>> +	switch (idx) {
+>> +	case CFFPS_DEBUGFS_ON_OFF_CONFIG:
+>> +		pmbus_set_page(psu->client, 0);
+>> +
+>> +		rc = simple_write_to_buffer(&data, 1, ppos, buf, count);
+>> +		if (rc < 0)
+>> +			return rc;
+>> +
+>> +		rc = i2c_smbus_write_byte_data(psu->client,
+>> +					       PMBUS_ON_OFF_CONFIG, data);
+>> +		if (rc)
+>> +			return rc;
+>> +
+>> +		rc = 1;
+>> +		break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	return rc;
+>> +}
+>> +
+>>   static const struct file_operations ibm_cffps_fops = {
+>>   	.llseek = noop_llseek,
+>> -	.read = ibm_cffps_debugfs_op,
+>> +	.read = ibm_cffps_debugfs_read,
+>> +	.write = ibm_cffps_debugfs_write,
+>>   	.open = simple_open,
+>>   };
+>>   
+>> @@ -486,15 +543,24 @@ static int ibm_cffps_probe(struct i2c_client *client,
+>>   	debugfs_create_file("part_number", 0444, ibm_cffps_dir,
+>>   			    &psu->debugfs_entries[CFFPS_DEBUGFS_PN],
+>>   			    &ibm_cffps_fops);
+>> +	debugfs_create_file("header", 0444, ibm_cffps_dir,
+>> +			    &psu->debugfs_entries[CFFPS_DEBUGFS_HEADER],
+>> +			    &ibm_cffps_fops);
+>>   	debugfs_create_file("serial_number", 0444, ibm_cffps_dir,
+>>   			    &psu->debugfs_entries[CFFPS_DEBUGFS_SN],
+>>   			    &ibm_cffps_fops);
+>> +	debugfs_create_file("max_power_out", 0444, ibm_cffps_dir,
+>> +			    &psu->debugfs_entries[CFFPS_DEBUGFS_MAX_POWER_OUT],
+>> +			    &ibm_cffps_fops);
+>>   	debugfs_create_file("ccin", 0444, ibm_cffps_dir,
+>>   			    &psu->debugfs_entries[CFFPS_DEBUGFS_CCIN],
+>>   			    &ibm_cffps_fops);
+>>   	debugfs_create_file("fw_version", 0444, ibm_cffps_dir,
+>>   			    &psu->debugfs_entries[CFFPS_DEBUGFS_FW],
+>>   			    &ibm_cffps_fops);
+>> +	debugfs_create_file("on_off_config", 0644, ibm_cffps_dir,
+>> +			    &psu->debugfs_entries[CFFPS_DEBUGFS_ON_OFF_CONFIG],
+>> +			    &ibm_cffps_fops);
+>>   
+>>   	return 0;
+>>   }
