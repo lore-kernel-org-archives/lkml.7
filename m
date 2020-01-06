@@ -2,120 +2,116 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28154C00523
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3637C00523
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E43762072C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:51:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RWgPNtmX"
+	by mail.kernel.org (Postfix) with ESMTP id 7A161206F0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:57:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbgAFCv3 (ORCPT
+        id S1727374AbgAFC5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 21:51:29 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26399 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727307AbgAFCv3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 21:51:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578279088;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CsRJ7uoCT/3TCgqLDKH0aLBqgk5O1Rp9vht+XRsijOA=;
-        b=RWgPNtmXajvE5hLnVdmNi2p9s2KUFQYHOcl/02Fd/mVXTmkMZVqp6uf2mrwuoeuvZjjwXe
-        6YDcqbXK4PufVzfQ0epPLInIKDcY1sneEpw5H2G3AKxzotz9mZsBTyDFttobEdxmwDosfU
-        vVa0lXKoUH05S6eBsZT2yI4a0Fd9qAo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-99-DGFkBu0UO6O5ST1fwjOQGQ-1; Sun, 05 Jan 2020 21:51:25 -0500
-X-MC-Unique: DGFkBu0UO6O5ST1fwjOQGQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E6F8A801E76;
-        Mon,  6 Jan 2020 02:51:23 +0000 (UTC)
-Received: from [10.72.12.147] (ovpn-12-147.pek2.redhat.com [10.72.12.147])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E3DC10840F1;
-        Mon,  6 Jan 2020 02:51:12 +0000 (UTC)
-Subject: Re: [virtio-dev] Re: [PATCH v1 2/2] virtio-mmio: add features for
- virtio-mmio specification version 3
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     "Liu, Jiang" <gerry@linux.alibaba.com>,
-        "Liu, Jing2" <jing2.liu@linux.intel.com>,
-        Zha Bin <zhabin@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org, slp@redhat.com,
-        virtio-dev@lists.oasis-open.org, jing2.liu@intel.com,
-        chao.p.peng@intel.com
-References: <cover.1577240905.git.zhabin@linux.alibaba.com>
- <a11d4c616158c9fb1ca4575ca0530b2e17b952fa.1577240905.git.zhabin@linux.alibaba.com>
- <85eeab19-1f53-6c45-95a2-44c1cfd39184@redhat.com>
- <28da67db-73ab-f772-fb00-5a471b746fc5@linux.intel.com>
- <683cac51-853d-c8c8-24c6-b01886978ca4@redhat.com>
- <42346d41-b758-967a-30b7-95aa0d383beb@linux.intel.com>
- <0c3d33de-3940-7895-2fe2-81de8714139c@redhat.com>
- <46806720-1D1C-40C3-BEE2-EDB0D4DA39BF@linux.alibaba.com>
- <7e151886-408e-2c1d-3958-77c26b8a4ac0@redhat.com>
- <20200105062023-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <e8dafb72-0737-01ad-f1c9-28870dbb8c1a@redhat.com>
-Date:   Mon, 6 Jan 2020 10:51:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 5 Jan 2020 21:57:52 -0500
+Received: from mga11.intel.com ([192.55.52.93]:41599 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727307AbgAFC5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 21:57:51 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jan 2020 18:57:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,401,1571727600"; 
+   d="scan'208";a="232694802"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by orsmga002.jf.intel.com with ESMTP; 05 Jan 2020 18:57:49 -0800
+Date:   Mon, 6 Jan 2020 10:37:42 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     mdf@kernel.org, mark.rutland@arm.com, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        atull@kernel.org, gregkh@linuxfoundation.org, yilun.xu@intel.com
+Subject: Re: [PATCH v6 0/2] add performance reporting support to FPGA DFL
+ drivers
+Message-ID: <20200106023742.GA3980@hao-dev>
+References: <1573622695-25607-1-git-send-email-hao.wu@intel.com>
+ <20191125033412.GB890@hao-dev>
+ <20191125080127.GC1809@willie-the-truck>
+ <20191125080839.GA6227@hao-dev>
+ <20191209024527.GA22625@hao-dev>
+ <20191216010104.GA32154@yilunxu-OptiPlex-7050>
 MIME-Version: 1.0
-In-Reply-To: <20200105062023-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191216010104.GA32154@yilunxu-OptiPlex-7050>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Dec 16, 2019 at 09:01:04AM +0800, Xu Yilum wrote:
+> On Mon, Dec 09, 2019 at 10:45:27AM +0800, Wu Hao wrote:
+> > On Mon, Nov 25, 2019 at 04:08:39PM +0800, Wu Hao wrote:
+> > > On Mon, Nov 25, 2019 at 08:01:28AM +0000, Will Deacon wrote:
+> > > > On Mon, Nov 25, 2019 at 11:34:12AM +0800, Wu Hao wrote:
+> > > > > Hi Will and Mark,
+> > > > > 
+> > > > > Could you please help us on review this patchset? as this patchset mainly 
+> > > > > introduced a new perf driver following the similar way as drivers/perf/*.
+> > > > 
+> > > > Why is it not under drivers/perf/, then?
+> > > 
+> > > Hi Will
+> > > 
+> > > Thanks for the quick response. This is one sub feature for DFL based FPGAs,
+> > > and we plan to put this sub feature together with others, including related
+> > > documentation. It only registers a standard perf pmu for its userspace
+> > > interfaces.
+> > > 
+> > > > 
+> > > > > This patchset has been submitted for a long time but didn't receive any
+> > > > > comment after v4. we appreciate any review comments! thanks in advance. :)
+> > > > 
+> > > > Hmm, not sure I saw the previous versions. Guessing I wasn't on cc?
+> > > 
+> > > We switched to perf API from v4, and started ccing you and Mark from v5. :)
+> > 
+> > Hi Will
+> > 
+> > Did you get a chance to look into this patchset?
+> > 
+> > Thanks
+> > Hao
+> 
+> Hi Will
+> 
+> Did you have time to look into this patchset? We have done review work
+> for FPGA part. And as a perf driver, we appreciate your comments.
+> 
+> Thanks
+> Yilun
 
-On 2020/1/5 =E4=B8=8B=E5=8D=887:25, Michael S. Tsirkin wrote:
-> On Fri, Jan 03, 2020 at 05:12:38PM +0800, Jason Wang wrote:
->> On 2020/1/3 =E4=B8=8B=E5=8D=882:14, Liu, Jiang wrote:
->>>> Ok, I get you now.
->>>>
->>>> But still, having fixed number of MSIs is less flexible. E.g:
->>>>
->>>> - for x86, processor can only deal with about 250 interrupt vectors.
->>>> - driver may choose to share MSI vectors [1] (which is not merged bu=
-t we will for sure need it)
->>> Thanks for the info:)
->>> X86 systems roughly have NCPU * 200 vectors available for device inte=
-rrupts.
->>> The proposed patch tries to map multiple event sources to an interrup=
-t vector, to avoid running out of x86 CPU vectors.
->>> Many virtio mmio devices may have several or tens of event sources, a=
-nd it=E2=80=99s rare to have hundreds of event sources.
->>> So could we treat the dynamic mapping between event sources and inter=
-rupt vectors as an advanced optional feature?
->>>
->> Maybe, but I still prefer to implement it if it is not too complex. Le=
-t's
->> see Michael's opinion on this.
->>
->> Thanks
-> I think a way for the device to limit # of vectors in use by driver is
-> useful. But sharing of vectors doesn't really need any special
-> registers, just program the same vector for multiple Qs/interrupts.
+Hi Will
 
+Did you get a chance to look into this patchset these days? 
 
-Right, but sine the #vectors is limited, we still need dynamic mapping=20
-like what is done in PCI.
+Actually we didn't receive any comments for a long time, if you are busy and
+don't have enough time on this, do you know if someone else could help with
+review and ack from perf driver point of view, or any other things we can do
+to speed up this? Thanks in advance! 
 
-Thanks
+Hao
 
-
->
-
+> 
+> > 
+> > > 
+> > > Thanks
+> > > Hao
+> > > 
+> > > > 
+> > > > Will
