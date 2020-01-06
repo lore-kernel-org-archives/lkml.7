@@ -2,136 +2,159 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB8CC00523
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C576C00523
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF2F21582
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:48:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nWysjDEF"
+	by mail.kernel.org (Postfix) with ESMTP id 613D621734
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:49:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbgAFBsu (ORCPT
+        id S1727340AbgAFBtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 20:48:50 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46228 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727226AbgAFBst (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 20:48:49 -0500
-Received: by mail-lj1-f196.google.com with SMTP id m26so46875636ljc.13;
-        Sun, 05 Jan 2020 17:48:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iEBeBtX3D+FecxXDkPEiiIV4CkPQmZtOza+gbuFwJ6Q=;
-        b=nWysjDEFnf1ZW1KuOOtMZR3c8DXFeGoQ7Pkf0QqGQyTgGE4bUjSsvLIglzOM/Embgd
-         +G/Wy46pZx7Mh4lJuIHmrT7Yr/AiDzSHQDCLmJpFSasUdy0CEB8/PDY714n2OX2aP0Jk
-         TBjnXkgFulCTksMF+sROlNYzGwjAChVcXgLAsAHgIPR0p1fjlSOtnvsf0JynHxVR9lqU
-         zUbb7fGzTbZcchQ4XvAn+5JE+v1ffZ/QuhG6Qfec7SmR99EZs4oT8Fcne5abr6jGWham
-         H2pG9P92gUI3yDMgt5GUJWxbYH8BMMZCJHo1vZPgZ5727Sjc6Kw7VuMDwPrsq86VyNNd
-         FIzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iEBeBtX3D+FecxXDkPEiiIV4CkPQmZtOza+gbuFwJ6Q=;
-        b=lLDb2aUb/Y2ejlZNGVgK9gK5Xf2NKgfA0biexoC04TjiEeBYtNeIn89KXSm/IFojvX
-         7vAnWYxUXmQw4fZFmOQ3YpW3O4AaG/kq3jop3Afv0t0fYILFuTI53U1GAtlaY6a+ViEB
-         mGIwoklCBmvSyvQb0okDvbtFXemfH66eVqqAlzokmuxGo6FPyW9GpuJzQ58lV9LWA6Qc
-         svwtqx2fJwFGAjp9oatEcat37uvdylXD/KrJqsG8LBKnke5BqewQpcTB9U5WgR3ynUUn
-         GWCv3DWQ34C1RXUNZEMa45MgsWcwB1fDaqyPKVujrHf13qy9psir8VwTC/SJu+r3Er3v
-         mVJQ==
-X-Gm-Message-State: APjAAAWFhEGtMhmrD1yqjXYGVfTb6FGXrYCt7biIZm4NvfecqUU/rXXk
-        B5R0Qobgn6NGgHPGcbVnheA=
-X-Google-Smtp-Source: APXvYqwDJIKUFFtDFfKjMDK2pI9tL+4EGshl7DCfCiqzjicOIBaD27gA1g1LXj+YNFMyhi1mP5VFYg==
-X-Received: by 2002:a2e:9a01:: with SMTP id o1mr56311153lji.247.1578275327908;
-        Sun, 05 Jan 2020 17:48:47 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id e17sm28369857ljg.101.2020.01.05.17.48.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jan 2020 17:48:47 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Bard Liao <bardliao@realtek.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>
-Cc:     linux-tegra@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ASoC: rt5640: Fix NULL dereference on module unload
-Date:   Mon,  6 Jan 2020 04:47:07 +0300
-Message-Id: <20200106014707.11378-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Sun, 5 Jan 2020 20:49:04 -0500
+Received: from szxga08-in.huawei.com ([45.249.212.255]:50154 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727226AbgAFBtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 20:49:04 -0500
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id EBE04D30CD39A58BF996;
+        Mon,  6 Jan 2020 09:49:01 +0800 (CST)
+Received: from DGGEMM526-MBX.china.huawei.com ([169.254.8.143]) by
+ DGGEMM405-HUB.china.huawei.com ([10.3.20.213]) with mapi id 14.03.0439.000;
+ Mon, 6 Jan 2020 09:48:54 +0800
+From:   "Zengtao (B)" <prime.zeng@hisilicon.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+CC:     Linuxarm <linuxarm@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Morten Rasmussen" <morten.rasmussen@arm.com>
+Subject: RE: [PATCH] cpu-topology: warn if NUMA configurations conflicts
+ with lower layer
+Thread-Topic: [PATCH] cpu-topology: warn if NUMA configurations conflicts
+ with lower layer
+Thread-Index: AQHVuWnsK0zwK8RxTkqe/SNAoYeaUKfT+S+AgALBI6CAAAyngIAAlqWw//+IwoCAAXt3QP//7niAgAAVeoCAAFV+gIAENd2Q
+Date:   Mon, 6 Jan 2020 01:48:54 +0000
+Message-ID: <678F3D1BB717D949B966B68EAEB446ED340B3203@dggemm526-mbx.china.huawei.com>
+References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
+ <20191231164051.GA4864@bogus>
+ <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
+ <20200102112955.GC4864@bogus>
+ <678F3D1BB717D949B966B68EAEB446ED340AEB67@dggemm526-mbx.china.huawei.com>
+ <c43342d0-7e4d-3be0-0fe1-8d802b0d7065@arm.com>
+ <678F3D1BB717D949B966B68EAEB446ED340AFCA0@dggemm526-mbx.china.huawei.com>
+ <7b375d79-2d3c-422b-27a6-68972fbcbeaf@arm.com>
+ <66943c82-2cfd-351b-7f36-5aefdb196a03@arm.com>
+ <c0e82c31-8ed6-4739-6b01-2594c58df95a@arm.com>
+In-Reply-To: <c0e82c31-8ed6-4739-6b01-2594c58df95a@arm.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.74.221.187]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The rt5640->jack is NULL if jack is already disabled at the time of
-driver's module unloading.
-
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
-
-Changelog:
-
-v2: - Addressed review comment from Takashi Iwai by making patch's diff a
-      bit cleaner and simpler.
-
-    - Addressed review comment from Mark Brown by removing noisy backtrace
-      from the commit's message and moving it after --- in order to keep it
-      discoverable in the ML archive.
-
-Backtrace:
-
- Unable to handle kernel NULL pointer dereference at virtual address 00000024
- ...
- (rt5640_set_jack [snd_soc_rt5640])
- (snd_soc_component_set_jack [snd_soc_core])
- (soc_remove_component [snd_soc_core])
- (soc_cleanup_card_resources [snd_soc_core])
- (snd_soc_unregister_card [snd_soc_core])
- (tegra_rt5640_remove [snd_soc_tegra_rt5640])
- (platform_drv_remove)
- (device_release_driver_internal)
- (driver_detach)
- (bus_remove_driver)
- (tegra_rt5640_driver_exit
- (sys_delete_module)
-
- sound/soc/codecs/rt5640.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/sound/soc/codecs/rt5640.c b/sound/soc/codecs/rt5640.c
-index adbae1f36a8a..747ca248bf10 100644
---- a/sound/soc/codecs/rt5640.c
-+++ b/sound/soc/codecs/rt5640.c
-@@ -2432,6 +2432,13 @@ static void rt5640_disable_jack_detect(struct snd_soc_component *component)
- {
- 	struct rt5640_priv *rt5640 = snd_soc_component_get_drvdata(component);
- 
-+	/*
-+	 * soc_remove_component() force-disables jack and thus rt5640->jack
-+	 * could be NULL at the time of driver's module unloading.
-+	 */
-+	if (!rt5640->jack)
-+		return;
-+
- 	disable_irq(rt5640->irq);
- 	rt5640_cancel_work(rt5640);
- 
--- 
-2.24.0
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBEaWV0bWFyIEVnZ2VtYW5uIFtt
+YWlsdG86ZGlldG1hci5lZ2dlbWFubkBhcm0uY29tXQ0KPiBTZW50OiBTYXR1cmRheSwgSmFudWFy
+eSAwNCwgMjAyMCAxOjIxIEFNDQo+IFRvOiBWYWxlbnRpbiBTY2huZWlkZXI7IFplbmd0YW8gKEIp
+OyBTdWRlZXAgSG9sbGENCj4gQ2M6IExpbnV4YXJtOyBHcmVnIEtyb2FoLUhhcnRtYW47IFJhZmFl
+bCBKLiBXeXNvY2tpOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBNb3J0ZW4gUmFz
+bXVzc2VuDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIGNwdS10b3BvbG9neTogd2FybiBpZiBOVU1B
+IGNvbmZpZ3VyYXRpb25zIGNvbmZsaWN0cw0KPiB3aXRoIGxvd2VyIGxheWVyDQo+IA0KPiBPbiAw
+My8wMS8yMDIwIDEzOjE0LCBWYWxlbnRpbiBTY2huZWlkZXIgd3JvdGU6DQo+ID4gT24gMDMvMDEv
+MjAyMCAxMDo1NywgVmFsZW50aW4gU2NobmVpZGVyIHdyb3RlOg0KPiA+PiBJJ20ganVnZ2xpbmcg
+d2l0aCBvdGhlciB0aGluZ3MgYXRtLCBidXQgbGV0IG1lIGhhdmUgYSB0aGluayBhbmQgc2VlIGlm
+IHdlDQo+ID4+IGNvdWxkbid0IGRldGVjdCB0aGF0IGluIHRoZSBzY2hlZHVsZXIgaXRzZWxmLg0K
+PiANCj4gSWYgdGhpcyBpcyBhIGNvbW1vbiBwcm9ibGVtLCB3ZSBzaG91bGQgZGV0ZWN0IGl0IGlu
+IHRoZSBzY2hlZHVsZXIgcmF0aGVyDQo+IHRoYW4gaW4NCj4gdGhlIGFyY2ggY29kZS4NCj4gDQo+
+ID4gU29tZXRoaW5nIGxpa2UgdGhpcyBvdWdodCB0byBjYXRjaCB5b3VyIGNhc2U7IG1pZ2h0IG5l
+ZWQgdG8gY29tcGFyZQ0KPiBncm91cA0KPiA+IHNwYW5zIHJhdGhlciB0aGFuIHB1cmUgZ3JvdXAg
+cG9pbnRlcnMuDQo+ID4NCj4gPiAtLS0NCj4gPiBkaWZmIC0tZ2l0IGEva2VybmVsL3NjaGVkL3Rv
+cG9sb2d5LmMgYi9rZXJuZWwvc2NoZWQvdG9wb2xvZ3kuYw0KPiA+IGluZGV4IDZlYzFlNTk1YjFk
+NC4uYzQxNTFlMTFhZmNkIDEwMDY0NA0KPiA+IC0tLSBhL2tlcm5lbC9zY2hlZC90b3BvbG9neS5j
+DQo+ID4gKysrIGIva2VybmVsL3NjaGVkL3RvcG9sb2d5LmMNCj4gPiBAQCAtMTEyMCw2ICsxMTIw
+LDEzIEBAIGJ1aWxkX3NjaGVkX2dyb3VwcyhzdHJ1Y3Qgc2NoZWRfZG9tYWluDQo+ICpzZCwgaW50
+IGNwdSkNCj4gPg0KPiA+ICAJCXNnID0gZ2V0X2dyb3VwKGksIHNkZCk7DQo+ID4NCj4gPiArCQkv
+KiBzZydzIGFyZSBpbml0ZWQgYXMgc2VsZi1sb29waW5nLiBJZiAnbGFzdCcgaXMgbm90IHNlbGYN
+Cj4gPiArCQkgKiBsb29waW5nLCB3ZSBzZXQgaXQgaW4gYSBwcmV2aW91cyB2aXNpdC4gTm8gZnVy
+dGhlciB2aXNpdA0KPiA+ICsJCSAqIHNob3VsZCBjaGFuZ2UgdGhlIGxpbmsgb3JkZXIsIGlmIHdl
+IGRvIHRoZW4gdGhlIHRvcG9sb2d5DQo+ID4gKwkJICogZGVzY3JpcHRpb24gaXMgdGVybWluYWxs
+eSBicm9rZW4uDQo+ID4gKwkJICovDQo+ID4gKwkJQlVHX09OKGxhc3QgJiYgbGFzdC0+bmV4dCAh
+PSBsYXN0ICYmIGxhc3QtPm5leHQgIT0gc2cpOw0KPiA+ICsNCj4gPiAgCQljcHVtYXNrX29yKGNv
+dmVyZWQsIGNvdmVyZWQsIHNjaGVkX2dyb3VwX3NwYW4oc2cpKTsNCj4gPg0KPiA+ICAJCWlmICgh
+Zmlyc3QpDQo+ID4NCj4gDQo+IFN0aWxsIGRvbid0IHNlZSB0aGUgYWN0dWFsIHByb2JsZW0gY2Fz
+ZS4gVGhlIGNsb3Nlc3QgSSBjYW1lIGlzOg0KPiANCj4gcWVtdS1zeXN0ZW0tYWFyY2g2NCAta2Vy
+bmVsIC4uLiAtYXBwZW5kICcgLi4uIGxvZ2xldmVsPTggc2NoZWRfZGVidWcnDQo+IC1zbXAgY29y
+ZXM9NCxzb2NrZXRzPTIgLi4uIC1udW1hIG5vZGUsY3B1cz0wLTIsbm9kZWlkPTANCj4gLW51bWEg
+bm9kZSxjcHVzPTMtNyxub2RlaWQ9MQ0KPiANCg0KSXQncyByZWxhdGVkIHRvIHRoZSBIVyB0b3Bv
+bG9neSwgaWYgeW91IGh3IGhhdmUgZ290IDIgY2x1c3RlcnMgMH4zLCA0fjcsIA0Kd2l0aCB0aGUg
+bWFpbmxpbmUgcWVtdSwgeW91IHdpbGwgc2VlIHRoZSBpc3N1ZS4NCkkgdGhpbmsgeW91IGNhbiBt
+YW51YWxseSBtb2RpZnkgdGhlIE1QSURSIHBhcnNpbmcgdG8gcmVwcm9kdWNlIHRoZSANCmlzc3Vl
+Lg0KTGludXggd2lsbCB1c2UgdGhlIE1QSURSIHRvIGd1ZXNzIHRoZSBNQyB0b3BvbG9neSBzaW5j
+ZSBjdXJyZW50bHkgcWVtdQ0KZG9uJ3QgcHJvdmlkZSBpdC4NClJlZmVyIHRvOiBodHRwczovL3Bh
+dGNod29yay5vemxhYnMub3JnL2NvdmVyLzkzOTMwMS8NCg0KDQo+IGJ1dCB0aGlzIGJlaGF2ZXMg
+c2FuZS4gU2luY2UgRElFIGFuZCBOVU1BIGhhdmUgdGhlIHNhbWUgc3BhbiwgdGhlDQo+IGZvcm1l
+ciBkZWdlbmVyYXRlcy4NCj4gDQo+IFsgICAgMC42NTQ0NTFdIENQVTAgYXR0YWNoaW5nIHNjaGVk
+LWRvbWFpbihzKToNCj4gWyAgICAwLjY1NDQ4M10gIGRvbWFpbi0wOiBzcGFuPTAtMiBsZXZlbD1N
+Qw0KPiBbICAgIDAuNjU0NjM1XSAgIGdyb3VwczogMDp7IHNwYW49MCBjYXA9MTAwOCB9LCAxOnsg
+c3Bhbj0xIGNhcD0xMDE1IH0sDQo+IDI6eyBzcGFuPTIgY2FwPTEwMTQgfQ0KPiBbICAgIDAuNjU0
+Nzg3XSAgIGRvbWFpbi0xOiBzcGFuPTAtNyBsZXZlbD1OVU1BDQo+IFsgICAgMC42NTQ4MDVdICAg
+IGdyb3VwczogMDp7IHNwYW49MC0yIGNhcD0zMDM3IH0sIDM6eyBzcGFuPTMtNw0KPiBjYXA9NTA0
+OCB9DQo+IFsgICAgMC42NTUzMjZdIENQVTEgYXR0YWNoaW5nIHNjaGVkLWRvbWFpbihzKToNCj4g
+WyAgICAwLjY1NTMzOV0gIGRvbWFpbi0wOiBzcGFuPTAtMiBsZXZlbD1NQw0KPiBbICAgIDAuNjU1
+MzU2XSAgIGdyb3VwczogMTp7IHNwYW49MSBjYXA9MTAxNSB9LCAyOnsgc3Bhbj0yIGNhcD0xMDE0
+IH0sDQo+IDA6eyBzcGFuPTAgY2FwPTEwMDggfQ0KPiBbICAgIDAuNjU1MzkxXSAgIGRvbWFpbi0x
+OiBzcGFuPTAtNyBsZXZlbD1OVU1BDQo+IFsgICAgMC42NTU0MDddICAgIGdyb3VwczogMDp7IHNw
+YW49MC0yIGNhcD0zMDM3IH0sIDM6eyBzcGFuPTMtNw0KPiBjYXA9NTA0OCB9DQo+IFsgICAgMC42
+NTU0ODBdIENQVTIgYXR0YWNoaW5nIHNjaGVkLWRvbWFpbihzKToNCj4gWyAgICAwLjY1NTQ5Ml0g
+IGRvbWFpbi0wOiBzcGFuPTAtMiBsZXZlbD1NQw0KPiBbICAgIDAuNjU1NTA3XSAgIGdyb3Vwczog
+Mjp7IHNwYW49MiBjYXA9MTAxNCB9LCAwOnsgc3Bhbj0wIGNhcD0xMDA4IH0sDQo+IDE6eyBzcGFu
+PTEgY2FwPTEwMTUgfQ0KPiBbICAgIDAuNjU1NTQxXSAgIGRvbWFpbi0xOiBzcGFuPTAtNyBsZXZl
+bD1OVU1BDQo+IFsgICAgMC42NTU1NTZdICAgIGdyb3VwczogMDp7IHNwYW49MC0yIGNhcD0zMDM3
+IH0sIDM6eyBzcGFuPTMtNw0KPiBjYXA9NTA0OCB9DQo+IFsgICAgMC42NTU2MDNdIENQVTMgYXR0
+YWNoaW5nIHNjaGVkLWRvbWFpbihzKToNCj4gWyAgICAwLjY1NTYxNF0gIGRvbWFpbi0wOiBzcGFu
+PTMtNyBsZXZlbD1NQw0KPiBbICAgIDAuNjU1NjI4XSAgIGdyb3VwczogMzp7IHNwYW49MyBjYXA9
+OTg0IH0sIDQ6eyBzcGFuPTQgY2FwPTEwMTUgfSwNCj4gNTp7IHNwYW49NSBjYXA9MTAxNiB9LCA2
+Onsgc3Bhbj02IGNhcD0xMDE2IH0sIDc6eyBzcGFuPTcgY2FwPTEwMTcgfQ0KPiBbICAgIDAuNjU1
+NjkzXSAgIGRvbWFpbi0xOiBzcGFuPTAtNyBsZXZlbD1OVU1BDQo+IFsgICAgMC42NTU3MjFdICAg
+IGdyb3VwczogMzp7IHNwYW49My03IGNhcD01MDQ4IH0sIDA6eyBzcGFuPTAtMg0KPiBjYXA9MzAz
+NyB9DQo+IFsgICAgMC42NTU3NjldIENQVTQgYXR0YWNoaW5nIHNjaGVkLWRvbWFpbihzKToNCj4g
+WyAgICAwLjY1NTc4MF0gIGRvbWFpbi0wOiBzcGFuPTMtNyBsZXZlbD1NQw0KPiBbICAgIDAuNjU1
+Nzk1XSAgIGdyb3VwczogNDp7IHNwYW49NCBjYXA9MTAxNSB9LCA1Onsgc3Bhbj01IGNhcD0xMDE2
+IH0sDQo+IDY6eyBzcGFuPTYgY2FwPTEwMTYgfSwgNzp7IHNwYW49NyBjYXA9MTAxNyB9LCAzOnsg
+c3Bhbj0zIGNhcD05ODQgfQ0KPiBbICAgIDAuNjU1ODQxXSAgIGRvbWFpbi0xOiBzcGFuPTAtNyBs
+ZXZlbD1OVU1BDQo+IFsgICAgMC42NTU4NTVdICAgIGdyb3VwczogMzp7IHNwYW49My03IGNhcD01
+MDQ4IH0sIDA6eyBzcGFuPTAtMg0KPiBjYXA9MzAzNyB9DQo+IFsgICAgMC42NTU5MDJdIENQVTUg
+YXR0YWNoaW5nIHNjaGVkLWRvbWFpbihzKToNCj4gWyAgICAwLjY1NTkxNl0gIGRvbWFpbi0wOiBz
+cGFuPTMtNyBsZXZlbD1NQw0KPiBbICAgIDAuNjU1OTMwXSAgIGdyb3VwczogNTp7IHNwYW49NSBj
+YXA9MTAxNiB9LCA2Onsgc3Bhbj02IGNhcD0xMDE2IH0sDQo+IDc6eyBzcGFuPTcgY2FwPTEwMTcg
+fSwgMzp7IHNwYW49MyBjYXA9OTg0IH0sIDQ6eyBzcGFuPTQgY2FwPTEwMTUgfQ0KPiBbICAgIDAu
+NjU2NTQ1XSAgIGRvbWFpbi0xOiBzcGFuPTAtNyBsZXZlbD1OVU1BDQo+IFsgICAgMC42NTY1NjJd
+ICAgIGdyb3VwczogMzp7IHNwYW49My03IGNhcD01MDQ4IH0sIDA6eyBzcGFuPTAtMg0KPiBjYXA9
+MzAzNyB9DQo+IFsgICAgMC42NTY3NzVdIENQVTYgYXR0YWNoaW5nIHNjaGVkLWRvbWFpbihzKToN
+Cj4gWyAgICAwLjY1Njc5Nl0gIGRvbWFpbi0wOiBzcGFuPTMtNyBsZXZlbD1NQw0KPiBbICAgIDAu
+NjU2ODM1XSAgIGdyb3VwczogNjp7IHNwYW49NiBjYXA9MTAxNiB9LCA3Onsgc3Bhbj03IGNhcD0x
+MDE3IH0sDQo+IDM6eyBzcGFuPTMgY2FwPTk4NCB9LCA0Onsgc3Bhbj00IGNhcD0xMDE1IH0sIDU6
+eyBzcGFuPTUgY2FwPTEwMTYgfQ0KPiBbICAgIDAuNjU2ODgxXSAgIGRvbWFpbi0xOiBzcGFuPTAt
+NyBsZXZlbD1OVU1BDQo+IFsgICAgMC42NTY5MTFdICAgIGdyb3VwczogMzp7IHNwYW49My03IGNh
+cD01MDQ4IH0sIDA6eyBzcGFuPTAtMg0KPiBjYXA9MzAzNyB9DQo+IFsgICAgMC42NTcxMDJdIENQ
+VTcgYXR0YWNoaW5nIHNjaGVkLWRvbWFpbihzKToNCj4gWyAgICAwLjY1NzExM10gIGRvbWFpbi0w
+OiBzcGFuPTMtNyBsZXZlbD1NQw0KPiBbICAgIDAuNjU3MTI4XSAgIGdyb3VwczogNzp7IHNwYW49
+NyBjYXA9MTAxNyB9LCAzOnsgc3Bhbj0zIGNhcD05ODQgfSwNCj4gNDp7IHNwYW49NCBjYXA9MTAx
+NSB9LCA1Onsgc3Bhbj01IGNhcD0xMDE2IH0sIDY6eyBzcGFuPTYgY2FwPTEwMTYgfQ0KPiBbICAg
+IDAuNjU3MTcyXSAgIGRvbWFpbi0xOiBzcGFuPTAtNyBsZXZlbD1OVU1BDQo+IFsgICAgMC42NTcx
+ODZdICAgIGdyb3VwczogMzp7IHNwYW49My03IGNhcD01MDQ4IH0sIDA6eyBzcGFuPTAtMg0KPiBj
+YXA9MzAzNyB9DQo+IFsgICAgMC42NTcyNDFdIHJvb3QgZG9tYWluIHNwYW46IDAtNyAobWF4IGNw
+dV9jYXBhY2l0eSA9IDEwMjQpDQo=
