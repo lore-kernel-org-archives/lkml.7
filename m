@@ -2,300 +2,220 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26896C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B442C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E230F20731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:37:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YCOEKUs2"
+	by mail.kernel.org (Postfix) with ESMTP id 38D312075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:38:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578321515;
+	bh=FesBo1upHM+kuo7tXW02SAn+zVTYT92KHE4R6S1mh88=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=nWBxAeXOUBMpfPCphYk0uq5TaSYezBu0BY2K13aBNM1zM2dy2LyUNzkd2+hLg/CFN
+	 ZUuOl4ihF4+jEn/Tus8ViL4KifjXzLigteQD0UxR4QiBz8WM8pZHhtO2WDXN3LE32A
+	 18hwg6Lj6bLoIlVFwmolY4nF/eE8xFwOSjITNsHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbgAFOh2 (ORCPT
+        id S1726540AbgAFOie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 09:37:28 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:41658 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgAFOh1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 09:37:27 -0500
-Received: by mail-il1-f194.google.com with SMTP id f10so42708263ils.8
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 06:37:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=1Z14qoOtbTxvDPVboAUI1bo3wkIy9GLdLGtgSdoaN+w=;
-        b=YCOEKUs2FxhokEcK3I2+fHUSruJtt1C6yvAJH4TPBs4Ti8IDZi9H/7isTYEtNYdT0q
-         3SqpMgKgbKVN9c512cMaYZBWt9WtlKjCES3/StUa3UR4IHHhm4kY3w3abKtyJNckIPM8
-         v+YmDzTvWyBdEcbWu4JDrEQw0clfQ+5YqkEjSk84DBK1ALrw3jnhymOrph/jxLbedMhz
-         a8Of6PvtJPIn28pZjBVjxpM1N6SsIsfEHi83CfInb38AfZqP1FJ27wBLmpR4UlN2ZOCs
-         9OekvCETC6pPuzbS8qjmRVwofCd/z/SQG8/vkiES25L/oz/qE9T98L94/iqSWykAQniz
-         NSGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=1Z14qoOtbTxvDPVboAUI1bo3wkIy9GLdLGtgSdoaN+w=;
-        b=b/k2l4XTkaRQiKeB83e/Xl3GyD3CL2VAFEb17pfVTpPeRc6mHYcBsQZI/rFrQR5mh2
-         szCvftao0et9e2ejY/PFathObiwjLMK7saVypdyY50ec7qeB0+oO5KhrRwGSdPrlzAzv
-         oo9xn/vzGKZEyTWb23jdZnkG3RrVA0O1a6X6Ayu7/bl56kMvKLzFmkT+zUCTdqvyoojy
-         IxbMlRhNeA91cKxh9RHVbQNbblWCytLQlKu1QRqkXTD/yadbJHuq5DPW6wnLbxeJBfjs
-         qwmRmfHe8Y1Hu5IQoN1WgbkSIrZB7X4W/dtQgumM0ErnYpmScAbt13ES5gD8Owv1FV25
-         ESsA==
-X-Gm-Message-State: APjAAAVKl/qPggS6JNWykZxyW/1jNthZxsUK25Qaft0nA6uL9yRuHJEl
-        ZZBPDUiPVzDyLj+PFONrg+h+sA==
-X-Google-Smtp-Source: APXvYqxoq5vB6+1tEInish5ag1fISYrMKCFCWvtHt6kJVL6pVvNve7/P1AjlUMy4Eh2q+K2QTrXzCA==
-X-Received: by 2002:a92:3991:: with SMTP id h17mr91202047ilf.131.1578321446634;
-        Mon, 06 Jan 2020 06:37:26 -0800 (PST)
-Received: from leoy-ThinkPad-X240s (li1058-79.members.linode.com. [45.33.121.79])
-        by smtp.gmail.com with ESMTPSA id n17sm10364536ile.68.2020.01.06.06.37.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 Jan 2020 06:37:26 -0800 (PST)
-Date:   Mon, 6 Jan 2020 22:37:17 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     "liwei (GF)" <liwei391@huawei.com>
-Cc:     acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, suzuki.poulose@arm.com,
-        mathieu.poirier@linaro.org, ilubashe@akamai.com,
-        peterz@infradead.org, mingo@redhat.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        huawei.libin@huawei.com
-Subject: Re: [RFC PATCH] perf tools: cs-etm: fix endless record after being
- terminated
-Message-ID: <20200106143717.GC29905@leoy-ThinkPad-X240s>
-References: <20200102074144.10407-1-liwei391@huawei.com>
- <20200103082414.GB9814@leoy-ThinkPad-X240s>
- <acc0afd9-5d0e-dcb8-d56a-ac5680049c8c@huawei.com>
+        Mon, 6 Jan 2020 09:38:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726303AbgAFOie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 09:38:34 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16A0220731;
+        Mon,  6 Jan 2020 14:38:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578321513;
+        bh=FesBo1upHM+kuo7tXW02SAn+zVTYT92KHE4R6S1mh88=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=LzWHqUnIiFJpaDWbx/gEgjkBNW8J4uabH0xBLBr1E1CCPnySXqNsdTH+XTEuhddZy
+         Bh5LyRZCqTYqcQguTIOVzWLW1cSr3Il0Da4wwHC3ZU3VPczDtEO/PpYketnxxt2X8w
+         IFYIFYnRxdSPQL7O6ugK16LxIE/7RKIR7wlMmdII=
+Date:   Mon, 6 Jan 2020 08:38:32 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     mika.westerberg@linux.intel.com, alex.williamson@redhat.com,
+        logang@deltatee.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers: pci: Clear ACS state at kexec
+Message-ID: <20200106143832.GA108920@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <acc0afd9-5d0e-dcb8-d56a-ac5680049c8c@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200104225149.27342-1-deepa.kernel@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wei,
+On Sat, Jan 04, 2020 at 02:51:49PM -0800, Deepa Dinamani wrote:
+> ACS bits remain sticky through kexec reset. This is not really a
+> problem for Linux because turning IOMMU on assumes ACS on. But,
+> this becomes a problem if we kexec into something other than
+> Linux and that does not turn ACS on always.
 
-On Mon, Jan 06, 2020 at 11:00:19AM +0800, liwei (GF) wrote:
-> Hi Leo,
-> 
-> Thanks for your test and sorry for missing the reproducing info.
-> The attachment is my test procedure, i can reproduce this issue
-> with it on kernel 5.5-rc4 definitely.
-> 
-> I have tested these patches on kernel 5.5-rc4, with intel-pt on Xeon
-> Gold 6140 (72 cores) and arm-spe on HiSilicon Hi1620 (128 cores).
-> But i can not test CoreSight temporarily, could you please test it
-> with the test procedure again?
+"Sticky" in the PCIe spec specifically describes bits that are
+unaffected by hot reset or FLR (see PCIe r5.0, sec 7.4), but the
+PCI_ACS_CTRL register contains no RWS bits, so I don't think that's
+what you mean here.
 
-Thanks for the test code.
+I suspect you mean something like "kexec doesn't reset the device, so
+the new kernel inherits the PCI_ACS_CTRL settings from Linux"?
 
-I tested it with perf/cs-etm, but cannot reproduce the issue.  But after
-capturing trace data with trace-cmd, I think this indeed is an
-potential issue; the reason for Arm cs-etm cannot produce this issue,
-one possibility is because cs-etm doesn't trigger interrupt; if the
-interrupt is triggered, perf tool might fail to stop hardware events
-with below flow:
+So it looks like you're unconditionally disabling ACS during kexec.
+The comment in pci_enable_acs() suggests that ACS may have been
+enabled by platform firmware.  Maybe we should *restore* the original
+ACS settings from before Linux enabled ACS rather than clearing them?
 
-  Perf thread:                           Profiled thread(s)
+> Reset the ACS bits to default before kexec or device remove.
+> 
+> Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+> ---
+>  drivers/pci/pci-driver.c |  4 ++++
+>  drivers/pci/pci.c        | 39 +++++++++++++++++++++++++++------------
+>  drivers/pci/pci.h        |  1 +
+>  3 files changed, 32 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index 0454ca0e4e3f..bd8d08e50b97 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -453,6 +453,8 @@ static int pci_device_remove(struct device *dev)
+>  
+>  	/* Undo the runtime PM settings in local_pci_probe() */
+>  	pm_runtime_put_sync(dev);
+> +	/* Undo the PCI ACS settings in pci_init_capabilities() */
+> +	pci_disable_acs(pci_dev);
 
-  __cmd_record()
-    evlist__disable()
-      set_affinity()
-        migration to prfiled thread's CPU
-          evsel__disable_cpu()
-            ioctl(PERF_EVENT_IOC_DISABLE)
+Can this be a separate patch?  It doesn't seem to have anything to do
+with kexec, so a different patch with (presumably) a different
+rationale would be good.
 
-                                      Thread is scheduled out
-                                        ctx_sched_out()
-                                          event_sched_out()
-                                            etm4_disable()
+>  	/*
+>  	 * If the device is still on, set the power state as "unknown",
+> @@ -493,6 +495,8 @@ static void pci_device_shutdown(struct device *dev)
+>  	 */
+>  	if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
+>  		pci_clear_master(pci_dev);
+> +	if (kexec_in_progress)
+> +		pci_disable_acs(pci_dev);
 
-  record__mmap_read_all()
-    record__auxtrace_mmap_read()
-      auxtrace_mmap__read()
-        itr->read_finish()
-          cs_etm_read_finish()
-            ioctl(PERF_EVENT_IOC_ENABLE)
+Shouldn't this be in the same "if" block as pci_clear_master()?  If
+the device is in D3cold, it's not going to work to disable ACS because
+config space isn't accessible.
 
-                                     Thread is scheduled in
-                                       __perf_event_task_sched_in()
-                                         perf_event_sched_in()
-                                           event_sched_in()
-                                             etm4_enable()
+>  }
+>  
+>  #ifdef CONFIG_PM
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index da2e59daad6f..8254617cff03 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3261,15 +3261,23 @@ static void pci_disable_acs_redir(struct pci_dev *dev)
+>  	pci_info(dev, "disabled ACS redirect\n");
+>  }
+>  
+> +
+> +/* Standard PCI ACS capailities
+> + * Source Validation | P2P Request Redirect | P2P Completion Redirect | Upstream Forwarding
 
-  the condition (hits == rec->samples) is
-  never true, infinite loop in
-  __cmd_record()
+Please make this comment fit in 80 columns.
 
+> + */
+> +#define PCI_STD_ACS_CAP (PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF)
+> +
+>  /**
+> - * pci_std_enable_acs - enable ACS on devices using standard ACS capabilities
+> + * pci_std_enable_disable_acs - enable/disable ACS on devices using standard
+> + * ACS capabilities
+>   * @dev: the PCI device
+>   */
+> -static void pci_std_enable_acs(struct pci_dev *dev)
+> +static void pci_std_enable_disable_acs(struct pci_dev *dev, int enable)
 
-So a minor suggestion for your patch:
+Maybe you could split this refactoring into its own patch that doesn't
+actually change any behavior?  Then the kexec patch would be a
+one-liner and the device remove patch would be another one-liner, so
+it's obvious where the important changes are.
 
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index ede040cf82ad..29c5eefa6e41 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -864,6 +864,9 @@ static int cs_etm_read_finish(struct auxtrace_record *itr, int idx)
-                        container_of(itr, struct cs_etm_recording, itr);
-        struct evsel *evsel;
- 
-+       if (!ptr->evlist->enabled)
-+               return 0;
-+
-        evlist__for_each_entry(ptr->evlist, evsel) {
-                if (evsel->core.attr.type == ptr->cs_etm_pmu->type)
-                        return perf_evlist__enable_event_idx(ptr->evlist,
+>  {
+>  	int pos;
+>  	u16 cap;
+>  	u16 ctrl;
+> +	u16 val = 0;
+>  
+>  	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
+>  	if (!pos)
+> @@ -3278,19 +3286,26 @@ static void pci_std_enable_acs(struct pci_dev *dev)
+>  	pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
+>  	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
+>  
+> -	/* Source Validation */
+> -	ctrl |= (cap & PCI_ACS_SV);
+> +	val = (cap & PCI_STD_ACS_CAP);
+>  
+> -	/* P2P Request Redirect */
+> -	ctrl |= (cap & PCI_ACS_RR);
+> +	if (enable)
+> +		ctrl |= val;
+> +	else
+> +		ctrl &= ~val;
+>  
+> -	/* P2P Completion Redirect */
+> -	ctrl |= (cap & PCI_ACS_CR);
+> +	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
+> +}
+>  
+> -	/* Upstream Forwarding */
+> -	ctrl |= (cap & PCI_ACS_UF);
+> +/**
+> + * pci_disable_acs - enable ACS if hardware support it
 
-I'd like to wait a bit if others can find more general method to fix
-this issue.
+s/enable/disable/ (in comment)
+s/support/supports/
 
-Thanks,
-Leo
-
-> P.s. Running the test procedure as a normal process is enough.
+> + * @dev: the PCI device
+> + */
+> +void pci_disable_acs(struct pci_dev *dev)
+> +{
+> +	if (pci_acs_enable)
+> +		pci_std_enable_disable_acs(dev, 0);
+>  
+> -	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
+> +	pci_disable_acs_redir(dev);
+>  }
+>  
+>  /**
+> @@ -3305,7 +3320,7 @@ void pci_enable_acs(struct pci_dev *dev)
+>  	if (!pci_dev_specific_enable_acs(dev))
+>  		goto disable_acs_redir;
+>  
+> -	pci_std_enable_acs(dev);
+> +	pci_std_enable_disable_acs(dev, 1);
+>  
+>  disable_acs_redir:
+>  	/*
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 6394e7746fb5..480e4de46fa8 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -526,6 +526,7 @@ static inline resource_size_t pci_resource_alignment(struct pci_dev *dev,
+>  }
+>  
+>  void pci_enable_acs(struct pci_dev *dev);
+> +void pci_disable_acs(struct pci_dev *dev);
+>  #ifdef CONFIG_PCI_QUIRKS
+>  int pci_dev_specific_acs_enabled(struct pci_dev *dev, u16 acs_flags);
+>  int pci_dev_specific_enable_acs(struct pci_dev *dev);
+> -- 
+> 2.17.1
 > 
-> Thanks，
-> Wei
-> 
-> On 2020/1/3 16:24, Leo Yan wrote:
-> 
-> > 
-> > I took some time to test on Arm CoreSight, the perf program can be
-> > terminated by Ctrl+c with SIGINT signal on the mainline kernel.
-> > 
-> > And after capturing ftrace data with below log:
-> > 
-> > 5242      migration/2-19    [002] d..3  4648.383155: sched_migrate_task: comm=perf pid=1692 prio=120 orig_cpu=2 dest_cpu=0
-> > 5243      migration/2-19    [002] d..2  4648.383167: sched_switch: prev_comm=migration/2 prev_pid=19 prev_prio=0 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120
-> > 5244           <idle>-0     [000] d..2  4648.383167: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=1692 next_prio=120
-> > 5245             perf-1692  [000] d..2  4648.383193: sched_stat_runtime: comm=perf pid=1692 runtime=35420 [ns] vruntime=1636633943 [ns]
-> > 5246             perf-1692  [000] d..3  4648.383200: sched_waking: comm=migration/0 pid=11 prio=0 target_cpu=000
-> > 5247             perf-1692  [000] dN.4  4648.383203: sched_wakeup: comm=migration/0 pid=11 prio=0 target_cpu=000
-> > 5248             perf-1692  [000] dN.2  4648.383205: sched_stat_runtime: comm=perf pid=1692 runtime=9340 [ns] vruntime=1636643283 [ns]
-> > 5249             perf-1692  [000] d..2  4648.383208: sched_switch: prev_comm=perf prev_pid=1692 prev_prio=120 prev_state=R+ ==> next_comm=migration/0 next_pid=11 next_prio=0
-> > 5250      migration/0-11    [000] d..3  4648.383215: sched_migrate_task: comm=perf pid=1692 prio=120 orig_cpu=0 dest_cpu=1
-> > 5251       algorithm1-721   [001] dN.2  4648.383225: sched_stat_runtime: comm=algorithm1 pid=721 runtime=2906000 [ns] vruntime=3501282256244 [ns]
-> > 5252       algorithm1-721   [001] d..2  4648.383229: sched_switch: prev_comm=algorithm1 prev_pid=721 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=1692 next_prio=120
-> > 5253      migration/0-11    [000] d..2  4648.383235: sched_switch: prev_comm=migration/0 prev_pid=11 prev_prio=0 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
-> > 5254       algorithm1-721   [001] d..4  4648.383241: <stack trace>
-> > 5255  => kprobe_breakpoint_handler
-> > 5256  => call_break_hook
-> > 5257  => brk_handler
-> > 5258  => do_debug_exception
-> > 5259  => el1_sync_handler
-> > 5260  => el1_sync
-> > 5261  => etm_event_stop
-> > 5262  => event_sched_out.isra.106
-> > 5263  => group_sched_out.part.108
-> > 5264  => ctx_sched_out
-> > 5265  => task_ctx_sched_out
-> > 5266  => __perf_event_task_sched_out
-> > 5267  => __schedule
-> > 5268  => schedule
-> > 5269  => do_notify_resume
-> > 5270  => work_pending
-> > 
-> > We can see after send SIGINT signal, the process 'perf' will be
-> > migrated from CPU2 to CPU0 (line 5242) and it will preempt process
-> > 'algorithm1' (line 5252); after the process 'algorithm1' is scheduled
-> > out, the function etm_event_stop() will be invoked to stop tracing.
-> > 
-> > If we connect with the code in cs_etm_read_finish(), it tries to call
-> > ioctl PERF_EVENT_IOC_ENABLE, but because the process 'algorithm1' is
-> > scheduled out, so the perf event should not be enabled afterwards.
-> > 
-> > I may miss something at here ... Could you confirm what's the type of
-> > attached process?  normal process or RT process?
-> > 
-> > Thanks,
-> > Leo
-> > 
-> > P.s. I tested IntelPT with 5.2-rc3 kernel, it also can be terminated
-> > properly.
-> > 
-> >>  	return -EINVAL;
-> >> -- 
-> >> 2.17.1
-> >>
-> > 
-> > .
-> > 
-> 
-
-> #define _GNU_SOURCE
-> 
-> #include <stdlib.h>
-> #include <stdio.h>
-> #include <sys/types.h>
-> #include <sys/sysinfo.h>
-> #include <unistd.h>
-> #include <sched.h>
-> #include <ctype.h>
-> #include <string.h>
-> #include <pthread.h>
-> 
-> int num = 0;
-> int test[65535];
-> 
-> int mess_rw(int data)
-> {
->     int i;
-> 
->     while (1) {
->         for (i = 0; i < (sizeof(test) / sizeof(test[0])); i++) {
->             if (test[i] != data)
->                 test[i] = data;
->         }
->     }
-> }
-> 
-> void *test_thread(void *arg)
-> {
->     int cpu = *(int *)arg;
->     cpu_set_t mask;
-> 
->     CPU_ZERO(&mask);
->     CPU_SET(cpu, &mask);
->     if (!sched_setaffinity(0, sizeof(mask), &mask))
->         printf("thread %d: running on cpu %d\n", cpu, cpu);
->     else
->         printf("thread %d: fail to set CPU affinity\n", cpu);
-> 
->     mess_rw(cpu);
-> 
->     return NULL;
-> }
-> 
-> int main(int argc, char *argv[])
-> {
->     num = sysconf(_SC_NPROCESSORS_CONF);
->     pthread_t thread[num];
->     int id[num];
->     int i;
-> 
->     printf("PID %d on system with %d processor(s)\n", getpid(), num);
-> 
->     for (i = 0; i < num; i++) {
->         id[i] = i;
->         pthread_create(&thread[i], NULL, test_thread, (void *)&id[i]);
->     }
-> 
->     for (i = 0; i < num; i++) {
->         pthread_join(thread[i], NULL);
->     }
-> 
->     return 0;
-> }
-> 
-
