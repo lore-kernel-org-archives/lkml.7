@@ -2,131 +2,87 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77064C32767
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 152FEC32771
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A05E218AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0B7821775
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578290546;
-	bh=zI7gBUNWlwkd3lFKva8XGnIwM1FVpFdgHUCAPBjSOs4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yx35R1+hHIz7y6bqsiIyP9OQEkOqBXsvnxanxCA/t0K11houzm2QjQ2Xc1y08X/7c
-	 TRem8FBOKpuqMP6yakwjayA65n8Mje15mMbu8/snVILTB9I/aFP2TWVvCZ/Lt9Pg/5
-	 001eI6hlGyW55l/cswvWp0APR7s+zD+JoyUhLm14=
+	s=default; t=1578290569;
+	bh=5hxva25df32tAsqNh8cqFx9odnLgu5hRKNw8HZPCLjk=;
+	h=In-Reply-To:References:Cc:To:Subject:From:Date:List-ID:From;
+	b=1p2dRPSA0uPCkpSZ1yNMBVhxfXVRf9oFdFbitSBOpJPWFXyrZpISGMWsYNjIRrOX+
+	 0kN5aTsUcvtrTjGID4IDqblvbjvwdV3UY3OksKdceWsYuPXGoec2Osi3t//9KakzwS
+	 q0LzopMu4XtVxGrs3+SmIfXShqliQfDIC5BHeid8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgAFGCZ (ORCPT
+        id S1726998AbgAFGCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 01:02:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45778 "EHLO mail.kernel.org"
+        Mon, 6 Jan 2020 01:02:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbgAFGCZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 01:02:25 -0500
-Received: from rapoport-lnx (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726338AbgAFGCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 01:02:47 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EBE120848;
-        Mon,  6 Jan 2020 06:02:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49A5720848;
+        Mon,  6 Jan 2020 06:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578290544;
-        bh=zI7gBUNWlwkd3lFKva8XGnIwM1FVpFdgHUCAPBjSOs4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LsnFF2geI19fPlwyYS15EN2J122xcAAudU7qPjc8Yg8rj5+ulcbot7RHDI/0f0a4C
-         CzKbNb50SqVOcIHiHpJY8bFWvC6xxVOQQiQTcEG7yINVvo5T+t1qoSg+qcErMRoY42
-         338+xYqXNsf3EA8fzviqqEB6MSOOfTBSjuQLpYEE=
-Date:   Mon, 6 Jan 2020 08:02:18 +0200
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH] powerpc: add support for folded p4d page tables
-Message-ID: <20200106060217.GA5444@rapoport-lnx>
-References: <20191209150908.6207-1-rppt@kernel.org>
- <20200102081059.GA12063@rapoport-lnx>
- <87v9ppi7ky.fsf@mpe.ellerman.id.au>
+        s=default; t=1578290566;
+        bh=5hxva25df32tAsqNh8cqFx9odnLgu5hRKNw8HZPCLjk=;
+        h=In-Reply-To:References:Cc:To:Subject:From:Date:From;
+        b=eJpHhyL6Zn+jn0TWh26dV/uWPfkkWmsibBqQhvb21LVcA6A7krW1p2EYvzXNOKOcK
+         ZHOPLcOkOfPCnDSxRNQ3b9pxbUrX2wYkH4wWSFdwiASwgMB9KVTYbGmcU+0aeg6ay6
+         vV9ndySbUZQE22ipz4z55cTxtK2FyQVvBOuHX2Vk=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87v9ppi7ky.fsf@mpe.ellerman.id.au>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200106045833.1725-1-masahiroy@kernel.org>
+References: <20200106045833.1725-1-masahiroy@kernel.org>
+Cc:     Julia Lawall <julia.lawall@lip6.fr>, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: [PATCH] treewide: remove redundent IS_ERR() before error code check
+From:   Stephen Boyd <sboyd@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Sun, 05 Jan 2020 22:02:45 -0800
+Message-Id: <20200106060246.49A5720848@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 02:31:41PM +1100, Michael Ellerman wrote:
-> Mike Rapoport <rppt@kernel.org> writes:
-> > Any updates on this?
-> 
-> It's very ... big, and kind of intrusive.
+Quoting Masahiro Yamada (2020-01-05 20:58:33)
+> 'PTR_ERR(p) =3D=3D -E*' is a stronger condition than IS_ERR(p).
+> Hence, IS_ERR(p) is unneeded.
+>=20
+> The semantic patch that generates this commit is as follows:
+>=20
+> // <smpl>
+> @@
+> expression ptr;
+> constant error_code;
+> @@
+> -IS_ERR(ptr) && (PTR_ERR(ptr) =3D=3D - error_code)
+> +PTR_ERR(ptr) =3D=3D - error_code
+> // </smpl>
+>=20
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
 
-I've tried to split it to several smaller ones, but I couldn't find a way
-to do it without breaking bisectability.
+For
 
-As for the intrusive, most of the changes are mechanical
- 
-> It's not an improvement as far as the powerpc code's readability is
-> concerned. I assume the plan is that the 5-level hack can eventually be
-> removed and so this conversion is a prerequisite for that?
- 
-Yep, the idea is to remove asm-generic/pgtable-nop4d-hack.h and
-asm-generic/5level-fixup.h.
+>  drivers/clk/clk.c                    | 2 +-
 
-And, there is a small benefit for powerpc as kernel size is reduced a bit,
-e.g. for pseries_defconfig:
+Acked-by: Stephen Boyd <sboyd@kernel.org>
 
-$ size old/vmlinux new/vmlinux
-   text	   data	    bss	    dec	    hex	filename
-13702955	5961022	1517520	21181497	1433439  old/vmlinux
-13702507	5961006	1517520	21181033	1433269  new/vmlinux
-
-> cheers
-> 
-> > On Mon, Dec 09, 2019 at 05:09:08PM +0200, Mike Rapoport wrote:
-> >> From: Mike Rapoport <rppt@linux.ibm.com>
-> >> 
-> >> Implement primitives necessary for the 4th level folding, add walks of p4d
-> >> level where appropriate and replace 5level-fixup.h with pgtable-nop4d.h.
-> >> 
-> >> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> >> ---
-> >>  arch/powerpc/include/asm/book3s/32/pgtable.h  |  1 -
-> >>  arch/powerpc/include/asm/book3s/64/hash.h     |  4 +-
-> >>  arch/powerpc/include/asm/book3s/64/pgalloc.h  |  4 +-
-> >>  arch/powerpc/include/asm/book3s/64/pgtable.h  | 58 ++++++++++--------
-> >>  arch/powerpc/include/asm/book3s/64/radix.h    |  6 +-
-> >>  arch/powerpc/include/asm/nohash/32/pgtable.h  |  1 -
-> >>  arch/powerpc/include/asm/nohash/64/pgalloc.h  |  2 +-
-> >>  .../include/asm/nohash/64/pgtable-4k.h        | 32 +++++-----
-> >>  arch/powerpc/include/asm/nohash/64/pgtable.h  |  6 +-
-> >>  arch/powerpc/include/asm/pgtable.h            |  8 +++
-> >>  arch/powerpc/kvm/book3s_64_mmu_radix.c        | 59 ++++++++++++++++---
-> >>  arch/powerpc/lib/code-patching.c              |  7 ++-
-> >>  arch/powerpc/mm/book3s32/mmu.c                |  2 +-
-> >>  arch/powerpc/mm/book3s32/tlb.c                |  4 +-
-> >>  arch/powerpc/mm/book3s64/hash_pgtable.c       |  4 +-
-> >>  arch/powerpc/mm/book3s64/radix_pgtable.c      | 19 ++++--
-> >>  arch/powerpc/mm/book3s64/subpage_prot.c       |  6 +-
-> >>  arch/powerpc/mm/hugetlbpage.c                 | 28 +++++----
-> >>  arch/powerpc/mm/kasan/kasan_init_32.c         |  8 +--
-> >>  arch/powerpc/mm/mem.c                         |  4 +-
-> >>  arch/powerpc/mm/nohash/40x.c                  |  4 +-
-> >>  arch/powerpc/mm/nohash/book3e_pgtable.c       | 15 +++--
-> >>  arch/powerpc/mm/pgtable.c                     | 25 +++++++-
-> >>  arch/powerpc/mm/pgtable_32.c                  | 28 +++++----
-> >>  arch/powerpc/mm/pgtable_64.c                  | 10 ++--
-> >>  arch/powerpc/mm/ptdump/hashpagetable.c        | 20 ++++++-
-> >>  arch/powerpc/mm/ptdump/ptdump.c               | 22 ++++++-
-> >>  arch/powerpc/xmon/xmon.c                      | 17 +++++-
-> >>  28 files changed, 284 insertions(+), 120 deletions(-)
-> 
-
--- 
-Sincerely yours,
-Mike.
