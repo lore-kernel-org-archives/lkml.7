@@ -2,32 +2,32 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F614C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661ABC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB4D20731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3810B2075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgAFPtD (ORCPT
+        id S1726707AbgAFPtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 10:49:03 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:41128 "EHLO honk.sigxcpu.org"
+        Mon, 6 Jan 2020 10:49:10 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:41158 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726446AbgAFPtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 10:49:03 -0500
+        id S1726454AbgAFPtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 10:49:04 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id B8FD1FB09;
-        Mon,  6 Jan 2020 16:48:59 +0100 (CET)
+        by honk.sigxcpu.org (Postfix) with ESMTP id 5B22AFB03;
+        Mon,  6 Jan 2020 16:49:02 +0100 (CET)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 9ozlM3C6QP1l; Mon,  6 Jan 2020 16:48:57 +0100 (CET)
+        with ESMTP id 7Hmxyg6x44up; Mon,  6 Jan 2020 16:49:00 +0100 (CET)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 0C76649D3F; Mon,  6 Jan 2020 16:48:55 +0100 (CET)
+        id 4330149D3D; Mon,  6 Jan 2020 16:48:56 +0100 (CET)
 From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
 To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
@@ -35,10 +35,12 @@ To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 0/6] leds: lm3692x: Allow to set ovp and brigthness mode
-Date:   Mon,  6 Jan 2020 16:48:49 +0100
-Message-Id: <cover.1578324703.git.agx@sigxcpu.org>
+Subject: [PATCH v4 3/6] leds: lm3692x: Split out lm3692x_leds_disable
+Date:   Mon,  6 Jan 2020 16:48:52 +0100
+Message-Id: <79793beed2ef175a64c28700fdd234a007ca39a5.1578324703.git.agx@sigxcpu.org>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1578324703.git.agx@sigxcpu.org>
+References: <cover.1578324703.git.agx@sigxcpu.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -47,66 +49,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Overvoltage protection and brightness mode are currently hardcoded
-as 29V and disabled in the driver. Make these configurable via DT.
+Move the relevant parts out of lm3692x_remove() and
+call it from there. No functional change.
 
-This v4 moves the exponential brightness mode to the back of the series
-as per Pavel's request:
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+---
+ drivers/leds/leds-lm3692x.c | 42 +++++++++++++++++++++++--------------
+ 1 file changed, 26 insertions(+), 16 deletions(-)
 
-  https://lore.kernel.org/linux-next/20200106103233.GA32426@amd/T/#m93270a9bf10b88e060f4e4cf5701c527476de985
-
-The end result is identical and i've tested everything still works when
-dropping the last to patches and checked compiltion via
-
-  git rebase -i ... -exec 'make ... Image dtbs'
-
-Patches are against linux-leds-next.
-
-Changes from v3
-- Move exponential mode patches to the back of the series
-  https://lore.kernel.org/linux-next/20200106103233.GA32426@amd/T/#m93270a9bf10b88e060f4e4cf5701c527476de985
-- Add Rob's Reviewed-by:, thanks!
-
-Changes from v2
-- As per review comment from Pavel Machek
-  https://lore.kernel.org/linux-leds/20191226100615.GA4033@amd/T/#u
-  - Use default value in DT example
-  https://lore.kernel.org/linux-leds/20191226100842.GC4033@amd/T/#u
-  - Use uppercase LED in commit message
-  https://lore.kernel.org/linux-leds/20191226101336.GD4033@amd/T/#u
-  - Fix typo in commit message
-  - Use correct return value when checking if property is present
-  - Fold in
-    https://lore.kernel.org/linux-leds/20191226101419.GE4033@amd/T/#t
-- Add Acked-By's from Pavel Machek, thanks!
-
-Changes from v1
-- As per review comments by Dan Murphy
-  https://lore.kernel.org/linux-leds/3d66b07d-b4c5-43e6-4378-d63cc84b8d43@ti.com/
-  - Split commits per propoerty
-  - Add new properties to DT example too
-  - Drop dev_dbg() statements
-  - ovp: fix 21V value parsing
-  - ovp: Set correct default value if DT parsing fails
-- As per review comments by Pavel Machek
-  https://lore.kernel.org/linux-leds/20191221191515.GF32732@amd/
-  - Fix defaults (which is 29V)
-  - Use uV as Unit for ovp property
-- Change property name to 'ti,ovp-microvolt' to make it shorter
-- Honor led-max-microamp to not exceed the maximum led current
-
-Guido Günther (6):
-  leds: lm3692x: Make sure we don't exceed the maximum led current
-  leds: lm3692x: Move lm3692x_init and rename to lm3692x_leds_enable
-  leds: lm3692x: Split out lm3692x_leds_disable
-  leds: lm3692x: Disable chip on brightness 0
-  dt: bindings: lm3692x: Add ti,brightness-mapping-exponential property
-  leds: lm3692x: Allow to configure brigthness mode
-
- .../devicetree/bindings/leds/leds-lm3692x.txt |   3 +
- drivers/leds/leds-lm3692x.c                   | 165 ++++++++++++------
- 2 files changed, 113 insertions(+), 55 deletions(-)
-
+diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
+index f7fdfaee5ac5..1254695d7e94 100644
+--- a/drivers/leds/leds-lm3692x.c
++++ b/drivers/leds/leds-lm3692x.c
+@@ -289,6 +289,30 @@ static int lm3692x_leds_enable(struct lm3692x_led *led)
+ 	return ret;
+ }
+ 
++static int lm3692x_leds_disable(struct lm3692x_led *led)
++{
++	int ret;
++
++	ret = regmap_update_bits(led->regmap, LM3692X_EN, LM3692X_DEVICE_EN, 0);
++	if (ret) {
++		dev_err(&led->client->dev, "Failed to disable regulator: %d\n",
++			ret);
++		return ret;
++	}
++
++	if (led->enable_gpio)
++		gpiod_direction_output(led->enable_gpio, 0);
++
++	if (led->regulator) {
++		ret = regulator_disable(led->regulator);
++		if (ret)
++			dev_err(&led->client->dev,
++				"Failed to disable regulator: %d\n", ret);
++	}
++
++	return ret;
++}
++
+ static int lm3692x_brightness_set(struct led_classdev *led_cdev,
+ 				enum led_brightness brt_val)
+ {
+@@ -463,23 +487,9 @@ static int lm3692x_remove(struct i2c_client *client)
+ 	struct lm3692x_led *led = i2c_get_clientdata(client);
+ 	int ret;
+ 
+-	ret = regmap_update_bits(led->regmap, LM3692X_EN, LM3692X_DEVICE_EN, 0);
+-	if (ret) {
+-		dev_err(&led->client->dev, "Failed to disable regulator: %d\n",
+-			ret);
++	ret = lm3692x_leds_disable(led);
++	if (ret)
+ 		return ret;
+-	}
+-
+-	if (led->enable_gpio)
+-		gpiod_direction_output(led->enable_gpio, 0);
+-
+-	if (led->regulator) {
+-		ret = regulator_disable(led->regulator);
+-		if (ret)
+-			dev_err(&led->client->dev,
+-				"Failed to disable regulator: %d\n", ret);
+-	}
+-
+ 	mutex_destroy(&led->lock);
+ 
+ 	return 0;
 -- 
 2.23.0
 
