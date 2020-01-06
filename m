@@ -2,165 +2,401 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9645C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 883FDC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B656A2072C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A482072C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:43:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="Ft/p4AIf"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="FLQDLfsm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgAFTkk (ORCPT
+        id S1726731AbgAFTne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 14:40:40 -0500
-Received: from UHIL19PA37.eemsg.mail.mil ([214.24.21.196]:40148 "EHLO
-        UHIL19PA37.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726569AbgAFTkj (ORCPT
+        Mon, 6 Jan 2020 14:43:34 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33783 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726569AbgAFTnd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 14:40:39 -0500
-X-Greylist: delayed 428 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 Jan 2020 14:40:39 EST
-X-EEMSG-check-017: 63071641|UHIL19PA37_ESA_OUT03.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.69,403,1571702400"; 
-   d="scan'208";a="63071641"
-Received: from emsm-gh1-uea10.ncsc.mil ([214.29.60.2])
-  by UHIL19PA37.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 06 Jan 2020 19:33:30 +0000
+        Mon, 6 Jan 2020 14:43:33 -0500
+Received: by mail-wm1-f66.google.com with SMTP id d139so12621782wmd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 11:43:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1578339210; x=1609875210;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=67eCUxRZt68ZH+LKSpSy6Guy4XdKARnQ4PpmgXjbTq8=;
-  b=Ft/p4AIfNHsAgTjx66utwda6gkgb9CGucOU6jCEojbt5nNqEdSiyRWEJ
-   PdR0iMkEj0C90dqcBIBCQ9IuFhIwY6NeoKcx+TrUb5La/rEogzCbzBU9t
-   stvD+kcf4Ua/BdSZeT5gi1tyAT9Mfl7S/OQu4/NewMy4GeHGw90mBly4+
-   z2an4OEto8pzJguUuqc84rkucBgcei9wBmayAwjVUiTidu0AmLAVMY0u4
-   8zzarHNCetaz+KZucu6DKwGssBlDJEgLR2YoAHMbjxywgX8QEyQvp46JK
-   e2M5lhBJnotyqDVc03D8416O4s83BRCe2iPWF6WCsj5I+bKez4XAZIXNu
-   g==;
-X-IronPort-AV: E=Sophos;i="5.69,403,1571702400"; 
-   d="scan'208";a="31640672"
-IronPort-PHdr: =?us-ascii?q?9a23=3A87JOIxwop/ngOSnXCy+O+j09IxM/srCxBDY+r6?=
- =?us-ascii?q?Qd0ugULPad9pjvdHbS+e9qxAeQG9mCsLQe1rKd6vq8EUU7or+5+EgYd5JNUx?=
- =?us-ascii?q?JXwe43pCcHRPC/NEvgMfTxZDY7FskRHHVs/nW8LFQHUJ2mPw6arXK99yMdFQ?=
- =?us-ascii?q?viPgRpOOv1BpTSj8Oq3Oyu5pHfeQpFiCezbL9oMhm7rRndusYLjYd8Jas61w?=
- =?us-ascii?q?fErGZPd+lK321jOEidnwz75se+/Z5j9zpftvc8/MNeUqv0Yro1Q6VAADspL2?=
- =?us-ascii?q?466svrtQLeTQSU/XsTTn8WkhtTDAfb6hzxQ4r8vTH7tup53ymaINH2QLUpUj?=
- =?us-ascii?q?ms86tnVBnlgzocOjUn7G/YlNB/jKNDoBKguRN/xZLUYJqIP/Z6Z6/RYM8WSX?=
- =?us-ascii?q?ZEUstXWSNBGIe8ZJYRAeQHM+hTso3xq0IAoBa6AAWhAv7kxD1ViX/sxaA0zv?=
- =?us-ascii?q?ovEQ/G0gIjEdwBvnvbo9fpO6kdSu210KvFwC/fY/9K1zrw6o7FeQ0hr/GWWr?=
- =?us-ascii?q?JwdNLcx1QzFwzbllWQqZLqPzWI3eoQtmiU9e5gVeaxhG8ntgp8pSOvydo3io?=
- =?us-ascii?q?TSmoIUykzL9SV+wIovI924U1R0bcSrEJtXqSGXLo17Sd4hTWFwoCs217ILtJ?=
- =?us-ascii?q?GhcCUK1Zgr3QDTZvOZf4SS/x7uUvuaLy1ii3J/Yr2/gg6/8U2nyuLhSMa5yE?=
- =?us-ascii?q?1Kri9ZktnUsXANygDT5tCHSvRj+keh3i6C1xzJ5eFeIEA0iLHbJ4Qgwr42mJ?=
- =?us-ascii?q?oTtl/DETHql0nskK+Xdlkr+uiv6+j9ZLXpuoScOJNuhgH7M6QuntSzAeU+Mg?=
- =?us-ascii?q?cQQ2iW4fmw2bLs8EHjQLhGk+c6nrfWvZzEP8gXu7a1AwpP3YYi7xa/AS2m0N?=
- =?us-ascii?q?MdnXQfN1JKZQmHgpP1O1DOPP/4DfC/j06qkDdw3f/KJLLhApLTLnTbirfuYa?=
- =?us-ascii?q?5961JAyAo01d1f54hUCrAcL/PzQED8r9PYDhg+Mwy7x+boFs9x2Z8ZWWKKGq?=
- =?us-ascii?q?WZKr/dsUeU5uIzJOmBfJcVtyzgK/gh/PPulWU2mUIZfaWw2JsXb3e4Hu54LE?=
- =?us-ascii?q?mDfXXshdIBG38QvgUiVOzqlEGCUTlLanmsR6Iz/Cs7CIO9DYrYXoCimqaB3C?=
- =?us-ascii?q?agHp1OYmBJEEyDHmnye4WDQfcMZzqYItV9nTwcSbihV4gh2Am1tADkz7pnL+?=
- =?us-ascii?q?zU+jAXtJ/4yth16PPclQso+Tx3EcudyWeNQH9wnm8SQD82xq9/q1Rnylifya?=
- =?us-ascii?q?h4n+BYFdtL6vNNUwc6M4PczuNjB9DxRA3BZNGJR0iiQti9HzExQcw+w8UUb0?=
- =?us-ascii?q?Z+BdqilBbD0DSuA7MPkLyLHpM0+LrG33ftP8Z912rG1K45glklXMRPL2umib?=
- =?us-ascii?q?B79wTKG47GjV+Wl6OxeKsG2i7C6X2DzW2PvE5FSgJ/TaLFXXUHbEvMsdv5/l?=
- =?us-ascii?q?/CT6OpCbk/MAtO18CCKqVUatDyglVGQ/DjONvaY22vgWu/GRGIxraUZorwZ2?=
- =?us-ascii?q?odxDndCFQDkw0L5naJLww+ByegomPeCjxjDkjgY0Xx/ulkr3O7T1I7wxuWYE?=
- =?us-ascii?q?1m0rrmsiIS0NyGSv8C1/o6sSM6oi99Hkv1i9LMCtaRriJue6JTZd5761BCgz?=
- =?us-ascii?q?H3rQt4a6e8Irhii1hWSAF+u0fjxl0jEYlbudQ7p3MtigxpIOSX100XJGDQ5o?=
- =?us-ascii?q?z5JrCCcjq6xxuocaODnwiFgds=3D?=
-X-IPAS-Result: =?us-ascii?q?A2CzAACuihNe/wHyM5BmHAEBAQEBBwEBEQEEBAEBgWsEA?=
- =?us-ascii?q?QELAYF8gWwBIBIqhAIHiQOGZAEBBAaBEiWJbo9hgRADRw0JAQEBAQEBAQEBI?=
- =?us-ascii?q?BcBAYRAAoINNwYOAhABAQEEAQEBAQEFAwEBbIVDgjspAYJ5AQEBAQIBIwQRF?=
- =?us-ascii?q?isQCxgCAiYCAjEmBggFAgQBAQEBGQSCQj+CUwUgrRB1fzOFT4MogT2BDigBh?=
- =?us-ascii?q?X+GM3mBB4E4DAOCXT6EFgESAYMvgjwiBI12gguGNGFGlz2CQIJFk08GG5pbq?=
- =?us-ascii?q?zwjNzBxKwgCGAghD4MnUBgNjjkBCI00IwMwEIwlgjIBAQ?=
-Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
-  by EMSM-GH1-UEA10.NCSC.MIL with ESMTP; 06 Jan 2020 19:33:29 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 006JWpTg063000;
-        Mon, 6 Jan 2020 14:32:56 -0500
-Subject: Re: [PATCH] security: selinux: allow per-file labelling for binderfs
-To:     Hridya Valsaraju <hridya@google.com>
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Mark Salyzyn <salyzyn@android.com>
-References: <20200106181329.167322-1-hridya@google.com>
- <d78e4db4-5847-082c-189a-f13d7d6a6c7a@tycho.nsa.gov>
- <CA+wgaPMHWOVYo_pVeYuvj6CrQOgy9=vQco+tnGHjPX3=CLh5wA@mail.gmail.com>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <c1354989-1e08-1433-f2c0-5984da341cf5@tycho.nsa.gov>
-Date:   Mon, 6 Jan 2020 14:33:58 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from:cc;
+        bh=3hqeznQcLJQafZMA5aLf09tU2qztyY3n37Fie0hXJ/E=;
+        b=FLQDLfsmu9RKmBOGPM8WiiqUcRGs23+hWsns2YHNF8vCV3EqpQ5BA9OxAsjx0x+YhC
+         AlpYvlmY2KxfNZbpFr6Nkd2hbglpVACVsohltZ3Mq53eGWGT4peFRYZWfvm9OgcNrFCc
+         lq3hmXKVcefCgx0gX4C46pqaxy7SqBtMK3lr2F7bvXQHmQ0IPPb8ZiWDc5jWVuWxjakr
+         zlnOeqzLnlXTdrbvndhFUB0cgLuDpfoRGlz8N7PNZxK0OQa9SRt4IwReLLsH73y9wfQ1
+         /ekoA1cdInw85fbj/7zTwWAmhuzDBsLMkGMOzbijgSXc8xhZv2eXHNlld+em9ZKFa7dq
+         qTsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from:cc;
+        bh=3hqeznQcLJQafZMA5aLf09tU2qztyY3n37Fie0hXJ/E=;
+        b=tc0Xh3CTAy3avErGcKZFjM1nu+cd0F4XqhkeaK6kl2gGWVauT62d+XlMemyVIL8yV0
+         43dntUh4MH5yIxDjMsU4jbZ6snlR9QbKjJfe7EDousVPjbVngQfPuLVzfBT63cyBORVI
+         1N/4SR8TOSdlex35mt7Yc2xMGUi6WmRiYrcAxPzN5XE0+hXXKZJn16iwnFoOHSYHm4q+
+         hRGCCrsj08eXPzj3Fm27h8hs1RunGx3Pr4GkBfpkfuWkxAg8PbpPqGxR83MAXQXC73LW
+         gBtb5PJJ4c+/lN6i1ngc8Uf7GMj+l3oXHVsDg9bRIcOkExuVEmIf/1sNKYp+6Ug6qYBp
+         2lQw==
+X-Gm-Message-State: APjAAAW8oCUjlu6M5+bopJXggUpav1C19ZcE7i3el3nR0T7wLF1xBiqF
+        tO5OnlzrR4i2eaGJu6QepHJYsaU8waY=
+X-Google-Smtp-Source: APXvYqzILWNvuxrtEx0SPPEHiT34v714zN/BDMr9Jzr7GgG+nAukxy0yEjGz6q0svk39O+0Rq3mNFg==
+X-Received: by 2002:a1c:4008:: with SMTP id n8mr34066488wma.121.1578339810121;
+        Mon, 06 Jan 2020 11:43:30 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id y139sm25232319wmd.24.2020.01.06.11.43.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 11:43:29 -0800 (PST)
+Message-ID: <5e138de1.1c69fb81.bcd11.0667@mx.google.com>
+Date:   Mon, 06 Jan 2020 11:43:29 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <CA+wgaPMHWOVYo_pVeYuvj6CrQOgy9=vQco+tnGHjPX3=CLh5wA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Lab-Name: lab-baylibre
+X-Kernelci-Kernel: next-20200106
+X-Kernelci-Tree: next
+X-Kernelci-Report-Type: bisect
+X-Kernelci-Branch: master
+Subject: next/master bisection: boot on sun4i-a10-olinuxino-lime
+To:     broonie@kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        tomeu.vizoso@collabora.com, enric.balletbo@collabora.com,
+        mgalka@collabora.com, guillaume.tucker@collabora.com,
+        khilman@baylibre.com, Alexandre Torgue <alexandre.torgue@st.com>
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Simon Horman <horms+renesas@verge.net.au>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        linux-kernel@vger.kernel.org,
+        "kernelci.org bot" <bot@kernelci.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/6/20 2:06 PM, Hridya Valsaraju wrote:
-> On Mon, Jan 6, 2020 at 10:33 AM 'Stephen Smalley' via kernel-team
-> <kernel-team@android.com> wrote:
->>
->> On 1/6/20 1:13 PM, Hridya Valsaraju wrote:
->>> This patch allows genfscon per-file labeling for binderfs.
->>> This is required to have separate permissions to allow
->>> access to binder, hwbinder and vndbinder devices which are
->>> relocating to binderfs.
->>>
->>> Acked-by: Jeff Vander Stoep <jeffv@google.com>
->>> Acked-by: Mark Salyzyn <salyzyn@android.com>
->>> Signed-off-by: Hridya Valsaraju <hridya@google.com>
->>
->> Do you want binderfs to also support userspace labeling of files via
->> setxattr()?  If so, you'll want to also add it to
->> selinux_is_genfs_special_handling() as well.
-> 
-> Thank you for the quick response Stephen :) I cannot think of a
-> use-case for the userspace labelling of files in binderfs via
-> setxattr() as of now. I
-> will make the change if one comes up!
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* This automated bisection report was sent to you on the basis  *
+* that you may be involved with the breaking commit it has      *
+* found.  No manual investigation has been done to verify it,   *
+* and the root cause of the problem may be somewhere else.      *
+*                                                               *
+* If you do send a fix, please include this trailer:            *
+*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+*                                                               *
+* Hope this helps!                                              *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-Ok, then you can include my:
-Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
+next/master bisection: boot on sun4i-a10-olinuxino-lime
 
-> 
-> Thanks,
-> Hridya
-> 
-> 
->>
->>> ---
->>>    security/selinux/hooks.c | 1 +
->>>    1 file changed, 1 insertion(+)
->>>
->>> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
->>> index 116b4d644f68..3f0669a708e9 100644
->>> --- a/security/selinux/hooks.c
->>> +++ b/security/selinux/hooks.c
->>> @@ -752,6 +752,7 @@ static int selinux_set_mnt_opts(struct super_block *sb,
->>>
->>>        if (!strcmp(sb->s_type->name, "debugfs") ||
->>>            !strcmp(sb->s_type->name, "tracefs") ||
->>> +         !strcmp(sb->s_type->name, "binderfs") ||
->>>            !strcmp(sb->s_type->name, "pstore"))
->>>                sbsec->flags |= SE_SBGENFS;
->>>
->>>
->>
->> --
->> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
->>
+Summary:
+  Start:      9eb1b48ca4ce Add linux-next specific files for 20200106
+  Details:    https://kernelci.org/boot/id/5e12e444c423ad7bc6973147
+  Plain log:  https://storage.kernelci.org//next/master/next-20200106/arm/m=
+ulti_v7_defconfig/gcc-8/lab-baylibre/boot-sun4i-a10-olinuxino-lime.txt
+  HTML log:   https://storage.kernelci.org//next/master/next-20200106/arm/m=
+ulti_v7_defconfig/gcc-8/lab-baylibre/boot-sun4i-a10-olinuxino-lime.html
+  Result:     5253fe05bb47 phy: core: Add consumer device link support
 
+Checks:
+  revert:     PASS
+  verify:     PASS
+
+Parameters:
+  Tree:       next
+  URL:        git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next=
+.git
+  Branch:     master
+  Target:     sun4i-a10-olinuxino-lime
+  CPU arch:   arm
+  Lab:        lab-baylibre
+  Compiler:   gcc-8
+  Config:     multi_v7_defconfig
+  Test suite: boot
+
+Breaking commit found:
+
+---------------------------------------------------------------------------=
+----
+commit 5253fe05bb47a2402f471d76078b3dcc66442d6c
+Author: Alexandre Torgue <alexandre.torgue@st.com>
+Date:   Mon Nov 4 15:37:13 2019 +0100
+
+    phy: core: Add consumer device link support
+    =
+
+    In order to enforce suspend/resume ordering, this commit creates link
+    between phy consumers and phy devices. This link avoids to suspend phy
+    before phy consumers.
+    =
+
+    Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+    Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+
+diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+index b04f4fe85ac2..8dfb4868c8c3 100644
+--- a/drivers/phy/phy-core.c
++++ b/drivers/phy/phy-core.c
+@@ -29,7 +29,7 @@ static void devm_phy_release(struct device *dev, void *re=
+s)
+ {
+ 	struct phy *phy =3D *(struct phy **)res;
+ =
+
+-	phy_put(phy);
++	phy_put(dev, phy);
+ }
+ =
+
+ static void devm_phy_provider_release(struct device *dev, void *res)
+@@ -566,12 +566,12 @@ struct phy *of_phy_get(struct device_node *np, const =
+char *con_id)
+ EXPORT_SYMBOL_GPL(of_phy_get);
+ =
+
+ /**
+- * phy_put() - release the PHY
+- * @phy: the phy returned by phy_get()
++ * of_phy_put() - release the PHY
++ * @phy: the phy returned by of_phy_get()
+  *
+- * Releases a refcount the caller received from phy_get().
++ * Releases a refcount the caller received from of_phy_get().
+  */
+-void phy_put(struct phy *phy)
++void of_phy_put(struct phy *phy)
+ {
+ 	if (!phy || IS_ERR(phy))
+ 		return;
+@@ -584,6 +584,20 @@ void phy_put(struct phy *phy)
+ 	module_put(phy->ops->owner);
+ 	put_device(&phy->dev);
+ }
++EXPORT_SYMBOL_GPL(of_phy_put);
++
++/**
++ * phy_put() - release the PHY
++ * @dev: device that wants to release this phy
++ * @phy: the phy returned by phy_get()
++ *
++ * Releases a refcount the caller received from phy_get().
++ */
++void phy_put(struct device *dev, struct phy *phy)
++{
++	device_link_remove(dev, &phy->dev);
++	of_phy_put(phy);
++}
+ EXPORT_SYMBOL_GPL(phy_put);
+ =
+
+ /**
+@@ -651,6 +665,7 @@ struct phy *phy_get(struct device *dev, const char *str=
+ing)
+ {
+ 	int index =3D 0;
+ 	struct phy *phy;
++	struct device_link *link;
+ =
+
+ 	if (string =3D=3D NULL) {
+ 		dev_WARN(dev, "missing string\n");
+@@ -672,6 +687,13 @@ struct phy *phy_get(struct device *dev, const char *st=
+ring)
+ =
+
+ 	get_device(&phy->dev);
+ =
+
++	link =3D device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
++	if (!link) {
++		dev_err(dev, "failed to create device link to %s\n",
++			dev_name(phy->dev.parent));
++		return ERR_PTR(-EINVAL);
++	}
++
+ 	return phy;
+ }
+ EXPORT_SYMBOL_GPL(phy_get);
+@@ -765,6 +787,7 @@ struct phy *devm_of_phy_get(struct device *dev, struct =
+device_node *np,
+ 			    const char *con_id)
+ {
+ 	struct phy **ptr, *phy;
++	struct device_link *link;
+ =
+
+ 	ptr =3D devres_alloc(devm_phy_release, sizeof(*ptr), GFP_KERNEL);
+ 	if (!ptr)
+@@ -778,6 +801,13 @@ struct phy *devm_of_phy_get(struct device *dev, struct=
+ device_node *np,
+ 		devres_free(ptr);
+ 	}
+ =
+
++	link =3D device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
++	if (!link) {
++		dev_err(dev, "failed to create device link to %s\n",
++			dev_name(phy->dev.parent));
++		return ERR_PTR(-EINVAL);
++	}
++
+ 	return phy;
+ }
+ EXPORT_SYMBOL_GPL(devm_of_phy_get);
+@@ -798,6 +828,7 @@ struct phy *devm_of_phy_get_by_index(struct device *dev=
+, struct device_node *np,
+ 				     int index)
+ {
+ 	struct phy **ptr, *phy;
++	struct device_link *link;
+ =
+
+ 	ptr =3D devres_alloc(devm_phy_release, sizeof(*ptr), GFP_KERNEL);
+ 	if (!ptr)
+@@ -819,6 +850,13 @@ struct phy *devm_of_phy_get_by_index(struct device *de=
+v, struct device_node *np,
+ 	*ptr =3D phy;
+ 	devres_add(dev, ptr);
+ =
+
++	link =3D device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
++	if (!link) {
++		dev_err(dev, "failed to create device link to %s\n",
++			dev_name(phy->dev.parent));
++		return ERR_PTR(-EINVAL);
++	}
++
+ 	return phy;
+ }
+ EXPORT_SYMBOL_GPL(devm_of_phy_get_by_index);
+diff --git a/drivers/usb/renesas_usbhs/rcar2.c b/drivers/usb/renesas_usbhs/=
+rcar2.c
+index 440d213e1749..791908f8cf73 100644
+--- a/drivers/usb/renesas_usbhs/rcar2.c
++++ b/drivers/usb/renesas_usbhs/rcar2.c
+@@ -34,7 +34,7 @@ static int usbhs_rcar2_hardware_exit(struct platform_devi=
+ce *pdev)
+ 	struct usbhs_priv *priv =3D usbhs_pdev_to_priv(pdev);
+ =
+
+ 	if (priv->phy) {
+-		phy_put(priv->phy);
++		phy_put(&pdev->dev, priv->phy);
+ 		priv->phy =3D NULL;
+ 	}
+ =
+
+diff --git a/drivers/usb/renesas_usbhs/rza2.c b/drivers/usb/renesas_usbhs/r=
+za2.c
+index 021749594389..3eed3334a17f 100644
+--- a/drivers/usb/renesas_usbhs/rza2.c
++++ b/drivers/usb/renesas_usbhs/rza2.c
+@@ -29,7 +29,7 @@ static int usbhs_rza2_hardware_exit(struct platform_devic=
+e *pdev)
+ {
+ 	struct usbhs_priv *priv =3D usbhs_pdev_to_priv(pdev);
+ =
+
+-	phy_put(priv->phy);
++	phy_put(&pdev->dev, priv->phy);
+ 	priv->phy =3D NULL;
+ =
+
+ 	return 0;
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index 56d3a100006a..19eddd64c8f6 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -234,7 +234,8 @@ struct phy *devm_of_phy_get(struct device *dev, struct =
+device_node *np,
+ 			    const char *con_id);
+ struct phy *devm_of_phy_get_by_index(struct device *dev, struct device_nod=
+e *np,
+ 				     int index);
+-void phy_put(struct phy *phy);
++void of_phy_put(struct phy *phy);
++void phy_put(struct device *dev, struct phy *phy);
+ void devm_phy_put(struct device *dev, struct phy *phy);
+ struct phy *of_phy_get(struct device_node *np, const char *con_id);
+ struct phy *of_phy_simple_xlate(struct device *dev,
+@@ -419,7 +420,11 @@ static inline struct phy *devm_of_phy_get_by_index(str=
+uct device *dev,
+ 	return ERR_PTR(-ENOSYS);
+ }
+ =
+
+-static inline void phy_put(struct phy *phy)
++static inline void of_phy_put(struct phy *phy)
++{
++}
++
++static inline void phy_put(struct device *dev, struct phy *phy)
+ {
+ }
+---------------------------------------------------------------------------=
+----
+
+
+Git bisection log:
+
+---------------------------------------------------------------------------=
+----
+git bisect start
+# good: [768fc661d12559b0dbd99d941b3bf28fe92fd365] Merge tag 'riscv/for-v5.=
+5-rc5' of git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux
+git bisect good 768fc661d12559b0dbd99d941b3bf28fe92fd365
+# bad: [9eb1b48ca4ce1406628ffe1a11b684a96e83ca08] Add linux-next specific f=
+iles for 20200106
+git bisect bad 9eb1b48ca4ce1406628ffe1a11b684a96e83ca08
+# good: [14f98ad9cf39f6dba9a0ee4d5a7844f72fb5dd6c] Merge remote-tracking br=
+anch 'crypto/master'
+git bisect good 14f98ad9cf39f6dba9a0ee4d5a7844f72fb5dd6c
+# good: [7e83dfa54c9d473f0a79775c97c2ec265300d748] Merge remote-tracking br=
+anch 'sound/for-next'
+git bisect good 7e83dfa54c9d473f0a79775c97c2ec265300d748
+# good: [9b19f21b01e41b56d0c4ebb29713058858db4254] Merge remote-tracking br=
+anch 'driver-core/driver-core-next'
+git bisect good 9b19f21b01e41b56d0c4ebb29713058858db4254
+# bad: [abe0382594f8afadbbf9774bfa1accb41e9afe39] Merge remote-tracking bra=
+nch 'vhost/linux-next'
+git bisect bad abe0382594f8afadbbf9774bfa1accb41e9afe39
+# bad: [3c4bafba69e79c34abcf9f2853d6756bf4b6bc1c] Merge remote-tracking bra=
+nch 'staging/staging-next'
+git bisect bad 3c4bafba69e79c34abcf9f2853d6756bf4b6bc1c
+# bad: [9b1e5f8654cffaf96e0194d107ffef4b118a47b8] Merge remote-tracking bra=
+nch 'tty/tty-next'
+git bisect bad 9b1e5f8654cffaf96e0194d107ffef4b118a47b8
+# good: [5e637d2be26385286748f494fdca30079bbe916f] tty/serial: Migrate suns=
+u to use has_sysrq
+git bisect good 5e637d2be26385286748f494fdca30079bbe916f
+# good: [71a1fa0df2a3728b8ccb97394be420d1f03df40e] usb: typec: ucsi: Store =
+the notification mask
+git bisect good 71a1fa0df2a3728b8ccb97394be420d1f03df40e
+# bad: [f17cb451270ca75198eed922da64b076a7176df6] phy: qcom-qmp: Add SW res=
+et register
+git bisect bad f17cb451270ca75198eed922da64b076a7176df6
+# bad: [7c118f6da9b7e46db7c815fd64090ec289f02d19] dt-bindings: phy: drop #c=
+lock-cells from rockchip,px30-dsi-dphy
+git bisect bad 7c118f6da9b7e46db7c815fd64090ec289f02d19
+# good: [24dbe0aaa0030231d4d35886d3552121d208df69] phy: ti-pipe3: make clk =
+operations symmetric in probe and remove
+git bisect good 24dbe0aaa0030231d4d35886d3552121d208df69
+# bad: [df0d0e07be73ccb21a8851f777fe4bf49f998bb8] phy: qualcomm: Adjust ind=
+entation in read_poll_timeout
+git bisect bad df0d0e07be73ccb21a8851f777fe4bf49f998bb8
+# bad: [5253fe05bb47a2402f471d76078b3dcc66442d6c] phy: core: Add consumer d=
+evice link support
+git bisect bad 5253fe05bb47a2402f471d76078b3dcc66442d6c
+# first bad commit: [5253fe05bb47a2402f471d76078b3dcc66442d6c] phy: core: A=
+dd consumer device link support
+---------------------------------------------------------------------------=
+----
