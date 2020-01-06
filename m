@@ -6,45 +6,44 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2F0C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A68EBC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCCFA2081E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82D052072C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:03:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgAFTDq (ORCPT
+        id S1727124AbgAFTDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 14:03:46 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:54796 "EHLO ale.deltatee.com"
+        Mon, 6 Jan 2020 14:03:48 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:54812 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726659AbgAFTDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 14:03:42 -0500
+        id S1726895AbgAFTDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 14:03:44 -0500
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1ioXf9-0005m4-NN; Mon, 06 Jan 2020 12:03:41 -0700
+        id 1ioXfA-0005mT-Ds; Mon, 06 Jan 2020 12:03:43 -0700
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1ioXf9-0000e7-0r; Mon, 06 Jan 2020 12:03:39 -0700
+        id 1ioXfA-0000ee-8O; Mon, 06 Jan 2020 12:03:40 -0700
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Kelvin.Cao@microchip.com, Eric Pilmore <epilmore@gigaio.com>,
         Doug Meyer <dmeyer@gigaio.com>,
-        Wesley Sheng <wesley.sheng@microchip.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Mon,  6 Jan 2020 12:03:26 -0700
-Message-Id: <20200106190337.2428-2-logang@deltatee.com>
+Date:   Mon,  6 Jan 2020 12:03:37 -0700
+Message-Id: <20200106190337.2428-13-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200106190337.2428-1-logang@deltatee.com>
 References: <20200106190337.2428-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, epilmore@gigaio.com, dmeyer@gigaio.com, Kelvin.Cao@microchip.com, wesley.sheng@microchip.com, logang@deltatee.com
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, Kelvin.Cao@microchip.com, epilmore@gigaio.com, dmeyer@gigaio.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 01/12] PCI/switchtec: Use dma_set_mask_and_coherent()
+Subject: [PATCH 12/12] PCI: Apply switchtec DMA aliasing quirk to GEN4 devices
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -52,33 +51,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wesley Sheng <wesley.sheng@microchip.com>
+Add GEN4 device IDs for quirk_switchtec_ntb_dma_alias().
 
-Use dma_set_mask_and_coherent() instead of dma_set_coherent_mask() as
-the switchtec hardware fully supports 64bit addressing and we should
-set both the streaming and coherent masks the same.
-
-Fixes: aff614c6339c ("switchtec: Set DMA coherent mask")
-Signed-off-by: Wesley Sheng <wesley.sheng@microchip.com>
-[logang@deltatee.com: reworked commit message]
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- drivers/pci/switch/switchtec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/quirks.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index 88091bbfe77f..2bf670977b9c 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -1349,7 +1349,7 @@ static int switchtec_init_pci(struct switchtec_dev *stdev,
- 	if (rc)
- 		return rc;
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 4937a088d7d8..d54692bc3af4 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5373,6 +5373,24 @@ SWITCHTEC_QUIRK(0x8573);  /* PFXI 48XG3 */
+ SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
+ SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
+ SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
++SWITCHTEC_QUIRK(0x4000);  /* PFX 100XG4 */
++SWITCHTEC_QUIRK(0x4084);  /* PFX 84XG4  */
++SWITCHTEC_QUIRK(0x4068);  /* PFX 68XG4  */
++SWITCHTEC_QUIRK(0x4052);  /* PFX 52XG4  */
++SWITCHTEC_QUIRK(0x4036);  /* PFX 36XG4  */
++SWITCHTEC_QUIRK(0x4028);  /* PFX 28XG4  */
++SWITCHTEC_QUIRK(0x4100);  /* PSX 100XG4 */
++SWITCHTEC_QUIRK(0x4184);  /* PSX 84XG4  */
++SWITCHTEC_QUIRK(0x4168);  /* PSX 68XG4  */
++SWITCHTEC_QUIRK(0x4152);  /* PSX 52XG4  */
++SWITCHTEC_QUIRK(0x4136);  /* PSX 36XG4  */
++SWITCHTEC_QUIRK(0x4128);  /* PSX 28XG4  */
++SWITCHTEC_QUIRK(0x4200);  /* PAX 100XG4 */
++SWITCHTEC_QUIRK(0x4284);  /* PAX 84XG4  */
++SWITCHTEC_QUIRK(0x4268);  /* PAX 68XG4  */
++SWITCHTEC_QUIRK(0x4252);  /* PAX 52XG4  */
++SWITCHTEC_QUIRK(0x4236);  /* PAX 36XG4  */
++SWITCHTEC_QUIRK(0x4228);  /* PAX 28XG4  */
  
--	rc = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(64));
-+	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
- 	if (rc)
- 		return rc;
- 
+ /*
+  * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS does
 -- 
 2.20.1
 
