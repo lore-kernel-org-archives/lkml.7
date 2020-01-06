@@ -2,231 +2,268 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C0BC33C9B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 07:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 831F7C33C9B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 07:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCBFC21775
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 07:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56691218AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 07:22:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q2j7noEH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbcHXjkp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgAFHWP (ORCPT
+        id S1726713AbgAFHW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 02:22:15 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39216 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgAFHWO (ORCPT
+        Mon, 6 Jan 2020 02:22:27 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37169 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgAFHW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 02:22:14 -0500
-Received: by mail-pl1-f193.google.com with SMTP id g6so18573979plp.6;
-        Sun, 05 Jan 2020 23:22:14 -0800 (PST)
+        Mon, 6 Jan 2020 02:22:27 -0500
+Received: by mail-pg1-f196.google.com with SMTP id q127so26475805pga.4;
+        Sun, 05 Jan 2020 23:22:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=VeggttJg0Pje/R+c9YmMm34vxKsAvn9MPA4ZMGlgdew=;
-        b=Q2j7noEHBiBWbtSbMQmaKwBI8ydmkNAfCsg/z/5pf2OTGUDdQ80j9x4GDM6AE1smsp
-         nsp/OeET/00sp+AWDMODr9+g/o4y4g9gjqU9pDcyZBHU69fltJ63fgbyGY0mpTYiHAc3
-         fFlvbxfwwtvEqG6KaPiX7yH+CrvQIBvYLyv999pjIAhWS+VFVPHLzR4dFhAAUMWWPIa4
-         QF6t1SmZTaTRz4EL3cGJijDCI9ON1TL/J6JiSN0HKsdqq32O9pIj5cvRS+fq9eQqSTcp
-         YIjBz4PQyyzD/8yhTlET6x7jcTlJvO9d9Qkkusqfkx6AD0Vlq6frcoJRXqp44ZZjY+8h
-         Aalw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=qnUvpIVI6jilLhA8MwTkPqoyoqaSkFHL57CbN/GbI7g=;
+        b=lbcHXjkpQo7dQQgKv7FiC2zhZQzdkQceveV++pQGU+MBXnRIrRMEHKKa4/E+QDdKgV
+         ChUU7UmZG8hoKl4LvDpH34vVSl7A/35BUZq6GU4WOWZ293O2ky4y7WFGsZpdC0Ya2xF4
+         scwm60WdiMEU2liYGKPW7bTt6XmrSX7Lu/6rcW080PgnMLGTAaI5nJ0gsZoHC5vA8MQY
+         9TX1wHNBnVw/P7lFCwTeGSX4NkKIU+wUGGqW6/j14am3HOiDgg3oRYLwX4ig59ARUY8q
+         v4SEYHMBXVkiBv3Y4Ohslp//hecJo2kicHVhEOqxvjyMmya3JjuMQnczLxrKiat5I2K8
+         bpGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=VeggttJg0Pje/R+c9YmMm34vxKsAvn9MPA4ZMGlgdew=;
-        b=MOCRKCfKwYYuL2F8A4jkio43ws66tJZd1xpwixW7HnNeAvh78/r/CLNgTwgI0ZaDlh
-         x+E7ekufSMOfdg1pbMv+nlrq5OCDVFOLTpVKAt5HrBGphD28RUGO3m52WRN2KTChHi4+
-         MitQba7SGn3f1PJk5sqqj9wQq3RH4FkAlqHPWXfoVqYvC3+cGvfSEngtfqQ3mwX9jx4A
-         NM94eSL7P94Yq1BBE+O/eZB+gDIjNHSRGkUCsxfWcqDB73yF1T1Mhvz7IlawxzINqufQ
-         03ZenKZFhH+ZDc9591tUuucZPxhj0pcmW5BQEFRPWqyj5rlCx9X7N9HXBx7qLjugtMb7
-         LZYg==
-X-Gm-Message-State: APjAAAUNx2p1HJXK5H8gTmw7bKHaUeq09rICC5i4GL/QWN1wN5aX+1jM
-        SNMRdpvvnf5o0tKytLrnZM4=
-X-Google-Smtp-Source: APXvYqzkNBCwTuZO8lb4mGtMa4XFdozVm3QWiTpXSECu2DZ945Vka8GQcDuSrF8qv0vA7BkG4ewUaw==
-X-Received: by 2002:a17:902:74c5:: with SMTP id f5mr99802403plt.229.1578295333957;
-        Sun, 05 Jan 2020 23:22:13 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=qnUvpIVI6jilLhA8MwTkPqoyoqaSkFHL57CbN/GbI7g=;
+        b=BOFO1YLwze6LzPlCzbcXbovi7IpXwrTKFKrEOS2/8sdhu/dJL4TWefHorbaASR2fR7
+         ZejbBdRLnfNRLlR+B4xes7m7Rs+eiLQepr2ntZ6xDzId9InNkgVTBWutcJ67HOlGolMa
+         XNSo48b3Jl/kaxjsgr0LQ/044D4cip8Gk3QdaO7HrxCJzwPhkfV4Vip5sB347N4baGoQ
+         XmKZqx4t3bk+BmiY4GnlHlhZfC6AY5ST8x3Nj9zFOKWmrnLyEl7NhumDH5tspDlSa2wN
+         guEtLWwCUI5ySkdZUOsJRIacupt2LM8oLsA4Lsm9q2ydeizB+m+10xfVfuSrgCtJxfeT
+         lUUQ==
+X-Gm-Message-State: APjAAAWqxShFGCdq9LehlUWvniEJZBmbegYXDPyKFes7cW0AQP3Xp58R
+        msp9yPxP65NNSHdw+xLBrKA=
+X-Google-Smtp-Source: APXvYqw3mf/xnblDKmwPV7DcEqS1ZCi31H4bCJkPPew0LIQ7H6Q3Ttk79JEHacwOnlMcRI/Rx8dZKg==
+X-Received: by 2002:a63:3484:: with SMTP id b126mr106717399pga.17.1578295346391;
+        Sun, 05 Jan 2020 23:22:26 -0800 (PST)
 Received: from localhost.localdomain ([49.207.56.131])
-        by smtp.gmail.com with ESMTPSA id q8sm72968137pgg.92.2020.01.05.23.22.11
+        by smtp.gmail.com with ESMTPSA id q8sm72968137pgg.92.2020.01.05.23.22.23
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 05 Jan 2020 23:22:13 -0800 (PST)
+        Sun, 05 Jan 2020 23:22:25 -0800 (PST)
 From:   Rishi Gupta <gupt21@gmail.com>
 To:     gregkh@linuxfoundation.org, robh+dt@kernel.org
 Cc:     jslaby@suse.com, linux-serial@vger.kernel.org,
         linux-kernel@vger.kernel.org, Rishi Gupta <gupt21@gmail.com>
-Subject: [PATCH v1 0/3] Add virtual serial null modem emulation driver
-Date:   Mon,  6 Jan 2020 12:51:52 +0530
-Message-Id: <cover.1578235515.git.gupt21@gmail.com>
+Subject: [PATCH v1 1/3] dt-bindings: ttyvs: document serial null modem driver dt bindings
+Date:   Mon,  6 Jan 2020 12:51:53 +0530
+Message-Id: <68e8f2bc664fd2d624bdb5f7a374abb42e5a5770.1578235515.git.gupt21@gmail.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1578235515.git.gupt21@gmail.com>
+References: <cover.1578235515.git.gupt21@gmail.com>
+In-Reply-To: <cover.1578235515.git.gupt21@gmail.com>
+References: <cover.1578235515.git.gupt21@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver named ttyvs creates virtual tty/serial device which emulates
-behaviour of a real serial port device. Serial port events like parity,
-frame, overflow errors, ring indications, break assertions, flow controls
-are also emulated.
+The ttyvs driver creates virtual tty devices. These devices can
+also be created through device tree. This commit document this.
 
-It supports both device-tree and non device-tree platforms. And works in
-both built-in and loadable driver methods.
-
-Use cases
-~~~~~~~~~~~~~~~~~
-This driver saves time to market and have following use cases including
-but not limited to; automated testing, GPS and other data simulation, data
-injection for corner case testing, scaleability testing, data sniffing,
-robotics emulator/simulator, application development when hardware,
-firmware and driver is still not available, identifying hardware issues
-from software bugs quickly during development, development cost reduction
-across team, product demo where data from hardware needs to be sent to the
-GUI application, data forwarding, serial port redirection etc.
-
-Basic idea
-~~~~~~~~~~~~~~~~~
-
-This driver implements a virtual multi-port serial card in such a
-way that the virtual card can have 0 to N number of virtual serial
-ports (tty devices). The devices created in this card are used in
-exactly the same way as the real tty devices using standard termios
-and Linux/Posix APIs.
- 
-     /dev/ttyvs_card
-   +~~~~~~~~~~~~~~~~~~~~~+
-   |   +-------------+   |
-   |   | /dev/ttyvs0 |   |
-   |   +-------------+   |
-   |   .                 |
-   |   .                 |
-   |   +-------------+   |
-   |   | /dev/ttyvsN |   |
-   |   +-------------+   |
-   +~~~~~~~~~~~~~~~~~~~~~+
-
-Creating devices
-~~~~~~~~~~~~~~~~~
-
-Devices can be created/deleted by writing to /dev/ttyvs_card node.
-
-# Create a loop back device using given number (for ex; ttyvs8):
-echo "genlb#00008#xxxxx#7-8,x,x,x#4-1,6,x,x#x-x,x,x,x#x-x,x,x,x#y#x" > /dev/ttyvs_card
-
-# Create a null modem pair using given numbers (for ex; ttyvs5/6):
-echo "gennm#xxxxx#xxxxx#7-8,x,x,x#4-1,6,x,x#7-8,x,x,x#4-1,6,x,x#y#y" > /dev/ttyvs_card
-
-# Create null modem pair using next free number (index)
-echo "gennm#xxxxx#xxxxx#7-8,x,x,x#4-1,6,x,x#7-8,x,x,x#4-1,6,x,x#y#y" > /dev/ttyvs_card
-
-# Create loopback devices using next free number (index)
-echo "genlb#xxxxx#xxxxx#7-8,x,x,x#4-1,6,x,x#x-x,x,x,x#x-x,x,x,x#y#x" > /dev/ttyvs_card
-
-Devices can also be created through DT. This patch describes this in detail:
-[PATCH 1/3] dt-bindings: ttyvs: document serial null modem driver dt bindings
-
-Deleting devices
-~~~~~~~~~~~~~~~~~
-
-Devices can be deleted by writing pre-formatted string only. Driver
-returns negative error code if invalid, out of range values or
-syntactically invalid values are supplied.
-
-# To delete all devices in one shot write 'xxxxx' as shown below:
-echo "del#xxxxx#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" > /dev/ttyvs_card
-
-# To delete a device by number specify its number for ex; to delete 5th device:
-echo "del#00005#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" > /dev/ttyvs_card
-
-Device tree bindings
-~~~~~~~~~~~~~~~~~~~~
-
-Devices can also be created and configured through DT. Following patch
-describes how to do it in detail.
-[PATCH 1/3] dt-bindings: ttyvs: document serial null modem driver dt bindings
-
-Module parameters
-~~~~~~~~~~~~~~~~~
-
-The ttyvs driver can be passd 3 optional parameters.
-
-max_num_vs_devs: specifies how may virtyal tty devices this driver should
-support. By default driver supports upto 64 devices. This can also be
-specified through DT property.
-
-init_num_nm_pairs: specifies how many standard type null modem pairs should
-be created when driver is loaded. If this parameter is used and devices are
-also created through DT, then all of these devices will be deleted. DT is
-given more preference in all cases.
-
-init_num_lb_devs: specifies how many standard type loop-back devices should
-be created when driver is loaded. If this parameter is used and devices are
-also created through DT, then all of these devices will be deleted. DT is
-given more preference in all cases.
-
-Udev rules example
-~~~~~~~~~~~~~~~~~~
-
-# Set permissions on card node to manage devices
-ACTION=="add", SUBSYSTEM=="misc", KERNEL=="ttyvs_card", MODE="0666"
-
-# Set permissions of sysfs files for event emulation
-ACTION=="add", SUBSYSTEM=="tty", KERNEL=="ttyvs[0-9]*", MODE="0666",\
-RUN+="/bin/chmod 0666 %S%p/event %S%p/faultycable"
-
-Emulating events
-~~~~~~~~~~~~~~~~~
-
-Event emulation is through per-device sysfs file.
-
-1. Emulate framing error (insert TTY_FRAME in data buffer):
-$ echo "1" > /sys/devices/virtual/tty/ttyvsN/event
-
-2. Emulate parity error (insert TTY_PARITY in data buffer):
-$ echo "2" > /sys/devices/virtual/tty/ttyvsN/event
-
-3. Emulate overrun error (insert TTY_OVERRUN in data buffer):
-$ echo "3" > /sys/devices/virtual/tty/ttyvsN/event
-
-4. Emulate ring indicator (set RI signal):
-$ echo "4" > /sys/devices/virtual/tty/ttyvsN/event
-
-5. Emulate ring indicator (unset RI signal):
-$ echo "5" > /sys/devices/virtual/tty/ttyvsN/event
-
-6. Emulate break received (insert TTY_BREAK in data buffer):
-$ echo "6" > /sys/devices/virtual/tty/ttyvsN/event
-
-7. Emulate cable is faulty (data sent is not received):
-$ echo "1" > /sys/devices/virtual/tty/ttyvsN/faultycable
-
-8. Emulate cable is not faulty (default):
-$ echo "0" > /sys/devices/virtual/tty/ttyvsN/faultycable
-
-
-There are 3 patches in this submission:
-[PATCH 1/3] dt-bindings: ttyvs: document serial null modem driver dt bindings
-[PATCH 2/3] tty/serial: ttvys: add null modem driver emulating serial port
-[PATCH 3/3] tty: documentation: abi: add ttyvs null modem driver sysfs nodes
-
-Rishi Gupta (3):
-  dt-bindings: ttyvs: document serial null modem driver dt bindings
-  tty/serial: ttvys: add null modem driver emulating serial port
-  tty: documentation: abi: add ttyvs null modem driver sysfs nodes
-
- .../ABI/testing/sysfs-devices-virtual-tty_ttyvs    |   18 +
- .../devicetree/bindings/serial/ttyvs.yaml          |  175 ++
- MAINTAINERS                                        |    8 +
- drivers/tty/Kconfig                                |   16 +
- drivers/tty/Makefile                               |    1 +
- drivers/tty/ttyvs.c                                | 2429 ++++++++++++++++++++
- 6 files changed, 2647 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-devices-virtual-tty_ttyvs
+Signed-off-by: Rishi Gupta <gupt21@gmail.com>
+---
+ .../devicetree/bindings/serial/ttyvs.yaml          | 175 +++++++++++++++++++++
+ 1 file changed, 175 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/serial/ttyvs.yaml
- create mode 100644 drivers/tty/ttyvs.c
 
+diff --git a/Documentation/devicetree/bindings/serial/ttyvs.yaml b/Documentation/devicetree/bindings/serial/ttyvs.yaml
+new file mode 100644
+index 0000000..d37c237
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/ttyvs.yaml
+@@ -0,0 +1,175 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/serial/ttyvs.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Virtual multi-port serial card DT bindings
++
++maintainers:
++  - Rishi Gupta <gupt21@gmail.com>
++
++description: |
++  The ttyvs driver creates a virtual card accessible through node
++  /dev/ttyvs_card. This card can have 0 to 65535 virtual tty devices.
++  The card is modeled as a node with zero or more child nodes each
++  representing a virtual tty device. These devices can be configured
++  to be a loop-back type device or it can be part of a null-modem pair.
++
++  Devices can be created through DT (see examples Ex1/2/3 at the end)
++  or by writing pre-formatted string to card node.
++
++  If the driver is built as loadable module, standard null modem pairs
++  can be created by passing 'init_num_nm_pairs' parameter. Similarly,
++  standard loopback devices can be created by passing 'init_num_lb_devs'
++  parameter. When DT is used and device nodes are defined, all devices
++  created due to module parameters will be deleted first and then
++  devices specified by DT will be created.
++
++  Devices can be deleted only by writing pre-formatted string to card node,
++  irrespective of whether they were created using DT or through string.
++
++properties:
++  compatible:
++    const: ttyvs,virtual-uart-card
++
++  max-num-vs-devs:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 0
++      - maximum: 0xffff
++    maxItems: 1
++    description:
++      By default, the driver can create upto 64 devices. This number can
++      be changed by passing 'max_num_vs_devs' parameter to the driver or
++      by defining 'max-num-vs-devs' DT property. If both are used then
++      first all devices created during module loading are deleted, then
++      driver updates itself to support total number of devices as defined
++      by max-num-vs-devs property.
++
++patternProperties:
++  "^ttyvs@[0-9]+$":
++    type: object
++    description:
++      A node representing one virtual tty device. This node optionally,
++      describes, device number and its configuration.
++
++    properties:
++      dev-num:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32
++          - minimum: 0
++          - maximum: 0xffff
++        maxItems: 1
++        description:
++          Specifies index (N in /dev/ttyvsN) to use for creating device.
++          If this property is not specified then next lowest free index
++          is used by driver. Valid value for N is 0 to 65535.
++
++      rtsmap:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32-array
++        items:
++          - enum: [1, 6, 8, 9]
++        maxItems: 1
++        description:
++          Specifies to which pin(s) RTS pin of this device should be
++          connected. Valid values are pin 1 (DCD), pin 6 (DSR), pin 8
++          (CTS) and pin 9 (RI). If this is not used then RTS pin is
++          left unconnected.
++
++      dtrmap:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32-array
++        items:
++          - enum: [1, 6, 8, 9]
++        maxItems: 1
++        description:
++          Specifies to which pin(s) DTR pin of this device should be
++          connected. Valid values are pin 1 (DCD), pin 6 (DSR), pin 8
++          (CTS) and pin 9 (RI). If this is not used then DTR pin is
++          left unconnected.
++
++      set-dtr-at-open:
++        type: boolean
++        description:
++          If used, DTR signal will be asserted by driver when device
++          node is opened by user space application.
++
++      peer-dev:
++        $ref: /schemas/types.yaml#definitions/phandle
++        description:
++          Phandle to the peer DT node if this node is part of a null
++          modem pair.
++
++required:
++  - compatible
++
++examples:
++  - |
++    # Ex1; Null-modem pair only TX/RX connected
++    # /dev/ttvs0  <---> /dev/ttyvs1
++    #      TX (3) ----> (2) RX
++    #      RX (2) <---- (3) TX
++
++    ttyvs-card@0 {
++        compatible = "ttyvs,virtual-uart-card";
++
++        ttyvs0: ttyvs0 {
++            dev-num = <0>;
++            peer-dev = <&ttyvs1>;
++        };
++
++        ttyvs1: ttyvs1 {
++            dev-num = <1>;
++            peer-dev = <&ttyvs0>;
++        };
++    };
++
++  - |
++    # Ex2; Standard loop-back device
++    # TX (3) -->|
++    # RX (2) <--|
++
++    ttyvs-card@0 {
++        compatible = "ttyvs,virtual-uart-card";
++        ttyvs2 {
++            dev-num = <2>;
++            rtsmap = <8>;
++            dtrmap = <1 6>;
++            set-dtr-at-open;
++        };
++    };
++
++  - |
++    # Ex3; Standard null-modem pair for hardware flow control
++    # TX  (3) ----> (2) RX
++    # RX  (2) <---- (3) TX
++    # RTS (7) ----> (8) CTS
++    # DTR (4) --+-> (1) DCD
++    #           +-> (6) DSR
++    # CTS (8) <---- (7) RTS
++    # DCD (1) <-+-- (4) DTR
++    # DSR (6) <-+
++
++    ttyvs-card@0 {
++        compatible = "ttyvs,virtual-uart-card";
++        max-num-vs-devs = <128>;
++
++        ttyvs3: ttyvs3 {
++            dev-num = <3>;
++            rtsmap = <8>;
++            dtrmap = <1 6>;
++            set-dtr-at-open;
++            peer-dev = <&ttyvs4>;
++        };
++
++        ttyvs4: ttyvs4 {
++            dev-num = <4>;
++            rtsmap = <8>;
++            dtrmap = <1 6>;
++            set-dtr-at-open;
++            peer-dev = <&ttyvs3>;
++        };
++    };
++...
 -- 
 2.7.4
 
