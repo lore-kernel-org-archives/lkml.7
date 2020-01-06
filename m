@@ -2,134 +2,131 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBA0C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13436C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FE362081E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:15:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bN9ihfMl"
+	by mail.kernel.org (Postfix) with ESMTP id E05B2207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:18:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbgAFQP1 (ORCPT
+        id S1726641AbgAFQS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 11:15:27 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36368 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbgAFQP0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 11:15:26 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z3so50270672wru.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 08:15:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=IPjzpRoYE+JzMIzBRc/67gO42QGNlC0QHXvvKHZ+em0=;
-        b=bN9ihfMlw7yCWRT6zDUMNIBSfZKgrC88Dg5/DHzN1Sj3ORWfM8jjAsZ2aATSKuD4pZ
-         UVZxVvT7RGB7VV+3H62l4PA6UBkOkx5ez6c1CnVrzWX/xECO1ZjE1zZl/uS+JM8P+SNp
-         oKsHHzK7khrSgy+dTK3UWQc3uix95QD5fvKlY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=IPjzpRoYE+JzMIzBRc/67gO42QGNlC0QHXvvKHZ+em0=;
-        b=Q7LaZucde60Dg4AlVotuxIulnz1HxiArwv7uH+wl44dU9ThLIQ3XDW8TdM1VrTcW6p
-         8EWro5tq3p3j1X+4nHNIlTPl19Ad0KOt4aoSDGyyMxcN46PV1FPDsTeySt5gmbpvpqiS
-         DTmrO3fHef76u4E2jtW29gE1ML7tCeEAMzDGNqQvU0t0Sut5+9PvM9OVxMZJDeiuhy06
-         yvolqBRFDQciVsIiU4T94F0SAA68oZKAYD1Cc5ZCImbEEHX/kVJ3HI0Lxl1xejqfDoKg
-         oOdxQiXOXDKKt6jNmTsd/iuU2Vwc8seWmGLjI2GIkEXCKbmU4AuUsMT6mYmh9mb8JIi/
-         kiAA==
-X-Gm-Message-State: APjAAAXdZMYxpkNcJPccL/+Op3pu4FD+zPDk3BB3F5cSmzHBsgg9Dr1p
-        WGDIA6NQ80/XxQpRzt1EdOj/Og==
-X-Google-Smtp-Source: APXvYqyKRUfAeaI/31baOUelcLazCeXcEGozHYa38/CdOUyrNHEwsBlNK08JcgvK+K0J3RJ0N+m7Xg==
-X-Received: by 2002:adf:dcc2:: with SMTP id x2mr25503891wrm.24.1578327324773;
-        Mon, 06 Jan 2020 08:15:24 -0800 (PST)
-Received: from ?IPv6:2a00:79e0:42:204:51d1:d96e:f72e:c8c0? ([2a00:79e0:42:204:51d1:d96e:f72e:c8c0])
-        by smtp.gmail.com with ESMTPSA id x18sm73045384wrr.75.2020.01.06.08.15.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 08:15:24 -0800 (PST)
-Message-ID: <a1d896052f608c549b67997eddd62015d2d230d5.camel@chromium.org>
-Subject: Re: [PATCH] ima: add the ability to query ima for the hash of a
- given file.
-From:   Florent Revest <revest@chromium.org>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     kpsingh@chromium.org, mjg59@google.com,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Florent Revest <revest@google.com>
-Date:   Mon, 06 Jan 2020 17:15:23 +0100
-In-Reply-To: <1577122751.5241.144.camel@linux.ibm.com>
-References: <20191220163136.25010-1-revest@chromium.org>
-         <8f4d9c4e-735d-8ba9-b84a-4f341030e0cf@linux.microsoft.com>
-         <1577122751.5241.144.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Mon, 6 Jan 2020 11:18:27 -0500
+Received: from mga06.intel.com ([134.134.136.31]:1506 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726448AbgAFQS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 11:18:26 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jan 2020 08:18:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,403,1571727600"; 
+   d="scan'208";a="222875855"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 06 Jan 2020 08:18:26 -0800
+Received: from [10.251.17.71] (kliang2-mobl.ccr.corp.intel.com [10.251.17.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 3294858033E;
+        Mon,  6 Jan 2020 08:18:25 -0800 (PST)
+Subject: Re: [RFC PATCH V2 2/7] perf: Init/fini PMU specific data
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>
+Cc:     mingo@redhat.com, acme@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, linux-kernel@vger.kernel.org, eranian@google.com,
+        alexey.budankov@linux.intel.com, vitaly.slobodskoy@intel.com
+References: <1578080364-5928-1-git-send-email-kan.liang@linux.intel.com>
+ <1578080364-5928-2-git-send-email-kan.liang@linux.intel.com>
+ <20200106103832.GO2810@hirez.programming.kicks-ass.net>
+ <20200106142343.GK15478@tassilo.jf.intel.com>
+ <20200106143138.GN2844@hirez.programming.kicks-ass.net>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <e12e347e-505e-2703-537f-c4394bebce89@linux.intel.com>
+Date:   Mon, 6 Jan 2020 11:18:24 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
+In-Reply-To: <20200106143138.GN2844@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-12-23 at 12:39 -0500, Mimi Zohar wrote:
-> On Fri, 2019-12-20 at 08:48 -0800, Lakshmi Ramasubramanian wrote:
-> > On 12/20/2019 8:31 AM, Florent Revest wrote:
-> > 
-> > >   
-> > > +/**
-> > > + * ima_file_hash - return the stored measurement if a file has
-> > > been hashed.
-> > > + * @file: pointer to the file
-> > > + * @buf: buffer in which to store the hash
-> > > + * @buf_size: length of the buffer
-> > > + *
-> > > + * On success, output the hash into buf and return the hash
-> > > algorithm (as
-> > > + * defined in the enum hash_algo).
-> > > + * If the hash is larger than buf, then only size bytes will be
-> > > copied. It
-> > > + * generally just makes sense to pass a buffer capable of
-> > > holding the largest
-> > > + * possible hash: IMA_MAX_DIGEST_SIZE
-> > 
-> > If the given buffer is smaller than the hash length, wouldn't it
-> > be 
-> > better to return the required size and a status indicating the
-> > buffer is 
-> > not enough. The caller can then call back with the required buffer.
-> > 
-> > If the hash is truncated the caller may not know if the hash is
-> > partial 
-> > or not.
-> 
-> Based on the hash algorithm, the caller would know if the buffer
-> provided was too small and was truncated.
-> 
-> > > + *
-> > > + * If IMA is disabled or if no measurement is available, return
-> > > -EOPNOTSUPP.
-> > > + * If the parameters are incorrect, return -EINVAL.
-> > > + */
-> > > +int ima_file_hash(struct file *file, char *buf, size_t buf_size)
-> > > +{
-> > > +	struct inode *inode;
-> > > +	struct integrity_iint_cache *iint;
-> > > +	size_t copied_size;
-> > > +
-> > > +	if (!file || !buf)
-> > > +		return -EINVAL;
-> > > +
-> 
-> Other kernel functions provide a means of determining the needed
-> buffer size by passing a NULL field.  Instead of failing here, if buf
-> is NULL, how about returning the hash algorithm?
 
-I wasn't aware of that. This is nice to have indeed! I'll send a v2.
-Thanks!
 
+On 1/6/2020 9:31 AM, Peter Zijlstra wrote:
+> On Mon, Jan 06, 2020 at 06:23:43AM -0800, Andi Kleen wrote:
+>>>> +	rcu_read_lock();
+>>>> +	for_each_process_thread(g, p) {
+>>>> +		mutex_lock(&p->perf_event_mutex);
+>>>> +		if (p->perf_ctx_data) {
+>>>> +			/*
+>>>> +			 * The perf_ctx_data for this thread may has been
+>>>> +			 * allocated by per-task event.
+>>>> +			 * Only update refcount for the case.
+>>>> +			 */
+>>>> +			refcount_inc(&p->perf_ctx_data->refcount);
+>>>> +			mutex_unlock(&p->perf_event_mutex);
+>>>> +			continue;
+>>>> +		}
+>>>> +
+>>>> +		if (pos < num_thread) {
+>>>> +			refcount_set(&data[pos]->refcount, 1);
+>>>> +			rcu_assign_pointer(p->perf_ctx_data, data[pos++]);
+>>>> +		} else {
+>>>> +			/*
+>>>> +			 * There may be some new threads created,
+>>>> +			 * when we allocate space.
+>>>> +			 * Track the number in nr_new_tasks.
+>>>> +			 */
+>>>> +			nr_new_tasks++;
+>>>> +		}
+>>>> +		mutex_unlock(&p->perf_event_mutex);
+>>>> +	}
+>>>> +	rcu_read_unlock();
+>>>> +
+>>>> +	raw_spin_unlock_irqrestore(&task_data_sys_wide_events_lock, flags);
+>>>
+>>> Still NAK. That's some mightly broken code there.
+>>
+>> Yes, Kan you cannot use a mutex (sleeping) inside rcu_read_lock().
+>> Can perf_event_mutex be a spin lock?
+> 
+> Or insize that raw_spin_lock.
+
+The task_data_sys_wide_events_lock is a global lock. I think we just 
+need per-task lock here.
+
+I think I will add a new dedicate per-task raw_spin_lock for 
+perf_ctx_data here.
+
+
+> And last time I expressly said to not do
+> what whole tasklist iteration under a spinlock.
+> 
+
+We need an indicator to tell if the assignment for all existing tasks 
+has been finished. Because we have to wait before processing the cases 
+as below.
+- Allocate the space for new threads. If we don't wait the assignments 
+finished, we cannot tell if the perf_ctx_data is allocated by previous 
+per-task event, or this system-wide event. The refcount may double count.
+- There may be two or more system-wide events at the same time. When we 
+are allocating the space for the first event, the second one may start 
+profiling if we don't wait. The LBR shorten issue still exists.
+- We have to serialize assignment and free.
+
+If we cannot use spinlock to serialize the cases here, can we set a 
+state when the assignment is finished, and use wait_var_event() in the 
+cases as above?
+
+
+Thanks,
+Kan
