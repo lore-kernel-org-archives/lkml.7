@@ -2,170 +2,205 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9A2C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 881F4C32771
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E66A82072E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 538832072E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:43:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="S6iDG8Pd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fPDyAAhQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgAFKmp (ORCPT
+        id S1726401AbgAFKnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 05:42:45 -0500
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:42482 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726281AbgAFKmo (ORCPT
+        Mon, 6 Jan 2020 05:43:45 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40319 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgAFKno (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 05:42:44 -0500
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 47ED62E1430;
-        Mon,  6 Jan 2020 13:42:41 +0300 (MSK)
-Received: from myt5-70c90f7d6d7d.qloud-c.yandex.net (myt5-70c90f7d6d7d.qloud-c.yandex.net [2a02:6b8:c12:3e2c:0:640:70c9:f7d])
-        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id 2E6fIXUjzS-gePakUEF;
-        Mon, 06 Jan 2020 13:42:41 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1578307361; bh=bRVeZsD0ssI2ITrXsE3HS5bNXpMA/dOYQCa6X9aIh44=;
-        h=Message-ID:Date:To:From:Subject:Cc;
-        b=S6iDG8PdFlivCb3idaunrZXUk+s8cjKe00WFd8ruvOMteYgbxUMcvKxRnlwLlCPKL
-         jU7SyUXe7aEgJLKnKqk1uaR3LB0HyOftX67mVpzB8SiQBqjkJYUB8v+rxmDONr4rQD
-         lIdx4c9TkLnzrdKTviHiYQOcxTF6gews81MRLPKg=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from unknown (unknown [2a02:6b8:b080:6708::1:7])
-        by myt5-70c90f7d6d7d.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id j38nwkNrq9-geV4IAKt;
-        Mon, 06 Jan 2020 13:42:40 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH] mm/rmap: fix reusing mergeable anon_vma as parent when fork
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Wei Yang <richardw.yang@linux.intel.com>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Date:   Mon, 06 Jan 2020 13:42:40 +0300
-Message-ID: <157830736034.8148.7070851958306750616.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
+        Mon, 6 Jan 2020 05:43:44 -0500
+Received: by mail-wr1-f65.google.com with SMTP id c14so49066571wrn.7;
+        Mon, 06 Jan 2020 02:43:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bt4iLSsaVU4TRitOeaJ5RT9zwbVmXACqxBToaITFncc=;
+        b=fPDyAAhQEuL6y9QUdvXHkdRPpFudVO7CV8w0HtxlhKhTxksP69AOSM+TtlwVfOyfrs
+         VN/OXPwmTnTcXQCl2ffNArHe8W1eSkm7O0saAAXRLi9cVnzQ0faEzLwUpqcFU5WdFxkl
+         g+7gpzFa0KL3yt8rusv12pPGcfQY9tdkISOYKNGUct73AiIHgcQOK2XXtAJk0V3B/jh0
+         8/ftL55sfEx56wf80qgy9hLzCeCDTNbqxeR5pBwPa7pwsFgg0D2K6jvxoZ9iDYhHR+Zk
+         NNGaIBy1YEpMgWTObGlU9p/G+ZrFASZAFTlxeIA5CfRTkFCEHsIy7XVcwpQYh0Luprrq
+         F3Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bt4iLSsaVU4TRitOeaJ5RT9zwbVmXACqxBToaITFncc=;
+        b=iFmAabbTwTe5MJQ6IVtBHYGuqpBmnrR7Ske0CUqt0EERqBMhDm5uTPuSHpEeKRFdNd
+         Wz1xqhioFVcFGlIfBV0lfF+9batmSoHnqf1RmSVW5XeliLKk1m6Nl3T8Q5CfB+eRpr0Q
+         Ut5p8XCVCfawmepu6gNjITpiMN22Lmb49pkKmFKZkxGDAdUDDDXANj/BLz6jlFsaN2JQ
+         nLg+L7UO18mQetTl/eWFhcoUFzPm/FFxNYALyIdFjeMVfAKKi0iNZNy388lGUPPy/rh/
+         Yt+xo54Fn+qBOfWASuOEak4V7z9tEuddnPPJOWrFqOCDR7Gw83h4IrRvo0BVUMoQ3X+G
+         8VOg==
+X-Gm-Message-State: APjAAAXp8V0bVdn9Nib+6PaRisRTVKbdQIh5y0bwSIMOXrtPUqEfMP19
+        k2D28W9XpdGubcKxTg7hYWr4rC7Ev5X4dg==
+X-Google-Smtp-Source: APXvYqz2ar7hWu8+Or3z6UDvr30I/9eI76qO8YYBwNQwKNh8wiZhQu+kOGqke2xanfu3YYR/vsUK8A==
+X-Received: by 2002:a5d:5381:: with SMTP id d1mr43080644wrv.259.1578307422666;
+        Mon, 06 Jan 2020 02:43:42 -0800 (PST)
+Received: from localhost.localdomain ([62.178.82.229])
+        by smtp.gmail.com with ESMTPSA id r62sm23513239wma.32.2020.01.06.02.43.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 02:43:41 -0800 (PST)
+From:   Christian Gmeiner <christian.gmeiner@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH] drm/etnaviv: rework perfmon query infrastructure
+Date:   Mon,  6 Jan 2020 11:43:36 +0100
+Message-Id: <20200106104339.215511-1-christian.gmeiner@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes couple misconceptions in commit 4e4a9eb92133 ("mm/rmap.c: reuse
-mergeable anon_vma as parent when fork").
+Report the correct perfmon domains and signals depending
+on the supported feature flags.
 
-First problem caused by initialization order in dup_mmap(): vma->vm_prev
-is set after calling anon_vma_fork(). Thus in anon_vma_fork() it points to
-previous VMA in parent mm. This is fixed by rearrangement in dup_mmap().
-
-If in parent VMAs: SRC1 SRC2 .. SRCn share anon-vma ANON0, then after fork
-before all patches in child process related VMAs: DST1 DST2 .. DSTn will
-use different anon-vmas: ANON1 ANON2 .. ANONn. Before this patch only DST1
-will fork new ANON1 and following DST2 .. DSTn will share parent's ANON0.
-With this patch DST1 will create new ANON1 and DST2 .. DSTn will share it.
-
-Also this patch moves sharing logic out of anon_vma_clone() into more
-specific anon_vma_fork() because this supposed to work only at fork().
-Function anon_vma_clone() is more generic is also used at splitting VMAs.
-
-Second problem is hidden behind first one: assumption "Parent has vm_prev,
-which implies we have vm_prev" is wrong if first VMA in parent mm has set
-flag VM_DONTCOPY. Luckily prev->anon_vma doesn't dereference NULL pointer
-because in current code 'prev' actually is same as 'pprev'. To avoid that
-this patch just checks pointer and compares vm_start to verify relation
-between previous VMAs in parent and child.
-
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Fixes: 4e4a9eb92133 ("mm/rmap.c: reuse mergeable anon_vma as parent when fork")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 9e2c2e273012 ("drm/etnaviv: add infrastructure to query perf counter")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
 ---
- kernel/fork.c |    4 ++--
- mm/rmap.c     |   25 ++++++++++++-------------
- 2 files changed, 14 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 57 ++++++++++++++++++++---
+ 1 file changed, 50 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 2508a4f238a3..04ee5e243f65 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -548,6 +548,8 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
- 		if (retval)
- 			goto fail_nomem_policy;
- 		tmp->vm_mm = mm;
-+		tmp->vm_prev = prev;	/* anon_vma_fork use this */
-+		tmp->vm_next = NULL;
- 		retval = dup_userfaultfd(tmp, &uf);
- 		if (retval)
- 			goto fail_nomem_anon_vma_fork;
-@@ -559,7 +561,6 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
- 		} else if (anon_vma_fork(tmp, mpnt))
- 			goto fail_nomem_anon_vma_fork;
- 		tmp->vm_flags &= ~(VM_LOCKED | VM_LOCKONFAULT);
--		tmp->vm_next = tmp->vm_prev = NULL;
- 		file = tmp->vm_file;
- 		if (file) {
- 			struct inode *inode = file_inode(file);
-@@ -592,7 +593,6 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
- 		 */
- 		*pprev = tmp;
- 		pprev = &tmp->vm_next;
--		tmp->vm_prev = prev;
- 		prev = tmp;
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+index 8adbf2861bff..7ae8f347ca06 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+@@ -32,6 +32,7 @@ struct etnaviv_pm_domain {
+ };
  
- 		__vma_link_rb(mm, tmp, rb_link, rb_parent);
-diff --git a/mm/rmap.c b/mm/rmap.c
-index b3e381919835..77b3aa38d5c2 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -269,19 +269,6 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
- {
- 	struct anon_vma_chain *avc, *pavc;
- 	struct anon_vma *root = NULL;
--	struct vm_area_struct *prev = dst->vm_prev, *pprev = src->vm_prev;
--
--	/*
--	 * If parent share anon_vma with its vm_prev, keep this sharing in in
--	 * child.
--	 *
--	 * 1. Parent has vm_prev, which implies we have vm_prev.
--	 * 2. Parent and its vm_prev have the same anon_vma.
--	 */
--	if (!dst->anon_vma && src->anon_vma &&
--	    pprev && pprev->anon_vma == src->anon_vma)
--		dst->anon_vma = prev->anon_vma;
--
+ struct etnaviv_pm_domain_meta {
++	unsigned int feature;
+ 	const struct etnaviv_pm_domain *domains;
+ 	u32 nr_domains;
+ };
+@@ -410,36 +411,78 @@ static const struct etnaviv_pm_domain doms_vg[] = {
  
- 	list_for_each_entry_reverse(pavc, &src->anon_vma_chain, same_vma) {
- 		struct anon_vma *anon_vma;
-@@ -334,6 +321,7 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
-  */
- int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma)
- {
-+	struct vm_area_struct *prev = vma->vm_prev, *pprev = pvma->vm_prev;
- 	struct anon_vma_chain *avc;
- 	struct anon_vma *anon_vma;
- 	int error;
-@@ -345,6 +333,17 @@ int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma)
- 	/* Drop inherited anon_vma, we'll reuse existing or allocate new. */
- 	vma->anon_vma = NULL;
+ static const struct etnaviv_pm_domain_meta doms_meta[] = {
+ 	{
++		.feature = chipFeatures_PIPE_3D,
+ 		.nr_domains = ARRAY_SIZE(doms_3d),
+ 		.domains = &doms_3d[0]
+ 	},
+ 	{
++		.feature = chipFeatures_PIPE_2D,
+ 		.nr_domains = ARRAY_SIZE(doms_2d),
+ 		.domains = &doms_2d[0]
+ 	},
+ 	{
++		.feature = chipFeatures_PIPE_VG,
+ 		.nr_domains = ARRAY_SIZE(doms_vg),
+ 		.domains = &doms_vg[0]
+ 	}
+ };
  
-+	/*
-+	 * If parent shares anon_vma with its vm_prev, keep this sharing.
-+	 *
-+	 * Previous VMA could be missing or not match previuos in parent
-+	 * if VM_DONTCOPY is set: compare vm_start to avoid this case.
-+	 */
-+	if (pvma->anon_vma && pprev && prev &&
-+	    pprev->anon_vma == pvma->anon_vma &&
-+	    pprev->vm_start == prev->vm_start)
-+		vma->anon_vma = prev->anon_vma;
++static unsigned int num_pm_domains(const struct etnaviv_gpu *gpu)
++{
++	unsigned int num = 0, i;
 +
- 	/*
- 	 * First, attach the new VMA to the parent VMA's anon_vmas,
- 	 * so rmap can find non-COWed pages in child processes.
++	for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
++		const struct etnaviv_pm_domain_meta *meta = &doms_meta[i];
++
++		if (gpu->identity.features & meta->feature)
++			num += meta->nr_domains;
++	}
++
++	return num;
++}
++
++static const struct etnaviv_pm_domain *pm_domain(const struct etnaviv_gpu *gpu,
++	unsigned int index)
++{
++	const struct etnaviv_pm_domain *domain = NULL;
++	unsigned int offset = 0, i;
++
++	for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
++		const struct etnaviv_pm_domain_meta *meta = &doms_meta[i];
++
++		if (!(gpu->identity.features & meta->feature))
++			continue;
++
++		if (meta->nr_domains < (index - offset)) {
++			offset += meta->nr_domains;
++			continue;
++		}
++
++		domain = meta->domains + (index - offset);
++	}
++
++	BUG_ON(!domain);
++
++	return domain;
++}
++
+ int etnaviv_pm_query_dom(struct etnaviv_gpu *gpu,
+ 	struct drm_etnaviv_pm_domain *domain)
+ {
+-	const struct etnaviv_pm_domain_meta *meta = &doms_meta[domain->pipe];
++	const unsigned int nr_domains = num_pm_domains(gpu);
+ 	const struct etnaviv_pm_domain *dom;
+ 
+-	if (domain->iter >= meta->nr_domains)
++	if (domain->iter >= nr_domains)
+ 		return -EINVAL;
+ 
+-	dom = meta->domains + domain->iter;
++	dom = pm_domain(gpu, domain->iter);
+ 
+ 	domain->id = domain->iter;
+ 	domain->nr_signals = dom->nr_signals;
+ 	strncpy(domain->name, dom->name, sizeof(domain->name));
+ 
+ 	domain->iter++;
+-	if (domain->iter == meta->nr_domains)
++	if (domain->iter == nr_domains)
+ 		domain->iter = 0xff;
+ 
+ 	return 0;
+@@ -448,14 +491,14 @@ int etnaviv_pm_query_dom(struct etnaviv_gpu *gpu,
+ int etnaviv_pm_query_sig(struct etnaviv_gpu *gpu,
+ 	struct drm_etnaviv_pm_signal *signal)
+ {
+-	const struct etnaviv_pm_domain_meta *meta = &doms_meta[signal->pipe];
++	const unsigned int nr_domains = num_pm_domains(gpu);
+ 	const struct etnaviv_pm_domain *dom;
+ 	const struct etnaviv_pm_signal *sig;
+ 
+-	if (signal->domain >= meta->nr_domains)
++	if (signal->domain >= nr_domains)
+ 		return -EINVAL;
+ 
+-	dom = meta->domains + signal->domain;
++	dom = pm_domain(gpu, signal->domain);
+ 
+ 	if (signal->iter >= dom->nr_signals)
+ 		return -EINVAL;
+-- 
+2.24.1
 
