@@ -2,85 +2,97 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3FDC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24068C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D62D520707
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6EFC207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:17:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KB5fdqLS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbgAFPQi (ORCPT
+        id S1726643AbgAFPRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 10:16:38 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:53044 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726436AbgAFPQh (ORCPT
+        Mon, 6 Jan 2020 10:17:02 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34972 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgAFPRB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 10:16:37 -0500
-Received: (qmail 1716 invoked by uid 2102); 6 Jan 2020 10:16:36 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 6 Jan 2020 10:16:36 -0500
-Date:   Mon, 6 Jan 2020 10:16:36 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Dmitry Osipenko <digetx@gmail.com>
-cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        <linux-usb@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 20/20] usb: host: ehci-tegra: Remove unused fields
- from tegra_ehci_hcd
-In-Reply-To: <20200106013416.9604-21-digetx@gmail.com>
-Message-ID: <Pine.LNX.4.44L0.2001061014430.1514-100000@iolanthe.rowland.org>
+        Mon, 6 Jan 2020 10:17:01 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p17so15658642wmb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 07:17:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gpvhQLZoHknjJ48p3/o2FGQ5HOsekKMFfojG0bDSsqg=;
+        b=KB5fdqLSM2cxZ4hWFKG4I+fvO8r5AB9PHS98h9BBsn2xLvMouLGDrBteRn9sUKU50h
+         G9fMGn6fIYvg3Wm8+FA3eKhnVFvJj6lHr20iqMVWGB6loLxYo3CM+kuXNXui28iiqeNX
+         T3kT8cT0BLyftcJiL7QHrrj1PUUqYg60s9HwMlSdOmbykqR/eSe7ZIHNsQnObzjtl3Ug
+         u4d++4DJPrFPehKamp36pLNtFkalxWAw7EjIQm29xzy2tpLGMGl9vDNoB96pi0oLAN/g
+         0EC9TSrN8i4pohD3Qr7ofD14U2vVlfoA9XbK8wRcZC1EPRHP9uBvb3UQWmDZYVqLmPla
+         erKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gpvhQLZoHknjJ48p3/o2FGQ5HOsekKMFfojG0bDSsqg=;
+        b=Z1ZuEZ/rhJiGZwxQtXGmtblvalRD7T3X8Rr2sqWH7XQZSTitOm8lGC22IX2+ZZQMOh
+         OntX8HYwVOVsBvYKEloocNy6ksM9KEnHPrd03nxO5PIAsxjN4FhS2IeOe56eJclX43Uz
+         n4iwPl00CrQx7i0lQyLP2/S5qCcroKZXX47Ab7tjQfbtoiNbcBojes6xTr0wCMvGdzge
+         tAlymPMVTmZexz9nAxB4yzfaw8cffo9U94fihkYeK89LPXhrfyXd/iUssUpf6p/+rNKl
+         UU3bFGqoKGwFEBXxZRuMLYHGPjslnOsvmhxYKNF5NRQEVkxFFLbhNzMhoqprZQ+zmptc
+         UCaA==
+X-Gm-Message-State: APjAAAVLtkG/3xFjrmLFealXnQNmHfMX3Z1UDWQ7ix2AGxkGk+wvLxnb
+        tNOgudRZ0CdCT8VATcRVGdg2enA9VQPsAQ==
+X-Google-Smtp-Source: APXvYqyPuCXy4xd36sgrJa286zCiAoAPjP2058i4I+qddvYosdeD5QkkY6BQZOszgfUbZSuabmd/mQ==
+X-Received: by 2002:a1c:4884:: with SMTP id v126mr32826252wma.64.1578323820322;
+        Mon, 06 Jan 2020 07:17:00 -0800 (PST)
+Received: from localhost.localdomain ([62.178.82.229])
+        by smtp.gmail.com with ESMTPSA id l3sm72122463wrt.29.2020.01.06.07.16.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 07:16:58 -0800 (PST)
+From:   Christian Gmeiner <christian.gmeiner@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH v2 0/6] update hwdw for gc400
+Date:   Mon,  6 Jan 2020 16:16:45 +0100
+Message-Id: <20200106151655.311413-1-christian.gmeiner@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Jan 2020, Dmitry Osipenko wrote:
+This patch series extends the hwdb for an entry for the gc400 found
+in the ST STM32 SoC. With this patches we report the same limits and
+features for this GPU as the galcore kernel driver does.
 
-> There are few stale fields in tegra_ehci_hcd structure, let's remove them.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/usb/host/ehci-tegra.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/usb/host/ehci-tegra.c b/drivers/usb/host/ehci-tegra.c
-> index 1eb94205a5ac..d6433f206c17 100644
-> --- a/drivers/usb/host/ehci-tegra.c
-> +++ b/drivers/usb/host/ehci-tegra.c
-> @@ -42,12 +42,10 @@ struct tegra_ehci_soc_config {
->  };
->  
->  struct tegra_ehci_hcd {
-> -	struct tegra_usb_phy *phy;
->  	struct clk *clk;
->  	struct reset_control *rst;
->  	int port_resuming;
->  	bool needs_double_reset;
-> -	enum tegra_usb_phy_port_speed port_speed;
->  };
->  
->  static int tegra_reset_usb_controller(struct platform_device *pdev)
+Christian Gmeiner (6):
+  drm/etnaviv: update hardware headers from rnndb
+  drm/etnaviv: determine product, customer and eco id
+  drm/etnaviv: show identity information in debugfs
+  drm/etnaviv: update gc7000 chip identity entry
+  drm/etnaviv: update hwdb selection logic
+  drm/etnaviv: add hwdb entry for gc400 found in STM32
 
-For patches 2, 19, and 20:
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.c  | 18 ++++++++++-
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.h  |  6 ++--
+ drivers/gpu/drm/etnaviv/etnaviv_hwdb.c | 42 +++++++++++++++++++++++++-
+ drivers/gpu/drm/etnaviv/state_hi.xml.h | 29 +++++++++++-------
+ 4 files changed, 79 insertions(+), 16 deletions(-)
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-
-It's nice to see that patch 2 makes the sequence of events in 
-tegra_ehci_remove() exactly the same as the failure pathway in 
-tegra_ehci_probe().
-
-Alan Stern
-
+-- 
+2.24.1
 
