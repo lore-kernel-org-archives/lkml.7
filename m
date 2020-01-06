@@ -2,90 +2,109 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB811C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDDFC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 888002072E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A7C22072E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:30:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cyberus-technology.de header.i=@cyberus-technology.de header.b="P9P3UkKt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgAFOXq (ORCPT
+        id S1726526AbgAFOaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 09:23:46 -0500
-Received: from mga11.intel.com ([192.55.52.93]:9090 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbgAFOXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 09:23:46 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jan 2020 06:23:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,402,1571727600"; 
-   d="scan'208";a="216842020"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by fmsmga007.fm.intel.com with ESMTP; 06 Jan 2020 06:23:43 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id A6E1F300DE4; Mon,  6 Jan 2020 06:23:43 -0800 (PST)
-Date:   Mon, 6 Jan 2020 06:23:43 -0800
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     kan.liang@linux.intel.com, mingo@redhat.com, acme@kernel.org,
-        tglx@linutronix.de, bp@alien8.de, linux-kernel@vger.kernel.org,
-        eranian@google.com, alexey.budankov@linux.intel.com,
-        vitaly.slobodskoy@intel.com
-Subject: Re: [RFC PATCH V2 2/7] perf: Init/fini PMU specific data
-Message-ID: <20200106142343.GK15478@tassilo.jf.intel.com>
-References: <1578080364-5928-1-git-send-email-kan.liang@linux.intel.com>
- <1578080364-5928-2-git-send-email-kan.liang@linux.intel.com>
- <20200106103832.GO2810@hirez.programming.kicks-ass.net>
+        Mon, 6 Jan 2020 09:30:00 -0500
+Received: from www413.your-server.de ([88.198.28.140]:34370 "EHLO
+        www413.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgAFOaA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 09:30:00 -0500
+X-Greylist: delayed 1404 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 Jan 2020 09:29:59 EST
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=cyberus-technology.de; s=default1911; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KW11SDNZTlK7yN6ChFi9azprOFMlb/1DKxBGOgh5XZ8=; b=P9P3UkKtEz5Dlo8dbhVf8CD1A
+        bLj4pxDJftJAQRIyF81VopSSYEvCiX3LWV1w3NfaupnjxcxWOKXxAdbed8XNXpr4ucsh9nJ++c1S+
+        0tvALkmv57cTPxmiHNev+6iaoPf0pa5ONsKqScprNTWn7Ku+WB8nSX7E+4IujARvytujG5gfgq17L
+        KL0a8mBotA0Aq7XfcxlojjJbHwK2WGHhmKv9URZiyL1YFcSmiVnIE9iDiRTfw1iTcu8pZV7tRb12Y
+        ZW0QqAMGexGxfi2KMomYRVjofx2SmJ2e2dVLHCeI7sX7UK3otELyj5110HTBhaVXLqI27j0YN/glj
+        4gVlzUilw==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www413.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <julian.stecklina@cyberus-technology.de>)
+        id 1ioT1d-0008HA-Vx; Mon, 06 Jan 2020 15:06:34 +0100
+Received: from [188.25.180.214] (helo=192-168-0-109.rdsnet.ro)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1:DHE-RSA-AES256-SHA:256)
+        (Exim 4.89)
+        (envelope-from <julian.stecklina@cyberus-technology.de>)
+        id 1ioT1d-000Xjb-MN; Mon, 06 Jan 2020 15:06:33 +0100
+From:   Julian Stecklina <julian.stecklina@cyberus-technology.de>
+To:     intel-gvt-dev@lists.freedesktop.org
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Julian Stecklina <julian.stecklina@cyberus-technology.de>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>, zhiyuan.lv@intel.com,
+        hang.yuan@intel.com
+Subject: [PATCH 1/3] drm/i915/gvt: fix file paths in documentation
+Date:   Mon,  6 Jan 2020 16:06:20 +0200
+Message-Id: <20200106140622.14393-1-julian.stecklina@cyberus-technology.de>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200106103832.GO2810@hirez.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: julian.stecklina@cyberus-technology.de
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25686/Mon Jan  6 10:55:07 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > +	rcu_read_lock();
-> > +	for_each_process_thread(g, p) {
-> > +		mutex_lock(&p->perf_event_mutex);
-> > +		if (p->perf_ctx_data) {
-> > +			/*
-> > +			 * The perf_ctx_data for this thread may has been
-> > +			 * allocated by per-task event.
-> > +			 * Only update refcount for the case.
-> > +			 */
-> > +			refcount_inc(&p->perf_ctx_data->refcount);
-> > +			mutex_unlock(&p->perf_event_mutex);
-> > +			continue;
-> > +		}
-> > +
-> > +		if (pos < num_thread) {
-> > +			refcount_set(&data[pos]->refcount, 1);
-> > +			rcu_assign_pointer(p->perf_ctx_data, data[pos++]);
-> > +		} else {
-> > +			/*
-> > +			 * There may be some new threads created,
-> > +			 * when we allocate space.
-> > +			 * Track the number in nr_new_tasks.
-> > +			 */
-> > +			nr_new_tasks++;
-> > +		}
-> > +		mutex_unlock(&p->perf_event_mutex);
-> > +	}
-> > +	rcu_read_unlock();
-> > +
-> > +	raw_spin_unlock_irqrestore(&task_data_sys_wide_events_lock, flags);
-> 
-> Still NAK. That's some mightly broken code there.
+The documentation had some stale paths to i915 graphics virtualization
+code. Fix them to point to existing files.
 
-Yes, Kan you cannot use a mutex (sleeping) inside rcu_read_lock().
-Can perf_event_mutex be a spin lock?
+Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+Cc: zhiyuan.lv@intel.com
+Cc: hang.yuan@intel.com
 
--Andi
+Signed-off-by: Julian Stecklina <julian.stecklina@cyberus-technology.de>
+---
+ Documentation/gpu/i915.rst | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/gpu/i915.rst b/Documentation/gpu/i915.rst
+index e539c42a3e78..d644683c5249 100644
+--- a/Documentation/gpu/i915.rst
++++ b/Documentation/gpu/i915.rst
+@@ -43,19 +43,19 @@ Interrupt Handling
+ Intel GVT-g Guest Support(vGPU)
+ -------------------------------
+ 
+-.. kernel-doc:: drivers/gpu/drm/i915/i915_vgpu.c
++.. kernel-doc:: drivers/gpu/drm/i915/gvt/vgpu.c
+    :doc: Intel GVT-g guest support
+ 
+-.. kernel-doc:: drivers/gpu/drm/i915/i915_vgpu.c
++.. kernel-doc:: drivers/gpu/drm/i915/gvt/vgpu.c
+    :internal:
+ 
+ Intel GVT-g Host Support(vGPU device model)
+ -------------------------------------------
+ 
+-.. kernel-doc:: drivers/gpu/drm/i915/intel_gvt.c
++.. kernel-doc:: drivers/gpu/drm/i915/gvt/gvt.c
+    :doc: Intel GVT-g host support
+ 
+-.. kernel-doc:: drivers/gpu/drm/i915/intel_gvt.c
++.. kernel-doc:: drivers/gpu/drm/i915/gvt/gvt.c
+    :internal:
+ 
+ Workarounds
+-- 
+2.24.1
+
