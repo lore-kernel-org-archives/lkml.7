@@ -2,110 +2,136 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE14C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4FBC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3542214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05CDC207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:39:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sP0b+kqI"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="EtPDPVRA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbgAFWiu (ORCPT
+        id S1727233AbgAFWjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 17:38:50 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35160 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbgAFWit (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 17:38:49 -0500
-Received: by mail-pg1-f194.google.com with SMTP id l24so27524988pgk.2;
-        Mon, 06 Jan 2020 14:38:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=S1FEEE6cCiUhglrJpwPJZH4zxshLjsGK5hYscNFBnAI=;
-        b=sP0b+kqIgs0Wa01Ipe9vAxhjDci+QsIELt4Jxx3GKyj3kkoogjMroLTcTLoZGuzM06
-         mcW7i8waLEOVEIet/Ye76nn5octXd9nntk0g25HRxSNdHGDW1tnZ81JNY415TaFdos2D
-         MCOZQJikcAznKooB1G+TpbIcS9Z3ly1lH8XjbpetKzLOxgmrQUxlJvp3oeKbRkD2mvmW
-         oxQH7yi7x+Hs254uljZlC1GiLQ7ZmgeChjbceYlBRG2BP+qdI7p8836mThhJT3yqS0Vu
-         Q4MZ1yyewwbfkq37wEuYjld1cm824RztHw9m3lh+uwzu7tFa8g0DYsDV397O4TmdAs/k
-         5CbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=S1FEEE6cCiUhglrJpwPJZH4zxshLjsGK5hYscNFBnAI=;
-        b=mI9jZzP3VXwe9O8d6GzL+SQtfsnfGA2UTpHLYyeRr1/FSVLVqGZAz84AMdZvPadLfx
-         UMZG2RMTRdj1wLg787DxatNjsxzQgUkSKxMdvxtcLcIMG8q9xvBKkgcSaOffE05MRRVX
-         uUPDqzRQlGSAMLe88toTZh4RuF3wYFRHHSA39mN0STHNXO/NeycWZGbt+s6RYcZChPVs
-         gieSOL63Bd9knAde7rTq7sOZOQN7s49mO5RIEM7Vg/uOik9iPQZ7XpykdAXnROhSC31d
-         x/Xockk32kcaFWh/dLtitUkNiZu0JSr3ezG/FSM9NkTwpCG20d3nYBvsFsSmPTJAMwrk
-         soSQ==
-X-Gm-Message-State: APjAAAVNIA6Ajm5w82rfv0EoJox0y6Zwsp+UB+oF3Z93Uy6cTHlhQZ80
-        EhxVOHQlqqsKrlYAg7Gs0y4FiVUp
-X-Google-Smtp-Source: APXvYqyYMmJhcA1k5o0TuMxSxjZ9wt+SVCos6N/y/ApdDFDvdAdsTi6M/W6N+SOmLCd5twlY4rfB9Q==
-X-Received: by 2002:a63:a508:: with SMTP id n8mr109588547pgf.278.1578350328970;
-        Mon, 06 Jan 2020 14:38:48 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id v8sm77416353pff.151.2020.01.06.14.38.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 14:38:48 -0800 (PST)
-Date:   Mon, 6 Jan 2020 14:38:46 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Patrice Chotard <patrice.chotard@st.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tty: st-asc: switch to using devm_gpiod_get()
-Message-ID: <20200106223846.GH8314@dtor-ws>
-References: <20200104202314.GA13591@dtor-ws>
- <20200106185816.GA597279@kroah.com>
+        Mon, 6 Jan 2020 17:39:40 -0500
+Received: from mail-eopbgr750109.outbound.protection.outlook.com ([40.107.75.109]:26411
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726721AbgAFWjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 17:39:39 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lf6gLMhJshSwl8qSKfMZnoaQ8b8mTW88RjRspuczU314kpcjGVYyZ9hRb/d+N8Jvx6dSZKrxUKkdqS9hgM7XxIHV2b9p5QahXUM6EIhoE8Ivha0qoK6WNqN+Fb+Vj46YaVfLqgeWoYf95dOtEhuqe8Oc0aYo38mi+i5q9MBHx93rQQSOjzS0zc6HzQW/PguZQ/0qiMNDsOBGRlL0FVO1jt8+wdX9Lf5m/CYBiE/V5e7MWP7b5opockdXFIMAsmWNMYWB4TwVNOJ0KRVvLC35JPwlWA1q2DfuRVe0L5M8vR5xj4nsVxnSxjYJdS26jaa2CqdP9pci3CFbKGfhE7xnxw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7uANN529b+8BSGabR1XCQGDktRdLyhuFdOC++g3rsLw=;
+ b=eNVEp75EB1c6HNHile4q5Bizs1KLvXelJLCOytEY41JV15ZCJAi+kg+9D9MT+TAPzYtRv4oevw0IwMSoDHvdSz/7MTPwmV7n9kpH788hMXsRP8EcGtf8GCSzibCv3Ty2lwyoizIkm/PGxtPR2fCfIT1C5uI8fxkpEvNldVwXVwiFS6iQJf+l9yVuegJ4EClqWK2wXHLCStD839s/JPbxR6mGeO01M/8Jh0o/4kjGlfw26fW2OM9At5LKpJMHNEj5nWSII1dNBseqcdEJCD3bAFFDOKeBB0Q7S7tFE4aHS2b/VFB71zLXs9b4+jZGvnjcPa7nLhT3PlBIVHz4fVHC/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7uANN529b+8BSGabR1XCQGDktRdLyhuFdOC++g3rsLw=;
+ b=EtPDPVRAeoC9KeZS99sDsCnpeCQdve5ClG6xExZozC0kwQ5p1yKsoItocKiR44qzHrE2cvNzcJ2T9Bm8VzrWgHQc99bNTnOUWrENv1q8KFYsG1NITWd5MAc8FYKvzkFVSnORTsUWaXc89za0zomZ8jVBE5msUOq2Iuhyx24lhUg=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+Received: from CY4PR21MB0775.namprd21.prod.outlook.com (10.173.192.21) by
+ CY4PR21MB0471.namprd21.prod.outlook.com (10.172.121.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.3; Mon, 6 Jan 2020 22:39:36 +0000
+Received: from CY4PR21MB0775.namprd21.prod.outlook.com
+ ([fe80::6155:bc1d:1d39:977b]) by CY4PR21MB0775.namprd21.prod.outlook.com
+ ([fe80::6155:bc1d:1d39:977b%8]) with mapi id 15.20.2644.002; Mon, 6 Jan 2020
+ 22:39:35 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        Alexander.Levin@microsoft.com
+Cc:     Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH] PCI: hv: Use kfree(hbus) in hv_pci_probe()'s error handling path
+Date:   Mon,  6 Jan 2020 14:39:11 -0800
+Message-Id: <1578350351-129783-1-git-send-email-decui@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-ClientProxiedBy: MWHPR2001CA0007.namprd20.prod.outlook.com
+ (2603:10b6:301:15::17) To CY4PR21MB0775.namprd21.prod.outlook.com
+ (2603:10b6:903:b8::21)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200106185816.GA597279@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR2001CA0007.namprd20.prod.outlook.com (2603:10b6:301:15::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.12 via Frontend Transport; Mon, 6 Jan 2020 22:39:34 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 49ed48a6-8ae2-4115-a9f4-08d792f94e28
+X-MS-TrafficTypeDiagnostic: CY4PR21MB0471:|CY4PR21MB0471:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CY4PR21MB0471E51DDBEA4C10A48569CEBF3C0@CY4PR21MB0471.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 0274272F87
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(136003)(396003)(376002)(346002)(39860400002)(366004)(199004)(189003)(6506007)(6486002)(2906002)(66946007)(66476007)(66556008)(26005)(3450700001)(2616005)(36756003)(6512007)(956004)(5660300002)(4326008)(86362001)(10290500003)(8936002)(52116002)(316002)(16526019)(107886003)(8676002)(81156014)(6666004)(186003)(478600001)(6636002)(81166006)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0471;H:CY4PR21MB0775.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: xwQktqa9VqCBfX6qxcXfv39ocAzuVcNnMcwqaEYMOmbLybPxfeIN3mPkE2JmibJz9rzJUYj6cIZOqC9XEzPIA9Ci0CpK+xXNwIFHMKrxII3OLiOwyGmfd6BIW0sxEhI9VW+8LZFYtKtVNVoT98R9QwzuRd3zcBH5pAsYuUyL4ZhKG+Ndn6aECGEuZitLYFivndefWl9M98G7W68uePESKSjar5qDglEXVUrVpHm83CuuqIhoXmkoyGsPW6ESnnQ1htLlzPEqtCQ6F6pK2r2nGc6C6PVI9ytyIr0U88eGeSqmMFuwfacflMxffYOaH3LyA4C+VymTWCD/iVcXDq1pkg7WYuKtWqzheLi5hRGgxJL8tsgYGMYJwsppgdg08Tjk7UWyAiBnBPNutWsrRxh2KqdWfddpNomY7sr5StDeUCiSWvmkE6eTdGVoLDppf4FbM8N0Bsd2DY34Nds35AVKIIQNZbZooIBWSW9BCiL02LX4Zv7r8EDpgMSwus8e8W2p
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49ed48a6-8ae2-4115-a9f4-08d792f94e28
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jan 2020 22:39:35.7471
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0xvEspa+pPzk0R1c+Vm62uWutXleUEOOKpCqoFUUtz2yv6s/uoUdEOWoRF6I7o96hhEECwvZYs9O8Uzdpb2jAw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0471
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 07:58:16PM +0100, Greg Kroah-Hartman wrote:
-> On Sat, Jan 04, 2020 at 12:23:14PM -0800, Dmitry Torokhov wrote:
-> > The node pointer in question is not a child node, but the node assigned
-> > to the port device itself, so we should not be using
-> > devm_fwnode_get_gpiod_from_child() [that is going away], but standard
-> > devm_gpiod_get().
-> > 
-> > To maintain the previous labeling we use gpiod_set_consumer_name() after
-> > we acquire the GPIO.
-> > 
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > ---
-> >  drivers/tty/serial/st-asc.c | 12 +++++-------
-> >  1 file changed, 5 insertions(+), 7 deletions(-)
-> 
-> What changed from v1 of this patch?  Please put that below the --- line
-> and versino your patches.
+Now that we use kzalloc() to allocate the hbus buffer, we should use
+kfree() in the error path as well.
 
-I did not add a version or changelog because I believe this is
-essentially a different patch, with different justification and
-different API that is being used.
+Also remove the type casting, since it's unnecessary in C.
 
-The first one was a simple switch to devm_fwnode_gpiod_get(), the new
-one is abandoning the use of explicit node reference, and instead uses
-standard devm_gpiod_get() to get a GPIO assigned to a device +
-gpiod_set_consumer_name() to maintain the naming.
+Fixes: 877b911a5ba0 ("PCI: hv: Avoid a kmemleak false positive caused by the hbus buffer")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
 
-Thanks.
+Sorry for missing the error handling path.
 
+ drivers/pci/controller/pci-hyperv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 9977abff92fc..15011a349520 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -2922,7 +2922,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	 * positive by using kmemleak_alloc() and kmemleak_free() to ask
+ 	 * kmemleak to track and scan the hbus buffer.
+ 	 */
+-	hbus = (struct hv_pcibus_device *)kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
++	hbus = kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
+ 	if (!hbus)
+ 		return -ENOMEM;
+ 	hbus->state = hv_pcibus_init;
+@@ -3058,7 +3058,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ free_dom:
+ 	hv_put_dom_num(hbus->sysdata.domain);
+ free_bus:
+-	free_page((unsigned long)hbus);
++	kfree(hbus);
+ 	return ret;
+ }
+ 
 -- 
-Dmitry
+2.19.1
+
