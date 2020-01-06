@@ -2,149 +2,221 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AC4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EF6C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68B5F207FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BD582072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:59:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dwlz1VRf"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WIZaFCAm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbgAFV55 (ORCPT
+        id S1727001AbgAFV67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 16:57:57 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:18254 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726695AbgAFV55 (ORCPT
+        Mon, 6 Jan 2020 16:58:59 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:33102 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbgAFV67 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 16:57:57 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578347875; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=Dh6uBBQOO4o59nsJrAsOkHICiEkRHSqYa9UZMQn8AGc=; b=dwlz1VRfaNG37QxpTqFLTVtDGzmc9nANj10LAtck1G8B/QpYid3KToqCsigFdOMLhbEnb1Cs
- PRW/H8Rai0fkCsTFPeLgaPV6wON8SUL4ckh9yRao6mKxGGrw6dKCjIa6txz+upCqhVtQQLOL
- 6HC5Npe7r/XrVadX1UkvTz99vOk=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e13ad62.7f4d73e86768-smtp-out-n03;
- Mon, 06 Jan 2020 21:57:54 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 76AB4C447A4; Mon,  6 Jan 2020 21:57:54 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BEF3EC43383;
-        Mon,  6 Jan 2020 21:57:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BEF3EC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 6 Jan 2020 14:57:51 -0700
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     smasetty@codeaurora.org
-Cc:     iommu@lists.linux-foundation.org, freedreno@lists.freedesktop.org,
-        David Airlie <airlied@linux.ie>, will@kernel.org,
-        robin.murphy@arm.com, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Sean Paul <sean@poorly.run>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 5/5] drm/msm/a6xx: Support split pagetables
-Message-ID: <20200106215750.GA4341@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: smasetty@codeaurora.org, iommu@lists.linux-foundation.org,
-        freedreno@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        will@kernel.org, robin.murphy@arm.com,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Sean Paul <sean@poorly.run>,
-        linux-arm-kernel@lists.infradead.org
-References: <1576514271-15687-1-git-send-email-jcrouse@codeaurora.org>
- <1576514271-15687-6-git-send-email-jcrouse@codeaurora.org>
- <8aec2a4f74fede1cf616b9e2eece3e8e@codeaurora.org>
+        Mon, 6 Jan 2020 16:58:59 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 006Lsjgh033841;
+        Mon, 6 Jan 2020 21:58:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=qM6wDfOkpgB7R0VuEaV7sFgdpP9cmoitLkOl/e+H2qw=;
+ b=WIZaFCAmwjeN2Chz2OXd1c+jrijhCdH1j9VsZP43N2Xm1sydoV3oTcrWjbL5TfMPok3O
+ z/SuNfPP1FdWtuA1+9YXUReVgrXBLJMCFQ2Hp/hVS+F/kTr7XdhmVkX2TfrFQq+6TEjI
+ qIoQ250oEzuGpj9WpB0PENcgJukh4oNND6ci/h/QHTnctnH0mv2yzOjjjuMns5giYXoy
+ YHRkU7BPodA/EZqmLBof//YhNgDjBeQrC65LqPexGDNW27H/jS/Gueh2cSphVnHQPRy+
+ l6jcBTU6FA2g1Vb7y9u8qVU3z1d0sRMM1ry8QrZ2LKLhEBeQLlaOmhcptUl+XQ1cVcMy PA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2xaj4tt17t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 06 Jan 2020 21:58:44 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 006LwfA6029081;
+        Mon, 6 Jan 2020 21:58:43 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2xb47fuuta-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 06 Jan 2020 21:58:42 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 006LvvI4014934;
+        Mon, 6 Jan 2020 21:57:57 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 06 Jan 2020 13:57:57 -0800
+Date:   Mon, 6 Jan 2020 13:57:55 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     yu kuai <yukuai3@huawei.com>
+Cc:     bfoster@redhat.com, dchinner@redhat.com, sandeen@sandeen.net,
+        cmaiolino@redhat.com, hch@lst.de, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, zhengbin13@huawei.com,
+        yi.zhang@huawei.com, houtao1@huawei.com
+Subject: Re: [PATCH 2/2] xfs: fix stale data exposure problem when punch
+ hole, collapse range or zero range across a delalloc extent
+Message-ID: <20200106215755.GB472651@magnolia>
+References: <20191226134721.43797-1-yukuai3@huawei.com>
+ <20191226134721.43797-3-yukuai3@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8aec2a4f74fede1cf616b9e2eece3e8e@codeaurora.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191226134721.43797-3-yukuai3@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001060184
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001060183
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 08:27:28AM +0530, smasetty@codeaurora.org wrote:
-> On 2019-12-16 22:07, Jordan Crouse wrote:
-> >Attempt to enable split pagetables if the arm-smmu driver supports it.
-> >This will move the default address space from the default region to
-> >the address range assigned to TTBR1. The behavior should be transparent
-> >to the driver for now but it gets the default buffers out of the way
-> >when we want to start swapping TTBR0 for context-specific pagetables.
-> >
-> >Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> >---
-> >
-> > drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 52
-> >++++++++++++++++++++++++++++++++++-
-> > 1 file changed, 51 insertions(+), 1 deletion(-)
-> >
-> >diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >index 5dc0b2c..1c6da93 100644
-> >--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >@@ -811,6 +811,56 @@ static unsigned long a6xx_gpu_busy(struct msm_gpu
-> >*gpu)
-> > 	return (unsigned long)busy_time;
-> > }
-> >
-> >+static struct msm_gem_address_space *
-> >+a6xx_create_address_space(struct msm_gpu *gpu, struct platform_device
-> >*pdev)
-> >+{
-> >+	struct iommu_domain *iommu = iommu_domain_alloc(&platform_bus_type);
-> >+	struct msm_gem_address_space *aspace;
-> >+	struct msm_mmu *mmu;
-> >+	u64 start, size;
-> >+	u32 val = 1;
-> >+	int ret;
-> >+
-> >+	if (!iommu)
-> >+		return ERR_PTR(-ENOMEM);
-> >+
-> >+	/*
-> >+	 * Try to request split pagetables - the request has to be made before
-> >+	 * the domian is attached
-> >+	 */
-> >+	iommu_domain_set_attr(iommu, DOMAIN_ATTR_SPLIT_TABLES, &val);
-> >+
-> >+	mmu = msm_iommu_new(&pdev->dev, iommu);
-> >+	if (IS_ERR(mmu)) {
-> >+		iommu_domain_free(iommu);
-> >+		return ERR_CAST(mmu);
-> >+	}
-> >+
-> >+	/*
-> >+	 * After the domain is attached, see if the split tables were actually
-> >+	 * successful.
-> >+	 */
-> >+	ret = iommu_domain_get_attr(iommu, DOMAIN_ATTR_SPLIT_TABLES, &val);
-> >+	if (!ret && val) {
-> >+		/*
-> >+		 * The aperture start will be at the beginning of the TTBR1
-> >+		 * space so use that as a base
-> >+		 */
-> >+		start = iommu->geometry.aperture_start;
-> >+		size = 0xffffffff;
-> This should be the va_end and not the size
+On Thu, Dec 26, 2019 at 09:47:21PM +0800, yu kuai wrote:
+> In xfs_file_fallocate, when punch hole, zero range or collapse range is
+> performed, xfs_fulsh_unmap_range() need to be called first. However,
+> xfs_map_blocks will convert the whole extent to real, even if there are
+> some blocks not related. Furthermore, the unrelated blocks will hold stale
+> data since xfs_fulsh_unmap_range didn't flush the correspond dirty pages
+> to disk.
+> 
+> In this case, if user shutdown file system through xfsioctl with cmd
+> 'XFS_IOC_GOINGDOWN' and arg 'XFS_FSOP_GOING_FLAGS_LOGFLUSH'. All the
+> completed transactions will be flushed to disk, while dirty pages will
+> never be flushed to disk. And after remount, the file will hold stale
+> data.
 
-This is a bug in msm_gem_address_space_create - I intended the parameter to be
-the size.
+Waitaminute, what problem are you trying to solve?
 
-Jordan
+You have a file with a huge delalloc extent because we just wrote a
+bunch of 'X' characters to part of a file:
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+---dddddddddddddddd
+
+Then you want to fallocate or something in the middle of that:
+
+---dddddddddddddddd
+           ^^^^------ collapse range these blocks
+
+So we xfs_flush_unmap_range to kill the pagecache on that range:
+
+---dddddddddddddddd
+           ^^^^------ xfs_flush_unmap_range()
+
+This triggers writeback, which can convert the entire delalloc range to
+a single extent:
+
+---rrrrrrrrrrrrrrrr
+           ^^^^^^^^-- This is the range we are writing back
+   ^^^^^^^^---------- This range doesn't undergo writeback, but we wrote
+                      the extent tree anyway
+
+After committing that update to the log, the fs goes down, which leaves
+us with the following after we reboot, mount, and recover the fs:
+
+---rrrrrrrrrrrrrrrr
+           ^^^^^^^^-- This part contains 'X'
+   ^^^^^^^^---------- This range never underwent writeback, so it's full
+		      of junk from the previous owner of the space
+
+So your solution is to split the delalloc reservation to constrain the
+allocation to the range that's being operated on?
+
+If so, I think a better solution (at least from the perspective of
+reducing fragmentation) would be to map the extent unwritten and force a
+post-writeback conversion[1] but I got shot down for performance reasons
+the last time I suggested that.
+
+--D
+
+[1] https://lore.kernel.org/linux-xfs/155259894630.30230.10064390935593758177.stgit@magnolia/
+
+> Fix the problem by spliting delalloc extent before xfs_flush_unmap_range
+> is called.
+> 
+> Signed-off-by: yu kuai <yukuai3@huawei.com>
+> ---
+>  fs/xfs/xfs_file.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+> 
+> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+> index c93250108952..5398102feec9 100644
+> --- a/fs/xfs/xfs_file.c
+> +++ b/fs/xfs/xfs_file.c
+> @@ -786,6 +786,50 @@ xfs_break_layouts(
+>  
+>  	return error;
+>  }
+> +int
+> +try_split_da_extent(
+> +	struct xfs_inode	*ip,
+> +	loff_t			offset,
+> +	loff_t			len)
+> +{
+> +	struct xfs_mount	*mp = ip->i_mount;
+> +	xfs_fileoff_t		start = XFS_B_TO_FSBT(mp, offset);
+> +	xfs_fileoff_t		end = XFS_B_TO_FSBT(mp, offset + len - 1);
+> +	struct xfs_ifork	*ifp = XFS_IFORK_PTR(ip, XFS_DATA_FORK);
+> +	struct xfs_iext_cursor	cur;
+> +	struct xfs_bmbt_irec	imap;
+> +	int error;
+> +
+> +	/*
+> +	 * if start belong to a delalloc extent and it's not the first block,
+> +	 * split the extent at start.
+> +	 */
+> +	if (xfs_iext_lookup_extent(ip, ifp, start, &cur, &imap) &&
+> +	    imap.br_startblock != HOLESTARTBLOCK &&
+> +	    isnullstartblock(imap.br_startblock) &&
+> +	    start > imap.br_startoff) {
+> +		error = xfs_bmap_split_da_extent(ip, start);
+> +		if (error)
+> +			return error;
+> +		ip->i_d.di_nextents--;
+> +	}
+> +
+> +	/*
+> +	 * if end + 1 belong to a delalloc extent and it's not the first block,
+> +	 * split the extent at end + 1.
+> +	 */
+> +	if (xfs_iext_lookup_extent(ip, ifp, end + 1, &cur, &imap) &&
+> +	    imap.br_startblock != HOLESTARTBLOCK &&
+> +	    isnullstartblock(imap.br_startblock) &&
+> +	    end + 1 > imap.br_startoff) {
+> +		error = xfs_bmap_split_da_extent(ip, end + 1);
+> +		if (error)
+> +			return error;
+> +		ip->i_d.di_nextents--;
+> +	}
+> +
+> +	return 0;
+> +}
+>  
+>  #define	XFS_FALLOC_FL_SUPPORTED						\
+>  		(FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE |		\
+> @@ -842,6 +886,9 @@ xfs_file_fallocate(
+>  	 */
+>  	if (mode & (FALLOC_FL_PUNCH_HOLE | FALLOC_FL_ZERO_RANGE |
+>  		    FALLOC_FL_COLLAPSE_RANGE)) {
+> +		error = try_split_da_extent(ip, offset, len);
+> +		if (error)
+> +			goto out_unlock;
+>  		error = xfs_flush_unmap_range(ip, offset, len);
+>  		if (error)
+>  			goto out_unlock;
+> -- 
+> 2.17.2
+> 
