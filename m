@@ -2,78 +2,190 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC552C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EC6C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F4E72072C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7CCA2072C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:19:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="h0sRlpMt"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tnCKUMjz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgAFKS6 (ORCPT
+        id S1726618AbgAFKTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 05:18:58 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:26875 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726212AbgAFKS6 (ORCPT
+        Mon, 6 Jan 2020 05:19:14 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46448 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgAFKTM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 05:18:58 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578305937; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=rFGBZ87fosedu6QgWERjhftd9fNtWdiGCpLSWREmmQs=; b=h0sRlpMtzO6rgQ4AvRbw5E94VH1U/Lb3PtGUMxntVoEXC0/YkGaIKpbAnBB7Kfy6iV0YP0a8
- yImFdu1b+ZRyIeZjwTCtbTxIuERil9H6jXAUHHW7wcbfzBKGuaaaMS7QynG2LnNI0RgYRFzM
- VYeeDQ8eLtNOFdasZBUQtHR6+lE=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e130990.7f3279e67dc0-smtp-out-n03;
- Mon, 06 Jan 2020 10:18:56 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CD687C4479C; Mon,  6 Jan 2020 10:18:54 +0000 (UTC)
-Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6B8BFC43383;
-        Mon,  6 Jan 2020 10:18:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6B8BFC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v2 0/2] Add support for IPA clock for SC7180
-Date:   Mon,  6 Jan 2020 15:48:41 +0530
-Message-Id: <1578305923-29125-1-git-send-email-tdas@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 6 Jan 2020 05:19:12 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 006AIxOs108404;
+        Mon, 6 Jan 2020 04:18:59 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578305939;
+        bh=tdMkbn3osxZCAoJDuuw76Xdz9TI9EVK5gZFc5dtx1VY=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=tnCKUMjzgPOEiC0Ge0PITCE9W6TvLWDPdwljkuY2n9oLWaq598WscEAbLLKxv6Qjz
+         PGsuX0ti/z1n/r8oMSPt2IOO6K9BmQUbjOdemDPqYswpD6KYAeaTiyJz1wx37CZ0PM
+         f246xNW8R1MdeZfYRGvpAoCDDNL4kZMZzx1NAZSM=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 006AIxU2130685
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 6 Jan 2020 04:18:59 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 6 Jan
+ 2020 04:18:59 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 6 Jan 2020 04:18:59 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 006AIqXr118652;
+        Mon, 6 Jan 2020 04:18:56 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Murray <andrew.murray@arm.com>
+CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v2 01/14] dt-bindings: PCI: cadence: Add PCIe RC/EP DT schema for Cadence PCIe
+Date:   Mon, 6 Jan 2020 15:50:45 +0530
+Message-ID: <20200106102058.19183-2-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200106102058.19183-1-kishon@ti.com>
+References: <20200106102058.19183-1-kishon@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[v2]
- * After register clk_hw::init is NULL, save off the name before registering.
+Add PCIe Host (RC) and Endpoint (EP) device tree schema for Cadence
+PCIe core library. Platforms using Cadence PCIe core can include the
+schemas added here in the platform specific schemas.
 
-[v1]
- * Support IPA clock for SC7180 and also handle undefined clock registration
-   in clk-rpmh driver.
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 20 ++++++++++++
+ .../bindings/pci/cdns-pcie-host.yaml          | 30 +++++++++++++++++
+ .../devicetree/bindings/pci/cdns-pcie.yaml    | 32 +++++++++++++++++++
+ 3 files changed, 82 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie.yaml
 
-Taniya Das (2):
-  clk: qcom: rpmh: skip undefined clocks when registering
-  clk: qcom: rpmh: Add IPA clock for SC7180
+diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+new file mode 100644
+index 000000000000..36aaae5931c3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+@@ -0,0 +1,20 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
++%YAML 1.2
++--
++$id: "http://devicetree.org/schemas/pci/cdns-pcie-ep.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Cadence PCIe Endpoint
++
++maintainers:
++  - Tom Joseph <tjoseph@cadence.com>
++
++allOf:
++  - $ref: "cdns-pcie.yaml#"
++
++properties:
++  max-functions:
++    description: Maximum number of functions that can be configured (default 1)
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint8
+diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+new file mode 100644
+index 000000000000..78261bc4f0c5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+@@ -0,0 +1,30 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/pci/cdns-pcie-host.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Cadence PCIe Host
++
++maintainers:
++  - Tom Joseph <tjoseph@cadence.com>
++
++allOf:
++  - $ref: "/schemas/pci/pci-bus.yaml#"
++  - $ref: "cdns-pcie.yaml#"
++
++properties:
++  vendor-id:
++    description: The PCI vendor ID (16 bits, default is design dependent)
++
++  device-id:
++    description: The PCI device ID (16 bits, default is design dependent)
++
++  cdns,no-bar-match-nbits:
++    description: Set into the no BAR match register to configure the number
++      of least significant bits kept during inbound (PCIe -> AXI) address
++      translations (default 32)
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++
+diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+new file mode 100644
+index 000000000000..497d3dc2e6f2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+@@ -0,0 +1,32 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/pci/cdns-pcie.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Cadence PCIe Core
++
++maintainers:
++  - Tom Joseph <tjoseph@cadence.com>
++
++properties:
++  max-link-speed:
++    minimum: 1
++    maximum: 3
++
++  num-lanes:
++    minimum: 1
++    maximum: 2
++
++  cdns,max-outbound-regions:
++    description: Set to maximum number of outbound regions.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++
++  phys:
++    description: List of Generic PHY phandles. One per lane if more than one in
++      the list. If only one PHY listed it must manage all lanes.
++
++  phy-names:
++    description: List of names to identify the PHY.
+-- 
+2.17.1
 
- drivers/clk/qcom/clk-rpmh.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
