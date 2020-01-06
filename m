@@ -2,98 +2,132 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EF5C33C9A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 05:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A76BC32767
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 05:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C62621734
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 05:02:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F97A21734
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 05:02:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Yxs6EI0X"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MpCZXqGu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgAFFCq (ORCPT
+        id S1726696AbgAFFCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 00:02:46 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:56258 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726303AbgAFFCq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 00:02:46 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578286965; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
- Subject: Sender; bh=CX/VHEJpV4no3LnvxpQFy1wS7PVPnmsZ8jU3trASlSQ=; b=Yxs6EI0XleqHx0FcAiwM2ksiyaG4kd2wH3IXi1vEmc6PYu1t7NIWs92z453e8RHTYpuMOlzw
- 2E3HOZFbB78IN+5AOo4/xBibBm007AhxbX+Zr1STXA5do1I/QheKHzJTUN1opOEIl3oYu/N6
- eGpq3+tK4gQu0Jfclg+ugAzkRVA=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e12bf74.7f9ba3b66998-smtp-out-n03;
- Mon, 06 Jan 2020 05:02:44 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CF8D8C433A2; Mon,  6 Jan 2020 05:02:44 +0000 (UTC)
-Received: from [10.201.2.161] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 6 Jan 2020 00:02:50 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:38949 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726620AbgAFFCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 00:02:49 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: sricharan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7E84CC43383;
-        Mon,  6 Jan 2020 05:02:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7E84CC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
-Subject: Re: [PATCH 0/2] Add Global clock controller support for IPQ6018
-To:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
-        devicetree@vger.kernel.org, linus.walleij@linaro.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-soc@vger.kernel.org, robh+dt@kernel.org,
-        sivaprak@codeaurora.org
-References: <1578050744-3761-1-git-send-email-sricharan@codeaurora.org>
- <20200105065919.4A548207FD@mail.kernel.org>
-From:   Sricharan R <sricharan@codeaurora.org>
-Message-ID: <4b4b9f0b-5473-aea8-9ebb-7a2c4fecea07@codeaurora.org>
-Date:   Mon, 6 Jan 2020 10:32:37 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47rk0Q6QlKz9sR1;
+        Mon,  6 Jan 2020 16:02:46 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578286967;
+        bh=D8EGVkxO374FrM+A+GsbiNGA5RKfYu9d6p/uLCeisrU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MpCZXqGuSj+g0LztV6Y7gQFjOzPnliYDgywdYXew3R3qP48qqxhwOLkNfkFEMVex8
+         2ifAxJPsDtPVxoX80NoqNo5MD+QS5UCpx87lin9sC6ssAbrMvNy8Gj+X8IZPBWW0Wg
+         0V5UnWVjWzH5QZXpNJatK46r3E4/MxayRj8rZPck3X3PVmHbJMxoenH7sHeJVz9B9y
+         SlhGMIGa2EbsEcro1Z3fd8u1Ra3A+Dv80y+RlEjjjpKZY6B4PcjaVaabn4EUTDVZvr
+         nIwGNGvla9BFj0A2hhgqVObcHYwcitE0z38IsgBM4Mgc5LYx0V6z3N7e2eXI2mMD9v
+         rUqygx6S0pdvg==
+Date:   Mon, 6 Jan 2020 16:02:46 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: linux-next: manual merge of the akpm-current tree with the
+ generic-ioremap tree
+Message-ID: <20200106160246.0f6bd04c@canb.auug.org.au>
+In-Reply-To: <20191218133025.15356802@canb.auug.org.au>
+References: <20191218133025.15356802@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200105065919.4A548207FD@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/s9_OHkIFGPCGxgx5UrvqmxK";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+--Sig_/s9_OHkIFGPCGxgx5UrvqmxK
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 1/5/2020 12:29 PM, Stephen Boyd wrote:
-> Quoting Sricharan R (2020-01-03 03:25:42)
->> The IPQ6018 is Qualcomm\u2019s 802.11ax SoC for Routers,
->> Gateways and Access Points.
->>
->> This series adds Global clock controller support for ipq6018.
-> 
-> Can you fold the fixes in?
-> 
+Hi all,
 
- Sure, will do and resend.
+On Wed, 18 Dec 2019 13:30:25 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the akpm-current tree got a conflict in:
+>=20
+>   arch/hexagon/include/asm/io.h
+>=20
+> between commit:
+>=20
+>   1188dd7d3fbd ("remove ioremap_nocache and devm_ioremap_nocache")
+>=20
+> from the generic-ioremap tree and commit:
+>=20
+>   a632c00ae02c ("hexagon: define ioremap_uc")
+>=20
+> from the akpm-current tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+> --=20
+> Cheers,
+> Stephen Rothwell
+>=20
+> diff --cc arch/hexagon/include/asm/io.h
+> index f42d9973e7d6,b0dbc3473172..000000000000
+> --- a/arch/hexagon/include/asm/io.h
+> +++ b/arch/hexagon/include/asm/io.h
+> @@@ -172,7 -172,10 +172,8 @@@ static inline void writel(u32 data, vol
+>   #define writel_relaxed __raw_writel
+>  =20
+>   void __iomem *ioremap(unsigned long phys_addr, unsigned long size);
+>  -#define ioremap_nocache ioremap
+> + #define ioremap_uc(X, Y) ioremap((X), (Y))
+>  =20
+>  -
+>   #define __raw_writel writel
+>  =20
+>   static inline void memcpy_fromio(void *dst, const volatile void __iomem=
+ *src,
 
->>
->> The patches were a part of https://patchwork.kernel.org/cover/11303075/,
->> now moved it outside based on Stephen's suggestion.
-> 
-> Thanks, but I still got the other pinctrl patches :(
-> 
+This is now a conflict between Linus' tree and the generic-ioremap tree.
 
- ho, will remove you from CC on those.
+--=20
+Cheers,
+Stephen Rothwell
 
-Regards,
- Sricharan
+--Sig_/s9_OHkIFGPCGxgx5UrvqmxK
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4Sv3YACgkQAVBC80lX
+0GwPtQf/S2/piGuennunKVNnnQFWOAW8jA6/1iwtHTG4pMooPRz5wvsHL7Wsf4wj
+P+NU7VHFbBsFl3kStQPbXGwyn6CDF4vAEHM/3u5YUuisprXZe9hty6iEoTVT5zpR
+oORi6ebvhaAu3dVxBO+2mCRAUG/jlGUzBQ3rmkz/umaDry5c4uUiXMGtTTNBkBrS
+rFnaBrNoMevAHm+mQ6eKPiektFJpMtLOk0qf/zVRJpfdv7eRpfxKy60XxTOih12e
+UWf/2GRcCpLtjXkB1DBjPTr7jwCwggQzMvdB6YTGWMPHfIYelkuuWMa8K1QpzP+y
+wpt8kHN3t7aW6fjjLwqi1EYHqilQsw==
+=FmOI
+-----END PGP SIGNATURE-----
+
+--Sig_/s9_OHkIFGPCGxgx5UrvqmxK--
