@@ -2,88 +2,129 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 552DDC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0681C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 265C42070E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9806B21744
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:22:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578334955;
+	bh=yVFia9Aq3nJT/AJHqJ7vTb4Du02J/oUYj2xpMmC059c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S55I//rplaotSDDJdJU/7O8G0SAYjCr45T2VLtLrtzjDTFZzd1oV3Fg2wUhoEu6q+
+	 mdLI6NSbG+ZwuYi27SkTMG2JY5i/wzpElTcwFCI62DJl3Ahjem50hXjKo12yPUI0Ma
+	 EhRhXBP+0+WTFSoAc2lQehHnGL8uDNlKLG5iZU9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgAFSTh (ORCPT
+        id S1726721AbgAFSWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 13:19:37 -0500
-Received: from foss.arm.com ([217.140.110.172]:46932 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726569AbgAFSTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 13:19:36 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0FBE9328;
-        Mon,  6 Jan 2020 10:19:36 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D2B43F534;
-        Mon,  6 Jan 2020 10:19:35 -0800 (PST)
-Subject: Re: [PATCH] iommu/dma: fix variable 'cookie' set but not used
-To:     Qian Cai <cai@lca.pw>, jroedel@suse.de
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-References: <20200106152727.1589-1-cai@lca.pw>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <418dcce0-f048-a4cc-3360-d4b9c7926a6d@arm.com>
-Date:   Mon, 6 Jan 2020 18:19:34 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 6 Jan 2020 13:22:34 -0500
+Received: from mail-qk1-f173.google.com ([209.85.222.173]:42899 "EHLO
+        mail-qk1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgAFSWe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 13:22:34 -0500
+Received: by mail-qk1-f173.google.com with SMTP id z14so39005435qkg.9
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 10:22:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5o2wRNCAKMcT/+6xTLyRnYIYx1n3D4DAHiecu8IQyes=;
+        b=ckOvbiZou7OnvBjv8IpRiWZLu+SoPVStYUAKND4GlXtFrSgfa/yHShzLtmSZ5DA8ik
+         zptwYPm0bcT9pRCpM+VVrUrM+ScseQ62S6oT/IdvF3k0Mm6h0cbmQltHvZ+U/qVUjn00
+         sYRLoLFt+rvethCpi9tOihwEAuR3yyxP2pgBM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=5o2wRNCAKMcT/+6xTLyRnYIYx1n3D4DAHiecu8IQyes=;
+        b=TaaFPckkqUCyuJGZkxsKdoJPz7hu6Sj/u/LyiwbGI3wAb66vQzwFt9TsgnKDuTAHys
+         /f6tP5Mr5RbpDzeSPHynoiSVVXf8wVqHpWVrfbHwc/587WsRGqfV+4dLjKZIaxRGINfa
+         Zpm7UHNuhRCR28Cwv00WPeS0MjoHkK261rF05qiubnQPOY6aL18XRM6iyuf/eWV/NvJe
+         9kk2Q8jGCtcHWY7zqlCZwI1mBdtuIqQCt+AYENBT7nQRRlQm/PrQv0NISaGX3VmXHvuC
+         CDJnUI0EkcTKY5bdoyqryemD9lgCQjH1BpFPqWTXOpWGOYpHRYLkgHp6+sj0yl6RbfSK
+         qiww==
+X-Gm-Message-State: APjAAAUzTrHQsCpHugIgsqBg2hliqhG/TYpd1EBKep8P4+Ruypq9g8pY
+        ImcZZ8rSDJo1FSIy2tV6DeMjvw==
+X-Google-Smtp-Source: APXvYqy+kLdlot2GUS5g7xCWLYAFic1eAv6vabAR+KojeGzv8G2ONbXwuzGXftaPD9ArDnSSsPOMbA==
+X-Received: by 2002:a05:620a:1183:: with SMTP id b3mr80424517qkk.316.1578334951923;
+        Mon, 06 Jan 2020 10:22:31 -0800 (PST)
+Received: from chatter.i7.local (107-179-243-71.cpe.teksavvy.com. [107.179.243.71])
+        by smtp.gmail.com with ESMTPSA id z141sm21094092qkb.63.2020.01.06.10.22.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 10:22:31 -0800 (PST)
+Date:   Mon, 6 Jan 2020 13:22:29 -0500
+From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        users@linux.kernel.org
+Subject: Re: [RFC] tools lib traceevent: How to do library versioning being
+ in the Linux kernel source?
+Message-ID: <20200106182229.3sntyytugif4hesi@chatter.i7.local>
+Mail-Followup-To: Jiri Olsa <jolsa@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        users@linux.kernel.org
+References: <20200102122004.216c85da@gandalf.local.home>
+ <20200102234950.GA14768@krava>
+ <20200102185853.0ed433e4@gandalf.local.home>
+ <20200103133640.GD9715@krava>
+ <20200103181614.7aa37f6d@gandalf.local.home>
+ <20200106151902.GB236146@krava>
 MIME-Version: 1.0
-In-Reply-To: <20200106152727.1589-1-cai@lca.pw>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200106151902.GB236146@krava>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/01/2020 3:27 pm, Qian Cai wrote:
-> The commit c18647900ec8 ("iommu/dma: Relax locking in
-> iommu_dma_prepare_msi()") introduced a compliation warning,
-> 
-> drivers/iommu/dma-iommu.c: In function 'iommu_dma_prepare_msi':
-> drivers/iommu/dma-iommu.c:1206:27: warning: variable 'cookie' set but
-> not used [-Wunused-but-set-variable]
->    struct iommu_dma_cookie *cookie;
->                             ^~~~~~
+On Mon, Jan 06, 2020 at 04:19:02PM +0100, Jiri Olsa wrote:
+> > I wonder if there should be a:
+> > 
+> >   git://git.kernel.org/pub/scm/utils/lib/
+> > 
+> > directory to have:
+> > 
+> >   git://git.kernel.org/pub/scm/utils/lib/traceevent/
+> >   git://git.kernel.org/pub/scm/utils/lib/libbpf/
+> >   git://git.kernel.org/pub/scm/utils/lib/libperf/
 
-Fair enough... I guess this is a W=1 thing? Either way there's certainly 
-no harm in cleaning up.
+We already have 'pub/scm/libs' so I suggest we just place things there:
 
-Acked-by: Robin Murphy <robin.murphy@arm.com>
+pub/scm/libs/traceevent
+pub/scm/libs/libbpf
+pub/scm/libs/libperf
 
-> Fixes: c18647900ec8 ("iommu/dma: Relax locking in iommu_dma_prepare_msi()")
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->   drivers/iommu/dma-iommu.c | 3 ---
->   1 file changed, 3 deletions(-)
-> 
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index c363294b3bb9..a2e96a5fd9a7 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -1203,7 +1203,6 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
->   {
->   	struct device *dev = msi_desc_to_dev(desc);
->   	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
-> -	struct iommu_dma_cookie *cookie;
->   	struct iommu_dma_msi_page *msi_page;
->   	static DEFINE_MUTEX(msi_prepare_lock); /* see below */
->   
-> @@ -1212,8 +1211,6 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
->   		return 0;
->   	}
->   
-> -	cookie = domain->iova_cookie;
-> -
->   	/*
->   	 * In fact the whole prepare operation should already be serialised by
->   	 * irq_domain_mutex further up the callchain, but that's pretty subtle
-> 
+Normally, we do a whole subdir, but that can be unnecessary, especially 
+to avoid repetitions like:
+
+pub/scm/libs/libgpiod/libgpiod.git
+
+If the suggested locations work for you, just email helpdesk@kernel.org 
+requesting their creation, and please specify who should have push 
+access to them.
+
+-K
