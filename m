@@ -2,108 +2,104 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8614C32771
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9906EC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB3120731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D15320731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:17:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="blZaf2bF"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Yt1hd/P1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgAFLRe (ORCPT
+        id S1726560AbgAFLR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 06:17:34 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35308 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726155AbgAFLRe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 06:17:34 -0500
-Received: by mail-wr1-f66.google.com with SMTP id g17so49150945wro.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 03:17:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=cQ5rRwhZnemiZ9ZgJkoSlgV14RD99l4994u/SctoHeo=;
-        b=blZaf2bFuxBU4cD6pJRn+51r8JWOy5QWF2F430FbI8HqUUzl+OPeskJIWiyY/JDCZx
-         88XvGXaKRCV0dnzNWHZBJxdgUXYt2kG/mzd06sIJZEVInapSITQBdfrB/aUivHHBJAfM
-         zvkaHDv8sj2/pP0sc2gYkaI+iDRI5oRNQIBaveatD32kxvgbPnOjNtDGGPlXS8E3VnHS
-         eNgcJhvAEkC/CLoBdSBd04QBg+TTi8vQoJ687Lauk1SHjv2FbNM3FKSKj23i1NFZwCTH
-         MABrMCYsgRPBD4kGM/Px0TVcWKN+wAOrvkFES/SL6hNQxf4tBImR6JY+lYedt1kY/tHw
-         fKcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=cQ5rRwhZnemiZ9ZgJkoSlgV14RD99l4994u/SctoHeo=;
-        b=HyugvmoJBJt0HVzM57R/KtYHAHRZBJhHqzufb5hcnGJpCCGQXCdZV+ccAFLc0JqGzZ
-         4a4NhRq7gsF/O7hNc6CFZ9yXZN8pP/7WFa9FUalJ/ZbmtuDW+UCzBdlZbaZRy5pTYoAm
-         V9GaLLoGedfZZNHRFxxtst/FshZu+eIpVmU1FAlG4xKIlVUgwg48ZfNOuaK9MSHUnytu
-         2esMsGaZeL9qf53MVsVjORzt3P3CihBVwi6Gojm0xiIdbWezaKg2EI7QXAnsdZzGlEJl
-         WR/mX7by7QrQwXwuWVS/JsmQnp2X7hbJ3iSBn7SotpavpcSZLneQLrxTw99WeRPncA+z
-         NJJg==
-X-Gm-Message-State: APjAAAW2LONkDwuPcxn11iaVrCflJ3Fq5ErKzHr+o8+cjs5iegDUSFbt
-        lG3vSkMC0Fl+oG1k9KjQw1dXLA==
-X-Google-Smtp-Source: APXvYqylPmSsm/jdoHEzDEZJDy4X9QFHopZzpjkRxI4lqV6QC3VSnW0i//kRQXYflqWhCMD3z4M38Q==
-X-Received: by 2002:a5d:44ca:: with SMTP id z10mr109310594wrr.266.1578309452254;
-        Mon, 06 Jan 2020 03:17:32 -0800 (PST)
-Received: from dell ([2.27.35.135])
-        by smtp.gmail.com with ESMTPSA id v8sm71653041wrw.2.2020.01.06.03.17.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 03:17:31 -0800 (PST)
-Date:   Mon, 6 Jan 2020 11:17:37 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Paul Gazzillo <paul@pgazz.com>
-Subject: Re: [PATCH] mfd: max77650: Select REGMAP_IRQ in Kconfig
-Message-ID: <20200106111737.GB14821@dell>
-References: <20200103114156.20089-1-brgl@bgdev.pl>
+        Mon, 6 Jan 2020 06:17:57 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:38503 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726155AbgAFLR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 06:17:57 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47rtKG4HMwz81;
+        Mon,  6 Jan 2020 12:17:54 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1578309475; bh=CCLxX53RZtZFK1gL18DyCLhrUoZctB9AHHRdjY+vBfA=;
+        h=Date:From:Subject:In-Reply-To:To:Cc:From;
+        b=Yt1hd/P1LEG9U6ev3oKFIA553MlvGDLb9N3rar36dJeyTGq9REJFgJunUMOMg4tbu
+         vXRMz56q2lB7PE/jY8T0qa5Tjfnq7F/RbNqh0bJ35+8knC/vlbZkc+ZdvarD8l4trp
+         k2CwTZgxVCSa8ESdZvIgYbUmCyvB5LTfpgyS8rqHn9Nc1qJTMFOjsyZ7IANmkNa648
+         1oykxDDx4pw25S6qQ2uIy97VDe7QuppMvAbWr7idiW4qLuoMaEXufCj+LZBKSa65Wx
+         HXbITfpzmyGrZFSIJtlES2HXUHpHGTCJudcojX0TC0p1N1c+vZc+baH9c/H6VdjbpZ
+         ZortkXZJwCTjA==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+Date:   Mon, 06 Jan 2020 12:17:54 +0100
+Message-Id: <e5b39c16dc6dcb25324f6e8389cc0d0f895c1cbd.1578309319.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH v2] iio: imu/mpu6050: support dual-edge IRQ
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200103114156.20089-1-brgl@bgdev.pl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <MN2PR12MB33737F067F25B2F7477C4FE5C43C0@MN2PR12MB3373.namprd12.prod.outlook.com>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 03 Jan 2020, Bartosz Golaszewski wrote:
+Make mpu6050 usable on platforms which provide only any-edge interrupts.
+This also covers shared interrupt case.
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> MAX77650 MFD driver uses regmap_irq API but doesn't select the required
-> REGMAP_IRQ option in Kconfig. This can cause the following build error
-> if regmap irq is not enabled implicitly by someone else:
-> 
->     ld: drivers/mfd/max77650.o: in function `max77650_i2c_probe':
->     max77650.c:(.text+0xcb): undefined reference to `devm_regmap_add_irq_chip'
->     ld: max77650.c:(.text+0xdb): undefined reference to `regmap_irq_get_domain'
->     make: *** [Makefile:1079: vmlinux] Error 1
-> 
-> Fix it by adding the missing option.
-> 
-> Fixes: d0f60334500b ("mfd: Add new driver for MAX77650 PMIC")
-> Reported-by: Paul Gazzillo <paul@pgazz.com>
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  drivers/mfd/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-Applied, thanks.
+---
+v2:
+   just remove the dev_warn() message
 
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+---
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 2 +-
+ drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c | 5 +----
+ 2 files changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+index 0686e41bb8a1..b3d138091f89 100644
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+@@ -1241,7 +1241,7 @@ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
+ 	irq_type = irqd_get_trigger_type(desc);
+ 	if (!irq_type)
+ 		irq_type = IRQF_TRIGGER_RISING;
+-	if (irq_type == IRQF_TRIGGER_RISING)
++	if (irq_type & IRQF_TRIGGER_RISING)	// rising or both-edge
+ 		st->irq_mask = INV_MPU6050_ACTIVE_HIGH;
+ 	else if (irq_type == IRQF_TRIGGER_FALLING)
+ 		st->irq_mask = INV_MPU6050_ACTIVE_LOW;
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
+index 10d16ec5104b..a4dc2c4a3ca5 100644
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
+@@ -183,11 +183,8 @@ irqreturn_t inv_mpu6050_read_fifo(int irq, void *p)
+ 			"failed to ack interrupt\n");
+ 		goto flush_fifo;
+ 	}
+-	if (!(int_status & INV_MPU6050_BIT_RAW_DATA_RDY_INT)) {
+-		dev_warn(regmap_get_device(st->map),
+-			"spurious interrupt with status 0x%x\n", int_status);
++	if (!(int_status & INV_MPU6050_BIT_RAW_DATA_RDY_INT))
+ 		goto end_session;
+-	}
+ 
+ 	if (!(st->chip_config.accl_fifo_enable |
+ 		st->chip_config.gyro_fifo_enable |
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.20.1
+
