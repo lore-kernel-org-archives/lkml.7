@@ -2,136 +2,124 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF2EC33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD191C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4A62072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:26:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KT3zTq13"
+	by mail.kernel.org (Postfix) with ESMTP id 7FE4A2467D
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:28:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578349681;
+	bh=9/pXoDuPOel5TvHcthR39pw/yucCrUp29xCV7mhe3QQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VVQAh/PwA4Md7iS9ipgY8rdKWy+CpewnEZIefZMMUTt1REiuFPc5HTncWMvCVNaZQ
+	 5lyJedn/X5rKsmHw1XgyDHx6ZX5Ey/zqSYFYj361RoCF0QVyvmjE9tv+l4+oJcArm6
+	 bsmM4DXAaoWuh5AtyRJGMAbImrAMGuElW6g/5Kpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbgAFW0g (ORCPT
+        id S1727139AbgAFW2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 17:26:36 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41732 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbgAFW0f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 17:26:35 -0500
-Received: by mail-ot1-f66.google.com with SMTP id r27so73612211otc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 14:26:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mxfnlzR8Z4ts/JAYctHXiWfBXAVi4Rg1+RqTkuxcXH0=;
-        b=KT3zTq13pwos3lUHyrco2lsAUWV1EAmrdS4rtw5xveHovt/+6pDL09kW9Ah4vhaDtm
-         WaQoZdUA+TVRoB+VboEKRwhnRBaQMTgHSyDlkebw8+92WLTfEQY0TeE6KMtVMNma75FZ
-         /0Su8D2L8COpd1ADE6dvVNrFzuyR+9tbIewVaht1E2oyZHlbk2jXZzU8FU9owkSMLs/7
-         wyftUApIEdV5rYxtUByhbx1ASniTjeUDluhBGktPAD7sXfuMCezwUvt3XnWmK3YZofCV
-         rTXKaN4t9D2CHuh6wPGSvza01dPbi8pWHrrcPR93JbwiFAihEESqZrIMuZBbAYLTJjvj
-         eyfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mxfnlzR8Z4ts/JAYctHXiWfBXAVi4Rg1+RqTkuxcXH0=;
-        b=UVBMm+Swfmp+MadFlKtDXVMAQ1R9aAXrL9C9VSBPCFaErT/EXRiio8Pgm7Y5HkcCdV
-         ZmO//US1fm4B6G687YItpfxvd7+Ipiu65h6ZR7LaK5gB+Do4qiiKyvddnKBomsIV9prx
-         NSCdAPou0TWBO1nsWcZ/BMl1iMD8V7MeGj3jzFWxgtpvJrIqk+2eZxdHQdtD4RVwckqY
-         9hviGcEwO+XHwPlxuwjzOqEKGeGmPXfH+XmXhCSGnBjbDUhnGRw3A6FVtVIdloj6Y60m
-         TKXQUv3VNrGCmJ1OhTBtx7pa5tNrSDcyAKAV0yWyjXYf7KDOBbj2+bfqOrd9T7flffcv
-         DQ8w==
-X-Gm-Message-State: APjAAAXAwLRh4SCf5cNdX39mHqDe0UckwHizqPuZu5wMIJBoX3UlcfbF
-        NwBuOjlvB9vPBmPCfDb6mX7RGWwLkSXyJfn2lWb1fA==
-X-Google-Smtp-Source: APXvYqwL3jAWdvMDMj4aRBZmqvQUERlVV6jXvZVasskn9QFt2yWJfcehfWgI+srl/dO2csohUYzK2dK4JXfZgXIo96Q=
-X-Received: by 2002:a9d:644a:: with SMTP id m10mr14535027otl.97.1578349594831;
- Mon, 06 Jan 2020 14:26:34 -0800 (PST)
+        Mon, 6 Jan 2020 17:28:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58422 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726721AbgAFW2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 17:28:00 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4FC42072A;
+        Mon,  6 Jan 2020 22:27:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578349677;
+        bh=9/pXoDuPOel5TvHcthR39pw/yucCrUp29xCV7mhe3QQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gyvZqGKWN+TsgfzXDFiTRGYsvBq7Q2MieKNhkhDGeIT8rrGK9G5mFScXCIJmUsQEC
+         X0VqSfRNfHB+Zg7QDvWsLp/ZhLiLM0Mpjhbu576bkI9VZv2JYtKd5RzEwJ23cEbAyO
+         9a4HTX2s5+2+3B80fCLdmtSexKfuOxG58nZU0/yQ=
+Date:   Mon, 6 Jan 2020 23:27:55 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andre Przywara <andre.przywara@arm.com>
+Subject: Re: linux-next: build failure after merge of the sunxi tree
+Message-ID: <20200106222755.hdi6fna2ypjwl2em@gilmour.lan>
+References: <20200107092017.1f219a19@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200106181329.167322-1-hridya@google.com> <d78e4db4-5847-082c-189a-f13d7d6a6c7a@tycho.nsa.gov>
- <CA+wgaPMHWOVYo_pVeYuvj6CrQOgy9=vQco+tnGHjPX3=CLh5wA@mail.gmail.com> <c1354989-1e08-1433-f2c0-5984da341cf5@tycho.nsa.gov>
-In-Reply-To: <c1354989-1e08-1433-f2c0-5984da341cf5@tycho.nsa.gov>
-From:   Hridya Valsaraju <hridya@google.com>
-Date:   Mon, 6 Jan 2020 14:25:58 -0800
-Message-ID: <CA+wgaPNWxpa4bUqer2kJZBATEf1NRvGD2pN4_mkev2NiS7U-Sw@mail.gmail.com>
-Subject: Re: [PATCH] security: selinux: allow per-file labelling for binderfs
-To:     Stephen Smalley <sds@tycho.nsa.gov>
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Mark Salyzyn <salyzyn@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xzhf6pkz635zwjnk"
+Content-Disposition: inline
+In-Reply-To: <20200107092017.1f219a19@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 6, 2020 at 11:33 AM Stephen Smalley <sds@tycho.nsa.gov> wrote:
->
-> On 1/6/20 2:06 PM, Hridya Valsaraju wrote:
-> > On Mon, Jan 6, 2020 at 10:33 AM 'Stephen Smalley' via kernel-team
-> > <kernel-team@android.com> wrote:
-> >>
-> >> On 1/6/20 1:13 PM, Hridya Valsaraju wrote:
-> >>> This patch allows genfscon per-file labeling for binderfs.
-> >>> This is required to have separate permissions to allow
-> >>> access to binder, hwbinder and vndbinder devices which are
-> >>> relocating to binderfs.
-> >>>
-> >>> Acked-by: Jeff Vander Stoep <jeffv@google.com>
-> >>> Acked-by: Mark Salyzyn <salyzyn@android.com>
-> >>> Signed-off-by: Hridya Valsaraju <hridya@google.com>
-> >>
-> >> Do you want binderfs to also support userspace labeling of files via
-> >> setxattr()?  If so, you'll want to also add it to
-> >> selinux_is_genfs_special_handling() as well.
-> >
-> > Thank you for the quick response Stephen :) I cannot think of a
-> > use-case for the userspace labelling of files in binderfs via
-> > setxattr() as of now. I
-> > will make the change if one comes up!
->
-> Ok, then you can include my:
-> Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
 
-Great! Thank you for reviewing my patch Stephen!
+--xzhf6pkz635zwjnk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Regards,
-Hridya
+Hi,
 
+On Tue, Jan 07, 2020 at 09:20:17AM +1100, Stephen Rothwell wrote:
+> Hi all,
 >
-> >
-> > Thanks,
-> > Hridya
-> >
-> >
-> >>
-> >>> ---
-> >>>    security/selinux/hooks.c | 1 +
-> >>>    1 file changed, 1 insertion(+)
-> >>>
-> >>> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> >>> index 116b4d644f68..3f0669a708e9 100644
-> >>> --- a/security/selinux/hooks.c
-> >>> +++ b/security/selinux/hooks.c
-> >>> @@ -752,6 +752,7 @@ static int selinux_set_mnt_opts(struct super_block *sb,
-> >>>
-> >>>        if (!strcmp(sb->s_type->name, "debugfs") ||
-> >>>            !strcmp(sb->s_type->name, "tracefs") ||
-> >>> +         !strcmp(sb->s_type->name, "binderfs") ||
-> >>>            !strcmp(sb->s_type->name, "pstore"))
-> >>>                sbsec->flags |= SE_SBGENFS;
-> >>>
-> >>>
-> >>
-> >> --
-> >> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
-> >>
+> After merging the sunxi tree, today's linux-next build (arm
+> multi_v7_defconfig) failed like this:
 >
+> arch/arm/boot/dts/sun8i-r40.dtsi:656.21-669.5: ERROR (phandle_references): /soc/spi@1c05000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:656.21-669.5: ERROR (phandle_references): /soc/spi@1c05000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:671.21-684.5: ERROR (phandle_references): /soc/spi@1c06000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:671.21-684.5: ERROR (phandle_references): /soc/spi@1c06000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:686.21-699.5: ERROR (phandle_references): /soc/spi@1c07000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:686.21-699.5: ERROR (phandle_references): /soc/spi@1c07000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:701.21-714.5: ERROR (phandle_references): /soc/spi@1c0f000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:701.21-714.5: ERROR (phandle_references): /soc/spi@1c0f000: Reference to non-existent node or label "dma"
+> ERROR: Input tree has errors, aborting (use -f to force output)
+> make[2]: *** [scripts/Makefile.lib:292: arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dtb] Error 2
+> arch/arm/boot/dts/sun8i-r40.dtsi:656.21-669.5: ERROR (phandle_references): /soc/spi@1c05000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:656.21-669.5: ERROR (phandle_references): /soc/spi@1c05000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:671.21-684.5: ERROR (phandle_references): /soc/spi@1c06000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:671.21-684.5: ERROR (phandle_references): /soc/spi@1c06000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:686.21-699.5: ERROR (phandle_references): /soc/spi@1c07000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:686.21-699.5: ERROR (phandle_references): /soc/spi@1c07000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:701.21-714.5: ERROR (phandle_references): /soc/spi@1c0f000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:701.21-714.5: ERROR (phandle_references): /soc/spi@1c0f000: Reference to non-existent node or label "dma"
+> ERROR: Input tree has errors, aborting (use -f to force output)
+> make[2]: *** [scripts/Makefile.lib:292: arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dtb] Error 2
+> arch/arm/boot/dts/sun8i-r40.dtsi:656.21-669.5: ERROR (phandle_references): /soc/spi@1c05000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:656.21-669.5: ERROR (phandle_references): /soc/spi@1c05000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:671.21-684.5: ERROR (phandle_references): /soc/spi@1c06000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:671.21-684.5: ERROR (phandle_references): /soc/spi@1c06000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:686.21-699.5: ERROR (phandle_references): /soc/spi@1c07000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:686.21-699.5: ERROR (phandle_references): /soc/spi@1c07000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:701.21-714.5: ERROR (phandle_references): /soc/spi@1c0f000: Reference to non-existent node or label "dma"
+> arch/arm/boot/dts/sun8i-r40.dtsi:701.21-714.5: ERROR (phandle_references): /soc/spi@1c0f000: Reference to non-existent node or label "dma"
+> ERROR: Input tree has errors, aborting (use -f to force output)
+> make[2]: *** [scripts/Makefile.lib:292: arch/arm/boot/dts/sun8i-t3-cqa3t-bv3.dtb] Error 2
+>
+> I am not sure which commits caused this.  I have used the sunxi tree
+> from next-20200106 for today.
+
+I just (~1 minute ago) pushed a fix for this.
+
+sorry for the troubles.
+
+Maxime
+
+--xzhf6pkz635zwjnk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXhO0awAKCRDj7w1vZxhR
+xVXmAP9x3chdiZO7vDUMjdoWrEWEYIaYadKmWP/sF08xr/6/lQD+KgZDJYGY78dz
+Sj3QiWhIuOMfwoMgPId46V/s2CIaaAI=
+=MG1a
+-----END PGP SIGNATURE-----
+
+--xzhf6pkz635zwjnk--
