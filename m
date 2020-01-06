@@ -2,76 +2,194 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B26EC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C443DC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B292080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:33:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jBYfXbdA"
+	by mail.kernel.org (Postfix) with ESMTP id 96D5C2080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:33:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578346431;
+	bh=9xjcdTmTHFBtmtqEGw9ymke6KbH6TNuRC64eu6PBQ14=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yWwleC5vHxF9EV4+BSH+1WZUvaQOHGl2Vb4GIbCRVc+ZZ1y/++iTQoxvzjgcZFAWs
+	 4vB1HxpzyrHquL69Ninu5zUbLkJc+Q1Ex9xq6Yg0l66ufHXNWphXhTop5ZZ8G4I6Ab
+	 kjy861EvmZ4w2Sg/AE8fwRgyvdvfSWE/kwdi7jVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbgAFVdq (ORCPT
+        id S1727180AbgAFVdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 16:33:46 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59066 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727080AbgAFVdo (ORCPT
+        Mon, 6 Jan 2020 16:33:50 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44470 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727132AbgAFVdp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 16:33:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578346423;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8ZH2G/JTot6OPpDakMqvB1skfWHMhWrQnGwWc63arzk=;
-        b=jBYfXbdAoSnahBspNydMYISBDBCfx5jaRhL1wkbcZHtrPf9W0rryiE10ywfecy+ioIb2R2
-        XaRR0NF9q4H9fBN2jS3J7fNcaoy5C57QHkIbfXeMFxlT7DY07ZZzfcu8SuSZb2Yo/UhGIC
-        Qa87GcvEFqTB76c+bclSdnaUz1RnKtc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-329--QWKhjTnNNinoRn0TlM2Zw-1; Mon, 06 Jan 2020 16:33:41 -0500
-X-MC-Unique: -QWKhjTnNNinoRn0TlM2Zw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B66DE8045D2;
-        Mon,  6 Jan 2020 21:33:39 +0000 (UTC)
-Received: from localhost (ovpn-112-4.rdu2.redhat.com [10.10.112.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6B41C60CD1;
-        Mon,  6 Jan 2020 21:33:37 +0000 (UTC)
-Date:   Mon, 06 Jan 2020 13:33:36 -0800 (PST)
-Message-Id: <20200106.133336.719905028750983361.davem@redhat.com>
-To:     masahiroy@kernel.org
-Cc:     linux-kbuild@vger.kernel.org, sparclinux@vger.kernel.org,
-        arnd@arndb.de, bcollins@debian.org, michal.lkml@markovi.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] modpost: assume STT_SPARC_REGISTER is defined
-From:   David Miller <davem@redhat.com>
-In-Reply-To: <20200104153651.2258-1-masahiroy@kernel.org>
-References: <20200104153651.2258-1-masahiroy@kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Mon, 6 Jan 2020 16:33:45 -0500
+Received: by mail-pg1-f196.google.com with SMTP id x7so27438011pgl.11;
+        Mon, 06 Jan 2020 13:33:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/YlYKPHpunNCuwNpgLXYWk+P5gDqWSvQ71BDe2+/jE4=;
+        b=N4j72bn0hNdQItfQfGkUaTpmwnyqrKkNrlAvj+xLTnxu0NQOeTbQBdk8DD0BDQ2yoQ
+         VzpltOJInN7hJSuF+ZgbeDJDcsQOidcI2NRZxXd4AMMikmHn5WyqmrBhkSS+1q/7eRSS
+         m+N3VndZbyQWIuZk5fogbxkxQj4XsUtQPYbSMBDG6PmuXf3yRB1gkPINkLw7Fu2t8jzd
+         NO/LvfCrSHlO7z6cKEDHSwTqZw4n4wT0CYaH/P7qqOEQbCPa3MYJ/SvHDPAAtggE3Sy7
+         cx4oAL0/SUKjwFomEwttomNiBm49+LNnJTI4S7UVOljDpB5/CB8OO6noiiPr2laRgR+M
+         Ry0A==
+X-Gm-Message-State: APjAAAUKzidBXOlevtkaqHg50aeyzIxbWL5KwbG0V9ZZf3A4Wtjg5C+W
+        qNir5xZQuw24l/uXO3Hj0Rk=
+X-Google-Smtp-Source: APXvYqwGiPQYAYwL9vWqDpJIl1HKxVMoDt4Ev4E/5klzEl3TNuNV/EZy4Blrnh13RzpOm/I800S+Nw==
+X-Received: by 2002:aa7:8e13:: with SMTP id c19mr76663440pfr.227.1578346424985;
+        Mon, 06 Jan 2020 13:33:44 -0800 (PST)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id 11sm81070528pfz.25.2020.01.06.13.33.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 13:33:43 -0800 (PST)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 1E46040321; Mon,  6 Jan 2020 21:33:43 +0000 (UTC)
+Date:   Mon, 6 Jan 2020 21:33:43 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v10 05/10] test_firmware: add support for
+ firmware_request_platform
+Message-ID: <20200106213343.GV11244@42.do-not-panic.com>
+References: <20191210115117.303935-1-hdegoede@redhat.com>
+ <20191210115117.303935-6-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210115117.303935-6-hdegoede@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sun,  5 Jan 2020 00:36:51 +0900
-
-> Commit 8d5290149ee1 ("[SPARC]: Deal with glibc changing macro names in
-> modpost.c") was more than 14 years ago. STT_SPARC_REGISTER is hopefully
-> defined in elf.h of recent C libraries.
+On Tue, Dec 10, 2019 at 12:51:12PM +0100, Hans de Goede wrote:
+> Add support for testing firmware_request_platform through a new
+> trigger_request_platform trigger.
 > 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  lib/test_firmware.c | 68 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+> 
+> diff --git a/lib/test_firmware.c b/lib/test_firmware.c
+> index 251213c872b5..9af00cfc8979 100644
+> --- a/lib/test_firmware.c
+> +++ b/lib/test_firmware.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/kthread.h>
+>  #include <linux/vmalloc.h>
+> +#include <linux/efi_embedded_fw.h>
+>  
+>  #define TEST_FIRMWARE_NAME	"test-firmware.bin"
+>  #define TEST_FIRMWARE_NUM_REQS	4
+> @@ -507,12 +508,76 @@ static ssize_t trigger_request_store(struct device *dev,
+>  }
+>  static DEVICE_ATTR_WO(trigger_request);
+>  
+> +#ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
+> +static ssize_t trigger_request_platform_store(struct device *dev,
+> +					      struct device_attribute *attr,
+> +					      const char *buf, size_t count)
+> +{
+> +	static const u8 test_data[] = {
+> +		0x55, 0xaa, 0x55, 0xaa, 0x01, 0x02, 0x03, 0x04,
+> +		0x55, 0xaa, 0x55, 0xaa, 0x05, 0x06, 0x07, 0x08,
+> +		0x55, 0xaa, 0x55, 0xaa, 0x10, 0x20, 0x30, 0x40,
+> +		0x55, 0xaa, 0x55, 0xaa, 0x50, 0x60, 0x70, 0x80
+> +	};
+> +	struct efi_embedded_fw fw;
+> +	int rc;
+> +	char *name;
+> +
+> +	name = kstrndup(buf, count, GFP_KERNEL);
+> +	if (!name)
+> +		return -ENOSPC;
+> +
+> +	pr_info("inserting test platform fw '%s'\n", name);
+> +	fw.name = name;
+> +	fw.data = (void *)test_data;
+> +	fw.length = sizeof(test_data);
+> +	list_add(&fw.list, &efi_embedded_fw_list);
+> +
+> +	pr_info("loading '%s'\n", name);
+> +
+> +	mutex_lock(&test_fw_mutex);
+> +	release_firmware(test_firmware);
+> +	test_firmware = NULL;
 
-Acked-by: David S. Miller <davem@davemloft.net>
+Seems odd to have the above two lines here before the request, why not
+after as noted below.
 
+> +	rc = firmware_request_platform(&test_firmware, name, dev);
+> +	if (rc) {
+> +		pr_info("load of '%s' failed: %d\n", name, rc);
+> +		goto out;
+> +	}
+> +	if (test_firmware->size != sizeof(test_data) ||
+> +	    memcmp(test_firmware->data, test_data, sizeof(test_data)) != 0) {
+> +		pr_info("firmware contents mismatch for '%s'\n", name);
+> +		rc = -EINVAL;
+> +		goto out;
+> +	}
+> +	pr_info("loaded: %zu\n", test_firmware->size);
+> +	rc = count;
+
+Here.
+
+> +
+> +out:
+> +	mutex_unlock(&test_fw_mutex);
+> +
+> +	list_del(&fw.list);
+> +	kfree(name);
+> +
+> +	return rc;
+> +}
+> +static DEVICE_ATTR_WO(trigger_request_platform);
+> +#endif
+> +
+>  static DECLARE_COMPLETION(async_fw_done);
+>  
+>  static void trigger_async_request_cb(const struct firmware *fw, void *context)
+>  {
+>  	test_firmware = fw;
+>  	complete(&async_fw_done);
+> +
+> +
+> +
+> +
+> +
+> +
+> +
+> +
+> +
+>  }
+
+Ummm, new empty lines without any code added... did you forget
+something?  Please address this.
+
+  Luis
