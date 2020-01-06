@@ -2,191 +2,109 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B784C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65426C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02975207FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA45207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:13:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ebxUl9dh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgAFTMM (ORCPT
+        id S1726778AbgAFTNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 14:12:12 -0500
-Received: from mxout2.idt.com ([157.165.5.26]:43383 "EHLO mxout2.idt.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726683AbgAFTML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 14:12:11 -0500
-Received: from mail6.idt.com (localhost [127.0.0.1])
-        by mxout2.idt.com (8.14.4/8.14.4) with ESMTP id 006JC7D0019791;
-        Mon, 6 Jan 2020 11:12:07 -0800
-Received: from corpml3.corp.idt.com (corpml3.corp.idt.com [157.165.140.25])
-        by mail6.idt.com (8.14.4/8.14.4) with ESMTP id 006JC7xu029469;
-        Mon, 6 Jan 2020 11:12:07 -0800
-Received: from vcheng-VirtualBox.na.ads.idt.com (corpimss2.corp.idt.com [157.165.141.30])
-        by corpml3.corp.idt.com (8.11.7p1+Sun/8.11.7) with ESMTP id 006JC6W23356;
-        Mon, 6 Jan 2020 11:12:06 -0800 (PST)
-From:   vincent.cheng.xh@renesas.com
-To:     richardcochran@gmail.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vincent Cheng <vincent.cheng.xh@renesas.com>
-Subject: [PATCH v3 net-next 1/1] ptp: clockmatrix: Rework clockmatrix version information.
-Date:   Mon,  6 Jan 2020 14:11:49 -0500
-Message-Id: <1578337909-4700-2-git-send-email-vincent.cheng.xh@renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1578337909-4700-1-git-send-email-vincent.cheng.xh@renesas.com>
-References: <1578337909-4700-1-git-send-email-vincent.cheng.xh@renesas.com>
-X-TM-AS-MML: disable
+        Mon, 6 Jan 2020 14:13:25 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34560 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbgAFTNZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 14:13:25 -0500
+Received: by mail-pf1-f193.google.com with SMTP id i6so20526526pfc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 11:13:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CWeF+qEiMx35B55O581zGPkQBg4u6jbLRdkEV6WWjg8=;
+        b=ebxUl9dh1FKnFxAkXnwnaZCuaaW7Za3VZTOLf6eUWfhcIgGX1Xz4QDGju8SuP5ORKP
+         +du3pSdkH3bQlfRjCN85Ni0pP7LTiGwkCL4usBBoPhMGs/VMDbPuDOhZXAs4jIC7YSpo
+         YUZgh/lxWqemlC2IiMVH7ZifwWjV3hC1ot50I8x0NIKEM7/T7oUPFcio0crZXbwyMGRK
+         USHhjFnz5ZPdh1xzGPh3VrEq2zf2esPa9ytQvLFI3zghZ9o+qrEICzfoLrWXxWgCeCUe
+         84RIcJbbsECIWTdE/mUg9cmjkk21JgRELcVxW66bZElpCAa+SGdAUEXOu2hpLWdnhP+u
+         hOXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CWeF+qEiMx35B55O581zGPkQBg4u6jbLRdkEV6WWjg8=;
+        b=F7i3p02U/5VX0If052ENdcC8jkxzwBFkcP64j89uiatzABAEOua/asPTXOthNn9lmj
+         K2lICZQvRQfca8y642zKeThc9Jm9H7G6IRFGoy+tTJv+meuZsXNEYmYpmfDnn8+E9PcK
+         qmpmkZ5aoU9KyLgbbPCr6o9vCla7ct1BZwxHs3F3qsUS4Ielk/u+Iqpz5bEWzcyP4o0i
+         uJrplXPZ1lsIyvDsHssBjKIb8xa/qdUPfwnvMfd7MK/cyRkZlUps8WapyWlpuKLjq4vM
+         dnKUyEISiLbhIg5ykQpycQAXazMFu+vjzO1cjns19Hgn3c/eZMVjhztXEn2MA+Bkg6mV
+         EnLA==
+X-Gm-Message-State: APjAAAUxjpQCL3A+WQo1Ty9qBdMYjW+NEcH417p+nNH5sizXh/EQRlEC
+        tJ+qM+WxPmGD/7Y1fUq6hyU9/Q==
+X-Google-Smtp-Source: APXvYqwVRgLXSzVPKren8Gq/VjMYYjdAkXhimprfkvlgbJfFMBCuRAYFriDOjImyXhnvrMbBQoyGsQ==
+X-Received: by 2002:a63:eb02:: with SMTP id t2mr112827707pgh.289.1578338004229;
+        Mon, 06 Jan 2020 11:13:24 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id r66sm80457803pfc.74.2020.01.06.11.13.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 11:13:23 -0800 (PST)
+Date:   Mon, 6 Jan 2020 11:13:21 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: msm8996: Fix venus iommu nodename error
+Message-ID: <20200106191321.GU3755841@builder>
+References: <20200106102305.27059-1-stanimir.varbanov@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200106102305.27059-1-stanimir.varbanov@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Cheng <vincent.cheng.xh@renesas.com>
+On Mon 06 Jan 02:23 PST 2020, Stanimir Varbanov wrote:
 
-Simplify and fix the version information displayed by the driver.
-The new info better relects what is needed to support the hardware.
+> Fix the following error/warn seen with make dtbs_check
+> 
+> arm,smmu-venus@d40000: $nodename:0: 'arm,smmu-venus@d40000' does not match '^iommu@[0-9a-f]*'
+> arm,smmu-venus@d40000: clock-names:0: 'bus' was expected
+> arm,smmu-venus@d40000: clock-names:1: 'iface' was expected
+> 
+> by rename nodename to "iommu".
+> 
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 
-Prev:
-Version: 4.8.0, Pipeline 22169 0x4001, Rev 0, Bond 5, CSR 311, IRQ 2
+Thanks Stan, applied.
 
-New:
-Version: 4.8.0, Id: 0x4001  Hw Rev: 5  OTP Config Select: 15
-
-- Removed pipeline, CSR and IRQ because version x.y.z already incorporates
-  this information.
-- Removed bond number because it is not used.
-- Removed rev number because register was not implemented, always 0
-- Add HW Rev ID register to replace rev number
-- Add OTP config select to show the user configuration chosen by
-  the configurable GPIO pins on start-up
-
-Signed-off-by: Vincent Cheng <vincent.cheng.xh@renesas.com>
----
- drivers/ptp/ptp_clockmatrix.c | 77 ++++++++-----------------------------------
- 1 file changed, 13 insertions(+), 64 deletions(-)
-
-diff --git a/drivers/ptp/ptp_clockmatrix.c b/drivers/ptp/ptp_clockmatrix.c
-index e858367..032e112 100644
---- a/drivers/ptp/ptp_clockmatrix.c
-+++ b/drivers/ptp/ptp_clockmatrix.c
-@@ -405,6 +405,7 @@ static int _idtcm_set_dpll_tod(struct idtcm_channel *channel,
- 	if (wr_trig == HW_TOD_WR_TRIG_SEL_MSB) {
- 
- 		if (idtcm->calculate_overhead_flag) {
-+			/* Assumption: I2C @ 400KHz */
- 			total_overhead_ns =  ktime_to_ns(ktime_get_raw()
- 							 - idtcm->start_time)
- 					     + idtcm->tod_write_overhead_ns
-@@ -596,44 +597,7 @@ static int idtcm_state_machine_reset(struct idtcm *idtcm)
- 
- static int idtcm_read_hw_rev_id(struct idtcm *idtcm, u8 *hw_rev_id)
- {
--	return idtcm_read(idtcm,
--			  GENERAL_STATUS,
--			  HW_REV_ID,
--			  hw_rev_id,
--			  sizeof(u8));
--}
--
--static int idtcm_read_bond_id(struct idtcm *idtcm, u8 *bond_id)
--{
--	return idtcm_read(idtcm,
--			  GENERAL_STATUS,
--			  BOND_ID,
--			  bond_id,
--			  sizeof(u8));
--}
--
--static int idtcm_read_hw_csr_id(struct idtcm *idtcm, u16 *hw_csr_id)
--{
--	int err;
--	u8 buf[2] = {0};
--
--	err = idtcm_read(idtcm, GENERAL_STATUS, HW_CSR_ID, buf, sizeof(buf));
--
--	*hw_csr_id = (buf[1] << 8) | buf[0];
--
--	return err;
--}
--
--static int idtcm_read_hw_irq_id(struct idtcm *idtcm, u16 *hw_irq_id)
--{
--	int err;
--	u8 buf[2] = {0};
--
--	err = idtcm_read(idtcm, GENERAL_STATUS, HW_IRQ_ID, buf, sizeof(buf));
--
--	*hw_irq_id = (buf[1] << 8) | buf[0];
--
--	return err;
-+	return idtcm_read(idtcm, HW_REVISION, REV_ID, hw_rev_id, sizeof(u8));
- }
- 
- static int idtcm_read_product_id(struct idtcm *idtcm, u16 *product_id)
-@@ -674,20 +638,11 @@ static int idtcm_read_hotfix_release(struct idtcm *idtcm, u8 *hotfix)
- 			  sizeof(u8));
- }
- 
--static int idtcm_read_pipeline(struct idtcm *idtcm, u32 *pipeline)
-+static int idtcm_read_otp_scsr_config_select(struct idtcm *idtcm,
-+					     u8 *config_select)
- {
--	int err;
--	u8 buf[4] = {0};
--
--	err = idtcm_read(idtcm,
--			 GENERAL_STATUS,
--			 PIPELINE_ID,
--			 &buf[0],
--			 sizeof(buf));
--
--	*pipeline = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
--
--	return err;
-+	return idtcm_read(idtcm, GENERAL_STATUS, OTP_SCSR_CONFIG_SELECT,
-+			  config_select, sizeof(u8));
- }
- 
- static int process_pll_mask(struct idtcm *idtcm, u32 addr, u8 val, u8 *mask)
-@@ -1078,28 +1033,22 @@ static void idtcm_display_version_info(struct idtcm *idtcm)
- 	u8 major;
- 	u8 minor;
- 	u8 hotfix;
--	u32 pipeline;
- 	u16 product_id;
--	u16 csr_id;
--	u16 irq_id;
- 	u8 hw_rev_id;
--	u8 bond_id;
-+	u8 config_select;
-+	char *fmt = "%d.%d.%d, Id: 0x%04x  HW Rev: %d  OTP Config Select: %d\n";
- 
- 	idtcm_read_major_release(idtcm, &major);
- 	idtcm_read_minor_release(idtcm, &minor);
- 	idtcm_read_hotfix_release(idtcm, &hotfix);
--	idtcm_read_pipeline(idtcm, &pipeline);
- 
- 	idtcm_read_product_id(idtcm, &product_id);
- 	idtcm_read_hw_rev_id(idtcm, &hw_rev_id);
--	idtcm_read_bond_id(idtcm, &bond_id);
--	idtcm_read_hw_csr_id(idtcm, &csr_id);
--	idtcm_read_hw_irq_id(idtcm, &irq_id);
--
--	dev_info(&idtcm->client->dev, "Version:  %d.%d.%d, Pipeline %u\t"
--		 "0x%04x, Rev %d, Bond %d, CSR %d, IRQ %d\n",
--		 major, minor, hotfix, pipeline,
--		 product_id, hw_rev_id, bond_id, csr_id, irq_id);
-+
-+	idtcm_read_otp_scsr_config_select(idtcm, &config_select);
-+
-+	dev_info(&idtcm->client->dev, fmt, major, minor, hotfix,
-+		 product_id, hw_rev_id, config_select);
- }
- 
- static const struct ptp_clock_info idtcm_caps = {
--- 
-2.7.4
-
+> ---
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> index 4ca2e7b44559..9bbcee31f28b 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> @@ -2267,7 +2267,7 @@
+>  			};
+>  		};
+>  
+> -		venus_smmu: arm,smmu-venus@d40000 {
+> +		venus_smmu: iommu@d40000 {
+>  			compatible = "qcom,msm8996-smmu-v2", "qcom,smmu-v2";
+>  			reg = <0xd40000 0x20000>;
+>  			#global-interrupts = <1>;
+> -- 
+> 2.17.1
+> 
