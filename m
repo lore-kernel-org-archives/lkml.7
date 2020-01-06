@@ -2,54 +2,55 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACFAC00523
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 00:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF6CC33C9A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 00:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 284A02072C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 00:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB9522072C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 00:43:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbgAFAmv (ORCPT
+        id S1727244AbgAFAnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 19:42:51 -0500
-Received: from mga09.intel.com ([134.134.136.24]:14491 "EHLO mga09.intel.com"
+        Sun, 5 Jan 2020 19:43:01 -0500
+Received: from mga11.intel.com ([192.55.52.93]:51826 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbgAFAmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 19:42:51 -0500
+        id S1726496AbgAFAnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 19:43:01 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jan 2020 16:42:50 -0800
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jan 2020 16:43:00 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,400,1571727600"; 
-   d="scan'208";a="210634382"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.6]) ([10.239.13.6])
-  by orsmga007.jf.intel.com with ESMTP; 05 Jan 2020 16:42:49 -0800
-Subject: Re: [block] f216fdd77b:
- BUG:kernel_reboot-without-warning_in_boot_stage
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        =?UTF-8?Q?Javier_Gonz=c3=a1lez?= <javier@javigon.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        lkp@lists.01.org
-References: <20191208153922.GI32275@shao2-debian>
- <20191209073152.GA14094@lst.de>
- <a67a0920-472f-7f86-299a-097bc2986a1c@intel.com>
- <20191209083637.GA15038@lst.de>
-From:   Rong Chen <rong.a.chen@intel.com>
-Message-ID: <b65813c2-5be1-224b-3094-b067f8f2e7f1@intel.com>
-Date:   Mon, 6 Jan 2020 08:42:32 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+   d="scan'208";a="394866806"
+Received: from unknown (HELO [10.239.196.123]) ([10.239.196.123])
+  by orsmga005.jf.intel.com with ESMTP; 05 Jan 2020 16:42:58 -0800
+Subject: Re: 4.9.208 regression in perf building
+To:     Jiri Olsa <jolsa@redhat.com>, Akemi Yagi <toracat@elrepo.org>
+Cc:     Gordan Bobic <gordan@redsleeve.org>, stable@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ElRepo <contact@elrepo.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+References: <CAMx4oe38RytiyqWfYb=So8iC6N=8nebqy3DsekiT7A5DGjpe+w@mail.gmail.com>
+ <CAMx4oe2JKTsOKg3P324PYRH=0ajOVDaXTLa7p=16Fo9fGiQSpQ@mail.gmail.com>
+ <CABA31DrtCwUj-wzPP+dwUP+=jTOHnt8eoS+d+N2yfAn22W19vA@mail.gmail.com>
+ <20200105193550.GA177781@krava>
+ <CABA31DoxzzoOgQXfLmaF2+msqi9F_sFRBN2thxe7W6+1QmWWgA@mail.gmail.com>
+ <20200105222502.GA207350@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <47d14944-e93f-e392-7d03-acf09bc1a414@linux.intel.com>
+Date:   Mon, 6 Jan 2020 08:42:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <20191209083637.GA15038@lst.de>
+In-Reply-To: <20200105222502.GA207350@krava>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -57,20 +58,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 12/9/19 4:36 PM, Christoph Hellwig wrote:
-> On Mon, Dec 09, 2019 at 04:08:56PM +0800, Rong Chen wrote:
->> Hi Christoph,
+On 1/6/2020 6:25 AM, Jiri Olsa wrote:
+> On Sun, Jan 05, 2020 at 12:06:07PM -0800, Akemi Yagi wrote:
+>> On Sun, Jan 5, 2020 at 11:36 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>>>
+>>> On Sun, Jan 05, 2020 at 10:21:25AM -0800, Akemi Yagi wrote:
+>>>> Adding Arnaldo and Jiri to the CC list.
+>>>>
+>>>> On Sun, Jan 5, 2020 at 9:01 AM Gordan Bobic <gordan@redsleeve.org> wrote:
+>>>>>
+>>>>> It looks like 4.9.208 introduces a build regression for perf:
+>>>>>
+>>>>> make -f /builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/build/Makefile.build
+>>>>> dir=. obj=perf
+>>>>
+>>>>>   -c -o builtin-report.o builtin-report.c
+>>>>> builtin-report.c: In function ‘report__setup_sample_type’:
+>>>>> builtin-report.c:296:6: error: ‘dwarf_callchain_users’ undeclared
+>>>>> (first use in this function)
+>>>>>    if (dwarf_callchain_users) {
+>>>>>        ^
+>>>>> builtin-report.c:296:6: note: each undeclared identifier is reported
+>>>>> only once for each function it appears in
+>>>>> mv: cannot stat ‘./.builtin-report.o.tmp’: No such file or directory
+>>>>> make[3]: *** [builtin-report.o] Error 1
+>>>>> make[2]: *** [perf-in.o] Error 2
+>>>>> make[1]: *** [sub-make] Error 2
+>>>>> make: *** [all] Error 2
+>>>>>
+>>>>> 4,9.207 works fine.
+>>>>
+>>>> The regression was caused by the following patch:
+>>>>
+>>>> https://lore.kernel.org/lkml/20191021133834.25998-7-acme@kernel.org/
+>>>>
+>>>> To fix this, 'dwarf_callchain_users' needs to be declared.
+>>>
+>>> hum, I see it's declared in callchain.h which is included in builtin-report.c
+>>> also I can't see that same stuff like you have on line 296.. what sources are you on?
+>>>
+>>> could you please check with latest Arnaldo's perf/core?
+>>>    git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
+>>>
+>>> thanks,
+>>> jirka
 >>
->> Kernel boot failed in early stage with commit "f216fdd77b":
-> Well, this config (plus enabling virtio for real) boots just fine for
-> me.  There is nothing in your dmesgs, which makes me assume the boot
-> stage means really early?  Nothing touched in this commit is involved
-> in the very early boot path, though.
+>> This is kernel 4.4.208 that was released today.
+>> 'dwarf_callchain_users' is not declared in this kernel. I'm afraid it
+>> was missed when the aforementioned patch was backported.
+> 
+> so 'dwarf_callchain_users' was introduced with:
+>    eabad8c6856f perf unwind: Do not look just at the global callchain_param.record_mode
+> 
+> which wasn't backported to 4.4.y and it seems it will need more
+> dependencies to be applied properly
+> 
+> however if I revert aforementioned patch:
+>    faece3af8072 perf report: Add warning when libunwind not compiled in
+> 
+> it compiles for me.. actualy I'm not sure why it went to stable,
+> it's just user info/warning
+> 
+> jirka
+> 
 
-Hi Christoph,
+Yes, agree with Jiri, this patch is only warning for user, but not for 
+fixing some issues.
 
-Sorry for the inconvenience, it should be a false positive,
-but we haven't figure it out yet.
-
-Best Regards,
-Rong Chen
+Thanks
+Jin Yao
