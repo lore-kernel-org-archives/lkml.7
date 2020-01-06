@@ -2,159 +2,116 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E95BEC33C9B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6CAC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCED520715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E692070E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:00:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T6z20UaR"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ZMVxUZ9J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgAFRzE (ORCPT
+        id S1726695AbgAFSAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 12:55:04 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52518 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbgAFRzE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 12:55:04 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p9so15911903wmc.2;
-        Mon, 06 Jan 2020 09:55:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vjAnTqnyYDsojY81CidHO5cyS8TO9xjXn3TKtmGerFk=;
-        b=T6z20UaRrFmnrbUyiy+mHxDezojhLXlh7hgeFh/aF2hkWRPxHeVPthL/Ew0DWiQy/s
-         IQlul1zUabH9uKrZKnUepn2r4SaHnN1Kg2G0At5fCXvhl7IHgDpvEKLl4AXT6vHfzDaq
-         Yo0c+qCBLyQhSAB6dqLtlNGhJlmr7rpANLwmzDUWHKE+hgZgavVFd9BnKIt+y44qLxAb
-         VdSL1VfCz3xLmcYNXnDSyXV6byjOI946tysgOrGGCQSVgfZVauTf0J+3Rq68zV+OGSU1
-         8UN11wmOktzxjq15Ck1OG1f5jKAgurQX7Qa3PbM+wwDDeASN+KnbV5Iq1uV0zr9pzoz7
-         q8Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vjAnTqnyYDsojY81CidHO5cyS8TO9xjXn3TKtmGerFk=;
-        b=STkDYvABIrvKXbMAmjlPF4HqBjtStg3/hJjHYvM4u5GtOoZzMlXhWCy3nYHvbzejOX
-         3hEwn1QB1ZvrKk2BxEBL13zQJHcl4aEMmuxLkSSZRMQIhiY+vEAZmGh8dKSJ19q0oSDy
-         0geOCAAIdPLlGhEIZO/enn1JQF5RffYBKZ4l55++kxFL00l3g6hjy2Ou4T9fsPU+9xgs
-         pt/EdThHDUR6MXfZQIrkJUZfvvctXR5vQcYkrnsLnPZYZ7MPcoFi3IbGdQ2fWlxCijOn
-         dMLL9pI8vr2VIaTwYMV1mdBweJrd0fkfupxeGTV5dWLp38f9HWLjOSmpN0jlbfayE6bm
-         /D+Q==
-X-Gm-Message-State: APjAAAVC5zKm7acI/lpjJmS140MeaOKNKnmoiFgVIjjLcCfotqUCEgo+
-        W9CvDzvSibQ5foJugWq0RPQ=
-X-Google-Smtp-Source: APXvYqwPymLgT6RXmbgP+qXyLmGY4VlaPE4NBuq2WMV/hlgF3pRFMWeNI7PixFZJhLcwDsY9mSG3kw==
-X-Received: by 2002:a1c:f407:: with SMTP id z7mr34005535wma.72.1578333301903;
-        Mon, 06 Jan 2020 09:55:01 -0800 (PST)
-Received: from ltop.local ([2a02:a03f:40c7:f800:685b:86a3:90af:d97])
-        by smtp.gmail.com with ESMTPSA id s1sm24420828wmc.23.2020.01.06.09.55.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 09:55:01 -0800 (PST)
-Date:   Mon, 6 Jan 2020 18:54:59 +0100
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Mon, 6 Jan 2020 13:00:46 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:41273 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726448AbgAFSAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 13:00:45 -0500
+Received: from carbon-x1.hos.anvin.org ([IPv6:2601:646:8600:3280:1098:42a1:36db:233c])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 006HxLts2985803
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Mon, 6 Jan 2020 09:59:21 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 006HxLts2985803
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019122001; t=1578333565;
+        bh=uFGtgLW/eUGZosJDUZ4/JsFg07VyLBe7Sl07+mpDDgQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ZMVxUZ9JlU6up34Nb4pGcpMjDZpUuWN8ck9Y4jYgVb+4bZERRqJiFzIJhbIfziB1k
+         ZNW7gtaTuWxOa78mC5Z+zWvyvNL35mkSsEZQpPBJS0ncqNieAs6YCfbCKRbkrwQtVp
+         RcNn3KAZoKEYAi4ef6eQLTWSuxUbKuM7RXuWfbUO5ZflxcLL1hn2UBbGPOSqDE+xOY
+         wijrfyuPLvBiBZoiKnCdjHJ9U/s6x0xqbbT7g3nNy9Gk9o9TiqnutL8djSuCUX49Qi
+         Oy4XDW1jzUdxSDSG813dTCGe2xdRD1rCCDjOpb+PwCTaq1SfwtxgOn+n2Mp0OYFc4L
+         +gnXlUsMkLtVw==
+Subject: Re: [PATCH v3 02/22] compat: provide compat_ptr() on all
+ architectures
+To:     Arnd Bergmann <arnd@arndb.de>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
-        Elena Reshetova <elena.reshetova@intel.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Robert Richter <rric@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-sparse@vger.kernel.org
-Subject: Re: [PATCH] locking/refcount: add sparse annotations to dec-and-lock
- functions
-Message-ID: <20200106175459.tjuhmdrsusax3s4z@ltop.local>
-References: <20191226152922.2034-1-ebiggers@kernel.org>
- <20191228114918.GU2827@hirez.programming.kicks-ass.net>
- <201912301042.FB806E1133@keescook>
- <20191230191547.GA1501@zzz.localdomain>
- <201912301131.2C7C51E8C6@keescook>
- <20191230233814.2fgmsgtnhruhklnu@ltop.local>
- <20200106154119.GV2810@hirez.programming.kicks-ass.net>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, oprofile-list@lists.sf.net,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org
+References: <20200102145552.1853992-1-arnd@arndb.de>
+ <20200102145552.1853992-3-arnd@arndb.de>
+From:   "H. Peter Anvin" <hpa@zytor.com>
+Message-ID: <e2c7b4d7-587e-f71c-f0df-810e8d9869f2@zytor.com>
+Date:   Mon, 6 Jan 2020 09:59:16 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200106154119.GV2810@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200102145552.1853992-3-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 04:41:19PM +0100, Peter Zijlstra wrote:
-> On Tue, Dec 31, 2019 at 12:38:14AM +0100, Luc Van Oostenryck wrote:
+On 2020-01-02 06:55, Arnd Bergmann wrote:
+> In order to avoid needless #ifdef CONFIG_COMPAT checks,
+> move the compat_ptr() definition to linux/compat.h
+> where it can be seen by any file regardless of the
+> architecture.
+> 
+> Only s390 needs a special definition, this can use the
+> self-#define trick we have elsewhere.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  arch/arm64/include/asm/compat.h   | 17 -----------------
+>  arch/mips/include/asm/compat.h    | 18 ------------------
+>  arch/parisc/include/asm/compat.h  | 17 -----------------
+>  arch/powerpc/include/asm/compat.h | 17 -----------------
+>  arch/powerpc/oprofile/backtrace.c |  2 +-
+>  arch/s390/include/asm/compat.h    |  6 +-----
+>  arch/sparc/include/asm/compat.h   | 17 -----------------
+>  arch/x86/include/asm/compat.h     | 17 -----------------
+>  include/linux/compat.h            | 18 ++++++++++++++++++
+>  9 files changed, 20 insertions(+), 109 deletions(-)
+> 
 
-...
- 
-> Not quite what we're talking about. Instead consider this:
-> 
-> The normal flow would be something like:
-> 
-> extern void spin_lock(spinlock_t *lock) __acquires(lock);
-> extern void spin_unlock(spinlock_t *lock) __releases(lock);
-> 
-> extern bool _spin_trylock(spinlock_t *lock) __acquires(lock);
-> 
-> #define __cond_lock(x, c) ((c) ? ({ __acquire(x); 1; }) : 0)
-> #define spin_trylock(lock) __cond_lock(lock, _spin_lock)
-> 
-> 
-> 	if (spin_trylock(lock)) {
-> 
-> 		/* do crap */
-> 
-> 		spin_unlock();
-> 	}
-> 
-> 
-> So the proposal here:
-> 
->   https://markmail.org/message/4obybcgqscznnx63
-> 
-> would have us write:
-> 
-> extern bool spin_trylock(spinlock_t *lock) __attribute__((context(lock, 0, spin_trylock(lock));
+For x86:
 
-Well, allowing arbitrary conditions would be hard/impossible but you're
-only asking to have the *return value* as condition, right? That looks
-as reasonably feasible.
+Reviewed-by: H. Peter Anvin <hpa@zytor.com>
 
-> Basically have sparse do a transform on its own expression tree and
-> inject the very same crud we now do manually. This avoids cluttering the
-> kernel tree with this nonsense.
+It still suffers from the zero-one-infinity rule failure of the compat
+architecture as a whole, but that is a very different problem. In this case
+"compat" is obviously meaning "a 32-on-64 ABI" and simply centralizes a common
+API, which is a Good Thing[TM].
 
-So, a call of a function declared with __acquires() or releases() is
-interpreted by Sparse as if the call is immediately followed by an
-increase or a decrease of the context. It wouldn't be very hard to
-add a new attribute (something like __cond_context) and let Sparse do
-as if a call to a function with such attribute is directly followed
-by a test of its return value and a corresponding change in the context.
-It would boil down to:
+	-hpa
 
-	extern bool spin_trylock(lock) __cond_context(lock);
-
-	if (spin_trylock(lock)) {
-		/* do crap */
-		spin_unlock();
-	}
-
-behaving like the following code currently would:
-
-	extern bool spin_trylock(lock);
-
-	if (spin_trylock(lock)) {
-		__acquire(lock);
-		/* do crap */
-		spin_unlock();
-	}
-
-
-Would something like this be satisfactory?
-
--- Luc
