@@ -2,98 +2,125 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3A6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9C7C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F23208C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 942C921744
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:25:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="P2d7x2Id"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="T4Mv9jQ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgAFUYP (ORCPT
+        id S1726778AbgAFUZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 15:24:15 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:33335 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726683AbgAFUYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 15:24:15 -0500
-Received: from carbon-x1.hos.anvin.org ([IPv6:2601:646:8600:3280:1098:42a1:36db:233c])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 006KO0mC3018392
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Mon, 6 Jan 2020 12:24:00 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 006KO0mC3018392
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019122001; t=1578342241;
-        bh=BKrFhGxobdHh8ywtvYFy3UuKFIE28vDuyhmxb4g1D4E=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=P2d7x2IdJqxGB9N4nqkQIcJxlm6QMJ4+OJi1vlrUXtNwSbzNgRbdCGUhgCKR/ga4S
-         fXTsfiNvWl4r2tKGbIFjBapDj3SNQ7KnJWaXQrSxTTK1dADL9n/LKzGDhAYhtS3yBp
-         lCUnctSyH6Q4uevLC+lRnaH31Vu0a617qJysMsFRJh1kXdPD7QqjqbURFKgYT3sE7a
-         fscZVwxVELjLHFHkg5RaCQp3wbnGv/d6ush6l+B+8eucFcJc5xmY1bP6DDJ2u2lTXW
-         goprr6bAcGMZEt1pJx1zSZYsBIdpCyZnldr9HCWXQGOHDHvcPLeEyWxXbRlB1p0+AQ
-         EJQqUGThqhezA==
-Subject: Re: [PATCH v1 0/3] Add virtual serial null modem emulation driver
-To:     Rishi Gupta <gupt21@gmail.com>, gregkh@linuxfoundation.org,
-        robh+dt@kernel.org
-Cc:     jslaby@suse.com, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1578235515.git.gupt21@gmail.com>
-From:   "H. Peter Anvin" <hpa@zytor.com>
-Message-ID: <be5b7b29-97e6-41ad-7ae8-cff83dfab95f@zytor.com>
-Date:   Mon, 6 Jan 2020 12:23:55 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Mon, 6 Jan 2020 15:25:58 -0500
+Received: from mail.efficios.com ([167.114.142.138]:41062 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbgAFUZ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 15:25:57 -0500
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id BFD7C6947AB;
+        Mon,  6 Jan 2020 15:25:55 -0500 (EST)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id 2F-bFRMgNF7F; Mon,  6 Jan 2020 15:25:55 -0500 (EST)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 5E4F96947A8;
+        Mon,  6 Jan 2020 15:25:55 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 5E4F96947A8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1578342355;
+        bh=UfT90aPpZTfS01AKwYyrbPfjuYNcs0SApfxVeTqI5Cs=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=T4Mv9jQ1RfyBp798o2jbvCJwabSOTLzANGDIP8XuegR+7/Ne7tRzo4rXQu0NpveI9
+         ZRwKtqVgGPCvLubSOV79yEWIwhjKQQwS5ctAtCzhLNL+OIT2c6oAtdrPHvlmT9BRmZ
+         HDJJEnDLIm1UuFya+MnxwBW+f3GBpxQd+jPg1a4pCjrY90HQSbL0E618PFzZrfvy9q
+         mEmeAIsvzcSFdpodZ5gcxwxVXdkd4M1SPuI3MJqmSbXBkccP8LdEhM1dSEf/KfzNtL
+         AUKhA0K3yFV3aK9/kJ4xDmBOIfwq4Fp6q78Y0QzcoATCAPJfLQn1eDIeplkxdRDVQD
+         SYBajgDaEVgJQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id x6xmiU9tpFXV; Mon,  6 Jan 2020 15:25:55 -0500 (EST)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 47A2469479C;
+        Mon,  6 Jan 2020 15:25:55 -0500 (EST)
+Date:   Mon, 6 Jan 2020 15:25:55 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fw@deneb.enyo.de>,
+        Michael Kerrisk <mtk.manpages@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Neel Natu <neelnatu@google.com>
+Message-ID: <2129265980.1223.1578342355079.JavaMail.zimbra@efficios.com>
+In-Reply-To: <87a7709ydd.fsf@mid.deneb.enyo.de>
+References: <20191220201207.17389-1-mathieu.desnoyers@efficios.com> <87imman36g.fsf@mid.deneb.enyo.de> <173832695.14381.1576875253374.JavaMail.zimbra@efficios.com> <875zian2a2.fsf@mid.deneb.enyo.de> <669061171.14506.1576876500152.JavaMail.zimbra@efficios.com> <1025393027.850.1578337717165.JavaMail.zimbra@efficios.com> <87a7709ydd.fsf@mid.deneb.enyo.de>
+Subject: Re: [PATCH for 5.5 1/2] rseq: Fix: Clarify rseq.h UAPI rseq_cs
+ memory reclaim requirements
 MIME-Version: 1.0
-In-Reply-To: <cover.1578235515.git.gupt21@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.15_GA_3894 (ZimbraWebClient - FF71 (Linux)/8.8.15_GA_3890)
+Thread-Topic: rseq: Fix: Clarify rseq.h UAPI rseq_cs memory reclaim requirements
+Thread-Index: c967+RLKmUJMckznywTx3eJqdLS1Gg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-05 23:21, Rishi Gupta wrote:
-> The driver named ttyvs creates virtual tty/serial device which emulates
-> behaviour of a real serial port device. Serial port events like parity,
-> frame, overflow errors, ring indications, break assertions, flow controls
-> are also emulated.
+----- On Jan 6, 2020, at 2:30 PM, Florian Weimer fw@deneb.enyo.de wrote:
+
+> * Mathieu Desnoyers:
 > 
-> It supports both device-tree and non device-tree platforms. And works in
-> both built-in and loadable driver methods.
+>> Just to clarify: should the discussion here prevent the UAPI
+>> documentation change from being merged into the Linux kernel ? Our
+>> discussion seems to be related to integration of rseq into glibc,
+>> rather than the kernel UAPI per se.
 > 
-> Use cases
-> ~~~~~~~~~~~~~~~~~
-> This driver saves time to market and have following use cases including
-> but not limited to; automated testing, GPS and other data simulation, data
-> injection for corner case testing, scaleability testing, data sniffing,
-> robotics emulator/simulator, application development when hardware,
-> firmware and driver is still not available, identifying hardware issues
-> from software bugs quickly during development, development cost reduction
-> across team, product demo where data from hardware needs to be sent to the
-> GUI application, data forwarding, serial port redirection etc.
-> 
-> Basic idea
-> ~~~~~~~~~~~~~~~~~
-> 
-> This driver implements a virtual multi-port serial card in such a
-> way that the virtual card can have 0 to N number of virtual serial
-> ports (tty devices). The devices created in this card are used in
-> exactly the same way as the real tty devices using standard termios
-> and Linux/Posix APIs.
+> I still think that clearing rseq_cs upon exit from the function that
+> contains the sequence is good practice, and the UAPI header should
+> mention that.
 
-OK, I believe I have asked this before, at least when this has come up in
-other contexts: any reason not to do this by adding the missing elements to
-the pty interface? For fixed-name nodes, the legacy PTY interface is basically
-what you need.
+My understanding is that a UAPI header should document what is strictly
+required (here, clearing rseq_cs before unmapping the memory area
+containing the rseq_cs structure or the code). Documenting a "best
+practice" would AFAIU belong to a man page and not a UAPI header.
 
-It would probably have other benefits, as well.
+I'm adding Michael Kerrisk in CC in case he has an opinion on this
+matter.
 
-	-hpa
+> For glibc, if I recall correctly, we decided against doing anything in
+> dlclose to deal with this issue (remapping new code in an existing
+> rseq area) because it would need updating all threads, not just the
+> thread calling dlclose.  That's why we're punting this to
+> applications and why I think the UAPI header should mention this.
 
+Nothing prevents us from implementing a clever scheme in the future,
+e.g. as a new membarrier command, that could be invoked from dlclose()
+when it becomes available.
 
+By documenting only the basic requirement in the UAPI header (do not
+use-after-free) and not providing a "best practice" (which is not so good
+performance-wise), we can then let the man page state the best practices,
+and update them as new system call commands are implemented.
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
