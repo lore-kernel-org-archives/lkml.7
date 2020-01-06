@@ -2,116 +2,116 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6CAC33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE63FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21E692070E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6F9520715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:03:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ZMVxUZ9J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MRrkj8EI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgAFSAq (ORCPT
+        id S1726735AbgAFSDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 13:00:46 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:41273 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726448AbgAFSAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 13:00:45 -0500
-Received: from carbon-x1.hos.anvin.org ([IPv6:2601:646:8600:3280:1098:42a1:36db:233c])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 006HxLts2985803
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Mon, 6 Jan 2020 09:59:21 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 006HxLts2985803
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019122001; t=1578333565;
-        bh=uFGtgLW/eUGZosJDUZ4/JsFg07VyLBe7Sl07+mpDDgQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ZMVxUZ9JlU6up34Nb4pGcpMjDZpUuWN8ck9Y4jYgVb+4bZERRqJiFzIJhbIfziB1k
-         ZNW7gtaTuWxOa78mC5Z+zWvyvNL35mkSsEZQpPBJS0ncqNieAs6YCfbCKRbkrwQtVp
-         RcNn3KAZoKEYAi4ef6eQLTWSuxUbKuM7RXuWfbUO5ZflxcLL1hn2UBbGPOSqDE+xOY
-         wijrfyuPLvBiBZoiKnCdjHJ9U/s6x0xqbbT7g3nNy9Gk9o9TiqnutL8djSuCUX49Qi
-         Oy4XDW1jzUdxSDSG813dTCGe2xdRD1rCCDjOpb+PwCTaq1SfwtxgOn+n2Mp0OYFc4L
-         +gnXlUsMkLtVw==
-Subject: Re: [PATCH v3 02/22] compat: provide compat_ptr() on all
- architectures
-To:     Arnd Bergmann <arnd@arndb.de>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Robert Richter <rric@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, oprofile-list@lists.sf.net,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org
-References: <20200102145552.1853992-1-arnd@arndb.de>
- <20200102145552.1853992-3-arnd@arndb.de>
-From:   "H. Peter Anvin" <hpa@zytor.com>
-Message-ID: <e2c7b4d7-587e-f71c-f0df-810e8d9869f2@zytor.com>
-Date:   Mon, 6 Jan 2020 09:59:16 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Mon, 6 Jan 2020 13:03:45 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44645 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgAFSDo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 13:03:44 -0500
+Received: by mail-qt1-f194.google.com with SMTP id t3so43126061qtr.11;
+        Mon, 06 Jan 2020 10:03:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NXHuuZed9m4gmjDMxbSt8Ydx4KTmpkC7vJID6XaP7I0=;
+        b=MRrkj8EI0gCPmdFxE+7l+GK4uoJ6rM6ez9nHt6AUuGx0FMkXiOZaBPPo6v3ir/4qvC
+         UM5lPvnzAegMqlxcvWBcv3A3h05n6p3fJ4wHTpCTlugRpUV3todEv6atqHe976LnXxna
+         if18JR4BhGt+t0M9PlWIWDBou86TspPSN28Kqbqr919TE6T9gKIMe/E0zIxV3Oq3Tfnm
+         LO0AH25bvTRbBaokmYmmGonA1NFq16uTbNKa5S2pthdQ8j1nL0twPvfvOIY3HlDgZQNg
+         YZUB0rAifbrSZjdksMKGwPQs4JtyBqj9GDLvR3mBRdQiAlt/GQkvWduSfMO9EhkKG5Fy
+         FoYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NXHuuZed9m4gmjDMxbSt8Ydx4KTmpkC7vJID6XaP7I0=;
+        b=VezwHh+MIzzxCQGalTuzxr99SNZEgNC8XxVSbBV56MIyvlQkv+7LNisHa866jeX9o0
+         94nGEkGj5cejiHTRS+5gRElR3k2ZMKt2P16H1XOLPaptyhZvAOERYWH0IfR83znHbXKM
+         NSyp1+rs8rvHEX6R4EbuZKekH3/mHA0yCvFMYlYFQoJ+fVDKQ0Gx/hAJgs3DVGVJVazG
+         ij3LPm/QJVYowTN6ApfvJatJTq0dZprpBSboZOg48Hui2ALcKvRpKOAUydLWHhl7InIq
+         F9E9N7/yZrcDGu71cfQJV2qcmbcSx+/62TnrB/X6xMHvszCy+G+sPb1cexhQzkb1VyKW
+         OCBQ==
+X-Gm-Message-State: APjAAAUnId8NLkMWS+NoVkwkR6cyzkHFuplSB/95GrLUASK+KCbNJRTw
+        mIBIPCEjHK1Ler5IEW0yMAzNv7cVr28C8vvdmC4=
+X-Google-Smtp-Source: APXvYqzoJpUI0qTBtGKc5HQQ71R+sejfLNU2IySNvN3xwwd+i3ukSvzyjPMESKmBcjWfEsJ28fSXH9mWzvLYPr9q2Ko=
+X-Received: by 2002:ac8:5457:: with SMTP id d23mr72628654qtq.93.1578333823652;
+ Mon, 06 Jan 2020 10:03:43 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200102145552.1853992-3-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200102172413.654385-1-amanieu@gmail.com> <20200102172413.654385-3-amanieu@gmail.com>
+ <20200102180130.hmpipoiiu3zsl2d6@wittgenstein> <20200106173953.GB9676@willie-the-truck>
+In-Reply-To: <20200106173953.GB9676@willie-the-truck>
+From:   "Amanieu d'Antras" <amanieu@gmail.com>
+Date:   Mon, 6 Jan 2020 19:03:32 +0100
+Message-ID: <CA+y5pbSBYLvZ46nJP0pSYZnRohtPxHitOHPEaLXq23-QrPKk2g@mail.gmail.com>
+Subject: Re: [PATCH 2/7] arm64: Implement copy_thread_tls
+To:     Will Deacon <will@kernel.org>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Christian Brauner <christian@brauner.io>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-02 06:55, Arnd Bergmann wrote:
-> In order to avoid needless #ifdef CONFIG_COMPAT checks,
-> move the compat_ptr() definition to linux/compat.h
-> where it can be seen by any file regardless of the
-> architecture.
-> 
-> Only s390 needs a special definition, this can use the
-> self-#define trick we have elsewhere.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/arm64/include/asm/compat.h   | 17 -----------------
->  arch/mips/include/asm/compat.h    | 18 ------------------
->  arch/parisc/include/asm/compat.h  | 17 -----------------
->  arch/powerpc/include/asm/compat.h | 17 -----------------
->  arch/powerpc/oprofile/backtrace.c |  2 +-
->  arch/s390/include/asm/compat.h    |  6 +-----
->  arch/sparc/include/asm/compat.h   | 17 -----------------
->  arch/x86/include/asm/compat.h     | 17 -----------------
->  include/linux/compat.h            | 18 ++++++++++++++++++
->  9 files changed, 20 insertions(+), 109 deletions(-)
-> 
+On Mon, Jan 6, 2020 at 6:39 PM Will Deacon <will@kernel.org> wrote:
+> I also ran the native and compat selftests but, unfortunately, they all
+> pass even without this patch. Do you reckon it would be possible to update
+> them to check the tls pointer?
 
-For x86:
+Here's the program I used for testing on arm64. I considered adding it
+to the selftests but there is no portable way of reading the TLS
+register on all architectures.
 
-Reviewed-by: H. Peter Anvin <hpa@zytor.com>
+#include <sys/syscall.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdint.h>
 
-It still suffers from the zero-one-infinity rule failure of the compat
-architecture as a whole, but that is a very different problem. In this case
-"compat" is obviously meaning "a 32-on-64 ABI" and simply centralizes a common
-API, which is a Good Thing[TM].
+#define __NR_clone3 435
+struct clone_args {
+    uint64_t flags;
+    uint64_t pidfd;
+    uint64_t child_tid;
+    uint64_t parent_tid;
+    uint64_t exit_signal;
+    uint64_t stack;
+    uint64_t stack_size;
+    uint64_t tls;
+};
 
-	-hpa
+#define USE_CLONE3
 
+int main() {
+    printf("Before fork: tp = %p\n", __builtin_thread_pointer());
+#ifdef USE_CLONE3
+    struct clone_args args = {
+        .flags = CLONE_SETTLS,
+        .tls = (uint64_t)__builtin_thread_pointer(),
+    };
+    int ret = syscall(__NR_clone3, &args, sizeof(args));
+#else
+    int ret = syscall(__NR_clone, CLONE_SETTLS, 0, 0,
+__builtin_thread_pointer(), 0);
+#endif
+    printf("Fork returned %d, tp = %p\n", ret, __builtin_thread_pointer());
+}
