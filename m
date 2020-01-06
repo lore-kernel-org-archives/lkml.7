@@ -2,71 +2,100 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0D6C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3922EC33C9B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD59F2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 109DE24679
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:46:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t0vgrTSV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgAFRpg (ORCPT
+        id S1726701AbgAFRqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 12:45:36 -0500
-Received: from s3.sipsolutions.net ([144.76.43.62]:52206 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbgAFRpe (ORCPT
+        Mon, 6 Jan 2020 12:46:44 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38107 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgAFRqn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 12:45:34 -0500
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.92.3)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1ioWRJ-000UZI-7p; Mon, 06 Jan 2020 18:45:17 +0100
-Message-ID: <e99552c62deec285cd4796827d53cdb1187eaca4.camel@sipsolutions.net>
-Subject: Re: [PATCH] iwlwifi: remove object duplication in Makefile
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        linux-wireless@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>
-Date:   Mon, 06 Jan 2020 18:45:15 +0100
-In-Reply-To: <CAK7LNARLw0cBBCV8C6_bKhxEmUSTqP2Ve1RWzUJw6y2cnqdUXQ@mail.gmail.com>
-References: <20200106075439.20926-1-masahiroy@kernel.org>
-         <8f17a0bca11604d9818326b01267186bd91236c9.camel@sipsolutions.net>
-         <CAK7LNARLw0cBBCV8C6_bKhxEmUSTqP2Ve1RWzUJw6y2cnqdUXQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 6 Jan 2020 12:46:43 -0500
+Received: by mail-pg1-f195.google.com with SMTP id a33so27189278pgm.5;
+        Mon, 06 Jan 2020 09:46:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=YdPHerSYFOJLKYefQHipXAmsHXvXtkbfyGcWcsin/Eo=;
+        b=t0vgrTSVmmj/57ZBr/Sm79BsA7lylrWcfhlGn3rqkCJQCiNewUgV8qMRVWd8rd+egl
+         y4YVUkO7FONNsn1TClHXBiMGXvlSzd8EjZHCxDyfZ8/ypJCvTGSy8kp4u/luDiWgNpte
+         /xuomSpMzKHv0y+ZJvGamupdnU4OhCIJqHfkhjDpnrsSs1rV4bksqvmVVGeldtCqIFk/
+         819/hKDzWB8e247vq3PjjUkLt61zIYtkRKmSMFad+FWT6x6C6Jcsl1fq+RH6GheqS9+k
+         1403NTO1gKuKwNcYpL902uwwL6oQ+rariS58bn2hsAqJ3rxjl1Eqtojz7ewaRqFZIAVH
+         LL/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=YdPHerSYFOJLKYefQHipXAmsHXvXtkbfyGcWcsin/Eo=;
+        b=pOwWaKC7mQ2CfgaJItXKNrop3Muuhm0LdQvXWhraQrgUDnNhhFkNOqmbpcn0rUcn2v
+         +TM8LNPZSAS37Rlyp/p7ltcQG7DGsWWzh2FYTra6jSujrxFFLAfhWx8DfLSlf2mQeFOU
+         eDV/yman44bQaqOxgb350jQhcrY8CjMM8BRbFzO9TRnSwOiIIxwNdEXD9Tbq6TgvVR6v
+         QE3RhAkEUgY5aI3iKNKeV69xz31BdZ9gxMvGb4+xv++MrK8ZbUo0mDwAMKrvlbdAFXdB
+         gQmp0bs2ykyVTVthrkiOfRvdk6bGOHEbIhrQHirUYNj3gHa9Yn/i5HVuDbmEQlmjhkTz
+         Ablg==
+X-Gm-Message-State: APjAAAXpyVoc7RK98S0L3q8XbjbZuWy7KIm1JR8oyMTq7q/26/RM4TBj
+        Up1QFblKZuymomVBqlb7Z7o=
+X-Google-Smtp-Source: APXvYqwNzPNo38qKaDE4TWjCFQ11EAzeBDsfFL07gxRaNNMnBA7f1Wmk2ubLY9y2gRba8Y9FzmQz5w==
+X-Received: by 2002:aa7:874a:: with SMTP id g10mr91607578pfo.205.1578332803309;
+        Mon, 06 Jan 2020 09:46:43 -0800 (PST)
+Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
+        by smtp.gmail.com with ESMTPSA id z4sm25051105pjn.29.2020.01.06.09.46.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 Jan 2020 09:46:42 -0800 (PST)
+From:   Yangtao Li <tiny.windzz@gmail.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
+        wens@csie.org, anarsoul@gmail.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        megous@megous.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Cc:     Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH v2 1/2] thermal: sun8i: fix r40 ths number
+Date:   Mon,  6 Jan 2020 17:46:38 +0000
+Message-Id: <20200106174639.20862-1-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-01-07 at 02:11 +0900, Masahiro Yamada wrote:
+According to the spec, r40 has 2 thermal sensors.
+Sensor0 located in the CPU, another in the GPU.
 
-> iwlwifi-m is automatically handled since commit
-> cf4f21938e13ea1533ebdcb21c46f1d998a44ee8
-> but cfg/*.o objects are not liked to vmlinux
-> under the following combination:
-> 
-> CONFIG_IWLWIFI=y
-> CONFIG_IWLDVM=m
-> CONFIG_IWLMVM=m
+Fixes: 730a45ccd9322 ("thermal/drivers/sun8i: Add thermal driver for H6/H5/H3/A64/A83T/R40")
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Tested-on: sun8i-r40-bananapi-m2-ultra
+---
+ drivers/thermal/sun8i_thermal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Right, that's what I thought.
-
-> Perhaps, I may come back to this patch,
-> but I need to change scripts/Makefile.lib beforehand.
-
-It's a pretty special case, not really worth it IMHO...
-
-johannes
+diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+index 23a5f4aa4be4..c5661d7c3e20 100644
+--- a/drivers/thermal/sun8i_thermal.c
++++ b/drivers/thermal/sun8i_thermal.c
+@@ -565,7 +565,7 @@ static const struct ths_thermal_chip sun8i_h3_ths = {
+ };
+ 
+ static const struct ths_thermal_chip sun8i_r40_ths = {
+-	.sensor_num = 3,
++	.sensor_num = 2,
+ 	.offset = 251086,
+ 	.scale = 1130,
+ 	.has_mod_clk = true,
+-- 
+2.17.1
 
