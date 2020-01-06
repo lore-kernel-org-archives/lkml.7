@@ -2,132 +2,91 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6D1C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98356C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFFA1207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:23:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578306230;
-	bh=l1nv7+iasDN8tGmSbWPuiclh0SKhjnM765w1GGZJntM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HZLnXYMNFIRDP/6hvD1iWshA9R8oMOfBRGtFI18zWnDNgVBhkfogr5D5DgRQb4I5w
-	 gdgK4hDz1cBAQqvuhOWpz4gWDl13Ur28IO6pxgzwKcLkt1H1t1yv5qy6sED89glTcI
-	 sl0e5pJWBFYdkGGXQBim/v/rOCJCJRC017ycU7Fk=
+	by mail.kernel.org (Postfix) with ESMTP id 6A64320731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:24:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N+nS18zn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbgAFKXt (ORCPT
+        id S1726548AbgAFKYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 05:23:49 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36201 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726155AbgAFKXt (ORCPT
+        Mon, 6 Jan 2020 05:24:09 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:40382 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbgAFKYI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 05:23:49 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z3so49039737wru.3;
-        Mon, 06 Jan 2020 02:23:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tgQqBIy5e4I6Hz0oQb/zzwQhBn/pQ2qSqWeoeZ4EV+A=;
-        b=OOTKCqhw1m5BZpT+BniTblllck8ZYoLhXSLPT9z7E529OUnpLbQzgHE61rHwabB5kK
-         Is9FnkWQV3JG/h+5vqJpK/pNYarHhF4q8skejgE7f947+HdblrU4Ev6IQmrDEYZ0tikq
-         28s+4sUXaYwzzQf8T9LHm0WQVZl8Z886sysfDOiqprlYjZocMsUKYrIg3GZ7dGcaue6s
-         3XLVdGmRw7ARtyYlZknUAFdq2WLx2TOaMrkTwfqAyZ/cOjsIiJVJOSbJ/7i/GQdhW8S4
-         6UgwcCEdOBjkOOSJzj/4ckAqya7yYxNCf+/nuLL9XGIcTzakHA54HmOmxYiGJ6Gd2OWW
-         XGzQ==
-X-Gm-Message-State: APjAAAVg378976ZNvO+x+dXtk4qNWSbFAZisPvgXI7kMiDz/hj7u0ESH
-        0HFNRv5JGsSPJtMrQxtaVUs=
-X-Google-Smtp-Source: APXvYqxIQDabJmEtH66y7KFu1WXendyZo1xIk9Vx2c9iiJQtk3BzNbZz+qSNwvvtCXbBwLWXMkNuPw==
-X-Received: by 2002:adf:82f3:: with SMTP id 106mr105334001wrc.69.1578306226841;
-        Mon, 06 Jan 2020 02:23:46 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id u1sm22257183wmc.5.2020.01.06.02.23.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 02:23:46 -0800 (PST)
-Date:   Mon, 6 Jan 2020 11:23:45 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     hannes@cmpxchg.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, yang.shi@linux.alibaba.com
-Subject: Re: [RFC PATCH] mm: thp: grab the lock before manipulation defer list
-Message-ID: <20200106102345.GE12699@dhcp22.suse.cz>
-References: <20200103143407.1089-1-richardw.yang@linux.intel.com>
+        Mon, 6 Jan 2020 05:24:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=g9YBz3F+B0vv6Z8r9xsyYIVGQYxQAbmF8Qb3K4NcA+A=; b=N+nS18znWKjmEYLgGbzrCg9tz
+        IdcDn2h6JdIpBdWF0v5ZMOARbrN8br+d5EgzsfVfg1p3Ft9o4pW0UUvEssCtYXPegMTfUHF6oqq3P
+        cMZdCUjLiWIvEzE/10F/tB8kG7TlFkQbJtyv7tgFJakLatFSio3Z6hKF01fSFf9ugR7I8TTXkONzE
+        fWvApuW+voFa+eGzPLjzsyc9o7QDIhICoMTP3fsaOZ47XWrotAYMSvEplsimQEUUdHmZdR476wfgm
+        y8YT7R95ZDt8OikrwOJzzZKgAnWrYzLxxQEJJ/rHZ+IL473lsq8eoLNpg+ZdW1F/dovgZSlm+Grmf
+        FNbc592Yw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ioPY0-0000tu-Dv; Mon, 06 Jan 2020 10:23:44 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5E54B306CEE;
+        Mon,  6 Jan 2020 11:22:09 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5D9DA2B627478; Mon,  6 Jan 2020 11:23:41 +0100 (CET)
+Date:   Mon, 6 Jan 2020 11:23:41 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Peng Liu <iwtbavbm@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, qais.yousef@arm.com, morten.rasmussen@arm.com,
+        valentin.schneider@arm.com
+Subject: Re: [PATCH v2] sched/fair: fix sgc->{min,max}_capacity miscalculate
+Message-ID: <20200106102341.GM2810@hirez.programming.kicks-ass.net>
+References: <20200104130828.GA7718@iZj6chx1xj0e0buvshuecpZ>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200103143407.1089-1-richardw.yang@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200104130828.GA7718@iZj6chx1xj0e0buvshuecpZ>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 03-01-20 22:34:07, Wei Yang wrote:
-> As all the other places, we grab the lock before manipulate the defer list.
-> Current implementation may face a race condition.
-
-Please always make sure to describe the effect of the change. Why a racy
-list_empty check matters?
-
-> Fixes: 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg aware")
+On Sat, Jan 04, 2020 at 09:08:28PM +0800, Peng Liu wrote:
+> commit bf475ce0a3dd ("sched/fair: Add per-CPU min capacity to
+> sched_group_capacity") introduced per-cpu min_capacity.
 > 
-> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+> commit e3d6d0cb66f2 ("sched/fair: Add sched_group per-CPU max capacity")
+> introduced per-cpu max_capacity.
 > 
+> Here, capacity is the accumulated sum of (maybe) many CPUs' capacity.
+> Compare with capacity to get {min,max}_capacity makes no sense. Instead,
+> we should compare one by one in each iteration to get
+> sgc->{min,max}_capacity of the group.
+> 
+> Also, the only CPU in rq->sd->groups should be rq's CPU. Thus,
+> capacity_of(cpu_of(rq)) should be equal to rq->sd->groups->sgc->capacity.
+> Code can be simplified by removing the if/else.
+> 
+> Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
+> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
 > ---
-> I notice the difference during code reading and just confused about the
-> difference. No specific test is done since limited knowledge about cgroup.
-> 
-> Maybe I miss something important?
-> ---
->  mm/memcontrol.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index bc01423277c5..62b7ec34ef1a 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -5368,12 +5368,12 @@ static int mem_cgroup_move_account(struct page *page,
->  	}
->  
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> +	spin_lock(&from->deferred_split_queue.split_queue_lock);
->  	if (compound && !list_empty(page_deferred_list(page))) {
-> -		spin_lock(&from->deferred_split_queue.split_queue_lock);
->  		list_del_init(page_deferred_list(page));
->  		from->deferred_split_queue.split_queue_len--;
-> -		spin_unlock(&from->deferred_split_queue.split_queue_lock);
->  	}
-> +	spin_unlock(&from->deferred_split_queue.split_queue_lock);
->  #endif
->  	/*
->  	 * It is safe to change page->mem_cgroup here because the page
-> @@ -5385,13 +5385,13 @@ static int mem_cgroup_move_account(struct page *page,
->  	page->mem_cgroup = to;
->  
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> +	spin_lock(&to->deferred_split_queue.split_queue_lock);
->  	if (compound && list_empty(page_deferred_list(page))) {
-> -		spin_lock(&to->deferred_split_queue.split_queue_lock);
->  		list_add_tail(page_deferred_list(page),
->  			      &to->deferred_split_queue.split_queue);
->  		to->deferred_split_queue.split_queue_len++;
-> -		spin_unlock(&to->deferred_split_queue.split_queue_lock);
->  	}
-> +	spin_unlock(&to->deferred_split_queue.split_queue_lock);
->  #endif
->  
->  	spin_unlock_irqrestore(&from->move_lock, flags);
-> -- 
-> 2.17.1
+> v1: https://lkml.org/lkml/2019/12/30/502
 
--- 
-Michal Hocko
-SUSE Labs
+Please (for future use); use the form:
+
+  https://lkml.kernel.org/r/$msgid
+
