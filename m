@@ -2,97 +2,244 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B363C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C158C33C9B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF40C207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 180152072C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:05:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="BLpK3J9b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbgAFTDs (ORCPT
+        id S1726770AbgAFTFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 14:03:48 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:54806 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726569AbgAFTDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 14:03:43 -0500
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1ioXfA-0005mR-AS; Mon, 06 Jan 2020 12:03:42 -0700
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1ioXfA-0000eb-4t; Mon, 06 Jan 2020 12:03:40 -0700
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Kelvin.Cao@microchip.com, Eric Pilmore <epilmore@gigaio.com>,
-        Doug Meyer <dmeyer@gigaio.com>,
-        Kelvin Cao <kelvin.cao@microchip.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Mon,  6 Jan 2020 12:03:36 -0700
-Message-Id: <20200106190337.2428-12-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200106190337.2428-1-logang@deltatee.com>
-References: <20200106190337.2428-1-logang@deltatee.com>
+        Mon, 6 Jan 2020 14:05:37 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35199 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726683AbgAFTFg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 14:05:36 -0500
+Received: by mail-oi1-f193.google.com with SMTP id k4so16655577oik.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 11:05:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=alX9B07HokhP3ECivMm8pGprXZuv/KIuu13Y0Jtq3rg=;
+        b=BLpK3J9bEkd6Wg2RItLkAFU/N5U4jsc764hHw3yBcw3+usDirwaNCn/42kqfH64cV+
+         oKl6ogYaLW4hZg2GMAIQY0ho7+sKRVlxpCnOWd1sfmjIQDCC//p1wTsMNI01AdG3w0xU
+         SyowTtxuWicITn6hSIbggt9P5IFTn59TBd546vxUCqVjqcNCGSOAmZc30Q/KzmimdxjZ
+         wGae8x99zXO3rnxaXWswDTOYTWFvuwsMAgFJ/HGB1gy5RLdic16ylAV8tyxK3WaFz8l2
+         oBor7VmJvgBEg4hKcfLxI8gGUqp4cpQcVFxeLFLoRfWqHyWAj3JKgU57vYi0ksVjST35
+         rJEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=alX9B07HokhP3ECivMm8pGprXZuv/KIuu13Y0Jtq3rg=;
+        b=GRpzqU3CA8XOzYf1oB6QVOOCAyEnbHv4NOiyo/W/io1WETpBXZH9IrPV8ylPJ8ztCi
+         OEtjHD5E9CtiDdRn2fX/MSKM4lVMKnkwmEThEC/yK+mFC7kTJN15yYV1yxQ32GfY4U0r
+         FvVydhhlRE3OoSd+YUXESrjkpENJBok0qr50tCOw2vnYJz0JbPJ5ndWXjPcRg/oSwZBj
+         f4hcIqliKuGC9udZdykfztZarkozhBkQsh2gQfxd40QKJephtTPe9ccIp/QlFW2q9XvM
+         MqcQVwRs9Ue2XqeryUHSMZ2Z1IzWZWGmv/bw5OFR+7pmsecR4dyXgvV15pduqjdtfqJu
+         KT0Q==
+X-Gm-Message-State: APjAAAVdEBPiGZojwMpiVbyNqU+VDoG3mGCiYhpLteKDCbb17GgbD7Gp
+        rH6E8BtzIJbOF8tv+L8aAfgMGyEGqUFbv+rXrj5aCQ==
+X-Google-Smtp-Source: APXvYqwq2F38iwC/q1v5HcOMi4czC/1PUV5A5pBl22QCQ8iuB1wjy6FX5YvmNx5+uzxdNN5E951SvkRKr6IFVGHaryg=
+X-Received: by 2002:aca:3f54:: with SMTP id m81mr5940073oia.73.1578337535501;
+ Mon, 06 Jan 2020 11:05:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, epilmore@gigaio.com, dmeyer@gigaio.com, Kelvin.Cao@microchip.com, kelvin.cao@microchip.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 11/12] PCI/switchtec: Introduce gen4 variant IDS in the device ID table
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <157793839827.977550.7845382457971215205.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <157793840865.977550.1385745645244916944.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAKv+Gu8JTha-Os6uzg_ghxodEKgjnkgLwJYFkXZiTbqqdKU6_Q@mail.gmail.com>
+In-Reply-To: <CAKv+Gu8JTha-Os6uzg_ghxodEKgjnkgLwJYFkXZiTbqqdKU6_Q@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 6 Jan 2020 11:05:24 -0800
+Message-ID: <CAPcyv4jqqJwxk8-dZxhZQX0PqNpdsAUVJBG+QufsJx+fhPzmug@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] efi: Add tracking for dynamically allocated memmaps
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Taku Izumi <izumi.taku@jp.fujitsu.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Kexec Mailing List <kexec@lists.infradead.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kelvin Cao <kelvin.cao@microchip.com>
+On Thu, Jan 2, 2020 at 1:02 AM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+>
+> Hi Dan,
+>
+> Thanks for taking the time to really fix this properly.
+>
+> Comments/questions below.
+>
+> On Thu, 2 Jan 2020 at 05:29, Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > In preparation for fixing efi_memmap_alloc() leaks, add support for
+> > recording whether the memmap was dynamically allocated from slab,
+> > memblock, or is the original physical memmap provided by the platform.
+> >
+> > Cc: Taku Izumi <izumi.taku@jp.fujitsu.com>
+> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  arch/x86/platform/efi/efi.c     |    2 +-
+> >  arch/x86/platform/efi/quirks.c  |   11 ++++++-----
+> >  drivers/firmware/efi/fake_mem.c |    5 +++--
+> >  drivers/firmware/efi/memmap.c   |   16 ++++++++++------
+> >  include/linux/efi.h             |    8 ++++++--
+> >  5 files changed, 26 insertions(+), 16 deletions(-)
+> >
+> > diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+> > index 38d44f36d5ed..7086afbb84fd 100644
+> > --- a/arch/x86/platform/efi/efi.c
+> > +++ b/arch/x86/platform/efi/efi.c
+> > @@ -333,7 +333,7 @@ static void __init efi_clean_memmap(void)
+> >                 u64 size = efi.memmap.nr_map - n_removal;
+> >
+> >                 pr_warn("Removing %d invalid memory map entries.\n", n_removal);
+> > -               efi_memmap_install(efi.memmap.phys_map, size);
+> > +               efi_memmap_install(efi.memmap.phys_map, size, 0);
+> >         }
+> >  }
+> >
+> > diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+> > index f8f0220b6a66..4a71c790f9c3 100644
+> > --- a/arch/x86/platform/efi/quirks.c
+> > +++ b/arch/x86/platform/efi/quirks.c
+> > @@ -244,6 +244,7 @@ EXPORT_SYMBOL_GPL(efi_query_variable_store);
+> >  void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+> >  {
+> >         phys_addr_t new_phys, new_size;
+> > +       unsigned long flags = 0;
+> >         struct efi_mem_range mr;
+> >         efi_memory_desc_t md;
+> >         int num_entries;
+> > @@ -272,8 +273,7 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+> >         num_entries += efi.memmap.nr_map;
+> >
+> >         new_size = efi.memmap.desc_size * num_entries;
+> > -
+> > -       new_phys = efi_memmap_alloc(num_entries);
+> > +       new_phys = efi_memmap_alloc(num_entries, &flags);
+> >         if (!new_phys) {
+> >                 pr_err("Could not allocate boot services memmap\n");
+> >                 return;
+> > @@ -288,7 +288,7 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+> >         efi_memmap_insert(&efi.memmap, new, &mr);
+> >         early_memunmap(new, new_size);
+> >
+> > -       efi_memmap_install(new_phys, num_entries);
+> > +       efi_memmap_install(new_phys, num_entries, flags);
+> >         e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
+> >         e820__update_table(e820_table);
+> >  }
+> > @@ -408,6 +408,7 @@ static void __init efi_unmap_pages(efi_memory_desc_t *md)
+> >  void __init efi_free_boot_services(void)
+> >  {
+> >         phys_addr_t new_phys, new_size;
+> > +       unsigned long flags = 0;
+> >         efi_memory_desc_t *md;
+> >         int num_entries = 0;
+> >         void *new, *new_md;
+> > @@ -463,7 +464,7 @@ void __init efi_free_boot_services(void)
+> >                 return;
+> >
+> >         new_size = efi.memmap.desc_size * num_entries;
+> > -       new_phys = efi_memmap_alloc(num_entries);
+> > +       new_phys = efi_memmap_alloc(num_entries, &flags);
+> >         if (!new_phys) {
+> >                 pr_err("Failed to allocate new EFI memmap\n");
+> >                 return;
+> > @@ -493,7 +494,7 @@ void __init efi_free_boot_services(void)
+> >
+> >         memunmap(new);
+> >
+> > -       if (efi_memmap_install(new_phys, num_entries)) {
+> > +       if (efi_memmap_install(new_phys, num_entries, flags)) {
+> >                 pr_err("Could not install new EFI memmap\n");
+> >                 return;
+> >         }
+> > diff --git a/drivers/firmware/efi/fake_mem.c b/drivers/firmware/efi/fake_mem.c
+> > index bb9fc70d0cfa..7e53e5520548 100644
+> > --- a/drivers/firmware/efi/fake_mem.c
+> > +++ b/drivers/firmware/efi/fake_mem.c
+> > @@ -39,6 +39,7 @@ void __init efi_fake_memmap(void)
+> >         int new_nr_map = efi.memmap.nr_map;
+> >         efi_memory_desc_t *md;
+> >         phys_addr_t new_memmap_phy;
+> > +       unsigned long flags = 0;
+> >         void *new_memmap;
+> >         int i;
+> >
+> > @@ -55,7 +56,7 @@ void __init efi_fake_memmap(void)
+> >         }
+> >
+> >         /* allocate memory for new EFI memmap */
+> > -       new_memmap_phy = efi_memmap_alloc(new_nr_map);
+> > +       new_memmap_phy = efi_memmap_alloc(new_nr_map, &flags);
+> >         if (!new_memmap_phy)
+> >                 return;
+> >
+> > @@ -73,7 +74,7 @@ void __init efi_fake_memmap(void)
+> >         /* swap into new EFI memmap */
+> >         early_memunmap(new_memmap, efi.memmap.desc_size * new_nr_map);
+> >
+> > -       efi_memmap_install(new_memmap_phy, new_nr_map);
+> > +       efi_memmap_install(new_memmap_phy, new_nr_map, flags);
+> >
+>
+> So it is the caller's responsibility to record the flags returned by
+> efi_memmap_alloc() and pass them into efi_memmap_install(), right?
+> Given that we are now passing three pieces of info that need to be in
+> sync between the two, could we use a dedicated data structure instead,
+> a reference to which is taken by both?
 
-Now that GEN4 is properly supported, advertise support in the module's
-device ID table.
+Sounds good, looks like I can mostly reuse 'struct
+efi_memory_map_data' for this purpose.
 
-Signed-off-by: Kelvin Cao <kelvin.cao@microchip.com>
-[logang@deltatee.com: add commit message]
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/pci/switch/switchtec.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+>
+>
+> >         /* print new EFI memmap */
+> >         efi_print_memmap();
+> > diff --git a/drivers/firmware/efi/memmap.c b/drivers/firmware/efi/memmap.c
+> > index 813674ef9000..2b81ee6858a9 100644
+> > --- a/drivers/firmware/efi/memmap.c
+> > +++ b/drivers/firmware/efi/memmap.c
+> > @@ -32,6 +32,7 @@ static phys_addr_t __init __efi_memmap_alloc_late(unsigned long size)
+> >  /**
+> >   * efi_memmap_alloc - Allocate memory for the EFI memory map
+> >   * @num_entries: Number of entries in the allocated map.
+> > + * @flags: Late map, memblock alloc, slab alloc flags
+> >   *
+> >   * Depending on whether mm_init() has already been invoked or not,
+> >   * either memblock or "normal" page allocation is used.
+> > @@ -39,20 +40,23 @@ static phys_addr_t __init __efi_memmap_alloc_late(unsigned long size)
+> >   * Returns the physical address of the allocated memory map on
+> >   * success, zero on failure.
+> >   */
+> > -phys_addr_t __init efi_memmap_alloc(unsigned int num_entries)
+> > +phys_addr_t __init efi_memmap_alloc(unsigned int num_entries, unsigned long *flags)
+> >  {
+> >         unsigned long size = num_entries * efi.memmap.desc_size;
+> >
+> > -       if (slab_is_available())
+> > +       if (slab_is_available()) {
+> > +               *flags |= EFI_MEMMAP_SLAB;
+> >                 return __efi_memmap_alloc_late(size);
+> > +       }
+> >
+> > +       *flags |= EFI_MEMMAP_MEMBLOCK;
+>
+> This assumes flags has neither bit set, but perhaps we should at least
+> clear the memblock one if we set the slab one?
 
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index 990e0ee32f7b..db240b70fbdd 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -1691,6 +1691,24 @@ static const struct pci_device_id switchtec_pci_tbl[] = {
- 	SWITCHTEC_PCI_DEVICE(0x8574, SWITCHTEC_GEN3),  //PFXI 64XG3
- 	SWITCHTEC_PCI_DEVICE(0x8575, SWITCHTEC_GEN3),  //PFXI 80XG3
- 	SWITCHTEC_PCI_DEVICE(0x8576, SWITCHTEC_GEN3),  //PFXI 96XG3
-+	SWITCHTEC_PCI_DEVICE(0x4000, SWITCHTEC_GEN4),  //PFX 100XG4
-+	SWITCHTEC_PCI_DEVICE(0x4084, SWITCHTEC_GEN4),  //PFX 84XG4
-+	SWITCHTEC_PCI_DEVICE(0x4068, SWITCHTEC_GEN4),  //PFX 68XG4
-+	SWITCHTEC_PCI_DEVICE(0x4052, SWITCHTEC_GEN4),  //PFX 52XG4
-+	SWITCHTEC_PCI_DEVICE(0x4036, SWITCHTEC_GEN4),  //PFX 36XG4
-+	SWITCHTEC_PCI_DEVICE(0x4028, SWITCHTEC_GEN4),  //PFX 28XG4
-+	SWITCHTEC_PCI_DEVICE(0x4100, SWITCHTEC_GEN4),  //PSX 100XG4
-+	SWITCHTEC_PCI_DEVICE(0x4184, SWITCHTEC_GEN4),  //PSX 84XG4
-+	SWITCHTEC_PCI_DEVICE(0x4168, SWITCHTEC_GEN4),  //PSX 68XG4
-+	SWITCHTEC_PCI_DEVICE(0x4152, SWITCHTEC_GEN4),  //PSX 52XG4
-+	SWITCHTEC_PCI_DEVICE(0x4136, SWITCHTEC_GEN4),  //PSX 36XG4
-+	SWITCHTEC_PCI_DEVICE(0x4128, SWITCHTEC_GEN4),  //PSX 28XG4
-+	SWITCHTEC_PCI_DEVICE(0x4200, SWITCHTEC_GEN4),  //PAX 100XG4
-+	SWITCHTEC_PCI_DEVICE(0x4284, SWITCHTEC_GEN4),  //PAX 84XG4
-+	SWITCHTEC_PCI_DEVICE(0x4268, SWITCHTEC_GEN4),  //PAX 68XG4
-+	SWITCHTEC_PCI_DEVICE(0x4252, SWITCHTEC_GEN4),  //PAX 52XG4
-+	SWITCHTEC_PCI_DEVICE(0x4236, SWITCHTEC_GEN4),  //PAX 36XG4
-+	SWITCHTEC_PCI_DEVICE(0x4228, SWITCHTEC_GEN4),  //PAX 28XG4
- 	{0}
- };
- MODULE_DEVICE_TABLE(pci, switchtec_pci_tbl);
--- 
-2.20.1
-
+Ok.
