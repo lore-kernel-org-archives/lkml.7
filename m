@@ -2,202 +2,157 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99746C33C9A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D7CC33C9A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 702DB222C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80AAD21582
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:22:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lPDci3wO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbgAFCWO (ORCPT
+        id S1727374AbgAFCWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 21:22:14 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35296 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbgAFCWO (ORCPT
+        Sun, 5 Jan 2020 21:22:39 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:32884 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727278AbgAFCWi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 21:22:14 -0500
-Received: by mail-ed1-f65.google.com with SMTP id f8so2706500edv.2;
-        Sun, 05 Jan 2020 18:22:12 -0800 (PST)
+        Sun, 5 Jan 2020 21:22:38 -0500
+Received: by mail-pf1-f194.google.com with SMTP id z16so26256055pfk.0;
+        Sun, 05 Jan 2020 18:22:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ipcsI+jZ4hrMnV7t9N2jVs66amx0u2G0uIwSlpjDd4Y=;
+        b=lPDci3wOl0yBaSZhnSt8JF1e1tCFoPAb4SE1gSvn6yb8TH4Qf2eBJIevhzA4jJ9kQT
+         jXw8T+0T3DMv9vCc2d3KtMCh0cO0Fh3AtQ1mQp9HnN/WUU9k/IdOqfebWK3ki2Q8kU9A
+         0vSiiZnGpAU22FAwvbSz30yaL+XhXV/sC2lPOgMXd/5FUrKk2Rv2WM/IE6luBBwj6F/Z
+         7T7Q8MrIX9nWS6DUTuRfhnWMeVdWUdb8jFSOYhvdy+lFddRukrLhwFNVoj+Cbm+s5OSp
+         8RzUEI23DO/jQmdHBuFs7xSyPCkTupn1Z1TeuBWqkz7VO3ghWsUkOECPzQHZlnUQi9cb
+         Ar6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=guWV4kowMxOih1kRoF7JAZaHs8K4xRnf2iN9iTMDP9w=;
-        b=qnxdRGO+fv/xCS3EZTVV3Y2GAV7PdSya2EJgT3sBqJZLlNh+EBeunm8GJbDTSaRBsy
-         3AHnF15r4Hsmihz8FDYHZ6yY1I14D+lywYmEFmgScX2gyCSldFRKqmK8PLdapDX/VXAV
-         GtWONecXCtUJodgC82cVNa+nn66u2AelEuduPgka+xLOPYz8rkt6oKnTepyQfrB3pNcP
-         NH719A7adNpDIjyxmsmCHLOpzXLUDmXOdZDj0uOoJNiTCMRvNXcmqYJF2Yod8Sc8XE6Z
-         +t17tOlpXKVaZP8gfWwIZWgE31AHchkZUTAnDgZQIIQxD0q2nF3DUcJaRdZ9wqZ7uZAl
-         ZmJQ==
-X-Gm-Message-State: APjAAAWSS81WCWjxgf5MvYXIP+MoMZC83a7y4PnPBgM3ntoB7WxohmPX
-        NtsSG8T9bFr5ymFeLxJszh0ALLkadVA=
-X-Google-Smtp-Source: APXvYqx/MAagoSOZDQpMIp9OvTD26492+zSgOMCGmQnSSTFj79X+Fgy4PuxbXg455HYxXtkZ2+wLtA==
-X-Received: by 2002:a17:906:934c:: with SMTP id p12mr103897536ejw.68.1578277331679;
-        Sun, 05 Jan 2020 18:22:11 -0800 (PST)
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com. [209.85.221.41])
-        by smtp.gmail.com with ESMTPSA id r19sm7851309ejr.33.2020.01.05.18.22.11
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ipcsI+jZ4hrMnV7t9N2jVs66amx0u2G0uIwSlpjDd4Y=;
+        b=HYv1hBLq10RYm2LWE5rZh2CihTyn0dCuifN/4m5rriCzvsdPs1eRK1yF6jAbEZipeb
+         J35sXVaggq6/6xxE57zbkveSU/HrLDbiL2ybwyda4DfdiqbMoYSTg0hW5ibTq/vUJKjC
+         0qhm5on26KYeiywb02pLa5vyQ8Eav059sCTJQaxN8j+9SJBy87VEgYIK35L4u4cfUPZW
+         DWcHbZy6nHjXGRzI3Crx9F3R93HXCwhEEcpx5G230ugIuXlM0Yo1Nx+G6FjPpRcwaqtx
+         MK4GD13UflYdNBUnNiV0YRYnAAwS1OqTlu7bLmGNhPpKgm9sijmFtRnVolh2BpOsGN31
+         kDGg==
+X-Gm-Message-State: APjAAAU5hNmAx2PiOr+GerKwvz10AvPG7/ELu7unEdi9YKAQLeBDZeac
+        K1IyAA7cZ+IUabnUfve/BtQ=
+X-Google-Smtp-Source: APXvYqz1BDCSkSXVrUu4zC2a82wSvLK/YKFS/9RPAe5p+u2Z0wTdw9lddOQIFWy8lwM33vK+qK2FoA==
+X-Received: by 2002:a62:e509:: with SMTP id n9mr4122196pff.159.1578277358154;
+        Sun, 05 Jan 2020 18:22:38 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q22sm77320323pfg.170.2020.01.05.18.22.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Jan 2020 18:22:11 -0800 (PST)
-Received: by mail-wr1-f41.google.com with SMTP id w15so35485138wru.4;
-        Sun, 05 Jan 2020 18:22:11 -0800 (PST)
-X-Received: by 2002:a5d:6b88:: with SMTP id n8mr82174248wrx.288.1578277331005;
- Sun, 05 Jan 2020 18:22:11 -0800 (PST)
+        Sun, 05 Jan 2020 18:22:37 -0800 (PST)
+Subject: Re: [PATCH v9 1/2] dt-bindings: mediatek: mt8183: Add #reset-cells
+To:     Jiaxin Yu <jiaxin.yu@mediatek.com>, yong.liang@mediatek.com,
+        wim@linux-watchdog.org, p.zabel@pengutronix.de,
+        matthias.bgg@gmail.com, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        chang-an.chen@mediatek.com, freddy.hsin@mediatek.com
+Cc:     yingjoe.chen@mediatek.com, sboyd@kernel.org
+References: <1578241301-14618-1-git-send-email-jiaxin.yu@mediatek.com>
+ <1578241301-14618-2-git-send-email-jiaxin.yu@mediatek.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <04f9dbd7-4d96-cdbf-0bb2-9c34e8d84dc9@roeck-us.net>
+Date:   Sun, 5 Jan 2020 18:22:35 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200105012416.23296-1-samuel@sholland.org> <20200105012416.23296-8-samuel@sholland.org>
- <CAGb2v67esqWZnKa8QNQAp8w-fhN+hM=zO9kUdzO9vFgr0FbfEQ@mail.gmail.com> <f0c5e260-dcc3-2744-21cd-305e4534f2be@sholland.org>
-In-Reply-To: <f0c5e260-dcc3-2744-21cd-305e4534f2be@sholland.org>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 6 Jan 2020 10:22:01 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66-G5PxvMHdOmLiGGiv4KQJM9nTAEeMKH6D5DCnO7jr3g@mail.gmail.com>
-Message-ID: <CAGb2v66-G5PxvMHdOmLiGGiv4KQJM9nTAEeMKH6D5DCnO7jr3g@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v2 7/9] power: supply: axp20x_usb_power:
- Allow offlining
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Oskari Lemmela <oskari@lemmela.net>,
-        Quentin Schulz <quentin.schulz@bootlin.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1578241301-14618-2-git-send-email-jiaxin.yu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 6, 2020 at 1:47 AM Samuel Holland <samuel@sholland.org> wrote:
->
-> On 1/5/20 4:40 AM, Chen-Yu Tsai wrote:
-> > On Sun, Jan 5, 2020 at 9:24 AM Samuel Holland <samuel@sholland.org> wrote:
-> >>
-> >> AXP803/AXP813 have a flag that enables/disables the USB power supply
-> >> input. Allow control of this flag via the ONLINE property on those
-> >> variants.
-> >>
-> >> It may be necessary to offline the USB power supply input when using
-> >> the USB port in OTG mode, or to allow userspace to disable charging.
-> >
-> > Any idea how the former would be implemented? AFAIK this isn't allowed
-> > right now.
->
-> Pinephone currently has AXP N_VBUSEN/DRIVEVBUS floating, so the hardware doesn't
-> automatically disable the VBUS path when enabling the boost regulator driving
-> it. This doubles the current draw from the battery.
->
-> The USB PHY driver would need to call:
->
->     union power_supply_propval val = { .intval = false };
->     power_supply_set_property(data->vbus_power_supply,
->                               POWER_SUPPLY_PROP_ONLINE, &val);
->
-> or similar to set VBUS offline in sun4i_usb_phy_power_on(), and set it back
-> online in sun4i_usb_phy_power_off().
+On 1/5/20 8:21 AM, Jiaxin Yu wrote:
+> Add #reset-cells property and update example
+> 
+> Signed-off-by: yong.liang <yong.liang@mediatek.com>
+> Signed-off-by: Jiaxin Yu <jiaxin.yu@mediatek.com>
+> Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+>   .../reset-controller/mt2712-resets.h          | 22 +++++++++++++++++++
+>   .../reset-controller/mt8183-resets.h          | 17 ++++++++++++++
+>   2 files changed, 39 insertions(+)
+>   create mode 100644 include/dt-bindings/reset-controller/mt2712-resets.h
+> 
 
-Ah, OK. That's a valid use case. I had something else in mind, the OTG host
-mode with charger one.
+Repeating Rob's question from v8: What happened to the bindings document ?
 
-> > As for disabling charging, wouldn't it make more sense to disable the
-> > charger?
->
-> Yes, I see now that there's a bit at 33H[7] for this. I don't see an obvious
-> property to hook it up to, though. Maybe POWER_SUPPLY_PROP_CHARGE_TYPE ==
-> POWER_SUPPLY_CHARGE_TYPE_NONE?
+Guenter
 
-Maybe? I suppose the sysfs ABI docs would have some clues.
+> diff --git a/include/dt-bindings/reset-controller/mt2712-resets.h b/include/dt-bindings/reset-controller/mt2712-resets.h
+> new file mode 100644
+> index 000000000000..9e7ee762f076
+> --- /dev/null
+> +++ b/include/dt-bindings/reset-controller/mt2712-resets.h
+> @@ -0,0 +1,22 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + * Author: Yong Liang <yong.liang@mediatek.com>
+> + */
+> +
+> +#ifndef _DT_BINDINGS_RESET_CONTROLLER_MT2712
+> +#define _DT_BINDINGS_RESET_CONTROLLER_MT2712
+> +
+> +#define MT2712_TOPRGU_INFRA_SW_RST				0
+> +#define MT2712_TOPRGU_MM_SW_RST					1
+> +#define MT2712_TOPRGU_MFG_SW_RST				2
+> +#define MT2712_TOPRGU_VENC_SW_RST				3
+> +#define MT2712_TOPRGU_VDEC_SW_RST				4
+> +#define MT2712_TOPRGU_IMG_SW_RST				5
+> +#define MT2712_TOPRGU_INFRA_AO_SW_RST				8
+> +#define MT2712_TOPRGU_USB_SW_RST				9
+> +#define MT2712_TOPRGU_APMIXED_SW_RST				10
+> +
+> +#define MT2712_TOPRGU_SW_RST_NUM				11
+> +
+> +#endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT2712 */
+> diff --git a/include/dt-bindings/reset-controller/mt8183-resets.h b/include/dt-bindings/reset-controller/mt8183-resets.h
+> index 8804e34ebdd4..a1bbd41e0d12 100644
+> --- a/include/dt-bindings/reset-controller/mt8183-resets.h
+> +++ b/include/dt-bindings/reset-controller/mt8183-resets.h
+> @@ -78,4 +78,21 @@
+>   #define MT8183_INFRACFG_AO_I2C7_SW_RST				126
+>   #define MT8183_INFRACFG_AO_I2C8_SW_RST				127
+>   
+> +#define MT8183_INFRACFG_SW_RST_NUM				128
+> +
+> +#define MT8183_TOPRGU_MM_SW_RST					1
+> +#define MT8183_TOPRGU_MFG_SW_RST				2
+> +#define MT8183_TOPRGU_VENC_SW_RST				3
+> +#define MT8183_TOPRGU_VDEC_SW_RST				4
+> +#define MT8183_TOPRGU_IMG_SW_RST				5
+> +#define MT8183_TOPRGU_MD_SW_RST					7
+> +#define MT8183_TOPRGU_CONN_SW_RST				9
+> +#define MT8183_TOPRGU_CONN_MCU_SW_RST				12
+> +#define MT8183_TOPRGU_IPU0_SW_RST				14
+> +#define MT8183_TOPRGU_IPU1_SW_RST				15
+> +#define MT8183_TOPRGU_AUDIO_SW_RST				17
+> +#define MT8183_TOPRGU_CAMSYS_SW_RST				18
+> +
+> +#define MT8183_TOPRGU_SW_RST_NUM				19
+> +
+>   #endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT8183 */
+> 
 
-> > Either way, these are not directly related to the changes. I'm just curious.
-> >
-> >> When the USB VBUS input is disabled via the PATH_SEL bit, the VBUS_USED
-> >> bit in PWR_INPUT_STATUS is cleared, so there is no change needed when
-> >> getting the property.
-> >>
-> >> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> >> ---
-> >>  drivers/power/supply/axp20x_usb_power.c | 27 +++++++++++++++++++++++++
-> >>  1 file changed, 27 insertions(+)
-> >>
-> >> diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
-> >> index 2d7272e19a87..68443f264dff 100644
-> >> --- a/drivers/power/supply/axp20x_usb_power.c
-> >> +++ b/drivers/power/supply/axp20x_usb_power.c
-> >> @@ -29,6 +29,9 @@
-> >>
-> >>  #define AXP20X_USB_STATUS_VBUS_VALID   BIT(2)
-> >>
-> >> +#define AXP20X_VBUS_PATH_SEL           BIT(7)
-> >> +#define AXP20X_VBUS_PATH_SEL_OFFSET    7
-> >> +
-> >>  #define AXP20X_VBUS_VHOLD_uV(b)                (4000000 + (((b) >> 3) & 7) * 100000)
-> >>  #define AXP20X_VBUS_VHOLD_MASK         GENMASK(5, 3)
-> >>  #define AXP20X_VBUS_VHOLD_OFFSET       3
-> >> @@ -263,6 +266,16 @@ static int axp20x_usb_power_get_property(struct power_supply *psy,
-> >>         return 0;
-> >>  }
-> >>
-> >> +static int axp813_usb_power_set_online(struct axp20x_usb_power *power,
-> >> +                                      int intval)
-> >> +{
-> >> +       int val = !intval << AXP20X_VBUS_PATH_SEL_OFFSET;
-> >> +
-> >> +       return regmap_update_bits(power->regmap,
-> >> +                                 AXP20X_VBUS_IPSOUT_MGMT,
-> >> +                                 AXP20X_VBUS_PATH_SEL, val);
-> >> +}
-> >> +
-> >>  static int axp20x_usb_power_set_voltage_min(struct axp20x_usb_power *power,
-> >>                                             int intval)
-> >>  {
-> >> @@ -344,6 +357,9 @@ static int axp20x_usb_power_set_property(struct power_supply *psy,
-> >>         struct axp20x_usb_power *power = power_supply_get_drvdata(psy);
-> >>
-> >>         switch (psp) {
-> >> +       case POWER_SUPPLY_PROP_ONLINE:
-> >> +               return axp813_usb_power_set_online(power, val->intval);
-> >> +
-> >
-> > I would add a comment here pointing to the next change as to why there's
-> > only an axp813-specific callback used here.
->
-> I'll add this for v3.
-
-Thanks
-ChenYu
-
-> >>         case POWER_SUPPLY_PROP_VOLTAGE_MIN:
-> >>                 return axp20x_usb_power_set_voltage_min(power, val->intval);
-> >>
-> >> @@ -363,6 +379,17 @@ static int axp20x_usb_power_set_property(struct power_supply *psy,
-> >>  static int axp20x_usb_power_prop_writeable(struct power_supply *psy,
-> >>                                            enum power_supply_property psp)
-> >>  {
-> >> +       struct axp20x_usb_power *power = power_supply_get_drvdata(psy);
-> >> +
-> >> +       /*
-> >> +        * Both AXP2xx and AXP8xx have a VBUS path select flag.
-> >> +        * On AXP2xx, setting the flag enables VBUS (ignoring N_VBUSEN).
-> >> +        * On AXP8xx, setting the flag disables VBUS (ignoring N_VBUSEN).
-> >> +        * So we only expose the control on AXP8xx where it is meaningful.
-> >> +        */
-> >> +       if (psp == POWER_SUPPLY_PROP_ONLINE)
-> >> +               return power->axp20x_id == AXP813_ID;
-> >> +
-> >>         return psp == POWER_SUPPLY_PROP_VOLTAGE_MIN ||
-> >>                psp == POWER_SUPPLY_PROP_CURRENT_MAX;
-> >>  }
-> >> --
-> >
-> > Otherwise,
-> >
-> > Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-> >
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/f0c5e260-dcc3-2744-21cd-305e4534f2be%40sholland.org.
