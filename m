@@ -2,88 +2,110 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D099BC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71164C33C9B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A461F2075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:03:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 487D52075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:05:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AG+WKiRL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G4Y7lI8p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbgAFXC7 (ORCPT
+        id S1727233AbgAFXFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 18:02:59 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36670 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbgAFXC6 (ORCPT
+        Mon, 6 Jan 2020 18:05:12 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46942 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726735AbgAFXFM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 18:02:58 -0500
-Received: by mail-lf1-f65.google.com with SMTP id n12so37500681lfe.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 15:02:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=PoH3a6UFcev6hSnVLUpMXxu6G3cX+06NWDeSI46eOP4=;
-        b=AG+WKiRLIfE4a3Ryt/xpjGAZPcaSQn4bMpbWlqsm88zytaALksIdw8OAY7rkkFI0/9
-         oyY2v8tSO1j1bhxa9ioSRY2Gh0bmKOWJI2dHYpfdL2FzqskvARvVPm1VRp/HP598/MxQ
-         P50damguECiqf30ejikCqgmTc661ItZy+O+JZ6T3mLJZVg5BH3mmyrkGgmYZA44hkyOE
-         IS8ua41bXhtqrkt6enZELSJlgkb5sW7fsNVUK1VxIGL8pS7zoQqQ+D4eTVzWZYCfbsIK
-         SlPqr1xQKaYWY1sAV9HVYIaIfGjlGbySTVvKLIy2O8lW9JYnlkUYohgwcbRid8lZHxbO
-         5X9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=PoH3a6UFcev6hSnVLUpMXxu6G3cX+06NWDeSI46eOP4=;
-        b=aAi8vPO/dYEJM7kHw+6AUiumI1Djl37X4rNc3rGdk7KRqPs/XCGDkXtUhWK3pvCC+S
-         2cJVsJKarPRwCZylR6F1lTTZJplxC0tnshAMl1T+/53eF6ulQtSJtAzZ6kmTOF9kmrWT
-         gExL44k2iH+/LF4PExG1kTELKpYJ7+uWeFvlASmGGxdubtqUz4OZUHPgb4k7A7Wkkv+d
-         uIwuwq8Qm3ocvNPA9lCW+ZMVVeSxzFJmeRVgHHbdazp+IlQ0dQMIyeP2nfUiTOV3E+yI
-         rYfguW5OcYxKiy/v5bod/yZTfvhSXkE/IxsvoVdtpOz6dV8K+iJVHiWfWoZegXJqjKR1
-         m0nA==
-X-Gm-Message-State: APjAAAW/hhMxwApOZFRTnJ5CkJ7bx4WbiEMRgNSMkaKaf1QGxbZA8aNN
-        0LjnQzBT8Wquv4rgmbAUEKf6srLpbL8FQuosiUdhYw==
-X-Google-Smtp-Source: APXvYqztDsiEMPzgq8tia4/g2GReO5Rdoxf4kFUrQqstmxXWTvU9bAoWL4HoosBo1RlFHnQrEHEus6Ink0jFQf9inoE=
-X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr57106508lfp.133.1578351776360;
- Mon, 06 Jan 2020 15:02:56 -0800 (PST)
+        Mon, 6 Jan 2020 18:05:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578351910;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5FUwndBIrFS376iq6UZxigDCdyXQx4W62Bo2bpWtvvU=;
+        b=G4Y7lI8pUX8BE2TKDRr4TeCkJFEjUL58XMd+os1uJcyMyrO4L9j5epDHJkNoIciRxxSMEv
+        D5DLV44uVLbH+1MZNd/w2z2cBX/ZpsaxdWVHAdt6OW04B3uv7L+N9kBP1kuhYzeWf4sWjA
+        zFzVyMiNW9hDa/daa+JD2qOr6klFGC8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-190-iBhoNrFePfelJiDunoLm6A-1; Mon, 06 Jan 2020 18:05:08 -0500
+X-MC-Unique: iBhoNrFePfelJiDunoLm6A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 834CB1800D4E;
+        Mon,  6 Jan 2020 23:05:06 +0000 (UTC)
+Received: from w520.home (ovpn-116-26.phx2.redhat.com [10.3.116.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 257F65D9D6;
+        Mon,  6 Jan 2020 23:05:05 +0000 (UTC)
+Date:   Mon, 6 Jan 2020 16:05:05 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Julia Lawall <Julia.Lawall@inria.fr>
+Cc:     kernel-janitors@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] vfio: vfio_pci_nvlink2: use mmgrab
+Message-ID: <20200106160505.2f962d38@w520.home>
+In-Reply-To: <1577634178-22530-3-git-send-email-Julia.Lawall@inria.fr>
+References: <1577634178-22530-1-git-send-email-Julia.Lawall@inria.fr>
+        <1577634178-22530-3-git-send-email-Julia.Lawall@inria.fr>
 MIME-Version: 1.0
-References: <20200106015154.12040-1-digetx@gmail.com>
-In-Reply-To: <20200106015154.12040-1-digetx@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 00:02:45 +0100
-Message-ID: <CACRpkdZK7hvqri9NwvWfiittb2+JKJCyutP6MfBZpThJD13CWw@mail.gmail.com>
-Subject: Re: [PATCH v1] gpio: max77620: Add missing dependency on GPIOLIB_IRQCHIP
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 6, 2020 at 2:52 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+On Sun, 29 Dec 2019 16:42:56 +0100
+Julia Lawall <Julia.Lawall@inria.fr> wrote:
 
-> Driver fails to compile in a minimized kernel's configuration because of
-> the missing dependency on GPIOLIB_IRQCHIP.
->
->  error: =E2=80=98struct gpio_chip=E2=80=99 has no member named =E2=80=98i=
-rq=E2=80=99
->    44 |   virq =3D irq_find_mapping(gpio->gpio_chip.irq.domain, offset);
->
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> Mmgrab was introduced in commit f1f1007644ff ("mm: add new mmgrab()
+> helper") and most of the kernel was updated to use it. Update a
+> remaining file.
+> 
+> The semantic patch that makes this change is as follows:
+> (http://coccinelle.lip6.fr/)
+> 
+> <smpl>
+> @@ expression e; @@
+> - atomic_inc(&e->mm_count);
+> + mmgrab(e);
+> </smpl>
+> 
+> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+> 
+> ---
+>  drivers/vfio/pci/vfio_pci_nvlink2.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci_nvlink2.c b/drivers/vfio/pci/vfio_pci_nvlink2.c
+> index f2983f0f84be..43df10af7f66 100644
+> --- a/drivers/vfio/pci/vfio_pci_nvlink2.c
+> +++ b/drivers/vfio/pci/vfio_pci_nvlink2.c
+> @@ -159,7 +159,7 @@ static int vfio_pci_nvgpu_mmap(struct vfio_pci_device *vdev,
+>  	data->useraddr = vma->vm_start;
+>  	data->mm = current->mm;
+>  
+> -	atomic_inc(&data->mm->mm_count);
+> +	mmgrab(data->mm);
+>  	ret = (int) mm_iommu_newdev(data->mm, data->useraddr,
+>  			vma_pages(vma), data->gpu_hpa, &data->mem);
+>  
+> 
 
-Patch applied for fixes, thanks!
+Acked-by: Alex Williamson <alex.williamson@redhat.com>
 
-Yours,
-Linus Walleij
+Thanks!  I'm assuming these will be routed via janitors tree, please
+let me know if you intend me to grab these two vfio patches from the
+series.  Thanks,
+
+Alex
+
