@@ -2,80 +2,82 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67535C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF0BC33C9B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41EDC2071A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 375F92081E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:10:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="e5OsSmbx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbgAFNJy (ORCPT
+        id S1726582AbgAFNKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 08:09:54 -0500
-Received: from lnfm1.sai.msu.ru ([93.180.26.255]:44440 "EHLO lnfm1.sai.msu.ru"
+        Mon, 6 Jan 2020 08:10:00 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:49886 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbgAFNJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 08:09:54 -0500
-Received: from dragon.sai.msu.ru (dragon.sai.msu.ru [93.180.26.172])
-        by lnfm1.sai.msu.ru (8.14.1/8.12.8) with ESMTP id 006D9OYS023161;
-        Mon, 6 Jan 2020 16:09:29 +0300
-Received: from oak.local (unknown [188.123.231.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client did not present a certificate)
-        by dragon.sai.msu.ru (Postfix) with ESMTPSA id 6DD565737;
-        Mon,  6 Jan 2020 16:09:25 +0300 (MSK)
-From:   "Matwey V. Kornilov" <matwey@sai.msu.ru>
-To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-omap@vger.kernel.org (open list:OMAP DEVICE TREE SUPPORT),
-        devicetree@vger.kernel.org (open list:OMAP DEVICE TREE SUPPORT),
-        linux-kernel@vger.kernel.org (open list)
-Cc:     matwey.kornilov@gmail.com,
-        "Matwey V. Kornilov" <matwey@sai.msu.ru>,
-        linux-omap@vger.kernel.org (open list:OMAP DEVICE TREE SUPPORT),
-        devicetree@vger.kernel.org (open list:OMAP DEVICE TREE SUPPORT),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] arm: dts: am335x-boneblack-common: fix memory size
-Date:   Mon,  6 Jan 2020 16:09:08 +0300
-Message-Id: <20200106130909.7697-1-matwey@sai.msu.ru>
-X-Mailer: git-send-email 2.16.4
+        id S1726467AbgAFNKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 08:10:00 -0500
+Received: from zn.tnic (p200300EC2F270F00D01C7B5BCA520F19.dip0.t-ipconnect.de [IPv6:2003:ec:2f27:f00:d01c:7b5b:ca52:f19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DCC231EC03AD;
+        Mon,  6 Jan 2020 14:09:57 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1578316198;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=lWa/DEYSm8nKdl5gwoKmWpRa3Mo12FbsP/q+yLT9OE8=;
+        b=e5OsSmbxS1duTWmwLnWMSnKCG9ubd+hCPC/562BMf7jyjbJG9PU81rWjwioPqF41trISQt
+        1hni2fgKsrdUTR0anu2f5/NjCayKQdBvteU72sUQKnz1jdEAd+xHqoDn8NybNJ6MJVIZoz
+        3Squ+v/orzb+M6TjU9wEE8Qvcy1J0gw=
+Date:   Mon, 6 Jan 2020 14:09:49 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Bhaskar Upadhaya <bhaskar.upadhaya.linux@gmail.com>
+Cc:     Bhaskar Upadhaya <bupadhaya@marvell.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-edac@vger.kernel.org, lenb@kernel.org, rafael@kernel.org,
+        gkulkarni@marvell.com, rrichter@marvell.com
+Subject: Re: [RFC PATCH] apei/ghes: fix ghes_poll_func by registering in
+ non-deferrable mode
+Message-ID: <20200106130949.GD12238@zn.tnic>
+References: <1576652618-27017-1-git-send-email-bupadhaya@marvell.com>
+ <20200102180130.GG8345@zn.tnic>
+ <CAEYJA6oXTxTmJEji5_Hup2oB+GrgGnmSTiS-nNuzbNzGJ9VESA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAEYJA6oXTxTmJEji5_Hup2oB+GrgGnmSTiS-nNuzbNzGJ9VESA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BeagleBone Black series is equipped with 512MB RAM
-whereas only 256MB is included from am335x-bone-common.dtsi
+On Mon, Jan 06, 2020 at 04:33:19PM +0530, Bhaskar Upadhaya wrote:
+> Definition of poll interval as per spec (referred ACPI 6.3):
+> "Indicates the poll interval in milliseconds OSPM should use to
+> periodically check the error source for the presence of an error
+> condition."
 
-This leads to an issue with unusual setups when devicetree
-is loaded by GRUB2 directly.
+Please add that...
 
-Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
----
- arch/arm/boot/dts/am335x-boneblack-common.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+> We are observing an issue in our ThunderX2 platforms wherein
+> ghes_poll_func is not called within poll interval when timer is
+> configured with TIMER_DEFERRABLE flag(For NO_HZ kernel) and hence we
+> are losing the error records.
 
-diff --git a/arch/arm/boot/dts/am335x-boneblack-common.dtsi b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
-index 7ad079861efd..91f93bc89716 100644
---- a/arch/arm/boot/dts/am335x-boneblack-common.dtsi
-+++ b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
-@@ -131,6 +131,11 @@
- };
- 
- / {
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>; /* 512 MB */
-+	};
-+
- 	clk_mcasp0_fixed: clk_mcasp0_fixed {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
+... and that to your commit message then, so that it is crystal clear
+*why* you're making this change.
+
+Thx.
+
 -- 
-2.16.4
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
