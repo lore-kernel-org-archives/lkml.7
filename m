@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07848C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84211C33C9B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D07B1207FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 596222072C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:17:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgAFVRJ (ORCPT
+        id S1726998AbgAFVRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 16:17:09 -0500
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:46862 "EHLO
+        Mon, 6 Jan 2020 16:17:13 -0500
+Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:47104 "EHLO
         wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726683AbgAFVRH (ORCPT
+        by vger.kernel.org with ESMTP id S1726683AbgAFVRM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 16:17:07 -0500
+        Mon, 6 Jan 2020 16:17:12 -0500
 Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
         by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1ioZkG-0001T2-Jy; Mon, 06 Jan 2020 22:17:04 +0100
+        id 1ioZkL-0001VB-HL; Mon, 06 Jan 2020 22:17:09 +0100
 X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
         linuxbbg.five-lan.de
 Received: from roc-pc (pD9E89450.dip0.t-ipconnect.de [217.232.148.80])
         (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id 006LH35I032137
+        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id 006LH84B032145
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Mon, 6 Jan 2020 22:17:04 +0100
+        Mon, 6 Jan 2020 22:17:08 +0100
 From:   Markus Reichl <m.reichl@fivetechno.de>
 To:     linux-rockchip@lists.infradead.org,
         Liam Girdwood <lgirdwood@gmail.com>,
@@ -40,64 +40,41 @@ To:     linux-rockchip@lists.infradead.org,
 Cc:     Markus Reichl <m.reichl@fivetechno.de>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/5] regulator: mp8859: add config option and build entry
-Date:   Mon,  6 Jan 2020 22:16:25 +0100
-Message-Id: <20200106211633.2882-3-m.reichl@fivetechno.de>
+Subject: [PATCH 3/5] dt-bindings: add vendor Monolithic Power Systems
+Date:   Mon,  6 Jan 2020 22:16:26 +0100
+Message-Id: <20200106211633.2882-4-m.reichl@fivetechno.de>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200106211633.2882-1-m.reichl@fivetechno.de>
 References: <20200106211633.2882-1-m.reichl@fivetechno.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1578345427;248ee592;
-X-HE-SMSGID: 1ioZkG-0001T2-Jy
+X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1578345431;c4c85a48;
+X-HE-SMSGID: 1ioZkL-0001VB-HL
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add entries for the mp8859 regulator driver
-to the build system.
+MPS produce power regulators like the MP8859.
 
 Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
 ---
- drivers/regulator/Kconfig  | 11 +++++++++++
- drivers/regulator/Makefile |  1 +
- 2 files changed, 12 insertions(+)
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 56512748a47d..593733a88a61 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -612,6 +612,17 @@ config REGULATOR_MCP16502
- 	  through the regulator interface. In addition it enables
- 	  suspend-to-ram/standby transition.
- 
-+config REGULATOR_MP8859
-+	tristate "MPS MP8859 regulator driver"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  Say y here to support the MP8859 voltage regulator. This driver
-+	  supports basic operations (get/set voltage) through the regulator
-+	  interface.
-+	  Say M here if you want to include support for the regulator as a
-+	  module. The module will be named "mp8859".
-+
- config REGULATOR_MT6311
- 	tristate "MediaTek MT6311 PMIC"
- 	depends on I2C
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 9eccf93bc3ab..8ba8e5deebbd 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -78,6 +78,7 @@ obj-$(CONFIG_REGULATOR_MC13783) += mc13783-regulator.o
- obj-$(CONFIG_REGULATOR_MC13892) += mc13892-regulator.o
- obj-$(CONFIG_REGULATOR_MC13XXX_CORE) +=  mc13xxx-regulator-core.o
- obj-$(CONFIG_REGULATOR_MCP16502) += mcp16502.o
-+obj-$(CONFIG_REGULATOR_MP8859) += mp8859.o
- obj-$(CONFIG_REGULATOR_MT6311) += mt6311-regulator.o
- obj-$(CONFIG_REGULATOR_MT6323)	+= mt6323-regulator.o
- obj-$(CONFIG_REGULATOR_MT6358)	+= mt6358-regulator.o
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index fa6aa3c5a500..4fa3bb494745 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -617,6 +617,8 @@ patternProperties:
+     description: Moxa Inc.
+   "^mpl,.*":
+     description: MPL AG
++  "^mps,.*":
++    description: Monolithic Power Systems Inc.
+   "^mqmaker,.*":
+     description: mqmaker Inc.
+   "^mscc,.*":
 -- 
 2.24.1
 
