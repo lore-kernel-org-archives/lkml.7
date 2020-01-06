@@ -2,89 +2,157 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30719C33C9B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177E0C33C9A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE09D20848
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:04:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578301480;
-	bh=R3lW9glk35yqVg/VMUPlgtgKJaOq6vpMeSYGhqpP9W4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LsQxcxLseU4HFwjRpM/Cd0BmwbFhoK7ERZzQu0vMcb6pyEPirZIxhoq4QhptMSe/T
-	 MJ22uREMwlph75nDc5MRRR9aLPSetHgW2rmsQXubdd6K4omgggOLjenr7XJeRVXc8T
-	 ymBGYab8gNzy+StUXLCMoRX1mndoxq3WJZhD0vDg=
+	by mail.kernel.org (Postfix) with ESMTP id DFC9921775
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:10:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="i3FuJlen"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgAFJEj (ORCPT
+        id S1726264AbgAFJKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 04:04:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725996AbgAFJEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 04:04:38 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE63420848;
-        Mon,  6 Jan 2020 09:04:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578301478;
-        bh=R3lW9glk35yqVg/VMUPlgtgKJaOq6vpMeSYGhqpP9W4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RwJnsuwNw5lvNc/hFugCS7jH+AyWz2EosczmYU1b8bPv1vbkOR4XE2DCDW3aAClCw
-         aXWledUZ14t5ahd869zvO3QR59ypBL0kpmWBIeeO86x93qf+tzi96P+OmpwjCZDIdI
-         SFh4KFbMsLJBSkt6GcPjGzpaekhawhtF/FIYXQAg=
-Date:   Mon, 6 Jan 2020 10:04:36 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: allwinner: sun50i-a64: Use macros for newly
- exported clocks
-Message-ID: <20200106090436.lz7kndaozhjwwpux@gilmour.lan>
-References: <20200106090030.9165-1-wens@kernel.org>
+        Mon, 6 Jan 2020 04:10:10 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:34796 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgAFJKJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 04:10:09 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00699SJd164287;
+        Mon, 6 Jan 2020 09:09:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=2XXWSUP1BjpVGTmZ+2CsgK5T/L+9UoxH989PAMTTewQ=;
+ b=i3FuJlenU+Q3KZxLkfH8pZDQJf17bClyQVzh/zeQOdvRQumxQtgV9ik5VCe6ybpxq1uV
+ TdeESViMJivYzap1LRiYqSnjEXTN1XR2PB9ZOeEFaweUpJSBe0D3RlTlwtPWl8yBZKET
+ dao+7kQaRPtNIQKEZn5CNHXnunCYciDlDBdGhailorLhnvFkVErHYo8wF1Pyd95RHyUI
+ xIxoe14WLIQhnXoT69Xf7muWdTzfxF38Vdzt89cFEcOFCicXx/fVHG5rUUaKtVCJm5Tj
+ zkhKQsBFujxiorynothHr+xiNR7fjt7wmPa0eHxFjGLS+rJ17eBc/O+Qser9LmpbnagT Ag== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2xakbqdvkw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 06 Jan 2020 09:09:54 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00699af6020933;
+        Mon, 6 Jan 2020 09:09:53 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2xb4unf3b0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 06 Jan 2020 09:09:53 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0069978Y000590;
+        Mon, 6 Jan 2020 09:09:07 GMT
+Received: from [192.168.1.14] (/114.88.246.185)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 06 Jan 2020 01:09:07 -0800
+Subject: Re: [resend v1 0/5] Add support for block disk resize notification
+To:     "Singh, Balbir" <sblbir@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+Cc:     "hch@lst.de" <hch@lst.de>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "Chaitanya.Kulkarni@wdc.com" <Chaitanya.Kulkarni@wdc.com>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "Sangaraju, Someswarudu" <ssomesh@amazon.com>
+References: <20200102075315.22652-1-sblbir@amazon.com>
+ <62ef2cd2-42a2-6117-155d-ed052a136c5c@oracle.com>
+ <f260159c7c56a08711240cc6c7f69d2d5327a449.camel@amazon.com>
+From:   Bob Liu <bob.liu@oracle.com>
+Message-ID: <77a665c6-1409-3dd0-2fde-221a00e04b3c@oracle.com>
+Date:   Mon, 6 Jan 2020 17:08:49 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="z7uhvbuxo4svguyf"
-Content-Disposition: inline
-In-Reply-To: <20200106090030.9165-1-wens@kernel.org>
+In-Reply-To: <f260159c7c56a08711240cc6c7f69d2d5327a449.camel@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9491 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001060084
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9491 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001060084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 1/6/20 4:47 PM, Singh, Balbir wrote:
+> On Mon, 2020-01-06 at 13:59 +0800, Bob Liu wrote:
+>> On 1/2/20 3:53 PM, Balbir Singh wrote:
+>>> Allow block/genhd to notify user space about disk size changes
+>>> using a new helper disk_set_capacity(), which is a wrapper on top
+>>> of set_capacity(). disk_set_capacity() will only notify if
+>>> the current capacity or the target capacity is not zero.
+>>>
+>>
+>> set_capacity_and_notify() may be a more straightforward name.
+>>
+> 
+> Yes, agreed.
+> 
+>>> Background:
+>>>
+>>> As a part of a patch to allow sending the RESIZE event on disk capacity
+>>> change, Christoph (hch@lst.de) requested that the patch be made generic
+>>> and the hacks for virtio block and xen block devices be removed and
+>>> merged via a generic helper.
+>>>
+>>> This series consists of 5 changes. The first one adds the basic
+>>> support for changing the size and notifying. The follow up patches
+>>> are per block subsystem changes. Other block drivers can add their
+>>> changes as necessary on top of this series.
+>>>
+>>> Testing:
+>>> 1. I did some basic testing with an NVME device, by resizing it in
+>>> the backend and ensured that udevd received the event.
+>>>
+>>> NOTE: After these changes, the notification might happen before
+>>> revalidate disk, where as it occured later before.
+>>>
+>>
+>> It's better not to change original behavior.
+>> How about something like:
+>>
+>> +void set_capacity_and_notify(struct gendisk *disk, sector_t size, bool
+>> revalidate)
+>> {
+>> 	sector_t capacity = get_capacity(disk);
+>>
+>> 	set_capacity(disk, size);
+>>
+>> +        if (revalidate)
+>> +		revalidate_disk(disk);
+> 
+> Do you see a concern with the notification going out before revalidate_disk?
 
---z7uhvbuxo4svguyf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Not aware any, but keep the original behavior is safer especial when not must change..
 
-On Mon, Jan 06, 2020 at 05:00:30PM +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
->
-> A few clocks from the CCU were exported later, and references to them in
-> the device tree were using raw numbers.
->
-> Now that the DT binding header changes are in as well, switch to the
-> macros for more clarity.
->
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> I could keep the behaviour and come up with a suitable name
+> 
+> revalidate_disk_and_notify() (set_capacity is a part of the revalidation
+> process), or feel free to suggest a better name
+> 
 
-Applied, thanks!
-Maxime
+Feel free to add my reviewed-by next version in this series.
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
 
---z7uhvbuxo4svguyf
-Content-Type: application/pgp-signature; name="signature.asc"
+> Thanks,
+> Balbir Singh
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXhL4IwAKCRDj7w1vZxhR
-xWXbAP9Ors18Np2z+FcY5vnpLSAVawSLtt6//SNXrjCIJVWkyAD/Zm/E8yIG+xZN
-5azAfdesLHweGYLYYFn1bz6nco+2vQM=
-=tHnk
------END PGP SIGNATURE-----
-
---z7uhvbuxo4svguyf--
