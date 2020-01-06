@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED92C32771
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 07:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7ACEC33C9A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 07:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9210F21775
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 07:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E3F020848
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 07:24:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578295481;
-	bh=eQ8yqiTzUyPNFIqy24QttGgeP6WmbwCLza0/SEWxECM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PEb+66Y18S+Tx2MQPB1E9eC6Y89qQ3TZrtL/6bXteURg9n8U+iUXMQqZJBlxawmEF
-	 CdR6LODJEcZFB/V/rs+/LHaORtQKPf1YSHLro1Vma4irx55va6WV5X3j6hXHLAnWZo
-	 xp7COLpIybdIotGus26VQfvsOjBF0Gj8DMFwKw2k=
+	s=default; t=1578295483;
+	bh=ZhmcAhSejz8Epok24JJ9UZlzx3xCZ+lKEygmAqKtvHk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=iJRKfAspAalaIKPEq3rlOQg/v8GgWR7cO/ZENN8iArBcnlUrb47v5ism73q6gfqq4
+	 lGpMORRl9j2odV9aBRCI9NVOS9g9KBMp52DCg0pKW9GAwT4dEJoohbEflKHbKmwvVV
+	 9XnO1tJhlXGjnKi/QhTzZ07Ex5mj5hKvbjUVOBog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgAFHYk (ORCPT
+        id S1726916AbgAFHYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 02:24:40 -0500
-Received: from conuserg-10.nifty.com ([210.131.2.77]:59020 "EHLO
+        Mon, 6 Jan 2020 02:24:42 -0500
+Received: from conuserg-10.nifty.com ([210.131.2.77]:59011 "EHLO
         conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726498AbgAFHYk (ORCPT
+        with ESMTP id S1726488AbgAFHYk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 Jan 2020 02:24:40 -0500
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 0067NuUK027666;
-        Mon, 6 Jan 2020 16:23:59 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 0067NuUK027666
+        by conuserg-10.nifty.com with ESMTP id 0067NuUJ027666;
+        Mon, 6 Jan 2020 16:23:57 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 0067NuUJ027666
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578295439;
-        bh=TYKpX6W0znwh1gMd4rZiv+4YStRd99Hk1SGjhmu432g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iV76gizfLZEcrcaMKma+rvXBNwpc8Kw6dhOKfPcMOYM45Vxx7PF06mSI4o/TtLgrj
-         sc1KKq+OMZ2hffyq61ssieKOezh3SJ6YrkBPwrNuJVRpouVaV19sRBWA2W5SfV0OMo
-         Eo6hNfJO7uLLoKbqLWbIvxq9pFSVfJjFOmVIzEe+CBqVMwn0LSMUR0heiRnjd5BkZX
-         0JDbe0r19gUzZGMIaUpXMNZ12Q67XEur1ZN/ARjCIKlkn0QQAFtvuC65DyH6qcYQVD
-         e75b+08Of4Qa7NOk4rYvt3Lnrh/fjtUyrWCEfc/pEiqtm7nOhzRs4RI0laMBg89CPw
-         C4ZamYSvwvNnQ==
+        s=dec2015msa; t=1578295438;
+        bh=nH4dFfP1GgwyNJ1zJ0dHhCaaOD+Rq3zIautm+yHcSB0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=uI4B/uwXD2uUt8T9ilWUdGrV5eqUYNK1Qyoczui8dMvAriIP3iwWjUcwCCVcaj46v
+         NESL8gqtR39wKMact7aYK6KaiLOrSiXcCsM8wMcMUudGq4kHmjwxSmIA1cYMHUDtv6
+         AwEs5+IUGNkJGa3yX2HkGeq9LzCMqOnjc8dBuHwTsFKa0dcZPKCALziJABSnVgy2Tw
+         99OzzmLMLMZ7UUdF+EV69yheIeFSTGEVAB7nn3OjyMdfSgqUxSEhC7EfRVS5/ogd9G
+         QUcepOYisf00v1/9rFi5UzqNXJ/q3JD6rj+O4vmeNCkuPzz5M7vYVTWORtW9EBPvHY
+         5MH3ZFomDPyMg==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
@@ -50,70 +50,54 @@ Cc:     Fumiya Shigemitsu <shfy1014@gmail.com>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] kbuild: allow modules to link *.a archives
-Date:   Mon,  6 Jan 2020 16:23:55 +0900
-Message-Id: <20200106072355.32178-2-masahiroy@kernel.org>
+Subject: [PATCH v2 1/2] kbuild: get rid of duplication in the first line of *.mod files
+Date:   Mon,  6 Jan 2020 16:23:54 +0900
+Message-Id: <20200106072355.32178-1-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200106072355.32178-1-masahiroy@kernel.org>
-References: <20200106072355.32178-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 69ea912fda74 ("kbuild: remove unneeded link_multi_deps"),
-modules cannot link *.a archives.
+The first line of *.mod lists the object files that consist of the
+module. This may contain duplication if the same object is added
+multiple times, like this:
 
-I do not see such a usecase in the upstream code, but multiple people
-reported this issue, so it seems to be a desired feature for external
-modules.
+  obj-m := foo.o
+  foo-$(CONFIG_FOO1_X) += foo1.o
+  foo-$(CONFIG_FOO1_Y) += foo1.o
+  foo-$(CONFIG_FOO2_X) += foo2.o
+  foo-$(CONFIG_FOO2_Y) += foo2.o
 
-For example, libfoo.a is not linked in the following test case:
+This is probably not a big deal. As far as I know, the only small
+problem is scripts/mod/sumversion.c parses the same file over again.
+This can be avoided by adding $(sort ...). It has a side-effect that
+sorts the objects alphabetically, but it is not a big deal, either.
 
-    obj-m := foo.o
-    foo-objs := foo1.o libfoo.a
-
-I used $(filter $(multi-m-prereqs), $^) to avoid linking the same object
-multiple times in case Makefile is written as follows:
-
-    obj-m := foo.o
-    foo-$(CONFIG_FOO1_X) += foo1.o
-    foo-$(CONFIG_FOO1_Y) += foo1.o
-    foo-y += libfoo.a
-
-Reported-by: Fumiya Shigemitsu <shfy1014@gmail.com>
-Reported-by: Yongxin Liu <yongxin.liu@windriver.com>
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
 Changes in v2:
-  - add $(filter ..., $^) to avoid build errors caused by multiple linking
+  - new patch
 
- scripts/Makefile.build | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ scripts/Makefile.build | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index d8445b696d5b..9ffb9300705e 100644
+index b734ac8a654e..d8445b696d5b 100644
 --- a/scripts/Makefile.build
 +++ b/scripts/Makefile.build
-@@ -429,13 +429,13 @@ targets += $(obj)/lib-ksyms.o
- endif
+@@ -265,8 +265,10 @@ $(obj)/%.o: $(src)/%.c $(recordmcount_source) $(objtool_dep) FORCE
+ 	$(call cmd,force_checksrc)
+ 	$(call if_changed_rule,cc_o_c)
  
- # NOTE:
--# Do not replace $(filter %.o,^) with $(real-prereqs). When a single object
--# module is turned into a multi object module, $^ will contain header file
--# dependencies recorded in the .*.cmd file.
-+# Do not replace $(filter $(multi-m-prereqs), $^) with $(real-prereqs).
-+# When a single object module is turned into a multi object module,
-+# $^ will contain header file dependencies recorded in the .*.cmd file.
- quiet_cmd_link_multi-m = LD [M]  $@
--      cmd_link_multi-m = $(LD) $(ld_flags) -r -o $@ $(filter %.o,$^)
-+      cmd_link_multi-m = $(LD) $(ld_flags) -r -o $@ $(filter $(multi-m-prereqs), $^)
- 
--$(multi-used-m): FORCE
-+$(multi-used-m): $(obj)/%.o: FORCE
- 	$(call if_changed,link_multi-m)
- $(call multi_depend, $(multi-used-m), .o, -objs -y -m)
++multi-m-prereqs = $(sort $(addprefix $(obj)/, $($*-objs) $($*-y) $($*-m)))
++
+ cmd_mod = { \
+-	echo $(if $($*-objs)$($*-y)$($*-m), $(addprefix $(obj)/, $($*-objs) $($*-y) $($*-m)), $(@:.mod=.o)); \
++	echo $(if $(multi-m-prereqs), $(multi-m-prereqs), $(@:.mod=.o)); \
+ 	$(cmd_undef_syms); \
+ 	} > $@
  
 -- 
 2.17.1
