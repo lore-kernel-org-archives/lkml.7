@@ -2,91 +2,103 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB96AC00523
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE60C33C9A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE9662072C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45AC2072C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:52:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jn8RXgrb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbgAFBw2 (ORCPT
+        id S1727359AbgAFBwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 20:52:28 -0500
-Received: from szxga08-in.huawei.com ([45.249.212.255]:56876 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727226AbgAFBw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 20:52:27 -0500
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 344BCE20430513D69D12;
-        Mon,  6 Jan 2020 09:52:25 +0800 (CST)
-Received: from DGGEMM526-MBX.china.huawei.com ([169.254.8.143]) by
- DGGEMM403-HUB.china.huawei.com ([10.3.20.211]) with mapi id 14.03.0439.000;
- Mon, 6 Jan 2020 09:52:19 +0800
-From:   "Zengtao (B)" <prime.zeng@hisilicon.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-CC:     Linuxarm <linuxarm@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Morten Rasmussen" <morten.rasmussen@arm.com>
-Subject: RE: [PATCH] cpu-topology: warn if NUMA configurations conflicts
- with lower layer
-Thread-Topic: [PATCH] cpu-topology: warn if NUMA configurations conflicts
- with lower layer
-Thread-Index: AQHVuWnsK0zwK8RxTkqe/SNAoYeaUKfT+S+AgALBI6CAAAyngIAAlqWw//+IwoCAAXt3QP//7niAgAAVeoCABI6+sA==
-Date:   Mon, 6 Jan 2020 01:52:18 +0000
-Message-ID: <678F3D1BB717D949B966B68EAEB446ED340B3211@dggemm526-mbx.china.huawei.com>
-References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
- <20191231164051.GA4864@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
- <20200102112955.GC4864@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340AEB67@dggemm526-mbx.china.huawei.com>
- <c43342d0-7e4d-3be0-0fe1-8d802b0d7065@arm.com>
- <678F3D1BB717D949B966B68EAEB446ED340AFCA0@dggemm526-mbx.china.huawei.com>
- <7b375d79-2d3c-422b-27a6-68972fbcbeaf@arm.com>
- <66943c82-2cfd-351b-7f36-5aefdb196a03@arm.com>
-In-Reply-To: <66943c82-2cfd-351b-7f36-5aefdb196a03@arm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.74.221.187]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 5 Jan 2020 20:52:36 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38827 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727226AbgAFBwf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 20:52:35 -0500
+Received: by mail-lj1-f194.google.com with SMTP id w1so27367002ljh.5;
+        Sun, 05 Jan 2020 17:52:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+WKDbV/B1whMsFkARIuj+xVMPqzn++Ge3NWQ5oVlVNI=;
+        b=Jn8RXgrbA0x9c7VxoOnXr3F3Z7b0MDtzYYOElpNEWf3fMQTAoINw3ErXHyBmBI9B/f
+         ctqk1W2N357i0AjDIZY3b2NPliWisTvtPSDSh5QBhpzT00IG2XpOD0ziLuW7qa9m4c75
+         tdn4kN4brFKB6kjbwindIp1xczKU0ObDzsT5pSP7zgzb0hXyj+S0n9QtoGEm4s65DfHu
+         IXadbATsaE6O7M0sBU4KsRmZhEtMzpbMcQIMSHqpjpnyfzZAsJLQ+2wpNYMsTKEv4WhX
+         Kwu0hcyH6WiMu3/xrNpSEXdIv2iGyWvx0mxtGnsNLvhxuPfeCgMBqW1R3P6rtUxd42rX
+         pHsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+WKDbV/B1whMsFkARIuj+xVMPqzn++Ge3NWQ5oVlVNI=;
+        b=R9h0Tof1W7/oCJARktTZpFviQGl6jBYeohvzZn8VnIMNY5DI4Tr72IQRS5x/PhX88s
+         oVIOrIrEV8pxIoplAEVhgQv5TYcup7VS3D2kZKEsVSlfpPxnRkRkv0W72rmSJo4J9hfW
+         Ql455Y9ACggqGclNPGYQajbGPMSyyQPz5BZkOc+UARvVobWmdVxcnAyETLMDT1hyDu5a
+         pzd9I01GCxm3K/5M+5tMlz4tLD1xkSjZfJdE4dGwvA1+lkycisUpCab0UAYk3Bu99pCz
+         z6ptM61MvlNsiLAexKDgK5z1wcu8vCEr+Btid51AHa3oruzgxehh/Tgl8MJDayMCrW8I
+         Tsrw==
+X-Gm-Message-State: APjAAAV18RHAQhI+tU7WPSf5uBsndXZ1qdHoop/AXB/sf7dzzXhyqUaI
+        161L68Y4gT6k4vt12nraCBw=
+X-Google-Smtp-Source: APXvYqyRELmENNsXGyiNlWWLXXV9nzG/DrG1gI0e4jsLV5xffbexDIkmohhIwDBJagerlHbfX18vKg==
+X-Received: by 2002:a2e:580c:: with SMTP id m12mr58842955ljb.150.1578275553133;
+        Sun, 05 Jan 2020 17:52:33 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id y25sm28131951lfy.59.2020.01.05.17.52.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jan 2020 17:52:32 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] gpio: max77620: Add missing dependency on GPIOLIB_IRQCHIP
+Date:   Mon,  6 Jan 2020 04:51:54 +0300
+Message-Id: <20200106015154.12040-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBWYWxlbnRpbiBTY2huZWlkZXIg
-W21haWx0bzp2YWxlbnRpbi5zY2huZWlkZXJAYXJtLmNvbV0NCj4gU2VudDogRnJpZGF5LCBKYW51
-YXJ5IDAzLCAyMDIwIDg6MTUgUE0NCj4gVG86IFplbmd0YW8gKEIpOyBTdWRlZXAgSG9sbGENCj4g
-Q2M6IExpbnV4YXJtOyBHcmVnIEtyb2FoLUhhcnRtYW47IFJhZmFlbCBKLiBXeXNvY2tpOw0KPiBs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBNb3J0ZW4gUmFzbXVzc2VuDQo+IFN1YmplY3Q6
-IFJlOiBbUEFUQ0hdIGNwdS10b3BvbG9neTogd2FybiBpZiBOVU1BIGNvbmZpZ3VyYXRpb25zIGNv
-bmZsaWN0cw0KPiB3aXRoIGxvd2VyIGxheWVyDQo+IA0KPiBPbiAwMy8wMS8yMDIwIDEwOjU3LCBW
-YWxlbnRpbiBTY2huZWlkZXIgd3JvdGU6DQo+ID4gSSdtIGp1Z2dsaW5nIHdpdGggb3RoZXIgdGhp
-bmdzIGF0bSwgYnV0IGxldCBtZSBoYXZlIGEgdGhpbmsgYW5kIHNlZSBpZiB3ZQ0KPiA+IGNvdWxk
-bid0IGRldGVjdCB0aGF0IGluIHRoZSBzY2hlZHVsZXIgaXRzZWxmLg0KPiA+DQo+IA0KPiBTb21l
-dGhpbmcgbGlrZSB0aGlzIG91Z2h0IHRvIGNhdGNoIHlvdXIgY2FzZTsgbWlnaHQgbmVlZCB0byBj
-b21wYXJlIGdyb3VwDQo+IHNwYW5zIHJhdGhlciB0aGFuIHB1cmUgZ3JvdXAgcG9pbnRlcnMuDQo+
-IA0KDQpHb29kIHN1Z2dlc3Rpb24sIEkgd2lsbCBuZWVkIHRvIGhhdmUgYSB0aGluayBhbmQgdHJ5
-DQpUaGFua3MuIA0KDQo+IC0tLQ0KPiBkaWZmIC0tZ2l0IGEva2VybmVsL3NjaGVkL3RvcG9sb2d5
-LmMgYi9rZXJuZWwvc2NoZWQvdG9wb2xvZ3kuYw0KPiBpbmRleCA2ZWMxZTU5NWIxZDQuLmM0MTUx
-ZTExYWZjZCAxMDA2NDQNCj4gLS0tIGEva2VybmVsL3NjaGVkL3RvcG9sb2d5LmMNCj4gKysrIGIv
-a2VybmVsL3NjaGVkL3RvcG9sb2d5LmMNCj4gQEAgLTExMjAsNiArMTEyMCwxMyBAQCBidWlsZF9z
-Y2hlZF9ncm91cHMoc3RydWN0IHNjaGVkX2RvbWFpbiAqc2QsDQo+IGludCBjcHUpDQo+IA0KPiAg
-CQlzZyA9IGdldF9ncm91cChpLCBzZGQpOw0KPiANCj4gKwkJLyogc2cncyBhcmUgaW5pdGVkIGFz
-IHNlbGYtbG9vcGluZy4gSWYgJ2xhc3QnIGlzIG5vdCBzZWxmDQo+ICsJCSAqIGxvb3BpbmcsIHdl
-IHNldCBpdCBpbiBhIHByZXZpb3VzIHZpc2l0LiBObyBmdXJ0aGVyIHZpc2l0DQo+ICsJCSAqIHNo
-b3VsZCBjaGFuZ2UgdGhlIGxpbmsgb3JkZXIsIGlmIHdlIGRvIHRoZW4gdGhlIHRvcG9sb2d5DQo+
-ICsJCSAqIGRlc2NyaXB0aW9uIGlzIHRlcm1pbmFsbHkgYnJva2VuLg0KPiArCQkgKi8NCj4gKwkJ
-QlVHX09OKGxhc3QgJiYgbGFzdC0+bmV4dCAhPSBsYXN0ICYmIGxhc3QtPm5leHQgIT0gc2cpOw0K
-PiArDQo+ICAJCWNwdW1hc2tfb3IoY292ZXJlZCwgY292ZXJlZCwgc2NoZWRfZ3JvdXBfc3Bhbihz
-ZykpOw0KPiANCj4gIAkJaWYgKCFmaXJzdCkNCg==
+Driver fails to compile in a minimized kernel's configuration because of
+the missing dependency on GPIOLIB_IRQCHIP.
+
+ error: ‘struct gpio_chip’ has no member named ‘irq’
+   44 |   virq = irq_find_mapping(gpio->gpio_chip.irq.domain, offset);
+
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/gpio/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 29689c7384ee..9e99d09a64c6 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1146,6 +1146,7 @@ config GPIO_MADERA
+ config GPIO_MAX77620
+ 	tristate "GPIO support for PMIC MAX77620 and MAX20024"
+ 	depends on MFD_MAX77620
++	select GPIOLIB_IRQCHIP
+ 	help
+ 	  GPIO driver for MAX77620 and MAX20024 PMIC from Maxim Semiconductor.
+ 	  MAX77620 PMIC has 8 pins that can be configured as GPIOs. The
+-- 
+2.24.0
+
