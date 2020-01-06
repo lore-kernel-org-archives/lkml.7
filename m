@@ -2,48 +2,47 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40433C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 775D3C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E8202146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9442468F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:50:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgAFUuE convert rfc822-to-8bit (ORCPT
+        id S1727165AbgAFUuG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 15:50:04 -0500
-Received: from mail-oln040092070039.outbound.protection.outlook.com ([40.92.70.39]:3042
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        Mon, 6 Jan 2020 15:50:06 -0500
+Received: from mail-oln040092071038.outbound.protection.outlook.com ([40.92.71.38]:3554
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726713AbgAFUuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 15:50:03 -0500
+        id S1726723AbgAFUuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 15:50:04 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dlvJIjjfWrCP1UjieUwTTDn/W/bWj2xbe4kXDfrEEXA5vxJa4j3Z4tyuRnZK0EwROf/r0vjwBlCM2NbkukbwObOUGYOTe5esZkxegrp51AKw5UimUx7mrZi97aqaYlGcaQuCS06jZwCAdsI/rqlMh7VnOyaNRLQFroaCo8b8F+hV/0iXyffBE9h+70Qbc5aa2o3AU0RM7fi4wbQ0zXKbtLOb1U5GYB+B6QCa3MRHfeczuew8zm9d+l7FbLoBSid9xtPluHmZhDkMoMCjVavRnCsuBqCjjuayWEzz5e1da5DVWKQR7jVxEsVAoQbFDsMRtsIYiViFhHHEgP5/KLmzhw==
+ b=b/5LVAHRs2ANxyBBxL82u2qcJ9tESFgwN22pf+xRBaMy0eQCMCmg9eMlCw0PXFKJnsHXMMiAdDNN48y8XwBtVrJdvwxO9iToDf1vxo0jUin9O1bSpJAc0ZZgNRaWi64MaBuM8GImM+50bT+l8VqyG00p5wlXSDCH4aQCHIboCz+AvwcB3BwLsIU0mieWoE4aQqIyF225B6QzEapNDD6TKO8vJlBvTt3ZdlPrDkVjQiLTY+PQSq6qYYyauWQ8Zk2LxsZoOQEMjgKLbt/8NnEsoE9XON7Ku617rSRlu+USyFOyFKUKypvs4Wondfz+myriwMqVPHWwC20yXzHzWwjIfA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JlKHrTOqsAVSdlZMiJZ1edfCPDb++y9Qlo88ad7C+QU=;
- b=DhekyVk3M5vi/0QJPjeHd3II/HZehA5ZN4/GCgkmFE7B5KASNlez3FLNKiF45/r23m9y1ee6yQS/JVuYyFPzl7rvllaU+RendLcNYAaWgde/p13BhZ7YmL0f0I9DQsJiKh6UJcrRNDR67sC8RfNv/nAEwQf4ShClw/tMblPIJlyOMbnNxHYD7Cn5VSrG0WcYm2Mlu/IPLFjs920WSR17JvTDI5rAWctH+PbMecjpswTOTqLQIdpA/B44kh57hHtwilROazUs542BWqjJKhcPDwMv/FjytHnhCNqk4oMmrckWouQEG4NfxKwhiFj33xfQTjAo7dUaK1vGz5nCfvhBmQ==
+ bh=h6V5qZ3BLDsY5ZJ+/GBz7fZOIdR1W/HViPFPKwEn5S4=;
+ b=HBlBF7aVe0Chh59ooipxeIlZoFA2P3YueepG4J2N5cWrSSduRdOzlxT7C6mTceZ4/MdgHE/Dkc6Z7QaHWbZz8bNbYa1zJNIsRum8xaZHRB+khiD3ANABHueUw4yY2VO9ZgkYJD9N37CGlfRKeM5cRuVYANClaJV8WLMgV4SToIZXoS7OXPXC9gCUGTBNZIpzuHFs+chTD0DfqPSumDyhWeLuOUvhK/IvKmYjWx1keEt1QafFcZMG6mCcxzfqnOIFkETXdJCghyKF1I5t7CURypehRJn66LEcXDJJsUeWf4M1ZdojDWnR0t4AONg6U4b3npl4hmuUgYzZ6lAYtOQJ6g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 Received: from VE1EUR03FT047.eop-EUR03.prod.protection.outlook.com
- (10.152.18.59) by VE1EUR03HT162.eop-EUR03.prod.protection.outlook.com
- (10.152.19.186) with Microsoft SMTP Server (version=TLS1_2,
+ (10.152.18.52) by VE1EUR03HT089.eop-EUR03.prod.protection.outlook.com
+ (10.152.19.172) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11; Mon, 6 Jan
- 2020 20:50:00 +0000
+ 2020 20:50:01 +0000
 Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.18.51) by
  VE1EUR03FT047.mail.protection.outlook.com (10.152.19.218) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.11 via Frontend Transport; Mon, 6 Jan 2020 20:50:00 +0000
+ 15.20.2602.11 via Frontend Transport; Mon, 6 Jan 2020 20:50:01 +0000
 Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
  ([fe80::b957:6908:9f62:c28b]) by HE1PR06MB4011.eurprd06.prod.outlook.com
  ([fe80::b957:6908:9f62:c28b%5]) with mapi id 15.20.2602.015; Mon, 6 Jan 2020
- 20:50:00 +0000
-Received: from bionic.localdomain (98.128.173.80) by AM6PR02CA0026.eurprd02.prod.outlook.com (2603:10a6:20b:6e::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.12 via Frontend Transport; Mon, 6 Jan 2020 20:49:59 +0000
+ 20:50:01 +0000
+Received: from bionic.localdomain (98.128.173.80) by AM6PR02CA0026.eurprd02.prod.outlook.com (2603:10a6:20b:6e::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.12 via Frontend Transport; Mon, 6 Jan 2020 20:50:00 +0000
 From:   Jonas Karlman <jonas@kwiboo.se>
 To:     Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>
 CC:     Jonas Karlman <jonas@kwiboo.se>,
@@ -59,15 +58,16 @@ CC:     Jonas Karlman <jonas@kwiboo.se>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH 13/15] drm/rockchip: dw-hdmi: limit tmds to 340mhz on
+Subject: [PATCH 14/15] drm/rockchip: dw-hdmi: remove unused plat_data on
  rk3228/rk3328
-Thread-Topic: [PATCH 13/15] drm/rockchip: dw-hdmi: limit tmds to 340mhz on
+Thread-Topic: [PATCH 14/15] drm/rockchip: dw-hdmi: remove unused plat_data on
  rk3228/rk3328
-Thread-Index: AQHVxNLcCglm8AAmg0a0X6vD7F1/yA==
-Date:   Mon, 6 Jan 2020 20:50:00 +0000
-Message-ID: <HE1PR06MB4011783219A9A6FCE76DA16FAC3C0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+Thread-Index: AQHVxNLdI/v5kV7XtE2WFpYckKZiBQ==
+Date:   Mon, 6 Jan 2020 20:50:01 +0000
+Message-ID: <HE1PR06MB4011E3DE63A9D47B602A0F16AC3C0@HE1PR06MB4011.eurprd06.prod.outlook.com>
 References: <HE1PR06MB4011254424EDB4485617513CAC3C0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-In-Reply-To: <HE1PR06MB4011254424EDB4485617513CAC3C0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+ <20200106204951.6060-1-jonas@kwiboo.se>
+In-Reply-To: <20200106204951.6060-1-jonas@kwiboo.se>
 Accept-Language: sv-SE, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -75,94 +75,68 @@ X-MS-TNEF-Correlator:
 x-clientproxiedby: AM6PR02CA0026.eurprd02.prod.outlook.com
  (2603:10a6:20b:6e::39) To HE1PR06MB4011.eurprd06.prod.outlook.com
  (2603:10a6:7:9c::32)
-x-incomingtopheadermarker: OriginalChecksum:AB8C425C86532D77E6649070CEE523E8B6C0720331FFAA8FDBC9BE057AA1C4F3;UpperCasedChecksum:6D88C61442898C4BD18C9D558ECD22A52DDAF77DD42A07FA3CADA659CBDDBA25;SizeAsReceived:8198;Count:51
+x-incomingtopheadermarker: OriginalChecksum:B80BE38B91D81950F8B1DD84771B58E12A0CBC4A3A7D42376EE097957CE4E0C0;UpperCasedChecksum:02FBEF99D71EA8A94B7B0BCD5E3C340731B9FA711987A70BF32C11A1FEF431DA;SizeAsReceived:8220;Count:51
 x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.17.1
-x-tmn:  [sS1bMFFduIyhXRMcBGOPHGeLfvaMPx2X]
-x-microsoft-original-message-id: <20200106204951.6060-1-jonas@kwiboo.se>
+x-tmn:  [Qx7uH+y87w7hX4GBi6h2tRk4KCkveSi8]
+x-microsoft-original-message-id: <20200106204951.6060-2-jonas@kwiboo.se>
 x-ms-publictraffictype: Email
 x-incomingheadercount: 51
 x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 3b9c3efc-8435-4b77-9242-08d792e9feea
-x-ms-traffictypediagnostic: VE1EUR03HT162:
+x-ms-office365-filtering-correlation-id: a5ddcf99-20b8-4d53-9cde-08d792e9ff8b
+x-ms-traffictypediagnostic: VE1EUR03HT089:
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VareEuWCl2yDbV5bsV+UpRLabhkELuRwSi9zblqROQZIQLBVv+45ksnu8cCIN+9Z42Dk5ZKdE4OgcREnHV5jqABdMMq92ddOMLX8aob05PaUKzmkOiQz5BK3tC0uKngRekSeEmIJvsjcxU5XffvitYPAEcW5uLXopzIu4s3teW+Y4+VtH+tufVHHJqFfml8h
+x-microsoft-antispam-message-info: uhdwUtJ21aRZGI7UJKNl8kXkl62/aIVovVVw5BU/YEO13HXzc8kboooMpYLz9m1KBiAUqsCShVLSqMmRencJZ9pukqPf0cn0F9uzDRtQKf3fM3Lv/bz1/9Ta/CGDUjk0IVEqjE0vyvq36mN1dJ22p80cPXcqi7lqO8jQhR3oDGfCPkVmQctmP9gIHzAE5kb8
 x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3b9c3efc-8435-4b77-9242-08d792e9feea
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5ddcf99-20b8-4d53-9cde-08d792e9ff8b
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2020 20:50:00.1643
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2020 20:50:01.2527
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Internet
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR03HT162
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR03HT089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RK3228/RK3328 does not provide a stable hdmi signal at TMDS rates
-above 371.25MHz (340MHz pixel clock).
-
-Limit the pixel clock rate to 340MHz to provide a stable signal.
-Also limit the pixel clock to the display reported max tmds clock.
+mpll_cfg/cur_ctr/phy_config is not used when phy_force_vendor is true,
+lets remove them.
 
 Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
- drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 22 +++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
 diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-index 45fcdce3f27f..66c14df4a680 100644
+index 66c14df4a680..a813299e97a2 100644
 --- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
 +++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-@@ -237,6 +237,24 @@ dw_hdmi_rockchip_mode_valid(struct drm_connector *connector,
- 	return (valid) ? MODE_OK : MODE_BAD;
- }
- 
-+static enum drm_mode_status
-+dw_hdmi_rk3228_mode_valid(struct drm_connector *connector,
-+			  const struct drm_display_mode *mode)
-+{
-+	struct drm_display_info *info = &connector->display_info;
-+	int max_tmds_clock = max(info->max_tmds_clock, 165000);
-+	int clock = mode->clock;
-+
-+	if (connector->ycbcr_420_allowed && drm_mode_is_420(info, mode) &&
-+	    (info->color_formats & DRM_COLOR_FORMAT_YCRCB420))
-+		clock /= 2;
-+
-+	if (clock > max_tmds_clock || clock > 340000)
-+		return MODE_CLOCK_HIGH;
-+
-+	return MODE_OK;
-+}
-+
- static const struct drm_encoder_funcs dw_hdmi_rockchip_encoder_funcs = {
- 	.destroy = drm_encoder_cleanup,
- };
-@@ -424,7 +442,7 @@ static struct rockchip_hdmi_chip_data rk3228_chip_data = {
- };
+@@ -443,9 +443,6 @@ static struct rockchip_hdmi_chip_data rk3228_chip_data = {
  
  static const struct dw_hdmi_plat_data rk3228_hdmi_drv_data = {
--	.mode_valid = dw_hdmi_rockchip_mode_valid,
-+	.mode_valid = dw_hdmi_rk3228_mode_valid,
- 	.mpll_cfg = rockchip_mpll_cfg,
- 	.cur_ctr = rockchip_cur_ctr,
- 	.phy_config = rockchip_phy_config,
-@@ -461,7 +479,7 @@ static struct rockchip_hdmi_chip_data rk3328_chip_data = {
- };
+ 	.mode_valid = dw_hdmi_rk3228_mode_valid,
+-	.mpll_cfg = rockchip_mpll_cfg,
+-	.cur_ctr = rockchip_cur_ctr,
+-	.phy_config = rockchip_phy_config,
+ 	.phy_data = &rk3228_chip_data,
+ 	.phy_ops = &rk3228_hdmi_phy_ops,
+ 	.phy_name = "inno_dw_hdmi_phy2",
+@@ -480,9 +477,6 @@ static struct rockchip_hdmi_chip_data rk3328_chip_data = {
  
  static const struct dw_hdmi_plat_data rk3328_hdmi_drv_data = {
--	.mode_valid = dw_hdmi_rockchip_mode_valid,
-+	.mode_valid = dw_hdmi_rk3228_mode_valid,
- 	.mpll_cfg = rockchip_mpll_cfg,
- 	.cur_ctr = rockchip_cur_ctr,
- 	.phy_config = rockchip_phy_config,
+ 	.mode_valid = dw_hdmi_rk3228_mode_valid,
+-	.mpll_cfg = rockchip_mpll_cfg,
+-	.cur_ctr = rockchip_cur_ctr,
+-	.phy_config = rockchip_phy_config,
+ 	.phy_data = &rk3328_chip_data,
+ 	.phy_ops = &rk3328_hdmi_phy_ops,
+ 	.phy_name = "inno_dw_hdmi_phy2",
 -- 
 2.17.1
 
