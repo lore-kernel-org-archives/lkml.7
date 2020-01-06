@@ -2,97 +2,86 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA35C32767
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7E4C33C9A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D498215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE54521734
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:25:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KuCFY6D6"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="CVsQXYPj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgAFGVY (ORCPT
+        id S1726992AbgAFGZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 01:21:24 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34371 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgAFGVY (ORCPT
+        Mon, 6 Jan 2020 01:25:27 -0500
+Received: from mail-lf1-f49.google.com ([209.85.167.49]:38522 "EHLO
+        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgAFGZ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 01:21:24 -0500
-Received: by mail-ot1-f67.google.com with SMTP id a15so70264532otf.1;
-        Sun, 05 Jan 2020 22:21:23 -0800 (PST)
+        Mon, 6 Jan 2020 01:25:26 -0500
+Received: by mail-lf1-f49.google.com with SMTP id r14so35682961lfm.5
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jan 2020 22:25:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uwZ2SiPflAo2gMhAO1B+oTaVC9KrM+PVnRjYk/ratMc=;
-        b=KuCFY6D6VJ9hn4OiaxJtMwWEQG8NmA3MxjnNQOZSc5mR7A88m+caskdq7A/waITkGQ
-         MnElD30Zann/cg+8HjO1QoHyN8so6ptaAT4JfOJTb3K/vMokV4Q+jHRJUA2Qhv/7kwMN
-         FfJYiURQuGfoYLO+5yUoFi3UjJhAVW2Gikk7BtJsoMgZ+3MqAyIG9dMcu5QMIKsqg1kl
-         ukRgts8sLgL3CkRnMYG2ijI8k+U328q0UxMy+Sko9DC3SSUN2JA6a5OpFZMUOAcXJpD8
-         ZbxzkZ6r3rauCCgMgfQGtsdoJADm7lB6kG/HQt3ZGEPcztnBluuxw4t/CX+Cm8RtDFsI
-         3zQQ==
+        d=broadcom.com; s=google;
+        h=from:references:in-reply-to:mime-version:thread-index:date
+         :message-id:subject:to:cc;
+        bh=ktz53LcM4NbiHQEM/ryy99m1nMVxEfn9yjDtHJKQSMU=;
+        b=CVsQXYPjSsqQqpDGIAoEBmGyyeGfBLpX6cre6IrzUWX1ycmguYir2YAdTjcygSNQyT
+         dSM99q7x0fsNo6GdzsLuvCy9SxwTp0BanpX2D9uCVewELf7/N+fvyursGHqicBLyGGw7
+         cKpCd0d0LfJW8KumaFhpabw8KSLDkKAEGRLPg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uwZ2SiPflAo2gMhAO1B+oTaVC9KrM+PVnRjYk/ratMc=;
-        b=EjW6c9aLJsmwDhOrH4xYykR5mLFkHczc8wz4HX35OU4bB89kDpiX0vCdqAkM5D7yaP
-         9RA2t+cyYuxIPBp3xOXabjIOR+fsd9NW8Q+B9d5/CBmJR+Mk7E3HX8zJOiNyE4e7oKZP
-         LMFM+KIFeilhSwFuONFdlx5RjBeC4aACiAI1IMq6Ypf6unwa0yuU5CV68GZLJlLTfKHG
-         lml/NvnuQr/qKqqoFc398IMxCaPaabqfhhGpW11fpfeDhoCYJs6HNOxfq/NYi1WXLRIT
-         C68fxjyHORFGpwURfT7ItimSeDlhRtEGVL4IbcSn/XMZqTq0TrVkvLi9U3cMX1ogAW3i
-         v7Pw==
-X-Gm-Message-State: APjAAAXTPI8mULf7sFS4UlN3YnvjakL6hHV2aX1VgvaDeqERPOpryKSM
-        pKGJscx54NcU3EzcdGZUA1GhYkcdtrY3tZLk2HA=
-X-Google-Smtp-Source: APXvYqxSz+b6F8LCIGIB5VIaGn6Cwvvmn5NGtc/3Mr2o8u1nlt15cKuWTr4XZ0S6VEX/2BCSmmay9uuguOVl8IfS0YQ=
-X-Received: by 2002:a05:6830:120b:: with SMTP id r11mr13747016otp.254.1578291683382;
- Sun, 05 Jan 2020 22:21:23 -0800 (PST)
+        h=x-gm-message-state:from:references:in-reply-to:mime-version
+         :thread-index:date:message-id:subject:to:cc;
+        bh=ktz53LcM4NbiHQEM/ryy99m1nMVxEfn9yjDtHJKQSMU=;
+        b=b1Za+gJrUpov+RWhZzoTKtxv/TL/vckv9VJVVZRfPO420zEAP6wFm8qnZzSnmKPIeV
+         DfuARvBfXq2WusL1AjsLMKNGzvDGKaijBnRpJfJ4csLcJ7HIkAMGwLlgSbSYXRbog+xZ
+         2dr61oxlNKDvrNuM8Hknf1ZY5R9zPwC9r/Tr/2gkBYmnXNYZ78VP3XxEoyTTT+zzMi0C
+         5lzxOBjh0vCyJp3VowbuhnYXGJymYSrb5QOLdB7CxBtxSNHIIxq+ciziI5wRG5Eee8hu
+         9KLhTNBWjePyL6tzYjQRYbBFNOcA0PsgONrYClHBaKhYZtmV4ldzDxZo632Nw2kY7SwZ
+         Eviw==
+X-Gm-Message-State: APjAAAXJj95WDhluj/sEk/Cz+wrG/JU6xKDsJZ4W4pTBVkoeYFbzB44P
+        Ktf26qq/Bhugt2y+YljgUOxRXEN8kjqLdA/fwvs9gQ==
+X-Google-Smtp-Source: APXvYqwbDPjRkFQER5ywOqBUAAP0W3suQ+ZwUfvvcHPkNQ7+ZGioF35HQnWVcvEQPVCxES0oQyETmwPLORs5PbGzfow=
+X-Received: by 2002:ac2:43a7:: with SMTP id t7mr51923621lfl.125.1578291924686;
+ Sun, 05 Jan 2020 22:25:24 -0800 (PST)
+From:   Vikas Gupta <vikas.gupta@broadcom.com>
+References: <1578068404-26195-1-git-send-email-vikas.gupta@broadcom.com> <20200105.144746.2055568145717937218.davem@davemloft.net>
+In-Reply-To: <20200105.144746.2055568145717937218.davem@davemloft.net>
 MIME-Version: 1.0
-References: <1561682593-12071-1-git-send-email-wanpengli@tencent.com>
- <20190628011012.GA19488@lerouge> <CANRm+CxUpwZ9KwOcQp=Ok64giyjjcJOGb2=zU6vayQzLqYvpXQ@mail.gmail.com>
- <alpine.DEB.2.21.1910231028250.2308@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1910231028250.2308@nanos.tec.linutronix.de>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 6 Jan 2020 14:21:13 +0800
-Message-ID: <CANRm+Cw1eTNgB1r79J7U__ynio7pMSR4Xa35XuQuj-JKAQGxmg@mail.gmail.com>
-Subject: Re: [PATCH v2] sched/nohz: Optimize get_nohz_timer_target()
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, kvm <kvm@vger.kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQE0opalCUsV5BygIsNN/3ef1GQcaQLm0oerqQg2PjA=
+Date:   Mon, 6 Jan 2020 11:55:22 +0530
+Message-ID: <96059280a7ebeb4e1ec92c78d053ccfe@mail.gmail.com>
+Subject: RE: [PATCH INTERNAL v2] firmware: tee_bnxt: Fix multiple call to tee_client_close_context
+To:     David Miller <davem@davemloft.net>
+Cc:     zajec5@gmail.com, Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>,
+        netdev@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sumit.garg@linaro.org,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Vikram Prakash <vikram.prakash@broadcom.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
-On Wed, 23 Oct 2019 at 16:29, Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Wed, 23 Oct 2019, Wanpeng Li wrote:
-> > I didn't see your refactor to get_nohz_timer_target() which you
-> > mentioned in IRC after four months, I can observe cyclictest drop from
-> > 4~5us to 8us in kvm guest(we offload the lapic timer emulation to
-> > housekeeping cpu to avoid timer fire external interrupt on the pCPU
-> > which vCPU resident incur a vCPU vmexit) w/o this patch in the case of
-> > there is no busy housekeeping cpu. The score can be recovered after I
-> > give stress to create a busy housekeeping cpu.
-> >
-> > Could you consider applying this patch for temporary since I'm not
-> > sure when the refactor can be ready.
->
-> Yeah. It's delayed (again).... Will pick that up.
+ "INTERNAL" and version "v2" added accidently. Please ignore this. I`ll
+send updated patch.
 
-I didn't find WIP tag for this work after ~half year since v4 was
-posted https://lkml.org/lkml/2019/6/28/231 Could you apply this patch
-for temporary because the completion time of refactor is not
-deterministic.
+-----Original Message-----
+From: David Miller [mailto:davem@davemloft.net]
+Sent: Monday, January 06, 2020 4:18 AM
+To: vikas.gupta@broadcom.com
+Cc: zajec5@gmail.com; sheetal.tigadoli@broadcom.com;
+netdev@vger.kernel.org; linux-mips@vger.kernel.org;
+linux-kernel@vger.kernel.org; sumit.garg@linaro.org;
+vasundhara-v.volam@broadcom.com; vikram.prakash@broadcom.com
+Subject: Re: [PATCH INTERNAL v2] firmware: tee_bnxt: Fix multiple call to
+tee_client_close_context
 
-    Wanpeng
+
+What does "INTERNAL" mean in these patch Subject lines?
