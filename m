@@ -2,209 +2,408 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB947C32771
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D907C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA8C2075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33F802081E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:13:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EjAlSWEC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgAFLMF (ORCPT
+        id S1726497AbgAFLNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 06:12:05 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40458 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726524AbgAFLL4 (ORCPT
+        Mon, 6 Jan 2020 06:13:55 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:51774 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726264AbgAFLNz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 06:11:56 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 006B2Jr3093809
-        for <linux-kernel@vger.kernel.org>; Mon, 6 Jan 2020 06:11:54 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xb8s8eub1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 06:11:54 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
-        Mon, 6 Jan 2020 11:11:52 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 6 Jan 2020 11:11:51 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 006BB2KD46727546
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Jan 2020 11:11:02 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C6B6C52063;
-        Mon,  6 Jan 2020 11:11:49 +0000 (GMT)
-Received: from pratiks-thinkpad.in.ibm.com (unknown [9.124.31.198])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3B00E52054;
-        Mon,  6 Jan 2020 11:11:48 +0000 (GMT)
-From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
-        mpe@ellerman.id.au, svaidy@linux.ibm.com, ego@linux.vnet.ibm.com,
-        linuxram@us.ibm.com, psampat@linux.ibm.com,
-        pratik.sampat@in.ibm.com, pratik.r.sampat@gmail.com
-Subject: [PATCH v2 3/3] powerpc/powernv: Parse device tree, population of SPR support
-Date:   Mon,  6 Jan 2020 16:41:42 +0530
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <cover.1578307288.git.psampat@linux.ibm.com>
-References: <cover.1578307288.git.psampat@linux.ibm.com>
+        Mon, 6 Jan 2020 06:13:55 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 006BDl1h127501;
+        Mon, 6 Jan 2020 05:13:47 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578309227;
+        bh=HJGTH6Q8gsRD6/e3keuuaD4sz9lTtUucnK3jDu4bszE=;
+        h=From:To:CC:Subject:Date;
+        b=EjAlSWECBcM54mUQ6LkGKaUxCaF3vjnAlHp1qukMwAcPgYbSEKUpsREhfPvtGIvDr
+         hNsSzeJcQDzZvPb5+eBK5GDyZTdM3MKUanZ9CaT5/pUYxNc1qHE37MUBciGZjjQ9pU
+         Y0aKIcX2yEp0pB3HK56WExb4kdP04MaMWxsva8ec=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 006BDluj052552
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 6 Jan 2020 05:13:47 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 6 Jan
+ 2020 05:13:46 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 6 Jan 2020 05:13:46 -0600
+Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 006BDhuf086022;
+        Mon, 6 Jan 2020 05:13:44 -0600
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, <linux-mmc@vger.kernel.org>
+CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <tony@atomide.com>,
+        <bcousson@baylibre.com>, <faiz_abbas@ti.com>, <kishon@ti.com>
+Subject: [PATCH] arm: dts: Move am33xx and am43xx mmc nodes to sdhci-omap driver
+Date:   Mon, 6 Jan 2020 16:45:17 +0530
+Message-ID: <20200106111517.15158-1-faiz_abbas@ti.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20010611-0012-0000-0000-0000037ADCCB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20010611-0013-0000-0000-000021B6F55C
-Message-Id: <e19f6343ba3f13531c52007fb9d0a9d2e6e7446a.1578307288.git.psampat@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2020-01-06_04:2020-01-06,2020-01-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- spamscore=0 clxscore=1015 impostorscore=0 lowpriorityscore=0
- priorityscore=1501 mlxlogscore=999 adultscore=0 mlxscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001060102
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Parse the device tree for nodes self-save, self-restore and populate
-support for the preferred SPRs based what was advertised by the device
-tree.
+Move mmc nodes to be compatible with the sdhci-omap driver. The following
+modifications are required for omap_hsmmc specific properties:
 
-Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+ti,non-removable: convert to the generic mmc non-removable
+ti,needs-special-reset:  co-opted into the sdhci-omap driver
+ti,dual-volt: removed. Legacy property not used in am335x or am43xx
+ti,needs-special-hs-handling: removed. Legacy property not used in am335x or am43xx
+
+Also since the sdhci-omap driver does not support runtime PM, explicitly
+disable the mmc3 instance in the dtsi.
+
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
 ---
- arch/powerpc/platforms/powernv/idle.c | 104 ++++++++++++++++++++++++++
- 1 file changed, 104 insertions(+)
 
-diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
-index d67d4d0b169b..e910ff40b7e6 100644
---- a/arch/powerpc/platforms/powernv/idle.c
-+++ b/arch/powerpc/platforms/powernv/idle.c
-@@ -1429,6 +1429,107 @@ static void __init pnv_probe_idle_states(void)
- 		supported_cpuidle_states |= pnv_idle_states[i].flags;
- }
+Driver modifications have been posted separately:
+https://patchwork.kernel.org/project/linux-mmc/list/?series=224053
+
+Tested on: am335x-evm, am335x-boneblack, am335x-sk, am335x-bone, am437x-idk,
+am43xx-gp-evm, am43xx-epos-evm.
+
+I need some help with testing all other am335x variants and SDIO cards.
+
+Here's a branch for testing: https://github.com/faizinator/linux/tree/sdhci-omap_v4_2
+
+ arch/arm/boot/dts/am335x-baltos.dtsi              | 2 +-
+ arch/arm/boot/dts/am335x-boneblack-common.dtsi    | 1 +
+ arch/arm/boot/dts/am335x-boneblack-wireless.dts   | 1 -
+ arch/arm/boot/dts/am335x-boneblue.dts             | 1 -
+ arch/arm/boot/dts/am335x-bonegreen-wireless.dts   | 1 -
+ arch/arm/boot/dts/am335x-evm.dts                  | 3 +--
+ arch/arm/boot/dts/am335x-evmsk.dts                | 2 +-
+ arch/arm/boot/dts/am335x-lxm.dts                  | 2 +-
+ arch/arm/boot/dts/am335x-moxa-uc-2100-common.dtsi | 2 +-
+ arch/arm/boot/dts/am335x-moxa-uc-8100-me-t.dts    | 2 +-
+ arch/arm/boot/dts/am335x-pepper.dts               | 4 ++--
+ arch/arm/boot/dts/am335x-phycore-som.dtsi         | 2 +-
+ arch/arm/boot/dts/am33xx-l4.dtsi                  | 6 ++----
+ arch/arm/boot/dts/am33xx.dtsi                     | 3 ++-
+ arch/arm/boot/dts/am4372.dtsi                     | 3 ++-
+ arch/arm/boot/dts/am437x-cm-t43.dts               | 2 +-
+ arch/arm/boot/dts/am437x-gp-evm.dts               | 4 ++--
+ arch/arm/boot/dts/am437x-l4.dtsi                  | 5 ++---
+ arch/arm/boot/dts/am437x-sk-evm.dts               | 2 +-
+ 19 files changed, 22 insertions(+), 26 deletions(-)
+
+diff --git a/arch/arm/boot/dts/am335x-baltos.dtsi b/arch/arm/boot/dts/am335x-baltos.dtsi
+index 05e7b5d4a95b..04f0b1227efe 100644
+--- a/arch/arm/boot/dts/am335x-baltos.dtsi
++++ b/arch/arm/boot/dts/am335x-baltos.dtsi
+@@ -369,7 +369,7 @@
+ &mmc2 {
+ 	status = "okay";
+ 	vmmc-supply = <&wl12xx_vmmc>;
+-	ti,non-removable;
++	non-removable;
+ 	bus-width = <4>;
+ 	cap-power-off-card;
+ 	pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/am335x-boneblack-common.dtsi b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
+index 7ad079861efd..83a71c4565eb 100644
+--- a/arch/arm/boot/dts/am335x-boneblack-common.dtsi
++++ b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
+@@ -22,6 +22,7 @@
+ 	pinctrl-0 = <&emmc_pins>;
+ 	bus-width = <8>;
+ 	status = "okay";
++	non-removable;
+ };
  
-+/*
-+ * Extracts and populates the self save or restore capabilities
-+ * passed from the device tree node
-+ */
-+static int extract_save_restore_state_dt(struct device_node *np, int type)
-+{
-+	int nr_sprns = 0, i, bitmask_index;
-+	int rc = 0;
-+	u64 *temp_u64;
-+	const char *state_prop;
-+	u64 bit_pos;
-+
-+	state_prop = of_get_property(np, "status", NULL);
-+	if (!state_prop) {
-+		pr_warn("opal: failed to find the active value for self save/restore node");
-+		return -EINVAL;
-+	}
-+	if (strncmp(state_prop, "disabled", 8) == 0) {
-+		/*
-+		 * if the feature is not active, strip the preferred_sprs from
-+		 * that capability.
-+		 */
-+		if (type == SELF_RESTORE_TYPE) {
-+			for (i = 0; i < nr_preferred_sprs; i++) {
-+				preferred_sprs[i].supported_mode &=
-+					~SELF_RESTORE_STRICT;
-+			}
-+		} else {
-+			for (i = 0; i < nr_preferred_sprs; i++) {
-+				preferred_sprs[i].supported_mode &=
-+					~SELF_SAVE_STRICT;
-+			}
-+		}
-+		return 0;
-+	}
-+	nr_sprns = of_property_count_u64_elems(np, "sprn-bitmask");
-+	if (nr_sprns <= 0)
-+		return rc;
-+	temp_u64 = kcalloc(nr_sprns, sizeof(u64), GFP_KERNEL);
-+	if (of_property_read_u64_array(np, "sprn-bitmask",
-+				       temp_u64, nr_sprns)) {
-+		pr_warn("cpuidle-powernv: failed to find registers in DT\n");
-+		kfree(temp_u64);
-+		return -EINVAL;
-+	}
-+	/*
-+	 * Populate acknowledgment of support for the sprs in the global vector
-+	 * gotten by the registers supplied by the firmware.
-+	 * The registers are in a bitmask, bit index within
-+	 * that specifies the SPR
-+	 */
-+	for (i = 0; i < nr_preferred_sprs; i++) {
-+		bitmask_index = preferred_sprs[i].spr / 64;
-+		bit_pos = preferred_sprs[i].spr % 64;
-+		if ((temp_u64[bitmask_index] & (1UL << bit_pos)) == 0) {
-+			if (type == SELF_RESTORE_TYPE)
-+				preferred_sprs[i].supported_mode &=
-+					~SELF_RESTORE_STRICT;
-+			else
-+				preferred_sprs[i].supported_mode &=
-+					~SELF_SAVE_STRICT;
-+			continue;
-+		}
-+		if (type == SELF_RESTORE_TYPE) {
-+			preferred_sprs[i].supported_mode |=
-+				SELF_RESTORE_STRICT;
-+		} else {
-+			preferred_sprs[i].supported_mode |=
-+				SELF_SAVE_STRICT;
-+		}
-+	}
-+
-+	kfree(temp_u64);
-+	return rc;
-+}
-+
-+static int pnv_parse_deepstate_dt(void)
-+{
-+	struct device_node *np, *np1;
-+	int rc = 0;
-+
-+	/* Self restore register population */
-+	np = of_find_node_by_path("/ibm,opal/power-mgt/self-restore");
-+	if (!np) {
-+		pr_warn("opal: self restore Node not found");
-+	} else {
-+		rc = extract_save_restore_state_dt(np, SELF_RESTORE_TYPE);
-+		if (rc != 0)
-+			return rc;
-+	}
-+	/* Self save register population */
-+	np1 = of_find_node_by_path("/ibm,opal/power-mgt/self-save");
-+	if (!np1) {
-+		pr_warn("opal: self save Node not found");
-+		pr_warn("Legacy firmware. Assuming default self-restore support");
-+	} else {
-+		rc = extract_save_restore_state_dt(np1, SELF_SAVE_TYPE);
-+	}
-+	return rc;
-+}
-+
- /*
-  * This function parses device-tree and populates all the information
-  * into pnv_idle_states structure. It also sets up nr_pnv_idle_states
-@@ -1577,6 +1678,9 @@ static int __init pnv_init_idle_states(void)
- 		return rc;
- 	pnv_probe_idle_states();
+ &am33xx_pinmux {
+diff --git a/arch/arm/boot/dts/am335x-boneblack-wireless.dts b/arch/arm/boot/dts/am335x-boneblack-wireless.dts
+index 3124d94c0b3c..e07dd7979586 100644
+--- a/arch/arm/boot/dts/am335x-boneblack-wireless.dts
++++ b/arch/arm/boot/dts/am335x-boneblack-wireless.dts
+@@ -75,7 +75,6 @@
+ 	bus-width = <4>;
+ 	non-removable;
+ 	cap-power-off-card;
+-	ti,needs-special-hs-handling;
+ 	keep-power-in-suspend;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc3_pins &wl18xx_pins>;
+diff --git a/arch/arm/boot/dts/am335x-boneblue.dts b/arch/arm/boot/dts/am335x-boneblue.dts
+index 5811fb8d4fdf..83f9452c9cd3 100644
+--- a/arch/arm/boot/dts/am335x-boneblue.dts
++++ b/arch/arm/boot/dts/am335x-boneblue.dts
+@@ -367,7 +367,6 @@
+ 	bus-width = <4>;
+ 	non-removable;
+ 	cap-power-off-card;
+-	ti,needs-special-hs-handling;
+ 	keep-power-in-suspend;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc3_pins &wl18xx_pins>;
+diff --git a/arch/arm/boot/dts/am335x-bonegreen-wireless.dts b/arch/arm/boot/dts/am335x-bonegreen-wireless.dts
+index 4092cd193b8a..609c8db687ec 100644
+--- a/arch/arm/boot/dts/am335x-bonegreen-wireless.dts
++++ b/arch/arm/boot/dts/am335x-bonegreen-wireless.dts
+@@ -75,7 +75,6 @@
+ 	bus-width = <4>;
+ 	non-removable;
+ 	cap-power-off-card;
+-	ti,needs-special-hs-handling;
+ 	keep-power-in-suspend;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc3_pins &wl18xx_pins>;
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+index 6f0a6be93098..cacfceb5765b 100644
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -757,8 +757,7 @@
+ 	bus-width = <4>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc3_pins &wlan_pins>;
+-	ti,non-removable;
+-	ti,needs-special-hs-handling;
++	non-removable;
+ 	cap-power-off-card;
+ 	keep-power-in-suspend;
  
-+	rc = pnv_parse_deepstate_dt();
-+	if (rc)
-+		return rc;
- 	if (!cpu_has_feature(CPU_FTR_ARCH_300)) {
- 		if (!(supported_cpuidle_states & OPAL_PM_SLEEP_ENABLED_ER1)) {
- 			power7_fastsleep_workaround_entry = false;
+diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
+index a97f9df460c1..f2ad6f614b52 100644
+--- a/arch/arm/boot/dts/am335x-evmsk.dts
++++ b/arch/arm/boot/dts/am335x-evmsk.dts
+@@ -675,7 +675,7 @@
+ &mmc2 {
+ 	status = "okay";
+ 	vmmc-supply = <&wl12xx_vmmc>;
+-	ti,non-removable;
++	non-removable;
+ 	bus-width = <4>;
+ 	cap-power-off-card;
+ 	keep-power-in-suspend;
+diff --git a/arch/arm/boot/dts/am335x-lxm.dts b/arch/arm/boot/dts/am335x-lxm.dts
+index fef582852820..dbedf729205c 100644
+--- a/arch/arm/boot/dts/am335x-lxm.dts
++++ b/arch/arm/boot/dts/am335x-lxm.dts
+@@ -339,7 +339,7 @@
+ 	pinctrl-0 = <&emmc_pins>;
+ 	vmmc-supply = <&vmmcsd_fixed>;
+ 	bus-width = <8>;
+-	ti,non-removable;
++	non-removable;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/am335x-moxa-uc-2100-common.dtsi b/arch/arm/boot/dts/am335x-moxa-uc-2100-common.dtsi
+index 6495a125c01f..4e90f9c23d2e 100644
+--- a/arch/arm/boot/dts/am335x-moxa-uc-2100-common.dtsi
++++ b/arch/arm/boot/dts/am335x-moxa-uc-2100-common.dtsi
+@@ -159,7 +159,7 @@
+ 	vmmc-supply = <&vmmcsd_fixed>;
+ 	bus-width = <8>;
+ 	pinctrl-0 = <&mmc1_pins_default>;
+-	ti,non-removable;
++	non-removable;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/am335x-moxa-uc-8100-me-t.dts b/arch/arm/boot/dts/am335x-moxa-uc-8100-me-t.dts
+index 244df9c5a537..f03e72cada41 100644
+--- a/arch/arm/boot/dts/am335x-moxa-uc-8100-me-t.dts
++++ b/arch/arm/boot/dts/am335x-moxa-uc-8100-me-t.dts
+@@ -451,7 +451,7 @@
+ 	vmmc-supply = <&vmmcsd_fixed>;
+ 	bus-width = <8>;
+ 	pinctrl-0 = <&mmc2_pins_default>;
+-	ti,non-removable;
++	non-removable;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/am335x-pepper.dts b/arch/arm/boot/dts/am335x-pepper.dts
+index 6d7608d9377b..f9a027b47962 100644
+--- a/arch/arm/boot/dts/am335x-pepper.dts
++++ b/arch/arm/boot/dts/am335x-pepper.dts
+@@ -341,7 +341,7 @@
+ 	pinctrl-0 = <&emmc_pins>;
+ 	vmmc-supply = <&ldo3_reg>;
+ 	bus-width = <8>;
+-	ti,non-removable;
++	non-removable;
+ };
+ 
+ &mmc3 {
+@@ -351,7 +351,7 @@
+ 	pinctrl-0 = <&wireless_pins>;
+ 	vmmmc-supply = <&v3v3c_reg>;
+ 	bus-width = <4>;
+-	ti,non-removable;
++	non-removable;
+ 	dmas = <&edma_xbar 12 0 1
+ 		&edma_xbar 13 0 2>;
+ 	dma-names = "tx", "rx";
+diff --git a/arch/arm/boot/dts/am335x-phycore-som.dtsi b/arch/arm/boot/dts/am335x-phycore-som.dtsi
+index 3d0672b53d77..7e46b4c02709 100644
+--- a/arch/arm/boot/dts/am335x-phycore-som.dtsi
++++ b/arch/arm/boot/dts/am335x-phycore-som.dtsi
+@@ -69,7 +69,7 @@
+ 	pinctrl-0 = <&emmc_pins>;
+ 	vmmc-supply = <&vmmc_reg>;
+ 	bus-width = <8>;
+-	ti,non-removable;
++	non-removable;
+ 	status = "disabled";
+ };
+ 
+diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+index 3a8a205c27b5..ba2bde6dd9e4 100644
+--- a/arch/arm/boot/dts/am33xx-l4.dtsi
++++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+@@ -1329,10 +1329,8 @@
+ 			ranges = <0x0 0x60000 0x1000>;
+ 
+ 			mmc1: mmc@0 {
+-				compatible = "ti,omap4-hsmmc";
+-				ti,dual-volt;
++				compatible = "ti,am335-sdhci";
+ 				ti,needs-special-reset;
+-				ti,needs-special-hs-handling;
+ 				dmas = <&edma_xbar 24 0 0
+ 					&edma_xbar 25 0 0>;
+ 				dma-names = "tx", "rx";
+@@ -1815,7 +1813,7 @@
+ 			ranges = <0x0 0xd8000 0x1000>;
+ 
+ 			mmc2: mmc@0 {
+-				compatible = "ti,omap4-hsmmc";
++				compatible = "ti,am335-sdhci";
+ 				ti,needs-special-reset;
+ 				dmas = <&edma 2 0
+ 					&edma 3 0>;
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index 646f11430dad..ddcfc8a40e41 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -255,10 +255,11 @@
+ 			ranges = <0x0 0x47810000 0x1000>;
+ 
+ 			mmc3: mmc@0 {
+-				compatible = "ti,omap4-hsmmc";
++				compatible = "ti,am335-sdhci";
+ 				ti,needs-special-reset;
+ 				interrupts = <29>;
+ 				reg = <0x0 0x1000>;
++				status = "disabled";
+ 			};
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+index ca0aa3f26c0a..157a1ba15ca4 100644
+--- a/arch/arm/boot/dts/am4372.dtsi
++++ b/arch/arm/boot/dts/am4372.dtsi
+@@ -249,10 +249,11 @@
+ 			ranges = <0x0 0x47810000 0x1000>;
+ 
+ 			mmc3: mmc@0 {
+-				compatible = "ti,omap4-hsmmc";
++				compatible = "ti,am437-sdhci";
+ 				ti,needs-special-reset;
+ 				interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
+ 				reg = <0x0 0x1000>;
++				status = "disabled";
+ 			};
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/am437x-cm-t43.dts b/arch/arm/boot/dts/am437x-cm-t43.dts
+index 063113a5da2d..a6b4fca8626a 100644
+--- a/arch/arm/boot/dts/am437x-cm-t43.dts
++++ b/arch/arm/boot/dts/am437x-cm-t43.dts
+@@ -291,7 +291,7 @@
+ 	pinctrl-0 = <&emmc_pins>;
+ 	vmmc-supply = <&vmmc_3v3>;
+ 	bus-width = <8>;
+-	ti,non-removable;
++	non-removable;
+ };
+ 
+ &spi0 {
+diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
+index 811c8cae315b..cadf47ee337f 100644
+--- a/arch/arm/boot/dts/am437x-gp-evm.dts
++++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+@@ -869,7 +869,7 @@
+ 	pinctrl-names = "default", "sleep";
+ 	pinctrl-0 = <&emmc_pins_default>;
+ 	pinctrl-1 = <&emmc_pins_sleep>;
+-	ti,non-removable;
++	non-removable;
+ };
+ 
+ &mmc3 {
+@@ -886,7 +886,7 @@
+ 	pinctrl-1 = <&mmc3_pins_sleep>;
+ 	cap-power-off-card;
+ 	keep-power-in-suspend;
+-	ti,non-removable;
++	non-removable;
+ 
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+diff --git a/arch/arm/boot/dts/am437x-l4.dtsi b/arch/arm/boot/dts/am437x-l4.dtsi
+index 0dd59ee14585..99741be9bcfe 100644
+--- a/arch/arm/boot/dts/am437x-l4.dtsi
++++ b/arch/arm/boot/dts/am437x-l4.dtsi
+@@ -1093,9 +1093,8 @@
+ 			ranges = <0x0 0x60000 0x1000>;
+ 
+ 			mmc1: mmc@0 {
+-				compatible = "ti,omap4-hsmmc";
++				compatible = "ti,am437-sdhci";
+ 				reg = <0x0 0x1000>;
+-				ti,dual-volt;
+ 				ti,needs-special-reset;
+ 				dmas = <&edma 24 0>,
+ 					<&edma 25 0>;
+@@ -1616,7 +1615,7 @@
+ 			ranges = <0x0 0xd8000 0x1000>;
+ 
+ 			mmc2: mmc@0 {
+-				compatible = "ti,omap4-hsmmc";
++				compatible = "ti,am437-sdhci";
+ 				reg = <0x0 0x1000>;
+ 				ti,needs-special-reset;
+ 				dmas = <&edma 2 0>,
+diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
+index 74eaa6a3b258..292153c6cb5d 100644
+--- a/arch/arm/boot/dts/am437x-sk-evm.dts
++++ b/arch/arm/boot/dts/am437x-sk-evm.dts
+@@ -694,7 +694,7 @@
+ 	pinctrl-1 = <&mmc3_pins_sleep>;
+ 	cap-power-off-card;
+ 	keep-power-in-suspend;
+-	ti,non-removable;
++	non-removable;
+ 
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
 -- 
-2.24.1
+2.19.2
 
