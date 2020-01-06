@@ -2,151 +2,136 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEAFC33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E6EDC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCC632075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F2AF20731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:46:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgAFPqg convert rfc822-to-8bit (ORCPT
+        id S1726742AbgAFPqp convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 10:46:36 -0500
-Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:40408 "EHLO
-        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726546AbgAFPqg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 10:46:36 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.02586491|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0879799-0.00448999-0.90753;DS=CONTINUE|ham_alarm|0.587195-0.000244349-0.412561;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16368;MF=ren_guo@c-sky.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.GXLz0W7_1578325585;
-Received: from it-c02z45m7lvcf.lan(mailfrom:ren_guo@c-sky.com fp:SMTPD_---.GXLz0W7_1578325585)
-          by smtp.aliyun-inc.com(10.147.41.121);
-          Mon, 06 Jan 2020 23:46:25 +0800
-Content-Type: text/plain;
-        charset=gb2312
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: linux-next: manual merge of the csky tree with Linus' tree
-From:   Guo Ren <ren_guo@c-sky.com>
-In-Reply-To: <20200106092029.00d365da@canb.auug.org.au>
-Date:   Mon, 6 Jan 2020 23:46:25 +0800
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@suse.de>
+        Mon, 6 Jan 2020 10:46:45 -0500
+Received: from mail-oln040092253027.outbound.protection.outlook.com ([40.92.253.27]:28620
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726296AbgAFPqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 10:46:45 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XBbDs4sym7hTrKVfxPK1cPYgFH+gdFB61zTrxA++zbVeZis/fwcloCdqpOl/UKJadfC20e/5UkO7MT6we7OxuYaig7pvN6VbhMsae1SNGSnsiWyOl/2R7XpIMS8o2ZfQS2PKb/eBbQWHF0fXATZaUwY6RxDlxqkfWiMtA3sEzo5UAf9OJSTja8vEe7jzlwt5B48Y9bxFsY8pY7ZmWIPqomVw+HLjlgKKamSUknJ1/SznpRxgDUI7ZY/ZRyebkzAeGwG5N4AoWR488KnhwfL0994NAwGLPuITzDvNut8qtwHCO00r4Ta8gkUQp+JYqaH94zAUoEOd52M6mGHuv/FNKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zzbb2GQbKI1ad7Gq9JnVJmi+t+mRDucPbw299YxHWVo=;
+ b=MROMh0am8TFel+a69nTs5hxFkr1YQtgD/f5Fmn9MT+ImD/gkvrJWKTugerRdGPZkFeWyWQMBdIiHHExw5Tqe4IMTGnKb3+TIC6sHwJF6FIQphA0vSSxQs7aRqP3trWHctu0OBjVXRchcXSRc1J7N6UTK2erv0W2WLLfZrNvkemhKr9puYr7glIEl4p2A68hm6QtEz8wIf832GKIfRpvlMbK6kJndbDNfU1R5Fndo4tllppoxBOrzfY7qkACHSprVYRXpBtWVr5oBmOzpOfCKDx2MVOl0ypoiDXiEJSQvxi7Pk37gcs1JDLAYedQP++FdsLOsiz7hY4cxXCkWq+6bpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from PU1APC01FT027.eop-APC01.prod.protection.outlook.com
+ (10.152.252.57) by PU1APC01HT212.eop-APC01.prod.protection.outlook.com
+ (10.152.252.157) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11; Mon, 6 Jan
+ 2020 15:46:40 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.252.59) by
+ PU1APC01FT027.mail.protection.outlook.com (10.152.252.232) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.11 via Frontend Transport; Mon, 6 Jan 2020 15:46:40 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2602.016; Mon, 6 Jan 2020
+ 15:46:40 +0000
+Received: from nicholas-dell-linux (49.196.2.242) by MEXPR01CA0129.ausprd01.prod.outlook.com (2603:10c6:200:2e::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.10 via Frontend Transport; Mon, 6 Jan 2020 15:46:37 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: [PATCH v1 0/4] PCI: Allow Thunderbolt to work with resources from
+ pci=hpmemsize
+Thread-Topic: [PATCH v1 0/4] PCI: Allow Thunderbolt to work with resources
+ from pci=hpmemsize
+Thread-Index: AQHVxKh8eb0M17AhuUSbrr8EOc1Lyg==
+Date:   Mon, 6 Jan 2020 15:46:39 +0000
+Message-ID: <PSXP216MB043852808CC6A3B169D4955F803C0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MEXPR01CA0129.ausprd01.prod.outlook.com
+ (2603:10c6:200:2e::14) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:F0C713D29773DD0B77C930B65429B24A489C1AD148CF2C312D8192530115E6DA;UpperCasedChecksum:22D2957B0E87A0AEB71CA7610F4A0D969FFA36EE7B622D39CBD67CA36FE89AB9;SizeAsReceived:7787;Count:48
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [FYIEcB42bem9xgPMn+Szz7P0sFgz+zjf]
+x-microsoft-original-message-id: <20200106154631.GA2548@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 48
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 6d4abf73-6f3f-4c94-7381-08d792bf9e9d
+x-ms-exchange-slblob-mailprops: =?us-ascii?Q?kNrQfc5EacYVTVQnmnYyZSuADa1TavtXMw8OW5X+vz6FAdJTr0UX1VJz1iFX?=
+ =?us-ascii?Q?HbgoHLlMWYuhS+E3lrfxmduPWqVAqHTm7DKsr0J8puV02sICvkx1MNVzA2aA?=
+ =?us-ascii?Q?W4NMtGbCL2dD1Hy/26koPDAfjt/F7B8fxX+4JYi8gxhcSrYyzpxxYNe3RrTB?=
+ =?us-ascii?Q?gu24fUzyvtHveq8TzNvNSkkz2hjkRYzvqQR/6zp1BumBI6TIKNe/IiItcIpg?=
+ =?us-ascii?Q?XpoHJxUt8YZ2uUI3op8xifUDGc0veO0bTJ4C+PJNgZ2rCggb8E6O3xe/Vl3z?=
+ =?us-ascii?Q?1hHPiBo5aTaboKX5XbMUCNNzOu+86rN0vWX0E6Ozb7lp2SpxZqj2Bh6MlvfM?=
+ =?us-ascii?Q?ttPX0Wqr+OVT1C9gjvpgmjE1Nt+qNR7ZeGTXZtiAejBBbyif+XUNbazL8U/X?=
+ =?us-ascii?Q?fsRX/VHLjuijEkNf/bEldhg8afkVVesQ2Gg3fAkgSvMhth2ZXGikYx6JYNEx?=
+ =?us-ascii?Q?0k8UF0/G1lNPeBa21cnpRAzLdXVTq8mKjIB/xv1GiSu+VsFzgy/6VkrZFV4S?=
+ =?us-ascii?Q?rcAIUirm8+AUSuGyY7H0s/02wCZl/4IoT/0zYwL+r0JMu6UqXAMGudCAUGuR?=
+ =?us-ascii?Q?T4MxBp33cK+VdlQqgjiON0qpToEvNCOjsi27JIPzmEIx57fQyHs9N5lLlL7H?=
+ =?us-ascii?Q?pjEnGs4imfJv0Oys/OnrvIRhulP6Xa4E2tqeI9Pz/i7f1wzUKIN6gdE7AgUa?=
+ =?us-ascii?Q?AyfqnlrTOkvebndjsVKF8429v6n+QJ2pF4ONDjcMcIy5spwMgCfK5cG0tSzz?=
+ =?us-ascii?Q?lkcMm+0jrP/f9MhvnXSD7Zdq4J3qKYAPariK6qwDdVqs+BpTbwW7LPuPUnup?=
+ =?us-ascii?Q?MnyG8cRAaSDk36vnvocnDYqn0A/SGW+hAWMOdwdafxn93WSLKN3IOLwSDyUu?=
+ =?us-ascii?Q?H4qUKpaH4oSqTQ0XxtvwV0vtYbuFV5MD/PKt8C0AdOBCJWMwm2/Uo8LrZ5Tp?=
+ =?us-ascii?Q?lMLb890PBh5BxA3rqieY9tWku4BjZeGbVBudDjbjjXU=3D?=
+x-ms-traffictypediagnostic: PU1APC01HT212:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fBWcmCbRLZTweVgu4Rq3cbuwGO1BcHyeHPJoCyqIexWT7dd9WQmaWQWY0/7Gj/qzGHY83pdEiHQFIaG0HewEa2gY5bIUZxlPKsAY/Cc301MI2S/Y9lbn5E0uFlMkMbKpsBVvwh7BALD37aQSeN7vQIIPb6Lm5bg5+Rl0zV3nqSvicMsPA+n3wEDoDtk3xDjq
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <478ECE469948DD4F840D9E76B4A42D53@KORP216.PROD.OUTLOOK.COM>
 Content-Transfer-Encoding: 8BIT
-Message-Id: <A7FF4A71-F073-4336-AD20-7B803949C543@c-sky.com>
-References: <20200106092029.00d365da@canb.auug.org.au>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-X-Mailer: Apple Mail (2.3445.104.11)
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d4abf73-6f3f-4c94-7381-08d792bf9e9d
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2020 15:46:39.8969
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT212
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed with new rebase on linux-5.5-rc4 for csky linux-next
+This patch series is split from from [0] to make sign-off easier.
 
-Best Regards
-  Guo Ren
+There are not a lot of changes here, but I still removed Reviewed-by 
+tags from Mika Westerberg so he can re-review and give the all clear.
 
+Apply this series after series "PCI: Fix failure to assign BARs with 
+alignment >1M with Thunderbolt"
 
+[0]
+https://lore.kernel.org/lkml/PSXP216MB043892C04178AB333F7AF08C80580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM/
 
-> 在 2020年1月6日，上午6:20，Stephen Rothwell <sfr@canb.auug.org.au> 写道：
-> 
-> Hi all,
-> 
-> FIXME: Add owner of second tree to To:
->       Add author(s)/SOB of conflicting commits.
-> 
-> Today's linux-next merge of the csky tree got a conflict in:
-> 
->  arch/csky/kernel/vmlinux.lds.S
-> 
-> between commit:
-> 
->  eaf937075c9a ("vmlinux.lds.h: Move NOTES into RO_DATA")
-> 
-> from Linus' tree and commit:
-> 
->  338ef1d06f0c ("csky: Tightly-Coupled Memory or Sram support")
-> 
-> from the csky tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-> 
-> diff --cc arch/csky/kernel/vmlinux.lds.S
-> index 2ff37beaf2bf,02b35d916fe7..000000000000
-> --- a/arch/csky/kernel/vmlinux.lds.S
-> +++ b/arch/csky/kernel/vmlinux.lds.S
-> @@@ -49,10 -51,59 +51,58 @@@ SECTION
-> 
-> 
->  	_sdata = .;
-> -	RO_DATA_SECTION(PAGE_SIZE)
-> -	RW_DATA_SECTION(L1_CACHE_BYTES, PAGE_SIZE, THREAD_SIZE)
-> +	RO_DATA(PAGE_SIZE)
-> +	RW_DATA(L1_CACHE_BYTES, PAGE_SIZE, THREAD_SIZE)
->  	_edata = .;
-> 
-> + #ifdef CONFIG_HAVE_TCM
-> + 	.tcm_start : {
-> + 		. = ALIGN(PAGE_SIZE);
-> + 		__tcm_start = .;
-> + 	}
-> + 
-> + 	.text_data_tcm FIXADDR_TCM : AT(__tcm_start)
-> + 	{
-> + 		. = ALIGN(4);
-> + 		__stcm_text_data = .;
-> + 		*(.tcm.text)
-> + 		*(.tcm.rodata)
-> + #ifndef CONFIG_HAVE_DTCM
-> + 		*(.tcm.data)
-> + #endif
-> + 		. = ALIGN(4);
-> + 		__etcm_text_data = .;
-> + 	}
-> + 
-> + 	. = ADDR(.tcm_start) + SIZEOF(.tcm_start) + SIZEOF(.text_data_tcm);
-> + 
-> + #ifdef CONFIG_HAVE_DTCM
-> + 	#define ITCM_SIZE	CONFIG_ITCM_NR_PAGES * PAGE_SIZE
-> + 
-> + 	.dtcm_start : {
-> + 		__dtcm_start = .;
-> + 	}
-> + 
-> + 	.data_tcm FIXADDR_TCM + ITCM_SIZE : AT(__dtcm_start)
-> + 	{
-> + 		. = ALIGN(4);
-> + 		__stcm_data = .;
-> + 		*(.tcm.data)
-> + 		. = ALIGN(4);
-> + 		__etcm_data = .;
-> + 	}
-> + 
-> + 	. = ADDR(.dtcm_start) + SIZEOF(.data_tcm);
-> + 
-> + 	.tcm_end : AT(ADDR(.dtcm_start) + SIZEOF(.data_tcm)) {
-> + #else
-> + 	.tcm_end : AT(ADDR(.tcm_start) + SIZEOF(.text_data_tcm)) {
-> + #endif
-> + 		. = ALIGN(PAGE_SIZE);
-> + 		__tcm_end = .;
-> + 	}
-> + #endif
-> + 
-> -	NOTES
->  	EXCEPTION_TABLE(L1_CACHE_BYTES)
->  	BSS_SECTION(L1_CACHE_BYTES, PAGE_SIZE, L1_CACHE_BYTES)
->  	VBR_BASE
+Nicholas Johnson (4):
+  PCI: In extend_bridge_window() change available to new_size
+  PCI: Rename extend_bridge_window() to adjust_bridge_window()
+  PCI: Change extend_bridge_window() to set resource size directly
+  PCI: Allow extend_bridge_window() to shrink resource if necessary
+
+ drivers/pci/setup-bus.c | 46 ++++++++++++++++++++---------------------
+ 1 file changed, 22 insertions(+), 24 deletions(-)
+
+-- 
+2.24.1
 
