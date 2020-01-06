@@ -2,42 +2,44 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB8EC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 990B3C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A4420715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75C0D24672
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:30:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgAFUaR (ORCPT
+        id S1726955AbgAFUaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 15:30:17 -0500
+        Mon, 6 Jan 2020 15:30:19 -0500
 Received: from mga03.intel.com ([134.134.136.65]:10708 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726739AbgAFUaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 15:30:16 -0500
+        id S1726739AbgAFUaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 15:30:18 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jan 2020 12:30:16 -0800
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jan 2020 12:30:17 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,403,1571727600"; 
-   d="scan'208";a="245699382"
+   d="scan'208";a="245699408"
 Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.50])
-  by fmsmga004.fm.intel.com with ESMTP; 06 Jan 2020 12:30:15 -0800
+  by fmsmga004.fm.intel.com with ESMTP; 06 Jan 2020 12:30:17 -0800
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@redhat.com, mingo@kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V5 RESEND 00/14] TopDown metrics support for Icelake
-Date:   Mon,  6 Jan 2020 12:29:05 -0800
-Message-Id: <20200106202919.2943-1-kan.liang@linux.intel.com>
+Subject: [PATCH V5 RESEND 01/14] perf/x86/intel: Introduce the fourth fixed counter
+Date:   Mon,  6 Jan 2020 12:29:06 -0800
+Message-Id: <20200106202919.2943-2-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200106202919.2943-1-kan.liang@linux.intel.com>
+References: <20200106202919.2943-1-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -45,118 +47,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Icelake has support for measuring the level 1 TopDown metrics
-directly in hardware. This is implemented by an additional METRICS
-register, and a new Fixed Counter 3 that measures pipeline SLOTS.
+The fourth fixed counter, TOPDOWN.SLOTS, is introduced in Ice Lake.
 
-New in Icelake
-- Do not require generic counters. This allows to collect TopDown always
-  in addition to other events.
-- Measuring TopDown per thread/process instead of only per core
+Add MSR address and macros for the new fixed counter, which will be used
+in the following patch.
 
-For the Ice Lake implementation of performance metrics, the values in
-PERF_METRICS MSR are derived from fixed counter 3. Software should start
-both registers, PERF_METRICS and fixed counter 3, from zero.
-Additionally, software is recommended to periodically clear both
-registers in order to maintain accurate measurements. The latter is
-required for certain scenarios that involve sampling metrics at high
-rates. Software should always write fixed counter 3 before write to
-PERF_METRICS.
+Add comments to explain the event encoding rules for fixed counters.
 
-IA32_PERF_GLOBAL_STATUS. OVF_PERF_METRICS[48]: If this bit is set,
-it indicates that some PERF_METRICS-related counter has overflowed and
-a PMI is triggered. Software has to synchronize, e.g. re-start,
-PERF_METRICS as well as fixed counter 3. Otherwise, PERF_METRICS may
-return invalid values.
-
-Limitation
-- To get accurate result and avoid reading the METRICS register multiple
-  times, the TopDown metrics events and SLOTS event have to be in the
-  same group.
-- METRICS and SLOTS registers have to be cleared after each read by SW.
-  That is to prevent the lose of precision.
-- Cannot do sampling read SLOTS and TopDown metric events
-
-Please refer SDM Vol3, 18.3.9.3 Performance Metrics for the details of
-TopDown metrics.
-
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
 
 Changes since V4:
 - Add description regarding to event-code naming for fixed counters
-- Fix add_nr_metric_event().
-  For leader event, we have to take the accepted metrics events into
-  account.
-  For sibling event, it doesn't need to count accepted metrics events
-  again.
-- Remove is_first_topdown_event_in_group().
-  Force slots in topdown group. Only update topdown events with slots
-  event.
-- Re-use last_period and period_left for saved_metric and saved_slots.
 
-Changes since V3:
-- Separate fixed counter3 definition patch
-- Separate BTS index patch
-- Apply Peter's cleanup patch
-- Fix the name of perf capabilities for perf METRICS
-- Apply patch for mul_u64_u32_div() x86_64 implementation
-- Fix unconditionally allows collecting 4 extra events
-- Add patch to clean up NMI handler by naming global status bit
-- Add patch to reuse event_base_rdpmc for RDPMC userspace support
+ arch/x86/include/asm/perf_event.h | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-Changes since V2:
-- Rebase on top of v5.3-rc1
-
-Key changes since V1:
-- Remove variables for reg_idx and enabled_events[] array.
-  The reg_idx can be calculated by idx in runtime.
-  Using existing active_mask to replace enabled_events.
-- Choose value 47 for the fixed index of BTS.
-- Support OVF_PERF_METRICS overflow bit in PMI handler
-- Drops the caching mechanism and related variables
-  New mechanism is to update all active slots/metrics events for the
-  first slots/metrics events in a group. For each group reading, it
-  still only read the slots/perf_metrics MSR once
-- Disable PMU for read of topdown events to avoid the NMI issue
-- Move RDPMC support to a separate patch
-- Using event=0x00,umask=0x1X for topdown metrics events
-- Drop the patch which add REMOVE transaction
-  We can indicate x86_pmu_stop() by checking
-  (event && !test_bit(event->hw.idx, cpuc->active_mask)),
-  which is a good place to save the slots/metrics MSR value
-
-Andi Kleen (2):
-  perf, tools, stat: Support new per thread TopDown metrics
-  perf, tools: Add documentation for topdown metrics
-
-Kan Liang (12):
-  perf/x86/intel: Introduce the fourth fixed counter
-  perf/x86/intel: Set correct mask for TOPDOWN.SLOTS
-  perf/x86/intel: Move BTS index to 47
-  perf/x86/intel: Basic support for metrics counters
-  perf/x86/intel: Fix the name of perf capabilities for perf METRICS
-  perf/x86/intel: Support hardware TopDown metrics
-  perf/x86/intel: Support per thread RDPMC TopDown metrics
-  perf/x86/intel: Export TopDown events for Icelake
-  perf/x86/intel: Disable sampling read slots and topdown
-  perf/x86/intel: Name global status bit in NMI handler
-  perf/x86: Use event_base_rdpmc for RDPMC userspace support
-  perf, tools, stat: Check Topdown Metric group
-
- arch/x86/events/core.c                 |  86 +++++-
- arch/x86/events/intel/core.c           | 399 ++++++++++++++++++++++---
- arch/x86/events/perf_event.h           |  57 +++-
- arch/x86/include/asm/msr-index.h       |   3 +
- arch/x86/include/asm/perf_event.h      |  60 +++-
- include/linux/perf_event.h             |  29 +-
- tools/perf/Documentation/perf-stat.txt |   9 +-
- tools/perf/Documentation/topdown.txt   | 235 +++++++++++++++
- tools/perf/builtin-stat.c              |  97 ++++++
- tools/perf/util/stat-shadow.c          |  89 ++++++
- tools/perf/util/stat.c                 |   4 +
- tools/perf/util/stat.h                 |   8 +
- 12 files changed, 1007 insertions(+), 69 deletions(-)
- create mode 100644 tools/perf/Documentation/topdown.txt
-
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index ee26e9215f18..55a4d05ba6ec 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -146,12 +146,22 @@ struct x86_pmu_capability {
+  */
+ 
+ /*
+- * All 3 fixed-mode PMCs are configured via this single MSR:
++ * All fixed-mode PMCs are configured via this single MSR:
+  */
+ #define MSR_ARCH_PERFMON_FIXED_CTR_CTRL	0x38d
+ 
+ /*
+- * The counts are available in three separate MSRs:
++ * There is no event-code assigned to fixed-mode PMCs.
++ * For the fixed-mode PMC which has an equivalent event on general-purpose PMCs,
++ * using the event-code of the equivalent event for the fixed-mode PMC.
++ * E.g. Instr_Retired.Any, CPU_CLK_Unhalted.Core
++ *
++ * For the fixed-mode PMCs which doesn't have an equivalent event,
++ * using pseudo-encoding, e.g. CPU_CLK_Unhalted.Ref, TOPDOWN.SLOTS.
++ * The event-code for fixed-mode PMCs must be 0x00.
++ * The umask-code is 0x0X. X indicates the index of the fixed counter.
++ *
++ * The counts are available in separate MSRs:
+  */
+ 
+ /* Instr_Retired.Any: */
+@@ -162,11 +172,16 @@ struct x86_pmu_capability {
+ #define MSR_ARCH_PERFMON_FIXED_CTR1	0x30a
+ #define INTEL_PMC_IDX_FIXED_CPU_CYCLES	(INTEL_PMC_IDX_FIXED + 1)
+ 
+-/* CPU_CLK_Unhalted.Ref: */
++/* CPU_CLK_Unhalted.Ref: event=0x00,umask=0x3 (pseudo-encoding) */
+ #define MSR_ARCH_PERFMON_FIXED_CTR2	0x30b
+ #define INTEL_PMC_IDX_FIXED_REF_CYCLES	(INTEL_PMC_IDX_FIXED + 2)
+ #define INTEL_PMC_MSK_FIXED_REF_CYCLES	(1ULL << INTEL_PMC_IDX_FIXED_REF_CYCLES)
+ 
++/* TOPDOWN.SLOTS: event=0x00,umask=0x4 (pseudo-encoding) */
++#define MSR_ARCH_PERFMON_FIXED_CTR3	0x30c
++#define INTEL_PMC_IDX_FIXED_SLOTS	(INTEL_PMC_IDX_FIXED + 3)
++#define INTEL_PMC_MSK_FIXED_SLOTS	(1ULL << INTEL_PMC_IDX_FIXED_SLOTS)
++
+ /*
+  * We model BTS tracing as another fixed-mode PMC.
+  *
 -- 
 2.17.1
 
