@@ -2,80 +2,71 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F967C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1688C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E02322072E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:52:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dep9kfbS"
+	by mail.kernel.org (Postfix) with ESMTP id A58B92072E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:54:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578329673;
+	bh=+GwqJBFRepVxID83AYSkAtYIDyth0Bn/PxTP6ZUQgBo=;
+	h=In-Reply-To:References:Cc:To:Subject:From:Date:List-ID:From;
+	b=G5p3KTnIxaBOJ6WiPOJYH9vvwxa5pzcU5ZbF1YHduaV3aEVC4hUiXk5+fR/2o1zjA
+	 rYn7ERA0BODwX6uO7bScbhPYTvOKLeZ2Qq1CJA+8q0CiYEW++0rvsSZ9BLXtO9UQig
+	 SlpDrMWYpAr/VDHj03Ibg5QeyS7Fee1YR5jM/FkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgAFQwN (ORCPT
+        id S1726668AbgAFQyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 11:52:13 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41638 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726524AbgAFQwM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 11:52:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578329531;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=05g1/1UzKsFaPL970JRtOkGOtlRptq1yeCOiOVojPRc=;
-        b=Dep9kfbS31Vx3hp2lMFH2EZ2dGkmAZxM04RMZQ4/B44LTypjz4+kbGDh0YKSCOrU3O+qI1
-        qFQvQ+P3CpTgQRnH4EuN5BRWQLDBQygD59IVREnLaq6Lv2aQNb/1vnc5UAj6v85O1AuT9Q
-        iMfcZuhJH3nzZ57BUrGJ7ffua+R9phA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-414-up8nbOpUNGyz70glY3rg9w-1; Mon, 06 Jan 2020 11:52:10 -0500
-X-MC-Unique: up8nbOpUNGyz70glY3rg9w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 6 Jan 2020 11:54:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47230 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726448AbgAFQyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 11:54:32 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3B01E2F62;
-        Mon,  6 Jan 2020 16:52:09 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A2BA760F82;
-        Mon,  6 Jan 2020 16:52:08 +0000 (UTC)
-Subject: Re: [PATCH v2 0/6] locking/lockdep: Reuse zapped chain_hlocks entries
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
-References: <20191216151517.7060-1-longman@redhat.com>
- <dfcfc267-1a2f-8070-c08b-662e9fe4798c@redhat.com>
- <20200106165001.GO2844@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <8a2f02c2-8e09-a898-5279-bf424acc545b@redhat.com>
-Date:   Mon, 6 Jan 2020 11:52:08 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        by mail.kernel.org (Postfix) with ESMTPSA id D662A20848;
+        Mon,  6 Jan 2020 16:54:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578329672;
+        bh=+GwqJBFRepVxID83AYSkAtYIDyth0Bn/PxTP6ZUQgBo=;
+        h=In-Reply-To:References:Cc:To:Subject:From:Date:From;
+        b=ZfKuxcuvE/qXDdBfOH9RA7Wbszru/wVojHayEf+M5hyrZ4lIYMgmYU/gPqQelJKMM
+         LCixsKxUauJ+tvLgQJph0TXYMKNnOedQEuCeQ+7H7BLAWBBSScZmFPYv0EAu0GlEHT
+         glUBEk2+UtWS/J7y3PGO3W4BZ3ugtrh3s7iYWU5I=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200106165001.GO2844@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1578305923-29125-2-git-send-email-tdas@codeaurora.org>
+References: <1578305923-29125-1-git-send-email-tdas@codeaurora.org> <1578305923-29125-2-git-send-email-tdas@codeaurora.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v2 1/2] clk: qcom: rpmh: skip undefined clocks when registering
+From:   Stephen Boyd <sboyd@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Mon, 06 Jan 2020 08:54:31 -0800
+Message-Id: <20200106165431.D662A20848@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/6/20 11:50 AM, Peter Zijlstra wrote:
-> On Mon, Jan 06, 2020 at 10:54:24AM -0500, Waiman Long wrote:
->
->> Ping! Any comments or suggestion for further improvement?
-> You got stuck in the xmas pile -- I haven't looked at email in 2 weeks.
-> I'll try and get to it soon-ish :-)
->
-Thanks!
-Longman
+Quoting Taniya Das (2020-01-06 02:18:42)
+> When iterating over a platform's available clocks in clk_rpmh_probe(),
+> check for undefined (null) entries in the clocks array.  Not all
+> clock indexes necessarily have clocks defined.
+>=20
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+
+Applied to clk-next + added the fix for type declaration.
 
