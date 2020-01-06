@@ -8,93 +8,111 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B328C33C9A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2A7C33C9B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE732072C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1095F2072C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:56:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ji/Uri2p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ARoVldjp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727374AbgAFB4Z (ORCPT
+        id S1727405AbgAFB4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 20:56:25 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:55254 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727226AbgAFB4Y (ORCPT
+        Sun, 5 Jan 2020 20:56:41 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40229 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727226AbgAFB4k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 20:56:24 -0500
-Received: by mail-pj1-f66.google.com with SMTP id kx11so6907009pjb.4;
-        Sun, 05 Jan 2020 17:56:24 -0800 (PST)
+        Sun, 5 Jan 2020 20:56:40 -0500
+Received: by mail-lj1-f194.google.com with SMTP id u1so49318763ljk.7;
+        Sun, 05 Jan 2020 17:56:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Bwykfnh9I+HBTex5KIv5flUDMZzUB+KXgYZaVTuNTVw=;
-        b=Ji/Uri2phyquI7tB8XXhe1WF/Q/QRG9LVCeX5W+cBP9IjDAeGBcb1e6BGAQw9tbTmo
-         1+5gUpRdr0mwzShSPcROxJl71xDR4R57tQezoQPsvZw93yUZCnlv7qYICAA1ca0W9yUC
-         NnhMGHxzOXPB0lsI214wqc1MSkaB/arMYEXBkeB2zmCGtX7m50ME2DJuFQkdsRzvYLRj
-         6d7tIf92A6XWNbrLe8ovm4Kn3LlFP+8r1qXXQb3VExQvcN5netq1WY0uueZakvojQ77w
-         fdxqGrJaHaiHC2FqYk5klZuPLIk/36/SuwPieoMdecy+iM+0NW89Cm72F75QIzEjw7fy
-         eBLA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4rvRIWvPPO3rgIXN9Qu/ANljbCFEmjfGVoQUvS+BrRQ=;
+        b=ARoVldjpnELYLXAJ7cCzkdlqzT4ncLTMjGveBhivQrZqSIbI2lWMrmOM0u7JorPLGA
+         CCSiNRIm0tRvFfvQLOqa18QhhjYinnWB+nUrwvQ3NKJa+n0C2h8eWhOeK7a2T9CnCDB/
+         Hoav1uW6/qqp0DdPR90DmPqTzc5LVbln4HxCjqNNnOAnuROWIshCYuEFUlqY6JGhY26G
+         TIGZ1JeWVCLMhM5AgREoleB0JlSUimr0BYLEgL1pcYVfa2J5c553xq2i08Y2ao4oN6V2
+         bWmEV+ua+YDPdUN8jHoCoRJvRLA1wysccMpweeWfoEvHufdQwUzOHfmrTfzGsV0QOox/
+         HYzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Bwykfnh9I+HBTex5KIv5flUDMZzUB+KXgYZaVTuNTVw=;
-        b=mg3F/7Yo7L1v0jeBrxyYCR6iPtOiavtRPPjgmleC48hcQlK1+vbD0UDp2Vgka3OePB
-         CWSE8XpvEifglm7cYPxTpE/TPi9ceKNySd2K8LOC2c2s7ns/OSVG3GZlxyjmBWRFUzHz
-         1sM1u9t7GJyZUyn+W8XJ39LjtQQSGlohHA2vWb1iofSyB/6AzQOHV/1lnejvgjId1LVU
-         //2V/+hZwWGX7fZhJtknVNHR4YqsLR10JmomNbCseJDv0YIAMocyq2mYRoV/BipN3dPm
-         +qvU8yep9HC8yBl1BTk3P3L51LTRC5DuLCBlQDCTEgWBbw4wPQTqprCSquZHTB4VUDB7
-         sxQw==
-X-Gm-Message-State: APjAAAWCj1IlPt9BEyHwjumt7HpeDmBORcEcPxrBCdEOhQ4JmjH9RIuD
-        n4xOoBTho4VRYUA41NVkA2U=
-X-Google-Smtp-Source: APXvYqwprWNudrZCAIdy2jEAfpLuiljLwlXloJdJDl3DL5bBJ0mppBmTwbVXm2ltIwpCH+09OxqEOw==
-X-Received: by 2002:a17:90b:1243:: with SMTP id gx3mr40570711pjb.117.1578275784141;
-        Sun, 05 Jan 2020 17:56:24 -0800 (PST)
-Received: from localhost ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id e16sm68495846pgk.77.2020.01.05.17.56.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 05 Jan 2020 17:56:23 -0800 (PST)
-From:   liuyang34 <yangliuxm34@gmail.com>
-X-Google-Original-From: liuyang34 <liuyang34@xiaomi.com>
-To:     Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4rvRIWvPPO3rgIXN9Qu/ANljbCFEmjfGVoQUvS+BrRQ=;
+        b=TXTaluoQhcY53CLa2ovpMjtp51tJ24tn3A8mAWAwjurMkbArWkOYU734B7jvrB0jIE
+         dfPEDFKxfGbHbw02msTxtJ7iqO/RZHOsPYG5cWKc7OXQKMxvPSmgqTnrxsarusUP2cXt
+         kfMr3MgA9yW7c0NFgCXX8NaLY3dn1pFqAJy80QvRJHqV57GEbiZe8L/+HI53qnTyQNbR
+         dsggl6vLabkutBWEQRB0lE9uEBmlhRflHV0bw6PPv737yKQL2fqz8sWTxKOtvj0C9iun
+         OP977S0V1ibS9SOO2iMTgSQ3BYo/W91/yM608xbCLvQPAauWm/qeopiQvnAACOSACMMs
+         A7ug==
+X-Gm-Message-State: APjAAAXupfPK1pO3s3u4d8lBvg54qg+1AElS3mNp83dMEZEZ9OInoIj4
+        68tconS7DYr36yuhd5lH+tI=
+X-Google-Smtp-Source: APXvYqw4+wDYspdBn20/FIYRd/Zx8SwBF9egqxCzltwle7cFRuRQvj82k0BUzA7kePdHTqZkSWlPXw==
+X-Received: by 2002:a2e:7518:: with SMTP id q24mr59460256ljc.119.1578275798191;
+        Sun, 05 Jan 2020 17:56:38 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id d1sm27433458ljl.18.2020.01.05.17.56.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jan 2020 17:56:37 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     linux-rtc@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     liuyang34 <liuyang34@xiaomi.com>
-Subject: [PATCH] selinuxfs: use scnprinft to get real length in sel_read_class
-Date:   Mon,  6 Jan 2020 09:56:18 +0800
-Message-Id: <ba3290e18f9867e110b77d058c3f8c7015bd868b.1578274288.git.liuyang34@xiaomi.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1578274288.git.liuyang34@xiaomi.com>
-References: <cover.1578274288.git.liuyang34@xiaomi.com>
+Subject: [PATCH v1] rtc: tps6586x: Use IRQ_NOAUTOEN flag
+Date:   Mon,  6 Jan 2020 04:56:15 +0300
+Message-Id: <20200106015615.12602-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-as the return value of snprintf maybe over the size of TMPBUFLEN, 
-use scnprintf to instead of it
+The IRQ_NOAUTOEN flag tells interrupt core that interrupt shall not be
+auto-enabled at the time of requesting interrupt. This is a minor clean-up
+change that doesn't fix any problems.
 
-Signed-off-by: liuyang34 <liuyang34@xiaomi.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- security/selinux/selinuxfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/rtc/rtc-tps6586x.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/security/selinux/selinuxfs.c b/security/selinux/selinuxfs.c
-index ee94fa4..977c32d 100644
---- a/security/selinux/selinuxfs.c
-+++ b/security/selinux/selinuxfs.c
-@@ -1672,7 +1672,7 @@ static ssize_t sel_read_class(struct file *file, char __user *buf,
- {
- 	unsigned long ino = file_inode(file)->i_ino;
- 	char res[TMPBUFLEN];
--	ssize_t len = snprintf(res, sizeof(res), "%d", sel_ino_to_class(ino));
-+	ssize_t len = scnprintf(res, sizeof(res), "%d", sel_ino_to_class(ino));
- 	return simple_read_from_buffer(buf, count, ppos, res, len);
- }
+diff --git a/drivers/rtc/rtc-tps6586x.c b/drivers/rtc/rtc-tps6586x.c
+index 859d901fa6cb..e39af2d67051 100644
+--- a/drivers/rtc/rtc-tps6586x.c
++++ b/drivers/rtc/rtc-tps6586x.c
+@@ -23,6 +23,7 @@
+ #include <linux/device.h>
+ #include <linux/err.h>
+ #include <linux/init.h>
++#include <linux/irq.h>
+ #include <linux/kernel.h>
+ #include <linux/mfd/tps6586x.h>
+ #include <linux/module.h>
+@@ -267,6 +268,8 @@ static int tps6586x_rtc_probe(struct platform_device *pdev)
+ 	rtc->rtc->start_secs = mktime64(2009, 1, 1, 0, 0, 0);
+ 	rtc->rtc->set_start_time = true;
  
++	irq_set_status_flags(rtc->irq, IRQ_NOAUTOEN);
++
+ 	ret = devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
+ 				tps6586x_rtc_irq,
+ 				IRQF_ONESHOT,
+@@ -276,7 +279,6 @@ static int tps6586x_rtc_probe(struct platform_device *pdev)
+ 				rtc->irq, ret);
+ 		goto fail_rtc_register;
+ 	}
+-	disable_irq(rtc->irq);
+ 
+ 	ret = rtc_register_device(rtc->rtc);
+ 	if (ret)
 -- 
-2.7.4
+2.24.0
 
