@@ -2,168 +2,132 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F92C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10899C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21D8F20731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E569520731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:48:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgAFPrv convert rfc822-to-8bit (ORCPT
+        id S1726773AbgAFPsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 10:47:51 -0500
-Received: from mail-oln040092254105.outbound.protection.outlook.com ([40.92.254.105]:29408
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726446AbgAFPru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 10:47:50 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ijmtXcuEgh49Pc3DLgffwhFrbFl0C7+kWKoi2qBPDvjyCJzBsUQLaV6F3XxkuRbPZ2jHVZxuoXV07neYgXJ2EFa+AXGZ2RdY2M7KXLNh6yEnt1XPrCUB0Vrv0YmOYVi2G9CksZ1WDEy9F/QfWiHhyYnmzacB4GTPP2U/us9MgTxJI+AKQINKg8/VUKVs3O47XXjdWN4LCkXGVbVeS9THowgvLcXtPNiR51RJ2K+iiHREMySKQowv4CMLk2qO20tQ8F2cVE04B7mn4q97Is/5qF2IsiglQAyfaFZ9YOftW3eFDTNB0g8aEtbAIRP9Eo0E/kH2XLFHwtiiaawy63gtsg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W1G7E/xOATCSFhCmuNY6VUB0fIguhBCNQ4FAllQUnTw=;
- b=M8lOtjWw0gerQhz6phlc0VwwvUvJfuTCvlyF38auWEajqvQLEbSX1k37+/0ZJnRF3EDHmQhJ5CTkY7ForPSrMWrSQbun+Tb5LopZKgPsfJ2MwdbLzW4KM9w0bOpJ1xLsHhImlSrKIeMxvByIeGH2OKZ0gPly6OwPP86J2AHPZjh3bR7CiObBAam3mebgb7tDlwhq0+lqIhvJIIRh9sp/GRHEqmb3PAKygDNKcSLxXe5y4GzdOtMNKBRJrhQC+fWV5JrB1d/ppdrhqowe0rKvHYhTcivevhrBONPPhZ43LCAqbEYVNtRwclilQSIhT9XaIBuTAjLyoEWK8G7gqYJIcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from PU1APC01FT027.eop-APC01.prod.protection.outlook.com
- (10.152.252.57) by PU1APC01HT217.eop-APC01.prod.protection.outlook.com
- (10.152.253.153) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11; Mon, 6 Jan
- 2020 15:47:46 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.252.59) by
- PU1APC01FT027.mail.protection.outlook.com (10.152.252.232) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.11 via Frontend Transport; Mon, 6 Jan 2020 15:47:46 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2602.016; Mon, 6 Jan 2020
- 15:47:46 +0000
-Received: from nicholas-dell-linux (49.196.2.242) by ME4P282CA0001.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:90::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.12 via Frontend Transport; Mon, 6 Jan 2020 15:47:43 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Subject: [PATCH v1 3/4] PCI: Change extend_bridge_window() to set resource
- size directly
-Thread-Topic: [PATCH v1 3/4] PCI: Change extend_bridge_window() to set
- resource size directly
-Thread-Index: AQHVxKijErSkuA6mHUWDAsVXSXsSfw==
-Date:   Mon, 6 Jan 2020 15:47:46 +0000
-Message-ID: <PSXP216MB04386BA48874B56BC5CB0292803C0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: ME4P282CA0001.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:220:90::11) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:E5A7E51C3DEBC1EC0D60CA76C86138AEAD698E1E8B87A74D193EA7202EA46697;UpperCasedChecksum:1BE29C202C672595D324CF7E016AF2F2D38FE3BD4241A0E7EFA7E691863C4B68;SizeAsReceived:7784;Count:48
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [Hk31UU2j0QgMxQqQVOmyqFdfJNXRVt/i]
-x-microsoft-original-message-id: <20200106154738.GA2559@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 48
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: a1e38f1e-4d20-41dd-3bc2-08d792bfc647
-x-ms-exchange-slblob-mailprops: mBy7Mai7yE6pvqwJQ6Mx8ls6+U3+cSxqRl4Pv7axpQA1J9/IVsYCYZ9gno4nkXuyUH7Hkk6wZMV2vdKPSRNEwt4v3w2aBwiZi1PEdFaOHy14gibmb3DoVkfqQXokBhlbl1EJun/DcH66nle/NlAOWyJwgWtK98QEryIbs33mfGb39bZMMQlAeIX9caDMrhcBBkwpedk6C8MPE+jE3Gj+TdHl0bHahdI7dxpzitDEri8vbvUgajp4zg1QXyEWzqrId5XCdBzCQmgmk7sVNxzrWsupTybwIMEJNk17FIOKph6uyfoI9y+KU57ahRwv069TnseKlOpLI+H4tc7KQZLc6VNM9XgnevYFq1v4g+j+NvJtQKn3h6Aj1hjbYkmhqc8yQqCs1mmseY8pzDBa1ycAzHCkHHcG/3cjqa7y6/nv+ReyBfDwusyctgSCmvPxehip/QcNOjMXjCmlNNbGajkhnPl7V73kMJMb20TgnGVJ90LThhrNmFWbkxclZLoZUiLn0UH2WN9zh6U1JCyQiaLOdv7LEFfRq8rB9FxD+971clPyQGQdOik/pEa846ca1zhpSAShSXqEslYYlxzZ2r5WReNnp3zUtUpwaPzgR0dDF9b02nJ5q5oe5W9PdFsjEgW8UQXWeftABG07g5iN3O8w3x8hMFI9OLVNJpTyys/F694tr8I39XODsvqWZDa0D1x5Sdmhf5TjsPj1xWB4GXThj5v2ko9+u+D1
-x-ms-traffictypediagnostic: PU1APC01HT217:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uQHpNNDRey/85Ce6JN5ioDBkryZv6X/A/liCWfjyno+9x1cBxu+zu+569GZ8WM4PJ3ogi6B7+5vOvgDwBQswwKnM3ut0G+I8+8DmASweQ2mVfUnkymAcYT1eklEgdSqk5vDXcZkCc5TCwJoUDmPjvlch05Y8GMdTYZ476x0HVFmthV/92Ch+x1Mvz8mHzTn5
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <0CB312B40E6B6841BA65B9FEF4AF5E36@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Mon, 6 Jan 2020 10:48:05 -0500
+Received: from shelob.surriel.com ([96.67.55.147]:39764 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbgAFPsE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 10:48:04 -0500
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1ioUbN-0004jZ-Uy; Mon, 06 Jan 2020 10:47:33 -0500
+Message-ID: <04033a63f11a9c59ebd2b099355915e4e889b772.camel@surriel.com>
+Subject: Re: [PATCH] sched, fair: Allow a small load imbalance between low
+ utilisation SD_NUMA domains v3
+From:   Rik van Riel <riel@surriel.com>
+To:     Mel Gorman <mgorman@techsingularity.net>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, pauld@redhat.com,
+        valentin.schneider@arm.com, srikar@linux.vnet.ibm.com,
+        quentin.perret@arm.com, dietmar.eggemann@arm.com,
+        Morten.Rasmussen@arm.com, hdanton@sina.com, parth@linux.ibm.com,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Mon, 06 Jan 2020 10:47:18 -0500
+In-Reply-To: <20200106144250.GA3466@techsingularity.net>
+References: <20200106144250.GA3466@techsingularity.net>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-XpltXy3SHHbmr7nTgcUV"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1e38f1e-4d20-41dd-3bc2-08d792bfc647
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2020 15:47:46.2209
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT217
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change extend_bridge_window() to set resource size directly instead of
-using additional resource lists.
 
-Because additional resource lists are optional resources, any algorithm
-that requires guaranteed allocation that uses them cannot be guaranteed
-to work.
+--=-XpltXy3SHHbmr7nTgcUV
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Remove the resource from add_list, as a zero-sized additional resource
-is redundant.
+On Mon, 2020-01-06 at 14:42 +0000, Mel Gorman wrote:
+>=20
+> +
+> +		/* Consider allowing a small imbalance between NUMA
+> groups */
+> +		if (env->sd->flags & SD_NUMA) {
+> +			long imbalance_adj, imbalance_max;
+> +
+> +			/*
+> +			 * imbalance_adj is the allowable degree of
+> imbalance
+> +			 * to exist between two NUMA domains.
+> imbalance_pct
+> +			 * is used to estimate the number of active
+> tasks
+> +			 * needed before memory bandwidth may be as
+> important
+> +			 * as memory locality.
+> +			 */
+> +			imbalance_adj =3D (100 / (env->sd->imbalance_pct
+> - 100)) - 1;
+> +
+> +			/*
+> +			 * Allow small imbalances when the busiest
+> group has
+> +			 * low utilisation.
+> +			 */
+> +			imbalance_max =3D imbalance_adj << 1;
+> +			if (busiest->sum_nr_running < imbalance_max)
+> +				env->imbalance -=3D min(env->imbalance,
+> imbalance_adj);
+> +		}
+> +
 
-Update comment in pci_bus_distribute_available_resources() to reflect
-the above changes.
+Wait, so imbalance_max is a function only of
+env->sd->imbalance_pct, and it gets compared
+against busiest->sum_nr_running, which is related
+to the number of CPUs in the node?
 
-Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
----
- drivers/pci/setup-bus.c | 25 ++++++++-----------------
- 1 file changed, 8 insertions(+), 17 deletions(-)
+Lets see how this works out for different numbers
+of CPUs in each node.
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index de43815be..0c51f4937 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1836,7 +1836,7 @@ static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
- 				 struct list_head *add_list,
- 				 resource_size_t new_size)
- {
--	struct pci_dev_resource *dev_res;
-+	resource_size_t add_size;
- 
- 	if (res->parent)
- 		return;
-@@ -1844,17 +1844,10 @@ static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
- 	if (resource_size(res) >= new_size)
- 		return;
- 
--	dev_res = res_to_dev_res(add_list, res);
--	if (!dev_res)
--		return;
--
--	/* Is there room to extend the window? */
--	if (new_size - resource_size(res) <= dev_res->add_size)
--		return;
--
--	dev_res->add_size = new_size - resource_size(res);
--	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
--		&dev_res->add_size);
-+	add_size = new_size - resource_size(res);
-+	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res, &add_size);
-+	res->end = res->start + new_size - 1;
-+	remove_from_list(add_list, res);
- }
- 
- static void pci_bus_distribute_available_resources(struct pci_bus *bus,
-@@ -1889,11 +1882,9 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
- 		mmio_pref.start = min(ALIGN(mmio_pref.start, align),
- 			mmio_pref.end + 1);
- 
--	/*
--	 * Update additional resource list (add_list) to fill all the
--	 * extra resource space available for this port except the space
--	 * calculated in __pci_bus_size_bridges() which covers all the
--	 * devices currently connected to the port and below.
-+        /*
-+	 * Now that we have adjusted for alignment, update the bridge window
-+	 * resources to fill as much remaining resource space as possible.
- 	 */
- 	adjust_bridge_window(bridge, io_res, add_list, resource_size(&io));
- 	adjust_bridge_window(bridge, mmio_res, add_list, resource_size(&mmio));
--- 
-2.24.1
+With imbalance_pct =3D=3D 115, we end up with=20
+imbalance_adj =3D (100 / (115 - 100)) - 1 =3D 0.18,
+which gets rounded down to 0.
+
+Wait, never mind the different numbers of CPUs.
+
+Am I overlooking something, or did you mean to have
+a factor of number of CPUs in the imbalance_adj
+calculation?
+
+kind regards,
+
+Rik
+--=20
+All Rights Reversed.
+
+--=-XpltXy3SHHbmr7nTgcUV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl4TVoYACgkQznnekoTE
+3oO5jggAuwBm1TeNZZs6lr/gw6VXGYhwcDrj2jR/XCVM1gStkxH7jbCC70zYWZVS
+rUepu2W6da/d96+wtwjgXQ34zGy7Gwg+hWZ7d13Cv4+xk2YtXzpsG/1Nrn2hMpYt
+zdBwdf0xSF8PKLmuK6PM1dIHZkVKnuvVcqLfCkW4dBFnZixw4Srdi6kD709xQuJF
+S9rAzxFVFdIxfhEm8oYYT4aVkEtFLVME/bzVpmBbtIlOBGJzYpnIrhZFOgv9FDgi
+D2HCJg18d2bqGu/z/U6nEN6dPl18KFh2IA8niW7dutIAGbpwr3CTDRTQe6QElzqP
+037MA6M7nCsJo9Bj7QpKKArznPks4g==
+=ew2e
+-----END PGP SIGNATURE-----
+
+--=-XpltXy3SHHbmr7nTgcUV--
 
