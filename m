@@ -2,156 +2,189 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F2BC33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C449DC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF96A2080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B27F207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:38:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oYdr2Rsm"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="dmF2P7al"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbgAFWfF (ORCPT
+        id S1727137AbgAFWiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 17:35:05 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33015 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbgAFWfE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 17:35:04 -0500
-Received: by mail-pl1-f194.google.com with SMTP id c13so22385542pls.0;
-        Mon, 06 Jan 2020 14:35:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qpvMgFdftf9ANhib2LlVwDtagmLWmW++B/ixHTrUb0U=;
-        b=oYdr2Rsm8aY2Krd2gOUV/nJh56dClC+QsvrjkZF3g/7GGV1ZjYbCgC4lXZmvSnSlER
-         9p8dv+MtdtyLh1S0gm08MwXvYox2H4s9MLGLjyyRGOx8ACReA7dDOoD70Ub7rtPbKpzw
-         0cAv/QLyio0m6BvC515cMhuUV6XxH9XbggQF5Ll+faWzs5iYch9Gld46pXdiAyq3Cqkt
-         UKeuOqgjJgrzVPHJaheY8VjrbTtjg9lE5f0s1q8DejgvfisEHxXbNz9+oz/7hW9D+8bP
-         ypElH5K9LVab+l4oupj+e56UP1wap/IBCMfJzpFL6qeSHgMyZA2WRPI8YlgxkycTh8e+
-         BdbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qpvMgFdftf9ANhib2LlVwDtagmLWmW++B/ixHTrUb0U=;
-        b=Zfd6WIBbeooPZgV7b12zRG0gQL2/40yRqD7sHB8+2NsjfDlO54pygNo6Pf4X+GhSSa
-         AqL+dNkJKB9iJzU+4A2Kbb1XTxg8y+Uiyvy2aoE7/LHsrxEoXkqp3RHRUSwGz8TJ9ucM
-         Uu5szpYA+e+epS+TqBwt8JJedttSdcIR7Duwf6S4WUfk0Yzv/jxlnTwTtlUg4MucYsjo
-         5vucbGc/jEtW0aei8pS+2pmqaI7VJXy8/EZJd3BEDoEtNYCheMpMuTQsby5W56VOvkes
-         1TbkJBe4cEMfV5/kAraDyOBA3kBH5mDSQ1NsZtcjZCn4LMc7nCXnRhcKuX3Ve2T4mnTY
-         krbA==
-X-Gm-Message-State: APjAAAVHItpGJyEEYeP/l/A4zC6JA7Np1auBq9bZgDxREA6m9BV3JAko
-        BizVvd7e9QAhL3ggLpwOGoo=
-X-Google-Smtp-Source: APXvYqwB0AkExqosTf+he1/2pNPXNah/DcoAIBnpMa/3YyMC3mf9MP5n3ID6YAxLrVLdEIrwmyRbnQ==
-X-Received: by 2002:a17:902:8a8d:: with SMTP id p13mr102320928plo.296.1578350103830;
-        Mon, 06 Jan 2020 14:35:03 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id w131sm81300933pfc.16.2020.01.06.14.35.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 14:35:03 -0800 (PST)
-Date:   Mon, 6 Jan 2020 14:35:00 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     rafael.j.wysocki@intel.com, gregkh@linuxfoundation.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] drivers/base/test: fix global-out-of-bounds error
-Message-ID: <20200106223500.GG8314@dtor-ws>
-References: <20200106163735.1826-1-cai@lca.pw>
+        Mon, 6 Jan 2020 17:38:12 -0500
+Received: from mail-eopbgr1300133.outbound.protection.outlook.com ([40.107.130.133]:6073
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726721AbgAFWiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 17:38:11 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DMEsMwiBMLqfhzKBzI2gC62+D8UtNgSvjnxif8BznXuZlNchNxCewJqgo6JGVE9Brk9F/C9FSw+qBijV15JHePsPhDhsvsOgnecZy5asFC3O8A+Ey01PdASvv9KhRFtBPsSihHeHzmU7LS8PUeB1KMmaYm1i8zFJqlctgIjAfE41g5lXizGA/xq28q6Eqy4tAaVMaRMl+sil6EYkBR0d7xNbmaq9duA3//8asz0OV9ZwrurZ0oZZ97NRUJRZKuvi7z/S1bs+6RraoehzhSgZYDCUiAvnm+bSEIj2FofXj0vi7m6IzRIb+t5imqImMp+D2p3OjyM337BUCsOKbd+z4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KiCD50HsVXB3SDNGKs1hwRp9s1laNPeqRrAt3EpEMwY=;
+ b=RugJ9mrVF68bVZoQjk7bbHMDVlJEDgqkbxmiltcHZ8XG8pp2PAlEMVFzp2XSalTZ4ye3iN2E7K6hGSSXLlFvi2JceYaJBK6hLUvZZ9k9DeV5MKMV+6JvUOMw2yr5+vsn03oBAR766vRW4Y78E5/wo0fXSIPeZ2LlXVubCQvt5+igoVMUeDmxxm2P5i+NRg1fvh+kZdBM/bMPJ2XG8FT2mlJB4YTV6LghLVZwWCTy35cutGYsVK5D3oYGJQm1HNOBgL9+veoLGKIfxCRyM+9CLTiZetz5jbgjAhOsjO//JyXkpf6uKYL4uPFBBeR/ZhR1H/o1oPPyqO+k20sJrHalfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KiCD50HsVXB3SDNGKs1hwRp9s1laNPeqRrAt3EpEMwY=;
+ b=dmF2P7alSZraMBXg1uLx8R4w/hUK6BnOPg6iSEoBuY+SHpKty8COJXdKQtvToWBVDsSDTjguCwGmYMgHHLoILS7puTaPzL/emFVvnsivP+7AT2bozg2lrKggUa+TDVHSbXYrxHOPWe5jqdoiJG4JTP5vDzTq3FOUjbiQBw80lUg=
+Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
+ HK0P153MB0145.APCP153.PROD.OUTLOOK.COM (52.133.156.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.3; Mon, 6 Jan 2020 22:38:00 +0000
+Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
+ ([fe80::15e7:8155:31bc:d4e7]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
+ ([fe80::15e7:8155:31bc:d4e7%7]) with mapi id 15.20.2644.002; Mon, 6 Jan 2020
+ 22:38:00 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        Wei Hu <weh@microsoft.com>,
+        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>, "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "sam@ravnborg.org" <sam@ravnborg.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "info@metux.net" <info@metux.net>, "arnd@arndb.de" <arnd@arndb.de>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+CC:     kbuild test robot <lkp@intel.com>
+Subject: RE: [PATCH v4] video: hyperv: hyperv_fb: Use physical memory for fb
+ on HyperV Gen 1 VMs.
+Thread-Topic: [PATCH v4] video: hyperv: hyperv_fb: Use physical memory for fb
+ on HyperV Gen 1 VMs.
+Thread-Index: AQHVxOHxuopG5mY95kawnV462nTW6w==
+Date:   Mon, 6 Jan 2020 22:37:59 +0000
+Message-ID: <HK0P153MB0148F18913BEA45144AF8443BF3C0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+References: <20191209075749.3804-1-weh@microsoft.com>
+ <CY4PR21MB06293C21EC5338C98080F6AED7580@CY4PR21MB0629.namprd21.prod.outlook.com>
+In-Reply-To: <CY4PR21MB06293C21EC5338C98080F6AED7580@CY4PR21MB0629.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-09T16:32:55.0594936Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=32db805d-f982-4dfd-985a-2183a1a1211d;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:9:9215:9356:cafd:e70d]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ad78d3bc-0336-43a8-b8ae-08d792f91593
+x-ms-traffictypediagnostic: HK0P153MB0145:|HK0P153MB0145:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HK0P153MB01453B73FFC8D5E7FB72F0FFBF3C0@HK0P153MB0145.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0274272F87
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(39860400002)(396003)(136003)(366004)(189003)(199004)(71200400001)(76116006)(316002)(10290500003)(86362001)(7416002)(9686003)(66946007)(478600001)(66476007)(66556008)(64756008)(55016002)(66446008)(53546011)(110136005)(8936002)(4326008)(8990500004)(5660300002)(2906002)(7696005)(6506007)(81166006)(81156014)(52536014)(8676002)(33656002)(186003)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0145;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TYfy/9hBwPHtX71CRSOAYpTOfijLZNuE09eWdKZAmqkEQsVJDYe5cAXN08W6/rwgaugrYVxueZQxBzP5nMJJgvZhPBBTNYWVHhLCjnNnkh/7XwEWxgnvrgC6EB/6nt0XBYiksmrQl28x/v1gzOGQDW1GXy/EdAP8RmuJD2bzw41HBjKPI39HKRnMmJloV8l3doBw7vRkvkwj9iz0whpNqJhRZHpy0Cgk6hylbgX47DyiYu/SOnW+33nO4bCg/Lireg3+jyhtBRcWvy82kjFK2W18UM/pPSjSa+Z/FYTWBWU3B+uFz1iiEfVlHXhwCdkApBXGe9g4Ajp8bj0UvA7PsQBD7gOK7mIGh+xOVTWKgLBmFFsDkjQNHOzSX0a0dNTuaE46ksA1YjEUDK95/4K3jPxj1Le8I2gjmGMOpMZiAIuUqMTTsea9hehD5+s35TnNEoVbUi6qHjIy4aKSyuO++ygODrs0ZNYgUWosY2R5Y/bma/SLlbzGKn4ueS7la5ZL
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200106163735.1826-1-cai@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad78d3bc-0336-43a8-b8ae-08d792f91593
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2020 22:37:59.8621
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /EgCmK1Ap1QFrM8BoWUuJ/CtYV54glkYyXuWQkpbSByV4QB+nlXqnOZBn6N127HB6glQky2coOSTQWFkMTTqxg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 11:37:35AM -0500, Qian Cai wrote:
-> The commit c032ace71c29 ("software node: add basic tests for property
-> entries") introduced a global-out-of-bounds error because it forgot to
-> add a terminator of "nodes "for software_node_register_nodes() to
-> process.
-> 
->  	# Subtest: property-entry
->  	1..7
->  	ok 1 - pe_test_uints
->  	ok 2 - pe_test_uint_arrays
->  	ok 3 - pe_test_strings
->  	ok 4 - pe_test_bool
->  	ok 5 - pe_test_move_inline_u8
->  	ok 6 - pe_test_move_inline_str
->  ==================================================================
->  BUG: KASAN: global-out-of-bounds in
->  software_node_register_nodes+0x41/0x80
->  Read of size 8 at addr ffffffff989ef250 by task kunit_try_catch/316
-> 
->  CPU: 17 PID: 316 Comm: kunit_try_catch Not tainted
->  5.5.0-rc4-next-20200106+ #1
->  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40
->  03/09/2018
->  Call Trace:
->   dump_stack+0xa0/0xea
->   print_address_description.constprop.5.cold.7+0x64/0x384
->   __kasan_report.cold.8+0x7a/0xc0
->   kasan_report+0x12/0x20
->   __asan_load8+0x71/0xa0
->   software_node_register_nodes+0x41/0x80
->   pe_test_reference+0x1eb/0x1200
->   kunit_try_run_case+0x6b/0xd1
->   kunit_generic_run_threadfn_adapter+0x29/0x50
->   kthread+0x1e6/0x210
->   ret_from_fork+0x27/0x50
-> 
->  The buggy address belongs to the variable:
->   nodes.21544+0x30/0x920
-> 
->  Memory state around the buggy address:
->   ffffffff989ef100: fa fa fa fa 00 04 fa fa fa fa fa fa 00 00 00 00
->   ffffffff989ef180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->  >ffffffff989ef200: fa fa fa fa 00 00 00 00 00 00 fa fa fa fa fa fa
->                                                   ^
->   ffffffff989ef280: 00 06 fa fa fa fa fa fa 00 00 04 fa fa fa fa fa
->   ffffffff989ef300: 00 00 fa fa fa fa fa fa 00 05 fa fa fa fa fa fa
->  ==================================================================
->  Disabling lock debugging due to kernel taint
->  	ok 7 - pe_test_reference
->  ok 8 - property-entry
-> 
-> Fixes: c032ace71c29 ("software node: add basic tests for property entries")
-> Signed-off-by: Qian Cai <cai@lca.pw>
+> From: Michael Kelley <mikelley@microsoft.com>
+> Sent: Monday, December 9, 2019 8:33 AM
+> To: Wei Hu <weh@microsoft.com>; b.zolnierkie@samsung.com; KY
+> Srinivasan <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>;
+> Stephen Hemminger <sthemmin@microsoft.com>; sashal@kernel.org;
+> hch@lst.de; m.szyprowski@samsung.com; mchehab+samsung@kernel.org;
+> sam@ravnborg.org; gregkh@linuxfoundation.org;
+> alexandre.belloni@bootlin.com; info@metux.net; arnd@arndb.de;
+> dri-devel@lists.freedesktop.org; linux-fbdev@vger.kernel.org;
+> linux-kernel@vger.kernel.org; linux-hyperv@vger.kernel.org; Dexuan Cui
+> <decui@microsoft.com>
+> Cc: kbuild test robot <lkp@intel.com>
+> Subject: RE: [PATCH v4] video: hyperv: hyperv_fb: Use physical memory for
+> fb on HyperV Gen 1 VMs.
+>=20
+> From: Wei Hu <weh@microsoft.com> Sent: Sunday, December 8, 2019 11:58
+> PM
+> >
+> > On Hyper-V, Generation 1 VMs can directly use VM's physical memory for
+> > their framebuffers. This can improve the efficiency of framebuffer and
+> > overall performance for VM. The physical memory assigned to framebuffer
+> > must be contiguous. We use CMA allocator to get contiguous physicial
+> > memory when the framebuffer size is greater than 4MB. For size under
+> > 4MB, we use alloc_pages to achieve this.
+> >
+> > To enable framebuffer memory allocation from CMA, supply a kernel
+> > parameter to give enough space to CMA allocator at boot time. For
+> > example:
+> >     cma=3D130m
+> > This gives 130MB memory to CAM allocator that can be allocated to
+> > framebuffer. If this fails, we fall back to the old way of using
+> > mmio for framebuffer.
+> >
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Signed-off-by: Wei Hu <weh@microsoft.com>
+> > ---
+> >     v2: Incorporated review comments form hch@lst.de, Michael Kelley
+> and
+> >     Dexuan Cui
+> >     - Use dma_alloc_coherent to allocate large contiguous memory
+> >     - Use phys_addr_t for physical addresses
+> >     - Corrected a few spelling errors and minor cleanups
+> >     - Also tested on 32 bit Ubuntu guest
+> >     v3: Fixed a build issue reported by kbuild test robot and incorport=
+ed
+> >     some review comments from Michael Kelley
+> >     - Add CMA check to avoid link failure
+> >     - Fixed small memory leak introduced by alloc_apertures
+> >     - Cleaned up so code
+> >     v4: Removed request_pages variable as it is no longer needed
+> >
+> >  drivers/video/fbdev/Kconfig     |   1 +
+> >  drivers/video/fbdev/hyperv_fb.c | 182
+> +++++++++++++++++++++++++-------
+> >  2 files changed, 144 insertions(+), 39 deletions(-)
+> >
+>=20
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
-Thanks Qian.
+Tested-by: Dexuan Cui <decui@microsoft.com>
 
-Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-
-> ---
->  drivers/base/test/property-entry-test.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/base/test/property-entry-test.c b/drivers/base/test/property-entry-test.c
-> index da812834b631..abe03315180f 100644
-> --- a/drivers/base/test/property-entry-test.c
-> +++ b/drivers/base/test/property-entry-test.c
-> @@ -366,6 +366,7 @@ static void pe_test_reference(struct kunit *test)
->  	static const struct software_node nodes[] = {
->  		{ .name = "1", },
->  		{ .name = "2", },
-> +		{ }
->  	};
->  
->  	static const struct software_node_ref_args refs[] = {
-> -- 
-> 2.21.0 (Apple Git-122.2)
-> 
-
--- 
-Dmitry
+For a Gen-1 VM running on recent Hyper-V hosts, this patch can greatly=20
+reduce the CPU utilization because it avoids the slow data copy from the=20
+shadow framebuffer to the MMIO framebuffer, and hence it resolves the
+"blurred screen" issue when we output a lot of characters on the text-mode
+ternimal (e.g. "dmesg").
