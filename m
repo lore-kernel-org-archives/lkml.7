@@ -2,128 +2,363 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6772DC32767
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 05:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D2BC32767
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 05:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3203B215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 05:28:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="B/CwpXbV"
+	by mail.kernel.org (Postfix) with ESMTP id 71ABB215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 05:29:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbgAFF2K (ORCPT
+        id S1726719AbgAFF3k convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 00:28:10 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40595 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbgAFF2J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 00:28:09 -0500
-Received: by mail-pf1-f193.google.com with SMTP id q8so26421962pfh.7
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jan 2020 21:28:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=ymhTcMEmDFG9TKBAl66QxLJ2ntfziG/odU0UA166lJg=;
-        b=B/CwpXbVt3NAU1qBeDI6Lzg+yNnfGsl+vtj89sjvSQ8lJb870b2kZTDO8VFoFr4jW0
-         jZ5A7irZ5E6FY0XzFQq8dnv7Wb2CicWzIg4yADZ1boeO+JyCk+hvl+g+cCMRxUyTCfck
-         uCgtoNg2zF3IUyVra9q3fmCi/fGbgRfEjefu4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=ymhTcMEmDFG9TKBAl66QxLJ2ntfziG/odU0UA166lJg=;
-        b=YutigQvYyZwxvIyP6KeH+TtWyiHj+d9Q4i2GJv2dL1aT9DFUhg4OVwcfTqQ+WId2Mz
-         KElBVBFKaoCL7GwitRZKNjhJ6SpyH+KdXP8zvnJl5xlF5QeQj3Cc5W4s+tkiPXOFHTZF
-         xeKZztSpQbPtG9NuFZkViATG91NPa1FmoOQ9cxPo+hSomcl1WggWP3Zu5kU183IYaB7k
-         hvXD/w61PRZGBGCzVK9KAPeyRpFcLOoz0CE0giwhiKRcFQw5b/fhWBavecTySs8xKakO
-         peOJp0a3ab9rYmr4P0xYp4mtN8slzWLxncOHNcv88PIUskbHgsrIljsE0Om+kg2Nko+3
-         Yrnw==
-X-Gm-Message-State: APjAAAUw+YMoOviulAVotylPjUULGJmvkJWrmZ3utNDWvwDY+uacDbtF
-        p+5/Foar2i6YCN0s78WuOUnO8orHZ1Q=
-X-Google-Smtp-Source: APXvYqwLFfLytt/PqtgNJEI4iGFyg7rJ2DqmH5gW6HxA7fBWai+ycfQJPihyxISe4/AIybjVe+vI/g==
-X-Received: by 2002:aa7:8e8f:: with SMTP id a15mr105811812pfr.153.1578288489198;
-        Sun, 05 Jan 2020 21:28:09 -0800 (PST)
-Received: from localhost (2001-44b8-1113-6700-3463-e857-4ed0-a740.static.ipv6.internode.on.net. [2001:44b8:1113:6700:3463:e857:4ed0:a740])
-        by smtp.gmail.com with ESMTPSA id 5sm23204917pjt.28.2020.01.05.21.28.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jan 2020 21:28:08 -0800 (PST)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Joel Stanley <joel@jms.id.au>, linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc/config: Enable secuity features in skiroot
-In-Reply-To: <20200102073058.163746-1-joel@jms.id.au>
-References: <20200102073058.163746-1-joel@jms.id.au>
-Date:   Mon, 06 Jan 2020 16:28:04 +1100
-Message-ID: <87k165nogr.fsf@dja-thinkpad.axtens.net>
+        Mon, 6 Jan 2020 00:29:40 -0500
+Received: from mga14.intel.com ([192.55.52.115]:41363 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725887AbgAFF3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 00:29:39 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jan 2020 21:29:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,401,1571727600"; 
+   d="scan'208";a="222742545"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by orsmga003.jf.intel.com with ESMTP; 05 Jan 2020 21:29:37 -0800
+Received: from fmsmsx153.amr.corp.intel.com (10.18.125.6) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 5 Jan 2020 21:29:36 -0800
+Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
+ FMSMSX153.amr.corp.intel.com (10.18.125.6) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 5 Jan 2020 21:29:36 -0800
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.197]) by
+ SHSMSX153.ccr.corp.intel.com ([169.254.12.89]) with mapi id 14.03.0439.000;
+ Mon, 6 Jan 2020 13:29:34 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [PATCH v3 08/10] vfio/pci: protect cap/ecap_perm bits alloc/free
+Thread-Topic: [PATCH v3 08/10] vfio/pci: protect cap/ecap_perm bits
+ alloc/free
+Thread-Index: AQHVoSnwVqdzrJe2wU2Z/flFcmihA6e7ao+AgAD9KVCAAEBDgIAfUASA
+Date:   Mon, 6 Jan 2020 05:29:34 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A17199E@SHSMSX104.ccr.corp.intel.com>
+References: <1574335427-3763-1-git-send-email-yi.l.liu@intel.com>
+        <1574335427-3763-9-git-send-email-yi.l.liu@intel.com>
+        <20191215154633.4641b05e@x1.home>
+        <A2975661238FB949B60364EF0F2C25743A134FBE@SHSMSX104.ccr.corp.intel.com>
+ <20191216104239.49e3d147@x1.home>
+In-Reply-To: <20191216104239.49e3d147@x1.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYzRmOTViNzgtYmQ0My00YzI0LTkzNTgtMWVmYTA0ZGUwMDc5IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiZGE5QkUyYjI0K050M2NUQ3RwckdyR1VWWlB6ZWhlNGMza0hKT1BjeDNSbEJzZXhiNWNRaHlQNnJ6TUtDKytScSJ9
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Joel Stanley <joel@jms.id.au> writes:
+> From: Alex Williamson < alex.williamson@redhat.com>
+> Sent: Tuesday, December 17, 2019 1:43 AM
+> To: Liu, Yi L <yi.l.liu@intel.com>
+> Subject: Re: [PATCH v3 08/10] vfio/pci: protect cap/ecap_perm bits alloc/free
+> 
+> On Mon, 16 Dec 2019 11:57:54 +0000
+> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> 
+> > > From: Alex Williamson [mailto:alex.williamson@redhat.com]
+> > > Sent: Monday, December 16, 2019 6:47 AM
+> > > To: Liu, Yi L <yi.l.liu@intel.com>
+> > > Subject: Re: [PATCH v3 08/10] vfio/pci: protect cap/ecap_perm bits alloc/free
+> > >
+> > > On Thu, 21 Nov 2019 19:23:45 +0800
+> > > Liu Yi L <yi.l.liu@intel.com> wrote:
+> > >
+> > > > This patch add a user numer track for the shared cap/ecap_perms bits,
+> > > > and the alloc/free will hold a semaphore to protect the operations.
+> > > > With the changes, first caller of vfio_pci_init_perm_bits() will
+> > > > initialize the bits. While the last caller of vfio_pci_uninit_perm_bits()
+> > > > will free the bits. This is a preparation to have multiple cap/ecap_perms
+> > > > bits users.
+> > > >
+> > > > Cc: Kevin Tian <kevin.tian@intel.com>
+> > > > Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> > > > Suggested-by: Alex Williamson <alex.williamson@redhat.com>
+> > > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > > > ---
+> > > >  drivers/vfio/pci/vfio_pci_config.c | 33 +++++++++++++++++++++++++++++++--
+> > > >  1 file changed, 31 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/drivers/vfio/pci/vfio_pci_config.c
+> b/drivers/vfio/pci/vfio_pci_config.c
+> > > > index f0891bd..274c993 100644
+> > > > --- a/drivers/vfio/pci/vfio_pci_config.c
+> > > > +++ b/drivers/vfio/pci/vfio_pci_config.c
+> > > > @@ -36,6 +36,13 @@
+> > > >  	 (offset >= PCI_ROM_ADDRESS && offset < PCI_ROM_ADDRESS + 4))
+> > > >
+> > > >  /*
+> > > > + * vfio_perm_bits_sem: prorects the shared perm_bits alloc/free
+> > > > + * vfio_pci_perm_bits_users: tracks the user of the shared perm_bits
+> > > > + */
+> > > > +static DEFINE_SEMAPHORE(vfio_perm_bits_sem);
+> > > > +static int vfio_pci_perm_bits_users;
+> > > > +
+> > > > +/*
+> > > >   * Lengths of PCI Config Capabilities
+> > > >   *   0: Removed from the user visible capability list
+> > > >   *   FF: Variable length
+> > > > @@ -995,7 +1002,7 @@ static int __init init_pci_ext_cap_pwr_perm(struct
+> > > perm_bits *perm)
+> > > >  /*
+> > > >   * Initialize the shared permission tables
+> > > >   */
+> > > > -void vfio_pci_uninit_perm_bits(void)
+> > > > +static void vfio_pci_uninit_perm_bits_internal(void)
+> > > >  {
+> > > >  	free_perm_bits(&cap_perms[PCI_CAP_ID_BASIC]);
+> > > >
+> > > > @@ -1009,10 +1016,30 @@ void vfio_pci_uninit_perm_bits(void)
+> > > >  	free_perm_bits(&ecap_perms[PCI_EXT_CAP_ID_PWR]);
+> > > >  }
+> > > >
+> > > > +void vfio_pci_uninit_perm_bits(void)
+> > > > +{
+> > > > +	down(&vfio_perm_bits_sem);
+> > > > +
+> > > > +	if (--vfio_pci_perm_bits_users > 0)
+> > > > +		goto out;
+> > > > +
+> > > > +	vfio_pci_uninit_perm_bits_internal();
+> > > > +
+> > > > +out:
+> > > > +	up(&vfio_perm_bits_sem);
+> > > > +}
+> > > > +
+> > > >  int __init vfio_pci_init_perm_bits(void)
+> > > >  {
+> > > >  	int ret;
+> > > >
+> > > > +	down(&vfio_perm_bits_sem);
+> > > > +
+> > > > +	if (++vfio_pci_perm_bits_users > 1) {
+> > > > +		ret = 0;
+> > > > +		goto out;
+> > > > +	}
+> > > > +
+> > > >  	/* Basic config space */
+> > > >  	ret = init_pci_cap_basic_perm(&cap_perms[PCI_CAP_ID_BASIC]);
+> > > >
+> > > > @@ -1030,8 +1057,10 @@ int __init vfio_pci_init_perm_bits(void)
+> > > >  	ecap_perms[PCI_EXT_CAP_ID_VNDR].writefn = vfio_raw_config_write;
+> > > >
+> > > >  	if (ret)
+> > > > -		vfio_pci_uninit_perm_bits();
+> > > > +		vfio_pci_uninit_perm_bits_internal();
+> > > >
+> > > > +out:
+> > > > +	up(&vfio_perm_bits_sem);
+> > > >  	return ret;
+> > > >  }
+> > > >
+> > >
+> > > Hi Yi,
+> > >
+> > > Sorry for slowness in providing feedback on this series.  If we
+> > > provided a vfio-pci-common module that vfio-pci and vfio-mdev-pci
+> > > depend on, doesn't this entire problem go away?
+> >
+> > I checked previous email, export the common functions out of
+> > vfio-pci module was proposed in RFC v2. But at that time, I didn't
+> > propose to have a separate module. So I guess it may be just correct
+> > way. Below is the reply at that time.
+> >
+> > https://lkml.org/lkml/2019/3/19/756
+> >
+> > > I played a little bit
+> > > with this in the crude patch below, it seems to work.  To finish this,
+> > > I think we'd move the function declarations out of the "private" header
+> > > file and into one under include/linux, then we could also move
+> > > vfio_mdev_pci.c to the samples directory like we intended originally.
+> > > I know you had tried to link things from samples and it didn't work,
+> > > but is the below a better attempt at resolving this?  It commits us to
+> > > exporting a bunch of functions, we'll need to decide whether that's a
+> > > good idea.  Thanks,
+> >
+> > I played with your patch and added a crude patch to move
+> > vfio-mdev-pci to samples directory. I can see below errors with
+> > either CONFIG_VFIO_PCI_COMMON=y and
+> > CONFIG_SAMPLE_VFIO_MDEV_PCI=y, or
+> > CONFIG_VFIO_PCI_COMMON=m and
+> > CONFIG_SAMPLE_VFIO_MDEV_PCI=m.
+> >
+> > But CONFIG_VFIO_PCI_COMMON works well with CONFIG_VFIO_PCI...
+> >
+> > Kernel: arch/x86/boot/bzImage is ready  (#88)
+> > ERROR: "vfio_pci_fill_ids" [samples/vfio-mdev-pci/vfio-mdev-pci.ko] undefined!
+> > ERROR: "vfio_pci_err_handlers" [samples/vfio-mdev-pci/vfio-mdev-pci.ko]
+> undefined!
+> > ERROR: "vfio_pci_reflck_attach" [samples/vfio-mdev-pci/vfio-mdev-pci.ko]
+> undefined!
+> > ERROR: "vfio_pci_write" [samples/vfio-mdev-pci/vfio-mdev-pci.ko] undefined!
+> > ERROR: "vfio_pci_disable" [samples/vfio-mdev-pci/vfio-mdev-pci.ko] undefined!
+> > ERROR: "vfio_pci_reflck_put" [samples/vfio-mdev-pci/vfio-mdev-pci.ko] undefined!
+> > ERROR: "vfio_pci_refresh_config" [samples/vfio-mdev-pci/vfio-mdev-pci.ko]
+> undefined!
+> > ERROR: "vfio_pci_set_power_state" [samples/vfio-mdev-pci/vfio-mdev-pci.ko]
+> undefined!
+> > ERROR: "vfio_pci_enable" [samples/vfio-mdev-pci/vfio-mdev-pci.ko] undefined!
+> > ERROR: "vfio_pci_set_vga_decode" [samples/vfio-mdev-pci/vfio-mdev-pci.ko]
+> undefined!
+> > ERROR: "vfio_pci_probe_power_state" [samples/vfio-mdev-pci/vfio-mdev-pci.ko]
+> undefined!
+> > ERROR: "vfio_pci_mmap" [samples/vfio-mdev-pci/vfio-mdev-pci.ko] undefined!
+> > ERROR: "vfio_pci_ioctl" [samples/vfio-mdev-pci/vfio-mdev-pci.ko] undefined!
+> > ERROR: "vfio_pci_read" [samples/vfio-mdev-pci/vfio-mdev-pci.ko] undefined!
+> > scripts/Makefile.modpost:93: recipe for target '__modpost' failed
+> >
+> > So I'm afraid that it still cannot resolve the problem which we encountered
+> > when trying to place vfio-mdev-pci in samples/.
+> 
+> I'm not sure what we're doing differently (with your patch applied):
+> 
+> $ grep VFIO ~/build/.config | grep -v ^#
+> CONFIG_KVM_VFIO=y
+> CONFIG_VFIO_IOMMU_TYPE1=m
+> CONFIG_VFIO_VIRQFD=m
+> CONFIG_VFIO=m
+> CONFIG_VFIO_PCI_COMMON=m
+> CONFIG_VFIO_PCI=m
+> CONFIG_VFIO_PCI_VGA=y
+> CONFIG_VFIO_PCI_MMAP=y
+> CONFIG_VFIO_PCI_INTX=y
+> CONFIG_VFIO_PCI_IGD=y
+> CONFIG_VFIO_MDEV=m
+> CONFIG_VFIO_MDEV_DEVICE=m
+> CONFIG_SAMPLE_VFIO_MDEV_PCI=m
 
-> This turns on HARDENED_USERCOPY with HARDENED_USERCOPY_PAGESPAN, and
-> FORTIFY_SOURCE.
->
-> It also enables SECURITY_LOCKDOWN_LSM with _EARLY and
-> LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY options enabled.
+Hi Alex,
 
-This will completely disable xmon when combined with 69393cb03ccd
-("powerpc/xmon: Restrict when kernel is locked down"). I don't
-personally have a problem with this, but I think not disabling xmon has
-come up before as a requirement of some developers.
+When facing the error in previous emai, I'm using the below
+.config. I didn't compile VFIO_PCI. This may be the major difference.
+And I think I found the root cause. When trying to build vfio_mdev_pci
+into kernel image, it requires vfio_pci_common.ko. However, if VFIO_PCI
+is not configured, the drivers/vfio/pci directory is not built. It can be fixed
+by either add " obj-$(CONFIG_VFIO_PCI_COMMON) += pci/"
+in drivers/vfio/Makefile or add " select VFIO_PCI" for SAMPLE_VFIO_MDEV_PCI
+in samples/Kconfig. So I'll move the vfio_mdev_pci module to samples as
+you suggested. Let me cook another version. :-)
 
-Is forcing integrity not sufficient? What confidential data held by the
-skiroot kernel are you trying to protect? If you just force integrity
-you'll get xmon in read-only mode, which should be fine for most
-debugging...
+yiliu@yiliu-dev:~/vfio-mdev-pci-driver/linux$ grep VFIO .config | grep -v ^#
+CONFIG_KVM_VFIO=y
+CONFIG_VFIO_IOMMU_TYPE1=y
+CONFIG_VFIO_VIRQFD=m
+CONFIG_VFIO=y
+CONFIG_VFIO_PCI_COMMON=m
+CONFIG_VFIO_MDEV=y
+CONFIG_VFIO_MDEV_DEVICE=y
+CONFIG_SAMPLE_VFIO_MDEV_PCI=m
+
+> $ make O=~/build -j36 > /dev/null && echo $?
+> 0
+> 
+> $ grep VFIO ~/build/.config | grep -v ^#
+> CONFIG_KVM_VFIO=y
+> CONFIG_VFIO_IOMMU_TYPE1=y
+> CONFIG_VFIO_VIRQFD=y
+> CONFIG_VFIO=y
+> CONFIG_VFIO_PCI_COMMON=y
+> CONFIG_VFIO_PCI=y
+> CONFIG_VFIO_PCI_VGA=y
+> CONFIG_VFIO_PCI_MMAP=y
+> CONFIG_VFIO_PCI_INTX=y
+> CONFIG_VFIO_PCI_IGD=y
+> CONFIG_VFIO_MDEV=m
+> CONFIG_VFIO_MDEV_DEVICE=m
+> $ make O=~/build -j36 > /dev/null && echo $?
+> 0
+> 
+> $ grep VFIO ~/build/.config | grep -v ^#
+> CONFIG_KVM_VFIO=y
+> CONFIG_VFIO_IOMMU_TYPE1=y
+> CONFIG_VFIO_VIRQFD=m
+> CONFIG_VFIO=y
+> CONFIG_VFIO_PCI_COMMON=m
+> CONFIG_VFIO_PCI=m
+> CONFIG_VFIO_PCI_VGA=y
+> CONFIG_VFIO_PCI_MMAP=y
+> CONFIG_VFIO_PCI_INTX=y
+> CONFIG_VFIO_PCI_IGD=y
+> CONFIG_VFIO_MDEV=m
+> CONFIG_VFIO_MDEV_DEVICE=m
+> $ make O=~/build -j36 > /dev/null && echo $?
+> 0
+> 
+> > ================= [the crude patch] =================
+> > From fa860ff15ab188481141f7bd2b9cb3a1d500f24d Mon Sep 17 00:00:00 2001
+> > From: Liu Yi L <yi.l.liu@intel.com>
+> > Date: Sun, 15 Dec 2019 19:16:54 +0800
+> > Subject: [PATCH] vfio/pci/sample: move vfio-pci-mdev to samples
+> >
+> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > ---
+> >  drivers/vfio/pci/Makefile             |   2 -
+> >  drivers/vfio/pci/vfio_mdev_pci.c      | 421 ----------------------------------
+> >  drivers/vfio/pci/vfio_pci.c           |   2 +-
+> >  drivers/vfio/pci/vfio_pci_common.c    |   2 +-
+> >  drivers/vfio/pci/vfio_pci_config.c    |   2 +-
+> >  drivers/vfio/pci/vfio_pci_igd.c       |   2 +-
+> >  drivers/vfio/pci/vfio_pci_intrs.c     |   2 +-
+> >  drivers/vfio/pci/vfio_pci_nvlink2.c   |   2 +-
+> >  drivers/vfio/pci/vfio_pci_private.h   | 228 ------------------
+> >  drivers/vfio/pci/vfio_pci_rdwr.c      |   2 +-
+> >  include/linux/vfio_pci_private.h      | 228 ++++++++++++++++++
+> 
+> Of course this would not be "private" if this is the direction we
+> decide to go. 
+
+yes, if we are going this way in the end, it should definitely be split into
+a "private" one and non "private" one.
+
+> Potentially there are still things private to
+> vfio-pci-common that we'd leave in the drivers directory though.  I'm
+> not entirely thrilled to expose the objects outside of vfio-pci,
+
+Will have a private .h to vfio-pci-common.ko :-)
+
+> but
+> potentially if vfio-pci had a mechanism to choose an alternate
+> vfio_device_ops that provided vendor mediation extension when calling
+> vfio_add_group_dev(), and common code was sharable to vendor drivers,
+> it might clean up the interface Yan is proposing for adding migration
+> to non-mdev devices.  Thanks,
+
+I think it is doable as long as common code are sharable to vendor drivers.
+Or maybe vendor driver just choose to consume vfio pci common codes.
+Thanks for your suggestions, let me work out another version.
+
+> 
+> Alex
 
 Regards,
-Daniel
-
->
-> MODULE_SIG is selected by lockdown, so it is still enabled.
->
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-> ---
->  arch/powerpc/configs/skiroot_defconfig | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/powerpc/configs/skiroot_defconfig b/arch/powerpc/configs/skiroot_defconfig
-> index 069f67f12731..0a441c414a57 100644
-> --- a/arch/powerpc/configs/skiroot_defconfig
-> +++ b/arch/powerpc/configs/skiroot_defconfig
-> @@ -33,7 +33,6 @@ CONFIG_JUMP_LABEL=y
->  CONFIG_STRICT_KERNEL_RWX=y
->  CONFIG_MODULES=y
->  CONFIG_MODULE_UNLOAD=y
-> -CONFIG_MODULE_SIG=y
->  CONFIG_MODULE_SIG_FORCE=y
->  CONFIG_MODULE_SIG_SHA512=y
->  CONFIG_PARTITION_ADVANCED=y
-> @@ -297,5 +296,15 @@ CONFIG_WQ_WATCHDOG=y
->  CONFIG_XMON=y
->  CONFIG_XMON_DEFAULT=y
->  CONFIG_ENCRYPTED_KEYS=y
-> +CONFIG_SECURITY=y
-> +CONFIG_HARDENED_USERCOPY=y
-> +# CONFIG_HARDENED_USERCOPY_FALLBACK is not set
-> +CONFIG_HARDENED_USERCOPY_PAGESPAN=y
-> +CONFIG_FORTIFY_SOURCE=y
-> +CONFIG_SECURITY_LOCKDOWN_LSM=y
-> +CONFIG_SECURITY_LOCKDOWN_LSM_EARLY=y
-> +CONFIG_LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY=y
-> +# CONFIG_INTEGRITY is not set
-> +CONFIG_LSM="yama,loadpin,safesetid,integrity"
->  # CONFIG_CRYPTO_ECHAINIV is not set
->  # CONFIG_CRYPTO_HW is not set
-> -- 
-> 2.24.1
+Yi Liu
