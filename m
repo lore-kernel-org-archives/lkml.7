@@ -2,101 +2,205 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EC1C33C9B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E779C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2F3222D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25489214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:43:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QhMRk2mi"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="T5V4Hy7G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbgAFWnU (ORCPT
+        id S1727256AbgAFWna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 17:43:20 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:53159 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbgAFWnT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 17:43:19 -0500
-Received: by mail-pj1-f68.google.com with SMTP id a6so8144367pjh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 14:43:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4RdNkbYZ+RFZlefMkKQtcxx/Dp7xm2bgzJO9aSRTQLY=;
-        b=QhMRk2miiCccImpiN7ngaz8l/5k8dYIz8H5fJO42jEYHW27vEkedCNTlRho3fGndFu
-         5QmOFMEWE8InP1O3SYox05L915GR/CiaWoBoJFatws6hS3VnOUZSc3Ytvy7bbW73JK9h
-         otvV+5+5GpT6ehoJbxJ1SbUkyFxd8cNJLUYgE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4RdNkbYZ+RFZlefMkKQtcxx/Dp7xm2bgzJO9aSRTQLY=;
-        b=iXswIFRuICoNxXXPpRXxIJ+/eqxQ/N6qYn+6IgyH/yHUnthxniis5Yt39ckxQ2ToGP
-         H4JppaRWcA9F9Eb/P5j3d/4Ep6f/3PHz+9VfNO1pma+inI62xpTVTUHtOVf/zXnXxL1H
-         Ii4orTxYkE2ecVgU8wFjxd1nHWPJlN6+bh3sgAOKGY7k+0moSdf76NLjzrz9r7C/qiT7
-         e6e7FzBwa6I7MW1pcscqDc951Sxz8YEHjF/6RKv/KlN0nsgndF4KEK6wAkmJomNfK+u7
-         Y6JV8kIqUt5gaZ2gb6EtaYQ7aHYSHoDDrZVf4NbEQVDuXl6uiDYQJbjsx6ST2xCeoJkF
-         TSGA==
-X-Gm-Message-State: APjAAAWygswzGsIQ0p/Zp3mlS7kcilo2XmkJxfdlCulT7FXMTCfBSZT7
-        1woAALlH6tmkSAK18fV4vpe2Gw==
-X-Google-Smtp-Source: APXvYqxGo7WUNXWWAK/AkTd2VsWCEWtIq05rE0cnXnQOct/PG90XE4sHAB+yXBghEH929maGJR8hkw==
-X-Received: by 2002:a17:90a:868b:: with SMTP id p11mr45627715pjn.60.1578350597921;
-        Mon, 06 Jan 2020 14:43:17 -0800 (PST)
-Received: from smtp.gmail.com ([2620:15c:202:1:534:b7c0:a63c:460c])
-        by smtp.gmail.com with ESMTPSA id b12sm4360280pfi.157.2020.01.06.14.43.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 14:43:16 -0800 (PST)
-From:   Brian Norris <briannorris@chromium.org>
-To:     linux-wireless@vger.kernel.org
-Cc:     <linux-kernel@vger.kernel.org>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Brian Norris <briannorris@chromium.org>,
-        stable@vger.kernel.org, huangwen <huangwenabc@gmail.com>
-Subject: [PATCH] mwifiex: fix unbalanced locking in mwifiex_process_country_ie()
-Date:   Mon,  6 Jan 2020 14:42:12 -0800
-Message-Id: <20200106224212.189763-1-briannorris@chromium.org>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+        Mon, 6 Jan 2020 17:43:30 -0500
+Received: from mail-dm6nam10on2136.outbound.protection.outlook.com ([40.107.93.136]:22150
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726735AbgAFWna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 17:43:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DM38UKINbX51s0nUK8IOlWDdctGf3P6fJn5oMvVPRmmkWigbXpl/aKFc5gbDLPcCatkHQzXVXEU0piGKIqRQHuF6XtrrXTwWUtz6u4CImmiN5Ze/ADFZt1FnLVbHQgS/555+Yu3aB5bw/z1b7/ho8F6AZEMAF3hRc1uAUWJMF9wwsK5taFSVYwM8bDkUZhW129NfrNQVDOwHAz7POrcN5xD2kkTHb3xUF8aU1rq10SfDKzAuK4uS6zWX8cl3oqeimvCazmppxU6AjHqIfTmibvSPpoWM0e+T7WEtHfeaOdADJsUSYTqzGj699pqa/O4QNolFn1NrRB4lkvUI8ASTMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DCgJOcCj17EAGRsOkG92QqjGFbp62fRnm8CK5T6ZfCY=;
+ b=VuWWE4KHgRPP/iVS5MprxAY5gXnbD10SCvzeTbxxMQZozPj10N9icRb9M2JIwxcymEq0pvxw8tEOPR1GJbupcVFx3gsFPH0UVVqgSk5MAaKgInckLmg1JW8FeGEn8tiPp6gp8gBlup+Jg0o6Z2YUznNhElnToOHMweoM3xka4NvnZWYFTEyyXOj/IA5XxyTlxoQeDUpSUHg1iRQGl/DX2j3gOLi28tnqa9y9j0UdSgqaL67hjbLhHCXeXPlpbI5jIpcMObGgbRZHjhuXnt5HUQIp2X3tIIhqsNdoozI9+wt/hCzrSxgOzQaFthIxOHJS5jKvLJOF1JaAsqb5vtZNXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DCgJOcCj17EAGRsOkG92QqjGFbp62fRnm8CK5T6ZfCY=;
+ b=T5V4Hy7GHhKXd9uYrGiL7174wufRMFb73GqsQFRQlZsCjpKMD899nRX9QuCbYA6uv0XEvKaQUXyUU9LvOyWO0Je1EK7R5uwWi7l2dD1EdkFTIQPgBll6oVCBhurX90WiF7hY8BwcbJNqLYF7lMAShYHPHJ8x0AO0QgaSacVfJz8=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+Received: from CY4PR21MB0775.namprd21.prod.outlook.com (10.173.192.21) by
+ CY4PR21MB0182.namprd21.prod.outlook.com (10.173.193.8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.4; Mon, 6 Jan 2020 22:42:46 +0000
+Received: from CY4PR21MB0775.namprd21.prod.outlook.com
+ ([fe80::6155:bc1d:1d39:977b]) by CY4PR21MB0775.namprd21.prod.outlook.com
+ ([fe80::6155:bc1d:1d39:977b%8]) with mapi id 15.20.2644.002; Mon, 6 Jan 2020
+ 22:42:46 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     arnd@arndb.de, bp@alien8.de, daniel.lezcano@linaro.org,
+        haiyangz@microsoft.com, hpa@zytor.com, kys@microsoft.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, sashal@kernel.org, sthemmin@microsoft.com,
+        tglx@linutronix.de, x86@kernel.org, mikelley@microsoft.com,
+        Alexander.Levin@microsoft.com, vkuznets@redhat.com
+Cc:     linux-arch@vger.kernel.org, Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH v6][RESEND] x86/hyperv: Suspend/resume the hypercall page for hibernation
+Date:   Mon,  6 Jan 2020 14:42:39 -0800
+Message-Id: <1578350559-130275-1-git-send-email-decui@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-ClientProxiedBy: MWHPR12CA0038.namprd12.prod.outlook.com
+ (2603:10b6:301:2::24) To CY4PR21MB0775.namprd21.prod.outlook.com
+ (2603:10b6:903:b8::21)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR12CA0038.namprd12.prod.outlook.com (2603:10b6:301:2::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.12 via Frontend Transport; Mon, 6 Jan 2020 22:42:45 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: eb2495d9-9584-4a4d-eb0f-08d792f9bfbc
+X-MS-TrafficTypeDiagnostic: CY4PR21MB0182:|CY4PR21MB0182:|CY4PR21MB0182:
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <CY4PR21MB01822EB28F4FF96349F1FA34BF3C0@CY4PR21MB0182.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0274272F87
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(366004)(39860400002)(376002)(346002)(396003)(136003)(189003)(199004)(5660300002)(966005)(107886003)(15650500001)(10290500003)(2906002)(3450700001)(478600001)(4326008)(6512007)(316002)(186003)(6486002)(16526019)(26005)(6666004)(956004)(81166006)(81156014)(8676002)(2616005)(8936002)(6506007)(86362001)(7416002)(66946007)(66476007)(66556008)(52116002)(36756003)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0182;H:CY4PR21MB0775.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: LphRne6k8wsntp8nqM/w6rSUHnBCS8tuWwrsVFZlzTfdCDVwWC1v6YjJ+SqRwVeMyKdA+3zq6W4WnXFsrlD+KoAYBe7AHCtwnspHIrkGbNNoMwgHjoD9fPrd/2lxyyojwc/OquUy2ai2qWDt4uZrHw2pohBohmJvOiv3XkDudRysju3MVKx4S73lR+Y9kZypCzdVhXbL44COwuHZY6Atxr9uVf/laA1fJ/+MGLXVtAylHrcMBQEezlYUQ8/vTqbBJ0oCjxYCX4/W9SxEIJ+aHeISh39K6RFafqFWDaDB84kp+6Wv3NOdA5VcndrxQ1kRuPDtGXKs1YnEA1/DooUPdItOs54X2Yg9AGoFzP9LKb1DbIiEsaxKYpY52eo+/r4F6MN7gJ9j6GXMz1f78CWK8g9MJnBCzetcXWAetSx8hCh9UXr3oD4fnL5mMU3N/qQ/g+U97uNWoKSFFCeP6iOuB1iR8nzr/IU9+h+Pd5MNtm51KWpXQRNlsOEIwIdXq/vz0YjsRaP0eqTtOc4beh8rgfnVdI27yIqg7RUAD7QLv3gy+IFTqkO/mhHY28U5ocQxlB/DHVo7xSeXoUG+PpQATQ==
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eb2495d9-9584-4a4d-eb0f-08d792f9bfbc
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jan 2020 22:42:45.9165
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AK2owzNt8jeYWm3hXkcUb0HTgwJnx4hC7PocRhhHb1oz+ARDFlJ/dsJrRW3x3qwUaY/5of0c7VVZjqvYhDta/w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0182
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We called rcu_read_lock(), so we need to call rcu_read_unlock() before
-we return.
+This is needed for hibernation, e.g. when we resume the old kernel, we need
+to disable the "current" kernel's hypercall page and then resume the old
+kernel's.
 
-Fixes: 3d94a4a8373b ("mwifiex: fix possible heap overflow in mwifiex_process_country_ie()")
-Cc: stable@vger.kernel.org
-Cc: huangwen <huangwenabc@gmail.com>
-Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 ---
- drivers/net/wireless/marvell/mwifiex/sta_ioctl.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
-index 6dd835f1efc2..fbfa0b15d0c8 100644
---- a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
-+++ b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
-@@ -232,6 +232,7 @@ static int mwifiex_process_country_ie(struct mwifiex_private *priv,
+This is a RESEND of https://lkml.org/lkml/2019/11/20/68 .
+
+Please review.
+
+If it looks good, can you please pick it up through the tip.git tree?
+
+
+ arch/x86/hyperv/hv_init.c | 48 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index caaf4dce99bf..24a62d33067c 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -21,11 +21,15 @@
+ #include <linux/hyperv.h>
+ #include <linux/slab.h>
+ #include <linux/cpuhotplug.h>
++#include <linux/syscore_ops.h>
+ #include <clocksource/hyperv_timer.h>
  
- 	if (country_ie_len >
- 	    (IEEE80211_COUNTRY_STRING_LEN + MWIFIEX_MAX_TRIPLET_802_11D)) {
-+		rcu_read_unlock();
- 		mwifiex_dbg(priv->adapter, ERROR,
- 			    "11D: country_ie_len overflow!, deauth AP\n");
- 		return -EINVAL;
+ void *hv_hypercall_pg;
+ EXPORT_SYMBOL_GPL(hv_hypercall_pg);
+ 
++/* Save the hypercall page temporarily for hibernation */
++static void *hv_hypercall_pg_saved;
++
+ u32 *hv_vp_index;
+ EXPORT_SYMBOL_GPL(hv_vp_index);
+ 
+@@ -246,6 +250,46 @@ static int __init hv_pci_init(void)
+ 	return 1;
+ }
+ 
++static int hv_suspend(void)
++{
++	union hv_x64_msr_hypercall_contents hypercall_msr;
++
++	/*
++	 * Reset hypercall page reference before reset the page,
++	 * let hypercall operations fail safely rather than
++	 * panic the kernel for using invalid hypercall page
++	 */
++	hv_hypercall_pg_saved = hv_hypercall_pg;
++	hv_hypercall_pg = NULL;
++
++	/* Reset the hypercall page */
++	rdmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
++	hypercall_msr.enable = 0;
++	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
++
++	return 0;
++}
++
++static void hv_resume(void)
++{
++	union hv_x64_msr_hypercall_contents hypercall_msr;
++
++	/* Re-enable the hypercall page */
++	rdmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
++	hypercall_msr.enable = 1;
++	hypercall_msr.guest_physical_address =
++		vmalloc_to_pfn(hv_hypercall_pg_saved);
++	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
++
++	hv_hypercall_pg = hv_hypercall_pg_saved;
++	hv_hypercall_pg_saved = NULL;
++}
++
++static struct syscore_ops hv_syscore_ops = {
++	.suspend = hv_suspend,
++	.resume = hv_resume,
++};
++
+ /*
+  * This function is to be invoked early in the boot sequence after the
+  * hypervisor has been detected.
+@@ -330,6 +374,8 @@ void __init hyperv_init(void)
+ 
+ 	x86_init.pci.arch_init = hv_pci_init;
+ 
++	register_syscore_ops(&hv_syscore_ops);
++
+ 	return;
+ 
+ remove_cpuhp_state:
+@@ -349,6 +395,8 @@ void hyperv_cleanup(void)
+ {
+ 	union hv_x64_msr_hypercall_contents hypercall_msr;
+ 
++	unregister_syscore_ops(&hv_syscore_ops);
++
+ 	/* Reset our OS id */
+ 	wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
+ 
 -- 
-2.24.1.735.g03f4e72817-goog
+2.19.1
 
