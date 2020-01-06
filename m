@@ -2,122 +2,91 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E450C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCB5C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36D1020731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:34:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kXX9odmX"
+	by mail.kernel.org (Postfix) with ESMTP id 211342072E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:36:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgAFNem (ORCPT
+        id S1726478AbgAFNgm convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 08:34:42 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44450 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbgAFNel (ORCPT
+        Mon, 6 Jan 2020 08:36:42 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:48624 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbgAFNgl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 08:34:41 -0500
-Received: by mail-lf1-f65.google.com with SMTP id v201so36339799lfa.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 05:34:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TLggzgyJvV8TKTUDxbBA+R5G99qoCIFvbA/nYC43k14=;
-        b=kXX9odmXZ7Bfd26kMx1l7PNs1AjQYHabeFTwq1RoncVrG102dEWFBvgYKjkv/LjTBw
-         XBxpYysBUWn5Q/oCxrskYzJ/k32D9Q6CBRgAjWeogx57z6oRpLxygOoHuFutfAsUZ+lz
-         dXQUKPgwFvuegsPuZhcaFvYSHP81qmHMpNXv0a+1CcHPeeuSUimWPFpuixcKlxptk3Fz
-         TzoA063cWRAnhzAgm32IiB9UGZ0J/ZN15Kq3CXC+/8asLo+ncbp2p7C7AkL94LlNi0b6
-         H2hrML0F+d2tZEH6vsCIPydkFQjM7TQj2WxrPn92Oaih4WIAMLoAtGH/sMidHncFeZzJ
-         OA/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TLggzgyJvV8TKTUDxbBA+R5G99qoCIFvbA/nYC43k14=;
-        b=Nuak11MPxxNYHpLonzj6ye3f9U6Xj1iY0RQYPpAoPNBCou7zgGrve0ViLvMBvYUn29
-         GS50uRdSVBtssPme+BZyR789EBLTjA/JjzrkKyJtfSxmcM4NHw8EpefwDG846k3Vop88
-         lzIBkU4GSxuDhleucaMxbE4O9uB5UepMcHfTG3ww/GUdGxZ1le0i3+ozHiMLEGODVEnR
-         Q3HInEUBKfkvqbd0alhs7uONgLD19o+3qus4d5EZvl5nTP06lcUHk7+FXA6kCMEGAtPM
-         cEbnC6TDF8sgtYlpTrF9OVoKPbooJi4wIrcpePTTq6HBYdqg0xv4SYMyQFhXhfxnTeRc
-         IDxQ==
-X-Gm-Message-State: APjAAAW8ip56rF+QSAJgWobpK/RMXIE37ofpsEp2nlg+ezVbsaJe4iTg
-        WgnHGg2Ch3l1pM6zvdWcGVmCWrO5DWaqMaTYrr83iA==
-X-Google-Smtp-Source: APXvYqym5w1SmcY6fKQB+woCSYKZPTS3viF83AOLj8xIdVMv+bOvXsHltXCsqw/PCe/2z8+s10n0EBPv+F8uQPT6DNw=
-X-Received: by 2002:a19:6b0e:: with SMTP id d14mr55096916lfa.151.1578317679486;
- Mon, 06 Jan 2020 05:34:39 -0800 (PST)
-MIME-Version: 1.0
-References: <20200103114400.17668-1-rocking@linux.alibaba.com>
-In-Reply-To: <20200103114400.17668-1-rocking@linux.alibaba.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Mon, 6 Jan 2020 14:34:28 +0100
-Message-ID: <CAKfTPtAYHqbbVkQdT3A6qgbehZr8Yxa-bFjOXG7oG7eaN=uckA@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: calculate delta runnable load only when it's needed
-To:     Peng Wang <rocking@linux.alibaba.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 6 Jan 2020 08:36:41 -0500
+Received: from marcel-macbook.fritz.box (p5B22B473.dip0.t-ipconnect.de [91.34.180.115])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 67D39CECD3;
+        Mon,  6 Jan 2020 14:45:56 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: [PATCH v2] Bluetooth: btusb: Add support for 04ca:3021 QCA_ROME
+ device
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200106060744.5476-1-rjliao@codeaurora.org>
+Date:   Mon, 6 Jan 2020 14:36:39 +0100
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <0E6CEC41-1759-4C13-86CF-9067B0F272E4@holtmann.org>
+References: <20191219071857.18532-1-rjliao@codeaurora.org>
+ <20200106060744.5476-1-rjliao@codeaurora.org>
+To:     Rocky Liao <rjliao@codeaurora.org>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Jan 2020 at 12:45, Peng Wang <rocking@linux.alibaba.com> wrote:
->
-> Move the code of calculation for delta_sum/delta_avg to where
+Hi Rocky,
 
-Maybe precise that you move delta_sum/delta_avg for runnable_load_sum/avg
-
-> it is really needed to be done.
->
-> Signed-off-by: Peng Wang <rocking@linux.alibaba.com>
-
-make sense to me
-
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-
+> USB "VendorID:04ca ProductID:3021" is a new QCA ROME USB
+> Bluetooth device, this patch will support firmware downloading for it.
+> 
+> T:  Bus=02 Lev=02 Prnt=02 Port=05 Cnt=01 Dev#=  3 Spd=12   MxCh= 0
+> D:  Ver= 2.01 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
+> P:  Vendor=04ca ProdID=3021 Rev= 0.01
+> C:* #Ifs= 2 Cfg#= 1 Atr=e0 MxPwr=100mA
+> I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+> E:  Ad=81(I) Atr=03(Int.) MxPS=  16 Ivl=1ms
+> E:  Ad=82(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+> E:  Ad=02(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+> I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+> E:  Ad=83(I) Atr=01(Isoc) MxPS=   0 Ivl=1ms
+> E:  Ad=03(O) Atr=01(Isoc) MxPS=   0 Ivl=1ms
+> I:  If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+> E:  Ad=83(I) Atr=01(Isoc) MxPS=   9 Ivl=1ms
+> E:  Ad=03(O) Atr=01(Isoc) MxPS=   9 Ivl=1ms
+> I:  If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+> E:  Ad=83(I) Atr=01(Isoc) MxPS=  17 Ivl=1ms
+> E:  Ad=03(O) Atr=01(Isoc) MxPS=  17 Ivl=1ms
+> I:  If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+> E:  Ad=83(I) Atr=01(Isoc) MxPS=  25 Ivl=1ms
+> E:  Ad=03(O) Atr=01(Isoc) MxPS=  25 Ivl=1ms
+> I:  If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+> E:  Ad=83(I) Atr=01(Isoc) MxPS=  33 Ivl=1ms
+> E:  Ad=03(O) Atr=01(Isoc) MxPS=  33 Ivl=1ms
+> I:  If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+> E:  Ad=83(I) Atr=01(Isoc) MxPS=  49 Ivl=1ms
+> E:  Ad=03(O) Atr=01(Isoc) MxPS=  49 Ivl=1ms
+> 
+> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
 > ---
->  kernel/sched/fair.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index ba749f579714..6b7e6b528e9b 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -3366,16 +3366,17 @@ update_tg_cfs_runnable(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cf
->
->         runnable_load_sum = (s64)se_runnable(se) * runnable_sum;
->         runnable_load_avg = div_s64(runnable_load_sum, LOAD_AVG_MAX);
-> -       delta_sum = runnable_load_sum - se_weight(se) * se->avg.runnable_load_sum;
-> -       delta_avg = runnable_load_avg - se->avg.runnable_load_avg;
-> -
-> -       se->avg.runnable_load_sum = runnable_sum;
-> -       se->avg.runnable_load_avg = runnable_load_avg;
->
->         if (se->on_rq) {
-> +               delta_sum = runnable_load_sum -
-> +                               se_weight(se) * se->avg.runnable_load_sum;
-> +               delta_avg = runnable_load_avg - se->avg.runnable_load_avg;
->                 add_positive(&cfs_rq->avg.runnable_load_avg, delta_avg);
->                 add_positive(&cfs_rq->avg.runnable_load_sum, delta_sum);
->         }
-> +
-> +       se->avg.runnable_load_sum = runnable_sum;
-> +       se->avg.runnable_load_avg = runnable_load_avg;
->  }
->
->  static inline void add_tg_cfs_propagate(struct cfs_rq *cfs_rq, long runnable_sum)
-> --
-> 2.24.0
->
+> 
+> Changes in v2: Added the /sys/kernel/debug/usb/devices output to the commit message
+> 
+> drivers/bluetooth/btusb.c | 1 +
+> 1 file changed, 1 insertion(+)
+
+patch has been applied to bluetooth-next tree.
+
+Regards
+
+Marcel
+
