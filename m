@@ -2,129 +2,121 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E57C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60274C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE202072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:56:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YFQfg+kE"
+	by mail.kernel.org (Postfix) with ESMTP id 36BE1207FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:56:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578337001;
+	bh=B/kWhHx1btx8ugLNBM9UY7cdDolaEByVRoHh+OX9Nx4=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=IPtHtl97J6eqzg3RqEHUAa4pRmbb1C29NN8z2idNOCEnEniepJc4hHRQSL3mabmCU
+	 jPYOVAqvZfXhdKbRo1KdQxz78MkAaEzgDzQOGxDaqhS/iwWrXMNtmJrfjHQjsIrLL9
+	 IqFun1Tfkh+riLmHtBGezCyu3ThrnI3t9mbL3lIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbgAFS41 (ORCPT
+        id S1727161AbgAFS4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 13:56:27 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22592 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726793AbgAFS40 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 13:56:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578336985;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:in-reply-to:
-         references:references:references;
-        bh=DWXFKSOUzkRcgpCgfN3PkqlzQm42xZwQFxY49CXWt+A=;
-        b=YFQfg+kEJ8RJMkegNWz+dx8KVvQ8m1HXy89wtzuebOwuiNiTnY0jKX5vkLE4bPjT3he4Pm
-        g3LUH4LcJ4SQ5/aTkh4L4sLEKQBvio39GPM1RJLyWroix0juZyueaOifd7nvRKjdgtC7Md
-        JCc2swZV/QdY+bm2MKw/H8R9waLdJsk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-268-g7QKIePsM42r8CFLX5OFyg-1; Mon, 06 Jan 2020 13:56:22 -0500
-X-MC-Unique: g7QKIePsM42r8CFLX5OFyg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 6 Jan 2020 13:56:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42532 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726690AbgAFS4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 13:56:40 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CEE9B102C867;
-        Mon,  6 Jan 2020 18:56:20 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-34.phx2.redhat.com [10.3.112.34])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D7B165D9E1;
-        Mon,  6 Jan 2020 18:56:15 +0000 (UTC)
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org
-Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, fw@strlen.de, twoerner@redhat.com,
-        eparis@parisplace.org, ebiederm@xmission.com, tgraf@infradead.org,
-        Richard Guy Briggs <rgb@redhat.com>
-Subject: [PATCH ghak25 v2 9/9] netfilter: audit table unregister actions
-Date:   Mon,  6 Jan 2020 13:54:10 -0500
-Message-Id: <65974a7254dffe53b5084bedfd60c95a29a41e08.1577830902.git.rgb@redhat.com>
-In-Reply-To: <cover.1577830902.git.rgb@redhat.com>
-References: <cover.1577830902.git.rgb@redhat.com>
-In-Reply-To: <cover.1577830902.git.rgb@redhat.com>
-References: <cover.1577830902.git.rgb@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        by mail.kernel.org (Postfix) with ESMTPSA id 1310B2072A;
+        Mon,  6 Jan 2020 18:56:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578336999;
+        bh=B/kWhHx1btx8ugLNBM9UY7cdDolaEByVRoHh+OX9Nx4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=wFB5cCk6ZBpaS/EqqKbo5pIKR+rsp94ZcY9zSFOsbabe5bOQG+RPLOjinJj9CYhfV
+         zGVAr6t+miSuHWR62tfbt/nFiaAwYJuehtQup86EKEFGyMfGOoWEStJnsT45bwEcEe
+         +VnUJX0LWJM/pNqWLI5ivdY70s4gznekvt1E2byc=
+Subject: Re: [PATCH v6 linux-kselftest-test 3/6] kunit: allow kunit tests to
+ be loaded as a module
+To:     Alan Maguire <alan.maguire@oracle.com>,
+        kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, brendanhiggins@google.com,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kunit-dev@googlegroups.com, keescook@chromium.org,
+        yzaikin@google.com, akpm@linux-foundation.org,
+        yamada.masahiro@socionext.com, catalin.marinas@arm.com,
+        joe.lawrence@redhat.com, penguin-kernel@i-love.sakura.ne.jp,
+        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
+        corbet@lwn.net, davidgow@google.com, adilger.kernel@dilger.ca,
+        tytso@mit.edu, mcgrof@kernel.org, linux-doc@vger.kernel.org,
+        Knut Omang <knut.omang@oracle.com>, shuah <shuah@kernel.org>
+References: <1575473234-5443-4-git-send-email-alan.maguire@oracle.com>
+ <201912190658.JKOfMs2i%lkp@intel.com>
+ <alpine.LRH.2.20.1912191424440.27984@dhcp-10-175-218-218.vpn.oracle.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <5671f077-d2ed-2e26-7588-29d1e4b8123e@kernel.org>
+Date:   Mon, 6 Jan 2020 11:56:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <alpine.LRH.2.20.1912191424440.27984@dhcp-10-175-218-218.vpn.oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Audit the action of unregistering ebtables and x_tables.
+On 12/19/19 7:28 AM, Alan Maguire wrote:
+> On Thu, 19 Dec 2019, kbuild test robot wrote:
+> 
+>> Hi Alan,
+>>
+>> Thank you for the patch! Yet something to improve:
+>>
+>> [auto build test ERROR on linus/master]
+>> [also build test ERROR on linux/master v5.5-rc2 next-20191218]
+>> [cannot apply to ext4/dev]
+>> [if your patch is applied to the wrong git tree, please drop us a note to help
+>> improve the system. BTW, we also suggest to use '--base' option to specify the
+>> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+>>
+>> url:    https://github.com/0day-ci/linux/commits/Alan-Maguire/kunit-support-building-core-tests-as-modules/20191207-021244
+>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git b0d4beaa5a4b7d31070c41c2e50740304a3f1138
+>> config: x86_64-randconfig-e002-20191218 (attached as .config)
+>> compiler: gcc-7 (Debian 7.5.0-1) 7.5.0
+>> reproduce:
+>>          # save the attached .config to linux build tree
+>>          make ARCH=x86_64
+>>
+>> If you fix the issue, kindly add following tag
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>>
+>> All errors (new ones prefixed by >>):
+>>
+>>     drivers/base/power/qos-test.c:117:1: warning: data definition has no type or storage class
+>>      kunit_test_suite(pm_qos_test_module);
+>>      ^~~~~~~~~~~~~~~~
+> 
+> I hadn't thought about the possibility that other trees
+> would have added kunit tests in the interim; it probably
+> makes most sense to not retire the kunit_test_suite()
+> definition (it can be trivially defined via kunit_test_suites().
+> Converting the test suite isn't an option as it's not in
+> the kselftest-test tree.
+> 
+> I'll spin up a v7 patchset with that 1-line change to patch 3
+> as I don't _think_ these changes have been pulled in yet.
+> 
 
-See: https://github.com/linux-audit/audit-kernel/issues/44
-Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
----
- kernel/auditsc.c                | 3 ++-
- net/bridge/netfilter/ebtables.c | 3 +++
- net/netfilter/x_tables.c        | 4 +++-
- 3 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-index 999ac184246b..2644130a9e66 100644
---- a/kernel/auditsc.c
-+++ b/kernel/auditsc.c
-@@ -2557,7 +2557,8 @@ void __audit_nf_cfg(const char *name, u8 af, int nentries, int op)
- 		return;	/* audit_panic or being filtered */
- 	audit_log_format(ab, "table=%s family=%u entries=%u op=%s",
- 			 name, af, nentries,
--			 op ? "replace" : "register");
-+			 op == 1 ? "replace" :
-+				   (op ? "unregister" : "register"));
- 	audit_log_end(ab);
- }
- EXPORT_SYMBOL_GPL(__audit_nf_cfg);
-diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
-index baff2f05af43..3dd4eb5b13fd 100644
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -1126,6 +1126,9 @@ static void __ebt_unregister_table(struct net *net, struct ebt_table *table)
- 	mutex_lock(&ebt_mutex);
- 	list_del(&table->list);
- 	mutex_unlock(&ebt_mutex);
-+	if (audit_enabled)
-+		audit_nf_cfg(table->name, AF_BRIDGE, table->private->nentries,
-+			     2);
- 	EBT_ENTRY_ITERATE(table->private->entries, table->private->entries_size,
- 			  ebt_cleanup_entry, net, NULL);
- 	if (table->private->nentries)
-diff --git a/net/netfilter/x_tables.c b/net/netfilter/x_tables.c
-index 4ae4f7bf8946..e4852a0cb62f 100644
---- a/net/netfilter/x_tables.c
-+++ b/net/netfilter/x_tables.c
-@@ -1403,7 +1403,7 @@ struct xt_table_info *xt_replace_table(struct xt_table *table,
- 
- 	if (audit_enabled)
- 		audit_nf_cfg(table->name, table->af, private->number,
--			     private->number);
-+			     !!private->number);
- 
- 	return private;
- }
-@@ -1466,6 +1466,8 @@ void *xt_unregister_table(struct xt_table *table)
- 	private = table->private;
- 	list_del(&table->list);
- 	mutex_unlock(&xt[table->af].mutex);
-+	if (audit_enabled)
-+		audit_nf_cfg(table->name, table->af, private->number, 2);
- 	kfree(table);
- 
- 	return private;
--- 
-1.8.3.1
+Alan,
 
+Please do send v7. I will pull it for 5.6.
+
+thanks,
+-- Shuah
