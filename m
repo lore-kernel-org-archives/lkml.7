@@ -2,117 +2,144 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F18EBC33C9A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 00:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EABC00523
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8C272072C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 00:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 000BF21775
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:04:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="LYPwCLxg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uuIx2EBw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbgAFAqo (ORCPT
+        id S1727238AbgAFBEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 19:46:44 -0500
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:13184 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726731AbgAFAqo (ORCPT
+        Sun, 5 Jan 2020 20:04:38 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34319 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgAFBEi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 19:46:44 -0500
+        Sun, 5 Jan 2020 20:04:38 -0500
+Received: by mail-lj1-f193.google.com with SMTP id z22so44450094ljg.1;
+        Sun, 05 Jan 2020 17:04:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1578271604; x=1609807604;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=Nm1HPLZ/VpXMl1rLxnlZl6cpUugevRClIBZqy2h1HHY=;
-  b=LYPwCLxgV0ljFa8Yn0MvyccWhtE7RoKMbaZabLpmh7nkXXDHBcwvxLC+
-   N1cxg86wlGBy4VzatBVrc0rw3n4ftyhA7c/D42Xrp7yAwRw379CQcafKM
-   H2byuKHBHXvQCwcvMFNvmtSmJx0UKRWAUXknrNOFUKZoqnSY4V6jKXBOS
-   Q=;
-IronPort-SDR: mP9tPbE7gNPbslPChUuDQUv3q5kWneKRt1xJ5Ul5rKiNjptAkUCHBrrVMXtgfjYNLC0ld1s6Tr
- yS6oCCP0FIXg==
-X-IronPort-AV: E=Sophos;i="5.69,400,1571702400"; 
-   d="scan'208";a="16874826"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 06 Jan 2020 00:46:32 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id 000F72497BB;
-        Mon,  6 Jan 2020 00:46:27 +0000 (UTC)
-Received: from EX13D11UWB001.ant.amazon.com (10.43.161.53) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 6 Jan 2020 00:46:27 +0000
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13D11UWB001.ant.amazon.com (10.43.161.53) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 6 Jan 2020 00:46:27 +0000
-Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
- EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1367.000;
- Mon, 6 Jan 2020 00:46:26 +0000
-From:   "Singh, Balbir" <sblbir@amazon.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chaitanya.Kulkarni@wdc.com" <Chaitanya.Kulkarni@wdc.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
-CC:     "hch@lst.de" <hch@lst.de>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "Sangaraju, Someswarudu" <ssomesh@amazon.com>
-Subject: Re: [resend v1 4/5] drivers/nvme/host/core.c: Convert to use
- disk_set_capacity
-Thread-Topic: [resend v1 4/5] drivers/nvme/host/core.c: Convert to use
- disk_set_capacity
-Thread-Index: AQHVwUG1iZmE8Pm/G0CenFe4gZ349afc0u0A
-Date:   Mon, 6 Jan 2020 00:46:26 +0000
-Message-ID: <1b88bedc6d5435fa7154f3356fa3f1a3e6888ded.camel@amazon.com>
-References: <20200102075315.22652-1-sblbir@amazon.com>
-         <20200102075315.22652-5-sblbir@amazon.com>
-         <BYAPR04MB57490FFCC025A88F4D97D40A86220@BYAPR04MB5749.namprd04.prod.outlook.com>
-In-Reply-To: <BYAPR04MB57490FFCC025A88F4D97D40A86220@BYAPR04MB5749.namprd04.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.160.101]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <50ECDC6CF5780E44B2534B78D9303263@amazon.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QxF8C0j9F49gnuQnqiXYtzEnYCy8UEVeDogjGha9Yck=;
+        b=uuIx2EBwoqFST1NYsHXBHvRXW5xqvyvly8yOpweMd2yLLSsLqS0pvgsjYKgeGpsr0t
+         XgnnkX+FA1FiqsplnCH28FUDFq2Fq39385Cvuyw84RX2xDF8GSVONY9WDgk6agFtlvlR
+         f8swnKVoihPMrHwOy4OjGO69FufyvEQpAomgsPVu/ROPFpH0q+miGbFNnkCe0QO7E5b9
+         1NDusaR15BtNHS577X/3EpeKT5fDTE4bWPRJxcmqmbcC5VDaXNYG0qYWT9bTpO9rVer6
+         DKwtxVlSfRmu59Ql/qIPtRO+7mr99olGcWK8URVPgHBTKxVy+B2kHGutAI/j5YUbYx06
+         h2fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QxF8C0j9F49gnuQnqiXYtzEnYCy8UEVeDogjGha9Yck=;
+        b=A3xdTZ4W5bEzWxuofznqRLM8xvCs6wYGOoLFTGKCJhBihk3I9WjRnwH5mg5EJqGWn/
+         dXLYDwCqvU7k0XDCUF5sYN/cpHiwyGCLmpseVES+ou/47JVpRVcCDDWHKbA0NHqpd3Ju
+         7RLYR7srdc68LV2qGkyXUuEebh5m5YQ5tc8d3xUizwUXz0EcX8uBXysoySWOsz+jIl3b
+         TK/IPRmK2OJPizv6cWQ+1193/DYLNtN7WD3i9n/6jddMRPnhMBSXMAt8NXv/uxTAj5xO
+         RkvZC/nZh1Z8FZJ9PbVRcqKSuoznv9hA7q43NjEnojYWqXZSs/0V+gxMFeKQf8snd+17
+         NWNQ==
+X-Gm-Message-State: APjAAAWL7jsnFO4F4CUJcTzGiuVblEhMNPx6rAjVb4c9gDRwckFLaD4M
+        x1/PJ7A37z6ST4j8rlKIbzMqdeXa
+X-Google-Smtp-Source: APXvYqyv0Lk57XfSlq6yKa9c3shlzDOX5JRBVr4/t344WMkf8y2uwsxOUcVO3elYPcxy4967fhFC7w==
+X-Received: by 2002:a2e:2e12:: with SMTP id u18mr32480900lju.36.1578272675987;
+        Sun, 05 Jan 2020 17:04:35 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id a19sm28245910ljb.103.2020.01.05.17.04.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jan 2020 17:04:35 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/9] NVIDIA Tegra I2C driver fixes and improvements
+Date:   Mon,  6 Jan 2020 04:04:14 +0300
+Message-Id: <20200106010423.5890-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU2F0LCAyMDIwLTAxLTA0IGF0IDIyOjI3ICswMDAwLCBDaGFpdGFueWEgS3Vsa2Fybmkgd3Jv
-dGU6DQo+IFF1aWNrIHF1ZXN0aW9uIGhlcmUgaWYgdXNlciBleGVjdXRlcyBudm1lIG5zLXJlc2Nh
-biAvZGV2L252bWUxDQo+IHdpbGwgZm9sbG93aW5nIGNvZGUgcmVzdWx0IGluIHRyaWdnZXJpbmcg
-dWV2ZW50KHMpIGZvcg0KPiB0aGUgbmFtZXNwYWNlKHMoIGZvciB3aGljaCB0aGVyZSBpcyBubyBj
-aGFuZ2UgaW4gdGhlIHNpemUgPw0KPiANCj4gSWYgc28gaXMgdGhhdCBhbiBleHBlY3RlZCBiZWhh
-dmlvciA/DQo+IA0KDQpNeSBvbGQgY29kZSBoYWQgYSBjaGVjayB0byBzZWUgaWYgb2xkX2NhcGFj
-aXR5ICE9IG5ld19jYXBhY2l0eSBhcyB3ZWxsLg0KSSBjYW4gcmVkbyB0aG9zZSBiaXRzIGlmIG5l
-ZWRlZC4NCg0KVGhlIGV4cGVjdGVkIGJlaGF2aW91ciBpcyBub3QgY2xlYXIsIGJ1dCB0aGUgZnVu
-Y3Rpb25hbGl0eSBpcyBub3QgYnJva2VuLCB1c2VyDQpzcGFjZSBzaG91bGQgYmUgYWJsZSB0byBk
-ZWFsIHdpdGggYSByZXNpemUgZXZlbnQgd2hlcmUgdGhlIHByZXZpb3VzIGNhcGFjaXR5DQo9PSBu
-ZXcgY2FwYWNpdHkgSU1ITy4NCg0KQmFsYmlyIFNpbmdoLg0KDQoNCj4gT24gMDEvMDEvMjAyMCAx
-MTo1NCBQTSwgQmFsYmlyIFNpbmdoIHdyb3RlOg0KPiA+IGJsb2NrL2dlbmhkIHByb3ZpZGVzIGRp
-c2tfc2V0X2NhcGFjaXR5KCkgZm9yIHNlbmRpbmcNCj4gPiBSRVNJWkUgbm90aWZpY2F0aW9ucyB2
-aWEgdWV2ZW50cy4gVGhpcyBub3RpZmljYXRpb24gaXMNCj4gPiBuZXdseSBhZGRlZCB0byBOVk1F
-IGRldmljZXMNCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBCYWxiaXIgU2luZ2ggPHNibGJpckBh
-bWF6b24uY29tPg0KPiA+IC0tLQ0KPiA+ICAgZHJpdmVycy9udm1lL2hvc3QvY29yZS5jIHwgMiAr
-LQ0KPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+
-ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbnZtZS9ob3N0L2NvcmUuYyBiL2RyaXZlcnMv
-bnZtZS9ob3N0L2NvcmUuYw0KPiA+IGluZGV4IDY2N2YxOGY0NjViZS4uY2IyMTRlOTE0ZmMyIDEw
-MDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbnZtZS9ob3N0L2NvcmUuYw0KPiA+ICsrKyBiL2RyaXZl
-cnMvbnZtZS9ob3N0L2NvcmUuYw0KPiA+IEBAIC0xODA4LDcgKzE4MDgsNyBAQCBzdGF0aWMgdm9p
-ZCBudm1lX3VwZGF0ZV9kaXNrX2luZm8oc3RydWN0IGdlbmRpc2sNCj4gPiAqZGlzaywNCj4gPiAg
-IAkgICAgbnMtPmxiYV9zaGlmdCA+IFBBR0VfU0hJRlQpDQo+ID4gICAJCWNhcGFjaXR5ID0gMDsN
-Cj4gPiANCj4gPiAtCXNldF9jYXBhY2l0eShkaXNrLCBjYXBhY2l0eSk7DQo+ID4gKwlkaXNrX3Nl
-dF9jYXBhY2l0eShkaXNrLCBjYXBhY2l0eSk7DQoNCg0KPiA+IA0KPiA+ICAgCW52bWVfY29uZmln
-X2Rpc2NhcmQoZGlzaywgbnMpOw0KPiA+ICAgCW52bWVfY29uZmlnX3dyaXRlX3plcm9lcyhkaXNr
-LCBucyk7DQo+ID4gDQo+IA0KPiANCg==
+Hello,
+
+This patchset adds support for atomic transfers which are required for
+shutting down machine properly. Secondly, a (not)suspending I2C and some
+other things are fixed/improved by this small series as well. Please review
+and apply, thanks in advance!
+
+Changelog:
+
+v3: The "Prevent interrupt triggering after transfer timeout" and "Support
+    atomic transfers" patches got extra very minor improvements. The
+    completion now is passed directly to tegra_i2c_poll_completion_timeout(),
+    for consistency.
+
+    Added two new patches that firm up DMA transfer handling:
+
+      i2c: tegra: Always terminate DMA transfer
+      i2c: tegra: Check DMA completion status in addition to left time
+
+v2: The series is renamed from "Tegra I2C: Support atomic transfers and
+    correct suspend/resume" to "NVIDIA Tegra I2C driver fixes and
+    improvements" because it now contains some more various changes.
+
+    New patches in v2:
+
+      i2c: tegra: Correct unwinding order on driver's probe error
+      i2c: tegra: Prevent interrupt triggering after transfer timeout
+      i2c: tegra: Use relaxed versions of readl/writel
+
+    The "Rename I2C_PIO_MODE_MAX_LEN to I2C_PIO_MODE_PREFERRED_LEN" got an
+    improved wording for the code's comment to I2C_PIO_MODE_PREFERRED_LEN.
+
+    The "Support atomic transfers" also got some very minor tuning, like
+    s/in_interrupt()/i2c_dev->is_curr_atomic_xfer/ in dvc_writel() that was
+    missed in v1.
+
+v1: The "i2c: tegra: Support atomic transfers" previously was sent out as
+    a separate patch, but later I spotted that suspend/resume doesn't
+    work properly. The "i2c: tegra: Fix suspending in active runtime PM
+    state" patch depends on the atomic patch because there is a need to
+    active IRQ-safe mode for the runtime PM by both patches.
+
+    I fixed a missed doc-comment of the newly added "is_curr_atomic_xfer"
+    structure field and added additional comment that explains why IRQ needs
+    to be disabled for the atomic transfer in the "Support atomic transfers"
+    patch.
+
+    Lastly, I added a minor "i2c: tegra: Rename .." patch that helps to
+    follow driver's code.
+
+Dmitry Osipenko (9):
+  i2c: tegra: Fix suspending in active runtime PM state
+  i2c: tegra: Properly disable runtime PM on driver's probe error
+  i2c: tegra: Prevent interrupt triggering after transfer timeout
+  i2c: tegra: Support atomic transfers
+  i2c: tegra: Rename I2C_PIO_MODE_MAX_LEN to I2C_PIO_MODE_PREFERRED_LEN
+  i2c: tegra: Use relaxed versions of readl/writel
+  clk: tegra: Fix double-free in tegra_clk_init()
+  i2c: tegra: Always terminate DMA transfer
+  i2c: tegra: Check DMA completion status in addition to left time
+
+ drivers/clk/tegra/clk.c        |   4 +-
+ drivers/i2c/busses/i2c-tegra.c | 216 ++++++++++++++++++++++-----------
+ 2 files changed, 147 insertions(+), 73 deletions(-)
+
+-- 
+2.24.0
+
