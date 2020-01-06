@@ -2,280 +2,211 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645FDC32771
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4036AC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 389912081E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E15782075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:14:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="hTOhuySw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bDdqcPXV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgAFKLy (ORCPT
+        id S1725446AbgAFKOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 05:11:54 -0500
-Received: from mail-io1-f47.google.com ([209.85.166.47]:45140 "EHLO
-        mail-io1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgAFKLx (ORCPT
+        Mon, 6 Jan 2020 05:14:54 -0500
+Received: from mail-vk1-f202.google.com ([209.85.221.202]:44796 "EHLO
+        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgAFKOx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 05:11:53 -0500
-Received: by mail-io1-f47.google.com with SMTP id i11so47997586ioi.12
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 02:11:52 -0800 (PST)
+        Mon, 6 Jan 2020 05:14:53 -0500
+Received: by mail-vk1-f202.google.com with SMTP id k16so7014761vko.11
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 02:14:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=BM5QMsP0AbZFoP/y14rM3kVBayTcxH4QJqPjuJIFHqM=;
-        b=hTOhuySw6rVzMQXpbeRI1b4riYgYNv9nSHA24LrY6vw32Aaydw9rut6jpnDig03XNS
-         dGQQdNXySoRhgyugLGobTaaEF2yTpPJYXSfZQGzAHwqmS/Sv0Eg9qALfxRBvpNNQB/LH
-         oLBGtGQpCCpoJ94TQP7K+G8pwBgvLCRSsop1s=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=at/6LW2CyTT3AHJ4DEYijPCx/QdUy/o9K531OsH9S78=;
+        b=bDdqcPXVe98eZZsa1W/fgJGsjHgmbnuAHsdVZRxB/3KvothFJUQUfQ0onHWQZ8cfpX
+         nT4tXkR1hx5QKJ0kqcm+i6hbjFiePhLwRTnnLJECG/i4KiwAfG9k7E6aYHg+osoPighR
+         XXXc5btco0/w1GOLEiK4WqSzvlCx/j9nz6X+8fZqp1uvhV7PRUaXbDN25u71AmYpWLyG
+         fxGkkeRTD0kfFO+jyrVOand0ROEnj5QBZn7670exqa2lPa0stOycRFTxWkSvuO/LOtdZ
+         pYS7sDIxeCDkp8cvSom/ZlQ7HLcbWDA13yy8M1tvGIWYO5o2xdI4JQFmv8Z7mjlYurwT
+         4nrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=BM5QMsP0AbZFoP/y14rM3kVBayTcxH4QJqPjuJIFHqM=;
-        b=t2CZj27JHPZuSJG5L5CsbWG4bAChjxLHuEX2klSNGR9a89pvxSzTKgo4vT29Eq4WL/
-         cY5ufWDrCLx6qACX3gUSZt9K9cfoqdZJwwoOVFrI5qRnT1XPp1mokGXdFPlRtR/454dT
-         uQEvGwg4atAkcFR1l0uSpGZvdileK61H/Bmgiw3sGlxT6ZB9NCezX1kx9j9/sB4X/pz3
-         TnSIuvm1CofWsBqLIPz9p3I0NHxIbv6xBVpFlMRfXAC1oi+aVJMKIJFK2OPCh0CnTRig
-         19F/RqzhfK6wun8r1UUOd1usW9rqAdCtWkvZmmEYoiDY3PN4pTItXsOfHk4gP9/Bnh9T
-         kbtw==
-X-Gm-Message-State: APjAAAWPY1lB92hWTnoPqF4l1ffZUbPnrocCB2EEtjXf4M2d2S0xq6AG
-        V/33E/qPP6VB/LC+HJQypz0ESkTUKNi6pSFki2xngw==
-X-Google-Smtp-Source: APXvYqzUirMUBMW0xxRJzNQkXJ6BFIkz9VVTNKPR3lN6QCD/Fd3IwAFCUoeqyShL+FgsbSIMx5prGQgOon0oVw7bq2c=
-X-Received: by 2002:a02:b893:: with SMTP id p19mr10064623jam.103.1578305512006;
- Mon, 06 Jan 2020 02:11:52 -0800 (PST)
-MIME-Version: 1.0
-References: <20200101112444.16250-1-jagan@amarulasolutions.com> <20200104151702.GC17768@ravnborg.org>
-In-Reply-To: <20200104151702.GC17768@ravnborg.org>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Mon, 6 Jan 2020 15:41:40 +0530
-Message-ID: <CAMty3ZDbDf6YovrEdG0pACQAwMQidjKr6BJvx-FPXqyT11G05w@mail.gmail.com>
-Subject: Re: [PATCH 0/6] dt-bindings: display: Update few panel bindings with YAML
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=at/6LW2CyTT3AHJ4DEYijPCx/QdUy/o9K531OsH9S78=;
+        b=bc82Lj/n0nZu+L2i2q8a7DkHHZutRsY8aeOFGdrHVYLXcUAsHbSvTSjAtxwkkLpVoQ
+         mH9XE62M5q5yS89Cdv0cXixILklr65Yp5hxZnl2qafNUO8vWmZAM2X1bwrrkbwgIiF+F
+         2ULOvhdV3EtubDK3z7peSiJoGhPNQJ9u8/yqOzJjY+XiWA+1iyCim2Igka12s/PZgIZy
+         fE5xTq0/TbKavghX4GRUB4L7iCxLyZtSlB1V9wnJOzq5TT+jBsG8AK0Q1Mjs/7FXTjbH
+         CxXkZDV04mBX3/ADMMbEaeiapONNCTzFWtlGi67OFv/BbRjN/ovSyI5CL4Ua/A768V8M
+         u7wQ==
+X-Gm-Message-State: APjAAAXzIJtC9arBHp8JXWV0siRzO9ivQYLH4Sxx9IGUjvMOGZFrPaOd
+        vPfLg/x1XVExFpVGoAHnHhizoSBGDNIXnCodBQ==
+X-Google-Smtp-Source: APXvYqxeiBsH+6mjRgu/QkCHpQHygOljrWjBgnQ6a4QtftT9FqtqwKY/jlH3egqEL8AIPfxpN+ZzS6YmKEMlPYvLDw==
+X-Received: by 2002:ab0:714c:: with SMTP id k12mr58239995uao.124.1578305691993;
+ Mon, 06 Jan 2020 02:14:51 -0800 (PST)
+Date:   Mon,  6 Jan 2020 18:14:37 +0800
+Message-Id: <20200106181425.Bluez.v1.1.I5ee1ea8e19d41c5bdffb4211aeb9cd9efa5e0a4a@changeid>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+Subject: [Bluez PATCH v1] bluetooth: secure bluetooth stack from bluedump attack
+From:   "howardchung@google.com" <howardchung@google.com>
+To:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org
+Cc:     chromeos-bluetooth-upstreaming@chromium.org,
+        howardchung <howardchung@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
+From: howardchung <howardchung@google.com>
 
-On Sat, Jan 4, 2020 at 8:47 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Jagan.
-> On Wed, Jan 01, 2020 at 04:54:38PM +0530, Jagan Teki wrote:
-> > These panel bindings are owned by me, so updated all of them into
-> > YAML DT schema.
-> >
-> > Any inputs?
-> Thanks for doing the conversion.
->
-> dt_binding_check was not happy:
-> Documentation/devicetree/bindings/display/panel/rocktech,rk070er9427.exam=
-ple.dt.yaml: panel: 'backlight', 'port' do not match any of the regexes: 'p=
-inctrl-[0-9]+'
->   DTC     Documentation/devicetree/bindings/display/panel/friendlyarm,hd7=
-02e.example.dt.yaml
->   CHECK   Documentation/devicetree/bindings/display/panel/friendlyarm,hd7=
-02e.example.dt.yaml
-> Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.exampl=
-e.dt.yaml: panel: 'backlight', 'port' do not match any of the regexes: 'pin=
-ctrl-[0-9]+'
-> Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.exampl=
-e.dt.yaml: panel: compatible: Additional items are not allowed ('simple-pan=
-el' was unexpected)
-> Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.exampl=
-e.dt.yaml: panel: compatible: ['friendlyarm,hd702e', 'simple-panel'] is too=
- long
->   DTC     Documentation/devicetree/bindings/display/panel/sitronix,st7701=
-.example.dt.yaml
-> Error: Documentation/devicetree/bindings/display/panel/sitronix,st7701.ex=
-ample.dts:22.42-43 syntax error
-> FATAL ERROR: Unable to parse input tree
->
-> Please fix and check the bindings using dt_binding_check before
-> resubmit.
->
-> I had to install libyaml-dev (as least I recall this was the name)
-> before dt_binding_check worked OK for me.
+Attack scenario:
+1. A Chromebook (let's call this device A) is paired to a legitimate
+   Bluetooth classic device (e.g. a speaker) (let's call this device
+   B).
+2. A malicious device (let's call this device C) pretends to be the
+   Bluetooth speaker by using the same BT address.
+3. If device A is not currently connected to device B, device A will
+   be ready to accept connection from device B in the background
+   (technically, doing Page Scan).
+4. Therefore, device C can initiate connection to device A
+   (because device A is doing Page Scan) and device A will accept the
+   connection because device A trusts device C's address which is the
+   same as device B's address.
+5. Device C won't be able to communicate at any high level Bluetooth
+   profile with device A because device A enforces that device C is
+   encrypted with their common Link Key, which device C doesn't have.
+   But device C can initiate pairing with device A with just-works
+   model without requiring user interaction (there is only pairing
+   notification). After pairing, device A now trusts device C with a
+   new different link key, common between device A and C.
+6. From now on, device A trusts device C, so device C can at anytime
+   connect to device A to do any kind of high-level hijacking, e.g.
+   speaker hijack or mouse/keyboard hijack.
 
-I did check dt_binfing_check with this series. Here is the complete
-build log and you can see the panels related to this series are
-checked fine. Let me know if I miss anything here?
+To fix this, reject the pairing if all the conditions below are met.
+- the pairing is initialized by peer
+- the authorization method is just-work
+- host already had the link key to the peer
 
-=E2=82=B9 make dt_binding_check
-arch/x86/Makefile:147: CONFIG_X86_X32 enabled but no binutils support
-  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
-/home/jagan/work/code/drm-misc/Documentation/devicetree/bindings/firmware/i=
-ntel,ixp4xx-network-processing-engine.yaml:
-ignoring, error in schema: properties: reg: minItems
-warning: no schema found in file:
-Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-=
-engine.yaml
-/home/jagan/work/code/drm-misc/Documentation/devicetree/bindings/interrupt-=
-controller/arm,gic-v3.yaml:
-ignoring, error in schema: properties: ppi-partitions:
-patternProperties: ^interrupt-partition-[0-9]+$
-warning: no schema found in file:
-Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
-/home/jagan/work/code/drm-misc/Documentation/devicetree/bindings/net/snps,d=
-wmac.yaml:
-ignoring, error in schema: allOf: 2: then
-warning: no schema found in file:
-Documentation/devicetree/bindings/net/snps,dwmac.yaml
-/home/jagan/work/code/drm-misc/Documentation/devicetree/bindings/regulator/=
-fixed-regulator.yaml:
-ignoring, error in schema: properties: compatible: enum: 0
-warning: no schema found in file:
-Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-/home/jagan/work/code/drm-misc/Documentation/devicetree/bindings/riscv/cpus=
-.yaml:
-ignoring, error in schema: properties: timebase-frequency: type
-warning: no schema found in file:
-Documentation/devicetree/bindings/riscv/cpus.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/pmu.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/rockchip.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/sirf.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/vt8500.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/calxeda.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/atmel-at91.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/sunxi.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/xilinx.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/moxart.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/stm32/stm32.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/spear.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/al,alpine.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/digicolor.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.=
-yaml
-  CHKDT   Documentation/devicetree/bindings/arm/altera.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/bitmain.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/nxp/lpc32xx.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/fsl.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/axxia.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/psci.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/qcom.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/zte.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/mediatek.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/socionext/milbeaut.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/ti/nspire.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/realtek.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/rda.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/actions.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/l2c2x0.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/renesas.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/tegra.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/amlogic.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao=
--secure.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/sti.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/primecell.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/cpus.yaml
-  CHKDT   Documentation/devicetree/bindings/bus/allwinner,sun50i-a64-de2.ya=
-ml
-  CHKDT   Documentation/devicetree/bindings/bus/allwinner,sun8i-a23-rsb.yam=
-l
-  CHKDT   Documentation/devicetree/bindings/clock/fixed-factor-clock.yaml
-  CHKDT   Documentation/devicetree/bindings/clock/milbeaut-clock.yaml
-  CHKDT   Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.y=
-aml
-  CHKDT   Documentation/devicetree/bindings/clock/imx8mn-clock.yaml
-  CHKDT   Documentation/devicetree/bindings/clock/fixed-clock.yaml
-  CHKDT   Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-cryp=
-to.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/ampire,am-480272h=
-3tmqw-t01h.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/innolux,ee101ia-0=
-1d.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/pda,91-00156-a0.y=
-aml
-  CHKDT   Documentation/devicetree/bindings/display/panel/sitronix,st7701.y=
-aml
-  CHKDT   Documentation/devicetree/bindings/display/panel/nec,nl8048hl11.ya=
-ml
-  CHKDT   Documentation/devicetree/bindings/display/panel/friendlyarm,hd702=
-e.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/bananapi,s070wv20=
--ct16.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/feiyang,fy07024di=
-26a30d.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/dlc,dlc0700yzg-1.=
-yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/koe,tx31d200vm0ba=
-a.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/mitsubishi,aa121t=
-d01.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/sony,acx424akp.ya=
-ml
-  CHKDT   Documentation/devicetree/bindings/display/panel/logicpd,type28.ya=
-ml
-  CHKDT   Documentation/devicetree/bindings/display/panel/tfc,s9700rtwv43tr=
--01b.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/ti,nspire.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/tpo,tpg110.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/rocktech,rk070er9=
-427.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/armadeus,st0700-a=
-dapt.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/raspberrypi,7inch=
--touchscreen.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/lvds.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/panel-common.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se=
-.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/mitsubishi,aa104x=
-d12.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/ronbo,rb070d30.ya=
-ml
-  CHKDT   Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
-  CHKDT   Documentation/devicetree/bindings/display/dsi-controller.yaml
-  CHKDT   Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
-  CHKDT   Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.y=
-aml
-  CHKDT   Documentation/devicetree/bindings/display/simple-framebuffer.yaml
-  CHKDT   Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mip=
-i-dsi.yaml
-  CHKDT   Documentation/devicetree/bindings/dma/dma-router.yaml
-  CHKDT   Documentation/devicetree/bindings/dma/dma-controller.yaml
-  CHKDT   Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.ya=
-ml
-  CHKDT   Documentation/devicetree/bindings/dma/allwinner,sun4i-a10-dma.yam=
-l
-  CHKDT   Documentation/devicetree/bindings/dma/dma-common.yaml
-  CHKDT   Documentation/devicetree/bindings/dma/allwinner,sun6i-a31-dma.yam=
-l
-  CHKDT   Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
-  CHKDT   Documentation/devicetree/bindings/example-schema.yaml
-  CHKDT   Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-p=
-rocessing-engine.yaml
-/home/jagan/work/code/drm-misc/Documentation/devicetree/bindings/firmware/i=
-ntel,ixp4xx-network-processing-engine.yaml:
-properties:reg:minItems: False schema does not allow 3
-/home/jagan/work/code/drm-misc/Documentation/devicetree/bindings/firmware/i=
-ntel,ixp4xx-network-processing-engine.yaml:
-properties:reg:maxItems: False schema does not allow 3
-Documentation/devicetree/bindings/Makefile:12: recipe for target
-'Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing=
--engine.example.dts'
-failed
-make[1]: *** [Documentation/devicetree/bindings/firmware/intel,ixp4xx-netwo=
-rk-processing-engine.example.dts]
-Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+Also create a debugfs option to permit the pairing even the
+conditions above are met.
+
+Signed-off-by: howardchung <howardchung@google.com>
+---
+
+ include/net/bluetooth/hci.h |  1 +
+ net/bluetooth/hci_core.c    | 47 +++++++++++++++++++++++++++++++++++++
+ net/bluetooth/hci_event.c   | 12 ++++++++++
+ 3 files changed, 60 insertions(+)
+
+diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+index 07b6ecedc6ce..4918b79baa41 100644
+--- a/include/net/bluetooth/hci.h
++++ b/include/net/bluetooth/hci.h
+@@ -283,6 +283,7 @@ enum {
+ 	HCI_FORCE_STATIC_ADDR,
+ 	HCI_LL_RPA_RESOLUTION,
+ 	HCI_CMD_PENDING,
++	HCI_PERMIT_JUST_WORK_REPAIR,
+ 
+ 	__HCI_NUM_FLAGS,
+ };
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index 9e19d5a3aac8..9014aa567e7b 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -172,10 +172,57 @@ static const struct file_operations vendor_diag_fops = {
+ 	.llseek		= default_llseek,
+ };
+ 
++static ssize_t permit_just_work_repair_read(struct file *file,
++					    char __user *user_buf,
++					    size_t count, loff_t *ppos)
++{
++	struct hci_dev *hdev = file->private_data;
++	char buf[3];
++
++	buf[0] = hci_dev_test_flag(hdev, HCI_PERMIT_JUST_WORK_REPAIR) ? 'Y'
++								      : 'N';
++	buf[1] = '\n';
++	buf[2] = '\0';
++	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
++}
++
++static ssize_t permit_just_work_repair_write(struct file *file,
++					     const char __user *user_buf,
++					     size_t count, loff_t *ppos)
++{
++	struct hci_dev *hdev = file->private_data;
++	char buf[32];
++	size_t buf_size = min(count, (sizeof(buf) - 1));
++	bool enable;
++
++	if (copy_from_user(buf, user_buf, buf_size))
++		return -EFAULT;
++
++	buf[buf_size] = '\0';
++	if (strtobool(buf, &enable))
++		return -EINVAL;
++
++	if (enable)
++		hci_dev_set_flag(hdev, HCI_PERMIT_JUST_WORK_REPAIR);
++	else
++		hci_dev_clear_flag(hdev, HCI_PERMIT_JUST_WORK_REPAIR);
++
++	return count;
++}
++
++static const struct file_operations permit_just_work_repair_fops = {
++	.open		= simple_open,
++	.read		= permit_just_work_repair_read,
++	.write		= permit_just_work_repair_write,
++	.llseek		= default_llseek,
++};
++
+ static void hci_debugfs_create_basic(struct hci_dev *hdev)
+ {
+ 	debugfs_create_file("dut_mode", 0644, hdev->debugfs, hdev,
+ 			    &dut_mode_fops);
++	debugfs_create_file("permit_just_work_repair", 0644, hdev->debugfs,
++			    hdev, &permit_just_work_repair_fops);
+ 
+ 	if (hdev->set_diag)
+ 		debugfs_create_file("vendor_diag", 0644, hdev->debugfs, hdev,
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 6ddc4a74a5e4..898e347e19e0 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -4539,6 +4539,18 @@ static void hci_user_confirm_request_evt(struct hci_dev *hdev,
+ 		goto unlock;
+ 	}
+ 
++	/* If there already exists link key in local host, terminate the
++	 * connection by default since the remote device could be malicious.
++	 * Permit the connection if permit_just_work_repair is enabled.
++	 */
++	if (!hci_dev_test_flag(hdev, HCI_PERMIT_JUST_WORK_REPAIR) &&
++	    hci_find_link_key(hdev, &ev->bdaddr)) {
++		BT_DBG("Rejecting request: local host already have link key");
++		hci_send_cmd(hdev, HCI_OP_USER_CONFIRM_NEG_REPLY,
++			     sizeof(ev->bdaddr), &ev->bdaddr);
++		goto unlock;
++	}
++
+ 	/* If no side requires MITM protection; auto-accept */
+ 	if ((!loc_mitm || conn->remote_cap == HCI_IO_NO_INPUT_OUTPUT) &&
+ 	    (!rem_mitm || conn->io_capability == HCI_IO_NO_INPUT_OUTPUT)) {
+-- 
+2.24.1.735.g03f4e72817-goog
+
