@@ -2,82 +2,109 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF0BC33C9B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA2FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 375F92081E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:10:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="e5OsSmbx"
+	by mail.kernel.org (Postfix) with ESMTP id 86C102072E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:10:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578316225;
+	bh=VYar+wnhB1pPVCw8DwA8lwmrGAqxnuK5CJyhpIoxUqU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oNt3B+IHsEKjdpiExQCIR1frGf7RrXZ9UUZnF6TGmh42gQc9pvwRNQuCPpiNsI8Np
+	 kI1Zaj6uVf0IZeY0+1xao0nzDNsMZqAMPP7C3WoQA0RFgzRJycvxfAqhflA+NmUeGE
+	 tpvZIXuls52BIdHrGqo7hT5QDSk2oA7saDJUv08E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgAFNKA (ORCPT
+        id S1726647AbgAFNKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 08:10:00 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:49886 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726467AbgAFNKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 08:10:00 -0500
-Received: from zn.tnic (p200300EC2F270F00D01C7B5BCA520F19.dip0.t-ipconnect.de [IPv6:2003:ec:2f27:f00:d01c:7b5b:ca52:f19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DCC231EC03AD;
-        Mon,  6 Jan 2020 14:09:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1578316198;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=lWa/DEYSm8nKdl5gwoKmWpRa3Mo12FbsP/q+yLT9OE8=;
-        b=e5OsSmbxS1duTWmwLnWMSnKCG9ubd+hCPC/562BMf7jyjbJG9PU81rWjwioPqF41trISQt
-        1hni2fgKsrdUTR0anu2f5/NjCayKQdBvteU72sUQKnz1jdEAd+xHqoDn8NybNJ6MJVIZoz
-        3Squ+v/orzb+M6TjU9wEE8Qvcy1J0gw=
-Date:   Mon, 6 Jan 2020 14:09:49 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Bhaskar Upadhaya <bhaskar.upadhaya.linux@gmail.com>
-Cc:     Bhaskar Upadhaya <bupadhaya@marvell.com>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-edac@vger.kernel.org, lenb@kernel.org, rafael@kernel.org,
-        gkulkarni@marvell.com, rrichter@marvell.com
-Subject: Re: [RFC PATCH] apei/ghes: fix ghes_poll_func by registering in
- non-deferrable mode
-Message-ID: <20200106130949.GD12238@zn.tnic>
-References: <1576652618-27017-1-git-send-email-bupadhaya@marvell.com>
- <20200102180130.GG8345@zn.tnic>
- <CAEYJA6oXTxTmJEji5_Hup2oB+GrgGnmSTiS-nNuzbNzGJ9VESA@mail.gmail.com>
+        Mon, 6 Jan 2020 08:10:24 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55794 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgAFNKY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 08:10:24 -0500
+Received: by mail-wm1-f66.google.com with SMTP id q9so14886680wmj.5;
+        Mon, 06 Jan 2020 05:10:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Vu9QJE4YseoFoORr+glUnjER2lum2n5Fmao9NtM3PIE=;
+        b=Qmry3npL+uon2eJcq/7lWfUMhGOxfaYkcOlq8is/UEYqFdbferfFuKRHJZ675o3jrd
+         Y61+wgDSJPdA2QAQ0Rc+y+A3nveYHZ3D5sPZqZhBslXiPv3gtTWMwN7A+rcQa+fjWP9j
+         YkHRM5Ge/kyJggZhKUKzDo7ubTAN2PYSRcNxuy4hqcpaE0ldf8PSlUMVNeXQSDDc22r2
+         Eio8o2M9j2vOZx/IDlk6Tb758rvqlZ6hU/bcJqvA5oJamegJwgzRtlHFBS/G0joR0G5r
+         4k3SifP/bol/7q3ebUzDZEEnKHOeD091OX0eIP2EG+cJPAIBkBIMp1tlr7eepAEIAX57
+         k6cA==
+X-Gm-Message-State: APjAAAUvewkARNni9YRnnjOWZ4szCyXNssJaVV5fkbW8nwJJ4Xp/0IT1
+        RBdeL/CLaAuiOUeVRIEDdNAgwg4a
+X-Google-Smtp-Source: APXvYqy98p6Gbv57CrgSCBw3//qlqbjd/XfXAeKhQJgUAMjp7jA95LuY+c3vWDw4ljcd4TFaL06olQ==
+X-Received: by 2002:a1c:4d03:: with SMTP id o3mr34937526wmh.164.1578316222081;
+        Mon, 06 Jan 2020 05:10:22 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id b137sm23650193wme.26.2020.01.06.05.10.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 05:10:21 -0800 (PST)
+Date:   Mon, 6 Jan 2020 14:10:20 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Hui Zhu <teawater@gmail.com>, hannes@cmpxchg.org,
+        vdavydov.dev@gmail.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, Hui Zhu <teawaterz@linux.alibaba.com>
+Subject: Re: [RFC] memcg: Add swappiness to cgroup2
+Message-ID: <20200106131020.GC9198@dhcp22.suse.cz>
+References: <1577252208-32419-1-git-send-email-teawater@gmail.com>
+ <20191225140546.GA311630@chrisdown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEYJA6oXTxTmJEji5_Hup2oB+GrgGnmSTiS-nNuzbNzGJ9VESA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191225140546.GA311630@chrisdown.name>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 04:33:19PM +0530, Bhaskar Upadhaya wrote:
-> Definition of poll interval as per spec (referred ACPI 6.3):
-> "Indicates the poll interval in milliseconds OSPM should use to
-> periodically check the error source for the presence of an error
-> condition."
+On Wed 25-12-19 14:05:46, Chris Down wrote:
+> Hi Hui,
+> 
+> Hui Zhu writes:
+> > Even if cgroup2 has swap.max, swappiness is still a very useful config.
+> > This commit add swappiness to cgroup2.
+> 
+> When submitting patches like this, it's important to explain *why* you want
+> it and what evidence there is. For example, how should one use this to
+> compose a reasonable system? Why aren't existing protection controls
+> sufficient for your use case? Where's the data?
 
-Please add that...
+Agreed!
 
-> We are observing an issue in our ThunderX2 platforms wherein
-> ghes_poll_func is not called within poll interval when timer is
-> configured with TIMER_DEFERRABLE flag(For NO_HZ kernel) and hence we
-> are losing the error records.
+> Also, why would swappiness be something cgroup-specific instead of
+> hardware-specific, when desired swappiness is really largely about the
+> hardware you have in your system?
 
-... and that to your commit message then, so that it is crystal clear
-*why* you're making this change.
+I am not really sure I agree here though. Swappiness has been
+traditionally more about workload because it has been believed that it
+is a preference of the workload whether the anonymous or disk based
+memory is more important. Whether this is a good interface is debatable
+of course but time has shown that it is extremely hard to tune.
 
-Thx.
+Not to mention that swappiness has been ignored for years for vast
+majority workloads because of the highly biased file LRU reclaim.
 
+At the time when cgroup v2 was introduced it'd been claimed that we
+do not want to copy the v1 swappiness logic because of the semantic
+shortcomings and that a better tuning should developed in future
+replacing even the global knob. AFAIR Johannes wanted to have a refault
+vs. cost based file/anon balancing.
+
+The lack of a sensible hierarchical behavior has been even a stronger
+argument.
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Michal Hocko
+SUSE Labs
