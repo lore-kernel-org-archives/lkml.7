@@ -2,119 +2,79 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB6BC32771
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C2FC32771
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB54020848
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:45:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D048821775
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:47:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Hbr1iiIw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgAFGp0 (ORCPT
+        id S1726498AbgAFGri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 01:45:26 -0500
-Received: from mga12.intel.com ([192.55.52.136]:46674 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbgAFGpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 01:45:25 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jan 2020 22:45:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,401,1571727600"; 
-   d="scan'208";a="420613782"
-Received: from cliu38-mobl3.sh.intel.com (HELO 286ab234718b.sh.intel.com) ([10.239.147.26])
-  by fmsmga005.fm.intel.com with ESMTP; 05 Jan 2020 22:45:24 -0800
-From:   Chuansheng Liu <chuansheng.liu@intel.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     tony.luck@intel.com, bp@alien8.de, tglx@linutronix.de,
-        mingo@redhat.com, hpa@zytor.com, chuansheng.liu@intel.com
-Subject: [PATCH] x86/mce/therm_throt: Fix the access of uninitialized therm_work
-Date:   Mon,  6 Jan 2020 06:41:55 +0000
-Message-Id: <20200106064155.64-1-chuansheng.liu@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 6 Jan 2020 01:47:38 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:57766 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726294AbgAFGri (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 01:47:38 -0500
+X-UUID: 3c523dba18a54c0bb9c23614c8d4a172-20200106
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=aYAZgI6ryqNleIeTmQWVE96vhfch+9yXx43Fz3GXDe0=;
+        b=Hbr1iiIwM5x+W94EmR46cxymgPfb+HIHweivpVQEJJZCEcrIrBzE+73oyEyn56Qh/CkstUDm8rnDdScizia4Z69tQOZxnI5xBM7ATIZFQrFs7mFrpjbWsWCJ8tSzTXRX6zeUnsTr3GcBEAeRqKEhi+3I3aJqGwilpPKk1jDl8LE=;
+X-UUID: 3c523dba18a54c0bb9c23614c8d4a172-20200106
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 506341859; Mon, 06 Jan 2020 14:47:33 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by mtkexhb02.mediatek.inc
+ (172.21.101.103) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 6 Jan
+ 2020 14:47:41 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 6 Jan 2020 14:46:02 +0800
+Message-ID: <1578293251.3044.1.camel@mtksdaap41>
+Subject: Re: [PATCH] drm/mediatek: fix indentation
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Fabien Parent <fparent@baylibre.com>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <p.zabel@pengutronix.de>,
+        <airlied@linux.ie>, <daniel@ffwll.ch>, <matthias.bgg@gmail.com>
+Date:   Mon, 6 Jan 2020 14:47:31 +0800
+In-Reply-To: <20200103142445.55036-1-fparent@baylibre.com>
+References: <20200103142445.55036-1-fparent@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In ICL platform, it is easy to hit bootup failure with panic
-in thermal interrupt handler during early bootup stage.
-
-Such issue makes my platform almost can not boot up with
-latest kernel code.
-
-The call stack is like:
-kernel BUG at kernel/timer/timer.c:1152!
-
-Call Trace:
-__queue_delayed_work
-queue_delayed_work_on
-therm_throt_process
-intel_thermal_interrupt
-...
-
-When one CPU is up, the irq is enabled prior to CPU UP
-notification which will then initialize therm_worker.
-Such race will cause the posssibility that interrupt
-handler therm_throt_process() accesses uninitialized
-therm_work, then system hit panic at very early bootup
-stage.
-
-In my ICL platform, it can be reproduced in several times
-of reboot stress. With this fix, the system keeps alive
-for more than 200 times of reboot stress.
-
-Signed-off-by: Chuansheng Liu <chuansheng.liu@intel.com>
----
- arch/x86/kernel/cpu/mce/therm_throt.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/mce/therm_throt.c b/arch/x86/kernel/cpu/mce/therm_throt.c
-index b38010b541d6..7320eb3ac029 100644
---- a/arch/x86/kernel/cpu/mce/therm_throt.c
-+++ b/arch/x86/kernel/cpu/mce/therm_throt.c
-@@ -86,6 +86,7 @@ struct _thermal_state {
- 	unsigned long		total_time_ms;
- 	bool			rate_control_active;
- 	bool			new_event;
-+	bool			therm_work_active;
- 	u8			level;
- 	u8			sample_index;
- 	u8			sample_count;
-@@ -359,7 +360,9 @@ static void therm_throt_process(bool new_event, int event, int level)
- 
- 		state->baseline_temp = temp;
- 		state->last_interrupt_time = now;
--		schedule_delayed_work_on(this_cpu, &state->therm_work, THERM_THROT_POLL_INTERVAL);
-+		if (state->therm_work_active)
-+			schedule_delayed_work_on(this_cpu, &state->therm_work,
-+					THERM_THROT_POLL_INTERVAL);
- 	} else if (old_event && state->last_interrupt_time) {
- 		unsigned long throttle_time;
- 
-@@ -473,7 +476,8 @@ static int thermal_throttle_online(unsigned int cpu)
- 
- 	INIT_DELAYED_WORK(&state->package_throttle.therm_work, throttle_active_work);
- 	INIT_DELAYED_WORK(&state->core_throttle.therm_work, throttle_active_work);
--
-+	state->package_throttle.therm_work_active = true;
-+	state->core_throttle.therm_work_active = true;
- 	return thermal_throttle_add_dev(dev, cpu);
- }
- 
-@@ -482,6 +486,8 @@ static int thermal_throttle_offline(unsigned int cpu)
- 	struct thermal_state *state = &per_cpu(thermal_state, cpu);
- 	struct device *dev = get_cpu_device(cpu);
- 
-+	state->package_throttle.therm_work_active = false;
-+	state->core_throttle.therm_work_active = false;
- 	cancel_delayed_work(&state->package_throttle.therm_work);
- 	cancel_delayed_work(&state->core_throttle.therm_work);
- 
--- 
-2.17.1
+SGksIEZhYmllbjoNCg0KT24gRnJpLCAyMDIwLTAxLTAzIGF0IDE1OjI0ICswMTAwLCBGYWJpZW4g
+UGFyZW50IHdyb3RlOg0KPiBGaXggaW5kZW50YXRpb24gaW4gdGhlIE1ha2VmaWxlIGJ5IHJlcGxh
+Y2luZyBzcGFjZXMgd2l0aCB0YWJzLg0KPiANCg0KQXBwbGllZCB0byBtZWRpYXRlay1kcm0tbmV4
+dC01LjYgWzFdLCB0aGFua3MuDQoNClsxXQ0KaHR0cHM6Ly9naXRodWIuY29tL2NraHUtbWVkaWF0
+ZWsvbGludXguZ2l0LXRhZ3MvY29tbWl0cy9tZWRpYXRlay1kcm0tbmV4dC01LjYNCg0KUmVnYXJk
+cywNCmNLDQoNCj4gU2lnbmVkLW9mZi1ieTogRmFiaWVuIFBhcmVudCA8ZnBhcmVudEBiYXlsaWJy
+ZS5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL01ha2VmaWxlIHwgMiAr
+LQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0K
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL01ha2VmaWxlIGIvZHJpdmVy
+cy9ncHUvZHJtL21lZGlhdGVrL01ha2VmaWxlDQo+IGluZGV4IDgwNjdhNGJlODMxMS4uYjJiNTIz
+OTEzMTY0IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvTWFrZWZpbGUN
+Cj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL01ha2VmaWxlDQo+IEBAIC0yMSw3ICsy
+MSw3IEBAIG9iai0kKENPTkZJR19EUk1fTUVESUFURUspICs9IG1lZGlhdGVrLWRybS5vDQo+ICBt
+ZWRpYXRlay1kcm0taGRtaS1vYmpzIDo9IG10a19jZWMubyBcDQo+ICAJCQkgIG10a19oZG1pLm8g
+XA0KPiAgCQkJICBtdGtfaGRtaV9kZGMubyBcDQo+IC0gICAgICAgICAgICAgICAgICAgICAgICAg
+IG10a19tdDI3MDFfaGRtaV9waHkubyBcDQo+ICsJCQkgIG10a19tdDI3MDFfaGRtaV9waHkubyBc
+DQo+ICAJCQkgIG10a19tdDgxNzNfaGRtaV9waHkubyBcDQo+ICAJCQkgIG10a19oZG1pX3BoeS5v
+DQo+ICANCg0K
 
