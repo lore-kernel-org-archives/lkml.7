@@ -4,66 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA2CC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9142DC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3EC920731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FA03207FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:50:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KHxFc1ac"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ISEN+lju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgAFPuT (ORCPT
+        id S1727207AbgAFPuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 10:50:19 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44848 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbgAFPuP (ORCPT
+        Mon, 6 Jan 2020 10:50:22 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46060 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726927AbgAFPuU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 10:50:15 -0500
-Received: by mail-lj1-f195.google.com with SMTP id u71so51376504lje.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 07:50:13 -0800 (PST)
+        Mon, 6 Jan 2020 10:50:20 -0500
+Received: by mail-lj1-f193.google.com with SMTP id j26so51358894ljc.12
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 07:50:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=uwOaY4uZyAiVBXTrHS/QGxhnoJkW9mn9qhM7V3ufkpk=;
-        b=KHxFc1acztpEL6v0E3hEeUOhz7P7Mj6iVxoVFq1cmyNoOZLOSG9wYZbr0x2f8er4Ih
-         NRa2y2dn1ko40JsD887RuxbyL0Q90rlJMWTXoXrZdbi4FaVRKE8M9kS4nLTwqBMoFFmk
-         tITWga8EuOdkeKi6zctlafd15uAA1s3X9a1/Ggs/FzCX4KXalFKHZX14MYyx0/NKhKae
-         TmZUKD+kTA05uqwADKx6mk9N6o9iflvXD1/mhp2WCcf6WnHSFxfsyjC5i9pqBbJUL5FU
-         kJ4Oudv3HRmXN99kaTFNPCe1M6SD8vNXhwC2Fh5S40W4SY5DtICeJlhns3q5hlQ47tjL
-         Jvkg==
+        bh=bwAT2XWcUWTIAz8ovsKA2zMF8ldaoI73jdUGsE0/j7I=;
+        b=ISEN+ljul5zbwEs37aMK7qGdMjDfHDaHyakglYuS0czKpb1pi83R/4dNAChWgp1ZTQ
+         HI+gOII1eVo35iHxXLz225Fs/5L8sTyuLI0fZLTShiuqdrTeFRWZqjUM0naIrt4Gq+kY
+         LGOJLUQggMt65g7RLc7WYEzhHDTi0dr/6YEE9AUh9II69aISX160tReVOIdlFinkUhE2
+         oAJSEm1VBuu4jMYw944VHkKcUGT8WzuyYVFBYeLk6Q6PCcUebld+t1fDDbcemMM2cPTH
+         cHS8TbjY1CGf9Cih9GwVr7A+wlNGRnshwBR2PApsu/X2kUcXu4Ux9qnZcBEenCOFx7lQ
+         5rmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=uwOaY4uZyAiVBXTrHS/QGxhnoJkW9mn9qhM7V3ufkpk=;
-        b=Rkw3C5TGFu/p4V/n2ZF2ccktflgKwwBBg6ENVud9cUB2EVSBNX8SCU7ZMEDk1UdzNb
-         S1ZO1mvNVdSAzXSPq0fREY8+wreh8+PTxBW8Fxbt0ekhPvOZz6kjBDUoXXsXVt+je9qW
-         +NYz3jlBCx9iq2NsBOOPIklxhyujweT7cQ8ioa3DWeNYBWhrfXHZKRyR+3jylUjTGjsT
-         GhI8KSG6WmB+EyoIZyNVfZhx387DlaDUIGINCxAempAY3KysjzJZ9XHXn1ewv8thER/l
-         fAyYoxSt0Hig3MTlCqXAHQzISigcS7f8q2kE8ajVEXSqgdqB+paJOlRYiO7Gn5I0rOAu
-         ZAwg==
-X-Gm-Message-State: APjAAAWXv7FB+X2WbkuiHIPv0n/emxWHo8tojgC4cBUBhN3LAx4wJX1V
-        lEBIqtZMWR82CSOeRe6sH0G1CQ==
-X-Google-Smtp-Source: APXvYqz7OYRw3Ub9jV6StA2wAvKU/WIJM7s1tLntdPC21QMwcA6Igw6WJgoM8nr7ZsNAO7H5eeijaA==
-X-Received: by 2002:a2e:b0e3:: with SMTP id h3mr11695964ljl.56.1578325813029;
-        Mon, 06 Jan 2020 07:50:13 -0800 (PST)
+        bh=bwAT2XWcUWTIAz8ovsKA2zMF8ldaoI73jdUGsE0/j7I=;
+        b=jrLsKOl52nfIYUG9I9q65MHRMOrYvrnKjadNmvrxjnO5W2uLelxqzzVMRblhlL+h1f
+         n4H/dUlIfChg89+DL/AAQcQik47+tP+vddBSPnqb23pv/z9lGZGhffIdnSywwpuQgU57
+         1yWyNuvoPtsc/92zeCWKz3CnNss4ZxWMH0Vf16VnxNevjih2OhKUNXUaM5sT9nP4Cd9T
+         iW8QiuPDlo73h7E5M2RceTq7BwvT6Pna9H2V1vrwwU48EncWbhUa54ZImyGmbTMDRiA0
+         gYpQBh4A3MI3HY7V1xqRCv4dj0jC7n8/PRm9NQmGYhaLf3/vEk59wNrCPDobShjQUxaG
+         tIYA==
+X-Gm-Message-State: APjAAAWw/vhVU+3i1QEfw8h4rQDyMAeSpuhiacEspAgRRVX/5ULFOAZp
+        j+Cq0wob5jxwHN1ideVonwSD4w==
+X-Google-Smtp-Source: APXvYqyfN/Txlv5OTSZXcQJltcuohomKJz0luNwo/dCj7iu5oNleIUxXbdzW6ldd4Sou6eeBxAQORg==
+X-Received: by 2002:a2e:81d0:: with SMTP id s16mr57815026ljg.166.1578325817404;
+        Mon, 06 Jan 2020 07:50:17 -0800 (PST)
 Received: from localhost.localdomain ([37.157.136.193])
-        by smtp.gmail.com with ESMTPSA id x84sm29388259lfa.97.2020.01.06.07.50.11
+        by smtp.gmail.com with ESMTPSA id x84sm29388259lfa.97.2020.01.06.07.50.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 07:50:12 -0800 (PST)
+        Mon, 06 Jan 2020 07:50:16 -0800 (PST)
 From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
 To:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-media@vger.kernel.org, devicetree@vger.kernel.org
 Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org,
-        Aniket Masule <amasule@codeaurora.org>,
         Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v4 05/12] media: venus: vdec: handle 10bit bitstreams
-Date:   Mon,  6 Jan 2020 17:49:22 +0200
-Message-Id: <20200106154929.4331-6-stanimir.varbanov@linaro.org>
+Subject: [PATCH v4 07/12] dt-bindings: media: venus: Convert msm8996 to DT schema
+Date:   Mon,  6 Jan 2020 17:49:24 +0200
+Message-Id: <20200106154929.4331-8-stanimir.varbanov@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200106154929.4331-1-stanimir.varbanov@linaro.org>
 References: <20200106154929.4331-1-stanimir.varbanov@linaro.org>
@@ -72,218 +71,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aniket Masule <amasule@codeaurora.org>
+Convert qcom,msm8996-venus Venus binding to DT schema.
 
-Handle 10bit video streams in the decoder by using dithering, i.e
-the decoder output buffers will be in 8bit format.
-
-The runtime handling is implemented by sending v4l2 event to
-userspace application, then the application should stop the
-streaming on capture queue and initiate format negotiation, and
-start streaming again.
-
-Signed-off-by: Aniket Masule <amasule@codeaurora.org>
-Co-developed-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 ---
- drivers/media/platform/qcom/venus/core.h      |  1 +
- drivers/media/platform/qcom/venus/helpers.c   | 97 +++++++++++++++++++
- .../media/platform/qcom/venus/hfi_helper.h    |  5 +
- drivers/media/platform/qcom/venus/vdec.c      |  8 +-
- 4 files changed, 110 insertions(+), 1 deletion(-)
+ .../bindings/media/qcom,msm8996-venus.yaml    | 153 ++++++++++++++++++
+ 1 file changed, 153 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/qcom,msm8996-venus.yaml
 
-diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-index bfbd4a1ba089..55bdeda780bc 100644
---- a/drivers/media/platform/qcom/venus/core.h
-+++ b/drivers/media/platform/qcom/venus/core.h
-@@ -382,6 +382,7 @@ struct venus_inst {
- 	u32 session_type;
- 	union hfi_get_property hprop;
- 	unsigned int core_acquired: 1;
-+	unsigned int bit_depth;
- };
- 
- #define IS_V1(core)	((core)->res->hfi_version == HFI_VERSION_1XX)
-diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-index 043e0d8705a8..a29662405e3a 100644
---- a/drivers/media/platform/qcom/venus/helpers.c
-+++ b/drivers/media/platform/qcom/venus/helpers.c
-@@ -626,6 +626,76 @@ static u32 get_framesize_raw_nv12_ubwc(u32 width, u32 height)
- 		     max(extradata, y_stride * 48), SZ_4K);
- }
- 
-+static u32 get_framesize_raw_p010(u32 width, u32 height)
-+{
-+	u32 y_plane, uv_plane, y_stride, uv_stride, y_sclines, uv_sclines;
+diff --git a/Documentation/devicetree/bindings/media/qcom,msm8996-venus.yaml b/Documentation/devicetree/bindings/media/qcom,msm8996-venus.yaml
+new file mode 100644
+index 000000000000..3d42fa83d31b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/qcom,msm8996-venus.yaml
+@@ -0,0 +1,153 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +
-+	y_stride = ALIGN(width * 2, 256);
-+	uv_stride = ALIGN(width * 2, 256);
-+	y_sclines = ALIGN(height, 32);
-+	uv_sclines = ALIGN((height + 1) >> 1, 16);
-+	y_plane = y_stride * y_sclines;
-+	uv_plane = uv_stride * uv_sclines;
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/media/qcom,msm8996-venus.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+	return ALIGN((y_plane + uv_plane), SZ_4K);
-+}
++title: Qualcomm Venus video encode and decode accelerators
 +
-+static u32 get_framesize_raw_p010_ubwc(u32 width, u32 height)
-+{
-+	u32 y_stride, uv_stride, y_sclines, uv_sclines;
-+	u32 y_ubwc_plane, uv_ubwc_plane;
-+	u32 y_meta_stride, y_meta_scanlines;
-+	u32 uv_meta_stride, uv_meta_scanlines;
-+	u32 y_meta_plane, uv_meta_plane;
-+	u32 size;
++maintainers:
++  - Stanimir Varbanov <stanimir.varbanov@linaro.org>
 +
-+	y_stride = ALIGN(width * 2, 256);
-+	uv_stride = ALIGN(width * 2, 256);
-+	y_sclines = ALIGN(height, 16);
-+	uv_sclines = ALIGN((height + 1) >> 1, 16);
++description: |
++  The Venus IP is a video encode and decode accelerator present
++  on Qualcomm platforms
 +
-+	y_ubwc_plane = ALIGN(y_stride * y_sclines, SZ_4K);
-+	uv_ubwc_plane = ALIGN(uv_stride * uv_sclines, SZ_4K);
-+	y_meta_stride = ALIGN(DIV_ROUND_UP(width, 32), 64);
-+	y_meta_scanlines = ALIGN(DIV_ROUND_UP(height, 4), 16);
-+	y_meta_plane = ALIGN(y_meta_stride * y_meta_scanlines, SZ_4K);
-+	uv_meta_stride = ALIGN(DIV_ROUND_UP((width + 1) >> 1, 16), 64);
-+	uv_meta_scanlines = ALIGN(DIV_ROUND_UP((height + 1) >> 1, 4), 16);
-+	uv_meta_plane = ALIGN(uv_meta_stride * uv_meta_scanlines, SZ_4K);
++properties:
++  compatible:
++    const: qcom,msm8996-venus
 +
-+	size = y_ubwc_plane + uv_ubwc_plane + y_meta_plane + uv_meta_plane;
++  reg:
++    maxItems: 1
 +
-+	return ALIGN(size, SZ_4K);
-+}
++  interrupts:
++    maxItems: 1
 +
-+static u32 get_framesize_raw_yuv420_tp10_ubwc(u32 width, u32 height)
-+{
-+	u32 y_stride, uv_stride, y_sclines, uv_sclines;
-+	u32 y_ubwc_plane, uv_ubwc_plane;
-+	u32 y_meta_stride, y_meta_scanlines;
-+	u32 uv_meta_stride, uv_meta_scanlines;
-+	u32 y_meta_plane, uv_meta_plane;
-+	u32 size;
++  power-domains:
++    maxItems: 1
 +
-+	y_stride = ALIGN(ALIGN(width, 192) * 4 / 3, 256);
-+	uv_stride = ALIGN(ALIGN(width, 192) * 4 / 3, 256);
-+	y_sclines = ALIGN(height, 16);
-+	uv_sclines = ALIGN((height + 1) >> 1, 16);
++  clocks:
++    maxItems: 4
 +
-+	y_ubwc_plane = ALIGN(y_stride * y_sclines, SZ_4K);
-+	uv_ubwc_plane = ALIGN(uv_stride * uv_sclines, SZ_4K);
-+	y_meta_stride = ALIGN(DIV_ROUND_UP(width, 48), 64);
-+	y_meta_scanlines = ALIGN(DIV_ROUND_UP(height, 4), 16);
-+	y_meta_plane = ALIGN(y_meta_stride * y_meta_scanlines, SZ_4K);
-+	uv_meta_stride = ALIGN(DIV_ROUND_UP((width + 1) >> 1, 24), 64);
-+	uv_meta_scanlines = ALIGN(DIV_ROUND_UP((height + 1) >> 1, 4), 16);
-+	uv_meta_plane = ALIGN(uv_meta_stride * uv_meta_scanlines, SZ_4K);
++  clock-names:
++    items:
++      - const: core
++      - const: iface
++      - const: bus
++      - const: mbus
 +
-+	size = y_ubwc_plane + uv_ubwc_plane + y_meta_plane + uv_meta_plane;
++  iommus:
++    maxItems: 20
 +
-+	return ALIGN(size, SZ_4K);
-+}
++  memory-region:
++    maxItems: 1
 +
- u32 venus_helper_get_framesz_raw(u32 hfi_fmt, u32 width, u32 height)
- {
- 	switch (hfi_fmt) {
-@@ -634,6 +704,12 @@ u32 venus_helper_get_framesz_raw(u32 hfi_fmt, u32 width, u32 height)
- 		return get_framesize_raw_nv12(width, height);
- 	case HFI_COLOR_FORMAT_NV12_UBWC:
- 		return get_framesize_raw_nv12_ubwc(width, height);
-+	case HFI_COLOR_FORMAT_P010:
-+		return get_framesize_raw_p010(width, height);
-+	case HFI_COLOR_FORMAT_P010_UBWC:
-+		return get_framesize_raw_p010_ubwc(width, height);
-+	case HFI_COLOR_FORMAT_YUV420_TP10_UBWC:
-+		return get_framesize_raw_yuv420_tp10_ubwc(width, height);
- 	default:
- 		return 0;
- 	}
-@@ -1235,6 +1311,27 @@ int venus_helper_get_out_fmts(struct venus_inst *inst, u32 v4l2_fmt,
- 	if (!caps)
- 		return -EINVAL;
- 
-+	if (inst->bit_depth == VIDC_BITDEPTH_10 &&
-+	    inst->session_type == VIDC_SESSION_TYPE_DEC) {
-+		found_ubwc =
-+			find_fmt_from_caps(caps, HFI_BUFFER_OUTPUT,
-+					   HFI_COLOR_FORMAT_YUV420_TP10_UBWC);
-+		found = find_fmt_from_caps(caps, HFI_BUFFER_OUTPUT2,
-+					   HFI_COLOR_FORMAT_NV12);
-+		if (found_ubwc && found) {
-+			/*
-+			 * Hard-code DPB buffers to be 10bit UBWC and decoder
-+			 * output buffers in 8bit NV12 until V4L2 is able to
-+			 * expose compressed/tiled formats to applications.
-+			 */
-+			*out_fmt = HFI_COLOR_FORMAT_YUV420_TP10_UBWC;
-+			*out2_fmt = HFI_COLOR_FORMAT_NV12;
-+			return 0;
-+		}
++  video-decoder:
++    type: object
 +
-+		return -EINVAL;
-+	}
++    properties:
++      compatible:
++        const: venus-decoder
 +
- 	if (ubwc) {
- 		ubwc_fmt = fmt | HFI_COLOR_FORMAT_UBWC_BASE;
- 		found_ubwc = find_fmt_from_caps(caps, HFI_BUFFER_OUTPUT,
-diff --git a/drivers/media/platform/qcom/venus/hfi_helper.h b/drivers/media/platform/qcom/venus/hfi_helper.h
-index 2a47f6c0a07a..0b4597c73fb5 100644
---- a/drivers/media/platform/qcom/venus/hfi_helper.h
-+++ b/drivers/media/platform/qcom/venus/hfi_helper.h
-@@ -793,6 +793,9 @@ struct hfi_h264_vui_timing_info {
- 	u32 time_scale;
- };
- 
-+#define VIDC_BITDEPTH_8		0
-+#define VIDC_BITDEPTH_10	1
++      clocks:
++        maxItems: 1
 +
- struct hfi_bit_depth {
- 	u32 buffer_type;
- 	u32 bit_depth;
-@@ -841,8 +844,10 @@ struct hfi_extradata_input_crop {
- #define HFI_COLOR_FORMAT_10_BIT_BASE		0x4000
- 
- #define HFI_COLOR_FORMAT_YUV420_TP10		0x4002
-+#define HFI_COLOR_FORMAT_P010			0x4003
- #define HFI_COLOR_FORMAT_NV12_UBWC		0x8002
- #define HFI_COLOR_FORMAT_YUV420_TP10_UBWC	0xc002
-+#define HFI_COLOR_FORMAT_P010_UBWC		0xc003
- #define HFI_COLOR_FORMAT_RGBA8888_UBWC		0x8010
- 
- struct hfi_uncompressed_format_select {
-diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-index 7b7a4f3377cf..eeff0d8e46b2 100644
---- a/drivers/media/platform/qcom/venus/vdec.c
-+++ b/drivers/media/platform/qcom/venus/vdec.c
-@@ -1172,7 +1172,7 @@ static void vdec_buf_done(struct venus_inst *inst, unsigned int buf_type,
- static void vdec_event_change(struct venus_inst *inst,
- 			      struct hfi_event_data *ev_data, bool sufficient)
- {
--	static const struct v4l2_event ev = {
-+	struct v4l2_event ev = {
- 		.type = V4L2_EVENT_SOURCE_CHANGE,
- 		.u.src_change.changes = V4L2_EVENT_SRC_CH_RESOLUTION };
- 	struct device *dev = inst->core->dev_dec;
-@@ -1193,6 +1193,11 @@ static void vdec_event_change(struct venus_inst *inst,
- 	inst->out_width = ev_data->width;
- 	inst->out_height = ev_data->height;
- 
-+	if (inst->bit_depth != ev_data->bit_depth) {
-+		inst->bit_depth = ev_data->bit_depth;
-+		ev.u.src_change.changes |= V4L2_EVENT_SRC_CH_COLOR_DEPTH;
-+	}
++      clock-names:
++        items:
++          - const: core
 +
- 	dev_dbg(dev, "event %s sufficient resources (%ux%u)\n",
- 		sufficient ? "" : "not", ev_data->width, ev_data->height);
- 
-@@ -1340,6 +1345,7 @@ static int vdec_open(struct file *file)
- 	inst->buf_count = 0;
- 	inst->clk_data.core_id = VIDC_CORE_ID_DEFAULT;
- 	inst->core_acquired = false;
-+	inst->bit_depth = VIDC_BITDEPTH_8;
- 	init_waitqueue_head(&inst->reconf_wait);
- 	venus_helper_init_instance(inst);
- 
++      power-domains:
++        maxItems: 1
++
++    required:
++      - compatible
++      - clocks
++      - clock-names
++      - power-domains
++
++    additionalProperties: false
++
++  video-encoder:
++    type: object
++
++    properties:
++      compatible:
++        const: venus-encoder
++
++      clocks:
++        maxItems: 1
++
++      clock-names:
++        items:
++          - const: core
++
++      power-domains:
++        maxItems: 1
++
++    required:
++      - compatible
++      - clocks
++      - clock-names
++      - power-domains
++
++    additionalProperties: false
++
++  video-firmware:
++    type: object
++
++    description: |
++      Firmware subnode is needed when the platform does not
++      have TrustZone.
++
++    properties:
++      iommus:
++        maxItems: 1
++
++    required:
++      - iommus
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - power-domains
++  - clocks
++  - clock-names
++  - iommus
++  - memory-region
++  - video-decoder
++  - video-encoder
++
++examples:
++  - |
++        #include <dt-bindings/interrupt-controller/arm-gic.h>
++        #include <dt-bindings/clock/qcom,mmcc-msm8996.h>
++
++        video-codec@c00000 {
++                compatible = "qcom,msm8996-venus";
++                reg = <0x00c00000 0xff000>;
++                interrupts = <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>;
++                clocks = <&mmcc VIDEO_CORE_CLK>,
++                         <&mmcc VIDEO_AHB_CLK>,
++                         <&mmcc VIDEO_AXI_CLK>,
++                         <&mmcc VIDEO_MAXI_CLK>;
++                clock-names = "core", "iface", "bus", "mbus";
++                power-domains = <&mmcc VENUS_GDSC>;
++                iommus = <&iommu 0>;
++                memory-region = <&venus_mem>;
++
++                video-decoder {
++                        compatible = "venus-decoder";
++                        clocks = <&mmcc VIDEO_SUBCORE0_CLK>;
++                        clock-names = "core";
++                        power-domains = <&mmcc VENUS_CORE0_GDSC>;
++                };
++
++                video-encoder {
++                        compatible = "venus-encoder";
++                        clocks = <&mmcc VIDEO_SUBCORE1_CLK>;
++                        clock-names = "core";
++                        power-domains = <&mmcc VENUS_CORE1_GDSC>;
++                };
++        };
 -- 
 2.17.1
 
