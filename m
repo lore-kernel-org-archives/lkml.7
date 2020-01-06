@@ -2,54 +2,57 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3125BC33C9A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D28BC32771
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 068C020656
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4403920656
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578300184;
-	bh=GyMtO6oRWPq3+Hr+8BFljMOSlSlAK0b+OtMogPrfuWQ=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=UVQEHbIsGs/MTjPZ4TOT0EsClL6KhejPRedxXDYX8nu/bzxdEwC7lcr2P5Tk08cST
-	 RM0Dn2Ui0/eqq/IZiJuKEycLM+vDhS3v9M33Ghn6LZapALgKLfhWjL/gsJCmuUjyki
-	 DFhQg2GmWHSJjCq349hZuD/MrwSjV6ZlqVCihE2o=
+	s=default; t=1578300190;
+	bh=eVqvnMTAH9P1OLuUyEiot4QmZkLk+LF/E69QJEZ/PAU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=m6JFhWPna0TKmCGPTnISLY73TaB5jsf3TJFOGuEA47gk2VZSS7AQqMxFG1++rbSzW
+	 OiRzZ2RAUB2YXKuJhrqkgd8pOJLjCpyWTxws5iXgE5Ti741eghlVgBoq5prfBPXSNG
+	 tBC2GTsyFmsVaMQAwFDrp4dL+CQZbE2vUEQJo2X0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgAFInC (ORCPT
+        id S1726690AbgAFInJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 03:43:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40110 "EHLO mail.kernel.org"
+        Mon, 6 Jan 2020 03:43:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbgAFImo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726296AbgAFImo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 Jan 2020 03:42:44 -0500
 Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C7EB20656;
+        by mail.kernel.org (Postfix) with ESMTPSA id 71EDE21775;
         Mon,  6 Jan 2020 08:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1578300163;
-        bh=GyMtO6oRWPq3+Hr+8BFljMOSlSlAK0b+OtMogPrfuWQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Zn5UiXsAtWD4qD796sVyJoLSKjO0SAI5FLpo3LlbuonQrebo2np2BDkx7sUmWRcSv
-         nY8kO0U5p7NNRuK3qhp6q+L1uwvp8r9rxsK1dpy5vmQk94LahC5fj2azRApbE+iwg8
-         AkExBPM/v4TBuDD4d1KilJeAteBWrP4bZ25I7/Qs=
+        bh=eVqvnMTAH9P1OLuUyEiot4QmZkLk+LF/E69QJEZ/PAU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AyGL9dEOfWJ1ZMV5t/c4+E0O/mQoXPWyshR1ZzH70DS1HxKy2PKcvmoVmSD9dhedZ
+         y/YpPkrj91Sd1UlO9I6XaVUjOxm+DgKNi31oW9xml8bJ5jKRXzfEsuq7S59MxE4qv+
+         h6MiVGAvf+gbqj5D1cgSJZASimQylhxufVLvYmkA=
 Received: by wens.tw (Postfix, from userid 1000)
-        id 49CE25FC12; Mon,  6 Jan 2020 16:42:41 +0800 (CST)
+        id 4E7645FA6A; Mon,  6 Jan 2020 16:42:41 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     Maxime Ripard <mripard@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
 Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/7] media: sun4i-csi: A10/A20 CSI1 and R40 CSI0 support
-Date:   Mon,  6 Jan 2020 16:42:33 +0800
-Message-Id: <20200106084240.1076-1-wens@kernel.org>
+Subject: [PATCH v2 1/7] ARM: dts: sun4i: Add CSI1 controller and pinmux options
+Date:   Mon,  6 Jan 2020 16:42:34 +0800
+Message-Id: <20200106084240.1076-2-wens@kernel.org>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200106084240.1076-1-wens@kernel.org>
+References: <20200106084240.1076-1-wens@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,70 +62,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-Hi everyone,
+The CSI controller driver now supports the second CSI controller, CSI1.
 
-This is v2 of my A10/A20 CSI1 and R40 CSI0 series. v2 is simply the
-remaining patches rebased on top of linux-next 20200106, with the
-MBUS device tree binding changes converted to YAML format.
+Add a device node for it. Pinmuxing options for the MCLK output, the
+standard 8-bit interface, and a secondary 24-bit interface are included.
 
-This series adds basic support for CSI1 on Allwinner A10/A20 and CSI0 on
-Allwinner R40. The CSI1 block has the same structure and layout as the
-CSI0 block. Differences include:
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ arch/arm/boot/dts/sun4i-a10.dtsi | 35 ++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-  - Only one channel in BT.656 instead of four in CSI0
-  - 10-bit raw data input vs 8-bit in CSI0
-  - 24-bit RGB888/YUV444 input vs 16-bit RGB565/YUV422 in CSI0
-  - No ISP hardware (CSI SCLK not needed)
-
-The CSI0 block in the Allwinner R40 SoC looks to be the same as the one
-in the A20. The register maps line up, and they support the same
-features. The R40 appears to support BT.1120 based on the feature
-overview, but it is not mentioned anywhere else. Also like the A20, the
-ISP is not mentioned, but the CSI special clock needs to be enabled for
-the hardware to function. The manual does state that the CSI special
-clock is the TOP clock for all CSI hardware, but currently no hardware
-exists for us to test if CSI1 also depends on it or not.
-
-Included are a couple of fixes for signal polarity and DRAM offset
-handling.
-
-Patches 1 and 2 add CSI1 to A10 (sun4i) and A20 (sun7i) dtsi files.
-
-Patch 3 adds a compatible string for the R40's MBUS (memory bus).
-This patch needs to go through Rob's tree as it now depends on
-the patch "dt-bindings: interconnect: Convert Allwinner MBUS
-controller to a schema" that was already merged.
-
-Patch 4 adds CSI0 to the R40 dtsi file
-
-Patches 5 through 7 are examples of cameras hooked up to boards.
-
-
-Regards
-ChenYu
-
-
-Chen-Yu Tsai (7):
-  ARM: dts: sun4i: Add CSI1 controller and pinmux options
-  ARM: dts: sun7i: Add CSI1 controller and pinmux options
-  dt-bindings: bus: sunxi: Add R40 MBUS compatible
-  ARM: dts: sun8i: r40: Add device node for CSI0
-  [DO NOT MERGE] ARM: dts: sun4i: cubieboard: Enable OV7670 camera on
-    CSI1
-  [DO NOT MERGE] ARM: dts: sun7i: cubieboard2: Enable OV7670 camera on
-    CSI1
-  [DO NOT MERGE] ARM: dts: sun8i-r40: bananapi-m2-ultra: Enable OV5640
-    camera
-
- .../arm/sunxi/allwinner,sun4i-a10-mbus.yaml   |  1 +
- arch/arm/boot/dts/sun4i-a10-cubieboard.dts    | 42 ++++++++++++
- arch/arm/boot/dts/sun4i-a10.dtsi              | 35 ++++++++++
- arch/arm/boot/dts/sun7i-a20-cubieboard2.dts   | 42 ++++++++++++
- arch/arm/boot/dts/sun7i-a20.dtsi              | 36 ++++++++++
- .../boot/dts/sun8i-r40-bananapi-m2-ultra.dts  | 67 +++++++++++++++++++
- arch/arm/boot/dts/sun8i-r40.dtsi              | 36 ++++++++++
- 7 files changed, 259 insertions(+)
-
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index 4c268b70b735..bf531efc0610 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -624,6 +624,16 @@ ohci1: usb@1c1c400 {
+ 			status = "disabled";
+ 		};
+ 
++		csi1: csi@1c1d000 {
++			compatible = "allwinner,sun4i-a10-csi1";
++			reg = <0x01c1d000 0x1000>;
++			interrupts = <43>;
++			clocks = <&ccu CLK_AHB_CSI1>, <&ccu CLK_DRAM_CSI1>;
++			clock-names = "bus", "ram";
++			resets = <&ccu RST_CSI1>;
++			status = "disabled";
++		};
++
+ 		spi3: spi@1c1f000 {
+ 			compatible = "allwinner,sun4i-a10-spi";
+ 			reg = <0x01c1f000 0x1000>;
+@@ -670,6 +680,31 @@ can0_ph_pins: can0-ph-pins {
+ 				function = "can";
+ 			};
+ 
++			/omit-if-no-ref/
++			csi1_8bits_pg_pins: csi1-8bits-pg-pins {
++				pins = "PG0", "PG2", "PG3", "PG4", "PG5",
++				       "PG6", "PG7", "PG8", "PG9", "PG10",
++				       "PG11";
++				function = "csi1";
++			};
++
++			/omit-if-no-ref/
++			csi1_24bits_ph_pins: csi1-24bits-ph-pins {
++				pins = "PH0", "PH1", "PH2", "PH3", "PH4",
++				       "PH5", "PH6", "PH7", "PH8", "PH9",
++				       "PH10", "PH11", "PH12", "PH13", "PH14",
++				       "PH15", "PH16", "PH17", "PH18", "PH19",
++				       "PH20", "PH21", "PH22", "PH23", "PH24",
++				       "PH25", "PH26", "PH27";
++				function = "csi1";
++			};
++
++			/omit-if-no-ref/
++			csi1_clk_pg_pin: csi1-clk-pg-pin {
++				pins = "PG1";
++				function = "csi1";
++			};
++
+ 			emac_pins: emac0-pins {
+ 				pins = "PA0", "PA1", "PA2",
+ 				       "PA3", "PA4", "PA5", "PA6",
 -- 
 2.24.1
 
