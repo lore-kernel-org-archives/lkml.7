@@ -2,84 +2,147 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51ED7C32771
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2100CC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 280692072C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD7D72081E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:00:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Yk/Jylho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgAFLAR (ORCPT
+        id S1726478AbgAFLAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 6 Jan 2020 06:00:18 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:60418 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbgAFLAR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 Jan 2020 06:00:17 -0500
-Received: from foss.arm.com ([217.140.110.172]:42862 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgAFLAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 06:00:16 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF869328;
-        Mon,  6 Jan 2020 03:00:15 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC7843F534;
-        Mon,  6 Jan 2020 03:00:14 -0800 (PST)
-Date:   Mon, 6 Jan 2020 11:00:07 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] firmware: arm_scmi: Make scmi core independent of
- transport type
-Message-ID: <20200106110007.GA54466@bogus>
-References: <5c545c2866ba075ddb44907940a1dae1d823b8a1.1575019719.git.viresh.kumar@linaro.org>
- <CABb+yY0qh-qWJWxEaB9_XxmiFb=xP0hOxpm1j54seeT3dMKt2w@mail.gmail.com>
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 006B08kv032657;
+        Mon, 6 Jan 2020 05:00:08 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578308408;
+        bh=rHHxnSNmoG0TpKHhfoDpiR+hC+hKper1pj6PfPbJugE=;
+        h=From:To:CC:Subject:Date;
+        b=Yk/JylhoNEEZ1OJCrK62AF0JJi+msYodaFoAFR1AV9PpL2hFsaL63sszFRaEgDeuS
+         i9UXt8qVwI+QqsvxTBs+PjT4ufL6a3WvSRuvHn7t6Br7a2u8qOuwH84oHNsfh3Mm9J
+         5fDm/m7c0ulC3/o66C1T+kUd0pXrBVPjXghOReko=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 006B086O062609
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 6 Jan 2020 05:00:08 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 6 Jan
+ 2020 05:00:07 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 6 Jan 2020 05:00:07 -0600
+Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 006B00Jp007044;
+        Mon, 6 Jan 2020 05:00:01 -0600
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-mmc@vger.kernel.org>
+CC:     <kishon@ti.com>, <adrian.hunter@intel.com>, <mark.rutland@arm.com>,
+        <robh+dt@kernel.org>, <ulf.hansson@linaro.org>, <tony@atomide.com>,
+        <faiz_abbas@ti.com>
+Subject: [PATCH v4 00/11] Port am335x and am437x devices to sdhci-omap
+Date:   Mon, 6 Jan 2020 16:31:22 +0530
+Message-ID: <20200106110133.13791-1-faiz_abbas@ti.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABb+yY0qh-qWJWxEaB9_XxmiFb=xP0hOxpm1j54seeT3dMKt2w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 31, 2019 at 02:09:27PM -0600, Jassi Brar wrote:
-> On Fri, Nov 29, 2019 at 3:32 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > The SCMI specification is fairly independent of the transport protocol,
-> > which can be a simple mailbox (already implemented) or anything else.
-> > The current Linux implementation however is very much dependent of the
-> > mailbox transport layer.
-> >
-> > This patch makes the SCMI core code (driver.c) independent of the
-> > mailbox transport layer and moves all mailbox related code to a new
-> > file: mailbox.c.
-> >
-> > We can now implement more transport protocols to transport SCMI
-> > messages.
-> >
-> > The transport protocols just need to provide struct scmi_transport_ops,
-> > with its version of the callbacks to enable exchange of SCMI messages.
-> >
-> We can either add new transport layer between SCMI and Mailbox layers,
-> or we can write new transport as a mailbox driver (which I always
-> thought could be a usecase). Right now I am of no strong opinion
-> either way.  Depends, what other transport do you have in mind?
->
+The following add driver patches for porting TI's am335x and am437x devices to
+the sdhci-omap driver.
 
-To be more clear, this patch abstracts the SCMI transport so that mailbox
-can be one of the transport. The plan is to add SMC/HVC, SMC/HVC over SPCI,
-vitio based transport as alternative to mailbox. These are neither added
-as mailbox driver nor transport layer between SCMI and Mailbox. E.g.:
-we either use Peng's SMC based mailbox driver as is or add a new transport
-independent of mailbox framework here as SCMI transport.
+Patches 1-4 Add Support for external DMA to the sdhci driver.
 
---
-Regards,
-Sudeep
+Patches 5-7 refactor the sdhci_set_timeout() function and use it disable
+data timeout interrupt for erase commands
+
+Patches 8-9 port the ti,needs-special-reset property from omap_hsmmc driver.
+
+Patches 10-11 add new compatibles for am335x and am43xx devices to the
+sdhci-omap driver.
+
+DT changes will be posted as a separate series.
+
+Tested on: am335x-evm, am335x-boneblack, am335x-bonegreen-wireless,
+am335x-sk, am335x-bone, am437x-idk, am43xx-gp-evm, am43xx-epos-evm.
+
+I need some help with testing all other am335x variants and SDIO cards.
+
+Here's a branch for testing: https://github.com/faizinator/linux/tree/sdhci-omap_v4_2
+
+RESEND ALERT: I sent these patches from a new computer yesterday but non
+of them appeared in any of the mailing lists. Apologies if you receive a
+duplicate series. Please ignore the previous one.
+
+v4:
+1. Made the factoring out of initialize_data, block_info and mrqs_done as a
+   separate patch
+2. Replaced the patch introducing the quirk to disable DTO during erase
+   operations to a set_timeout() callback in sdhci-omap
+3. Ported the ti,needs-special-reset property from omap_hsmmc to sdhci-omap.
+4. Minor style changes.
+
+v3:
+1. Dropped patch 1 because the tasklet was removed by Adrian in an
+   earlier series.
+2. Added dma bindings in sdhci-omap as optional properties.
+3. Rebased on top of latest mainline.
+
+v2:
+1. sdhci is using two bottom halves. One threaded_rq for card detect and a
+   tasklet for finishing mmc requests. Patch 1 removes the tasklet and
+   moves its function to the threaded_irq. This enables me to
+   terminate_sync() in sdhci_request_done()
+
+2. Factored out common code for between the normal adn external dma case
+
+3. Using existing API sdhci_data_timeout_irq for disabling DTO during
+   erase commands.
+
+4. Fixed subject line for dt-bindings patch.
+
+Chunyan Zhang (3):
+  dt-bindings: sdhci-omap: Add properties for using external dma
+  mmc: sdhci: add support for using external DMA devices
+  mmc: sdhci-omap: Add using external dma
+
+Faiz Abbas (8):
+  mmc: sdhci: Factor out some operations set to their own functions
+  mmc: sdhci: Convert sdhci_set_timeout_irq() to non-static
+  mmc: sdhci: Refactor sdhci_set_timeout()
+  mmc: sdhci-omap: Disable data timeout interrupt during erase
+  dt-bindings: sdhci-omap: Add documentation for ti,needs-special-reset
+    property
+  mmc: sdhci-omap: Add ti,needs-special-reset property
+  dt-bindings: sdhci-omap: Add am335x and am437x specific bindings
+  mmc: sdhci-omap: Add am335x and am437x specific compatibles
+
+ .../devicetree/bindings/mmc/sdhci-omap.txt    |  12 +
+ drivers/mmc/host/Kconfig                      |   4 +
+ drivers/mmc/host/sdhci-omap.c                 |  61 ++-
+ drivers/mmc/host/sdhci.c                      | 355 +++++++++++++++---
+ drivers/mmc/host/sdhci.h                      |  10 +
+ 5 files changed, 384 insertions(+), 58 deletions(-)
+
+-- 
+2.19.2
+
