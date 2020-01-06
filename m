@@ -2,172 +2,129 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07350C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE39C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80B12072E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F9A320731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:04:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DeDorgOp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgAFNEU (ORCPT
+        id S1726620AbgAFNEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 08:04:20 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45146 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbgAFNET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 08:04:19 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C022DAF33;
-        Mon,  6 Jan 2020 13:04:16 +0000 (UTC)
-Subject: Re: [PATCH] drm/hisilicon: get the BO from drm_fb rather than
- hibmc_fb
-To:     Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
-        airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
-        alexander.deucher@amd.com, tglx@linutronix.de,
-        dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
-        linux-kernel@vger.kernel.org
-Cc:     linuxarm@huawei.com
-References: <1577775059-61116-1-git-send-email-tiantao6@hisilicon.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <e52f539b-f942-4810-282e-19d33321eca2@suse.de>
-Date:   Mon, 6 Jan 2020 14:04:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Mon, 6 Jan 2020 08:04:43 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35230 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbgAFNEn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 08:04:43 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so15199033wmb.0;
+        Mon, 06 Jan 2020 05:04:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=f1SlUZDN16+Hw4sSBCtOG/D+BZxQ/TTwFM07SREKnFo=;
+        b=DeDorgOpx3C4lcDFyo9GkzRr59Szn/LwWdUmMSwc2930pdk85z0mR7qnBxqur1PWk8
+         5ZNAZGhOKaChzNrOeCGaaBhtTmFDpjscnDb6nX8LSJgCO6t/LjpT2g0r5Jt63Ff6e6gP
+         ZZqq6PYnNvIDoWQIFnYHa/b0jcW7O2SvBuwwvnKJvOhlz8WZksto+RCUJdnrZ7j0m4HX
+         FfDLR6GfxFRDEZKwdJ+RLVz5MlBKuNfiJYvvFtWihHVdrM8IU2kMxVJmaWmRO2ePTugj
+         /7vlA6UfxZ/bc/n6CRkvLohYAwCPB4FLN8No5IqJIUfr9eHjp7MvHabyJHqi9dbD1AS+
+         aT3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=f1SlUZDN16+Hw4sSBCtOG/D+BZxQ/TTwFM07SREKnFo=;
+        b=tW1GSkOAG6KjajD3ymsKwVVQ9YsA60ttM6bvgghoY4n6hXktIGtD8l8DK2xfxVACQN
+         Hbj/hYsXW4qFB6qECXVV3DfDibYszcO0n6Ncpl8triQX/BwylOstFk/A+/G6CUBYVNoS
+         KYRPB3v76Ufa3tBtZhjN3Foskj9eKoO3DtB3svHtMGpu6pX69zskrW9hTpqnLVZ7negg
+         mMNl+JJFlCCRdO158rutt+zVQIC86YTbaEswitTgho+vU3ApJ++W2vQS7xUfnr0l3Kjn
+         drA6MHHHvlcyqhZfux78x/XZpwq0ZH2MJZNIwWj2WwOuyOHNhnKfmKk/AyF0XHvvCxzi
+         iBlQ==
+X-Gm-Message-State: APjAAAWwomHu6QlGD39XB/nWPY4BD4h3LgAHVw8l58GOs3ciBzVwvZ98
+        UlkjOcu4bIz8vLO600eeAY0=
+X-Google-Smtp-Source: APXvYqwYQiVAy7ZtUBk8Qv2zP+847DcpaQDmGIoG5FymG0IgkuUKC1KDqV4U3cWISyeAqZBsqRzYuA==
+X-Received: by 2002:a7b:c183:: with SMTP id y3mr34995190wmi.0.1578315880453;
+        Mon, 06 Jan 2020 05:04:40 -0800 (PST)
+Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
+        by smtp.gmail.com with ESMTPSA id c2sm71998289wrp.46.2020.01.06.05.04.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 05:04:39 -0800 (PST)
+Date:   Mon, 6 Jan 2020 14:04:38 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V2 1/5] soc/tegra: bpmp: Update ABI header
+Message-ID: <20200106130438.GC1955714@ulmo>
+References: <20200103124404.20662-1-vidyas@nvidia.com>
+ <20200103124404.20662-2-vidyas@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <1577775059-61116-1-git-send-email-tiantao6@hisilicon.com>
 Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="jDkp0ZaMxe11w1NKzULpN4UxIzDIY0f0J"
+        protocol="application/pgp-signature"; boundary="w7PDEPdKQumQfZlR"
+Content-Disposition: inline
+In-Reply-To: <20200103124404.20662-2-vidyas@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---jDkp0ZaMxe11w1NKzULpN4UxIzDIY0f0J
-Content-Type: multipart/mixed; boundary="RpyWvJt5w4Wff8aWgFzH8vjM8yD1xzhev";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
- airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
- alexander.deucher@amd.com, tglx@linutronix.de,
- dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
- linux-kernel@vger.kernel.org
-Cc: linuxarm@huawei.com
-Message-ID: <e52f539b-f942-4810-282e-19d33321eca2@suse.de>
-Subject: Re: [PATCH] drm/hisilicon: get the BO from drm_fb rather than
- hibmc_fb
-References: <1577775059-61116-1-git-send-email-tiantao6@hisilicon.com>
-In-Reply-To: <1577775059-61116-1-git-send-email-tiantao6@hisilicon.com>
 
---RpyWvJt5w4Wff8aWgFzH8vjM8yD1xzhev
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+--w7PDEPdKQumQfZlR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi
-
-Am 31.12.19 um 07:50 schrieb Tian Tao:
-> since we can get the BO from drm_fb rather than hibmc_fb,do not need
-> the hibmc_fb.so we delete the local variable hibmc_fb.
+On Fri, Jan 03, 2020 at 06:14:00PM +0530, Vidya Sagar wrote:
+> Update the firmware header to support uninitialization of UPHY PLL
+> when the PCIe controller is operating in endpoint mode and host cuts
+> the PCIe reference clock.
 >=20
-> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
-> Signed-off-by: Gong junjie <gongjunjie2@huawei.com>
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > ---
->  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> V2:
+> * Changed Copyright year from 2019 to 2020
 >=20
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c b/drivers/g=
-pu/drm/hisilicon/hibmc/hibmc_drm_de.c
-> index 6bf4334..12b38ac 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
-> @@ -105,14 +105,12 @@ static void hibmc_plane_atomic_update(struct drm_=
-plane *plane,
->  	s64 gpu_addr =3D 0;
->  	unsigned int line_l;
->  	struct hibmc_drm_private *priv =3D plane->dev->dev_private;
-> -	struct hibmc_framebuffer *hibmc_fb;
->  	struct drm_gem_vram_object *gbo;
-> =20
->  	if (!state->fb)
->  		return;
-> =20
-> -	hibmc_fb =3D to_hibmc_framebuffer(state->fb);
-> -	gbo =3D drm_gem_vram_of_gem(hibmc_fb->obj);
-> +	gbo =3D drm_gem_vram_of_gem(state->fb->obj[0]);
-> =20
->  	gpu_addr =3D drm_gem_vram_offset(gbo);
->  	if (WARN_ON_ONCE(gpu_addr < 0))
->=20
+>  include/soc/tegra/bpmp-abi.h | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 
-Thanks for the patch. This has meanwhile been fixed as part of
+Bjorn, Lorenzo,
 
-	commit 3e10d2ffd245f996c36f87b0a8027a719e6135c3
-	Author: Thomas Zimmermann <tzimmermann@suse.de>
-	Date:   Tue Dec 3 09:38:16 2019 +0100
+subsequent patches in this series depend on this patch, so I think it'd
+be best if you took this into the PCI tree along with the DT bindings
+and the PCI driver changes, so:
 
-	    drm/hisilicon/hibmc: Replace struct hibmc_framebuffer with
-		generic code
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-Best regards
-Thomas
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---RpyWvJt5w4Wff8aWgFzH8vjM8yD1xzhev--
-
---jDkp0ZaMxe11w1NKzULpN4UxIzDIY0f0J
+--w7PDEPdKQumQfZlR
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl4TMEwACgkQaA3BHVML
-eiN2Kgf9FPSDEisd3SmDgJPL9HzJ7NQfLoTvJnhDs4vosdF1Ulu/ovYvjkSCDdeF
-fvcDlOEh9pzJKxGFoK/BNMOzOGTR+KtNjFk1ICBouY8LlRI/6q79JtrBtNBojUcR
-FRKDYHi8BnwA2TOAPedXslfTnDHOxlXDjrhSygXxVmNopqKeinnG5OwOLOXaAqIA
-aeaMl2+DChWHOgtxj+ezCau0qcUgV8dngoyi33X1f4hHLpqbh4Rdg170T6T0ecA5
-7HQFJzKX68SnQWpn76jJnLcDdPbN7M1I+VozEtT19/VnUNRztlXYsP1DzXGgrFJY
-z1/c8W4a3h2zlnXQ1pL6Y5QjBa/hBA==
-=/QcD
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4TMGYACgkQ3SOs138+
+s6F+Zg//TLpFZod96JYrSlXeoed6v2Ljl8ogG72EMMhOZIGLCcKwJWIX7ZYo1SeD
+WkkHSPNRbwIIF91AMpanXAmNImq3CSbg63BrTDhYcQXBxGRnAKM19NnI/tXwesm0
+Vbw5Xsq1mkVDpw/TmlJDJTB+koeIdwIXI81voGHrpja0jPn6dDWpuR6GWA+lNjKL
+7RrsKeRyXeAsND0HX/LHNGc0Muyw+uAOU5kPfzhrTx7xcIpIhPymV2qI4mexMw5h
+fbmppZSm/21u53VkeMhhdFBa0Ic+JM7nS7NHWaBgwl8L7RbuT423uaX159qb2KRC
+NQbVh4xJGmaNMEpDq7FxSpMHszHgBthvyV3z80kkohVg5jUM1Fno+YsjlBNeFhp2
+60zwuPnvqIgg0i7vP7rwYVc/mrIJBkrcUgVzxB0M1/R978xJmVZSeFE9yzVY9oty
+XaqjNcwPyL+w+04TbCqOarVCbmKKnGPKmpCjuE4PlhI4LhgDXO/e7afNFR7liMGz
+PRI8whwR/49g0ByoOJrNA3r7KPoL3UMfLiWXBZCUnuvwBVdL4ihXg79zVvPE/eFc
+HqZOSLfj03/ZcIvi8IigUl6LVGdSanZvyJOaQzKPE5bTIJb8VzxjxxJhq4tCZJ5y
+LcsdpM6sTJefSbEf7Gio2ioW6r6yUTxzVoG3Pco1xQm0Szb7UCQ=
+=GkrY
 -----END PGP SIGNATURE-----
 
---jDkp0ZaMxe11w1NKzULpN4UxIzDIY0f0J--
+--w7PDEPdKQumQfZlR--
