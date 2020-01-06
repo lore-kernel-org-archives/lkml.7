@@ -2,121 +2,95 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 235E4C33C9A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 04:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3345BC33C9A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 04:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF61524670
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 04:24:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DYHTxQMU"
+	by mail.kernel.org (Postfix) with ESMTP id 11A382071A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 04:27:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbgAFEYo (ORCPT
+        id S1727506AbgAFE1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 23:24:44 -0500
-Received: from ozlabs.org ([203.11.71.1]:36417 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727432AbgAFEYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 23:24:43 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47rj8T1pVwz9sP6;
-        Mon,  6 Jan 2020 15:24:41 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578284681;
-        bh=K4jQauS/nFr+wfixoE3+3PWR3/OkWL0lmMEDdgDwrIA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=DYHTxQMU9ONbilqUPTnhP7iyKBJ8KTlref6Hfl9Y/fu4O5WeBSeQgxkjF3gxLSkeW
-         no5jutpkNMqJaDYZndniaFFMtPJdofl8S0PL7C8MuMp4fPtNdCdg1KCuN9i3ChzRwr
-         Sx7dQxcAscmXQDigoSoMHm/FAWdu1gRNQQHPSRuATe3Fji25KbKXVkkaZCW7GtBkqT
-         KnpDWRvRXMvgi4gV2q59ocPi6RUQcxZdTKazoZBbdrFBXpjcbr/K4BGblVnXe2gAZb
-         8dHPfKr/AroSwTAf4rBk7ih+aRjnyXdPWVoAayNlj5RGcVPOTdjtLywP5UevXKg2j0
-         k6sHp/NUHWMOA==
-Date:   Mon, 6 Jan 2020 15:24:40 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: linux-next: manual merge of the y2038 tree with the vhost tree
-Message-ID: <20200106152440.05a36767@canb.auug.org.au>
+        Sun, 5 Jan 2020 23:27:15 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40021 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727432AbgAFE1O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 23:27:14 -0500
+Received: by mail-ed1-f65.google.com with SMTP id b8so46413852edx.7;
+        Sun, 05 Jan 2020 20:27:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RwRP4ECi3xByfI1AHY6eFXxg+DNLJFdWayS/RcdVemU=;
+        b=IEPvxW+5pliFKZOvQ54n+TkAbfNxusZQQJ1Xt6vtUxmjXk4jHO/lowrQS0zSlAr9U1
+         99b0dWjgcS4Tq26U6+T0vYhMjAh9Tuf9eRXLk53qqNCJ5+3t+DN/433jJD3096G/2Rje
+         xU3LL21KCK4YLGBSrpHoZnbtLRK4IM5IGR/j8zppc8dMEmoylw70hA4zoFXffRNtH9Wt
+         DGfK3+v+NUAT2QKKF7VEVqW4RpaaK/M7qU85IQw/JJIUCbd5uCHyd6FrmRYHzRCbd6xi
+         ckEz8xwX5rTi1ZeHKPUwUrKtXT+HK44+HsvhRKfkU/exbcdN0rpO0ZcA73hYYsI5q2v+
+         qHLg==
+X-Gm-Message-State: APjAAAV/mvWy7xXD6dGbk3tQsc6WK1Vx6jFZS+BsZUZMnV0Xc4z7kpnE
+        kSANJn+wmPzZU3ofSfra6WkJ/MpMQiM=
+X-Google-Smtp-Source: APXvYqxsuFjd6KIlUxup71uAFtWbBiXXOLCYfRpRiK/1LTv9g0h/ZYmV6qgV9USBX2seJ2aH7cCvLQ==
+X-Received: by 2002:a17:906:b2d1:: with SMTP id cf17mr107937673ejb.192.1578284832637;
+        Sun, 05 Jan 2020 20:27:12 -0800 (PST)
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com. [209.85.221.48])
+        by smtp.gmail.com with ESMTPSA id y25sm8003412ejj.68.2020.01.05.20.27.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Jan 2020 20:27:12 -0800 (PST)
+Received: by mail-wr1-f48.google.com with SMTP id y17so48268940wrh.5;
+        Sun, 05 Jan 2020 20:27:12 -0800 (PST)
+X-Received: by 2002:adf:ef4e:: with SMTP id c14mr102268897wrp.142.1578284831822;
+ Sun, 05 Jan 2020 20:27:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/NFejsT2gXU7ePzLuj3yCe2+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200105012416.23296-1-samuel@sholland.org> <20200105012416.23296-10-samuel@sholland.org>
+In-Reply-To: <20200105012416.23296-10-samuel@sholland.org>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Mon, 6 Jan 2020 12:27:01 +0800
+X-Gmail-Original-Message-ID: <CAGb2v66jxw5acPXEQd0KwVbL96dOjeTj=8jZsC7DFiB_-=i0MA@mail.gmail.com>
+Message-ID: <CAGb2v66jxw5acPXEQd0KwVbL96dOjeTj=8jZsC7DFiB_-=i0MA@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v2 9/9] power: supply: axp20x_usb_power:
+ Only poll while offline
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Oskari Lemmela <oskari@lemmela.net>,
+        Quentin Schulz <quentin.schulz@bootlin.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/NFejsT2gXU7ePzLuj3yCe2+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Jan 5, 2020 at 9:24 AM Samuel Holland <samuel@sholland.org> wrote:
+>
+> Investigation on the AXP803 shows that VBUS_PLUGIN/VBUS_REMOVAL IRQs are
+> triggered on the rising/falling edge of AXP20X_PWR_STATUS_VBUS_USED. The
+> reason IRQs do not arrive while N_VBUSEN/DRIVEVBUS is high is because
+> AXP20X_PWR_STATUS_VBUS_USED also never goes high.
+>
+> This also means that if VBUS is online, a VBUS_REMOVAL IRQ is received
+> immediately on setting N_VBUSEN/DRIVEVBUS high (and VBUS_PLUGIN shortly
+> after it is set back low). This was also verified to be the case when
+> manually offlining VBUS through AXP20X_VBUS_PATH_SELECT.
+>
+> As long as VBUS is online, a present->absent transition necessarily
+> implies an online->offline transition. Since will cause an IRQ, there is
+> no need to poll while VBUS is online.
+>
+> To ensure the driver's view of VBUS online status remains accurate,
+> unconditionally poll once when receiving an IRQ and when resuming. If
+> VBUS is still online at that time, polling will cease until the next
+> VBUS_REMOVAL IRQ.
+>
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-Hi all,
-
-Today's linux-next merge of the y2038 tree got a conflict in:
-
-  drivers/block/virtio_blk.c
-
-between commit:
-
-  d1281e3a562e ("virtio-blk: remove VIRTIO_BLK_F_SCSI support")
-
-from the vhost tree and commit:
-
-  d320a9551e39 ("compat_ioctl: scsi: move ioctl handling into drivers")
-
-from the y2038 tree.
-
-I wonder if this driver needs a compat_ioctl entry at all any more?
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/block/virtio_blk.c
-index 54158766334b,fbbf18ac1d5d..000000000000
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@@ -310,6 -404,10 +310,9 @@@ static int virtblk_getgeo(struct block_
-  }
- =20
-  static const struct block_device_operations virtblk_fops =3D {
- -	.ioctl  =3D virtblk_ioctl,
-+ #ifdef CONFIG_COMPAT
-+ 	.compat_ioctl =3D blkdev_compat_ptr_ioctl,
-+ #endif
-  	.owner  =3D THIS_MODULE,
-  	.getgeo =3D virtblk_getgeo,
-  };
-
---Sig_/NFejsT2gXU7ePzLuj3yCe2+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4StogACgkQAVBC80lX
-0GxiWwf6AsyNwXnw8Yhmyr0Or2c6bs167N6Ing5wBTCJUnB45HkQhVziD4dFlhL/
-QqcpneoGn9s/7sNWpyTekBGzf4yPFq3QtrSZtKp/CulEJG6bSYw0iosNdWDySAu0
-vNh54P4Kgrh6mPUaKIhv5i8ys/t6zMAO+NCk7wRMxDsedEQ+hCRvGMrdWu6moX36
-SvDFeED7f9/+jv5vX1FMjW63FOVsQjIGm+jjGn25EoLYC3s8w7N/iLCU1Rjz1oLG
-5ZiTv/25j68tXGLUWjV4Ko7Y2gJ7qyzkRuwuOBkTG9UjGFJ9F5vMMRF4ikQzWJ0e
-E8XUVQsyjbYrEgyPM4a0UBF9T4LB3w==
-=Ix2d
------END PGP SIGNATURE-----
-
---Sig_/NFejsT2gXU7ePzLuj3yCe2+--
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
