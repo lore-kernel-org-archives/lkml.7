@@ -2,105 +2,91 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DCBC00523
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB96AC00523
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8784E21734
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:50:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="eeXy++9V"
+	by mail.kernel.org (Postfix) with ESMTP id BE9662072C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbgAFBui (ORCPT
+        id S1727319AbgAFBw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 20:50:38 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33502 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727270AbgAFBui (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 20:50:38 -0500
-Received: by mail-io1-f65.google.com with SMTP id z8so47054316ioh.0
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jan 2020 17:50:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=VdfYfcG5q1NyFiFXYXaUTE1whOJmabFbb1jufVcSpNI=;
-        b=eeXy++9VzngyMEB/0k4M6iH/GjyUpFOnbDJCiIkbbm6/RIwHHyVylyEQ2emB6Jmt0B
-         Ey43n3ErHFXltbzX74bKzN7M0sKo02Op0k5a2+tkHbcxII03JSpVjmibmFpUYQZJMB+f
-         MSEGLwh5GjnwtOnqRS3o66SUc3XP2VfXwd+iDuWduOukvK+uxnkQWdYc/amwy/RpB54n
-         48jCh3KwpY3Vqc+vm8YwgTEk3Ijsr8sn5Lqs+ktIUgAmJmIl3XXVTVGw9o+0Na4lr0bZ
-         OCwFdWhovdqIrX5I0j1XznJnXhpiqn5nX4aoMz8YKxptczjgO6AXnwrg6dAhD6zrbI7l
-         YK1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=VdfYfcG5q1NyFiFXYXaUTE1whOJmabFbb1jufVcSpNI=;
-        b=c1gAsJit1/u4IYtbzD/AjfH2Y72UBhqI36A54hxR4sW/lT2RcFR51ep/DTgbKZyFCQ
-         ykVdsgkI2fUTmIPdZvAe0cJZUIVG3eqchJaoIGCIsY2vTHDfpyQQSpM08urJarnVPtcH
-         /gZXqhZjXcIk1RfcUwupdByUMzACMTmXmfv/Q+LSgY6SM8VNcNmZVaQblr9IV/46eC83
-         FQxlPM60tyWN0yHMdaECw8NqPm6Z73TYe/Cnsm+RgM6nidyNQnTd8coEIU+J4ETEMggI
-         pkdCYvPCgzj3TsReaf3+0Zjjnu1r4pQ5NjDoA3zdhhCqPKLHPi4SSeVeq5jscEkwB6N3
-         CuEg==
-X-Gm-Message-State: APjAAAVrCth8Lc4Faw0lC4vs8FYkgPBSgEDGY6SKwYZlgqoiK0KoVe0I
-        +ZnbxC3Gsn+uxyXaB8RzUTS7mQ==
-X-Google-Smtp-Source: APXvYqymJINXQwafxuveL/Fa0mW5ldqpklrKDw9WhQEWFERck5saRPT6P7hvfY9QBdWsOGkXLeRrnA==
-X-Received: by 2002:a6b:c9c6:: with SMTP id z189mr64169930iof.285.1578275437348;
-        Sun, 05 Jan 2020 17:50:37 -0800 (PST)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id y18sm16204591ilm.9.2020.01.05.17.50.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jan 2020 17:50:36 -0800 (PST)
-Date:   Sun, 5 Jan 2020 17:50:35 -0800 (PST)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul@pwsan.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the risc-v tree with Linus' tree
-In-Reply-To: <20200106093246.6abbb7e9@canb.auug.org.au>
-Message-ID: <alpine.DEB.2.21.9999.2001051749560.484919@viisi.sifive.com>
-References: <20200106093246.6abbb7e9@canb.auug.org.au>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Sun, 5 Jan 2020 20:52:28 -0500
+Received: from szxga08-in.huawei.com ([45.249.212.255]:56876 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727226AbgAFBw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 20:52:27 -0500
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 344BCE20430513D69D12;
+        Mon,  6 Jan 2020 09:52:25 +0800 (CST)
+Received: from DGGEMM526-MBX.china.huawei.com ([169.254.8.143]) by
+ DGGEMM403-HUB.china.huawei.com ([10.3.20.211]) with mapi id 14.03.0439.000;
+ Mon, 6 Jan 2020 09:52:19 +0800
+From:   "Zengtao (B)" <prime.zeng@hisilicon.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+CC:     Linuxarm <linuxarm@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Morten Rasmussen" <morten.rasmussen@arm.com>
+Subject: RE: [PATCH] cpu-topology: warn if NUMA configurations conflicts
+ with lower layer
+Thread-Topic: [PATCH] cpu-topology: warn if NUMA configurations conflicts
+ with lower layer
+Thread-Index: AQHVuWnsK0zwK8RxTkqe/SNAoYeaUKfT+S+AgALBI6CAAAyngIAAlqWw//+IwoCAAXt3QP//7niAgAAVeoCABI6+sA==
+Date:   Mon, 6 Jan 2020 01:52:18 +0000
+Message-ID: <678F3D1BB717D949B966B68EAEB446ED340B3211@dggemm526-mbx.china.huawei.com>
+References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
+ <20191231164051.GA4864@bogus>
+ <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
+ <20200102112955.GC4864@bogus>
+ <678F3D1BB717D949B966B68EAEB446ED340AEB67@dggemm526-mbx.china.huawei.com>
+ <c43342d0-7e4d-3be0-0fe1-8d802b0d7065@arm.com>
+ <678F3D1BB717D949B966B68EAEB446ED340AFCA0@dggemm526-mbx.china.huawei.com>
+ <7b375d79-2d3c-422b-27a6-68972fbcbeaf@arm.com>
+ <66943c82-2cfd-351b-7f36-5aefdb196a03@arm.com>
+In-Reply-To: <66943c82-2cfd-351b-7f36-5aefdb196a03@arm.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.74.221.187]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
-
-On Mon, 6 Jan 2020, Stephen Rothwell wrote:
-
-> Today's linux-next merge of the risc-v tree got a conflict in:
-> 
->   Documentation/riscv/patch-acceptance.rst
-> 
-> between commit:
-> 
->   0e194d9da198 ("Documentation: riscv: add patch acceptance guidelines")
-> 
-> from Linus' tree and commit:
-> 
->   d89a1a16d7dc ("Documentation: riscv: add patch acceptance guidelines")
-> 
-> from the risc-v tree.
-> 
-> I fixed it up (I used the version from Linus' tree as that was committed
-> later) and can carry the fix as necessary. This is now fixed as far as
-> linux-next is concerned, but any non trivial conflicts should be mentioned
-> to your upstream maintainer when your tree is submitted for merging.
-> You may also want to consider cooperating with the maintainer of the
-> conflicting tree to minimise any particularly complex conflicts.
-
-Thanks, I just reset our for-next branch to v5.5-rc5, so this won't 
-reappear.
-
-- Paul
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBWYWxlbnRpbiBTY2huZWlkZXIg
+W21haWx0bzp2YWxlbnRpbi5zY2huZWlkZXJAYXJtLmNvbV0NCj4gU2VudDogRnJpZGF5LCBKYW51
+YXJ5IDAzLCAyMDIwIDg6MTUgUE0NCj4gVG86IFplbmd0YW8gKEIpOyBTdWRlZXAgSG9sbGENCj4g
+Q2M6IExpbnV4YXJtOyBHcmVnIEtyb2FoLUhhcnRtYW47IFJhZmFlbCBKLiBXeXNvY2tpOw0KPiBs
+aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBNb3J0ZW4gUmFzbXVzc2VuDQo+IFN1YmplY3Q6
+IFJlOiBbUEFUQ0hdIGNwdS10b3BvbG9neTogd2FybiBpZiBOVU1BIGNvbmZpZ3VyYXRpb25zIGNv
+bmZsaWN0cw0KPiB3aXRoIGxvd2VyIGxheWVyDQo+IA0KPiBPbiAwMy8wMS8yMDIwIDEwOjU3LCBW
+YWxlbnRpbiBTY2huZWlkZXIgd3JvdGU6DQo+ID4gSSdtIGp1Z2dsaW5nIHdpdGggb3RoZXIgdGhp
+bmdzIGF0bSwgYnV0IGxldCBtZSBoYXZlIGEgdGhpbmsgYW5kIHNlZSBpZiB3ZQ0KPiA+IGNvdWxk
+bid0IGRldGVjdCB0aGF0IGluIHRoZSBzY2hlZHVsZXIgaXRzZWxmLg0KPiA+DQo+IA0KPiBTb21l
+dGhpbmcgbGlrZSB0aGlzIG91Z2h0IHRvIGNhdGNoIHlvdXIgY2FzZTsgbWlnaHQgbmVlZCB0byBj
+b21wYXJlIGdyb3VwDQo+IHNwYW5zIHJhdGhlciB0aGFuIHB1cmUgZ3JvdXAgcG9pbnRlcnMuDQo+
+IA0KDQpHb29kIHN1Z2dlc3Rpb24sIEkgd2lsbCBuZWVkIHRvIGhhdmUgYSB0aGluayBhbmQgdHJ5
+DQpUaGFua3MuIA0KDQo+IC0tLQ0KPiBkaWZmIC0tZ2l0IGEva2VybmVsL3NjaGVkL3RvcG9sb2d5
+LmMgYi9rZXJuZWwvc2NoZWQvdG9wb2xvZ3kuYw0KPiBpbmRleCA2ZWMxZTU5NWIxZDQuLmM0MTUx
+ZTExYWZjZCAxMDA2NDQNCj4gLS0tIGEva2VybmVsL3NjaGVkL3RvcG9sb2d5LmMNCj4gKysrIGIv
+a2VybmVsL3NjaGVkL3RvcG9sb2d5LmMNCj4gQEAgLTExMjAsNiArMTEyMCwxMyBAQCBidWlsZF9z
+Y2hlZF9ncm91cHMoc3RydWN0IHNjaGVkX2RvbWFpbiAqc2QsDQo+IGludCBjcHUpDQo+IA0KPiAg
+CQlzZyA9IGdldF9ncm91cChpLCBzZGQpOw0KPiANCj4gKwkJLyogc2cncyBhcmUgaW5pdGVkIGFz
+IHNlbGYtbG9vcGluZy4gSWYgJ2xhc3QnIGlzIG5vdCBzZWxmDQo+ICsJCSAqIGxvb3BpbmcsIHdl
+IHNldCBpdCBpbiBhIHByZXZpb3VzIHZpc2l0LiBObyBmdXJ0aGVyIHZpc2l0DQo+ICsJCSAqIHNo
+b3VsZCBjaGFuZ2UgdGhlIGxpbmsgb3JkZXIsIGlmIHdlIGRvIHRoZW4gdGhlIHRvcG9sb2d5DQo+
+ICsJCSAqIGRlc2NyaXB0aW9uIGlzIHRlcm1pbmFsbHkgYnJva2VuLg0KPiArCQkgKi8NCj4gKwkJ
+QlVHX09OKGxhc3QgJiYgbGFzdC0+bmV4dCAhPSBsYXN0ICYmIGxhc3QtPm5leHQgIT0gc2cpOw0K
+PiArDQo+ICAJCWNwdW1hc2tfb3IoY292ZXJlZCwgY292ZXJlZCwgc2NoZWRfZ3JvdXBfc3Bhbihz
+ZykpOw0KPiANCj4gIAkJaWYgKCFmaXJzdCkNCg==
