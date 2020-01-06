@@ -2,132 +2,121 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A76BC32767
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 05:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 664D5C33C9A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 05:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F97A21734
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 05:02:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MpCZXqGu"
+	by mail.kernel.org (Postfix) with ESMTP id 4712120848
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 05:14:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgAFFCu (ORCPT
+        id S1726591AbgAFFOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 00:02:50 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:38949 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbgAFFCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 00:02:49 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47rk0Q6QlKz9sR1;
-        Mon,  6 Jan 2020 16:02:46 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578286967;
-        bh=D8EGVkxO374FrM+A+GsbiNGA5RKfYu9d6p/uLCeisrU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MpCZXqGuSj+g0LztV6Y7gQFjOzPnliYDgywdYXew3R3qP48qqxhwOLkNfkFEMVex8
-         2ifAxJPsDtPVxoX80NoqNo5MD+QS5UCpx87lin9sC6ssAbrMvNy8Gj+X8IZPBWW0Wg
-         0V5UnWVjWzH5QZXpNJatK46r3E4/MxayRj8rZPck3X3PVmHbJMxoenH7sHeJVz9B9y
-         SlhGMIGa2EbsEcro1Z3fd8u1Ra3A+Dv80y+RlEjjjpKZY6B4PcjaVaabn4EUTDVZvr
-         nIwGNGvla9BFj0A2hhgqVObcHYwcitE0z38IsgBM4Mgc5LYx0V6z3N7e2eXI2mMD9v
-         rUqygx6S0pdvg==
-Date:   Mon, 6 Jan 2020 16:02:46 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: linux-next: manual merge of the akpm-current tree with the
- generic-ioremap tree
-Message-ID: <20200106160246.0f6bd04c@canb.auug.org.au>
-In-Reply-To: <20191218133025.15356802@canb.auug.org.au>
-References: <20191218133025.15356802@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/s9_OHkIFGPCGxgx5UrvqmxK";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Mon, 6 Jan 2020 00:14:32 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:32358 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725446AbgAFFOc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 00:14:32 -0500
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 06 Jan 2020 10:44:28 +0530
+Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 06 Jan 2020 10:44:04 +0530
+Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
+        id AEB2827C8; Mon,  6 Jan 2020 10:44:03 +0530 (IST)
+From:   Harigovindan P <harigovi@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        abhinavk@codeaurora.org, jsanka@codeaurora.org,
+        chandanu@codeaurora.org, nganji@codeaurora.org
+Subject: [v2] drm/msm: add support for 2.4.1 DSI version for sc7180 soc
+Date:   Mon,  6 Jan 2020 10:43:49 +0530
+Message-Id: <1578287629-26709-1-git-send-email-harigovi@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/s9_OHkIFGPCGxgx5UrvqmxK
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Modify commit text to indicate DSI version and SOC detail
 
-Hi all,
+Changes in v1:
+	-Modify commit text to indicate DSI version and SOC detail(Jeffrey Hugo).
+	-Splitting visionox panel driver code out into a
+	 different patch(set), since panel drivers are merged into
+	 drm-next via a different tree(Rob Clark).
+Changes in v2:
+	-Update commit text accordingly(Matthias Kaehlcke).
 
-On Wed, 18 Dec 2019 13:30:25 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Today's linux-next merge of the akpm-current tree got a conflict in:
->=20
->   arch/hexagon/include/asm/io.h
->=20
-> between commit:
->=20
->   1188dd7d3fbd ("remove ioremap_nocache and devm_ioremap_nocache")
->=20
-> from the generic-ioremap tree and commit:
->=20
->   a632c00ae02c ("hexagon: define ioremap_uc")
->=20
-> from the akpm-current tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> --=20
-> Cheers,
-> Stephen Rothwell
->=20
-> diff --cc arch/hexagon/include/asm/io.h
-> index f42d9973e7d6,b0dbc3473172..000000000000
-> --- a/arch/hexagon/include/asm/io.h
-> +++ b/arch/hexagon/include/asm/io.h
-> @@@ -172,7 -172,10 +172,8 @@@ static inline void writel(u32 data, vol
->   #define writel_relaxed __raw_writel
->  =20
->   void __iomem *ioremap(unsigned long phys_addr, unsigned long size);
->  -#define ioremap_nocache ioremap
-> + #define ioremap_uc(X, Y) ioremap((X), (Y))
->  =20
->  -
->   #define __raw_writel writel
->  =20
->   static inline void memcpy_fromio(void *dst, const volatile void __iomem=
- *src,
+Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+---
+ drivers/gpu/drm/msm/dsi/dsi_cfg.c | 21 +++++++++++++++++++++
+ drivers/gpu/drm/msm/dsi/dsi_cfg.h |  1 +
+ 2 files changed, 22 insertions(+)
 
-This is now a conflict between Linus' tree and the generic-ioremap tree.
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+index b7b7c1a..7b967dd 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+@@ -133,6 +133,10 @@ static const char * const dsi_sdm845_bus_clk_names[] = {
+ 	"iface", "bus",
+ };
+ 
++static const char * const dsi_sc7180_bus_clk_names[] = {
++	"iface", "bus",
++};
++
+ static const struct msm_dsi_config sdm845_dsi_cfg = {
+ 	.io_offset = DSI_6G_REG_SHIFT,
+ 	.reg_cfg = {
+@@ -147,6 +151,20 @@ static const struct msm_dsi_config sdm845_dsi_cfg = {
+ 	.num_dsi = 2,
+ };
+ 
++static const struct msm_dsi_config sc7180_dsi_cfg = {
++	.io_offset = DSI_6G_REG_SHIFT,
++	.reg_cfg = {
++		.num = 1,
++		.regs = {
++			{"vdda", 21800, 4 },	/* 1.2 V */
++		},
++	},
++	.bus_clk_names = dsi_sc7180_bus_clk_names,
++	.num_bus_clks = ARRAY_SIZE(dsi_sc7180_bus_clk_names),
++	.io_start = { 0xae94000 },
++	.num_dsi = 1,
++};
++
+ const static struct msm_dsi_host_cfg_ops msm_dsi_v2_host_ops = {
+ 	.link_clk_enable = dsi_link_clk_enable_v2,
+ 	.link_clk_disable = dsi_link_clk_disable_v2,
+@@ -201,6 +219,9 @@ static const struct msm_dsi_cfg_handler dsi_cfg_handlers[] = {
+ 		&msm8998_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+ 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_1,
+ 		&sdm845_dsi_cfg, &msm_dsi_6g_v2_host_ops},
++	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_4_1,
++		&sc7180_dsi_cfg, &msm_dsi_6g_v2_host_ops},
++
+ };
+ 
+ const struct msm_dsi_cfg_handler *msm_dsi_cfg_get(u32 major, u32 minor)
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.h b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+index e2b7a7d..9919536 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_cfg.h
++++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+@@ -19,6 +19,7 @@
+ #define MSM_DSI_6G_VER_MINOR_V1_4_1	0x10040001
+ #define MSM_DSI_6G_VER_MINOR_V2_2_0	0x20000000
+ #define MSM_DSI_6G_VER_MINOR_V2_2_1	0x20020001
++#define MSM_DSI_6G_VER_MINOR_V2_4_1	0x20040001
+ 
+ #define MSM_DSI_V2_VER_MINOR_8064	0x0
+ 
+-- 
+2.7.4
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/s9_OHkIFGPCGxgx5UrvqmxK
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4Sv3YACgkQAVBC80lX
-0GwPtQf/S2/piGuennunKVNnnQFWOAW8jA6/1iwtHTG4pMooPRz5wvsHL7Wsf4wj
-P+NU7VHFbBsFl3kStQPbXGwyn6CDF4vAEHM/3u5YUuisprXZe9hty6iEoTVT5zpR
-oORi6ebvhaAu3dVxBO+2mCRAUG/jlGUzBQ3rmkz/umaDry5c4uUiXMGtTTNBkBrS
-rFnaBrNoMevAHm+mQ6eKPiektFJpMtLOk0qf/zVRJpfdv7eRpfxKy60XxTOih12e
-UWf/2GRcCpLtjXkB1DBjPTr7jwCwggQzMvdB6YTGWMPHfIYelkuuWMa8K1QpzP+y
-wpt8kHN3t7aW6fjjLwqi1EYHqilQsw==
-=FmOI
------END PGP SIGNATURE-----
-
---Sig_/s9_OHkIFGPCGxgx5UrvqmxK--
