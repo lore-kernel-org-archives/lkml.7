@@ -2,99 +2,118 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1124C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9EF1C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9382720731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8EF207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:07:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sRlsi32t"
+	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="kKMyPh9s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgAFUCN (ORCPT
+        id S1726751AbgAFUHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 15:02:13 -0500
-Received: from mail-wr1-f73.google.com ([209.85.221.73]:36672 "EHLO
-        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726779AbgAFUCM (ORCPT
+        Mon, 6 Jan 2020 15:07:18 -0500
+Received: from www.linux-watchdog.org ([185.87.125.42]:45066 "EHLO
+        www.linux-watchdog.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbgAFUHS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 15:02:12 -0500
-Received: by mail-wr1-f73.google.com with SMTP id y7so27687845wrm.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 12:02:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=iqMEcoc9F5plBffOZF1F+Bz77zemJAbtQp1LiChIOwM=;
-        b=sRlsi32tJjCrR38S9xgh4BAd5/EOjrLXJcnvlriD0YNhtV+U8locZ42odR7BocQUwY
-         o+kBATxSfCDjW8DajNqGQPZ4mnHutU+E24iIMcsC2FHZ6yyp2aSi/wbtJe90rdL6y59O
-         ldmHuKD7ZIPScH5FE/cfyta6gEhDITBX2gyj2gRVfeWaM8ed0wSsDGJ5Gy2+MvA76jvl
-         j9DQGqvPnGn5EsYU5ZBG7DtmdO6MBeA/4dRblRv9BDwMigO8whi580KKjdLzOG8EwRHn
-         +FXhNIq6yY6TY+GGro6irf21NFz0G2YiJDzOivlJY2Iph1zTS/TbixTT3ECGnaHl0oXP
-         LcfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=iqMEcoc9F5plBffOZF1F+Bz77zemJAbtQp1LiChIOwM=;
-        b=os/sMjh8Xc/nYD/B6/o1lQ4ZC1BhGRiTnGn/SYL6vGR9b384Uy/Y9OwXFq6dPWxrDF
-         4SMpWGlnOSlyblkVaRNcYJHu2Dqt387fcD4+pDQDWP7vswh5S0tvGv2ooGpIqaRwiTob
-         mYEoUsINKfMrESh9yyqN5EJLO0CNSTmSUWSKgOLOviXoH4ngaxFZHVUM1lKsXCxs0H5Q
-         56eCIJhNQ/a3/xQKPWp8kelWF9xlSFZxsHH8DgCVSYPyDk/WbcAJECABxCGnTkuy3JJo
-         ax51t3QY0YY8PKGcAyhBY1o9t8fmARBMkRbO3Vw2sVe2t2B7UavSgVUQn1JQFi5hL8JF
-         bWCQ==
-X-Gm-Message-State: APjAAAXgqQgry7LPasj5nlw5kQ6r4wVAPDi2MvZ6y2qDlxl1rk0vVoI2
-        XFPK6X1JoqWHqgszOkIt0OrvIWj+ng==
-X-Google-Smtp-Source: APXvYqzufZgu/J6+10nna8VOUb9/7o9V7RDuj0Q8Mhg/Wh45mWnTfh/Duyfi4cd1r36NKS+sPIEvyN5eHw==
-X-Received: by 2002:a5d:4044:: with SMTP id w4mr70483522wrp.322.1578340929806;
- Mon, 06 Jan 2020 12:02:09 -0800 (PST)
-Date:   Mon,  6 Jan 2020 21:02:04 +0100
-Message-Id: <20200106200204.94782-1-jannh@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-Subject: [PATCH] x86/vdso: Enable sanitizers for vma.o
-From:   Jann Horn <jannh@google.com>
-To:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, jannh@google.com
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 6 Jan 2020 15:07:18 -0500
+X-Greylist: delayed 422 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 Jan 2020 15:07:17 EST
+Received: by www.linux-watchdog.org (Postfix, from userid 500)
+        id E61D74018E; Mon,  6 Jan 2020 20:12:34 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org E61D74018E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
+        s=odk20180602; t=1578337954;
+        bh=2VvN6Q99eRU6JAhLlTbUje/JR/J+1FCxnbH7sV88u5o=;
+        h=Date:From:To:Cc:Subject:From;
+        b=kKMyPh9sxv0KOnNaXRVlqG/+dCNEI5hNXbe7YzJjbQVJMfwOndhWWuUaMjkH+dB8N
+         myxvauKOAz13BcyP+eGaB1VmT2duJ77VeFVfh7gmcJ1TXkoMMEWQS3fDdeIIaS+nmQ
+         m9U87UQ4XDHX/sRz4KRUKHHq2WgnKCSkrQuxXCj8=
+Date:   Mon, 6 Jan 2020 20:12:34 +0100
+From:   Wim Van Sebroeck <wim@linux-watchdog.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        David Engraf <david.engraf@sysgo.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Srikanth Krishnakar <skrishnakar@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [GIT PULL REQUEST] watchdog - v5.5 Fixes
+Message-ID: <20200106191234.GA1443@www.linux-watchdog.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.20 (2009-12-10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The vDSO makefile opts out of all sanitizers (and objtool validation);
-however, vma.o is a normal kernel object file (and already has objtool
-validation selectively enabled), so turn the sanitizers back on for that
-file.
+Hi Linus,
 
-Signed-off-by: Jann Horn <jannh@google.com>
----
+Please pull the watchdog changes for the v5.5 release cycle.
 
-Notes:
-    This should probably go on top of the locking/kcsan branch?
+This series contains:
+* rn5t618_wdt: fix module aliases
+* max77620_wdt: fix potential build errors
+* imx7ulp: Fix missing conversion of imx7ulp_wdt_enable()
+* orion: fix platform_get_irq() complaints
+* w83627hf_wdt: Fix NCT6116D support
 
- arch/x86/entry/vdso/Makefile | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 0f46273b4556..50a1c9008864 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -30,6 +30,9 @@ vobjs-y := vdso-note.o vclock_gettime.o vgetcpu.o
- 
- # files to link into kernel
- obj-y				+= vma.o
-+KASAN_SANITIZE_vma.o		:= y
-+UBSAN_SANITIZE_vma.o		:= y
-+KCSAN_SANITIZE_vma.o		:= y
- OBJECT_FILES_NON_STANDARD_vma.o	:= n
- 
- # vDSO images to build
--- 
-2.24.1.735.g03f4e72817-goog
+The output from git request-pull:
+----------------------------------------------------------------
+The following changes since commit d1eef1c619749b2a57e514a3fa67d9a516ffa919:
+
+  Linux 5.5-rc2 (2019-12-15 15:16:08 -0800)
+
+are available in the git repository at:
+
+  git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-5.5-fixes
+
+for you to fetch changes up to dcbce5fbcc69bf2553f650004aad44bf390eca73:
+
+  watchdog: orion: fix platform_get_irq() complaints (2019-12-30 15:58:29 +0100)
+
+----------------------------------------------------------------
+linux-watchdog 5.5-fixes tag
+
+----------------------------------------------------------------
+Andreas Kemnade (1):
+      watchdog: rn5t618_wdt: fix module aliases
+
+David Engraf (1):
+      watchdog: max77620_wdt: fix potential build errors
+
+Fabio Estevam (1):
+      watchdog: imx7ulp: Fix missing conversion of imx7ulp_wdt_enable()
+
+Russell King (1):
+      watchdog: orion: fix platform_get_irq() complaints
+
+Srikanth Krishnakar (1):
+      watchdog: w83627hf_wdt: Fix support NCT6116D
+
+YueHaibing (1):
+      watchdog: tqmx86_wdt: Fix build error
+
+ drivers/watchdog/Kconfig        | 2 ++
+ drivers/watchdog/imx7ulp_wdt.c  | 2 +-
+ drivers/watchdog/orion_wdt.c    | 4 ++--
+ drivers/watchdog/rn5t618_wdt.c  | 1 +
+ drivers/watchdog/w83627hf_wdt.c | 2 +-
+ 5 files changed, 7 insertions(+), 4 deletions(-)
+----------------------------------------------------------------
+
+Kind regards,
+Wim.
 
