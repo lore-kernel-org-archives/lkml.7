@@ -2,109 +2,87 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C29ADC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FDFC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98B0C2081E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:43:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578347014;
-	bh=D40R+s508mEXSVXOQ1t6RztEzDp+C0eZ3m/aCRf0AkY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=B825fQSPCKB4kIJ8JbXk+wGsi7foeOo4n+q58F6thoUnqMl/Nvaq6Wx5t8wvkK0pb
-	 WmxTeaPwYaODWxCW5y4A4MbrKtOiXpMRcqq+H+0ghX88UpLd3STadvMfCtdgPADaYf
-	 iZEtJr2Gmj7EBNHNqGKUcr0iW0gxrE/3ARjZkrss=
+	by mail.kernel.org (Postfix) with ESMTP id B92572080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:45:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T0Cp49iN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgAFVne (ORCPT
+        id S1726906AbgAFVpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 16:43:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38246 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbgAFVnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 16:43:33 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 248DF2080A;
-        Mon,  6 Jan 2020 21:43:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578347013;
-        bh=D40R+s508mEXSVXOQ1t6RztEzDp+C0eZ3m/aCRf0AkY=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=IcvQRK/YIp0u1+vc/JHsBaMzpzpqbusydrWc3+6UFHH64Gy5/4gvucn3jrpRW3sQ+
-         sHBG7GyeBc5dwDuLuLdpxL2Bvvf6Kr/eiSqqNdmnStMjS4vEYxijHEgfS6Tw23OIGR
-         /T9k5wP+TXI3SbQ4mIrHIx0ciiAUG4/IjqHVXALs=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id BAA4E352274D; Mon,  6 Jan 2020 13:43:32 -0800 (PST)
-Date:   Mon, 6 Jan 2020 13:43:32 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eric Dumazet <edumazet@google.com>
-Subject: Re: linux-next: build warning after merge of the rcu tree
-Message-ID: <20200106214332.GU13449@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191212160622.021517d3@canb.auug.org.au>
- <CAOesGMiabP7nAPYKrmP=j_8bSj-UfUSFoiD0W+kqzaBp-6J2hQ@mail.gmail.com>
- <20200106181006.GL13449@paulmck-ThinkPad-P72>
- <CAOesGMjTbrtVTU6ootOrOifKLqY_D0bstgqBKGriE9pVkNcPOQ@mail.gmail.com>
+        Mon, 6 Jan 2020 16:45:21 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46994 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726713AbgAFVpV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 16:45:21 -0500
+Received: by mail-lj1-f194.google.com with SMTP id m26so50031368ljc.13
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 13:45:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZjQqjrgkh7UnNQJ1G1FfRv0Qnrcc+UBzR3ffHuWmJLo=;
+        b=T0Cp49iNhBPtry9RRB9H+4/H9Cnci8jBAdb1agffxxbBZu6dSlRujUOlO6q/7+po8t
+         NukgfrM75WAPZX1AMqK16k1GbqFYWxukeGtta3bKoaYbWTZfheDRoEVQpqgjbqrwy3vD
+         qu9KIfq92QbOMNPQ6wY4GF+gKyepaOsnp5LmA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZjQqjrgkh7UnNQJ1G1FfRv0Qnrcc+UBzR3ffHuWmJLo=;
+        b=dNY3+yNKyhIfGlL7DznVLJPBgtAkzuEAYXYOIf6lQjQBeH+AHzUpVCEz3SmFEsFSnz
+         ZbmqcAB8aKtqgT4GBULoONtV+4+kmmMHnHSw1k310H+l9mfQrTbD1vum0fJeOlVvqeBP
+         yut/KDluqyGXsnKrCvJsxb7tCGGCUWghAsqkRzqLAMzbJl3evRocU/kAI3Cfau3OmvrP
+         zUfzclZ5Y/QZsTekHodNRgIB/1G6JnDIJmCceyouyjTqfyOBmDGoo0lcrSXMDLwhX+m+
+         aRVEI5Xj3FGmirdmnfHEfRKFMQma0sZhiiuKipJNFSiRiMxd2XAjOYsdihQMRQ0L01Ut
+         zmSw==
+X-Gm-Message-State: APjAAAW8Fqb2FH0CpRSc+AJxku3XrMgzYA6DcE8ORoaAMToH16iFnhAw
+        yFaT+adjeSeNTmW6CSyj45ZRhSxQaLg=
+X-Google-Smtp-Source: APXvYqzB1Zh47mpxTXwHKAda2OP4UKBmvZA2TTDuGZkzKbJVJOX00Pk87q+pryGBBlZ2GUp2Z4NUUw==
+X-Received: by 2002:a2e:9013:: with SMTP id h19mr62132570ljg.223.1578347118800;
+        Mon, 06 Jan 2020 13:45:18 -0800 (PST)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id h24sm29694295ljc.84.2020.01.06.13.45.17
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jan 2020 13:45:18 -0800 (PST)
+Received: by mail-lj1-f174.google.com with SMTP id u1so52472018ljk.7
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 13:45:17 -0800 (PST)
+X-Received: by 2002:a2e:9e4c:: with SMTP id g12mr60097737ljk.15.1578347117398;
+ Mon, 06 Jan 2020 13:45:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOesGMjTbrtVTU6ootOrOifKLqY_D0bstgqBKGriE9pVkNcPOQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200106172746.19803-1-georgi.djakov@linaro.org>
+In-Reply-To: <20200106172746.19803-1-georgi.djakov@linaro.org>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Mon, 6 Jan 2020 13:44:41 -0800
+X-Gmail-Original-Message-ID: <CAE=gft60FwXEVxS5DohqBaQTFOfCZ7co3b3KEQyongGNB==E0Q@mail.gmail.com>
+Message-ID: <CAE=gft60FwXEVxS5DohqBaQTFOfCZ7co3b3KEQyongGNB==E0Q@mail.gmail.com>
+Subject: Re: [PATCH v2] interconnect: Check for valid path in icc_set_bw()
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     linux-pm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Dai <daidavid1@codeaurora.org>,
+        Odelu Kukatla <okukatla@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 01:08:37PM -0800, Olof Johansson wrote:
-> On Mon, Jan 6, 2020 at 10:10 AM Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Mon, Jan 06, 2020 at 09:51:47AM -0800, Olof Johansson wrote:
-> > > Hi,
-> > >
-> > > On Wed, Dec 11, 2019 at 9:06 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > > >
-> > > > Hi all,
-> > > >
-> > > > After merging the rcu (I think) tree, today's linux-next build (x86_64
-> > > > allnoconfig) produced this warning:
-> > > >
-> > > > kernel/time/timer.c: In function 'schedule_timeout':
-> > > > kernel/time/timer.c:969:20: warning: 'timer.expires' may be used uninitialized in this function [-Wmaybe-uninitialized]
-> > > >   969 |   long diff = timer->expires - expires;
-> > > >       |               ~~~~~^~~~~~~~~
-> > > >
-> > > > Introduced by (bisected to) commit
-> > > >
-> > > >   c4127fce1d02 ("timer: Use hlist_unhashed_lockless() in timer_pending()")
-> > > >
-> > > > x86_64-linux-gnu-gcc (Debian 9.2.1-21) 9.2.1 20191130
-> > >
-> > > This is still there as of last night's -next. Any update on getting a
-> > > fix queued together with the offending patch?
-> >
-> > Hello, Olof,
-> >
-> > Thank you, I had indeed lost track of this one.  :-/
-> >
-> > Does Eric's patch fix things for you?
-> >
-> > https://lore.kernel.org/lkml/CANn89i+xomdo4HFqewrfNf_Z4Q5ayXuW6A4SjSkE46JXP9KuFw@mail.gmail.com/
-> 
-> It does, but it's not a proper patch (whitespace damage, no S-o-b, etc).
+On Mon, Jan 6, 2020 at 9:27 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
+>
+> Use IS_ERR() to ensure that the path passed to icc_set_bw() is valid.
+>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 
-Understood, and thank you for checking!
-
-Eric, would you be willing to turn this into a something that can be
-sent upstream?
-
-							Thanx, Paul
+Reviewed-by: Evan Green <evgreen@chromium.org>
