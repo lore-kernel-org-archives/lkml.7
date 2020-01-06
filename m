@@ -2,97 +2,310 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F13C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA335C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAC482070E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:13:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mP7El5Q4"
+	by mail.kernel.org (Postfix) with ESMTP id AB5172072C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 18:14:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgAFSNe (ORCPT
+        id S1726751AbgAFSO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 13:13:34 -0500
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:40037 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgAFSNe (ORCPT
+        Mon, 6 Jan 2020 13:14:28 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35632 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgAFSO2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 13:13:34 -0500
-Received: by mail-pf1-f201.google.com with SMTP id d127so28304164pfa.7
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 10:13:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=UEDzAmAV9WaLeo9yTDqPSpBCyPNP5d0qczx1NnXY4co=;
-        b=mP7El5Q4TtrIfgk9TDJS14F2Eu9vFw0ZDs7c8H76nJtmFN5yjRrLSDguZ60lYkNcDM
-         Bkt+gDdPDI5ehXsqcQw3LrmnwYmgN8yKSw+0Q1Rk9nr5Adh1EDI01FsSsxoig0GiXpd7
-         IT8yO+IXVVRGuEOamw+VDExxiunDcKNuGPzJEzvkJPSNNWFKizAqD59OhtgfAIHOknXs
-         o7ECUMXlpuRUOt1QW5FmLC3hTyDp7kt7Rt9cYyYBnb6d0EWemY0pMCZPgYMGEN44sHj3
-         laVOuHXIuo2vbzwWcAkWnfkYmATCv3yyXYVI8kdwoRwBkgr9teI/QL34W2lxjY4j2VZ7
-         DYNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=UEDzAmAV9WaLeo9yTDqPSpBCyPNP5d0qczx1NnXY4co=;
-        b=FKx1YEyujYz+43Eot+N1SEs6plKgvWtGSbJodpEbpRboZroNzAl7Gtm6eBbOSjDXOA
-         0JkC/BAwYFGmwvKrx9athXQ3AnJRHwfFwvRWdN8bcclGJTWPOmXRLbiLRpkDx3f7N6w+
-         M04vFvcexKaUfl02Ag14oW7eh/+BKCAVaXkfUXUXxNm3eChd8bO8yDPc3mfCeWdXFgSh
-         Ipm1qMIradXfQmUon/YQGUYjF0j7eDCEU17FT/0e7r3bqjKPa9fN/4LEQxkYXB+2j0Lg
-         Y6SPG7CE6nBGRGPYjzR9Qmv/tOVz8CkZVHf4AjR71fNzGfsHIpUa2iAJ3Hwg9aol2EB4
-         YpfQ==
-X-Gm-Message-State: APjAAAXz+zVLxgLrMtM+mDaI1uoXKGBjFNrw/4xzYTy8YZEZN/b3Ov/n
-        iqx3pluGdGy9J/8klbEjvycuia9xoQs=
-X-Google-Smtp-Source: APXvYqx52b7bUUdO8CftqfX7YMxu6TRCr8DCWWok5+XVBAVJsgPd//2sZgQfRpMyhE1OKDke/Qsdly46i0c=
-X-Received: by 2002:a65:6842:: with SMTP id q2mr115275661pgt.345.1578334413511;
- Mon, 06 Jan 2020 10:13:33 -0800 (PST)
-Date:   Mon,  6 Jan 2020 10:13:29 -0800
-Message-Id: <20200106181329.167322-1-hridya@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-Subject: [PATCH] security: selinux: allow per-file labelling for binderfs
-From:   Hridya Valsaraju <hridya@google.com>
-To:     Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, Hridya Valsaraju <hridya@google.com>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Mark Salyzyn <salyzyn@android.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 6 Jan 2020 13:14:28 -0500
+Received: from turingmachine.home (unknown [IPv6:2804:431:c7f4:447f:d711:794d:1c68:5ed3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tonyk)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 5AF11290C87;
+        Mon,  6 Jan 2020 18:14:22 +0000 (GMT)
+From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
+To:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+Cc:     kernel@collabora.com, krisman@collabora.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com,
+        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
+Subject: [RESEND PATCH v2] scsi: core: Change function comments to kernel-doc style
+Date:   Mon,  6 Jan 2020 15:12:14 -0300
+Message-Id: <20200106181214.86249-1-andrealmeid@collabora.com>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allows genfscon per-file labeling for binderfs.
-This is required to have separate permissions to allow
-access to binder, hwbinder and vndbinder devices which are
-relocating to binderfs.
+Despite of functions being documented, they are not in the kernel-doc
+specification, and could not be included in kernel documentation. Change
+the style of functions comments to be compliant to the kernel-doc style.
+When the function comment is outdated, update then.
 
-Acked-by: Jeff Vander Stoep <jeffv@google.com>
-Acked-by: Mark Salyzyn <salyzyn@android.com>
-Signed-off-by: Hridya Valsaraju <hridya@google.com>
+Signed-off-by: André Almeida <andrealmeid@collabora.com>
 ---
- security/selinux/hooks.c | 1 +
- 1 file changed, 1 insertion(+)
+Hello,
 
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 116b4d644f68..3f0669a708e9 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -752,6 +752,7 @@ static int selinux_set_mnt_opts(struct super_block *sb,
+This v2 is from a commit originally from this serie:
+https://patchwork.kernel.org/patch/11141867/
+
+This patched was tested with kernel-doc script and the HTML output was
+verified as well.
+
+Thanks,
+	André
+
+Changes from v1:
+- Update "midlevel queue" to "scheduler queue". This seems to be the
+correct term after following the call stack until reach a call to
+blk_mq_sched_requeue_request().
+- Update names of functions at scsi_io_completion() comment.
+- Remove duplicated comment at scsi_io_completion().
+---
+ drivers/scsi/scsi_lib.c | 169 +++++++++++++++-------------------------
+ 1 file changed, 62 insertions(+), 107 deletions(-)
+
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 610ee41fa54c..d94803ff67f7 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -202,24 +202,17 @@ static void __scsi_queue_insert(struct scsi_cmnd *cmd, int reason, bool unbusy)
+ 	blk_mq_requeue_request(cmd->request, true);
+ }
  
- 	if (!strcmp(sb->s_type->name, "debugfs") ||
- 	    !strcmp(sb->s_type->name, "tracefs") ||
-+	    !strcmp(sb->s_type->name, "binderfs") ||
- 	    !strcmp(sb->s_type->name, "pstore"))
- 		sbsec->flags |= SE_SBGENFS;
+-/*
+- * Function:    scsi_queue_insert()
+- *
+- * Purpose:     Insert a command in the midlevel queue.
+- *
+- * Arguments:   cmd    - command that we are adding to queue.
+- *              reason - why we are inserting command to queue.
+- *
+- * Lock status: Assumed that lock is not held upon entry.
++/**
++ * scsi_queue_insert - Reinsert a command in the scheduler queue.
++ * @cmd:    command that we are adding to queue.
++ * @reason: why we are inserting command to queue.
+  *
+- * Returns:     Nothing.
++ * We do this for one of two cases. Either the host is busy and it cannot accept
++ * any more commands for the time being, or the device returned QUEUE_FULL and
++ * can accept no more commands.
+  *
+- * Notes:       We do this for one of two cases.  Either the host is busy
+- *              and it cannot accept any more commands for the time being,
+- *              or the device returned QUEUE_FULL and can accept no more
+- *              commands.
+- * Notes:       This could be called either from an interrupt context or a
+- *              normal process context.
++ * Context: This could be called either from an interrupt context or a normal
++ * process context.
+  */
+ void scsi_queue_insert(struct scsi_cmnd *cmd, int reason)
+ {
+@@ -301,16 +294,12 @@ int __scsi_execute(struct scsi_device *sdev, const unsigned char *cmd,
+ }
+ EXPORT_SYMBOL(__scsi_execute);
  
+-/*
+- * Function:    scsi_init_cmd_errh()
+- *
+- * Purpose:     Initialize cmd fields related to error handling.
+- *
+- * Arguments:   cmd	- command that is ready to be queued.
++/**
++ * scsi_init_cmd_errh - Initialize cmd fields related to error handling.
++ * @cmd:  command that is ready to be queued.
+  *
+- * Notes:       This function has the job of initializing a number of
+- *              fields related to error handling.   Typically this will
+- *              be called once for each command, as required.
++ * This function has the job of initializing a number of fields related to error
++ * handling. Typically this will be called once for each command, as required.
+  */
+ static void scsi_init_cmd_errh(struct scsi_cmnd *cmd)
+ {
+@@ -496,17 +485,11 @@ static void scsi_starved_list_run(struct Scsi_Host *shost)
+ 	spin_unlock_irqrestore(shost->host_lock, flags);
+ }
+ 
+-/*
+- * Function:   scsi_run_queue()
+- *
+- * Purpose:    Select a proper request queue to serve next
+- *
+- * Arguments:  q       - last request's queue
+- *
+- * Returns:     Nothing
++/**
++ * scsi_run_queue - Select a proper request queue to serve next.
++ * @q:  last request's queue
+  *
+- * Notes:      The previous command was completely finished, start
+- *             a new one if possible.
++ * The previous command was completely finished, start a new one if possible.
+  */
+ static void scsi_run_queue(struct request_queue *q)
+ {
+@@ -897,34 +880,27 @@ static int scsi_io_completion_nz_result(struct scsi_cmnd *cmd, int result,
+ 	return result;
+ }
+ 
+-/*
+- * Function:    scsi_io_completion()
+- *
+- * Purpose:     Completion processing for block device I/O requests.
+- *
+- * Arguments:   cmd   - command that is finished.
+- *
+- * Lock status: Assumed that no lock is held upon entry.
+- *
+- * Returns:     Nothing
+- *
+- * Notes:       We will finish off the specified number of sectors.  If we
+- *		are done, the command block will be released and the queue
+- *		function will be goosed.  If we are not done then we have to
+- *		figure out what to do next:
+- *
+- *		a) We can call scsi_requeue_command().  The request
+- *		   will be unprepared and put back on the queue.  Then
+- *		   a new command will be created for it.  This should
+- *		   be used if we made forward progress, or if we want
+- *		   to switch from READ(10) to READ(6) for example.
+- *
+- *		b) We can call __scsi_queue_insert().  The request will
+- *		   be put back on the queue and retried using the same
+- *		   command as before, possibly after a delay.
+- *
+- *		c) We can call scsi_end_request() with blk_stat other than
+- *		   BLK_STS_OK, to fail the remainder of the request.
++/**
++ * scsi_io_completion - Completion processing for SCSI commands.
++ * @cmd:	command that is finished.
++ * @good_bytes:	number of processed bytes.
++ *
++ * We will finish off the specified number of sectors. If we are done, the
++ * command block will be released and the queue function will be goosed. If we
++ * are not done then we have to figure out what to do next:
++ *
++ *   a) We can call scsi_io_completion_reprep().  The request
++ *	will be unprepared and put back on the queue.  Then
++ *	a new command will be created for it.  This should
++ *	be used if we made forward progress, or if we want
++ *	to switch from READ(10) to READ(6) for example.
++ *
++ *   b) We can call scsi_io_completion_action().  The request will
++ *	be put back on the queue and retried using the same
++ *	command as before, possibly after a delay.
++ *
++ *   c) We can call scsi_end_request() with blk_stat other than
++ *	BLK_STS_OK, to fail the remainder of the request.
+  */
+ void scsi_io_completion(struct scsi_cmnd *cmd, unsigned int good_bytes)
+ {
+@@ -952,8 +928,7 @@ void scsi_io_completion(struct scsi_cmnd *cmd, unsigned int good_bytes)
+ 		blk_rq_sectors(req), good_bytes));
+ 
+ 	/*
+-	 * Next deal with any sectors which we were able to correctly
+-	 * handle. Failed, zero length commands always need to drop down
++	 * Failed, zero length commands always need to drop down
+ 	 * to retry code. Fast path should return in this block.
+ 	 */
+ 	if (likely(blk_rq_bytes(req) > 0 || blk_stat == BLK_STS_OK)) {
+@@ -1003,16 +978,14 @@ static blk_status_t scsi_init_sgtable(struct request *req,
+ 	return BLK_STS_OK;
+ }
+ 
+-/*
+- * Function:    scsi_init_io()
+- *
+- * Purpose:     SCSI I/O initialize function.
+- *
+- * Arguments:   cmd   - Command descriptor we wish to initialize
++/**
++ * scsi_init_io - SCSI I/O initialize function.
++ * @cmd:  command descriptor we wish to initialize
+  *
+- * Returns:     BLK_STS_OK on success
+- *		BLK_STS_RESOURCE if the failure is retryable
+- *		BLK_STS_IOERR if the failure is fatal
++ * Returns:
++ * * BLK_STS_OK       - on success
++ * * BLK_STS_RESOURCE - if the failure is retryable
++ * * BLK_STS_IOERR    - if the failure is fatal
+  */
+ blk_status_t scsi_init_io(struct scsi_cmnd *cmd)
+ {
+@@ -1932,21 +1905,13 @@ struct scsi_device *scsi_device_from_queue(struct request_queue *q)
+ }
+ EXPORT_SYMBOL_GPL(scsi_device_from_queue);
+ 
+-/*
+- * Function:    scsi_block_requests()
+- *
+- * Purpose:     Utility function used by low-level drivers to prevent further
+- *		commands from being queued to the device.
+- *
+- * Arguments:   shost       - Host in question
+- *
+- * Returns:     Nothing
+- *
+- * Lock status: No locks are assumed held.
++/**
++ * scsi_block_requests - Utility function used by low-level drivers to prevent
++ * further commands from being queued to the device.
++ * @shost:  host in question
+  *
+- * Notes:       There is no timer nor any other means by which the requests
+- *		get unblocked other than the low-level driver calling
+- *		scsi_unblock_requests().
++ * There is no timer nor any other means by which the requests get unblocked
++ * other than the low-level driver calling scsi_unblock_requests().
+  */
+ void scsi_block_requests(struct Scsi_Host *shost)
+ {
+@@ -1954,25 +1919,15 @@ void scsi_block_requests(struct Scsi_Host *shost)
+ }
+ EXPORT_SYMBOL(scsi_block_requests);
+ 
+-/*
+- * Function:    scsi_unblock_requests()
+- *
+- * Purpose:     Utility function used by low-level drivers to allow further
+- *		commands from being queued to the device.
+- *
+- * Arguments:   shost       - Host in question
+- *
+- * Returns:     Nothing
+- *
+- * Lock status: No locks are assumed held.
+- *
+- * Notes:       There is no timer nor any other means by which the requests
+- *		get unblocked other than the low-level driver calling
+- *		scsi_unblock_requests().
+- *
+- *		This is done as an API function so that changes to the
+- *		internals of the scsi mid-layer won't require wholesale
+- *		changes to drivers that use this feature.
++/**
++ * scsi_unblock_requests - Utility function used by low-level drivers to allow
++ * further commands from being queued to the device.
++ * @shost:  host in question
++ *
++ * There is no timer nor any other means by which the requests get unblocked
++ * other than the low-level driver calling scsi_unblock_requests(). This is done
++ * as an API function so that changes to the internals of the scsi mid-layer
++ * won't require wholesale changes to drivers that use this feature.
+  */
+ void scsi_unblock_requests(struct Scsi_Host *shost)
+ {
 -- 
-2.24.1.735.g03f4e72817-goog
+2.24.1
 
