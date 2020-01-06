@@ -2,83 +2,136 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 675C1C32771
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B40C32771
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43F87207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D25B2075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:22:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgAFLUm (ORCPT
+        id S1726524AbgAFLWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 06:20:42 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:50164 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbgAFLUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 06:20:41 -0500
-Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=phil.lan)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1ioQR5-0004aL-Th; Mon, 06 Jan 2020 12:20:39 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     linux-rockchip@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com, heiko@sntech.de,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: [PATCH v2 2/2] arm64: dts: rockchip: hook up the px30-evb dsi display
-Date:   Mon,  6 Jan 2020 12:20:05 +0100
-Message-Id: <20200106112005.795834-2-heiko@sntech.de>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200106112005.795834-1-heiko@sntech.de>
-References: <20200106112005.795834-1-heiko@sntech.de>
+        Mon, 6 Jan 2020 06:22:53 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38499 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbgAFLWw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 06:22:52 -0500
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1ioQTD-0003IS-94; Mon, 06 Jan 2020 12:22:51 +0100
+Message-ID: <191213c32908a217cf78590464c9b9519865f3e0.camel@pengutronix.de>
+Subject: Re: [PATCH 2/6] drm/etnaviv: determine product, customer and eco id
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Christian Gmeiner <christian.gmeiner@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>
+Date:   Mon, 06 Jan 2020 12:22:50 +0100
+In-Reply-To: <CAH9NwWddNNc+2rRsntm+_eYF0S9uwC0kTszpPysbzmkc4dNuNA@mail.gmail.com>
+References: <20200102100230.420009-1-christian.gmeiner@gmail.com>
+         <20200102100230.420009-3-christian.gmeiner@gmail.com>
+         <5cd1dc11df43d86d9db0dc2520de9b2e839ea7cc.camel@pengutronix.de>
+         <CAH9NwWddNNc+2rRsntm+_eYF0S9uwC0kTszpPysbzmkc4dNuNA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+On Mo, 2020-01-06 at 11:57 +0100, Christian Gmeiner wrote:
+> Hi Lucas
+> 
+> Am Mo., 6. Jan. 2020 um 11:03 Uhr schrieb Lucas Stach <l.stach@pengutronix.de>:
+> > On Do, 2020-01-02 at 11:02 +0100, Christian Gmeiner wrote:
+> > > They will be used for extended HWDB support. The eco id logic was taken
+> > > from galcore kernel driver sources.
+> > > 
+> > > Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+> > > ---
+> > >  drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 17 +++++++++++++++++
+> > >  drivers/gpu/drm/etnaviv/etnaviv_gpu.h |  6 +++---
+> > >  2 files changed, 20 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> > > index d47d1a8e0219..253301be9e95 100644
+> > > --- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> > > +++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> > > @@ -321,6 +321,18 @@ static void etnaviv_hw_specs(struct etnaviv_gpu *gpu)
+> > >               gpu->identity.varyings_count -= 1;
+> > >  }
+> > > 
+> > > +static void etnaviv_hw_eco_id(struct etnaviv_gpu *gpu)
+> > > +{
+> > > +     const u32 chipDate = gpu_read(gpu, VIVS_HI_CHIP_DATE);
+> > > +     gpu->identity.eco_id = gpu_read(gpu, VIVS_HI_CHIP_ECO_ID);
+> > > +
+> > > +     if (etnaviv_is_model_rev(gpu, GC1000, 0x5037) && (chipDate == 0x20120617))
+> > > +             gpu->identity.eco_id = 1;
+> > > +
+> > > +     if (etnaviv_is_model_rev(gpu, GC320, 0x5303) && (chipDate == 0x20140511))
+> > > +             gpu->identity.eco_id = 1;
+> > 
+> > I'm not sure if those two checks warrant a separate function. Maybe
+> > just place them besides the other ID fixups?
+> > 
+> 
+> This is almost a 1:1 copy of _GetEcoID(..) but will try to move the fixups.
+> 
+> 
+> > > +}
+> > > +
+> > >  static void etnaviv_hw_identify(struct etnaviv_gpu *gpu)
+> > >  {
+> > >       u32 chipIdentity;
+> > > @@ -362,6 +374,8 @@ static void etnaviv_hw_identify(struct etnaviv_gpu *gpu)
+> > >                       }
+> > >               }
+> > > 
+> > > +             gpu->identity.product_id = gpu_read(gpu, VIVS_HI_CHIP_PRODUCT_ID);
+> > > +
+> > >               /*
+> > >                * NXP likes to call the GPU on the i.MX6QP GC2000+, but in
+> > >                * reality it's just a re-branded GC3000. We can identify this
+> > > @@ -375,6 +389,9 @@ static void etnaviv_hw_identify(struct etnaviv_gpu *gpu)
+> > >               }
+> > >       }
+> > > 
+> > > +     etnaviv_hw_eco_id(gpu);
+> > > +     gpu->identity.customer_id = gpu_read(gpu, VIVS_HI_CHIP_CUSTOMER_ID);
+> > 
+> > I don't like this scattering of identity register reads. Please move
+> > all of those reads to the else clause where we currently read
+> > model/rev. I doubt that the customer ID register is available on the
+> > really early cores, that only have the VIVS_HI_CHIP_IDENTITY register.
+> > 
+> 
+> There is feature bit for it: chipMinorFeatures5_HAS_PRODUCTID
+> Will change the code to make use of it. Shall I still put it in the
+> else clause then?
 
-Create the necessary display nodes to activate the Xingpeng XPP055C272
-dsi display that can be found on the px30-evb.
+If there's a feature bit we need to move the read toward the end of the
+function, as we currently read the features as the last step in the
+hw_identify.
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
----
- arch/arm64/boot/dts/rockchip/px30-evb.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+But then I'm not sure if the HAS_PRODUCTID feature bit is correct. At
+least wumpus' gpus_comparison says that none of the known <= GC3000
+cores has it set, which seems... suspicious.
 
-diff --git a/arch/arm64/boot/dts/rockchip/px30-evb.dts b/arch/arm64/boot/dts/rockchip/px30-evb.dts
-index 180995a590c1..fa21da5d9268 100644
---- a/arch/arm64/boot/dts/rockchip/px30-evb.dts
-+++ b/arch/arm64/boot/dts/rockchip/px30-evb.dts
-@@ -112,6 +112,22 @@ &display_subsystem {
- 	status = "okay";
- };
- 
-+&dsi {
-+	status = "okay";
-+
-+	panel@0 {
-+		compatible = "xinpeng,xpp055c272";
-+		reg = <0>;
-+		backlight = <&backlight>;
-+		iovcc-supply = <&vcc_1v8>;
-+		vci-supply = <&vcc3v3_lcd>;
-+	};
-+};
-+
-+&dsi_dphy {
-+	status = "okay";
-+};
-+
- &emmc {
- 	bus-width = <8>;
- 	cap-mmc-highspeed;
--- 
-2.24.1
+Regards,
+Lucas
 
