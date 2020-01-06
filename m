@@ -2,77 +2,131 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9EAC32771
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4624C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB1922072E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B73402072E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:40:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BfyEGs4v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbgAFKjl (ORCPT
+        id S1726446AbgAFKkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 05:39:41 -0500
-Received: from foss.arm.com ([217.140.110.172]:42666 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgAFKjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 05:39:40 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C8C22328;
-        Mon,  6 Jan 2020 02:39:39 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E28F63F534;
-        Mon,  6 Jan 2020 02:39:38 -0800 (PST)
-Date:   Mon, 6 Jan 2020 10:39:33 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        linux-hwmon@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v2 10/11] hwmon: (scmi-hwmon) Match scmi device by both
- name and protocol id
-Message-ID: <20200106103933.GA54418@bogus>
-References: <20191218111742.29731-1-sudeep.holla@arm.com>
- <20191218111742.29731-11-sudeep.holla@arm.com>
- <20200104161946.GA2974@roeck-us.net>
+        Mon, 6 Jan 2020 05:40:17 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:57190 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgAFKkR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 05:40:17 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 006Ae926063647;
+        Mon, 6 Jan 2020 04:40:09 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578307209;
+        bh=8c6+nL0sjGE+mUP74dPaw6GeeVNGbaLFurAs3499j/I=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=BfyEGs4vO6I/tb+2dG0m5Y826jIxvx1JS/nESh2b2osjlfLZJ1Xo49deXS31sPS9P
+         xx8h47hhrfyNUqPl11uLdDpfmf2fnUJ/JTrM5kq52sXQJ72fLDoFPkN1VNWnCgZlv2
+         bruqcfsapbOaVO2zZWxSuSUBm8GGQzx0BQNO1vE4=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 006Ae9mZ031981
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 6 Jan 2020 04:40:09 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 6 Jan
+ 2020 04:40:09 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 6 Jan 2020 04:40:09 -0600
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 006Ae6DC025983;
+        Mon, 6 Jan 2020 04:40:06 -0600
+Subject: Re: [PATCH v6 2/2] spi: cadence-quadpsi: Add support for the Cadence
+ QSPI controller
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        <broonie@kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <robh+dt@kernel.org>, <dan.carpenter@oracle.com>,
+        <cheol.yong.kim@intel.com>, <qi-ming.wu@intel.com>
+References: <20191230074102.50982-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20191230074102.50982-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+X-Enigmail-Draft-Status: N11100
+Message-ID: <e89cf037-217b-cd61-79ee-a11e2a118c01@ti.com>
+Date:   Mon, 6 Jan 2020 16:10:39 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200104161946.GA2974@roeck-us.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191230074102.50982-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 04, 2020 at 08:19:46AM -0800, Guenter Roeck wrote:
-> On Wed, Dec 18, 2019 at 11:17:41AM +0000, Sudeep Holla wrote:
-> > The scmi bus now has support to match the driver with devices not only
-> > based on their protocol id but also based on their device name if one is
-> > available. This was added to cater the need to support multiple devices
-> > and drivers for the same protocol.
-> >
-> > Let us add the name "hwmon" to scmi_device_id table in the driver so
-> > that in matches only with device with the same name and protocol id
-> > SCMI_PROTOCOL_SENSOR. This is just for sake of completion and must
-> > not be used to add IIO support in parallel. Instead, if IIO support is
-> > added ever in future, we need to drop this hwmon driver entirely and
-> > use the iio->hwmon bridge to access the sensors as hwmon devices if
-> > needed.
-> >
->
-> Acked-by: Guenter Roeck <linux@roeck-us.net>
->
+Hi,
 
-Thanks
+On 30/12/19 1:11 pm, Ramuthevar,Vadivel MuruganX wrote:
+[...]
+> +static u32 cqspi_cmd2addr(const unsigned char *addr_buf, u32 addr_width)
+> +{
+> +	unsigned int addr = 0;
+> +	int i;
+> +
+> +	/* Invalid address return zero. */
+> +	if (addr_width > 4)
+> +		return 0;
+> +
+> +	for (i = 0; i < addr_width; i++) {
+> +		addr = addr << 8;
+> +		addr |= addr_buf[i];
+> +	}
+> +
+> +	return addr;
+> +}
+> +
+[...]
+> +static int cqspi_apb_read_setup(struct struct_cqspi *cqspi,
+> +				const struct spi_mem_op *op,
+> +				const u8 *addrbuf)
+> +{
+> +	void __iomem *reg_base = cqspi->iobase;
+> +	size_t addrlen = op->addr.nbytes;
+> +	size_t dummy_bytes = op->dummy.nbytes;
+> +	unsigned int addr_value, dummy_clk, reg;
+> +
+> +	if (addrlen) {
+> +		addr_value = cqspi_cmd2addr(&addrbuf[0], addrlen);
+> +		writel(addr_value, reg_base + CQSPI_REG_INDIRECTRDSTARTADDR);
+> +	}
+> +
 
-> [ assuming the series will be pushed into the kernel together ]
->
+Why do you need to swap the address bytes to SPI bus order? You are
+writing to a controller register that accepts 24 bit or 32 bit address.
 
-Indeed.
+> +	reg = op->cmd.opcode << CQSPI_REG_RD_INSTR_OPCODE_LSB;
+> +	reg |= (op->data.buswidth & CQSPI_REG_RD_INSTR_TYPE_DATA_MASK) <<
+> +		CQSPI_REG_RD_INSTR_TYPE_DATA_LSB;
+> +
 
---
-Regards,
-Sudeep
+This is wrong... op->data.buswidth's range is 1 to 8 whereas
+CQSPI_REG_RD_INSTR_TYPE range is 0 to 3. I wonder whether you tested
+dual/quad mode with this driver?
+
+I am still unable to get this series to work on my platform. Will
+continue to debug...
+
+-- 
+Regards
+Vignesh
