@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F66FC00523
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB58C00523
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06BB121775
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 136A021775
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:35:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCWSsV9p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AmUifnA5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbgAFBfE (ORCPT
+        id S1727497AbgAFBfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 20:35:04 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42045 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727464AbgAFBe6 (ORCPT
+        Sun, 5 Jan 2020 20:35:00 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44953 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727260AbgAFBex (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 20:34:58 -0500
-Received: by mail-lj1-f195.google.com with SMTP id y4so34956309ljj.9;
-        Sun, 05 Jan 2020 17:34:56 -0800 (PST)
+        Sun, 5 Jan 2020 20:34:53 -0500
+Received: by mail-lf1-f65.google.com with SMTP id v201so35297459lfa.11;
+        Sun, 05 Jan 2020 17:34:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=RdRgeWTtviiIWS4YZZN2UoUeCEyNPX48xbOaYwnMDFE=;
-        b=VCWSsV9p6paoScf47picv2GV0/m9s9ui2clBeNluJeQyhsCVfUGWzyXl6/btVamdi1
-         j9dQ6YqYb+iM5lGs34b3WZbPjuD6zFdLhO+NCHlMtKxZuGwZo6DMhkXLCemtE+PhZa9o
-         Is3fWSqW7+y9revc/MuOSVgnReMgWQSckW7mMzTlc/zDYEiEVzlZzm53qKsdqNRl+oG4
-         srV7d0wkqs2Oy6qQkjNT2xDXpm+AsROsUyAcXt31mrcweL5udZ71RYnXA/I2EqOcgcI2
-         IfWgcHl6/vxfVroeP0uIjkDmqT3Wda+BwML7OnX1h4qXj/DWF0P4/KS0qhNIjfPw81y/
-         i1fw==
+        bh=+7IbWzfPhmBnEreIxXsILwKTpjW90RDh/fEgRDfgjeM=;
+        b=AmUifnA5XnTZGZZ082fVauHQS8xiNyA7i6Pv7uajYxbnxnD5Nd/i6mX6YGkbtIwSAy
+         g02Us0ENuC5NO2XDoeHhVy6rHPqBq7WgoGxgdTHNM1ZmLb0ZxKRywsyxRZN79WuBq6OY
+         15Rx3a462oTajjSNG77GEDqaOXN0yAEpsVNksCLDnA3z2U3/m6I1POkqASzaADSg7Osq
+         7pH9ue+tml699F1DO/5FKirmHH7794X2y2YNrUNNMosHVfmamo5CThssalTPxqWVP0KI
+         IOKSWaww3CSJJuEqkZ+0+abQCZauLESsuEwHRLRtG0cMd6PRx/4CWcx8ycr5abr+LF5j
+         uHEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RdRgeWTtviiIWS4YZZN2UoUeCEyNPX48xbOaYwnMDFE=;
-        b=QYehijyK4N/Y4NLS9dkSu5k7kWkMnPVQIxThpQNKzn3JcTqjd8cx5haZxaHIQJSLdi
-         u8vqD4Uii+QnURYtyCSTXsbwUXjoepA7T5JXR3j3rfyi/Xk8XQk5RTkBJQ8XlACRtzzC
-         U4FsX2hQdoZ0XYlPRVfzCMwMIZ4dMJbFI807QqB7g9DvTKM8CPPhhtkT+kAfdXpR8kvz
-         Q2ztMzXMsEazJiNauKxgQScV3/L1v8zUZYKmrlJijTQR9vduhyTXLY8AGus8efXCjuKE
-         LYfVwxlGbM9x2BZLRfzdC7tPGJvj33JM2PuwcLzUNCE9oA64cwSjtVTGO/Yl/l10KPpZ
-         ny4Q==
-X-Gm-Message-State: APjAAAWkpm7DRlZT9oo4LeJKlGEuq087X3J6OyioaO9FYv+0I8s362FH
-        Zfgr4KaWxG2n4tu/kBwMY/g=
-X-Google-Smtp-Source: APXvYqzHEdlUrxRnvmi3zmqHLyUKH7nYxSyXMjbS/oTk11srVGo8tTw41DlI83BkiMhsGQE5+5I07g==
-X-Received: by 2002:a2e:9806:: with SMTP id a6mr57818053ljj.178.1578274495720;
-        Sun, 05 Jan 2020 17:34:55 -0800 (PST)
+        bh=+7IbWzfPhmBnEreIxXsILwKTpjW90RDh/fEgRDfgjeM=;
+        b=XF6NHneZFAo/prJc/Eye9hRwCEvybMnYoCSc2mBWd3DQDpXovgfpb3iUPy/4MnKVtY
+         QMQxnb1oEaI871r7l+pPXYa9Bp5AuM63SryVTk6V0QShVY1vtV//Ax18snZe+CoStEmJ
+         3Ww4vnoxK0SnuuJ0oAkIWyQMvKD9Mz7aP0ZOuWzwdNMHSefSunKcz4kqfW5KNNw+QOpV
+         zw+jzYChh9jQ27zx7/63tT2QEue6Q6SUg2LsjGix5iSbHsEvSM4ikFkKjuZkMwLX9gdI
+         sb7F4Ch01ce/CpLdPuLa3BbkFIIyT0HTSjbjRr98ZR4fawJdeBbG82ohqkNWBKjKzJqE
+         W1ww==
+X-Gm-Message-State: APjAAAUJFpuavxB4BR0kqHaA3YDZRv5no+yjnUA6CzukHuTGk6o0Q4E2
+        3l+2Rzu6mMlohx2cVRY1WTE=
+X-Google-Smtp-Source: APXvYqw8vdLhoJtuPi+v3NEjMicxcwkIIvTDQv+HHBM9MAUYnVdcQHr7ETJIuDHVYSThN2WhJ7sm8A==
+X-Received: by 2002:a19:c697:: with SMTP id w145mr54051507lff.54.1578274490798;
+        Sun, 05 Jan 2020 17:34:50 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id h10sm28235739ljc.39.2020.01.05.17.34.54
+        by smtp.gmail.com with ESMTPSA id h10sm28235739ljc.39.2020.01.05.17.34.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jan 2020 17:34:55 -0800 (PST)
+        Sun, 05 Jan 2020 17:34:50 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Peter Chen <Peter.Chen@nxp.com>,
@@ -66,9 +66,9 @@ To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
 Cc:     linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 17/20] usb: chipidea: tegra: Stop managing PHY's power
-Date:   Mon,  6 Jan 2020 04:34:13 +0300
-Message-Id: <20200106013416.9604-18-digetx@gmail.com>
+Subject: [PATCH v4 11/20] usb: phy: tegra: Use devm_otg_ulpi_create()
+Date:   Mon,  6 Jan 2020 04:34:07 +0300
+Message-Id: <20200106013416.9604-12-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200106013416.9604-1-digetx@gmail.com>
 References: <20200106013416.9604-1-digetx@gmail.com>
@@ -79,49 +79,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra's USB PHY driver now provides generic PHY init/shutdown callbacks
-and thus the custom PHY management could be removed from Tegra-specific
-part of the ChipIdea driver.
+The resource-managed variant removes the necessity for the driver to care
+about freeing ULPI resources.
 
+Suggested-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/usb/chipidea/ci_hdrc_tegra.c | 9 ---------
- 1 file changed, 9 deletions(-)
+ drivers/usb/phy/phy-tegra-usb.c | 22 ++++++----------------
+ 1 file changed, 6 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/usb/chipidea/ci_hdrc_tegra.c b/drivers/usb/chipidea/ci_hdrc_tegra.c
-index 0c9911d44ee5..7455df0ede49 100644
---- a/drivers/usb/chipidea/ci_hdrc_tegra.c
-+++ b/drivers/usb/chipidea/ci_hdrc_tegra.c
-@@ -83,13 +83,6 @@ static int tegra_udc_probe(struct platform_device *pdev)
- 		return err;
- 	}
+diff --git a/drivers/usb/phy/phy-tegra-usb.c b/drivers/usb/phy/phy-tegra-usb.c
+index 5b9f031619c5..9adbcdf8d3a1 100644
+--- a/drivers/usb/phy/phy-tegra-usb.c
++++ b/drivers/usb/phy/phy-tegra-usb.c
+@@ -1100,6 +1100,7 @@ static int tegra_usb_phy_probe(struct platform_device *pdev)
+ 	enum usb_phy_interface phy_type;
+ 	struct reset_control *reset;
+ 	struct resource *res;
++	struct usb_phy *phy;
+ 	int err;
  
--	/*
--	 * Tegra's USB PHY driver doesn't implement optional phy_init()
--	 * hook, so we have to power on UDC controller before ChipIdea
--	 * driver initialization kicks in.
--	 */
--	usb_phy_set_suspend(udc->phy, 0);
+ 	tegra_phy = devm_kzalloc(&pdev->dev, sizeof(*tegra_phy), GFP_KERNEL);
+@@ -1200,12 +1201,14 @@ static int tegra_usb_phy_probe(struct platform_device *pdev)
+ 			return err;
+ 		}
+ 
+-		tegra_phy->ulpi = otg_ulpi_create(&ulpi_viewport_access_ops, 0);
+-		if (!tegra_phy->ulpi) {
++		phy = devm_otg_ulpi_create(&pdev->dev,
++					   &ulpi_viewport_access_ops, 0);
++		if (!phy) {
+ 			dev_err(&pdev->dev, "Failed to create ULPI OTG\n");
+ 			return -ENOMEM;
+ 		}
+ 
++		tegra_phy->ulpi = phy;
+ 		tegra_phy->ulpi->io_priv = tegra_phy->regs + ULPI_VIEWPORT;
+ 		break;
+ 
+@@ -1224,17 +1227,9 @@ static int tegra_usb_phy_probe(struct platform_device *pdev)
+ 
+ 	err = usb_add_phy_dev(&tegra_phy->u_phy);
+ 	if (err)
+-		goto free_ulpi;
++		return err;
+ 
+ 	return 0;
 -
- 	/* setup and register ChipIdea HDRC device */
- 	udc->data.name = "tegra-udc";
- 	udc->data.flags = soc->flags;
-@@ -109,7 +102,6 @@ static int tegra_udc_probe(struct platform_device *pdev)
- 	return 0;
- 
- fail_power_off:
--	usb_phy_set_suspend(udc->phy, 1);
- 	clk_disable_unprepare(udc->clk);
- 	return err;
+-free_ulpi:
+-	if (tegra_phy->ulpi) {
+-		kfree(tegra_phy->ulpi->otg);
+-		kfree(tegra_phy->ulpi);
+-	}
+-
+-	return err;
  }
-@@ -119,7 +111,6 @@ static int tegra_udc_remove(struct platform_device *pdev)
- 	struct tegra_udc *udc = platform_get_drvdata(pdev);
  
- 	ci_hdrc_remove_device(udc->dev);
--	usb_phy_set_suspend(udc->phy, 1);
- 	clk_disable_unprepare(udc->clk);
+ static int tegra_usb_phy_remove(struct platform_device *pdev)
+@@ -1243,11 +1238,6 @@ static int tegra_usb_phy_remove(struct platform_device *pdev)
  
+ 	usb_remove_phy(&tegra_phy->u_phy);
+ 
+-	if (tegra_phy->ulpi) {
+-		kfree(tegra_phy->ulpi->otg);
+-		kfree(tegra_phy->ulpi);
+-	}
+-
  	return 0;
+ }
+ 
 -- 
 2.24.0
 
