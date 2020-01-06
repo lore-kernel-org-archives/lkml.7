@@ -2,110 +2,106 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC84C32767
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 03:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02386C33C9A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 03:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA2F20801
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 03:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBDC924670
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 03:41:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pcSztysJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbgAFDlL (ORCPT
+        id S1727499AbgAFDl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 22:41:11 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54644 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727307AbgAFDlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 22:41:10 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C6404996695D43207D1B;
-        Mon,  6 Jan 2020 11:41:08 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 6 Jan 2020
- 11:41:05 +0800
-Subject: Re: [f2fs-dev] Multidevice f2fs mount after disk rearrangement
-To:     Oleksandr Natalenko <oleksandr@natalenko.name>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-CC:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>
-References: <4c6cf8418236145f7124ac61eb2908ad@natalenko.name>
- <2c4cafd35d1595a62134203669d7c244@natalenko.name>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <e773d576-9458-48d7-bad4-dd4f8c61ebd3@huawei.com>
-Date:   Mon, 6 Jan 2020 11:41:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 5 Jan 2020 22:41:27 -0500
+Received: from ozlabs.org ([203.11.71.1]:54719 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727487AbgAFDl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 22:41:26 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47rhBX0mRTz9sR1;
+        Mon,  6 Jan 2020 14:41:23 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578282084;
+        bh=RuY20d6p1htWPH+1tTPPvNN9OuSfE/X13IHrRPkPK8g=;
+        h=Date:From:To:Cc:Subject:From;
+        b=pcSztysJBVa0QNKnW49DF4phR6B8EFalOY1LauHPrh9KCZMsNaniH9mDl7ZClMp7s
+         NVz1QfUlVpA+IQ7PLyvPljq/sdjpee6+VFEpKTpzcfyJCO341BerDPFtUMeUXsCC73
+         f/GS7S75YF+x7sKBnMYDc9SGOjISxy0Fx9OqvkiOWzP9T2FSROGYQ/3xspUqDBeEcX
+         VjuyzOVaXQi/eCX9hsTYOW36T0nJi458zDCS6jrOKeJZItr47nQr9dsakfMFlRAxSR
+         HmB8XsujHJmi4a8OJ0Ymhk1Y94DkWv7h3U77t9AfMNtITr+sAvAXcpKBixP3C0eriF
+         He1cz3yq9a1ag==
+Date:   Mon, 6 Jan 2020 14:41:22 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: linux-next: build warning after merge of the usb tree
+Message-ID: <20200106144122.01f51be9@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <2c4cafd35d1595a62134203669d7c244@natalenko.name>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/HYVkpLFNHS6Y7DpUt2yJALP";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+--Sig_/HYVkpLFNHS6Y7DpUt2yJALP
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the report. :)
+Hi all,
 
-On 2020/1/5 5:52, Oleksandr Natalenko via Linux-f2fs-devel wrote:
-> Hi.
-> 
-> On 04.01.2020 17:29, Oleksandr Natalenko wrote:
->> I was brave enough to create f2fs filesystem spanning through 2
->> physical device using this command:
->>
->> # mkfs.f2fs -t 0 /dev/sdc -c /dev/sdd
->>
->> It worked fine until I removed /dev/sdb from my system, so f2fs devices 
->> became:
->>
->> /dev/sdc -> /dev/sdb
->> /dev/sdd -> /dev/sdc
->>
->> Now, when I try to mount it, I get the following:
->>
->> # mount -t f2fs /dev/sdb /mnt/fs
->> mount: /mnt/fs: mount(2) system call failed: No such file or directory.
->>
->> In dmesg:
->>
->> [Jan 4 17:25] F2FS-fs (sdb): Mount Device [ 0]:             /dev/sdc,
->>   59063,        0 -  1cd6fff
->> [  +0,000024] F2FS-fs (sdb): Failed to find devices
->>
->> fsck also fails with the following assertion:
->>
->> [ASSERT] (init_sb_info: 908) !strcmp((char *)sb->devs[i].path, (char
->> *)c.devices[i].path)
->>
->> Am I doing something obviously stupid, and the device path can be
->> (somehow) changed so that the mount succeeds, or this is unfixable,
->> and f2fs relies on persistent device naming?
->>
->> Please suggest.
->>
->> Thank you.
-> 
-> Erm, fine. I studied f2fs-tools code a little bit and discovered that 
-> superblock indeed had /dev/sdX paths saved as strings. So I fired up 
-> hexedit and just changed the superblock directly on the first device, 
-> substituting sdc with sdb and sdd with sdc (I did it twice; I guess 
-> there are 2 copies of superblock), and after this the mount worked.
+After merging the usb tree, today's linux-next build (x86_64 allmodconfig)
+produced this warning:
 
-Alright, it works if superblock checksum feature is off...
+WARNING: unmet direct dependencies detected for PHY_DA8XX_USB
+  Depends on [n]: ARCH_DAVINCI_DA8XX
+  Selected by [m]:
+  - USB_OHCI_HCD_DAVINCI [=3Dm] && USB_SUPPORT [=3Dy] && USB [=3Dm] && (ARC=
+H_DAVINCI_DA8XX || COMPILE_TEST [=3Dy]) && USB_OHCI_HCD [=3Dm]
 
-> 
-> Am I really supposed to do this manually ;)?
+WARNING: unmet direct dependencies detected for PHY_DA8XX_USB
+  Depends on [n]: ARCH_DAVINCI_DA8XX
+  Selected by [m]:
+  - USB_OHCI_HCD_DAVINCI [=3Dm] && USB_SUPPORT [=3Dy] && USB [=3Dm] && (ARC=
+H_DAVINCI_DA8XX || COMPILE_TEST [=3Dy]) && USB_OHCI_HCD [=3Dm]
 
-We'd better add that ability in tune.f2fs. And I guess we need to let
-kernel/fsck to notice that case, and give hint to run tune.f2fs to
-reconfigure primary/secondary/... device paths.
+WARNING: unmet direct dependencies detected for PHY_DA8XX_USB
+  Depends on [n]: ARCH_DAVINCI_DA8XX
+  Selected by [m]:
+  - USB_OHCI_HCD_DAVINCI [=3Dm] && USB_SUPPORT [=3Dy] && USB [=3Dm] && (ARC=
+H_DAVINCI_DA8XX || COMPILE_TEST [=3Dy]) && USB_OHCI_HCD [=3Dm]
 
-Thanks,
+Introduced by commit
 
-> 
+  88eaaecc4446 ("usb: host: Enable compile testing for some of drivers")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/HYVkpLFNHS6Y7DpUt2yJALP
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4SrGIACgkQAVBC80lX
+0Gyzuwf/YcT3nLjbS6mNKzYrZMoWLqIM5GYL/gfsj9aKPW4SLhScJSygUDzYGg4A
+Gu7FfXMEgcFUq4SC/S+j9QwyXrLwA80PGtoQ0PtIR5KT+IPm0ukvNEiGD/RytfWE
+4l/uEIZvCuyqKXKLtZmQOxLl261Gsqk+CulxXRKgbhU1ddANzleqTuIURAOusVEF
+QeWscmuPuX5opjzgJEgl8FafwLL7VygRO+xvEjzNsa9qYejVOHakOb27cDDl89pB
+8Ac2APP8Y4MYznZTGI271ymrURJCG9nQ9DrA3StgP6yRYdycb/0pfy/UgfCg88l5
+lW29NfWjoFAoJccjsFfx/kv3TXz6HQ==
+=q/15
+-----END PGP SIGNATURE-----
+
+--Sig_/HYVkpLFNHS6Y7DpUt2yJALP--
