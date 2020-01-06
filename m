@@ -2,142 +2,116 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15256C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21022C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E00C820731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4D0C20731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:44:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c3/Johp/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t1HhJyuh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgAFPlb (ORCPT
+        id S1726515AbgAFPov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 10:41:31 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:42570 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgAFPla (ORCPT
+        Mon, 6 Jan 2020 10:44:51 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:39489 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbgAFPou (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 10:41:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Pr+QJhLWon8Zy2xzdYFdw8f98/n5SlmPPCm9dGfNuCU=; b=c3/Johp/zrnjTKuah4azV/J/z
-        jHBViK0l3EwXzBzuZWUdyQQkJKnZL7zuKVNl6K08BVxu6TNGMkua4JmFf7Xu7dw/HiHRLh3zykrEq
-        xkpI8oKCTPBdIwkcAxq8iPS0JA9BHMDYpSRn2oO7DknGdsHH8hwghXZodIVbrM9VFhIi7BmGi2A/Q
-        FA2VwLuNSmgNAZR82xfiBIPmYBdmzxC7U7XVwR7gBr2LG4wZdFGwajQPbhcRS2NrirK6H8pXgWfZ/
-        8qxXNhok1Kaxm9tHDZHUrvpgG/ITQKI9zgSBxOv8FsTPw0g0GPF5FDKYuXKrtGJb8nRcRH/pBwcvY
-        5FW1a2Rpw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ioUVO-0003LZ-2q; Mon, 06 Jan 2020 15:41:22 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 513453006E0;
-        Mon,  6 Jan 2020 16:39:47 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3A67D2B2844FB; Mon,  6 Jan 2020 16:41:19 +0100 (CET)
-Date:   Mon, 6 Jan 2020 16:41:19 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-sparse@vger.kernel.org
-Subject: Re: [PATCH] locking/refcount: add sparse annotations to dec-and-lock
- functions
-Message-ID: <20200106154119.GV2810@hirez.programming.kicks-ass.net>
-References: <20191226152922.2034-1-ebiggers@kernel.org>
- <20191228114918.GU2827@hirez.programming.kicks-ass.net>
- <201912301042.FB806E1133@keescook>
- <20191230191547.GA1501@zzz.localdomain>
- <201912301131.2C7C51E8C6@keescook>
- <20191230233814.2fgmsgtnhruhklnu@ltop.local>
+        Mon, 6 Jan 2020 10:44:50 -0500
+Received: by mail-pj1-f68.google.com with SMTP id t101so7931415pjb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 07:44:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n0l5A9UoqjVI1sY5PPJyL17z33+kBWrkankas44MyTI=;
+        b=t1HhJyuhMF6b2u0cHsve67RMCFv+L2YN1phOPEJ39G+0kiSGSPX12N3z9hbQUyHnP2
+         qavWAIKWz4aJZrmtIDX6lDLsjNScEXEKoxUAayeV2RpdtN3n8D8fXKUE6B1CSyGPc6Uu
+         qhVHYgAHNZHogm30G35nMn38lRSJES6cnUzsH22Fvcc2CpTZ4FJmyBJ/BLw6Qi0tzCTV
+         I8ed4V4pNvcDUWu7TsAFHsw59BhMgxFITZp9u99jJPwndvwK0czkDXnYZOX3O0BMiKmw
+         eAjeVpm0z3sgjST5Lo3bOuTGYjKJpH6/6Le0qkg97XQ9qLHShGOqSWijJaEli0YvCUyY
+         U8jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n0l5A9UoqjVI1sY5PPJyL17z33+kBWrkankas44MyTI=;
+        b=YjG6JD9NsZlTqYkHGN0Xgm2EZUskQHCfK35LL8QNq65q3j1hmMRE5HTPtlnIFEYgwW
+         57jpBAsXmgKLI2vbzEaf1K5gdT27ISleS4bGWHDEPhVKzcFxfjqeUOorGwnuAPd/DGwe
+         d8/1ucHDWTsn7jArRQfkP6+3bZ4iFk5/hp3+XiViMKu1/VjnSbjBUk2xHnasTQIuYTU2
+         o68NAk1DTtJk2Af1naGbpGdiAxQtJydNdtnpmHi7zEEUVvNUKP620KqhiE36GsD3f+TG
+         3P90SDhSU9taUxryRhX3COcKvY+wgn0ZpUOKAP5tqULZLygwdNR5JPsXmHvelh/1+rvC
+         kSew==
+X-Gm-Message-State: APjAAAUBasAWjTjrQ/IOmVB+pEWkP5xLRIomTEJsn6mgbLxtQQxxnFxu
+        5vgQjUuURglQwnJxnZxE+A0WM5Cm
+X-Google-Smtp-Source: APXvYqw/g9CEBUx5KdX3yMeBwP5RWe4LJN6oMi0ehtmKDq9tO/+zMagHk4t0MyaX/sCGHlFKbdINVg==
+X-Received: by 2002:a17:90a:dc82:: with SMTP id j2mr44544482pjv.70.1578325490212;
+        Mon, 06 Jan 2020 07:44:50 -0800 (PST)
+Received: from localhost.localdomain ([2408:8025:ad:7e20:1523:ae70:55ad:68cb])
+        by smtp.gmail.com with ESMTPSA id b185sm61935315pfa.102.2020.01.06.07.44.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 07:44:49 -0800 (PST)
+From:   chengkaitao <pilgrimtao@gmail.com>
+To:     tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, smuchun@gmail.com,
+        Kaitao Cheng <pilgrimtao@gmail.com>
+Subject: [RESEND v2] irq: Refactor irq_wait_for_interrupt info to simplify the code
+Date:   Mon,  6 Jan 2020 07:44:30 -0800
+Message-Id: <20200106154430.3413-1-pilgrimtao@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191230233814.2fgmsgtnhruhklnu@ltop.local>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 31, 2019 at 12:38:14AM +0100, Luc Van Oostenryck wrote:
-> On Mon, Dec 30, 2019 at 11:32:31AM -0800, Kees Cook wrote:
-> > On Mon, Dec 30, 2019 at 01:15:47PM -0600, Eric Biggers wrote:
-> > > 
-> > > The annotation needs to go in the .h file, not the .c file, because sparse only
-> > > analyzes individual translation units.
-> > > 
-> > > It needs to be a wrapper macro because it needs to tie the acquisition of the
-> > > lock to the return value being true.  I.e. there's no annotation you can apply
-> > > directly to the function prototype that means "if this function returns true, it
-> > > acquires the lock that was passed in parameter N".
-> > 
-> > Gotcha. Well, I guess I leave it to Will and Peter to hash out...
-> > 
-> > Is there a meaningful proposal anywhere for sparse to DTRT here? If
-> > not, it seems best to use what you've proposed until sparse reaches the
-> > point of being able to do this on its own.
-> 
-> What "Right Thing" are you thinking about?
-> One of the simplest situation with these conditional locks is:
-> 
-> 	if (test)
-> 		lock();
-> 
-> 	do_stuff();
-> 
-> 	if (test)
-> 		unlock();
-> 
-> No program can check that the second test gives the same result than
-> the first one, it's undecidable. I mean, it's undecidable even on
-> if single threaded and without interrupts. The best you can do is
-> to simulate the whole thing (and be sure your simulation will halt).
+From: Kaitao Cheng <pilgrimtao@gmail.com>
 
-Not quite what we're talking about. Instead consider this:
+Cleanup extra if(test_and_clear_bit), and put the other one in front.
 
-The normal flow would be something like:
+Signed-off-by: Kaitao Cheng <pilgrimtao@gmail.com>
+---
+ kernel/irq/manage.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
-extern void spin_lock(spinlock_t *lock) __acquires(lock);
-extern void spin_unlock(spinlock_t *lock) __releases(lock);
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 1753486b440c..7266d0d30fa9 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -863,21 +863,15 @@ static int irq_wait_for_interrupt(struct irqaction *action)
+ 	for (;;) {
+ 		set_current_state(TASK_INTERRUPTIBLE);
+ 
+-		if (kthread_should_stop()) {
+-			/* may need to run one last time */
+-			if (test_and_clear_bit(IRQTF_RUNTHREAD,
+-					       &action->thread_flags)) {
+-				__set_current_state(TASK_RUNNING);
+-				return 0;
+-			}
++		if (test_and_clear_bit(IRQTF_RUNTHREAD,
++					&action->thread_flags)) {
+ 			__set_current_state(TASK_RUNNING);
+-			return -1;
++			return 0;
+ 		}
+ 
+-		if (test_and_clear_bit(IRQTF_RUNTHREAD,
+-				       &action->thread_flags)) {
++		if (kthread_should_stop()) {
+ 			__set_current_state(TASK_RUNNING);
+-			return 0;
++			return -1;
+ 		}
+ 		schedule();
+ 	}
+-- 
+2.20.1
 
-extern bool _spin_trylock(spinlock_t *lock) __acquires(lock);
-
-#define __cond_lock(x, c) ((c) ? ({ __acquire(x); 1; }) : 0)
-#define spin_trylock(lock) __cond_lock(lock, _spin_lock)
-
-
-	if (spin_trylock(lock)) {
-
-		/* do crap */
-
-		spin_unlock();
-	}
-
-
-So the proposal here:
-
-  https://markmail.org/message/4obybcgqscznnx63
-
-would have us write:
-
-extern bool spin_trylock(spinlock_t *lock) __attribute__((context(lock, 0, spin_trylock(lock));
-
-Basically have sparse do a transform on its own expression tree and
-inject the very same crud we now do manually. This avoids cluttering the
-kernel tree with this nonsense.
