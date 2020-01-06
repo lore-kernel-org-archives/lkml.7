@@ -2,89 +2,117 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBEBC32771
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E7BC32771
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E728720848
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD6020848
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:12:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZUDeLbmS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MQG5p4dm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbgAFIKb (ORCPT
+        id S1726275AbgAFIM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 03:10:31 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:57478 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgAFIKa (ORCPT
+        Mon, 6 Jan 2020 03:12:26 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37298 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgAFIM0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 03:10:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4jQT2MzQnGVbRqu0zEK79SsXrd8bqafhR3CZKOJDJAI=; b=ZUDeLbmSrGs+4SbT7pm8/4nX8
-        tDqFDyrJfAWLbNTFH8krQ/jD9CmZo00y/8QCaZP/ZD0ZF0J74oLl6njQxiLOSuXqbifp2mteZIGXj
-        Kv48FYjP11u/tXXxudiu2rB3gBeZb24sS/qIjcM0/Hm6r+qSKpGnI+ABWjvnUJSoElxkky5fLM35H
-        pQGJvDdOd6JNvrZhY/d9wRPC5LwSeEfREX3urIJGZlAVhpTzX2OTUqKnYwEZJ66FhsWaexuXiaK1a
-        kTzHNM5qH4k0+kw6bvh+llV0aCM3NNITchFIeu4CsP76UfMNAxMRZC2Uexhda+koZZrKFhNq/l46d
-        A4PJKUhpw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ioNSx-0008Gk-9a; Mon, 06 Jan 2020 08:10:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A8799304124;
-        Mon,  6 Jan 2020 09:08:48 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5F1612B508237; Mon,  6 Jan 2020 09:10:20 +0100 (CET)
-Date:   Mon, 6 Jan 2020 09:10:20 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC PATCH 0/7] sched: Streamline select_task_rq() &
- select_task_rq_fair()
-Message-ID: <20200106081020.GL2844@hirez.programming.kicks-ass.net>
-References: <20191211164401.5013-1-valentin.schneider@arm.com>
+        Mon, 6 Jan 2020 03:12:26 -0500
+Received: by mail-pl1-f193.google.com with SMTP id c23so21575276plz.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 00:12:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=58eNx8xjPfMV4eq6vPbdIdo8dcdfbd9IAa9aN+9mrdc=;
+        b=MQG5p4dm8iSs9bjqsWL8TyBmSrQW9Hkp8VMQZugaTbXk2MSLt9tDixQkPu7YMcm9aG
+         qwhfxUFs3DQqnVBtt/JAVyE+RcVoaKZ7fOwsow1tjSST6RcN3hyW5EuGoj8Lyah7iPqi
+         Bh9APtJkRabqTt5AoHJTI8UXsHTBZApxKFrGYlO9whTrqbKdsdSOMNDIzc/UpDxLoDye
+         gBSP6SEIMkr1vcuQ548H1pVa9ba6BHEDULqBma3d3GOZ6T1pYpdtUSwbXSpMOJlbPGWj
+         PzRD0V23H9CM+656dIv+jv2wMibAssBph4Lz0aV4uNxyIGmNao4OGpTHUH3kHsTN8dws
+         AZ9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=58eNx8xjPfMV4eq6vPbdIdo8dcdfbd9IAa9aN+9mrdc=;
+        b=hoQT+/lqqf5rMt4xJk/Ibu3JZ42oVcEqD+NdWtkHJ6SEPi/wFDFIUaKslL3XPAaleu
+         eDCUDh72tHTXaovgM5JA7wdfbD00hFXNQIU/LzJPm1Ug9Ri3zj2gfmksM/Q3ODKJhy4O
+         EqzyQcY/itHBR3Q34dfvqxZLG9qz1ufPGsEik4GajOrJsC6+zQg3+z3P8SjNjbhfmn53
+         m6QmFhrZaYhcHIo7VvHElrZRdINpJNXWLsGDE9SITWG24onMXKVKCrpPxA4LqwAzh6gj
+         FsS45KutxhP6kyGppa8pbJN3zIA3/+XuFfYGQr0/UvnD8rXWm7+OS12Jlt3UhDW3JjY2
+         P+6Q==
+X-Gm-Message-State: APjAAAVX0vZQ0slQjDqkji16DNqnR2vBsB1qCC24rlIJnjCaZd6YNffc
+        +DvtFzHJ7z+GdL9JL1oKlU8Q4A==
+X-Google-Smtp-Source: APXvYqwxlIZexxNFfYuYrgDtyjvoOHjG2sq4TgXR5+3z7XlWffjwrHaQfndEtMXnQfh+jno11givJg==
+X-Received: by 2002:a17:902:968c:: with SMTP id n12mr105934875plp.144.1578298344533;
+        Mon, 06 Jan 2020 00:12:24 -0800 (PST)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id n4sm18755019pgg.88.2020.01.06.00.12.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 00:12:23 -0800 (PST)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4] phy: qcom: qmp: Use power_on/off ops for PCIe
+Date:   Mon,  6 Jan 2020 00:11:42 -0800
+Message-Id: <20200106081142.3192204-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211164401.5013-1-valentin.schneider@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 04:43:54PM +0000, Valentin Schneider wrote:
-> Discussion points
-> =================
-> 
-> The use of SD_LOAD_BALANCE forced me to do a few ugly things.
-> 
-> Patch 5 is only required because the domain walk in select_task_rq_fair()
-> is ceiled by the presence of SD_LOAD_BALANCE. Thing is (I also ramble about
-> this in the changelog of patch 7) AFAIK this flag is set unconditionally in
-> sd_init() and the only way to clear it is via the sched_domain sysctl,
-> which is a SCHED_DEBUG interface. I haven't found anything with cpusets
-> that would clear it; AFAICT cpusets can end up attaching the NULL domain to
-> some CPUs (with sched_load_balance=0) but that's as far as this goes:
+The PCIe PHY initialization requires the attached device to be present,
+which is primarily achieved by the PCI controller driver.  So move the
+logic from init/exit to power_on/power_off.
 
-I can't find it in a hurry, but cpusets should really be able to build
-stuff without LOAD_BALANCe on, otherwise it is broken.
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
-/me digs a little into the code and finds that. no, you're right. What
-cpusets does is create non-overlapping domain trees for each parition.
-Which avoids the need to clear that flag.
+Changes since v3:
+- Sent separate from SDM845 QMP/QHP series
 
-Hmmm.. if we double check all that, I don't suppose there is anything
-against simply removing that flag. Less is more etc..
+Changes since v2:
+- None
+
+Changes since v1:
+- None
+
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index 7db2a94f7a99..e107a7eec235 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -1967,7 +1967,7 @@ static const struct phy_ops qcom_qmp_phy_gen_ops = {
+ 	.owner		= THIS_MODULE,
+ };
+ 
+-static const struct phy_ops qcom_qmp_ufs_ops = {
++static const struct phy_ops qcom_qmp_pcie_ufs_ops = {
+ 	.power_on	= qcom_qmp_phy_enable,
+ 	.power_off	= qcom_qmp_phy_disable,
+ 	.set_mode	= qcom_qmp_phy_set_mode,
+@@ -2067,8 +2067,8 @@ int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
+ 		}
+ 	}
+ 
+-	if (qmp->cfg->type == PHY_TYPE_UFS)
+-		ops = &qcom_qmp_ufs_ops;
++	if (qmp->cfg->type == PHY_TYPE_UFS || qmp->cfg->type == PHY_TYPE_PCIE)
++		ops = &qcom_qmp_pcie_ufs_ops;
+ 
+ 	generic_phy = devm_phy_create(dev, np, ops);
+ 	if (IS_ERR(generic_phy)) {
+-- 
+2.24.0
+
