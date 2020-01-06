@@ -2,90 +2,102 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD03C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BA1C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21DCD21744
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4724020731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:16:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sc6bN9z9"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="h5aYFg1L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727300AbgAFXQG (ORCPT
+        id S1727315AbgAFXQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 18:16:06 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41657 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727001AbgAFXQF (ORCPT
+        Mon, 6 Jan 2020 18:16:20 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41764 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727001AbgAFXQU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 18:16:05 -0500
-Received: by mail-lj1-f195.google.com with SMTP id h23so52708406ljc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 15:16:04 -0800 (PST)
+        Mon, 6 Jan 2020 18:16:20 -0500
+Received: by mail-pg1-f194.google.com with SMTP id x8so27545526pgk.8
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 15:16:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=478YH3IYCHrD2e4B506SFn4dG66iW1M4hvXAWnhq7U0=;
-        b=Sc6bN9z9vX6vHT6KJ86/wcGYjg701Ez026i8tnOYJhzp4DwZHmKRWtsPGNX7Z7rBNm
-         wfA8qiev5ebBo4+7IsnAYVFiISE9k7MrG109NOAQGUqvLRNa/2rMoLfb4RKnfNhmaQwE
-         xyPY6at0gwMC2ZzBod7g8wVLAJZroEKUCJs7OB4icZrfs7ufV/kJZtSizkwVYDt81DYR
-         HCH12BsFCjiEAxoBgK6NA/gzfZSpx8uzIPgr1hsTM1AdQpd8jopdsIRWSZRgIuurxEqe
-         +Gdv1GcJfjuHZg47hm8gTG7XKlXVWo3eyM6MHQP7nVuWWo22R+v69K3pHsEAMOUSJJmX
-         B+ow==
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TrkNrlsI6gf+UgcIdoDUEX3iqa/Oz0F6ZIOtZxRpg7U=;
+        b=h5aYFg1LHy7RecocWz2pJ8zPdAcz/Zlxf0A90TagTHHfzfgiLT7dDpHo3qzZKG5T7h
+         x6bJ+8DtVgwqQG8oyrM0gdwnUJLKdJybBqYaDsW7IsaXO6CsqpcneYkkRi011gVD/Zsz
+         9t98bw6eht+s2PTB+3QTmsmDwt8fnshoyGsbUiAghLSWmK0QERKfo7CkKuU6f4XN8JtR
+         qN5hg/lchx9eiPOk924DnTRLTxXolWcdAnCmvRJVRpJQCtctjshI1OIAiZukYPFvHeVX
+         8r7YjAUrMbKcFgIX4is99Zkb3FsrbRVEKe0fdyj3WsJ5BnfoEy7Dtb+atpT1zhk6ERzt
+         0lQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=478YH3IYCHrD2e4B506SFn4dG66iW1M4hvXAWnhq7U0=;
-        b=pHg01k4gBw1nSbQIHmYr63oXrWyVbSfn4YRM1vCh15B5Jn/ZigjR3QQlJXUatnM+1C
-         7zzjLnpP/F6NcN7uhKy2HClsfKXtQ+y7TGzGXkRKb6A2iTn0hOHSRMjts8cNiz4HT5bX
-         CoGGdlBoh3MwM1A4yGQoYO5Da0R9tTv8BjDMfHRbwlWtnhxowMM2WQ5SfJ3RJEWHrLM4
-         648Yb6P9tXiVczWjIvvgQUHuwcqlTI8nv4YdlIpxhv3WIsID4LED8hnzjVSlJteuPxvy
-         YmS011SBZf2gGbk1mm2iT7F9zR3Rzvv9Zfmpb5xQeEWhyGl/NPZiI9dglf3Iey83nE8D
-         8+wA==
-X-Gm-Message-State: APjAAAUsdQsvX30LXLEoPkaBXadfH5CdbhtVNDdr8ZVYN0ZKAIy13X4y
-        u793bu2AL62GeDeohcwB1JlFXhrqs7VvPztsLknzau3XeXo=
-X-Google-Smtp-Source: APXvYqzrxWmdShmKUM9TYeByfQUqSIfyhOUDPflUr01aUaoSyuiRbnZsG1KIZtnjSy8sPboUTEjxmBcaoS8PkTk20KY=
-X-Received: by 2002:a2e:9587:: with SMTP id w7mr58926187ljh.42.1578352563746;
- Mon, 06 Jan 2020 15:16:03 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TrkNrlsI6gf+UgcIdoDUEX3iqa/Oz0F6ZIOtZxRpg7U=;
+        b=PxhpFgqOXud7hzlMacL0fPoIuTPrycC97SlM+tJWrDyWgprWFvWKoA6UDzcI/cfG0p
+         MbI/RzOAis/xJHSCa7sN2x6pWjL/rtffFx+wK+76YQZfFFuUcWoO43zZizJhtgC8FYQA
+         vfHqUxUvTfYsv02H7okCKViAX/Zp/HJqYetCr8lIw5/CCih+5hCuaV6sLvRHEcXikJVg
+         n7DiaVcRiseyp1WSTHD87fCmrLFocD6VVMS7s7Z+SHt336gV3ZdANIK/3V8/TENKy/Nl
+         O9Dk+W39sAb6wyHDucucHoBPBpAQZgIjtL4+6t+eghgI14teWlyG+wQj76vJGWF106mH
+         NVUA==
+X-Gm-Message-State: APjAAAUTz1WIVDhxNAilJWBjtuZwpYmiTXksrEcdYZLIedzOViLD4kVi
+        ENE9m0M+MD1dJkM7t4FRfbcP4g==
+X-Google-Smtp-Source: APXvYqziUHnuk5l/Atiw2vj5n2Wz6sjwDTja/WaJs0V1Vh/2LG/VjEj5/h6HlAXT+QuTPWrIOVMPDQ==
+X-Received: by 2002:a63:4c4f:: with SMTP id m15mr112630946pgl.346.1578352579414;
+        Mon, 06 Jan 2020 15:16:19 -0800 (PST)
+Received: from rip.lixom.net (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
+        by smtp.gmail.com with ESMTPSA id s131sm65052995pfs.135.2020.01.06.15.16.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 15:16:18 -0800 (PST)
+From:   Olof Johansson <olof@lixom.net>
+To:     paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Olof Johansson <olof@lixom.net>
+Subject: [PATCH] riscv: keep 32-bit kernel to 32-bit phys_addr_t
+Date:   Mon,  6 Jan 2020 15:16:11 -0800
+Message-Id: <20200106231611.10169-1-olof@lixom.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191217121642.28534-1-srinivas.kandagatla@linaro.org> <20191217121642.28534-9-srinivas.kandagatla@linaro.org>
-In-Reply-To: <20191217121642.28534-9-srinivas.kandagatla@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 00:15:52 +0100
-Message-ID: <CACRpkdY+A_=phLW6ymz+QXTnGKzzUt4v4iAVndnr5nKH1r48LQ@mail.gmail.com>
-Subject: Re: [PATCH v5 08/11] dt-bindings: gpio: wcd934x: Add bindings for gpio
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Vinod Koul <vinod.koul@linaro.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 1:17 PM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
+While rv32 technically has 34-bit physical addresses, no current
+platforms use it and it's likely to shake out driver bugs.
 
-> Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
-> gpio controller to control 5 gpios on the chip. This patch adds
-> required device tree bindings for it.
->
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Let's keep 64-bit phys_addr_t off on 32-bit builds until one shows up,
+since other work will be needed to make such a system useful anyway.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Olof Johansson <olof@lixom.net>
+---
+ arch/riscv/Kconfig | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Yours,
-Linus Walleij
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index a31169b02ec06..33a20fa046e0a 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -12,8 +12,9 @@ config 32BIT
+ 
+ config RISCV
+ 	def_bool y
+-	# even on 32-bit, physical (and DMA) addresses are > 32-bits
+-	select PHYS_ADDR_T_64BIT
++	# While RV32 has 34-bit physical addresses, no known platform
++	# uses it, so keep it to 32-bit until one shows up to test with.
++	select PHYS_ADDR_T_64BIT if 64BIT
+ 	select OF
+ 	select OF_EARLY_FLATTREE
+ 	select OF_IRQ
+-- 
+2.20.1
+
