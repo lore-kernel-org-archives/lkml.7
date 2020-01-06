@@ -2,163 +2,114 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA3BC32767
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 05:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A775EC33C9A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 05:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E89421775
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 05:42:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578289354;
-	bh=3RhNzBGs+D8rTsIRLrcYDaHymOOyLXkNlDfsc8JeyZY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ud+5ejJWq08SWYbye85ikNmP/tyKUGjMxzW3Ly7VctoCt+Fy0N6JG8pcbnsLCeyHj
-	 UUTSKEjvXFRSrp7c8JlPl21dzWVCPcBqixBZVp8rLLfnDOAIjsDotPOv5OQdrp26J0
-	 RxWmwzNRhX52pSP0EWidliFI9trGbp8vYusHKDqE=
+	by mail.kernel.org (Postfix) with ESMTP id 7EECD21734
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 05:45:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YUsvcYgU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgAFFm0 (ORCPT
+        id S1726767AbgAFFpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 00:42:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbgAFFmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 00:42:25 -0500
-Received: from localhost (unknown [117.99.94.5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16C1121734;
-        Mon,  6 Jan 2020 05:42:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578289345;
-        bh=3RhNzBGs+D8rTsIRLrcYDaHymOOyLXkNlDfsc8JeyZY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MinmSbcCkzk1oiZEJyhRn/jaFO5NQ/wKcCKKfRm5rrLa7GBYYqS9ZqTNBrXcPIW94
-         vBzhi30/Faml22jv2YFmujSrhy3fH15V+28W/X8yn6AR5Y8i4QcVdVik9MvJ4CD6zo
-         ZvjRndP7VTCN1eHYPOGKz2/oTI/s7L/UjbaGFm28=
-Date:   Mon, 6 Jan 2020 11:12:21 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, slawomir.blauciak@intel.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-Subject: Re: [alsa-devel] [PATCH v5 09/17] soundwire: intel: remove platform
- devices and use 'Master Devices' instead
-Message-ID: <20200106054221.GN2818@vkoul-mobl>
-References: <20191217210314.20410-1-pierre-louis.bossart@linux.intel.com>
- <20191217210314.20410-10-pierre-louis.bossart@linux.intel.com>
- <20191227090826.GM3006@vkoul-mobl>
- <5be4d9df-0f46-d36f-471c-aae9e1f55cc0@linux.intel.com>
+        Mon, 6 Jan 2020 00:45:02 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40847 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgAFFpB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 00:45:01 -0500
+Received: by mail-pl1-f195.google.com with SMTP id s21so18688828plr.7
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jan 2020 21:45:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gE/Gid9i9PsBYsQlg4fmp57Ncbkyju9XGadeZRX0gF4=;
+        b=YUsvcYgUUc5z5cDmx8TusJQdedghyS4mO/+HKbOr+CblccrQl+0cwBT/vWzbe0MHx2
+         QygMwZvxE2N9VK/mg1gpYFlKhzqVWWQDfFDD06SaYUeNbJk1uKxokGj70ZQUsNpKbctH
+         FcK9o5kCJ58G6vlgT2qslLidoX4nKlSzRwsXMA/lpRPCnTg5vcLZCnt1RYfngBon8GVt
+         BizW140hesxr64i4pb/Nqt++6R7w/yZ1EQ6XAwj0PuWyZ19c4HyMp2Il8xuOT/UQuLW/
+         ixThiTGoEbMLhxGOmd03HKC19gcrvrpV53g3LS4laULn8mfedP0+ba3r5p6XqVAc3KE/
+         r9qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gE/Gid9i9PsBYsQlg4fmp57Ncbkyju9XGadeZRX0gF4=;
+        b=pjYbuQqOFP3lRYQ4LNZxkgKswIF4EodACWv4cAFVx6iN8Xp2HRkrA3VBA2HNaqK/0A
+         Tb3gVSdxv9o9R5QowLKuf22HKoGrJYTYLu4jwv//0Y/7Y5N9v20LcO53QtUiwlGsMH6G
+         ywFmceHP1DM7OT6/Z6VdeWuCJL7hmUbZ6IrDBg+z1zzSUWPB0btR6DmxZlnMfigDTYHi
+         Awv8oDGAurfUi57EfXsCYJOUlwYEl4bld+XqHO0Yd36USXzr3YVQ1Mo+ht5aZ1BCCdQh
+         sEyg58ejW7HQ6upctVPsTL/vvNFv4HgoWjxgJ8xHhgxbKxFjbKZ1N/uKwfU3qOWYJ47L
+         3pcw==
+X-Gm-Message-State: APjAAAXVc/DXaDXCw0/NwpfWIY9/nx1Vg2hfhic3+LFIVWsIk5f7UIr5
+        SztUeR1qGcoI7nkakXdc/UIzIw==
+X-Google-Smtp-Source: APXvYqzWXlQqvmRVI1MoLPER/6vOzIRLLhjY3gbCu4p9smluhkTOdAjJDcJ2o3CSCudp542u0BhlaQ==
+X-Received: by 2002:a17:902:8a8e:: with SMTP id p14mr104008787plo.28.1578289500553;
+        Sun, 05 Jan 2020 21:45:00 -0800 (PST)
+Received: from localhost ([122.172.26.121])
+        by smtp.gmail.com with ESMTPSA id n26sm74694101pgd.46.2020.01.05.21.44.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 05 Jan 2020 21:44:59 -0800 (PST)
+Date:   Mon, 6 Jan 2020 11:14:57 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     qiwuchen55@gmail.com
+Cc:     rjw@rjwysocki.net, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, chenqiwu <chenqiwu@xiaomi.com>
+Subject: Re: [PATCH] cpufreq: powernow-k8: avoid use after free issue in
+ cpufreq_notify_transition()
+Message-ID: <20200106054457.sgz4uevykvkqdqzt@vireshk-i7>
+References: <1577501824-12152-1-git-send-email-qiwuchen55@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5be4d9df-0f46-d36f-471c-aae9e1f55cc0@linux.intel.com>
+In-Reply-To: <1577501824-12152-1-git-send-email-qiwuchen55@gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27-12-19, 18:13, Pierre-Louis Bossart wrote:
+On 28-12-19, 10:57, qiwuchen55@gmail.com wrote:
+> From: chenqiwu <chenqiwu@xiaomi.com>
 > 
+> There is a potential UAF issue in cpufreq_notify_transition() that the
+> cpufreq of current cpu has been released before using it. So we should
+> make a judgement and avoid it.
 > 
-> > > +extern struct sdw_md_driver intel_sdw_driver;
-> > 
-> > who uses this intel_sdw_driver? I would assumed someone would register
-> > this with the core...
+> Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
+> ---
+>  drivers/cpufreq/powernow-k8.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> this is a structure used by intel_init(), see the following code.
-> 
-> +		md = sdw_md_add(&intel_sdw_driver,
-> +				res->parent,
-> +				acpi_fwnode_handle(adev),
-> +				i);
-> 
-> that will in turn call intel_master_probe() as defined below:
-> 
-> +struct sdw_md_driver intel_sdw_driver = {
-> +	.probe = intel_master_probe,
-> +	.startup = intel_master_startup,
-> +	
-> 
-> > > -		link->pdev = pdev;
-> > > -		link++;
-> > > +		/* let the SoundWire master driver to its probe */
-> > > +		md->driver->probe(md, link);
-> > 
-> > So you are invoking driver probe here.. That is typically role of driver
-> > core to do that.. If we need that, make driver core do that for you!
-> > 
-> > That reminds me I am missing match code for master driver...
-> 
-> There is no match for the master because it doesn't have an existence in
-> ACPI. There are no _ADR or HID that can be used, the only thing that exists
-> is the Controller which has 4 sublinks. Each master must be added  by hand.
-> 
-> Also the SoundWire master cannot be enumerated or matched against a
-> SoundWire bus, since it controls the bus itself (that would be a chicken and
-> egg problem). The SoundWire master would need to be matched on a parent bus
-> (which does not exist for Intel) since the hardware is embedded in a larger
-> audio cluster that's visible on PCI only.
-> 
-> Currently for Intel platforms, the SoundWire master device is created by the
-> SOF driver (via the abstraction in intel_init.c).
+> diff --git a/drivers/cpufreq/powernow-k8.c b/drivers/cpufreq/powernow-k8.c
+> index 2db2f17..7391eb0 100644
+> --- a/drivers/cpufreq/powernow-k8.c
+> +++ b/drivers/cpufreq/powernow-k8.c
+> @@ -913,6 +913,11 @@ static int transition_frequency_fidvid(struct powernow_k8_data *data,
+>  	freqs.new = find_khz_freq_from_fid(fid);
+>  
+>  	policy = cpufreq_cpu_get(smp_processor_id());
+> +	if (!policy) {
+> +		pr_debug("cpu %d: CPUFreq policy not found\n",
+> +			 smp_processor_id());
+> +		return 1;
+> +	}
 
-That is okay for me, the thing that is bit confusing is having a probe
-etc and no match.. (more below)..
+You $subject and this change doesn't look related to me. The cpufreq
+policy shall never be NULL here as we are in the middle of changing
+frequency, initiated by cpufreq core itself.
 
-> > So we seem to be somewhere is middle wrt driver probing here! IIUC this
-> > is not a full master driver, thats okay, but then it is not
-> > completely transparent either...
-> > 
-> > I was somehow thinking that the driver will continue to be
-> > 'platform/acpi/of' driver and master device abstraction will be
-> > handled in the core (for example see how the busses like i2c handle
-> > this). The master device is created and used to represent but driver
-> > probing etc is not done
-> 
-> I2C controllers are typically PCI devices or have some sort of ACPI
-> description. This is not the case for SoundWire masters on Intel platforms,
-
-Well the world is not PCI/ACPI... We have controllers which are DT
-described and work in same manner as a PCI device.
-
-> so even if I wanted to I would have no ability to implement any matching or
-> parent bus registration.
-> 
-> Also the notion of 'probe' does not necessarily mean that the device is
-> attached to a bus, we use DAI 'drivers' in ASoC and still have probe/remove
-> callbacks.
-
-The "big" difference is that probe is called by core (asoc) and not by
-driver onto themselves.. IMO that needs to go away.
-
-> And if you look at the definitions, we added additional callbacks since
-> probe/remove are not enough to deal with hardware restrictions:
-> 
-> For Intel platforms, we have a startup() callback which is only invoked once
-> the DSP is powered and the rails stable. Likewise we added an
-> 'autonomous_clock_stop()' callback which will be needed when the Linux
-> driver hands-over control of the hardware to the DSP firmware, e.g. to deal
-> with in-band wakes in D0i3.
-> 
-> FWIW, the implementation here follows what was suggested for Greybus 'Host
-> Devices' [1] [2], so it's not like I am creating any sort of dangerous
-> precedent.
-> 
-> [1]
-> https://elixir.bootlin.com/linux/latest/source/drivers/greybus/es2.c#L1275
-> [2] https://elixir.bootlin.com/linux/latest/source/drivers/greybus/hd.c#L124
-
-And if you look closely all this work is done by core not by drivers!
-Drivers _should_ never do all this, it is the job of core to do that for
-you.
+>  	cpufreq_cpu_put(policy);
+>  
+>  	cpufreq_freq_transition_begin(policy, &freqs);
+> -- 
+> 1.9.1
 
 -- 
-~Vinod
+viresh
