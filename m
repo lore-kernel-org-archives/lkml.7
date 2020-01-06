@@ -2,91 +2,172 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCB5C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4378AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 211342072E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18D0A2072E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:37:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VnuawsnT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgAFNgm convert rfc822-to-8bit (ORCPT
+        id S1726540AbgAFNhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 08:36:42 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:48624 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgAFNgl (ORCPT
+        Mon, 6 Jan 2020 08:37:09 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34351 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbgAFNhI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 08:36:41 -0500
-Received: from marcel-macbook.fritz.box (p5B22B473.dip0.t-ipconnect.de [91.34.180.115])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 67D39CECD3;
-        Mon,  6 Jan 2020 14:45:56 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: [PATCH v2] Bluetooth: btusb: Add support for 04ca:3021 QCA_ROME
- device
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200106060744.5476-1-rjliao@codeaurora.org>
-Date:   Mon, 6 Jan 2020 14:36:39 +0100
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <0E6CEC41-1759-4C13-86CF-9067B0F272E4@holtmann.org>
-References: <20191219071857.18532-1-rjliao@codeaurora.org>
- <20200106060744.5476-1-rjliao@codeaurora.org>
-To:     Rocky Liao <rjliao@codeaurora.org>
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+        Mon, 6 Jan 2020 08:37:08 -0500
+Received: by mail-wm1-f65.google.com with SMTP id c127so11979851wme.1;
+        Mon, 06 Jan 2020 05:37:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QOQNIAmP2EwBVCavZ0lFmSFnjBVk76326QHH2Q3kcmU=;
+        b=VnuawsnTf0Cd7zf4BmAy2YZKMN8+T2U2fEnGwrY7kdoQTrvBcljDa3+5uGsf5J07XH
+         wPvqtMi6exEC2pfkHwRNTimcbZTq6Wcny0eaccgE5xhSlGuAHyS/f5lu77WQnHMSVgtn
+         tRJRdS/zH+Ljx+KA6O85HOKMRCFvFMYoyUtZGfUipMbkJvD4FWqv7/P50/fAK5iZncT5
+         Q8ZEwPCTlT6R++dghR8MX75pnY86JlOwSJlwilVsmb8dvoirMCNJ8/zwuoRRyPVEY8MS
+         vPtcm/nlmMRXTOTom3L4CohdSPHaupLVC6B6zy/Ynxdr5accUgX91F3UCxjM7c1r6fr9
+         Woxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QOQNIAmP2EwBVCavZ0lFmSFnjBVk76326QHH2Q3kcmU=;
+        b=uBoMH6TfIJzH5myS4dviGu5kSjBHWhnuDvcXDFzC9PuKyCYC8ng53GNBwfTS8XqDpJ
+         6EroxGjn/wj5r1Ehj1Yyw+Eyjrmof06DKJQQDBYsU5tr1XouScQXx59LguANIxJ60d0V
+         bDYbOpVSYr4CJ80Qr64zzATk6g6jgEJaJwsXbCrprUnfUoVe8DvtLteNEXgQVj9ILSTS
+         xNwlCYdWCgWQAxBB2cpESP0PX/xoCI0dL04MdIAqwy09mbNojMkpQEpLimSK1KEK9Alc
+         Yv8shYEZbaN1A16EYUEgvqY578lCCrhZ4e93ozwWulw8Rex4uK+kOdPYyWnzEgGDTelm
+         bz/g==
+X-Gm-Message-State: APjAAAUQfT8+ZDwho3d2cjcmU69tci4koBp69SnPMsRWGd77Uz1L2Rft
+        5CXGsaFBQOl3WDKP2F3RSsm3sVCv
+X-Google-Smtp-Source: APXvYqxVJYPFzO8K7RFO9Mbkl9yf3DcX5Yyfc46eQahs0rjbrZh4wXbwJ5UoOs/3egJCUyIihU7gEw==
+X-Received: by 2002:a1c:5f06:: with SMTP id t6mr34830155wmb.32.1578317825517;
+        Mon, 06 Jan 2020 05:37:05 -0800 (PST)
+Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
+        by smtp.gmail.com with ESMTPSA id d16sm77467856wrg.27.2020.01.06.05.37.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 05:37:04 -0800 (PST)
+Date:   Mon, 6 Jan 2020 14:37:03 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Lucas Stach <dev@lynxeye.de>, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mmc: tegra: fix SDR50 tuning override
+Message-ID: <20200106133703.GE1955714@ulmo>
+References: <245d569e4c258063dbd78bd30c7027638b30f059.1577960737.git.mirq-linux@rere.qmqm.pl>
+ <20200106120718.GA1955714@ulmo>
+ <20200106122745.GA3414443@kroah.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="+JUInw4efm7IfTNU"
+Content-Disposition: inline
+In-Reply-To: <20200106122745.GA3414443@kroah.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rocky,
 
-> USB "VendorID:04ca ProductID:3021" is a new QCA ROME USB
-> Bluetooth device, this patch will support firmware downloading for it.
-> 
-> T:  Bus=02 Lev=02 Prnt=02 Port=05 Cnt=01 Dev#=  3 Spd=12   MxCh= 0
-> D:  Ver= 2.01 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
-> P:  Vendor=04ca ProdID=3021 Rev= 0.01
-> C:* #Ifs= 2 Cfg#= 1 Atr=e0 MxPwr=100mA
-> I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-> E:  Ad=81(I) Atr=03(Int.) MxPS=  16 Ivl=1ms
-> E:  Ad=82(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-> E:  Ad=02(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-> I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-> E:  Ad=83(I) Atr=01(Isoc) MxPS=   0 Ivl=1ms
-> E:  Ad=03(O) Atr=01(Isoc) MxPS=   0 Ivl=1ms
-> I:  If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-> E:  Ad=83(I) Atr=01(Isoc) MxPS=   9 Ivl=1ms
-> E:  Ad=03(O) Atr=01(Isoc) MxPS=   9 Ivl=1ms
-> I:  If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-> E:  Ad=83(I) Atr=01(Isoc) MxPS=  17 Ivl=1ms
-> E:  Ad=03(O) Atr=01(Isoc) MxPS=  17 Ivl=1ms
-> I:  If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-> E:  Ad=83(I) Atr=01(Isoc) MxPS=  25 Ivl=1ms
-> E:  Ad=03(O) Atr=01(Isoc) MxPS=  25 Ivl=1ms
-> I:  If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-> E:  Ad=83(I) Atr=01(Isoc) MxPS=  33 Ivl=1ms
-> E:  Ad=03(O) Atr=01(Isoc) MxPS=  33 Ivl=1ms
-> I:  If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-> E:  Ad=83(I) Atr=01(Isoc) MxPS=  49 Ivl=1ms
-> E:  Ad=03(O) Atr=01(Isoc) MxPS=  49 Ivl=1ms
-> 
-> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
-> ---
-> 
-> Changes in v2: Added the /sys/kernel/debug/usb/devices output to the commit message
-> 
-> drivers/bluetooth/btusb.c | 1 +
-> 1 file changed, 1 insertion(+)
+--+JUInw4efm7IfTNU
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-patch has been applied to bluetooth-next tree.
+On Mon, Jan 06, 2020 at 01:27:45PM +0100, Greg Kroah-Hartman wrote:
+> On Mon, Jan 06, 2020 at 01:07:18PM +0100, Thierry Reding wrote:
+> > On Thu, Jan 02, 2020 at 11:30:50AM +0100, Micha=C5=82 Miros=C5=82aw wro=
+te:
+> > > Commit 7ad2ed1dfcbe inadvertently mixed up a quirk flag's name and
+> > > broke SDR50 tuning override. Use correct NVQUIRK_ name.
+> > >=20
+> > > Fixes: 7ad2ed1dfcbe ("mmc: tegra: enable UHS-I modes")
+> > > Depends-on: 4f6aa3264af4 ("mmc: tegra: Only advertise UHS modes if IO=
+ regulator is present")
+> > > Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
+> > > ---
+> > >  drivers/mmc/host/sdhci-tegra.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > Oh my... good catch!
+> >=20
+> > Reviewed-by: Thierry Reding <treding@nvidia.com>
+> >=20
+> > I also ran this through our internal test system and all tests pass, so
+> > also:
+> >=20
+> > Tested-by: Thierry Reding <treding@nvidia.com>
+> >=20
+> > I'm not sure if that "Depends-on:" tag is anything that's recognized
+> > anywhere. It might be better to turn that into an additional "Fixes:"
+> > line. Adding Greg to see if he has a standard way of dealing with this
+> > kind of dependency.
+> >=20
+> > Greg, what's your preferred way to handle these situations? I think the
+> > intention here was to describe that the original error was introduced by
+> > commit 7ad2ed1dfcbe ("mmc: tegra: enable UHS-I modes"), but then commit
+> > 4f6aa3264af4 ("mmc: tegra: Only advertise UHS modes if IO regulator is
+> > present") moved that code around, so this patch here will only be back-
+> > portable until the latter commit, but should be backported until the
+> > former.
+>=20
+> The stable kernel rules document says how to handle this, but the
+> "depends on" commit id in the comment to the right of the stable@k.o cc:
+> line in the changelog area.
 
-Regards
+That only mentions "static" prerequisites needed by the patch, but what
+if the prerequisites change depending on version?
 
-Marcel
+Could I do something like this:
 
+	Cc: <stable@vger.kernel.org> # 4.4.x: abcdef: ...
+	Cc: <stable@vger.kernel.org> # 4.9.x: bcdefa: ...
+	Cc: <stable@vger.kernel.org>
+
+Would that mean that the patch is selected for all stable releases
+(because of the last line with no version prerequisite) but when applied
+for stable-4.4 the abcdef patch gets pulled in and for stable-4.9 the
+bcdefa dependency is applied before the patch?
+
+I suppose this is perhaps a bit of an exotic case, but it might be good
+to document it specifically because it might be fairly rare. I can draft
+a change if you think this is useful to add.
+
+Thierry
+
+--+JUInw4efm7IfTNU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4TN/0ACgkQ3SOs138+
+s6Gf6A/8DvUkX7G3C3SRLThd/KInbrXQTvY5GaqwhZeQCwWJc+qXeyxc4SSbHOig
+90ipVBR0VmEtT5ti3g365UWoQf0hxFZ/+0nIU105pjbtCJ1JwUtF2mvBvRJ3906D
+fTtqJeb6FvdAVAeweLiifczATkfFQHqOy3k+ChfKyAauaDoBi/eErkwYFWvMywZo
+oLxEBMjiSdbPUxqJnzhEuoq64aGHxqsqOulRSvalGfAUwaFJCsqXx0zsW4TXMWwv
+q0Nm5qSnZ5zXVeNX2xHIXv+L7/a9FBFp4E5wY/awZvqH8EZIH3Ms6tlkwitG1WsW
+HHtjlJ1wgGPMeqoDBIkfoQLm+i8kDiei83fsQR3aIr+SR0RBVt8aisb4v/Jz4FMY
+TGiOY4ugVe8tQUUQlydJ3Wc5tN33/8kqYBDlxTLb6U5kYvapDg86S9ejWIUk3Qdj
+IhejPfTn14qSookBpUpAWp1C4uvAKiqEeVxf0hb1TJXP3ZekfVpOQSj71Poj4ybz
+X872X94OKhBJFvv654mMB34WfQ3WePQC0PqAU1Z8usrQAAWWUl6cvonD2LWKr6jK
+6YOoFuFHL6fhZoyahVvVAuYhX8HjJnCsP5k0HYc/enDHICTW5a1U2B0dSOpbHpjQ
+ZUjyyLiMaY14zDVzIVWJp7U5dT9YVks3cN9h2BqZ0RRzKdDBeBA=
+=GeZw
+-----END PGP SIGNATURE-----
+
+--+JUInw4efm7IfTNU--
