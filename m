@@ -2,104 +2,121 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9906EC33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2267C32771
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D15320731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:17:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Yt1hd/P1"
+	by mail.kernel.org (Postfix) with ESMTP id 9338D2075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:19:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgAFLR5 (ORCPT
+        id S1726494AbgAFLTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 06:17:57 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:38503 "EHLO rere.qmqm.pl"
+        Mon, 6 Jan 2020 06:19:31 -0500
+Received: from mga14.intel.com ([192.55.52.115]:23966 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726155AbgAFLR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 06:17:57 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47rtKG4HMwz81;
-        Mon,  6 Jan 2020 12:17:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1578309475; bh=CCLxX53RZtZFK1gL18DyCLhrUoZctB9AHHRdjY+vBfA=;
-        h=Date:From:Subject:In-Reply-To:To:Cc:From;
-        b=Yt1hd/P1LEG9U6ev3oKFIA553MlvGDLb9N3rar36dJeyTGq9REJFgJunUMOMg4tbu
-         vXRMz56q2lB7PE/jY8T0qa5Tjfnq7F/RbNqh0bJ35+8knC/vlbZkc+ZdvarD8l4trp
-         k2CwTZgxVCSa8ESdZvIgYbUmCyvB5LTfpgyS8rqHn9Nc1qJTMFOjsyZ7IANmkNa648
-         1oykxDDx4pw25S6qQ2uIy97VDe7QuppMvAbWr7idiW4qLuoMaEXufCj+LZBKSa65Wx
-         HXbITfpzmyGrZFSIJtlES2HXUHpHGTCJudcojX0TC0p1N1c+vZc+baH9c/H6VdjbpZ
-         ZortkXZJwCTjA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Mon, 06 Jan 2020 12:17:54 +0100
-Message-Id: <e5b39c16dc6dcb25324f6e8389cc0d0f895c1cbd.1578309319.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2] iio: imu/mpu6050: support dual-edge IRQ
+        id S1726155AbgAFLTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 06:19:31 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jan 2020 03:19:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,402,1571727600"; 
+   d="scan'208";a="232798628"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 06 Jan 2020 03:19:31 -0800
+Received: from [10.226.38.20] (unknown [10.226.38.20])
+        by linux.intel.com (Postfix) with ESMTP id 2907E580297;
+        Mon,  6 Jan 2020 03:19:28 -0800 (PST)
+Subject: Re: [PATCH v6 2/2] spi: cadence-quadpsi: Add support for the Cadence
+ QSPI controller
+To:     Vignesh Raghavendra <vigneshr@ti.com>, broonie@kernel.org,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     robh+dt@kernel.org, dan.carpenter@oracle.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+References: <20191230074102.50982-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20191230074102.50982-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <e89cf037-217b-cd61-79ee-a11e2a118c01@ti.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <66b9f427-83c2-f56c-3d38-fa955429118d@linux.intel.com>
+Date:   Mon, 6 Jan 2020 19:19:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <e89cf037-217b-cd61-79ee-a11e2a118c01@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <MN2PR12MB33737F067F25B2F7477C4FE5C43C0@MN2PR12MB3373.namprd12.prod.outlook.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make mpu6050 usable on platforms which provide only any-edge interrupts.
-This also covers shared interrupt case.
+Hi,
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Thank you for the review comments.
+
+On 6/1/2020 6:40 PM, Vignesh Raghavendra wrote:
+> Hi,
+>
+> On 30/12/19 1:11 pm, Ramuthevar,Vadivel MuruganX wrote:
+> [...]
+>> +static u32 cqspi_cmd2addr(const unsigned char *addr_buf, u32 addr_width)
+>> +{
+>> +	unsigned int addr = 0;
+>> +	int i;
+>> +
+>> +	/* Invalid address return zero. */
+>> +	if (addr_width > 4)
+>> +		return 0;
+>> +
+>> +	for (i = 0; i < addr_width; i++) {
+>> +		addr = addr << 8;
+>> +		addr |= addr_buf[i];
+>> +	}
+>> +
+>> +	return addr;
+>> +}
+>> +
+> [...]
+>> +static int cqspi_apb_read_setup(struct struct_cqspi *cqspi,
+>> +				const struct spi_mem_op *op,
+>> +				const u8 *addrbuf)
+>> +{
+>> +	void __iomem *reg_base = cqspi->iobase;
+>> +	size_t addrlen = op->addr.nbytes;
+>> +	size_t dummy_bytes = op->dummy.nbytes;
+>> +	unsigned int addr_value, dummy_clk, reg;
+>> +
+>> +	if (addrlen) {
+>> +		addr_value = cqspi_cmd2addr(&addrbuf[0], addrlen);
+>> +		writel(addr_value, reg_base + CQSPI_REG_INDIRECTRDSTARTADDR);
+>> +	}
+>> +
+> Why do you need to swap the address bytes to SPI bus order?
+Yes , you are right to align with spi bus order swap is done .
+>   You are
+> writing to a controller register that accepts 24 bit or 32 bit address.
+32bit address.
+>> +	reg = op->cmd.opcode << CQSPI_REG_RD_INSTR_OPCODE_LSB;
+>> +	reg |= (op->data.buswidth & CQSPI_REG_RD_INSTR_TYPE_DATA_MASK) <<
+>> +		CQSPI_REG_RD_INSTR_TYPE_DATA_LSB;
+>> +
+> This is wrong... op->data.buswidth's range is 1 to 8 whereas
+> CQSPI_REG_RD_INSTR_TYPE range is 0 to 3. I wonder whether you tested
+> dual/quad mode with this driver?
+Yes I have tested with Quad mode since Cadence-IP supports dual/quad on 
+my platform, used to validate
+before sending the patch that's  standard procedure here.
+please let me know if you have any further queries.
 
 ---
-v2:
-   just remove the dev_warn() message
-
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
- drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 2 +-
- drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c | 5 +----
- 2 files changed, 2 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-index 0686e41bb8a1..b3d138091f89 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-@@ -1241,7 +1241,7 @@ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
- 	irq_type = irqd_get_trigger_type(desc);
- 	if (!irq_type)
- 		irq_type = IRQF_TRIGGER_RISING;
--	if (irq_type == IRQF_TRIGGER_RISING)
-+	if (irq_type & IRQF_TRIGGER_RISING)	// rising or both-edge
- 		st->irq_mask = INV_MPU6050_ACTIVE_HIGH;
- 	else if (irq_type == IRQF_TRIGGER_FALLING)
- 		st->irq_mask = INV_MPU6050_ACTIVE_LOW;
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-index 10d16ec5104b..a4dc2c4a3ca5 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-@@ -183,11 +183,8 @@ irqreturn_t inv_mpu6050_read_fifo(int irq, void *p)
- 			"failed to ack interrupt\n");
- 		goto flush_fifo;
- 	}
--	if (!(int_status & INV_MPU6050_BIT_RAW_DATA_RDY_INT)) {
--		dev_warn(regmap_get_device(st->map),
--			"spurious interrupt with status 0x%x\n", int_status);
-+	if (!(int_status & INV_MPU6050_BIT_RAW_DATA_RDY_INT))
- 		goto end_session;
--	}
- 
- 	if (!(st->chip_config.accl_fifo_enable |
- 		st->chip_config.gyro_fifo_enable |
--- 
-2.20.1
-
+Best Regards
+Vadivel
+> I am still unable to get this series to work on my platform. Will
+> continue to debug...
+>
