@@ -2,88 +2,139 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA175C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4631C32771
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99D302072C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:20:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 897E52072C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:20:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="v3cjZZMw"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="T/srrEKx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgAFKUX (ORCPT
+        id S1726536AbgAFKTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 05:20:23 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:61136 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726922AbgAFKTo (ORCPT
+        Mon, 6 Jan 2020 05:19:12 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:55794 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbgAFKTM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 05:19:44 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578305983; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=xdwDBbCt3ADHqi1ABLUWrI3ox3RMn3Dwt8QUOQKxMb0=; b=v3cjZZMwKHxXlY3AD0WN/EOfQeLphUkscAD4c4qrlTFPGjUuJhCaHZGHdcxJiCy2XuticHBJ
- YfYBndyV6RN028EhRp9NnNcI4x17CYzEgpA/r1mvtULx5WWlfhxthWbSNQtqWiysf3XYZ2jJ
- gRujrVaNZjqc8xeE0dOZzI68V7Q=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1309bd.7f7b82dea730-smtp-out-n02;
- Mon, 06 Jan 2020 10:19:41 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 13564C43383; Mon,  6 Jan 2020 10:19:40 +0000 (UTC)
-Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 84425C4479C;
-        Mon,  6 Jan 2020 10:19:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 84425C4479C
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v2 2/2] clk: qcom: rpmh: Add IPA clock for SC7180
-Date:   Mon,  6 Jan 2020 15:48:43 +0530
-Message-Id: <1578305923-29125-3-git-send-email-tdas@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1578305923-29125-1-git-send-email-tdas@codeaurora.org>
-References: <1578305923-29125-1-git-send-email-tdas@codeaurora.org>
+        Mon, 6 Jan 2020 05:19:12 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 006AIuva017532;
+        Mon, 6 Jan 2020 04:18:56 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578305936;
+        bh=RG7euWT3O/6syk9ik2OS7LO4epm3FNAKw0V+gmUsq30=;
+        h=From:To:CC:Subject:Date;
+        b=T/srrEKxnBDgZkcMzBZm+4gQWEabRd0tyuRCRllQzP3POYF/NqWIiF4Pu+ODUcx4i
+         /OKgdUZPTfyX17ptOXe5J2Oh+yyOwU0TK1Xh64LEOtPiGKngNNvg5pVnSbOvN3igDK
+         hvYLwIr4IojPL3ylpNsxSCjf46cumrzoW3MHh3ak=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 006AIudm031107;
+        Mon, 6 Jan 2020 04:18:56 -0600
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 6 Jan
+ 2020 04:18:56 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 6 Jan 2020 04:18:56 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 006AIqXq118652;
+        Mon, 6 Jan 2020 04:18:53 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Murray <andrew.murray@arm.com>
+CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v2 00/14] Add PCIe support to TI's J721E SoC
+Date:   Mon, 6 Jan 2020 15:50:44 +0530
+Message-ID: <20200106102058.19183-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Qualcomm IP Accelerator (IPA) clock resource that is managed by the BCM is
-required by the IPA driver in order to scale its core clock.
+TI's J721E SoC uses Cadence PCIe core to implement both RC mode
+and EP mode.
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- drivers/clk/qcom/clk-rpmh.c | 1 +
- 1 file changed, 1 insertion(+)
+The high level features are:
+  *) Supports Legacy, MSI and MSI-X interrupt
+  *) Supports upto GEN4 speed mode
+  *) Supports SR-IOV
+  *) Supports multiple physical function
+  *) Ability to route all transactions via SMMU
 
-diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
-index 075cc43..8b0844b 100644
---- a/drivers/clk/qcom/clk-rpmh.c
-+++ b/drivers/clk/qcom/clk-rpmh.c
-@@ -396,6 +396,7 @@ static struct clk_hw *sc7180_rpmh_clocks[] = {
- 	[RPMH_RF_CLK1_A]	= &sdm845_rf_clk1_ao.hw,
- 	[RPMH_RF_CLK2]		= &sdm845_rf_clk2.hw,
- 	[RPMH_RF_CLK2_A]	= &sdm845_rf_clk2_ao.hw,
-+	[RPMH_IPA_CLK]		= &sdm845_ipa.hw,
- };
+This patch series
+  *) Add support in Cadence PCIe core to be used for TI's J721E SoC
+  *) Add a driver for J721E PCIe wrapper
 
- static const struct clk_rpmh_desc clk_rpmh_sc7180 = {
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
+v1 of the series can be found @ [1]
+
+Changes from v1:
+1) Added DT schemas cdns-pcie-host.yaml, cdns-pcie-ep.yaml and
+   cdns-pcie.yaml for Cadence PCIe core and included it in
+   TI's PCIe DT schema.
+2) Added cpu_addr_fixup() for Cadence Platform driver.
+3) Fixed subject/description/renamed functions as commented by
+   Andrew Murray.
+
+[1] -> http://lore.kernel.org/r/20191209092147.22901-1-kishon@ti.com
+
+Kishon Vijay Abraham I (14):
+  dt-bindings: PCI: cadence: Add PCIe RC/EP DT schema for Cadence PCIe
+  PCI: cadence: Fix cdns_pcie_{host|ep}_setup() error path
+  linux/kernel.h: Add PTR_ALIGN_DOWN macro
+  PCI: cadence: Add support to use custom read and write accessors
+  PCI: cadence: Add support to start link and verify link status
+  PCI: cadence: Add read/write accessors to perform only 32-bit accesses
+  PCI: cadence: Allow pci_host_bridge to have custom pci_ops
+  PCI: cadence: Add new *ops* for CPU addr fixup
+  PCI: cadence: Fix updating Vendor ID and Subsystem Vendor ID register
+  dt-bindings: PCI: Add host mode dt-bindings for TI's J721E SoC
+  dt-bindings: PCI: Add EP mode dt-bindings for TI's J721E SoC
+  PCI: j721e: Add TI J721E PCIe driver
+  misc: pci_endpoint_test: Add J721E in pci_device_id table
+  MAINTAINERS: Add Kishon Vijay Abraham I for TI J721E SoC PCIe
+
+ .../devicetree/bindings/pci/cdns-pcie-ep.yaml |  20 +
+ .../bindings/pci/cdns-pcie-host.yaml          |  30 ++
+ .../devicetree/bindings/pci/cdns-pcie.yaml    |  32 ++
+ .../bindings/pci/ti,j721e-pci-ep.yaml         |  93 ++++
+ .../bindings/pci/ti,j721e-pci-host.yaml       | 119 +++++
+ MAINTAINERS                                   |   4 +-
+ drivers/misc/pci_endpoint_test.c              |   9 +
+ drivers/pci/controller/cadence/Kconfig        |  23 +
+ drivers/pci/controller/cadence/Makefile       |   1 +
+ drivers/pci/controller/cadence/pci-j721e.c    | 438 ++++++++++++++++++
+ .../pci/controller/cadence/pcie-cadence-ep.c  |  17 +-
+ .../controller/cadence/pcie-cadence-host.c    |  59 ++-
+ .../controller/cadence/pcie-cadence-plat.c    |  13 +
+ drivers/pci/controller/cadence/pcie-cadence.c |  48 +-
+ drivers/pci/controller/cadence/pcie-cadence.h | 148 +++++-
+ include/linux/kernel.h                        |   1 +
+ 16 files changed, 1014 insertions(+), 41 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+ create mode 100644 drivers/pci/controller/cadence/pci-j721e.c
+
+-- 
+2.17.1
+
