@@ -2,109 +2,186 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB97C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24751C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F5020731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:12:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RpSlUCia"
+	by mail.kernel.org (Postfix) with ESMTP id 05BE32081E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:21:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgAFOMB (ORCPT
+        id S1726536AbgAFOVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 09:12:01 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:39183 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbgAFOMA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 09:12:00 -0500
-Received: by mail-pj1-f66.google.com with SMTP id t101so7839291pjb.4;
-        Mon, 06 Jan 2020 06:12:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=x12/MnWhTR1CIEE0fQm8ZPt2JEPyxFhF/62AyMWTIF4=;
-        b=RpSlUCiajdnrEkAiBHB/x1FRMzdTfV3a1ys+JWRpm7WbTS6bAlo0YmhyVcNdZJvzlZ
-         xP1st+plEabEOlJVceM+gXmG0k+6tdFXNh0hFz2u16soAiPqjp7UZsIHfVJITb6QMvgx
-         ohRP6Picahxw4T/kNf3vDvhnwArV/r7/iCZQkHkJ1C6ukeKj8b40SB7GMggCeaQeMghV
-         PgjMKK2v/xUw1Lqv/YGd1zLlvXF8K8VuiXPwOZ5hKBftK6HSUd2bBqCf4iiGq64+kkIn
-         fbaPhrZsnr2O/nEadsoDQUekyA5O46jLdPID9sLBXSMtJccMaTyWTOSuQXmA5FedvtBV
-         nPiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=x12/MnWhTR1CIEE0fQm8ZPt2JEPyxFhF/62AyMWTIF4=;
-        b=d460oLkqalQ7pU/LZBmVtFf7PbIl/+mjQTywp051hpIGHwodvsrurx5hk3RXfF3Swu
-         CUI3vzYmk9AOAKzSB6W6SL9kk9x5eHjVkIP9kmB7hs0lJNEBsKnz55TG4CfcZsBkdfMq
-         V7zOLkNiOinE4hTACrtXNFmu876doDKr7PzwJXXyg2kKC9SZ3J3BlN8SP/6GW/oKe6Cm
-         9jzKHSCG3u3RSv3quiDOPjFvePfzBFYY5xT2bG39LOMLgN9134s1LFs2jqGlAbC6bLp8
-         060xG40jHhrdTKB0j6KAm1yXe8aLUkFLRce29K0BiyybQPRoplTrMPKly9Avc3Z3pBBn
-         /erQ==
-X-Gm-Message-State: APjAAAWFmwx9hyV5aRHVcFv9rLdzY0N5iTF9CImpvZwblRAdPHyleRBr
-        73CvgGmPLw2cSa7GEm82rUPSy6rd
-X-Google-Smtp-Source: APXvYqxrt0zTD1KBEl/X2X7mwqWt77TT4QOMIp4Un+U4TMoV3QwtgBa6Rz5uEGVSXKT+enUqThUung==
-X-Received: by 2002:a17:902:d711:: with SMTP id w17mr107885064ply.303.1578319919767;
-        Mon, 06 Jan 2020 06:11:59 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p23sm73759456pgh.83.2020.01.06.06.11.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jan 2020 06:11:58 -0800 (PST)
-Subject: Re: [PATCH][next] usb: typec: ucsi: fix spelling mistake "connetor"
- -> "connector"
-To:     Colin King <colin.king@canonical.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ajay Gupta <ajayg@nvidia.com>, linux-usb@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200106111124.28100-1-colin.king@canonical.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <99d45a1f-69f3-083b-35bd-7e09eea4d64f@roeck-us.net>
-Date:   Mon, 6 Jan 2020 06:11:57 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 6 Jan 2020 09:21:44 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:51568 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726307AbgAFOVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 09:21:43 -0500
+Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ioTFp-0005Md-9V; Mon, 06 Jan 2020 15:21:13 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Akash Gajjar <akash@openedev.com>
+Cc:     jagan@openedev.com, tom@radxa.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Nick Xie <nick@khadas.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3, 1/1] arm64: dts: rockchip: add ROCK Pi S DTS support
+Date:   Mon, 06 Jan 2020 15:21:12 +0100
+Message-ID: <14039094.HKn2KS7fIZ@diego>
+In-Reply-To: <20191230145008.5899-1-akash@openedev.com>
+References: <20191230145008.5899-1-akash@openedev.com>
 MIME-Version: 1.0
-In-Reply-To: <20200106111124.28100-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/6/20 3:11 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There is a spelling mistake in a dev_dbg message. Fix it.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Hi Akash,
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Am Montag, 30. Dezember 2019, 15:49:32 CET schrieb Akash Gajjar:
+> ROCK Pi S is RK3308 based SBC from radxa.com. ROCK Pi S has a,
+> - 256MB/512MB DDR3 RAM
+> - SD, NAND flash (optional on board 1/2/4/8Gb)
+> - 100MB ethernet, PoE (optional)
+> - Onboard 802.11 b/g/n wifi + Bluetooth 4.0 Module
+> - USB2.0 Type-A HOST x1
+> - USB3.0 Type-C OTG x1
+> - 26-pin expansion header
+> - USB Type-C DC 5V Power Supply
+> 
+> This patch enables
+> - Console
+> - NAND Flash
+> - SD Card
+> 
+> Signed-off-by: Akash Gajjar <akash@openedev.com>
 
-> ---
->   drivers/usb/typec/ucsi/ucsi.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-> index 466bd8afceea..1b1e36178317 100644
-> --- a/drivers/usb/typec/ucsi/ucsi.c
-> +++ b/drivers/usb/typec/ucsi/ucsi.c
-> @@ -669,7 +669,7 @@ void ucsi_connector_change(struct ucsi *ucsi, u8 num)
->   	struct ucsi_connector *con = &ucsi->connector[num - 1];
->   
->   	if (!(ucsi->ntfy & UCSI_ENABLE_NTFY_CONNECTOR_CHANGE)) {
-> -		dev_dbg(ucsi->dev, "Bogus connetor change event\n");
-> +		dev_dbg(ucsi->dev, "Bogus connector change event\n");
->   		return;
->   	}
->   
-> 
+> +&emmc {
+> +	bus-width = <4>;
+> +	cap-mmc-highspeed;
+> +	mmc-hs200-1_8v;
+> +	supports-sd;
+
+supports-sd is not a property
+
+> +	disable-wp;
+> +	non-removable;
+> +	num-slots = <1>;
+
+nums-slots was removed very long ago
+
+> +	vin-supply = <&vcc_io>;
+
+please provide actual vmmc and vqmmc supplies
+vin is not a valid supply for emmcs
+
+> +	status = "okay";
+> +};
+> +
+> +&i2c1 {
+> +	status = "okay";
+> +};
+> +
+> +&sdmmc {
+> +	bus-width = <4>;
+> +	cap-mmc-highspeed;
+> +	cap-sd-highspeed;
+> +	max-frequeency = <150000000>;
+> +	supports-sd;
+
+supports-sd is not a valid property
+
+> +	disable-wp;
+> +	num-slots = <1>;
+
+again, obsolete num-slots
+
+> +	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_det &sdmmc_bus4>;
+> +	card-detect-delay = <800>;
+> +	status = "okay";
+> +};
+> +
+> +&spi2 {
+> +	status = "okay";
+> +	max-freq = <10000000>;
+> +};
+> +
+> +&pinctrl {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&rtc_32k>;
+> +
+> +	leds {
+> +		green_led_gio: green-led-gpio {
+> +			rockchip,pins = <0 RK_PA6 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +
+> +		heartbeat_led_gpio: heartbeat-led-gpio {
+> +			rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> +	usb {
+> +		otg_vbus_drv: otg-vbus-drv {
+> +			rockchip,pins = <0 RK_PC5 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> +	sdio-pwrseq {
+> +		wifi_enable_h: wifi-enable-h {
+> +			rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +
+> +		wifi_host_wake: wifi-host-wake {
+> +			rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_down>;
+> +		};
+> +	};
+> +};
+> +
+> +&pwm0 {
+> +	status = "okay";
+> +	pinctrl-0 = <&pwm0_pin_pull_down>;
+> +};
+> +
+> +&saradc {
+> +	vref-supply = <&vcc_1v8>;
+> +	status = "okay";
+> +};
+> +
+> +&sdio {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	bus-width = <4>;
+> +	max-frequency = <1000000>;
+> +	cap-sd-highspeed;
+> +	cap-sdio-irq;
+> +	supports-sdio;
+
+not a valid property
+
+> +	keep-power-in-suspend;
+> +	mmc-pwrseq = <&sdio_pwrseq>;
+> +	non-removable;
+> +	sd-uhs-sdr104;
+> +	status = "okay";
+> +};
+
+Heiko
+
 
