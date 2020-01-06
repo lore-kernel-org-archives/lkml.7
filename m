@@ -2,119 +2,103 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5386CC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E581C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 291EA207FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23F8A2072E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:19:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BOTUID1k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oputHxGn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbgAFTTi (ORCPT
+        id S1727232AbgAFTTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 14:19:38 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38339 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbgAFTTQ (ORCPT
+        Mon, 6 Jan 2020 14:19:49 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44145 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726569AbgAFTTM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 14:19:16 -0500
-Received: by mail-wm1-f67.google.com with SMTP id u2so16507325wmc.3;
-        Mon, 06 Jan 2020 11:19:15 -0800 (PST)
+        Mon, 6 Jan 2020 14:19:12 -0500
+Received: by mail-wr1-f68.google.com with SMTP id q10so12029939wrm.11;
+        Mon, 06 Jan 2020 11:19:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=BiVSGDhREaUEf54KgSEKmOQyVoop478wRSm340p5AAw=;
-        b=BOTUID1kNmUCME5BD87r2im56ctjTtka/2HhskCJDunHZeZI7kNgTLVEDOQek4wdAd
-         e2T7n3J46OI4j8w/D2sHdBVv6H1x+cTpmtItSeMsf54y4qukPrNg+DEk7SI08ts/4lwr
-         seAMw9zeK/Z5VedOjOGZl3T43528TObl77mXdbe8+J/QEGzlxQAWui/KAgNYIHWTB1JS
-         HWgBWDlTnxlgCY0Qr7YQT1J2AniF3Ilrw0im/pugKz5TQs9XEPztWakx23HOj5g468xu
-         3WD84iFYHGmf4y34rhut8F3bfHR/tVsOFg1ocd5qvblzk82iy1zXHloPe1l4t2uNRTsa
-         B8HQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=A27WQZOEbgSzITJcY4rI27WoWfYXi0S0dPxyuFu6MSY=;
+        b=oputHxGnw1oGn3BatQlgSJmMMlzHK/XNNzFFStKqT0RbR4G7fEJieEg9fHeD/4P1Ji
+         tRezg3ma4TOTbq6DSvbL9NLT8w85FhHBXiEmT3nmulD1HIysGxbrfV+oLrnY3ji0zJ4o
+         lN7+xpc7+6Rj9ly9t2MgExZqFsBOW9dfhP3OfS+5rrj93SuRjqGsw0op/2sLFgY40mMk
+         WrWkAieTchgq5C8zMFVVLn27QpopjItt/3ozKfkv5HmI05RYajEnaJCAROWP1lNKpnUn
+         OKxTCzGF6Q6CyOoEeqyaVBvrEux/DTECgN1QeBUKa/dkL5DPyjN30H8vmTnEv1Of/GrW
+         URXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=BiVSGDhREaUEf54KgSEKmOQyVoop478wRSm340p5AAw=;
-        b=Nw1JbtIVgSEr0mEbforfGPfRXwJuoKjP/0EYqtrIg5wv5NU956zc1q73ODMzjtF/s/
-         eoP0uLk/Ja9fpCFzxN0uZRhaFmLdhZ8f2Xc0m+H/jTrMSvizpmmJFtwQKmmPvWO0IKo9
-         i10m8rpvc8szpgfO0zFSm/9Bf5J+kKUH+3u1GmSDzxWbMJ4JhNcyjrocLb+s0n5HDA48
-         UZdbekE3VyNmCSUUtq9opHX9D0InheJL4qWeTtKXJVsdjJLl5yHubNlYAInXpnF7EhAR
-         /3o0Phz+nOszg7iF1LLx21nIxLLkrgrW5n8KlfHynT00ivmsf9stvgNoBudfdiZUUMKv
-         z6RQ==
-X-Gm-Message-State: APjAAAUGKyGuiOn8I9hzCtJIpHJA2V9QB/Znz9LCvSw/BJG3coQEleZa
-        uTpFMkRJYtRqRQhalJzKtLe2L7sv
-X-Google-Smtp-Source: APXvYqy1wTq4hJotlXKxiQu+cXtwGmQzU4XCYLcRdisOuXwT4/BrV8lTguH2yCMaqCd9xrSFoWJEFA==
-X-Received: by 2002:a1c:7901:: with SMTP id l1mr35233423wme.67.1578338354811;
-        Mon, 06 Jan 2020 11:19:14 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=A27WQZOEbgSzITJcY4rI27WoWfYXi0S0dPxyuFu6MSY=;
+        b=G8P6iXDLt1YEX4n1cqqQXRw1YxThF6716IW90t01Vo3kb+H1eErkasYVKmXrT1g+le
+         XwvoHcfBsqM5bkxM0mDYIqqlMZ5ETkaqCrz6XTGlLq06dHAis6FOBh4KKzgUiXX2OUxB
+         gRQDptPVFB7LvAJsjIq7rtFY1dUeJmW4YGwJTHOlYHPjDN6G6vS+IyXbRcPj8b5H/ds+
+         txSGxDglO+UeT0d1MJiI8e/Ee3OEjTVx4I4QF0lQTJuhI2yq5M+4UgLc5jcv/WxP30qN
+         uzuW1p1bPGswfQgDG598Fd/+tNxIQ2OGnPQbG4fr3JU9SomzSzWKSVLoAFgguPQId8JX
+         /J/A==
+X-Gm-Message-State: APjAAAUKRh4E2greAEaD5zUTQVhCUR7sWoSf5ll1vxDyS2mDuvh0xV8f
+        QBNocnHpH5QWkxhvqIMKIGc=
+X-Google-Smtp-Source: APXvYqxZ+TmUFdkPrK14zayrozuKucwL/kzOUHuSKHDxBzEG3aS32lnpkMzzUiTMQ2jgW0Wq01r66A==
+X-Received: by 2002:adf:ef8b:: with SMTP id d11mr100976013wro.45.1578338350359;
+        Mon, 06 Jan 2020 11:19:10 -0800 (PST)
 Received: from localhost.localdomain ([2a02:2450:10d2:194d:74f9:b588:decc:794d])
-        by smtp.gmail.com with ESMTPSA id o4sm72041756wrx.25.2020.01.06.11.19.13
+        by smtp.gmail.com with ESMTPSA id o4sm72041756wrx.25.2020.01.06.11.19.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 11:19:14 -0800 (PST)
+        Mon, 06 Jan 2020 11:19:09 -0800 (PST)
 From:   SeongJae Park <sj38.park@gmail.com>
 X-Google-Original-From: SeongJae Park <sjpark@amazon.de>
 To:     paulmck@kernel.org
 Cc:     corbet@lwn.net, rcu@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, madhuparnabhowmik04@gmail.com,
         sj38.park@gmail.com, SeongJae Park <sjpark@amazon.de>
-Subject: [PATCH v2 4/7] doc/RCU/rcu: Use ':ref:' for links to other docs
-Date:   Mon,  6 Jan 2020 20:18:49 +0100
-Message-Id: <20200106191852.22973-5-sjpark@amazon.de>
+Subject: [PATCH v2 0/7] Fix trivial nits in RCU docs
+Date:   Mon,  6 Jan 2020 20:18:45 +0100
+Message-Id: <20200106191852.22973-1-sjpark@amazon.de>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200106191852.22973-1-sjpark@amazon.de>
-References: <20200106191852.22973-1-sjpark@amazon.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- Documentation/RCU/rcu.rst | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+This patchset fixes trivial nits in the RCU documentations.
 
-diff --git a/Documentation/RCU/rcu.rst b/Documentation/RCU/rcu.rst
-index 8dfb437dacc3..a1dd71d01862 100644
---- a/Documentation/RCU/rcu.rst
-+++ b/Documentation/RCU/rcu.rst
-@@ -11,8 +11,8 @@ must be long enough that any readers accessing the item being deleted have
- since dropped their references.  For example, an RCU-protected deletion
- from a linked list would first remove the item from the list, wait for
- a grace period to elapse, then free the element.  See the
--Documentation/RCU/listRCU.rst file for more information on using RCU with
--linked lists.
-+:ref:`Documentation/RCU/listRCU.rst <list_rcu_doc>` for more information on
-+using RCU with linked lists.
- 
- Frequently Asked Questions
- --------------------------
-@@ -50,7 +50,7 @@ Frequently Asked Questions
- - If I am running on a uniprocessor kernel, which can only do one
-   thing at a time, why should I wait for a grace period?
- 
--  See the Documentation/RCU/UP.rst file for more information.
-+  See :ref:`Documentation/RCU/UP.rst <up_doc>` for more information.
- 
- - How can I see where RCU is currently used in the Linux kernel?
- 
-@@ -68,9 +68,9 @@ Frequently Asked Questions
- 
- - Why the name "RCU"?
- 
--  "RCU" stands for "read-copy update".  The file Documentation/RCU/listRCU.rst
--  has more information on where this name came from, search for
--  "read-copy update" to find it.
-+  "RCU" stands for "read-copy update".
-+  :ref:`Documentation/RCU/listRCU.rst <list_rcu_doc>` has more information on where
-+  this name came from, search for "read-copy update" to find it.
- 
- - I hear that RCU is patented?  What is with that?
- 
+It is based on the latest dev branch of Paul's linux-rcu git repository.
+The Complete git tree is also available at
+https://github.com/sjp38/linux/tree/patches/rcu/docs/2019-12-31/v2.
+
+Changes from v1
+(https://lore.kernel.org/linux-doc/20191231151549.12797-1-sjpark@amazon.de/)
+
+ - Add 'Reviewed-by' from Madhuparna
+ - Fix wrong author email address
+ - Rebased on latest dev branch of Paul's linux-rcu git repository.
+
+SeongJae Park (7):
+  doc/RCU/Design: Remove remaining HTML tags in ReST files
+  doc/RCU/listRCU: Fix typos in a example code snippets
+  doc/RCU/listRCU: Update example function name
+  doc/RCU/rcu: Use ':ref:' for links to other docs
+  doc/RCU/rcu: Use absolute paths for non-rst files
+  doc/RCU/rcu: Use https instead of http if possible
+  rcu: Fix typos in beginning comments
+
+ .../Tree-RCU-Memory-Ordering.rst               |  8 ++++----
+ Documentation/RCU/listRCU.rst                  | 10 +++++-----
+ Documentation/RCU/rcu.rst                      | 18 +++++++++---------
+ kernel/rcu/srcutree.c                          |  2 +-
+ kernel/rcu/tree.c                              |  4 ++--
+ 5 files changed, 21 insertions(+), 21 deletions(-)
+
 -- 
 2.17.1
 
