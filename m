@@ -2,135 +2,171 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D79ECC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202A1C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8EB42081E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:08:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578337691;
-	bh=GTgBx/JA91ia0+OMvTgPUGoIEEqGYFmp61UBCTw+K+g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KHYXu+jQynrP5CpmZEYLhf/OoUa4EjmCZZ6owtNDHVlAbH/YuM9QyU+5sitKzYghR
-	 j0+OzlwNQNDnvK3WxJQIJ0vLkEnWeRCitqCY7KxlEAZqNH+0o0NxW9gCD+r30w8rnI
-	 kXZbKz0Q8vbJ3g5tIQ4TSFrZHU/wC2rN59GPlbsg=
+	by mail.kernel.org (Postfix) with ESMTP id E8AD32081E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:08:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="fJUEqMcu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgAFTIK (ORCPT
+        id S1726823AbgAFTIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 14:08:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726569AbgAFTIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 14:08:10 -0500
-Received: from localhost (unknown [104.132.0.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2549E2072E;
-        Mon,  6 Jan 2020 19:08:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578337690;
-        bh=GTgBx/JA91ia0+OMvTgPUGoIEEqGYFmp61UBCTw+K+g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jbPI6gd17MVlhjV1JDDBmHnf2an7DD5VWxs6DCFS9mIDC+HU5PAxeOfNzDqIIcHAp
-         Q7+mf9RkCC/aJ0DNn8E7UYnoHWpmjsLmcCGq3ikfuSC6y/emkVTDsdsIH23IbT6J7i
-         DCj8ab6ajH+5jyRGuttqhaYaNQjDMMsTd+WOQqWQ=
-Date:   Mon, 6 Jan 2020 11:08:09 -0800
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH 3/4] f2fs: compress: fix error path in
- prepare_compress_overwrite()
-Message-ID: <20200106190809.GE50058@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20200106080144.52363-1-yuchao0@huawei.com>
- <20200106080144.52363-3-yuchao0@huawei.com>
+        Mon, 6 Jan 2020 14:08:40 -0500
+Received: from mail.efficios.com ([167.114.142.138]:39180 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726569AbgAFTIj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 14:08:39 -0500
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id C360A6943FD;
+        Mon,  6 Jan 2020 14:08:37 -0500 (EST)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id SgWCljRP6-DE; Mon,  6 Jan 2020 14:08:37 -0500 (EST)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 47AB26943F4;
+        Mon,  6 Jan 2020 14:08:37 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 47AB26943F4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1578337717;
+        bh=zIl8A6TLdf+oAfGFrNNrc51On1qmddpUPuBxgyxcrHc=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=fJUEqMcuOQR9R4stWSeQpFZsC1yybi+vm8zlyDWg8+St9OU5sHJ96AP59kr0Lo/DA
+         qddq8zq9XLjRyv2Ta3p5dY35hh9aEO22y+q4LpTM3/3Bn2rB+TSEuRL27oKqJzb2u5
+         wRVytGfKXlJA34j5yO9XGF+cZfg0OGtavdPXbu1ycbfDIOyj5obMnQ1EF/ZJQ2pY8w
+         X2uhizfuUDVWHoR9zSgCa2kcB0YdIWcuu+Kv2kqkRuFiKC1Qz86Cjx2lV3IDSO5qRn
+         UZzos+NJkY7WQGZEwfc++cWjGQGDK+8FcTxhWFpXYD3vec10TcwqR/lnn/7O5J6An/
+         7jvBuJ0zo9vvg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id zsiBdNTc3Ll9; Mon,  6 Jan 2020 14:08:37 -0500 (EST)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 32ADA6943DE;
+        Mon,  6 Jan 2020 14:08:37 -0500 (EST)
+Date:   Mon, 6 Jan 2020 14:08:37 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fw@deneb.enyo.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Neel Natu <neelnatu@google.com>
+Message-ID: <1025393027.850.1578337717165.JavaMail.zimbra@efficios.com>
+In-Reply-To: <669061171.14506.1576876500152.JavaMail.zimbra@efficios.com>
+References: <20191220201207.17389-1-mathieu.desnoyers@efficios.com> <87imman36g.fsf@mid.deneb.enyo.de> <173832695.14381.1576875253374.JavaMail.zimbra@efficios.com> <875zian2a2.fsf@mid.deneb.enyo.de> <669061171.14506.1576876500152.JavaMail.zimbra@efficios.com>
+Subject: Re: [PATCH for 5.5 1/2] rseq: Fix: Clarify rseq.h UAPI rseq_cs
+ memory reclaim requirements
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200106080144.52363-3-yuchao0@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.15_GA_3894 (ZimbraWebClient - FF71 (Linux)/8.8.15_GA_3890)
+Thread-Topic: rseq: Fix: Clarify rseq.h UAPI rseq_cs memory reclaim requirements
+Thread-Index: lBXaukfByKp9TejsCTqcOtGiErTiYOyBdIyh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/06, Chao Yu wrote:
-> - fix to release cluster pages in retry flow
-> - fix to call f2fs_put_dnode() & __do_map_lock() in error path
-> 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
->  fs/f2fs/compress.c | 22 ++++++++++++++++------
->  1 file changed, 16 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-> index fc4510729654..3390351d2e39 100644
-> --- a/fs/f2fs/compress.c
-> +++ b/fs/f2fs/compress.c
-> @@ -626,20 +626,26 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
->  	}
->  
->  	for (i = 0; i < cc->cluster_size; i++) {
-> +		f2fs_bug_on(sbi, cc->rpages[i]);
-> +
->  		page = find_lock_page(mapping, start_idx + i);
->  		f2fs_bug_on(sbi, !page);
->  
->  		f2fs_wait_on_page_writeback(page, DATA, true, true);
->  
-> -		cc->rpages[i] = page;
-> +		f2fs_compress_ctx_add_page(cc, page);
->  		f2fs_put_page(page, 0);
->  
->  		if (!PageUptodate(page)) {
-> -			for (idx = 0; idx < cc->cluster_size; idx++) {
-> -				f2fs_put_page(cc->rpages[idx],
-> -						(idx <= i) ? 1 : 0);
-> +			for (idx = 0; idx <= i; idx++) {
-> +				unlock_page(cc->rpages[idx]);
->  				cc->rpages[idx] = NULL;
->  			}
-> +			for (idx = 0; idx < cc->cluster_size; idx++) {
-> +				page = find_lock_page(mapping, start_idx + idx);
+----- On Dec 20, 2019, at 4:15 PM, Mathieu Desnoyers mathieu.desnoyers@effi=
+cios.com wrote:
 
-Why do we need to lock the pages again?
+> ----- On Dec 20, 2019, at 3:57 PM, Florian Weimer fw@deneb.enyo.de wrote:
+>=20
+>> * Mathieu Desnoyers:
+>>=20
+>>> ----- On Dec 20, 2019, at 3:37 PM, Florian Weimer fw@deneb.enyo.de wrot=
+e:
+>>>
+>>>> * Mathieu Desnoyers:
+>>>>=20
+>>>>> diff --git a/include/uapi/linux/rseq.h b/include/uapi/linux/rseq.h
+>>>>> index 9a402fdb60e9..6f26b0b148a6 100644
+>>>>> --- a/include/uapi/linux/rseq.h
+>>>>> +++ b/include/uapi/linux/rseq.h
+>>>>> @@ -100,7 +100,9 @@ struct rseq {
+>>>>>  =09 * instruction sequence block, as well as when the kernel detects=
+ that
+>>>>>  =09 * it is preempting or delivering a signal outside of the range
+>>>>>  =09 * targeted by the rseq_cs. Also needs to be set to NULL by user-=
+space
+>>>>> -=09 * before reclaiming memory that contains the targeted struct rse=
+q_cs.
+>>>>> +=09 * before reclaiming memory that contains the targeted struct rse=
+q_cs
+>>>>> +=09 * or reclaiming memory that contains the code refered to by the
+>>>>> +=09 * start_ip and post_commit_offset fields of struct rseq_cs.
+>>>>=20
+>>>> Maybe mention that it's good practice to clear rseq_cs before
+>>>> returning from a function that contains a restartable sequence?
+>>>
+>>> Unfortunately, clearing it is not free. Considering that rseq is meant =
+to
+>>> be used in very hot code paths, it would be preferable that application=
+s
+>>> clear it in the very infrequent case where the rseq_cs or code will
+>>> vanish (e.g. dlclose or JIT reclaim), and not require it to be cleared
+>>> after each critical section. I am therefore reluctant to document the
+>>> behavior you describe as a "good practice" for rseq.
+>>=20
+>> You already have to write to rseq_cs before entering the critical
+>> section, right?  Then you've already determined the address, and the
+>> cache line is already hot, so it really should be close to zero cost.
+>=20
+> Considering that overall rseq executes in fraction of nanoseconds on
+> some architectures, adding an extra store is perhaps close to zero,
+> but still significantly degrades performance.
+>=20
+>>=20
+>> I mean, you can still discard the advice, but you do so ad your own
+>> peril =E2=80=A6
+>=20
+> I am also uncomfortable leaving this to the end user. One possibility
+> would be to extend rseq or membarrier to add a kind of "rseq-clear"
+> barrier, which would ensure that the kernel will have cleared the
+> rseq_cs field for each thread belonging to the current process. glibc
+> could then call this barrier before dlclose.
+>=20
+> This is slightly different from another rseq-barrier that has been
+> requested by Paul Turner: a way to ensure that all previously
+> running rseq critical sections have completed or aborted.
+>=20
+> AFAIU, the desiderata for each of the 2 use-cases is as follows:
+>=20
+> rseq-barrier: guarantee that all prior rseq critical sections have
+> completed or aborted for the current process or for a set of registered
+> processes. Allows doing RCU-like algorithms within rseq critical sections=
+.
+>=20
+> rseq-clear: guarantee that the rseq_cs field is cleared for each thread
+> belonging to the current process before the barrier system call returns
+> to the caller. Aborts currently running rseq critical sections for all
+> threads belonging to the current process. The use-case is to allow
+> dlclose and JIT reclaim to clear any leftover reference to struct
+> rseq_cs or code which are going to be reclaimed.
 
-> +				f2fs_put_page(page, 1);
-> +				f2fs_put_page(page, 0);
-> +			}
->  			kvfree(cc->rpages);
->  			cc->nr_rpages = 0;
->  			goto retry;
-> @@ -654,16 +660,20 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
->  		for (i = cc->cluster_size - 1; i > 0; i--) {
->  			ret = f2fs_get_block(&dn, start_idx + i);
->  			if (ret) {
-> -				/* TODO: release preallocate blocks */
->  				i = cc->cluster_size;
-> -				goto unlock_pages;
-> +				break;
->  			}
->  
->  			if (dn.data_blkaddr != NEW_ADDR)
->  				break;
->  		}
->  
-> +		f2fs_put_dnode(&dn);
+Just to clarify: should the discussion here prevent the UAPI documentation
+change from being merged into the Linux kernel ? Our discussion seems to be
+related to integration of rseq into glibc, rather than the kernel UAPI per =
+se.
 
-We don't neeed this, since f2fs_reserve_block() put the dnode.
+Thanks,
 
-> +
->  		__do_map_lock(sbi, F2FS_GET_BLOCK_PRE_AIO, false);
-> +
-> +		if (ret)
-> +			goto unlock_pages;
->  	}
->  
->  	*fsdata = cc->rpages;
-> -- 
-> 2.18.0.rc1
+Mathieu
+
+
+--=20
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
