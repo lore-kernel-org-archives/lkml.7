@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D30C9C33C9B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9116AC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A8320848
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66BF020707
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:17:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OdV+YKJ7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XTTYJKT4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgAFPRU (ORCPT
+        id S1726820AbgAFPRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 10:17:20 -0500
-Received: from mail-wr1-f42.google.com ([209.85.221.42]:42383 "EHLO
-        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726735AbgAFPRS (ORCPT
+        Mon, 6 Jan 2020 10:17:23 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54634 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726779AbgAFPRU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 10:17:18 -0500
-Received: by mail-wr1-f42.google.com with SMTP id q6so49920518wro.9
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 07:17:16 -0800 (PST)
+        Mon, 6 Jan 2020 10:17:20 -0500
+Received: by mail-wm1-f66.google.com with SMTP id b19so15287398wmj.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 07:17:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=yJ0mr1VWMGhD0hVJLZ9ZIIn5jKvvmiJ3Y4rzn7LBNbk=;
-        b=OdV+YKJ76dFnccPkFBU9f006TXXIhBiuLYkoKvV7ppMkKbVF0b3zR4LXOZzcUWCNOa
-         CDSL9CJFm0FwKSpFfDXo8jQS/2ViNXS3pLOG5Hf0YRIY+jU9djzSz9DBHPS3jWANp4QA
-         9EPjg8z1aBJaoHYk7jTSk+p/BKhSNcuildd742DYrc0G+YUeBu9eHvVn5X/Q10yPtLJH
-         2ow8NsUkSjqlJ7OCT84/ohCUAZ/lVllaFT5v4DYO+KNrN4BlSM5qR4S+rP5Dtb0ecl/V
-         E9OJJxPmejuTpODDkX304hjg5sPi/9rq/PrPIHZQXrEaCKnEIemTOGsOOELN0MlLLBjH
-         OzlA==
+        bh=pUtO+zfkq/xek1f3bH27+DPV8k2ximGVGaU/9KafJH0=;
+        b=XTTYJKT4BhxUENbB1bJpDezEokEgz7EvtXnUvZCuliLResJdPZeDfRCQKevvDaUL/t
+         v4XReeszIRlSuC2F9BfJkihW3wNtxKQBePKriCrtxJV26VIAXb8xn+VcHu2269wsq6CW
+         ENjOFrG3aJ6beMBG6gPLlBDKKycEJt7PRovRIB744LdYkSlnXqbhtZx9CgAaqY5hPh01
+         CXpC41kARMiZmqWAcw/gV9Cb1CYKKGMmUL4ISciRaxQx29IyYe3BlpDQO8UcixpRwLwM
+         EiNNiB30YO0mWN0piyv+1BZnscBeIbzyOSzYQaJBFa22OCrPCdrLMcw1PTNUZG62G1uM
+         LxvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=yJ0mr1VWMGhD0hVJLZ9ZIIn5jKvvmiJ3Y4rzn7LBNbk=;
-        b=mP7VsiGAXuWubn8pi0KOlf3ubIpNTz/2Jv9XjHuItAGYcWPifD1/oxKW/ruHnoT628
-         39OHicCnd3pqakPww1nZiQ/vdc6AtdDueq0XrJDQI3+dHJ6Z40DGghEVaFjFdJCznMn4
-         D9xVwHgdX2tlwNERzgIFIPNJ12aCQljLw7ZAGZTW6TkChjVoCczw3e4hPRRH3tMihumO
-         POyWqzOiNTwu1F6io6rmIKsKl7OuyAVjQxBhqLSusWwTSaApjGkFj417rkgmE+Aq1gGW
-         D6dXN+XS0Nf+KAbrz5kxcQAU4/IRrrzhcGdJPZoJjGwH3WSfU6xHcZcuSULNQKFetVh4
-         yA2Q==
-X-Gm-Message-State: APjAAAXcVqr9ay+p5JC1rbfoHmFu5PHyNNA7/IttdD8FVpgJV12oPhXi
-        s5LZVDWUPRtj8OrJ89SSrbbwZu6VWLbvAw==
-X-Google-Smtp-Source: APXvYqzRcsMyqVZ/N0cqQteFF/ISWt+yhbWUk/y5CgQQTwwBMBRi79mBuZT8l8jcRj8o3Oq4Gsno0A==
-X-Received: by 2002:adf:f605:: with SMTP id t5mr20038985wrp.282.1578323835553;
-        Mon, 06 Jan 2020 07:17:15 -0800 (PST)
+        bh=pUtO+zfkq/xek1f3bH27+DPV8k2ximGVGaU/9KafJH0=;
+        b=IL8+bRihs3mUdZN8AUdOXzNPNOYD4ImI9MLscEN8qeaRwWhFoIRWWIoPNP8HannodK
+         nL4vDnr97K2l+0TX+PY+ZuvuTh0vhw7xaKCai4FGDJ/iNHGPhEOAUK7zkD7GyUQZSBaw
+         /Hgw40cINdObnBxVCibGyFnfvXND6l/czXW0ToJGDFVMWsNYNm5IYzrxvYBe/Bg83DjP
+         4NGbW7aLEbiju6/W7bWLvEsytFkyQo5G9W4ylu6tLd9nlvmkM1Z0UxydAseV+Yn1ngpA
+         JpeSS5Fe6J2c/57Qfga85+tZWAyAggDwgSLwiB7/50x/5y02vBm3p8C+ZC0tFtEH3III
+         hxEg==
+X-Gm-Message-State: APjAAAW8BcdysNO3jRk634UFviy0jK45B9L/cLmkSSEs8+UrZz3Q5fhl
+        FF4WMasA5fSKbG6mulPBGt+NR1NyOiGbEA==
+X-Google-Smtp-Source: APXvYqwsQT394RlJuINUB+uKLmcbP1C4/aQR0TEdQ+tH37E1WPzngyosxD5K4zHwRHh2xFuLqNWXJg==
+X-Received: by 2002:a1c:3dc3:: with SMTP id k186mr33755601wma.95.1578323838278;
+        Mon, 06 Jan 2020 07:17:18 -0800 (PST)
 Received: from localhost.localdomain ([62.178.82.229])
-        by smtp.gmail.com with ESMTPSA id l3sm72122463wrt.29.2020.01.06.07.17.14
+        by smtp.gmail.com with ESMTPSA id l3sm72122463wrt.29.2020.01.06.07.17.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 07:17:14 -0800 (PST)
+        Mon, 06 Jan 2020 07:17:17 -0800 (PST)
 From:   Christian Gmeiner <christian.gmeiner@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Christian Gmeiner <christian.gmeiner@gmail.com>,
@@ -65,9 +65,9 @@ Cc:     Christian Gmeiner <christian.gmeiner@gmail.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH v2 5/6] drm/etnaviv: update hwdb selection logic
-Date:   Mon,  6 Jan 2020 16:16:50 +0100
-Message-Id: <20200106151655.311413-6-christian.gmeiner@gmail.com>
+Subject: [PATCH v2 6/6] drm/etnaviv: add hwdb entry for gc400 found in STM32
+Date:   Mon,  6 Jan 2020 16:16:51 +0100
+Message-Id: <20200106151655.311413-7-christian.gmeiner@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200106151655.311413-1-christian.gmeiner@gmail.com>
 References: <20200106151655.311413-1-christian.gmeiner@gmail.com>
@@ -78,33 +78,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Take product id, customer id and eco id into account. If that
-delivers no match try a search for model and revision.
+The information was taken from STM32 glacore driver hw database.
+The entry is named as gc7000nano_0x4652.
 
 Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_hwdb.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/etnaviv/etnaviv_hwdb.c | 31 ++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
 diff --git a/drivers/gpu/drm/etnaviv/etnaviv_hwdb.c b/drivers/gpu/drm/etnaviv/etnaviv_hwdb.c
-index eb0f3eb87ced..cf3bb26e2e43 100644
+index cf3bb26e2e43..167971a09be7 100644
 --- a/drivers/gpu/drm/etnaviv/etnaviv_hwdb.c
 +++ b/drivers/gpu/drm/etnaviv/etnaviv_hwdb.c
-@@ -46,7 +46,13 @@ bool etnaviv_fill_identity_from_hwdb(struct etnaviv_gpu *gpu)
+@@ -6,6 +6,37 @@
+ #include "etnaviv_gpu.h"
  
- 	for (i = 0; i < ARRAY_SIZE(etnaviv_chip_identities); i++) {
- 		if (etnaviv_chip_identities[i].model == ident->model &&
--		    etnaviv_chip_identities[i].revision == ident->revision) {
-+		    etnaviv_chip_identities[i].revision == ident->revision &&
-+		    (etnaviv_chip_identities[i].product_id == ident->product_id ||
-+			 etnaviv_chip_identities[i].product_id == ~0U) &&
-+		    (etnaviv_chip_identities[i].customer_id == ident->customer_id ||
-+			 etnaviv_chip_identities[i].customer_id == ~0U) &&
-+		    (etnaviv_chip_identities[i].eco_id == ident->eco_id ||
-+			 etnaviv_chip_identities[i].eco_id == ~0U)) {
- 			memcpy(ident, &etnaviv_chip_identities[i],
- 			       sizeof(*ident));
- 			return true;
+ static const struct etnaviv_chip_identity etnaviv_chip_identities[] = {
++	{
++		.model = 0x400,
++		.revision = 0x4652,
++		.product_id = 0x70001,
++		.customer_id = 0x100,
++		.eco_id = 0,
++		.stream_count = 4,
++		.register_max = 64,
++		.thread_count = 128,
++		.shader_core_count = 1,
++		.vertex_cache_size = 8,
++		.vertex_output_buffer_size = 1024,
++		.pixel_pipes = 1,
++		.instruction_count = 256,
++		.num_constants = 320,
++		.buffer_size = 0,
++		.varyings_count = 8,
++		.features = 0xa0e9e004,
++		.minor_features0 = 0xe1299fff,
++		.minor_features1 = 0xbe13b219,
++		.minor_features2 = 0xce110010,
++		.minor_features3 = 0x8000001,
++		.minor_features4 = 0x20102,
++		.minor_features5 = 0x120000,
++		.minor_features6 = 0x0,
++		.minor_features7 = 0x0,
++		.minor_features8 = 0x0,
++		.minor_features9 = 0x0,
++		.minor_features10 = 0x0,
++		.minor_features11 = 0x0,
++	},
+ 	{
+ 		.model = 0x7000,
+ 		.revision = 0x6214,
 -- 
 2.24.1
 
