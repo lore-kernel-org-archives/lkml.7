@@ -2,144 +2,72 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D33C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24465C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85EEF2072E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:10:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="EFgVP5Ag"
+	by mail.kernel.org (Postfix) with ESMTP id 00C682072E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:12:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgAFTKk (ORCPT
+        id S1726767AbgAFTMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 14:10:40 -0500
-Received: from mail.efficios.com ([167.114.142.138]:39290 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726569AbgAFTKk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 14:10:40 -0500
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id A03D16944EA;
-        Mon,  6 Jan 2020 14:10:38 -0500 (EST)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id KyGeu2p5HyCe; Mon,  6 Jan 2020 14:10:38 -0500 (EST)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 213486944E7;
-        Mon,  6 Jan 2020 14:10:38 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 213486944E7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1578337838;
-        bh=Qu3x60DNx5arxiFWBfIIJu97/cDoqLXAFxljCMqLL1I=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=EFgVP5Agp46TJfrFCfmQu30xM4M15qtYoOBPE+P0dSLyYa/1lN0YF+vPMgFFNL1Ao
-         Elw/mxXy8fBsG8RSh0HLXgjvnNo5nET2r/g9ONkCdDUPIC4cEpSZR68jElaUoY/GnL
-         xV4GL9g5bplJdjYt05np0AGEKe2DiOF6lkrQp309whne+3u7+qIRhOphfyowGYASpC
-         2te9k69yCjUwr+ojToFtYG2krlwabhS3dNh5FL1TFXFdi3xoGg40YklQXxu9GkxsoY
-         0iD7r1whdGVfpPa1qEz2tlvVjCIh0t3X+2TVOEtXnWnM+xYPVze58RCSEJwCOtdO41
-         0KrdSFKMuf84g==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id 2zMWPdjfYLT5; Mon,  6 Jan 2020 14:10:38 -0500 (EST)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 062136944D6;
-        Mon,  6 Jan 2020 14:10:38 -0500 (EST)
-Date:   Mon, 6 Jan 2020 14:10:37 -0500 (EST)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Florian Weimer <fw@deneb.enyo.de>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Neel Natu <neelnatu@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Message-ID: <688649540.853.1578337837967.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20191220203318.18739-1-mathieu.desnoyers@efficios.com>
-References: <20191220203318.18739-1-mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH for 5.5 1/2 v2] rseq: Fix: Clarify rseq.h UAPI rseq_cs
- memory reclaim requirements
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.15_GA_3894 (ZimbraWebClient - FF71 (Linux)/8.8.15_GA_3890)
-Thread-Topic: rseq: Fix: Clarify rseq.h UAPI rseq_cs memory reclaim requirements
-Thread-Index: 7VOxhyid3ErFvbM9DicoUvZrucOkXg==
+        Mon, 6 Jan 2020 14:12:05 -0500
+Received: from mxout2.idt.com ([157.165.5.26]:43372 "EHLO mxout2.idt.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726569AbgAFTMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 14:12:05 -0500
+Received: from mail6.idt.com (localhost [127.0.0.1])
+        by mxout2.idt.com (8.14.4/8.14.4) with ESMTP id 006JC0b6019762;
+        Mon, 6 Jan 2020 11:12:00 -0800
+Received: from corpml3.corp.idt.com (corpml3.corp.idt.com [157.165.140.25])
+        by mail6.idt.com (8.14.4/8.14.4) with ESMTP id 006JC0IW029465;
+        Mon, 6 Jan 2020 11:12:00 -0800
+Received: from vcheng-VirtualBox.na.ads.idt.com (corpimss2.corp.idt.com [157.165.141.30])
+        by corpml3.corp.idt.com (8.11.7p1+Sun/8.11.7) with ESMTP id 006JBxW23349;
+        Mon, 6 Jan 2020 11:12:00 -0800 (PST)
+From:   vincent.cheng.xh@renesas.com
+To:     richardcochran@gmail.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vincent Cheng <vincent.cheng.xh@renesas.com>
+Subject: [PATCH v3 net-next 0/1] Replace IDT with Renesas and improve version info.
+Date:   Mon,  6 Jan 2020 14:11:48 -0500
+Message-Id: <1578337909-4700-1-git-send-email-vincent.cheng.xh@renesas.com>
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Dec 20, 2019, at 3:33 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
+From: Vincent Cheng <vincent.cheng.xh@renesas.com>
 
-> The rseq.h UAPI documents that the rseq_cs field must be cleared
-> before reclaiming memory that contains the targeted struct rseq_cs.
-> 
-> We should extend this comment to also dictate that the rseq_cs field
-> must be cleared before reclaiming memory of the code pointed to by
-> the rseq_cs start_ip and post_commit_offset fields.
-> 
-> While we can expect that use of dlclose(3) will typically unmap
-> both struct rseq_cs and its associated code at once, nothing would
-> theoretically prevent a JIT from reclaiming the code without
-> reclaiming the struct rseq_cs, which would erroneously allow the
-> kernel to consider new code which is not a rseq critical section
-> as a rseq critical section following a code reclaim.
+Replacing IDT with Renesas patches has been withdrawn.
+This series reworks the version info displayed for the clockmatrix chip.
 
-Hi Peter,
+Apologize for the delayed response to Dec 20 feedback.
+Corporate email server hiccup so email was not received.
+Added more details to Patch 1/1 commit message to explain the change.
 
-Is there anything preventing this rseq UAPI documentation fix from being merged ?
+Fixes: 3a6ba7dc7799 ("ptp: Add a ptp clock driver for IDT ClockMatrix.")
 
-Thanks,
+Changes since v2:
+- Add details to commit message for Patch 1 to provide
+  background information.
 
-Mathieu
+Changes since v1:
+- Remove Patch 1/3 Add Replace idt with renesas in dt-bindings
+- Remove Patch 2/3 Replaces IDT references with Renesas
+- Patch 3/3 becomes patch 1/1
 
-> 
-> Suggested-by: Florian Weimer <fw@deneb.enyo.de>
-> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Florian Weimer <fw@deneb.enyo.de>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> Cc: Boqun Feng <boqun.feng@gmail.com>
-> Cc: "H . Peter Anvin" <hpa@zytor.com>
-> Cc: Paul Turner <pjt@google.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Neel Natu <neelnatu@google.com>
-> Cc: linux-api@vger.kernel.org
-> ---
-> include/uapi/linux/rseq.h | 4 +++-
-> 1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/uapi/linux/rseq.h b/include/uapi/linux/rseq.h
-> index 9a402fdb60e9..d94afdfc4b7c 100644
-> --- a/include/uapi/linux/rseq.h
-> +++ b/include/uapi/linux/rseq.h
-> @@ -100,7 +100,9 @@ struct rseq {
-> 	 * instruction sequence block, as well as when the kernel detects that
-> 	 * it is preempting or delivering a signal outside of the range
-> 	 * targeted by the rseq_cs. Also needs to be set to NULL by user-space
-> -	 * before reclaiming memory that contains the targeted struct rseq_cs.
-> +	 * before reclaiming memory that contains the targeted struct rseq_cs
-> +	 * or reclaiming memory that contains the code referred to by the
-> +	 * start_ip and post_commit_offset fields of struct rseq_cs.
-> 	 *
-> 	 * Read and set by the kernel. Set by user-space with single-copy
-> 	 * atomicity semantics. This field should only be updated by the
-> --
-> 2.17.1
+Vincent Cheng (1):
+  ptp: clockmatrix: Rework clockmatrix version information.
+
+ drivers/ptp/ptp_clockmatrix.c | 77 ++++++++-----------------------------------
+ 1 file changed, 13 insertions(+), 64 deletions(-)
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.7.4
+
