@@ -2,118 +2,144 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E843C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D33C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F26D207FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85EEF2072E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:10:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipVTd/8W"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="EFgVP5Ag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbgAFTKK (ORCPT
+        id S1726939AbgAFTKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 14:10:10 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39006 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726569AbgAFTKI (ORCPT
+        Mon, 6 Jan 2020 14:10:40 -0500
+Received: from mail.efficios.com ([167.114.142.138]:39290 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726569AbgAFTKk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 14:10:08 -0500
-Received: by mail-pg1-f195.google.com with SMTP id b137so27284090pga.6;
-        Mon, 06 Jan 2020 11:10:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=5UWJNKwGSnZRp2VqvhJODGUDqM6guG99MwzXRTV7Nb0=;
-        b=ipVTd/8WzUVxxKpTAZ5SKS4Qu+ymKDslRCsM2dW8CGQMRNF6NzHNamg6TOhJBPyGg4
-         ORhCV/Q5T8y2fc6B1zO52fudCe7Ri99+HF+7CYMnu/g6aUg/jkTAxDng5wgqVlYQPW5M
-         Eb1mHgurqw9jEMBxSZrCkCc/YNhvW1uG9OzYyDLsfbfTLtq8DxHe2/KfwxYAVG5uY07m
-         Bu+Es72kW0OdrMRIyWbKxuwGZnqRBRvhXad4hOpPqKc9VD/hJXtap77MbDviSyNM10Wi
-         rq9UBlVrwtu3Xybe/h9VTxYu7wSVEZitLRu2ig4aK71hqy34yItwhdaoDe3AQ1acwACR
-         8n1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=5UWJNKwGSnZRp2VqvhJODGUDqM6guG99MwzXRTV7Nb0=;
-        b=pYL5uIdx7aZJKyaWj2wLXAJeeqolVv6liUqzlcoS60wXfZgwjqP2mVvsE61NAJkr4i
-         ytqzTjV3U4aG8EOKU/8LT8svShR8ZN8Cds4LtnpGBfiVCYydEBx1ak3XnlQ1wdrJF5DZ
-         U5p1YqY+I/N9/DfLQwferxZVhYpCM07XXOg4ajtm3QX8DOgsRBw68lyaAX0KIWvT4PWl
-         0yumoBq6/vkNYQlM956/VHWPGY3ozxW+Q+j60W0lo4gKzoDwdzorinWIsJOP/vdYmOaM
-         bWfcYT+2jS96ZEiOouiQeElvhMcSJSkCDi2siBZrdoXjg5l/mF6uMpvfpRGriCCFYaLJ
-         rHTw==
-X-Gm-Message-State: APjAAAUKM1ip9WzZeKOf1SqNxX9cNE529WGMLPVN1zdieadwqUG/nbsV
-        eOLr9cXpEa0iZb4hStipdSI=
-X-Google-Smtp-Source: APXvYqy3M3OIjOkADUaBh75HkL/X1n2uuXocdJbwJl2rTbC++kuHHBua+mNCifGNrP3hQMUCclRBEg==
-X-Received: by 2002:a63:7705:: with SMTP id s5mr110197804pgc.379.1578337808378;
-        Mon, 06 Jan 2020 11:10:08 -0800 (PST)
-Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
-        by smtp.gmail.com with ESMTPSA id s24sm24868480pjp.17.2020.01.06.11.10.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 Jan 2020 11:10:07 -0800 (PST)
-From:   Yangtao Li <tiny.windzz@gmail.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org,
-        krzk@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 2/2] ARM: dts: exynos: tiny4412: add proper panel node
-Date:   Mon,  6 Jan 2020 19:10:03 +0000
-Message-Id: <20200106191003.21584-2-tiny.windzz@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200106191003.21584-1-tiny.windzz@gmail.com>
-References: <20200106191003.21584-1-tiny.windzz@gmail.com>
+        Mon, 6 Jan 2020 14:10:40 -0500
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id A03D16944EA;
+        Mon,  6 Jan 2020 14:10:38 -0500 (EST)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id KyGeu2p5HyCe; Mon,  6 Jan 2020 14:10:38 -0500 (EST)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 213486944E7;
+        Mon,  6 Jan 2020 14:10:38 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 213486944E7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1578337838;
+        bh=Qu3x60DNx5arxiFWBfIIJu97/cDoqLXAFxljCMqLL1I=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=EFgVP5Agp46TJfrFCfmQu30xM4M15qtYoOBPE+P0dSLyYa/1lN0YF+vPMgFFNL1Ao
+         Elw/mxXy8fBsG8RSh0HLXgjvnNo5nET2r/g9ONkCdDUPIC4cEpSZR68jElaUoY/GnL
+         xV4GL9g5bplJdjYt05np0AGEKe2DiOF6lkrQp309whne+3u7+qIRhOphfyowGYASpC
+         2te9k69yCjUwr+ojToFtYG2krlwabhS3dNh5FL1TFXFdi3xoGg40YklQXxu9GkxsoY
+         0iD7r1whdGVfpPa1qEz2tlvVjCIh0t3X+2TVOEtXnWnM+xYPVze58RCSEJwCOtdO41
+         0KrdSFKMuf84g==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id 2zMWPdjfYLT5; Mon,  6 Jan 2020 14:10:38 -0500 (EST)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 062136944D6;
+        Mon,  6 Jan 2020 14:10:38 -0500 (EST)
+Date:   Mon, 6 Jan 2020 14:10:37 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Florian Weimer <fw@deneb.enyo.de>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Neel Natu <neelnatu@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Message-ID: <688649540.853.1578337837967.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20191220203318.18739-1-mathieu.desnoyers@efficios.com>
+References: <20191220203318.18739-1-mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH for 5.5 1/2 v2] rseq: Fix: Clarify rseq.h UAPI rseq_cs
+ memory reclaim requirements
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.15_GA_3894 (ZimbraWebClient - FF71 (Linux)/8.8.15_GA_3890)
+Thread-Topic: rseq: Fix: Clarify rseq.h UAPI rseq_cs memory reclaim requirements
+Thread-Index: 7VOxhyid3ErFvbM9DicoUvZrucOkXg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add at070tn92 panel for tiny4412 board.
+----- On Dec 20, 2019, at 3:33 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
----
- arch/arm/boot/dts/exynos4412-tiny4412.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+> The rseq.h UAPI documents that the rseq_cs field must be cleared
+> before reclaiming memory that contains the targeted struct rseq_cs.
+> 
+> We should extend this comment to also dictate that the rseq_cs field
+> must be cleared before reclaiming memory of the code pointed to by
+> the rseq_cs start_ip and post_commit_offset fields.
+> 
+> While we can expect that use of dlclose(3) will typically unmap
+> both struct rseq_cs and its associated code at once, nothing would
+> theoretically prevent a JIT from reclaiming the code without
+> reclaiming the struct rseq_cs, which would erroneously allow the
+> kernel to consider new code which is not a rseq critical section
+> as a rseq critical section following a code reclaim.
 
-diff --git a/arch/arm/boot/dts/exynos4412-tiny4412.dts b/arch/arm/boot/dts/exynos4412-tiny4412.dts
-index 2b62cb27420c..57f9d09233ad 100644
---- a/arch/arm/boot/dts/exynos4412-tiny4412.dts
-+++ b/arch/arm/boot/dts/exynos4412-tiny4412.dts
-@@ -66,6 +66,16 @@
- 			clock-frequency = <24000000>;
- 		};
- 	};
-+
-+	panel {
-+		compatible = "innolux,at070tn92";
-+
-+		port {
-+			panel_input: endpoint {
-+				remote-endpoint = <&lcdc_output>;
-+			};
-+		};
-+	};
- };
- 
- &fimd {
-@@ -74,6 +84,12 @@
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 	status = "okay";
-+	port@3 {
-+		reg = <3>;
-+		lcdc_output: endpoint {
-+			remote-endpoint = <&panel_input>;
-+		};
-+	};
- };
- 
- &rtc {
+Hi Peter,
+
+Is there anything preventing this rseq UAPI documentation fix from being merged ?
+
+Thanks,
+
+Mathieu
+
+> 
+> Suggested-by: Florian Weimer <fw@deneb.enyo.de>
+> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Florian Weimer <fw@deneb.enyo.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> Cc: "H . Peter Anvin" <hpa@zytor.com>
+> Cc: Paul Turner <pjt@google.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Neel Natu <neelnatu@google.com>
+> Cc: linux-api@vger.kernel.org
+> ---
+> include/uapi/linux/rseq.h | 4 +++-
+> 1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/rseq.h b/include/uapi/linux/rseq.h
+> index 9a402fdb60e9..d94afdfc4b7c 100644
+> --- a/include/uapi/linux/rseq.h
+> +++ b/include/uapi/linux/rseq.h
+> @@ -100,7 +100,9 @@ struct rseq {
+> 	 * instruction sequence block, as well as when the kernel detects that
+> 	 * it is preempting or delivering a signal outside of the range
+> 	 * targeted by the rseq_cs. Also needs to be set to NULL by user-space
+> -	 * before reclaiming memory that contains the targeted struct rseq_cs.
+> +	 * before reclaiming memory that contains the targeted struct rseq_cs
+> +	 * or reclaiming memory that contains the code referred to by the
+> +	 * start_ip and post_commit_offset fields of struct rseq_cs.
+> 	 *
+> 	 * Read and set by the kernel. Set by user-space with single-copy
+> 	 * atomicity semantics. This field should only be updated by the
+> --
+> 2.17.1
+
 -- 
-2.17.1
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
