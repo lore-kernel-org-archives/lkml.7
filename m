@@ -2,262 +2,116 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0679FC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 573DBC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C203220715
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2941420715
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:07:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="diofNhKl"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="b3B5l/u9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgAFVGv (ORCPT
+        id S1726869AbgAFVHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 16:06:51 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:44788 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726699AbgAFVGu (ORCPT
+        Mon, 6 Jan 2020 16:07:46 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46256 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726699AbgAFVHp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 16:06:50 -0500
-Received: by mail-il1-f196.google.com with SMTP id z12so7285835iln.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 13:06:50 -0800 (PST)
+        Mon, 6 Jan 2020 16:07:45 -0500
+Received: by mail-io1-f66.google.com with SMTP id t26so50116591ioi.13
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 13:07:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=I5YnJi5+e7D80WmVJPQGsVfF+pGCM7LZ6AnxAH86SAc=;
-        b=diofNhKl+RfW70F+qVworoxVdriK4nndJCXj/bAKm93v+PNpoqtOdS2Bl/KO5DIYON
-         S2UX9/TG1z//w16uDjfOHeO4fvkbybWQWt2tuQGtSw4JtnDwuyvjrfAM/byYVxJGWmm+
-         /jUIqjsQbYzkV4yARruJ8BD29r+8rJG8MnYZg=
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xRpwQviknb25UoZmbJMLN6EJGSP9FYuSxPxJ31clxVs=;
+        b=b3B5l/u9gjT+OpYHkhEegMK+pBwrPRkSjcRruBCbXIAjTmW48tye354OZERmQSamB4
+         Pjhy7cDKQeD0thwr0RaYeHK3mokcLMiTaSz73ClS8ThVz1b7Xh1glcIw/XliWXWe89aG
+         rlWq2dTdRX3UdRtC8BzSOc3OkazGkrp+7veIltbgQAIWHYw4eQVhAMmA5wygomf1G+dB
+         gUdpD85w9ZnSfpJ7rzTdVvEs4vpZOrZw6H2JE2k16gfkiogmGfY2yA29+1vfJw5CW0ep
+         iMhCompfFlJYZ8HF38JfyA7iOWkigqMftEDU4Kl7td+2HG3SbsZse6lbr0NRRRzF4APL
+         lxIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=I5YnJi5+e7D80WmVJPQGsVfF+pGCM7LZ6AnxAH86SAc=;
-        b=jSLnKbjA+AlkyvroQEXh8A/CQv+Ri+3appkB8zY17GGfn9uCi9qyCs1r+YiLnvpj3b
-         LEH7GTYVuGT0UH/f5e88F2icr9fWquxOVACX43Bh2miibWwvDPOe6/6gCSIM9AD8mXsI
-         osJBColBk2LEk7b1oIRwyAy7D9ynAVJlu2T1a2H/Fa/KppupokG0P+n/yaMbjP5CNk1Y
-         vtFDm4lmObsNdlnbNOu4yaJt2TQnrLf/vb9TWqx6f1yzPlr1en7OlGn9vK6GvCCsoZVa
-         VWp+H1axxl4oXnJ6Pn+GMVM79fcYcPBnIBXBeW3Kv6i+eWy602u7zQdyDgWlNHvIi99J
-         Josg==
-X-Gm-Message-State: APjAAAWUdj2uh53MoHEmaMOj2gjXFfVPIgdr2IuG1+1y+rwEpwjJePFp
-        mRjbZVHtdCs/V95/HARhQbCqJg==
-X-Google-Smtp-Source: APXvYqy7WAS5sKOwmNYnXOVezTlzC1T3k+CdImORRxrszGGIxYQYJ0RaZJOW37O1ovYyE3rcfsJXYQ==
-X-Received: by 2002:a92:afcf:: with SMTP id v76mr85765246ill.20.1578344809563;
-        Mon, 06 Jan 2020 13:06:49 -0800 (PST)
-Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
-        by smtp.gmail.com with ESMTPSA id a3sm17121597iot.87.2020.01.06.13.06.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 Jan 2020 13:06:49 -0800 (PST)
-Date:   Mon, 6 Jan 2020 21:06:47 +0000
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, tycho@tycho.ws, jannh@google.com,
-        cyphar@cyphar.com, oleg@redhat.com, luto@amacapital.net,
-        viro@zeniv.linux.org.uk, gpascutto@mozilla.com,
-        ealvarez@mozilla.com, fweimer@redhat.com, jld@mozilla.com,
-        arnd@arndb.de
-Subject: Re: [PATCH v8 3/3] test: Add test for pidfd getfd
-Message-ID: <20200106210647.GA30920@ircssh-2.c.rugged-nimbus-611.internal>
-References: <20200103162928.5271-1-sargun@sargun.me>
- <20200103162928.5271-4-sargun@sargun.me>
- <20200105142019.umls5ff4b5433u6k@wittgenstein>
- <20200105190812.GC8522@ircssh-2.c.rugged-nimbus-611.internal>
- <20200106171940.vjo2w5o6cqw2kkuk@wittgenstein>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xRpwQviknb25UoZmbJMLN6EJGSP9FYuSxPxJ31clxVs=;
+        b=eBUGw9wo9uDTMzyzXNoHynLVr4xojd16Qt3Ev7mpD53ITNlp2tdop4TagKaTISrawk
+         bB0Tnqi3y1H2RTloqW7iNtMpj/5xM+nxqoDALpWMKKH2/9fy2ziyKRvynmz8YU/VRST1
+         UsZR4C6Ioe6PcAmwk+B6fvkYNEEx2UD+mc0K1/+AR/66Jot+mrC/GF5Bon7oR8tPW1Zk
+         leAtpnAMAa2igOkt0t0/YsbDrTxUWipWlxOhGEZlJdn3JomNk4XtSgIrI3s7aho50okH
+         WbBZeQ0WFXujqYscDHjqTeM9bMa7sF9xxwx+58p/qAC8beeU7PcgruDCRnIUyufDEGSs
+         Nr5Q==
+X-Gm-Message-State: APjAAAUJsa+ziqrBepGdCFUy19OhK1ISIDppLx+AtOP758ml5YLs33E/
+        TPviGZ8DYxvAydLNf76xTDA9U8J/KVLdtPHCDfjc6g==
+X-Google-Smtp-Source: APXvYqzc+ndsPGVWQqd03R9vgmoEdYCbRH0T8wxQshOrpgT1uPAz0/P2devjATpA6jCfqYmFYGzlDY97JfI5jbp1ng0=
+X-Received: by 2002:a02:ce8a:: with SMTP id y10mr71794309jaq.21.1578344863555;
+ Mon, 06 Jan 2020 13:07:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200106171940.vjo2w5o6cqw2kkuk@wittgenstein>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200106203700.21009-1-tony@atomide.com>
+In-Reply-To: <20200106203700.21009-1-tony@atomide.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Mon, 6 Jan 2020 13:07:32 -0800
+Message-ID: <CAOesGMiNbyUXwPFsG-ipTn-xfEs+A2hG8Q8MTcSLz5794GCv0g@mail.gmail.com>
+Subject: Re: [PATCH] clocksource: timer-ti-dm: Fix regression
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Yangtao Li <tiny.windzz@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 06:19:41PM +0100, Christian Brauner wrote:
-> On Sun, Jan 05, 2020 at 07:08:13PM +0000, Sargun Dhillon wrote:
-> > On Sun, Jan 05, 2020 at 03:20:23PM +0100, Christian Brauner wrote:
-> > > On Fri, Jan 03, 2020 at 08:29:28AM -0800, Sargun Dhillon wrote:
-> > > > +static int sys_pidfd_getfd(int pidfd, int fd, int flags)
-> > > > +{
-> > > > +	return syscall(__NR_pidfd_getfd, pidfd, fd, flags);
-> > > > +}
-> > > 
-> > > I think you can move this to the pidfd.h header as:
-> > > 
-> > > static inline int sys_pidfd_getfd(int pidfd, int fd, int flags)
-> > > {
-> > > 	return syscall(__NR_pidfd_getfd, pidfd, fd, flags);
-> > > }
-> > > 
-> > > Note, this also needs an
-> > > 
-> > > #ifndef __NR_pidfd_getfd
-> > > __NR_pidfd_getfd -1
-> > > #endif
-> > > so that compilation doesn't fail.
-> > > 
-> > I'll go ahead and move this into pidfd.h, and follow the pattern there. I
-> > don't think it's worth checking if each time the return code is ENOSYS.
-> > 
-> > Does it make sense to add something like:
-> > #ifdef __NR_pidfd_getfd
-> > TEST_HARNESS_MAIN
-> > #else
-> > int main(void)
-> > {
-> > 	fprintf(stderr, "pidfd_getfd syscall not supported\n");
-> > 	return KSFT_SKIP;
-> > }
-> > #endif
-> > 
-> > to short-circuit the entire test suite?
-> 
-> You mean the getfd testsuite? If so and that works, then sounds like a
-> good idea to me.
-> 
-> > 
-> > 
-> > 
-> > > 
-> > > Hm, isn't it safer to do 65535 explicitly? Since USHRT_MAX can
-> > > technically be greater than 65535.
-> > > 
-> > I borrowed this from the BPF tests. I can hardcode something like:
-> > #define NOBODY_UID 65535
-> > and setuid to that, if you think it's safer?
-> 
-> If you want to specifically seteuid() to 65535 then yes, using the
-> hard-coded number or using a dedicated macro seems better.
-> 
-> > 
-> > > > +
-> > > > +	ASSERT_EQ(1, send(self->sk, "P", 1, 0));
-> > > > +	ASSERT_EQ(1, recv(self->sk, &c, 1, 0));
-> > > > +
-> > > > +	fd = sys_pidfd_getfd(self->pidfd, self->remote_fd, 0);
-> > > > +	EXPECT_EQ(-1, fd);
-> > > > +	EXPECT_EQ(EPERM, errno);
-> > > > +
-> > > > +	if (uid == 0)
-> > > > +		ASSERT_EQ(0, seteuid(0));
-> > > > +}
-> > > > +
-> > > > +TEST_F(child, fetch_fd)
-> > > > +{
-> > > > +	int fd, ret;
-> > > > +
-> > > > +	fd = sys_pidfd_getfd(self->pidfd, self->remote_fd, 0);
-> > > > +	ASSERT_GE(fd, 0);
-> > > > +
-> > > > +	EXPECT_EQ(0, sys_kcmp(getpid(), self->pid, KCMP_FILE, fd, self->remote_fd));
-> > > 
-> > > So most of these tests seem to take place when the child has already
-> > > called exit() - or at least it's very likely that the child has already
-> > > called exit() - and remains a zombie. That's not ideal because
-> > > that's not the common scenario/use-case. Usually the task of which we
-> > > want to get an fd will be alive. Also, if the child has already called
-> > > exit(), by the time it returns to userspace it should have already
-> > > called exit_files() and so I wonder whether this test would fail if it's
-> > > run after the child has exited. Maybe I'm missing something here... Is
-> > > there some ordering enforced by TEST_F()?
-> > Yeah, I think perhaps I was being too clever.
-> > The timeline roughly goes something like this:
-> > 
-> > # Fixture bringup
-> > [parent] creates socket_pair
-> > [parent] forks, and passes pair down to child
-> > [parent] waits to read sizeof(int) from the sk_pair
-> > [child] creates memfd 
-> > [__child] sends local memfd number to parent via sk_pair
-> > [__child] waits to read from sk_pair
-> > [parent] reads remote memfd number from socket
-> > # Test
-> > [parent] performs tests
-> > # Fixture teardown
-> > [parent] closes sk_pair
-> > [__child] reads 0 from recv on sk_pair, implies the other end is closed
-> > [__child] Returns / exits 0
-> > [parent] Reaps child / reads exit code
-> > 
-> > ---
-> > The one case where this is not true, is if the parent sends 'P' to the sk pair,
-> > it triggers setting PR_SET_DUMPABLE to 0, and then resumes waiting for the fd to 
-> > close.
-> > 
-> > Maybe I'm being too clever? Instead, the alternative was to send explicit stop / 
-> > start messages across the sk_pair, but that got kind of ugly. Do you have a 
-> > better suggestion?
-> 
-> If I understand correctly you just need to block the child to stop it
-> from exiting. Couldn't you do this by simply calling recv() on the
-> socket in the child thereby blocking it? At the end you just send a
-> final message to proceed and if that doesn't work SIGKILL it?
-> 
-This already exists in:
-while ((ret = recv(sk, &buf, sizeof(buf), 0)) > 0) {
-	if (buf == 'P') {
-		ret = prctl(PR_SET_DUMPABLE, 0);
-		if (ret < 0) {
-			fprintf(stderr,
-				"%s: Child failed to disable ptrace\n",
-				strerror(errno));
-			return -1;
-		}
-	} else {
-		fprintf(stderr, "Child received unknown command %c\n",
-			buf);
-		return -1;
-	}
-	ret = send(sk, &buf, sizeof(buf), 0);
-	if (ret != 1) {
-		fprintf(stderr, "%s: Child failed to ack\n",
-			strerror(errno));
-		return -1;
-	}
-}
-----
-This will block until the close(self->sk) in the fixture teardown. Then ret
-returns 0, and the child should exit. Maybe a comment like:
-/*
- * The fixture setup is completed at this point. The tests will run.
- *
- * Either we will read 'P' off of the sk, indicating that we need
- * to disable ptrace, or if the other side of the socket is closed
- * recv will return 0-bytes. This indicates that the fixture teardown
- * has occured, and the child should exit.
- */
-would be useful?
+On Mon, Jan 6, 2020 at 12:37 PM Tony Lindgren <tony@atomide.com> wrote:
+>
+> Clean-up commit 8c82723414d5 ("clocksource/drivers/timer-ti-dm: Switch to
+> platform_get_irq") caused a regression where we now try to access
+> uninitialized data for timer:
+>
+> drivers/clocksource/timer-ti-dm.c: In function 'omap_dm_timer_probe':
+> drivers/clocksource/timer-ti-dm.c:798:13: warning: 'timer' may be used
+> uninitialized in this function [-Wmaybe-uninitialized]
+>
+> On boot we now get:
+>
+> Unable to handle kernel NULL pointer dereference at virtual address
+> 00000004
+> ...
+> (omap_dm_timer_probe) from [<c061ac7c>] (platform_drv_probe+0x48/0x98)
+> (platform_drv_probe) from [<c0618c04>] (really_probe+0x1dc/0x348)
+> (really_probe) from [<c0618ef4>] (driver_probe_device+0x5c/0x160)
+>
+> Let's fix the issue by moving platform_get_irq to happen after timer has
+> been allocated.
+>
+> Fixes: 8c82723414d5 ("clocksource/drivers/timer-ti-dm: Switch to platform_get_irq")
+> Cc: Yangtao Li <tiny.windzz@gmail.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
 
-> > 
-> > > 
-> > > Also, what does self->pid point to? The fd of the already exited child?
-> > It's just the pid of the child. pidfd is the fd of the (unexited) child.
-I have no idea if it's pro / against the commenting style to blow up that
-structure:
-FIXTURE(child)
-{
-	/* pid points to the child which we are fetching FDs from */
-	pid_t pid;
-	/* pidfd is the pidfd of the child */
-	int pidfd;
-	/*
-	 * sk is our side of the socketpair used to communicate with the child.
-	 * When it is closed, the child will exit.
-	 */
-	int sk;
-	/*
-	 * remote_fd is the number of the FD which we are trying to retrieve
-	 * from the child.
-	 */
-	int remote_fd;
-};
+Acked-by: Olof Johansson <olof@lixom.net>
 
-> 
-> Ah, thanks!
-> Christian
+> ---
+>
+> I did not notice simlar issue with other patches in the series, but
+> please do double check Yangtao.
+
+Yeah, this even seems to be caught at build (but our builds have been
+so noisy with warnings lately that they're hard to spot):
+
+/build/drivers/clocksource/timer-ti-dm.c: In function 'omap_dm_timer_probe':
+/build/drivers/clocksource/timer-ti-dm.c:798:13: warning: 'timer' may
+be used uninitialized in this function [-Wmaybe-uninitialized]
+  798 |  timer->irq = platform_get_irq(pdev, 0);
+      |  ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+-Olof
