@@ -2,117 +2,168 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2A7C33C9B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE47FC00523
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1095F2072C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:56:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ARoVldjp"
+	by mail.kernel.org (Postfix) with ESMTP id C6BB52072C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:04:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbgAFB4l (ORCPT
+        id S1727337AbgAFCEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 20:56:41 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40229 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727226AbgAFB4k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 20:56:40 -0500
-Received: by mail-lj1-f194.google.com with SMTP id u1so49318763ljk.7;
-        Sun, 05 Jan 2020 17:56:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4rvRIWvPPO3rgIXN9Qu/ANljbCFEmjfGVoQUvS+BrRQ=;
-        b=ARoVldjpnELYLXAJ7cCzkdlqzT4ncLTMjGveBhivQrZqSIbI2lWMrmOM0u7JorPLGA
-         CCSiNRIm0tRvFfvQLOqa18QhhjYinnWB+nUrwvQ3NKJa+n0C2h8eWhOeK7a2T9CnCDB/
-         Hoav1uW6/qqp0DdPR90DmPqTzc5LVbln4HxCjqNNnOAnuROWIshCYuEFUlqY6JGhY26G
-         TIGZ1JeWVCLMhM5AgREoleB0JlSUimr0BYLEgL1pcYVfa2J5c553xq2i08Y2ao4oN6V2
-         bWmEV+ua+YDPdUN8jHoCoRJvRLA1wysccMpweeWfoEvHufdQwUzOHfmrTfzGsV0QOox/
-         HYzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4rvRIWvPPO3rgIXN9Qu/ANljbCFEmjfGVoQUvS+BrRQ=;
-        b=TXTaluoQhcY53CLa2ovpMjtp51tJ24tn3A8mAWAwjurMkbArWkOYU734B7jvrB0jIE
-         dfPEDFKxfGbHbw02msTxtJ7iqO/RZHOsPYG5cWKc7OXQKMxvPSmgqTnrxsarusUP2cXt
-         kfMr3MgA9yW7c0NFgCXX8NaLY3dn1pFqAJy80QvRJHqV57GEbiZe8L/+HI53qnTyQNbR
-         dsggl6vLabkutBWEQRB0lE9uEBmlhRflHV0bw6PPv737yKQL2fqz8sWTxKOtvj0C9iun
-         OP977S0V1ibS9SOO2iMTgSQ3BYo/W91/yM608xbCLvQPAauWm/qeopiQvnAACOSACMMs
-         A7ug==
-X-Gm-Message-State: APjAAAXupfPK1pO3s3u4d8lBvg54qg+1AElS3mNp83dMEZEZ9OInoIj4
-        68tconS7DYr36yuhd5lH+tI=
-X-Google-Smtp-Source: APXvYqw4+wDYspdBn20/FIYRd/Zx8SwBF9egqxCzltwle7cFRuRQvj82k0BUzA7kePdHTqZkSWlPXw==
-X-Received: by 2002:a2e:7518:: with SMTP id q24mr59460256ljc.119.1578275798191;
-        Sun, 05 Jan 2020 17:56:38 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id d1sm27433458ljl.18.2020.01.05.17.56.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jan 2020 17:56:37 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     linux-rtc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1] rtc: tps6586x: Use IRQ_NOAUTOEN flag
-Date:   Mon,  6 Jan 2020 04:56:15 +0300
-Message-Id: <20200106015615.12602-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Sun, 5 Jan 2020 21:04:06 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56458 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727226AbgAFCEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 21:04:05 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 82B3A5B94C23C3898F14;
+        Mon,  6 Jan 2020 10:04:01 +0800 (CST)
+Received: from [127.0.0.1] (10.184.213.217) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Mon, 6 Jan 2020
+ 10:03:58 +0800
+Subject: Re: [PATCH v5 1/2] tmpfs: Add per-superblock i_ino support
+To:     Chris Down <chris@chrisdown.name>, <linux-mm@kvack.org>
+CC:     Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Matthew Wilcox" <willy@infradead.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Jeff Layton" <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>
+References: <cover.1578225806.git.chris@chrisdown.name>
+ <91b4ed6727712cb6d426cf60c740fe2f473f7638.1578225806.git.chris@chrisdown.name>
+From:   "zhengbin (A)" <zhengbin13@huawei.com>
+Message-ID: <4106bf3f-5c99-77a4-717e-10a0ffa6a3fa@huawei.com>
+Date:   Mon, 6 Jan 2020 10:03:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <91b4ed6727712cb6d426cf60c740fe2f473f7638.1578225806.git.chris@chrisdown.name>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.184.213.217]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The IRQ_NOAUTOEN flag tells interrupt core that interrupt shall not be
-auto-enabled at the time of requesting interrupt. This is a minor clean-up
-change that doesn't fix any problems.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/rtc/rtc-tps6586x.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On 2020/1/5 20:06, Chris Down wrote:
+> get_next_ino has a number of problems:
+>
+> - It uses and returns a uint, which is susceptible to become overflowed
+>   if a lot of volatile inodes that use get_next_ino are created.
+> - It's global, with no specificity per-sb or even per-filesystem. This
+>   means it's not that difficult to cause inode number wraparounds on a
+>   single device, which can result in having multiple distinct inodes
+>   with the same inode number.
+>
+> This patch adds a per-superblock counter that mitigates the second case.
+> This design also allows us to later have a specific i_ino size
+> per-device, for example, allowing users to choose whether to use 32- or
+> 64-bit inodes for each tmpfs mount. This is implemented in the next
+> commit.
+>
+> Signed-off-by: Chris Down <chris@chrisdown.name>
+> Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Jeff Layton <jlayton@kernel.org>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: linux-mm@kvack.org
+> Cc: linux-fsdevel@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: kernel-team@fb.com
+> ---
+>  include/linux/shmem_fs.h |  1 +
+>  mm/shmem.c               | 30 +++++++++++++++++++++++++++++-
+>  2 files changed, 30 insertions(+), 1 deletion(-)
+>
+> v5: Nothing in code, just resending with correct linux-mm domain.
+>
+> diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
+> index de8e4b71e3ba..7fac91f490dc 100644
+> --- a/include/linux/shmem_fs.h
+> +++ b/include/linux/shmem_fs.h
+> @@ -35,6 +35,7 @@ struct shmem_sb_info {
+>  	unsigned char huge;	    /* Whether to try for hugepages */
+>  	kuid_t uid;		    /* Mount uid for root directory */
+>  	kgid_t gid;		    /* Mount gid for root directory */
+> +	ino_t next_ino;		    /* The next per-sb inode number to use */
+>  	struct mempolicy *mpol;     /* default memory policy for mappings */
+>  	spinlock_t shrinklist_lock;   /* Protects shrinklist */
+>  	struct list_head shrinklist;  /* List of shinkable inodes */
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index 8793e8cc1a48..9e97ba972225 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -2236,6 +2236,12 @@ static int shmem_mmap(struct file *file, struct vm_area_struct *vma)
+>  	return 0;
+>  }
+>  
+> +/*
+> + * shmem_get_inode - reserve, allocate, and initialise a new inode
+> + *
+> + * If this tmpfs is from kern_mount we use get_next_ino, which is global, since
+> + * inum churn there is low and this avoids taking locks.
+> + */
+>  static struct inode *shmem_get_inode(struct super_block *sb, const struct inode *dir,
+>  				     umode_t mode, dev_t dev, unsigned long flags)
+>  {
+> @@ -2248,7 +2254,28 @@ static struct inode *shmem_get_inode(struct super_block *sb, const struct inode
+>  
+>  	inode = new_inode(sb);
+>  	if (inode) {
+> -		inode->i_ino = get_next_ino();
+> +		if (sb->s_flags & SB_KERNMOUNT) {
+> +			/*
+> +			 * __shmem_file_setup, one of our callers, is lock-free:
+> +			 * it doesn't hold stat_lock in shmem_reserve_inode
+> +			 * since max_inodes is always 0, and is called from
+> +			 * potentially unknown contexts. As such, use the global
+> +			 * allocator which doesn't require the per-sb stat_lock.
+> +			 */
+> +			inode->i_ino = get_next_ino();
+> +		} else {
+> +			spin_lock(&sbinfo->stat_lock);
 
-diff --git a/drivers/rtc/rtc-tps6586x.c b/drivers/rtc/rtc-tps6586x.c
-index 859d901fa6cb..e39af2d67051 100644
---- a/drivers/rtc/rtc-tps6586x.c
-+++ b/drivers/rtc/rtc-tps6586x.c
-@@ -23,6 +23,7 @@
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/init.h>
-+#include <linux/irq.h>
- #include <linux/kernel.h>
- #include <linux/mfd/tps6586x.h>
- #include <linux/module.h>
-@@ -267,6 +268,8 @@ static int tps6586x_rtc_probe(struct platform_device *pdev)
- 	rtc->rtc->start_secs = mktime64(2009, 1, 1, 0, 0, 0);
- 	rtc->rtc->set_start_time = true;
- 
-+	irq_set_status_flags(rtc->irq, IRQ_NOAUTOEN);
-+
- 	ret = devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
- 				tps6586x_rtc_irq,
- 				IRQF_ONESHOT,
-@@ -276,7 +279,6 @@ static int tps6586x_rtc_probe(struct platform_device *pdev)
- 				rtc->irq, ret);
- 		goto fail_rtc_register;
- 	}
--	disable_irq(rtc->irq);
- 
- 	ret = rtc_register_device(rtc->rtc);
- 	if (ret)
--- 
-2.24.0
+Use spin_lock will affect performance, how about define
+
+unsigned long __percpu *last_ino_number; /* Last inode number */
+atomic64_t shared_last_ino_number; /* Shared last inode number */
+in shmem_sb_info, whose performance will be better?
+
+> +			if (unlikely(sbinfo->next_ino > UINT_MAX)) {
+> +				/*
+> +				 * Emulate get_next_ino uint wraparound for
+> +				 * compatibility
+> +				 */
+> +				sbinfo->next_ino = 1;
+> +			}
+> +			inode->i_ino = sbinfo->next_ino++;
+> +			spin_unlock(&sbinfo->stat_lock);
+> +		}
+> +
+>  		inode_init_owner(inode, dir, mode);
+>  		inode->i_blocks = 0;
+>  		inode->i_atime = inode->i_mtime = inode->i_ctime = current_time(inode);
+> @@ -3662,6 +3689,7 @@ static int shmem_fill_super(struct super_block *sb, struct fs_context *fc)
+>  #else
+>  	sb->s_flags |= SB_NOUSER;
+>  #endif
+> +	sbinfo->next_ino = 1;
+>  	sbinfo->max_blocks = ctx->blocks;
+>  	sbinfo->free_inodes = sbinfo->max_inodes = ctx->inodes;
+>  	sbinfo->uid = ctx->uid;
 
