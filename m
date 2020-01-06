@@ -2,91 +2,163 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98356C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF70C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A64320731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928CC20731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:25:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N+nS18zn"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="FC3Br8Hl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgAFKYJ (ORCPT
+        id S1726385AbgAFKZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 05:24:09 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:40382 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbgAFKYI (ORCPT
+        Mon, 6 Jan 2020 05:25:30 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:61083 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725446AbgAFKZa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 05:24:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=g9YBz3F+B0vv6Z8r9xsyYIVGQYxQAbmF8Qb3K4NcA+A=; b=N+nS18znWKjmEYLgGbzrCg9tz
-        IdcDn2h6JdIpBdWF0v5ZMOARbrN8br+d5EgzsfVfg1p3Ft9o4pW0UUvEssCtYXPegMTfUHF6oqq3P
-        cMZdCUjLiWIvEzE/10F/tB8kG7TlFkQbJtyv7tgFJakLatFSio3Z6hKF01fSFf9ugR7I8TTXkONzE
-        fWvApuW+voFa+eGzPLjzsyc9o7QDIhICoMTP3fsaOZ47XWrotAYMSvEplsimQEUUdHmZdR476wfgm
-        y8YT7R95ZDt8OikrwOJzzZKgAnWrYzLxxQEJJ/rHZ+IL473lsq8eoLNpg+ZdW1F/dovgZSlm+Grmf
-        FNbc592Yw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ioPY0-0000tu-Dv; Mon, 06 Jan 2020 10:23:44 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5E54B306CEE;
-        Mon,  6 Jan 2020 11:22:09 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5D9DA2B627478; Mon,  6 Jan 2020 11:23:41 +0100 (CET)
-Date:   Mon, 6 Jan 2020 11:23:41 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Peng Liu <iwtbavbm@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, qais.yousef@arm.com, morten.rasmussen@arm.com,
-        valentin.schneider@arm.com
-Subject: Re: [PATCH v2] sched/fair: fix sgc->{min,max}_capacity miscalculate
-Message-ID: <20200106102341.GM2810@hirez.programming.kicks-ass.net>
-References: <20200104130828.GA7718@iZj6chx1xj0e0buvshuecpZ>
+        Mon, 6 Jan 2020 05:25:30 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 006AHKbC028995;
+        Mon, 6 Jan 2020 11:25:15 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=csKu8+UMH7YN+nRTevbWnuk0toNCOh+W9ovVroJG4Gs=;
+ b=FC3Br8HlV5BIIQm0VeJ7roajgAUqSoCVTK35cV4/OxzRJ8jBa3EImWslq3jusdv/IP0q
+ 0wQQW5tUfoEu6NU/kjF63OabrvuDcdz3Ej5qRIO+hfNCC6Eg5G3z1M5mxo3qxmCRsElD
+ irbTBS3HtyRpvonV+JnmDisXOWCbdnpQEE2oTk9AUYCvhldCI//iqPh8RfXTgsoWR+oq
+ GwBqTXj9ErFNmrVqEehsAu98A7yto+aGeU71hYdgWEWcvr7MYr53viCmf6gbO3d/3J9D
+ itdevHZiOMndqK++SW/QI1XKm1loG8SGq0iJyxAf6xLTa1LcieR8JLo5/4mkYVwKcxZy Zw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xakuqfaab-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Jan 2020 11:25:15 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 36A9210002A;
+        Mon,  6 Jan 2020 11:25:14 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 27F172B088F;
+        Mon,  6 Jan 2020 11:25:14 +0100 (CET)
+Received: from [10.48.0.71] (10.75.127.44) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Jan
+ 2020 11:25:12 +0100
+Subject: Re: [PATCH] iio: adc: stm32-adc: Use dma_request_chan() instead
+ dma_request_slave_channel()
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+CC:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <vkoul@kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Olivier MOYSAN <olivier.moysan@st.com>
+References: <20191217075153.23766-1-peter.ujfalusi@ti.com>
+ <20191223154230.7fb2a988@archlinux>
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-ID: <9f190583-824c-01a6-7da3-43065fde49c7@st.com>
+Date:   Mon, 6 Jan 2020 11:25:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200104130828.GA7718@iZj6chx1xj0e0buvshuecpZ>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191223154230.7fb2a988@archlinux>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-06_03:2020-01-06,2020-01-06 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 04, 2020 at 09:08:28PM +0800, Peng Liu wrote:
-> commit bf475ce0a3dd ("sched/fair: Add per-CPU min capacity to
-> sched_group_capacity") introduced per-cpu min_capacity.
+On 12/23/19 4:42 PM, Jonathan Cameron wrote:
+> On Tue, 17 Dec 2019 09:51:53 +0200
+> Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
 > 
-> commit e3d6d0cb66f2 ("sched/fair: Add sched_group per-CPU max capacity")
-> introduced per-cpu max_capacity.
+>> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+>> eating up the error code.
+>>
+>> By using dma_request_chan() directly the driver can support deferred
+>> probing against DMA.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Hi Peter,
 > 
-> Here, capacity is the accumulated sum of (maybe) many CPUs' capacity.
-> Compare with capacity to get {min,max}_capacity makes no sense. Instead,
-> we should compare one by one in each iteration to get
-> sgc->{min,max}_capacity of the group.
+> Change looks sensible to me, but I'd like to leave a little longer
+> for others to look at this.
 > 
-> Also, the only CPU in rq->sd->groups should be rq's CPU. Thus,
-> capacity_of(cpu_of(rq)) should be equal to rq->sd->groups->sgc->capacity.
-> Code can be simplified by removing the if/else.
+> Give me a poke if I seem to have lost it by the end of the first
+> week in Jan.
 > 
-> Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
-> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-> ---
-> v1: https://lkml.org/lkml/2019/12/30/502
+> Thanks,
+> 
+> Jonathan
+> 
+>> ---
+>>  drivers/iio/adc/stm32-adc.c | 10 ++++++++--
+>>  1 file changed, 8 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+>> index 3b291d72701c..5dab23f1fdee 100644
+>> --- a/drivers/iio/adc/stm32-adc.c
+>> +++ b/drivers/iio/adc/stm32-adc.c
+>> @@ -1746,9 +1746,15 @@ static int stm32_adc_dma_request(struct iio_dev *indio_dev)
+>>  	struct dma_slave_config config;
+>>  	int ret;
+>>  
+>> -	adc->dma_chan = dma_request_slave_channel(&indio_dev->dev, "rx");
+>> -	if (!adc->dma_chan)
+>> +	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
+>> +	if (IS_ERR(adc->dma_chan)) {
+>> +		if (PTR_ERR(adc->dma_chan) == -EPROBE_DEFER)
+>> +			return -EPROBE_DEFER;
 
-Please (for future use); use the form:
+Hi Peter,
 
-  https://lkml.kernel.org/r/$msgid
+Thanks for the patch and sorry for the late reply.
 
+I'd rather prefer to check explicitly for -ENODEV (as the DMA is
+optional) to use the IRQ mode and treat all other codes (including
+EPROBE_DEFER) as errors.
+
+Rationale is: This can hide other errors e.g. like all DMA channels are
+busy/reserved for other usage. So the user may wrongly think it's
+probing the driver, with DMA. This may be a corner case, but still...
+DMA channels are assigned via device tree. I'd rather prefer to avoid
+depending of runtime (probe ordering) in such a case.
+
+Can you update the patch considering this ?
+
+Please find here an alternate proposal:
+
+	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
+	if (IS_ERR(adc->dma_chan)) {
+		if (PTR_ERR(adc->dma_chan) != -ENODEV)
+			return PTR_ERR(adc->dma_chan);
+
+		/* DMA is optional: fall back to IRQ mode */
+		adc->dma_chan = NULL;
+		return 0;
+	}
+
+Best regards,
+Fabrice
+
+>> +
+>> +		/* Ignore errors to fall back to IRQ mode */
+>> +		adc->dma_chan = NULL;
+>>  		return 0;
+>> +	}
+>>  
+>>  	adc->rx_buf = dma_alloc_coherent(adc->dma_chan->device->dev,
+>>  					 STM32_DMA_BUFFER_SIZE,
+> 
