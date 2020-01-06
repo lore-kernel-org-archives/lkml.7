@@ -2,119 +2,104 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C69F0C33C9A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 05:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 057A1C32767
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 05:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D8A121734
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 05:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD56D20848
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 05:53:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FAT2GuUw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ee8gnuGL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgAFFts (ORCPT
+        id S1726713AbgAFFxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 00:49:48 -0500
-Received: from ozlabs.org ([203.11.71.1]:57651 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbgAFFts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 00:49:48 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47rl2d4Kf9z9sR4;
-        Mon,  6 Jan 2020 16:49:45 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578289786;
-        bh=tZmF/WDn1Rl9uQxu18Ig3v3tPGDxQ5X6sH5nqcnQnrw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=FAT2GuUwSQEOC95zpXnmSjpcD7QNieVGZtWZd0RYoUgaHmNoXeWeGhxzyvJuak+NI
-         FwvTJaiL5i0FpF6tTpTjF6o5O1/HRw8XLu5k8S2SFsAOzL8Op5B7MQl+xR2Ak2uO8q
-         /4+SDMzmw5RLRv5Qf+IuAh8C18/H7vn7u3JmPDurDw5mzo+mCpxGvbgzVQYsirvLUC
-         T90BKiUGyK8jY30y5umZTaPEWolRed2KVj3nJkL0sqspFih1A7gCmwjhiwuR6cEkAd
-         0YgC043UMxpwKfufKvEeLFqqD12THCNp+zYcR9rGE2LnlptOFdUOPSygPHd8cJO0vl
-         YObIU6/e4Ez2A==
-Date:   Mon, 6 Jan 2020 16:49:44 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: linux-next: build failure after merge of the akpm-current tree
-Message-ID: <20200106164944.063ac07b@canb.auug.org.au>
+        Mon, 6 Jan 2020 00:53:52 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37263 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgAFFxv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 00:53:51 -0500
+Received: by mail-ot1-f67.google.com with SMTP id k14so70202421otn.4
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jan 2020 21:53:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BQszsIlQqsooj5gDAGmY6RU64iOnhfI7B772izNBsYM=;
+        b=ee8gnuGL69ozRuwZUJpSr4P6/DsEbehVpg4t432EFwemYqGGmlTb0iEdTOJmBVFpqp
+         hFp1pQTG5THio9gam+tEfphxOt7f07ndimYZ2YwRz/ZmY3sg/pApil4/ADDJeo8ldFcR
+         ZjcNeHD2cwIMauayBpfJOLip/orBSkK1pItTPLQIFIzaiCrPVbQG7TJyiqcvoV9Ndo0W
+         KHHbbmsHkoA/jg+Aakp6SGBlkhLiRmq17t11KZb4Q12IjoSmBxBD7tAWhVYgOfe9MUQS
+         ZSEipdwYIyfI7+fO/xa2fEZw3tWIRFIFGZc1c7tG0MGzCMiCdoJmOPJseJlEmHxZuY5b
+         /MnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BQszsIlQqsooj5gDAGmY6RU64iOnhfI7B772izNBsYM=;
+        b=HNdSaxxSuim0awDDfF+xA+EAZYJoq7yiZuIe8Orv48QxtxHC8B8gsuyso8lqeRCznp
+         zsr1D2APi5i1+diLl0jan9RODpXTOqlXmi42aIqtzVEsU+IAiqc1uIwAk5s/2gA7zc/E
+         cvjTUUD7hllAPE45bq5BoqLr5EYrJMsV8FtEbGGdjVhzrYCz6M63GlDLqHfWHK6GbBr6
+         2PweocJCh2Npj/CUjSQ5cEB9rnz+lKYZOKsL0Bk6zUUdSPwfMiK1frkFUjc/3SELR+3y
+         5LCFk6IJxStCNq8fiWfreU2kt9fQe3ohGfqF8wlgkD7kOxtRU24wC2xo/IKG83kA8Dml
+         vhRQ==
+X-Gm-Message-State: APjAAAVnPl2loPgx2t7RWZNL7IMStx32fjLrBAKw6bJRcqi3PSJ8foBC
+        uUHud4BajwemuFfXdJJtrXKy4rVuQ/+nEe7Dz1IcHLrA
+X-Google-Smtp-Source: APXvYqwvEfu/W18MHjO0KaiXTWnKIy6C6TWOpJ0TQ+nCHQFMUhA7Ex6gzMAlw40UpiBvZRzdtntBkOGHZbT6lSYDXYk=
+X-Received: by 2002:a05:6830:2009:: with SMTP id e9mr62849528otp.160.1578290030741;
+ Sun, 05 Jan 2020 21:53:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/xkYCoiMf93arr8aBlvWVIku";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200105090537.19979-1-oshpigelman@habana.ai> <20200105090537.19979-2-oshpigelman@habana.ai>
+In-Reply-To: <20200105090537.19979-2-oshpigelman@habana.ai>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Mon, 6 Jan 2020 07:53:43 +0200
+Message-ID: <CAFCwf13-WW2FkLRF9NzGB4CYUi0U6nD1zzAXcnQUYSG+GM4a-g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] habanalabs: do not halt Coresight during hard reset
+To:     Omer Shpigelman <oshpigelman@habana.ai>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/xkYCoiMf93arr8aBlvWVIku
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-After merging the akpm-current tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
-
-ERROR: "_debug_pagealloc_enabled_early" [sound/drivers/pcsp/snd-pcsp.ko] un=
-defined!
-
-Caused by commit
-
-  6538817e7869 ("mm, debug_pagealloc: don't rely on static keys too early")
-
-I have added this patch for today:
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Mon, 6 Jan 2020 16:44:57 +1100
-Subject: [PATCH] mm, debug_pagealloc: need to export _debug_pagealloc_enabl=
-ed_early
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- mm/page_alloc.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 85811f1465e5..a41bd7341de1 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -696,6 +696,7 @@ unsigned int _debug_guardpage_minorder;
-=20
- bool _debug_pagealloc_enabled_early __read_mostly
- 			=3D IS_ENABLED(CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT);
-+EXPORT_SYMBOL(_debug_pagealloc_enabled_early);
- DEFINE_STATIC_KEY_FALSE(_debug_pagealloc_enabled);
- EXPORT_SYMBOL(_debug_pagealloc_enabled);
-=20
---=20
-2.24.0
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/xkYCoiMf93arr8aBlvWVIku
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4SynkACgkQAVBC80lX
-0GyeAggAk2sgUF6Wk0X6K3Yo33ZC7v4f5yCcmQ15RfKpWDhNDKETzN80wacIvnSl
-FMIF7tnbCH8s8c3OY5fCxfK+jb1tA+L2FvxKrwqsifIJ8MKaY4XoDf8/c8q3QsIb
-kKMYNj53DQcoxT3FAN059lVUkA/VLLE/MB1YI8UYD1HfIxgyREeCBgk+T6OVAgd3
-OF/vS6VM+8VsFo4HVoKlbAv//q+47hEqJdj6Y1Q4jht7BKNxPWaOTPQwF4xJKmYA
-MMtwFua50sxamdW0fvQpCuNevmDxL8FJbx2vwuqfRKsgloBkWX2DzHkvwaSsSeSx
-xcQ8xf/VO6jAAozq4icxMtwSRfIdmg==
-=7QBI
------END PGP SIGNATURE-----
-
---Sig_/xkYCoiMf93arr8aBlvWVIku--
+On Sun, Jan 5, 2020 at 11:05 AM Omer Shpigelman <oshpigelman@habana.ai> wrote:
+>
+> During hard reset we must not write to the device.
+> Hence avoid halting Coresight during user context close if it is done
+> during hard reset.
+> In addition, we must not reenable clock gating afterwards as it was
+> deliberately disabled in the beginning of the hard reset flow.
+>
+> Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
+> ---
+>  drivers/misc/habanalabs/device.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
+> index 166883b64725..b680b0caa69b 100644
+> --- a/drivers/misc/habanalabs/device.c
+> +++ b/drivers/misc/habanalabs/device.c
+> @@ -598,7 +598,9 @@ int hl_device_set_debug_mode(struct hl_device *hdev, bool enable)
+>                         goto out;
+>                 }
+>
+> -               hdev->asic_funcs->halt_coresight(hdev);
+> +               if (!hdev->hard_reset_pending)
+> +                       hdev->asic_funcs->halt_coresight(hdev);
+> +
+>                 hdev->in_debug = 0;
+>
+>                 goto out;
+> --
+> 2.17.1
+>
+Both patches are:
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Applied to -next
+Thanks,
+Oded
