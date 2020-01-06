@@ -2,127 +2,134 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A58DC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBA0C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61BA52146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:14:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FE362081E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:15:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iX0itlbN"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bN9ihfMl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgAFQOR (ORCPT
+        id S1726677AbgAFQP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 11:14:17 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35452 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgAFQOQ (ORCPT
+        Mon, 6 Jan 2020 11:15:27 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36368 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbgAFQP0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 11:14:16 -0500
-Received: by mail-io1-f67.google.com with SMTP id h8so2091959iob.2;
-        Mon, 06 Jan 2020 08:14:15 -0800 (PST)
+        Mon, 6 Jan 2020 11:15:26 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z3so50270672wru.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 08:15:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ua8KbVa3SpqdzIiSYVNEkoWrUMKqMyXBPCO7dg4wRmM=;
-        b=iX0itlbNib8LJTsR58U9neHGgr8BcFiZamBCdiKqTV/MgHPWreFYWG/jjAzwCAdE6U
-         kDcEWzmnTj4viodfQL2WcIJ7ojijDtrPM5vITc973VYGhwRQdYfXSkaDpgrgQaD7eI51
-         4V5q/dBeGzaf40deLdBQYr1MzIabhv/i/c3/T/1hpyBG8XC04FVibOIQLDFDV4iXo7PX
-         GK7mrNVXQyLOK/sN95ph2JjCOAXKYrDAJgaoZr+zT99xf2/vwk1ceLISS4IzWTVv94aG
-         LxuCvPTKb4mhePCa1HazQxUQDlsxTOlQ3BM3ZsfjMHUiCl6/YLjzXM62nggj/X6rj2bn
-         wz5Q==
+        d=chromium.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=IPjzpRoYE+JzMIzBRc/67gO42QGNlC0QHXvvKHZ+em0=;
+        b=bN9ihfMlw7yCWRT6zDUMNIBSfZKgrC88Dg5/DHzN1Sj3ORWfM8jjAsZ2aATSKuD4pZ
+         UVZxVvT7RGB7VV+3H62l4PA6UBkOkx5ez6c1CnVrzWX/xECO1ZjE1zZl/uS+JM8P+SNp
+         oKsHHzK7khrSgy+dTK3UWQc3uix95QD5fvKlY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ua8KbVa3SpqdzIiSYVNEkoWrUMKqMyXBPCO7dg4wRmM=;
-        b=HP3ofrleudOqTEZBlRgsgTcFe7g670g+UDW1IrnyJYbunZKpgcp0PzUePihwGpYVlP
-         sF1PtyJWUENT/DHxoCzRwjQViJAQQkJMGLQu9uDBYnmtjX6b6EfG4BcHqIlAY0oO0d1Z
-         fG4HV0RAJhoZceEBo5kZydOot6IeBQJlQZQgqkFY9JWs+ipe3h2YRtoNeBtGk68SbFnW
-         vFwvPq3efKdXVMGEX/WbCwLR7u8dyQWDFFnsyVEGeikuZQErOtmzlfb+FNNu59TWnp+M
-         DigbFryJqi8SZhP+Gc1Mq1H+CMujmdgjWYYtQVFDmqCNASOYXwaKtxd8aQ9hvJqcwLo1
-         Td+g==
-X-Gm-Message-State: APjAAAX8CXC/z5bxGw/Y8KMwviLzIhK+LQsCRG+aPwumg0Mb0NjKDaBv
-        5X6oj9ZHWTRPfFntmCPHoxm4WUnxnG035C6YFIkmEWw7OLs=
-X-Google-Smtp-Source: APXvYqwMmvRtJEJHpP4WEIRufRFbnxvhprQMCYZCdCDsymhg7qLrojfb/BpnvNceW/wU1BrtqwwdcB45nQJVIVKkGZk=
-X-Received: by 2002:a6b:c410:: with SMTP id y16mr64355721ioa.18.1578327255375;
- Mon, 06 Jan 2020 08:14:15 -0800 (PST)
-MIME-Version: 1.0
-References: <20191228171904.24618-1-tiny.windzz@gmail.com> <CAGb2v67YPLy_qFuLKKMFytPEdFRUazoNfsQ1tYj8z3WVSRqC3Q@mail.gmail.com>
-In-Reply-To: <CAGb2v67YPLy_qFuLKKMFytPEdFRUazoNfsQ1tYj8z3WVSRqC3Q@mail.gmail.com>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Tue, 7 Jan 2020 00:14:03 +0800
-Message-ID: <CAEExFWtkPBhqT-wteE0_bC=QqaTyuvAcj_4SMOLjYAdc6p4tkg@mail.gmail.com>
-Subject: Re: [PATCH] thermal: sun8i: Add hwmon support
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=IPjzpRoYE+JzMIzBRc/67gO42QGNlC0QHXvvKHZ+em0=;
+        b=Q7LaZucde60Dg4AlVotuxIulnz1HxiArwv7uH+wl44dU9ThLIQ3XDW8TdM1VrTcW6p
+         8EWro5tq3p3j1X+4nHNIlTPl19Ad0KOt4aoSDGyyMxcN46PV1FPDsTeySt5gmbpvpqiS
+         DTmrO3fHef76u4E2jtW29gE1ML7tCeEAMzDGNqQvU0t0Sut5+9PvM9OVxMZJDeiuhy06
+         yvolqBRFDQciVsIiU4T94F0SAA68oZKAYD1Cc5ZCImbEEHX/kVJ3HI0Lxl1xejqfDoKg
+         oOdxQiXOXDKKt6jNmTsd/iuU2Vwc8seWmGLjI2GIkEXCKbmU4AuUsMT6mYmh9mb8JIi/
+         kiAA==
+X-Gm-Message-State: APjAAAXdZMYxpkNcJPccL/+Op3pu4FD+zPDk3BB3F5cSmzHBsgg9Dr1p
+        WGDIA6NQ80/XxQpRzt1EdOj/Og==
+X-Google-Smtp-Source: APXvYqyKRUfAeaI/31baOUelcLazCeXcEGozHYa38/CdOUyrNHEwsBlNK08JcgvK+K0J3RJ0N+m7Xg==
+X-Received: by 2002:adf:dcc2:: with SMTP id x2mr25503891wrm.24.1578327324773;
+        Mon, 06 Jan 2020 08:15:24 -0800 (PST)
+Received: from ?IPv6:2a00:79e0:42:204:51d1:d96e:f72e:c8c0? ([2a00:79e0:42:204:51d1:d96e:f72e:c8c0])
+        by smtp.gmail.com with ESMTPSA id x18sm73045384wrr.75.2020.01.06.08.15.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 08:15:24 -0800 (PST)
+Message-ID: <a1d896052f608c549b67997eddd62015d2d230d5.camel@chromium.org>
+Subject: Re: [PATCH] ima: add the ability to query ima for the hash of a
+ given file.
+From:   Florent Revest <revest@chromium.org>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     kpsingh@chromium.org, mjg59@google.com,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Florent Revest <revest@google.com>
+Date:   Mon, 06 Jan 2020 17:15:23 +0100
+In-Reply-To: <1577122751.5241.144.camel@linux.ibm.com>
+References: <20191220163136.25010-1-revest@chromium.org>
+         <8f4d9c4e-735d-8ba9-b84a-4f341030e0cf@linux.microsoft.com>
+         <1577122751.5241.144.camel@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI Chen-Yu.
+On Mon, 2019-12-23 at 12:39 -0500, Mimi Zohar wrote:
+> On Fri, 2019-12-20 at 08:48 -0800, Lakshmi Ramasubramanian wrote:
+> > On 12/20/2019 8:31 AM, Florent Revest wrote:
+> > 
+> > >   
+> > > +/**
+> > > + * ima_file_hash - return the stored measurement if a file has
+> > > been hashed.
+> > > + * @file: pointer to the file
+> > > + * @buf: buffer in which to store the hash
+> > > + * @buf_size: length of the buffer
+> > > + *
+> > > + * On success, output the hash into buf and return the hash
+> > > algorithm (as
+> > > + * defined in the enum hash_algo).
+> > > + * If the hash is larger than buf, then only size bytes will be
+> > > copied. It
+> > > + * generally just makes sense to pass a buffer capable of
+> > > holding the largest
+> > > + * possible hash: IMA_MAX_DIGEST_SIZE
+> > 
+> > If the given buffer is smaller than the hash length, wouldn't it
+> > be 
+> > better to return the required size and a status indicating the
+> > buffer is 
+> > not enough. The caller can then call back with the required buffer.
+> > 
+> > If the hash is truncated the caller may not know if the hash is
+> > partial 
+> > or not.
+> 
+> Based on the hash algorithm, the caller would know if the buffer
+> provided was too small and was truncated.
+> 
+> > > + *
+> > > + * If IMA is disabled or if no measurement is available, return
+> > > -EOPNOTSUPP.
+> > > + * If the parameters are incorrect, return -EINVAL.
+> > > + */
+> > > +int ima_file_hash(struct file *file, char *buf, size_t buf_size)
+> > > +{
+> > > +	struct inode *inode;
+> > > +	struct integrity_iint_cache *iint;
+> > > +	size_t copied_size;
+> > > +
+> > > +	if (!file || !buf)
+> > > +		return -EINVAL;
+> > > +
+> 
+> Other kernel functions provide a means of determining the needed
+> buffer size by passing a NULL field.  Instead of failing here, if buf
+> is NULL, how about returning the hash algorithm?
 
-On Mon, Jan 6, 2020 at 12:32 PM Chen-Yu Tsai <wens@csie.org> wrote:
->
-> On Sun, Dec 29, 2019 at 1:19 AM Yangtao Li <tiny.windzz@gmail.com> wrote:
-> >
-> > Expose sun8i thermal as a HWMON device.
-> >
-> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > ---
-> >  drivers/thermal/sun8i_thermal.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-> > index 23a5f4aa4be4..619e75cb41b0 100644
-> > --- a/drivers/thermal/sun8i_thermal.c
-> > +++ b/drivers/thermal/sun8i_thermal.c
-> > @@ -20,6 +20,8 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/thermal.h>
-> >
-> > +#include "thermal_hwmon.h"
-> > +
-> >  #define MAX_SENSOR_NUM 4
-> >
-> >  #define FT_TEMP_MASK                           GENMASK(11, 0)
-> > @@ -477,6 +479,10 @@ static int sun8i_ths_register(struct ths_device *tmdev)
-> >                                                              &ths_ops);
-> >                 if (IS_ERR(tmdev->sensor[i].tzd))
-> >                         return PTR_ERR(tmdev->sensor[i].tzd);
-> > +
-> > +               if (devm_thermal_add_hwmon_sysfs(tmdev->sensor[i].tzd))
-> > +                       dev_warn(tmdev->dev,
-> > +                                "Failed to add hwmon sysfs attributes\n");
->
-> Maybe you want a hard failure instead?
+I wasn't aware of that. This is nice to have indeed! I'll send a v2.
+Thanks!
 
-I don't quite understand what you mean.
-What do you think should be done?
-
-MBR,
-Yangtao
-
->
-> ChenYu
->
-> >         }
-> >
-> >         return 0;
-> > --
-> > 2.17.1
-> >
