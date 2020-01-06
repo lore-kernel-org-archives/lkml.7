@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC60EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72529C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B28312081E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49F78207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:35:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbgAFOfb (ORCPT
+        id S1726696AbgAFOfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 09:35:31 -0500
-Received: from sauhun.de ([88.99.104.3]:39324 "EHLO pokefinder.org"
+        Mon, 6 Jan 2020 09:35:41 -0500
+Received: from sauhun.de ([88.99.104.3]:39328 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbgAFOfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 09:35:30 -0500
+        id S1726303AbgAFOfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 09:35:41 -0500
 Received: from localhost (p54B338AC.dip0.t-ipconnect.de [84.179.56.172])
-        by pokefinder.org (Postfix) with ESMTPSA id 4B6672C393D;
-        Mon,  6 Jan 2020 15:35:29 +0100 (CET)
-Date:   Mon, 6 Jan 2020 15:35:28 +0100
+        by pokefinder.org (Postfix) with ESMTPSA id 576212C0686;
+        Mon,  6 Jan 2020 15:35:39 +0100 (CET)
+Date:   Mon, 6 Jan 2020 15:35:39 +0100
 From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Eugen.Hristev@microchip.com
-Cc:     robh@kernel.org, Ludovic.Desroches@microchip.com, peda@axentia.se,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Codrin.Ciubotariu@microchip.com
-Subject: Re: [PATCH v3 4/4] dt-bindings: i2c: at91: fix i2c-sda-hold-time-ns
- documentation for sam9x60
-Message-ID: <20200106143528.GF1290@ninjato>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Eugen.Hristev@microchip.com, Ludovic.Desroches@microchip.com,
+        peda@axentia.se, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Codrin.Ciubotariu@microchip.com
+Subject: Re: [PATCH v3 1/4] dt-bindings: i2c: at91: cosmetic formatting of
+ compatible list
+Message-ID: <20200106143538.GG1290@ninjato>
 References: <1575886763-19089-1-git-send-email-eugen.hristev@microchip.com>
- <1575886763-19089-4-git-send-email-eugen.hristev@microchip.com>
+ <20191218213716.GA30887@bogus>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="E69HUUNAyIJqGpVn"
+        protocol="application/pgp-signature"; boundary="G44BJl3Aq1QbV/QL"
 Content-Disposition: inline
-In-Reply-To: <1575886763-19089-4-git-send-email-eugen.hristev@microchip.com>
+In-Reply-To: <20191218213716.GA30887@bogus>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -46,41 +46,43 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---E69HUUNAyIJqGpVn
+--G44BJl3Aq1QbV/QL
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 09, 2019 at 10:20:07AM +0000, Eugen.Hristev@microchip.com wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
->=20
-> SAM9X60 also supports i2c-sda-hold-time-ns. Fix the documentation accordi=
-ngly.
->=20
-> Fixes: 2034e3f4c9a5 ("dt-bindings: i2c: at91: add new compatible")
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+On Wed, Dec 18, 2019 at 03:37:16PM -0600, Rob Herring wrote:
+> On Mon, 9 Dec 2019 10:19:59 +0000, <Eugen.Hristev@microchip.com> wrote:
+> >=20
+> > From: Eugen Hristev <eugen.hristev@microchip.com>
+> >=20
+> > Format the list of compatibles with one compatible per line.
+> >=20
+> > Suggested-by: Peter Rosin <peda@axentia.se>
+> > Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> > Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 
-Applied to for-current, thanks!
+Applied to for-next, thanks!
 
 
---E69HUUNAyIJqGpVn
+--G44BJl3Aq1QbV/QL
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4TRbAACgkQFA3kzBSg
-KbZimBAAl9QQJ8QhFYzsII9px4gfhT0yrmh+cV811coXSMa4w9CLYmL5vgm3y0Rj
-eDNkXGJrk6YQ4xr8R8LE1AOQS3WDj84cwKG2H+BvmWxaR6hPtYUe+9rpUBqSbOjj
-ToQ4B9qzxAKQioPtRIIIngQVJULmGYDOoHc4o5lECZGCQkNlmztIGsCdn1stuSUB
-y/wqbaVvhUAbzaVh4z2dh2AI4FXMBZ35fkRmPxvE3ekZVuGax3aFmrFPi1PPexqP
-VE9W5bUl4MJjvXE0QSB8fWrdCtrP6tp7y95X8DVYdTTi4TgLN/UkG9rf+2FHp5eE
-M3Xy+aNjXajR0fs16se1OACue5gSIAcAX09AqgH9UvyLC16G4WgB+RFqLfuIbeLU
-nbLc5QGNrpInPN0swe1FBw13kD5RN42cwkX3OIl7GxJ9QMMbv6YJFg2Ve7HZzTbS
-tymTP6m5AnyAR/S/1uJoLkLV3I85JzwvOmAU8axt/ZFYXv5J/NOl4/pQZtXBjRdJ
-Pb6C9ZKW8fUk3qKT99tRawa2uUeXKqqB1gk9VgVrWR7z0xQN9+7hProm3avOMWE0
-MLFlstRff4E3jgRSB2zW+oWD6OxuKNYbZm8uFnTSrS9Im2nr3mxEWNAc/RF8bQ3x
-1Q2FkbhLVeXweNsgLMfKtoIOoDY1enxpdt+y96DUcFc9/IZ/7NU=
-=c8KO
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4TRboACgkQFA3kzBSg
+KbbclRAAm2+DMARlhfiRHkwpy6DngebAhoTyl6NBSUEMGtj+HDYSWSH9qlskh54q
+B8xb/31ICwgLWNN8oszpO2ctFyL+yYWfseLcSBw4FmiMXJ8YYe2j96VHHvyNsx2t
+We+lehY+p1K5e3o5PJhoNTrAuv4ZYMd4qAioLr39nqUcxQ5RcTLALvbKkbu6Dsf5
+Bw3I/SiuVkFOFEKHpBt2eqPDyuva5ntJ7TSSQaEftGUOyFWED0mh207w0wp9hfOf
++YmAa714rEKAcXqhzXw8qANmRB3MsGwaWlap9bC8Zj3gmwfszrhkD7MIkatkv2rJ
+0VlTdk2YAQ+FJqBJGLF5tl9cL40/Sarb0W0Dt/mPRjgwRXKnAUoVEuyC4AD2NouP
+4F8TQi+wPxNi/YZ04NuOdOx0aqSIomHjAJMIXMt8RaoYwQ2m8F8II/kbjqQ7LVO0
+dWOC/1XRRGboxZLUjz5LQ2w6psvYf8JoOeBT/J3UqTt6sZTI3MpDYsUpvb+Fqiu3
+3FRmzRYOEH4obZvDoO2BBqs1RE5hcw582KLO9J+Zqy3LZRJ3oNeCoNR7T3csRywm
+q8frEUJyV0Mu5vel2teDPDrPLfgqfi45rL1ogJv/s2NnxXd74jzDl3aF9k29jcF/
+Tg0fZCfRkyWA8XLVuAqSfppcEKjF5WcsG480+ubEqSqD15e+cAo=
+=mR/+
 -----END PGP SIGNATURE-----
 
---E69HUUNAyIJqGpVn--
+--G44BJl3Aq1QbV/QL--
