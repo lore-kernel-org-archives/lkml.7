@@ -2,151 +2,70 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 060E7C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2751FC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB45E214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:23:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578342184;
-	bh=25PZJ3bxW9cvFKLoe04UEz+DJIDuK6tnzw3H5UoY7J4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=tykVH7SyNa6cOBgbrKE7ymbAgpy7UXR7FgQ2RssgDh3E+XxQaQ9M9ULdZxD6iOLXe
-	 QrnGFFTC2JP/uPhGf/uacOwYO3sNvDaWUMK4x2xioA4agMfoEyfL4Uz7xF7H5SdO3Y
-	 cKMFA1tK4h0jMbQxfXw9lTPeDuSCIh3DUZE89hio=
+	by mail.kernel.org (Postfix) with ESMTP id 02C912467E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:23:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgAFUXE (ORCPT
+        id S1726830AbgAFUXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 15:23:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45198 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726657AbgAFUXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 15:23:03 -0500
-Received: from localhost (unknown [64.237.17.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96A1B2072C;
-        Mon,  6 Jan 2020 20:23:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578342182;
-        bh=25PZJ3bxW9cvFKLoe04UEz+DJIDuK6tnzw3H5UoY7J4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=YiVVfvruwwv191AVb8asnyueIBs27wbbAGsxJY8Gr/pHeMFRlGl5wBlofVTEPkhid
-         orw+IpGondGfQoZbCnKI+KTIM35+5RgjuhF79WueafuY6uscQp7TnZFae5aiQ4clW8
-         po7qZHCt56ZzjgjUoVlm6f7VbjOFLcEc4utbKaw8=
-Date:   Mon, 6 Jan 2020 14:23:01 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH v1 3/4] PCI: Change extend_bridge_window() to set
- resource size directly
-Message-ID: <20200106202301.GA137556@google.com>
+        Mon, 6 Jan 2020 15:23:11 -0500
+Received: from Chamillionaire.breakpoint.cc ([193.142.43.52]:37648 "EHLO
+        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726699AbgAFUXK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 15:23:10 -0500
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+        (envelope-from <fw@strlen.de>)
+        id 1ioYu2-0006hD-1J; Mon, 06 Jan 2020 21:23:06 +0100
+Date:   Mon, 6 Jan 2020 21:23:06 +0100
+From:   Florian Westphal <fw@strlen.de>
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
+        sgrubb@redhat.com, omosnace@redhat.com, fw@strlen.de,
+        twoerner@redhat.com, eparis@parisplace.org, ebiederm@xmission.com,
+        tgraf@infradead.org
+Subject: Re: [PATCH ghak25 v2 8/9] netfilter: add audit operation field
+Message-ID: <20200106202306.GO795@breakpoint.cc>
+References: <cover.1577830902.git.rgb@redhat.com>
+ <6768f7c7d9804216853e6e9c59e44f8a10f46b99.1577830902.git.rgb@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PSXP216MB04386BA48874B56BC5CB0292803C0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+In-Reply-To: <6768f7c7d9804216853e6e9c59e44f8a10f46b99.1577830902.git.rgb@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks a lot for splitting these up.  It makes these dramatically
-easier to read.
+Richard Guy Briggs <rgb@redhat.com> wrote:
+> diff --git a/include/linux/audit.h b/include/linux/audit.h
+> index 96cabb095eed..5eab4d898c26 100644
+> --- a/include/linux/audit.h
+> +++ b/include/linux/audit.h
+> @@ -379,7 +379,7 @@ extern int __audit_log_bprm_fcaps(struct linux_binprm *bprm,
+>  extern void __audit_fanotify(unsigned int response);
+>  extern void __audit_tk_injoffset(struct timespec64 offset);
+>  extern void __audit_ntp_log(const struct audit_ntp_data *ad);
+> -extern void __audit_nf_cfg(const char *name, u8 af, int nentries);
+> +extern void __audit_nf_cfg(const char *name, u8 af, int nentries, int op);
 
-On Mon, Jan 06, 2020 at 03:47:46PM +0000, Nicholas Johnson wrote:
-> Change extend_bridge_window() to set resource size directly instead of
-> using additional resource lists.
-> 
-> Because additional resource lists are optional resources, any algorithm
-> that requires guaranteed allocation that uses them cannot be guaranteed
-> to work.
+Consider adding an enum instead of int op.
 
-There is never a guarantee that PCI resource assignment will work.
-It's always possible that we don't have enough resources to allow us
-to enable a device.  So I'm not sure what this is telling me, and it
-doesn't seem like a justification for setting the resource size
-directly here.
+>  	if (audit_enabled)
+> -		audit_nf_cfg(repl->name, AF_BRIDGE, repl->nentries);
+> +		audit_nf_cfg(repl->name, AF_BRIDGE, repl->nentries, 1);
 
-Prior to this patch, I think all the assignment and changes to
-dev->resource[] were in __assign_resources_sorted().  Maybe it's safe
-to do some here and some in __assign_resources_sorted(), but I don't
-understand it well enough to be confident.
+audit_nf_cfg(repl->name, AF_BRIDGE, repl->nentries, AUDIT_XT_OP_REPLACE);
 
-> Remove the resource from add_list, as a zero-sized additional resource
-> is redundant.
-> 
-> Update comment in pci_bus_distribute_available_resources() to reflect
-> the above changes.
-> 
-> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> ---
->  drivers/pci/setup-bus.c | 25 ++++++++-----------------
->  1 file changed, 8 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index de43815be..0c51f4937 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1836,7 +1836,7 @@ static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
->  				 struct list_head *add_list,
->  				 resource_size_t new_size)
->  {
-> -	struct pci_dev_resource *dev_res;
-> +	resource_size_t add_size;
->  
->  	if (res->parent)
->  		return;
-> @@ -1844,17 +1844,10 @@ static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
->  	if (resource_size(res) >= new_size)
->  		return;
->  
-> -	dev_res = res_to_dev_res(add_list, res);
-> -	if (!dev_res)
-> -		return;
-> -
-> -	/* Is there room to extend the window? */
-> -	if (new_size - resource_size(res) <= dev_res->add_size)
-> -		return;
-> -
-> -	dev_res->add_size = new_size - resource_size(res);
-> -	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
-> -		&dev_res->add_size);
-> +	add_size = new_size - resource_size(res);
-> +	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res, &add_size);
-> +	res->end = res->start + new_size - 1;
+... would be a bit more readable than '1'.
 
-How do we know it's safe to extend this, i.e., how do we know there's
-nothing immediately after res?
-
-> +	remove_from_list(add_list, res);
->  }
->  
->  static void pci_bus_distribute_available_resources(struct pci_bus *bus,
-> @@ -1889,11 +1882,9 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
->  		mmio_pref.start = min(ALIGN(mmio_pref.start, align),
->  			mmio_pref.end + 1);
->  
-> -	/*
-> -	 * Update additional resource list (add_list) to fill all the
-> -	 * extra resource space available for this port except the space
-> -	 * calculated in __pci_bus_size_bridges() which covers all the
-> -	 * devices currently connected to the port and below.
-> +        /*
-> +	 * Now that we have adjusted for alignment, update the bridge window
-> +	 * resources to fill as much remaining resource space as possible.
->  	 */
->  	adjust_bridge_window(bridge, io_res, add_list, resource_size(&io));
->  	adjust_bridge_window(bridge, mmio_res, add_list, resource_size(&mmio));
-> -- 
-> 2.24.1
-> 
+The name is just an example, you can pick something else.
