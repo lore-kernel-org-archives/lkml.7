@@ -6,76 +6,51 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8055C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3456DC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 987202071A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B1B12072E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:46:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgAFLpG (ORCPT
+        id S1726368AbgAFLqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 06:45:06 -0500
-Received: from spam01.hygon.cn ([110.188.70.11]:25091 "EHLO spam2.hygon.cn"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725787AbgAFLpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 06:45:06 -0500
-Received: from MK-FE.hygon.cn ([172.23.18.61])
-        by spam2.hygon.cn with ESMTP id 006BiZ86005952;
-        Mon, 6 Jan 2020 19:44:35 +0800 (GMT-8)
-        (envelope-from fanjinke@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-FE.hygon.cn with ESMTP id 006BiYZh051074;
-        Mon, 6 Jan 2020 19:44:34 +0800 (GMT-8)
-        (envelope-from fanjinke@hygon.cn)
-Received: from cncheex01.Hygon.cn (172.23.18.10) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Mon, 6 Jan 2020
- 19:44:35 +0800
-Received: from cncheex01.Hygon.cn ([172.23.18.10]) by cncheex01.Hygon.cn
- ([172.23.18.10]) with mapi id 15.01.1466.003; Mon, 6 Jan 2020 19:44:35 +0800
-From:   Jinke Fan <fanjinke@hygon.cn>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hwentlan@amd.com" <hwentlan@amd.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "kim.phillips@amd.com" <kim.phillips@amd.com>
-Subject: Re: [PATCH] rtc: cmos: Revert "rtc: Fix the AltCentury value on
- AMD/Hygon platform"
-Thread-Topic: [PATCH] rtc: cmos: Revert "rtc: Fix the AltCentury value on
- AMD/Hygon platform"
-Thread-Index: AQHVwrfTVKk+wf1rp0W1bhQdWLaOKafdAcgA
-Date:   Mon, 6 Jan 2020 11:44:34 +0000
-Message-ID: <fe3c4660-090a-19ea-4dc6-87538c7d7afa@hygon.cn>
-References: <20200104043110.707810-1-alexandre.belloni@bootlin.com>
-In-Reply-To: <20200104043110.707810-1-alexandre.belloni@bootlin.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.23.18.44]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <10097DF8442EE64D9FDF96CB3582539D@Hygon.cn>
-Content-Transfer-Encoding: base64
+        Mon, 6 Jan 2020 06:46:20 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:50356 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725787AbgAFLqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 06:46:20 -0500
+Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ioQpt-0004gS-ME; Mon, 06 Jan 2020 12:46:17 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     linux-rockchip@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com
+Subject: Re: [PATCH v2 1/2] arm64: dts: rockchip: add dsi controller for px30
+Date:   Mon, 06 Jan 2020 12:46:17 +0100
+Message-ID: <4115761.bQNJq9cmoQ@phil>
+In-Reply-To: <20200106112005.795834-1-heiko@sntech.de>
+References: <20200106112005.795834-1-heiko@sntech.de>
 MIME-Version: 1.0
-X-MAIL: spam2.hygon.cn 006BiZ86005952
-X-DNSRBL: 
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQWxleGFuZHJlLA0KDQpPbiAyMDIwLzEvNCAxMjozMSwgQWxleGFuZHJlIEJlbGxvbmkgd3Jv
-dGU6DQo+IFRoZXJlIGFyZSBtdWx0aXBsZSByZXBvcnRzIG9mIHRoaXMgcGF0Y2ggYnJlYWtpbmcg
-UlRDIHRpbWUgc2V0dGluZyBmb3IgQU1EDQo+IHBsYXRmb3Jtcy4NCj4gDQpBZnRlciBkaWdnaW5n
-IGludG8gdGhpcyBpc3N1ZXMsIHdlIHN1c3BlY3QgaXQgcmVsYXRlZCB0byBCSU9TIHVwZ3JhZGUs
-IA0KV2hpY2ggdXBncmFkZSBBTTQgUEkgZnJvbSBBR0VTQSAxLjAuMC4zQUJCQSB0byBBTTQgY29t
-Ym8gUEkgMS4wLjAuNCBwYXRjaCBCLg0KU2VlbWVkIHRoaXMgUEkgdXBncmFkZSBtYWtlcyB0aGlz
-IHBhdGNoIGNhbid0IHdvcmsgYXMgZXhwZWN0ZWQuDQoNCi0tIA0KQmVzdCByZWdhcmRzLg0KSmlu
-a2UgRmFuDQo+IFRoaXMgcmV2ZXJ0cyBjb21taXQgN2FkMjk1ZDUxOTZhNThjMjJhYmVjZWY2MmRk
-NGY5OWUyZjg2ZTgzMS4NCj4gDQo+IENjOiBKaW5rZSBGYW4gPGZhbmppbmtlQGh5Z29uLmNuPg0K
-PiBMaW5rOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9yL0NBQlhHQ3NNTG9iMERDMjVKUzh3d0FZ
-eWRuRG9IQlNvTWgyX1lMUGZxbTNUVHZERS1ad0BtYWlsLmdtYWlsLmNvbQ0KPiBGaXhlczogN2Fk
-Mjk1ZDUxOTZhICgicnRjOiBGaXggdGhlIEFsdENlbnR1cnkgdmFsdWUgb24gQU1EL0h5Z29uIHBs
-YXRmb3JtIikNCj4gU2lnbmVkLW9mZi1ieTogQWxleGFuZHJlIEJlbGxvbmkgPGFsZXhhbmRyZS5i
-ZWxsb25pQGJvb3RsaW4uY29tPg0KPiAtLS0=
+Am Montag, 6. Januar 2020, 12:20:04 CET schrieb Heiko Stuebner:
+> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> 
+> This adds the dw-mipi-dsi controller and hooks it into the
+> display-subsystem on px30.
+> 
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+
+applied for 5.6
+
+Waiting on patch2 for the dw-dsi port patch to proceed
+
+
