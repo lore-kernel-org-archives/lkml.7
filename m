@@ -2,167 +2,116 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F35BC33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9218DC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63667206DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62A7E20731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:46:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Unb+4F7I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbgAFUqH convert rfc822-to-8bit (ORCPT
+        id S1726906AbgAFUqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 15:46:07 -0500
-Received: from mail-oln040092068054.outbound.protection.outlook.com ([40.92.68.54]:16644
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726657AbgAFUqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 15:46:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EBlq8OP77AVE023E3kEtFqs0Whl8Gjj9sgHYYE9B7gVr307RwGxvzdxptgz935RboZ8vQM92PSNdc1e6/RF/PZeyR71bIQuEflPn1jaU3aFTpjZVqBnROMvp1pBmCt5K4qkvTafbw3EN1AlslWH7HYCGJRN4Y+bPw8IvRjeSG9MbmtDbrkYWr2wXAIq+jOTXIh0EE/fE3jMkOhr5Vadh2/wXjQFowXTNbEuovDq8Z4CYPwbJy22tYYTI20SdFUDkRlRLhi6BiyxGDzyzDKasJf5gmFCKeN15lmmo3YX+kSoXTT3N3icHrbNIXO68uE3n45nL8vlE9Gjab4cImx6Ftw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ulw9p1L3gMXb4AJXqo5es4a5r/NKzxoZzWnYv91QgKo=;
- b=gsTyCXxvX7zFqsXqmcBievkLxprNO5c+PaMqW/VO+eliMK45aH0KsNU7EPejsC6a573nysmjH4H6fzXD48lpJ9S4WD7RENruwXiFVYHvquwNS3gIKBM82pCiCy1Y+ruTvZtYfPxiB0QhWkuBCWu98lX4L/t7zpJTSy3McNw8WIiTwr/vS8PNnWX7zn9YMwZ9N6ngOWHC5xIjmHySzQogVR9WKStF+wJ0cXbLYqXONYY4bGsJKN9ovuR3JqstkUummq1InNMX4sija6hyj5mNq6HFSdb24xTGQDylK76+Inm9q1g/W0RaetYxakaQTUfxtIppC0TnqHL9TTZIl7ERGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from VE1EUR02FT060.eop-EUR02.prod.protection.outlook.com
- (10.152.12.53) by VE1EUR02HT115.eop-EUR02.prod.protection.outlook.com
- (10.152.13.129) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11; Mon, 6 Jan
- 2020 20:46:02 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.12.60) by
- VE1EUR02FT060.mail.protection.outlook.com (10.152.13.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.11 via Frontend Transport; Mon, 6 Jan 2020 20:46:00 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::b957:6908:9f62:c28b]) by HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::b957:6908:9f62:c28b%5]) with mapi id 15.20.2602.015; Mon, 6 Jan 2020
- 20:46:00 +0000
-Received: from bionic.localdomain (98.128.173.80) by AM5PR0402CA0019.eurprd04.prod.outlook.com (2603:10a6:203:90::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.12 via Frontend Transport; Mon, 6 Jan 2020 20:45:59 +0000
-From:   Jonas Karlman <jonas@kwiboo.se>
-To:     Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>
-CC:     Jonas Karlman <jonas@kwiboo.se>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Zheng Yang <zhengyang@rock-chips.com>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH 00/15] Support more HDMI modes on RK3228/RK3328
-Thread-Topic: [PATCH 00/15] Support more HDMI modes on RK3228/RK3328
-Thread-Index: AQHVxNJNNVZSJYLQbE2SQNKZv6GhtQ==
-Date:   Mon, 6 Jan 2020 20:46:00 +0000
-Message-ID: <HE1PR06MB4011254424EDB4485617513CAC3C0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-Accept-Language: sv-SE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM5PR0402CA0019.eurprd04.prod.outlook.com
- (2603:10a6:203:90::29) To HE1PR06MB4011.eurprd06.prod.outlook.com
- (2603:10a6:7:9c::32)
-x-incomingtopheadermarker: OriginalChecksum:CC8E993C4D3FD8CA0CD71A9CD67E907DB6949CF8D3AAE82376CAEAA6CDF308A0;UpperCasedChecksum:A2CD90775FD91933196DC12F0B0931C91DB158E95D9BB2C2A02BB5C842F00F4E;SizeAsReceived:7981;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-tmn:  [+PzkEC5Sk+0gmq/B1zMjnaSoM5exaTwV]
-x-microsoft-original-message-id: <20200106204544.5836-1-jonas@kwiboo.se>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: c69260a1-ddc4-4ef4-9f21-08d792e96ff1
-x-ms-traffictypediagnostic: VE1EUR02HT115:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 81XcGKf1B3vW9CwbT8OKh7COlEBVNib5G4a80I+YXrLKvnnQGlwMtPPSbMATnG7lFEKVLxHBEtJnJ+0Et/elTI5TUI0yKw70Sw2hW4UxmIOXqnu8mJdmEU3ltkUjqf0vg0d/R/7zP3v6cV11avCWTD8OHUGz1rb6hTBJ6kTkrWyyreFOoL66GKfmJFTNlnas
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Mon, 6 Jan 2020 15:46:31 -0500
+Received: from mout.gmx.net ([212.227.17.20]:50709 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726657AbgAFUqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 15:46:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1578343537;
+        bh=AXpGt6vP1miQ02Ok8X67tzEHDpIlBVB845mWvjv5ADY=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=Unb+4F7Ij6/bVNexShtXbEUPfcoBefbQgOX9fakK6GPKEREeZg/opgspH7CTQZiUu
+         VuhJAteg9YWGOOBkzKbKS3NhEZs5VUvAKPKPZ1pMiWABXKAoGFvHiyNJKXCuDc/SNv
+         MazE7c4JPEVQlikrT2cbI6lPtX79IutDZbuKZhyI=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost ([62.216.209.53]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MuDXp-1jiJCv3Q21-00uYAY; Mon, 06
+ Jan 2020 21:45:36 +0100
+Date:   Mon, 6 Jan 2020 21:45:34 +0100
+From:   Peter Seiderer <ps.report@gmx.net>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+        Annaliese McDermond <nh6z@nh6z.net>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH v1] ASoC: tlv320aic32x4: handle regmap_read error
+ gracefully
+Message-ID: <20200106214534.39378927@gmx.net>
+In-Reply-To: <20191227225204.GQ27497@sirena.org.uk>
+References: <20191227152056.9903-1-ps.report@gmx.net>
+        <20191227225204.GQ27497@sirena.org.uk>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: c69260a1-ddc4-4ef4-9f21-08d792e96ff1
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2020 20:46:00.4572
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR02HT115
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Q8R6Ak8r/kkVJO4HyPxZZFP9/PXIR7PCZyESALXOFPRi68v7X8K
+ Y51A8wh/vU6IJRJTrJUaeuolxbvHXNetGMJuD/c3yQBhsH+HX+kZUL63YN0Npzm5vmS+bXb
+ 7VLbRl1zkMDVnxuG6VpZGKkPSIueDuPcny3VzoL9cB7dS3z6sWmPZKZpGR5DMzQh0xSAD+R
+ ZZgKW70iW2e+PrUXeXePg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Tc85brVL/yI=:+mntAPO7HQ0u5djZTpfWwA
+ hOkc5txGLKc2hvKUyzxbQML2ajspkqepir54aVulJuV2tf10AfrksFoSVDBaTTDgJnxBYG0od
+ vyLVM0er68ip8mvExdT7MAG+U2WAS1v/9rmcmokV6lq1Tv4lHdaL4kkswxsdjHPWkrbTrxH28
+ pu25K5lIJtTRm99vIIxmNqEYtQcNyUb7ax3wMn3UuqIsx1XLpX01ZbLOvL7tUJb8cNEoZNQR0
+ /+JOAs2QvCUWSy4O0gAhIFNBnh97pZe9g5xXt5pKN/pciGrsCJvAN1DFAoX52PejTx0t/1U6x
+ Lx7W4CCBZ9vXs2trQta5DnVsayqW0qVl34y386PAWx4BK/7eZw2uSUTr/KAyzvEmLmfrrMb6m
+ K5N2Ncb5nI5KXeUtZMmXGjFTPpaamoH6TU97jHY6H5ZHYoVYZ69dScpur88E4bdBPnXA0wo+L
+ uB3emQed+ICsCL06T1KV6oDzHgM/OttkkfCecamKC4Yv6VBbUQIdm+FRz847ELXG1F55gITjr
+ hX6R8DykdVyljrNHc0LKqsCgOMgX0tjQAF2IEHS61luCv8o2zKpoQ602YzY5aOfW49X+q7Cjc
+ o/tnqcljFcnk8BMvGggCHoK95dcQdmvfFgnExSefaI6Ie8Do1A5yZ1VFt/6fcUgaHHCcBxjmV
+ +R+khm6TuiHh6F3yi2keKWMY6KE9Ys6R8I3jLp9OrXzL7m12iIL2UATz9AMFZEn1StYtK1w58
+ vxF75a5watVTxfeCN8c3RSmnSJT8tp4bIQ/vUi4s7xgJ062HY5W8HKxigWcAifixd+eAiPy98
+ P60AsyMc6/e+xDj8Akt1/Gr/aetUn8bwHWJX9c3etGb+njApHMD8AQlC1kNxrcx1iCQjGTY8y
+ O1r/xPxxPNitcVdfxfZrT29szswy/RyQPBhv450al7fZDiLey09BPKYZDvuCE8+GNvgX9eIvy
+ 7YhR6O3+gO6bliqQ1y3SmfX5BYB64Wi40Zy7uqAcKE5oBzjD+RUnVbMkUt8rFqv81jNifCyfo
+ OpkZ6KYNjbJUglHIwNHgGKqjTzeZfc4fzR2JbniMhm4L/wnKAw9J8SKF0VgCO4fkGGTdYWdGI
+ JAfkjHQobHN2JNn0+oefdkRbHtpPxagBUPBbXY/izlHcpOYK187R1SUlP2JfOoLhVLt7NJsQI
+ tI6C0mTMCXqHCQg+XPqEv3zqDytphlFz9CRWMF1gbuxPYIoD2ieq9A+QQrF200GzAJPUvasvm
+ 2P0S8btgCscQPCzJv2d7+HwslzT4NZLwTGm5KSX8OpT+rmhpCQyg7O/7iHpM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series make it possible to use more HDMI modes on RK3328,
-and presumably also on RK3228. It also prepares for a future YUV420 and
-10-bit output series.
+Hello Mark,
 
-Part of this has been reworked from vendor BSP 4.4 kernel commits.
+On Fri, 27 Dec 2019 22:52:04 +0000, Mark Brown <broonie@kernel.org> wrote:
 
-Patch 1-5 fixes issues and shortcomings in the inno hdmi phy driver.
+> On Fri, Dec 27, 2019 at 04:20:56PM +0100, Peter Seiderer wrote:
+> > Fixes:
+> >
+> > [    5.169310] Division by zero in kernel.
+> > [    5.200998] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.18-201910=
+21-1+ #14
+> > [    5.203049] cdc_acm 2-1.6:1.0: ttyACM0: USB ACM device
+> > [    5.208198] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tr=
+ee)
+> > [    5.220084] Backtrace:
+> > [    5.222628] [<8010f60c>] (dump_backtrace) from [<8010f9a8>] (show_s=
+tack+0x20/0x24)
+>
+> Please think hard before including complete backtraces in upstream
+> reports, they are very large and contain almost no useful information
+> relative to their size so often obscure the relevant content in your
+> message. If part of the backtrace is usefully illustrative then it's
+> usually better to pull out the relevant sections.
 
-Patch 6 filter out any mode having larger width then 3840 pixels,
-e.g 4096x2304 modes, since limitations in the scaler code trigger an error
-for a large console framebuffer.
+Thanks for review..., but a little disagree here, do not know much which
+is more informative than a complete back trace for a division by zero (and
+which is the complete information/starting point for investigating the
+reason therefore) and it would be a pity to loose this valuable informatio=
+n?
 
-Patch 7 prepares for use of high TMDS bit rates used with HDMI2.0 and
-10-bit output modes.
+Maybe I should have added more information about why and how the failing
+regmap_read() call leads to a division by zero?
 
-Patch 8-14 changes rk3228/rk3328 to use mode_valid functions suited for
-the inno hdmi phy instead of the dw-hdmi phy. This
-
-Patch 15 adds support for more pixel clock rates in order to support
-common DMT modes in addition to CEA modes.
-
-Note: I have only been able to build test RK322x related changes
-as I do not have any RK322x device to test on.
-
-All modes, including fractal modes, has been tested with modetest on
-a RK3328 Rock64 device.
-
-  modetest -M rockchip -s 39:3840x2160-29.97
+Any hint for a better commit message is welcome ;-)
 
 Regards,
-Jonas
-
-Algea Cao (1):
-  phy/rockchip: inno-hdmi: Support more pre-pll configuration
-
-Huicong Xu (1):
-  phy/rockchip: inno-hdmi: force set_rate on power_on
-
-Jonas Karlman (12):
-  phy/rockchip: inno-hdmi: use correct vco_div_5 macro on rk3328
-  phy/rockchip: inno-hdmi: remove unused no_c from rk3328 recalc_rate
-  phy/rockchip: inno-hdmi: do not power on rk3328 post pll on reg write
-  drm/rockchip: vop: limit resolution width to 3840
-  drm/rockchip: dw-hdmi: allow high tmds bit rates
-  drm/rockchip: dw-hdmi: require valid vpll clock rate on rk3228/rk3328
-  clk: rockchip: set parent rate for DCLK_VOP clock on rk3228
-  arm64: dts: rockchip: increase vop clock rate on rk3328
-  arm64: dts: rockchip: add vpll clock to hdmi node on rk3328
-  ARM: dts: rockchip: add vpll clock to hdmi node on rk3228
-  drm/rockchip: dw-hdmi: limit tmds to 340mhz on rk3228/rk3328
-  drm/rockchip: dw-hdmi: remove unused plat_data on rk3228/rk3328
-
-Zheng Yang (1):
-  phy/rockchip: inno-hdmi: round fractal pixclock in rk3328 recalc_rate
-
- arch/arm/boot/dts/rk322x.dtsi                 |   4 +-
- arch/arm64/boot/dts/rockchip/rk3328.dtsi      |   6 +-
- drivers/clk/rockchip/clk-rk3228.c             |   2 +-
- drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c   |  47 ++++++--
- drivers/gpu/drm/rockchip/rockchip_drm_vop.c   |  10 ++
- drivers/phy/rockchip/phy-rockchip-inno-hdmi.c | 110 ++++++++++++------
- 6 files changed, 130 insertions(+), 49 deletions(-)
-
--- 
-2.17.1
-
+Peter
