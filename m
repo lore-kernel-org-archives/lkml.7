@@ -2,168 +2,85 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE47FC00523
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FD4C00523
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6BB52072C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CF992072C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:04:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hiWOUE/1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbgAFCEG (ORCPT
+        id S1727379AbgAFCEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 21:04:06 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56458 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727226AbgAFCEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 21:04:05 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 82B3A5B94C23C3898F14;
-        Mon,  6 Jan 2020 10:04:01 +0800 (CST)
-Received: from [127.0.0.1] (10.184.213.217) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Mon, 6 Jan 2020
- 10:03:58 +0800
-Subject: Re: [PATCH v5 1/2] tmpfs: Add per-superblock i_ino support
-To:     Chris Down <chris@chrisdown.name>, <linux-mm@kvack.org>
-CC:     Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Matthew Wilcox" <willy@infradead.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        "Jeff Layton" <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>
-References: <cover.1578225806.git.chris@chrisdown.name>
- <91b4ed6727712cb6d426cf60c740fe2f473f7638.1578225806.git.chris@chrisdown.name>
-From:   "zhengbin (A)" <zhengbin13@huawei.com>
-Message-ID: <4106bf3f-5c99-77a4-717e-10a0ffa6a3fa@huawei.com>
-Date:   Mon, 6 Jan 2020 10:03:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Sun, 5 Jan 2020 21:04:31 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:22143 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726743AbgAFCEb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 21:04:31 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578276270; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=ibkKkQF713Ci0VoGdUa5r7/qydExaOgwC183n6zUSwg=;
+ b=hiWOUE/13fxRR01sjBApoJdxOUHg4FvAGWY4pWqjJUbFeKRabO607OPKHNH1vJEsIyMJbXyA
+ XiCOLrRxCb2Arxrzx0PAFh4Z2tW8VnUAgYnivP/lvmNoMShjVQ70CPumUu/NwjHUv3eWKhov
+ gYewIlZ/moyP+u52alPBb+fbUa8=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e1295aa.7f2e0b6cb110-smtp-out-n03;
+ Mon, 06 Jan 2020 02:04:26 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2AC92C4479F; Mon,  6 Jan 2020 02:04:26 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: wgong)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B9C18C43383;
+        Mon,  6 Jan 2020 02:04:25 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <91b4ed6727712cb6d426cf60c740fe2f473f7638.1578225806.git.chris@chrisdown.name>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.184.213.217]
-X-CFilter-Loop: Reflected
+Date:   Mon, 06 Jan 2020 10:04:25 +0800
+From:   Wen Gong <wgong@codeaurora.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ath11k@lists.infradead.org
+Subject: Re: [PATCH v2] net: qrtr: fix len of skb_put_padto in
+ qrtr_node_enqueue
+In-Reply-To: <20200105.144704.221506192255563950.davem@davemloft.net>
+References: <20200103045016.12459-1-wgong@codeaurora.org>
+ <20200105.144704.221506192255563950.davem@davemloft.net>
+Message-ID: <2540a09c73dd896bb793924275bdab0e@codeaurora.org>
+X-Sender: wgong@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-01-06 06:47, David Miller wrote:
+> From: Wen Gong <wgong@codeaurora.org>
+> Date: Fri,  3 Jan 2020 12:50:16 +0800
+> 
+>> The len used for skb_put_padto is wrong, it need to add len of hdr.
+> 
+> Thanks, applied.
+> 
+> There is another bug here, skb_put_padto() returns an error and frees
+> the SKB when the put fails.  There really needs to be a check here,
+> because currently the code right now will keep using the freed up
+> skb in that situation.
+> 
 
-On 2020/1/5 20:06, Chris Down wrote:
-> get_next_ino has a number of problems:
->
-> - It uses and returns a uint, which is susceptible to become overflowed
->   if a lot of volatile inodes that use get_next_ino are created.
-> - It's global, with no specificity per-sb or even per-filesystem. This
->   means it's not that difficult to cause inode number wraparounds on a
->   single device, which can result in having multiple distinct inodes
->   with the same inode number.
->
-> This patch adds a per-superblock counter that mitigates the second case.
-> This design also allows us to later have a specific i_ino size
-> per-device, for example, allowing users to choose whether to use 32- or
-> 64-bit inodes for each tmpfs mount. This is implemented in the next
-> commit.
->
-> Signed-off-by: Chris Down <chris@chrisdown.name>
-> Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Jeff Layton <jlayton@kernel.org>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: linux-mm@kvack.org
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: kernel-team@fb.com
-> ---
->  include/linux/shmem_fs.h |  1 +
->  mm/shmem.c               | 30 +++++++++++++++++++++++++++++-
->  2 files changed, 30 insertions(+), 1 deletion(-)
->
-> v5: Nothing in code, just resending with correct linux-mm domain.
->
-> diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
-> index de8e4b71e3ba..7fac91f490dc 100644
-> --- a/include/linux/shmem_fs.h
-> +++ b/include/linux/shmem_fs.h
-> @@ -35,6 +35,7 @@ struct shmem_sb_info {
->  	unsigned char huge;	    /* Whether to try for hugepages */
->  	kuid_t uid;		    /* Mount uid for root directory */
->  	kgid_t gid;		    /* Mount gid for root directory */
-> +	ino_t next_ino;		    /* The next per-sb inode number to use */
->  	struct mempolicy *mpol;     /* default memory policy for mappings */
->  	spinlock_t shrinklist_lock;   /* Protects shrinklist */
->  	struct list_head shrinklist;  /* List of shinkable inodes */
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index 8793e8cc1a48..9e97ba972225 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -2236,6 +2236,12 @@ static int shmem_mmap(struct file *file, struct vm_area_struct *vma)
->  	return 0;
->  }
->  
-> +/*
-> + * shmem_get_inode - reserve, allocate, and initialise a new inode
-> + *
-> + * If this tmpfs is from kern_mount we use get_next_ino, which is global, since
-> + * inum churn there is low and this avoids taking locks.
-> + */
->  static struct inode *shmem_get_inode(struct super_block *sb, const struct inode *dir,
->  				     umode_t mode, dev_t dev, unsigned long flags)
->  {
-> @@ -2248,7 +2254,28 @@ static struct inode *shmem_get_inode(struct super_block *sb, const struct inode
->  
->  	inode = new_inode(sb);
->  	if (inode) {
-> -		inode->i_ino = get_next_ino();
-> +		if (sb->s_flags & SB_KERNMOUNT) {
-> +			/*
-> +			 * __shmem_file_setup, one of our callers, is lock-free:
-> +			 * it doesn't hold stat_lock in shmem_reserve_inode
-> +			 * since max_inodes is always 0, and is called from
-> +			 * potentially unknown contexts. As such, use the global
-> +			 * allocator which doesn't require the per-sb stat_lock.
-> +			 */
-> +			inode->i_ino = get_next_ino();
-> +		} else {
-> +			spin_lock(&sbinfo->stat_lock);
+Thanks David.
 
-Use spin_lock will affect performance, how about define
-
-unsigned long __percpu *last_ino_number; /* Last inode number */
-atomic64_t shared_last_ino_number; /* Shared last inode number */
-in shmem_sb_info, whose performance will be better?
-
-> +			if (unlikely(sbinfo->next_ino > UINT_MAX)) {
-> +				/*
-> +				 * Emulate get_next_ino uint wraparound for
-> +				 * compatibility
-> +				 */
-> +				sbinfo->next_ino = 1;
-> +			}
-> +			inode->i_ino = sbinfo->next_ino++;
-> +			spin_unlock(&sbinfo->stat_lock);
-> +		}
-> +
->  		inode_init_owner(inode, dir, mode);
->  		inode->i_blocks = 0;
->  		inode->i_atime = inode->i_mtime = inode->i_ctime = current_time(inode);
-> @@ -3662,6 +3689,7 @@ static int shmem_fill_super(struct super_block *sb, struct fs_context *fc)
->  #else
->  	sb->s_flags |= SB_NOUSER;
->  #endif
-> +	sbinfo->next_ino = 1;
->  	sbinfo->max_blocks = ctx->blocks;
->  	sbinfo->free_inodes = sbinfo->max_inodes = ctx->inodes;
->  	sbinfo->uid = ctx->uid;
-
+Yes, __skb_put_padto will return -ENOMEM if __skb_pad fail.
+I think it can return the same error immediately and do not do the next 
+steps in qrtr_node_enqueue.
+> Thanks.
