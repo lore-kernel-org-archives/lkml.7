@@ -2,73 +2,214 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D77F0C00523
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD4BC00523
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABEC5206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:25:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="oMePjRk6"
+	by mail.kernel.org (Postfix) with ESMTP id 2ECDE21582
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:27:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbgAFCZ4 (ORCPT
+        id S1727352AbgAFC1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 21:25:56 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:2070 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727278AbgAFCZ4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 21:25:56 -0500
-X-UUID: 1353c1f766d641b3b13673e0db1a27a2-20200106
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=90we2HNJ1wSvFgeVfDv+pQLV73/5FIpxbNt+xxqxkIg=;
-        b=oMePjRk6ZHKZP/k5PhqascXLGAnBk8Mx1nsIYFdo30HT/gcHI1XAGXBE+g/YF+A64qn359k5ORjHsKl+FKoCFTCECwmkd+qTC5pKekcOd7QNVTECeoIIBfQR91wzR5MkS1CJg1TehaESXeB1gAwZ8pMd19O/uO7dvPS45cUpF/k=;
-X-UUID: 1353c1f766d641b3b13673e0db1a27a2-20200106
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1097889689; Mon, 06 Jan 2020 10:25:48 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 6 Jan 2020 10:25:12 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 6 Jan 2020 10:26:12 +0800
-Message-ID: <1578277539.17435.5.camel@mtkswgap22>
-Subject: Re: [PATCH v2 1/2] phy: mediatek: Fix Kconfig indentation
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-CC:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        <linux-kernel@vger.kernel.org>, Maxime Ripard <mripard@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Mon, 6 Jan 2020 10:25:39 +0800
-In-Reply-To: <1578276653.21256.12.camel@mhfsdcap03>
-References: <20200103164710.4829-1-krzk@kernel.org>
-         <1578276653.21256.12.camel@mhfsdcap03>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Sun, 5 Jan 2020 21:27:47 -0500
+Received: from foss.arm.com ([217.140.110.172]:39896 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727307AbgAFC1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 21:27:47 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A348631B;
+        Sun,  5 Jan 2020 18:27:46 -0800 (PST)
+Received: from [10.162.41.131] (p8cg001049571a15.blr.arm.com [10.162.41.131])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ABD163F534;
+        Sun,  5 Jan 2020 18:27:42 -0800 (PST)
+Subject: Re: [RFC] mm/memblock: Define memblock_physmem()
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     linux-mm@kvack.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Collin Walling <walling@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1578040866-3844-1-git-send-email-anshuman.khandual@arm.com>
+ <20200105085921.GB7261@rapoport-lnx>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <1e5e2ff2-03f9-387f-e566-38657cd9dfe2@arm.com>
+Date:   Mon, 6 Jan 2020 07:58:54 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 366D91C7E258C65393D58DF059721550643DFB395D1DB2ED4FF626D1C1DF7C892000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200105085921.GB7261@rapoport-lnx>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTAxLTA2IGF0IDEwOjEwICswODAwLCBDaHVuZmVuZyBZdW4gd3JvdGU6DQo+
-IE9uIEZyaSwgMjAyMC0wMS0wMyBhdCAxNzo0NyArMDEwMCwgS3J6eXN6dG9mIEtvemxvd3NraSB3
-cm90ZToNCj4gPiBBZGp1c3QgaW5kZW50YXRpb24gZnJvbSBzcGFjZXMgdG8gdGFiICgrb3B0aW9u
-YWwgdHdvIHNwYWNlcykgYXMgaW4NCj4gPiBjb2Rpbmcgc3R5bGUuDQo+ID4gDQo+ID4gU2lnbmVk
-LW9mZi1ieTogS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6a0BrZXJuZWwub3JnPg0KPiA+IA0KPiA+
-IC0tLQ0KPiA+IA0KDQpSZXZpZXdlZC1ieTogU3RhbmxleSBDaHUgPHN0YW5sZXkuY2h1QG1lZGlh
-dGVrLmNvbT4NCg0K
 
+On 01/05/2020 02:29 PM, Mike Rapoport wrote:
+> Hi Anshuman,
+> 
+> On Fri, Jan 03, 2020 at 02:11:06PM +0530, Anshuman Khandual wrote:
+>> On s390 platform memblock.physmem array is being built by directly calling
+>> into memblock_add_range() which is a low level function not intended to be
+>> used outside of memblock. Hence lets conditionally add helper functions for
+>> physmem array when HAVE_MEMBLOCK_PHYS_MAP is enabled. Also use MAX_NUMNODES
+>> instead of 0 as node ID similar to memblock_add() and memblock_reserve().
+>> While here replace some function name strings with (%s __func__) in various
+>> memblock_dbg() call sites.
+>  
+> I'd prefer to have memblock_dbg() updates as a separate patch.
+
+Sure, will do.
+
+> 
+>> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+>> Cc: Vasily Gorbik <gor@linux.ibm.com>
+>> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+>> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+>> Cc: Collin Walling <walling@linux.ibm.com>
+>> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+>> Cc: Philipp Rudo <prudo@linux.ibm.com>
+>> Cc: Mike Rapoport <rppt@linux.ibm.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: linux-s390@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>> Only build tested for s390, will appreciate if some one can give it a try
+>> on a real system.
+>>
+>>  arch/s390/kernel/setup.c | 14 ++++----------
+>>  include/linux/memblock.h |  3 +++
+>>  mm/memblock.c            | 20 ++++++++++++++++----
+>>  3 files changed, 23 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
+>> index 9cbf490fd162..79a7b1872e5a 100644
+>> --- a/arch/s390/kernel/setup.c
+>> +++ b/arch/s390/kernel/setup.c
+>> @@ -761,14 +761,6 @@ static void __init free_mem_detect_info(void)
+>>  		memblock_free(start, size);
+>>  }
+>>  
+>> -static void __init memblock_physmem_add(phys_addr_t start, phys_addr_t size)
+>> -{
+>> -	memblock_dbg("memblock_physmem_add: [%#016llx-%#016llx]\n",
+>> -		     start, start + size - 1);
+>> -	memblock_add_range(&memblock.memory, start, size, 0, 0);
+>> -	memblock_add_range(&memblock.physmem, start, size, 0, 0);
+>> -}
+>> -
+>>  static const char * __init get_mem_info_source(void)
+>>  {
+>>  	switch (mem_detect.info_source) {
+>> @@ -793,8 +785,10 @@ static void __init memblock_add_mem_detect_info(void)
+>>  		     get_mem_info_source(), mem_detect.info_source);
+>>  	/* keep memblock lists close to the kernel */
+>>  	memblock_set_bottom_up(true);
+>> -	for_each_mem_detect_block(i, &start, &end)
+>> -		memblock_physmem_add(start, end - start);
+>> +	for_each_mem_detect_block(i, &start, &end) {
+>> +		memblock_add(start, end - start);
+>> +		memblock_physmem(start, end - start);
+> 
+> Maybe memblock_physmem_add()?
+
+Okay.
+
+> 
+> And, since memblock_add_range() will actually become private, cab you
+> please make it static?
+
+Sure, will do.
+
+> 
+>> +	}
+>>  	memblock_set_bottom_up(false);
+>>  	memblock_dump_all();
+>>  }
+>> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+>> index 1510b12de031..d17e7b841cb6 100644
+>> --- a/include/linux/memblock.h
+>> +++ b/include/linux/memblock.h
+>> @@ -115,6 +115,9 @@ int memblock_add(phys_addr_t base, phys_addr_t size);
+>>  int memblock_remove(phys_addr_t base, phys_addr_t size);
+>>  int memblock_free(phys_addr_t base, phys_addr_t size);
+>>  int memblock_reserve(phys_addr_t base, phys_addr_t size);
+>> +#ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
+>> +int memblock_physmem(phys_addr_t base, phys_addr_t size);
+>> +#endif
+>>  void memblock_trim_memory(phys_addr_t align);
+>>  bool memblock_overlaps_region(struct memblock_type *type,
+>>  			      phys_addr_t base, phys_addr_t size);
+>> diff --git a/mm/memblock.c b/mm/memblock.c
+>> index 3e20c6ba2101..f6d17a1f30e3 100644
+>> --- a/mm/memblock.c
+>> +++ b/mm/memblock.c
+>> @@ -694,7 +694,7 @@ int __init_memblock memblock_add(phys_addr_t base, phys_addr_t size)
+>>  {
+>>  	phys_addr_t end = base + size - 1;
+>>  
+>> -	memblock_dbg("memblock_add: [%pa-%pa] %pS\n",
+>> +	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+>>  		     &base, &end, (void *)_RET_IP_);
+>>  
+>>  	return memblock_add_range(&memblock.memory, base, size, MAX_NUMNODES, 0);
+>> @@ -795,7 +795,7 @@ int __init_memblock memblock_remove(phys_addr_t base, phys_addr_t size)
+>>  {
+>>  	phys_addr_t end = base + size - 1;
+>>  
+>> -	memblock_dbg("memblock_remove: [%pa-%pa] %pS\n",
+>> +	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+>>  		     &base, &end, (void *)_RET_IP_);
+>>  
+>>  	return memblock_remove_range(&memblock.memory, base, size);
+>> @@ -813,7 +813,7 @@ int __init_memblock memblock_free(phys_addr_t base, phys_addr_t size)
+>>  {
+>>  	phys_addr_t end = base + size - 1;
+>>  
+>> -	memblock_dbg("   memblock_free: [%pa-%pa] %pS\n",
+>> +	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+>>  		     &base, &end, (void *)_RET_IP_);
+>>  
+>>  	kmemleak_free_part_phys(base, size);
+>> @@ -824,12 +824,24 @@ int __init_memblock memblock_reserve(phys_addr_t base, phys_addr_t size)
+>>  {
+>>  	phys_addr_t end = base + size - 1;
+>>  
+>> -	memblock_dbg("memblock_reserve: [%pa-%pa] %pS\n",
+>> +	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+>>  		     &base, &end, (void *)_RET_IP_);
+>>  
+>>  	return memblock_add_range(&memblock.reserved, base, size, MAX_NUMNODES, 0);
+>>  }
+>>  
+>> +#ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
+>> +int __init_memblock memblock_physmem(phys_addr_t base, phys_addr_t size)
+>> +{
+>> +	phys_addr_t end = base + size - 1;
+>> +
+>> +	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+>> +		     &base, &end, (void *)_RET_IP_);
+>> +
+>> +	return memblock_add_range(&memblock.physmem, base, size, MAX_NUMNODES, 0);
+>> +}
+>> +#endif
+>> +
+>>  /**
+>>   * memblock_setclr_flag - set or clear flag for a memory region
+>>   * @base: base address of the region
+>> -- 
+>> 2.20.1
+>>
+>>
+> 
