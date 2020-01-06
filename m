@@ -2,104 +2,115 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8293BC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 12:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A15BC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 12:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 556AF2081E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 12:27:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578313673;
-	bh=clouiNKPozJbzl+cLuzS/XRHq+Lyf1dDHc3esJcePWI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TB4Gr97t9D3AkvvAMr26w43GyIJtYCzcRzKhBe40z49nGJrk/AcvCXsih7kVwxmB3
-	 HyjgtS8j5OJyVCNdQIbTLDKaGQaco6Hg5cbZ4fLMcXHJ2kj1Xkktsd9h9kEHjM4Onm
-	 /hoWqJ6MVtoGjtHVOiSZlgwJna8UKfAFs4AAi0ps=
+	by mail.kernel.org (Postfix) with ESMTP id C8CEB2075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 12:35:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BXwsf8wO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgAFM1w (ORCPT
+        id S1726383AbgAFMfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 07:27:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgAFM1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 07:27:51 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F7342071A;
-        Mon,  6 Jan 2020 12:27:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578313670;
-        bh=clouiNKPozJbzl+cLuzS/XRHq+Lyf1dDHc3esJcePWI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RnaB8GukECekcfPfugsEAULLMDowkyQmsRQjiTuw7PtYMarp/ZmhtU/0fGb4wqRfQ
-         ZIGH6uM3XEsPvZfBhXkiJbAzP/eLb09L82IanFJ7pCAHh9B9gzq3bKvmq6RIZh3MVU
-         RUYluJ/YnmHkAfq5azZm10zajZGP7+9HHGQnVwdM=
-Date:   Mon, 6 Jan 2020 13:27:45 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Lucas Stach <dev@lynxeye.de>, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mmc: tegra: fix SDR50 tuning override
-Message-ID: <20200106122745.GA3414443@kroah.com>
-References: <245d569e4c258063dbd78bd30c7027638b30f059.1577960737.git.mirq-linux@rere.qmqm.pl>
- <20200106120718.GA1955714@ulmo>
+        Mon, 6 Jan 2020 07:35:21 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35951 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgAFMfU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 07:35:20 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z3so49438858wru.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 04:35:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=etHpp/b+tlLKLxjZ6TvTwVRA6Mmf6McMbwfMAQQfH4k=;
+        b=BXwsf8wOueR/7Su482SHlTV1NZOq9Sek0uktcbPx49LyYUqGYpdX1/KKBGw4c1qhOP
+         3VeMM6AJ295vWqtr1HogZQL2jggx/d7H9l8aTCGvsp8NO5J/KlVynSX7f+KmAcTjEnh8
+         ATDQnjZWp2xFqMUBCl1ZbIAeKap/QiobXrF3B+Jx8fgjg3Ccw9Nk+1ra6iBGNbeVGKy9
+         lZv4pqSa3IJOh3G++W23H4qvyeQL0ZJ8py2UFrWPHHrCllgLTkG8lcC95LD71Nh52b0A
+         1rQsgNiCVL5VdStupvzTG9JiWOnObcDVFW1sWWWdg6TjTs1dk4Gfpmxp4UqCABomegcq
+         i83A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=etHpp/b+tlLKLxjZ6TvTwVRA6Mmf6McMbwfMAQQfH4k=;
+        b=VqUBHuNcWRuIRJluNSoZxk3rb7cfSgDPRr6WdvYyGa4/FV/AJ18pQuE9jHKeaH59O1
+         hawfC5vfbdMhS5FSCT0m2GAFB7N/sd9ZM8q1OrPkNYCazenX6ShfG/h2fwypruZE9lpR
+         4jX8EP0/RPF693M4Kv3s1h6Q0mkxB2L2vnaV0x1+xm/2U9nHxQCjVYoGDU0l2YLj0fU7
+         AX1UHou3f2jf0EnJUC5RHpAs+HmmpUcUeZ3zO85ChZ2dn3nJwYFaI4wiir9lfuocXb+T
+         xxaKiDAT3TDbTeojZcTyJeO3rnc8QLcemNQzc/6HaE47LnRK06t4VAB1ERIG/rN4loI5
+         UtnQ==
+X-Gm-Message-State: APjAAAWdZtGMP5essZFY1qLv5dO4z1IItFMmXQShp0G8Qr+iHbobFPOv
+        iMzymWENtSO21E3wYoi972xCYkKQsj0=
+X-Google-Smtp-Source: APXvYqy3oBNdsjFPXDVHPqhQuVUEc+K3UjrdOr8x429sFlMq1oz4I+8J9YqRlNLlkhJ3y728gc9Z5Q==
+X-Received: by 2002:a5d:4045:: with SMTP id w5mr96791354wrp.59.1578314118603;
+        Mon, 06 Jan 2020 04:35:18 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id w22sm21853573wmk.34.2020.01.06.04.35.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 Jan 2020 04:35:17 -0800 (PST)
+Subject: Re: [PATCH] nvmem: core: Fix a potential use after free
+To:     Xu Wang <vulab@iscas.ac.cn>
+Cc:     linux-kernel@vger.kernel.org
+References: <1577438434-9945-1-git-send-email-vulab@iscas.ac.cn>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <a5734013-f80b-772a-7fed-b548ff98ec4b@linaro.org>
+Date:   Mon, 6 Jan 2020 12:35:17 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200106120718.GA1955714@ulmo>
+In-Reply-To: <1577438434-9945-1-git-send-email-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 01:07:18PM +0100, Thierry Reding wrote:
-> On Thu, Jan 02, 2020 at 11:30:50AM +0100, Michał Mirosław wrote:
-> > Commit 7ad2ed1dfcbe inadvertently mixed up a quirk flag's name and
-> > broke SDR50 tuning override. Use correct NVQUIRK_ name.
-> > 
-> > Fixes: 7ad2ed1dfcbe ("mmc: tegra: enable UHS-I modes")
-> > Depends-on: 4f6aa3264af4 ("mmc: tegra: Only advertise UHS modes if IO regulator is present")
-> > Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> > ---
-> >  drivers/mmc/host/sdhci-tegra.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Oh my... good catch!
-> 
-> Reviewed-by: Thierry Reding <treding@nvidia.com>
-> 
-> I also ran this through our internal test system and all tests pass, so
-> also:
-> 
-> Tested-by: Thierry Reding <treding@nvidia.com>
-> 
-> I'm not sure if that "Depends-on:" tag is anything that's recognized
-> anywhere. It might be better to turn that into an additional "Fixes:"
-> line. Adding Greg to see if he has a standard way of dealing with this
-> kind of dependency.
-> 
-> Greg, what's your preferred way to handle these situations? I think the
-> intention here was to describe that the original error was introduced by
-> commit 7ad2ed1dfcbe ("mmc: tegra: enable UHS-I modes"), but then commit
-> 4f6aa3264af4 ("mmc: tegra: Only advertise UHS modes if IO regulator is
-> present") moved that code around, so this patch here will only be back-
-> portable until the latter commit, but should be backported until the
-> former.
 
-The stable kernel rules document says how to handle this, but the
-"depends on" commit id in the comment to the right of the stable@k.o cc:
-line in the changelog area.
+Thanks for the patch.
 
-thanks,
+On 27/12/2019 09:20, Xu Wang wrote:
+> Free the nvmem structure only after we are done using it.
+> This patch just moves the put_device() down a bit to avoid the
+> use after free.
 
-greg k-h
+Could you explain the issue bit more here on what exactly could go wrong 
+with the exiting order?
+may be the stack trace of the use-after-free case? Or steps to reproduce 
+the issue?
+
+nvmem device is protected with kref.
+
+--srini
+
+> 
+> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+> ---
+>   drivers/nvmem/core.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> index 9f1ee9c..7051d34 100644
+> --- a/drivers/nvmem/core.c
+> +++ b/drivers/nvmem/core.c
+> @@ -535,8 +535,8 @@ static struct nvmem_device *__nvmem_device_get(void *data,
+>   
+>   static void __nvmem_device_put(struct nvmem_device *nvmem)
+>   {
+> -	put_device(&nvmem->dev);
+>   	module_put(nvmem->owner);
+> +	put_device(&nvmem->dev);
+>   	kref_put(&nvmem->refcnt, nvmem_device_release);
+>   }
+>   
+> 
