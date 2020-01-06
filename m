@@ -2,148 +2,95 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFD0C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1E2C32767
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4C1921734
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:32:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="amD3+lLr"
+	by mail.kernel.org (Postfix) with ESMTP id B545220848
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbgAFGcj (ORCPT
+        id S1727415AbgAFGj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 01:32:39 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53836 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbgAFGci (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 01:32:38 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0066Wbnl018714;
-        Mon, 6 Jan 2020 00:32:37 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578292357;
-        bh=bU7JD9mSLgbKPED+rEVhbTC9TEOicgI7SxvgPaaB5nQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=amD3+lLrRSUkocUPynBlK5cf0Qqq6NraEtD7CK5whO/YwtKoLGjvYJrF9dNVfhiwD
-         dwvr+8S/epT++qGUZ2QPYyP4nO1RQUlzWQFQ1Zu4xnH10FPJJhk7DLybXQfLHWwRuB
-         aXLjfbh2Vik5BRdfdRyGftvDeXuu+ZCYbHWTAiUo=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0066WaCN085336
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 6 Jan 2020 00:32:37 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 6 Jan
- 2020 00:32:36 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 6 Jan 2020 00:32:36 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0066WXBo046469;
-        Mon, 6 Jan 2020 00:32:34 -0600
-Subject: Re: [PATCH v4 0/3] phy: cadence: j721e-wiz: Add Type-C plug flip
- support
-To:     Roger Quadros <rogerq@ti.com>
-CC:     <aniljoy@cadence.com>, <adouglas@cadence.com>, <nsekhar@ti.com>,
-        <jsarha@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20191028102153.24866-1-rogerq@ti.com>
- <d9f3af03-b9a6-d5b9-dce6-e573ceef7348@ti.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <6be83e71-4205-bc86-f788-46c955bf9fe5@ti.com>
-Date:   Mon, 6 Jan 2020 12:04:39 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <d9f3af03-b9a6-d5b9-dce6-e573ceef7348@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 6 Jan 2020 01:39:29 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42554 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726338AbgAFGj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 01:39:29 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 1AF7FADBE;
+        Mon,  6 Jan 2020 06:39:27 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 75D20E048A; Mon,  6 Jan 2020 07:39:26 +0100 (CET)
+Message-Id: <cover.1578292157.git.mkubecek@suse.cz>
+From:   Michal Kubecek <mkubecek@suse.cz>
+Subject: [PATCH net-next v2 0/3] ethtool: allow nesting of begin() and
+ complete() callbacks
+To:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
+        Francois Romieu <romieu@fr.zoreil.com>,
+        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Date:   Mon,  6 Jan 2020 07:39:26 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Roger,
+The ethtool ioctl interface used to guarantee that ethtool_ops callbacks
+were always called in a block between calls to ->begin() and ->complete()
+(if these are defined) and that this whole block was executed with RTNL
+lock held:
 
-On 09/12/19 3:19 PM, Roger Quadros wrote:
-> Hi Kishon,
-> 
-> On 28/10/2019 12:21, Roger Quadros wrote:
->> Hi,
->>
->> On J721e platform, the 2 lanes of SERDES PHY are used to achieve
->> USB Type-C plug flip support without any additional MUX component
->> by using a lane swap feature.
->>
->> However, the driver needs to know the Type-C plug orientation before
->> it can decide whether to swap the lanes or not. This is achieved via a
->> GPIO named DIR.
->>
->> Another constraint is that the lane swap must happen only when the PHY
->> is in inactive state. This is achieved by sampling the GPIO and
->> programming the lane swap before bringing the PHY out of reset.
->>
->> This series adds support to read the GPIO and accordingly program
->> the Lane swap for Type-C plug flip support.
->>
->> Series must be applied on top of
->> https://lkml.org/lkml/2019/10/23/589
-> 
-> I just tested this on top of Sierra PHY patches v3
-> https://lkml.org/lkml/2019/11/28/186
-> on v5.5-rc1
-> 
-> USB3 works fine on J7ES.
-> 
-> Please queue this along with the Sierra PHY patches for -next. Thanks.
+	rtnl_lock();
+	ops->begin();
+	/* other ethtool_ops calls */
+	ops->complete();
+	rtnl_unlock();
 
-This series doesn't apply cleanly. Can you resend the series please
-based on phy -next?
+This prevented any nesting or crossing of the begin-complete blocks.
+However, this is no longer guaranteed even for ioctl interface as at least
+ethtool_phys_id() releases RTNL lock while waiting for a timer. With the
+introduction of netlink ethtool interface, the begin-complete pairs are
+naturally nested e.g. when a request triggers a netlink notification.
 
-Thanks
-Kishon
-> 
-> cheers,
-> -roger
-> 
->>
->> cheers,
->> -roger
->>
->> Changelog:
->> v4
->> - fixes in dt-binding document
->>    - fix typo
->>    - change to typec-dir-debounce-ms and add min/max/default values
->>    - drop reference to uint32 type
->> - fixes in driver
->>    - change to updated typec-dir-debounce-ms property
->>    - add limit checks and use default value if not specified
->>
->> v3
->> - Rebase on v2 of PHY series and update DT binding to yaml
->>
->> v2
->> - revise commit log of patch 1
->> - use regmap_field in patch 3
->>
->> Roger Quadros (3):
->>    phy: cadence: Sierra: add phy_reset hook
->>    dt-bindings: phy: ti,phy-j721e-wiz: Add Type-C dir GPIO
->>    phy: ti: j721e-wiz: Manage typec-gpio-dir
->>
->>   .../bindings/phy/ti,phy-j721e-wiz.yaml        | 17 ++++++
->>   drivers/phy/cadence/phy-cadence-sierra.c      | 10 +++
->>   drivers/phy/ti/phy-j721e-wiz.c                | 61 +++++++++++++++++++
->>   3 files changed, 88 insertions(+)
->>
-> 
+Fortunately, only minority of networking drivers implements begin() and
+complete() callbacks and most of those that do, fall into three groups:
+
+  - wrappers for pm_runtime_get_sync() and pm_runtime_put()
+  - wrappers for clk_prepare_enable() and clk_disable_unprepare()
+  - begin() checks netif_running() (fails if false), no complete()
+
+First two have their own refcounting, third is safe w.r.t. nesting of the
+blocks.
+
+Only three in-tree networking drivers need an update to deal with nesting
+of begin() and complete() calls: via-velocity and epic100 perform resume
+and suspend on their own and wil6210 completely serializes the calls using
+its own mutex (which would lead to a deadlock if a request request
+triggered a netlink notification). The series addresses these problems.
+
+changes between v1 and v2:
+  - fix inverted condition in epic100 ethtool_begin() (thanks to Andrew
+    Lunn)
+
+
+Michal Kubecek (3):
+  wil6210: get rid of begin() and complete() ethtool_ops
+  via-velocity: allow nesting of ethtool_ops begin() and complete()
+  epic100: allow nesting of ethtool_ops begin() and complete()
+
+ drivers/net/ethernet/smsc/epic100.c        |  7 +++-
+ drivers/net/ethernet/via/via-velocity.c    | 14 +++++--
+ drivers/net/ethernet/via/via-velocity.h    |  1 +
+ drivers/net/wireless/ath/wil6210/ethtool.c | 43 ++++++++--------------
+ 4 files changed, 32 insertions(+), 33 deletions(-)
+
+-- 
+2.24.1
+
