@@ -2,220 +2,173 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B442C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 640B3C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38D312075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:38:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578321515;
-	bh=FesBo1upHM+kuo7tXW02SAn+zVTYT92KHE4R6S1mh88=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=nWBxAeXOUBMpfPCphYk0uq5TaSYezBu0BY2K13aBNM1zM2dy2LyUNzkd2+hLg/CFN
-	 ZUuOl4ihF4+jEn/Tus8ViL4KifjXzLigteQD0UxR4QiBz8WM8pZHhtO2WDXN3LE32A
-	 18hwg6Lj6bLoIlVFwmolY4nF/eE8xFwOSjITNsHo=
+	by mail.kernel.org (Postfix) with ESMTP id 2FF3520731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:40:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="WuLLNNQC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbgAFOie (ORCPT
+        id S1726524AbgAFOkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 09:38:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbgAFOie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 09:38:34 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16A0220731;
-        Mon,  6 Jan 2020 14:38:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578321513;
-        bh=FesBo1upHM+kuo7tXW02SAn+zVTYT92KHE4R6S1mh88=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=LzWHqUnIiFJpaDWbx/gEgjkBNW8J4uabH0xBLBr1E1CCPnySXqNsdTH+XTEuhddZy
-         Bh5LyRZCqTYqcQguTIOVzWLW1cSr3Il0Da4wwHC3ZU3VPczDtEO/PpYketnxxt2X8w
-         IFYIFYnRxdSPQL7O6ugK16LxIE/7RKIR7wlMmdII=
-Date:   Mon, 6 Jan 2020 08:38:32 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Deepa Dinamani <deepa.kernel@gmail.com>
-Cc:     mika.westerberg@linux.intel.com, alex.williamson@redhat.com,
-        logang@deltatee.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers: pci: Clear ACS state at kexec
-Message-ID: <20200106143832.GA108920@google.com>
+        Mon, 6 Jan 2020 09:40:14 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33820 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgAFOkN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 09:40:13 -0500
+Received: by mail-wr1-f67.google.com with SMTP id t2so49859474wrr.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 06:40:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7eUvJTSlSuf2nqxGLFafW7DiwXtpRvmtmLkuYANuajc=;
+        b=WuLLNNQCQvLJeF7rsGrFGVPBwgw6XzSHTNMZjk4iRHt1lnjZU3Sm1+tdOvPZIATIsA
+         nOolD8wfAzx1WPQ9suFMvJtq7gEFxXbLU4HpZHr3Yh088C7D1fHyaZU1rqNPbmI09Q2Z
+         yrCSnm1EDInTdNVJUWmy28qHpd7IK2+w6r6R9UNlOJvYUab+ACmB5QryApa+Fg//8LMY
+         B2rjT/o5+LbEAcLW8yMznD6AehDYHYIyBm/vLgfGOp9LhK85krrd8R6L/6AWXY1LJNsR
+         FEzcscXASSJv7yfIaZqFNyp7Ho8y3LwQKBU2fBGgMMgnHJhbL5phQY74SoZhnw2wtlJF
+         sPtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=7eUvJTSlSuf2nqxGLFafW7DiwXtpRvmtmLkuYANuajc=;
+        b=Oiw9W2rilQHjJlWdRdjihhHAgfAF+qtIP2gkfK7tHpW6bbIBlTBN3I4tDTILX1uR+z
+         8vsqLo6BxYik1CbJ77BLXBNoKw3QMGF5SAN2aANOZffpyupz7syOambKfEYY2vRLA/iJ
+         o09WaqEBZJSwDd/YVzeGS5o2hvuldWh43p/JoiqjVIPp4cIv4BJOavhh1uVyuQrrnPmU
+         QUip6UBHJNfeGA41kyUpRnzs6IneJsSAoltXQJzj2XavNESfu3XQ4VS00jSYyJ3wpEj7
+         9E4UtqetnDxflU0jAtHfw3hU+BmQ5sE2aMpQwEJqFUV3yDDKKLrfUmwVr9xVGJfbAqfS
+         mxvA==
+X-Gm-Message-State: APjAAAXraU5eL3hmVo+jpbH6qNTGp3VEaiW+5YhddrsXUPk6L/lL0jjh
+        ZnasXNSwhTaHk2ToNKKsRdPWZpFTGAjGxQ==
+X-Google-Smtp-Source: APXvYqzSBfjXYIdW6Mt/MPZEeEwKE2x29GqGOIp2n9XmZmOEcy9GzBVV4v4OgRTV7eApFFRZYOrWFg==
+X-Received: by 2002:adf:90e7:: with SMTP id i94mr100745504wri.47.1578321611019;
+        Mon, 06 Jan 2020 06:40:11 -0800 (PST)
+Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id q6sm77351194wrx.72.2020.01.06.06.40.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jan 2020 06:40:10 -0800 (PST)
+Subject: Re: [PATCH 15/16] drm: bridge: dw-hdmi: constify copied structure
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Julia Lawall <Julia.Lawall@inria.fr>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        kernel-janitors@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <1577864614-5543-1-git-send-email-Julia.Lawall@inria.fr>
+ <1577864614-5543-16-git-send-email-Julia.Lawall@inria.fr>
+ <20200101145242.GA4855@pendragon.ideasonboard.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <6fe74afe-6fc3-b1e5-56a3-dd5b9e3c2d62@baylibre.com>
+Date:   Mon, 6 Jan 2020 15:40:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200104225149.27342-1-deepa.kernel@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200101145242.GA4855@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 04, 2020 at 02:51:49PM -0800, Deepa Dinamani wrote:
-> ACS bits remain sticky through kexec reset. This is not really a
-> problem for Linux because turning IOMMU on assumes ACS on. But,
-> this becomes a problem if we kexec into something other than
-> Linux and that does not turn ACS on always.
-
-"Sticky" in the PCIe spec specifically describes bits that are
-unaffected by hot reset or FLR (see PCIe r5.0, sec 7.4), but the
-PCI_ACS_CTRL register contains no RWS bits, so I don't think that's
-what you mean here.
-
-I suspect you mean something like "kexec doesn't reset the device, so
-the new kernel inherits the PCI_ACS_CTRL settings from Linux"?
-
-So it looks like you're unconditionally disabling ACS during kexec.
-The comment in pci_enable_acs() suggests that ACS may have been
-enabled by platform firmware.  Maybe we should *restore* the original
-ACS settings from before Linux enabled ACS rather than clearing them?
-
-> Reset the ACS bits to default before kexec or device remove.
+On 01/01/2020 15:52, Laurent Pinchart wrote:
+> Hi Julia,
 > 
-> Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
-> ---
->  drivers/pci/pci-driver.c |  4 ++++
->  drivers/pci/pci.c        | 39 +++++++++++++++++++++++++++------------
->  drivers/pci/pci.h        |  1 +
->  3 files changed, 32 insertions(+), 12 deletions(-)
+> Thank you for the patch.
 > 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 0454ca0e4e3f..bd8d08e50b97 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -453,6 +453,8 @@ static int pci_device_remove(struct device *dev)
->  
->  	/* Undo the runtime PM settings in local_pci_probe() */
->  	pm_runtime_put_sync(dev);
-> +	/* Undo the PCI ACS settings in pci_init_capabilities() */
-> +	pci_disable_acs(pci_dev);
-
-Can this be a separate patch?  It doesn't seem to have anything to do
-with kexec, so a different patch with (presumably) a different
-rationale would be good.
-
->  	/*
->  	 * If the device is still on, set the power state as "unknown",
-> @@ -493,6 +495,8 @@ static void pci_device_shutdown(struct device *dev)
->  	 */
->  	if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
->  		pci_clear_master(pci_dev);
-> +	if (kexec_in_progress)
-> +		pci_disable_acs(pci_dev);
-
-Shouldn't this be in the same "if" block as pci_clear_master()?  If
-the device is in D3cold, it's not going to work to disable ACS because
-config space isn't accessible.
-
->  }
->  
->  #ifdef CONFIG_PM
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index da2e59daad6f..8254617cff03 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3261,15 +3261,23 @@ static void pci_disable_acs_redir(struct pci_dev *dev)
->  	pci_info(dev, "disabled ACS redirect\n");
->  }
->  
-> +
-> +/* Standard PCI ACS capailities
-> + * Source Validation | P2P Request Redirect | P2P Completion Redirect | Upstream Forwarding
-
-Please make this comment fit in 80 columns.
-
-> + */
-> +#define PCI_STD_ACS_CAP (PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF)
-> +
->  /**
-> - * pci_std_enable_acs - enable ACS on devices using standard ACS capabilities
-> + * pci_std_enable_disable_acs - enable/disable ACS on devices using standard
-> + * ACS capabilities
->   * @dev: the PCI device
->   */
-> -static void pci_std_enable_acs(struct pci_dev *dev)
-> +static void pci_std_enable_disable_acs(struct pci_dev *dev, int enable)
-
-Maybe you could split this refactoring into its own patch that doesn't
-actually change any behavior?  Then the kexec patch would be a
-one-liner and the device remove patch would be another one-liner, so
-it's obvious where the important changes are.
-
->  {
->  	int pos;
->  	u16 cap;
->  	u16 ctrl;
-> +	u16 val = 0;
->  
->  	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
->  	if (!pos)
-> @@ -3278,19 +3286,26 @@ static void pci_std_enable_acs(struct pci_dev *dev)
->  	pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
->  	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
->  
-> -	/* Source Validation */
-> -	ctrl |= (cap & PCI_ACS_SV);
-> +	val = (cap & PCI_STD_ACS_CAP);
->  
-> -	/* P2P Request Redirect */
-> -	ctrl |= (cap & PCI_ACS_RR);
-> +	if (enable)
-> +		ctrl |= val;
-> +	else
-> +		ctrl &= ~val;
->  
-> -	/* P2P Completion Redirect */
-> -	ctrl |= (cap & PCI_ACS_CR);
-> +	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
-> +}
->  
-> -	/* Upstream Forwarding */
-> -	ctrl |= (cap & PCI_ACS_UF);
-> +/**
-> + * pci_disable_acs - enable ACS if hardware support it
-
-s/enable/disable/ (in comment)
-s/support/supports/
-
-> + * @dev: the PCI device
-> + */
-> +void pci_disable_acs(struct pci_dev *dev)
-> +{
-> +	if (pci_acs_enable)
-> +		pci_std_enable_disable_acs(dev, 0);
->  
-> -	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
-> +	pci_disable_acs_redir(dev);
->  }
->  
->  /**
-> @@ -3305,7 +3320,7 @@ void pci_enable_acs(struct pci_dev *dev)
->  	if (!pci_dev_specific_enable_acs(dev))
->  		goto disable_acs_redir;
->  
-> -	pci_std_enable_acs(dev);
-> +	pci_std_enable_disable_acs(dev, 1);
->  
->  disable_acs_redir:
->  	/*
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 6394e7746fb5..480e4de46fa8 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -526,6 +526,7 @@ static inline resource_size_t pci_resource_alignment(struct pci_dev *dev,
->  }
->  
->  void pci_enable_acs(struct pci_dev *dev);
-> +void pci_disable_acs(struct pci_dev *dev);
->  #ifdef CONFIG_PCI_QUIRKS
->  int pci_dev_specific_acs_enabled(struct pci_dev *dev, u16 acs_flags);
->  int pci_dev_specific_enable_acs(struct pci_dev *dev);
-> -- 
-> 2.17.1
+> On Wed, Jan 01, 2020 at 08:43:33AM +0100, Julia Lawall wrote:
+>> The dw_hdmi_hw structure is only copied into another structure,
+>> so make it const.
+>>
+>> The opportunity for this change was found using Coccinelle.
+>>
+>> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 > 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+>> ---
+>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi-ahb-audio.c |    2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-ahb-audio.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-ahb-audio.c
+>> index 2b7539701b42..dd56996fe9c7 100644
+>> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-ahb-audio.c
+>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-ahb-audio.c
+>> @@ -291,7 +291,7 @@ static irqreturn_t snd_dw_hdmi_irq(int irq, void *data)
+>>  	return IRQ_HANDLED;
+>>  }
+>>  
+>> -static struct snd_pcm_hardware dw_hdmi_hw = {
+>> +static const struct snd_pcm_hardware dw_hdmi_hw = {
+>>  	.info = SNDRV_PCM_INFO_INTERLEAVED |
+>>  		SNDRV_PCM_INFO_BLOCK_TRANSFER |
+>>  		SNDRV_PCM_INFO_MMAP |
+> 
+
+Applied to drm-misc-next
+
+Neil
