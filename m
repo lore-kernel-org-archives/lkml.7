@@ -2,128 +2,97 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD12FC32767
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA35C32767
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFC51215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D498215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:21:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KuCFY6D6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgAFGTR convert rfc822-to-8bit (ORCPT
+        id S1727006AbgAFGVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 01:19:17 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:36160 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgAFGTR (ORCPT
+        Mon, 6 Jan 2020 01:21:24 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34371 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgAFGVY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 01:19:17 -0500
-Received: from mail-pl1-f197.google.com ([209.85.214.197])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1ioLjP-00069F-7m
-        for linux-kernel@vger.kernel.org; Mon, 06 Jan 2020 06:19:15 +0000
-Received: by mail-pl1-f197.google.com with SMTP id b5so18663601pls.9
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Jan 2020 22:19:15 -0800 (PST)
+        Mon, 6 Jan 2020 01:21:24 -0500
+Received: by mail-ot1-f67.google.com with SMTP id a15so70264532otf.1;
+        Sun, 05 Jan 2020 22:21:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uwZ2SiPflAo2gMhAO1B+oTaVC9KrM+PVnRjYk/ratMc=;
+        b=KuCFY6D6VJ9hn4OiaxJtMwWEQG8NmA3MxjnNQOZSc5mR7A88m+caskdq7A/waITkGQ
+         MnElD30Zann/cg+8HjO1QoHyN8so6ptaAT4JfOJTb3K/vMokV4Q+jHRJUA2Qhv/7kwMN
+         FfJYiURQuGfoYLO+5yUoFi3UjJhAVW2Gikk7BtJsoMgZ+3MqAyIG9dMcu5QMIKsqg1kl
+         ukRgts8sLgL3CkRnMYG2ijI8k+U328q0UxMy+Sko9DC3SSUN2JA6a5OpFZMUOAcXJpD8
+         ZbxzkZ6r3rauCCgMgfQGtsdoJADm7lB6kG/HQt3ZGEPcztnBluuxw4t/CX+Cm8RtDFsI
+         3zQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=vqkeBbtQ/S3eGJG7ALwvxRss7P5JkNLpwge+MbQGY3E=;
-        b=GFgVInBC5AGGSKRSkEW7NSijBao0iiJ4Gfw0yxEJ6dIHP81EcUpOgnNY0WzZkMxBLW
-         sShRicf8UPT5KdIg2u+W6uUSDnT8X1ufd9uSETTfGy0st1Jdbb5DDNruEIsgXFni4WxZ
-         Oq7DkGpDCvpCm81+C0R7Y7LuX6toZwx8LdrqpJ10gpsyZm3yGcqpcpe3caWhqgNbxLQZ
-         LUbVJoN4RKPOgPpgDPDmGC8K4z65VqD+nuxMWyR1z9hiUhblawKpKloEX6c8ZG6k26dB
-         Whwkm9FVaQ7hv2tK26h0WfWYmVnOm9mZ63EtS5/Dw4+Xj+PrgOZpI4O9t0XQ/nB4OQOT
-         AaSw==
-X-Gm-Message-State: APjAAAUlYEwqmrWTuxjdeEEneEbdVfwJNYlcVOctOQ1uKsru0QFKKODT
-        46eYqWxSZpO1LnWdeRJCFEnzezqgZE6SoFLKNpXaXbueSUfXTU+ETmlFr4oFK81Sf0WUo/W9O06
-        DXIi+t4pMtqb22w6s5i8zIq5MMwPX4bASeYi3ib+RKQ==
-X-Received: by 2002:a62:1c88:: with SMTP id c130mr108394749pfc.195.1578291553831;
-        Sun, 05 Jan 2020 22:19:13 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwwneR4KEMxSx+1Y1t/2K3PN/9q9+hJWQvCmqIhS/uOCbyKHuq5HQvg5itd1UaQq8J8UXre5Q==
-X-Received: by 2002:a62:1c88:: with SMTP id c130mr108394738pfc.195.1578291553557;
-        Sun, 05 Jan 2020 22:19:13 -0800 (PST)
-Received: from 2001-b011-380f-35a3-2839-ccbd-36ed-2f4a.dynamic-ip6.hinet.net (2001-b011-380f-35a3-2839-ccbd-36ed-2f4a.dynamic-ip6.hinet.net. [2001:b011:380f:35a3:2839:ccbd:36ed:2f4a])
-        by smtp.gmail.com with ESMTPSA id j5sm60724985pfn.180.2020.01.05.22.19.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 05 Jan 2020 22:19:13 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: [PATCH 3/3] USB: Disable LPM on WD19's Realtek Hub during setting
- its ports to U0
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <Pine.LNX.4.44L0.2001041117130.7125-100000@netrider.rowland.org>
-Date:   Mon, 6 Jan 2020 14:19:07 +0800
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        gregkh@linuxfoundation.org, acelan.kao@canonical.com,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <90B37743-30D1-41BB-8272-D5FBDC89C88F@canonical.com>
-References: <Pine.LNX.4.44L0.2001041117130.7125-100000@netrider.rowland.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uwZ2SiPflAo2gMhAO1B+oTaVC9KrM+PVnRjYk/ratMc=;
+        b=EjW6c9aLJsmwDhOrH4xYykR5mLFkHczc8wz4HX35OU4bB89kDpiX0vCdqAkM5D7yaP
+         9RA2t+cyYuxIPBp3xOXabjIOR+fsd9NW8Q+B9d5/CBmJR+Mk7E3HX8zJOiNyE4e7oKZP
+         LMFM+KIFeilhSwFuONFdlx5RjBeC4aACiAI1IMq6Ypf6unwa0yuU5CV68GZLJlLTfKHG
+         lml/NvnuQr/qKqqoFc398IMxCaPaabqfhhGpW11fpfeDhoCYJs6HNOxfq/NYi1WXLRIT
+         C68fxjyHORFGpwURfT7ItimSeDlhRtEGVL4IbcSn/XMZqTq0TrVkvLi9U3cMX1ogAW3i
+         v7Pw==
+X-Gm-Message-State: APjAAAXTPI8mULf7sFS4UlN3YnvjakL6hHV2aX1VgvaDeqERPOpryKSM
+        pKGJscx54NcU3EzcdGZUA1GhYkcdtrY3tZLk2HA=
+X-Google-Smtp-Source: APXvYqxSz+b6F8LCIGIB5VIaGn6Cwvvmn5NGtc/3Mr2o8u1nlt15cKuWTr4XZ0S6VEX/2BCSmmay9uuguOVl8IfS0YQ=
+X-Received: by 2002:a05:6830:120b:: with SMTP id r11mr13747016otp.254.1578291683382;
+ Sun, 05 Jan 2020 22:21:23 -0800 (PST)
+MIME-Version: 1.0
+References: <1561682593-12071-1-git-send-email-wanpengli@tencent.com>
+ <20190628011012.GA19488@lerouge> <CANRm+CxUpwZ9KwOcQp=Ok64giyjjcJOGb2=zU6vayQzLqYvpXQ@mail.gmail.com>
+ <alpine.DEB.2.21.1910231028250.2308@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1910231028250.2308@nanos.tec.linutronix.de>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 6 Jan 2020 14:21:13 +0800
+Message-ID: <CANRm+Cw1eTNgB1r79J7U__ynio7pMSR4Xa35XuQuj-JKAQGxmg@mail.gmail.com>
+Subject: Re: [PATCH v2] sched/nohz: Optimize get_nohz_timer_target()
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, kvm <kvm@vger.kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Thomas,
+On Wed, 23 Oct 2019 at 16:29, Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On Wed, 23 Oct 2019, Wanpeng Li wrote:
+> > I didn't see your refactor to get_nohz_timer_target() which you
+> > mentioned in IRC after four months, I can observe cyclictest drop from
+> > 4~5us to 8us in kvm guest(we offload the lapic timer emulation to
+> > housekeeping cpu to avoid timer fire external interrupt on the pCPU
+> > which vCPU resident incur a vCPU vmexit) w/o this patch in the case of
+> > there is no busy housekeeping cpu. The score can be recovered after I
+> > give stress to create a busy housekeeping cpu.
+> >
+> > Could you consider applying this patch for temporary since I'm not
+> > sure when the refactor can be ready.
+>
+> Yeah. It's delayed (again).... Will pick that up.
 
+I didn't find WIP tag for this work after ~half year since v4 was
+posted https://lkml.org/lkml/2019/6/28/231 Could you apply this patch
+for temporary because the completion time of refactor is not
+deterministic.
 
-> On Jan 5, 2020, at 00:20, Alan Stern <stern@rowland.harvard.edu> wrote:
-> 
-> On Sat, 4 Jan 2020, Kai-Heng Feng wrote:
-> 
->>>>>> @@ -3533,9 +3533,17 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
->>>>>> 	}
->>>>>> 
->>>>>> 	/* see 7.1.7.7; affects power usage, but not budgeting */
->>>>>> -	if (hub_is_superspeed(hub->hdev))
->>>>>> +	if (hub_is_superspeed(hub->hdev)) {
->>>>>> +		if (hub->hdev->quirks & USB_QUIRK_DISABLE_LPM_ON_U0) {
->>>>>> +			usb_lock_device(hub->hdev);
->>>>>> +			usb_unlocked_disable_lpm(hub->hdev);
->>>>>> +		}
->>>>>> 		status = hub_set_port_link_state(hub, port1, USB_SS_PORT_LS_U0);
->>>>>> -	else
->>>>>> +		if (hub->hdev->quirks & USB_QUIRK_DISABLE_LPM_ON_U0) {
->>>>>> +			usb_unlocked_enable_lpm(hub->hdev);
->>>>>> +			usb_unlock_device(hub->hdev);
->>>>> 
->>>>> The locking here seems questionable.  Doesn't this code sometimes get
->>>>> called with the hub already locked?  Or with the child device locked
->>>>> (in which case locking the hub would violate the normal locking order:  
->>>>> parent first, child second)?
->>> 
->>> I did a little checking.  In many cases the child device _will_ be 
->>> locked at this point.
->>> 
->>>> Maybe introduce a new lock? The lock however will only be used by this specific hub.
->>>> But I still want the LPM can be enabled for this hub.
->>> 
->>> Do you really need to lock the hub at all?  What would the lock protect 
->>> against?
->> 
->> There can be multiple usb_port_resume() run at the same time for different ports, so this is to prevent LPM enable/disable race.
-> 
-> But there can't really be an LPM enable/disable race, can there?  The 
-> individual function calls are protected by the bandwidth mutex taken by 
-> the usb_unlocked_{en|dis}able_lpm routines, and the overall LPM setting 
-> is controlled by the hub device's lpm_disable_counter.
-
-For enable/disable LPM itself, there's no race.
-But the lock here is to protect hub_set_port_link_state().
-If we don't lock the hub, other instances of usb_port_resume() routine can enable LPM and we want the LPM stays disabled until hub_set_port_link_state() is done.
-
-Kai-Heng
-
-> 
-> So I think you don't need to lock the hub here.
-> 
-> Alan Stern
-> 
-
+    Wanpeng
