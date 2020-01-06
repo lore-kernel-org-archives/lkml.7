@@ -2,94 +2,113 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441BAC33C9A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AEFC32767
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B955215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:07:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A303215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:07:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bjT+Ocl0"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iXHk+EUi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgAFGHs (ORCPT
+        id S1726930AbgAFGH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 01:07:48 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33071 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbgAFGHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 01:07:47 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Mon, 6 Jan 2020 01:07:56 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:63471 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726778AbgAFGH4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 01:07:56 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578290875; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=Ni2MAYHhzQmb15bRlA69nMXi08b9x+IHJXp9Cl1L/pY=; b=iXHk+EUiCKJ3K9OgsRxWP9re70VIjLP/bo+OngtQnokCDrL6fs13EydrObX3WZmvZFJxwq2e
+ HbQYFBr67Wv3kCJdypWGzelZgyjDFI9pInLpmJTjpztaOQHbQtfB8IIPpOF6b6me71BUKxDw
+ OupagBsEsZ8tZx+tHTk6RUG+kEk=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e12ceb7.7f70b30d5bc8-smtp-out-n03;
+ Mon, 06 Jan 2020 06:07:51 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 10781C4479C; Mon,  6 Jan 2020 06:07:50 +0000 (UTC)
+Received: from rocky-Inspiron-7590.qca.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47rlRN5HdNz9sNH;
-        Mon,  6 Jan 2020 17:07:44 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578290864;
-        bh=UDwlrivPPJ8XSRXPOf6uF0KaDm0hn0VSjcTGznD/YBQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=bjT+Ocl0E7ur14LMOf9bopC2R0C6Oi84OlBz45vPEdiWdSigG0TMXZrDfn1u17ARa
-         67Rs3BR3hfGQOxfBIQhJ/ejPwCbrcNxxVaMnu2DgA5H95fQKTnw+xiAB+JaAICa7WW
-         6P0p+SiA2zISDqIvS5ioZGCSqutK9cCPZerkc/L1Uj8WjlGGbd/TsiYBBS6mhOEw+T
-         tPx2nlvdK4+xoGooKAuKl7BE0ntIpfTZtB0abWf1s90oUCXhjP9rDIEuxUi9yRqFJO
-         gwc1Uioo0tN5REejxBwAzPH6fercl9WSXBgD2qCDxt3VN63PixsKMGaS7Qbkk+fYtC
-         0yXlzR3O9aqUg==
-Date:   Mon, 6 Jan 2020 17:07:44 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Steven Price <steven.price@arm.com>
-Subject: linux-next: build warning after merge of the akpm tree
-Message-ID: <20200106170744.5b6ca678@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/30WeM7X7uMQfbLSg0Gj1uh5";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        (Authenticated sender: rjliao)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 42B8BC43383;
+        Mon,  6 Jan 2020 06:07:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 42B8BC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rjliao@codeaurora.org
+From:   Rocky Liao <rjliao@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        Rocky Liao <rjliao@codeaurora.org>
+Subject: [PATCH v2] Bluetooth: btusb: Add support for 04ca:3021 QCA_ROME device
+Date:   Mon,  6 Jan 2020 14:07:44 +0800
+Message-Id: <20200106060744.5476-1-rjliao@codeaurora.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191219071857.18532-1-rjliao@codeaurora.org>
+References: <20191219071857.18532-1-rjliao@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/30WeM7X7uMQfbLSg0Gj1uh5
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+USB "VendorID:04ca ProductID:3021" is a new QCA ROME USB
+Bluetooth device, this patch will support firmware downloading for it.
 
-Hi all,
+T:  Bus=02 Lev=02 Prnt=02 Port=05 Cnt=01 Dev#=  3 Spd=12   MxCh= 0
+D:  Ver= 2.01 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
+P:  Vendor=04ca ProdID=3021 Rev= 0.01
+C:* #Ifs= 2 Cfg#= 1 Atr=e0 MxPwr=100mA
+I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=81(I) Atr=03(Int.) MxPS=  16 Ivl=1ms
+E:  Ad=82(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+E:  Ad=02(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=83(I) Atr=01(Isoc) MxPS=   0 Ivl=1ms
+E:  Ad=03(O) Atr=01(Isoc) MxPS=   0 Ivl=1ms
+I:  If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=83(I) Atr=01(Isoc) MxPS=   9 Ivl=1ms
+E:  Ad=03(O) Atr=01(Isoc) MxPS=   9 Ivl=1ms
+I:  If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  17 Ivl=1ms
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  17 Ivl=1ms
+I:  If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  25 Ivl=1ms
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  25 Ivl=1ms
+I:  If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  33 Ivl=1ms
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  33 Ivl=1ms
+I:  If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  49 Ivl=1ms
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  49 Ivl=1ms
 
-After merging the akpm tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+---
 
-arch/x86/mm/dump_pagetables.c: In function 'ptdump_walk_pgd_level_core':
-arch/x86/mm/dump_pagetables.c:403:1: warning: the frame size of 2128 bytes =
-is larger than 2048 bytes [-Wframe-larger-than=3D]
-  403 | }
-      | ^
+Changes in v2: Added the /sys/kernel/debug/usb/devices output to the commit message
 
-Introduced by commit
+ drivers/bluetooth/btusb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-  710fae4f03f2 ("x86: mm: convert dump_pagetables to use walk_page_range")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/30WeM7X7uMQfbLSg0Gj1uh5
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4SzrAACgkQAVBC80lX
-0Gzx6Af+Jjc+DM+uEB2HcWogRDp/75rEKTl+Fw237TASZRlsrT6VUrZAMwr+IfB/
-iVCGXYDYhC7Dj9kPa6tinKYkj5Bmd7/mMIuy3eoW00o191405YA9B2L+ReVdmmmb
-LBpwsAiTaUi92q2xbaobb03CdHJbQd4tMY+IzUD7Y6sKMih9FOqu+8YBB8nlslOL
-u4IMVO0xlM+QbhK9AVkobs2cGUHw30nY42Y16zgoyzK7+4Fyep3pbRGL0fji4sxC
-znZHtZpg7NX3u2XmSy3HBdtQCcTxBBdD2BJQuNm4gHTeCP7uK72nxkrpx4/pn3YC
-dwJQ7rfCnjIpchSXtDlVq6yGBCYCBg==
-=/BKR
------END PGP SIGNATURE-----
-
---Sig_/30WeM7X7uMQfbLSg0Gj1uh5--
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 0eaeca0a64fb..f5924f3e8b8d 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -266,6 +266,7 @@ static const struct usb_device_id blacklist_table[] = {
+ 	{ USB_DEVICE(0x04ca, 0x3015), .driver_info = BTUSB_QCA_ROME },
+ 	{ USB_DEVICE(0x04ca, 0x3016), .driver_info = BTUSB_QCA_ROME },
+ 	{ USB_DEVICE(0x04ca, 0x301a), .driver_info = BTUSB_QCA_ROME },
++	{ USB_DEVICE(0x04ca, 0x3021), .driver_info = BTUSB_QCA_ROME },
+ 	{ USB_DEVICE(0x13d3, 0x3491), .driver_info = BTUSB_QCA_ROME },
+ 	{ USB_DEVICE(0x13d3, 0x3496), .driver_info = BTUSB_QCA_ROME },
+ 	{ USB_DEVICE(0x13d3, 0x3501), .driver_info = BTUSB_QCA_ROME },
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
