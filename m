@@ -2,144 +2,103 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D77C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B9BC33C9B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E96824677
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DE9720848
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:39:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="RAyqu9ZL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HYACJWe7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbgAFQhn (ORCPT
+        id S1726640AbgAFQj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 11:37:43 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:46584 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgAFQhn (ORCPT
+        Mon, 6 Jan 2020 11:39:59 -0500
+Received: from mail-ot1-f50.google.com ([209.85.210.50]:35422 "EHLO
+        mail-ot1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgAFQj6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 11:37:43 -0500
-Received: by mail-qt1-f196.google.com with SMTP id g1so2558109qtr.13
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 08:37:43 -0800 (PST)
+        Mon, 6 Jan 2020 11:39:58 -0500
+Received: by mail-ot1-f50.google.com with SMTP id i15so4759266oto.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 08:39:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=r+jSOrz0ggOnULHRyjZYHEWOfyv+l6rhjy3cWQ3mwrg=;
-        b=RAyqu9ZLSyNlyDDhChjFRkyveS5QKwUZJe2h0lZR6/TQPI0+6XpML62Vch9hdHaMeL
-         /TcMgkfKPU5NIubrIi10QSrVv3n0gGYW4ekh4nEOEeAO9LhddRcOUNn1QT92sVL2qbRz
-         coaYe2jWakCCkzsDg5C0kiVQiYAI+nLLU6MZJ9EqgMo/hhJUZ5f9CzeAtz9W/An/tcY4
-         lJxl+9FZnuCgQb4MoAXLw1vK2iIZCBUVfXOQrSpknWaA8wSUU0O9CjRP910Ezwj1CyAS
-         Gy4FpCOtKZpkSyeYGd1hgw3f94FqfuCuTKMWrNb+NEUhRt4yQ29cPVuEdi4jIp251wPX
-         0/sQ==
+        d=google.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=BYX+ysDLixguPL9U7dTnnMHsyuHIKDFw1NJsrezq400=;
+        b=HYACJWe7iC1JO54rLjWk/PavmoaeeOJJuzQRDOcsQWfJO67/UJxQhZOj7/OHKg/L8x
+         0ysV6fkDOhztER0XKzJ1PwzCjL7zapiZoZqwysTAVMsry+duaYK1I/j8cVw89/qWN1r6
+         UKsTgFexVIq0TbVZLxEB3tkuHabjQfhsLR3ofgyqxSs7IUCTmAzkXf6nOd3RPT2IK3L9
+         JGZolBaGH0slMOBbYeUGag+MGi9wLIYV0cPaFGRfYnXb89/8N/O6iDI2kvoC3HOJI1Eb
+         b2V4RqWKPrfLMpvyjWnsj8D+l+sTzgtEBRw9PsQ0WjFYkjT20hVMrzI9S9bm+pGII2yf
+         EvYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=r+jSOrz0ggOnULHRyjZYHEWOfyv+l6rhjy3cWQ3mwrg=;
-        b=Ny5o3mKjmPkg6dAvFlu6u0iE21r94O1hXYS/3efbAW/tTo8I5528h09V1/XyvKX+cq
-         vmyE+PVPwbQziaX8h0fJsH+KmlRHYftMa/zShHtQThy8QJC/qa3P0SPYUKNS7MiOUC3K
-         q4KUo5M6Ul/iJ8dKJZIo9eIKHopVn0zY8ck39XxDNTfFfPUOaPmitMRiR0SNnY/OmG8F
-         Qz2+Dex33paLQBjGQ5oWBO7xlIaDAVb2eJJ4yJlxguexSQwV5fAuScmBVv0b3AJpp4QM
-         NyCKPivFO+mSaf1vleG8Gwjtc3LT3DxSPMS2DOwxJ+44jI/HBwgN8TamqLHkgfe33F2z
-         M9WA==
-X-Gm-Message-State: APjAAAVRxjzciegERds14ONUR4RVlDNa08CUnRwZVWXjbvt7Kl32Z/eu
-        FXju/iGTbYoBb6d463HsyfD7tvIyDbY=
-X-Google-Smtp-Source: APXvYqxtlnL/pyN9q3EiFstOPI51sTUm5NCbQtajWd3B5j+kI6sEpgpIdpIC6PFYRD7ynqiscM/ypw==
-X-Received: by 2002:ac8:16ca:: with SMTP id y10mr79055212qtk.340.1578328662546;
-        Mon, 06 Jan 2020 08:37:42 -0800 (PST)
-Received: from ovpn-121-70.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id l85sm20924871qke.103.2020.01.06.08.37.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 Jan 2020 08:37:41 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     rafael.j.wysocki@intel.com
-Cc:     dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] drivers/base/test: fix global-out-of-bounds error
-Date:   Mon,  6 Jan 2020 11:37:35 -0500
-Message-Id: <20200106163735.1826-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=BYX+ysDLixguPL9U7dTnnMHsyuHIKDFw1NJsrezq400=;
+        b=nuJ0yh6wnMUYJhh8pUbFKJ060338w7r2kQKA+MKkG7U95yhgb/dex7trB5qbQsk/fJ
+         7ltm8+l7KMzizuCcGNslTeyyZyEqAjahHds5Pe8+ymTokUf8LAMyIK0Tf7RrK6ulKDmq
+         kOSPdyJZuuYTyCJgMB2xbep47JIEbBqkpx8dUIly5TkQi0XX6QEPRiaLlkKOFDvLCcBm
+         lTAD3+v9iVwT+9wBSl0m3mhDtEH2kooH7G64cJ28sRvgtq89gkYXm/X0R0g95R266Ei0
+         t4QGoxP3cSxDZILxVSMwYuEw6PzYxf9GyPWbAZbGGNoC+lNfdHmVRMbRsuNEa4aHbwkN
+         aTGA==
+X-Gm-Message-State: APjAAAXKzOJhfAPuQeP0tS1RKV6ldn+qx8GNwLz9u58hiktxR8dlfPGY
+        5ZjeflB+hRjxwggoi37qq7mxJfhXQti+QPYOOrD3qA==
+X-Google-Smtp-Source: APXvYqyzJZgS9aC7Sd3hjVODNTRsj55lXa5LHChcNvYlVMoVjaqF3LKL0u3oYBiod7r1Yv6oUpSmScmSEqnX9/uI01k=
+X-Received: by 2002:a9d:c02:: with SMTP id 2mr119359452otr.183.1578328797486;
+ Mon, 06 Jan 2020 08:39:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Jann Horn <jannh@google.com>
+Date:   Mon, 6 Jan 2020 17:39:30 +0100
+Message-ID: <CAG48ez2gDDRtKaOcGdKLREd7RGtVzCypXiBMHBguOGSpxQFk3w@mail.gmail.com>
+Subject: BPF tracing trampoline synchronization between update/freeing and execution?
+To:     bpf@vger.kernel.org, live-patching@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     KP Singh <kpsingh@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit c032ace71c29 ("software node: add basic tests for property
-entries") introduced a global-out-of-bounds error because it forgot to
-add a terminator of "nodes "for software_node_register_nodes() to
-process.
+Hi!
 
- 	# Subtest: property-entry
- 	1..7
- 	ok 1 - pe_test_uints
- 	ok 2 - pe_test_uint_arrays
- 	ok 3 - pe_test_strings
- 	ok 4 - pe_test_bool
- 	ok 5 - pe_test_move_inline_u8
- 	ok 6 - pe_test_move_inline_str
- ==================================================================
- BUG: KASAN: global-out-of-bounds in
- software_node_register_nodes+0x41/0x80
- Read of size 8 at addr ffffffff989ef250 by task kunit_try_catch/316
+I was chatting with kpsingh about BPF trampolines, and I noticed that
+it looks like BPF trampolines (as of current bpf-next/master) seem to
+be missing synchronization between trampoline code updates and
+trampoline execution. Or maybe I'm missing something?
 
- CPU: 17 PID: 316 Comm: kunit_try_catch Not tainted
- 5.5.0-rc4-next-20200106+ #1
- Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40
- 03/09/2018
- Call Trace:
-  dump_stack+0xa0/0xea
-  print_address_description.constprop.5.cold.7+0x64/0x384
-  __kasan_report.cold.8+0x7a/0xc0
-  kasan_report+0x12/0x20
-  __asan_load8+0x71/0xa0
-  software_node_register_nodes+0x41/0x80
-  pe_test_reference+0x1eb/0x1200
-  kunit_try_run_case+0x6b/0xd1
-  kunit_generic_run_threadfn_adapter+0x29/0x50
-  kthread+0x1e6/0x210
-  ret_from_fork+0x27/0x50
+If I understand correctly, trampolines are executed directly from the
+fentry placeholders at the start of arbitrary kernel functions, so
+they can run without any locks held. So for example, if task A starts
+executing a trampoline on entry to sys_open(), then gets preempted in
+the middle of the trampoline, and then task B quickly calls
+BPF_RAW_TRACEPOINT_OPEN twice, and then task A continues execution,
+task A will end up executing the middle of newly-written machine code,
+which can probably end up crashing the kernel somehow?
 
- The buggy address belongs to the variable:
-  nodes.21544+0x30/0x920
+I think that at least to synchronize trampoline text freeing with
+concurrent trampoline execution, it is necessary to do something
+similar to what the livepatching code does with klp_check_stack(), and
+then either use a callback from the scheduler to periodically re-check
+tasks that were in the trampoline or let the trampoline tail-call into
+a cleanup helper that is part of normal kernel text. And you'd
+probably have to gate BPF trampolines on
+CONFIG_HAVE_RELIABLE_STACKTRACE.
 
- Memory state around the buggy address:
-  ffffffff989ef100: fa fa fa fa 00 04 fa fa fa fa fa fa 00 00 00 00
-  ffffffff989ef180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- >ffffffff989ef200: fa fa fa fa 00 00 00 00 00 00 fa fa fa fa fa fa
-                                                  ^
-  ffffffff989ef280: 00 06 fa fa fa fa fa fa 00 00 04 fa fa fa fa fa
-  ffffffff989ef300: 00 00 fa fa fa fa fa fa 00 05 fa fa fa fa fa fa
- ==================================================================
- Disabling lock debugging due to kernel taint
- 	ok 7 - pe_test_reference
- ok 8 - property-entry
-
-Fixes: c032ace71c29 ("software node: add basic tests for property entries")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/base/test/property-entry-test.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/base/test/property-entry-test.c b/drivers/base/test/property-entry-test.c
-index da812834b631..abe03315180f 100644
---- a/drivers/base/test/property-entry-test.c
-+++ b/drivers/base/test/property-entry-test.c
-@@ -366,6 +366,7 @@ static void pe_test_reference(struct kunit *test)
- 	static const struct software_node nodes[] = {
- 		{ .name = "1", },
- 		{ .name = "2", },
-+		{ }
- 	};
- 
- 	static const struct software_node_ref_args refs[] = {
--- 
-2.21.0 (Apple Git-122.2)
-
+[Trampoline *updates* could probably be handled more easily if a
+trampoline consisted of an immutable header that increments something
+like a percpu refcount followed by a mutable body, but given that that
+doesn't solve freeing trampolines, I'm not sure if it'd be worth the
+effort. Unless you just never free trampoline memory, but that's
+probably not a great idea.]
