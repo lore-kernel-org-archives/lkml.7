@@ -2,109 +2,107 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIM_ADSP_NXDOMAIN,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA2FC33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C4AC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C102072E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:10:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578316225;
-	bh=VYar+wnhB1pPVCw8DwA8lwmrGAqxnuK5CJyhpIoxUqU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oNt3B+IHsEKjdpiExQCIR1frGf7RrXZ9UUZnF6TGmh42gQc9pvwRNQuCPpiNsI8Np
-	 kI1Zaj6uVf0IZeY0+1xao0nzDNsMZqAMPP7C3WoQA0RFgzRJycvxfAqhflA+NmUeGE
-	 tpvZIXuls52BIdHrGqo7hT5QDSk2oA7saDJUv08E=
+	by mail.kernel.org (Postfix) with ESMTP id F1F012072E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:12:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgAFNKY (ORCPT
+        id S1726508AbgAFNMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 08:10:24 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55794 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgAFNKY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 08:10:24 -0500
-Received: by mail-wm1-f66.google.com with SMTP id q9so14886680wmj.5;
-        Mon, 06 Jan 2020 05:10:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Vu9QJE4YseoFoORr+glUnjER2lum2n5Fmao9NtM3PIE=;
-        b=Qmry3npL+uon2eJcq/7lWfUMhGOxfaYkcOlq8is/UEYqFdbferfFuKRHJZ675o3jrd
-         Y61+wgDSJPdA2QAQ0Rc+y+A3nveYHZ3D5sPZqZhBslXiPv3gtTWMwN7A+rcQa+fjWP9j
-         YkHRM5Ge/kyJggZhKUKzDo7ubTAN2PYSRcNxuy4hqcpaE0ldf8PSlUMVNeXQSDDc22r2
-         Eio8o2M9j2vOZx/IDlk6Tb758rvqlZ6hU/bcJqvA5oJamegJwgzRtlHFBS/G0joR0G5r
-         4k3SifP/bol/7q3ebUzDZEEnKHOeD091OX0eIP2EG+cJPAIBkBIMp1tlr7eepAEIAX57
-         k6cA==
-X-Gm-Message-State: APjAAAUvewkARNni9YRnnjOWZ4szCyXNssJaVV5fkbW8nwJJ4Xp/0IT1
-        RBdeL/CLaAuiOUeVRIEDdNAgwg4a
-X-Google-Smtp-Source: APXvYqy98p6Gbv57CrgSCBw3//qlqbjd/XfXAeKhQJgUAMjp7jA95LuY+c3vWDw4ljcd4TFaL06olQ==
-X-Received: by 2002:a1c:4d03:: with SMTP id o3mr34937526wmh.164.1578316222081;
-        Mon, 06 Jan 2020 05:10:22 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id b137sm23650193wme.26.2020.01.06.05.10.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 05:10:21 -0800 (PST)
-Date:   Mon, 6 Jan 2020 14:10:20 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Hui Zhu <teawater@gmail.com>, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, Hui Zhu <teawaterz@linux.alibaba.com>
-Subject: Re: [RFC] memcg: Add swappiness to cgroup2
-Message-ID: <20200106131020.GC9198@dhcp22.suse.cz>
-References: <1577252208-32419-1-git-send-email-teawater@gmail.com>
- <20191225140546.GA311630@chrisdown.name>
+        Mon, 6 Jan 2020 08:12:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:43894 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726173AbgAFNMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 08:12:35 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D7F3B328;
+        Mon,  6 Jan 2020 05:12:34 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 600723F534;
+        Mon,  6 Jan 2020 05:12:34 -0800 (PST)
+Date:   Mon, 6 Jan 2020 13:12:32 +0000
+From:   Mark Brown <broonie@kerenl.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: [GIT PULL] spi fixes for v5.5
+Message-ID: <20200106131232.GC6448@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jy6Sn24JjFx/iggw"
 Content-Disposition: inline
-In-Reply-To: <20191225140546.GA311630@chrisdown.name>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Cookie: It's later than you think.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 25-12-19 14:05:46, Chris Down wrote:
-> Hi Hui,
-> 
-> Hui Zhu writes:
-> > Even if cgroup2 has swap.max, swappiness is still a very useful config.
-> > This commit add swappiness to cgroup2.
-> 
-> When submitting patches like this, it's important to explain *why* you want
-> it and what evidence there is. For example, how should one use this to
-> compose a reasonable system? Why aren't existing protection controls
-> sufficient for your use case? Where's the data?
 
-Agreed!
+--jy6Sn24JjFx/iggw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Also, why would swappiness be something cgroup-specific instead of
-> hardware-specific, when desired swappiness is really largely about the
-> hardware you have in your system?
+The following changes since commit 63aa6a692595d47a0785297b481072086b9272d2:
 
-I am not really sure I agree here though. Swappiness has been
-traditionally more about workload because it has been believed that it
-is a preference of the workload whether the anonymous or disk based
-memory is more important. Whether this is a good interface is debatable
-of course but time has shown that it is extremely hard to tune.
+  spi: fsl: use platform_get_irq() instead of of_irq_to_resource() (2019-12-16 11:54:55 +0000)
 
-Not to mention that swappiness has been ignored for years for vast
-majority workloads because of the highly biased file LRU reclaim.
+are available in the Git repository at:
 
-At the time when cgroup v2 was introduced it'd been claimed that we
-do not want to copy the v1 swappiness logic because of the semantic
-shortcomings and that a better tuning should developed in future
-replacing even the global knob. AFAIR Johannes wanted to have a refault
-vs. cost based file/anon balancing.
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v5.5-rc5
 
-The lack of a sensible hierarchical behavior has been even a stronger
-argument.
--- 
-Michal Hocko
-SUSE Labs
+for you to fetch changes up to 09b6636cea4f8e419d7cca4155e8695e462535a6:
+
+  spi: Document Octal mode as valid SPI bus width (2020-01-03 01:02:11 +0000)
+
+----------------------------------------------------------------
+spi: Fixes for v5.5
+
+A small collection of fixes here, one to make the newly added PTP
+timestamping code more accurate, a few driver fixes and a fix for the
+core DT binding to document the fact that we support eight wire buses.
+
+----------------------------------------------------------------
+Kunihiko Hayashi (1):
+      spi: uniphier: Fix FIFO threshold
+
+Vignesh Raghavendra (1):
+      spi: Document Octal mode as valid SPI bus width
+
+Vladimir Oltean (2):
+      spi: Don't look at TX buffer for PTP system timestamping
+      spi: spi-fsl-dspi: Fix 16-bit word order in 32-bit XSPI mode
+
+wuxu.wu (1):
+      spi: spi-dw: Add lock protect dw_spi rx/tx to prevent concurrent calls
+
+ .../devicetree/bindings/spi/spi-controller.yaml    |  4 +--
+ drivers/spi/spi-dw.c                               | 15 ++++++++---
+ drivers/spi/spi-dw.h                               |  1 +
+ drivers/spi/spi-fsl-dspi.c                         | 24 +++++++----------
+ drivers/spi/spi-uniphier.c                         | 31 +++++++++++++---------
+ drivers/spi/spi.c                                  | 22 ++++++---------
+ include/linux/spi/spi.h                            |  4 +--
+ 7 files changed, 54 insertions(+), 47 deletions(-)
+
+--jy6Sn24JjFx/iggw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4TMkAACgkQJNaLcl1U
+h9Avjgf9GlqKPfiuEc9tJ7BwdeCWC5muNQl/ME0FOwxBZr1pmup24A5ZiL+/6r+G
+dpdWZbGeiM90jsbcGqSDVjsg+v8brmKM0G6WJH8YQiZEBFzbrZ5kOqC8xYXoKaOi
+LX9yvAQKrIfl+eKltGZ4Mspnu+fUfF4Xa5ZiK5nXkbfZPN/B0zaPH8NvnjoQnwro
+oQnsKixrp3Q1A9MHZi4HgUrBha1wHZwjpS3Z9u2QmKRGXjuyxJHPSb57VoYXtb42
+hDVd/5BWreHe4z2LeIQVsvQPXx4fgmZCi25nEOdfYDzkBT30zJA15c1GtmkW6j5J
+9fSTGiOc2oRuLFG+itKtwSkx/stKcg==
+=OS15
+-----END PGP SIGNATURE-----
+
+--jy6Sn24JjFx/iggw--
