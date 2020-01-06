@@ -2,126 +2,163 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232BDC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8606C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB19520731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA4F20731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:19:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pyrjEmMh"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SF6lNuDU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbgAFXTi (ORCPT
+        id S1727316AbgAFXTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 18:19:38 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36917 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbgAFXTg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 18:19:36 -0500
-Received: by mail-lj1-f196.google.com with SMTP id o13so41273166ljg.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 15:19:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4ifLICUP3yJ2Jc69aKyPrFElbdfNiE/0Qf5WDAsEJ7k=;
-        b=pyrjEmMhzxyrQ1hUcrahOg9m+TH53ZbznItKyNMvrY/fK9J7ew5E739goWY8PcP9KE
-         osp4+WXa6IXcUIoxC6oD/scn2Onhm9/F5WLSauRcFyqPnaJoVvPfFzwD+F5P8GTeBsbs
-         IKj8xSuE8o4iWnYrwVGJXJHOyotZUEfxCkQMHSfKpuSQQzPqiDDzL5OlFx4j1FOnf8l4
-         spxkANE2K6lr2bophpOyTCu3bGpeqx808DpHV/jZSnQMRLbigYYQh4wpTK5LTFz8AmWZ
-         F6FWtkrhW3/4vcP+x1KiWc0xlIsBb724CeRwPedJKwiQ92ZcHTft0Qj0PMSU3GQvHilz
-         fvxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4ifLICUP3yJ2Jc69aKyPrFElbdfNiE/0Qf5WDAsEJ7k=;
-        b=aQjH0d0W8wH0xF5lIJFJaqyLmJ4cbNNgLNQXppHU2p26hRXDkR3BsZTj5XYG77CH4w
-         WXk6o+Dxs6ztX5lNRWbpC/6s2pt7ZXNL8lUlpfpDjOv0qWAgyxCDRo+iEOyobykqDSOV
-         hzZPMg3pipxqxew94hkMPzzkMePiHpsbryqv/1SfcjkCUpxSxAumH0NlAARwTq8jM9+j
-         kV+AoCz1GaSOZGCgrAqii0ZG9ZT3NkWCERmbd5O9E8GPrQ75ykn5Hs6MG29T5niYqvvh
-         AkFYPDMBjzIn5cpH4M1DKvksdI0TFpZ1EccIAQOGtC555mMm4nGeQ9gGIySjx8bQtsGa
-         aXtQ==
-X-Gm-Message-State: APjAAAVvrb+7/6c4Sl+kjToLJoYbot4LXgPZzj492TgEd7BO0NxAphog
-        rk5uESwcNllF9p7fjFNx5Vh00JX4P+QQHqZrInQVbA==
-X-Google-Smtp-Source: APXvYqxVrJvf9BPRKtKqrWl9CB2TzK8f78daLojWiACCChF+prk4cqTGQs5ip21no8hv5sSnLvVrxbWEWln/dkHJOQk=
-X-Received: by 2002:a2e:86d6:: with SMTP id n22mr50504659ljj.77.1578352774218;
- Mon, 06 Jan 2020 15:19:34 -0800 (PST)
+        Mon, 6 Jan 2020 18:19:51 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:58183 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726599AbgAFXTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 18:19:50 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47sBLC4TvJz9sR0;
+        Tue,  7 Jan 2020 10:19:47 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578352788;
+        bh=twYwekdnzLNpnUWdd/Q17/cXiGtuXMj4Jl1sdEh5On8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=SF6lNuDUotbHcN6u2tlPdNqfXci7fW2ld+Jq7+ODzG+ORJbKM5UnTLV3W6DyKWxZN
+         cEqX1ONEI/Qut+ob0MQppKDhHPyNImrOHgycunoSlaXmyame+R29xDMTkQUoTbZjor
+         h1X/Iv1HkhML3yD0ciPRg2PCxoIGP+XIw9ot700jeyrHtAHM/GjWrXwmiSSKTmSDte
+         wUyIIb/1pmGUpwCDr9ri0SmV3T1iO+iW8jbmhA6XJSjSi0EpZc3fbqwjiVmV2S7t5Q
+         x7XWRvv2LRUIVy2pDGGnUBe7HqP36tkzYprWV9rpKItej78VH9+H4jxiyds4KG+wyy
+         ZhZsfEaUeURlw==
+Date:   Tue, 7 Jan 2020 10:19:46 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: linux-next: manual merge of the iomap tree with the f2fs tree
+Message-ID: <20200107101946.0b505f6a@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20191217121642.28534-1-srinivas.kandagatla@linaro.org> <20191217121642.28534-10-srinivas.kandagatla@linaro.org>
-In-Reply-To: <20191217121642.28534-10-srinivas.kandagatla@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 00:19:23 +0100
-Message-ID: <CACRpkdbQCc3AUgj81JLfzeUDt4XyVWLTzwkhAQS+0PSskL4ggA@mail.gmail.com>
-Subject: Re: [PATCH v5 09/11] gpio: wcd934x: Add support to wcd934x gpio controller
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Vinod Koul <vinod.koul@linaro.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/88=2A+8hqq+KPYxXOFwO6yr";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 1:17 PM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
+--Sig_/88=2A+8hqq+KPYxXOFwO6yr
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> This patch adds support to wcd934x gpio block found in
-> WCD9340/WC9341 Audio codecs.
->
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Hi all,
 
-This looks mostly finished, some minor comments.
+Today's linux-next merge of the iomap tree got a conflict in:
 
-> +config GPIO_WCD934X
-> +       tristate "Qualcomm Technologies Inc WCD9340/WCD9341 gpio controller driver"
-> +       depends on MFD_WCD934X && OF_GPIO
-> +       select GPIO_GENERIC
+  fs/f2fs/file.c
 
-You're not using GPIO_GENERIC so select GPIOLIB instead.
+between commits:
 
-> +#include <linux/module.h>
-> +#include <linux/gpio.h>
+  bdf032992489 ("f2fs: call f2fs_balance_fs outside of locked page")
+  df4d07124128 ("f2fs: support data compression")
 
-Don't use this legacy header, use
-<linux/gpio/driver.h>
+from the f2fs tree and commit:
 
-> +static int wcd_gpio_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct wcd_gpio_data *data;
-> +       struct gpio_chip *chip;
-> +
-> +       data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       data->map = dev_get_regmap(dev->parent, NULL);
-> +       if (!data->map) {
-> +               dev_err(dev, "%s: failed to get regmap\n", __func__);
-> +               return  -EINVAL;
-> +       }
-> +
-> +       chip = &data->chip;
-> +       chip->direction_input  = wcd_gpio_direction_input;
-> +       chip->direction_output = wcd_gpio_direction_output;
-> +       chip->get = wcd_gpio_get;
-> +       chip->set = wcd_gpio_set;
+  4a58d8158f6d ("fs: Fix page_mkwrite off-by-one errors")
 
-If you can, please implement .get_direction(), see other drivers
-under gpio for examples.
+from the iomap tree.
 
-Yours,
-Linus Walleij
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc fs/f2fs/file.c
+index bde5612f37f5,0e77b2e6f873..000000000000
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@@ -50,9 -50,8 +50,10 @@@ static vm_fault_t f2fs_vm_page_mkwrite(
+  	struct page *page =3D vmf->page;
+  	struct inode *inode =3D file_inode(vmf->vma->vm_file);
+  	struct f2fs_sb_info *sbi =3D F2FS_I_SB(inode);
+ -	struct dnode_of_data dn =3D { .node_changed =3D false };
+ -	int offset, err;
+ +	struct dnode_of_data dn;
+ +	bool need_alloc =3D true;
+ +	int err =3D 0;
+++	int offset;
+ =20
+  	if (unlikely(f2fs_cp_error(sbi))) {
+  		err =3D -EIO;
+@@@ -88,25 -70,24 +89,26 @@@
+  	file_update_time(vmf->vma->vm_file);
+  	down_read(&F2FS_I(inode)->i_mmap_sem);
+  	lock_page(page);
+- 	if (unlikely(page->mapping !=3D inode->i_mapping ||
+- 			page_offset(page) > i_size_read(inode) ||
+- 			!PageUptodate(page))) {
++ 	err =3D -EFAULT;
++ 	if (likely(PageUptodate(page)))
++ 		err =3D page_mkwrite_check_truncate(page, inode);
++ 	if (unlikely(err < 0)) {
+  		unlock_page(page);
+- 		err =3D -EFAULT;
+  		goto out_sem;
+  	}
++ 	offset =3D err;
+ =20
+ -	/* block allocation */
+ -	__do_map_lock(sbi, F2FS_GET_BLOCK_PRE_AIO, true);
+ -	set_new_dnode(&dn, inode, NULL, NULL, 0);
+ -	err =3D f2fs_get_block(&dn, page->index);
+ -	f2fs_put_dnode(&dn);
+ -	__do_map_lock(sbi, F2FS_GET_BLOCK_PRE_AIO, false);
+ -	if (err) {
+ -		unlock_page(page);
+ -		goto out_sem;
+ +	if (need_alloc) {
+ +		/* block allocation */
+ +		__do_map_lock(sbi, F2FS_GET_BLOCK_PRE_AIO, true);
+ +		set_new_dnode(&dn, inode, NULL, NULL, 0);
+ +		err =3D f2fs_get_block(&dn, page->index);
+ +		f2fs_put_dnode(&dn);
+ +		__do_map_lock(sbi, F2FS_GET_BLOCK_PRE_AIO, false);
+ +		if (err) {
+ +			unlock_page(page);
+ +			goto out_sem;
+ +		}
+  	}
+ =20
+  	/* fill the page */
+
+--Sig_/88=2A+8hqq+KPYxXOFwO6yr
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4TwJIACgkQAVBC80lX
+0GxcqQf+PtiMC//7S+3bLMapvJwsIA2MWxvCuTlZ7oKf/TYgNYtUctHd2mBGwRjR
+aBR34dAysLT8nfmcu8NEPar9ff106qigxZ2TkX3Xa3v4hh5pPa26mwEchbiKdCm2
+XfhetTR0ZOh4Mev+9SB/aVsyHcoYaQ3RC1dvUvHJKR8nJx5Ui9SYLOt+2MMdr2hY
+GE1sv4wvaevXsDqZNBv3WT0uZ8IsYRRMbyO3GhNjTIr7dkgctFF2XoyBSU7hz0n/
+5ZDolmHPGwiBdbSI7ydmVYZMag8loleVU5S/fZjZG1I+cro99s2c7HyyBcvSyqMM
+9jDbsHPWzykGKaZUulN0A7BETi1GLQ==
+=cK1e
+-----END PGP SIGNATURE-----
+
+--Sig_/88=2A+8hqq+KPYxXOFwO6yr--
